@@ -19,6 +19,106 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - `intl` and `flutter_localizations` for i18n
 - `bloc_test`, `flutter_test` for testing
 
+## Architecture
+
+```mermaid
+flowchart LR
+  subgraph Presentation
+    V1[CounterDisplay]\nV2[CountdownBar]\nV3[CounterActions]
+    CUBIT[CounterCubit]
+  end
+  subgraph Domain
+    REPOI[[CounterRepository]]
+    SNAP[CounterSnapshot]
+  end
+  subgraph Data
+    REPO[SharedPrefsCounterRepository]
+    SP[(SharedPreferences)]
+  end
+
+  V1 -->|BlocBuilder| CUBIT
+  V2 -->|BlocBuilder| CUBIT
+  V3 -->|read() actions| CUBIT
+  CUBIT -->|load/save| REPOI
+  REPOI <-.implements .-> REPO
+  REPO --> SP
+```
+
+## Sequence
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant View as Widgets
+  participant Cubit as CounterCubit
+  participant Repo as CounterRepository
+  participant Store as SharedPreferences
+
+  View->>Cubit: loadInitial()
+  Cubit->>Repo: load()
+  Repo->>Store: get(last_count, last_changed)
+  Repo-->>Cubit: CounterSnapshot
+  Cubit-->>View: emit CounterState
+
+  User->>View: Tap + / -
+  View->>Cubit: increment() / decrement()
+  Cubit-->>View: emit updated state
+  Cubit->>Repo: save(snapshot)
+  Repo->>Store: set(...)
+
+  loop every 1s
+    Cubit-->>View: emit countdownSeconds--
+  end
+
+  loop every 5s
+    alt state.count > 0
+      Cubit-->>View: emit count-1, lastChanged=now
+      Cubit->>Repo: save(snapshot)
+    end
+  end
+```
+
+## Class Diagram
+
+```mermaid
+classDiagram
+  class CounterCubit {
+    -Timer _autoDecrementTimer
+    -Timer _countdownTimer
+    +loadInitial()
+    +increment()
+    +decrement()
+  }
+
+  class CounterState {
+    +int count
+    +DateTime? lastChanged
+    +int countdownSeconds
+    +copyWith(...)
+  }
+
+  class CounterRepository {
+    <<interface>>
+    +load() CounterSnapshot
+    +save(CounterSnapshot)
+  }
+
+  class CounterSnapshot {
+    +int count
+    +DateTime? lastChanged
+  }
+
+  class SharedPrefsCounterRepository {
+    +load()
+    +save()
+  }
+
+  CounterCubit --> CounterState
+  CounterCubit ..> CounterRepository
+  CounterRepository <|.. SharedPrefsCounterRepository
+  CounterRepository --> CounterSnapshot
+```
+
 ## App Structure
 
 - `lib/main.dart`: App bootstrapping, `BlocProvider`, `MaterialApp`, widgets.

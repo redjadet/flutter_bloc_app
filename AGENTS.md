@@ -1,75 +1,203 @@
-# Repository Guidelines (MVP + SOLID + Clean Code)
+# AGENTS — Flutter BLoC App
 
-Bu projede tüm yeni geliştirmeler, refaktörler ve katkılar aşağıdaki mimari ve prensiplere uymalıdır: MVP (Model–View–Presenter), SOLID ve Clean Code.
+Bu doküman, bu repo üzerinde çalışacak geliştiriciler/ajanlar için mimari rehber, görev akışları ve kalite standartlarını özetler. Proje küçük bir sayaç uygulaması olsa da, yapı MVP + SOLID + Clean Code ilkelerine göre düzenlenmiştir ve kolay genişletilebilirlik hedeflenir.
 
-## Mimari: MVP
-- View: Sadece UI. `Widget`/`Screen` bileşenleri kullanıcı etkileşimini presenter’a deleg eder; iş kuralı içermez.
-- Presenter: UI iş mantığı. View arayüzüne konuşur, model/repoya delegasyon yapar. Test edilebilir saf Dart sınıflarıdır.
-- Model: Durum + veri erişimi. Tercih edilen state management: Bloc/Cubit (`flutter_bloc`) veya Provider (`provider`/`ChangeNotifier`/`ValueNotifier`). Repo’lar ve veri modelleri bu katmanda konumlanır.
+## Amaç ve Kapsam
 
-## Klasör Yapısı
-- `lib/core/`:
-  - `mvp/`: Presenter tabanı ve ortak MVP yardımcıları (`lib/core/mvp/presenter.dart`).
-  - `theme/`, `ui/`, `l10n/`: Çapraz kesen UI/konfig.
-- `lib/features/<feature>/`:
-  - `screens/`: Route seviyesindeki View’lar (örn. `dashboard_screen.dart`).
-  - `widgets/`: Parçalı UI bileşenleri (yalnızca görünüm).
-  - `presentation/`: Presenter arayüzleri + uygulamaları (örn. `dashboard_presenter.dart`, `settings_presenter.dart`).
-  - `state/` veya `data/`: Bloc/Cubit veya Provider tabanlı yöneticiler, repo’lar, modeller.
+- Basit bir sayaç akışını BLoC (Cubit) ile modellemek.
+- Kalıcı saklama (SharedPreferences) ile son değer ve zaman bilgisini tutmak.
+- 5 saniyede bir otomatik azaltım ve görsel geri sayım göstergesi sunmak.
+- Çoklu dil desteği (EN, TR, DE, FR, ES) sağlamak.
 
-Örnek: Dashboard
-- Presenter: `lib/features/dashboard/presentation/dashboard_presenter.dart`
-- View: `lib/features/dashboard/screens/dashboard_screen.dart`
-- Model/State: `lib/features/dashboard/state/*`
+## Mimari Genel Bakış
 
-## SOLID Uygulaması
-- Single Responsibility: View, Presenter ve Model katmanları tek sorumluluk taşır; sınırlar karıştırılmaz.
-- Open/Closed: View’ları değiştirmeden yeni davranışlar presenter’a eklenir; arayüzler genişletilir.
-- Liskov Substitution: Presenter arayüzü (`IDashboardPresenter` vs.) yerine tüm uygulamalar sorunsuz geçebilir.
-- Interface Segregation: Her özelliğe özel küçük arayüzler (örn. `ISettingsPresenter`); şişkin interface yok.
-- Dependency Inversion: View’lar somut sınıflara değil presenter arayüzlerine bağımlı olur; DI için `provider` (Provider<>) veya `flutter_bloc` (BlocProvider) tercih edilir.
+- Desen: MVP (View = Widget’lar, Presenter = Cubit, Model = Repository/Domain)
+- SOLID: 
+  - SRP: Her sınıf tek sorumluluk. (Widget, Cubit, Repository ayrık)
+  - OCP/DIP: `CounterRepository` arayüzü ile depolama katmanı soyutlandı.
+  - ISP: Minimal, amaç odaklı arayüzler.
+  - LSP: Uygulamalar arayüz sözleşmesine uygun.
+- Clean Code: Anlamlı isimler, küçük bileşenler, yan etkilerin sınırlandırılması.
 
-## Clean Code Kuralları
-- Adlandırma: Anlamlı, niyeti ifade eden isimler. Dosyalar `snake_case.dart`, tipler `UpperCamelCase`, değişken/metotlar `lowerCamelCase`, sabitler `const` + `lowerCamelCase`.
-- Küçük bileşenler: UI bileşenlerini odaklı tutun; tekrar eden stilleri `core/` altında toplayın.
-- Yan etki yönetimi: View içinden doğrudan state değiştirmeyin; presenter aracılığıyla çağırın. Presenter da repo/bloc/cubit/notify ediciye deleg eder.
-- Açık bağımlılıklar: Presenter, ihtiyaç duyduğu servisleri DI ile alır (`Provider`/`BlocProvider`). Gizli global erişim yok.
-- Test edilebilirlik: Presenter’lar saf Dart olarak yazılır; UI’dan bağımsız test edilir.
+### Mimari Diyagramı
 
-## Geliştirme Akışı
-- View → Presenter: Widget, kullanıcı etkileşimlerinde sadece presenter arayüz metodlarını çağırır (örn. `presenter.refresh()`).
-- Presenter → Model: Presenter, Bloc/Cubit aksiyonlarını tetikler veya Provider tabanlı yöneticilere/repo’lara deleg eder; gerektiğinde View’i bilgilendirmek için view arayüzünü (opsiyonel) kullanır.
-- Durum okuma: UI, görsel durumu `context.watch<Bloc>()/context.select` veya `Provider.of<T>(context)/context.watch<T>()` ile okur; doğrudan mutable state tutmaz.
-- Yaşam döngüsü: Presenter tek sefer okunur ve alan olarak saklanır; `dispose` içinde tekrar lookup yapılmaz (örn. `BlocProvider.of`/`Provider.of` çağrısından kaçının).
+```mermaid
+flowchart LR
+  subgraph Presentation[Presentation]
+    V1[Widgets: CounterDisplay]\nV2[Widgets: CountdownBar]\nV3[Widgets: CounterActions]
+    CUBIT[CounterCubit (Presenter)]
+  end
 
-## Kod Örüntüleri
-- Presenter tabanı: `lib/core/mvp/presenter.dart` içinde `attachView/detachView` barındıran temel sınıf.
-- DI: `provider` ile `Provider<T>` veya `flutter_bloc` ile `BlocProvider` kullanın; presenter enjekte edin.
-- View’larda arayüz: `implements <Feature>View` tercih edin; navigation/snackbar gibi UI etkileri view tarafından gerçekleştirilir, tetikleyici presenter’dan gelir.
-- Şablonlar: Yeni özellik eklerken aşağıdaki şablonları baz alın:
-  - `lib/core/mvp/templates/presenter_template.dart`
-  - `lib/core/mvp/templates/view_widget_template.dart`
+  subgraph Domain[Domain]
+    REPOI[[CounterRepository (Interface)]]
+    SNAP[CounterSnapshot]
+  end
 
-## Test
-- Birim test: Presenter mantığı (senaryolar, hatalar, delegasyon). Repo/Notifer bağımlılıklarını sahtelemek.
-- Widget test: Görünüm durum bağlama, etkileşimlerin presenter’a delegasyonu ve görsel çıktılar.
-- Golden (varsa): Görsel regresyon için kritik widget’lar.
+  subgraph Data[Data]
+    REPO[SharedPrefsCounterRepository]
+    SP[(SharedPreferences)]
+  end
 
-## Komutlar
-- `flutter pub get`: Bağımlılıkları kurar.
-- `flutter run -d chrome` veya `flutter run`: Uygulamayı çalıştırır.
-- `flutter analyze`: Statik analiz ve linter.
-- `dart format .`: Otomatik biçimlendirme.
-- `flutter test`: Birim/widget testleri.
-- `flutter build apk --release` / `flutter build ios --release`: Platforma özel sürüm derlemeleri.
+  V1 -->|BlocBuilder| CUBIT
+  V2 -->|BlocBuilder| CUBIT
+  V3 -->|read()\nincrement/decrement| CUBIT
 
-## PR ve Commit Kuralları
-- Conventional Commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`. Örn: `refactor(dashboard): move logic to presenter`.
-- PR’lar: Açıklama, ekran görüntüsü/GIF (UI değiştiyse), test adımları ve ilgili issue bağlantıları. Analiz ve testler geçmeli.
+  CUBIT -->|load/save| REPOI
+  REPOI <-.implements .-> REPO
+  REPO --> SP
+```
 
-## Güvenlik ve Yapılandırma
-- SDK: `pubspec.yaml` içindeki `environment.sdk`’e uyun.
-- Sırlar: İmzalama dosyaları/sırlar commitlenmez; `build/` ignore’dur.
+## Katmanlar ve Dizin Yapısı
 
----
-Not: Mevcut projede hali hazırda farklı state management çözümleri bulunabilir. Yeni geliştirmelerde öncelik Bloc/Cubit veya Provider’dır. Kademeli geçiş yapılabilir; view içinde iş kuralı eklemeyin, presenter arayüzü ile genişletin.
+- `lib/presentation/`
+  - `counter_state.dart`: UI katmanında kullanılan sunum durumu modeli.
+  - `widgets/`: Küçük, tek amaçlı View bileşenleri.
+    - `counter_display.dart`
+    - `countdown_bar.dart`
+    - `counter_actions.dart`
+- `lib/` (Presenter)
+  - `counter_cubit.dart`: Akışın sunucusu/presenter’ı. Zamanlayıcılar, durum üretimi ve repository ile etkileşim.
+- `lib/domain/`
+  - `counter_repository.dart`: Depolama için soyutlama (DIP).
+  - `counter_snapshot.dart`: Kalıcı veri anlık görüntüsü (UI’dan bağımsız).
+- `lib/data/`
+  - `shared_prefs_counter_repository.dart`: Varsayılan depolama implementasyonu.
+- `lib/main.dart`: Uygulama giriş noktası ve widget bileşimi.
+- `test/`: Birim ve bloc testleri.
+
+## Ana Akış
+
+1. Uygulama açılır → `CounterCubit` başlar ve zamanlayıcıları kurar.
+2. `loadInitial()` → repository’den son değer ve zaman bilgisi yüklenir.
+3. Kullanıcı etkileşimi (arttır/azalt) → durum güncellenir, kalıcı olarak yazılır ve 5 sn’lik pencere sıfırlanır.
+4. Otomatik azaltım zamanlayıcısı → `count > 0` ise 5 sn’de bir azaltır.
+5. Geri sayım zamanlayıcısı → her saniye UI’de kalan süreyi günceller.
+
+### Akış / Zamanlama Şeması
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant View as Widgets
+  participant Cubit as CounterCubit
+  participant Repo as CounterRepository
+  participant Store as SharedPreferences
+
+  View->>Cubit: loadInitial()
+  Cubit->>Repo: load()
+  Repo->>Store: get(last_count, last_changed)
+  Repo-->>Cubit: CounterSnapshot
+  Cubit-->>View: emit CounterState
+
+  User->>View: Tap + / -
+  View->>Cubit: increment() / decrement()
+  Cubit-->>View: emit updated state
+  Cubit->>Repo: save(snapshot)
+  Repo->>Store: set(...)
+
+  loop every 1s
+    Cubit-->>View: emit countdownSeconds--
+  end
+
+  loop every 5s
+    alt state.count > 0
+      Cubit-->>View: emit count-1, lastChanged=now
+      Cubit->>Repo: save(snapshot)
+    end
+  end
+```
+
+## Geliştirme Kuralları
+
+- Bağımlılık Tersine Çevirme: Yeni veri kaynağı ekleyecekseniz `CounterRepository` implementasyonu yazın, Cubit’e enjekte edin (constructor).
+- Sunum Durumu: UI’ya özgü alanları `presentation/*` altında tutun. Domain veri modelleri UI’dan bağımsızdır.
+- Küçük Widget’lar: Her widget tek sorumluluk; karmaşık ekranları küçük bileşenlerle oluşturun.
+- Zamanlayıcılar: Zaman davranışını genişletmek istiyorsanız ayrı bir servis arayüzü (örn. `Ticker`/`TimerService`) ile soyutlayın.
+- İsimlendirme: Açık ve net; sihirli sayılardan kaçının (sabitleri private const ile merkezileştirin).
+- Yan etkiler: Repository sınırında; Cubit içinde kontrol edilen, test edilebilir biçimde.
+
+## Yeni Özellik Ekleme Adımları (Önerilen)
+
+1. Domain
+   - Gerekirse yeni bir Snapshot/Entity oluşturun.
+   - `CounterRepository` benzeri bir arayüz tanımlayın veya mevcut arayüzü genişletin.
+2. Data
+   - Yeni veri kaynağı implementasyonu (örn. REST, Secure Storage). Arayüz sözleşmesine uyun.
+3. Presenter
+   - Cubit/Bloc üzerinde yeni olay/komut/metot ekleyin; durumu açıkça güncelleyin.
+4. Presentation
+   - Yeni widget(lar) ekleyin; iş kurallarını View’a taşımayın.
+5. Test
+   - Fake/Mock repository ile Cubit’i izole edin.
+   - Zamanlayıcı/async davranışlarını deterministic olacak şekilde test edin.
+
+## Test Stratejisi
+
+- Cubit Testleri: `bloc_test` ile sıradaki durumları, kalıcılık ve zamanlayıcı etkilerini doğrulayın.
+- Widget Testleri: Bileşenlerin doğru render edildiğini ve etkileşimlerin Cubit’e gittiğini test edin.
+- Fake Repository: `SharedPreferences` yerine hafif sahte implementasyon kullanın (hız ve izolasyon).
+
+## Çalıştırma ve Komutlar
+
+```bash
+flutter pub get
+flutter run
+flutter test
+flutter analyze
+flutter format .
+```
+
+## Kod İnceleme Kontrol Listesi
+
+- Tek sorumluluk: Dosya/sınıf birden fazla şeyi yapıyor mu?
+- Bağımlılık yönü: Presenter → Abstraction → Implementation hiyerarşisi korunmuş mu?
+- Testler: Yeni davranış için birim/bloc testleri var mı ve hızlı çalışıyor mu?
+- İsimlendirme ve okunabilirlik: Anlamlı, tutarlı, kısa ama açıklayıcı mı?
+- Yan etkiler/persist: Repository üzerinden mi yapılıyor, UI’dan sızmıyor mu?
+
+## Notlar
+
+- Varsayılan otomatik azaltım aralığı 5 saniyedir.
+- Otomatik azaltım 0’ın altına inmez.
+- Desteklenen yereller `MaterialApp.supportedLocales` içinde listelenir.
+
+### Katmanlı Yapı (Özet)
+
+```mermaid
+classDiagram
+  class CounterCubit {
+    -Timer _autoDecrementTimer
+    -Timer _countdownTimer
+    +loadInitial()
+    +increment()
+    +decrement()
+  }
+
+  class CounterState {
+    +int count
+    +DateTime? lastChanged
+    +int countdownSeconds
+    +copyWith(...)
+  }
+
+  class CounterRepository {
+    <<interface>>
+    +load() CounterSnapshot
+    +save(CounterSnapshot)
+  }
+
+  class CounterSnapshot {
+    +int count
+    +DateTime? lastChanged
+  }
+
+  class SharedPrefsCounterRepository {
+    +load()
+    +save()
+  }
+
+  CounterCubit --> CounterState
+  CounterCubit ..> CounterRepository
+  CounterRepository <|.. SharedPrefsCounterRepository
+  CounterRepository --> CounterSnapshot
+```
