@@ -1,69 +1,50 @@
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
+import 'package:flutter_bloc_app/domain/counter_repository.dart';
+import 'package:flutter_bloc_app/domain/counter_snapshot.dart';
+import 'package:flutter_bloc_app/data/shared_prefs_counter_repository.dart';
+import 'package:flutter_bloc_app/presentation/counter_state.dart';
 
-class CounterState {
-  const CounterState({
-    required this.count,
-    this.lastChanged,
-    this.countdownSeconds = 5,
-  });
-
-  final int count;
-  final DateTime? lastChanged;
-  final int countdownSeconds;
-
-  CounterState copyWith({
-    int? count,
-    DateTime? lastChanged,
-    int? countdownSeconds,
-  }) {
-    return CounterState(
-      count: count ?? this.count,
-      lastChanged: lastChanged ?? this.lastChanged,
-      countdownSeconds: countdownSeconds ?? this.countdownSeconds,
-    );
-  }
-}
+export 'package:flutter_bloc_app/presentation/counter_state.dart';
 
 class CounterCubit extends Cubit<CounterState> {
-  CounterCubit() : super(const CounterState(count: 0)) {
+  CounterCubit({CounterRepository? repository})
+      : _repository = repository ?? SharedPrefsCounterRepository(),
+        super(const CounterState(count: 0)) {
     _startTimer();
   }
 
-  static const String _prefsKeyCount = 'last_count';
-  static const String _prefsKeyChanged = 'last_changed';
-  static const int _autoDecrementInterval = 5; // seconds
+  static const int _autoDecrementIntervalSeconds = 5;
 
-  Timer? _timer;
+  final CounterRepository _repository;
+
+  Timer? _autoDecrementTimer;
   Timer? _countdownTimer;
 
   void _startTimer() {
-    _timer?.cancel();
+    _autoDecrementTimer?.cancel();
     _countdownTimer?.cancel();
 
-    // Start main auto-decrement timer
-    _timer = Timer.periodic(Duration(seconds: _autoDecrementInterval), (timer) {
+    _autoDecrementTimer =
+        Timer.periodic(const Duration(seconds: _autoDecrementIntervalSeconds), (_) {
       if (state.count > 0) {
         _autoDecrement();
       }
     });
 
-    // Start countdown timer that updates every second
     _startCountdownTimer();
   }
 
   void _startCountdownTimer() {
     _countdownTimer?.cancel();
-    emit(state.copyWith(countdownSeconds: _autoDecrementInterval));
+    emit(state.copyWith(countdownSeconds: _autoDecrementIntervalSeconds));
 
-    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (state.countdownSeconds > 0) {
         emit(state.copyWith(countdownSeconds: state.countdownSeconds - 1));
       } else {
-        // Reset countdown when it reaches 0
-        emit(state.copyWith(countdownSeconds: _autoDecrementInterval));
+        emit(state.copyWith(countdownSeconds: _autoDecrementIntervalSeconds));
       }
     });
   }
@@ -72,60 +53,48 @@ class CounterCubit extends Cubit<CounterState> {
     _startTimer();
   }
 
+  Future<void> loadInitial() async {
+    final CounterSnapshot snapshot = await _repository.load();
+    if (snapshot.count != state.count || snapshot.lastChanged != state.lastChanged) {
+      emit(CounterState(
+        count: snapshot.count,
+        lastChanged: snapshot.lastChanged,
+        countdownSeconds: _autoDecrementIntervalSeconds,
+      ));
+    }
+  }
+
+  Future<void> _persistCurrent() async {
+    await _repository.save(
+      CounterSnapshot(count: state.count, lastChanged: state.lastChanged),
+    );
+  }
+
   void _autoDecrement() {
     final CounterState next = CounterState(
       count: state.count - 1,
       lastChanged: DateTime.now(),
-      countdownSeconds: _autoDecrementInterval,
+      countdownSeconds: _autoDecrementIntervalSeconds,
     );
     emit(next);
-    _persist(next);
+    _persistCurrent();
   }
 
   @override
   Future<void> close() {
-    _timer?.cancel();
+    _autoDecrementTimer?.cancel();
     _countdownTimer?.cancel();
     return super.close();
-  }
-
-  Future<void> loadInitial() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final int saved = prefs.getInt(_prefsKeyCount) ?? 0;
-    final int? changedMs = prefs.getInt(_prefsKeyChanged);
-    final DateTime? changed = changedMs != null
-        ? DateTime.fromMillisecondsSinceEpoch(changedMs)
-        : null;
-    if (saved != state.count || changed != state.lastChanged) {
-      emit(
-        CounterState(
-          count: saved,
-          lastChanged: changed,
-          countdownSeconds: _autoDecrementInterval,
-        ),
-      );
-    }
-  }
-
-  Future<void> _persist(CounterState value) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_prefsKeyCount, value.count);
-    if (value.lastChanged != null) {
-      await prefs.setInt(
-        _prefsKeyChanged,
-        value.lastChanged!.millisecondsSinceEpoch,
-      );
-    }
   }
 
   Future<void> increment() async {
     final CounterState next = CounterState(
       count: state.count + 1,
       lastChanged: DateTime.now(),
-      countdownSeconds: _autoDecrementInterval,
+      countdownSeconds: _autoDecrementIntervalSeconds,
     );
     emit(next);
-    await _persist(next);
+    await _persistCurrent();
     _resetTimer();
   }
 
@@ -133,10 +102,10 @@ class CounterCubit extends Cubit<CounterState> {
     final CounterState next = CounterState(
       count: state.count - 1,
       lastChanged: DateTime.now(),
-      countdownSeconds: _autoDecrementInterval,
+      countdownSeconds: _autoDecrementIntervalSeconds,
     );
     emit(next);
-    await _persist(next);
+    await _persistCurrent();
     _resetTimer();
   }
 }
