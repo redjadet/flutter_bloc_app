@@ -1,9 +1,8 @@
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'dart:async';
-import 'package:flutter_bloc_app/domain/counter_repository.dart';
-import 'package:flutter_bloc_app/domain/counter_snapshot.dart';
-import 'package:flutter_bloc_app/data/shared_prefs_counter_repository.dart';
+import 'package:flutter_bloc_app/domain/domain.dart';
+import 'package:flutter_bloc_app/data/data.dart';
 import 'package:flutter_bloc_app/presentation/counter_state.dart';
 
 export 'package:flutter_bloc_app/presentation/counter_state.dart';
