@@ -25,4 +25,3 @@ class CounterActions extends StatelessWidget {
     );
   }
 }
-

@@ -33,4 +33,3 @@ class CounterDisplay extends StatelessWidget {
     );
   }
 }
-

@@ -33,9 +33,9 @@ class CountdownBar extends StatelessWidget {
               Text(
                 'Next auto-decrement in: ${state.countdownSeconds}s',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ],
           ),
@@ -44,4 +44,3 @@ class CountdownBar extends StatelessWidget {
     );
   }
 }
-

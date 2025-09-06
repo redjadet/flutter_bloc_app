@@ -9,8 +9,8 @@ export 'package:flutter_bloc_app/presentation/counter_state.dart';
 
 class CounterCubit extends Cubit<CounterState> {
   CounterCubit({CounterRepository? repository})
-      : _repository = repository ?? SharedPrefsCounterRepository(),
-        super(const CounterState(count: 0)) {
+    : _repository = repository ?? SharedPrefsCounterRepository(),
+      super(const CounterState(count: 0)) {
     _startTimer();
   }
 
@@ -25,12 +25,14 @@ class CounterCubit extends Cubit<CounterState> {
     _autoDecrementTimer?.cancel();
     _countdownTimer?.cancel();
 
-    _autoDecrementTimer =
-        Timer.periodic(const Duration(seconds: _autoDecrementIntervalSeconds), (_) {
-      if (state.count > 0) {
-        _autoDecrement();
-      }
-    });
+    _autoDecrementTimer = Timer.periodic(
+      const Duration(seconds: _autoDecrementIntervalSeconds),
+      (_) {
+        if (state.count > 0) {
+          _autoDecrement();
+        }
+      },
+    );
 
     _startCountdownTimer();
   }
@@ -54,12 +56,15 @@ class CounterCubit extends Cubit<CounterState> {
 
   Future<void> loadInitial() async {
     final CounterSnapshot snapshot = await _repository.load();
-    if (snapshot.count != state.count || snapshot.lastChanged != state.lastChanged) {
-      emit(CounterState(
-        count: snapshot.count,
-        lastChanged: snapshot.lastChanged,
-        countdownSeconds: _autoDecrementIntervalSeconds,
-      ));
+    if (snapshot.count != state.count ||
+        snapshot.lastChanged != state.lastChanged) {
+      emit(
+        CounterState(
+          count: snapshot.count,
+          lastChanged: snapshot.lastChanged,
+          countdownSeconds: _autoDecrementIntervalSeconds,
+        ),
+      );
     }
   }
 

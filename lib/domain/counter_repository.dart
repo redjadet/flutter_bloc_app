@@ -6,4 +6,3 @@ abstract class CounterRepository {
   Future<CounterSnapshot> load();
   Future<void> save(CounterSnapshot snapshot);
 }
-

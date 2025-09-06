@@ -30,4 +30,3 @@ class SharedPrefsCounterRepository implements CounterRepository {
     }
   }
 }
-
