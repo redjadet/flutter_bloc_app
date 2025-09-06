@@ -38,10 +38,10 @@ flowchart LR
     SP[(SharedPreferences)]
   end
 
-  V1 -->|BlocBuilder| CUBIT
-  V2 -->|BlocBuilder| CUBIT
-  V3 -->|read() actions| CUBIT
-  CUBIT -->|load/save| REPOI
+  V1 --> CUBIT
+  V2 --> CUBIT
+  V3 --> CUBIT
+  CUBIT --> REPOI
   REPOI <-.implements .-> REPO
   REPO --> SP
 ```
