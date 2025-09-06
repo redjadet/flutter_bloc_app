@@ -24,7 +24,9 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 ```mermaid
 flowchart LR
   subgraph Presentation
-    V1[CounterDisplay]\nV2[CountdownBar]\nV3[CounterActions]
+    V1[CounterDisplay]
+    V2[CountdownBar]
+    V3[CounterActions]
     CUBIT[CounterCubit]
   end
   subgraph Domain

@@ -24,7 +24,9 @@ Bu doküman, bu repo üzerinde çalışacak geliştiriciler/ajanlar için mimari
 ```mermaid
 flowchart LR
   subgraph Presentation[Presentation]
-    V1[Widgets: CounterDisplay]\nV2[Widgets: CountdownBar]\nV3[Widgets: CounterActions]
+    V1[Widgets: CounterDisplay]
+    V2[Widgets: CountdownBar]
+    V3[Widgets: CounterActions]
     CUBIT[CounterCubit (Presenter)]
   end
 
@@ -40,7 +42,7 @@ flowchart LR
 
   V1 -->|BlocBuilder| CUBIT
   V2 -->|BlocBuilder| CUBIT
-  V3 -->|read()\nincrement/decrement| CUBIT
+  V3 -->|read() increment/decrement| CUBIT
 
   CUBIT -->|load/save| REPOI
   REPOI <-.implements .-> REPO
