@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
 import 'package:flutter_bloc_app/domain/domain.dart';
@@ -54,23 +55,33 @@ class CounterCubit extends Cubit<CounterState> {
   }
 
   Future<void> loadInitial() async {
-    final CounterSnapshot snapshot = await _repository.load();
-    if (snapshot.count != state.count ||
-        snapshot.lastChanged != state.lastChanged) {
-      emit(
-        CounterState(
-          count: snapshot.count,
-          lastChanged: snapshot.lastChanged,
-          countdownSeconds: _autoDecrementIntervalSeconds,
-        ),
-      );
+    try {
+      final CounterSnapshot snapshot = await _repository.load();
+      if (snapshot.count != state.count ||
+          snapshot.lastChanged != state.lastChanged) {
+        emit(
+          CounterState(
+            count: snapshot.count,
+            lastChanged: snapshot.lastChanged,
+            countdownSeconds: _autoDecrementIntervalSeconds,
+          ),
+        );
+      }
+    } catch (e, s) {
+      debugPrint('CounterCubit.loadInitial error: $e\n$s');
+      emit(state.copyWith(errorMessage: 'Failed to load saved counter'));
     }
   }
 
   Future<void> _persistCurrent() async {
-    await _repository.save(
-      CounterSnapshot(count: state.count, lastChanged: state.lastChanged),
-    );
+    try {
+      await _repository.save(
+        CounterSnapshot(count: state.count, lastChanged: state.lastChanged),
+      );
+    } catch (e, s) {
+      debugPrint('CounterCubit._persistCurrent error: $e\n$s');
+      // keep UX stable; no extra emit
+    }
   }
 
   void _autoDecrement() {
@@ -110,5 +121,11 @@ class CounterCubit extends Cubit<CounterState> {
     emit(next);
     await _persistCurrent();
     _resetTimer();
+  }
+
+  void clearError() {
+    if (state.errorMessage != null) {
+      emit(state.copyWith(errorMessage: null));
+    }
   }
 }
