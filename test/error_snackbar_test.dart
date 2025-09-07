@@ -25,9 +25,7 @@ void main() {
     await tester.pumpWidget(
       BlocProvider.value(
         value: cubit,
-        child: const MaterialApp(
-          home: MyHomePage(title: 'Test Home'),
-        ),
+        child: const MaterialApp(home: MyHomePage(title: 'Test Home')),
       ),
     );
 
@@ -46,4 +44,3 @@ void main() {
     await cubit.close();
   });
 }
-

@@ -56,6 +56,7 @@ class CounterCubit extends Cubit<CounterState> {
 
   Future<void> loadInitial() async {
     try {
+      emit(state.copyWith(status: CounterStatus.loading));
       final CounterSnapshot snapshot = await _repository.load();
       if (snapshot.count != state.count ||
           snapshot.lastChanged != state.lastChanged) {
@@ -64,12 +65,20 @@ class CounterCubit extends Cubit<CounterState> {
             count: snapshot.count,
             lastChanged: snapshot.lastChanged,
             countdownSeconds: _autoDecrementIntervalSeconds,
+            status: CounterStatus.success,
           ),
         );
+      } else {
+        emit(state.copyWith(status: CounterStatus.success));
       }
     } catch (e, s) {
       debugPrint('CounterCubit.loadInitial error: $e\n$s');
-      emit(state.copyWith(errorMessage: 'Failed to load saved counter'));
+      emit(
+        state.copyWith(
+          errorMessage: 'Failed to load saved counter',
+          status: CounterStatus.error,
+        ),
+      );
     }
   }
 
@@ -89,6 +98,7 @@ class CounterCubit extends Cubit<CounterState> {
       count: state.count - 1,
       lastChanged: DateTime.now(),
       countdownSeconds: _autoDecrementIntervalSeconds,
+      status: CounterStatus.success,
     );
     emit(next);
     _persistCurrent();
@@ -106,6 +116,7 @@ class CounterCubit extends Cubit<CounterState> {
       count: state.count + 1,
       lastChanged: DateTime.now(),
       countdownSeconds: _autoDecrementIntervalSeconds,
+      status: CounterStatus.success,
     );
     emit(next);
     await _persistCurrent();
@@ -117,6 +128,7 @@ class CounterCubit extends Cubit<CounterState> {
       count: state.count - 1,
       lastChanged: DateTime.now(),
       countdownSeconds: _autoDecrementIntervalSeconds,
+      status: CounterStatus.success,
     );
     emit(next);
     await _persistCurrent();
@@ -125,7 +137,7 @@ class CounterCubit extends Cubit<CounterState> {
 
   void clearError() {
     if (state.errorMessage != null) {
-      emit(state.copyWith(errorMessage: null));
+      emit(state.copyWith(errorMessage: null, status: CounterStatus.idle));
     }
   }
 }

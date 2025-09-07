@@ -25,15 +25,23 @@ class MyHomePage extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(title),
         ),
-        body: const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('You have pushed the button this many times:'),
-              SizedBox(height: 8),
-              CounterDisplay(),
-            ],
-          ),
+        body: BlocBuilder<CounterCubit, CounterState>(
+          buildWhen: (p, c) => p.status != c.status,
+          builder: (context, state) {
+            if (state.status == CounterStatus.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('You have pushed the button this many times:'),
+                  SizedBox(height: 8),
+                  CounterDisplay(),
+                ],
+              ),
+            );
+          },
         ),
         bottomNavigationBar: const CountdownBar(),
         floatingActionButton: const CounterActions(),
