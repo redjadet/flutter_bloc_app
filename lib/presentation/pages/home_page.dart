@@ -17,11 +17,7 @@ class MyHomePage extends StatelessWidget {
         if (message != null && message.isNotEmpty) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context).loadErrorMessage),
-              ),
-            );
+            ..showSnackBar(SnackBar(content: Text(message)));
           context.read<CounterCubit>().clearError();
         }
       },

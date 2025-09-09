@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       child: Builder(
         builder: (context) {
           return MaterialApp(
-            title: AppLocalizations.supportedLocales.first.toString(),
+            onGenerateTitle: (ctx) => AppLocalizations.of(ctx).appTitle,
             localizationsDelegates: [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,

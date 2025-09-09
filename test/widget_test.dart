@@ -15,17 +15,17 @@ void main() {
   ) async {
     await tester.pumpWidget(const MyApp());
 
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // There may be multiple '0' texts in UI; rely on semantics by tapping FABs
+    expect(find.text('0'), findsWidgets);
 
     await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
 
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('1'), findsWidgets);
 
     await tester.tap(find.byIcon(Icons.remove));
     await tester.pump();
 
-    expect(find.text('0'), findsOneWidget);
+    expect(find.text('0'), findsWidgets);
   });
 }

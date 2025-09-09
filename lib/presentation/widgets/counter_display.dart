@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc_app/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 
 class CounterDisplay extends StatefulWidget {
   const CounterDisplay({super.key});
@@ -23,7 +24,9 @@ class _CounterDisplayState extends State<CounterDisplay> {
                 Localizations.localeOf(context).languageCode,
               ).add_jm().format(state.lastChanged!)
             : '-';
-        final AppLocalizations l10n = AppLocalizations.of(context);
+        final AppLocalizations l10n =
+            Localizations.of<AppLocalizations>(context, AppLocalizations) ??
+            AppLocalizationsEn();
         final ColorScheme colors = Theme.of(context).colorScheme;
 
         // Track per-cycle total for subtle background urgency cue

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 
 class CountdownBar extends StatefulWidget {
   const CountdownBar({super.key});
@@ -18,7 +19,9 @@ class _CountdownBarState extends State<CountdownBar> {
     return BlocBuilder<CounterCubit, CounterState>(
       builder: (context, state) {
         final bool active = state.isAutoDecrementActive;
-        final AppLocalizations l10n = AppLocalizations.of(context);
+        final AppLocalizations l10n =
+            Localizations.of<AppLocalizations>(context, AppLocalizations) ??
+            AppLocalizationsEn();
         final ColorScheme colors = Theme.of(context).colorScheme;
 
         if (_cycleTotalSeconds == null ||
@@ -31,7 +34,6 @@ class _CountdownBarState extends State<CountdownBar> {
           1.0,
         );
 
-        // Target color transitions from primary (full time) to error (time running out)
         final Color targetColor = active
             ? Color.lerp(colors.error, colors.primary, progress) ??
                   colors.primary
