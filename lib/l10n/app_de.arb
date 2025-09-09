@@ -1,0 +1,21 @@
+{
+  "@@locale": "de",
+  "autoLabel": "Automatisch",
+  "pausedLabel": "Pausiert",
+  "nextAutoDecrementIn": "Nächste automatische Verringerung in: {s}s",
+  "@nextAutoDecrementIn": {
+    "placeholders": {
+      "s": {
+        "type": "int"
+      }
+    }
+  },
+  "autoDecrementPaused": "Automatische Verringerung pausiert",
+  "lastChangedLabel": "Zuletzt geändert:",
+  "appTitle": "Flutter Demo",
+  "homeTitle": "Flutter Demo Startseite",
+  "pushCountLabel": "Sie haben so oft auf die Taste gedrückt:",
+  "incrementTooltip": "Erhöhen",
+  "decrementTooltip": "Verringern",
+  "loadErrorMessage": "Gespeicherter Zähler konnte nicht geladen werden"
+}

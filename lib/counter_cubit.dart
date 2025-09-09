@@ -1,76 +1,118 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter_bloc_app/domain/domain.dart';
 import 'package:flutter_bloc_app/data/data.dart';
 import 'package:flutter_bloc_app/presentation/counter_state.dart';
 
 export 'package:flutter_bloc_app/presentation/counter_state.dart';
 
+/// Presenter (Cubit) orchestrating counter state, persistence and timers.
 class CounterCubit extends Cubit<CounterState> {
   CounterCubit({CounterRepository? repository})
     : _repository = repository ?? SharedPrefsCounterRepository(),
       super(const CounterState(count: 0)) {
-    _startTimer();
+    // Ensure first emission occurs after listeners subscribe.
+    Future.microtask(() {
+      if (!isClosed) {
+        emit(state.copyWith());
+      }
+    });
+    _ensureCountdownTickerStarted();
   }
 
-  static const int _autoDecrementIntervalSeconds = 5;
+  // Default auto-decrement interval used on load and manual interactions.
+  static const int _defaultIntervalSeconds = 5;
+  // Randomized interval constraints: must be > 1 and <= 5.
+  static const int _randomMinSeconds = 2; // inclusive
+  static const int _randomMaxSeconds = 5; // inclusive
 
   final CounterRepository _repository;
 
-  Timer? _autoDecrementTimer;
-  Timer? _countdownTimer;
+  Timer? _countdownTicker;
+  bool _holdAfterReset = false;
+  final Random _random = Random();
+  int _currentIntervalSeconds = _defaultIntervalSeconds;
 
-  void _startTimer() {
-    _autoDecrementTimer?.cancel();
-    _countdownTimer?.cancel();
-
-    _autoDecrementTimer = Timer.periodic(
-      const Duration(seconds: _autoDecrementIntervalSeconds),
-      (_) {
-        if (state.count > 0) {
-          _autoDecrement();
-        }
-      },
-    );
-
-    _startCountdownTimer();
+  /// Returns the next randomized interval in [_randomMinSeconds, _randomMaxSeconds].
+  int _nextRandomIntervalSeconds() {
+    return _randomMinSeconds +
+        _random.nextInt(_randomMaxSeconds - _randomMinSeconds + 1);
   }
 
-  void _startCountdownTimer() {
-    _countdownTimer?.cancel();
-    emit(state.copyWith(countdownSeconds: _autoDecrementIntervalSeconds));
+  /// Starts the 1s countdown ticker if not already running.
+  void _ensureCountdownTickerStarted() {
+    _countdownTicker ??= Timer.periodic(const Duration(seconds: 1), (_) {
+      if (_holdAfterReset) {
+        _holdAfterReset = false;
+        _emitCountdown(state.countdownSeconds);
+        return;
+      }
 
-    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (state.countdownSeconds > 0) {
-        emit(state.copyWith(countdownSeconds: state.countdownSeconds - 1));
+      final int remaining = state.countdownSeconds;
+      if (remaining > 1) {
+        _emitCountdown(remaining - 1);
+        return;
+      }
+
+      // Reaches zero now.
+      if (state.count > 0) {
+        _handleAutoDecrement();
       } else {
-        emit(state.copyWith(countdownSeconds: _autoDecrementIntervalSeconds));
+        _resetToDefaultIntervalAndHold();
       }
     });
   }
 
-  void _resetTimer() {
-    _startTimer();
+  /// Emits state with the provided countdown, preserving other fields.
+  void _emitCountdown(int seconds) {
+    emit(state.copyWith(countdownSeconds: seconds));
+  }
+
+  /// Handles the auto-decrement cycle and schedules next randomized interval.
+  void _handleAutoDecrement() {
+    final int decremented = state.count - 1;
+    _currentIntervalSeconds = _nextRandomIntervalSeconds();
+    emit(
+      CounterState(
+        count: decremented,
+        lastChanged: DateTime.now(),
+        countdownSeconds: _currentIntervalSeconds,
+        isAutoDecrementActive: decremented > 0,
+        status: CounterStatus.success,
+      ),
+    );
+    _persistCurrent();
+  }
+
+  /// Resets to the default interval and holds one tick at that value when inactive.
+  void _resetToDefaultIntervalAndHold() {
+    _currentIntervalSeconds = _defaultIntervalSeconds;
+    _holdAfterReset = true;
+    emit(
+      state.copyWith(
+        countdownSeconds: _currentIntervalSeconds,
+        isAutoDecrementActive: false,
+      ),
+    );
   }
 
   Future<void> loadInitial() async {
     try {
       emit(state.copyWith(status: CounterStatus.loading));
       final CounterSnapshot snapshot = await _repository.load();
-      if (snapshot.count != state.count ||
-          snapshot.lastChanged != state.lastChanged) {
-        emit(
-          CounterState(
-            count: snapshot.count,
-            lastChanged: snapshot.lastChanged,
-            countdownSeconds: _autoDecrementIntervalSeconds,
-            status: CounterStatus.success,
-          ),
-        );
-      } else {
-        emit(state.copyWith(status: CounterStatus.success));
-      }
+      _currentIntervalSeconds = _defaultIntervalSeconds;
+      emit(
+        CounterState(
+          count: snapshot.count,
+          lastChanged: snapshot.lastChanged,
+          countdownSeconds: _currentIntervalSeconds,
+          isAutoDecrementActive: snapshot.count > 0,
+          status: CounterStatus.success,
+        ),
+      );
+      _ensureCountdownTickerStarted();
     } catch (e, s) {
       debugPrint('CounterCubit.loadInitial error: $e\n$s');
       emit(
@@ -89,50 +131,44 @@ class CounterCubit extends Cubit<CounterState> {
       );
     } catch (e, s) {
       debugPrint('CounterCubit._persistCurrent error: $e\n$s');
-      // keep UX stable; no extra emit
     }
-  }
-
-  void _autoDecrement() {
-    final CounterState next = CounterState(
-      count: state.count - 1,
-      lastChanged: DateTime.now(),
-      countdownSeconds: _autoDecrementIntervalSeconds,
-      status: CounterStatus.success,
-    );
-    emit(next);
-    _persistCurrent();
   }
 
   @override
   Future<void> close() {
-    _autoDecrementTimer?.cancel();
-    _countdownTimer?.cancel();
+    _countdownTicker?.cancel();
     return super.close();
   }
 
   Future<void> increment() async {
-    final CounterState next = CounterState(
-      count: state.count + 1,
-      lastChanged: DateTime.now(),
-      countdownSeconds: _autoDecrementIntervalSeconds,
-      status: CounterStatus.success,
+    _currentIntervalSeconds = _defaultIntervalSeconds;
+    emit(
+      CounterState(
+        count: state.count + 1,
+        lastChanged: DateTime.now(),
+        countdownSeconds: _currentIntervalSeconds,
+        isAutoDecrementActive: true,
+        status: CounterStatus.success,
+      ),
     );
-    emit(next);
     await _persistCurrent();
-    _resetTimer();
+    _ensureCountdownTickerStarted();
   }
 
   Future<void> decrement() async {
-    final CounterState next = CounterState(
-      count: state.count - 1,
-      lastChanged: DateTime.now(),
-      countdownSeconds: _autoDecrementIntervalSeconds,
-      status: CounterStatus.success,
+    final int newCount = state.count - 1;
+    _currentIntervalSeconds = _defaultIntervalSeconds;
+    emit(
+      CounterState(
+        count: newCount,
+        lastChanged: DateTime.now(),
+        countdownSeconds: _currentIntervalSeconds,
+        isAutoDecrementActive: newCount > 0,
+        status: CounterStatus.success,
+      ),
     );
-    emit(next);
     await _persistCurrent();
-    _resetTimer();
+    _ensureCountdownTickerStarted();
   }
 
   void clearError() {

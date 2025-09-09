@@ -1,0 +1,24 @@
+{
+  "@@locale": "en",
+  "autoLabel": "Auto",
+  "pausedLabel": "Paused",
+  "nextAutoDecrementIn": "Next auto-decrement in: {s}s",
+  "@nextAutoDecrementIn": {
+    "placeholders": {
+      "s": {
+        "type": "int"
+      }
+    }
+  },
+  "autoDecrementPaused": "Auto-decrement paused !!!",
+  "@autoDecrementPaused": {},
+  "lastChangedLabel": "Last changed:",
+  "appTitle": "Flutter Demo",
+  "homeTitle": "Flutter Demo Home Page",
+  "pushCountLabel": "You have pushed the button this many times:",
+  "@pushCountLabel": {},
+  "incrementTooltip": "Increment",
+  "@incrementTooltip": {},
+  "decrementTooltip": "Decrement",
+  "loadErrorMessage": "Failed to load saved counter"
+}

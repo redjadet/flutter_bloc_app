@@ -1,0 +1,21 @@
+{
+  "@@locale": "fr",
+  "autoLabel": "Automatique",
+  "pausedLabel": "En pause",
+  "nextAutoDecrementIn": "Prochaine diminution automatique dans : {s}s",
+  "@nextAutoDecrementIn": {
+    "placeholders": {
+      "s": {
+        "type": "int"
+      }
+    }
+  },
+  "autoDecrementPaused": "Diminution automatique en pause",
+  "lastChangedLabel": "Dernière modification :",
+  "appTitle": "Flutter Démo",
+  "homeTitle": "Page d'accueil Flutter Démo",
+  "pushCountLabel": "Vous avez appuyé sur le bouton autant de fois :",
+  "incrementTooltip": "Incrémenter",
+  "decrementTooltip": "Décrémenter",
+  "loadErrorMessage": "Impossible de charger le compteur enregistré"
+}

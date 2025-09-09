@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/counter_cubit.dart';
 import 'package:flutter_bloc_app/presentation/widgets/widgets.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
@@ -16,7 +17,11 @@ class MyHomePage extends StatelessWidget {
         if (message != null && message.isNotEmpty) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(message)));
+            ..showSnackBar(
+              SnackBar(
+                content: Text(AppLocalizations.of(context).loadErrorMessage),
+              ),
+            );
           context.read<CounterCubit>().clearError();
         }
       },
@@ -25,23 +30,18 @@ class MyHomePage extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(title),
         ),
-        body: BlocBuilder<CounterCubit, CounterState>(
-          buildWhen: (p, c) => p.status != c.status,
-          builder: (context, state) {
-            if (state.status == CounterStatus.loading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('You have pushed the button this many times:'),
-                  SizedBox(height: 8),
-                  CounterDisplay(),
-                ],
-              ),
-            );
-          },
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(AppLocalizations.of(context).pushCountLabel),
+                const SizedBox(height: 8),
+                const CounterDisplay(),
+              ],
+            ),
+          ),
         ),
         bottomNavigationBar: const CountdownBar(),
         floatingActionButton: const CounterActions(),

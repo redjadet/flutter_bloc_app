@@ -1,0 +1,21 @@
+{
+  "@@locale": "es",
+  "autoLabel": "Automático",
+  "pausedLabel": "Pausado",
+  "nextAutoDecrementIn": "Próxima disminución automática en: {s}s",
+  "@nextAutoDecrementIn": {
+    "placeholders": {
+      "s": {
+        "type": "int"
+      }
+    }
+  },
+  "autoDecrementPaused": "Disminución automática en pausa",
+  "lastChangedLabel": "Último cambio:",
+  "appTitle": "Demostración de Flutter",
+  "homeTitle": "Página principal de la demostración",
+  "pushCountLabel": "Has pulsado el botón tantas veces:",
+  "incrementTooltip": "Incrementar",
+  "decrementTooltip": "Disminuir",
+  "loadErrorMessage": "No se pudo cargar el contador guardado"
+}

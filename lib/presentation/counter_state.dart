@@ -5,6 +5,7 @@ class CounterState {
     required this.count,
     this.lastChanged,
     this.countdownSeconds = 5,
+    this.isAutoDecrementActive = true,
     this.errorMessage,
     this.status = CounterStatus.idle,
   });
@@ -12,6 +13,7 @@ class CounterState {
   final int count;
   final DateTime? lastChanged;
   final int countdownSeconds;
+  final bool isAutoDecrementActive;
   final String? errorMessage;
   final CounterStatus status;
 
@@ -19,6 +21,7 @@ class CounterState {
     int? count,
     DateTime? lastChanged,
     int? countdownSeconds,
+    bool? isAutoDecrementActive,
     String? errorMessage,
     CounterStatus? status,
   }) {
@@ -26,6 +29,8 @@ class CounterState {
       count: count ?? this.count,
       lastChanged: lastChanged ?? this.lastChanged,
       countdownSeconds: countdownSeconds ?? this.countdownSeconds,
+      isAutoDecrementActive:
+          isAutoDecrementActive ?? this.isAutoDecrementActive,
       errorMessage: errorMessage ?? this.errorMessage,
       status: status ?? this.status,
     );

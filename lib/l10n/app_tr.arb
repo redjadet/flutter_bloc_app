@@ -1,0 +1,22 @@
+{
+  "@@locale": "tr",
+  "autoLabel": "Otomatik",
+  "pausedLabel": "Duraklatıldı",
+  "nextAutoDecrementIn": "Sonraki otomatik azaltım: {s}s",
+  "@nextAutoDecrementIn": {
+    "placeholders": {
+      "s": {
+        "type": "int"
+      }
+    }
+  },
+  "autoDecrementPaused": "Otomatik azaltım duraklatıldı",
+  "lastChangedLabel": "Son değişiklik:",
+  "@lastChangedLabel": {},
+  "appTitle": "Flutter Demo",
+  "homeTitle": "Flutter Demo Ana Sayfa",
+  "pushCountLabel": "Butona bu kadar kez bastınız:",
+  "incrementTooltip": "+",
+  "decrementTooltip": "-",
+  "loadErrorMessage": "Kaydedilmiş sayaç yüklenemedi"
+}
