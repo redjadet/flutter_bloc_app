@@ -35,6 +35,23 @@ class MyHomePage extends StatelessWidget {
                 Text(AppLocalizations.of(context).pushCountLabel),
                 const SizedBox(height: 8),
                 const CounterDisplay(),
+                const SizedBox(height: 12),
+                BlocBuilder<CounterCubit, CounterState>(
+                  buildWhen: (p, c) => p.count != c.count,
+                  builder: (context, state) {
+                    if (state.count == 0) {
+                      return Text(
+                        AppLocalizations.of(context).startAutoHint,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: Theme.of(context).colorScheme.primary),
+                        textAlign: TextAlign.center,
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
               ],
             ),
           ),

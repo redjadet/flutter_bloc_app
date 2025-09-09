@@ -44,7 +44,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loadErrorMessage => 'Failed to load saved counter';
 
   @override
-  String get startAutoHint => 'Tap + to start auto-decrement when count is 0';
+  String get startAutoHint => 'Tap + to start auto-decrement';
 
   @override
   String get cannotGoBelowZero => 'Count cannot go below 0';

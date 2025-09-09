@@ -173,7 +173,7 @@ abstract class AppLocalizations {
   /// No description provided for @startAutoHint.
   ///
   /// In en, this message translates to:
-  /// **'Tap + to start auto-decrement when count is 0'**
+  /// **'Tap + to start auto-decrement'**
   String get startAutoHint;
 
   /// No description provided for @cannotGoBelowZero.
