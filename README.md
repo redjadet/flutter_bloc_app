@@ -177,6 +177,17 @@ You can add screenshots or a short GIF here to showcase the counter and countdow
 - Auto-decrement never goes below zero.
 - State shape: `count`, `lastChanged` (DateTime?), `countdownSeconds`.
 
+## Localization (Do Not Edit Generated Files)
+
+- All localizable strings live in ARB files under `lib/l10n/` (for example: `app_en.arb`, `app_tr.arb`, etc.).
+- The localization classes (such as `app_localizations.dart` and per-locale files) are auto-generated from these ARB files.
+- Do not modify any generated `app_localizations*.dart` files manually — changes will be overwritten.
+- To add or change a string:
+  - Edit the appropriate `lib/l10n/app_XX.arb` file(s).
+  - Keep keys consistent across locales and update placeholder metadata as needed.
+  - Run `flutter pub get` and then `flutter run` (or `flutter gen-l10n` if configured) to regenerate the localization Dart code.
+  - Use the generated APIs in code, for example: `AppLocalizations.of(context).startAutoHint`.
+
 ## License
 
 This project is for demonstration purposes. Add an explicit license if you intend to distribute.
