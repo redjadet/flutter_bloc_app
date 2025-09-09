@@ -1,9 +1,10 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
 import 'dart:math';
-import 'package:flutter_bloc_app/domain/domain.dart';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/data/data.dart';
+import 'package:flutter_bloc_app/domain/domain.dart';
 import 'package:flutter_bloc_app/presentation/counter_state.dart';
 
 export 'package:flutter_bloc_app/presentation/counter_state.dart';
