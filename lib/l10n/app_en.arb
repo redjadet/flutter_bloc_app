@@ -20,5 +20,7 @@
   "incrementTooltip": "Increment",
   "@incrementTooltip": {},
   "decrementTooltip": "Decrement",
-  "loadErrorMessage": "Failed to load saved counter"
+  "loadErrorMessage": "Failed to load saved counter",
+  "startAutoHint": "Tap + to start auto-decrement when count is 0",
+  "cannotGoBelowZero": "Count cannot go below 0"
 }

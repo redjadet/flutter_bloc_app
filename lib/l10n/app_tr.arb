@@ -18,5 +18,7 @@
   "pushCountLabel": "Butona bu kadar kez bastınız:",
   "incrementTooltip": "+",
   "decrementTooltip": "-",
-  "loadErrorMessage": "Kaydedilmiş sayaç yüklenemedi"
+  "loadErrorMessage": "Kaydedilmiş sayaç yüklenemedi",
+  "startAutoHint": "Sayı 0 iken otomatik azalma için +'ya dokunun",
+  "cannotGoBelowZero": "Sayı 0'ın altına inemez"
 }

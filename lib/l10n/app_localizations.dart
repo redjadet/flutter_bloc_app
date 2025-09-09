@@ -169,6 +169,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to load saved counter'**
   String get loadErrorMessage;
+
+  /// No description provided for @startAutoHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to start auto-decrement when count is 0'**
+  String get startAutoHint;
+
+  /// No description provided for @cannotGoBelowZero.
+  ///
+  /// In en, this message translates to:
+  /// **'Count cannot go below 0'**
+  String get cannotGoBelowZero;
 }
 
 class _AppLocalizationsDelegate

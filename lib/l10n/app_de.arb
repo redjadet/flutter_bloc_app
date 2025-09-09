@@ -17,5 +17,7 @@
   "pushCountLabel": "Sie haben so oft auf die Taste gedrückt:",
   "incrementTooltip": "Erhöhen",
   "decrementTooltip": "Verringern",
-  "loadErrorMessage": "Gespeicherter Zähler konnte nicht geladen werden"
+  "loadErrorMessage": "Gespeicherter Zähler konnte nicht geladen werden",
+  "startAutoHint": "Bei Zähler 0: Tippen Sie auf + für Auto-Verringerung",
+  "cannotGoBelowZero": "Der Zähler kann nicht unter 0 gehen"
 }

@@ -42,4 +42,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get loadErrorMessage => 'No se pudo cargar el contador guardado';
+
+  @override
+  String get startAutoHint => 'Si el contador es 0, toca + para iniciar auto';
+
+  @override
+  String get cannotGoBelowZero => 'El contador no puede ser inferior a 0';
 }

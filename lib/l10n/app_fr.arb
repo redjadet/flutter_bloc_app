@@ -17,5 +17,7 @@
   "pushCountLabel": "Vous avez appuyé sur le bouton autant de fois :",
   "incrementTooltip": "Incrémenter",
   "decrementTooltip": "Décrémenter",
-  "loadErrorMessage": "Impossible de charger le compteur enregistré"
+  "loadErrorMessage": "Impossible de charger le compteur enregistré",
+  "startAutoHint": "Quand le compteur est 0, appuyez sur + pour démarrer",
+  "cannotGoBelowZero": "Le compteur ne peut pas être inférieur à 0"
 }

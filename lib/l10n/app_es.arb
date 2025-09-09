@@ -17,5 +17,7 @@
   "pushCountLabel": "Has pulsado el botón tantas veces:",
   "incrementTooltip": "Incrementar",
   "decrementTooltip": "Disminuir",
-  "loadErrorMessage": "No se pudo cargar el contador guardado"
+  "loadErrorMessage": "No se pudo cargar el contador guardado",
+  "startAutoHint": "Si el contador es 0, toca + para iniciar auto",
+  "cannotGoBelowZero": "El contador no puede ser inferior a 0"
 }

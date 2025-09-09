@@ -43,4 +43,11 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get loadErrorMessage =>
       'Gespeicherter Zähler konnte nicht geladen werden';
+
+  @override
+  String get startAutoHint =>
+      'Bei Zähler 0: Tippen Sie auf + für Auto-Verringerung';
+
+  @override
+  String get cannotGoBelowZero => 'Der Zähler kann nicht unter 0 gehen';
 }

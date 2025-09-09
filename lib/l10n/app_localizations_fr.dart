@@ -43,4 +43,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get loadErrorMessage => 'Impossible de charger le compteur enregistré';
+
+  @override
+  String get startAutoHint =>
+      'Quand le compteur est 0, appuyez sur + pour démarrer';
+
+  @override
+  String get cannotGoBelowZero => 'Le compteur ne peut pas être inférieur à 0';
 }

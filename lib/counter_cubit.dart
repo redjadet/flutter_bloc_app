@@ -157,6 +157,10 @@ class CounterCubit extends Cubit<CounterState> {
   }
 
   Future<void> decrement() async {
+    if (state.count == 0) {
+      emit(state.copyWith(errorMessage: 'cannotGoBelowZero'));
+      return;
+    }
     final int newCount = state.count - 1;
     _currentIntervalSeconds = _defaultIntervalSeconds;
     emit(

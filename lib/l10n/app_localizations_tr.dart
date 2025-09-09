@@ -42,4 +42,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get loadErrorMessage => 'Kaydedilmiş sayaç yüklenemedi';
+
+  @override
+  String get startAutoHint => 'Sayı 0 iken otomatik azalma için +\'ya dokunun';
+
+  @override
+  String get cannotGoBelowZero => 'Sayı 0\'ın altına inemez';
 }
