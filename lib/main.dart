@@ -45,6 +45,34 @@ class MyApp extends StatelessWidget {
                 AppLocalizations.delegate,
               ],
               supportedLocales: AppLocalizations.supportedLocales,
+              localeListResolutionCallback: (locales, supported) {
+                if (locales != null && locales.isNotEmpty) {
+                  // Try exact match (language+country)
+                  for (final Locale sys in locales) {
+                    if (supported.any(
+                      (s) =>
+                          s.languageCode == sys.languageCode &&
+                          (s.countryCode == null ||
+                              s.countryCode == sys.countryCode),
+                    )) {
+                      return Locale(sys.languageCode, sys.countryCode);
+                    }
+                  }
+                  // Try language-only match
+                  for (final Locale sys in locales) {
+                    final match = supported.firstWhere(
+                      (s) => s.languageCode == sys.languageCode,
+                      orElse: () => const Locale('en'),
+                    );
+                    if (match.languageCode != 'en' ||
+                        supported.any((s) => s.languageCode == 'en')) {
+                      return match;
+                    }
+                  }
+                }
+                // Fallback to English
+                return const Locale('en');
+              },
               theme: ThemeData(
                 useMaterial3: true,
                 colorScheme: ColorScheme.fromSeed(
