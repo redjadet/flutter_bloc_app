@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/presentation/widgets/widgets.dart';
+import 'package:flutter_bloc_app/theme_cubit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyHomePage extends StatelessWidget {
@@ -26,6 +27,18 @@ class MyHomePage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(title, style: Theme.of(context).textTheme.titleLarge),
+          actions: [
+            BlocBuilder<ThemeCubit, ThemeMode>(
+              builder: (context, mode) {
+                final bool isDark = mode == ThemeMode.dark;
+                return IconButton(
+                  tooltip: isDark ? 'Light mode' : 'Dark mode',
+                  onPressed: () => context.read<ThemeCubit>().toggle(),
+                  icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
+                );
+              },
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           child: Padding(

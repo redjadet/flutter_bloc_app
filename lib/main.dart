@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/presentation/pages/home_page.dart';
+import 'package:flutter_bloc_app/theme_cubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:window_manager/window_manager.dart';
@@ -24,38 +25,51 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => CounterCubit()..loadInitial(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => CounterCubit()..loadInitial()),
+        BlocProvider(create: (_) => ThemeCubit()..loadInitial()),
+      ],
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
-          return MaterialApp(
-            onGenerateTitle: (ctx) => AppLocalizations.of(ctx).appTitle,
-            localizationsDelegates: [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-              AppLocalizations.delegate,
-            ],
-            supportedLocales: AppLocalizations.supportedLocales,
-            theme: ThemeData(
-              useMaterial3: true,
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: const Color(0xFF6750A4),
-              ),
-            ),
-            builder: (context, child) {
-              return ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minWidth: 390,
-                  minHeight: 390,
+          return BlocBuilder<ThemeCubit, ThemeMode>(
+            builder: (context, themeMode) => MaterialApp(
+              onGenerateTitle: (ctx) => AppLocalizations.of(ctx).appTitle,
+              localizationsDelegates: [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                AppLocalizations.delegate,
+              ],
+              supportedLocales: AppLocalizations.supportedLocales,
+              theme: ThemeData(
+                useMaterial3: true,
+                colorScheme: ColorScheme.fromSeed(
+                  seedColor: const Color(0xFF6750A4),
                 ),
-                child: child ?? const SizedBox.shrink(),
-              );
-            },
-            home: child,
+              ),
+              darkTheme: ThemeData(
+                useMaterial3: true,
+                colorScheme: ColorScheme.fromSeed(
+                  seedColor: const Color(0xFF6750A4),
+                  brightness: Brightness.dark,
+                ),
+              ),
+              themeMode: themeMode,
+              builder: (context, child) {
+                return ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minWidth: 390,
+                    minHeight: 390,
+                  ),
+                  child: child ?? const SizedBox.shrink(),
+                );
+              },
+              home: child,
+            ),
           );
         },
         child: Builder(
