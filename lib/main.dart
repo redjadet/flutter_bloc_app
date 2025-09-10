@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
                 AppLocalizations.delegate,
               ],
               supportedLocales: AppLocalizations.supportedLocales,
+              debugShowCheckedModeBanner: kDebugMode,
               localeListResolutionCallback: (locales, supported) {
                 if (locales != null && locales.isNotEmpty) {
                   // Try exact match (language+country)
