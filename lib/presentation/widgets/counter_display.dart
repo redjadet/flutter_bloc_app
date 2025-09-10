@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_bloc_app/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 class CounterDisplay extends StatefulWidget {
   const CounterDisplay({super.key});
@@ -59,13 +60,10 @@ class _CounterDisplayState extends State<CounterDisplay> {
               color: cardColor,
               margin: EdgeInsets.zero,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 16,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -84,10 +82,18 @@ class _CounterDisplayState extends State<CounterDisplay> {
                         '${state.count}',
                         key: ValueKey<int>(state.count),
                         style: Theme.of(context).textTheme.displaySmall
-                            ?.copyWith(fontWeight: FontWeight.w600),
+                            ?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              fontSize:
+                                  (Theme.of(
+                                            context,
+                                          ).textTheme.displaySmall?.fontSize ??
+                                          36)
+                                      .sp,
+                            ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.h),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -98,11 +104,11 @@ class _CounterDisplayState extends State<CounterDisplay> {
                             color: state.isAutoDecrementActive
                                 ? colors.primary.withValues(alpha: 0.12)
                                 : colors.surface,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(16.r),
                           ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 6,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 6.h,
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -121,11 +127,11 @@ class _CounterDisplayState extends State<CounterDisplay> {
                                   key: ValueKey<bool>(
                                     state.isAutoDecrementActive,
                                   ),
-                                  size: 16,
+                                  size: 16.sp,
                                   color: colors.primary,
                                 ),
                               ),
-                              const SizedBox(width: 6),
+                              SizedBox(width: 6.w),
                               AnimatedSwitcher(
                                 duration: const Duration(milliseconds: 180),
                                 transitionBuilder: (child, animation) =>
@@ -141,7 +147,16 @@ class _CounterDisplayState extends State<CounterDisplay> {
                                     state.isAutoDecrementActive,
                                   ),
                                   style: Theme.of(context).textTheme.labelMedium
-                                      ?.copyWith(color: colors.primary),
+                                      ?.copyWith(
+                                        color: colors.primary,
+                                        fontSize:
+                                            (Theme.of(context)
+                                                        .textTheme
+                                                        .labelMedium
+                                                        ?.fontSize ??
+                                                    12)
+                                                .sp,
+                                      ),
                                 ),
                               ),
                             ],
@@ -149,12 +164,17 @@ class _CounterDisplayState extends State<CounterDisplay> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    Divider(height: 1, color: colors.outlineVariant),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.h),
+                    Divider(height: 1.h, color: colors.outlineVariant),
+                    SizedBox(height: 12.h),
                     Text(
                       '${l10n.lastChangedLabel} $lastChangedText',
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontSize:
+                            (Theme.of(context).textTheme.bodySmall?.fontSize ??
+                                    11)
+                                .sp,
+                      ),
                     ),
                   ],
                 ),

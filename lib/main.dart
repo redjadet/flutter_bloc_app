@@ -1,11 +1,22 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/presentation/pages/home_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:window_manager/window_manager.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+    await windowManager.ensureInitialized();
+    const Size minSize = Size(390, 390);
+    await windowManager.setMinimumSize(minSize);
+  }
   runApp(const MyApp());
 }
 
@@ -15,8 +26,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => CounterCubit()..loadInitial(),
-      child: Builder(
-        builder: (context) {
+      child: ScreenUtilInit(
+        designSize: const Size(390, 844),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
           return MaterialApp(
             onGenerateTitle: (ctx) => AppLocalizations.of(ctx).appTitle,
             localizationsDelegates: [
@@ -32,12 +46,22 @@ class MyApp extends StatelessWidget {
                 seedColor: const Color(0xFF6750A4),
               ),
             ),
-            home: Builder(
-              builder: (context) =>
-                  MyHomePage(title: AppLocalizations.of(context).homeTitle),
-            ),
+            builder: (context, child) {
+              return ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minWidth: 390,
+                  minHeight: 390,
+                ),
+                child: child ?? const SizedBox.shrink(),
+              );
+            },
+            home: child,
           );
         },
+        child: Builder(
+          builder: (context) =>
+              MyHomePage(title: AppLocalizations.of(context).homeTitle),
+        ),
       ),
     );
   }

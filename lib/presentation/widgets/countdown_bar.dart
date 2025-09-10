@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CountdownBar extends StatefulWidget {
   const CountdownBar({super.key});
@@ -42,16 +43,13 @@ class _CountdownBarState extends State<CountdownBar> {
         return SafeArea(
           top: false,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
             child: Material(
               elevation: 0,
               color: colors.surface,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -76,10 +74,10 @@ class _CountdownBarState extends State<CountdownBar> {
                                     : Icons.pause_circle_filled,
                                 key: ValueKey<bool>(active),
                                 color: c,
-                                size: 20,
+                                size: 20.sp,
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            SizedBox(width: 10.w),
                             AnimatedSwitcher(
                               duration: const Duration(milliseconds: 180),
                               transitionBuilder: (child, animation) =>
@@ -102,6 +100,13 @@ class _CountdownBarState extends State<CountdownBar> {
                                     ?.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: c,
+                                      fontSize:
+                                          (Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium
+                                                      ?.fontSize ??
+                                                  14)
+                                              .sp,
                                     ),
                               ),
                             ),
@@ -109,17 +114,17 @@ class _CountdownBarState extends State<CountdownBar> {
                         );
                       },
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10.h),
                     TweenAnimationBuilder<Color?>(
                       duration: const Duration(milliseconds: 220),
                       tween: ColorTween(end: targetColor),
                       builder: (context, animatedColor, _) {
                         final Color barColor = animatedColor ?? targetColor;
                         return ClipRRect(
-                          borderRadius: BorderRadius.circular(999),
+                          borderRadius: BorderRadius.circular(999.r),
                           child: LinearProgressIndicator(
                             value: active ? progress : 0,
-                            minHeight: 6,
+                            minHeight: 6.h,
                             backgroundColor: colors.surfaceContainerHighest,
                             valueColor: AlwaysStoppedAnimation<Color>(barColor),
                           ),

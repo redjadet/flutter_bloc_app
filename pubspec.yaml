@@ -39,6 +39,8 @@ dependencies:
   flutter_bloc: ^9.1.1
   shared_preferences: ^2.3.2
   intl: ^0.20.2
+  flutter_screenutil: ^5.9.3
+  window_manager: ^0.3.9
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CounterActions extends StatelessWidget {
   const CounterActions({super.key});
@@ -18,13 +19,13 @@ class CounterActions extends StatelessWidget {
         FloatingActionButton(
           onPressed: () => context.read<CounterCubit>().increment(),
           tooltip: l10n.incrementTooltip,
-          child: const Icon(Icons.add),
+          child: Icon(Icons.add, size: 24.sp),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12.h),
         FloatingActionButton(
           onPressed: () => context.read<CounterCubit>().decrement(),
           tooltip: l10n.decrementTooltip,
-          child: const Icon(Icons.remove),
+          child: Icon(Icons.remove, size: 24.sp),
         ),
       ],
     );
