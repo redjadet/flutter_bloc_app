@@ -42,10 +42,9 @@ class MyHomePage extends StatelessWidget {
                     if (state.count == 0) {
                       return Text(
                         AppLocalizations.of(context).startAutoHint,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: Theme.of(context).colorScheme.primary),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                         textAlign: TextAlign.center,
                       );
                     }
