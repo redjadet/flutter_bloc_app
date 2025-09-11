@@ -74,7 +74,7 @@ class _CountdownBarState extends State<CountdownBar> {
                                     : Icons.pause_circle_filled,
                                 key: ValueKey<bool>(active),
                                 color: c,
-                                size: 20.sp,
+                                size: 20.spMax,
                               ),
                             ),
                             SizedBox(width: 10.w),
@@ -100,13 +100,12 @@ class _CountdownBarState extends State<CountdownBar> {
                                     ?.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: c,
-                                      fontSize:
-                                          (Theme.of(context)
+                                      fontSize: ((Theme.of(context)
                                                       .textTheme
                                                       .bodyMedium
                                                       ?.fontSize ??
-                                                  14)
-                                              .sp,
+                                                  14))
+                                          .spMax,
                                     ),
                               ),
                             ),

@@ -19,13 +19,13 @@ class CounterActions extends StatelessWidget {
         FloatingActionButton(
           onPressed: () => context.read<CounterCubit>().increment(),
           tooltip: l10n.incrementTooltip,
-          child: Icon(Icons.add, size: 24.sp),
+          child: Icon(Icons.add, size: 24.spMax),
         ),
         SizedBox(height: 12.h),
         FloatingActionButton(
           onPressed: () => context.read<CounterCubit>().decrement(),
           tooltip: l10n.decrementTooltip,
-          child: Icon(Icons.remove, size: 24.sp),
+          child: Icon(Icons.remove, size: 24.spMax),
         ),
       ],
     );

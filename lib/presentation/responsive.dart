@@ -29,14 +29,14 @@ extension ResponsiveContext on BuildContext {
   }
 
   double get contentMaxWidth {
-    if (isDesktop) return 840;
-    if (isTabletOrLarger) return 720;
-    return 560; // keep content comfortably narrow on large phones
+    if (isDesktop) return 840.w;
+    if (isTabletOrLarger) return 720.w;
+    return 560.w; // keep content comfortably narrow on large phones
   }
 
   double get barMaxWidth {
-    if (isDesktop) return 900;
-    if (isTabletOrLarger) return 720;
+    if (isDesktop) return 900.w;
+    if (isTabletOrLarger) return 720.w;
     return double.infinity;
   }
 

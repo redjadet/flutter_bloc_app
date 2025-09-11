@@ -84,12 +84,12 @@ class _CounterDisplayState extends State<CounterDisplay> {
                         style: Theme.of(context).textTheme.displaySmall
                             ?.copyWith(
                               fontWeight: FontWeight.w600,
-                              fontSize:
-                                  (Theme.of(
-                                            context,
-                                          ).textTheme.displaySmall?.fontSize ??
-                                          36)
-                                      .sp,
+                              fontSize: ((Theme.of(context)
+                                              .textTheme
+                                              .displaySmall
+                                              ?.fontSize ??
+                                          36))
+                                  .spMax,
                             ),
                       ),
                     ),
@@ -127,7 +127,7 @@ class _CounterDisplayState extends State<CounterDisplay> {
                                   key: ValueKey<bool>(
                                     state.isAutoDecrementActive,
                                   ),
-                                  size: 16.sp,
+                                  size: 16.spMax,
                                   color: colors.primary,
                                 ),
                               ),
@@ -149,13 +149,12 @@ class _CounterDisplayState extends State<CounterDisplay> {
                                   style: Theme.of(context).textTheme.labelMedium
                                       ?.copyWith(
                                         color: colors.primary,
-                                        fontSize:
-                                            (Theme.of(context)
+                                        fontSize: ((Theme.of(context)
                                                         .textTheme
                                                         .labelMedium
                                                         ?.fontSize ??
-                                                    12)
-                                                .sp,
+                                                    12))
+                                            .spMax,
                                       ),
                                 ),
                               ),
