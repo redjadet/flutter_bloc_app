@@ -23,22 +23,35 @@ class CounterState {
   @Deprecated('Use error instead')
   String? get errorMessage => error?.type.name;
 
+  // Use a sentinel to allow explicit nulling of [error]
+  static const Object _noChange = Object();
+
   CounterState copyWith({
     int? count,
     DateTime? lastChanged,
     int? countdownSeconds,
     bool? isAutoDecrementActive,
-    CounterError? error,
+    Object? error = _noChange,
     CounterStatus? status,
   }) {
+    final CounterError? newError =
+        identical(error, _noChange) ? this.error : error as CounterError?;
     return CounterState(
       count: count ?? this.count,
       lastChanged: lastChanged ?? this.lastChanged,
       countdownSeconds: countdownSeconds ?? this.countdownSeconds,
       isAutoDecrementActive:
           isAutoDecrementActive ?? this.isAutoDecrementActive,
-      error: error ?? this.error,
+      error: newError,
       status: status ?? this.status,
     );
+  }
+
+  @override
+  String toString() {
+    return 'CounterState(count: $count, lastChanged: $lastChanged, '
+        'countdownSeconds: $countdownSeconds, '
+        'isAutoDecrementActive: $isAutoDecrementActive, '
+        'error: $error, status: $status)';
   }
 }

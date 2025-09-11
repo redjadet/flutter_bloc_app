@@ -34,6 +34,9 @@ class SharedPreferencesCounterRepository implements CounterRepository {
           _prefsKeyChanged,
           snapshot.lastChanged!.millisecondsSinceEpoch,
         );
+      } else {
+        // Keep store consistent if timestamp becomes null.
+        await prefs.remove(_prefsKeyChanged);
       }
     } catch (e, s) {
       AppLogger.error('SharedPrefsCounterRepository.save failed', e, s);
