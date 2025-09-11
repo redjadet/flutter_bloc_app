@@ -21,7 +21,11 @@ extension ResponsiveContext on BuildContext {
     return 12.w;
   }
 
-  double get pageVerticalPadding => 12.h;
+  double get pageVerticalPadding {
+    if (isDesktop) return 32.h;
+    if (isTabletOrLarger) return 20.h;
+    return 12.h;
+  }
 
   double get contentMaxWidth {
     if (isDesktop) return 840;
@@ -36,7 +40,7 @@ extension ResponsiveContext on BuildContext {
   }
 
   EdgeInsets get pagePadding => EdgeInsets.symmetric(
-        horizontal: pageHorizontalPadding,
-        vertical: pageVerticalPadding,
-      );
+    horizontal: pageHorizontalPadding,
+    vertical: pageVerticalPadding,
+  );
 }
