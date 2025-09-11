@@ -44,7 +44,11 @@ void main() {
       expect: () => [
         isA<CounterState>()
             .having((s) => s.count, 'count', 0)
-            .having((s) => s.error, 'errorMessage', 'cannotGoBelowZero'),
+            .having(
+              (s) => s.error?.type.name,
+              'errorMessage',
+              'cannotGoBelowZero',
+            ),
       ],
       skip: 1, // Skip the initial countdown timer emission
     );
