@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_test/flutter_test.dart';
-
-import 'package:flutter_bloc_app/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_bloc_app/presentation/widgets/countdown_bar.dart';
+import 'package:flutter_bloc_app/shared/widgets/countdown_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 Widget _wrapWithApp(Widget child) {
   return ScreenUtilInit(

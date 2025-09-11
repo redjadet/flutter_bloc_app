@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/core/constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Keep responsive_framework optional; fall back to width-based checks in tests
 // ignore: unused_import
@@ -6,9 +7,9 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 extension ResponsiveContext on BuildContext {
   double get _width => MediaQuery.sizeOf(this).width;
-  bool get isMobile => _width < 800;
-  bool get isTabletOrLarger => _width >= 800;
-  bool get isDesktop => _width >= 1200;
+  bool get isMobile => _width < AppConstants.mobileBreakpoint;
+  bool get isTabletOrLarger => _width >= AppConstants.mobileBreakpoint;
+  bool get isDesktop => _width >= AppConstants.tabletBreakpoint;
   bool get isPortrait => MediaQuery.orientationOf(this) == Orientation.portrait;
   double get bottomInset => MediaQuery.viewPaddingOf(this).bottom;
 

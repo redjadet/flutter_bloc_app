@@ -1,26 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/presentation/responsive.dart';
-import 'package:flutter_bloc_app/presentation/ui_constants.dart';
-import 'package:flutter_bloc_app/presentation/widgets/widgets.dart';
-import 'package:flutter_bloc_app/theme_cubit.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/presentation/theme_cubit.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/widgets/counter_widgets.dart';
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key, required this.title});
+class CounterPage extends StatelessWidget {
+  const CounterPage({super.key, required this.title});
   final String title;
+
+  String _getLocalizedErrorMessage(BuildContext context, CounterError error) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
+    switch (error.type) {
+      case CounterErrorType.cannotGoBelowZero:
+        return l10n.cannotGoBelowZero;
+      case CounterErrorType.loadError:
+        return l10n.loadErrorMessage;
+      case CounterErrorType.saveError:
+        return l10n.loadErrorMessage; // Reuse same message for now
+      case CounterErrorType.unknown:
+        return error.message ?? 'An unknown error occurred';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<CounterCubit, CounterState>(
-      listenWhen: (prev, curr) => prev.errorMessage != curr.errorMessage,
+      listenWhen: (prev, curr) => prev.error != curr.error,
       listener: (context, state) {
-        final String? message = state.errorMessage;
-        if (message != null && message.isNotEmpty) {
+        final error = state.error;
+        if (error != null) {
+          final String localizedMessage = _getLocalizedErrorMessage(
+            context,
+            error,
+          );
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(message)));
+            ..showSnackBar(SnackBar(content: Text(localizedMessage)));
           context.read<CounterCubit>().clearError();
         }
       },

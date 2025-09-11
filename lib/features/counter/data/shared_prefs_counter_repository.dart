@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/domain/counter_repository.dart';
-import 'package:flutter_bloc_app/domain/counter_snapshot.dart';
+import 'package:flutter_bloc_app/features/counter/data/counter_repository.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// SharedPreferences-backed implementation of [CounterRepository].
@@ -19,7 +19,7 @@ class SharedPreferencesCounterRepository implements CounterRepository {
           : null;
       return CounterSnapshot(count: count, lastChanged: changed);
     } catch (e, s) {
-      debugPrint('SharedPrefsCounterRepository.load error: $e\n$s');
+      AppLogger.error('SharedPrefsCounterRepository.load failed', e, s);
       return const CounterSnapshot(count: 0);
     }
   }
@@ -36,7 +36,7 @@ class SharedPreferencesCounterRepository implements CounterRepository {
         );
       }
     } catch (e, s) {
-      debugPrint('SharedPrefsCounterRepository.save error: $e\n$s');
+      AppLogger.error('SharedPrefsCounterRepository.save failed', e, s);
     }
   }
 }

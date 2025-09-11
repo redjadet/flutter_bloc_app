@@ -1,12 +1,15 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc_app/counter_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'test_helpers.dart';
 
 void main() {
   group('CounterCubit', () {
     setUp(() async {
-      SharedPreferences.setMockInitialValues(<String, Object>{});
+      setupSharedPreferencesMock();
     });
 
     test('initial state is count 0 with countdown 5', () {
@@ -41,7 +44,7 @@ void main() {
       expect: () => [
         isA<CounterState>()
             .having((s) => s.count, 'count', 0)
-            .having((s) => s.errorMessage, 'errorMessage', 'cannotGoBelowZero'),
+            .having((s) => s.error, 'errorMessage', 'cannotGoBelowZero'),
       ],
       skip: 1, // Skip the initial countdown timer emission
     );
@@ -52,6 +55,17 @@ void main() {
       await cubit.loadInitial();
       expect(cubit.state.count, 7);
       expect(cubit.state.lastChanged, isNull);
+      expect(cubit.state.countdownSeconds, 5);
+      cubit.close();
+    });
+
+    test('loadInitial with mock repository loads correctly', () async {
+      final mockRepo = MockCounterRepository(
+        snapshot: const CounterSnapshot(count: 42, lastChanged: null),
+      );
+      final CounterCubit cubit = CounterCubit(repository: mockRepo);
+      await cubit.loadInitial();
+      expect(cubit.state.count, 42);
       expect(cubit.state.countdownSeconds, 5);
       cubit.close();
     });

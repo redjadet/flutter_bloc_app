@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/domain/counter_snapshot.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 
 /// Abstraction over counter persistence.
 /// Enables substituting storage without changing business logic (DIP).

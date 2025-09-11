@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_bloc_app/presentation/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class CounterActions extends StatelessWidget {
   const CounterActions({super.key});

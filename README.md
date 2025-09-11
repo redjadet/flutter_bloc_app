@@ -9,10 +9,10 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - UI constants: Centralized sizing/spacing in `presentation/ui_constants.dart`.
 - Accessibility: Semantics on key widgets, overflow guards on narrow screens.
 - Persistence: Stores last count and timestamp with `shared_preferences`.
-- Auto-decrement: Decreases count every 5 seconds if above zero (never below 0).
+- Auto-decrement: Decreases count every 5 seconds if above zero.
 - Countdown UI: Live “next auto-decrement in: Ns” indicator.
-- Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES) using device locale.
-- Tests: Bloc and widget tests with `flutter_test` and `bloc_test`.
+- Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES).
+- Tests: Unit and bloc tests with `flutter_test` and `bloc_test`.
 
 ## Tech Stack
 
@@ -128,7 +128,7 @@ classDiagram
 
 ## App Structure
 
-- `lib/main.dart`: App bootstrapping, `MultiBlocProvider`, `MaterialApp`.
+- `lib/main.dart`: App bootstrapping, `BlocProvider`, `MaterialApp`, widgets.
 - `lib/counter_cubit.dart`: `CounterCubit` and `CounterState`, timers, persistence.
 - `lib/presentation/responsive.dart`: Width-based breakpoints + helpers (ScreenUtil aware).
 - `lib/presentation/ui_constants.dart`: Centralized responsive constants (safe fallbacks in tests).
@@ -203,8 +203,8 @@ You can add screenshots or a short GIF here to showcase the counter and countdow
 
 This project is for demonstration purposes. Add an explicit license if you intend to distribute.
 
-
 Note on skipped test
+
 - The suite `test/error_snackbar_test.dart` is intentionally annotated with `@Skip(...)` and is excluded from the default `flutter test` run because it throws on purpose to exercise the SnackBar error path.
 - To run it explicitly:
 
