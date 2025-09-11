@@ -101,10 +101,6 @@ class _CountdownBarState extends State<CountdownBar> {
 }
 
 class _CountdownStatus extends StatelessWidget {
-  final bool active;
-  final Color color;
-  final String label;
-  final Duration animDuration;
 
   const _CountdownStatus({
     required this.active,
@@ -112,6 +108,10 @@ class _CountdownStatus extends StatelessWidget {
     required this.label,
     required this.animDuration,
   });
+  final bool active;
+  final Color color;
+  final String label;
+  final Duration animDuration;
 
   @override
   Widget build(BuildContext context) {

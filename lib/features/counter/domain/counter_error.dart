@@ -3,11 +3,6 @@ enum CounterErrorType { cannotGoBelowZero, loadError, saveError, unknown }
 
 /// Counter error model with type and optional message
 class CounterError {
-  const CounterError({required this.type, this.message, this.originalError});
-
-  final CounterErrorType type;
-  final String? message;
-  final Object? originalError;
 
   /// Creates a cannot go below zero error
   factory CounterError.cannotGoBelowZero() {
@@ -37,6 +32,11 @@ class CounterError {
       originalError: originalError,
     );
   }
+  const CounterError({required this.type, this.message, this.originalError});
+
+  final CounterErrorType type;
+  final String? message;
+  final Object? originalError;
 
   @override
   bool operator ==(Object other) {
