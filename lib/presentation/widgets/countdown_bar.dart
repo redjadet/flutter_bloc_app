@@ -47,7 +47,6 @@ class _CountdownBarState extends State<CountdownBar> {
           child: Padding(
             padding: EdgeInsets.fromLTRB(UI.hgapL, 0, UI.hgapL, UI.gapM),
             child: Material(
-              elevation: 0,
               color: colors.surface,
               borderRadius: BorderRadius.circular(UI.radiusM),
               child: Padding(

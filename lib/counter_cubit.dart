@@ -12,7 +12,7 @@ export 'package:flutter_bloc_app/presentation/counter_state.dart';
 /// Presenter (Cubit) orchestrating counter state, persistence and timers.
 class CounterCubit extends Cubit<CounterState> {
   CounterCubit({CounterRepository? repository})
-    : _repository = repository ?? SharedPrefsCounterRepository(),
+    : _repository = repository ?? SharedPreferencesCounterRepository(),
       super(const CounterState(count: 0)) {
     // Ensure first emission occurs after listeners subscribe.
     Future.microtask(() {
@@ -148,7 +148,6 @@ class CounterCubit extends Cubit<CounterState> {
         count: state.count + 1,
         lastChanged: DateTime.now(),
         countdownSeconds: _currentIntervalSeconds,
-        isAutoDecrementActive: true,
         status: CounterStatus.success,
       ),
     );
@@ -178,6 +177,8 @@ class CounterCubit extends Cubit<CounterState> {
 
   void clearError() {
     if (state.errorMessage != null) {
+      // We intentionally reset status to idle along with clearing the error.
+      // ignore: avoid_redundant_argument_values
       emit(state.copyWith(errorMessage: null, status: CounterStatus.idle));
     }
   }

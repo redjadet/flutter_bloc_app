@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/domain/counter_snapshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// SharedPreferences-backed implementation of [CounterRepository].
-class SharedPrefsCounterRepository implements CounterRepository {
+class SharedPreferencesCounterRepository implements CounterRepository {
   static const String _prefsKeyCount = 'last_count';
   static const String _prefsKeyChanged = 'last_changed';
 
@@ -20,7 +20,7 @@ class SharedPrefsCounterRepository implements CounterRepository {
       return CounterSnapshot(count: count, lastChanged: changed);
     } catch (e, s) {
       debugPrint('SharedPrefsCounterRepository.load error: $e\n$s');
-      return const CounterSnapshot(count: 0, lastChanged: null);
+      return const CounterSnapshot(count: 0);
     }
   }
 

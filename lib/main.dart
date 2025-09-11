@@ -39,14 +39,14 @@ class MyApp extends StatelessWidget {
           return BlocBuilder<ThemeCubit, ThemeMode>(
             builder: (context, themeMode) => MaterialApp(
               onGenerateTitle: (ctx) => AppLocalizations.of(ctx).appTitle,
-              localizationsDelegates: [
+              localizationsDelegates: const [
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
                 AppLocalizations.delegate,
               ],
               supportedLocales: AppLocalizations.supportedLocales,
-              debugShowCheckedModeBanner: kDebugMode,
+              // default shows banner in debug; hide in release automatically
               localeListResolutionCallback: (locales, supported) {
                 if (locales != null && locales.isNotEmpty) {
                   // Try exact match (language+country)

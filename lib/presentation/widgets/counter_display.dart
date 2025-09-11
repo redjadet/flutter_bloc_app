@@ -97,34 +97,30 @@ class _CounterDisplayState extends State<CounterDisplay> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CounterCubit, CounterState>(
-      builder: (context, state) {
-        final ThemeData theme = Theme.of(context);
-        final TextTheme textTheme = theme.textTheme;
-        final ColorScheme colors = theme.colorScheme;
-        final AppLocalizations l10n = _l10n(context);
-        final String lastChangedText =
-            _formatLastChanged(context, state.lastChanged);
+    final ThemeData theme = Theme.of(context);
+    final TextTheme textTheme = theme.textTheme;
+    final ColorScheme colors = theme.colorScheme;
+    final AppLocalizations l10n = _l10n(context);
 
-        // Track per-cycle total for subtle background urgency cue
+    return BlocSelector<CounterCubit, CounterState, (bool,int)>(
+      selector: (s) => (s.isAutoDecrementActive, s.countdownSeconds),
+      builder: (context, tuple) {
+        final bool isActive = tuple.$1;
+        final int seconds = tuple.$2;
+
         _cycleTotalSeconds = (_cycleTotalSeconds == null)
-            ? state.countdownSeconds
-            : (_cycleTotalSeconds! < state.countdownSeconds
-                ? state.countdownSeconds
-                : _cycleTotalSeconds);
+            ? seconds
+            : (_cycleTotalSeconds! < seconds ? seconds : _cycleTotalSeconds);
         final int total = _cycleTotalSeconds ?? 5;
-        final double progress = (state.countdownSeconds / total).clamp(
-          0.0,
-          1.0,
-        );
+        final double progress = (seconds / total).clamp(0.0, 1.0);
 
-        final Color targetCardColor = state.isAutoDecrementActive
-            ? Color.lerp(
-                    colors.errorContainer.withValues(alpha: 0.08),
-                    colors.surfaceContainerHighest,
-                    progress,
-                  ) ??
-                  colors.surfaceContainerHighest
+        final Color targetCardColor = isActive
+            ? (Color.lerp(
+                  colors.errorContainer.withValues(alpha: 0.08),
+                  colors.surfaceContainerHighest,
+                  progress,
+                ) ??
+                colors.surfaceContainerHighest)
             : colors.surfaceContainerHighest;
 
         return TweenAnimationBuilder<Color?>(
@@ -147,24 +143,33 @@ class _CounterDisplayState extends State<CounterDisplay> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _counterValue(textTheme, state.count),
+                    // Only rebuilds when count changes
+                    BlocSelector<CounterCubit, CounterState, int>(
+                      selector: (s) => s.count,
+                      builder: (context, count) => _counterValue(textTheme, count),
+                    ),
                     SizedBox(height: UI.gapM),
-                    _statusChip(
-                      active: state.isAutoDecrementActive,
-                      colors: colors,
-                      textTheme: textTheme,
-                      l10n: l10n,
+                    // Only rebuilds when active flag changes
+                    BlocSelector<CounterCubit, CounterState, bool>(
+                      selector: (s) => s.isAutoDecrementActive,
+                      builder: (context, active) => _statusChip(
+                        active: active,
+                        colors: colors,
+                        textTheme: textTheme,
+                        l10n: l10n,
+                      ),
                     ),
                     SizedBox(height: UI.gapM),
                     Divider(height: UI.dividerThin, color: colors.outlineVariant),
                     SizedBox(height: UI.gapM),
-                    Text(
-                      '${l10n.lastChangedLabel} $lastChangedText',
-                      style: textTheme.bodySmall?.copyWith(
-                        fontSize:
-                            (Theme.of(context).textTheme.bodySmall?.fontSize ??
-                                    11)
-                                .sp,
+                    // Only rebuilds when lastChanged changes
+                    BlocSelector<CounterCubit, CounterState, DateTime?>(
+                      selector: (s) => s.lastChanged,
+                      builder: (context, dt) => Text(
+                        '${l10n.lastChangedLabel} ${_formatLastChanged(context, dt)}',
+                        style: textTheme.bodySmall?.copyWith(
+                          fontSize: (textTheme.bodySmall?.fontSize ?? 11).sp,
+                        ),
                       ),
                     ),
                   ],

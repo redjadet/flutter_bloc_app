@@ -12,7 +12,7 @@ Bu doküman, bu repo üzerinde çalışacak geliştiriciler/ajanlar için mimari
 ## Mimari Genel Bakış
 
 - Desen: MVP (View = Widget’lar, Presenter = Cubit, Model = Repository/Domain)
-- SOLID: 
+- SOLID:
   - SRP: Her sınıf tek sorumluluk. (Widget, Cubit, Repository ayrık)
   - OCP/DIP: `CounterRepository` arayüzü ile depolama katmanı soyutlandı.
   - ISP: Minimal, amaç odaklı arayüzler.

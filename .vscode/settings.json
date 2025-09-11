@@ -1,16 +1,95 @@
 {
+  "editor.wordWrap": "on",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit"
   },
   "editor.defaultFormatter": "Dart-Code.dart-code",
+  "dart.lineLength": 100,
+  "dart.completeFunctionCalls": true,
+  "dart.updateImportsOnRename": true,
+  "dart.showTodos": true,
+  "dart.warnWhenEditingFilesOutsideWorkspace": true,
+  "dart.runPubGetOnPubspecChanges": true,
+  "dart.previewFlutterUiGuides": true,
+  "dart.flutterShowStructuredErrors": true,
+  "dart.flutterCreateOrganization": "com.example",
+  "dart.flutterOpenDevTools": "flutter",
+  "editor.rulers": [100],
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/.dart_tool": true,
+    "**/.idea": true,
+    "**/.fleet": true,
+    "**/.fvm": true,
+    "**/build": true,
+    "**/ios/Pods": true,
+    "**/android/.gradle": true,
+    "**/android/local.properties": true,
+    "**/.vscode": false
+  },
+  "search.exclude": {
+    "**/build": true,
+    "**/.dart_tool": true,
+    "**/ios/Pods": true,
+    "**/android/.gradle": true,
+    "**/.git": true
+  },
+  "coverage-gutters.showLineCoverage": true,
+  "coverage-gutters.showGutterCoverage": true,
+  "coverage-gutters.highlightCovered": true,
+  "coverage-gutters.coverageFileNames": [
+    "lcov.info",
+    "coverage/lcov.info"
+  ],
+  "cSpell.enabled": true,
+  "cSpell.allowedFileTypes": [
+    "dart"
+  ],
+  "cSpell.ignorePaths": [
+    "**/AGENTS.md",
+    "**/*.g.dart",
+    "**/*.freezed.dart",
+    "**/*.gen.dart",
+    "**/*.mocks.dart",
+    "**/build/**",
+    "analysis_options.yaml",
+    ".vscode/settings.json",
+    ".vscode/extensions.json",
+    "test/**/*.dart",
+    "**/*.arb",
+    "**/*.yaml",
+    "**/*.json",
+    "**/*.md"
+  ],
+  "cSpell.checkPaths": [
+    "lib/**",
+    "!lib/**/*.g.dart",
+    "!lib/**/*.freezed.dart",
+    "!lib/**/*.gen.dart",
+    "!lib/**/*.mocks.dart"
+  ],
   "[dart]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "Dart-Code.dart-code",
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit",
       "source.organizeImports": "explicit"
-    }
+    },
+    "editor.rulers": [100],
+    "editor.formatOnSaveMode": "modificationsIfAvailable",
+    "editor.inlayHints.enabled": "on"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
   }
 }

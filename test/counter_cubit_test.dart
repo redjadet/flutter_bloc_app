@@ -74,12 +74,12 @@ void main() {
     test('countdown timer decreases every second', () async {
       final CounterCubit cubit = CounterCubit();
       // Wait for initial setup
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
 
       final int initialCountdown = cubit.state.countdownSeconds;
 
       // Wait 2 seconds
-      await Future.delayed(const Duration(seconds: 2));
+      await Future<void>.delayed(const Duration(seconds: 2));
 
       expect(cubit.state.countdownSeconds, initialCountdown - 2);
       cubit.close();
@@ -88,10 +88,10 @@ void main() {
     test('countdown resets to 5 when it reaches 0', () async {
       final CounterCubit cubit = CounterCubit();
       // Wait for initial setup
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
 
       // Wait for countdown to reach 0 and reset
-      await Future.delayed(const Duration(seconds: 6));
+      await Future<void>.delayed(const Duration(seconds: 6));
 
       expect(cubit.state.countdownSeconds, 5);
       cubit.close();
@@ -108,7 +108,7 @@ void main() {
       );
 
       // Wait for auto-decrement (5 seconds)
-      await Future.delayed(const Duration(seconds: 6));
+      await Future<void>.delayed(const Duration(seconds: 6));
 
       expect(cubit.state.count, 4);
       cubit.close();
@@ -125,11 +125,11 @@ void main() {
       );
 
       // Wait for auto-decrement to reach 0
-      await Future.delayed(const Duration(seconds: 6));
+      await Future<void>.delayed(const Duration(seconds: 6));
       expect(cubit.state.count, 0);
 
       // Wait another 5 seconds to ensure it doesn't go below 0
-      await Future.delayed(const Duration(seconds: 6));
+      await Future<void>.delayed(const Duration(seconds: 6));
       expect(cubit.state.count, 0);
 
       cubit.close();
@@ -146,17 +146,17 @@ void main() {
       );
 
       // Wait 1 second, then increment
-      await Future.delayed(const Duration(seconds: 1));
+      await Future<void>.delayed(const Duration(seconds: 1));
       await cubit.increment();
       expect(cubit.state.count, 4);
       expect(cubit.state.countdownSeconds, 5); // Should reset to 5
 
       // Wait 3 more seconds - should not auto-decrement yet
-      await Future.delayed(const Duration(seconds: 3));
+      await Future<void>.delayed(const Duration(seconds: 3));
       expect(cubit.state.count, 4);
 
       // Wait 3 more seconds - should auto-decrement now
-      await Future.delayed(const Duration(seconds: 3));
+      await Future<void>.delayed(const Duration(seconds: 3));
       expect(cubit.state.count, 3);
 
       cubit.close();
