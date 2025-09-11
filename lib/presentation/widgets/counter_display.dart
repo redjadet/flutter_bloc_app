@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_bloc_app/presentation/ui_constants.dart';
 
 class CounterDisplay extends StatefulWidget {
   const CounterDisplay({super.key});
@@ -16,8 +17,8 @@ class CounterDisplay extends StatefulWidget {
 class _CounterDisplayState extends State<CounterDisplay> {
   int? _cycleTotalSeconds;
 
-  static const Duration _animFast = Duration(milliseconds: 180);
-  static const Duration _animMedium = Duration(milliseconds: 220);
+  static const Duration _animFast = UI.animFast;
+  static const Duration _animMedium = UI.animMedium;
 
   AppLocalizations _l10n(BuildContext context) =>
       Localizations.of<AppLocalizations>(context, AppLocalizations) ??
@@ -40,9 +41,9 @@ class _CounterDisplayState extends State<CounterDisplay> {
       curve: Curves.easeInOut,
       decoration: BoxDecoration(
         color: active ? colors.primary.withValues(alpha: 0.12) : colors.surface,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(UI.radiusM),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      padding: EdgeInsets.symmetric(horizontal: UI.hgapM, vertical: UI.gapXS),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -56,7 +57,7 @@ class _CounterDisplayState extends State<CounterDisplay> {
               color: colors.primary,
             ),
           ),
-          SizedBox(width: 6.w),
+          SizedBox(width: UI.hgapXS),
           AnimatedSwitcher(
             duration: _animFast,
             transitionBuilder: (c, a) => FadeTransition(opacity: a, child: c),
@@ -136,24 +137,27 @@ class _CounterDisplayState extends State<CounterDisplay> {
               color: cardColor,
               margin: EdgeInsets.zero,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.r),
+                borderRadius: BorderRadius.circular(UI.radiusM),
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                padding: EdgeInsets.symmetric(
+                  horizontal: UI.cardPadH,
+                  vertical: UI.cardPadV,
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _counterValue(textTheme, state.count),
-                    SizedBox(height: 12.h),
+                    SizedBox(height: UI.gapM),
                     _statusChip(
                       active: state.isAutoDecrementActive,
                       colors: colors,
                       textTheme: textTheme,
                       l10n: l10n,
                     ),
-                    SizedBox(height: 12.h),
-                    Divider(height: 1.h, color: colors.outlineVariant),
-                    SizedBox(height: 12.h),
+                    SizedBox(height: UI.gapM),
+                    Divider(height: UI.dividerThin, color: colors.outlineVariant),
+                    SizedBox(height: UI.gapM),
                     Text(
                       '${l10n.lastChangedLabel} $lastChangedText',
                       style: textTheme.bodySmall?.copyWith(

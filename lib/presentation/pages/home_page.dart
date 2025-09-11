@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/presentation/widgets/widgets.dart';
 import 'package:flutter_bloc_app/theme_cubit.dart';
 import 'package:flutter_bloc_app/presentation/responsive.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc_app/presentation/ui_constants.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
@@ -56,9 +56,9 @@ class MyHomePage extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 8.h),
+                    SizedBox(height: UI.gapS),
                     const CounterDisplay(),
-                    SizedBox(height: 12.h),
+                    SizedBox(height: UI.gapM),
                     BlocBuilder<CounterCubit, CounterState>(
                       buildWhen: (p, c) => p.count != c.count,
                       builder: (context, state) {

@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc_app/presentation/ui_constants.dart';
 
 class CountdownBar extends StatefulWidget {
   const CountdownBar({super.key});
@@ -14,7 +15,7 @@ class CountdownBar extends StatefulWidget {
 
 class _CountdownBarState extends State<CountdownBar> {
   int? _cycleTotalSeconds;
-  static const Duration _animFast = Duration(milliseconds: 180);
+  static const Duration _animFast = UI.animFast;
 
   @override
   Widget build(BuildContext context) {
@@ -44,18 +45,18 @@ class _CountdownBarState extends State<CountdownBar> {
         return SafeArea(
           top: false,
           child: Padding(
-            padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
+            padding: EdgeInsets.fromLTRB(UI.hgapL, 0, UI.hgapL, UI.gapM),
             child: Material(
               elevation: 0,
               color: colors.surface,
-              borderRadius: BorderRadius.circular(12.r),
+              borderRadius: BorderRadius.circular(UI.radiusM),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                padding: EdgeInsets.symmetric(horizontal: UI.hgapL, vertical: UI.gapM),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TweenAnimationBuilder<Color?>(
-                      duration: const Duration(milliseconds: 220),
+                      duration: UI.animMedium,
                       tween: ColorTween(end: targetColor),
                       builder: (context, animatedColor, _) {
                         final Color c = animatedColor ?? targetColor;
@@ -69,17 +70,17 @@ class _CountdownBarState extends State<CountdownBar> {
                         );
                       },
                     ),
-                    SizedBox(height: 10.h),
+                    SizedBox(height: UI.gapS),
                     TweenAnimationBuilder<Color?>(
-                      duration: const Duration(milliseconds: 220),
+                      duration: UI.animMedium,
                       tween: ColorTween(end: targetColor),
                       builder: (context, animatedColor, _) {
                         final Color barColor = animatedColor ?? targetColor;
                         return ClipRRect(
-                          borderRadius: BorderRadius.circular(999.r),
+                          borderRadius: BorderRadius.circular(UI.radiusPill),
                           child: LinearProgressIndicator(
                             value: active ? progress : 0,
-                            minHeight: 6.h,
+                            minHeight: UI.progressHeight,
                             backgroundColor: colors.surfaceContainerHighest,
                             valueColor: AlwaysStoppedAnimation<Color>(barColor),
                           ),
@@ -125,10 +126,10 @@ class _CountdownStatus extends StatelessWidget {
             active ? Icons.timer : Icons.pause_circle_filled,
             key: ValueKey<bool>(active),
             color: color,
-            size: 20.spMax,
+            size: UI.iconM,
           ),
         ),
-        SizedBox(width: 10.w),
+        SizedBox(width: UI.hgapM),
         AnimatedSwitcher(
           duration: animDuration,
           transitionBuilder: (child, animation) =>
