@@ -14,6 +14,7 @@ class CountdownBar extends StatefulWidget {
 
 class _CountdownBarState extends State<CountdownBar> {
   int? _cycleTotalSeconds;
+  static const Duration _animFast = Duration(milliseconds: 180);
 
   @override
   Widget build(BuildContext context) {
@@ -58,58 +59,13 @@ class _CountdownBarState extends State<CountdownBar> {
                       tween: ColorTween(end: targetColor),
                       builder: (context, animatedColor, _) {
                         final Color c = animatedColor ?? targetColor;
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 180),
-                              transitionBuilder: (child, animation) =>
-                                  FadeTransition(
-                                    opacity: animation,
-                                    child: child,
-                                  ),
-                              child: Icon(
-                                active
-                                    ? Icons.timer
-                                    : Icons.pause_circle_filled,
-                                key: ValueKey<bool>(active),
-                                color: c,
-                                size: 20.spMax,
-                              ),
-                            ),
-                            SizedBox(width: 10.w),
-                            AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 180),
-                              transitionBuilder: (child, animation) =>
-                                  FadeTransition(
-                                    opacity: animation,
-                                    child: child,
-                                  ),
-                              child: Text(
-                                active
-                                    ? l10n.nextAutoDecrementIn(
-                                        state.countdownSeconds,
-                                      )
-                                    : l10n.autoDecrementPaused,
-                                key: ValueKey<String>(
-                                  active
-                                      ? 'active-${state.countdownSeconds}'
-                                      : 'paused',
-                                ),
-                                style: Theme.of(context).textTheme.bodyMedium
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: c,
-                                      fontSize: ((Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium
-                                                      ?.fontSize ??
-                                                  14))
-                                          .spMax,
-                                    ),
-                              ),
-                            ),
-                          ],
+                        return _CountdownStatus(
+                          active: active,
+                          color: c,
+                          label: active
+                              ? l10n.nextAutoDecrementIn(state.countdownSeconds)
+                              : l10n.autoDecrementPaused,
+                          animDuration: _animFast,
                         );
                       },
                     ),
@@ -137,6 +93,57 @@ class _CountdownBarState extends State<CountdownBar> {
           ),
         );
       },
+    );
+  }
+}
+
+class _CountdownStatus extends StatelessWidget {
+  final bool active;
+  final Color color;
+  final String label;
+  final Duration animDuration;
+
+  const _CountdownStatus({
+    required this.active,
+    required this.color,
+    required this.label,
+    required this.animDuration,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final TextStyle? base = Theme.of(context).textTheme.bodyMedium;
+    final double baseSize = Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        AnimatedSwitcher(
+          duration: animDuration,
+          transitionBuilder: (child, animation) =>
+              FadeTransition(opacity: animation, child: child),
+          child: Icon(
+            active ? Icons.timer : Icons.pause_circle_filled,
+            key: ValueKey<bool>(active),
+            color: color,
+            size: 20.spMax,
+          ),
+        ),
+        SizedBox(width: 10.w),
+        AnimatedSwitcher(
+          duration: animDuration,
+          transitionBuilder: (child, animation) =>
+              FadeTransition(opacity: animation, child: child),
+          child: Text(
+            label,
+            key: ValueKey<String>(active ? 'active' : 'paused'),
+            style: base?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: color,
+              fontSize: baseSize.spMax,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

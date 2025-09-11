@@ -16,25 +16,101 @@ class CounterDisplay extends StatefulWidget {
 class _CounterDisplayState extends State<CounterDisplay> {
   int? _cycleTotalSeconds;
 
+  static const Duration _animFast = Duration(milliseconds: 180);
+  static const Duration _animMedium = Duration(milliseconds: 220);
+
+  AppLocalizations _l10n(BuildContext context) =>
+      Localizations.of<AppLocalizations>(context, AppLocalizations) ??
+      AppLocalizationsEn();
+
+  String _formatLastChanged(BuildContext context, DateTime? dt) => dt == null
+      ? '-'
+      : DateFormat.yMd(Localizations.localeOf(context).languageCode)
+          .add_jm()
+          .format(dt);
+
+  Widget _statusChip({
+    required bool active,
+    required ColorScheme colors,
+    required TextTheme textTheme,
+    required AppLocalizations l10n,
+  }) {
+    return AnimatedContainer(
+      duration: _animMedium,
+      curve: Curves.easeInOut,
+      decoration: BoxDecoration(
+        color: active ? colors.primary.withValues(alpha: 0.12) : colors.surface,
+        borderRadius: BorderRadius.circular(16.r),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AnimatedSwitcher(
+            duration: _animFast,
+            transitionBuilder: (c, a) => FadeTransition(opacity: a, child: c),
+            child: Icon(
+              active ? Icons.timer : Icons.pause_circle_filled,
+              key: ValueKey<bool>(active),
+              size: 16.spMax,
+              color: colors.primary,
+            ),
+          ),
+          SizedBox(width: 6.w),
+          AnimatedSwitcher(
+            duration: _animFast,
+            transitionBuilder: (c, a) => FadeTransition(opacity: a, child: c),
+            child: Text(
+              active ? l10n.autoLabel : l10n.pausedLabel,
+              key: ValueKey<bool>(active),
+              style: textTheme.labelMedium?.copyWith(
+                color: colors.primary,
+                fontSize: (textTheme.labelMedium?.fontSize ?? 12).spMax,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _counterValue(TextTheme textTheme, int count) {
+    return AnimatedSwitcher(
+      duration: _animMedium,
+      switchInCurve: Curves.easeOut,
+      switchOutCurve: Curves.easeIn,
+      transitionBuilder: (child, animation) => ScaleTransition(
+        scale: Tween<double>(begin: 0.9, end: 1.0).animate(animation),
+        child: child,
+      ),
+      child: Text(
+        '$count',
+        key: ValueKey<int>(count),
+        style: textTheme.displaySmall?.copyWith(
+          fontWeight: FontWeight.w600,
+          fontSize: ((textTheme.displaySmall?.fontSize ?? 36)).spMax,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CounterCubit, CounterState>(
       builder: (context, state) {
-        final String lastChangedText = state.lastChanged != null
-            ? DateFormat.yMd(
-                Localizations.localeOf(context).languageCode,
-              ).add_jm().format(state.lastChanged!)
-            : '-';
-        final AppLocalizations l10n =
-            Localizations.of<AppLocalizations>(context, AppLocalizations) ??
-            AppLocalizationsEn();
-        final ColorScheme colors = Theme.of(context).colorScheme;
+        final ThemeData theme = Theme.of(context);
+        final TextTheme textTheme = theme.textTheme;
+        final ColorScheme colors = theme.colorScheme;
+        final AppLocalizations l10n = _l10n(context);
+        final String lastChangedText =
+            _formatLastChanged(context, state.lastChanged);
 
         // Track per-cycle total for subtle background urgency cue
-        if (_cycleTotalSeconds == null ||
-            state.countdownSeconds > (_cycleTotalSeconds ?? 0)) {
-          _cycleTotalSeconds = state.countdownSeconds;
-        }
+        _cycleTotalSeconds = (_cycleTotalSeconds == null)
+            ? state.countdownSeconds
+            : (_cycleTotalSeconds! < state.countdownSeconds
+                ? state.countdownSeconds
+                : _cycleTotalSeconds);
         final int total = _cycleTotalSeconds ?? 5;
         final double progress = (state.countdownSeconds / total).clamp(
           0.0,
@@ -51,7 +127,7 @@ class _CounterDisplayState extends State<CounterDisplay> {
             : colors.surfaceContainerHighest;
 
         return TweenAnimationBuilder<Color?>(
-          duration: const Duration(milliseconds: 220),
+          duration: _animMedium,
           tween: ColorTween(end: targetCardColor),
           builder: (context, animatedColor, _) {
             final Color cardColor = animatedColor ?? targetCardColor;
@@ -67,108 +143,20 @@ class _CounterDisplayState extends State<CounterDisplay> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 220),
-                      switchInCurve: Curves.easeOut,
-                      switchOutCurve: Curves.easeIn,
-                      transitionBuilder: (child, animation) => ScaleTransition(
-                        scale: Tween<double>(
-                          begin: 0.9,
-                          end: 1.0,
-                        ).animate(animation),
-                        child: child,
-                      ),
-                      child: Text(
-                        '${state.count}',
-                        key: ValueKey<int>(state.count),
-                        style: Theme.of(context).textTheme.displaySmall
-                            ?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: ((Theme.of(context)
-                                              .textTheme
-                                              .displaySmall
-                                              ?.fontSize ??
-                                          36))
-                                  .spMax,
-                            ),
-                      ),
-                    ),
+                    _counterValue(textTheme, state.count),
                     SizedBox(height: 12.h),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.easeInOut,
-                          decoration: BoxDecoration(
-                            color: state.isAutoDecrementActive
-                                ? colors.primary.withValues(alpha: 0.12)
-                                : colors.surface,
-                            borderRadius: BorderRadius.circular(16.r),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10.w,
-                            vertical: 6.h,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 180),
-                                transitionBuilder: (child, animation) =>
-                                    FadeTransition(
-                                      opacity: animation,
-                                      child: child,
-                                    ),
-                                child: Icon(
-                                  state.isAutoDecrementActive
-                                      ? Icons.timer
-                                      : Icons.pause_circle_filled,
-                                  key: ValueKey<bool>(
-                                    state.isAutoDecrementActive,
-                                  ),
-                                  size: 16.spMax,
-                                  color: colors.primary,
-                                ),
-                              ),
-                              SizedBox(width: 6.w),
-                              AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 180),
-                                transitionBuilder: (child, animation) =>
-                                    FadeTransition(
-                                      opacity: animation,
-                                      child: child,
-                                    ),
-                                child: Text(
-                                  state.isAutoDecrementActive
-                                      ? l10n.autoLabel
-                                      : l10n.pausedLabel,
-                                  key: ValueKey<bool>(
-                                    state.isAutoDecrementActive,
-                                  ),
-                                  style: Theme.of(context).textTheme.labelMedium
-                                      ?.copyWith(
-                                        color: colors.primary,
-                                        fontSize: ((Theme.of(context)
-                                                        .textTheme
-                                                        .labelMedium
-                                                        ?.fontSize ??
-                                                    12))
-                                            .spMax,
-                                      ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    _statusChip(
+                      active: state.isAutoDecrementActive,
+                      colors: colors,
+                      textTheme: textTheme,
+                      l10n: l10n,
                     ),
                     SizedBox(height: 12.h),
                     Divider(height: 1.h, color: colors.outlineVariant),
                     SizedBox(height: 12.h),
                     Text(
                       '${l10n.lastChangedLabel} $lastChangedText',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      style: textTheme.bodySmall?.copyWith(
                         fontSize:
                             (Theme.of(context).textTheme.bodySmall?.fontSize ??
                                     11)
