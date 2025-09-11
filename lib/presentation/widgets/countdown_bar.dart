@@ -50,7 +50,10 @@ class _CountdownBarState extends State<CountdownBar> {
               color: colors.surface,
               borderRadius: BorderRadius.circular(UI.radiusM),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: UI.hgapL, vertical: UI.gapM),
+                padding: EdgeInsets.symmetric(
+                  horizontal: UI.hgapL,
+                  vertical: UI.gapM,
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -113,7 +116,8 @@ class _CountdownStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextStyle? base = Theme.of(context).textTheme.bodyMedium;
-    final double baseSize = Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14;
+    final double baseSize =
+        Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

@@ -1,0 +1,72 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import 'package:flutter_bloc_app/counter_cubit.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/presentation/widgets/counter_display.dart';
+
+Widget _wrap(Widget child) {
+  return ScreenUtilInit(
+    designSize: const Size(390, 844),
+    minTextAdapt: true,
+    splitScreenMode: true,
+    builder: (context, _) => MaterialApp(
+      localizationsDelegates: const [AppLocalizations.delegate],
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Scaffold(body: Center(child: child)),
+    ),
+  );
+}
+
+void main() {
+  group('CounterDisplay chip', () {
+    testWidgets('shows Auto label when active', (tester) async {
+      final cubit = CounterCubit();
+      addTearDown(cubit.close);
+
+      await tester.pumpWidget(
+        _wrap(BlocProvider.value(value: cubit, child: const CounterDisplay())),
+      );
+
+      cubit.emit(
+        CounterState(
+          count: 2,
+          lastChanged: DateTime.now(),
+          countdownSeconds: 5,
+          isAutoDecrementActive: true,
+          status: CounterStatus.success,
+        ),
+      );
+      await tester.pump();
+
+      final en = AppLocalizationsEn();
+      expect(find.text(en.autoLabel), findsOneWidget);
+    });
+
+    testWidgets('shows Paused label when inactive', (tester) async {
+      final cubit = CounterCubit();
+      addTearDown(cubit.close);
+
+      await tester.pumpWidget(
+        _wrap(BlocProvider.value(value: cubit, child: const CounterDisplay())),
+      );
+
+      cubit.emit(
+        CounterState(
+          count: 0,
+          lastChanged: DateTime.now(),
+          countdownSeconds: 5,
+          isAutoDecrementActive: false,
+          status: CounterStatus.success,
+        ),
+      );
+      await tester.pump();
+
+      final en = AppLocalizationsEn();
+      expect(find.text(en.pausedLabel), findsOneWidget);
+    });
+  });
+}

@@ -72,6 +72,12 @@
   ],
   "cSpell.checkPaths": [
     "lib/**",
+    "test/**",
+    "!README.md",
+    "!analysis_options.yaml",
+    "!pubspec.yaml",
+    "!.vscode/*.json",
+    "!AGENTS.md",
     "!lib/**/*.g.dart",
     "!lib/**/*.freezed.dart",
     "!lib/**/*.gen.dart",

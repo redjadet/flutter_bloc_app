@@ -26,9 +26,9 @@ class _CounterDisplayState extends State<CounterDisplay> {
 
   String _formatLastChanged(BuildContext context, DateTime? dt) => dt == null
       ? '-'
-      : DateFormat.yMd(Localizations.localeOf(context).languageCode)
-          .add_jm()
-          .format(dt);
+      : DateFormat.yMd(
+          Localizations.localeOf(context).languageCode,
+        ).add_jm().format(dt);
 
   Widget _statusChip({
     required bool active,
@@ -105,7 +105,7 @@ class _CounterDisplayState extends State<CounterDisplay> {
     final ColorScheme colors = theme.colorScheme;
     final AppLocalizations l10n = _l10n(context);
 
-    return BlocSelector<CounterCubit, CounterState, (bool,int)>(
+    return BlocSelector<CounterCubit, CounterState, (bool, int)>(
       selector: (s) => (s.isAutoDecrementActive, s.countdownSeconds),
       builder: (context, tuple) {
         final bool isActive = tuple.$1;
@@ -124,11 +124,11 @@ class _CounterDisplayState extends State<CounterDisplay> {
 
         final Color targetCardColor = isActive
             ? (Color.lerp(
-                  colors.errorContainer.withValues(alpha: 0.08),
-                  colors.surfaceContainerHighest,
-                  progress,
-                ) ??
-                colors.surfaceContainerHighest)
+                    colors.errorContainer.withValues(alpha: 0.08),
+                    colors.surfaceContainerHighest,
+                    progress,
+                  ) ??
+                  colors.surfaceContainerHighest)
             : colors.surfaceContainerHighest;
 
         return TweenAnimationBuilder<Color?>(
@@ -154,7 +154,8 @@ class _CounterDisplayState extends State<CounterDisplay> {
                     // Only rebuilds when count changes
                     BlocSelector<CounterCubit, CounterState, int>(
                       selector: (s) => s.count,
-                      builder: (context, count) => _counterValue(textTheme, count),
+                      builder: (context, count) =>
+                          _counterValue(textTheme, count),
                     ),
                     SizedBox(height: UI.gapM),
                     // Only rebuilds when active flag changes
@@ -168,7 +169,10 @@ class _CounterDisplayState extends State<CounterDisplay> {
                       ),
                     ),
                     SizedBox(height: UI.gapM),
-                    Divider(height: UI.dividerThin, color: colors.outlineVariant),
+                    Divider(
+                      height: UI.dividerThin,
+                      color: colors.outlineVariant,
+                    ),
                     SizedBox(height: UI.gapM),
                     // Only rebuilds when lastChanged changes
                     BlocSelector<CounterCubit, CounterState, DateTime?>(

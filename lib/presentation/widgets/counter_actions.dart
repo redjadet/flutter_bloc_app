@@ -16,18 +16,26 @@ class CounterActions extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        FloatingActionButton(
-          heroTag: 'fab_increment',
-          onPressed: () => context.read<CounterCubit>().increment(),
-          tooltip: l10n.incrementTooltip,
-          child: Icon(Icons.add, size: UI.iconL),
+        Semantics(
+          button: true,
+          label: l10n.incrementTooltip,
+          child: FloatingActionButton(
+            heroTag: 'fab_increment',
+            onPressed: () => context.read<CounterCubit>().increment(),
+            tooltip: l10n.incrementTooltip,
+            child: Icon(Icons.add, size: UI.iconL),
+          ),
         ),
         SizedBox(height: UI.gapM),
-        FloatingActionButton(
-          heroTag: 'fab_decrement',
-          onPressed: () => context.read<CounterCubit>().decrement(),
-          tooltip: l10n.decrementTooltip,
-          child: Icon(Icons.remove, size: UI.iconL),
+        Semantics(
+          button: true,
+          label: l10n.decrementTooltip,
+          child: FloatingActionButton(
+            heroTag: 'fab_decrement',
+            onPressed: () => context.read<CounterCubit>().decrement(),
+            tooltip: l10n.decrementTooltip,
+            child: Icon(Icons.remove, size: UI.iconL),
+          ),
         ),
       ],
     );
