@@ -35,18 +35,13 @@ void main() {
     );
 
     blocTest<CounterCubit, CounterState>(
-      'emits state with count -1 and lastChanged set on decrement',
+      'does not go below 0 and emits error on decrement at 0',
       build: () => CounterCubit(),
       act: (cubit) => cubit.decrement(),
       expect: () => [
         isA<CounterState>()
-            .having((s) => s.count, 'count', -1)
-            .having(
-              (s) => s.lastChanged is DateTime,
-              'lastChanged is DateTime',
-              true,
-            )
-            .having((s) => s.countdownSeconds, 'countdownSeconds', 5),
+            .having((s) => s.count, 'count', 0)
+            .having((s) => s.errorMessage, 'errorMessage', 'cannotGoBelowZero'),
       ],
       skip: 1, // Skip the initial countdown timer emission
     );

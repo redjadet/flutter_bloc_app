@@ -7,12 +7,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_bloc_app/main.dart';
 
 void main() {
   testWidgets('Counter increments and decrements using Bloc', (
     WidgetTester tester,
   ) async {
+    await initializeDateFormatting('en');
     await tester.pumpWidget(const MyApp());
 
     // There may be multiple '0' texts in UI; rely on semantics by tapping FABs

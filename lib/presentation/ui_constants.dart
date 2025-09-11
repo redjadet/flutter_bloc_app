@@ -8,31 +8,64 @@ class UI {
   static const Duration animMedium = Duration(milliseconds: 220);
 
   // Gaps (vertical by default)
-  static double get gapXS => 6.h;
-  static double get gapS => 8.h;
-  static double get gapM => 12.h;
-  static double get gapL => 16.h;
+  static double get gapXS => _h(6);
+  static double get gapS => _h(8);
+  static double get gapM => _h(12);
+  static double get gapL => _h(16);
 
   // Horizontal gaps
-  static double get hgapXS => 6.w;
-  static double get hgapS => 8.w;
-  static double get hgapM => 10.w;
-  static double get hgapL => 16.w;
+  static double get hgapXS => _w(6);
+  static double get hgapS => _w(8);
+  static double get hgapM => _w(10);
+  static double get hgapL => _w(16);
 
   // Card paddings
-  static double get cardPadH => 20.w;
-  static double get cardPadV => 16.h;
+  static double get cardPadH => _w(20);
+  static double get cardPadV => _h(16);
 
   // Radii
-  static double get radiusM => 16.r;
-  static double get radiusPill => 999.r;
+  static double get radiusM => _r(16);
+  static double get radiusPill => _r(999);
 
   // Icon sizes
-  static double get iconS => 16.spMax;
-  static double get iconM => 20.spMax;
-  static double get iconL => 24.spMax;
+  static double get iconS => _spMax(16);
+  static double get iconM => _spMax(20);
+  static double get iconL => _spMax(24);
 
   // Misc
-  static double get progressHeight => 6.h;
-  static double get dividerThin => 1.h;
+  static double get progressHeight => _h(6);
+  static double get dividerThin => _h(1);
+
+  // Safe adapters (fallback to raw when ScreenUtil not initialized)
+  static double _w(double v) {
+    try {
+      return v.w;
+    } catch (_) {
+      return v;
+    }
+  }
+
+  static double _h(double v) {
+    try {
+      return v.h;
+    } catch (_) {
+      return v;
+    }
+  }
+
+  static double _r(double v) {
+    try {
+      return v.r;
+    } catch (_) {
+      return v;
+    }
+  }
+
+  static double _spMax(double v) {
+    try {
+      return v.spMax;
+    } catch (_) {
+      return v;
+    }
+  }
 }

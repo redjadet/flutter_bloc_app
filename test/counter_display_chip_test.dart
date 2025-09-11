@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:flutter_bloc_app/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -22,9 +23,13 @@ Widget _wrap(Widget child) {
 }
 
 void main() {
+  setUpAll(() async {
+    await initializeDateFormatting('en');
+  });
+
   group('CounterDisplay chip', () {
     testWidgets('shows Auto label when active', (tester) async {
-      final cubit = CounterCubit();
+      final cubit = CounterCubit(startTicker: false);
       addTearDown(cubit.close);
 
       await tester.pumpWidget(
@@ -47,7 +52,7 @@ void main() {
     });
 
     testWidgets('shows Paused label when inactive', (tester) async {
-      final cubit = CounterCubit();
+      final cubit = CounterCubit(startTicker: false);
       addTearDown(cubit.close);
 
       await tester.pumpWidget(

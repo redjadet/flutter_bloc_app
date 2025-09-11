@@ -24,7 +24,7 @@ Widget _wrapWithApp(Widget child) {
 void main() {
   group('CountdownBar', () {
     testWidgets('shows active label with remaining seconds', (tester) async {
-      final cubit = CounterCubit();
+      final cubit = CounterCubit(startTicker: false);
       addTearDown(cubit.close);
 
       await tester.pumpWidget(
@@ -50,7 +50,7 @@ void main() {
     });
 
     testWidgets('shows paused label when inactive', (tester) async {
-      final cubit = CounterCubit();
+      final cubit = CounterCubit(startTicker: false);
       addTearDown(cubit.close);
 
       await tester.pumpWidget(

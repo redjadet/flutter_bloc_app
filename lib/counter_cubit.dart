@@ -11,7 +11,7 @@ export 'package:flutter_bloc_app/presentation/counter_state.dart';
 
 /// Presenter (Cubit) orchestrating counter state, persistence and timers.
 class CounterCubit extends Cubit<CounterState> {
-  CounterCubit({CounterRepository? repository})
+  CounterCubit({CounterRepository? repository, bool startTicker = true})
     : _repository = repository ?? SharedPreferencesCounterRepository(),
       super(const CounterState(count: 0)) {
     // Ensure first emission occurs after listeners subscribe.
@@ -20,7 +20,9 @@ class CounterCubit extends Cubit<CounterState> {
         emit(state.copyWith());
       }
     });
-    _ensureCountdownTickerStarted();
+    if (startTicker) {
+      _ensureCountdownTickerStarted();
+    }
   }
 
   // Default auto-decrement interval used on load and manual interactions.

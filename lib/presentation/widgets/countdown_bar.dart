@@ -133,20 +133,23 @@ class _CountdownStatus extends StatelessWidget {
           ),
         ),
         SizedBox(width: UI.hgapM),
-        AnimatedSwitcher(
-          duration: animDuration,
-          transitionBuilder: (child, animation) =>
-              FadeTransition(opacity: animation, child: child),
-          child: Text(
-            label,
-            key: ValueKey<String>(active ? 'active' : 'paused'),
-            style: base?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: color,
-              fontSize: baseSize.spMax,
+        Flexible(
+          child: AnimatedSwitcher(
+            duration: animDuration,
+            transitionBuilder: (child, animation) =>
+                FadeTransition(opacity: animation, child: child),
+            child: Text(
+              label,
+              key: ValueKey<String>(active ? 'active' : 'paused'),
+              style: base?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: color,
+                fontSize: baseSize.spMax,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

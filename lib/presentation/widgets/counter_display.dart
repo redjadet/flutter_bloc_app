@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/presentation/ui_constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_bloc_app/presentation/ui_constants.dart';
 
 class CounterDisplay extends StatefulWidget {
   const CounterDisplay({super.key});
@@ -53,7 +53,7 @@ class _CounterDisplayState extends State<CounterDisplay> {
             child: Icon(
               active ? Icons.timer : Icons.pause_circle_filled,
               key: ValueKey<bool>(active),
-              size: 16.spMax,
+              size: UI.iconS,
               color: colors.primary,
             ),
           ),

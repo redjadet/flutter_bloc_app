@@ -5,11 +5,14 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 ## Features
 
 - BLoC/Cubit: Simple `CounterCubit` with immutable `CounterState`.
+- Responsive UI: Uses `flutter_screenutil` and width-based helpers (see `presentation/responsive.dart`).
+- UI constants: Centralized sizing/spacing in `presentation/ui_constants.dart`.
+- Accessibility: Semantics on key widgets, overflow guards on narrow screens.
 - Persistence: Stores last count and timestamp with `shared_preferences`.
-- Auto-decrement: Decreases count every 5 seconds if above zero.
+- Auto-decrement: Decreases count every 5 seconds if above zero (never below 0).
 - Countdown UI: Live “next auto-decrement in: Ns” indicator.
-- Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES).
-- Tests: Unit and bloc tests with `flutter_test` and `bloc_test`.
+- Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES) using device locale.
+- Tests: Bloc and widget tests with `flutter_test` and `bloc_test`.
 
 ## Tech Stack
 
@@ -17,6 +20,8 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - `flutter_bloc` for Cubit/BLoC
 - `shared_preferences` for simple storage
 - `intl` and `flutter_localizations` for i18n
+- `flutter_screenutil` for adaptive sizing (with safe fallbacks in tests)
+- `responsive_framework` optional; helpers fall back to MediaQuery breakpoints
 - `bloc_test`, `flutter_test` for testing
 
 ## Architecture
@@ -123,10 +128,16 @@ classDiagram
 
 ## App Structure
 
-- `lib/main.dart`: App bootstrapping, `BlocProvider`, `MaterialApp`, widgets.
+- `lib/main.dart`: App bootstrapping, `MultiBlocProvider`, `MaterialApp`.
 - `lib/counter_cubit.dart`: `CounterCubit` and `CounterState`, timers, persistence.
+- `lib/presentation/responsive.dart`: Width-based breakpoints + helpers (ScreenUtil aware).
+- `lib/presentation/ui_constants.dart`: Centralized responsive constants (safe fallbacks in tests).
+- `lib/presentation/widgets/`: `CounterDisplay`, `CountdownBar`, `CounterActions`.
 - `test/counter_cubit_test.dart`: Cubit behavior, timers, persistence tests.
-- `test/widget_test.dart`: Basic widget test hooking into the app.
+- `test/countdown_bar_test.dart`: Verifies CountdownBar active/paused labels.
+- `test/counter_display_chip_test.dart`: Verifies CounterDisplay chip labels.
+- `test/error_snackbar_test.dart`: Intentionally throws to exercise SnackBar (skipped by default).
+- `test/widget_test.dart`: Basic boot test for the app.
 
 ## How It Works
 
@@ -191,3 +202,12 @@ You can add screenshots or a short GIF here to showcase the counter and countdow
 ## License
 
 This project is for demonstration purposes. Add an explicit license if you intend to distribute.
+
+
+Note on skipped test
+- The suite `test/error_snackbar_test.dart` is intentionally annotated with `@Skip(...)` and is excluded from the default `flutter test` run because it throws on purpose to exercise the SnackBar error path.
+- To run it explicitly:
+
+```
+flutter test test/error_snackbar_test.dart
+```
