@@ -27,7 +27,12 @@ class MyHomePage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(title, style: Theme.of(context).textTheme.titleLarge),
+          title: Text(
+            title,
+            style: Theme.of(context).textTheme.titleLarge,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
           actions: [
             BlocBuilder<ThemeCubit, ThemeMode>(
               builder: (context, mode) {
@@ -55,6 +60,8 @@ class MyHomePage extends StatelessWidget {
                       AppLocalizations.of(context).pushCountLabel,
                       style: Theme.of(context).textTheme.bodyMedium,
                       textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: UI.gapS),
                     const CounterDisplay(),

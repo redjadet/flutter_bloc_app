@@ -141,6 +141,8 @@ class _CountdownStatus extends StatelessWidget {
               color: color,
               fontSize: baseSize.spMax,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

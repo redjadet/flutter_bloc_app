@@ -68,6 +68,8 @@ class _CounterDisplayState extends State<CounterDisplay> {
                 color: colors.primary,
                 fontSize: (textTheme.labelMedium?.fontSize ?? 12).spMax,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -87,6 +89,7 @@ class _CounterDisplayState extends State<CounterDisplay> {
       child: Text(
         '$count',
         key: ValueKey<int>(count),
+        semanticsLabel: 'count $count',
         style: textTheme.displaySmall?.copyWith(
           fontWeight: FontWeight.w600,
           fontSize: ((textTheme.displaySmall?.fontSize ?? 36)).spMax,
@@ -108,9 +111,14 @@ class _CounterDisplayState extends State<CounterDisplay> {
         final bool isActive = tuple.$1;
         final int seconds = tuple.$2;
 
-        _cycleTotalSeconds = (_cycleTotalSeconds == null)
-            ? seconds
-            : (_cycleTotalSeconds! < seconds ? seconds : _cycleTotalSeconds);
+        // Edge-case reset: when auto-decrement is inactive, restart cycle window
+        if (!isActive) {
+          _cycleTotalSeconds = seconds;
+        } else {
+          _cycleTotalSeconds = (_cycleTotalSeconds == null)
+              ? seconds
+              : (_cycleTotalSeconds! < seconds ? seconds : _cycleTotalSeconds);
+        }
         final int total = _cycleTotalSeconds ?? 5;
         final double progress = (seconds / total).clamp(0.0, 1.0);
 
@@ -170,6 +178,8 @@ class _CounterDisplayState extends State<CounterDisplay> {
                         style: textTheme.bodySmall?.copyWith(
                           fontSize: (textTheme.bodySmall?.fontSize ?? 11).sp,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
