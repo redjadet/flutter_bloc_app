@@ -14,23 +14,24 @@ extension ResponsiveContext on BuildContext {
   bool get isMobile => rb.smallerThan(AppBreakpoints.tablet);
   bool get isTabletOrLarger => rb.largerOrEqualTo(AppBreakpoints.tablet);
   bool get isDesktop => rb.largerOrEqualTo(AppBreakpoints.desktop);
+  bool get isPortrait => MediaQuery.orientationOf(this) == Orientation.portrait;
+  double get bottomInset => MediaQuery.viewPaddingOf(this).bottom;
 
   double get pageHorizontalPadding {
     if (isDesktop) return 32.w;
-    if (isTabletOrLarger) return 20.w;
-    return 12.w;
+    if (isTabletOrLarger) return 24.w;
+    return 16.w;
   }
 
   double get pageVerticalPadding {
-    if (isDesktop) return 32.h;
-    if (isTabletOrLarger) return 20.h;
+    if (isDesktop || isTabletOrLarger) return 16.h;
     return 12.h;
   }
 
   double get contentMaxWidth {
     if (isDesktop) return 840;
     if (isTabletOrLarger) return 720;
-    return double.infinity;
+    return 560; // keep content comfortably narrow on large phones
   }
 
   double get barMaxWidth {
@@ -39,8 +40,13 @@ extension ResponsiveContext on BuildContext {
     return double.infinity;
   }
 
-  EdgeInsets get pagePadding => EdgeInsets.symmetric(
-    horizontal: pageHorizontalPadding,
-    vertical: pageVerticalPadding,
-  );
+  EdgeInsets get pagePadding {
+    final double extraBottom = isMobile && isPortrait ? 72.h : 0;
+    return EdgeInsets.fromLTRB(
+      pageHorizontalPadding,
+      pageVerticalPadding,
+      pageHorizontalPadding,
+      pageVerticalPadding + bottomInset + extraBottom,
+    );
+  }
 }
