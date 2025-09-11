@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/theme_cubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -89,12 +90,24 @@ class MyApp extends StatelessWidget {
               ),
               themeMode: themeMode,
               builder: (context, child) {
-                return ConstrainedBox(
+                final Widget constrained = ConstrainedBox(
                   constraints: const BoxConstraints(
                     minWidth: 390,
                     minHeight: 390,
                   ),
                   child: child ?? const SizedBox.shrink(),
+                );
+                return ResponsiveBreakpoints.builder(
+                  child: constrained,
+                  breakpoints: const [
+                    Breakpoint(start: 0, end: 799, name: MOBILE),
+                    Breakpoint(start: 800, end: 1199, name: TABLET),
+                    Breakpoint(
+                      start: 1200,
+                      end: double.infinity,
+                      name: DESKTOP,
+                    ),
+                  ],
                 );
               },
               home: child,
