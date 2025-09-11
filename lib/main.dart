@@ -1,10 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/app.dart';
-import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/core/flavor.dart';
+import 'package:flutter_bloc_app/main_bootstrap.dart';
 
-/// Application entry point
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await PlatformInit.initialize();
-  runApp(const MyApp());
-}
+/// Application entry point (generic)
+/// Uses compile-time `--dart-define=FLAVOR=` if provided, otherwise defaults to `dev`.
+Future<void> main() => runAppWithFlavor(FlavorManager.I.flavor);

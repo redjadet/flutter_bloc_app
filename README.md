@@ -178,6 +178,33 @@ flutter analyze
 flutter format .
 ```
 
+### Flavors
+
+Common flavors are available: dev, staging, and prod.
+
+- Entrypoints:
+  - `lib/main_dev.dart`
+  - `lib/main_staging.dart`
+  - `lib/main_prod.dart`
+
+- Run examples:
+  - Dev: `flutter run -t dev`
+  - Staging: `flutter run -t staging`
+  - Prod: `flutter run -t prod`
+
+- Build examples:
+  - Android (prod): `flutter build apk -t prod`
+  - iOS (staging): `flutter build ios -t staging`
+
+Programmatic access:
+
+- Use `FlavorManager.I` from `lib/core/flavor.dart` to check the current flavor.
+- Default is `dev`. You can override with `--dart-define=FLAVOR=staging|prod`.
+
+UI indicator:
+
+- The current flavor is shown in the app bar as a small badge (DEV/STG). Nothing is shown for PROD.
+
 ## Screenshots
 
 You can add screenshots or a short GIF here to showcase the counter and countdown.

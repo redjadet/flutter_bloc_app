@@ -34,8 +34,9 @@ class CounterState {
     Object? error = _noChange,
     CounterStatus? status,
   }) {
-    final CounterError? newError =
-        identical(error, _noChange) ? this.error : error as CounterError?;
+    final CounterError? newError = identical(error, _noChange)
+        ? this.error
+        : error as CounterError?;
     return CounterState(
       count: count ?? this.count,
       lastChanged: lastChanged ?? this.lastChanged,
