@@ -5,10 +5,10 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/counter/data/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
+import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/shared/presentation/theme_cubit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -42,7 +42,9 @@ void main() {
         builder: (context, _) => MultiBlocProvider(
           providers: [
             BlocProvider.value(value: cubit),
-            BlocProvider(create: (_) => ThemeCubit()),
+            BlocProvider(
+              create: (_) => ThemeCubit(repository: _FakeThemeRepository(ThemeMode.system)),
+            ),
           ],
           child: const MaterialApp(home: CounterPage(title: 'Test Home')),
         ),
@@ -58,4 +60,13 @@ void main() {
     expect(find.byType(SnackBar), findsOneWidget);
     await cubit.close();
   });
+}
+
+class _FakeThemeRepository implements ThemeRepository {
+  _FakeThemeRepository(this.initial);
+  final ThemeMode initial;
+  @override
+  Future<ThemeMode?> load() async => initial;
+  @override
+  Future<void> save(ThemeMode mode) async {}
 }

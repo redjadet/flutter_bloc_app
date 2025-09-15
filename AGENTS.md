@@ -139,6 +139,119 @@ sequenceDiagram
 - Widget Testleri: Bileşenlerin doğru render edildiğini ve etkileşimlerin Cubit’e gittiğini test edin.
 - Fake Repository: `SharedPreferences` yerine hafif sahte implementasyon kullanın (hız ve izolasyon).
 
+## Bağımlılık Enjeksiyonu (DI)
+
+- Konteyner: `get_it` kullanılmaktadır. Kayıtlar `lib/core/di/injector.dart` içinde yapılır.
+- Kayıtlar:
+  - `CounterRepository` → `SharedPreferencesCounterRepository`
+  - `ThemeRepository` → `SharedPreferencesThemeRepository`
+  - `TimerService` → `DefaultTimerService`
+- Uygulama başlatımı: `runAppWithFlavor` içinde `configureDependencies()` çağrılır.
+- Testlerde `MyApp` doğrudan pump edilirse `ensureConfigured()` güvenlik ağı sağlar.
+
+### Örnek Kullanım (GetIt)
+
+```dart
+// lib/main_bootstrap.dart
+Future<void> runAppWithFlavor(Flavor flavor) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  FlavorManager.set(flavor);
+  await PlatformInit.initialize();
+  await configureDependencies();
+  runApp(const MyApp());
+}
+
+// lib/app.dart
+return MultiBlocProvider(
+  providers: [
+    BlocProvider(
+      create: (_) => CounterCubit(
+        repository: getIt<CounterRepository>(),
+        timerService: getIt(),
+      )..loadInitial(),
+    ),
+    BlocProvider(
+      create: (_) => ThemeCubit(
+        repository: getIt<ThemeRepository>(),
+      )..loadInitial(),
+    ),
+  ],
+  child: ...,
+);
+```
+
+### Veri Kaynağı Değişimi (DIP Pratiği)
+
+Yeni bir veri katmanı eklemek (örn. REST, Hive, Secure Storage) için:
+
+1) Domain sözleşmesini yeniden kullanın:
+
+```dart
+// lib/features/counter/domain/counter_repository.dart
+abstract class CounterRepository {
+  Future<CounterSnapshot> load();
+  Future<void> save(CounterSnapshot snapshot);
+}
+```
+
+2) Yeni implementasyonu yazın:
+
+```dart
+// lib/features/counter/data/rest_counter_repository.dart
+class RestCounterRepository implements CounterRepository {
+  @override
+  Future<CounterSnapshot> load() async {
+    // TODO: REST çağrısı yapın ve CounterSnapshot döndürün
+    return const CounterSnapshot(count: 0);
+  }
+
+  @override
+  Future<void> save(CounterSnapshot snapshot) async {
+    // TODO: REST kaydı yapın
+  }
+}
+```
+
+3) DI kayıtlarını değiştirin (geçici veya kalıcı):
+
+```dart
+// Geçici: test veya deneme amaçlı
+getIt.unregister<CounterRepository>();
+getIt.registerLazySingleton<CounterRepository>(() => RestCounterRepository());
+
+// Kalıcı: injector.dart içinde varsayılanı değiştirin
+getIt.registerLazySingleton<CounterRepository>(() => RestCounterRepository());
+```
+
+Presenter/Widget tarafında değişiklik gerekmez; `CounterCubit` arayüz üzerinden çalışır.
+
+## Zamanlama Soyutlaması: TimerService
+
+- Arayüz: `lib/core/time/timer_service.dart` içinde `TimerService.periodic(interval, onTick)` ve `TimerDisposable` tanımlıdır.
+- Presenter kullanımı: `CounterCubit` doğrudan `Timer.periodic` yerine `TimerService` kullanır; constructor’da opsiyonel `timerService` alır.
+
+### Testlerde Deterministik Zaman
+
+- Basit sahte servis: `test/test_helpers.dart` içinde `FakeTimerService` bulunur.
+- Kullanım:
+  - Cubit oluştururken enjekte edin: `CounterCubit(repository: mockRepo, timerService: fake)`
+  - Zamanı ilerletin: `fake.tick(n)` çağrıları ile n kere periyodik tetikleme yapın.
+- Örnekler: `test/counter_cubit_test.dart` içinde sayaç azalışı, sıfırlama ve auto-decrement senaryoları fake servis ile deterministik test edilir.
+
+Kısa örnek:
+
+```dart
+final fakeTimer = FakeTimerService();
+final cubit = CounterCubit(
+  repository: MockCounterRepository(),
+  timerService: fakeTimer,
+);
+await Future<void>.delayed(const Duration(milliseconds: 10));
+final initial = cubit.state.countdownSeconds;
+fakeTimer.tick(2);
+expect(cubit.state.countdownSeconds, initial - 2);
+```
+
 ## Çalıştırma ve Komutlar
 
 ```bash
@@ -146,7 +259,7 @@ flutter pub get
 flutter run
 flutter test
 flutter analyze
-flutter format .
+dart format .
 ```
 
 ## Kod İnceleme Kontrol Listesi

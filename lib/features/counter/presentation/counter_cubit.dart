@@ -1,8 +1,7 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/counter/data/counter_data.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_state.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -11,9 +10,13 @@ export 'package:flutter_bloc_app/features/counter/presentation/counter_state.dar
 
 /// Presenter (Cubit) orchestrating counter state, persistence and timers.
 class CounterCubit extends Cubit<CounterState> {
-  CounterCubit({CounterRepository? repository, bool startTicker = true})
-    : _repository = repository ?? SharedPreferencesCounterRepository(),
-      super(const CounterState(count: 0)) {
+  CounterCubit({
+    required CounterRepository repository,
+    TimerService? timerService,
+    bool startTicker = true,
+  }) : _repository = repository,
+       _timerService = timerService ?? DefaultTimerService(),
+       super(const CounterState(count: 0)) {
     // Ensure first emission occurs after listeners subscribe.
     Future.microtask(() {
       if (!isClosed) {
@@ -35,8 +38,9 @@ class CounterCubit extends Cubit<CounterState> {
   static const Duration _countdownTickInterval = Duration(seconds: 1);
 
   final CounterRepository _repository;
+  final TimerService _timerService;
 
-  Timer? _countdownTicker;
+  TimerDisposable? _countdownTicker;
   bool _holdAfterReset = false;
   final Random _random = Random();
   int _currentIntervalSeconds = _defaultIntervalSeconds;
@@ -49,7 +53,7 @@ class CounterCubit extends Cubit<CounterState> {
 
   /// Starts the 1s countdown ticker if not already running.
   void _ensureCountdownTickerStarted() {
-    _countdownTicker ??= Timer.periodic(_countdownTickInterval, (_) {
+    _countdownTicker ??= _timerService.periodic(_countdownTickInterval, () {
       if (_holdAfterReset) {
         _holdAfterReset = false;
         _emitCountdown(state.countdownSeconds);
@@ -142,7 +146,7 @@ class CounterCubit extends Cubit<CounterState> {
 
   @override
   Future<void> close() {
-    _countdownTicker?.cancel();
+    _countdownTicker?.dispose();
     return super.close();
   }
 

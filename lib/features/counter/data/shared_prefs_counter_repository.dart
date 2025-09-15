@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/features/counter/data/counter_repository.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';

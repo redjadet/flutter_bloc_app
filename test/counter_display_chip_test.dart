@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
@@ -28,7 +29,7 @@ void main() {
 
   group('CounterDisplay chip', () {
     testWidgets('shows Auto label when active', (tester) async {
-      final cubit = CounterCubit(startTicker: false);
+      final cubit = CounterCubit(repository: _NoopRepo(), startTicker: false);
       addTearDown(cubit.close);
 
       await tester.pumpWidget(
@@ -51,7 +52,7 @@ void main() {
     });
 
     testWidgets('shows Paused label when inactive', (tester) async {
-      final cubit = CounterCubit(startTicker: false);
+      final cubit = CounterCubit(repository: _NoopRepo(), startTicker: false);
       addTearDown(cubit.close);
 
       await tester.pumpWidget(
@@ -73,4 +74,11 @@ void main() {
       expect(find.text(en.pausedLabel), findsOneWidget);
     });
   });
+}
+
+class _NoopRepo implements CounterRepository {
+  @override
+  Future<CounterSnapshot> load() async => const CounterSnapshot(count: 0);
+  @override
+  Future<void> save(CounterSnapshot snapshot) async {}
 }

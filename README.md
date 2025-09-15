@@ -198,6 +198,56 @@ Common flavors are available: dev, staging, and prod.
 
 Programmatic access:
 
+## Dependency Injection (GetIt)
+
+This app uses GetIt for DI. Registrations live in `lib/core/di/injector.dart` and are called from `lib/main_bootstrap.dart`.
+
+Registered services:
+- `CounterRepository` → `SharedPreferencesCounterRepository`
+- `ThemeRepository` → `SharedPreferencesThemeRepository`
+- `TimerService` → `DefaultTimerService`
+
+Initialize in bootstrap:
+
+```dart
+// lib/main_bootstrap.dart
+await configureDependencies();
+runApp(const MyApp());
+```
+
+Resolve in composition:
+
+```dart
+// lib/app.dart
+BlocProvider(
+  create: (_) => CounterCubit(
+    repository: getIt<CounterRepository>(),
+    timerService: getIt(),
+  )..loadInitial(),
+),
+```
+
+If tests pump `MyApp` directly, `ensureConfigured()` inside `MyApp.build` makes sure DI is ready.
+
+## Deterministic Time in Tests (TimerService)
+
+Time is abstracted via `TimerService` (`lib/core/time/timer_service.dart`). For tests, use `FakeTimerService` from `test/test_helpers.dart`:
+
+```dart
+final fakeTimer = FakeTimerService();
+final cubit = CounterCubit(
+  repository: MockCounterRepository(),
+  timerService: fakeTimer,
+);
+
+// Let first microtask emission happen
+await Future<void>.delayed(const Duration(milliseconds: 10));
+
+final initial = cubit.state.countdownSeconds;
+fakeTimer.tick(2); // advance two ticks deterministically
+expect(cubit.state.countdownSeconds, initial - 2);
+```
+
 - Use `FlavorManager.I` from `lib/core/flavor.dart` to check the current flavor.
 - Default is `dev`. You can override with `--dart-define=FLAVOR=staging|prod`.
 
