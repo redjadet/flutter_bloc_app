@@ -9,60 +9,85 @@ import 'package:http/http.dart' as http;
 ///
 /// This is a scaffold with TODOs. Wire endpoints, auth and models as needed.
 class RestCounterRepository implements CounterRepository {
-  RestCounterRepository({required String baseUrl, http.Client? client})
-    : _baseUrl = baseUrl,
-      _client = client ?? http.Client();
+  RestCounterRepository({
+    required String baseUrl,
+    http.Client? client,
+    Map<String, String>? defaultHeaders,
+  }) : _baseUri = Uri.parse(baseUrl),
+       _client = client ?? http.Client(),
+       _defaultHeaders = {if (defaultHeaders != null) ...defaultHeaders};
 
-  final String _baseUrl;
+  final Uri _baseUri;
   final http.Client _client;
+  final Map<String, String> _defaultHeaders;
+  static const CounterSnapshot _emptySnapshot = CounterSnapshot(count: 0);
 
-  Uri get _counterUri => Uri.parse('$_baseUrl/counter');
+  Uri get _counterUri => _baseUri.resolve('counter');
+
+  Map<String, String> _headers({Map<String, String>? overrides}) => {
+    ..._defaultHeaders,
+    if (overrides != null) ...overrides,
+  };
+
+  bool _isSuccess(int statusCode) => statusCode >= 200 && statusCode < 300;
+
+  CounterSnapshot _parseSnapshot(String body) {
+    final dynamic decoded = jsonDecode(body);
+    if (decoded is! Map<String, dynamic>) {
+      AppLogger.error(
+        'RestCounterRepository.load invalid payload',
+        decoded,
+        StackTrace.current,
+      );
+      return _emptySnapshot;
+    }
+    final Map<String, dynamic> json = decoded;
+    final int count = (json['count'] as num?)?.toInt() ?? 0;
+    final int? changedMs = (json['last_changed'] as num?)?.toInt();
+    final DateTime? lastChanged = changedMs != null
+        ? DateTime.fromMillisecondsSinceEpoch(changedMs)
+        : null;
+    return CounterSnapshot(count: count, lastChanged: lastChanged);
+  }
+
+  void _logHttpError(String operation, http.Response response) {
+    AppLogger.error(
+      'RestCounterRepository.$operation non-success: ${response.statusCode}',
+      response.body,
+      StackTrace.current,
+    );
+  }
 
   @override
   Future<CounterSnapshot> load() async {
     try {
-      // TODO: Add headers/auth when necessary
-      final res = await _client.get(_counterUri);
-      if (res.statusCode != 200) {
-        AppLogger.error(
-          'RestCounterRepository.load non-200: ${res.statusCode}',
-          null,
-          StackTrace.current,
-        );
-        return const CounterSnapshot(count: 0);
+      final res = await _client.get(_counterUri, headers: _headers());
+      if (!_isSuccess(res.statusCode)) {
+        _logHttpError('load', res);
+        return _emptySnapshot;
       }
-      final Map<String, dynamic> json =
-          jsonDecode(res.body) as Map<String, dynamic>;
-      final int count = (json['count'] as num?)?.toInt() ?? 0;
-      final int? changedMs = (json['last_changed'] as num?)?.toInt();
-      final DateTime? lastChanged = changedMs != null
-          ? DateTime.fromMillisecondsSinceEpoch(changedMs)
-          : null;
-      return CounterSnapshot(count: count, lastChanged: lastChanged);
+      return _parseSnapshot(res.body);
     } catch (e, s) {
       AppLogger.error('RestCounterRepository.load failed', e, s);
-      return const CounterSnapshot(count: 0);
+      return _emptySnapshot;
     }
   }
 
   @override
   Future<void> save(CounterSnapshot snapshot) async {
     try {
-      // TODO: Add headers/auth when necessary
       final res = await _client.post(
         _counterUri,
-        headers: const {'Content-Type': 'application/json'},
+        headers: _headers(
+          overrides: const {'Content-Type': 'application/json'},
+        ),
         body: jsonEncode(<String, dynamic>{
           'count': snapshot.count,
           'last_changed': snapshot.lastChanged?.millisecondsSinceEpoch,
         }),
       );
-      if (res.statusCode < 200 || res.statusCode >= 300) {
-        AppLogger.error(
-          'RestCounterRepository.save non-2xx: ${res.statusCode}',
-          null,
-          StackTrace.current,
-        );
+      if (!_isSuccess(res.statusCode)) {
+        _logHttpError('save', res);
       }
     } catch (e, s) {
       AppLogger.error('RestCounterRepository.save failed', e, s);

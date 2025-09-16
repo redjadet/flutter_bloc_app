@@ -17,15 +17,12 @@ class CounterPage extends StatelessWidget {
   const CounterPage({super.key, required this.title});
   final String title;
 
-  String _getLocalizedErrorMessage(BuildContext context, CounterError error) {
-    final AppLocalizations l10n = AppLocalizations.of(context);
+  String _getLocalizedErrorMessage(AppLocalizations l10n, CounterError error) {
     switch (error.type) {
       case CounterErrorType.cannotGoBelowZero:
         return l10n.cannotGoBelowZero;
-      case CounterErrorType.loadError:
+      case CounterErrorType.loadError || CounterErrorType.saveError:
         return l10n.loadErrorMessage;
-      case CounterErrorType.saveError:
-        return l10n.loadErrorMessage; // Reuse same message for now
       case CounterErrorType.unknown:
         return error.message ?? 'An unknown error occurred';
     }
@@ -33,13 +30,15 @@ class CounterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final AppLocalizations l10n = AppLocalizations.of(context);
     return BlocListener<CounterCubit, CounterState>(
       listenWhen: (prev, curr) => prev.error != curr.error,
       listener: (context, state) {
         final error = state.error;
         if (error != null) {
           final String localizedMessage = _getLocalizedErrorMessage(
-            context,
+            l10n,
             error,
           );
           ScaffoldMessenger.of(context)
@@ -50,21 +49,21 @@ class CounterPage extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          backgroundColor: theme.colorScheme.inversePrimary,
           title: Text(
             title,
-            style: Theme.of(context).textTheme.titleLarge,
+            style: theme.textTheme.titleLarge,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           actions: [
             IconButton(
-              tooltip: AppLocalizations.of(context).openExampleTooltip,
+              tooltip: l10n.openExampleTooltip,
               onPressed: () => context.pushNamed(AppRoutes.example),
               icon: const Icon(Icons.explore),
             ),
             IconButton(
-              tooltip: AppLocalizations.of(context).openChartsTooltip,
+              tooltip: l10n.openChartsTooltip,
               onPressed: () => context.pushNamed(AppRoutes.charts),
               icon: const Icon(Icons.show_chart),
             ),
@@ -90,8 +89,8 @@ class CounterPage extends StatelessWidget {
                   selector: (state) => state.status,
                   builder: (context, status) {
                     final bool isLoading = status == CounterStatus.loading;
-                    final ThemeData theme = Theme.of(context);
-                    final bool showFlavor = FlavorManager.I.flavor != Flavor.prod;
+                    final bool showFlavor =
+                        FlavorManager.I.flavor != Flavor.prod;
                     return Skeletonizer(
                       enabled: isLoading,
                       effect: ShimmerEffect(
@@ -110,7 +109,7 @@ class CounterPage extends StatelessWidget {
                             SizedBox(height: UI.gapS),
                           ],
                           Text(
-                            AppLocalizations.of(context).pushCountLabel,
+                            l10n.pushCountLabel,
                             style: theme.textTheme.bodyMedium,
                             textAlign: TextAlign.center,
                             maxLines: 1,
@@ -124,7 +123,7 @@ class CounterPage extends StatelessWidget {
                             builder: (context, state) {
                               if (state.count == 0) {
                                 return Text(
-                                  AppLocalizations.of(context).startAutoHint,
+                                  l10n.startAutoHint,
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: theme.colorScheme.primary,
                                   ),
