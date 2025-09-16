@@ -49,7 +49,7 @@ $Res call({
 });
 
 
-
+$CounterErrorCopyWith<$Res>? get error;
 
 }
 /// @nodoc
@@ -73,7 +73,19 @@ as CounterError?,status: null == status ? _self.status : status // ignore: cast_
 as CounterStatus,
   ));
 }
+/// Create a copy of CounterState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CounterErrorCopyWith<$Res>? get error {
+    if (_self.error == null) {
+    return null;
+  }
 
+  return $CounterErrorCopyWith<$Res>(_self.error!, (value) {
+    return _then(_self.copyWith(error: value));
+  });
+}
 }
 
 
@@ -255,7 +267,7 @@ $Res call({
 });
 
 
-
+@override $CounterErrorCopyWith<$Res>? get error;
 
 }
 /// @nodoc
@@ -280,7 +292,19 @@ as CounterStatus,
   ));
 }
 
+/// Create a copy of CounterState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CounterErrorCopyWith<$Res>? get error {
+    if (_self.error == null) {
+    return null;
+  }
 
+  return $CounterErrorCopyWith<$Res>(_self.error!, (value) {
+    return _then(_self.copyWith(error: value));
+  });
+}
 }
 
 // dart format on

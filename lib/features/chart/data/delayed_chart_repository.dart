@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/chart/chart.dart';
 
 class DelayedChartRepository extends ChartRepository {
-  DelayedChartRepository({super.client});
+  DelayedChartRepository({super.client, super.now});
 
   @override
   Future<List<ChartPoint>> fetchTrendingCounts() async {

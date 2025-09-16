@@ -133,7 +133,7 @@ class CounterCubit extends Cubit<CounterState> {
       AppLogger.error('CounterCubit.loadInitial failed', e, s);
       emit(
         state.copyWith(
-          error: CounterError.loadError(e),
+          error: CounterError.load(originalError: e),
           status: CounterStatus.error,
         ),
       );
@@ -172,7 +172,7 @@ class CounterCubit extends Cubit<CounterState> {
 
   Future<void> decrement() async {
     if (state.count == 0) {
-      emit(state.copyWith(error: CounterError.cannotGoBelowZero()));
+      emit(state.copyWith(error: const CounterError.cannotGoBelowZero()));
       return;
     }
     final int newCount = state.count - 1;

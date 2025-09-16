@@ -4,11 +4,15 @@ import 'dart:io';
 import 'package:flutter_bloc_app/features/chart/chart.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:http/http.dart' as http;
+import 'package:meta/meta.dart';
 
 class ChartRepository {
-  ChartRepository({http.Client? client}) : _client = client ?? http.Client();
+  ChartRepository({http.Client? client, DateTime Function()? now})
+    : _client = client ?? http.Client(),
+      _now = now ?? DateTime.now;
 
   final http.Client _client;
+  final DateTime Function() _now;
   static final Uri _endpoint = Uri.parse(
     'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart'
     '?vs_currency=usd&days=7&interval=daily',
@@ -20,8 +24,14 @@ class ChartRepository {
   static List<ChartPoint>? _cached;
   static DateTime? _lastFetched;
 
+  @visibleForTesting
+  static void clearCache() {
+    _cached = null;
+    _lastFetched = null;
+  }
+
   Future<List<ChartPoint>> fetchTrendingCounts() async {
-    final now = DateTime.now();
+    final now = _now();
     if (_hasFreshCache(now)) {
       return _cached!;
     }
@@ -39,9 +49,10 @@ class ChartRepository {
         '${response.statusCode}',
       );
       return _cached ?? _cache(_fallbackData(now), now);
-    } on FormatException catch (error, stackTrace) {
-      AppLogger.warning('ChartRepository.fetchTrendingCounts invalid payload');
-      AppLogger.error('ChartRepository payload parsing failed', error, stackTrace);
+    } on FormatException catch (error) {
+      AppLogger.warning(
+        'ChartRepository.fetchTrendingCounts invalid payload: ${error.message}',
+      );
       return _cached ?? _cache(_fallbackData(now), now);
     } catch (error, stackTrace) {
       AppLogger.warning('ChartRepository.fetchTrendingCounts falling back');
@@ -73,12 +84,13 @@ class ChartRepository {
       throw const FormatException('Invalid chart payload content');
     }
 
-    final data = prices
-        .whereType<List<dynamic>>()
-        .where((item) => item.length >= 2)
-        .map(ChartPoint.fromApi)
-        .toList()
-      ..sort((a, b) => a.date.compareTo(b.date));
+    final data =
+        prices
+            .whereType<List<dynamic>>()
+            .where((item) => item.length >= 2)
+            .map(ChartPoint.fromApi)
+            .toList()
+          ..sort((a, b) => a.date.compareTo(b.date));
 
     if (data.isEmpty) {
       throw const FormatException('Chart payload missing points');

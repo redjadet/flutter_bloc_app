@@ -1,55 +1,42 @@
-/// Error types for counter operations
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'counter_error.freezed.dart';
+
 enum CounterErrorType { cannotGoBelowZero, loadError, saveError, unknown }
 
-/// Counter error model with type and optional message
-class CounterError {
-  /// Creates a cannot go below zero error
-  factory CounterError.cannotGoBelowZero() {
-    return const CounterError(type: CounterErrorType.cannotGoBelowZero);
-  }
+@freezed
+sealed class CounterError with _$CounterError {
+  const CounterError._();
 
-  /// Creates a load error
-  factory CounterError.loadError([Object? originalError]) {
-    return CounterError(
-      type: CounterErrorType.loadError,
-      originalError: originalError,
-    );
-  }
+  const factory CounterError.cannotGoBelowZero() = _CannotGoBelowZero;
 
-  /// Creates a save error
-  factory CounterError.saveError([Object? originalError]) {
-    return CounterError(
-      type: CounterErrorType.saveError,
-      originalError: originalError,
-    );
-  }
+  const factory CounterError.load({Object? originalError, String? message}) =
+      _LoadCounterError;
 
-  /// Creates an unknown error
-  factory CounterError.unknown([Object? originalError]) {
-    return CounterError(
-      type: CounterErrorType.unknown,
-      originalError: originalError,
-    );
-  }
-  const CounterError({required this.type, this.message, this.originalError});
+  const factory CounterError.save({Object? originalError, String? message}) =
+      _SaveCounterError;
 
-  final CounterErrorType type;
-  final String? message;
-  final Object? originalError;
+  const factory CounterError.unknown({Object? originalError, String? message}) =
+      _UnknownCounterError;
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is CounterError &&
-        other.type == type &&
-        other.message == message;
-  }
+  CounterErrorType get type => when(
+    cannotGoBelowZero: () => CounterErrorType.cannotGoBelowZero,
+    load: (_, _) => CounterErrorType.loadError,
+    save: (_, _) => CounterErrorType.saveError,
+    unknown: (_, _) => CounterErrorType.unknown,
+  );
 
-  @override
-  int get hashCode => Object.hash(type, message);
+  Object? get originalError => when(
+    cannotGoBelowZero: () => null,
+    load: (originalError, _) => originalError,
+    save: (originalError, _) => originalError,
+    unknown: (originalError, _) => originalError,
+  );
 
-  @override
-  String toString() {
-    return 'CounterError(type: $type, message: $message, originalError: $originalError)';
-  }
+  String? get message => when(
+    cannotGoBelowZero: () => null,
+    load: (_, message) => message,
+    save: (_, message) => message,
+    unknown: (_, message) => message,
+  );
 }

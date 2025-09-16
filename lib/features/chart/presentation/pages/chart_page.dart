@@ -110,10 +110,7 @@ class _ChartPageState extends State<ChartPage> {
     final theme = Theme.of(context);
     final chartHeight = MediaQuery.of(context).size.height * 0.45;
     return _scrollable([
-      Text(
-        l10n.chartPageDescription,
-        style: theme.textTheme.titleMedium,
-      ),
+      Text(l10n.chartPageDescription, style: theme.textTheme.titleMedium),
       SizedBox(height: UI.gapL),
       SwitchListTile.adaptive(
         value: _zoomEnabled,
@@ -130,7 +127,8 @@ class _ChartPageState extends State<ChartPage> {
   Widget _buildChart(List<ChartPoint> points, DateFormat dateFormat) {
     final theme = Theme.of(context);
     final primaryColor = theme.colorScheme.primary;
-    final tooltipTextStyle = theme.textTheme.bodyMedium?.copyWith(
+    final tooltipTextStyle =
+        theme.textTheme.bodyMedium?.copyWith(
           color: theme.colorScheme.onSurface,
           fontWeight: FontWeight.w600,
         ) ??
@@ -214,8 +212,8 @@ class _ChartPageState extends State<ChartPage> {
   }
 
   ListView _scrollable(List<Widget> children) => ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.all(UI.gapL),
-        children: children,
-      );
+    physics: const AlwaysScrollableScrollPhysics(),
+    padding: EdgeInsets.all(UI.gapL),
+    children: children,
+  );
 }
