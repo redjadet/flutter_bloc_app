@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -67,7 +68,6 @@ class CounterPage extends StatelessWidget {
               onPressed: () => context.pushNamed(AppRoutes.charts),
               icon: const Icon(Icons.show_chart),
             ),
-            const FlavorBadge(),
             BlocBuilder<ThemeCubit, ThemeMode>(
               builder: (context, mode) {
                 final bool isDark = mode == ThemeMode.dark;
@@ -91,6 +91,7 @@ class CounterPage extends StatelessWidget {
                   builder: (context, status) {
                     final bool isLoading = status == CounterStatus.loading;
                     final ThemeData theme = Theme.of(context);
+                    final bool showFlavor = FlavorManager.I.flavor != Flavor.prod;
                     return Skeletonizer(
                       enabled: isLoading,
                       effect: ShimmerEffect(
@@ -101,6 +102,13 @@ class CounterPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
+                          if (showFlavor) ...[
+                            const Align(
+                              alignment: Alignment.centerRight,
+                              child: FlavorBadge(),
+                            ),
+                            SizedBox(height: UI.gapS),
+                          ],
                           Text(
                             AppLocalizations.of(context).pushCountLabel,
                             style: theme.textTheme.bodyMedium,
