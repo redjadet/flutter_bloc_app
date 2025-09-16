@@ -1,35 +1,38 @@
 import 'package:flutter/foundation.dart';
+import 'package:logger/logger.dart';
 
 /// Simple logging utility for the app
 class AppLogger {
+  static final Logger _logger = Logger(
+    filter: _DebugOnlyFilter(),
+    printer: PrettyPrinter(
+      methodCount: 0,
+      errorMethodCount: 5,
+      lineLength: 80,
+      colors: false,
+      printEmojis: false,
+      noBoxingByDefault: true,
+    ),
+  );
+
   static void error(String message, [Object? error, StackTrace? stackTrace]) {
-    if (kDebugMode) {
-      final buffer = StringBuffer(message);
-      if (error != null) {
-        buffer.write('\nError: $error');
-      }
-      if (stackTrace != null) {
-        buffer.write('\nStackTrace: $stackTrace');
-      }
-      debugPrint(buffer.toString());
-    }
+    _logger.e(message, error: error, stackTrace: stackTrace);
   }
 
   static void warning(String message) {
-    if (kDebugMode) {
-      debugPrint('WARNING: $message');
-    }
+    _logger.w(message);
   }
 
   static void info(String message) {
-    if (kDebugMode) {
-      debugPrint('INFO: $message');
-    }
+    _logger.i(message);
   }
 
   static void debug(String message) {
-    if (kDebugMode) {
-      debugPrint('DEBUG: $message');
-    }
+    _logger.d(message);
   }
+}
+
+class _DebugOnlyFilter extends LogFilter {
+  @override
+  bool shouldLog(LogEvent event) => kDebugMode;
 }

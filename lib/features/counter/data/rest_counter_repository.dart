@@ -21,7 +21,7 @@ class RestCounterRepository implements CounterRepository {
   @override
   Future<CounterSnapshot> load() async {
     try {
-      // TODO: Add headers/auth if necessary
+      // TODO: Add headers/auth when necessary
       final res = await _client.get(_counterUri);
       if (res.statusCode != 200) {
         AppLogger.error(
@@ -47,7 +47,7 @@ class RestCounterRepository implements CounterRepository {
   @override
   Future<void> save(CounterSnapshot snapshot) async {
     try {
-      // TODO: Add headers/auth if necessary
+      // TODO: Add headers/auth when necessary
       final res = await _client.post(
         _counterUri,
         headers: const {'Content-Type': 'application/json'},

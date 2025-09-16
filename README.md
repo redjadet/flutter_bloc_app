@@ -155,25 +155,25 @@ Prerequisites:
 
 Install dependencies:
 
-```
+```bash
 flutter pub get
 ```
 
 Run the app:
 
-```
+```bash
 flutter run
 ```
 
 Run tests:
 
-```
+```bash
 flutter test
 ```
 
 Optional useful commands:
 
-```
+```bash
 flutter analyze
 dart format .
 ```
@@ -286,6 +286,6 @@ Note on skipped test
 - The suite `test/error_snackbar_test.dart` is intentionally annotated with `@Skip(...)` and is excluded from the default `flutter test` run because it throws on purpose to exercise the SnackBar error path.
 - To run it explicitly:
 
-```
+```bash
 flutter test test/error_snackbar_test.dart
 ```
