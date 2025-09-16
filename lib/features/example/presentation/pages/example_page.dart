@@ -26,49 +26,51 @@ class ExamplePage extends StatelessWidget {
                 horizontal: UI.cardPadH,
                 vertical: UI.cardPadV,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(UI.radiusM),
-                    child: FancyShimmerImage(
-                      imageUrl:
-                          'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
-                      height: 180,
-                      width: double.infinity,
-                      boxFit: BoxFit.cover,
-                      shimmerBaseColor: Theme.of(
-                        context,
-                      ).colorScheme.surfaceContainerHighest,
-                      shimmerHighlightColor: Theme.of(
-                        context,
-                      ).colorScheme.surface,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(UI.radiusM),
+                      child: FancyShimmerImage(
+                        imageUrl:
+                            'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+                        height: 180,
+                        width: double.infinity,
+                        boxFit: BoxFit.cover,
+                        shimmerBaseColor: Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainerHighest,
+                        shimmerHighlightColor: Theme.of(
+                          context,
+                        ).colorScheme.surface,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: UI.gapL),
-                  Icon(
-                    Icons.explore,
-                    size: 64,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  SizedBox(height: UI.gapM),
-                  Text(
-                    l10n.examplePageDescription,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: UI.gapL),
-                  FilledButton(
-                    onPressed: () {
-                      if (Navigator.of(context).canPop()) {
-                        context.pop();
-                      } else {
-                        context.goNamed(AppRoutes.counter);
-                      }
-                    },
-                    child: Text(l10n.exampleBackButtonLabel),
-                  ),
-                ],
+                    SizedBox(height: UI.gapL),
+                    Icon(
+                      Icons.explore,
+                      size: 64,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    SizedBox(height: UI.gapM),
+                    Text(
+                      l10n.examplePageDescription,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: UI.gapL),
+                    FilledButton(
+                      onPressed: () {
+                        if (Navigator.of(context).canPop()) {
+                          context.pop();
+                        } else {
+                          context.goNamed(AppRoutes.counter);
+                        }
+                      },
+                      child: Text(l10n.exampleBackButtonLabel),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

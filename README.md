@@ -175,7 +175,7 @@ Optional useful commands:
 
 ```
 flutter analyze
-flutter format .
+dart format .
 ```
 
 ### Flavors
@@ -203,6 +203,7 @@ Programmatic access:
 This app uses GetIt for DI. Registrations live in `lib/core/di/injector.dart` and are called from `lib/main_bootstrap.dart`.
 
 Registered services:
+
 - `CounterRepository` → `SharedPreferencesCounterRepository`
 - `ThemeRepository` → `SharedPreferencesThemeRepository`
 - `TimerService` → `DefaultTimerService`
