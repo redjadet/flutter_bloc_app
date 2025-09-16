@@ -63,4 +63,24 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get exampleBackButtonLabel => 'Retour au compteur';
+
+  @override
+  String get openChartsTooltip => 'Ouvrir les graphiques';
+
+  @override
+  String get chartPageTitle => 'Prix du Bitcoin (USD)';
+
+  @override
+  String get chartPageDescription =>
+      'Cours de clôture sur les 7 derniers jours (source : CoinGecko)';
+
+  @override
+  String get chartPageError =>
+      'Impossible de charger les données du graphique.';
+
+  @override
+  String get chartPageEmpty => 'Aucune donnée de graphique pour le moment.';
+
+  @override
+  String get chartZoomToggleLabel => 'Activer le zoom par pincement';
 }

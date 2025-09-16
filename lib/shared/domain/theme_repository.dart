@@ -5,4 +5,3 @@ abstract class ThemeRepository {
   Future<ThemeMode?> load();
   Future<void> save(ThemeMode mode);
 }
-

@@ -54,7 +54,8 @@ Widget wrapWithProviders({
       providers: [
         BlocProvider(
           create: (ctx) =>
-              CounterCubit(repository: repository ?? MockCounterRepository())..loadInitial(),
+              CounterCubit(repository: repository ?? MockCounterRepository())
+                ..loadInitial(),
         ),
         BlocProvider(
           create: (_) =>
@@ -105,8 +106,10 @@ class FakeTimerService implements TimerService {
   /// Triggers all active periodic callbacks [times] times.
   void tick([int times = 1]) {
     for (int i = 0; i < times; i++) {
-      final callbacks =
-          _entries.where((e) => !e.cancelled).map((e) => e.onTick).toList();
+      final callbacks = _entries
+          .where((e) => !e.cancelled)
+          .map((e) => e.onTick)
+          .toList();
       for (final cb in callbacks) {
         cb();
       }

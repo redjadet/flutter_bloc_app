@@ -14,7 +14,9 @@ void main() {
     });
 
     test('initial state is count 0 with countdown 5', () {
-      final CounterCubit cubit = CounterCubit(repository: SharedPreferencesCounterRepository());
+      final CounterCubit cubit = CounterCubit(
+        repository: SharedPreferencesCounterRepository(),
+      );
       expect(cubit.state.count, 0);
       expect(cubit.state.lastChanged, isNull);
       expect(cubit.state.countdownSeconds, 5);
@@ -56,7 +58,9 @@ void main() {
 
     test('loadInitial loads saved value with countdown 5', () async {
       SharedPreferences.setMockInitialValues(<String, Object>{'last_count': 7});
-      final CounterCubit cubit = CounterCubit(repository: SharedPreferencesCounterRepository());
+      final CounterCubit cubit = CounterCubit(
+        repository: SharedPreferencesCounterRepository(),
+      );
       await cubit.loadInitial();
       expect(cubit.state.count, 7);
       expect(cubit.state.lastChanged, isNull);
@@ -77,7 +81,8 @@ void main() {
 
     test('increment persists value and timestamp', () async {
       SharedPreferences.setMockInitialValues(<String, Object>{});
-      final SharedPreferencesCounterRepository repo = SharedPreferencesCounterRepository();
+      final SharedPreferencesCounterRepository repo =
+          SharedPreferencesCounterRepository();
       final CounterCubit cubit = CounterCubit(repository: repo);
       await cubit.increment();
       final CounterSnapshot snap = await repo.load();
@@ -86,36 +91,42 @@ void main() {
       cubit.close();
     });
 
-    test('countdown timer decreases deterministically (FakeTimerService)', () async {
-      final fakeTimer = FakeTimerService();
-      final CounterCubit cubit = CounterCubit(
-        repository: MockCounterRepository(),
-        timerService: fakeTimer,
-      );
+    test(
+      'countdown timer decreases deterministically (FakeTimerService)',
+      () async {
+        final fakeTimer = FakeTimerService();
+        final CounterCubit cubit = CounterCubit(
+          repository: MockCounterRepository(),
+          timerService: fakeTimer,
+        );
 
-      // Let microtask emission happen
-      await Future<void>.delayed(const Duration(milliseconds: 10));
+        // Let microtask emission happen
+        await Future<void>.delayed(const Duration(milliseconds: 10));
 
-      final int initialCountdown = cubit.state.countdownSeconds;
+        final int initialCountdown = cubit.state.countdownSeconds;
 
-      // Trigger two ticks deterministically
-      fakeTimer.tick(2);
+        // Trigger two ticks deterministically
+        fakeTimer.tick(2);
 
-      expect(cubit.state.countdownSeconds, initialCountdown - 2);
-      await cubit.close();
-    });
+        expect(cubit.state.countdownSeconds, initialCountdown - 2);
+        await cubit.close();
+      },
+    );
 
-    test('countdown resets to 5 when it reaches 0 (FakeTimerService)', () async {
-      final fakeTimer = FakeTimerService();
-      final CounterCubit cubit = CounterCubit(
-        repository: MockCounterRepository(),
-        timerService: fakeTimer,
-      );
-      await Future<void>.delayed(const Duration(milliseconds: 10));
-      fakeTimer.tick(5);
-      expect(cubit.state.countdownSeconds, 5);
-      await cubit.close();
-    });
+    test(
+      'countdown resets to 5 when it reaches 0 (FakeTimerService)',
+      () async {
+        final fakeTimer = FakeTimerService();
+        final CounterCubit cubit = CounterCubit(
+          repository: MockCounterRepository(),
+          timerService: fakeTimer,
+        );
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+        fakeTimer.tick(5);
+        expect(cubit.state.countdownSeconds, 5);
+        await cubit.close();
+      },
+    );
 
     test('auto-decrement timer works (FakeTimerService)', () async {
       final fakeTimer = FakeTimerService();

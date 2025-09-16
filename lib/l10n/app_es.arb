@@ -23,5 +23,11 @@
   "openExampleTooltip": "Abrir página de ejemplo",
   "examplePageTitle": "Página de ejemplo",
   "examplePageDescription": "Esta página demuestra el enrutamiento con GoRouter.",
-  "exampleBackButtonLabel": "Volver al contador"
+  "exampleBackButtonLabel": "Volver al contador",
+  "openChartsTooltip": "Abrir gráficos",
+  "chartPageTitle": "Precio de Bitcoin (USD)",
+  "chartPageDescription": "Precio de cierre de los últimos 7 días (fuente: CoinGecko)",
+  "chartPageError": "No se pudieron cargar los datos del gráfico.",
+  "chartPageEmpty": "Aún no hay datos del gráfico.",
+  "chartZoomToggleLabel": "Activar zoom con gestos"
 }

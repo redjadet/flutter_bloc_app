@@ -24,5 +24,11 @@
   "openExampleTooltip": "Örnek sayfayı aç",
   "examplePageTitle": "Örnek Sayfa",
   "examplePageDescription": "Bu sayfa GoRouter ile yönlendirmeyi gösterir.",
-  "exampleBackButtonLabel": "Sayaca dön"
+  "exampleBackButtonLabel": "Sayaca dön",
+  "openChartsTooltip": "Grafikleri aç",
+  "chartPageTitle": "Bitcoin Fiyatı (USD)",
+  "chartPageDescription": "Son 7 günün kapanış fiyatı (CoinGecko verisi)",
+  "chartPageError": "Grafik verileri yüklenemedi.",
+  "chartPageEmpty": "Henüz grafik verisi yok.",
+  "chartZoomToggleLabel": "Yakınlaştırmayı etkinleştir"
 }

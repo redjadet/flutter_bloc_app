@@ -62,6 +62,11 @@ class CounterPage extends StatelessWidget {
               onPressed: () => context.pushNamed(AppRoutes.example),
               icon: const Icon(Icons.explore),
             ),
+            IconButton(
+              tooltip: AppLocalizations.of(context).openChartsTooltip,
+              onPressed: () => context.pushNamed(AppRoutes.charts),
+              icon: const Icon(Icons.show_chart),
+            ),
             const FlavorBadge(),
             BlocBuilder<ThemeCubit, ThemeMode>(
               builder: (context, mode) {

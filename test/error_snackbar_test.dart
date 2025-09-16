@@ -43,7 +43,9 @@ void main() {
           providers: [
             BlocProvider.value(value: cubit),
             BlocProvider(
-              create: (_) => ThemeCubit(repository: _FakeThemeRepository(ThemeMode.system)),
+              create: (_) => ThemeCubit(
+                repository: _FakeThemeRepository(ThemeMode.system),
+              ),
             ),
           ],
           child: const MaterialApp(home: CounterPage(title: 'Test Home')),

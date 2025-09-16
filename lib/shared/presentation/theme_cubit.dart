@@ -4,8 +4,8 @@ import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
 
 class ThemeCubit extends Cubit<ThemeMode> {
   ThemeCubit({required ThemeRepository repository})
-      : _repository = repository,
-        super(ThemeMode.system);
+    : _repository = repository,
+      super(ThemeMode.system);
 
   final ThemeRepository _repository;
 

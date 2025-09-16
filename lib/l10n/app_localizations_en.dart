@@ -61,4 +61,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exampleBackButtonLabel => 'Back to counter';
+
+  @override
+  String get openChartsTooltip => 'Open charts';
+
+  @override
+  String get chartPageTitle => 'Bitcoin Price (USD)';
+
+  @override
+  String get chartPageDescription =>
+      'Closing price over the past 7 days (powered by CoinGecko)';
+
+  @override
+  String get chartPageError => 'Unable to load chart data.';
+
+  @override
+  String get chartPageEmpty => 'No chart data available yet.';
+
+  @override
+  String get chartZoomToggleLabel => 'Enable pinch zoom';
 }

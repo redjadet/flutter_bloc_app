@@ -63,4 +63,23 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get exampleBackButtonLabel => 'Zurück zum Zähler';
+
+  @override
+  String get openChartsTooltip => 'Diagramme öffnen';
+
+  @override
+  String get chartPageTitle => 'Bitcoin-Preis (USD)';
+
+  @override
+  String get chartPageDescription =>
+      'Schlusskurs der letzten 7 Tage (Quelle: CoinGecko)';
+
+  @override
+  String get chartPageError => 'Diagrammdaten konnten nicht geladen werden.';
+
+  @override
+  String get chartPageEmpty => 'Noch keine Diagrammdaten verfügbar.';
+
+  @override
+  String get chartZoomToggleLabel => 'Pinch-Zoom aktivieren';
 }

@@ -31,7 +31,8 @@ class RestCounterRepository implements CounterRepository {
         );
         return const CounterSnapshot(count: 0);
       }
-      final Map<String, dynamic> json = jsonDecode(res.body) as Map<String, dynamic>;
+      final Map<String, dynamic> json =
+          jsonDecode(res.body) as Map<String, dynamic>;
       final int count = (json['count'] as num?)?.toInt() ?? 0;
       final int? changedMs = (json['last_changed'] as num?)?.toInt();
       final DateTime? lastChanged = changedMs != null

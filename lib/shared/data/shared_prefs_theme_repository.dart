@@ -28,4 +28,3 @@ class SharedPreferencesThemeRepository implements ThemeRepository {
     await prefs.setString(_prefsKey, value);
   }
 }
-

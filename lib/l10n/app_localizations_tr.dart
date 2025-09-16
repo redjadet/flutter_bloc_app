@@ -61,4 +61,23 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get exampleBackButtonLabel => 'Sayaca dön';
+
+  @override
+  String get openChartsTooltip => 'Grafikleri aç';
+
+  @override
+  String get chartPageTitle => 'Bitcoin Fiyatı (USD)';
+
+  @override
+  String get chartPageDescription =>
+      'Son 7 günün kapanış fiyatı (CoinGecko verisi)';
+
+  @override
+  String get chartPageError => 'Grafik verileri yüklenemedi.';
+
+  @override
+  String get chartPageEmpty => 'Henüz grafik verisi yok.';
+
+  @override
+  String get chartZoomToggleLabel => 'Yakınlaştırmayı etkinleştir';
 }

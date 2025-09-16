@@ -7,4 +7,7 @@ class AppRoutes {
 
   static const example = 'example';
   static const examplePath = '/example';
+
+  static const charts = 'charts';
+  static const chartsPath = '/charts';
 }

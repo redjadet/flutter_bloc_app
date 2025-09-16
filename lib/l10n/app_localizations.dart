@@ -205,6 +205,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back to counter'**
   String get exampleBackButtonLabel;
+
+  /// No description provided for @openChartsTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Open charts'**
+  String get openChartsTooltip;
+
+  /// No description provided for @chartPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bitcoin Price (USD)'**
+  String get chartPageTitle;
+
+  /// No description provided for @chartPageDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Closing price over the past 7 days (powered by CoinGecko)'**
+  String get chartPageDescription;
+
+  /// No description provided for @chartPageError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load chart data.'**
+  String get chartPageError;
+
+  /// No description provided for @chartPageEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No chart data available yet.'**
+  String get chartPageEmpty;
+
+  /// No description provided for @chartZoomToggleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable pinch zoom'**
+  String get chartZoomToggleLabel;
 }
 
 class _AppLocalizationsDelegate

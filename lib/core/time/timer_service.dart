@@ -24,4 +24,3 @@ class DefaultTimerService implements TimerService {
     return _TimerHandle(timer);
   }
 }
-

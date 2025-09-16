@@ -3,7 +3,6 @@ enum CounterErrorType { cannotGoBelowZero, loadError, saveError, unknown }
 
 /// Counter error model with type and optional message
 class CounterError {
-
   /// Creates a cannot go below zero error
   factory CounterError.cannotGoBelowZero() {
     return const CounterError(type: CounterErrorType.cannotGoBelowZero);

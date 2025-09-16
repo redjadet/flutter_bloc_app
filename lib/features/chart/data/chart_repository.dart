@@ -1,0 +1,71 @@
+import 'dart:convert';
+
+import 'package:flutter_bloc_app/features/chart/chart.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:http/http.dart' as http;
+
+class ChartRepository {
+  ChartRepository({http.Client? client}) : _client = client ?? http.Client();
+
+  final http.Client _client;
+  static final Uri _endpoint = Uri.parse(
+    'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart'
+    '?vs_currency=usd&days=7&interval=daily',
+  );
+
+  Future<List<ChartPoint>> fetchTrendingCounts() async {
+    try {
+      final http.Response response = await _client.get(_endpoint);
+      if (response.statusCode == 200) {
+        return _parseBody(response.body);
+      }
+      AppLogger.warning(
+        'ChartRepository.fetchTrendingCounts fallback '
+        'due to status ${response.statusCode}',
+      );
+    } catch (e, s) {
+      AppLogger.warning('ChartRepository.fetchTrendingCounts falling back');
+      AppLogger.debug('ChartRepository error details: $e');
+      AppLogger.error('ChartRepository failure', e, s);
+    }
+    return _fallbackData;
+  }
+
+  List<ChartPoint> _parseBody(String body) {
+    final dynamic decoded = json.decode(body);
+    if (decoded is Map<String, dynamic> && decoded['prices'] is List<dynamic>) {
+      final data =
+          (decoded['prices'] as List<dynamic>)
+              .whereType<List<dynamic>>()
+              .where(
+                (item) => item.length >= 2 && item[0] is num && item[1] is num,
+              )
+              .map((item) {
+                final millis = (item[0] as num).toInt();
+                final price = (item[1] as num).toDouble();
+                return ChartPoint(
+                  date: DateTime.fromMillisecondsSinceEpoch(
+                    millis,
+                    isUtc: true,
+                  ),
+                  value: price,
+                );
+              })
+              .toList()
+            ..sort((a, b) => a.date.compareTo(b.date));
+      if (data.isNotEmpty) {
+        return data;
+      }
+    }
+    throw const FormatException('Invalid chart payload');
+  }
+
+  List<ChartPoint> get _fallbackData {
+    final now = DateTime.now().toUtc();
+    final values = <double>[27150, 27320, 26980, 27560, 28040, 28410, 28200];
+    return List<ChartPoint>.generate(values.length, (index) {
+      final date = now.subtract(Duration(days: values.length - index - 1));
+      return ChartPoint(date: date, value: values[index]);
+    });
+  }
+}

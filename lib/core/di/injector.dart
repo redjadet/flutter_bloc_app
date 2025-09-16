@@ -9,17 +9,25 @@ final GetIt getIt = GetIt.instance;
 
 Future<void> configureDependencies() async {
   // Repositories (lazy singletons)
-  getIt.registerLazySingleton<CounterRepository>(() => SharedPreferencesCounterRepository());
-  getIt.registerLazySingleton<ThemeRepository>(() => SharedPreferencesThemeRepository());
+  getIt.registerLazySingleton<CounterRepository>(
+    () => SharedPreferencesCounterRepository(),
+  );
+  getIt.registerLazySingleton<ThemeRepository>(
+    () => SharedPreferencesThemeRepository(),
+  );
   getIt.registerLazySingleton<TimerService>(() => DefaultTimerService());
 }
 
 void ensureConfigured() {
   if (!getIt.isRegistered<CounterRepository>()) {
-    getIt.registerLazySingleton<CounterRepository>(() => SharedPreferencesCounterRepository());
+    getIt.registerLazySingleton<CounterRepository>(
+      () => SharedPreferencesCounterRepository(),
+    );
   }
   if (!getIt.isRegistered<ThemeRepository>()) {
-    getIt.registerLazySingleton<ThemeRepository>(() => SharedPreferencesThemeRepository());
+    getIt.registerLazySingleton<ThemeRepository>(
+      () => SharedPreferencesThemeRepository(),
+    );
   }
   if (!getIt.isRegistered<TimerService>()) {
     getIt.registerLazySingleton<TimerService>(() => DefaultTimerService());

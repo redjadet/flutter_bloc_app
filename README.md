@@ -11,7 +11,8 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Persistence: Stores last count and timestamp with `shared_preferences`.
 - Auto-decrement: Decreases count every 5 seconds if above zero.
 - Countdown UI: Live “next auto-decrement in: Ns” indicator.
-- Navigation: `go_router` wiring with a sample page demonstrating navigation patterns.
+- Navigation: `go_router` wiring with sample and chart pages demonstrating navigation patterns.
+- Charts: `fl_chart` Bitcoin price line chart backed by CoinGecko's public API (pinch-zoomable with graceful fallback).
 - Loading polish: `skeletonizer` placeholders, `fancy_shimmer_image` hero card, and dev-only loading delay to showcase the effects.
 - Logging: Centralized `AppLogger` built on top of the `logger` package.
 - Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES).

@@ -26,5 +26,11 @@
   "openExampleTooltip": "Open example page",
   "examplePageTitle": "Example Page",
   "examplePageDescription": "This page demonstrates navigation with GoRouter.",
-  "exampleBackButtonLabel": "Back to counter"
+  "exampleBackButtonLabel": "Back to counter",
+  "openChartsTooltip": "Open charts",
+  "chartPageTitle": "Bitcoin Price (USD)",
+  "chartPageDescription": "Closing price over the past 7 days (powered by CoinGecko)",
+  "chartPageError": "Unable to load chart data.",
+  "chartPageEmpty": "No chart data available yet.",
+  "chartZoomToggleLabel": "Enable pinch zoom"
 }

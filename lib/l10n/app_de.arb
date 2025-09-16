@@ -23,5 +23,11 @@
   "openExampleTooltip": "Beispielseite öffnen",
   "examplePageTitle": "Beispielseite",
   "examplePageDescription": "Diese Seite demonstriert die Navigation mit GoRouter.",
-  "exampleBackButtonLabel": "Zurück zum Zähler"
+  "exampleBackButtonLabel": "Zurück zum Zähler",
+  "openChartsTooltip": "Diagramme öffnen",
+  "chartPageTitle": "Bitcoin-Preis (USD)",
+  "chartPageDescription": "Schlusskurs der letzten 7 Tage (Quelle: CoinGecko)",
+  "chartPageError": "Diagrammdaten konnten nicht geladen werden.",
+  "chartPageEmpty": "Noch keine Diagrammdaten verfügbar.",
+  "chartZoomToggleLabel": "Pinch-Zoom aktivieren"
 }

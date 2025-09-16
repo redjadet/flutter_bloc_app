@@ -257,10 +257,10 @@ expect(cubit.state.countdownSeconds, initial - 2);
 
 ```bash
 flutter pub get
-flutter run
-flutter test
-flutter analyze
 dart format .
+flutter run
+flutter analyze
+flutter test
 ```
 
 ## Kod İnceleme Kontrol Listesi

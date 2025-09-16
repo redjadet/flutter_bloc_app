@@ -26,7 +26,8 @@ class AppConfig {
       theme: _createLightTheme(),
       darkTheme: _createDarkTheme(),
       themeMode: themeMode,
-      builder: (context, appChild) => _createResponsiveBuilder(appChild ?? child),
+      builder: (context, appChild) =>
+          _createResponsiveBuilder(appChild ?? child),
       routerConfig: router,
     );
   }
