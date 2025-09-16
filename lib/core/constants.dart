@@ -18,5 +18,5 @@ class AppConstants {
   static const double minContentHeight = 390;
 
   // UI/UX
-  static const Duration devSkeletonDelay = Duration(milliseconds: 1200);
+  static const Duration devSkeletonDelay = Duration(milliseconds: 1000);
 }

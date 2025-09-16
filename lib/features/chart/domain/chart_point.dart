@@ -1,22 +1,20 @@
-class ChartPoint {
-  const ChartPoint({required this.date, required this.value});
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  factory ChartPoint.fromMapEntry(MapEntry<String, dynamic> entry) {
+part 'chart_point.freezed.dart';
+part 'chart_point.g.dart';
+
+@freezed
+class ChartPoint with _$ChartPoint {
+  const factory ChartPoint({required DateTime date, required double value}) = _ChartPoint;
+
+  factory ChartPoint.fromJson(Map<String, dynamic> json) => _$ChartPointFromJson(json);
+
+  factory ChartPoint.fromApi(List<dynamic> entry) {
+    final millis = (entry[0] as num).toInt();
+    final price = (entry[1] as num).toDouble();
     return ChartPoint(
-      date: DateTime.parse(entry.key),
-      value: (entry.value as num).toDouble(),
+      date: DateTime.fromMillisecondsSinceEpoch(millis, isUtc: true),
+      value: price,
     );
   }
-
-  final DateTime date;
-  final double value;
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is ChartPoint && other.date == date && other.value == value;
-  }
-
-  @override
-  int get hashCode => Object.hash(date, value);
 }

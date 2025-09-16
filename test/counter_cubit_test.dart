@@ -37,7 +37,7 @@ void main() {
             )
             .having((s) => s.countdownSeconds, 'countdownSeconds', 5),
       ],
-      skip: 1, // Skip the initial countdown timer emission
+      skip: 0,
     );
 
     blocTest<CounterCubit, CounterState>(
@@ -53,7 +53,7 @@ void main() {
               'cannotGoBelowZero',
             ),
       ],
-      skip: 1, // Skip the initial countdown timer emission
+      skip: 0,
     );
 
     test('loadInitial loads saved value with countdown 5', () async {
