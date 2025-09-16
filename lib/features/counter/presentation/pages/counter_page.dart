@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_bloc_app/shared/presentation/theme_cubit.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/widgets/counter_widgets.dart';
 import 'package:flutter_bloc_app/shared/widgets/flavor_badge.dart';
+import 'package:go_router/go_router.dart';
 
 class CounterPage extends StatelessWidget {
   const CounterPage({super.key, required this.title});
@@ -54,6 +56,11 @@ class CounterPage extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           actions: [
+            IconButton(
+              tooltip: AppLocalizations.of(context).openExampleTooltip,
+              onPressed: () => context.pushNamed(AppRoutes.example),
+              icon: const Icon(Icons.explore),
+            ),
             const FlavorBadge(),
             BlocBuilder<ThemeCubit, ThemeMode>(
               builder: (context, mode) {

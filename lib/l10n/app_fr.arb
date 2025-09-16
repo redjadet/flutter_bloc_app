@@ -19,5 +19,9 @@
   "decrementTooltip": "Décrémenter",
   "loadErrorMessage": "Impossible de charger le compteur enregistré",
   "startAutoHint": "Quand le compteur est 0, appuyez sur + pour démarrer",
-  "cannotGoBelowZero": "Le compteur ne peut pas être inférieur à 0"
+  "cannotGoBelowZero": "Le compteur ne peut pas être inférieur à 0",
+  "openExampleTooltip": "Ouvrir la page d'exemple",
+  "examplePageTitle": "Page d'exemple",
+  "examplePageDescription": "Cette page montre la navigation avec GoRouter.",
+  "exampleBackButtonLabel": "Retour au compteur"
 }

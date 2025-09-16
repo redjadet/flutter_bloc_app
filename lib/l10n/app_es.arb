@@ -19,5 +19,9 @@
   "decrementTooltip": "Disminuir",
   "loadErrorMessage": "No se pudo cargar el contador guardado",
   "startAutoHint": "Si el contador es 0, toca + para iniciar auto",
-  "cannotGoBelowZero": "El contador no puede ser inferior a 0"
+  "cannotGoBelowZero": "El contador no puede ser inferior a 0",
+  "openExampleTooltip": "Abrir página de ejemplo",
+  "examplePageTitle": "Página de ejemplo",
+  "examplePageDescription": "Esta página demuestra el enrutamiento con GoRouter.",
+  "exampleBackButtonLabel": "Volver al contador"
 }

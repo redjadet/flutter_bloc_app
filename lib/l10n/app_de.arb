@@ -19,5 +19,9 @@
   "decrementTooltip": "Verringern",
   "loadErrorMessage": "Gespeicherter Zähler konnte nicht geladen werden",
   "startAutoHint": "Bei Zähler 0: Tippen Sie auf + für Auto-Verringerung",
-  "cannotGoBelowZero": "Der Zähler kann nicht unter 0 gehen"
+  "cannotGoBelowZero": "Der Zähler kann nicht unter 0 gehen",
+  "openExampleTooltip": "Beispielseite öffnen",
+  "examplePageTitle": "Beispielseite",
+  "examplePageDescription": "Diese Seite demonstriert die Navigation mit GoRouter.",
+  "exampleBackButtonLabel": "Zurück zum Zähler"
 }

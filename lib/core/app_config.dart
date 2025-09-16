@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/constants.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 /// Application configuration and theme setup
@@ -9,9 +10,10 @@ class AppConfig {
   /// Creates the MaterialApp with all necessary configurations
   static Widget createMaterialApp({
     required ThemeMode themeMode,
-    required Widget child,
+    required GoRouter router,
+    Widget? child,
   }) {
-    return MaterialApp(
+    return MaterialApp.router(
       onGenerateTitle: (ctx) => AppLocalizations.of(ctx).appTitle,
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
@@ -24,8 +26,8 @@ class AppConfig {
       theme: _createLightTheme(),
       darkTheme: _createDarkTheme(),
       themeMode: themeMode,
-      builder: (context, child) => _createResponsiveBuilder(child),
-      home: child,
+      builder: (context, appChild) => _createResponsiveBuilder(appChild ?? child),
+      routerConfig: router,
     );
   }
 

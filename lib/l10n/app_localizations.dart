@@ -181,6 +181,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Count cannot go below 0'**
   String get cannotGoBelowZero;
+
+  /// No description provided for @openExampleTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Open example page'**
+  String get openExampleTooltip;
+
+  /// No description provided for @examplePageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Example Page'**
+  String get examplePageTitle;
+
+  /// No description provided for @examplePageDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This page demonstrates navigation with GoRouter.'**
+  String get examplePageDescription;
+
+  /// No description provided for @exampleBackButtonLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to counter'**
+  String get exampleBackButtonLabel;
 }
 
 class _AppLocalizationsDelegate

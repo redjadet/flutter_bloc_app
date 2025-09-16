@@ -20,5 +20,9 @@
   "decrementTooltip": "-",
   "loadErrorMessage": "Kaydedilmiş sayaç yüklenemedi",
   "startAutoHint": "Sayı 0 iken otomatik azalma için +'ya dokunun",
-  "cannotGoBelowZero": "Sayı 0'ın altına inemez"
+  "cannotGoBelowZero": "Sayı 0'ın altına inemez",
+  "openExampleTooltip": "Örnek sayfayı aç",
+  "examplePageTitle": "Örnek Sayfa",
+  "examplePageDescription": "Bu sayfa GoRouter ile yönlendirmeyi gösterir.",
+  "exampleBackButtonLabel": "Sayaca dön"
 }

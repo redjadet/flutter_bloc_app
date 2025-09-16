@@ -50,4 +50,17 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get cannotGoBelowZero => 'Le compteur ne peut pas être inférieur à 0';
+
+  @override
+  String get openExampleTooltip => 'Ouvrir la page d\'exemple';
+
+  @override
+  String get examplePageTitle => 'Page d\'exemple';
+
+  @override
+  String get examplePageDescription =>
+      'Cette page montre la navigation avec GoRouter.';
+
+  @override
+  String get exampleBackButtonLabel => 'Retour au compteur';
 }

@@ -48,4 +48,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cannotGoBelowZero => 'Count cannot go below 0';
+
+  @override
+  String get openExampleTooltip => 'Open example page';
+
+  @override
+  String get examplePageTitle => 'Example Page';
+
+  @override
+  String get examplePageDescription =>
+      'This page demonstrates navigation with GoRouter.';
+
+  @override
+  String get exampleBackButtonLabel => 'Back to counter';
 }

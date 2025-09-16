@@ -22,5 +22,9 @@
   "decrementTooltip": "Decrement",
   "loadErrorMessage": "Failed to load saved counter",
   "startAutoHint": "Tap + to start auto-decrement",
-  "cannotGoBelowZero": "Count cannot go below 0"
+  "cannotGoBelowZero": "Count cannot go below 0",
+  "openExampleTooltip": "Open example page",
+  "examplePageTitle": "Example Page",
+  "examplePageDescription": "This page demonstrates navigation with GoRouter.",
+  "exampleBackButtonLabel": "Back to counter"
 }

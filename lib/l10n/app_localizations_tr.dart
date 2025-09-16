@@ -48,4 +48,17 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get cannotGoBelowZero => 'Sayı 0\'ın altına inemez';
+
+  @override
+  String get openExampleTooltip => 'Örnek sayfayı aç';
+
+  @override
+  String get examplePageTitle => 'Örnek Sayfa';
+
+  @override
+  String get examplePageDescription =>
+      'Bu sayfa GoRouter ile yönlendirmeyi gösterir.';
+
+  @override
+  String get exampleBackButtonLabel => 'Sayaca dön';
 }
