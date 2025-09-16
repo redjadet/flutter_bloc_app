@@ -4,10 +4,15 @@ part 'chart_point.freezed.dart';
 part 'chart_point.g.dart';
 
 @freezed
-class ChartPoint with _$ChartPoint {
-  const factory ChartPoint({required DateTime date, required double value}) = _ChartPoint;
+abstract class ChartPoint with _$ChartPoint {
+  const factory ChartPoint({required DateTime date, required double value}) =
+      _ChartPoint;
 
-  factory ChartPoint.fromJson(Map<String, dynamic> json) => _$ChartPointFromJson(json);
+  // If you later add instance methods, also add:
+  // const ChartPoint._();
+
+  factory ChartPoint.fromJson(Map<String, dynamic> json) =>
+      _$ChartPointFromJson(json);
 
   factory ChartPoint.fromApi(List<dynamic> entry) {
     final millis = (entry[0] as num).toInt();

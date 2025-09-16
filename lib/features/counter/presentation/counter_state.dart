@@ -6,7 +6,7 @@ part 'counter_state.freezed.dart';
 enum CounterStatus { idle, loading, success, error }
 
 @freezed
-class CounterState with _$CounterState {
+abstract class CounterState with _$CounterState {
   const CounterState._();
 
   const factory CounterState({

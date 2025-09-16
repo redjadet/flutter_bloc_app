@@ -18,14 +18,16 @@ class ChartRepository {
 
   Future<List<ChartPoint>> fetchTrendingCounts() async {
     final now = DateTime.now();
-    if (_cached != null && _lastFetched != null &&
+    if (_cached != null &&
+        _lastFetched != null &&
         now.difference(_lastFetched!) < _cacheDuration) {
       return _cached!;
     }
     try {
-      final http.Response response = await _client.get(_endpoint, headers: {
-        'accept': 'application/json',
-      });
+      final http.Response response = await _client.get(
+        _endpoint,
+        headers: {'accept': 'application/json'},
+      );
       if (response.statusCode == 200) {
         final parsed = _parseBody(response.body);
         _cached = parsed;
@@ -56,12 +58,15 @@ class ChartRepository {
   List<ChartPoint> _parseBody(String body) {
     final dynamic decoded = json.decode(body);
     if (decoded is Map<String, dynamic> && decoded['prices'] is List<dynamic>) {
-      final data = (decoded['prices'] as List<dynamic>)
-          .whereType<List<dynamic>>()
-          .where((item) => item.length >= 2 && item[0] is num && item[1] is num)
-          .map(ChartPoint.fromApi)
-          .toList()
-        ..sort((a, b) => a.date.compareTo(b.date));
+      final data =
+          (decoded['prices'] as List<dynamic>)
+              .whereType<List<dynamic>>()
+              .where(
+                (item) => item.length >= 2 && item[0] is num && item[1] is num,
+              )
+              .map(ChartPoint.fromApi)
+              .toList()
+            ..sort((a, b) => a.date.compareTo(b.date));
       if (data.isNotEmpty) {
         return data;
       }

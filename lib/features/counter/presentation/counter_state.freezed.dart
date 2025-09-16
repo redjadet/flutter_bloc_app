@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,267 +9,278 @@ part of 'counter_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
 /// @nodoc
 mixin _$CounterState {
-  int get count => throw _privateConstructorUsedError;
-  DateTime? get lastChanged => throw _privateConstructorUsedError;
-  int get countdownSeconds => throw _privateConstructorUsedError;
-  bool get isAutoDecrementActive => throw _privateConstructorUsedError;
-  CounterError? get error => throw _privateConstructorUsedError;
-  CounterStatus get status => throw _privateConstructorUsedError;
 
-  /// Create a copy of CounterState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $CounterStateCopyWith<CounterState> get copyWith =>
-      throw _privateConstructorUsedError;
+ int get count; DateTime? get lastChanged; int get countdownSeconds; bool get isAutoDecrementActive; CounterError? get error; CounterStatus get status;
+/// Create a copy of CounterState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CounterStateCopyWith<CounterState> get copyWith => _$CounterStateCopyWithImpl<CounterState>(this as CounterState, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CounterState&&(identical(other.count, count) || other.count == count)&&(identical(other.lastChanged, lastChanged) || other.lastChanged == lastChanged)&&(identical(other.countdownSeconds, countdownSeconds) || other.countdownSeconds == countdownSeconds)&&(identical(other.isAutoDecrementActive, isAutoDecrementActive) || other.isAutoDecrementActive == isAutoDecrementActive)&&(identical(other.error, error) || other.error == error)&&(identical(other.status, status) || other.status == status));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,count,lastChanged,countdownSeconds,isAutoDecrementActive,error,status);
+
+@override
+String toString() {
+  return 'CounterState(count: $count, lastChanged: $lastChanged, countdownSeconds: $countdownSeconds, isAutoDecrementActive: $isAutoDecrementActive, error: $error, status: $status)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $CounterStateCopyWith<$Res> {
-  factory $CounterStateCopyWith(
-    CounterState value,
-    $Res Function(CounterState) then,
-  ) = _$CounterStateCopyWithImpl<$Res, CounterState>;
-  @useResult
-  $Res call({
-    int count,
-    DateTime? lastChanged,
-    int countdownSeconds,
-    bool isAutoDecrementActive,
-    CounterError? error,
-    CounterStatus status,
-  });
-}
+abstract mixin class $CounterStateCopyWith<$Res>  {
+  factory $CounterStateCopyWith(CounterState value, $Res Function(CounterState) _then) = _$CounterStateCopyWithImpl;
+@useResult
+$Res call({
+ int count, DateTime? lastChanged, int countdownSeconds, bool isAutoDecrementActive, CounterError? error, CounterStatus status
+});
 
+
+
+
+}
 /// @nodoc
-class _$CounterStateCopyWithImpl<$Res, $Val extends CounterState>
+class _$CounterStateCopyWithImpl<$Res>
     implements $CounterStateCopyWith<$Res> {
-  _$CounterStateCopyWithImpl(this._value, this._then);
+  _$CounterStateCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final CounterState _self;
+  final $Res Function(CounterState) _then;
 
-  /// Create a copy of CounterState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? count = null,
-    Object? lastChanged = freezed,
-    Object? countdownSeconds = null,
-    Object? isAutoDecrementActive = null,
-    Object? error = freezed,
-    Object? status = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            count: null == count
-                ? _value.count
-                : count // ignore: cast_nullable_to_non_nullable
-                      as int,
-            lastChanged: freezed == lastChanged
-                ? _value.lastChanged
-                : lastChanged // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
-            countdownSeconds: null == countdownSeconds
-                ? _value.countdownSeconds
-                : countdownSeconds // ignore: cast_nullable_to_non_nullable
-                      as int,
-            isAutoDecrementActive: null == isAutoDecrementActive
-                ? _value.isAutoDecrementActive
-                : isAutoDecrementActive // ignore: cast_nullable_to_non_nullable
-                      as bool,
-            error: freezed == error
-                ? _value.error
-                : error // ignore: cast_nullable_to_non_nullable
-                      as CounterError?,
-            status: null == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
-                      as CounterStatus,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of CounterState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? count = null,Object? lastChanged = freezed,Object? countdownSeconds = null,Object? isAutoDecrementActive = null,Object? error = freezed,Object? status = null,}) {
+  return _then(_self.copyWith(
+count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,lastChanged: freezed == lastChanged ? _self.lastChanged : lastChanged // ignore: cast_nullable_to_non_nullable
+as DateTime?,countdownSeconds: null == countdownSeconds ? _self.countdownSeconds : countdownSeconds // ignore: cast_nullable_to_non_nullable
+as int,isAutoDecrementActive: null == isAutoDecrementActive ? _self.isAutoDecrementActive : isAutoDecrementActive // ignore: cast_nullable_to_non_nullable
+as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as CounterError?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as CounterStatus,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [CounterState].
+extension CounterStatePatterns on CounterState {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CounterState value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CounterState() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CounterState value)  $default,){
+final _that = this;
+switch (_that) {
+case _CounterState():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CounterState value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CounterState() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int count,  DateTime? lastChanged,  int countdownSeconds,  bool isAutoDecrementActive,  CounterError? error,  CounterStatus status)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CounterState() when $default != null:
+return $default(_that.count,_that.lastChanged,_that.countdownSeconds,_that.isAutoDecrementActive,_that.error,_that.status);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int count,  DateTime? lastChanged,  int countdownSeconds,  bool isAutoDecrementActive,  CounterError? error,  CounterStatus status)  $default,) {final _that = this;
+switch (_that) {
+case _CounterState():
+return $default(_that.count,_that.lastChanged,_that.countdownSeconds,_that.isAutoDecrementActive,_that.error,_that.status);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int count,  DateTime? lastChanged,  int countdownSeconds,  bool isAutoDecrementActive,  CounterError? error,  CounterStatus status)?  $default,) {final _that = this;
+switch (_that) {
+case _CounterState() when $default != null:
+return $default(_that.count,_that.lastChanged,_that.countdownSeconds,_that.isAutoDecrementActive,_that.error,_that.status);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
-abstract class _$$CounterStateImplCopyWith<$Res>
-    implements $CounterStateCopyWith<$Res> {
-  factory _$$CounterStateImplCopyWith(
-    _$CounterStateImpl value,
-    $Res Function(_$CounterStateImpl) then,
-  ) = __$$CounterStateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    int count,
-    DateTime? lastChanged,
-    int countdownSeconds,
-    bool isAutoDecrementActive,
-    CounterError? error,
-    CounterStatus status,
-  });
+
+
+class _CounterState extends CounterState {
+  const _CounterState({required this.count, this.lastChanged, this.countdownSeconds = 5, this.isAutoDecrementActive = true, this.error, this.status = CounterStatus.idle}): super._();
+  
+
+@override final  int count;
+@override final  DateTime? lastChanged;
+@override@JsonKey() final  int countdownSeconds;
+@override@JsonKey() final  bool isAutoDecrementActive;
+@override final  CounterError? error;
+@override@JsonKey() final  CounterStatus status;
+
+/// Create a copy of CounterState
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CounterStateCopyWith<_CounterState> get copyWith => __$CounterStateCopyWithImpl<_CounterState>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CounterState&&(identical(other.count, count) || other.count == count)&&(identical(other.lastChanged, lastChanged) || other.lastChanged == lastChanged)&&(identical(other.countdownSeconds, countdownSeconds) || other.countdownSeconds == countdownSeconds)&&(identical(other.isAutoDecrementActive, isAutoDecrementActive) || other.isAutoDecrementActive == isAutoDecrementActive)&&(identical(other.error, error) || other.error == error)&&(identical(other.status, status) || other.status == status));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,count,lastChanged,countdownSeconds,isAutoDecrementActive,error,status);
+
+@override
+String toString() {
+  return 'CounterState(count: $count, lastChanged: $lastChanged, countdownSeconds: $countdownSeconds, isAutoDecrementActive: $isAutoDecrementActive, error: $error, status: $status)';
+}
+
+
 }
 
 /// @nodoc
-class __$$CounterStateImplCopyWithImpl<$Res>
-    extends _$CounterStateCopyWithImpl<$Res, _$CounterStateImpl>
-    implements _$$CounterStateImplCopyWith<$Res> {
-  __$$CounterStateImplCopyWithImpl(
-    _$CounterStateImpl _value,
-    $Res Function(_$CounterStateImpl) _then,
-  ) : super(_value, _then);
+abstract mixin class _$CounterStateCopyWith<$Res> implements $CounterStateCopyWith<$Res> {
+  factory _$CounterStateCopyWith(_CounterState value, $Res Function(_CounterState) _then) = __$CounterStateCopyWithImpl;
+@override @useResult
+$Res call({
+ int count, DateTime? lastChanged, int countdownSeconds, bool isAutoDecrementActive, CounterError? error, CounterStatus status
+});
 
-  /// Create a copy of CounterState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? count = null,
-    Object? lastChanged = freezed,
-    Object? countdownSeconds = null,
-    Object? isAutoDecrementActive = null,
-    Object? error = freezed,
-    Object? status = null,
-  }) {
-    return _then(
-      _$CounterStateImpl(
-        count: null == count
-            ? _value.count
-            : count // ignore: cast_nullable_to_non_nullable
-                  as int,
-        lastChanged: freezed == lastChanged
-            ? _value.lastChanged
-            : lastChanged // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
-        countdownSeconds: null == countdownSeconds
-            ? _value.countdownSeconds
-            : countdownSeconds // ignore: cast_nullable_to_non_nullable
-                  as int,
-        isAutoDecrementActive: null == isAutoDecrementActive
-            ? _value.isAutoDecrementActive
-            : isAutoDecrementActive // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        error: freezed == error
-            ? _value.error
-            : error // ignore: cast_nullable_to_non_nullable
-                  as CounterError?,
-        status: null == status
-            ? _value.status
-            : status // ignore: cast_nullable_to_non_nullable
-                  as CounterStatus,
-      ),
-    );
-  }
+
+
+
 }
-
 /// @nodoc
+class __$CounterStateCopyWithImpl<$Res>
+    implements _$CounterStateCopyWith<$Res> {
+  __$CounterStateCopyWithImpl(this._self, this._then);
 
-class _$CounterStateImpl extends _CounterState {
-  const _$CounterStateImpl({
-    required this.count,
-    this.lastChanged,
-    this.countdownSeconds = 5,
-    this.isAutoDecrementActive = true,
-    this.error,
-    this.status = CounterStatus.idle,
-  }) : super._();
+  final _CounterState _self;
+  final $Res Function(_CounterState) _then;
 
-  @override
-  final int count;
-  @override
-  final DateTime? lastChanged;
-  @override
-  @JsonKey()
-  final int countdownSeconds;
-  @override
-  @JsonKey()
-  final bool isAutoDecrementActive;
-  @override
-  final CounterError? error;
-  @override
-  @JsonKey()
-  final CounterStatus status;
-
-  @override
-  String toString() {
-    return 'CounterState(count: $count, lastChanged: $lastChanged, countdownSeconds: $countdownSeconds, isAutoDecrementActive: $isAutoDecrementActive, error: $error, status: $status)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$CounterStateImpl &&
-            (identical(other.count, count) || other.count == count) &&
-            (identical(other.lastChanged, lastChanged) ||
-                other.lastChanged == lastChanged) &&
-            (identical(other.countdownSeconds, countdownSeconds) ||
-                other.countdownSeconds == countdownSeconds) &&
-            (identical(other.isAutoDecrementActive, isAutoDecrementActive) ||
-                other.isAutoDecrementActive == isAutoDecrementActive) &&
-            (identical(other.error, error) || other.error == error) &&
-            (identical(other.status, status) || other.status == status));
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    count,
-    lastChanged,
-    countdownSeconds,
-    isAutoDecrementActive,
-    error,
-    status,
-  );
-
-  /// Create a copy of CounterState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$CounterStateImplCopyWith<_$CounterStateImpl> get copyWith =>
-      __$$CounterStateImplCopyWithImpl<_$CounterStateImpl>(this, _$identity);
+/// Create a copy of CounterState
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? count = null,Object? lastChanged = freezed,Object? countdownSeconds = null,Object? isAutoDecrementActive = null,Object? error = freezed,Object? status = null,}) {
+  return _then(_CounterState(
+count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,lastChanged: freezed == lastChanged ? _self.lastChanged : lastChanged // ignore: cast_nullable_to_non_nullable
+as DateTime?,countdownSeconds: null == countdownSeconds ? _self.countdownSeconds : countdownSeconds // ignore: cast_nullable_to_non_nullable
+as int,isAutoDecrementActive: null == isAutoDecrementActive ? _self.isAutoDecrementActive : isAutoDecrementActive // ignore: cast_nullable_to_non_nullable
+as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as CounterError?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as CounterStatus,
+  ));
 }
 
-abstract class _CounterState extends CounterState {
-  const factory _CounterState({
-    required final int count,
-    final DateTime? lastChanged,
-    final int countdownSeconds,
-    final bool isAutoDecrementActive,
-    final CounterError? error,
-    final CounterStatus status,
-  }) = _$CounterStateImpl;
-  const _CounterState._() : super._();
 
-  @override
-  int get count;
-  @override
-  DateTime? get lastChanged;
-  @override
-  int get countdownSeconds;
-  @override
-  bool get isAutoDecrementActive;
-  @override
-  CounterError? get error;
-  @override
-  CounterStatus get status;
-
-  /// Create a copy of CounterState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$CounterStateImplCopyWith<_$CounterStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
+
+// dart format on
