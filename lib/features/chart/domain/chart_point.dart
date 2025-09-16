@@ -8,15 +8,20 @@ abstract class ChartPoint with _$ChartPoint {
   const factory ChartPoint({required DateTime date, required double value}) =
       _ChartPoint;
 
-  // If you later add instance methods, also add:
-  // const ChartPoint._();
-
   factory ChartPoint.fromJson(Map<String, dynamic> json) =>
       _$ChartPointFromJson(json);
 
   factory ChartPoint.fromApi(List<dynamic> entry) {
-    final millis = (entry[0] as num).toInt();
-    final price = (entry[1] as num).toDouble();
+    if (entry.length < 2) {
+      throw const FormatException('Chart entry requires timestamp and value');
+    }
+    final Object? timestamp = entry[0];
+    final Object? rawValue = entry[1];
+    if (timestamp is! num || rawValue is! num) {
+      throw const FormatException('Chart entry types are invalid');
+    }
+    final millis = timestamp.toInt();
+    final price = rawValue.toDouble();
     return ChartPoint(
       date: DateTime.fromMillisecondsSinceEpoch(millis, isUtc: true),
       value: price,

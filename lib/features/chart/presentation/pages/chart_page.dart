@@ -31,7 +31,7 @@ class _ChartPageState extends State<ChartPage> {
     setState(() {
       _future = next;
     });
-    return next.then((_) {});
+    return next;
   }
 
   @override
@@ -66,46 +66,39 @@ class _ChartPageState extends State<ChartPage> {
 
   Widget _buildLoadingList() {
     final theme = Theme.of(context);
+    final skeletonColor = theme.colorScheme.surfaceContainerHighest;
+    final chartHeight = MediaQuery.of(context).size.height * 0.28;
     return Skeletonizer(
       effect: ShimmerEffect(
         baseColor: theme.colorScheme.surfaceContainerHigh,
         highlightColor: theme.colorScheme.surface,
       ),
-      child: ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.all(UI.gapL),
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.28,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(UI.radiusM),
-              color: theme.colorScheme.surfaceContainerHighest,
-            ),
+      child: _scrollable([
+        Container(
+          height: chartHeight,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(UI.radiusM),
+            color: skeletonColor,
           ),
-          SizedBox(height: UI.gapL),
-          Container(
-            height: 48,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(UI.radiusM),
-              color: theme.colorScheme.surfaceContainerHighest,
-            ),
+        ),
+        SizedBox(height: UI.gapL),
+        Container(
+          height: 48,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(UI.radiusM),
+            color: skeletonColor,
           ),
-        ],
-      ),
+        ),
+      ]),
     );
   }
 
   Widget _buildMessageList(BuildContext context, String message) {
-    return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.all(UI.gapL),
-      children: [
-        SizedBox(height: UI.gapL * 2),
-        Center(
-          child: Text(message, style: Theme.of(context).textTheme.bodyLarge),
-        ),
-      ],
-    );
+    final theme = Theme.of(context);
+    return _scrollable([
+      SizedBox(height: UI.gapL * 2),
+      Center(child: Text(message, style: theme.textTheme.bodyLarge)),
+    ]);
   }
 
   Widget _buildContentList(
@@ -114,35 +107,30 @@ class _ChartPageState extends State<ChartPage> {
     List<ChartPoint> points,
     DateFormat dateFormat,
   ) {
+    final theme = Theme.of(context);
     final chartHeight = MediaQuery.of(context).size.height * 0.45;
-    return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.all(UI.gapL),
-      children: [
-        Text(
-          l10n.chartPageDescription,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        SizedBox(height: UI.gapL),
-        SwitchListTile.adaptive(
-          value: _zoomEnabled,
-          onChanged: (value) {
-            setState(() => _zoomEnabled = value);
-          },
-          contentPadding: EdgeInsets.zero,
-          title: Text(l10n.chartZoomToggleLabel),
-        ),
-        SizedBox(height: UI.gapS),
-        SizedBox(height: chartHeight, child: _buildChart(points, dateFormat)),
-        SizedBox(height: UI.gapL),
-      ],
-    );
+    return _scrollable([
+      Text(
+        l10n.chartPageDescription,
+        style: theme.textTheme.titleMedium,
+      ),
+      SizedBox(height: UI.gapL),
+      SwitchListTile.adaptive(
+        value: _zoomEnabled,
+        onChanged: (value) => setState(() => _zoomEnabled = value),
+        contentPadding: EdgeInsets.zero,
+        title: Text(l10n.chartZoomToggleLabel),
+      ),
+      SizedBox(height: UI.gapS),
+      SizedBox(height: chartHeight, child: _buildChart(points, dateFormat)),
+      SizedBox(height: UI.gapL),
+    ]);
   }
 
   Widget _buildChart(List<ChartPoint> points, DateFormat dateFormat) {
     final theme = Theme.of(context);
-    final tooltipTextStyle =
-        theme.textTheme.bodyMedium?.copyWith(
+    final primaryColor = theme.colorScheme.primary;
+    final tooltipTextStyle = theme.textTheme.bodyMedium?.copyWith(
           color: theme.colorScheme.onSurface,
           fontWeight: FontWeight.w600,
         ) ??
@@ -158,14 +146,16 @@ class _ChartPageState extends State<ChartPage> {
             touchTooltipData: LineTouchTooltipData(
               fitInsideHorizontally: true,
               fitInsideVertically: true,
-              getTooltipItems: (touchedSpots) => touchedSpots
-                  .map<LineTooltipItem?>(
-                    (spot) => LineTooltipItem(
-                      spot.y.toStringAsFixed(3),
-                      tooltipTextStyle,
-                    ),
-                  )
-                  .toList(),
+              getTooltipItems: (touchedSpots) {
+                return touchedSpots
+                    .map<LineTooltipItem?>(
+                      (spot) => LineTooltipItem(
+                        spot.y.toStringAsFixed(3),
+                        tooltipTextStyle,
+                      ),
+                    )
+                    .toList();
+              },
             ),
           );
 
@@ -201,13 +191,11 @@ class _ChartPageState extends State<ChartPage> {
                 FlSpot(i.toDouble(), points[i].value),
             ],
             isCurved: true,
-            color: Theme.of(context).colorScheme.primary,
+            color: primaryColor,
             // ignore: avoid_redundant_argument_values
             belowBarData: BarAreaData(
               show: true,
-              color: Theme.of(
-                context,
-              ).colorScheme.primary.withValues(alpha: 0.15),
+              color: primaryColor.withValues(alpha: 0.15),
             ),
           ),
         ],
@@ -224,4 +212,10 @@ class _ChartPageState extends State<ChartPage> {
       child: chart,
     );
   }
+
+  ListView _scrollable(List<Widget> children) => ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.all(UI.gapL),
+        children: children,
+      );
 }
