@@ -11,6 +11,9 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Persistence: Stores last count and timestamp with `shared_preferences`.
 - Auto-decrement: Decreases count every 5 seconds if above zero.
 - Countdown UI: Live “next auto-decrement in: Ns” indicator.
+- Navigation: `go_router` wiring with a sample page demonstrating navigation patterns.
+- Loading polish: `skeletonizer` placeholders, `fancy_shimmer_image` hero card, and dev-only loading delay to showcase the effects.
+- Logging: Centralized `AppLogger` built on top of the `logger` package.
 - Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES).
 - Tests: Unit and bloc tests with `flutter_test` and `bloc_test`.
 
@@ -128,11 +131,12 @@ classDiagram
 
 ## App Structure
 
-- `lib/main.dart`: App bootstrapping, `BlocProvider`, `MaterialApp`, widgets.
-- `lib/counter_cubit.dart`: `CounterCubit` and `CounterState`, timers, persistence.
-- `lib/presentation/responsive.dart`: Width-based breakpoints + helpers (ScreenUtil aware).
-- `lib/presentation/ui_constants.dart`: Centralized responsive constants (safe fallbacks in tests).
-- `lib/presentation/widgets/`: `CounterDisplay`, `CountdownBar`, `CounterActions`.
+- `lib/main.dart`: App bootstrapping via `runAppWithFlavor` (imports the flavor entrypoint).
+- `lib/app.dart`: Root widget wiring `go_router`, theme, DI, and cubits.
+- `lib/core/`: Constants, flavor manager, dependency injection configuration, time utilities.
+- `lib/features/counter/`: Domain, data, and presentation layers for the counter feature.
+- `lib/features/example/`: Simple routed example page rendered through `go_router`.
+- `lib/shared/`: Cross-cutting UI, theme, logging, and utility components.
 - `test/counter_cubit_test.dart`: Cubit behavior, timers, persistence tests.
 - `test/countdown_bar_test.dart`: Verifies CountdownBar active/paused labels.
 - `test/counter_display_chip_test.dart`: Verifies CounterDisplay chip labels.
@@ -146,6 +150,7 @@ classDiagram
   - A 5s periodic timer that auto-decrements when `count > 0`.
   - A 1s countdown timer that updates the UI’s remaining seconds.
 - Any manual increment/decrement resets the 5s window and persists the state.
+- Tap the compass icon in the app bar to navigate to the Example page rendered via `go_router`.
 
 ## Getting Started
 
@@ -224,6 +229,8 @@ BlocProvider(
   create: (_) => CounterCubit(
     repository: getIt<CounterRepository>(),
     timerService: getIt(),
+    loadDelay:
+        FlavorManager.I.isDev ? AppConstants.devSkeletonDelay : Duration.zero,
   )..loadInitial(),
 ),
 ```
