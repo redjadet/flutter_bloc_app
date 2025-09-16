@@ -40,9 +40,9 @@ dependencies:
   shared_preferences: ^2.3.2
   intl: ^0.20.2
   flutter_screenutil: ^5.9.3
-  window_manager: ^0.3.9
+  window_manager: ^0.5.1
   responsive_framework: ^1.1.1
-  get_it: ^7.6.4
+  get_it: ^8.2.0
   http: ^1.2.2
 
 dev_dependencies:
@@ -99,3 +99,13 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+dependency_overrides:
+  characters: 1.4.1
+  material_color_utilities: 0.13.0
+  meta: 1.17.0
+  _fe_analyzer_shared: 88.0.0
+  analyzer: 8.1.1
+  test: 1.26.3
+  test_api: 0.7.7
+  test_core: 0.6.12
