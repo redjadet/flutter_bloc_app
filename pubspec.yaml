@@ -49,16 +49,16 @@ dependencies:
   skeletonizer: ^2.1.0+1
   logger: ^2.6.1
   fl_chart: ^1.1.1
-  freezed_annotation: ^2.4.4
+  freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   bloc_test: ^10.0.0
-  build_runner: ^2.4.8
-  freezed: ^2.4.7
-  json_serializable: ^6.8.0
+  build_runner: ^2.5.4
+  freezed: ^3.2.3
+  json_serializable: ^6.9.5
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
