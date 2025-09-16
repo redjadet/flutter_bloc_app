@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/widgets/counter_widgets.dart';
 import 'package:flutter_bloc_app/shared/widgets/flavor_badge.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CounterPage extends StatelessWidget {
   const CounterPage({super.key, required this.title});
@@ -80,37 +81,50 @@ class CounterPage extends StatelessWidget {
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: context.contentMaxWidth),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      AppLocalizations.of(context).pushCountLabel,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: UI.gapS),
-                    const CounterDisplay(),
-                    SizedBox(height: UI.gapM),
-                    BlocBuilder<CounterCubit, CounterState>(
-                      buildWhen: (p, c) => p.count != c.count,
-                      builder: (context, state) {
-                        if (state.count == 0) {
-                          return Text(
-                            AppLocalizations.of(context).startAutoHint,
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
+                child: BlocSelector<CounterCubit, CounterState, CounterStatus>(
+                  selector: (state) => state.status,
+                  builder: (context, status) {
+                    final bool isLoading = status == CounterStatus.loading;
+                    final ThemeData theme = Theme.of(context);
+                    return Skeletonizer(
+                      enabled: isLoading,
+                      effect: ShimmerEffect(
+                        baseColor: theme.colorScheme.surfaceContainerHighest,
+                        highlightColor: theme.colorScheme.surface,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            AppLocalizations.of(context).pushCountLabel,
+                            style: theme.textTheme.bodyMedium,
                             textAlign: TextAlign.center,
-                          );
-                        }
-                        return const SizedBox.shrink();
-                      },
-                    ),
-                  ],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(height: UI.gapS),
+                          const CounterDisplay(),
+                          SizedBox(height: UI.gapM),
+                          BlocBuilder<CounterCubit, CounterState>(
+                            buildWhen: (p, c) => p.count != c.count,
+                            builder: (context, state) {
+                              if (state.count == 0) {
+                                return Text(
+                                  AppLocalizations.of(context).startAutoHint,
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                );
+                              }
+                              return const SizedBox.shrink();
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
             ),

@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CountdownBar extends StatefulWidget {
   const CountdownBar({super.key});
@@ -22,6 +23,7 @@ class _CountdownBarState extends State<CountdownBar> {
     return BlocBuilder<CounterCubit, CounterState>(
       builder: (context, state) {
         final bool active = state.isAutoDecrementActive;
+        final bool isLoading = state.status == CounterStatus.loading;
         final AppLocalizations l10n =
             Localizations.of<AppLocalizations>(context, AppLocalizations) ??
             AppLocalizationsEn();
@@ -42,7 +44,7 @@ class _CountdownBarState extends State<CountdownBar> {
                   colors.primary
             : colors.primary;
 
-        return SafeArea(
+        final Widget bar = SafeArea(
           top: false,
           child: Padding(
             padding: EdgeInsets.fromLTRB(UI.hgapL, 0, UI.hgapL, UI.gapM),
@@ -95,13 +97,24 @@ class _CountdownBarState extends State<CountdownBar> {
             ),
           ),
         );
+
+        if (!isLoading) {
+          return bar;
+        }
+
+        return Skeletonizer(
+          effect: ShimmerEffect(
+            baseColor: colors.surfaceContainerHighest,
+            highlightColor: colors.surface,
+          ),
+          child: bar,
+        );
       },
     );
   }
 }
 
 class _CountdownStatus extends StatelessWidget {
-
   const _CountdownStatus({
     required this.active,
     required this.color,

@@ -14,8 +14,10 @@ class CounterCubit extends Cubit<CounterState> {
     required CounterRepository repository,
     TimerService? timerService,
     bool startTicker = true,
+    Duration loadDelay = Duration.zero,
   }) : _repository = repository,
        _timerService = timerService ?? DefaultTimerService(),
+       _initialLoadDelay = loadDelay,
        super(const CounterState(count: 0)) {
     // Ensure first emission occurs after listeners subscribe.
     Future.microtask(() {
@@ -39,6 +41,7 @@ class CounterCubit extends Cubit<CounterState> {
 
   final CounterRepository _repository;
   final TimerService _timerService;
+  final Duration _initialLoadDelay;
 
   TimerDisposable? _countdownTicker;
   bool _holdAfterReset = false;
@@ -111,6 +114,9 @@ class CounterCubit extends Cubit<CounterState> {
   Future<void> loadInitial() async {
     try {
       emit(state.copyWith(status: CounterStatus.loading));
+      if (_initialLoadDelay > Duration.zero) {
+        await Future<void>.delayed(_initialLoadDelay);
+      }
       final CounterSnapshot snapshot = await _repository.load();
       _currentIntervalSeconds = _defaultIntervalSeconds;
       emit(

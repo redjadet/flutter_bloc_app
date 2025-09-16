@@ -1,4 +1,5 @@
 # AGENTS — Flutter BLoC App
+<!-- markdownlint-configure-file {"MD029": {"style": "ordered"}} -->
 
 Bu doküman, bu repo üzerinde çalışacak geliştiriciler/ajanlar için mimari rehber, görev akışları ve kalite standartlarını özetler. Proje küçük bir sayaç uygulaması olsa da, yapı MVP + SOLID + Clean Code ilkelerine göre düzenlenmiştir ve kolay genişletilebilirlik hedeflenir.
 
@@ -184,7 +185,7 @@ return MultiBlocProvider(
 
 Yeni bir veri katmanı eklemek (örn. REST, Hive, Secure Storage) için:
 
-1) Domain sözleşmesini yeniden kullanın:
+1 Domain sözleşmesini yeniden kullanın:
 
 ```dart
 // lib/features/counter/domain/counter_repository.dart
@@ -194,7 +195,7 @@ abstract class CounterRepository {
 }
 ```
 
-2) Yeni implementasyonu yazın:
+2 Yeni implementasyonu yazın:
 
 ```dart
 // lib/features/counter/data/rest_counter_repository.dart
@@ -212,7 +213,7 @@ class RestCounterRepository implements CounterRepository {
 }
 ```
 
-3) DI kayıtlarını değiştirin (geçici veya kalıcı):
+3 DI kayıtlarını değiştirin (geçici veya kalıcı):
 
 ```dart
 // Geçici: test veya deneme amaçlı

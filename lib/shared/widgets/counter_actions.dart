@@ -13,31 +13,40 @@ class CounterActions extends StatelessWidget {
     final AppLocalizations l10n =
         Localizations.of<AppLocalizations>(context, AppLocalizations) ??
         AppLocalizationsEn();
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Semantics(
-          button: true,
-          label: l10n.incrementTooltip,
-          child: FloatingActionButton(
-            heroTag: 'fab_increment',
-            onPressed: () => context.read<CounterCubit>().increment(),
-            tooltip: l10n.incrementTooltip,
-            child: Icon(Icons.add, size: UI.iconL),
-          ),
-        ),
-        SizedBox(height: UI.gapM),
-        Semantics(
-          button: true,
-          label: l10n.decrementTooltip,
-          child: FloatingActionButton(
-            heroTag: 'fab_decrement',
-            onPressed: () => context.read<CounterCubit>().decrement(),
-            tooltip: l10n.decrementTooltip,
-            child: Icon(Icons.remove, size: UI.iconL),
-          ),
-        ),
-      ],
+    return BlocSelector<CounterCubit, CounterState, bool>(
+      selector: (state) => state.status == CounterStatus.loading,
+      builder: (context, isLoading) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Semantics(
+              button: true,
+              label: l10n.incrementTooltip,
+              child: FloatingActionButton(
+                heroTag: 'fab_increment',
+                onPressed: isLoading
+                    ? null
+                    : () => context.read<CounterCubit>().increment(),
+                tooltip: l10n.incrementTooltip,
+                child: Icon(Icons.add, size: UI.iconL),
+              ),
+            ),
+            SizedBox(height: UI.gapM),
+            Semantics(
+              button: true,
+              label: l10n.decrementTooltip,
+              child: FloatingActionButton(
+                heroTag: 'fab_decrement',
+                onPressed: isLoading
+                    ? null
+                    : () => context.read<CounterCubit>().decrement(),
+                tooltip: l10n.decrementTooltip,
+                child: Icon(Icons.remove, size: UI.iconL),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -9,13 +9,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   testWidgets('Counter increments and decrements using Bloc', (
     WidgetTester tester,
   ) async {
     await initializeDateFormatting('en');
+    SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const MyApp());
+    final Finder incrementFinder =
+        find.widgetWithIcon(FloatingActionButton, Icons.add);
+    FloatingActionButton incrementFab =
+        tester.widget<FloatingActionButton>(incrementFinder);
+    if (incrementFab.onPressed == null) {
+      // Wait for repository load to finish and enable the controls.
+      for (int i = 0; i < 10; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+        incrementFab = tester.widget<FloatingActionButton>(incrementFinder);
+        if (incrementFab.onPressed != null) {
+          break;
+        }
+      }
+    }
+    expect(incrementFab.onPressed, isNotNull);
 
     // There may be multiple '0' texts in UI; rely on semantics by tapping FABs
     expect(find.text('0'), findsWidgets);

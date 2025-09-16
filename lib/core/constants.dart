@@ -16,4 +16,7 @@ class AppConstants {
   // Constraints
   static const double minContentWidth = 390;
   static const double minContentHeight = 390;
+
+  // UI/UX
+  static const Duration devSkeletonDelay = Duration(milliseconds: 1200);
 }

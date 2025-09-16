@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/features.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
@@ -23,9 +24,8 @@ class _MyAppState extends State<MyApp> {
       GoRoute(
         path: AppRoutes.counterPath,
         name: AppRoutes.counter,
-        builder: (context, state) => CounterPage(
-          title: AppLocalizations.of(context).homeTitle,
-        ),
+        builder: (context, state) =>
+            CounterPage(title: AppLocalizations.of(context).homeTitle),
       ),
       GoRoute(
         path: AppRoutes.examplePath,
@@ -45,10 +45,14 @@ class _MyAppState extends State<MyApp> {
           create: (_) => CounterCubit(
             repository: getIt<CounterRepository>(),
             timerService: getIt(),
+            loadDelay: FlavorManager.I.isDev
+                ? AppConstants.devSkeletonDelay
+                : Duration.zero,
           )..loadInitial(),
         ),
         BlocProvider(
-          create: (_) => ThemeCubit(repository: getIt<ThemeRepository>())..loadInitial(),
+          create: (_) =>
+              ThemeCubit(repository: getIt<ThemeRepository>())..loadInitial(),
         ),
       ],
       child: ScreenUtilInit(

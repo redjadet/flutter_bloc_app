@@ -45,6 +45,8 @@ dependencies:
   get_it: ^8.2.0
   http: ^1.2.2
   go_router: ^16.2.1
+  fancy_shimmer_image: ^2.0.3
+  skeletonizer: ^2.1.0+1
 
 dev_dependencies:
   flutter_test:
