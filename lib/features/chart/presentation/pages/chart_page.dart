@@ -1,9 +1,11 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chart/chart.dart';
+import 'package:flutter_bloc_app/features/chart/data/delayed_chart_repository.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ChartPage extends StatefulWidget {
   const ChartPage({super.key});
@@ -20,8 +22,16 @@ class _ChartPageState extends State<ChartPage> {
   @override
   void initState() {
     super.initState();
-    _repository = ChartRepository();
+    _repository = DelayedChartRepository();
     _future = _repository.fetchTrendingCounts();
+  }
+
+  Future<void> _handleRefresh() {
+    final next = _repository.fetchTrendingCounts();
+    setState(() {
+      _future = next;
+    });
+    return next.then((_) {});
   }
 
   @override
@@ -29,56 +39,103 @@ class _ChartPageState extends State<ChartPage> {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.chartPageTitle)),
-      body: FutureBuilder<List<ChartPoint>>(
-        future: _future,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                l10n.chartPageError,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            );
-          }
-          final points = snapshot.data ?? const [];
-          if (points.isEmpty) {
-            return Center(
-              child: Text(
-                l10n.chartPageEmpty,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            );
-          }
-          final locale = Localizations.localeOf(context).toString();
-          final dateFormat = DateFormat.Md(locale);
-          return Padding(
-            padding: EdgeInsets.all(UI.gapL),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  l10n.chartPageDescription,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                SizedBox(height: UI.gapL),
-                SwitchListTile.adaptive(
-                  value: _zoomEnabled,
-                  onChanged: (value) {
-                    setState(() => _zoomEnabled = value);
-                  },
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(l10n.chartZoomToggleLabel),
-                ),
-                SizedBox(height: UI.gapS),
-                Expanded(child: _buildChart(points, dateFormat)),
-              ],
-            ),
-          );
-        },
+      body: RefreshIndicator(
+        onRefresh: _handleRefresh,
+        child: FutureBuilder<List<ChartPoint>>(
+          future: _future,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting &&
+                !snapshot.hasData) {
+              return _buildLoadingList();
+            }
+            if (snapshot.hasError) {
+              return _buildMessageList(context, l10n.chartPageError);
+            }
+            final points = snapshot.data ?? const [];
+            if (points.isEmpty) {
+              return _buildMessageList(context, l10n.chartPageEmpty);
+            }
+            final locale = Localizations.localeOf(context).toString();
+            final dateFormat = DateFormat.Md(locale);
+            return _buildContentList(context, l10n, points, dateFormat);
+          },
+        ),
       ),
+    );
+  }
+
+  Widget _buildLoadingList() {
+    final theme = Theme.of(context);
+    return Skeletonizer(
+      effect: ShimmerEffect(
+        baseColor: theme.colorScheme.surfaceContainerHigh,
+        highlightColor: theme.colorScheme.surface,
+      ),
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.all(UI.gapL),
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height * 0.28,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(UI.radiusM),
+              color: theme.colorScheme.surfaceContainerHighest,
+            ),
+          ),
+          SizedBox(height: UI.gapL),
+          Container(
+            height: 48,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(UI.radiusM),
+              color: theme.colorScheme.surfaceContainerHighest,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageList(BuildContext context, String message) {
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: EdgeInsets.all(UI.gapL),
+      children: [
+        SizedBox(height: UI.gapL * 2),
+        Center(
+          child: Text(message, style: Theme.of(context).textTheme.bodyLarge),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildContentList(
+    BuildContext context,
+    AppLocalizations l10n,
+    List<ChartPoint> points,
+    DateFormat dateFormat,
+  ) {
+    final chartHeight = MediaQuery.of(context).size.height * 0.45;
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: EdgeInsets.all(UI.gapL),
+      children: [
+        Text(
+          l10n.chartPageDescription,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        SizedBox(height: UI.gapL),
+        SwitchListTile.adaptive(
+          value: _zoomEnabled,
+          onChanged: (value) {
+            setState(() => _zoomEnabled = value);
+          },
+          contentPadding: EdgeInsets.zero,
+          title: Text(l10n.chartZoomToggleLabel),
+        ),
+        SizedBox(height: UI.gapS),
+        SizedBox(height: chartHeight, child: _buildChart(points, dateFormat)),
+        SizedBox(height: UI.gapL),
+      ],
     );
   }
 

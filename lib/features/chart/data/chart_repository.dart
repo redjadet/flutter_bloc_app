@@ -12,23 +12,45 @@ class ChartRepository {
     'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart'
     '?vs_currency=usd&days=7&interval=daily',
   );
+  static const Duration _cacheDuration = Duration(minutes: 3);
+  static List<ChartPoint>? _cached;
+  static DateTime? _lastFetched;
 
   Future<List<ChartPoint>> fetchTrendingCounts() async {
+    final now = DateTime.now();
+    if (_cached != null && _lastFetched != null &&
+        now.difference(_lastFetched!) < _cacheDuration) {
+      return _cached!;
+    }
     try {
-      final http.Response response = await _client.get(_endpoint);
+      final http.Response response = await _client.get(_endpoint, headers: {
+        'accept': 'application/json',
+      });
       if (response.statusCode == 200) {
-        return _parseBody(response.body);
+        final parsed = _parseBody(response.body);
+        _cached = parsed;
+        _lastFetched = now;
+        return parsed;
       }
       AppLogger.warning(
         'ChartRepository.fetchTrendingCounts fallback '
         'due to status ${response.statusCode}',
       );
+      if (_cached != null) {
+        return _cached!;
+      }
     } catch (e, s) {
       AppLogger.warning('ChartRepository.fetchTrendingCounts falling back');
       AppLogger.debug('ChartRepository error details: $e');
       AppLogger.error('ChartRepository failure', e, s);
+      if (_cached != null) {
+        return _cached!;
+      }
     }
-    return _fallbackData;
+    final fallback = _fallbackData;
+    _cached = fallback;
+    _lastFetched = now;
+    return fallback;
   }
 
   List<ChartPoint> _parseBody(String body) {
