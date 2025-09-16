@@ -55,7 +55,7 @@ flowchart LR
 - `lib/presentation/`
   - `counter_state.dart`: UI katmanında kullanılan sunum durumu modeli.
   - `widgets/`: Küçük, tek amaçlı View bileşenleri.
-    - `counter_display.dart`
+    - `counter_display/counter_display.dart`
     - `countdown_bar.dart`
     - `counter_actions.dart`
 - `lib/` (Presenter)

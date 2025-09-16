@@ -3,13 +3,15 @@ import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesThemeRepository implements ThemeRepository {
-  SharedPreferencesThemeRepository([SharedPreferences? instance]) : _prefsInstance = instance;
+  SharedPreferencesThemeRepository([SharedPreferences? instance])
+    : _prefsInstance = instance;
 
   static const String _prefsKey = 'theme_mode';
   final SharedPreferences? _prefsInstance;
 
-  Future<SharedPreferences> _prefs() =>
-      _prefsInstance != null ? Future.value(_prefsInstance) : SharedPreferences.getInstance();
+  Future<SharedPreferences> _prefs() => _prefsInstance != null
+      ? Future.value(_prefsInstance)
+      : SharedPreferences.getInstance();
 
   @override
   Future<ThemeMode?> load() async {
