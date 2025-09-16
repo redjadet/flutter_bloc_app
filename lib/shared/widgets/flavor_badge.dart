@@ -13,6 +13,8 @@ class FlavorBadge extends StatelessWidget {
     final (String label, Color color) = switch (flavor) {
       Flavor.dev => ('DEV', colors.error),
       Flavor.staging => ('STG', colors.tertiary),
+      Flavor.qa => ('QA', colors.secondary),
+      Flavor.beta => ('BETA', colors.primary),
       Flavor.prod => ('', colors.primary),
     };
 
