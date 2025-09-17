@@ -320,6 +320,24 @@ abstract class AppLocalizations {
   /// **'Start the conversation by sending a message.'**
   String get chatEmptyState;
 
+  /// No description provided for @chatModelLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Model'**
+  String get chatModelLabel;
+
+  /// No description provided for @chatModelGptOss20b.
+  ///
+  /// In en, this message translates to:
+  /// **'GPT-OSS-20B'**
+  String get chatModelGptOss20b;
+
+  /// No description provided for @chatModelGptOss120b.
+  ///
+  /// In en, this message translates to:
+  /// **'GPT-OSS-120B'**
+  String get chatModelGptOss120b;
+
   /// No description provided for @chartPageTitle.
   ///
   /// In en, this message translates to:

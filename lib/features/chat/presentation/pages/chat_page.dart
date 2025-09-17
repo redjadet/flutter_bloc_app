@@ -39,6 +39,61 @@ class _ChatPageState extends State<ChatPage> {
       appBar: AppBar(title: Text(l10n.chatPageTitle)),
       body: Column(
         children: <Widget>[
+          Padding(
+            padding: EdgeInsets.fromLTRB(UI.hgapL, UI.gapM, UI.hgapL, UI.gapS),
+            child: BlocBuilder<ChatCubit, ChatState>(
+              buildWhen: (prev, curr) => prev.currentModel != curr.currentModel,
+              builder: (context, state) {
+                final ChatCubit cubit = context.read<ChatCubit>();
+                final List<String> models = cubit.models;
+                final String currentModel = state.currentModel ?? models.first;
+
+                if (models.length <= 1) {
+                  return Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      '${l10n.chatModelLabel}: '
+                      '${_modelLabel(l10n, currentModel)}',
+                      style: theme.textTheme.titleMedium,
+                    ),
+                  );
+                }
+
+                return Row(
+                  children: <Widget>[
+                    Text(
+                      l10n.chatModelLabel,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    SizedBox(width: UI.hgapS),
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        initialValue: currentModel,
+                        items: models
+                            .map(
+                              (String model) => DropdownMenuItem<String>(
+                                value: model,
+                                child: Text(_modelLabel(l10n, model)),
+                              ),
+                            )
+                            .toList(growable: false),
+                        onChanged: (String? value) {
+                          if (value != null) {
+                            cubit.selectModel(value);
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                        ),
+                        isExpanded: true,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
           Expanded(
             child: BlocConsumer<ChatCubit, ChatState>(
               listener: (context, state) {
@@ -166,5 +221,16 @@ class _ChatPageState extends State<ChatPage> {
         ],
       ),
     );
+  }
+
+  String _modelLabel(AppLocalizations l10n, String model) {
+    switch (model) {
+      case 'openai/gpt-oss-20b':
+        return l10n.chatModelGptOss20b;
+      case 'openai/gpt-oss-120b':
+        return l10n.chatModelGptOss120b;
+      default:
+        return model;
+    }
   }
 }

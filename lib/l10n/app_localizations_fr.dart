@@ -123,6 +123,15 @@ class AppLocalizationsFr extends AppLocalizations {
       'Commencez la conversation en envoyant un message.';
 
   @override
+  String get chatModelLabel => 'Modèle';
+
+  @override
+  String get chatModelGptOss20b => 'GPT-OSS-20B';
+
+  @override
+  String get chatModelGptOss120b => 'GPT-OSS-120B';
+
+  @override
   String get chartPageTitle => 'Prix du Bitcoin (USD)';
 
   @override

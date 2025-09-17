@@ -7,6 +7,7 @@ class ChatState {
     this.error,
     this.pastUserInputs = const <String>[],
     this.generatedResponses = const <String>[],
+    this.currentModel,
   });
 
   final List<ChatMessage> messages;
@@ -14,6 +15,7 @@ class ChatState {
   final String? error;
   final List<String> pastUserInputs;
   final List<String> generatedResponses;
+  final String? currentModel;
 
   ChatState copyWith({
     List<ChatMessage>? messages,
@@ -22,6 +24,7 @@ class ChatState {
     bool clearError = false,
     List<String>? pastUserInputs,
     List<String>? generatedResponses,
+    String? currentModel,
   }) {
     return ChatState(
       messages: messages ?? this.messages,
@@ -29,6 +32,7 @@ class ChatState {
       error: clearError ? null : (error ?? this.error),
       pastUserInputs: pastUserInputs ?? this.pastUserInputs,
       generatedResponses: generatedResponses ?? this.generatedResponses,
+      currentModel: currentModel ?? this.currentModel,
     );
   }
 }

@@ -120,6 +120,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get chatEmptyState => 'Sohbete bir mesaj göndererek başla.';
 
   @override
+  String get chatModelLabel => 'Model';
+
+  @override
+  String get chatModelGptOss20b => 'GPT-OSS-20B';
+
+  @override
+  String get chatModelGptOss120b => 'GPT-OSS-120B';
+
+  @override
   String get chartPageTitle => 'Bitcoin Fiyatı (USD)';
 
   @override

@@ -5,6 +5,7 @@ abstract class ChatRepository {
     required List<String> pastUserInputs,
     required List<String> generatedResponses,
     required String prompt,
+    String? model,
   });
 }
 

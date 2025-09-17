@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
@@ -47,7 +48,10 @@ class _MyAppState extends State<MyApp> {
         path: AppRoutes.chatPath,
         name: AppRoutes.chat,
         builder: (context, state) => BlocProvider(
-          create: (_) => ChatCubit(repository: getIt<ChatRepository>()),
+          create: (_) => ChatCubit(
+            repository: getIt<ChatRepository>(),
+            initialModel: SecretConfig.huggingfaceModel,
+          ),
           child: const ChatPage(),
         ),
       ),

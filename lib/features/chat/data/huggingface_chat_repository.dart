@@ -28,8 +28,6 @@ class HuggingfaceChatRepository implements ChatRepository {
   final String _model;
   final bool _useChatCompletions;
 
-  Uri get _inferenceUri => Uri.parse('$_inferenceBaseUrl/$_model');
-
   Map<String, String> get _headers => <String, String>{
     'Content-Type': 'application/json',
     if (_apiKey != null) 'Authorization': 'Bearer $_apiKey',
@@ -40,21 +38,25 @@ class HuggingfaceChatRepository implements ChatRepository {
     required List<String> pastUserInputs,
     required List<String> generatedResponses,
     required String prompt,
+    String? model,
   }) async {
     if (_apiKey == null) {
       throw const ChatException('Missing Hugging Face API token.');
     }
 
+    final String? override = _normalize(model);
     return _useChatCompletions
         ? _sendViaChatCompletions(
             pastUserInputs: pastUserInputs,
             generatedResponses: generatedResponses,
             prompt: prompt,
+            modelOverride: override,
           )
         : _sendViaInference(
             pastUserInputs: pastUserInputs,
             generatedResponses: generatedResponses,
             prompt: prompt,
+            modelOverride: override,
           );
   }
 
@@ -62,7 +64,9 @@ class HuggingfaceChatRepository implements ChatRepository {
     required List<String> pastUserInputs,
     required List<String> generatedResponses,
     required String prompt,
+    String? modelOverride,
   }) async {
+    final String targetModel = modelOverride ?? _model;
     final Map<String, dynamic> payload = <String, dynamic>{
       'inputs': <String, dynamic>{
         'past_user_inputs': pastUserInputs,
@@ -72,7 +76,7 @@ class HuggingfaceChatRepository implements ChatRepository {
     };
 
     final Map<String, dynamic> json = await _postJson(
-      _inferenceUri,
+      Uri.parse('$_inferenceBaseUrl/$targetModel'),
       payload,
       context: 'inference',
     );
@@ -101,9 +105,11 @@ class HuggingfaceChatRepository implements ChatRepository {
     required List<String> pastUserInputs,
     required List<String> generatedResponses,
     required String prompt,
+    String? modelOverride,
   }) async {
+    final String targetModel = modelOverride ?? _model;
     final Map<String, dynamic> payload = <String, dynamic>{
-      'model': _model,
+      'model': targetModel,
       'messages': <Map<String, String>>[
         for (
           int i = 0;

@@ -120,6 +120,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatEmptyState => 'Start the conversation by sending a message.';
 
   @override
+  String get chatModelLabel => 'Model';
+
+  @override
+  String get chatModelGptOss20b => 'GPT-OSS-20B';
+
+  @override
+  String get chatModelGptOss120b => 'GPT-OSS-120B';
+
+  @override
   String get chartPageTitle => 'Bitcoin Price (USD)';
 
   @override
