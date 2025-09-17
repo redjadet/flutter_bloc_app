@@ -102,6 +102,49 @@ void main() {
       expect(history.conversations.first.messages.length, 2);
       expect(history.conversations.first.pastUserInputs, isNotEmpty);
     });
+
+    test('loadHistory removes empty conversations from storage', () async {
+      final FakeChatRepository repo = FakeChatRepository();
+      final FakeChatHistoryRepository history = FakeChatHistoryRepository();
+      history.conversations = <ChatConversation>[
+        ChatConversation(id: 'empty', createdAt: DateTime(2024, 1, 1)),
+      ];
+
+      final ChatCubit cubit = ChatCubit(
+        repository: repo,
+        historyRepository: history,
+        initialModel: 'openai/gpt-oss-20b',
+      );
+
+      await cubit.loadHistory();
+
+      expect(cubit.state.history, isEmpty);
+      expect(history.conversations, isEmpty);
+      expect(cubit.state.messages, isEmpty);
+    });
+
+    test(
+      'clearHistory removes stored conversations and resets state',
+      () async {
+        final FakeChatRepository repo = FakeChatRepository();
+        final FakeChatHistoryRepository history = FakeChatHistoryRepository();
+        final ChatCubit cubit = ChatCubit(
+          repository: repo,
+          historyRepository: history,
+          initialModel: 'openai/gpt-oss-20b',
+        );
+
+        await cubit.sendMessage('Hello');
+        final String previousActiveId = cubit.state.activeConversationId!;
+
+        await cubit.clearHistory();
+
+        expect(cubit.state.history, isEmpty);
+        expect(history.conversations, isEmpty);
+        expect(cubit.state.messages, isEmpty);
+        expect(cubit.state.activeConversationId, isNot(previousActiveId));
+      },
+    );
   });
 }
 

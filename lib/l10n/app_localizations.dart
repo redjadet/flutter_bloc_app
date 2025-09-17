@@ -362,6 +362,42 @@ abstract class AppLocalizations {
   /// **'Start new conversation'**
   String get chatHistoryStartNew;
 
+  /// Button label for clearing all stored chat conversations
+  ///
+  /// In en, this message translates to:
+  /// **'Delete history'**
+  String get chatHistoryClearAll;
+
+  /// Tooltip for removing a single conversation from history
+  ///
+  /// In en, this message translates to:
+  /// **'Delete conversation'**
+  String get chatHistoryDeleteConversation;
+
+  /// Warning message shown before clearing all chat history
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete all stored conversations.'**
+  String get chatHistoryClearAllWarning;
+
+  /// Warning displayed before deleting a specific conversation
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{title}\"?'**
+  String chatHistoryDeleteConversationWarning(String title);
+
+  /// Generic cancel button label
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelButtonLabel;
+
+  /// Generic delete button label
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteButtonLabel;
+
   /// Message shown when no stored chat history is available
   ///
   /// In en, this message translates to:

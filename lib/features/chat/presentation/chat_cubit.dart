@@ -32,7 +32,11 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> loadHistory() async {
     final List<ChatConversation> stored = await _historyRepository.load();
-    List<ChatConversation> history = _sortHistory(stored);
+    final List<ChatConversation> filtered = stored
+        .where((ChatConversation c) => c.hasContent)
+        .toList();
+    List<ChatConversation> history = _sortHistory(filtered);
+    bool needsPersist = filtered.length != stored.length;
 
     ChatConversation? active = _conversationById(
       history,
@@ -41,17 +45,18 @@ class ChatCubit extends Cubit<ChatState> {
 
     active ??= history.isNotEmpty ? history.first : null;
 
-    if (active == null) {
-      active = _createEmptyConversation(model: state.currentModel);
-      history.insert(0, active);
-      history = _sortHistory(history);
-      await _persistHistory(history);
-    }
+    active ??= _createEmptyConversation(model: state.currentModel);
 
     final String resolvedModel = _resolveModelForConversation(active);
     if (active.model != resolvedModel) {
       active = active.copyWith(model: resolvedModel);
-      history = _replaceConversation(active, history: history);
+      if (history.any((ChatConversation c) => c.id == active!.id)) {
+        history = _replaceConversation(active, history: history);
+        needsPersist = true;
+      }
+    }
+
+    if (needsPersist) {
       await _persistHistory(history);
     }
 
@@ -146,6 +151,92 @@ class ChatCubit extends Cubit<ChatState> {
     if (state.hasError) {
       emit(state.copyWith(error: null));
     }
+  }
+
+  Future<void> clearHistory() async {
+    if (state.history.isEmpty) {
+      final ChatConversation fresh = _createEmptyConversation(
+        model: _currentModel,
+      );
+      emit(
+        state.copyWith(
+          history: const <ChatConversation>[],
+          activeConversationId: fresh.id,
+          messages: fresh.messages,
+          pastUserInputs: fresh.pastUserInputs,
+          generatedResponses: fresh.generatedResponses,
+          isLoading: false,
+          error: null,
+        ),
+      );
+      return;
+    }
+
+    await _historyRepository.save(const <ChatConversation>[]);
+    final ChatConversation fresh = _createEmptyConversation(
+      model: _currentModel,
+    );
+    emit(
+      state.copyWith(
+        history: const <ChatConversation>[],
+        activeConversationId: fresh.id,
+        messages: fresh.messages,
+        pastUserInputs: fresh.pastUserInputs,
+        generatedResponses: fresh.generatedResponses,
+        isLoading: false,
+        error: null,
+      ),
+    );
+  }
+
+  Future<void> deleteConversation(String conversationId) async {
+    final List<ChatConversation> history = List<ChatConversation>.from(
+      state.history,
+    );
+    final int index = history.indexWhere(
+      (ChatConversation c) => c.id == conversationId,
+    );
+    if (index < 0) {
+      return;
+    }
+
+    history.removeAt(index);
+    await _historyRepository.save(history);
+
+    if (history.isEmpty) {
+      final ChatConversation fresh = _createEmptyConversation(
+        model: _currentModel,
+      );
+      emit(
+        state.copyWith(
+          history: const <ChatConversation>[],
+          activeConversationId: fresh.id,
+          messages: fresh.messages,
+          pastUserInputs: fresh.pastUserInputs,
+          generatedResponses: fresh.generatedResponses,
+          currentModel: _currentModel,
+        ),
+      );
+      return;
+    }
+
+    final ChatConversation desiredActive =
+        state.activeConversationId == conversationId
+        ? history.first
+        : _conversationById(history, state.activeConversationId) ??
+              history.first;
+    final String resolvedModel = _resolveModelForConversation(desiredActive);
+
+    emit(
+      state.copyWith(
+        history: history,
+        activeConversationId: desiredActive.id,
+        messages: desiredActive.messages,
+        pastUserInputs: desiredActive.pastUserInputs,
+        generatedResponses: desiredActive.generatedResponses,
+        currentModel: resolvedModel,
+      ),
+    );
   }
 
   Future<void> resetConversation() async {
@@ -288,7 +379,10 @@ class ChatCubit extends Cubit<ChatState> {
     final ChatConversation conversation = _createEmptyConversation(
       model: state.currentModel,
     );
-    final List<ChatConversation> history = _replaceConversation(conversation);
+
+    final List<ChatConversation> history = conversation.hasContent
+        ? _replaceConversation(conversation)
+        : state.history;
 
     emit(
       state.copyWith(
@@ -299,7 +393,9 @@ class ChatCubit extends Cubit<ChatState> {
         generatedResponses: conversation.generatedResponses,
       ),
     );
-    unawaited(_persistHistory(history));
+    if (conversation.hasContent) {
+      unawaited(_persistHistory(history));
+    }
 
     return conversation;
   }
@@ -324,11 +420,17 @@ class ChatCubit extends Cubit<ChatState> {
     final int index = updated.indexWhere(
       (ChatConversation c) => c.id == conversation.id,
     );
+
     if (index >= 0) {
-      updated[index] = conversation;
-    } else {
+      if (conversation.hasContent) {
+        updated[index] = conversation;
+      } else {
+        updated.removeAt(index);
+      }
+    } else if (conversation.hasContent) {
       updated.add(conversation);
     }
+
     updated.sort(
       (ChatConversation a, ChatConversation b) =>
           b.updatedAt.compareTo(a.updatedAt),

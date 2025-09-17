@@ -26,4 +26,6 @@ abstract class ChatState with _$ChatState {
   bool get hasMessages => messages.isNotEmpty;
   bool get hasHistory => history.isNotEmpty;
   bool get canSend => !isLoading;
+  bool get hasContent =>
+      hasMessages || pastUserInputs.isNotEmpty || generatedResponses.isNotEmpty;
 }

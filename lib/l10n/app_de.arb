@@ -50,7 +50,42 @@
   "chatHistoryHideTooltip": "Verlauf ausblenden",
   "chatHistoryPanelTitle": "Konversationsverlauf",
   "chatHistoryStartNew": "Neue Unterhaltung starten",
+  "@chatHistoryStartNew": {
+    "description": "Schaltfläche zum Starten einer neuen Unterhaltung"
+  },
+  "chatHistoryClearAll": "Verlauf löschen",
+  "@chatHistoryClearAll": {
+    "description": "Schaltfläche zum Löschen des gesamten gespeicherten Gesprächsverlaufs"
+  },
+  "chatHistoryDeleteConversation": "Unterhaltung löschen",
+  "@chatHistoryDeleteConversation": {
+    "description": "Tooltip zum Entfernen einer einzelnen Unterhaltung aus dem Verlauf"
+  },
+  "chatHistoryClearAllWarning": "Dadurch werden alle gespeicherten Unterhaltungen dauerhaft gelöscht.",
+  "@chatHistoryClearAllWarning": {
+    "description": "Warnhinweis vor dem Löschen des gesamten Gesprächsverlaufs"
+  },
+  "chatHistoryDeleteConversationWarning": "\"{title}\" löschen?",
+  "@chatHistoryDeleteConversationWarning": {
+    "description": "Warnung vor dem Entfernen einer bestimmten Unterhaltung",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelButtonLabel": "Abbrechen",
+  "@cancelButtonLabel": {
+    "description": "Allgemeine Beschriftung für Abbrechen"
+  },
+  "deleteButtonLabel": "Löschen",
+  "@deleteButtonLabel": {
+    "description": "Allgemeine Beschriftung für Löschen"
+  },
   "chatHistoryEmpty": "Noch keine gespeicherten Unterhaltungen.",
+  "@chatHistoryEmpty": {
+    "description": "Hinweis, wenn kein gespeicherter Gesprächsverlauf vorhanden ist"
+  },
   "chatHistoryConversationTitle": "Unterhaltung {index}",
   "@chatHistoryConversationTitle": {
     "placeholders": {

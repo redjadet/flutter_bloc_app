@@ -321,10 +321,26 @@ class _ChatHistoryPanel extends StatelessWidget {
                       TextButton.icon(
                         icon: const Icon(Icons.add),
                         label: Text(l10n.chatHistoryStartNew),
-                        onPressed: () {
-                          cubit.resetConversation();
+                        onPressed: () async {
+                          await cubit.resetConversation();
                           onClose();
                         },
+                      ),
+                      TextButton.icon(
+                        icon: const Icon(Icons.delete_outline),
+                        label: Text(l10n.chatHistoryClearAll),
+                        onPressed: state.hasHistory
+                            ? () async {
+                                final bool confirmed =
+                                    await _showClearHistoryDialog(
+                                      context,
+                                      l10n,
+                                    );
+                                if (!confirmed) return;
+                                await cubit.clearHistory();
+                                onClose();
+                              }
+                            : null,
                       ),
                       SizedBox(height: UI.gapS),
                       Expanded(
@@ -340,11 +356,11 @@ class _ChatHistoryPanel extends StatelessWidget {
                                     materialLocalizations,
                                     conversation.updatedAt,
                                   );
-                                  final String title =
-                                      conversation.model ??
-                                      l10n.chatHistoryConversationTitle(
-                                        index + 1,
-                                      );
+                                  final String title = _conversationTitle(
+                                    l10n,
+                                    index,
+                                    conversation,
+                                  );
                                   final String? preview =
                                       conversation.messages.isNotEmpty
                                       ? conversation.messages.last.text
@@ -359,6 +375,23 @@ class _ChatHistoryPanel extends StatelessWidget {
                                       cubit.selectConversation(conversation.id);
                                       onClose();
                                     },
+                                    trailing: IconButton(
+                                      tooltip:
+                                          l10n.chatHistoryDeleteConversation,
+                                      icon: const Icon(Icons.delete_outline),
+                                      onPressed: () async {
+                                        final bool confirmed =
+                                            await _showDeleteConversationDialog(
+                                              context,
+                                              l10n,
+                                              title,
+                                            );
+                                        if (!confirmed) return;
+                                        await cubit.deleteConversation(
+                                          conversation.id,
+                                        );
+                                      },
+                                    ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                         UI.radiusM,
@@ -448,4 +481,63 @@ class _ChatHistoryPanel extends StatelessWidget {
     final String formattedTime = materialLocalizations.formatTimeOfDay(time);
     return '$date · $formattedTime';
   }
+}
+
+Future<bool> _showClearHistoryDialog(
+  BuildContext context,
+  AppLocalizations l10n,
+) async {
+  return await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l10n.chatHistoryClearAll),
+          content: Text(l10n.chatHistoryClearAllWarning),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(l10n.cancelButtonLabel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(l10n.deleteButtonLabel),
+            ),
+          ],
+        ),
+      ) ??
+      false;
+}
+
+Future<bool> _showDeleteConversationDialog(
+  BuildContext context,
+  AppLocalizations l10n,
+  String conversationTitle,
+) async {
+  return await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l10n.chatHistoryDeleteConversation),
+          content: Text(
+            l10n.chatHistoryDeleteConversationWarning(conversationTitle),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(l10n.cancelButtonLabel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(l10n.deleteButtonLabel),
+            ),
+          ],
+        ),
+      ) ??
+      false;
+}
+
+String _conversationTitle(
+  AppLocalizations l10n,
+  int index,
+  ChatConversation conversation,
+) {
+  return conversation.model ?? l10n.chatHistoryConversationTitle(index + 1);
 }

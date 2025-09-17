@@ -51,7 +51,42 @@
   "chatHistoryHideTooltip": "Geçmişi gizle",
   "chatHistoryPanelTitle": "Sohbet geçmişi",
   "chatHistoryStartNew": "Yeni sohbet başlat",
+  "@chatHistoryStartNew": {
+    "description": "Yeni bir sohbet konuşması başlatan buton etiketi"
+  },
+  "chatHistoryClearAll": "Geçmişi sil",
+  "@chatHistoryClearAll": {
+    "description": "Tüm kayıtlı sohbet geçmişini temizleyen buton etiketi"
+  },
+  "chatHistoryDeleteConversation": "Sohbeti sil",
+  "@chatHistoryDeleteConversation": {
+    "description": "Tek bir sohbet konuşmasını geçmişten kaldırmak için araç ipucu"
+  },
+  "chatHistoryClearAllWarning": "Bu işlem tüm kayıtlı sohbetleri kalıcı olarak silecek.",
+  "@chatHistoryClearAllWarning": {
+    "description": "Tüm sohbet geçmişi silinmeden önce gösterilen uyarı"
+  },
+  "chatHistoryDeleteConversationWarning": "\"{title}\" konuşmasını silmek istiyor musun?",
+  "@chatHistoryDeleteConversationWarning": {
+    "description": "Belirli bir konuşmayı silmeden önce gösterilen uyarı",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelButtonLabel": "Vazgeç",
+  "@cancelButtonLabel": {
+    "description": "Genel iptal düğmesi etiketi"
+  },
+  "deleteButtonLabel": "Sil",
+  "@deleteButtonLabel": {
+    "description": "Genel sil düğmesi etiketi"
+  },
   "chatHistoryEmpty": "Henüz kayıtlı sohbet yok.",
+  "@chatHistoryEmpty": {
+    "description": "Kaydedilmiş sohbet geçmişi olmadığında gösterilen mesaj"
+  },
   "chatHistoryConversationTitle": "Sohbet {index}",
   "@chatHistoryConversationTitle": {
     "placeholders": {

@@ -141,6 +141,27 @@ class AppLocalizationsTr extends AppLocalizations {
   String get chatHistoryStartNew => 'Yeni sohbet başlat';
 
   @override
+  String get chatHistoryClearAll => 'Geçmişi sil';
+
+  @override
+  String get chatHistoryDeleteConversation => 'Sohbeti sil';
+
+  @override
+  String get chatHistoryClearAllWarning =>
+      'Bu işlem tüm kayıtlı sohbetleri kalıcı olarak silecek.';
+
+  @override
+  String chatHistoryDeleteConversationWarning(String title) {
+    return '\"$title\" konuşmasını silmek istiyor musun?';
+  }
+
+  @override
+  String get cancelButtonLabel => 'Vazgeç';
+
+  @override
+  String get deleteButtonLabel => 'Sil';
+
+  @override
   String get chatHistoryEmpty => 'Henüz kayıtlı sohbet yok.';
 
   @override

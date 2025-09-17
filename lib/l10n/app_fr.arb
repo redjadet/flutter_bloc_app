@@ -50,7 +50,42 @@
   "chatHistoryHideTooltip": "Masquer l'historique",
   "chatHistoryPanelTitle": "Historique des conversations",
   "chatHistoryStartNew": "Commencer une nouvelle conversation",
+  "@chatHistoryStartNew": {
+    "description": "Libellé du bouton permettant de démarrer une nouvelle conversation"
+  },
+  "chatHistoryClearAll": "Supprimer l'historique",
+  "@chatHistoryClearAll": {
+    "description": "Libellé du bouton qui efface tout l'historique des conversations"
+  },
+  "chatHistoryDeleteConversation": "Supprimer la conversation",
+  "@chatHistoryDeleteConversation": {
+    "description": "Infobulle pour supprimer une conversation individuelle de l'historique"
+  },
+  "chatHistoryClearAllWarning": "Cela supprimera définitivement toutes les conversations enregistrées.",
+  "@chatHistoryClearAllWarning": {
+    "description": "Avertissement affiché avant de supprimer tout l'historique"
+  },
+  "chatHistoryDeleteConversationWarning": "Supprimer \"{title}\" ?",
+  "@chatHistoryDeleteConversationWarning": {
+    "description": "Avertissement affiché avant de supprimer une conversation spécifique",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelButtonLabel": "Annuler",
+  "@cancelButtonLabel": {
+    "description": "Intitulé générique pour annuler"
+  },
+  "deleteButtonLabel": "Supprimer",
+  "@deleteButtonLabel": {
+    "description": "Intitulé générique pour supprimer"
+  },
   "chatHistoryEmpty": "Aucune conversation enregistrée pour le moment.",
+  "@chatHistoryEmpty": {
+    "description": "Message affiché lorsqu'aucune conversation n'est enregistrée"
+  },
   "chatHistoryConversationTitle": "Conversation {index}",
   "@chatHistoryConversationTitle": {
     "placeholders": {

@@ -144,6 +144,27 @@ class AppLocalizationsFr extends AppLocalizations {
   String get chatHistoryStartNew => 'Commencer une nouvelle conversation';
 
   @override
+  String get chatHistoryClearAll => 'Supprimer l\'historique';
+
+  @override
+  String get chatHistoryDeleteConversation => 'Supprimer la conversation';
+
+  @override
+  String get chatHistoryClearAllWarning =>
+      'Cela supprimera définitivement toutes les conversations enregistrées.';
+
+  @override
+  String chatHistoryDeleteConversationWarning(String title) {
+    return 'Supprimer \"$title\" ?';
+  }
+
+  @override
+  String get cancelButtonLabel => 'Annuler';
+
+  @override
+  String get deleteButtonLabel => 'Supprimer';
+
+  @override
   String get chatHistoryEmpty =>
       'Aucune conversation enregistrée pour le moment.';
 

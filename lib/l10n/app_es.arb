@@ -50,7 +50,42 @@
   "chatHistoryHideTooltip": "Ocultar historial",
   "chatHistoryPanelTitle": "Historial de conversaciones",
   "chatHistoryStartNew": "Iniciar nueva conversación",
+  "@chatHistoryStartNew": {
+    "description": "Etiqueta del botón para iniciar una nueva conversación"
+  },
+  "chatHistoryClearAll": "Eliminar historial",
+  "@chatHistoryClearAll": {
+    "description": "Etiqueta del botón que elimina todo el historial de conversaciones guardadas"
+  },
+  "chatHistoryDeleteConversation": "Eliminar conversación",
+  "@chatHistoryDeleteConversation": {
+    "description": "Tooltip para eliminar una sola conversación del historial"
+  },
+  "chatHistoryClearAllWarning": "Esto eliminará permanentemente todas las conversaciones guardadas.",
+  "@chatHistoryClearAllWarning": {
+    "description": "Advertencia mostrada antes de borrar todo el historial"
+  },
+  "chatHistoryDeleteConversationWarning": "¿Eliminar \"{title}\"?",
+  "@chatHistoryDeleteConversationWarning": {
+    "description": "Advertencia mostrada antes de eliminar una conversación específica",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelButtonLabel": "Cancelar",
+  "@cancelButtonLabel": {
+    "description": "Etiqueta genérica para cancelar"
+  },
+  "deleteButtonLabel": "Eliminar",
+  "@deleteButtonLabel": {
+    "description": "Etiqueta genérica para eliminar"
+  },
   "chatHistoryEmpty": "Todavía no hay conversaciones guardadas.",
+  "@chatHistoryEmpty": {
+    "description": "Mensaje mostrado cuando no hay historial de conversaciones"
+  },
   "chatHistoryConversationTitle": "Conversación {index}",
   "@chatHistoryConversationTitle": {
     "placeholders": {

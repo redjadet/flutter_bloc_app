@@ -42,6 +42,11 @@ class ChatConversation {
   final DateTime updatedAt;
   final String? model;
 
+  bool get hasContent =>
+      messages.isNotEmpty ||
+      pastUserInputs.isNotEmpty ||
+      generatedResponses.isNotEmpty;
+
   ChatConversation copyWith({
     List<ChatMessage>? messages,
     List<String>? pastUserInputs,

@@ -143,6 +143,27 @@ class AppLocalizationsDe extends AppLocalizations {
   String get chatHistoryStartNew => 'Neue Unterhaltung starten';
 
   @override
+  String get chatHistoryClearAll => 'Verlauf löschen';
+
+  @override
+  String get chatHistoryDeleteConversation => 'Unterhaltung löschen';
+
+  @override
+  String get chatHistoryClearAllWarning =>
+      'Dadurch werden alle gespeicherten Unterhaltungen dauerhaft gelöscht.';
+
+  @override
+  String chatHistoryDeleteConversationWarning(String title) {
+    return '\"$title\" löschen?';
+  }
+
+  @override
+  String get cancelButtonLabel => 'Abbrechen';
+
+  @override
+  String get deleteButtonLabel => 'Löschen';
+
+  @override
   String get chatHistoryEmpty => 'Noch keine gespeicherten Unterhaltungen.';
 
   @override
