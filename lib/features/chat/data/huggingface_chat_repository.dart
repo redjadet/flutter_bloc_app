@@ -12,30 +12,28 @@ class HuggingfaceChatRepository implements ChatRepository {
     String? model,
     bool useChatCompletions = false,
   }) : _client = client ?? http.Client(),
-       _apiKey = apiKey?.isEmpty ?? true ? null : apiKey,
-       _model = model ?? _defaultModel,
+       _apiKey = _normalize(apiKey),
+       _model = _normalize(model) ?? _defaultModel,
        _useChatCompletions = useChatCompletions;
 
-  static const String _baseUrl = 'https://api-inference.huggingface.co/models';
   static const String _defaultModel = 'HuggingFaceH4/zephyr-7b-beta';
-  static const String _chatCompletionsUrl =
-      'https://router.huggingface.co/v1/chat/completions';
+  static const String _inferenceBaseUrl =
+      'https://api-inference.huggingface.co/models';
+  static final Uri _chatCompletionsUri = Uri.parse(
+    'https://router.huggingface.co/v1/chat/completions',
+  );
 
   final http.Client _client;
   final String? _apiKey;
   final String _model;
   final bool _useChatCompletions;
 
-  Uri get _endpoint => _useChatCompletions
-      ? Uri.parse(_chatCompletionsUrl)
-      : Uri.parse('$_baseUrl/$_model');
+  Uri get _inferenceUri => Uri.parse('$_inferenceBaseUrl/$_model');
 
-  Map<String, String> _headers() {
-    return <String, String>{
-      'Content-Type': 'application/json',
-      if (_apiKey != null) 'Authorization': 'Bearer $_apiKey',
-    };
-  }
+  Map<String, String> get _headers => <String, String>{
+    'Content-Type': 'application/json',
+    if (_apiKey != null) 'Authorization': 'Bearer $_apiKey',
+  };
 
   @override
   Future<ChatResult> sendMessage({
@@ -47,22 +45,107 @@ class HuggingfaceChatRepository implements ChatRepository {
       throw const ChatException('Missing Hugging Face API token.');
     }
 
-    final Map<String, dynamic> payload = _useChatCompletions
-        ? _buildChatCompletionsPayload(
+    return _useChatCompletions
+        ? _sendViaChatCompletions(
             pastUserInputs: pastUserInputs,
             generatedResponses: generatedResponses,
             prompt: prompt,
           )
-        : _buildInferencePayload(
+        : _sendViaInference(
             pastUserInputs: pastUserInputs,
             generatedResponses: generatedResponses,
             prompt: prompt,
           );
+  }
 
+  Future<ChatResult> _sendViaInference({
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+  }) async {
+    final Map<String, dynamic> payload = <String, dynamic>{
+      'inputs': <String, dynamic>{
+        'past_user_inputs': pastUserInputs,
+        'generated_responses': generatedResponses,
+        'text': prompt,
+      },
+    };
+
+    final Map<String, dynamic> json = await _postJson(
+      _inferenceUri,
+      payload,
+      context: 'inference',
+    );
+
+    final Map<String, dynamic> conversation =
+        (json['conversation'] as Map<String, dynamic>?) ??
+        const <String, dynamic>{};
+    final List<String> updatedPastInputs = _stringsFrom(
+      conversation['past_user_inputs'],
+    );
+    final List<String> updatedResponses = _stringsFrom(
+      conversation['generated_responses'],
+    );
+    final String replyText =
+        (json['generated_text'] as String?) ??
+        _lastOrFallback(updatedResponses);
+
+    return ChatResult(
+      reply: ChatMessage(author: ChatAuthor.assistant, text: replyText),
+      pastUserInputs: updatedPastInputs,
+      generatedResponses: updatedResponses,
+    );
+  }
+
+  Future<ChatResult> _sendViaChatCompletions({
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+  }) async {
+    final Map<String, dynamic> payload = <String, dynamic>{
+      'model': _model,
+      'messages': <Map<String, String>>[
+        for (
+          int i = 0;
+          i < pastUserInputs.length;
+          i++
+        ) ...<Map<String, String>>[
+          <String, String>{'role': 'user', 'content': pastUserInputs[i]},
+          if (i < generatedResponses.length)
+            <String, String>{
+              'role': 'assistant',
+              'content': generatedResponses[i],
+            },
+        ],
+        <String, String>{'role': 'user', 'content': prompt},
+      ],
+      'stream': false,
+    };
+
+    final Map<String, dynamic> json = await _postJson(
+      _chatCompletionsUri,
+      payload,
+      context: 'chat-completions',
+    );
+
+    final String replyText = _extractAssistantContent(json);
+
+    return ChatResult(
+      reply: ChatMessage(author: ChatAuthor.assistant, text: replyText),
+      pastUserInputs: <String>[...pastUserInputs, prompt],
+      generatedResponses: <String>[...generatedResponses, replyText],
+    );
+  }
+
+  Future<Map<String, dynamic>> _postJson(
+    Uri uri,
+    Map<String, dynamic> payload, {
+    required String context,
+  }) async {
     try {
       final http.Response response = await _client.post(
-        _endpoint,
-        headers: _headers(),
+        uri,
+        headers: _headers,
         body: jsonEncode(payload),
       );
 
@@ -76,131 +159,31 @@ class HuggingfaceChatRepository implements ChatRepository {
       if (code >= 400) {
         final String friendly = _formatError(response);
         AppLogger.error(
-          'HuggingfaceChatRepository.sendMessage non-success',
+          'HuggingfaceChatRepository.$context non-success',
           'HTTP $code => ${response.body}',
           StackTrace.current,
         );
         throw ChatException(friendly);
       }
 
-      final Map<String, dynamic> decoded =
-          jsonDecode(response.body) as Map<String, dynamic>;
-
-      if (_useChatCompletions) {
-        return _mapChatCompletionsResult(
-          decoded: decoded,
-          pastUserInputs: pastUserInputs,
-          generatedResponses: generatedResponses,
-          prompt: prompt,
-        );
-      }
-
-      return _mapInferenceResult(decoded);
+      return jsonDecode(response.body) as Map<String, dynamic>;
     } catch (e, s) {
       if (e is ChatException) rethrow;
-      AppLogger.error('HuggingfaceChatRepository.sendMessage failed', e, s);
+      AppLogger.error('HuggingfaceChatRepository.$context failed', e, s);
       throw const ChatException('Failed to contact chat service.');
     }
   }
 
-  Map<String, dynamic> _buildInferencePayload({
-    required List<String> pastUserInputs,
-    required List<String> generatedResponses,
-    required String prompt,
-  }) {
-    return <String, dynamic>{
-      'inputs': <String, dynamic>{
-        'past_user_inputs': pastUserInputs,
-        'generated_responses': generatedResponses,
-        'text': prompt,
-      },
-    };
-  }
-
-  Map<String, dynamic> _buildChatCompletionsPayload({
-    required List<String> pastUserInputs,
-    required List<String> generatedResponses,
-    required String prompt,
-  }) {
-    final List<Map<String, String>> messages = <Map<String, String>>[
-      for (int i = 0; i < pastUserInputs.length; i++) ...<Map<String, String>>[
-        <String, String>{'role': 'user', 'content': pastUserInputs[i]},
-        if (i < generatedResponses.length)
-          <String, String>{
-            'role': 'assistant',
-            'content': generatedResponses[i],
-          },
-      ],
-      <String, String>{'role': 'user', 'content': prompt},
-    ];
-
-    return <String, dynamic>{
-      'model': _model,
-      'messages': messages,
-      'stream': false,
-    };
-  }
-
-  ChatResult _mapInferenceResult(Map<String, dynamic> decoded) {
-    final Map<String, dynamic>? conversation =
-        decoded['conversation'] as Map<String, dynamic>?;
-    final List<dynamic>? responses =
-        conversation?['generated_responses'] as List<dynamic>?;
-    final List<dynamic>? pastInputs =
-        conversation?['past_user_inputs'] as List<dynamic>?;
-    final String replyText =
-        (decoded['generated_text'] as String?) ?? _fallbackFromList(responses);
-
-    final ChatMessage reply = ChatMessage(
-      author: ChatAuthor.assistant,
-      text: replyText,
-    );
-
-    return ChatResult(
-      reply: reply,
-      pastUserInputs: (pastInputs ?? const <dynamic>[])
-          .map((dynamic e) => e.toString())
-          .toList(growable: false),
-      generatedResponses: (responses ?? const <dynamic>[])
-          .map((dynamic e) => e.toString())
-          .toList(growable: false),
-    );
-  }
-
-  ChatResult _mapChatCompletionsResult({
-    required Map<String, dynamic> decoded,
-    required List<String> pastUserInputs,
-    required List<String> generatedResponses,
-    required String prompt,
-  }) {
-    final List<dynamic>? choices = decoded['choices'] as List<dynamic>?;
-    final Map<String, dynamic>? firstChoice =
-        (choices != null && choices.isNotEmpty)
-        ? choices.first as Map<String, dynamic>?
-        : null;
-    final dynamic message = firstChoice?['message'];
-    final String replyText = _extractAssistantContent(message);
-
-    final ChatMessage reply = ChatMessage(
-      author: ChatAuthor.assistant,
-      text: replyText,
-    );
-
-    return ChatResult(
-      reply: reply,
-      pastUserInputs: <String>[...pastUserInputs, prompt],
-      generatedResponses: <String>[...generatedResponses, replyText],
-    );
-  }
-
-  static String _fallbackFromList(List<dynamic>? list) {
-    if (list == null || list.isEmpty) {
-      return 'I\'m not sure how to respond yet.';
+  static String _extractAssistantContent(Map<String, dynamic> json) {
+    final List<dynamic>? choices = json['choices'] as List<dynamic>?;
+    if (choices == null || choices.isEmpty) {
+      return _fallbackMessage;
     }
-    return list.last.toString();
-  }
 
-  static String _extractAssistantContent(dynamic message) {
+    final Map<String, dynamic>? firstChoice =
+        choices.first as Map<String, dynamic>?;
+    final dynamic message = firstChoice?['message'];
+
     if (message is Map<String, dynamic>) {
       final dynamic content = message['content'];
       if (content is String && content.trim().isNotEmpty) {
@@ -219,7 +202,28 @@ class HuggingfaceChatRepository implements ChatRepository {
         }
       }
     }
-    return 'I\'m not sure how to respond yet.';
+
+    return _fallbackMessage;
+  }
+
+  static List<String> _stringsFrom(dynamic value) {
+    if (value is List) {
+      return value.map((dynamic e) => e.toString()).toList(growable: false);
+    }
+    return const <String>[];
+  }
+
+  static String _lastOrFallback(List<String> values) {
+    if (values.isNotEmpty && values.last.trim().isNotEmpty) {
+      return values.last;
+    }
+    return _fallbackMessage;
+  }
+
+  static String? _normalize(String? value) {
+    if (value == null) return null;
+    final String trimmed = value.trim();
+    return trimmed.isEmpty ? null : trimmed;
   }
 
   static String _formatError(http.Response response) {
@@ -248,4 +252,6 @@ class HuggingfaceChatRepository implements ChatRepository {
     }
     return 'Chat service error (HTTP $code): $detail';
   }
+
+  static const String _fallbackMessage = "I'm not sure how to respond yet.";
 }
