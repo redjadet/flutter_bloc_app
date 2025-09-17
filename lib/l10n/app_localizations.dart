@@ -338,6 +338,48 @@ abstract class AppLocalizations {
   /// **'GPT-OSS-120B'**
   String get chatModelGptOss120b;
 
+  /// No description provided for @chatHistoryShowTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Show history'**
+  String get chatHistoryShowTooltip;
+
+  /// No description provided for @chatHistoryHideTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide history'**
+  String get chatHistoryHideTooltip;
+
+  /// No description provided for @chatHistoryPanelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Conversation history'**
+  String get chatHistoryPanelTitle;
+
+  /// No description provided for @chatHistoryStartNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Start new conversation'**
+  String get chatHistoryStartNew;
+
+  /// No description provided for @chatHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No past conversations yet.'**
+  String get chatHistoryEmpty;
+
+  /// No description provided for @chatHistoryConversationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Conversation {index}'**
+  String chatHistoryConversationTitle(int index);
+
+  /// No description provided for @chatHistoryUpdatedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated {timestamp}'**
+  String chatHistoryUpdatedAt(String timestamp);
+
   /// No description provided for @chartPageTitle.
   ///
   /// In en, this message translates to:

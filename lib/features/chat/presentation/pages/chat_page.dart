@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
@@ -30,13 +31,39 @@ class _ChatPageState extends State<ChatPage> {
     context.read<ChatCubit>().sendMessage(text);
   }
 
+  void _showHistorySheet(BuildContext context) {
+    final ChatCubit cubit = context.read<ChatCubit>();
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext sheetContext) {
+        return BlocProvider.value(
+          value: cubit,
+          child: _ChatHistoryPanel(
+            onClose: () => Navigator.of(sheetContext).pop(),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.chatPageTitle)),
+      appBar: AppBar(
+        title: Text(l10n.chatPageTitle),
+        actions: <Widget>[
+          IconButton(
+            tooltip: l10n.chatHistoryShowTooltip,
+            onPressed: () => _showHistorySheet(context),
+            icon: const Icon(Icons.history),
+          ),
+        ],
+      ),
       body: Column(
         children: <Widget>[
           Padding(
@@ -232,5 +259,189 @@ class _ChatPageState extends State<ChatPage> {
       default:
         return model;
     }
+  }
+}
+
+class _ChatHistoryPanel extends StatelessWidget {
+  const _ChatHistoryPanel({required this.onClose});
+
+  final VoidCallback onClose;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
+    final ThemeData theme = Theme.of(context);
+    final ChatCubit cubit = context.read<ChatCubit>();
+    final MaterialLocalizations materialLocalizations =
+        MaterialLocalizations.of(context);
+    final double bottomInset = MediaQuery.of(context).viewInsets.bottom;
+
+    return FractionallySizedBox(
+      heightFactor: 0.9,
+      child: ClipRRect(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(UI.radiusM)),
+        child: Material(
+          color: theme.colorScheme.surface,
+          child: SafeArea(
+            top: false,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                UI.hgapL,
+                UI.gapM,
+                UI.hgapL,
+                UI.gapM + bottomInset,
+              ),
+              child: BlocBuilder<ChatCubit, ChatState>(
+                builder: (context, state) {
+                  final List<ChatConversation> conversations = state.history;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              l10n.chatHistoryPanelTitle,
+                              style: theme.textTheme.titleMedium,
+                            ),
+                          ),
+                          IconButton(
+                            tooltip: l10n.chatHistoryHideTooltip,
+                            onPressed: onClose,
+                            icon: const Icon(Icons.close),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: UI.gapS),
+                      TextButton.icon(
+                        icon: const Icon(Icons.add),
+                        label: Text(l10n.chatHistoryStartNew),
+                        onPressed: () {
+                          cubit.resetConversation();
+                          onClose();
+                        },
+                      ),
+                      SizedBox(height: UI.gapS),
+                      Expanded(
+                        child: conversations.isEmpty
+                            ? Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: UI.hgapL,
+                                  ),
+                                  child: Text(
+                                    l10n.chatHistoryEmpty,
+                                    style: theme.textTheme.bodyMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              )
+                            : ListView.separated(
+                                itemBuilder: (context, index) {
+                                  final ChatConversation conversation =
+                                      conversations[index];
+                                  final bool isActive =
+                                      conversation.id ==
+                                      state.activeConversationId;
+                                  final String timestamp = _formatTimestamp(
+                                    materialLocalizations,
+                                    conversation.updatedAt,
+                                  );
+                                  final String title =
+                                      conversation.model ??
+                                      l10n.chatHistoryConversationTitle(
+                                        index + 1,
+                                      );
+                                  final String? preview =
+                                      conversation.messages.isNotEmpty
+                                      ? conversation.messages.last.text
+                                      : null;
+
+                                  final Color baseTextColor = isActive
+                                      ? theme.colorScheme.onPrimaryContainer
+                                      : theme.colorScheme.onSurface;
+
+                                  return ListTile(
+                                    onTap: () {
+                                      cubit.selectConversation(conversation.id);
+                                      onClose();
+                                    },
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        UI.radiusM,
+                                      ),
+                                    ),
+                                    tileColor: isActive
+                                        ? theme.colorScheme.primaryContainer
+                                        : theme
+                                              .colorScheme
+                                              .surfaceContainerHighest,
+                                    title: Text(
+                                      title,
+                                      style: theme.textTheme.titleMedium
+                                          ?.copyWith(color: baseTextColor),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          l10n.chatHistoryUpdatedAt(timestamp),
+                                          style: theme.textTheme.bodySmall
+                                              ?.copyWith(
+                                                color: isActive
+                                                    ? baseTextColor.withValues(
+                                                        alpha: 0.85,
+                                                      )
+                                                    : theme
+                                                          .colorScheme
+                                                          .onSurfaceVariant,
+                                              ),
+                                        ),
+                                        if (preview != null &&
+                                            preview.isNotEmpty)
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              top: UI.gapXS,
+                                            ),
+                                            child: Text(
+                                              preview,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: theme.textTheme.bodySmall
+                                                  ?.copyWith(
+                                                    color: baseTextColor,
+                                                  ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                separatorBuilder: (context, _) =>
+                                    SizedBox(height: UI.gapS),
+                                itemCount: conversations.length,
+                              ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatTimestamp(
+    MaterialLocalizations materialLocalizations,
+    DateTime timestamp,
+  ) {
+    final String date = materialLocalizations.formatMediumDate(timestamp);
+    final TimeOfDay time = TimeOfDay.fromDateTime(timestamp);
+    final String formattedTime = materialLocalizations.formatTimeOfDay(time);
+    return '$date · $formattedTime';
   }
 }

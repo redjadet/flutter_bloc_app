@@ -1,38 +1,19 @@
+import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class ChatState {
-  const ChatState({
-    this.messages = const <ChatMessage>[],
-    this.isLoading = false,
-    this.error,
-    this.pastUserInputs = const <String>[],
-    this.generatedResponses = const <String>[],
-    this.currentModel,
-  });
+part 'chat_state.freezed.dart';
 
-  final List<ChatMessage> messages;
-  final bool isLoading;
-  final String? error;
-  final List<String> pastUserInputs;
-  final List<String> generatedResponses;
-  final String? currentModel;
-
-  ChatState copyWith({
-    List<ChatMessage>? messages,
-    bool? isLoading,
+@freezed
+abstract class ChatState with _$ChatState {
+  const factory ChatState({
+    @Default(<ChatMessage>[]) List<ChatMessage> messages,
+    @Default(false) bool isLoading,
     String? error,
-    bool clearError = false,
-    List<String>? pastUserInputs,
-    List<String>? generatedResponses,
+    @Default(<String>[]) List<String> pastUserInputs,
+    @Default(<String>[]) List<String> generatedResponses,
     String? currentModel,
-  }) {
-    return ChatState(
-      messages: messages ?? this.messages,
-      isLoading: isLoading ?? this.isLoading,
-      error: clearError ? null : (error ?? this.error),
-      pastUserInputs: pastUserInputs ?? this.pastUserInputs,
-      generatedResponses: generatedResponses ?? this.generatedResponses,
-      currentModel: currentModel ?? this.currentModel,
-    );
-  }
+    @Default(<ChatConversation>[]) List<ChatConversation> history,
+    String? activeConversationId,
+  }) = _ChatState;
 }

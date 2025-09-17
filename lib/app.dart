@@ -50,8 +50,9 @@ class _MyAppState extends State<MyApp> {
         builder: (context, state) => BlocProvider(
           create: (_) => ChatCubit(
             repository: getIt<ChatRepository>(),
+            historyRepository: getIt<ChatHistoryRepository>(),
             initialModel: SecretConfig.huggingfaceModel,
-          ),
+          )..loadHistory(),
           child: const ChatPage(),
         ),
       ),

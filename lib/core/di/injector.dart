@@ -1,6 +1,8 @@
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
+import 'package:flutter_bloc_app/features/chat/data/shared_prefs_chat_history_repository.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/shared_prefs_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
@@ -24,6 +26,9 @@ Future<void> configureDependencies() async {
       useChatCompletions: SecretConfig.useChatCompletions,
     ),
   );
+  getIt.registerLazySingleton<ChatHistoryRepository>(
+    () => SharedPrefsChatHistoryRepository(),
+  );
   getIt.registerLazySingleton<LocaleRepository>(
     () => SharedPreferencesLocaleRepository(),
   );
@@ -46,6 +51,11 @@ void ensureConfigured() {
         model: SecretConfig.huggingfaceModel,
         useChatCompletions: SecretConfig.useChatCompletions,
       ),
+    );
+  }
+  if (!getIt.isRegistered<ChatHistoryRepository>()) {
+    getIt.registerLazySingleton<ChatHistoryRepository>(
+      () => SharedPrefsChatHistoryRepository(),
     );
   }
   if (!getIt.isRegistered<LocaleRepository>()) {

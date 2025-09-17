@@ -46,6 +46,27 @@
   "chatModelLabel": "Modelo",
   "chatModelGptOss20b": "GPT-OSS-20B",
   "chatModelGptOss120b": "GPT-OSS-120B",
+  "chatHistoryShowTooltip": "Mostrar historial",
+  "chatHistoryHideTooltip": "Ocultar historial",
+  "chatHistoryPanelTitle": "Historial de conversaciones",
+  "chatHistoryStartNew": "Iniciar nueva conversación",
+  "chatHistoryEmpty": "Todavía no hay conversaciones guardadas.",
+  "chatHistoryConversationTitle": "Conversación {index}",
+  "@chatHistoryConversationTitle": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "chatHistoryUpdatedAt": "Actualizado {timestamp}",
+  "@chatHistoryUpdatedAt": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
   "chartPageTitle": "Precio de Bitcoin (USD)",
   "chartPageDescription": "Precio de cierre de los últimos 7 días (fuente: CoinGecko)",
   "chartPageError": "No se pudieron cargar los datos del gráfico.",

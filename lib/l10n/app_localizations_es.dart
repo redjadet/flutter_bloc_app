@@ -129,6 +129,31 @@ class AppLocalizationsEs extends AppLocalizations {
   String get chatModelGptOss120b => 'GPT-OSS-120B';
 
   @override
+  String get chatHistoryShowTooltip => 'Mostrar historial';
+
+  @override
+  String get chatHistoryHideTooltip => 'Ocultar historial';
+
+  @override
+  String get chatHistoryPanelTitle => 'Historial de conversaciones';
+
+  @override
+  String get chatHistoryStartNew => 'Iniciar nueva conversación';
+
+  @override
+  String get chatHistoryEmpty => 'Todavía no hay conversaciones guardadas.';
+
+  @override
+  String chatHistoryConversationTitle(int index) {
+    return 'Conversación $index';
+  }
+
+  @override
+  String chatHistoryUpdatedAt(String timestamp) {
+    return 'Actualizado $timestamp';
+  }
+
+  @override
   String get chartPageTitle => 'Precio de Bitcoin (USD)';
 
   @override

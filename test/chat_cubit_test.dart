@@ -1,3 +1,5 @@
+import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
@@ -7,8 +9,10 @@ void main() {
   group('ChatCubit', () {
     test('appends user and assistant messages on success', () async {
       final FakeChatRepository repo = FakeChatRepository();
+      final FakeChatHistoryRepository history = FakeChatHistoryRepository();
       final ChatCubit cubit = ChatCubit(
         repository: repo,
+        historyRepository: history,
         initialModel: 'openai/gpt-oss-20b',
       );
 
@@ -23,6 +27,7 @@ void main() {
     test('emits error when repository throws', () async {
       final ChatCubit cubit = ChatCubit(
         repository: _ErrorChatRepository(),
+        historyRepository: FakeChatHistoryRepository(),
         initialModel: 'openai/gpt-oss-20b',
       );
 
@@ -34,8 +39,10 @@ void main() {
 
     test('selectModel resets conversation and updates currentModel', () async {
       final FakeChatRepository repo = FakeChatRepository();
+      final FakeChatHistoryRepository history = FakeChatHistoryRepository();
       final ChatCubit cubit = ChatCubit(
         repository: repo,
+        historyRepository: history,
         initialModel: 'openai/gpt-oss-20b',
       );
 
@@ -47,6 +54,53 @@ void main() {
       expect(cubit.state.currentModel, 'openai/gpt-oss-120b');
       expect(cubit.state.messages, isEmpty);
       expect(cubit.models.contains('openai/gpt-oss-120b'), isTrue);
+    });
+
+    test('loadHistory restores stored conversation', () async {
+      final FakeChatRepository repo = FakeChatRepository();
+      final FakeChatHistoryRepository history = FakeChatHistoryRepository();
+      final ChatConversation storedConversation = ChatConversation(
+        id: 'conv-1',
+        messages: <ChatMessage>[
+          const ChatMessage(author: ChatAuthor.user, text: 'Hi'),
+          const ChatMessage(author: ChatAuthor.assistant, text: 'Hello!'),
+        ],
+        pastUserInputs: const <String>['Hi'],
+        generatedResponses: const <String>['Hello!'],
+        createdAt: DateTime(2024, 1, 1, 12, 0),
+        updatedAt: DateTime(2024, 1, 1, 12, 1),
+        model: 'openai/gpt-oss-20b',
+      );
+      history.conversations = <ChatConversation>[storedConversation];
+
+      final ChatCubit cubit = ChatCubit(
+        repository: repo,
+        historyRepository: history,
+        initialModel: 'openai/gpt-oss-20b',
+      );
+
+      await cubit.loadHistory();
+
+      expect(cubit.state.messages.length, 2);
+      expect(cubit.state.history.length, 1);
+      expect(cubit.state.activeConversationId, storedConversation.id);
+      expect(history.conversations.length, 1);
+    });
+
+    test('sendMessage persists conversation to history', () async {
+      final FakeChatRepository repo = FakeChatRepository();
+      final FakeChatHistoryRepository history = FakeChatHistoryRepository();
+      final ChatCubit cubit = ChatCubit(
+        repository: repo,
+        historyRepository: history,
+        initialModel: 'openai/gpt-oss-20b',
+      );
+
+      await cubit.sendMessage('Hello');
+
+      expect(history.conversations, isNotEmpty);
+      expect(history.conversations.first.messages.length, 2);
+      expect(history.conversations.first.pastUserInputs, isNotEmpty);
     });
   });
 }
@@ -64,6 +118,18 @@ class FakeChatRepository implements ChatRepository {
       pastUserInputs: <String>[...pastUserInputs, prompt],
       generatedResponses: <String>[...generatedResponses, 'Hi there!'],
     );
+  }
+}
+
+class FakeChatHistoryRepository implements ChatHistoryRepository {
+  List<ChatConversation> conversations = <ChatConversation>[];
+
+  @override
+  Future<List<ChatConversation>> load() async => conversations;
+
+  @override
+  Future<void> save(List<ChatConversation> conversations) async {
+    this.conversations = List<ChatConversation>.from(conversations);
   }
 }
 

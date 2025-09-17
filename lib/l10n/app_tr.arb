@@ -47,6 +47,27 @@
   "chatModelLabel": "Model",
   "chatModelGptOss20b": "GPT-OSS-20B",
   "chatModelGptOss120b": "GPT-OSS-120B",
+  "chatHistoryShowTooltip": "Geçmişi göster",
+  "chatHistoryHideTooltip": "Geçmişi gizle",
+  "chatHistoryPanelTitle": "Sohbet geçmişi",
+  "chatHistoryStartNew": "Yeni sohbet başlat",
+  "chatHistoryEmpty": "Henüz kayıtlı sohbet yok.",
+  "chatHistoryConversationTitle": "Sohbet {index}",
+  "@chatHistoryConversationTitle": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "chatHistoryUpdatedAt": "{timestamp} tarihinde güncellendi",
+  "@chatHistoryUpdatedAt": {
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
   "chartPageTitle": "Bitcoin Fiyatı (USD)",
   "chartPageDescription": "Son 7 günün kapanış fiyatı (CoinGecko verisi)",
   "chartPageError": "Grafik verileri yüklenemedi.",
