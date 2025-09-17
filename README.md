@@ -44,7 +44,7 @@ flowchart LR
     SNAP[CounterSnapshot]
   end
   subgraph Data
-    REPO[SharedPrefsCounterRepository]
+    REPO[SharedPreferencesCounterRepository]
     SP[(SharedPreferences)]
   end
 
@@ -120,14 +120,14 @@ classDiagram
     +DateTime? lastChanged
   }
 
-  class SharedPrefsCounterRepository {
+  class SharedPreferencesCounterRepository {
     +load()
     +save()
   }
 
   CounterCubit --> CounterState
   CounterCubit ..> CounterRepository
-  CounterRepository <|.. SharedPrefsCounterRepository
+  CounterRepository <|.. SharedPreferencesCounterRepository
   CounterRepository --> CounterSnapshot
 ```
 

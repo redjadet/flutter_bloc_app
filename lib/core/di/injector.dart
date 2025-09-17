@@ -1,13 +1,13 @@
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
-import 'package:flutter_bloc_app/features/chat/data/shared_prefs_chat_history_repository.dart';
+import 'package:flutter_bloc_app/features/chat/data/shared_preferences_chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/features/counter/data/shared_prefs_counter_repository.dart';
+import 'package:flutter_bloc_app/features/counter/data/shared_preferences_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
-import 'package:flutter_bloc_app/shared/data/shared_prefs_locale_repository.dart';
-import 'package:flutter_bloc_app/shared/data/shared_prefs_theme_repository.dart';
+import 'package:flutter_bloc_app/shared/data/shared_preferences_locale_repository.dart';
+import 'package:flutter_bloc_app/shared/data/shared_preferences_theme_repository.dart';
 import 'package:flutter_bloc_app/shared/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
 import 'package:get_it/get_it.dart';
@@ -27,7 +27,7 @@ Future<void> configureDependencies() async {
     ),
   );
   getIt.registerLazySingleton<ChatHistoryRepository>(
-    () => SharedPrefsChatHistoryRepository(),
+    () => SharedPreferencesChatHistoryRepository(),
   );
   getIt.registerLazySingleton<LocaleRepository>(
     () => SharedPreferencesLocaleRepository(),
@@ -55,7 +55,7 @@ void ensureConfigured() {
   }
   if (!getIt.isRegistered<ChatHistoryRepository>()) {
     getIt.registerLazySingleton<ChatHistoryRepository>(
-      () => SharedPrefsChatHistoryRepository(),
+      () => SharedPreferencesChatHistoryRepository(),
     );
   }
   if (!getIt.isRegistered<LocaleRepository>()) {

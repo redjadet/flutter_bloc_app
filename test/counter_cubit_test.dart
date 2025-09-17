@@ -1,5 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_bloc_app/features/counter/data/shared_prefs_counter_repository.dart';
+import 'package:flutter_bloc_app/features/counter/data/shared_preferences_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';

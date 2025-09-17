@@ -4,19 +4,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesLocaleRepository implements LocaleRepository {
   SharedPreferencesLocaleRepository([SharedPreferences? instance])
-    : _prefsInstance = instance;
+    : _preferencesInstance = instance;
 
-  static const String _prefsKey = 'preferred_locale_code';
-  final SharedPreferences? _prefsInstance;
+  static const String _preferencesKey = 'preferred_locale_code';
+  final SharedPreferences? _preferencesInstance;
 
-  Future<SharedPreferences> _prefs() => _prefsInstance != null
-      ? Future.value(_prefsInstance)
+  Future<SharedPreferences> _preferences() => _preferencesInstance != null
+      ? Future.value(_preferencesInstance)
       : SharedPreferences.getInstance();
 
   @override
   Future<Locale?> load() async {
-    final SharedPreferences prefs = await _prefs();
-    final String? code = prefs.getString(_prefsKey);
+    final SharedPreferences preferences = await _preferences();
+    final String? code = preferences.getString(_preferencesKey);
     if (code == null || code.isEmpty) {
       return null;
     }
@@ -29,14 +29,14 @@ class SharedPreferencesLocaleRepository implements LocaleRepository {
 
   @override
   Future<void> save(Locale? locale) async {
-    final SharedPreferences prefs = await _prefs();
+    final SharedPreferences preferences = await _preferences();
     if (locale == null) {
-      await prefs.remove(_prefsKey);
+      await preferences.remove(_preferencesKey);
       return;
     }
     final String code = locale.countryCode == null
         ? locale.languageCode
         : '${locale.languageCode}_${locale.countryCode}';
-    await prefs.setString(_prefsKey, code);
+    await preferences.setString(_preferencesKey, code);
   }
 }

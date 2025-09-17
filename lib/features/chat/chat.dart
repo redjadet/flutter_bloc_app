@@ -1,5 +1,5 @@
 export 'data/huggingface_chat_repository.dart';
-export 'data/shared_prefs_chat_history_repository.dart';
+export 'data/shared_preferences_chat_history_repository.dart';
 export 'domain/chat_conversation.dart';
 export 'domain/chat_history_repository.dart';
 export 'domain/chat_message.dart';

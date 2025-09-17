@@ -37,7 +37,7 @@ flowchart LR
   end
 
   subgraph Data[Data]
-    REPO[SharedPrefsCounterRepository]
+    REPO[SharedPreferencesCounterRepository]
     SP[(SharedPreferences)]
   end
 
@@ -64,7 +64,7 @@ flowchart LR
   - `counter_repository.dart`: Depolama için soyutlama (DIP).
   - `counter_snapshot.dart`: Kalıcı veri anlık görüntüsü (UI’dan bağımsız).
 - `lib/data/`
-  - `shared_prefs_counter_repository.dart`: Varsayılan depolama implementasyonu.
+  - `shared_preferences_counter_repository.dart`: Varsayılan depolama implementasyonu.
 - `lib/main.dart`: Uygulama giriş noktası ve widget bileşimi.
 - `test/`: Birim ve bloc testleri.
 
@@ -307,13 +307,13 @@ classDiagram
     +DateTime? lastChanged
   }
 
-  class SharedPrefsCounterRepository {
+  class SharedPreferencesCounterRepository {
     +load()
     +save()
   }
 
   CounterCubit --> CounterState
   CounterCubit ..> CounterRepository
-  CounterRepository <|.. SharedPrefsCounterRepository
+  CounterRepository <|.. SharedPreferencesCounterRepository
   CounterRepository --> CounterSnapshot
 ```

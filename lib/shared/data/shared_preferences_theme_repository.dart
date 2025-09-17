@@ -4,19 +4,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesThemeRepository implements ThemeRepository {
   SharedPreferencesThemeRepository([SharedPreferences? instance])
-    : _prefsInstance = instance;
+    : _preferencesInstance = instance;
 
-  static const String _prefsKey = 'theme_mode';
-  final SharedPreferences? _prefsInstance;
+  static const String _preferencesKey = 'theme_mode';
+  final SharedPreferences? _preferencesInstance;
 
-  Future<SharedPreferences> _prefs() => _prefsInstance != null
-      ? Future.value(_prefsInstance)
+  Future<SharedPreferences> _preferences() => _preferencesInstance != null
+      ? Future.value(_preferencesInstance)
       : SharedPreferences.getInstance();
 
   @override
   Future<ThemeMode?> load() async {
-    final SharedPreferences prefs = await _prefs();
-    final String? stored = prefs.getString(_prefsKey);
+    final SharedPreferences preferences = await _preferences();
+    final String? stored = preferences.getString(_preferencesKey);
     return switch (stored) {
       'light' => ThemeMode.light,
       'dark' => ThemeMode.dark,
@@ -27,12 +27,12 @@ class SharedPreferencesThemeRepository implements ThemeRepository {
 
   @override
   Future<void> save(ThemeMode mode) async {
-    final SharedPreferences prefs = await _prefs();
+    final SharedPreferences preferences = await _preferences();
     final String value = switch (mode) {
       ThemeMode.light => 'light',
       ThemeMode.dark => 'dark',
       ThemeMode.system => 'system',
     };
-    await prefs.setString(_prefsKey, value);
+    await preferences.setString(_preferencesKey, value);
   }
 }

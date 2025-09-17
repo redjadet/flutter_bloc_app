@@ -5,23 +5,23 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.da
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPrefsChatHistoryRepository implements ChatHistoryRepository {
-  SharedPrefsChatHistoryRepository([SharedPreferences? instance])
-    : _prefsInstance = instance;
+class SharedPreferencesChatHistoryRepository implements ChatHistoryRepository {
+  SharedPreferencesChatHistoryRepository([SharedPreferences? instance])
+    : _preferencesInstance = instance;
 
-  static const String _prefsKeyHistory = 'chat_history';
+  static const String _preferencesKeyHistory = 'chat_history';
 
-  final SharedPreferences? _prefsInstance;
+  final SharedPreferences? _preferencesInstance;
 
-  Future<SharedPreferences> _prefs() => _prefsInstance != null
-      ? Future<SharedPreferences>.value(_prefsInstance)
+  Future<SharedPreferences> _preferences() => _preferencesInstance != null
+      ? Future<SharedPreferences>.value(_preferencesInstance)
       : SharedPreferences.getInstance();
 
   @override
   Future<List<ChatConversation>> load() async {
     try {
-      final SharedPreferences prefs = await _prefs();
-      final String? stored = prefs.getString(_prefsKeyHistory);
+      final SharedPreferences preferences = await _preferences();
+      final String? stored = preferences.getString(_preferencesKeyHistory);
       if (stored == null || stored.isEmpty) {
         return const <ChatConversation>[];
       }
@@ -33,7 +33,11 @@ class SharedPrefsChatHistoryRepository implements ChatHistoryRepository {
             .toList(growable: false);
       }
     } catch (e, s) {
-      AppLogger.error('SharedPrefsChatHistoryRepository.load failed', e, s);
+      AppLogger.error(
+        'SharedPreferencesChatHistoryRepository.load failed',
+        e,
+        s,
+      );
     }
     return const <ChatConversation>[];
   }
@@ -41,17 +45,21 @@ class SharedPrefsChatHistoryRepository implements ChatHistoryRepository {
   @override
   Future<void> save(List<ChatConversation> conversations) async {
     try {
-      final SharedPreferences prefs = await _prefs();
+      final SharedPreferences preferences = await _preferences();
       if (conversations.isEmpty) {
-        await prefs.remove(_prefsKeyHistory);
+        await preferences.remove(_preferencesKeyHistory);
         return;
       }
       final String json = jsonEncode(
         conversations.map((ChatConversation c) => c.toJson()).toList(),
       );
-      await prefs.setString(_prefsKeyHistory, json);
+      await preferences.setString(_preferencesKeyHistory, json);
     } catch (e, s) {
-      AppLogger.error('SharedPrefsChatHistoryRepository.save failed', e, s);
+      AppLogger.error(
+        'SharedPreferencesChatHistoryRepository.save failed',
+        e,
+        s,
+      );
     }
   }
 }
