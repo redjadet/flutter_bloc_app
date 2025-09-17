@@ -34,7 +34,7 @@ class CountdownStatus extends StatelessWidget {
             size: UI.iconM,
           ),
         ),
-        SizedBox(width: UI.hgapM),
+        SizedBox(width: UI.horizontalGapM),
         Flexible(
           child: AnimatedSwitcher(
             duration: animDuration,

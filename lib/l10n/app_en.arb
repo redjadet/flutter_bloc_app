@@ -1,9 +1,16 @@
 {
   "@@locale": "en",
   "autoLabel": "Auto",
+  "@autoLabel": {
+    "description": "Label for choosing automatic behaviour, such as using the system theme"
+  },
   "pausedLabel": "Paused",
+  "@pausedLabel": {
+    "description": "Label displayed when an automatic process is temporarily stopped"
+  },
   "nextAutoDecrementIn": "Next auto-decrement in: {s}s",
   "@nextAutoDecrementIn": {
+    "description": "Countdown message that shows how many seconds remain before the counter auto-decrements",
     "placeholders": {
       "s": {
         "type": "int"
@@ -11,51 +18,172 @@
     }
   },
   "autoDecrementPaused": "Auto-decrement paused !!!",
-  "@autoDecrementPaused": {},
+  "@autoDecrementPaused": {
+    "description": "Warning text shown when the automatic decrement routine is paused"
+  },
   "lastChangedLabel": "Last changed:",
+  "@lastChangedLabel": {
+    "description": "Caption shown before the timestamp of the last counter update"
+  },
   "appTitle": "Flutter Demo",
+  "@appTitle": {
+    "description": "Application title shown on the launcher and app switcher"
+  },
   "homeTitle": "Flutter Demo Home Page",
+  "@homeTitle": {
+    "description": "Title for the home screen in the demo application"
+  },
   "pushCountLabel": "You have pushed the button this many times:",
-  "@pushCountLabel": {},
+  "@pushCountLabel": {
+    "description": "Label preceding the current count value"
+  },
   "incrementTooltip": "Increment",
-  "@incrementTooltip": {},
+  "@incrementTooltip": {
+    "description": "Tooltip for the button that increases the counter"
+  },
   "decrementTooltip": "Decrement",
+  "@decrementTooltip": {
+    "description": "Tooltip for the button that decreases the counter"
+  },
   "loadErrorMessage": "Failed to load saved counter",
+  "@loadErrorMessage": {
+    "description": "Error message shown when counter data cannot be loaded from storage"
+  },
   "startAutoHint": "Tap + to start auto-decrement",
+  "@startAutoHint": {
+    "description": "Hint explaining how to start the automatic decrement feature"
+  },
   "cannotGoBelowZero": "Count cannot go below 0",
+  "@cannotGoBelowZero": {
+    "description": "Error message displayed when the user tries to decrement past zero"
+  },
   "openExampleTooltip": "Open example page",
+  "@openExampleTooltip": {
+    "description": "Tooltip for navigating to the example feature page"
+  },
   "examplePageTitle": "Example Page",
+  "@examplePageTitle": {
+    "description": "Title of the example feature page"
+  },
   "examplePageDescription": "This page demonstrates navigation with GoRouter.",
+  "@examplePageDescription": {
+    "description": "Description shown on the example page summarising its purpose"
+  },
   "exampleBackButtonLabel": "Back to counter",
+  "@exampleBackButtonLabel": {
+    "description": "Label for the button that returns from the example page to the counter"
+  },
   "openChartsTooltip": "Open charts",
+  "@openChartsTooltip": {
+    "description": "Tooltip for the action that opens the charts feature"
+  },
   "openSettingsTooltip": "Open settings",
+  "@openSettingsTooltip": {
+    "description": "Tooltip for navigating to the settings page"
+  },
   "settingsPageTitle": "Settings",
+  "@settingsPageTitle": {
+    "description": "Title for the settings screen"
+  },
   "themeSectionTitle": "Appearance",
+  "@themeSectionTitle": {
+    "description": "Heading for the appearance/theme selection section"
+  },
   "themeModeSystem": "System default",
+  "@themeModeSystem": {
+    "description": "Option label for matching the system theme"
+  },
   "themeModeLight": "Light",
+  "@themeModeLight": {
+    "description": "Option label for forcing light theme"
+  },
   "themeModeDark": "Dark",
+  "@themeModeDark": {
+    "description": "Option label for forcing dark theme"
+  },
   "languageSectionTitle": "Language",
+  "@languageSectionTitle": {
+    "description": "Heading for the language selection section"
+  },
   "languageSystemDefault": "Use device language",
+  "@languageSystemDefault": {
+    "description": "Option label that follows the device language setting"
+  },
   "languageEnglish": "English",
+  "@languageEnglish": {
+    "description": "Language option for English"
+  },
   "languageTurkish": "Türkçe",
+  "@languageTurkish": {
+    "description": "Language option for Turkish"
+  },
   "languageGerman": "Deutsch",
+  "@languageGerman": {
+    "description": "Language option for German"
+  },
   "languageFrench": "Français",
+  "@languageFrench": {
+    "description": "Language option for French"
+  },
   "languageSpanish": "Español",
+  "@languageSpanish": {
+    "description": "Language option for Spanish"
+  },
   "openChatTooltip": "Chat with AI",
+  "@openChatTooltip": {
+    "description": "Tooltip for navigating to the AI chat feature"
+  },
   "chatPageTitle": "AI Chat",
+  "@chatPageTitle": {
+    "description": "Title for the AI chat page"
+  },
   "chatInputHint": "Ask the assistant anything...",
+  "@chatInputHint": {
+    "description": "Placeholder text shown in the chat input field"
+  },
   "chatSendButton": "Send message",
+  "@chatSendButton": {
+    "description": "Tooltip and accessibility label for the button that sends a chat message"
+  },
   "chatEmptyState": "Start the conversation by sending a message.",
+  "@chatEmptyState": {
+    "description": "Empty-state message displayed before any chat messages exist"
+  },
   "chatModelLabel": "Model",
+  "@chatModelLabel": {
+    "description": "Label shown before the chat model dropdown"
+  },
   "chatModelGptOss20b": "GPT-OSS-20B",
+  "@chatModelGptOss20b": {
+    "description": "Display name for the GPT-OSS-20B chat model"
+  },
   "chatModelGptOss120b": "GPT-OSS-120B",
+  "@chatModelGptOss120b": {
+    "description": "Display name for the GPT-OSS-120B chat model"
+  },
   "chatHistoryShowTooltip": "Show history",
+  "@chatHistoryShowTooltip": {
+    "description": "Tooltip for the action that opens the chat history"
+  },
   "chatHistoryHideTooltip": "Hide history",
+  "@chatHistoryHideTooltip": {
+    "description": "Tooltip for the action that closes the chat history"
+  },
   "chatHistoryPanelTitle": "Conversation history",
+  "@chatHistoryPanelTitle": {
+    "description": "Heading for the chat history panel"
+  },
   "chatHistoryStartNew": "Start new conversation",
+  "@chatHistoryStartNew": {
+    "description": "Button label for creating a new chat conversation"
+  },
   "chatHistoryEmpty": "No past conversations yet.",
+  "@chatHistoryEmpty": {
+    "description": "Message shown when no stored chat history is available"
+  },
   "chatHistoryConversationTitle": "Conversation {index}",
   "@chatHistoryConversationTitle": {
+    "description": "Generated title for a conversation in the history list",
     "placeholders": {
       "index": {
         "type": "int"
@@ -64,6 +192,7 @@
   },
   "chatHistoryUpdatedAt": "Updated {timestamp}",
   "@chatHistoryUpdatedAt": {
+    "description": "Indicates when a conversation in the history was last updated",
     "placeholders": {
       "timestamp": {
         "type": "String"
@@ -71,8 +200,23 @@
     }
   },
   "chartPageTitle": "Bitcoin Price (USD)",
+  "@chartPageTitle": {
+    "description": "Title for the cryptocurrency chart page"
+  },
   "chartPageDescription": "Closing price over the past 7 days (powered by CoinGecko)",
+  "@chartPageDescription": {
+    "description": "Description text explaining what data the chart represents"
+  },
   "chartPageError": "Unable to load chart data.",
+  "@chartPageError": {
+    "description": "Error message shown when fetching chart data fails"
+  },
   "chartPageEmpty": "No chart data available yet.",
-  "chartZoomToggleLabel": "Enable pinch zoom"
+  "@chartPageEmpty": {
+    "description": "Message displayed when there is no chart data to show"
+  },
+  "chartZoomToggleLabel": "Enable pinch zoom",
+  "@chartZoomToggleLabel": {
+    "description": "Toggle label for enabling pinch-to-zoom on the chart"
+  }
 }

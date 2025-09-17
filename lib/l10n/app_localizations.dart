@@ -104,307 +104,307 @@ abstract class AppLocalizations {
     Locale('tr'),
   ];
 
-  /// No description provided for @autoLabel.
+  /// Label for choosing automatic behaviour, such as using the system theme
   ///
   /// In en, this message translates to:
   /// **'Auto'**
   String get autoLabel;
 
-  /// No description provided for @pausedLabel.
+  /// Label displayed when an automatic process is temporarily stopped
   ///
   /// In en, this message translates to:
   /// **'Paused'**
   String get pausedLabel;
 
-  /// No description provided for @nextAutoDecrementIn.
+  /// Countdown message that shows how many seconds remain before the counter auto-decrements
   ///
   /// In en, this message translates to:
   /// **'Next auto-decrement in: {s}s'**
   String nextAutoDecrementIn(int s);
 
-  /// No description provided for @autoDecrementPaused.
+  /// Warning text shown when the automatic decrement routine is paused
   ///
   /// In en, this message translates to:
   /// **'Auto-decrement paused !!!'**
   String get autoDecrementPaused;
 
-  /// No description provided for @lastChangedLabel.
+  /// Caption shown before the timestamp of the last counter update
   ///
   /// In en, this message translates to:
   /// **'Last changed:'**
   String get lastChangedLabel;
 
-  /// No description provided for @appTitle.
+  /// Application title shown on the launcher and app switcher
   ///
   /// In en, this message translates to:
   /// **'Flutter Demo'**
   String get appTitle;
 
-  /// No description provided for @homeTitle.
+  /// Title for the home screen in the demo application
   ///
   /// In en, this message translates to:
   /// **'Flutter Demo Home Page'**
   String get homeTitle;
 
-  /// No description provided for @pushCountLabel.
+  /// Label preceding the current count value
   ///
   /// In en, this message translates to:
   /// **'You have pushed the button this many times:'**
   String get pushCountLabel;
 
-  /// No description provided for @incrementTooltip.
+  /// Tooltip for the button that increases the counter
   ///
   /// In en, this message translates to:
   /// **'Increment'**
   String get incrementTooltip;
 
-  /// No description provided for @decrementTooltip.
+  /// Tooltip for the button that decreases the counter
   ///
   /// In en, this message translates to:
   /// **'Decrement'**
   String get decrementTooltip;
 
-  /// No description provided for @loadErrorMessage.
+  /// Error message shown when counter data cannot be loaded from storage
   ///
   /// In en, this message translates to:
   /// **'Failed to load saved counter'**
   String get loadErrorMessage;
 
-  /// No description provided for @startAutoHint.
+  /// Hint explaining how to start the automatic decrement feature
   ///
   /// In en, this message translates to:
   /// **'Tap + to start auto-decrement'**
   String get startAutoHint;
 
-  /// No description provided for @cannotGoBelowZero.
+  /// Error message displayed when the user tries to decrement past zero
   ///
   /// In en, this message translates to:
   /// **'Count cannot go below 0'**
   String get cannotGoBelowZero;
 
-  /// No description provided for @openExampleTooltip.
+  /// Tooltip for navigating to the example feature page
   ///
   /// In en, this message translates to:
   /// **'Open example page'**
   String get openExampleTooltip;
 
-  /// No description provided for @examplePageTitle.
+  /// Title of the example feature page
   ///
   /// In en, this message translates to:
   /// **'Example Page'**
   String get examplePageTitle;
 
-  /// No description provided for @examplePageDescription.
+  /// Description shown on the example page summarising its purpose
   ///
   /// In en, this message translates to:
   /// **'This page demonstrates navigation with GoRouter.'**
   String get examplePageDescription;
 
-  /// No description provided for @exampleBackButtonLabel.
+  /// Label for the button that returns from the example page to the counter
   ///
   /// In en, this message translates to:
   /// **'Back to counter'**
   String get exampleBackButtonLabel;
 
-  /// No description provided for @openChartsTooltip.
+  /// Tooltip for the action that opens the charts feature
   ///
   /// In en, this message translates to:
   /// **'Open charts'**
   String get openChartsTooltip;
 
-  /// No description provided for @openSettingsTooltip.
+  /// Tooltip for navigating to the settings page
   ///
   /// In en, this message translates to:
   /// **'Open settings'**
   String get openSettingsTooltip;
 
-  /// No description provided for @settingsPageTitle.
+  /// Title for the settings screen
   ///
   /// In en, this message translates to:
   /// **'Settings'**
   String get settingsPageTitle;
 
-  /// No description provided for @themeSectionTitle.
+  /// Heading for the appearance/theme selection section
   ///
   /// In en, this message translates to:
   /// **'Appearance'**
   String get themeSectionTitle;
 
-  /// No description provided for @themeModeSystem.
+  /// Option label for matching the system theme
   ///
   /// In en, this message translates to:
   /// **'System default'**
   String get themeModeSystem;
 
-  /// No description provided for @themeModeLight.
+  /// Option label for forcing light theme
   ///
   /// In en, this message translates to:
   /// **'Light'**
   String get themeModeLight;
 
-  /// No description provided for @themeModeDark.
+  /// Option label for forcing dark theme
   ///
   /// In en, this message translates to:
   /// **'Dark'**
   String get themeModeDark;
 
-  /// No description provided for @languageSectionTitle.
+  /// Heading for the language selection section
   ///
   /// In en, this message translates to:
   /// **'Language'**
   String get languageSectionTitle;
 
-  /// No description provided for @languageSystemDefault.
+  /// Option label that follows the device language setting
   ///
   /// In en, this message translates to:
   /// **'Use device language'**
   String get languageSystemDefault;
 
-  /// No description provided for @languageEnglish.
+  /// Language option for English
   ///
   /// In en, this message translates to:
   /// **'English'**
   String get languageEnglish;
 
-  /// No description provided for @languageTurkish.
+  /// Language option for Turkish
   ///
   /// In en, this message translates to:
   /// **'Türkçe'**
   String get languageTurkish;
 
-  /// No description provided for @languageGerman.
+  /// Language option for German
   ///
   /// In en, this message translates to:
   /// **'Deutsch'**
   String get languageGerman;
 
-  /// No description provided for @languageFrench.
+  /// Language option for French
   ///
   /// In en, this message translates to:
   /// **'Français'**
   String get languageFrench;
 
-  /// No description provided for @languageSpanish.
+  /// Language option for Spanish
   ///
   /// In en, this message translates to:
   /// **'Español'**
   String get languageSpanish;
 
-  /// No description provided for @openChatTooltip.
+  /// Tooltip for navigating to the AI chat feature
   ///
   /// In en, this message translates to:
   /// **'Chat with AI'**
   String get openChatTooltip;
 
-  /// No description provided for @chatPageTitle.
+  /// Title for the AI chat page
   ///
   /// In en, this message translates to:
   /// **'AI Chat'**
   String get chatPageTitle;
 
-  /// No description provided for @chatInputHint.
+  /// Placeholder text shown in the chat input field
   ///
   /// In en, this message translates to:
   /// **'Ask the assistant anything...'**
   String get chatInputHint;
 
-  /// No description provided for @chatSendButton.
+  /// Tooltip and accessibility label for the button that sends a chat message
   ///
   /// In en, this message translates to:
   /// **'Send message'**
   String get chatSendButton;
 
-  /// No description provided for @chatEmptyState.
+  /// Empty-state message displayed before any chat messages exist
   ///
   /// In en, this message translates to:
   /// **'Start the conversation by sending a message.'**
   String get chatEmptyState;
 
-  /// No description provided for @chatModelLabel.
+  /// Label shown before the chat model dropdown
   ///
   /// In en, this message translates to:
   /// **'Model'**
   String get chatModelLabel;
 
-  /// No description provided for @chatModelGptOss20b.
+  /// Display name for the GPT-OSS-20B chat model
   ///
   /// In en, this message translates to:
   /// **'GPT-OSS-20B'**
   String get chatModelGptOss20b;
 
-  /// No description provided for @chatModelGptOss120b.
+  /// Display name for the GPT-OSS-120B chat model
   ///
   /// In en, this message translates to:
   /// **'GPT-OSS-120B'**
   String get chatModelGptOss120b;
 
-  /// No description provided for @chatHistoryShowTooltip.
+  /// Tooltip for the action that opens the chat history
   ///
   /// In en, this message translates to:
   /// **'Show history'**
   String get chatHistoryShowTooltip;
 
-  /// No description provided for @chatHistoryHideTooltip.
+  /// Tooltip for the action that closes the chat history
   ///
   /// In en, this message translates to:
   /// **'Hide history'**
   String get chatHistoryHideTooltip;
 
-  /// No description provided for @chatHistoryPanelTitle.
+  /// Heading for the chat history panel
   ///
   /// In en, this message translates to:
   /// **'Conversation history'**
   String get chatHistoryPanelTitle;
 
-  /// No description provided for @chatHistoryStartNew.
+  /// Button label for creating a new chat conversation
   ///
   /// In en, this message translates to:
   /// **'Start new conversation'**
   String get chatHistoryStartNew;
 
-  /// No description provided for @chatHistoryEmpty.
+  /// Message shown when no stored chat history is available
   ///
   /// In en, this message translates to:
   /// **'No past conversations yet.'**
   String get chatHistoryEmpty;
 
-  /// No description provided for @chatHistoryConversationTitle.
+  /// Generated title for a conversation in the history list
   ///
   /// In en, this message translates to:
   /// **'Conversation {index}'**
   String chatHistoryConversationTitle(int index);
 
-  /// No description provided for @chatHistoryUpdatedAt.
+  /// Indicates when a conversation in the history was last updated
   ///
   /// In en, this message translates to:
   /// **'Updated {timestamp}'**
   String chatHistoryUpdatedAt(String timestamp);
 
-  /// No description provided for @chartPageTitle.
+  /// Title for the cryptocurrency chart page
   ///
   /// In en, this message translates to:
   /// **'Bitcoin Price (USD)'**
   String get chartPageTitle;
 
-  /// No description provided for @chartPageDescription.
+  /// Description text explaining what data the chart represents
   ///
   /// In en, this message translates to:
   /// **'Closing price over the past 7 days (powered by CoinGecko)'**
   String get chartPageDescription;
 
-  /// No description provided for @chartPageError.
+  /// Error message shown when fetching chart data fails
   ///
   /// In en, this message translates to:
   /// **'Unable to load chart data.'**
   String get chartPageError;
 
-  /// No description provided for @chartPageEmpty.
+  /// Message displayed when there is no chart data to show
   ///
   /// In en, this message translates to:
   /// **'No chart data available yet.'**
   String get chartPageEmpty;
 
-  /// No description provided for @chartZoomToggleLabel.
+  /// Toggle label for enabling pinch-to-zoom on the chart
   ///
   /// In en, this message translates to:
   /// **'Enable pinch zoom'**

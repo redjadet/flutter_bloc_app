@@ -29,7 +29,10 @@ class CounterStatusChip extends StatelessWidget {
         color: active ? colors.primary.withValues(alpha: 0.12) : colors.surface,
         borderRadius: BorderRadius.circular(UI.radiusM),
       ),
-      padding: EdgeInsets.symmetric(horizontal: UI.hgapM, vertical: UI.gapXS),
+      padding: EdgeInsets.symmetric(
+        horizontal: UI.horizontalGapM,
+        vertical: UI.gapXS,
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -44,7 +47,7 @@ class CounterStatusChip extends StatelessWidget {
               color: colors.primary,
             ),
           ),
-          SizedBox(width: UI.hgapXS),
+          SizedBox(width: UI.horizontalGapXS),
           AnimatedSwitcher(
             duration: animDuration,
             transitionBuilder: (child, animation) =>

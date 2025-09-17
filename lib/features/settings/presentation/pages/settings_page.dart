@@ -15,7 +15,10 @@ class SettingsPage extends StatelessWidget {
         title: Text(AppLocalizations.of(context).settingsPageTitle),
       ),
       body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: UI.hgapL, vertical: UI.gapM),
+        padding: EdgeInsets.symmetric(
+          horizontal: UI.horizontalGapL,
+          vertical: UI.gapM,
+        ),
         children: <Widget>[
           const _ThemeSection(),
           SizedBox(height: UI.gapL),

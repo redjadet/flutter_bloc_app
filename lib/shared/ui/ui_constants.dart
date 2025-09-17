@@ -14,10 +14,10 @@ class UI {
   static double get gapL => _h(16);
 
   // Horizontal gaps
-  static double get hgapXS => _w(6);
-  static double get hgapS => _w(8);
-  static double get hgapM => _w(10);
-  static double get hgapL => _w(16);
+  static double get horizontalGapXS => _w(6);
+  static double get horizontalGapS => _w(8);
+  static double get horizontalGapM => _w(10);
+  static double get horizontalGapL => _w(16);
 
   // Card paddings
   static double get cardPadH => _w(20);

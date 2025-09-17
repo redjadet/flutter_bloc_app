@@ -67,7 +67,12 @@ class _ChatPageState extends State<ChatPage> {
       body: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.fromLTRB(UI.hgapL, UI.gapM, UI.hgapL, UI.gapS),
+            padding: EdgeInsets.fromLTRB(
+              UI.horizontalGapL,
+              UI.gapM,
+              UI.horizontalGapL,
+              UI.gapS,
+            ),
             child: BlocBuilder<ChatCubit, ChatState>(
               buildWhen: (prev, curr) => prev.currentModel != curr.currentModel,
               builder: (context, state) {
@@ -92,7 +97,7 @@ class _ChatPageState extends State<ChatPage> {
                       l10n.chatModelLabel,
                       style: theme.textTheme.titleMedium,
                     ),
-                    SizedBox(width: UI.hgapS),
+                    SizedBox(width: UI.horizontalGapS),
                     Expanded(
                       child: DropdownButtonFormField<String>(
                         initialValue: currentModel,
@@ -176,7 +181,7 @@ class _ChatPageState extends State<ChatPage> {
                       child: Container(
                         margin: EdgeInsets.symmetric(vertical: UI.gapS / 2),
                         padding: EdgeInsets.symmetric(
-                          horizontal: UI.hgapM,
+                          horizontal: UI.horizontalGapM,
                           vertical: UI.gapS,
                         ),
                         constraints: BoxConstraints(
@@ -203,9 +208,9 @@ class _ChatPageState extends State<ChatPage> {
             top: false,
             child: Padding(
               padding: EdgeInsets.fromLTRB(
-                UI.hgapL,
+                UI.horizontalGapL,
                 UI.gapS,
-                UI.hgapL,
+                UI.horizontalGapL,
                 UI.gapS,
               ),
               child: Row(
@@ -220,7 +225,7 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                     ),
                   ),
-                  SizedBox(width: UI.hgapS),
+                  SizedBox(width: UI.horizontalGapS),
                   BlocBuilder<ChatCubit, ChatState>(
                     builder: (context, state) {
                       return IconButton(
@@ -285,9 +290,9 @@ class _ChatHistoryPanel extends StatelessWidget {
             top: false,
             child: Padding(
               padding: EdgeInsets.fromLTRB(
-                UI.hgapL,
+                UI.horizontalGapL,
                 UI.gapM,
-                UI.hgapL,
+                UI.horizontalGapL,
                 UI.gapM + bottomInset,
               ),
               child: BlocBuilder<ChatCubit, ChatState>(
@@ -413,7 +418,7 @@ class _ChatHistoryPanel extends StatelessWidget {
                             : Center(
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: UI.hgapL,
+                                    horizontal: UI.horizontalGapL,
                                   ),
                                   child: Text(
                                     l10n.chatHistoryEmpty,

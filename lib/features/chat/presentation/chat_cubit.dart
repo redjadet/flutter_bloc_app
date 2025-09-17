@@ -365,5 +365,5 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   String _generateConversationId(DateTime timestamp) =>
-      'conv_${timestamp.microsecondsSinceEpoch}';
+      'conversation_${timestamp.microsecondsSinceEpoch}';
 }

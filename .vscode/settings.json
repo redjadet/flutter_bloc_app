@@ -60,6 +60,7 @@
     "**/*.freezed.dart",
     "**/*.gen.dart",
     "**/*.mocks.dart",
+    "lib/l10n/app_localizations*.dart",
     "**/build/**",
     "analysis_options.yaml",
     ".vscode/settings.json",
@@ -81,7 +82,8 @@
     "!lib/**/*.g.dart",
     "!lib/**/*.freezed.dart",
     "!lib/**/*.gen.dart",
-    "!lib/**/*.mocks.dart"
+    "!lib/**/*.mocks.dart",
+    "!lib/l10n/app_localizations*.dart"
   ],
   "[dart]": {
     "editor.formatOnSave": true,
@@ -97,5 +99,10 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
-  }
+  },
+  "cSpell.words": [
+    "huggingface",
+    "prefs",
+    "Türkçe"
+  ]
 }

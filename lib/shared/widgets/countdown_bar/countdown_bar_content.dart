@@ -31,13 +31,18 @@ class CountdownBarContent extends StatelessWidget {
     final Widget bar = SafeArea(
       top: false,
       child: Padding(
-        padding: EdgeInsets.fromLTRB(UI.hgapL, 0, UI.hgapL, UI.gapM),
+        padding: EdgeInsets.fromLTRB(
+          UI.horizontalGapL,
+          0,
+          UI.horizontalGapL,
+          UI.gapM,
+        ),
         child: Material(
           color: colors.surface,
           borderRadius: BorderRadius.circular(UI.radiusM),
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: UI.hgapL,
+              horizontal: UI.horizontalGapL,
               vertical: UI.gapM,
             ),
             child: Column(
