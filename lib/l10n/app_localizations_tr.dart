@@ -105,6 +105,21 @@ class AppLocalizationsTr extends AppLocalizations {
   String get languageSpanish => 'İspanyolca';
 
   @override
+  String get openChatTooltip => 'Yapay zekâ ile sohbet et';
+
+  @override
+  String get chatPageTitle => 'Yapay Zekâ Sohbeti';
+
+  @override
+  String get chatInputHint => 'Asistana bir şey sor...';
+
+  @override
+  String get chatSendButton => 'Mesaj gönder';
+
+  @override
+  String get chatEmptyState => 'Sohbete bir mesaj göndererek başla.';
+
+  @override
   String get chartPageTitle => 'Bitcoin Fiyatı (USD)';
 
   @override

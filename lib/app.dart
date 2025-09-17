@@ -43,6 +43,14 @@ class _MyAppState extends State<MyApp> {
         name: AppRoutes.settings,
         builder: (context, state) => const SettingsPage(),
       ),
+      GoRoute(
+        path: AppRoutes.chatPath,
+        name: AppRoutes.chat,
+        builder: (context, state) => BlocProvider(
+          create: (_) => ChatCubit(repository: getIt<ChatRepository>()),
+          child: const ChatPage(),
+        ),
+      ),
     ],
   );
 

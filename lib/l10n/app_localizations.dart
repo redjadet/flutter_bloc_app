@@ -290,6 +290,36 @@ abstract class AppLocalizations {
   /// **'Español'**
   String get languageSpanish;
 
+  /// No description provided for @openChatTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with AI'**
+  String get openChatTooltip;
+
+  /// No description provided for @chatPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Chat'**
+  String get chatPageTitle;
+
+  /// No description provided for @chatInputHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask the assistant anything...'**
+  String get chatInputHint;
+
+  /// No description provided for @chatSendButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Send message'**
+  String get chatSendButton;
+
+  /// No description provided for @chatEmptyState.
+  ///
+  /// In en, this message translates to:
+  /// **'Start the conversation by sending a message.'**
+  String get chatEmptyState;
+
   /// No description provided for @chartPageTitle.
   ///
   /// In en, this message translates to:

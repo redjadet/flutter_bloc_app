@@ -16,6 +16,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Loading polish: `skeletonizer` placeholders, `fancy_shimmer_image` hero card, and dev-only loading delay to showcase the effects.
 - Logging: Centralized `AppLogger` built on top of the `logger` package.
 - Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES).
+- AI Chat: Conversational UI backed by Hugging Face Inference API (Qwen 0.5B chat).
 - Tests: Unit and bloc tests with `flutter_test` and `bloc_test`.
 
 ## Tech Stack
@@ -176,6 +177,25 @@ Run tests:
 ```bash
 flutter test
 ```
+
+### Hugging Face token (AI chat)
+
+The chat screen calls a hosted Hugging Face model that requires an access token. Create a free token at [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens) **with the Inference API scope enabled**, then create a local file based on the provided sample:
+
+1. Copy `assets/config/secrets.sample.json` to `assets/config/secrets.json` (this file is git-ignored).
+2. Replace the placeholder value with your token and (optionally) the model id you want to query. By default the app targets `HuggingFaceH4/zephyr-7b-beta`, but you can override it if you prefer another model with Inference Provider support:
+
+   ```json
+   {
+     "HUGGINGFACE_API_KEY": "hf_xxx_your_token",
+     "HUGGINGFACE_MODEL": "HuggingFaceH4/zephyr-7b-beta",
+     "HUGGINGFACE_USE_CHAT_COMPLETIONS": false
+   }
+   ```
+
+The app will read the value at startup. Unit tests rely on fakes and do not need the token.
+
+If the model you want to use is only exposed through the Hugging Face router (OpenAI-compatible `/v1/chat/completions` endpoint), set `HUGGINGFACE_USE_CHAT_COMPLETIONS` to `true` and provide the routed model id (for example `openai/gpt-oss-20b`).
 
 Optional useful commands:
 

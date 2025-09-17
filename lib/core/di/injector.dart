@@ -1,4 +1,7 @@
+import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/shared_prefs_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/shared/data/shared_prefs_locale_repository.dart';
@@ -14,6 +17,13 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<CounterRepository>(
     () => SharedPreferencesCounterRepository(),
   );
+  getIt.registerLazySingleton<ChatRepository>(
+    () => HuggingfaceChatRepository(
+      apiKey: SecretConfig.huggingfaceApiKey,
+      model: SecretConfig.huggingfaceModel,
+      useChatCompletions: SecretConfig.useChatCompletions,
+    ),
+  );
   getIt.registerLazySingleton<LocaleRepository>(
     () => SharedPreferencesLocaleRepository(),
   );
@@ -27,6 +37,15 @@ void ensureConfigured() {
   if (!getIt.isRegistered<CounterRepository>()) {
     getIt.registerLazySingleton<CounterRepository>(
       () => SharedPreferencesCounterRepository(),
+    );
+  }
+  if (!getIt.isRegistered<ChatRepository>()) {
+    getIt.registerLazySingleton<ChatRepository>(
+      () => HuggingfaceChatRepository(
+        apiKey: SecretConfig.huggingfaceApiKey,
+        model: SecretConfig.huggingfaceModel,
+        useChatCompletions: SecretConfig.useChatCompletions,
+      ),
     );
   }
   if (!getIt.isRegistered<LocaleRepository>()) {

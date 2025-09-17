@@ -105,6 +105,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get languageSpanish => 'Español';
 
   @override
+  String get openChatTooltip => 'Chatear con IA';
+
+  @override
+  String get chatPageTitle => 'Chat con IA';
+
+  @override
+  String get chatInputHint => 'Pregunta lo que quieras al asistente...';
+
+  @override
+  String get chatSendButton => 'Enviar mensaje';
+
+  @override
+  String get chatEmptyState => 'Comienza la conversación enviando un mensaje.';
+
+  @override
   String get chartPageTitle => 'Precio de Bitcoin (USD)';
 
   @override

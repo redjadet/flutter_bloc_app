@@ -107,6 +107,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get languageSpanish => 'Spanisch';
 
   @override
+  String get openChatTooltip => 'Mit KI chatten';
+
+  @override
+  String get chatPageTitle => 'KI-Chat';
+
+  @override
+  String get chatInputHint => 'Frag den Assistenten etwas...';
+
+  @override
+  String get chatSendButton => 'Nachricht senden';
+
+  @override
+  String get chatEmptyState => 'Beginne das Gespräch mit einer Nachricht.';
+
+  @override
   String get chartPageTitle => 'Bitcoin-Preis (USD)';
 
   @override

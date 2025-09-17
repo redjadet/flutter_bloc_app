@@ -13,4 +13,7 @@ class AppRoutes {
 
   static const settings = 'settings';
   static const settingsPath = '/settings';
+
+  static const chat = 'chat';
+  static const chatPath = '/chat';
 }

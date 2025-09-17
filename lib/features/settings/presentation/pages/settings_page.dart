@@ -11,7 +11,9 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context).settingsPageTitle)),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).settingsPageTitle),
+      ),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: UI.hgapL, vertical: UI.gapM),
         children: <Widget>[
@@ -82,7 +84,9 @@ class _LanguageSection extends StatelessWidget {
               _Option(label: l10n.languageSystemDefault, value: null),
               for (final Locale locale in AppLocalizations.supportedLocales)
                 _Option(
-                  label: localizedLabels[locale.languageCode] ?? locale.languageCode,
+                  label:
+                      localizedLabels[locale.languageCode] ??
+                      locale.languageCode,
                   value: locale,
                 ),
             ];
@@ -90,7 +94,8 @@ class _LanguageSection extends StatelessWidget {
             return _SettingsCard<Locale?>(
               options: options,
               isSelected: (locale) => _sameLocale(locale, currentLocale),
-              onSelect: (locale) => context.read<LocaleCubit>().setLocale(locale),
+              onSelect: (locale) =>
+                  context.read<LocaleCubit>().setLocale(locale),
             );
           },
         ),
@@ -106,7 +111,11 @@ class _LanguageSection extends StatelessWidget {
 }
 
 class _SettingsCard<T> extends StatelessWidget {
-  const _SettingsCard({required this.options, required this.isSelected, required this.onSelect});
+  const _SettingsCard({
+    required this.options,
+    required this.isSelected,
+    required this.onSelect,
+  });
 
   final List<_Option<T>> options;
   final bool Function(T value) isSelected;
@@ -140,7 +149,11 @@ class _Option<T> {
 }
 
 class _SettingsTile extends StatelessWidget {
-  const _SettingsTile({required this.label, required this.selected, required this.onTap});
+  const _SettingsTile({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
 
   final String label;
   final bool selected;
@@ -151,7 +164,9 @@ class _SettingsTile extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     return ListTile(
       title: Text(label),
-      trailing: selected ? Icon(Icons.check, color: theme.colorScheme.primary) : null,
+      trailing: selected
+          ? Icon(Icons.check, color: theme.colorScheme.primary)
+          : null,
       onTap: onTap,
       selectedTileColor: theme.colorScheme.surfaceContainerHighest,
       selected: selected,

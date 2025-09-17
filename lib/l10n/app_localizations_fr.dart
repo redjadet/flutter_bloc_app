@@ -107,6 +107,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get languageSpanish => 'Espagnol';
 
   @override
+  String get openChatTooltip => 'Discuter avec l\'IA';
+
+  @override
+  String get chatPageTitle => 'Discussion IA';
+
+  @override
+  String get chatInputHint => 'Posez votre question à l\'assistant...';
+
+  @override
+  String get chatSendButton => 'Envoyer le message';
+
+  @override
+  String get chatEmptyState =>
+      'Commencez la conversation en envoyant un message.';
+
+  @override
   String get chartPageTitle => 'Prix du Bitcoin (USD)';
 
   @override

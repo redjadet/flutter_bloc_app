@@ -67,6 +67,11 @@ class CounterPage extends StatelessWidget {
               icon: const Icon(Icons.show_chart),
             ),
             IconButton(
+              tooltip: l10n.openChatTooltip,
+              onPressed: () => context.pushNamed(AppRoutes.chat),
+              icon: const Icon(Icons.forum),
+            ),
+            IconButton(
               tooltip: l10n.openSettingsTooltip,
               onPressed: () => context.pushNamed(AppRoutes.settings),
               icon: const Icon(Icons.settings),
