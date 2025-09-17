@@ -13,7 +13,7 @@ abstract class CounterState with _$CounterState {
     required int count,
     DateTime? lastChanged,
     @Default(5) int countdownSeconds,
-    @Default(true) bool isAutoDecrementActive,
+    @Default(false) bool isAutoDecrementActive,
     CounterError? error,
     @Default(CounterStatus.idle) CounterStatus status,
   }) = _CounterState;

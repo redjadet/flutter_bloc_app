@@ -83,19 +83,30 @@ class CounterCubit extends Cubit<CounterState> {
     emit(state.copyWith(countdownSeconds: seconds));
   }
 
-  /// Handles the auto-decrement cycle and schedules next randomized interval.
-  void _handleAutoDecrement() {
-    final int decremented = state.count - 1;
-    _currentIntervalSeconds = _nextRandomIntervalSeconds();
+  /// Emits a success state normalizing countdown, timestamp and activation flag.
+  void _emitCountUpdate({
+    required int count,
+    bool randomizeInterval = false,
+    DateTime? timestamp,
+  }) {
+    _currentIntervalSeconds = randomizeInterval
+        ? _nextRandomIntervalSeconds()
+        : _defaultIntervalSeconds;
     emit(
       CounterState(
-        count: decremented,
-        lastChanged: DateTime.now(),
+        count: count,
+        lastChanged: timestamp ?? DateTime.now(),
         countdownSeconds: _currentIntervalSeconds,
-        isAutoDecrementActive: decremented > 0,
+        isAutoDecrementActive: count > 0,
         status: CounterStatus.success,
       ),
     );
+  }
+
+  /// Handles the auto-decrement cycle and schedules next randomized interval.
+  void _handleAutoDecrement() {
+    final int decremented = state.count - 1;
+    _emitCountUpdate(count: decremented, randomizeInterval: true);
     _persistCurrent();
   }
 
@@ -157,15 +168,7 @@ class CounterCubit extends Cubit<CounterState> {
   }
 
   Future<void> increment() async {
-    _currentIntervalSeconds = _defaultIntervalSeconds;
-    emit(
-      CounterState(
-        count: state.count + 1,
-        lastChanged: DateTime.now(),
-        countdownSeconds: _currentIntervalSeconds,
-        status: CounterStatus.success,
-      ),
-    );
+    _emitCountUpdate(count: state.count + 1);
     await _persistCurrent();
     _ensureCountdownTickerStarted();
   }
@@ -176,16 +179,7 @@ class CounterCubit extends Cubit<CounterState> {
       return;
     }
     final int newCount = state.count - 1;
-    _currentIntervalSeconds = _defaultIntervalSeconds;
-    emit(
-      CounterState(
-        count: newCount,
-        lastChanged: DateTime.now(),
-        countdownSeconds: _currentIntervalSeconds,
-        isAutoDecrementActive: newCount > 0,
-        status: CounterStatus.success,
-      ),
-    );
+    _emitCountUpdate(count: newCount);
     await _persistCurrent();
     _ensureCountdownTickerStarted();
   }

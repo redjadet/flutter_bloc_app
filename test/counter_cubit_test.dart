@@ -139,6 +139,7 @@ void main() {
           count: 5,
           lastChanged: DateTime.now(),
           countdownSeconds: 5,
+          isAutoDecrementActive: true,
         ),
       );
       // Trigger auto-decrement after 5 ticks
@@ -158,6 +159,7 @@ void main() {
           count: 1,
           lastChanged: DateTime.now(),
           countdownSeconds: 5,
+          isAutoDecrementActive: true,
         ),
       );
       // Reach 0
@@ -180,6 +182,7 @@ void main() {
           count: 3,
           lastChanged: DateTime.now(),
           countdownSeconds: 2,
+          isAutoDecrementActive: true,
         ),
       );
 
