@@ -2,25 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/shared/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
+import 'package:flutter_bloc_app/shared/presentation/locale_cubit.dart';
 import 'package:flutter_bloc_app/shared/presentation/theme_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('SettingsPage', () {
-    testWidgets('changes theme mode when selecting an option', (
+    testWidgets('changes theme mode and locale when selecting options', (
       WidgetTester tester,
     ) async {
       final _InMemoryThemeRepository repo = _InMemoryThemeRepository();
-      final ThemeCubit cubit = ThemeCubit(repository: repo);
+      final ThemeCubit themeCubit = ThemeCubit(repository: repo);
+      final _InMemoryLocaleRepository localeRepo = _InMemoryLocaleRepository();
+      final LocaleCubit localeCubit = LocaleCubit(repository: localeRepo);
+
+      final AppLocalizationsEn en = AppLocalizationsEn();
 
       await tester.pumpWidget(
         MaterialApp(
           locale: const Locale('en'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: BlocProvider<ThemeCubit>.value(
-            value: cubit,
+          home: MultiBlocProvider(
+            providers: [
+              BlocProvider<ThemeCubit>.value(value: themeCubit),
+              BlocProvider<LocaleCubit>.value(value: localeCubit),
+            ],
             child: const SettingsPage(),
           ),
         ),
@@ -29,19 +39,28 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
 
-      expect(cubit.state, ThemeMode.system);
+      expect(themeCubit.state, ThemeMode.system);
+      expect(localeCubit.state, isNull);
 
-      await tester.tap(find.text('Dark'));
+      await tester.tap(find.text(en.themeModeDark));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
 
-      expect(cubit.state, ThemeMode.dark);
+      expect(themeCubit.state, ThemeMode.dark);
       expect(repo.saved, ThemeMode.dark);
+
+      await tester.tap(find.text(en.languageSpanish));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(localeCubit.state?.languageCode, 'es');
+      expect(localeRepo.saved?.languageCode, 'es');
 
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump();
 
-      await cubit.close();
+      await themeCubit.close();
+      await localeCubit.close();
     });
   });
 }
@@ -55,5 +74,17 @@ class _InMemoryThemeRepository implements ThemeRepository {
   @override
   Future<void> save(ThemeMode mode) async {
     saved = mode;
+  }
+}
+
+class _InMemoryLocaleRepository implements LocaleRepository {
+  Locale? saved;
+
+  @override
+  Future<Locale?> load() async => saved;
+
+  @override
+  Future<void> save(Locale? locale) async {
+    saved = locale;
   }
 }

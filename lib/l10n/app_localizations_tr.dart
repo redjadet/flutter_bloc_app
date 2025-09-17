@@ -84,6 +84,27 @@ class AppLocalizationsTr extends AppLocalizations {
   String get themeModeDark => 'Koyu';
 
   @override
+  String get languageSectionTitle => 'Dil';
+
+  @override
+  String get languageSystemDefault => 'Cihaz dilini kullan';
+
+  @override
+  String get languageEnglish => 'İngilizce';
+
+  @override
+  String get languageTurkish => 'Türkçe';
+
+  @override
+  String get languageGerman => 'Almanca';
+
+  @override
+  String get languageFrench => 'Fransızca';
+
+  @override
+  String get languageSpanish => 'İspanyolca';
+
+  @override
   String get chartPageTitle => 'Bitcoin Fiyatı (USD)';
 
   @override

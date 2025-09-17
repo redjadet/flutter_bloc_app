@@ -11,6 +11,7 @@ class AppConfig {
   static Widget createMaterialApp({
     required ThemeMode themeMode,
     required GoRouter router,
+    Locale? locale,
     Widget? child,
   }) {
     return MaterialApp.router(
@@ -23,6 +24,7 @@ class AppConfig {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       localeListResolutionCallback: _localeListResolutionCallback,
+      locale: locale,
       theme: _createLightTheme(),
       darkTheme: _createDarkTheme(),
       themeMode: themeMode,

@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/features.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -62,6 +63,10 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider(
           create: (_) =>
+              LocaleCubit(repository: getIt<LocaleRepository>())..loadInitial(),
+        ),
+        BlocProvider(
+          create: (_) =>
               ThemeCubit(repository: getIt<ThemeRepository>())..loadInitial(),
         ),
       ],
@@ -70,12 +75,17 @@ class _MyAppState extends State<MyApp> {
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
-          return BlocBuilder<ThemeCubit, ThemeMode>(
-            builder: (context, themeMode) => AppConfig.createMaterialApp(
-              themeMode: themeMode,
-              router: _router,
-              child: child,
-            ),
+          return BlocBuilder<LocaleCubit, Locale?>(
+            builder: (context, locale) {
+              return BlocBuilder<ThemeCubit, ThemeMode>(
+                builder: (context, themeMode) => AppConfig.createMaterialApp(
+                  themeMode: themeMode,
+                  router: _router,
+                  locale: locale,
+                  child: child,
+                ),
+              );
+            },
           );
         },
       ),

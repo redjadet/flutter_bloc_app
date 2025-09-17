@@ -86,6 +86,27 @@ class AppLocalizationsDe extends AppLocalizations {
   String get themeModeDark => 'Dunkel';
 
   @override
+  String get languageSectionTitle => 'Sprache';
+
+  @override
+  String get languageSystemDefault => 'Gerätesprache verwenden';
+
+  @override
+  String get languageEnglish => 'Englisch';
+
+  @override
+  String get languageTurkish => 'Türkisch';
+
+  @override
+  String get languageGerman => 'Deutsch';
+
+  @override
+  String get languageFrench => 'Französisch';
+
+  @override
+  String get languageSpanish => 'Spanisch';
+
+  @override
   String get chartPageTitle => 'Bitcoin-Preis (USD)';
 
   @override

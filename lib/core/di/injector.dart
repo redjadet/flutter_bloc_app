@@ -1,7 +1,9 @@
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/data/shared_prefs_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
+import 'package:flutter_bloc_app/shared/data/shared_prefs_locale_repository.dart';
 import 'package:flutter_bloc_app/shared/data/shared_prefs_theme_repository.dart';
+import 'package:flutter_bloc_app/shared/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
 import 'package:get_it/get_it.dart';
 
@@ -11,6 +13,9 @@ Future<void> configureDependencies() async {
   // Repositories (lazy singletons)
   getIt.registerLazySingleton<CounterRepository>(
     () => SharedPreferencesCounterRepository(),
+  );
+  getIt.registerLazySingleton<LocaleRepository>(
+    () => SharedPreferencesLocaleRepository(),
   );
   getIt.registerLazySingleton<ThemeRepository>(
     () => SharedPreferencesThemeRepository(),
@@ -22,6 +27,11 @@ void ensureConfigured() {
   if (!getIt.isRegistered<CounterRepository>()) {
     getIt.registerLazySingleton<CounterRepository>(
       () => SharedPreferencesCounterRepository(),
+    );
+  }
+  if (!getIt.isRegistered<LocaleRepository>()) {
+    getIt.registerLazySingleton<LocaleRepository>(
+      () => SharedPreferencesLocaleRepository(),
     );
   }
   if (!getIt.isRegistered<ThemeRepository>()) {

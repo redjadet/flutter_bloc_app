@@ -248,6 +248,48 @@ abstract class AppLocalizations {
   /// **'Dark'**
   String get themeModeDark;
 
+  /// No description provided for @languageSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get languageSectionTitle;
+
+  /// No description provided for @languageSystemDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Use device language'**
+  String get languageSystemDefault;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// No description provided for @languageTurkish.
+  ///
+  /// In en, this message translates to:
+  /// **'Türkçe'**
+  String get languageTurkish;
+
+  /// No description provided for @languageGerman.
+  ///
+  /// In en, this message translates to:
+  /// **'Deutsch'**
+  String get languageGerman;
+
+  /// No description provided for @languageFrench.
+  ///
+  /// In en, this message translates to:
+  /// **'Français'**
+  String get languageFrench;
+
+  /// No description provided for @languageSpanish.
+  ///
+  /// In en, this message translates to:
+  /// **'Español'**
+  String get languageSpanish;
+
   /// No description provided for @chartPageTitle.
   ///
   /// In en, this message translates to:
