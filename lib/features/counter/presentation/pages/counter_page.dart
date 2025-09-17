@@ -6,7 +6,6 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/presentation/theme_cubit.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/widgets/counter_widgets.dart';
 import 'package:flutter_bloc_app/shared/widgets/flavor_badge.dart';
@@ -67,15 +66,10 @@ class CounterPage extends StatelessWidget {
               onPressed: () => context.pushNamed(AppRoutes.charts),
               icon: const Icon(Icons.show_chart),
             ),
-            BlocBuilder<ThemeCubit, ThemeMode>(
-              builder: (context, mode) {
-                final bool isDark = mode == ThemeMode.dark;
-                return IconButton(
-                  tooltip: isDark ? 'Light mode' : 'Dark mode',
-                  onPressed: () => context.read<ThemeCubit>().toggle(),
-                  icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-                );
-              },
+            IconButton(
+              tooltip: l10n.openSettingsTooltip,
+              onPressed: () => context.pushNamed(AppRoutes.settings),
+              icon: const Icon(Icons.settings),
             ),
           ],
         ),

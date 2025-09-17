@@ -37,6 +37,11 @@ class _MyAppState extends State<MyApp> {
         name: AppRoutes.charts,
         builder: (context, state) => const ChartPage(),
       ),
+      GoRoute(
+        path: AppRoutes.settingsPath,
+        name: AppRoutes.settings,
+        builder: (context, state) => const SettingsPage(),
+      ),
     ],
   );
 

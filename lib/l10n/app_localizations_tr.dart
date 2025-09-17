@@ -66,6 +66,24 @@ class AppLocalizationsTr extends AppLocalizations {
   String get openChartsTooltip => 'Grafikleri aç';
 
   @override
+  String get openSettingsTooltip => 'Ayarları aç';
+
+  @override
+  String get settingsPageTitle => 'Ayarlar';
+
+  @override
+  String get themeSectionTitle => 'Görünüm';
+
+  @override
+  String get themeModeSystem => 'Sistem varsayılanı';
+
+  @override
+  String get themeModeLight => 'Açık';
+
+  @override
+  String get themeModeDark => 'Koyu';
+
+  @override
   String get chartPageTitle => 'Bitcoin Fiyatı (USD)';
 
   @override

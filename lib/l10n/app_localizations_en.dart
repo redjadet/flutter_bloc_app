@@ -66,6 +66,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openChartsTooltip => 'Open charts';
 
   @override
+  String get openSettingsTooltip => 'Open settings';
+
+  @override
+  String get settingsPageTitle => 'Settings';
+
+  @override
+  String get themeSectionTitle => 'Appearance';
+
+  @override
+  String get themeModeSystem => 'System default';
+
+  @override
+  String get themeModeLight => 'Light';
+
+  @override
+  String get themeModeDark => 'Dark';
+
+  @override
   String get chartPageTitle => 'Bitcoin Price (USD)';
 
   @override

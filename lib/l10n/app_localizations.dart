@@ -212,6 +212,42 @@ abstract class AppLocalizations {
   /// **'Open charts'**
   String get openChartsTooltip;
 
+  /// No description provided for @openSettingsTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get openSettingsTooltip;
+
+  /// No description provided for @settingsPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsPageTitle;
+
+  /// No description provided for @themeSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get themeSectionTitle;
+
+  /// No description provided for @themeModeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System default'**
+  String get themeModeSystem;
+
+  /// No description provided for @themeModeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeModeLight;
+
+  /// No description provided for @themeModeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeModeDark;
+
   /// No description provided for @chartPageTitle.
   ///
   /// In en, this message translates to:
