@@ -16,4 +16,14 @@ abstract class ChatState with _$ChatState {
     @Default(<ChatConversation>[]) List<ChatConversation> history,
     String? activeConversationId,
   }) = _ChatState;
+
+  const ChatState._();
+
+  factory ChatState.initial({String? currentModel}) =>
+      ChatState(currentModel: currentModel);
+
+  bool get hasError => error != null;
+  bool get hasMessages => messages.isNotEmpty;
+  bool get hasHistory => history.isNotEmpty;
+  bool get canSend => !isLoading;
 }

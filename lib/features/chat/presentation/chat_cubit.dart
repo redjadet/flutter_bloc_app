@@ -18,7 +18,7 @@ class ChatCubit extends Cubit<ChatState> {
        _historyRepository = historyRepository,
        _models = _buildModelList(initialModel, supportedModels),
        super(
-         ChatState(
+         ChatState.initial(
            currentModel: _resolveInitialModel(initialModel, supportedModels),
          ),
        );
@@ -143,7 +143,7 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   void clearError() {
-    if (state.error != null) {
+    if (state.hasError) {
       emit(state.copyWith(error: null));
     }
   }

@@ -212,8 +212,8 @@ return $default(_that.messages,_that.isLoading,_that.error,_that.pastUserInputs,
 /// @nodoc
 
 
-class _ChatState implements ChatState {
-  const _ChatState({final  List<ChatMessage> messages = const <ChatMessage>[], this.isLoading = false, this.error, final  List<String> pastUserInputs = const <String>[], final  List<String> generatedResponses = const <String>[], this.currentModel, final  List<ChatConversation> history = const <ChatConversation>[], this.activeConversationId}): _messages = messages,_pastUserInputs = pastUserInputs,_generatedResponses = generatedResponses,_history = history;
+class _ChatState extends ChatState {
+  const _ChatState({final  List<ChatMessage> messages = const <ChatMessage>[], this.isLoading = false, this.error, final  List<String> pastUserInputs = const <String>[], final  List<String> generatedResponses = const <String>[], this.currentModel, final  List<ChatConversation> history = const <ChatConversation>[], this.activeConversationId}): _messages = messages,_pastUserInputs = pastUserInputs,_generatedResponses = generatedResponses,_history = history,super._();
   
 
  final  List<ChatMessage> _messages;

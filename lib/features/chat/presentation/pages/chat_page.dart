@@ -124,26 +124,25 @@ class _ChatPageState extends State<ChatPage> {
           Expanded(
             child: BlocConsumer<ChatCubit, ChatState>(
               listener: (context, state) {
-                if (state.error != null) {
+                if (state.hasError) {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentSnackBar()
                     ..showSnackBar(SnackBar(content: Text(state.error!)));
                   context.read<ChatCubit>().clearError();
                 }
-                if (state.messages.isNotEmpty) {
-                  Future<void>.delayed(Duration.zero, () {
-                    if (_scrollController.hasClients) {
-                      _scrollController.animateTo(
-                        _scrollController.position.maxScrollExtent,
-                        duration: UI.animFast,
-                        curve: Curves.easeOut,
-                      );
-                    }
+                if (state.hasMessages) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (!_scrollController.hasClients) return;
+                    _scrollController.animateTo(
+                      _scrollController.position.maxScrollExtent,
+                      duration: UI.animFast,
+                      curve: Curves.easeOut,
+                    );
                   });
                 }
               },
               builder: (context, state) {
-                if (state.messages.isEmpty) {
+                if (!state.hasMessages) {
                   return Center(
                     child: Padding(
                       padding: EdgeInsets.all(UI.gapL),
@@ -226,9 +225,9 @@ class _ChatPageState extends State<ChatPage> {
                     builder: (context, state) {
                       return IconButton(
                         tooltip: l10n.chatSendButton,
-                        onPressed: state.isLoading
-                            ? null
-                            : () => _submit(context),
+                        onPressed: state.canSend
+                            ? () => _submit(context)
+                            : null,
                         icon: state.isLoading
                             ? SizedBox.square(
                                 dimension: UI.iconM,
@@ -324,20 +323,8 @@ class _ChatHistoryPanel extends StatelessWidget {
                       ),
                       SizedBox(height: UI.gapS),
                       Expanded(
-                        child: conversations.isEmpty
-                            ? Center(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: UI.hgapL,
-                                  ),
-                                  child: Text(
-                                    l10n.chatHistoryEmpty,
-                                    style: theme.textTheme.bodyMedium,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              )
-                            : ListView.separated(
+                        child: state.hasHistory
+                            ? ListView.separated(
                                 itemBuilder: (context, index) {
                                   final ChatConversation conversation =
                                       conversations[index];
@@ -422,6 +409,18 @@ class _ChatHistoryPanel extends StatelessWidget {
                                 separatorBuilder: (context, _) =>
                                     SizedBox(height: UI.gapS),
                                 itemCount: conversations.length,
+                              )
+                            : Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: UI.hgapL,
+                                  ),
+                                  child: Text(
+                                    l10n.chatHistoryEmpty,
+                                    style: theme.textTheme.bodyMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
                               ),
                       ),
                     ],
