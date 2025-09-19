@@ -1,13 +1,25 @@
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
-import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
-import 'package:flutter_bloc_app/features/chat/data/shared_preferences_chat_history_repository.dart';
-import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
+import 'package:flutter_bloc_app/features/chat/data/'
+    'huggingface_api_client.dart';
+import 'package:flutter_bloc_app/features/chat/data/'
+    'huggingface_chat_repository.dart';
+import 'package:flutter_bloc_app/features/chat/data/'
+    'huggingface_payload_builder.dart';
+import 'package:flutter_bloc_app/features/chat/data/'
+    'huggingface_response_parser.dart';
+import 'package:flutter_bloc_app/features/chat/data/'
+    'shared_preferences_chat_history_repository.dart';
+import 'package:flutter_bloc_app/features/chat/domain/'
+    'chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/features/counter/data/shared_preferences_counter_repository.dart';
+import 'package:flutter_bloc_app/features/counter/data/'
+    'shared_preferences_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
-import 'package:flutter_bloc_app/shared/data/shared_preferences_locale_repository.dart';
-import 'package:flutter_bloc_app/shared/data/shared_preferences_theme_repository.dart';
+import 'package:flutter_bloc_app/shared/data/'
+    'shared_preferences_locale_repository.dart';
+import 'package:flutter_bloc_app/shared/data/'
+    'shared_preferences_theme_repository.dart';
 import 'package:flutter_bloc_app/shared/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
 import 'package:get_it/get_it.dart';
@@ -19,9 +31,22 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<CounterRepository>(
     () => SharedPreferencesCounterRepository(),
   );
+  getIt.registerLazySingleton<HuggingFaceApiClient>(
+    () => HuggingFaceApiClient(apiKey: SecretConfig.huggingfaceApiKey),
+  );
+  getIt.registerLazySingleton<HuggingFacePayloadBuilder>(
+    () => const HuggingFacePayloadBuilder(),
+  );
+  getIt.registerLazySingleton<HuggingFaceResponseParser>(
+    () => const HuggingFaceResponseParser(
+      fallbackMessage: HuggingfaceChatRepository.fallbackMessage,
+    ),
+  );
   getIt.registerLazySingleton<ChatRepository>(
     () => HuggingfaceChatRepository(
-      apiKey: SecretConfig.huggingfaceApiKey,
+      apiClient: getIt<HuggingFaceApiClient>(),
+      payloadBuilder: getIt<HuggingFacePayloadBuilder>(),
+      responseParser: getIt<HuggingFaceResponseParser>(),
       model: SecretConfig.huggingfaceModel,
       useChatCompletions: SecretConfig.useChatCompletions,
     ),
@@ -44,10 +69,29 @@ void ensureConfigured() {
       () => SharedPreferencesCounterRepository(),
     );
   }
+  if (!getIt.isRegistered<HuggingFaceApiClient>()) {
+    getIt.registerLazySingleton<HuggingFaceApiClient>(
+      () => HuggingFaceApiClient(apiKey: SecretConfig.huggingfaceApiKey),
+    );
+  }
+  if (!getIt.isRegistered<HuggingFacePayloadBuilder>()) {
+    getIt.registerLazySingleton<HuggingFacePayloadBuilder>(
+      () => const HuggingFacePayloadBuilder(),
+    );
+  }
+  if (!getIt.isRegistered<HuggingFaceResponseParser>()) {
+    getIt.registerLazySingleton<HuggingFaceResponseParser>(
+      () => const HuggingFaceResponseParser(
+        fallbackMessage: HuggingfaceChatRepository.fallbackMessage,
+      ),
+    );
+  }
   if (!getIt.isRegistered<ChatRepository>()) {
     getIt.registerLazySingleton<ChatRepository>(
       () => HuggingfaceChatRepository(
-        apiKey: SecretConfig.huggingfaceApiKey,
+        apiClient: getIt<HuggingFaceApiClient>(),
+        payloadBuilder: getIt<HuggingFacePayloadBuilder>(),
+        responseParser: getIt<HuggingFaceResponseParser>(),
         model: SecretConfig.huggingfaceModel,
         useChatCompletions: SecretConfig.useChatCompletions,
       ),
