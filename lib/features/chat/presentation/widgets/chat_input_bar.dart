@@ -26,6 +26,8 @@ class ChatInputBar extends StatelessWidget {
           child: TextField(
             controller: controller,
             onSubmitted: (_) => onSend(),
+            autocorrect: false,
+            enableSuggestions: false,
             decoration: InputDecoration(
               hintText: l10n.chatInputHint,
               border: const OutlineInputBorder(),

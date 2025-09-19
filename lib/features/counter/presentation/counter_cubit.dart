@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
@@ -31,11 +29,8 @@ class CounterCubit extends Cubit<CounterState> {
   }
 
   // Default auto-decrement interval used on load and manual interactions.
-  static const int _defaultIntervalSeconds = 5;
-  // Randomized interval constraints: must be > 1 and <= 5.
-  static const int _randomMinSeconds = 2; // inclusive
-  static const int _randomMaxSeconds = 5; // inclusive
-
+  static const int _defaultIntervalSeconds =
+      CounterState.defaultCountdownSeconds;
   // Timer intervals
   static const Duration _countdownTickInterval = Duration(seconds: 1);
 
@@ -44,21 +39,15 @@ class CounterCubit extends Cubit<CounterState> {
   final Duration _initialLoadDelay;
 
   TimerDisposable? _countdownTicker;
-  bool _holdAfterReset = false;
-  final Random _random = Random();
-  int _currentIntervalSeconds = _defaultIntervalSeconds;
-
-  /// Returns the next randomized interval in [_randomMinSeconds, _randomMaxSeconds].
-  int _nextRandomIntervalSeconds() {
-    return _randomMinSeconds +
-        _random.nextInt(_randomMaxSeconds - _randomMinSeconds + 1);
-  }
+  // Ensures the countdown stays at the full value for one tick after a reset
+  // so the progress bar remains visually consistent.
+  bool _holdCountdownAtFullCycle = false;
 
   /// Starts the 1s countdown ticker if not already running.
   void _ensureCountdownTickerStarted() {
     _countdownTicker ??= _timerService.periodic(_countdownTickInterval, () {
-      if (_holdAfterReset) {
-        _holdAfterReset = false;
+      if (_holdCountdownAtFullCycle) {
+        _holdCountdownAtFullCycle = false;
         _emitCountdown(state.countdownSeconds);
         return;
       }
@@ -73,7 +62,7 @@ class CounterCubit extends Cubit<CounterState> {
       if (state.count > 0) {
         _handleAutoDecrement();
       } else {
-        _resetToDefaultIntervalAndHold();
+        _resetCountdownAndHold();
       }
     });
   }
@@ -84,39 +73,33 @@ class CounterCubit extends Cubit<CounterState> {
   }
 
   /// Emits a success state normalizing countdown, timestamp and activation flag.
-  void _emitCountUpdate({
-    required int count,
-    bool randomizeInterval = false,
-    DateTime? timestamp,
-  }) {
-    _currentIntervalSeconds = randomizeInterval
-        ? _nextRandomIntervalSeconds()
-        : _defaultIntervalSeconds;
+  void _emitCountUpdate({required int count, DateTime? timestamp}) {
+    _holdCountdownAtFullCycle = false;
     emit(
-      CounterState(
+      CounterState.success(
         count: count,
         lastChanged: timestamp ?? DateTime.now(),
-        countdownSeconds: _currentIntervalSeconds,
-        isAutoDecrementActive: count > 0,
-        status: CounterStatus.success,
       ),
     );
   }
 
-  /// Handles the auto-decrement cycle and schedules next randomized interval.
+  /// Handles the auto-decrement cycle and resets the countdown.
   void _handleAutoDecrement() {
+    if (state.count <= 0) {
+      _resetCountdownAndHold();
+      return;
+    }
     final int decremented = state.count - 1;
-    _emitCountUpdate(count: decremented, randomizeInterval: true);
+    _emitCountUpdate(count: decremented);
     _persistCurrent();
   }
 
   /// Resets to the default interval and holds one tick at that value when inactive.
-  void _resetToDefaultIntervalAndHold() {
-    _currentIntervalSeconds = _defaultIntervalSeconds;
-    _holdAfterReset = true;
+  void _resetCountdownAndHold() {
+    _holdCountdownAtFullCycle = true;
     emit(
       state.copyWith(
-        countdownSeconds: _currentIntervalSeconds,
+        countdownSeconds: _defaultIntervalSeconds,
         isAutoDecrementActive: false,
       ),
     );
@@ -129,14 +112,11 @@ class CounterCubit extends Cubit<CounterState> {
         await Future<void>.delayed(_initialLoadDelay);
       }
       final CounterSnapshot snapshot = await _repository.load();
-      _currentIntervalSeconds = _defaultIntervalSeconds;
+      _holdCountdownAtFullCycle = false;
       emit(
-        CounterState(
+        CounterState.success(
           count: snapshot.count,
           lastChanged: snapshot.lastChanged,
-          countdownSeconds: _currentIntervalSeconds,
-          isAutoDecrementActive: snapshot.count > 0,
-          status: CounterStatus.success,
         ),
       );
       _ensureCountdownTickerStarted();
