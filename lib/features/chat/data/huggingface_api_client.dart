@@ -52,7 +52,28 @@ class HuggingFaceApiClient {
         throw ChatException(friendly);
       }
 
-      return jsonDecode(response.body) as JsonMap;
+      final String contentType =
+          response.headers['content-type']?.toLowerCase() ?? '';
+      if (!contentType.contains('application/json')) {
+        AppLogger.error(
+          'HuggingFaceApiClient.$context failed',
+          'Unexpected content-type: $contentType',
+          StackTrace.current,
+        );
+        throw const ChatException('Chat service returned unsupported content.');
+      }
+
+      final dynamic decoded = jsonDecode(response.body);
+      if (decoded is JsonMap) {
+        return decoded;
+      }
+
+      AppLogger.error(
+        'HuggingFaceApiClient.$context failed',
+        'Unexpected payload structure: ${decoded.runtimeType}',
+        StackTrace.current,
+      );
+      throw const ChatException('Chat service returned unexpected payload.');
     } catch (error, stackTrace) {
       if (error is ChatException) rethrow;
       AppLogger.error(

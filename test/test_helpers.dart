@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
@@ -91,7 +90,12 @@ void setupSharedPreferencesMock({Map<String, Object>? initialValues}) {
 /// (e.g. rerunning `configureDependencies`). Prefer using
 /// [runWithHuggingFaceHttpClientOverride] to keep overrides scoped.
 @Deprecated('Prefer runWithHuggingFaceHttpClientOverride for scoped overrides.')
-void overrideHuggingFaceHttpClient(http.Client client, {String? apiKey}) {
+void overrideHuggingFaceHttpClient(
+  http.Client client, {
+  required String apiKey,
+  String model = 'test-model',
+  bool useChatCompletions = false,
+}) {
   if (getIt.isRegistered<ChatRepository>()) {
     getIt.unregister<ChatRepository>();
   }
@@ -102,19 +106,31 @@ void overrideHuggingFaceHttpClient(http.Client client, {String? apiKey}) {
     getIt.unregister<http.Client>();
   }
 
-  _registerHuggingFaceDependencies(client, apiKey: apiKey);
+  _registerHuggingFaceDependencies(
+    client,
+    apiKey: apiKey,
+    model: model,
+    useChatCompletions: useChatCompletions,
+  );
 }
 
 /// Runs [action] within a GetIt scope that overrides Hugging Face dependencies.
 /// The provided [client] is automatically disposed if [closeClient] is true.
 Future<T> runWithHuggingFaceHttpClientOverride<T>({
   required http.Client client,
-  String? apiKey,
+  required String apiKey,
+  String model = 'test-model',
+  bool useChatCompletions = false,
   bool closeClient = true,
   required Future<T> Function() action,
 }) async {
   getIt.pushNewScope(scopeName: 'huggingface-test-override');
-  _registerHuggingFaceDependencies(client, apiKey: apiKey);
+  _registerHuggingFaceDependencies(
+    client,
+    apiKey: apiKey,
+    model: model,
+    useChatCompletions: useChatCompletions,
+  );
   try {
     return await action();
   } finally {
@@ -125,13 +141,16 @@ Future<T> runWithHuggingFaceHttpClientOverride<T>({
   }
 }
 
-void _registerHuggingFaceDependencies(http.Client client, {String? apiKey}) {
+void _registerHuggingFaceDependencies(
+  http.Client client, {
+  required String apiKey,
+  required String model,
+  required bool useChatCompletions,
+}) {
   getIt.registerSingleton<http.Client>(client);
   getIt.registerLazySingleton<HuggingFaceApiClient>(
-    () => HuggingFaceApiClient(
-      httpClient: getIt<http.Client>(),
-      apiKey: apiKey ?? SecretConfig.huggingfaceApiKey,
-    ),
+    () =>
+        HuggingFaceApiClient(httpClient: getIt<http.Client>(), apiKey: apiKey),
   );
   getIt.registerLazySingleton<HuggingFacePayloadBuilder>(
     () => const HuggingFacePayloadBuilder(),
@@ -146,8 +165,8 @@ void _registerHuggingFaceDependencies(http.Client client, {String? apiKey}) {
       apiClient: getIt<HuggingFaceApiClient>(),
       payloadBuilder: getIt<HuggingFacePayloadBuilder>(),
       responseParser: getIt<HuggingFaceResponseParser>(),
-      model: SecretConfig.huggingfaceModel,
-      useChatCompletions: SecretConfig.useChatCompletions,
+      model: model,
+      useChatCompletions: useChatCompletions,
     ),
   );
 }

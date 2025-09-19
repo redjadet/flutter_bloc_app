@@ -137,6 +137,9 @@ classDiagram
 - `lib/app.dart`: Root widget wiring `go_router`, theme, DI, and cubits.
 - `lib/core/`: Constants, flavor manager, dependency injection configuration, time utilities.
 - `lib/features/counter/`: Domain, data, and presentation layers for the counter feature.
+- `lib/features/chat/data/huggingface_api_client.dart`: HTTP wrapper that enforces headers, status handling, and JSON parsing for Hugging Face requests.
+- `lib/features/chat/data/huggingface_payload_builder.dart`: Central place for building inference vs chat completion payloads.
+- `lib/features/chat/data/huggingface_response_parser.dart`: Safely maps Hugging Face responses to `ChatResult` with null-safe chunk handling.
 - `lib/features/example/`: Simple routed example page rendered through `go_router`.
 - `lib/shared/`: Cross-cutting UI, theme, logging, and utility components.
 - `test/counter_cubit_test.dart`: Cubit behavior, timers, persistence tests.
@@ -178,6 +181,12 @@ Run tests:
 flutter test
 ```
 
+Regenerate Freezed formatting after large refactors (optional helper):
+
+```bash
+dart run fix_freezed_formatting.dart
+```
+
 ### Hugging Face token (AI chat)
 
 The chat screen calls a hosted Hugging Face model that requires an access token. Create a free token at [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens) **with the Inference API scope enabled**, then create a local file based on the provided sample:
@@ -202,7 +211,23 @@ Optional useful commands:
 ```bash
 flutter analyze
 dart format .
+dart run fix_freezed_formatting.dart
 ```
+
+### Test helpers
+
+- `runWithHuggingFaceHttpClientOverride` scopes a mocked `http.Client`, API key, and model in a temporary GetIt scope so integration tests can stub Hugging Face responses without affecting global DI:
+
+  ```dart
+  await runWithHuggingFaceHttpClientOverride(
+    client: MockClient(...),
+    apiKey: 'test-token',
+    model: 'test-model',
+    action: () async => getIt<ChatRepository>().sendMessage(...),
+  );
+  ```
+
+- `dart run fix_freezed_formatting.dart` restores line breaks and mixins in generated Freezed files when the formatter collapses them.
 
 ### Flavors
 

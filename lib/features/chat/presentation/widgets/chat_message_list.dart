@@ -19,10 +19,17 @@ class ChatMessageList extends StatelessWidget {
     return BlocConsumer<ChatCubit, ChatState>(
       listener: (context, state) {
         if (state.hasError) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(state.error!)));
-          context.read<ChatCubit>().clearError();
+          final chatCubit = context.read<ChatCubit>();
+          final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar();
+          messenger
+              .showSnackBar(SnackBar(content: Text(state.error!)))
+              .closed
+              .whenComplete(() {
+                if (!chatCubit.isClosed) {
+                  chatCubit.clearError();
+                }
+              });
         }
         if (state.hasMessages) {
           WidgetsBinding.instance.addPostFrameCallback((_) {

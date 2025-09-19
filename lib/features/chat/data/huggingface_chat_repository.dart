@@ -47,19 +47,19 @@ class HuggingfaceChatRepository implements ChatRepository {
       throw const ChatException('Missing Hugging Face API token.');
     }
 
-    final String? override = _normalize(model);
+    final String targetModel = _resolveModel(model);
     return _useChatCompletions
         ? _sendViaChatCompletions(
             pastUserInputs: pastUserInputs,
             generatedResponses: generatedResponses,
             prompt: prompt,
-            modelOverride: override,
+            model: targetModel,
           )
         : _sendViaInference(
             pastUserInputs: pastUserInputs,
             generatedResponses: generatedResponses,
             prompt: prompt,
-            modelOverride: override,
+            model: targetModel,
           );
   }
 
@@ -67,9 +67,8 @@ class HuggingfaceChatRepository implements ChatRepository {
     required List<String> pastUserInputs,
     required List<String> generatedResponses,
     required String prompt,
-    String? modelOverride,
+    required String model,
   }) async {
-    final String targetModel = modelOverride ?? _model;
     final Map<String, dynamic> payload = _payloadBuilder.buildInferencePayload(
       pastUserInputs: pastUserInputs,
       generatedResponses: generatedResponses,
@@ -77,7 +76,7 @@ class HuggingfaceChatRepository implements ChatRepository {
     );
 
     final Map<String, dynamic> json = await _apiClient.postJson(
-      uri: Uri.parse('$_inferenceBaseUrl/$targetModel'),
+      uri: Uri.parse('$_inferenceBaseUrl/$model'),
       payload: payload,
       context: 'inference',
     );
@@ -89,15 +88,14 @@ class HuggingfaceChatRepository implements ChatRepository {
     required List<String> pastUserInputs,
     required List<String> generatedResponses,
     required String prompt,
-    String? modelOverride,
+    required String model,
   }) async {
-    final String targetModel = modelOverride ?? _model;
     final Map<String, dynamic> payload = _payloadBuilder
         .buildChatCompletionsPayload(
           pastUserInputs: pastUserInputs,
           generatedResponses: generatedResponses,
           prompt: prompt,
-          model: targetModel,
+          model: model,
         );
 
     final Map<String, dynamic> json = await _apiClient.postJson(
@@ -112,6 +110,10 @@ class HuggingfaceChatRepository implements ChatRepository {
       generatedResponses: generatedResponses,
       prompt: prompt,
     );
+  }
+
+  String _resolveModel(String? value) {
+    return _normalize(value) ?? _model;
   }
 
   static String? _normalize(String? value) {

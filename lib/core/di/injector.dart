@@ -28,26 +28,25 @@ import 'package:http/http.dart' as http;
 final GetIt getIt = GetIt.instance;
 
 Future<void> configureDependencies() async {
-  // Repositories (lazy singletons)
-  getIt.registerLazySingleton<CounterRepository>(
+  _registerLazySingletonIfAbsent<CounterRepository>(
     () => SharedPreferencesCounterRepository(),
   );
-  getIt.registerLazySingleton<http.Client>(http.Client.new);
-  getIt.registerLazySingleton<HuggingFaceApiClient>(
+  _registerLazySingletonIfAbsent<http.Client>(http.Client.new);
+  _registerLazySingletonIfAbsent<HuggingFaceApiClient>(
     () => HuggingFaceApiClient(
       httpClient: getIt<http.Client>(),
       apiKey: SecretConfig.huggingfaceApiKey,
     ),
   );
-  getIt.registerLazySingleton<HuggingFacePayloadBuilder>(
+  _registerLazySingletonIfAbsent<HuggingFacePayloadBuilder>(
     () => const HuggingFacePayloadBuilder(),
   );
-  getIt.registerLazySingleton<HuggingFaceResponseParser>(
+  _registerLazySingletonIfAbsent<HuggingFaceResponseParser>(
     () => const HuggingFaceResponseParser(
       fallbackMessage: HuggingfaceChatRepository.fallbackMessage,
     ),
   );
-  getIt.registerLazySingleton<ChatRepository>(
+  _registerLazySingletonIfAbsent<ChatRepository>(
     () => HuggingfaceChatRepository(
       apiClient: getIt<HuggingFaceApiClient>(),
       payloadBuilder: getIt<HuggingFacePayloadBuilder>(),
@@ -56,74 +55,24 @@ Future<void> configureDependencies() async {
       useChatCompletions: SecretConfig.useChatCompletions,
     ),
   );
-  getIt.registerLazySingleton<ChatHistoryRepository>(
+  _registerLazySingletonIfAbsent<ChatHistoryRepository>(
     () => SharedPreferencesChatHistoryRepository(),
   );
-  getIt.registerLazySingleton<LocaleRepository>(
+  _registerLazySingletonIfAbsent<LocaleRepository>(
     () => SharedPreferencesLocaleRepository(),
   );
-  getIt.registerLazySingleton<ThemeRepository>(
+  _registerLazySingletonIfAbsent<ThemeRepository>(
     () => SharedPreferencesThemeRepository(),
   );
-  getIt.registerLazySingleton<TimerService>(() => DefaultTimerService());
+  _registerLazySingletonIfAbsent<TimerService>(() => DefaultTimerService());
 }
 
 void ensureConfigured() {
-  if (!getIt.isRegistered<CounterRepository>()) {
-    getIt.registerLazySingleton<CounterRepository>(
-      () => SharedPreferencesCounterRepository(),
-    );
-  }
-  if (!getIt.isRegistered<http.Client>()) {
-    getIt.registerLazySingleton<http.Client>(http.Client.new);
-  }
-  if (!getIt.isRegistered<HuggingFaceApiClient>()) {
-    getIt.registerLazySingleton<HuggingFaceApiClient>(
-      () => HuggingFaceApiClient(
-        httpClient: getIt<http.Client>(),
-        apiKey: SecretConfig.huggingfaceApiKey,
-      ),
-    );
-  }
-  if (!getIt.isRegistered<HuggingFacePayloadBuilder>()) {
-    getIt.registerLazySingleton<HuggingFacePayloadBuilder>(
-      () => const HuggingFacePayloadBuilder(),
-    );
-  }
-  if (!getIt.isRegistered<HuggingFaceResponseParser>()) {
-    getIt.registerLazySingleton<HuggingFaceResponseParser>(
-      () => const HuggingFaceResponseParser(
-        fallbackMessage: HuggingfaceChatRepository.fallbackMessage,
-      ),
-    );
-  }
-  if (!getIt.isRegistered<ChatRepository>()) {
-    getIt.registerLazySingleton<ChatRepository>(
-      () => HuggingfaceChatRepository(
-        apiClient: getIt<HuggingFaceApiClient>(),
-        payloadBuilder: getIt<HuggingFacePayloadBuilder>(),
-        responseParser: getIt<HuggingFaceResponseParser>(),
-        model: SecretConfig.huggingfaceModel,
-        useChatCompletions: SecretConfig.useChatCompletions,
-      ),
-    );
-  }
-  if (!getIt.isRegistered<ChatHistoryRepository>()) {
-    getIt.registerLazySingleton<ChatHistoryRepository>(
-      () => SharedPreferencesChatHistoryRepository(),
-    );
-  }
-  if (!getIt.isRegistered<LocaleRepository>()) {
-    getIt.registerLazySingleton<LocaleRepository>(
-      () => SharedPreferencesLocaleRepository(),
-    );
-  }
-  if (!getIt.isRegistered<ThemeRepository>()) {
-    getIt.registerLazySingleton<ThemeRepository>(
-      () => SharedPreferencesThemeRepository(),
-    );
-  }
-  if (!getIt.isRegistered<TimerService>()) {
-    getIt.registerLazySingleton<TimerService>(() => DefaultTimerService());
+  configureDependencies();
+}
+
+void _registerLazySingletonIfAbsent<T extends Object>(T Function() factory) {
+  if (!getIt.isRegistered<T>()) {
+    getIt.registerLazySingleton<T>(factory);
   }
 }

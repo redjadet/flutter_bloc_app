@@ -75,15 +75,18 @@ class HuggingFaceResponseParser {
         return content;
       }
       if (content is List) {
-        final String buffer = content
-            .whereType<JsonMap>()
-            .map(
-              (JsonMap chunk) =>
-                  (chunk['text'] ?? chunk['content'] ?? '').toString(),
-            )
-            .join();
-        if (buffer.trim().isNotEmpty) {
-          return buffer;
+        final StringBuffer buffer = StringBuffer();
+        for (final dynamic chunk in content) {
+          if (chunk is JsonMap) {
+            final Object? primary = chunk['text'] ?? chunk['content'];
+            if (primary is String && primary.trim().isNotEmpty) {
+              buffer.write(primary);
+            }
+          }
+        }
+        final String combined = buffer.toString().trim();
+        if (combined.isNotEmpty) {
+          return combined;
         }
       }
     }

@@ -52,14 +52,15 @@ class CounterCubit extends Cubit<CounterState> {
         return;
       }
 
-      final int remaining = state.countdownSeconds;
+      final CounterState current = state;
+      final int remaining = current.countdownSeconds;
       if (remaining > 1) {
         _emitCountdown(remaining - 1);
         return;
       }
 
       // Reaches zero now.
-      if (state.count > 0) {
+      if (current.count > 0) {
         _handleAutoDecrement();
       } else {
         _resetCountdownAndHold();
@@ -73,25 +74,26 @@ class CounterCubit extends Cubit<CounterState> {
   }
 
   /// Emits a success state normalizing countdown, timestamp and activation flag.
-  void _emitCountUpdate({required int count, DateTime? timestamp}) {
+  CounterState _emitCountUpdate({required int count, DateTime? timestamp}) {
     _holdCountdownAtFullCycle = false;
-    emit(
-      CounterState.success(
-        count: count,
-        lastChanged: timestamp ?? DateTime.now(),
-      ),
+    final CounterState next = CounterState.success(
+      count: count,
+      lastChanged: timestamp ?? DateTime.now(),
     );
+    emit(next);
+    return next;
   }
 
   /// Handles the auto-decrement cycle and resets the countdown.
   void _handleAutoDecrement() {
-    if (state.count <= 0) {
+    final CounterState current = state;
+    if (current.count <= 0) {
       _resetCountdownAndHold();
       return;
     }
-    final int decremented = state.count - 1;
-    _emitCountUpdate(count: decremented);
-    _persistCurrent();
+    final int decremented = current.count - 1;
+    final CounterState next = _emitCountUpdate(count: decremented);
+    _persistState(next);
   }
 
   /// Resets to the default interval and holds one tick at that value when inactive.
@@ -131,13 +133,16 @@ class CounterCubit extends Cubit<CounterState> {
     }
   }
 
-  Future<void> _persistCurrent() async {
+  Future<void> _persistState(CounterState snapshotState) async {
     try {
       await _repository.save(
-        CounterSnapshot(count: state.count, lastChanged: state.lastChanged),
+        CounterSnapshot(
+          count: snapshotState.count,
+          lastChanged: snapshotState.lastChanged,
+        ),
       );
     } catch (e, s) {
-      AppLogger.error('CounterCubit._persistCurrent failed', e, s);
+      AppLogger.error('CounterCubit._persistState failed', e, s);
     }
   }
 
@@ -148,19 +153,20 @@ class CounterCubit extends Cubit<CounterState> {
   }
 
   Future<void> increment() async {
-    _emitCountUpdate(count: state.count + 1);
-    await _persistCurrent();
+    final CounterState next = _emitCountUpdate(count: state.count + 1);
+    await _persistState(next);
     _ensureCountdownTickerStarted();
   }
 
   Future<void> decrement() async {
-    if (state.count == 0) {
+    final CounterState current = state;
+    if (current.count == 0) {
       emit(state.copyWith(error: const CounterError.cannotGoBelowZero()));
       return;
     }
-    final int newCount = state.count - 1;
-    _emitCountUpdate(count: newCount);
-    await _persistCurrent();
+    final int newCount = current.count - 1;
+    final CounterState next = _emitCountUpdate(count: newCount);
+    await _persistState(next);
     _ensureCountdownTickerStarted();
   }
 
