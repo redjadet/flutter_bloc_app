@@ -74,6 +74,7 @@ class _CounterDisplayState extends State<CounterDisplay> {
   }
 }
 
+@immutable
 class _DisplayState {
   const _DisplayState({
     required this.count,
