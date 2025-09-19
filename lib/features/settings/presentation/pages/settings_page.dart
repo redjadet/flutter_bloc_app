@@ -23,6 +23,11 @@ class SettingsPage extends StatelessWidget {
           const _ThemeSection(),
           SizedBox(height: UI.gapL),
           const _LanguageSection(),
+          SizedBox(height: UI.gapL),
+          TextButton(
+            onPressed: () => throw Exception(),
+            child: const Text('Throw Test Exception'),
+          ),
         ],
       ),
     );

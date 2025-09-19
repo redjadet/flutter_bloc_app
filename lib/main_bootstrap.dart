@@ -1,15 +1,64 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/core/platform_init.dart';
+import 'package:flutter_bloc_app/firebase_options.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 Future<void> runAppWithFlavor(Flavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
+  final bool firebaseReady = await _initializeFirebase();
+  if (firebaseReady) {
+    // Pass all uncaught "fatal" errors from the framework to Crashlytics
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  }
   FlavorManager.set(flavor);
   await PlatformInit.initialize();
   await SecretConfig.load();
   await configureDependencies();
   runApp(const MyApp());
+}
+
+Future<bool> _initializeFirebase() async {
+  try {
+    final FirebaseOptions options = DefaultFirebaseOptions.currentPlatform;
+    if (_usesPlaceholderValues(options)) {
+      AppLogger.warning(
+        'Firebase configuration uses placeholder values. Skip initialization.',
+      );
+      return false;
+    }
+
+    await Firebase.initializeApp(options: options);
+    return true;
+  } on UnsupportedError catch (error, stackTrace) {
+    AppLogger.warning('Firebase not configured: $error');
+    AppLogger.debug('Skipping Firebase initialization\n$stackTrace');
+  } catch (error, stackTrace) {
+    AppLogger.error('Firebase initialization failed', error, stackTrace);
+  }
+  return false;
+}
+
+bool _usesPlaceholderValues(FirebaseOptions options) {
+  bool containsPlaceholder(String? value) {
+    if (value == null || value.isEmpty) return true;
+    const List<String> markers = <String>[
+      'your-project-id',
+      'YOUR_',
+      'placeholder',
+      '000000000000',
+    ];
+    return markers.any(value.contains);
+  }
+
+  return containsPlaceholder(options.projectId) ||
+      containsPlaceholder(options.appId) ||
+      containsPlaceholder(options.apiKey) ||
+      containsPlaceholder(options.messagingSenderId) ||
+      containsPlaceholder(options.storageBucket);
 }

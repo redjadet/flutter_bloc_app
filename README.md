@@ -187,12 +187,33 @@ Regenerate Freezed formatting after large refactors (optional helper):
 dart run fix_freezed_formatting.dart
 ```
 
+### Secrets & configuration
+
+This repository is public, so runtime secrets are never committed. Before
+running the app locally make sure you create the private configuration files
+listed below. All of them are git-ignored; keep the generated files out of
+version control.
+
+1. **Firebase (required for Crashlytics/Analytics):**
+   - Copy `lib/firebase_options.dart.sample` to `lib/firebase_options.dart` and
+     keep it untracked (the path is listed in `.gitignore`).
+   - Run `flutterfire configure` to populate the copied file with your actual
+     Firebase project settings. The sample uses placeholder values; if they
+     remain unchanged the app skips Firebase initialization at runtime.
+   - Copy the generated platform files next to the provided samples:
+     - `android/app/google-services.json.sample`
+     - `ios/Runner/GoogleService-Info.plist.sample`
+     - `macos/Runner/GoogleService-Info.plist.sample`
+   - Do **not** commit the generated files. They stay local only.
+
+2. **Hugging Face token (AI chat):**
+   - Copy `assets/config/secrets.sample.json` to `assets/config/secrets.json`
+     (already ignored by git) and fill in your token / model details. See below
+     for the structure and options.
+
 ### Hugging Face token (AI chat)
 
-The chat screen calls a hosted Hugging Face model that requires an access token. Create a free token at [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens) **with the Inference API scope enabled**, then create a local file based on the provided sample:
-
-1. Copy `assets/config/secrets.sample.json` to `assets/config/secrets.json` (this file is git-ignored).
-2. Replace the placeholder value with your token and (optionally) the model id you want to query. By default the app targets `HuggingFaceH4/zephyr-7b-beta`, but you can override it if you prefer another model with Inference Provider support:
+The chat screen calls a hosted Hugging Face model that requires an access token. Create a free token at [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens) **with the Inference API scope enabled**, then edit your local `assets/config/secrets.json` (created in the previous section) with content similar to:
 
    ```json
    {
