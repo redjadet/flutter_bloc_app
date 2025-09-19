@@ -223,6 +223,7 @@ dart run fix_freezed_formatting.dart
     client: MockClient(...),
     apiKey: 'test-token',
     model: 'test-model',
+    useChatCompletions: false,
     action: () async => getIt<ChatRepository>().sendMessage(...),
   );
   ```

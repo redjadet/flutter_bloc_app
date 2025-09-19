@@ -93,8 +93,8 @@ void setupSharedPreferencesMock({Map<String, Object>? initialValues}) {
 void overrideHuggingFaceHttpClient(
   http.Client client, {
   required String apiKey,
-  String model = 'test-model',
-  bool useChatCompletions = false,
+  required String model,
+  required bool useChatCompletions,
 }) {
   if (getIt.isRegistered<ChatRepository>()) {
     getIt.unregister<ChatRepository>();
@@ -119,8 +119,8 @@ void overrideHuggingFaceHttpClient(
 Future<T> runWithHuggingFaceHttpClientOverride<T>({
   required http.Client client,
   required String apiKey,
-  String model = 'test-model',
-  bool useChatCompletions = false,
+  required String model,
+  required bool useChatCompletions,
   bool closeClient = true,
   required Future<T> Function() action,
 }) async {

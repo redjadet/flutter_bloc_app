@@ -223,7 +223,7 @@ return $default(_that.count,_that.lastChanged,_that.countdownSeconds,_that.isAut
 
 
 class _CounterState extends CounterState {
-  const _CounterState({required this.count, this.lastChanged, this.countdownSeconds = 5, this.isAutoDecrementActive = false, this.error, this.status = CounterStatus.idle}): super._();
+  const _CounterState({required this.count, this.lastChanged, this.countdownSeconds = CounterState.defaultCountdownSeconds, this.isAutoDecrementActive = false, this.error, this.status = CounterStatus.idle}): super._();
   
 
 @override final  int count;

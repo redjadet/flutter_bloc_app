@@ -39,6 +39,7 @@ mixin _ChatCubitActions on _ChatCubitCore, _ChatCubitHelpers {
         pastUserInputs: active.pastUserInputs,
         generatedResponses: active.generatedResponses,
         currentModel: resolvedModel,
+        status: ChatStatus.success,
       ),
     );
   }
@@ -75,6 +76,7 @@ mixin _ChatCubitActions on _ChatCubitCore, _ChatCubitHelpers {
         generatedResponses: withUser.generatedResponses,
         history: historyAfterUser,
         activeConversationId: withUser.id,
+        status: ChatStatus.loading,
       ),
     );
 
@@ -107,14 +109,27 @@ mixin _ChatCubitActions on _ChatCubitCore, _ChatCubitHelpers {
           generatedResponses: withAssistant.generatedResponses,
           history: finalHistory,
           activeConversationId: withAssistant.id,
+          status: ChatStatus.success,
         ),
       );
 
       await _persistHistory(finalHistory);
     } on ChatException catch (e) {
-      emit(state.copyWith(isLoading: false, error: e.message));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          error: e.message,
+          status: ChatStatus.error,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(isLoading: false, error: e.toString()));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          error: e.toString(),
+          status: ChatStatus.error,
+        ),
+      );
     }
   }
 
@@ -132,6 +147,7 @@ mixin _ChatCubitActions on _ChatCubitCore, _ChatCubitHelpers {
           generatedResponses: fresh.generatedResponses,
           isLoading: false,
           error: null,
+          status: ChatStatus.success,
         ),
       );
       return;
@@ -150,6 +166,7 @@ mixin _ChatCubitActions on _ChatCubitCore, _ChatCubitHelpers {
         generatedResponses: fresh.generatedResponses,
         isLoading: false,
         error: null,
+        status: ChatStatus.success,
       ),
     );
   }
@@ -180,6 +197,7 @@ mixin _ChatCubitActions on _ChatCubitCore, _ChatCubitHelpers {
           pastUserInputs: fresh.pastUserInputs,
           generatedResponses: fresh.generatedResponses,
           currentModel: _currentModel,
+          status: ChatStatus.success,
         ),
       );
       return;
@@ -200,6 +218,7 @@ mixin _ChatCubitActions on _ChatCubitCore, _ChatCubitHelpers {
         pastUserInputs: desiredActive.pastUserInputs,
         generatedResponses: desiredActive.generatedResponses,
         currentModel: resolvedModel,
+        status: ChatStatus.success,
       ),
     );
   }
@@ -219,6 +238,7 @@ mixin _ChatCubitActions on _ChatCubitCore, _ChatCubitHelpers {
         generatedResponses: conversation.generatedResponses,
         history: history,
         activeConversationId: conversation.id,
+        status: ChatStatus.success,
       ),
     );
 
@@ -248,6 +268,7 @@ mixin _ChatCubitActions on _ChatCubitCore, _ChatCubitHelpers {
         activeConversationId: conversation.id,
         isLoading: false,
         error: null,
+        status: ChatStatus.success,
       ),
     );
 
@@ -276,6 +297,7 @@ mixin _ChatCubitActions on _ChatCubitCore, _ChatCubitHelpers {
         pastUserInputs: conversation.pastUserInputs,
         generatedResponses: conversation.generatedResponses,
         currentModel: resolvedModel,
+        status: ChatStatus.success,
       ),
     );
   }

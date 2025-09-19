@@ -67,6 +67,7 @@ void main() {
           client: mockClient,
           apiKey: 'override',
           model: 'override-model',
+          useChatCompletions: false,
           action: () async {
             final repository = getIt<ChatRepository>();
             return repository.sendMessage(

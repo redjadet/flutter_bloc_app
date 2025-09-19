@@ -12,7 +12,7 @@ abstract class CounterState with _$CounterState {
   const factory CounterState({
     required int count,
     DateTime? lastChanged,
-    @Default(defaultCountdownSeconds) int countdownSeconds,
+    @Default(CounterState.defaultCountdownSeconds) int countdownSeconds,
     @Default(false) bool isAutoDecrementActive,
     CounterError? error,
     @Default(CounterStatus.idle) CounterStatus status,
@@ -21,7 +21,7 @@ abstract class CounterState with _$CounterState {
   factory CounterState.success({
     required int count,
     DateTime? lastChanged,
-    int countdownSeconds = defaultCountdownSeconds,
+    int countdownSeconds = CounterState.defaultCountdownSeconds,
   }) {
     return CounterState(
       count: count,

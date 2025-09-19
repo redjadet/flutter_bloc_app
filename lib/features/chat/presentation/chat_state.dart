@@ -4,6 +4,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'chat_state.freezed.dart';
 
+enum ChatStatus { idle, loading, success, error }
+
 @freezed
 abstract class ChatState with _$ChatState {
   const factory ChatState({
@@ -15,6 +17,7 @@ abstract class ChatState with _$ChatState {
     String? currentModel,
     @Default(<ChatConversation>[]) List<ChatConversation> history,
     String? activeConversationId,
+    @Default(ChatStatus.idle) ChatStatus status,
   }) = _ChatState;
 
   const ChatState._();

@@ -36,6 +36,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
         messages: conversation.messages,
         pastUserInputs: conversation.pastUserInputs,
         generatedResponses: conversation.generatedResponses,
+        status: ChatStatus.success,
       ),
     );
     if (conversation.hasContent) {

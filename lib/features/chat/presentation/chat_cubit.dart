@@ -46,7 +46,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
 
   void clearError() {
     if (state.hasError) {
-      emit(state.copyWith(error: null));
+      emit(state.copyWith(error: null, status: ChatStatus.idle));
     }
   }
 }
