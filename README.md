@@ -312,7 +312,11 @@ UI indicator:
 
 ## Screenshots
 
-You can add screenshots or a short GIF here to showcase the counter and countdown.
+![Counter screen](assets/screenshots/counter_home.png)
+![Counter screen2](assets/screenshots/counter_home2.png)
+![AI_Chat screen](assets/screenshots/ai_chat.png)
+![Chart screen](assets/screenshots/chart.png)
+![Settings screen](assets/screenshots/settings.png)
 
 ## Notes
 
