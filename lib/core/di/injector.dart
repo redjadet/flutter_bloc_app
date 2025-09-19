@@ -23,6 +23,7 @@ import 'package:flutter_bloc_app/shared/data/'
 import 'package:flutter_bloc_app/shared/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
 import 'package:get_it/get_it.dart';
+import 'package:http/http.dart' as http;
 
 final GetIt getIt = GetIt.instance;
 
@@ -31,8 +32,12 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<CounterRepository>(
     () => SharedPreferencesCounterRepository(),
   );
+  getIt.registerLazySingleton<http.Client>(http.Client.new);
   getIt.registerLazySingleton<HuggingFaceApiClient>(
-    () => HuggingFaceApiClient(apiKey: SecretConfig.huggingfaceApiKey),
+    () => HuggingFaceApiClient(
+      httpClient: getIt<http.Client>(),
+      apiKey: SecretConfig.huggingfaceApiKey,
+    ),
   );
   getIt.registerLazySingleton<HuggingFacePayloadBuilder>(
     () => const HuggingFacePayloadBuilder(),
@@ -69,9 +74,15 @@ void ensureConfigured() {
       () => SharedPreferencesCounterRepository(),
     );
   }
+  if (!getIt.isRegistered<http.Client>()) {
+    getIt.registerLazySingleton<http.Client>(http.Client.new);
+  }
   if (!getIt.isRegistered<HuggingFaceApiClient>()) {
     getIt.registerLazySingleton<HuggingFaceApiClient>(
-      () => HuggingFaceApiClient(apiKey: SecretConfig.huggingfaceApiKey),
+      () => HuggingFaceApiClient(
+        httpClient: getIt<http.Client>(),
+        apiKey: SecretConfig.huggingfaceApiKey,
+      ),
     );
   }
   if (!getIt.isRegistered<HuggingFacePayloadBuilder>()) {

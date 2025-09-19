@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/config/secret_config.dart';
+import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
+import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
+import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';
+import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/shared/presentation/theme_cubit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 
 /// Test helper for creating mock repositories
 class MockCounterRepository implements CounterRepository {
@@ -75,6 +83,73 @@ Widget wrapWithProviders({
 /// Test helper for setting up SharedPreferences mock
 void setupSharedPreferencesMock({Map<String, Object>? initialValues}) {
   SharedPreferences.setMockInitialValues(initialValues ?? <String, Object>{});
+}
+
+/// Overrides the shared Hugging Face HTTP client so tests can inject mocks.
+///
+/// This mutates the root GetIt scope and should be paired with manual cleanup
+/// (e.g. rerunning `configureDependencies`). Prefer using
+/// [runWithHuggingFaceHttpClientOverride] to keep overrides scoped.
+@Deprecated('Prefer runWithHuggingFaceHttpClientOverride for scoped overrides.')
+void overrideHuggingFaceHttpClient(http.Client client, {String? apiKey}) {
+  if (getIt.isRegistered<ChatRepository>()) {
+    getIt.unregister<ChatRepository>();
+  }
+  if (getIt.isRegistered<HuggingFaceApiClient>()) {
+    getIt.unregister<HuggingFaceApiClient>();
+  }
+  if (getIt.isRegistered<http.Client>()) {
+    getIt.unregister<http.Client>();
+  }
+
+  _registerHuggingFaceDependencies(client, apiKey: apiKey);
+}
+
+/// Runs [action] within a GetIt scope that overrides Hugging Face dependencies.
+/// The provided [client] is automatically disposed if [closeClient] is true.
+Future<T> runWithHuggingFaceHttpClientOverride<T>({
+  required http.Client client,
+  String? apiKey,
+  bool closeClient = true,
+  required Future<T> Function() action,
+}) async {
+  getIt.pushNewScope(scopeName: 'huggingface-test-override');
+  _registerHuggingFaceDependencies(client, apiKey: apiKey);
+  try {
+    return await action();
+  } finally {
+    if (closeClient) {
+      client.close();
+    }
+    await getIt.popScope();
+  }
+}
+
+void _registerHuggingFaceDependencies(http.Client client, {String? apiKey}) {
+  getIt.registerSingleton<http.Client>(client);
+  getIt.registerLazySingleton<HuggingFaceApiClient>(
+    () => HuggingFaceApiClient(
+      httpClient: getIt<http.Client>(),
+      apiKey: apiKey ?? SecretConfig.huggingfaceApiKey,
+    ),
+  );
+  getIt.registerLazySingleton<HuggingFacePayloadBuilder>(
+    () => const HuggingFacePayloadBuilder(),
+  );
+  getIt.registerLazySingleton<HuggingFaceResponseParser>(
+    () => const HuggingFaceResponseParser(
+      fallbackMessage: HuggingfaceChatRepository.fallbackMessage,
+    ),
+  );
+  getIt.registerLazySingleton<ChatRepository>(
+    () => HuggingfaceChatRepository(
+      apiClient: getIt<HuggingFaceApiClient>(),
+      payloadBuilder: getIt<HuggingFacePayloadBuilder>(),
+      responseParser: getIt<HuggingFaceResponseParser>(),
+      model: SecretConfig.huggingfaceModel,
+      useChatCompletions: SecretConfig.useChatCompletions,
+    ),
+  );
 }
 
 class _FakeThemeRepository implements ThemeRepository {
