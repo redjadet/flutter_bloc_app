@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
@@ -13,8 +14,7 @@ Future<void> runAppWithFlavor(Flavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
   final bool firebaseReady = await _initializeFirebase();
   if (firebaseReady) {
-    // Pass all uncaught "fatal" errors from the framework to Crashlytics
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+    _registerCrashlyticsGlobalHandlers();
   }
   FlavorManager.set(flavor);
   await PlatformInit.initialize();
@@ -34,6 +34,7 @@ Future<bool> _initializeFirebase() async {
     }
 
     await Firebase.initializeApp(options: options);
+    AppLogger.info('Firebase initialized for project: ${options.projectId}');
     return true;
   } on UnsupportedError catch (error, stackTrace) {
     AppLogger.warning('Firebase not configured: $error');
@@ -61,4 +62,19 @@ bool _usesPlaceholderValues(FirebaseOptions options) {
       containsPlaceholder(options.apiKey) ||
       containsPlaceholder(options.messagingSenderId) ||
       containsPlaceholder(options.storageBucket);
+}
+
+void _registerCrashlyticsGlobalHandlers() {
+  final FlutterExceptionHandler? previousFlutterHandler = FlutterError.onError;
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+    previousFlutterHandler?.call(details);
+  };
+
+  final bool Function(Object, StackTrace)? previousPlatformHandler =
+      PlatformDispatcher.instance.onError;
+  PlatformDispatcher.instance.onError = (Object error, StackTrace stackTrace) {
+    FirebaseCrashlytics.instance.recordError(error, stackTrace, fatal: true);
+    return previousPlatformHandler?.call(error, stackTrace) ?? true;
+  };
 }
