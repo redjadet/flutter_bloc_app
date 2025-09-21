@@ -56,6 +56,39 @@ void main() {
       skip: 0,
     );
 
+    test(
+      'clearError clears existing error and resets status to idle',
+      () async {
+        final CounterCubit cubit = CounterCubit(
+          repository: MockCounterRepository(),
+        );
+        cubit.emit(
+          cubit.state.copyWith(
+            error: const CounterError.cannotGoBelowZero(),
+            status: CounterStatus.error,
+          ),
+        );
+
+        cubit.clearError();
+
+        expect(cubit.state.error, isNull);
+        expect(cubit.state.status, CounterStatus.idle);
+        await cubit.close();
+      },
+    );
+
+    test('clearError is a no-op when no error is present', () async {
+      final CounterCubit cubit = CounterCubit(
+        repository: MockCounterRepository(),
+      );
+      final CounterState initial = cubit.state;
+
+      cubit.clearError();
+
+      expect(cubit.state, same(initial));
+      await cubit.close();
+    });
+
     test('loadInitial loads saved value with countdown 5', () async {
       SharedPreferences.setMockInitialValues(<String, Object>{'last_count': 7});
       final CounterCubit cubit = CounterCubit(

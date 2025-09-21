@@ -1,6 +1,9 @@
 part of 'chat_cubit.dart';
 
 mixin _ChatCubitHelpers on _ChatCubitCore {
+  int _compareByUpdatedAt(ChatConversation a, ChatConversation b) =>
+      b.updatedAt.compareTo(a.updatedAt);
+
   String _resolveModelForConversation(ChatConversation conversation) {
     final String? model = conversation.model;
     if (model != null && _models.contains(model)) {
@@ -77,22 +80,18 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
       updated.add(conversation);
     }
 
-    updated.sort(
-      (ChatConversation a, ChatConversation b) =>
-          b.updatedAt.compareTo(a.updatedAt),
-    );
-    return updated;
+    return _sortHistory(updated, clone: false);
   }
 
-  List<ChatConversation> _sortHistory(List<ChatConversation> conversations) {
-    final List<ChatConversation> sorted = List<ChatConversation>.from(
-      conversations,
-    );
-    sorted.sort(
-      (ChatConversation a, ChatConversation b) =>
-          b.updatedAt.compareTo(a.updatedAt),
-    );
-    return sorted;
+  List<ChatConversation> _sortHistory(
+    List<ChatConversation> conversations, {
+    bool clone = true,
+  }) {
+    final List<ChatConversation> target = clone
+        ? List<ChatConversation>.from(conversations)
+        : conversations;
+    target.sort(_compareByUpdatedAt);
+    return target;
   }
 
   ChatConversation? _conversationById(

@@ -87,6 +87,51 @@ void main() {
       expect(history.conversations.length, 1);
     });
 
+    test('loadHistory orders conversations by most recent update', () async {
+      final FakeChatRepository repo = FakeChatRepository();
+      final FakeChatHistoryRepository history = FakeChatHistoryRepository();
+      final ChatConversation older = ChatConversation(
+        id: 'older',
+        messages: const <ChatMessage>[
+          ChatMessage(author: ChatAuthor.user, text: 'Hi'),
+          ChatMessage(author: ChatAuthor.assistant, text: 'Hello'),
+        ],
+        pastUserInputs: const <String>['Hi'],
+        generatedResponses: const <String>['Hello'],
+        createdAt: DateTime(2024, 1, 1, 12, 0),
+        updatedAt: DateTime(2024, 1, 1, 12, 5),
+        model: 'openai/gpt-oss-20b',
+      );
+      final ChatConversation newer = ChatConversation(
+        id: 'newer',
+        messages: const <ChatMessage>[
+          ChatMessage(author: ChatAuthor.user, text: 'Howdy'),
+          ChatMessage(author: ChatAuthor.assistant, text: 'Welcome'),
+        ],
+        pastUserInputs: const <String>['Howdy'],
+        generatedResponses: const <String>['Welcome'],
+        createdAt: DateTime(2024, 1, 2, 8, 0),
+        updatedAt: DateTime(2024, 1, 2, 8, 30),
+        model: 'openai/gpt-oss-20b',
+      );
+      history.conversations = <ChatConversation>[older, newer];
+
+      final ChatCubit cubit = ChatCubit(
+        repository: repo,
+        historyRepository: history,
+        initialModel: 'openai/gpt-oss-20b',
+      );
+
+      await cubit.loadHistory();
+
+      expect(cubit.state.history.first.id, 'newer');
+      expect(cubit.state.history.map((ChatConversation c) => c.id), <String>[
+        'newer',
+        'older',
+      ]);
+      await cubit.close();
+    });
+
     test('sendMessage persists conversation to history', () async {
       final FakeChatRepository repo = FakeChatRepository();
       final FakeChatHistoryRepository history = FakeChatHistoryRepository();

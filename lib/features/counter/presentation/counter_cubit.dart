@@ -171,10 +171,14 @@ class CounterCubit extends Cubit<CounterState> {
   }
 
   void clearError() {
-    if (state.error != null) {
-      // We intentionally reset status to idle along with clearing the error.
-      // ignore: avoid_redundant_argument_values
-      emit(state.copyWith(error: null, status: CounterStatus.idle));
+    if (state.error == null) {
+      return;
     }
+
+    // Reset status only when we previously exposed the error state.
+    final CounterState next = state.status == CounterStatus.idle
+        ? state.copyWith(error: null)
+        : state.copyWith(error: null, status: CounterStatus.idle);
+    emit(next);
   }
 }
