@@ -7,13 +7,26 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ChatCubit', () {
+    ChatCubit createCubit({
+      ChatRepository? repository,
+      ChatHistoryRepository? historyRepository,
+      String initialModel = 'openai/gpt-oss-20b',
+    }) {
+      final ChatCubit cubit = ChatCubit(
+        repository: repository ?? FakeChatRepository(),
+        historyRepository: historyRepository ?? FakeChatHistoryRepository(),
+        initialModel: initialModel,
+      );
+      addTearDown(cubit.close);
+      return cubit;
+    }
+
     test('appends user and assistant messages on success', () async {
       final FakeChatRepository repo = FakeChatRepository();
       final FakeChatHistoryRepository history = FakeChatHistoryRepository();
-      final ChatCubit cubit = ChatCubit(
+      final ChatCubit cubit = createCubit(
         repository: repo,
         historyRepository: history,
-        initialModel: 'openai/gpt-oss-20b',
       );
 
       await cubit.sendMessage('Hello');
@@ -25,10 +38,9 @@ void main() {
     });
 
     test('emits error when repository throws', () async {
-      final ChatCubit cubit = ChatCubit(
+      final ChatCubit cubit = createCubit(
         repository: _ErrorChatRepository(),
         historyRepository: FakeChatHistoryRepository(),
-        initialModel: 'openai/gpt-oss-20b',
       );
 
       await cubit.sendMessage('Hi');
@@ -40,10 +52,9 @@ void main() {
     test('selectModel resets conversation and updates currentModel', () async {
       final FakeChatRepository repo = FakeChatRepository();
       final FakeChatHistoryRepository history = FakeChatHistoryRepository();
-      final ChatCubit cubit = ChatCubit(
+      final ChatCubit cubit = createCubit(
         repository: repo,
         historyRepository: history,
-        initialModel: 'openai/gpt-oss-20b',
       );
 
       await cubit.sendMessage('Hello');
@@ -73,10 +84,9 @@ void main() {
       );
       history.conversations = <ChatConversation>[storedConversation];
 
-      final ChatCubit cubit = ChatCubit(
+      final ChatCubit cubit = createCubit(
         repository: repo,
         historyRepository: history,
-        initialModel: 'openai/gpt-oss-20b',
       );
 
       await cubit.loadHistory();
@@ -116,10 +126,9 @@ void main() {
       );
       history.conversations = <ChatConversation>[older, newer];
 
-      final ChatCubit cubit = ChatCubit(
+      final ChatCubit cubit = createCubit(
         repository: repo,
         historyRepository: history,
-        initialModel: 'openai/gpt-oss-20b',
       );
 
       await cubit.loadHistory();
@@ -129,16 +138,14 @@ void main() {
         'newer',
         'older',
       ]);
-      await cubit.close();
     });
 
     test('sendMessage persists conversation to history', () async {
       final FakeChatRepository repo = FakeChatRepository();
       final FakeChatHistoryRepository history = FakeChatHistoryRepository();
-      final ChatCubit cubit = ChatCubit(
+      final ChatCubit cubit = createCubit(
         repository: repo,
         historyRepository: history,
-        initialModel: 'openai/gpt-oss-20b',
       );
 
       await cubit.sendMessage('Hello');
@@ -155,10 +162,9 @@ void main() {
         ChatConversation(id: 'empty', createdAt: DateTime(2024, 1, 1)),
       ];
 
-      final ChatCubit cubit = ChatCubit(
+      final ChatCubit cubit = createCubit(
         repository: repo,
         historyRepository: history,
-        initialModel: 'openai/gpt-oss-20b',
       );
 
       await cubit.loadHistory();
@@ -173,10 +179,9 @@ void main() {
       () async {
         final FakeChatRepository repo = FakeChatRepository();
         final FakeChatHistoryRepository history = FakeChatHistoryRepository();
-        final ChatCubit cubit = ChatCubit(
+        final ChatCubit cubit = createCubit(
           repository: repo,
           historyRepository: history,
-          initialModel: 'openai/gpt-oss-20b',
         );
 
         await cubit.sendMessage('Hello');
