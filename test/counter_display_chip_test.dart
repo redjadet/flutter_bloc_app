@@ -28,9 +28,17 @@ void main() {
   });
 
   group('CounterDisplay chip', () {
-    testWidgets('shows Auto label when active', (tester) async {
-      final cubit = CounterCubit(repository: _NoopRepo(), startTicker: false);
+    CounterCubit createCubit({CounterRepository? repository}) {
+      final cubit = CounterCubit(
+        repository: repository ?? _NoopRepo(),
+        startTicker: false,
+      );
       addTearDown(cubit.close);
+      return cubit;
+    }
+
+    testWidgets('shows Auto label when active', (tester) async {
+      final cubit = createCubit();
 
       await tester.pumpWidget(
         _wrap(BlocProvider.value(value: cubit, child: const CounterDisplay())),
@@ -52,8 +60,7 @@ void main() {
     });
 
     testWidgets('shows Paused label when inactive', (tester) async {
-      final cubit = CounterCubit(repository: _NoopRepo(), startTicker: false);
-      addTearDown(cubit.close);
+      final cubit = createCubit();
 
       await tester.pumpWidget(
         _wrap(BlocProvider.value(value: cubit, child: const CounterDisplay())),

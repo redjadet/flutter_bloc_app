@@ -11,13 +11,25 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('SettingsPage', () {
+    ThemeCubit createThemeCubit(ThemeRepository repository) {
+      final ThemeCubit cubit = ThemeCubit(repository: repository);
+      addTearDown(() => cubit.close());
+      return cubit;
+    }
+
+    LocaleCubit createLocaleCubit(LocaleRepository repository) {
+      final LocaleCubit cubit = LocaleCubit(repository: repository);
+      addTearDown(() => cubit.close());
+      return cubit;
+    }
+
     testWidgets('changes theme mode and locale when selecting options', (
       WidgetTester tester,
     ) async {
       final _InMemoryThemeRepository repo = _InMemoryThemeRepository();
-      final ThemeCubit themeCubit = ThemeCubit(repository: repo);
+      final ThemeCubit themeCubit = createThemeCubit(repo);
       final _InMemoryLocaleRepository localeRepo = _InMemoryLocaleRepository();
-      final LocaleCubit localeCubit = LocaleCubit(repository: localeRepo);
+      final LocaleCubit localeCubit = createLocaleCubit(localeRepo);
 
       final AppLocalizationsEn en = AppLocalizationsEn();
 
@@ -58,9 +70,6 @@ void main() {
 
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump();
-
-      await themeCubit.close();
-      await localeCubit.close();
     });
   });
 }

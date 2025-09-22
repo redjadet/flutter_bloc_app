@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/data/shared_preferences_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
@@ -13,14 +14,29 @@ void main() {
       setupSharedPreferencesMock();
     });
 
-    test('initial state is count 0 with countdown 5', () {
+    CounterCubit createCubit({
+      CounterRepository? repository,
+      TimerService? timerService,
+      bool startTicker = true,
+      Duration loadDelay = Duration.zero,
+    }) {
       final CounterCubit cubit = CounterCubit(
+        repository: repository ?? MockCounterRepository(),
+        timerService: timerService,
+        startTicker: startTicker,
+        loadDelay: loadDelay,
+      );
+      addTearDown(cubit.close);
+      return cubit;
+    }
+
+    test('initial state is count 0 with countdown 5', () {
+      final CounterCubit cubit = createCubit(
         repository: SharedPreferencesCounterRepository(),
       );
       expect(cubit.state.count, 0);
       expect(cubit.state.lastChanged, isNull);
       expect(cubit.state.countdownSeconds, 5);
-      cubit.close();
     });
 
     blocTest<CounterCubit, CounterState>(
@@ -59,9 +75,7 @@ void main() {
     test(
       'clearError clears existing error and resets status to idle',
       () async {
-        final CounterCubit cubit = CounterCubit(
-          repository: MockCounterRepository(),
-        );
+        final CounterCubit cubit = createCubit();
         cubit.emit(
           cubit.state.copyWith(
             error: const CounterError.cannotGoBelowZero(),
@@ -73,65 +87,55 @@ void main() {
 
         expect(cubit.state.error, isNull);
         expect(cubit.state.status, CounterStatus.idle);
-        await cubit.close();
       },
     );
 
     test('clearError is a no-op when no error is present', () async {
-      final CounterCubit cubit = CounterCubit(
-        repository: MockCounterRepository(),
-      );
+      final CounterCubit cubit = createCubit();
       final CounterState initial = cubit.state;
 
       cubit.clearError();
 
       expect(cubit.state, same(initial));
-      await cubit.close();
     });
 
     test('loadInitial loads saved value with countdown 5', () async {
       SharedPreferences.setMockInitialValues(<String, Object>{'last_count': 7});
-      final CounterCubit cubit = CounterCubit(
+      final CounterCubit cubit = createCubit(
         repository: SharedPreferencesCounterRepository(),
       );
       await cubit.loadInitial();
       expect(cubit.state.count, 7);
       expect(cubit.state.lastChanged, isNull);
       expect(cubit.state.countdownSeconds, 5);
-      cubit.close();
     });
 
     test('loadInitial with mock repository loads correctly', () async {
       final mockRepo = MockCounterRepository(
         snapshot: const CounterSnapshot(count: 42, lastChanged: null),
       );
-      final CounterCubit cubit = CounterCubit(repository: mockRepo);
+      final CounterCubit cubit = createCubit(repository: mockRepo);
       await cubit.loadInitial();
       expect(cubit.state.count, 42);
       expect(cubit.state.countdownSeconds, 5);
-      cubit.close();
     });
 
     test('increment persists value and timestamp', () async {
       SharedPreferences.setMockInitialValues(<String, Object>{});
       final SharedPreferencesCounterRepository repo =
           SharedPreferencesCounterRepository();
-      final CounterCubit cubit = CounterCubit(repository: repo);
+      final CounterCubit cubit = createCubit(repository: repo);
       await cubit.increment();
       final CounterSnapshot snap = await repo.load();
       expect(snap.count, 1);
       expect(snap.lastChanged, isA<DateTime>());
-      cubit.close();
     });
 
     test(
       'countdown timer decreases deterministically (FakeTimerService)',
       () async {
         final fakeTimer = FakeTimerService();
-        final CounterCubit cubit = CounterCubit(
-          repository: MockCounterRepository(),
-          timerService: fakeTimer,
-        );
+        final CounterCubit cubit = createCubit(timerService: fakeTimer);
 
         // Let microtask emission happen
         await Future<void>.delayed(const Duration(milliseconds: 10));
@@ -142,7 +146,6 @@ void main() {
         fakeTimer.tick(2);
 
         expect(cubit.state.countdownSeconds, initialCountdown - 2);
-        await cubit.close();
       },
     );
 
@@ -150,23 +153,16 @@ void main() {
       'countdown resets to 5 when it reaches 0 (FakeTimerService)',
       () async {
         final fakeTimer = FakeTimerService();
-        final CounterCubit cubit = CounterCubit(
-          repository: MockCounterRepository(),
-          timerService: fakeTimer,
-        );
+        final CounterCubit cubit = createCubit(timerService: fakeTimer);
         await Future<void>.delayed(const Duration(milliseconds: 10));
         fakeTimer.tick(5);
         expect(cubit.state.countdownSeconds, 5);
-        await cubit.close();
       },
     );
 
     test('auto-decrement timer works (FakeTimerService)', () async {
       final fakeTimer = FakeTimerService();
-      final CounterCubit cubit = CounterCubit(
-        repository: MockCounterRepository(),
-        timerService: fakeTimer,
-      );
+      final CounterCubit cubit = createCubit(timerService: fakeTimer);
       cubit.emit(
         CounterState(
           count: 5,
@@ -178,15 +174,11 @@ void main() {
       // Trigger auto-decrement after 5 ticks
       fakeTimer.tick(5);
       expect(cubit.state.count, 4);
-      await cubit.close();
     });
 
     test('auto-decrement stops at 0 (FakeTimerService)', () async {
       final fakeTimer = FakeTimerService();
-      final CounterCubit cubit = CounterCubit(
-        repository: MockCounterRepository(),
-        timerService: fakeTimer,
-      );
+      final CounterCubit cubit = createCubit(timerService: fakeTimer);
       cubit.emit(
         CounterState(
           count: 1,
@@ -201,15 +193,11 @@ void main() {
       // Ensure it doesn't go below 0 on further ticks
       fakeTimer.tick(5);
       expect(cubit.state.count, 0);
-      await cubit.close();
     });
 
     test('timer resets when increment is pressed (FakeTimerService)', () async {
       final fakeTimer = FakeTimerService();
-      final CounterCubit cubit = CounterCubit(
-        repository: MockCounterRepository(),
-        timerService: fakeTimer,
-      );
+      final CounterCubit cubit = createCubit(timerService: fakeTimer);
       cubit.emit(
         CounterState(
           count: 3,
@@ -232,7 +220,6 @@ void main() {
       // 2 more ticks (total since increment = 5) - auto-decrement now
       fakeTimer.tick(2);
       expect(cubit.state.count, 3);
-      await cubit.close();
     });
   });
 }

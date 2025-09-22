@@ -33,6 +33,7 @@ void main() {
       repository: ThrowingRepo(),
       startTicker: false,
     );
+    addTearDown(() => cubit.close());
 
     await tester.pumpWidget(
       ScreenUtilInit(
@@ -60,7 +61,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(SnackBar), findsOneWidget);
-    await cubit.close();
   });
 }
 

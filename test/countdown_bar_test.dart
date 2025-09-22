@@ -23,9 +23,17 @@ Widget _wrapWithApp(Widget child) {
 
 void main() {
   group('CountdownBar', () {
-    testWidgets('shows active label with remaining seconds', (tester) async {
-      final cubit = CounterCubit(repository: _NoopRepo(), startTicker: false);
+    CounterCubit createCubit({CounterRepository? repository}) {
+      final cubit = CounterCubit(
+        repository: repository ?? _NoopRepo(),
+        startTicker: false,
+      );
       addTearDown(cubit.close);
+      return cubit;
+    }
+
+    testWidgets('shows active label with remaining seconds', (tester) async {
+      final cubit = createCubit();
 
       await tester.pumpWidget(
         _wrapWithApp(
@@ -50,8 +58,7 @@ void main() {
     });
 
     testWidgets('shows paused label when inactive', (tester) async {
-      final cubit = CounterCubit(repository: _NoopRepo(), startTicker: false);
-      addTearDown(cubit.close);
+      final cubit = createCubit();
 
       await tester.pumpWidget(
         _wrapWithApp(
