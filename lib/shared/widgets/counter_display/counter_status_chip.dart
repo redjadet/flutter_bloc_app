@@ -29,10 +29,7 @@ class CounterStatusChip extends StatelessWidget {
         color: active ? colors.primary.withValues(alpha: 0.12) : colors.surface,
         borderRadius: BorderRadius.circular(UI.radiusM),
       ),
-      padding: EdgeInsets.symmetric(
-        horizontal: UI.horizontalGapM,
-        vertical: UI.gapXS,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: UI.horizontalGapM, vertical: UI.gapXS),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -48,19 +45,19 @@ class CounterStatusChip extends StatelessWidget {
             ),
           ),
           SizedBox(width: UI.horizontalGapXS),
-          AnimatedSwitcher(
-            duration: animDuration,
-            transitionBuilder: (child, animation) =>
-                FadeTransition(opacity: animation, child: child),
-            child: Text(
-              active ? l10n.autoLabel : l10n.pausedLabel,
-              key: ValueKey<bool>(active),
-              style: textTheme.labelMedium?.copyWith(
-                color: colors.primary,
-                fontSize: fontSize,
+          Flexible(
+            child: AnimatedSwitcher(
+              duration: animDuration,
+              transitionBuilder: (child, animation) =>
+                  FadeTransition(opacity: animation, child: child),
+              child: Text(
+                active ? l10n.autoLabel : l10n.pausedLabel,
+                key: ValueKey<bool>(active),
+                style: textTheme.labelMedium?.copyWith(color: colors.primary, fontSize: fontSize),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
