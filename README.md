@@ -17,7 +17,9 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Logging: Centralized `AppLogger` built on top of the `logger` package.
 - Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES).
 - AI Chat: Conversational UI backed by Hugging Face Inference API (openai/gpt-oss).
-- Tests: Unit and bloc tests with `flutter_test` and `bloc_test`.
+- Native integration: MethodChannel (`com.example.flutter_bloc_app/native`) returning sanitized device metadata with Kotlin/Swift handlers.
+- Secrets: `SecretConfig` bootstraps Hugging Face credentials; in release builds values are persisted in platform secure storage (`flutter_secure_storage`).
+- Tests: Unit, bloc, widget, and golden coverage (`flutter_test`, `bloc_test`, `golden_toolkit`).
 
 ## Tech Stack
 
@@ -27,7 +29,17 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - `intl` and `flutter_localizations` for i18n
 - `flutter_screenutil` for adaptive sizing (with safe fallbacks in tests)
 - `responsive_framework` optional; helpers fall back to MediaQuery breakpoints
-- `bloc_test`, `flutter_test` for testing
+- `go_router` for declarative navigation
+- `flutter_secure_storage` for keychain/keystore persistence
+- `bloc_test`, `flutter_test`, `golden_toolkit` for testing
+
+## Security & Secrets
+
+- NEVER commit `assets/config/secrets.json`. The repo ships only `assets/config/secrets.sample.json`; copy it locally and provide runtime secrets via environment variables or secure storage.
+- When `SecretConfig.load()` executes in release mode, Hugging Face credentials are cached into the OS keychain/keystore via `flutter_secure_storage` to avoid leaving secrets in asset bundles. Debug/tests continue to rely on the asset for convenience.
+- Rotate any leaked tokens immediately (e.g. Hugging Face Inference API key) and prefer short-lived or server-issued credentials for production.
+- Keep to least-privilege MethodChannel usage. `com.example.flutter_bloc_app/native` currently exposes only `getPlatformInfo` (no arguments). Validate future methods thoroughly and avoid returning sensitive data.
+- For production distribution, supply credentials from environment variables (e.g. CI-injected `--dart-define`s) or fetch them securely at runtime (remote config/services protected with TLS and optional certificate pinning) instead of bundling assets.
 
 ## Architecture
 
@@ -140,12 +152,14 @@ classDiagram
 - `lib/features/chat/data/huggingface_api_client.dart`: HTTP wrapper that enforces headers, status handling, and JSON parsing for Hugging Face requests.
 - `lib/features/chat/data/huggingface_payload_builder.dart`: Central place for building inference vs chat completion payloads.
 - `lib/features/chat/data/huggingface_response_parser.dart`: Safely maps Hugging Face responses to `ChatResult` with null-safe chunk handling.
-- `lib/features/example/`: Simple routed example page rendered through `go_router`.
-- `lib/shared/`: Cross-cutting UI, theme, logging, and utility components.
+- `lib/features/example/`: Simple routed example page rendered through `go_router` and showcasing native MethodChannel integration.
+- `lib/shared/`: Cross-cutting UI, theme, logging, secure storage, and utility components.
 - `test/counter_cubit_test.dart`: Cubit behavior, timers, persistence tests.
 - `test/countdown_bar_test.dart`: Verifies CountdownBar active/paused labels.
 - `test/counter_display_chip_test.dart`: Verifies CounterDisplay chip labels.
 - `test/error_snackbar_test.dart`: Intentionally throws to exercise SnackBar (skipped by default).
+- `test/native_platform_service_test.dart`: Validates MethodChannel responses.
+- `test/secure_secret_storage_test.dart`: Covers secure storage wrappers.
 - `test/widget_test.dart`: Basic boot test for the app.
 
 ## How It Works
@@ -159,212 +173,45 @@ classDiagram
 
 ## Getting Started
 
-Prerequisites:
-
-- Flutter SDK installed (matching the Dart SDK constraint in `pubspec.yaml`).
-
-Install dependencies:
-
 ```bash
 flutter pub get
-```
-
-Run the app:
-
-```bash
+flutter pub run build_runner build --delete-conflicting-outputs
+flutter test
 flutter run
 ```
 
-Run tests:
+### Secrets setup
 
 ```bash
-flutter test
+cp assets/config/secrets.sample.json assets/config/secrets.json
 ```
 
-Regenerate Freezed formatting after large refactors (optional helper):
+Edit the JSON with your Hugging Face token/model. The file is ignored by git. In release builds the app persists the values into secure storage, so you can ship builds without embedding long-lived secrets.
 
-```bash
-dart run fix_freezed_formatting.dart
-```
+### Firebase
 
-### Secrets & configuration
+Copy your Firebase config files from the provided `*.sample` files. Placeholder keys are detected and skip Firebase initialization gracefully.
 
-This repository is public, so runtime secrets are never committed. Before
-running the app locally make sure you create the private configuration files
-listed below. All of them are git-ignored; keep the generated files out of
-version control.
+## Native Integration
 
-1. **Firebase (required for Crashlytics/Analytics):**
-   - Copy `lib/firebase_options.dart.sample` to `lib/firebase_options.dart` and
-     keep it untracked (the path is listed in `.gitignore`).
-   - Run `flutterfire configure` to populate the copied file with your actual
-     Firebase project settings. The sample uses placeholder values; if they
-     remain unchanged the app skips Firebase initialization at runtime.
-   - Copy the generated platform files next to the provided samples:
-     - `android/app/google-services.json.sample`
-     - `ios/Runner/GoogleService-Info.plist.sample`
-     - `macos/Runner/GoogleService-Info.plist.sample`
-   - Do **not** commit the generated files. They stay local only.
+The `ExamplePage` includes a “Fetch native info” button that uses a MethodChannel to retrieve basic device metadata from Kotlin/Swift implementations. The channel is deliberately narrow (no arguments, low risk) but demonstrates the wiring for richer features.
 
-2. **Hugging Face token (AI chat):**
-   - Copy `assets/config/secrets.sample.json` to `assets/config/secrets.json`
-     (already ignored by git) and fill in your token / model details. See below
-     for the structure and options.
+## Testing
 
-### Hugging Face token (AI chat)
+- `flutter test` runs unit, widget, and golden tests.
+- `flutter test test/fab_alignment_golden_test.dart` runs FAB alignment goldens.
+- `flutter test test/counter_page_golden_test.dart` runs counter page goldens.
 
-The chat screen calls a hosted Hugging Face model that requires an access token. Create a free token at [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens) **with the Inference API scope enabled**, then edit your local `assets/config/secrets.json` (created in the previous section) with content similar to:
+Golden baselines live in `test/goldens/`.
 
-   ```json
-   {
-     "HUGGINGFACE_API_KEY": "hf_xxx_your_token",
-     "HUGGINGFACE_MODEL": "HuggingFaceH4/zephyr-7b-beta",
-     "HUGGINGFACE_USE_CHAT_COMPLETIONS": false
-   }
-   ```
-
-The app will read the value at startup. Unit tests rely on fakes and do not need the token.
-
-If the model you want to use is only exposed through the Hugging Face router (OpenAI-compatible `/v1/chat/completions` endpoint), set `HUGGINGFACE_USE_CHAT_COMPLETIONS` to `true` and provide the routed model id (for example `openai/gpt-oss-20b`). In the app you can switch between `openai/gpt-oss-20b` and `openai/gpt-oss-120b` using the chat model selector; changing the model resets the conversation to avoid mixing prompts between providers.
-
-Optional useful commands:
+## Linting
 
 ```bash
 flutter analyze
-dart format .
-dart run fix_freezed_formatting.dart
 ```
 
-### Test helpers
+The project follows Flutter lints (`analysis_options.yaml`).
 
-- `runWithHuggingFaceHttpClientOverride` scopes a mocked `http.Client`, API key, and model in a temporary GetIt scope so integration tests can stub Hugging Face responses without affecting global DI:
+## Contributing
 
-  ```dart
-  await runWithHuggingFaceHttpClientOverride(
-    client: MockClient(...),
-    apiKey: 'test-token',
-    model: 'test-model',
-    useChatCompletions: false,
-    action: () async => getIt<ChatRepository>().sendMessage(...),
-  );
-  ```
-
-- `dart run fix_freezed_formatting.dart` restores line breaks and mixins in generated Freezed files when the formatter collapses them.
-
-### Flavors
-
-Common flavors are available: dev, staging, and prod.
-
-- Entrypoints:
-  - `lib/main_dev.dart`
-  - `lib/main_staging.dart`
-  - `lib/main_prod.dart`
-
-- Run examples:
-  - Dev: `flutter run -t dev`
-  - Staging: `flutter run -t staging`
-  - Prod: `flutter run -t prod`
-
-- Build examples:
-  - Android (prod): `flutter build apk -t prod`
-  - iOS (staging): `flutter build ios -t staging`
-
-Programmatic access:
-
-## Dependency Injection (GetIt)
-
-This app uses GetIt for DI. Registrations live in `lib/core/di/injector.dart` and are called from `lib/main_bootstrap.dart`.
-
-Registered services:
-
-- `CounterRepository` → `SharedPreferencesCounterRepository`
-- `ThemeRepository` → `SharedPreferencesThemeRepository`
-- `TimerService` → `DefaultTimerService`
-
-Initialize in bootstrap:
-
-```dart
-// lib/main_bootstrap.dart
-await configureDependencies();
-runApp(const MyApp());
-```
-
-Resolve in composition:
-
-```dart
-// lib/app.dart
-BlocProvider(
-  create: (_) => CounterCubit(
-    repository: getIt<CounterRepository>(),
-    timerService: getIt(),
-    loadDelay:
-        FlavorManager.I.isDev ? AppConstants.devSkeletonDelay : Duration.zero,
-  )..loadInitial(),
-),
-```
-
-If tests pump `MyApp` directly, `ensureConfigured()` inside `MyApp.build` makes sure DI is ready.
-
-## Deterministic Time in Tests (TimerService)
-
-Time is abstracted via `TimerService` (`lib/core/time/timer_service.dart`). For tests, use `FakeTimerService` from `test/test_helpers.dart`:
-
-```dart
-final fakeTimer = FakeTimerService();
-final cubit = CounterCubit(
-  repository: MockCounterRepository(),
-  timerService: fakeTimer,
-);
-
-// Let first microtask emission happen
-await Future<void>.delayed(const Duration(milliseconds: 10));
-
-final initial = cubit.state.countdownSeconds;
-fakeTimer.tick(2); // advance two ticks deterministically
-expect(cubit.state.countdownSeconds, initial - 2);
-```
-
-- Use `FlavorManager.I` from `lib/core/flavor.dart` to check the current flavor.
-- Default is `dev`. You can override with `--dart-define=FLAVOR=staging|prod`.
-
-UI indicator:
-
-- The current flavor is shown in the app bar as a small badge (DEV/STG). Nothing is shown for PROD.
-
-## Screenshots
-
-![Counter screen](assets/screenshots/counter_home.png)
-![Counter screen2](assets/screenshots/counter_home2.png)
-![AI_Chat screen](assets/screenshots/ai_chat.png)
-![Chart screen](assets/screenshots/chart.png)
-![Settings screen](assets/screenshots/settings.png)
-
-## Notes
-
-- Supported locales are declared in `MaterialApp.supportedLocales`.
-- Auto-decrement never goes below zero.
-- State shape: `count`, `lastChanged` (DateTime?), `countdownSeconds`.
-
-## Localization (Do Not Edit Generated Files)
-
-- All localizable strings live in ARB files under `lib/l10n/` (for example: `app_en.arb`, `app_tr.arb`, etc.).
-- The localization classes (such as `app_localizations.dart` and per-locale files) are auto-generated from these ARB files.
-- Do not modify any generated `app_localizations*.dart` files manually — changes will be overwritten.
-- To add or change a string:
-  - Edit the appropriate `lib/l10n/app_XX.arb` file(s).
-  - Keep keys consistent across locales and update placeholder metadata as needed.
-  - Run `flutter pub get` and then `flutter run` (or `flutter gen-l10n` if configured) to regenerate the localization Dart code.
-  - Use the generated APIs in code, for example: `AppLocalizations.of(context).startAutoHint`.
-
-## License
-
-This project is for demonstration purposes. Add an explicit license if you intend to distribute.
-
-Note on skipped test
-
-- The suite `test/error_snackbar_test.dart` is intentionally annotated with `@Skip(...)` and is excluded from the default `flutter test` run because it throws on purpose to exercise the SnackBar error path.
-- To run it explicitly:
-
-```bash
-flutter test test/error_snackbar_test.dart
-```
+Contributions are welcome—open an issue or PR with your proposed change. Make sure to include tests and documentation updates.

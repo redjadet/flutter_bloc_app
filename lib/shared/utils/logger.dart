@@ -50,6 +50,8 @@ class AppLogger {
       _silenceDepth--;
     }
   }
+
+  static bool get isSilenced => _silenceDepth > 0;
 }
 
 class _DebugOnlyFilter extends LogFilter {

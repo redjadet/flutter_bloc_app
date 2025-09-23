@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_bloc_app/features/chart/data/chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
@@ -27,8 +28,12 @@ void main() {
       }),
     );
 
-    final first = await repository.fetchTrendingCounts();
-    final second = await repository.fetchTrendingCounts();
+    final first = await AppLogger.silenceAsync(
+      () => repository.fetchTrendingCounts(),
+    );
+    final second = await AppLogger.silenceAsync(
+      () => repository.fetchTrendingCounts(),
+    );
 
     expect(first, hasLength(prices.length));
     expect(first.first.date.isBefore(first.last.date), isTrue);
@@ -57,9 +62,13 @@ void main() {
       now: () => current,
     );
 
-    final first = await repository.fetchTrendingCounts();
+    final first = await AppLogger.silenceAsync(
+      () => repository.fetchTrendingCounts(),
+    );
     current = current.add(const Duration(minutes: 5));
-    final second = await repository.fetchTrendingCounts();
+    final second = await AppLogger.silenceAsync(
+      () => repository.fetchTrendingCounts(),
+    );
 
     expect(second, same(first));
     expect(requestCount, 2);
@@ -76,7 +85,9 @@ void main() {
         now: () => current,
       );
 
-      final result = await repository.fetchTrendingCounts();
+      final result = await AppLogger.silenceAsync(
+        () => repository.fetchTrendingCounts(),
+      );
 
       expect(result, isNotEmpty);
       expect(result.length, 7);
@@ -94,7 +105,9 @@ void main() {
         now: () => current,
       );
 
-      final result = await repository.fetchTrendingCounts();
+      final result = await AppLogger.silenceAsync(
+        () => repository.fetchTrendingCounts(),
+      );
 
       expect(result, isNotEmpty);
       expect(result.length, 7);
