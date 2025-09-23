@@ -28,7 +28,7 @@ class CounterActions extends StatelessWidget {
                     ? null
                     : () => context.read<CounterCubit>().increment(),
                 tooltip: l10n.incrementTooltip,
-                child: Icon(Icons.add, size: UI.iconL),
+                child: Center(child: Icon(Icons.add, size: UI.iconL)),
               ),
             ),
             SizedBox(height: UI.gapM),
@@ -41,7 +41,7 @@ class CounterActions extends StatelessWidget {
                     ? null
                     : () => context.read<CounterCubit>().decrement(),
                 tooltip: l10n.decrementTooltip,
-                child: Icon(Icons.remove, size: UI.iconL),
+                child: Center(child: Icon(Icons.remove, size: UI.iconL)),
               ),
             ),
           ],
