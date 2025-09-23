@@ -44,7 +44,7 @@ dependencies:
   responsive_framework: ^1.1.1
   get_it: ^8.2.0
   http: ^1.2.2
-  go_router: ^16.2.1
+  go_router: ^16.2.2
   fancy_shimmer_image: ^2.0.3
   skeletonizer: ^2.1.0+1
   logger: ^2.6.1
@@ -52,9 +52,9 @@ dependencies:
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
   meta: ^1.16.0
-  firebase_core: ^4.1.0
-  firebase_crashlytics: ^5.0.1
-  firebase_analytics: ^12.0.1
+  firebase_core: ^4.1.1
+  firebase_crashlytics: ^5.0.2
+  firebase_analytics: ^12.0.2
 
 dev_dependencies:
   flutter_test:
