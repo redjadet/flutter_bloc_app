@@ -65,6 +65,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get exampleBackButtonLabel => 'Zurück zum Zähler';
 
   @override
+  String get exampleNativeInfoButton => 'Native Infos abrufen';
+
+  @override
+  String get exampleNativeInfoTitle => 'Plattforminformationen';
+
+  @override
+  String get exampleNativeInfoError =>
+      'Native Plattforminformationen konnten nicht abgerufen werden.';
+
+  @override
   String get openChartsTooltip => 'Diagramme öffnen';
 
   @override

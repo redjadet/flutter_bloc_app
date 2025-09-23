@@ -73,6 +73,18 @@
   "@exampleBackButtonLabel": {
     "description": "Label for the button that returns from the example page to the counter"
   },
+  "exampleNativeInfoButton": "Fetch native info",
+  "@exampleNativeInfoButton": {
+    "description": "Button label that triggers fetching platform information via MethodChannel"
+  },
+  "exampleNativeInfoTitle": "Platform info",
+  "@exampleNativeInfoTitle": {
+    "description": "Title displayed above the platform information section"
+  },
+  "exampleNativeInfoError": "Unable to fetch native platform info.",
+  "@exampleNativeInfoError": {
+    "description": "Error message shown when fetching native platform information fails"
+  },
   "openChartsTooltip": "Open charts",
   "@openChartsTooltip": {
     "description": "Tooltip for the action that opens the charts feature"

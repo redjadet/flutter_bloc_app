@@ -206,6 +206,24 @@ abstract class AppLocalizations {
   /// **'Back to counter'**
   String get exampleBackButtonLabel;
 
+  /// Button label that triggers fetching platform information via MethodChannel
+  ///
+  /// In en, this message translates to:
+  /// **'Fetch native info'**
+  String get exampleNativeInfoButton;
+
+  /// Title displayed above the platform information section
+  ///
+  /// In en, this message translates to:
+  /// **'Platform info'**
+  String get exampleNativeInfoTitle;
+
+  /// Error message shown when fetching native platform information fails
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to fetch native platform info.'**
+  String get exampleNativeInfoError;
+
   /// Tooltip for the action that opens the charts feature
   ///
   /// In en, this message translates to:

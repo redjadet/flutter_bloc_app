@@ -63,6 +63,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exampleBackButtonLabel => 'Back to counter';
 
   @override
+  String get exampleNativeInfoButton => 'Fetch native info';
+
+  @override
+  String get exampleNativeInfoTitle => 'Platform info';
+
+  @override
+  String get exampleNativeInfoError => 'Unable to fetch native platform info.';
+
+  @override
   String get openChartsTooltip => 'Open charts';
 
   @override

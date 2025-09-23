@@ -38,14 +38,20 @@ void main() {
         _Harness(
           width: width,
           height: height,
-          child: BlocProvider.value(value: cubit, child: const CounterActions()),
+          child: BlocProvider.value(
+            value: cubit,
+            child: const CounterActions(),
+          ),
         ),
       );
       await tester.pumpAndSettle();
     }
 
     testWidgets('renders without overflow on small screen', (tester) async {
-      final cubit = CounterCubit(repository: MockCounterRepository(), startTicker: false);
+      final cubit = CounterCubit(
+        repository: MockCounterRepository(),
+        startTicker: false,
+      );
       addTearDown(cubit.close);
 
       await pumpHarness(tester, width: 240, height: 320, cubit: cubit);
@@ -54,7 +60,10 @@ void main() {
     });
 
     testWidgets('renders without overflow on large screen', (tester) async {
-      final cubit = CounterCubit(repository: MockCounterRepository(), startTicker: false);
+      final cubit = CounterCubit(
+        repository: MockCounterRepository(),
+        startTicker: false,
+      );
       addTearDown(cubit.close);
 
       await pumpHarness(tester, width: 1400, height: 1024, cubit: cubit);

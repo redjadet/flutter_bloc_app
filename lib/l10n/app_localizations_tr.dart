@@ -63,6 +63,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get exampleBackButtonLabel => 'Sayaca dön';
 
   @override
+  String get exampleNativeInfoButton => 'Yerel bilgileri getir';
+
+  @override
+  String get exampleNativeInfoTitle => 'Platform bilgisi';
+
+  @override
+  String get exampleNativeInfoError => 'Yerel platform bilgisi alınamadı.';
+
+  @override
   String get openChartsTooltip => 'Grafikleri aç';
 
   @override
