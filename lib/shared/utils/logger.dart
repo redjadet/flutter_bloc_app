@@ -15,6 +15,8 @@ class AppLogger {
     ),
   );
 
+  static int _silenceDepth = 0;
+
   static void error(String message, [Object? error, StackTrace? stackTrace]) {
     _logger.e(message, error: error, stackTrace: stackTrace);
   }
@@ -30,9 +32,27 @@ class AppLogger {
   static void debug(String message) {
     _logger.d(message);
   }
+
+  static T silence<T>(T Function() action) {
+    _silenceDepth++;
+    try {
+      return action();
+    } finally {
+      _silenceDepth--;
+    }
+  }
+
+  static Future<T> silenceAsync<T>(Future<T> Function() action) async {
+    _silenceDepth++;
+    try {
+      return await action();
+    } finally {
+      _silenceDepth--;
+    }
+  }
 }
 
 class _DebugOnlyFilter extends LogFilter {
   @override
-  bool shouldLog(LogEvent event) => kDebugMode;
+  bool shouldLog(LogEvent event) => kDebugMode && AppLogger._silenceDepth == 0;
 }

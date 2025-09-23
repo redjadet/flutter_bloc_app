@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -26,14 +27,16 @@ void main() {
         apiKey: 'token',
       );
 
-      await expectLater(
-        apiClient.postJson(
-          uri: Uri.parse('https://example.com'),
-          payload: const <String, dynamic>{},
-          context: 'test',
-        ),
-        throwsA(isA<ChatException>()),
-      );
+      await AppLogger.silenceAsync(() async {
+        await expectLater(
+          apiClient.postJson(
+            uri: Uri.parse('https://example.com'),
+            payload: const <String, dynamic>{},
+            context: 'test',
+          ),
+          throwsA(isA<ChatException>()),
+        );
+      });
     });
 
     test('throws when response body is not a JSON map', () async {
@@ -49,14 +52,16 @@ void main() {
         apiKey: 'token',
       );
 
-      await expectLater(
-        apiClient.postJson(
-          uri: Uri.parse('https://example.com'),
-          payload: const <String, dynamic>{},
-          context: 'test',
-        ),
-        throwsA(isA<ChatException>()),
-      );
+      await AppLogger.silenceAsync(() async {
+        await expectLater(
+          apiClient.postJson(
+            uri: Uri.parse('https://example.com'),
+            payload: const <String, dynamic>{},
+            context: 'test',
+          ),
+          throwsA(isA<ChatException>()),
+        );
+      });
     });
   });
 }
