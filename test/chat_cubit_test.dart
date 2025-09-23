@@ -159,7 +159,11 @@ void main() {
       final FakeChatRepository repo = FakeChatRepository();
       final FakeChatHistoryRepository history = FakeChatHistoryRepository();
       history.conversations = <ChatConversation>[
-        ChatConversation(id: 'empty', createdAt: DateTime(2024, 1, 1)),
+        ChatConversation(
+          id: 'empty',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
+        ),
       ];
 
       final ChatCubit cubit = createCubit(

@@ -1,73 +1,53 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class ChatConversation {
-  const ChatConversation({
-    required this.id,
-    this.messages = const <ChatMessage>[],
-    this.pastUserInputs = const <String>[],
-    this.generatedResponses = const <String>[],
-    required this.createdAt,
-    DateTime? updatedAt,
-    this.model,
-  }) : updatedAt = updatedAt ?? createdAt;
+part 'chat_conversation.freezed.dart';
+
+@freezed
+abstract class ChatConversation with _$ChatConversation {
+  const ChatConversation._();
+
+  const factory ChatConversation({
+    required String id,
+    @Default(<ChatMessage>[]) List<ChatMessage> messages,
+    @Default(<String>[]) List<String> pastUserInputs,
+    @Default(<String>[]) List<String> generatedResponses,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    String? model,
+  }) = _ChatConversation;
 
   factory ChatConversation.fromJson(Map<String, dynamic> json) {
-    final Iterable<dynamic> rawMessages =
-        (json['messages'] as List<dynamic>? ?? const <dynamic>[]);
+    final List<ChatMessage> messages = _messagesFromJson(
+      json['messages'] as List<dynamic>?,
+    );
+    final List<String> pastInputs = _stringListFromJson(
+      json['pastUserInputs'] as List<dynamic>?,
+    );
+    final List<String> generated = _stringListFromJson(
+      json['generatedResponses'] as List<dynamic>?,
+    );
+    final DateTime createdAt = _parseDate(json['createdAt']);
+    final DateTime updatedAt = _parseDate(
+      json['updatedAt'],
+      fallback: createdAt,
+    );
+
     return ChatConversation(
       id: (json['id'] ?? '').toString(),
-      messages: rawMessages
-          .whereType<Map<String, dynamic>>()
-          .map(ChatMessage.fromJson)
-          .toList(growable: false),
-      pastUserInputs:
-          (json['pastUserInputs'] as List<dynamic>? ?? const <dynamic>[])
-              .map((dynamic e) => e.toString())
-              .toList(growable: false),
-      generatedResponses:
-          (json['generatedResponses'] as List<dynamic>? ?? const <dynamic>[])
-              .map((dynamic e) => e.toString())
-              .toList(growable: false),
-      createdAt: _parseDate(json['createdAt']),
-      updatedAt: _parseDate(json['updatedAt']),
-      model: _parseModel(json['model']),
-    );
-  }
-
-  final String id;
-  final List<ChatMessage> messages;
-  final List<String> pastUserInputs;
-  final List<String> generatedResponses;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String? model;
-
-  bool get hasContent =>
-      messages.isNotEmpty ||
-      pastUserInputs.isNotEmpty ||
-      generatedResponses.isNotEmpty;
-
-  ChatConversation copyWith({
-    List<ChatMessage>? messages,
-    List<String>? pastUserInputs,
-    List<String>? generatedResponses,
-    DateTime? updatedAt,
-    String? model,
-  }) {
-    return ChatConversation(
-      id: id,
-      messages: messages ?? this.messages,
-      pastUserInputs: pastUserInputs ?? this.pastUserInputs,
-      generatedResponses: generatedResponses ?? this.generatedResponses,
+      messages: messages,
+      pastUserInputs: pastInputs,
+      generatedResponses: generated,
       createdAt: createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      model: model ?? this.model,
+      updatedAt: updatedAt,
+      model: _normalizeModel(json['model']),
     );
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
     'id': id,
-    'messages': messages.map((ChatMessage e) => e.toJson()).toList(),
+    'messages': messages.map((ChatMessage m) => m.toJson()).toList(),
     'pastUserInputs': pastUserInputs,
     'generatedResponses': generatedResponses,
     'createdAt': createdAt.toIso8601String(),
@@ -75,23 +55,42 @@ class ChatConversation {
     if (model != null) 'model': model,
   };
 
-  static DateTime _parseDate(dynamic value) {
-    if (value is String && value.isNotEmpty) {
-      return DateTime.tryParse(value) ?? DateTime.now();
-    }
-    if (value is int) {
-      return DateTime.fromMillisecondsSinceEpoch(value);
-    }
-    return DateTime.now();
-  }
+  bool get hasContent =>
+      messages.isNotEmpty ||
+      pastUserInputs.isNotEmpty ||
+      generatedResponses.isNotEmpty;
+}
 
-  static String? _parseModel(dynamic value) {
-    if (value is String) {
-      final String trimmed = value.trim();
-      if (trimmed.isNotEmpty) {
-        return trimmed;
-      }
+List<ChatMessage> _messagesFromJson(List<dynamic>? raw) {
+  if (raw == null) return const <ChatMessage>[];
+  return raw
+      .whereType<Map<String, dynamic>>()
+      .map(ChatMessage.fromJson)
+      .toList(growable: false);
+}
+
+List<String> _stringListFromJson(List<dynamic>? raw) {
+  if (raw == null) return const <String>[];
+  return raw.map((dynamic value) => value.toString()).toList(growable: false);
+}
+
+DateTime _parseDate(dynamic value, {DateTime? fallback}) {
+  if (value is String && value.isNotEmpty) {
+    final DateTime? parsed = DateTime.tryParse(value);
+    if (parsed != null) {
+      return parsed;
     }
+  }
+  if (value is num) {
+    return DateTime.fromMillisecondsSinceEpoch(value.toInt());
+  }
+  return fallback ?? DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+}
+
+String? _normalizeModel(dynamic value) {
+  if (value is! String) {
     return null;
   }
+  final String trimmed = value.trim();
+  return trimmed.isEmpty ? null : trimmed;
 }
