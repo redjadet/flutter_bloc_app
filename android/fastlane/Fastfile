@@ -1,0 +1,45 @@
+fastlane_version '2.221.0'
+
+default_platform(:android)
+
+platform :android do
+  desc 'Build a release appbundle via Flutter'
+  lane :build do |options|
+    flavor = options[:flavor] || ENV['ANDROID_BUILD_FLAVOR']
+    bundle_dir = 'build/app/outputs/bundle'
+
+    sh('flutter', 'pub', 'get')
+    sh('dart', 'run', 'tool/prepare_release.dart')
+
+    args = %w[flutter build appbundle --release]
+    args << '--flavor' << flavor if flavor
+    sh(*args)
+
+    sh('ls', '-R', bundle_dir) if ENV['FL_FASTLANE_DEBUG'] == 'true'
+  end
+
+  desc 'Build and upload a Flutter appbundle to Google Play'
+  lane :deploy do |options|
+    track = options[:track] || ENV['ANDROID_PLAY_TRACK'] || 'internal'
+    flavor = options[:flavor] || ENV['ANDROID_BUILD_FLAVOR']
+
+    invoke(:build, flavor: flavor)
+
+    aab = if flavor
+            "build/app/outputs/bundle/#{flavor}Release/app-#{flavor}-release.aab"
+          else
+            'build/app/outputs/bundle/release/app-release.aab'
+          end
+
+    UI.user_error!("Could not find AAB at #{aab}") unless File.exist?(aab)
+
+    upload_to_play_store(
+      track: track,
+      aab: aab,
+      skip_upload_apk: true,
+      skip_upload_images: true,
+      skip_upload_metadata: ENV['ANDROID_UPLOAD_METADATA'] != 'true',
+      skip_upload_screenshots: true,
+    )
+  end
+end

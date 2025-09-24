@@ -241,6 +241,35 @@ The `ExamplePage` includes a “Fetch native info” button that uses a MethodCh
 
 Golden baselines live in `test/goldens/`.
 
+## Deployment (Fastlane)
+
+This project includes minimal Fastlane setups for both Android and iOS to help
+automate store uploads.
+
+1. Install dependencies:
+
+   ```bash
+   bundle install
+   ```
+
+2. Export the required credentials as environment variables. At minimum:
+   - Android: `ANDROID_JSON_KEY` (path to JSON service-account key) and, if you
+     use tracks other than `internal`, set `ANDROID_PLAY_TRACK`.
+   - iOS: `APPLE_ID`, `APPLE_TEAM_ID`, `APPLE_ITC_TEAM_ID`, plus the usual
+     App-Store Connect API/keychain setup.
+3. Scrub secrets and build/upload in one step:
+
+   ```bash
+   bundle exec fastlane android deploy track:internal
+   bundle exec fastlane ios deploy
+   ```
+
+The Android lane wraps `flutter build appbundle` and pushes to Google Play via
+`upload_to_play_store`. The iOS lane runs `flutter build ipa` and uses
+`deliver`. Adjust flavors/targets with the optional `flavor` parameter or the
+environment variables described in `android/fastlane/Fastfile` and
+`ios/fastlane/Fastfile`.
+
 ## Linting
 
 ```bash

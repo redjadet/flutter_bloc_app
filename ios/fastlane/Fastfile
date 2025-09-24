@@ -1,0 +1,44 @@
+fastlane_version '2.221.0'
+
+default_platform(:ios)
+
+platform :ios do
+  desc 'Build an .ipa using Flutter'
+  lane :build do |options|
+    configuration = options[:configuration] || ENV['IOS_CONFIGURATION'] || 'Release'
+    flavor = options[:flavor] || ENV['IOS_BUILD_FLAVOR']
+
+    sh('flutter', 'pub', 'get')
+    sh('dart', 'run', 'tool/prepare_release.dart')
+
+    build_args = %w[flutter build ipa]
+    build_args << '--release' unless configuration.casecmp?('debug')
+    build_args << '--flavor' << flavor if flavor
+    sh(*build_args)
+  end
+
+  desc 'Upload ipa to App Store Connect'
+  lane :deploy do |options|
+    configuration = options[:configuration] || ENV['IOS_CONFIGURATION'] || 'Release'
+    flavor = options[:flavor] || ENV['IOS_BUILD_FLAVOR']
+
+    invoke(:build, configuration: configuration, flavor: flavor)
+
+    ipa = if flavor
+            "build/ios/ipa/#{flavor}.ipa"
+          else
+            'build/ios/ipa/Runner.ipa'
+          end
+
+    UI.user_error!("Could not find ipa at #{ipa}") unless File.exist?(ipa)
+
+    deliver(
+      ipa: ipa,
+      submit_for_review: false,
+      automatic_release: false,
+      skip_metadata: true,
+      skip_screenshots: true,
+      force: true,
+    )
+  end
+end
