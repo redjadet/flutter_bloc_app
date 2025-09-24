@@ -54,7 +54,8 @@ class FlutterSecureSecretStorage implements SecretStorage {
   T withoutLogs<T>(T Function() action) => AppLogger.silence(action);
 
   @override
-  Future<T> withoutLogsAsync<T>(Future<T> Function() action) => AppLogger.silenceAsync(action);
+  Future<T> withoutLogsAsync<T>(Future<T> Function() action) =>
+      AppLogger.silenceAsync(action);
 }
 
 class InMemorySecretStorage implements SecretStorage {
@@ -77,5 +78,6 @@ class InMemorySecretStorage implements SecretStorage {
   T withoutLogs<T>(T Function() action) => AppLogger.silence(action);
 
   @override
-  Future<T> withoutLogsAsync<T>(Future<T> Function() action) => AppLogger.silenceAsync(action);
+  Future<T> withoutLogsAsync<T>(Future<T> Function() action) =>
+      AppLogger.silenceAsync(action);
 }

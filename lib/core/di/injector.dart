@@ -9,7 +9,7 @@ import 'package:flutter_bloc_app/features/chat/data/'
 import 'package:flutter_bloc_app/features/chat/data/'
     'huggingface_response_parser.dart';
 import 'package:flutter_bloc_app/features/chat/data/'
-    'shared_preferences_chat_history_repository.dart';
+    'secure_chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/'
     'chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
@@ -31,12 +31,16 @@ Future<void> configureDependencies() async {
   _registerLazySingletonIfAbsent<CounterRepository>(
     () => SharedPreferencesCounterRepository(),
   );
-  _registerLazySingletonIfAbsent<http.Client>(http.Client.new);
+  _registerLazySingletonIfAbsent<http.Client>(
+    http.Client.new,
+    dispose: (client) => client.close(),
+  );
   _registerLazySingletonIfAbsent<HuggingFaceApiClient>(
     () => HuggingFaceApiClient(
       httpClient: getIt<http.Client>(),
       apiKey: SecretConfig.huggingfaceApiKey,
     ),
+    dispose: (client) => client.dispose(),
   );
   _registerLazySingletonIfAbsent<HuggingFacePayloadBuilder>(
     () => const HuggingFacePayloadBuilder(),
@@ -56,7 +60,7 @@ Future<void> configureDependencies() async {
     ),
   );
   _registerLazySingletonIfAbsent<ChatHistoryRepository>(
-    () => SharedPreferencesChatHistoryRepository(),
+    () => SecureChatHistoryRepository(),
   );
   _registerLazySingletonIfAbsent<LocaleRepository>(
     () => SharedPreferencesLocaleRepository(),
@@ -71,8 +75,11 @@ void ensureConfigured() {
   configureDependencies();
 }
 
-void _registerLazySingletonIfAbsent<T extends Object>(T Function() factory) {
+void _registerLazySingletonIfAbsent<T extends Object>(
+  T Function() factory, {
+  void Function(T instance)? dispose,
+}) {
   if (!getIt.isRegistered<T>()) {
-    getIt.registerLazySingleton<T>(factory);
+    getIt.registerLazySingleton<T>(factory, dispose: dispose);
   }
 }

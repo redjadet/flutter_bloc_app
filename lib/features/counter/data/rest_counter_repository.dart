@@ -13,13 +13,18 @@ class RestCounterRepository implements CounterRepository {
     required String baseUrl,
     http.Client? client,
     Map<String, String>? defaultHeaders,
+    Duration requestTimeout = const Duration(seconds: 10),
   }) : _baseUri = Uri.parse(baseUrl),
        _client = client ?? http.Client(),
-       _defaultHeaders = {if (defaultHeaders != null) ...defaultHeaders};
+       _defaultHeaders = {if (defaultHeaders != null) ...defaultHeaders},
+       _requestTimeout = requestTimeout,
+       _ownsClient = client == null;
 
   final Uri _baseUri;
   final http.Client _client;
   final Map<String, String> _defaultHeaders;
+  final Duration _requestTimeout;
+  final bool _ownsClient;
   static const CounterSnapshot _emptySnapshot = CounterSnapshot(count: 0);
 
   Uri get _counterUri => _baseUri.resolve('counter');
@@ -58,10 +63,18 @@ class RestCounterRepository implements CounterRepository {
     );
   }
 
+  void dispose() {
+    if (_ownsClient) {
+      _client.close();
+    }
+  }
+
   @override
   Future<CounterSnapshot> load() async {
     try {
-      final res = await _client.get(_counterUri, headers: _headers());
+      final res = await _client
+          .get(_counterUri, headers: _headers())
+          .timeout(_requestTimeout);
       if (!_isSuccess(res.statusCode)) {
         _logHttpError('load', res);
         return _emptySnapshot;
@@ -76,16 +89,18 @@ class RestCounterRepository implements CounterRepository {
   @override
   Future<void> save(CounterSnapshot snapshot) async {
     try {
-      final res = await _client.post(
-        _counterUri,
-        headers: _headers(
-          overrides: const {'Content-Type': 'application/json'},
-        ),
-        body: jsonEncode(<String, dynamic>{
-          'count': snapshot.count,
-          'last_changed': snapshot.lastChanged?.millisecondsSinceEpoch,
-        }),
-      );
+      final res = await _client
+          .post(
+            _counterUri,
+            headers: _headers(
+              overrides: const {'Content-Type': 'application/json'},
+            ),
+            body: jsonEncode(<String, dynamic>{
+              'count': snapshot.count,
+              'last_changed': snapshot.lastChanged?.millisecondsSinceEpoch,
+            }),
+          )
+          .timeout(_requestTimeout);
       if (!_isSuccess(res.statusCode)) {
         _logHttpError('save', res);
       }

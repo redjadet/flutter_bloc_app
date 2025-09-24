@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history_sheet.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_input_bar.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_message_list.dart';
@@ -49,6 +50,38 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
+  Future<void> _confirmAndClearHistory(BuildContext context) async {
+    final ChatCubit cubit = context.read<ChatCubit>();
+    final AppLocalizations l10n = AppLocalizations.of(context);
+    final bool confirmed =
+        await showDialog<bool>(
+          context: context,
+          builder: (BuildContext dialogContext) {
+            return AlertDialog(
+              title: Text(l10n.chatHistoryClearAll),
+              content: Text(l10n.chatHistoryClearAllWarning),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(false),
+                  child: Text(l10n.cancelButtonLabel),
+                ),
+                FilledButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(true),
+                  child: Text(l10n.deleteButtonLabel),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+
+    if (!confirmed) {
+      return;
+    }
+
+    await cubit.clearHistory();
+  }
+
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
@@ -61,6 +94,19 @@ class _ChatPageState extends State<ChatPage> {
             tooltip: l10n.chatHistoryShowTooltip,
             onPressed: () => _showHistorySheet(context),
             icon: const Icon(Icons.history),
+          ),
+          BlocBuilder<ChatCubit, ChatState>(
+            buildWhen: (previous, current) =>
+                previous.history.length != current.history.length,
+            builder: (context, state) {
+              return IconButton(
+                tooltip: l10n.chatHistoryClearAll,
+                onPressed: state.hasHistory
+                    ? () => _confirmAndClearHistory(context)
+                    : null,
+                icon: const Icon(Icons.delete_sweep_outlined),
+              );
+            },
           ),
         ],
       ),

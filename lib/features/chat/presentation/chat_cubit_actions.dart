@@ -45,6 +45,9 @@ mixin _ChatCubitActions on _ChatCubitCore, _ChatCubitHelpers {
   }
 
   Future<void> sendMessage(String message) async {
+    if (state.isLoading) {
+      return;
+    }
     final String trimmed = message.trim();
     if (trimmed.isEmpty) {
       return;

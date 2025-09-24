@@ -155,6 +155,34 @@ void main() {
       expect(history.conversations.first.pastUserInputs, isNotEmpty);
     });
 
+    test('sendMessage ignores re-entrant calls while loading', () async {
+      final _DelayedChatRepository repo = _DelayedChatRepository(
+        const Duration(milliseconds: 50),
+      );
+      final FakeChatHistoryRepository history = FakeChatHistoryRepository();
+      final ChatCubit cubit = createCubit(
+        repository: repo,
+        historyRepository: history,
+      );
+
+      final Future<void> firstCall = cubit.sendMessage('Hello');
+      await Future<void>.delayed(Duration.zero);
+
+      await cubit.sendMessage('Second');
+
+      expect(repo.callCount, 1);
+      expect(cubit.state.messages.length, 1);
+      expect(cubit.state.messages.single.text, 'Hello');
+      expect(cubit.state.isLoading, isTrue);
+
+      await firstCall;
+
+      expect(cubit.state.isLoading, isFalse);
+      expect(cubit.state.messages.length, 2);
+      expect(cubit.state.messages.last.text, 'assistant: Hello');
+      expect(history.conversations.single.messages.length, 2);
+    });
+
     test('loadHistory removes empty conversations from storage', () async {
       final FakeChatRepository repo = FakeChatRepository();
       final FakeChatHistoryRepository history = FakeChatHistoryRepository();
@@ -214,6 +242,37 @@ class FakeChatRepository implements ChatRepository {
       reply: const ChatMessage(author: ChatAuthor.assistant, text: 'Hi there!'),
       pastUserInputs: <String>[...pastUserInputs, prompt],
       generatedResponses: <String>[...generatedResponses, 'Hi there!'],
+    );
+  }
+}
+
+class _DelayedChatRepository implements ChatRepository {
+  _DelayedChatRepository(this.delay);
+
+  final Duration delay;
+  int callCount = 0;
+
+  @override
+  Future<ChatResult> sendMessage({
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+  }) {
+    callCount++;
+    return Future<ChatResult>.delayed(
+      delay,
+      () => ChatResult(
+        reply: ChatMessage(
+          author: ChatAuthor.assistant,
+          text: 'assistant: $prompt',
+        ),
+        pastUserInputs: <String>[...pastUserInputs, prompt],
+        generatedResponses: <String>[
+          ...generatedResponses,
+          'assistant: $prompt',
+        ],
+      ),
     );
   }
 }

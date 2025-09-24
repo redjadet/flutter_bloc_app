@@ -9,12 +9,19 @@ typedef JsonMap = Map<String, dynamic>;
 /// Thin wrapper around [http.Client] that centralizes Hugging Face specific
 /// headers, error handling and JSON parsing.
 class HuggingFaceApiClient {
-  HuggingFaceApiClient({http.Client? httpClient, String? apiKey})
-    : _client = httpClient ?? http.Client(),
-      _apiKey = _clean(apiKey);
+  HuggingFaceApiClient({
+    http.Client? httpClient,
+    String? apiKey,
+    Duration requestTimeout = const Duration(seconds: 30),
+  }) : _client = httpClient ?? http.Client(),
+       _apiKey = _clean(apiKey),
+       _requestTimeout = requestTimeout,
+       _ownsClient = httpClient == null;
 
   final http.Client _client;
   final String? _apiKey;
+  final Duration _requestTimeout;
+  final bool _ownsClient;
 
   bool get hasApiKey => _apiKey != null;
 
@@ -29,11 +36,9 @@ class HuggingFaceApiClient {
     required String context,
   }) async {
     try {
-      final http.Response response = await _client.post(
-        uri,
-        headers: _headers(),
-        body: jsonEncode(payload),
-      );
+      final http.Response response = await _client
+          .post(uri, headers: _headers(), body: jsonEncode(payload))
+          .timeout(_requestTimeout);
 
       final int statusCode = response.statusCode;
       if (statusCode == 429) {
@@ -82,6 +87,12 @@ class HuggingFaceApiClient {
         stackTrace,
       );
       throw const ChatException('Failed to contact chat service.');
+    }
+  }
+
+  void dispose() {
+    if (_ownsClient) {
+      _client.close();
     }
   }
 

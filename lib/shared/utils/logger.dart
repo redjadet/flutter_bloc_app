@@ -56,5 +56,13 @@ class AppLogger {
 
 class _DebugOnlyFilter extends LogFilter {
   @override
-  bool shouldLog(LogEvent event) => kDebugMode && AppLogger._silenceDepth == 0;
+  bool shouldLog(LogEvent event) {
+    if (AppLogger._silenceDepth > 0) {
+      return false;
+    }
+    if (kDebugMode) {
+      return true;
+    }
+    return event.level.index >= Level.warning.index;
+  }
 }

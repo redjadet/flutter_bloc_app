@@ -30,14 +30,16 @@ class SecretConfig {
 
   static Future<void> load({bool? persistToSecureStorage}) async {
     if (_loaded) return;
-    _loaded = true;
+
     final bool shouldPersist = persistToSecureStorage ?? kReleaseMode;
     final SecretStorage storage =
         _configuredStorage ?? FlutterSecureSecretStorage();
+
     try {
       final Map<String, dynamic>? stored = await _readSecureSecrets(storage);
       if (stored != null && stored.isNotEmpty) {
         _applySecrets(stored);
+        _loaded = true;
         return;
       }
 
@@ -48,9 +50,12 @@ class SecretConfig {
       if (shouldPersist) {
         await _persistToSecureStorage(storage);
       }
+
+      _loaded = true;
     } catch (e, s) {
       AppLogger.warning('SecretConfig.load failed: $e');
       AppLogger.error('SecretConfig.load stack', e, s);
+      _loaded = false;
     }
   }
 
