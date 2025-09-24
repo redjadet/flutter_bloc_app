@@ -18,7 +18,10 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES).
 - AI Chat: Conversational UI backed by Hugging Face Inference API (openai/gpt-oss).
 - Native integration: MethodChannel (`com.example.flutter_bloc_app/native`) returning sanitized device metadata with Kotlin/Swift handlers.
-- Secrets: `SecretConfig` bootstraps Hugging Face credentials; in release builds values are persisted in platform secure storage (`flutter_secure_storage`).
+- Secrets: `SecretConfig` reads from secure storage first, falls back to the dev-only
+  `assets/config/secrets.json`, and finally to `--dart-define` values. Release
+  builds skip the asset and persist any provided values into platform secure
+  storage (`flutter_secure_storage`).
 - Tests: Unit, bloc, widget, and golden coverage (`flutter_test`, `bloc_test`, `golden_toolkit`).
 
 ## Tech Stack
@@ -182,11 +185,45 @@ flutter run
 
 ### Secrets setup
 
+For local development, copy `assets/config/secrets.sample.json` to
+`assets/config/secrets.json` and fill in your Hugging Face credentials. The file
+is git-ignored and only loaded on non-release builds.
+
 ```bash
 cp assets/config/secrets.sample.json assets/config/secrets.json
 ```
 
-Edit the JSON with your Hugging Face token/model. The file is ignored by git. In release builds the app persists the values into secure storage, so you can ship builds without embedding long-lived secrets.
+Production (and CI) builds should inject credentials via secure storage or
+`--dart-define` values. On first launch with the flags present, the app persists
+them into the platform keychain/keystore so future runs can omit the flags.
+
+```bash
+flutter run \
+  --dart-define=HUGGINGFACE_API_KEY=hf_xxx \
+  --dart-define=HUGGINGFACE_MODEL=openai/gpt-oss-20b \
+  --dart-define=HUGGINGFACE_USE_CHAT_COMPLETIONS=true
+```
+
+Before packaging a release, run the helper script to scrub any local
+`secrets.json` file so no live credentials end up in the bundle:
+
+```bash
+dart run tool/prepare_release.dart
+flutter build apk --release
+```
+
+For integration tests or custom tooling, inject a storage implementation before
+calling `SecretConfig.load()`:
+
+```dart
+SecretConfig.configureStorage(
+  InMemorySecretStorage()
+    ..write('huggingface_api_key', 'hf_dev_token')
+    ..write('huggingface_model', 'openai/gpt-oss-20b')
+    ..write('huggingface_use_chat_completions', 'true'),
+);
+await SecretConfig.load();
+```
 
 ### Firebase
 

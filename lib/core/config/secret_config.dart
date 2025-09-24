@@ -8,7 +8,6 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class SecretConfig {
   SecretConfig._();
 
-  static const String _assetPath = 'assets/config/secrets.json';
   static const String _keyHfToken = 'huggingface_api_key';
   static const String _keyHfModel = 'huggingface_model';
   static const String _keyHfUseChatCompletions =
@@ -31,27 +30,42 @@ class SecretConfig {
   static Future<void> load({bool? persistToSecureStorage}) async {
     if (_loaded) return;
 
-    final bool shouldPersist = persistToSecureStorage ?? kReleaseMode;
     final SecretStorage storage =
         _configuredStorage ?? FlutterSecureSecretStorage();
 
     try {
       final Map<String, dynamic>? stored = await _readSecureSecrets(storage);
-      if (stored != null && stored.isNotEmpty) {
-        _applySecrets(stored);
+      if (_hasSecrets(stored)) {
+        _applySecrets(stored!);
         _loaded = true;
         return;
       }
 
-      final String raw = await rootBundle.loadString(_assetPath);
-      final Map<String, dynamic> json = jsonDecode(raw) as Map<String, dynamic>;
-      _applySecrets(json);
-
-      if (shouldPersist) {
-        await _persistToSecureStorage(storage);
+      if (!kReleaseMode) {
+        final Map<String, dynamic>? assetSecrets = await _readAssetSecrets();
+        if (_hasSecrets(assetSecrets)) {
+          _applySecrets(assetSecrets!);
+          _loaded = true;
+          return;
+        }
       }
 
-      _loaded = true;
+      final Map<String, dynamic>? envSecrets = _readEnvironmentSecrets();
+      if (_hasSecrets(envSecrets)) {
+        _applySecrets(envSecrets!);
+        final bool shouldPersistEnv =
+            persistToSecureStorage ?? true; // default to persisting env values
+        if (shouldPersistEnv) {
+          await _persistToSecureStorage(storage);
+        }
+        _loaded = true;
+        return;
+      }
+
+      AppLogger.warning(
+        'SecretConfig: No Hugging Face credentials found in secure storage or '
+        'environment. Chat features requiring remote access remain disabled.',
+      );
     } catch (e, s) {
       AppLogger.warning('SecretConfig.load failed: $e');
       AppLogger.error('SecretConfig.load stack', e, s);
@@ -83,11 +97,13 @@ class SecretConfig {
   }
 
   static Future<void> _persistToSecureStorage(SecretStorage storage) async {
-    if (_huggingfaceApiKey != null) {
-      await storage.write(_keyHfToken, _huggingfaceApiKey!);
+    final String? token = _huggingfaceApiKey;
+    final String? model = _huggingfaceModel;
+    if (token != null) {
+      await storage.write(_keyHfToken, token);
     }
-    if (_huggingfaceModel != null) {
-      await storage.write(_keyHfModel, _huggingfaceModel!);
+    if (model != null) {
+      await storage.write(_keyHfModel, model);
     }
     await storage.write(
       _keyHfUseChatCompletions,
@@ -108,5 +124,59 @@ class SecretConfig {
     } else {
       _useChatCompletions = false;
     }
+  }
+
+  static bool _hasSecrets(Map<String, dynamic>? source) {
+    if (source == null) return false;
+    final String? token = (source['HUGGINGFACE_API_KEY'] as String?)?.trim();
+    final String? model = (source['HUGGINGFACE_MODEL'] as String?)?.trim();
+    final Object? flag = source['HUGGINGFACE_USE_CHAT_COMPLETIONS'];
+
+    final bool hasToken = token != null && token.isNotEmpty;
+    final bool hasModel = model != null && model.isNotEmpty;
+    final bool hasFlag =
+        flag is bool || (flag is String && flag.trim().isNotEmpty);
+
+    return hasToken || hasModel || hasFlag;
+  }
+
+  static Map<String, dynamic>? _readEnvironmentSecrets() {
+    const String token = String.fromEnvironment('HUGGINGFACE_API_KEY');
+    const String model = String.fromEnvironment('HUGGINGFACE_MODEL');
+    const String completionFlagRaw = String.fromEnvironment(
+      'HUGGINGFACE_USE_CHAT_COMPLETIONS',
+    );
+
+    final Map<String, dynamic> result = <String, dynamic>{};
+    if (token.isNotEmpty) {
+      result['HUGGINGFACE_API_KEY'] = token;
+    }
+    if (model.isNotEmpty) {
+      result['HUGGINGFACE_MODEL'] = model;
+    }
+    if (completionFlagRaw.isNotEmpty) {
+      result['HUGGINGFACE_USE_CHAT_COMPLETIONS'] = completionFlagRaw;
+    }
+
+    return result.isEmpty ? null : result;
+  }
+
+  static Future<Map<String, dynamic>?> _readAssetSecrets() async {
+    const String assetPath = 'assets/config/secrets.json';
+    try {
+      final String raw = await rootBundle.loadString(assetPath);
+      final dynamic decoded = jsonDecode(raw);
+      if (decoded is Map<String, dynamic>) {
+        return decoded;
+      }
+      AppLogger.warning(
+        'SecretConfig: Asset $assetPath does not contain a JSON object.',
+      );
+    } on FlutterError {
+      // Asset not bundled; ignore silently for developers without a local file.
+    } catch (e) {
+      AppLogger.warning('SecretConfig asset read failed: $e');
+    }
+    return null;
   }
 }
