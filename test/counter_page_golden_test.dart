@@ -31,7 +31,10 @@ void main() {
             Device.tabletLandscape,
           ],
         )
-        ..addScenario(name: 'Initial state', widget: const MyApp());
+        ..addScenario(
+          name: 'Initial state',
+          widget: const MyApp(requireAuth: false),
+        );
 
       await tester.pumpDeviceBuilder(builder);
       await tester.pumpAndSettle();
@@ -39,7 +42,7 @@ void main() {
     });
 
     testGoldens('renders loading state without settling', (tester) async {
-      await tester.pumpWidgetBuilder(const MyApp());
+      await tester.pumpWidgetBuilder(const MyApp(requireAuth: false));
       await multiScreenGolden(
         tester,
         'counter_page_loading',

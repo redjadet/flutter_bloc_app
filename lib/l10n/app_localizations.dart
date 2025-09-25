@@ -242,6 +242,54 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settingsPageTitle;
 
+  /// Heading for the account and authentication section
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountSectionTitle;
+
+  /// Label showing the current authenticated user
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as {name}'**
+  String accountSignedInAs(String name);
+
+  /// Label shown when the user has not authenticated
+  ///
+  /// In en, this message translates to:
+  /// **'Not signed in.'**
+  String get accountSignedOutLabel;
+
+  /// Button label that navigates to the sign-in flow
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get accountSignInButton;
+
+  /// Button label that opens the profile management page
+  ///
+  /// In en, this message translates to:
+  /// **'Manage account'**
+  String get accountManageButton;
+
+  /// Label shown when the current user is anonymous
+  ///
+  /// In en, this message translates to:
+  /// **'Using guest account'**
+  String get accountGuestLabel;
+
+  /// Helper text encouraging guest users to upgrade
+  ///
+  /// In en, this message translates to:
+  /// **'You are signed in anonymously. Create an account to sync your data across devices.'**
+  String get accountGuestDescription;
+
+  /// Button label inviting anonymous users to upgrade
+  ///
+  /// In en, this message translates to:
+  /// **'Create or link account'**
+  String get accountUpgradeButton;
+
   /// Heading for the appearance/theme selection section
   ///
   /// In en, this message translates to:
@@ -397,6 +445,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This will permanently delete all stored conversations.'**
   String get chatHistoryClearAllWarning;
+
+  /// Title for the account profile management page
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profilePageTitle;
+
+  /// Button label for anonymous sign-in
+  ///
+  /// In en, this message translates to:
+  /// **'Continue as guest'**
+  String get anonymousSignInButton;
+
+  /// Helper text explaining anonymous sign-in
+  ///
+  /// In en, this message translates to:
+  /// **'You can explore the app without creating an account. You can upgrade later from Settings.'**
+  String get anonymousSignInDescription;
+
+  /// Snackbar message shown if anonymous sign-in fails
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t start guest session. Please try again.'**
+  String get anonymousSignInFailed;
+
+  /// Informational text for anonymous users upgrading
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re currently using a guest session. Sign in to keep your data across installs and devices.'**
+  String get anonymousUpgradeHint;
+
+  /// Error shown when the email is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'The email address appears to be malformed.'**
+  String get authErrorInvalidEmail;
+
+  /// Error when the Firebase user is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'This account has been disabled. Contact support for help.'**
+  String get authErrorUserDisabled;
+
+  /// Error when the user does not exist
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t find an account with those details.'**
+  String get authErrorUserNotFound;
+
+  /// Error when password is wrong
+  ///
+  /// In en, this message translates to:
+  /// **'The password is incorrect. Check it and try again.'**
+  String get authErrorWrongPassword;
+
+  /// Error when email already in use
+  ///
+  /// In en, this message translates to:
+  /// **'That email is already linked to another account.'**
+  String get authErrorEmailInUse;
+
+  /// Error when provider is not enabled
+  ///
+  /// In en, this message translates to:
+  /// **'This sign-in method is currently disabled. Please try a different option.'**
+  String get authErrorOperationNotAllowed;
+
+  /// Error for weak password
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a stronger password before continuing.'**
+  String get authErrorWeakPassword;
+
+  /// Error when recent login is required
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign in again to complete this action.'**
+  String get authErrorRequiresRecentLogin;
+
+  /// Error when credential already in use
+  ///
+  /// In en, this message translates to:
+  /// **'Those credentials are already associated with another account.'**
+  String get authErrorCredentialInUse;
+
+  /// Error when credential invalid
+  ///
+  /// In en, this message translates to:
+  /// **'The provided credentials are invalid or expired.'**
+  String get authErrorInvalidCredential;
+
+  /// Fallback error message for authentication
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t complete the request. Please try again.'**
+  String get authErrorGeneric;
 
   /// Warning displayed before deleting a specific conversation
   ///

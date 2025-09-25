@@ -97,6 +97,43 @@
   "@settingsPageTitle": {
     "description": "Title for the settings screen"
   },
+  "accountSectionTitle": "Account",
+  "@accountSectionTitle": {
+    "description": "Heading for the account and authentication section"
+  },
+  "accountSignedInAs": "Signed in as {name}",
+  "@accountSignedInAs": {
+    "description": "Label showing the current authenticated user",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accountSignedOutLabel": "Not signed in.",
+  "@accountSignedOutLabel": {
+    "description": "Label shown when the user has not authenticated"
+  },
+  "accountSignInButton": "Sign in",
+  "@accountSignInButton": {
+    "description": "Button label that navigates to the sign-in flow"
+  },
+  "accountManageButton": "Manage account",
+  "@accountManageButton": {
+    "description": "Button label that opens the profile management page"
+  },
+  "accountGuestLabel": "Using guest account",
+  "@accountGuestLabel": {
+    "description": "Label shown when the current user is anonymous"
+  },
+  "accountGuestDescription": "You are signed in anonymously. Create an account to sync your data across devices.",
+  "@accountGuestDescription": {
+    "description": "Helper text encouraging guest users to upgrade"
+  },
+  "accountUpgradeButton": "Create or link account",
+  "@accountUpgradeButton": {
+    "description": "Button label inviting anonymous users to upgrade"
+  },
   "themeSectionTitle": "Appearance",
   "@themeSectionTitle": {
     "description": "Heading for the appearance/theme selection section"
@@ -200,6 +237,70 @@
   "chatHistoryClearAllWarning": "This will permanently delete all stored conversations.",
   "@chatHistoryClearAllWarning": {
     "description": "Warning message shown before clearing all chat history"
+  },
+  "profilePageTitle": "Profile",
+  "@profilePageTitle": {
+    "description": "Title for the account profile management page"
+  },
+  "anonymousSignInButton": "Continue as guest",
+  "@anonymousSignInButton": {
+    "description": "Button label for anonymous sign-in"
+  },
+  "anonymousSignInDescription": "You can explore the app without creating an account. You can upgrade later from Settings.",
+  "@anonymousSignInDescription": {
+    "description": "Helper text explaining anonymous sign-in"
+  },
+  "anonymousSignInFailed": "Couldn't start guest session. Please try again.",
+  "@anonymousSignInFailed": {
+    "description": "Snackbar message shown if anonymous sign-in fails"
+  },
+  "anonymousUpgradeHint": "You're currently using a guest session. Sign in to keep your data across installs and devices.",
+  "@anonymousUpgradeHint": {
+    "description": "Informational text for anonymous users upgrading"
+  },
+  "authErrorInvalidEmail": "The email address appears to be malformed.",
+  "@authErrorInvalidEmail": {
+    "description": "Error shown when the email is invalid"
+  },
+  "authErrorUserDisabled": "This account has been disabled. Contact support for help.",
+  "@authErrorUserDisabled": {
+    "description": "Error when the Firebase user is disabled"
+  },
+  "authErrorUserNotFound": "We couldn't find an account with those details.",
+  "@authErrorUserNotFound": {
+    "description": "Error when the user does not exist"
+  },
+  "authErrorWrongPassword": "The password is incorrect. Check it and try again.",
+  "@authErrorWrongPassword": {
+    "description": "Error when password is wrong"
+  },
+  "authErrorEmailInUse": "That email is already linked to another account.",
+  "@authErrorEmailInUse": {
+    "description": "Error when email already in use"
+  },
+  "authErrorOperationNotAllowed": "This sign-in method is currently disabled. Please try a different option.",
+  "@authErrorOperationNotAllowed": {
+    "description": "Error when provider is not enabled"
+  },
+  "authErrorWeakPassword": "Choose a stronger password before continuing.",
+  "@authErrorWeakPassword": {
+    "description": "Error for weak password"
+  },
+  "authErrorRequiresRecentLogin": "Please sign in again to complete this action.",
+  "@authErrorRequiresRecentLogin": {
+    "description": "Error when recent login is required"
+  },
+  "authErrorCredentialInUse": "Those credentials are already associated with another account.",
+  "@authErrorCredentialInUse": {
+    "description": "Error when credential already in use"
+  },
+  "authErrorInvalidCredential": "The provided credentials are invalid or expired.",
+  "@authErrorInvalidCredential": {
+    "description": "Error when credential invalid"
+  },
+  "authErrorGeneric": "We couldn't complete the request. Please try again.",
+  "@authErrorGeneric": {
+    "description": "Fallback error message for authentication"
   },
   "chatHistoryDeleteConversationWarning": "Delete \"{title}\"?",
   "@chatHistoryDeleteConversationWarning": {

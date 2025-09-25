@@ -30,6 +30,43 @@
   "openChartsTooltip": "Ouvrir les graphiques",
   "openSettingsTooltip": "Ouvrir les paramètres",
   "settingsPageTitle": "Paramètres",
+  "accountSectionTitle": "Compte",
+  "@accountSectionTitle": {
+    "description": "Titre de la section compte et authentification"
+  },
+  "accountSignedInAs": "Connecté en tant que {name}",
+  "@accountSignedInAs": {
+    "description": "Libellé affichant l'utilisateur authentifié",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accountSignedOutLabel": "Non connecté.",
+  "@accountSignedOutLabel": {
+    "description": "Libellé affiché lorsqu'aucun utilisateur n'est connecté"
+  },
+  "accountSignInButton": "Se connecter",
+  "@accountSignInButton": {
+    "description": "Bouton qui ouvre le flux d'authentification"
+  },
+  "accountManageButton": "Gérer le compte",
+  "@accountManageButton": {
+    "description": "Bouton qui ouvre la page de gestion du profil"
+  },
+  "accountGuestLabel": "Compte invité utilisé",
+  "@accountGuestLabel": {
+    "description": "Libellé lorsque l'utilisateur actuel est anonyme"
+  },
+  "accountGuestDescription": "Vous êtes connecté anonymement. Créez un compte pour synchroniser vos données entre vos appareils.",
+  "@accountGuestDescription": {
+    "description": "Texte incitant l'utilisateur invité à créer un compte"
+  },
+  "accountUpgradeButton": "Créer ou lier un compte",
+  "@accountUpgradeButton": {
+    "description": "Bouton invitant les utilisateurs anonymes à passer à un compte"
+  },
   "themeSectionTitle": "Apparence",
   "themeModeSystem": "Valeur par défaut du système",
   "themeModeLight": "Clair",
@@ -67,6 +104,70 @@
   "chatHistoryClearAllWarning": "Cela supprimera définitivement toutes les conversations enregistrées.",
   "@chatHistoryClearAllWarning": {
     "description": "Avertissement affiché avant de supprimer tout l'historique"
+  },
+  "profilePageTitle": "Profil",
+  "@profilePageTitle": {
+    "description": "Titre de la page de gestion du profil"
+  },
+  "anonymousSignInButton": "Continuer en invité",
+  "@anonymousSignInButton": {
+    "description": "Bouton pour lancer une connexion anonyme"
+  },
+  "anonymousSignInDescription": "Vous pouvez explorer l'application sans créer de compte. Vous pourrez mettre à niveau plus tard depuis les paramètres.",
+  "@anonymousSignInDescription": {
+    "description": "Texte expliquant la connexion anonyme"
+  },
+  "anonymousSignInFailed": "Impossible de démarrer la session invité. Veuillez réessayer.",
+  "@anonymousSignInFailed": {
+    "description": "Message affiché si la connexion anonyme échoue"
+  },
+  "anonymousUpgradeHint": "Vous utilisez actuellement une session invitée. Connectez-vous pour conserver vos données durablement.",
+  "@anonymousUpgradeHint": {
+    "description": "Texte d'information pour les utilisateurs anonymes qui s'inscrivent"
+  },
+  "authErrorInvalidEmail": "L'adresse e-mail semble invalide.",
+  "@authErrorInvalidEmail": {
+    "description": "Erreur e-mail invalide"
+  },
+  "authErrorUserDisabled": "Ce compte est désactivé. Contactez le support pour obtenir de l'aide.",
+  "@authErrorUserDisabled": {
+    "description": "Erreur compte désactivé"
+  },
+  "authErrorUserNotFound": "Aucun compte ne correspond à ces informations.",
+  "@authErrorUserNotFound": {
+    "description": "Erreur utilisateur introuvable"
+  },
+  "authErrorWrongPassword": "Le mot de passe est incorrect. Vérifiez et réessayez.",
+  "@authErrorWrongPassword": {
+    "description": "Erreur mot de passe incorrect"
+  },
+  "authErrorEmailInUse": "Cette adresse e-mail est déjà liée à un autre compte.",
+  "@authErrorEmailInUse": {
+    "description": "Erreur e-mail déjà utilisé"
+  },
+  "authErrorOperationNotAllowed": "Ce mode de connexion est actuellement désactivé. Choisissez une autre option.",
+  "@authErrorOperationNotAllowed": {
+    "description": "Erreur opération non autorisée"
+  },
+  "authErrorWeakPassword": "Choisissez un mot de passe plus robuste avant de continuer.",
+  "@authErrorWeakPassword": {
+    "description": "Erreur mot de passe faible"
+  },
+  "authErrorRequiresRecentLogin": "Veuillez vous reconnecter pour terminer cette action.",
+  "@authErrorRequiresRecentLogin": {
+    "description": "Erreur nécessitant une reconnexion"
+  },
+  "authErrorCredentialInUse": "Ces identifiants sont déjà associés à un autre compte.",
+  "@authErrorCredentialInUse": {
+    "description": "Erreur identifiants déjà utilisés"
+  },
+  "authErrorInvalidCredential": "Les identifiants fournis sont invalides ou ont expiré.",
+  "@authErrorInvalidCredential": {
+    "description": "Erreur identifiants invalides"
+  },
+  "authErrorGeneric": "La requête n'a pas abouti. Veuillez réessayer.",
+  "@authErrorGeneric": {
+    "description": "Erreur d'authentification générique"
   },
   "chatHistoryDeleteConversationWarning": "Supprimer \"{title}\" ?",
   "@chatHistoryDeleteConversationWarning": {

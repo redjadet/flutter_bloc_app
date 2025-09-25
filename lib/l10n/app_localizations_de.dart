@@ -84,6 +84,33 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsPageTitle => 'Einstellungen';
 
   @override
+  String get accountSectionTitle => 'Konto';
+
+  @override
+  String accountSignedInAs(String name) {
+    return 'Angemeldet als $name';
+  }
+
+  @override
+  String get accountSignedOutLabel => 'Nicht angemeldet.';
+
+  @override
+  String get accountSignInButton => 'Anmelden';
+
+  @override
+  String get accountManageButton => 'Konto verwalten';
+
+  @override
+  String get accountGuestLabel => 'Gastkonto wird verwendet';
+
+  @override
+  String get accountGuestDescription =>
+      'Du bist anonym angemeldet. Erstelle ein Konto, um deine Daten zwischen Geräten zu synchronisieren.';
+
+  @override
+  String get accountUpgradeButton => 'Konto erstellen oder verknüpfen';
+
+  @override
   String get themeSectionTitle => 'Erscheinungsbild';
 
   @override
@@ -161,6 +188,67 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get chatHistoryClearAllWarning =>
       'Dadurch werden alle gespeicherten Unterhaltungen dauerhaft gelöscht.';
+
+  @override
+  String get profilePageTitle => 'Profil';
+
+  @override
+  String get anonymousSignInButton => 'Als Gast fortfahren';
+
+  @override
+  String get anonymousSignInDescription =>
+      'Du kannst die App ohne Konto ausprobieren. Später kannst du in den Einstellungen upgraden.';
+
+  @override
+  String get anonymousSignInFailed =>
+      'Gast-Sitzung konnte nicht gestartet werden. Bitte versuche es erneut.';
+
+  @override
+  String get anonymousUpgradeHint =>
+      'Du nutzt derzeit eine Gast-Sitzung. Melde dich an, um deine Daten dauerhaft zu sichern.';
+
+  @override
+  String get authErrorInvalidEmail =>
+      'Die E-Mail-Adresse scheint ungültig zu sein.';
+
+  @override
+  String get authErrorUserDisabled =>
+      'Dieses Konto wurde deaktiviert. Bitte wende dich an den Support.';
+
+  @override
+  String get authErrorUserNotFound =>
+      'Wir konnten kein Konto mit diesen Angaben finden.';
+
+  @override
+  String get authErrorWrongPassword =>
+      'Das Passwort ist falsch. Bitte überprüfe es und versuche es erneut.';
+
+  @override
+  String get authErrorEmailInUse =>
+      'Diese E-Mail ist bereits mit einem anderen Konto verknüpft.';
+
+  @override
+  String get authErrorOperationNotAllowed =>
+      'Diese Anmeldemethode ist derzeit deaktiviert. Bitte wähle eine andere Option.';
+
+  @override
+  String get authErrorWeakPassword => 'Bitte wähle ein stärkeres Passwort.';
+
+  @override
+  String get authErrorRequiresRecentLogin =>
+      'Bitte melde dich erneut an, um diesen Vorgang abzuschließen.';
+
+  @override
+  String get authErrorCredentialInUse =>
+      'Diese Anmeldedaten sind bereits einem anderen Konto zugeordnet.';
+
+  @override
+  String get authErrorInvalidCredential =>
+      'Die angegebenen Anmeldedaten sind ungültig oder abgelaufen.';
+
+  @override
+  String get authErrorGeneric =>
+      'Die Anfrage konnte nicht abgeschlossen werden. Bitte versuche es erneut.';
 
   @override
   String chatHistoryDeleteConversationWarning(String title) {

@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
@@ -14,6 +16,7 @@ Future<void> runAppWithFlavor(Flavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
   final bool firebaseReady = await _initializeFirebase();
   if (firebaseReady) {
+    _configureFirebaseUI();
     _registerCrashlyticsGlobalHandlers();
   }
   FlavorManager.set(flavor);
@@ -43,6 +46,49 @@ Future<bool> _initializeFirebase() async {
     AppLogger.error('Firebase initialization failed', error, stackTrace);
   }
   return false;
+}
+
+void _configureFirebaseUI() {
+  final List<AuthProvider> providers = <AuthProvider>[EmailAuthProvider()];
+
+  final GoogleProvider? googleProvider = _createGoogleProvider();
+  if (googleProvider != null) {
+    providers.add(googleProvider);
+  }
+
+  FirebaseUIAuth.configureProviders(providers);
+}
+
+GoogleProvider? _createGoogleProvider() {
+  if (kIsWeb) return null;
+
+  try {
+    final TargetPlatform platform = defaultTargetPlatform;
+    if (platform != TargetPlatform.android && platform != TargetPlatform.iOS) {
+      return null;
+    }
+
+    final FirebaseOptions options = Firebase.app().options;
+    final bool isIOS = platform == TargetPlatform.iOS;
+    final String? platformClientId = isIOS
+        ? options.iosClientId
+        : options.androidClientId;
+    final bool preferPlist = isIOS && (platformClientId?.isEmpty ?? true);
+
+    final String resolvedClientId =
+        (platformClientId?.trim().isNotEmpty ?? false)
+        ? platformClientId!.trim()
+        : options.appId;
+
+    return GoogleProvider(
+      clientId: resolvedClientId,
+      iOSPreferPlist: preferPlist,
+    );
+  } catch (error, stackTrace) {
+    AppLogger.warning('Skipping Google sign-in configuration: $error');
+    AppLogger.debug('Google provider configuration stack trace\n$stackTrace');
+    return null;
+  }
 }
 
 bool _usesPlaceholderValues(FirebaseOptions options) {

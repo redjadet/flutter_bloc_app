@@ -18,7 +18,7 @@ void main() {
   ) async {
     await initializeDateFormatting('en');
     SharedPreferences.setMockInitialValues({});
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const MyApp(requireAuth: false));
     final Finder incrementFinder = find.widgetWithIcon(
       FloatingActionButton,
       Icons.add,

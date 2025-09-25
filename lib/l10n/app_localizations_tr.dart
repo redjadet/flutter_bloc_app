@@ -81,6 +81,33 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsPageTitle => 'Ayarlar';
 
   @override
+  String get accountSectionTitle => 'Hesap';
+
+  @override
+  String accountSignedInAs(String name) {
+    return '$name olarak oturum açıldı';
+  }
+
+  @override
+  String get accountSignedOutLabel => 'Oturum açılmadı.';
+
+  @override
+  String get accountSignInButton => 'Oturum aç';
+
+  @override
+  String get accountManageButton => 'Hesabı yönet';
+
+  @override
+  String get accountGuestLabel => 'Misafir hesabı kullanılıyor';
+
+  @override
+  String get accountGuestDescription =>
+      'Anonim olarak oturum açtınız. Verilerinizi cihazlar arasında senkronlamak için bir hesap oluşturun.';
+
+  @override
+  String get accountUpgradeButton => 'Hesap oluştur veya bağla';
+
+  @override
   String get themeSectionTitle => 'Görünüm';
 
   @override
@@ -158,6 +185,66 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get chatHistoryClearAllWarning =>
       'Bu işlem tüm kayıtlı sohbetleri kalıcı olarak silecek.';
+
+  @override
+  String get profilePageTitle => 'Profil';
+
+  @override
+  String get anonymousSignInButton => 'Misafir olarak devam et';
+
+  @override
+  String get anonymousSignInDescription =>
+      'Hesap oluşturmadan uygulamayı keşfedebilirsiniz. Daha sonra Ayarlar\'dan yükseltebilirsiniz.';
+
+  @override
+  String get anonymousSignInFailed =>
+      'Misafir oturumu başlatılamadı. Lütfen tekrar deneyin.';
+
+  @override
+  String get anonymousUpgradeHint =>
+      'Şu anda misafir oturumundasınız. Verilerinizi korumak için giriş yapın.';
+
+  @override
+  String get authErrorInvalidEmail => 'E-posta adresi geçerli görünmüyor.';
+
+  @override
+  String get authErrorUserDisabled =>
+      'Bu hesap devre dışı bırakılmış. Lütfen destek ile iletişime geçin.';
+
+  @override
+  String get authErrorUserNotFound =>
+      'Bu bilgilerle eşleşen bir hesap bulunamadı.';
+
+  @override
+  String get authErrorWrongPassword =>
+      'Parola yanlış. Lütfen kontrol edip tekrar deneyin.';
+
+  @override
+  String get authErrorEmailInUse =>
+      'Bu e-posta zaten başka bir hesapla ilişkili.';
+
+  @override
+  String get authErrorOperationNotAllowed =>
+      'Bu giriş yöntemi şu anda devre dışı. Lütfen farklı bir seçenek deneyin.';
+
+  @override
+  String get authErrorWeakPassword =>
+      'Devam etmeden önce daha güçlü bir parola seçin.';
+
+  @override
+  String get authErrorRequiresRecentLogin =>
+      'Bu işlemi tamamlamak için lütfen yeniden oturum açın.';
+
+  @override
+  String get authErrorCredentialInUse =>
+      'Bu kimlik bilgileri zaten başka bir hesapla ilişkili.';
+
+  @override
+  String get authErrorInvalidCredential =>
+      'Sağlanan kimlik bilgileri geçersiz veya süresi dolmuş.';
+
+  @override
+  String get authErrorGeneric => 'İstek tamamlanamadı. Lütfen tekrar deneyin.';
 
   @override
   String chatHistoryDeleteConversationWarning(String title) {

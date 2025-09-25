@@ -69,7 +69,8 @@
     "**/*.arb",
     "**/*.yaml",
     "**/*.json",
-    "**/*.md"
+    "**/*.md",
+    "**/*.plist"
   ],
   "cSpell.checkPaths": [
     "lib/**",

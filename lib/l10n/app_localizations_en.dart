@@ -81,6 +81,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsPageTitle => 'Settings';
 
   @override
+  String get accountSectionTitle => 'Account';
+
+  @override
+  String accountSignedInAs(String name) {
+    return 'Signed in as $name';
+  }
+
+  @override
+  String get accountSignedOutLabel => 'Not signed in.';
+
+  @override
+  String get accountSignInButton => 'Sign in';
+
+  @override
+  String get accountManageButton => 'Manage account';
+
+  @override
+  String get accountGuestLabel => 'Using guest account';
+
+  @override
+  String get accountGuestDescription =>
+      'You are signed in anonymously. Create an account to sync your data across devices.';
+
+  @override
+  String get accountUpgradeButton => 'Create or link account';
+
+  @override
   String get themeSectionTitle => 'Appearance';
 
   @override
@@ -158,6 +185,68 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get chatHistoryClearAllWarning =>
       'This will permanently delete all stored conversations.';
+
+  @override
+  String get profilePageTitle => 'Profile';
+
+  @override
+  String get anonymousSignInButton => 'Continue as guest';
+
+  @override
+  String get anonymousSignInDescription =>
+      'You can explore the app without creating an account. You can upgrade later from Settings.';
+
+  @override
+  String get anonymousSignInFailed =>
+      'Couldn\'t start guest session. Please try again.';
+
+  @override
+  String get anonymousUpgradeHint =>
+      'You\'re currently using a guest session. Sign in to keep your data across installs and devices.';
+
+  @override
+  String get authErrorInvalidEmail =>
+      'The email address appears to be malformed.';
+
+  @override
+  String get authErrorUserDisabled =>
+      'This account has been disabled. Contact support for help.';
+
+  @override
+  String get authErrorUserNotFound =>
+      'We couldn\'t find an account with those details.';
+
+  @override
+  String get authErrorWrongPassword =>
+      'The password is incorrect. Check it and try again.';
+
+  @override
+  String get authErrorEmailInUse =>
+      'That email is already linked to another account.';
+
+  @override
+  String get authErrorOperationNotAllowed =>
+      'This sign-in method is currently disabled. Please try a different option.';
+
+  @override
+  String get authErrorWeakPassword =>
+      'Choose a stronger password before continuing.';
+
+  @override
+  String get authErrorRequiresRecentLogin =>
+      'Please sign in again to complete this action.';
+
+  @override
+  String get authErrorCredentialInUse =>
+      'Those credentials are already associated with another account.';
+
+  @override
+  String get authErrorInvalidCredential =>
+      'The provided credentials are invalid or expired.';
+
+  @override
+  String get authErrorGeneric =>
+      'We couldn\'t complete the request. Please try again.';
 
   @override
   String chatHistoryDeleteConversationWarning(String title) {

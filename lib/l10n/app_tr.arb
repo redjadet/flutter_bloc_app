@@ -31,6 +31,43 @@
   "openChartsTooltip": "Grafikleri aç",
   "openSettingsTooltip": "Ayarları aç",
   "settingsPageTitle": "Ayarlar",
+  "accountSectionTitle": "Hesap",
+  "@accountSectionTitle": {
+    "description": "Hesap ve kimlik doğrulama bölümünün başlığı"
+  },
+  "accountSignedInAs": "{name} olarak oturum açıldı",
+  "@accountSignedInAs": {
+    "description": "O anda oturum açmış kullanıcıyı gösteren etiket",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accountSignedOutLabel": "Oturum açılmadı.",
+  "@accountSignedOutLabel": {
+    "description": "Herhangi bir kullanıcı oturum açmadığında gösterilen etiket"
+  },
+  "accountSignInButton": "Oturum aç",
+  "@accountSignInButton": {
+    "description": "Kullanıcıyı giriş akışına yönlendiren buton etiketi"
+  },
+  "accountManageButton": "Hesabı yönet",
+  "@accountManageButton": {
+    "description": "Profil yönetimi sayfasını açan buton etiketi"
+  },
+  "accountGuestLabel": "Misafir hesabı kullanılıyor",
+  "@accountGuestLabel": {
+    "description": "Geçerli kullanıcı anonim olduğunda gösterilen etiket"
+  },
+  "accountGuestDescription": "Anonim olarak oturum açtınız. Verilerinizi cihazlar arasında senkronlamak için bir hesap oluşturun.",
+  "@accountGuestDescription": {
+    "description": "Misafir kullanıcıları hesap oluşturmaya teşvik eden açıklama"
+  },
+  "accountUpgradeButton": "Hesap oluştur veya bağla",
+  "@accountUpgradeButton": {
+    "description": "Anonim kullanıcıları yükseltmeye davet eden buton"
+  },
   "themeSectionTitle": "Görünüm",
   "themeModeSystem": "Sistem varsayılanı",
   "themeModeLight": "Açık",
@@ -68,6 +105,70 @@
   "chatHistoryClearAllWarning": "Bu işlem tüm kayıtlı sohbetleri kalıcı olarak silecek.",
   "@chatHistoryClearAllWarning": {
     "description": "Tüm sohbet geçmişi silinmeden önce gösterilen uyarı"
+  },
+  "profilePageTitle": "Profil",
+  "@profilePageTitle": {
+    "description": "Hesap profil yönetimi sayfasının başlığı"
+  },
+  "anonymousSignInButton": "Misafir olarak devam et",
+  "@anonymousSignInButton": {
+    "description": "Anonim oturum açma butonu"
+  },
+  "anonymousSignInDescription": "Hesap oluşturmadan uygulamayı keşfedebilirsiniz. Daha sonra Ayarlar'dan yükseltebilirsiniz.",
+  "@anonymousSignInDescription": {
+    "description": "Anonim oturumu açıklayan metin"
+  },
+  "anonymousSignInFailed": "Misafir oturumu başlatılamadı. Lütfen tekrar deneyin.",
+  "@anonymousSignInFailed": {
+    "description": "Anonim oturum açma başarısız olduğunda gösterilen uyarı"
+  },
+  "anonymousUpgradeHint": "Şu anda misafir oturumundasınız. Verilerinizi korumak için giriş yapın.",
+  "@anonymousUpgradeHint": {
+    "description": "Anonim kullanıcıların yükseltme sırasında gördüğü bilgilendirme"
+  },
+  "authErrorInvalidEmail": "E-posta adresi geçerli görünmüyor.",
+  "@authErrorInvalidEmail": {
+    "description": "Geçersiz e-posta hatası"
+  },
+  "authErrorUserDisabled": "Bu hesap devre dışı bırakılmış. Lütfen destek ile iletişime geçin.",
+  "@authErrorUserDisabled": {
+    "description": "Hesap devre dışı hatası"
+  },
+  "authErrorUserNotFound": "Bu bilgilerle eşleşen bir hesap bulunamadı.",
+  "@authErrorUserNotFound": {
+    "description": "Kullanıcı bulunamadı hatası"
+  },
+  "authErrorWrongPassword": "Parola yanlış. Lütfen kontrol edip tekrar deneyin.",
+  "@authErrorWrongPassword": {
+    "description": "Yanlış parola hatası"
+  },
+  "authErrorEmailInUse": "Bu e-posta zaten başka bir hesapla ilişkili.",
+  "@authErrorEmailInUse": {
+    "description": "E-posta kullanımda hatası"
+  },
+  "authErrorOperationNotAllowed": "Bu giriş yöntemi şu anda devre dışı. Lütfen farklı bir seçenek deneyin.",
+  "@authErrorOperationNotAllowed": {
+    "description": "İşleme izin verilmiyor hatası"
+  },
+  "authErrorWeakPassword": "Devam etmeden önce daha güçlü bir parola seçin.",
+  "@authErrorWeakPassword": {
+    "description": "Zayıf parola hatası"
+  },
+  "authErrorRequiresRecentLogin": "Bu işlemi tamamlamak için lütfen yeniden oturum açın.",
+  "@authErrorRequiresRecentLogin": {
+    "description": "Yakın zamanda giriş gerekli hatası"
+  },
+  "authErrorCredentialInUse": "Bu kimlik bilgileri zaten başka bir hesapla ilişkili.",
+  "@authErrorCredentialInUse": {
+    "description": "Kimlik bilgisi kullanımda hatası"
+  },
+  "authErrorInvalidCredential": "Sağlanan kimlik bilgileri geçersiz veya süresi dolmuş.",
+  "@authErrorInvalidCredential": {
+    "description": "Geçersiz kimlik bilgisi hatası"
+  },
+  "authErrorGeneric": "İstek tamamlanamadı. Lütfen tekrar deneyin.",
+  "@authErrorGeneric": {
+    "description": "Genel kimlik doğrulama hatası"
   },
   "chatHistoryDeleteConversationWarning": "\"{title}\" konuşmasını silmek istiyor musun?",
   "@chatHistoryDeleteConversationWarning": {

@@ -16,4 +16,10 @@ class AppRoutes {
 
   static const chat = 'chat';
   static const chatPath = '/chat';
+
+  static const auth = 'auth';
+  static const authPath = '/auth';
+
+  static const profile = 'profile';
+  static const profilePath = '/profile';
 }

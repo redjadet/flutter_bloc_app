@@ -30,6 +30,43 @@
   "openChartsTooltip": "Abrir gráficos",
   "openSettingsTooltip": "Abrir configuración",
   "settingsPageTitle": "Configuración",
+  "accountSectionTitle": "Cuenta",
+  "@accountSectionTitle": {
+    "description": "Título de la sección de cuenta y autenticación"
+  },
+  "accountSignedInAs": "Has iniciado sesión como {name}",
+  "@accountSignedInAs": {
+    "description": "Etiqueta que muestra el usuario autenticado",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accountSignedOutLabel": "No has iniciado sesión.",
+  "@accountSignedOutLabel": {
+    "description": "Etiqueta que se muestra cuando no hay sesión iniciada"
+  },
+  "accountSignInButton": "Iniciar sesión",
+  "@accountSignInButton": {
+    "description": "Botón que abre el flujo de autenticación"
+  },
+  "accountManageButton": "Administrar cuenta",
+  "@accountManageButton": {
+    "description": "Botón que abre la página de gestión del perfil"
+  },
+  "accountGuestLabel": "Cuenta de invitado en uso",
+  "@accountGuestLabel": {
+    "description": "Etiqueta cuando el usuario actual es anónimo"
+  },
+  "accountGuestDescription": "Has iniciado sesión de forma anónima. Crea una cuenta para sincronizar tus datos entre dispositivos.",
+  "@accountGuestDescription": {
+    "description": "Texto que anima al usuario invitado a crear una cuenta"
+  },
+  "accountUpgradeButton": "Crear o vincular cuenta",
+  "@accountUpgradeButton": {
+    "description": "Botón que invita a los usuarios anónimos a mejorar"
+  },
   "themeSectionTitle": "Apariencia",
   "themeModeSystem": "Predeterminado del sistema",
   "themeModeLight": "Claro",
@@ -67,6 +104,70 @@
   "chatHistoryClearAllWarning": "Esto eliminará permanentemente todas las conversaciones guardadas.",
   "@chatHistoryClearAllWarning": {
     "description": "Advertencia mostrada antes de borrar todo el historial"
+  },
+  "profilePageTitle": "Perfil",
+  "@profilePageTitle": {
+    "description": "Título de la página de gestión del perfil"
+  },
+  "anonymousSignInButton": "Continuar como invitado",
+  "@anonymousSignInButton": {
+    "description": "Botón para iniciar sesión anónima"
+  },
+  "anonymousSignInDescription": "Puedes probar la app sin crear una cuenta. Más tarde podrás mejorar desde Configuración.",
+  "@anonymousSignInDescription": {
+    "description": "Texto que explica la sesión anónima"
+  },
+  "anonymousSignInFailed": "No se pudo iniciar la sesión de invitado. Inténtalo de nuevo.",
+  "@anonymousSignInFailed": {
+    "description": "Mensaje mostrado si la sesión anónima falla"
+  },
+  "anonymousUpgradeHint": "Actualmente usas una sesión de invitado. Inicia sesión para conservar tus datos para el futuro.",
+  "@anonymousUpgradeHint": {
+    "description": "Texto informativo cuando un usuario anónimo se registra"
+  },
+  "authErrorInvalidEmail": "La dirección de correo parece inválida.",
+  "@authErrorInvalidEmail": {
+    "description": "Error de correo inválido"
+  },
+  "authErrorUserDisabled": "Esta cuenta está deshabilitada. Ponte en contacto con el soporte.",
+  "@authErrorUserDisabled": {
+    "description": "Error de usuario deshabilitado"
+  },
+  "authErrorUserNotFound": "No encontramos una cuenta con esos datos.",
+  "@authErrorUserNotFound": {
+    "description": "Error usuario no encontrado"
+  },
+  "authErrorWrongPassword": "La contraseña es incorrecta. Verifícala e inténtalo de nuevo.",
+  "@authErrorWrongPassword": {
+    "description": "Error contraseña incorrecta"
+  },
+  "authErrorEmailInUse": "Ese correo ya está vinculado a otra cuenta.",
+  "@authErrorEmailInUse": {
+    "description": "Error correo en uso"
+  },
+  "authErrorOperationNotAllowed": "Este método de inicio de sesión está deshabilitado. Prueba otra opción.",
+  "@authErrorOperationNotAllowed": {
+    "description": "Error operación no permitida"
+  },
+  "authErrorWeakPassword": "Elige una contraseña más segura antes de continuar.",
+  "@authErrorWeakPassword": {
+    "description": "Error contraseña débil"
+  },
+  "authErrorRequiresRecentLogin": "Vuelve a iniciar sesión para completar esta acción.",
+  "@authErrorRequiresRecentLogin": {
+    "description": "Error requiere inicio reciente"
+  },
+  "authErrorCredentialInUse": "Esas credenciales ya están asociadas a otra cuenta.",
+  "@authErrorCredentialInUse": {
+    "description": "Error credenciales en uso"
+  },
+  "authErrorInvalidCredential": "Las credenciales proporcionadas son inválidas o han expirado.",
+  "@authErrorInvalidCredential": {
+    "description": "Error credenciales inválidas"
+  },
+  "authErrorGeneric": "No pudimos completar la solicitud. Inténtalo de nuevo.",
+  "@authErrorGeneric": {
+    "description": "Error genérico de autenticación"
   },
   "chatHistoryDeleteConversationWarning": "¿Eliminar \"{title}\"?",
   "@chatHistoryDeleteConversationWarning": {

@@ -61,6 +61,12 @@ void main() {
       expect(themeCubit.state, ThemeMode.dark);
       expect(repo.saved, ThemeMode.dark);
 
+      await tester.scrollUntilVisible(
+        find.text(en.languageSpanish),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
       await tester.tap(find.text(en.languageSpanish));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));

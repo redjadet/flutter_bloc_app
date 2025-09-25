@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
@@ -14,15 +17,32 @@ import 'package:go_router/go_router.dart';
 
 /// Main application widget
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, this.requireAuth = true});
+
+  final bool requireAuth;
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  late final GoRouter _router = GoRouter(
-    routes: [
+  FirebaseAuth? _auth;
+  _GoRouterRefreshStream? _authRefresh;
+  late GoRouter _router;
+
+  @override
+  void initState() {
+    super.initState();
+    _router = _createRouter();
+  }
+
+  GoRouter _createRouter() {
+    final List<GoRoute> routes = <GoRoute>[
+      GoRoute(
+        path: AppRoutes.authPath,
+        name: AppRoutes.auth,
+        builder: (context, state) => const SignInPage(),
+      ),
       GoRoute(
         path: AppRoutes.counterPath,
         name: AppRoutes.counter,
@@ -45,6 +65,11 @@ class _MyAppState extends State<MyApp> {
         builder: (context, state) => const SettingsPage(),
       ),
       GoRoute(
+        path: AppRoutes.profilePath,
+        name: AppRoutes.profile,
+        builder: (context, state) => const ProfilePage(),
+      ),
+      GoRoute(
         path: AppRoutes.chatPath,
         name: AppRoutes.chat,
         builder: (context, state) => BlocProvider(
@@ -56,8 +81,39 @@ class _MyAppState extends State<MyApp> {
           child: const ChatPage(),
         ),
       ),
-    ],
-  );
+    ];
+
+    if (!widget.requireAuth) {
+      return GoRouter(initialLocation: AppRoutes.counterPath, routes: routes);
+    }
+
+    _auth = FirebaseAuth.instance;
+    _authRefresh = _GoRouterRefreshStream(_auth!.authStateChanges());
+
+    return GoRouter(
+      initialLocation: AppRoutes.counterPath,
+      refreshListenable: _authRefresh,
+      redirect: (context, state) {
+        final FirebaseAuth auth = _auth!;
+        final bool loggedIn = auth.currentUser != null;
+        final bool loggingIn = state.matchedLocation == AppRoutes.authPath;
+
+        if (!loggedIn) {
+          return loggingIn ? null : AppRoutes.authPath;
+        }
+        if (loggingIn) {
+          final bool upgradingAnonymous =
+              auth.currentUser?.isAnonymous ?? false;
+          if (upgradingAnonymous) {
+            return null;
+          }
+          return AppRoutes.counterPath;
+        }
+        return null;
+      },
+      routes: routes,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,5 +159,25 @@ class _MyAppState extends State<MyApp> {
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _authRefresh?.dispose();
+    super.dispose();
+  }
+}
+
+class _GoRouterRefreshStream extends ChangeNotifier {
+  _GoRouterRefreshStream(Stream<dynamic> stream) {
+    _subscription = stream.listen((_) => notifyListeners());
+  }
+
+  late final StreamSubscription<dynamic> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 }

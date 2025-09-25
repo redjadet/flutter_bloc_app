@@ -1,3 +1,4 @@
+import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/constants.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -21,6 +22,7 @@ class AppConfig {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
         AppLocalizations.delegate,
+        FirebaseUILocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       localeListResolutionCallback: _localeListResolutionCallback,

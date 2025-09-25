@@ -30,6 +30,43 @@
   "openChartsTooltip": "Diagramme öffnen",
   "openSettingsTooltip": "Einstellungen öffnen",
   "settingsPageTitle": "Einstellungen",
+  "accountSectionTitle": "Konto",
+  "@accountSectionTitle": {
+    "description": "Überschrift für den Konto- und Anmeldebereich"
+  },
+  "accountSignedInAs": "Angemeldet als {name}",
+  "@accountSignedInAs": {
+    "description": "Beschriftung der aktuell angemeldeten Person",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accountSignedOutLabel": "Nicht angemeldet.",
+  "@accountSignedOutLabel": {
+    "description": "Hinweis, wenn keine Person angemeldet ist"
+  },
+  "accountSignInButton": "Anmelden",
+  "@accountSignInButton": {
+    "description": "Schaltfläche, die zum Anmeldefluss führt"
+  },
+  "accountManageButton": "Konto verwalten",
+  "@accountManageButton": {
+    "description": "Schaltfläche zum Öffnen der Profilverwaltung"
+  },
+  "accountGuestLabel": "Gastkonto wird verwendet",
+  "@accountGuestLabel": {
+    "description": "Hinweis, wenn der aktuelle Benutzer anonym ist"
+  },
+  "accountGuestDescription": "Du bist anonym angemeldet. Erstelle ein Konto, um deine Daten zwischen Geräten zu synchronisieren.",
+  "@accountGuestDescription": {
+    "description": "Text, der Gastnutzer zum Upgrade ermutigt"
+  },
+  "accountUpgradeButton": "Konto erstellen oder verknüpfen",
+  "@accountUpgradeButton": {
+    "description": "Schaltfläche, die anonyme Nutzer zum Upgrade einlädt"
+  },
   "themeSectionTitle": "Erscheinungsbild",
   "themeModeSystem": "Systemstandard",
   "themeModeLight": "Hell",
@@ -67,6 +104,70 @@
   "chatHistoryClearAllWarning": "Dadurch werden alle gespeicherten Unterhaltungen dauerhaft gelöscht.",
   "@chatHistoryClearAllWarning": {
     "description": "Warnhinweis vor dem Löschen des gesamten Gesprächsverlaufs"
+  },
+  "profilePageTitle": "Profil",
+  "@profilePageTitle": {
+    "description": "Titel der Seite zur Kontoverwaltung"
+  },
+  "anonymousSignInButton": "Als Gast fortfahren",
+  "@anonymousSignInButton": {
+    "description": "Schaltfläche für anonymes Anmelden"
+  },
+  "anonymousSignInDescription": "Du kannst die App ohne Konto ausprobieren. Später kannst du in den Einstellungen upgraden.",
+  "@anonymousSignInDescription": {
+    "description": "Text, der anonymes Anmelden erklärt"
+  },
+  "anonymousSignInFailed": "Gast-Sitzung konnte nicht gestartet werden. Bitte versuche es erneut.",
+  "@anonymousSignInFailed": {
+    "description": "Warnung, wenn anonymes Anmelden fehlschlägt"
+  },
+  "anonymousUpgradeHint": "Du nutzt derzeit eine Gast-Sitzung. Melde dich an, um deine Daten dauerhaft zu sichern.",
+  "@anonymousUpgradeHint": {
+    "description": "Hinweistext für den Wechsel von anonym zu regulär"
+  },
+  "authErrorInvalidEmail": "Die E-Mail-Adresse scheint ungültig zu sein.",
+  "@authErrorInvalidEmail": {
+    "description": "Ungültige E-Mail"
+  },
+  "authErrorUserDisabled": "Dieses Konto wurde deaktiviert. Bitte wende dich an den Support.",
+  "@authErrorUserDisabled": {
+    "description": "Benutzer deaktiviert"
+  },
+  "authErrorUserNotFound": "Wir konnten kein Konto mit diesen Angaben finden.",
+  "@authErrorUserNotFound": {
+    "description": "Benutzer nicht gefunden"
+  },
+  "authErrorWrongPassword": "Das Passwort ist falsch. Bitte überprüfe es und versuche es erneut.",
+  "@authErrorWrongPassword": {
+    "description": "Falsches Passwort"
+  },
+  "authErrorEmailInUse": "Diese E-Mail ist bereits mit einem anderen Konto verknüpft.",
+  "@authErrorEmailInUse": {
+    "description": "E-Mail bereits verwendet"
+  },
+  "authErrorOperationNotAllowed": "Diese Anmeldemethode ist derzeit deaktiviert. Bitte wähle eine andere Option.",
+  "@authErrorOperationNotAllowed": {
+    "description": "Vorgang nicht erlaubt"
+  },
+  "authErrorWeakPassword": "Bitte wähle ein stärkeres Passwort.",
+  "@authErrorWeakPassword": {
+    "description": "Schwaches Passwort"
+  },
+  "authErrorRequiresRecentLogin": "Bitte melde dich erneut an, um diesen Vorgang abzuschließen.",
+  "@authErrorRequiresRecentLogin": {
+    "description": "Erfordert kürzliche Anmeldung"
+  },
+  "authErrorCredentialInUse": "Diese Anmeldedaten sind bereits einem anderen Konto zugeordnet.",
+  "@authErrorCredentialInUse": {
+    "description": "Anmeldedaten in Verwendung"
+  },
+  "authErrorInvalidCredential": "Die angegebenen Anmeldedaten sind ungültig oder abgelaufen.",
+  "@authErrorInvalidCredential": {
+    "description": "Ungültige Anmeldedaten"
+  },
+  "authErrorGeneric": "Die Anfrage konnte nicht abgeschlossen werden. Bitte versuche es erneut.",
+  "@authErrorGeneric": {
+    "description": "Allgemeiner Auth-Fehler"
   },
   "chatHistoryDeleteConversationWarning": "\"{title}\" löschen?",
   "@chatHistoryDeleteConversationWarning": {
