@@ -6,6 +6,12 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 export 'package:flutter_bloc_app/features/counter/presentation/counter_state.dart';
 
+typedef _RestorationResult = ({
+  CounterState state,
+  bool shouldPersist,
+  bool holdCountdown,
+});
+
 /// Presenter (Cubit) orchestrating counter state, persistence and timers.
 class CounterCubit extends Cubit<CounterState> {
   CounterCubit({
@@ -13,8 +19,10 @@ class CounterCubit extends Cubit<CounterState> {
     TimerService? timerService,
     bool startTicker = true,
     Duration loadDelay = Duration.zero,
+    DateTime Function()? now,
   }) : _repository = repository,
        _timerService = timerService ?? DefaultTimerService(),
+       _now = now ?? DateTime.now,
        _initialLoadDelay = loadDelay,
        super(const CounterState(count: 0)) {
     // Ensure first emission occurs after listeners subscribe.
@@ -36,6 +44,7 @@ class CounterCubit extends Cubit<CounterState> {
 
   final CounterRepository _repository;
   final TimerService _timerService;
+  final DateTime Function() _now;
   final Duration _initialLoadDelay;
 
   TimerDisposable? _countdownTicker;
@@ -78,7 +87,7 @@ class CounterCubit extends Cubit<CounterState> {
     _holdCountdownAtFullCycle = false;
     final CounterState next = CounterState.success(
       count: count,
-      lastChanged: timestamp ?? DateTime.now(),
+      lastChanged: timestamp ?? _now(),
     );
     emit(next);
     return next;
@@ -114,14 +123,16 @@ class CounterCubit extends Cubit<CounterState> {
         await Future<void>.delayed(_initialLoadDelay);
       }
       final CounterSnapshot snapshot = await _repository.load();
-      _holdCountdownAtFullCycle = false;
-      emit(
-        CounterState.success(
-          count: snapshot.count,
-          lastChanged: snapshot.lastChanged,
-        ),
+      final _RestorationResult restoration = _restoreStateFromSnapshot(
+        snapshot,
+        now: _now(),
       );
+      _holdCountdownAtFullCycle = restoration.holdCountdown;
+      emit(restoration.state);
       _ensureCountdownTickerStarted();
+      if (restoration.shouldPersist) {
+        await _persistState(restoration.state);
+      }
     } catch (e, s) {
       AppLogger.error('CounterCubit.loadInitial failed', e, s);
       emit(
@@ -131,6 +142,90 @@ class CounterCubit extends Cubit<CounterState> {
         ),
       );
     }
+  }
+
+  _RestorationResult _restoreStateFromSnapshot(
+    CounterSnapshot snapshot, {
+    required DateTime now,
+  }) {
+    final int safeCount = snapshot.count < 0 ? 0 : snapshot.count;
+    final DateTime? lastChanged = snapshot.lastChanged;
+    bool holdCountdown = false;
+    bool shouldPersist = safeCount != snapshot.count;
+
+    if (lastChanged == null) {
+      return (
+        state: CounterState.success(
+          count: safeCount,
+        ),
+        shouldPersist: shouldPersist,
+        holdCountdown: holdCountdown,
+      );
+    }
+
+    if (safeCount == 0) {
+      holdCountdown = true;
+      return (
+        state: CounterState.success(
+          count: 0,
+          lastChanged: lastChanged,
+        ),
+        shouldPersist: shouldPersist,
+        holdCountdown: holdCountdown,
+      );
+    }
+
+    final Duration elapsed = now.difference(lastChanged);
+    if (elapsed.inSeconds <= 0) {
+      return (
+        state: CounterState.success(
+          count: safeCount,
+          lastChanged: lastChanged,
+        ),
+        shouldPersist: shouldPersist,
+        holdCountdown: holdCountdown,
+      );
+    }
+
+    final int elapsedSeconds = elapsed.inSeconds;
+    final int intervalsElapsed = elapsedSeconds ~/ _defaultIntervalSeconds;
+    final int decrements = intervalsElapsed > safeCount
+        ? safeCount
+        : intervalsElapsed;
+    final int newCount = safeCount - decrements;
+    final DateTime resolvedLastChanged = lastChanged.add(
+      Duration(seconds: decrements * _defaultIntervalSeconds),
+    );
+
+    shouldPersist = shouldPersist || decrements > 0;
+
+    if (newCount == 0) {
+      holdCountdown = true;
+      return (
+        state: CounterState.success(
+          count: 0,
+          lastChanged: resolvedLastChanged,
+        ),
+        shouldPersist: shouldPersist,
+        holdCountdown: holdCountdown,
+      );
+    }
+
+    final int remainderSeconds =
+        elapsedSeconds - (decrements * _defaultIntervalSeconds);
+    final int countdownSeconds = remainderSeconds == 0
+        ? _defaultIntervalSeconds
+        : _defaultIntervalSeconds - remainderSeconds;
+
+    return (
+      state: CounterState.success(
+        count: newCount,
+        lastChanged: resolvedLastChanged,
+        countdownSeconds: countdownSeconds,
+      ),
+      shouldPersist: shouldPersist,
+      holdCountdown: holdCountdown,
+    );
   }
 
   Future<void> _persistState(CounterState snapshotState) async {
