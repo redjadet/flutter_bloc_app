@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 import 'test_helpers.dart';
 
@@ -193,6 +194,21 @@ void main() {
       expect(snap.count, 1);
       expect(snap.lastChanged, isA<DateTime>());
     });
+
+    test(
+      'persist failure emits save error without losing latest count',
+      () async {
+        final CounterCubit cubit = createCubit(
+          repository: MockCounterRepository(shouldThrowOnSave: true),
+        );
+
+        await AppLogger.silenceAsync(() => cubit.increment());
+
+        expect(cubit.state.count, 1);
+        expect(cubit.state.status, CounterStatus.error);
+        expect(cubit.state.error?.type, CounterErrorType.saveError);
+      },
+    );
 
     test(
       'countdown timer decreases deterministically (FakeTimerService)',

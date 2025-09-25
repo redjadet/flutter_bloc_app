@@ -155,9 +155,7 @@ class CounterCubit extends Cubit<CounterState> {
 
     if (lastChanged == null) {
       return (
-        state: CounterState.success(
-          count: safeCount,
-        ),
+        state: CounterState.success(count: safeCount),
         shouldPersist: shouldPersist,
         holdCountdown: holdCountdown,
       );
@@ -166,10 +164,7 @@ class CounterCubit extends Cubit<CounterState> {
     if (safeCount == 0) {
       holdCountdown = true;
       return (
-        state: CounterState.success(
-          count: 0,
-          lastChanged: lastChanged,
-        ),
+        state: CounterState.success(count: 0, lastChanged: lastChanged),
         shouldPersist: shouldPersist,
         holdCountdown: holdCountdown,
       );
@@ -178,10 +173,7 @@ class CounterCubit extends Cubit<CounterState> {
     final Duration elapsed = now.difference(lastChanged);
     if (elapsed.inSeconds <= 0) {
       return (
-        state: CounterState.success(
-          count: safeCount,
-          lastChanged: lastChanged,
-        ),
+        state: CounterState.success(count: safeCount, lastChanged: lastChanged),
         shouldPersist: shouldPersist,
         holdCountdown: holdCountdown,
       );
@@ -202,10 +194,7 @@ class CounterCubit extends Cubit<CounterState> {
     if (newCount == 0) {
       holdCountdown = true;
       return (
-        state: CounterState.success(
-          count: 0,
-          lastChanged: resolvedLastChanged,
-        ),
+        state: CounterState.success(count: 0, lastChanged: resolvedLastChanged),
         shouldPersist: shouldPersist,
         holdCountdown: holdCountdown,
       );
@@ -238,6 +227,12 @@ class CounterCubit extends Cubit<CounterState> {
       );
     } catch (e, s) {
       AppLogger.error('CounterCubit._persistState failed', e, s);
+      emit(
+        state.copyWith(
+          error: CounterError.save(originalError: e),
+          status: CounterStatus.error,
+        ),
+      );
     }
   }
 
