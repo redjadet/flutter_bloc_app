@@ -16,13 +16,14 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Loading polish: `skeletonizer` placeholders, `fancy_shimmer_image` hero card, and dev-only loading delay to showcase the effects.
 - Logging: Centralized `AppLogger` built on top of the `logger` package.
 - Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES).
+- Authentication: Firebase Auth with FirebaseUI (email/password, Google) plus anonymous “guest” sessions that can be upgraded in-place.
 - AI Chat: Conversational UI backed by Hugging Face Inference API (openai/gpt-oss).
 - Native integration: MethodChannel (`com.example.flutter_bloc_app/native`) returning sanitized device metadata with Kotlin/Swift handlers.
 - Secrets: `SecretConfig` reads from secure storage first, falls back to the dev-only
   `assets/config/secrets.json`, and finally to `--dart-define` values. Release
   builds skip the asset and persist any provided values into platform secure
   storage (`flutter_secure_storage`).
-- Tests: Unit, bloc, widget, and golden coverage (`flutter_test`, `bloc_test`, `golden_toolkit`).
+- Tests: Unit, bloc, widget, and golden coverage (`flutter_test`, `bloc_test`, `golden_toolkit`), including auth flows with Firebase mocks.
 
 ## Tech Stack
 
@@ -163,6 +164,7 @@ classDiagram
 - `test/error_snackbar_test.dart`: Intentionally throws to exercise SnackBar (skipped by default).
 - `test/native_platform_service_test.dart`: Validates MethodChannel responses.
 - `test/secure_secret_storage_test.dart`: Covers secure storage wrappers.
+- `test/sign_in_page_test.dart`: Exercises anonymous sign-in, auth error handling, and error message mapping with `MockFirebaseAuth`.
 - `test/widget_test.dart`: Basic boot test for the app.
 
 ## How It Works

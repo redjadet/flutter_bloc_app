@@ -9,6 +9,7 @@ Bu doküman, bu repo üzerinde çalışacak geliştiriciler/ajanlar için mimari
 - Kalıcı saklama (SharedPreferences) ile son değer ve zaman bilgisini tutmak.
 - 5 saniyede bir otomatik azaltım ve görsel geri sayım göstergesi sunmak.
 - Çoklu dil desteği (EN, TR, DE, FR, ES) sağlamak.
+- Firebase Authentication ile e-posta/parola, Google ve anonim (misafir) oturum akışlarını desteklemek; misafir oturumlarını kalıcı kimlik bilgileriyle yükseltebilmek.
 
 ## Mimari Genel Bakış
 
@@ -65,8 +66,9 @@ flowchart LR
   - `counter_snapshot.dart`: Kalıcı veri anlık görüntüsü (UI’dan bağımsız).
 - `lib/data/`
   - `shared_preferences_counter_repository.dart`: Varsayılan depolama implementasyonu.
+- `lib/features/auth/`: FirebaseUI tabanlı kimlik doğrulama ekranları, anonim oturumdan hesap yükseltme akışı ve profile sayfası.
 - `lib/main.dart`: Uygulama giriş noktası ve widget bileşimi.
-- `test/`: Birim ve bloc testleri.
+- `test/`: Birim, bloc, widget ve auth senaryoları.
 
 ## Ana Akış
 
@@ -133,12 +135,14 @@ sequenceDiagram
 5. Test
    - Fake/Mock repository ile Cubit’i izole edin.
    - Zamanlayıcı/async davranışlarını deterministic olacak şekilde test edin.
+   - Kimlik doğrulamada `MockFirebaseAuth` ve `whenCalling(...).thenThrow(...)` paterniyle hata kodlarını doğrulayın.
 
 ## Test Stratejisi
 
 - Cubit Testleri: `bloc_test` ile sıradaki durumları, kalıcılık ve zamanlayıcı etkilerini doğrulayın.
 - Widget Testleri: Bileşenlerin doğru render edildiğini ve etkileşimlerin Cubit’e gittiğini test edin.
 - Fake Repository: `SharedPreferences` yerine hafif sahte implementasyon kullanın (hız ve izolasyon).
+- Firebase Auth Testleri: `MockFirebaseAuth` ve `mock_exceptions` ile hata kodlarını tetikleyip kullanıcıya yansıtılan mesajları doğrulayın (`test/sign_in_page_test.dart`).
 
 ## Bağımlılık Enjeksiyonu (DI)
 
@@ -146,7 +150,8 @@ sequenceDiagram
 - Kayıtlar:
   - `CounterRepository` → `SharedPreferencesCounterRepository`
   - `ThemeRepository` → `SharedPreferencesThemeRepository`
-  - `TimerService` → `DefaultTimerService`
+- `TimerService` → `DefaultTimerService`
+- FirebaseAuth varsayılanı `firebase_ui_auth` tarafından sağlanır; testlerde gerektiğinde `SignInPage(auth: mockAuth)` ile sahte örnek enjekte edin.
 - Uygulama başlatımı: `runAppWithFlavor` içinde `configureDependencies()` çağrılır.
 - Testlerde `MyApp` doğrudan pump edilirse `ensureConfigured()` güvenlik ağı sağlar.
 
