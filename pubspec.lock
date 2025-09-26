@@ -85,10 +85,10 @@ packages:
     dependency: transitive
     description:
       name: bloc
-      sha256: "52c10575f4445c61dd9e0cafcc6356fdd827c4c64dd7945ef3c4105f6b6ac189"
+      sha256: e18b8e7825e9921d67a6d256dba0b6015ece8a577eb0a411845c46a352994d78
       url: "https://pub.dev"
     source: hosted
-    version: "9.0.0"
+    version: "9.0.1"
   bloc_test:
     dependency: "direct dev"
     description:
@@ -397,10 +397,10 @@ packages:
     dependency: "direct dev"
     description:
       name: firebase_auth_mocks
-      sha256: "48fcc9e3bef9b3ae6d9e2b7652bcb91965b68d8b0042814c45686086476ed967"
+      sha256: ee1076150ea51d181ae24d5f8e2686a1926b7cc54e25c0deaa8ac58705025551
       url: "https://pub.dev"
     source: hosted
-    version: "0.15.0"
+    version: "0.15.1"
   firebase_auth_platform_interface:
     dependency: transitive
     description:
@@ -457,6 +457,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.8.13"
+  firebase_database:
+    dependency: "direct main"
+    description:
+      name: firebase_database
+      sha256: f6e819a2d0b4518b3f628586d7d5475ff35dcd4c1c90054c2ffccae4e0bafca7
+      url: "https://pub.dev"
+    source: hosted
+    version: "12.0.2"
+  firebase_database_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_database_platform_interface
+      sha256: bb4d3c33a3ac29b4315297549d17fa87e752cf013f187c28f1d562a190e6b846
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.6+13"
+  firebase_database_web:
+    dependency: transitive
+    description:
+      name: firebase_database_web
+      sha256: "185de933ad436c25bfca309387078548dd8bc6468a97d1a2e0a92b8fa33fdf21"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.6+19"
   firebase_ui_auth:
     dependency: "direct main"
     description:

@@ -1,5 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui;
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'
+    as firebase_ui_google;
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -51,6 +56,34 @@ class SignInPage extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final FirebaseAuth auth = _auth ?? FirebaseAuth.instance;
     final bool upgradingAnonymous = auth.currentUser?.isAnonymous ?? false;
+    final List<firebase_ui.AuthProvider> providers =
+        List<firebase_ui.AuthProvider>.from(
+          firebase_ui.FirebaseUIAuth.providersFor(auth.app),
+        );
+
+    if (!providers.any(
+      (firebase_ui.AuthProvider provider) =>
+          provider is firebase_ui.EmailAuthProvider,
+    )) {
+      providers.insert(0, firebase_ui.EmailAuthProvider());
+    }
+
+    if (providers.isEmpty) {
+      providers.add(firebase_ui.EmailAuthProvider());
+    }
+
+    final bool hasGoogleProvider = providers.any(
+      (firebase_ui.AuthProvider provider) =>
+          provider is firebase_ui_google.GoogleProvider,
+    );
+
+    if (!hasGoogleProvider) {
+      final firebase_ui_google.GoogleProvider? googleProvider =
+          _maybeCreateGoogleProvider();
+      if (googleProvider != null) {
+        providers.add(googleProvider);
+      }
+    }
 
     void showAuthError(Object error) {
       if (!context.mounted) return;
@@ -77,8 +110,9 @@ class SignInPage extends StatelessWidget {
       }
     }
 
-    return SignInScreen(
+    return firebase_ui.SignInScreen(
       auth: auth,
+      providers: providers,
       headerBuilder: (context, constraints, _) {
         return Padding(
           padding: const EdgeInsets.only(top: 32, bottom: 16),
@@ -121,20 +155,70 @@ class SignInPage extends StatelessWidget {
           ],
         );
       },
-      actions: <FirebaseUIAction>[
-        AuthStateChangeAction<SignedIn>((context, state) {
+      actions: <firebase_ui.FirebaseUIAction>[
+        firebase_ui.AuthStateChangeAction<firebase_ui.SignedIn>((
+          context,
+          state,
+        ) {
           context.go(AppRoutes.counterPath);
         }),
-        AuthStateChangeAction<UserCreated>((context, state) {
+        firebase_ui.AuthStateChangeAction<firebase_ui.UserCreated>((
+          context,
+          state,
+        ) {
           context.go(AppRoutes.counterPath);
         }),
-        AuthStateChangeAction<CredentialLinked>((context, state) {
+        firebase_ui.AuthStateChangeAction<firebase_ui.CredentialLinked>((
+          context,
+          state,
+        ) {
           context.go(AppRoutes.counterPath);
         }),
-        AuthStateChangeAction<AuthFailed>((context, state) {
+        firebase_ui.AuthStateChangeAction<firebase_ui.AuthFailed>((
+          context,
+          state,
+        ) {
           showAuthError(state.exception);
         }),
       ],
     );
+  }
+}
+
+firebase_ui_google.GoogleProvider? _maybeCreateGoogleProvider() {
+  if (kIsWeb) {
+    return null;
+  }
+
+  if (Firebase.apps.isEmpty) {
+    return null;
+  }
+
+  try {
+    final FirebaseApp app = Firebase.app();
+    final FirebaseOptions options = app.options;
+    final TargetPlatform platform = defaultTargetPlatform;
+    if (platform != TargetPlatform.android && platform != TargetPlatform.iOS) {
+      return null;
+    }
+
+    final bool isIOS = platform == TargetPlatform.iOS;
+    final String? platformClientId = isIOS
+        ? options.iosClientId
+        : options.androidClientId;
+    final bool preferPlist =
+        isIOS && (platformClientId?.trim().isEmpty ?? true);
+
+    final String resolvedClientId =
+        (platformClientId?.trim().isNotEmpty ?? false)
+        ? platformClientId!.trim()
+        : options.appId;
+
+    return firebase_ui_google.GoogleProvider(
+      clientId: resolvedClientId,
+      iOSPreferPlist: preferPlist,
+    );
+  } catch (_) {
+    return null;
   }
 }

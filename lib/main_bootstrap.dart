@@ -26,8 +26,29 @@ Future<void> runAppWithFlavor(Flavor flavor) async {
   runApp(const MyApp());
 }
 
-Future<bool> _initializeFirebase() async {
+Future<bool>? _firebaseInitialization;
+
+Future<bool> _initializeFirebase() {
+  return _firebaseInitialization ??= _initializeFirebaseOnce().then((
+    bool initialized,
+  ) {
+    if (!initialized) {
+      _firebaseInitialization = null;
+    }
+    return initialized;
+  });
+}
+
+Future<bool> _initializeFirebaseOnce() async {
   try {
+    if (Firebase.apps.isNotEmpty) {
+      AppLogger.debug(
+        'Firebase already initialized: '
+        '${Firebase.apps.map((FirebaseApp app) => app.name).join(', ')}',
+      );
+      return true;
+    }
+
     final FirebaseOptions options = DefaultFirebaseOptions.currentPlatform;
     if (_usesPlaceholderValues(options)) {
       AppLogger.warning(
@@ -39,6 +60,15 @@ Future<bool> _initializeFirebase() async {
     await Firebase.initializeApp(options: options);
     AppLogger.info('Firebase initialized for project: ${options.projectId}');
     return true;
+  } on FirebaseException catch (error, stackTrace) {
+    if (error.code == 'duplicate-app') {
+      AppLogger.warning(
+        'Firebase already initialized natively. Reusing existing instance.',
+      );
+      Firebase.app();
+      return true;
+    }
+    AppLogger.error('Firebase initialization failed', error, stackTrace);
   } on UnsupportedError catch (error, stackTrace) {
     AppLogger.warning('Firebase not configured: $error');
     AppLogger.debug('Skipping Firebase initialization\n$stackTrace');

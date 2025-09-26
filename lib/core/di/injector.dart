@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/chat/data/'
@@ -14,6 +16,8 @@ import 'package:flutter_bloc_app/features/chat/domain/'
     'chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/'
+    'realtime_database_counter_repository.dart';
+import 'package:flutter_bloc_app/features/counter/data/'
     'shared_preferences_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/shared/data/'
@@ -22,15 +26,14 @@ import 'package:flutter_bloc_app/shared/data/'
     'shared_preferences_theme_repository.dart';
 import 'package:flutter_bloc_app/shared/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
 final GetIt getIt = GetIt.instance;
 
 Future<void> configureDependencies() async {
-  _registerLazySingletonIfAbsent<CounterRepository>(
-    () => SharedPreferencesCounterRepository(),
-  );
+  _registerLazySingletonIfAbsent<CounterRepository>(_createCounterRepository);
   _registerLazySingletonIfAbsent<http.Client>(
     http.Client.new,
     dispose: (client) => client.close(),
@@ -73,6 +76,23 @@ Future<void> configureDependencies() async {
 
 void ensureConfigured() {
   configureDependencies();
+}
+
+CounterRepository _createCounterRepository() {
+  if (Firebase.apps.isNotEmpty) {
+    try {
+      final FirebaseApp app = Firebase.app();
+      final FirebaseDatabase database = FirebaseDatabase.instanceFor(app: app);
+      return RealtimeDatabaseCounterRepository(database: database);
+    } catch (error, stackTrace) {
+      AppLogger.error(
+        'Falling back to SharedPreferencesCounterRepository',
+        error,
+        stackTrace,
+      );
+    }
+  }
+  return SharedPreferencesCounterRepository();
 }
 
 void _registerLazySingletonIfAbsent<T extends Object>(
