@@ -32,14 +32,14 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
       final User user = await waitForAuthUser(_auth);
       AppLogger.debug(
         'RealtimeDatabaseCounterRepository.load requesting path: '
-        '${_counterRef.path}',
+        '${_counterRef.path}/${user.uid}',
       );
       AppLogger.debug(
         'RealtimeDatabaseCounterRepository.load auth payload: '
         '{uid: ${user.uid}, providerData: ${user.providerData.map((item) => item.providerId).toList()}, '
         'isAnonymous: ${user.isAnonymous}, email: ${user.email}}',
       );
-      final DataSnapshot snapshot = await _counterRef.get();
+      final DataSnapshot snapshot = await _counterRef.child(user.uid).get();
       AppLogger.debug(
         'RealtimeDatabaseCounterRepository.load response exists: '
         '${snapshot.exists}',
@@ -48,7 +48,7 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
         'RealtimeDatabaseCounterRepository.load raw value: '
         '${snapshot.value}',
       );
-      return snapshotFromValue(snapshot.value);
+      return snapshotFromValue(snapshot.value, userId: user.uid);
     } on FirebaseAuthException {
       rethrow;
     } catch (error, stackTrace) {
@@ -57,7 +57,8 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
         error,
         stackTrace,
       );
-      return _emptySnapshot;
+      final String? userId = _auth.currentUser?.uid;
+      return _emptySnapshot.copyWith(userId: userId);
     }
   }
 
@@ -67,14 +68,15 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
       final User user = await waitForAuthUser(_auth);
       AppLogger.debug(
         'RealtimeDatabaseCounterRepository.save writing to: '
-        '${_counterRef.path} => ${snapshot.toJson()}',
+        '${_counterRef.path}/${user.uid} => ${snapshot.toJson()}',
       );
       AppLogger.debug(
         'RealtimeDatabaseCounterRepository.save auth payload: '
         '{uid: ${user.uid}, providerData: ${user.providerData.map((item) => item.providerId).toList()}, '
         'isAnonymous: ${user.isAnonymous}, email: ${user.email}}',
       );
-      await _counterRef.set(<String, Object?>{
+      await _counterRef.child(user.uid).set(<String, Object?>{
+        'userId': user.uid,
         'count': snapshot.count,
         'last_changed': snapshot.lastChanged?.millisecondsSinceEpoch,
       });
@@ -92,14 +94,15 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   @visibleForTesting
   static CounterSnapshot snapshotFromValue(
     Object? value, {
+    required String userId,
     bool logUnexpected = true,
   }) {
     if (value == null) {
-      return _emptySnapshot;
+      return CounterSnapshot(userId: userId, count: 0);
     }
 
     if (value is num) {
-      return CounterSnapshot(count: value.toInt());
+      return CounterSnapshot(userId: userId, count: value.toInt());
     }
 
     if (value is Map) {
@@ -109,7 +112,13 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
       final DateTime? lastChanged = lastChangedMs != null
           ? DateTime.fromMillisecondsSinceEpoch(lastChangedMs)
           : null;
-      return CounterSnapshot(count: count, lastChanged: lastChanged);
+      final String snapshotId =
+          (data['userId'] as String?) ?? (data['id'] as String?) ?? userId;
+      return CounterSnapshot(
+        userId: snapshotId,
+        count: count,
+        lastChanged: lastChanged,
+      );
     }
 
     if (logUnexpected) {
@@ -117,7 +126,7 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
         'RealtimeDatabaseCounterRepository.load unexpected payload: $value',
       );
     }
-    return _emptySnapshot;
+    return CounterSnapshot(userId: userId, count: 0);
   }
 }
 

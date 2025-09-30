@@ -25,7 +25,10 @@ class RestCounterRepository implements CounterRepository {
   final Map<String, String> _defaultHeaders;
   final Duration _requestTimeout;
   final bool _ownsClient;
-  static const CounterSnapshot _emptySnapshot = CounterSnapshot(count: 0);
+  static const CounterSnapshot _emptySnapshot = CounterSnapshot(
+    userId: 'rest',
+    count: 0,
+  );
 
   Uri get _counterUri => _baseUri.resolve('counter');
 
@@ -52,7 +55,13 @@ class RestCounterRepository implements CounterRepository {
     final DateTime? lastChanged = changedMs != null
         ? DateTime.fromMillisecondsSinceEpoch(changedMs)
         : null;
-    return CounterSnapshot(count: count, lastChanged: lastChanged);
+    final String userId =
+        json['userId'] as String? ?? json['id'] as String? ?? 'rest';
+    return CounterSnapshot(
+      userId: userId,
+      count: count,
+      lastChanged: lastChanged,
+    );
   }
 
   void _logHttpError(String operation, http.Response response) {
@@ -96,6 +105,7 @@ class RestCounterRepository implements CounterRepository {
               overrides: const {'Content-Type': 'application/json'},
             ),
             body: jsonEncode(<String, dynamic>{
+              'userId': snapshot.userId,
               'count': snapshot.count,
               'last_changed': snapshot.lastChanged?.millisecondsSinceEpoch,
             }),

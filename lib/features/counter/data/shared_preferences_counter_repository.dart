@@ -10,7 +10,10 @@ class SharedPreferencesCounterRepository implements CounterRepository {
 
   static const String _preferencesKeyCount = 'last_count';
   static const String _preferencesKeyChanged = 'last_changed';
-  static const CounterSnapshot _emptySnapshot = CounterSnapshot(count: 0);
+  static const CounterSnapshot _emptySnapshot = CounterSnapshot(
+    userId: 'local',
+    count: 0,
+  );
 
   final SharedPreferences? _preferencesInstance;
 
@@ -27,7 +30,11 @@ class SharedPreferencesCounterRepository implements CounterRepository {
       final DateTime? changed = changedMs != null
           ? DateTime.fromMillisecondsSinceEpoch(changedMs)
           : null;
-      return CounterSnapshot(count: count, lastChanged: changed);
+      return CounterSnapshot(
+        userId: 'local',
+        count: count,
+        lastChanged: changed,
+      );
     } catch (e, s) {
       AppLogger.error('SharedPreferencesCounterRepository.load failed', e, s);
       return _emptySnapshot;
