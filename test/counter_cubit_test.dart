@@ -113,68 +113,54 @@ void main() {
       expect(cubit.state.countdownSeconds, 5);
     });
 
-    test(
-      'loadInitial applies elapsed countdown and persists snapshot',
-      () async {
-        final DateTime fixedNow = DateTime(2024, 1, 1, 12, 0, 0);
-        final DateTime lastChanged = fixedNow.subtract(
-          const Duration(seconds: 12),
-        );
-        final recordingRepo = _RecordingCounterRepository(
-          CounterSnapshot(count: 5, lastChanged: lastChanged),
-        );
-        final fakeTimer = FakeTimerService();
-        final CounterCubit cubit = CounterCubit(
-          repository: recordingRepo,
-          timerService: fakeTimer,
-          startTicker: false,
-          now: () => fixedNow,
-        );
-        addTearDown(cubit.close);
+    test('loadInitial keeps remote value without catch-up', () async {
+      final DateTime fixedNow = DateTime(2024, 1, 1, 12, 0, 0);
+      final DateTime lastChanged = fixedNow.subtract(
+        const Duration(seconds: 12),
+      );
+      final recordingRepo = _RecordingCounterRepository(
+        CounterSnapshot(count: 5, lastChanged: lastChanged),
+      );
+      final CounterCubit cubit = CounterCubit(
+        repository: recordingRepo,
+        timerService: FakeTimerService(),
+        startTicker: false,
+        now: () => fixedNow,
+      );
+      addTearDown(cubit.close);
 
-        await cubit.loadInitial();
+      await cubit.loadInitial();
 
-        expect(cubit.state.count, 3);
-        expect(cubit.state.countdownSeconds, 3);
-        expect(
-          cubit.state.lastChanged,
-          lastChanged.add(const Duration(seconds: 10)),
-        );
-        expect(recordingRepo.saved?.count, 3);
-        expect(recordingRepo.saved?.lastChanged, cubit.state.lastChanged);
-      },
-    );
+      expect(cubit.state.count, 5);
+      expect(cubit.state.countdownSeconds, 5);
+      expect(cubit.state.lastChanged, lastChanged);
+      expect(recordingRepo.saved, isNull);
+    });
 
-    test(
-      'loadInitial saturates to zero and holds countdown when exhausted',
-      () async {
-        final DateTime fixedNow = DateTime(2024, 1, 1, 12, 0, 0);
-        final DateTime lastChanged = fixedNow.subtract(
-          const Duration(seconds: 20),
-        );
-        final recordingRepo = _RecordingCounterRepository(
-          CounterSnapshot(count: 2, lastChanged: lastChanged),
-        );
-        final CounterCubit cubit = CounterCubit(
-          repository: recordingRepo,
-          timerService: FakeTimerService(),
-          startTicker: false,
-          now: () => fixedNow,
-        );
-        addTearDown(cubit.close);
+    test('loadInitial preserves zero state without forcing catch-up', () async {
+      final DateTime fixedNow = DateTime(2024, 1, 1, 12, 0, 0);
+      final DateTime lastChanged = fixedNow.subtract(
+        const Duration(seconds: 20),
+      );
+      final recordingRepo = _RecordingCounterRepository(
+        CounterSnapshot(count: 0, lastChanged: lastChanged),
+      );
+      final CounterCubit cubit = CounterCubit(
+        repository: recordingRepo,
+        timerService: FakeTimerService(),
+        startTicker: false,
+        now: () => fixedNow,
+      );
+      addTearDown(cubit.close);
 
-        await cubit.loadInitial();
+      await cubit.loadInitial();
 
-        expect(cubit.state.count, 0);
-        expect(cubit.state.countdownSeconds, 5);
-        expect(cubit.state.isAutoDecrementActive, isFalse);
-        expect(recordingRepo.saved?.count, 0);
-        expect(
-          cubit.state.lastChanged,
-          lastChanged.add(const Duration(seconds: 10)),
-        );
-      },
-    );
+      expect(cubit.state.count, 0);
+      expect(cubit.state.countdownSeconds, 5);
+      expect(cubit.state.isAutoDecrementActive, isFalse);
+      expect(cubit.state.lastChanged, lastChanged);
+      expect(recordingRepo.saved, isNull);
+    });
 
     test('loadInitial with mock repository loads correctly', () async {
       final mockRepo = MockCounterRepository(
