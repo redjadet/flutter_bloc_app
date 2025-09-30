@@ -24,6 +24,10 @@ class ThrowingRepo implements CounterRepository {
   Future<void> save(CounterSnapshot snapshot) async {
     throw Exception('save failed');
   }
+
+  @override
+  Stream<CounterSnapshot> watch() =>
+      Stream<CounterSnapshot>.error(Exception('watch failed'));
 }
 
 void main() {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
@@ -48,6 +50,7 @@ class CounterCubit extends Cubit<CounterState> {
   final Duration _initialLoadDelay;
 
   TimerDisposable? _countdownTicker;
+  StreamSubscription<CounterSnapshot>? _repositorySubscription;
   // Ensures the countdown stays at the full value for one tick after a reset
   // so the progress bar remains visually consistent.
   bool _holdCountdownAtFullCycle = false;
@@ -133,6 +136,7 @@ class CounterCubit extends Cubit<CounterState> {
       if (restoration.shouldPersist) {
         await _persistState(restoration.state);
       }
+      _subscribeToRepository();
     } catch (e, s) {
       AppLogger.error('CounterCubit.loadInitial failed', e, s);
       emit(
@@ -239,6 +243,7 @@ class CounterCubit extends Cubit<CounterState> {
   @override
   Future<void> close() {
     _countdownTicker?.dispose();
+    _repositorySubscription?.cancel();
     return super.close();
   }
 
@@ -270,5 +275,38 @@ class CounterCubit extends Cubit<CounterState> {
         ? state.copyWith(error: null)
         : state.copyWith(error: null, status: CounterStatus.idle);
     emit(next);
+  }
+
+  void _subscribeToRepository() {
+    _repositorySubscription?.cancel();
+    _repositorySubscription = _repository.watch().listen(
+      (CounterSnapshot snapshot) {
+        if (_shouldIgnoreRemoteSnapshot(snapshot)) {
+          return;
+        }
+        final _RestorationResult restoration = _restoreStateFromSnapshot(
+          snapshot,
+          now: _now(),
+        );
+        _holdCountdownAtFullCycle = restoration.holdCountdown;
+        emit(restoration.state);
+      },
+      onError: (Object error, StackTrace stackTrace) {
+        AppLogger.error('CounterCubit.watch failed', error, stackTrace);
+      },
+    );
+  }
+
+  bool _shouldIgnoreRemoteSnapshot(CounterSnapshot snapshot) {
+    final CounterState current = state;
+    final bool countsEqual = snapshot.count == current.count;
+    final bool timestampsEqual = () {
+      final DateTime? a = snapshot.lastChanged;
+      final DateTime? b = current.lastChanged;
+      if (a == null && b == null) return true;
+      if (a == null || b == null) return false;
+      return a.millisecondsSinceEpoch == b.millisecondsSinceEpoch;
+    }();
+    return countsEqual && timestampsEqual;
   }
 }

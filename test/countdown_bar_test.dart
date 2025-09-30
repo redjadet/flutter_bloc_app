@@ -86,7 +86,13 @@ void main() {
 
 class _NoopRepo implements CounterRepository {
   @override
-  Future<CounterSnapshot> load() async => const CounterSnapshot(count: 0);
+  Future<CounterSnapshot> load() async =>
+      const CounterSnapshot(userId: 'noop', count: 0);
   @override
   Future<void> save(CounterSnapshot snapshot) async {}
+
+  @override
+  Stream<CounterSnapshot> watch() async* {
+    yield await load();
+  }
 }

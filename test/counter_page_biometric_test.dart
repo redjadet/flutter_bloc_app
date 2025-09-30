@@ -22,6 +22,11 @@ class _FakeCounterRepository implements CounterRepository {
 
   @override
   Future<void> save(CounterSnapshot snapshot) async {}
+
+  @override
+  Stream<CounterSnapshot> watch() async* {
+    yield await load();
+  }
 }
 
 class _FakeBiometricAuthenticator implements BiometricAuthenticator {

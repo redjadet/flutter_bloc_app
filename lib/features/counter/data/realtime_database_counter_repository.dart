@@ -91,6 +91,27 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
     }
   }
 
+  @override
+  Stream<CounterSnapshot> watch() {
+    return Stream.fromFuture(waitForAuthUser(_auth))
+        .asyncExpand((User user) {
+          return _counterRef
+              .child(user.uid)
+              .onValue
+              .map(
+                (DatabaseEvent event) =>
+                    snapshotFromValue(event.snapshot.value, userId: user.uid),
+              );
+        })
+        .handleError((Object error, StackTrace stackTrace) {
+          AppLogger.error(
+            'RealtimeDatabaseCounterRepository.watch failed',
+            error,
+            stackTrace,
+          );
+        });
+  }
+
   @visibleForTesting
   static CounterSnapshot snapshotFromValue(
     Object? value, {

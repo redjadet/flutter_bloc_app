@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
@@ -29,6 +30,7 @@ class RestCounterRepository implements CounterRepository {
     userId: 'rest',
     count: 0,
   );
+  StreamController<CounterSnapshot>? _watchController;
 
   Uri get _counterUri => _baseUri.resolve('counter');
 
@@ -76,6 +78,7 @@ class RestCounterRepository implements CounterRepository {
     if (_ownsClient) {
       _client.close();
     }
+    _watchController?.close();
   }
 
   @override
@@ -114,8 +117,21 @@ class RestCounterRepository implements CounterRepository {
       if (!_isSuccess(res.statusCode)) {
         _logHttpError('save', res);
       }
+      _watchController?.add(
+        snapshot.userId != null ? snapshot : snapshot.copyWith(userId: 'rest'),
+      );
     } catch (e, s) {
       AppLogger.error('RestCounterRepository.save failed', e, s);
     }
+  }
+
+  @override
+  Stream<CounterSnapshot> watch() {
+    _watchController ??= StreamController<CounterSnapshot>.broadcast(
+      onListen: () async {
+        _watchController?.add(await load());
+      },
+    );
+    return _watchController!.stream;
   }
 }

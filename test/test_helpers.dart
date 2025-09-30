@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -18,15 +20,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Test helper for creating mock repositories
 class MockCounterRepository implements CounterRepository {
-  final CounterSnapshot _snapshot;
+  CounterSnapshot _snapshot;
   final bool _shouldThrowOnLoad;
   final bool _shouldThrowOnSave;
+  StreamController<CounterSnapshot>? _watchController;
 
   MockCounterRepository({
     CounterSnapshot? snapshot,
     bool shouldThrowOnLoad = false,
     bool shouldThrowOnSave = false,
-  }) : _snapshot = snapshot ?? const CounterSnapshot(count: 0),
+  }) : _snapshot = snapshot ?? const CounterSnapshot(userId: 'mock', count: 0),
        _shouldThrowOnLoad = shouldThrowOnLoad,
        _shouldThrowOnSave = shouldThrowOnSave;
 
@@ -43,7 +46,18 @@ class MockCounterRepository implements CounterRepository {
     if (_shouldThrowOnSave) {
       throw Exception('Mock save error');
     }
-    // Mock save - do nothing
+    _snapshot = snapshot;
+    _watchController?.add(_snapshot);
+  }
+
+  @override
+  Stream<CounterSnapshot> watch() {
+    _watchController ??= StreamController<CounterSnapshot>.broadcast(
+      onListen: () {
+        _watchController?.add(_snapshot);
+      },
+    );
+    return _watchController!.stream;
   }
 }
 

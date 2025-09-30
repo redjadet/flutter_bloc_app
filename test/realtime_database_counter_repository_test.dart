@@ -7,9 +7,9 @@ void main() {
     test('returns empty snapshot when value is null', () {
       final CounterSnapshot result =
           RealtimeDatabaseCounterRepository.snapshotFromValue(
-        null,
-        userId: 'user-1',
-      );
+            null,
+            userId: 'user-1',
+          );
 
       expect(result.count, 0);
       expect(result.lastChanged, isNull);
@@ -44,7 +44,10 @@ void main() {
 
     test('parses numeric payload into snapshot', () {
       final CounterSnapshot result =
-          RealtimeDatabaseCounterRepository.snapshotFromValue(7, userId: 'user-4');
+          RealtimeDatabaseCounterRepository.snapshotFromValue(
+            7,
+            userId: 'user-4',
+          );
 
       expect(result.count, 7);
       expect(result.lastChanged, isNull);
@@ -54,10 +57,10 @@ void main() {
     test('returns empty snapshot for unsupported payload', () {
       final CounterSnapshot result =
           RealtimeDatabaseCounterRepository.snapshotFromValue(
-        'unexpected',
-        userId: 'test-user',
-        logUnexpected: false,
-      );
+            'unexpected',
+            userId: 'test-user',
+            logUnexpected: false,
+          );
 
       expect(result.count, 0);
       expect(result.lastChanged, isNull);

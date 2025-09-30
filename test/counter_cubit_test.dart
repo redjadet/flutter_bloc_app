@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/data/shared_preferences_counter_repository.dart';
@@ -304,10 +306,12 @@ void main() {
 }
 
 class _RecordingCounterRepository implements CounterRepository {
-  _RecordingCounterRepository(this._initial);
+  _RecordingCounterRepository(this._initial)
+    : _controller = StreamController<CounterSnapshot>.broadcast();
 
-  final CounterSnapshot _initial;
+  CounterSnapshot _initial;
   CounterSnapshot? saved;
+  final StreamController<CounterSnapshot> _controller;
 
   @override
   Future<CounterSnapshot> load() async => _initial;
@@ -315,5 +319,13 @@ class _RecordingCounterRepository implements CounterRepository {
   @override
   Future<void> save(CounterSnapshot snapshot) async {
     saved = snapshot;
+    _initial = snapshot;
+    _controller.add(snapshot);
+  }
+
+  @override
+  Stream<CounterSnapshot> watch() async* {
+    yield _initial;
+    yield* _controller.stream;
   }
 }

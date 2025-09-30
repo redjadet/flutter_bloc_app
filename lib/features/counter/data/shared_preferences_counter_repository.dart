@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -16,6 +18,7 @@ class SharedPreferencesCounterRepository implements CounterRepository {
   );
 
   final SharedPreferences? _preferencesInstance;
+  StreamController<CounterSnapshot>? _watchController;
 
   Future<SharedPreferences> _preferences() => _preferencesInstance != null
       ? Future.value(_preferencesInstance)
@@ -56,8 +59,21 @@ class SharedPreferencesCounterRepository implements CounterRepository {
         // Keep store consistent if timestamp becomes null.
         await preferences.remove(_preferencesKeyChanged);
       }
+      _watchController?.add(
+        snapshot.userId != null ? snapshot : snapshot.copyWith(userId: 'local'),
+      );
     } catch (e, s) {
       AppLogger.error('SharedPreferencesCounterRepository.save failed', e, s);
     }
+  }
+
+  @override
+  Stream<CounterSnapshot> watch() {
+    _watchController ??= StreamController<CounterSnapshot>.broadcast(
+      onListen: () async {
+        _watchController?.add(await load());
+      },
+    );
+    return _watchController!.stream;
   }
 }
