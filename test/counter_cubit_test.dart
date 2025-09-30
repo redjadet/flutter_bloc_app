@@ -302,6 +302,54 @@ void main() {
       fakeTimer.tick(2);
       expect(cubit.state.count, 3);
     });
+
+    test('pauseAutoDecrement stops countdown ticks', () async {
+      final fakeTimer = FakeTimerService();
+      final CounterCubit cubit = createCubit(timerService: fakeTimer);
+      cubit.emit(
+        CounterState(
+          count: 3,
+          lastChanged: DateTime.now(),
+          countdownSeconds: 3,
+          isAutoDecrementActive: true,
+        ),
+      );
+
+      fakeTimer.tick(1);
+      expect(cubit.state.countdownSeconds, 2);
+
+      cubit.pauseAutoDecrement();
+      fakeTimer.tick(5);
+
+      expect(cubit.state.count, 3);
+      expect(cubit.state.countdownSeconds, 2);
+    });
+
+    test('resumeAutoDecrement restarts countdown ticks after pause', () async {
+      final fakeTimer = FakeTimerService();
+      final CounterCubit cubit = createCubit(timerService: fakeTimer);
+      cubit.emit(
+        CounterState(
+          count: 2,
+          lastChanged: DateTime.now(),
+          countdownSeconds: 2,
+          isAutoDecrementActive: true,
+        ),
+      );
+
+      cubit.pauseAutoDecrement();
+      fakeTimer.tick(2);
+      expect(cubit.state.count, 2);
+
+      cubit.resumeAutoDecrement();
+      fakeTimer.tick(2);
+
+      expect(cubit.state.count, 1);
+      expect(
+        cubit.state.countdownSeconds,
+        CounterState.defaultCountdownSeconds,
+      );
+    });
   });
 }
 

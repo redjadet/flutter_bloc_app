@@ -16,10 +16,15 @@ import 'package:flutter_bloc_app/shared/widgets/flavor_badge.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class CounterPage extends StatelessWidget {
+class CounterPage extends StatefulWidget {
   const CounterPage({super.key, required this.title});
   final String title;
 
+  @override
+  State<CounterPage> createState() => _CounterPageState();
+}
+
+class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   String _getLocalizedErrorMessage(AppLocalizations l10n, CounterError error) {
     switch (error.type) {
       case CounterErrorType.cannotGoBelowZero:
@@ -28,6 +33,35 @@ class CounterPage extends StatelessWidget {
         return l10n.loadErrorMessage;
       case CounterErrorType.unknown:
         return error.message ?? 'An unknown error occurred';
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!mounted) return;
+    final CounterCubit cubit = context.read<CounterCubit>();
+    switch (state) {
+      case AppLifecycleState.paused:
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
+        cubit.pauseAutoDecrement();
+        break;
+      case AppLifecycleState.resumed:
+        cubit.resumeAutoDecrement();
+        break;
     }
   }
 
@@ -54,7 +88,7 @@ class CounterPage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: theme.colorScheme.inversePrimary,
           title: Text(
-            title,
+            widget.title,
             style: theme.textTheme.titleLarge,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

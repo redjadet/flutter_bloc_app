@@ -54,9 +54,13 @@ class CounterCubit extends Cubit<CounterState> {
   // Ensures the countdown stays at the full value for one tick after a reset
   // so the progress bar remains visually consistent.
   bool _holdCountdownAtFullCycle = false;
+  bool _isLifecyclePaused = false;
 
   /// Starts the 1s countdown ticker if not already running.
   void _ensureCountdownTickerStarted() {
+    if (_isLifecyclePaused) {
+      return;
+    }
     _countdownTicker ??= _timerService.periodic(_countdownTickInterval, () {
       if (_holdCountdownAtFullCycle) {
         _holdCountdownAtFullCycle = false;
@@ -275,6 +279,17 @@ class CounterCubit extends Cubit<CounterState> {
         ? state.copyWith(error: null)
         : state.copyWith(error: null, status: CounterStatus.idle);
     emit(next);
+  }
+
+  void pauseAutoDecrement() {
+    _isLifecyclePaused = true;
+    _countdownTicker?.dispose();
+    _countdownTicker = null;
+  }
+
+  void resumeAutoDecrement() {
+    _isLifecyclePaused = false;
+    _ensureCountdownTickerStarted();
   }
 
   void _subscribeToRepository() {
