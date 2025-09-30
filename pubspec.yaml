@@ -46,6 +46,7 @@ dependencies:
   http: ^1.2.2
   go_router: ^16.2.4
   flutter_secure_storage: ^9.0.0
+  local_auth: ^2.1.9
   fancy_shimmer_image: ^2.0.3
   skeletonizer: ^2.1.0+1
   logger: ^2.6.1

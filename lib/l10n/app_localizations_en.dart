@@ -88,6 +88,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get settingsBiometricPrompt => 'Authenticate to open Settings';
+
+  @override
+  String get settingsBiometricFailed => 'Couldn\'t verify your identity.';
+
+  @override
   String get openChartsTooltip => 'Open charts';
 
   @override

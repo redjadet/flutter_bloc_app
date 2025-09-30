@@ -89,6 +89,13 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get settingsBiometricPrompt =>
+      'Ayarları açmak için kimliğinizi doğrulayın';
+
+  @override
+  String get settingsBiometricFailed => 'Kimliğiniz doğrulanamadı.';
+
+  @override
   String get openChartsTooltip => 'Grafikleri aç';
 
   @override

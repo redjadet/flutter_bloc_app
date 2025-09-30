@@ -248,6 +248,18 @@ abstract class AppLocalizations {
   /// **'Parallel doubled values: {values} (completed in {milliseconds} ms)'**
   String exampleIsolateParallelComplete(String values, int milliseconds);
 
+  /// Biometric prompt displayed before navigating to settings
+  ///
+  /// In en, this message translates to:
+  /// **'Authenticate to open Settings'**
+  String get settingsBiometricPrompt;
+
+  /// Shown when biometric authentication fails
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t verify your identity.'**
+  String get settingsBiometricFailed;
+
   /// Tooltip for the action that opens the charts feature
   ///
   /// In en, this message translates to:

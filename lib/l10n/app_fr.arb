@@ -27,6 +27,8 @@
   "exampleNativeInfoButton": "Récupérer les infos natives",
   "exampleNativeInfoTitle": "Informations sur la plateforme",
   "exampleNativeInfoError": "Impossible de récupérer les informations natives de la plateforme.",
+  "settingsBiometricPrompt": "Authentifiez-vous pour ouvrir les paramètres",
+  "settingsBiometricFailed": "Impossible de vérifier votre identité.",
   "exampleRunIsolatesButton": "Exécuter les exemples d'isolats",
   "exampleIsolateParallelPending": "Exécution des tâches parallèles...",
   "exampleIsolateFibonacciLabel": "Fibonacci({input}) = {value}",

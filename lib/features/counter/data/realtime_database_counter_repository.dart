@@ -141,7 +141,8 @@ Future<User> waitForAuthUser(
   } on TimeoutException {
     throw FirebaseAuthException(
       code: 'no-current-user',
-      message: 'FirebaseAuth did not supply a user within ${timeout.inMilliseconds}ms.',
+      message:
+          'FirebaseAuth did not supply a user within ${timeout.inMilliseconds}ms.',
     );
   }
 }

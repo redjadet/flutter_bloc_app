@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/widgets/counter_widgets.dart';
 import 'package:flutter_bloc_app/shared/widgets/flavor_badge.dart';
@@ -73,7 +77,7 @@ class CounterPage extends StatelessWidget {
             ),
             IconButton(
               tooltip: l10n.openSettingsTooltip,
-              onPressed: () => context.pushNamed(AppRoutes.settings),
+              onPressed: () => _handleOpenSettings(context),
               icon: const Icon(Icons.settings),
             ),
           ],
@@ -145,5 +149,22 @@ class CounterPage extends StatelessWidget {
         floatingActionButton: const CounterActions(),
       ),
     );
+  }
+
+  Future<void> _handleOpenSettings(BuildContext context) async {
+    final AppLocalizations l10n = AppLocalizations.of(context);
+    final BiometricAuthenticator authenticator =
+        getIt<BiometricAuthenticator>();
+    final bool authenticated = await authenticator.authenticate(
+      localizedReason: l10n.settingsBiometricPrompt,
+    );
+    if (!context.mounted) return;
+    if (authenticated) {
+      await context.pushNamed(AppRoutes.settings);
+    } else {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(l10n.settingsBiometricFailed)));
+    }
   }
 }

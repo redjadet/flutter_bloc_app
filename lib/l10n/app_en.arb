@@ -117,6 +117,14 @@
       }
     }
   },
+  "settingsBiometricPrompt": "Authenticate to open Settings",
+  "@settingsBiometricPrompt": {
+    "description": "Biometric prompt displayed before navigating to settings"
+  },
+  "settingsBiometricFailed": "Couldn't verify your identity.",
+  "@settingsBiometricFailed": {
+    "description": "Shown when biometric authentication fails"
+  },
   "openChartsTooltip": "Open charts",
   "@openChartsTooltip": {
     "description": "Tooltip for the action that opens the charts feature"

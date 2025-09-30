@@ -27,6 +27,7 @@ import 'package:flutter_bloc_app/shared/data/'
     'shared_preferences_theme_repository.dart';
 import 'package:flutter_bloc_app/shared/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
+import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -73,6 +74,9 @@ Future<void> configureDependencies() async {
     () => SharedPreferencesThemeRepository(),
   );
   _registerLazySingletonIfAbsent<TimerService>(() => DefaultTimerService());
+  _registerLazySingletonIfAbsent<BiometricAuthenticator>(
+    () => LocalBiometricAuthenticator(),
+  );
 }
 
 void ensureConfigured() {

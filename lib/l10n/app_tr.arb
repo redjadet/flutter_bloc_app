@@ -28,6 +28,8 @@
   "exampleNativeInfoButton": "Yerel bilgileri getir",
   "exampleNativeInfoTitle": "Platform bilgisi",
   "exampleNativeInfoError": "Yerel platform bilgisi alınamadı.",
+  "settingsBiometricPrompt": "Ayarları açmak için kimliğinizi doğrulayın",
+  "settingsBiometricFailed": "Kimliğiniz doğrulanamadı.",
   "exampleRunIsolatesButton": "İzole örneklerini çalıştır",
   "exampleIsolateParallelPending": "Paralel görevler çalıştırılıyor...",
   "exampleIsolateFibonacciLabel": "Fibonacci({input}) = {value}",

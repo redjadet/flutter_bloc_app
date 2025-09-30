@@ -92,6 +92,14 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get settingsBiometricPrompt =>
+      'Authentifiez-vous pour ouvrir les paramètres';
+
+  @override
+  String get settingsBiometricFailed =>
+      'Impossible de vérifier votre identité.';
+
+  @override
   String get openChartsTooltip => 'Ouvrir les graphiques';
 
   @override
