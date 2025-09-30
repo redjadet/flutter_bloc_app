@@ -88,6 +88,7 @@ CounterRepository _createCounterRepository() {
     try {
       final FirebaseApp app = Firebase.app();
       final FirebaseDatabase database = FirebaseDatabase.instanceFor(app: app);
+      database.setPersistenceEnabled(true);
       final FirebaseAuth auth = FirebaseAuth.instanceFor(app: app);
       return RealtimeDatabaseCounterRepository(database: database, auth: auth);
     } catch (error, stackTrace) {
