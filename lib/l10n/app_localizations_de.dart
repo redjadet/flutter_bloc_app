@@ -75,6 +75,23 @@ class AppLocalizationsDe extends AppLocalizations {
       'Native Plattforminformationen konnten nicht abgerufen werden.';
 
   @override
+  String get exampleRunIsolatesButton => 'Isolat-Beispiele ausführen';
+
+  @override
+  String get exampleIsolateParallelPending =>
+      'Parallele Aufgaben werden ausgeführt...';
+
+  @override
+  String exampleIsolateFibonacciLabel(int input, int value) {
+    return 'Fibonacci($input) = $value';
+  }
+
+  @override
+  String exampleIsolateParallelComplete(String values, int milliseconds) {
+    return 'Parallel verdoppelte Werte: $values (abgeschlossen in $milliseconds ms)';
+  }
+
+  @override
   String get openChartsTooltip => 'Diagramme öffnen';
 
   @override

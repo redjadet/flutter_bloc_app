@@ -28,6 +28,30 @@
   "exampleNativeInfoButton": "Yerel bilgileri getir",
   "exampleNativeInfoTitle": "Platform bilgisi",
   "exampleNativeInfoError": "Yerel platform bilgisi alınamadı.",
+  "exampleRunIsolatesButton": "İzole örneklerini çalıştır",
+  "exampleIsolateParallelPending": "Paralel görevler çalıştırılıyor...",
+  "exampleIsolateFibonacciLabel": "Fibonacci({input}) = {value}",
+  "@exampleIsolateFibonacciLabel": {
+    "placeholders": {
+      "input": {
+        "type": "int"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "exampleIsolateParallelComplete": "Paralel iki kat değerler: {values} ({milliseconds} ms içinde tamamlandı)",
+  "@exampleIsolateParallelComplete": {
+    "placeholders": {
+      "values": {
+        "type": "String"
+      },
+      "milliseconds": {
+        "type": "int"
+      }
+    }
+  },
   "openChartsTooltip": "Grafikleri aç",
   "openSettingsTooltip": "Ayarları aç",
   "settingsPageTitle": "Ayarlar",

@@ -80,7 +80,10 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   }
 
   @visibleForTesting
-  static CounterSnapshot snapshotFromValue(Object? value) {
+  static CounterSnapshot snapshotFromValue(
+    Object? value, {
+    bool logUnexpected = true,
+  }) {
     if (value == null) {
       return _emptySnapshot;
     }
@@ -99,9 +102,11 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
       return CounterSnapshot(count: count, lastChanged: lastChanged);
     }
 
-    AppLogger.warning(
-      'RealtimeDatabaseCounterRepository.load unexpected payload: $value',
-    );
+    if (logUnexpected) {
+      AppLogger.warning(
+        'RealtimeDatabaseCounterRepository.load unexpected payload: $value',
+      );
+    }
     return _emptySnapshot;
   }
 }

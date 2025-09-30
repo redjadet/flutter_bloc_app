@@ -72,6 +72,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exampleNativeInfoError => 'Unable to fetch native platform info.';
 
   @override
+  String get exampleRunIsolatesButton => 'Run isolate samples';
+
+  @override
+  String get exampleIsolateParallelPending => 'Running parallel tasks...';
+
+  @override
+  String exampleIsolateFibonacciLabel(int input, int value) {
+    return 'Fibonacci($input) = $value';
+  }
+
+  @override
+  String exampleIsolateParallelComplete(String values, int milliseconds) {
+    return 'Parallel doubled values: $values (completed in $milliseconds ms)';
+  }
+
+  @override
   String get openChartsTooltip => 'Open charts';
 
   @override

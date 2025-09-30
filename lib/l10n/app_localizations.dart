@@ -224,6 +224,30 @@ abstract class AppLocalizations {
   /// **'Unable to fetch native platform info.'**
   String get exampleNativeInfoError;
 
+  /// Button label to execute isolate demo functions
+  ///
+  /// In en, this message translates to:
+  /// **'Run isolate samples'**
+  String get exampleRunIsolatesButton;
+
+  /// Status text shown while isolate tasks are in progress
+  ///
+  /// In en, this message translates to:
+  /// **'Running parallel tasks...'**
+  String get exampleIsolateParallelPending;
+
+  /// Displays the fibonacci result returned from an isolate
+  ///
+  /// In en, this message translates to:
+  /// **'Fibonacci({input}) = {value}'**
+  String exampleIsolateFibonacciLabel(int input, int value);
+
+  /// Shows the doubled list and elapsed time of the isolate demo
+  ///
+  /// In en, this message translates to:
+  /// **'Parallel doubled values: {values} (completed in {milliseconds} ms)'**
+  String exampleIsolateParallelComplete(String values, int milliseconds);
+
   /// Tooltip for the action that opens the charts feature
   ///
   /// In en, this message translates to:

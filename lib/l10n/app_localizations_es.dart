@@ -73,6 +73,22 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudieron obtener los datos nativos de la plataforma.';
 
   @override
+  String get exampleRunIsolatesButton => 'Ejecutar ejemplos con aislados';
+
+  @override
+  String get exampleIsolateParallelPending => 'Ejecutando tareas paralelas...';
+
+  @override
+  String exampleIsolateFibonacciLabel(int input, int value) {
+    return 'Fibonacci($input) = $value';
+  }
+
+  @override
+  String exampleIsolateParallelComplete(String values, int milliseconds) {
+    return 'Valores duplicados en paralelo: $values (terminado en $milliseconds ms)';
+  }
+
+  @override
   String get openChartsTooltip => 'Abrir gráficos';
 
   @override

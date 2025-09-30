@@ -72,6 +72,23 @@ class AppLocalizationsTr extends AppLocalizations {
   String get exampleNativeInfoError => 'Yerel platform bilgisi alınamadı.';
 
   @override
+  String get exampleRunIsolatesButton => 'İzole örneklerini çalıştır';
+
+  @override
+  String get exampleIsolateParallelPending =>
+      'Paralel görevler çalıştırılıyor...';
+
+  @override
+  String exampleIsolateFibonacciLabel(int input, int value) {
+    return 'Fibonacci($input) = $value';
+  }
+
+  @override
+  String exampleIsolateParallelComplete(String values, int milliseconds) {
+    return 'Paralel iki kat değerler: $values ($milliseconds ms içinde tamamlandı)';
+  }
+
+  @override
   String get openChartsTooltip => 'Grafikleri aç';
 
   @override

@@ -27,6 +27,30 @@
   "exampleNativeInfoButton": "Obtener info nativa",
   "exampleNativeInfoTitle": "Información de la plataforma",
   "exampleNativeInfoError": "No se pudieron obtener los datos nativos de la plataforma.",
+  "exampleRunIsolatesButton": "Ejecutar ejemplos con aislados",
+  "exampleIsolateParallelPending": "Ejecutando tareas paralelas...",
+  "exampleIsolateFibonacciLabel": "Fibonacci({input}) = {value}",
+  "@exampleIsolateFibonacciLabel": {
+    "placeholders": {
+      "input": {
+        "type": "int"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "exampleIsolateParallelComplete": "Valores duplicados en paralelo: {values} (terminado en {milliseconds} ms)",
+  "@exampleIsolateParallelComplete": {
+    "placeholders": {
+      "values": {
+        "type": "String"
+      },
+      "milliseconds": {
+        "type": "int"
+      }
+    }
+  },
   "openChartsTooltip": "Abrir gráficos",
   "openSettingsTooltip": "Abrir configuración",
   "settingsPageTitle": "Configuración",

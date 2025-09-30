@@ -45,7 +45,10 @@ void main() {
 
     test('returns empty snapshot for unsupported payload', () {
       final CounterSnapshot result =
-          RealtimeDatabaseCounterRepository.snapshotFromValue('unexpected');
+          RealtimeDatabaseCounterRepository.snapshotFromValue(
+            'unexpected',
+            logUnexpected: false,
+          );
 
       expect(result.count, 0);
       expect(result.lastChanged, isNull);

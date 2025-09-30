@@ -85,6 +85,38 @@
   "@exampleNativeInfoError": {
     "description": "Error message shown when fetching native platform information fails"
   },
+  "exampleRunIsolatesButton": "Run isolate samples",
+  "@exampleRunIsolatesButton": {
+    "description": "Button label to execute isolate demo functions"
+  },
+  "exampleIsolateParallelPending": "Running parallel tasks...",
+  "@exampleIsolateParallelPending": {
+    "description": "Status text shown while isolate tasks are in progress"
+  },
+  "exampleIsolateFibonacciLabel": "Fibonacci({input}) = {value}",
+  "@exampleIsolateFibonacciLabel": {
+    "description": "Displays the fibonacci result returned from an isolate",
+    "placeholders": {
+      "input": {
+        "type": "int"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "exampleIsolateParallelComplete": "Parallel doubled values: {values} (completed in {milliseconds} ms)",
+  "@exampleIsolateParallelComplete": {
+    "description": "Shows the doubled list and elapsed time of the isolate demo",
+    "placeholders": {
+      "values": {
+        "type": "String"
+      },
+      "milliseconds": {
+        "type": "int"
+      }
+    }
+  },
   "openChartsTooltip": "Open charts",
   "@openChartsTooltip": {
     "description": "Tooltip for the action that opens the charts feature"
