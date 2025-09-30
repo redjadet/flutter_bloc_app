@@ -11,8 +11,11 @@ import UIKit
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
 
-    if let controller = window?.rootViewController as? FlutterViewController {
-      let channel = FlutterMethodChannel(name: channelName, binaryMessenger: controller.binaryMessenger)
+    if let registrar = registrar(forPlugin: "AppDelegateMethodChannel") {
+      let channel = FlutterMethodChannel(
+        name: channelName,
+        binaryMessenger: registrar.messenger()
+      )
 
       channel.setMethodCallHandler { [weak self] call, result in
         guard self != nil else {

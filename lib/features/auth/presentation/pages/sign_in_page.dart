@@ -56,33 +56,40 @@ class SignInPage extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final FirebaseAuth auth = _auth ?? FirebaseAuth.instance;
     final bool upgradingAnonymous = auth.currentUser?.isAnonymous ?? false;
-    final List<firebase_ui.AuthProvider> providers =
-        List<firebase_ui.AuthProvider>.from(
-          firebase_ui.FirebaseUIAuth.providersFor(auth.app),
-        );
 
-    if (!providers.any(
-      (firebase_ui.AuthProvider provider) =>
-          provider is firebase_ui.EmailAuthProvider,
-    )) {
-      providers.insert(0, firebase_ui.EmailAuthProvider());
-    }
+    final bool canUseFirebaseUISignIn = Firebase.apps.isNotEmpty;
 
-    if (providers.isEmpty) {
-      providers.add(firebase_ui.EmailAuthProvider());
-    }
+    late final List<firebase_ui.AuthProvider> providers;
+    if (canUseFirebaseUISignIn) {
+      providers = List<firebase_ui.AuthProvider>.from(
+        firebase_ui.FirebaseUIAuth.providersFor(auth.app),
+      );
 
-    final bool hasGoogleProvider = providers.any(
-      (firebase_ui.AuthProvider provider) =>
-          provider is firebase_ui_google.GoogleProvider,
-    );
-
-    if (!hasGoogleProvider) {
-      final firebase_ui_google.GoogleProvider? googleProvider =
-          _maybeCreateGoogleProvider();
-      if (googleProvider != null) {
-        providers.add(googleProvider);
+      if (!providers.any(
+        (firebase_ui.AuthProvider provider) =>
+            provider is firebase_ui.EmailAuthProvider,
+      )) {
+        providers.insert(0, firebase_ui.EmailAuthProvider());
       }
+
+      if (providers.isEmpty) {
+        providers.add(firebase_ui.EmailAuthProvider());
+      }
+
+      final bool hasGoogleProvider = providers.any(
+        (firebase_ui.AuthProvider provider) =>
+            provider is firebase_ui_google.GoogleProvider,
+      );
+
+      if (!hasGoogleProvider) {
+        final firebase_ui_google.GoogleProvider? googleProvider =
+            _maybeCreateGoogleProvider();
+        if (googleProvider != null) {
+          providers.add(googleProvider);
+        }
+      }
+    } else {
+      providers = <firebase_ui.AuthProvider>[];
     }
 
     void showAuthError(Object error) {
@@ -108,6 +115,15 @@ class SignInPage extends StatelessWidget {
           ..hideCurrentSnackBar()
           ..showSnackBar(SnackBar(content: Text(l10n.anonymousSignInFailed)));
       }
+    }
+
+    if (!canUseFirebaseUISignIn) {
+      return _FallbackSignInContent(
+        l10n: l10n,
+        theme: theme,
+        upgradingAnonymous: upgradingAnonymous,
+        signInAnonymously: signInAnonymously,
+      );
     }
 
     return firebase_ui.SignInScreen(
@@ -181,6 +197,65 @@ class SignInPage extends StatelessWidget {
           showAuthError(state.exception);
         }),
       ],
+    );
+  }
+}
+
+class _FallbackSignInContent extends StatelessWidget {
+  const _FallbackSignInContent({
+    required this.l10n,
+    required this.theme,
+    required this.upgradingAnonymous,
+    required this.signInAnonymously,
+  });
+
+  final AppLocalizations l10n;
+  final ThemeData theme;
+  final bool upgradingAnonymous;
+  final Future<void> Function() signInAnonymously;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Text(
+                  l10n.appTitle,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.headlineSmall,
+                ),
+                const SizedBox(height: 16),
+                if (upgradingAnonymous)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 24),
+                    child: Text(
+                      l10n.anonymousUpgradeHint,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ),
+                Text(
+                  l10n.anonymousSignInDescription,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodySmall,
+                ),
+                const SizedBox(height: 12),
+                FilledButton.tonal(
+                  key: signInGuestButtonKey,
+                  onPressed: signInAnonymously,
+                  child: Text(l10n.anonymousSignInButton),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
