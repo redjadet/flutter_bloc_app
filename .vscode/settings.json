@@ -103,6 +103,8 @@
     "editor.formatOnSave": true
   },
   "cSpell.words": [
+    "appspot",
+    "flutterfire",
     "huggingface",
     "preferences",
     "sqflite",

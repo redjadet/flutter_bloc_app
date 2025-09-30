@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
@@ -83,7 +84,8 @@ CounterRepository _createCounterRepository() {
     try {
       final FirebaseApp app = Firebase.app();
       final FirebaseDatabase database = FirebaseDatabase.instanceFor(app: app);
-      return RealtimeDatabaseCounterRepository(database: database);
+      final FirebaseAuth auth = FirebaseAuth.instanceFor(app: app);
+      return RealtimeDatabaseCounterRepository(database: database, auth: auth);
     } catch (error, stackTrace) {
       AppLogger.error(
         'Falling back to SharedPreferencesCounterRepository',

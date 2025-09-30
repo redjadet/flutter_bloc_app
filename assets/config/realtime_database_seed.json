@@ -1,0 +1,11 @@
+{
+  "counter": {
+    "count": 5,
+    "last_changed": 1735689600000
+  },
+  "metadata": {
+    "version": 1,
+    "seeded_at": "2024-12-31T00:00:00Z",
+    "notes": "Sample payload for Firebase Realtime Database seeding"
+  }
+}
