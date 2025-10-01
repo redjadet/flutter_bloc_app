@@ -55,6 +55,7 @@
     }
   },
   "openChartsTooltip": "Grafikleri aç",
+  "openGraphqlTooltip": "GraphQL örneğini aç",
   "openSettingsTooltip": "Ayarları aç",
   "settingsPageTitle": "Ayarlar",
   "accountSectionTitle": "Hesap",
@@ -237,5 +238,14 @@
   "chartPageDescription": "Son 7 günün kapanış fiyatı (CoinGecko verisi)",
   "chartPageError": "Grafik verileri yüklenemedi.",
   "chartPageEmpty": "Henüz grafik verisi yok.",
-  "chartZoomToggleLabel": "Yakınlaştırmayı etkinleştir"
+  "chartZoomToggleLabel": "Yakınlaştırmayı etkinleştir",
+  "graphqlSampleTitle": "GraphQL Ülkeleri",
+  "graphqlSampleFilterLabel": "Kıtaya göre filtrele",
+  "graphqlSampleAllContinents": "Tüm kıtalar",
+  "graphqlSampleErrorTitle": "Bir sorun oluştu",
+  "graphqlSampleGenericError": "Şu anda ülkeler yüklenemedi.",
+  "graphqlSampleRetryButton": "Tekrar dene",
+  "graphqlSampleEmpty": "Seçilen filtrelerle ülke bulunamadı.",
+  "graphqlSampleCapitalLabel": "Başkent",
+  "graphqlSampleCurrencyLabel": "Para birimi"
 }

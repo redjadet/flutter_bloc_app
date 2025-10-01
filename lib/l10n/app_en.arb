@@ -129,6 +129,10 @@
   "@openChartsTooltip": {
     "description": "Tooltip for the action that opens the charts feature"
   },
+  "openGraphqlTooltip": "Explore GraphQL sample",
+  "@openGraphqlTooltip": {
+    "description": "Tooltip for navigating to the GraphQL demo page"
+  },
   "openSettingsTooltip": "Open settings",
   "@openSettingsTooltip": {
     "description": "Tooltip for navigating to the settings page"
@@ -400,5 +404,41 @@
   "chartZoomToggleLabel": "Enable pinch zoom",
   "@chartZoomToggleLabel": {
     "description": "Toggle label for enabling pinch-to-zoom on the chart"
+  },
+  "graphqlSampleTitle": "GraphQL Countries",
+  "@graphqlSampleTitle": {
+    "description": "App bar title for the GraphQL demo page"
+  },
+  "graphqlSampleFilterLabel": "Filter by continent",
+  "@graphqlSampleFilterLabel": {
+    "description": "Label shown above the continent filter control"
+  },
+  "graphqlSampleAllContinents": "All continents",
+  "@graphqlSampleAllContinents": {
+    "description": "Dropdown option that clears the continent filter"
+  },
+  "graphqlSampleErrorTitle": "Something went wrong",
+  "@graphqlSampleErrorTitle": {
+    "description": "Headline shown when the GraphQL request fails"
+  },
+  "graphqlSampleGenericError": "We couldn't load countries right now.",
+  "@graphqlSampleGenericError": {
+    "description": "Fallback error text used when no specific message is available"
+  },
+  "graphqlSampleRetryButton": "Try again",
+  "@graphqlSampleRetryButton": {
+    "description": "Button label for retrying the GraphQL request"
+  },
+  "graphqlSampleEmpty": "No countries matched the selected filters.",
+  "@graphqlSampleEmpty": {
+    "description": "Message shown when the query returns zero countries"
+  },
+  "graphqlSampleCapitalLabel": "Capital",
+  "@graphqlSampleCapitalLabel": {
+    "description": "Label used before the capital city name"
+  },
+  "graphqlSampleCurrencyLabel": "Currency",
+  "@graphqlSampleCurrencyLabel": {
+    "description": "Label used before the currency code"
   }
 }

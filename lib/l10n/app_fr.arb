@@ -54,6 +54,7 @@
     }
   },
   "openChartsTooltip": "Ouvrir les graphiques",
+  "openGraphqlTooltip": "Explorer la démo GraphQL",
   "openSettingsTooltip": "Ouvrir les paramètres",
   "settingsPageTitle": "Paramètres",
   "accountSectionTitle": "Compte",
@@ -236,5 +237,14 @@
   "chartPageDescription": "Cours de clôture sur les 7 derniers jours (source : CoinGecko)",
   "chartPageError": "Impossible de charger les données du graphique.",
   "chartPageEmpty": "Aucune donnée de graphique pour le moment.",
-  "chartZoomToggleLabel": "Activer le zoom par pincement"
+  "chartZoomToggleLabel": "Activer le zoom par pincement",
+  "graphqlSampleTitle": "Pays GraphQL",
+  "graphqlSampleFilterLabel": "Filtrer par continent",
+  "graphqlSampleAllContinents": "Tous les continents",
+  "graphqlSampleErrorTitle": "Un problème est survenu",
+  "graphqlSampleGenericError": "Impossible de charger les pays pour le moment.",
+  "graphqlSampleRetryButton": "Réessayer",
+  "graphqlSampleEmpty": "Aucun pays ne correspond aux filtres sélectionnés.",
+  "graphqlSampleCapitalLabel": "Capitale",
+  "graphqlSampleCurrencyLabel": "Devise"
 }

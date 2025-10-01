@@ -266,6 +266,12 @@ abstract class AppLocalizations {
   /// **'Open charts'**
   String get openChartsTooltip;
 
+  /// Tooltip for navigating to the GraphQL demo page
+  ///
+  /// In en, this message translates to:
+  /// **'Explore GraphQL sample'**
+  String get openGraphqlTooltip;
+
   /// Tooltip for navigating to the settings page
   ///
   /// In en, this message translates to:
@@ -643,6 +649,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enable pinch zoom'**
   String get chartZoomToggleLabel;
+
+  /// App bar title for the GraphQL demo page
+  ///
+  /// In en, this message translates to:
+  /// **'GraphQL Countries'**
+  String get graphqlSampleTitle;
+
+  /// Label shown above the continent filter control
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by continent'**
+  String get graphqlSampleFilterLabel;
+
+  /// Dropdown option that clears the continent filter
+  ///
+  /// In en, this message translates to:
+  /// **'All continents'**
+  String get graphqlSampleAllContinents;
+
+  /// Headline shown when the GraphQL request fails
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get graphqlSampleErrorTitle;
+
+  /// Fallback error text used when no specific message is available
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load countries right now.'**
+  String get graphqlSampleGenericError;
+
+  /// Button label for retrying the GraphQL request
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get graphqlSampleRetryButton;
+
+  /// Message shown when the query returns zero countries
+  ///
+  /// In en, this message translates to:
+  /// **'No countries matched the selected filters.'**
+  String get graphqlSampleEmpty;
+
+  /// Label used before the capital city name
+  ///
+  /// In en, this message translates to:
+  /// **'Capital'**
+  String get graphqlSampleCapitalLabel;
+
+  /// Label used before the currency code
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get graphqlSampleCurrencyLabel;
 }
 
 class _AppLocalizationsDelegate

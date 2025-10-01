@@ -54,6 +54,7 @@
     }
   },
   "openChartsTooltip": "Abrir gráficos",
+  "openGraphqlTooltip": "Explorar demo GraphQL",
   "openSettingsTooltip": "Abrir configuración",
   "settingsPageTitle": "Configuración",
   "accountSectionTitle": "Cuenta",
@@ -236,5 +237,14 @@
   "chartPageDescription": "Precio de cierre de los últimos 7 días (fuente: CoinGecko)",
   "chartPageError": "No se pudieron cargar los datos del gráfico.",
   "chartPageEmpty": "Aún no hay datos del gráfico.",
-  "chartZoomToggleLabel": "Activar zoom con gestos"
+  "chartZoomToggleLabel": "Activar zoom con gestos",
+  "graphqlSampleTitle": "Países GraphQL",
+  "graphqlSampleFilterLabel": "Filtrar por continente",
+  "graphqlSampleAllContinents": "Todos los continentes",
+  "graphqlSampleErrorTitle": "Algo salió mal",
+  "graphqlSampleGenericError": "No pudimos cargar los países en este momento.",
+  "graphqlSampleRetryButton": "Intentar de nuevo",
+  "graphqlSampleEmpty": "Ningún país coincide con los filtros seleccionados.",
+  "graphqlSampleCapitalLabel": "Capital",
+  "graphqlSampleCurrencyLabel": "Moneda"
 }

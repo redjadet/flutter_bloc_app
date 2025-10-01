@@ -99,6 +99,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get openChartsTooltip => 'Grafikleri aç';
 
   @override
+  String get openGraphqlTooltip => 'GraphQL örneğini aç';
+
+  @override
   String get openSettingsTooltip => 'Ayarları aç';
 
   @override
@@ -309,4 +312,31 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get chartZoomToggleLabel => 'Yakınlaştırmayı etkinleştir';
+
+  @override
+  String get graphqlSampleTitle => 'GraphQL Ülkeleri';
+
+  @override
+  String get graphqlSampleFilterLabel => 'Kıtaya göre filtrele';
+
+  @override
+  String get graphqlSampleAllContinents => 'Tüm kıtalar';
+
+  @override
+  String get graphqlSampleErrorTitle => 'Bir sorun oluştu';
+
+  @override
+  String get graphqlSampleGenericError => 'Şu anda ülkeler yüklenemedi.';
+
+  @override
+  String get graphqlSampleRetryButton => 'Tekrar dene';
+
+  @override
+  String get graphqlSampleEmpty => 'Seçilen filtrelerle ülke bulunamadı.';
+
+  @override
+  String get graphqlSampleCapitalLabel => 'Başkent';
+
+  @override
+  String get graphqlSampleCurrencyLabel => 'Para birimi';
 }

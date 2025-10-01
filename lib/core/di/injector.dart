@@ -21,6 +21,10 @@ import 'package:flutter_bloc_app/features/counter/data/'
 import 'package:flutter_bloc_app/features/counter/data/'
     'shared_preferences_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/data/'
+    'countries_graphql_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/'
+    'graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/shared/data/'
     'shared_preferences_locale_repository.dart';
 import 'package:flutter_bloc_app/shared/data/'
@@ -39,6 +43,9 @@ Future<void> configureDependencies() async {
   _registerLazySingletonIfAbsent<http.Client>(
     http.Client.new,
     dispose: (client) => client.close(),
+  );
+  _registerLazySingletonIfAbsent<GraphqlDemoRepository>(
+    () => CountriesGraphqlRepository(client: getIt<http.Client>()),
   );
   _registerLazySingletonIfAbsent<HuggingFaceApiClient>(
     () => HuggingFaceApiClient(

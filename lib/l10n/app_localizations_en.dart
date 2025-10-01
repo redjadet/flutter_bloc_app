@@ -97,6 +97,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openChartsTooltip => 'Open charts';
 
   @override
+  String get openGraphqlTooltip => 'Explore GraphQL sample';
+
+  @override
   String get openSettingsTooltip => 'Open settings';
 
   @override
@@ -309,4 +312,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chartZoomToggleLabel => 'Enable pinch zoom';
+
+  @override
+  String get graphqlSampleTitle => 'GraphQL Countries';
+
+  @override
+  String get graphqlSampleFilterLabel => 'Filter by continent';
+
+  @override
+  String get graphqlSampleAllContinents => 'All continents';
+
+  @override
+  String get graphqlSampleErrorTitle => 'Something went wrong';
+
+  @override
+  String get graphqlSampleGenericError =>
+      'We couldn\'t load countries right now.';
+
+  @override
+  String get graphqlSampleRetryButton => 'Try again';
+
+  @override
+  String get graphqlSampleEmpty => 'No countries matched the selected filters.';
+
+  @override
+  String get graphqlSampleCapitalLabel => 'Capital';
+
+  @override
+  String get graphqlSampleCurrencyLabel => 'Currency';
 }

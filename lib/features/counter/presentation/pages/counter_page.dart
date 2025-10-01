@@ -105,6 +105,11 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
               icon: const Icon(Icons.show_chart),
             ),
             IconButton(
+              tooltip: l10n.openGraphqlTooltip,
+              onPressed: () => context.pushNamed(AppRoutes.graphql),
+              icon: const Icon(Icons.public),
+            ),
+            IconButton(
               tooltip: l10n.openChatTooltip,
               onPressed: () => context.pushNamed(AppRoutes.chat),
               icon: const Icon(Icons.forum),

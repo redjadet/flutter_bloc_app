@@ -55,6 +55,16 @@ class _MyAppState extends State<MyApp> {
         builder: (context, state) => const ExamplePage(),
       ),
       GoRoute(
+        path: AppRoutes.graphqlPath,
+        name: AppRoutes.graphql,
+        builder: (context, state) => BlocProvider(
+          create: (_) =>
+              GraphqlDemoCubit(repository: getIt<GraphqlDemoRepository>())
+                ..loadInitial(),
+          child: const GraphqlDemoPage(),
+        ),
+      ),
+      GoRoute(
         path: AppRoutes.chartsPath,
         name: AppRoutes.charts,
         builder: (context, state) => const ChartPage(),

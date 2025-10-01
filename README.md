@@ -13,6 +13,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Countdown UI: Live “next auto-decrement in: Ns” indicator.
 - Navigation: `go_router` wiring with sample and chart pages demonstrating navigation patterns.
 - Charts: `fl_chart` Bitcoin price line chart backed by CoinGecko's public API (pinch-zoomable with graceful fallback).
+- GraphQL demo: Countries browser backed by the free `countries.trevorblades.com` GraphQL API, complete with continent filtering and localized labels.
 - Loading polish: `skeletonizer` placeholders, `fancy_shimmer_image` hero card, and dev-only loading delay to showcase the effects.
 - Logging: Centralized `AppLogger` built on top of the `logger` package.
 - Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES).
@@ -156,12 +157,15 @@ classDiagram
 - `lib/features/chat/data/huggingface_api_client.dart`: HTTP wrapper that enforces headers, status handling, and JSON parsing for Hugging Face requests.
 - `lib/features/chat/data/huggingface_payload_builder.dart`: Central place for building inference vs chat completion payloads.
 - `lib/features/chat/data/huggingface_response_parser.dart`: Safely maps Hugging Face responses to `ChatResult` with null-safe chunk handling.
+- `lib/features/graphql_demo/`: Countries GraphQL feature (repository, cubit, widgets) showcasing how to integrate GraphQL alongside BLoC and GetIt DI.
 - `lib/features/example/`: Simple routed example page rendered through `go_router` and showcasing native MethodChannel integration.
 - `lib/shared/`: Cross-cutting UI, theme, logging, secure storage, and utility components.
 - `test/counter_cubit_test.dart`: Cubit behavior, timers, persistence tests.
 - `test/countdown_bar_test.dart`: Verifies CountdownBar active/paused labels.
 - `test/counter_display_chip_test.dart`: Verifies CounterDisplay chip labels.
 - `test/error_snackbar_test.dart`: Intentionally throws to exercise SnackBar (skipped by default).
+- `test/graphql_demo/data/countries_graphql_repository_test.dart`: Covers GraphQL repository parsing, error handling, and filtering.
+- `test/graphql_demo/presentation/graphql_demo_cubit_test.dart`: Validates continent filtering logic and error surfacing in the GraphQL cubit.
 - `test/native_platform_service_test.dart`: Validates MethodChannel responses.
 - `test/secure_secret_storage_test.dart`: Covers secure storage wrappers.
 - `test/sign_in_page_test.dart`: Exercises anonymous sign-in, auth error handling, and error message mapping with `MockFirebaseAuth`.

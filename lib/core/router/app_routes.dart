@@ -17,6 +17,9 @@ class AppRoutes {
   static const chat = 'chat';
   static const chatPath = '/chat';
 
+  static const graphql = 'graphql-demo';
+  static const graphqlPath = '/graphql-demo';
+
   static const auth = 'auth';
   static const authPath = '/auth';
 
