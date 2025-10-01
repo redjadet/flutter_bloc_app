@@ -115,12 +115,7 @@ class CounterCubit extends Cubit<CounterState> {
   /// Resets to the default interval and holds one tick at that value when inactive.
   void _resetCountdownAndHold() {
     _holdCountdownAtFullCycle = true;
-    emit(
-      state.copyWith(
-        countdownSeconds: _defaultIntervalSeconds,
-        isAutoDecrementActive: false,
-      ),
-    );
+    emit(state.copyWith(countdownSeconds: _defaultIntervalSeconds));
   }
 
   Future<void> loadInitial() async {
@@ -132,7 +127,6 @@ class CounterCubit extends Cubit<CounterState> {
       final CounterSnapshot snapshot = await _repository.load();
       final _RestorationResult restoration = _restoreStateFromSnapshot(
         snapshot,
-        now: _now(),
       );
       _holdCountdownAtFullCycle = restoration.holdCountdown;
       emit(restoration.state);
@@ -152,30 +146,15 @@ class CounterCubit extends Cubit<CounterState> {
     }
   }
 
-  _RestorationResult _restoreStateFromSnapshot(
-    CounterSnapshot snapshot, {
-    required DateTime now,
-  }) {
+  _RestorationResult _restoreStateFromSnapshot(CounterSnapshot snapshot) {
     final int safeCount = snapshot.count < 0 ? 0 : snapshot.count;
-    final DateTime? lastChanged = snapshot.lastChanged;
-    bool holdCountdown = false;
     final bool shouldPersist = safeCount != snapshot.count;
-
-    if (lastChanged == null) {
-      return (
-        state: CounterState.success(count: safeCount),
-        shouldPersist: shouldPersist,
-        holdCountdown: holdCountdown,
-      );
-    }
-
-    if (safeCount == 0) {
-      holdCountdown = true;
-    }
+    final bool holdCountdown = safeCount == 0;
 
     return (
       state: CounterState.success(
-        count: safeCount, lastChanged: lastChanged,
+        count: safeCount,
+        lastChanged: snapshot.lastChanged,
       ),
       shouldPersist: shouldPersist,
       holdCountdown: holdCountdown,
@@ -258,7 +237,6 @@ class CounterCubit extends Cubit<CounterState> {
         }
         final _RestorationResult restoration = _restoreStateFromSnapshot(
           snapshot,
-          now: _now(),
         );
         _holdCountdownAtFullCycle = restoration.holdCountdown;
         emit(restoration.state);

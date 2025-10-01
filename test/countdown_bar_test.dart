@@ -47,7 +47,6 @@ void main() {
           count: 1,
           lastChanged: DateTime.now(),
           countdownSeconds: 3,
-          isAutoDecrementActive: true,
           status: CounterStatus.success,
         ),
       );
@@ -72,7 +71,6 @@ void main() {
           count: 0,
           lastChanged: DateTime.now(),
           countdownSeconds: 5,
-          isAutoDecrementActive: false,
           status: CounterStatus.success,
         ),
       );

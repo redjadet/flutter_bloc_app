@@ -13,7 +13,6 @@ abstract class CounterState with _$CounterState {
     required int count,
     DateTime? lastChanged,
     @Default(CounterState.defaultCountdownSeconds) int countdownSeconds,
-    @Default(false) bool isAutoDecrementActive,
     CounterError? error,
     @Default(CounterStatus.idle) CounterStatus status,
   }) = _CounterState;
@@ -27,12 +26,14 @@ abstract class CounterState with _$CounterState {
       count: count,
       lastChanged: lastChanged,
       countdownSeconds: countdownSeconds,
-      isAutoDecrementActive: count > 0,
       status: CounterStatus.success,
     );
   }
 
   static const int defaultCountdownSeconds = 5;
+
+  /// Auto decrement stays active while the counter is above zero.
+  bool get isAutoDecrementActive => count > 0;
 
   /// Deprecated: Use [error] instead. Kept for backward compatibility.
   @Deprecated('Use error instead')

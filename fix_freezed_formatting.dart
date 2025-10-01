@@ -74,7 +74,6 @@ const String _counterStateContract =
     ' int get count;'
     ' DateTime? get lastChanged;'
     ' int get countdownSeconds;'
-    ' bool get isAutoDecrementActive;'
     ' CounterError? get error;'
     ' CounterStatus get status;';
 
@@ -82,7 +81,6 @@ const String _counterStateMultilineContract =
     ' int get count;\n'
     ' DateTime? get lastChanged;\n'
     ' int get countdownSeconds;\n'
-    ' bool get isAutoDecrementActive;\n'
     ' CounterError? get error;\n'
     ' CounterStatus get status;';
 
