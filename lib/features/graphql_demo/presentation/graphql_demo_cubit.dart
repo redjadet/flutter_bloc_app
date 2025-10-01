@@ -21,8 +21,8 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
       emit(
         state.copyWith(
           status: GraphqlDemoStatus.success,
-          continents: continents,
-          countries: countries,
+          continents: List<GraphqlContinent>.unmodifiable(continents),
+          countries: List<GraphqlCountry>.unmodifiable(countries),
           activeContinentCode: null,
           errorMessage: null,
         ),
@@ -66,7 +66,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
       emit(
         state.copyWith(
           status: GraphqlDemoStatus.success,
-          countries: countries,
+          countries: List<GraphqlCountry>.unmodifiable(countries),
           errorMessage: null,
         ),
       );

@@ -11,6 +11,9 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
   CountriesGraphqlRepository({http.Client? client})
     : _client = client ?? http.Client();
 
+  static const String _opContinents = 'Continents';
+  static const String _opAllCountries = 'AllCountries';
+  static const String _opCountriesByContinent = 'CountriesByContinent';
   static const String _endpoint = 'https://countries.trevorblades.com/';
   static const Map<String, String> _headers = <String, String>{
     'Content-Type': 'application/json',
@@ -22,33 +25,37 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
   Future<List<GraphqlContinent>> fetchContinents() async {
     final Map<String, dynamic> data = await _postQuery(
       _continentsQuery,
-      operationName: 'Continents',
+      operationName: _opContinents,
     );
     final List<dynamic> rawContinents =
         (data['continents'] as List<dynamic>? ?? <dynamic>[]);
-    return rawContinents
-        .map(
-          (dynamic item) => GraphqlContinent.fromJson(
-            Map<String, dynamic>.from(item as Map<Object?, Object?>),
-          ),
-        )
-        .toList(growable: false);
+    if (rawContinents.isEmpty) {
+      return const <GraphqlContinent>[];
+    }
+    return List<GraphqlContinent>.unmodifiable(
+      rawContinents.map(
+        (dynamic item) => GraphqlContinent.fromJson(
+          Map<String, dynamic>.from(item as Map<Object?, Object?>),
+        ),
+      ),
+    );
   }
 
   @override
   Future<List<GraphqlCountry>> fetchCountries({String? continentCode}) async {
-    if (continentCode == null) {
+    final String? normalizedCode = _normalizedContinentCode(continentCode);
+    if (normalizedCode == null) {
       final Map<String, dynamic> data = await _postQuery(
         _allCountriesQuery,
-        operationName: 'AllCountries',
+        operationName: _opAllCountries,
       );
       return _mapCountries(data['countries']);
     }
 
     final Map<String, dynamic> data = await _postQuery(
       _countriesByContinentQuery,
-      variables: <String, dynamic>{'continent': continentCode},
-      operationName: 'CountriesByContinent',
+      variables: <String, dynamic>{'continent': normalizedCode},
+      operationName: _opCountriesByContinent,
     );
     final Map<String, dynamic>? continent =
         data['continent'] as Map<String, dynamic>?;
@@ -57,13 +64,27 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
 
   List<GraphqlCountry> _mapCountries(Object? rawCountries) {
     final List<dynamic> list = (rawCountries as List<dynamic>? ?? <dynamic>[]);
-    return list
-        .map(
-          (dynamic item) => GraphqlCountry.fromJson(
-            Map<String, dynamic>.from(item as Map<Object?, Object?>),
-          ),
-        )
-        .toList(growable: false);
+    if (list.isEmpty) {
+      return const <GraphqlCountry>[];
+    }
+    return List<GraphqlCountry>.unmodifiable(
+      list.map(
+        (dynamic item) => GraphqlCountry.fromJson(
+          Map<String, dynamic>.from(item as Map<Object?, Object?>),
+        ),
+      ),
+    );
+  }
+
+  String? _normalizedContinentCode(String? code) {
+    if (code == null) {
+      return null;
+    }
+    final String trimmed = code.trim();
+    if (trimmed.isEmpty) {
+      return null;
+    }
+    return trimmed.toUpperCase();
   }
 
   Future<Map<String, dynamic>> _postQuery(
