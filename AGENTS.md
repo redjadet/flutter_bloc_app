@@ -1,70 +1,47 @@
 # AGENTS Guide — Flutter BLoC App
-<!-- markdownlint-disable MD029 -->
 
-This document is the condensed playbook for all AI agents (and humans) working on the project. The app is intentionally small, but the codebase must stay scalable via Clean Architecture, MVP, and SOLID.
+Keep the architecture clean, tests green, and generated files up to date. Follow the checklist, then check the references when needed.
 
----
-## Quick Checklist (run every time)
+## Daily Checklist
+
 1. `dart format .`
 2. `flutter analyze`
 3. `flutter test`
-4. If freezed/json_serializable files changed → `dart run build_runner build --delete-conflicting-outputs`
-5. Keep dependency flow **Domain → Data → Presentation**
-6. Add or update tests for new behaviour
+4. If freezed/json_serializable changes → `dart run build_runner build --delete-conflicting-outputs`
 
----
-## Architecture Rules
-- Follow Clean Code principles: expressive naming, small functions/classes, minimal side effects, and consistent formatting.
-- **Clean Architecture + MVP**: Widgets (View) ↔︎ Cubits (Presenter) ↔︎ Repository & domain models.
-- **SOLID**: Preserve small single‑purpose classes, use abstractions for data sources, keep UI logic out of domain.
-- **State placement**: UI-only state lives in `presentation/*`; domain models stay UI-agnostic.
-- **Widgets**: Compose small, focused widgets; avoid god widgets.
-- **Timing**: Extend timer behaviour via `TimerService`; tests should use `FakeTimerService`.
+## Core Rules
 
-### Layer snapshot
-```mermaid
-flowchart LR
-  subgraph Presentation
-    Widgets --> CounterCubit
-  end
-  subgraph Domain
-    CounterCubit --> CounterRepository
-    CounterRepository --> CounterSnapshot
-  end
-  subgraph Data
-    CounterRepositoryImpl --> SharedPreferences
-  end
-```
+- Uphold Clean Architecture: **Domain → Data → Presentation** only.
+- MVP split: Widgets (View) ↔︎ Cubits (Presenter) ↔︎ Repositories/Models.
+- Apply SOLID + Clean Code (expressive naming, small units, limited side effects).
+- UI-only state stays in `presentation/*`; domain models remain UI-agnostic.
+- Compose small widgets; use `TimerService` for timed behaviour (`FakeTimerService` in tests).
+- Add or update tests with every behavioural change.
 
----
-## Directory Layout
-- `lib/features/<feature>/{domain,data,presentation}` — feature-based Clean Architecture packages.
-- `lib/core/` — DI (`injector.dart`), time utils, shared constants.
-- `lib/shared/` — reusable widgets, extensions, logger, platform helpers.
-- `test/` — mirrors features; includes bloc, widget, golden, auth, and utility tests.
+## Project Map
 
----
-## Development Workflow
-1. Model/contract change in **domain**.
-2. Add/update repository implementation in **data** and wire it through DI.
-3. Extend Cubit/Bloc in **presentation**, inject dependencies via `get_it`.
-4. Build UI with small widgets; keep business rules out of the view.
-5. Add tests (unit/bloc/widget/golden) and ensure determinism (use fakes where needed).
+- `lib/features/<feature>/{domain,data,presentation}` — feature packages.
+- `lib/core/` — DI (`injector.dart`), time utilities, constants.
+- `lib/shared/` — reusable widgets, logger, platform helpers.
+- `test/` — mirrors features: bloc, widget, golden, auth, fakes.
 
----
-## Testing Strategy
-- Bloc/Cubit tests with `bloc_test` for state sequences.
-- Widget + golden tests for UI regressions (CountdownBar, CounterDisplay, etc.).
-- Use fakes (`FakeTimerService`, mock repositories, `MockFirebaseAuth`) for deterministic behaviour.
-- Update or create tests whenever behaviour changes.
+## Typical Workflow
 
----
-## TimerService Cheatsheet
-- Interface: `lib/core/time/timer_service.dart` (`TimerService.periodic`, `TimerDisposable`).
-- `CounterCubit` receives a `TimerService`; tests inject `FakeTimerService` and drive time via `fake.tick(n)`.
+1. Adjust domain contracts/models.
+2. Implement/update repositories in data layer and register via `get_it`.
+3. Extend Cubits/Blocs in presentation; inject dependencies.
+4. Build UI with focused widgets; keep business logic in cubits/domain.
+5. Write/refresh unit–bloc–widget–golden tests (use fakes for determinism).
 
----
+## Testing Focus
+
+- Bloc flows with `bloc_test`.
+- Widget + golden regressions (Countdown, CounterDisplay, etc.).
+- Auth flows with `MockFirebaseAuth`, `mock_exceptions`.
+- Deterministic time: `FakeTimerService` (`fake.tick(n)`).
+
 ## Command Reference
+
 ```bash
 flutter pub get
 dart format .
@@ -74,8 +51,8 @@ dart run build_runner build --delete-conflicting-outputs
 flutter run
 ```
 
----
-## Dependency Injection Sample
+## DI & Data Swap Example
+
 ```dart
 Future<void> runAppWithFlavor(Flavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -103,8 +80,6 @@ return MultiBlocProvider(
 );
 ```
 
----
-## Example: Swapping the Data Source (DIP)
 ```dart
 abstract class CounterRepository {
   Future<CounterSnapshot> load();
@@ -118,16 +93,13 @@ class RestCounterRepository implements CounterRepository {
   @override
   Future<void> save(CounterSnapshot snapshot) async {}
 }
-```
-```
+
 getIt.unregister<CounterRepository>();
 getIt.registerLazySingleton<CounterRepository>(() => RestCounterRepository());
 ```
 
----
-## Extra Notes
-- Default auto-decrement interval is 5 seconds; counter never drops below 0.
-- Supported locales are listed in `MaterialApp.supportedLocales`.
-- Native platform info is surfaced via `NativePlatformService` (MethodChannel).
+## Extras
 
-Keep the guide short, follow the checklist, and keep the architecture clean.
+- Auto-decrement interval = 5s; counter never goes negative.
+- Supported locales: see `MaterialApp.supportedLocales`.
+- Platform info comes from `NativePlatformService` (MethodChannel).
