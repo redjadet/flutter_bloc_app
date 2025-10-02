@@ -116,10 +116,7 @@ class GraphqlDemoPage extends StatelessWidget {
   }
 }
 
-String _errorMessageForState(
-  AppLocalizations l10n,
-  GraphqlDemoState state,
-) {
+String _errorMessageForState(AppLocalizations l10n, GraphqlDemoState state) {
   switch (state.errorType) {
     case GraphqlDemoErrorType.network:
       return l10n.graphqlSampleNetworkError;

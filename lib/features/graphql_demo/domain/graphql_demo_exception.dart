@@ -1,10 +1,4 @@
-enum GraphqlDemoErrorType {
-  network,
-  invalidRequest,
-  server,
-  data,
-  unknown,
-}
+enum GraphqlDemoErrorType { network, invalidRequest, server, data, unknown }
 
 class GraphqlDemoException implements Exception {
   GraphqlDemoException(
