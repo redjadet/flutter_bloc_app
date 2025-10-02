@@ -29,4 +29,17 @@ jobs:
         run: flutter analyze
 
       - name: Flutter tests (including goldens)
-        run: flutter test
+        run: flutter test --coverage
+
+      - name: Enforce coverage threshold
+        run: |
+          COVERAGE_FILE=coverage/lcov.info
+          TARGET=60
+          ACTUAL=$(lcov --summary "$COVERAGE_FILE" | awk '/lines/ {print $2}' | sed 's/%//')
+          echo "Coverage: $ACTUAL%"
+          awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { exit (actual + 0 >= target + 0 ? 0 : 1) }'
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-lcov
+          path: coverage/lcov.info
