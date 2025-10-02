@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/features/example/presentation/widgets/example_sections.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
@@ -182,7 +183,11 @@ class _ExamplePageState extends State<ExamplePage> {
                     SizedBox(height: UI.gapS),
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 250),
-                      child: _buildPlatformInfoSection(theme, l10n),
+                      child: PlatformInfoSection(
+                        isLoading: _isFetchingInfo,
+                        info: _platformInfo,
+                        errorMessage: _infoError,
+                      ),
                     ),
                     SizedBox(height: UI.gapL),
                     FilledButton.icon(
@@ -195,7 +200,14 @@ class _ExamplePageState extends State<ExamplePage> {
                     SizedBox(height: UI.gapS),
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 250),
-                      child: _buildIsolateSection(theme, l10n),
+                      child: IsolateResultSection(
+                        isLoading: _isRunningIsolates,
+                        errorMessage: _isolateError,
+                        fibonacciInput: _fibonacciInput,
+                        fibonacciResult: _fibonacciResult,
+                        parallelValues: _parallelResult,
+                        parallelDuration: _parallelDuration,
+                      ),
                     ),
                   ],
                 ),
@@ -203,110 +215,6 @@ class _ExamplePageState extends State<ExamplePage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildPlatformInfoSection(ThemeData theme, AppLocalizations l10n) {
-    if (_isFetchingInfo && _platformInfo == null && _infoError == null) {
-      return Padding(
-        padding: EdgeInsets.only(top: UI.gapS),
-        child: const CircularProgressIndicator(),
-      );
-    }
-    if (_infoError != null) {
-      return Padding(
-        padding: EdgeInsets.only(top: UI.gapS),
-        child: Text(
-          l10n.exampleNativeInfoError,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.error,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      );
-    }
-    if (_platformInfo == null) {
-      return const SizedBox.shrink();
-    }
-    final NativePlatformInfo info = _platformInfo!;
-    return Padding(
-      padding: EdgeInsets.only(top: UI.gapS),
-      child: Column(
-        key: ValueKey<String>('platform-info-${info.platform}-${info.version}'),
-        children: [
-          Text(
-            l10n.exampleNativeInfoTitle,
-            style: theme.textTheme.titleMedium,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: UI.gapXS),
-          Text(
-            info.toString(),
-            style: theme.textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildIsolateSection(ThemeData theme, AppLocalizations l10n) {
-    final bool hasResults =
-        _fibonacciResult != null &&
-        _fibonacciInput != null &&
-        _parallelResult != null &&
-        _parallelDuration != null;
-    final bool showSpinner =
-        _isRunningIsolates && !hasResults && _isolateError == null;
-
-    if (showSpinner) {
-      return Padding(
-        padding: EdgeInsets.only(top: UI.gapS),
-        child: const CircularProgressIndicator(),
-      );
-    }
-    if (_isolateError != null) {
-      return Padding(
-        padding: EdgeInsets.only(top: UI.gapS),
-        child: Text(
-          _isolateError!,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.error,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      );
-    }
-    if (!hasResults) {
-      return const SizedBox.shrink();
-    }
-    final String durationText = _parallelDuration == null
-        ? l10n.exampleIsolateParallelPending
-        : l10n.exampleIsolateParallelComplete(
-            _parallelResult!.join(', '),
-            _parallelDuration!.inMilliseconds,
-          );
-    return Padding(
-      padding: EdgeInsets.only(top: UI.gapS),
-      child: Column(
-        key: ValueKey<String>('isolate-result-$_parallelDuration'),
-        children: [
-          Text(
-            l10n.exampleIsolateFibonacciLabel(
-              _fibonacciInput ?? 0,
-              _fibonacciResult ?? 0,
-            ),
-            style: theme.textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: UI.gapXS),
-          Text(
-            durationText,
-            style: theme.textTheme.bodySmall,
-            textAlign: TextAlign.center,
-          ),
-        ],
       ),
     );
   }

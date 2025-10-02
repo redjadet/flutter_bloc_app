@@ -27,19 +27,26 @@ class LanguageSection extends StatelessWidget {
         SizedBox(height: UI.gapS),
         BlocBuilder<LocaleCubit, Locale?>(
           builder: (context, currentLocale) {
-            final List<SettingsOption<Locale?>> options = <SettingsOption<Locale?>>[
-              SettingsOption(label: l10n.languageSystemDefault, value: null),
-              for (final Locale locale in AppLocalizations.supportedLocales)
-                SettingsOption(
-                  label: localizedLabels[locale.languageCode] ?? locale.languageCode,
-                  value: locale,
-                ),
-            ];
+            final List<SettingsOption<Locale?>> options =
+                <SettingsOption<Locale?>>[
+                  SettingsOption(
+                    label: l10n.languageSystemDefault,
+                    value: null,
+                  ),
+                  for (final Locale locale in AppLocalizations.supportedLocales)
+                    SettingsOption(
+                      label:
+                          localizedLabels[locale.languageCode] ??
+                          locale.languageCode,
+                      value: locale,
+                    ),
+                ];
 
             return SettingsCard<Locale?>(
               options: options,
               isSelected: (locale) => _sameLocale(locale, currentLocale),
-              onSelect: (locale) => context.read<LocaleCubit>().setLocale(locale),
+              onSelect: (locale) =>
+                  context.read<LocaleCubit>().setLocale(locale),
             );
           },
         ),
