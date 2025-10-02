@@ -14,9 +14,14 @@ const List<String> _generatedSuffixes = <String>[
 
 const List<String> _generatedPrefixes = <String>['lib/l10n/app_localizations_'];
 
-const List<String> _excludedDirectories = <String>['lib/l10n/', 'lib/generated/'];
+const List<String> _excludedDirectories = <String>[
+  'lib/l10n/',
+  'lib/generated/',
+];
 
-const List<String> _generatedExact = <String>['lib/generated_plugin_registrant.dart'];
+const List<String> _generatedExact = <String>[
+  'lib/generated_plugin_registrant.dart',
+];
 
 Future<void> main(List<String> args) async {
   final File lcov = File('coverage/lcov.info');
@@ -37,13 +42,18 @@ Future<void> main(List<String> args) async {
 }
 
 class _CoverageRecord {
-  _CoverageRecord({required this.path, required this.linesHit, required this.linesFound});
+  _CoverageRecord({
+    required this.path,
+    required this.linesHit,
+    required this.linesFound,
+  });
 
   final String path;
   final int linesHit;
   final int linesFound;
 
-  double get percentage => linesFound == 0 ? 100.0 : (linesHit / linesFound) * 100;
+  double get percentage =>
+      linesFound == 0 ? 100.0 : (linesHit / linesFound) * 100;
 }
 
 class _Coverage {
@@ -67,7 +77,9 @@ class _Coverage {
         'Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) '
         'are excluded from these totals.\n',
       )
-      ..writeln('Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.\n')
+      ..writeln(
+        'Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.\n',
+      )
       ..writeln('| File | Coverage | Covered/Total |')
       ..writeln('| --- | ---: | ---: |');
 
@@ -136,8 +148,14 @@ class _Coverage {
             .toList()
           ..sort((a, b) => a.percentage.compareTo(b.percentage));
 
-    final int totalFound = filtered.fold<int>(0, (sum, record) => sum + record.linesFound);
-    final int totalHit = filtered.fold<int>(0, (sum, record) => sum + record.linesHit);
+    final int totalFound = filtered.fold<int>(
+      0,
+      (sum, record) => sum + record.linesFound,
+    );
+    final int totalHit = filtered.fold<int>(
+      0,
+      (sum, record) => sum + record.linesHit,
+    );
 
     return _Coverage._(filtered, totalHit, totalFound);
   }
@@ -183,7 +201,9 @@ class _Updator {
       return;
     }
     final List<String> lines = await readme.readAsLines();
-    final RegExp marker = RegExp(r'Latest line coverage: \*\*([0-9]+\.?[0-9]*)%\*\*');
+    final RegExp marker = RegExp(
+      r'Latest line coverage: \*\*([0-9]+\.?[0-9]*)%\*\*',
+    );
     bool updated = false;
     for (int i = 0; i < lines.length; i++) {
       final String line = lines[i];

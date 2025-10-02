@@ -68,14 +68,19 @@ void main() {
     expect(SecretConfig.useChatCompletions, isTrue);
     expect(storage.writeCalls, containsPair('huggingface_api_key', 'env-key'));
     expect(storage.writeCalls, containsPair('huggingface_model', 'env-model'));
-    expect(storage.writeCalls, containsPair('huggingface_use_chat_completions', 'true'));
+    expect(
+      storage.writeCalls,
+      containsPair('huggingface_use_chat_completions', 'true'),
+    );
   });
 
   test('skips secure storage persistence when disabled', () async {
     final _FakeSecretStorage storage = _FakeSecretStorage();
     SecretConfig.configureStorage(storage);
     SecretConfig.debugAssetBundle = _FakeAssetBundle.throwing();
-    SecretConfig.debugEnvironment = <String, dynamic>{'HUGGINGFACE_API_KEY': 'env-key'};
+    SecretConfig.debugEnvironment = <String, dynamic>{
+      'HUGGINGFACE_API_KEY': 'env-key',
+    };
 
     await SecretConfig.load(persistToSecureStorage: false);
 
