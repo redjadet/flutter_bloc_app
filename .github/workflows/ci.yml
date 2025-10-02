@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -22,13 +24,26 @@ jobs:
       - name: Flutter pub get
         run: flutter pub get
 
-      - name: Verify formatting
-        run: dart format . --output=none --set-exit-if-changed
+      - name: Format code
+        run: dart format .
+
+      - name: Auto-commit formatted code
+        if: github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add .
+            git commit -m "chore: apply dart format"
+            git push
+          fi
 
       - name: Flutter analyze
         run: flutter analyze
 
-      - name: Flutter tests (including goldens)
+      - name: Flutter tests (with coverage)
         run: flutter test --coverage
 
       - name: Enforce coverage threshold
@@ -38,6 +53,7 @@ jobs:
           ACTUAL=$(lcov --summary "$COVERAGE_FILE" | awk '/lines/ {print $2}' | sed 's/%//')
           echo "Coverage: $ACTUAL%"
           awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { exit (actual + 0 >= target + 0 ? 0 : 1) }'
+
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
