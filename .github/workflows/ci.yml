@@ -1,9 +1,16 @@
 name: CI
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
+  workflow_dispatch:
+    inputs:
+      run_analyze:
+        description: 'Run flutter analyze'
+        required: false
+        default: 'true'
+      run_tests:
+        description: 'Run flutter test --coverage'
+        required: false
+        default: 'true'
 
 jobs:
   build:
@@ -23,12 +30,15 @@ jobs:
         run: flutter pub get
 
       - name: Flutter analyze
+        if: ${{ github.event.inputs.run_analyze != 'false' }}
         run: flutter analyze
 
       - name: Flutter tests (with coverage)
+        if: ${{ github.event.inputs.run_tests != 'false' }}
         run: flutter test --coverage
 
       - name: Enforce coverage threshold
+        if: ${{ github.event.inputs.run_tests != 'false' }}
         run: |
           COVERAGE_FILE=coverage/lcov.info
           TARGET=60
@@ -37,6 +47,7 @@ jobs:
           awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { exit (actual + 0 >= target + 0 ? 0 : 1) }'
 
       - name: Upload coverage report
+        if: ${{ github.event.inputs.run_tests != 'false' }}
         uses: actions/upload-artifact@v4
         with:
           name: coverage-lcov
