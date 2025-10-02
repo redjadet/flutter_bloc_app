@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -24,26 +22,8 @@ jobs:
       - name: Flutter pub get
         run: flutter pub get
 
-      - name: Format code
-        run: dart format .
-
-      - name: Create formatting PR
-        if: github.event_name == 'push'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if ! git diff --quiet; then
-            branch="ci/format-${GITHUB_RUN_ID}"
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git checkout -b "$branch"
-            git add .
-            git commit -m "chore: apply dart format"
-            git push origin "$branch"
-            gh pr create --repo "$GITHUB_REPOSITORY" --head "$branch" \
-              --title "chore: apply dart format" \
-              --body "Automated formatting updates from CI." || true
-          fi
+      - name: Verify formatting
+        run: dart format . --output=none --set-exit-if-changed
 
       - name: Flutter analyze
         run: flutter analyze
