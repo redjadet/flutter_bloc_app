@@ -18,6 +18,10 @@ class SecretConfig {
   static String? _huggingfaceModel;
   static bool _useChatCompletions = false;
   static SecretStorage? _configuredStorage;
+  @visibleForTesting
+  static AssetBundle? debugAssetBundle;
+  @visibleForTesting
+  static Map<String, dynamic>? debugEnvironment;
 
   static String? get huggingfaceApiKey => _huggingfaceApiKey;
   static String? get huggingfaceModel => _huggingfaceModel;
@@ -25,6 +29,17 @@ class SecretConfig {
 
   static void configureStorage(SecretStorage storage) {
     _configuredStorage = storage;
+  }
+
+  @visibleForTesting
+  static void resetForTest() {
+    _configuredStorage = null;
+    debugAssetBundle = null;
+    debugEnvironment = null;
+    _loaded = false;
+    _huggingfaceApiKey = null;
+    _huggingfaceModel = null;
+    _useChatCompletions = false;
   }
 
   static Future<void> load({bool? persistToSecureStorage}) async {
@@ -158,13 +173,18 @@ class SecretConfig {
       result['HUGGINGFACE_USE_CHAT_COMPLETIONS'] = completionFlagRaw;
     }
 
+    if (debugEnvironment != null) {
+      result.addAll(debugEnvironment!);
+    }
+
     return result.isEmpty ? null : result;
   }
 
   static Future<Map<String, dynamic>?> _readAssetSecrets() async {
     const String assetPath = 'assets/config/secrets.json';
     try {
-      final String raw = await rootBundle.loadString(assetPath);
+      final AssetBundle bundle = debugAssetBundle ?? rootBundle;
+      final String raw = await bundle.loadString(assetPath);
       final dynamic decoded = jsonDecode(raw);
       if (decoded is Map<String, dynamic>) {
         return decoded;

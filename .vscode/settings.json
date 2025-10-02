@@ -72,7 +72,8 @@
     "**/*.json",
     "**/*.lock",
     "**/*.md",
-    "**/*.plist"
+    "**/*.plist",
+    "tool/**"
   ],
   "cSpell.checkPaths": [
     "lib/**",
