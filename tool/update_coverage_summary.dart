@@ -32,12 +32,12 @@ Future<void> main(List<String> args) async {
   }
 
   final _Coverage coverage = await _Coverage.parse(await lcov.readAsLines());
-  final File output = File('docs/coverage_summary.md');
+  final File output = File('coverage/coverage_summary.md');
   await output.parent.create(recursive: true);
   await output.writeAsString(coverage.toMarkdown());
   await _Updator.updateReadme(coverage.totalPercentage);
   stdout.writeln(
-    'Wrote docs/coverage_summary.md with ${coverage.totalPercentage.toStringAsFixed(2)}% coverage',
+    'Wrote coverage/coverage_summary.md with ${coverage.totalPercentage.toStringAsFixed(2)}% coverage',
   );
 }
 

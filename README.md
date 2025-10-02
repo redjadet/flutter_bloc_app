@@ -29,7 +29,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 
 ## Test Coverage
 
-- Latest line coverage: **53.20%** (generated files excluded; see `docs/coverage_summary.md` for the per-file breakdown).
+- Latest line coverage: **53.20%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
 
 ## Tech Stack
 
@@ -295,4 +295,4 @@ Contributions are welcome—open an issue or PR with your proposed change. Make 
 
 ## Tooling
 
-- `dart run tool/update_coverage_summary.dart` – regenerate `docs/coverage_summary.md` from `coverage/lcov.info`, excluding generated and localization files.
+- `dart run tool/update_coverage_summary.dart` – regenerate `coverage/coverage_summary.md` from `coverage/lcov.info`, excluding generated and localization files.
