@@ -27,6 +27,10 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Tests: Unit, bloc, widget, and golden coverage (`flutter_test`, `bloc_test`, `golden_toolkit`), including auth flows with Firebase mocks.
 - Agent-friendly guide: See `AGENTS.md` for the quick checklist (format → analyze → test → build_runner) and architecture guardrails.
 
+## Test Coverage
+
+- Latest line coverage: **47.14%** (generated files excluded; see `docs/coverage_summary.md` for the per-file breakdown).
+
 ## Tech Stack
 
 - Flutter 3.35.5 (Dart 3.9.2)
