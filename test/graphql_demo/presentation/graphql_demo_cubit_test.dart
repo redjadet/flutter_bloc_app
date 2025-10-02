@@ -69,6 +69,7 @@ void main() {
         const GraphqlDemoState(
           status: GraphqlDemoStatus.error,
           errorMessage: 'Load failed',
+          errorType: GraphqlDemoErrorType.unknown,
         ),
       ],
     );

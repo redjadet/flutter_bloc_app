@@ -339,4 +339,20 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get graphqlSampleCurrencyLabel => 'Para birimi';
+
+  @override
+  String get graphqlSampleNetworkError =>
+      'Ağ hatası. Bağlantınızı kontrol edip yeniden deneyin.';
+
+  @override
+  String get graphqlSampleInvalidRequestError =>
+      'İstek reddedildi. Farklı bir filtre deneyin.';
+
+  @override
+  String get graphqlSampleServerError =>
+      'Hizmet şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.';
+
+  @override
+  String get graphqlSampleDataError =>
+      'Beklenmedik bir yanıt alındı. Lütfen yeniden deneyin.';
 }

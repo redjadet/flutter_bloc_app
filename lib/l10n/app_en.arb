@@ -440,5 +440,21 @@
   "graphqlSampleCurrencyLabel": "Currency",
   "@graphqlSampleCurrencyLabel": {
     "description": "Label used before the currency code"
+  },
+  "graphqlSampleNetworkError": "Network error. Check your connection and try again.",
+  "@graphqlSampleNetworkError": {
+    "description": "Shown when the GraphQL call fails due to connectivity"
+  },
+  "graphqlSampleInvalidRequestError": "The request was rejected. Try a different filter.",
+  "@graphqlSampleInvalidRequestError": {
+    "description": "Shown when the GraphQL endpoint rejects the query"
+  },
+  "graphqlSampleServerError": "The service is unavailable right now. Please try again later.",
+  "@graphqlSampleServerError": {
+    "description": "Shown when the GraphQL endpoint returns a server error"
+  },
+  "graphqlSampleDataError": "We received an unexpected response. Please try again.",
+  "@graphqlSampleDataError": {
+    "description": "Shown when the GraphQL response is malformed or missing data"
   }
 }

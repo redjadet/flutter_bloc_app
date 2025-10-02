@@ -110,15 +110,22 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
         body: jsonEncode(payload),
       );
       if (response.statusCode != 200) {
+        final bool isServerError = response.statusCode >= 500;
         throw GraphqlDemoException(
           'Unexpected status code: ${response.statusCode}',
-          response.body.isNotEmpty ? response.body : null,
+          cause: response.body.isNotEmpty ? response.body : null,
+          type: isServerError
+              ? GraphqlDemoErrorType.server
+              : GraphqlDemoErrorType.invalidRequest,
         );
       }
 
       final dynamic decoded = jsonDecode(response.body);
       if (decoded is! Map<String, dynamic>) {
-        throw GraphqlDemoException('Malformed GraphQL response');
+        throw GraphqlDemoException(
+          'Malformed GraphQL response',
+          type: GraphqlDemoErrorType.data,
+        );
       }
 
       final List<dynamic>? errors = decoded['errors'] as List<dynamic>?;
@@ -127,13 +134,20 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
             errors.first as Map<String, dynamic>?;
         final String message =
             firstError?['message']?.toString() ?? 'Unknown error';
-        throw GraphqlDemoException(message, firstError);
+        throw GraphqlDemoException(
+          message,
+          cause: firstError,
+          type: GraphqlDemoErrorType.invalidRequest,
+        );
       }
 
       final Map<String, dynamic>? data =
           decoded['data'] as Map<String, dynamic>?;
       if (data == null) {
-        throw GraphqlDemoException('Missing data field in GraphQL response');
+        throw GraphqlDemoException(
+          'Missing data field in GraphQL response',
+          type: GraphqlDemoErrorType.data,
+        );
       }
       return data;
     } catch (error, stackTrace) {
@@ -150,7 +164,11 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
         error,
         stackTrace,
       );
-      throw GraphqlDemoException('Failed to reach GraphQL endpoint', error);
+      throw GraphqlDemoException(
+        'Failed to reach GraphQL endpoint',
+        cause: error,
+        type: GraphqlDemoErrorType.network,
+      );
     }
   }
 

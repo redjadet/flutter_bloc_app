@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'graphql_demo_state.freezed.dart';
@@ -13,11 +14,13 @@ abstract class GraphqlDemoState with _$GraphqlDemoState {
     @Default(<GraphqlContinent>[]) List<GraphqlContinent> continents,
     String? activeContinentCode,
     String? errorMessage,
+    GraphqlDemoErrorType? errorType,
   }) = _GraphqlDemoState;
 
   const GraphqlDemoState._();
 
   bool get isLoading => status == GraphqlDemoStatus.loading;
   bool get hasError =>
-      status == GraphqlDemoStatus.error && errorMessage != null;
+      status == GraphqlDemoStatus.error &&
+      (errorMessage != null || errorType != null);
 }

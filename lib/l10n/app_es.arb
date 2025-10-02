@@ -246,5 +246,9 @@
   "graphqlSampleRetryButton": "Intentar de nuevo",
   "graphqlSampleEmpty": "Ningún país coincide con los filtros seleccionados.",
   "graphqlSampleCapitalLabel": "Capital",
-  "graphqlSampleCurrencyLabel": "Moneda"
+  "graphqlSampleCurrencyLabel": "Moneda",
+  "graphqlSampleNetworkError": "Error de red. Comprueba tu conexión e inténtalo de nuevo.",
+  "graphqlSampleInvalidRequestError": "La solicitud fue rechazada. Prueba con otro filtro.",
+  "graphqlSampleServerError": "El servicio no está disponible. Vuelve a intentarlo más tarde.",
+  "graphqlSampleDataError": "Se recibió una respuesta inesperada. Intenta de nuevo."
 }

@@ -349,4 +349,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get graphqlSampleCurrencyLabel => 'Devise';
+
+  @override
+  String get graphqlSampleNetworkError =>
+      'Erreur réseau. Vérifiez votre connexion et réessayez.';
+
+  @override
+  String get graphqlSampleInvalidRequestError =>
+      'La requête a été refusée. Essayez un autre filtre.';
+
+  @override
+  String get graphqlSampleServerError =>
+      'Le service est momentanément indisponible. Réessayez plus tard.';
+
+  @override
+  String get graphqlSampleDataError => 'Réponse inattendue reçue. Réessayez.';
 }

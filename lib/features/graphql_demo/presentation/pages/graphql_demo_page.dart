@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_state.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/widgets/graphql_country_card.dart';
@@ -67,7 +68,7 @@ class GraphqlDemoPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  state.errorMessage ?? l10n.graphqlSampleGenericError,
+                  _errorMessageForState(l10n, state),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
@@ -113,6 +114,27 @@ class GraphqlDemoPage extends StatelessWidget {
       itemCount: state.countries.length,
     );
   }
+}
+
+String _errorMessageForState(
+  AppLocalizations l10n,
+  GraphqlDemoState state,
+) {
+  switch (state.errorType) {
+    case GraphqlDemoErrorType.network:
+      return l10n.graphqlSampleNetworkError;
+    case GraphqlDemoErrorType.invalidRequest:
+      return l10n.graphqlSampleInvalidRequestError;
+    case GraphqlDemoErrorType.server:
+      return l10n.graphqlSampleServerError;
+    case GraphqlDemoErrorType.data:
+      return l10n.graphqlSampleDataError;
+    case GraphqlDemoErrorType.unknown:
+      break;
+    case null:
+      break;
+  }
+  return state.errorMessage ?? l10n.graphqlSampleGenericError;
 }
 
 class _FilterBar extends StatelessWidget {

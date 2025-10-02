@@ -340,4 +340,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get graphqlSampleCurrencyLabel => 'Currency';
+
+  @override
+  String get graphqlSampleNetworkError =>
+      'Network error. Check your connection and try again.';
+
+  @override
+  String get graphqlSampleInvalidRequestError =>
+      'The request was rejected. Try a different filter.';
+
+  @override
+  String get graphqlSampleServerError =>
+      'The service is unavailable right now. Please try again later.';
+
+  @override
+  String get graphqlSampleDataError =>
+      'We received an unexpected response. Please try again.';
 }

@@ -247,5 +247,9 @@
   "graphqlSampleRetryButton": "Tekrar dene",
   "graphqlSampleEmpty": "Seçilen filtrelerle ülke bulunamadı.",
   "graphqlSampleCapitalLabel": "Başkent",
-  "graphqlSampleCurrencyLabel": "Para birimi"
+  "graphqlSampleCurrencyLabel": "Para birimi",
+  "graphqlSampleNetworkError": "Ağ hatası. Bağlantınızı kontrol edip yeniden deneyin.",
+  "graphqlSampleInvalidRequestError": "İstek reddedildi. Farklı bir filtre deneyin.",
+  "graphqlSampleServerError": "Hizmet şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.",
+  "graphqlSampleDataError": "Beklenmedik bir yanıt alındı. Lütfen yeniden deneyin."
 }

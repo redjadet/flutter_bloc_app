@@ -342,4 +342,20 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get graphqlSampleCurrencyLabel => 'Moneda';
+
+  @override
+  String get graphqlSampleNetworkError =>
+      'Error de red. Comprueba tu conexión e inténtalo de nuevo.';
+
+  @override
+  String get graphqlSampleInvalidRequestError =>
+      'La solicitud fue rechazada. Prueba con otro filtro.';
+
+  @override
+  String get graphqlSampleServerError =>
+      'El servicio no está disponible. Vuelve a intentarlo más tarde.';
+
+  @override
+  String get graphqlSampleDataError =>
+      'Se recibió una respuesta inesperada. Intenta de nuevo.';
 }

@@ -13,7 +13,13 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
   final GraphqlDemoRepository _repository;
 
   Future<void> loadInitial() async {
-    emit(state.copyWith(status: GraphqlDemoStatus.loading, errorMessage: null));
+    emit(
+      state.copyWith(
+        status: GraphqlDemoStatus.loading,
+        errorMessage: null,
+        errorType: null,
+      ),
+    );
     try {
       final List<GraphqlContinent> continents = await _repository
           .fetchContinents();
@@ -25,6 +31,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
           countries: List<GraphqlCountry>.unmodifiable(countries),
           activeContinentCode: null,
           errorMessage: null,
+          errorType: null,
         ),
       );
     } catch (error, stackTrace) {
@@ -33,6 +40,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         state.copyWith(
           status: GraphqlDemoStatus.error,
           errorMessage: _friendlyMessage(error),
+          errorType: _resolveErrorType(error),
         ),
       );
     }
@@ -56,6 +64,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
       state.copyWith(
         status: GraphqlDemoStatus.loading,
         errorMessage: null,
+        errorType: null,
         activeContinentCode: continentCode,
       ),
     );
@@ -68,6 +77,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
           status: GraphqlDemoStatus.success,
           countries: List<GraphqlCountry>.unmodifiable(countries),
           errorMessage: null,
+          errorType: null,
         ),
       );
     } catch (error, stackTrace) {
@@ -80,6 +90,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         state.copyWith(
           status: GraphqlDemoStatus.error,
           errorMessage: _friendlyMessage(error),
+          errorType: _resolveErrorType(error),
         ),
       );
     }
@@ -90,5 +101,12 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
       return error.message;
     }
     return null;
+  }
+
+  GraphqlDemoErrorType _resolveErrorType(Object error) {
+    if (error is GraphqlDemoException) {
+      return error.type;
+    }
+    return GraphqlDemoErrorType.unknown;
   }
 }

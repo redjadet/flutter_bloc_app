@@ -703,6 +703,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Currency'**
   String get graphqlSampleCurrencyLabel;
+
+  /// Shown when the GraphQL call fails due to connectivity
+  ///
+  /// In en, this message translates to:
+  /// **'Network error. Check your connection and try again.'**
+  String get graphqlSampleNetworkError;
+
+  /// Shown when the GraphQL endpoint rejects the query
+  ///
+  /// In en, this message translates to:
+  /// **'The request was rejected. Try a different filter.'**
+  String get graphqlSampleInvalidRequestError;
+
+  /// Shown when the GraphQL endpoint returns a server error
+  ///
+  /// In en, this message translates to:
+  /// **'The service is unavailable right now. Please try again later.'**
+  String get graphqlSampleServerError;
+
+  /// Shown when the GraphQL response is malformed or missing data
+  ///
+  /// In en, this message translates to:
+  /// **'We received an unexpected response. Please try again.'**
+  String get graphqlSampleDataError;
 }
 
 class _AppLocalizationsDelegate
