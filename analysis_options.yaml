@@ -45,6 +45,7 @@ linter:
     require_trailing_commas: true
     avoid_unnecessary_containers: true
     unnecessary_late: true
+    unawaited_futures: true
     # Imports
     always_use_package_imports: true
     # Team prefs

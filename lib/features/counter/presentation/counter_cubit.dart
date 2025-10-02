@@ -109,7 +109,7 @@ class CounterCubit extends Cubit<CounterState> {
     }
     final int decremented = current.count - 1;
     final CounterState next = _emitCountUpdate(count: decremented);
-    _persistState(next);
+    unawaited(_persistState(next));
   }
 
   /// Resets to the default interval and holds one tick at that value when inactive.
