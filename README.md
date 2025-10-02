@@ -25,6 +25,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
   builds skip the asset and persist any provided values into platform secure
   storage (`flutter_secure_storage`).
 - Tests: Unit, bloc, widget, and golden coverage (`flutter_test`, `bloc_test`, `golden_toolkit`), including auth flows with Firebase mocks.
+- Agent-friendly guide: See `AGENTS.md` for the quick checklist (format → analyze → test → build_runner) and architecture guardrails.
 
 ## Tech Stack
 
