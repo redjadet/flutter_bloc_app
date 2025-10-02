@@ -20,7 +20,7 @@ class ExamplePage extends StatefulWidget {
 
 class _ExamplePageState extends State<ExamplePage> {
   final NativePlatformService _platformService = NativePlatformService();
-  final Random _random = Random();
+  final Random _random = Random(42);
   NativePlatformInfo? _platformInfo;
   bool _isFetchingInfo = false;
   String? _infoError;

@@ -27,12 +27,6 @@ class CounterCubit extends Cubit<CounterState> {
        _now = now ?? DateTime.now,
        _initialLoadDelay = loadDelay,
        super(const CounterState(count: 0)) {
-    // Ensure first emission occurs after listeners subscribe.
-    Future.microtask(() {
-      if (!isClosed) {
-        emit(state.copyWith());
-      }
-    });
     if (startTicker) {
       _ensureCountdownTickerStarted();
     }

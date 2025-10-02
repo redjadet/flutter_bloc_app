@@ -7,6 +7,10 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:http/http.dart' as http;
 
 /// GraphQL-backed repository that talks to https://countries.trevorblades.com.
+///
+/// [http.Client] instances are injected via `get_it` so DI can dispose them
+/// when the app shuts down. Avoid constructing new clients directly in
+/// repositories to keep connection pooling and teardown consistent.
 class CountriesGraphqlRepository implements GraphqlDemoRepository {
   CountriesGraphqlRepository({http.Client? client})
     : _client = client ?? http.Client();
