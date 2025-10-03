@@ -49,7 +49,10 @@ Future<bool> _initializeFirebaseOnce() async {
       return true;
     }
 
-    final FirebaseOptions options = DefaultFirebaseOptions.currentPlatform;
+    final FirebaseOptions? options = _resolveFirebaseOptions();
+    if (options == null) {
+      return false;
+    }
     if (_usesPlaceholderValues(options)) {
       AppLogger.warning(
         'Firebase configuration uses placeholder values. Skip initialization.',
@@ -69,13 +72,34 @@ Future<bool> _initializeFirebaseOnce() async {
       return true;
     }
     AppLogger.error('Firebase initialization failed', error, stackTrace);
-  } on UnsupportedError catch (error, stackTrace) {
-    AppLogger.warning('Firebase not configured: $error');
-    AppLogger.debug('Skipping Firebase initialization\n$stackTrace');
-  } catch (error, stackTrace) {
+  } on Exception catch (error, stackTrace) {
     AppLogger.error('Firebase initialization failed', error, stackTrace);
   }
   return false;
+}
+
+FirebaseOptions? _resolveFirebaseOptions() {
+  if (kIsWeb) {
+    AppLogger.warning(
+      'Firebase configuration has not been generated for web. Skip initialization.',
+    );
+    return null;
+  }
+
+  switch (defaultTargetPlatform) {
+    case TargetPlatform.android:
+      return DefaultFirebaseOptions.android;
+    case TargetPlatform.iOS:
+      return DefaultFirebaseOptions.ios;
+    case TargetPlatform.macOS:
+      return DefaultFirebaseOptions.macos;
+    default:
+      AppLogger.warning(
+        'Firebase configuration not available for platform $defaultTargetPlatform. '
+        'Skip initialization.',
+      );
+      return null;
+  }
 }
 
 void _configureFirebaseUI() {
@@ -114,7 +138,13 @@ GoogleProvider? _createGoogleProvider() {
       clientId: resolvedClientId,
       iOSPreferPlist: preferPlist,
     );
-  } catch (error, stackTrace) {
+  } on FirebaseException catch (error, stackTrace) {
+    AppLogger.warning(
+      'Skipping Google sign-in configuration: ${error.message}',
+    );
+    AppLogger.debug('Google provider configuration stack trace\n$stackTrace');
+    return null;
+  } on Exception catch (error, stackTrace) {
     AppLogger.warning('Skipping Google sign-in configuration: $error');
     AppLogger.debug('Google provider configuration stack trace\n$stackTrace');
     return null;

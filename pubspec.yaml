@@ -80,6 +80,9 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
   firebase_auth_mocks: ^0.15.0
+  custom_lint: ^0.7.5
+  file_length_lint:
+    path: custom_lints/file_length_lint
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

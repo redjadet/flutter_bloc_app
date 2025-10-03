@@ -3,6 +3,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 /// Central place for UI spacings, radii and durations.
 /// Use these helpers to keep sizes consistent and responsive.
 class UI {
+  UI._();
+
+  static bool _screenUtilReady = false;
+
+  static void markScreenUtilReady([bool ready = true]) {
+    _screenUtilReady = ready;
+  }
+
+  static void resetScreenUtilReady() {
+    _screenUtilReady = false;
+  }
+
+  static bool get isScreenUtilReady => _screenUtilReady;
+
   // Animations
   static const Duration animFast = Duration(milliseconds: 180);
   static const Duration animMedium = Duration(milliseconds: 220);
@@ -38,34 +52,22 @@ class UI {
 
   // Safe adapters (fallback to raw when ScreenUtil not initialized)
   static double _w(double v) {
-    try {
-      return v.w;
-    } catch (_) {
-      return v;
-    }
+    if (!_screenUtilReady) return v;
+    return v.w;
   }
 
   static double _h(double v) {
-    try {
-      return v.h;
-    } catch (_) {
-      return v;
-    }
+    if (!_screenUtilReady) return v;
+    return v.h;
   }
 
   static double _r(double v) {
-    try {
-      return v.r;
-    } catch (_) {
-      return v;
-    }
+    if (!_screenUtilReady) return v;
+    return v.r;
   }
 
   static double _spMax(double v) {
-    try {
-      return v.spMax;
-    } catch (_) {
-      return v;
-    }
+    if (!_screenUtilReady) return v;
+    return v.spMax;
   }
 }

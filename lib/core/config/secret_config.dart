@@ -81,7 +81,7 @@ class SecretConfig {
         'SecretConfig: No Hugging Face credentials found in secure storage or '
         'environment. Chat features requiring remote access remain disabled.',
       );
-    } catch (e, s) {
+    } on Exception catch (e, s) {
       AppLogger.warning('SecretConfig.load failed: $e');
       AppLogger.error('SecretConfig.load stack', e, s);
       _loaded = false;
@@ -105,7 +105,7 @@ class SecretConfig {
         'HUGGINGFACE_MODEL': model,
         'HUGGINGFACE_USE_CHAT_COMPLETIONS': flag == 'true',
       };
-    } catch (e) {
+    } on Exception catch (e) {
       AppLogger.warning('SecretConfig secure read failed: $e');
       return null;
     }
@@ -182,9 +182,20 @@ class SecretConfig {
 
   static Future<Map<String, dynamic>?> _readAssetSecrets() async {
     const String assetPath = 'assets/config/secrets.json';
+    final AssetBundle bundle = debugAssetBundle ?? rootBundle;
+    final String? raw = await bundle
+        .loadString(assetPath)
+        .then<String?>((value) => value)
+        .catchError(
+          (Object _) => null,
+          test: (Object error) => error is FlutterError,
+        );
+    if (raw == null) {
+      // Asset not bundled; ignore silently for developers without a local file.
+      return null;
+    }
+
     try {
-      final AssetBundle bundle = debugAssetBundle ?? rootBundle;
-      final String raw = await bundle.loadString(assetPath);
       final dynamic decoded = jsonDecode(raw);
       if (decoded is Map<String, dynamic>) {
         return decoded;
@@ -192,9 +203,9 @@ class SecretConfig {
       AppLogger.warning(
         'SecretConfig: Asset $assetPath does not contain a JSON object.',
       );
-    } on FlutterError {
-      // Asset not bundled; ignore silently for developers without a local file.
-    } catch (e) {
+    } on FormatException catch (e) {
+      AppLogger.warning('SecretConfig asset parse failed: $e');
+    } on Exception catch (e) {
       AppLogger.warning('SecretConfig asset read failed: $e');
     }
     return null;

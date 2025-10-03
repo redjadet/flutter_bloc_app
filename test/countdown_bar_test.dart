@@ -5,19 +5,24 @@ import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dar
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/widgets.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Widget _wrapWithApp(Widget child) {
+  UI.resetScreenUtilReady();
   return ScreenUtilInit(
     designSize: const Size(390, 844),
     minTextAdapt: true,
     splitScreenMode: true,
-    builder: (context, _) => MaterialApp(
-      localizationsDelegates: const [AppLocalizations.delegate],
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Scaffold(bottomNavigationBar: child),
-    ),
+    builder: (context, _) {
+      UI.markScreenUtilReady();
+      return MaterialApp(
+        localizationsDelegates: const [AppLocalizations.delegate],
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(bottomNavigationBar: child),
+      );
+    },
   );
 }
 

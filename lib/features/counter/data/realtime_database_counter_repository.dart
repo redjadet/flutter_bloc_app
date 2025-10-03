@@ -51,7 +51,15 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
       return snapshotFromValue(snapshot.value, userId: user.uid);
     } on FirebaseAuthException {
       rethrow;
-    } catch (error, stackTrace) {
+    } on FirebaseException catch (error, stackTrace) {
+      AppLogger.error(
+        'RealtimeDatabaseCounterRepository.load failed',
+        error,
+        stackTrace,
+      );
+      final String? userId = _auth.currentUser?.uid;
+      return _emptySnapshot.copyWith(userId: userId);
+    } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'RealtimeDatabaseCounterRepository.load failed',
         error,
@@ -82,7 +90,13 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
       });
     } on FirebaseAuthException {
       rethrow;
-    } catch (error, stackTrace) {
+    } on FirebaseException catch (error, stackTrace) {
+      AppLogger.error(
+        'RealtimeDatabaseCounterRepository.save failed',
+        error,
+        stackTrace,
+      );
+    } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'RealtimeDatabaseCounterRepository.save failed',
         error,

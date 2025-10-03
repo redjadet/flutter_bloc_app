@@ -125,7 +125,7 @@ mixin _ChatCubitActions on _ChatCubitCore, _ChatCubitHelpers {
           status: ChatStatus.error,
         ),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       emit(
         state.copyWith(
           isLoading: false,

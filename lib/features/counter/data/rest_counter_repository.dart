@@ -92,7 +92,7 @@ class RestCounterRepository implements CounterRepository {
         return _emptySnapshot;
       }
       return _parseSnapshot(res.body);
-    } catch (e, s) {
+    } on Exception catch (e, s) {
       AppLogger.error('RestCounterRepository.load failed', e, s);
       return _emptySnapshot;
     }
@@ -120,7 +120,7 @@ class RestCounterRepository implements CounterRepository {
       _watchController?.add(
         snapshot.userId != null ? snapshot : snapshot.copyWith(userId: 'rest'),
       );
-    } catch (e, s) {
+    } on Exception catch (e, s) {
       AppLogger.error('RestCounterRepository.save failed', e, s);
     }
   }

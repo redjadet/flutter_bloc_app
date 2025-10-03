@@ -33,7 +33,7 @@ class SecureChatHistoryRepository implements ChatHistoryRepository {
         decoded,
         StackTrace.current,
       );
-    } catch (e, s) {
+    } on Exception catch (e, s) {
       AppLogger.error('SecureChatHistoryRepository.load failed', e, s);
     }
     return const <ChatConversation>[];
@@ -52,7 +52,7 @@ class SecureChatHistoryRepository implements ChatHistoryRepository {
             .toList(growable: false),
       );
       await _storage.write(_storageKeyHistory, json);
-    } catch (e, s) {
+    } on Exception catch (e, s) {
       AppLogger.error('SecureChatHistoryRepository.save failed', e, s);
     }
   }

@@ -98,7 +98,13 @@ CounterRepository _createCounterRepository() {
       database.setPersistenceEnabled(true);
       final FirebaseAuth auth = FirebaseAuth.instanceFor(app: app);
       return RealtimeDatabaseCounterRepository(database: database, auth: auth);
-    } catch (error, stackTrace) {
+    } on FirebaseException catch (error, stackTrace) {
+      AppLogger.error(
+        'Falling back to SharedPreferencesCounterRepository',
+        error,
+        stackTrace,
+      );
+    } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'Falling back to SharedPreferencesCounterRepository',
         error,

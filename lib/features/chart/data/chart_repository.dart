@@ -54,7 +54,7 @@ class ChartRepository {
         'ChartRepository.fetchTrendingCounts invalid payload: ${error.message}',
       );
       return _cached ?? _cache(_fallbackData(now), now);
-    } catch (error, stackTrace) {
+    } on Exception catch (error, stackTrace) {
       AppLogger.warning('ChartRepository.fetchTrendingCounts falling back');
       AppLogger.error('ChartRepository failure', error, stackTrace);
       return _cached ?? _cache(_fallbackData(now), now);

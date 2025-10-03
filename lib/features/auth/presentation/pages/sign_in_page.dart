@@ -109,7 +109,7 @@ class SignInPage extends StatelessWidget {
         context.go(AppRoutes.counterPath);
       } on FirebaseAuthException catch (error) {
         showAuthError(error);
-      } catch (_) {
+      } on Exception {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
@@ -293,7 +293,9 @@ firebase_ui_google.GoogleProvider? _maybeCreateGoogleProvider() {
       clientId: resolvedClientId,
       iOSPreferPlist: preferPlist,
     );
-  } catch (_) {
+  } on FirebaseException {
+    return null;
+  } on Exception {
     return null;
   }
 }

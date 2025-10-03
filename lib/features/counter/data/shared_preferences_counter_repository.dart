@@ -38,7 +38,7 @@ class SharedPreferencesCounterRepository implements CounterRepository {
         count: count,
         lastChanged: changed,
       );
-    } catch (e, s) {
+    } on Exception catch (e, s) {
       AppLogger.error('SharedPreferencesCounterRepository.load failed', e, s);
       return _emptySnapshot;
     }
@@ -62,7 +62,7 @@ class SharedPreferencesCounterRepository implements CounterRepository {
       _watchController?.add(
         snapshot.userId != null ? snapshot : snapshot.copyWith(userId: 'local'),
       );
-    } catch (e, s) {
+    } on Exception catch (e, s) {
       AppLogger.error('SharedPreferencesCounterRepository.save failed', e, s);
     }
   }

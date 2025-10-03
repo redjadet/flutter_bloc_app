@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_sections.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -43,7 +44,17 @@ class _ExamplePageState extends State<ExamplePage> {
       setState(() {
         _platformInfo = info;
       });
-    } catch (error) {
+    } on PlatformException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _infoError = error.message ?? error.toString();
+      });
+    } on MissingPluginException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _infoError = error.message ?? error.toString();
+      });
+    } on Exception catch (error) {
       if (!mounted) return;
       setState(() {
         _infoError = error.toString();
@@ -76,7 +87,7 @@ class _ExamplePageState extends State<ExamplePage> {
         parallelValues: doubled,
         elapsed: stopwatch.elapsed,
       );
-    } catch (error) {
+    } on Exception catch (error) {
       _setIsolateFailure(error);
     }
   }

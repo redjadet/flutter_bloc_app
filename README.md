@@ -33,9 +33,9 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 | --- | --- | --- |
 | ![Counter home screen](assets/screenshots/small/counter_home.png) | ![Counter screen with countdown](assets/screenshots/small/counter_home2.png) | ![Settings screen](assets/screenshots/small/settings.png) |
 
-| Charts | AI Chat |
-| --- | --- |
-| ![Charts page](assets/screenshots/small/chart.png) | ![AI chat conversation](assets/screenshots/small/ai_chat.png) |
+| Charts | GraphQL | AI Chat |
+| --- | --- | --- |
+| ![Charts page](assets/screenshots/small/chart.png) | ![GraphQL countries browser](assets/screenshots/small/graphQL_countries.png) | ![AI chat conversation](assets/screenshots/small/ai_chat.png) |
 
 ## Test Coverage
 

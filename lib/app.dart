@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/features.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
@@ -151,6 +152,7 @@ class _MyAppState extends State<MyApp> {
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
+          UI.markScreenUtilReady();
           return BlocBuilder<LocaleCubit, Locale?>(
             builder: (context, locale) {
               return BlocBuilder<ThemeCubit, ThemeMode>(

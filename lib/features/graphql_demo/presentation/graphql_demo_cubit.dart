@@ -34,7 +34,16 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
           errorType: null,
         ),
       );
-    } catch (error, stackTrace) {
+    } on GraphqlDemoException catch (error, stackTrace) {
+      AppLogger.error('GraphqlDemoCubit.loadInitial failed', error, stackTrace);
+      emit(
+        state.copyWith(
+          status: GraphqlDemoStatus.error,
+          errorMessage: error.message,
+          errorType: error.type,
+        ),
+      );
+    } on Exception catch (error, stackTrace) {
       AppLogger.error('GraphqlDemoCubit.loadInitial failed', error, stackTrace);
       emit(
         state.copyWith(
@@ -80,7 +89,20 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
           errorType: null,
         ),
       );
-    } catch (error, stackTrace) {
+    } on GraphqlDemoException catch (error, stackTrace) {
+      AppLogger.error(
+        'GraphqlDemoCubit.selectContinent failed',
+        error,
+        stackTrace,
+      );
+      emit(
+        state.copyWith(
+          status: GraphqlDemoStatus.error,
+          errorMessage: error.message,
+          errorType: error.type,
+        ),
+      );
+    } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'GraphqlDemoCubit.selectContinent failed',
         error,

@@ -129,11 +129,14 @@ class CounterCubit extends Cubit<CounterState> {
         await _persistState(restoration.state);
       }
       _subscribeToRepository();
-    } catch (e, s) {
-      AppLogger.error('CounterCubit.loadInitial failed', e, s);
+    } on CounterError catch (error, stackTrace) {
+      AppLogger.error('CounterCubit.loadInitial failed', error, stackTrace);
+      emit(state.copyWith(error: error, status: CounterStatus.error));
+    } on Exception catch (error, stackTrace) {
+      AppLogger.error('CounterCubit.loadInitial failed', error, stackTrace);
       emit(
         state.copyWith(
-          error: CounterError.load(originalError: e),
+          error: CounterError.load(originalError: error),
           status: CounterStatus.error,
         ),
       );
@@ -163,11 +166,14 @@ class CounterCubit extends Cubit<CounterState> {
           lastChanged: snapshotState.lastChanged,
         ),
       );
-    } catch (e, s) {
-      AppLogger.error('CounterCubit._persistState failed', e, s);
+    } on CounterError catch (error, stackTrace) {
+      AppLogger.error('CounterCubit._persistState failed', error, stackTrace);
+      emit(state.copyWith(error: error, status: CounterStatus.error));
+    } on Exception catch (error, stackTrace) {
+      AppLogger.error('CounterCubit._persistState failed', error, stackTrace);
       emit(
         state.copyWith(
-          error: CounterError.save(originalError: e),
+          error: CounterError.save(originalError: error),
           status: CounterStatus.error,
         ),
       );

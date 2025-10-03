@@ -12,6 +12,7 @@ import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dar
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'test_helpers.dart';
 import 'package:flutter_bloc_app/core/constants.dart';
 
@@ -45,11 +46,13 @@ class _FakeBiometricAuthenticator implements BiometricAuthenticator {
 }
 
 Widget _buildApp(GoRouter router) {
+  UI.resetScreenUtilReady();
   return ScreenUtilInit(
     designSize: AppConstants.designSize,
     minTextAdapt: true,
     splitScreenMode: true,
     builder: (context, child) {
+      UI.markScreenUtilReady();
       return MaterialApp.router(
         routerConfig: router,
         localizationsDelegates: AppLocalizations.localizationsDelegates,

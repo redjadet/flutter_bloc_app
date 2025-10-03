@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/constants.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Keep responsive_framework optional; fall back to width-based checks in tests
 // ignore: unused_import
@@ -13,21 +14,9 @@ extension ResponsiveContext on BuildContext {
   bool get isPortrait => MediaQuery.orientationOf(this) == Orientation.portrait;
   double get bottomInset => MediaQuery.viewPaddingOf(this).bottom;
 
-  double _safeW(double v) {
-    try {
-      return v.w;
-    } catch (_) {
-      return v;
-    }
-  }
+  double _safeW(double v) => UI.isScreenUtilReady ? v.w : v;
 
-  double _safeH(double v) {
-    try {
-      return v.h;
-    } catch (_) {
-      return v;
-    }
-  }
+  double _safeH(double v) => UI.isScreenUtilReady ? v.h : v;
 
   double get pageHorizontalPadding {
     if (isDesktop) return _safeW(32);

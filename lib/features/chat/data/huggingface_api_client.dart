@@ -79,7 +79,7 @@ class HuggingFaceApiClient {
         StackTrace.current,
       );
       throw const ChatException('Chat service returned unexpected payload.');
-    } catch (error, stackTrace) {
+    } on Exception catch (error, stackTrace) {
       if (error is ChatException) rethrow;
       AppLogger.error(
         'HuggingFaceApiClient.$context failed',
@@ -112,7 +112,7 @@ class HuggingFaceApiClient {
       if (decoded is Map<String, dynamic>) {
         detail = (decoded['error'] ?? decoded['message']) as String?;
       }
-    } catch (_) {
+    } on FormatException {
       if (body.isNotEmpty && body != 'null') {
         detail = body;
       }

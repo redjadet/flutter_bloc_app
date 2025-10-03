@@ -74,3 +74,4 @@ return MultiBlocProvider(
 - Counter UI widgets now live under `lib/features/counter/presentation/widgets/` (exported via `features/counter.dart`).
 - Theme & locale contracts + cubits reside in `lib/features/settings/`; keep `lib/shared/` for cross-cutting utilities only.
 - After modifying tests, run coverage commands (`flutter test --coverage` then `dart run tool/update_coverage_summary.dart`) to keep reports current.
+- Keep hand-written `.dart` files under ~250 lines; split out widgets/helpers when approaching the limit (ignore generated and localization files).

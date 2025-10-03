@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:local_auth/local_auth.dart';
 
@@ -35,7 +36,11 @@ class LocalBiometricAuthenticator implements BiometricAuthenticator {
         localizedReason: localizedReason ?? 'Authenticate to continue',
         options: const AuthenticationOptions(biometricOnly: true),
       );
-    } catch (error, stackTrace) {
+    } on PlatformException catch (error, stackTrace) {
+      AppLogger.warning('Biometric authentication failed: ${error.message}');
+      AppLogger.debug(stackTrace.toString());
+      return false;
+    } on Exception catch (error, stackTrace) {
       AppLogger.warning('Biometric authentication failed: $error');
       AppLogger.debug(stackTrace.toString());
       return false;
