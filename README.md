@@ -66,26 +66,53 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 ```mermaid
 flowchart LR
   subgraph Presentation
-    V1[CounterDisplay]
-    V2[CountdownBar]
-    V3[CounterActions]
-    CUBIT[CounterCubit]
-  end
-  subgraph Domain
-    REPOI[[CounterRepository]]
-    SNAP[CounterSnapshot]
-  end
-  subgraph Data
-    REPO[SharedPreferencesCounterRepository]
-    SP[(SharedPreferences)]
+    CounterPage
+    CounterDisplay
+    CountdownBar
+    CounterActions
+    ThemeSection
+    LanguageSection
+    CounterCubit
+    ThemeCubit
+    LocaleCubit
   end
 
-  V1 --> CUBIT
-  V2 --> CUBIT
-  V3 --> CUBIT
-  CUBIT --> REPOI
-  REPOI <-.implements .-> REPO
-  REPO --> SP
+  subgraph Domain
+    CounterRepository
+    CounterSnapshot
+    ThemeRepository
+    LocaleRepository
+  end
+
+  subgraph Data
+    SharedPreferencesCounterRepository
+    RealtimeDatabaseCounterRepository
+    SharedPreferencesThemeRepository
+    SharedPreferencesLocaleRepository
+  end
+
+  TimerService
+  FirebaseDatabase
+  SharedPreferences
+
+  CounterPage --> CounterCubit
+  CounterDisplay --> CounterCubit
+  CountdownBar --> CounterCubit
+  CounterActions --> CounterCubit
+  CounterCubit --> CounterRepository
+  CounterCubit --> TimerService
+  CounterRepository <-.implements .-> SharedPreferencesCounterRepository
+  CounterRepository <-.implements .-> RealtimeDatabaseCounterRepository
+  SharedPreferencesCounterRepository --> SharedPreferences
+  RealtimeDatabaseCounterRepository --> FirebaseDatabase
+  ThemeSection --> ThemeCubit
+  LanguageSection --> LocaleCubit
+  ThemeCubit --> ThemeRepository
+  LocaleCubit --> LocaleRepository
+  ThemeRepository <-.implements .-> SharedPreferencesThemeRepository
+  LocaleRepository <-.implements .-> SharedPreferencesLocaleRepository
+  SharedPreferencesThemeRepository --> SharedPreferences
+  SharedPreferencesLocaleRepository --> SharedPreferences
 ```
 
 ## Sequence
@@ -93,33 +120,34 @@ flowchart LR
 ```mermaid
 sequenceDiagram
   participant User
-  participant View as Widgets
+  participant View as CounterPage & Widgets
   participant Cubit as CounterCubit
+  participant Timer as TimerService
   participant Repo as CounterRepository
-  participant Store as SharedPreferences
+  participant Store as Persistence
 
   View->>Cubit: loadInitial()
   Cubit->>Repo: load()
-  Repo->>Store: get(last_count, last_changed)
   Repo-->>Cubit: CounterSnapshot
-  Cubit-->>View: emit CounterState
+  Cubit-->>View: emit CounterState(status: success)
 
-  User->>View: Tap + / -
-  View->>Cubit: increment() / decrement()
+  User->>View: Tap increment/decrement
+  View->>Cubit: increment()/decrement()
   Cubit-->>View: emit updated state
   Cubit->>Repo: save(snapshot)
-  Repo->>Store: set(...)
+  Repo->>Store: persist count & timestamp
 
-  loop every 1s
-    Cubit-->>View: emit countdownSeconds--
+  Timer-->>Cubit: countdown tick (every 1s)
+  Cubit-->>View: emit countdownSeconds--
+
+  Timer-->>Cubit: auto decrement tick (every 5s)
+  alt state.count > 0 && auto active
+    Cubit-->>View: emit count-1 & updated lastChanged
+    Cubit->>Repo: save(snapshot)
   end
 
-  loop every 5s
-    alt state.count > 0
-      Cubit-->>View: emit count-1, lastChanged=now
-      Cubit->>Repo: save(snapshot)
-    end
-  end
+  View->>Cubit: pauseAutoDecrement() (app background)
+  View->>Cubit: resumeAutoDecrement() (app foreground)
 ```
 
 ## Class Diagram
@@ -127,55 +155,82 @@ sequenceDiagram
 ```mermaid
 classDiagram
   class CounterCubit {
-    -Timer _autoDecrementTimer
-    -Timer _countdownTimer
+    -TimerService _timerService
+    -CounterRepository _repository
     +loadInitial()
     +increment()
     +decrement()
+    +pauseAutoDecrement()
+    +resumeAutoDecrement()
+    +clearError()
   }
 
   class CounterState {
     +int count
     +DateTime? lastChanged
     +int countdownSeconds
+    +CounterStatus status
+    +CounterError? error
+    +bool get isAutoDecrementActive
     +copyWith(...)
+  }
+
+  class CounterError {
+    +CounterErrorType type
+    +String? message
   }
 
   class CounterRepository {
     <<interface>>
-    +load() CounterSnapshot
-    +save(CounterSnapshot)
+    +Future<CounterSnapshot> load()
+    +Future<void> save(CounterSnapshot snapshot)
+    +Stream<CounterSnapshot> watch()
   }
 
   class CounterSnapshot {
+    +String userId
     +int count
     +DateTime? lastChanged
   }
 
-  class SharedPreferencesCounterRepository {
-    +load()
-    +save()
+  class TimerService {
+    <<interface>>
+    +TimerDisposable periodic(Duration interval, void Function() onTick)
   }
 
+  class TimerDisposable {
+    <<interface>>
+    +void dispose()
+  }
+
+  class DefaultTimerService
+  class SharedPreferencesCounterRepository
+  class RealtimeDatabaseCounterRepository
+
   CounterCubit --> CounterState
+  CounterCubit --> CounterError
   CounterCubit ..> CounterRepository
+  CounterCubit ..> TimerService
+  TimerService ..> TimerDisposable
+  TimerService <|.. DefaultTimerService
   CounterRepository <|.. SharedPreferencesCounterRepository
-  CounterRepository --> CounterSnapshot
+  CounterRepository <|.. RealtimeDatabaseCounterRepository
+  SharedPreferencesCounterRepository --> CounterSnapshot
+  RealtimeDatabaseCounterRepository --> CounterSnapshot
 ```
 
 ## App Structure
 
 - `lib/main.dart`: App bootstrapping via `runAppWithFlavor` (imports the flavor entrypoint).
-- `lib/app.dart`: Root widget wiring `go_router`, theme, DI, and cubits.
-- `lib/core/`: Constants, flavor manager, dependency injection configuration, time utilities.
-- `lib/features/counter/`: Domain, data, and presentation layers for the counter feature (widgets live under `presentation/widgets/`).
-- `lib/features/chat/data/huggingface_api_client.dart`: HTTP wrapper that enforces headers, status handling, and JSON parsing for Hugging Face requests.
-- `lib/features/chat/data/huggingface_payload_builder.dart`: Central place for building inference vs chat completion payloads.
-- `lib/features/chat/data/huggingface_response_parser.dart`: Safely maps Hugging Face responses to `ChatResult` with null-safe chunk handling.
-- `lib/features/graphql_demo/`: Countries GraphQL feature (repository, cubit, widgets) showcasing how to integrate GraphQL alongside BLoC and GetIt DI.
-- `lib/features/example/`: Simple routed example page rendered through `go_router` and showcasing native MethodChannel integration.
-- `lib/features/settings/`: Theme/locale repositories plus cubits and settings-focused widgets.
-- `lib/shared/`: Cross-cutting UI utilities, logging, platform bindings, and shared helpers.
+- `lib/app.dart`: Root widget wiring `go_router`, ScreenUtil init, DI, and global cubits (`CounterCubit`, `LocaleCubit`, `ThemeCubit`).
+- `lib/core/`: Cross-layer foundations (constants, flavor manager, dependency injection, router helpers, timer utilities).
+- `lib/features/counter/`: Counter feature split into `domain/`, `data/`, and `presentation/` (pages, cubit, and widgets under `presentation/widgets/`).
+- `lib/features/chat/`: Conversational AI feature (Hugging Face API client, payload builder, repositories, cubit, presentation widgets).
+- `lib/features/graphql_demo/`: Countries GraphQL browser with repository, cubit, presentation pages, and widgets.
+- `lib/features/settings/`: Theme & locale repositories, cubits, and UI sections used by the settings page.
+- `lib/features/example/`: Example page showcasing native MethodChannel integration.
+- `lib/shared/`: Reusable UI primitives, logging, platform services, localization helpers, and shared utilities.
+- `test/`: Unit, bloc, widget, golden, and platform tests (see file names for focused coverage like `counter_*`, `settings_*`, `graphql_demo_*`).
 - `test/counter_cubit_test.dart`: Cubit behavior, timers, persistence tests.
 - `test/countdown_bar_test.dart`: Verifies CountdownBar active/paused labels.
 - `test/counter_display_chip_test.dart`: Verifies CounterDisplay chip labels.
