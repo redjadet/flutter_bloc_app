@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
+import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 
 class ThemeCubit extends Cubit<ThemeMode> {
   ThemeCubit({required ThemeRepository repository})

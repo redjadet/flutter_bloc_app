@@ -3,3 +3,4 @@ export 'domain/counter_domain.dart';
 export 'presentation/counter_cubit.dart';
 export 'presentation/counter_state.dart';
 export 'presentation/pages/counter_page.dart';
+export 'presentation/widgets/widgets.dart';

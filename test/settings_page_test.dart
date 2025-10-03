@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
+import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
+import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
+import 'package:flutter_bloc_app/features/settings/presentation/cubits/locale_cubit.dart';
+import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_bloc_app/shared/domain/locale_repository.dart';
-import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
-import 'package:flutter_bloc_app/shared/presentation/locale_cubit.dart';
-import 'package:flutter_bloc_app/shared/presentation/theme_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_display/counter_last_changed_text.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_display/counter_status_chip.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_display/counter_value_text.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
-import 'package:flutter_bloc_app/shared/widgets/counter_display/counter_last_changed_text.dart';
-import 'package:flutter_bloc_app/shared/widgets/counter_display/counter_status_chip.dart';
-import 'package:flutter_bloc_app/shared/widgets/counter_display/counter_value_text.dart';
 
 class CounterDisplayCard extends StatelessWidget {
   const CounterDisplayCard({

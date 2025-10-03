@@ -25,12 +25,12 @@ import 'package:flutter_bloc_app/features/graphql_demo/data/'
     'countries_graphql_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/'
     'graphql_demo_repository.dart';
-import 'package:flutter_bloc_app/shared/data/'
+import 'package:flutter_bloc_app/features/settings/data/'
     'shared_preferences_locale_repository.dart';
-import 'package:flutter_bloc_app/shared/data/'
+import 'package:flutter_bloc_app/features/settings/data/'
     'shared_preferences_theme_repository.dart';
-import 'package:flutter_bloc_app/shared/domain/locale_repository.dart';
-import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
+import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
+import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:get_it/get_it.dart';

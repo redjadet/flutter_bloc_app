@@ -9,9 +9,6 @@ import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/features.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/domain/locale_repository.dart';
-import 'package:flutter_bloc_app/shared/domain/theme_repository.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 

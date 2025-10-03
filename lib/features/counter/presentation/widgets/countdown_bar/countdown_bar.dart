@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/widgets/countdown_bar/countdown_bar_content.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
-
-import 'package:flutter_bloc_app/shared/widgets/countdown_bar/countdown_bar_content.dart';
 
 class CountdownBar extends StatefulWidget {
   const CountdownBar({super.key});

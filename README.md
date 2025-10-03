@@ -249,6 +249,7 @@ The `ExamplePage` includes a “Fetch native info” button that uses a MethodCh
 - `flutter test` runs unit, widget, and golden tests.
 - `flutter test test/fab_alignment_golden_test.dart` runs FAB alignment goldens.
 - `flutter test test/counter_page_golden_test.dart` runs counter page goldens.
+- `flutter test coverage` to generate `lcov.info` file used to generate `coverage_summary.md` file
 
 Golden baselines live in `test/goldens/`.
 
@@ -295,4 +296,5 @@ Contributions are welcome—open an issue or PR with your proposed change. Make 
 
 ## Tooling
 
+- `flutter test coverage` to regenerate `coverage/lcov.info` file used to generate `coverage_summary.md` file
 - `dart run tool/update_coverage_summary.dart` – regenerate `coverage/coverage_summary.md` from `coverage/lcov.info`, excluding generated and localization files.

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/widgets/countdown_bar/countdown_status.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
-import 'package:flutter_bloc_app/shared/widgets/countdown_bar/countdown_status.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CountdownBarContent extends StatelessWidget {
