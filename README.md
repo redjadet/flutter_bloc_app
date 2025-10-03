@@ -27,6 +27,16 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Tests: Unit, bloc, widget, and golden coverage (`flutter_test`, `bloc_test`, `golden_toolkit`), including auth flows with Firebase mocks.
 - Agent-friendly guide: See `AGENTS.md` for the quick checklist (format → analyze → test → build_runner) and architecture guardrails.
 
+## Screenshots
+
+| Counter Home | Auto Countdown | Settings |
+| --- | --- | --- |
+| ![Counter home screen](assets/screenshots/small/counter_home.png) | ![Counter screen with countdown](assets/screenshots/small/counter_home2.png) | ![Settings screen](assets/screenshots/small/settings.png) |
+
+| Charts | AI Chat |
+| --- | --- |
+| ![Charts page](assets/screenshots/small/chart.png) | ![AI chat conversation](assets/screenshots/small/ai_chat.png) |
+
 ## Test Coverage
 
 - Latest line coverage: **53.20%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).

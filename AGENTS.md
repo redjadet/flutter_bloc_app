@@ -6,8 +6,9 @@ Keep work lean, clean, and tested.
 
 1. `dart format .`
 2. `flutter analyze`
-3. `flutter test`
-4. If Freezed/JSON models changed → `dart run build_runner build --delete-conflicting-outputs`
+3. `flutter test --coverage`
+4. `dart run tool/update_coverage_summary.dart`
+5. If Freezed/JSON models changed → `dart run build_runner build --delete-conflicting-outputs`
 
 ## Architecture Rules
 
@@ -38,7 +39,8 @@ Keep work lean, clean, and tested.
 flutter pub get
 dart format .
 flutter analyze
-flutter test
+flutter test --coverage
+dart run tool/update_coverage_summary.dart
 dart run build_runner build --delete-conflicting-outputs
 flutter run
 ```
@@ -71,3 +73,4 @@ return MultiBlocProvider(
 - Platform info comes from `NativePlatformService` (MethodChannel).
 - Counter UI widgets now live under `lib/features/counter/presentation/widgets/` (exported via `features/counter.dart`).
 - Theme & locale contracts + cubits reside in `lib/features/settings/`; keep `lib/shared/` for cross-cutting utilities only.
+- After modifying tests, run coverage commands (`flutter test --coverage` then `dart run tool/update_coverage_summary.dart`) to keep reports current.
