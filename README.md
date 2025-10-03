@@ -158,13 +158,14 @@ classDiagram
 - `lib/main.dart`: App bootstrapping via `runAppWithFlavor` (imports the flavor entrypoint).
 - `lib/app.dart`: Root widget wiring `go_router`, theme, DI, and cubits.
 - `lib/core/`: Constants, flavor manager, dependency injection configuration, time utilities.
-- `lib/features/counter/`: Domain, data, and presentation layers for the counter feature.
+- `lib/features/counter/`: Domain, data, and presentation layers for the counter feature (widgets live under `presentation/widgets/`).
 - `lib/features/chat/data/huggingface_api_client.dart`: HTTP wrapper that enforces headers, status handling, and JSON parsing for Hugging Face requests.
 - `lib/features/chat/data/huggingface_payload_builder.dart`: Central place for building inference vs chat completion payloads.
 - `lib/features/chat/data/huggingface_response_parser.dart`: Safely maps Hugging Face responses to `ChatResult` with null-safe chunk handling.
 - `lib/features/graphql_demo/`: Countries GraphQL feature (repository, cubit, widgets) showcasing how to integrate GraphQL alongside BLoC and GetIt DI.
 - `lib/features/example/`: Simple routed example page rendered through `go_router` and showcasing native MethodChannel integration.
-- `lib/shared/`: Cross-cutting UI, theme, logging, secure storage, and utility components.
+- `lib/features/settings/`: Theme/locale repositories plus cubits and settings-focused widgets.
+- `lib/shared/`: Cross-cutting UI utilities, logging, platform bindings, and shared helpers.
 - `test/counter_cubit_test.dart`: Cubit behavior, timers, persistence tests.
 - `test/countdown_bar_test.dart`: Verifies CountdownBar active/paused labels.
 - `test/counter_display_chip_test.dart`: Verifies CounterDisplay chip labels.

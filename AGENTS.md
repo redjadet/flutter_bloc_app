@@ -69,3 +69,5 @@ return MultiBlocProvider(
 - Auto-decrement interval = 5 s; counter never goes below 0.
 - Supported locales: `MaterialApp.supportedLocales`.
 - Platform info comes from `NativePlatformService` (MethodChannel).
+- Counter UI widgets now live under `lib/features/counter/presentation/widgets/` (exported via `features/counter.dart`).
+- Theme & locale contracts + cubits reside in `lib/features/settings/`; keep `lib/shared/` for cross-cutting utilities only.
