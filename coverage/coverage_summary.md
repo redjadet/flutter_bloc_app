@@ -1,4 +1,5 @@
 # Test Coverage Summary
+
 *Total line coverage*: **80.90%** (2312/2858 lines)
 
 Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) are excluded from these totals.
