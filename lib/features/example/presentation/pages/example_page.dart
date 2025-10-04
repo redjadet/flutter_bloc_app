@@ -202,6 +202,7 @@ class _ExamplePageState extends State<ExamplePage> {
                     ),
                     SizedBox(height: UI.gapL),
                     FilledButton.icon(
+                      key: const ValueKey('example-run-isolates-button'),
                       onPressed: _isRunningIsolates
                           ? null
                           : () => _runIsolateSamples(),

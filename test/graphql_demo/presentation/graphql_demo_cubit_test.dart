@@ -58,6 +58,45 @@ void main() {
     );
 
     blocTest<GraphqlDemoCubit, GraphqlDemoState>(
+      'refresh reloads current continent',
+      build: createCubit,
+      seed: () => GraphqlDemoState(
+        status: GraphqlDemoStatus.success,
+        continents: repository.continents,
+        countries: repository.countriesByCode['EU']!,
+        activeContinentCode: 'EU',
+      ),
+      act: (cubit) => cubit.refresh(),
+      expect: () => [
+        GraphqlDemoState(
+          status: GraphqlDemoStatus.loading,
+          continents: repository.continents,
+          countries: repository.countriesByCode['EU']!,
+          activeContinentCode: 'EU',
+        ),
+        GraphqlDemoState(
+          status: GraphqlDemoStatus.success,
+          continents: repository.continents,
+          countries: repository.countriesByCode['EU']!,
+          activeContinentCode: 'EU',
+        ),
+      ],
+    );
+
+    blocTest<GraphqlDemoCubit, GraphqlDemoState>(
+      'selectContinent ignores redundant selections',
+      build: createCubit,
+      seed: () => GraphqlDemoState(
+        status: GraphqlDemoStatus.success,
+        continents: repository.continents,
+        countries: repository.countriesByCode['EU']!,
+        activeContinentCode: 'EU',
+      ),
+      act: (cubit) => cubit.selectContinent('EU'),
+      expect: () => const <GraphqlDemoState>[],
+    );
+
+    blocTest<GraphqlDemoCubit, GraphqlDemoState>(
       'emits error state when repository throws',
       build: () {
         repository.shouldThrow = true;

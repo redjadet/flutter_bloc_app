@@ -120,4 +120,10 @@ class AppConfig {
     // Fallback to English
     return const Locale('en');
   }
+
+  @visibleForTesting
+  static Locale? resolveLocales(
+    List<Locale>? locales,
+    Iterable<Locale> supported,
+  ) => _localeListResolutionCallback(locales, supported);
 }

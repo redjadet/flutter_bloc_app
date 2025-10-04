@@ -5,7 +5,10 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 class ChartPage extends StatefulWidget {
-  const ChartPage({super.key});
+  const ChartPage({super.key, ChartRepository? repository})
+    : _repository = repository;
+
+  final ChartRepository? _repository;
 
   @override
   State<ChartPage> createState() => _ChartPageState();
@@ -19,7 +22,7 @@ class _ChartPageState extends State<ChartPage> {
   @override
   void initState() {
     super.initState();
-    _repository = DelayedChartRepository();
+    _repository = widget._repository ?? DelayedChartRepository();
     _future = _repository.fetchTrendingCounts();
   }
 

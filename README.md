@@ -39,7 +39,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 
 ## Test Coverage
 
-- Latest line coverage: **52.12%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
+- Latest line coverage: **80.90%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
 
 ## Tech Stack
 

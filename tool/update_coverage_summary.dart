@@ -1,5 +1,3 @@
-// @dart=3.0
-
 import 'dart:io';
 
 const List<String> _generatedSuffixes = <String>[
@@ -143,11 +141,12 @@ class _Coverage {
     }
     finishRecord();
 
-    final List<_CoverageRecord> filtered = perFile.values
-        .where((record) => record.path.startsWith('lib/'))
-        .where((record) => record.linesFound > 0)
-        .toList()
-      ..sort((a, b) => a.percentage.compareTo(b.percentage));
+    final List<_CoverageRecord> filtered =
+        perFile.values
+            .where((record) => record.path.startsWith('lib/'))
+            .where((record) => record.linesFound > 0)
+            .toList()
+          ..sort((a, b) => a.percentage.compareTo(b.percentage));
 
     final int totalFound = filtered.fold<int>(
       0,
@@ -190,6 +189,50 @@ class _Coverage {
       if (path.startsWith(prefix)) {
         return false;
       }
+    }
+    if (_isTrivialDartFile(path)) {
+      return false;
+    }
+    return true;
+  }
+
+  static bool _isTrivialDartFile(String path) {
+    if (!path.endsWith('.dart')) {
+      return false;
+    }
+    final File file = File(path);
+    if (!file.existsSync()) {
+      return false;
+    }
+    final List<String> lines = file.readAsLinesSync();
+    bool inBlockComment = false;
+    for (final String raw in lines) {
+      final String line = raw.trim();
+      if (line.isEmpty) {
+        continue;
+      }
+      if (inBlockComment) {
+        if (line.contains('*/')) {
+          inBlockComment = false;
+        }
+        continue;
+      }
+      if (line.startsWith('/*')) {
+        if (!line.contains('*/')) {
+          inBlockComment = true;
+        }
+        continue;
+      }
+      if (line.startsWith('//') || line.startsWith('*')) {
+        continue;
+      }
+      if (line.startsWith('import ') ||
+          line.startsWith('export ') ||
+          line.startsWith('library ') ||
+          line.startsWith('part ')) {
+        continue;
+      }
+      return false;
     }
     return true;
   }

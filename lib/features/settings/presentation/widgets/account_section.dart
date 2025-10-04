@@ -8,13 +8,18 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:go_router/go_router.dart';
 
 class AccountSection extends StatelessWidget {
-  const AccountSection({super.key});
+  const AccountSection({super.key, FirebaseAuth? auth}) : _auth = auth;
+
+  final FirebaseAuth? _auth;
 
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
-    final bool firebaseReady = Firebase.apps.isNotEmpty;
+    final bool firebaseReady = Firebase.apps.isNotEmpty || _auth != null;
+    final FirebaseAuth? auth = firebaseReady
+        ? (_auth ?? FirebaseAuth.instance)
+        : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +39,7 @@ class AccountSection extends StatelessWidget {
                   Text(l10n.accountSignedOutLabel)
                 else
                   StreamBuilder<User?>(
-                    stream: FirebaseAuth.instance.authStateChanges(),
+                    stream: auth!.authStateChanges(),
                     builder: (context, snapshot) {
                       final User? user = snapshot.data;
                       if (user == null) {

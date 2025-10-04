@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_bloc_app/features/counter/data/realtime_database_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -65,6 +67,42 @@ void main() {
       expect(result.count, 0);
       expect(result.lastChanged, isNull);
       expect(result.userId, 'test-user');
+    });
+  });
+
+  group('waitForAuthUser', () {
+    test('returns current user immediately when already signed in', () async {
+      final MockUser mockUser = MockUser(uid: 'user-123');
+      final MockFirebaseAuth auth = MockFirebaseAuth(
+        signedIn: true,
+        mockUser: mockUser,
+      );
+
+      final User user = await waitForAuthUser(auth);
+      expect(user.uid, mockUser.uid);
+    });
+
+    test('awaits authStateChanges when current user is null', () async {
+      final MockFirebaseAuth auth = MockFirebaseAuth();
+
+      Future<void>.delayed(const Duration(milliseconds: 10)).then((_) {
+        auth.signInAnonymously();
+      });
+
+      final User user = await waitForAuthUser(
+        auth,
+        timeout: const Duration(seconds: 1),
+      );
+      expect(user.isAnonymous, isTrue);
+    });
+
+    test('throws when no user arrives before timeout', () async {
+      final MockFirebaseAuth auth = MockFirebaseAuth();
+
+      await expectLater(
+        waitForAuthUser(auth, timeout: const Duration(milliseconds: 20)),
+        throwsA(isA<FirebaseAuthException>()),
+      );
     });
   });
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +17,22 @@ void main() {
 
       await storage.delete('token');
       expect(await storage.read('token'), isNull);
+    });
+
+    test('withoutLogs toggles AppLogger silence flag', () async {
+      final storage = InMemorySecretStorage();
+      final int value = storage.withoutLogs(() {
+        expect(AppLogger.isSilenced, isTrue);
+        return 21;
+      });
+      expect(value, 21);
+
+      final int asyncValue = await storage.withoutLogsAsync(() async {
+        expect(AppLogger.isSilenced, isTrue);
+        return 34;
+      });
+      expect(asyncValue, 34);
+      expect(AppLogger.isSilenced, isFalse);
     });
   });
 
@@ -75,6 +92,33 @@ void main() {
 
       final storage = FlutterSecureSecretStorage();
       expect(await storage.read('token'), isNull);
+    });
+
+    test('write and delete swallow platform errors', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (MethodCall call) async {
+            throw MissingPluginException('unavailable');
+          });
+
+      final storage = FlutterSecureSecretStorage();
+      await storage.write('token', 'value');
+      await storage.delete('token');
+    });
+
+    test('withoutLogs proxies to AppLogger helpers', () async {
+      final storage = FlutterSecureSecretStorage();
+      final int value = storage.withoutLogs(() {
+        expect(AppLogger.isSilenced, isTrue);
+        return 7;
+      });
+      expect(value, 7);
+
+      final int asyncValue = await storage.withoutLogsAsync(() async {
+        expect(AppLogger.isSilenced, isTrue);
+        return 11;
+      });
+      expect(asyncValue, 11);
+      expect(AppLogger.isSilenced, isFalse);
     });
   });
 }

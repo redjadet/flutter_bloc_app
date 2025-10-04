@@ -7,9 +7,9 @@ import 'package:window_manager/window_manager.dart';
 /// Platform-specific initialization utilities
 class PlatformInit {
   /// Initializes platform-specific features
-  static Future<void> initialize() async {
+  static Future<void> initialize({WindowManager? manager}) async {
     if (!kIsWeb && _isDesktopPlatform()) {
-      await _initializeDesktop();
+      await _initializeDesktop(manager ?? windowManager);
     }
   }
 
@@ -19,8 +19,8 @@ class PlatformInit {
   }
 
   /// Initializes desktop-specific features
-  static Future<void> _initializeDesktop() async {
-    await windowManager.ensureInitialized();
-    await windowManager.setMinimumSize(AppConstants.minWindowSize);
+  static Future<void> _initializeDesktop(WindowManager manager) async {
+    await manager.ensureInitialized();
+    await manager.setMinimumSize(AppConstants.minWindowSize);
   }
 }
