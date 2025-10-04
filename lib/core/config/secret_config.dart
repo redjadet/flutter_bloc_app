@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -49,30 +50,32 @@ class SecretConfig {
         _configuredStorage ?? FlutterSecureSecretStorage();
 
     try {
-      final Map<String, dynamic>? stored = await _readSecureSecrets(storage);
-      if (_hasSecrets(stored)) {
-        _applySecrets(stored!);
+      final bool loadedFromSecure = await _loadFromSource(
+        () => _readSecureSecrets(storage),
+      );
+      if (loadedFromSecure) {
         _loaded = true;
         return;
       }
 
       if (!kReleaseMode) {
-        final Map<String, dynamic>? assetSecrets = await _readAssetSecrets();
-        if (_hasSecrets(assetSecrets)) {
-          _applySecrets(assetSecrets!);
+        final bool loadedFromAssets = await _loadFromSource(
+          () => _readAssetSecrets(),
+        );
+        if (loadedFromAssets) {
           _loaded = true;
           return;
         }
       }
 
-      final Map<String, dynamic>? envSecrets = _readEnvironmentSecrets();
-      if (_hasSecrets(envSecrets)) {
-        _applySecrets(envSecrets!);
-        final bool shouldPersistEnv =
-            persistToSecureStorage ?? true; // default to persisting env values
-        if (shouldPersistEnv) {
-          await _persistToSecureStorage(storage);
-        }
+      final bool shouldPersistEnv = persistToSecureStorage ?? true;
+      final bool loadedFromEnvironment = await _loadFromSource(
+        () => _readEnvironmentSecrets(),
+        afterApply: shouldPersistEnv
+            ? () => _persistToSecureStorage(storage)
+            : null,
+      );
+      if (loadedFromEnvironment) {
         _loaded = true;
         return;
       }
@@ -209,5 +212,22 @@ class SecretConfig {
       AppLogger.warning('SecretConfig asset read failed: $e');
     }
     return null;
+  }
+
+  static Future<bool> _loadFromSource(
+    FutureOr<Map<String, dynamic>?> Function() read, {
+    Future<void> Function()? afterApply,
+  }) async {
+    final Map<String, dynamic>? secrets =
+        await Future<Map<String, dynamic>?>.value(read());
+    if (!_hasSecrets(secrets)) {
+      return false;
+    }
+
+    _applySecrets(secrets!);
+    if (afterApply != null) {
+      await afterApply();
+    }
+    return true;
   }
 }

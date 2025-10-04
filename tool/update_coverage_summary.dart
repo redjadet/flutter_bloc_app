@@ -1,3 +1,5 @@
+// @dart=3.0
+
 import 'dart:io';
 
 const List<String> _generatedSuffixes = <String>[
@@ -141,12 +143,11 @@ class _Coverage {
     }
     finishRecord();
 
-    final List<_CoverageRecord> filtered =
-        perFile.values
-            .where((record) => record.path.startsWith('lib/'))
-            .where((record) => record.linesFound > 0)
-            .toList()
-          ..sort((a, b) => a.percentage.compareTo(b.percentage));
+    final List<_CoverageRecord> filtered = perFile.values
+        .where((record) => record.path.startsWith('lib/'))
+        .where((record) => record.linesFound > 0)
+        .toList()
+      ..sort((a, b) => a.percentage.compareTo(b.percentage));
 
     final int totalFound = filtered.fold<int>(
       0,
