@@ -66,7 +66,15 @@ void main() {
     test('posts JSON payload and emits saved snapshot', () async {
       final _Requests requests = _Requests();
       final _FakeClient client = _FakeClient(
-        getHandler: (_) => http.Response('null', 200),
+        getHandler: (_) => http.Response(
+          jsonEncode(<String, dynamic>{
+            'id': 'user-abc',
+            'count': 5,
+            'last_changed': 99,
+          }),
+          200,
+          headers: <String, String>{'content-type': 'application/json'},
+        ),
         postHandler: (http.BaseRequest request, String body) {
           requests.record(request, body);
           return http.Response('', 204);
@@ -103,10 +111,51 @@ void main() {
         expect(body['last_changed'], 42);
         expect(body['userId'], isNull);
 
-        expect(emitted.length, greaterThanOrEqualTo(2));
+        expect(emitted.length, greaterThanOrEqualTo(3));
+        expect(emitted.first.count, 0);
+        expect(emitted.first.userId, 'rest');
+        final CounterSnapshot initialRemote = emitted[1];
+        expect(initialRemote.count, 5);
+        expect(initialRemote.userId, 'user-abc');
+
         final CounterSnapshot saved = emitted.last;
         expect(saved.count, 3);
         expect(saved.userId, 'rest');
+      });
+    });
+
+    test('provides cached snapshot to new watch subscribers', () async {
+      final _FakeClient client = _FakeClient(
+        getHandler: (_) => http.Response(
+          jsonEncode(<String, dynamic>{'id': 'user-xyz', 'count': 11}),
+          200,
+          headers: <String, String>{'content-type': 'application/json'},
+        ),
+      );
+      final RestCounterRepository repository = RestCounterRepository(
+        baseUrl: 'https://api.example.com/',
+        client: client,
+      );
+
+      await AppLogger.silenceAsync(() async {
+        final List<CounterSnapshot> first = <CounterSnapshot>[];
+        final StreamSubscription<CounterSnapshot> a = repository.watch().listen(
+          first.add,
+        );
+        await pumpEventQueue();
+        await a.cancel();
+
+        expect(first.last.count, 11);
+
+        final List<CounterSnapshot> second = <CounterSnapshot>[];
+        final StreamSubscription<CounterSnapshot> b = repository.watch().listen(
+          second.add,
+        );
+        await pumpEventQueue();
+        await b.cancel();
+
+        expect(second.first.count, 11);
+        expect(second.first.userId, 'user-xyz');
       });
     });
   });

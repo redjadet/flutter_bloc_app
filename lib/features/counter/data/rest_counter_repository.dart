@@ -31,6 +31,8 @@ class RestCounterRepository implements CounterRepository {
     count: 0,
   );
   StreamController<CounterSnapshot>? _watchController;
+  CounterSnapshot _latestSnapshot = _emptySnapshot;
+  Completer<void>? _initialLoadCompleter;
 
   Uri get _counterUri => _baseUri.resolve('counter');
 
@@ -79,6 +81,7 @@ class RestCounterRepository implements CounterRepository {
       _client.close();
     }
     _watchController?.close();
+    _watchController = null;
   }
 
   @override
@@ -89,17 +92,23 @@ class RestCounterRepository implements CounterRepository {
           .timeout(_requestTimeout);
       if (!_isSuccess(res.statusCode)) {
         _logHttpError('load', res);
+        _latestSnapshot = _emptySnapshot;
         return _emptySnapshot;
       }
-      return _parseSnapshot(res.body);
+      final CounterSnapshot snapshot = _parseSnapshot(res.body);
+      final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
+      _latestSnapshot = normalized;
+      return normalized;
     } on Exception catch (e, s) {
       AppLogger.error('RestCounterRepository.load failed', e, s);
+      _latestSnapshot = _emptySnapshot;
       return _emptySnapshot;
     }
   }
 
   @override
   Future<void> save(CounterSnapshot snapshot) async {
+    final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
     try {
       final res = await _client
           .post(
@@ -117,21 +126,75 @@ class RestCounterRepository implements CounterRepository {
       if (!_isSuccess(res.statusCode)) {
         _logHttpError('save', res);
       }
-      _watchController?.add(
-        snapshot.userId != null ? snapshot : snapshot.copyWith(userId: 'rest'),
-      );
     } on Exception catch (e, s) {
       AppLogger.error('RestCounterRepository.save failed', e, s);
+    } finally {
+      _emitSnapshot(normalized);
     }
   }
 
   @override
   Stream<CounterSnapshot> watch() {
     _watchController ??= StreamController<CounterSnapshot>.broadcast(
-      onListen: () async {
-        _watchController?.add(await load());
-      },
+      onListen: _triggerInitialLoadIfNeeded,
+      onCancel: _handleWatchCancel,
     );
-    return _watchController!.stream;
+
+    final Stream<CounterSnapshot> sourceStream = _watchController!.stream;
+    return Stream<CounterSnapshot>.multi((multi) {
+      multi.add(_latestSnapshot);
+      final StreamSubscription<CounterSnapshot> subscription = sourceStream
+          .listen(multi.add, onError: multi.addError);
+      multi.onCancel = subscription.cancel;
+    });
+  }
+
+  CounterSnapshot _normalizeSnapshot(CounterSnapshot snapshot) {
+    final String? userId = snapshot.userId;
+    if (userId == null || userId.isEmpty) {
+      return snapshot.copyWith(userId: _emptySnapshot.userId);
+    }
+    return snapshot;
+  }
+
+  void _emitSnapshot(CounterSnapshot snapshot) {
+    final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
+    _latestSnapshot = normalized;
+    final StreamController<CounterSnapshot>? controller = _watchController;
+    if (controller != null && !controller.isClosed) {
+      controller.add(normalized);
+    }
+  }
+
+  void _triggerInitialLoadIfNeeded() {
+    if (_watchController == null) {
+      return;
+    }
+    if (_initialLoadCompleter != null) {
+      return;
+    }
+    final Completer<void> completer = Completer<void>();
+    _initialLoadCompleter = completer;
+    unawaited(() async {
+      try {
+        final CounterSnapshot snapshot = await load();
+        _emitSnapshot(snapshot);
+      } finally {
+        completer.complete();
+        _initialLoadCompleter = null;
+      }
+    }());
+  }
+
+  Future<void> _handleWatchCancel() async {
+    final StreamController<CounterSnapshot>? controller = _watchController;
+    if (controller == null) {
+      return;
+    }
+    if (controller.hasListener) {
+      return;
+    }
+    _watchController = null;
+    await controller.close();
   }
 }

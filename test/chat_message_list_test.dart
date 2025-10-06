@@ -23,7 +23,9 @@ void main() {
     final _StubChatCubit cubit = _StubChatCubit(const ChatState());
     addTearDown(cubit.close);
 
-    await tester.pumpWidget(_wrapWithApp(cubit, ChatMessageList(controller: ScrollController())));
+    await tester.pumpWidget(
+      _wrapWithApp(cubit, ChatMessageList(controller: ScrollController())),
+    );
 
     expect(find.text(AppLocalizationsEn().chatEmptyState), findsOneWidget);
   });
@@ -34,7 +36,9 @@ void main() {
     final _StubChatCubit cubit = _StubChatCubit(const ChatState());
     addTearDown(cubit.close);
 
-    await tester.pumpWidget(_wrapWithApp(cubit, ChatMessageList(controller: ScrollController())));
+    await tester.pumpWidget(
+      _wrapWithApp(cubit, ChatMessageList(controller: ScrollController())),
+    );
 
     cubit.emit(
       ChatState(
@@ -52,8 +56,9 @@ void main() {
     expect(find.text('hello'), findsOneWidget);
     expect(find.text('boom'), findsOneWidget);
 
-    final ScaffoldMessengerState messenger =
-        ScaffoldMessenger.of(tester.element(find.byType(Scaffold)));
+    final ScaffoldMessengerState messenger = ScaffoldMessenger.of(
+      tester.element(find.byType(Scaffold)),
+    );
     messenger.hideCurrentSnackBar();
     messenger.clearSnackBars();
     await tester.pumpAndSettle();
@@ -75,7 +80,10 @@ Widget _wrapWithApp(ChatCubit cubit, Widget child) {
 
 class _StubChatCubit extends ChatCubit {
   _StubChatCubit(ChatState initialState)
-    : super(repository: _StubChatRepository(), historyRepository: _StubHistoryRepository()) {
+    : super(
+        repository: _StubChatRepository(),
+        historyRepository: _StubHistoryRepository(),
+      ) {
     emit(initialState);
   }
 
