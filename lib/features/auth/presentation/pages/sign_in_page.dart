@@ -46,9 +46,58 @@ const Key signInGuestButtonKey = Key('sign_in_guest_button');
 
 /// Sign-in page that hosts the FirebaseUI Auth drop-in experience.
 class SignInPage extends StatelessWidget {
-  const SignInPage({super.key, FirebaseAuth? auth}) : _auth = auth;
+  const SignInPage({
+    super.key,
+    FirebaseAuth? auth,
+    this.providersOverride,
+    firebase_ui_google.GoogleProvider? Function()? googleProviderFactory,
+  }) : _auth = auth,
+       _googleProviderFactory =
+           googleProviderFactory ?? _maybeCreateGoogleProvider;
 
   final FirebaseAuth? _auth;
+  @visibleForTesting
+  final List<firebase_ui.AuthProvider>? providersOverride;
+  final firebase_ui_google.GoogleProvider? Function() _googleProviderFactory;
+
+  @visibleForTesting
+  static List<firebase_ui.AuthProvider> prepareProviders({
+    required FirebaseAuth auth,
+    List<firebase_ui.AuthProvider>? override,
+    required firebase_ui_google.GoogleProvider? Function()
+    googleProviderFactory,
+  }) {
+    final List<firebase_ui.AuthProvider> providers =
+        List<firebase_ui.AuthProvider>.from(
+          override ?? firebase_ui.FirebaseUIAuth.providersFor(auth.app),
+        );
+
+    if (!providers.any(
+      (firebase_ui.AuthProvider provider) =>
+          provider is firebase_ui.EmailAuthProvider,
+    )) {
+      providers.insert(0, firebase_ui.EmailAuthProvider());
+    }
+
+    if (providers.isEmpty) {
+      providers.add(firebase_ui.EmailAuthProvider());
+    }
+
+    final bool hasGoogleProvider = providers.any(
+      (firebase_ui.AuthProvider provider) =>
+          provider is firebase_ui_google.GoogleProvider,
+    );
+
+    if (!hasGoogleProvider) {
+      final firebase_ui_google.GoogleProvider? googleProvider =
+          googleProviderFactory();
+      if (googleProvider != null) {
+        providers.add(googleProvider);
+      }
+    }
+
+    return providers;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,37 +106,16 @@ class SignInPage extends StatelessWidget {
     final FirebaseAuth auth = _auth ?? FirebaseAuth.instance;
     final bool upgradingAnonymous = auth.currentUser?.isAnonymous ?? false;
 
-    final bool canUseFirebaseUISignIn = Firebase.apps.isNotEmpty;
+    final bool canUseFirebaseUISignIn =
+        providersOverride != null || Firebase.apps.isNotEmpty;
 
     late final List<firebase_ui.AuthProvider> providers;
     if (canUseFirebaseUISignIn) {
-      providers = List<firebase_ui.AuthProvider>.from(
-        firebase_ui.FirebaseUIAuth.providersFor(auth.app),
+      providers = prepareProviders(
+        auth: auth,
+        override: providersOverride,
+        googleProviderFactory: _googleProviderFactory,
       );
-
-      if (!providers.any(
-        (firebase_ui.AuthProvider provider) =>
-            provider is firebase_ui.EmailAuthProvider,
-      )) {
-        providers.insert(0, firebase_ui.EmailAuthProvider());
-      }
-
-      if (providers.isEmpty) {
-        providers.add(firebase_ui.EmailAuthProvider());
-      }
-
-      final bool hasGoogleProvider = providers.any(
-        (firebase_ui.AuthProvider provider) =>
-            provider is firebase_ui_google.GoogleProvider,
-      );
-
-      if (!hasGoogleProvider) {
-        final firebase_ui_google.GoogleProvider? googleProvider =
-            _maybeCreateGoogleProvider();
-        if (googleProvider != null) {
-          providers.add(googleProvider);
-        }
-      }
     } else {
       providers = <firebase_ui.AuthProvider>[];
     }
@@ -126,6 +154,9 @@ class SignInPage extends StatelessWidget {
       );
     }
 
+    // Rendering relies on FirebaseUI internals; exclude from coverage to keep
+    // unit tests focused on data-path logic.
+    // coverage:ignore-start
     return firebase_ui.SignInScreen(
       auth: auth,
       providers: providers,
@@ -198,6 +229,7 @@ class SignInPage extends StatelessWidget {
         }),
       ],
     );
+    // coverage:ignore-end
   }
 }
 

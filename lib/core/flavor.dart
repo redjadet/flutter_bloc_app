@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 enum Flavor { dev, staging, qa, beta, prod }
 
 class FlavorManager {
@@ -46,3 +48,6 @@ Flavor _parseFlavor(String value) {
       return Flavor.dev;
   }
 }
+
+@visibleForTesting
+Flavor parseFlavorForTest(String value) => _parseFlavor(value);

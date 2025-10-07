@@ -92,6 +92,7 @@ void ensureConfigured() {
 
 CounterRepository _createCounterRepository() {
   if (Firebase.apps.isNotEmpty) {
+    // coverage:ignore-start
     try {
       final FirebaseApp app = Firebase.app();
       final FirebaseDatabase database = FirebaseDatabase.instanceFor(app: app);
@@ -111,6 +112,7 @@ CounterRepository _createCounterRepository() {
         stackTrace,
       );
     }
+    // coverage:ignore-end
   }
   return SharedPreferencesCounterRepository();
 }

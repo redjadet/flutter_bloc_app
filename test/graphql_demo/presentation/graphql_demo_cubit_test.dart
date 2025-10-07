@@ -112,6 +112,83 @@ void main() {
         ),
       ],
     );
+
+    blocTest<GraphqlDemoCubit, GraphqlDemoState>(
+      'emits generic error when repository throws unexpected exception',
+      build: () {
+        repository.shouldThrowGeneric = true;
+        return createCubit();
+      },
+      act: (cubit) => AppLogger.silenceAsync(() => cubit.loadInitial()),
+      expect: () => const <GraphqlDemoState>[
+        GraphqlDemoState(status: GraphqlDemoStatus.loading),
+        GraphqlDemoState(
+          status: GraphqlDemoStatus.error,
+          errorMessage: null,
+          errorType: GraphqlDemoErrorType.unknown,
+        ),
+      ],
+    );
+
+    blocTest<GraphqlDemoCubit, GraphqlDemoState>(
+      'selectContinent surfaces GraphqlDemoException',
+      build: () => createCubit(),
+      seed: () => GraphqlDemoState(
+        status: GraphqlDemoStatus.success,
+        continents: repository.continents,
+        countries: repository.countriesByCode[null]!,
+      ),
+      act: (cubit) {
+        repository.shouldThrow = true;
+        return AppLogger.silenceAsync(() => cubit.selectContinent('EU'));
+      },
+      expect: () => [
+        GraphqlDemoState(
+          status: GraphqlDemoStatus.loading,
+          continents: repository.continents,
+          countries: repository.countriesByCode[null]!,
+          activeContinentCode: 'EU',
+        ),
+        GraphqlDemoState(
+          status: GraphqlDemoStatus.error,
+          continents: repository.continents,
+          countries: repository.countriesByCode[null]!,
+          activeContinentCode: 'EU',
+          errorMessage: 'Load failed',
+          errorType: GraphqlDemoErrorType.unknown,
+        ),
+      ],
+    );
+
+    blocTest<GraphqlDemoCubit, GraphqlDemoState>(
+      'selectContinent surfaces unknown exception as generic error',
+      build: () => createCubit(),
+      seed: () => GraphqlDemoState(
+        status: GraphqlDemoStatus.success,
+        continents: repository.continents,
+        countries: repository.countriesByCode[null]!,
+      ),
+      act: (cubit) {
+        repository.shouldThrowGeneric = true;
+        return AppLogger.silenceAsync(() => cubit.selectContinent('EU'));
+      },
+      expect: () => [
+        GraphqlDemoState(
+          status: GraphqlDemoStatus.loading,
+          continents: repository.continents,
+          countries: repository.countriesByCode[null]!,
+          activeContinentCode: 'EU',
+        ),
+        GraphqlDemoState(
+          status: GraphqlDemoStatus.error,
+          continents: repository.continents,
+          countries: repository.countriesByCode[null]!,
+          activeContinentCode: 'EU',
+          errorMessage: null,
+          errorType: GraphqlDemoErrorType.unknown,
+        ),
+      ],
+    );
   });
 }
 
@@ -152,11 +229,15 @@ class FakeGraphqlDemoRepository implements GraphqlDemoRepository {
   final List<GraphqlContinent> continents;
   final Map<String?, List<GraphqlCountry>> countriesByCode;
   bool shouldThrow = false;
+  bool shouldThrowGeneric = false;
 
   @override
   Future<List<GraphqlContinent>> fetchContinents() async {
     if (shouldThrow) {
       throw GraphqlDemoException('Load failed');
+    }
+    if (shouldThrowGeneric) {
+      throw Exception('network down');
     }
     return continents;
   }
@@ -165,6 +246,9 @@ class FakeGraphqlDemoRepository implements GraphqlDemoRepository {
   Future<List<GraphqlCountry>> fetchCountries({String? continentCode}) async {
     if (shouldThrow) {
       throw GraphqlDemoException('Load failed');
+    }
+    if (shouldThrowGeneric) {
+      throw Exception('network down');
     }
     return countriesByCode[continentCode] ?? <GraphqlCountry>[];
   }

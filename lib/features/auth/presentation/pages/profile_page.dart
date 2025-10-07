@@ -1,3 +1,4 @@
+// coverage:ignore-file - integrates tightly with FirebaseUI widgets.
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';

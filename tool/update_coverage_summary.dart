@@ -190,10 +190,26 @@ class _Coverage {
         return false;
       }
     }
+    if (_hasCoverageIgnoreFile(path)) {
+      return false;
+    }
     if (_isTrivialDartFile(path)) {
       return false;
     }
     return true;
+  }
+
+  static bool _hasCoverageIgnoreFile(String path) {
+    if (!path.endsWith('.dart')) {
+      return false;
+    }
+    final File file = File(path);
+    if (!file.existsSync()) {
+      return false;
+    }
+    return file.readAsLinesSync().any(
+      (String line) => line.trim().startsWith('// coverage:ignore-file'),
+    );
   }
 
   static bool _isTrivialDartFile(String path) {

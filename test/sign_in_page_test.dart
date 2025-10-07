@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui;
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'
+    as firebase_ui_google;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -74,6 +77,45 @@ void main() {
         findsOneWidget,
       );
       expect(mockAuth.currentUser, isNull);
+    });
+  });
+
+  group('SignInPage.prepareProviders', () {
+    test('injects email provider when override lacks email provider', () {
+      final MockFirebaseAuth mockAuth = MockFirebaseAuth();
+
+      final List<firebase_ui.AuthProvider> providers =
+          SignInPage.prepareProviders(
+            auth: mockAuth,
+            override: const <firebase_ui.AuthProvider>[],
+            googleProviderFactory: () => null,
+          );
+
+      expect(providers.first, isA<firebase_ui.EmailAuthProvider>());
+      expect(providers.whereType<firebase_ui.EmailAuthProvider>().length, 1);
+    });
+
+    test('appends google provider when factory supplies one', () {
+      final MockFirebaseAuth mockAuth = MockFirebaseAuth();
+      final firebase_ui_google.GoogleProvider googleProvider =
+          firebase_ui_google.GoogleProvider(
+            clientId: 'test-client',
+            iOSPreferPlist: false,
+          );
+
+      final List<firebase_ui.AuthProvider> providers =
+          SignInPage.prepareProviders(
+            auth: mockAuth,
+            override: <firebase_ui.AuthProvider>[
+              firebase_ui.EmailAuthProvider(),
+            ],
+            googleProviderFactory: () => googleProvider,
+          );
+
+      expect(
+        providers.whereType<firebase_ui_google.GoogleProvider>(),
+        contains(googleProvider),
+      );
     });
   });
 

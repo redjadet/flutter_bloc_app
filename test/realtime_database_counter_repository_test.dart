@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_bloc_app/features/counter/data/realtime_database_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
 void main() {
   group('RealtimeDatabaseCounterRepository.snapshotFromValue', () {
@@ -105,4 +110,133 @@ void main() {
       );
     });
   });
+
+  group('RealtimeDatabaseCounterRepository', () {
+    test('load returns parsed snapshot from database', () async {
+      final MockFirebaseAuth auth = MockFirebaseAuth(
+        signedIn: true,
+        mockUser: MockUser(uid: 'user-123'),
+      );
+      final _MockDatabaseReference rootRef = _MockDatabaseReference();
+      final _MockDatabaseReference userRef = _MockDatabaseReference();
+      final _MockDataSnapshot snapshot = _MockDataSnapshot();
+
+      when(() => snapshot.exists).thenReturn(true);
+      when(() => rootRef.path).thenReturn('counter');
+      when(() => rootRef.child('user-123')).thenReturn(userRef);
+      when(() => userRef.get()).thenAnswer((_) async => snapshot);
+      when(
+        () => snapshot.value,
+      ).thenReturn(<String, Object?>{'count': 9, 'last_changed': 10});
+
+      final RealtimeDatabaseCounterRepository repository =
+          RealtimeDatabaseCounterRepository(counterRef: rootRef, auth: auth);
+
+      final CounterSnapshot result = await AppLogger.silenceAsync(() {
+        return repository.load();
+      });
+
+      expect(result.userId, 'user-123');
+      expect(result.count, 9);
+      expect(result.lastChanged, isNotNull);
+    });
+
+    test('load falls back to empty snapshot on firebase exception', () async {
+      final MockFirebaseAuth auth = MockFirebaseAuth(
+        signedIn: true,
+        mockUser: MockUser(uid: 'user-456'),
+      );
+      final _MockDatabaseReference rootRef = _MockDatabaseReference();
+      final _MockDatabaseReference userRef = _MockDatabaseReference();
+
+      when(() => rootRef.path).thenReturn('counter');
+      when(() => rootRef.child('user-456')).thenReturn(userRef);
+      when(
+        () => userRef.get(),
+      ).thenThrow(FirebaseException(plugin: 'database', message: 'boom'));
+
+      final RealtimeDatabaseCounterRepository repository =
+          RealtimeDatabaseCounterRepository(counterRef: rootRef, auth: auth);
+
+      final CounterSnapshot result = await AppLogger.silenceAsync(() {
+        return repository.load();
+      });
+
+      expect(result.userId, 'user-456');
+      expect(result.count, 0);
+    });
+
+    test('save writes normalized snapshot to database', () async {
+      final MockFirebaseAuth auth = MockFirebaseAuth(
+        signedIn: true,
+        mockUser: MockUser(uid: 'user-789'),
+      );
+      final _MockDatabaseReference rootRef = _MockDatabaseReference();
+      final _MockDatabaseReference userRef = _MockDatabaseReference();
+
+      when(() => rootRef.path).thenReturn('counter');
+      when(() => rootRef.child('user-789')).thenReturn(userRef);
+      when(() => userRef.set(any<dynamic>())).thenAnswer((_) async {});
+
+      final RealtimeDatabaseCounterRepository repository =
+          RealtimeDatabaseCounterRepository(counterRef: rootRef, auth: auth);
+      final DateTime timestamp = DateTime.fromMillisecondsSinceEpoch(42);
+
+      await AppLogger.silenceAsync(() async {
+        await repository.save(
+          CounterSnapshot(userId: '', count: 4, lastChanged: timestamp),
+        );
+      });
+
+      final VerificationResult verification = verify(() {
+        return userRef.set(captureAny<dynamic>());
+      });
+      verification.called(1);
+      final Object? payload = verification.captured.single;
+      expect(payload, isA<Map<String, Object?>>());
+      final Map<dynamic, dynamic> map = payload as Map<dynamic, dynamic>;
+      expect(map['userId'], 'user-789');
+      expect(map['count'], 4);
+      expect(map['last_changed'], timestamp.millisecondsSinceEpoch);
+    });
+
+    test('watch emits snapshots from database stream', () async {
+      final MockFirebaseAuth auth = MockFirebaseAuth(
+        signedIn: true,
+        mockUser: MockUser(uid: 'user-watch'),
+      );
+      final _MockDatabaseReference rootRef = _MockDatabaseReference();
+      final _MockDatabaseReference userRef = _MockDatabaseReference();
+      final StreamController<DatabaseEvent> controller =
+          StreamController<DatabaseEvent>();
+      final _MockDatabaseEvent event = _MockDatabaseEvent();
+      final _MockDataSnapshot snapshot = _MockDataSnapshot();
+
+      when(() => rootRef.child('user-watch')).thenReturn(userRef);
+      when(() => userRef.onValue).thenAnswer((_) => controller.stream);
+      when(() => event.snapshot).thenReturn(snapshot);
+      when(() => snapshot.value).thenReturn(<String, Object?>{'count': 6});
+
+      final RealtimeDatabaseCounterRepository repository =
+          RealtimeDatabaseCounterRepository(counterRef: rootRef, auth: auth);
+
+      final Future<CounterSnapshot> futureSnapshot = AppLogger.silenceAsync(() {
+        return repository.watch().first;
+      });
+
+      controller.add(event);
+      final CounterSnapshot result = await futureSnapshot;
+
+      expect(result.userId, 'user-watch');
+      expect(result.count, 6);
+
+      await controller.close();
+    });
+  });
 }
+
+class _MockDatabaseReference extends Mock implements DatabaseReference {}
+
+class _MockDataSnapshot extends Mock implements DataSnapshot {}
+
+class _MockDatabaseEvent extends Mock implements DatabaseEvent {}

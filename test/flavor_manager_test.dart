@@ -27,4 +27,10 @@ void main() {
     expect(FlavorManager.I.isDev, isTrue);
     expect(FlavorManager.I.name, 'dev');
   });
+
+  test('parseFlavorForTest resolves aliases and defaults to dev', () {
+    expect(parseFlavorForTest('stage'), Flavor.staging);
+    expect(parseFlavorForTest('production'), Flavor.prod);
+    expect(parseFlavorForTest('unknown'), Flavor.dev);
+  });
 }

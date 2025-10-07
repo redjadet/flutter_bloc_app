@@ -227,6 +227,134 @@ void main() {
         expect(cubit.state.activeConversationId, isNot(previousActiveId));
       },
     );
+
+    test(
+      'clearHistory resets state without persisting when already empty',
+      () async {
+        final FakeChatRepository repo = FakeChatRepository();
+        final _TrackingChatHistoryRepository history =
+            _TrackingChatHistoryRepository();
+        final ChatCubit cubit = createCubit(
+          repository: repo,
+          historyRepository: history,
+        );
+
+        await cubit.clearHistory();
+
+        expect(history.saveCallCount, 0);
+        expect(cubit.state.history, isEmpty);
+        expect(cubit.state.activeConversationId, isNotNull);
+        expect(cubit.state.messages, isEmpty);
+      },
+    );
+
+    test('deleteConversation promotes next available conversation', () async {
+      final FakeChatRepository repo = FakeChatRepository();
+      final FakeChatHistoryRepository history = FakeChatHistoryRepository();
+      final ChatConversation older = ChatConversation(
+        id: 'older',
+        messages: const <ChatMessage>[
+          ChatMessage(author: ChatAuthor.user, text: 'Hi'),
+          ChatMessage(author: ChatAuthor.assistant, text: 'Hello'),
+        ],
+        pastUserInputs: const <String>['Hi'],
+        generatedResponses: const <String>['Hello'],
+        createdAt: DateTime(2024, 1, 1, 12, 0),
+        updatedAt: DateTime(2024, 1, 1, 12, 5),
+        model: 'openai/gpt-oss-20b',
+      );
+      final ChatConversation newer = ChatConversation(
+        id: 'newer',
+        messages: const <ChatMessage>[
+          ChatMessage(author: ChatAuthor.user, text: 'Howdy'),
+          ChatMessage(author: ChatAuthor.assistant, text: 'Welcome'),
+        ],
+        pastUserInputs: const <String>['Howdy'],
+        generatedResponses: const <String>['Welcome'],
+        createdAt: DateTime(2024, 1, 2, 8, 0),
+        updatedAt: DateTime(2024, 1, 2, 8, 30),
+        model: 'openai/gpt-oss-20b',
+      );
+      history.conversations = <ChatConversation>[older, newer];
+
+      final ChatCubit cubit = createCubit(
+        repository: repo,
+        historyRepository: history,
+      );
+
+      await cubit.loadHistory();
+      expect(cubit.state.activeConversationId, 'newer');
+
+      await cubit.deleteConversation('newer');
+
+      expect(cubit.state.history.length, 1);
+      expect(cubit.state.history.single.id, 'older');
+      expect(cubit.state.activeConversationId, 'older');
+    });
+
+    test(
+      'deleteConversation resets to fresh conversation when history empties',
+      () async {
+        final FakeChatRepository repo = FakeChatRepository();
+        final FakeChatHistoryRepository history = FakeChatHistoryRepository();
+        final ChatConversation only = ChatConversation(
+          id: 'only',
+          messages: const <ChatMessage>[
+            ChatMessage(author: ChatAuthor.user, text: 'Hi'),
+            ChatMessage(author: ChatAuthor.assistant, text: 'Hello'),
+          ],
+          pastUserInputs: const <String>['Hi'],
+          generatedResponses: const <String>['Hello'],
+          createdAt: DateTime(2024, 1, 1, 12, 0),
+          updatedAt: DateTime(2024, 1, 1, 12, 1),
+          model: 'openai/gpt-oss-20b',
+        );
+        history.conversations = <ChatConversation>[only];
+
+        final ChatCubit cubit = createCubit(
+          repository: repo,
+          historyRepository: history,
+        );
+
+        await cubit.loadHistory();
+        final String previousActiveId = cubit.state.activeConversationId!;
+
+        await cubit.deleteConversation(previousActiveId);
+
+        expect(cubit.state.history, isEmpty);
+        expect(cubit.state.activeConversationId, isNot(previousActiveId));
+        expect(cubit.state.messages, isEmpty);
+        expect(history.conversations, isEmpty);
+      },
+    );
+
+    test('loadHistory normalizes model and persists updated history', () async {
+      final FakeChatRepository repo = FakeChatRepository();
+      final _TrackingChatHistoryRepository history =
+          _TrackingChatHistoryRepository();
+      final ChatConversation legacy = ChatConversation(
+        id: 'legacy',
+        messages: const <ChatMessage>[
+          ChatMessage(author: ChatAuthor.user, text: 'Hi'),
+        ],
+        pastUserInputs: const <String>['Hi'],
+        generatedResponses: const <String>['Hello'],
+        createdAt: DateTime(2024, 1, 1, 8, 0),
+        updatedAt: DateTime(2024, 1, 1, 8, 1),
+        model: 'unsupported-model',
+      );
+      history.conversations = <ChatConversation>[legacy];
+
+      final ChatCubit cubit = createCubit(
+        repository: repo,
+        historyRepository: history,
+      );
+
+      await cubit.loadHistory();
+
+      expect(history.saveCallCount, greaterThan(0));
+      expect(cubit.state.history.single.model, cubit.state.currentModel);
+    });
   });
 }
 
@@ -286,6 +414,16 @@ class FakeChatHistoryRepository implements ChatHistoryRepository {
   @override
   Future<void> save(List<ChatConversation> conversations) async {
     this.conversations = List<ChatConversation>.from(conversations);
+  }
+}
+
+class _TrackingChatHistoryRepository extends FakeChatHistoryRepository {
+  int saveCallCount = 0;
+
+  @override
+  Future<void> save(List<ChatConversation> conversations) async {
+    saveCallCount++;
+    await super.save(conversations);
   }
 }
 
