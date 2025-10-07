@@ -49,7 +49,7 @@ dependencies:
   local_auth: ^2.1.9
   fancy_shimmer_image: ^2.0.3
   skeletonizer: ^2.1.0+1
-  logger: ^2.6.1
+  logger: ^2.6.2
   fl_chart: ^1.1.1
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
