@@ -109,7 +109,7 @@ void main() {
         final Map<String, dynamic> body = jsonDecode(requests.lastBody ?? '{}');
         expect(body['count'], 3);
         expect(body['last_changed'], 42);
-        expect(body['userId'], isNull);
+        expect(body['userId'], 'rest');
 
         expect(emitted.length, greaterThanOrEqualTo(3));
         expect(emitted.first.count, 0);
@@ -156,6 +156,34 @@ void main() {
 
         expect(second.first.count, 11);
         expect(second.first.userId, 'user-xyz');
+      });
+    });
+
+    test('preserves provided userId when saving snapshots', () async {
+      final _Requests requests = _Requests();
+      final _FakeClient client = _FakeClient(
+        postHandler: (http.BaseRequest request, String body) {
+          requests.record(request, body);
+          return http.Response('', 200);
+        },
+      );
+      final RestCounterRepository repository = RestCounterRepository(
+        baseUrl: 'https://api.example.com/',
+        client: client,
+      );
+
+      await AppLogger.silenceAsync(() async {
+        final CounterSnapshot snapshot = CounterSnapshot(
+          userId: 'custom-user',
+          count: 8,
+          lastChanged: DateTime.fromMillisecondsSinceEpoch(314),
+        );
+        await repository.save(snapshot);
+
+        final Map<String, dynamic> body = jsonDecode(requests.lastBody ?? '{}');
+        expect(body['userId'], 'custom-user');
+        expect(body['count'], 8);
+        expect(body['last_changed'], 314);
       });
     });
   });

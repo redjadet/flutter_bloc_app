@@ -117,9 +117,9 @@ class RestCounterRepository implements CounterRepository {
               overrides: const {'Content-Type': 'application/json'},
             ),
             body: jsonEncode(<String, dynamic>{
-              'userId': snapshot.userId,
-              'count': snapshot.count,
-              'last_changed': snapshot.lastChanged?.millisecondsSinceEpoch,
+              'userId': normalized.userId,
+              'count': normalized.count,
+              'last_changed': normalized.lastChanged?.millisecondsSinceEpoch,
             }),
           )
           .timeout(_requestTimeout);
