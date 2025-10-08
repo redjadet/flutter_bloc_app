@@ -20,10 +20,10 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Authentication: Firebase Auth with FirebaseUI (email/password, Google) plus anonymous “guest” sessions that can be upgraded in-place.
 - AI Chat: Conversational UI backed by Hugging Face Inference API (openai/gpt-oss).
 - Native integration: MethodChannel (`com.example.flutter_bloc_app/native`) returning sanitized device metadata with Kotlin/Swift handlers.
-- Secrets: `SecretConfig` reads from secure storage first, falls back to the dev-only
-  `assets/config/secrets.json`, and finally to `--dart-define` values. Release
-  builds skip the asset and persist any provided values into platform secure
-  storage (`flutter_secure_storage`).
+- Secrets: `SecretConfig` reads from secure storage first, then from any
+  `--dart-define` values (persisted into secure storage), and only loads the
+  optional dev asset when explicitly opted-in via
+  `--dart-define=ENABLE_ASSET_SECRETS=true` (never in release builds).
 - Tests: Unit, bloc, widget, and golden coverage (`flutter_test`, `bloc_test`, `golden_toolkit`), including auth flows with Firebase mocks.
 - Agent-friendly guide: See `AGENTS.md` for the quick checklist (format → analyze → test → build_runner) and architecture guardrails.
 
@@ -56,7 +56,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 ## Security & Secrets
 
 - NEVER commit `assets/config/secrets.json`. The repo ships only `assets/config/secrets.sample.json`; copy it locally and provide runtime secrets via environment variables or secure storage.
-- When `SecretConfig.load()` executes in release mode, Hugging Face credentials are cached into the OS keychain/keystore via `flutter_secure_storage` to avoid leaving secrets in asset bundles. Debug/tests continue to rely on the asset for convenience.
+- When `SecretConfig.load()` executes it persists any `--dart-define` secrets into the OS keychain/keystore via `flutter_secure_storage`. Asset-based secrets are ignored unless you opt-in with `--dart-define=ENABLE_ASSET_SECRETS=true`, and that code path is disabled entirely for release builds.
 - Rotate any leaked tokens immediately (e.g. Hugging Face Inference API key) and prefer short-lived or server-issued credentials for production.
 - Keep to least-privilege MethodChannel usage. `com.example.flutter_bloc_app/native` currently exposes only `getPlatformInfo` (no arguments). Validate future methods thoroughly and avoid returning sensitive data.
 - For production distribution, supply credentials from environment variables (e.g. CI-injected `--dart-define`s) or fetch them securely at runtime (remote config/services protected with TLS and optional certificate pinning) instead of bundling assets.
@@ -263,8 +263,9 @@ flutter run
 ### Secrets setup
 
 For local development, copy `assets/config/secrets.sample.json` to
-`assets/config/secrets.json` and fill in your Hugging Face credentials. The file
-is git-ignored and only loaded on non-release builds.
+`assets/config/secrets.json` and fill in your Hugging Face credentials. Opt-in
+to the asset fallback by passing `--dart-define=ENABLE_ASSET_SECRETS=true`
+when launching the app. Release builds ignore this flag entirely.
 
 ```bash
 cp assets/config/secrets.sample.json assets/config/secrets.json
@@ -276,10 +277,13 @@ them into the platform keychain/keystore so future runs can omit the flags.
 
 ```bash
 flutter run \
-  --dart-define=HUGGINGFACE_API_KEY=hf_xxx \
+  --dart-define=HUGGINGFACE_API_KEY=hf_dev_example123 \
   --dart-define=HUGGINGFACE_MODEL=openai/gpt-oss-20b \
   --dart-define=HUGGINGFACE_USE_CHAT_COMPLETIONS=true
 ```
+
+You can optionally add `--dart-define=ENABLE_ASSET_SECRETS=true` if you want
+the local `assets/config/secrets.json` fallback to kick in during that session.
 
 Before packaging a release, run the helper script to scrub any local
 `secrets.json` file so no live credentials end up in the bundle:
@@ -299,7 +303,7 @@ SecretConfig.configureStorage(
     ..write('huggingface_model', 'openai/gpt-oss-20b')
     ..write('huggingface_use_chat_completions', 'true'),
 );
-await SecretConfig.load();
+await SecretConfig.load(allowAssetFallback: true);
 ```
 
 ### Firebase

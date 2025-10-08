@@ -14,6 +14,10 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 Future<void> runAppWithFlavor(Flavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
+  const bool enableAssetSecrets = bool.fromEnvironment(
+    SecretConfig.enableAssetSecretsDefine,
+    defaultValue: true,
+  );
   final bool firebaseReady = await _initializeFirebase();
   if (firebaseReady) {
     _configureFirebaseUI();
@@ -21,7 +25,7 @@ Future<void> runAppWithFlavor(Flavor flavor) async {
   }
   FlavorManager.set(flavor);
   await PlatformInit.initialize();
-  await SecretConfig.load();
+  await SecretConfig.load(allowAssetFallback: enableAssetSecrets);
   await configureDependencies();
   runApp(const MyApp());
 }

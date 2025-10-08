@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class SecretConfig {
   SecretConfig._();
 
+  static const String enableAssetSecretsDefine = 'ENABLE_ASSET_SECRETS';
   static const String _keyHfToken = 'huggingface_api_key';
   static const String _keyHfModel = 'huggingface_model';
   static const String _keyHfUseChatCompletions =
@@ -43,11 +44,20 @@ class SecretConfig {
     _useChatCompletions = false;
   }
 
-  static Future<void> load({bool? persistToSecureStorage}) async {
+  static const bool _envAllowsAssetFallback = bool.fromEnvironment(
+    enableAssetSecretsDefine,
+  );
+
+  static Future<void> load({
+    bool? persistToSecureStorage,
+    bool allowAssetFallback = false,
+  }) async {
     if (_loaded) return;
 
     final SecretStorage storage =
         _configuredStorage ?? FlutterSecureSecretStorage();
+    final bool assetFallbackAllowed =
+        (_envAllowsAssetFallback || allowAssetFallback) && !kReleaseMode;
 
     try {
       final bool loadedFromSecure = await _loadFromSource(
@@ -58,7 +68,7 @@ class SecretConfig {
         return;
       }
 
-      if (!kReleaseMode) {
+      if (assetFallbackAllowed) {
         final bool loadedFromAssets = await _loadFromSource(
           () => _readAssetSecrets(),
         );

@@ -24,7 +24,7 @@ void main() {
 
     SecretConfig.configureStorage(storage);
 
-    await SecretConfig.load();
+    await SecretConfig.load(allowAssetFallback: true);
 
     expect(SecretConfig.huggingfaceApiKey, 'token-123');
     expect(SecretConfig.huggingfaceModel, 'awesome-model');
@@ -43,7 +43,7 @@ void main() {
     };
     SecretConfig.debugAssetBundle = _FakeAssetBundle(jsonEncode(assetSecrets));
 
-    await SecretConfig.load();
+    await SecretConfig.load(allowAssetFallback: true);
 
     expect(SecretConfig.huggingfaceApiKey, 'asset-key');
     expect(SecretConfig.huggingfaceModel, 'asset-model');
