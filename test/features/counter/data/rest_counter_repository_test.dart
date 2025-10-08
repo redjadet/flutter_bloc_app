@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/counter/data/rest_counter_repository.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -186,6 +187,46 @@ void main() {
         expect(body['last_changed'], 314);
       });
     });
+  });
+
+  test('throws CounterError.save when backend rejects write', () async {
+    final _FakeClient client = _FakeClient(
+      getHandler: (_) => http.Response(
+        jsonEncode(<String, dynamic>{
+          'id': 'user-seed',
+          'count': 2,
+          'last_changed': 5,
+        }),
+        200,
+        headers: <String, String>{'content-type': 'application/json'},
+      ),
+      postHandler: (_, _) => http.Response('nope', 500),
+    );
+    final RestCounterRepository repository = RestCounterRepository(
+      baseUrl: 'https://api.example.com/',
+      client: client,
+    );
+    final List<CounterSnapshot> emitted = <CounterSnapshot>[];
+    final StreamSubscription<CounterSnapshot> sub = repository.watch().listen(
+      emitted.add,
+    );
+    await pumpEventQueue();
+    expect(emitted, isNotEmpty);
+    final int initialLength = emitted.length;
+
+    await expectLater(
+      AppLogger.silenceAsync(() => repository.save(CounterSnapshot(count: 1))),
+      throwsA(
+        isA<CounterError>().having(
+          (CounterError error) => error.type,
+          'type',
+          CounterErrorType.saveError,
+        ),
+      ),
+    );
+    await pumpEventQueue();
+    expect(emitted.length, initialLength); // No extra event emitted on failure
+    await sub.cancel();
   });
 }
 

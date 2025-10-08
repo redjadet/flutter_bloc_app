@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -71,7 +72,7 @@ class RestCounterRepository implements CounterRepository {
   void _logHttpError(String operation, http.Response response) {
     AppLogger.error(
       'RestCounterRepository.$operation non-success: ${response.statusCode}',
-      response.body,
+      'Response body omitted for privacy',
       StackTrace.current,
     );
   }
@@ -125,11 +126,20 @@ class RestCounterRepository implements CounterRepository {
           .timeout(_requestTimeout);
       if (!_isSuccess(res.statusCode)) {
         _logHttpError('save', res);
+        throw CounterError.save(
+          originalError: http.ClientException(
+            'Counter save failed (HTTP ${res.statusCode})',
+            _counterUri,
+          ),
+          message: 'Save failed with status ${res.statusCode}',
+        );
       }
+      _emitSnapshot(normalized);
+    } on CounterError {
+      rethrow;
     } on Exception catch (e, s) {
       AppLogger.error('RestCounterRepository.save failed', e, s);
-    } finally {
-      _emitSnapshot(normalized);
+      throw CounterError.save(originalError: e);
     }
   }
 
