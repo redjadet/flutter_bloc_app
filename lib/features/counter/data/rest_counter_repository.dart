@@ -34,6 +34,7 @@ class RestCounterRepository implements CounterRepository {
   StreamController<CounterSnapshot>? _watchController;
   CounterSnapshot _latestSnapshot = _emptySnapshot;
   Completer<void>? _initialLoadCompleter;
+  bool _hasResolvedInitialValue = false;
 
   Uri get _counterUri => _baseUri.resolve('counter');
 
@@ -94,15 +95,18 @@ class RestCounterRepository implements CounterRepository {
       if (!_isSuccess(res.statusCode)) {
         _logHttpError('load', res);
         _latestSnapshot = _emptySnapshot;
+        _hasResolvedInitialValue = true;
         return _emptySnapshot;
       }
       final CounterSnapshot snapshot = _parseSnapshot(res.body);
       final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
       _latestSnapshot = normalized;
+      _hasResolvedInitialValue = true;
       return normalized;
     } on Exception catch (e, s) {
       AppLogger.error('RestCounterRepository.load failed', e, s);
       _latestSnapshot = _emptySnapshot;
+      _hasResolvedInitialValue = true;
       return _emptySnapshot;
     }
   }
@@ -152,7 +156,9 @@ class RestCounterRepository implements CounterRepository {
 
     final Stream<CounterSnapshot> sourceStream = _watchController!.stream;
     return Stream<CounterSnapshot>.multi((multi) {
-      multi.add(_latestSnapshot);
+      if (_hasResolvedInitialValue) {
+        multi.add(_latestSnapshot);
+      }
       final StreamSubscription<CounterSnapshot> subscription = sourceStream
           .listen(multi.add, onError: multi.addError);
       multi.onCancel = subscription.cancel;
@@ -170,6 +176,7 @@ class RestCounterRepository implements CounterRepository {
   void _emitSnapshot(CounterSnapshot snapshot) {
     final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
     _latestSnapshot = normalized;
+    _hasResolvedInitialValue = true;
     final StreamController<CounterSnapshot>? controller = _watchController;
     if (controller != null && !controller.isClosed) {
       controller.add(normalized);

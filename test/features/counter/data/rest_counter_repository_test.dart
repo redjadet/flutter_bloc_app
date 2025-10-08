@@ -112,10 +112,8 @@ void main() {
         expect(body['last_changed'], 42);
         expect(body['userId'], 'rest');
 
-        expect(emitted.length, greaterThanOrEqualTo(3));
-        expect(emitted.first.count, 0);
-        expect(emitted.first.userId, 'rest');
-        final CounterSnapshot initialRemote = emitted[1];
+        expect(emitted.length, 2);
+        final CounterSnapshot initialRemote = emitted.first;
         expect(initialRemote.count, 5);
         expect(initialRemote.userId, 'user-abc');
 
