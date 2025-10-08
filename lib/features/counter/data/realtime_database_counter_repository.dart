@@ -31,22 +31,13 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
     try {
       final User user = await waitForAuthUser(_auth);
       AppLogger.debug(
-        'RealtimeDatabaseCounterRepository.load requesting path: '
-        '${_counterRef.path}/${user.uid}',
-      );
-      AppLogger.debug(
-        'RealtimeDatabaseCounterRepository.load auth payload: '
-        '{uid: ${user.uid}, providerData: ${user.providerData.map((item) => item.providerId).toList()}, '
-        'isAnonymous: ${user.isAnonymous}, email: ${user.email}}',
+        'RealtimeDatabaseCounterRepository.load requesting counter value from '
+        '${_counterRef.path}',
       );
       final DataSnapshot snapshot = await _counterRef.child(user.uid).get();
       AppLogger.debug(
         'RealtimeDatabaseCounterRepository.load response exists: '
         '${snapshot.exists}',
-      );
-      AppLogger.debug(
-        'RealtimeDatabaseCounterRepository.load raw value: '
-        '${snapshot.value}',
       );
       return snapshotFromValue(snapshot.value, userId: user.uid);
     } on FirebaseAuthException {
@@ -75,13 +66,8 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
     try {
       final User user = await waitForAuthUser(_auth);
       AppLogger.debug(
-        'RealtimeDatabaseCounterRepository.save writing to: '
-        '${_counterRef.path}/${user.uid} => ${snapshot.toJson()}',
-      );
-      AppLogger.debug(
-        'RealtimeDatabaseCounterRepository.save auth payload: '
-        '{uid: ${user.uid}, providerData: ${user.providerData.map((item) => item.providerId).toList()}, '
-        'isAnonymous: ${user.isAnonymous}, email: ${user.email}}',
+        'RealtimeDatabaseCounterRepository.save writing counter value to '
+        '${_counterRef.path}',
       );
       await _counterRef.child(user.uid).set(<String, Object?>{
         'userId': user.uid,
@@ -158,7 +144,8 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
 
     if (logUnexpected) {
       AppLogger.warning(
-        'RealtimeDatabaseCounterRepository.load unexpected payload: $value',
+        'RealtimeDatabaseCounterRepository.load unexpected payload type: '
+        '${value.runtimeType}',
       );
     }
     return CounterSnapshot(userId: userId, count: 0);

@@ -50,8 +50,8 @@ class HuggingFaceApiClient {
       if (statusCode >= 400) {
         final String friendly = formatError(response);
         AppLogger.error(
-          'HuggingFaceApiClient.$context non-success',
-          'HTTP $statusCode => ${response.body}',
+          'HuggingFaceApiClient.$context non-success (HTTP $statusCode)',
+          'Response body omitted for privacy',
           StackTrace.current,
         );
         throw ChatException(friendly);
@@ -62,7 +62,7 @@ class HuggingFaceApiClient {
       if (!contentType.contains('application/json')) {
         AppLogger.error(
           'HuggingFaceApiClient.$context failed',
-          'Unexpected content-type: $contentType',
+          'Unexpected content-type: $contentType (payload omitted)',
           StackTrace.current,
         );
         throw const ChatException('Chat service returned unsupported content.');
