@@ -29,6 +29,7 @@ class PlatformInfoSection extends StatelessWidget {
       return const SizedBox.shrink();
     }
     final NativePlatformInfo resolvedInfo = info!;
+    final int? batteryPercent = resolvedInfo.batteryLevel;
     return Padding(
       padding: EdgeInsets.only(top: UI.gapS),
       child: Column(
@@ -47,6 +48,14 @@ class PlatformInfoSection extends StatelessWidget {
             style: theme.textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
+          if (batteryPercent != null) ...[
+            SizedBox(height: UI.gapXS),
+            Text(
+              'Battery level: $batteryPercent%',
+              style: theme.textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+          ],
         ],
       ),
     );

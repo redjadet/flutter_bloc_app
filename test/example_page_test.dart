@@ -25,6 +25,7 @@ void main() {
             'version': '14',
             'manufacturer': 'Google',
             'model': 'Pixel',
+            'batteryLevel': 87,
           };
         });
 
@@ -45,6 +46,7 @@ void main() {
       find.byKey(const ValueKey<String>('platform-info-Android-14')),
       findsOneWidget,
     );
+    expect(find.text('Battery level: 87%'), findsOneWidget);
 
     final Finder isolateButtonText = find.text(
       AppLocalizationsEn().exampleRunIsolatesButton,

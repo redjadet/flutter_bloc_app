@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 
 const String _channelName = 'com.example.flutter_bloc_app/native';
 const String _methodGetPlatformInfo = 'getPlatformInfo';
+const String _keyBatteryLevel = 'batteryLevel';
 
 class NativePlatformService {
   NativePlatformService({MethodChannel? channel})
@@ -22,6 +23,7 @@ class NativePlatformInfo {
     required this.version,
     this.manufacturer,
     this.model,
+    this.batteryLevel,
   });
 
   factory NativePlatformInfo.fromMap(Map<String, dynamic>? map) {
@@ -41,6 +43,7 @@ class NativePlatformInfo {
       model: (map['model'] as String?)?.trim().isNotEmpty == true
           ? (map['model'] as String)
           : null,
+      batteryLevel: (map[_keyBatteryLevel] as num?)?.toInt(),
     );
   }
 
@@ -48,6 +51,7 @@ class NativePlatformInfo {
   final String version;
   final String? manufacturer;
   final String? model;
+  final int? batteryLevel;
 
   @override
   String toString() {
@@ -64,6 +68,9 @@ class NativePlatformInfo {
         buffer.write(model);
       }
       buffer.write(']');
+    }
+    if (batteryLevel != null) {
+      buffer.write(' (battery: $batteryLevel%)');
     }
     return buffer.toString();
   }

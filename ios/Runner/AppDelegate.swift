@@ -25,11 +25,17 @@ import UIKit
         switch call.method {
         case "getPlatformInfo":
           let device = UIDevice.current
+          let previousMonitoring = device.isBatteryMonitoringEnabled
+          device.isBatteryMonitoringEnabled = true
+          let rawBattery = device.batteryLevel
+          let batteryPercent = rawBattery >= 0 ? Int(rawBattery * 100) : nil
+          device.isBatteryMonitoringEnabled = previousMonitoring
           let info: [String: Any?] = [
             "platform": "ios",
             "version": device.systemVersion,
             "manufacturer": "Apple",
-            "model": device.model
+            "model": device.model,
+            "batteryLevel": batteryPercent
           ]
           result(info)
         default:
