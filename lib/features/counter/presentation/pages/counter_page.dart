@@ -5,8 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
-import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/helpers/counter_error_localizer.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_page_app_bar.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/widgets.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
@@ -25,17 +26,6 @@ class CounterPage extends StatefulWidget {
 }
 
 class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
-  String _getLocalizedErrorMessage(AppLocalizations l10n, CounterError error) {
-    switch (error.type) {
-      case CounterErrorType.cannotGoBelowZero:
-        return l10n.cannotGoBelowZero;
-      case CounterErrorType.loadError || CounterErrorType.saveError:
-        return l10n.loadErrorMessage;
-      case CounterErrorType.unknown:
-        return error.message ?? 'An unknown error occurred';
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -74,10 +64,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
       listener: (context, state) {
         final error = state.error;
         if (error != null) {
-          final String localizedMessage = _getLocalizedErrorMessage(
-            l10n,
-            error,
-          );
+          final String localizedMessage = counterErrorMessage(l10n, error);
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(content: Text(localizedMessage)));
@@ -85,41 +72,9 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: theme.colorScheme.inversePrimary,
-          title: Text(
-            widget.title,
-            style: theme.textTheme.titleLarge,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          actions: [
-            IconButton(
-              tooltip: l10n.openExampleTooltip,
-              onPressed: () => context.pushNamed(AppRoutes.example),
-              icon: const Icon(Icons.explore),
-            ),
-            IconButton(
-              tooltip: l10n.openChartsTooltip,
-              onPressed: () => context.pushNamed(AppRoutes.charts),
-              icon: const Icon(Icons.show_chart),
-            ),
-            IconButton(
-              tooltip: l10n.openGraphqlTooltip,
-              onPressed: () => context.pushNamed(AppRoutes.graphql),
-              icon: const Icon(Icons.public),
-            ),
-            IconButton(
-              tooltip: l10n.openChatTooltip,
-              onPressed: () => context.pushNamed(AppRoutes.chat),
-              icon: const Icon(Icons.forum),
-            ),
-            IconButton(
-              tooltip: l10n.openSettingsTooltip,
-              onPressed: () => _handleOpenSettings(context),
-              icon: const Icon(Icons.settings),
-            ),
-          ],
+        appBar: CounterPageAppBar(
+          title: widget.title,
+          onOpenSettings: () => _handleOpenSettings(context),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -146,7 +101,10 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
                           if (showFlavor) ...[
                             const Padding(
                               padding: EdgeInsets.all(1.0),
-                              child: Align(alignment: Alignment.centerRight, child: FlavorBadge()),
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: FlavorBadge(),
+                              ),
                             ),
                             SizedBox(height: UI.gapS),
                           ],
