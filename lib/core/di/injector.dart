@@ -26,9 +26,12 @@ import 'package:flutter_bloc_app/features/graphql_demo/data/'
 import 'package:flutter_bloc_app/features/graphql_demo/domain/'
     'graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/'
+    'package_info_app_info_repository.dart';
+import 'package:flutter_bloc_app/features/settings/data/'
     'shared_preferences_locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/'
     'shared_preferences_theme_repository.dart';
+import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/data/'
@@ -83,6 +86,9 @@ Future<void> configureDependencies() async {
   );
   _registerLazySingletonIfAbsent<ThemeRepository>(
     () => SharedPreferencesThemeRepository(),
+  );
+  _registerLazySingletonIfAbsent<AppInfoRepository>(
+    () => const PackageInfoAppInfoRepository(),
   );
   _registerLazySingletonIfAbsent<TimerService>(() => DefaultTimerService());
   _registerLazySingletonIfAbsent<BiometricAuthenticator>(

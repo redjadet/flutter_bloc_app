@@ -172,6 +172,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String get languageSpanish => 'Spanisch';
 
   @override
+  String get appInfoSectionTitle => 'App-Informationen';
+
+  @override
+  String get appInfoVersionLabel => 'Version';
+
+  @override
+  String get appInfoBuildNumberLabel => 'Build-Nummer';
+
+  @override
+  String get appInfoLoadingLabel => 'App-Informationen werden geladen...';
+
+  @override
+  String get appInfoLoadErrorLabel =>
+      'App-Informationen konnten nicht geladen werden.';
+
+  @override
+  String get appInfoRetryButtonLabel => 'Erneut versuchen';
+
+  @override
   String get openChatTooltip => 'Mit KI chatten';
 
   @override

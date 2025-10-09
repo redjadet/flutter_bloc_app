@@ -166,6 +166,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageSpanish => 'Español';
 
   @override
+  String get appInfoSectionTitle => 'App info';
+
+  @override
+  String get appInfoVersionLabel => 'Version';
+
+  @override
+  String get appInfoBuildNumberLabel => 'Build number';
+
+  @override
+  String get appInfoLoadingLabel => 'Loading app info...';
+
+  @override
+  String get appInfoLoadErrorLabel => 'Failed to load app info.';
+
+  @override
+  String get appInfoRetryButtonLabel => 'Retry';
+
+  @override
   String get openChatTooltip => 'Chat with AI';
 
   @override

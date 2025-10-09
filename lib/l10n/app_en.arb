@@ -222,6 +222,30 @@
   "@languageSpanish": {
     "description": "Language option for Spanish"
   },
+  "appInfoSectionTitle": "App info",
+  "@appInfoSectionTitle": {
+    "description": "Heading for the section that displays application metadata"
+  },
+  "appInfoVersionLabel": "Version",
+  "@appInfoVersionLabel": {
+    "description": "Label shown before the application version string"
+  },
+  "appInfoBuildNumberLabel": "Build number",
+  "@appInfoBuildNumberLabel": {
+    "description": "Label shown before the build number string"
+  },
+  "appInfoLoadingLabel": "Loading app info...",
+  "@appInfoLoadingLabel": {
+    "description": "Status text shown while the app info is loading"
+  },
+  "appInfoLoadErrorLabel": "Failed to load app info.",
+  "@appInfoLoadErrorLabel": {
+    "description": "Error message shown when app info fails to load"
+  },
+  "appInfoRetryButtonLabel": "Retry",
+  "@appInfoRetryButtonLabel": {
+    "description": "Button label to retry loading the app info"
+  },
   "openChatTooltip": "Chat with AI",
   "@openChatTooltip": {
     "description": "Tooltip for navigating to the AI chat feature"

@@ -398,6 +398,42 @@ abstract class AppLocalizations {
   /// **'Español'**
   String get languageSpanish;
 
+  /// Heading for the section that displays application metadata
+  ///
+  /// In en, this message translates to:
+  /// **'App info'**
+  String get appInfoSectionTitle;
+
+  /// Label shown before the application version string
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get appInfoVersionLabel;
+
+  /// Label shown before the build number string
+  ///
+  /// In en, this message translates to:
+  /// **'Build number'**
+  String get appInfoBuildNumberLabel;
+
+  /// Status text shown while the app info is loading
+  ///
+  /// In en, this message translates to:
+  /// **'Loading app info...'**
+  String get appInfoLoadingLabel;
+
+  /// Error message shown when app info fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load app info.'**
+  String get appInfoLoadErrorLabel;
+
+  /// Button label to retry loading the app info
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get appInfoRetryButtonLabel;
+
   /// Tooltip for navigating to the AI chat feature
   ///
   /// In en, this message translates to:

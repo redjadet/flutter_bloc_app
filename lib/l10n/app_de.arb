@@ -105,6 +105,30 @@
   "languageGerman": "Deutsch",
   "languageFrench": "Französisch",
   "languageSpanish": "Spanisch",
+  "appInfoSectionTitle": "App-Informationen",
+  "@appInfoSectionTitle": {
+    "description": "Überschrift für den Abschnitt mit App-Metadaten"
+  },
+  "appInfoVersionLabel": "Version",
+  "@appInfoVersionLabel": {
+    "description": "Beschriftung vor der App-Versionsnummer"
+  },
+  "appInfoBuildNumberLabel": "Build-Nummer",
+  "@appInfoBuildNumberLabel": {
+    "description": "Beschriftung vor der Build-Nummer"
+  },
+  "appInfoLoadingLabel": "App-Informationen werden geladen...",
+  "@appInfoLoadingLabel": {
+    "description": "Statusmeldung während die App-Informationen geladen werden"
+  },
+  "appInfoLoadErrorLabel": "App-Informationen konnten nicht geladen werden.",
+  "@appInfoLoadErrorLabel": {
+    "description": "Fehlermeldung, wenn das Laden der App-Informationen fehlschlägt"
+  },
+  "appInfoRetryButtonLabel": "Erneut versuchen",
+  "@appInfoRetryButtonLabel": {
+    "description": "Beschriftung für den Button zum erneuten Laden der App-Informationen"
+  },
   "openChatTooltip": "Mit KI chatten",
   "chatPageTitle": "KI-Chat",
   "chatInputHint": "Frag den Assistenten etwas...",

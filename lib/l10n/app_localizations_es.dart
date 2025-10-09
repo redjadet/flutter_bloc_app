@@ -168,6 +168,25 @@ class AppLocalizationsEs extends AppLocalizations {
   String get languageSpanish => 'Español';
 
   @override
+  String get appInfoSectionTitle => 'Información de la app';
+
+  @override
+  String get appInfoVersionLabel => 'Versión';
+
+  @override
+  String get appInfoBuildNumberLabel => 'Número de compilación';
+
+  @override
+  String get appInfoLoadingLabel => 'Cargando información de la app...';
+
+  @override
+  String get appInfoLoadErrorLabel =>
+      'No se pudo cargar la información de la app.';
+
+  @override
+  String get appInfoRetryButtonLabel => 'Reintentar';
+
+  @override
   String get openChatTooltip => 'Chatear con IA';
 
   @override

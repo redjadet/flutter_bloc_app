@@ -105,6 +105,30 @@
   "languageGerman": "Allemand",
   "languageFrench": "Français",
   "languageSpanish": "Espagnol",
+  "appInfoSectionTitle": "Informations de l'application",
+  "@appInfoSectionTitle": {
+    "description": "Titre de la section affichant les métadonnées de l'application"
+  },
+  "appInfoVersionLabel": "Version",
+  "@appInfoVersionLabel": {
+    "description": "Intitulé affiché avant la version de l'application"
+  },
+  "appInfoBuildNumberLabel": "Numéro de build",
+  "@appInfoBuildNumberLabel": {
+    "description": "Intitulé affiché avant le numéro de build"
+  },
+  "appInfoLoadingLabel": "Chargement des informations de l'application...",
+  "@appInfoLoadingLabel": {
+    "description": "Texte d'état affiché pendant le chargement des informations de l'application"
+  },
+  "appInfoLoadErrorLabel": "Impossible de charger les informations de l'application.",
+  "@appInfoLoadErrorLabel": {
+    "description": "Message d'erreur affiché lorsque le chargement des informations de l'application échoue"
+  },
+  "appInfoRetryButtonLabel": "Réessayer",
+  "@appInfoRetryButtonLabel": {
+    "description": "Intitulé du bouton pour relancer le chargement des informations de l'application"
+  },
   "openChatTooltip": "Discuter avec l'IA",
   "chatPageTitle": "Discussion IA",
   "chatInputHint": "Posez votre question à l'assistant...",

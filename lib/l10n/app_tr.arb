@@ -106,6 +106,30 @@
   "languageGerman": "Almanca",
   "languageFrench": "Fransızca",
   "languageSpanish": "İspanyolca",
+  "appInfoSectionTitle": "Uygulama bilgileri",
+  "@appInfoSectionTitle": {
+    "description": "Uygulama meta verilerinin gösterildiği bölümün başlığı"
+  },
+  "appInfoVersionLabel": "Sürüm",
+  "@appInfoVersionLabel": {
+    "description": "Uygulama sürüm numarasının önündeki etiket"
+  },
+  "appInfoBuildNumberLabel": "Derleme numarası",
+  "@appInfoBuildNumberLabel": {
+    "description": "Derleme numarasının önündeki etiket"
+  },
+  "appInfoLoadingLabel": "Uygulama bilgileri yükleniyor...",
+  "@appInfoLoadingLabel": {
+    "description": "Uygulama bilgileri yüklenirken gösterilen durum metni"
+  },
+  "appInfoLoadErrorLabel": "Uygulama bilgileri yüklenemedi.",
+  "@appInfoLoadErrorLabel": {
+    "description": "Uygulama bilgileri alınamadığında gösterilen hata mesajı"
+  },
+  "appInfoRetryButtonLabel": "Tekrar dene",
+  "@appInfoRetryButtonLabel": {
+    "description": "Uygulama bilgilerini yeniden yükleme düğmesi etiketi"
+  },
   "openChatTooltip": "Yapay zekâ ile sohbet et",
   "chatPageTitle": "Yapay Zekâ Sohbeti",
   "chatInputHint": "Asistana bir şey sor...",

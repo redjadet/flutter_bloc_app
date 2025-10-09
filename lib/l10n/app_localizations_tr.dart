@@ -168,6 +168,24 @@ class AppLocalizationsTr extends AppLocalizations {
   String get languageSpanish => 'İspanyolca';
 
   @override
+  String get appInfoSectionTitle => 'Uygulama bilgileri';
+
+  @override
+  String get appInfoVersionLabel => 'Sürüm';
+
+  @override
+  String get appInfoBuildNumberLabel => 'Derleme numarası';
+
+  @override
+  String get appInfoLoadingLabel => 'Uygulama bilgileri yükleniyor...';
+
+  @override
+  String get appInfoLoadErrorLabel => 'Uygulama bilgileri yüklenemedi.';
+
+  @override
+  String get appInfoRetryButtonLabel => 'Tekrar dene';
+
+  @override
   String get openChatTooltip => 'Yapay zekâ ile sohbet et';
 
   @override
