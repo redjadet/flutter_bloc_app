@@ -4,6 +4,7 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_sections.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
@@ -190,6 +191,12 @@ class _ExamplePageState extends State<ExamplePage> {
                           : () => _loadPlatformInfo(context),
                       icon: const Icon(Icons.phone_iphone),
                       label: Text(l10n.exampleNativeInfoButton),
+                    ),
+                    SizedBox(height: UI.gapS),
+                    FilledButton.icon(
+                      onPressed: () => context.pushNamed(AppRoutes.websocket),
+                      icon: const Icon(Icons.wifi),
+                      label: Text(l10n.exampleWebsocketButton),
                     ),
                     SizedBox(height: UI.gapS),
                     AnimatedSwitcher(

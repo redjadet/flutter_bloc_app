@@ -31,6 +31,10 @@ import 'package:flutter_bloc_app/features/settings/data/'
     'shared_preferences_theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
+import 'package:flutter_bloc_app/features/websocket/data/'
+    'echo_websocket_repository.dart';
+import 'package:flutter_bloc_app/features/websocket/domain/'
+    'websocket_repository.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:get_it/get_it.dart';
@@ -83,6 +87,10 @@ Future<void> configureDependencies() async {
   _registerLazySingletonIfAbsent<TimerService>(() => DefaultTimerService());
   _registerLazySingletonIfAbsent<BiometricAuthenticator>(
     () => LocalBiometricAuthenticator(),
+  );
+  _registerLazySingletonIfAbsent<WebsocketRepository>(
+    () => EchoWebsocketRepository(),
+    dispose: (repository) => repository.dispose(),
   );
 }
 

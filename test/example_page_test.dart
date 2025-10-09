@@ -46,7 +46,14 @@ void main() {
       find.byKey(const ValueKey<String>('platform-info-Android-14')),
       findsOneWidget,
     );
-    expect(find.text('Battery level: 87%'), findsOneWidget);
+    expect(
+      find.text(AppLocalizationsEn().exampleNativeBatteryLabel(87)),
+      findsOneWidget,
+    );
+    expect(
+      find.text(AppLocalizationsEn().exampleWebsocketButton),
+      findsOneWidget,
+    );
 
     final Finder isolateButtonText = find.text(
       AppLocalizationsEn().exampleRunIsolatesButton,

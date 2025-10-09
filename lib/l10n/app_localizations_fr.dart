@@ -364,4 +364,47 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get graphqlSampleDataError => 'Réponse inattendue reçue. Réessayez.';
+
+  @override
+  String get exampleWebsocketButton => 'Ouvrir la démo WebSocket';
+
+  @override
+  String exampleNativeBatteryLabel(int percent) {
+    return 'Niveau de batterie : $percent %';
+  }
+
+  @override
+  String get websocketDemoTitle => 'Démo WebSocket';
+
+  @override
+  String get websocketDemoWebUnsupported =>
+      'La démo WebSocket n\'est pas encore disponible sur le Web.';
+
+  @override
+  String get websocketReconnectTooltip => 'Reconnexion';
+
+  @override
+  String get websocketEmptyState =>
+      'Aucun message pour le moment. Envoyez un message pour commencer.';
+
+  @override
+  String get websocketMessageHint => 'Saisissez un message';
+
+  @override
+  String get websocketSendButton => 'Envoyer';
+
+  @override
+  String websocketStatusConnected(String endpoint) {
+    return 'Connecté à $endpoint';
+  }
+
+  @override
+  String websocketStatusConnecting(String endpoint) {
+    return 'Connexion à $endpoint...';
+  }
+
+  @override
+  String websocketErrorLabel(String error) {
+    return 'Erreur WebSocket : $error';
+  }
 }

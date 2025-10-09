@@ -14,6 +14,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Navigation: `go_router` wiring with sample and chart pages demonstrating navigation patterns.
 - Charts: `fl_chart` Bitcoin price line chart backed by CoinGecko's public API (pinch-zoomable with graceful fallback).
 - GraphQL demo: Countries browser backed by the free `countries.trevorblades.com` GraphQL API, complete with continent filtering and localized labels.
+- WebSocket demo: Reusable Cubit + repository stack driving a public echo websocket with reconnect/error handling and localized UI.
 - Loading polish: `skeletonizer` placeholders, `fancy_shimmer_image` hero card, and dev-only loading delay to showcase the effects.
 - Logging: Centralized `AppLogger` built on top of the `logger` package.
 - Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES).
@@ -27,6 +28,13 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Tests: Unit, bloc, widget, and golden coverage (`flutter_test`, `bloc_test`, `golden_toolkit`), including auth flows with Firebase mocks.
 - Agent-friendly guide: See `AGENTS.md` for the quick checklist (format → analyze → test → build_runner) and architecture guardrails.
 
+## WebSocket Demo
+
+- Entry points: from the Example page (`Open WebSocket demo` button) or directly via the `/websocket` GoRouter route.
+- Stack: `WebsocketCubit` + `EchoWebsocketRepository` stream messages from the configurable endpoint (`wss://echo.websocket.events` by default) and surface connection banners, errors, and send state.
+- Auto-connect occurs on mobile/desktop builds; on web the screen renders an informative unsupported message instead of attempting a socket handshake.
+- To target a different echo server (e.g. `wss://ws.postman-echo.com/raw`), register your own `WebsocketRepository` with `getIt` in `configureDependencies()` or inject a custom implementation in tests.
+
 ## Screenshots
 
 | Counter Home | Auto Countdown | Settings |
@@ -39,11 +47,11 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 
 ## Test Coverage
 
-- Latest line coverage: **88.19%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
+- Latest line coverage: **87.94%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
 
 ## Tech Stack
 
-- Flutter 3.35.5 (Dart 3.9.2)
+- Flutter 3.35.6 (Dart 3.9.2)
 - `flutter_bloc` for Cubit/BLoC
 - `shared_preferences` for simple storage
 - `intl` and `flutter_localizations` for i18n

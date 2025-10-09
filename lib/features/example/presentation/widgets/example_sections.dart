@@ -51,7 +51,7 @@ class PlatformInfoSection extends StatelessWidget {
           if (batteryPercent != null) ...[
             SizedBox(height: UI.gapXS),
             Text(
-              'Battery level: $batteryPercent%',
+              l10n.exampleNativeBatteryLabel(batteryPercent),
               style: theme.textTheme.bodySmall,
               textAlign: TextAlign.center,
             ),

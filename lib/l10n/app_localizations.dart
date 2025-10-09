@@ -727,6 +727,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We received an unexpected response. Please try again.'**
   String get graphqlSampleDataError;
+
+  /// Button label that navigates to the WebSocket demo page
+  ///
+  /// In en, this message translates to:
+  /// **'Open WebSocket demo'**
+  String get exampleWebsocketButton;
+
+  /// Label showing the battery level returned from the native platform
+  ///
+  /// In en, this message translates to:
+  /// **'Battery level: {percent}%'**
+  String exampleNativeBatteryLabel(int percent);
+
+  /// Title for the WebSocket demonstration page
+  ///
+  /// In en, this message translates to:
+  /// **'WebSocket demo'**
+  String get websocketDemoTitle;
+
+  /// Message shown when the WebSocket demo is opened on the web platform
+  ///
+  /// In en, this message translates to:
+  /// **'The WebSocket demo isn\'t available on web builds yet.'**
+  String get websocketDemoWebUnsupported;
+
+  /// Tooltip for the reconnect icon button in the WebSocket demo
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect'**
+  String get websocketReconnectTooltip;
+
+  /// Empty state text when no WebSocket messages have been exchanged
+  ///
+  /// In en, this message translates to:
+  /// **'No messages yet. Send a message to get started.'**
+  String get websocketEmptyState;
+
+  /// Placeholder text for the WebSocket message input
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message'**
+  String get websocketMessageHint;
+
+  /// Label for the button that sends a WebSocket message
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get websocketSendButton;
+
+  /// Status label shown when the WebSocket connection is established
+  ///
+  /// In en, this message translates to:
+  /// **'Connected to {endpoint}'**
+  String websocketStatusConnected(String endpoint);
+
+  /// Status label shown while establishing the WebSocket connection
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting to {endpoint}...'**
+  String websocketStatusConnecting(String endpoint);
+
+  /// Error message shown when the WebSocket connection fails
+  ///
+  /// In en, this message translates to:
+  /// **'WebSocket error: {error}'**
+  String websocketErrorLabel(String error);
 }
 
 class _AppLocalizationsDelegate

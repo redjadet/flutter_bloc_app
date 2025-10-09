@@ -251,5 +251,69 @@
   "graphqlSampleNetworkError": "Ağ hatası. Bağlantınızı kontrol edip yeniden deneyin.",
   "graphqlSampleInvalidRequestError": "İstek reddedildi. Farklı bir filtre deneyin.",
   "graphqlSampleServerError": "Hizmet şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.",
-  "graphqlSampleDataError": "Beklenmedik bir yanıt alındı. Lütfen yeniden deneyin."
+  "graphqlSampleDataError": "Beklenmedik bir yanıt alındı. Lütfen yeniden deneyin.",
+  "exampleWebsocketButton": "WebSocket demosunu aç",
+  "@exampleWebsocketButton": {
+    "description": "Button label that navigates to the WebSocket demo page"
+  },
+  "exampleNativeBatteryLabel": "Pil seviyesi: %{percent}",
+  "@exampleNativeBatteryLabel": {
+    "description": "Label showing the battery level returned from the native platform",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "websocketDemoTitle": "WebSocket demosu",
+  "@websocketDemoTitle": {
+    "description": "Title for the WebSocket demonstration page"
+  },
+  "websocketDemoWebUnsupported": "WebSocket demosu web derlemelerinde henüz kullanılabilir değil.",
+  "@websocketDemoWebUnsupported": {
+    "description": "Message shown when the WebSocket demo is opened on the web platform"
+  },
+  "websocketReconnectTooltip": "Yeniden bağlan",
+  "@websocketReconnectTooltip": {
+    "description": "Tooltip for the reconnect icon button in the WebSocket demo"
+  },
+  "websocketEmptyState": "Henüz mesaj yok. Başlamak için bir mesaj gönderin.",
+  "@websocketEmptyState": {
+    "description": "Empty state text when no WebSocket messages have been exchanged"
+  },
+  "websocketMessageHint": "Bir mesaj yazın",
+  "@websocketMessageHint": {
+    "description": "Placeholder text for the WebSocket message input"
+  },
+  "websocketSendButton": "Gönder",
+  "@websocketSendButton": {
+    "description": "Label for the button that sends a WebSocket message"
+  },
+  "websocketStatusConnected": "{endpoint} adresine bağlandı",
+  "@websocketStatusConnected": {
+    "description": "Status label shown when the WebSocket connection is established",
+    "placeholders": {
+      "endpoint": {
+        "type": "String"
+      }
+    }
+  },
+  "websocketStatusConnecting": "{endpoint} adresine bağlanılıyor...",
+  "@websocketStatusConnecting": {
+    "description": "Status label shown while establishing the WebSocket connection",
+    "placeholders": {
+      "endpoint": {
+        "type": "String"
+      }
+    }
+  },
+  "websocketErrorLabel": "WebSocket hatası: {error}",
+  "@websocketErrorLabel": {
+    "description": "Error message shown when the WebSocket connection fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
 }

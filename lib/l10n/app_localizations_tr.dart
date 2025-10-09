@@ -355,4 +355,47 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get graphqlSampleDataError =>
       'Beklenmedik bir yanıt alındı. Lütfen yeniden deneyin.';
+
+  @override
+  String get exampleWebsocketButton => 'WebSocket demosunu aç';
+
+  @override
+  String exampleNativeBatteryLabel(int percent) {
+    return 'Pil seviyesi: %$percent';
+  }
+
+  @override
+  String get websocketDemoTitle => 'WebSocket demosu';
+
+  @override
+  String get websocketDemoWebUnsupported =>
+      'WebSocket demosu web derlemelerinde henüz kullanılabilir değil.';
+
+  @override
+  String get websocketReconnectTooltip => 'Yeniden bağlan';
+
+  @override
+  String get websocketEmptyState =>
+      'Henüz mesaj yok. Başlamak için bir mesaj gönderin.';
+
+  @override
+  String get websocketMessageHint => 'Bir mesaj yazın';
+
+  @override
+  String get websocketSendButton => 'Gönder';
+
+  @override
+  String websocketStatusConnected(String endpoint) {
+    return '$endpoint adresine bağlandı';
+  }
+
+  @override
+  String websocketStatusConnecting(String endpoint) {
+    return '$endpoint adresine bağlanılıyor...';
+  }
+
+  @override
+  String websocketErrorLabel(String error) {
+    return 'WebSocket hatası: $error';
+  }
 }

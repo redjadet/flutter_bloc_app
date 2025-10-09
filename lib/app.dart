@@ -89,6 +89,15 @@ class _MyAppState extends State<MyApp> {
           child: const ChatPage(),
         ),
       ),
+      GoRoute(
+        path: AppRoutes.websocketPath,
+        name: AppRoutes.websocket,
+        builder: (context, state) => BlocProvider(
+          create: (_) =>
+              WebsocketCubit(repository: getIt<WebsocketRepository>()),
+          child: const WebsocketDemoPage(),
+        ),
+      ),
     ];
 
     if (!widget.requireAuth) {
