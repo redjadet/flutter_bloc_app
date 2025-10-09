@@ -51,6 +51,21 @@ void main() {
     expect(storage.writeCalls, isEmpty);
   });
 
+  test('ignores asset secrets when fallback disabled', () async {
+    final _FakeSecretStorage storage = _FakeSecretStorage();
+    SecretConfig.configureStorage(storage);
+
+    final Map<String, dynamic> assetSecrets = <String, dynamic>{
+      'HUGGINGFACE_API_KEY': 'asset-key',
+    };
+    SecretConfig.debugAssetBundle = _FakeAssetBundle(jsonEncode(assetSecrets));
+
+    await SecretConfig.load(allowAssetFallback: false);
+
+    expect(SecretConfig.huggingfaceApiKey, isNull);
+    expect(storage.writeCalls, isEmpty);
+  });
+
   test('uses environment overrides and persists them by default', () async {
     final _FakeSecretStorage storage = _FakeSecretStorage();
     SecretConfig.configureStorage(storage);
@@ -66,8 +81,14 @@ void main() {
     expect(SecretConfig.huggingfaceApiKey, 'env-key');
     expect(SecretConfig.huggingfaceModel, 'env-model');
     expect(SecretConfig.useChatCompletions, isTrue);
-    expect(storage.writeCalls, containsPair('huggingface_api_key', 'env-key'));
-    expect(storage.writeCalls, containsPair('huggingface_model', 'env-model'));
+    expect(
+      storage.writeCalls,
+      containsPair(_FakeSecretStorage.hfTokenKey, 'env-key'),
+    );
+    expect(
+      storage.writeCalls,
+      containsPair(_FakeSecretStorage.hfModelKey, 'env-model'),
+    );
     expect(
       storage.writeCalls,
       containsPair('huggingface_use_chat_completions', 'true'),
@@ -87,12 +108,44 @@ void main() {
     expect(SecretConfig.huggingfaceApiKey, 'env-key');
     expect(storage.writeCalls, isEmpty);
   });
+
+  test(
+    'prefers secure storage over other sources for subsequent loads',
+    () async {
+      final _FakeSecretStorage storage = _FakeSecretStorage();
+      SecretConfig.configureStorage(storage);
+      SecretConfig.debugAssetBundle = _FakeAssetBundle.throwing();
+      SecretConfig.debugEnvironment = <String, dynamic>{
+        'HUGGINGFACE_API_KEY': 'env-key',
+        'HUGGINGFACE_MODEL': 'env-model',
+      };
+
+      await SecretConfig.load();
+      expect(
+        storage.read(_FakeSecretStorage.hfTokenKey),
+        completion('env-key'),
+      );
+      SecretConfig.resetForTest();
+      storage.write(_FakeSecretStorage.hfTokenKey, 'stored-token');
+      storage.write(_FakeSecretStorage.hfModelKey, 'stored-model');
+      SecretConfig.configureStorage(storage);
+      SecretConfig.debugAssetBundle = _FakeAssetBundle.throwing();
+      SecretConfig.debugEnvironment = null;
+
+      await SecretConfig.load();
+
+      expect(SecretConfig.huggingfaceApiKey, 'stored-token');
+      expect(SecretConfig.huggingfaceModel, 'stored-model');
+    },
+  );
 }
 
 class _FakeSecretStorage implements SecretStorage {
   _FakeSecretStorage({Map<String, String>? initialValues})
     : _values = Map<String, String>.from(initialValues ?? <String, String>{});
 
+  static const String hfTokenKey = 'huggingface_api_key';
+  static const String hfModelKey = 'huggingface_model';
   final Map<String, String> _values;
   final Map<String, String> writeCalls = <String, String>{};
 
