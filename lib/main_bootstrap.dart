@@ -25,7 +25,15 @@ Future<void> runAppWithFlavor(Flavor flavor) async {
   }
   FlavorManager.set(flavor);
   await PlatformInit.initialize();
-  await SecretConfig.load(allowAssetFallback: enableAssetSecrets);
+  if (!FlavorManager.I.isDev && enableAssetSecrets) {
+    AppLogger.warning(
+      'ENABLE_ASSET_SECRETS is true outside dev flavor; ignoring asset fallback.',
+    );
+  }
+  final bool allowAssets =
+      enableAssetSecrets && (FlavorManager.I.isDev || kDebugMode);
+
+  await SecretConfig.load(allowAssetFallback: allowAssets);
   await configureDependencies();
   runApp(const MyApp());
 }
