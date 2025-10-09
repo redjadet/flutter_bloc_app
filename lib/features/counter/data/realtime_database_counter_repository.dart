@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:meta/meta.dart';
 
 /// Firebase Realtime Database backed implementation of [CounterRepository].
 class RealtimeDatabaseCounterRepository implements CounterRepository {
@@ -30,12 +30,10 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   Future<CounterSnapshot> load() async {
     try {
       final User user = await waitForAuthUser(_auth);
-      AppLogger.debug(
-        'RealtimeDatabaseCounterRepository.load requesting counter value from '
-        '${_counterRef.path}',
+      _debugLog('RealtimeDatabaseCounterRepository.load requesting counter value',
       );
       final DataSnapshot snapshot = await _counterRef.child(user.uid).get();
-      AppLogger.debug(
+      _debugLog(
         'RealtimeDatabaseCounterRepository.load response exists: '
         '${snapshot.exists}',
       );
@@ -65,9 +63,7 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   Future<void> save(CounterSnapshot snapshot) async {
     try {
       final User user = await waitForAuthUser(_auth);
-      AppLogger.debug(
-        'RealtimeDatabaseCounterRepository.save writing counter value to '
-        '${_counterRef.path}',
+      _debugLog('RealtimeDatabaseCounterRepository.save writing counter value',
       );
       await _counterRef.child(user.uid).set(<String, Object?>{
         'userId': user.uid,
@@ -149,6 +145,12 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
       );
     }
     return CounterSnapshot(userId: userId, count: 0);
+  }
+}
+
+void _debugLog(String message) {
+  if (kDebugMode) {
+    AppLogger.debug(message);
   }
 }
 
