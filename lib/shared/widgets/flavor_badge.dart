@@ -10,21 +10,28 @@ class FlavorBadge extends StatelessWidget {
     if (flavor == Flavor.prod) return const SizedBox.shrink();
     final ColorScheme colors = Theme.of(context).colorScheme;
     final FlavorBadgeStyle style = mapFlavorToBadge(flavor, colors);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-        decoration: BoxDecoration(
-          color: style.color.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: style.color.withValues(alpha: 0.6)),
-        ),
-        child: Text(
-          style.label,
-          style: TextStyle(
-            color: style.color,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.6,
+    final String tooltipMessage = flavor == Flavor.prod
+        ? 'Production flavor'
+        : 'Flavor: ${style.label}';
+    return Tooltip(
+      message: tooltipMessage,
+      waitDuration: const Duration(milliseconds: 250),
+      child: Semantics(
+        label: tooltipMessage,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+          decoration: BoxDecoration(
+            color: style.color.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: style.color.withValues(alpha: 0.6)),
+          ),
+          child: Text(
+            style.label,
+            style: TextStyle(
+              color: style.color,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.6,
+            ),
           ),
         ),
       ),
@@ -50,6 +57,6 @@ FlavorBadgeStyle mapFlavorToBadge(Flavor flavor, ColorScheme colors) {
     case Flavor.beta:
       return FlavorBadgeStyle(label: 'BETA', color: colors.primary);
     case Flavor.prod:
-      return FlavorBadgeStyle(label: '', color: colors.primary);
+      return FlavorBadgeStyle(label: 'PROD', color: colors.primary);
   }
 }
