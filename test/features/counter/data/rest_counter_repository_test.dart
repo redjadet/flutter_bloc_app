@@ -45,7 +45,7 @@ void main() {
       });
     });
 
-    test('returns empty snapshot on HTTP failure', () async {
+    test('throws CounterError on HTTP failure', () async {
       final _FakeClient client = _FakeClient(
         getHandler: (_) => http.Response('nope', 500),
       );
@@ -54,12 +54,31 @@ void main() {
         client: client,
       );
 
-      await AppLogger.silenceAsync(() async {
-        final CounterSnapshot snapshot = await repository.load();
+      await expectLater(
+        AppLogger.silenceAsync(repository.load),
+        throwsA(
+          isA<CounterError>().having(
+            (CounterError error) => error.type,
+            'type',
+            CounterErrorType.loadError,
+          ),
+        ),
+      );
+    });
 
-        expect(snapshot.count, 0);
-        expect(snapshot.userId, 'rest');
-      });
+    test('throws CounterError on malformed payload', () async {
+      final _FakeClient client = _FakeClient(
+        getHandler: (_) => http.Response('[]', 200),
+      );
+      final RestCounterRepository repository = RestCounterRepository(
+        baseUrl: 'https://api.example.com/',
+        client: client,
+      );
+
+      await expectLater(
+        AppLogger.silenceAsync(repository.load),
+        throwsA(isA<CounterError>()),
+      );
     });
   });
 
@@ -225,6 +244,28 @@ void main() {
     await pumpEventQueue();
     expect(emitted.length, initialLength); // No extra event emitted on failure
     await sub.cancel();
+  });
+
+  test('watch receives error when initial load fails', () async {
+    await AppLogger.silenceAsync(() async {
+      final _FakeClient client = _FakeClient(
+        getHandler: (_) => http.Response('bad', 500),
+      );
+      final RestCounterRepository repository = RestCounterRepository(
+        baseUrl: 'https://api.example.com/',
+        client: client,
+      );
+
+      final List<Object?> errors = <Object?>[];
+      final StreamSubscription<CounterSnapshot> sub = repository.watch().listen(
+        (_) {},
+        onError: errors.add,
+      );
+      await pumpEventQueue();
+      expect(errors, isNotEmpty);
+      expect(errors.first, isA<CounterError>());
+      await sub.cancel();
+    });
   });
 }
 

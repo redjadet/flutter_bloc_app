@@ -30,7 +30,8 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   Future<CounterSnapshot> load() async {
     try {
       final User user = await waitForAuthUser(_auth);
-      _debugLog('RealtimeDatabaseCounterRepository.load requesting counter value',
+      _debugLog(
+        'RealtimeDatabaseCounterRepository.load requesting counter value',
       );
       final DataSnapshot snapshot = await _counterRef.child(user.uid).get();
       _debugLog(
@@ -63,8 +64,7 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   Future<void> save(CounterSnapshot snapshot) async {
     try {
       final User user = await waitForAuthUser(_auth);
-      _debugLog('RealtimeDatabaseCounterRepository.save writing counter value',
-      );
+      _debugLog('RealtimeDatabaseCounterRepository.save writing counter value');
       await _counterRef.child(user.uid).set(<String, Object?>{
         'userId': user.uid,
         'count': snapshot.count,

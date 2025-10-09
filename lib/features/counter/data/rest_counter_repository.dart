@@ -46,28 +46,35 @@ class RestCounterRepository implements CounterRepository {
   bool _isSuccess(int statusCode) => statusCode >= 200 && statusCode < 300;
 
   CounterSnapshot _parseSnapshot(String body) {
-    final dynamic decoded = jsonDecode(body);
-    if (decoded is! Map<String, dynamic>) {
-      AppLogger.error(
-        'RestCounterRepository.load invalid payload',
-        decoded,
-        StackTrace.current,
+    try {
+      final dynamic decoded = jsonDecode(body);
+      if (decoded is! Map<String, dynamic>) {
+        throw CounterError.load(
+          message: 'REST payload was not a JSON object.',
+          originalError: decoded,
+        );
+      }
+      final Map<String, dynamic> json = decoded;
+      final int count = (json['count'] as num?)?.toInt() ?? 0;
+      final int? changedMs = (json['last_changed'] as num?)?.toInt();
+      final DateTime? lastChanged = changedMs != null
+          ? DateTime.fromMillisecondsSinceEpoch(changedMs)
+          : null;
+      final String userId =
+          json['userId'] as String? ?? json['id'] as String? ?? 'rest';
+      return CounterSnapshot(
+        userId: userId,
+        count: count,
+        lastChanged: lastChanged,
       );
-      return _emptySnapshot;
+    } on CounterError {
+      rethrow;
+    } on FormatException catch (error) {
+      throw CounterError.load(
+        message: 'Malformed REST counter payload.',
+        originalError: error,
+      );
     }
-    final Map<String, dynamic> json = decoded;
-    final int count = (json['count'] as num?)?.toInt() ?? 0;
-    final int? changedMs = (json['last_changed'] as num?)?.toInt();
-    final DateTime? lastChanged = changedMs != null
-        ? DateTime.fromMillisecondsSinceEpoch(changedMs)
-        : null;
-    final String userId =
-        json['userId'] as String? ?? json['id'] as String? ?? 'rest';
-    return CounterSnapshot(
-      userId: userId,
-      count: count,
-      lastChanged: lastChanged,
-    );
   }
 
   void _logHttpError(String operation, http.Response response) {
@@ -94,20 +101,20 @@ class RestCounterRepository implements CounterRepository {
           .timeout(_requestTimeout);
       if (!_isSuccess(res.statusCode)) {
         _logHttpError('load', res);
-        _latestSnapshot = _emptySnapshot;
-        _hasResolvedInitialValue = true;
-        return _emptySnapshot;
+        throw CounterError.load(
+          message: 'REST load failed (HTTP ${res.statusCode}).',
+        );
       }
       final CounterSnapshot snapshot = _parseSnapshot(res.body);
       final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
       _latestSnapshot = normalized;
       _hasResolvedInitialValue = true;
       return normalized;
+    } on CounterError {
+      rethrow;
     } on Exception catch (e, s) {
       AppLogger.error('RestCounterRepository.load failed', e, s);
-      _latestSnapshot = _emptySnapshot;
-      _hasResolvedInitialValue = true;
-      return _emptySnapshot;
+      throw CounterError.load(originalError: e);
     }
   }
 
@@ -196,6 +203,13 @@ class RestCounterRepository implements CounterRepository {
       try {
         final CounterSnapshot snapshot = await load();
         _emitSnapshot(snapshot);
+      } on CounterError catch (error, stackTrace) {
+        AppLogger.error(
+          'RestCounterRepository.initialLoad failed',
+          error,
+          stackTrace,
+        );
+        _watchController?.addError(error, stackTrace);
       } finally {
         completer.complete();
         _initialLoadCompleter = null;
