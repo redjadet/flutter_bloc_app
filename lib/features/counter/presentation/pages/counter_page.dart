@@ -59,18 +59,28 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final AppLocalizations l10n = AppLocalizations.of(context);
-    return BlocListener<CounterCubit, CounterState>(
-      listenWhen: (prev, curr) => prev.error != curr.error,
-      listener: (context, state) {
-        final error = state.error;
-        if (error != null) {
-          final String localizedMessage = counterErrorMessage(l10n, error);
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(localizedMessage)));
-          context.read<CounterCubit>().clearError();
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<CounterCubit, CounterState>(
+          listenWhen: (prev, curr) => prev.error != curr.error,
+          listener: (context, state) {
+            final error = state.error;
+            if (error != null) {
+              final String localizedMessage = counterErrorMessage(l10n, error);
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(content: Text(localizedMessage)));
+              context.read<CounterCubit>().clearError();
+            }
+          },
+        ),
+        BlocListener<CounterCubit, CounterState>(
+          listenWhen: (prev, curr) => prev.count == 0 && curr.count > 0,
+          listener: (context, state) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ],
       child: Scaffold(
         appBar: CounterPageAppBar(
           title: widget.title,
