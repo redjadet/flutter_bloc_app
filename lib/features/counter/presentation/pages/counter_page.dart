@@ -144,9 +144,9 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           if (showFlavor) ...[
-                            const Align(
-                              alignment: Alignment.centerRight,
-                              child: FlavorBadge(),
+                            const Padding(
+                              padding: EdgeInsets.all(1.0),
+                              child: Align(alignment: Alignment.centerRight, child: FlavorBadge()),
                             ),
                             SizedBox(height: UI.gapS),
                           ],

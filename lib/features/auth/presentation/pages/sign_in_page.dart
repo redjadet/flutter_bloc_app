@@ -3,43 +3,16 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui;
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'
     as firebase_ui_google;
-import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/features/auth/presentation/helpers/auth_error_message.dart';
+import 'package:flutter_bloc_app/features/auth/presentation/helpers/google_provider_helper.dart';
+import 'package:flutter_bloc_app/features/auth/presentation/helpers/provider_builder.dart';
+import 'package:flutter_bloc_app/features/auth/presentation/widgets/fallback_sign_in_content.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
-@visibleForTesting
-String authErrorMessage(AppLocalizations l10n, FirebaseAuthException error) {
-  switch (error.code) {
-    case 'invalid-email':
-      return l10n.authErrorInvalidEmail;
-    case 'user-disabled':
-      return l10n.authErrorUserDisabled;
-    case 'user-not-found':
-      return l10n.authErrorUserNotFound;
-    case 'wrong-password':
-      return l10n.authErrorWrongPassword;
-    case 'email-already-in-use':
-      return l10n.authErrorEmailInUse;
-    case 'operation-not-allowed':
-      return l10n.authErrorOperationNotAllowed;
-    case 'weak-password':
-      return l10n.authErrorWeakPassword;
-    case 'requires-recent-login':
-      return l10n.authErrorRequiresRecentLogin;
-    case 'credential-already-in-use':
-    case 'account-exists-with-different-credential':
-      return l10n.authErrorCredentialInUse;
-    case 'invalid-credential':
-    case 'invalid-verification-code':
-    case 'invalid-verification-id':
-      return l10n.authErrorInvalidCredential;
-    default:
-      return l10n.authErrorGeneric;
-  }
-}
+export 'package:flutter_bloc_app/features/auth/presentation/helpers/auth_error_message.dart';
 
 @visibleForTesting
 const Key signInGuestButtonKey = Key('sign_in_guest_button');
@@ -53,7 +26,7 @@ class SignInPage extends StatelessWidget {
     firebase_ui_google.GoogleProvider? Function()? googleProviderFactory,
   }) : _auth = auth,
        _googleProviderFactory =
-           googleProviderFactory ?? _maybeCreateGoogleProvider;
+           googleProviderFactory ?? maybeCreateGoogleProvider;
 
   final FirebaseAuth? _auth;
   @visibleForTesting
@@ -66,38 +39,11 @@ class SignInPage extends StatelessWidget {
     List<firebase_ui.AuthProvider>? override,
     required firebase_ui_google.GoogleProvider? Function()
     googleProviderFactory,
-  }) {
-    final List<firebase_ui.AuthProvider> providers =
-        List<firebase_ui.AuthProvider>.from(
-          override ?? firebase_ui.FirebaseUIAuth.providersFor(auth.app),
-        );
-
-    if (!providers.any(
-      (firebase_ui.AuthProvider provider) =>
-          provider is firebase_ui.EmailAuthProvider,
-    )) {
-      providers.insert(0, firebase_ui.EmailAuthProvider());
-    }
-
-    if (providers.isEmpty) {
-      providers.add(firebase_ui.EmailAuthProvider());
-    }
-
-    final bool hasGoogleProvider = providers.any(
-      (firebase_ui.AuthProvider provider) =>
-          provider is firebase_ui_google.GoogleProvider,
-    );
-
-    if (!hasGoogleProvider) {
-      final firebase_ui_google.GoogleProvider? googleProvider =
-          googleProviderFactory();
-      if (googleProvider != null) {
-        providers.add(googleProvider);
-      }
-    }
-
-    return providers;
-  }
+  }) => buildAuthProviders(
+    auth: auth,
+    override: override,
+    googleProviderFactory: googleProviderFactory,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -146,10 +92,11 @@ class SignInPage extends StatelessWidget {
     }
 
     if (!canUseFirebaseUISignIn) {
-      return _FallbackSignInContent(
+      return FallbackSignInContent(
         l10n: l10n,
         theme: theme,
         upgradingAnonymous: upgradingAnonymous,
+        signInGuestButtonKey: signInGuestButtonKey,
         signInAnonymously: signInAnonymously,
       );
     }
@@ -230,104 +177,5 @@ class SignInPage extends StatelessWidget {
       ],
     );
     // coverage:ignore-end
-  }
-}
-
-class _FallbackSignInContent extends StatelessWidget {
-  const _FallbackSignInContent({
-    required this.l10n,
-    required this.theme,
-    required this.upgradingAnonymous,
-    required this.signInAnonymously,
-  });
-
-  final AppLocalizations l10n;
-  final ThemeData theme;
-  final bool upgradingAnonymous;
-  final Future<void> Function() signInAnonymously;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Text(
-                  l10n.appTitle,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.headlineSmall,
-                ),
-                const SizedBox(height: 16),
-                if (upgradingAnonymous)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 24),
-                    child: Text(
-                      l10n.anonymousUpgradeHint,
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodySmall,
-                    ),
-                  ),
-                Text(
-                  l10n.anonymousSignInDescription,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodySmall,
-                ),
-                const SizedBox(height: 12),
-                FilledButton.tonal(
-                  key: signInGuestButtonKey,
-                  onPressed: signInAnonymously,
-                  child: Text(l10n.anonymousSignInButton),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-firebase_ui_google.GoogleProvider? _maybeCreateGoogleProvider() {
-  if (kIsWeb) {
-    return null;
-  }
-
-  if (Firebase.apps.isEmpty) {
-    return null;
-  }
-
-  try {
-    final FirebaseApp app = Firebase.app();
-    final FirebaseOptions options = app.options;
-    final TargetPlatform platform = defaultTargetPlatform;
-    if (platform != TargetPlatform.android && platform != TargetPlatform.iOS) {
-      return null;
-    }
-
-    final bool isIOS = platform == TargetPlatform.iOS;
-    final String? platformClientId = isIOS
-        ? options.iosClientId
-        : options.androidClientId;
-    final bool preferPlist =
-        isIOS && (platformClientId?.trim().isEmpty ?? true);
-
-    final String resolvedClientId =
-        (platformClientId?.trim().isNotEmpty ?? false)
-        ? platformClientId!.trim()
-        : options.appId;
-
-    return firebase_ui_google.GoogleProvider(
-      clientId: resolvedClientId,
-      iOSPreferPlist: preferPlist,
-    );
-  } on FirebaseException {
-    return null;
-  } on Exception {
-    return null;
   }
 }
