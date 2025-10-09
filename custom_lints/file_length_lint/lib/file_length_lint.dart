@@ -109,6 +109,8 @@ class _FileLengthLint extends DartLintRule {
     '**/*.mocks.dart',
     '**/*.part.dart',
     'lib/l10n/**',
+    '**/test/**',
+    '**/tool/**',
   ];
 }
 

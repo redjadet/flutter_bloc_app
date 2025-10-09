@@ -74,6 +74,9 @@ linter:
     sort_child_properties_last: true
     sort_constructors_first: true
 
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options
+
 custom_lint:
   rules:
     - file_too_long:
@@ -85,6 +88,5 @@ custom_lint:
           - '**/*.gr.dart'
           - '**/*.mocks.dart'
           - 'lib/l10n/**'
-
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+          - 'test/**'
+          - 'tool/**'
