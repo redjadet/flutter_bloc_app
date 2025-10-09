@@ -4,15 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_state.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/helpers/counter_snapshot_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 export 'package:flutter_bloc_app/features/counter/presentation/counter_state.dart';
-
-typedef _RestorationResult = ({
-  CounterState state,
-  bool shouldPersist,
-  bool holdCountdown,
-});
 
 /// Presenter (Cubit) orchestrating counter state, persistence and timers.
 class CounterCubit extends Cubit<CounterState> {
@@ -119,9 +114,7 @@ class CounterCubit extends Cubit<CounterState> {
         await Future<void>.delayed(_initialLoadDelay);
       }
       final CounterSnapshot snapshot = await _repository.load();
-      final _RestorationResult restoration = _restoreStateFromSnapshot(
-        snapshot,
-      );
+      final RestorationResult restoration = restoreStateFromSnapshot(snapshot);
       _holdCountdownAtFullCycle = restoration.holdCountdown;
       emit(restoration.state);
       _ensureCountdownTickerStarted();
@@ -141,21 +134,6 @@ class CounterCubit extends Cubit<CounterState> {
         ),
       );
     }
-  }
-
-  _RestorationResult _restoreStateFromSnapshot(CounterSnapshot snapshot) {
-    final int safeCount = snapshot.count < 0 ? 0 : snapshot.count;
-    final bool shouldPersist = safeCount != snapshot.count;
-    final bool holdCountdown = safeCount == 0;
-
-    return (
-      state: CounterState.success(
-        count: safeCount,
-        lastChanged: snapshot.lastChanged,
-      ),
-      shouldPersist: shouldPersist,
-      holdCountdown: holdCountdown,
-    );
   }
 
   Future<void> _persistState(CounterState snapshotState) async {
@@ -232,10 +210,10 @@ class CounterCubit extends Cubit<CounterState> {
     _repositorySubscription?.cancel();
     _repositorySubscription = _repository.watch().listen(
       (CounterSnapshot snapshot) {
-        if (_shouldIgnoreRemoteSnapshot(snapshot)) {
+        if (shouldIgnoreRemoteSnapshot(state, snapshot)) {
           return;
         }
-        final _RestorationResult restoration = _restoreStateFromSnapshot(
+        final RestorationResult restoration = restoreStateFromSnapshot(
           snapshot,
         );
         _holdCountdownAtFullCycle = restoration.holdCountdown;
@@ -245,18 +223,5 @@ class CounterCubit extends Cubit<CounterState> {
         AppLogger.error('CounterCubit.watch failed', error, stackTrace);
       },
     );
-  }
-
-  bool _shouldIgnoreRemoteSnapshot(CounterSnapshot snapshot) {
-    final CounterState current = state;
-    final bool countsEqual = snapshot.count == current.count;
-    final bool timestampsEqual = () {
-      final DateTime? a = snapshot.lastChanged;
-      final DateTime? b = current.lastChanged;
-      if (a == null && b == null) return true;
-      if (a == null || b == null) return false;
-      return a.millisecondsSinceEpoch == b.millisecondsSinceEpoch;
-    }();
-    return countsEqual && timestampsEqual;
   }
 }

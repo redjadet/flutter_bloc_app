@@ -8,12 +8,18 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 
-part 'chat_cubit_actions.dart';
+part 'chat_cubit_history_actions.dart';
 part 'chat_cubit_helpers.dart';
+part 'chat_cubit_message_actions.dart';
 part 'chat_cubit_models.dart';
+part 'chat_cubit_selection_actions.dart';
 
 class ChatCubit extends _ChatCubitCore
-    with _ChatCubitHelpers, _ChatCubitActions {
+    with
+        _ChatCubitHelpers,
+        _ChatCubitHistoryActions,
+        _ChatCubitMessageActions,
+        _ChatCubitSelectionActions {
   ChatCubit({
     required super.repository,
     required super.historyRepository,

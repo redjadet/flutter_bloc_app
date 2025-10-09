@@ -258,6 +258,7 @@ flutter pub get
 dart run build_runner build --delete-conflicting-outputs
 flutter test
 flutter run
+dart run custom_lint  # run additional custom lint checks (optional)
 ```
 
 ### Secrets setup

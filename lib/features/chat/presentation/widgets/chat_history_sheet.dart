@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history_sheet_helpers.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
@@ -72,10 +73,7 @@ class ChatHistorySheet extends StatelessWidget {
                         onPressed: state.hasHistory
                             ? () async {
                                 final bool confirmed =
-                                    await _showClearHistoryDialog(
-                                      context,
-                                      l10n,
-                                    );
+                                    await showClearHistoryDialog(context, l10n);
                                 if (!confirmed) return;
                                 await cubit.clearHistory();
                                 onClose();
@@ -92,11 +90,11 @@ class ChatHistorySheet extends StatelessWidget {
                                   final bool isActive =
                                       conversation.id ==
                                       state.activeConversationId;
-                                  final String timestamp = _formatTimestamp(
+                                  final String timestamp = formatTimestamp(
                                     materialLocalizations,
                                     conversation.updatedAt,
                                   );
-                                  final String title = _conversationTitle(
+                                  final String title = conversationTitle(
                                     l10n,
                                     index,
                                     conversation,
@@ -121,7 +119,7 @@ class ChatHistorySheet extends StatelessWidget {
                                       icon: const Icon(Icons.delete_outline),
                                       onPressed: () async {
                                         final bool confirmed =
-                                            await _showDeleteConversationDialog(
+                                            await showDeleteConversationDialog(
                                               context,
                                               l10n,
                                               title,
@@ -211,73 +209,4 @@ class ChatHistorySheet extends StatelessWidget {
       ),
     );
   }
-}
-
-Future<bool> _showClearHistoryDialog(
-  BuildContext context,
-  AppLocalizations l10n,
-) async {
-  return await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(l10n.chatHistoryClearAll),
-          content: Text(l10n.chatHistoryClearAllWarning),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(l10n.cancelButtonLabel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(l10n.deleteButtonLabel),
-            ),
-          ],
-        ),
-      ) ??
-      false;
-}
-
-Future<bool> _showDeleteConversationDialog(
-  BuildContext context,
-  AppLocalizations l10n,
-  String conversationTitle,
-) async {
-  return await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(l10n.chatHistoryDeleteConversation),
-          content: Text(
-            l10n.chatHistoryDeleteConversationWarning(conversationTitle),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(l10n.cancelButtonLabel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(l10n.deleteButtonLabel),
-            ),
-          ],
-        ),
-      ) ??
-      false;
-}
-
-String _conversationTitle(
-  AppLocalizations l10n,
-  int index,
-  ChatConversation conversation,
-) {
-  return conversation.model ?? l10n.chatHistoryConversationTitle(index + 1);
-}
-
-String _formatTimestamp(
-  MaterialLocalizations localizations,
-  DateTime timestamp,
-) {
-  final String date = localizations.formatMediumDate(timestamp);
-  final TimeOfDay time = TimeOfDay.fromDateTime(timestamp);
-  final String formattedTime = localizations.formatTimeOfDay(time);
-  return '$date · $formattedTime';
 }
