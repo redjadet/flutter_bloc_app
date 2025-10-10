@@ -105,10 +105,12 @@
     "editor.formatOnSave": true
   },
   "cSpell.words": [
+    "appbundle",
     "appspot",
     "flutterfire",
     "huggingface",
     "preferences",
+    "pubspec",
     "sqflite",
     "Türkçe"
   ]
