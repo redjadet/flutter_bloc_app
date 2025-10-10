@@ -2,6 +2,24 @@ fastlane_version '2.221.0'
 
 default_platform(:ios)
 
+def bump_pubspec_build_number
+  pubspec_path = File.expand_path('../../pubspec.yaml', __dir__)
+  UI.user_error!("pubspec.yaml not found at #{pubspec_path}") unless File.exist?(pubspec_path)
+
+  content = File.read(pubspec_path)
+  match = content.match(/^version:\s*(\d+\.\d+\.\d+)\+(\d+)/)
+  UI.user_error!('Could not locate version line in pubspec.yaml') unless match
+
+  semantic_version = match[1]
+  build_number = match[2].to_i + 1
+  updated_line = "version: #{semantic_version}+#{build_number}"
+
+  File.write(pubspec_path, content.sub(match[0], updated_line))
+  UI.message("Updated pubspec.yaml build number to #{build_number}")
+
+  { version: semantic_version, build_number: build_number }
+end
+
 platform :ios do
   desc 'Build an .ipa using Flutter'
   lane :build do |options|
@@ -21,6 +39,11 @@ platform :ios do
   lane :deploy do |options|
     configuration = options[:configuration] || ENV['IOS_CONFIGURATION'] || 'Release'
     flavor = options[:flavor] || ENV['IOS_BUILD_FLAVOR']
+
+    build_info = bump_pubspec_build_number
+    UI.message(
+      "Preparing deploy for #{build_info[:version]}+#{build_info[:build_number]}",
+    )
 
     invoke(:build, configuration: configuration, flavor: flavor)
 
