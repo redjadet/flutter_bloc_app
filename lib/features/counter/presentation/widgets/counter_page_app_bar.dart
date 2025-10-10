@@ -50,6 +50,11 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.forum),
         ),
         IconButton(
+          tooltip: l10n.openGoogleMapsTooltip,
+          onPressed: () => context.pushNamed(AppRoutes.googleMaps),
+          icon: const Icon(Icons.map),
+        ),
+        IconButton(
           tooltip: l10n.openSettingsTooltip,
           onPressed: onOpenSettings,
           icon: const Icon(Icons.settings),

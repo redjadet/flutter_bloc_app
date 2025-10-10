@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 
 const String _channelName = 'com.example.flutter_bloc_app/native';
 const String _methodGetPlatformInfo = 'getPlatformInfo';
+const String _methodHasGoogleMapsApiKey = 'hasGoogleMapsApiKey';
 const String _keyBatteryLevel = 'batteryLevel';
 
 class NativePlatformService {
@@ -14,6 +15,19 @@ class NativePlatformService {
     final Map<String, dynamic>? result = await _channel
         .invokeMapMethod<String, dynamic>(_methodGetPlatformInfo);
     return NativePlatformInfo.fromMap(result);
+  }
+
+  Future<bool> hasGoogleMapsApiKey() async {
+    try {
+      final bool? result = await _channel.invokeMethod<bool>(
+        _methodHasGoogleMapsApiKey,
+      );
+      return result ?? false;
+    } on PlatformException {
+      return false;
+    } on MissingPluginException {
+      return false;
+    }
   }
 }
 

@@ -15,6 +15,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Charts: `fl_chart` Bitcoin price line chart backed by CoinGecko's public API (pinch-zoomable with graceful fallback).
 - GraphQL demo: Countries browser backed by the free `countries.trevorblades.com` GraphQL API, complete with continent filtering and localized labels.
 - WebSocket demo: Reusable Cubit + repository stack driving a public echo websocket with reconnect/error handling and localized UI.
+- Maps: Google Maps sample page showcasing curated San Francisco locations with traffic toggle, runtime map controls, and guard rails when API keys are missing (Android & iOS).
 - Loading polish: `skeletonizer` placeholders, `fancy_shimmer_image` hero card, and dev-only loading delay to showcase the effects.
 - Logging: Centralized `AppLogger` built on top of the `logger` package.
 - Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES) with version/build surfaced on the Settings page.
@@ -35,6 +36,29 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Auto-connect occurs on mobile/desktop builds; on web the screen renders an informative unsupported message instead of attempting a socket handshake.
 - To target a different echo server (e.g. `wss://ws.postman-echo.com/raw`), register your own `WebsocketRepository` with `getIt` in `configureDependencies()` or inject a custom implementation in tests.
 
+## Google Maps Demo
+
+- Entry points: the counter app bar (`Open Google Maps demo` icon) and the Example page (`Open Google Maps demo` button), or navigate directly via `/google-maps`.
+- The page loads curated San Francisco landmarks from `SampleMapLocationRepository`, exposes map type & traffic toggles, and highlights the currently focused marker.
+- Android: provide an API key by adding `GOOGLE_MAPS_ANDROID_API_KEY=YOUR_KEY` to `android/local.properties` (or `gradle.properties`). The Gradle build feeds this into `AndroidManifest.xml` via a manifest placeholder; the default placeholder string is intentionally invalid.
+- iOS: set the `GMSApiKey` entry in `ios/Runner/Info.plist` (or override it per configuration in Xcode). The app only boots Google Maps when the value is non-empty and not the placeholder.
+- When keys are absent, the page shows a friendly warning card instead of instantiating the native map view (preventing simulator crashes).
+- Keep real API keys out of source control—store them in untracked files or CI secrets and inspect them before shipping.
+
+### Getting a Google Maps API key
+
+1. Visit the [Google Cloud Console](https://console.cloud.google.com/), create (or select) a project, and enable:
+   - *Maps SDK for Android*
+   - *Maps SDK for iOS*
+2. Generate an API key and apply app restrictions:
+   - Android: restrict by package name `com.example.flutter_bloc_app` and the SHA-1 fingerprints you use locally/CI.
+   - iOS: restrict by bundle identifier `com.example.flutterBlocApp`.
+3. Add the key to your local environment (never commit it):
+   - Android: update `android/local.properties` with `GOOGLE_MAPS_ANDROID_API_KEY=your-key` (alternatively, define it inside `~/.gradle/gradle.properties`).
+   - iOS: set `GMSApiKey` in `ios/Runner/Info.plist`, or reference an environment-specific `.xcconfig` value (e.g. `GMS_API_KEY`) so it stays out of version control.
+   - Optional: keep a private copy in `assets/config/secrets.json` (ignored by git) or your preferred secrets manager.
+4. Rebuild the app. The maps sample will render once both platforms have a non-placeholder key.
+
 ## Screenshots
 
 | Counter Home | Auto Countdown | Settings |
@@ -44,6 +68,10 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 | Charts | GraphQL | AI Chat |
 | --- | --- | --- |
 | ![Charts page](assets/screenshots/small/chart.png) | ![GraphQL countries browser](assets/screenshots/small/graphQL_countries.png) | ![AI chat conversation](assets/screenshots/small/ai_chat.png) |
+
+| Google Maps Demo |
+| --- |
+| ![Google Maps demo](assets/screenshots/google_maps.png) |
 
 ## Test Coverage
 

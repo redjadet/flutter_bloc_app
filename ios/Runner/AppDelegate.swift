@@ -1,4 +1,5 @@
 import Flutter
+import GoogleMaps
 import UIKit
 
 @main
@@ -9,6 +10,21 @@ import UIKit
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    if let apiKey = Bundle.main.object(forInfoDictionaryKey: "GMSApiKey") as? String,
+       !apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+      GMSServices.provideAPIKey(apiKey)
+      #if DEBUG
+        if apiKey == "YOUR_IOS_GOOGLE_MAPS_API_KEY" {
+          NSLog(
+            "⚠️ Google Maps API key placeholder detected. Replace the GMSApiKey value in Info.plist"
+          )
+        }
+      #endif
+    } else {
+      NSLog(
+        "⚠️ No Google Maps API key configured. The Google Maps sample page will remain disabled."
+      )
+    }
     GeneratedPluginRegistrant.register(with: self)
 
     if let registrar = registrar(forPlugin: "AppDelegateMethodChannel") {
@@ -38,6 +54,11 @@ import UIKit
             "batteryLevel": batteryPercent
           ]
           result(info)
+        case "hasGoogleMapsApiKey":
+          let key = Bundle.main.object(forInfoDictionaryKey: "GMSApiKey") as? String
+          let trimmed = key?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+          let hasKey = !trimmed.isEmpty && trimmed != "YOUR_IOS_GOOGLE_MAPS_API_KEY"
+          result(hasKey)
         default:
           result(FlutterMethodNotImplemented)
         }

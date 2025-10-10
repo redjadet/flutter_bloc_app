@@ -21,6 +21,9 @@ class AppRoutes {
   static const websocket = 'websocket';
   static const websocketPath = '/websocket';
 
+  static const googleMaps = 'google-maps';
+  static const googleMapsPath = '/google-maps';
+
   static const graphql = 'graphql-demo';
   static const graphqlPath = '/graphql-demo';
 

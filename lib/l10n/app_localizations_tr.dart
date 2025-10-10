@@ -189,6 +189,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get openChatTooltip => 'Yapay zekâ ile sohbet et';
 
   @override
+  String get openGoogleMapsTooltip => 'Google Haritalar demosunu aç';
+
+  @override
   String get chatPageTitle => 'Yapay Zekâ Sohbeti';
 
   @override
@@ -378,6 +381,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get exampleWebsocketButton => 'WebSocket demosunu aç';
 
   @override
+  String get exampleGoogleMapsButton => 'Google Haritalar demosunu aç';
+
+  @override
   String exampleNativeBatteryLabel(int percent) {
     return 'Pil seviyesi: %$percent';
   }
@@ -416,4 +422,50 @@ class AppLocalizationsTr extends AppLocalizations {
   String websocketErrorLabel(String error) {
     return 'WebSocket hatası: $error';
   }
+
+  @override
+  String get googleMapsPageTitle => 'Google Haritalar demosu';
+
+  @override
+  String get googleMapsPageGenericError => 'Harita verileri yüklenemedi.';
+
+  @override
+  String get googleMapsPageControlsHeading => 'Harita kontrolleri';
+
+  @override
+  String get googleMapsPageMapTypeNormal => 'Standart haritayı göster';
+
+  @override
+  String get googleMapsPageMapTypeHybrid => 'Hibrit haritayı göster';
+
+  @override
+  String get googleMapsPageTrafficToggle => 'Canlı trafiği göster';
+
+  @override
+  String get googleMapsPageApiKeyHelp =>
+      'Canlı döşemeleri görebilmek için Google Haritalar API anahtarlarını yerel projelere ekleyin.';
+
+  @override
+  String get googleMapsPageEmptyLocations => 'Gösterilecek konum yok.';
+
+  @override
+  String get googleMapsPageLocationsHeading => 'Öne çıkan konumlar';
+
+  @override
+  String get googleMapsPageFocusButton => 'Odaklan';
+
+  @override
+  String get googleMapsPageSelectedBadge => 'Seçildi';
+
+  @override
+  String get googleMapsPageMissingKeyTitle =>
+      'Google Haritalar API anahtarı ekle';
+
+  @override
+  String get googleMapsPageMissingKeyDescription =>
+      'Bu demoyu kullanmak için yerel projelere geçerli Google Haritalar API anahtarlarını ekleyin.';
+
+  @override
+  String get googleMapsPageUnsupportedDescription =>
+      'Google Haritalar demosu yalnızca Android ve iOS derlemelerinde kullanılabilir.';
 }

@@ -131,6 +131,7 @@
     "description": "Uygulama bilgilerini yeniden yükleme düğmesi etiketi"
   },
   "openChatTooltip": "Yapay zekâ ile sohbet et",
+  "openGoogleMapsTooltip": "Google Haritalar demosunu aç",
   "chatPageTitle": "Yapay Zekâ Sohbeti",
   "chatInputHint": "Asistana bir şey sor...",
   "chatSendButton": "Mesaj gönder",
@@ -280,6 +281,10 @@
   "@exampleWebsocketButton": {
     "description": "Button label that navigates to the WebSocket demo page"
   },
+  "exampleGoogleMapsButton": "Google Haritalar demosunu aç",
+  "@exampleGoogleMapsButton": {
+    "description": "Button label that navigates to the Google Maps sample page"
+  },
   "exampleNativeBatteryLabel": "Pil seviyesi: %{percent}",
   "@exampleNativeBatteryLabel": {
     "description": "Label showing the battery level returned from the native platform",
@@ -339,5 +344,52 @@
         "type": "String"
       }
     }
-  }
+  },
+  "googleMapsPageTitle": "Google Haritalar demosu",
+  "@googleMapsPageTitle": {
+    "description": "Google Haritalar örnek sayfasının başlığı"
+  },
+  "googleMapsPageGenericError": "Harita verileri yüklenemedi.",
+  "@googleMapsPageGenericError": {
+    "description": "Harita yüklenemediğinde gösterilen hata mesajı"
+  },
+  "googleMapsPageControlsHeading": "Harita kontrolleri",
+  "@googleMapsPageControlsHeading": {
+    "description": "Harita kontrolleri bölümünün başlığı"
+  },
+  "googleMapsPageMapTypeNormal": "Standart haritayı göster",
+  "@googleMapsPageMapTypeNormal": {
+    "description": "Haritayı standart görünüme döndüren buton etiketi"
+  },
+  "googleMapsPageMapTypeHybrid": "Hibrit haritayı göster",
+  "@googleMapsPageMapTypeHybrid": {
+    "description": "Haritayı hibrit görünüme alan buton etiketi"
+  },
+  "googleMapsPageTrafficToggle": "Canlı trafiği göster",
+  "@googleMapsPageTrafficToggle": {
+    "description": "Trafik katmanını açan anahtar etiketi"
+  },
+  "googleMapsPageApiKeyHelp": "Canlı döşemeleri görebilmek için Google Haritalar API anahtarlarını yerel projelere ekleyin.",
+  "@googleMapsPageApiKeyHelp": {
+    "description": "Google Haritalar API anahtarlarını yapılandırmayı hatırlatan not"
+  },
+  "googleMapsPageEmptyLocations": "Gösterilecek konum yok.",
+  "@googleMapsPageEmptyLocations": {
+    "description": "Örnek konum bulunmadığında gösterilen mesaj"
+  },
+  "googleMapsPageLocationsHeading": "Öne çıkan konumlar",
+  "@googleMapsPageLocationsHeading": {
+    "description": "Konum listesi için başlık"
+  },
+  "googleMapsPageFocusButton": "Odaklan",
+  "@googleMapsPageFocusButton": {
+    "description": "Haritayı seçilen konuma odaklayan buton etiketi"
+  },
+  "googleMapsPageSelectedBadge": "Seçildi",
+  "@googleMapsPageSelectedBadge": {
+    "description": "Seçili konumu gösteren rozet metni"
+  },
+  "googleMapsPageMissingKeyTitle": "Google Haritalar API anahtarı ekle",
+  "googleMapsPageMissingKeyDescription": "Bu demoyu kullanmak için yerel projelere geçerli Google Haritalar API anahtarlarını ekleyin.",
+  "googleMapsPageUnsupportedDescription": "Google Haritalar demosu yalnızca Android ve iOS derlemelerinde kullanılabilir."
 }

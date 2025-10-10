@@ -3,6 +3,7 @@ package com.example.flutter_bloc_app
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
+import android.content.pm.PackageManager
 import android.os.Build
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -25,6 +26,20 @@ class MainActivity : FlutterActivity() {
               "batteryLevel" to getBatteryLevel(),
             )
             result.success(info)
+          }
+          "hasGoogleMapsApiKey" -> {
+            val hasKey = try {
+              val appInfo = packageManager.getApplicationInfo(
+                packageName,
+                PackageManager.GET_META_DATA,
+              )
+              val metaValue = appInfo.metaData?.getString("com.google.android.geo.API_KEY")
+              val trimmed = metaValue?.trim().orEmpty()
+              trimmed.isNotEmpty() && trimmed != "YOUR_ANDROID_GOOGLE_MAPS_API_KEY"
+            } catch (exception: Exception) {
+              false
+            }
+            result.success(hasKey)
           }
           else -> result.notImplemented()
         }

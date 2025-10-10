@@ -187,6 +187,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openChatTooltip => 'Chat with AI';
 
   @override
+  String get openGoogleMapsTooltip => 'Open Google Maps demo';
+
+  @override
   String get chatPageTitle => 'AI Chat';
 
   @override
@@ -379,6 +382,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exampleWebsocketButton => 'Open WebSocket demo';
 
   @override
+  String get exampleGoogleMapsButton => 'Open Google Maps demo';
+
+  @override
   String exampleNativeBatteryLabel(int percent) {
     return 'Battery level: $percent%';
   }
@@ -417,4 +423,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String websocketErrorLabel(String error) {
     return 'WebSocket error: $error';
   }
+
+  @override
+  String get googleMapsPageTitle => 'Google Maps demo';
+
+  @override
+  String get googleMapsPageGenericError =>
+      'We couldn\'t load map data right now.';
+
+  @override
+  String get googleMapsPageControlsHeading => 'Map controls';
+
+  @override
+  String get googleMapsPageMapTypeNormal => 'Show standard map';
+
+  @override
+  String get googleMapsPageMapTypeHybrid => 'Show hybrid map';
+
+  @override
+  String get googleMapsPageTrafficToggle => 'Show real-time traffic';
+
+  @override
+  String get googleMapsPageApiKeyHelp =>
+      'Add your Google Maps API keys to the native projects to see live tiles.';
+
+  @override
+  String get googleMapsPageEmptyLocations => 'No locations to display yet.';
+
+  @override
+  String get googleMapsPageLocationsHeading => 'Featured locations';
+
+  @override
+  String get googleMapsPageFocusButton => 'Focus';
+
+  @override
+  String get googleMapsPageSelectedBadge => 'Selected';
+
+  @override
+  String get googleMapsPageMissingKeyTitle => 'Add a Google Maps API key';
+
+  @override
+  String get googleMapsPageMissingKeyDescription =>
+      'Update the platform projects with valid Google Maps API keys to use this demo.';
+
+  @override
+  String get googleMapsPageUnsupportedDescription =>
+      'The Google Maps demo is only available on Android and iOS builds.';
 }

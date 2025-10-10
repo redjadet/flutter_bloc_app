@@ -14,11 +14,13 @@ class SecretConfig {
   static const String _keyHfModel = 'huggingface_model';
   static const String _keyHfUseChatCompletions =
       'huggingface_use_chat_completions';
+  static const String _keyGoogleMaps = 'google_maps_api_key';
 
   static bool _loaded = false;
   static String? _huggingfaceApiKey;
   static String? _huggingfaceModel;
   static bool _useChatCompletions = false;
+  static String? _googleMapsApiKey;
   static SecretStorage? _configuredStorage;
   @visibleForTesting
   static AssetBundle? debugAssetBundle;
@@ -28,6 +30,7 @@ class SecretConfig {
   static String? get huggingfaceApiKey => _huggingfaceApiKey;
   static String? get huggingfaceModel => _huggingfaceModel;
   static bool get useChatCompletions => _useChatCompletions;
+  static String? get googleMapsApiKey => _googleMapsApiKey;
 
   static void configureStorage(SecretStorage storage) {
     _configuredStorage = storage;
@@ -42,6 +45,7 @@ class SecretConfig {
     _huggingfaceApiKey = null;
     _huggingfaceModel = null;
     _useChatCompletions = false;
+    _googleMapsApiKey = null;
   }
 
   static const bool _envAllowsAssetFallback = bool.fromEnvironment(
@@ -71,6 +75,7 @@ class SecretConfig {
       if (assetFallbackAllowed) {
         final bool loadedFromAssets = await _loadFromSource(
           () => _readAssetSecrets(),
+          afterApply: () => _persistGoogleMapsKey(storage),
         );
         if (loadedFromAssets) {
           _loaded = true;
@@ -108,15 +113,18 @@ class SecretConfig {
       final String? token = await storage.read(_keyHfToken);
       final String? model = await storage.read(_keyHfModel);
       final String? flag = await storage.read(_keyHfUseChatCompletions);
+      final String? mapsKey = await storage.read(_keyGoogleMaps);
       if ((token == null || token.isEmpty) &&
           (model == null || model.isEmpty) &&
-          (flag == null || flag.isEmpty)) {
+          (flag == null || flag.isEmpty) &&
+          (mapsKey == null || mapsKey.isEmpty)) {
         return null;
       }
       return <String, dynamic>{
         'HUGGINGFACE_API_KEY': token,
         'HUGGINGFACE_MODEL': model,
         'HUGGINGFACE_USE_CHAT_COMPLETIONS': flag == 'true',
+        'GOOGLE_MAPS_API_KEY': mapsKey,
       };
     } on Exception catch (e) {
       AppLogger.warning('SecretConfig secure read failed: $e');
@@ -137,6 +145,10 @@ class SecretConfig {
       _keyHfUseChatCompletions,
       _useChatCompletions.toString(),
     );
+    final String? mapsKey = _googleMapsApiKey;
+    if (mapsKey != null) {
+      await storage.write(_keyGoogleMaps, mapsKey);
+    }
   }
 
   static void _applySecrets(Map<String, dynamic> json) {
@@ -152,6 +164,8 @@ class SecretConfig {
     } else {
       _useChatCompletions = false;
     }
+    final String? mapsKey = (json['GOOGLE_MAPS_API_KEY'] as String?)?.trim();
+    _googleMapsApiKey = (mapsKey?.isEmpty ?? true) ? null : mapsKey;
   }
 
   static bool _hasSecrets(Map<String, dynamic>? source) {
@@ -159,13 +173,15 @@ class SecretConfig {
     final String? token = (source['HUGGINGFACE_API_KEY'] as String?)?.trim();
     final String? model = (source['HUGGINGFACE_MODEL'] as String?)?.trim();
     final Object? flag = source['HUGGINGFACE_USE_CHAT_COMPLETIONS'];
+    final String? maps = (source['GOOGLE_MAPS_API_KEY'] as String?)?.trim();
 
     final bool hasToken = token != null && token.isNotEmpty;
     final bool hasModel = model != null && model.isNotEmpty;
     final bool hasFlag =
         flag is bool || (flag is String && flag.trim().isNotEmpty);
+    final bool hasMaps = maps != null && maps.isNotEmpty;
 
-    return hasToken || hasModel || hasFlag;
+    return hasToken || hasModel || hasFlag || hasMaps;
   }
 
   static Map<String, dynamic>? _readEnvironmentSecrets() {
@@ -174,6 +190,7 @@ class SecretConfig {
     const String completionFlagRaw = String.fromEnvironment(
       'HUGGINGFACE_USE_CHAT_COMPLETIONS',
     );
+    const String mapsKey = String.fromEnvironment('GOOGLE_MAPS_API_KEY');
 
     final Map<String, dynamic> result = <String, dynamic>{};
     if (token.isNotEmpty) {
@@ -184,6 +201,9 @@ class SecretConfig {
     }
     if (completionFlagRaw.isNotEmpty) {
       result['HUGGINGFACE_USE_CHAT_COMPLETIONS'] = completionFlagRaw;
+    }
+    if (mapsKey.isNotEmpty) {
+      result['GOOGLE_MAPS_API_KEY'] = mapsKey;
     }
 
     if (debugEnvironment != null) {
@@ -222,6 +242,13 @@ class SecretConfig {
       AppLogger.warning('SecretConfig asset read failed: $e');
     }
     return null;
+  }
+
+  static Future<void> _persistGoogleMapsKey(SecretStorage storage) async {
+    final String? mapsKey = _googleMapsApiKey;
+    if (mapsKey != null) {
+      await storage.write(_keyGoogleMaps, mapsKey);
+    }
   }
 
   static Future<bool> _loadFromSource(

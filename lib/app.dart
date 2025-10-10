@@ -98,6 +98,16 @@ class _MyAppState extends State<MyApp> {
           child: const WebsocketDemoPage(),
         ),
       ),
+      GoRoute(
+        path: AppRoutes.googleMapsPath,
+        name: AppRoutes.googleMaps,
+        builder: (context, state) => BlocProvider(
+          create: (_) =>
+              MapSampleCubit(repository: getIt<MapLocationRepository>())
+                ..loadLocations(),
+          child: const GoogleMapsSamplePage(),
+        ),
+      ),
     ];
 
     if (!widget.requireAuth) {

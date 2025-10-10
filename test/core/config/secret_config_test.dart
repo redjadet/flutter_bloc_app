@@ -19,6 +19,7 @@ void main() {
         'huggingface_api_key': 'token-123',
         'huggingface_model': 'awesome-model',
         'huggingface_use_chat_completions': 'true',
+        'google_maps_api_key': 'maps-secure',
       },
     );
 
@@ -29,6 +30,7 @@ void main() {
     expect(SecretConfig.huggingfaceApiKey, 'token-123');
     expect(SecretConfig.huggingfaceModel, 'awesome-model');
     expect(SecretConfig.useChatCompletions, isTrue);
+    expect(SecretConfig.googleMapsApiKey, 'maps-secure');
     expect(storage.writeCalls, isEmpty);
   });
 
@@ -40,6 +42,7 @@ void main() {
       'HUGGINGFACE_API_KEY': 'asset-key',
       'HUGGINGFACE_MODEL': 'asset-model',
       'HUGGINGFACE_USE_CHAT_COMPLETIONS': 'TrUe',
+      'GOOGLE_MAPS_API_KEY': 'asset-maps',
     };
     SecretConfig.debugAssetBundle = _FakeAssetBundle(jsonEncode(assetSecrets));
 
@@ -48,7 +51,11 @@ void main() {
     expect(SecretConfig.huggingfaceApiKey, 'asset-key');
     expect(SecretConfig.huggingfaceModel, 'asset-model');
     expect(SecretConfig.useChatCompletions, isTrue);
-    expect(storage.writeCalls, isEmpty);
+    expect(SecretConfig.googleMapsApiKey, 'asset-maps');
+    expect(
+      storage.writeCalls,
+      containsPair(_FakeSecretStorage.googleMapsKey, 'asset-maps'),
+    );
   });
 
   test('ignores asset secrets when fallback disabled', () async {
@@ -74,6 +81,7 @@ void main() {
       'HUGGINGFACE_API_KEY': 'env-key',
       'HUGGINGFACE_MODEL': 'env-model',
       'HUGGINGFACE_USE_CHAT_COMPLETIONS': true,
+      'GOOGLE_MAPS_API_KEY': 'maps-env',
     };
 
     await SecretConfig.load();
@@ -81,6 +89,7 @@ void main() {
     expect(SecretConfig.huggingfaceApiKey, 'env-key');
     expect(SecretConfig.huggingfaceModel, 'env-model');
     expect(SecretConfig.useChatCompletions, isTrue);
+    expect(SecretConfig.googleMapsApiKey, 'maps-env');
     expect(
       storage.writeCalls,
       containsPair(_FakeSecretStorage.hfTokenKey, 'env-key'),
@@ -93,6 +102,10 @@ void main() {
       storage.writeCalls,
       containsPair('huggingface_use_chat_completions', 'true'),
     );
+    expect(
+      storage.writeCalls,
+      containsPair(_FakeSecretStorage.googleMapsKey, 'maps-env'),
+    );
   });
 
   test('skips secure storage persistence when disabled', () async {
@@ -101,11 +114,13 @@ void main() {
     SecretConfig.debugAssetBundle = _FakeAssetBundle.throwing();
     SecretConfig.debugEnvironment = <String, dynamic>{
       'HUGGINGFACE_API_KEY': 'env-key',
+      'GOOGLE_MAPS_API_KEY': 'maps-env',
     };
 
     await SecretConfig.load(persistToSecureStorage: false);
 
     expect(SecretConfig.huggingfaceApiKey, 'env-key');
+    expect(SecretConfig.googleMapsApiKey, 'maps-env');
     expect(storage.writeCalls, isEmpty);
   });
 
@@ -118,6 +133,7 @@ void main() {
       SecretConfig.debugEnvironment = <String, dynamic>{
         'HUGGINGFACE_API_KEY': 'env-key',
         'HUGGINGFACE_MODEL': 'env-model',
+        'GOOGLE_MAPS_API_KEY': 'maps-env',
       };
 
       await SecretConfig.load();
@@ -128,6 +144,7 @@ void main() {
       SecretConfig.resetForTest();
       storage.write(_FakeSecretStorage.hfTokenKey, 'stored-token');
       storage.write(_FakeSecretStorage.hfModelKey, 'stored-model');
+      storage.write(_FakeSecretStorage.googleMapsKey, 'stored-maps');
       SecretConfig.configureStorage(storage);
       SecretConfig.debugAssetBundle = _FakeAssetBundle.throwing();
       SecretConfig.debugEnvironment = null;
@@ -136,6 +153,7 @@ void main() {
 
       expect(SecretConfig.huggingfaceApiKey, 'stored-token');
       expect(SecretConfig.huggingfaceModel, 'stored-model');
+      expect(SecretConfig.googleMapsApiKey, 'stored-maps');
     },
   );
 }
@@ -146,6 +164,7 @@ class _FakeSecretStorage implements SecretStorage {
 
   static const String hfTokenKey = 'huggingface_api_key';
   static const String hfModelKey = 'huggingface_model';
+  static const String googleMapsKey = 'google_maps_api_key';
   final Map<String, String> _values;
   final Map<String, String> writeCalls = <String, String>{};
 

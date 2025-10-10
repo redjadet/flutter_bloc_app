@@ -130,6 +130,7 @@
     "description": "Intitulé du bouton pour relancer le chargement des informations de l'application"
   },
   "openChatTooltip": "Discuter avec l'IA",
+  "openGoogleMapsTooltip": "Ouvrir la démo Google Maps",
   "chatPageTitle": "Discussion IA",
   "chatInputHint": "Posez votre question à l'assistant...",
   "chatSendButton": "Envoyer le message",
@@ -279,6 +280,10 @@
   "@exampleWebsocketButton": {
     "description": "Button label that navigates to the WebSocket demo page"
   },
+  "exampleGoogleMapsButton": "Ouvrir la démo Google Maps",
+  "@exampleGoogleMapsButton": {
+    "description": "Button label that navigates to the Google Maps sample page"
+  },
   "exampleNativeBatteryLabel": "Niveau de batterie : {percent} %",
   "@exampleNativeBatteryLabel": {
     "description": "Label showing the battery level returned from the native platform",
@@ -338,5 +343,52 @@
         "type": "String"
       }
     }
-  }
+  },
+  "googleMapsPageTitle": "Démo Google Maps",
+  "@googleMapsPageTitle": {
+    "description": "Titre de la page de démonstration Google Maps"
+  },
+  "googleMapsPageGenericError": "Impossible de charger les données de la carte.",
+  "@googleMapsPageGenericError": {
+    "description": "Message d'erreur affiché lorsque la carte n'a pas pu être chargée"
+  },
+  "googleMapsPageControlsHeading": "Commandes de la carte",
+  "@googleMapsPageControlsHeading": {
+    "description": "En-tête de la section des commandes de la carte"
+  },
+  "googleMapsPageMapTypeNormal": "Afficher la carte standard",
+  "@googleMapsPageMapTypeNormal": {
+    "description": "Texte du bouton pour revenir à la carte standard"
+  },
+  "googleMapsPageMapTypeHybrid": "Afficher la carte hybride",
+  "@googleMapsPageMapTypeHybrid": {
+    "description": "Texte du bouton pour passer à la carte hybride"
+  },
+  "googleMapsPageTrafficToggle": "Afficher le trafic en temps réel",
+  "@googleMapsPageTrafficToggle": {
+    "description": "Libellé de l'interrupteur qui active la couche de trafic"
+  },
+  "googleMapsPageApiKeyHelp": "Ajoutez les clés d’API Google Maps aux projets natifs pour voir les tuiles en direct.",
+  "@googleMapsPageApiKeyHelp": {
+    "description": "Rappel indiquant où configurer les clés d’API Google Maps"
+  },
+  "googleMapsPageEmptyLocations": "Aucun lieu à afficher pour le moment.",
+  "@googleMapsPageEmptyLocations": {
+    "description": "Message affiché lorsqu'il n'y a pas de lieux d'exemple"
+  },
+  "googleMapsPageLocationsHeading": "Lieux à découvrir",
+  "@googleMapsPageLocationsHeading": {
+    "description": "En-tête affiché au-dessus de la liste des lieux"
+  },
+  "googleMapsPageFocusButton": "Centrer",
+  "@googleMapsPageFocusButton": {
+    "description": "Intitulé du bouton qui centre la carte sur la position"
+  },
+  "googleMapsPageSelectedBadge": "Sélectionné",
+  "@googleMapsPageSelectedBadge": {
+    "description": "Badge indiquant l’emplacement actuellement sélectionné"
+  },
+  "googleMapsPageMissingKeyTitle": "Ajoutez une clé d’API Google Maps",
+  "googleMapsPageMissingKeyDescription": "Configurez des clés Google Maps valides dans les projets natifs pour utiliser cette démo.",
+  "googleMapsPageUnsupportedDescription": "La démo Google Maps est disponible uniquement sur Android et iOS."
 }

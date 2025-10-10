@@ -21,6 +21,10 @@ import 'package:flutter_bloc_app/features/counter/data/'
 import 'package:flutter_bloc_app/features/counter/data/'
     'shared_preferences_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
+import 'package:flutter_bloc_app/features/google_maps/data/'
+    'sample_map_location_repository.dart';
+import 'package:flutter_bloc_app/features/google_maps/domain/'
+    'map_location_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/'
     'countries_graphql_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/'
@@ -97,6 +101,9 @@ Future<void> configureDependencies() async {
   _registerLazySingletonIfAbsent<WebsocketRepository>(
     () => EchoWebsocketRepository(),
     dispose: (repository) => repository.dispose(),
+  );
+  _registerLazySingletonIfAbsent<MapLocationRepository>(
+    () => const SampleMapLocationRepository(),
   );
 }
 

@@ -250,6 +250,10 @@
   "@openChatTooltip": {
     "description": "Tooltip for navigating to the AI chat feature"
   },
+  "openGoogleMapsTooltip": "Open Google Maps demo",
+  "@openGoogleMapsTooltip": {
+    "description": "Tooltip for navigating to the Google Maps sample page"
+  },
   "chatPageTitle": "AI Chat",
   "@chatPageTitle": {
     "description": "Title for the AI chat page"
@@ -485,6 +489,10 @@
   "@exampleWebsocketButton": {
     "description": "Button label that navigates to the WebSocket demo page"
   },
+  "exampleGoogleMapsButton": "Open Google Maps demo",
+  "@exampleGoogleMapsButton": {
+    "description": "Button label that navigates to the Google Maps sample page"
+  },
   "exampleNativeBatteryLabel": "Battery level: {percent}%",
   "@exampleNativeBatteryLabel": {
     "description": "Label showing the battery level returned from the native platform",
@@ -544,5 +552,61 @@
         "type": "String"
       }
     }
+  },
+  "googleMapsPageTitle": "Google Maps demo",
+  "@googleMapsPageTitle": {
+    "description": "Title for the Google Maps sample page"
+  },
+  "googleMapsPageGenericError": "We couldn't load map data right now.",
+  "@googleMapsPageGenericError": {
+    "description": "Fallback error message shown when the Google Maps sample fails to load"
+  },
+  "googleMapsPageControlsHeading": "Map controls",
+  "@googleMapsPageControlsHeading": {
+    "description": "Section title for the map interaction controls"
+  },
+  "googleMapsPageMapTypeNormal": "Show standard map",
+  "@googleMapsPageMapTypeNormal": {
+    "description": "Button label that switches the map back to the normal style"
+  },
+  "googleMapsPageMapTypeHybrid": "Show hybrid map",
+  "@googleMapsPageMapTypeHybrid": {
+    "description": "Button label that switches the map to the hybrid style"
+  },
+  "googleMapsPageTrafficToggle": "Show real-time traffic",
+  "@googleMapsPageTrafficToggle": {
+    "description": "Toggle label for enabling traffic overlays on the map"
+  },
+  "googleMapsPageApiKeyHelp": "Add your Google Maps API keys to the native projects to see live tiles.",
+  "@googleMapsPageApiKeyHelp": {
+    "description": "Helper text reminding developers to configure API keys for the Google Maps demo"
+  },
+  "googleMapsPageEmptyLocations": "No locations to display yet.",
+  "@googleMapsPageEmptyLocations": {
+    "description": "Message shown when there are no sample map locations"
+  },
+  "googleMapsPageLocationsHeading": "Featured locations",
+  "@googleMapsPageLocationsHeading": {
+    "description": "Heading displayed above the list of sample map locations"
+  },
+  "googleMapsPageFocusButton": "Focus",
+  "@googleMapsPageFocusButton": {
+    "description": "Button label that re-centres the map on a selected location"
+  },
+  "googleMapsPageSelectedBadge": "Selected",
+  "@googleMapsPageSelectedBadge": {
+    "description": "Badge text shown next to the currently selected location"
+  },
+  "googleMapsPageMissingKeyTitle": "Add a Google Maps API key",
+  "@googleMapsPageMissingKeyTitle": {
+    "description": "Headline shown when no Google Maps API key is configured"
+  },
+  "googleMapsPageMissingKeyDescription": "Update the platform projects with valid Google Maps API keys to use this demo.",
+  "@googleMapsPageMissingKeyDescription": {
+    "description": "Helper text prompting developers to configure Google Maps keys"
+  },
+  "googleMapsPageUnsupportedDescription": "The Google Maps demo is only available on Android and iOS builds.",
+  "@googleMapsPageUnsupportedDescription": {
+    "description": "Message shown when the Google Maps demo is opened on an unsupported platform"
   }
 }

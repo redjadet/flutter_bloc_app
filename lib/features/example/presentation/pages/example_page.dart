@@ -199,6 +199,12 @@ class _ExamplePageState extends State<ExamplePage> {
                       label: Text(l10n.exampleWebsocketButton),
                     ),
                     SizedBox(height: UI.gapS),
+                    FilledButton.icon(
+                      onPressed: () => context.pushNamed(AppRoutes.googleMaps),
+                      icon: const Icon(Icons.map),
+                      label: Text(l10n.exampleGoogleMapsButton),
+                    ),
+                    SizedBox(height: UI.gapS),
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 250),
                       child: PlatformInfoSection(

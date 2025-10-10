@@ -130,6 +130,7 @@
     "description": "Etiqueta del botón para volver a intentar cargar la información de la app"
   },
   "openChatTooltip": "Chatear con IA",
+  "openGoogleMapsTooltip": "Abrir demo de Google Maps",
   "chatPageTitle": "Chat con IA",
   "chatInputHint": "Pregunta lo que quieras al asistente...",
   "chatSendButton": "Enviar mensaje",
@@ -279,6 +280,10 @@
   "@exampleWebsocketButton": {
     "description": "Button label that navigates to the WebSocket demo page"
   },
+  "exampleGoogleMapsButton": "Abrir demo de Google Maps",
+  "@exampleGoogleMapsButton": {
+    "description": "Button label that navigates to the Google Maps sample page"
+  },
   "exampleNativeBatteryLabel": "Nivel de batería: {percent}% ",
   "@exampleNativeBatteryLabel": {
     "description": "Label showing the battery level returned from the native platform",
@@ -338,5 +343,52 @@
         "type": "String"
       }
     }
-  }
+  },
+  "googleMapsPageTitle": "Demostración de Google Maps",
+  "@googleMapsPageTitle": {
+    "description": "Título de la página de ejemplo de Google Maps"
+  },
+  "googleMapsPageGenericError": "No pudimos cargar los datos del mapa.",
+  "@googleMapsPageGenericError": {
+    "description": "Mensaje de error mostrado cuando falla la carga del mapa"
+  },
+  "googleMapsPageControlsHeading": "Controles del mapa",
+  "@googleMapsPageControlsHeading": {
+    "description": "Encabezado de la sección de controles del mapa"
+  },
+  "googleMapsPageMapTypeNormal": "Mostrar mapa estándar",
+  "@googleMapsPageMapTypeNormal": {
+    "description": "Texto del botón para volver al estilo de mapa estándar"
+  },
+  "googleMapsPageMapTypeHybrid": "Mostrar mapa híbrido",
+  "@googleMapsPageMapTypeHybrid": {
+    "description": "Texto del botón para cambiar al estilo de mapa híbrido"
+  },
+  "googleMapsPageTrafficToggle": "Mostrar tráfico en tiempo real",
+  "@googleMapsPageTrafficToggle": {
+    "description": "Etiqueta para activar la capa de tráfico"
+  },
+  "googleMapsPageApiKeyHelp": "Añade las claves de API de Google Maps a los proyectos nativos para ver mosaicos en vivo.",
+  "@googleMapsPageApiKeyHelp": {
+    "description": "Nota que recuerda configurar las claves de API de Google Maps"
+  },
+  "googleMapsPageEmptyLocations": "Sin ubicaciones disponibles todavía.",
+  "@googleMapsPageEmptyLocations": {
+    "description": "Mensaje mostrado cuando no hay ubicaciones de ejemplo"
+  },
+  "googleMapsPageLocationsHeading": "Lugares destacados",
+  "@googleMapsPageLocationsHeading": {
+    "description": "Encabezado sobre la lista de ubicaciones de ejemplo"
+  },
+  "googleMapsPageFocusButton": "Centrar",
+  "@googleMapsPageFocusButton": {
+    "description": "Etiqueta del botón que centra el mapa en la ubicación"
+  },
+  "googleMapsPageSelectedBadge": "Seleccionado",
+  "@googleMapsPageSelectedBadge": {
+    "description": "Distintivo que indica la ubicación seleccionada"
+  },
+  "googleMapsPageMissingKeyTitle": "Añade una clave de API de Google Maps",
+  "googleMapsPageMissingKeyDescription": "Configura claves válidas de Google Maps en los proyectos nativos para usar esta demostración.",
+  "googleMapsPageUnsupportedDescription": "La demo de Google Maps solo está disponible en compilaciones de Android y iOS."
 }

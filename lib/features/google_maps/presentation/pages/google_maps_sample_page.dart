@@ -1,0 +1,159 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_cubit.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_state.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/'
+    'google_maps_controls.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/'
+    'google_maps_layout.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/'
+    'google_maps_location_list.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/'
+    'google_maps_messages.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+class GoogleMapsSamplePage extends StatefulWidget {
+  const GoogleMapsSamplePage({super.key});
+
+  @override
+  State<GoogleMapsSamplePage> createState() => _GoogleMapsSamplePageState();
+}
+
+class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
+  final Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
+  final NativePlatformService _platformService = NativePlatformService();
+  bool _hasRequiredApiKey = true;
+  bool _isCheckingApiKey = false;
+
+  MapSampleCubit get _cubit => context.read<MapSampleCubit>();
+
+  @override
+  void initState() {
+    super.initState();
+    if (_isMapsSupported) {
+      _resolveApiKeyAvailability();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
+    return Scaffold(
+      appBar: AppBar(title: Text(l10n.googleMapsPageTitle)),
+      body: !_isMapsSupported
+          ? GoogleMapsUnsupportedMessage(
+              message: l10n.googleMapsPageUnsupportedDescription,
+            )
+          : _isCheckingApiKey
+          ? const Center(child: CircularProgressIndicator())
+          : !_hasRequiredApiKey
+          ? GoogleMapsMissingKeyMessage(
+              title: l10n.googleMapsPageMissingKeyTitle,
+              description: l10n.googleMapsPageMissingKeyDescription,
+            )
+          : BlocBuilder<MapSampleCubit, MapSampleState>(
+              builder: (BuildContext context, MapSampleState state) {
+                if (state.isLoading && state.markers.isEmpty) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (state.hasError) {
+                  return GoogleMapsErrorMessage(
+                    message:
+                        state.errorMessage ?? l10n.googleMapsPageGenericError,
+                  );
+                }
+                return GoogleMapsContentLayout(
+                  map: _buildGoogleMap(state),
+                  controls: _buildControls(context, state),
+                  locations: _buildLocationList(context, state),
+                );
+              },
+            ),
+    );
+  }
+
+  Widget _buildGoogleMap(MapSampleState state) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(UI.radiusM),
+      child: GoogleMap(
+        mapType: state.mapType,
+        initialCameraPosition: state.cameraPosition,
+        markers: state.markers,
+        trafficEnabled: state.trafficEnabled,
+        onMapCreated: (GoogleMapController controller) {
+          if (!_mapController.isCompleted) {
+            _mapController.complete(controller);
+          }
+        },
+        onCameraMove: _cubit.updateCameraPosition,
+      ),
+    );
+  }
+
+  Widget _buildControls(BuildContext context, MapSampleState state) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
+    return GoogleMapsControlsCard(
+      heading: l10n.googleMapsPageControlsHeading,
+      helpText: l10n.googleMapsPageApiKeyHelp,
+      isHybridMapType: state.mapType == MapType.hybrid,
+      trafficEnabled: state.trafficEnabled,
+      onToggleMapType: _cubit.toggleMapType,
+      onToggleTraffic: (_) => _cubit.toggleTraffic(),
+      mapTypeHybridLabel: l10n.googleMapsPageMapTypeHybrid,
+      mapTypeNormalLabel: l10n.googleMapsPageMapTypeNormal,
+      trafficToggleLabel: l10n.googleMapsPageTrafficToggle,
+    );
+  }
+
+  Widget _buildLocationList(BuildContext context, MapSampleState state) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
+    return GoogleMapsLocationList(
+      locations: state.locations,
+      selectedMarkerId: state.selectedMarkerId?.value,
+      emptyLabel: l10n.googleMapsPageEmptyLocations,
+      heading: l10n.googleMapsPageLocationsHeading,
+      focusLabel: l10n.googleMapsPageFocusButton,
+      selectedBadgeLabel: l10n.googleMapsPageSelectedBadge,
+      onFocus: _focusOnLocation,
+    );
+  }
+
+  Future<void> _focusOnLocation(MapLocation location) async {
+    if (!_mapController.isCompleted) {
+      return;
+    }
+    final GoogleMapController controller = await _mapController.future;
+    if (!mounted) {
+      return;
+    }
+    await controller.animateCamera(_cubit.cameraUpdateForLocation(location));
+    _cubit.selectLocation(location.id);
+  }
+
+  bool get _isMapsSupported =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
+
+  Future<void> _resolveApiKeyAvailability() async {
+    setState(() {
+      _isCheckingApiKey = true;
+    });
+    final bool hasKey = await _platformService.hasGoogleMapsApiKey();
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _hasRequiredApiKey = hasKey;
+      _isCheckingApiKey = false;
+    });
+  }
+}

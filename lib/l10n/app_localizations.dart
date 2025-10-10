@@ -440,6 +440,12 @@ abstract class AppLocalizations {
   /// **'Chat with AI'**
   String get openChatTooltip;
 
+  /// Tooltip for navigating to the Google Maps sample page
+  ///
+  /// In en, this message translates to:
+  /// **'Open Google Maps demo'**
+  String get openGoogleMapsTooltip;
+
   /// Title for the AI chat page
   ///
   /// In en, this message translates to:
@@ -770,6 +776,12 @@ abstract class AppLocalizations {
   /// **'Open WebSocket demo'**
   String get exampleWebsocketButton;
 
+  /// Button label that navigates to the Google Maps sample page
+  ///
+  /// In en, this message translates to:
+  /// **'Open Google Maps demo'**
+  String get exampleGoogleMapsButton;
+
   /// Label showing the battery level returned from the native platform
   ///
   /// In en, this message translates to:
@@ -829,6 +841,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'WebSocket error: {error}'**
   String websocketErrorLabel(String error);
+
+  /// Title for the Google Maps sample page
+  ///
+  /// In en, this message translates to:
+  /// **'Google Maps demo'**
+  String get googleMapsPageTitle;
+
+  /// Fallback error message shown when the Google Maps sample fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load map data right now.'**
+  String get googleMapsPageGenericError;
+
+  /// Section title for the map interaction controls
+  ///
+  /// In en, this message translates to:
+  /// **'Map controls'**
+  String get googleMapsPageControlsHeading;
+
+  /// Button label that switches the map back to the normal style
+  ///
+  /// In en, this message translates to:
+  /// **'Show standard map'**
+  String get googleMapsPageMapTypeNormal;
+
+  /// Button label that switches the map to the hybrid style
+  ///
+  /// In en, this message translates to:
+  /// **'Show hybrid map'**
+  String get googleMapsPageMapTypeHybrid;
+
+  /// Toggle label for enabling traffic overlays on the map
+  ///
+  /// In en, this message translates to:
+  /// **'Show real-time traffic'**
+  String get googleMapsPageTrafficToggle;
+
+  /// Helper text reminding developers to configure API keys for the Google Maps demo
+  ///
+  /// In en, this message translates to:
+  /// **'Add your Google Maps API keys to the native projects to see live tiles.'**
+  String get googleMapsPageApiKeyHelp;
+
+  /// Message shown when there are no sample map locations
+  ///
+  /// In en, this message translates to:
+  /// **'No locations to display yet.'**
+  String get googleMapsPageEmptyLocations;
+
+  /// Heading displayed above the list of sample map locations
+  ///
+  /// In en, this message translates to:
+  /// **'Featured locations'**
+  String get googleMapsPageLocationsHeading;
+
+  /// Button label that re-centres the map on a selected location
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get googleMapsPageFocusButton;
+
+  /// Badge text shown next to the currently selected location
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get googleMapsPageSelectedBadge;
+
+  /// Headline shown when no Google Maps API key is configured
+  ///
+  /// In en, this message translates to:
+  /// **'Add a Google Maps API key'**
+  String get googleMapsPageMissingKeyTitle;
+
+  /// Helper text prompting developers to configure Google Maps keys
+  ///
+  /// In en, this message translates to:
+  /// **'Update the platform projects with valid Google Maps API keys to use this demo.'**
+  String get googleMapsPageMissingKeyDescription;
+
+  /// Message shown when the Google Maps demo is opened on an unsupported platform
+  ///
+  /// In en, this message translates to:
+  /// **'The Google Maps demo is only available on Android and iOS builds.'**
+  String get googleMapsPageUnsupportedDescription;
 }
 
 class _AppLocalizationsDelegate

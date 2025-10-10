@@ -195,6 +195,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get openChatTooltip => 'Discuter avec l\'IA';
 
   @override
+  String get openGoogleMapsTooltip => 'Ouvrir la démo Google Maps';
+
+  @override
   String get chatPageTitle => 'Discussion IA';
 
   @override
@@ -389,6 +392,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get exampleWebsocketButton => 'Ouvrir la démo WebSocket';
 
   @override
+  String get exampleGoogleMapsButton => 'Ouvrir la démo Google Maps';
+
+  @override
   String exampleNativeBatteryLabel(int percent) {
     return 'Niveau de batterie : $percent %';
   }
@@ -427,4 +433,52 @@ class AppLocalizationsFr extends AppLocalizations {
   String websocketErrorLabel(String error) {
     return 'Erreur WebSocket : $error';
   }
+
+  @override
+  String get googleMapsPageTitle => 'Démo Google Maps';
+
+  @override
+  String get googleMapsPageGenericError =>
+      'Impossible de charger les données de la carte.';
+
+  @override
+  String get googleMapsPageControlsHeading => 'Commandes de la carte';
+
+  @override
+  String get googleMapsPageMapTypeNormal => 'Afficher la carte standard';
+
+  @override
+  String get googleMapsPageMapTypeHybrid => 'Afficher la carte hybride';
+
+  @override
+  String get googleMapsPageTrafficToggle => 'Afficher le trafic en temps réel';
+
+  @override
+  String get googleMapsPageApiKeyHelp =>
+      'Ajoutez les clés d’API Google Maps aux projets natifs pour voir les tuiles en direct.';
+
+  @override
+  String get googleMapsPageEmptyLocations =>
+      'Aucun lieu à afficher pour le moment.';
+
+  @override
+  String get googleMapsPageLocationsHeading => 'Lieux à découvrir';
+
+  @override
+  String get googleMapsPageFocusButton => 'Centrer';
+
+  @override
+  String get googleMapsPageSelectedBadge => 'Sélectionné';
+
+  @override
+  String get googleMapsPageMissingKeyTitle =>
+      'Ajoutez une clé d’API Google Maps';
+
+  @override
+  String get googleMapsPageMissingKeyDescription =>
+      'Configurez des clés Google Maps valides dans les projets natifs pour utiliser cette démo.';
+
+  @override
+  String get googleMapsPageUnsupportedDescription =>
+      'La démo Google Maps est disponible uniquement sur Android et iOS.';
 }

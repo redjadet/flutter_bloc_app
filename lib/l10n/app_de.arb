@@ -130,6 +130,7 @@
     "description": "Beschriftung für den Button zum erneuten Laden der App-Informationen"
   },
   "openChatTooltip": "Mit KI chatten",
+  "openGoogleMapsTooltip": "Google-Maps-Demo öffnen",
   "chatPageTitle": "KI-Chat",
   "chatInputHint": "Frag den Assistenten etwas...",
   "chatSendButton": "Nachricht senden",
@@ -279,6 +280,10 @@
   "@exampleWebsocketButton": {
     "description": "Button label that navigates to the WebSocket demo page"
   },
+  "exampleGoogleMapsButton": "Google-Maps-Demo öffnen",
+  "@exampleGoogleMapsButton": {
+    "description": "Button label that navigates to the Google Maps sample page"
+  },
   "exampleNativeBatteryLabel": "Batteriestand: {percent}%",
   "@exampleNativeBatteryLabel": {
     "description": "Label showing the battery level returned from the native platform",
@@ -338,5 +343,52 @@
         "type": "String"
       }
     }
-  }
+  },
+  "googleMapsPageTitle": "Google Maps Demo",
+  "@googleMapsPageTitle": {
+    "description": "Titel der Google-Maps-Demoseite"
+  },
+  "googleMapsPageGenericError": "Kartendaten konnten nicht geladen werden.",
+  "@googleMapsPageGenericError": {
+    "description": "Fehlermeldung, wenn die Karte nicht geladen werden kann"
+  },
+  "googleMapsPageControlsHeading": "Kartensteuerung",
+  "@googleMapsPageControlsHeading": {
+    "description": "Überschrift für die Sektion mit Kartensteuerungen"
+  },
+  "googleMapsPageMapTypeNormal": "Standardkarte anzeigen",
+  "@googleMapsPageMapTypeNormal": {
+    "description": "Beschriftung für den Wechsel zur Standardkarte"
+  },
+  "googleMapsPageMapTypeHybrid": "Hybridkarte anzeigen",
+  "@googleMapsPageMapTypeHybrid": {
+    "description": "Beschriftung für den Wechsel zur Hybridkarte"
+  },
+  "googleMapsPageTrafficToggle": "Verkehr in Echtzeit anzeigen",
+  "@googleMapsPageTrafficToggle": {
+    "description": "Schalter zum Anzeigen der Verkehrsdaten"
+  },
+  "googleMapsPageApiKeyHelp": "Füge die Google-Maps-API-Schlüssel zu den nativen Projekten hinzu, um Live-Kacheln zu sehen.",
+  "@googleMapsPageApiKeyHelp": {
+    "description": "Hinweis zur Konfiguration der Google-Maps-API-Schlüssel"
+  },
+  "googleMapsPageEmptyLocations": "Noch keine Orte vorhanden.",
+  "@googleMapsPageEmptyLocations": {
+    "description": "Meldung, wenn keine Beispielorte verfügbar sind"
+  },
+  "googleMapsPageLocationsHeading": "Ausgewählte Orte",
+  "@googleMapsPageLocationsHeading": {
+    "description": "Überschrift oberhalb der Liste der Beispielorte"
+  },
+  "googleMapsPageFocusButton": "Fokussieren",
+  "@googleMapsPageFocusButton": {
+    "description": "Buttonbeschriftung zum Zentrieren auf einen Ort"
+  },
+  "googleMapsPageSelectedBadge": "Ausgewählt",
+  "@googleMapsPageSelectedBadge": {
+    "description": "Kennzeichnung für den aktuell ausgewählten Ort"
+  },
+  "googleMapsPageMissingKeyTitle": "Google-Maps-API-Schlüssel hinzufügen",
+  "googleMapsPageMissingKeyDescription": "Hinterlege gültige Google-Maps-API-Schlüssel in den Plattformprojekten, um diese Demo zu verwenden.",
+  "googleMapsPageUnsupportedDescription": "Die Google-Maps-Demo ist nur auf Android- und iOS-Builds verfügbar."
 }
