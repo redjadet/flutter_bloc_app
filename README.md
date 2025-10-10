@@ -17,7 +17,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - WebSocket demo: Reusable Cubit + repository stack driving a public echo websocket with reconnect/error handling and localized UI.
 - Loading polish: `skeletonizer` placeholders, `fancy_shimmer_image` hero card, and dev-only loading delay to showcase the effects.
 - Logging: Centralized `AppLogger` built on top of the `logger` package.
-- Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES).
+- Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES) with version/build surfaced on the Settings page.
 - Authentication: Firebase Auth with FirebaseUI (email/password, Google) plus anonymous “guest” sessions that can be upgraded in-place.
 - AI Chat: Conversational UI backed by Hugging Face Inference API (openai/gpt-oss).
 - Native integration: MethodChannel (`com.example.flutter_bloc_app/native`) returning sanitized device metadata with Kotlin/Swift handlers.
@@ -59,6 +59,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - `responsive_framework` optional; helpers fall back to MediaQuery breakpoints
 - `go_router` for declarative navigation
 - `flutter_secure_storage` for keychain/keystore persistence
+- `get_it` for dependency injection across features
 - `bloc_test`, `flutter_test`, `golden_toolkit` for testing
 
 ## Security & Secrets
@@ -122,6 +123,12 @@ flowchart LR
   SharedPreferencesThemeRepository --> SharedPreferences
   SharedPreferencesLocaleRepository --> SharedPreferences
 ```
+
+## Release Automation
+
+- iOS: `fastlane ios deploy` runs the release checklist, automatically bumps the numeric build suffix in `pubspec.yaml`, then builds and submits the `.ipa` to App Store Connect (submission left in draft).
+- Android: `fastlane android deploy` mirrors this flow for the Play Store, incrementing the same build number before producing the `.aab`.
+- Both lanes run `dart run tool/prepare_release.dart` to scrub secrets prior to packaging. Commit the auto-bumped `pubspec.yaml` if the release goes out. Continuous integration can override `IOS_BUILD_FLAVOR` / `ANDROID_BUILD_FLAVOR` and tracks via environment variables.
 
 ## Sequence
 
