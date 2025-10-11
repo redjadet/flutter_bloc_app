@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/settings/presentation/widgets/language
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/theme_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -30,7 +31,10 @@ class _SettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.settingsPageTitle)),
+      appBar: AppBar(
+        leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
+        title: Text(l10n.settingsPageTitle),
+      ),
       body: ListView(
         padding: EdgeInsets.symmetric(
           horizontal: UI.horizontalGapL,

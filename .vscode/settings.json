@@ -68,6 +68,7 @@
     "test/**/*.dart",
     "**/*.arb",
     "**/*.yaml",
+    "**/*.xml",
     "**/*.yml",
     "**/*.json",
     "**/*.lock",
@@ -107,6 +108,7 @@
   "cSpell.words": [
     "appbundle",
     "appspot",
+    "deeplink",
     "flutterfire",
     "huggingface",
     "preferences",

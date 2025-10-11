@@ -55,6 +55,14 @@
 				<string>com.googleusercontent.apps.473097776453-eml27tsnmpj6tj5g1ipl8ec7g0ttd5iu</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>flutter-bloc-app</string>
+			</array>
+		</dict>
 	</array>
 	<key>GMSApiKey</key>
 	<string>GMS_API_KEY</string>

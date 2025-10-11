@@ -1,15 +1,14 @@
 import 'dart:math';
 
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
-import 'package:flutter_bloc_app/features/example/presentation/widgets/example_sections.dart';
+import 'package:flutter_bloc_app/features/example/presentation/widgets/example_page_body.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/utils/isolate_samples.dart';
+import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
 import 'package:go_router/go_router.dart';
 
 /// Simple example page used to demonstrate GoRouter navigation
@@ -136,110 +135,36 @@ class _ExamplePageState extends State<ExamplePage> {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.examplePageTitle)),
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.all(UI.gapL),
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(UI.radiusM),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: UI.cardPadH,
-                vertical: UI.cardPadV,
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(UI.radiusM),
-                      child: FancyShimmerImage(
-                        imageUrl:
-                            'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
-                        height: 180,
-                        width: double.infinity,
-                        boxFit: BoxFit.cover,
-                        shimmerBaseColor: colors.surfaceContainerHighest,
-                        shimmerHighlightColor: colors.surface,
-                      ),
-                    ),
-                    SizedBox(height: UI.gapL),
-                    Icon(Icons.explore, size: 64, color: colors.primary),
-                    SizedBox(height: UI.gapM),
-                    Text(
-                      l10n.examplePageDescription,
-                      style: theme.textTheme.bodyLarge,
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: UI.gapL),
-                    FilledButton(
-                      onPressed: () {
-                        if (Navigator.of(context).canPop()) {
-                          context.pop();
-                        } else {
-                          context.goNamed(AppRoutes.counter);
-                        }
-                      },
-                      child: Text(l10n.exampleBackButtonLabel),
-                    ),
-                    SizedBox(height: UI.gapL),
-                    FilledButton.icon(
-                      onPressed: _isFetchingInfo
-                          ? null
-                          : () => _loadPlatformInfo(context),
-                      icon: const Icon(Icons.phone_iphone),
-                      label: Text(l10n.exampleNativeInfoButton),
-                    ),
-                    SizedBox(height: UI.gapS),
-                    FilledButton.icon(
-                      onPressed: () => context.pushNamed(AppRoutes.websocket),
-                      icon: const Icon(Icons.wifi),
-                      label: Text(l10n.exampleWebsocketButton),
-                    ),
-                    SizedBox(height: UI.gapS),
-                    FilledButton.icon(
-                      onPressed: () => context.pushNamed(AppRoutes.googleMaps),
-                      icon: const Icon(Icons.map),
-                      label: Text(l10n.exampleGoogleMapsButton),
-                    ),
-                    SizedBox(height: UI.gapS),
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
-                      child: PlatformInfoSection(
-                        isLoading: _isFetchingInfo,
-                        info: _platformInfo,
-                        errorMessage: _infoError,
-                      ),
-                    ),
-                    SizedBox(height: UI.gapL),
-                    FilledButton.icon(
-                      key: const ValueKey('example-run-isolates-button'),
-                      onPressed: _isRunningIsolates
-                          ? null
-                          : () => _runIsolateSamples(),
-                      icon: const Icon(Icons.bolt_outlined),
-                      label: Text(l10n.exampleRunIsolatesButton),
-                    ),
-                    SizedBox(height: UI.gapS),
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
-                      child: IsolateResultSection(
-                        isLoading: _isRunningIsolates,
-                        errorMessage: _isolateError,
-                        fibonacciInput: _fibonacciInput,
-                        fibonacciResult: _fibonacciResult,
-                        parallelValues: _parallelResult,
-                        parallelDuration: _parallelDuration,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+      appBar: AppBar(
+        leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
+        title: Text(l10n.examplePageTitle),
+      ),
+      body: ExamplePageBody(
+        l10n: l10n,
+        theme: theme,
+        colors: colors,
+        onBackPressed: () {
+          if (Navigator.of(context).canPop()) {
+            context.pop();
+          } else {
+            context.goNamed(AppRoutes.counter);
+          }
+        },
+        onLoadPlatformInfo: _isFetchingInfo
+            ? null
+            : () => _loadPlatformInfo(context),
+        onOpenWebsocket: () => context.pushNamed(AppRoutes.websocket),
+        onOpenGoogleMaps: () => context.pushNamed(AppRoutes.googleMaps),
+        onRunIsolates: _isRunningIsolates ? null : _runIsolateSamples,
+        isFetchingInfo: _isFetchingInfo,
+        platformInfo: _platformInfo,
+        infoError: _infoError,
+        isRunningIsolates: _isRunningIsolates,
+        isolateError: _isolateError,
+        fibonacciInput: _fibonacciInput,
+        fibonacciResult: _fibonacciResult,
+        parallelValues: _parallelResult,
+        parallelDuration: _parallelDuration,
       ),
     );
   }

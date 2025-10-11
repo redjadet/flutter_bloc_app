@@ -17,6 +17,7 @@ import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/'
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class GoogleMapsSamplePage extends StatefulWidget {
@@ -47,7 +48,10 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.googleMapsPageTitle)),
+      appBar: AppBar(
+        leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
+        title: Text(l10n.googleMapsPageTitle),
+      ),
       body: !_isMapsSupported
           ? GoogleMapsUnsupportedMessage(
               message: l10n.googleMapsPageUnsupportedDescription,

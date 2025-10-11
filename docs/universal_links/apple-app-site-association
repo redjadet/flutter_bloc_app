@@ -1,0 +1,22 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "QPG8754DYH.com.example.flutterBlocApp",
+        "paths": [
+          "/",
+          "/counter",
+          "/chat",
+          "/example",
+          "/settings",
+          "/websocket",
+          "/google-maps",
+          "/charts",
+          "/graphql-demo",
+          "/profile"
+        ]
+      }
+    ]
+  }
+}

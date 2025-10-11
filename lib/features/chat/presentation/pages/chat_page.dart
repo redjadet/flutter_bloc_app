@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_message
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_model_selector.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -88,6 +89,7 @@ class _ChatPageState extends State<ChatPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
         title: Text(l10n.chatPageTitle),
         actions: <Widget>[
           IconButton(

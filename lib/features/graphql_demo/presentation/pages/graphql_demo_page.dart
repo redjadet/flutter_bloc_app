@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_state.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/widgets/graphql_country_card.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
 
 class GraphqlDemoPage extends StatelessWidget {
   const GraphqlDemoPage({super.key});
@@ -14,7 +15,10 @@ class GraphqlDemoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.graphqlSampleTitle)),
+      appBar: AppBar(
+        leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
+        title: Text(l10n.graphqlSampleTitle),
+      ),
       body: BlocBuilder<GraphqlDemoCubit, GraphqlDemoState>(
         builder: (context, state) {
           final bool showProgressBar =

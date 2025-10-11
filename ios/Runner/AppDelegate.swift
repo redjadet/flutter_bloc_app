@@ -67,4 +67,6 @@ import UIKit
 
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
+
+  // UniLinksPlugin is registered via addApplicationDelegate; no manual forwarding needed.
 }

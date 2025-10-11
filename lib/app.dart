@@ -166,25 +166,28 @@ class _MyAppState extends State<MyApp> {
               ThemeCubit(repository: getIt<ThemeRepository>())..loadInitial(),
         ),
       ],
-      child: ScreenUtilInit(
-        designSize: AppConstants.designSize,
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (context, child) {
-          UI.markScreenUtilReady();
-          return BlocBuilder<LocaleCubit, Locale?>(
-            builder: (context, locale) {
-              return BlocBuilder<ThemeCubit, ThemeMode>(
-                builder: (context, themeMode) => AppConfig.createMaterialApp(
-                  themeMode: themeMode,
-                  router: _router,
-                  locale: locale,
-                  child: child,
-                ),
-              );
-            },
-          );
-        },
+      child: DeepLinkListener(
+        router: _router,
+        child: ScreenUtilInit(
+          designSize: AppConstants.designSize,
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, child) {
+            UI.markScreenUtilReady();
+            return BlocBuilder<LocaleCubit, Locale?>(
+              builder: (context, locale) {
+                return BlocBuilder<ThemeCubit, ThemeMode>(
+                  builder: (context, themeMode) => AppConfig.createMaterialApp(
+                    themeMode: themeMode,
+                    router: _router,
+                    locale: locale,
+                    child: child,
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

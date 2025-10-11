@@ -2,6 +2,7 @@ export 'auth/auth.dart';
 export 'chart/chart.dart';
 export 'chat/chat.dart';
 export 'counter/counter.dart';
+export 'deeplink/deeplink.dart';
 export 'example/example.dart';
 export 'google_maps/google_maps.dart';
 export 'graphql_demo/graphql_demo.dart';

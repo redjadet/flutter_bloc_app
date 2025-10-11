@@ -3,45 +3,31 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
-import 'package:flutter_bloc_app/features/chat/data/'
-    'huggingface_api_client.dart';
-import 'package:flutter_bloc_app/features/chat/data/'
-    'huggingface_chat_repository.dart';
-import 'package:flutter_bloc_app/features/chat/data/'
-    'huggingface_payload_builder.dart';
-import 'package:flutter_bloc_app/features/chat/data/'
-    'huggingface_response_parser.dart';
-import 'package:flutter_bloc_app/features/chat/data/'
-    'secure_chat_history_repository.dart';
-import 'package:flutter_bloc_app/features/chat/domain/'
-    'chat_history_repository.dart';
+import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
+import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
+import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';
+import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.dart';
+import 'package:flutter_bloc_app/features/chat/data/secure_chat_history_repository.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/features/counter/data/'
-    'realtime_database_counter_repository.dart';
-import 'package:flutter_bloc_app/features/counter/data/'
-    'shared_preferences_counter_repository.dart';
+import 'package:flutter_bloc_app/features/counter/data/realtime_database_counter_repository.dart';
+import 'package:flutter_bloc_app/features/counter/data/shared_preferences_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
-import 'package:flutter_bloc_app/features/google_maps/data/'
-    'sample_map_location_repository.dart';
-import 'package:flutter_bloc_app/features/google_maps/domain/'
-    'map_location_repository.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/data/'
-    'countries_graphql_repository.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/domain/'
-    'graphql_demo_repository.dart';
-import 'package:flutter_bloc_app/features/settings/data/'
-    'package_info_app_info_repository.dart';
-import 'package:flutter_bloc_app/features/settings/data/'
-    'shared_preferences_locale_repository.dart';
-import 'package:flutter_bloc_app/features/settings/data/'
-    'shared_preferences_theme_repository.dart';
+import 'package:flutter_bloc_app/features/deeplink/data/uni_links_deep_link_service.dart';
+import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
+import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
+import 'package:flutter_bloc_app/features/google_maps/data/sample_map_location_repository.dart';
+import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/data/countries_graphql_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
+import 'package:flutter_bloc_app/features/settings/data/package_info_app_info_repository.dart';
+import 'package:flutter_bloc_app/features/settings/data/shared_preferences_locale_repository.dart';
+import 'package:flutter_bloc_app/features/settings/data/shared_preferences_theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
-import 'package:flutter_bloc_app/features/websocket/data/'
-    'echo_websocket_repository.dart';
-import 'package:flutter_bloc_app/features/websocket/domain/'
-    'websocket_repository.dart';
+import 'package:flutter_bloc_app/features/websocket/data/echo_websocket_repository.dart';
+import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:get_it/get_it.dart';
@@ -90,6 +76,10 @@ Future<void> configureDependencies() async {
   );
   _registerLazySingletonIfAbsent<ThemeRepository>(
     () => SharedPreferencesThemeRepository(),
+  );
+  _registerLazySingletonIfAbsent<DeepLinkParser>(() => const DeepLinkParser());
+  _registerLazySingletonIfAbsent<DeepLinkService>(
+    () => const UniLinksDeepLinkService(),
   );
   _registerLazySingletonIfAbsent<AppInfoRepository>(
     () => const PackageInfoAppInfoRepository(),

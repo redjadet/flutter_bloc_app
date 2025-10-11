@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/websocket/presentation/widgets/websock
 import 'package:flutter_bloc_app/features/websocket/presentation/widgets/websocket_message_list.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
 
 class WebsocketDemoPage extends StatefulWidget {
   const WebsocketDemoPage({super.key});
@@ -52,7 +53,10 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
     final AppLocalizations l10n = AppLocalizations.of(context);
     if (kIsWeb) {
       return Scaffold(
-        appBar: AppBar(title: Text(l10n.websocketDemoTitle)),
+        appBar: AppBar(
+          leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
+          title: Text(l10n.websocketDemoTitle),
+        ),
         body: Center(
           child: Padding(
             padding: EdgeInsets.all(UI.gapL),
@@ -69,6 +73,7 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
+            leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
             title: Text(l10n.websocketDemoTitle),
             actions: [
               IconButton(

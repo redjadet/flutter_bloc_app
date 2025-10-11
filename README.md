@@ -22,6 +22,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Authentication: Firebase Auth with FirebaseUI (email/password, Google) plus anonymous “guest” sessions that can be upgraded in-place.
 - AI Chat: Conversational UI backed by Hugging Face Inference API (openai/gpt-oss).
 - Native integration: MethodChannel (`com.example.flutter_bloc_app/native`) returning sanitized device metadata with Kotlin/Swift handlers.
+- Universal links: Background-safe navigation via `DeepLinkCubit`, covering hosted HTTPS links (`https://links.flutterbloc.app/...`) and the fallback `flutter-bloc-app://` scheme for local development.
 - Secrets: `SecretConfig` reads from secure storage first, then from any
   `--dart-define` values (persisted into secure storage), and only loads the
   optional dev asset when explicitly opted-in via
@@ -44,6 +45,15 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - iOS: set the `GMSApiKey` entry in `ios/Runner/Info.plist` (or override it per configuration in Xcode). The app only boots Google Maps when the value is non-empty and not the placeholder.
 - When keys are absent, the page shows a friendly warning card instead of instantiating the native map view (preventing simulator crashes).
 - Keep real API keys out of source control—store them in untracked files or CI secrets and inspect them before shipping.
+
+## Universal Links
+
+- Universal link host: `https://links.flutterbloc.app`.
+- Supported paths: `/`, `/counter`, `/settings`, `/example`, `/chat`, `/websocket`, `/google-maps`, `/charts`, `/graphql-demo`, `/profile`.
+- Android auto-verification is enabled via an `intent-filter` (see `android/app/src/main/AndroidManifest.xml`). Supply your SHA-256 fingerprint inside `.well-known/assetlinks.json`.
+- iOS uses Associated Domains with `applinks:links.flutterbloc.app` configured in `Runner.entitlements`. Host the matching `apple-app-site-association` file.
+- Fallback scheme: `flutter-bloc-app://settings` (and other paths) is available when you cannot host HTTPS files during development.
+- See `docs/universal_links/` for the hosted file templates and validation steps.
 
 ### Getting a Google Maps API key
 

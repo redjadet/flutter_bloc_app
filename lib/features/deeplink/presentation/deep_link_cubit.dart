@@ -1,0 +1,59 @@
+import 'dart:async';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
+import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
+import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_state.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
+
+/// Handles incoming deep/universal links and exposes navigation events.
+class DeepLinkCubit extends Cubit<DeepLinkState> {
+  DeepLinkCubit({
+    required DeepLinkService service,
+    required DeepLinkParser parser,
+  }) : _service = service,
+       _parser = parser,
+       super(const DeepLinkIdle());
+
+  final DeepLinkService _service;
+  final DeepLinkParser _parser;
+
+  StreamSubscription<Uri>? _subscription;
+  bool _initialized = false;
+
+  /// Begins listening to deep link events. Safe to call multiple times.
+  Future<void> initialize() async {
+    if (_initialized) {
+      return;
+    }
+    _initialized = true;
+
+    final Uri? initialUri = await _service.getInitialLink();
+    if (initialUri != null) {
+      _handleUri(initialUri, DeepLinkOrigin.initial);
+    }
+
+    _subscription = _service.linkStream().listen(
+      (Uri uri) => _handleUri(uri, DeepLinkOrigin.resumed),
+      onError: (Object error, StackTrace stackTrace) {
+        AppLogger.error('Deep link stream error', error, stackTrace);
+      },
+    );
+  }
+
+  void _handleUri(Uri uri, DeepLinkOrigin origin) {
+    final target = _parser.parse(uri);
+    if (target == null) {
+      AppLogger.warning('Unsupported deep link: $uri');
+      return;
+    }
+    emit(DeepLinkNavigate(target, origin));
+    emit(const DeepLinkIdle());
+  }
+
+  @override
+  Future<void> close() async {
+    await _subscription?.cancel();
+    return super.close();
+  }
+}
