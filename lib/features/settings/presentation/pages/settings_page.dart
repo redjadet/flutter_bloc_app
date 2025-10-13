@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/settings/presentation/widgets/app_info
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/language_section.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/theme_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
 
@@ -35,25 +36,37 @@ class _SettingsView extends StatelessWidget {
         leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
         title: Text(l10n.settingsPageTitle),
       ),
-      body: ListView(
-        padding: EdgeInsets.symmetric(
-          horizontal: UI.horizontalGapL,
-          vertical: UI.gapM,
-        ),
-        children: <Widget>[
-          const AccountSection(),
-          SizedBox(height: UI.gapL),
-          const ThemeSection(),
-          SizedBox(height: UI.gapL),
-          const LanguageSection(),
-          SizedBox(height: UI.gapL),
-          const AppInfoSection(),
-          SizedBox(height: UI.gapL),
-          TextButton(
-            onPressed: () => throw Exception(),
-            child: const Text('Throw Test Exception'),
-          ),
-        ],
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final EdgeInsets padding = EdgeInsets.symmetric(
+            horizontal: context.pageHorizontalPadding,
+            vertical: context.pageVerticalPadding,
+          );
+          return Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: context.contentMaxWidth),
+              child: ListView(
+                key: const ValueKey('settings-list'),
+                padding: padding,
+                children: <Widget>[
+                  const AccountSection(),
+                  SizedBox(height: UI.gapL),
+                  const ThemeSection(),
+                  SizedBox(height: UI.gapL),
+                  const LanguageSection(),
+                  SizedBox(height: UI.gapL),
+                  const AppInfoSection(),
+                  SizedBox(height: UI.gapL),
+                  TextButton(
+                    onPressed: () => throw Exception(),
+                    child: const Text('Throw Test Exception'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
