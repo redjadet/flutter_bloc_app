@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.da
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 part 'chat_cubit_history_actions.dart';
 part 'chat_cubit_helpers.dart';

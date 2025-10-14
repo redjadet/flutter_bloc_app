@@ -74,19 +74,21 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
       );
 
       await _persistHistory(finalHistory);
-    } on ChatException catch (e) {
+    } on ChatException catch (error, stackTrace) {
+      AppLogger.error('ChatCubit.sendMessage failed', error, stackTrace);
       emit(
         state.copyWith(
           isLoading: false,
-          error: e.message,
+          error: error.message,
           status: ChatStatus.error,
         ),
       );
-    } on Exception catch (e) {
+    } on Exception catch (error, stackTrace) {
+      AppLogger.error('ChatCubit.sendMessage failed', error, stackTrace);
       emit(
         state.copyWith(
           isLoading: false,
-          error: e.toString(),
+          error: error.toString(),
           status: ChatStatus.error,
         ),
       );

@@ -21,7 +21,12 @@ class FlutterSecureSecretStorage implements SecretStorage {
   Future<String?> read(String key) async {
     try {
       return await _storage.read(key: key);
-    } on PlatformException catch (_) {
+    } on PlatformException catch (error, stackTrace) {
+      AppLogger.error(
+        'FlutterSecureSecretStorage.read failed for key "$key"',
+        error,
+        stackTrace,
+      );
       return null;
     } on MissingPluginException catch (_) {
       return null;
@@ -32,8 +37,12 @@ class FlutterSecureSecretStorage implements SecretStorage {
   Future<void> write(String key, String value) async {
     try {
       await _storage.write(key: key, value: value);
-    } on PlatformException catch (_) {
-      // Ignore when secure storage is unavailable (e.g. tests).
+    } on PlatformException catch (error, stackTrace) {
+      AppLogger.error(
+        'FlutterSecureSecretStorage.write failed for key "$key"',
+        error,
+        stackTrace,
+      );
     } on MissingPluginException catch (_) {
       // Ignore when secure storage is unavailable (e.g. tests).
     }
@@ -43,8 +52,12 @@ class FlutterSecureSecretStorage implements SecretStorage {
   Future<void> delete(String key) async {
     try {
       await _storage.delete(key: key);
-    } on PlatformException catch (_) {
-      // Ignore when secure storage is unavailable.
+    } on PlatformException catch (error, stackTrace) {
+      AppLogger.error(
+        'FlutterSecureSecretStorage.delete failed for key "$key"',
+        error,
+        stackTrace,
+      );
     } on MissingPluginException catch (_) {
       // Ignore when secure storage is unavailable.
     }
