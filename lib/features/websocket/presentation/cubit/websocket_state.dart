@@ -4,13 +4,13 @@ import 'package:flutter_bloc_app/features/websocket/domain/websocket_connection_
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 
 class WebsocketState extends Equatable {
-  const WebsocketState({
+  WebsocketState({
     required this.endpoint,
     required this.status,
-    required this.messages,
+    required List<WebsocketMessage> messages,
     this.errorMessage,
     this.isSending = false,
-  });
+  }) : _messages = List<WebsocketMessage>.unmodifiable(messages);
 
   factory WebsocketState.initial(Uri endpoint) {
     return WebsocketState(
@@ -22,9 +22,11 @@ class WebsocketState extends Equatable {
 
   final Uri endpoint;
   final WebsocketStatus status;
-  final List<WebsocketMessage> messages;
+  final List<WebsocketMessage> _messages;
   final String? errorMessage;
   final bool isSending;
+
+  List<WebsocketMessage> get messages => _messages;
 
   bool get isConnected => status == WebsocketStatus.connected;
   bool get isConnecting => status == WebsocketStatus.connecting;
@@ -39,14 +41,14 @@ class WebsocketState extends Equatable {
     return WebsocketState(
       endpoint: endpoint,
       status: status ?? this.status,
-      messages: messages ?? this.messages,
+      messages: messages ?? _messages,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       isSending: isSending ?? this.isSending,
     );
   }
 
   WebsocketState appendMessage(WebsocketMessage message) {
-    return copyWith(messages: <WebsocketMessage>[...messages, message]);
+    return copyWith(messages: <WebsocketMessage>[..._messages, message]);
   }
 
   static const DeepCollectionEquality _listEquality = DeepCollectionEquality();
@@ -57,6 +59,6 @@ class WebsocketState extends Equatable {
     status,
     isSending,
     errorMessage,
-    _listEquality.hash(messages),
+    _listEquality.hash(_messages),
   ];
 }
