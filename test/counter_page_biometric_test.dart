@@ -68,8 +68,6 @@ GoRouter _createRouter(
   BiometricAuthenticator auth, {
   required bool startTicker,
 }) {
-  getIt.registerSingleton<BiometricAuthenticator>(auth);
-
   return GoRouter(
     initialLocation: AppRoutes.counterPath,
     routes: [
@@ -98,8 +96,9 @@ GoRouter _createRouter(
 }
 
 void main() {
-  setUp(() {
+  setUp(() async {
     getIt.pushNewScope();
+    await configureDependencies();
   });
 
   tearDown(() {
@@ -110,6 +109,8 @@ void main() {
     tester,
   ) async {
     final _FakeBiometricAuthenticator auth = _FakeBiometricAuthenticator(true);
+    getIt.unregister<BiometricAuthenticator>();
+    getIt.registerSingleton<BiometricAuthenticator>(auth);
     final GoRouter router = _createRouter(
       _FakeCounterRepository(),
       auth,
@@ -129,6 +130,8 @@ void main() {
 
   testWidgets('shows error feedback when biometric auth fails', (tester) async {
     final _FakeBiometricAuthenticator auth = _FakeBiometricAuthenticator(false);
+    getIt.unregister<BiometricAuthenticator>();
+    getIt.registerSingleton<BiometricAuthenticator>(auth);
     final GoRouter router = _createRouter(
       _FakeCounterRepository(),
       auth,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
 
 class WebsocketMessageList extends StatelessWidget {
   const WebsocketMessageList({
@@ -14,18 +15,8 @@ class WebsocketMessageList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
     if (messages.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: EdgeInsets.all(UI.gapL),
-          child: Text(
-            emptyLabel,
-            style: theme.textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
+      return AppMessage(message: emptyLabel);
     }
     return ListView.builder(
       padding: EdgeInsets.symmetric(

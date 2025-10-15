@@ -16,6 +16,7 @@ class AppLogger {
   );
 
   static int _silenceDepth = 0;
+  static bool _globalSilence = false;
 
   static void error(String message, [Object? error, StackTrace? stackTrace]) {
     _logger.e(message, error: error, stackTrace: stackTrace);
@@ -52,12 +53,20 @@ class AppLogger {
   }
 
   static bool get isSilenced => _silenceDepth > 0;
+
+  static void silenceGlobally() {
+    _globalSilence = true;
+  }
+
+  static void restoreGlobalLogging() {
+    _globalSilence = false;
+  }
 }
 
 class _DebugOnlyFilter extends LogFilter {
   @override
   bool shouldLog(LogEvent event) {
-    if (AppLogger._silenceDepth > 0) {
+    if (AppLogger._globalSilence || AppLogger._silenceDepth > 0) {
       return false;
     }
     if (kDebugMode) {

@@ -12,6 +12,7 @@ import 'package:flutter_bloc_app/features/counter/presentation/widgets/widgets.d
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
+import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/widgets/flavor_badge.dart';
 import 'package:go_router/go_router.dart';
@@ -26,6 +27,9 @@ class CounterPage extends StatefulWidget {
 }
 
 class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
+  final ErrorNotificationService _errorNotificationService =
+      getIt<ErrorNotificationService>();
+
   @override
   void initState() {
     super.initState();
@@ -67,9 +71,12 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
             final error = state.error;
             if (error != null) {
               final String localizedMessage = counterErrorMessage(l10n, error);
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(SnackBar(content: Text(localizedMessage)));
+              unawaited(
+                _errorNotificationService.showSnackBar(
+                  context,
+                  localizedMessage,
+                ),
+              );
               context.read<CounterCubit>().clearError();
             }
           },
@@ -169,9 +176,12 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
     if (authenticated) {
       await context.pushNamed(AppRoutes.settings);
     } else {
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(content: Text(l10n.settingsBiometricFailed)));
+      unawaited(
+        _errorNotificationService.showSnackBar(
+          context,
+          l10n.settingsBiometricFailed,
+        ),
+      );
     }
   }
 }

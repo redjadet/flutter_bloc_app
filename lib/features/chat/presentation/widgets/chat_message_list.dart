@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class ChatMessageList extends StatelessWidget {
@@ -15,16 +17,15 @@ class ChatMessageList extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
+    final ErrorNotificationService errorNotificationService =
+        getIt<ErrorNotificationService>();
 
     return BlocConsumer<ChatCubit, ChatState>(
       listener: (context, state) {
         if (state.hasError) {
-          final chatCubit = context.read<ChatCubit>();
-          final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar();
-          messenger
-              .showSnackBar(SnackBar(content: Text(state.error!)))
-              .closed
+          final ChatCubit chatCubit = context.read<ChatCubit>();
+          errorNotificationService
+              .showSnackBar(context, state.error!)
               .whenComplete(() {
                 if (!chatCubit.isClosed) {
                   chatCubit.clearError();

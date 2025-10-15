@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_state.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/widgets/graphql_country_card.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
 import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
 
 class GraphqlDemoPage extends StatelessWidget {
@@ -59,45 +60,21 @@ class GraphqlDemoPage extends StatelessWidget {
     }
 
     if (state.hasError && state.countries.isEmpty) {
-      return ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              children: [
-                Text(
-                  l10n.graphqlSampleErrorTitle,
-                  style: theme.textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  _errorMessageForState(l10n, state),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () =>
-                      context.read<GraphqlDemoCubit>().loadInitial(),
-                  child: Text(l10n.graphqlSampleRetryButton),
-                ),
-              ],
-            ),
+      return AppMessage(
+        title: l10n.graphqlSampleErrorTitle,
+        message: _errorMessageForState(l10n, state),
+        isError: true,
+        actions: [
+          ElevatedButton(
+            onPressed: () => context.read<GraphqlDemoCubit>().loadInitial(),
+            child: Text(l10n.graphqlSampleRetryButton),
           ),
         ],
       );
     }
 
     if (state.countries.isEmpty) {
-      return ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(32),
-            child: Text(l10n.graphqlSampleEmpty, textAlign: TextAlign.center),
-          ),
-        ],
-      );
+      return AppMessage(message: l10n.graphqlSampleEmpty);
     }
 
     final String capitalLabel = l10n.graphqlSampleCapitalLabel;

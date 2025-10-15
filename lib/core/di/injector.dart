@@ -29,6 +29,7 @@ import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart'
 import 'package:flutter_bloc_app/features/websocket/data/echo_websocket_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
+import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -94,6 +95,9 @@ Future<void> configureDependencies() async {
   );
   _registerLazySingletonIfAbsent<MapLocationRepository>(
     () => const SampleMapLocationRepository(),
+  );
+  _registerLazySingletonIfAbsent<ErrorNotificationService>(
+    () => SnackbarErrorNotificationService(),
   );
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
@@ -13,8 +14,13 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  setUp(() {
+  setUp(() async {
     UI.resetScreenUtilReady();
+    await configureDependencies();
+  });
+
+  tearDown(() async {
+    await getIt.reset();
   });
 
   testWidgets('ChatMessageList shows empty placeholder when no messages', (

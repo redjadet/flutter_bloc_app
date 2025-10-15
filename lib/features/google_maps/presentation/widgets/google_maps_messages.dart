@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
 
 class GoogleMapsUnsupportedMessage extends StatelessWidget {
   const GoogleMapsUnsupportedMessage({super.key, required this.message});
@@ -8,12 +8,7 @@ class GoogleMapsUnsupportedMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(UI.gapL),
-        child: Text(message, textAlign: TextAlign.center),
-      ),
-    );
+    return AppMessage(message: message);
   }
 }
 
@@ -24,19 +19,7 @@ class GoogleMapsErrorMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(UI.gapL),
-        child: Text(
-          message,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.error,
-          ),
-        ),
-      ),
-    );
+    return AppMessage(message: message, isError: true);
   }
 }
 
@@ -52,34 +35,6 @@ class GoogleMapsMissingKeyMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colors = theme.colorScheme;
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(UI.gapL),
-        child: Card(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: UI.cardPadH,
-              vertical: UI.cardPadV,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(title, style: theme.textTheme.titleMedium),
-                SizedBox(height: UI.gapS),
-                Text(
-                  description,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: colors.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    return AppMessage(title: title, message: description, isError: true);
   }
 }
