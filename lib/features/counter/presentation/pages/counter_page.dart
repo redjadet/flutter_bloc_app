@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dar
 import 'package:flutter_bloc_app/features/counter/presentation/helpers/counter_error_localizer.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_page_app_bar.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/widgets.dart';
+import 'package:flutter_bloc_app/features/remote_config/presentation/widgets/awesome_feature_widget.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
@@ -134,6 +135,8 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
                           ),
                           SizedBox(height: UI.gapS),
                           const CounterDisplay(),
+                          SizedBox(height: UI.gapM),
+                          const AwesomeFeatureWidget(),
                           SizedBox(height: UI.gapM),
                           BlocBuilder<CounterCubit, CounterState>(
                             buildWhen: (p, c) => p.count != c.count,

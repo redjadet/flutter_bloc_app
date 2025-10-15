@@ -7,6 +7,12 @@ platform :ios, '15.0'
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
+require 'pathname'
+
+# Move the CocoaPods cache into the project to avoid user Library permission issues.
+project_cache_root = Pathname.new(File.expand_path('.cocoapods_cache', __dir__))
+Pod::Config.instance.cache_root = project_cache_root
+
 project 'Runner', {
   'Debug' => :debug,
   'Profile' => :release,

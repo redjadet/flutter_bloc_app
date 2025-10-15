@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/features.dart';
+import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -165,6 +166,7 @@ class _MyAppState extends State<MyApp> {
           create: (_) =>
               ThemeCubit(repository: getIt<ThemeRepository>())..loadInitial(),
         ),
+        BlocProvider(create: (_) => getIt<RemoteConfigCubit>()..initialize()),
       ],
       child: DeepLinkListener(
         router: _router,

@@ -1,6 +1,7 @@
 import Flutter
 import GoogleMaps
 import UIKit
+import Firebase
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -26,6 +27,14 @@ import UIKit
       )
     }
     GeneratedPluginRegistrant.register(with: self)
+
+    if FirebaseApp.app() == nil {
+      FirebaseApp.configure()
+    } else {
+      #if DEBUG
+        NSLog("ℹ️ FirebaseApp already configured; skipping duplicate configure call.")
+      #endif
+    }
 
     if let registrar = registrar(forPlugin: "AppDelegateMethodChannel") {
       let channel = FlutterMethodChannel(
