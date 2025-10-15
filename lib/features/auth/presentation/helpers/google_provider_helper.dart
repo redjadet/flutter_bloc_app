@@ -1,14 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'
     as firebase_ui_google;
-import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform, kIsWeb;
+import 'package:flutter/foundation.dart';
 
-firebase_ui_google.GoogleProvider? maybeCreateGoogleProvider() {
-  if (kIsWeb) {
-    return null;
-  }
-
+firebase_ui_google.GoogleProvider? maybeCreateGoogleProvider([
+  FirebaseApp? app,
+]) {
+  app ??= Firebase.app();
   if (Firebase.apps.isEmpty) {
     return null;
   }

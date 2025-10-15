@@ -21,7 +21,9 @@ import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class GoogleMapsSamplePage extends StatefulWidget {
-  const GoogleMapsSamplePage({super.key});
+  const GoogleMapsSamplePage({super.key, this.platformService});
+
+  final NativePlatformService? platformService;
 
   @override
   State<GoogleMapsSamplePage> createState() => _GoogleMapsSamplePageState();
@@ -30,7 +32,7 @@ class GoogleMapsSamplePage extends StatefulWidget {
 class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
-  final NativePlatformService _platformService = NativePlatformService();
+  late final NativePlatformService _platformService;
   bool _hasRequiredApiKey = true;
   bool _isCheckingApiKey = false;
 
@@ -39,6 +41,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
   @override
   void initState() {
     super.initState();
+    _platformService = widget.platformService ?? NativePlatformService();
     if (_isMapsSupported) {
       _resolveApiKeyAvailability();
     }

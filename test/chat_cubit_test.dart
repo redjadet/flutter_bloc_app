@@ -67,6 +67,32 @@ void main() {
       expect(cubit.models.contains('openai/gpt-oss-120b'), isTrue);
     });
 
+    test('selectModel does nothing for invalid model', () async {
+      final FakeChatRepository repo = FakeChatRepository();
+      final FakeChatHistoryRepository history = FakeChatHistoryRepository();
+      final ChatCubit cubit = createCubit(
+        repository: repo,
+        historyRepository: history,
+      );
+
+      cubit.selectModel('invalid-model');
+
+      expect(cubit.state.currentModel, 'openai/gpt-oss-20b');
+    });
+
+    test('selectModel does nothing for same model', () async {
+      final FakeChatRepository repo = FakeChatRepository();
+      final FakeChatHistoryRepository history = FakeChatHistoryRepository();
+      final ChatCubit cubit = createCubit(
+        repository: repo,
+        historyRepository: history,
+      );
+
+      cubit.selectModel('openai/gpt-oss-20b');
+
+      expect(cubit.state.currentModel, 'openai/gpt-oss-20b');
+    });
+
     test('loadHistory restores stored conversation', () async {
       final FakeChatRepository repo = FakeChatRepository();
       final FakeChatHistoryRepository history = FakeChatHistoryRepository();
@@ -355,6 +381,94 @@ void main() {
       expect(history.saveCallCount, greaterThan(0));
       expect(cubit.state.history.single.model, cubit.state.currentModel);
     });
+
+    test('selectConversation updates the active conversation', () async {
+      final FakeChatRepository repo = FakeChatRepository();
+      final FakeChatHistoryRepository history = FakeChatHistoryRepository();
+      final ChatConversation conversation1 = ChatConversation(
+        id: 'conv-1',
+        messages: const <ChatMessage>[
+          ChatMessage(author: ChatAuthor.user, text: 'Hi'),
+        ],
+        pastUserInputs: const <String>['Hi'],
+        generatedResponses: const <String>['Hello'],
+        createdAt: DateTime(2024, 1, 1, 12, 0),
+        updatedAt: DateTime(2024, 1, 1, 12, 1),
+        model: 'openai/gpt-oss-20b',
+      );
+      final ChatConversation conversation2 = ChatConversation(
+        id: 'conv-2',
+        messages: const <ChatMessage>[
+          ChatMessage(author: ChatAuthor.user, text: 'Howdy'),
+        ],
+        pastUserInputs: const <String>['Howdy'],
+        generatedResponses: const <String>['Welcome'],
+        createdAt: DateTime(2024, 1, 2, 8, 0),
+        updatedAt: DateTime(2024, 1, 2, 8, 30),
+        model: 'openai/gpt-oss-120b',
+      );
+      history.conversations = <ChatConversation>[conversation1, conversation2];
+
+      final ChatCubit cubit = createCubit(
+        repository: repo,
+        historyRepository: history,
+      );
+
+      await cubit.loadHistory();
+      cubit.selectConversation('conv-1');
+
+      expect(cubit.state.activeConversationId, 'conv-1');
+      expect(cubit.state.currentModel, 'openai/gpt-oss-20b');
+    });
+
+    test(
+      'selectConversation does nothing if conversation is already active',
+      () async {
+        final FakeChatRepository repo = FakeChatRepository();
+        final FakeChatHistoryRepository history = FakeChatHistoryRepository();
+        final ChatConversation conversation1 = ChatConversation(
+          id: 'conv-1',
+          messages: const <ChatMessage>[
+            ChatMessage(author: ChatAuthor.user, text: 'Hi'),
+          ],
+          pastUserInputs: const <String>['Hi'],
+          generatedResponses: const <String>['Hello'],
+          createdAt: DateTime(2024, 1, 1, 12, 0),
+          updatedAt: DateTime(2024, 1, 1, 12, 1),
+          model: 'openai/gpt-oss-20b',
+        );
+        history.conversations = <ChatConversation>[conversation1];
+
+        final ChatCubit cubit = createCubit(
+          repository: repo,
+          historyRepository: history,
+        );
+
+        await cubit.loadHistory();
+        final initialState = cubit.state;
+        cubit.selectConversation('conv-1');
+
+        expect(cubit.state, initialState);
+      },
+    );
+
+    test(
+      'selectConversation does nothing if conversation is not found',
+      () async {
+        final FakeChatRepository repo = FakeChatRepository();
+        final FakeChatHistoryRepository history = FakeChatHistoryRepository();
+        final ChatCubit cubit = createCubit(
+          repository: repo,
+          historyRepository: history,
+        );
+
+        await cubit.loadHistory();
+        final initialState = cubit.state;
+        cubit.selectConversation('not-found');
+
+        expect(cubit.state, initialState);
+      },
+    );
   });
 }
 
