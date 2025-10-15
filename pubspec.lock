@@ -552,6 +552,27 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.6+20"
+  firebase_remote_config:
+    dependency: "direct main"
+    description:
+      path: "third_party/pub/firebase_remote_config"
+      relative: true
+    source: path
+    version: "6.1.0"
+  firebase_remote_config_platform_interface:
+    dependency: "direct overridden"
+    description:
+      path: "third_party/pub/firebase_remote_config_platform_interface"
+      relative: true
+    source: path
+    version: "2.0.4"
+  firebase_remote_config_web:
+    dependency: "direct overridden"
+    description:
+      path: "third_party/pub/firebase_remote_config_web"
+      relative: true
+    source: path
+    version: "1.9.0"
   firebase_ui_auth:
     dependency: "direct main"
     description:

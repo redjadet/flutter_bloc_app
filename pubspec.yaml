@@ -68,6 +68,7 @@ dependencies:
   firebase_database: ^12.0.3
   web_socket_channel: ^3.0.3
   google_maps_flutter: ^2.7.2
+  firebase_remote_config: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -141,3 +142,9 @@ flutter:
   # see https://flutter.dev/to/font-from-package
 
 dependency_overrides:
+  firebase_remote_config:
+    path: third_party/pub/firebase_remote_config
+  firebase_remote_config_platform_interface:
+    path: third_party/pub/firebase_remote_config_platform_interface
+  firebase_remote_config_web:
+    path: third_party/pub/firebase_remote_config_web

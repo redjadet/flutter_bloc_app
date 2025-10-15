@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
@@ -20,6 +21,8 @@ import 'package:flutter_bloc_app/features/google_maps/data/sample_map_location_r
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/countries_graphql_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/data/package_info_app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/shared_preferences_locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/shared_preferences_theme_repository.dart';
@@ -98,6 +101,13 @@ Future<void> configureDependencies() async {
   );
   _registerLazySingletonIfAbsent<ErrorNotificationService>(
     () => SnackbarErrorNotificationService(),
+  );
+  _registerLazySingletonIfAbsent<RemoteConfigRepository>(
+    () => RemoteConfigRepository(FirebaseRemoteConfig.instance),
+    dispose: (repository) => repository.dispose(),
+  );
+  _registerLazySingletonIfAbsent<RemoteConfigCubit>(
+    () => RemoteConfigCubit(getIt<RemoteConfigRepository>()),
   );
 }
 
