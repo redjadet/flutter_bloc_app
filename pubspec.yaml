@@ -58,14 +58,14 @@ dependencies:
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
   meta: ^1.16.0
-  firebase_core: ^4.1.1
-  firebase_crashlytics: ^5.0.2
-  firebase_analytics: ^12.0.2
-  firebase_auth: ^6.1.0
+  firebase_core: ^4.2.0
+  firebase_crashlytics: ^5.0.3
+  firebase_analytics: ^12.0.3
+  firebase_auth: ^6.1.1
   firebase_ui_auth: ^3.0.0
   firebase_ui_localizations: ^2.0.0
   firebase_ui_oauth_google: ^2.0.0
-  firebase_database: ^12.0.2
+  firebase_database: ^12.0.3
   web_socket_channel: ^3.0.3
   google_maps_flutter: ^2.7.2
 
@@ -79,7 +79,7 @@ dev_dependencies:
   golden_toolkit: ^0.15.0
   mock_exceptions: ^0.8.2
   mocktail: ^1.0.4
-  firebase_core_platform_interface: ^6.0.1
+  firebase_core_platform_interface: ^6.0.2
   google_sign_in_mocks: ^0.3.0
   google_maps_flutter_platform_interface: ^2.2.1
 
