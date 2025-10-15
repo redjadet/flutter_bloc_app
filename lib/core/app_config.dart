@@ -13,7 +13,6 @@ class AppConfig {
     required ThemeMode themeMode,
     required GoRouter router,
     Locale? locale,
-    Widget? child,
   }) {
     return MaterialApp.router(
       onGenerateTitle: (ctx) => AppLocalizations.of(ctx).appTitle,
@@ -30,8 +29,7 @@ class AppConfig {
       theme: _createLightTheme(),
       darkTheme: _createDarkTheme(),
       themeMode: themeMode,
-      builder: (context, appChild) =>
-          _createResponsiveBuilder(appChild ?? child),
+      builder: (context, appChild) => _createResponsiveBuilder(appChild),
       routerConfig: router,
     );
   }
@@ -89,41 +87,51 @@ class AppConfig {
     );
   }
 
+  static const Locale _defaultLocale = Locale('en');
+
   /// Handles locale resolution with fallback logic
   static Locale? _localeListResolutionCallback(
     List<Locale>? locales,
     Iterable<Locale> supported,
   ) {
-    if (locales != null && locales.isNotEmpty) {
-      // Try exact match (language+country)
-      for (final Locale sys in locales) {
-        if (supported.any(
-          (s) =>
-              s.languageCode == sys.languageCode &&
-              (s.countryCode == null || s.countryCode == sys.countryCode),
-        )) {
-          return Locale(sys.languageCode, sys.countryCode);
-        }
-      }
-      // Try language-only match
-      for (final Locale sys in locales) {
-        final match = supported.firstWhere(
-          (s) => s.languageCode == sys.languageCode,
-          orElse: () => const Locale('en'),
-        );
-        if (match.languageCode != 'en' ||
-            supported.any((s) => s.languageCode == 'en')) {
-          return match;
-        }
+    if (locales == null || locales.isEmpty) {
+      return _defaultLocale;
+    }
+
+    final supportedLocales = supported.toList();
+
+    for (final locale in locales) {
+      final matchingLocale = supportedLocales.firstWhere(
+        (supportedLocale) =>
+            supportedLocale.languageCode == locale.languageCode &&
+            (supportedLocale.countryCode == locale.countryCode ||
+                supportedLocale.countryCode == null),
+        orElse: () => const Locale('unsupported'),
+      );
+
+      if (matchingLocale.languageCode != 'unsupported') {
+        return locale;
       }
     }
-    // Fallback to English
-    return const Locale('en');
+
+    for (final locale in locales) {
+      final matchingLocale = supportedLocales.firstWhere(
+        (supportedLocale) =>
+            supportedLocale.languageCode == locale.languageCode,
+        orElse: () => const Locale('unsupported'),
+      );
+
+      if (matchingLocale.languageCode != 'unsupported') {
+        return matchingLocale;
+      }
+    }
+
+    return _defaultLocale;
   }
 
   @visibleForTesting
   static Locale? resolveLocales(
     List<Locale>? locales,
     Iterable<Locale> supported,
-  ) => _localeListResolutionCallback(locales, supported);
+  ) => _localeListResolutionCallback(locales, supported) ?? _defaultLocale;
 }

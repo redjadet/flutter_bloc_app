@@ -181,7 +181,6 @@ class _MyAppState extends State<MyApp> {
                     themeMode: themeMode,
                     router: _router,
                     locale: locale,
-                    child: child,
                   ),
                 );
               },

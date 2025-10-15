@@ -32,6 +32,7 @@ class CounterCubit extends Cubit<CounterState> {
       CounterState.defaultCountdownSeconds;
   // Timer intervals
   static const Duration _countdownTickInterval = Duration(seconds: 1);
+  static const int _countdownTickThreshold = 1;
 
   final CounterRepository _repository;
   final TimerService _timerService;
@@ -42,7 +43,7 @@ class CounterCubit extends Cubit<CounterState> {
   StreamSubscription<CounterSnapshot>? _repositorySubscription;
   // Ensures the countdown stays at the full value for one tick after a reset
   // so the progress bar remains visually consistent.
-  bool _holdCountdownAtFullCycle = false;
+  bool _pauseCountdownForOneTick = false;
   bool _isLifecyclePaused = false;
 
   /// Starts the 1s countdown ticker if not already running.
@@ -51,15 +52,15 @@ class CounterCubit extends Cubit<CounterState> {
       return;
     }
     _countdownTicker ??= _timerService.periodic(_countdownTickInterval, () {
-      if (_holdCountdownAtFullCycle) {
-        _holdCountdownAtFullCycle = false;
+      if (_pauseCountdownForOneTick) {
+        _pauseCountdownForOneTick = false;
         _emitCountdown(state.countdownSeconds);
         return;
       }
 
       final CounterState current = state;
       final int remaining = current.countdownSeconds;
-      if (remaining > 1) {
+      if (remaining > _countdownTickThreshold) {
         _emitCountdown(remaining - 1);
         return;
       }
@@ -80,7 +81,7 @@ class CounterCubit extends Cubit<CounterState> {
 
   /// Emits a success state normalizing countdown, timestamp and activation flag.
   CounterState _emitCountUpdate({required int count, DateTime? timestamp}) {
-    _holdCountdownAtFullCycle = false;
+    _pauseCountdownForOneTick = false;
     final CounterState next = CounterState.success(
       count: count,
       lastChanged: timestamp ?? _now(),
@@ -103,7 +104,7 @@ class CounterCubit extends Cubit<CounterState> {
 
   /// Resets to the default interval and holds one tick at that value when inactive.
   void _resetCountdownAndHold() {
-    _holdCountdownAtFullCycle = true;
+    _pauseCountdownForOneTick = true;
     emit(state.copyWith(countdownSeconds: _defaultIntervalSeconds));
   }
 
@@ -115,7 +116,7 @@ class CounterCubit extends Cubit<CounterState> {
       }
       final CounterSnapshot snapshot = await _repository.load();
       final RestorationResult restoration = restoreStateFromSnapshot(snapshot);
-      _holdCountdownAtFullCycle = restoration.holdCountdown;
+      _pauseCountdownForOneTick = restoration.holdCountdown;
       emit(restoration.state);
       _ensureCountdownTickerStarted();
       if (restoration.shouldPersist) {
@@ -123,15 +124,18 @@ class CounterCubit extends Cubit<CounterState> {
       }
       _subscribeToRepository();
     } on CounterError catch (error, stackTrace) {
-      AppLogger.error('CounterCubit.loadInitial failed', error, stackTrace);
-      emit(state.copyWith(error: error, status: CounterStatus.error));
+      _handleError(
+        error,
+        stackTrace,
+        CounterError.load,
+        'CounterCubit.loadInitial failed',
+      );
     } on Exception catch (error, stackTrace) {
-      AppLogger.error('CounterCubit.loadInitial failed', error, stackTrace);
-      emit(
-        state.copyWith(
-          error: CounterError.load(originalError: error),
-          status: CounterStatus.error,
-        ),
+      _handleError(
+        error,
+        stackTrace,
+        CounterError.load,
+        'CounterCubit.loadInitial failed',
       );
     }
   }
@@ -145,17 +149,33 @@ class CounterCubit extends Cubit<CounterState> {
         ),
       );
     } on CounterError catch (error, stackTrace) {
-      AppLogger.error('CounterCubit._persistState failed', error, stackTrace);
-      emit(state.copyWith(error: error, status: CounterStatus.error));
+      _handleError(
+        error,
+        stackTrace,
+        CounterError.save,
+        'CounterCubit._persistState failed',
+      );
     } on Exception catch (error, stackTrace) {
-      AppLogger.error('CounterCubit._persistState failed', error, stackTrace);
-      emit(
-        state.copyWith(
-          error: CounterError.save(originalError: error),
-          status: CounterStatus.error,
-        ),
+      _handleError(
+        error,
+        stackTrace,
+        CounterError.save,
+        'CounterCubit._persistState failed',
       );
     }
+  }
+
+  void _handleError(
+    Object error,
+    StackTrace stackTrace,
+    CounterError Function({Object? originalError}) errorFactory,
+    String message,
+  ) {
+    AppLogger.error(message, error, stackTrace);
+    final CounterError counterError = error is CounterError
+        ? error
+        : errorFactory(originalError: error);
+    emit(state.copyWith(error: counterError, status: CounterStatus.error));
   }
 
   @override
@@ -216,7 +236,7 @@ class CounterCubit extends Cubit<CounterState> {
         final RestorationResult restoration = restoreStateFromSnapshot(
           snapshot,
         );
-        _holdCountdownAtFullCycle = restoration.holdCountdown;
+        _pauseCountdownForOneTick = restoration.holdCountdown;
         emit(restoration.state);
       },
       onError: (Object error, StackTrace stackTrace) {

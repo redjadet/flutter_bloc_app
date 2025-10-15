@@ -9,7 +9,7 @@ class FlavorBadge extends StatelessWidget {
     final flavor = FlavorManager.I.flavor;
     if (flavor == Flavor.prod) return const SizedBox.shrink();
     final ColorScheme colors = Theme.of(context).colorScheme;
-    final FlavorBadgeStyle style = mapFlavorToBadge(flavor, colors);
+    final _FlavorBadgeStyle style = _mapFlavorToBadge(flavor, colors);
     final String tooltipMessage = flavor == Flavor.prod
         ? 'Production flavor'
         : 'Flavor: ${style.label}';
@@ -40,23 +40,23 @@ class FlavorBadge extends StatelessWidget {
 }
 
 @immutable
-class FlavorBadgeStyle {
-  const FlavorBadgeStyle({required this.label, required this.color});
+class _FlavorBadgeStyle {
+  const _FlavorBadgeStyle({required this.label, required this.color});
   final String label;
   final Color color;
 }
 
-FlavorBadgeStyle mapFlavorToBadge(Flavor flavor, ColorScheme colors) {
+_FlavorBadgeStyle _mapFlavorToBadge(Flavor flavor, ColorScheme colors) {
   switch (flavor) {
     case Flavor.dev:
-      return FlavorBadgeStyle(label: 'DEV', color: colors.error);
+      return _FlavorBadgeStyle(label: 'DEV', color: colors.error);
     case Flavor.staging:
-      return FlavorBadgeStyle(label: 'STG', color: colors.tertiary);
+      return _FlavorBadgeStyle(label: 'STG', color: colors.tertiary);
     case Flavor.qa:
-      return FlavorBadgeStyle(label: 'QA', color: colors.secondary);
+      return _FlavorBadgeStyle(label: 'QA', color: colors.secondary);
     case Flavor.beta:
-      return FlavorBadgeStyle(label: 'BETA', color: colors.primary);
+      return _FlavorBadgeStyle(label: 'BETA', color: colors.primary);
     case Flavor.prod:
-      return FlavorBadgeStyle(label: 'PROD', color: colors.primary);
+      return _FlavorBadgeStyle(label: 'PROD', color: colors.primary);
   }
 }
