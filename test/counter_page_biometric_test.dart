@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-
+import 'package:flutter_bloc_app/core/constants.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
@@ -13,8 +10,11 @@ import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_pag
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+
 import 'test_helpers.dart';
-import 'package:flutter_bloc_app/core/constants.dart';
 
 class _FakeCounterRepository implements CounterRepository {
   @override
