@@ -103,7 +103,7 @@ Future<void> configureDependencies() async {
     () => SnackbarErrorNotificationService(),
   );
   _registerLazySingletonIfAbsent<RemoteConfigRepository>(
-    () => RemoteConfigRepository(FirebaseRemoteConfig.instance),
+    () => _createRemoteConfigRepository(),
     dispose: (repository) => repository.dispose(),
   );
   _registerLazySingletonIfAbsent<RemoteConfigCubit>(
@@ -140,6 +140,39 @@ CounterRepository _createCounterRepository() {
     // coverage:ignore-end
   }
   return SharedPreferencesCounterRepository();
+}
+
+RemoteConfigRepository _createRemoteConfigRepository() {
+  try {
+    // Try to create with Firebase if available
+    return RemoteConfigRepository(FirebaseRemoteConfig.instance);
+  } on Exception {
+    // If Firebase is not available (e.g., in tests), create a fake implementation
+    return _FakeRemoteConfigRepository();
+  }
+}
+
+class _FakeRemoteConfigRepository implements RemoteConfigRepository {
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  Future<void> forceFetch() async {}
+
+  @override
+  String getString(String key) => '';
+
+  @override
+  bool getBool(String key) => false;
+
+  @override
+  int getInt(String key) => 0;
+
+  @override
+  double getDouble(String key) => 0.0;
+
+  @override
+  Future<void> dispose() async {}
 }
 
 void _registerLazySingletonIfAbsent<T extends Object>(
