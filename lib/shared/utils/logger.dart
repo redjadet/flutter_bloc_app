@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
@@ -66,6 +69,11 @@ class AppLogger {
 class _DebugOnlyFilter extends LogFilter {
   @override
   bool shouldLog(LogEvent event) {
+    // Check if we're in a test environment
+    if (_isTestEnvironment()) {
+      return false;
+    }
+
     if (AppLogger._globalSilence || AppLogger._silenceDepth > 0) {
       return false;
     }
@@ -73,5 +81,19 @@ class _DebugOnlyFilter extends LogFilter {
       return true;
     }
     return event.level.index >= Level.warning.index;
+  }
+
+  /// Detects if we're running in a test environment
+  bool _isTestEnvironment() {
+    // Check for common test environment indicators
+    try {
+      // Check if we're running under the test framework
+      return Platform.environment.containsKey('FLUTTER_TEST') ||
+          Platform.environment.containsKey('DART_TEST_CONFIG') ||
+          Zone.current.toString().contains('test');
+    } on Exception {
+      // If we can't determine, assume not in test
+      return false;
+    }
   }
 }
