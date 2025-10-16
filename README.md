@@ -27,8 +27,11 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
   `--dart-define` values (persisted into secure storage), and only loads the
   optional dev asset when explicitly opted-in via
   `--dart-define=ENABLE_ASSET_SECRETS=true` (never in release builds).
-- Tests: Unit, bloc, widget, and golden coverage (`flutter_test`, `bloc_test`, `golden_toolkit`), including auth flows with Firebase mocks.
+- Remote Config: Firebase Remote Config integration for feature flags and runtime configuration updates, with `RemoteConfigCubit` managing feature toggles like the "awesome feature" demo.
+- Biometric Authentication: Secure authentication using device biometrics (fingerprint, face recognition) for sensitive actions via `LocalBiometricAuthenticator`, with graceful fallback when biometrics are unavailable.
+- Tests: Comprehensive unit, bloc, widget, and golden coverage (`flutter_test`, `bloc_test`, `golden_toolkit`), including auth flows with Firebase mocks and global log suppression during test execution.
 - Agent-friendly guide: See `AGENTS.md` for the quick checklist (format → analyze → test → build_runner) and architecture guardrails.
+- Custom Linting: Custom file length linting rules to maintain code quality and prevent oversized files.
 
 ## WebSocket Demo
 
@@ -86,6 +89,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 ## Test Coverage
 
 - Latest line coverage: **87.20%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
+- Test Infrastructure: Global test configuration with automatic log suppression during test execution for cleaner output.
 
 ## Tech Stack
 
@@ -99,6 +103,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - `flutter_secure_storage` for keychain/keystore persistence
 - `get_it` for dependency injection across features
 - `bloc_test`, `flutter_test`, `golden_toolkit` for testing
+- `custom_lint` for custom linting rules and file length enforcement
 
 ## Security & Secrets
 
@@ -119,9 +124,21 @@ flowchart LR
     CounterActions
     ThemeSection
     LanguageSection
+    ChatPage
+    GraphqlDemoPage
+    WebsocketDemoPage
+    GoogleMapsPage
+    SettingsPage
     CounterCubit
     ThemeCubit
     LocaleCubit
+    ChatCubit
+    GraphqlDemoCubit
+    WebsocketCubit
+    MapSampleCubit
+    RemoteConfigCubit
+    DeepLinkCubit
+    AppInfoCubit
   end
 
   subgraph Domain
@@ -129,6 +146,14 @@ flowchart LR
     CounterSnapshot
     ThemeRepository
     LocaleRepository
+    ChatRepository
+    ChatHistoryRepository
+    GraphqlDemoRepository
+    WebsocketRepository
+    MapLocationRepository
+    RemoteConfigRepository
+    DeepLinkService
+    AppInfoRepository
   end
 
   subgraph Data
@@ -136,11 +161,33 @@ flowchart LR
     RealtimeDatabaseCounterRepository
     SharedPreferencesThemeRepository
     SharedPreferencesLocaleRepository
+    HuggingfaceChatRepository
+    SecureChatHistoryRepository
+    CountriesGraphqlRepository
+    EchoWebsocketRepository
+    SampleMapLocationRepository
+    RemoteConfigRepository
+    UniLinksDeepLinkService
+    PackageInfoAppInfoRepository
   end
 
-  TimerService
-  FirebaseDatabase
-  SharedPreferences
+  subgraph Services
+    TimerService
+    BiometricAuthenticator
+    ErrorNotificationService
+    AppLogger
+  end
+
+  subgraph External
+    FirebaseDatabase
+    FirebaseAuth
+    FirebaseRemoteConfig
+    SharedPreferences
+    HuggingFaceAPI
+    GraphQLAPI
+    WebSocketServer
+    GoogleMapsAPI
+  end
 
   CounterPage --> CounterCubit
   CounterDisplay --> CounterCubit
@@ -152,6 +199,7 @@ flowchart LR
   CounterRepository <-.implements .-> RealtimeDatabaseCounterRepository
   SharedPreferencesCounterRepository --> SharedPreferences
   RealtimeDatabaseCounterRepository --> FirebaseDatabase
+
   ThemeSection --> ThemeCubit
   LanguageSection --> LocaleCubit
   ThemeCubit --> ThemeRepository
@@ -160,6 +208,36 @@ flowchart LR
   LocaleRepository <-.implements .-> SharedPreferencesLocaleRepository
   SharedPreferencesThemeRepository --> SharedPreferences
   SharedPreferencesLocaleRepository --> SharedPreferences
+
+  ChatPage --> ChatCubit
+  ChatCubit --> ChatRepository
+  ChatCubit --> ChatHistoryRepository
+  ChatRepository <-.implements .-> HuggingfaceChatRepository
+  ChatHistoryRepository <-.implements .-> SecureChatHistoryRepository
+  HuggingfaceChatRepository --> HuggingFaceAPI
+  SecureChatHistoryRepository --> SharedPreferences
+
+  GraphqlDemoPage --> GraphqlDemoCubit
+  GraphqlDemoCubit --> GraphqlDemoRepository
+  GraphqlDemoRepository <-.implements .-> CountriesGraphqlRepository
+  CountriesGraphqlRepository --> GraphQLAPI
+
+  WebsocketDemoPage --> WebsocketCubit
+  WebsocketCubit --> WebsocketRepository
+  WebsocketRepository <-.implements .-> EchoWebsocketRepository
+  EchoWebsocketRepository --> WebSocketServer
+
+  GoogleMapsPage --> MapSampleCubit
+  MapSampleCubit --> MapLocationRepository
+  MapLocationRepository <-.implements .-> SampleMapLocationRepository
+  SampleMapLocationRepository --> GoogleMapsAPI
+
+  SettingsPage --> RemoteConfigCubit
+  RemoteConfigCubit --> RemoteConfigRepository
+  RemoteConfigRepository --> FirebaseRemoteConfig
+
+  AppInfoCubit --> AppInfoRepository
+  AppInfoRepository <-.implements .-> PackageInfoAppInfoRepository
 ```
 
 ## Release Automation
@@ -178,18 +256,37 @@ sequenceDiagram
   participant Timer as TimerService
   participant Repo as CounterRepository
   participant Store as Persistence
+  participant RemoteConfig as RemoteConfigCubit
+  participant Biometric as BiometricAuthenticator
 
+  Note over User, Biometric: App Initialization
   View->>Cubit: loadInitial()
   Cubit->>Repo: load()
   Repo-->>Cubit: CounterSnapshot
   Cubit-->>View: emit CounterState(status: success)
 
+  RemoteConfig->>RemoteConfig: initialize()
+  RemoteConfig->>RemoteConfig: fetchValues()
+  RemoteConfig-->>View: emit RemoteConfigLoaded
+
+  Note over User, Biometric: User Interactions
   User->>View: Tap increment/decrement
   View->>Cubit: increment()/decrement()
   Cubit-->>View: emit updated state
   Cubit->>Repo: save(snapshot)
   Repo->>Store: persist count & timestamp
 
+  Note over User, Biometric: Biometric Authentication
+  User->>View: Access sensitive action
+  View->>Biometric: authenticate()
+  Biometric-->>View: authentication result
+  alt authentication successful
+    View->>Cubit: performAction()
+  else authentication failed
+    View-->>User: show error message
+  end
+
+  Note over User, Biometric: Timer Operations
   Timer-->>Cubit: countdown tick (every 1s)
   Cubit-->>View: emit countdownSeconds--
 
@@ -199,6 +296,7 @@ sequenceDiagram
     Cubit->>Repo: save(snapshot)
   end
 
+  Note over User, Biometric: App Lifecycle
   View->>Cubit: pauseAutoDecrement() (app background)
   View->>Cubit: resumeAutoDecrement() (app foreground)
 ```
@@ -256,6 +354,71 @@ classDiagram
     +void dispose()
   }
 
+  class RemoteConfigCubit {
+    -RemoteConfigRepository _repository
+    +initialize()
+    +fetchValues()
+  }
+
+  class RemoteConfigState {
+    +isAwesomeFeatureEnabled: bool
+  }
+
+  class RemoteConfigRepository {
+    +initialize()
+    +forceFetch()
+    +getBool(String key): bool
+    +dispose()
+  }
+
+  class BiometricAuthenticator {
+    <<interface>>
+    +authenticate(String? reason): Future<bool>
+  }
+
+  class LocalBiometricAuthenticator {
+    -LocalAuthentication _localAuth
+    +authenticate(String? reason): Future<bool>
+  }
+
+  class ChatCubit {
+    -ChatRepository _repository
+    -ChatHistoryRepository _historyRepository
+    +sendMessage(String message)
+    +clearHistory()
+    +loadHistory()
+  }
+
+  class ChatRepository {
+    <<interface>>
+    +sendMessage(String message): Future<ChatMessage>
+  }
+
+  class HuggingfaceChatRepository {
+    -HuggingFaceApiClient _apiClient
+    -String _model
+    +sendMessage(String message): Future<ChatMessage>
+  }
+
+  class GraphqlDemoCubit {
+    -GraphqlDemoRepository _repository
+    +loadCountries()
+    +filterByContinent(String continent)
+  }
+
+  class WebsocketCubit {
+    -WebsocketRepository _repository
+    +connect()
+    +disconnect()
+    +sendMessage(String message)
+  }
+
+  class MapSampleCubit {
+    -MapLocationRepository _repository
+    +loadLocations()
+    +selectLocation(MapLocation location)
+  }
+
   class DefaultTimerService
   class SharedPreferencesCounterRepository
   class RealtimeDatabaseCounterRepository
@@ -270,6 +433,16 @@ classDiagram
   CounterRepository <|.. RealtimeDatabaseCounterRepository
   SharedPreferencesCounterRepository --> CounterSnapshot
   RealtimeDatabaseCounterRepository --> CounterSnapshot
+
+  RemoteConfigCubit --> RemoteConfigState
+  RemoteConfigCubit ..> RemoteConfigRepository
+  BiometricAuthenticator <|.. LocalBiometricAuthenticator
+  ChatCubit ..> ChatRepository
+  ChatCubit ..> ChatHistoryRepository
+  ChatRepository <|.. HuggingfaceChatRepository
+  GraphqlDemoCubit ..> GraphqlDemoRepository
+  WebsocketCubit ..> WebsocketRepository
+  MapSampleCubit ..> MapLocationRepository
 ```
 
 ## App Structure
@@ -294,6 +467,8 @@ classDiagram
 - `test/secure_secret_storage_test.dart`: Covers secure storage wrappers.
 - `test/sign_in_page_test.dart`: Exercises anonymous sign-in, auth error handling, and error message mapping with `MockFirebaseAuth`.
 - `test/widget_test.dart`: Basic boot test for the app.
+- `test/flutter_test_config.dart`: Global test configuration with log suppression.
+- `test/counter_page_biometric_test.dart`: Golden tests for counter page with biometric authentication.
 
 ## How It Works
 
@@ -308,10 +483,13 @@ classDiagram
 
 ```bash
 flutter pub get
+dart format .
+flutter analyze
 dart run build_runner build --delete-conflicting-outputs
 flutter test
-flutter run
+dart run tool/update_coverage_summary.dart
 dart run custom_lint  # run additional custom lint checks (optional)
+flutter run
 ```
 
 ### Secrets setup
@@ -374,6 +552,7 @@ The `ExamplePage` includes a “Fetch native info” button that uses a MethodCh
 - `flutter test test/fab_alignment_golden_test.dart` runs FAB alignment goldens.
 - `flutter test test/counter_page_golden_test.dart` runs counter page goldens.
 - `flutter test coverage` to generate `lcov.info` file used to generate `coverage_summary.md` file
+- `dart run tool/update_coverage_summary.dart` to regenerate coverage summary from lcov data
 
 Golden baselines live in `test/goldens/`.
 
@@ -422,3 +601,5 @@ Contributions are welcome—open an issue or PR with your proposed change. Make 
 
 - `flutter test coverage` to regenerate `coverage/lcov.info` file used to generate `coverage_summary.md` file
 - `dart run tool/update_coverage_summary.dart` – regenerate `coverage/coverage_summary.md` from `coverage/lcov.info`, excluding generated and localization files.
+- `dart run custom_lint` – run custom linting rules including file length enforcement.
+- `test/flutter_test_config.dart` – global test configuration that automatically suppresses logging during test execution for cleaner output.
