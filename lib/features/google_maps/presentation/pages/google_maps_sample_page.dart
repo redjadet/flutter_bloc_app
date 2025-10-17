@@ -6,19 +6,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_cubit.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_state.dart';
-import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/'
-    'google_maps_controls.dart';
-import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/'
-    'google_maps_layout.dart';
-import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/'
-    'google_maps_location_list.dart';
-import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/'
-    'google_maps_messages.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/google_maps_controls.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/google_maps_layout.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/google_maps_location_list.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/google_maps_messages.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_sample_map_view.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 class GoogleMapsSamplePage extends StatefulWidget {
   const GoogleMapsSamplePage({super.key, this.platformService});
@@ -30,20 +26,21 @@ class GoogleMapsSamplePage extends StatefulWidget {
 }
 
 class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
-  final Completer<GoogleMapController> _mapController =
-      Completer<GoogleMapController>();
-  GoogleMapController? _mapControllerInstance;
+  late final MapSampleMapController _mapViewController;
   late final NativePlatformService _platformService;
   bool _hasRequiredApiKey = true;
   bool _isCheckingApiKey = false;
+  late final bool _useAppleMaps;
 
   MapSampleCubit get _cubit => context.read<MapSampleCubit>();
 
   @override
   void initState() {
     super.initState();
+    _mapViewController = MapSampleMapController();
+    _useAppleMaps = !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
     _platformService = widget.platformService ?? NativePlatformService();
-    if (_isMapsSupported) {
+    if (_isMapsSupported && !_useAppleMaps) {
       _resolveApiKeyAvailability();
     }
   }
@@ -60,9 +57,9 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
           ? GoogleMapsUnsupportedMessage(
               message: l10n.googleMapsPageUnsupportedDescription,
             )
-          : _isCheckingApiKey
+          : (!_useAppleMaps && _isCheckingApiKey)
           ? const Center(child: CircularProgressIndicator())
-          : !_hasRequiredApiKey
+          : (!_useAppleMaps && !_hasRequiredApiKey)
           ? GoogleMapsMissingKeyMessage(
               title: l10n.googleMapsPageMissingKeyTitle,
               description: l10n.googleMapsPageMissingKeyDescription,
@@ -79,7 +76,12 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
                   );
                 }
                 return GoogleMapsContentLayout(
-                  map: _buildGoogleMap(state),
+                  map: MapSampleMapView(
+                    state: state,
+                    cubit: _cubit,
+                    useAppleMaps: _useAppleMaps,
+                    controller: _mapViewController,
+                  ),
                   controls: _buildControls(context, state),
                   locations: _buildLocationList(context, state),
                 );
@@ -88,31 +90,12 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
     );
   }
 
-  Widget _buildGoogleMap(MapSampleState state) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(UI.radiusM),
-      child: GoogleMap(
-        mapType: state.mapType,
-        initialCameraPosition: state.cameraPosition,
-        markers: state.markers,
-        trafficEnabled: state.trafficEnabled,
-        onMapCreated: (GoogleMapController controller) {
-          _mapControllerInstance = controller;
-          if (!_mapController.isCompleted) {
-            _mapController.complete(controller);
-          }
-        },
-        onCameraMove: _cubit.updateCameraPosition,
-      ),
-    );
-  }
-
   Widget _buildControls(BuildContext context, MapSampleState state) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     return GoogleMapsControlsCard(
       heading: l10n.googleMapsPageControlsHeading,
       helpText: l10n.googleMapsPageApiKeyHelp,
-      isHybridMapType: state.mapType == MapType.hybrid,
+      isHybridMapType: state.mapType == gmaps.MapType.hybrid,
       trafficEnabled: state.trafficEnabled,
       onToggleMapType: _cubit.toggleMapType,
       onToggleTraffic: (_) => _cubit.toggleTraffic(),
@@ -131,31 +114,10 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
       heading: l10n.googleMapsPageLocationsHeading,
       focusLabel: l10n.googleMapsPageFocusButton,
       selectedBadgeLabel: l10n.googleMapsPageSelectedBadge,
-      onFocus: _focusOnLocation,
+      onFocus: (MapLocation location) {
+        unawaited(_mapViewController.focusOnLocation(location));
+      },
     );
-  }
-
-  Future<void> _focusOnLocation(MapLocation location) async {
-    GoogleMapController? controller = _mapControllerInstance;
-    if (controller == null && !_mapController.isCompleted) {
-      return;
-    }
-    controller ??= await _mapController.future;
-    if (!mounted) {
-      return;
-    }
-    await controller.animateCamera(_cubit.cameraUpdateForLocation(location));
-    _cubit.selectLocation(location.id);
-  }
-
-  @override
-  void dispose() {
-    final GoogleMapController? controller = _mapControllerInstance;
-    if (controller != null) {
-      controller.dispose();
-      _mapControllerInstance = null;
-    }
-    super.dispose();
   }
 
   bool get _isMapsSupported =>
@@ -164,6 +126,9 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
           defaultTargetPlatform == TargetPlatform.android);
 
   Future<void> _resolveApiKeyAvailability() async {
+    if (_useAppleMaps) {
+      return;
+    }
     setState(() {
       _isCheckingApiKey = true;
     });

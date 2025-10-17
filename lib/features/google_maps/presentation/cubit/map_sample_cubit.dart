@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_state.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 class MapSampleCubit extends Cubit<MapSampleState> {
   MapSampleCubit({required MapLocationRepository repository})
@@ -17,7 +17,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
       state.copyWith(
         isLoading: true,
         clearError: true,
-        markers: const <Marker>{},
+        markers: const <gmaps.Marker>{},
         locations: const <MapLocation>[],
         clearSelectedMarker: true,
       ),
@@ -25,9 +25,9 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     try {
       final List<MapLocation> locations = await _repository
           .fetchSampleLocations();
-      final MarkerId? firstMarkerId = locations.isEmpty
+      final gmaps.MarkerId? firstMarkerId = locations.isEmpty
           ? null
-          : MarkerId(locations.first.id);
+          : gmaps.MarkerId(locations.first.id);
       emit(
         state.copyWith(
           isLoading: false,
@@ -47,7 +47,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
         state.copyWith(
           isLoading: false,
           errorMessage: error.toString(),
-          markers: const <Marker>{},
+          markers: const <gmaps.Marker>{},
           locations: const <MapLocation>[],
           clearSelectedMarker: true,
         ),
@@ -56,9 +56,9 @@ class MapSampleCubit extends Cubit<MapSampleState> {
   }
 
   void toggleMapType() {
-    final MapType nextType = state.mapType == MapType.normal
-        ? MapType.hybrid
-        : MapType.normal;
+    final gmaps.MapType nextType = state.mapType == gmaps.MapType.normal
+        ? gmaps.MapType.hybrid
+        : gmaps.MapType.normal;
     emit(state.copyWith(mapType: nextType));
   }
 
@@ -66,7 +66,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     emit(state.copyWith(trafficEnabled: !state.trafficEnabled));
   }
 
-  void updateCameraPosition(CameraPosition position) {
+  void updateCameraPosition(gmaps.CameraPosition position) {
     emit(state.copyWith(cameraPosition: position));
   }
 
@@ -77,7 +77,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     if (location == null) {
       return;
     }
-    final MarkerId markerId = MarkerId(location.id);
+    final gmaps.MarkerId markerId = gmaps.MarkerId(location.id);
     emit(
       state.copyWith(
         selectedMarkerId: markerId,
@@ -89,10 +89,10 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     );
   }
 
-  CameraUpdate cameraUpdateForLocation(MapLocation location) {
-    return CameraUpdate.newCameraPosition(
-      CameraPosition(
-        target: LatLng(
+  gmaps.CameraUpdate cameraUpdateForLocation(MapLocation location) {
+    return gmaps.CameraUpdate.newCameraPosition(
+      gmaps.CameraPosition(
+        target: gmaps.LatLng(
           location.coordinate.latitude,
           location.coordinate.longitude,
         ),
@@ -102,30 +102,33 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     );
   }
 
-  CameraPosition? _resolveInitialCamera(List<MapLocation> locations) {
+  gmaps.CameraPosition? _resolveInitialCamera(List<MapLocation> locations) {
     if (locations.isEmpty) {
       return null;
     }
     final MapLocation first = locations.first;
-    return CameraPosition(
-      target: LatLng(first.coordinate.latitude, first.coordinate.longitude),
+    return gmaps.CameraPosition(
+      target: gmaps.LatLng(
+        first.coordinate.latitude,
+        first.coordinate.longitude,
+      ),
       zoom: 13.5,
     );
   }
 
-  Set<Marker> _buildMarkers({
+  Set<gmaps.Marker> _buildMarkers({
     required List<MapLocation> locations,
-    required MarkerId? selectedMarkerId,
+    required gmaps.MarkerId? selectedMarkerId,
   }) {
     return locations
         .map(
-          (MapLocation location) => Marker(
-            markerId: MarkerId(location.id),
-            position: LatLng(
+          (MapLocation location) => gmaps.Marker(
+            markerId: gmaps.MarkerId(location.id),
+            position: gmaps.LatLng(
               location.coordinate.latitude,
               location.coordinate.longitude,
             ),
-            infoWindow: InfoWindow(
+            infoWindow: gmaps.InfoWindow(
               title: location.title,
               snippet: location.description,
             ),

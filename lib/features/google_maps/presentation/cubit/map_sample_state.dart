@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 class MapSampleState extends Equatable {
   const MapSampleState({
@@ -17,12 +17,12 @@ class MapSampleState extends Equatable {
   factory MapSampleState.initial() => const MapSampleState(
     isLoading: true,
     errorMessage: null,
-    cameraPosition: CameraPosition(
-      target: LatLng(37.7955, -122.3937),
+    cameraPosition: gmaps.CameraPosition(
+      target: gmaps.LatLng(37.7955, -122.3937),
       zoom: 13,
     ),
-    markers: <Marker>{},
-    mapType: MapType.normal,
+    markers: <gmaps.Marker>{},
+    mapType: gmaps.MapType.normal,
     trafficEnabled: false,
     locations: <MapLocation>[],
     selectedMarkerId: null,
@@ -30,22 +30,22 @@ class MapSampleState extends Equatable {
 
   final bool isLoading;
   final String? errorMessage;
-  final CameraPosition cameraPosition;
-  final Set<Marker> markers;
-  final MapType mapType;
+  final gmaps.CameraPosition cameraPosition;
+  final Set<gmaps.Marker> markers;
+  final gmaps.MapType mapType;
   final bool trafficEnabled;
   final List<MapLocation> locations;
-  final MarkerId? selectedMarkerId;
+  final gmaps.MarkerId? selectedMarkerId;
 
   MapSampleState copyWith({
     bool? isLoading,
     String? errorMessage,
-    CameraPosition? cameraPosition,
-    Set<Marker>? markers,
-    MapType? mapType,
+    gmaps.CameraPosition? cameraPosition,
+    Set<gmaps.Marker>? markers,
+    gmaps.MapType? mapType,
     bool? trafficEnabled,
     List<MapLocation>? locations,
-    MarkerId? selectedMarkerId,
+    gmaps.MarkerId? selectedMarkerId,
     bool clearError = false,
     bool clearSelectedMarker = false,
   }) {
