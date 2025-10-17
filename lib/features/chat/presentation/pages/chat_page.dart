@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history_sheet.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_input_bar.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_message_list.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_model_selector.dart';
+import 'package:flutter_bloc_app/features/chat/chat.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});

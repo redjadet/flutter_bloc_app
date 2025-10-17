@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_cubit.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_state.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/presentation/widgets/graphql_country_card.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/graphql_demo.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
-import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 
 class GraphqlDemoPage extends StatelessWidget {
   const GraphqlDemoPage({super.key});
