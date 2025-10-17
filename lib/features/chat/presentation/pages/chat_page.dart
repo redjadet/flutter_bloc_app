@@ -8,7 +8,8 @@ import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_message
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_model_selector.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
-import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -31,7 +32,7 @@ class _ChatPageState extends State<ChatPage> {
   void _submit(BuildContext context) {
     final String text = _controller.text;
     _controller.clear();
-    context.read<ChatCubit>().sendMessage(text);
+    CubitHelpers.safeExecute<ChatCubit, ChatState>(context, (cubit) => cubit.sendMessage(text));
   }
 
   void _showHistorySheet(BuildContext context) {
@@ -87,31 +88,25 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
-        title: Text(l10n.chatPageTitle),
-        actions: <Widget>[
-          IconButton(
-            tooltip: l10n.chatHistoryShowTooltip,
-            onPressed: () => _showHistorySheet(context),
-            icon: const Icon(Icons.history),
-          ),
-          BlocBuilder<ChatCubit, ChatState>(
-            buildWhen: (previous, current) =>
-                previous.history.length != current.history.length,
-            builder: (context, state) {
-              return IconButton(
-                tooltip: l10n.chatHistoryClearAll,
-                onPressed: state.hasHistory
-                    ? () => _confirmAndClearHistory(context)
-                    : null,
-                icon: const Icon(Icons.delete_sweep_outlined),
-              );
-            },
-          ),
-        ],
-      ),
+    return CommonPageLayout(
+      title: l10n.chatPageTitle,
+      actions: <Widget>[
+        IconButton(
+          tooltip: l10n.chatHistoryShowTooltip,
+          onPressed: () => _showHistorySheet(context),
+          icon: const Icon(Icons.history),
+        ),
+        BlocBuilder<ChatCubit, ChatState>(
+          buildWhen: (previous, current) => previous.history.length != current.history.length,
+          builder: (context, state) {
+            return IconButton(
+              tooltip: l10n.chatHistoryClearAll,
+              onPressed: state.hasHistory ? () => _confirmAndClearHistory(context) : null,
+              icon: const Icon(Icons.delete_sweep_outlined),
+            );
+          },
+        ),
+      ],
       body: Column(
         children: <Widget>[
           Padding(

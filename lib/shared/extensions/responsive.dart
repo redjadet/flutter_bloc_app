@@ -27,6 +27,7 @@ extension ResponsiveContext on BuildContext {
   double _safeW(double v) => UI.isScreenUtilReady ? v.w : v;
   double _safeH(double v) => UI.isScreenUtilReady ? v.h : v;
   double _safeSp(double v) => UI.isScreenUtilReady ? v.sp : v;
+  double _safeR(double v) => UI.isScreenUtilReady ? v.r : v;
 
   // Responsive padding system
   double get pageHorizontalPadding {
@@ -78,4 +79,33 @@ extension ResponsiveContext on BuildContext {
   // Responsive spacing
   double get responsiveGap => isMobile ? _safeH(8) : _safeH(12);
   double get responsiveCardPadding => isMobile ? _safeW(16) : _safeW(20);
+
+  // Additional responsive utilities for specific use cases
+  double get responsiveButtonHeight => isMobile ? _safeH(48) : _safeH(56);
+  double get responsiveButtonPadding => isMobile ? _safeW(16) : _safeW(24);
+
+  // Responsive text styles
+  double get responsiveHeadlineSize => isMobile ? _safeSp(24) : _safeSp(32);
+  double get responsiveTitleSize => isMobile ? _safeSp(20) : _safeSp(24);
+  double get responsiveBodySize => isMobile ? _safeSp(14) : _safeSp(16);
+  double get responsiveCaptionSize => isMobile ? _safeSp(12) : _safeSp(14);
+
+  // Responsive margins and paddings
+  EdgeInsets get responsivePageMargin =>
+      EdgeInsets.symmetric(horizontal: pageHorizontalPadding, vertical: pageVerticalPadding);
+
+  EdgeInsets get responsiveCardMargin => EdgeInsets.all(isMobile ? _safeW(8) : _safeW(12));
+
+  EdgeInsets get responsiveListPadding => EdgeInsets.symmetric(
+    horizontal: pageHorizontalPadding,
+    vertical: isMobile ? _safeH(8) : _safeH(12),
+  );
+
+  // Responsive border radius
+  double get responsiveBorderRadius => isMobile ? _safeR(8) : _safeR(12);
+  double get responsiveCardRadius => isMobile ? _safeR(12) : _safeR(16);
+
+  // Responsive elevation
+  double get responsiveElevation => isMobile ? 2.0 : 4.0;
+  double get responsiveCardElevation => isMobile ? 1.0 : 2.0;
 }

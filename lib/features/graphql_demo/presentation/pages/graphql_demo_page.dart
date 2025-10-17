@@ -6,8 +6,9 @@ import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_state.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/widgets/graphql_country_card.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
 import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
-import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
 class GraphqlDemoPage extends StatelessWidget {
   const GraphqlDemoPage({super.key});
@@ -15,11 +16,8 @@ class GraphqlDemoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
-        title: Text(l10n.graphqlSampleTitle),
-      ),
+    return CommonPageLayout(
+      title: l10n.graphqlSampleTitle,
       body: BlocBuilder<GraphqlDemoCubit, GraphqlDemoState>(
         builder: (context, state) {
           final bool showProgressBar =
@@ -38,7 +36,12 @@ class GraphqlDemoPage extends StatelessWidget {
               ),
               Expanded(
                 child: RefreshIndicator(
-                  onRefresh: () => context.read<GraphqlDemoCubit>().refresh(),
+                  onRefresh: () async {
+                    CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
+                      context,
+                      (cubit) => cubit.refresh(),
+                    );
+                  },
                   child: _buildBody(context, state, l10n, theme),
                 ),
               ),
@@ -66,7 +69,10 @@ class GraphqlDemoPage extends StatelessWidget {
         isError: true,
         actions: [
           ElevatedButton(
-            onPressed: () => context.read<GraphqlDemoCubit>().loadInitial(),
+            onPressed: () => CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
+              context,
+              (cubit) => cubit.loadInitial(),
+            ),
             child: Text(l10n.graphqlSampleRetryButton),
           ),
         ],
@@ -155,7 +161,10 @@ class _FilterBar extends StatelessWidget {
               onChanged: state.isLoading
                   ? null
                   : (value) =>
-                        context.read<GraphqlDemoCubit>().selectContinent(value),
+                        CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
+                      context,
+                      (cubit) => cubit.selectContinent(value),
+                    ),
             ),
           ),
         ),
