@@ -67,10 +67,11 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
                 context,
                 error,
                 customMessage: localizedMessage,
-                onRetry: () => CubitHelpers.safeExecute<CounterCubit, CounterState>(
-                  context,
-                  (cubit) => cubit.clearError(),
-                ),
+                onRetry: () =>
+                    CubitHelpers.safeExecute<CounterCubit, CounterState>(
+                      context,
+                      (cubit) => cubit.clearError(),
+                    ),
               );
             }
           },

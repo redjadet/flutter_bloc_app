@@ -25,7 +25,10 @@ class _ChatPageState extends State<ChatPage> {
   void _submit(BuildContext context) {
     final String text = _controller.text;
     _controller.clear();
-    CubitHelpers.safeExecute<ChatCubit, ChatState>(context, (cubit) => cubit.sendMessage(text));
+    CubitHelpers.safeExecute<ChatCubit, ChatState>(
+      context,
+      (cubit) => cubit.sendMessage(text),
+    );
   }
 
   void _showHistorySheet(BuildContext context) {
@@ -90,11 +93,14 @@ class _ChatPageState extends State<ChatPage> {
           icon: const Icon(Icons.history),
         ),
         BlocBuilder<ChatCubit, ChatState>(
-          buildWhen: (previous, current) => previous.history.length != current.history.length,
+          buildWhen: (previous, current) =>
+              previous.history.length != current.history.length,
           builder: (context, state) {
             return IconButton(
               tooltip: l10n.chatHistoryClearAll,
-              onPressed: state.hasHistory ? () => _confirmAndClearHistory(context) : null,
+              onPressed: state.hasHistory
+                  ? () => _confirmAndClearHistory(context)
+                  : null,
               icon: const Icon(Icons.delete_sweep_outlined),
             );
           },

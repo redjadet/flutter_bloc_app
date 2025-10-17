@@ -17,7 +17,7 @@ class CommonLoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectiveColor = color ?? theme.colorScheme.primary;
+    final effectiveColor = color ?? theme.colorScheme.secondary;
 
     return Center(
       child: Column(
@@ -28,7 +28,7 @@ class CommonLoadingWidget extends StatelessWidget {
             height: size,
             child: CircularProgressIndicator(
               strokeWidth: 2.0,
-              valueColor: AlwaysStoppedAnimation<Color>(effectiveColor),
+              color: effectiveColor,
             ),
           ),
           if (message != null) ...[

@@ -91,10 +91,13 @@ extension ResponsiveContext on BuildContext {
   double get responsiveCaptionSize => isMobile ? _safeSp(12) : _safeSp(14);
 
   // Responsive margins and paddings
-  EdgeInsets get responsivePageMargin =>
-      EdgeInsets.symmetric(horizontal: pageHorizontalPadding, vertical: pageVerticalPadding);
+  EdgeInsets get responsivePageMargin => EdgeInsets.symmetric(
+    horizontal: pageHorizontalPadding,
+    vertical: pageVerticalPadding,
+  );
 
-  EdgeInsets get responsiveCardMargin => EdgeInsets.all(isMobile ? _safeW(8) : _safeW(12));
+  EdgeInsets get responsiveCardMargin =>
+      EdgeInsets.all(isMobile ? _safeW(8) : _safeW(12));
 
   EdgeInsets get responsiveListPadding => EdgeInsets.symmetric(
     horizontal: pageHorizontalPadding,

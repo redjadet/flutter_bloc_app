@@ -88,7 +88,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 
 ## Test Coverage
 
-- Latest line coverage: **82.64%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
+- Latest line coverage: **84.30%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
 - Test Infrastructure: Global test configuration with automatic log suppression during test execution for cleaner output.
 
 ## Tech Stack
@@ -599,7 +599,7 @@ Contributions are welcome—open an issue or PR with your proposed change. Make 
 
 ## Tooling
 
-- `flutter test coverage` to regenerate `coverage/lcov.info` file used to generate `coverage_summary.md` file
+- `flutter test coverage` to regenerate `coverage/lcov.info` file.
 - `dart run tool/update_coverage_summary.dart` – regenerate `coverage/coverage_summary.md` from `coverage/lcov.info`, excluding generated and localization files.
 - `dart run custom_lint` – run custom linting rules including file length enforcement.
 - `test/flutter_test_config.dart` – global test configuration that automatically suppresses logging during test execution for cleaner output.
