@@ -73,6 +73,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  apple_maps_flutter:
+    dependency: "direct main"
+    description:
+      name: apple_maps_flutter
+      sha256: "5874d4ce4932191d6d0ae78cae478e167e05e37efc2266cd7f91d9a95fabf1b3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   args:
     dependency: transitive
     description:

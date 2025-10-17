@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:meta/meta.dart';
 
 part 'chat_cubit_history_actions.dart';
 part 'chat_cubit_helpers.dart';
@@ -50,6 +51,12 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
 
   List<String> get models => _models;
   String get _currentModel => state.currentModel ?? _models.first;
+
+  @protected
+  ChatState get currentState => state;
+
+  @protected
+  void emitState(ChatState newState) => emit(newState);
 
   void clearError() {
     if (state.hasError) {

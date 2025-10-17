@@ -15,7 +15,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Charts: `fl_chart` Bitcoin price line chart backed by CoinGecko's public API (pinch-zoomable with graceful fallback).
 - GraphQL demo: Countries browser backed by the free `countries.trevorblades.com` GraphQL API, complete with continent filtering and localized labels.
 - WebSocket demo: Reusable Cubit + repository stack driving a public echo websocket with reconnect/error handling and localized UI.
-- Maps: Google Maps sample page showcasing curated San Francisco locations with traffic toggle, runtime map controls, and guard rails when API keys are missing (Android & iOS).
+- Maps: Google Maps sample page showcasing curated San Francisco locations with traffic toggle, runtime map controls, and guard rails when API keys are missing (Android & iOS, with native Apple Maps rendering on iOS when Google keys are unavailable).
 - Loading polish: `skeletonizer` placeholders, `fancy_shimmer_image` hero card, and dev-only loading delay to showcase the effects.
 - Logging: Centralized `AppLogger` built on top of the `logger` package.
 - Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES) with version/build surfaced on the Settings page.
@@ -45,7 +45,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Entry points: the counter app bar (`Open Google Maps demo` icon) and the Example page (`Open Google Maps demo` button), or navigate directly via `/google-maps`.
 - The page loads curated San Francisco landmarks from `SampleMapLocationRepository`, exposes map type & traffic toggles, and highlights the currently focused marker.
 - Android: provide an API key by adding `GOOGLE_MAPS_ANDROID_API_KEY=YOUR_KEY` to `android/local.properties` (or `gradle.properties`). The Gradle build feeds this into `AndroidManifest.xml` via a manifest placeholder; the default placeholder string is intentionally invalid.
-- iOS: set the `GMSApiKey` entry in `ios/Runner/Info.plist` (or override it per configuration in Xcode). The app only boots Google Maps when the value is non-empty and not the placeholder.
+- iOS: set the `GMSApiKey` entry in `ios/Runner/Info.plist` (or override it per configuration in Xcode). When the key is missing or still using the placeholder, the page automatically renders via Apple Maps (`apple_maps_flutter`) so MapKit-backed pins and camera controls remain available without Google credentials.
 - When keys are absent, the page shows a friendly warning card instead of instantiating the native map view (preventing simulator crashes).
 - Keep real API keys out of source control—store them in untracked files or CI secrets and inspect them before shipping.
 

@@ -1,6 +1,8 @@
 part of 'chat_cubit.dart';
 
 mixin _ChatCubitHelpers on _ChatCubitCore {
+  ChatState get _state => currentState;
+
   int _compareByUpdatedAt(ChatConversation a, ChatConversation b) =>
       b.updatedAt.compareTo(a.updatedAt);
 
@@ -13,10 +15,10 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
   }
 
   ChatConversation _ensureActiveConversation() {
-    final String? activeId = state.activeConversationId;
+    final String? activeId = _state.activeConversationId;
     if (activeId != null) {
       final ChatConversation? existing = _conversationById(
-        state.history,
+        _state.history,
         activeId,
       );
       if (existing != null) {
@@ -25,15 +27,15 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     }
 
     final ChatConversation conversation = _createEmptyConversation(
-      model: state.currentModel,
+      model: _state.currentModel,
     );
 
     final List<ChatConversation> history = conversation.hasContent
         ? _replaceConversation(conversation)
-        : state.history;
+        : _state.history;
 
-    emit(
-      state.copyWith(
+    emitState(
+      _state.copyWith(
         history: history,
         activeConversationId: conversation.id,
         messages: conversation.messages,
@@ -64,7 +66,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     List<ChatConversation>? history,
   }) {
     final List<ChatConversation> updated = List<ChatConversation>.from(
-      history ?? state.history,
+      history ?? _state.history,
     );
     final int index = updated.indexWhere(
       (ChatConversation c) => c.id == conversation.id,
