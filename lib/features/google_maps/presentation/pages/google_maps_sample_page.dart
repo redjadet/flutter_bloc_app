@@ -32,6 +32,7 @@ class GoogleMapsSamplePage extends StatefulWidget {
 class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
+  GoogleMapController? _mapControllerInstance;
   late final NativePlatformService _platformService;
   bool _hasRequiredApiKey = true;
   bool _isCheckingApiKey = false;
@@ -96,6 +97,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
         markers: state.markers,
         trafficEnabled: state.trafficEnabled,
         onMapCreated: (GoogleMapController controller) {
+          _mapControllerInstance = controller;
           if (!_mapController.isCompleted) {
             _mapController.complete(controller);
           }
@@ -134,15 +136,26 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
   }
 
   Future<void> _focusOnLocation(MapLocation location) async {
-    if (!_mapController.isCompleted) {
+    GoogleMapController? controller = _mapControllerInstance;
+    if (controller == null && !_mapController.isCompleted) {
       return;
     }
-    final GoogleMapController controller = await _mapController.future;
+    controller ??= await _mapController.future;
     if (!mounted) {
       return;
     }
     await controller.animateCamera(_cubit.cameraUpdateForLocation(location));
     _cubit.selectLocation(location.id);
+  }
+
+  @override
+  void dispose() {
+    final GoogleMapController? controller = _mapControllerInstance;
+    if (controller != null) {
+      controller.dispose();
+      _mapControllerInstance = null;
+    }
+    super.dispose();
   }
 
   bool get _isMapsSupported =>
