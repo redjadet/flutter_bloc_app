@@ -9,7 +9,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.da
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/shared_preferences_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
-import 'package:flutter_bloc_app/features/deeplink/data/uni_links_deep_link_service.dart';
+import 'package:flutter_bloc_app/features/deeplink/data/app_links_deep_link_service.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/countries_graphql_repository.dart';
@@ -56,7 +56,7 @@ void main() {
     expect(parser, isA<DeepLinkParser>());
 
     final DeepLinkService service = injector<DeepLinkService>();
-    expect(service, isA<UniLinksDeepLinkService>());
+    expect(service, isA<AppLinksDeepLinkService>());
   });
 
   test('ensureConfigured can be called after configureDependencies', () async {

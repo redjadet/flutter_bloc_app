@@ -22,7 +22,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Authentication: Firebase Auth with FirebaseUI (email/password, Google) plus anonymous “guest” sessions that can be upgraded in-place.
 - AI Chat: Conversational UI backed by Hugging Face Inference API (openai/gpt-oss).
 - Native integration: MethodChannel (`com.example.flutter_bloc_app/native`) returning sanitized device metadata with Kotlin/Swift handlers.
-- Universal links: Background-safe navigation via `DeepLinkCubit`, covering hosted HTTPS links (`https://links.flutterbloc.app/...`) and the fallback `flutter-bloc-app://` scheme for local development.
+- Universal links: Background-safe navigation via `DeepLinkCubit`, now powered by `AppLinksDeepLinkService` (backed by the `app_links` plugin). Supports the hosted `https://links.flutterbloc.app/...` routes (with `apple-app-site-association` in `docs/universal_links/`) and the local `flutter-bloc-app://` custom scheme when running on emulators.
 - Secrets: `SecretConfig` reads from secure storage first, then from any
   `--dart-define` values (persisted into secure storage), and only loads the
   optional dev asset when explicitly opted-in via
@@ -49,14 +49,15 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - When keys are absent, the page shows a friendly warning card instead of instantiating the native map view (preventing simulator crashes).
 - Keep real API keys out of source control—store them in untracked files or CI secrets and inspect them before shipping.
 
-## Universal Links
+## Deep Links & Universal Links
 
-- Universal link host: `https://links.flutterbloc.app`.
-- Supported paths: `/`, `/counter`, `/settings`, `/example`, `/chat`, `/websocket`, `/google-maps`, `/charts`, `/graphql-demo`, `/profile`.
-- Android auto-verification is enabled via an `intent-filter` (see `android/app/src/main/AndroidManifest.xml`). Supply your SHA-256 fingerprint inside `.well-known/assetlinks.json`.
-- iOS uses Associated Domains with `applinks:links.flutterbloc.app` configured in `Runner.entitlements`. Host the matching `apple-app-site-association` file.
-- Fallback scheme: `flutter-bloc-app://settings` (and other paths) is available when you cannot host HTTPS files during development.
-- See `docs/universal_links/` for the hosted file templates and validation steps.
+- Service stack: `DeepLinkCubit` listens to `AppLinksDeepLinkService`, a wrapper around the [`app_links`](https://pub.dev/packages/app_links) plugin. The service streams incoming URIs, provides the initial link on cold start, and gracefully disables itself when the platform channel is absent (e.g. widget tests).
+- Universal link host: `https://links.flutterbloc.app` serves as the canonical domain. We publish the required `apple-app-site-association` JSON and `assetlinks.json` under `docs/universal_links/`. Update both files with your bundle ID, team ID, and SHA-256 fingerprint if you fork the app.
+- Supported paths: `/`, `/counter`, `/settings`, `/example`, `/chat`, `/websocket`, `/google-maps`, `/charts`, `/graphql-demo`, `/profile`. Add or remove routes in both DeepLinkParser and the hosted association files when your navigation map changes.
+- Android setup: `android/app/src/main/AndroidManifest.xml` contains an `<intent-filter>` with `android:autoVerify="true"` pointing at the host. Regenerate the SHA-256 fingerprint (`./gradlew signingReport`) and mirror it in the hosted `assetlinks.json` when rebranding.
+- iOS setup: Associated Domains (`applinks:links.flutterbloc.app`) are enabled in `Runner.entitlements`. Ensure the hosted `apple-app-site-association` file lists every path you need; Xcode will only treat the domain as verified when that content is reachable over HTTPS without redirects.
+- Custom scheme fallback: During local development—or when hosting isn’t yet configured—the same deep link cubit accepts the `flutter-bloc-app://` scheme so QA can test routing without the universal link prerequisites.
+- Testing: Because `AppLinks` can throw `MissingPluginException` under test, the service caches that state and returns empty streams so widget/unit tests keep running without native plumbing.
 
 ### Getting a Google Maps API key
 
@@ -167,7 +168,7 @@ flowchart LR
     EchoWebsocketRepository
     SampleMapLocationRepository
     RemoteConfigRepository
-    UniLinksDeepLinkService
+    AppLinksDeepLinkService
     PackageInfoAppInfoRepository
   end
 

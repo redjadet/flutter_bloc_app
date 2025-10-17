@@ -1,17 +1,17 @@
 import 'dart:async';
 
+import 'package:app_links/app_links.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:meta/meta.dart';
-import 'package:uni_links/uni_links.dart' as uni_links;
 
-/// Deep link service backed by the `uni_links` plugin.
-class UniLinksDeepLinkService implements DeepLinkService {
-  const UniLinksDeepLinkService({UniLinksApi? api})
-    : _api = api ?? const DefaultUniLinksApi();
+/// Deep link service backed by the `app_links` plugin.
+class AppLinksDeepLinkService implements DeepLinkService {
+  AppLinksDeepLinkService({AppLinksApi? api})
+    : _api = api ?? DefaultAppLinksApi();
 
-  final UniLinksApi _api;
+  final AppLinksApi _api;
   static bool _pluginAvailable = true;
 
   @override
@@ -86,18 +86,20 @@ class UniLinksDeepLinkService implements DeepLinkService {
   }
 }
 
-/// Abstraction over the `uni_links` plugin to ease testing.
-abstract class UniLinksApi {
+/// Abstraction over the `app_links` plugin to ease testing.
+abstract class AppLinksApi {
   Stream<Uri?> get uriLinkStream;
   Future<Uri?> getInitialUri();
 }
 
-class DefaultUniLinksApi implements UniLinksApi {
-  const DefaultUniLinksApi();
+class DefaultAppLinksApi implements AppLinksApi {
+  DefaultAppLinksApi() : _appLinks = AppLinks();
+
+  final AppLinks _appLinks;
 
   @override
-  Stream<Uri?> get uriLinkStream => uni_links.uriLinkStream;
+  Stream<Uri?> get uriLinkStream => _appLinks.uriLinkStream;
 
   @override
-  Future<Uri?> getInitialUri() => uni_links.getInitialUri();
+  Future<Uri?> getInitialUri() => _appLinks.getInitialLink();
 }
