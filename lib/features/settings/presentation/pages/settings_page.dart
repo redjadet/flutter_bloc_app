@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
-import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
-import 'package:flutter_bloc_app/features/settings/presentation/cubits/app_info_cubit.dart';
-import 'package:flutter_bloc_app/features/settings/presentation/widgets/account_section.dart';
-import 'package:flutter_bloc_app/features/settings/presentation/widgets/app_info_section.dart';
-import 'package:flutter_bloc_app/features/settings/presentation/widgets/language_section.dart';
-import 'package:flutter_bloc_app/features/settings/presentation/widgets/theme_section.dart';
+import 'package:flutter_bloc_app/features/settings/settings.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
-import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});

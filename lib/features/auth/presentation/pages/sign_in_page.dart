@@ -5,10 +5,7 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'
     as firebase_ui_google;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
-import 'package:flutter_bloc_app/features/auth/presentation/helpers/auth_error_message.dart';
-import 'package:flutter_bloc_app/features/auth/presentation/helpers/google_provider_helper.dart';
-import 'package:flutter_bloc_app/features/auth/presentation/helpers/provider_builder.dart';
-import 'package:flutter_bloc_app/features/auth/presentation/widgets/fallback_sign_in_content.dart';
+import 'package:flutter_bloc_app/features/auth/auth.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
