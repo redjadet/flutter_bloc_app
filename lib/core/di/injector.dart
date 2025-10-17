@@ -14,7 +14,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/realtime_database_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/shared_preferences_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
-import 'package:flutter_bloc_app/features/deeplink/data/uni_links_deep_link_service.dart';
+import 'package:flutter_bloc_app/features/deeplink/data/app_links_deep_link_service.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
 import 'package:flutter_bloc_app/features/google_maps/data/sample_map_location_repository.dart';
@@ -83,7 +83,7 @@ Future<void> configureDependencies() async {
   );
   _registerLazySingletonIfAbsent<DeepLinkParser>(() => const DeepLinkParser());
   _registerLazySingletonIfAbsent<DeepLinkService>(
-    () => const UniLinksDeepLinkService(),
+    () => AppLinksDeepLinkService(),
   );
   _registerLazySingletonIfAbsent<AppInfoRepository>(
     () => const PackageInfoAppInfoRepository(),

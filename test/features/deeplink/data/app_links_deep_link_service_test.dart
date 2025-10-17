@@ -1,16 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc_app/features/deeplink/data/uni_links_deep_link_service.dart';
+import 'package:flutter_bloc_app/features/deeplink/data/app_links_deep_link_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  setUp(UniLinksDeepLinkService.debugResetPluginAvailability);
+  setUp(AppLinksDeepLinkService.debugResetPluginAvailability);
 
   test('linkStream emits URIs provided by the API stream', () async {
     final StreamController<Uri?> controller = StreamController<Uri?>();
-    final FakeUniLinksApi api = FakeUniLinksApi(uriStream: controller.stream);
-    final UniLinksDeepLinkService service = UniLinksDeepLinkService(api: api);
+    final FakeAppLinksApi api = FakeAppLinksApi(uriStream: controller.stream);
+    final AppLinksDeepLinkService service = AppLinksDeepLinkService(api: api);
 
     final Uri expected = Uri.parse('app://example/path');
     final Future<Uri> resultFuture = service.linkStream().first;
@@ -25,8 +25,8 @@ void main() {
     'linkStream disables plugin usage after MissingPluginException from stream',
     () async {
       final StreamController<Uri?> controller = StreamController<Uri?>();
-      final FakeUniLinksApi api = FakeUniLinksApi(uriStream: controller.stream);
-      final UniLinksDeepLinkService service = UniLinksDeepLinkService(api: api);
+      final FakeAppLinksApi api = FakeAppLinksApi(uriStream: controller.stream);
+      final AppLinksDeepLinkService service = AppLinksDeepLinkService(api: api);
 
       bool isDone = false;
       service.linkStream().listen(
@@ -48,8 +48,8 @@ void main() {
 
   test('getInitialLink delegates to the API', () async {
     final Uri initial = Uri.parse('app://initial');
-    final FakeUniLinksApi api = FakeUniLinksApi(initialUri: initial);
-    final UniLinksDeepLinkService service = UniLinksDeepLinkService(api: api);
+    final FakeAppLinksApi api = FakeAppLinksApi(initialUri: initial);
+    final AppLinksDeepLinkService service = AppLinksDeepLinkService(api: api);
 
     expect(await service.getInitialLink(), initial);
   });
@@ -57,10 +57,10 @@ void main() {
   test(
     'getInitialLink caches MissingPluginException and returns null',
     () async {
-      final FakeUniLinksApi api = FakeUniLinksApi(
+      final FakeAppLinksApi api = FakeAppLinksApi(
         initialUriError: MissingPluginException(),
       );
-      final UniLinksDeepLinkService service = UniLinksDeepLinkService(api: api);
+      final AppLinksDeepLinkService service = AppLinksDeepLinkService(api: api);
 
       expect(await service.getInitialLink(), isNull);
       expect(await service.linkStream().isEmpty, isTrue);
@@ -68,8 +68,8 @@ void main() {
   );
 }
 
-class FakeUniLinksApi implements UniLinksApi {
-  FakeUniLinksApi({
+class FakeAppLinksApi implements AppLinksApi {
+  FakeAppLinksApi({
     Stream<Uri?>? uriStream,
     this.initialUri,
     this.initialUriError,

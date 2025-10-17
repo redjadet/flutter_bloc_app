@@ -28,25 +28,35 @@ class DeepLinkCubit extends Cubit<DeepLinkState> {
     }
     _initialized = true;
 
+    AppLogger.info('Initializing deep link cubit');
+
     final Uri? initialUri = await _service.getInitialLink();
     if (initialUri != null) {
+      AppLogger.info('Found initial URI: $initialUri');
       _handleUri(initialUri, DeepLinkOrigin.initial);
     }
 
     _subscription = _service.linkStream().listen(
-      (Uri uri) => _handleUri(uri, DeepLinkOrigin.resumed),
+      (Uri uri) {
+        AppLogger.info('Received deep link from stream: $uri');
+        _handleUri(uri, DeepLinkOrigin.resumed);
+      },
       onError: (Object error, StackTrace stackTrace) {
         AppLogger.error('Deep link stream error', error, stackTrace);
       },
     );
+
+    AppLogger.info('Deep link cubit initialized successfully');
   }
 
   void _handleUri(Uri uri, DeepLinkOrigin origin) {
+    AppLogger.info('Deep link received: $uri (origin: $origin)');
     final target = _parser.parse(uri);
     if (target == null) {
       AppLogger.warning('Unsupported deep link: $uri');
       return;
     }
+    AppLogger.info('Deep link parsed to target: ${target.location}');
     emit(DeepLinkNavigate(target, origin));
     emit(const DeepLinkIdle());
   }

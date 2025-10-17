@@ -1,4 +1,4 @@
-export 'data/uni_links_deep_link_service.dart';
+export 'data/app_links_deep_link_service.dart';
 export 'domain/deep_link_config.dart';
 export 'domain/deep_link_parser.dart';
 export 'domain/deep_link_service.dart';

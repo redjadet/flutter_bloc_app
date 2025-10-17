@@ -2,6 +2,7 @@ import Flutter
 import GoogleMaps
 import UIKit
 import Firebase
+import app_links
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -34,6 +35,10 @@ import Firebase
       #if DEBUG
         NSLog("ℹ️ FirebaseApp already configured; skipping duplicate configure call.")
       #endif
+    }
+
+    if let initialUrl = AppLinks.shared.getLink(launchOptions: launchOptions) {
+      AppLinks.shared.handleLink(url: initialUrl)
     }
 
     if let registrar = registrar(forPlugin: "AppDelegateMethodChannel") {
@@ -77,5 +82,30 @@ import Firebase
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
-  // UniLinksPlugin is registered via addApplicationDelegate; no manual forwarding needed.
+  override func application(
+    _ application: UIApplication,
+    open url: URL,
+    options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+  ) -> Bool {
+    // Handle deep links when app is in background or foreground
+    AppLinks.shared.handleLink(url: url)
+    return super.application(application, open: url, options: options)
+  }
+
+  override func application(
+    _ application: UIApplication,
+    continue userActivity: NSUserActivity,
+    restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+  ) -> Bool {
+    if let url = userActivity.webpageURL {
+      AppLinks.shared.handleLink(url: url)
+    }
+    return super.application(
+      application,
+      continue: userActivity,
+      restorationHandler: restorationHandler
+    )
+  }
+
+  // AppLinksPlugin registers via addApplicationDelegate; no manual forwarding needed.
 }

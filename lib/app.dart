@@ -124,7 +124,19 @@ class _MyAppState extends State<MyApp> {
         final bool loggedIn = auth.currentUser != null;
         final bool loggingIn = state.matchedLocation == AppRoutes.authPath;
 
+        // Allow deep link navigation to proceed without redirect
+        // This ensures deep links work even when user is not authenticated
+        final String currentLocation = state.matchedLocation;
+        final bool isDeepLinkNavigation =
+            currentLocation != AppRoutes.counterPath &&
+            currentLocation != AppRoutes.authPath &&
+            currentLocation != '/';
+
         if (!loggedIn) {
+          // If it's a deep link navigation, allow it to proceed
+          if (isDeepLinkNavigation) {
+            return null; // Allow navigation to proceed
+          }
           return loggingIn ? null : AppRoutes.authPath;
         }
         if (loggingIn) {
