@@ -15,6 +15,8 @@ import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
+import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/widgets/flavor_badge.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -72,13 +74,15 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
             final error = state.error;
             if (error != null) {
               final String localizedMessage = counterErrorMessage(l10n, error);
-              unawaited(
-                _errorNotificationService.showSnackBar(
+              ErrorHandling.handleCubitError(
+                context,
+                error,
+                customMessage: localizedMessage,
+                onRetry: () => CubitHelpers.safeExecute<CounterCubit, CounterState>(
                   context,
-                  localizedMessage,
+                  (cubit) => cubit.clearError(),
                 ),
               );
-              context.read<CounterCubit>().clearError();
             }
           },
         ),
