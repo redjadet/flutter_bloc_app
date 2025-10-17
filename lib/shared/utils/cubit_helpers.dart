@@ -37,7 +37,9 @@ class CubitHelpers {
   }
 
   /// Check if a Cubit is available in the widget tree
-  static bool isCubitAvailable<T extends StateStreamable<S>, S>(BuildContext context) {
+  static bool isCubitAvailable<T extends StateStreamable<S>, S>(
+    BuildContext context,
+  ) {
     try {
       context.read<T>();
       return true;
@@ -48,7 +50,9 @@ class CubitHelpers {
 
   /// Get the current state of a Cubit safely
   /// Returns null if Cubit is not found
-  static S? getCurrentState<T extends StateStreamable<S>, S>(BuildContext context) {
+  static S? getCurrentState<T extends StateStreamable<S>, S>(
+    BuildContext context,
+  ) {
     try {
       final T cubit = context.read<T>();
       return cubit.state;
@@ -56,5 +60,15 @@ class CubitHelpers {
       debugPrint('Failed to get state from Cubit $T: $e');
       return null;
     }
+  }
+}
+
+/// Utility extension for common Cubit operations on [BuildContext].
+extension CubitContextHelpers on BuildContext {
+  /// A convenient way to access a Cubit of type [T] from the widget tree.
+  ///
+  /// This is a shorthand for `BlocProvider.of<T>(this)`.
+  T readCubit<T extends Cubit<dynamic>>() {
+    return read<T>();
   }
 }

@@ -31,10 +31,10 @@ class GraphqlDemoPage extends StatelessWidget {
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: () async {
-                    CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
-                      context,
-                      (cubit) => cubit.refresh(),
-                    );
+                    CubitHelpers.safeExecute<
+                      GraphqlDemoCubit,
+                      GraphqlDemoState
+                    >(context, (cubit) => cubit.refresh());
                   },
                   child: _buildBody(context, state, l10n, theme),
                 ),
@@ -63,10 +63,11 @@ class GraphqlDemoPage extends StatelessWidget {
         isError: true,
         actions: [
           ElevatedButton(
-            onPressed: () => CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
-              context,
-              (cubit) => cubit.loadInitial(),
-            ),
+            onPressed: () =>
+                CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
+                  context,
+                  (cubit) => cubit.loadInitial(),
+                ),
             child: Text(l10n.graphqlSampleRetryButton),
           ),
         ],
@@ -155,10 +156,10 @@ class _FilterBar extends StatelessWidget {
               onChanged: state.isLoading
                   ? null
                   : (value) =>
-                        CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
-                      context,
-                      (cubit) => cubit.selectContinent(value),
-                    ),
+                        CubitHelpers.safeExecute<
+                          GraphqlDemoCubit,
+                          GraphqlDemoState
+                        >(context, (cubit) => cubit.selectContinent(value)),
             ),
           ),
         ),

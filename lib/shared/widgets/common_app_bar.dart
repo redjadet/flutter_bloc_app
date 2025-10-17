@@ -21,6 +21,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     final String effectiveHomeTooltip = homeTooltip ?? l10n.homeTitle;
 
     return AppBar(
@@ -28,6 +29,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
           ? RootAwareBackButton(homeTooltip: effectiveHomeTooltip)
           : null,
       automaticallyImplyLeading: automaticallyImplyLeading,
+      backgroundColor: theme.appBarTheme.backgroundColor,
+      foregroundColor: theme.appBarTheme.foregroundColor,
       title: Text(title),
       actions: actions,
     );
