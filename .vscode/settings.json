@@ -115,6 +115,7 @@
     "preferences",
     "pubspec",
     "sqflite",
+    "Streamable",
     "Türkçe"
   ]
 }

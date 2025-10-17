@@ -6,18 +6,29 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // ignore: unused_import
 import 'package:responsive_framework/responsive_framework.dart';
 
+/// Extension providing responsive utilities and breakpoint helpers
 extension ResponsiveContext on BuildContext {
+  // Private getters for consistent access
   double get _width => MediaQuery.sizeOf(this).width;
+
+  // Device type detection
   bool get isMobile => _width < AppConstants.mobileBreakpoint;
   bool get isTabletOrLarger => _width >= AppConstants.mobileBreakpoint;
   bool get isDesktop => _width >= AppConstants.tabletBreakpoint;
   bool get isPortrait => MediaQuery.orientationOf(this) == Orientation.portrait;
+  bool get isLandscape => !isPortrait;
+
+  // Safe area helpers
   double get bottomInset => MediaQuery.viewPaddingOf(this).bottom;
+  double get topInset => MediaQuery.viewPaddingOf(this).top;
+  EdgeInsets get safeAreaInsets => MediaQuery.viewPaddingOf(this);
 
+  // Safe ScreenUtil adapters with fallbacks
   double _safeW(double v) => UI.isScreenUtilReady ? v.w : v;
-
   double _safeH(double v) => UI.isScreenUtilReady ? v.h : v;
+  double _safeSp(double v) => UI.isScreenUtilReady ? v.sp : v;
 
+  // Responsive padding system
   double get pageHorizontalPadding {
     if (isDesktop) return _safeW(32);
     if (isTabletOrLarger) return _safeW(24);
@@ -29,6 +40,7 @@ extension ResponsiveContext on BuildContext {
     return _safeH(12);
   }
 
+  // Content width constraints
   double get contentMaxWidth {
     if (isDesktop) return _safeW(840);
     if (isTabletOrLarger) return _safeW(720);
@@ -41,6 +53,7 @@ extension ResponsiveContext on BuildContext {
     return double.infinity;
   }
 
+  // Complete page padding with safe area considerations
   EdgeInsets get pagePadding {
     final double extraBottom = isMobile && isPortrait ? _safeH(72) : 0;
     return EdgeInsets.fromLTRB(
@@ -50,4 +63,19 @@ extension ResponsiveContext on BuildContext {
       pageVerticalPadding + bottomInset + extraBottom,
     );
   }
+
+  // Additional responsive utilities
+  double get responsiveFontSize => isMobile ? _safeSp(14) : _safeSp(16);
+  double get responsiveIconSize => isMobile ? _safeSp(20) : _safeSp(24);
+
+  // Grid columns based on screen size
+  int get gridColumns {
+    if (isDesktop) return 4;
+    if (isTabletOrLarger) return 3;
+    return 2;
+  }
+
+  // Responsive spacing
+  double get responsiveGap => isMobile ? _safeH(8) : _safeH(12);
+  double get responsiveCardPadding => isMobile ? _safeW(16) : _safeW(20);
 }
