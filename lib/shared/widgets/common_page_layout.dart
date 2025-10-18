@@ -18,6 +18,7 @@ class CommonPageLayout extends StatelessWidget {
     this.endDrawer,
     this.onWillPop,
     this.automaticallyImplyLeading = true,
+    this.useResponsiveBody = true,
   });
 
   final String title;
@@ -31,9 +32,15 @@ class CommonPageLayout extends StatelessWidget {
   final bool Function()? onWillPop;
   final bool automaticallyImplyLeading;
 
+  /// Whether to wrap [body] with the shared responsive padding/constraints.
+  final bool useResponsiveBody;
+
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
+    final Widget content = useResponsiveBody
+        ? _ResponsiveBody(child: body)
+        : body;
 
     return PopScope(
       canPop: onWillPop?.call() ?? true,
@@ -46,7 +53,7 @@ class CommonPageLayout extends StatelessWidget {
           title: Text(title),
           actions: actions,
         ),
-        body: _ResponsiveBody(child: body),
+        body: content,
         floatingActionButton: floatingActionButton,
         bottomNavigationBar: bottomNavigationBar,
         persistentFooterButtons: persistentFooterButtons,

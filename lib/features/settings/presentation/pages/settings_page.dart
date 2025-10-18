@@ -24,42 +24,25 @@ class _SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
-        title: Text(l10n.settingsPageTitle),
-      ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final EdgeInsets padding = EdgeInsets.symmetric(
-            horizontal: context.pageHorizontalPadding,
-            vertical: context.pageVerticalPadding,
-          );
-          return Align(
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: context.contentMaxWidth),
-              child: ListView(
-                key: const ValueKey('settings-list'),
-                padding: padding,
-                children: <Widget>[
-                  const AccountSection(),
-                  SizedBox(height: UI.gapL),
-                  const ThemeSection(),
-                  SizedBox(height: UI.gapL),
-                  const LanguageSection(),
-                  SizedBox(height: UI.gapL),
-                  const AppInfoSection(),
-                  SizedBox(height: UI.gapL),
-                  TextButton(
-                    onPressed: () => throw Exception(),
-                    child: const Text('Throw Test Exception'),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+    return CommonPageLayout(
+      title: l10n.settingsPageTitle,
+      body: ListView(
+        key: const ValueKey('settings-list'),
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          const AccountSection(),
+          SizedBox(height: UI.gapL),
+          const ThemeSection(),
+          SizedBox(height: UI.gapL),
+          const LanguageSection(),
+          SizedBox(height: UI.gapL),
+          const AppInfoSection(),
+          SizedBox(height: UI.gapL),
+          TextButton(
+            onPressed: () => throw Exception(),
+            child: const Text('Throw Test Exception'),
+          ),
+        ],
       ),
     );
   }
