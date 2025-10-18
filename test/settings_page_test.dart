@@ -127,6 +127,63 @@ void main() {
       expect(find.text('1.2.3'), findsOneWidget);
       expect(find.text('42'), findsOneWidget);
     });
+
+    testWidgets('surfaces app info load errors and retries successfully', (
+      WidgetTester tester,
+    ) async {
+      final _InMemoryThemeRepository themeRepo = _InMemoryThemeRepository();
+      final ThemeCubit themeCubit = createThemeCubit(themeRepo);
+      final _InMemoryLocaleRepository localeRepo = _InMemoryLocaleRepository();
+      final LocaleCubit localeCubit = createLocaleCubit(localeRepo);
+      final _FlakyAppInfoRepository appInfoRepo = _FlakyAppInfoRepository();
+
+      getIt.unregister<AppInfoRepository>();
+      getIt.registerSingleton<AppInfoRepository>(appInfoRepo);
+
+      final AppLocalizationsEn en = AppLocalizationsEn();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: MultiBlocProvider(
+            providers: [
+              BlocProvider<ThemeCubit>.value(value: themeCubit),
+              BlocProvider<LocaleCubit>.value(value: localeCubit),
+            ],
+            child: const SettingsPage(),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pump(const Duration(milliseconds: 400));
+
+      await tester.scrollUntilVisible(
+        find.text(en.appInfoSectionTitle),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pump();
+
+      expect(find.text(en.appInfoLoadErrorLabel), findsOneWidget);
+      expect(find.text('Exception: Boom 1'), findsOneWidget);
+
+      appInfoRepo.shouldFail = false;
+
+      await tester.tap(find.text(en.appInfoRetryButtonLabel));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(find.text(en.appInfoVersionLabel), findsOneWidget);
+      expect(find.text('9.9.9'), findsOneWidget);
+      expect(appInfoRepo.loadCount, 2);
+    });
   });
 }
 
@@ -158,4 +215,18 @@ class _InMemoryAppInfoRepository implements AppInfoRepository {
   @override
   Future<AppInfo> load() async =>
       const AppInfo(version: '1.2.3', buildNumber: '42');
+}
+
+class _FlakyAppInfoRepository implements AppInfoRepository {
+  int loadCount = 0;
+  bool shouldFail = true;
+
+  @override
+  Future<AppInfo> load() async {
+    loadCount += 1;
+    if (shouldFail) {
+      throw Exception('Boom $loadCount');
+    }
+    return const AppInfo(version: '9.9.9', buildNumber: '77');
+  }
 }

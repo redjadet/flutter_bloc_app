@@ -96,4 +96,58 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('ExamplePage handles missing plugin error', (
+    WidgetTester tester,
+  ) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (MethodCall call) async {
+          throw MissingPluginException('missing');
+        });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('en'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const ExamplePage(),
+      ),
+    );
+
+    await tester.tap(find.text(AppLocalizationsEn().exampleNativeInfoButton));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(
+      find.text(AppLocalizationsEn().exampleNativeInfoError),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('ExamplePage shows generic error when native info fails', (
+    WidgetTester tester,
+  ) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (MethodCall call) async {
+          throw Exception('unexpected');
+        });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('en'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const ExamplePage(),
+      ),
+    );
+
+    await tester.tap(find.text(AppLocalizationsEn().exampleNativeInfoButton));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(
+      find.text(AppLocalizationsEn().exampleNativeInfoError),
+      findsOneWidget,
+    );
+  });
 }

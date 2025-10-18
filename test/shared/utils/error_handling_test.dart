@@ -212,5 +212,148 @@ void main() {
       expect(find.text(errorMessage), findsOneWidget);
       expect(find.byType(SnackBar), findsOneWidget);
     });
+
+    testWidgets('showSuccessSnackBar shows green snackbar', (tester) async {
+      const successMessage = 'Operation succeeded';
+      late BuildContext context;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (builderContext) {
+                context = builderContext;
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ),
+      );
+
+      ErrorHandling.showSuccessSnackBar(context, successMessage);
+      await tester.pump();
+
+      final SnackBar snackBar = tester.widget(find.byType(SnackBar));
+      expect(snackBar.backgroundColor, Colors.green);
+      expect(find.text(successMessage), findsOneWidget);
+    });
+
+    testWidgets('handleCubitError maps network error message', (
+      WidgetTester tester,
+    ) async {
+      late BuildContext context;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (builderContext) {
+                context = builderContext;
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ),
+      );
+
+      ErrorHandling.handleCubitError(context, Exception('Network failure'));
+      await tester.pump();
+
+      expect(find.textContaining('Network connection error'), findsOneWidget);
+    });
+
+    testWidgets('handleCubitError supports retry action', (
+      WidgetTester tester,
+    ) async {
+      late BuildContext context;
+      bool retried = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (builderContext) {
+                context = builderContext;
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ),
+      );
+
+      ErrorHandling.handleCubitError(
+        context,
+        Exception('timeout'),
+        customMessage: 'Custom message',
+        onRetry: () => retried = true,
+      );
+      await tester.pump();
+
+      expect(find.text('Custom message'), findsOneWidget);
+      final SnackBar snackBar = tester.widget(find.byType(SnackBar));
+      final SnackBarAction? action = snackBar.action;
+      expect(action, isNotNull);
+      expect(action!.label, 'Retry');
+
+      action.onPressed();
+      expect(retried, isTrue);
+    });
+
+    testWidgets('clearSnackBars removes active snackbars', (
+      WidgetTester tester,
+    ) async {
+      late BuildContext context;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (builderContext) {
+                context = builderContext;
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ),
+      );
+
+      ErrorHandling.showErrorSnackBar(context, 'Error');
+      await tester.pump();
+      expect(find.byType(SnackBar), findsOneWidget);
+
+      ErrorHandling.clearSnackBars(context);
+      await tester.pump();
+      expect(find.byType(SnackBar), findsNothing);
+    });
+
+    testWidgets('showLoadingDialog and hideLoadingDialog toggle dialog', (
+      WidgetTester tester,
+    ) async {
+      late BuildContext context;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (builderContext) {
+                context = builderContext;
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ),
+      );
+
+      ErrorHandling.showLoadingDialog(context, 'Loading...');
+      await tester.pump();
+
+      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(find.text('Loading...'), findsOneWidget);
+
+      ErrorHandling.hideLoadingDialog(context);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlertDialog), findsNothing);
+    });
   });
 }
