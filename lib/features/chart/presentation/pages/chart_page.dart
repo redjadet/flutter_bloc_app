@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chart/chart.dart';
 import 'package:flutter_bloc_app/features/chart/data/delayed_chart_repository.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:intl/intl.dart';
 
 class ChartPage extends StatefulWidget {
@@ -38,11 +38,8 @@ class _ChartPageState extends State<ChartPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
-        title: Text(l10n.chartPageTitle),
-      ),
+    return CommonPageLayout(
+      title: l10n.chartPageTitle,
       body: RefreshIndicator(
         onRefresh: _handleRefresh,
         child: FutureBuilder<List<ChartPoint>>(

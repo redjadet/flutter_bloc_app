@@ -6,9 +6,7 @@ import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_page_body.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
-import 'package:flutter_bloc_app/shared/utils/isolate_samples.dart';
-import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:go_router/go_router.dart';
 
 /// Simple example page used to demonstrate GoRouter navigation
@@ -134,22 +132,14 @@ class _ExamplePageState extends State<ExamplePage> {
     final l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
-    return Scaffold(
-      appBar: AppBar(
-        leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
-        title: Text(l10n.examplePageTitle),
-      ),
+    return CommonPageLayout(
+      title: l10n.examplePageTitle,
+      useResponsiveBody: false,
       body: ExamplePageBody(
         l10n: l10n,
         theme: theme,
         colors: colors,
-        onBackPressed: () {
-          if (Navigator.of(context).canPop()) {
-            context.pop();
-          } else {
-            context.goNamed(AppRoutes.counter);
-          }
-        },
+        onBackPressed: () => NavigationUtils.popOrGoHome(context),
         onLoadPlatformInfo: _isFetchingInfo
             ? null
             : () => _loadPlatformInfo(context),

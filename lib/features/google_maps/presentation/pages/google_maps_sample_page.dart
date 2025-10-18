@@ -12,8 +12,7 @@ import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/googl
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/google_maps_messages.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_sample_map_view.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
-import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 class GoogleMapsSamplePage extends StatefulWidget {
@@ -48,45 +47,45 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
-        title: Text(l10n.googleMapsPageTitle),
-      ),
-      body: !_isMapsSupported
-          ? GoogleMapsUnsupportedMessage(
-              message: l10n.googleMapsPageUnsupportedDescription,
-            )
-          : (!_useAppleMaps && _isCheckingApiKey)
-          ? const Center(child: CircularProgressIndicator())
-          : (!_useAppleMaps && !_hasRequiredApiKey)
-          ? GoogleMapsMissingKeyMessage(
-              title: l10n.googleMapsPageMissingKeyTitle,
-              description: l10n.googleMapsPageMissingKeyDescription,
-            )
-          : BlocBuilder<MapSampleCubit, MapSampleState>(
-              builder: (BuildContext context, MapSampleState state) {
-                if (state.isLoading && state.markers.isEmpty) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (state.hasError) {
-                  return GoogleMapsErrorMessage(
-                    message:
-                        state.errorMessage ?? l10n.googleMapsPageGenericError,
-                  );
-                }
-                return GoogleMapsContentLayout(
-                  map: MapSampleMapView(
-                    state: state,
-                    cubit: _cubit,
-                    useAppleMaps: _useAppleMaps,
-                    controller: _mapViewController,
-                  ),
-                  controls: _buildControls(context, state),
-                  locations: _buildLocationList(context, state),
+    final Widget body = !_isMapsSupported
+        ? GoogleMapsUnsupportedMessage(
+            message: l10n.googleMapsPageUnsupportedDescription,
+          )
+        : (!_useAppleMaps && _isCheckingApiKey)
+        ? const Center(child: CircularProgressIndicator())
+        : (!_useAppleMaps && !_hasRequiredApiKey)
+        ? GoogleMapsMissingKeyMessage(
+            title: l10n.googleMapsPageMissingKeyTitle,
+            description: l10n.googleMapsPageMissingKeyDescription,
+          )
+        : BlocBuilder<MapSampleCubit, MapSampleState>(
+            builder: (BuildContext context, MapSampleState state) {
+              if (state.isLoading && state.markers.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (state.hasError) {
+                return GoogleMapsErrorMessage(
+                  message:
+                      state.errorMessage ?? l10n.googleMapsPageGenericError,
                 );
-              },
-            ),
+              }
+              return GoogleMapsContentLayout(
+                map: MapSampleMapView(
+                  state: state,
+                  cubit: _cubit,
+                  useAppleMaps: _useAppleMaps,
+                  controller: _mapViewController,
+                ),
+                controls: _buildControls(context, state),
+                locations: _buildLocationList(context, state),
+              );
+            },
+          );
+
+    return CommonPageLayout(
+      title: l10n.googleMapsPageTitle,
+      useResponsiveBody: false,
+      body: body,
     );
   }
 

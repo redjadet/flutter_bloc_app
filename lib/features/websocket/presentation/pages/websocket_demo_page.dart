@@ -6,8 +6,7 @@ import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket
 import 'package:flutter_bloc_app/features/websocket/presentation/widgets/websocket_connection_banner.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/widgets/websocket_message_list.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
-import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 
 class WebsocketDemoPage extends StatefulWidget {
   const WebsocketDemoPage({super.key});
@@ -52,11 +51,8 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     if (kIsWeb) {
-      return Scaffold(
-        appBar: AppBar(
-          leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
-          title: Text(l10n.websocketDemoTitle),
-        ),
+      return CommonPageLayout(
+        title: l10n.websocketDemoTitle,
         body: Center(
           child: Padding(
             padding: EdgeInsets.all(UI.gapL),
@@ -71,18 +67,15 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
     }
     return BlocBuilder<WebsocketCubit, WebsocketState>(
       builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            leading: RootAwareBackButton(homeTooltip: l10n.homeTitle),
-            title: Text(l10n.websocketDemoTitle),
-            actions: [
-              IconButton(
-                tooltip: l10n.websocketReconnectTooltip,
-                onPressed: state.isConnecting ? null : _cubit.reconnect,
-                icon: const Icon(Icons.refresh),
-              ),
-            ],
-          ),
+        return CommonPageLayout(
+          title: l10n.websocketDemoTitle,
+          actions: [
+            IconButton(
+              tooltip: l10n.websocketReconnectTooltip,
+              onPressed: state.isConnecting ? null : _cubit.reconnect,
+              icon: const Icon(Icons.refresh),
+            ),
+          ],
           body: Column(
             children: [
               WebsocketConnectionBanner(state: state),
