@@ -134,7 +134,6 @@ class _ExamplePageState extends State<ExamplePage> {
     final ColorScheme colors = theme.colorScheme;
     return CommonPageLayout(
       title: l10n.examplePageTitle,
-      useResponsiveBody: false,
       body: ExamplePageBody(
         l10n: l10n,
         theme: theme,
