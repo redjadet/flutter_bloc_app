@@ -16,9 +16,14 @@ import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 class GoogleMapsSamplePage extends StatefulWidget {
-  const GoogleMapsSamplePage({super.key, this.platformService});
+  const GoogleMapsSamplePage({
+    super.key,
+    this.platformService,
+    this.platformOverride,
+  });
 
   final NativePlatformService? platformService;
+  final TargetPlatform? platformOverride;
 
   @override
   State<GoogleMapsSamplePage> createState() => _GoogleMapsSamplePageState();
@@ -29,6 +34,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
   late final NativePlatformService _platformService;
   bool _hasRequiredApiKey = true;
   bool _isCheckingApiKey = false;
+  late final TargetPlatform _platform;
   late final bool _useAppleMaps;
 
   MapSampleCubit get _cubit => context.read<MapSampleCubit>();
@@ -37,7 +43,8 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
   void initState() {
     super.initState();
     _mapViewController = MapSampleMapController();
-    _useAppleMaps = !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+    _platform = widget.platformOverride ?? defaultTargetPlatform;
+    _useAppleMaps = !kIsWeb && _platform == TargetPlatform.iOS;
     _platformService = widget.platformService ?? NativePlatformService();
     if (_isMapsSupported && !_useAppleMaps) {
       _resolveApiKeyAvailability();
@@ -121,8 +128,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
 
   bool get _isMapsSupported =>
       !kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.android);
+      (_platform == TargetPlatform.iOS || _platform == TargetPlatform.android);
 
   Future<void> _resolveApiKeyAvailability() async {
     if (_useAppleMaps) {
