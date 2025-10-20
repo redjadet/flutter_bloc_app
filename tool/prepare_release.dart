@@ -9,11 +9,11 @@ import 'dart:io';
 /// of `assets/config/secrets.sample.json`, or a minimal placeholder if the
 /// sample is unavailable. Run this right before `flutter build` for release
 /// flavors to guarantee that no live credentials are bundled.
-Future<void> main(final List<String> args) async {
+void main(final List<String> args) {
   final File secretsFile = File('assets/config/secrets.json');
   final File sampleFile = File('assets/config/secrets.sample.json');
 
-  if (!await secretsFile.exists()) {
+  if (!secretsFile.existsSync()) {
     stdout.writeln(
       'prepare_release: secrets.json not found; nothing to scrub.',
     );
@@ -21,8 +21,8 @@ Future<void> main(final List<String> args) async {
   }
 
   String sanitized;
-  if (await sampleFile.exists()) {
-    sanitized = await sampleFile.readAsString();
+  if (sampleFile.existsSync()) {
+    sanitized = sampleFile.readAsStringSync();
   } else {
     sanitized =
         '{\n'
@@ -32,7 +32,7 @@ Future<void> main(final List<String> args) async {
         '}\n';
   }
 
-  await secretsFile.writeAsString(sanitized);
+  secretsFile.writeAsStringSync(sanitized);
   stdout.writeln(
     'prepare_release: Scrubbed assets/config/secrets.json with placeholder values.',
   );
