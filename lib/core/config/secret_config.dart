@@ -34,7 +34,8 @@ class SecretConfig {
   static bool get useChatCompletions => _useChatCompletions;
   static String? get googleMapsApiKey => _googleMapsApiKey;
 
-  static void configureStorage(final SecretStorage storage) {
+  static SecretStorage? get storage => _configuredStorage;
+  static set storage(final SecretStorage storage) {
     _configuredStorage = storage;
   }
 

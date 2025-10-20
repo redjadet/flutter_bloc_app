@@ -42,14 +42,15 @@ linter:
     unnecessary_raw_strings: true
     avoid_multiple_declarations_per_line: true
     prefer_expression_function_bodies: true
-    # Temporarily soften very_good_analysis high-churn rules. I will remove some of these as i refactor.
     avoid_final_parameters: false
     public_member_api_docs: false
     omit_local_variable_types: false
     lines_longer_than_80_chars: false
     no_default_cases: false
-    always_put_required_named_parameters_first: false
-    use_setters_to_change_properties: false
+    always_put_required_named_parameters_first: true
+    # Temporarily soften very_good_analysis high-churn rules. I will remove some of these as i refactor.
+
+    use_setters_to_change_properties: true
     one_member_abstracts: false
     avoid_slow_async_io: false
     only_throw_errors: false

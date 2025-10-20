@@ -3,10 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CounterValueText extends StatelessWidget {
   const CounterValueText({
-    super.key,
     required this.count,
     required this.textTheme,
     required this.animDuration,
+    super.key,
   });
 
   final int count;

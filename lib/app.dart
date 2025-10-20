@@ -185,7 +185,7 @@ class _MyAppState extends State<MyApp> {
           minTextAdapt: true,
           splitScreenMode: true,
           builder: (final context, final child) {
-            UI.markScreenUtilReady();
+            UI.screenUtilReady = true;
             return BlocBuilder<LocaleCubit, Locale?>(
               builder: (final context, final locale) =>
                   BlocBuilder<ThemeCubit, ThemeMode>(

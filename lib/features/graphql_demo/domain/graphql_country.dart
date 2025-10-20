@@ -19,10 +19,10 @@ abstract class GraphqlCountry with _$GraphqlCountry {
   const factory GraphqlCountry({
     required final String code,
     required final String name,
+    required final GraphqlContinent continent,
     final String? capital,
     final String? currency,
     final String? emoji,
-    required final GraphqlContinent continent,
   }) = _GraphqlCountry;
 
   factory GraphqlCountry.fromJson(final Map<String, dynamic> json) =>

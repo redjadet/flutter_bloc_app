@@ -23,7 +23,7 @@ void main() {
       },
     );
 
-    SecretConfig.configureStorage(storage);
+    SecretConfig.storage = storage;
 
     await SecretConfig.load(allowAssetFallback: true);
 
@@ -36,7 +36,7 @@ void main() {
 
   test('falls back to bundled asset secrets in debug builds', () async {
     final _FakeSecretStorage storage = _FakeSecretStorage();
-    SecretConfig.configureStorage(storage);
+    SecretConfig.storage = storage;
 
     final Map<String, dynamic> assetSecrets = <String, dynamic>{
       'HUGGINGFACE_API_KEY': 'asset-key',
@@ -60,7 +60,7 @@ void main() {
 
   test('ignores asset secrets when fallback disabled', () async {
     final _FakeSecretStorage storage = _FakeSecretStorage();
-    SecretConfig.configureStorage(storage);
+    SecretConfig.storage = storage;
 
     final Map<String, dynamic> assetSecrets = <String, dynamic>{
       'HUGGINGFACE_API_KEY': 'asset-key',
@@ -75,7 +75,7 @@ void main() {
 
   test('uses environment overrides and persists them by default', () async {
     final _FakeSecretStorage storage = _FakeSecretStorage();
-    SecretConfig.configureStorage(storage);
+    SecretConfig.storage = storage;
     SecretConfig.debugAssetBundle = _FakeAssetBundle.throwing();
     SecretConfig.debugEnvironment = <String, dynamic>{
       'HUGGINGFACE_API_KEY': 'env-key',
@@ -110,7 +110,7 @@ void main() {
 
   test('skips secure storage persistence when disabled', () async {
     final _FakeSecretStorage storage = _FakeSecretStorage();
-    SecretConfig.configureStorage(storage);
+    SecretConfig.storage = storage;
     SecretConfig.debugAssetBundle = _FakeAssetBundle.throwing();
     SecretConfig.debugEnvironment = <String, dynamic>{
       'HUGGINGFACE_API_KEY': 'env-key',
@@ -128,7 +128,7 @@ void main() {
     'prefers secure storage over other sources for subsequent loads',
     () async {
       final _FakeSecretStorage storage = _FakeSecretStorage();
-      SecretConfig.configureStorage(storage);
+      SecretConfig.storage = storage;
       SecretConfig.debugAssetBundle = _FakeAssetBundle.throwing();
       SecretConfig.debugEnvironment = <String, dynamic>{
         'HUGGINGFACE_API_KEY': 'env-key',
@@ -145,7 +145,7 @@ void main() {
       storage.write(_FakeSecretStorage.hfTokenKey, 'stored-token');
       storage.write(_FakeSecretStorage.hfModelKey, 'stored-model');
       storage.write(_FakeSecretStorage.googleMapsKey, 'stored-maps');
-      SecretConfig.configureStorage(storage);
+      SecretConfig.storage = storage;
       SecretConfig.debugAssetBundle = _FakeAssetBundle.throwing();
       SecretConfig.debugEnvironment = null;
 

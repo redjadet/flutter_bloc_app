@@ -4,11 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CountdownStatus extends StatelessWidget {
   const CountdownStatus({
-    super.key,
     required this.active,
     required this.color,
     required this.label,
     required this.animDuration,
+    super.key,
   });
 
   final bool active;

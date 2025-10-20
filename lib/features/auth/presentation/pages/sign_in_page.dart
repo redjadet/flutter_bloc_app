@@ -33,9 +33,9 @@ class SignInPage extends StatelessWidget {
   @visibleForTesting
   static List<firebase_ui.AuthProvider> prepareProviders({
     required final FirebaseAuth auth,
-    final List<firebase_ui.AuthProvider>? override,
     required final firebase_ui_google.GoogleProvider? Function()
     googleProviderFactory,
+    final List<firebase_ui.AuthProvider>? override,
   }) => buildAuthProviders(
     auth: auth,
     override: override,

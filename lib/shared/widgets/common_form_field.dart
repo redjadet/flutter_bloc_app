@@ -4,8 +4,8 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 /// A reusable form field with consistent styling and validation
 class CommonFormField extends StatelessWidget {
   const CommonFormField({
-    super.key,
     required this.controller,
+    super.key,
     this.labelText,
     this.hintText,
     this.helperText,
@@ -98,8 +98,8 @@ class CommonFormField extends StatelessWidget {
 /// A reusable search field with common search functionality
 class CommonSearchField extends StatelessWidget {
   const CommonSearchField({
-    super.key,
     required this.controller,
+    super.key,
     this.hintText = 'Search...',
     this.onChanged,
     this.onSubmitted,
@@ -137,10 +137,10 @@ class CommonSearchField extends StatelessWidget {
 /// A reusable dropdown field with consistent styling
 class CommonDropdownField<T> extends StatelessWidget {
   const CommonDropdownField({
-    super.key,
     required this.value,
     required this.items,
     required this.onChanged,
+    super.key,
     this.labelText,
     this.hintText,
     this.validator,

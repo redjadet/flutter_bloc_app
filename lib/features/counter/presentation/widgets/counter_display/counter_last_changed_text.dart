@@ -5,10 +5,10 @@ import 'package:intl/intl.dart';
 
 class CounterLastChangedText extends StatelessWidget {
   const CounterLastChangedText({
-    super.key,
     required this.lastChanged,
     required this.l10n,
     required this.textTheme,
+    super.key,
   });
 
   final DateTime? lastChanged;

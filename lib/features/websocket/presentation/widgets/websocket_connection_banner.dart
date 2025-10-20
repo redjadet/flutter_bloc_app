@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class WebsocketConnectionBanner extends StatelessWidget {
-  const WebsocketConnectionBanner({super.key, required this.state});
+  const WebsocketConnectionBanner({required this.state, super.key});
 
   final WebsocketState state;
 

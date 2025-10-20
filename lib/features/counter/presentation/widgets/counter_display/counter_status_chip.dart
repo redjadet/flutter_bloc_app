@@ -5,12 +5,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CounterStatusChip extends StatelessWidget {
   const CounterStatusChip({
-    super.key,
     required this.active,
     required this.colors,
     required this.textTheme,
     required this.l10n,
     required this.animDuration,
+    super.key,
   });
 
   final bool active;

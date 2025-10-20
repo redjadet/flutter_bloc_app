@@ -40,14 +40,14 @@ void main() {
     );
     addTearDown(() => cubit.close());
 
-    UI.resetScreenUtilReady();
+    UI.screenUtilReady = false;
     await tester.pumpWidget(
       ScreenUtilInit(
         designSize: const Size(390, 844),
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, _) {
-          UI.markScreenUtilReady();
+          UI.screenUtilReady = true;
           return MultiBlocProvider(
             providers: [
               BlocProvider.value(value: cubit),

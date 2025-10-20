@@ -50,9 +50,9 @@ class CommonLoadingWidget extends StatelessWidget {
 /// A reusable loading overlay that can be placed over content
 class CommonLoadingOverlay extends StatelessWidget {
   const CommonLoadingOverlay({
-    super.key,
     required this.isLoading,
     required this.child,
+    super.key,
     this.message,
   });
 
@@ -76,9 +76,9 @@ class CommonLoadingOverlay extends StatelessWidget {
 /// A reusable loading button that shows progress when loading
 class CommonLoadingButton extends StatelessWidget {
   const CommonLoadingButton({
-    super.key,
     required this.onPressed,
     required this.child,
+    super.key,
     this.isLoading = false,
     this.loadingMessage,
     this.style,

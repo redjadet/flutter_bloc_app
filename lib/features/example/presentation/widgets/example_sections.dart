@@ -5,10 +5,10 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class PlatformInfoSection extends StatelessWidget {
   const PlatformInfoSection({
-    super.key,
     required this.isLoading,
     required this.info,
     required this.errorMessage,
+    super.key,
   });
 
   final bool isLoading;
@@ -80,13 +80,13 @@ class PlatformInfoSection extends StatelessWidget {
 
 class IsolateResultSection extends StatelessWidget {
   const IsolateResultSection({
-    super.key,
     required this.isLoading,
     required this.errorMessage,
     required this.fibonacciInput,
     required this.fibonacciResult,
     required this.parallelValues,
     required this.parallelDuration,
+    super.key,
   });
 
   final bool isLoading;

@@ -7,15 +7,16 @@ class UI {
 
   static bool _screenUtilReady = false;
 
-  static void markScreenUtilReady({final bool ready = true}) {
+  static bool get screenUtilReady => _screenUtilReady;
+
+  static set screenUtilReady(final bool ready) {
+    if (_screenUtilReady == ready) {
+      return;
+    }
     _screenUtilReady = ready;
   }
 
-  static void resetScreenUtilReady() {
-    _screenUtilReady = false;
-  }
-
-  static bool get isScreenUtilReady => _screenUtilReady;
+  static bool get isScreenUtilReady => screenUtilReady;
 
   // Animations
   static const Duration animFast = Duration(milliseconds: 180);

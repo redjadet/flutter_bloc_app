@@ -23,7 +23,7 @@ Future<void> runAppWithFlavor(final Flavor flavor) async {
     _configureFirebaseUI();
     _registerCrashlyticsGlobalHandlers();
   }
-  FlavorManager.set(flavor);
+  FlavorManager.current = flavor;
   await PlatformInit.initialize();
   if (!FlavorManager.I.isDev && enableAssetSecrets) {
     AppLogger.warning(

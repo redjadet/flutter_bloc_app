@@ -7,9 +7,9 @@ import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
 /// across the app with responsive design and common AppBar pattern.
 class CommonPageLayout extends StatelessWidget {
   const CommonPageLayout({
-    super.key,
     required this.title,
     required this.body,
+    super.key,
     this.actions,
     this.floatingActionButton,
     this.bottomNavigationBar,

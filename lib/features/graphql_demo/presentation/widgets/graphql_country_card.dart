@@ -3,10 +3,10 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.da
 
 class GraphqlCountryCard extends StatelessWidget {
   const GraphqlCountryCard({
-    super.key,
     required this.country,
     required this.capitalLabel,
     required this.currencyLabel,
+    super.key,
   });
 
   final GraphqlCountry country;

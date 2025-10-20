@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class ChartScrollable extends StatelessWidget {
-  const ChartScrollable({super.key, required this.children});
+  const ChartScrollable({required this.children, super.key});
 
   final List<Widget> children;
 

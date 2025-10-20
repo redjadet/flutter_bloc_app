@@ -7,9 +7,9 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class ChatInputBar extends StatelessWidget {
   const ChatInputBar({
-    super.key,
     required this.controller,
     required this.onSend,
+    super.key,
   });
 
   final TextEditingController controller;

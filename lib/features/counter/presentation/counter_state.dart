@@ -7,7 +7,6 @@ enum CounterStatus { idle, loading, success, error }
 
 @freezed
 abstract class CounterState with _$CounterState {
-
   const factory CounterState({
     required final int count,
     final DateTime? lastChanged,

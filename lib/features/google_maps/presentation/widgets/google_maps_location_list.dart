@@ -4,7 +4,6 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class GoogleMapsLocationList extends StatelessWidget {
   const GoogleMapsLocationList({
-    super.key,
     required this.locations,
     required this.selectedMarkerId,
     required this.emptyLabel,
@@ -12,6 +11,7 @@ class GoogleMapsLocationList extends StatelessWidget {
     required this.focusLabel,
     required this.selectedBadgeLabel,
     required this.onFocus,
+    super.key,
   });
 
   final List<MapLocation> locations;

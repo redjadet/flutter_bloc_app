@@ -530,12 +530,10 @@ For integration tests or custom tooling, inject a storage implementation before
 calling `SecretConfig.load()`:
 
 ```dart
-SecretConfig.configureStorage(
-  InMemorySecretStorage()
-    ..write('huggingface_api_key', 'hf_dev_token')
-    ..write('huggingface_model', 'openai/gpt-oss-20b')
-    ..write('huggingface_use_chat_completions', 'true'),
-);
+SecretConfig.storage = InMemorySecretStorage()
+  ..write('huggingface_api_key', 'hf_dev_token')
+  ..write('huggingface_model', 'openai/gpt-oss-20b')
+  ..write('huggingface_use_chat_completions', 'true');
 await SecretConfig.load(allowAssetFallback: true);
 ```
 

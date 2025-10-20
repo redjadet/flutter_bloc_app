@@ -9,10 +9,10 @@ class SettingsOption<T> {
 
 class SettingsCard<T> extends StatelessWidget {
   const SettingsCard({
-    super.key,
     required this.options,
     required this.isSelected,
     required this.onSelect,
+    super.key,
   });
 
   final List<SettingsOption<T>> options;

@@ -125,10 +125,7 @@ void main() {
       final coloredBox = tester.widget<ColoredBox>(
         find.byType(ColoredBox).first,
       );
-      expect(
-        coloredBox.color,
-        equals(Colors.black.withValues(alpha: 0.3)),
-      );
+      expect(coloredBox.color, equals(Colors.black.withValues(alpha: 0.3)));
     });
 
     testWidgets('maintains child widget when not loading', (tester) async {

@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 
 void main() {
   setUp(() {
-    UI.resetScreenUtilReady();
+    UI.screenUtilReady = false;
   });
 
   final List<ChartPoint> samplePoints = <ChartPoint>[
