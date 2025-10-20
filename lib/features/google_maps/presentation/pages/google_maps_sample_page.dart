@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,8 @@ import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_s
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
+
+part 'google_maps_sample_sections.dart';
 
 class GoogleMapsSamplePage extends StatefulWidget {
   const GoogleMapsSamplePage({
@@ -54,74 +57,57 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
-    final Widget body = !_isMapsSupported
-        ? GoogleMapsUnsupportedMessage(
-            message: l10n.googleMapsPageUnsupportedDescription,
-          )
-        : (!_useAppleMaps && _isCheckingApiKey)
-        ? const Center(child: CircularProgressIndicator())
-        : (!_useAppleMaps && !_hasRequiredApiKey)
-        ? GoogleMapsMissingKeyMessage(
-            title: l10n.googleMapsPageMissingKeyTitle,
-            description: l10n.googleMapsPageMissingKeyDescription,
-          )
-        : BlocBuilder<MapSampleCubit, MapSampleState>(
-            builder: (BuildContext context, MapSampleState state) {
-              if (state.isLoading && state.markers.isEmpty) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (state.hasError) {
-                return GoogleMapsErrorMessage(
-                  message:
-                      state.errorMessage ?? l10n.googleMapsPageGenericError,
-                );
-              }
-              return GoogleMapsContentLayout(
-                map: MapSampleMapView(
-                  state: state,
-                  cubit: _cubit,
-                  useAppleMaps: _useAppleMaps,
-                  controller: _mapViewController,
-                ),
-                controls: _buildControls(context, state),
-                locations: _buildLocationList(context, state),
-              );
-            },
-          );
-
     return CommonPageLayout(
       title: l10n.googleMapsPageTitle,
       useResponsiveBody: false,
-      body: body,
+      body: _buildBody(context, l10n),
     );
   }
 
-  Widget _buildControls(BuildContext context, MapSampleState state) {
-    final AppLocalizations l10n = AppLocalizations.of(context);
-    return GoogleMapsControlsCard(
-      heading: l10n.googleMapsPageControlsHeading,
-      helpText: l10n.googleMapsPageApiKeyHelp,
-      isHybridMapType: state.mapType == gmaps.MapType.hybrid,
-      trafficEnabled: state.trafficEnabled,
-      onToggleMapType: _cubit.toggleMapType,
-      onToggleTraffic: (_) => _cubit.toggleTraffic(),
-      mapTypeHybridLabel: l10n.googleMapsPageMapTypeHybrid,
-      mapTypeNormalLabel: l10n.googleMapsPageMapTypeNormal,
-      trafficToggleLabel: l10n.googleMapsPageTrafficToggle,
-    );
-  }
-
-  Widget _buildLocationList(BuildContext context, MapSampleState state) {
-    final AppLocalizations l10n = AppLocalizations.of(context);
-    return GoogleMapsLocationList(
-      locations: state.locations,
-      selectedMarkerId: state.selectedMarkerId?.value,
-      emptyLabel: l10n.googleMapsPageEmptyLocations,
-      heading: l10n.googleMapsPageLocationsHeading,
-      focusLabel: l10n.googleMapsPageFocusButton,
-      selectedBadgeLabel: l10n.googleMapsPageSelectedBadge,
-      onFocus: (MapLocation location) {
-        unawaited(_mapViewController.focusOnLocation(location));
+  Widget _buildBody(BuildContext context, AppLocalizations l10n) {
+    if (!_isMapsSupported) {
+      return GoogleMapsUnsupportedMessage(
+        message: l10n.googleMapsPageUnsupportedDescription,
+      );
+    }
+    if (!_useAppleMaps && _isCheckingApiKey) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (!_useAppleMaps && !_hasRequiredApiKey) {
+      return GoogleMapsMissingKeyMessage(
+        title: l10n.googleMapsPageMissingKeyTitle,
+        description: l10n.googleMapsPageMissingKeyDescription,
+      );
+    }
+    return BlocBuilder<MapSampleCubit, MapSampleState>(
+      buildWhen: _shouldRebuildBody,
+      builder: (BuildContext context, MapSampleState state) {
+        if (state.isLoading && state.markers.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (state.hasError) {
+          return GoogleMapsErrorMessage(
+            message: state.errorMessage ?? l10n.googleMapsPageGenericError,
+          );
+        }
+        return GoogleMapsContentLayout(
+          map: _GoogleMapsMapSection(
+            controller: _mapViewController,
+            cubit: _cubit,
+            useAppleMaps: _useAppleMaps,
+          ),
+          controls: _GoogleMapsControlsSection(
+            l10n: l10n,
+            onToggleMapType: _cubit.toggleMapType,
+            onToggleTraffic: (_) => _cubit.toggleTraffic(),
+          ),
+          locations: _GoogleMapsLocationListSection(
+            l10n: l10n,
+            onFocus: (MapLocation location) {
+              unawaited(_mapViewController.focusOnLocation(location));
+            },
+          ),
+        );
       },
     );
   }
@@ -145,5 +131,22 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
       _hasRequiredApiKey = hasKey;
       _isCheckingApiKey = false;
     });
+  }
+
+  bool _shouldRebuildBody(MapSampleState previous, MapSampleState current) {
+    final bool previousShowingInitialLoader =
+        previous.isLoading && previous.markers.isEmpty;
+    final bool currentShowingInitialLoader =
+        current.isLoading && current.markers.isEmpty;
+    if (previousShowingInitialLoader != currentShowingInitialLoader) {
+      return true;
+    }
+    if (previous.hasError != current.hasError) {
+      return true;
+    }
+    if (current.hasError && previous.errorMessage != current.errorMessage) {
+      return true;
+    }
+    return false;
   }
 }
