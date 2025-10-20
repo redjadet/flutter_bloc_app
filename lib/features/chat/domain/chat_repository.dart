@@ -1,6 +1,6 @@
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 
-abstract class ChatRepository {
+mixin ChatRepository {
   Future<ChatResult> sendMessage({
     required final List<String> pastUserInputs,
     required final List<String> generatedResponses,

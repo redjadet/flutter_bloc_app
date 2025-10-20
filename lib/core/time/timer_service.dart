@@ -1,11 +1,11 @@
 import 'dart:async';
 
-abstract class TimerDisposable {
+mixin TimerDisposable {
   void dispose();
 }
 
 /// Abstraction over periodic timers to make time deterministic in tests.
-abstract class TimerService {
+mixin TimerService {
   /// Starts a periodic timer and returns a disposable handle to cancel it.
   TimerDisposable periodic(
     final Duration interval,
