@@ -283,9 +283,7 @@ class _Updator {
       }
     }
     if (updated) {
-      await readme.writeAsString(
-        _withSingleTrailingNewline(lines.join('\n')),
-      );
+      await readme.writeAsString(_withSingleTrailingNewline(lines.join('\n')));
     }
   }
 }

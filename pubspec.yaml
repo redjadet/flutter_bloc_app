@@ -50,7 +50,7 @@ dependencies:
   app_links: ^6.4.1
   package_info_plus: ^9.0.0
   flutter_secure_storage: ^9.2.4
-  local_auth: ^2.1.9
+  local_auth: ^3.0.0
   fancy_shimmer_image: ^2.0.3
   skeletonizer: ^2.1.0+1
   logger: ^2.6.2

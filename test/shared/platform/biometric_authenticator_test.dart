@@ -91,7 +91,9 @@ class _StubLocalAuthentication extends LocalAuthentication {
   Future<bool> authenticate({
     required String localizedReason,
     Iterable<Object?> authMessages = const <Object?>[],
-    AuthenticationOptions options = const AuthenticationOptions(),
+    bool biometricOnly = false,
+    bool sensitiveTransaction = true,
+    bool persistAcrossBackgrounding = false,
   }) async {
     authenticateCalls.add(localizedReason);
     if (authenticateError != null) {
