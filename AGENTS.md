@@ -5,13 +5,13 @@ Keep work lean, clean, and tested.
 ## Quick Checklist
 
 1. `flutter pub get`
-2. `dart format .`
-3. `flutter analyze`
-4. `dart run custom_lint`
-5. `flutter test --coverage`
-6. `dart run tool/update_coverage_summary.dart`
-7. `flutter build ios --simulator` (only when platform changes or other big shifts risk breaking builds)
-8. If Freezed/JSON models changed → `dart run build_runner build --delete-conflicting-outputs`
+2. If Freezed/JSON models changed → `dart run build_runner build --delete-conflicting-outputs`
+3. `dart format .`
+4. `flutter analyze`
+5. `dart run custom_lint`
+6. `flutter test --coverage`
+7. `dart run tool/update_coverage_summary.dart`
+8. `flutter build ios --simulator` (optional, only when platform changes or other big shifts risk breaking builds)
 
 ## Architecture Rules
 
