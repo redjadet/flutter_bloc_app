@@ -7,7 +7,6 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class CounterDisplayCard extends StatelessWidget {
   const CounterDisplayCard({
-    super.key,
     required this.count,
     required this.isActive,
     required this.lastChanged,
@@ -17,6 +16,7 @@ class CounterDisplayCard extends StatelessWidget {
     required this.l10n,
     required this.animFast,
     required this.animMedium,
+    super.key,
   });
 
   final int count;

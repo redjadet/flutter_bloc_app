@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 
 /// Displays a back button when the navigator can pop, otherwise a home button.
 class RootAwareBackButton extends StatelessWidget {
-  const RootAwareBackButton({super.key, required this.homeTooltip});
+  const RootAwareBackButton({required this.homeTooltip, super.key});
 
   final String homeTooltip;
 

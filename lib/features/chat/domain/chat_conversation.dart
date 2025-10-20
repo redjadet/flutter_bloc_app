@@ -6,14 +6,13 @@ part 'chat_conversation.freezed.dart';
 
 @freezed
 abstract class ChatConversation with _$ChatConversation {
-
   const factory ChatConversation({
     required final String id,
+    required final DateTime createdAt,
+    required final DateTime updatedAt,
     @Default(<ChatMessage>[]) final List<ChatMessage> messages,
     @Default(<String>[]) final List<String> pastUserInputs,
     @Default(<String>[]) final List<String> generatedResponses,
-    required final DateTime createdAt,
-    required final DateTime updatedAt,
     final String? model,
   }) = _ChatConversation;
   const ChatConversation._();

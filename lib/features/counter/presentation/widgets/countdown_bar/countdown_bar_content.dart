@@ -6,7 +6,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 class CountdownBarContent extends StatelessWidget {
   const CountdownBarContent({
-    super.key,
     required this.active,
     required this.isLoading,
     required this.progress,
@@ -15,6 +14,7 @@ class CountdownBarContent extends StatelessWidget {
     required this.colors,
     required this.l10n,
     required this.animFast,
+    super.key,
   });
 
   final bool active;

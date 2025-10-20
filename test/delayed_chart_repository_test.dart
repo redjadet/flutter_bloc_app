@@ -13,13 +13,13 @@ void main() {
   });
 
   tearDown(() {
-    FlavorManager.set(Flavor.dev);
+    FlavorManager.current = Flavor.dev;
   });
 
   test(
     'DelayedChartRepository fetches chart points without delay in prod',
     () async {
-      FlavorManager.set(Flavor.prod);
+      FlavorManager.current = Flavor.prod;
       final http.Client client = MockClient((request) async {
         final Map<String, Object?> payload = <String, Object?>{
           'prices': <List<Object>>[

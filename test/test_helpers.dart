@@ -68,13 +68,13 @@ Widget wrapWithProviders({
   CounterRepository? repository,
   ThemeMode initialThemeMode = ThemeMode.system,
 }) {
-  UI.resetScreenUtilReady();
+  UI.screenUtilReady = false;
   return ScreenUtilInit(
     designSize: const Size(390, 844),
     minTextAdapt: true,
     splitScreenMode: true,
     builder: (context, _) {
-      UI.markScreenUtilReady();
+      UI.screenUtilReady = true;
       return MultiBlocProvider(
         providers: [
           BlocProvider(

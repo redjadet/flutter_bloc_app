@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   setUp(() {
-    UI.resetScreenUtilReady();
+    UI.screenUtilReady = false;
   });
 
   testWidgets('ChartMessageList displays provided message', (

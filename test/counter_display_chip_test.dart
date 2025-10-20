@@ -11,13 +11,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 Widget _wrap(Widget child) {
-  UI.resetScreenUtilReady();
+  UI.screenUtilReady = false;
   return ScreenUtilInit(
     designSize: const Size(390, 844),
     minTextAdapt: true,
     splitScreenMode: true,
     builder: (context, _) {
-      UI.markScreenUtilReady();
+      UI.screenUtilReady = true;
       return MaterialApp(
         localizationsDelegates: const [AppLocalizations.delegate],
         supportedLocales: AppLocalizations.supportedLocales,

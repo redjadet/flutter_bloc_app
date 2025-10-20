@@ -9,7 +9,7 @@ import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class ChatHistorySheet extends StatelessWidget {
-  const ChatHistorySheet({super.key, required this.onClose});
+  const ChatHistorySheet({required this.onClose, super.key});
 
   final VoidCallback onClose;
 

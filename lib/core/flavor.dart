@@ -11,7 +11,9 @@ class FlavorManager {
     const String.fromEnvironment('FLAVOR', defaultValue: 'dev'),
   );
 
-  static void set(final Flavor flavor) {
+  static Flavor get current => _instance._flavor;
+
+  static set current(final Flavor flavor) {
     _instance._flavor = flavor;
   }
 

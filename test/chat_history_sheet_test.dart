@@ -15,7 +15,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   setUp(() {
     // Ensure responsive helpers use fallback dimensions for tests.
-    UI.resetScreenUtilReady();
+    UI.screenUtilReady = false;
   });
 
   testWidgets('ChatHistorySheet shows empty message when no history', (

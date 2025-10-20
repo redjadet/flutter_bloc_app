@@ -5,9 +5,9 @@ import 'package:go_router/go_router.dart';
 
 class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CounterPageAppBar({
-    super.key,
     required this.title,
     required this.onOpenSettings,
+    super.key,
   });
 
   final String title;

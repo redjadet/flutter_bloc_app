@@ -11,7 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CounterPage extends StatefulWidget {
-  const CounterPage({super.key, required this.title});
+  const CounterPage({required this.title, super.key});
   final String title;
 
   @override

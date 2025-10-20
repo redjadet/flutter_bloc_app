@@ -5,9 +5,9 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'
 
 List<firebase_ui.AuthProvider> buildAuthProviders({
   required final FirebaseAuth auth,
-  final List<firebase_ui.AuthProvider>? override,
   required final firebase_ui_google.GoogleProvider? Function()
   googleProviderFactory,
+  final List<firebase_ui.AuthProvider>? override,
 }) {
   final List<firebase_ui.AuthProvider> providers =
       List<firebase_ui.AuthProvider>.from(

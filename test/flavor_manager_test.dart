@@ -3,27 +3,27 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   setUp(() {
-    FlavorManager.set(Flavor.dev);
+    FlavorManager.current = Flavor.dev;
   });
 
   test('FlavorManager exposes flags and name for each flavor', () {
-    FlavorManager.set(Flavor.prod);
+    FlavorManager.current = Flavor.prod;
     expect(FlavorManager.I.isProd, isTrue);
     expect(FlavorManager.I.name, 'prod');
 
-    FlavorManager.set(Flavor.beta);
+    FlavorManager.current = Flavor.beta;
     expect(FlavorManager.I.isBeta, isTrue);
     expect(FlavorManager.I.name, 'beta');
 
-    FlavorManager.set(Flavor.qa);
+    FlavorManager.current = Flavor.qa;
     expect(FlavorManager.I.isQa, isTrue);
     expect(FlavorManager.I.name, 'qa');
 
-    FlavorManager.set(Flavor.staging);
+    FlavorManager.current = Flavor.staging;
     expect(FlavorManager.I.isStaging, isTrue);
     expect(FlavorManager.I.name, 'staging');
 
-    FlavorManager.set(Flavor.dev);
+    FlavorManager.current = Flavor.dev;
     expect(FlavorManager.I.isDev, isTrue);
     expect(FlavorManager.I.name, 'dev');
   });

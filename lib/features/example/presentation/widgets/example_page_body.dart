@@ -7,7 +7,6 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class ExamplePageBody extends StatelessWidget {
   const ExamplePageBody({
-    super.key,
     required this.l10n,
     required this.theme,
     required this.colors,
@@ -25,6 +24,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.fibonacciResult,
     required this.parallelValues,
     required this.parallelDuration,
+    super.key,
   });
 
   final AppLocalizations l10n;

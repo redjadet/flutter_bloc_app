@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
 
 class GoogleMapsUnsupportedMessage extends StatelessWidget {
-  const GoogleMapsUnsupportedMessage({super.key, required this.message});
+  const GoogleMapsUnsupportedMessage({required this.message, super.key});
 
   final String message;
 
@@ -11,7 +11,7 @@ class GoogleMapsUnsupportedMessage extends StatelessWidget {
 }
 
 class GoogleMapsErrorMessage extends StatelessWidget {
-  const GoogleMapsErrorMessage({super.key, required this.message});
+  const GoogleMapsErrorMessage({required this.message, super.key});
 
   final String message;
 
@@ -22,9 +22,9 @@ class GoogleMapsErrorMessage extends StatelessWidget {
 
 class GoogleMapsMissingKeyMessage extends StatelessWidget {
   const GoogleMapsMissingKeyMessage({
-    super.key,
     required this.title,
     required this.description,
+    super.key,
   });
 
   final String title;

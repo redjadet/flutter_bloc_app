@@ -6,10 +6,10 @@ import 'package:intl/intl.dart';
 
 class ChartLineGraph extends StatelessWidget {
   const ChartLineGraph({
-    super.key,
     required this.points,
     required this.dateFormat,
     required this.zoomEnabled,
+    super.key,
   });
 
   final List<ChartPoint> points;

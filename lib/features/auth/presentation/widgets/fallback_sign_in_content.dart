@@ -3,12 +3,12 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 class FallbackSignInContent extends StatelessWidget {
   const FallbackSignInContent({
-    super.key,
     required this.l10n,
     required this.theme,
     required this.upgradingAnonymous,
     required this.signInGuestButtonKey,
     required this.signInAnonymously,
+    super.key,
   });
 
   final AppLocalizations l10n;

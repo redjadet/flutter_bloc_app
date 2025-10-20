@@ -3,7 +3,6 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class GoogleMapsControlsCard extends StatelessWidget {
   const GoogleMapsControlsCard({
-    super.key,
     required this.heading,
     required this.helpText,
     required this.isHybridMapType,
@@ -13,6 +12,7 @@ class GoogleMapsControlsCard extends StatelessWidget {
     required this.mapTypeHybridLabel,
     required this.mapTypeNormalLabel,
     required this.trafficToggleLabel,
+    super.key,
   });
 
   final String heading;

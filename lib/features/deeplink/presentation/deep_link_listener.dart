@@ -11,9 +11,9 @@ import 'package:go_router/go_router.dart';
 /// Listens for deep link events and navigates using the provided [GoRouter].
 class DeepLinkListener extends StatelessWidget {
   const DeepLinkListener({
-    super.key,
     required this.router,
     required this.child,
+    super.key,
   });
 
   final GoRouter router;

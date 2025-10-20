@@ -42,11 +42,11 @@ class SharedPreferencesCounterRepository implements CounterRepository {
         count: count,
         lastChanged: changed,
       );
-      _cacheSnapshot(snapshot);
+      _cachedSnapshot = snapshot;
       return snapshot;
     } on Exception catch (e, s) {
       AppLogger.error('SharedPreferencesCounterRepository.load failed', e, s);
-      _cacheSnapshot(_emptySnapshot);
+      _cachedSnapshot = _emptySnapshot;
       return _emptySnapshot;
     }
   }
@@ -125,16 +125,12 @@ class SharedPreferencesCounterRepository implements CounterRepository {
   }
 
   void _emitSnapshot(final CounterSnapshot snapshot) {
-    _cacheSnapshot(snapshot);
+    _cachedSnapshot = snapshot;
     final StreamController<CounterSnapshot>? controller = _watchController;
     if (controller == null || controller.isClosed) {
       return;
     }
     controller.add(snapshot);
-  }
-
-  void _cacheSnapshot(final CounterSnapshot snapshot) {
-    _cachedSnapshot = snapshot;
   }
 
   @visibleForTesting

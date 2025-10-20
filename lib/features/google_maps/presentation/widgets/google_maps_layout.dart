@@ -3,10 +3,10 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class GoogleMapsContentLayout extends StatelessWidget {
   const GoogleMapsContentLayout({
-    super.key,
     required this.map,
     required this.controls,
     required this.locations,
+    super.key,
   });
 
   final Widget map;

@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
 
 class ChartMessageList extends StatelessWidget {
-  const ChartMessageList({super.key, required this.message});
+  const ChartMessageList({required this.message, super.key});
 
   final String message;
 

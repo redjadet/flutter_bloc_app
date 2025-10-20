@@ -46,13 +46,13 @@ class _FakeBiometricAuthenticator implements BiometricAuthenticator {
 }
 
 Widget _buildApp(GoRouter router) {
-  UI.resetScreenUtilReady();
+  UI.screenUtilReady = false;
   return ScreenUtilInit(
     designSize: AppConstants.designSize,
     minTextAdapt: true,
     splitScreenMode: true,
     builder: (context, child) {
-      UI.markScreenUtilReady();
+      UI.screenUtilReady = true;
       return MaterialApp.router(
         routerConfig: router,
         localizationsDelegates: AppLocalizations.localizationsDelegates,

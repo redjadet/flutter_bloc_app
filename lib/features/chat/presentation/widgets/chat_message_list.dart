@@ -9,7 +9,7 @@ import 'package:flutter_bloc_app/shared/services/error_notification_service.dart
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class ChatMessageList extends StatelessWidget {
-  const ChatMessageList({super.key, required this.controller});
+  const ChatMessageList({required this.controller, super.key});
 
   final ScrollController controller;
 

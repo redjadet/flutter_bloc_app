@@ -3,8 +3,8 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class AppMessage extends StatelessWidget {
   const AppMessage({
-    super.key,
     required this.message,
+    super.key,
     this.title,
     this.icon,
     this.isError = false,

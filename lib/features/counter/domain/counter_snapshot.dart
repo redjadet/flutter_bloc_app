@@ -7,8 +7,8 @@ part 'counter_snapshot.g.dart';
 @freezed
 abstract class CounterSnapshot with _$CounterSnapshot {
   const factory CounterSnapshot({
-    final String? userId,
     required final int count,
+    final String? userId,
     final DateTime? lastChanged,
   }) = _CounterSnapshot;
 

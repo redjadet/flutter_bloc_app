@@ -5,9 +5,9 @@ import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
 
 class WebsocketMessageList extends StatelessWidget {
   const WebsocketMessageList({
-    super.key,
     required this.messages,
     required this.emptyLabel,
+    super.key,
   });
 
   final List<WebsocketMessage> messages;

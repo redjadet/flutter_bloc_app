@@ -8,12 +8,12 @@ import 'package:intl/intl.dart';
 
 class ChartContentList extends StatelessWidget {
   const ChartContentList({
-    super.key,
     required this.l10n,
     required this.points,
     required this.dateFormat,
     required this.zoomEnabled,
     required this.onZoomChanged,
+    super.key,
   });
 
   final AppLocalizations l10n;

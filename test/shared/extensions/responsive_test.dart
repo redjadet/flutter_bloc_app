@@ -431,7 +431,7 @@ void main() {
 
     testWidgets('works with ScreenUtil disabled', (tester) async {
       // Reset ScreenUtil state
-      UI.resetScreenUtilReady();
+      UI.screenUtilReady = false;
 
       await tester.pumpWidget(
         createTestWidget(

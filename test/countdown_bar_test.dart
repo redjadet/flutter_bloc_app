@@ -10,13 +10,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Widget _wrapWithApp(Widget child) {
-  UI.resetScreenUtilReady();
+  UI.screenUtilReady = false;
   return ScreenUtilInit(
     designSize: const Size(390, 844),
     minTextAdapt: true,
     splitScreenMode: true,
     builder: (context, _) {
-      UI.markScreenUtilReady();
+      UI.screenUtilReady = true;
       return MaterialApp(
         localizationsDelegates: const [AppLocalizations.delegate],
         supportedLocales: AppLocalizations.supportedLocales,

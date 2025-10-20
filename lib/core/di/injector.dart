@@ -82,9 +82,7 @@ Future<void> configureDependencies() async {
     SharedPreferencesThemeRepository.new,
   );
   _registerLazySingletonIfAbsent<DeepLinkParser>(() => const DeepLinkParser());
-  _registerLazySingletonIfAbsent<DeepLinkService>(
-    AppLinksDeepLinkService.new,
-  );
+  _registerLazySingletonIfAbsent<DeepLinkService>(AppLinksDeepLinkService.new);
   _registerLazySingletonIfAbsent<AppInfoRepository>(
     () => const PackageInfoAppInfoRepository(),
   );

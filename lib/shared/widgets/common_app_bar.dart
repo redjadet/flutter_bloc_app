@@ -6,8 +6,8 @@ import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
 /// across the app with automatic back button handling.
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CommonAppBar({
-    super.key,
     required this.title,
+    super.key,
     this.actions,
     this.automaticallyImplyLeading = true,
     this.homeTooltip,

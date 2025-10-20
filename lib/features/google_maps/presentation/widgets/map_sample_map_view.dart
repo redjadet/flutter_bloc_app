@@ -9,32 +9,24 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 class MapSampleMapController {
-  Future<void> Function(MapLocation location)? _focusHandler;
+  Future<void> Function(MapLocation location)? focusHandler;
 
   Future<void> focusOnLocation(final MapLocation location) async {
-    final handler = _focusHandler;
+    final handler = focusHandler;
     if (handler == null) {
       return;
     }
     await handler(location);
   }
-
-  void _attach(final Future<void> Function(MapLocation location) handler) {
-    _focusHandler = handler;
-  }
-
-  void _detach() {
-    _focusHandler = null;
-  }
 }
 
 class MapSampleMapView extends StatefulWidget {
   const MapSampleMapView({
-    super.key,
     required this.state,
     required this.cubit,
     required this.useAppleMaps,
     required this.controller,
+    super.key,
   });
 
   final MapSampleState state;
@@ -55,15 +47,15 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
   @override
   void initState() {
     super.initState();
-    widget.controller._attach(_focusOnLocation);
+    widget.controller.focusHandler = _focusOnLocation;
   }
 
   @override
   void didUpdateWidget(final MapSampleMapView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!identical(oldWidget.controller, widget.controller)) {
-      oldWidget.controller._detach();
-      widget.controller._attach(_focusOnLocation);
+      oldWidget.controller.focusHandler = null;
+      widget.controller.focusHandler = _focusOnLocation;
     }
   }
 
@@ -175,8 +167,7 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
     if (!_googleMapController.isCompleted) {
       return null;
     }
-    return _googleMapControllerInstance =
-        await _googleMapController.future;
+    return _googleMapControllerInstance = await _googleMapController.future;
   }
 
   Future<void> _focusOnLocation(final MapLocation location) async {
@@ -205,7 +196,7 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
 
   @override
   void dispose() {
-    widget.controller._detach();
+    widget.controller.focusHandler = null;
     if (!widget.useAppleMaps) {
       _googleMapControllerInstance?.dispose();
       _googleMapControllerInstance = null;
