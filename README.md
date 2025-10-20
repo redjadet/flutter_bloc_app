@@ -487,7 +487,7 @@ flutter pub get
 dart format .
 flutter analyze
 dart run build_runner build --delete-conflicting-outputs
-flutter test
+flutter test --coverage
 dart run tool/update_coverage_summary.dart
 dart run custom_lint  # run additional custom lint checks (optional)
 flutter run
