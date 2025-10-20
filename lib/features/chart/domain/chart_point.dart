@@ -5,13 +5,15 @@ part 'chart_point.g.dart';
 
 @freezed
 abstract class ChartPoint with _$ChartPoint {
-  const factory ChartPoint({required DateTime date, required double value}) =
-      _ChartPoint;
+  const factory ChartPoint({
+    required final DateTime date,
+    required final double value,
+  }) = _ChartPoint;
 
-  factory ChartPoint.fromJson(Map<String, dynamic> json) =>
+  factory ChartPoint.fromJson(final Map<String, dynamic> json) =>
       _$ChartPointFromJson(json);
 
-  factory ChartPoint.fromApi(List<dynamic> entry) {
+  factory ChartPoint.fromApi(final List<dynamic> entry) {
     if (entry.length < 2) {
       throw const FormatException('Chart entry requires timestamp and value');
     }

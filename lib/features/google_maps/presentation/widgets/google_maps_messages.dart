@@ -7,9 +7,7 @@ class GoogleMapsUnsupportedMessage extends StatelessWidget {
   final String message;
 
   @override
-  Widget build(BuildContext context) {
-    return AppMessage(message: message);
-  }
+  Widget build(final BuildContext context) => AppMessage(message: message);
 }
 
 class GoogleMapsErrorMessage extends StatelessWidget {
@@ -18,9 +16,8 @@ class GoogleMapsErrorMessage extends StatelessWidget {
   final String message;
 
   @override
-  Widget build(BuildContext context) {
-    return AppMessage(message: message, isError: true);
-  }
+  Widget build(final BuildContext context) =>
+      AppMessage(message: message, isError: true);
 }
 
 class GoogleMapsMissingKeyMessage extends StatelessWidget {
@@ -34,7 +31,6 @@ class GoogleMapsMissingKeyMessage extends StatelessWidget {
   final String description;
 
   @override
-  Widget build(BuildContext context) {
-    return AppMessage(title: title, message: description, isError: true);
-  }
+  Widget build(final BuildContext context) =>
+      AppMessage(title: title, message: description, isError: true);
 }

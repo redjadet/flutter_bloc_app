@@ -1,7 +1,10 @@
 import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
-String counterErrorMessage(AppLocalizations l10n, CounterError error) {
+String counterErrorMessage(
+  final AppLocalizations l10n,
+  final CounterError error,
+) {
   switch (error.type) {
     case CounterErrorType.cannotGoBelowZero:
       return l10n.cannotGoBelowZero;

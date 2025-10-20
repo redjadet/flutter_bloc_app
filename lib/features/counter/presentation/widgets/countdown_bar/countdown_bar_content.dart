@@ -27,7 +27,7 @@ class CountdownBarContent extends StatelessWidget {
   final Duration animFast;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final Widget bar = SafeArea(
       top: false,
       child: Padding(
@@ -51,7 +51,7 @@ class CountdownBarContent extends StatelessWidget {
                 TweenAnimationBuilder<Color?>(
                   duration: UI.animMedium,
                   tween: ColorTween(end: targetColor),
-                  builder: (context, animatedColor, _) {
+                  builder: (final context, final animatedColor, _) {
                     final Color c = animatedColor ?? targetColor;
                     return CountdownStatus(
                       active: active,
@@ -67,7 +67,7 @@ class CountdownBarContent extends StatelessWidget {
                 TweenAnimationBuilder<Color?>(
                   duration: UI.animMedium,
                   tween: ColorTween(end: targetColor),
-                  builder: (context, animatedColor, _) {
+                  builder: (final context, final animatedColor, _) {
                     final Color barColor = animatedColor ?? targetColor;
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(UI.radiusPill),

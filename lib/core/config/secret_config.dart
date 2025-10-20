@@ -34,7 +34,7 @@ class SecretConfig {
   static bool get useChatCompletions => _useChatCompletions;
   static String? get googleMapsApiKey => _googleMapsApiKey;
 
-  static void configureStorage(SecretStorage storage) {
+  static void configureStorage(final SecretStorage storage) {
     _configuredStorage = storage;
   }
 
@@ -55,8 +55,8 @@ class SecretConfig {
   );
 
   static Future<void> load({
-    bool? persistToSecureStorage,
-    bool allowAssetFallback = false,
+    final bool? persistToSecureStorage,
+    final bool allowAssetFallback = false,
   }) async {
     if (_loaded) return;
 

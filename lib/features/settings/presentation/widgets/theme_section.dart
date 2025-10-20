@@ -9,7 +9,7 @@ class ThemeSection extends StatelessWidget {
   const ThemeSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     final List<SettingsOption<ThemeMode>> options = <SettingsOption<ThemeMode>>[
@@ -24,13 +24,13 @@ class ThemeSection extends StatelessWidget {
         Text(l10n.themeSectionTitle, style: theme.textTheme.titleMedium),
         SizedBox(height: UI.gapS),
         BlocBuilder<ThemeCubit, ThemeMode>(
-          builder: (context, currentMode) {
-            return SettingsCard<ThemeMode>(
-              options: options,
-              isSelected: (mode) => mode == currentMode,
-              onSelect: (mode) => context.read<ThemeCubit>().setMode(mode),
-            );
-          },
+          builder: (final context, final currentMode) =>
+              SettingsCard<ThemeMode>(
+                options: options,
+                isSelected: (final mode) => mode == currentMode,
+                onSelect: (final mode) =>
+                    context.read<ThemeCubit>().setMode(mode),
+              ),
         ),
       ],
     );

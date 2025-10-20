@@ -7,7 +7,7 @@ typedef RestorationResult = ({
   bool holdCountdown,
 });
 
-RestorationResult restoreStateFromSnapshot(CounterSnapshot snapshot) {
+RestorationResult restoreStateFromSnapshot(final CounterSnapshot snapshot) {
   final int safeCount = snapshot.count < 0 ? 0 : snapshot.count;
   final bool shouldPersist = safeCount != snapshot.count;
   final bool holdCountdown = safeCount == 0;
@@ -23,8 +23,8 @@ RestorationResult restoreStateFromSnapshot(CounterSnapshot snapshot) {
 }
 
 bool shouldIgnoreRemoteSnapshot(
-  CounterState current,
-  CounterSnapshot snapshot,
+  final CounterState current,
+  final CounterSnapshot snapshot,
 ) {
   final bool countsEqual = snapshot.count == current.count;
   final bool timestampsEqual = () {

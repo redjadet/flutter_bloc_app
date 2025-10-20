@@ -9,12 +9,12 @@ enum GraphqlDemoStatus { initial, loading, success, error }
 @freezed
 abstract class GraphqlDemoState with _$GraphqlDemoState {
   const factory GraphqlDemoState({
-    @Default(GraphqlDemoStatus.initial) GraphqlDemoStatus status,
-    @Default(<GraphqlCountry>[]) List<GraphqlCountry> countries,
-    @Default(<GraphqlContinent>[]) List<GraphqlContinent> continents,
-    String? activeContinentCode,
-    String? errorMessage,
-    GraphqlDemoErrorType? errorType,
+    @Default(GraphqlDemoStatus.initial) final GraphqlDemoStatus status,
+    @Default(<GraphqlCountry>[]) final List<GraphqlCountry> countries,
+    @Default(<GraphqlContinent>[]) final List<GraphqlContinent> continents,
+    final String? activeContinentCode,
+    final String? errorMessage,
+    final GraphqlDemoErrorType? errorType,
   }) = _GraphqlDemoState;
 
   const GraphqlDemoState._();

@@ -43,7 +43,7 @@ Future<void> configureDependencies() async {
   _registerLazySingletonIfAbsent<CounterRepository>(_createCounterRepository);
   _registerLazySingletonIfAbsent<http.Client>(
     http.Client.new,
-    dispose: (client) => client.close(),
+    dispose: (final client) => client.close(),
   );
   _registerLazySingletonIfAbsent<GraphqlDemoRepository>(
     () => CountriesGraphqlRepository(client: getIt<http.Client>()),
@@ -53,7 +53,7 @@ Future<void> configureDependencies() async {
       httpClient: getIt<http.Client>(),
       apiKey: SecretConfig.huggingfaceApiKey,
     ),
-    dispose: (client) => client.dispose(),
+    dispose: (final client) => client.dispose(),
   );
   _registerLazySingletonIfAbsent<HuggingFacePayloadBuilder>(
     () => const HuggingFacePayloadBuilder(),
@@ -94,7 +94,7 @@ Future<void> configureDependencies() async {
   );
   _registerLazySingletonIfAbsent<WebsocketRepository>(
     () => EchoWebsocketRepository(),
-    dispose: (repository) => repository.dispose(),
+    dispose: (final repository) => repository.dispose(),
   );
   _registerLazySingletonIfAbsent<MapLocationRepository>(
     () => const SampleMapLocationRepository(),
@@ -104,7 +104,7 @@ Future<void> configureDependencies() async {
   );
   _registerLazySingletonIfAbsent<RemoteConfigRepository>(
     () => _createRemoteConfigRepository(),
-    dispose: (repository) => repository.dispose(),
+    dispose: (final repository) => repository.dispose(),
   );
   _registerLazySingletonIfAbsent<RemoteConfigCubit>(
     () => RemoteConfigCubit(getIt<RemoteConfigRepository>()),
@@ -120,8 +120,8 @@ CounterRepository _createCounterRepository() {
     // coverage:ignore-start
     try {
       final FirebaseApp app = Firebase.app();
-      final FirebaseDatabase database = FirebaseDatabase.instanceFor(app: app);
-      database.setPersistenceEnabled(true);
+      final FirebaseDatabase database = FirebaseDatabase.instanceFor(app: app)
+        ..setPersistenceEnabled(true);
       final FirebaseAuth auth = FirebaseAuth.instanceFor(app: app);
       return RealtimeDatabaseCounterRepository(database: database, auth: auth);
     } on FirebaseException catch (error, stackTrace) {
@@ -160,24 +160,24 @@ class _FakeRemoteConfigRepository implements RemoteConfigRepository {
   Future<void> forceFetch() async {}
 
   @override
-  String getString(String key) => '';
+  String getString(final String key) => '';
 
   @override
-  bool getBool(String key) => false;
+  bool getBool(final String key) => false;
 
   @override
-  int getInt(String key) => 0;
+  int getInt(final String key) => 0;
 
   @override
-  double getDouble(String key) => 0.0;
+  double getDouble(final String key) => 0.0;
 
   @override
   Future<void> dispose() async {}
 }
 
 void _registerLazySingletonIfAbsent<T extends Object>(
-  T Function() factory, {
-  void Function(T instance)? dispose,
+  final T Function() factory, {
+  final void Function(T instance)? dispose,
 }) {
   if (!getIt.isRegistered<T>()) {
     getIt.registerLazySingleton<T>(factory, dispose: dispose);

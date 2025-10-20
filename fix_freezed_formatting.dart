@@ -51,9 +51,9 @@ class _Replacement {
   final String oldValue;
   final String newValue;
 
-  bool shouldApply(String filePath) => filePath.contains(trigger);
+  bool shouldApply(final String filePath) => filePath.contains(trigger);
 
-  String apply(String content) => content.replaceAll(oldValue, newValue);
+  String apply(final String content) => content.replaceAll(oldValue, newValue);
 }
 
 const String _chartPointContract =

@@ -21,23 +21,27 @@ class AppLogger {
   static int _silenceDepth = 0;
   static bool _globalSilence = false;
 
-  static void error(String message, [Object? error, StackTrace? stackTrace]) {
+  static void error(
+    final String message, [
+    final Object? error,
+    final StackTrace? stackTrace,
+  ]) {
     _logger.e(message, error: error, stackTrace: stackTrace);
   }
 
-  static void warning(String message) {
+  static void warning(final String message) {
     _logger.w(message);
   }
 
-  static void info(String message) {
+  static void info(final String message) {
     _logger.i(message);
   }
 
-  static void debug(String message) {
+  static void debug(final String message) {
     _logger.d(message);
   }
 
-  static T silence<T>(T Function() action) {
+  static T silence<T>(final T Function() action) {
     _silenceDepth++;
     try {
       return action();
@@ -46,7 +50,7 @@ class AppLogger {
     }
   }
 
-  static Future<T> silenceAsync<T>(Future<T> Function() action) async {
+  static Future<T> silenceAsync<T>(final Future<T> Function() action) async {
     _silenceDepth++;
     try {
       return await action();
@@ -68,7 +72,7 @@ class AppLogger {
 
 class _DebugOnlyFilter extends LogFilter {
   @override
-  bool shouldLog(LogEvent event) {
+  bool shouldLog(final LogEvent event) {
     // Check if we're in a test environment
     if (_isTestEnvironment()) {
       return false;

@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 
 class ChartRepository {
-  ChartRepository({http.Client? client, DateTime Function()? now})
+  ChartRepository({final http.Client? client, final DateTime Function()? now})
     : _client = client ?? http.Client(),
       _now = now ?? DateTime.now;
 
@@ -61,20 +61,23 @@ class ChartRepository {
     }
   }
 
-  bool _hasFreshCache(DateTime now) {
+  bool _hasFreshCache(final DateTime now) {
     if (_cached == null || _lastFetched == null) {
       return false;
     }
     return now.difference(_lastFetched!) < _cacheDuration;
   }
 
-  List<ChartPoint> _cache(List<ChartPoint> data, DateTime fetchedAt) {
+  List<ChartPoint> _cache(
+    final List<ChartPoint> data,
+    final DateTime fetchedAt,
+  ) {
     _cached = data;
     _lastFetched = fetchedAt;
     return data;
   }
 
-  List<ChartPoint> _parseBody(String body) {
+  List<ChartPoint> _parseBody(final String body) {
     final dynamic decoded = json.decode(body);
     if (decoded is! Map<String, dynamic>) {
       throw const FormatException('Invalid chart payload shape');
@@ -87,10 +90,10 @@ class ChartRepository {
     final data =
         prices
             .whereType<List<dynamic>>()
-            .where((item) => item.length >= 2)
+            .where((final item) => item.length >= 2)
             .map(ChartPoint.fromApi)
             .toList()
-          ..sort((a, b) => a.date.compareTo(b.date));
+          ..sort((final a, final b) => a.date.compareTo(b.date));
 
     if (data.isEmpty) {
       throw const FormatException('Chart payload missing points');
@@ -99,10 +102,10 @@ class ChartRepository {
     return data;
   }
 
-  List<ChartPoint> _fallbackData(DateTime now) {
+  List<ChartPoint> _fallbackData(final DateTime now) {
     final base = now.toUtc();
     const values = <double>[27150, 27320, 26980, 27560, 28040, 28410, 28200];
-    return List<ChartPoint>.generate(values.length, (index) {
+    return List<ChartPoint>.generate(values.length, (final index) {
       final date = base.subtract(Duration(days: values.length - index - 1));
       return ChartPoint(date: date, value: values[index]);
     });

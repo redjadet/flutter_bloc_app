@@ -55,7 +55,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     return CommonPageLayout(
       title: l10n.googleMapsPageTitle,
@@ -64,7 +64,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
     );
   }
 
-  Widget _buildBody(BuildContext context, AppLocalizations l10n) {
+  Widget _buildBody(final BuildContext context, final AppLocalizations l10n) {
     if (!_isMapsSupported) {
       return GoogleMapsUnsupportedMessage(
         message: l10n.googleMapsPageUnsupportedDescription,
@@ -81,7 +81,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
     }
     return BlocBuilder<MapSampleCubit, MapSampleState>(
       buildWhen: _shouldRebuildBody,
-      builder: (BuildContext context, MapSampleState state) {
+      builder: (final BuildContext context, final MapSampleState state) {
         if (state.isLoading && state.markers.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -103,7 +103,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
           ),
           locations: _GoogleMapsLocationListSection(
             l10n: l10n,
-            onFocus: (MapLocation location) {
+            onFocus: (final MapLocation location) {
               unawaited(_mapViewController.focusOnLocation(location));
             },
           ),
@@ -133,7 +133,10 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
     });
   }
 
-  bool _shouldRebuildBody(MapSampleState previous, MapSampleState current) {
+  bool _shouldRebuildBody(
+    final MapSampleState previous,
+    final MapSampleState current,
+  ) {
     final bool previousShowingInitialLoader =
         previous.isLoading && previous.markers.isEmpty;
     final bool currentShowingInitialLoader =

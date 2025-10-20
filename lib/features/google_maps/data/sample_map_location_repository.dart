@@ -40,8 +40,5 @@ class SampleMapLocationRepository implements MapLocationRepository {
   ];
 
   @override
-  Future<List<MapLocation>> fetchSampleLocations() async {
-    // Mimic async work to keep repository signature future-proof.
-    return _locations;
-  }
+  Future<List<MapLocation>> fetchSampleLocations() async => _locations;
 }

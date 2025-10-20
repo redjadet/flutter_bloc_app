@@ -14,7 +14,7 @@ class WebsocketMessageList extends StatelessWidget {
   final String emptyLabel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     if (messages.isEmpty) {
       return AppMessage(message: emptyLabel);
     }
@@ -25,7 +25,7 @@ class WebsocketMessageList extends StatelessWidget {
       ),
       reverse: true,
       itemCount: messages.length,
-      itemBuilder: (context, index) {
+      itemBuilder: (final context, final index) {
         final WebsocketMessage message = messages[messages.length - 1 - index];
         return _WebsocketMessageBubble(message: message);
       },
@@ -39,7 +39,7 @@ class _WebsocketMessageBubble extends StatelessWidget {
   final WebsocketMessage message;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final bool isOutgoing =
         message.direction == WebsocketMessageDirection.outgoing;

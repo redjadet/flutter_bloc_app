@@ -5,40 +5,36 @@ class HuggingFacePayloadBuilder {
   const HuggingFacePayloadBuilder();
 
   JsonMap buildInferencePayload({
-    required List<String> pastUserInputs,
-    required List<String> generatedResponses,
-    required String prompt,
-  }) {
-    return <String, dynamic>{
-      'inputs': <String, dynamic>{
-        'past_user_inputs': pastUserInputs,
-        'generated_responses': generatedResponses,
-        'text': prompt,
-      },
-    };
-  }
+    required final List<String> pastUserInputs,
+    required final List<String> generatedResponses,
+    required final String prompt,
+  }) => <String, dynamic>{
+    'inputs': <String, dynamic>{
+      'past_user_inputs': pastUserInputs,
+      'generated_responses': generatedResponses,
+      'text': prompt,
+    },
+  };
 
   JsonMap buildChatCompletionsPayload({
-    required List<String> pastUserInputs,
-    required List<String> generatedResponses,
-    required String prompt,
-    required String model,
-  }) {
-    return <String, dynamic>{
-      'model': model,
-      'messages': _composeMessages(
-        pastUserInputs: pastUserInputs,
-        generatedResponses: generatedResponses,
-        prompt: prompt,
-      ),
-      'stream': false,
-    };
-  }
+    required final List<String> pastUserInputs,
+    required final List<String> generatedResponses,
+    required final String prompt,
+    required final String model,
+  }) => <String, dynamic>{
+    'model': model,
+    'messages': _composeMessages(
+      pastUserInputs: pastUserInputs,
+      generatedResponses: generatedResponses,
+      prompt: prompt,
+    ),
+    'stream': false,
+  };
 
   List<Map<String, String>> _composeMessages({
-    required List<String> pastUserInputs,
-    required List<String> generatedResponses,
-    required String prompt,
+    required final List<String> pastUserInputs,
+    required final List<String> generatedResponses,
+    required final String prompt,
   }) {
     final List<Map<String, String>> messages = <Map<String, String>>[];
 

@@ -4,12 +4,12 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 typedef JsonMap = Map<String, dynamic>;
 
 class HuggingFaceResponseParser {
-  const HuggingFaceResponseParser({required String fallbackMessage})
+  const HuggingFaceResponseParser({required final String fallbackMessage})
     : _fallbackMessage = fallbackMessage;
 
   final String _fallbackMessage;
 
-  ChatResult buildInferenceResult(JsonMap json) {
+  ChatResult buildInferenceResult(final JsonMap json) {
     final JsonMap conversation =
         (json['conversation'] as JsonMap?) ?? const <String, dynamic>{};
     final List<String> updatedPastInputs = _stringsFrom(
@@ -30,10 +30,10 @@ class HuggingFaceResponseParser {
   }
 
   ChatResult buildChatCompletionsResult({
-    required JsonMap json,
-    required List<String> pastUserInputs,
-    required List<String> generatedResponses,
-    required String prompt,
+    required final JsonMap json,
+    required final List<String> pastUserInputs,
+    required final List<String> generatedResponses,
+    required final String prompt,
   }) {
     final String replyText = _extractAssistantContent(json);
 
@@ -44,23 +44,23 @@ class HuggingFaceResponseParser {
     );
   }
 
-  List<String> _stringsFrom(dynamic value) {
+  List<String> _stringsFrom(final dynamic value) {
     if (value is List) {
       return value
-          .map((dynamic element) => element.toString())
+          .map((final dynamic element) => element.toString())
           .toList(growable: false);
     }
     return const <String>[];
   }
 
-  String _lastOrFallback(List<String> values) {
+  String _lastOrFallback(final List<String> values) {
     if (values.isNotEmpty && values.last.trim().isNotEmpty) {
       return values.last;
     }
     return _fallbackMessage;
   }
 
-  String _extractAssistantContent(JsonMap json) {
+  String _extractAssistantContent(final JsonMap json) {
     final List<dynamic>? choices = json['choices'] as List<dynamic>?;
     if (choices == null || choices.isEmpty) {
       return _fallbackMessage;

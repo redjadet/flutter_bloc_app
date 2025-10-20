@@ -16,12 +16,19 @@ analyzer:
     strict-raw-types: true
   plugins:
     - custom_lint
+  errors:
+    invalid_section_format: ignore
   exclude:
     - build/**
     - .dart_tool/**
     - ios/Pods/**
     - android/.gradle/**
     - android/app/generated/**
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+    - '**/*.gen.dart'
+    - '**/*.gr.dart'
+    - '**/*.mocks.dart'
     - '**/*.arb'
     - README.md
     - third_party/**
@@ -74,6 +81,14 @@ linter:
     prefer_spread_collections: true
     sort_child_properties_last: true
     sort_constructors_first: true
+    # Stricter rules
+    avoid_positional_boolean_parameters: true
+    prefer_final_parameters: true
+    cascade_invocations: true
+    unnecessary_raw_strings: true
+    avoid_multiple_declarations_per_line: true
+    prefer_expression_function_bodies: true
+    unnecessary_breaks: true
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

@@ -1,11 +1,11 @@
 part of 'chat_cubit.dart';
 
 List<String> _buildModelList(
-  String? initialModel,
-  List<String>? supportedModels,
+  final String? initialModel,
+  final List<String>? supportedModels,
 ) {
   final LinkedHashSet<String> ordered = LinkedHashSet<String>();
-  void add(String? value) {
+  void add(final String? value) {
     if (value == null) return;
     final String trimmed = value.trim();
     if (trimmed.isNotEmpty) {
@@ -26,8 +26,8 @@ List<String> _buildModelList(
 }
 
 String _resolveInitialModel(
-  String? initialModel,
-  List<String>? supportedModels,
+  final String? initialModel,
+  final List<String>? supportedModels,
 ) {
   final String? trimmed = _normalize(initialModel);
   if (trimmed != null) return trimmed;
@@ -35,7 +35,7 @@ String _resolveInitialModel(
   return models.first;
 }
 
-String? _normalize(String? value) {
+String? _normalize(final String? value) {
   if (value == null) return null;
   final String trimmed = value.trim();
   return trimmed.isEmpty ? null : trimmed;

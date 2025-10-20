@@ -30,7 +30,7 @@ class _ExamplePageState extends State<ExamplePage> {
   List<int>? _parallelResult;
   Duration? _parallelDuration;
 
-  Future<void> _loadPlatformInfo(BuildContext context) async {
+  Future<void> _loadPlatformInfo(final BuildContext context) async {
     if (_isFetchingInfo) return;
     setState(() {
       _isFetchingInfo = true;
@@ -103,10 +103,10 @@ class _ExamplePageState extends State<ExamplePage> {
   }
 
   void _setIsolateResults({
-    required int input,
-    required int result,
-    required List<int> parallelValues,
-    required Duration elapsed,
+    required final int input,
+    required final int result,
+    required final List<int> parallelValues,
+    required final Duration elapsed,
   }) {
     if (!mounted) return;
     setState(() {
@@ -119,7 +119,7 @@ class _ExamplePageState extends State<ExamplePage> {
     });
   }
 
-  void _setIsolateFailure(Object error) {
+  void _setIsolateFailure(final Object error) {
     if (!mounted) return;
     setState(() {
       _isRunningIsolates = false;
@@ -128,7 +128,7 @@ class _ExamplePageState extends State<ExamplePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;

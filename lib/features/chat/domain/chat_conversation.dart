@@ -9,16 +9,16 @@ abstract class ChatConversation with _$ChatConversation {
   const ChatConversation._();
 
   const factory ChatConversation({
-    required String id,
-    @Default(<ChatMessage>[]) List<ChatMessage> messages,
-    @Default(<String>[]) List<String> pastUserInputs,
-    @Default(<String>[]) List<String> generatedResponses,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-    String? model,
+    required final String id,
+    @Default(<ChatMessage>[]) final List<ChatMessage> messages,
+    @Default(<String>[]) final List<String> pastUserInputs,
+    @Default(<String>[]) final List<String> generatedResponses,
+    required final DateTime createdAt,
+    required final DateTime updatedAt,
+    final String? model,
   }) = _ChatConversation;
 
-  factory ChatConversation.fromJson(Map<String, dynamic> json) {
+  factory ChatConversation.fromJson(final Map<String, dynamic> json) {
     final List<ChatMessage> messages = _messagesFromJson(
       json['messages'] as List<dynamic>?,
     );
@@ -47,7 +47,7 @@ abstract class ChatConversation with _$ChatConversation {
 
   Map<String, dynamic> toJson() => <String, dynamic>{
     'id': id,
-    'messages': messages.map((ChatMessage m) => m.toJson()).toList(),
+    'messages': messages.map((final ChatMessage m) => m.toJson()).toList(),
     'pastUserInputs': pastUserInputs,
     'generatedResponses': generatedResponses,
     'createdAt': createdAt.toIso8601String(),
@@ -61,7 +61,7 @@ abstract class ChatConversation with _$ChatConversation {
       generatedResponses.isNotEmpty;
 }
 
-List<ChatMessage> _messagesFromJson(List<dynamic>? raw) {
+List<ChatMessage> _messagesFromJson(final List<dynamic>? raw) {
   if (raw == null) return const <ChatMessage>[];
   return raw
       .whereType<Map<String, dynamic>>()
@@ -69,12 +69,14 @@ List<ChatMessage> _messagesFromJson(List<dynamic>? raw) {
       .toList(growable: false);
 }
 
-List<String> _stringListFromJson(List<dynamic>? raw) {
+List<String> _stringListFromJson(final List<dynamic>? raw) {
   if (raw == null) return const <String>[];
-  return raw.map((dynamic value) => value.toString()).toList(growable: false);
+  return raw
+      .map((final dynamic value) => value.toString())
+      .toList(growable: false);
 }
 
-DateTime _parseDate(dynamic value, {DateTime? fallback}) {
+DateTime _parseDate(final dynamic value, {final DateTime? fallback}) {
   if (value is String && value.isNotEmpty) {
     final DateTime? parsed = DateTime.tryParse(value);
     if (parsed != null) {
@@ -87,7 +89,7 @@ DateTime _parseDate(dynamic value, {DateTime? fallback}) {
   return fallback ?? DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
 }
 
-String? _normalizeModel(dynamic value) {
+String? _normalizeModel(final dynamic value) {
   if (value is! String) {
     return null;
   }

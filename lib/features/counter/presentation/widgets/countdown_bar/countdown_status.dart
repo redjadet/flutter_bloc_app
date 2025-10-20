@@ -17,7 +17,7 @@ class CountdownStatus extends StatelessWidget {
   final Duration animDuration;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final TextStyle? base = Theme.of(context).textTheme.bodyMedium;
     final double baseSize = (base?.fontSize ?? 14).spMax;
     return Row(
@@ -25,7 +25,7 @@ class CountdownStatus extends StatelessWidget {
       children: [
         AnimatedSwitcher(
           duration: animDuration,
-          transitionBuilder: (child, animation) =>
+          transitionBuilder: (final child, final animation) =>
               FadeTransition(opacity: animation, child: child),
           child: Icon(
             active ? Icons.timer : Icons.pause_circle_filled,
@@ -38,7 +38,7 @@ class CountdownStatus extends StatelessWidget {
         Flexible(
           child: AnimatedSwitcher(
             duration: animDuration,
-            transitionBuilder: (child, animation) =>
+            transitionBuilder: (final child, final animation) =>
                 FadeTransition(opacity: animation, child: child),
             child: Text(
               label,

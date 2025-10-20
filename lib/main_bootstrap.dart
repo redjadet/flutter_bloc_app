@@ -12,7 +12,7 @@ import 'package:flutter_bloc_app/core/platform_init.dart';
 import 'package:flutter_bloc_app/firebase_options.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
-Future<void> runAppWithFlavor(Flavor flavor) async {
+Future<void> runAppWithFlavor(final Flavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
   const bool enableAssetSecrets = bool.fromEnvironment(
     SecretConfig.enableAssetSecretsDefine,
@@ -40,23 +40,20 @@ Future<void> runAppWithFlavor(Flavor flavor) async {
 
 Future<bool>? _firebaseInitialization;
 
-Future<bool> _initializeFirebase() {
-  return _firebaseInitialization ??= _initializeFirebaseOnce().then((
-    bool initialized,
-  ) {
-    if (!initialized) {
-      _firebaseInitialization = null;
-    }
-    return initialized;
-  });
-}
+Future<bool> _initializeFirebase() => _firebaseInitialization ??=
+    _initializeFirebaseOnce().then((final bool initialized) {
+      if (!initialized) {
+        _firebaseInitialization = null;
+      }
+      return initialized;
+    });
 
 Future<bool> _initializeFirebaseOnce() async {
   try {
     if (Firebase.apps.isNotEmpty) {
       AppLogger.debug(
         'Firebase already initialized: '
-        '${Firebase.apps.map((FirebaseApp app) => app.name).join(', ')}',
+        '${Firebase.apps.map((final FirebaseApp app) => app.name).join(', ')}',
       );
       return true;
     }
@@ -163,8 +160,8 @@ GoogleProvider? _createGoogleProvider() {
   }
 }
 
-bool _usesPlaceholderValues(FirebaseOptions options) {
-  bool containsPlaceholder(String? value) {
+bool _usesPlaceholderValues(final FirebaseOptions options) {
+  bool containsPlaceholder(final String? value) {
     if (value == null || value.isEmpty) return true;
     const List<String> markers = <String>[
       'your-project-id',
@@ -184,14 +181,16 @@ bool _usesPlaceholderValues(FirebaseOptions options) {
 
 void _registerCrashlyticsGlobalHandlers() {
   final FlutterExceptionHandler? previousFlutterHandler = FlutterError.onError;
-  FlutterError.onError = (FlutterErrorDetails details) {
+  FlutterError.onError = (final FlutterErrorDetails details) {
     FirebaseCrashlytics.instance.recordFlutterFatalError(details);
     previousFlutterHandler?.call(details);
   };
 
   final bool Function(Object, StackTrace)? previousPlatformHandler =
       PlatformDispatcher.instance.onError;
-  PlatformDispatcher.instance.onError = (Object error, StackTrace stackTrace) {
+  PlatformDispatcher
+      .instance
+      .onError = (final Object error, final StackTrace stackTrace) {
     FirebaseCrashlytics.instance.recordError(error, stackTrace, fatal: true);
     return previousPlatformHandler?.call(error, stackTrace) ?? true;
   };

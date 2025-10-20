@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
-  GraphqlDemoCubit({required GraphqlDemoRepository repository})
+  GraphqlDemoCubit({required final GraphqlDemoRepository repository})
     : _repository = repository,
       super(const GraphqlDemoState());
 
@@ -61,8 +61,8 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
   }
 
   Future<void> selectContinent(
-    String? continentCode, {
-    bool force = false,
+    final String? continentCode, {
+    final bool force = false,
   }) async {
     if (!force &&
         state.status == GraphqlDemoStatus.success &&
@@ -118,14 +118,14 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
     }
   }
 
-  String? _friendlyMessage(Object error) {
+  String? _friendlyMessage(final Object error) {
     if (error is GraphqlDemoException) {
       return error.message;
     }
     return null;
   }
 
-  GraphqlDemoErrorType _resolveErrorType(Object error) {
+  GraphqlDemoErrorType _resolveErrorType(final Object error) {
     if (error is GraphqlDemoException) {
       return error.type;
     }

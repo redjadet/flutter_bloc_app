@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:intl/intl.dart';
 
 class ChartPage extends StatefulWidget {
-  const ChartPage({super.key, ChartRepository? repository})
+  const ChartPage({super.key, final ChartRepository? repository})
     : _repository = repository;
 
   final ChartRepository? _repository;
@@ -36,7 +36,7 @@ class _ChartPageState extends State<ChartPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return CommonPageLayout(
       title: l10n.chartPageTitle,
@@ -44,7 +44,7 @@ class _ChartPageState extends State<ChartPage> {
         onRefresh: _handleRefresh,
         child: FutureBuilder<List<ChartPoint>>(
           future: _future,
-          builder: (context, snapshot) {
+          builder: (final context, final snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting &&
                 !snapshot.hasData) {
               return const ChartLoadingList();
@@ -63,7 +63,8 @@ class _ChartPageState extends State<ChartPage> {
               points: points,
               dateFormat: dateFormat,
               zoomEnabled: _zoomEnabled,
-              onZoomChanged: (value) => setState(() => _zoomEnabled = value),
+              onZoomChanged: (final value) =>
+                  setState(() => _zoomEnabled = value),
             );
           },
         ),

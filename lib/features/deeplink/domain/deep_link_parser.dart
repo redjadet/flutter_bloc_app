@@ -7,7 +7,7 @@ class DeepLinkParser {
 
   /// Returns the matching [DeepLinkTarget] for the provided [uri].
   /// Returns null when the URI is not supported.
-  DeepLinkTarget? parse(Uri uri) {
+  DeepLinkTarget? parse(final Uri uri) {
     if (!_isSupportedScheme(uri.scheme)) {
       return null;
     }
@@ -17,8 +17,8 @@ class DeepLinkParser {
     }
 
     final List<String> segments = uri.pathSegments
-        .where((segment) => segment.isNotEmpty)
-        .map((segment) => segment.toLowerCase())
+        .where((final segment) => segment.isNotEmpty)
+        .map((final segment) => segment.toLowerCase())
         .toList();
 
     if (segments.isEmpty) {
@@ -35,10 +35,9 @@ class DeepLinkParser {
     return _segmentMap[key];
   }
 
-  bool _isSupportedScheme(String scheme) {
-    return scheme == DeepLinkConfig.universalScheme ||
-        scheme == DeepLinkConfig.fallbackScheme;
-  }
+  bool _isSupportedScheme(final String scheme) =>
+      scheme == DeepLinkConfig.universalScheme ||
+      scheme == DeepLinkConfig.fallbackScheme;
 
   static const Map<String, DeepLinkTarget> _segmentMap =
       <String, DeepLinkTarget>{

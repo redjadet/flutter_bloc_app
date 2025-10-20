@@ -7,18 +7,18 @@ abstract class BiometricAuthenticator {
   /// Prompts the user for biometric authentication and returns whether the
   /// user successfully authenticated. Implementations should handle cases where
   /// biometrics are unavailable and decide whether to allow or block access.
-  Future<bool> authenticate({String? localizedReason});
+  Future<bool> authenticate({final String? localizedReason});
 }
 
 /// Uses the `local_auth` package to request biometric authentication.
 class LocalBiometricAuthenticator implements BiometricAuthenticator {
-  LocalBiometricAuthenticator({LocalAuthentication? localAuth})
+  LocalBiometricAuthenticator({final LocalAuthentication? localAuth})
     : _localAuth = localAuth ?? LocalAuthentication();
 
   final LocalAuthentication _localAuth;
 
   @override
-  Future<bool> authenticate({String? localizedReason}) async {
+  Future<bool> authenticate({final String? localizedReason}) async {
     try {
       final bool isSupported = await _localAuth.isDeviceSupported();
       if (!isSupported) {
@@ -37,10 +37,32 @@ class LocalBiometricAuthenticator implements BiometricAuthenticator {
         biometricOnly: true,
       );
     } on PlatformException catch (error, stackTrace) {
+      // Allow navigating to settings if biometrics are not enrolled on device.
+      final String code = (error.code).toString();
+      final bool notEnrolled =
+          code.contains('noBiometricsEnrolled') ||
+          code.contains('NotEnrolled') ||
+          code.contains('notEnrolled');
+      if (notEnrolled) {
+        AppLogger.info('Biometry not enrolled; allowing access to settings.');
+        return true;
+      }
       AppLogger.warning('Biometric authentication failed: ${error.message}');
       AppLogger.debug(stackTrace.toString());
       return false;
     } on Exception catch (error, stackTrace) {
+      // Some platforms throw a non-PlatformException (e.g., LocalAuthException)
+      // Parse the string form to detect enrollment-related failures.
+      final String text = error.toString();
+      final bool notEnrolled =
+          text.contains('noBiometricsEnrolled') ||
+          text.contains('NotEnrolled') ||
+          text.contains('notEnrolled') ||
+          text.contains('passcodeNotSet');
+      if (notEnrolled) {
+        AppLogger.info('Biometry not enrolled (Exception); allowing.');
+        return true;
+      }
       AppLogger.warning('Biometric authentication failed: $error');
       AppLogger.debug(stackTrace.toString());
       return false;

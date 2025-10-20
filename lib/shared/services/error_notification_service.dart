@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 abstract class ErrorNotificationService {
-  Future<void> showSnackBar(BuildContext context, String message);
+  Future<void> showSnackBar(final BuildContext context, final String message);
   Future<void> showAlertDialog(
-    BuildContext context,
-    String title,
-    String message,
+    final BuildContext context,
+    final String title,
+    final String message,
   );
 }
 
 class SnackbarErrorNotificationService implements ErrorNotificationService {
   @override
-  Future<void> showSnackBar(BuildContext context, String message) async {
+  Future<void> showSnackBar(
+    final BuildContext context,
+    final String message,
+  ) async {
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
       context,
     );
@@ -33,9 +36,9 @@ class SnackbarErrorNotificationService implements ErrorNotificationService {
 
   @override
   Future<void> showAlertDialog(
-    BuildContext context,
-    String title,
-    String message,
+    final BuildContext context,
+    final String title,
+    final String message,
   ) {
     if (!context.mounted) {
       AppLogger.debug(
@@ -46,18 +49,16 @@ class SnackbarErrorNotificationService implements ErrorNotificationService {
     AppLogger.info('Showing AlertDialog error message');
     return showDialog<void>(
       context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
+      builder: (final BuildContext dialogContext) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
     );
   }
 }

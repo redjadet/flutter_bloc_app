@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 
 class AppInfoCubit extends Cubit<AppInfoState> {
-  AppInfoCubit({required AppInfoRepository repository})
+  AppInfoCubit({required final AppInfoRepository repository})
     : _repository = repository,
       super(const AppInfoState());
 
@@ -49,18 +49,16 @@ class AppInfoState extends Equatable {
   final String? errorMessage;
 
   AppInfoState copyWith({
-    AppInfoStatus? status,
-    AppInfo? info,
-    bool clearInfo = false,
-    String? errorMessage,
-    bool clearError = false,
-  }) {
-    return AppInfoState(
-      status: status ?? this.status,
-      info: clearInfo ? null : (info ?? this.info),
-      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-    );
-  }
+    final AppInfoStatus? status,
+    final AppInfo? info,
+    final bool clearInfo = false,
+    final String? errorMessage,
+    final bool clearError = false,
+  }) => AppInfoState(
+    status: status ?? this.status,
+    info: clearInfo ? null : (info ?? this.info),
+    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+  );
 
   @override
   List<Object?> get props => <Object?>[status, info, errorMessage];

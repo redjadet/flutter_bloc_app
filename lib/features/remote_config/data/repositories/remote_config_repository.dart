@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class RemoteConfigRepository {
   RemoteConfigRepository(
     this._remoteConfig, {
-    void Function(String message)? debugLogger,
+    final void Function(String message)? debugLogger,
   }) : _logDebug = debugLogger ?? AppLogger.debug;
 
   static const String _awesomeFeatureKey = 'awesome_feature_enabled';
@@ -45,7 +45,7 @@ class RemoteConfigRepository {
     _logAwesomeFeatureFlag(source: 'fetch');
   }
 
-  String getString(String key) {
+  String getString(final String key) {
     final String value = _remoteConfig.getString(key);
 
     if (key == _testValueKey) {
@@ -55,7 +55,7 @@ class RemoteConfigRepository {
     return value;
   }
 
-  bool getBool(String key) {
+  bool getBool(final String key) {
     final bool value = _remoteConfig.getBool(key);
 
     if (key == _awesomeFeatureKey) {
@@ -65,13 +65,9 @@ class RemoteConfigRepository {
     return value;
   }
 
-  int getInt(String key) {
-    return _remoteConfig.getInt(key);
-  }
+  int getInt(final String key) => _remoteConfig.getInt(key);
 
-  double getDouble(String key) {
-    return _remoteConfig.getDouble(key);
-  }
+  double getDouble(final String key) => _remoteConfig.getDouble(key);
 
   Future<void> dispose() async {
     await _configUpdatesSubscription?.cancel();
@@ -81,7 +77,7 @@ class RemoteConfigRepository {
 
   void _subscribeToRealtimeUpdates() {
     _configUpdatesSubscription ??= _remoteConfig.onConfigUpdated.listen(
-      (RemoteConfigUpdate update) async {
+      (final RemoteConfigUpdate update) async {
         final bool shouldLogTestValue = update.updatedKeys.contains(
           _testValueKey,
         );
@@ -111,7 +107,7 @@ class RemoteConfigRepository {
           _logAwesomeFeatureFlag(source: 'realtime-update');
         }
       },
-      onError: (Object error, StackTrace stackTrace) {
+      onError: (final Object error, final StackTrace stackTrace) {
         AppLogger.error(
           'Remote Config realtime listener error',
           error,
@@ -121,12 +117,12 @@ class RemoteConfigRepository {
     );
   }
 
-  void _logTestValue({required String source}) {
+  void _logTestValue({required final String source}) {
     final String value = _remoteConfig.getString(_testValueKey);
     _logDebug('RemoteConfig[$source] $_testValueKey="$value"');
   }
 
-  void _logAwesomeFeatureFlag({required String source}) {
+  void _logAwesomeFeatureFlag({required final String source}) {
     final bool value = _remoteConfig.getBool(_awesomeFeatureKey);
     _logDebug('RemoteConfig[$source] $_awesomeFeatureKey=$value');
   }

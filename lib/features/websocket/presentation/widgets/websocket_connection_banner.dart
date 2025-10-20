@@ -9,7 +9,7 @@ class WebsocketConnectionBanner extends StatelessWidget {
   final WebsocketState state;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final AppLocalizations l10n = AppLocalizations.of(context);
     if (state.errorMessage != null) {

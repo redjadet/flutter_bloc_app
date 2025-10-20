@@ -10,10 +10,10 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 /// Firebase Realtime Database backed implementation of [CounterRepository].
 class RealtimeDatabaseCounterRepository implements CounterRepository {
   RealtimeDatabaseCounterRepository({
-    FirebaseDatabase? database,
-    DatabaseReference? counterRef,
-    FirebaseAuth? auth,
-    String counterPath = _defaultCounterPath,
+    final FirebaseDatabase? database,
+    final DatabaseReference? counterRef,
+    final FirebaseAuth? auth,
+    final String counterPath = _defaultCounterPath,
   }) : _counterRef =
            counterRef ??
            (database ?? FirebaseDatabase.instance).ref(counterPath),
@@ -61,7 +61,7 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   }
 
   @override
-  Future<void> save(CounterSnapshot snapshot) async {
+  Future<void> save(final CounterSnapshot snapshot) async {
     try {
       final User user = await waitForAuthUser(_auth);
       _debugLog('RealtimeDatabaseCounterRepository.save writing counter value');
@@ -88,31 +88,29 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   }
 
   @override
-  Stream<CounterSnapshot> watch() {
-    return Stream.fromFuture(waitForAuthUser(_auth))
-        .asyncExpand((User user) {
-          return _counterRef
-              .child(user.uid)
-              .onValue
-              .map(
-                (DatabaseEvent event) =>
-                    snapshotFromValue(event.snapshot.value, userId: user.uid),
-              );
-        })
-        .handleError((Object error, StackTrace stackTrace) {
-          AppLogger.error(
-            'RealtimeDatabaseCounterRepository.watch failed',
-            error,
-            stackTrace,
-          );
-        });
-  }
+  Stream<CounterSnapshot> watch() => Stream.fromFuture(waitForAuthUser(_auth))
+      .asyncExpand(
+        (final User user) => _counterRef
+            .child(user.uid)
+            .onValue
+            .map(
+              (final DatabaseEvent event) =>
+                  snapshotFromValue(event.snapshot.value, userId: user.uid),
+            ),
+      )
+      .handleError((final Object error, final StackTrace stackTrace) {
+        AppLogger.error(
+          'RealtimeDatabaseCounterRepository.watch failed',
+          error,
+          stackTrace,
+        );
+      });
 
   @visibleForTesting
   static CounterSnapshot snapshotFromValue(
-    Object? value, {
-    required String userId,
-    bool logUnexpected = true,
+    final Object? value, {
+    required final String userId,
+    final bool logUnexpected = true,
   }) {
     if (value == null) {
       return CounterSnapshot(userId: userId, count: 0);
@@ -148,7 +146,7 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   }
 }
 
-void _debugLog(String message) {
+void _debugLog(final String message) {
   if (kDebugMode) {
     AppLogger.debug(message);
   }
@@ -156,8 +154,8 @@ void _debugLog(String message) {
 
 @visibleForTesting
 Future<User> waitForAuthUser(
-  FirebaseAuth auth, {
-  Duration timeout = RealtimeDatabaseCounterRepository._authWaitTimeout,
+  final FirebaseAuth auth, {
+  final Duration timeout = RealtimeDatabaseCounterRepository._authWaitTimeout,
 }) async {
   final User? current = auth.currentUser;
   if (current != null) {
@@ -167,7 +165,7 @@ Future<User> waitForAuthUser(
   try {
     return await auth
         .authStateChanges()
-        .where((User? user) => user != null)
+        .where((final User? user) => user != null)
         .cast<User>()
         .first
         .timeout(timeout);

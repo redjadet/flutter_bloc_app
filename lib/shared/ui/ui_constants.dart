@@ -7,7 +7,7 @@ class UI {
 
   static bool _screenUtilReady = false;
 
-  static void markScreenUtilReady([bool ready = true]) {
+  static void markScreenUtilReady({final bool ready = true}) {
     _screenUtilReady = ready;
   }
 
@@ -51,22 +51,22 @@ class UI {
   static double get dividerThin => _h(1);
 
   // Safe adapters (fallback to raw when ScreenUtil not initialized)
-  static double _w(double v) {
+  static double _w(final double v) {
     if (!_screenUtilReady) return v;
     return v.w;
   }
 
-  static double _h(double v) {
+  static double _h(final double v) {
     if (!_screenUtilReady) return v;
     return v.h;
   }
 
-  static double _r(double v) {
+  static double _r(final double v) {
     if (!_screenUtilReady) return v;
     return v.r;
   }
 
-  static double _spMax(double v) {
+  static double _spMax(final double v) {
     if (!_screenUtilReady) return v;
     return v.spMax;
   }

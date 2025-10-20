@@ -3,10 +3,10 @@ enum ChatAuthor { user, assistant, system }
 class ChatMessage {
   const ChatMessage({required this.author, required this.text});
 
-  factory ChatMessage.fromJson(Map<String, dynamic> json) {
+  factory ChatMessage.fromJson(final Map<String, dynamic> json) {
     final String authorValue = (json['author'] ?? '').toString();
     final ChatAuthor author = ChatAuthor.values.firstWhere(
-      (ChatAuthor value) => value.name == authorValue,
+      (final ChatAuthor value) => value.name == authorValue,
       orElse: () => ChatAuthor.system,
     );
     return ChatMessage(author: author, text: (json['text'] ?? '').toString());

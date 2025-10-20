@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 /// when the app shuts down. Avoid constructing new clients directly in
 /// repositories to keep connection pooling and teardown consistent.
 class CountriesGraphqlRepository implements GraphqlDemoRepository {
-  CountriesGraphqlRepository({http.Client? client})
+  CountriesGraphqlRepository({final http.Client? client})
     : _client = client ?? http.Client();
 
   static const String _opContinents = 'Continents';
@@ -38,7 +38,7 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
     }
     return List<GraphqlContinent>.unmodifiable(
       rawContinents.map(
-        (dynamic item) => GraphqlContinent.fromJson(
+        (final dynamic item) => GraphqlContinent.fromJson(
           Map<String, dynamic>.from(item as Map<Object?, Object?>),
         ),
       ),
@@ -46,7 +46,9 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
   }
 
   @override
-  Future<List<GraphqlCountry>> fetchCountries({String? continentCode}) async {
+  Future<List<GraphqlCountry>> fetchCountries({
+    final String? continentCode,
+  }) async {
     final String? normalizedCode = _normalizedContinentCode(continentCode);
     if (normalizedCode == null) {
       final Map<String, dynamic> data = await _postQuery(
@@ -66,21 +68,21 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
     return _mapCountries(continent?['countries']);
   }
 
-  List<GraphqlCountry> _mapCountries(Object? rawCountries) {
+  List<GraphqlCountry> _mapCountries(final Object? rawCountries) {
     final List<dynamic> list = (rawCountries as List<dynamic>? ?? <dynamic>[]);
     if (list.isEmpty) {
       return const <GraphqlCountry>[];
     }
     return List<GraphqlCountry>.unmodifiable(
       list.map(
-        (dynamic item) => GraphqlCountry.fromJson(
+        (final dynamic item) => GraphqlCountry.fromJson(
           Map<String, dynamic>.from(item as Map<Object?, Object?>),
         ),
       ),
     );
   }
 
-  String? _normalizedContinentCode(String? code) {
+  String? _normalizedContinentCode(final String? code) {
     if (code == null) {
       return null;
     }
@@ -92,9 +94,9 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
   }
 
   Future<Map<String, dynamic>> _postQuery(
-    String query, {
-    Map<String, dynamic>? variables,
-    String? operationName,
+    final String query, {
+    final Map<String, dynamic>? variables,
+    final String? operationName,
   }) async {
     final Uri uri = Uri.parse(_endpoint);
     final Map<String, dynamic> payload = <String, dynamic>{
@@ -176,7 +178,7 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
     }
   }
 
-  static const String _continentsQuery = r'''
+  static const String _continentsQuery = '''
     query Continents {
       continents {
         code
@@ -185,7 +187,7 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
     }
   ''';
 
-  static const String _allCountriesQuery = r'''
+  static const String _allCountriesQuery = '''
     query AllCountries {
       countries {
         code

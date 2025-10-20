@@ -7,18 +7,16 @@ class WebsocketState extends Equatable {
   WebsocketState({
     required this.endpoint,
     required this.status,
-    required List<WebsocketMessage> messages,
+    required final List<WebsocketMessage> messages,
     this.errorMessage,
     this.isSending = false,
   }) : _messages = List<WebsocketMessage>.unmodifiable(messages);
 
-  factory WebsocketState.initial(Uri endpoint) {
-    return WebsocketState(
-      endpoint: endpoint,
-      status: WebsocketStatus.disconnected,
-      messages: const <WebsocketMessage>[],
-    );
-  }
+  factory WebsocketState.initial(final Uri endpoint) => WebsocketState(
+    endpoint: endpoint,
+    status: WebsocketStatus.disconnected,
+    messages: const <WebsocketMessage>[],
+  );
 
   final Uri endpoint;
   final WebsocketStatus status;
@@ -32,24 +30,21 @@ class WebsocketState extends Equatable {
   bool get isConnecting => status == WebsocketStatus.connecting;
 
   WebsocketState copyWith({
-    WebsocketStatus? status,
-    List<WebsocketMessage>? messages,
-    String? errorMessage,
-    bool clearError = false,
-    bool? isSending,
-  }) {
-    return WebsocketState(
-      endpoint: endpoint,
-      status: status ?? this.status,
-      messages: messages ?? _messages,
-      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-      isSending: isSending ?? this.isSending,
-    );
-  }
+    final WebsocketStatus? status,
+    final List<WebsocketMessage>? messages,
+    final String? errorMessage,
+    final bool clearError = false,
+    final bool? isSending,
+  }) => WebsocketState(
+    endpoint: endpoint,
+    status: status ?? this.status,
+    messages: messages ?? _messages,
+    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+    isSending: isSending ?? this.isSending,
+  );
 
-  WebsocketState appendMessage(WebsocketMessage message) {
-    return copyWith(messages: <WebsocketMessage>[..._messages, message]);
-  }
+  WebsocketState appendMessage(final WebsocketMessage message) =>
+      copyWith(messages: <WebsocketMessage>[..._messages, message]);
 
   static const DeepCollectionEquality _listEquality = DeepCollectionEquality();
 

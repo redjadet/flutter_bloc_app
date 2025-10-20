@@ -9,7 +9,7 @@ import 'dart:io';
 /// of `assets/config/secrets.sample.json`, or a minimal placeholder if the
 /// sample is unavailable. Run this right before `flutter build` for release
 /// flavors to guarantee that no live credentials are bundled.
-Future<void> main(List<String> args) async {
+Future<void> main(final List<String> args) async {
   final File secretsFile = File('assets/config/secrets.json');
   final File sampleFile = File('assets/config/secrets.sample.json');
 

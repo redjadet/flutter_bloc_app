@@ -12,7 +12,7 @@ class IsolateSamples {
   ///
   /// The computation itself is intentionally CPU-bound so we can observe the
   /// advantage of moving the work off the main isolate.
-  static Future<int> fibonacci(int n) async {
+  static Future<int> fibonacci(final int n) async {
     final ReceivePort receivePort = ReceivePort();
     await Isolate.spawn<_FibonacciMessage>(
       _fibonacciEntryPoint,
@@ -27,8 +27,8 @@ class IsolateSamples {
   /// then returns `value * 2`. The combined result demonstrates how work can be
   /// parallelized.
   static Future<List<int>> delayedDoubleAll(
-    List<int> values, {
-    Duration delay = const Duration(milliseconds: 120),
+    final List<int> values, {
+    final Duration delay = const Duration(milliseconds: 120),
   }) async {
     final List<Future<int>> tasks = <Future<int>>[
       for (final int value in values) _delayedDouble(value, delay),
@@ -36,7 +36,10 @@ class IsolateSamples {
     return Future.wait(tasks);
   }
 
-  static Future<int> _delayedDouble(int value, Duration delay) async {
+  static Future<int> _delayedDouble(
+    final int value,
+    final Duration delay,
+  ) async {
     final ReceivePort receivePort = ReceivePort();
     await Isolate.spawn<_DelayMessage>(
       _delayEntryPoint,
@@ -61,17 +64,17 @@ class _DelayMessage {
   final SendPort replyPort;
 }
 
-Future<void> _fibonacciEntryPoint(_FibonacciMessage message) async {
+Future<void> _fibonacciEntryPoint(final _FibonacciMessage message) async {
   final int result = _calculateFibonacci(message.n);
   message.replyPort.send(result);
 }
 
-Future<void> _delayEntryPoint(_DelayMessage message) async {
+Future<void> _delayEntryPoint(final _DelayMessage message) async {
   await Future<void>.delayed(message.delay);
   message.replyPort.send(message.value * 2);
 }
 
-int _calculateFibonacci(int n) {
+int _calculateFibonacci(final int n) {
   if (n <= 0) {
     return 0;
   }

@@ -93,7 +93,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
   firebase_auth_mocks: ^0.15.0
-  custom_lint: ^0.7.5
+  custom_lint: ^0.7.6
   file_length_lint:
     path: custom_lints/file_length_lint
 

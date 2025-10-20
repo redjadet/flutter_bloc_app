@@ -1,7 +1,7 @@
 part of 'chat_cubit.dart';
 
 mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
-  Future<void> sendMessage(String message) async {
+  Future<void> sendMessage(final String message) async {
     if (state.isLoading) {
       return;
     }

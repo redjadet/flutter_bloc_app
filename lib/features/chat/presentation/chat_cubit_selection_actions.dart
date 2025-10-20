@@ -1,7 +1,7 @@
 part of 'chat_cubit.dart';
 
 mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
-  void selectModel(String model) {
+  void selectModel(final String model) {
     final String? normalized = _normalize(model);
     if (normalized == null ||
         !_models.contains(normalized) ||
@@ -31,7 +31,7 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
     unawaited(_persistHistory(history));
   }
 
-  void selectConversation(String conversationId) {
+  void selectConversation(final String conversationId) {
     if (state.activeConversationId == conversationId) {
       return;
     }

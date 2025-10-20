@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Stores chat history in encrypted platform storage.
 class SecureChatHistoryRepository implements ChatHistoryRepository {
-  SecureChatHistoryRepository({SecretStorage? storage})
+  SecureChatHistoryRepository({final SecretStorage? storage})
     : _storage = storage ?? FlutterSecureSecretStorage();
 
   static const String _storageKeyHistory = 'chat_history';
@@ -40,7 +40,7 @@ class SecureChatHistoryRepository implements ChatHistoryRepository {
   }
 
   @override
-  Future<void> save(List<ChatConversation> conversations) async {
+  Future<void> save(final List<ChatConversation> conversations) async {
     try {
       if (conversations.isEmpty) {
         await _storage.delete(_storageKeyHistory);
@@ -48,7 +48,7 @@ class SecureChatHistoryRepository implements ChatHistoryRepository {
       }
       final String json = jsonEncode(
         conversations
-            .map((ChatConversation c) => c.toJson())
+            .map((final ChatConversation c) => c.toJson())
             .toList(growable: false),
       );
       await _storage.write(_storageKeyHistory, json);

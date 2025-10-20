@@ -2,10 +2,10 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 
 abstract class ChatRepository {
   Future<ChatResult> sendMessage({
-    required List<String> pastUserInputs,
-    required List<String> generatedResponses,
-    required String prompt,
-    String? model,
+    required final List<String> pastUserInputs,
+    required final List<String> generatedResponses,
+    required final String prompt,
+    final String? model,
   });
 }
 

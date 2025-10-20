@@ -17,7 +17,7 @@ class ChartLineGraph extends StatelessWidget {
   final bool zoomEnabled;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final theme = Theme.of(context);
     final primaryColor = theme.colorScheme.primary;
     final tooltipTextStyle =
@@ -37,16 +37,14 @@ class ChartLineGraph extends StatelessWidget {
             touchTooltipData: LineTouchTooltipData(
               fitInsideHorizontally: true,
               fitInsideVertically: true,
-              getTooltipItems: (touchedSpots) {
-                return touchedSpots
-                    .map<LineTooltipItem?>(
-                      (spot) => LineTooltipItem(
-                        spot.y.toStringAsFixed(3),
-                        tooltipTextStyle,
-                      ),
-                    )
-                    .toList();
-              },
+              getTooltipItems: (final touchedSpots) => touchedSpots
+                  .map<LineTooltipItem?>(
+                    (final spot) => LineTooltipItem(
+                      spot.y.toStringAsFixed(3),
+                      tooltipTextStyle,
+                    ),
+                  )
+                  .toList(),
             ),
           );
 
@@ -58,7 +56,7 @@ class ChartLineGraph extends StatelessWidget {
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: UI.gapL * 3,
-              getTitlesWidget: (value, meta) {
+              getTitlesWidget: (final value, final meta) {
                 final index = value.toInt();
                 Widget child = const SizedBox.shrink();
                 if (index >= 0 && index < points.length) {

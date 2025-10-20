@@ -15,7 +15,7 @@ class CommonLoadingWidget extends StatelessWidget {
   final Color? color;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final theme = Theme.of(context);
     final effectiveColor = color ?? theme.colorScheme.secondary;
 
@@ -61,18 +61,16 @@ class CommonLoadingOverlay extends StatelessWidget {
   final String? message;
 
   @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        child,
-        if (isLoading)
-          Container(
-            color: Colors.black.withValues(alpha: 0.3),
-            child: CommonLoadingWidget(message: message),
-          ),
-      ],
-    );
-  }
+  Widget build(final BuildContext context) => Stack(
+    children: [
+      child,
+      if (isLoading)
+        Container(
+          color: Colors.black.withValues(alpha: 0.3),
+          child: CommonLoadingWidget(message: message),
+        ),
+    ],
+  );
 }
 
 /// A reusable loading button that shows progress when loading
@@ -93,31 +91,29 @@ class CommonLoadingButton extends StatelessWidget {
   final ButtonStyle? style;
 
   @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: isLoading ? null : onPressed,
-      style: style,
-      child: isLoading
-          ? Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).colorScheme.onPrimary,
-                    ),
+  Widget build(final BuildContext context) => ElevatedButton(
+    onPressed: isLoading ? null : onPressed,
+    style: style,
+    child: isLoading
+        ? Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).colorScheme.onPrimary,
                   ),
                 ),
-                if (loadingMessage != null) ...[
-                  const SizedBox(width: 8),
-                  Text(loadingMessage!),
-                ],
+              ),
+              if (loadingMessage != null) ...[
+                const SizedBox(width: 8),
+                Text(loadingMessage!),
               ],
-            )
-          : child,
-    );
-  }
+            ],
+          )
+        : child,
+  );
 }

@@ -16,7 +16,7 @@ class PlatformInfoSection extends StatelessWidget {
   final String? errorMessage;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final AppLocalizations l10n = AppLocalizations.of(context);
     if (isLoading && info == null && errorMessage == null) {
@@ -61,25 +61,21 @@ class PlatformInfoSection extends StatelessWidget {
     );
   }
 
-  Widget _loadingIndicator() {
-    return Padding(
-      padding: EdgeInsets.only(top: UI.gapS),
-      child: const CircularProgressIndicator(),
-    );
-  }
+  Widget _loadingIndicator() => Padding(
+    padding: EdgeInsets.only(top: UI.gapS),
+    child: const CircularProgressIndicator(),
+  );
 
-  Widget _errorText(ThemeData theme, String message) {
-    return Padding(
-      padding: EdgeInsets.only(top: UI.gapS),
-      child: Text(
-        message,
-        style: theme.textTheme.bodySmall?.copyWith(
-          color: theme.colorScheme.error,
-        ),
-        textAlign: TextAlign.center,
+  Widget _errorText(final ThemeData theme, final String message) => Padding(
+    padding: EdgeInsets.only(top: UI.gapS),
+    child: Text(
+      message,
+      style: theme.textTheme.bodySmall?.copyWith(
+        color: theme.colorScheme.error,
       ),
-    );
-  }
+      textAlign: TextAlign.center,
+    ),
+  );
 }
 
 class IsolateResultSection extends StatelessWidget {
@@ -107,7 +103,7 @@ class IsolateResultSection extends StatelessWidget {
       parallelDuration != null;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final AppLocalizations l10n = AppLocalizations.of(context);
     if (isLoading && !_hasResults && errorMessage == null) {
@@ -150,23 +146,19 @@ class IsolateResultSection extends StatelessWidget {
     );
   }
 
-  Widget _loadingIndicator() {
-    return Padding(
-      padding: EdgeInsets.only(top: UI.gapS),
-      child: const CircularProgressIndicator(),
-    );
-  }
+  Widget _loadingIndicator() => Padding(
+    padding: EdgeInsets.only(top: UI.gapS),
+    child: const CircularProgressIndicator(),
+  );
 
-  Widget _errorText(ThemeData theme, String message) {
-    return Padding(
-      padding: EdgeInsets.only(top: UI.gapS),
-      child: Text(
-        message,
-        style: theme.textTheme.bodySmall?.copyWith(
-          color: theme.colorScheme.error,
-        ),
-        textAlign: TextAlign.center,
+  Widget _errorText(final ThemeData theme, final String message) => Padding(
+    padding: EdgeInsets.only(top: UI.gapS),
+    child: Text(
+      message,
+      style: theme.textTheme.bodySmall?.copyWith(
+        color: theme.colorScheme.error,
       ),
-    );
-  }
+      textAlign: TextAlign.center,
+    ),
+  );
 }

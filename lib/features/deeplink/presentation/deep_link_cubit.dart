@@ -9,8 +9,8 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 /// Handles incoming deep/universal links and exposes navigation events.
 class DeepLinkCubit extends Cubit<DeepLinkState> {
   DeepLinkCubit({
-    required DeepLinkService service,
-    required DeepLinkParser parser,
+    required final DeepLinkService service,
+    required final DeepLinkParser parser,
   }) : _service = service,
        _parser = parser,
        super(const DeepLinkIdle());
@@ -37,11 +37,11 @@ class DeepLinkCubit extends Cubit<DeepLinkState> {
     }
 
     _subscription = _service.linkStream().listen(
-      (Uri uri) {
+      (final Uri uri) {
         AppLogger.info('Received deep link from stream: $uri');
         _handleUri(uri, DeepLinkOrigin.resumed);
       },
-      onError: (Object error, StackTrace stackTrace) {
+      onError: (final Object error, final StackTrace stackTrace) {
         AppLogger.error('Deep link stream error', error, stackTrace);
       },
     );
@@ -49,7 +49,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState> {
     AppLogger.info('Deep link cubit initialized successfully');
   }
 
-  void _handleUri(Uri uri, DeepLinkOrigin origin) {
+  void _handleUri(final Uri uri, final DeepLinkOrigin origin) {
     AppLogger.info('Deep link received: $uri (origin: $origin)');
     final target = _parser.parse(uri);
     if (target == null) {

@@ -11,7 +11,7 @@ class FlavorManager {
     const String.fromEnvironment('FLAVOR', defaultValue: 'dev'),
   );
 
-  static void set(Flavor flavor) {
+  static void set(final Flavor flavor) {
     _instance._flavor = flavor;
   }
 
@@ -30,7 +30,7 @@ class FlavorManager {
   };
 }
 
-Flavor _parseFlavor(String value) {
+Flavor _parseFlavor(final String value) {
   switch (value.toLowerCase()) {
     case 'dev':
       return Flavor.dev;
@@ -50,4 +50,4 @@ Flavor _parseFlavor(String value) {
 }
 
 @visibleForTesting
-Flavor parseFlavorForTest(String value) => _parseFlavor(value);
+Flavor parseFlavorForTest(final String value) => _parseFlavor(value);

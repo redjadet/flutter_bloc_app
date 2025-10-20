@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 
 class ThemeCubit extends Cubit<ThemeMode> {
-  ThemeCubit({required ThemeRepository repository})
+  ThemeCubit({required final ThemeRepository repository})
     : _repository = repository,
       super(ThemeMode.system);
 
@@ -14,7 +14,7 @@ class ThemeCubit extends Cubit<ThemeMode> {
     if (loaded != null) emit(loaded);
   }
 
-  Future<void> setMode(ThemeMode mode) async {
+  Future<void> setMode(final ThemeMode mode) async {
     if (state == mode) return;
     emit(mode);
     await _repository.save(mode);

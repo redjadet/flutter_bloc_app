@@ -6,12 +6,12 @@ class AwesomeFeatureWidget extends StatelessWidget {
   const AwesomeFeatureWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     try {
       // Try to access the cubit to check if it exists
       context.read<RemoteConfigCubit>();
       return BlocBuilder<RemoteConfigCubit, RemoteConfigState>(
-        builder: (context, state) {
+        builder: (final context, final state) {
           if (state is RemoteConfigLoaded && state.isAwesomeFeatureEnabled) {
             return const Text('Awesome feature is enabled');
           }

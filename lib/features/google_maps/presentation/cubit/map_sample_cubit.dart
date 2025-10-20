@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sam
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 class MapSampleCubit extends Cubit<MapSampleState> {
-  MapSampleCubit({required MapLocationRepository repository})
+  MapSampleCubit({required final MapLocationRepository repository})
     : _repository = repository,
       super(MapSampleState.initial());
 
@@ -66,13 +66,13 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     emit(state.copyWith(trafficEnabled: !state.trafficEnabled));
   }
 
-  void updateCameraPosition(gmaps.CameraPosition position) {
+  void updateCameraPosition(final gmaps.CameraPosition position) {
     emit(state.copyWith(cameraPosition: position));
   }
 
-  void selectLocation(String locationId) {
+  void selectLocation(final String locationId) {
     final MapLocation? location = state.locations.firstWhereOrNull(
-      (MapLocation candidate) => candidate.id == locationId,
+      (final MapLocation candidate) => candidate.id == locationId,
     );
     if (location == null) {
       return;
@@ -89,20 +89,21 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     );
   }
 
-  gmaps.CameraUpdate cameraUpdateForLocation(MapLocation location) {
-    return gmaps.CameraUpdate.newCameraPosition(
-      gmaps.CameraPosition(
-        target: gmaps.LatLng(
-          location.coordinate.latitude,
-          location.coordinate.longitude,
+  gmaps.CameraUpdate cameraUpdateForLocation(final MapLocation location) =>
+      gmaps.CameraUpdate.newCameraPosition(
+        gmaps.CameraPosition(
+          target: gmaps.LatLng(
+            location.coordinate.latitude,
+            location.coordinate.longitude,
+          ),
+          zoom: 14,
+          tilt: 22,
         ),
-        zoom: 14,
-        tilt: 22,
-      ),
-    );
-  }
+      );
 
-  gmaps.CameraPosition? _resolveInitialCamera(List<MapLocation> locations) {
+  gmaps.CameraPosition? _resolveInitialCamera(
+    final List<MapLocation> locations,
+  ) {
     if (locations.isEmpty) {
       return null;
     }
@@ -117,24 +118,22 @@ class MapSampleCubit extends Cubit<MapSampleState> {
   }
 
   Set<gmaps.Marker> _buildMarkers({
-    required List<MapLocation> locations,
-    required gmaps.MarkerId? selectedMarkerId,
-  }) {
-    return locations
-        .map(
-          (MapLocation location) => gmaps.Marker(
-            markerId: gmaps.MarkerId(location.id),
-            position: gmaps.LatLng(
-              location.coordinate.latitude,
-              location.coordinate.longitude,
-            ),
-            infoWindow: gmaps.InfoWindow(
-              title: location.title,
-              snippet: location.description,
-            ),
-            onTap: () => selectLocation(location.id),
+    required final List<MapLocation> locations,
+    required final gmaps.MarkerId? selectedMarkerId,
+  }) => locations
+      .map(
+        (final MapLocation location) => gmaps.Marker(
+          markerId: gmaps.MarkerId(location.id),
+          position: gmaps.LatLng(
+            location.coordinate.latitude,
+            location.coordinate.longitude,
           ),
-        )
-        .toSet();
-  }
+          infoWindow: gmaps.InfoWindow(
+            title: location.title,
+            snippet: location.description,
+          ),
+          onTap: () => selectLocation(location.id),
+        ),
+      )
+      .toSet();
 }

@@ -7,7 +7,7 @@ class ChartLoadingList extends StatelessWidget {
   const ChartLoadingList({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final theme = Theme.of(context);
     final skeletonColor = theme.colorScheme.surfaceContainerHighest;
     final chartHeight = MediaQuery.of(context).size.height * 0.28;

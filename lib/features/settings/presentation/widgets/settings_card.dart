@@ -20,23 +20,21 @@ class SettingsCard<T> extends StatelessWidget {
   final ValueChanged<T> onSelect;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          for (int i = 0; i < options.length; i++) ...<Widget>[
-            if (i > 0) const Divider(height: 0),
-            _SettingsTile(
-              label: options[i].label,
-              selected: isSelected(options[i].value),
-              onTap: () => onSelect(options[i].value),
-            ),
-          ],
+  Widget build(final BuildContext context) => Card(
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        for (int i = 0; i < options.length; i++) ...<Widget>[
+          if (i > 0) const Divider(height: 0),
+          _SettingsTile(
+            label: options[i].label,
+            selected: isSelected(options[i].value),
+            onTap: () => onSelect(options[i].value),
+          ),
         ],
-      ),
-    );
-  }
+      ],
+    ),
+  );
 }
 
 class _SettingsTile extends StatelessWidget {
@@ -51,7 +49,7 @@ class _SettingsTile extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return ListTile(
       title: Text(label),

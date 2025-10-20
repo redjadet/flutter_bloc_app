@@ -18,9 +18,9 @@ const Key signInGuestButtonKey = Key('sign_in_guest_button');
 class SignInPage extends StatelessWidget {
   const SignInPage({
     super.key,
-    FirebaseAuth? auth,
+    final FirebaseAuth? auth,
     this.providersOverride,
-    firebase_ui_google.GoogleProvider? Function()? googleProviderFactory,
+    final firebase_ui_google.GoogleProvider? Function()? googleProviderFactory,
   }) : _auth = auth,
        _googleProviderFactory =
            googleProviderFactory ?? maybeCreateGoogleProvider;
@@ -32,9 +32,9 @@ class SignInPage extends StatelessWidget {
 
   @visibleForTesting
   static List<firebase_ui.AuthProvider> prepareProviders({
-    required FirebaseAuth auth,
-    List<firebase_ui.AuthProvider>? override,
-    required firebase_ui_google.GoogleProvider? Function()
+    required final FirebaseAuth auth,
+    final List<firebase_ui.AuthProvider>? override,
+    required final firebase_ui_google.GoogleProvider? Function()
     googleProviderFactory,
   }) => buildAuthProviders(
     auth: auth,
@@ -43,7 +43,7 @@ class SignInPage extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     final FirebaseAuth auth = _auth ?? FirebaseAuth.instance;
@@ -63,7 +63,7 @@ class SignInPage extends StatelessWidget {
       providers = <firebase_ui.AuthProvider>[];
     }
 
-    void showAuthError(Object error) {
+    void showAuthError(final Object error) {
       if (!context.mounted) return;
       if (error is FirebaseAuthException) {
         final String message = authErrorMessage(l10n, error);
@@ -104,18 +104,16 @@ class SignInPage extends StatelessWidget {
     return firebase_ui.SignInScreen(
       auth: auth,
       providers: providers,
-      headerBuilder: (context, constraints, _) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 32, bottom: 16),
-          child: Text(
-            l10n.appTitle,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.headlineSmall,
-          ),
-        );
-      },
+      headerBuilder: (final context, final constraints, _) => Padding(
+        padding: const EdgeInsets.only(top: 32, bottom: 16),
+        child: Text(
+          l10n.appTitle,
+          textAlign: TextAlign.center,
+          style: theme.textTheme.headlineSmall,
+        ),
+      ),
       subtitleBuilder: upgradingAnonymous
-          ? (context, action) => Padding(
+          ? (final context, final action) => Padding(
               padding: const EdgeInsets.only(bottom: 24),
               child: Text(
                 l10n.anonymousUpgradeHint,
@@ -124,50 +122,48 @@ class SignInPage extends StatelessWidget {
               ),
             )
           : null,
-      footerBuilder: (context, action) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            const SizedBox(height: 24),
-            Text(
-              l10n.anonymousSignInDescription,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodySmall,
+      footerBuilder: (final context, final action) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const SizedBox(height: 24),
+          Text(
+            l10n.anonymousSignInDescription,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodySmall,
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.tonal(
+              key: signInGuestButtonKey,
+              onPressed: signInAnonymously,
+              child: Text(l10n.anonymousSignInButton),
             ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton.tonal(
-                key: signInGuestButtonKey,
-                onPressed: signInAnonymously,
-                child: Text(l10n.anonymousSignInButton),
-              ),
-            ),
-          ],
-        );
-      },
+          ),
+        ],
+      ),
       actions: <firebase_ui.FirebaseUIAction>[
         firebase_ui.AuthStateChangeAction<firebase_ui.SignedIn>((
-          context,
-          state,
+          final context,
+          final state,
         ) {
           context.go(AppRoutes.counterPath);
         }),
         firebase_ui.AuthStateChangeAction<firebase_ui.UserCreated>((
-          context,
-          state,
+          final context,
+          final state,
         ) {
           context.go(AppRoutes.counterPath);
         }),
         firebase_ui.AuthStateChangeAction<firebase_ui.CredentialLinked>((
-          context,
-          state,
+          final context,
+          final state,
         ) {
           context.go(AppRoutes.counterPath);
         }),
         firebase_ui.AuthStateChangeAction<firebase_ui.AuthFailed>((
-          context,
-          state,
+          final context,
+          final state,
         ) {
           showAuthError(state.exception);
         }),

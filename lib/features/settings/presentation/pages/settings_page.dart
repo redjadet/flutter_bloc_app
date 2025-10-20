@@ -9,20 +9,17 @@ class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) =>
-          AppInfoCubit(repository: getIt<AppInfoRepository>())..load(),
-      child: const _SettingsView(),
-    );
-  }
+  Widget build(final BuildContext context) => BlocProvider(
+    create: (_) => AppInfoCubit(repository: getIt<AppInfoRepository>())..load(),
+    child: const _SettingsView(),
+  );
 }
 
 class _SettingsView extends StatelessWidget {
   const _SettingsView();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     return CommonPageLayout(
       title: l10n.settingsPageTitle,

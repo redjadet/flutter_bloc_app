@@ -8,7 +8,7 @@ PluginBase createPlugin() => _FileLengthLintPlugin();
 
 class _FileLengthLintPlugin extends PluginBase {
   @override
-  List<LintRule> getLintRules(CustomLintConfigs configs) => <LintRule>[
+  List<LintRule> getLintRules(final CustomLintConfigs configs) => <LintRule>[
     _FileLengthLint(options: configs.rules[_FileLengthLint._lintName]),
   ];
 }
@@ -29,9 +29,9 @@ class _FileLengthLint extends DartLintRule {
 
   @override
   Future<void> run(
-    CustomLintResolver resolver,
-    ErrorReporter reporter,
-    CustomLintContext context,
+    final CustomLintResolver resolver,
+    final ErrorReporter reporter,
+    final CustomLintContext context,
   ) async {
     final String? rawPath = _tryFilePath(resolver);
     if (rawPath == null) {
@@ -84,7 +84,7 @@ class _FileLengthLint extends DartLintRule {
     return null;
   }
 
-  bool _matchesAny(Iterable<String> patterns, String path) {
+  bool _matchesAny(final Iterable<String> patterns, final String path) {
     for (final String pattern in patterns) {
       if (_Glob(pattern).matches(path)) {
         return true;
@@ -93,7 +93,7 @@ class _FileLengthLint extends DartLintRule {
     return false;
   }
 
-  String? _tryFilePath(CustomLintResolver resolver) {
+  String? _tryFilePath(final CustomLintResolver resolver) {
     try {
       return resolver.source.uri.toFilePath();
     } on Object catch (_) {
@@ -116,13 +116,13 @@ class _FileLengthLint extends DartLintRule {
 
 /// Minimal glob matcher for our use case to avoid adding the `glob` package.
 class _Glob {
-  _Glob(String pattern) : _regex = _createRegex(pattern);
+  _Glob(final String pattern) : _regex = _createRegex(pattern);
 
   final RegExp _regex;
 
-  bool matches(String input) => _regex.hasMatch(input);
+  bool matches(final String input) => _regex.hasMatch(input);
 
-  static RegExp _createRegex(String pattern) {
+  static RegExp _createRegex(final String pattern) {
     final StringBuffer buffer = StringBuffer('^');
     for (int i = 0; i < pattern.length; i += 1) {
       final String char = pattern[i];
@@ -134,16 +134,12 @@ class _Glob {
           } else {
             buffer.write('[^/]*');
           }
-          break;
         case '.':
           buffer.write(r'\.');
-          break;
         case '?':
           buffer.write('.');
-          break;
         case r'\':
           buffer.write(r'\\');
-          break;
         default:
           buffer.write(RegExp.escape(char));
       }

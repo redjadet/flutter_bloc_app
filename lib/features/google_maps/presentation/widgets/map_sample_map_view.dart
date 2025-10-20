@@ -11,7 +11,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 class MapSampleMapController {
   Future<void> Function(MapLocation location)? _focusHandler;
 
-  Future<void> focusOnLocation(MapLocation location) async {
+  Future<void> focusOnLocation(final MapLocation location) async {
     final handler = _focusHandler;
     if (handler == null) {
       return;
@@ -19,7 +19,7 @@ class MapSampleMapController {
     await handler(location);
   }
 
-  void _attach(Future<void> Function(MapLocation location) handler) {
+  void _attach(final Future<void> Function(MapLocation location) handler) {
     _focusHandler = handler;
   }
 
@@ -59,7 +59,7 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
   }
 
   @override
-  void didUpdateWidget(MapSampleMapView oldWidget) {
+  void didUpdateWidget(final MapSampleMapView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!identical(oldWidget.controller, widget.controller)) {
       oldWidget.controller._detach();
@@ -68,12 +68,10 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(UI.radiusM),
-      child: widget.useAppleMaps ? _buildAppleMap() : _buildGoogleMap(),
-    );
-  }
+  Widget build(final BuildContext context) => ClipRRect(
+    borderRadius: BorderRadius.circular(UI.radiusM),
+    child: widget.useAppleMaps ? _buildAppleMap() : _buildGoogleMap(),
+  );
 
   Widget _buildGoogleMap() {
     final MapSampleState state = widget.state;
@@ -82,7 +80,7 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
       initialCameraPosition: state.cameraPosition,
       markers: state.markers,
       trafficEnabled: state.trafficEnabled,
-      onMapCreated: (gmaps.GoogleMapController controller) {
+      onMapCreated: (final gmaps.GoogleMapController controller) {
         _googleMapControllerInstance = controller;
         if (!_googleMapController.isCompleted) {
           _googleMapController.complete(controller);
@@ -99,20 +97,20 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
       initialCameraPosition: _toAppleCameraPosition(state.cameraPosition),
       annotations: _buildAppleAnnotations(state),
       trafficEnabled: state.trafficEnabled,
-      onMapCreated: (amap.AppleMapController controller) {
+      onMapCreated: (final amap.AppleMapController controller) {
         _appleMapController = controller;
       },
-      onCameraMove: (amap.CameraPosition position) {
+      onCameraMove: (final amap.CameraPosition position) {
         widget.cubit.updateCameraPosition(_toGoogleCameraPosition(position));
       },
     );
   }
 
-  Set<amap.Annotation> _buildAppleAnnotations(MapSampleState state) {
+  Set<amap.Annotation> _buildAppleAnnotations(final MapSampleState state) {
     final String? selectedId = state.selectedMarkerId?.value;
     return state.locations
         .map(
-          (MapLocation location) => amap.Annotation(
+          (final MapLocation location) => amap.Annotation(
             annotationId: amap.AnnotationId(location.id),
             position: amap.LatLng(
               location.coordinate.latitude,
@@ -129,7 +127,7 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
         .toSet();
   }
 
-  amap.MapType _resolveAppleMapType(gmaps.MapType mapType) {
+  amap.MapType _resolveAppleMapType(final gmaps.MapType mapType) {
     switch (mapType) {
       case gmaps.MapType.hybrid:
         return amap.MapType.hybrid;
@@ -140,36 +138,35 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
     }
   }
 
-  amap.CameraPosition _toAppleCameraPosition(gmaps.CameraPosition position) {
-    return amap.CameraPosition(
-      target: amap.LatLng(position.target.latitude, position.target.longitude),
-      zoom: position.zoom,
-      pitch: position.tilt,
-      heading: position.bearing,
-    );
-  }
+  amap.CameraPosition _toAppleCameraPosition(
+    final gmaps.CameraPosition position,
+  ) => amap.CameraPosition(
+    target: amap.LatLng(position.target.latitude, position.target.longitude),
+    zoom: position.zoom,
+    pitch: position.tilt,
+    heading: position.bearing,
+  );
 
-  gmaps.CameraPosition _toGoogleCameraPosition(amap.CameraPosition position) {
-    return gmaps.CameraPosition(
-      target: gmaps.LatLng(position.target.latitude, position.target.longitude),
-      zoom: position.zoom,
-      tilt: position.pitch,
-      bearing: position.heading,
-    );
-  }
+  gmaps.CameraPosition _toGoogleCameraPosition(
+    final amap.CameraPosition position,
+  ) => gmaps.CameraPosition(
+    target: gmaps.LatLng(position.target.latitude, position.target.longitude),
+    zoom: position.zoom,
+    tilt: position.pitch,
+    bearing: position.heading,
+  );
 
-  amap.CameraUpdate _appleCameraUpdateForLocation(MapLocation location) {
-    return amap.CameraUpdate.newCameraPosition(
-      amap.CameraPosition(
-        target: amap.LatLng(
-          location.coordinate.latitude,
-          location.coordinate.longitude,
+  amap.CameraUpdate _appleCameraUpdateForLocation(final MapLocation location) =>
+      amap.CameraUpdate.newCameraPosition(
+        amap.CameraPosition(
+          target: amap.LatLng(
+            location.coordinate.latitude,
+            location.coordinate.longitude,
+          ),
+          zoom: 14,
+          pitch: 22,
         ),
-        zoom: 14,
-        pitch: 22,
-      ),
-    );
-  }
+      );
 
   Future<gmaps.GoogleMapController?> _ensureGoogleController() async {
     if (_googleMapControllerInstance != null) {
@@ -182,7 +179,7 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
     return _googleMapControllerInstance;
   }
 
-  Future<void> _focusOnLocation(MapLocation location) async {
+  Future<void> _focusOnLocation(final MapLocation location) async {
     if (widget.useAppleMaps) {
       final amap.AppleMapController? appleController = _appleMapController;
       if (appleController == null) {

@@ -3,10 +3,10 @@ part of 'chat_cubit.dart';
 mixin _ChatCubitHelpers on _ChatCubitCore {
   ChatState get _state => currentState;
 
-  int _compareByUpdatedAt(ChatConversation a, ChatConversation b) =>
+  int _compareByUpdatedAt(final ChatConversation a, final ChatConversation b) =>
       b.updatedAt.compareTo(a.updatedAt);
 
-  String _resolveModelForConversation(ChatConversation conversation) {
+  String _resolveModelForConversation(final ChatConversation conversation) {
     final String? model = conversation.model;
     if (model != null && _models.contains(model)) {
       return model;
@@ -51,7 +51,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     return conversation;
   }
 
-  ChatConversation _createEmptyConversation({String? model}) {
+  ChatConversation _createEmptyConversation({final String? model}) {
     final DateTime now = DateTime.now();
     return ChatConversation(
       id: _generateConversationId(now),
@@ -62,14 +62,14 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
   }
 
   List<ChatConversation> _replaceConversation(
-    ChatConversation conversation, {
-    List<ChatConversation>? history,
+    final ChatConversation conversation, {
+    final List<ChatConversation>? history,
   }) {
     final List<ChatConversation> updated = List<ChatConversation>.from(
       history ?? _state.history,
     );
     final int index = updated.indexWhere(
-      (ChatConversation c) => c.id == conversation.id,
+      (final ChatConversation c) => c.id == conversation.id,
     );
 
     if (index >= 0) {
@@ -86,19 +86,18 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
   }
 
   List<ChatConversation> _sortHistory(
-    List<ChatConversation> conversations, {
-    bool clone = true,
+    final List<ChatConversation> conversations, {
+    final bool clone = true,
   }) {
-    final List<ChatConversation> target = clone
-        ? List<ChatConversation>.from(conversations)
-        : conversations;
-    target.sort(_compareByUpdatedAt);
+    final List<ChatConversation> target =
+        (clone ? List<ChatConversation>.from(conversations) : conversations)
+          ..sort(_compareByUpdatedAt);
     return target;
   }
 
   ChatConversation? _conversationById(
-    List<ChatConversation> conversations,
-    String? id,
+    final List<ChatConversation> conversations,
+    final String? id,
   ) {
     if (id == null) return null;
     for (final ChatConversation conversation in conversations) {
@@ -109,10 +108,9 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     return null;
   }
 
-  Future<void> _persistHistory(List<ChatConversation> history) {
-    return _historyRepository.save(history);
-  }
+  Future<void> _persistHistory(final List<ChatConversation> history) =>
+      _historyRepository.save(history);
 
-  String _generateConversationId(DateTime timestamp) =>
+  String _generateConversationId(final DateTime timestamp) =>
       'conversation_${timestamp.microsecondsSinceEpoch}';
 }

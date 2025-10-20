@@ -20,30 +20,29 @@ class DeepLinkListener extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => DeepLinkCubit(
-        service: getIt<DeepLinkService>(),
-        parser: getIt<DeepLinkParser>(),
-      )..initialize(),
-      child: BlocListener<DeepLinkCubit, DeepLinkState>(
-        listenWhen: (previous, current) => current is DeepLinkNavigate,
-        listener: (context, state) {
-          final DeepLinkNavigate navigate = state as DeepLinkNavigate;
-          AppLogger.info('Navigating to: ${navigate.target.location}');
+  Widget build(final BuildContext context) => BlocProvider(
+    create: (_) => DeepLinkCubit(
+      service: getIt<DeepLinkService>(),
+      parser: getIt<DeepLinkParser>(),
+    )..initialize(),
+    child: BlocListener<DeepLinkCubit, DeepLinkState>(
+      listenWhen: (final previous, final current) =>
+          current is DeepLinkNavigate,
+      listener: (final context, final state) {
+        final DeepLinkNavigate navigate = state as DeepLinkNavigate;
+        AppLogger.info('Navigating to: ${navigate.target.location}');
 
-          // Add a small delay to ensure the router is ready
-          Future.delayed(const Duration(milliseconds: 100), () {
-            try {
-              router.go(navigate.target.location);
-              AppLogger.info('Navigation completed successfully');
-            } on Exception catch (e) {
-              AppLogger.error('Navigation failed', e);
-            }
-          });
-        },
-        child: child,
-      ),
-    );
-  }
+        // Add a small delay to ensure the router is ready
+        Future.delayed(const Duration(milliseconds: 100), () {
+          try {
+            router.go(navigate.target.location);
+            AppLogger.info('Navigation completed successfully');
+          } on Exception catch (e) {
+            AppLogger.error('Navigation failed', e);
+          }
+        });
+      },
+      child: child,
+    ),
+  );
 }

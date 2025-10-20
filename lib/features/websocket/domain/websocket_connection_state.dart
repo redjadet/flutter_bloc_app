@@ -14,7 +14,7 @@ class WebsocketConnectionState extends Equatable {
   const WebsocketConnectionState.connected()
     : this(status: WebsocketStatus.connected);
 
-  const WebsocketConnectionState.error(String message)
+  const WebsocketConnectionState.error(final String message)
     : this(status: WebsocketStatus.error, errorMessage: message);
 
   final WebsocketStatus status;

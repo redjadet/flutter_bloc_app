@@ -6,10 +6,10 @@ class ErrorHandling {
 
   /// Show a snackbar with error message
   static void showErrorSnackBar(
-    BuildContext context,
-    String message, {
-    Duration duration = const Duration(seconds: 4),
-    SnackBarAction? action,
+    final BuildContext context,
+    final String message, {
+    final Duration duration = const Duration(seconds: 4),
+    final SnackBarAction? action,
   }) {
     if (!context.mounted) return;
 
@@ -25,9 +25,9 @@ class ErrorHandling {
 
   /// Show a success snackbar
   static void showSuccessSnackBar(
-    BuildContext context,
-    String message, {
-    Duration duration = const Duration(seconds: 3),
+    final BuildContext context,
+    final String message, {
+    final Duration duration = const Duration(seconds: 3),
   }) {
     if (!context.mounted) return;
 
@@ -43,10 +43,10 @@ class ErrorHandling {
 
   /// Handle common Cubit errors with user-friendly messages
   static void handleCubitError(
-    BuildContext context,
-    dynamic error, {
-    String? customMessage,
-    VoidCallback? onRetry,
+    final BuildContext context,
+    final dynamic error, {
+    final String? customMessage,
+    final VoidCallback? onRetry,
   }) {
     final String message = customMessage ?? _getErrorMessage(error);
 
@@ -58,7 +58,7 @@ class ErrorHandling {
   }
 
   /// Get user-friendly error message from various error types
-  static String _getErrorMessage(dynamic error) {
+  static String _getErrorMessage(final dynamic error) {
     if (error == null) return 'An unknown error occurred';
 
     final String errorString = error.toString().toLowerCase();
@@ -92,34 +92,35 @@ class ErrorHandling {
   }
 
   /// Clear all current snackbars
-  static void clearSnackBars(BuildContext context) {
+  static void clearSnackBars(final BuildContext context) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).clearSnackBars();
   }
 
   /// Show a loading dialog
-  static void showLoadingDialog(BuildContext context, String message) {
+  static void showLoadingDialog(
+    final BuildContext context,
+    final String message,
+  ) {
     if (!context.mounted) return;
 
     showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Row(
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(width: 16),
-              Expanded(child: Text(message)),
-            ],
-          ),
-        );
-      },
+      builder: (final BuildContext context) => AlertDialog(
+        content: Row(
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(width: 16),
+            Expanded(child: Text(message)),
+          ],
+        ),
+      ),
     );
   }
 
   /// Hide loading dialog
-  static void hideLoadingDialog(BuildContext context) {
+  static void hideLoadingDialog(final BuildContext context) {
     if (!context.mounted) return;
     Navigator.of(context).pop();
   }

@@ -8,12 +8,12 @@ class GraphqlDemoPage extends StatelessWidget {
   const GraphqlDemoPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return CommonPageLayout(
       title: l10n.graphqlSampleTitle,
       body: BlocBuilder<GraphqlDemoCubit, GraphqlDemoState>(
-        builder: (context, state) {
+        builder: (final context, final state) {
           final bool showProgressBar =
               state.isLoading && state.countries.isNotEmpty;
           final theme = Theme.of(context);
@@ -34,7 +34,7 @@ class GraphqlDemoPage extends StatelessWidget {
                     CubitHelpers.safeExecute<
                       GraphqlDemoCubit,
                       GraphqlDemoState
-                    >(context, (cubit) => cubit.refresh());
+                    >(context, (final cubit) => cubit.refresh());
                   },
                   child: _buildBody(context, state, l10n, theme),
                 ),
@@ -47,10 +47,10 @@ class GraphqlDemoPage extends StatelessWidget {
   }
 
   Widget _buildBody(
-    BuildContext context,
-    GraphqlDemoState state,
-    AppLocalizations l10n,
-    ThemeData theme,
+    final BuildContext context,
+    final GraphqlDemoState state,
+    final AppLocalizations l10n,
+    final ThemeData theme,
   ) {
     if (state.isLoading && state.countries.isEmpty) {
       return const Center(child: CircularProgressIndicator());
@@ -66,7 +66,7 @@ class GraphqlDemoPage extends StatelessWidget {
             onPressed: () =>
                 CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
                   context,
-                  (cubit) => cubit.loadInitial(),
+                  (final cubit) => cubit.loadInitial(),
                 ),
             child: Text(l10n.graphqlSampleRetryButton),
           ),
@@ -84,7 +84,7 @@ class GraphqlDemoPage extends StatelessWidget {
     return ListView.separated(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      itemBuilder: (context, index) {
+      itemBuilder: (final context, final index) {
         final GraphqlCountry country = state.countries[index];
         return GraphqlCountryCard(
           country: country,
@@ -98,7 +98,10 @@ class GraphqlDemoPage extends StatelessWidget {
   }
 }
 
-String _errorMessageForState(AppLocalizations l10n, GraphqlDemoState state) {
+String _errorMessageForState(
+  final AppLocalizations l10n,
+  final GraphqlDemoState state,
+) {
   switch (state.errorType) {
     case GraphqlDemoErrorType.network:
       return l10n.graphqlSampleNetworkError;
@@ -123,12 +126,12 @@ class _FilterBar extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final continents = state.continents;
     final items = <DropdownMenuItem<String?>>[
       DropdownMenuItem<String?>(child: Text(l10n.graphqlSampleAllContinents)),
       ...continents.map(
-        (continent) => DropdownMenuItem<String?>(
+        (final continent) => DropdownMenuItem<String?>(
           value: continent.code,
           child: Text('${continent.name} (${continent.code})'),
         ),
@@ -155,11 +158,14 @@ class _FilterBar extends StatelessWidget {
               items: items,
               onChanged: state.isLoading
                   ? null
-                  : (value) =>
+                  : (final value) =>
                         CubitHelpers.safeExecute<
                           GraphqlDemoCubit,
                           GraphqlDemoState
-                        >(context, (cubit) => cubit.selectContinent(value)),
+                        >(
+                          context,
+                          (final cubit) => cubit.selectContinent(value),
+                        ),
             ),
           ),
         ),

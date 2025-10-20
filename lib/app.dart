@@ -38,23 +38,23 @@ class _MyAppState extends State<MyApp> {
       GoRoute(
         path: AppRoutes.authPath,
         name: AppRoutes.auth,
-        builder: (context, state) => const SignInPage(),
+        builder: (final context, final state) => const SignInPage(),
       ),
       GoRoute(
         path: AppRoutes.counterPath,
         name: AppRoutes.counter,
-        builder: (context, state) =>
+        builder: (final context, final state) =>
             CounterPage(title: AppLocalizations.of(context).homeTitle),
       ),
       GoRoute(
         path: AppRoutes.examplePath,
         name: AppRoutes.example,
-        builder: (context, state) => const ExamplePage(),
+        builder: (final context, final state) => const ExamplePage(),
       ),
       GoRoute(
         path: AppRoutes.graphqlPath,
         name: AppRoutes.graphql,
-        builder: (context, state) => BlocProvider(
+        builder: (final context, final state) => BlocProvider(
           create: (_) =>
               GraphqlDemoCubit(repository: getIt<GraphqlDemoRepository>())
                 ..loadInitial(),
@@ -64,22 +64,22 @@ class _MyAppState extends State<MyApp> {
       GoRoute(
         path: AppRoutes.chartsPath,
         name: AppRoutes.charts,
-        builder: (context, state) => const ChartPage(),
+        builder: (final context, final state) => const ChartPage(),
       ),
       GoRoute(
         path: AppRoutes.settingsPath,
         name: AppRoutes.settings,
-        builder: (context, state) => const SettingsPage(),
+        builder: (final context, final state) => const SettingsPage(),
       ),
       GoRoute(
         path: AppRoutes.profilePath,
         name: AppRoutes.profile,
-        builder: (context, state) => const ProfilePage(),
+        builder: (final context, final state) => const ProfilePage(),
       ),
       GoRoute(
         path: AppRoutes.chatPath,
         name: AppRoutes.chat,
-        builder: (context, state) => BlocProvider(
+        builder: (final context, final state) => BlocProvider(
           create: (_) => ChatCubit(
             repository: getIt<ChatRepository>(),
             historyRepository: getIt<ChatHistoryRepository>(),
@@ -91,7 +91,7 @@ class _MyAppState extends State<MyApp> {
       GoRoute(
         path: AppRoutes.websocketPath,
         name: AppRoutes.websocket,
-        builder: (context, state) => BlocProvider(
+        builder: (final context, final state) => BlocProvider(
           create: (_) =>
               WebsocketCubit(repository: getIt<WebsocketRepository>()),
           child: const WebsocketDemoPage(),
@@ -100,7 +100,7 @@ class _MyAppState extends State<MyApp> {
       GoRoute(
         path: AppRoutes.googleMapsPath,
         name: AppRoutes.googleMaps,
-        builder: (context, state) => BlocProvider(
+        builder: (final context, final state) => BlocProvider(
           create: (_) =>
               MapSampleCubit(repository: getIt<MapLocationRepository>())
                 ..loadLocations(),
@@ -119,7 +119,7 @@ class _MyAppState extends State<MyApp> {
     return GoRouter(
       initialLocation: AppRoutes.counterPath,
       refreshListenable: _authRefresh,
-      redirect: (context, state) {
+      redirect: (final context, final state) {
         final FirebaseAuth auth = _auth!;
         final bool loggedIn = auth.currentUser != null;
         final bool loggingIn = state.matchedLocation == AppRoutes.authPath;
@@ -154,7 +154,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     // Ensure DI is configured when running tests that directly pump MyApp
     ensureConfigured();
     return MultiBlocProvider(
@@ -184,18 +184,18 @@ class _MyAppState extends State<MyApp> {
           designSize: AppConstants.designSize,
           minTextAdapt: true,
           splitScreenMode: true,
-          builder: (context, child) {
+          builder: (final context, final child) {
             UI.markScreenUtilReady();
             return BlocBuilder<LocaleCubit, Locale?>(
-              builder: (context, locale) {
-                return BlocBuilder<ThemeCubit, ThemeMode>(
-                  builder: (context, themeMode) => AppConfig.createMaterialApp(
-                    themeMode: themeMode,
-                    router: _router,
-                    locale: locale,
+              builder: (final context, final locale) =>
+                  BlocBuilder<ThemeCubit, ThemeMode>(
+                    builder: (final context, final themeMode) =>
+                        AppConfig.createMaterialApp(
+                          themeMode: themeMode,
+                          router: _router,
+                          locale: locale,
+                        ),
                   ),
-                );
-              },
             );
           },
         ),
@@ -211,7 +211,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 class _GoRouterRefreshStream extends ChangeNotifier {
-  _GoRouterRefreshStream(Stream<dynamic> stream) {
+  _GoRouterRefreshStream(final Stream<dynamic> stream) {
     _subscription = stream.listen((_) => notifyListeners());
   }
 

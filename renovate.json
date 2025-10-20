@@ -1,0 +1,26 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":dependencyDashboard",
+    ":separateMultipleMajorReleases"
+  ],
+  "labels": ["dependencies"],
+  "rangeStrategy": "bump",
+  "packageRules": [
+    {
+      "matchManagers": ["pub"]
+    },
+    {
+      "description": "Group minor/patch Flutter/Dart updates",
+      "matchManagers": ["pub"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "dart-minor-patch"
+    },
+    {
+      "description": "Schedule to weekdays",
+      "schedule": ["after 9am and before 5pm on Monday to Friday"]
+    }
+  ]
+}
