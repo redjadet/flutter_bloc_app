@@ -111,7 +111,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
                         children: <Widget>[
                           if (showFlavor) ...[
                             const Padding(
-                              padding: EdgeInsets.all(1.0),
+                              padding: EdgeInsets.all(1),
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: FlavorBadge(),

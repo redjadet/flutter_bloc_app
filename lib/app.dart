@@ -23,9 +23,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  FirebaseAuth? _auth;
-  _GoRouterRefreshStream? _authRefresh;
-  late GoRouter _router;
+  late final FirebaseAuth _auth;
+  late final _GoRouterRefreshStream _authRefresh;
+  late final GoRouter _router;
 
   @override
   void initState() {
@@ -114,13 +114,13 @@ class _MyAppState extends State<MyApp> {
     }
 
     _auth = FirebaseAuth.instance;
-    _authRefresh = _GoRouterRefreshStream(_auth!.authStateChanges());
+    _authRefresh = _GoRouterRefreshStream(_auth.authStateChanges());
 
     return GoRouter(
       initialLocation: AppRoutes.counterPath,
       refreshListenable: _authRefresh,
       redirect: (final context, final state) {
-        final FirebaseAuth auth = _auth!;
+        final FirebaseAuth auth = _auth;
         final bool loggedIn = auth.currentUser != null;
         final bool loggingIn = state.matchedLocation == AppRoutes.authPath;
 
@@ -205,7 +205,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    _authRefresh?.dispose();
+    if (widget.requireAuth) {
+      _authRefresh.dispose();
+    }
     super.dispose();
   }
 }

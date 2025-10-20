@@ -76,7 +76,7 @@ class ErrorHandling {
     }
 
     if (errorString.contains('forbidden') || errorString.contains('403')) {
-      return 'Access denied. You don\'t have permission for this action.';
+      return "Access denied. You don't have permission for this action.";
     }
 
     if (errorString.contains('not found') || errorString.contains('404')) {

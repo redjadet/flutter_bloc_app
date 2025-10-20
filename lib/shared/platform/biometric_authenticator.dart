@@ -38,7 +38,7 @@ class LocalBiometricAuthenticator implements BiometricAuthenticator {
       );
     } on PlatformException catch (error, stackTrace) {
       // Allow navigating to settings if biometrics are not enrolled on device.
-      final String code = (error.code).toString();
+      final String code = error.code;
       final bool notEnrolled =
           code.contains('noBiometricsEnrolled') ||
           code.contains('NotEnrolled') ||

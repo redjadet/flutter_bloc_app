@@ -27,7 +27,7 @@ class CommonLoadingWidget extends StatelessWidget {
             width: size,
             height: size,
             child: CircularProgressIndicator(
-              strokeWidth: 2.0,
+              strokeWidth: 2,
               color: effectiveColor,
             ),
           ),
@@ -65,7 +65,7 @@ class CommonLoadingOverlay extends StatelessWidget {
     children: [
       child,
       if (isLoading)
-        Container(
+        ColoredBox(
           color: Colors.black.withValues(alpha: 0.3),
           child: CommonLoadingWidget(message: message),
         ),

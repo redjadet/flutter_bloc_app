@@ -73,37 +73,37 @@ Future<void> configureDependencies() async {
     ),
   );
   _registerLazySingletonIfAbsent<ChatHistoryRepository>(
-    () => SecureChatHistoryRepository(),
+    SecureChatHistoryRepository.new,
   );
   _registerLazySingletonIfAbsent<LocaleRepository>(
-    () => SharedPreferencesLocaleRepository(),
+    SharedPreferencesLocaleRepository.new,
   );
   _registerLazySingletonIfAbsent<ThemeRepository>(
-    () => SharedPreferencesThemeRepository(),
+    SharedPreferencesThemeRepository.new,
   );
   _registerLazySingletonIfAbsent<DeepLinkParser>(() => const DeepLinkParser());
   _registerLazySingletonIfAbsent<DeepLinkService>(
-    () => AppLinksDeepLinkService(),
+    AppLinksDeepLinkService.new,
   );
   _registerLazySingletonIfAbsent<AppInfoRepository>(
     () => const PackageInfoAppInfoRepository(),
   );
-  _registerLazySingletonIfAbsent<TimerService>(() => DefaultTimerService());
+  _registerLazySingletonIfAbsent<TimerService>(DefaultTimerService.new);
   _registerLazySingletonIfAbsent<BiometricAuthenticator>(
-    () => LocalBiometricAuthenticator(),
+    LocalBiometricAuthenticator.new,
   );
   _registerLazySingletonIfAbsent<WebsocketRepository>(
-    () => EchoWebsocketRepository(),
+    EchoWebsocketRepository.new,
     dispose: (final repository) => repository.dispose(),
   );
   _registerLazySingletonIfAbsent<MapLocationRepository>(
     () => const SampleMapLocationRepository(),
   );
   _registerLazySingletonIfAbsent<ErrorNotificationService>(
-    () => SnackbarErrorNotificationService(),
+    SnackbarErrorNotificationService.new,
   );
   _registerLazySingletonIfAbsent<RemoteConfigRepository>(
-    () => _createRemoteConfigRepository(),
+    _createRemoteConfigRepository,
     dispose: (final repository) => repository.dispose(),
   );
   _registerLazySingletonIfAbsent<RemoteConfigCubit>(
@@ -169,7 +169,7 @@ class _FakeRemoteConfigRepository implements RemoteConfigRepository {
   int getInt(final String key) => 0;
 
   @override
-  double getDouble(final String key) => 0.0;
+  double getDouble(final String key) => 0;
 
   @override
   Future<void> dispose() async {}

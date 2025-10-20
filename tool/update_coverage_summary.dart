@@ -165,7 +165,7 @@ class _Coverage {
   }
 
   static String _normalizePath(final String path) {
-    final String normalized = path.replaceAll('\\', '/');
+    final String normalized = path.replaceAll(r'\', '/');
     if (normalized.startsWith('${Directory.current.path}/')) {
       return normalized.substring(Directory.current.path.length + 1);
     }

@@ -75,7 +75,7 @@ void main() {
 
       expect(find.text('Content'), findsOneWidget);
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      expect(find.byType(Container), findsOneWidget);
+      expect(find.byType(ColoredBox), findsOneWidget);
     });
 
     testWidgets('hides overlay when loading is false', (tester) async {
@@ -122,8 +122,13 @@ void main() {
         ),
       );
 
-      final container = tester.widget<Container>(find.byType(Container).first);
-      expect(container.color, equals(Colors.black.withValues(alpha: 0.3)));
+      final coloredBox = tester.widget<ColoredBox>(
+        find.byType(ColoredBox).first,
+      );
+      expect(
+        coloredBox.color,
+        equals(Colors.black.withValues(alpha: 0.3)),
+      );
     });
 
     testWidgets('maintains child widget when not loading', (tester) async {
