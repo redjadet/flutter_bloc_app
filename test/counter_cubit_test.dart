@@ -204,8 +204,7 @@ void main() {
         final fakeTimer = FakeTimerService();
         final CounterCubit cubit = createCubit(timerService: fakeTimer);
 
-        // Let microtask emission happen
-        await Future<void>.delayed(const Duration(milliseconds: 10));
+        await cubit.increment();
 
         final int initialCountdown = cubit.state.countdownSeconds;
 
@@ -221,22 +220,22 @@ void main() {
       () async {
         final fakeTimer = FakeTimerService();
         final CounterCubit cubit = createCubit(timerService: fakeTimer);
-        await Future<void>.delayed(const Duration(milliseconds: 10));
+        await cubit.increment();
         fakeTimer.tick(5);
-        expect(cubit.state.countdownSeconds, 5);
+        expect(
+          cubit.state.countdownSeconds,
+          CounterState.defaultCountdownSeconds,
+        );
+        expect(cubit.state.count, 0);
       },
     );
 
     test('auto-decrement timer works (FakeTimerService)', () async {
       final fakeTimer = FakeTimerService();
       final CounterCubit cubit = createCubit(timerService: fakeTimer);
-      cubit.emit(
-        CounterState(
-          count: 5,
-          lastChanged: DateTime.now(),
-          countdownSeconds: 5,
-        ),
-      );
+      for (int i = 0; i < 5; i++) {
+        await cubit.increment();
+      }
       // Trigger auto-decrement after 5 ticks
       fakeTimer.tick(5);
       expect(cubit.state.count, 4);
@@ -245,13 +244,7 @@ void main() {
     test('auto-decrement stops at 0 (FakeTimerService)', () async {
       final fakeTimer = FakeTimerService();
       final CounterCubit cubit = createCubit(timerService: fakeTimer);
-      cubit.emit(
-        CounterState(
-          count: 1,
-          lastChanged: DateTime.now(),
-          countdownSeconds: 5,
-        ),
-      );
+      await cubit.increment();
       // Reach 0
       fakeTimer.tick(5);
       expect(cubit.state.count, 0);
@@ -263,19 +256,20 @@ void main() {
     test('timer resets when increment is pressed (FakeTimerService)', () async {
       final fakeTimer = FakeTimerService();
       final CounterCubit cubit = createCubit(timerService: fakeTimer);
-      cubit.emit(
-        CounterState(
-          count: 3,
-          lastChanged: DateTime.now(),
-          countdownSeconds: 2,
-        ),
-      );
+      for (int i = 0; i < 3; i++) {
+        await cubit.increment();
+      }
 
-      // 1 tick then increment
+      fakeTimer.tick(2);
+      expect(cubit.state.countdownSeconds, 3);
+
       fakeTimer.tick(1);
       await cubit.increment();
       expect(cubit.state.count, 4);
-      expect(cubit.state.countdownSeconds, 5); // Should reset to 5
+      expect(
+        cubit.state.countdownSeconds,
+        CounterState.defaultCountdownSeconds,
+      ); // Should reset to 5
 
       // 3 more ticks - should not auto-decrement yet
       fakeTimer.tick(3);
@@ -289,13 +283,12 @@ void main() {
     test('pauseAutoDecrement stops countdown ticks', () async {
       final fakeTimer = FakeTimerService();
       final CounterCubit cubit = createCubit(timerService: fakeTimer);
-      cubit.emit(
-        CounterState(
-          count: 3,
-          lastChanged: DateTime.now(),
-          countdownSeconds: 3,
-        ),
-      );
+      for (int i = 0; i < 3; i++) {
+        await cubit.increment();
+      }
+
+      fakeTimer.tick(2);
+      expect(cubit.state.countdownSeconds, 3);
 
       fakeTimer.tick(1);
       expect(cubit.state.countdownSeconds, 2);
@@ -310,13 +303,12 @@ void main() {
     test('resumeAutoDecrement restarts countdown ticks after pause', () async {
       final fakeTimer = FakeTimerService();
       final CounterCubit cubit = createCubit(timerService: fakeTimer);
-      cubit.emit(
-        CounterState(
-          count: 2,
-          lastChanged: DateTime.now(),
-          countdownSeconds: 2,
-        ),
-      );
+      for (int i = 0; i < 2; i++) {
+        await cubit.increment();
+      }
+
+      fakeTimer.tick(3);
+      expect(cubit.state.countdownSeconds, 2);
 
       cubit.pauseAutoDecrement();
       fakeTimer.tick(2);
