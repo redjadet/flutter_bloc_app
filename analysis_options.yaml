@@ -51,9 +51,7 @@ linter:
     use_setters_to_change_properties: true
     one_member_abstracts: true
     avoid_slow_async_io: true
-    # Temporarily soften very_good_analysis high-churn rules. I will remove some of these as i refactor.
-
-    only_throw_errors: false
+    only_throw_errors: true
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

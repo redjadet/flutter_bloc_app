@@ -43,8 +43,51 @@ class RestCounterRepository implements CounterRepository {
     if (overrides != null) ...overrides,
   };
 
+  Future<http.Response> _sendRequest({
+    required final String operation,
+    required final Future<http.Response> Function() request,
+    required final CounterError Function({
+      Object? originalError,
+      String? message,
+    })
+    errorFactory,
+    CounterError Function(http.Response response)? onHttpFailure,
+  }) async {
+    try {
+      final http.Response response = await request().timeout(_requestTimeout);
+      if (_isSuccess(response.statusCode)) {
+        return response;
+      }
+      _logHttpError(operation, response);
+      throw onHttpFailure?.call(response) ??
+          errorFactory(
+            originalError: http.ClientException(
+              'REST $operation failed (HTTP ${response.statusCode})',
+              response.request?.url ?? _counterUri,
+            ),
+            message: 'REST $operation failed (HTTP ${response.statusCode}).',
+          );
+    } on CounterError {
+      rethrow;
+    } on Exception catch (error, stackTrace) {
+      AppLogger.error(
+        'RestCounterRepository.$operation failed',
+        error,
+        stackTrace,
+      );
+      throw errorFactory(originalError: error);
+    }
+  }
+
   bool _isSuccess(final int statusCode) =>
       statusCode >= 200 && statusCode < 300;
+
+  CounterSnapshot _storeSnapshot(final CounterSnapshot snapshot) {
+    final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
+    _latestSnapshot = normalized;
+    _hasResolvedInitialValue = true;
+    return normalized;
+  }
 
   CounterSnapshot _parseSnapshot(final String body) {
     try {
@@ -96,63 +139,44 @@ class RestCounterRepository implements CounterRepository {
 
   @override
   Future<CounterSnapshot> load() async {
-    try {
-      final res = await _client
-          .get(_counterUri, headers: _headers())
-          .timeout(_requestTimeout);
-      if (!_isSuccess(res.statusCode)) {
-        _logHttpError('load', res);
-        throw CounterError.load(
-          message: 'REST load failed (HTTP ${res.statusCode}).',
-        );
-      }
-      final CounterSnapshot snapshot = _parseSnapshot(res.body);
-      final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
-      _latestSnapshot = normalized;
-      _hasResolvedInitialValue = true;
-      return normalized;
-    } on CounterError {
-      rethrow;
-    } on Exception catch (e, s) {
-      AppLogger.error('RestCounterRepository.load failed', e, s);
-      throw CounterError.load(originalError: e);
-    }
+    final http.Response response = await _sendRequest(
+      operation: 'load',
+      request: () => _client.get(_counterUri, headers: _headers()),
+      errorFactory: CounterError.load,
+      onHttpFailure: (final http.Response res) => CounterError.load(
+        message: 'REST load failed (HTTP ${res.statusCode}).',
+      ),
+    );
+    final CounterSnapshot snapshot = _parseSnapshot(response.body);
+    return _storeSnapshot(snapshot);
   }
 
   @override
   Future<void> save(final CounterSnapshot snapshot) async {
     final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
-    try {
-      final res = await _client
-          .post(
-            _counterUri,
-            headers: _headers(
-              overrides: const {'Content-Type': 'application/json'},
-            ),
-            body: jsonEncode(<String, dynamic>{
-              'userId': normalized.userId,
-              'count': normalized.count,
-              'last_changed': normalized.lastChanged?.millisecondsSinceEpoch,
-            }),
-          )
-          .timeout(_requestTimeout);
-      if (!_isSuccess(res.statusCode)) {
-        _logHttpError('save', res);
-        throw CounterError.save(
-          originalError: http.ClientException(
-            'Counter save failed (HTTP ${res.statusCode})',
-            _counterUri,
-          ),
-          message: 'Save failed with status ${res.statusCode}',
-        );
-      }
-      _emitSnapshot(normalized);
-    } on CounterError {
-      rethrow;
-    } on Exception catch (e, s) {
-      AppLogger.error('RestCounterRepository.save failed', e, s);
-      throw CounterError.save(originalError: e);
-    }
+    await _sendRequest(
+      operation: 'save',
+      request: () => _client.post(
+        _counterUri,
+        headers: _headers(
+          overrides: const {'Content-Type': 'application/json'},
+        ),
+        body: jsonEncode(<String, dynamic>{
+          'userId': normalized.userId,
+          'count': normalized.count,
+          'last_changed': normalized.lastChanged?.millisecondsSinceEpoch,
+        }),
+      ),
+      errorFactory: CounterError.save,
+      onHttpFailure: (final http.Response res) => CounterError.save(
+        originalError: http.ClientException(
+          'Counter save failed (HTTP ${res.statusCode})',
+          _counterUri,
+        ),
+        message: 'Save failed with status ${res.statusCode}',
+      ),
+    );
+    _emitSnapshot(normalized);
   }
 
   @override
@@ -182,9 +206,7 @@ class RestCounterRepository implements CounterRepository {
   }
 
   void _emitSnapshot(final CounterSnapshot snapshot) {
-    final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
-    _latestSnapshot = normalized;
-    _hasResolvedInitialValue = true;
+    final CounterSnapshot normalized = _storeSnapshot(snapshot);
     final StreamController<CounterSnapshot>? controller = _watchController;
     if (controller != null && !controller.isClosed) {
       controller.add(normalized);
@@ -200,7 +222,11 @@ class RestCounterRepository implements CounterRepository {
     }
     final Completer<void> completer = Completer<void>();
     _initialLoadCompleter = completer;
-    unawaited(() async {
+    _startInitialLoad(completer);
+  }
+
+  void _startInitialLoad(final Completer<void> completer) {
+    Future<void> run() async {
       try {
         final CounterSnapshot snapshot = await load();
         _emitSnapshot(snapshot);
@@ -215,7 +241,9 @@ class RestCounterRepository implements CounterRepository {
         completer.complete();
         _initialLoadCompleter = null;
       }
-    }());
+    }
+
+    unawaited(run());
   }
 
   Future<void> _handleWatchCancel() async {

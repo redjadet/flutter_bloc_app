@@ -5,7 +5,7 @@ part 'counter_error.freezed.dart';
 enum CounterErrorType { cannotGoBelowZero, loadError, saveError, unknown }
 
 @freezed
-sealed class CounterError with _$CounterError {
+sealed class CounterError with _$CounterError implements Exception {
   const CounterError._();
 
   const factory CounterError.cannotGoBelowZero() = _CannotGoBelowZero;

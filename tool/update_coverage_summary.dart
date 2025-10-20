@@ -140,7 +140,9 @@ class _Coverage {
         'are excluded from these totals.',
       )
       ..writeln()
-      ..writeln('Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.')
+      ..writeln(
+        'Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.',
+      )
       ..writeln()
       ..writeln('| File | Coverage | Covered/Total |')
       ..writeln('| --- | ---: | ---: |');
