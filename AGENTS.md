@@ -9,9 +9,8 @@ Keep work lean, clean, and tested.
 3. `flutter analyze`
 4. `flutter test --coverage`
 5. `flutter build ios --simulator`
-6. `flutter build apk`
-7. `dart run tool/update_coverage_summary.dart`
-8. If Freezed/JSON models changed → `dart run build_runner build --delete-conflicting-outputs`
+6. `dart run tool/update_coverage_summary.dart`
+7. If Freezed/JSON models changed → `dart run build_runner build --delete-conflicting-outputs`
 
 ## Architecture Rules
 
@@ -33,6 +32,7 @@ Keep work lean, clean, and tested.
 - Any new feature ships with matching `bloc_test` coverage and, when UI surfaces change, widget/golden tests; keep coverage scripts up to date.
 - Respect lint configuration: fix violations instead of disabling rules; if ignoring is unavoidable, annotate with a TODO and owner.
 - Adhere to size limits: keep hand-written files under ~250 lines—extract widgets/helpers once you approach the threshold.
+- Resolve markdown lint warnings before wrapping up a task so future runs start clean.
 
 ## Workflow
 
