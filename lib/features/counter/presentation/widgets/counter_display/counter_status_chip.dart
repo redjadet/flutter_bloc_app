@@ -20,7 +20,7 @@ class CounterStatusChip extends StatelessWidget {
   final Duration animDuration;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final double fontSize = (textTheme.labelMedium?.fontSize ?? 12).spMax;
     return AnimatedContainer(
       duration: animDuration,
@@ -38,7 +38,7 @@ class CounterStatusChip extends StatelessWidget {
         children: [
           AnimatedSwitcher(
             duration: animDuration,
-            transitionBuilder: (child, animation) =>
+            transitionBuilder: (final child, final animation) =>
                 FadeTransition(opacity: animation, child: child),
             child: Icon(
               active ? Icons.timer : Icons.pause_circle_filled,
@@ -51,7 +51,7 @@ class CounterStatusChip extends StatelessWidget {
           Flexible(
             child: AnimatedSwitcher(
               duration: animDuration,
-              transitionBuilder: (child, animation) =>
+              transitionBuilder: (final child, final animation) =>
                   FadeTransition(opacity: animation, child: child),
               child: Text(
                 active ? l10n.autoLabel : l10n.pausedLabel,

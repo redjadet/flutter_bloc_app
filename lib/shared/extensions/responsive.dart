@@ -24,10 +24,10 @@ extension ResponsiveContext on BuildContext {
   EdgeInsets get safeAreaInsets => MediaQuery.viewPaddingOf(this);
 
   // Safe ScreenUtil adapters with fallbacks
-  double _safeW(double v) => UI.isScreenUtilReady ? v.w : v;
-  double _safeH(double v) => UI.isScreenUtilReady ? v.h : v;
-  double _safeSp(double v) => UI.isScreenUtilReady ? v.sp : v;
-  double _safeR(double v) => UI.isScreenUtilReady ? v.r : v;
+  double _safeW(final double v) => UI.isScreenUtilReady ? v.w : v;
+  double _safeH(final double v) => UI.isScreenUtilReady ? v.h : v;
+  double _safeSp(final double v) => UI.isScreenUtilReady ? v.sp : v;
+  double _safeR(final double v) => UI.isScreenUtilReady ? v.r : v;
 
   // Responsive padding system
   double get pageHorizontalPadding {

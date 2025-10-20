@@ -8,12 +8,12 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:go_router/go_router.dart';
 
 class AccountSection extends StatelessWidget {
-  const AccountSection({super.key, FirebaseAuth? auth}) : _auth = auth;
+  const AccountSection({super.key, final FirebaseAuth? auth}) : _auth = auth;
 
   final FirebaseAuth? _auth;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     final bool firebaseReady = Firebase.apps.isNotEmpty || _auth != null;
@@ -40,7 +40,7 @@ class AccountSection extends StatelessWidget {
                 else
                   StreamBuilder<User?>(
                     stream: auth!.authStateChanges(),
-                    builder: (context, snapshot) {
+                    builder: (final context, final snapshot) {
                       final User? user = snapshot.data;
                       if (user == null) {
                         return Column(

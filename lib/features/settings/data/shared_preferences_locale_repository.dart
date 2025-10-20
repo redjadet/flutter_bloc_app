@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesLocaleRepository implements LocaleRepository {
-  SharedPreferencesLocaleRepository([SharedPreferences? instance])
+  SharedPreferencesLocaleRepository([final SharedPreferences? instance])
     : _preferencesInstance = instance;
 
   static const String _preferencesKey = 'preferred_locale_code';
@@ -28,7 +28,7 @@ class SharedPreferencesLocaleRepository implements LocaleRepository {
   }
 
   @override
-  Future<void> save(Locale? locale) async {
+  Future<void> save(final Locale? locale) async {
     final SharedPreferences preferences = await _preferences();
     if (locale == null) {
       await preferences.remove(_preferencesKey);

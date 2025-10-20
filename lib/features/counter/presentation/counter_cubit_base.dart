@@ -2,10 +2,10 @@ part of 'counter_cubit.dart';
 
 abstract class _CounterCubitBase extends Cubit<CounterState> {
   _CounterCubitBase({
-    required CounterRepository repository,
-    required TimerService timerService,
-    required DateTime Function() now,
-    required Duration initialLoadDelay,
+    required final CounterRepository repository,
+    required final TimerService timerService,
+    required final DateTime Function() now,
+    required final Duration initialLoadDelay,
   }) : _repository = repository,
        _timerService = timerService,
        _now = now,
@@ -63,7 +63,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
     _countdownTicker = null;
   }
 
-  void _syncTickerForState(CounterState nextState) {
+  void _syncTickerForState(final CounterState nextState) {
     if (_isLifecyclePaused) {
       return;
     }
@@ -75,12 +75,15 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
   }
 
   /// Emits state with the provided countdown, preserving other fields.
-  void _emitCountdown(int seconds) {
+  void _emitCountdown(final int seconds) {
     emit(state.copyWith(countdownSeconds: seconds));
   }
 
   /// Emits a success state normalizing countdown, timestamp and activation flag.
-  CounterState _emitCountUpdate({required int count, DateTime? timestamp}) {
+  CounterState _emitCountUpdate({
+    required final int count,
+    final DateTime? timestamp,
+  }) {
     _pauseCountdownForOneTick = false;
     final CounterState next = CounterState.success(
       count: count,
@@ -113,7 +116,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
     _syncTickerForState(next);
   }
 
-  Future<void> _persistState(CounterState snapshotState) async {
+  Future<void> _persistState(final CounterState snapshotState) async {
     try {
       await _repository.save(
         CounterSnapshot(
@@ -139,10 +142,10 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
   }
 
   void _handleError(
-    Object error,
-    StackTrace stackTrace,
-    CounterError Function({Object? originalError}) errorFactory,
-    String message,
+    final Object error,
+    final StackTrace stackTrace,
+    final CounterError Function({Object? originalError}) errorFactory,
+    final String message,
   ) {
     AppLogger.error(message, error, stackTrace);
     final CounterError counterError = error is CounterError
@@ -154,7 +157,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
   void _subscribeToRepository() {
     _repositorySubscription?.cancel();
     _repositorySubscription = _repository.watch().listen(
-      (CounterSnapshot snapshot) {
+      (final CounterSnapshot snapshot) {
         if (shouldIgnoreRemoteSnapshot(state, snapshot)) {
           return;
         }
@@ -165,7 +168,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
         emit(restoration.state);
         _syncTickerForState(restoration.state);
       },
-      onError: (Object error, StackTrace stackTrace) {
+      onError: (final Object error, final StackTrace stackTrace) {
         AppLogger.error('CounterCubit.watch failed', error, stackTrace);
       },
     );

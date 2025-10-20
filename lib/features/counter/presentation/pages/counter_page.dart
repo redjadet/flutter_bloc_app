@@ -35,7 +35,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(final AppLifecycleState state) {
     if (!mounted) return;
     final CounterCubit cubit = context.read<CounterCubit>();
     switch (state) {
@@ -44,22 +44,20 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
       case AppLifecycleState.detached:
       case AppLifecycleState.hidden:
         cubit.pauseAutoDecrement();
-        break;
       case AppLifecycleState.resumed:
         cubit.resumeAutoDecrement();
-        break;
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final AppLocalizations l10n = AppLocalizations.of(context);
     return MultiBlocListener(
       listeners: [
         BlocListener<CounterCubit, CounterState>(
-          listenWhen: (prev, curr) => prev.error != curr.error,
-          listener: (context, state) {
+          listenWhen: (final prev, final curr) => prev.error != curr.error,
+          listener: (final context, final state) {
             final error = state.error;
             if (error != null) {
               final String localizedMessage = counterErrorMessage(l10n, error);
@@ -70,15 +68,16 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
                 onRetry: () =>
                     CubitHelpers.safeExecute<CounterCubit, CounterState>(
                       context,
-                      (cubit) => cubit.clearError(),
+                      (final cubit) => cubit.clearError(),
                     ),
               );
             }
           },
         ),
         BlocListener<CounterCubit, CounterState>(
-          listenWhen: (prev, curr) => prev.count == 0 && curr.count > 0,
-          listener: (context, state) {
+          listenWhen: (final prev, final curr) =>
+              prev.count == 0 && curr.count > 0,
+          listener: (final context, final state) {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
           },
         ),
@@ -95,8 +94,8 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: context.contentMaxWidth),
                 child: BlocSelector<CounterCubit, CounterState, CounterStatus>(
-                  selector: (state) => state.status,
-                  builder: (context, status) {
+                  selector: (final state) => state.status,
+                  builder: (final context, final status) {
                     final bool isLoading = status == CounterStatus.loading;
                     final bool showFlavor =
                         FlavorManager.I.flavor != Flavor.prod;
@@ -133,8 +132,8 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
                           const AwesomeFeatureWidget(),
                           SizedBox(height: UI.gapM),
                           BlocBuilder<CounterCubit, CounterState>(
-                            buildWhen: (p, c) => p.count != c.count,
-                            builder: (context, state) {
+                            buildWhen: (final p, final c) => p.count != c.count,
+                            builder: (final context, final state) {
                               if (state.count == 0) {
                                 return Text(
                                   l10n.startAutoHint,
@@ -162,7 +161,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
     );
   }
 
-  Future<void> _handleOpenSettings(BuildContext context) async {
+  Future<void> _handleOpenSettings(final BuildContext context) async {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final BiometricAuthenticator authenticator =
         getIt<BiometricAuthenticator>();

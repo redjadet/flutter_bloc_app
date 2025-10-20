@@ -9,12 +9,10 @@ class ChartMessageList extends StatelessWidget {
   final String message;
 
   @override
-  Widget build(BuildContext context) {
-    return ChartScrollable(
-      children: <Widget>[
-        SizedBox(height: UI.gapL),
-        AppMessage(message: message),
-      ],
-    );
-  }
+  Widget build(final BuildContext context) => ChartScrollable(
+    children: <Widget>[
+      SizedBox(height: UI.gapL),
+      AppMessage(message: message),
+    ],
+  );
 }

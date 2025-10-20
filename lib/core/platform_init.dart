@@ -8,8 +8,8 @@ import 'package:window_manager/window_manager.dart';
 class PlatformInit {
   /// Initializes platform-specific features
   static Future<void> initialize({
-    WindowManager? manager,
-    bool Function()? isDesktopPredicate,
+    final WindowManager? manager,
+    final bool Function()? isDesktopPredicate,
   }) async {
     final bool Function() predicate = isDesktopPredicate ?? _isDesktopPlatform;
     if (!kIsWeb && predicate()) {
@@ -18,12 +18,11 @@ class PlatformInit {
   }
 
   /// Checks if the current platform is desktop
-  static bool _isDesktopPlatform() {
-    return Platform.isWindows || Platform.isLinux || Platform.isMacOS;
-  }
+  static bool _isDesktopPlatform() =>
+      Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 
   /// Initializes desktop-specific features
-  static Future<void> _initializeDesktop(WindowManager manager) async {
+  static Future<void> _initializeDesktop(final WindowManager manager) async {
     await manager.ensureInitialized();
     await manager.setMinimumSize(AppConstants.minWindowSize);
   }

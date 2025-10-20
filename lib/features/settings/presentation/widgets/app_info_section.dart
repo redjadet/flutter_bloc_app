@@ -9,7 +9,7 @@ class AppInfoSection extends StatelessWidget {
   const AppInfoSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     return Column(
@@ -24,16 +24,14 @@ class AppInfoSection extends StatelessWidget {
               vertical: UI.cardPadV,
             ),
             child: BlocBuilder<AppInfoCubit, AppInfoState>(
-              builder: (context, state) {
-                return switch (state.status) {
-                  AppInfoStatus.success when state.info != null => _InfoDetails(
-                    infoState: state,
-                  ),
-                  AppInfoStatus.failure => _ErrorContent(
-                    error: state.errorMessage,
-                  ),
-                  AppInfoStatus.loading || _ => const _LoadingContent(),
-                };
+              builder: (final context, final state) => switch (state.status) {
+                AppInfoStatus.success when state.info != null => _InfoDetails(
+                  infoState: state,
+                ),
+                AppInfoStatus.failure => _ErrorContent(
+                  error: state.errorMessage,
+                ),
+                AppInfoStatus.loading || _ => const _LoadingContent(),
               },
             ),
           ),
@@ -49,7 +47,7 @@ class _InfoDetails extends StatelessWidget {
   final AppInfoState infoState;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final TextStyle? labelStyle = Theme.of(context).textTheme.bodyMedium;
     final TextStyle? valueStyle = Theme.of(context).textTheme.bodyLarge;
@@ -89,16 +87,14 @@ class _InfoRow extends StatelessWidget {
   final TextStyle? valueStyle;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(label, style: labelStyle),
-        SizedBox(height: UI.gapXS),
-        SelectableText(value, style: valueStyle),
-      ],
-    );
-  }
+  Widget build(final BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      Text(label, style: labelStyle),
+      SizedBox(height: UI.gapXS),
+      SelectableText(value, style: valueStyle),
+    ],
+  );
 }
 
 class _ErrorContent extends StatelessWidget {
@@ -107,7 +103,7 @@ class _ErrorContent extends StatelessWidget {
   final String? error;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     return Column(
@@ -140,7 +136,7 @@ class _LoadingContent extends StatelessWidget {
   const _LoadingContent();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     return Row(

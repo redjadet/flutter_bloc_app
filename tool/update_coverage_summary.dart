@@ -23,7 +23,7 @@ const List<String> _generatedExact = <String>[
   'lib/generated_plugin_registrant.dart',
 ];
 
-Future<void> main(List<String> args) async {
+Future<void> main(final List<String> args) async {
   final File lcov = File('coverage/lcov.info');
   if (!await lcov.exists()) {
     stderr.writeln('coverage/lcov.info not found');
@@ -103,7 +103,7 @@ class _Coverage {
     return _withSingleTrailingNewline(buffer.toString());
   }
 
-  static Future<_Coverage> parse(List<String> lines) async {
+  static Future<_Coverage> parse(final List<String> lines) async {
     String? currentFile;
     int linesFound = 0;
     int linesHit = 0;
@@ -147,24 +147,24 @@ class _Coverage {
 
     final List<_CoverageRecord> filtered =
         perFile.values
-            .where((record) => record.path.startsWith('lib/'))
-            .where((record) => record.linesFound > 0)
+            .where((final record) => record.path.startsWith('lib/'))
+            .where((final record) => record.linesFound > 0)
             .toList()
-          ..sort((a, b) => a.percentage.compareTo(b.percentage));
+          ..sort((final a, final b) => a.percentage.compareTo(b.percentage));
 
     final int totalFound = filtered.fold<int>(
       0,
-      (sum, record) => sum + record.linesFound,
+      (final sum, final record) => sum + record.linesFound,
     );
     final int totalHit = filtered.fold<int>(
       0,
-      (sum, record) => sum + record.linesHit,
+      (final sum, final record) => sum + record.linesHit,
     );
 
     return _Coverage._(filtered, totalHit, totalFound);
   }
 
-  static String _normalizePath(String path) {
+  static String _normalizePath(final String path) {
     final String normalized = path.replaceAll('\\', '/');
     if (normalized.startsWith('${Directory.current.path}/')) {
       return normalized.substring(Directory.current.path.length + 1);
@@ -172,7 +172,7 @@ class _Coverage {
     return normalized;
   }
 
-  static bool _shouldInclude(String path) {
+  static bool _shouldInclude(final String path) {
     if (!path.startsWith('lib/')) {
       return false;
     }
@@ -203,7 +203,7 @@ class _Coverage {
     return true;
   }
 
-  static bool _hasCoverageIgnoreFile(String path) {
+  static bool _hasCoverageIgnoreFile(final String path) {
     if (!path.endsWith('.dart')) {
       return false;
     }
@@ -212,11 +212,11 @@ class _Coverage {
       return false;
     }
     return file.readAsLinesSync().any(
-      (String line) => line.trim().startsWith('// coverage:ignore-file'),
+      (final String line) => line.trim().startsWith('// coverage:ignore-file'),
     );
   }
 
-  static bool _isTrivialDartFile(String path) {
+  static bool _isTrivialDartFile(final String path) {
     if (!path.endsWith('.dart')) {
       return false;
     }
@@ -259,7 +259,7 @@ class _Coverage {
 }
 
 class _Updator {
-  static Future<void> updateReadme(double percentage) async {
+  static Future<void> updateReadme(final double percentage) async {
     final File readme = File('README.md');
     if (!await readme.exists()) {
       return;
@@ -288,7 +288,7 @@ class _Updator {
   }
 }
 
-String _withSingleTrailingNewline(String value) {
+String _withSingleTrailingNewline(final String value) {
   final String stripped = value.replaceFirst(RegExp(r'\n+$'), '');
   return '$stripped\n';
 }

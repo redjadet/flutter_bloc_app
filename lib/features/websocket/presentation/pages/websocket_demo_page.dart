@@ -48,7 +48,7 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     if (kIsWeb) {
       return CommonPageLayout(
@@ -66,64 +66,62 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
       );
     }
     return BlocBuilder<WebsocketCubit, WebsocketState>(
-      builder: (context, state) {
-        return CommonPageLayout(
-          title: l10n.websocketDemoTitle,
-          actions: [
-            IconButton(
-              tooltip: l10n.websocketReconnectTooltip,
-              onPressed: state.isConnecting ? null : _cubit.reconnect,
-              icon: const Icon(Icons.refresh),
+      builder: (final context, final state) => CommonPageLayout(
+        title: l10n.websocketDemoTitle,
+        actions: [
+          IconButton(
+            tooltip: l10n.websocketReconnectTooltip,
+            onPressed: state.isConnecting ? null : _cubit.reconnect,
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
+        body: Column(
+          children: [
+            WebsocketConnectionBanner(state: state),
+            const Divider(height: 1),
+            Expanded(
+              child: WebsocketMessageList(
+                messages: state.messages,
+                emptyLabel: l10n.websocketEmptyState,
+              ),
+            ),
+            const Divider(height: 1),
+            SafeArea(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  UI.horizontalGapL,
+                  UI.gapS,
+                  UI.horizontalGapL,
+                  UI.gapS,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _messageController,
+                        enabled: state.isConnected && !state.isSending,
+                        decoration: InputDecoration(
+                          hintText: l10n.websocketMessageHint,
+                          border: const OutlineInputBorder(),
+                        ),
+                        onSubmitted: (_) => _sendCurrentMessage(),
+                      ),
+                    ),
+                    SizedBox(width: UI.gapS),
+                    FilledButton.icon(
+                      onPressed: state.isConnected && !state.isSending
+                          ? _sendCurrentMessage
+                          : null,
+                      icon: const Icon(Icons.send),
+                      label: Text(l10n.websocketSendButton),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
-          body: Column(
-            children: [
-              WebsocketConnectionBanner(state: state),
-              const Divider(height: 1),
-              Expanded(
-                child: WebsocketMessageList(
-                  messages: state.messages,
-                  emptyLabel: l10n.websocketEmptyState,
-                ),
-              ),
-              const Divider(height: 1),
-              SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    UI.horizontalGapL,
-                    UI.gapS,
-                    UI.horizontalGapL,
-                    UI.gapS,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _messageController,
-                          enabled: state.isConnected && !state.isSending,
-                          decoration: InputDecoration(
-                            hintText: l10n.websocketMessageHint,
-                            border: const OutlineInputBorder(),
-                          ),
-                          onSubmitted: (_) => _sendCurrentMessage(),
-                        ),
-                      ),
-                      SizedBox(width: UI.gapS),
-                      FilledButton.icon(
-                        onPressed: state.isConnected && !state.isSending
-                            ? _sendCurrentMessage
-                            : null,
-                        icon: const Icon(Icons.send),
-                        label: Text(l10n.websocketSendButton),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

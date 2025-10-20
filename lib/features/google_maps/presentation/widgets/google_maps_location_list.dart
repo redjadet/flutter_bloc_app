@@ -23,7 +23,7 @@ class GoogleMapsLocationList extends StatelessWidget {
   final ValueChanged<MapLocation> onFocus;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     if (locations.isEmpty) {
       return Text(
@@ -73,7 +73,7 @@ class _LocationFocusActions extends StatelessWidget {
   final VoidCallback onFocus;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
     return Row(

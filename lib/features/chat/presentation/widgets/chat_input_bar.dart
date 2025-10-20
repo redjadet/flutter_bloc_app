@@ -16,7 +16,7 @@ class ChatInputBar extends StatelessWidget {
   final VoidCallback onSend;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
 
@@ -36,21 +36,19 @@ class ChatInputBar extends StatelessWidget {
         ),
         SizedBox(width: UI.horizontalGapS),
         BlocBuilder<ChatCubit, ChatState>(
-          builder: (context, state) {
-            return IconButton(
-              tooltip: l10n.chatSendButton,
-              onPressed: state.canSend ? onSend : null,
-              icon: state.isLoading
-                  ? SizedBox.square(
-                      dimension: UI.iconM,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: theme.colorScheme.primary,
-                      ),
-                    )
-                  : const Icon(Icons.send),
-            );
-          },
+          builder: (final context, final state) => IconButton(
+            tooltip: l10n.chatSendButton,
+            onPressed: state.canSend ? onSend : null,
+            icon: state.isLoading
+                ? SizedBox.square(
+                    dimension: UI.iconM,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: theme.colorScheme.primary,
+                    ),
+                  )
+                : const Icon(Icons.send),
+          ),
         ),
       ],
     );

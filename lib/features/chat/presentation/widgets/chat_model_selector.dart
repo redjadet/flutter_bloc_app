@@ -9,13 +9,14 @@ class ChatModelSelector extends StatelessWidget {
   const ChatModelSelector({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
 
     return BlocBuilder<ChatCubit, ChatState>(
-      buildWhen: (prev, curr) => prev.currentModel != curr.currentModel,
-      builder: (context, state) {
+      buildWhen: (final prev, final curr) =>
+          prev.currentModel != curr.currentModel,
+      builder: (final context, final state) {
         final ChatCubit cubit = context.read<ChatCubit>();
         final List<String> models = cubit.models;
         final String currentModel = state.currentModel ?? models.first;
@@ -39,13 +40,13 @@ class ChatModelSelector extends StatelessWidget {
                 initialValue: currentModel,
                 items: models
                     .map(
-                      (String model) => DropdownMenuItem<String>(
+                      (final String model) => DropdownMenuItem<String>(
                         value: model,
                         child: Text(_modelLabel(l10n, model)),
                       ),
                     )
                     .toList(growable: false),
-                onChanged: (String? value) {
+                onChanged: (final String? value) {
                   if (value != null) {
                     cubit.selectModel(value);
                   }
@@ -63,7 +64,7 @@ class ChatModelSelector extends StatelessWidget {
     );
   }
 
-  String _modelLabel(AppLocalizations l10n, String model) {
+  String _modelLabel(final AppLocalizations l10n, final String model) {
     switch (model) {
       case 'openai/gpt-oss-20b':
         return l10n.chatModelGptOss20b;

@@ -14,14 +14,14 @@ class ChatMessageList extends StatelessWidget {
   final ScrollController controller;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     final ErrorNotificationService errorNotificationService =
         getIt<ErrorNotificationService>();
 
     return BlocConsumer<ChatCubit, ChatState>(
-      listener: (context, state) {
+      listener: (final context, final state) {
         if (state.hasError) {
           final ChatCubit chatCubit = context.read<ChatCubit>();
           errorNotificationService
@@ -43,7 +43,7 @@ class ChatMessageList extends StatelessWidget {
           });
         }
       },
-      builder: (context, state) {
+      builder: (final context, final state) {
         if (!state.hasMessages) {
           return Center(
             child: Padding(
@@ -60,7 +60,7 @@ class ChatMessageList extends StatelessWidget {
           controller: controller,
           padding: EdgeInsets.all(UI.gapM),
           itemCount: state.messages.length,
-          itemBuilder: (context, index) {
+          itemBuilder: (final context, final index) {
             final ChatMessage message = state.messages[index];
             final bool isUser = message.author == ChatAuthor.user;
             final Alignment alignment = isUser

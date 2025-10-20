@@ -32,10 +32,10 @@ class ChatCubit extends _ChatCubitCore
 
 abstract class _ChatCubitCore extends Cubit<ChatState> {
   _ChatCubitCore({
-    required ChatRepository repository,
-    required ChatHistoryRepository historyRepository,
-    String? initialModel,
-    List<String>? supportedModels,
+    required final ChatRepository repository,
+    required final ChatHistoryRepository historyRepository,
+    final String? initialModel,
+    final List<String>? supportedModels,
   }) : _repository = repository,
        _historyRepository = historyRepository,
        _models = _buildModelList(initialModel, supportedModels),
@@ -56,7 +56,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
   ChatState get currentState => state;
 
   @protected
-  void emitState(ChatState newState) => emit(newState);
+  void emitState(final ChatState newState) => emit(newState);
 
   void clearError() {
     if (state.hasError) {

@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// SharedPreferences-backed implementation of [CounterRepository].
 class SharedPreferencesCounterRepository implements CounterRepository {
-  SharedPreferencesCounterRepository([SharedPreferences? instance])
+  SharedPreferencesCounterRepository([final SharedPreferences? instance])
     : _preferencesInstance = instance;
 
   static const String _preferencesKeyCount = 'last_count';
@@ -52,7 +52,7 @@ class SharedPreferencesCounterRepository implements CounterRepository {
   }
 
   @override
-  Future<void> save(CounterSnapshot snapshot) async {
+  Future<void> save(final CounterSnapshot snapshot) async {
     try {
       final SharedPreferences preferences = await _preferences();
       final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
@@ -113,7 +113,7 @@ class SharedPreferencesCounterRepository implements CounterRepository {
     }
   }
 
-  CounterSnapshot _normalizeSnapshot(CounterSnapshot snapshot) {
+  CounterSnapshot _normalizeSnapshot(final CounterSnapshot snapshot) {
     if (snapshot.userId == null &&
         snapshot.count == 0 &&
         snapshot.lastChanged == null) {
@@ -124,7 +124,7 @@ class SharedPreferencesCounterRepository implements CounterRepository {
         : snapshot.copyWith(userId: _localUserId);
   }
 
-  void _emitSnapshot(CounterSnapshot snapshot) {
+  void _emitSnapshot(final CounterSnapshot snapshot) {
     _cacheSnapshot(snapshot);
     final StreamController<CounterSnapshot>? controller = _watchController;
     if (controller == null || controller.isClosed) {
@@ -133,7 +133,7 @@ class SharedPreferencesCounterRepository implements CounterRepository {
     controller.add(snapshot);
   }
 
-  void _cacheSnapshot(CounterSnapshot snapshot) {
+  void _cacheSnapshot(final CounterSnapshot snapshot) {
     _cachedSnapshot = snapshot;
   }
 

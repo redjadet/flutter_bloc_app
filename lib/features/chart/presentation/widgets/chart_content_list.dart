@@ -23,7 +23,7 @@ class ChartContentList extends StatelessWidget {
   final ValueChanged<bool> onZoomChanged;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final theme = Theme.of(context);
     final chartHeight = MediaQuery.of(context).size.height * 0.45;
     return ChartScrollable(

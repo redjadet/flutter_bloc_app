@@ -12,7 +12,8 @@ import 'package:mocktail/mocktail.dart';
 class _MockMapSampleCubit extends MockCubit<MapSampleState>
     implements MapSampleCubit {}
 
-class _MockNativePlatformService extends Mock implements NativePlatformService {}
+class _MockNativePlatformService extends Mock
+    implements NativePlatformService {}
 
 void main() {
   late AppLocalizations l10n;
@@ -41,7 +42,10 @@ void main() {
       await cubit.close();
     });
 
-    Future<void> pumpPage(WidgetTester tester, {required TargetPlatform platform}) async {
+    Future<void> pumpPage(
+      WidgetTester tester, {
+      required TargetPlatform platform,
+    }) async {
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -87,7 +91,9 @@ void main() {
       expect(find.text(l10n.googleMapsPageMissingKeyTitle), findsOneWidget);
     });
 
-    testWidgets('shows loading indicator when cubit is loading', (tester) async {
+    testWidgets('shows loading indicator when cubit is loading', (
+      tester,
+    ) async {
       when(
         () => platformService.hasGoogleMapsApiKey(),
       ).thenAnswer((_) async => true);
@@ -105,9 +111,7 @@ void main() {
       when(
         () => platformService.hasGoogleMapsApiKey(),
       ).thenAnswer((_) async => true);
-      when(
-        () => cubit.state,
-      ).thenReturn(
+      when(() => cubit.state).thenReturn(
         MapSampleState.initial().copyWith(
           isLoading: false,
           errorMessage: 'Error',

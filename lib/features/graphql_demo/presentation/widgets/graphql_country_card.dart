@@ -14,7 +14,7 @@ class GraphqlCountryCard extends StatelessWidget {
   final String currencyLabel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final TextTheme textTheme = theme.textTheme;
     final ColorScheme colors = theme.colorScheme;
@@ -71,7 +71,7 @@ class _DetailChip extends StatelessWidget {
   final String value;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Chip(
       label: Text('$label: $value', style: theme.textTheme.bodySmall),

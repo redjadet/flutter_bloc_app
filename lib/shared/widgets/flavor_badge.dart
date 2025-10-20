@@ -5,7 +5,7 @@ class FlavorBadge extends StatelessWidget {
   const FlavorBadge({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final flavor = FlavorManager.I.flavor;
     if (flavor == Flavor.prod) return const SizedBox.shrink();
     final ColorScheme colors = Theme.of(context).colorScheme;
@@ -46,7 +46,10 @@ class _FlavorBadgeStyle {
   final Color color;
 }
 
-_FlavorBadgeStyle _mapFlavorToBadge(Flavor flavor, ColorScheme colors) {
+_FlavorBadgeStyle _mapFlavorToBadge(
+  final Flavor flavor,
+  final ColorScheme colors,
+) {
   switch (flavor) {
     case Flavor.dev:
       return _FlavorBadgeStyle(label: 'DEV', color: colors.error);

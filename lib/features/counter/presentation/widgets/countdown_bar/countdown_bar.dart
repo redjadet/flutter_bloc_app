@@ -17,45 +17,41 @@ class _CountdownBarState extends State<CountdownBar> {
   int? _cycleTotalSeconds;
   static const Duration _animFast = UI.animFast;
 
-  AppLocalizations _l10n(BuildContext context) =>
+  AppLocalizations _l10n(final BuildContext context) =>
       Localizations.of<AppLocalizations>(context, AppLocalizations) ??
       AppLocalizationsEn();
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<CounterCubit, CounterState>(
-      builder: (context, state) {
-        final bool active = state.isAutoDecrementActive;
-        final bool isLoading = state.status == CounterStatus.loading;
-        final AppLocalizations l10n = _l10n(context);
-        final ColorScheme colors = Theme.of(context).colorScheme;
+  Widget build(
+    final BuildContext context,
+  ) => BlocBuilder<CounterCubit, CounterState>(
+    builder: (final context, final state) {
+      final bool active = state.isAutoDecrementActive;
+      final bool isLoading = state.status == CounterStatus.loading;
+      final AppLocalizations l10n = _l10n(context);
+      final ColorScheme colors = Theme.of(context).colorScheme;
 
-        if (_cycleTotalSeconds == null ||
-            state.countdownSeconds > (_cycleTotalSeconds ?? 0)) {
-          _cycleTotalSeconds = state.countdownSeconds;
-        }
-        final int total = _cycleTotalSeconds ?? 5;
-        final double progress = (state.countdownSeconds / total).clamp(
-          0.0,
-          1.0,
-        );
+      if (_cycleTotalSeconds == null ||
+          state.countdownSeconds > (_cycleTotalSeconds ?? 0)) {
+        _cycleTotalSeconds = state.countdownSeconds;
+      }
+      final int total = _cycleTotalSeconds ?? 5;
+      final double progress = (state.countdownSeconds / total).clamp(0.0, 1.0);
 
-        final Color targetColor = active
-            ? Color.lerp(colors.error, colors.primary, progress) ??
-                  colors.primary
-            : colors.primary;
+      final Color targetColor = active
+          ? Color.lerp(colors.error, colors.primary, progress) ?? colors.primary
+          : colors.primary;
 
-        return CountdownBarContent(
-          active: active,
-          isLoading: isLoading,
-          progress: progress,
-          countdownSeconds: state.countdownSeconds,
-          targetColor: targetColor,
-          colors: colors,
-          l10n: l10n,
-          animFast: _animFast,
-        );
-      },
-    );
-  }
+      return CountdownBarContent(
+        active: active,
+        isLoading: isLoading,
+        progress: progress,
+        countdownSeconds: state.countdownSeconds,
+        targetColor: targetColor,
+        colors: colors,
+        l10n: l10n,
+        animFast: _animFast,
+      );
+    },
+  );
 }

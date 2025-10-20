@@ -6,13 +6,13 @@ import 'package:http/http.dart' as http;
 
 class HuggingfaceChatRepository implements ChatRepository {
   HuggingfaceChatRepository({
-    http.Client? client,
-    String? apiKey,
-    String? model,
-    bool useChatCompletions = false,
-    HuggingFaceApiClient? apiClient,
-    HuggingFacePayloadBuilder? payloadBuilder,
-    HuggingFaceResponseParser? responseParser,
+    final http.Client? client,
+    final String? apiKey,
+    final String? model,
+    final bool useChatCompletions = false,
+    final HuggingFaceApiClient? apiClient,
+    final HuggingFacePayloadBuilder? payloadBuilder,
+    final HuggingFaceResponseParser? responseParser,
   }) : _apiClient =
            apiClient ??
            HuggingFaceApiClient(httpClient: client, apiKey: _normalize(apiKey)),
@@ -38,10 +38,10 @@ class HuggingfaceChatRepository implements ChatRepository {
 
   @override
   Future<ChatResult> sendMessage({
-    required List<String> pastUserInputs,
-    required List<String> generatedResponses,
-    required String prompt,
-    String? model,
+    required final List<String> pastUserInputs,
+    required final List<String> generatedResponses,
+    required final String prompt,
+    final String? model,
   }) async {
     if (!_apiClient.hasApiKey) {
       throw const ChatException('Missing Hugging Face API token.');
@@ -64,10 +64,10 @@ class HuggingfaceChatRepository implements ChatRepository {
   }
 
   Future<ChatResult> _sendViaInference({
-    required List<String> pastUserInputs,
-    required List<String> generatedResponses,
-    required String prompt,
-    required String model,
+    required final List<String> pastUserInputs,
+    required final List<String> generatedResponses,
+    required final String prompt,
+    required final String model,
   }) async {
     final Map<String, dynamic> payload = _payloadBuilder.buildInferencePayload(
       pastUserInputs: pastUserInputs,
@@ -85,10 +85,10 @@ class HuggingfaceChatRepository implements ChatRepository {
   }
 
   Future<ChatResult> _sendViaChatCompletions({
-    required List<String> pastUserInputs,
-    required List<String> generatedResponses,
-    required String prompt,
-    required String model,
+    required final List<String> pastUserInputs,
+    required final List<String> generatedResponses,
+    required final String prompt,
+    required final String model,
   }) async {
     final Map<String, dynamic> payload = _payloadBuilder
         .buildChatCompletionsPayload(
@@ -112,11 +112,9 @@ class HuggingfaceChatRepository implements ChatRepository {
     );
   }
 
-  String _resolveModel(String? value) {
-    return _normalize(value) ?? _model;
-  }
+  String _resolveModel(final String? value) => _normalize(value) ?? _model;
 
-  static String? _normalize(String? value) {
+  static String? _normalize(final String? value) {
     if (value == null) return null;
     final String trimmed = value.trim();
     return trimmed.isEmpty ? null : trimmed;

@@ -4,6 +4,6 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 /// Enables substituting storage without changing business logic (DIP).
 abstract class CounterRepository {
   Future<CounterSnapshot> load();
-  Future<void> save(CounterSnapshot snapshot);
+  Future<void> save(final CounterSnapshot snapshot);
   Stream<CounterSnapshot> watch();
 }

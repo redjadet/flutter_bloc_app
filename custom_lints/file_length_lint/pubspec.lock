@@ -18,7 +18,7 @@ packages:
     source: hosted
     version: "7.6.0"
   analyzer_plugin:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: analyzer_plugin
       sha256: a5ab7590c27b779f3d4de67f31c4109dbe13dd7339f86461a6f2a8ab2594d8ce

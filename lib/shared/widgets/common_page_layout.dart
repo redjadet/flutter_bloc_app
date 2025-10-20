@@ -36,7 +36,7 @@ class CommonPageLayout extends StatelessWidget {
   final bool useResponsiveBody;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final Widget content = useResponsiveBody
         ? _ResponsiveBody(child: body)
@@ -71,23 +71,19 @@ class _ResponsiveBody extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Align(
-          alignment: Alignment.topCenter,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: context.contentMaxWidth),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: context.pageHorizontalPadding,
-                vertical: context.pageVerticalPadding,
-              ),
-              child: child,
-            ),
+  Widget build(final BuildContext context) => LayoutBuilder(
+    builder: (final context, final constraints) => Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: context.contentMaxWidth),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: context.pageHorizontalPadding,
+            vertical: context.pageVerticalPadding,
           ),
-        );
-      },
-    );
-  }
+          child: child,
+        ),
+      ),
+    ),
+  );
 }

@@ -26,7 +26,7 @@ class GoogleMapsControlsCard extends StatelessWidget {
   final String trafficToggleLabel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final String mapTypeLabel = isHybridMapType
         ? mapTypeNormalLabel

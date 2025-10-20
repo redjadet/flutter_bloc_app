@@ -8,8 +8,8 @@ class CubitHelpers {
   /// Safely read a Cubit from context and execute an action
   /// Returns true if successful, false if Cubit is not found
   static bool safeExecute<T extends StateStreamable<S>, S>(
-    BuildContext context,
-    void Function(T cubit) action,
+    final BuildContext context,
+    final void Function(T cubit) action,
   ) {
     try {
       final T cubit = context.read<T>();
@@ -24,8 +24,8 @@ class CubitHelpers {
   /// Safely read a Cubit from context and execute an action with return value
   /// Returns the result if successful, null if Cubit is not found
   static R? safeExecuteWithResult<T extends StateStreamable<S>, S, R>(
-    BuildContext context,
-    R Function(T cubit) action,
+    final BuildContext context,
+    final R Function(T cubit) action,
   ) {
     try {
       final T cubit = context.read<T>();
@@ -38,7 +38,7 @@ class CubitHelpers {
 
   /// Check if a Cubit is available in the widget tree
   static bool isCubitAvailable<T extends StateStreamable<S>, S>(
-    BuildContext context,
+    final BuildContext context,
   ) {
     try {
       context.read<T>();
@@ -51,7 +51,7 @@ class CubitHelpers {
   /// Get the current state of a Cubit safely
   /// Returns null if Cubit is not found
   static S? getCurrentState<T extends StateStreamable<S>, S>(
-    BuildContext context,
+    final BuildContext context,
   ) {
     try {
       final T cubit = context.read<T>();
@@ -68,7 +68,5 @@ extension CubitContextHelpers on BuildContext {
   /// A convenient way to access a Cubit of type [T] from the widget tree.
   ///
   /// This is a shorthand for `BlocProvider.of<T>(this)`.
-  T readCubit<T extends Cubit<dynamic>>() {
-    return read<T>();
-  }
+  T readCubit<T extends Cubit<dynamic>>() => read<T>();
 }

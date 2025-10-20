@@ -12,27 +12,26 @@ class _GoogleMapsMapSection extends StatelessWidget {
   final bool useAppleMaps;
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<MapSampleCubit, MapSampleState>(
-      buildWhen: (MapSampleState previous, MapSampleState current) =>
-          previous.cameraPosition != current.cameraPosition ||
-          previous.markers != current.markers ||
-          previous.mapType != current.mapType ||
-          previous.trafficEnabled != current.trafficEnabled ||
-          previous.locations != current.locations ||
-          previous.selectedMarkerId != current.selectedMarkerId,
-      builder: (BuildContext context, MapSampleState state) {
-        return RepaintBoundary(
-          child: MapSampleMapView(
-            state: state,
-            cubit: cubit,
-            useAppleMaps: useAppleMaps,
-            controller: controller,
-          ),
-        );
-      },
-    );
-  }
+  Widget build(final BuildContext context) =>
+      BlocBuilder<MapSampleCubit, MapSampleState>(
+        buildWhen:
+            (final MapSampleState previous, final MapSampleState current) =>
+                previous.cameraPosition != current.cameraPosition ||
+                previous.markers != current.markers ||
+                previous.mapType != current.mapType ||
+                previous.trafficEnabled != current.trafficEnabled ||
+                previous.locations != current.locations ||
+                previous.selectedMarkerId != current.selectedMarkerId,
+        builder: (final BuildContext context, final MapSampleState state) =>
+            RepaintBoundary(
+              child: MapSampleMapView(
+                state: state,
+                cubit: cubit,
+                useAppleMaps: useAppleMaps,
+                controller: controller,
+              ),
+            ),
+      );
 }
 
 class _GoogleMapsControlsSection extends StatelessWidget {
@@ -47,27 +46,26 @@ class _GoogleMapsControlsSection extends StatelessWidget {
   final ValueChanged<bool> onToggleTraffic;
 
   @override
-  Widget build(BuildContext context) {
-    return BlocSelector<MapSampleCubit, MapSampleState, _ControlsViewModel>(
-      selector: (MapSampleState state) => _ControlsViewModel(
-        isHybridMapType: state.mapType == gmaps.MapType.hybrid,
-        trafficEnabled: state.trafficEnabled,
-      ),
-      builder: (BuildContext context, _ControlsViewModel viewModel) {
-        return GoogleMapsControlsCard(
-          heading: l10n.googleMapsPageControlsHeading,
-          helpText: l10n.googleMapsPageApiKeyHelp,
-          isHybridMapType: viewModel.isHybridMapType,
-          trafficEnabled: viewModel.trafficEnabled,
-          onToggleMapType: onToggleMapType,
-          onToggleTraffic: onToggleTraffic,
-          mapTypeHybridLabel: l10n.googleMapsPageMapTypeHybrid,
-          mapTypeNormalLabel: l10n.googleMapsPageMapTypeNormal,
-          trafficToggleLabel: l10n.googleMapsPageTrafficToggle,
-        );
-      },
-    );
-  }
+  Widget build(final BuildContext context) =>
+      BlocSelector<MapSampleCubit, MapSampleState, _ControlsViewModel>(
+        selector: (final MapSampleState state) => _ControlsViewModel(
+          isHybridMapType: state.mapType == gmaps.MapType.hybrid,
+          trafficEnabled: state.trafficEnabled,
+        ),
+        builder:
+            (final BuildContext context, final _ControlsViewModel viewModel) =>
+                GoogleMapsControlsCard(
+                  heading: l10n.googleMapsPageControlsHeading,
+                  helpText: l10n.googleMapsPageApiKeyHelp,
+                  isHybridMapType: viewModel.isHybridMapType,
+                  trafficEnabled: viewModel.trafficEnabled,
+                  onToggleMapType: onToggleMapType,
+                  onToggleTraffic: onToggleTraffic,
+                  mapTypeHybridLabel: l10n.googleMapsPageMapTypeHybrid,
+                  mapTypeNormalLabel: l10n.googleMapsPageMapTypeNormal,
+                  trafficToggleLabel: l10n.googleMapsPageTrafficToggle,
+                ),
+      );
 }
 
 class _GoogleMapsLocationListSection extends StatelessWidget {
@@ -80,25 +78,26 @@ class _GoogleMapsLocationListSection extends StatelessWidget {
   final ValueChanged<MapLocation> onFocus;
 
   @override
-  Widget build(BuildContext context) {
-    return BlocSelector<MapSampleCubit, MapSampleState, _LocationListViewModel>(
-      selector: (MapSampleState state) => _LocationListViewModel(
-        locations: state.locations,
-        selectedMarkerId: state.selectedMarkerId?.value,
-      ),
-      builder: (BuildContext context, _LocationListViewModel viewModel) {
-        return GoogleMapsLocationList(
-          locations: viewModel.locations,
-          selectedMarkerId: viewModel.selectedMarkerId,
-          emptyLabel: l10n.googleMapsPageEmptyLocations,
-          heading: l10n.googleMapsPageLocationsHeading,
-          focusLabel: l10n.googleMapsPageFocusButton,
-          selectedBadgeLabel: l10n.googleMapsPageSelectedBadge,
-          onFocus: onFocus,
-        );
-      },
-    );
-  }
+  Widget build(final BuildContext context) =>
+      BlocSelector<MapSampleCubit, MapSampleState, _LocationListViewModel>(
+        selector: (final MapSampleState state) => _LocationListViewModel(
+          locations: state.locations,
+          selectedMarkerId: state.selectedMarkerId?.value,
+        ),
+        builder:
+            (
+              final BuildContext context,
+              final _LocationListViewModel viewModel,
+            ) => GoogleMapsLocationList(
+              locations: viewModel.locations,
+              selectedMarkerId: viewModel.selectedMarkerId,
+              emptyLabel: l10n.googleMapsPageEmptyLocations,
+              heading: l10n.googleMapsPageLocationsHeading,
+              focusLabel: l10n.googleMapsPageFocusButton,
+              selectedBadgeLabel: l10n.googleMapsPageSelectedBadge,
+              onFocus: onFocus,
+            ),
+      );
 }
 
 class _ControlsViewModel extends Equatable {

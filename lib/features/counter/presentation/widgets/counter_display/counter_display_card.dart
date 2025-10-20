@@ -30,53 +30,51 @@ class CounterDisplayCard extends StatelessWidget {
   final Duration animMedium;
 
   @override
-  Widget build(BuildContext context) {
-    return TweenAnimationBuilder<Color?>(
-      duration: animMedium,
-      tween: ColorTween(end: cardColor),
-      builder: (context, animatedColor, _) {
-        final Color resolvedColor = animatedColor ?? cardColor;
-        return Card(
-          elevation: 0,
-          color: resolvedColor,
-          margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(UI.radiusM),
+  Widget build(final BuildContext context) => TweenAnimationBuilder<Color?>(
+    duration: animMedium,
+    tween: ColorTween(end: cardColor),
+    builder: (final context, final animatedColor, _) {
+      final Color resolvedColor = animatedColor ?? cardColor;
+      return Card(
+        elevation: 0,
+        color: resolvedColor,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(UI.radiusM),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: UI.cardPadH,
+            vertical: UI.cardPadV,
           ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: UI.cardPadH,
-              vertical: UI.cardPadV,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CounterValueText(
-                  count: count,
-                  textTheme: textTheme,
-                  animDuration: animMedium,
-                ),
-                SizedBox(height: UI.gapM),
-                CounterStatusChip(
-                  active: isActive,
-                  colors: colors,
-                  textTheme: textTheme,
-                  l10n: l10n,
-                  animDuration: animFast,
-                ),
-                SizedBox(height: UI.gapM),
-                Divider(height: UI.dividerThin, color: colors.outlineVariant),
-                SizedBox(height: UI.gapM),
-                CounterLastChangedText(
-                  lastChanged: lastChanged,
-                  l10n: l10n,
-                  textTheme: textTheme,
-                ),
-              ],
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CounterValueText(
+                count: count,
+                textTheme: textTheme,
+                animDuration: animMedium,
+              ),
+              SizedBox(height: UI.gapM),
+              CounterStatusChip(
+                active: isActive,
+                colors: colors,
+                textTheme: textTheme,
+                l10n: l10n,
+                animDuration: animFast,
+              ),
+              SizedBox(height: UI.gapM),
+              Divider(height: UI.dividerThin, color: colors.outlineVariant),
+              SizedBox(height: UI.gapM),
+              CounterLastChangedText(
+                lastChanged: lastChanged,
+                l10n: l10n,
+                textTheme: textTheme,
+              ),
+            ],
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
 }

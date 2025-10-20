@@ -10,25 +10,23 @@ abstract class CounterState with _$CounterState {
   const CounterState._();
 
   const factory CounterState({
-    required int count,
-    DateTime? lastChanged,
-    @Default(CounterState.defaultCountdownSeconds) int countdownSeconds,
-    CounterError? error,
-    @Default(CounterStatus.idle) CounterStatus status,
+    required final int count,
+    final DateTime? lastChanged,
+    @Default(CounterState.defaultCountdownSeconds) final int countdownSeconds,
+    final CounterError? error,
+    @Default(CounterStatus.idle) final CounterStatus status,
   }) = _CounterState;
 
   factory CounterState.success({
-    required int count,
-    DateTime? lastChanged,
-    int countdownSeconds = CounterState.defaultCountdownSeconds,
-  }) {
-    return CounterState(
-      count: count,
-      lastChanged: lastChanged,
-      countdownSeconds: countdownSeconds,
-      status: CounterStatus.success,
-    );
-  }
+    required final int count,
+    final DateTime? lastChanged,
+    final int countdownSeconds = CounterState.defaultCountdownSeconds,
+  }) => CounterState(
+    count: count,
+    lastChanged: lastChanged,
+    countdownSeconds: countdownSeconds,
+    status: CounterStatus.success,
+  );
 
   static const int defaultCountdownSeconds = 5;
 

@@ -10,9 +10,9 @@ typedef JsonMap = Map<String, dynamic>;
 /// headers, error handling and JSON parsing.
 class HuggingFaceApiClient {
   HuggingFaceApiClient({
-    http.Client? httpClient,
-    String? apiKey,
-    Duration requestTimeout = const Duration(seconds: 30),
+    final http.Client? httpClient,
+    final String? apiKey,
+    final Duration requestTimeout = const Duration(seconds: 30),
   }) : _client = httpClient ?? http.Client(),
        _apiKey = _clean(apiKey),
        _requestTimeout = requestTimeout,
@@ -31,9 +31,9 @@ class HuggingFaceApiClient {
   };
 
   Future<JsonMap> postJson({
-    required Uri uri,
-    required JsonMap payload,
-    required String context,
+    required final Uri uri,
+    required final JsonMap payload,
+    required final String context,
   }) async {
     try {
       final http.Response response = await _client
@@ -96,13 +96,13 @@ class HuggingFaceApiClient {
     }
   }
 
-  static String? _clean(String? value) {
+  static String? _clean(final String? value) {
     if (value == null) return null;
     final String trimmed = value.trim();
     return trimmed.isEmpty ? null : trimmed;
   }
 
-  static String formatError(http.Response response) {
+  static String formatError(final http.Response response) {
     final int code = response.statusCode;
     final String body = response.body;
     String? detail;

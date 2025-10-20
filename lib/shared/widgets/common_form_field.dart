@@ -43,7 +43,7 @@ class CommonFormField extends StatelessWidget {
   final bool autofocus;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final theme = Theme.of(context);
 
     return TextFormField(
@@ -115,25 +115,23 @@ class CommonSearchField extends StatelessWidget {
   final bool enabled;
 
   @override
-  Widget build(BuildContext context) {
-    return CommonFormField(
-      controller: controller,
-      hintText: hintText,
-      onChanged: onChanged,
-      onSubmitted: onSubmitted,
-      enabled: enabled,
-      prefixIcon: const Icon(Icons.search),
-      suffixIcon: controller.text.isNotEmpty
-          ? IconButton(
-              icon: const Icon(Icons.clear),
-              onPressed: () {
-                controller.clear();
-                onClear?.call();
-              },
-            )
-          : null,
-    );
-  }
+  Widget build(final BuildContext context) => CommonFormField(
+    controller: controller,
+    hintText: hintText,
+    onChanged: onChanged,
+    onSubmitted: onSubmitted,
+    enabled: enabled,
+    prefixIcon: const Icon(Icons.search),
+    suffixIcon: controller.text.isNotEmpty
+        ? IconButton(
+            icon: const Icon(Icons.clear),
+            onPressed: () {
+              controller.clear();
+              onClear?.call();
+            },
+          )
+        : null,
+  );
 }
 
 /// A reusable dropdown field with consistent styling
@@ -160,7 +158,7 @@ class CommonDropdownField<T> extends StatelessWidget {
   final bool isExpanded;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final theme = Theme.of(context);
 
     return DropdownButtonFormField<T>(

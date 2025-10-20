@@ -9,20 +9,20 @@ enum ChatStatus { idle, loading, success, error }
 @freezed
 abstract class ChatState with _$ChatState {
   const factory ChatState({
-    @Default(<ChatMessage>[]) List<ChatMessage> messages,
-    @Default(false) bool isLoading,
-    String? error,
-    @Default(<String>[]) List<String> pastUserInputs,
-    @Default(<String>[]) List<String> generatedResponses,
-    String? currentModel,
-    @Default(<ChatConversation>[]) List<ChatConversation> history,
-    String? activeConversationId,
-    @Default(ChatStatus.idle) ChatStatus status,
+    @Default(<ChatMessage>[]) final List<ChatMessage> messages,
+    @Default(false) final bool isLoading,
+    final String? error,
+    @Default(<String>[]) final List<String> pastUserInputs,
+    @Default(<String>[]) final List<String> generatedResponses,
+    final String? currentModel,
+    @Default(<ChatConversation>[]) final List<ChatConversation> history,
+    final String? activeConversationId,
+    @Default(ChatStatus.idle) final ChatStatus status,
   }) = _ChatState;
 
   const ChatState._();
 
-  factory ChatState.initial({String? currentModel}) =>
+  factory ChatState.initial({final String? currentModel}) =>
       ChatState(currentModel: currentModel);
 
   bool get hasError => error != null;

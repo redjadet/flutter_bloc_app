@@ -15,10 +15,10 @@ part 'counter_cubit_base.dart';
 class CounterCubit extends _CounterCubitBase {
   CounterCubit({
     required super.repository,
-    TimerService? timerService,
-    bool startTicker = true,
-    Duration loadDelay = Duration.zero,
-    DateTime Function()? now,
+    final TimerService? timerService,
+    final bool startTicker = true,
+    final Duration loadDelay = Duration.zero,
+    final DateTime Function()? now,
   }) : super(
          timerService: timerService ?? DefaultTimerService(),
          now: now ?? DateTime.now,

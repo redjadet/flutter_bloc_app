@@ -1,6 +1,8 @@
 part of 'secret_config.dart';
 
-Future<Map<String, dynamic>?> _readSecureSecrets(SecretStorage storage) async {
+Future<Map<String, dynamic>?> _readSecureSecrets(
+  final SecretStorage storage,
+) async {
   try {
     final String? token = await storage.read(SecretConfig._keyHfToken);
     final String? model = await storage.read(SecretConfig._keyHfModel);
@@ -26,7 +28,7 @@ Future<Map<String, dynamic>?> _readSecureSecrets(SecretStorage storage) async {
   }
 }
 
-Future<void> _persistToSecureStorage(SecretStorage storage) async {
+Future<void> _persistToSecureStorage(final SecretStorage storage) async {
   final String? token = SecretConfig._huggingfaceApiKey;
   final String? model = SecretConfig._huggingfaceModel;
   if (token != null) {
@@ -45,7 +47,7 @@ Future<void> _persistToSecureStorage(SecretStorage storage) async {
   }
 }
 
-void _applySecrets(Map<String, dynamic> json) {
+void _applySecrets(final Map<String, dynamic> json) {
   final String? token = (json['HUGGINGFACE_API_KEY'] as String?)?.trim();
   SecretConfig._huggingfaceApiKey = (token?.isEmpty ?? true) ? null : token;
   final String? model = (json['HUGGINGFACE_MODEL'] as String?)?.trim();
@@ -64,7 +66,7 @@ void _applySecrets(Map<String, dynamic> json) {
   SecretConfig._googleMapsApiKey = (mapsKey?.isEmpty ?? true) ? null : mapsKey;
 }
 
-bool _hasSecrets(Map<String, dynamic>? source) {
+bool _hasSecrets(final Map<String, dynamic>? source) {
   if (source == null) return false;
   final String? token = (source['HUGGINGFACE_API_KEY'] as String?)?.trim();
   final String? model = (source['HUGGINGFACE_MODEL'] as String?)?.trim();
@@ -114,10 +116,10 @@ Future<Map<String, dynamic>?> _readAssetSecrets() async {
   final AssetBundle bundle = SecretConfig.debugAssetBundle ?? rootBundle;
   final String? raw = await bundle
       .loadString(assetPath)
-      .then<String?>((value) => value)
+      .then<String?>((final value) => value)
       .catchError(
         (Object _) => null,
-        test: (Object error) => error is FlutterError,
+        test: (final Object error) => error is FlutterError,
       );
   if (raw == null) {
     // Asset not bundled; ignore silently for developers without a local file.
@@ -140,7 +142,7 @@ Future<Map<String, dynamic>?> _readAssetSecrets() async {
   return null;
 }
 
-Future<void> _persistGoogleMapsKey(SecretStorage storage) async {
+Future<void> _persistGoogleMapsKey(final SecretStorage storage) async {
   final String? mapsKey = SecretConfig._googleMapsApiKey;
   if (mapsKey != null) {
     await storage.write(SecretConfig._keyGoogleMaps, mapsKey);
@@ -148,8 +150,8 @@ Future<void> _persistGoogleMapsKey(SecretStorage storage) async {
 }
 
 Future<bool> _loadFromSource(
-  FutureOr<Map<String, dynamic>?> Function() read, {
-  Future<void> Function()? afterApply,
+  final FutureOr<Map<String, dynamic>?> Function() read, {
+  final Future<void> Function()? afterApply,
 }) async {
   final Map<String, dynamic>? secrets =
       await Future<Map<String, dynamic>?>.value(read());

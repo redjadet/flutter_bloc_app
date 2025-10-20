@@ -19,25 +19,25 @@ class _CounterDisplayState extends State<CounterDisplay> {
   static const Duration _animFast = UI.animFast;
   static const Duration _animMedium = UI.animMedium;
 
-  AppLocalizations _l10n(BuildContext context) =>
+  AppLocalizations _l10n(final BuildContext context) =>
       Localizations.of<AppLocalizations>(context, AppLocalizations) ??
       AppLocalizationsEn();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final TextTheme textTheme = theme.textTheme;
     final ColorScheme colors = theme.colorScheme;
     final AppLocalizations l10n = _l10n(context);
 
     return BlocSelector<CounterCubit, CounterState, _DisplayState>(
-      selector: (state) => _DisplayState(
+      selector: (final state) => _DisplayState(
         count: state.count,
         countdownSeconds: state.countdownSeconds,
         isActive: state.isAutoDecrementActive,
         lastChanged: state.lastChanged,
       ),
-      builder: (context, data) {
+      builder: (final context, final data) {
         if (!data.isActive) {
           _cycleTotalSeconds = data.countdownSeconds;
         } else {

@@ -14,7 +14,7 @@ class ChatHistorySheet extends StatelessWidget {
   final VoidCallback onClose;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     final ChatCubit cubit = context.read<ChatCubit>();
@@ -42,7 +42,7 @@ class ChatHistorySheet extends StatelessWidget {
                     UI.gapM + bottomInset,
                   ),
                   child: BlocBuilder<ChatCubit, ChatState>(
-                    builder: (context, state) {
+                    builder: (final context, final state) {
                       final List<ChatConversation> conversations =
                           state.history;
 
@@ -93,7 +93,7 @@ class ChatHistorySheet extends StatelessWidget {
                           Expanded(
                             child: state.hasHistory
                                 ? ListView.separated(
-                                    itemBuilder: (context, index) {
+                                    itemBuilder: (final context, final index) {
                                       final ChatConversation conversation =
                                           conversations[index];
                                       final bool isActive =
@@ -201,7 +201,7 @@ class ChatHistorySheet extends StatelessWidget {
                                         ),
                                       );
                                     },
-                                    separatorBuilder: (context, _) =>
+                                    separatorBuilder: (final context, _) =>
                                         SizedBox(height: UI.gapS),
                                     itemCount: conversations.length,
                                   )

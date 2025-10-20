@@ -14,54 +14,52 @@ class GoogleMapsContentLayout extends StatelessWidget {
   final Widget locations;
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final bool useHorizontalLayout = constraints.maxWidth >= 900;
-        final Widget mapSection = SizedBox(
-          height: useHorizontalLayout ? double.infinity : 320,
-          child: map,
-        );
-        final Widget detailsSection = ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: useHorizontalLayout ? 360 : double.infinity,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              controls,
-              SizedBox(height: UI.gapM),
-              locations,
-            ],
-          ),
-        );
+  Widget build(final BuildContext context) => LayoutBuilder(
+    builder: (final BuildContext context, final BoxConstraints constraints) {
+      final bool useHorizontalLayout = constraints.maxWidth >= 900;
+      final Widget mapSection = SizedBox(
+        height: useHorizontalLayout ? double.infinity : 320,
+        child: map,
+      );
+      final Widget detailsSection = ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: useHorizontalLayout ? 360 : double.infinity,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            controls,
+            SizedBox(height: UI.gapM),
+            locations,
+          ],
+        ),
+      );
 
-        if (useHorizontalLayout) {
-          return Padding(
-            padding: EdgeInsets.all(UI.gapL),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: mapSection),
-                SizedBox(width: UI.gapL),
-                Flexible(child: detailsSection),
-              ],
-            ),
-          );
-        }
-
-        return SingleChildScrollView(
+      if (useHorizontalLayout) {
+        return Padding(
           padding: EdgeInsets.all(UI.gapL),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              mapSection,
-              SizedBox(height: UI.gapL),
-              detailsSection,
+              Expanded(child: mapSection),
+              SizedBox(width: UI.gapL),
+              Flexible(child: detailsSection),
             ],
           ),
         );
-      },
-    );
-  }
+      }
+
+      return SingleChildScrollView(
+        padding: EdgeInsets.all(UI.gapL),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            mapSection,
+            SizedBox(height: UI.gapL),
+            detailsSection,
+          ],
+        ),
+      );
+    },
+  );
 }

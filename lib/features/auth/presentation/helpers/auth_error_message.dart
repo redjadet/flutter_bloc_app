@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
-String authErrorMessage(AppLocalizations l10n, FirebaseAuthException error) {
+String authErrorMessage(
+  final AppLocalizations l10n,
+  final FirebaseAuthException error,
+) {
   switch (error.code) {
     case 'invalid-email':
       return l10n.authErrorInvalidEmail;

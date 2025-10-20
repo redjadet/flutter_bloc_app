@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart'
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesThemeRepository implements ThemeRepository {
-  SharedPreferencesThemeRepository([SharedPreferences? instance])
+  SharedPreferencesThemeRepository([final SharedPreferences? instance])
     : _preferencesInstance = instance;
 
   static const String _preferencesKey = 'theme_mode';
@@ -26,7 +26,7 @@ class SharedPreferencesThemeRepository implements ThemeRepository {
   }
 
   @override
-  Future<void> save(ThemeMode mode) async {
+  Future<void> save(final ThemeMode mode) async {
     final SharedPreferences preferences = await _preferences();
     final String value = switch (mode) {
       ThemeMode.light => 'light',

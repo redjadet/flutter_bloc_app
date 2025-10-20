@@ -16,7 +16,7 @@ abstract interface class WebsocketRepository {
 
   Future<void> disconnect();
 
-  Future<void> send(String message);
+  Future<void> send(final String message);
 
   Future<void> dispose();
 }

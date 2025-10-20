@@ -22,54 +22,50 @@ class _ChatPageState extends State<ChatPage> {
     super.dispose();
   }
 
-  void _submit(BuildContext context) {
+  void _submit(final BuildContext context) {
     final String text = _controller.text;
     _controller.clear();
     CubitHelpers.safeExecute<ChatCubit, ChatState>(
       context,
-      (cubit) => cubit.sendMessage(text),
+      (final cubit) => cubit.sendMessage(text),
     );
   }
 
-  void _showHistorySheet(BuildContext context) {
+  void _showHistorySheet(final BuildContext context) {
     final ChatCubit cubit = context.read<ChatCubit>();
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (BuildContext sheetContext) {
-        return BlocProvider.value(
-          value: cubit,
-          child: ChatHistorySheet(
-            onClose: () => Navigator.of(sheetContext).pop(),
-          ),
-        );
-      },
+      builder: (final BuildContext sheetContext) => BlocProvider.value(
+        value: cubit,
+        child: ChatHistorySheet(
+          onClose: () => Navigator.of(sheetContext).pop(),
+        ),
+      ),
     );
   }
 
-  Future<void> _confirmAndClearHistory(BuildContext context) async {
+  Future<void> _confirmAndClearHistory(final BuildContext context) async {
     final ChatCubit cubit = context.read<ChatCubit>();
     final AppLocalizations l10n = AppLocalizations.of(context);
     final bool confirmed =
         await showDialog<bool>(
           context: context,
-          builder: (BuildContext dialogContext) {
-            return AlertDialog(
-              title: Text(l10n.chatHistoryClearAll),
-              content: Text(l10n.chatHistoryClearAllWarning),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.of(dialogContext).pop(false),
-                  child: Text(l10n.cancelButtonLabel),
-                ),
-                FilledButton(
-                  onPressed: () => Navigator.of(dialogContext).pop(true),
-                  child: Text(l10n.deleteButtonLabel),
-                ),
-              ],
-            );
-          },
+          builder: (final BuildContext dialogContext) => AlertDialog(
+            title: Text(l10n.chatHistoryClearAll),
+            content: Text(l10n.chatHistoryClearAllWarning),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: Text(l10n.cancelButtonLabel),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                child: Text(l10n.deleteButtonLabel),
+              ),
+            ],
+          ),
         ) ??
         false;
 
@@ -81,7 +77,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
 
     return CommonPageLayout(
@@ -93,17 +89,15 @@ class _ChatPageState extends State<ChatPage> {
           icon: const Icon(Icons.history),
         ),
         BlocBuilder<ChatCubit, ChatState>(
-          buildWhen: (previous, current) =>
+          buildWhen: (final previous, final current) =>
               previous.history.length != current.history.length,
-          builder: (context, state) {
-            return IconButton(
-              tooltip: l10n.chatHistoryClearAll,
-              onPressed: state.hasHistory
-                  ? () => _confirmAndClearHistory(context)
-                  : null,
-              icon: const Icon(Icons.delete_sweep_outlined),
-            );
-          },
+          builder: (final context, final state) => IconButton(
+            tooltip: l10n.chatHistoryClearAll,
+            onPressed: state.hasHistory
+                ? () => _confirmAndClearHistory(context)
+                : null,
+            icon: const Icon(Icons.delete_sweep_outlined),
+          ),
         ),
       ],
       body: Column(

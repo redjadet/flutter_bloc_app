@@ -8,7 +8,7 @@ import 'package:meta/meta.dart';
 
 /// Deep link service backed by the `app_links` plugin.
 class AppLinksDeepLinkService implements DeepLinkService {
-  AppLinksDeepLinkService({AppLinksApi? api})
+  AppLinksDeepLinkService({final AppLinksApi? api})
     : _api = api ?? DefaultAppLinksApi();
 
   final AppLinksApi _api;
@@ -42,12 +42,12 @@ class AppLinksDeepLinkService implements DeepLinkService {
 
       try {
         subscription = _api.uriLinkStream.listen(
-          (Uri? uri) {
+          (final Uri? uri) {
             if (uri != null && !controller.isClosed) {
               controller.add(uri);
             }
           },
-          onError: (Object error, StackTrace stackTrace) {
+          onError: (final Object error, final StackTrace stackTrace) {
             if (error is MissingPluginException) {
               unawaited(closeDueToMissingPlugin());
               return;

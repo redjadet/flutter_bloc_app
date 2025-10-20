@@ -9,7 +9,7 @@ class LanguageSection extends StatelessWidget {
   const LanguageSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     final Map<String, String> localizedLabels = <String, String>{
@@ -26,7 +26,7 @@ class LanguageSection extends StatelessWidget {
         Text(l10n.languageSectionTitle, style: theme.textTheme.titleMedium),
         SizedBox(height: UI.gapS),
         BlocBuilder<LocaleCubit, Locale?>(
-          builder: (context, currentLocale) {
+          builder: (final context, final currentLocale) {
             final List<SettingsOption<Locale?>> options =
                 <SettingsOption<Locale?>>[
                   SettingsOption(
@@ -44,8 +44,8 @@ class LanguageSection extends StatelessWidget {
 
             return SettingsCard<Locale?>(
               options: options,
-              isSelected: (locale) => _sameLocale(locale, currentLocale),
-              onSelect: (locale) =>
+              isSelected: (final locale) => _sameLocale(locale, currentLocale),
+              onSelect: (final locale) =>
                   context.read<LocaleCubit>().setLocale(locale),
             );
           },
@@ -54,7 +54,7 @@ class LanguageSection extends StatelessWidget {
     );
   }
 
-  bool _sameLocale(Locale? a, Locale? b) {
+  bool _sameLocale(final Locale? a, final Locale? b) {
     if (a == null && b == null) return true;
     if (a == null || b == null) return false;
     return a.languageCode == b.languageCode && a.countryCode == b.countryCode;

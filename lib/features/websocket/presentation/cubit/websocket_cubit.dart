@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_state.dart';
 
 class WebsocketCubit extends Cubit<WebsocketState> {
-  WebsocketCubit({required WebsocketRepository repository})
+  WebsocketCubit({required final WebsocketRepository repository})
     : _repository = repository,
       super(WebsocketState.initial(repository.endpoint)) {
     _statusSubscription = _repository.connectionStates.listen(
@@ -49,7 +49,7 @@ class WebsocketCubit extends Cubit<WebsocketState> {
     await _repository.disconnect();
   }
 
-  Future<void> sendMessage(String rawMessage) async {
+  Future<void> sendMessage(final String rawMessage) async {
     final String message = rawMessage.trim();
     if (message.isEmpty || !state.isConnected) {
       return;
@@ -73,11 +73,11 @@ class WebsocketCubit extends Cubit<WebsocketState> {
     emit(state.copyWith(isSending: false));
   }
 
-  void _onIncomingMessage(WebsocketMessage message) {
+  void _onIncomingMessage(final WebsocketMessage message) {
     emit(state.appendMessage(message));
   }
 
-  void _onConnectionState(WebsocketConnectionState connectionState) {
+  void _onConnectionState(final WebsocketConnectionState connectionState) {
     emit(
       state.copyWith(
         status: connectionState.status,

@@ -38,30 +38,28 @@ class MapSampleState extends Equatable {
   final gmaps.MarkerId? selectedMarkerId;
 
   MapSampleState copyWith({
-    bool? isLoading,
-    String? errorMessage,
-    gmaps.CameraPosition? cameraPosition,
-    Set<gmaps.Marker>? markers,
-    gmaps.MapType? mapType,
-    bool? trafficEnabled,
-    List<MapLocation>? locations,
-    gmaps.MarkerId? selectedMarkerId,
-    bool clearError = false,
-    bool clearSelectedMarker = false,
-  }) {
-    return MapSampleState(
-      isLoading: isLoading ?? this.isLoading,
-      errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
-      cameraPosition: cameraPosition ?? this.cameraPosition,
-      markers: markers ?? this.markers,
-      mapType: mapType ?? this.mapType,
-      trafficEnabled: trafficEnabled ?? this.trafficEnabled,
-      locations: locations ?? this.locations,
-      selectedMarkerId: clearSelectedMarker
-          ? null
-          : selectedMarkerId ?? this.selectedMarkerId,
-    );
-  }
+    final bool? isLoading,
+    final String? errorMessage,
+    final gmaps.CameraPosition? cameraPosition,
+    final Set<gmaps.Marker>? markers,
+    final gmaps.MapType? mapType,
+    final bool? trafficEnabled,
+    final List<MapLocation>? locations,
+    final gmaps.MarkerId? selectedMarkerId,
+    final bool clearError = false,
+    final bool clearSelectedMarker = false,
+  }) => MapSampleState(
+    isLoading: isLoading ?? this.isLoading,
+    errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
+    cameraPosition: cameraPosition ?? this.cameraPosition,
+    markers: markers ?? this.markers,
+    mapType: mapType ?? this.mapType,
+    trafficEnabled: trafficEnabled ?? this.trafficEnabled,
+    locations: locations ?? this.locations,
+    selectedMarkerId: clearSelectedMarker
+        ? null
+        : selectedMarkerId ?? this.selectedMarkerId,
+  );
 
   bool get hasError => errorMessage != null;
 

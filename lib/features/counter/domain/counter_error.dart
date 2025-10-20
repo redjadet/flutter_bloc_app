@@ -10,14 +10,20 @@ sealed class CounterError with _$CounterError {
 
   const factory CounterError.cannotGoBelowZero() = _CannotGoBelowZero;
 
-  const factory CounterError.load({Object? originalError, String? message}) =
-      _LoadCounterError;
+  const factory CounterError.load({
+    final Object? originalError,
+    final String? message,
+  }) = _LoadCounterError;
 
-  const factory CounterError.save({Object? originalError, String? message}) =
-      _SaveCounterError;
+  const factory CounterError.save({
+    final Object? originalError,
+    final String? message,
+  }) = _SaveCounterError;
 
-  const factory CounterError.unknown({Object? originalError, String? message}) =
-      _UnknownCounterError;
+  const factory CounterError.unknown({
+    final Object? originalError,
+    final String? message,
+  }) = _UnknownCounterError;
 
   CounterErrorType get type => when(
     cannotGoBelowZero: () => CounterErrorType.cannotGoBelowZero,
@@ -28,15 +34,15 @@ sealed class CounterError with _$CounterError {
 
   Object? get originalError => when(
     cannotGoBelowZero: () => null,
-    load: (originalError, _) => originalError,
-    save: (originalError, _) => originalError,
-    unknown: (originalError, _) => originalError,
+    load: (final originalError, _) => originalError,
+    save: (final originalError, _) => originalError,
+    unknown: (final originalError, _) => originalError,
   );
 
   String? get message => when(
     cannotGoBelowZero: () => null,
-    load: (_, message) => message,
-    save: (_, message) => message,
-    unknown: (_, message) => message,
+    load: (_, final message) => message,
+    save: (_, final message) => message,
+    unknown: (_, final message) => message,
   );
 }

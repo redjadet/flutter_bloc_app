@@ -8,7 +8,7 @@ class RootAwareBackButton extends StatelessWidget {
   final String homeTooltip;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final NavigatorState navigator = Navigator.of(context);
     if (navigator.canPop()) {
       return BackButton(onPressed: () => NavigationUtils.popOrGoHome(context));

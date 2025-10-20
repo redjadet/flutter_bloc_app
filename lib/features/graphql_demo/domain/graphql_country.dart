@@ -5,24 +5,26 @@ part 'graphql_country.g.dart';
 
 @freezed
 abstract class GraphqlContinent with _$GraphqlContinent {
-  const factory GraphqlContinent({required String code, required String name}) =
-      _GraphqlContinent;
+  const factory GraphqlContinent({
+    required final String code,
+    required final String name,
+  }) = _GraphqlContinent;
 
-  factory GraphqlContinent.fromJson(Map<String, dynamic> json) =>
+  factory GraphqlContinent.fromJson(final Map<String, dynamic> json) =>
       _$GraphqlContinentFromJson(json);
 }
 
 @freezed
 abstract class GraphqlCountry with _$GraphqlCountry {
   const factory GraphqlCountry({
-    required String code,
-    required String name,
-    String? capital,
-    String? currency,
-    String? emoji,
-    required GraphqlContinent continent,
+    required final String code,
+    required final String name,
+    final String? capital,
+    final String? currency,
+    final String? emoji,
+    required final GraphqlContinent continent,
   }) = _GraphqlCountry;
 
-  factory GraphqlCountry.fromJson(Map<String, dynamic> json) =>
+  factory GraphqlCountry.fromJson(final Map<String, dynamic> json) =>
       _$GraphqlCountryFromJson(json);
 }

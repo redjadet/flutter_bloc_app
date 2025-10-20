@@ -16,7 +16,7 @@ class CounterLastChangedText extends StatelessWidget {
   final TextTheme textTheme;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final locale = Localizations.localeOf(context).languageCode;
     final formatted = lastChanged == null
         ? '-'

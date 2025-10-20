@@ -7,7 +7,7 @@ class NavigationUtils {
   const NavigationUtils._();
 
   /// Pops the current route when possible, otherwise navigates to the home route.
-  static void popOrGoHome(BuildContext context) {
+  static void popOrGoHome(final BuildContext context) {
     final NavigatorState navigator = Navigator.of(context);
     if (navigator.canPop()) {
       navigator.pop();

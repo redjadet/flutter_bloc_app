@@ -10,53 +10,46 @@ import 'package:responsive_framework/responsive_framework.dart';
 class AppConfig {
   /// Creates the MaterialApp with all necessary configurations
   static Widget createMaterialApp({
-    required ThemeMode themeMode,
-    required GoRouter router,
-    Locale? locale,
-  }) {
-    return MaterialApp.router(
-      onGenerateTitle: (ctx) => AppLocalizations.of(ctx).appTitle,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        AppLocalizations.delegate,
-        FirebaseUILocalizations.delegate,
-      ],
-      supportedLocales: AppLocalizations.supportedLocales,
-      localeListResolutionCallback: _localeListResolutionCallback,
-      locale: locale,
-      theme: _createLightTheme(),
-      darkTheme: _createDarkTheme(),
-      themeMode: themeMode,
-      builder: (context, appChild) => _createResponsiveBuilder(appChild),
-      routerConfig: router,
-    );
-  }
+    required final ThemeMode themeMode,
+    required final GoRouter router,
+    final Locale? locale,
+  }) => MaterialApp.router(
+    onGenerateTitle: (final ctx) => AppLocalizations.of(ctx).appTitle,
+    localizationsDelegates: const [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+      AppLocalizations.delegate,
+      FirebaseUILocalizations.delegate,
+    ],
+    supportedLocales: AppLocalizations.supportedLocales,
+    localeListResolutionCallback: _localeListResolutionCallback,
+    locale: locale,
+    theme: _createLightTheme(),
+    darkTheme: _createDarkTheme(),
+    themeMode: themeMode,
+    builder: (final context, final appChild) =>
+        _createResponsiveBuilder(appChild),
+    routerConfig: router,
+  );
 
   /// Creates light theme
-  static ThemeData _createLightTheme() {
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: AppConstants.primarySeedColor,
-      ),
-    );
-  }
+  static ThemeData _createLightTheme() => ThemeData(
+    useMaterial3: true,
+    colorScheme: ColorScheme.fromSeed(seedColor: AppConstants.primarySeedColor),
+  );
 
   /// Creates dark theme
-  static ThemeData _createDarkTheme() {
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: AppConstants.primarySeedColor,
-        brightness: Brightness.dark,
-      ),
-    );
-  }
+  static ThemeData _createDarkTheme() => ThemeData(
+    useMaterial3: true,
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: AppConstants.primarySeedColor,
+      brightness: Brightness.dark,
+    ),
+  );
 
   /// Creates responsive builder with constraints and breakpoints
-  static Widget _createResponsiveBuilder(Widget? child) {
+  static Widget _createResponsiveBuilder(final Widget? child) {
     final Widget constrained = ConstrainedBox(
       constraints: const BoxConstraints(
         minWidth: AppConstants.minContentWidth,
@@ -91,8 +84,8 @@ class AppConfig {
 
   /// Handles locale resolution with fallback logic
   static Locale? _localeListResolutionCallback(
-    List<Locale>? locales,
-    Iterable<Locale> supported,
+    final List<Locale>? locales,
+    final Iterable<Locale> supported,
   ) {
     if (locales == null || locales.isEmpty) {
       return _defaultLocale;
@@ -102,7 +95,7 @@ class AppConfig {
 
     for (final locale in locales) {
       final matchingLocale = supportedLocales.firstWhere(
-        (supportedLocale) =>
+        (final supportedLocale) =>
             supportedLocale.languageCode == locale.languageCode &&
             (supportedLocale.countryCode == locale.countryCode ||
                 supportedLocale.countryCode == null),
@@ -116,7 +109,7 @@ class AppConfig {
 
     for (final locale in locales) {
       final matchingLocale = supportedLocales.firstWhere(
-        (supportedLocale) =>
+        (final supportedLocale) =>
             supportedLocale.languageCode == locale.languageCode,
         orElse: () => const Locale('unsupported'),
       );
@@ -131,7 +124,7 @@ class AppConfig {
 
   @visibleForTesting
   static Locale? resolveLocales(
-    List<Locale>? locales,
-    Iterable<Locale> supported,
+    final List<Locale>? locales,
+    final Iterable<Locale> supported,
   ) => _localeListResolutionCallback(locales, supported) ?? _defaultLocale;
 }

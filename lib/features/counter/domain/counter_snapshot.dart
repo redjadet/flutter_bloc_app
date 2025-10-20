@@ -7,11 +7,11 @@ part 'counter_snapshot.g.dart';
 @freezed
 abstract class CounterSnapshot with _$CounterSnapshot {
   const factory CounterSnapshot({
-    String? userId,
-    required int count,
-    DateTime? lastChanged,
+    final String? userId,
+    required final int count,
+    final DateTime? lastChanged,
   }) = _CounterSnapshot;
 
-  factory CounterSnapshot.fromJson(Map<String, dynamic> json) =>
+  factory CounterSnapshot.fromJson(final Map<String, dynamic> json) =>
       _$CounterSnapshotFromJson(json);
 }

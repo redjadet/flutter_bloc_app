@@ -12,10 +12,10 @@ import 'package:http/http.dart' as http;
 /// This is a scaffold with TODOs. Wire endpoints, auth and models as needed.
 class RestCounterRepository implements CounterRepository {
   RestCounterRepository({
-    required String baseUrl,
-    http.Client? client,
-    Map<String, String>? defaultHeaders,
-    Duration requestTimeout = const Duration(seconds: 10),
+    required final String baseUrl,
+    final http.Client? client,
+    final Map<String, String>? defaultHeaders,
+    final Duration requestTimeout = const Duration(seconds: 10),
   }) : _baseUri = Uri.parse(baseUrl),
        _client = client ?? http.Client(),
        _defaultHeaders = {if (defaultHeaders != null) ...defaultHeaders},
@@ -38,14 +38,15 @@ class RestCounterRepository implements CounterRepository {
 
   Uri get _counterUri => _baseUri.resolve('counter');
 
-  Map<String, String> _headers({Map<String, String>? overrides}) => {
+  Map<String, String> _headers({final Map<String, String>? overrides}) => {
     ..._defaultHeaders,
     if (overrides != null) ...overrides,
   };
 
-  bool _isSuccess(int statusCode) => statusCode >= 200 && statusCode < 300;
+  bool _isSuccess(final int statusCode) =>
+      statusCode >= 200 && statusCode < 300;
 
-  CounterSnapshot _parseSnapshot(String body) {
+  CounterSnapshot _parseSnapshot(final String body) {
     try {
       final dynamic decoded = jsonDecode(body);
       if (decoded is! Map<String, dynamic>) {
@@ -77,7 +78,7 @@ class RestCounterRepository implements CounterRepository {
     }
   }
 
-  void _logHttpError(String operation, http.Response response) {
+  void _logHttpError(final String operation, final http.Response response) {
     AppLogger.error(
       'RestCounterRepository.$operation non-success: ${response.statusCode}',
       'Response body omitted for privacy',
@@ -119,7 +120,7 @@ class RestCounterRepository implements CounterRepository {
   }
 
   @override
-  Future<void> save(CounterSnapshot snapshot) async {
+  Future<void> save(final CounterSnapshot snapshot) async {
     final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
     try {
       final res = await _client
@@ -162,7 +163,7 @@ class RestCounterRepository implements CounterRepository {
     );
 
     final Stream<CounterSnapshot> sourceStream = _watchController!.stream;
-    return Stream<CounterSnapshot>.multi((multi) {
+    return Stream<CounterSnapshot>.multi((final multi) {
       if (_hasResolvedInitialValue) {
         multi.add(_latestSnapshot);
       }
@@ -172,7 +173,7 @@ class RestCounterRepository implements CounterRepository {
     });
   }
 
-  CounterSnapshot _normalizeSnapshot(CounterSnapshot snapshot) {
+  CounterSnapshot _normalizeSnapshot(final CounterSnapshot snapshot) {
     final String? userId = snapshot.userId;
     if (userId == null || userId.isEmpty) {
       return snapshot.copyWith(userId: _emptySnapshot.userId);
@@ -180,7 +181,7 @@ class RestCounterRepository implements CounterRepository {
     return snapshot;
   }
 
-  void _emitSnapshot(CounterSnapshot snapshot) {
+  void _emitSnapshot(final CounterSnapshot snapshot) {
     final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
     _latestSnapshot = normalized;
     _hasResolvedInitialValue = true;

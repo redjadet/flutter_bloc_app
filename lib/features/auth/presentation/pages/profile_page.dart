@@ -11,7 +11,7 @@ class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
 
     return ProfileScreen(
@@ -20,7 +20,7 @@ class ProfilePage extends StatelessWidget {
         title: Text(l10n.profilePageTitle),
       ),
       actions: <FirebaseUIAction>[
-        SignedOutAction((context) => context.go(AppRoutes.authPath)),
+        SignedOutAction((final context) => context.go(AppRoutes.authPath)),
       ],
     );
   }
