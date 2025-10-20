@@ -7,8 +7,12 @@ import 'package:window_manager/window_manager.dart';
 /// Platform-specific initialization utilities
 class PlatformInit {
   /// Initializes platform-specific features
-  static Future<void> initialize({WindowManager? manager}) async {
-    if (!kIsWeb && _isDesktopPlatform()) {
+  static Future<void> initialize({
+    WindowManager? manager,
+    bool Function()? isDesktopPredicate,
+  }) async {
+    final bool Function() predicate = isDesktopPredicate ?? _isDesktopPlatform;
+    if (!kIsWeb && predicate()) {
       await _initializeDesktop(manager ?? windowManager);
     }
   }
