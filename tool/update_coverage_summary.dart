@@ -69,17 +69,21 @@ class _Coverage {
   String toMarkdown() {
     final StringBuffer buffer = StringBuffer()
       ..writeln('# Test Coverage Summary')
+      ..writeln()
       ..writeln(
         '*Total line coverage*: **${totalPercentage.toStringAsFixed(2)}%** '
-        '($totalLinesHit/$totalLinesFound lines)\n',
+        '($totalLinesHit/$totalLinesFound lines)',
       )
+      ..writeln()
       ..writeln(
         'Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) '
-        'are excluded from these totals.\n',
+        'are excluded from these totals.',
       )
+      ..writeln()
       ..writeln(
-        'Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.\n',
+        'Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.',
       )
+      ..writeln()
       ..writeln('| File | Coverage | Covered/Total |')
       ..writeln('| --- | ---: | ---: |');
 
@@ -96,7 +100,7 @@ class _Coverage {
         ..writeln(' |');
     }
 
-    return buffer.toString();
+    return _withSingleTrailingNewline(buffer.toString());
   }
 
   static Future<_Coverage> parse(List<String> lines) async {
@@ -279,7 +283,14 @@ class _Updator {
       }
     }
     if (updated) {
-      await readme.writeAsString(lines.join('\n'));
+      await readme.writeAsString(
+        _withSingleTrailingNewline(lines.join('\n')),
+      );
     }
   }
+}
+
+String _withSingleTrailingNewline(String value) {
+  final String stripped = value.replaceFirst(RegExp(r'\n+$'), '');
+  return '$stripped\n';
 }

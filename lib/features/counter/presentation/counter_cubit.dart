@@ -48,7 +48,7 @@ class CounterCubit extends Cubit<CounterState> {
 
   /// Starts the 1s countdown ticker if not already running.
   void _ensureCountdownTickerStarted() {
-    if (_isLifecyclePaused) {
+    if (_isLifecyclePaused || state.count <= 0) {
       return;
     }
     _countdownTicker ??= _timerService.periodic(_countdownTickInterval, () {
@@ -74,6 +74,22 @@ class CounterCubit extends Cubit<CounterState> {
     });
   }
 
+  void _stopCountdownTicker() {
+    _countdownTicker?.dispose();
+    _countdownTicker = null;
+  }
+
+  void _syncTickerForState(CounterState nextState) {
+    if (_isLifecyclePaused) {
+      return;
+    }
+    if (nextState.count > 0) {
+      _ensureCountdownTickerStarted();
+    } else {
+      _stopCountdownTicker();
+    }
+  }
+
   /// Emits state with the provided countdown, preserving other fields.
   void _emitCountdown(int seconds) {
     emit(state.copyWith(countdownSeconds: seconds));
@@ -87,6 +103,7 @@ class CounterCubit extends Cubit<CounterState> {
       lastChanged: timestamp ?? _now(),
     );
     emit(next);
+    _syncTickerForState(next);
     return next;
   }
 
@@ -105,7 +122,11 @@ class CounterCubit extends Cubit<CounterState> {
   /// Resets to the default interval and holds one tick at that value when inactive.
   void _resetCountdownAndHold() {
     _pauseCountdownForOneTick = true;
-    emit(state.copyWith(countdownSeconds: _defaultIntervalSeconds));
+    final CounterState next = state.copyWith(
+      countdownSeconds: _defaultIntervalSeconds,
+    );
+    emit(next);
+    _syncTickerForState(next);
   }
 
   Future<void> loadInitial() async {
@@ -118,7 +139,7 @@ class CounterCubit extends Cubit<CounterState> {
       final RestorationResult restoration = restoreStateFromSnapshot(snapshot);
       _pauseCountdownForOneTick = restoration.holdCountdown;
       emit(restoration.state);
-      _ensureCountdownTickerStarted();
+      _syncTickerForState(restoration.state);
       if (restoration.shouldPersist) {
         await _persistState(restoration.state);
       }
@@ -180,7 +201,7 @@ class CounterCubit extends Cubit<CounterState> {
 
   @override
   Future<void> close() {
-    _countdownTicker?.dispose();
+    _stopCountdownTicker();
     _repositorySubscription?.cancel();
     return super.close();
   }
@@ -188,7 +209,6 @@ class CounterCubit extends Cubit<CounterState> {
   Future<void> increment() async {
     final CounterState next = _emitCountUpdate(count: state.count + 1);
     await _persistState(next);
-    _ensureCountdownTickerStarted();
   }
 
   Future<void> decrement() async {
@@ -200,7 +220,6 @@ class CounterCubit extends Cubit<CounterState> {
     final int newCount = current.count - 1;
     final CounterState next = _emitCountUpdate(count: newCount);
     await _persistState(next);
-    _ensureCountdownTickerStarted();
   }
 
   void clearError() {
@@ -217,13 +236,12 @@ class CounterCubit extends Cubit<CounterState> {
 
   void pauseAutoDecrement() {
     _isLifecyclePaused = true;
-    _countdownTicker?.dispose();
-    _countdownTicker = null;
+    _stopCountdownTicker();
   }
 
   void resumeAutoDecrement() {
     _isLifecyclePaused = false;
-    _ensureCountdownTickerStarted();
+    _syncTickerForState(state);
   }
 
   void _subscribeToRepository() {
@@ -238,6 +256,7 @@ class CounterCubit extends Cubit<CounterState> {
         );
         _pauseCountdownForOneTick = restoration.holdCountdown;
         emit(restoration.state);
+        _syncTickerForState(restoration.state);
       },
       onError: (Object error, StackTrace stackTrace) {
         AppLogger.error('CounterCubit.watch failed', error, stackTrace);
