@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:local_auth/local_auth.dart';
 
 /// Contract for triggering biometric authentication before sensitive actions.
-abstract class BiometricAuthenticator {
+mixin BiometricAuthenticator {
   /// Prompts the user for biometric authentication and returns whether the
   /// user successfully authenticated. Implementations should handle cases where
   /// biometrics are unavailable and decide whether to allow or block access.
