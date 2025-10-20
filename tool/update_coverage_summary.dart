@@ -23,19 +23,19 @@ const List<String> _generatedExact = <String>[
   'lib/generated_plugin_registrant.dart',
 ];
 
-Future<void> main(final List<String> args) async {
+void main(final List<String> args) {
   final File lcov = File('coverage/lcov.info');
-  if (!await lcov.exists()) {
+  if (!lcov.existsSync()) {
     stderr.writeln('coverage/lcov.info not found');
     exitCode = 2;
     return;
   }
 
-  final _Coverage coverage = await _Coverage.parse(await lcov.readAsLines());
+  final _Coverage coverage = _Coverage.fromLines(lcov.readAsLinesSync());
   final File output = File('coverage/coverage_summary.md');
-  await output.parent.create(recursive: true);
-  await output.writeAsString(coverage.toMarkdown());
-  await _Updator.updateReadme(coverage.totalPercentage);
+  output.parent.createSync(recursive: true);
+  output.writeAsStringSync(coverage.toMarkdown());
+  _Updator.updateReadme(coverage.totalPercentage);
   stdout.writeln(
     'Wrote coverage/coverage_summary.md with ${coverage.totalPercentage.toStringAsFixed(2)}% coverage',
   );
@@ -57,53 +57,7 @@ class _CoverageRecord {
 }
 
 class _Coverage {
-  _Coverage._(this.records, this.totalLinesHit, this.totalLinesFound);
-
-  final List<_CoverageRecord> records;
-  final int totalLinesHit;
-  final int totalLinesFound;
-
-  double get totalPercentage =>
-      totalLinesFound == 0 ? 0.0 : (totalLinesHit / totalLinesFound) * 100;
-
-  String toMarkdown() {
-    final StringBuffer buffer = StringBuffer()
-      ..writeln('# Test Coverage Summary')
-      ..writeln()
-      ..writeln(
-        '*Total line coverage*: **${totalPercentage.toStringAsFixed(2)}%** '
-        '($totalLinesHit/$totalLinesFound lines)',
-      )
-      ..writeln()
-      ..writeln(
-        'Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) '
-        'are excluded from these totals.',
-      )
-      ..writeln()
-      ..writeln(
-        'Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.',
-      )
-      ..writeln()
-      ..writeln('| File | Coverage | Covered/Total |')
-      ..writeln('| --- | ---: | ---: |');
-
-    for (final _CoverageRecord record in records) {
-      buffer
-        ..write('| `')
-        ..write(record.path)
-        ..write('` | ')
-        ..write(record.percentage.toStringAsFixed(2))
-        ..write('% | ')
-        ..write(record.linesHit)
-        ..write('/')
-        ..write(record.linesFound)
-        ..writeln(' |');
-    }
-
-    return _withSingleTrailingNewline(buffer.toString());
-  }
-
-  static Future<_Coverage> parse(final List<String> lines) async {
+  factory _Coverage.fromLines(final List<String> lines) {
     String? currentFile;
     int linesFound = 0;
     int linesHit = 0;
@@ -162,6 +116,49 @@ class _Coverage {
     );
 
     return _Coverage._(filtered, totalHit, totalFound);
+  }
+  _Coverage._(this.records, this.totalLinesHit, this.totalLinesFound);
+
+  final List<_CoverageRecord> records;
+  final int totalLinesHit;
+  final int totalLinesFound;
+
+  double get totalPercentage =>
+      totalLinesFound == 0 ? 0.0 : (totalLinesHit / totalLinesFound) * 100;
+
+  String toMarkdown() {
+    final StringBuffer buffer = StringBuffer()
+      ..writeln('# Test Coverage Summary')
+      ..writeln()
+      ..writeln(
+        '*Total line coverage*: **${totalPercentage.toStringAsFixed(2)}%** '
+        '($totalLinesHit/$totalLinesFound lines)',
+      )
+      ..writeln()
+      ..writeln(
+        'Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) '
+        'are excluded from these totals.',
+      )
+      ..writeln()
+      ..writeln('Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.')
+      ..writeln()
+      ..writeln('| File | Coverage | Covered/Total |')
+      ..writeln('| --- | ---: | ---: |');
+
+    for (final _CoverageRecord record in records) {
+      buffer
+        ..write('| `')
+        ..write(record.path)
+        ..write('` | ')
+        ..write(record.percentage.toStringAsFixed(2))
+        ..write('% | ')
+        ..write(record.linesHit)
+        ..write('/')
+        ..write(record.linesFound)
+        ..writeln(' |');
+    }
+
+    return _withSingleTrailingNewline(buffer.toString());
   }
 
   static String _normalizePath(final String path) {
@@ -259,12 +256,12 @@ class _Coverage {
 }
 
 class _Updator {
-  static Future<void> updateReadme(final double percentage) async {
+  static void updateReadme(final double percentage) {
     final File readme = File('README.md');
-    if (!await readme.exists()) {
+    if (!readme.existsSync()) {
       return;
     }
-    final List<String> lines = await readme.readAsLines();
+    final List<String> lines = readme.readAsLinesSync();
     final RegExp marker = RegExp(
       r'Latest line coverage: \*\*([0-9]+\.?[0-9]*)%\*\*',
     );
@@ -283,7 +280,7 @@ class _Updator {
       }
     }
     if (updated) {
-      await readme.writeAsString(_withSingleTrailingNewline(lines.join('\n')));
+      readme.writeAsStringSync(_withSingleTrailingNewline(lines.join('\n')));
     }
   }
 }
