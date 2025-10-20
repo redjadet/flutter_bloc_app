@@ -19,7 +19,7 @@ class CounterValueText extends StatelessWidget {
     switchInCurve: Curves.easeOut,
     switchOutCurve: Curves.easeIn,
     transitionBuilder: (final child, final animation) => ScaleTransition(
-      scale: Tween<double>(begin: 0.9, end: 1.0).animate(animation),
+      scale: Tween<double>(begin: 0.9, end: 1).animate(animation),
       child: child,
     ),
     child: Text(

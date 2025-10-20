@@ -76,7 +76,7 @@ class SecretConfig {
 
       if (assetFallbackAllowed) {
         final bool loadedFromAssets = await _loadFromSource(
-          () => _readAssetSecrets(),
+          _readAssetSecrets,
           afterApply: () => _persistGoogleMapsKey(storage),
         );
         if (loadedFromAssets) {
@@ -87,7 +87,7 @@ class SecretConfig {
 
       final bool shouldPersistEnv = persistToSecureStorage ?? true;
       final bool loadedFromEnvironment = await _loadFromSource(
-        () => _readEnvironmentSecrets(),
+        _readEnvironmentSecrets,
         afterApply: shouldPersistEnv
             ? () => _persistToSecureStorage(storage)
             : null,

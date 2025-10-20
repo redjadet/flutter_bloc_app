@@ -6,7 +6,6 @@ part 'chat_conversation.freezed.dart';
 
 @freezed
 abstract class ChatConversation with _$ChatConversation {
-  const ChatConversation._();
 
   const factory ChatConversation({
     required final String id,
@@ -17,6 +16,7 @@ abstract class ChatConversation with _$ChatConversation {
     required final DateTime updatedAt,
     final String? model,
   }) = _ChatConversation;
+  const ChatConversation._();
 
   factory ChatConversation.fromJson(final Map<String, dynamic> json) {
     final List<ChatMessage> messages = _messagesFromJson(

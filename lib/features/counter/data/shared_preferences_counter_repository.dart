@@ -89,7 +89,7 @@ class SharedPreferencesCounterRepository implements CounterRepository {
       return;
     }
     _pendingInitialNotification ??= _loadAndEmitInitial();
-    unawaited(_pendingInitialNotification!);
+    unawaited(_pendingInitialNotification);
   }
 
   Future<void> _handleOnCancel() async {

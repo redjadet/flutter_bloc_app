@@ -32,7 +32,7 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
       operationName: _opContinents,
     );
     final List<dynamic> rawContinents =
-        (data['continents'] as List<dynamic>? ?? <dynamic>[]);
+        data['continents'] as List<dynamic>? ?? <dynamic>[];
     if (rawContinents.isEmpty) {
       return const <GraphqlContinent>[];
     }
@@ -69,7 +69,7 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
   }
 
   List<GraphqlCountry> _mapCountries(final Object? rawCountries) {
-    final List<dynamic> list = (rawCountries as List<dynamic>? ?? <dynamic>[]);
+    final List<dynamic> list = rawCountries as List<dynamic>? ?? <dynamic>[];
     if (list.isEmpty) {
       return const <GraphqlCountry>[];
     }
@@ -203,9 +203,9 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
     }
   ''';
 
-  static const String _countriesByContinentQuery = '''
-    query CountriesByContinent(\$continent: ID!) {
-      continent(code: \$continent) {
+  static const String _countriesByContinentQuery = r'''
+    query CountriesByContinent($continent: ID!) {
+      continent(code: $continent) {
         countries {
           code
           name

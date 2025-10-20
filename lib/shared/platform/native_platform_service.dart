@@ -45,16 +45,16 @@ class NativePlatformInfo {
       return const NativePlatformInfo(platform: 'unknown', version: 'unknown');
     }
     return NativePlatformInfo(
-      platform: (map['platform'] as String?)?.trim().isNotEmpty == true
+      platform: (map['platform'] as String?)?.trim().isNotEmpty ?? false
           ? (map['platform'] as String)
           : 'unknown',
-      version: (map['version'] as String?)?.trim().isNotEmpty == true
+      version: (map['version'] as String?)?.trim().isNotEmpty ?? false
           ? (map['version'] as String)
           : 'unknown',
-      manufacturer: (map['manufacturer'] as String?)?.trim().isNotEmpty == true
+      manufacturer: (map['manufacturer'] as String?)?.trim().isNotEmpty ?? false
           ? (map['manufacturer'] as String)
           : null,
-      model: (map['model'] as String?)?.trim().isNotEmpty == true
+      model: (map['model'] as String?)?.trim().isNotEmpty ?? false
           ? (map['model'] as String)
           : null,
       batteryLevel: (map[_keyBatteryLevel] as num?)?.toInt(),

@@ -175,8 +175,8 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
     if (!_googleMapController.isCompleted) {
       return null;
     }
-    _googleMapControllerInstance = await _googleMapController.future;
-    return _googleMapControllerInstance;
+    return _googleMapControllerInstance =
+        await _googleMapController.future;
   }
 
   Future<void> _focusOnLocation(final MapLocation location) async {

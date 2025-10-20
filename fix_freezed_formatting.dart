@@ -103,18 +103,18 @@ const List<_Replacement> _replacements = <_Replacement>[
   _Replacement(
     trigger: 'chart_point',
     oldValue: 'class _ChartPoint implements ChartPoint {',
-    newValue: 'class _ChartPoint implements ChartPoint, _\$ChartPoint {',
+    newValue: r'class _ChartPoint implements ChartPoint, _$ChartPoint {',
   ),
   _Replacement(
     trigger: 'counter_snapshot',
     oldValue: 'class _CounterSnapshot implements CounterSnapshot {',
     newValue:
-        'class _CounterSnapshot implements CounterSnapshot, _\$CounterSnapshot {',
+        r'class _CounterSnapshot implements CounterSnapshot, _$CounterSnapshot {',
   ),
   _Replacement(
     trigger: 'counter_state',
     oldValue: 'class _CounterState extends CounterState {',
     newValue:
-        'class _CounterState extends CounterState implements _\$CounterState {',
+        r'class _CounterState extends CounterState implements _$CounterState {',
   ),
 ];

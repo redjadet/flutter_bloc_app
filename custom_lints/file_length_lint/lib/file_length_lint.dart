@@ -38,7 +38,7 @@ class _FileLengthLint extends DartLintRule {
       return;
     }
 
-    final String path = rawPath.replaceAll('\\', '/');
+    final String path = rawPath.replaceAll(r'\', '/');
 
     if (_matchesAny(_excludedPatterns, path)) {
       return;

@@ -7,7 +7,6 @@ enum CounterStatus { idle, loading, success, error }
 
 @freezed
 abstract class CounterState with _$CounterState {
-  const CounterState._();
 
   const factory CounterState({
     required final int count,
@@ -16,6 +15,7 @@ abstract class CounterState with _$CounterState {
     final CounterError? error,
     @Default(CounterStatus.idle) final CounterStatus status,
   }) = _CounterState;
+  const CounterState._();
 
   factory CounterState.success({
     required final int count,
