@@ -34,7 +34,7 @@ class LocalBiometricAuthenticator implements BiometricAuthenticator {
 
       return await _localAuth.authenticate(
         localizedReason: localizedReason ?? 'Authenticate to continue',
-        options: const AuthenticationOptions(biometricOnly: true),
+        biometricOnly: true,
       );
     } on PlatformException catch (error, stackTrace) {
       AppLogger.warning('Biometric authentication failed: ${error.message}');
