@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_bloc_app/features/chart/data/chart_repository.dart';
+import 'package:flutter_bloc_app/features/chart/data/http_chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -16,12 +16,12 @@ void main() {
   const Map<String, Object> pricesPayload = <String, Object>{'prices': prices};
 
   setUp(() {
-    ChartRepository.clearCache();
+    HttpChartRepository.clearCache();
   });
 
   test('fetchTrendingCounts parses payload and caches results', () async {
     int requestCount = 0;
-    final repository = ChartRepository(
+    final repository = HttpChartRepository(
       client: MockClient((request) async {
         requestCount++;
         return http.Response(jsonEncode(pricesPayload), 200);
@@ -54,7 +54,7 @@ void main() {
 
     DateTime current = DateTime(2024, 1, 1, 12);
 
-    final repository = ChartRepository(
+    final repository = HttpChartRepository(
       client: MockClient((request) async {
         requestCount++;
         return responses[requestCount - 1];
@@ -78,7 +78,7 @@ void main() {
     'fetchTrendingCounts falls back to defaults when request fails without cache',
     () async {
       DateTime current = DateTime(2024, 1, 1, 12);
-      final repository = ChartRepository(
+      final repository = HttpChartRepository(
         client: MockClient((request) async {
           return http.Response('server error', 500);
         }),
@@ -98,7 +98,7 @@ void main() {
     'fetchTrendingCounts falls back to defaults when payload is invalid',
     () async {
       DateTime current = DateTime(2024, 1, 1, 12);
-      final repository = ChartRepository(
+      final repository = HttpChartRepository(
         client: MockClient((request) async {
           return http.Response('{"prices": "not-a-list"}', 200);
         }),

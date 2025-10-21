@@ -1,15 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_bloc_app/features/chart/chart.dart';
+import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
+import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 
-class ChartRepository {
-  ChartRepository({final http.Client? client, final DateTime Function()? now})
-    : _client = client ?? http.Client(),
-      _now = now ?? DateTime.now;
+class HttpChartRepository extends ChartRepository {
+  HttpChartRepository({
+    final http.Client? client,
+    final DateTime Function()? now,
+  }) : _client = client ?? http.Client(),
+       _now = now ?? DateTime.now;
 
   final http.Client _client;
   final DateTime Function() _now;
@@ -30,6 +33,7 @@ class ChartRepository {
     _lastFetched = null;
   }
 
+  @override
   Future<List<ChartPoint>> fetchTrendingCounts() async {
     final now = _now();
     if (_hasFreshCache(now)) {
@@ -45,18 +49,19 @@ class ChartRepository {
         return _cache(parsed, now);
       }
       AppLogger.warning(
-        'ChartRepository.fetchTrendingCounts fallback due to status '
+        'HttpChartRepository.fetchTrendingCounts fallback due to status '
         '${response.statusCode}',
       );
       return _cached ?? _cache(_fallbackData(now), now);
     } on FormatException catch (error) {
       AppLogger.warning(
-        'ChartRepository.fetchTrendingCounts invalid payload: ${error.message}',
+        'HttpChartRepository.fetchTrendingCounts invalid payload: '
+        '${error.message}',
       );
       return _cached ?? _cache(_fallbackData(now), now);
     } on Exception catch (error, stackTrace) {
-      AppLogger.warning('ChartRepository.fetchTrendingCounts falling back');
-      AppLogger.error('ChartRepository failure', error, stackTrace);
+      AppLogger.warning('HttpChartRepository.fetchTrendingCounts falling back');
+      AppLogger.error('HttpChartRepository failure', error, stackTrace);
       return _cached ?? _cache(_fallbackData(now), now);
     }
   }
