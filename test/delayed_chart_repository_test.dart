@@ -1,15 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter_bloc_app/core/flavor.dart';
-import 'package:flutter_bloc_app/features/chart/chart.dart';
 import 'package:flutter_bloc_app/features/chart/data/delayed_chart_repository.dart';
+import 'package:flutter_bloc_app/features/chart/data/http_chart_repository.dart';
+import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
 void main() {
   setUp(() {
-    ChartRepository.clearCache();
+    HttpChartRepository.clearCache();
   });
 
   tearDown(() {
