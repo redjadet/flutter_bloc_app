@@ -38,8 +38,7 @@ class ChartCubit extends Cubit<ChartState> {
     );
 
     try {
-      final List<ChartPoint> result = await _repository.fetchTrendingCounts();
-      final List<ChartPoint> points = List<ChartPoint>.unmodifiable(result);
+      final List<ChartPoint> points = await _repository.fetchTrendingCounts();
 
       if (points.isEmpty) {
         emit(
