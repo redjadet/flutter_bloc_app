@@ -77,9 +77,10 @@ class HttpChartRepository extends ChartRepository {
     final List<ChartPoint> data,
     final DateTime fetchedAt,
   ) {
-    _cached = data;
+    final List<ChartPoint> cached = List<ChartPoint>.unmodifiable(data);
+    _cached = cached;
     _lastFetched = fetchedAt;
-    return data;
+    return cached;
   }
 
   List<ChartPoint> _parseBody(final String body) {
