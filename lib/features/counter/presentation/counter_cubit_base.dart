@@ -33,7 +33,9 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
 
   /// Starts the 1s countdown ticker if not already running.
   void _ensureCountdownTickerStarted() {
-    if (_isLifecyclePaused || state.count <= 0) {
+    if (_isLifecyclePaused ||
+        state.count <= 0 ||
+        state.status == CounterStatus.error) {
       return;
     }
     _countdownTicker ??= _timerService.periodic(_countdownTickInterval, () {
@@ -67,7 +69,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
     if (_isLifecyclePaused) {
       return;
     }
-    if (nextState.count > 0) {
+    if (nextState.count > 0 && nextState.status != CounterStatus.error) {
       _ensureCountdownTickerStarted();
     } else {
       _stopCountdownTicker();
@@ -85,9 +87,13 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
     final DateTime? timestamp,
   }) {
     _pauseCountdownForOneTick = false;
-    final CounterState next = CounterState.success(
+    final bool hasError = state.error != null;
+    final CounterState next = state.copyWith(
       count: count,
       lastChanged: timestamp ?? _now(),
+      countdownSeconds: _defaultIntervalSeconds,
+      status: hasError ? CounterStatus.error : CounterStatus.success,
+      error: hasError ? state.error : null,
     );
     emit(next);
     _syncTickerForState(next);
@@ -152,6 +158,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
         ? error
         : errorFactory(originalError: error);
     emit(state.copyWith(error: counterError, status: CounterStatus.error));
+    _stopCountdownTicker();
   }
 
   void _subscribeToRepository() {

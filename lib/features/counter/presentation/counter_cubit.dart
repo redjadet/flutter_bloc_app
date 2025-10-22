@@ -94,6 +94,7 @@ class CounterCubit extends _CounterCubitBase {
         ? state.copyWith(error: null)
         : state.copyWith(error: null, status: CounterStatus.idle);
     emit(next);
+    _syncTickerForState(next);
   }
 
   void pauseAutoDecrement() {
