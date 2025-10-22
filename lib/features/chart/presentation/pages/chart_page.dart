@@ -57,9 +57,8 @@ class _ChartView extends StatelessWidget {
               points: state.points,
               dateFormat: dateFormat,
               zoomEnabled: state.zoomEnabled,
-              onZoomChanged: (final value) => context
-                  .read<ChartCubit>()
-                  .setZoomEnabled(isEnabled: value),
+              onZoomChanged: (final value) =>
+                  context.read<ChartCubit>().setZoomEnabled(isEnabled: value),
             );
           },
         ),
