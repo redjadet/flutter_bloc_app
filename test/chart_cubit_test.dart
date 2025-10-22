@@ -31,9 +31,7 @@ void main() {
             (final state) =>
                 state.points.map((final point) => point.value).toList(),
             'values',
-            equals(
-              defaultPoints.map((final point) => point.value).toList(),
-            ),
+            equals(defaultPoints.map((final point) => point.value).toList()),
           ),
     ],
   );
@@ -111,9 +109,7 @@ void main() {
             (final state) =>
                 state.points.map((final point) => point.value).toList(),
             'values',
-            equals(
-              defaultPoints.map((final point) => point.value).toList(),
-            ),
+            equals(defaultPoints.map((final point) => point.value).toList()),
           ),
       isA<ChartState>()
           .having((final state) => state.status, 'status', ChartStatus.success)
