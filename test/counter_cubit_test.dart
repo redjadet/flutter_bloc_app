@@ -198,6 +198,29 @@ void main() {
       },
     );
 
+    test('save error pauses countdown until error cleared', () async {
+      final fakeTimer = FakeTimerService();
+      final CounterCubit cubit = createCubit(
+        repository: MockCounterRepository(shouldThrowOnSave: true),
+        timerService: fakeTimer,
+      );
+
+      await AppLogger.silenceAsync(() => cubit.increment());
+
+      final int countdownAfterError = cubit.state.countdownSeconds;
+
+      fakeTimer.tick(3);
+
+      expect(cubit.state.countdownSeconds, countdownAfterError);
+      expect(cubit.state.status, CounterStatus.error);
+
+      cubit.clearError();
+
+      fakeTimer.tick(1);
+
+      expect(cubit.state.countdownSeconds, countdownAfterError - 1);
+    });
+
     test(
       'countdown timer decreases deterministically (FakeTimerService)',
       () async {
