@@ -84,9 +84,9 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 | --- | --- | --- |
 | ![Charts page](assets/screenshots/small/chart.png) | ![GraphQL countries browser](assets/screenshots/small/graphQL_countries.png) | ![AI chat conversation](assets/screenshots/small/ai_chat.png) |
 
-| Google Maps Demo |
-| --- |
-| ![Google Maps demo](assets/screenshots/google_maps.png) |
+| Google Maps Demo | Search |
+| --- | --- |
+| ![Google Maps demo](assets/screenshots/google_maps.png) | ![Search demo](assets/screenshots/search.png) |
 
 ## Test Coverage
 
