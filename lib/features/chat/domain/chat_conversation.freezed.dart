@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ChatConversation implements DiagnosticableTreeMixin {
 
- String get id; List<ChatMessage> get messages; List<String> get pastUserInputs; List<String> get generatedResponses; DateTime get createdAt; DateTime get updatedAt; String? get model;
+ String get id; DateTime get createdAt; DateTime get updatedAt; List<ChatMessage> get messages; List<String> get pastUserInputs; List<String> get generatedResponses; String? get model;
 /// Create a copy of ChatConversation
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,21 +26,21 @@ $ChatConversationCopyWith<ChatConversation> get copyWith => _$ChatConversationCo
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'ChatConversation'))
-    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('messages', messages))..add(DiagnosticsProperty('pastUserInputs', pastUserInputs))..add(DiagnosticsProperty('generatedResponses', generatedResponses))..add(DiagnosticsProperty('createdAt', createdAt))..add(DiagnosticsProperty('updatedAt', updatedAt))..add(DiagnosticsProperty('model', model));
+    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('createdAt', createdAt))..add(DiagnosticsProperty('updatedAt', updatedAt))..add(DiagnosticsProperty('messages', messages))..add(DiagnosticsProperty('pastUserInputs', pastUserInputs))..add(DiagnosticsProperty('generatedResponses', generatedResponses))..add(DiagnosticsProperty('model', model));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatConversation&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.messages, messages)&&const DeepCollectionEquality().equals(other.pastUserInputs, pastUserInputs)&&const DeepCollectionEquality().equals(other.generatedResponses, generatedResponses)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.model, model) || other.model == model));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatConversation&&(identical(other.id, id) || other.id == id)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.messages, messages)&&const DeepCollectionEquality().equals(other.pastUserInputs, pastUserInputs)&&const DeepCollectionEquality().equals(other.generatedResponses, generatedResponses)&&(identical(other.model, model) || other.model == model));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(messages),const DeepCollectionEquality().hash(pastUserInputs),const DeepCollectionEquality().hash(generatedResponses),createdAt,updatedAt,model);
+int get hashCode => Object.hash(runtimeType,id,createdAt,updatedAt,const DeepCollectionEquality().hash(messages),const DeepCollectionEquality().hash(pastUserInputs),const DeepCollectionEquality().hash(generatedResponses),model);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'ChatConversation(id: $id, messages: $messages, pastUserInputs: $pastUserInputs, generatedResponses: $generatedResponses, createdAt: $createdAt, updatedAt: $updatedAt, model: $model)';
+  return 'ChatConversation(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, messages: $messages, pastUserInputs: $pastUserInputs, generatedResponses: $generatedResponses, model: $model)';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $ChatConversationCopyWith<$Res>  {
   factory $ChatConversationCopyWith(ChatConversation value, $Res Function(ChatConversation) _then) = _$ChatConversationCopyWithImpl;
 @useResult
 $Res call({
- String id, List<ChatMessage> messages, List<String> pastUserInputs, List<String> generatedResponses, DateTime createdAt, DateTime updatedAt, String? model
+ String id, DateTime createdAt, DateTime updatedAt, List<ChatMessage> messages, List<String> pastUserInputs, List<String> generatedResponses, String? model
 });
 
 
@@ -68,15 +68,15 @@ class _$ChatConversationCopyWithImpl<$Res>
 
 /// Create a copy of ChatConversation
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? messages = null,Object? pastUserInputs = null,Object? generatedResponses = null,Object? createdAt = null,Object? updatedAt = null,Object? model = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? createdAt = null,Object? updatedAt = null,Object? messages = null,Object? pastUserInputs = null,Object? generatedResponses = null,Object? model = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,messages: null == messages ? _self.messages : messages // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,messages: null == messages ? _self.messages : messages // ignore: cast_nullable_to_non_nullable
 as List<ChatMessage>,pastUserInputs: null == pastUserInputs ? _self.pastUserInputs : pastUserInputs // ignore: cast_nullable_to_non_nullable
 as List<String>,generatedResponses: null == generatedResponses ? _self.generatedResponses : generatedResponses // ignore: cast_nullable_to_non_nullable
-as List<String>,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,model: freezed == model ? _self.model : model // ignore: cast_nullable_to_non_nullable
+as List<String>,model: freezed == model ? _self.model : model // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -162,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  List<ChatMessage> messages,  List<String> pastUserInputs,  List<String> generatedResponses,  DateTime createdAt,  DateTime updatedAt,  String? model)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DateTime createdAt,  DateTime updatedAt,  List<ChatMessage> messages,  List<String> pastUserInputs,  List<String> generatedResponses,  String? model)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ChatConversation() when $default != null:
-return $default(_that.id,_that.messages,_that.pastUserInputs,_that.generatedResponses,_that.createdAt,_that.updatedAt,_that.model);case _:
+return $default(_that.id,_that.createdAt,_that.updatedAt,_that.messages,_that.pastUserInputs,_that.generatedResponses,_that.model);case _:
   return orElse();
 
 }
@@ -183,10 +183,10 @@ return $default(_that.id,_that.messages,_that.pastUserInputs,_that.generatedResp
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  List<ChatMessage> messages,  List<String> pastUserInputs,  List<String> generatedResponses,  DateTime createdAt,  DateTime updatedAt,  String? model)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DateTime createdAt,  DateTime updatedAt,  List<ChatMessage> messages,  List<String> pastUserInputs,  List<String> generatedResponses,  String? model)  $default,) {final _that = this;
 switch (_that) {
 case _ChatConversation():
-return $default(_that.id,_that.messages,_that.pastUserInputs,_that.generatedResponses,_that.createdAt,_that.updatedAt,_that.model);case _:
+return $default(_that.id,_that.createdAt,_that.updatedAt,_that.messages,_that.pastUserInputs,_that.generatedResponses,_that.model);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +203,10 @@ return $default(_that.id,_that.messages,_that.pastUserInputs,_that.generatedResp
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  List<ChatMessage> messages,  List<String> pastUserInputs,  List<String> generatedResponses,  DateTime createdAt,  DateTime updatedAt,  String? model)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DateTime createdAt,  DateTime updatedAt,  List<ChatMessage> messages,  List<String> pastUserInputs,  List<String> generatedResponses,  String? model)?  $default,) {final _that = this;
 switch (_that) {
 case _ChatConversation() when $default != null:
-return $default(_that.id,_that.messages,_that.pastUserInputs,_that.generatedResponses,_that.createdAt,_that.updatedAt,_that.model);case _:
+return $default(_that.id,_that.createdAt,_that.updatedAt,_that.messages,_that.pastUserInputs,_that.generatedResponses,_that.model);case _:
   return null;
 
 }
@@ -218,10 +218,12 @@ return $default(_that.id,_that.messages,_that.pastUserInputs,_that.generatedResp
 
 
 class _ChatConversation extends ChatConversation with DiagnosticableTreeMixin {
-  const _ChatConversation({required this.id, final  List<ChatMessage> messages = const <ChatMessage>[], final  List<String> pastUserInputs = const <String>[], final  List<String> generatedResponses = const <String>[], required this.createdAt, required this.updatedAt, this.model}): _messages = messages,_pastUserInputs = pastUserInputs,_generatedResponses = generatedResponses,super._();
+  const _ChatConversation({required this.id, required this.createdAt, required this.updatedAt, final  List<ChatMessage> messages = const <ChatMessage>[], final  List<String> pastUserInputs = const <String>[], final  List<String> generatedResponses = const <String>[], this.model}): _messages = messages,_pastUserInputs = pastUserInputs,_generatedResponses = generatedResponses,super._();
   
 
 @override final  String id;
+@override final  DateTime createdAt;
+@override final  DateTime updatedAt;
  final  List<ChatMessage> _messages;
 @override@JsonKey() List<ChatMessage> get messages {
   if (_messages is EqualUnmodifiableListView) return _messages;
@@ -243,8 +245,6 @@ class _ChatConversation extends ChatConversation with DiagnosticableTreeMixin {
   return EqualUnmodifiableListView(_generatedResponses);
 }
 
-@override final  DateTime createdAt;
-@override final  DateTime updatedAt;
 @override final  String? model;
 
 /// Create a copy of ChatConversation
@@ -258,21 +258,21 @@ _$ChatConversationCopyWith<_ChatConversation> get copyWith => __$ChatConversatio
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'ChatConversation'))
-    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('messages', messages))..add(DiagnosticsProperty('pastUserInputs', pastUserInputs))..add(DiagnosticsProperty('generatedResponses', generatedResponses))..add(DiagnosticsProperty('createdAt', createdAt))..add(DiagnosticsProperty('updatedAt', updatedAt))..add(DiagnosticsProperty('model', model));
+    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('createdAt', createdAt))..add(DiagnosticsProperty('updatedAt', updatedAt))..add(DiagnosticsProperty('messages', messages))..add(DiagnosticsProperty('pastUserInputs', pastUserInputs))..add(DiagnosticsProperty('generatedResponses', generatedResponses))..add(DiagnosticsProperty('model', model));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChatConversation&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._messages, _messages)&&const DeepCollectionEquality().equals(other._pastUserInputs, _pastUserInputs)&&const DeepCollectionEquality().equals(other._generatedResponses, _generatedResponses)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.model, model) || other.model == model));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChatConversation&&(identical(other.id, id) || other.id == id)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other._messages, _messages)&&const DeepCollectionEquality().equals(other._pastUserInputs, _pastUserInputs)&&const DeepCollectionEquality().equals(other._generatedResponses, _generatedResponses)&&(identical(other.model, model) || other.model == model));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_messages),const DeepCollectionEquality().hash(_pastUserInputs),const DeepCollectionEquality().hash(_generatedResponses),createdAt,updatedAt,model);
+int get hashCode => Object.hash(runtimeType,id,createdAt,updatedAt,const DeepCollectionEquality().hash(_messages),const DeepCollectionEquality().hash(_pastUserInputs),const DeepCollectionEquality().hash(_generatedResponses),model);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'ChatConversation(id: $id, messages: $messages, pastUserInputs: $pastUserInputs, generatedResponses: $generatedResponses, createdAt: $createdAt, updatedAt: $updatedAt, model: $model)';
+  return 'ChatConversation(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, messages: $messages, pastUserInputs: $pastUserInputs, generatedResponses: $generatedResponses, model: $model)';
 }
 
 
@@ -283,7 +283,7 @@ abstract mixin class _$ChatConversationCopyWith<$Res> implements $ChatConversati
   factory _$ChatConversationCopyWith(_ChatConversation value, $Res Function(_ChatConversation) _then) = __$ChatConversationCopyWithImpl;
 @override @useResult
 $Res call({
- String id, List<ChatMessage> messages, List<String> pastUserInputs, List<String> generatedResponses, DateTime createdAt, DateTime updatedAt, String? model
+ String id, DateTime createdAt, DateTime updatedAt, List<ChatMessage> messages, List<String> pastUserInputs, List<String> generatedResponses, String? model
 });
 
 
@@ -300,15 +300,15 @@ class __$ChatConversationCopyWithImpl<$Res>
 
 /// Create a copy of ChatConversation
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? messages = null,Object? pastUserInputs = null,Object? generatedResponses = null,Object? createdAt = null,Object? updatedAt = null,Object? model = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? createdAt = null,Object? updatedAt = null,Object? messages = null,Object? pastUserInputs = null,Object? generatedResponses = null,Object? model = freezed,}) {
   return _then(_ChatConversation(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,messages: null == messages ? _self._messages : messages // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,messages: null == messages ? _self._messages : messages // ignore: cast_nullable_to_non_nullable
 as List<ChatMessage>,pastUserInputs: null == pastUserInputs ? _self._pastUserInputs : pastUserInputs // ignore: cast_nullable_to_non_nullable
 as List<String>,generatedResponses: null == generatedResponses ? _self._generatedResponses : generatedResponses // ignore: cast_nullable_to_non_nullable
-as List<String>,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,model: freezed == model ? _self.model : model // ignore: cast_nullable_to_non_nullable
+as List<String>,model: freezed == model ? _self.model : model // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

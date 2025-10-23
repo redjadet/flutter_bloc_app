@@ -204,22 +204,39 @@ class _FakeThemeRepository implements ThemeRepository {
 
 /// Simple fake timer service to drive periodic ticks deterministically in tests.
 class FakeTimerService implements TimerService {
-  final List<_Entry> _entries = [];
+  final List<_PeriodicEntry> _periodicEntries = [];
+  final List<_OneShotEntry> _oneShotEntries = [];
 
   @override
   TimerDisposable periodic(Duration interval, void Function() onTick) {
-    final entry = _Entry(interval, onTick);
-    _entries.add(entry);
+    final entry = _PeriodicEntry(interval, onTick);
+    _periodicEntries.add(entry);
     return _FakeTimerHandle(() {
+      if (entry.cancelled) {
+        return;
+      }
       entry.cancelled = true;
-      _entries.remove(entry);
+      _periodicEntries.remove(entry);
+    });
+  }
+
+  @override
+  TimerDisposable runOnce(Duration delay, void Function() onComplete) {
+    final entry = _OneShotEntry(delay, onComplete);
+    _oneShotEntries.add(entry);
+    return _FakeTimerHandle(() {
+      if (entry.cancelled) {
+        return;
+      }
+      entry.cancelled = true;
+      _oneShotEntries.remove(entry);
     });
   }
 
   /// Triggers all active periodic callbacks [times] times.
   void tick([int times = 1]) {
     for (int i = 0; i < times; i++) {
-      final callbacks = _entries
+      final callbacks = _periodicEntries
           .where((e) => !e.cancelled)
           .map((e) => e.onTick)
           .toList();
@@ -228,12 +245,69 @@ class FakeTimerService implements TimerService {
       }
     }
   }
+
+  /// Advances fake time by [duration], triggering due timers.
+  void elapse(Duration duration) {
+    final int delta = duration.inMicroseconds;
+    if (delta <= 0) {
+      return;
+    }
+
+    for (final entry in List<_PeriodicEntry>.from(_periodicEntries)) {
+      if (entry.cancelled) {
+        continue;
+      }
+      entry.addElapsed(delta);
+    }
+
+    final pending = <_OneShotEntry>[];
+    for (final entry in List<_OneShotEntry>.from(_oneShotEntries)) {
+      if (entry.cancelled) {
+        continue;
+      }
+      entry.remainingMicros -= delta;
+      if (entry.remainingMicros <= 0) {
+        entry.cancelled = true;
+        pending.add(entry);
+        _oneShotEntries.remove(entry);
+      }
+    }
+
+    for (final entry in pending) {
+      entry.onComplete();
+    }
+  }
 }
 
-class _Entry {
-  _Entry(this.interval, this.onTick);
+class _PeriodicEntry {
+  _PeriodicEntry(this.interval, this.onTick);
   final Duration interval;
   final void Function() onTick;
+  bool cancelled = false;
+  int _elapsedMicros = 0;
+
+  void addElapsed(int deltaMicros) {
+    if (interval.inMicroseconds <= 0) {
+      return;
+    }
+    _elapsedMicros += deltaMicros;
+    final int intervalMicros = interval.inMicroseconds;
+    final int tickCount = _elapsedMicros ~/ intervalMicros;
+    if (tickCount == 0) {
+      return;
+    }
+    _elapsedMicros -= tickCount * intervalMicros;
+    for (int i = 0; i < tickCount; i++) {
+      onTick();
+    }
+  }
+}
+
+class _OneShotEntry {
+  _OneShotEntry(Duration delay, this.onComplete)
+    : remainingMicros = delay.inMicroseconds;
+  final void Function() onComplete;
+  int remainingMicros;
   bool cancelled = false;
 }
 

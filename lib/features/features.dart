@@ -6,5 +6,6 @@ export 'deeplink/deeplink.dart';
 export 'example/example.dart';
 export 'google_maps/google_maps.dart';
 export 'graphql_demo/graphql_demo.dart';
+export 'search/search.dart';
 export 'settings/settings.dart';
 export 'websocket/websocket.dart';

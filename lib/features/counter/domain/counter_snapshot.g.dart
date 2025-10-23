@@ -8,8 +8,8 @@ part of 'counter_snapshot.dart';
 
 _CounterSnapshot _$CounterSnapshotFromJson(Map<String, dynamic> json) =>
     _CounterSnapshot(
-      userId: json['userId'] as String?,
       count: (json['count'] as num).toInt(),
+      userId: json['userId'] as String?,
       lastChanged: json['lastChanged'] == null
           ? null
           : DateTime.parse(json['lastChanged'] as String),
@@ -17,7 +17,7 @@ _CounterSnapshot _$CounterSnapshotFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$CounterSnapshotToJson(_CounterSnapshot instance) =>
     <String, dynamic>{
-      'userId': instance.userId,
       'count': instance.count,
+      'userId': instance.userId,
       'lastChanged': instance.lastChanged?.toIso8601String(),
     };

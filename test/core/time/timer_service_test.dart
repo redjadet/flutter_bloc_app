@@ -45,6 +45,36 @@ void main() {
         expect(count, 0);
       });
     });
+
+    test('runOnce fires after delay', () {
+      fakeAsync((async) {
+        final timerService = DefaultTimerService();
+        var count = 0;
+        timerService.runOnce(const Duration(milliseconds: 500), () => count++);
+
+        async.elapse(const Duration(milliseconds: 499));
+        expect(count, 0);
+
+        async.elapse(const Duration(milliseconds: 1));
+        expect(count, 1);
+      });
+    });
+
+    test('runOnce can be cancelled', () {
+      fakeAsync((async) {
+        final timerService = DefaultTimerService();
+        var count = 0;
+        final disposable = timerService.runOnce(
+          const Duration(milliseconds: 500),
+          () => count++,
+        );
+
+        disposable.dispose();
+        async.elapse(const Duration(milliseconds: 600));
+
+        expect(count, 0);
+      });
+    });
   });
 
   group('FakeTimerService', () {
@@ -74,6 +104,42 @@ void main() {
       timerService.tick(3);
 
       expect(count, 0);
+    });
+
+    test('runOnce fires after elapsing fake time', () {
+      final timerService = FakeTimerService();
+      var count = 0;
+      timerService.runOnce(const Duration(milliseconds: 500), () => count++);
+
+      timerService.elapse(const Duration(milliseconds: 499));
+      expect(count, 0);
+
+      timerService.elapse(const Duration(milliseconds: 1));
+      expect(count, 1);
+    });
+
+    test('runOnce cancellation prevents callback', () {
+      final timerService = FakeTimerService();
+      var count = 0;
+      final disposable = timerService.runOnce(
+        const Duration(milliseconds: 500),
+        () => count++,
+      );
+
+      disposable.dispose();
+      timerService.elapse(const Duration(milliseconds: 600));
+
+      expect(count, 0);
+    });
+
+    test('elapse advances periodic timers respecting intervals', () {
+      final timerService = FakeTimerService();
+      var count = 0;
+      timerService.periodic(const Duration(milliseconds: 250), () => count++);
+
+      timerService.elapse(const Duration(milliseconds: 1000));
+
+      expect(count, 4);
     });
   });
 }

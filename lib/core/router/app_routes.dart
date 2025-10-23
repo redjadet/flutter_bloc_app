@@ -32,4 +32,7 @@ class AppRoutes {
 
   static const profile = 'profile';
   static const profilePath = '/profile';
+
+  static const search = 'search';
+  static const searchPath = '/search';
 }

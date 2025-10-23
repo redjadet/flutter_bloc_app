@@ -107,6 +107,11 @@ class _MyAppState extends State<MyApp> {
           child: const GoogleMapsSamplePage(),
         ),
       ),
+      GoRoute(
+        path: AppRoutes.searchPath,
+        name: AppRoutes.search,
+        builder: (final context, final state) => const SearchPage(),
+      ),
     ];
 
     if (!widget.requireAuth) {

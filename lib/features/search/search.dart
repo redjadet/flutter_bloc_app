@@ -1,0 +1,9 @@
+export 'data/mock_search_repository.dart';
+export 'domain/search_repository.dart';
+export 'domain/search_result.dart';
+export 'presentation/pages/search_page.dart';
+export 'presentation/search_cubit.dart';
+export 'presentation/search_state.dart';
+export 'presentation/widgets/search_app_bar.dart';
+export 'presentation/widgets/search_results_grid.dart';
+export 'presentation/widgets/search_text_field.dart';

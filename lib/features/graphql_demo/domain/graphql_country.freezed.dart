@@ -281,7 +281,7 @@ as String,
 /// @nodoc
 mixin _$GraphqlCountry {
 
- String get code; String get name; String? get capital; String? get currency; String? get emoji; GraphqlContinent get continent;
+ String get code; String get name; GraphqlContinent get continent; String? get capital; String? get currency; String? get emoji;
 /// Create a copy of GraphqlCountry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -294,16 +294,16 @@ $GraphqlCountryCopyWith<GraphqlCountry> get copyWith => _$GraphqlCountryCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GraphqlCountry&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.capital, capital) || other.capital == capital)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.emoji, emoji) || other.emoji == emoji)&&(identical(other.continent, continent) || other.continent == continent));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GraphqlCountry&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.continent, continent) || other.continent == continent)&&(identical(other.capital, capital) || other.capital == capital)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.emoji, emoji) || other.emoji == emoji));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,name,capital,currency,emoji,continent);
+int get hashCode => Object.hash(runtimeType,code,name,continent,capital,currency,emoji);
 
 @override
 String toString() {
-  return 'GraphqlCountry(code: $code, name: $name, capital: $capital, currency: $currency, emoji: $emoji, continent: $continent)';
+  return 'GraphqlCountry(code: $code, name: $name, continent: $continent, capital: $capital, currency: $currency, emoji: $emoji)';
 }
 
 
@@ -314,7 +314,7 @@ abstract mixin class $GraphqlCountryCopyWith<$Res>  {
   factory $GraphqlCountryCopyWith(GraphqlCountry value, $Res Function(GraphqlCountry) _then) = _$GraphqlCountryCopyWithImpl;
 @useResult
 $Res call({
- String code, String name, String? capital, String? currency, String? emoji, GraphqlContinent continent
+ String code, String name, GraphqlContinent continent, String? capital, String? currency, String? emoji
 });
 
 
@@ -331,15 +331,15 @@ class _$GraphqlCountryCopyWithImpl<$Res>
 
 /// Create a copy of GraphqlCountry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? capital = freezed,Object? currency = freezed,Object? emoji = freezed,Object? continent = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? name = null,Object? continent = null,Object? capital = freezed,Object? currency = freezed,Object? emoji = freezed,}) {
   return _then(_self.copyWith(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,capital: freezed == capital ? _self.capital : capital // ignore: cast_nullable_to_non_nullable
+as String,continent: null == continent ? _self.continent : continent // ignore: cast_nullable_to_non_nullable
+as GraphqlContinent,capital: freezed == capital ? _self.capital : capital // ignore: cast_nullable_to_non_nullable
 as String?,currency: freezed == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
 as String?,emoji: freezed == emoji ? _self.emoji : emoji // ignore: cast_nullable_to_non_nullable
-as String?,continent: null == continent ? _self.continent : continent // ignore: cast_nullable_to_non_nullable
-as GraphqlContinent,
+as String?,
   ));
 }
 /// Create a copy of GraphqlCountry
@@ -433,10 +433,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  String? capital,  String? currency,  String? emoji,  GraphqlContinent continent)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String name,  GraphqlContinent continent,  String? capital,  String? currency,  String? emoji)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GraphqlCountry() when $default != null:
-return $default(_that.code,_that.name,_that.capital,_that.currency,_that.emoji,_that.continent);case _:
+return $default(_that.code,_that.name,_that.continent,_that.capital,_that.currency,_that.emoji);case _:
   return orElse();
 
 }
@@ -454,10 +454,10 @@ return $default(_that.code,_that.name,_that.capital,_that.currency,_that.emoji,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  String? capital,  String? currency,  String? emoji,  GraphqlContinent continent)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String name,  GraphqlContinent continent,  String? capital,  String? currency,  String? emoji)  $default,) {final _that = this;
 switch (_that) {
 case _GraphqlCountry():
-return $default(_that.code,_that.name,_that.capital,_that.currency,_that.emoji,_that.continent);case _:
+return $default(_that.code,_that.name,_that.continent,_that.capital,_that.currency,_that.emoji);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -474,10 +474,10 @@ return $default(_that.code,_that.name,_that.capital,_that.currency,_that.emoji,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  String? capital,  String? currency,  String? emoji,  GraphqlContinent continent)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String name,  GraphqlContinent continent,  String? capital,  String? currency,  String? emoji)?  $default,) {final _that = this;
 switch (_that) {
 case _GraphqlCountry() when $default != null:
-return $default(_that.code,_that.name,_that.capital,_that.currency,_that.emoji,_that.continent);case _:
+return $default(_that.code,_that.name,_that.continent,_that.capital,_that.currency,_that.emoji);case _:
   return null;
 
 }
@@ -489,15 +489,15 @@ return $default(_that.code,_that.name,_that.capital,_that.currency,_that.emoji,_
 @JsonSerializable()
 
 class _GraphqlCountry implements GraphqlCountry {
-  const _GraphqlCountry({required this.code, required this.name, this.capital, this.currency, this.emoji, required this.continent});
+  const _GraphqlCountry({required this.code, required this.name, required this.continent, this.capital, this.currency, this.emoji});
   factory _GraphqlCountry.fromJson(Map<String, dynamic> json) => _$GraphqlCountryFromJson(json);
 
 @override final  String code;
 @override final  String name;
+@override final  GraphqlContinent continent;
 @override final  String? capital;
 @override final  String? currency;
 @override final  String? emoji;
-@override final  GraphqlContinent continent;
 
 /// Create a copy of GraphqlCountry
 /// with the given fields replaced by the non-null parameter values.
@@ -512,16 +512,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GraphqlCountry&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.capital, capital) || other.capital == capital)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.emoji, emoji) || other.emoji == emoji)&&(identical(other.continent, continent) || other.continent == continent));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GraphqlCountry&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.continent, continent) || other.continent == continent)&&(identical(other.capital, capital) || other.capital == capital)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.emoji, emoji) || other.emoji == emoji));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,name,capital,currency,emoji,continent);
+int get hashCode => Object.hash(runtimeType,code,name,continent,capital,currency,emoji);
 
 @override
 String toString() {
-  return 'GraphqlCountry(code: $code, name: $name, capital: $capital, currency: $currency, emoji: $emoji, continent: $continent)';
+  return 'GraphqlCountry(code: $code, name: $name, continent: $continent, capital: $capital, currency: $currency, emoji: $emoji)';
 }
 
 
@@ -532,7 +532,7 @@ abstract mixin class _$GraphqlCountryCopyWith<$Res> implements $GraphqlCountryCo
   factory _$GraphqlCountryCopyWith(_GraphqlCountry value, $Res Function(_GraphqlCountry) _then) = __$GraphqlCountryCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String name, String? capital, String? currency, String? emoji, GraphqlContinent continent
+ String code, String name, GraphqlContinent continent, String? capital, String? currency, String? emoji
 });
 
 
@@ -549,15 +549,15 @@ class __$GraphqlCountryCopyWithImpl<$Res>
 
 /// Create a copy of GraphqlCountry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? capital = freezed,Object? currency = freezed,Object? emoji = freezed,Object? continent = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? name = null,Object? continent = null,Object? capital = freezed,Object? currency = freezed,Object? emoji = freezed,}) {
   return _then(_GraphqlCountry(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,capital: freezed == capital ? _self.capital : capital // ignore: cast_nullable_to_non_nullable
+as String,continent: null == continent ? _self.continent : continent // ignore: cast_nullable_to_non_nullable
+as GraphqlContinent,capital: freezed == capital ? _self.capital : capital // ignore: cast_nullable_to_non_nullable
 as String?,currency: freezed == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
 as String?,emoji: freezed == emoji ? _self.emoji : emoji // ignore: cast_nullable_to_non_nullable
-as String?,continent: null == continent ? _self.continent : continent // ignore: cast_nullable_to_non_nullable
-as GraphqlContinent,
+as String?,
   ));
 }
 
