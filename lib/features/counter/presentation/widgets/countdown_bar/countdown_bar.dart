@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
@@ -31,11 +33,9 @@ class _CountdownBarState extends State<CountdownBar> {
       final AppLocalizations l10n = _l10n(context);
       final ColorScheme colors = Theme.of(context).colorScheme;
 
-      if (_cycleTotalSeconds == null ||
-          state.countdownSeconds > (_cycleTotalSeconds ?? 0)) {
-        _cycleTotalSeconds = state.countdownSeconds;
-      }
-      final int total = _cycleTotalSeconds ?? 5;
+      _updateCycleTotalSeconds(state.countdownSeconds);
+      final int total =
+          _cycleTotalSeconds ?? CounterState.defaultCountdownSeconds;
       final double progress = (state.countdownSeconds / total).clamp(0.0, 1.0);
 
       final Color targetColor = active
@@ -54,4 +54,9 @@ class _CountdownBarState extends State<CountdownBar> {
       );
     },
   );
+
+  void _updateCycleTotalSeconds(final int seconds) {
+    final int current = _cycleTotalSeconds ?? seconds;
+    _cycleTotalSeconds = math.max(current, seconds);
+  }
 }
