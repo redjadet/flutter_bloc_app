@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
@@ -38,15 +40,9 @@ class _CounterDisplayState extends State<CounterDisplay> {
         lastChanged: state.lastChanged,
       ),
       builder: (final context, final data) {
-        if (!data.isActive) {
-          _cycleTotalSeconds = data.countdownSeconds;
-        } else {
-          _cycleTotalSeconds ??= data.countdownSeconds;
-          if ((_cycleTotalSeconds ?? 0) < data.countdownSeconds) {
-            _cycleTotalSeconds = data.countdownSeconds;
-          }
-        }
-        final int total = _cycleTotalSeconds ?? 5;
+        _updateCycleTotalSeconds(data);
+        final int total =
+            _cycleTotalSeconds ?? CounterState.defaultCountdownSeconds;
         final double progress = (data.countdownSeconds / total).clamp(0.0, 1.0);
 
         final Color cardColor = data.isActive
@@ -71,6 +67,15 @@ class _CounterDisplayState extends State<CounterDisplay> {
         );
       },
     );
+  }
+
+  void _updateCycleTotalSeconds(final _DisplayState data) {
+    if (!data.isActive) {
+      _cycleTotalSeconds = data.countdownSeconds;
+      return;
+    }
+    final int current = _cycleTotalSeconds ?? data.countdownSeconds;
+    _cycleTotalSeconds = math.max(current, data.countdownSeconds);
   }
 }
 
