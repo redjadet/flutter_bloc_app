@@ -21,6 +21,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES) with version/build surfaced on the Settings page.
 - Authentication: Firebase Auth with FirebaseUI (email/password, Google) plus anonymous “guest” sessions that can be upgraded in-place.
 - AI Chat: Conversational UI backed by Hugging Face Inference API (openai/gpt-oss).
+- Search demo: Image search experience that debounces input, pulls results from a mock repository, and presents them in a responsive grid with shimmer loading states.
 - Native integration: MethodChannel (`com.example.flutter_bloc_app/native`) returning sanitized device metadata with Kotlin/Swift handlers.
 - Universal links: Background-safe navigation via `DeepLinkCubit`, now powered by `AppLinksDeepLinkService` (backed by the `app_links` plugin). Supports the hosted `https://links.flutterbloc.app/...` routes (with `apple-app-site-association` in `docs/universal_links/`) and the local `flutter-bloc-app://` custom scheme when running on emulators.
 - Secrets: `SecretConfig` reads from secure storage first, then from any
@@ -89,7 +90,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 
 ## Test Coverage
 
-- Latest line coverage: **83.66%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
+- Latest line coverage: **81.86%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
 - Test Infrastructure: Global test configuration with automatic log suppression during test execution for cleaner output.
 
 ## Tech Stack

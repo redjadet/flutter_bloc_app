@@ -14,6 +14,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.onLoadPlatformInfo,
     required this.onOpenWebsocket,
     required this.onOpenGoogleMaps,
+    required this.onOpenSearch,
     required this.onRunIsolates,
     required this.isFetchingInfo,
     required this.platformInfo,
@@ -34,6 +35,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback? onLoadPlatformInfo;
   final VoidCallback onOpenWebsocket;
   final VoidCallback onOpenGoogleMaps;
+  final VoidCallback onOpenSearch;
   final VoidCallback? onRunIsolates;
   final bool isFetchingInfo;
   final NativePlatformInfo? platformInfo;
@@ -104,6 +106,12 @@ class ExamplePageBody extends StatelessWidget {
               onPressed: onOpenGoogleMaps,
               icon: const Icon(Icons.map),
               label: Text(l10n.exampleGoogleMapsButton),
+            ),
+            SizedBox(height: UI.gapS),
+            FilledButton.icon(
+              onPressed: onOpenSearch,
+              icon: const Icon(Icons.search),
+              label: const Text('Search Demo'),
             ),
             SizedBox(height: UI.gapS),
             AnimatedSwitcher(

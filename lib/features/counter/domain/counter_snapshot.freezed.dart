@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CounterSnapshot {
 
- String? get userId; int get count; DateTime? get lastChanged;
+ int get count; String? get userId; DateTime? get lastChanged;
 /// Create a copy of CounterSnapshot
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $CounterSnapshotCopyWith<CounterSnapshot> get copyWith => _$CounterSnapshotCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CounterSnapshot&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.count, count) || other.count == count)&&(identical(other.lastChanged, lastChanged) || other.lastChanged == lastChanged));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CounterSnapshot&&(identical(other.count, count) || other.count == count)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.lastChanged, lastChanged) || other.lastChanged == lastChanged));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,count,lastChanged);
+int get hashCode => Object.hash(runtimeType,count,userId,lastChanged);
 
 @override
 String toString() {
-  return 'CounterSnapshot(userId: $userId, count: $count, lastChanged: $lastChanged)';
+  return 'CounterSnapshot(count: $count, userId: $userId, lastChanged: $lastChanged)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $CounterSnapshotCopyWith<$Res>  {
   factory $CounterSnapshotCopyWith(CounterSnapshot value, $Res Function(CounterSnapshot) _then) = _$CounterSnapshotCopyWithImpl;
 @useResult
 $Res call({
- String? userId, int count, DateTime? lastChanged
+ int count, String? userId, DateTime? lastChanged
 });
 
 
@@ -65,11 +65,11 @@ class _$CounterSnapshotCopyWithImpl<$Res>
 
 /// Create a copy of CounterSnapshot
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userId = freezed,Object? count = null,Object? lastChanged = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? count = null,Object? userId = freezed,Object? lastChanged = freezed,}) {
   return _then(_self.copyWith(
-userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String?,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
-as int,lastChanged: freezed == lastChanged ? _self.lastChanged : lastChanged // ignore: cast_nullable_to_non_nullable
+count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,lastChanged: freezed == lastChanged ? _self.lastChanged : lastChanged // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
@@ -155,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? userId,  int count,  DateTime? lastChanged)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int count,  String? userId,  DateTime? lastChanged)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CounterSnapshot() when $default != null:
-return $default(_that.userId,_that.count,_that.lastChanged);case _:
+return $default(_that.count,_that.userId,_that.lastChanged);case _:
   return orElse();
 
 }
@@ -176,10 +176,10 @@ return $default(_that.userId,_that.count,_that.lastChanged);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? userId,  int count,  DateTime? lastChanged)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int count,  String? userId,  DateTime? lastChanged)  $default,) {final _that = this;
 switch (_that) {
 case _CounterSnapshot():
-return $default(_that.userId,_that.count,_that.lastChanged);case _:
+return $default(_that.count,_that.userId,_that.lastChanged);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +196,10 @@ return $default(_that.userId,_that.count,_that.lastChanged);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? userId,  int count,  DateTime? lastChanged)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int count,  String? userId,  DateTime? lastChanged)?  $default,) {final _that = this;
 switch (_that) {
 case _CounterSnapshot() when $default != null:
-return $default(_that.userId,_that.count,_that.lastChanged);case _:
+return $default(_that.count,_that.userId,_that.lastChanged);case _:
   return null;
 
 }
@@ -211,11 +211,11 @@ return $default(_that.userId,_that.count,_that.lastChanged);case _:
 @JsonSerializable()
 
 class _CounterSnapshot implements CounterSnapshot {
-  const _CounterSnapshot({this.userId, required this.count, this.lastChanged});
+  const _CounterSnapshot({required this.count, this.userId, this.lastChanged});
   factory _CounterSnapshot.fromJson(Map<String, dynamic> json) => _$CounterSnapshotFromJson(json);
 
-@override final  String? userId;
 @override final  int count;
+@override final  String? userId;
 @override final  DateTime? lastChanged;
 
 /// Create a copy of CounterSnapshot
@@ -231,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CounterSnapshot&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.count, count) || other.count == count)&&(identical(other.lastChanged, lastChanged) || other.lastChanged == lastChanged));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CounterSnapshot&&(identical(other.count, count) || other.count == count)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.lastChanged, lastChanged) || other.lastChanged == lastChanged));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,count,lastChanged);
+int get hashCode => Object.hash(runtimeType,count,userId,lastChanged);
 
 @override
 String toString() {
-  return 'CounterSnapshot(userId: $userId, count: $count, lastChanged: $lastChanged)';
+  return 'CounterSnapshot(count: $count, userId: $userId, lastChanged: $lastChanged)';
 }
 
 
@@ -251,7 +251,7 @@ abstract mixin class _$CounterSnapshotCopyWith<$Res> implements $CounterSnapshot
   factory _$CounterSnapshotCopyWith(_CounterSnapshot value, $Res Function(_CounterSnapshot) _then) = __$CounterSnapshotCopyWithImpl;
 @override @useResult
 $Res call({
- String? userId, int count, DateTime? lastChanged
+ int count, String? userId, DateTime? lastChanged
 });
 
 
@@ -268,11 +268,11 @@ class __$CounterSnapshotCopyWithImpl<$Res>
 
 /// Create a copy of CounterSnapshot
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = freezed,Object? count = null,Object? lastChanged = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? count = null,Object? userId = freezed,Object? lastChanged = freezed,}) {
   return _then(_CounterSnapshot(
-userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String?,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
-as int,lastChanged: freezed == lastChanged ? _self.lastChanged : lastChanged // ignore: cast_nullable_to_non_nullable
+count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String?,lastChanged: freezed == lastChanged ? _self.lastChanged : lastChanged // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }

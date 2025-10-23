@@ -53,7 +53,7 @@ linter:
     no_default_cases: false
     always_put_required_named_parameters_first: true
     use_setters_to_change_properties: true
-    one_member_abstracts: true
+    one_member_abstracts: false
     avoid_slow_async_io: true
     only_throw_errors: true
 

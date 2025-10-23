@@ -53,3 +53,5 @@ firebase.json
 lib/firebase_options.dart
 third_party/pub/firebase_remote_config/example/lib/firebase_options.dart
 INTERVIEW_QA.md
+
+.config/
