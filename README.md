@@ -596,6 +596,10 @@ The project follows Flutter lints (`analysis_options.yaml`).
 
 Contributions are welcome—open an issue or PR with your proposed change. Make sure to include tests and documentation updates.
 
+## License
+
+This project is available for free use in public, non-commercial repositories under the terms described in [`LICENSE`](LICENSE). Any commercial or closed-source usage requires prior written permission from the copyright holder.
+
 ## Tooling
 
 - `flutter test coverage` to regenerate `coverage/lcov.info` file.
