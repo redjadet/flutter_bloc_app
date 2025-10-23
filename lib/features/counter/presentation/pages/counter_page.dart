@@ -21,10 +21,12 @@ class CounterPage extends StatefulWidget {
 class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   final ErrorNotificationService _errorNotificationService =
       getIt<ErrorNotificationService>();
+  late final bool _showFlavorBadge;
 
   @override
   void initState() {
     super.initState();
+    _showFlavorBadge = FlavorManager.I.flavor != Flavor.prod;
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -93,63 +95,10 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: context.contentMaxWidth),
-                child: BlocSelector<CounterCubit, CounterState, CounterStatus>(
-                  selector: (final state) => state.status,
-                  builder: (final context, final status) {
-                    final bool isLoading = status == CounterStatus.loading;
-                    final bool showFlavor =
-                        FlavorManager.I.flavor != Flavor.prod;
-                    return Skeletonizer(
-                      enabled: isLoading,
-                      effect: ShimmerEffect(
-                        baseColor: theme.colorScheme.surfaceContainerHighest,
-                        highlightColor: theme.colorScheme.surface,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          if (showFlavor) ...[
-                            const Padding(
-                              padding: EdgeInsets.all(1),
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: FlavorBadge(),
-                              ),
-                            ),
-                            SizedBox(height: UI.gapS),
-                          ],
-                          Text(
-                            l10n.pushCountLabel,
-                            style: theme.textTheme.bodyMedium,
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: UI.gapS),
-                          const CounterDisplay(),
-                          SizedBox(height: UI.gapM),
-                          const AwesomeFeatureWidget(),
-                          SizedBox(height: UI.gapM),
-                          BlocBuilder<CounterCubit, CounterState>(
-                            buildWhen: (final p, final c) => p.count != c.count,
-                            builder: (final context, final state) {
-                              if (state.count == 0) {
-                                return Text(
-                                  l10n.startAutoHint,
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: theme.colorScheme.primary,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                );
-                              }
-                              return const SizedBox.shrink();
-                            },
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                child: _CounterSkeletonizedBody(
+                  theme: theme,
+                  l10n: l10n,
+                  showFlavorBadge: _showFlavorBadge,
                 ),
               ),
             ),
@@ -180,4 +129,88 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
       );
     }
   }
+}
+
+class _CounterSkeletonizedBody extends StatelessWidget {
+  const _CounterSkeletonizedBody({
+    required this.theme,
+    required this.l10n,
+    required this.showFlavorBadge,
+  });
+
+  final ThemeData theme;
+  final AppLocalizations l10n;
+  final bool showFlavorBadge;
+
+  @override
+  Widget build(final BuildContext context) =>
+      BlocSelector<CounterCubit, CounterState, bool>(
+        selector: (final state) => state.status == CounterStatus.loading,
+        builder: (final context, final isLoading) => Skeletonizer(
+          enabled: isLoading,
+          effect: ShimmerEffect(
+            baseColor: theme.colorScheme.surfaceContainerHighest,
+            highlightColor: theme.colorScheme.surface,
+          ),
+          child: _CounterContent(
+            theme: theme,
+            l10n: l10n,
+            showFlavorBadge: showFlavorBadge,
+          ),
+        ),
+      );
+}
+
+class _CounterContent extends StatelessWidget {
+  const _CounterContent({
+    required this.theme,
+    required this.l10n,
+    required this.showFlavorBadge,
+  });
+
+  final ThemeData theme;
+  final AppLocalizations l10n;
+  final bool showFlavorBadge;
+
+  @override
+  Widget build(final BuildContext context) => Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    mainAxisSize: MainAxisSize.min,
+    children: <Widget>[
+      if (showFlavorBadge) ...[
+        const Padding(
+          padding: EdgeInsets.all(1),
+          child: Align(alignment: Alignment.centerRight, child: FlavorBadge()),
+        ),
+        SizedBox(height: UI.gapS),
+      ],
+      Text(
+        l10n.pushCountLabel,
+        style: theme.textTheme.bodyMedium,
+        textAlign: TextAlign.center,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      SizedBox(height: UI.gapS),
+      const CounterDisplay(),
+      SizedBox(height: UI.gapM),
+      const AwesomeFeatureWidget(),
+      SizedBox(height: UI.gapM),
+      BlocSelector<CounterCubit, CounterState, bool>(
+        selector: (final state) => state.count == 0,
+        builder: (final context, final showHint) {
+          if (!showHint) {
+            return const SizedBox.shrink();
+          }
+          return Text(
+            l10n.startAutoHint,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.primary,
+            ),
+            textAlign: TextAlign.center,
+          );
+        },
+      ),
+    ],
+  );
 }

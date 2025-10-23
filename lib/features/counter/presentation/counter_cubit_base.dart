@@ -87,13 +87,16 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
     final DateTime? timestamp,
   }) {
     _pauseCountdownForOneTick = false;
-    final bool hasError = state.error != null;
+    final CounterError? existingError = state.error;
+    final bool preserveError =
+        existingError != null &&
+        existingError.type != CounterErrorType.cannotGoBelowZero;
     final CounterState next = state.copyWith(
       count: count,
       lastChanged: timestamp ?? _now(),
       countdownSeconds: _defaultIntervalSeconds,
-      status: hasError ? CounterStatus.error : CounterStatus.success,
-      error: hasError ? state.error : null,
+      status: preserveError ? CounterStatus.error : CounterStatus.success,
+      error: preserveError ? existingError : null,
     );
     emit(next);
     _syncTickerForState(next);

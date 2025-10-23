@@ -222,6 +222,28 @@ void main() {
     });
 
     test(
+      'cannotGoBelowZero error clears automatically and ticker resumes on next increment',
+      () async {
+        final fakeTimer = FakeTimerService();
+        final CounterCubit cubit = createCubit(timerService: fakeTimer);
+
+        await AppLogger.silenceAsync(() => cubit.decrement());
+
+        expect(cubit.state.error?.type, CounterErrorType.cannotGoBelowZero);
+        expect(cubit.state.status, CounterStatus.idle);
+
+        await cubit.increment();
+
+        expect(cubit.state.error, isNull);
+        expect(cubit.state.status, CounterStatus.success);
+
+        final int countdown = cubit.state.countdownSeconds;
+        fakeTimer.tick(1);
+        expect(cubit.state.countdownSeconds, countdown - 1);
+      },
+    );
+
+    test(
       'countdown timer decreases deterministically (FakeTimerService)',
       () async {
         final fakeTimer = FakeTimerService();
