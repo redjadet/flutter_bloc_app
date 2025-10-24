@@ -98,13 +98,13 @@ class ErrorHandling {
   }
 
   /// Show a loading dialog
-  static void showLoadingDialog(
+  static Future<void> showLoadingDialog(
     final BuildContext context,
     final String message,
-  ) {
+  ) async {
     if (!context.mounted) return;
 
-    showDialog<void>(
+    await showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (final BuildContext context) => AlertDialog(

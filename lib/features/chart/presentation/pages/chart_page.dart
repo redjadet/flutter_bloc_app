@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -18,8 +20,11 @@ class ChartPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => BlocProvider(
-    create: (_) =>
-        ChartCubit(repository: _repository ?? getIt<ChartRepository>())..load(),
+    create: (_) {
+      final cubit = ChartCubit(repository: _repository ?? getIt<ChartRepository>());
+      unawaited(cubit.load());
+      return cubit;
+    },
     child: const _ChartView(),
   );
 }

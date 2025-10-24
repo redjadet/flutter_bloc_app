@@ -64,7 +64,7 @@ class CounterCubit extends _CounterCubitBase {
   @override
   Future<void> close() {
     _stopCountdownTicker();
-    _repositorySubscription?.cancel();
+    unawaited(_repositorySubscription?.cancel());
     return super.close();
   }
 

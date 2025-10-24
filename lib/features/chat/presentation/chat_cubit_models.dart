@@ -15,9 +15,7 @@ List<String> _buildModelList(
 
   add(initialModel);
   if (supportedModels != null) {
-    for (final String candidate in supportedModels) {
-      add(candidate);
-    }
+    supportedModels.forEach(add);
   }
   add('openai/gpt-oss-20b');
   add('openai/gpt-oss-120b');

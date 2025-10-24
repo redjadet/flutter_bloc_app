@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -118,7 +120,7 @@ Future<void> configureDependencies() async {
 }
 
 void ensureConfigured() {
-  configureDependencies();
+  unawaited(configureDependencies());
 }
 
 CounterRepository _createCounterRepository() {

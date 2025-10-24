@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -10,7 +12,11 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => BlocProvider(
-    create: (_) => AppInfoCubit(repository: getIt<AppInfoRepository>())..load(),
+    create: (_) {
+      final cubit = AppInfoCubit(repository: getIt<AppInfoRepository>());
+      unawaited(cubit.load());
+      return cubit;
+    },
     child: const _SettingsView(),
   );
 }

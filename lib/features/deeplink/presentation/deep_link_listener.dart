@@ -1,4 +1,6 @@
-import 'package:flutter/widgets.dart';
+import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
@@ -21,10 +23,14 @@ class DeepLinkListener extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => BlocProvider(
-    create: (_) => DeepLinkCubit(
-      service: getIt<DeepLinkService>(),
-      parser: getIt<DeepLinkParser>(),
-    )..initialize(),
+    create: (_) {
+      final cubit = DeepLinkCubit(
+        service: getIt<DeepLinkService>(),
+        parser: getIt<DeepLinkParser>(),
+      );
+      unawaited(cubit.initialize());
+      return cubit;
+    },
     child: BlocListener<DeepLinkCubit, DeepLinkState>(
       listenWhen: (final previous, final current) =>
           current is DeepLinkNavigate,

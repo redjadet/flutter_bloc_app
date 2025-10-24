@@ -21,10 +21,10 @@ class ChatMessageList extends StatelessWidget {
         getIt<ErrorNotificationService>();
 
     return BlocConsumer<ChatCubit, ChatState>(
-      listener: (final context, final state) {
+      listener: (final context, final state) async {
         if (state.hasError) {
           final ChatCubit chatCubit = context.read<ChatCubit>();
-          errorNotificationService
+          await errorNotificationService
               .showSnackBar(context, state.error!)
               .whenComplete(() {
                 if (!chatCubit.isClosed) {
@@ -33,9 +33,9 @@ class ChatMessageList extends StatelessWidget {
               });
         }
         if (state.hasMessages) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
             if (!controller.hasClients) return;
-            controller.animateTo(
+            await controller.animateTo(
               controller.position.maxScrollExtent,
               duration: UI.animFast,
               curve: Curves.easeOut,
