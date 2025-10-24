@@ -21,7 +21,9 @@ class ChartPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => BlocProvider(
     create: (_) {
-      final cubit = ChartCubit(repository: _repository ?? getIt<ChartRepository>());
+      final cubit = ChartCubit(
+        repository: _repository ?? getIt<ChartRepository>(),
+      );
       unawaited(cubit.load());
       return cubit;
     },
