@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,9 +26,9 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
     super.initState();
     _cubit = context.read<WebsocketCubit>();
     if (!kIsWeb) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (!mounted) return;
-        _cubit.connect();
+        await _cubit.connect();
       });
     }
   }
@@ -34,16 +36,16 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
   @override
   void dispose() {
     _messageController.dispose();
-    _cubit.disconnect();
+    unawaited(_cubit.disconnect());
     super.dispose();
   }
 
-  void _sendCurrentMessage() {
+  Future<void> _sendCurrentMessage() async {
     final String raw = _messageController.text;
     if (raw.trim().isEmpty) {
       return;
     }
-    _cubit.sendMessage(raw);
+    await _cubit.sendMessage(raw);
     _messageController.clear();
   }
 

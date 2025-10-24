@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
@@ -182,7 +184,7 @@ bool _usesPlaceholderValues(final FirebaseOptions options) {
 void _registerCrashlyticsGlobalHandlers() {
   final FlutterExceptionHandler? previousFlutterHandler = FlutterError.onError;
   FlutterError.onError = (final FlutterErrorDetails details) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+    unawaited(FirebaseCrashlytics.instance.recordFlutterFatalError(details));
     previousFlutterHandler?.call(details);
   };
 
@@ -191,7 +193,7 @@ void _registerCrashlyticsGlobalHandlers() {
   PlatformDispatcher
       .instance
       .onError = (final Object error, final StackTrace stackTrace) {
-    FirebaseCrashlytics.instance.recordError(error, stackTrace, fatal: true);
+    unawaited(FirebaseCrashlytics.instance.recordError(error, stackTrace, fatal: true));
     return previousPlatformHandler?.call(error, stackTrace) ?? true;
   };
 }

@@ -67,10 +67,10 @@ class EchoWebsocketRepository implements WebsocketRepository {
       );
       _updateState(const WebsocketConnectionState.connected());
     } on TimeoutException catch (error) {
-      _handleError(error);
+      await _handleError(error);
       rethrow;
     } on Object catch (error) {
-      _handleError(error);
+      await _handleError(error);
       rethrow;
     }
   }
@@ -97,18 +97,18 @@ class EchoWebsocketRepository implements WebsocketRepository {
     );
   }
 
-  void _handleError(final Object error, [final StackTrace? stackTrace]) {
-    _cleanupChannel();
+  Future<void> _handleError(final Object error, [final StackTrace? stackTrace]) async {
+    await _cleanupChannel();
     _updateState(WebsocketConnectionState.error(error.toString()));
   }
 
-  void _handleDone() {
-    _cleanupChannel();
+  Future<void> _handleDone() async {
+    await _cleanupChannel();
     _updateState(const WebsocketConnectionState.disconnected());
   }
 
-  void _cleanupChannel() {
-    _channelSubscription?.cancel();
+  Future<void> _cleanupChannel() async {
+    unawaited(_channelSubscription?.cancel());
     _channelSubscription = null;
     _channel = null;
   }

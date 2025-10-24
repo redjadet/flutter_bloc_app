@@ -50,7 +50,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
     _useAppleMaps = !kIsWeb && _platform == TargetPlatform.iOS;
     _platformService = widget.platformService ?? NativePlatformService();
     if (_isMapsSupported && !_useAppleMaps) {
-      _resolveApiKeyAvailability();
+      unawaited(_resolveApiKeyAvailability());
     }
   }
 

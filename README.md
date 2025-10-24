@@ -95,7 +95,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 
 ## Tech Stack
 
-- Flutter 3.35.6 (Dart 3.9.2)
+- Flutter 3.35.7 (Dart 3.9.2)
 - `flutter_bloc` for Cubit/BLoC
 - `shared_preferences` for simple storage
 - `intl` and `flutter_localizations` for i18n

@@ -14,8 +14,7 @@ class _FileLengthLintPlugin extends PluginBase {
 }
 
 class _FileLengthLint extends DartLintRule {
-  // ignore: prefer_const_constructors_in_immutables
-  _FileLengthLint({required this.options}) : super(code: _lintCode);
+  const _FileLengthLint({required this.options}) : super(code: _lintCode);
 
   static const String _lintName = 'file_too_long';
 

@@ -165,7 +165,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
   }
 
   void _subscribeToRepository() {
-    _repositorySubscription?.cancel();
+    unawaited(_repositorySubscription?.cancel());
     _repositorySubscription = _repository.watch().listen(
       (final CounterSnapshot snapshot) {
         if (shouldIgnoreRemoteSnapshot(state, snapshot)) {

@@ -87,7 +87,7 @@ dev_dependencies:
   json_serializable: ^6.9.5
   mock_exceptions: ^0.8.2
   mocktail: ^1.0.4
-  very_good_analysis: ^5.1.0
+  very_good_analysis: ^10.0.0
 
 
 # For information on the generic Dart part of this file, see the

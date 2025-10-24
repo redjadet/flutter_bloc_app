@@ -60,7 +60,7 @@ class SearchCubit extends Cubit<SearchState> {
           clearError: true,
         ),
       );
-    } catch (error) {
+    } on Exception catch (error) {
       emit(
         state.copyWith(status: SearchStatus.error, query: query, error: error),
       );

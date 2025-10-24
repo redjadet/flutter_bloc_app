@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/router/go_router_refresh_stream.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/features.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late final FirebaseAuth _auth;
-  late final _GoRouterRefreshStream _authRefresh;
+  late final GoRouterRefreshStream _authRefresh;
   late final GoRouter _router;
 
   @override
@@ -55,9 +56,13 @@ class _MyAppState extends State<MyApp> {
         path: AppRoutes.graphqlPath,
         name: AppRoutes.graphql,
         builder: (final context, final state) => BlocProvider(
-          create: (_) =>
-              GraphqlDemoCubit(repository: getIt<GraphqlDemoRepository>())
-                ..loadInitial(),
+          create: (_) {
+            final cubit = GraphqlDemoCubit(
+              repository: getIt<GraphqlDemoRepository>(),
+            );
+            unawaited(cubit.loadInitial());
+            return cubit;
+          },
           child: const GraphqlDemoPage(),
         ),
       ),
@@ -80,11 +85,15 @@ class _MyAppState extends State<MyApp> {
         path: AppRoutes.chatPath,
         name: AppRoutes.chat,
         builder: (final context, final state) => BlocProvider(
-          create: (_) => ChatCubit(
-            repository: getIt<ChatRepository>(),
-            historyRepository: getIt<ChatHistoryRepository>(),
-            initialModel: SecretConfig.huggingfaceModel,
-          )..loadHistory(),
+          create: (_) {
+            final cubit = ChatCubit(
+              repository: getIt<ChatRepository>(),
+              historyRepository: getIt<ChatHistoryRepository>(),
+              initialModel: SecretConfig.huggingfaceModel,
+            );
+            unawaited(cubit.loadHistory());
+            return cubit;
+          },
           child: const ChatPage(),
         ),
       ),
@@ -101,9 +110,13 @@ class _MyAppState extends State<MyApp> {
         path: AppRoutes.googleMapsPath,
         name: AppRoutes.googleMaps,
         builder: (final context, final state) => BlocProvider(
-          create: (_) =>
-              MapSampleCubit(repository: getIt<MapLocationRepository>())
-                ..loadLocations(),
+          create: (_) {
+            final cubit = MapSampleCubit(
+              repository: getIt<MapLocationRepository>(),
+            );
+            unawaited(cubit.loadLocations());
+            return cubit;
+          },
           child: const GoogleMapsSamplePage(),
         ),
       ),
@@ -119,7 +132,7 @@ class _MyAppState extends State<MyApp> {
     }
 
     _auth = FirebaseAuth.instance;
-    _authRefresh = _GoRouterRefreshStream(_auth.authStateChanges());
+    _authRefresh = GoRouterRefreshStream(_auth.authStateChanges());
 
     return GoRouter(
       initialLocation: AppRoutes.counterPath,
@@ -165,23 +178,39 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => CounterCubit(
-            repository: getIt<CounterRepository>(),
-            timerService: getIt(),
-            loadDelay: FlavorManager.I.isDev
-                ? AppConstants.devSkeletonDelay
-                : Duration.zero,
-          )..loadInitial(),
+          create: (_) {
+            final cubit = CounterCubit(
+              repository: getIt<CounterRepository>(),
+              timerService: getIt(),
+              loadDelay: FlavorManager.I.isDev
+                  ? AppConstants.devSkeletonDelay
+                  : Duration.zero,
+            );
+            unawaited(cubit.loadInitial());
+            return cubit;
+          },
         ),
         BlocProvider(
-          create: (_) =>
-              LocaleCubit(repository: getIt<LocaleRepository>())..loadInitial(),
+          create: (_) {
+            final cubit = LocaleCubit(repository: getIt<LocaleRepository>());
+            unawaited(cubit.loadInitial());
+            return cubit;
+          },
         ),
         BlocProvider(
-          create: (_) =>
-              ThemeCubit(repository: getIt<ThemeRepository>())..loadInitial(),
+          create: (_) {
+            final cubit = ThemeCubit(repository: getIt<ThemeRepository>());
+            unawaited(cubit.loadInitial());
+            return cubit;
+          },
         ),
-        BlocProvider(create: (_) => getIt<RemoteConfigCubit>()..initialize()),
+        BlocProvider(
+          create: (_) {
+            final cubit = getIt<RemoteConfigCubit>();
+            unawaited(cubit.initialize());
+            return cubit;
+          },
+        ),
       ],
       child: DeepLinkListener(
         router: _router,
@@ -213,20 +242,6 @@ class _MyAppState extends State<MyApp> {
     if (widget.requireAuth) {
       _authRefresh.dispose();
     }
-    super.dispose();
-  }
-}
-
-class _GoRouterRefreshStream extends ChangeNotifier {
-  _GoRouterRefreshStream(final Stream<dynamic> stream) {
-    _subscription = stream.listen((_) => notifyListeners());
-  }
-
-  late final StreamSubscription<dynamic> _subscription;
-
-  @override
-  void dispose() {
-    _subscription.cancel();
     super.dispose();
   }
 }

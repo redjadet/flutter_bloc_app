@@ -31,9 +31,9 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  void _showHistorySheet(final BuildContext context) {
+  Future<void> _showHistorySheet(final BuildContext context) async {
     final ChatCubit cubit = context.read<ChatCubit>();
-    showModalBottomSheet<void>(
+    await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
