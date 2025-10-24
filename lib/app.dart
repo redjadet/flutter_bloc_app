@@ -98,6 +98,11 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       GoRoute(
+        path: AppRoutes.chatListPath,
+        name: AppRoutes.chatList,
+        builder: (final context, final state) => const ChatListPage(),
+      ),
+      GoRoute(
         path: AppRoutes.websocketPath,
         name: AppRoutes.websocket,
         builder: (final context, final state) => BlocProvider(
