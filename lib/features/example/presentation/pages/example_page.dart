@@ -145,6 +145,7 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenWebsocket: () => context.pushNamed(AppRoutes.websocket),
         onOpenGoogleMaps: () => context.pushNamed(AppRoutes.googleMaps),
         onOpenSearch: () => context.pushNamed(AppRoutes.search),
+        onOpenProfile: () => context.pushNamed(AppRoutes.profile),
         onRunIsolates: _isRunningIsolates ? null : _runIsolateSamples,
         isFetchingInfo: _isFetchingInfo,
         platformInfo: _platformInfo,
