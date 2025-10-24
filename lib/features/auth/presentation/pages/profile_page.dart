@@ -7,8 +7,8 @@ import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
 import 'package:go_router/go_router.dart';
 
 /// High-level profile page backed by FirebaseUI's [ProfileScreen].
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class AuthProfilePage extends StatelessWidget {
+  const AuthProfilePage({super.key});
 
   @override
   Widget build(final BuildContext context) {

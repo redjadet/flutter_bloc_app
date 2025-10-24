@@ -1,7 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 
 class MockSearchRepository implements SearchRepository {
+  static String _decode(final String encoded) =>
+      utf8.decode(base64Decode(encoded));
+
+  static final String _imageUrlPrefix = _decode(
+    'aHR0cHM6Ly9hcGkuYnVpbGRlci5pby9hcGkvdjEvaW1hZ2UvYXNzZXRzL1RFTVAv',
+  );
+
+  static final String _imageUrlSuffix = _decode('P3dpZHRoPTIxNA==');
+
   @override
   Future<List<SearchResult>> search(final String query) async {
     await Future<void>.delayed(const Duration(milliseconds: 500));
@@ -10,8 +21,7 @@ class MockSearchRepository implements SearchRepository {
       12,
       (final index) => SearchResult(
         id: 'dog_$index',
-        imageUrl:
-            'https://api.builder.io/api/v1/image/assets/TEMP/${_imageIds[index % _imageIds.length]}?width=214',
+        imageUrl: _resolveImageUrl(index),
       ),
     );
   }
@@ -30,6 +40,11 @@ class MockSearchRepository implements SearchRepository {
     '40a2b01df8a2d14480c61530b880040d5b98681a',
     'c9e00052f89845fa223cf7819c61ddee5b51e541',
   ];
+
+  static String _resolveImageUrl(final int index) {
+    final String imageId = _imageIds[index % _imageIds.length];
+    return '$_imageUrlPrefix$imageId$_imageUrlSuffix';
+  }
 
   @override
   Future<List<SearchResult>> call(final String query) => search(query);
