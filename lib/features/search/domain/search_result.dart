@@ -12,5 +12,6 @@ abstract class SearchResult with _$SearchResult {
     String? description,
   }) = _SearchResult;
 
-  factory SearchResult.fromJson(final Map<String, dynamic> json) => _$SearchResultFromJson(json);
+  factory SearchResult.fromJson(final Map<String, dynamic> json) =>
+      _$SearchResultFromJson(json);
 }

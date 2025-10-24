@@ -97,7 +97,10 @@ class EchoWebsocketRepository implements WebsocketRepository {
     );
   }
 
-  Future<void> _handleError(final Object error, [final StackTrace? stackTrace]) async {
+  Future<void> _handleError(
+    final Object error, [
+    final StackTrace? stackTrace,
+  ]) async {
     await _cleanupChannel();
     _updateState(WebsocketConnectionState.error(error.toString()));
   }

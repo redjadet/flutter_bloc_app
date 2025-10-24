@@ -193,7 +193,9 @@ void _registerCrashlyticsGlobalHandlers() {
   PlatformDispatcher
       .instance
       .onError = (final Object error, final StackTrace stackTrace) {
-    unawaited(FirebaseCrashlytics.instance.recordError(error, stackTrace, fatal: true));
+    unawaited(
+      FirebaseCrashlytics.instance.recordError(error, stackTrace, fatal: true),
+    );
     return previousPlatformHandler?.call(error, stackTrace) ?? true;
   };
 }
