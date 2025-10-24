@@ -50,6 +50,11 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.forum),
         ),
         IconButton(
+          tooltip: 'Open Chat List',
+          onPressed: () => context.pushNamed(AppRoutes.chatList),
+          icon: const Icon(Icons.chat_bubble_outline),
+        ),
+        IconButton(
           tooltip: l10n.openGoogleMapsTooltip,
           onPressed: () => context.pushNamed(AppRoutes.googleMaps),
           icon: const Icon(Icons.map),

@@ -12,8 +12,10 @@ import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart'
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.dart';
+import 'package:flutter_bloc_app/features/chat/data/mock_chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/secure_chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/realtime_database_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/shared_preferences_counter_repository.dart';
@@ -83,6 +85,9 @@ Future<void> configureDependencies() async {
   );
   _registerLazySingletonIfAbsent<ChatHistoryRepository>(
     SecureChatHistoryRepository.new,
+  );
+  _registerLazySingletonIfAbsent<ChatListRepository>(
+    MockChatListRepository.new,
   );
   _registerLazySingletonIfAbsent<LocaleRepository>(
     SharedPreferencesLocaleRepository.new,

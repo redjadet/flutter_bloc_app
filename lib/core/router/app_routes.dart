@@ -18,6 +18,9 @@ class AppRoutes {
   static const chat = 'chat';
   static const chatPath = '/chat';
 
+  static const chatList = 'chat-list';
+  static const chatListPath = '/chat-list';
+
   static const websocket = 'websocket';
   static const websocketPath = '/websocket';
 
