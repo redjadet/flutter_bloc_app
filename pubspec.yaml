@@ -137,9 +137,13 @@ flutter:
   # see https://flutter.dev/to/font-from-package
 
 dependency_overrides:
+  ci:
+    path: third_party/pub/ci
   firebase_remote_config:
     path: third_party/pub/firebase_remote_config
   firebase_remote_config_platform_interface:
     path: third_party/pub/firebase_remote_config_platform_interface
   firebase_remote_config_web:
     path: third_party/pub/firebase_remote_config_web
+  sprintf:
+    path: third_party/pub/sprintf
