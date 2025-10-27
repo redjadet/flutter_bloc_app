@@ -17,6 +17,7 @@ analyzer:
   exclude:
     - build/**
     - .dart_tool/**
+    - '**/.pub-cache/**'
     - ios/Pods/**
     - android/.gradle/**
     - android/app/generated/**
@@ -27,6 +28,7 @@ analyzer:
     - '**/*.mocks.dart'
     - '**/*.arb'
     - README.md
+    # Ignore vendored packages and tooling pulled in under third_party.
     - third_party/**
 
 # Keep our custom preferences on top of VGV
@@ -61,6 +63,7 @@ linter:
 # https://dart.dev/guides/language/analysis-options
 
 custom_lint:
+  enable_all_lint_rules: false
   rules:
     - file_too_long:
         max_lines: 250
@@ -73,3 +76,5 @@ custom_lint:
           - 'lib/l10n/**'
           - 'test/**'
           - 'tool/**'
+          - 'third_party/**'
+          - '**/.pub-cache/**'

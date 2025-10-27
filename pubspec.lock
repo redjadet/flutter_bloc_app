@@ -226,12 +226,11 @@ packages:
     source: hosted
     version: "2.0.4"
   ci:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: ci
-      sha256: "145d095ce05cddac4d797a158bc4cf3b6016d1fe63d8c3d2fbd7212590adca13"
-      url: "https://pub.dev"
-    source: hosted
+      path: "third_party/pub/ci"
+      relative: true
+    source: path
     version: "0.1.0"
   cli_config:
     dependency: transitive
@@ -1535,12 +1534,11 @@ packages:
     source: hosted
     version: "1.10.1"
   sprintf:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: sprintf
-      sha256: "1fc9ffe69d4df602376b52949af107d8f5703b77cda567c4d7d86a0693120f23"
-      url: "https://pub.dev"
-    source: hosted
+      path: "third_party/pub/sprintf"
+      relative: true
+    source: path
     version: "7.0.0"
   sqflite:
     dependency: transitive
