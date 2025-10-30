@@ -16,6 +16,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.onOpenGoogleMaps,
     required this.onOpenSearch,
     required this.onOpenProfile,
+    required this.onOpenRegister,
     required this.onRunIsolates,
     required this.isFetchingInfo,
     required this.platformInfo,
@@ -38,6 +39,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onOpenGoogleMaps;
   final VoidCallback onOpenSearch;
   final VoidCallback onOpenProfile;
+  final VoidCallback onOpenRegister;
   final VoidCallback? onRunIsolates;
   final bool isFetchingInfo;
   final NativePlatformInfo? platformInfo;
@@ -120,6 +122,13 @@ class ExamplePageBody extends StatelessWidget {
               onPressed: onOpenProfile,
               icon: const Icon(Icons.person),
               label: const Text('Profile Demo'),
+            ),
+            SizedBox(height: UI.gapS),
+            FilledButton.icon(
+              onPressed: onOpenRegister,
+              icon: const Icon(Icons.app_registration),
+              label: const Text('Register Demo'),
+              key: const ValueKey('example-register-button'),
             ),
             SizedBox(height: UI.gapS),
             AnimatedSwitcher(
