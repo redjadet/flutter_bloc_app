@@ -31,16 +31,10 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
       await _persistHistory(history);
     }
 
-    emit(
-      state.copyWith(
-        history: history,
-        activeConversationId: active.id,
-        messages: active.messages,
-        pastUserInputs: active.pastUserInputs,
-        generatedResponses: active.generatedResponses,
-        currentModel: resolvedModel,
-        status: ChatStatus.success,
-      ),
+    _emitConversationSnapshot(
+      active: active,
+      history: history,
+      currentModel: resolvedModel,
     );
   }
 
@@ -49,17 +43,11 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
       final ChatConversation fresh = _createEmptyConversation(
         model: _currentModel,
       );
-      emit(
-        state.copyWith(
-          history: const <ChatConversation>[],
-          activeConversationId: fresh.id,
-          messages: fresh.messages,
-          pastUserInputs: fresh.pastUserInputs,
-          generatedResponses: fresh.generatedResponses,
-          isLoading: false,
-          error: null,
-          status: ChatStatus.success,
-        ),
+      _emitConversationSnapshot(
+        active: fresh,
+        history: const <ChatConversation>[],
+        isLoading: false,
+        clearError: true,
       );
       return;
     }
@@ -68,17 +56,11 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
     final ChatConversation fresh = _createEmptyConversation(
       model: _currentModel,
     );
-    emit(
-      state.copyWith(
-        history: const <ChatConversation>[],
-        activeConversationId: fresh.id,
-        messages: fresh.messages,
-        pastUserInputs: fresh.pastUserInputs,
-        generatedResponses: fresh.generatedResponses,
-        isLoading: false,
-        error: null,
-        status: ChatStatus.success,
-      ),
+    _emitConversationSnapshot(
+      active: fresh,
+      history: const <ChatConversation>[],
+      isLoading: false,
+      clearError: true,
     );
   }
 
@@ -100,16 +82,10 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
       final ChatConversation fresh = _createEmptyConversation(
         model: _currentModel,
       );
-      emit(
-        state.copyWith(
-          history: const <ChatConversation>[],
-          activeConversationId: fresh.id,
-          messages: fresh.messages,
-          pastUserInputs: fresh.pastUserInputs,
-          generatedResponses: fresh.generatedResponses,
-          currentModel: _currentModel,
-          status: ChatStatus.success,
-        ),
+      _emitConversationSnapshot(
+        active: fresh,
+        history: const <ChatConversation>[],
+        currentModel: _currentModel,
       );
       return;
     }
@@ -121,16 +97,10 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
               history.first;
     final String resolvedModel = _resolveModelForConversation(desiredActive);
 
-    emit(
-      state.copyWith(
-        history: history,
-        activeConversationId: desiredActive.id,
-        messages: desiredActive.messages,
-        pastUserInputs: desiredActive.pastUserInputs,
-        generatedResponses: desiredActive.generatedResponses,
-        currentModel: resolvedModel,
-        status: ChatStatus.success,
-      ),
+    _emitConversationSnapshot(
+      active: desiredActive,
+      history: history,
+      currentModel: resolvedModel,
     );
   }
 
@@ -140,17 +110,11 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
     );
     final List<ChatConversation> history = _replaceConversation(conversation);
 
-    emit(
-      state.copyWith(
-        messages: conversation.messages,
-        isLoading: false,
-        error: null,
-        pastUserInputs: conversation.pastUserInputs,
-        generatedResponses: conversation.generatedResponses,
-        history: history,
-        activeConversationId: conversation.id,
-        status: ChatStatus.success,
-      ),
+    _emitConversationSnapshot(
+      active: conversation,
+      history: history,
+      isLoading: false,
+      clearError: true,
     );
 
     await _persistHistory(history);

@@ -3,6 +3,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.da
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_state.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
@@ -13,44 +14,23 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
   final GraphqlDemoRepository _repository;
 
   Future<void> loadInitial() async {
-    emit(
-      state.copyWith(
-        status: GraphqlDemoStatus.loading,
-        errorMessage: null,
-        errorType: null,
-      ),
-    );
+    _emitLoading();
     try {
       final List<GraphqlContinent> continents = await _repository
           .fetchContinents();
       final List<GraphqlCountry> countries = await _repository.fetchCountries();
-      emit(
-        state.copyWith(
-          status: GraphqlDemoStatus.success,
-          continents: List<GraphqlContinent>.unmodifiable(continents),
-          countries: List<GraphqlCountry>.unmodifiable(countries),
-          activeContinentCode: null,
-          errorMessage: null,
-          errorType: null,
-        ),
+      _emitSuccess(
+        continents: continents,
+        countries: countries,
       );
     } on GraphqlDemoException catch (error, stackTrace) {
       AppLogger.error('GraphqlDemoCubit.loadInitial failed', error, stackTrace);
-      emit(
-        state.copyWith(
-          status: GraphqlDemoStatus.error,
-          errorMessage: error.message,
-          errorType: error.type,
-        ),
-      );
+      _emitError(message: error.message, type: error.type);
     } on Exception catch (error, stackTrace) {
       AppLogger.error('GraphqlDemoCubit.loadInitial failed', error, stackTrace);
-      emit(
-        state.copyWith(
-          status: GraphqlDemoStatus.error,
-          errorMessage: _friendlyMessage(error),
-          errorType: _resolveErrorType(error),
-        ),
+      _emitError(
+        message: _friendlyMessage(error),
+        type: _resolveErrorType(error),
       );
     }
   }
@@ -65,55 +45,32 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
     final bool force = false,
   }) async {
     if (!force &&
-        state.status == GraphqlDemoStatus.success &&
+        state.status == ViewStatus.success &&
         state.activeContinentCode == continentCode) {
       return;
     }
-    emit(
-      state.copyWith(
-        status: GraphqlDemoStatus.loading,
-        errorMessage: null,
-        errorType: null,
-        activeContinentCode: continentCode,
-      ),
-    );
+    _emitLoading(activeContinentCode: continentCode);
     try {
       final List<GraphqlCountry> countries = await _repository.fetchCountries(
         continentCode: continentCode,
       );
-      emit(
-        state.copyWith(
-          status: GraphqlDemoStatus.success,
-          countries: List<GraphqlCountry>.unmodifiable(countries),
-          errorMessage: null,
-          errorType: null,
-        ),
-      );
+      _emitSuccess(countries: countries);
     } on GraphqlDemoException catch (error, stackTrace) {
       AppLogger.error(
         'GraphqlDemoCubit.selectContinent failed',
         error,
         stackTrace,
       );
-      emit(
-        state.copyWith(
-          status: GraphqlDemoStatus.error,
-          errorMessage: error.message,
-          errorType: error.type,
-        ),
-      );
+      _emitError(message: error.message, type: error.type);
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'GraphqlDemoCubit.selectContinent failed',
         error,
         stackTrace,
       );
-      emit(
-        state.copyWith(
-          status: GraphqlDemoStatus.error,
-          errorMessage: _friendlyMessage(error),
-          errorType: _resolveErrorType(error),
-        ),
+      _emitError(
+        message: _friendlyMessage(error),
+        type: _resolveErrorType(error),
       );
     }
   }
@@ -130,5 +87,52 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
       return error.type;
     }
     return GraphqlDemoErrorType.unknown;
+  }
+
+  void _emitLoading({final String? activeContinentCode}) {
+    emit(
+      state.copyWith(
+        status: ViewStatus.loading,
+        errorMessage: null,
+        errorType: null,
+        activeContinentCode: activeContinentCode ?? state.activeContinentCode,
+      ),
+    );
+  }
+
+  void _emitSuccess({
+    final List<GraphqlCountry>? countries,
+    final List<GraphqlContinent>? continents,
+    final String? activeContinentCode,
+  }) {
+    final List<GraphqlCountry> resolvedCountries = countries != null
+        ? List<GraphqlCountry>.unmodifiable(countries)
+        : state.countries;
+    final List<GraphqlContinent> resolvedContinents = continents != null
+        ? List<GraphqlContinent>.unmodifiable(continents)
+        : state.continents;
+    emit(
+      state.copyWith(
+        status: ViewStatus.success,
+        countries: resolvedCountries,
+        continents: resolvedContinents,
+        activeContinentCode: activeContinentCode ?? state.activeContinentCode,
+        errorMessage: null,
+        errorType: null,
+      ),
+    );
+  }
+
+  void _emitError({
+    required final String? message,
+    required final GraphqlDemoErrorType? type,
+  }) {
+    emit(
+      state.copyWith(
+        status: ViewStatus.error,
+        errorMessage: message,
+        errorType: type,
+      ),
+    );
   }
 }

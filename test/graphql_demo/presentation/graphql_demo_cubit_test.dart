@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_excep
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_state.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -22,9 +23,9 @@ void main() {
       build: createCubit,
       act: (cubit) => AppLogger.silenceAsync(() => cubit.loadInitial()),
       expect: () => [
-        const GraphqlDemoState(status: GraphqlDemoStatus.loading),
+        const GraphqlDemoState(status: ViewStatus.loading),
         predicate<GraphqlDemoState>((state) {
-          return state.status == GraphqlDemoStatus.success &&
+          return state.status == ViewStatus.success &&
               state.continents.length == repository.continents.length &&
               state.countries.length ==
                   repository.countriesByCode[null]!.length;
@@ -36,20 +37,20 @@ void main() {
       'selectContinent fetches filtered countries',
       build: createCubit,
       seed: () => GraphqlDemoState(
-        status: GraphqlDemoStatus.success,
+        status: ViewStatus.success,
         continents: repository.continents,
         countries: repository.countriesByCode[null]!,
       ),
       act: (cubit) => cubit.selectContinent('EU'),
       expect: () => [
         GraphqlDemoState(
-          status: GraphqlDemoStatus.loading,
+          status: ViewStatus.loading,
           continents: repository.continents,
           countries: repository.countriesByCode[null]!,
           activeContinentCode: 'EU',
         ),
         GraphqlDemoState(
-          status: GraphqlDemoStatus.success,
+          status: ViewStatus.success,
           continents: repository.continents,
           countries: repository.countriesByCode['EU']!,
           activeContinentCode: 'EU',
@@ -61,7 +62,7 @@ void main() {
       'refresh reloads current continent',
       build: createCubit,
       seed: () => GraphqlDemoState(
-        status: GraphqlDemoStatus.success,
+        status: ViewStatus.success,
         continents: repository.continents,
         countries: repository.countriesByCode['EU']!,
         activeContinentCode: 'EU',
@@ -69,13 +70,13 @@ void main() {
       act: (cubit) => cubit.refresh(),
       expect: () => [
         GraphqlDemoState(
-          status: GraphqlDemoStatus.loading,
+          status: ViewStatus.loading,
           continents: repository.continents,
           countries: repository.countriesByCode['EU']!,
           activeContinentCode: 'EU',
         ),
         GraphqlDemoState(
-          status: GraphqlDemoStatus.success,
+          status: ViewStatus.success,
           continents: repository.continents,
           countries: repository.countriesByCode['EU']!,
           activeContinentCode: 'EU',
@@ -87,7 +88,7 @@ void main() {
       'selectContinent ignores redundant selections',
       build: createCubit,
       seed: () => GraphqlDemoState(
-        status: GraphqlDemoStatus.success,
+        status: ViewStatus.success,
         continents: repository.continents,
         countries: repository.countriesByCode['EU']!,
         activeContinentCode: 'EU',
@@ -104,9 +105,9 @@ void main() {
       },
       act: (cubit) => AppLogger.silenceAsync(() => cubit.loadInitial()),
       expect: () => [
-        const GraphqlDemoState(status: GraphqlDemoStatus.loading),
+        const GraphqlDemoState(status: ViewStatus.loading),
         const GraphqlDemoState(
-          status: GraphqlDemoStatus.error,
+          status: ViewStatus.error,
           errorMessage: 'Load failed',
           errorType: GraphqlDemoErrorType.unknown,
         ),
@@ -121,9 +122,9 @@ void main() {
       },
       act: (cubit) => AppLogger.silenceAsync(() => cubit.loadInitial()),
       expect: () => const <GraphqlDemoState>[
-        GraphqlDemoState(status: GraphqlDemoStatus.loading),
+        GraphqlDemoState(status: ViewStatus.loading),
         GraphqlDemoState(
-          status: GraphqlDemoStatus.error,
+          status: ViewStatus.error,
           errorMessage: null,
           errorType: GraphqlDemoErrorType.unknown,
         ),
@@ -134,7 +135,7 @@ void main() {
       'selectContinent surfaces GraphqlDemoException',
       build: () => createCubit(),
       seed: () => GraphqlDemoState(
-        status: GraphqlDemoStatus.success,
+        status: ViewStatus.success,
         continents: repository.continents,
         countries: repository.countriesByCode[null]!,
       ),
@@ -144,13 +145,13 @@ void main() {
       },
       expect: () => [
         GraphqlDemoState(
-          status: GraphqlDemoStatus.loading,
+          status: ViewStatus.loading,
           continents: repository.continents,
           countries: repository.countriesByCode[null]!,
           activeContinentCode: 'EU',
         ),
         GraphqlDemoState(
-          status: GraphqlDemoStatus.error,
+          status: ViewStatus.error,
           continents: repository.continents,
           countries: repository.countriesByCode[null]!,
           activeContinentCode: 'EU',
@@ -164,7 +165,7 @@ void main() {
       'selectContinent surfaces unknown exception as generic error',
       build: () => createCubit(),
       seed: () => GraphqlDemoState(
-        status: GraphqlDemoStatus.success,
+        status: ViewStatus.success,
         continents: repository.continents,
         countries: repository.countriesByCode[null]!,
       ),
@@ -174,13 +175,13 @@ void main() {
       },
       expect: () => [
         GraphqlDemoState(
-          status: GraphqlDemoStatus.loading,
+          status: ViewStatus.loading,
           continents: repository.continents,
           countries: repository.countriesByCode[null]!,
           activeContinentCode: 'EU',
         ),
         GraphqlDemoState(
-          status: GraphqlDemoStatus.error,
+          status: ViewStatus.error,
           continents: repository.continents,
           countries: repository.countriesByCode[null]!,
           activeContinentCode: 'EU',

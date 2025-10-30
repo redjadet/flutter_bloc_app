@@ -11,6 +11,8 @@ export 'platform/secure_secret_storage.dart';
 export 'services/error_notification_service.dart';
 // UI constants
 export 'ui/ui_constants.dart';
+// UI status helpers
+export 'ui/view_status.dart';
 // Utilities
 export 'utils/cubit_helpers.dart';
 export 'utils/error_handling.dart';

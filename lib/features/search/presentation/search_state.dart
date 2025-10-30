@@ -1,26 +1,25 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
-
-enum SearchStatus { initial, loading, success, error }
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 
 class SearchState extends Equatable {
   const SearchState({
-    this.status = SearchStatus.initial,
+    this.status = ViewStatus.initial,
     this.query = '',
     this.results = const [],
     this.error,
   });
 
-  final SearchStatus status;
+  final ViewStatus status;
   final String query;
   final List<SearchResult> results;
   final Object? error;
 
-  bool get isLoading => status == SearchStatus.loading;
+  bool get isLoading => status.isLoading;
   bool get hasResults => results.isNotEmpty;
 
   SearchState copyWith({
-    final SearchStatus? status,
+    final ViewStatus? status,
     final String? query,
     final List<SearchResult>? results,
     final Object? error,

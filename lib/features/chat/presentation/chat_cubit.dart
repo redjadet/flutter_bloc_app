@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.da
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:meta/meta.dart';
 
@@ -60,7 +61,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
 
   void clearError() {
     if (state.hasError) {
-      emit(state.copyWith(error: null, status: ChatStatus.idle));
+      emit(state.copyWith(error: null, status: ViewStatus.initial));
     }
   }
 }

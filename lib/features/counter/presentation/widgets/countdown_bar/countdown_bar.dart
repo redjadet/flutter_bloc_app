@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/counter/presentation/widgets/countdown
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 
 class CountdownBar extends StatefulWidget {
   const CountdownBar({super.key});
@@ -29,7 +30,7 @@ class _CountdownBarState extends State<CountdownBar> {
   ) => BlocBuilder<CounterCubit, CounterState>(
     builder: (final context, final state) {
       final bool active = state.isAutoDecrementActive;
-      final bool isLoading = state.status == CounterStatus.loading;
+      final bool isLoading = state.status.isLoading;
       final AppLocalizations l10n = _l10n(context);
       final ColorScheme colors = Theme.of(context).colorScheme;
 

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CounterState {
 
- int get count; DateTime? get lastChanged; int get countdownSeconds; CounterError? get error; CounterStatus get status;
+ int get count; DateTime? get lastChanged; int get countdownSeconds; CounterError? get error; ViewStatus get status;
 /// Create a copy of CounterState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $CounterStateCopyWith<$Res>  {
   factory $CounterStateCopyWith(CounterState value, $Res Function(CounterState) _then) = _$CounterStateCopyWithImpl;
 @useResult
 $Res call({
- int count, DateTime? lastChanged, int countdownSeconds, CounterError? error, CounterStatus status
+ int count, DateTime? lastChanged, int countdownSeconds, CounterError? error, ViewStatus status
 });
 
 
@@ -69,7 +69,7 @@ as int,lastChanged: freezed == lastChanged ? _self.lastChanged : lastChanged // 
 as DateTime?,countdownSeconds: null == countdownSeconds ? _self.countdownSeconds : countdownSeconds // ignore: cast_nullable_to_non_nullable
 as int,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as CounterError?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as CounterStatus,
+as ViewStatus,
   ));
 }
 /// Create a copy of CounterState
@@ -166,7 +166,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int count,  DateTime? lastChanged,  int countdownSeconds,  CounterError? error,  CounterStatus status)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int count,  DateTime? lastChanged,  int countdownSeconds,  CounterError? error,  ViewStatus status)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CounterState() when $default != null:
 return $default(_that.count,_that.lastChanged,_that.countdownSeconds,_that.error,_that.status);case _:
@@ -187,7 +187,7 @@ return $default(_that.count,_that.lastChanged,_that.countdownSeconds,_that.error
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int count,  DateTime? lastChanged,  int countdownSeconds,  CounterError? error,  CounterStatus status)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int count,  DateTime? lastChanged,  int countdownSeconds,  CounterError? error,  ViewStatus status)  $default,) {final _that = this;
 switch (_that) {
 case _CounterState():
 return $default(_that.count,_that.lastChanged,_that.countdownSeconds,_that.error,_that.status);case _:
@@ -207,7 +207,7 @@ return $default(_that.count,_that.lastChanged,_that.countdownSeconds,_that.error
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int count,  DateTime? lastChanged,  int countdownSeconds,  CounterError? error,  CounterStatus status)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int count,  DateTime? lastChanged,  int countdownSeconds,  CounterError? error,  ViewStatus status)?  $default,) {final _that = this;
 switch (_that) {
 case _CounterState() when $default != null:
 return $default(_that.count,_that.lastChanged,_that.countdownSeconds,_that.error,_that.status);case _:
@@ -222,14 +222,14 @@ return $default(_that.count,_that.lastChanged,_that.countdownSeconds,_that.error
 
 
 class _CounterState extends CounterState {
-  const _CounterState({required this.count, this.lastChanged, this.countdownSeconds = CounterState.defaultCountdownSeconds, this.error, this.status = CounterStatus.idle}): super._();
+  const _CounterState({required this.count, this.lastChanged, this.countdownSeconds = CounterState.defaultCountdownSeconds, this.error, this.status = ViewStatus.initial}): super._();
   
 
 @override final  int count;
 @override final  DateTime? lastChanged;
 @override@JsonKey() final  int countdownSeconds;
 @override final  CounterError? error;
-@override@JsonKey() final  CounterStatus status;
+@override@JsonKey() final  ViewStatus status;
 
 /// Create a copy of CounterState
 /// with the given fields replaced by the non-null parameter values.
@@ -261,7 +261,7 @@ abstract mixin class _$CounterStateCopyWith<$Res> implements $CounterStateCopyWi
   factory _$CounterStateCopyWith(_CounterState value, $Res Function(_CounterState) _then) = __$CounterStateCopyWithImpl;
 @override @useResult
 $Res call({
- int count, DateTime? lastChanged, int countdownSeconds, CounterError? error, CounterStatus status
+ int count, DateTime? lastChanged, int countdownSeconds, CounterError? error, ViewStatus status
 });
 
 
@@ -285,7 +285,7 @@ as int,lastChanged: freezed == lastChanged ? _self.lastChanged : lastChanged // 
 as DateTime?,countdownSeconds: null == countdownSeconds ? _self.countdownSeconds : countdownSeconds // ignore: cast_nullable_to_non_nullable
 as int,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as CounterError?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as CounterStatus,
+as ViewStatus,
   ));
 }
 

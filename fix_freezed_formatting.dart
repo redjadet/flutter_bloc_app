@@ -75,14 +75,14 @@ const String _counterStateContract =
     ' DateTime? get lastChanged;'
     ' int get countdownSeconds;'
     ' CounterError? get error;'
-    ' CounterStatus get status;';
+    ' ViewStatus get status;';
 
 const String _counterStateMultilineContract =
     ' int get count;\n'
     ' DateTime? get lastChanged;\n'
     ' int get countdownSeconds;\n'
     ' CounterError? get error;\n'
-    ' CounterStatus get status;';
+    ' ViewStatus get status;';
 
 const List<_Replacement> _replacements = <_Replacement>[
   _Replacement(

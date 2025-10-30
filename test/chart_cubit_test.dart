@@ -4,6 +4,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/cubit/chart_cubit.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -19,14 +20,14 @@ void main() {
     act: (final cubit) => cubit.load(),
     expect: () => <Matcher>[
       isA<ChartState>()
-          .having((final state) => state.status, 'status', ChartStatus.loading)
+          .having((final state) => state.status, 'status', ViewStatus.loading)
           .having(
             (final state) => state.points,
             'points',
             equals(const <ChartPoint>[]),
           ),
       isA<ChartState>()
-          .having((final state) => state.status, 'status', ChartStatus.success)
+          .having((final state) => state.status, 'status', ViewStatus.success)
           .having(
             (final state) =>
                 state.points.map((final point) => point.value).toList(),
@@ -46,10 +47,10 @@ void main() {
       isA<ChartState>().having(
         (final state) => state.status,
         'status',
-        ChartStatus.loading,
+        ViewStatus.loading,
       ),
       isA<ChartState>()
-          .having((final state) => state.status, 'status', ChartStatus.empty)
+          .having((final state) => state.status, 'status', ViewStatus.success)
           .having(
             (final state) => state.points,
             'points',
@@ -68,10 +69,10 @@ void main() {
       isA<ChartState>().having(
         (final state) => state.status,
         'status',
-        ChartStatus.loading,
+        ViewStatus.loading,
       ),
       isA<ChartState>()
-          .having((final state) => state.status, 'status', ChartStatus.failure)
+          .having((final state) => state.status, 'status', ViewStatus.error)
           .having((final state) => state.points, 'points', equals(const [])),
     ],
   );
@@ -96,15 +97,15 @@ void main() {
       isA<ChartState>().having(
         (final state) => state.status,
         'status',
-        ChartStatus.loading,
+        ViewStatus.loading,
       ),
       isA<ChartState>().having(
         (final state) => state.status,
         'status',
-        ChartStatus.success,
+        ViewStatus.success,
       ),
       isA<ChartState>()
-          .having((final state) => state.status, 'status', ChartStatus.loading)
+          .having((final state) => state.status, 'status', ViewStatus.loading)
           .having(
             (final state) =>
                 state.points.map((final point) => point.value).toList(),
@@ -112,7 +113,7 @@ void main() {
             equals(defaultPoints.map((final point) => point.value).toList()),
           ),
       isA<ChartState>()
-          .having((final state) => state.status, 'status', ChartStatus.success)
+          .having((final state) => state.status, 'status', ViewStatus.success)
           .having(
             (final state) =>
                 state.points.map((final point) => point.value).toList(),
@@ -134,12 +135,12 @@ void main() {
       isA<ChartState>().having(
         (final state) => state.status,
         'status',
-        ChartStatus.loading,
+        ViewStatus.loading,
       ),
       isA<ChartState>().having(
         (final state) => state.status,
         'status',
-        ChartStatus.success,
+        ViewStatus.success,
       ),
       isA<ChartState>().having(
         (final state) => state.zoomEnabled,

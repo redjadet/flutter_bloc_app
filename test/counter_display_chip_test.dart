@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/counter/presentation/widgets/widgets.d
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -54,7 +55,7 @@ void main() {
           count: 2,
           lastChanged: DateTime.now(),
           countdownSeconds: 5,
-          status: CounterStatus.success,
+          status: ViewStatus.success,
         ),
       );
       await tester.pump();
@@ -75,7 +76,7 @@ void main() {
           count: 0,
           lastChanged: DateTime.now(),
           countdownSeconds: 5,
-          status: CounterStatus.success,
+          status: ViewStatus.success,
         ),
       );
       await tester.pump();

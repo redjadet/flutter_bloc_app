@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/data/shared_preferences_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -82,14 +83,14 @@ void main() {
         cubit.emit(
           cubit.state.copyWith(
             error: const CounterError.cannotGoBelowZero(),
-            status: CounterStatus.error,
+            status: ViewStatus.error,
           ),
         );
 
         cubit.clearError();
 
         expect(cubit.state.error, isNull);
-        expect(cubit.state.status, CounterStatus.idle);
+        expect(cubit.state.status, ViewStatus.initial);
       },
     );
 
@@ -193,7 +194,7 @@ void main() {
         await AppLogger.silenceAsync(() => cubit.increment());
 
         expect(cubit.state.count, 1);
-        expect(cubit.state.status, CounterStatus.error);
+        expect(cubit.state.status, ViewStatus.error);
         expect(cubit.state.error?.type, CounterErrorType.saveError);
       },
     );
@@ -212,7 +213,7 @@ void main() {
       fakeTimer.tick(3);
 
       expect(cubit.state.countdownSeconds, countdownAfterError);
-      expect(cubit.state.status, CounterStatus.error);
+      expect(cubit.state.status, ViewStatus.error);
 
       cubit.clearError();
 
@@ -230,12 +231,12 @@ void main() {
         await AppLogger.silenceAsync(() => cubit.decrement());
 
         expect(cubit.state.error?.type, CounterErrorType.cannotGoBelowZero);
-        expect(cubit.state.status, CounterStatus.idle);
+        expect(cubit.state.status, ViewStatus.initial);
 
         await cubit.increment();
 
         expect(cubit.state.error, isNull);
-        expect(cubit.state.status, CounterStatus.success);
+        expect(cubit.state.status, ViewStatus.success);
 
         final int countdown = cubit.state.countdownSeconds;
         fakeTimer.tick(1);

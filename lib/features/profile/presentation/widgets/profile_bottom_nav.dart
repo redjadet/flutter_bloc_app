@@ -5,9 +5,14 @@ class ProfileBottomNav extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final navHeight = screenWidth < 360 ? 70.0 : 83.0;
+    final mediaQuery = MediaQuery.of(context);
+    final double bottomPadding = mediaQuery.padding.bottom;
+    final double screenWidth = mediaQuery.size.width;
+    final bool isCompactWidth = screenWidth < 360;
+    final double navHeight = isCompactWidth ? 70 : 83;
+    final double actionSlotWidth = isCompactWidth ? 60 : 70;
+    final double actionSlotHeight = isCompactWidth ? 36 : 40;
+    final double addIconSize = isCompactWidth ? 20 : 24;
 
     return Container(
       height: navHeight + bottomPadding,
@@ -39,7 +44,7 @@ class ProfileBottomNav extends StatelessWidget {
                     icon: Icons.search,
                     onTap: () {},
                   ),
-                  SizedBox(width: screenWidth < 360 ? 60 : 70),
+                  SizedBox(width: actionSlotWidth),
                   _NavIcon(
                     icon: Icons.chat_bubble_outline,
                     onTap: () {},
@@ -55,11 +60,11 @@ class ProfileBottomNav extends StatelessWidget {
           Positioned(
             left: 0,
             right: 0,
-            top: screenWidth < 360 ? 7 : 9,
+            top: isCompactWidth ? 7 : 9,
             child: Center(
               child: Container(
-                width: screenWidth < 360 ? 60 : 70,
-                height: screenWidth < 360 ? 36 : 40,
+                width: actionSlotWidth,
+                height: actionSlotHeight,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   gradient: const LinearGradient(
@@ -80,7 +85,7 @@ class ProfileBottomNav extends StatelessWidget {
                     child: Icon(
                       Icons.add,
                       color: Colors.white,
-                      size: screenWidth < 360 ? 20 : 24,
+                      size: addIconSize,
                     ),
                   ),
                 ),

@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 
 class AppInfoCubit extends Cubit<AppInfoState> {
   AppInfoCubit({required final AppInfoRepository repository})
@@ -11,15 +12,15 @@ class AppInfoCubit extends Cubit<AppInfoState> {
   final AppInfoRepository _repository;
 
   Future<void> load() async {
-    if (state.status == AppInfoStatus.loading) return;
+    if (state.status.isLoading) return;
 
-    emit(state.copyWith(status: AppInfoStatus.loading, clearError: true));
+    emit(state.copyWith(status: ViewStatus.loading, clearError: true));
 
     try {
       final AppInfo info = await _repository.load();
       emit(
         state.copyWith(
-          status: AppInfoStatus.success,
+          status: ViewStatus.success,
           info: info,
           clearError: true,
         ),
@@ -27,7 +28,7 @@ class AppInfoCubit extends Cubit<AppInfoState> {
     } on Object catch (error) {
       emit(
         state.copyWith(
-          status: AppInfoStatus.failure,
+          status: ViewStatus.error,
           errorMessage: error.toString(),
         ),
       );
@@ -35,21 +36,19 @@ class AppInfoCubit extends Cubit<AppInfoState> {
   }
 }
 
-enum AppInfoStatus { initial, loading, success, failure }
-
 class AppInfoState extends Equatable {
   const AppInfoState({
-    this.status = AppInfoStatus.initial,
+    this.status = ViewStatus.initial,
     this.info,
     this.errorMessage,
   });
 
-  final AppInfoStatus status;
+  final ViewStatus status;
   final AppInfo? info;
   final String? errorMessage;
 
   AppInfoState copyWith({
-    final AppInfoStatus? status,
+    final ViewStatus? status,
     final AppInfo? info,
     final bool clearInfo = false,
     final String? errorMessage,

@@ -1,9 +1,8 @@
 import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'counter_state.freezed.dart';
-
-enum CounterStatus { idle, loading, success, error }
 
 @freezed
 abstract class CounterState with _$CounterState {
@@ -12,7 +11,7 @@ abstract class CounterState with _$CounterState {
     final DateTime? lastChanged,
     @Default(CounterState.defaultCountdownSeconds) final int countdownSeconds,
     final CounterError? error,
-    @Default(CounterStatus.idle) final CounterStatus status,
+    @Default(ViewStatus.initial) final ViewStatus status,
   }) = _CounterState;
   const CounterState._();
 
@@ -24,7 +23,7 @@ abstract class CounterState with _$CounterState {
     count: count,
     lastChanged: lastChanged,
     countdownSeconds: countdownSeconds,
-    status: CounterStatus.success,
+    status: ViewStatus.success,
   );
 
   static const int defaultCountdownSeconds = 5;

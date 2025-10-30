@@ -34,15 +34,9 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
         ? _replaceConversation(conversation)
         : _state.history;
 
-    emitState(
-      _state.copyWith(
-        history: history,
-        activeConversationId: conversation.id,
-        messages: conversation.messages,
-        pastUserInputs: conversation.pastUserInputs,
-        generatedResponses: conversation.generatedResponses,
-        status: ChatStatus.success,
-      ),
+    _emitConversationSnapshot(
+      active: conversation,
+      history: history,
     );
     if (conversation.hasContent) {
       unawaited(_persistHistory(history));
@@ -113,4 +107,29 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
 
   String _generateConversationId(final DateTime timestamp) =>
       'conversation_${timestamp.microsecondsSinceEpoch}';
+
+  void _emitConversationSnapshot({
+    required final ChatConversation active,
+    required final List<ChatConversation> history,
+    final ViewStatus status = ViewStatus.success,
+    final bool? isLoading,
+    final bool clearError = false,
+    final String? error,
+    final String? currentModel,
+  }) {
+    final ChatState current = _state;
+    emitState(
+      current.copyWith(
+        history: history,
+        activeConversationId: active.id,
+        messages: active.messages,
+        pastUserInputs: active.pastUserInputs,
+        generatedResponses: active.generatedResponses,
+        status: status,
+        isLoading: isLoading ?? current.isLoading,
+        error: clearError ? null : error ?? current.error,
+        currentModel: currentModel ?? current.currentModel,
+      ),
+    );
+  }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_excep
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_state.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 
 class _StubGraphqlDemoRepository implements GraphqlDemoRepository {
   const _StubGraphqlDemoRepository({this.exception});
@@ -37,9 +38,9 @@ void main() {
       build: () => GraphqlDemoCubit(repository: _StubGraphqlDemoRepository()),
       act: (cubit) => cubit.loadInitial(),
       expect: () => const <GraphqlDemoState>[
-        GraphqlDemoState(status: GraphqlDemoStatus.loading),
+        GraphqlDemoState(status: ViewStatus.loading),
         GraphqlDemoState(
-          status: GraphqlDemoStatus.success,
+          status: ViewStatus.success,
           continents: <GraphqlContinent>[],
           countries: <GraphqlCountry>[],
         ),
@@ -55,9 +56,9 @@ void main() {
       ),
       act: (cubit) => cubit.loadInitial(),
       expect: () => const <GraphqlDemoState>[
-        GraphqlDemoState(status: GraphqlDemoStatus.loading),
+        GraphqlDemoState(status: ViewStatus.loading),
         GraphqlDemoState(
-          status: GraphqlDemoStatus.error,
+          status: ViewStatus.error,
           errorMessage: 'error',
           errorType: GraphqlDemoErrorType.unknown,
         ),
@@ -69,12 +70,9 @@ void main() {
       build: () => GraphqlDemoCubit(repository: _StubGraphqlDemoRepository()),
       act: (cubit) => cubit.selectContinent('AF'),
       expect: () => const <GraphqlDemoState>[
+        GraphqlDemoState(status: ViewStatus.loading, activeContinentCode: 'AF'),
         GraphqlDemoState(
-          status: GraphqlDemoStatus.loading,
-          activeContinentCode: 'AF',
-        ),
-        GraphqlDemoState(
-          status: GraphqlDemoStatus.success,
+          status: ViewStatus.success,
           countries: <GraphqlCountry>[],
           activeContinentCode: 'AF',
         ),
@@ -90,12 +88,9 @@ void main() {
       ),
       act: (cubit) => cubit.selectContinent('AF'),
       expect: () => const <GraphqlDemoState>[
+        GraphqlDemoState(status: ViewStatus.loading, activeContinentCode: 'AF'),
         GraphqlDemoState(
-          status: GraphqlDemoStatus.loading,
-          activeContinentCode: 'AF',
-        ),
-        GraphqlDemoState(
-          status: GraphqlDemoStatus.error,
+          status: ViewStatus.error,
           errorMessage: 'error',
           errorType: GraphqlDemoErrorType.unknown,
           activeContinentCode: 'AF',

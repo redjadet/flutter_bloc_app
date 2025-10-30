@@ -1,22 +1,24 @@
 part of 'chart_cubit.dart';
 
-enum ChartStatus { initial, loading, success, empty, failure }
-
 class ChartState extends Equatable {
   const ChartState({
-    this.status = ChartStatus.initial,
+    this.status = ViewStatus.initial,
     this.points = const <ChartPoint>[],
     this.errorMessage,
     this.zoomEnabled = false,
   });
 
-  final ChartStatus status;
+  final ViewStatus status;
   final List<ChartPoint> points;
   final String? errorMessage;
   final bool zoomEnabled;
 
+  bool get hasPoints => points.isNotEmpty;
+  bool get isEmpty => status.isSuccess && points.isEmpty;
+  bool get isLoading => status.isLoading;
+
   ChartState copyWith({
-    final ChartStatus? status,
+    final ViewStatus? status,
     final List<ChartPoint>? points,
     final bool? zoomEnabled,
     final String? errorMessage,

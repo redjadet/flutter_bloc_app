@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/pages/graphql_demo_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -19,7 +20,7 @@ void main() {
 
     await tester.pumpWidget(_wrapWithCubit(cubit));
 
-    cubit.emit(const GraphqlDemoState(status: GraphqlDemoStatus.loading));
+    cubit.emit(const GraphqlDemoState(status: ViewStatus.loading));
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -35,7 +36,7 @@ void main() {
 
     cubit.emit(
       const GraphqlDemoState(
-        status: GraphqlDemoStatus.error,
+        status: ViewStatus.error,
         errorMessage: 'Network down',
         errorType: GraphqlDemoErrorType.network,
       ),
@@ -57,7 +58,7 @@ void main() {
 
     cubit.emit(
       const GraphqlDemoState(
-        status: GraphqlDemoStatus.success,
+        status: ViewStatus.success,
         countries: <GraphqlCountry>[],
       ),
     );
@@ -76,7 +77,7 @@ void main() {
 
     cubit.emit(
       GraphqlDemoState(
-        status: GraphqlDemoStatus.success,
+        status: ViewStatus.success,
         countries: const <GraphqlCountry>[
           GraphqlCountry(
             code: 'TR',
@@ -114,7 +115,7 @@ void main() {
 
     cubit.emit(
       GraphqlDemoState(
-        status: GraphqlDemoStatus.loading,
+        status: ViewStatus.loading,
         continents: const <GraphqlContinent>[
           GraphqlContinent(code: 'AF', name: 'Africa'),
         ],
