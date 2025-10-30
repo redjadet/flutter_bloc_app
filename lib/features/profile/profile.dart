@@ -1,5 +1,8 @@
 export 'data/mock_profile_repository.dart';
+export 'domain/profile_repository.dart';
 export 'domain/profile_user.dart';
+export 'presentation/cubit/profile_cubit.dart';
+export 'presentation/cubit/profile_state.dart';
 export 'presentation/pages/profile_page.dart';
 export 'presentation/widgets/profile_action_buttons.dart';
 export 'presentation/widgets/profile_bottom_nav.dart';

@@ -77,7 +77,16 @@ class _MyAppState extends State<MyApp> {
       GoRoute(
         path: AppRoutes.profilePath,
         name: AppRoutes.profile,
-        builder: (final context, final state) => const ProfilePage(),
+        builder: (final context, final state) => BlocProvider(
+          create: (_) {
+            final cubit = ProfileCubit(
+              repository: getIt<ProfileRepository>(),
+            );
+            unawaited(cubit.loadProfile());
+            return cubit;
+          },
+          child: const ProfilePage(),
+        ),
       ),
       GoRoute(
         path: AppRoutes.registerPath,

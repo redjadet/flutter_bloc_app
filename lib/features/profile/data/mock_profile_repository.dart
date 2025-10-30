@@ -1,8 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 
-class MockProfileRepository {
+class MockProfileRepository implements ProfileRepository {
+  const MockProfileRepository();
+
   static String _decodeUrl(final String encoded) =>
       utf8.decode(base64Decode(encoded));
 
@@ -51,6 +54,7 @@ class MockProfileRepository {
     ],
   );
 
+  @override
   Future<ProfileUser> getProfile() async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
 
