@@ -1,8 +1,6 @@
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfileHeader extends StatelessWidget {
@@ -12,58 +10,97 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final theme = Theme.of(context);
-    // Match Figma: 128x128 avatar
-    const avatarSize = 128.0;
+    // Responsive avatar size using existing responsive utilities
+    final avatarSize = context.isDesktop
+        ? 160.0
+        : context.isTabletOrLarger
+        ? 144.0
+        : 128.0;
+
+    // Font sizes - keeping Figma design but scaling responsively
+    const baseNameFontSize = 36.0;
+    final nameFontSize = context.isDesktop
+        ? baseNameFontSize *
+              1.17 // ~42px
+        : context.isTabletOrLarger
+        ? baseNameFontSize *
+              1.06 // ~38px
+        : baseNameFontSize;
+    const baseLocationFontSize = 13.0;
+    final locationFontSize = context.isDesktop
+        ? baseLocationFontSize *
+              1.08 // ~14px
+        : context.isTabletOrLarger
+        ? baseLocationFontSize *
+              1.04 // ~13.5px
+        : baseLocationFontSize;
+
+    // Use existing responsive gap utilities with multipliers
+    final topSpacing = context.pageVerticalPadding * 1.33; // Approx UI.gapL
+    final nameSpacing =
+        topSpacing *
+        (context.isDesktop
+            ? 3
+            : context.isTabletOrLarger
+            ? 2.5
+            : 2);
+    final locationSpacing =
+        topSpacing *
+        (context.isDesktop
+            ? 2
+            : context.isTabletOrLarger
+            ? 1.75
+            : 1.5);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: context.pageHorizontalPadding),
       child: Column(
         children: [
-          SizedBox(height: UI.gapL),
+          SizedBox(height: topSpacing),
           ClipOval(
-            child: SizedBox(
+            child: Image.asset(
+              'assets/images/profile_avatar.jpg',
               width: avatarSize,
               height: avatarSize,
-              child: FancyShimmerImage(
-                imageUrl: user.avatarUrl,
-                boxFit: BoxFit.cover,
-                shimmerBaseColor: theme.colorScheme.surfaceContainerHighest,
-                shimmerHighlightColor: theme.colorScheme.surface,
-                errorWidget: Container(
+              fit: BoxFit.cover,
+              errorBuilder: (final context, final error, final stackTrace) {
+                debugPrint('Image Error: $error');
+                return Container(
+                  width: avatarSize,
+                  height: avatarSize,
                   color: Colors.grey[300],
-                  child: const Icon(
-                    Icons.person,
-                    size: 64,
-                    color: Colors.black54,
+                  child: Icon(
+                    Icons.error,
+                    size: avatarSize * 0.5,
+                    color: Colors.red,
                   ),
-                ),
-              ),
+                );
+              },
             ),
           ),
-          SizedBox(height: UI.gapL * 2),
-          // Match Figma: fontSize 36, Comfortaa Regular, letterSpacing -0.54
+          SizedBox(height: nameSpacing),
+          // Responsive name text style
           Text(
             user.name,
             style: GoogleFonts.comfortaa(
-              fontSize: 36,
+              fontSize: nameFontSize,
               fontWeight: FontWeight.w400,
-              letterSpacing: -0.54,
+              letterSpacing: -0.54 * (nameFontSize / 36),
               color: Colors.black,
-              height: 40.14 / 36, // lineHeightPx / fontSize from Figma
+              height: 40.14 / 36, // Maintain aspect ratio
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: UI.gapL * 1.5),
-          // Match Figma: fontSize 13, Roboto Black, letterSpacing 0.52, uppercase
+          SizedBox(height: locationSpacing),
+          // Responsive location text style
           Text(
             user.location.toUpperCase(),
             style: GoogleFonts.roboto(
-              fontSize: 13,
+              fontSize: locationFontSize,
               fontWeight: FontWeight.w900,
-              letterSpacing: 0.52,
+              letterSpacing: 0.52 * (locationFontSize / 13),
               color: Colors.black,
-              height: 15.234375 / 13, // lineHeightPx / fontSize from Figma
+              height: 15.234375 / 13, // Maintain aspect ratio
             ),
             textAlign: TextAlign.center,
           ),
