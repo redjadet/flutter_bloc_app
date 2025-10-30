@@ -542,6 +542,15 @@ await SecretConfig.load(allowAssetFallback: true);
 
 Copy your Firebase config files from the provided `*.sample` files. Placeholder keys are detected and skip Firebase initialization gracefully.
 
+### FlutterFire CLI (Crashlytics dSYM upload)
+
+The Xcode build includes a script phase to upload Crashlytics dSYM symbols via the FlutterFire CLI. If the `flutterfire` executable is not present on your PATH, the script will skip symbol upload without failing the build. To enable symbol upload locally:
+
+```bash
+dart pub global activate flutterfire_cli
+```
+Ensure your shell PATH includes `${HOME}/.pub-cache/bin` so `flutterfire` is discoverable by Xcode build scripts.
+
 ## Native Integration
 
 The `ExamplePage` includes a “Fetch native info” button that uses a MethodChannel to retrieve basic device metadata from Kotlin/Swift implementations. The channel is deliberately narrow (no arguments, low risk) but demonstrates the wiring for richer features.
@@ -607,3 +616,7 @@ This project is available for free use in public, non-commercial repositories un
 - `dart run tool/update_coverage_summary.dart` – regenerate `coverage/coverage_summary.md` from `coverage/lcov.info`, excluding generated and localization files.
 - `dart run custom_lint` – run custom linting rules including file length enforcement.
 - `test/flutter_test_config.dart` – global test configuration that automatically suppresses logging during test execution for cleaner output.
+
+Optional:
+
+- `flutterfire` – used by the iOS/macOS build scripts to upload Crashlytics dSYMs. Install with `dart pub global activate flutterfire_cli` or leave uninstalled (build will still succeed; upload will be skipped).
