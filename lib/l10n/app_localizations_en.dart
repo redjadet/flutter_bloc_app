@@ -29,7 +29,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Flutter Demo';
 
   @override
-  String get homeTitle => 'Flutter Demo Home Page';
+  String get homeTitle => 'Home Page';
 
   @override
   String get pushCountLabel => 'You have pushed the button this many times:';
