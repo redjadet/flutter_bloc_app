@@ -80,6 +80,11 @@ class _MyAppState extends State<MyApp> {
         builder: (final context, final state) => const ProfilePage(),
       ),
       GoRoute(
+        path: AppRoutes.registerPath,
+        name: AppRoutes.register,
+        builder: (final context, final state) => const RegisterPage(),
+      ),
+      GoRoute(
         path: AppRoutes.chatPath,
         name: AppRoutes.chat,
         builder: (final context, final state) => BlocProvider(
