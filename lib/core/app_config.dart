@@ -2,6 +2,7 @@ import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/constants.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -14,7 +15,7 @@ class AppConfig {
     required final GoRouter router,
     final Locale? locale,
   }) => MaterialApp.router(
-    onGenerateTitle: (final ctx) => AppLocalizations.of(ctx).appTitle,
+    onGenerateTitle: (final ctx) => ctx.l10n.appTitle,
     localizationsDelegates: const [
       GlobalMaterialLocalizations.delegate,
       GlobalWidgetsLocalizations.delegate,

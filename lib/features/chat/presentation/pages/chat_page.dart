@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 
 class ChatPage extends StatefulWidget {
@@ -48,7 +47,7 @@ class _ChatPageState extends State<ChatPage> {
 
   Future<void> _confirmAndClearHistory(final BuildContext context) async {
     final ChatCubit cubit = context.read<ChatCubit>();
-    final AppLocalizations l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final bool confirmed =
         await showDialog<bool>(
           context: context,
@@ -78,7 +77,7 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(final BuildContext context) {
-    final AppLocalizations l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
 
     return CommonPageLayout(
       title: l10n.chatPageTitle,

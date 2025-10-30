@@ -54,7 +54,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   @override
   Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final AppLocalizations l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     return MultiBlocListener(
       listeners: [
         BlocListener<CounterCubit, CounterState>(
@@ -111,7 +111,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   }
 
   Future<void> _handleOpenSettings(final BuildContext context) async {
-    final AppLocalizations l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final BiometricAuthenticator authenticator =
         getIt<BiometricAuthenticator>();
     final bool authenticated = await authenticator.authenticate(

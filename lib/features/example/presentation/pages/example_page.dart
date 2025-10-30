@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_page_body.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:go_router/go_router.dart';
 
@@ -129,7 +128,7 @@ class _ExamplePageState extends State<ExamplePage> {
 
   @override
   Widget build(final BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
     return CommonPageLayout(

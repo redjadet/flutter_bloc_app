@@ -56,7 +56,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
 
   @override
   Widget build(final BuildContext context) {
-    final AppLocalizations l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.googleMapsPageTitle,
       useResponsiveBody: false,

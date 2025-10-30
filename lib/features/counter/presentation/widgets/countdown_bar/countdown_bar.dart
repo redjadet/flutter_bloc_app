@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/countdown_bar/countdown_bar_content.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 
@@ -20,10 +19,6 @@ class _CountdownBarState extends State<CountdownBar> {
   int? _cycleTotalSeconds;
   static const Duration _animFast = UI.animFast;
 
-  AppLocalizations _l10n(final BuildContext context) =>
-      Localizations.of<AppLocalizations>(context, AppLocalizations) ??
-      AppLocalizationsEn();
-
   @override
   Widget build(
     final BuildContext context,
@@ -31,7 +26,7 @@ class _CountdownBarState extends State<CountdownBar> {
     builder: (final context, final state) {
       final bool active = state.isAutoDecrementActive;
       final bool isLoading = state.status.isLoading;
-      final AppLocalizations l10n = _l10n(context);
+      final l10n = context.l10n;
       final ColorScheme colors = Theme.of(context).colorScheme;
 
       _updateCycleTotalSeconds(state.countdownSeconds);

@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/app/router/go_router_refresh_stream.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/features.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:go_router/go_router.dart';
 
 /// Main application widget
@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
         path: AppRoutes.counterPath,
         name: AppRoutes.counter,
         builder: (final context, final state) =>
-            CounterPage(title: AppLocalizations.of(context).homeTitle),
+            CounterPage(title: context.l10n.homeTitle),
       ),
       GoRoute(
         path: AppRoutes.examplePath,

@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_display/counter_display_card.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class CounterDisplay extends StatefulWidget {
@@ -21,16 +20,12 @@ class _CounterDisplayState extends State<CounterDisplay> {
   static const Duration _animFast = UI.animFast;
   static const Duration _animMedium = UI.animMedium;
 
-  AppLocalizations _l10n(final BuildContext context) =>
-      Localizations.of<AppLocalizations>(context, AppLocalizations) ??
-      AppLocalizationsEn();
-
   @override
   Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final TextTheme textTheme = theme.textTheme;
     final ColorScheme colors = theme.colorScheme;
-    final AppLocalizations l10n = _l10n(context);
+    final l10n = context.l10n;
 
     return BlocSelector<CounterCubit, CounterState, _DisplayState>(
       selector: (final state) => _DisplayState(

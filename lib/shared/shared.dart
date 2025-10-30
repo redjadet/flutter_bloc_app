@@ -2,6 +2,7 @@
 library;
 
 // Extensions
+export 'extensions/build_context_l10n.dart';
 export 'extensions/responsive.dart';
 // Platform services
 export 'platform/biometric_authenticator.dart';
