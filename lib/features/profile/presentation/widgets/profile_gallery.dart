@@ -13,19 +13,27 @@ class ProfileGallery extends StatelessWidget {
     final theme = Theme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = context.pageHorizontalPadding;
-    // Match Figma spacing: 8px between items
-    const spacing = 8.0;
-    final columnWidth = (screenWidth - (horizontalPadding * 2) - spacing) / 2;
 
-    final leftColumn = <ProfileImage>[];
-    final rightColumn = <ProfileImage>[];
+    // Use existing responsive gap with multipliers
+    final spacing = context.responsiveGap;
 
+    // Responsive columns: use gridColumns but cap at 3 for masonry layout
+    final columnCount = context.isDesktop ? 3 : 2;
+    final totalSpacing = spacing * (columnCount - 1);
+
+    // Use contentMaxWidth if constrained, otherwise full screen width
+    final maxContentWidth = context.contentMaxWidth;
+    final availableScreenWidth = maxContentWidth < screenWidth
+        ? maxContentWidth
+        : screenWidth;
+    final availableWidth =
+        availableScreenWidth - (horizontalPadding * 2) - totalSpacing;
+    final columnWidth = availableWidth / columnCount;
+
+    // Distribute images across columns
+    final columns = List.generate(columnCount, (_) => <ProfileImage>[]);
     for (int i = 0; i < images.length; i++) {
-      if (i.isEven) {
-        leftColumn.add(images[i]);
-      } else {
-        rightColumn.add(images[i]);
-      }
+      columns[i % columnCount].add(images[i]);
     }
 
     return Padding(
@@ -33,23 +41,17 @@ class ProfileGallery extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: _GalleryColumn(
-              images: leftColumn,
-              theme: theme,
-              columnWidth: columnWidth,
-              spacing: spacing,
+          for (int i = 0; i < columnCount; i++) ...[
+            if (i > 0) SizedBox(width: spacing),
+            Expanded(
+              child: _GalleryColumn(
+                images: columns[i],
+                theme: theme,
+                columnWidth: columnWidth,
+                spacing: spacing,
+              ),
             ),
-          ),
-          const SizedBox(width: spacing),
-          Expanded(
-            child: _GalleryColumn(
-              images: rightColumn,
-              theme: theme,
-              columnWidth: columnWidth,
-              spacing: spacing,
-            ),
-          ),
+          ],
         ],
       ),
     );

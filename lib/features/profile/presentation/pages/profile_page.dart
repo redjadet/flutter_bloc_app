@@ -6,7 +6,6 @@ import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_a
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_gallery.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_header.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -51,57 +50,113 @@ class ProfilePage extends StatelessWidget {
         return CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  ProfileHeader(user: profile),
-                  const ProfileActionButtons(),
-                  SizedBox(height: UI.gapL * 2),
-                ],
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: context.contentMaxWidth,
+                  ),
+                  child: Column(
+                    children: [
+                      ProfileHeader(user: profile),
+                      const ProfileActionButtons(),
+                      SizedBox(
+                        height:
+                            context.pageVerticalPadding *
+                            (context.isDesktop
+                                ? 3
+                                : context.isTabletOrLarger
+                                ? 2.5
+                                : 2),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
             SliverToBoxAdapter(
-              child: ProfileGallery(images: profile.galleryImages),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: context.contentMaxWidth,
+                  ),
+                  child: ProfileGallery(images: profile.galleryImages),
+                ),
+              ),
             ),
             SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.pageHorizontalPadding,
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(height: UI.gapL * 2),
-                    SizedBox(
-                      width: double.infinity,
-                      height: context.isMobile ? 52 : 56,
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 500),
-                        child: OutlinedButton(
-                          onPressed: () {},
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: const BorderSide(width: 2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: context.contentMaxWidth,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.pageHorizontalPadding,
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height:
+                              context.pageVerticalPadding *
+                              (context.isDesktop
+                                  ? 3
+                                  : context.isTabletOrLarger
+                                  ? 2.5
+                                  : 2),
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: context.responsiveButtonHeight,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: context.isDesktop
+                                  ? 600
+                                  : context.isTabletOrLarger
+                                  ? 500
+                                  : double.infinity,
                             ),
-                            padding: EdgeInsets.zero,
-                          ),
-                          child: Text(
-                            'SEE MORE',
-                            style: GoogleFonts.roboto(
-                              fontSize: 13, // Match Figma: fontSize 13
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 0.52,
-                              color: Colors.black,
-                              height: 15.234375 / 13, // lineHeightPx / fontSize from Figma
+                            child: OutlinedButton(
+                              onPressed: () {},
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                side: const BorderSide(width: 2),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                padding: EdgeInsets.zero,
+                              ),
+                              child: Text(
+                                'SEE MORE',
+                                style: GoogleFonts.roboto(
+                                  fontSize:
+                                      context.responsiveBodySize *
+                                      (context.isDesktop
+                                          ? 0.875
+                                          : context.isTabletOrLarger
+                                          ? 0.844
+                                          : 0.813),
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 0.52,
+                                  color: Colors.black,
+                                  height: 15.234375 / 13,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                        SizedBox(
+                          height:
+                              context.pageVerticalPadding *
+                                  (context.isDesktop
+                                      ? 3
+                                      : context.isTabletOrLarger
+                                      ? 2.5
+                                      : 2) +
+                              MediaQuery.of(context).padding.bottom,
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: UI.gapL * 2 + MediaQuery.of(context).padding.bottom,
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
