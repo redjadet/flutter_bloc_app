@@ -27,6 +27,8 @@ import 'package:flutter_bloc_app/features/google_maps/data/sample_map_location_r
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/countries_graphql_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
+import 'package:flutter_bloc_app/features/profile/data/mock_profile_repository.dart';
+import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/search/data/mock_search_repository.dart';
@@ -110,6 +112,9 @@ Future<void> configureDependencies() async {
   );
   _registerLazySingletonIfAbsent<MapLocationRepository>(
     () => const SampleMapLocationRepository(),
+  );
+  _registerLazySingletonIfAbsent<ProfileRepository>(
+    MockProfileRepository.new,
   );
   _registerLazySingletonIfAbsent<ErrorNotificationService>(
     SnackbarErrorNotificationService.new,

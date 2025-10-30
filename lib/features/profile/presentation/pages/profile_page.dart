@@ -1,39 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/features/profile/data/mock_profile_repository.dart';
-import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_state.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_action_buttons.dart';
-import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_bottom_nav.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_gallery.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_header.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
-
-  @override
-  State<ProfilePage> createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage> {
-  final MockProfileRepository _repository = MockProfileRepository();
-  ProfileUser? _user;
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadProfile(); // ignore: discarded_futures - async call in initState is intentional
-  }
-
-  Future<void> _loadProfile() async {
-    final user = await _repository.getProfile();
-    if (!mounted) return;
-    setState(() {
-      _user = user;
-      _isLoading = false;
-    });
-  }
 
   @override
   Widget build(final BuildContext context) => Scaffold(
@@ -53,78 +30,157 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     ),
-    body: _isLoading
-        ? const Center(child: CircularProgressIndicator(color: Colors.black))
-        : _user == null
-        ? const Center(child: Text('Failed to load profile'))
-        : Stack(
-            children: [
-              CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Column(
-                      children: [
-                        ProfileHeader(user: _user!),
-                        const ProfileActionButtons(),
-                        SizedBox(height: UI.gapL * 2),
-                      ],
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: ProfileGallery(images: _user!.galleryImages),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.pageHorizontalPadding,
-                      ),
-                      child: Column(
-                        children: [
-                          SizedBox(height: UI.gapL * 2),
-                          SizedBox(
-                            width: double.infinity,
-                            height: context.isMobile ? 52 : 56,
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(maxWidth: 500),
-                              child: OutlinedButton(
-                                onPressed: () {},
-                                style: OutlinedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  side: const BorderSide(),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  padding: EdgeInsets.zero,
-                                ),
-                                child: Text(
-                                  'SEE MORE',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: context.responsiveCaptionSize,
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: 0.52,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 100 + MediaQuery.of(context).padding.bottom,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+    body: BlocBuilder<ProfileCubit, ProfileState>(
+      builder: (final context, final state) {
+        if (state.isLoading && !state.hasUser) {
+          return const _ProfileLoadingView();
+        }
+
+        if (state.hasError && !state.hasUser) {
+          return _ProfileErrorView(
+            onRetry: () => context.read<ProfileCubit>().loadProfile(),
+          );
+        }
+
+        if (!state.hasUser) {
+          return const _ProfileErrorView(); // Fallback if state is unexpected
+        }
+
+        final profile = state.user!;
+
+        return CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  ProfileHeader(user: profile),
+                  const ProfileActionButtons(),
+                  SizedBox(height: UI.gapL * 2),
                 ],
               ),
-              const Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: ProfileBottomNav(),
+            ),
+            SliverToBoxAdapter(
+              child: ProfileGallery(images: profile.galleryImages),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.pageHorizontalPadding,
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: UI.gapL * 2),
+                    SizedBox(
+                      width: double.infinity,
+                      height: context.isMobile ? 52 : 56,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 500),
+                        child: OutlinedButton(
+                          onPressed: () {},
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            side: const BorderSide(width: 2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            padding: EdgeInsets.zero,
+                          ),
+                          child: Text(
+                            'SEE MORE',
+                            style: GoogleFonts.roboto(
+                              fontSize: 13, // Match Figma: fontSize 13
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 0.52,
+                              color: Colors.black,
+                              height: 15.234375 / 13, // lineHeightPx / fontSize from Figma
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: UI.gapL * 2 + MediaQuery.of(context).padding.bottom,
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
+          ],
+        );
+      },
+    ),
+  );
+}
+
+class _ProfileLoadingView extends StatelessWidget {
+  const _ProfileLoadingView();
+
+  @override
+  Widget build(final BuildContext context) => const Center(
+    child: CircularProgressIndicator(color: Colors.black),
+  );
+}
+
+class _ProfileErrorView extends StatelessWidget {
+  const _ProfileErrorView({this.onRetry});
+
+  final VoidCallback? onRetry;
+
+  @override
+  Widget build(final BuildContext context) => Padding(
+    padding: const EdgeInsets.all(24),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(Icons.error_outline, size: 48, color: Colors.black54),
+        const SizedBox(height: 16),
+        const Text(
+          'Failed to load profile',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
           ),
+          textAlign: TextAlign.center,
+        ),
+        if (onRetry != null) ...[
+          const SizedBox(height: 24),
+          SizedBox(
+            height: 48,
+            child: _RetryButton(onPressed: onRetry!),
+          ),
+        ],
+      ],
+    ),
+  );
+}
+
+class _RetryButton extends StatelessWidget {
+  const _RetryButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(final BuildContext context) => DecoratedBox(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(6),
+      border: Border.all(color: const Color(0xFF050505), width: 1.5),
+    ),
+    child: Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(6),
+        onTap: onPressed,
+        child: const Center(
+          child: Text(
+            'TRY AGAIN',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ),
+    ),
   );
 }

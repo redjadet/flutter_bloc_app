@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({required this.user, super.key});
@@ -12,8 +13,8 @@ class ProfileHeader extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
-    final avatarSize = context.isMobile ? 128.0 : 160.0;
-    final nameFontSize = context.isMobile ? 32.0 : 40.0;
+    // Match Figma: 128x128 avatar
+    const avatarSize = 128.0;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: context.pageHorizontalPadding),
@@ -31,9 +32,9 @@ class ProfileHeader extends StatelessWidget {
                 shimmerHighlightColor: theme.colorScheme.surface,
                 errorWidget: Container(
                   color: Colors.grey[300],
-                  child: Icon(
+                  child: const Icon(
                     Icons.person,
-                    size: avatarSize * 0.5,
+                    size: 64,
                     color: Colors.black54,
                   ),
                 ),
@@ -41,26 +42,28 @@ class ProfileHeader extends StatelessWidget {
             ),
           ),
           SizedBox(height: UI.gapL * 2),
+          // Match Figma: fontSize 36, Comfortaa Regular, letterSpacing -0.54
           Text(
             user.name,
-            style: TextStyle(
-              fontFamily: 'Comfortaa',
-              fontSize: nameFontSize,
+            style: GoogleFonts.comfortaa(
+              fontSize: 36,
               fontWeight: FontWeight.w400,
               letterSpacing: -0.54,
               color: Colors.black,
+              height: 40.14 / 36, // lineHeightPx / fontSize from Figma
             ),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: UI.gapL * 1.5),
+          // Match Figma: fontSize 13, Roboto Black, letterSpacing 0.52, uppercase
           Text(
             user.location.toUpperCase(),
-            style: TextStyle(
-              fontFamily: 'Roboto',
-              fontSize: context.responsiveCaptionSize,
+            style: GoogleFonts.roboto(
+              fontSize: 13,
               fontWeight: FontWeight.w900,
               letterSpacing: 0.52,
               color: Colors.black,
+              height: 15.234375 / 13, // lineHeightPx / fontSize from Figma
             ),
             textAlign: TextAlign.center,
           ),

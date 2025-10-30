@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileActionButtons extends StatelessWidget {
   const ProfileActionButtons({super.key});
@@ -52,7 +53,7 @@ class _ProfileButton extends StatelessWidget {
           onPressed: onPressed,
           style: OutlinedButton.styleFrom(
             backgroundColor: isPrimary ? Colors.black : Colors.white,
-            side: const BorderSide(),
+            side: const BorderSide(width: 2),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6),
             ),
@@ -60,12 +61,12 @@ class _ProfileButton extends StatelessWidget {
           ),
           child: Text(
             label,
-            style: TextStyle(
-              fontFamily: 'Roboto',
-              fontSize: context.responsiveCaptionSize,
+            style: GoogleFonts.roboto(
+              fontSize: 13, // Match Figma: fontSize 13
               fontWeight: FontWeight.w900,
               letterSpacing: 0.52,
               color: isPrimary ? Colors.white : Colors.black,
+              height: 15.234375 / 13, // lineHeightPx / fontSize from Figma
             ),
           ),
         ),

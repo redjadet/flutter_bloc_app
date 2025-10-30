@@ -13,7 +13,8 @@ class ProfileGallery extends StatelessWidget {
     final theme = Theme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = context.pageHorizontalPadding;
-    final spacing = context.isMobile ? 8.0 : 12.0;
+    // Match Figma spacing: 8px between items
+    const spacing = 8.0;
     final columnWidth = (screenWidth - (horizontalPadding * 2) - spacing) / 2;
 
     final leftColumn = <ProfileImage>[];
@@ -40,7 +41,7 @@ class ProfileGallery extends StatelessWidget {
               spacing: spacing,
             ),
           ),
-          SizedBox(width: spacing),
+          const SizedBox(width: spacing),
           Expanded(
             child: _GalleryColumn(
               images: rightColumn,
