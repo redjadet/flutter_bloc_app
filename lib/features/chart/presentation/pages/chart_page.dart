@@ -8,7 +8,6 @@ import 'package:flutter_bloc_app/features/chart/presentation/cubit/chart_cubit.d
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_content_list.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_loading_list.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_message_list.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:intl/intl.dart';
 
@@ -36,7 +35,7 @@ class _ChartView extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.chartPageTitle,
       body: RefreshIndicator(

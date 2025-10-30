@@ -6,7 +6,7 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/auth/auth.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:go_router/go_router.dart';
 
 export 'package:flutter_bloc_app/features/auth/presentation/helpers/auth_error_message.dart';
@@ -44,7 +44,7 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final AppLocalizations l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
     final FirebaseAuth auth = _auth ?? FirebaseAuth.instance;
     final bool upgradingAnonymous = auth.currentUser?.isAnonymous ?? false;

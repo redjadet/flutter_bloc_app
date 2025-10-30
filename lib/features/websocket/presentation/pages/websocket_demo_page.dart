@@ -7,7 +7,6 @@ import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_state.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/widgets/websocket_connection_banner.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/widgets/websocket_message_list.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 
 class WebsocketDemoPage extends StatefulWidget {
@@ -51,7 +50,7 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
 
   @override
   Widget build(final BuildContext context) {
-    final AppLocalizations l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     if (kIsWeb) {
       return CommonPageLayout(
         title: l10n.websocketDemoTitle,

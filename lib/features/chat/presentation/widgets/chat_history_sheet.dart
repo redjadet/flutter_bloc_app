@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history_sheet_helpers.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
@@ -15,7 +15,7 @@ class ChatHistorySheet extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final AppLocalizations l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
     final ChatCubit cubit = context.read<ChatCubit>();
     final MaterialLocalizations materialLocalizations =

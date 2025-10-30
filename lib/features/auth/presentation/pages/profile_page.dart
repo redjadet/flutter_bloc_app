@@ -2,7 +2,7 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,7 +12,7 @@ class AuthProfilePage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final AppLocalizations l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
 
     return ProfileScreen(
       appBar: AppBar(

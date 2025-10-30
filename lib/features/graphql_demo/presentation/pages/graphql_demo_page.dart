@@ -9,7 +9,7 @@ class GraphqlDemoPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.graphqlSampleTitle,
       body: BlocBuilder<GraphqlDemoCubit, GraphqlDemoState>(

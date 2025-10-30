@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/locale_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_card.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class LanguageSection extends StatelessWidget {
@@ -10,7 +11,7 @@ class LanguageSection extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final AppLocalizations l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
     final Map<String, String> localizedLabels = <String, String>{
       'en': l10n.languageEnglish,

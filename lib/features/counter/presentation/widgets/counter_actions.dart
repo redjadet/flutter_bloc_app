@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 
@@ -11,9 +10,7 @@ class CounterActions extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final AppLocalizations l10n =
-        Localizations.of<AppLocalizations>(context, AppLocalizations) ??
-        AppLocalizationsEn();
+    final l10n = context.l10n;
     return BlocSelector<CounterCubit, CounterState, bool>(
       selector: (final state) => state.status.isLoading,
       builder: (final context, final isLoading) => Column(
