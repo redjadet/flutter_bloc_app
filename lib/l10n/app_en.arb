@@ -29,7 +29,7 @@
   "@appTitle": {
     "description": "Application title shown on the launcher and app switcher"
   },
-  "homeTitle": "Flutter Demo Home Page",
+  "homeTitle": "Home Page",
   "@homeTitle": {
     "description": "Title for the home screen in the demo application"
   },

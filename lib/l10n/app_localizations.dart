@@ -143,7 +143,7 @@ abstract class AppLocalizations {
   /// Title for the home screen in the demo application
   ///
   /// In en, this message translates to:
-  /// **'Flutter Demo Home Page'**
+  /// **'Home Page'**
   String get homeTitle;
 
   /// Label preceding the current count value

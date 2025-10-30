@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -35,36 +37,54 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.explore),
         ),
         IconButton(
-          tooltip: l10n.openChartsTooltip,
-          onPressed: () => context.pushNamed(AppRoutes.charts),
-          icon: const Icon(Icons.show_chart),
-        ),
-        IconButton(
-          tooltip: l10n.openGraphqlTooltip,
-          onPressed: () => context.pushNamed(AppRoutes.graphql),
-          icon: const Icon(Icons.public),
-        ),
-        IconButton(
-          tooltip: l10n.openChatTooltip,
-          onPressed: () => context.pushNamed(AppRoutes.chat),
-          icon: const Icon(Icons.forum),
-        ),
-        IconButton(
-          tooltip: 'Open Chat List',
-          onPressed: () => context.pushNamed(AppRoutes.chatList),
-          icon: const Icon(Icons.chat_bubble_outline),
-        ),
-        IconButton(
-          tooltip: l10n.openGoogleMapsTooltip,
-          onPressed: () => context.pushNamed(AppRoutes.googleMaps),
-          icon: const Icon(Icons.map),
-        ),
-        IconButton(
           tooltip: l10n.openSettingsTooltip,
           onPressed: onOpenSettings,
           icon: const Icon(Icons.settings),
+        ),
+        PopupMenuButton<_OverflowAction>(
+          tooltip: 'More',
+          onSelected: (final action) {
+            switch (action) {
+              case _OverflowAction.charts:
+                unawaited(context.pushNamed(AppRoutes.charts));
+              case _OverflowAction.graphql:
+                unawaited(context.pushNamed(AppRoutes.graphql));
+              case _OverflowAction.chat:
+                unawaited(context.pushNamed(AppRoutes.chat));
+              case _OverflowAction.chatList:
+                unawaited(context.pushNamed(AppRoutes.chatList));
+              case _OverflowAction.googleMaps:
+                unawaited(context.pushNamed(AppRoutes.googleMaps));
+            }
+          },
+          itemBuilder: (final context) => <PopupMenuEntry<_OverflowAction>>[
+            PopupMenuItem<_OverflowAction>(
+              value: _OverflowAction.charts,
+              child: Text(l10n.openChartsTooltip),
+            ),
+            PopupMenuItem<_OverflowAction>(
+              value: _OverflowAction.graphql,
+              child: Text(l10n.openGraphqlTooltip),
+            ),
+            PopupMenuItem<_OverflowAction>(
+              value: _OverflowAction.chat,
+              child: Text(l10n.openChatTooltip),
+            ),
+            const PopupMenuDivider(),
+            const PopupMenuItem<_OverflowAction>(
+              value: _OverflowAction.chatList,
+              child: Text('Open Chat List'),
+            ),
+            const PopupMenuDivider(),
+            PopupMenuItem<_OverflowAction>(
+              value: _OverflowAction.googleMaps,
+              child: Text(l10n.openGoogleMapsTooltip),
+            ),
+          ],
         ),
       ],
     );
   }
 }
+
+enum _OverflowAction { charts, graphql, chat, chatList, googleMaps }
