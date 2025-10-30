@@ -1,10 +1,9 @@
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'chat_state.freezed.dart';
-
-enum ChatStatus { idle, loading, success, error }
 
 @freezed
 abstract class ChatState with _$ChatState {
@@ -17,7 +16,7 @@ abstract class ChatState with _$ChatState {
     final String? currentModel,
     @Default(<ChatConversation>[]) final List<ChatConversation> history,
     final String? activeConversationId,
-    @Default(ChatStatus.idle) final ChatStatus status,
+    @Default(ViewStatus.initial) final ViewStatus status,
   }) = _ChatState;
 
   const ChatState._();

@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -22,7 +23,7 @@ void main() {
     WidgetTester tester,
   ) async {
     final _StubChatCubit cubit = _StubChatCubit(
-      const ChatState(status: ChatStatus.success),
+      const ChatState(status: ViewStatus.success),
     );
     addTearDown(cubit.close);
 
@@ -59,7 +60,7 @@ void main() {
       messages: conversation.messages,
       pastUserInputs: conversation.pastUserInputs,
       generatedResponses: conversation.generatedResponses,
-      status: ChatStatus.success,
+      status: ViewStatus.success,
     );
 
     final _StubChatCubit cubit = _StubChatCubit(seededState);

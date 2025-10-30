@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_state.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/pages/graphql_demo_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 
 class _StubGraphqlDemoRepository implements GraphqlDemoRepository {
   @override
@@ -64,9 +65,7 @@ void main() {
     testWidgets('renders a loading indicator when state is loading', (
       tester,
     ) async {
-      cubit.emitState(
-        const GraphqlDemoState(status: GraphqlDemoStatus.loading),
-      );
+      cubit.emitState(const GraphqlDemoState(status: ViewStatus.loading));
 
       await pumpPage(tester);
 
@@ -77,10 +76,7 @@ void main() {
       tester,
     ) async {
       cubit.emitState(
-        const GraphqlDemoState(
-          status: GraphqlDemoStatus.error,
-          errorMessage: 'error',
-        ),
+        const GraphqlDemoState(status: ViewStatus.error, errorMessage: 'error'),
       );
 
       await pumpPage(tester);
@@ -91,7 +87,7 @@ void main() {
     testWidgets('renders countries when state is success', (tester) async {
       cubit.emitState(
         const GraphqlDemoState(
-          status: GraphqlDemoStatus.success,
+          status: ViewStatus.success,
           countries: <GraphqlCountry>[
             GraphqlCountry(
               code: 'AD',

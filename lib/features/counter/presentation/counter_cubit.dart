@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_state.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/helpers/counter_snapshot_utils.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 export 'package:flutter_bloc_app/features/counter/presentation/counter_state.dart';
@@ -31,7 +32,7 @@ class CounterCubit extends _CounterCubitBase {
 
   Future<void> loadInitial() async {
     try {
-      emit(state.copyWith(status: CounterStatus.loading));
+      emit(state.copyWith(status: ViewStatus.loading));
       if (_initialLoadDelay > Duration.zero) {
         await Future<void>.delayed(_initialLoadDelay);
       }
@@ -90,9 +91,9 @@ class CounterCubit extends _CounterCubitBase {
     }
 
     // Reset status only when we previously exposed the error state.
-    final CounterState next = state.status == CounterStatus.idle
+    final CounterState next = state.status.isInitial
         ? state.copyWith(error: null)
-        : state.copyWith(error: null, status: CounterStatus.idle);
+        : state.copyWith(error: null, status: ViewStatus.initial);
     emit(next);
     _syncTickerForState(next);
   }

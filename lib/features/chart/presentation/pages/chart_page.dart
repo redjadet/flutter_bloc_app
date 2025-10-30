@@ -43,13 +43,12 @@ class _ChartView extends StatelessWidget {
         onRefresh: () => context.read<ChartCubit>().refresh(),
         child: BlocBuilder<ChartCubit, ChartState>(
           builder: (final context, final state) {
-            if ((state.status == ChartStatus.initial ||
-                    state.status == ChartStatus.loading) &&
+            if ((state.status.isInitial || state.status.isLoading) &&
                 state.points.isEmpty) {
               return const ChartLoadingList();
             }
 
-            if (state.status == ChartStatus.failure) {
+            if (state.status.isError) {
               return ChartMessageList(message: l10n.chartPageError);
             }
 

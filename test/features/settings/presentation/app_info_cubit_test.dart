@@ -4,6 +4,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/app_info_cubit.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -14,9 +15,9 @@ void main() {
           AppInfoCubit(repository: const _FakeSuccessAppInfoRepository()),
       act: (cubit) => cubit.load(),
       expect: () => const <AppInfoState>[
-        AppInfoState(status: AppInfoStatus.loading),
+        AppInfoState(status: ViewStatus.loading),
         AppInfoState(
-          status: AppInfoStatus.success,
+          status: ViewStatus.success,
           info: AppInfo(version: '2.0.0', buildNumber: '20'),
         ),
       ],
@@ -28,9 +29,9 @@ void main() {
           AppInfoCubit(repository: const _FakeErrorAppInfoRepository()),
       act: (cubit) => cubit.load(),
       expect: () => <Matcher>[
-        equals(const AppInfoState(status: AppInfoStatus.loading)),
+        equals(const AppInfoState(status: ViewStatus.loading)),
         isA<AppInfoState>()
-            .having((state) => state.status, 'status', AppInfoStatus.failure)
+            .having((state) => state.status, 'status', ViewStatus.error)
             .having(
               (state) => state.errorMessage,
               'errorMessage',
@@ -48,9 +49,9 @@ void main() {
       },
       wait: const Duration(milliseconds: 250),
       expect: () => const <AppInfoState>[
-        AppInfoState(status: AppInfoStatus.loading),
+        AppInfoState(status: ViewStatus.loading),
         AppInfoState(
-          status: AppInfoStatus.success,
+          status: ViewStatus.success,
           info: AppInfo(version: '3.0.0', buildNumber: '300'),
         ),
       ],

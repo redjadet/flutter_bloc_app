@@ -14,18 +14,12 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
     );
     final List<ChatConversation> history = _replaceConversation(conversation);
 
-    emit(
-      state.copyWith(
-        currentModel: normalized,
-        messages: conversation.messages,
-        pastUserInputs: conversation.pastUserInputs,
-        generatedResponses: conversation.generatedResponses,
-        history: history,
-        activeConversationId: conversation.id,
-        isLoading: false,
-        error: null,
-        status: ChatStatus.success,
-      ),
+    _emitConversationSnapshot(
+      active: conversation,
+      history: history,
+      currentModel: normalized,
+      isLoading: false,
+      clearError: true,
     );
 
     unawaited(_persistHistory(history));
@@ -46,15 +40,10 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
 
     final String resolvedModel = _resolveModelForConversation(conversation);
 
-    emit(
-      state.copyWith(
-        activeConversationId: conversation.id,
-        messages: conversation.messages,
-        pastUserInputs: conversation.pastUserInputs,
-        generatedResponses: conversation.generatedResponses,
-        currentModel: resolvedModel,
-        status: ChatStatus.success,
-      ),
+    _emitConversationSnapshot(
+      active: conversation,
+      history: state.history,
+      currentModel: resolvedModel,
     );
   }
 }

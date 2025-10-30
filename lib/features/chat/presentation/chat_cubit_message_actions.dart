@@ -27,17 +27,12 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
       withUser,
     );
 
-    emit(
-      state.copyWith(
-        messages: withUser.messages,
-        isLoading: true,
-        error: null,
-        pastUserInputs: withUser.pastUserInputs,
-        generatedResponses: withUser.generatedResponses,
-        history: historyAfterUser,
-        activeConversationId: withUser.id,
-        status: ChatStatus.loading,
-      ),
+    _emitConversationSnapshot(
+      active: withUser,
+      history: historyAfterUser,
+      isLoading: true,
+      clearError: true,
+      status: ViewStatus.loading,
     );
 
     await _persistHistory(historyAfterUser);
@@ -61,36 +56,30 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
         withAssistant,
       );
 
-      emit(
-        state.copyWith(
-          messages: withAssistant.messages,
-          isLoading: false,
-          pastUserInputs: withAssistant.pastUserInputs,
-          generatedResponses: withAssistant.generatedResponses,
-          history: finalHistory,
-          activeConversationId: withAssistant.id,
-          status: ChatStatus.success,
-        ),
+      _emitConversationSnapshot(
+        active: withAssistant,
+        history: finalHistory,
+        isLoading: false,
       );
 
       await _persistHistory(finalHistory);
     } on ChatException catch (error, stackTrace) {
       AppLogger.error('ChatCubit.sendMessage failed', error, stackTrace);
-      emit(
-        state.copyWith(
-          isLoading: false,
-          error: error.message,
-          status: ChatStatus.error,
-        ),
+      _emitConversationSnapshot(
+        active: withUser,
+        history: historyAfterUser,
+        isLoading: false,
+        error: error.message,
+        status: ViewStatus.error,
       );
     } on Exception catch (error, stackTrace) {
       AppLogger.error('ChatCubit.sendMessage failed', error, stackTrace);
-      emit(
-        state.copyWith(
-          isLoading: false,
-          error: error.toString(),
-          status: ChatStatus.error,
-        ),
+      _emitConversationSnapshot(
+        active: withUser,
+        history: historyAfterUser,
+        isLoading: false,
+        error: error.toString(),
+        status: ViewStatus.error,
       );
     }
   }

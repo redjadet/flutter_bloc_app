@@ -145,7 +145,7 @@ class _CounterSkeletonizedBody extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       BlocSelector<CounterCubit, CounterState, bool>(
-        selector: (final state) => state.status == CounterStatus.loading,
+        selector: (final state) => state.status.isLoading,
         builder: (final context, final isLoading) => Skeletonizer(
           enabled: isLoading,
           effect: ShimmerEffect(

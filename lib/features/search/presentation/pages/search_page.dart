@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/features/search/presentation/widgets/search_res
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_text_field.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
@@ -71,7 +72,7 @@ class _SearchPageContent extends StatelessWidget {
                     );
                   }
 
-                  if (state.status == SearchStatus.error) {
+                  if (state.status.isError) {
                     return Center(
                       child: Text(
                         'Error loading results',

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ChatState {
 
- List<ChatMessage> get messages; bool get isLoading; String? get error; List<String> get pastUserInputs; List<String> get generatedResponses; String? get currentModel; List<ChatConversation> get history; String? get activeConversationId; ChatStatus get status;
+ List<ChatMessage> get messages; bool get isLoading; String? get error; List<String> get pastUserInputs; List<String> get generatedResponses; String? get currentModel; List<ChatConversation> get history; String? get activeConversationId; ViewStatus get status;
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $ChatStateCopyWith<$Res>  {
   factory $ChatStateCopyWith(ChatState value, $Res Function(ChatState) _then) = _$ChatStateCopyWithImpl;
 @useResult
 $Res call({
- List<ChatMessage> messages, bool isLoading, String? error, List<String> pastUserInputs, List<String> generatedResponses, String? currentModel, List<ChatConversation> history, String? activeConversationId, ChatStatus status
+ List<ChatMessage> messages, bool isLoading, String? error, List<String> pastUserInputs, List<String> generatedResponses, String? currentModel, List<ChatConversation> history, String? activeConversationId, ViewStatus status
 });
 
 
@@ -73,7 +73,7 @@ as List<String>,currentModel: freezed == currentModel ? _self.currentModel : cur
 as String?,history: null == history ? _self.history : history // ignore: cast_nullable_to_non_nullable
 as List<ChatConversation>,activeConversationId: freezed == activeConversationId ? _self.activeConversationId : activeConversationId // ignore: cast_nullable_to_non_nullable
 as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as ChatStatus,
+as ViewStatus,
   ));
 }
 
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ChatMessage> messages,  bool isLoading,  String? error,  List<String> pastUserInputs,  List<String> generatedResponses,  String? currentModel,  List<ChatConversation> history,  String? activeConversationId,  ChatStatus status)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ChatMessage> messages,  bool isLoading,  String? error,  List<String> pastUserInputs,  List<String> generatedResponses,  String? currentModel,  List<ChatConversation> history,  String? activeConversationId,  ViewStatus status)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ChatState() when $default != null:
 return $default(_that.messages,_that.isLoading,_that.error,_that.pastUserInputs,_that.generatedResponses,_that.currentModel,_that.history,_that.activeConversationId,_that.status);case _:
@@ -179,7 +179,7 @@ return $default(_that.messages,_that.isLoading,_that.error,_that.pastUserInputs,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ChatMessage> messages,  bool isLoading,  String? error,  List<String> pastUserInputs,  List<String> generatedResponses,  String? currentModel,  List<ChatConversation> history,  String? activeConversationId,  ChatStatus status)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ChatMessage> messages,  bool isLoading,  String? error,  List<String> pastUserInputs,  List<String> generatedResponses,  String? currentModel,  List<ChatConversation> history,  String? activeConversationId,  ViewStatus status)  $default,) {final _that = this;
 switch (_that) {
 case _ChatState():
 return $default(_that.messages,_that.isLoading,_that.error,_that.pastUserInputs,_that.generatedResponses,_that.currentModel,_that.history,_that.activeConversationId,_that.status);case _:
@@ -199,7 +199,7 @@ return $default(_that.messages,_that.isLoading,_that.error,_that.pastUserInputs,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ChatMessage> messages,  bool isLoading,  String? error,  List<String> pastUserInputs,  List<String> generatedResponses,  String? currentModel,  List<ChatConversation> history,  String? activeConversationId,  ChatStatus status)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ChatMessage> messages,  bool isLoading,  String? error,  List<String> pastUserInputs,  List<String> generatedResponses,  String? currentModel,  List<ChatConversation> history,  String? activeConversationId,  ViewStatus status)?  $default,) {final _that = this;
 switch (_that) {
 case _ChatState() when $default != null:
 return $default(_that.messages,_that.isLoading,_that.error,_that.pastUserInputs,_that.generatedResponses,_that.currentModel,_that.history,_that.activeConversationId,_that.status);case _:
@@ -214,7 +214,7 @@ return $default(_that.messages,_that.isLoading,_that.error,_that.pastUserInputs,
 
 
 class _ChatState extends ChatState {
-  const _ChatState({final  List<ChatMessage> messages = const <ChatMessage>[], this.isLoading = false, this.error, final  List<String> pastUserInputs = const <String>[], final  List<String> generatedResponses = const <String>[], this.currentModel, final  List<ChatConversation> history = const <ChatConversation>[], this.activeConversationId, this.status = ChatStatus.idle}): _messages = messages,_pastUserInputs = pastUserInputs,_generatedResponses = generatedResponses,_history = history,super._();
+  const _ChatState({final  List<ChatMessage> messages = const <ChatMessage>[], this.isLoading = false, this.error, final  List<String> pastUserInputs = const <String>[], final  List<String> generatedResponses = const <String>[], this.currentModel, final  List<ChatConversation> history = const <ChatConversation>[], this.activeConversationId, this.status = ViewStatus.initial}): _messages = messages,_pastUserInputs = pastUserInputs,_generatedResponses = generatedResponses,_history = history,super._();
   
 
  final  List<ChatMessage> _messages;
@@ -249,7 +249,7 @@ class _ChatState extends ChatState {
 }
 
 @override final  String? activeConversationId;
-@override@JsonKey() final  ChatStatus status;
+@override@JsonKey() final  ViewStatus status;
 
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
@@ -281,7 +281,7 @@ abstract mixin class _$ChatStateCopyWith<$Res> implements $ChatStateCopyWith<$Re
   factory _$ChatStateCopyWith(_ChatState value, $Res Function(_ChatState) _then) = __$ChatStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<ChatMessage> messages, bool isLoading, String? error, List<String> pastUserInputs, List<String> generatedResponses, String? currentModel, List<ChatConversation> history, String? activeConversationId, ChatStatus status
+ List<ChatMessage> messages, bool isLoading, String? error, List<String> pastUserInputs, List<String> generatedResponses, String? currentModel, List<ChatConversation> history, String? activeConversationId, ViewStatus status
 });
 
 
@@ -309,7 +309,7 @@ as List<String>,currentModel: freezed == currentModel ? _self.currentModel : cur
 as String?,history: null == history ? _self._history : history // ignore: cast_nullable_to_non_nullable
 as List<ChatConversation>,activeConversationId: freezed == activeConversationId ? _self.activeConversationId : activeConversationId // ignore: cast_nullable_to_non_nullable
 as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as ChatStatus,
+as ViewStatus,
   ));
 }
 

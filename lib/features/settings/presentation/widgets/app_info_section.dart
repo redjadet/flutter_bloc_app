@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/app_info_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 
 class AppInfoSection extends StatelessWidget {
   const AppInfoSection({super.key});
@@ -24,14 +25,14 @@ class AppInfoSection extends StatelessWidget {
               vertical: UI.cardPadV,
             ),
             child: BlocBuilder<AppInfoCubit, AppInfoState>(
-              builder: (final context, final state) => switch (state.status) {
-                AppInfoStatus.success when state.info != null => _InfoDetails(
-                  infoState: state,
-                ),
-                AppInfoStatus.failure => _ErrorContent(
-                  error: state.errorMessage,
-                ),
-                AppInfoStatus.loading || _ => const _LoadingContent(),
+              builder: (final context, final state) {
+                if (state.status.isSuccess && state.info != null) {
+                  return _InfoDetails(infoState: state);
+                }
+                if (state.status.isError) {
+                  return _ErrorContent(error: state.errorMessage);
+                }
+                return const _LoadingContent();
               },
             ),
           ),

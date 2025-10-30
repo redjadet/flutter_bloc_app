@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/features/search/presentation/search_cubit.dart';
 import 'package:flutter_bloc_app/features/search/presentation/search_state.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 
 import '../../../test_helpers.dart';
 
@@ -57,18 +58,10 @@ void main() {
         const SearchState(query: 'do'),
         const SearchState(query: 'dog'),
         isA<SearchState>()
-            .having(
-              (final state) => state.status,
-              'status',
-              SearchStatus.loading,
-            )
+            .having((final state) => state.status, 'status', ViewStatus.loading)
             .having((final state) => state.query, 'query', 'dog'),
         isA<SearchState>()
-            .having(
-              (final state) => state.status,
-              'status',
-              SearchStatus.success,
-            )
+            .having((final state) => state.status, 'status', ViewStatus.success)
             .having((final state) => state.query, 'query', 'dog')
             .having(
               (final state) => state.results.single.id,
@@ -110,14 +103,10 @@ void main() {
       expect: () => <dynamic>[
         const SearchState(query: 'error'),
         isA<SearchState>()
-            .having(
-              (final state) => state.status,
-              'status',
-              SearchStatus.loading,
-            )
+            .having((final state) => state.status, 'status', ViewStatus.loading)
             .having((final state) => state.query, 'query', 'error'),
         isA<SearchState>()
-            .having((final state) => state.status, 'status', SearchStatus.error)
+            .having((final state) => state.status, 'status', ViewStatus.error)
             .having((final state) => state.query, 'query', 'error')
             .having((final state) => state.error, 'error', isA<Exception>()),
       ],

@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 
 part 'chart_state.dart';
 
@@ -13,7 +14,7 @@ class ChartCubit extends Cubit<ChartState> {
   final ChartRepository _repository;
 
   Future<void> load() async {
-    if (state.status == ChartStatus.loading) {
+    if (state.status.isLoading) {
       return;
     }
     await _fetch(resetExistingData: true);
@@ -31,7 +32,7 @@ class ChartCubit extends Cubit<ChartState> {
   Future<void> _fetch({required final bool resetExistingData}) async {
     emit(
       state.copyWith(
-        status: ChartStatus.loading,
+        status: ViewStatus.loading,
         clearError: true,
         points: resetExistingData ? const <ChartPoint>[] : state.points,
       ),
@@ -43,18 +44,18 @@ class ChartCubit extends Cubit<ChartState> {
       if (points.isEmpty) {
         emit(
           state.copyWith(
-            status: ChartStatus.empty,
+            status: ViewStatus.success,
             points: const <ChartPoint>[],
           ),
         );
         return;
       }
 
-      emit(state.copyWith(status: ChartStatus.success, points: points));
+      emit(state.copyWith(status: ViewStatus.success, points: points));
     } on Object catch (error) {
       emit(
         state.copyWith(
-          status: ChartStatus.failure,
+          status: ViewStatus.error,
           errorMessage: error.toString(),
           points: state.points,
         ),
