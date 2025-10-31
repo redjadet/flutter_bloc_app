@@ -26,7 +26,6 @@ void main() {
             onBackPressed: () {},
             onLoadPlatformInfo: () {},
             onOpenWebsocket: () {},
-            onOpenGoogleMaps: () {},
             onOpenSearch: () {},
             onOpenProfile: () {},
             onOpenRegister: () {
@@ -43,6 +42,7 @@ void main() {
             fibonacciResult: null,
             parallelValues: const <int>[],
             parallelDuration: Duration.zero,
+            onOpenChatList: () {},
           ),
         ),
       );

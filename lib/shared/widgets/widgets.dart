@@ -7,4 +7,5 @@ export 'common_form_field.dart';
 export 'common_loading_widget.dart';
 export 'common_page_layout.dart';
 export 'flavor_badge.dart';
+export 'resilient_svg_asset_image.dart';
 export 'root_aware_back_button.dart';

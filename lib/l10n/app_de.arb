@@ -344,7 +344,7 @@
       }
     }
   },
-  "googleMapsPageTitle": "Google Maps Demo",
+  "googleMapsPageTitle": "Maps Demo",
   "@googleMapsPageTitle": {
     "description": "Titel der Google-Maps-Demoseite"
   },

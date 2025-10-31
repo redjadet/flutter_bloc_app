@@ -51,8 +51,6 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
                 unawaited(context.pushNamed(AppRoutes.graphql));
               case _OverflowAction.chat:
                 unawaited(context.pushNamed(AppRoutes.chat));
-              case _OverflowAction.chatList:
-                unawaited(context.pushNamed(AppRoutes.chatList));
               case _OverflowAction.googleMaps:
                 unawaited(context.pushNamed(AppRoutes.googleMaps));
             }
@@ -70,12 +68,6 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
               value: _OverflowAction.chat,
               child: Text(l10n.openChatTooltip),
             ),
-            const PopupMenuDivider(),
-            const PopupMenuItem<_OverflowAction>(
-              value: _OverflowAction.chatList,
-              child: Text('Open Chat List'),
-            ),
-            const PopupMenuDivider(),
             PopupMenuItem<_OverflowAction>(
               value: _OverflowAction.googleMaps,
               child: Text(l10n.openGoogleMapsTooltip),
@@ -87,4 +79,4 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-enum _OverflowAction { charts, graphql, chat, chatList, googleMaps }
+enum _OverflowAction { charts, graphql, chat, googleMaps }

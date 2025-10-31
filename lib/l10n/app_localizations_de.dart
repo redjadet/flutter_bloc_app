@@ -431,7 +431,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get googleMapsPageTitle => 'Google Maps Demo';
+  String get googleMapsPageTitle => 'Maps Demo';
 
   @override
   String get googleMapsPageGenericError =>
