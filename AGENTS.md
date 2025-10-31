@@ -256,6 +256,7 @@ Agents should:
 - If an asset file is missing, render an empty `SizedBox` with matching dimensions instead of failing
 - If `layout_manifest.json` is missing, attempt to parse `{FrameName}.json` directly
 - Always validate asset paths exist before generating code
+- For SVGs that embed base64 raster data (common with profile ellipses), use `ResilientSvgAssetImage` from `lib/shared/widgets/` to load the bitmap payload automatically before falling back to a PNG. The widget handles caching and gracefully degrades to the provided fallback builder.
 
 ### Agent Intelligence
 

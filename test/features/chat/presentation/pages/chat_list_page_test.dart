@@ -38,7 +38,7 @@ void main() {
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pumpAndSettle();
 
-      expect(find.text('Test Chat List'), findsOneWidget);
+      expect(find.text('Chats'), findsOneWidget);
       expect(find.byType(AppBar), findsOneWidget);
     });
 

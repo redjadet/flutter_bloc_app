@@ -250,9 +250,9 @@
   "@openChatTooltip": {
     "description": "Tooltip for navigating to the AI chat feature"
   },
-  "openGoogleMapsTooltip": "Open Google Maps demo",
+  "openGoogleMapsTooltip": "Open Google/Apple Maps demo",
   "@openGoogleMapsTooltip": {
-    "description": "Tooltip for navigating to the Google Maps sample page"
+    "description": "Tooltip for navigating to the Google/Apple Maps sample page"
   },
   "chatPageTitle": "AI Chat",
   "@chatPageTitle": {
@@ -489,9 +489,9 @@
   "@exampleWebsocketButton": {
     "description": "Button label that navigates to the WebSocket demo page"
   },
-  "exampleGoogleMapsButton": "Open Google Maps demo",
+  "exampleGoogleMapsButton": "Open Google/Apple Maps demo",
   "@exampleGoogleMapsButton": {
-    "description": "Button label that navigates to the Google Maps sample page"
+    "description": "Button label that navigates to the Google/Apple Maps sample page"
   },
   "exampleNativeBatteryLabel": "Battery level: {percent}%",
   "@exampleNativeBatteryLabel": {
@@ -553,7 +553,7 @@
       }
     }
   },
-  "googleMapsPageTitle": "Google Maps demo",
+  "googleMapsPageTitle": "Maps demo",
   "@googleMapsPageTitle": {
     "description": "Title for the Google Maps sample page"
   },

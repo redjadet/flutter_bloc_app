@@ -32,7 +32,7 @@ class ChatListPage extends StatelessWidget {
     backgroundColor: Colors.white,
     elevation: 0,
     title: Text(
-      'Test Chats List',
+      'Chats',
       style: _appBarTitleStyle(context),
     ),
     centerTitle: true,

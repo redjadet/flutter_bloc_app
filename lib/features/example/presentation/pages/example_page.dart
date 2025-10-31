@@ -142,7 +142,7 @@ class _ExamplePageState extends State<ExamplePage> {
             ? null
             : () => _loadPlatformInfo(context),
         onOpenWebsocket: () => context.pushNamed(AppRoutes.websocket),
-        onOpenGoogleMaps: () => context.pushNamed(AppRoutes.googleMaps),
+        onOpenChatList: () => context.pushNamed(AppRoutes.chatList),
         onOpenSearch: () => context.pushNamed(AppRoutes.search),
         onOpenProfile: () => context.pushNamed(AppRoutes.profile),
         onOpenRegister: () => context.pushNamed(AppRoutes.register),

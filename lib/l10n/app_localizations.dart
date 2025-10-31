@@ -440,10 +440,10 @@ abstract class AppLocalizations {
   /// **'Chat with AI'**
   String get openChatTooltip;
 
-  /// Tooltip for navigating to the Google Maps sample page
+  /// Tooltip for navigating to the Google/Apple Maps sample page
   ///
   /// In en, this message translates to:
-  /// **'Open Google Maps demo'**
+  /// **'Open Google/Apple Maps demo'**
   String get openGoogleMapsTooltip;
 
   /// Title for the AI chat page
@@ -776,10 +776,10 @@ abstract class AppLocalizations {
   /// **'Open WebSocket demo'**
   String get exampleWebsocketButton;
 
-  /// Button label that navigates to the Google Maps sample page
+  /// Button label that navigates to the Google/Apple Maps sample page
   ///
   /// In en, this message translates to:
-  /// **'Open Google Maps demo'**
+  /// **'Open Google/Apple Maps demo'**
   String get exampleGoogleMapsButton;
 
   /// Label showing the battery level returned from the native platform
@@ -845,7 +845,7 @@ abstract class AppLocalizations {
   /// Title for the Google Maps sample page
   ///
   /// In en, this message translates to:
-  /// **'Google Maps demo'**
+  /// **'Maps demo'**
   String get googleMapsPageTitle;
 
   /// Fallback error message shown when the Google Maps sample fails to load

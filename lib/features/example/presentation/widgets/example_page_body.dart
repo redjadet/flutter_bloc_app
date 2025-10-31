@@ -13,7 +13,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.onBackPressed,
     required this.onLoadPlatformInfo,
     required this.onOpenWebsocket,
-    required this.onOpenGoogleMaps,
+    required this.onOpenChatList,
     required this.onOpenSearch,
     required this.onOpenProfile,
     required this.onOpenRegister,
@@ -37,7 +37,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onBackPressed;
   final VoidCallback? onLoadPlatformInfo;
   final VoidCallback onOpenWebsocket;
-  final VoidCallback onOpenGoogleMaps;
+  final VoidCallback onOpenChatList;
   final VoidCallback onOpenSearch;
   final VoidCallback onOpenProfile;
   final VoidCallback onOpenRegister;
@@ -109,9 +109,9 @@ class ExamplePageBody extends StatelessWidget {
             ),
             SizedBox(height: UI.gapS),
             FilledButton.icon(
-              onPressed: onOpenGoogleMaps,
-              icon: const Icon(Icons.map),
-              label: Text(l10n.exampleGoogleMapsButton),
+              onPressed: onOpenChatList,
+              icon: const Icon(Icons.forum_outlined),
+              label: const Text('Chat List Demo'),
             ),
             SizedBox(height: UI.gapS),
             FilledButton.icon(

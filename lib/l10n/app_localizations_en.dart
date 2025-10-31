@@ -187,7 +187,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openChatTooltip => 'Chat with AI';
 
   @override
-  String get openGoogleMapsTooltip => 'Open Google Maps demo';
+  String get openGoogleMapsTooltip => 'Open Google/Apple Maps demo';
 
   @override
   String get chatPageTitle => 'AI Chat';
@@ -382,7 +382,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exampleWebsocketButton => 'Open WebSocket demo';
 
   @override
-  String get exampleGoogleMapsButton => 'Open Google Maps demo';
+  String get exampleGoogleMapsButton => 'Open Google/Apple Maps demo';
 
   @override
   String exampleNativeBatteryLabel(int percent) {
@@ -425,7 +425,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get googleMapsPageTitle => 'Google Maps demo';
+  String get googleMapsPageTitle => 'Maps demo';
 
   @override
   String get googleMapsPageGenericError =>
