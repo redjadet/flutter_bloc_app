@@ -94,6 +94,11 @@ class _MyAppState extends State<MyApp> {
         builder: (final context, final state) => const RegisterPage(),
       ),
       GoRoute(
+        path: AppRoutes.loggedOutPath,
+        name: AppRoutes.loggedOut,
+        builder: (final context, final state) => const LoggedOutPage(),
+      ),
+      GoRoute(
         path: AppRoutes.chatPath,
         name: AppRoutes.chat,
         builder: (final context, final state) => BlocProvider(

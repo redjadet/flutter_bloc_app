@@ -146,6 +146,7 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenSearch: () => context.pushNamed(AppRoutes.search),
         onOpenProfile: () => context.pushNamed(AppRoutes.profile),
         onOpenRegister: () => context.pushNamed(AppRoutes.register),
+        onOpenLoggedOut: () => context.pushNamed(AppRoutes.loggedOut),
         onRunIsolates: _isRunningIsolates ? null : _runIsolateSamples,
         isFetchingInfo: _isFetchingInfo,
         platformInfo: _platformInfo,

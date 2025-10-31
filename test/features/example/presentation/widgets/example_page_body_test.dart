@@ -32,6 +32,7 @@ void main() {
             onOpenRegister: () {
               registerTapped = true;
             },
+            onOpenLoggedOut: () {},
             onRunIsolates: () {},
             isFetchingInfo: false,
             platformInfo: platformInfo,

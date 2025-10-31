@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_state.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_action_buttons.dart';
+import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_bottom_nav.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_gallery.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_header.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
@@ -29,6 +30,7 @@ class ProfilePage extends StatelessWidget {
         ),
       ),
     ),
+    bottomNavigationBar: const ProfileBottomNav(),
     body: BlocBuilder<ProfileCubit, ProfileState>(
       builder: (final context, final state) {
         if (state.isLoading && !state.hasUser) {

@@ -88,7 +88,7 @@ void main() {
 
       expect(find.byType(ProfileHeader), findsOneWidget);
       expect(find.byType(ProfileActionButtons), findsOneWidget);
-      expect(find.byType(ProfileGallery), findsOneWidget);
+      expect(find.byType(ProfileGallery, skipOffstage: false), findsOneWidget);
       expect(find.byType(ProfileBottomNav), findsOneWidget);
     });
 
