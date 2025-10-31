@@ -17,6 +17,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.onOpenSearch,
     required this.onOpenProfile,
     required this.onOpenRegister,
+    required this.onOpenLoggedOut,
     required this.onRunIsolates,
     required this.isFetchingInfo,
     required this.platformInfo,
@@ -40,6 +41,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onOpenSearch;
   final VoidCallback onOpenProfile;
   final VoidCallback onOpenRegister;
+  final VoidCallback onOpenLoggedOut;
   final VoidCallback? onRunIsolates;
   final bool isFetchingInfo;
   final NativePlatformInfo? platformInfo;
@@ -129,6 +131,13 @@ class ExamplePageBody extends StatelessWidget {
               icon: const Icon(Icons.app_registration),
               label: const Text('Register Demo'),
               key: const ValueKey('example-register-button'),
+            ),
+            SizedBox(height: UI.gapS),
+            FilledButton.icon(
+              onPressed: onOpenLoggedOut,
+              icon: const Icon(Icons.logout),
+              label: const Text('Logged Out Demo'),
+              key: const ValueKey('example-logged-out-button'),
             ),
             SizedBox(height: UI.gapS),
             AnimatedSwitcher(
