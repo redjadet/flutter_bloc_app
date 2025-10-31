@@ -19,31 +19,52 @@ class ChatListView extends StatelessWidget {
               strokeWidth: context.isTabletOrLarger ? 3.0 : 2.0,
             ),
           ),
-          ChatListLoaded(:final contacts) => ListView.separated(
-            padding: context.responsiveListPadding,
-            itemCount: contacts.length,
-            separatorBuilder: (context, index) => Divider(
-              height: 1,
-              color: const Color(0xFFE5E5E5),
-              indent: context.isDesktop
-                  ? 100.0
-                  : context.isTabletOrLarger
-                  ? 90.0
-                  : 80.0,
-            ),
-            itemBuilder: (context, index) {
-              final contact = contacts[index];
-              return ChatContactTile(
-                contact: contact,
-                onTap: () => _navigateToChat(context, contact),
-                onLongPress: () => _showDeleteDialog(context, contact),
-              );
-            },
+          ChatListLoaded(:final contacts) => _buildLoadedList(
+            context,
+            contacts,
           ),
           ChatListError(:final message) => _buildErrorState(context, message),
           _ => const SizedBox.shrink(),
         },
       );
+
+  Widget _buildLoadedList(
+    BuildContext context,
+    List<ChatContact> contacts,
+  ) {
+    final listPadding = context.responsiveListPadding;
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: context.contentMaxWidth),
+        child: ListView.separated(
+          padding: EdgeInsets.only(
+            bottom: listPadding.bottom + context.responsiveGap,
+          ),
+          itemCount: contacts.length,
+          separatorBuilder: (context, index) => const _ChatDivider(),
+          itemBuilder: (context, index) {
+            final contact = contacts[index];
+            final isFirst = index == 0;
+            final isLast = index == contacts.length - 1;
+
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isFirst) const _ChatDivider(),
+                ChatContactTile(
+                  contact: contact,
+                  onTap: () => _navigateToChat(context, contact),
+                  onLongPress: () => _showDeleteDialog(context, contact),
+                ),
+                if (isLast) const _ChatDivider(),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
 
   Widget _buildErrorState(BuildContext context, String message) => Center(
     child: Padding(
@@ -146,4 +167,15 @@ class ChatListView extends StatelessWidget {
       ),
     );
   }
+}
+
+class _ChatDivider extends StatelessWidget {
+  const _ChatDivider();
+
+  @override
+  Widget build(BuildContext context) => const Divider(
+    height: 0.5,
+    thickness: 0.5,
+    color: Color(0x4D000000),
+  );
 }

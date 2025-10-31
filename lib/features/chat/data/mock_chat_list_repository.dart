@@ -7,8 +7,7 @@ class MockChatListRepository implements ChatListRepository {
       id: '1',
       name: 'James',
       lastMessage: 'Thank you! That was very helpful!',
-      profileImageUrl:
-          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face&auto=format&q=80',
+      profileImageUrl: 'assets/figma/Chats_mockup_0-702/Ellipse_0-713.svg',
       lastMessageTime: DateTime.now().subtract(const Duration(minutes: 5)),
       isOnline: true,
     ),
@@ -16,8 +15,7 @@ class MockChatListRepository implements ChatListRepository {
       id: '2',
       name: 'Will Kenny',
       lastMessage: "I know... I'm trying to get the funds.",
-      profileImageUrl:
-          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face&auto=format&q=80',
+      profileImageUrl: 'assets/figma/Chats_mockup_0-702/Ellipse_0-722.svg',
       lastMessageTime: DateTime.now().subtract(const Duration(hours: 1)),
       unreadCount: 2,
     ),
@@ -26,8 +24,7 @@ class MockChatListRepository implements ChatListRepository {
       name: 'Beth Williams',
       lastMessage:
           "I'm looking for tips around capturing the milky way. I have a 6D with a 24-100mm...",
-      profileImageUrl:
-          'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face&auto=format&q=80',
+      profileImageUrl: 'assets/figma/Chats_mockup_0-702/Ellipse_0-723.svg',
       lastMessageTime: DateTime.now().subtract(const Duration(hours: 3)),
       isOnline: true,
       unreadCount: 1,
@@ -37,8 +34,7 @@ class MockChatListRepository implements ChatListRepository {
       name: 'Rev Shawn',
       lastMessage:
           "Wanted to ask if you're available for a portrait shoot next week.",
-      profileImageUrl:
-          'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face&auto=format&q=80',
+      profileImageUrl: 'assets/figma/Chats_mockup_0-702/Ellipse_0-724.svg',
       lastMessageTime: DateTime.now().subtract(const Duration(days: 1)),
     ),
   ];
