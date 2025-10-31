@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 class ChatListPage extends StatelessWidget {
   const ChatListPage({super.key, this.repository});
@@ -33,12 +32,8 @@ class ChatListPage extends StatelessWidget {
     backgroundColor: Colors.white,
     elevation: 0,
     title: Text(
-      'Test Chat List',
-      style: TextStyle(
-        color: Colors.black,
-        fontSize: context.responsiveTitleSize,
-        fontWeight: FontWeight.bold,
-      ),
+      'Test Chats List',
+      style: _appBarTitleStyle(context),
     ),
     centerTitle: true,
     systemOverlayStyle: const SystemUiOverlayStyle(
@@ -46,4 +41,18 @@ class ChatListPage extends StatelessWidget {
       statusBarIconBrightness: Brightness.dark,
     ),
   );
+
+  TextStyle _appBarTitleStyle(BuildContext context) {
+    const baseStyle = TextStyle(
+      color: Colors.black,
+      fontSize: 17,
+      fontWeight: FontWeight.w600,
+      letterSpacing: -0.41,
+    );
+    final platform = Theme.of(context).platform;
+    if (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS) {
+      return baseStyle.copyWith(fontFamily: 'SF Pro Text');
+    }
+    return baseStyle.copyWith(fontFamily: 'Roboto');
+  }
 }

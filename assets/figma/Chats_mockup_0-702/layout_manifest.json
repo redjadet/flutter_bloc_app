@@ -1,0 +1,141 @@
+{
+  "frame": "Chats_mockup",
+  "nodeId": "0:702",
+  "assets": [
+    {
+      "id": "0:703",
+      "name": "Rectangle",
+      "file": "Rectangle_0-703.svg",
+      "type": "RECTANGLE",
+      "position": {
+        "x": 7822,
+        "y": 701
+      },
+      "size": {
+        "width": 375,
+        "height": 812
+      },
+      "zIndex": 0
+    },
+    {
+      "id": "0:709",
+      "name": "Background",
+      "file": "Background_0-709.svg",
+      "type": "RECTANGLE",
+      "position": {
+        "x": 7822,
+        "y": 885
+      },
+      "size": {
+        "width": 375,
+        "height": 0.5
+      },
+      "zIndex": 1
+    },
+    {
+      "id": "0:710",
+      "name": "Background",
+      "file": "Background_0-710.svg",
+      "type": "RECTANGLE",
+      "position": {
+        "x": 7822,
+        "y": 981.5
+      },
+      "size": {
+        "width": 375,
+        "height": 0.5
+      },
+      "zIndex": 2
+    },
+    {
+      "id": "0:711",
+      "name": "Background",
+      "file": "Background_0-711.svg",
+      "type": "RECTANGLE",
+      "position": {
+        "x": 7822,
+        "y": 1078
+      },
+      "size": {
+        "width": 375,
+        "height": 0.5
+      },
+      "zIndex": 3
+    },
+    {
+      "id": "0:712",
+      "name": "Background",
+      "file": "Background_0-712.svg",
+      "type": "RECTANGLE",
+      "position": {
+        "x": 7822,
+        "y": 1174.5
+      },
+      "size": {
+        "width": 375,
+        "height": 0.5
+      },
+      "zIndex": 4
+    },
+    {
+      "id": "0:713",
+      "name": "Ellipse",
+      "file": "Ellipse_0-713.svg",
+      "type": "ELLIPSE",
+      "position": {
+        "x": 7838,
+        "y": 805
+      },
+      "size": {
+        "width": 64,
+        "height": 64
+      },
+      "zIndex": 5
+    },
+    {
+      "id": "0:722",
+      "name": "Ellipse",
+      "file": "Ellipse_0-722.svg",
+      "type": "ELLIPSE",
+      "position": {
+        "x": 7838,
+        "y": 901.5
+      },
+      "size": {
+        "width": 64,
+        "height": 64
+      },
+      "zIndex": 6
+    },
+    {
+      "id": "0:723",
+      "name": "Ellipse",
+      "file": "Ellipse_0-723.svg",
+      "type": "ELLIPSE",
+      "position": {
+        "x": 7838,
+        "y": 998
+      },
+      "size": {
+        "width": 64,
+        "height": 64
+      },
+      "zIndex": 7
+    },
+    {
+      "id": "0:724",
+      "name": "Ellipse",
+      "file": "Ellipse_0-724.svg",
+      "type": "ELLIPSE",
+      "position": {
+        "x": 7838,
+        "y": 1094.5
+      },
+      "size": {
+        "width": 64,
+        "height": 64
+      },
+      "zIndex": 8
+    }
+  ]
+}
