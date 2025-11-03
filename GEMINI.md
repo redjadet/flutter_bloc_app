@@ -2,56 +2,49 @@
 
 Keep work lean, clean, and tested.
 
-## Quick Checklist
-
+## Delivery Checklist (run top to bottom)
 1. `flutter pub get`
-2. `dart format .`
-3. `flutter analyze`
-4. `flutter test --coverage`
-5. `flutter build ios --simulator`
-6. `dart run tool/update_coverage_summary.dart`
-7. If Freezed/JSON models changed → `dart run build_runner build --delete-conflicting-outputs`
+2. If Freezed/JSON changed → `dart run build_runner build --delete-conflicting-outputs`
+3. `dart format .`
+4. `flutter analyze`
+5. `dart run custom_lint`
+6. `flutter test --coverage`
+7. `dart run tool/update_coverage_summary.dart`
+8. `flutter build ios --simulator` (only for platform/build-risk changes)
 
-## Architecture Rules
+## Architecture Guardrails
+- Enforce Clean Architecture flow (Domain → Data → Presentation) with MVP: Widgets ↔ Cubits ↔ Repositories/Models.
+- Domain stays Flutter-agnostic; presentation depends on abstractions only; shared utilities live under `lib/shared/` when cross-cutting.
+- House business rules inside domain use cases or cubits; widgets limit themselves to layout, theming, navigation triggers.
+- Inject dependencies via `get_it`; avoid constructing services inside widgets/cubits unless they are pure value objects.
+- Timer logic routes through `TimerService` (or `FakeTimerService` in tests) for deterministic flows.
+- Cubit states remain immutable + `Equatable`/`freezed`; expose derived values with getters.
+- Await async work; channel failures through domain failures or `ErrorHandling`.
+- Keep hand-written files under ~250 lines and resolve lint warnings before handoff.
 
-- Enforce **Clean Architecture**: Domain → Data → Presentation only.
-- Follow MVP: Widgets (View) ↔ Cubits (Presenter) ↔ Repositories/Models.
-- Apply SOLID & Clean Code: expressive names, small units, limited side effects.
-- UI-only state stays under `presentation/*`; domain models remain UI agnostic.
-- Use `TimerService` (& `FakeTimerService` in tests) for timed behaviour.
-
-## Code Rules
-
-- Honor layer boundaries: domain stays Flutter-agnostic; data implements domain contracts only; presentation depends on abstractions, never concrete data sources.
-- Keep business logic inside domain use cases or cubits; widgets are limited to view concerns (layout, theming, navigation hooks).
-- Register every repository/service in `get_it`; avoid `new`ing dependencies in widgets or cubits unless they are pure value objects.
-- Make all cubit states immutable and `Equatable`/`freezed`; expose derived values with getters instead of mutable fields.
-- Ban unhandled `async` work: await futures, avoid `async void` outside callbacks, and route errors through domain failures or `ErrorHandling` helpers.
-- Guard architecture with imports: no `../../data` or `../../presentation` jumps; shared utilities live under `lib/shared/` only when cross-cutting.
-- Timer or clock logic must pass through `TimerService` (or `FakeTimerService` in tests) to keep flows deterministic.
-- Any new feature ships with matching `bloc_test` coverage and, when UI surfaces change, widget/golden tests; keep coverage scripts up to date.
-- Respect lint configuration: fix violations instead of disabling rules; if ignoring is unavoidable, annotate with a TODO and owner.
-- Adhere to size limits: keep hand-written files under ~250 lines—extract widgets/helpers once you approach the threshold.
-- Resolve markdown lint warnings before wrapping up a task so future runs start clean.
-
-## Workflow
-
+## Delivery Workflow
 1. Update domain contracts/models.
-2. Implement data repositories and register via `get_it`.
-3. Extend Cubits/Blocs; inject dependencies.
-4. Build UI with focused widgets; keep business rules in cubits/domain.
-5. Add or update unit/bloc/widget/golden tests; use fakes for determinism.
+2. Implement data repositories and register them in `get_it`.
+3. Extend cubits/blocs and inject dependencies.
+4. Build focused presentation widgets.
+5. Add/update unit, bloc, widget, and golden tests using fakes for determinism.
 
-## Testing Focus
+## Testing Playbook
+- Use `bloc_test` for cubit/bloc flows.
+- Cover UI with widget/golden tests (e.g., `CountdownBar`, `CounterDisplay`).
+- Auth flows rely on `MockFirebaseAuth` + `mock_exceptions`.
+- Drive time-dependent behaviour via `FakeTimerService().tick(n)`; abort runs >3 minutes and investigate hangs.
+- Update `NativePlatformService` fakes and integration coverage when platform contracts change.
 
-- `bloc_test` for state flows.
-- Widget/golden coverage for UI regressions (CountdownBar, CounterDisplay, etc.).
-- Auth flows with `MockFirebaseAuth` + `mock_exceptions`.
-- Deterministic time: `FakeTimerService().tick(n)`.
-- Abort any test run exceeding 3 minutes and investigate stuck timers, unawaited futures, or hanging platform calls before rerunning.
-- Cover platform contracts: update `NativePlatformService` fakes alongside channel changes and add integration coverage for new platform behaviour.
+## Key Notes
+- Counter auto-decrements every 5 s and never drops below 0.
+- Supported locales live in `MaterialApp.supportedLocales`.
+- Platform info comes from `NativePlatformService` (MethodChannel).
+- Counter widgets are under `lib/features/counter/presentation/widgets/` (exported via `features/counter.dart`).
+- Theme & locale logic stays in `lib/features/settings/`.
+- After modifying tests, rerun coverage scripts (`flutter test --coverage`, `dart run tool/update_coverage_summary.dart`).
 
-## DI Snippet
+## DI Reference
 
 ```dart
 return MultiBlocProvider(
@@ -72,12 +65,33 @@ return MultiBlocProvider(
 );
 ```
 
-## Notes
+## Figma Agent Playbook
 
-- Auto-decrement interval = 5 s; counter never goes below 0.
-- Supported locales: `MaterialApp.supportedLocales`.
-- Platform info comes from `NativePlatformService` (MethodChannel).
-- Counter UI widgets now live under `lib/features/counter/presentation/widgets/` (exported via `features/counter.dart`).
-- Theme & locale contracts + cubits reside in `lib/features/settings/`; keep `lib/shared/` for cross-cutting utilities only.
-- After modifying tests, rerun coverage (`flutter test --coverage` + `dart run tool/update_coverage_summary.dart`) to keep reports current.
-- Keep hand-written `.dart` files under ~250 lines; split out widgets/helpers when approaching the limit (ignore generated and localization files).
+**Purpose**: Generate Flutter layouts from `figma-sync` exports.
+
+**Setup**
+1. `cd figma-sync && npm install` (first run).
+2. Create/update `figma-sync/.env` with either:
+   - `FIGMA_TOKEN`, `FILE_KEY`, `NODE_IDS`, `EXPORT_FORMAT=png`, or
+   - `FIGMA_TOKEN`, `FIGMA_URL`, `EXPORT_FORMAT=png` (auto extracts keys).
+
+**Fetch Assets**
+- Run `npm run fetch` (or `npm run watch` for auto-refresh). Outputs per-node folders under `figma-sync/figma-data/{Frame}_{Node}/` containing JSON, PNG/SVG assets, `layout_manifest.json`, and `all_nodes.json`.
+
+**Implement Layout**
+1. Copy assets to `assets/figma/{Frame}_{Node}/` and add that folder to `pubspec.yaml`.
+2. Read `layout_manifest.json` to drive layout; subtract the frame origin from asset positions to get `left/top`.
+3. Render assets respecting ascending `zIndex` (background → foreground). Prefer semantic Flutter widgets; otherwise use `SvgPicture.asset` or `Image.asset`.
+4. Load SVGs with embedded rasters via `ResilientSvgAssetImage`, falling back to PNGs or sized placeholders when needed.
+
+**Prompt Triggers**
+- Treat requests like “create design/layout from Figma {Frame}_{Node}”, “generate Flutter screen from node {id}”, or direct Figma URLs as signals to run this playbook.
+
+**Direct Figma URLs**
+1. Parse `FILE_KEY` and `NODE_ID` from the URL (convert `0-702` → `0:702`).
+2. Update `.env`, then run `npm run fetch`.
+3. Proceed with the layout workflow above.
+
+**Quality Checks**
+- After integrating assets/code: run the delivery checklist (format, analyze, tests, coverage).
+- Keep platform fakes and integrations in sync with new assets or channel usage.
