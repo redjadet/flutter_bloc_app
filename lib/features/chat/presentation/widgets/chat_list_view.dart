@@ -68,13 +68,13 @@ class ChatListView extends StatelessWidget {
 
   Widget _buildErrorState(BuildContext context, String message) => Center(
     child: Padding(
-      padding: EdgeInsets.all(context.isTabletOrLarger ? 48.0 : 32.0),
+      padding: context.responsiveStatePadding,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             Icons.error_outline,
-            size: context.isTabletOrLarger ? 80.0 : 64.0,
+            size: context.responsiveErrorIconSizeLarge,
             color: Colors.grey,
           ),
           SizedBox(height: context.responsiveGap * 2),

@@ -6,7 +6,6 @@ import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history_sheet_helpers.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class ChatHistorySheet extends StatelessWidget {
   const ChatHistorySheet({required this.onClose, super.key});
@@ -20,12 +19,13 @@ class ChatHistorySheet extends StatelessWidget {
     final ChatCubit cubit = context.read<ChatCubit>();
     final MaterialLocalizations materialLocalizations =
         MaterialLocalizations.of(context);
-    final double bottomInset = context.keyboardInset;
 
     return FractionallySizedBox(
       heightFactor: 0.9,
       child: ClipRRect(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(UI.radiusM)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(context.responsiveCardRadius),
+        ),
         child: Material(
           color: theme.colorScheme.surface,
           child: SafeArea(
@@ -35,12 +35,7 @@ class ChatHistorySheet extends StatelessWidget {
                 constraints: BoxConstraints(maxWidth: context.barMaxWidth),
                 child: Padding(
                   key: const ValueKey('chat-history-sheet-content'),
-                  padding: EdgeInsets.fromLTRB(
-                    UI.horizontalGapL,
-                    UI.gapM,
-                    UI.horizontalGapL,
-                    UI.gapM + bottomInset,
-                  ),
+                  padding: context.responsiveSheetPadding(),
                   child: BlocBuilder<ChatCubit, ChatState>(
                     builder: (final context, final state) {
                       final List<ChatConversation> conversations =
@@ -64,7 +59,7 @@ class ChatHistorySheet extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: UI.gapS),
+                          SizedBox(height: context.responsiveGapS),
                           TextButton.icon(
                             icon: const Icon(Icons.add),
                             label: Text(l10n.chatHistoryStartNew),
@@ -89,7 +84,7 @@ class ChatHistorySheet extends StatelessWidget {
                                   }
                                 : null,
                           ),
-                          SizedBox(height: UI.gapS),
+                          SizedBox(height: context.responsiveGapS),
                           Expanded(
                             child: state.hasHistory
                                 ? ListView.separated(
@@ -145,7 +140,7 @@ class ChatHistorySheet extends StatelessWidget {
                                         ),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
-                                            UI.radiusM,
+                                            context.responsiveCardRadius,
                                           ),
                                         ),
                                         tileColor: isActive
@@ -182,7 +177,7 @@ class ChatHistorySheet extends StatelessWidget {
                                                 preview.isNotEmpty)
                                               Padding(
                                                 padding: EdgeInsets.only(
-                                                  top: UI.gapXS,
+                                                  top: context.responsiveGapXS,
                                                 ),
                                                 child: Text(
                                                   preview,
@@ -202,13 +197,16 @@ class ChatHistorySheet extends StatelessWidget {
                                       );
                                     },
                                     separatorBuilder: (final context, _) =>
-                                        SizedBox(height: UI.gapS),
+                                        SizedBox(
+                                          height: context.responsiveGapS,
+                                        ),
                                     itemCount: conversations.length,
                                   )
                                 : Center(
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
-                                        horizontal: UI.horizontalGapL,
+                                        horizontal:
+                                            context.responsiveHorizontalGapL,
                                       ),
                                       child: Text(
                                         l10n.chatHistoryEmpty,
