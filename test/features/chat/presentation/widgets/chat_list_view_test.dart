@@ -143,8 +143,8 @@ void main() {
         ),
       );
 
-      // Should find dividers (one less than the number of contacts)
-      expect(find.byType(Divider), findsOneWidget);
+      // Should find dividers for each gap plus leading and trailing
+      expect(find.byType(Divider), findsNWidgets(mockContacts.length + 1));
     });
 
     testWidgets('should handle responsive padding', (tester) async {

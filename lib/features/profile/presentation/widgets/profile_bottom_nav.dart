@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 class ProfileBottomNav extends StatelessWidget {
   const ProfileBottomNav({super.key});
 
   @override
   Widget build(final BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final double bottomPadding = mediaQuery.padding.bottom;
-    final double screenWidth = mediaQuery.size.width;
-    final bool isCompactWidth = screenWidth < 360;
+    final double bottomPadding = context.safeAreaInsets.bottom;
+    final bool isCompactWidth = context.isCompactWidth;
     final double navHeight = isCompactWidth ? 70 : 83;
     final double actionSlotWidth = isCompactWidth ? 60 : 70;
     final double actionSlotHeight = isCompactWidth ? 36 : 40;

@@ -3,6 +3,7 @@ import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_line_graph.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_scrollable.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:intl/intl.dart';
 
@@ -25,7 +26,7 @@ class ChartContentList extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
-    final chartHeight = MediaQuery.of(context).size.height * 0.45;
+    final chartHeight = context.heightFraction(0.45);
     return ChartScrollable(
       children: [
         Text(l10n.chartPageDescription, style: theme.textTheme.titleMedium),
