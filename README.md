@@ -31,7 +31,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Remote Config: Firebase Remote Config integration for feature flags and runtime configuration updates, with `RemoteConfigCubit` managing feature toggles like the "awesome feature" demo.
 - Biometric Authentication: Secure authentication using device biometrics (fingerprint, face recognition) for sensitive actions via `LocalBiometricAuthenticator`, with graceful fallback when biometrics are unavailable.
 - Tests: Comprehensive unit, bloc, widget, and golden coverage (`flutter_test`, `bloc_test`, `golden_toolkit`), including auth flows with Firebase mocks and global log suppression during test execution.
-- Agent-friendly guide: See `AGENTS.md` for the quick checklist (format → analyze → test → build_runner) and architecture guardrails.
+- Agent-friendly guide: See `AGENTS.md` for the delivery checklist (`flutter pub get` → build_runner when models change → `dart format .` → `flutter analyze` → `dart run custom_lint` → `flutter test --coverage` → `dart run tool/update_coverage_summary.dart` → optional `flutter build ios --simulator`) and architecture guardrails.
 - Custom Linting: Custom file length linting rules to maintain code quality and prevent oversized files.
 
 ## WebSocket Demo
@@ -485,13 +485,14 @@ classDiagram
 
 ```bash
 flutter pub get
+dart run build_runner build --delete-conflicting-outputs # only when Freezed/JSON models change
 dart format .
 flutter analyze
-dart run build_runner build --delete-conflicting-outputs
+dart run custom_lint
 flutter test --coverage
 dart run tool/update_coverage_summary.dart
-dart run custom_lint  # run additional custom lint checks (optional)
 flutter run
+# optional when platform/build-risk changes: flutter build ios --simulator
 ```
 
 ### Secrets setup
@@ -561,7 +562,7 @@ The `ExamplePage` includes a “Fetch native info” button that uses a MethodCh
 - `flutter test` runs unit, widget, and golden tests.
 - `flutter test test/fab_alignment_golden_test.dart` runs FAB alignment goldens.
 - `flutter test test/counter_page_golden_test.dart` runs counter page goldens.
-- `flutter test coverage` to generate `lcov.info` file used to generate `coverage_summary.md` file
+- `flutter test --coverage` to generate `lcov.info` used by the coverage summary.
 - `dart run tool/update_coverage_summary.dart` to regenerate coverage summary from lcov data
 
 Golden baselines live in `test/goldens/`.
@@ -599,6 +600,7 @@ environment variables described in `android/fastlane/Fastfile` and
 
 ```bash
 flutter analyze
+dart run custom_lint
 ```
 
 The project follows Flutter lints (`analysis_options.yaml`).
@@ -613,7 +615,7 @@ This project is available for free use in public, non-commercial repositories un
 
 ## Tooling
 
-- `flutter test coverage` to regenerate `coverage/lcov.info` file.
+- `flutter test --coverage` to regenerate `coverage/lcov.info` file.
 - `dart run tool/update_coverage_summary.dart` – regenerate `coverage/coverage_summary.md` from `coverage/lcov.info`, excluding generated and localization files.
 - `dart run custom_lint` – run custom linting rules including file length enforcement.
 - `test/flutter_test_config.dart` – global test configuration that automatically suppresses logging during test execution for cleaner output.
