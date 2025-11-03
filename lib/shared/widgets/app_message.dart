@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 class AppMessage extends StatelessWidget {
   const AppMessage({
@@ -30,20 +30,24 @@ class AppMessage extends StatelessWidget {
 
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(UI.gapL),
+        padding: EdgeInsets.all(context.responsiveGapL),
         child: Card(
           color: backgroundColor,
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: UI.cardPadH,
-              vertical: UI.cardPadV,
+              horizontal: context.responsiveCardPadding,
+              vertical: context.responsiveGapL,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 if (icon != null) ...<Widget>[
-                  Icon(icon, size: UI.iconL * 2, color: textColor),
-                  SizedBox(height: UI.gapM),
+                  Icon(
+                    icon,
+                    size: context.responsiveIconSize * 2,
+                    color: textColor,
+                  ),
+                  SizedBox(height: context.responsiveGapM),
                 ],
                 if (title != null) ...<Widget>[
                   Text(
@@ -53,7 +57,7 @@ class AppMessage extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: UI.gapS),
+                  SizedBox(height: context.responsiveGapS),
                 ],
                 Text(
                   message,
@@ -61,11 +65,11 @@ class AppMessage extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 if (actions != null && actions!.isNotEmpty) ...<Widget>[
-                  SizedBox(height: UI.gapM),
+                  SizedBox(height: context.responsiveGapM),
                   Wrap(
                     alignment: WrapAlignment.center,
-                    spacing: UI.gapM,
-                    runSpacing: UI.gapS,
+                    spacing: context.responsiveGapM,
+                    runSpacing: context.responsiveGapS,
                     children: actions!,
                   ),
                 ],

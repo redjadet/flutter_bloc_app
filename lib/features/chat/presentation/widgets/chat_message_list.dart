@@ -48,7 +48,7 @@ class ChatMessageList extends StatelessWidget {
         if (!state.hasMessages) {
           return Center(
             child: Padding(
-              padding: EdgeInsets.all(UI.gapL),
+              padding: context.responsiveStatePadding,
               child: Text(
                 l10n.chatEmptyState,
                 style: theme.textTheme.bodyLarge,
@@ -59,7 +59,7 @@ class ChatMessageList extends StatelessWidget {
         }
         return ListView.builder(
           controller: controller,
-          padding: EdgeInsets.all(UI.gapM),
+          padding: EdgeInsets.all(context.responsiveGapM),
           itemCount: state.messages.length,
           itemBuilder: (final context, final index) {
             final ChatMessage message = state.messages[index];
@@ -77,17 +77,16 @@ class ChatMessageList extends StatelessWidget {
             return Align(
               alignment: alignment,
               child: Container(
-                margin: EdgeInsets.symmetric(vertical: UI.gapS / 2),
-                padding: EdgeInsets.symmetric(
-                  horizontal: UI.horizontalGapM,
-                  vertical: UI.gapS,
-                ),
+                margin: context.responsiveBubbleMargin,
+                padding: context.responsiveBubblePadding,
                 constraints: BoxConstraints(
                   maxWidth: context.widthFraction(0.75),
                 ),
                 decoration: BoxDecoration(
                   color: bubbleColor,
-                  borderRadius: BorderRadius.circular(UI.radiusM),
+                  borderRadius: BorderRadius.circular(
+                    context.responsiveCardRadius,
+                  ),
                 ),
                 child: Text(
                   message.text,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 class GoogleMapsContentLayout extends StatelessWidget {
   const GoogleMapsContentLayout({
@@ -29,7 +29,7 @@ class GoogleMapsContentLayout extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             controls,
-            SizedBox(height: UI.gapM),
+            SizedBox(height: context.responsiveGapM),
             locations,
           ],
         ),
@@ -37,12 +37,12 @@ class GoogleMapsContentLayout extends StatelessWidget {
 
       if (useHorizontalLayout) {
         return Padding(
-          padding: EdgeInsets.all(UI.gapL),
+          padding: EdgeInsets.all(context.responsiveGapL),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(child: mapSection),
-              SizedBox(width: UI.gapL),
+              SizedBox(width: context.responsiveGapL),
               Flexible(child: detailsSection),
             ],
           ),
@@ -50,12 +50,12 @@ class GoogleMapsContentLayout extends StatelessWidget {
       }
 
       return SingleChildScrollView(
-        padding: EdgeInsets.all(UI.gapL),
+        padding: EdgeInsets.all(context.responsiveGapL),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             mapSection,
-            SizedBox(height: UI.gapL),
+            SizedBox(height: context.responsiveGapL),
             detailsSection,
           ],
         ),

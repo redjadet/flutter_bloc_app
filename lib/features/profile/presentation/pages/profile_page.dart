@@ -185,24 +185,28 @@ class _ProfileErrorView extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => Padding(
-    padding: const EdgeInsets.all(24),
+    padding: context.responsiveStatePadding,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Icon(Icons.error_outline, size: 48, color: Colors.black54),
-        const SizedBox(height: 16),
-        const Text(
+        Icon(
+          Icons.error_outline,
+          size: context.responsiveErrorIconSize,
+          color: Colors.black54,
+        ),
+        SizedBox(height: context.responsiveGapL),
+        Text(
           'Failed to load profile',
           style: TextStyle(
-            fontSize: 18,
+            fontSize: context.responsiveTitleSize,
             fontWeight: FontWeight.w600,
           ),
           textAlign: TextAlign.center,
         ),
         if (onRetry != null) ...[
-          const SizedBox(height: 24),
+          SizedBox(height: context.responsiveGapL * 1.5),
           SizedBox(
-            height: 48,
+            height: context.responsiveButtonHeight,
             child: _RetryButton(onPressed: onRetry!),
           ),
         ],

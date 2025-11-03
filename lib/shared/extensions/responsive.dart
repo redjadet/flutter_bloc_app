@@ -123,6 +123,78 @@ extension ResponsiveContext on BuildContext {
   double get responsiveElevation => isMobile ? 2.0 : 4.0;
   double get responsiveCardElevation => isMobile ? 1.0 : 2.0;
 
+  // Common responsive spacing helpers
+  /// Responsive gap XS (extra small)
+  double get responsiveGapXS => isMobile ? _safeH(6) : _safeH(8);
+
+  /// Responsive gap S (small) - maps to UI.gapS
+  double get responsiveGapS => isMobile ? _safeH(8) : _safeH(10);
+
+  /// Responsive gap M (medium) - maps to UI.gapM
+  double get responsiveGapM => isMobile ? _safeH(12) : _safeH(16);
+
+  /// Responsive gap L (large) - maps to UI.gapL
+  double get responsiveGapL => isMobile ? _safeH(16) : _safeH(24);
+
+  /// Responsive horizontal gap S
+  double get responsiveHorizontalGapS => isMobile ? _safeW(8) : _safeW(10);
+
+  /// Responsive horizontal gap M
+  double get responsiveHorizontalGapM => isMobile ? _safeW(10) : _safeW(12);
+
+  /// Responsive horizontal gap L
+  double get responsiveHorizontalGapL => isMobile ? _safeW(16) : _safeW(24);
+
+  // Common responsive EdgeInsets patterns
+  /// Padding for cards with responsive values (EdgeInsets)
+  EdgeInsets get responsiveCardPaddingInsets =>
+      EdgeInsets.all(responsiveCardPadding);
+
+  /// Padding for list items
+  EdgeInsets get responsiveListItemPadding => EdgeInsets.symmetric(
+    horizontal: responsiveHorizontalGapL,
+    vertical: responsiveGapM,
+  );
+
+  /// Padding for error/empty states
+  EdgeInsets get responsiveStatePadding => EdgeInsets.all(
+    isMobile ? _safeW(24) : _safeW(32),
+  );
+
+  /// Padding for dialog content
+  EdgeInsets get responsiveDialogPadding => EdgeInsets.symmetric(
+    horizontal: isMobile ? _safeW(24) : _safeW(32),
+    vertical: isMobile ? _safeH(20) : _safeH(24),
+  );
+
+  /// Padding for sheet content (with bottom inset consideration)
+  EdgeInsets responsiveSheetPadding({final double extraBottom = 0}) =>
+      EdgeInsets.fromLTRB(
+        responsiveHorizontalGapL,
+        responsiveGapM,
+        responsiveHorizontalGapL,
+        responsiveGapM + keyboardInset + extraBottom,
+      );
+
+  /// Padding for message bubbles
+  EdgeInsets get responsiveBubblePadding => EdgeInsets.symmetric(
+    horizontal: responsiveHorizontalGapM,
+    vertical: responsiveGapS,
+  );
+
+  /// Margin for message bubbles
+  EdgeInsets get responsiveBubbleMargin => EdgeInsets.symmetric(
+    vertical: responsiveGapS / 2,
+  );
+
+  // Responsive icon sizes for common states
+  /// Responsive icon size for error states
+  double get responsiveErrorIconSize => isMobile ? _safeSp(48) : _safeSp(64);
+
+  /// Responsive icon size for large error states
+  double get responsiveErrorIconSizeLarge =>
+      isMobile ? _safeSp(64) : _safeSp(80);
+
   // General responsive helpers
   double widthFraction(final double fraction) => screenWidth * fraction;
   double heightFraction(final double fraction) => screenHeight * fraction;
