@@ -188,6 +188,12 @@ abstract class AppLocalizations {
   /// **'Open example page'**
   String get openExampleTooltip;
 
+  /// Tooltip for navigating to the payment calculator page
+  ///
+  /// In en, this message translates to:
+  /// **'Open payment calculator'**
+  String get openCalculatorTooltip;
+
   /// Title of the example feature page
   ///
   /// In en, this message translates to:
@@ -247,6 +253,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Parallel doubled values: {values} (completed in {milliseconds} ms)'**
   String exampleIsolateParallelComplete(String values, int milliseconds);
+
+  /// Title for the payment calculator screen
+  ///
+  /// In en, this message translates to:
+  /// **'Payment calculator'**
+  String get calculatorTitle;
+
+  /// Heading for the payment summary card
+  ///
+  /// In en, this message translates to:
+  /// **'Payment summary'**
+  String get calculatorSummaryHeader;
+
+  /// Label for the committed calculation result
+  ///
+  /// In en, this message translates to:
+  /// **'Result'**
+  String get calculatorResultLabel;
+
+  /// Label for the subtotal amount
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal'**
+  String get calculatorSubtotalLabel;
+
+  /// Label for the tax amount row
+  ///
+  /// In en, this message translates to:
+  /// **'Tax ({rate})'**
+  String calculatorTaxLabel(String rate);
+
+  /// Label for the tip amount row
+  ///
+  /// In en, this message translates to:
+  /// **'Tip ({rate})'**
+  String calculatorTipLabel(String rate);
+
+  /// Label for the final total amount
+  ///
+  /// In en, this message translates to:
+  /// **'Amount to collect'**
+  String get calculatorTotalLabel;
+
+  /// Caption for the tax preset chips
+  ///
+  /// In en, this message translates to:
+  /// **'Tax presets'**
+  String get calculatorTaxPresetsLabel;
+
+  /// Label for opening the custom tax dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Custom tax'**
+  String get calculatorCustomTaxLabel;
+
+  /// Dialog title asking for a custom tax percentage
+  ///
+  /// In en, this message translates to:
+  /// **'Custom tax'**
+  String get calculatorCustomTaxDialogTitle;
+
+  /// Label for the custom tax text field
+  ///
+  /// In en, this message translates to:
+  /// **'Tax percentage'**
+  String get calculatorCustomTaxFieldLabel;
+
+  /// Action label for clearing the configured tax
+  ///
+  /// In en, this message translates to:
+  /// **'Reset tax'**
+  String get calculatorResetTax;
+
+  /// Caption for the tip preset chips
+  ///
+  /// In en, this message translates to:
+  /// **'Tip presets'**
+  String get calculatorTipRateLabel;
+
+  /// Label for opening the custom tip dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Custom tip'**
+  String get calculatorCustomTipLabel;
+
+  /// Action label for clearing the selected tip
+  ///
+  /// In en, this message translates to:
+  /// **'Clear tip'**
+  String get calculatorResetTip;
+
+  /// Dialog title asking for a custom tip percentage
+  ///
+  /// In en, this message translates to:
+  /// **'Custom tip'**
+  String get calculatorCustomTipDialogTitle;
+
+  /// Label for the text field requesting a custom tip
+  ///
+  /// In en, this message translates to:
+  /// **'Tip percentage'**
+  String get calculatorCustomTipFieldLabel;
+
+  /// Generic cancel button label
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get calculatorCancel;
+
+  /// Label for applying a custom configuration
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get calculatorApply;
+
+  /// Heading for the calculator keypad card
+  ///
+  /// In en, this message translates to:
+  /// **'Keypad'**
+  String get calculatorKeypadHeader;
+
+  /// Button label that clears the calculator state
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get calculatorClearLabel;
+
+  /// Button label that removes the last character
+  ///
+  /// In en, this message translates to:
+  /// **'Backspace'**
+  String get calculatorBackspace;
+
+  /// Label for the button finalising the calculation
+  ///
+  /// In en, this message translates to:
+  /// **'Charge total'**
+  String get calculatorEquals;
+
+  /// Title for the payment breakdown screen
+  ///
+  /// In en, this message translates to:
+  /// **'Payment summary'**
+  String get calculatorPaymentTitle;
+
+  /// Button label to return to the calculator
+  ///
+  /// In en, this message translates to:
+  /// **'New calculation'**
+  String get calculatorNewCalculation;
 
   /// Biometric prompt displayed before navigating to settings
   ///
