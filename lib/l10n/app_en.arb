@@ -61,6 +61,10 @@
   "@openExampleTooltip": {
     "description": "Tooltip for navigating to the example feature page"
   },
+  "openCalculatorTooltip": "Open payment calculator",
+  "@openCalculatorTooltip": {
+    "description": "Tooltip for navigating to the payment calculator page"
+  },
   "examplePageTitle": "Example Page",
   "@examplePageTitle": {
     "description": "Title of the example feature page"
@@ -116,6 +120,116 @@
         "type": "int"
       }
     }
+  },
+  "calculatorTitle": "Payment calculator",
+  "@calculatorTitle": {
+    "description": "Title for the payment calculator screen"
+  },
+  "calculatorSummaryHeader": "Payment summary",
+  "@calculatorSummaryHeader": {
+    "description": "Heading for the payment summary card"
+  },
+  "calculatorResultLabel": "Result",
+  "@calculatorResultLabel": {
+    "description": "Label for the committed calculation result"
+  },
+  "calculatorSubtotalLabel": "Subtotal",
+  "@calculatorSubtotalLabel": {
+    "description": "Label for the subtotal amount"
+  },
+  "calculatorTaxLabel": "Tax ({rate})",
+  "@calculatorTaxLabel": {
+    "description": "Label for the tax amount row",
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "calculatorTipLabel": "Tip ({rate})",
+  "@calculatorTipLabel": {
+    "description": "Label for the tip amount row",
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "calculatorTotalLabel": "Amount to collect",
+  "@calculatorTotalLabel": {
+    "description": "Label for the final total amount"
+  },
+  "calculatorTaxPresetsLabel": "Tax presets",
+  "@calculatorTaxPresetsLabel": {
+    "description": "Caption for the tax preset chips"
+  },
+  "calculatorCustomTaxLabel": "Custom tax",
+  "@calculatorCustomTaxLabel": {
+    "description": "Label for opening the custom tax dialog"
+  },
+  "calculatorCustomTaxDialogTitle": "Custom tax",
+  "@calculatorCustomTaxDialogTitle": {
+    "description": "Dialog title asking for a custom tax percentage"
+  },
+  "calculatorCustomTaxFieldLabel": "Tax percentage",
+  "@calculatorCustomTaxFieldLabel": {
+    "description": "Label for the custom tax text field"
+  },
+  "calculatorResetTax": "Reset tax",
+  "@calculatorResetTax": {
+    "description": "Action label for clearing the configured tax"
+  },
+  "calculatorTipRateLabel": "Tip presets",
+  "@calculatorTipRateLabel": {
+    "description": "Caption for the tip preset chips"
+  },
+  "calculatorCustomTipLabel": "Custom tip",
+  "@calculatorCustomTipLabel": {
+    "description": "Label for opening the custom tip dialog"
+  },
+  "calculatorResetTip": "Clear tip",
+  "@calculatorResetTip": {
+    "description": "Action label for clearing the selected tip"
+  },
+  "calculatorCustomTipDialogTitle": "Custom tip",
+  "@calculatorCustomTipDialogTitle": {
+    "description": "Dialog title asking for a custom tip percentage"
+  },
+  "calculatorCustomTipFieldLabel": "Tip percentage",
+  "@calculatorCustomTipFieldLabel": {
+    "description": "Label for the text field requesting a custom tip"
+  },
+  "calculatorCancel": "Cancel",
+  "@calculatorCancel": {
+    "description": "Generic cancel button label"
+  },
+  "calculatorApply": "Apply",
+  "@calculatorApply": {
+    "description": "Label for applying a custom configuration"
+  },
+  "calculatorKeypadHeader": "Keypad",
+  "@calculatorKeypadHeader": {
+    "description": "Heading for the calculator keypad card"
+  },
+  "calculatorClearLabel": "Clear",
+  "@calculatorClearLabel": {
+    "description": "Button label that clears the calculator state"
+  },
+  "calculatorBackspace": "Backspace",
+  "@calculatorBackspace": {
+    "description": "Button label that removes the last character"
+  },
+  "calculatorEquals": "Charge total",
+  "@calculatorEquals": {
+    "description": "Label for the button finalising the calculation"
+  },
+  "calculatorPaymentTitle": "Payment summary",
+  "@calculatorPaymentTitle": {
+    "description": "Title for the payment breakdown screen"
+  },
+  "calculatorNewCalculation": "New calculation",
+  "@calculatorNewCalculation": {
+    "description": "Button label to return to the calculator"
   },
   "settingsBiometricPrompt": "Authenticate to open Settings",
   "@settingsBiometricPrompt": {

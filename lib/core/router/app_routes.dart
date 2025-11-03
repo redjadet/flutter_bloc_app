@@ -12,6 +12,12 @@ class AppRoutes {
   static const charts = 'charts';
   static const chartsPath = '/charts';
 
+  static const calculator = 'calculator';
+  static const calculatorPath = '/calculator';
+
+  static const calculatorPayment = 'calculator-payment';
+  static const calculatorPaymentPath = '/calculator/payment';
+
   static const settings = 'settings';
   static const settingsPath = '/settings';
 

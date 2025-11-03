@@ -46,6 +46,37 @@ class _MyAppState extends State<MyApp> {
             CounterPage(title: context.l10n.homeTitle),
       ),
       GoRoute(
+        path: AppRoutes.calculatorPath,
+        name: AppRoutes.calculator,
+        builder: (final context, final state) => BlocProvider(
+          create: (_) => CalculatorCubit(
+            calculator: getIt<PaymentCalculator>(),
+          ),
+          child: const CalculatorPage(),
+        ),
+        routes: [
+          GoRoute(
+            path: 'payment',
+            name: AppRoutes.calculatorPayment,
+            builder: (final context, final state) {
+              final Object? extra = state.extra;
+              if (extra is CalculatorCubit) {
+                return BlocProvider.value(
+                  value: extra,
+                  child: const CalculatorPaymentPage(),
+                );
+              }
+              return BlocProvider(
+                create: (_) => CalculatorCubit(
+                  calculator: getIt<PaymentCalculator>(),
+                ),
+                child: const CalculatorPaymentPage(),
+              );
+            },
+          ),
+        ],
+      ),
+      GoRoute(
         path: AppRoutes.examplePath,
         name: AppRoutes.example,
         builder: (final context, final state) => const ExamplePage(),

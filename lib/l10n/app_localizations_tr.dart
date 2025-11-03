@@ -53,6 +53,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get openExampleTooltip => 'Örnek sayfayı aç';
 
   @override
+  String get openCalculatorTooltip => 'Ödeme hesaplayıcısını aç';
+
+  @override
   String get examplePageTitle => 'Örnek Sayfa';
 
   @override
@@ -87,6 +90,85 @@ class AppLocalizationsTr extends AppLocalizations {
   String exampleIsolateParallelComplete(String values, int milliseconds) {
     return 'Paralel iki kat değerler: $values ($milliseconds ms içinde tamamlandı)';
   }
+
+  @override
+  String get calculatorTitle => 'Ödeme hesaplayıcısı';
+
+  @override
+  String get calculatorSummaryHeader => 'Ödeme özeti';
+
+  @override
+  String get calculatorResultLabel => 'Sonuç';
+
+  @override
+  String get calculatorSubtotalLabel => 'Ara toplam';
+
+  @override
+  String calculatorTaxLabel(String rate) {
+    return 'Vergi ($rate)';
+  }
+
+  @override
+  String calculatorTipLabel(String rate) {
+    return 'Bahşiş ($rate)';
+  }
+
+  @override
+  String get calculatorTotalLabel => 'Tahsil edilecek tutar';
+
+  @override
+  String get calculatorTaxPresetsLabel => 'Vergi seçenekleri';
+
+  @override
+  String get calculatorCustomTaxLabel => 'Özel vergi';
+
+  @override
+  String get calculatorCustomTaxDialogTitle => 'Özel vergi';
+
+  @override
+  String get calculatorCustomTaxFieldLabel => 'Vergi yüzdesi';
+
+  @override
+  String get calculatorResetTax => 'Vergiyi sıfırla';
+
+  @override
+  String get calculatorTipRateLabel => 'Bahşiş seçenekleri';
+
+  @override
+  String get calculatorCustomTipLabel => 'Özel bahşiş';
+
+  @override
+  String get calculatorResetTip => 'Bahşişi temizle';
+
+  @override
+  String get calculatorCustomTipDialogTitle => 'Özel bahşiş';
+
+  @override
+  String get calculatorCustomTipFieldLabel => 'Bahşiş yüzdesi';
+
+  @override
+  String get calculatorCancel => 'İptal';
+
+  @override
+  String get calculatorApply => 'Uygula';
+
+  @override
+  String get calculatorKeypadHeader => 'Tuş takımı';
+
+  @override
+  String get calculatorClearLabel => 'Temizle';
+
+  @override
+  String get calculatorBackspace => 'Geri sil';
+
+  @override
+  String get calculatorEquals => 'Toplamı hesapla';
+
+  @override
+  String get calculatorPaymentTitle => 'Ödeme özeti';
+
+  @override
+  String get calculatorNewCalculation => 'Yeni hesaplama';
 
   @override
   String get settingsBiometricPrompt =>

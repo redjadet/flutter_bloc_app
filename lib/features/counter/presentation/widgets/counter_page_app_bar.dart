@@ -32,6 +32,11 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
+          tooltip: l10n.openCalculatorTooltip,
+          onPressed: () => context.pushNamed(AppRoutes.calculator),
+          icon: const Icon(Icons.payments_outlined),
+        ),
+        IconButton(
           tooltip: l10n.openExampleTooltip,
           onPressed: () => context.pushNamed(AppRoutes.example),
           icon: const Icon(Icons.explore),

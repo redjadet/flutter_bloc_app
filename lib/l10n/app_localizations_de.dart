@@ -55,6 +55,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get openExampleTooltip => 'Beispielseite öffnen';
 
   @override
+  String get openCalculatorTooltip => 'Zahlungsrechner öffnen';
+
+  @override
   String get examplePageTitle => 'Beispielseite';
 
   @override
@@ -90,6 +93,85 @@ class AppLocalizationsDe extends AppLocalizations {
   String exampleIsolateParallelComplete(String values, int milliseconds) {
     return 'Parallel verdoppelte Werte: $values (abgeschlossen in $milliseconds ms)';
   }
+
+  @override
+  String get calculatorTitle => 'Zahlungsrechner';
+
+  @override
+  String get calculatorSummaryHeader => 'Zahlungsübersicht';
+
+  @override
+  String get calculatorResultLabel => 'Ergebnis';
+
+  @override
+  String get calculatorSubtotalLabel => 'Zwischensumme';
+
+  @override
+  String calculatorTaxLabel(String rate) {
+    return 'Steuer ($rate)';
+  }
+
+  @override
+  String calculatorTipLabel(String rate) {
+    return 'Trinkgeld ($rate)';
+  }
+
+  @override
+  String get calculatorTotalLabel => 'Zu kassierender Betrag';
+
+  @override
+  String get calculatorTaxPresetsLabel => 'Steuervorgaben';
+
+  @override
+  String get calculatorCustomTaxLabel => 'Individueller Steuersatz';
+
+  @override
+  String get calculatorCustomTaxDialogTitle => 'Individueller Steuersatz';
+
+  @override
+  String get calculatorCustomTaxFieldLabel => 'Steuersatz in Prozent';
+
+  @override
+  String get calculatorResetTax => 'Steuer zurücksetzen';
+
+  @override
+  String get calculatorTipRateLabel => 'Trinkgeld-Voreinstellungen';
+
+  @override
+  String get calculatorCustomTipLabel => 'Individuelles Trinkgeld';
+
+  @override
+  String get calculatorResetTip => 'Trinkgeld löschen';
+
+  @override
+  String get calculatorCustomTipDialogTitle => 'Individuelles Trinkgeld';
+
+  @override
+  String get calculatorCustomTipFieldLabel => 'Trinkgeld in Prozent';
+
+  @override
+  String get calculatorCancel => 'Abbrechen';
+
+  @override
+  String get calculatorApply => 'Übernehmen';
+
+  @override
+  String get calculatorKeypadHeader => 'Tastatur';
+
+  @override
+  String get calculatorClearLabel => 'Zurücksetzen';
+
+  @override
+  String get calculatorBackspace => 'Rücktaste';
+
+  @override
+  String get calculatorEquals => 'Betrag berechnen';
+
+  @override
+  String get calculatorPaymentTitle => 'Zahlungsübersicht';
+
+  @override
+  String get calculatorNewCalculation => 'Neue Berechnung';
 
   @override
   String get settingsBiometricPrompt =>

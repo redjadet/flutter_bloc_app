@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:flutter_bloc_app/features/calculator/domain/payment_calculator.dart';
 import 'package:flutter_bloc_app/features/chart/data/delayed_chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
@@ -58,6 +59,7 @@ Future<void> configureDependencies() async {
   _registerLazySingletonIfAbsent<ChartRepository>(
     () => DelayedChartRepository(client: getIt<http.Client>()),
   );
+  _registerLazySingletonIfAbsent<PaymentCalculator>(PaymentCalculator.new);
   _registerLazySingletonIfAbsent<GraphqlDemoRepository>(
     () => CountriesGraphqlRepository(client: getIt<http.Client>()),
   );

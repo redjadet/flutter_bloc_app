@@ -16,6 +16,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - GraphQL demo: Countries browser backed by the free `countries.trevorblades.com` GraphQL API, complete with continent filtering and localized labels.
 - WebSocket demo: Reusable Cubit + repository stack driving a public echo websocket with reconnect/error handling and localized UI.
 - Maps: Google Maps sample page showcasing curated San Francisco locations with traffic toggle, runtime map controls, and guard rails when API keys are missing (Android & iOS, with native Apple Maps rendering on iOS when Google keys are unavailable).
+- Payment calculator: iOS-style keypad with running expression history, tax/tip presets, custom percentage dialogs, and dedicated payment summary screen (desktop/mobile responsive, scroll-aware on compact layouts).
 - Loading polish: `skeletonizer` placeholders, `fancy_shimmer_image` hero card, and dev-only loading delay to showcase the effects.
 - Logging: Centralized `AppLogger` built on top of the `logger` package.
 - Localization: `intl` + Flutter localizations (EN, TR, DE, FR, ES) with version/build surfaced on the Settings page.
@@ -90,7 +91,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 
 ## Test Coverage
 
-- Latest line coverage: **78.00%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
+- Latest line coverage: **73.95%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
 - Test Infrastructure: Global test configuration with automatic log suppression during test execution for cleaner output.
 
 ## Tech Stack

@@ -1,4 +1,5 @@
 export 'auth/auth.dart';
+export 'calculator/calculator.dart';
 export 'chart/chart.dart';
 export 'chat/chat.dart';
 export 'counter/counter.dart';

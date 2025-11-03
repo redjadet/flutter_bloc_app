@@ -53,6 +53,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openExampleTooltip => 'Open example page';
 
   @override
+  String get openCalculatorTooltip => 'Open payment calculator';
+
+  @override
   String get examplePageTitle => 'Example Page';
 
   @override
@@ -86,6 +89,85 @@ class AppLocalizationsEn extends AppLocalizations {
   String exampleIsolateParallelComplete(String values, int milliseconds) {
     return 'Parallel doubled values: $values (completed in $milliseconds ms)';
   }
+
+  @override
+  String get calculatorTitle => 'Payment calculator';
+
+  @override
+  String get calculatorSummaryHeader => 'Payment summary';
+
+  @override
+  String get calculatorResultLabel => 'Result';
+
+  @override
+  String get calculatorSubtotalLabel => 'Subtotal';
+
+  @override
+  String calculatorTaxLabel(String rate) {
+    return 'Tax ($rate)';
+  }
+
+  @override
+  String calculatorTipLabel(String rate) {
+    return 'Tip ($rate)';
+  }
+
+  @override
+  String get calculatorTotalLabel => 'Amount to collect';
+
+  @override
+  String get calculatorTaxPresetsLabel => 'Tax presets';
+
+  @override
+  String get calculatorCustomTaxLabel => 'Custom tax';
+
+  @override
+  String get calculatorCustomTaxDialogTitle => 'Custom tax';
+
+  @override
+  String get calculatorCustomTaxFieldLabel => 'Tax percentage';
+
+  @override
+  String get calculatorResetTax => 'Reset tax';
+
+  @override
+  String get calculatorTipRateLabel => 'Tip presets';
+
+  @override
+  String get calculatorCustomTipLabel => 'Custom tip';
+
+  @override
+  String get calculatorResetTip => 'Clear tip';
+
+  @override
+  String get calculatorCustomTipDialogTitle => 'Custom tip';
+
+  @override
+  String get calculatorCustomTipFieldLabel => 'Tip percentage';
+
+  @override
+  String get calculatorCancel => 'Cancel';
+
+  @override
+  String get calculatorApply => 'Apply';
+
+  @override
+  String get calculatorKeypadHeader => 'Keypad';
+
+  @override
+  String get calculatorClearLabel => 'Clear';
+
+  @override
+  String get calculatorBackspace => 'Backspace';
+
+  @override
+  String get calculatorEquals => 'Charge total';
+
+  @override
+  String get calculatorPaymentTitle => 'Payment summary';
+
+  @override
+  String get calculatorNewCalculation => 'New calculation';
 
   @override
   String get settingsBiometricPrompt => 'Authenticate to open Settings';

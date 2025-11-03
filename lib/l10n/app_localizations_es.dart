@@ -53,6 +53,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get openExampleTooltip => 'Abrir página de ejemplo';
 
   @override
+  String get openCalculatorTooltip => 'Abrir calculadora de pagos';
+
+  @override
   String get examplePageTitle => 'Página de ejemplo';
 
   @override
@@ -87,6 +90,85 @@ class AppLocalizationsEs extends AppLocalizations {
   String exampleIsolateParallelComplete(String values, int milliseconds) {
     return 'Valores duplicados en paralelo: $values (terminado en $milliseconds ms)';
   }
+
+  @override
+  String get calculatorTitle => 'Calculadora de pagos';
+
+  @override
+  String get calculatorSummaryHeader => 'Resumen de pago';
+
+  @override
+  String get calculatorResultLabel => 'Resultado';
+
+  @override
+  String get calculatorSubtotalLabel => 'Subtotal';
+
+  @override
+  String calculatorTaxLabel(String rate) {
+    return 'Impuesto ($rate)';
+  }
+
+  @override
+  String calculatorTipLabel(String rate) {
+    return 'Propina ($rate)';
+  }
+
+  @override
+  String get calculatorTotalLabel => 'Monto a cobrar';
+
+  @override
+  String get calculatorTaxPresetsLabel => 'Impuestos rápidos';
+
+  @override
+  String get calculatorCustomTaxLabel => 'Impuesto personalizado';
+
+  @override
+  String get calculatorCustomTaxDialogTitle => 'Impuesto personalizado';
+
+  @override
+  String get calculatorCustomTaxFieldLabel => 'Porcentaje de impuesto';
+
+  @override
+  String get calculatorResetTax => 'Restablecer impuesto';
+
+  @override
+  String get calculatorTipRateLabel => 'Propinas rápidas';
+
+  @override
+  String get calculatorCustomTipLabel => 'Propina personalizada';
+
+  @override
+  String get calculatorResetTip => 'Borrar propina';
+
+  @override
+  String get calculatorCustomTipDialogTitle => 'Propina personalizada';
+
+  @override
+  String get calculatorCustomTipFieldLabel => 'Porcentaje de propina';
+
+  @override
+  String get calculatorCancel => 'Cancelar';
+
+  @override
+  String get calculatorApply => 'Aplicar';
+
+  @override
+  String get calculatorKeypadHeader => 'Teclado';
+
+  @override
+  String get calculatorClearLabel => 'Limpiar';
+
+  @override
+  String get calculatorBackspace => 'Retroceso';
+
+  @override
+  String get calculatorEquals => 'Calcular total';
+
+  @override
+  String get calculatorPaymentTitle => 'Resumen de pago';
+
+  @override
+  String get calculatorNewCalculation => 'Nueva operación';
 
   @override
   String get settingsBiometricPrompt =>
