@@ -13,7 +13,7 @@ class SearchResultsGrid extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = context.screenWidth;
     final horizontalPadding = context.pageHorizontalPadding;
     final availableWidth = screenWidth - (horizontalPadding * 2);
     final int columns = math.max(3, context.gridColumns);

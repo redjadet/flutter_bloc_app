@@ -41,12 +41,16 @@ class _ProfileButton extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final maxWidth = screenWidth.clamp(0.0, 500.0);
+    final maxWidth = context.clampWidthTo(500);
+    final buttonHeight = context.responsiveValue<double>(
+      mobile: 52,
+      tablet: 56,
+      desktop: 56,
+    );
 
     return SizedBox(
       width: double.infinity,
-      height: context.isMobile ? 52 : 56,
+      height: buttonHeight,
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: maxWidth),
         child: OutlinedButton(

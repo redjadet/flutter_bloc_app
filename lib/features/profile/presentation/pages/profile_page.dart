@@ -154,7 +154,7 @@ class ProfilePage extends StatelessWidget {
                                       : context.isTabletOrLarger
                                       ? 2.5
                                       : 2) +
-                              MediaQuery.of(context).padding.bottom,
+                              context.safeAreaInsets.bottom,
                         ),
                       ],
                     ),

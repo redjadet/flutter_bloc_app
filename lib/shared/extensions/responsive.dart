@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/constants.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
@@ -10,11 +12,18 @@ import 'package:responsive_framework/responsive_framework.dart';
 extension ResponsiveContext on BuildContext {
   // Private getters for consistent access
   double get _width => MediaQuery.sizeOf(this).width;
+  double get _height => MediaQuery.sizeOf(this).height;
+
+  /// Raw screen size helpers
+  Size get screenSize => MediaQuery.sizeOf(this);
+  double get screenWidth => _width;
+  double get screenHeight => _height;
 
   // Device type detection
   bool get isMobile => _width < AppConstants.mobileBreakpoint;
   bool get isTabletOrLarger => _width >= AppConstants.mobileBreakpoint;
   bool get isDesktop => _width >= AppConstants.tabletBreakpoint;
+  bool get isCompactWidth => _width < AppConstants.compactWidthBreakpoint;
   bool get isPortrait => MediaQuery.orientationOf(this) == Orientation.portrait;
   bool get isLandscape => !isPortrait;
 
@@ -22,6 +31,8 @@ extension ResponsiveContext on BuildContext {
   double get bottomInset => MediaQuery.viewPaddingOf(this).bottom;
   double get topInset => MediaQuery.viewPaddingOf(this).top;
   EdgeInsets get safeAreaInsets => MediaQuery.viewPaddingOf(this);
+  EdgeInsets get viewInsets => MediaQuery.viewInsetsOf(this);
+  double get keyboardInset => viewInsets.bottom;
 
   // Safe ScreenUtil adapters with fallbacks
   double _safeW(final double v) => UI.isScreenUtilReady ? v.w : v;
@@ -111,4 +122,19 @@ extension ResponsiveContext on BuildContext {
   // Responsive elevation
   double get responsiveElevation => isMobile ? 2.0 : 4.0;
   double get responsiveCardElevation => isMobile ? 1.0 : 2.0;
+
+  // General responsive helpers
+  double widthFraction(final double fraction) => screenWidth * fraction;
+  double heightFraction(final double fraction) => screenHeight * fraction;
+  double clampWidthTo(final double max) => math.min(screenWidth, max);
+
+  T responsiveValue<T>({
+    required final T mobile,
+    final T? tablet,
+    final T? desktop,
+  }) {
+    if (isDesktop && desktop != null) return desktop;
+    if (isTabletOrLarger && tablet != null) return tablet;
+    return mobile;
+  }
 }

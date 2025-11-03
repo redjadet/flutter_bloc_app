@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
@@ -82,7 +83,7 @@ class ChatMessageList extends StatelessWidget {
                   vertical: UI.gapS,
                 ),
                 constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.75,
+                  maxWidth: context.widthFraction(0.75),
                 ),
                 decoration: BoxDecoration(
                   color: bubbleColor,

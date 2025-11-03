@@ -12,6 +12,7 @@ class AppConstants {
   // Responsive breakpoints
   static const double mobileBreakpoint = 800;
   static const double tabletBreakpoint = 1200;
+  static const double compactWidthBreakpoint = 360;
 
   // Constraints
   static const double minContentWidth = 390;

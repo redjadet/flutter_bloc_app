@@ -20,7 +20,7 @@ class ChatHistorySheet extends StatelessWidget {
     final ChatCubit cubit = context.read<ChatCubit>();
     final MaterialLocalizations materialLocalizations =
         MaterialLocalizations.of(context);
-    final double bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final double bottomInset = context.keyboardInset;
 
     return FractionallySizedBox(
       heightFactor: 0.9,

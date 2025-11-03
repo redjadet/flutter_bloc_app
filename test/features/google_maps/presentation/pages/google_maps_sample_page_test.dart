@@ -8,6 +8,9 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
+
+import '../../test_utils/fake_google_maps_flutter_platform.dart';
 
 class _MockMapSampleCubit extends MockCubit<MapSampleState>
     implements MapSampleCubit {}
@@ -19,6 +22,8 @@ void main() {
   late AppLocalizations l10n;
 
   setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    GoogleMapsFlutterPlatform.instance = FakeGoogleMapsFlutterPlatform();
     registerFallbackValue(MapSampleState.initial());
     l10n = await AppLocalizations.delegate.load(const Locale('en'));
   });
@@ -31,11 +36,10 @@ void main() {
       cubit = _MockMapSampleCubit();
       platformService = _MockNativePlatformService();
       when(() => cubit.close()).thenAnswer((_) async {});
-      whenListen<MapSampleState>(
-        cubit,
-        const Stream<MapSampleState>.empty(),
-        initialState: MapSampleState.initial(),
-      );
+      when(
+        () => cubit.stream,
+      ).thenAnswer((_) => const Stream<MapSampleState>.empty());
+      when(() => cubit.state).thenReturn(MapSampleState.initial());
     });
 
     tearDown(() async {
