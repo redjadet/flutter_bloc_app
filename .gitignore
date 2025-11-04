@@ -12,6 +12,8 @@
 .swiftpm/
 migrate_working_dir/
 figma-sync/
+AGENTS.md
+GEMINI.md
 
 # IntelliJ related
 *.iml
