@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/payment_calculator.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_cubit.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:go_router/go_router.dart';
 
 class CalculatorKeypad extends StatelessWidget {
@@ -15,6 +16,7 @@ class CalculatorKeypad extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final CalculatorCubit cubit = context.read<CalculatorCubit>();
+    final double spacing = context.responsiveGapL;
     final List<_ButtonConfig> buttons = <_ButtonConfig>[
       _ButtonConfig(
         label: '⌫',
@@ -83,11 +85,11 @@ class CalculatorKeypad extends StatelessWidget {
     return GridView.builder(
       shrinkWrap: shrinkWrap,
       physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.only(bottom: 16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      padding: EdgeInsets.only(bottom: spacing),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
+        mainAxisSpacing: spacing,
+        crossAxisSpacing: spacing,
       ),
       itemCount: buttons.length,
       itemBuilder: (final context, final index) =>

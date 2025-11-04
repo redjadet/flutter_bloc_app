@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:flutter_bloc_app/core/constants.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_cubit.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_state.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_keypad.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class CalculatorPage extends StatelessWidget {
   const CalculatorPage({super.key});
+
+  static const double _maxContentWidth = 480;
 
   @override
   Widget build(final BuildContext context) {
@@ -23,24 +28,29 @@ class CalculatorPage extends StatelessWidget {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (final context, final constraints) {
-            final bool isCompact = constraints.maxHeight < 640;
-            final EdgeInsets padding = EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: isCompact ? 12 : 8,
+            final bool compactHeight =
+                constraints.maxHeight < AppConstants.compactHeightBreakpoint;
+            final bool shouldScroll = compactHeight || context.isCompactWidth;
+            final EdgeInsetsGeometry padding = EdgeInsets.symmetric(
+              horizontal: context.pageHorizontalPadding,
+              vertical: shouldScroll
+                  ? context.responsiveGapM
+                  : context.responsiveGapS,
             );
+            final double verticalGap = UI.gapL * 2;
 
             Widget content;
-            if (isCompact) {
+            if (shouldScroll) {
               content = SingleChildScrollView(
                 padding: padding,
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    SizedBox(height: 24),
-                    _CalculatorDisplay(),
-                    SizedBox(height: 24),
-                    CalculatorKeypad(shrinkWrap: true),
-                    SizedBox(height: 24),
+                    SizedBox(height: verticalGap),
+                    const _CalculatorDisplay(),
+                    SizedBox(height: verticalGap),
+                    const CalculatorKeypad(shrinkWrap: true),
+                    SizedBox(height: verticalGap),
                   ],
                 ),
               );
@@ -56,7 +66,7 @@ class CalculatorPage extends StatelessWidget {
 
             return Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 480),
+                constraints: const BoxConstraints(maxWidth: _maxContentWidth),
                 child: content,
               ),
             );
@@ -71,15 +81,18 @@ class _CalculatorBody extends StatelessWidget {
   const _CalculatorBody();
 
   @override
-  Widget build(final BuildContext context) => const Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      SizedBox(height: 32),
-      _CalculatorDisplay(),
-      SizedBox(height: 32),
-      Expanded(child: CalculatorKeypad()),
-    ],
-  );
+  Widget build(final BuildContext context) {
+    final double sectionGap = UI.gapL * 2;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SizedBox(height: sectionGap),
+        const _CalculatorDisplay(),
+        SizedBox(height: sectionGap),
+        const Expanded(child: CalculatorKeypad()),
+      ],
+    );
+  }
 }
 
 class _CalculatorDisplay extends StatelessWidget {
@@ -91,45 +104,49 @@ class _CalculatorDisplay extends StatelessWidget {
         buildWhen: (final previous, final current) =>
             previous.display != current.display ||
             previous.history != current.history,
-        builder: (final context, final state) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (state.history.isNotEmpty) ...[
+        builder: (final context, final state) {
+          final double horizontalPadding = context.responsiveHorizontalGapL;
+          final double historySpacing = context.responsiveGapS;
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (state.history.isNotEmpty) ...[
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      state.history,
+                      style: const TextStyle(
+                        color: Colors.white54,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  SizedBox(height: historySpacing),
+                ],
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Text(
-                    state.history,
-                    style: const TextStyle(
-                      color: Colors.white54,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      state.display,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 64,
+                        fontWeight: FontWeight.w300,
+                      ),
+                      maxLines: 1,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(height: 8),
               ],
-              Align(
-                alignment: Alignment.centerRight,
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    state.display,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 64,
-                      fontWeight: FontWeight.w300,
-                    ),
-                    maxLines: 1,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       );
 }

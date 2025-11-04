@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:intl/intl.dart';
 
 /// Reusable selector for choosing percentage-based rates (e.g. tax, tip).
@@ -40,6 +41,9 @@ class CalculatorRateSelector extends StatelessWidget {
     final bool hasCustomSelection =
         !options.contains(selectedRate) && selectedRate != 0;
 
+    final double wrapSpacing = context.responsiveHorizontalGapM;
+    final double wrapRunSpacing = context.responsiveGapM;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -47,10 +51,10 @@ class CalculatorRateSelector extends StatelessWidget {
           title,
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: context.responsiveGapS),
         Wrap(
-          spacing: 12,
-          runSpacing: 12,
+          spacing: wrapSpacing,
+          runSpacing: wrapRunSpacing,
           children: [
             for (final double option in options)
               ChoiceChip(

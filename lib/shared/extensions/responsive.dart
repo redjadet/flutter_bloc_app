@@ -21,11 +21,13 @@ extension ResponsiveContext on BuildContext {
 
   // Device type detection
   bool get isMobile => _width < AppConstants.mobileBreakpoint;
+  bool get isMediumWidth => _width >= AppConstants.mediumWidthBreakpoint;
   bool get isTabletOrLarger => _width >= AppConstants.mobileBreakpoint;
   bool get isDesktop => _width >= AppConstants.tabletBreakpoint;
   bool get isCompactWidth => _width < AppConstants.compactWidthBreakpoint;
   bool get isPortrait => MediaQuery.orientationOf(this) == Orientation.portrait;
   bool get isLandscape => !isPortrait;
+  bool get isCompactHeight => _height < AppConstants.compactHeightBreakpoint;
 
   // Safe area helpers
   double get bottomInset => MediaQuery.viewPaddingOf(this).bottom;
