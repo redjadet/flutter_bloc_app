@@ -4,30 +4,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/constants.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-// Keep responsive_framework optional; fall back to width-based checks in tests
-// ignore: unused_import
 import 'package:responsive_framework/responsive_framework.dart';
 
 /// Extension providing responsive utilities and breakpoint helpers
 extension ResponsiveContext on BuildContext {
   // Private getters for consistent access
-  double get _width => MediaQuery.sizeOf(this).width;
-  double get _height => MediaQuery.sizeOf(this).height;
+  double get _width => UI.isScreenUtilReady
+      ? ScreenUtil().screenWidth
+      : MediaQuery.sizeOf(this).width;
+  double get _height => UI.isScreenUtilReady
+      ? ScreenUtil().screenHeight
+      : MediaQuery.sizeOf(this).height;
 
   /// Raw screen size helpers
-  Size get screenSize => MediaQuery.sizeOf(this);
-  double get screenWidth => _width;
-  double get screenHeight => _height;
+  Size get screenSize => Size(_responsiveWidth, _responsiveHeight);
+  double get screenWidth => _responsiveWidth;
+  double get screenHeight => _responsiveHeight;
 
   // Device type detection
-  bool get isMobile => _width < AppConstants.mobileBreakpoint;
-  bool get isMediumWidth => _width >= AppConstants.mediumWidthBreakpoint;
-  bool get isTabletOrLarger => _width >= AppConstants.mobileBreakpoint;
-  bool get isDesktop => _width >= AppConstants.tabletBreakpoint;
-  bool get isCompactWidth => _width < AppConstants.compactWidthBreakpoint;
-  bool get isPortrait => MediaQuery.orientationOf(this) == Orientation.portrait;
-  bool get isLandscape => !isPortrait;
-  bool get isCompactHeight => _height < AppConstants.compactHeightBreakpoint;
+  bool get isMobile => _responsiveWidth < AppConstants.mobileBreakpoint;
+
+  bool get isMediumWidth =>
+      _responsiveWidth >= AppConstants.mediumWidthBreakpoint;
+
+  bool get isTabletOrLarger =>
+      _responsiveWidth >= AppConstants.mobileBreakpoint;
+
+  bool get isDesktop => _responsiveWidth >= AppConstants.tabletBreakpoint;
+  bool get isCompactWidth =>
+      _responsiveWidth < AppConstants.compactWidthBreakpoint;
+  bool get isPortrait => _responsiveOrientation == Orientation.portrait;
+  bool get isLandscape => _responsiveOrientation == Orientation.landscape;
+  bool get isCompactHeight =>
+      _responsiveHeight < AppConstants.compactHeightBreakpoint;
 
   // Safe area helpers
   double get bottomInset => MediaQuery.viewPaddingOf(this).bottom;
@@ -42,24 +51,66 @@ extension ResponsiveContext on BuildContext {
   double _safeSp(final double v) => UI.isScreenUtilReady ? v.sp : v;
   double _safeR(final double v) => UI.isScreenUtilReady ? v.r : v;
 
-  // Responsive padding system
-  double get pageHorizontalPadding {
-    if (isDesktop) return _safeW(32);
-    if (isTabletOrLarger) return _safeW(24);
-    return _safeW(16);
+  ResponsiveBreakpointsData? get _breakpoints {
+    final inheritedElement =
+        getElementForInheritedWidgetOfExactType<
+          InheritedResponsiveBreakpoints
+        >();
+    if (inheritedElement == null) {
+      return null;
+    }
+    final inheritedWidget = inheritedElement.widget;
+    if (inheritedWidget is! InheritedResponsiveBreakpoints) {
+      return null;
+    }
+    final data = inheritedWidget.data;
+    if (data.breakpoints.isEmpty) {
+      return null;
+    }
+    return data;
   }
 
-  double get pageVerticalPadding {
-    if (isDesktop || isTabletOrLarger) return _safeH(16);
-    return _safeH(12);
+  double get _responsiveWidth => _breakpoints?.screenWidth ?? _width;
+  double get _responsiveHeight => _breakpoints?.screenHeight ?? _height;
+  Orientation get _responsiveOrientation =>
+      _breakpoints?.orientation ?? MediaQuery.orientationOf(this);
+
+  double _scaledDimension({
+    required final double Function(double value) convert,
+    required final double mobile,
+    final double? tablet,
+    final double? desktop,
+  }) {
+    final double baseValue = responsiveValue<double>(
+      mobile: mobile,
+      tablet: tablet ?? desktop ?? mobile,
+      desktop: desktop,
+    );
+    return convert(baseValue);
   }
+
+  // Responsive padding system
+  double get pageHorizontalPadding => _scaledDimension(
+    mobile: 16,
+    tablet: 24,
+    desktop: 32,
+    convert: _safeW,
+  );
+
+  double get pageVerticalPadding => _scaledDimension(
+    mobile: 12,
+    tablet: 16,
+    desktop: 16,
+    convert: _safeH,
+  );
 
   // Content width constraints
-  double get contentMaxWidth {
-    if (isDesktop) return _safeW(840);
-    if (isTabletOrLarger) return _safeW(720);
-    return _safeW(560); // keep content comfortably narrow on large phones
-  }
+  double get contentMaxWidth => _scaledDimension(
+    mobile: 560,
+    tablet: 720,
+    desktop: 840,
+    convert: _safeW,
+  ); // keep content comfortably narrow on large phones
 
   double get barMaxWidth {
     if (isDesktop) return _safeW(900);
@@ -79,29 +130,79 @@ extension ResponsiveContext on BuildContext {
   }
 
   // Additional responsive utilities
-  double get responsiveFontSize => isMobile ? _safeSp(14) : _safeSp(16);
-  double get responsiveIconSize => isMobile ? _safeSp(20) : _safeSp(24);
+  double get responsiveFontSize => _scaledDimension(
+    mobile: 14,
+    tablet: 16,
+    desktop: 16,
+    convert: _safeSp,
+  );
+  double get responsiveIconSize => _scaledDimension(
+    mobile: 20,
+    tablet: 24,
+    desktop: 24,
+    convert: _safeSp,
+  );
 
   // Grid columns based on screen size
-  int get gridColumns {
-    if (isDesktop) return 4;
-    if (isTabletOrLarger) return 3;
-    return 2;
-  }
+  int get gridColumns => responsiveValue<int>(
+    mobile: 2,
+    tablet: 3,
+    desktop: 4,
+  );
 
   // Responsive spacing
-  double get responsiveGap => isMobile ? _safeH(8) : _safeH(12);
-  double get responsiveCardPadding => isMobile ? _safeW(16) : _safeW(20);
+  double get responsiveGap => _scaledDimension(
+    mobile: 8,
+    tablet: 12,
+    desktop: 12,
+    convert: _safeH,
+  );
+  double get responsiveCardPadding => _scaledDimension(
+    mobile: 16,
+    tablet: 20,
+    desktop: 20,
+    convert: _safeW,
+  );
 
   // Additional responsive utilities for specific use cases
-  double get responsiveButtonHeight => isMobile ? _safeH(48) : _safeH(56);
-  double get responsiveButtonPadding => isMobile ? _safeW(16) : _safeW(24);
+  double get responsiveButtonHeight => _scaledDimension(
+    mobile: 48,
+    tablet: 56,
+    desktop: 56,
+    convert: _safeH,
+  );
+  double get responsiveButtonPadding => _scaledDimension(
+    mobile: 16,
+    tablet: 24,
+    desktop: 24,
+    convert: _safeW,
+  );
 
   // Responsive text styles
-  double get responsiveHeadlineSize => isMobile ? _safeSp(24) : _safeSp(32);
-  double get responsiveTitleSize => isMobile ? _safeSp(20) : _safeSp(24);
-  double get responsiveBodySize => isMobile ? _safeSp(14) : _safeSp(16);
-  double get responsiveCaptionSize => isMobile ? _safeSp(12) : _safeSp(14);
+  double get responsiveHeadlineSize => _scaledDimension(
+    mobile: 24,
+    tablet: 32,
+    desktop: 32,
+    convert: _safeSp,
+  );
+  double get responsiveTitleSize => _scaledDimension(
+    mobile: 20,
+    tablet: 24,
+    desktop: 24,
+    convert: _safeSp,
+  );
+  double get responsiveBodySize => _scaledDimension(
+    mobile: 14,
+    tablet: 16,
+    desktop: 16,
+    convert: _safeSp,
+  );
+  double get responsiveCaptionSize => _scaledDimension(
+    mobile: 12,
+    tablet: 14,
+    desktop: 14,
+    convert: _safeSp,
+  );
 
   // Responsive margins and paddings
   EdgeInsets get responsivePageMargin => EdgeInsets.symmetric(
@@ -109,43 +210,107 @@ extension ResponsiveContext on BuildContext {
     vertical: pageVerticalPadding,
   );
 
-  EdgeInsets get responsiveCardMargin =>
-      EdgeInsets.all(isMobile ? _safeW(8) : _safeW(12));
+  EdgeInsets get responsiveCardMargin => EdgeInsets.all(
+    _scaledDimension(
+      mobile: 8,
+      tablet: 12,
+      desktop: 12,
+      convert: _safeW,
+    ),
+  );
 
   EdgeInsets get responsiveListPadding => EdgeInsets.symmetric(
     horizontal: pageHorizontalPadding,
-    vertical: isMobile ? _safeH(8) : _safeH(12),
+    vertical: _scaledDimension(
+      mobile: 8,
+      tablet: 12,
+      desktop: 12,
+      convert: _safeH,
+    ),
   );
 
   // Responsive border radius
-  double get responsiveBorderRadius => isMobile ? _safeR(8) : _safeR(12);
-  double get responsiveCardRadius => isMobile ? _safeR(12) : _safeR(16);
+  double get responsiveBorderRadius => _scaledDimension(
+    mobile: 8,
+    tablet: 12,
+    desktop: 12,
+    convert: _safeR,
+  );
+  double get responsiveCardRadius => _scaledDimension(
+    mobile: 12,
+    tablet: 16,
+    desktop: 16,
+    convert: _safeR,
+  );
 
   // Responsive elevation
-  double get responsiveElevation => isMobile ? 2.0 : 4.0;
-  double get responsiveCardElevation => isMobile ? 1.0 : 2.0;
+  double get responsiveElevation => responsiveValue(
+    mobile: 2,
+    tablet: 4,
+    desktop: 4,
+  );
+  double get responsiveCardElevation => responsiveValue(
+    mobile: 1,
+    tablet: 2,
+    desktop: 2,
+  );
 
   // Common responsive spacing helpers
   /// Responsive gap XS (extra small)
-  double get responsiveGapXS => isMobile ? _safeH(6) : _safeH(8);
+  double get responsiveGapXS => _scaledDimension(
+    mobile: 6,
+    tablet: 8,
+    desktop: 8,
+    convert: _safeH,
+  );
 
   /// Responsive gap S (small) - maps to UI.gapS
-  double get responsiveGapS => isMobile ? _safeH(8) : _safeH(10);
+  double get responsiveGapS => _scaledDimension(
+    mobile: 8,
+    tablet: 10,
+    desktop: 10,
+    convert: _safeH,
+  );
 
   /// Responsive gap M (medium) - maps to UI.gapM
-  double get responsiveGapM => isMobile ? _safeH(12) : _safeH(16);
+  double get responsiveGapM => _scaledDimension(
+    mobile: 12,
+    tablet: 16,
+    desktop: 16,
+    convert: _safeH,
+  );
 
   /// Responsive gap L (large) - maps to UI.gapL
-  double get responsiveGapL => isMobile ? _safeH(16) : _safeH(24);
+  double get responsiveGapL => _scaledDimension(
+    mobile: 16,
+    tablet: 24,
+    desktop: 24,
+    convert: _safeH,
+  );
 
   /// Responsive horizontal gap S
-  double get responsiveHorizontalGapS => isMobile ? _safeW(8) : _safeW(10);
+  double get responsiveHorizontalGapS => _scaledDimension(
+    mobile: 8,
+    tablet: 10,
+    desktop: 10,
+    convert: _safeW,
+  );
 
   /// Responsive horizontal gap M
-  double get responsiveHorizontalGapM => isMobile ? _safeW(10) : _safeW(12);
+  double get responsiveHorizontalGapM => _scaledDimension(
+    mobile: 10,
+    tablet: 12,
+    desktop: 12,
+    convert: _safeW,
+  );
 
   /// Responsive horizontal gap L
-  double get responsiveHorizontalGapL => isMobile ? _safeW(16) : _safeW(24);
+  double get responsiveHorizontalGapL => _scaledDimension(
+    mobile: 16,
+    tablet: 24,
+    desktop: 24,
+    convert: _safeW,
+  );
 
   // Common responsive EdgeInsets patterns
   /// Padding for cards with responsive values (EdgeInsets)
@@ -160,13 +325,28 @@ extension ResponsiveContext on BuildContext {
 
   /// Padding for error/empty states
   EdgeInsets get responsiveStatePadding => EdgeInsets.all(
-    isMobile ? _safeW(24) : _safeW(32),
+    _scaledDimension(
+      mobile: 24,
+      tablet: 32,
+      desktop: 32,
+      convert: _safeW,
+    ),
   );
 
   /// Padding for dialog content
   EdgeInsets get responsiveDialogPadding => EdgeInsets.symmetric(
-    horizontal: isMobile ? _safeW(24) : _safeW(32),
-    vertical: isMobile ? _safeH(20) : _safeH(24),
+    horizontal: _scaledDimension(
+      mobile: 24,
+      tablet: 32,
+      desktop: 32,
+      convert: _safeW,
+    ),
+    vertical: _scaledDimension(
+      mobile: 20,
+      tablet: 24,
+      desktop: 24,
+      convert: _safeH,
+    ),
   );
 
   /// Padding for sheet content (with bottom inset consideration)
@@ -191,11 +371,20 @@ extension ResponsiveContext on BuildContext {
 
   // Responsive icon sizes for common states
   /// Responsive icon size for error states
-  double get responsiveErrorIconSize => isMobile ? _safeSp(48) : _safeSp(64);
+  double get responsiveErrorIconSize => _scaledDimension(
+    mobile: 48,
+    tablet: 64,
+    desktop: 64,
+    convert: _safeSp,
+  );
 
   /// Responsive icon size for large error states
-  double get responsiveErrorIconSizeLarge =>
-      isMobile ? _safeSp(64) : _safeSp(80);
+  double get responsiveErrorIconSizeLarge => _scaledDimension(
+    mobile: 64,
+    tablet: 80,
+    desktop: 80,
+    convert: _safeSp,
+  );
 
   // General responsive helpers
   double widthFraction(final double fraction) => screenWidth * fraction;
@@ -207,8 +396,44 @@ extension ResponsiveContext on BuildContext {
     final T? tablet,
     final T? desktop,
   }) {
-    if (isDesktop && desktop != null) return desktop;
-    if (isTabletOrLarger && tablet != null) return tablet;
+    final breakpoints = _breakpoints;
+    final conditions = <Condition<T>>[];
+    if (tablet != null) {
+      conditions.add(
+        Condition<T>.largerThan(
+          breakpoint: (AppConstants.mobileBreakpoint - 1).round(),
+          value: tablet,
+        ),
+      );
+    }
+    if (desktop != null) {
+      conditions.add(
+        Condition<T>.largerThan(
+          breakpoint: (AppConstants.tabletBreakpoint - 1).round(),
+          value: desktop,
+        ),
+      );
+    }
+    if (breakpoints != null && conditions.isNotEmpty) {
+      return ResponsiveValue<T>(
+        this,
+        defaultValue: mobile,
+        conditionalValues: conditions,
+      ).value;
+    }
+
+    final double width = breakpoints?.screenWidth ?? _responsiveWidth;
+    if (desktop != null && width >= AppConstants.tabletBreakpoint) {
+      return desktop;
+    }
+    if (tablet != null && width >= AppConstants.mobileBreakpoint) {
+      return tablet;
+    }
+    if (desktop != null &&
+        tablet == null &&
+        width >= AppConstants.mobileBreakpoint) {
+      return desktop;
+    }
     return mobile;
   }
 }
