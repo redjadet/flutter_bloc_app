@@ -5,7 +5,6 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 
 /// Application configuration and theme setup
 class AppConfig {
@@ -30,7 +29,7 @@ class AppConfig {
     darkTheme: _createDarkTheme(),
     themeMode: themeMode,
     builder: (final context, final appChild) =>
-        _createResponsiveBuilder(appChild),
+        appChild ?? const SizedBox.shrink(),
     routerConfig: router,
   );
 
@@ -48,38 +47,6 @@ class AppConfig {
       brightness: Brightness.dark,
     ),
   );
-
-  /// Creates responsive builder with constraints and breakpoints
-  static Widget _createResponsiveBuilder(final Widget? child) {
-    final Widget constrained = ConstrainedBox(
-      constraints: const BoxConstraints(
-        minWidth: AppConstants.minContentWidth,
-        minHeight: AppConstants.minContentHeight,
-      ),
-      child: child ?? const SizedBox.shrink(),
-    );
-
-    return ResponsiveBreakpoints.builder(
-      child: constrained,
-      breakpoints: const [
-        Breakpoint(
-          start: 0,
-          end: AppConstants.mobileBreakpoint - 1,
-          name: MOBILE,
-        ),
-        Breakpoint(
-          start: AppConstants.mobileBreakpoint,
-          end: AppConstants.tabletBreakpoint - 1,
-          name: TABLET,
-        ),
-        Breakpoint(
-          start: AppConstants.tabletBreakpoint,
-          end: double.infinity,
-          name: DESKTOP,
-        ),
-      ],
-    );
-  }
 
   static const Locale _defaultLocale = Locale('en');
 

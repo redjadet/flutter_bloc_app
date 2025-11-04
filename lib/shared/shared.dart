@@ -3,11 +3,12 @@ library;
 
 // Extensions
 export 'extensions/build_context_l10n.dart';
-export 'extensions/responsive.dart';
 // Platform services
 export 'platform/biometric_authenticator.dart';
 export 'platform/native_platform_service.dart';
 export 'platform/secure_secret_storage.dart';
+// Responsive
+export 'responsive/responsive.dart';
 // Services
 export 'services/error_notification_service.dart';
 // UI constants
