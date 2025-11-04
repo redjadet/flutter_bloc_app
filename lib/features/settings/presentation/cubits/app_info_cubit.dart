@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 class AppInfoCubit extends Cubit<AppInfoState> {
   AppInfoCubit({required final AppInfoRepository repository})
@@ -16,23 +17,27 @@ class AppInfoCubit extends Cubit<AppInfoState> {
 
     emit(state.copyWith(status: ViewStatus.loading, clearError: true));
 
-    try {
-      final AppInfo info = await _repository.load();
-      emit(
-        state.copyWith(
-          status: ViewStatus.success,
-          info: info,
-          clearError: true,
-        ),
-      );
-    } on Object catch (error) {
-      emit(
-        state.copyWith(
-          status: ViewStatus.error,
-          errorMessage: error.toString(),
-        ),
-      );
-    }
+    await CubitExceptionHandler.executeAsync(
+      operation: _repository.load,
+      onSuccess: (final AppInfo info) {
+        emit(
+          state.copyWith(
+            status: ViewStatus.success,
+            info: info,
+            clearError: true,
+          ),
+        );
+      },
+      onError: (final String errorMessage) {
+        emit(
+          state.copyWith(
+            status: ViewStatus.error,
+            errorMessage: errorMessage,
+          ),
+        );
+      },
+      logContext: 'AppInfoCubit.load',
+    );
   }
 }
 

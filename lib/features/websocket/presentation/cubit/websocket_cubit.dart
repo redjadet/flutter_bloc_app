@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/websocket/domain/websocket_connection_
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_state.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 class WebsocketCubit extends Cubit<WebsocketState> {
   WebsocketCubit({required final WebsocketRepository repository})
@@ -27,17 +28,19 @@ class WebsocketCubit extends Cubit<WebsocketState> {
       return;
     }
     emit(state.copyWith(status: WebsocketStatus.connecting, clearError: true));
-    try {
-      await _repository.connect();
-    } on Object catch (error) {
-      emit(
-        state.copyWith(
-          status: WebsocketStatus.error,
-          errorMessage: error.toString(),
-          isSending: false,
-        ),
-      );
-    }
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: _repository.connect,
+      onError: (final String errorMessage) {
+        emit(
+          state.copyWith(
+            status: WebsocketStatus.error,
+            errorMessage: errorMessage,
+            isSending: false,
+          ),
+        );
+      },
+      logContext: 'WebsocketCubit.connect',
+    );
   }
 
   Future<void> reconnect() async {
@@ -64,13 +67,16 @@ class WebsocketCubit extends Cubit<WebsocketState> {
           )
           .copyWith(isSending: true, clearError: true),
     );
-    try {
-      await _repository.send(message);
-    } on Object catch (error) {
-      emit(state.copyWith(isSending: false, errorMessage: error.toString()));
-      return;
-    }
-    emit(state.copyWith(isSending: false));
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: () => _repository.send(message),
+      onSuccess: () {
+        emit(state.copyWith(isSending: false));
+      },
+      onError: (final String errorMessage) {
+        emit(state.copyWith(isSending: false, errorMessage: errorMessage));
+      },
+      logContext: 'WebsocketCubit.sendMessage',
+    );
   }
 
   void _onIncomingMessage(final WebsocketMessage message) {

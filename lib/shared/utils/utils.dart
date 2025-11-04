@@ -1,6 +1,7 @@
 /// Shared utilities for common operations across the app
 library;
 
+export 'cubit_async_operations.dart';
 export 'cubit_helpers.dart';
 export 'error_handling.dart';
 export 'isolate_samples.dart';
