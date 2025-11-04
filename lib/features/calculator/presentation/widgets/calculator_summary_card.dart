@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculat
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_tax_selector.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_tip_selector.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:intl/intl.dart';
 
 class CalculatorSummaryCard extends StatelessWidget {
@@ -36,15 +37,19 @@ class CalculatorSummaryCard extends StatelessWidget {
         return Padding(
           padding: padding,
           child: Card(
-            elevation: 1,
+            elevation: context.responsiveCardElevation,
             child: LayoutBuilder(
               builder: (final context, final constraints) {
                 final BoxConstraints scrollConstraints =
                     constraints.maxHeight.isFinite
                     ? BoxConstraints(minHeight: constraints.maxHeight)
                     : const BoxConstraints();
+                final double gapS = context.responsiveGapS;
+                final double gapM = context.responsiveGapM;
+                final double gapL = context.responsiveGapL;
+                final double gapXL = gapL * 2;
                 return SingleChildScrollView(
-                  padding: const EdgeInsets.all(24),
+                  padding: context.responsiveCardPaddingInsets,
                   child: ConstrainedBox(
                     constraints: scrollConstraints,
                     child: Column(
@@ -66,49 +71,49 @@ class CalculatorSummaryCard extends StatelessWidget {
                               textAlign: TextAlign.right,
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          SizedBox(height: gapM),
                         ],
                         Text(
                           l10n.calculatorSummaryHeader,
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: gapL),
                         _SummaryRow(
                           label: l10n.calculatorResultLabel,
                           value: state.display,
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: gapM),
                         CalculatorTaxSelector(
                           percent: state.taxRate,
                           onChanged: cubit.setTaxRate,
                           onReset: cubit.resetTax,
                         ),
-                        const SizedBox(height: 24),
+                        SizedBox(height: gapL + gapM),
                         CalculatorTipSelector(
                           selectedRate: state.tipRate,
                           onChanged: cubit.setTipRate,
                           onReset: cubit.resetTip,
                         ),
-                        const Divider(height: 32),
+                        Divider(height: gapXL),
                         _SummaryRow(
                           label: l10n.calculatorSubtotalLabel,
                           value: currency.format(subtotal),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: gapS),
                         _SummaryRow(
                           label: l10n.calculatorTaxLabel(
                             percent.format(state.taxRate),
                           ),
                           value: currency.format(tax),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: gapS),
                         _SummaryRow(
                           label: l10n.calculatorTipLabel(
                             percent.format(state.tipRate),
                           ),
                           value: currency.format(tip),
                         ),
-                        const Divider(height: 32),
+                        Divider(height: gapXL),
                         _SummaryRow(
                           label: l10n.calculatorTotalLabel,
                           value: currency.format(total),
@@ -152,7 +157,7 @@ class _SummaryRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Flexible(child: Text(label, style: labelStyle)),
-        const SizedBox(width: 12),
+        SizedBox(width: context.responsiveHorizontalGapM),
         Text(value, style: valueStyle, textAlign: TextAlign.right),
       ],
     );
