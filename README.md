@@ -32,7 +32,6 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Remote Config: Firebase Remote Config integration for feature flags and runtime configuration updates, with `RemoteConfigCubit` managing feature toggles like the "awesome feature" demo.
 - Biometric Authentication: Secure authentication using device biometrics (fingerprint, face recognition) for sensitive actions via `LocalBiometricAuthenticator`, with graceful fallback when biometrics are unavailable.
 - Tests: Comprehensive unit, bloc, widget, and golden coverage (`flutter_test`, `bloc_test`, `golden_toolkit`), including auth flows with Firebase mocks and global log suppression during test execution.
-- Agent-friendly guide: See `AGENTS.md` for the delivery checklist (`flutter pub get` → build_runner when models change → `dart format .` → `flutter analyze` → `dart run custom_lint` → `flutter test --coverage` → `dart run tool/update_coverage_summary.dart` → optional `flutter build ios --simulator`) and architecture guardrails.
 - Custom Linting: Custom file length linting rules to maintain code quality and prevent oversized files.
 
 ## WebSocket Demo
