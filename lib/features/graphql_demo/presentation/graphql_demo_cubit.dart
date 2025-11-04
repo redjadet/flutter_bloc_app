@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_excep
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_state.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
   GraphqlDemoCubit({required final GraphqlDemoRepository repository})
@@ -15,24 +15,31 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
 
   Future<void> loadInitial() async {
     _emitLoading();
-    try {
-      final List<GraphqlContinent> continents = await _repository
-          .fetchContinents();
-      final List<GraphqlCountry> countries = await _repository.fetchCountries();
-      _emitSuccess(
-        continents: continents,
-        countries: countries,
-      );
-    } on GraphqlDemoException catch (error, stackTrace) {
-      AppLogger.error('GraphqlDemoCubit.loadInitial failed', error, stackTrace);
-      _emitError(message: error.message, type: error.type);
-    } on Exception catch (error, stackTrace) {
-      AppLogger.error('GraphqlDemoCubit.loadInitial failed', error, stackTrace);
-      _emitError(
-        message: _friendlyMessage(error),
-        type: _resolveErrorType(error),
-      );
-    }
+    await CubitExceptionHandler.executeAsync(
+      operation: () async {
+        final List<GraphqlContinent> continents = await _repository
+            .fetchContinents();
+        final List<GraphqlCountry> countries = await _repository
+            .fetchCountries();
+        return (continents: continents, countries: countries);
+      },
+      onSuccess: (final result) {
+        _emitSuccess(
+          continents: result.continents,
+          countries: result.countries,
+        );
+      },
+      onError: (final String message) {
+        _emitError(message: message, type: GraphqlDemoErrorType.unknown);
+      },
+      logContext: 'GraphqlDemoCubit.loadInitial',
+      specificExceptionHandlers: {
+        GraphqlDemoException: (final error, final stackTrace) {
+          final GraphqlDemoException exception = error as GraphqlDemoException;
+          _emitError(message: exception.message, type: exception.type);
+        },
+      },
+    );
   }
 
   Future<void> refresh() async {
@@ -50,43 +57,24 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
       return;
     }
     _emitLoading(activeContinentCode: continentCode);
-    try {
-      final List<GraphqlCountry> countries = await _repository.fetchCountries(
+    await CubitExceptionHandler.executeAsync(
+      operation: () => _repository.fetchCountries(
         continentCode: continentCode,
-      );
-      _emitSuccess(countries: countries);
-    } on GraphqlDemoException catch (error, stackTrace) {
-      AppLogger.error(
-        'GraphqlDemoCubit.selectContinent failed',
-        error,
-        stackTrace,
-      );
-      _emitError(message: error.message, type: error.type);
-    } on Exception catch (error, stackTrace) {
-      AppLogger.error(
-        'GraphqlDemoCubit.selectContinent failed',
-        error,
-        stackTrace,
-      );
-      _emitError(
-        message: _friendlyMessage(error),
-        type: _resolveErrorType(error),
-      );
-    }
-  }
-
-  String? _friendlyMessage(final Object error) {
-    if (error is GraphqlDemoException) {
-      return error.message;
-    }
-    return null;
-  }
-
-  GraphqlDemoErrorType _resolveErrorType(final Object error) {
-    if (error is GraphqlDemoException) {
-      return error.type;
-    }
-    return GraphqlDemoErrorType.unknown;
+      ),
+      onSuccess: (final List<GraphqlCountry> countries) {
+        _emitSuccess(countries: countries);
+      },
+      onError: (final String message) {
+        _emitError(message: message, type: GraphqlDemoErrorType.unknown);
+      },
+      logContext: 'GraphqlDemoCubit.selectContinent',
+      specificExceptionHandlers: {
+        GraphqlDemoException: (final error, final stackTrace) {
+          final GraphqlDemoException exception = error as GraphqlDemoException;
+          _emitError(message: exception.message, type: exception.type);
+        },
+      },
+    );
   }
 
   void _emitLoading({final String? activeContinentCode}) {

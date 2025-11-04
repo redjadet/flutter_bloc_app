@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 part 'chart_state.dart';
 
@@ -38,28 +39,26 @@ class ChartCubit extends Cubit<ChartState> {
       ),
     );
 
-    try {
-      final List<ChartPoint> points = await _repository.fetchTrendingCounts();
-
-      if (points.isEmpty) {
+    await CubitExceptionHandler.executeAsync(
+      operation: _repository.fetchTrendingCounts,
+      onSuccess: (final List<ChartPoint> points) {
         emit(
           state.copyWith(
             status: ViewStatus.success,
-            points: const <ChartPoint>[],
+            points: points.isEmpty ? const <ChartPoint>[] : points,
           ),
         );
-        return;
-      }
-
-      emit(state.copyWith(status: ViewStatus.success, points: points));
-    } on Object catch (error) {
-      emit(
-        state.copyWith(
-          status: ViewStatus.error,
-          errorMessage: error.toString(),
-          points: state.points,
-        ),
-      );
-    }
+      },
+      onError: (final String errorMessage) {
+        emit(
+          state.copyWith(
+            status: ViewStatus.error,
+            errorMessage: errorMessage,
+            points: state.points,
+          ),
+        );
+      },
+      logContext: 'ChartCubit._fetch',
+    );
   }
 }
