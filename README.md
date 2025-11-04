@@ -89,6 +89,10 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 | --- | --- |
 | ![Google Maps demo](assets/screenshots/google_maps.png) | ![Search demo](assets/screenshots/search.png) |
 
+| Payment Calculator | Payment Summary |
+| --- | --- |
+| ![Payment calculator screen](assets/screenshots/calculator.png) | ![Payment summary screen](assets/screenshots/paymentSummary.png) |
+
 ## Test Coverage
 
 - Latest line coverage: **73.95%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
