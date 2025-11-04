@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/payment_calculator.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_cubit.dart';
+import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_actions.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,68 +18,57 @@ class CalculatorKeypad extends StatelessWidget {
   Widget build(final BuildContext context) {
     final CalculatorCubit cubit = context.read<CalculatorCubit>();
     final double spacing = context.responsiveGapL;
+    final CalculatorActions actions = CalculatorCubitActions(cubit);
     final List<_ButtonConfig> buttons = <_ButtonConfig>[
-      _ButtonConfig(
+      const _ButtonConfig.function(
         label: '⌫',
-        type: _ButtonType.function,
-        onPressed: cubit.backspace,
+        command: BackspaceCommand(),
       ),
-      _ButtonConfig(
+      const _ButtonConfig.function(
         label: 'AC',
-        type: _ButtonType.function,
-        onPressed: cubit.clearAll,
+        command: ClearAllCommand(),
       ),
-      _ButtonConfig(
+      const _ButtonConfig.function(
         label: '%',
-        type: _ButtonType.function,
-        onPressed: cubit.applyPercentage,
+        command: ApplyPercentageCommand(),
       ),
-      _ButtonConfig(
+      const _ButtonConfig.operation(
         label: '÷',
-        type: _ButtonType.operation,
-        onPressed: () => cubit.selectOperation(CalculatorOperation.divide),
+        command: OperationCommand(CalculatorOperation.divide),
       ),
-      _digit('7', cubit),
-      _digit('8', cubit),
-      _digit('9', cubit),
-      _operation(
-        '×',
-        () => cubit.selectOperation(CalculatorOperation.multiply),
+      _digit('7'),
+      _digit('8'),
+      _digit('9'),
+      const _ButtonConfig.operation(
+        label: '×',
+        command: OperationCommand(CalculatorOperation.multiply),
       ),
-      _digit('4', cubit),
-      _digit('5', cubit),
-      _digit('6', cubit),
-      _operation(
-        '−',
-        () => cubit.selectOperation(CalculatorOperation.subtract),
+      _digit('4'),
+      _digit('5'),
+      _digit('6'),
+      const _ButtonConfig.operation(
+        label: '−',
+        command: OperationCommand(CalculatorOperation.subtract),
       ),
-      _digit('1', cubit),
-      _digit('2', cubit),
-      _digit('3', cubit),
-      _operation('+', () => cubit.selectOperation(CalculatorOperation.add)),
-      _ButtonConfig(
+      _digit('1'),
+      _digit('2'),
+      _digit('3'),
+      const _ButtonConfig.operation(
+        label: '+',
+        command: OperationCommand(CalculatorOperation.add),
+      ),
+      const _ButtonConfig.function(
         label: '+/−',
-        type: _ButtonType.function,
-        onPressed: cubit.toggleSign,
+        command: ToggleSignCommand(),
       ),
-      _digit('0', cubit),
-      _ButtonConfig(
+      _digit('0'),
+      const _ButtonConfig.number(
         label: '.',
-        type: _ButtonType.number,
-        onPressed: cubit.inputDecimalPoint,
+        command: DecimalCommand(),
       ),
-      _ButtonConfig(
+      const _ButtonConfig.operation(
         label: '=',
-        type: _ButtonType.operation,
-        onPressed: () {
-          cubit.evaluate();
-          unawaited(
-            context.pushNamed(
-              AppRoutes.calculatorPayment,
-              extra: cubit,
-            ),
-          );
-        },
+        command: EvaluateCommand(),
       ),
     ];
 
@@ -92,44 +82,76 @@ class CalculatorKeypad extends StatelessWidget {
         crossAxisSpacing: spacing,
       ),
       itemCount: buttons.length,
-      itemBuilder: (final context, final index) =>
-          _CalculatorButton(config: buttons[index]),
+      itemBuilder: (final context, final index) => _CalculatorButton(
+        config: buttons[index],
+        actions: actions,
+        onEvaluate: () => unawaited(
+          context.pushNamed(
+            AppRoutes.calculatorPayment,
+            extra: cubit,
+          ),
+        ),
+      ),
     );
   }
 }
 
-_ButtonConfig _digit(final String label, final CalculatorCubit cubit) =>
-    _ButtonConfig(
-      label: label,
-      type: _ButtonType.number,
-      onPressed: () => cubit.inputDigit(label),
-    );
-
-_ButtonConfig _operation(final String label, final VoidCallback onPressed) =>
-    _ButtonConfig(
-      label: label,
-      type: _ButtonType.operation,
-      onPressed: onPressed,
-    );
+_ButtonConfig _digit(final String label) => _ButtonConfig.number(
+  label: label,
+  command: DigitCommand(label),
+);
 
 enum _ButtonType { number, operation, function }
 
 class _ButtonConfig {
-  const _ButtonConfig({
+  const _ButtonConfig._({
     required this.label,
-    required this.onPressed,
     required this.type,
+    required this.command,
   });
 
+  const _ButtonConfig.number({
+    required String label,
+    required CalculatorCommand command,
+  }) : this._(
+         label: label,
+         type: _ButtonType.number,
+         command: command,
+       );
+
+  const _ButtonConfig.operation({
+    required String label,
+    required CalculatorCommand command,
+  }) : this._(
+         label: label,
+         type: _ButtonType.operation,
+         command: command,
+       );
+
+  const _ButtonConfig.function({
+    required String label,
+    required CalculatorCommand command,
+  }) : this._(
+         label: label,
+         type: _ButtonType.function,
+         command: command,
+       );
+
   final String label;
-  final VoidCallback onPressed;
   final _ButtonType type;
+  final CalculatorCommand command;
 }
 
 class _CalculatorButton extends StatelessWidget {
-  const _CalculatorButton({required this.config});
+  const _CalculatorButton({
+    required this.config,
+    required this.actions,
+    required this.onEvaluate,
+  });
 
   final _ButtonConfig config;
+  final CalculatorActions actions;
+  final VoidCallback onEvaluate;
 
   @override
   Widget build(final BuildContext context) {
@@ -143,6 +165,7 @@ class _CalculatorButton extends StatelessWidget {
       _ButtonType.number => Colors.white,
       _ButtonType.operation => Colors.white,
     };
+    final bool triggersEvaluation = config.command is EvaluateCommand;
 
     return Material(
       color: background,
@@ -151,7 +174,12 @@ class _CalculatorButton extends StatelessWidget {
       ),
       child: InkWell(
         customBorder: const CircleBorder(),
-        onTap: config.onPressed,
+        onTap: () {
+          config.command.execute(actions);
+          if (triggersEvaluation) {
+            onEvaluate();
+          }
+        },
         child: Center(
           child: Text(
             config.label,
