@@ -53,6 +53,11 @@ class CubitExceptionHandler {
 
   /// Extract a user-friendly error message from an exception.
   static String _extractErrorMessage(final Object error) {
+    final String fallback = error.toString();
+    if (fallback.startsWith('Exception:')) {
+      return fallback;
+    }
+
     // Handle exceptions with a message property
     try {
       final dynamic message = (error as dynamic).message;
@@ -64,7 +69,7 @@ class CubitExceptionHandler {
     }
 
     // Fallback to toString
-    return error.toString();
+    return fallback;
   }
 
   /// Execute an async operation with standardized exception handling.
