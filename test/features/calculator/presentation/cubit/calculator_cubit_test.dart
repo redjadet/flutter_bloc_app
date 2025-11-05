@@ -37,7 +37,6 @@ void main() {
     expect: () => const <CalculatorState>[
       CalculatorState(display: '4', replaceInput: false),
       CalculatorState(display: '4.', replaceInput: false),
-      CalculatorState(display: '4.', replaceInput: false),
       CalculatorState(display: '4.5', replaceInput: false),
     ],
   );
@@ -212,6 +211,8 @@ void main() {
       const CalculatorState(
         display: '10',
         replaceInput: true,
+        lastOperand: 1,
+        lastOperation: CalculatorOperation.add,
         settledAmount: 10,
         history: '9+1',
       ),

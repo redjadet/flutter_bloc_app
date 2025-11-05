@@ -5,13 +5,59 @@ import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculat
 
 /// Cubit orchestrating payment calculator behaviour and summaries.
 class CalculatorCubit extends Cubit<CalculatorState> {
-  CalculatorCubit({required final PaymentCalculator calculator})
-    : _calculator = calculator,
-      super(const CalculatorState());
+  CalculatorCubit({required this.calculator}) : super(const CalculatorState());
 
-  final PaymentCalculator _calculator;
+  final PaymentCalculator calculator;
 
-  PaymentCalculator get calculator => _calculator;
+  double _parseDisplay([final CalculatorState? value]) =>
+      calculator.parseCurrency((value ?? state).display);
+
+  double _applyOperation({
+    required final double lhs,
+    required final double rhs,
+    required final CalculatorOperation operation,
+  }) => calculator.applyOperation(
+    lhs: lhs,
+    rhs: rhs,
+    operation: operation,
+  );
+
+  String _format(final double value) => formatDisplay(calculator, value);
+
+  double _resolveAccumulator(
+    final CalculatorState current,
+    final double currentValue,
+  ) {
+    if (current.accumulator != null &&
+        current.operation != null &&
+        !current.replaceInput) {
+      return _applyOperation(
+        lhs: current.accumulator!,
+        rhs: currentValue,
+        operation: current.operation!,
+      );
+    }
+    return current.accumulator ?? currentValue;
+  }
+
+  String _pendingHistory(
+    final double accumulator,
+    final CalculatorOperation operation,
+  ) => '${_format(accumulator)}${operationSymbol(operation)}';
+
+  String _composeHistory({
+    required final CalculatorState current,
+    required final double lhs,
+    required final double rhs,
+    required final CalculatorOperation operation,
+    final String? historyOverride,
+  }) {
+    final String seed = historyOverride ?? current.history;
+    final String prefix = seed.isNotEmpty
+        ? seed
+        : _pendingHistory(lhs, operation);
+    return '$prefix${_format(rhs)}';
+  }
 
   void inputDigit(final String digit) {
     if (digit.length != 1 || int.tryParse(digit) == null) {
@@ -33,6 +79,7 @@ class CalculatorCubit extends Cubit<CalculatorState> {
     }
 
     if (current.display.contains('.')) {
+      emit(current.copyWith(display: current.display));
       return;
     }
 
@@ -46,53 +93,43 @@ class CalculatorCubit extends Cubit<CalculatorState> {
 
   void selectOperation(final CalculatorOperation operation) {
     final CalculatorState current = state;
-    final double currentValue = _calculator.parseCurrency(current.display);
-
-    double accumulator = current.accumulator ?? currentValue;
-    if (current.accumulator != null &&
-        current.operation != null &&
-        !current.replaceInput) {
-      accumulator = _calculator.applyOperation(
-        lhs: current.accumulator!,
-        rhs: currentValue,
-        operation: current.operation!,
-      );
-    }
+    final double currentValue = _parseDisplay(current);
+    final double accumulator = _resolveAccumulator(current, currentValue);
 
     emit(
       current.copyWith(
         accumulator: accumulator,
         operation: operation,
-        display: formatDisplay(_calculator, accumulator),
+        display: _format(accumulator),
         replaceInput: true,
         lastOperand: null,
         lastOperation: null,
-        history:
-            '${formatDisplay(_calculator, accumulator)}${operationSymbol(operation)}',
+        history: _pendingHistory(accumulator, operation),
       ),
     );
   }
 
   void evaluate() {
     final CalculatorState current = state;
-    final double currentValue = _calculator.parseCurrency(current.display);
+    final double currentValue = _parseDisplay(current);
 
     if (current.operation != null) {
       final double lhs = current.accumulator ?? currentValue;
-      final double result = _calculator.applyOperation(
+      final double result = _applyOperation(
         lhs: lhs,
         rhs: currentValue,
         operation: current.operation!,
       );
-      final String prefix = current.history.isNotEmpty
-          ? current.history
-          : '${formatDisplay(_calculator, lhs)}${operationSymbol(current.operation!)}';
-      final String expression =
-          '$prefix${formatDisplay(_calculator, currentValue)}';
+      final String expression = _composeHistory(
+        current: current,
+        lhs: lhs,
+        rhs: currentValue,
+        operation: current.operation!,
+      );
 
       emit(
         current.copyWith(
-          display: formatDisplay(_calculator, result),
+          display: _format(result),
           accumulator: null,
           operation: null,
           replaceInput: true,
@@ -106,17 +143,22 @@ class CalculatorCubit extends Cubit<CalculatorState> {
     }
 
     if (current.lastOperation != null && current.lastOperand != null) {
-      final double result = _calculator.applyOperation(
+      final double result = _applyOperation(
         lhs: currentValue,
         rhs: current.lastOperand!,
         operation: current.lastOperation!,
       );
-      final String expression =
-          '${formatDisplay(_calculator, currentValue)}${operationSymbol(current.lastOperation!)}${formatDisplay(_calculator, current.lastOperand!)}';
+      final String expression = _composeHistory(
+        current: current,
+        lhs: currentValue,
+        rhs: current.lastOperand!,
+        operation: current.lastOperation!,
+        historyOverride: '',
+      );
 
       emit(
         current.copyWith(
-          display: formatDisplay(_calculator, result),
+          display: _format(result),
           replaceInput: true,
           settledAmount: result,
           history: expression,
@@ -127,10 +169,10 @@ class CalculatorCubit extends Cubit<CalculatorState> {
 
     final String expression = current.history.isNotEmpty
         ? current.history
-        : formatDisplay(_calculator, currentValue);
+        : _format(currentValue);
     emit(
       current.copyWith(
-        display: formatDisplay(_calculator, currentValue),
+        display: _format(currentValue),
         replaceInput: true,
         settledAmount: currentValue,
         history: expression,
@@ -139,29 +181,12 @@ class CalculatorCubit extends Cubit<CalculatorState> {
   }
 
   void clearAll() {
-    emit(
-      state.copyWith(
-        display: '0',
-        accumulator: null,
-        operation: null,
-        lastOperand: null,
-        lastOperation: null,
-        replaceInput: true,
-        taxRate: 0,
-        tipRate: 0,
-        settledAmount: 0,
-        history: '',
-      ),
-    );
+    emit(const CalculatorState());
   }
 
-  void toggleSign() {
-    emit(toggleSignState(state, _calculator));
-  }
+  void toggleSign() => emit(toggleSignState(state, calculator));
 
-  void applyPercentage() {
-    emit(applyPercentageState(state, _calculator));
-  }
+  void applyPercentage() => emit(applyPercentageState(state, calculator));
 
   void backspace() {
     final CalculatorState current = state;
@@ -200,6 +225,6 @@ class CalculatorCubit extends Cubit<CalculatorState> {
   void resetTax() => emit(state.copyWith(taxRate: 0));
 
   void _writeDigits(final String digits) {
-    emit(writeDigitsState(state, digits, _calculator));
+    emit(writeDigitsState(state, digits, calculator));
   }
 }
