@@ -102,6 +102,12 @@ This document summarizes the code quality improvements and duplicate code elimin
 - **Added responsive border radius** (`responsiveBorderRadius`, `responsiveCardRadius`)
 - **Added responsive elevation** (`responsiveElevation`, `responsiveCardElevation`)
 
+### 12. Extended Shared Layout Adoption
+
+- **Migrated Calculator Payment Page** to `CommonPageLayout` for consistent Scaffold/AppBar handling
+- **Migrated Logged Out Page** to `CommonPageLayout`, eliminating bespoke back-button wiring
+- **Updated Auth Profile Page** to reuse `CommonAppBar`, keeping FirebaseUI profile flows aligned with shared navigation UX
+
 ## Benefits Achieved
 
 ### Code Quality
