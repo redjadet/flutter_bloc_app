@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_state.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 class MapSampleCubit extends Cubit<MapSampleState> {
@@ -22,37 +23,40 @@ class MapSampleCubit extends Cubit<MapSampleState> {
         clearSelectedMarker: true,
       ),
     );
-    try {
-      final List<MapLocation> locations = await _repository
-          .fetchSampleLocations();
-      final gmaps.MarkerId? firstMarkerId = locations.isEmpty
-          ? null
-          : gmaps.MarkerId(locations.first.id);
-      emit(
-        state.copyWith(
-          isLoading: false,
-          locations: locations,
-          selectedMarkerId: firstMarkerId,
-          cameraPosition:
-              _resolveInitialCamera(locations) ??
-              state.cameraPosition, // Keep default when list empty.
-          markers: _buildMarkers(
+    await CubitExceptionHandler.executeAsync(
+      operation: _repository.fetchSampleLocations,
+      onSuccess: (final List<MapLocation> locations) {
+        final gmaps.MarkerId? firstMarkerId = locations.isEmpty
+            ? null
+            : gmaps.MarkerId(locations.first.id);
+        emit(
+          state.copyWith(
+            isLoading: false,
             locations: locations,
             selectedMarkerId: firstMarkerId,
+            cameraPosition:
+                _resolveInitialCamera(locations) ??
+                state.cameraPosition, // Keep default when list empty.
+            markers: _buildMarkers(
+              locations: locations,
+              selectedMarkerId: firstMarkerId,
+            ),
           ),
-        ),
-      );
-    } on Exception catch (error) {
-      emit(
-        state.copyWith(
-          isLoading: false,
-          errorMessage: error.toString(),
-          markers: const <gmaps.Marker>{},
-          locations: const <MapLocation>[],
-          clearSelectedMarker: true,
-        ),
-      );
-    }
+        );
+      },
+      onError: (final String errorMessage) {
+        emit(
+          state.copyWith(
+            isLoading: false,
+            errorMessage: errorMessage,
+            markers: const <gmaps.Marker>{},
+            locations: const <MapLocation>[],
+            clearSelectedMarker: true,
+          ),
+        );
+      },
+      logContext: 'MapSampleCubit.loadLocations',
+    );
   }
 
   void toggleMapType() {
