@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_summary_card.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:go_router/go_router.dart';
 
 class CalculatorPaymentPage extends StatelessWidget {
@@ -19,10 +18,9 @@ class CalculatorPaymentPage extends StatelessWidget {
     );
     final double sectionGap = context.responsiveGapL;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.calculatorPaymentTitle),
-      ),
+    return CommonPageLayout(
+      title: l10n.calculatorPaymentTitle,
+      useResponsiveBody: false,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: padding,
