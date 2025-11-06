@@ -30,6 +30,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         );
       },
       onError: (final String message) {
+        // For unknown exceptions, set errorMessage to null to match original behavior
         _emitError(message: null, type: GraphqlDemoErrorType.unknown);
       },
       logContext: 'GraphqlDemoCubit.loadInitial',
@@ -65,6 +66,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         _emitSuccess(countries: countries);
       },
       onError: (final String message) {
+        // For unknown exceptions, set errorMessage to null to match original behavior
         _emitError(message: null, type: GraphqlDemoErrorType.unknown);
       },
       logContext: 'GraphqlDemoCubit.selectContinent',

@@ -37,50 +37,55 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
 
     await _persistHistory(historyAfterUser);
 
-    try {
-      final ChatResult result = await _repository.sendMessage(
+    await CubitExceptionHandler.executeAsync(
+      operation: () => _repository.sendMessage(
         pastUserInputs: withUser.pastUserInputs,
         generatedResponses: withUser.generatedResponses,
         prompt: trimmed,
         model: _currentModel,
-      );
+      ),
+      onSuccess: (final ChatResult result) {
+        final ChatConversation withAssistant = withUser.copyWith(
+          messages: <ChatMessage>[...withUser.messages, result.reply],
+          pastUserInputs: result.pastUserInputs,
+          generatedResponses: result.generatedResponses,
+          updatedAt: DateTime.now(),
+        );
 
-      final ChatConversation withAssistant = withUser.copyWith(
-        messages: <ChatMessage>[...withUser.messages, result.reply],
-        pastUserInputs: result.pastUserInputs,
-        generatedResponses: result.generatedResponses,
-        updatedAt: DateTime.now(),
-      );
+        final List<ChatConversation> finalHistory = _replaceConversation(
+          withAssistant,
+        );
 
-      final List<ChatConversation> finalHistory = _replaceConversation(
-        withAssistant,
-      );
+        _emitConversationSnapshot(
+          active: withAssistant,
+          history: finalHistory,
+          isLoading: false,
+        );
 
-      _emitConversationSnapshot(
-        active: withAssistant,
-        history: finalHistory,
-        isLoading: false,
-      );
-
-      await _persistHistory(finalHistory);
-    } on ChatException catch (error, stackTrace) {
-      AppLogger.error('ChatCubit.sendMessage failed', error, stackTrace);
-      _emitConversationSnapshot(
-        active: withUser,
-        history: historyAfterUser,
-        isLoading: false,
-        error: error.message,
-        status: ViewStatus.error,
-      );
-    } on Exception catch (error, stackTrace) {
-      AppLogger.error('ChatCubit.sendMessage failed', error, stackTrace);
-      _emitConversationSnapshot(
-        active: withUser,
-        history: historyAfterUser,
-        isLoading: false,
-        error: error.toString(),
-        status: ViewStatus.error,
-      );
-    }
+        unawaited(_persistHistory(finalHistory));
+      },
+      onError: (final String errorMessage) {
+        _emitConversationSnapshot(
+          active: withUser,
+          history: historyAfterUser,
+          isLoading: false,
+          error: errorMessage,
+          status: ViewStatus.error,
+        );
+      },
+      logContext: 'ChatCubit.sendMessage',
+      specificExceptionHandlers: {
+        ChatException: (final error, final stackTrace) {
+          final ChatException exception = error as ChatException;
+          _emitConversationSnapshot(
+            active: withUser,
+            history: historyAfterUser,
+            isLoading: false,
+            error: exception.message,
+            status: ViewStatus.error,
+          );
+        },
+      },
+    );
   }
 }
