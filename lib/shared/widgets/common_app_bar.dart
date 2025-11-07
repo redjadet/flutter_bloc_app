@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
 
@@ -17,6 +18,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.titleTextStyle,
     this.cupertinoBackgroundColor,
     this.cupertinoTitleStyle,
+    this.centerTitle,
+    this.systemOverlayStyle,
   });
 
   final String title;
@@ -28,6 +31,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final TextStyle? titleTextStyle;
   final Color? cupertinoBackgroundColor;
   final TextStyle? cupertinoTitleStyle;
+  final bool? centerTitle;
+  final SystemUiOverlayStyle? systemOverlayStyle;
 
   @override
   Widget build(final BuildContext context) {
@@ -78,6 +83,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: backgroundColor ?? theme.appBarTheme.backgroundColor,
       foregroundColor: foregroundColor ?? theme.appBarTheme.foregroundColor,
       title: Text(title, style: titleTextStyle),
+      centerTitle: centerTitle,
+      systemOverlayStyle: systemOverlayStyle,
       actions: actions,
     );
   }
