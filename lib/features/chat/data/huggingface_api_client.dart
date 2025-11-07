@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
 import 'package:http/http.dart' as http;
 
 typedef JsonMap = Map<String, dynamic>;
@@ -35,59 +36,57 @@ class HuggingFaceApiClient {
     required final JsonMap payload,
     required final String context,
   }) async {
-    try {
-      final http.Response response = await _client
-          .post(uri, headers: _headers(), body: jsonEncode(payload))
-          .timeout(_requestTimeout);
-
-      final int statusCode = response.statusCode;
-      if (statusCode == 429) {
-        throw const ChatException(
-          'Hugging Face rate limit hit. Please wait before trying again.',
-        );
-      }
-
-      if (statusCode >= 400) {
-        final String friendly = formatError(response);
+    final http.Response response = await NetworkGuard.execute<ChatException>(
+      request: () => _client.post(
+        uri,
+        headers: _headers(),
+        body: jsonEncode(payload),
+      ),
+      timeout: _requestTimeout,
+      isSuccess: (final int statusCode) => statusCode < 400,
+      logContext: 'HuggingFaceApiClient.$context',
+      onHttpFailure: (final http.Response res) {
+        if (res.statusCode == 429) {
+          return const ChatException(
+            'Hugging Face rate limit hit. Please wait before trying again.',
+          );
+        }
+        final String message = formatError(res);
+        return ChatException(message);
+      },
+      onException: (final Object error) =>
+          const ChatException('Failed to contact chat service.'),
+      onFailureLog: (final http.Response res) {
         AppLogger.error(
-          'HuggingFaceApiClient.$context non-success (HTTP $statusCode)',
+          'HuggingFaceApiClient.$context non-success (HTTP ${res.statusCode})',
           'Response body omitted for privacy',
           StackTrace.current,
         );
-        throw ChatException(friendly);
-      }
+      },
+    );
 
-      final String contentType =
-          response.headers['content-type']?.toLowerCase() ?? '';
-      if (!contentType.contains('application/json')) {
-        AppLogger.error(
-          'HuggingFaceApiClient.$context failed',
-          'Unexpected content-type: $contentType (payload omitted)',
-          StackTrace.current,
-        );
-        throw const ChatException('Chat service returned unsupported content.');
-      }
-
-      final dynamic decoded = jsonDecode(response.body);
-      if (decoded is JsonMap) {
-        return decoded;
-      }
-
+    final String contentType =
+        response.headers['content-type']?.toLowerCase() ?? '';
+    if (!contentType.contains('application/json')) {
       AppLogger.error(
         'HuggingFaceApiClient.$context failed',
-        'Unexpected payload structure: ${decoded.runtimeType}',
+        'Unexpected content-type: $contentType (payload omitted)',
         StackTrace.current,
       );
-      throw const ChatException('Chat service returned unexpected payload.');
-    } on Exception catch (error, stackTrace) {
-      if (error is ChatException) rethrow;
-      AppLogger.error(
-        'HuggingFaceApiClient.$context failed',
-        error,
-        stackTrace,
-      );
-      throw const ChatException('Failed to contact chat service.');
+      throw const ChatException('Chat service returned unsupported content.');
     }
+
+    final dynamic decoded = jsonDecode(response.body);
+    if (decoded is JsonMap) {
+      return decoded;
+    }
+
+    AppLogger.error(
+      'HuggingFaceApiClient.$context failed',
+      'Unexpected payload structure: ${decoded.runtimeType}',
+      StackTrace.current,
+    );
+    throw const ChatException('Chat service returned unexpected payload.');
   }
 
   void dispose() {
