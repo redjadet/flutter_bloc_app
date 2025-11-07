@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_state.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/helpers/counter_snapshot_utils.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 export 'package:flutter_bloc_app/features/counter/presentation/counter_state.dart';
@@ -31,35 +32,36 @@ class CounterCubit extends _CounterCubitBase {
   }
 
   Future<void> loadInitial() async {
-    try {
-      emit(state.copyWith(status: ViewStatus.loading));
-      if (_initialLoadDelay > Duration.zero) {
-        await Future<void>.delayed(_initialLoadDelay);
-      }
-      final CounterSnapshot snapshot = await _repository.load();
-      final RestorationResult restoration = restoreStateFromSnapshot(snapshot);
-      _pauseCountdownForOneTick = restoration.holdCountdown;
-      emit(restoration.state);
-      _syncTickerForState(restoration.state);
-      if (restoration.shouldPersist) {
-        await _persistState(restoration.state);
-      }
-      _subscribeToRepository();
-    } on CounterError catch (error, stackTrace) {
-      _handleError(
-        error,
-        stackTrace,
-        CounterError.load,
-        'CounterCubit.loadInitial failed',
-      );
-    } on Exception catch (error, stackTrace) {
-      _handleError(
-        error,
-        stackTrace,
-        CounterError.load,
-        'CounterCubit.loadInitial failed',
-      );
-    }
+    emit(state.copyWith(status: ViewStatus.loading));
+
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: () async {
+        if (_initialLoadDelay > Duration.zero) {
+          await Future<void>.delayed(_initialLoadDelay);
+        }
+        final CounterSnapshot snapshot = await _repository.load();
+        final RestorationResult restoration = restoreStateFromSnapshot(
+          snapshot,
+        );
+        _pauseCountdownForOneTick = restoration.holdCountdown;
+        emit(restoration.state);
+        _syncTickerForState(restoration.state);
+        if (restoration.shouldPersist) {
+          await _persistState(restoration.state);
+        }
+        _subscribeToRepository();
+      },
+      onError: (_) {},
+      logContext: 'CounterCubit.loadInitial',
+      onErrorWithDetails: (final Object error, final StackTrace? stackTrace) {
+        _handleError(
+          error,
+          stackTrace ?? StackTrace.current,
+          CounterError.load,
+          'CounterCubit.loadInitial failed',
+        );
+      },
+    );
   }
 
   @override
@@ -106,5 +108,27 @@ class CounterCubit extends _CounterCubitBase {
   void resumeAutoDecrement() {
     _isLifecyclePaused = false;
     _syncTickerForState(state);
+  }
+
+  @override
+  Future<void> _persistState(final CounterState snapshotState) async {
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: () => _repository.save(
+        CounterSnapshot(
+          count: snapshotState.count,
+          lastChanged: snapshotState.lastChanged,
+        ),
+      ),
+      onError: (_) {},
+      logContext: 'CounterCubit._persistState',
+      onErrorWithDetails: (final Object error, final StackTrace? stackTrace) {
+        _handleError(
+          error,
+          stackTrace ?? StackTrace.current,
+          CounterError.save,
+          'CounterCubit._persistState failed',
+        );
+      },
+    );
   }
 }

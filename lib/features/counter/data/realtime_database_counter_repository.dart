@@ -27,9 +27,9 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   final FirebaseAuth _auth;
 
   @override
-  Future<CounterSnapshot> load() async {
-    try {
-      final User user = await waitForAuthUser(_auth);
+  Future<CounterSnapshot> load() async => _executeForUser<CounterSnapshot>(
+    operation: 'load',
+    action: (final User user) async {
       _debugLog(
         'RealtimeDatabaseCounterRepository.load requesting counter value',
       );
@@ -39,52 +39,29 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
         '${snapshot.exists}',
       );
       return snapshotFromValue(snapshot.value, userId: user.uid);
-    } on FirebaseAuthException {
-      rethrow;
-    } on FirebaseException catch (error, stackTrace) {
-      AppLogger.error(
-        'RealtimeDatabaseCounterRepository.load failed',
-        error,
-        stackTrace,
-      );
+    },
+    onFailureFallback: () async {
       final String? userId = _auth.currentUser?.uid;
       return _emptySnapshot.copyWith(userId: userId);
-    } on Exception catch (error, stackTrace) {
-      AppLogger.error(
-        'RealtimeDatabaseCounterRepository.load failed',
-        error,
-        stackTrace,
-      );
-      final String? userId = _auth.currentUser?.uid;
-      return _emptySnapshot.copyWith(userId: userId);
-    }
-  }
+    },
+  );
 
   @override
   Future<void> save(final CounterSnapshot snapshot) async {
-    try {
-      final User user = await waitForAuthUser(_auth);
-      _debugLog('RealtimeDatabaseCounterRepository.save writing counter value');
-      await _counterRef.child(user.uid).set(<String, Object?>{
-        'userId': user.uid,
-        'count': snapshot.count,
-        'last_changed': snapshot.lastChanged?.millisecondsSinceEpoch,
-      });
-    } on FirebaseAuthException {
-      rethrow;
-    } on FirebaseException catch (error, stackTrace) {
-      AppLogger.error(
-        'RealtimeDatabaseCounterRepository.save failed',
-        error,
-        stackTrace,
-      );
-    } on Exception catch (error, stackTrace) {
-      AppLogger.error(
-        'RealtimeDatabaseCounterRepository.save failed',
-        error,
-        stackTrace,
-      );
-    }
+    await _executeForUser<void>(
+      operation: 'save',
+      action: (final User user) async {
+        _debugLog(
+          'RealtimeDatabaseCounterRepository.save writing counter value',
+        );
+        await _counterRef.child(user.uid).set(<String, Object?>{
+          'userId': user.uid,
+          'count': snapshot.count,
+          'last_changed': snapshot.lastChanged?.millisecondsSinceEpoch,
+        });
+      },
+      onFailureFallback: () async {},
+    );
   }
 
   @override
@@ -143,6 +120,39 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
       );
     }
     return CounterSnapshot(userId: userId, count: 0);
+  }
+
+  Future<T> _executeForUser<T>({
+    required final String operation,
+    required final Future<T> Function(User user) action,
+    Future<T> Function()? onFailureFallback,
+  }) async {
+    try {
+      final User user = await waitForAuthUser(_auth);
+      return await action(user);
+    } on FirebaseAuthException {
+      rethrow;
+    } on FirebaseException catch (error, stackTrace) {
+      AppLogger.error(
+        'RealtimeDatabaseCounterRepository.$operation failed',
+        error,
+        stackTrace,
+      );
+      if (onFailureFallback != null) {
+        return onFailureFallback();
+      }
+      rethrow;
+    } on Exception catch (error, stackTrace) {
+      AppLogger.error(
+        'RealtimeDatabaseCounterRepository.$operation failed',
+        error,
+        stackTrace,
+      );
+      if (onFailureFallback != null) {
+        return onFailureFallback();
+      }
+      rethrow;
+    }
   }
 }
 
