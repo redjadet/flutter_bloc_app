@@ -61,34 +61,24 @@ Future<http.Response> _restCounterRepositorySendRequest({
   })
   errorFactory,
   CounterError Function(http.Response response)? onHttpFailure,
-}) async {
-  try {
-    final http.Response response = await request().timeout(
-      repository._requestTimeout,
-    );
-    if (_isSuccess(response.statusCode)) {
-      return response;
-    }
-    _logHttpError(operation, response);
-    throw onHttpFailure?.call(response) ??
-        errorFactory(
-          originalError: http.ClientException(
-            'REST $operation failed (HTTP ${response.statusCode})',
-            response.request?.url ?? repository._counterUri,
-          ),
-          message: 'REST $operation failed (HTTP ${response.statusCode}).',
-        );
-  } on CounterError {
-    rethrow;
-  } on Exception catch (error, stackTrace) {
-    AppLogger.error(
-      'RestCounterRepository.$operation failed',
-      error,
-      stackTrace,
-    );
-    throw errorFactory(originalError: error);
-  }
-}
+}) => NetworkGuard.execute<CounterError>(
+  request: request,
+  timeout: repository._requestTimeout,
+  isSuccess: _isSuccess,
+  logContext: 'RestCounterRepository.$operation',
+  onHttpFailure: (final http.Response response) =>
+      onHttpFailure?.call(response) ??
+      errorFactory(
+        originalError: http.ClientException(
+          'REST $operation failed (HTTP ${response.statusCode})',
+          response.request?.url ?? repository._counterUri,
+        ),
+        message: 'REST $operation failed (HTTP ${response.statusCode}).',
+      ),
+  onException: (final Object error) => errorFactory(originalError: error),
+  onFailureLog: (final http.Response response) =>
+      _logHttpError(operation, response),
+);
 
 Map<String, String> _headers(
   final RestCounterRepository repository, {

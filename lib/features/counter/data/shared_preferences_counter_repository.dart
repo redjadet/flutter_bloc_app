@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,9 +29,10 @@ class SharedPreferencesCounterRepository implements CounterRepository {
       : SharedPreferences.getInstance();
 
   @override
-  Future<CounterSnapshot> load() async => _executeSafely<CounterSnapshot>(
-    operation: 'load',
-    action: (final SharedPreferences preferences) {
+  Future<CounterSnapshot> load() async => StorageGuard.run<CounterSnapshot>(
+    logContext: 'SharedPreferencesCounterRepository.load',
+    action: () async {
+      final SharedPreferences preferences = await _preferences();
       final int count = preferences.getInt(_preferencesKeyCount) ?? 0;
       final int? changedMs = preferences.getInt(_preferencesKeyChanged);
       final DateTime? changed = changedMs != null
@@ -52,25 +53,26 @@ class SharedPreferencesCounterRepository implements CounterRepository {
   );
 
   @override
-  Future<void> save(final CounterSnapshot snapshot) async {
-    await _executeSafely<void>(
-      operation: 'save',
-      action: (final SharedPreferences preferences) async {
-        final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
-        await preferences.setInt(_preferencesKeyCount, normalized.count);
-        final DateTime? lastChanged = normalized.lastChanged;
-        if (lastChanged != null) {
-          await preferences.setInt(
-            _preferencesKeyChanged,
-            lastChanged.millisecondsSinceEpoch,
-          );
-        } else {
-          await preferences.remove(_preferencesKeyChanged);
-        }
-        _emitSnapshot(normalized);
-      },
-    );
-  }
+  Future<void> save(final CounterSnapshot snapshot) async =>
+      StorageGuard.run<void>(
+        logContext: 'SharedPreferencesCounterRepository.save',
+        action: () async {
+          final SharedPreferences preferences = await _preferences();
+          final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
+          await preferences.setInt(_preferencesKeyCount, normalized.count);
+          final DateTime? lastChanged = normalized.lastChanged;
+          if (lastChanged != null) {
+            await preferences.setInt(
+              _preferencesKeyChanged,
+              lastChanged.millisecondsSinceEpoch,
+            );
+          } else {
+            await preferences.remove(_preferencesKeyChanged);
+          }
+          _emitSnapshot(normalized);
+        },
+        fallback: () {},
+      );
 
   @override
   Stream<CounterSnapshot> watch() {
@@ -138,36 +140,4 @@ class SharedPreferencesCounterRepository implements CounterRepository {
     await _watchController?.close();
     _watchController = null;
   }
-
-  Future<T> _executeSafely<T>({
-    required final String operation,
-    required final FutureOr<T> Function(SharedPreferences preferences) action,
-    FutureOr<T> Function()? fallback,
-  }) async {
-    try {
-      final SharedPreferences preferences = await _preferences();
-      return await action(preferences);
-    } on Exception catch (error, stackTrace) {
-      AppLogger.error(
-        'SharedPreferencesCounterRepository.$operation failed',
-        error,
-        stackTrace,
-      );
-      if (fallback != null) {
-        return await fallback();
-      }
-      throw _SharedPreferencesCounterException(operation, error);
-    }
-  }
-}
-
-class _SharedPreferencesCounterException implements Exception {
-  _SharedPreferencesCounterException(this.operation, [this.original]);
-
-  final String operation;
-  final Object? original;
-
-  @override
-  String toString() =>
-      'SharedPreferencesCounterException(operation: $operation, original: $original)';
 }
