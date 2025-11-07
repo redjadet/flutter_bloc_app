@@ -33,7 +33,11 @@ class RootAwareBackButton extends StatelessWidget {
           color: CupertinoTheme.of(context).primaryColor,
           onPressed: onPressed,
         )
-      : BackButton(onPressed: onPressed);
+      : IconButton(
+          icon: const Icon(Icons.arrow_back),
+          tooltip: homeTooltip,
+          onPressed: onPressed,
+        );
 
   Widget _buildHomeButton(
     final bool useCupertino,

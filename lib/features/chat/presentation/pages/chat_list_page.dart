@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 
 class ChatListPage extends StatelessWidget {
   const ChatListPage({super.key, this.repository});
@@ -14,7 +15,19 @@ class ChatListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: Colors.white,
-    appBar: _buildAppBar(context),
+    appBar: CommonAppBar(
+      title: 'Chats',
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
+      titleTextStyle: _appBarTitleStyle(context),
+      cupertinoBackgroundColor: Colors.white,
+      cupertinoTitleStyle: _appBarTitleStyle(context),
+      centerTitle: true,
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    ),
     body: BlocProvider(
       create: (context) {
         final cubit = ChatListCubit(
@@ -26,20 +39,6 @@ class ChatListPage extends StatelessWidget {
       child: const ChatListView(),
     ),
     bottomNavigationBar: const ChatBottomNavigationBar(),
-  );
-
-  PreferredSizeWidget _buildAppBar(BuildContext context) => AppBar(
-    backgroundColor: Colors.white,
-    elevation: 0,
-    title: Text(
-      'Chats',
-      style: _appBarTitleStyle(context),
-    ),
-    centerTitle: true,
-    systemOverlayStyle: const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ),
   );
 
   TextStyle _appBarTitleStyle(BuildContext context) {
