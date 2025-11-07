@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:intl/intl.dart';
 
 /// Reusable selector for choosing percentage-based rates (e.g. tax, tip).
@@ -66,7 +68,7 @@ class CalculatorRateSelector extends StatelessWidget {
               label: Text(customLabel),
               selected: hasCustomSelection,
               onSelected: (_) async {
-                final double? value = await showDialog<double>(
+                final double? value = await showAdaptiveDialog<double>(
                   context: context,
                   builder: (final context) => _CustomRateDialog(
                     initialValue: selectedRate,
@@ -134,7 +136,24 @@ class _CustomRateDialogState extends State<_CustomRateDialog> {
   }
 
   @override
-  Widget build(final BuildContext context) => AlertDialog(
+  Widget build(final BuildContext context) {
+    final bool useCupertino = PlatformAdaptive.isCupertinoFromTheme(
+      Theme.of(context),
+    );
+
+    return useCupertino
+        ? _buildCupertinoDialog(context)
+        : _buildMaterialDialog(context);
+  }
+
+  void _handleChanged(final String value) {
+    final double? parsed = double.tryParse(value);
+    setState(() {
+      _parsedValue = parsed == null ? null : (parsed / 100).clamp(0, 1);
+    });
+  }
+
+  Widget _buildMaterialDialog(final BuildContext context) => AlertDialog(
     title: Text(widget.title),
     content: TextField(
       controller: _controller,
@@ -144,12 +163,7 @@ class _CustomRateDialogState extends State<_CustomRateDialog> {
         labelText: widget.fieldLabel,
         suffixText: widget.suffixText,
       ),
-      onChanged: (final value) {
-        final double? parsed = double.tryParse(value);
-        setState(() {
-          _parsedValue = parsed == null ? null : (parsed / 100).clamp(0, 1);
-        });
-      },
+      onChanged: _handleChanged,
     ),
     actions: [
       TextButton(
@@ -164,4 +178,38 @@ class _CustomRateDialogState extends State<_CustomRateDialog> {
       ),
     ],
   );
+
+  Widget _buildCupertinoDialog(final BuildContext context) =>
+      CupertinoAlertDialog(
+        title: Text(widget.title),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 12),
+            CupertinoTextField(
+              controller: _controller,
+              keyboardType: TextInputType.number,
+              autofocus: true,
+              placeholder: widget.fieldLabel,
+              suffix: Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Text(widget.suffixText),
+              ),
+              onChanged: _handleChanged,
+            ),
+          ],
+        ),
+        actions: [
+          CupertinoDialogAction(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(widget.cancelLabel),
+          ),
+          CupertinoDialogAction(
+            onPressed: _parsedValue == null
+                ? null
+                : () => Navigator.of(context).pop(_parsedValue),
+            child: Text(widget.applyLabel),
+          ),
+        ],
+      );
 }

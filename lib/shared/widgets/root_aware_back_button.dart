@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 /// Displays a back button when the navigator can pop, otherwise a home button.
 class RootAwareBackButton extends StatelessWidget {
@@ -11,17 +12,12 @@ class RootAwareBackButton extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final navigator = Navigator.of(context);
-    final bool useCupertino = _isCupertinoPlatform(context);
+    final bool useCupertino = PlatformAdaptive.isCupertino(context);
     void handleNavigation() => NavigationUtils.popOrGoHome(context);
 
     return navigator.canPop()
         ? _buildBackButton(useCupertino, handleNavigation, context)
         : _buildHomeButton(useCupertino, handleNavigation);
-  }
-
-  bool _isCupertinoPlatform(final BuildContext context) {
-    final TargetPlatform platform = Theme.of(context).platform;
-    return platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
   }
 
   Widget _buildBackButton(

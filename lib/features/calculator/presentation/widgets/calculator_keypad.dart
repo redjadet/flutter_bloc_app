@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_bloc_app/features/calculator/domain/payment_calculator.d
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_cubit.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_actions.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:go_router/go_router.dart';
 
 class CalculatorKeypad extends StatelessWidget {
@@ -163,6 +165,46 @@ class _CalculatorButton extends StatelessWidget {
   Widget build(final BuildContext context) {
     final _CalculatorButtonStyle style = palette.styleFor(config.type);
     final bool triggersEvaluation = config.command is EvaluateCommand;
+    final ThemeData theme = Theme.of(context);
+    final bool useCupertino = PlatformAdaptive.isCupertinoFromTheme(theme);
+
+    void handleTap() {
+      config.command.execute(actions);
+      if (triggersEvaluation) {
+        onEvaluate();
+      }
+    }
+
+    final Widget label = Center(
+      child: Text(
+        config.label,
+        style: TextStyle(
+          color: style.foreground,
+          fontSize: 26,
+          fontWeight: config.type == _ButtonType.operation
+              ? FontWeight.w600
+              : FontWeight.w500,
+        ),
+      ),
+    );
+
+    if (useCupertino) {
+      return ClipOval(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: style.background,
+            shape: BoxShape.circle,
+            border: Border.all(color: palette.borderColor),
+          ),
+          child: CupertinoButton(
+            padding: EdgeInsets.zero,
+            borderRadius: BorderRadius.circular(999),
+            onPressed: handleTap,
+            child: label,
+          ),
+        ),
+      );
+    }
 
     return Material(
       color: style.background,
@@ -171,24 +213,8 @@ class _CalculatorButton extends StatelessWidget {
       ),
       child: InkWell(
         customBorder: const CircleBorder(),
-        onTap: () {
-          config.command.execute(actions);
-          if (triggersEvaluation) {
-            onEvaluate();
-          }
-        },
-        child: Center(
-          child: Text(
-            config.label,
-            style: TextStyle(
-              color: style.foreground,
-              fontSize: 26,
-              fontWeight: config.type == _ButtonType.operation
-                  ? FontWeight.w600
-                  : FontWeight.w500,
-            ),
-          ),
-        ),
+        onTap: handleTap,
+        child: label,
       ),
     );
   }
