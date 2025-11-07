@@ -36,7 +36,8 @@ class _RegisterAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final bool useCupertino =
-        theme.platform == TargetPlatform.iOS || theme.platform == TargetPlatform.macOS;
+        theme.platform == TargetPlatform.iOS ||
+        theme.platform == TargetPlatform.macOS;
     void onBack() => NavigationUtils.popOrGoHome(context);
 
     if (useCupertino) {
