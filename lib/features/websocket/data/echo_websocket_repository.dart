@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_connection_state.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/websocket_guard.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 typedef WebSocketConnector = FutureOr<WebSocketChannel> Function(Uri uri);
@@ -34,15 +35,13 @@ class EchoWebsocketRepository implements WebsocketRepository {
   final StreamController<WebsocketConnectionState> _stateController =
       StreamController<WebsocketConnectionState>.broadcast();
 
-  WebsocketConnectionState _state =
-      const WebsocketConnectionState.disconnected();
+  WebsocketConnectionState _state = const WebsocketConnectionState.disconnected();
 
   static Future<WebSocketChannel> _defaultConnector(final Uri uri) async =>
       WebSocketChannel.connect(uri);
 
   @override
-  Stream<WebsocketConnectionState> get connectionStates =>
-      _stateController.stream;
+  Stream<WebsocketConnectionState> get connectionStates => _stateController.stream;
 
   @override
   WebsocketConnectionState get currentState => _state;
@@ -75,14 +74,11 @@ class EchoWebsocketRepository implements WebsocketRepository {
     }
   }
 
-  Future<WebSocketChannel> _connectWithTimeout() {
-    final Future<WebSocketChannel> futureChannel =
-        Future<WebSocketChannel>.value(_connector(endpoint));
-    if (_connectionTimeout.inMilliseconds <= 0) {
-      return futureChannel;
-    }
-    return futureChannel.timeout(_connectionTimeout);
-  }
+  Future<WebSocketChannel> _connectWithTimeout() => WebSocketGuard.connect(
+    connect: () async => Future<WebSocketChannel>.value(_connector(endpoint)),
+    timeout: _connectionTimeout,
+    logContext: 'EchoWebsocketRepository.connect',
+  );
 
   void _handleIncoming(final dynamic data) {
     final String message = data?.toString() ?? '';
