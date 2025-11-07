@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flutter_bloc_app/core/constants.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_cubit.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_state.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calcul
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 
 class CalculatorPage extends StatelessWidget {
   const CalculatorPage({super.key});
@@ -19,11 +19,16 @@ class CalculatorPage extends StatelessWidget {
     final l10n = context.l10n;
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
+      appBar: CommonAppBar(
+        title: l10n.calculatorTitle,
         backgroundColor: Colors.black,
-        elevation: 0,
         foregroundColor: Colors.white,
-        title: Text(l10n.calculatorTitle),
+        cupertinoBackgroundColor: Colors.black,
+        cupertinoTitleStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 17,
+          fontWeight: FontWeight.w600,
+        ),
       ),
       body: SafeArea(
         child: LayoutBuilder(

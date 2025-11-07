@@ -78,6 +78,9 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
+    final bool hasHistory = context.select(
+      (final ChatCubit cubit) => cubit.state.hasHistory,
+    );
 
     return CommonPageLayout(
       title: l10n.chatPageTitle,
@@ -87,16 +90,10 @@ class _ChatPageState extends State<ChatPage> {
           onPressed: () => _showHistorySheet(context),
           icon: const Icon(Icons.history),
         ),
-        BlocBuilder<ChatCubit, ChatState>(
-          buildWhen: (final previous, final current) =>
-              previous.history.length != current.history.length,
-          builder: (final context, final state) => IconButton(
-            tooltip: l10n.chatHistoryClearAll,
-            onPressed: state.hasHistory
-                ? () => _confirmAndClearHistory(context)
-                : null,
-            icon: const Icon(Icons.delete_sweep_outlined),
-          ),
+        IconButton(
+          tooltip: l10n.chatHistoryClearAll,
+          onPressed: hasHistory ? () => _confirmAndClearHistory(context) : null,
+          icon: const Icon(Icons.delete_sweep_outlined),
         ),
       ],
       body: Column(

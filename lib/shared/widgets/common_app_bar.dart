@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
@@ -11,30 +12,88 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.automaticallyImplyLeading = true,
     this.homeTooltip,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.titleTextStyle,
+    this.cupertinoBackgroundColor,
+    this.cupertinoTitleStyle,
   });
 
   final String title;
   final List<Widget>? actions;
   final bool automaticallyImplyLeading;
   final String? homeTooltip;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final TextStyle? titleTextStyle;
+  final Color? cupertinoBackgroundColor;
+  final TextStyle? cupertinoTitleStyle;
 
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final String effectiveHomeTooltip = homeTooltip ?? l10n.homeTitle;
+    final bool useCupertino = _isCupertinoPlatform(theme.platform);
+    final bool hasActions = actions != null && actions!.isNotEmpty;
+
+    if (useCupertino) {
+      final colorScheme = theme.colorScheme;
+      final Color resolvedBackgroundColor =
+          cupertinoBackgroundColor ??
+          colorScheme.surface.withValues(
+            alpha: theme.brightness == Brightness.dark ? 0.98 : 1,
+          );
+      final TextStyle titleStyle =
+          cupertinoTitleStyle ??
+          theme.textTheme.titleMedium?.copyWith(
+            color: colorScheme.onSurface,
+          ) ??
+          TextStyle(
+            color: colorScheme.onSurface,
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
+          );
+
+      return CupertinoNavigationBar(
+        backgroundColor: resolvedBackgroundColor,
+        brightness: theme.brightness,
+        automaticallyImplyLeading: automaticallyImplyLeading,
+        leading: automaticallyImplyLeading
+            ? RootAwareBackButton(homeTooltip: effectiveHomeTooltip)
+            : null,
+        middle: DefaultTextStyle(
+          style: titleStyle,
+          child: Text(title),
+        ),
+        trailing: hasActions ? _buildCupertinoActions() : null,
+      );
+    }
 
     return AppBar(
       leading: automaticallyImplyLeading
           ? RootAwareBackButton(homeTooltip: effectiveHomeTooltip)
           : null,
       automaticallyImplyLeading: automaticallyImplyLeading,
-      backgroundColor: theme.appBarTheme.backgroundColor,
-      foregroundColor: theme.appBarTheme.foregroundColor,
-      title: Text(title),
+      backgroundColor: backgroundColor ?? theme.appBarTheme.backgroundColor,
+      foregroundColor: foregroundColor ?? theme.appBarTheme.foregroundColor,
+      title: Text(title, style: titleTextStyle),
       actions: actions,
     );
   }
+
+  Widget _buildCupertinoActions() {
+    if (actions!.length == 1) {
+      return actions!.first;
+    }
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: actions!,
+    );
+  }
+
+  bool _isCupertinoPlatform(final TargetPlatform platform) =>
+      platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
