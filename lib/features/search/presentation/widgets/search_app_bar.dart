@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
@@ -16,8 +17,20 @@ class SearchAppBar extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final theme = Theme.of(context);
+    final bool useCupertino =
+        theme.platform == TargetPlatform.iOS ||
+        theme.platform == TargetPlatform.macOS;
     final double headlineSize = context.responsiveHeadlineSize;
     final double backIconSize = context.responsiveIconSize;
+    final Color titleColor = theme.brightness == Brightness.dark
+        ? theme.colorScheme.onSurface
+        : Colors.black;
+    final TextStyle effectiveTitleStyle =
+        (theme.textTheme.displaySmall ?? _titleStyle).copyWith(
+          fontSize: headlineSize,
+          color: titleColor,
+        );
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -26,14 +39,25 @@ class SearchAppBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back),
-            color: Colors.black,
-            iconSize: backIconSize,
-            onPressed: () => NavigationUtils.popOrGoHome(context),
-          ),
+          if (useCupertino)
+            CupertinoButton(
+              padding: EdgeInsets.zero,
+              onPressed: () => NavigationUtils.popOrGoHome(context),
+              child: Icon(
+                CupertinoIcons.left_chevron,
+                color: titleColor,
+                size: backIconSize,
+              ),
+            )
+          else
+            IconButton(
+              icon: const Icon(Icons.arrow_back),
+              color: titleColor,
+              iconSize: backIconSize,
+              onPressed: () => NavigationUtils.popOrGoHome(context),
+            ),
           SizedBox(width: UI.horizontalGapS),
-          Text('Search', style: _titleStyle.copyWith(fontSize: headlineSize)),
+          Text('Search', style: effectiveTitleStyle),
         ],
       ),
     );

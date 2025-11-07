@@ -32,8 +32,10 @@ class _SearchPageContent extends StatelessWidget {
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
 
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorScheme.surface,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
