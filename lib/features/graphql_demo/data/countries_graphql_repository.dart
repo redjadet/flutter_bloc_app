@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.da
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
 import 'package:http/http.dart' as http;
 
 /// GraphQL-backed repository that talks to https://countries.trevorblades.com.
@@ -109,73 +110,70 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
       payload['operationName'] = operationName;
     }
 
-    try {
-      final http.Response response = await _client.post(
+    const Duration timeout = Duration(seconds: 10);
+    final http.Response
+    response = await NetworkGuard.execute<GraphqlDemoException>(
+      request: () => _client.post(
         uri,
         headers: _headers,
         body: jsonEncode(payload),
-      );
-      if (response.statusCode != 200) {
-        final bool isServerError = response.statusCode >= 500;
-        throw GraphqlDemoException(
-          'Unexpected status code: ${response.statusCode}',
-          cause: response.body.isNotEmpty ? response.body : null,
+      ),
+      timeout: timeout,
+      isSuccess: (final int statusCode) => statusCode == 200,
+      logContext: 'CountriesGraphqlRepository._postQuery',
+      onHttpFailure: (final http.Response res) {
+        final bool isServerError = res.statusCode >= 500;
+        return GraphqlDemoException(
+          'Unexpected status code: ${res.statusCode}',
+          cause: res.body.isNotEmpty ? res.body : null,
           type: isServerError
               ? GraphqlDemoErrorType.server
               : GraphqlDemoErrorType.invalidRequest,
         );
-      }
-
-      final dynamic decoded = jsonDecode(response.body);
-      if (decoded is! Map<String, dynamic>) {
-        throw GraphqlDemoException(
-          'Malformed GraphQL response',
-          type: GraphqlDemoErrorType.data,
-        );
-      }
-
-      final List<dynamic>? errors = decoded['errors'] as List<dynamic>?;
-      if (errors != null && errors.isNotEmpty) {
-        final Map<String, dynamic>? firstError =
-            errors.first as Map<String, dynamic>?;
-        final String message =
-            firstError?['message']?.toString() ?? 'Unknown error';
-        throw GraphqlDemoException(
-          message,
-          cause: firstError,
-          type: GraphqlDemoErrorType.invalidRequest,
-        );
-      }
-
-      final Map<String, dynamic>? data =
-          decoded['data'] as Map<String, dynamic>?;
-      if (data == null) {
-        throw GraphqlDemoException(
-          'Missing data field in GraphQL response',
-          type: GraphqlDemoErrorType.data,
-        );
-      }
-      return data;
-    } catch (error, stackTrace) {
-      if (error is GraphqlDemoException) {
-        AppLogger.error(
-          'CountriesGraphqlRepository._postQuery failed',
-          error,
-          stackTrace,
-        );
-        rethrow;
-      }
-      AppLogger.error(
-        'CountriesGraphqlRepository._postQuery failed',
-        error,
-        stackTrace,
-      );
-      throw GraphqlDemoException(
+      },
+      onException: (final Object error) => GraphqlDemoException(
         'Failed to reach GraphQL endpoint',
         cause: error,
         type: GraphqlDemoErrorType.network,
+      ),
+      onFailureLog: (final http.Response res) {
+        AppLogger.error(
+          'CountriesGraphqlRepository._postQuery non-success: ${res.statusCode}',
+          'Response body omitted',
+          StackTrace.current,
+        );
+      },
+    );
+
+    final dynamic decoded = jsonDecode(response.body);
+    if (decoded is! Map<String, dynamic>) {
+      throw GraphqlDemoException(
+        'Malformed GraphQL response',
+        type: GraphqlDemoErrorType.data,
       );
     }
+
+    final List<dynamic>? errors = decoded['errors'] as List<dynamic>?;
+    if (errors != null && errors.isNotEmpty) {
+      final Map<String, dynamic>? firstError =
+          errors.first as Map<String, dynamic>?;
+      final String message =
+          firstError?['message']?.toString() ?? 'Unknown error';
+      throw GraphqlDemoException(
+        message,
+        cause: firstError,
+        type: GraphqlDemoErrorType.invalidRequest,
+      );
+    }
+
+    final Map<String, dynamic>? data = decoded['data'] as Map<String, dynamic>?;
+    if (data == null) {
+      throw GraphqlDemoException(
+        'Missing data field in GraphQL response',
+        type: GraphqlDemoErrorType.data,
+      );
+    }
+    return data;
   }
 
   static const String _continentsQuery = '''
