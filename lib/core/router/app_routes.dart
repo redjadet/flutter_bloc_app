@@ -42,6 +42,9 @@ class AppRoutes {
   static const profile = 'profile';
   static const profilePath = '/profile';
 
+  static const manageAccount = 'manage-account';
+  static const manageAccountPath = '/manage-account';
+
   static const register = 'register';
   static const registerPath = '/register';
 

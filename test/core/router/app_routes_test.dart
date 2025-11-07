@@ -14,5 +14,7 @@ void main() {
     expect(AppRoutes.chatPath, '/chat');
     expect(AppRoutes.profile, 'profile');
     expect(AppRoutes.profilePath, '/profile');
+    expect(AppRoutes.manageAccount, 'manage-account');
+    expect(AppRoutes.manageAccountPath, '/manage-account');
   });
 }
