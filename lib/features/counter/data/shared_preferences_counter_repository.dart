@@ -29,9 +29,9 @@ class SharedPreferencesCounterRepository implements CounterRepository {
       : SharedPreferences.getInstance();
 
   @override
-  Future<CounterSnapshot> load() async {
-    try {
-      final SharedPreferences preferences = await _preferences();
+  Future<CounterSnapshot> load() async => _executeSafely<CounterSnapshot>(
+    operation: 'load',
+    action: (final SharedPreferences preferences) {
       final int count = preferences.getInt(_preferencesKeyCount) ?? 0;
       final int? changedMs = preferences.getInt(_preferencesKeyChanged);
       final DateTime? changed = changedMs != null
@@ -44,33 +44,32 @@ class SharedPreferencesCounterRepository implements CounterRepository {
       );
       _cachedSnapshot = snapshot;
       return snapshot;
-    } on Exception catch (e, s) {
-      AppLogger.error('SharedPreferencesCounterRepository.load failed', e, s);
+    },
+    fallback: () {
       _cachedSnapshot = _emptySnapshot;
       return _emptySnapshot;
-    }
-  }
+    },
+  );
 
   @override
   Future<void> save(final CounterSnapshot snapshot) async {
-    try {
-      final SharedPreferences preferences = await _preferences();
-      final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
-      await preferences.setInt(_preferencesKeyCount, normalized.count);
-      final DateTime? lastChanged = normalized.lastChanged;
-      if (lastChanged != null) {
-        await preferences.setInt(
-          _preferencesKeyChanged,
-          lastChanged.millisecondsSinceEpoch,
-        );
-      } else {
-        // Keep store consistent if timestamp becomes null.
-        await preferences.remove(_preferencesKeyChanged);
-      }
-      _emitSnapshot(normalized);
-    } on Exception catch (e, s) {
-      AppLogger.error('SharedPreferencesCounterRepository.save failed', e, s);
-    }
+    await _executeSafely<void>(
+      operation: 'save',
+      action: (final SharedPreferences preferences) async {
+        final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
+        await preferences.setInt(_preferencesKeyCount, normalized.count);
+        final DateTime? lastChanged = normalized.lastChanged;
+        if (lastChanged != null) {
+          await preferences.setInt(
+            _preferencesKeyChanged,
+            lastChanged.millisecondsSinceEpoch,
+          );
+        } else {
+          await preferences.remove(_preferencesKeyChanged);
+        }
+        _emitSnapshot(normalized);
+      },
+    );
   }
 
   @override
@@ -139,4 +138,36 @@ class SharedPreferencesCounterRepository implements CounterRepository {
     await _watchController?.close();
     _watchController = null;
   }
+
+  Future<T> _executeSafely<T>({
+    required final String operation,
+    required final FutureOr<T> Function(SharedPreferences preferences) action,
+    FutureOr<T> Function()? fallback,
+  }) async {
+    try {
+      final SharedPreferences preferences = await _preferences();
+      return await action(preferences);
+    } on Exception catch (error, stackTrace) {
+      AppLogger.error(
+        'SharedPreferencesCounterRepository.$operation failed',
+        error,
+        stackTrace,
+      );
+      if (fallback != null) {
+        return await fallback();
+      }
+      throw _SharedPreferencesCounterException(operation, error);
+    }
+  }
+}
+
+class _SharedPreferencesCounterException implements Exception {
+  _SharedPreferencesCounterException(this.operation, [this.original]);
+
+  final String operation;
+  final Object? original;
+
+  @override
+  String toString() =>
+      'SharedPreferencesCounterException(operation: $operation, original: $original)';
 }
