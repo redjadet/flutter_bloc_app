@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
 
 /// A reusable AppBar widget that provides consistent styling and behavior
@@ -39,7 +40,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final String effectiveHomeTooltip = homeTooltip ?? l10n.homeTitle;
-    final bool useCupertino = _isCupertinoPlatform(theme.platform);
+    final bool useCupertino = PlatformAdaptive.isCupertinoFromTheme(theme);
     final bool hasActions = actions != null && actions!.isNotEmpty;
 
     if (useCupertino) {
@@ -98,9 +99,6 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       children: actions!,
     );
   }
-
-  bool _isCupertinoPlatform(final TargetPlatform platform) =>
-      platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
