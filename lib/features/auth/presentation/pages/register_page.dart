@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,20 +10,10 @@ class RegisterPage extends StatelessWidget {
   static const double _horizontalPadding = 16;
 
   @override
-  Widget build(final BuildContext context) => Scaffold(
+  Widget build(final BuildContext context) => const Scaffold(
     backgroundColor: Colors.white,
-    appBar: AppBar(
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        tooltip: 'Back',
-        onPressed: () => NavigationUtils.popOrGoHome(context),
-      ),
-      title: const SizedBox.shrink(),
-      backgroundColor: Colors.white,
-      surfaceTintColor: Colors.white,
-      elevation: 0,
-    ),
-    body: const Padding(
+    appBar: _RegisterAppBar(),
+    body: Padding(
       padding: EdgeInsets.symmetric(horizontal: _horizontalPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,6 +24,49 @@ class RegisterPage extends StatelessWidget {
       ),
     ),
   );
+}
+
+class _RegisterAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _RegisterAppBar();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(final BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final bool useCupertino =
+        theme.platform == TargetPlatform.iOS || theme.platform == TargetPlatform.macOS;
+    void onBack() => NavigationUtils.popOrGoHome(context);
+
+    if (useCupertino) {
+      return CupertinoNavigationBar(
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        leading: CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: onBack,
+          child: const Icon(
+            CupertinoIcons.left_chevron,
+            color: Colors.black,
+          ),
+        ),
+        middle: const SizedBox.shrink(),
+      );
+    }
+
+    return AppBar(
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        tooltip: 'Back',
+        onPressed: onBack,
+      ),
+      title: const SizedBox.shrink(),
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
+      elevation: 0,
+    );
+  }
 }
 
 class _RegisterForm extends StatelessWidget {

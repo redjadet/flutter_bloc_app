@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_b
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_gallery.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_header.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -15,19 +16,14 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => Scaffold(
     backgroundColor: Colors.white,
-    appBar: AppBar(
+    appBar: const CommonAppBar(
+      title: 'Profile',
       backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.black),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
-      title: const Text(
-        'Profile',
-        style: TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.w600,
-        ),
+      foregroundColor: Colors.black,
+      cupertinoBackgroundColor: Colors.white,
+      cupertinoTitleStyle: TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.w600,
       ),
     ),
     bottomNavigationBar: const ProfileBottomNav(),
