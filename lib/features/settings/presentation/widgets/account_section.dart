@@ -116,7 +116,7 @@ class AccountSection extends StatelessWidget {
                             width: double.infinity,
                             child: FilledButton.tonal(
                               onPressed: () =>
-                                  context.push(AppRoutes.profilePath),
+                                  context.push(AppRoutes.manageAccountPath),
                               child: Text(l10n.accountManageButton),
                             ),
                           ),

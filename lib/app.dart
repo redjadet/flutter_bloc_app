@@ -106,6 +106,11 @@ class _MyAppState extends State<MyApp> {
         builder: (final context, final state) => const SettingsPage(),
       ),
       GoRoute(
+        path: AppRoutes.manageAccountPath,
+        name: AppRoutes.manageAccount,
+        builder: (final context, final state) => const AuthProfilePage(),
+      ),
+      GoRoute(
         path: AppRoutes.profilePath,
         name: AppRoutes.profile,
         builder: (final context, final state) => BlocProvider(
