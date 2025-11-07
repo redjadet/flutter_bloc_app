@@ -18,17 +18,8 @@ class CalculatorPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: CommonAppBar(
         title: l10n.calculatorTitle,
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
-        cupertinoBackgroundColor: Colors.black,
-        cupertinoTitleStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 17,
-          fontWeight: FontWeight.w600,
-        ),
       ),
       body: SafeArea(
         child: LayoutBuilder(
@@ -110,8 +101,30 @@ class _CalculatorDisplay extends StatelessWidget {
             previous.display != current.display ||
             previous.history != current.history,
         builder: (final context, final state) {
+          final ThemeData theme = Theme.of(context);
+          final ColorScheme colors = theme.colorScheme;
           final double horizontalPadding = context.responsiveHorizontalGapL;
           final double historySpacing = context.responsiveGapS;
+          final TextStyle historyStyle =
+              theme.textTheme.titleMedium?.copyWith(
+                color: colors.onSurfaceVariant,
+                fontWeight: FontWeight.w400,
+              ) ??
+              TextStyle(
+                color: colors.onSurfaceVariant,
+                fontSize: 24,
+                fontWeight: FontWeight.w400,
+              );
+          final TextStyle displayStyle =
+              theme.textTheme.displayLarge?.copyWith(
+                color: colors.onSurface,
+                fontWeight: FontWeight.w300,
+              ) ??
+              TextStyle(
+                color: colors.onSurface,
+                fontSize: 64,
+                fontWeight: FontWeight.w300,
+              );
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Column(
@@ -122,11 +135,7 @@ class _CalculatorDisplay extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: Text(
                       state.history,
-                      style: const TextStyle(
-                        color: Colors.white54,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w400,
-                      ),
+                      style: historyStyle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -140,11 +149,7 @@ class _CalculatorDisplay extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: Text(
                       state.display,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 64,
-                        fontWeight: FontWeight.w300,
-                      ),
+                      style: displayStyle,
                       maxLines: 1,
                     ),
                   ),
