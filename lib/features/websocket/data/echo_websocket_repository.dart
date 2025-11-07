@@ -35,13 +35,15 @@ class EchoWebsocketRepository implements WebsocketRepository {
   final StreamController<WebsocketConnectionState> _stateController =
       StreamController<WebsocketConnectionState>.broadcast();
 
-  WebsocketConnectionState _state = const WebsocketConnectionState.disconnected();
+  WebsocketConnectionState _state =
+      const WebsocketConnectionState.disconnected();
 
   static Future<WebSocketChannel> _defaultConnector(final Uri uri) async =>
       WebSocketChannel.connect(uri);
 
   @override
-  Stream<WebsocketConnectionState> get connectionStates => _stateController.stream;
+  Stream<WebsocketConnectionState> get connectionStates =>
+      _stateController.stream;
 
   @override
   WebsocketConnectionState get currentState => _state;
