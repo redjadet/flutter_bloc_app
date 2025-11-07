@@ -19,6 +19,9 @@ class CalculatorKeypad extends StatelessWidget {
     final CalculatorCubit cubit = context.read<CalculatorCubit>();
     final double spacing = context.responsiveGapL;
     final CalculatorActions actions = CalculatorCubitActions(cubit);
+    final _CalculatorPalette palette = _CalculatorPalette.fromTheme(
+      Theme.of(context),
+    );
     final List<_ButtonConfig> buttons = <_ButtonConfig>[
       const _ButtonConfig.function(
         label: '⌫',
@@ -85,6 +88,7 @@ class CalculatorKeypad extends StatelessWidget {
       itemBuilder: (final context, final index) => _CalculatorButton(
         config: buttons[index],
         actions: actions,
+        palette: palette,
         onEvaluate: () => unawaited(
           context.pushNamed(
             AppRoutes.calculatorPayment,
@@ -147,30 +151,23 @@ class _CalculatorButton extends StatelessWidget {
     required this.config,
     required this.actions,
     required this.onEvaluate,
+    required this.palette,
   });
 
   final _ButtonConfig config;
   final CalculatorActions actions;
   final VoidCallback onEvaluate;
+  final _CalculatorPalette palette;
 
   @override
   Widget build(final BuildContext context) {
-    final Color background = switch (config.type) {
-      _ButtonType.number => const Color(0xFF333333),
-      _ButtonType.function => const Color(0xFFA5A5A5),
-      _ButtonType.operation => const Color(0xFFFF9500),
-    };
-    final Color foreground = switch (config.type) {
-      _ButtonType.function => Colors.black,
-      _ButtonType.number => Colors.white,
-      _ButtonType.operation => Colors.white,
-    };
+    final _CalculatorButtonStyle style = palette.styleFor(config.type);
     final bool triggersEvaluation = config.command is EvaluateCommand;
 
     return Material(
-      color: background,
-      shape: const CircleBorder(
-        side: BorderSide(color: Colors.white24),
+      color: style.background,
+      shape: CircleBorder(
+        side: BorderSide(color: palette.borderColor),
       ),
       child: InkWell(
         customBorder: const CircleBorder(),
@@ -184,7 +181,7 @@ class _CalculatorButton extends StatelessWidget {
           child: Text(
             config.label,
             style: TextStyle(
-              color: foreground,
+              color: style.foreground,
               fontSize: 26,
               fontWeight: config.type == _ButtonType.operation
                   ? FontWeight.w600
@@ -195,4 +192,53 @@ class _CalculatorButton extends StatelessWidget {
       ),
     );
   }
+}
+
+class _CalculatorPalette {
+  const _CalculatorPalette({
+    required this.number,
+    required this.function,
+    required this.operation,
+    required this.borderColor,
+  });
+
+  factory _CalculatorPalette.fromTheme(final ThemeData theme) {
+    final ColorScheme colors = theme.colorScheme;
+    return _CalculatorPalette(
+      number: _CalculatorButtonStyle(
+        background: colors.surfaceContainerHighest,
+        foreground: colors.onSurface,
+      ),
+      function: _CalculatorButtonStyle(
+        background: colors.secondaryContainer,
+        foreground: colors.onSecondaryContainer,
+      ),
+      operation: _CalculatorButtonStyle(
+        background: colors.primary,
+        foreground: colors.onPrimary,
+      ),
+      borderColor: colors.outlineVariant.withValues(alpha: 0.5),
+    );
+  }
+
+  final _CalculatorButtonStyle number;
+  final _CalculatorButtonStyle function;
+  final _CalculatorButtonStyle operation;
+  final Color borderColor;
+
+  _CalculatorButtonStyle styleFor(final _ButtonType type) => switch (type) {
+    _ButtonType.number => number,
+    _ButtonType.function => function,
+    _ButtonType.operation => operation,
+  };
+}
+
+class _CalculatorButtonStyle {
+  const _CalculatorButtonStyle({
+    required this.background,
+    required this.foreground,
+  });
+
+  final Color background;
+  final Color foreground;
 }
