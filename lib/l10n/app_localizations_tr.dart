@@ -162,6 +162,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get calculatorBackspace => 'Geri sil';
 
   @override
+  String get calculatorPercentCommand => 'Yüzde';
+
+  @override
+  String get calculatorToggleSign => 'İşareti değiştir';
+
+  @override
+  String get calculatorDecimalPointLabel => 'Ondalık ayırıcı';
+
+  @override
   String get calculatorEquals => 'Toplamı hesapla';
 
   @override

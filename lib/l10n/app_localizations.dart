@@ -386,6 +386,24 @@ abstract class AppLocalizations {
   /// **'Backspace'**
   String get calculatorBackspace;
 
+  /// Button label that applies the percentage operation
+  ///
+  /// In en, this message translates to:
+  /// **'Percent'**
+  String get calculatorPercentCommand;
+
+  /// Button label that toggles the sign of the current value
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle sign'**
+  String get calculatorToggleSign;
+
+  /// Button label that inserts a decimal separator
+  ///
+  /// In en, this message translates to:
+  /// **'Decimal point'**
+  String get calculatorDecimalPointLabel;
+
   /// Label for the button finalising the calculation
   ///
   /// In en, this message translates to:

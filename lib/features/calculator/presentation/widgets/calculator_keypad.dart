@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/payment_calculator.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_cubit.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_actions.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:go_router/go_router.dart';
@@ -24,18 +25,52 @@ class CalculatorKeypad extends StatelessWidget {
     final _CalculatorPalette palette = _CalculatorPalette.fromTheme(
       Theme.of(context),
     );
-    final List<_ButtonConfig> buttons = <_ButtonConfig>[
-      const _ButtonConfig.function(
+    final List<_ButtonConfig> buttons = _buildButtons(context);
+
+    return GridView.builder(
+      shrinkWrap: shrinkWrap,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.only(bottom: spacing),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        mainAxisSpacing: spacing,
+        crossAxisSpacing: spacing,
+      ),
+      itemCount: buttons.length,
+      itemBuilder: (final context, final index) => _CalculatorButton(
+        config: buttons[index],
+        actions: actions,
+        palette: palette,
+        onEvaluate: () => unawaited(
+          context.pushNamed(
+            AppRoutes.calculatorPayment,
+            extra: cubit,
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<_ButtonConfig> _buildButtons(final BuildContext context) {
+    final l10n = context.l10n;
+    return <_ButtonConfig>[
+      _ButtonConfig.function(
         label: '⌫',
-        command: BackspaceCommand(),
+        semanticsLabel: l10n.calculatorBackspace,
+        tooltip: l10n.calculatorBackspace,
+        command: const BackspaceCommand(),
       ),
-      const _ButtonConfig.function(
+      _ButtonConfig.function(
         label: 'AC',
-        command: ClearAllCommand(),
+        semanticsLabel: l10n.calculatorClearLabel,
+        tooltip: l10n.calculatorClearLabel,
+        command: const ClearAllCommand(),
       ),
-      const _ButtonConfig.function(
+      _ButtonConfig.function(
         label: '%',
-        command: ApplyPercentageCommand(),
+        semanticsLabel: l10n.calculatorPercentCommand,
+        tooltip: l10n.calculatorPercentCommand,
+        command: const ApplyPercentageCommand(),
       ),
       const _ButtonConfig.operation(
         label: '÷',
@@ -62,43 +97,26 @@ class CalculatorKeypad extends StatelessWidget {
         label: '+',
         command: OperationCommand(CalculatorOperation.add),
       ),
-      const _ButtonConfig.function(
+      _ButtonConfig.function(
         label: '+/−',
-        command: ToggleSignCommand(),
+        semanticsLabel: l10n.calculatorToggleSign,
+        tooltip: l10n.calculatorToggleSign,
+        command: const ToggleSignCommand(),
       ),
       _digit('0'),
-      const _ButtonConfig.number(
+      _ButtonConfig.number(
         label: '.',
-        command: DecimalCommand(),
+        semanticsLabel: l10n.calculatorDecimalPointLabel,
+        tooltip: l10n.calculatorDecimalPointLabel,
+        command: const DecimalCommand(),
       ),
-      const _ButtonConfig.operation(
+      _ButtonConfig.operation(
         label: '=',
-        command: EvaluateCommand(),
+        semanticsLabel: l10n.calculatorEquals,
+        tooltip: l10n.calculatorEquals,
+        command: const EvaluateCommand(),
       ),
     ];
-
-    return GridView.builder(
-      shrinkWrap: shrinkWrap,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.only(bottom: spacing),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        mainAxisSpacing: spacing,
-        crossAxisSpacing: spacing,
-      ),
-      itemCount: buttons.length,
-      itemBuilder: (final context, final index) => _CalculatorButton(
-        config: buttons[index],
-        actions: actions,
-        palette: palette,
-        onEvaluate: () => unawaited(
-          context.pushNamed(
-            AppRoutes.calculatorPayment,
-            extra: cubit,
-          ),
-        ),
-      ),
-    );
   }
 }
 
@@ -114,38 +132,54 @@ class _ButtonConfig {
     required this.label,
     required this.type,
     required this.command,
+    this.semanticsLabel,
+    this.tooltip,
   });
 
   const _ButtonConfig.number({
     required String label,
     required CalculatorCommand command,
+    String? semanticsLabel,
+    String? tooltip,
   }) : this._(
          label: label,
          type: _ButtonType.number,
          command: command,
+         semanticsLabel: semanticsLabel,
+         tooltip: tooltip,
        );
 
   const _ButtonConfig.operation({
     required String label,
     required CalculatorCommand command,
+    String? semanticsLabel,
+    String? tooltip,
   }) : this._(
          label: label,
          type: _ButtonType.operation,
          command: command,
+         semanticsLabel: semanticsLabel,
+         tooltip: tooltip,
        );
 
   const _ButtonConfig.function({
     required String label,
     required CalculatorCommand command,
+    String? semanticsLabel,
+    String? tooltip,
   }) : this._(
          label: label,
          type: _ButtonType.function,
          command: command,
+         semanticsLabel: semanticsLabel,
+         tooltip: tooltip,
        );
 
   final String label;
   final _ButtonType type;
   final CalculatorCommand command;
+  final String? semanticsLabel;
+  final String? tooltip;
 }
 
 class _CalculatorButton extends StatelessWidget {
@@ -176,20 +210,24 @@ class _CalculatorButton extends StatelessWidget {
     }
 
     final Widget label = Center(
-      child: Text(
-        config.label,
-        style: TextStyle(
-          color: style.foreground,
-          fontSize: 26,
-          fontWeight: config.type == _ButtonType.operation
-              ? FontWeight.w600
-              : FontWeight.w500,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          config.label,
+          style: TextStyle(
+            color: style.foreground,
+            fontSize: 26,
+            fontWeight: config.type == _ButtonType.operation
+                ? FontWeight.w600
+                : FontWeight.w500,
+          ),
         ),
       ),
     );
 
+    Widget button;
     if (useCupertino) {
-      return ClipOval(
+      button = ClipOval(
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: style.background,
@@ -204,18 +242,28 @@ class _CalculatorButton extends StatelessWidget {
           ),
         ),
       );
+    } else {
+      button = Material(
+        color: style.background,
+        shape: CircleBorder(side: BorderSide(color: palette.borderColor)),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: handleTap,
+          child: label,
+        ),
+      );
     }
 
-    return Material(
-      color: style.background,
-      shape: CircleBorder(
-        side: BorderSide(color: palette.borderColor),
-      ),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: handleTap,
-        child: label,
-      ),
+    final String? tooltip = config.tooltip;
+    if (tooltip != null && tooltip.isNotEmpty) {
+      button = Tooltip(message: tooltip, child: button);
+    }
+
+    final String semanticsLabel = config.semanticsLabel ?? config.label;
+    return Semantics(
+      button: true,
+      label: semanticsLabel,
+      child: button,
     );
   }
 }

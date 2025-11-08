@@ -162,6 +162,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get calculatorBackspace => 'Retroceso';
 
   @override
+  String get calculatorPercentCommand => 'Porcentaje';
+
+  @override
+  String get calculatorToggleSign => 'Cambiar signo';
+
+  @override
+  String get calculatorDecimalPointLabel => 'Punto decimal';
+
+  @override
   String get calculatorEquals => 'Calcular total';
 
   @override
