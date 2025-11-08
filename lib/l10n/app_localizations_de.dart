@@ -165,6 +165,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get calculatorBackspace => 'Rücktaste';
 
   @override
+  String get calculatorPercentCommand => 'Prozent';
+
+  @override
+  String get calculatorToggleSign => 'Vorzeichen wechseln';
+
+  @override
+  String get calculatorDecimalPointLabel => 'Dezimaltrennzeichen';
+
+  @override
   String get calculatorEquals => 'Betrag berechnen';
 
   @override

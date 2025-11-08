@@ -219,6 +219,18 @@
   "@calculatorBackspace": {
     "description": "Button label that removes the last character"
   },
+  "calculatorPercentCommand": "Percent",
+  "@calculatorPercentCommand": {
+    "description": "Button label that applies the percentage operation"
+  },
+  "calculatorToggleSign": "Toggle sign",
+  "@calculatorToggleSign": {
+    "description": "Button label that toggles the sign of the current value"
+  },
+  "calculatorDecimalPointLabel": "Decimal point",
+  "@calculatorDecimalPointLabel": {
+    "description": "Button label that inserts a decimal separator"
+  },
   "calculatorEquals": "Charge total",
   "@calculatorEquals": {
     "description": "Label for the button finalising the calculation"

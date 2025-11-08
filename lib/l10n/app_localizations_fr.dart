@@ -165,6 +165,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get calculatorBackspace => 'Retour arrière';
 
   @override
+  String get calculatorPercentCommand => 'Pourcentage';
+
+  @override
+  String get calculatorToggleSign => 'Changer de signe';
+
+  @override
+  String get calculatorDecimalPointLabel => 'Séparateur décimal';
+
+  @override
   String get calculatorEquals => 'Calculer le total';
 
   @override
