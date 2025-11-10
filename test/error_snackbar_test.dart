@@ -10,7 +10,6 @@ import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dar
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -40,26 +39,22 @@ void main() {
     );
     addTearDown(() => cubit.close());
 
-    UI.screenUtilReady = false;
     await tester.pumpWidget(
       ScreenUtilInit(
         designSize: const Size(390, 844),
         minTextAdapt: true,
         splitScreenMode: true,
-        builder: (context, _) {
-          UI.screenUtilReady = true;
-          return MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: cubit),
-              BlocProvider(
-                create: (_) => ThemeCubit(
-                  repository: _FakeThemeRepository(ThemeMode.system),
-                ),
+        builder: (context, _) => MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: cubit),
+            BlocProvider(
+              create: (_) => ThemeCubit(
+                repository: _FakeThemeRepository(ThemeMode.system),
               ),
-            ],
-            child: const MaterialApp(home: CounterPage(title: 'Test Home')),
-          );
-        },
+            ),
+          ],
+          child: const MaterialApp(home: CounterPage(title: 'Test Home')),
+        ),
       ),
     );
 
