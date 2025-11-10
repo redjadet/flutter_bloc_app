@@ -2,28 +2,25 @@ part of 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 /// Layout-specific responsive helpers for paddings, typography, and surfaces.
 extension ResponsiveLayoutContext on BuildContext {
-  double get pageHorizontalPadding => _scaledDimension(
+  double get pageHorizontalPadding => _scaledWidth(
     this,
     mobile: 16,
     tablet: 24,
     desktop: 32,
-    convert: UI.scaleWidth,
   );
 
-  double get pageVerticalPadding => _scaledDimension(
+  double get pageVerticalPadding => _scaledHeight(
     this,
     mobile: 12,
     tablet: 16,
     desktop: 16,
-    convert: UI.scaleHeight,
   );
 
-  double get contentMaxWidth => _scaledDimension(
+  double get contentMaxWidth => _scaledWidth(
     this,
     mobile: 560,
     tablet: 720,
     desktop: 840,
-    convert: UI.scaleWidth,
   );
 
   double get barMaxWidth {
@@ -42,20 +39,18 @@ extension ResponsiveLayoutContext on BuildContext {
     );
   }
 
-  double get responsiveFontSize => _scaledDimension(
+  double get responsiveFontSize => _scaledFont(
     this,
     mobile: 14,
     tablet: 16,
     desktop: 16,
-    convert: UI.scaleFont,
   );
 
-  double get responsiveIconSize => _scaledDimension(
+  double get responsiveIconSize => _scaledFont(
     this,
     mobile: 20,
     tablet: 24,
     desktop: 24,
-    convert: UI.scaleFont,
   );
 
   int get gridColumns => responsiveValue<int>(
@@ -64,60 +59,53 @@ extension ResponsiveLayoutContext on BuildContext {
     desktop: 4,
   );
 
-  double get responsiveButtonHeight => _scaledDimension(
+  double get responsiveButtonHeight => _scaledHeight(
     this,
     mobile: 48,
     tablet: 56,
     desktop: 56,
-    convert: UI.scaleHeight,
   );
 
-  double get responsiveButtonPadding => _scaledDimension(
+  double get responsiveButtonPadding => _scaledWidth(
     this,
     mobile: 16,
     tablet: 24,
     desktop: 24,
-    convert: UI.scaleWidth,
   );
 
-  double get responsiveHeadlineSize => _scaledDimension(
+  double get responsiveHeadlineSize => _scaledFont(
     this,
     mobile: 24,
     tablet: 32,
     desktop: 32,
-    convert: UI.scaleFont,
   );
 
-  double get responsiveTitleSize => _scaledDimension(
+  double get responsiveTitleSize => _scaledFont(
     this,
     mobile: 20,
     tablet: 24,
     desktop: 24,
-    convert: UI.scaleFont,
   );
 
-  double get responsiveBodySize => _scaledDimension(
+  double get responsiveBodySize => _scaledFont(
     this,
     mobile: 14,
     tablet: 16,
     desktop: 16,
-    convert: UI.scaleFont,
   );
 
-  double get responsiveCaptionSize => _scaledDimension(
+  double get responsiveCaptionSize => _scaledFont(
     this,
     mobile: 12,
     tablet: 14,
     desktop: 14,
-    convert: UI.scaleFont,
   );
 
-  double get responsiveCardPadding => _scaledDimension(
+  double get responsiveCardPadding => _scaledWidth(
     this,
     mobile: 16,
     tablet: 20,
     desktop: 20,
-    convert: UI.scaleWidth,
   );
 
   EdgeInsets get responsivePageMargin => EdgeInsets.symmetric(
@@ -126,40 +114,36 @@ extension ResponsiveLayoutContext on BuildContext {
   );
 
   EdgeInsets get responsiveCardMargin => EdgeInsets.all(
-    _scaledDimension(
+    _scaledWidth(
       this,
       mobile: 8,
       tablet: 12,
       desktop: 12,
-      convert: UI.scaleWidth,
     ),
   );
 
   EdgeInsets get responsiveListPadding => EdgeInsets.symmetric(
     horizontal: pageHorizontalPadding,
-    vertical: _scaledDimension(
+    vertical: _scaledHeight(
       this,
       mobile: 8,
       tablet: 12,
       desktop: 12,
-      convert: UI.scaleHeight,
     ),
   );
 
-  double get responsiveBorderRadius => _scaledDimension(
+  double get responsiveBorderRadius => _scaledRadius(
     this,
     mobile: 8,
     tablet: 12,
     desktop: 12,
-    convert: UI.scaleRadius,
   );
 
-  double get responsiveCardRadius => _scaledDimension(
+  double get responsiveCardRadius => _scaledRadius(
     this,
     mobile: 12,
     tablet: 16,
     desktop: 16,
-    convert: UI.scaleRadius,
   );
 
   double get responsiveElevation => responsiveValue<double>(
@@ -183,29 +167,26 @@ extension ResponsiveLayoutContext on BuildContext {
   );
 
   EdgeInsets get responsiveStatePadding => EdgeInsets.all(
-    _scaledDimension(
+    _scaledWidth(
       this,
       mobile: 24,
       tablet: 32,
       desktop: 32,
-      convert: UI.scaleWidth,
     ),
   );
 
   EdgeInsets get responsiveDialogPadding => EdgeInsets.symmetric(
-    horizontal: _scaledDimension(
+    horizontal: _scaledWidth(
       this,
       mobile: 24,
       tablet: 32,
       desktop: 32,
-      convert: UI.scaleWidth,
     ),
-    vertical: _scaledDimension(
+    vertical: _scaledHeight(
       this,
       mobile: 20,
       tablet: 24,
       desktop: 24,
-      convert: UI.scaleHeight,
     ),
   );
 
@@ -226,19 +207,17 @@ extension ResponsiveLayoutContext on BuildContext {
     vertical: responsiveGapS / 2,
   );
 
-  double get responsiveErrorIconSize => _scaledDimension(
+  double get responsiveErrorIconSize => _scaledFont(
     this,
     mobile: 48,
     tablet: 64,
     desktop: 64,
-    convert: UI.scaleFont,
   );
 
-  double get responsiveErrorIconSizeLarge => _scaledDimension(
+  double get responsiveErrorIconSizeLarge => _scaledFont(
     this,
     mobile: 64,
     tablet: 80,
     desktop: 80,
-    convert: UI.scaleFont,
   );
 }

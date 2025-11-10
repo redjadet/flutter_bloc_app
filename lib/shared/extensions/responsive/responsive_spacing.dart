@@ -2,67 +2,59 @@ part of 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 /// Fine-grained spacing helpers shared across widgets.
 extension ResponsiveSpacingContext on BuildContext {
-  double get responsiveGap => _scaledDimension(
+  double get responsiveGap => _scaledHeight(
     this,
     mobile: 8,
     tablet: 12,
     desktop: 12,
-    convert: UI.scaleHeight,
   );
 
-  double get responsiveGapXS => _scaledDimension(
+  double get responsiveGapXS => _scaledHeight(
     this,
     mobile: 6,
     tablet: 8,
     desktop: 8,
-    convert: UI.scaleHeight,
   );
 
-  double get responsiveGapS => _scaledDimension(
+  double get responsiveGapS => _scaledHeight(
     this,
     mobile: 8,
     tablet: 10,
     desktop: 10,
-    convert: UI.scaleHeight,
   );
 
-  double get responsiveGapM => _scaledDimension(
+  double get responsiveGapM => _scaledHeight(
     this,
     mobile: 12,
     tablet: 16,
     desktop: 16,
-    convert: UI.scaleHeight,
   );
 
-  double get responsiveGapL => _scaledDimension(
+  double get responsiveGapL => _scaledHeight(
     this,
     mobile: 16,
     tablet: 24,
     desktop: 24,
-    convert: UI.scaleHeight,
   );
 
-  double get responsiveHorizontalGapS => _scaledDimension(
+  double get responsiveHorizontalGapS => _scaledWidth(
     this,
     mobile: 8,
     tablet: 10,
     desktop: 10,
-    convert: UI.scaleWidth,
   );
 
-  double get responsiveHorizontalGapM => _scaledDimension(
+  double get responsiveHorizontalGapM => _scaledWidth(
     this,
     mobile: 10,
     tablet: 12,
     desktop: 12,
-    convert: UI.scaleWidth,
   );
 
-  double get responsiveHorizontalGapL => _scaledDimension(
+  double get responsiveHorizontalGapL => _scaledWidth(
     this,
     mobile: 16,
     tablet: 24,
     desktop: 24,
-    convert: UI.scaleWidth,
   );
 }

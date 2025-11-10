@@ -6,10 +6,35 @@ extension ResponsiveContextMetrics on BuildContext {
   double get screenWidth => _responsiveWidth(this);
   double get screenHeight => _responsiveHeight(this);
 
-  bool get isMobile => screenWidth < AppConstants.mobileBreakpoint;
+  ResponsiveBreakpointsData? get _breakpointsData =>
+      ResponsiveConfig.maybeDataOf(this);
+
+  bool get isMobile {
+    final data = _breakpointsData;
+    if (data != null) {
+      return data.isMobile || data.isPhone;
+    }
+    return screenWidth < AppConstants.mobileBreakpoint;
+  }
+
   bool get isMediumWidth => screenWidth >= AppConstants.mediumWidthBreakpoint;
-  bool get isTabletOrLarger => screenWidth >= AppConstants.mobileBreakpoint;
-  bool get isDesktop => screenWidth >= AppConstants.tabletBreakpoint;
+
+  bool get isTabletOrLarger {
+    final data = _breakpointsData;
+    if (data != null) {
+      return data.isTablet || data.isDesktop || data.largerOrEqualTo(TABLET);
+    }
+    return screenWidth >= AppConstants.mobileBreakpoint;
+  }
+
+  bool get isDesktop {
+    final data = _breakpointsData;
+    if (data != null) {
+      return data.isDesktop || data.largerOrEqualTo(DESKTOP);
+    }
+    return screenWidth >= AppConstants.tabletBreakpoint;
+  }
+
   bool get isCompactWidth => screenWidth < AppConstants.compactWidthBreakpoint;
   bool get isCompactHeight =>
       screenHeight < AppConstants.compactHeightBreakpoint;
