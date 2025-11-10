@@ -18,6 +18,13 @@ class UI {
 
   static bool get isScreenUtilReady => screenUtilReady;
 
+  // Shared adapters so other modules don't duplicate ScreenUtil checks.
+  static double scaleWidth(final double value) => _w(value);
+  static double scaleHeight(final double value) => _h(value);
+  static double scaleRadius(final double value) => _r(value);
+  static double scaleFont(final double value) => _sp(value);
+  static double scaleFontMax(final double value) => _spMax(value);
+
   // Animations
   static const Duration animFast = Duration(milliseconds: 180);
   static const Duration animMedium = Duration(milliseconds: 220);
@@ -65,6 +72,11 @@ class UI {
   static double _r(final double v) {
     if (!_screenUtilReady) return v;
     return v.r;
+  }
+
+  static double _sp(final double v) {
+    if (!_screenUtilReady) return v;
+    return v.sp;
   }
 
   static double _spMax(final double v) {
