@@ -9,16 +9,10 @@ import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history_sheet.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  setUp(() {
-    // Ensure responsive helpers use fallback dimensions for tests.
-    UI.screenUtilReady = false;
-  });
-
   testWidgets('ChatHistorySheet shows empty message when no history', (
     WidgetTester tester,
   ) async {

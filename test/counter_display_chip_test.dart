@@ -5,28 +5,21 @@ import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dar
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/widgets.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-Widget _wrap(Widget child) {
-  UI.screenUtilReady = false;
-  return ScreenUtilInit(
-    designSize: const Size(390, 844),
-    minTextAdapt: true,
-    splitScreenMode: true,
-    builder: (context, _) {
-      UI.screenUtilReady = true;
-      return MaterialApp(
-        localizationsDelegates: const [AppLocalizations.delegate],
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Scaffold(body: Center(child: child)),
-      );
-    },
-  );
-}
+Widget _wrap(Widget child) => ScreenUtilInit(
+  designSize: const Size(390, 844),
+  minTextAdapt: true,
+  splitScreenMode: true,
+  builder: (context, _) => MaterialApp(
+    localizationsDelegates: const [AppLocalizations.delegate],
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: Scaffold(body: Center(child: child)),
+  ),
+);
 
 void main() {
   setUpAll(() async {

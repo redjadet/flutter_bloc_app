@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -430,9 +429,6 @@ void main() {
     });
 
     testWidgets('works with ScreenUtil disabled', (tester) async {
-      // Reset ScreenUtil state
-      UI.screenUtilReady = false;
-
       await tester.pumpWidget(
         createTestWidget(
           width: 400,

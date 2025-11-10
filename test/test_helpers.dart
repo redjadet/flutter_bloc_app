@@ -15,7 +15,6 @@ import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart'
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -67,36 +66,30 @@ Widget wrapWithProviders({
   required Widget child,
   CounterRepository? repository,
   ThemeMode initialThemeMode = ThemeMode.system,
-}) {
-  UI.screenUtilReady = false;
-  return ScreenUtilInit(
-    designSize: const Size(390, 844),
-    minTextAdapt: true,
-    splitScreenMode: true,
-    builder: (context, _) {
-      UI.screenUtilReady = true;
-      return MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (ctx) =>
-                CounterCubit(repository: repository ?? MockCounterRepository())
-                  ..loadInitial(),
-          ),
-          BlocProvider(
-            create: (_) =>
-                ThemeCubit(repository: _FakeThemeRepository(initialThemeMode))
-                  ..emit(initialThemeMode),
-          ),
-        ],
-        child: MaterialApp(
-          localizationsDelegates: const [AppLocalizations.delegate],
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: Scaffold(body: child),
-        ),
-      );
-    },
-  );
-}
+}) => ScreenUtilInit(
+  designSize: const Size(390, 844),
+  minTextAdapt: true,
+  splitScreenMode: true,
+  builder: (context, _) => MultiBlocProvider(
+    providers: [
+      BlocProvider(
+        create: (ctx) =>
+            CounterCubit(repository: repository ?? MockCounterRepository())
+              ..loadInitial(),
+      ),
+      BlocProvider(
+        create: (_) =>
+            ThemeCubit(repository: _FakeThemeRepository(initialThemeMode))
+              ..emit(initialThemeMode),
+      ),
+    ],
+    child: MaterialApp(
+      localizationsDelegates: const [AppLocalizations.delegate],
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Scaffold(body: child),
+    ),
+  ),
+);
 
 /// Test helper for setting up SharedPreferences mock
 void setupSharedPreferencesMock({Map<String, Object>? initialValues}) {

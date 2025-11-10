@@ -19,7 +19,7 @@ class ResponsiveScope extends StatefulWidget {
 class _ResponsiveScopeState extends State<ResponsiveScope> {
   @override
   void dispose() {
-    UI.screenUtilReady = false;
+    UI.markScreenUtilUnready();
     super.dispose();
   }
 
@@ -39,7 +39,7 @@ class _ResponsiveScopeState extends State<ResponsiveScope> {
       ),
     ),
     builder: (final context, final child) {
-      UI.screenUtilReady = true;
+      UI.markScreenUtilReady();
       return child ?? const SizedBox.shrink();
     },
   );

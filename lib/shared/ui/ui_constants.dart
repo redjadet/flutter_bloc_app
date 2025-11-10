@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Central place for UI spacings, radii and durations.
@@ -7,28 +9,25 @@ class UI {
 
   static bool _screenUtilReady = false;
 
-  static bool get screenUtilReady => _screenUtilReady;
-
-  static set screenUtilReady(final bool ready) {
-    if (_screenUtilReady == ready) {
-      return;
-    }
-    _screenUtilReady = ready;
-  }
-
-  static bool get isScreenUtilReady => screenUtilReady;
-
   // Shared adapters so other modules don't duplicate ScreenUtil checks.
-  static double scaleWidth(final double value) =>
-      _scale(value, (final v) => v.w);
-  static double scaleHeight(final double value) =>
-      _scale(value, (final v) => v.h);
-  static double scaleRadius(final double value) =>
-      _scale(value, (final v) => v.r);
-  static double scaleFont(final double value) =>
-      _scale(value, (final v) => v.sp);
-  static double scaleFontMax(final double value) =>
-      _scale(value, (final v) => v.spMax);
+  static double scaleWidth(final double value) => _screenUtilReady
+      ? _safeScale(() => ScreenUtil().setWidth(value), value)
+      : value;
+  static double scaleHeight(final double value) => _screenUtilReady
+      ? _safeScale(() => ScreenUtil().setHeight(value), value)
+      : value;
+  static double scaleRadius(final double value) => _screenUtilReady
+      ? _safeScale(() => ScreenUtil().radius(value), value)
+      : value;
+  static double scaleFont(final double value) => _screenUtilReady
+      ? _safeScale(() => ScreenUtil().setSp(value), value)
+      : value;
+  static double scaleFontMax(final double value) => _screenUtilReady
+      ? _safeScale(
+          () => math.max(value, ScreenUtil().setSp(value)),
+          value,
+        )
+      : value;
 
   // Animations
   static const Duration animFast = Duration(milliseconds: 180);
@@ -64,8 +63,36 @@ class UI {
   static double get dividerThin => scaleHeight(1);
 
   // Safe adapters (fallback to raw when ScreenUtil not initialized)
-  static double _scale(
-    final double value,
-    final double Function(double value) transformer,
-  ) => _screenUtilReady ? transformer(value) : value;
+  static bool get isScreenUtilReady => _screenUtilReady;
+
+  static void markScreenUtilReady() {
+    _screenUtilReady = true;
+  }
+
+  static void markScreenUtilUnready() {
+    _screenUtilReady = false;
+  }
+
+  static double _safeScale(
+    final double Function() scaledValue,
+    final double fallback,
+  ) {
+    try {
+      final double result = scaledValue();
+      if (result.isFinite) {
+        return result;
+      }
+    } on Exception {
+      // ignore and fallback to raw value.
+    } on Object catch (error) {
+      if (_isLateInitializationError(error)) {
+        return fallback;
+      }
+      rethrow;
+    }
+    return fallback;
+  }
+
+  static bool _isLateInitializationError(final Object error) =>
+      '$error'.contains('LateInitializationError');
 }

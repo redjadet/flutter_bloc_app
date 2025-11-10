@@ -9,7 +9,6 @@ import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dar
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -45,23 +44,17 @@ class _FakeBiometricAuthenticator implements BiometricAuthenticator {
   }
 }
 
-Widget _buildApp(GoRouter router) {
-  UI.screenUtilReady = false;
-  return ScreenUtilInit(
-    designSize: AppConstants.designSize,
-    minTextAdapt: true,
-    splitScreenMode: true,
-    builder: (context, child) {
-      UI.screenUtilReady = true;
-      return MaterialApp.router(
-        routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        theme: ThemeData(useMaterial3: true),
-      );
-    },
-  );
-}
+Widget _buildApp(GoRouter router) => ScreenUtilInit(
+  designSize: AppConstants.designSize,
+  minTextAdapt: true,
+  splitScreenMode: true,
+  builder: (context, child) => MaterialApp.router(
+    routerConfig: router,
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    theme: ThemeData(useMaterial3: true),
+  ),
+);
 
 GoRouter _createRouter(
   CounterRepository repository,

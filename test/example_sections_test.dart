@@ -3,14 +3,9 @@ import 'package:flutter_bloc_app/features/example/presentation/widgets/example_s
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  setUp(() {
-    UI.screenUtilReady = false;
-  });
-
   testWidgets('PlatformInfoSection shows loading indicator', (
     WidgetTester tester,
   ) async {

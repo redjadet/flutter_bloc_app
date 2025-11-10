@@ -5,15 +5,10 @@ import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_conte
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_line_graph.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_loading_list.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
 void main() {
-  setUp(() {
-    UI.screenUtilReady = false;
-  });
-
   final List<ChartPoint> samplePoints = <ChartPoint>[
     ChartPoint(date: DateTime.utc(2024, 1, 1), value: 42.0),
     ChartPoint(date: DateTime.utc(2024, 1, 2), value: 43.5),
