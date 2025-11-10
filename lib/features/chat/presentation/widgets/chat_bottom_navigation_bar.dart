@@ -5,8 +5,8 @@ class ChatBottomNavigationBar extends StatelessWidget {
   const ChatBottomNavigationBar({super.key});
 
   @override
-  Widget build(BuildContext context) => Container(
-    decoration: const BoxDecoration(
+  Widget build(BuildContext context) => const DecoratedBox(
+    decoration: BoxDecoration(
       color: Colors.white,
       border: Border(
         top: BorderSide(
@@ -16,43 +16,50 @@ class ChatBottomNavigationBar extends StatelessWidget {
       ),
     ),
     child: SafeArea(
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: context.pageHorizontalPadding,
-          vertical: context.responsiveGap,
+      child: _ChatBottomNavigationBarContent(),
+    ),
+  );
+}
+
+class _ChatBottomNavigationBarContent extends StatelessWidget {
+  const _ChatBottomNavigationBarContent();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: EdgeInsets.symmetric(
+      horizontal: context.pageHorizontalPadding,
+      vertical: context.responsiveGap,
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _buildNavItem(
+          Icons.home_outlined,
+          isSelected: false,
+          context: context,
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildNavItem(
-              Icons.home_outlined,
-              isSelected: false,
-              context: context,
-            ),
-            _buildNavItem(
-              Icons.search_outlined,
-              isSelected: false,
-              context: context,
-            ),
-            _buildNavItem(
-              Icons.add,
-              isSelected: true,
-              isPrimary: true,
-              context: context,
-            ),
-            _buildNavItem(
-              Icons.chat_bubble_outline,
-              isSelected: true,
-              context: context,
-            ),
-            _buildNavItem(
-              Icons.person_outline,
-              isSelected: false,
-              context: context,
-            ),
-          ],
+        _buildNavItem(
+          Icons.search_outlined,
+          isSelected: false,
+          context: context,
         ),
-      ),
+        _buildNavItem(
+          Icons.add,
+          isSelected: true,
+          isPrimary: true,
+          context: context,
+        ),
+        _buildNavItem(
+          Icons.chat_bubble_outline,
+          isSelected: true,
+          context: context,
+        ),
+        _buildNavItem(
+          Icons.person_outline,
+          isSelected: false,
+          context: context,
+        ),
+      ],
     ),
   );
 
@@ -67,21 +74,25 @@ class ChatBottomNavigationBar extends StatelessWidget {
     final borderRadius = context.responsiveBorderRadius;
 
     if (isPrimary) {
-      return Container(
+      return SizedBox(
         width: containerSize,
         height: containerSize,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFFF6B6B), Color(0xFFFF8E53)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFFFF6B6B), Color(0xFFFF8E53)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(borderRadius),
           ),
-          borderRadius: BorderRadius.circular(borderRadius),
-        ),
-        child: Icon(
-          icon,
-          color: Colors.white,
-          size: iconSize,
+          child: Center(
+            child: Icon(
+              icon,
+              color: Colors.white,
+              size: iconSize,
+            ),
+          ),
         ),
       );
     }

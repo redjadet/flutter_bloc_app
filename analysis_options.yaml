@@ -12,6 +12,18 @@ analyzer:
     strict-casts: true
     strict-inference: true
     strict-raw-types: true
+  errors:
+    avoid_dynamic_calls: error
+    avoid_unnecessary_containers: error
+    cancel_subscriptions: error
+    close_sinks: warning
+    discarded_futures: error
+    prefer_const_constructors: error
+    prefer_const_literals_to_create_immutables: error
+    prefer_final_fields: warning
+    prefer_final_locals: warning
+    use_build_context_synchronously: error
+    use_key_in_widget_constructors: warning
   plugins:
     - custom_lint
   exclude:
@@ -34,8 +46,12 @@ analyzer:
 # Keep our custom preferences on top of VGV
 linter:
   rules:
+    avoid_dynamic_calls: true
     always_use_package_imports: true
     prefer_single_quotes: true
+    close_sinks: true
+    cancel_subscriptions: true
+    discarded_futures: true
     require_trailing_commas: true
     avoid_redundant_argument_values: true
     unawaited_futures: true
@@ -58,6 +74,16 @@ linter:
     one_member_abstracts: false
     avoid_slow_async_io: true
     only_throw_errors: true
+    prefer_final_fields: true
+    prefer_final_in_for_each: true
+    prefer_final_locals: true
+    prefer_spread_collections: true
+    use_colored_box: true
+    use_decorated_box: true
+    use_enums: true
+    use_key_in_widget_constructors: true
+    use_named_constants: true
+    use_string_buffers: true
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

@@ -38,23 +38,23 @@ void main() {
       expect(chatButton, findsOneWidget);
 
       // The add button should be in a container with gradient
-      final addContainer = find.ancestor(
+      final addDecoratedBox = find.ancestor(
         of: addButton,
         matching: find.byWidgetPredicate(
           (widget) =>
-              widget is Container &&
+              widget is DecoratedBox &&
               widget.decoration is BoxDecoration &&
               (widget.decoration as BoxDecoration).gradient != null,
         ),
       );
-      expect(addContainer, findsOneWidget);
+      expect(addDecoratedBox, findsOneWidget);
     });
 
     testWidgets('should have correct layout structure', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
 
-      // Should have a container with border
-      expect(find.byType(Container), findsWidgets);
+      // Should have a decorated box with border
+      expect(find.byType(DecoratedBox), findsWidgets);
 
       // Should have SafeArea
       expect(find.byType(SafeArea), findsOneWidget);
@@ -91,8 +91,17 @@ void main() {
       await tester.pumpWidget(createWidgetUnderTest());
 
       // Should have white background
-      final container = tester.widget<Container>(find.byType(Container).first);
-      final decoration = container.decoration as BoxDecoration;
+      final decoratedBox = tester.widget<DecoratedBox>(
+        find
+            .byWidgetPredicate(
+              (widget) =>
+                  widget is DecoratedBox &&
+                  widget.decoration is BoxDecoration &&
+                  (widget.decoration as BoxDecoration).border != null,
+            )
+            .first,
+      );
+      final decoration = decoratedBox.decoration as BoxDecoration;
       expect(decoration.color, equals(Colors.white));
 
       // Should have top border
@@ -108,7 +117,7 @@ void main() {
         of: addIcon,
         matching: find.byWidgetPredicate(
           (widget) =>
-              widget is Container &&
+              widget is DecoratedBox &&
               widget.decoration is BoxDecoration &&
               (widget.decoration as BoxDecoration).gradient != null,
         ),
@@ -117,8 +126,8 @@ void main() {
       expect(addContainer, findsOneWidget);
 
       // Verify the gradient colors
-      final container = tester.widget<Container>(addContainer);
-      final decoration = container.decoration as BoxDecoration;
+      final decoratedBox = tester.widget<DecoratedBox>(addContainer);
+      final decoration = decoratedBox.decoration as BoxDecoration;
       final gradient = decoration.gradient as LinearGradient;
 
       expect(gradient.colors, contains(const Color(0xFFFF6B6B)));
