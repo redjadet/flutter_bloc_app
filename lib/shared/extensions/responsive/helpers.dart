@@ -1,45 +1,13 @@
 part of 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
-double _rawWidth(final BuildContext context) => UI.isScreenUtilReady
-    ? ScreenUtil().screenWidth
-    : MediaQuery.sizeOf(context).width;
-
-double _rawHeight(final BuildContext context) => UI.isScreenUtilReady
-    ? ScreenUtil().screenHeight
-    : MediaQuery.sizeOf(context).height;
-
-double _safeW(final double value) => UI.isScreenUtilReady ? value.w : value;
-double _safeH(final double value) => UI.isScreenUtilReady ? value.h : value;
-double _safeSp(final double value) => UI.isScreenUtilReady ? value.sp : value;
-double _safeR(final double value) => UI.isScreenUtilReady ? value.r : value;
-
-ResponsiveBreakpointsData? _breakpoints(final BuildContext context) {
-  final inheritedElement = context
-      .getElementForInheritedWidgetOfExactType<
-        InheritedResponsiveBreakpoints
-      >();
-  if (inheritedElement == null) {
-    return null;
-  }
-  final inheritedWidget = inheritedElement.widget;
-  if (inheritedWidget is! InheritedResponsiveBreakpoints) {
-    return null;
-  }
-  final data = inheritedWidget.data;
-  if (data.breakpoints.isEmpty) {
-    return null;
-  }
-  return data;
-}
-
 double _responsiveWidth(final BuildContext context) =>
-    _breakpoints(context)?.screenWidth ?? _rawWidth(context);
+    ResponsiveConfig.screenWidth(context);
 
 double _responsiveHeight(final BuildContext context) =>
-    _breakpoints(context)?.screenHeight ?? _rawHeight(context);
+    ResponsiveConfig.screenHeight(context);
 
 Orientation _responsiveOrientation(final BuildContext context) =>
-    _breakpoints(context)?.orientation ?? MediaQuery.orientationOf(context);
+    ResponsiveConfig.orientation(context);
 
 double _scaledDimension(
   final BuildContext context, {
@@ -63,7 +31,7 @@ T _responsiveValue<T>(
   final T? tablet,
   final T? desktop,
 }) {
-  final breakpoints = _breakpoints(context);
+  final breakpoints = ResponsiveConfig.maybeDataOf(context);
   final conditions = <Condition<T>>[];
   if (tablet != null) {
     conditions.add(
