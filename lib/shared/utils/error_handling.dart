@@ -4,6 +4,14 @@ import 'package:flutter/material.dart';
 class ErrorHandling {
   ErrorHandling._();
 
+  static void _showSnackBar(
+    final BuildContext context,
+    final SnackBar snackBar,
+  ) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   /// Show a snackbar with error message
   static void showErrorSnackBar(
     final BuildContext context,
@@ -11,9 +19,8 @@ class ErrorHandling {
     final Duration duration = const Duration(seconds: 4),
     final SnackBarAction? action,
   }) {
-    if (!context.mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
+    _showSnackBar(
+      context,
       SnackBar(
         content: Text(message),
         duration: duration,
@@ -29,9 +36,8 @@ class ErrorHandling {
     final String message, {
     final Duration duration = const Duration(seconds: 3),
   }) {
-    if (!context.mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
+    _showSnackBar(
+      context,
       SnackBar(
         content: Text(message),
         duration: duration,

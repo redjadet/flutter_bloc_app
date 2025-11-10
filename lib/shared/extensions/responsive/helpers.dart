@@ -25,49 +25,100 @@ double _scaledDimension(
   return convert(baseValue);
 }
 
+double _scaledWidth(
+  final BuildContext context, {
+  required final double mobile,
+  final double? tablet,
+  final double? desktop,
+}) => _scaledDimension(
+  context,
+  mobile: mobile,
+  tablet: tablet,
+  desktop: desktop,
+  convert: UI.scaleWidth,
+);
+
+double _scaledHeight(
+  final BuildContext context, {
+  required final double mobile,
+  final double? tablet,
+  final double? desktop,
+}) => _scaledDimension(
+  context,
+  mobile: mobile,
+  tablet: tablet,
+  desktop: desktop,
+  convert: UI.scaleHeight,
+);
+
+double _scaledFont(
+  final BuildContext context, {
+  required final double mobile,
+  final double? tablet,
+  final double? desktop,
+}) => _scaledDimension(
+  context,
+  mobile: mobile,
+  tablet: tablet,
+  desktop: desktop,
+  convert: UI.scaleFont,
+);
+
+double _scaledRadius(
+  final BuildContext context, {
+  required final double mobile,
+  final double? tablet,
+  final double? desktop,
+}) => _scaledDimension(
+  context,
+  mobile: mobile,
+  tablet: tablet,
+  desktop: desktop,
+  convert: UI.scaleRadius,
+);
+
 T _responsiveValue<T>(
   final BuildContext context, {
   required final T mobile,
   final T? tablet,
   final T? desktop,
 }) {
-  final breakpoints = ResponsiveConfig.maybeDataOf(context);
-  final conditions = <Condition<T>>[];
-  if (tablet != null) {
-    conditions.add(
-      Condition<T>.largerThan(
-        breakpoint: (AppConstants.mobileBreakpoint - 1).round(),
-        value: tablet,
-      ),
-    );
-  }
-  if (desktop != null) {
-    conditions.add(
-      Condition<T>.largerThan(
-        breakpoint: (AppConstants.tabletBreakpoint - 1).round(),
-        value: desktop,
-      ),
-    );
-  }
-  if (breakpoints != null && conditions.isNotEmpty) {
-    return ResponsiveValue<T>(
-      context,
-      defaultValue: mobile,
-      conditionalValues: conditions,
-    ).value;
+  if (tablet == null && desktop == null) {
+    return mobile;
   }
 
-  final double width = breakpoints?.screenWidth ?? _responsiveWidth(context);
+  final breakpointsData = ResponsiveConfig.maybeDataOf(context);
+  if (breakpointsData != null) {
+    final conditions = <Condition<T>>[
+      if (tablet != null)
+        Condition.largerThan(
+          name: MOBILE,
+          value: tablet,
+        ),
+      if (desktop != null)
+        Condition.largerThan(
+          name: tablet != null ? TABLET : MOBILE,
+          value: desktop,
+        ),
+    ];
+    if (conditions.isNotEmpty) {
+      return ResponsiveValue<T>(
+        context,
+        defaultValue: mobile,
+        conditionalValues: conditions,
+      ).value;
+    }
+  }
+
+  final double width =
+      breakpointsData?.screenWidth ?? _responsiveWidth(context);
   if (desktop != null && width >= AppConstants.tabletBreakpoint) {
     return desktop;
   }
-  if (tablet != null && width >= AppConstants.mobileBreakpoint) {
-    return tablet;
-  }
-  if (desktop != null &&
-      tablet == null &&
-      width >= AppConstants.mobileBreakpoint) {
-    return desktop;
+  final bool hasTabletValue = tablet != null;
+  final T? tabletOrDesktop = hasTabletValue ? tablet : desktop;
+  if (tabletOrDesktop != null && width >= AppConstants.mobileBreakpoint) {
+    return tabletOrDesktop;
   }
   return mobile;
 }

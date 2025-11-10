@@ -19,68 +19,53 @@ class UI {
   static bool get isScreenUtilReady => screenUtilReady;
 
   // Shared adapters so other modules don't duplicate ScreenUtil checks.
-  static double scaleWidth(final double value) => _w(value);
-  static double scaleHeight(final double value) => _h(value);
-  static double scaleRadius(final double value) => _r(value);
-  static double scaleFont(final double value) => _sp(value);
-  static double scaleFontMax(final double value) => _spMax(value);
+  static double scaleWidth(final double value) =>
+      _scale(value, (final v) => v.w);
+  static double scaleHeight(final double value) =>
+      _scale(value, (final v) => v.h);
+  static double scaleRadius(final double value) =>
+      _scale(value, (final v) => v.r);
+  static double scaleFont(final double value) =>
+      _scale(value, (final v) => v.sp);
+  static double scaleFontMax(final double value) =>
+      _scale(value, (final v) => v.spMax);
 
   // Animations
   static const Duration animFast = Duration(milliseconds: 180);
   static const Duration animMedium = Duration(milliseconds: 220);
 
   // Gaps (vertical by default)
-  static double get gapXS => _h(6);
-  static double get gapS => _h(8);
-  static double get gapM => _h(12);
-  static double get gapL => _h(16);
+  static double get gapXS => scaleHeight(6);
+  static double get gapS => scaleHeight(8);
+  static double get gapM => scaleHeight(12);
+  static double get gapL => scaleHeight(16);
 
   // Horizontal gaps
-  static double get horizontalGapXS => _w(6);
-  static double get horizontalGapS => _w(8);
-  static double get horizontalGapM => _w(10);
-  static double get horizontalGapL => _w(16);
+  static double get horizontalGapXS => scaleWidth(6);
+  static double get horizontalGapS => scaleWidth(8);
+  static double get horizontalGapM => scaleWidth(10);
+  static double get horizontalGapL => scaleWidth(16);
 
   // Card paddings
-  static double get cardPadH => _w(20);
-  static double get cardPadV => _h(16);
+  static double get cardPadH => scaleWidth(20);
+  static double get cardPadV => scaleHeight(16);
 
   // Radii
-  static double get radiusM => _r(16);
-  static double get radiusPill => _r(999);
+  static double get radiusM => scaleRadius(16);
+  static double get radiusPill => scaleRadius(999);
 
   // Icon sizes
-  static double get iconS => _spMax(16);
-  static double get iconM => _spMax(20);
-  static double get iconL => _spMax(24);
+  static double get iconS => scaleFontMax(16);
+  static double get iconM => scaleFontMax(20);
+  static double get iconL => scaleFontMax(24);
 
   // Misc
-  static double get progressHeight => _h(6);
-  static double get dividerThin => _h(1);
+  static double get progressHeight => scaleHeight(6);
+  static double get dividerThin => scaleHeight(1);
 
   // Safe adapters (fallback to raw when ScreenUtil not initialized)
-  static double _w(final double v) {
-    if (!_screenUtilReady) return v;
-    return v.w;
-  }
-
-  static double _h(final double v) {
-    if (!_screenUtilReady) return v;
-    return v.h;
-  }
-
-  static double _r(final double v) {
-    if (!_screenUtilReady) return v;
-    return v.r;
-  }
-
-  static double _sp(final double v) {
-    if (!_screenUtilReady) return v;
-    return v.sp;
-  }
-
-  static double _spMax(final double v) {
-    if (!_screenUtilReady) return v;
-    return v.spMax;
-  }
+  static double _scale(
+    final double value,
+    final double Function(double value) transformer,
+  ) => _screenUtilReady ? transformer(value) : value;
 }

@@ -5,20 +5,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class CubitHelpers {
   CubitHelpers._();
 
+  static T? _tryRead<T>(
+    final BuildContext context, {
+    final String? failureMessage,
+  }) {
+    try {
+      return context.read<T>();
+    } on Exception catch (e) {
+      if (failureMessage != null) {
+        debugPrint('$failureMessage $T: $e');
+      }
+      return null;
+    }
+  }
+
   /// Safely read a Cubit from context and execute an action
   /// Returns true if successful, false if Cubit is not found
   static bool safeExecute<T extends StateStreamable<S>, S>(
     final BuildContext context,
     final void Function(T cubit) action,
   ) {
-    try {
-      final T cubit = context.read<T>();
-      action(cubit);
-      return true;
-    } on Exception catch (e) {
-      debugPrint('Failed to execute action on Cubit $T: $e');
-      return false;
-    }
+    final T? cubit = _tryRead<T>(
+      context,
+      failureMessage: 'Failed to execute action on Cubit',
+    );
+    if (cubit == null) return false;
+    action(cubit);
+    return true;
   }
 
   /// Safely read a Cubit from context and execute an action with return value
@@ -27,39 +40,29 @@ class CubitHelpers {
     final BuildContext context,
     final R Function(T cubit) action,
   ) {
-    try {
-      final T cubit = context.read<T>();
-      return action(cubit);
-    } on Exception catch (e) {
-      debugPrint('Failed to execute action on Cubit $T: $e');
-      return null;
-    }
+    final T? cubit = _tryRead<T>(
+      context,
+      failureMessage: 'Failed to execute action on Cubit',
+    );
+    if (cubit == null) return null;
+    return action(cubit);
   }
 
   /// Check if a Cubit is available in the widget tree
   static bool isCubitAvailable<T extends StateStreamable<S>, S>(
     final BuildContext context,
-  ) {
-    try {
-      context.read<T>();
-      return true;
-    } on Exception {
-      return false;
-    }
-  }
+  ) => _tryRead<T>(context) != null;
 
   /// Get the current state of a Cubit safely
   /// Returns null if Cubit is not found
   static S? getCurrentState<T extends StateStreamable<S>, S>(
     final BuildContext context,
   ) {
-    try {
-      final T cubit = context.read<T>();
-      return cubit.state;
-    } on Exception catch (e) {
-      debugPrint('Failed to get state from Cubit $T: $e');
-      return null;
-    }
+    final T? cubit = _tryRead<T>(
+      context,
+      failureMessage: 'Failed to get state from Cubit',
+    );
+    return cubit?.state;
   }
 }
 
