@@ -174,6 +174,20 @@ class AppLocalizationsFr extends AppLocalizations {
   String get calculatorDecimalPointLabel => 'Séparateur décimal';
 
   @override
+  String get calculatorErrorTitle => 'Erreur';
+
+  @override
+  String get calculatorErrorDivisionByZero => 'Impossible de diviser par zéro';
+
+  @override
+  String get calculatorErrorInvalidResult =>
+      'Le résultat n\'est pas un nombre valide';
+
+  @override
+  String get calculatorErrorNonPositiveTotal =>
+      'Le total doit être supérieur à zéro';
+
+  @override
   String get calculatorEquals => 'Calculer le total';
 
   @override

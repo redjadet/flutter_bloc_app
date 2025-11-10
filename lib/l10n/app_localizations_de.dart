@@ -174,6 +174,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get calculatorDecimalPointLabel => 'Dezimaltrennzeichen';
 
   @override
+  String get calculatorErrorTitle => 'Fehler';
+
+  @override
+  String get calculatorErrorDivisionByZero =>
+      'Division durch Null ist nicht möglich';
+
+  @override
+  String get calculatorErrorInvalidResult =>
+      'Das Ergebnis ist keine gültige Zahl';
+
+  @override
+  String get calculatorErrorNonPositiveTotal =>
+      'Der Gesamtbetrag muss größer als null sein';
+
+  @override
   String get calculatorEquals => 'Betrag berechnen';
 
   @override

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CalculatorState {
 
- String get display; double? get accumulator; CalculatorOperation? get operation; CalculatorOperation? get lastOperation; double? get lastOperand; bool get replaceInput; double get taxRate; double get tipRate; double get settledAmount; String get history;
+ String get display; double? get accumulator; CalculatorOperation? get operation; CalculatorOperation? get lastOperation; double? get lastOperand; bool get replaceInput; double get taxRate; double get tipRate; double get settledAmount; String get history; CalculatorError? get error;
 /// Create a copy of CalculatorState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CalculatorStateCopyWith<CalculatorState> get copyWith => _$CalculatorStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalculatorState&&(identical(other.display, display) || other.display == display)&&(identical(other.accumulator, accumulator) || other.accumulator == accumulator)&&(identical(other.operation, operation) || other.operation == operation)&&(identical(other.lastOperation, lastOperation) || other.lastOperation == lastOperation)&&(identical(other.lastOperand, lastOperand) || other.lastOperand == lastOperand)&&(identical(other.replaceInput, replaceInput) || other.replaceInput == replaceInput)&&(identical(other.taxRate, taxRate) || other.taxRate == taxRate)&&(identical(other.tipRate, tipRate) || other.tipRate == tipRate)&&(identical(other.settledAmount, settledAmount) || other.settledAmount == settledAmount)&&(identical(other.history, history) || other.history == history));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalculatorState&&(identical(other.display, display) || other.display == display)&&(identical(other.accumulator, accumulator) || other.accumulator == accumulator)&&(identical(other.operation, operation) || other.operation == operation)&&(identical(other.lastOperation, lastOperation) || other.lastOperation == lastOperation)&&(identical(other.lastOperand, lastOperand) || other.lastOperand == lastOperand)&&(identical(other.replaceInput, replaceInput) || other.replaceInput == replaceInput)&&(identical(other.taxRate, taxRate) || other.taxRate == taxRate)&&(identical(other.tipRate, tipRate) || other.tipRate == tipRate)&&(identical(other.settledAmount, settledAmount) || other.settledAmount == settledAmount)&&(identical(other.history, history) || other.history == history)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,display,accumulator,operation,lastOperation,lastOperand,replaceInput,taxRate,tipRate,settledAmount,history);
+int get hashCode => Object.hash(runtimeType,display,accumulator,operation,lastOperation,lastOperand,replaceInput,taxRate,tipRate,settledAmount,history,error);
 
 @override
 String toString() {
-  return 'CalculatorState(display: $display, accumulator: $accumulator, operation: $operation, lastOperation: $lastOperation, lastOperand: $lastOperand, replaceInput: $replaceInput, taxRate: $taxRate, tipRate: $tipRate, settledAmount: $settledAmount, history: $history)';
+  return 'CalculatorState(display: $display, accumulator: $accumulator, operation: $operation, lastOperation: $lastOperation, lastOperand: $lastOperand, replaceInput: $replaceInput, taxRate: $taxRate, tipRate: $tipRate, settledAmount: $settledAmount, history: $history, error: $error)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $CalculatorStateCopyWith<$Res>  {
   factory $CalculatorStateCopyWith(CalculatorState value, $Res Function(CalculatorState) _then) = _$CalculatorStateCopyWithImpl;
 @useResult
 $Res call({
- String display, double? accumulator, CalculatorOperation? operation, CalculatorOperation? lastOperation, double? lastOperand, bool replaceInput, double taxRate, double tipRate, double settledAmount, String history
+ String display, double? accumulator, CalculatorOperation? operation, CalculatorOperation? lastOperation, double? lastOperand, bool replaceInput, double taxRate, double tipRate, double settledAmount, String history, CalculatorError? error
 });
 
 
@@ -62,7 +62,7 @@ class _$CalculatorStateCopyWithImpl<$Res>
 
 /// Create a copy of CalculatorState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? display = null,Object? accumulator = freezed,Object? operation = freezed,Object? lastOperation = freezed,Object? lastOperand = freezed,Object? replaceInput = null,Object? taxRate = null,Object? tipRate = null,Object? settledAmount = null,Object? history = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? display = null,Object? accumulator = freezed,Object? operation = freezed,Object? lastOperation = freezed,Object? lastOperand = freezed,Object? replaceInput = null,Object? taxRate = null,Object? tipRate = null,Object? settledAmount = null,Object? history = null,Object? error = freezed,}) {
   return _then(_self.copyWith(
 display: null == display ? _self.display : display // ignore: cast_nullable_to_non_nullable
 as String,accumulator: freezed == accumulator ? _self.accumulator : accumulator // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,8 @@ as bool,taxRate: null == taxRate ? _self.taxRate : taxRate // ignore: cast_nulla
 as double,tipRate: null == tipRate ? _self.tipRate : tipRate // ignore: cast_nullable_to_non_nullable
 as double,settledAmount: null == settledAmount ? _self.settledAmount : settledAmount // ignore: cast_nullable_to_non_nullable
 as double,history: null == history ? _self.history : history // ignore: cast_nullable_to_non_nullable
-as String,
+as String,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as CalculatorError?,
   ));
 }
 
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String display,  double? accumulator,  CalculatorOperation? operation,  CalculatorOperation? lastOperation,  double? lastOperand,  bool replaceInput,  double taxRate,  double tipRate,  double settledAmount,  String history)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String display,  double? accumulator,  CalculatorOperation? operation,  CalculatorOperation? lastOperation,  double? lastOperand,  bool replaceInput,  double taxRate,  double tipRate,  double settledAmount,  String history,  CalculatorError? error)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CalculatorState() when $default != null:
-return $default(_that.display,_that.accumulator,_that.operation,_that.lastOperation,_that.lastOperand,_that.replaceInput,_that.taxRate,_that.tipRate,_that.settledAmount,_that.history);case _:
+return $default(_that.display,_that.accumulator,_that.operation,_that.lastOperation,_that.lastOperand,_that.replaceInput,_that.taxRate,_that.tipRate,_that.settledAmount,_that.history,_that.error);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.display,_that.accumulator,_that.operation,_that.lastOperat
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String display,  double? accumulator,  CalculatorOperation? operation,  CalculatorOperation? lastOperation,  double? lastOperand,  bool replaceInput,  double taxRate,  double tipRate,  double settledAmount,  String history)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String display,  double? accumulator,  CalculatorOperation? operation,  CalculatorOperation? lastOperation,  double? lastOperand,  bool replaceInput,  double taxRate,  double tipRate,  double settledAmount,  String history,  CalculatorError? error)  $default,) {final _that = this;
 switch (_that) {
 case _CalculatorState():
-return $default(_that.display,_that.accumulator,_that.operation,_that.lastOperation,_that.lastOperand,_that.replaceInput,_that.taxRate,_that.tipRate,_that.settledAmount,_that.history);case _:
+return $default(_that.display,_that.accumulator,_that.operation,_that.lastOperation,_that.lastOperand,_that.replaceInput,_that.taxRate,_that.tipRate,_that.settledAmount,_that.history,_that.error);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +201,10 @@ return $default(_that.display,_that.accumulator,_that.operation,_that.lastOperat
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String display,  double? accumulator,  CalculatorOperation? operation,  CalculatorOperation? lastOperation,  double? lastOperand,  bool replaceInput,  double taxRate,  double tipRate,  double settledAmount,  String history)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String display,  double? accumulator,  CalculatorOperation? operation,  CalculatorOperation? lastOperation,  double? lastOperand,  bool replaceInput,  double taxRate,  double tipRate,  double settledAmount,  String history,  CalculatorError? error)?  $default,) {final _that = this;
 switch (_that) {
 case _CalculatorState() when $default != null:
-return $default(_that.display,_that.accumulator,_that.operation,_that.lastOperation,_that.lastOperand,_that.replaceInput,_that.taxRate,_that.tipRate,_that.settledAmount,_that.history);case _:
+return $default(_that.display,_that.accumulator,_that.operation,_that.lastOperation,_that.lastOperand,_that.replaceInput,_that.taxRate,_that.tipRate,_that.settledAmount,_that.history,_that.error);case _:
   return null;
 
 }
@@ -215,7 +216,7 @@ return $default(_that.display,_that.accumulator,_that.operation,_that.lastOperat
 
 
 class _CalculatorState extends CalculatorState {
-  const _CalculatorState({this.display = '0', this.accumulator, this.operation, this.lastOperation, this.lastOperand, this.replaceInput = true, this.taxRate = 0.0, this.tipRate = 0.0, this.settledAmount = 0.0, this.history = ''}): super._();
+  const _CalculatorState({this.display = '0', this.accumulator, this.operation, this.lastOperation, this.lastOperand, this.replaceInput = true, this.taxRate = 0.0, this.tipRate = 0.0, this.settledAmount = 0.0, this.history = '', this.error}): super._();
   
 
 @override@JsonKey() final  String display;
@@ -228,6 +229,7 @@ class _CalculatorState extends CalculatorState {
 @override@JsonKey() final  double tipRate;
 @override@JsonKey() final  double settledAmount;
 @override@JsonKey() final  String history;
+@override final  CalculatorError? error;
 
 /// Create a copy of CalculatorState
 /// with the given fields replaced by the non-null parameter values.
@@ -239,16 +241,16 @@ _$CalculatorStateCopyWith<_CalculatorState> get copyWith => __$CalculatorStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalculatorState&&(identical(other.display, display) || other.display == display)&&(identical(other.accumulator, accumulator) || other.accumulator == accumulator)&&(identical(other.operation, operation) || other.operation == operation)&&(identical(other.lastOperation, lastOperation) || other.lastOperation == lastOperation)&&(identical(other.lastOperand, lastOperand) || other.lastOperand == lastOperand)&&(identical(other.replaceInput, replaceInput) || other.replaceInput == replaceInput)&&(identical(other.taxRate, taxRate) || other.taxRate == taxRate)&&(identical(other.tipRate, tipRate) || other.tipRate == tipRate)&&(identical(other.settledAmount, settledAmount) || other.settledAmount == settledAmount)&&(identical(other.history, history) || other.history == history));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalculatorState&&(identical(other.display, display) || other.display == display)&&(identical(other.accumulator, accumulator) || other.accumulator == accumulator)&&(identical(other.operation, operation) || other.operation == operation)&&(identical(other.lastOperation, lastOperation) || other.lastOperation == lastOperation)&&(identical(other.lastOperand, lastOperand) || other.lastOperand == lastOperand)&&(identical(other.replaceInput, replaceInput) || other.replaceInput == replaceInput)&&(identical(other.taxRate, taxRate) || other.taxRate == taxRate)&&(identical(other.tipRate, tipRate) || other.tipRate == tipRate)&&(identical(other.settledAmount, settledAmount) || other.settledAmount == settledAmount)&&(identical(other.history, history) || other.history == history)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,display,accumulator,operation,lastOperation,lastOperand,replaceInput,taxRate,tipRate,settledAmount,history);
+int get hashCode => Object.hash(runtimeType,display,accumulator,operation,lastOperation,lastOperand,replaceInput,taxRate,tipRate,settledAmount,history,error);
 
 @override
 String toString() {
-  return 'CalculatorState(display: $display, accumulator: $accumulator, operation: $operation, lastOperation: $lastOperation, lastOperand: $lastOperand, replaceInput: $replaceInput, taxRate: $taxRate, tipRate: $tipRate, settledAmount: $settledAmount, history: $history)';
+  return 'CalculatorState(display: $display, accumulator: $accumulator, operation: $operation, lastOperation: $lastOperation, lastOperand: $lastOperand, replaceInput: $replaceInput, taxRate: $taxRate, tipRate: $tipRate, settledAmount: $settledAmount, history: $history, error: $error)';
 }
 
 
@@ -259,7 +261,7 @@ abstract mixin class _$CalculatorStateCopyWith<$Res> implements $CalculatorState
   factory _$CalculatorStateCopyWith(_CalculatorState value, $Res Function(_CalculatorState) _then) = __$CalculatorStateCopyWithImpl;
 @override @useResult
 $Res call({
- String display, double? accumulator, CalculatorOperation? operation, CalculatorOperation? lastOperation, double? lastOperand, bool replaceInput, double taxRate, double tipRate, double settledAmount, String history
+ String display, double? accumulator, CalculatorOperation? operation, CalculatorOperation? lastOperation, double? lastOperand, bool replaceInput, double taxRate, double tipRate, double settledAmount, String history, CalculatorError? error
 });
 
 
@@ -276,7 +278,7 @@ class __$CalculatorStateCopyWithImpl<$Res>
 
 /// Create a copy of CalculatorState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? display = null,Object? accumulator = freezed,Object? operation = freezed,Object? lastOperation = freezed,Object? lastOperand = freezed,Object? replaceInput = null,Object? taxRate = null,Object? tipRate = null,Object? settledAmount = null,Object? history = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? display = null,Object? accumulator = freezed,Object? operation = freezed,Object? lastOperation = freezed,Object? lastOperand = freezed,Object? replaceInput = null,Object? taxRate = null,Object? tipRate = null,Object? settledAmount = null,Object? history = null,Object? error = freezed,}) {
   return _then(_CalculatorState(
 display: null == display ? _self.display : display // ignore: cast_nullable_to_non_nullable
 as String,accumulator: freezed == accumulator ? _self.accumulator : accumulator // ignore: cast_nullable_to_non_nullable
@@ -288,7 +290,8 @@ as bool,taxRate: null == taxRate ? _self.taxRate : taxRate // ignore: cast_nulla
 as double,tipRate: null == tipRate ? _self.tipRate : tipRate // ignore: cast_nullable_to_non_nullable
 as double,settledAmount: null == settledAmount ? _self.settledAmount : settledAmount // ignore: cast_nullable_to_non_nullable
 as double,history: null == history ? _self.history : history // ignore: cast_nullable_to_non_nullable
-as String,
+as String,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as CalculatorError?,
   ));
 }
 

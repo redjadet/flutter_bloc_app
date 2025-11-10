@@ -404,6 +404,30 @@ abstract class AppLocalizations {
   /// **'Decimal point'**
   String get calculatorDecimalPointLabel;
 
+  /// Title displayed when the calculator encounters an error
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get calculatorErrorTitle;
+
+  /// Error message shown when attempting to divide by zero
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot divide by zero'**
+  String get calculatorErrorDivisionByZero;
+
+  /// Error message shown when an operation results in NaN or infinity
+  ///
+  /// In en, this message translates to:
+  /// **'Result is not a valid number'**
+  String get calculatorErrorInvalidResult;
+
+  /// Error message shown when attempting to settle a payment with zero or negative amount
+  ///
+  /// In en, this message translates to:
+  /// **'Total must be greater than zero'**
+  String get calculatorErrorNonPositiveTotal;
+
   /// Label for the button finalising the calculation
   ///
   /// In en, this message translates to:

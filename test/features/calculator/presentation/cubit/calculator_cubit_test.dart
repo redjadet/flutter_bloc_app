@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/calculator/calculator.dart';
+import 'package:flutter_bloc_app/features/calculator/domain/calculator_error.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   const PaymentCalculator calculator = PaymentCalculator();
@@ -220,24 +221,154 @@ void main() {
     ],
   );
 
-  test('divide by zero returns zero without errors', () {
-    final cubit = buildCubit();
-    cubit
+  blocTest<CalculatorCubit, CalculatorState>(
+    'divide by zero surfaces error state',
+    build: buildCubit,
+    act: (final cubit) => cubit
       ..inputDigit('8')
       ..selectOperation(CalculatorOperation.divide)
       ..inputDigit('0')
-      ..evaluate();
-
-    expect(
-      cubit.state,
+      ..evaluate(),
+    expect: () => <CalculatorState>[
+      const CalculatorState(display: '8', replaceInput: false),
+      const CalculatorState(
+        display: '8',
+        accumulator: 8,
+        operation: CalculatorOperation.divide,
+        replaceInput: true,
+        history: '8÷',
+      ),
+      const CalculatorState(
+        display: '0',
+        accumulator: 8,
+        operation: CalculatorOperation.divide,
+        replaceInput: false,
+        history: '8÷',
+      ),
       const CalculatorState(
         display: '0',
         replaceInput: true,
         settledAmount: 0,
-        history: '8÷0',
-        lastOperand: 0,
-        lastOperation: CalculatorOperation.divide,
+        history: '',
+        error: CalculatorError.divisionByZero,
       ),
-    );
-  });
+    ],
+  );
+
+  blocTest<CalculatorCubit, CalculatorState>(
+    'clearAll resets error state',
+    build: buildCubit,
+    act: (final cubit) => cubit
+      ..inputDigit('8')
+      ..selectOperation(CalculatorOperation.divide)
+      ..inputDigit('0')
+      ..evaluate()
+      ..clearAll(),
+    expect: () => <CalculatorState>[
+      const CalculatorState(display: '8', replaceInput: false),
+      const CalculatorState(
+        display: '8',
+        accumulator: 8,
+        operation: CalculatorOperation.divide,
+        replaceInput: true,
+        history: '8÷',
+      ),
+      const CalculatorState(
+        display: '0',
+        accumulator: 8,
+        operation: CalculatorOperation.divide,
+        replaceInput: false,
+        history: '8÷',
+      ),
+      const CalculatorState(
+        display: '0',
+        replaceInput: true,
+        settledAmount: 0,
+        history: '',
+        error: CalculatorError.divisionByZero,
+      ),
+      const CalculatorState(),
+    ],
+  );
+
+  blocTest<CalculatorCubit, CalculatorState>(
+    'input digit clears divide-by-zero error state',
+    build: buildCubit,
+    act: (final cubit) => cubit
+      ..inputDigit('8')
+      ..selectOperation(CalculatorOperation.divide)
+      ..inputDigit('0')
+      ..evaluate()
+      ..inputDigit('2'),
+    expect: () => <CalculatorState>[
+      const CalculatorState(display: '8', replaceInput: false),
+      const CalculatorState(
+        display: '8',
+        accumulator: 8,
+        operation: CalculatorOperation.divide,
+        replaceInput: true,
+        history: '8÷',
+      ),
+      const CalculatorState(
+        display: '0',
+        accumulator: 8,
+        operation: CalculatorOperation.divide,
+        replaceInput: false,
+        history: '8÷',
+      ),
+      const CalculatorState(
+        display: '0',
+        replaceInput: true,
+        settledAmount: 0,
+        history: '',
+        error: CalculatorError.divisionByZero,
+      ),
+      const CalculatorState(
+        display: '0',
+        replaceInput: true,
+        settledAmount: 0,
+        history: '',
+      ),
+      const CalculatorState(display: '2', replaceInput: false),
+    ],
+  );
+
+  blocTest<CalculatorCubit, CalculatorState>(
+    'non-positive total triggers error state',
+    build: buildCubit,
+    act: (final cubit) => cubit.evaluate(),
+    expect: () => const <CalculatorState>[
+      CalculatorState(
+        display: '0',
+        replaceInput: true,
+        settledAmount: 0,
+        history: '',
+        error: CalculatorError.nonPositiveTotal,
+      ),
+    ],
+  );
+
+  blocTest<CalculatorCubit, CalculatorState>(
+    'input digit clears non-positive total error state',
+    build: buildCubit,
+    act: (final cubit) => cubit
+      ..evaluate()
+      ..inputDigit('5'),
+    expect: () => const <CalculatorState>[
+      CalculatorState(
+        display: '0',
+        replaceInput: true,
+        settledAmount: 0,
+        history: '',
+        error: CalculatorError.nonPositiveTotal,
+      ),
+      CalculatorState(
+        display: '0',
+        replaceInput: true,
+        settledAmount: 0,
+        history: '',
+      ),
+      CalculatorState(display: '5', replaceInput: false),
+    ],
+  );
 }

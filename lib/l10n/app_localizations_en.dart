@@ -170,6 +170,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get calculatorDecimalPointLabel => 'Decimal point';
 
   @override
+  String get calculatorErrorTitle => 'Error';
+
+  @override
+  String get calculatorErrorDivisionByZero => 'Cannot divide by zero';
+
+  @override
+  String get calculatorErrorInvalidResult => 'Result is not a valid number';
+
+  @override
+  String get calculatorErrorNonPositiveTotal =>
+      'Total must be greater than zero';
+
+  @override
   String get calculatorEquals => 'Charge total';
 
   @override

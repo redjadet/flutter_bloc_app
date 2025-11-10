@@ -1,3 +1,4 @@
+import 'package:flutter_bloc_app/features/calculator/domain/calculator_error.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/payment_calculator.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -16,6 +17,7 @@ abstract class CalculatorState with _$CalculatorState {
     @Default(0.0) double tipRate,
     @Default(0.0) double settledAmount,
     @Default('') String history,
+    CalculatorError? error,
   }) = _CalculatorState;
 
   const CalculatorState._();
