@@ -65,10 +65,15 @@ class CounterCubit extends _CounterCubitBase {
   }
 
   @override
-  Future<void> close() {
+  Future<void> close() async {
     _stopCountdownTicker();
-    unawaited(_repositorySubscription?.cancel());
-    return super.close();
+    final StreamSubscription<CounterSnapshot>? subscription =
+        _repositorySubscription;
+    _repositorySubscription = null;
+    if (subscription != null) {
+      await subscription.cancel();
+    }
+    await super.close();
   }
 
   Future<void> increment() async {
