@@ -4,48 +4,53 @@ import 'package:flutter/material.dart';
 class ErrorHandling {
   ErrorHandling._();
 
-  static void _showSnackBar(
+  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
+  _showSnackBar(
     final BuildContext context,
     final SnackBar snackBar,
   ) {
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    if (!context.mounted) return null;
+    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+      context,
+    );
+    if (messenger == null) {
+      return null;
+    }
+    return messenger.showSnackBar(snackBar);
   }
 
   /// Show a snackbar with error message
-  static void showErrorSnackBar(
+  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
+  showErrorSnackBar(
     final BuildContext context,
     final String message, {
     final Duration duration = const Duration(seconds: 4),
     final SnackBarAction? action,
-  }) {
-    _showSnackBar(
-      context,
-      SnackBar(
-        content: Text(message),
-        duration: duration,
-        action: action,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
+  }) => _showSnackBar(
+    context,
+    SnackBar(
+      content: Text(message),
+      duration: duration,
+      action: action,
+      behavior: SnackBarBehavior.floating,
+    ),
+  );
 
   /// Show a success snackbar
-  static void showSuccessSnackBar(
+  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
+  showSuccessSnackBar(
     final BuildContext context,
     final String message, {
     final Duration duration = const Duration(seconds: 3),
-  }) {
-    _showSnackBar(
-      context,
-      SnackBar(
-        content: Text(message),
-        duration: duration,
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
+  }) => _showSnackBar(
+    context,
+    SnackBar(
+      content: Text(message),
+      duration: duration,
+      backgroundColor: Colors.green,
+      behavior: SnackBarBehavior.floating,
+    ),
+  );
 
   /// Handle common Cubit errors with user-friendly messages
   static void handleCubitError(
@@ -100,7 +105,10 @@ class ErrorHandling {
   /// Clear all current snackbars
   static void clearSnackBars(final BuildContext context) {
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).clearSnackBars();
+    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+      context,
+    );
+    messenger?.clearSnackBars();
   }
 
   /// Show a loading dialog

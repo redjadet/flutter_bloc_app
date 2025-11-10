@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 abstract class ErrorNotificationService {
@@ -16,22 +17,22 @@ class SnackbarErrorNotificationService implements ErrorNotificationService {
     final BuildContext context,
     final String message,
   ) async {
-    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
-      context,
-    );
-    if (messenger == null) {
+    if (!context.mounted) {
+      AppLogger.debug(
+        'Skipping SnackBar error message – context no longer mounted.',
+      );
+      return;
+    }
+    AppLogger.info('Showing SnackBar error message');
+    ErrorHandling.clearSnackBars(context);
+    final controller = ErrorHandling.showErrorSnackBar(context, message);
+    if (controller == null) {
       AppLogger.debug(
         'Skipping SnackBar error message – no ScaffoldMessenger available.',
       );
       return;
     }
-    AppLogger.info('Showing SnackBar error message');
-    messenger.hideCurrentSnackBar();
-    await messenger
-        .showSnackBar(
-          SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
-        )
-        .closed;
+    await controller.closed;
   }
 
   @override
