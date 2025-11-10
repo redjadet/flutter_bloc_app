@@ -110,6 +110,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - `get_it` for dependency injection across features
 - `bloc_test`, `flutter_test`, `golden_toolkit` for testing
 - `custom_lint` for custom linting rules and file length enforcement
+- **Dependency refresh (Nov 2025):** `go_router 17.0.0`, `get_it 9.0.5`, `google_maps_flutter 2.14.0`, `firebase_core 4.2.1` (+ `firebase_auth 6.1.2`, `firebase_analytics 12.0.4`), `shared_preferences 2.5.3`, `flutter_svg 2.2.2`
 
 ## Security & Secrets
 
