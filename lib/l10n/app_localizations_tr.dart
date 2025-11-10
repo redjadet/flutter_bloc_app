@@ -171,6 +171,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String get calculatorDecimalPointLabel => 'Ondalık ayırıcı';
 
   @override
+  String get calculatorErrorTitle => 'Hata';
+
+  @override
+  String get calculatorErrorDivisionByZero => 'Sıfıra bölme yapılamaz';
+
+  @override
+  String get calculatorErrorInvalidResult => 'Sonuç geçerli bir sayı değil';
+
+  @override
+  String get calculatorErrorNonPositiveTotal =>
+      'Toplam sıfırdan büyük olmalıdır';
+
+  @override
   String get calculatorEquals => 'Toplamı hesapla';
 
   @override

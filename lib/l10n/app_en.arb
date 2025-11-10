@@ -231,6 +231,22 @@
   "@calculatorDecimalPointLabel": {
     "description": "Button label that inserts a decimal separator"
   },
+  "calculatorErrorTitle": "Error",
+  "@calculatorErrorTitle": {
+    "description": "Title displayed when the calculator encounters an error"
+  },
+  "calculatorErrorDivisionByZero": "Cannot divide by zero",
+  "@calculatorErrorDivisionByZero": {
+    "description": "Error message shown when attempting to divide by zero"
+  },
+  "calculatorErrorInvalidResult": "Result is not a valid number",
+  "@calculatorErrorInvalidResult": {
+    "description": "Error message shown when an operation results in NaN or infinity"
+  },
+  "calculatorErrorNonPositiveTotal": "Total must be greater than zero",
+  "@calculatorErrorNonPositiveTotal": {
+    "description": "Error message shown when attempting to settle a payment with zero or negative amount"
+  },
   "calculatorEquals": "Charge total",
   "@calculatorEquals": {
     "description": "Label for the button finalising the calculation"

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/constants.dart';
+import 'package:flutter_bloc_app/features/calculator/domain/calculator_error.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_cubit.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_state.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_keypad.dart';
@@ -99,7 +100,8 @@ class _CalculatorDisplay extends StatelessWidget {
       BlocBuilder<CalculatorCubit, CalculatorState>(
         buildWhen: (final previous, final current) =>
             previous.display != current.display ||
-            previous.history != current.history,
+            previous.history != current.history ||
+            previous.error != current.error,
         builder: (final context, final state) {
           final ThemeData theme = Theme.of(context);
           final ColorScheme colors = theme.colorScheme;
@@ -125,12 +127,25 @@ class _CalculatorDisplay extends StatelessWidget {
                 fontSize: 64,
                 fontWeight: FontWeight.w300,
               );
+          final l10n = context.l10n;
+          final bool hasError = state.error != null;
+          final TextStyle effectiveDisplayStyle = hasError
+              ? displayStyle.copyWith(color: colors.error)
+              : displayStyle;
+          final String displayText = switch (state.error) {
+            CalculatorError.divisionByZero =>
+              l10n.calculatorErrorDivisionByZero,
+            CalculatorError.invalidResult => l10n.calculatorErrorInvalidResult,
+            CalculatorError.nonPositiveTotal =>
+              l10n.calculatorErrorNonPositiveTotal,
+            null => state.display,
+          };
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (state.history.isNotEmpty) ...[
+                if (!hasError && state.history.isNotEmpty) ...[
                   Align(
                     alignment: Alignment.centerRight,
                     child: Text(
@@ -148,8 +163,8 @@ class _CalculatorDisplay extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerRight,
                     child: Text(
-                      state.display,
-                      style: displayStyle,
+                      displayText,
+                      style: effectiveDisplayStyle,
                       maxLines: 1,
                     ),
                   ),
