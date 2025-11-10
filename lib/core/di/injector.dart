@@ -197,7 +197,7 @@ class _FakeRemoteConfigRepository implements RemoteConfigRepository {
 
 void _registerLazySingletonIfAbsent<T extends Object>(
   final T Function() factory, {
-  final void Function(T instance)? dispose,
+  final FutureOr<void> Function(T instance)? dispose,
 }) {
   if (!getIt.isRegistered<T>()) {
     getIt.registerLazySingleton<T>(factory, dispose: dispose);

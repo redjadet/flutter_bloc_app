@@ -109,8 +109,11 @@ class EchoWebsocketRepository implements WebsocketRepository {
   }
 
   Future<void> _cleanupChannel() async {
-    unawaited(_channelSubscription?.cancel());
+    final StreamSubscription<dynamic>? subscription = _channelSubscription;
     _channelSubscription = null;
+    if (subscription != null) {
+      await subscription.cancel();
+    }
     _channel = null;
   }
 
