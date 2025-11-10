@@ -2,7 +2,6 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_sections.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class ExamplePageBody extends StatelessWidget {
@@ -19,9 +18,6 @@ class ExamplePageBody extends StatelessWidget {
     required this.onOpenRegister,
     required this.onOpenLoggedOut,
     required this.onRunIsolates,
-    required this.isFetchingInfo,
-    required this.platformInfo,
-    required this.infoError,
     required this.isRunningIsolates,
     required this.isolateError,
     required this.fibonacciInput,
@@ -43,9 +39,6 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onOpenRegister;
   final VoidCallback onOpenLoggedOut;
   final VoidCallback? onRunIsolates;
-  final bool isFetchingInfo;
-  final NativePlatformInfo? platformInfo;
-  final String? infoError;
   final bool isRunningIsolates;
   final String? isolateError;
   final int? fibonacciInput;
@@ -138,15 +131,6 @@ class ExamplePageBody extends StatelessWidget {
               icon: const Icon(Icons.logout),
               label: const Text('Logged Out Demo'),
               key: const ValueKey('example-logged-out-button'),
-            ),
-            SizedBox(height: UI.gapS),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 250),
-              child: PlatformInfoSection(
-                isLoading: isFetchingInfo,
-                info: platformInfo,
-                errorMessage: infoError,
-              ),
             ),
             SizedBox(height: UI.gapL),
             FilledButton.icon(

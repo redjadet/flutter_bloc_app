@@ -28,6 +28,34 @@
   "exampleNativeInfoButton": "Récupérer les infos natives",
   "exampleNativeInfoTitle": "Informations sur la plateforme",
   "exampleNativeInfoError": "Impossible de récupérer les informations natives de la plateforme.",
+  "exampleNativeInfoDialogTitle": "Détails de la plateforme",
+  "@exampleNativeInfoDialogTitle": {
+    "description": "Titre de la boîte de dialogue adaptative qui affiche les informations natives de la plateforme"
+  },
+  "exampleNativeInfoDialogPlatformLabel": "Plateforme",
+  "@exampleNativeInfoDialogPlatformLabel": {
+    "description": "Libellé pour le nom de la plateforme dans la boîte de dialogue d'informations"
+  },
+  "exampleNativeInfoDialogVersionLabel": "Version",
+  "@exampleNativeInfoDialogVersionLabel": {
+    "description": "Libellé pour la version de la plateforme dans la boîte de dialogue d'informations"
+  },
+  "exampleNativeInfoDialogManufacturerLabel": "Fabricant",
+  "@exampleNativeInfoDialogManufacturerLabel": {
+    "description": "Libellé pour le fabricant dans la boîte de dialogue d'informations de la plateforme"
+  },
+  "exampleNativeInfoDialogModelLabel": "Modèle",
+  "@exampleNativeInfoDialogModelLabel": {
+    "description": "Libellé pour le modèle dans la boîte de dialogue d'informations de la plateforme"
+  },
+  "exampleNativeInfoDialogBatteryLabel": "Niveau de batterie",
+  "@exampleNativeInfoDialogBatteryLabel": {
+    "description": "Libellé pour le niveau de batterie dans la boîte de dialogue d'informations de la plateforme"
+  },
+  "exampleDialogCloseButton": "Fermer",
+  "@exampleDialogCloseButton": {
+    "description": "Libellé du bouton qui ferme la boîte de dialogue d'informations de la plateforme"
+  },
   "settingsBiometricPrompt": "Authentifiez-vous pour ouvrir les paramètres",
   "settingsBiometricFailed": "Impossible de vérifier votre identité.",
   "exampleRunIsolatesButton": "Exécuter les exemples d'isolats",

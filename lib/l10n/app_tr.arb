@@ -29,6 +29,34 @@
   "exampleNativeInfoButton": "Yerel bilgileri getir",
   "exampleNativeInfoTitle": "Platform bilgisi",
   "exampleNativeInfoError": "Yerel platform bilgisi alınamadı.",
+  "exampleNativeInfoDialogTitle": "Platform ayrıntıları",
+  "@exampleNativeInfoDialogTitle": {
+    "description": "Yerel platform bilgilerini gösteren uyarlanabilir ileti başlığı"
+  },
+  "exampleNativeInfoDialogPlatformLabel": "Platform",
+  "@exampleNativeInfoDialogPlatformLabel": {
+    "description": "Platform adını gösteren etiket"
+  },
+  "exampleNativeInfoDialogVersionLabel": "Sürüm",
+  "@exampleNativeInfoDialogVersionLabel": {
+    "description": "Platform sürümünü gösteren etiket"
+  },
+  "exampleNativeInfoDialogManufacturerLabel": "Üretici",
+  "@exampleNativeInfoDialogManufacturerLabel": {
+    "description": "Platform üreticisini gösteren etiket"
+  },
+  "exampleNativeInfoDialogModelLabel": "Model",
+  "@exampleNativeInfoDialogModelLabel": {
+    "description": "Platform modelini gösteren etiket"
+  },
+  "exampleNativeInfoDialogBatteryLabel": "Pil seviyesi",
+  "@exampleNativeInfoDialogBatteryLabel": {
+    "description": "Pil seviyesini gösteren etiket"
+  },
+  "exampleDialogCloseButton": "Kapat",
+  "@exampleDialogCloseButton": {
+    "description": "Platform bilgisi iletişim kutusunu kapatan düğmenin etiketi"
+  },
   "settingsBiometricPrompt": "Ayarları açmak için kimliğinizi doğrulayın",
   "settingsBiometricFailed": "Kimliğiniz doğrulanamadı.",
   "exampleRunIsolatesButton": "İzole örneklerini çalıştır",

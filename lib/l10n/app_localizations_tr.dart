@@ -75,6 +75,27 @@ class AppLocalizationsTr extends AppLocalizations {
   String get exampleNativeInfoError => 'Yerel platform bilgisi alınamadı.';
 
   @override
+  String get exampleNativeInfoDialogTitle => 'Platform ayrıntıları';
+
+  @override
+  String get exampleNativeInfoDialogPlatformLabel => 'Platform';
+
+  @override
+  String get exampleNativeInfoDialogVersionLabel => 'Sürüm';
+
+  @override
+  String get exampleNativeInfoDialogManufacturerLabel => 'Üretici';
+
+  @override
+  String get exampleNativeInfoDialogModelLabel => 'Model';
+
+  @override
+  String get exampleNativeInfoDialogBatteryLabel => 'Pil seviyesi';
+
+  @override
+  String get exampleDialogCloseButton => 'Kapat';
+
+  @override
   String get exampleRunIsolatesButton => 'İzole örneklerini çalıştır';
 
   @override
