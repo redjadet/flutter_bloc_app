@@ -3,13 +3,8 @@ part of 'rest_counter_repository.dart';
 Stream<CounterSnapshot> _restCounterRepositoryWatch(
   final RestCounterRepository repository,
 ) {
-  repository._watchController ??= StreamController<CounterSnapshot>.broadcast(
-    onListen: () => _triggerInitialLoadIfNeeded(repository),
-    onCancel: () => _handleWatchCancel(repository),
-  );
-
   final Stream<CounterSnapshot> sourceStream =
-      repository._watchController!.stream;
+      repository._watchController.stream;
   return Stream<CounterSnapshot>.multi((final multi) {
     if (repository._hasResolvedInitialValue) {
       multi.add(repository._latestSnapshot);
@@ -20,32 +15,17 @@ Stream<CounterSnapshot> _restCounterRepositoryWatch(
   });
 }
 
-Future<void> _restCounterRepositoryDispose(
-  final RestCounterRepository repository,
-) async {
-  if (repository._ownsClient) {
-    repository._client.close();
-  }
-  unawaited(repository._watchController?.close());
-  repository._watchController = null;
-}
-
 void _emitSnapshot(
   final RestCounterRepository repository,
   final CounterSnapshot snapshot,
 ) {
   final CounterSnapshot normalized = _storeSnapshot(repository, snapshot);
-  final StreamController<CounterSnapshot>? controller =
-      repository._watchController;
-  if (controller != null && !controller.isClosed) {
-    controller.add(normalized);
+  if (!repository._watchController.isClosed) {
+    repository._watchController.add(normalized);
   }
 }
 
 void _triggerInitialLoadIfNeeded(final RestCounterRepository repository) {
-  if (repository._watchController == null) {
-    return;
-  }
   if (repository._initialLoadCompleter != null) {
     return;
   }
@@ -68,7 +48,7 @@ void _startInitialLoad(
         error,
         stackTrace,
       );
-      repository._watchController?.addError(error, stackTrace);
+      repository._watchController.addError(error, stackTrace);
     } finally {
       completer.complete();
       repository._initialLoadCompleter = null;
@@ -79,14 +59,8 @@ void _startInitialLoad(
 }
 
 Future<void> _handleWatchCancel(final RestCounterRepository repository) async {
-  final StreamController<CounterSnapshot>? controller =
-      repository._watchController;
-  if (controller == null) {
+  if (repository._watchController.hasListener) {
     return;
   }
-  if (controller.hasListener) {
-    return;
-  }
-  repository._watchController = null;
-  await controller.close();
+  repository._hasResolvedInitialValue = false;
 }

@@ -24,7 +24,12 @@ class RestCounterRepository implements CounterRepository {
        _client = client ?? http.Client(),
        _defaultHeaders = {if (defaultHeaders != null) ...defaultHeaders},
        _requestTimeout = requestTimeout,
-       _ownsClient = client == null;
+       _ownsClient = client == null {
+    _watchController = StreamController<CounterSnapshot>.broadcast(
+      onListen: () => _triggerInitialLoadIfNeeded(this),
+      onCancel: () => _handleWatchCancel(this),
+    );
+  }
 
   final Uri _baseUri;
   final http.Client _client;
@@ -35,7 +40,7 @@ class RestCounterRepository implements CounterRepository {
     userId: 'rest',
     count: 0,
   );
-  StreamController<CounterSnapshot>? _watchController;
+  late final StreamController<CounterSnapshot> _watchController;
   CounterSnapshot _latestSnapshot = _emptySnapshot;
   Completer<void>? _initialLoadCompleter;
   bool _hasResolvedInitialValue = false;
@@ -52,5 +57,12 @@ class RestCounterRepository implements CounterRepository {
   @override
   Stream<CounterSnapshot> watch() => _restCounterRepositoryWatch(this);
 
-  Future<void> dispose() => _restCounterRepositoryDispose(this);
+  Future<void> dispose() async {
+    if (_ownsClient) {
+      _client.close();
+    }
+    if (!_watchController.isClosed) {
+      await _watchController.close();
+    }
+  }
 }
