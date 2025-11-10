@@ -40,16 +40,19 @@ void main() {
 
     await tester.tap(find.text(AppLocalizationsEn().exampleNativeInfoButton));
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 50));
+    await tester.pump(const Duration(milliseconds: 200));
 
     expect(
-      find.byKey(const ValueKey<String>('platform-info-Android-14')),
+      find.text(AppLocalizationsEn().exampleNativeInfoDialogTitle),
       findsOneWidget,
     );
-    expect(
-      find.text(AppLocalizationsEn().exampleNativeBatteryLabel(87)),
-      findsOneWidget,
-    );
+    expect(find.text('Android'), findsWidgets);
+    expect(find.text('14'), findsWidgets);
+
+    await tester.tap(find.text(AppLocalizationsEn().exampleDialogCloseButton));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
+
     expect(
       find.text(AppLocalizationsEn().exampleWebsocketButton),
       findsOneWidget,
@@ -90,6 +93,7 @@ void main() {
 
     await tester.tap(find.text(AppLocalizationsEn().exampleNativeInfoButton));
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
     expect(
       find.text(AppLocalizationsEn().exampleNativeInfoError),

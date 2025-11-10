@@ -76,6 +76,27 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudieron obtener los datos nativos de la plataforma.';
 
   @override
+  String get exampleNativeInfoDialogTitle => 'Detalles de la plataforma';
+
+  @override
+  String get exampleNativeInfoDialogPlatformLabel => 'Plataforma';
+
+  @override
+  String get exampleNativeInfoDialogVersionLabel => 'Versión';
+
+  @override
+  String get exampleNativeInfoDialogManufacturerLabel => 'Fabricante';
+
+  @override
+  String get exampleNativeInfoDialogModelLabel => 'Modelo';
+
+  @override
+  String get exampleNativeInfoDialogBatteryLabel => 'Nivel de batería';
+
+  @override
+  String get exampleDialogCloseButton => 'Cerrar';
+
+  @override
   String get exampleRunIsolatesButton => 'Ejecutar ejemplos con aislados';
 
   @override

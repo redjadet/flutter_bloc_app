@@ -89,6 +89,34 @@
   "@exampleNativeInfoError": {
     "description": "Error message shown when fetching native platform information fails"
   },
+  "exampleNativeInfoDialogTitle": "Platform details",
+  "@exampleNativeInfoDialogTitle": {
+    "description": "Title shown in the adaptive dialog that displays native platform information"
+  },
+  "exampleNativeInfoDialogPlatformLabel": "Platform",
+  "@exampleNativeInfoDialogPlatformLabel": {
+    "description": "Label for the platform name inside the platform info dialog"
+  },
+  "exampleNativeInfoDialogVersionLabel": "Version",
+  "@exampleNativeInfoDialogVersionLabel": {
+    "description": "Label for the platform version inside the platform info dialog"
+  },
+  "exampleNativeInfoDialogManufacturerLabel": "Manufacturer",
+  "@exampleNativeInfoDialogManufacturerLabel": {
+    "description": "Label for the platform manufacturer inside the platform info dialog"
+  },
+  "exampleNativeInfoDialogModelLabel": "Model",
+  "@exampleNativeInfoDialogModelLabel": {
+    "description": "Label for the platform model inside the platform info dialog"
+  },
+  "exampleNativeInfoDialogBatteryLabel": "Battery level",
+  "@exampleNativeInfoDialogBatteryLabel": {
+    "description": "Label for the battery level row inside the platform info dialog"
+  },
+  "exampleDialogCloseButton": "Close",
+  "@exampleDialogCloseButton": {
+    "description": "Label for the button that dismisses the platform info dialog"
+  },
   "exampleRunIsolatesButton": "Run isolate samples",
   "@exampleRunIsolatesButton": {
     "description": "Button label to execute isolate demo functions"

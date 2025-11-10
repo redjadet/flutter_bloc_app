@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_page_body.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -11,12 +10,6 @@ void main() {
     ) async {
       bool registerTapped = false;
       final theme = ThemeData.light();
-      const platformInfo = NativePlatformInfo(
-        platform: 'iOS',
-        version: '17',
-        model: 'iPhone',
-      );
-
       await tester.pumpWidget(
         MaterialApp(
           home: ExamplePageBody(
@@ -33,9 +26,6 @@ void main() {
             },
             onOpenLoggedOut: () {},
             onRunIsolates: () {},
-            isFetchingInfo: false,
-            platformInfo: platformInfo,
-            infoError: null,
             isRunningIsolates: false,
             isolateError: null,
             fibonacciInput: null,

@@ -78,6 +78,27 @@ class AppLocalizationsDe extends AppLocalizations {
       'Native Plattforminformationen konnten nicht abgerufen werden.';
 
   @override
+  String get exampleNativeInfoDialogTitle => 'Plattformdetails';
+
+  @override
+  String get exampleNativeInfoDialogPlatformLabel => 'Plattform';
+
+  @override
+  String get exampleNativeInfoDialogVersionLabel => 'Version';
+
+  @override
+  String get exampleNativeInfoDialogManufacturerLabel => 'Hersteller';
+
+  @override
+  String get exampleNativeInfoDialogModelLabel => 'Modell';
+
+  @override
+  String get exampleNativeInfoDialogBatteryLabel => 'Akkustand';
+
+  @override
+  String get exampleDialogCloseButton => 'Schließen';
+
+  @override
   String get exampleRunIsolatesButton => 'Isolat-Beispiele ausführen';
 
   @override

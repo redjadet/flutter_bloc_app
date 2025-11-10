@@ -75,6 +75,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exampleNativeInfoError => 'Unable to fetch native platform info.';
 
   @override
+  String get exampleNativeInfoDialogTitle => 'Platform details';
+
+  @override
+  String get exampleNativeInfoDialogPlatformLabel => 'Platform';
+
+  @override
+  String get exampleNativeInfoDialogVersionLabel => 'Version';
+
+  @override
+  String get exampleNativeInfoDialogManufacturerLabel => 'Manufacturer';
+
+  @override
+  String get exampleNativeInfoDialogModelLabel => 'Model';
+
+  @override
+  String get exampleNativeInfoDialogBatteryLabel => 'Battery level';
+
+  @override
+  String get exampleDialogCloseButton => 'Close';
+
+  @override
   String get exampleRunIsolatesButton => 'Run isolate samples';
 
   @override

@@ -28,6 +28,34 @@
   "exampleNativeInfoButton": "Native Infos abrufen",
   "exampleNativeInfoTitle": "Plattforminformationen",
   "exampleNativeInfoError": "Native Plattforminformationen konnten nicht abgerufen werden.",
+  "exampleNativeInfoDialogTitle": "Plattformdetails",
+  "@exampleNativeInfoDialogTitle": {
+    "description": "Titel des adaptiven Dialogs, der die nativen Plattforminformationen anzeigt"
+  },
+  "exampleNativeInfoDialogPlatformLabel": "Plattform",
+  "@exampleNativeInfoDialogPlatformLabel": {
+    "description": "Bezeichnung für den Plattformnamen im Plattforminfo-Dialog"
+  },
+  "exampleNativeInfoDialogVersionLabel": "Version",
+  "@exampleNativeInfoDialogVersionLabel": {
+    "description": "Bezeichnung für die Plattformversion im Plattforminfo-Dialog"
+  },
+  "exampleNativeInfoDialogManufacturerLabel": "Hersteller",
+  "@exampleNativeInfoDialogManufacturerLabel": {
+    "description": "Bezeichnung für den Plattformhersteller im Plattforminfo-Dialog"
+  },
+  "exampleNativeInfoDialogModelLabel": "Modell",
+  "@exampleNativeInfoDialogModelLabel": {
+    "description": "Bezeichnung für das Plattformmodell im Plattforminfo-Dialog"
+  },
+  "exampleNativeInfoDialogBatteryLabel": "Akkustand",
+  "@exampleNativeInfoDialogBatteryLabel": {
+    "description": "Bezeichnung für den Akkustand im Plattforminfo-Dialog"
+  },
+  "exampleDialogCloseButton": "Schließen",
+  "@exampleDialogCloseButton": {
+    "description": "Beschriftung für die Schaltfläche zum Schließen des Plattforminfo-Dialogs"
+  },
   "settingsBiometricPrompt": "Authentifiziere dich, um die Einstellungen zu öffnen",
   "settingsBiometricFailed": "Identität konnte nicht bestätigt werden.",
   "exampleRunIsolatesButton": "Isolat-Beispiele ausführen",

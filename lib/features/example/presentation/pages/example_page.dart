@@ -19,9 +19,7 @@ class ExamplePage extends StatefulWidget {
 class _ExamplePageState extends State<ExamplePage> {
   final NativePlatformService _platformService = NativePlatformService();
   final Random _random = Random(42);
-  NativePlatformInfo? _platformInfo;
   bool _isFetchingInfo = false;
-  String? _infoError;
   bool _isRunningIsolates = false;
   String? _isolateError;
   int? _fibonacciResult;
@@ -33,29 +31,17 @@ class _ExamplePageState extends State<ExamplePage> {
     if (_isFetchingInfo) return;
     setState(() {
       _isFetchingInfo = true;
-      _infoError = null;
     });
     try {
       final NativePlatformInfo info = await _platformService.getPlatformInfo();
       if (!mounted) return;
-      setState(() {
-        _platformInfo = info;
-      });
+      await _showPlatformInfoDialog(info);
     } on PlatformException catch (error) {
-      if (!mounted) return;
-      setState(() {
-        _infoError = error.message ?? error.toString();
-      });
+      await _showPlatformInfoErrorDialog(error.message);
     } on MissingPluginException catch (error) {
-      if (!mounted) return;
-      setState(() {
-        _infoError = error.message ?? error.toString();
-      });
+      await _showPlatformInfoErrorDialog(error.message);
     } on Exception catch (error) {
-      if (!mounted) return;
-      setState(() {
-        _infoError = error.toString();
-      });
+      await _showPlatformInfoErrorDialog(error.toString());
     } finally {
       if (mounted) {
         setState(() {
@@ -126,6 +112,111 @@ class _ExamplePageState extends State<ExamplePage> {
     });
   }
 
+  Future<void> _showPlatformInfoDialog(final NativePlatformInfo info) async {
+    if (!mounted) return;
+    final l10n = context.l10n;
+    final List<Widget> rows = <Widget>[
+      _buildInfoRow(
+        l10n.exampleNativeInfoDialogPlatformLabel,
+        info.platform,
+      ),
+      _buildInfoRow(
+        l10n.exampleNativeInfoDialogVersionLabel,
+        info.version,
+      ),
+      if (info.manufacturer != null)
+        _buildInfoRow(
+          l10n.exampleNativeInfoDialogManufacturerLabel,
+          info.manufacturer!,
+        ),
+      if (info.model != null)
+        _buildInfoRow(
+          l10n.exampleNativeInfoDialogModelLabel,
+          info.model!,
+        ),
+      if (info.batteryLevel != null)
+        _buildInfoRow(
+          l10n.exampleNativeInfoDialogBatteryLabel,
+          '${info.batteryLevel}%',
+        ),
+    ];
+
+    await showAdaptiveDialog<void>(
+      context: context,
+      builder: (final BuildContext dialogContext) => AlertDialog.adaptive(
+        title: Text(l10n.exampleNativeInfoDialogTitle),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: rows,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(l10n.exampleDialogCloseButton),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showPlatformInfoErrorDialog(final String? message) async {
+    if (!mounted) return;
+    final l10n = context.l10n;
+    final String? detail = (message?.trim().isNotEmpty ?? false)
+        ? message!.trim()
+        : null;
+    await showAdaptiveDialog<void>(
+      context: context,
+      builder: (final BuildContext dialogContext) => AlertDialog.adaptive(
+        title: Text(l10n.exampleNativeInfoDialogTitle),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.exampleNativeInfoError),
+            if (detail != null) ...[
+              const SizedBox(height: 12),
+              Text(detail),
+            ],
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(l10n.exampleDialogCloseButton),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(final String label, final String value) => Padding(
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            label,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            value,
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.right,
+          ),
+        ),
+      ],
+    ),
+  );
+
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
@@ -148,9 +239,6 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenRegister: () => context.pushNamed(AppRoutes.register),
         onOpenLoggedOut: () => context.pushNamed(AppRoutes.loggedOut),
         onRunIsolates: _isRunningIsolates ? null : _runIsolateSamples,
-        isFetchingInfo: _isFetchingInfo,
-        platformInfo: _platformInfo,
-        infoError: _infoError,
         isRunningIsolates: _isRunningIsolates,
         isolateError: _isolateError,
         fibonacciInput: _fibonacciInput,

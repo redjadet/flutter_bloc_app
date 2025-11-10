@@ -230,6 +230,48 @@ abstract class AppLocalizations {
   /// **'Unable to fetch native platform info.'**
   String get exampleNativeInfoError;
 
+  /// Title shown in the adaptive dialog that displays native platform information
+  ///
+  /// In en, this message translates to:
+  /// **'Platform details'**
+  String get exampleNativeInfoDialogTitle;
+
+  /// Label for the platform name inside the platform info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Platform'**
+  String get exampleNativeInfoDialogPlatformLabel;
+
+  /// Label for the platform version inside the platform info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get exampleNativeInfoDialogVersionLabel;
+
+  /// Label for the platform manufacturer inside the platform info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Manufacturer'**
+  String get exampleNativeInfoDialogManufacturerLabel;
+
+  /// Label for the platform model inside the platform info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Model'**
+  String get exampleNativeInfoDialogModelLabel;
+
+  /// Label for the battery level row inside the platform info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Battery level'**
+  String get exampleNativeInfoDialogBatteryLabel;
+
+  /// Label for the button that dismisses the platform info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get exampleDialogCloseButton;
+
   /// Button label to execute isolate demo functions
   ///
   /// In en, this message translates to:
