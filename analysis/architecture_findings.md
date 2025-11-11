@@ -14,11 +14,10 @@
 
 ## Medium Severity
 
-### Domain Coupled to Routing Layer
+### Domain Coupled to Routing Layer — **Resolved**
 
 - Location: `lib/features/deeplink/domain/deep_link_target.dart`
-- Issue: Domain enum references presentation navigation constants via `AppRoutes`, binding domain logic to routing details.
-- Recommendation: Keep the enum semantic-only and move route mappings to a presentation adapter or mapper.
+- Resolution: Removed the `AppRoutes` dependency from the domain enum and introduced a presentation-side extension (`lib/features/deeplink/presentation/deep_link_target_extensions.dart`) that translates targets to router locations.
 
 ### Domain Imports Flutter Foundation — **Resolved**
 
