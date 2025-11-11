@@ -11,6 +11,7 @@ import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -184,16 +185,28 @@ void _registerHuggingFaceDependencies(
 }
 
 class _FakeThemeRepository implements ThemeRepository {
-  _FakeThemeRepository(this.initial);
+  _FakeThemeRepository(this.initial) : _stored = _toPreference(initial);
+
   final ThemeMode initial;
-  ThemeMode? saved;
+  ThemePreference? _stored;
+
+  ThemePreference? saved;
+
   @override
-  Future<ThemeMode?> load() async => initial;
+  Future<ThemePreference?> load() async => _stored;
+
   @override
-  Future<void> save(ThemeMode mode) async {
+  Future<void> save(ThemePreference mode) async {
     saved = mode;
+    _stored = mode;
   }
 }
+
+ThemePreference _toPreference(final ThemeMode mode) => switch (mode) {
+  ThemeMode.light => ThemePreference.light,
+  ThemeMode.dark => ThemePreference.dark,
+  ThemeMode.system => ThemePreference.system,
+};
 
 /// Simple fake timer service to drive periodic ticks deterministically in tests.
 class FakeTimerService implements TimerService {

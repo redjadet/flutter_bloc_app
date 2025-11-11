@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _FakeThemeRepository implements ThemeRepository {
-  ThemeMode? stored;
+  ThemePreference? stored;
 
   @override
-  Future<ThemeMode?> load() async => stored;
+  Future<ThemePreference?> load() async => stored;
 
   @override
-  Future<void> save(ThemeMode mode) async {
+  Future<void> save(ThemePreference mode) async {
     stored = mode;
   }
 }
 
 void main() {
   test('loadInitial emits stored mode when available', () async {
-    final repo = _FakeThemeRepository()..stored = ThemeMode.dark;
+    final repo = _FakeThemeRepository()..stored = ThemePreference.dark;
     final cubit = ThemeCubit(repository: repo);
     await cubit.loadInitial();
     expect(cubit.state, ThemeMode.dark);
@@ -28,7 +29,7 @@ void main() {
     final cubit = ThemeCubit(repository: repo);
     await cubit.setMode(ThemeMode.light);
     expect(cubit.state, ThemeMode.light);
-    expect(repo.stored, ThemeMode.light);
+    expect(repo.stored, ThemePreference.light);
   });
 
   test('toggle cycles through modes', () async {

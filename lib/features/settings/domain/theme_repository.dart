@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 
 /// Abstraction for persisting and loading theme mode.
 abstract class ThemeRepository {
-  Future<ThemeMode?> load();
-  Future<void> save(final ThemeMode mode);
+  Future<ThemePreference?> load();
+  Future<void> save(final ThemePreference mode);
 }

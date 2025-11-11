@@ -10,7 +10,9 @@ import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history
 import 'package:flutter_bloc_app/features/example/presentation/pages/example_page.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
+import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
+import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/locale_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
@@ -145,20 +147,20 @@ void main() {
 
 class _FakeThemeRepository implements ThemeRepository {
   @override
-  Future<ThemeMode?> load() async => ThemeMode.system;
+  Future<ThemePreference?> load() async => ThemePreference.system;
 
   @override
-  Future<void> save(ThemeMode mode) async {}
+  Future<void> save(ThemePreference mode) async {}
 }
 
 class _FakeLocaleRepository implements LocaleRepository {
-  Locale? _stored;
+  AppLocale? _stored;
 
   @override
-  Future<Locale?> load() async => _stored;
+  Future<AppLocale?> load() async => _stored;
 
   @override
-  Future<void> save(Locale? locale) async {
+  Future<void> save(AppLocale? locale) async {
     _stored = locale;
   }
 }

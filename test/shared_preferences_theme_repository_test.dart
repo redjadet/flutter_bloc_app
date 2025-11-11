@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/settings/data/shared_preferences_theme_repository.dart';
+import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,13 +12,13 @@ void main() {
 
     expect(await repository.load(), isNull);
 
-    await repository.save(ThemeMode.light);
-    expect(await repository.load(), ThemeMode.light);
+    await repository.save(ThemePreference.light);
+    expect(await repository.load(), ThemePreference.light);
 
-    await repository.save(ThemeMode.dark);
-    expect(await repository.load(), ThemeMode.dark);
+    await repository.save(ThemePreference.dark);
+    expect(await repository.load(), ThemePreference.dark);
 
-    await repository.save(ThemeMode.system);
-    expect(await repository.load(), ThemeMode.system);
+    await repository.save(ThemePreference.system);
+    expect(await repository.load(), ThemePreference.system);
   });
 }

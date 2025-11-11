@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
-class RemoteConfigRepository {
+class RemoteConfigRepository implements RemoteConfigService {
   RemoteConfigRepository(
     this._remoteConfig, {
     final void Function(String message)? debugLogger,
@@ -18,6 +19,7 @@ class RemoteConfigRepository {
   StreamSubscription<RemoteConfigUpdate>? _configUpdatesSubscription;
   bool _isInitialized = false;
 
+  @override
   Future<void> initialize() async {
     if (_isInitialized) {
       return;
@@ -39,12 +41,14 @@ class RemoteConfigRepository {
     _subscribeToRealtimeUpdates();
   }
 
+  @override
   Future<void> forceFetch() async {
     await _remoteConfig.fetchAndActivate();
     _logTestValue(source: 'fetch');
     _logAwesomeFeatureFlag(source: 'fetch');
   }
 
+  @override
   String getString(final String key) {
     final String value = _remoteConfig.getString(key);
 
@@ -55,6 +59,7 @@ class RemoteConfigRepository {
     return value;
   }
 
+  @override
   bool getBool(final String key) {
     final bool value = _remoteConfig.getBool(key);
 
@@ -65,8 +70,10 @@ class RemoteConfigRepository {
     return value;
   }
 
+  @override
   int getInt(final String key) => _remoteConfig.getInt(key);
 
+  @override
   double getDouble(final String key) => _remoteConfig.getDouble(key);
 
   Future<void> dispose() async {

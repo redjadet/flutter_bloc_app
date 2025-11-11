@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,29 +14,19 @@ class SharedPreferencesLocaleRepository implements LocaleRepository {
       : SharedPreferences.getInstance();
 
   @override
-  Future<Locale?> load() async {
+  Future<AppLocale?> load() async {
     final SharedPreferences preferences = await _preferences();
     final String? code = preferences.getString(_preferencesKey);
-    if (code == null || code.isEmpty) {
-      return null;
-    }
-    final List<String> parts = code.split('_');
-    if (parts.length == 1) {
-      return Locale(parts.first);
-    }
-    return Locale(parts.first, parts[1]);
+    return AppLocale.fromTag(code);
   }
 
   @override
-  Future<void> save(final Locale? locale) async {
+  Future<void> save(final AppLocale? locale) async {
     final SharedPreferences preferences = await _preferences();
     if (locale == null) {
       await preferences.remove(_preferencesKey);
       return;
     }
-    final String code = locale.countryCode == null
-        ? locale.languageCode
-        : '${locale.languageCode}_${locale.countryCode}';
-    await preferences.setString(_preferencesKey, code);
+    await preferences.setString(_preferencesKey, locale.tag);
   }
 }

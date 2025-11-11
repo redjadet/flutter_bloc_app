@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,24 +14,24 @@ class SharedPreferencesThemeRepository implements ThemeRepository {
       : SharedPreferences.getInstance();
 
   @override
-  Future<ThemeMode?> load() async {
+  Future<ThemePreference?> load() async {
     final SharedPreferences preferences = await _preferences();
     final String? stored = preferences.getString(_preferencesKey);
     return switch (stored) {
-      'light' => ThemeMode.light,
-      'dark' => ThemeMode.dark,
-      'system' => ThemeMode.system,
+      'light' => ThemePreference.light,
+      'dark' => ThemePreference.dark,
+      'system' => ThemePreference.system,
       _ => null,
     };
   }
 
   @override
-  Future<void> save(final ThemeMode mode) async {
+  Future<void> save(final ThemePreference mode) async {
     final SharedPreferences preferences = await _preferences();
     final String value = switch (mode) {
-      ThemeMode.light => 'light',
-      ThemeMode.dark => 'dark',
-      ThemeMode.system => 'system',
+      ThemePreference.light => 'light',
+      ThemePreference.dark => 'dark',
+      ThemePreference.system => 'system',
     };
     await preferences.setString(_preferencesKey, value);
   }
