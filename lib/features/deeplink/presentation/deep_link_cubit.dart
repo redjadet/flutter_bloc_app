@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_state.dart';
+import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_target_extensions.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Handles incoming deep/universal links and exposes navigation events.

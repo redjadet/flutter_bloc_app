@@ -12,7 +12,7 @@ part of 'chat_conversation.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$ChatConversation implements DiagnosticableTreeMixin {
+mixin _$ChatConversation {
 
  String get id; DateTime get createdAt; DateTime get updatedAt; List<ChatMessage> get messages; List<String> get pastUserInputs; List<String> get generatedResponses; String? get model;
 /// Create a copy of ChatConversation
@@ -22,12 +22,6 @@ mixin _$ChatConversation implements DiagnosticableTreeMixin {
 $ChatConversationCopyWith<ChatConversation> get copyWith => _$ChatConversationCopyWithImpl<ChatConversation>(this as ChatConversation, _$identity);
 
 
-@override
-void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-  properties
-    ..add(DiagnosticsProperty('type', 'ChatConversation'))
-    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('createdAt', createdAt))..add(DiagnosticsProperty('updatedAt', updatedAt))..add(DiagnosticsProperty('messages', messages))..add(DiagnosticsProperty('pastUserInputs', pastUserInputs))..add(DiagnosticsProperty('generatedResponses', generatedResponses))..add(DiagnosticsProperty('model', model));
-}
 
 @override
 bool operator ==(Object other) {
@@ -39,7 +33,7 @@ bool operator ==(Object other) {
 int get hashCode => Object.hash(runtimeType,id,createdAt,updatedAt,const DeepCollectionEquality().hash(messages),const DeepCollectionEquality().hash(pastUserInputs),const DeepCollectionEquality().hash(generatedResponses),model);
 
 @override
-String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+String toString() {
   return 'ChatConversation(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, messages: $messages, pastUserInputs: $pastUserInputs, generatedResponses: $generatedResponses, model: $model)';
 }
 
@@ -217,7 +211,7 @@ return $default(_that.id,_that.createdAt,_that.updatedAt,_that.messages,_that.pa
 /// @nodoc
 
 
-class _ChatConversation extends ChatConversation with DiagnosticableTreeMixin {
+class _ChatConversation extends ChatConversation {
   const _ChatConversation({required this.id, required this.createdAt, required this.updatedAt, final  List<ChatMessage> messages = const <ChatMessage>[], final  List<String> pastUserInputs = const <String>[], final  List<String> generatedResponses = const <String>[], this.model}): _messages = messages,_pastUserInputs = pastUserInputs,_generatedResponses = generatedResponses,super._();
   
 
@@ -254,12 +248,6 @@ class _ChatConversation extends ChatConversation with DiagnosticableTreeMixin {
 _$ChatConversationCopyWith<_ChatConversation> get copyWith => __$ChatConversationCopyWithImpl<_ChatConversation>(this, _$identity);
 
 
-@override
-void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-  properties
-    ..add(DiagnosticsProperty('type', 'ChatConversation'))
-    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('createdAt', createdAt))..add(DiagnosticsProperty('updatedAt', updatedAt))..add(DiagnosticsProperty('messages', messages))..add(DiagnosticsProperty('pastUserInputs', pastUserInputs))..add(DiagnosticsProperty('generatedResponses', generatedResponses))..add(DiagnosticsProperty('model', model));
-}
 
 @override
 bool operator ==(Object other) {
@@ -271,7 +259,7 @@ bool operator ==(Object other) {
 int get hashCode => Object.hash(runtimeType,id,createdAt,updatedAt,const DeepCollectionEquality().hash(_messages),const DeepCollectionEquality().hash(_pastUserInputs),const DeepCollectionEquality().hash(_generatedResponses),model);
 
 @override
-String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+String toString() {
   return 'ChatConversation(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, messages: $messages, pastUserInputs: $pastUserInputs, generatedResponses: $generatedResponses, model: $model)';
 }
 
