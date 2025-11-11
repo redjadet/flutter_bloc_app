@@ -367,6 +367,152 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dadurch werden alle gespeicherten Unterhaltungen dauerhaft gelöscht.';
 
   @override
+  String get registerTitle => 'Registrieren';
+
+  @override
+  String get registerFullNameLabel => 'Vollständiger Name';
+
+  @override
+  String get registerFullNameHint => 'Max Mustermann';
+
+  @override
+  String get registerEmailLabel => 'E-Mail-Adresse';
+
+  @override
+  String get registerEmailHint => 'max.mustermann@example.com';
+
+  @override
+  String get registerPhoneLabel => 'Telefonnummer';
+
+  @override
+  String get registerPhoneHint => '5551234567';
+
+  @override
+  String get registerCountryPickerTitle => 'Wähle deine Ländervorwahl';
+
+  @override
+  String get registerPasswordLabel => 'Passwort';
+
+  @override
+  String get registerPasswordHint => 'Passwort erstellen';
+
+  @override
+  String get registerConfirmPasswordLabel => 'Passwort bestätigen';
+
+  @override
+  String get registerConfirmPasswordHint => 'Passwort erneut eingeben';
+
+  @override
+  String get registerSubmitButton => 'Weiter';
+
+  @override
+  String get registerDialogTitle => 'Registrierung abgeschlossen';
+
+  @override
+  String registerDialogMessage(String name) {
+    return 'Willkommen an Bord, $name!';
+  }
+
+  @override
+  String get registerDialogOk => 'OK';
+
+  @override
+  String get registerFullNameEmptyError =>
+      'Bitte geben Sie Ihren vollständigen Namen ein';
+
+  @override
+  String get registerFullNameTooShortError =>
+      'Der Name muss mindestens 2 Zeichen lang sein';
+
+  @override
+  String get registerEmailEmptyError =>
+      'Bitte geben Sie Ihre E-Mail-Adresse ein';
+
+  @override
+  String get registerEmailInvalidError =>
+      'Bitte geben Sie eine gültige E-Mail-Adresse ein';
+
+  @override
+  String get registerPasswordEmptyError => 'Bitte geben Sie Ihr Passwort ein';
+
+  @override
+  String get registerPasswordTooShortError =>
+      'Das Passwort muss mindestens 8 Zeichen lang sein';
+
+  @override
+  String get registerPasswordLettersAndNumbersError =>
+      'Verwenden Sie Buchstaben und Zahlen';
+
+  @override
+  String get registerPasswordWhitespaceError =>
+      'Das Passwort darf keine Leerzeichen enthalten';
+
+  @override
+  String get registerTermsCheckboxPrefix => 'Ich habe die ';
+
+  @override
+  String get registerTermsCheckboxSuffix => ' gelesen und akzeptiere sie.';
+
+  @override
+  String get registerTermsLinkLabel => 'Allgemeinen Geschäftsbedingungen';
+
+  @override
+  String get registerTermsError =>
+      'Bitte akzeptieren Sie die Bedingungen, um fortzufahren';
+
+  @override
+  String get registerTermsDialogTitle => 'Allgemeine Geschäftsbedingungen';
+
+  @override
+  String get registerTermsDialogBody =>
+      'Diese Demo-Anwendung darf nur verantwortungsvoll genutzt werden. Durch die Registrierung verpflichten Sie sich, Ihre Zugangsdaten zu schützen, geltende Gesetze einzuhalten und zu akzeptieren, dass Inhalte ausschließlich illustrativen Charakter haben und ohne Ankündigung geändert werden können. Wenn Sie nicht zustimmen, brechen Sie die Registrierung ab.';
+
+  @override
+  String get registerTermsAcceptButton => 'Akzeptieren';
+
+  @override
+  String get registerTermsRejectButton => 'Abbrechen';
+
+  @override
+  String get registerTermsPrompt =>
+      'Bitte lesen und akzeptieren Sie die Bedingungen, bevor Sie fortfahren.';
+
+  @override
+  String get registerTermsButtonLabel =>
+      'Allgemeine Geschäftsbedingungen lesen';
+
+  @override
+  String get registerTermsDialogAcknowledge =>
+      'Ich habe die Bedingungen gelesen';
+
+  @override
+  String get registerTermsCheckboxLabel =>
+      'Ich akzeptiere die Allgemeinen Geschäftsbedingungen';
+
+  @override
+  String get registerTermsCheckboxDisabledHint =>
+      'Bitte lesen Sie zuerst die Bedingungen.';
+
+  @override
+  String get registerTermsNotAcceptedError =>
+      'Sie müssen die Bedingungen akzeptieren, um fortzufahren.';
+
+  @override
+  String get registerConfirmPasswordEmptyError =>
+      'Bitte bestätigen Sie Ihr Passwort';
+
+  @override
+  String get registerConfirmPasswordMismatchError =>
+      'Passwörter stimmen nicht überein';
+
+  @override
+  String get registerPhoneEmptyError =>
+      'Bitte geben Sie Ihre Telefonnummer ein';
+
+  @override
+  String get registerPhoneInvalidError => 'Geben Sie 6 bis 15 Ziffern ein';
+
+  @override
   String get profilePageTitle => 'Profil';
 
   @override

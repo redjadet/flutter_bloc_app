@@ -368,6 +368,146 @@ class AppLocalizationsFr extends AppLocalizations {
       'Cela supprimera définitivement toutes les conversations enregistrées.';
 
   @override
+  String get registerTitle => 'Inscription';
+
+  @override
+  String get registerFullNameLabel => 'Nom complet';
+
+  @override
+  String get registerFullNameHint => 'Marie Dupont';
+
+  @override
+  String get registerEmailLabel => 'Adresse e-mail';
+
+  @override
+  String get registerEmailHint => 'marie.dupont@example.com';
+
+  @override
+  String get registerPhoneLabel => 'Numéro de téléphone';
+
+  @override
+  String get registerPhoneHint => '5551234567';
+
+  @override
+  String get registerCountryPickerTitle => 'Choisissez votre indicatif pays';
+
+  @override
+  String get registerPasswordLabel => 'Mot de passe';
+
+  @override
+  String get registerPasswordHint => 'Créer un mot de passe';
+
+  @override
+  String get registerConfirmPasswordLabel => 'Confirmer le mot de passe';
+
+  @override
+  String get registerConfirmPasswordHint => 'Saisir à nouveau le mot de passe';
+
+  @override
+  String get registerSubmitButton => 'Suivant';
+
+  @override
+  String get registerDialogTitle => 'Inscription terminée';
+
+  @override
+  String registerDialogMessage(String name) {
+    return 'Bienvenue à bord, $name !';
+  }
+
+  @override
+  String get registerDialogOk => 'OK';
+
+  @override
+  String get registerFullNameEmptyError => 'Veuillez saisir votre nom complet';
+
+  @override
+  String get registerFullNameTooShortError =>
+      'Le nom doit comporter au moins 2 caractères';
+
+  @override
+  String get registerEmailEmptyError => 'Veuillez saisir votre e-mail';
+
+  @override
+  String get registerEmailInvalidError => 'Veuillez saisir un e-mail valide';
+
+  @override
+  String get registerPasswordEmptyError => 'Veuillez saisir votre mot de passe';
+
+  @override
+  String get registerPasswordTooShortError =>
+      'Le mot de passe doit comporter au moins 8 caractères';
+
+  @override
+  String get registerPasswordLettersAndNumbersError =>
+      'Utilisez des lettres et des chiffres';
+
+  @override
+  String get registerPasswordWhitespaceError =>
+      'Le mot de passe ne peut pas contenir d’espaces';
+
+  @override
+  String get registerTermsCheckboxPrefix => 'J’ai lu et j’accepte les ';
+
+  @override
+  String get registerTermsCheckboxSuffix => '.';
+
+  @override
+  String get registerTermsLinkLabel => 'conditions générales d’utilisation';
+
+  @override
+  String get registerTermsError =>
+      'Veuillez accepter les conditions pour continuer';
+
+  @override
+  String get registerTermsDialogTitle => 'Conditions générales';
+
+  @override
+  String get registerTermsDialogBody =>
+      'Cette application de démonstration doit être utilisée de manière responsable. En vous inscrivant, vous acceptez de protéger vos identifiants, de respecter les lois en vigueur et de reconnaître que le contenu est fourni à titre illustratif et peut être modifié sans préavis. Si vous n’acceptez pas ces conditions, interrompez l’inscription.';
+
+  @override
+  String get registerTermsAcceptButton => 'Accepter';
+
+  @override
+  String get registerTermsRejectButton => 'Annuler';
+
+  @override
+  String get registerTermsPrompt =>
+      'Veuillez lire et accepter les conditions avant de continuer.';
+
+  @override
+  String get registerTermsButtonLabel => 'Lire les conditions générales';
+
+  @override
+  String get registerTermsDialogAcknowledge => 'J’ai lu les conditions';
+
+  @override
+  String get registerTermsCheckboxLabel => 'J’accepte les conditions générales';
+
+  @override
+  String get registerTermsCheckboxDisabledHint =>
+      'Veuillez lire les conditions avant de les accepter.';
+
+  @override
+  String get registerTermsNotAcceptedError =>
+      'Vous devez accepter les conditions pour continuer.';
+
+  @override
+  String get registerConfirmPasswordEmptyError =>
+      'Veuillez confirmer votre mot de passe';
+
+  @override
+  String get registerConfirmPasswordMismatchError =>
+      'Les mots de passe ne correspondent pas';
+
+  @override
+  String get registerPhoneEmptyError =>
+      'Veuillez saisir votre numéro de téléphone';
+
+  @override
+  String get registerPhoneInvalidError => 'Saisissez entre 6 et 15 chiffres';
+
+  @override
   String get profilePageTitle => 'Profil';
 
   @override

@@ -360,6 +360,141 @@ class AppLocalizationsTr extends AppLocalizations {
       'Bu işlem tüm kayıtlı sohbetleri kalıcı olarak silecek.';
 
   @override
+  String get registerTitle => 'Kayıt Ol';
+
+  @override
+  String get registerFullNameLabel => 'Ad Soyad';
+
+  @override
+  String get registerFullNameHint => 'Ayşe Yılmaz';
+
+  @override
+  String get registerEmailLabel => 'E-posta adresi';
+
+  @override
+  String get registerEmailHint => 'ayse.yilmaz@example.com';
+
+  @override
+  String get registerPhoneLabel => 'Telefon numarası';
+
+  @override
+  String get registerPhoneHint => '5551234567';
+
+  @override
+  String get registerCountryPickerTitle => 'Ülke kodunuzu seçin';
+
+  @override
+  String get registerPasswordLabel => 'Parola';
+
+  @override
+  String get registerPasswordHint => 'Parola oluştur';
+
+  @override
+  String get registerConfirmPasswordLabel => 'Parolayı doğrula';
+
+  @override
+  String get registerConfirmPasswordHint => 'Parolayı tekrar yaz';
+
+  @override
+  String get registerSubmitButton => 'İleri';
+
+  @override
+  String get registerDialogTitle => 'Kayıt tamamlandı';
+
+  @override
+  String registerDialogMessage(String name) {
+    return 'Aramıza hoş geldin, $name!';
+  }
+
+  @override
+  String get registerDialogOk => 'Tamam';
+
+  @override
+  String get registerFullNameEmptyError => 'Lütfen adınızı girin';
+
+  @override
+  String get registerFullNameTooShortError => 'Ad en az 2 karakter olmalı';
+
+  @override
+  String get registerEmailEmptyError => 'Lütfen e-postanızı girin';
+
+  @override
+  String get registerEmailInvalidError => 'Lütfen geçerli bir e-posta girin';
+
+  @override
+  String get registerPasswordEmptyError => 'Lütfen parolanızı girin';
+
+  @override
+  String get registerPasswordTooShortError => 'Parola en az 8 karakter olmalı';
+
+  @override
+  String get registerPasswordLettersAndNumbersError => 'Harf ve rakam kullanın';
+
+  @override
+  String get registerPasswordWhitespaceError => 'Parola boşluk içeremez';
+
+  @override
+  String get registerTermsCheckboxPrefix => 'Şartlar ve Koşulları okudum ve ';
+
+  @override
+  String get registerTermsCheckboxSuffix => ' kabul ediyorum.';
+
+  @override
+  String get registerTermsLinkLabel => 'Şartlar ve Koşullar';
+
+  @override
+  String get registerTermsError =>
+      'Devam etmek için şartları kabul etmelisiniz';
+
+  @override
+  String get registerTermsDialogTitle => 'Şartlar ve Koşullar';
+
+  @override
+  String get registerTermsDialogBody =>
+      'Bu demo uygulamasını kullanırken hesap bilgilerinizi korumayı, ilgili tüm yasalara uymayı ve içeriğin yalnızca örnek amaçlı olduğunu kabul edersiniz. Şartları kabul etmiyorsanız kayıt işlemini sonlandırın.';
+
+  @override
+  String get registerTermsAcceptButton => 'Kabul Et';
+
+  @override
+  String get registerTermsRejectButton => 'İptal';
+
+  @override
+  String get registerTermsPrompt =>
+      'Devam etmeden önce şartları okuyup kabul edin.';
+
+  @override
+  String get registerTermsButtonLabel => 'Şartları ve koşulları oku';
+
+  @override
+  String get registerTermsDialogAcknowledge => 'Şartları okudum';
+
+  @override
+  String get registerTermsCheckboxLabel =>
+      'Şartları ve koşulları kabul ediyorum';
+
+  @override
+  String get registerTermsCheckboxDisabledHint =>
+      'Lütfen önce şartları okuyun.';
+
+  @override
+  String get registerTermsNotAcceptedError =>
+      'Devam etmek için şartları kabul etmelisiniz.';
+
+  @override
+  String get registerConfirmPasswordEmptyError =>
+      'Lütfen parolanızı doğrulayın';
+
+  @override
+  String get registerConfirmPasswordMismatchError => 'Parolalar eşleşmiyor';
+
+  @override
+  String get registerPhoneEmptyError => 'Lütfen telefon numaranızı girin';
+
+  @override
+  String get registerPhoneInvalidError => '6-15 rakam girin';
+
+  @override
   String get profilePageTitle => 'Profil';
 
   @override

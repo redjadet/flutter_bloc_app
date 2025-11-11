@@ -1,150 +1,82 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'dart:async';
 
-/// Register page built from the provided Figma frame specifications.
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_cubit.dart';
+import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_state.dart';
+import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_body.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
+
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
 
-  static const double _horizontalPadding = 16;
-
   @override
-  Widget build(final BuildContext context) => const Scaffold(
-    backgroundColor: Colors.white,
-    appBar: CommonAppBar(
-      title: '',
-      homeTooltip: 'Back',
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.black,
-      cupertinoBackgroundColor: Colors.white,
-      cupertinoTitleStyle: TextStyle(color: Colors.black),
-    ),
-    body: Padding(
-      padding: EdgeInsets.symmetric(horizontal: _horizontalPadding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 60),
-          _RegisterForm(),
-        ],
-      ),
+  Widget build(final BuildContext context) => BlocProvider(
+    create: (_) => RegisterCubit(),
+    child: BlocListener<RegisterCubit, RegisterState>(
+      listenWhen: (final previous, final current) =>
+          previous.submissionStatus != current.submissionStatus,
+      listener: (final context, final state) {
+        if (state.submissionStatus == RegisterSubmissionStatus.success) {
+          _handleSuccess(context, state);
+        }
+      },
+      child: const _RegisterView(),
     ),
   );
 }
 
-class _RegisterForm extends StatelessWidget {
-  const _RegisterForm();
-
-  static TextStyle get _titleStyle => GoogleFonts.comfortaa(
-    fontSize: 36,
-    fontWeight: FontWeight.w400,
-    height: 40.14 / 36,
-    letterSpacing: -0.54,
-    color: Colors.black,
-  );
-
-  static TextStyle get _fieldPlaceholderStyle => GoogleFonts.roboto(
-    fontSize: 15,
-    fontWeight: FontWeight.w400,
-    height: 17.58 / 15,
-    color: Colors.black.withValues(alpha: 0.5),
-  );
-
-  static TextStyle get _buttonTextStyle => GoogleFonts.roboto(
-    fontSize: 13,
-    fontWeight: FontWeight.w900,
-    height: 15.23 / 13,
-    color: Colors.white,
-  );
-
-  static const double _componentHeight = 52;
+class _RegisterView extends StatelessWidget {
+  const _RegisterView();
 
   @override
-  Widget build(final BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text('Register', style: _titleStyle),
-      const SizedBox(height: 32),
-      _OutlinedPlaceholderField(
-        height: _componentHeight,
-        text: 'Email address',
-        style: _fieldPlaceholderStyle,
+  Widget build(final BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
+
+    return Scaffold(
+      backgroundColor: colorScheme.surface,
+      appBar: CommonAppBar(
+        title: '',
+        homeTooltip: l10n.homeTitle,
+        backgroundColor: colorScheme.surface,
+        foregroundColor: colorScheme.onSurface,
+        cupertinoBackgroundColor: colorScheme.surface,
+        cupertinoTitleStyle: theme.textTheme.titleMedium?.copyWith(
+          color: colorScheme.onSurface,
+        ),
       ),
-      const SizedBox(height: 16),
-      _OutlinedPlaceholderField(
-        height: _componentHeight,
-        text: 'Create password',
-        style: _fieldPlaceholderStyle,
+      body: const SafeArea(
+        child: ResponsiveRegisterBody(),
       ),
-      const SizedBox(height: 16),
-      _PrimaryButton(
-        height: _componentHeight,
-        text: 'NEXT',
-        style: _buttonTextStyle,
-      ),
-    ],
-  );
+    );
+  }
 }
 
-class _OutlinedPlaceholderField extends StatelessWidget {
-  const _OutlinedPlaceholderField({
-    required this.height,
-    required this.text,
-    required this.style,
-  });
+void _handleSuccess(final BuildContext context, final RegisterState state) {
+  final cubit = context.read<RegisterCubit>();
+  final l10n = context.l10n;
+  final displayName = state.fullName.value.trim();
 
-  final double height;
-  final String text;
-  final TextStyle style;
-
-  @override
-  Widget build(final BuildContext context) => Container(
-    height: height,
-    width: double.infinity,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      border: Border.all(width: 2),
-    ),
-    alignment: Alignment.centerLeft,
-    padding: const EdgeInsets.symmetric(horizontal: 17),
-    child: Text(text, style: style),
-  );
-}
-
-class _PrimaryButton extends StatelessWidget {
-  const _PrimaryButton({
-    required this.height,
-    required this.text,
-    required this.style,
-  });
-
-  final double height;
-  final String text;
-  final TextStyle style;
-
-  @override
-  Widget build(final BuildContext context) => SizedBox(
-    height: height,
-    width: double.infinity,
-    child: DecoratedBox(
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x26000000),
-            offset: Offset(0, 4),
-            blurRadius: 8,
+  unawaited(
+    showAdaptiveDialog<void>(
+      context: context,
+      builder: (final dialogContext) => AlertDialog.adaptive(
+        title: Text(l10n.registerDialogTitle),
+        content: Text(l10n.registerDialogMessage(displayName)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(l10n.registerDialogOk),
           ),
         ],
       ),
-      child: Center(
-        child: Text(
-          text,
-          style: style,
-          textAlign: TextAlign.center,
-        ),
-      ),
-    ),
+    ).then((_) {
+      if (!cubit.isClosed) {
+        cubit.resetSubmissionStatus();
+      }
+    }),
   );
 }
