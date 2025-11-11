@@ -1,5 +1,100 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:go_router/go_router.dart';
+
+class _NavDestination {
+  const _NavDestination({
+    required this.materialIcon,
+    required this.cupertinoIcon,
+    required this.label,
+    required this.route,
+  });
+
+  final IconData materialIcon;
+  final IconData cupertinoIcon;
+  final String label;
+  final String route;
+
+  bool matches(final String location) {
+    final String path = Uri.parse(location).path;
+    return path == route || path.endsWith(route);
+  }
+}
+
+class _NavItem {
+  const _NavItem.destination(this.destination)
+    : isAction = false,
+      _labelOverride = null,
+      _materialIconOverride = null,
+      _cupertinoIconOverride = null;
+
+  const _NavItem.action({
+    required String label,
+    required IconData materialIcon,
+    required IconData cupertinoIcon,
+  }) : destination = null,
+       isAction = true,
+       _labelOverride = label,
+       _materialIconOverride = materialIcon,
+       _cupertinoIconOverride = cupertinoIcon;
+
+  final _NavDestination? destination;
+  final bool isAction;
+  final String? _labelOverride;
+  final IconData? _materialIconOverride;
+  final IconData? _cupertinoIconOverride;
+
+  String get label => destination?.label ?? _labelOverride!;
+  IconData get materialIcon =>
+      destination?.materialIcon ?? _materialIconOverride!;
+  IconData get cupertinoIcon =>
+      destination?.cupertinoIcon ?? _cupertinoIconOverride!;
+}
+
+const int _profileTabIndex = 0;
+
+List<_NavItem> _buildNavItems() => const <_NavItem>[
+  _NavItem.destination(
+    _NavDestination(
+      materialIcon: Icons.person_outline,
+      cupertinoIcon: CupertinoIcons.person,
+      label: 'Profile',
+      route: AppRoutes.profilePath,
+    ),
+  ),
+  _NavItem.destination(
+    _NavDestination(
+      materialIcon: Icons.search,
+      cupertinoIcon: CupertinoIcons.search,
+      label: 'Search',
+      route: AppRoutes.searchPath,
+    ),
+  ),
+  _NavItem.action(
+    label: 'Add',
+    materialIcon: Icons.add,
+    cupertinoIcon: CupertinoIcons.add,
+  ),
+  _NavItem.destination(
+    _NavDestination(
+      materialIcon: Icons.chat_bubble_outline,
+      cupertinoIcon: CupertinoIcons.chat_bubble,
+      label: 'Chat',
+      route: AppRoutes.chatListPath,
+    ),
+  ),
+  _NavItem.destination(
+    _NavDestination(
+      materialIcon: Icons.widgets_outlined,
+      cupertinoIcon: CupertinoIcons.square_grid_2x2,
+      label: 'Example',
+      route: AppRoutes.examplePath,
+    ),
+  ),
+];
 
 class ProfileBottomNav extends StatelessWidget {
   const ProfileBottomNav({super.key});
@@ -7,133 +102,103 @@ class ProfileBottomNav extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final double bottomPadding = context.safeAreaInsets.bottom;
-    final bool isCompactWidth = context.isCompactWidth;
-    final double navHeight = isCompactWidth ? 70 : 83;
-    final double actionSlotWidth = isCompactWidth ? 60 : 70;
-    final double actionSlotHeight = isCompactWidth ? 36 : 40;
-    final double addIconSize = isCompactWidth ? 20 : 24;
+    final ThemeData theme = Theme.of(context);
+    final bool useCupertino = PlatformAdaptive.isCupertinoFromTheme(theme);
+    final GoRouter router = GoRouter.of(context);
+    final String currentLocation = router
+        .routerDelegate
+        .currentConfiguration
+        .uri
+        .toString();
+    final List<_NavItem> items = _buildNavItems();
+    const int selectedIndex = 0;
+    const int effectiveIndex = selectedIndex >= 0
+        ? selectedIndex
+        : _profileTabIndex;
 
-    return Container(
-      height: navHeight + bottomPadding,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
-            offset: const Offset(0, -0.5),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            left: 0,
-            right: 0,
-            top: 0,
-            child: SizedBox(
-              height: navHeight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _NavIcon(
-                    icon: Icons.home_outlined,
-                    onTap: () {},
-                  ),
-                  _NavIcon(
-                    icon: Icons.search,
-                    onTap: () {},
-                  ),
-                  SizedBox(width: actionSlotWidth),
-                  _NavIcon(
-                    icon: Icons.chat_bubble_outline,
-                    onTap: () {},
-                  ),
-                  _NavIcon(
-                    icon: Icons.person_outline,
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            top: isCompactWidth ? 7 : 9,
-            child: Center(
-              child: Container(
-                width: actionSlotWidth,
-                height: actionSlotHeight,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFFFF00D6),
-                      Color(0xFFFF4D00),
-                    ],
-                    stops: [0.0858, 0.9142],
-                  ),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(20),
-                    onTap: () {},
-                    child: Icon(
-                      Icons.add,
-                      color: Colors.white,
-                      size: addIconSize,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          if (bottomPadding > 0)
-            Positioned(
-              left: 120,
-              right: 120,
-              bottom: bottomPadding - 5,
-              child: Container(
-                height: 5,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.black,
-                ),
-              ),
-            ),
-        ],
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomPadding),
+      child: _AdaptiveBottomNavBar(
+        items: items,
+        selectedIndex: effectiveIndex,
+        currentLocation: currentLocation,
+        useCupertino: useCupertino,
       ),
     );
   }
 }
 
-class _NavIcon extends StatelessWidget {
-  const _NavIcon({
-    required this.icon,
-    required this.onTap,
+class _AdaptiveBottomNavBar extends StatelessWidget {
+  const _AdaptiveBottomNavBar({
+    required this.items,
+    required this.selectedIndex,
+    required this.currentLocation,
+    required this.useCupertino,
   });
 
-  final IconData icon;
-  final VoidCallback onTap;
+  final List<_NavItem> items;
+  final int selectedIndex;
+  final String currentLocation;
+  final bool useCupertino;
+
+  List<BottomNavigationBarItem> get _navItems => items
+      .map(
+        (final item) => BottomNavigationBarItem(
+          icon: Icon(useCupertino ? item.cupertinoIcon : item.materialIcon),
+          label: item.label,
+        ),
+      )
+      .toList();
 
   @override
-  Widget build(final BuildContext context) => SizedBox(
-    width: 40,
-    height: 40,
-    child: Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: Icon(
-          icon,
-          color: Colors.black.withValues(alpha: 0.8),
-          size: 24,
+  Widget build(final BuildContext context) {
+    if (useCupertino) {
+      return CupertinoTabBar(
+        currentIndex: selectedIndex,
+        items: _navItems,
+        onTap: (final index) => _handleTap(
+          context,
+          items[index],
+          currentLocation,
         ),
+      );
+    }
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      currentIndex: selectedIndex,
+      onTap: (final index) => _handleTap(
+        context,
+        items[index],
+        currentLocation,
       ),
-    ),
-  );
+      items: _navItems,
+    );
+  }
+}
+
+Future<void> _handleTap(
+  final BuildContext context,
+  final _NavItem item,
+  final String currentLocation,
+) async {
+  final _NavDestination? destination = item.destination;
+  if (destination == null) {
+    await context.push(AppRoutes.registerPath);
+    return;
+  }
+  if (destination.route == AppRoutes.profilePath) {
+    return;
+  }
+  if (destination.matches(currentLocation)) {
+    return;
+  }
+  if (destination.route == AppRoutes.examplePath) {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    } else {
+      context.go(AppRoutes.examplePath);
+    }
+    return;
+  }
+  await context.push(destination.route);
 }
