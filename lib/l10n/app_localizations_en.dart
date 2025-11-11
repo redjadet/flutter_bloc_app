@@ -358,6 +358,142 @@ class AppLocalizationsEn extends AppLocalizations {
       'This will permanently delete all stored conversations.';
 
   @override
+  String get registerTitle => 'Register';
+
+  @override
+  String get registerFullNameLabel => 'Full name';
+
+  @override
+  String get registerFullNameHint => 'Jane Doe';
+
+  @override
+  String get registerEmailLabel => 'Email address';
+
+  @override
+  String get registerEmailHint => 'jane.doe@example.com';
+
+  @override
+  String get registerPhoneLabel => 'Phone number';
+
+  @override
+  String get registerPhoneHint => '5551234567';
+
+  @override
+  String get registerCountryPickerTitle => 'Choose your country code';
+
+  @override
+  String get registerPasswordLabel => 'Password';
+
+  @override
+  String get registerPasswordHint => 'Create password';
+
+  @override
+  String get registerConfirmPasswordLabel => 'Confirm password';
+
+  @override
+  String get registerConfirmPasswordHint => 'Re-enter password';
+
+  @override
+  String get registerSubmitButton => 'Next';
+
+  @override
+  String get registerDialogTitle => 'Registration complete';
+
+  @override
+  String registerDialogMessage(String name) {
+    return 'Welcome aboard, $name!';
+  }
+
+  @override
+  String get registerDialogOk => 'OK';
+
+  @override
+  String get registerFullNameEmptyError => 'Please enter your full name';
+
+  @override
+  String get registerFullNameTooShortError =>
+      'Name must be at least 2 characters';
+
+  @override
+  String get registerEmailEmptyError => 'Please enter your email';
+
+  @override
+  String get registerEmailInvalidError => 'Please enter a valid email';
+
+  @override
+  String get registerPasswordEmptyError => 'Please enter your password';
+
+  @override
+  String get registerPasswordTooShortError =>
+      'Password must be at least 8 characters';
+
+  @override
+  String get registerPasswordLettersAndNumbersError =>
+      'Use letters and numbers';
+
+  @override
+  String get registerPasswordWhitespaceError => 'Password can’t contain spaces';
+
+  @override
+  String get registerTermsCheckboxPrefix => 'I have read and agree to the ';
+
+  @override
+  String get registerTermsCheckboxSuffix => '.';
+
+  @override
+  String get registerTermsLinkLabel => 'Terms & Conditions';
+
+  @override
+  String get registerTermsError => 'Please accept the terms to continue';
+
+  @override
+  String get registerTermsDialogTitle => 'Terms & Conditions';
+
+  @override
+  String get registerTermsDialogBody =>
+      'These terms outline the acceptable use of this demo application. By continuing, you agree to handle your account responsibly, protect your credentials, and comply with any applicable laws. The content provided is illustrative only and may change without notice. If you do not agree to these terms, please discontinue the registration process.';
+
+  @override
+  String get registerTermsAcceptButton => 'Accept';
+
+  @override
+  String get registerTermsRejectButton => 'Cancel';
+
+  @override
+  String get registerTermsPrompt =>
+      'Please review and accept the terms before continuing.';
+
+  @override
+  String get registerTermsButtonLabel => 'Read terms & conditions';
+
+  @override
+  String get registerTermsDialogAcknowledge => 'I have read the terms';
+
+  @override
+  String get registerTermsCheckboxLabel => 'I accept the Terms & Conditions';
+
+  @override
+  String get registerTermsCheckboxDisabledHint =>
+      'Read the terms before accepting them.';
+
+  @override
+  String get registerTermsNotAcceptedError =>
+      'You must accept the terms to continue.';
+
+  @override
+  String get registerConfirmPasswordEmptyError =>
+      'Please confirm your password';
+
+  @override
+  String get registerConfirmPasswordMismatchError => 'Passwords do not match';
+
+  @override
+  String get registerPhoneEmptyError => 'Please enter your phone number';
+
+  @override
+  String get registerPhoneInvalidError => 'Enter 6-15 digits';
+
+  @override
   String get profilePageTitle => 'Profile';
 
   @override

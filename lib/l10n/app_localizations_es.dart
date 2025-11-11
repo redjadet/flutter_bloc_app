@@ -362,6 +362,143 @@ class AppLocalizationsEs extends AppLocalizations {
       'Esto eliminará permanentemente todas las conversaciones guardadas.';
 
   @override
+  String get registerTitle => 'Registrarse';
+
+  @override
+  String get registerFullNameLabel => 'Nombre completo';
+
+  @override
+  String get registerFullNameHint => 'María Pérez';
+
+  @override
+  String get registerEmailLabel => 'Correo electrónico';
+
+  @override
+  String get registerEmailHint => 'maria.perez@example.com';
+
+  @override
+  String get registerPhoneLabel => 'Número de teléfono';
+
+  @override
+  String get registerPhoneHint => '5551234567';
+
+  @override
+  String get registerCountryPickerTitle => 'Elige tu código de país';
+
+  @override
+  String get registerPasswordLabel => 'Contraseña';
+
+  @override
+  String get registerPasswordHint => 'Crear contraseña';
+
+  @override
+  String get registerConfirmPasswordLabel => 'Confirmar contraseña';
+
+  @override
+  String get registerConfirmPasswordHint => 'Vuelve a escribir la contraseña';
+
+  @override
+  String get registerSubmitButton => 'Siguiente';
+
+  @override
+  String get registerDialogTitle => 'Registro completado';
+
+  @override
+  String registerDialogMessage(String name) {
+    return '¡Bienvenido a bordo, $name!';
+  }
+
+  @override
+  String get registerDialogOk => 'Aceptar';
+
+  @override
+  String get registerFullNameEmptyError => 'Ingresa tu nombre completo';
+
+  @override
+  String get registerFullNameTooShortError =>
+      'El nombre debe tener al menos 2 caracteres';
+
+  @override
+  String get registerEmailEmptyError => 'Ingresa tu correo electrónico';
+
+  @override
+  String get registerEmailInvalidError =>
+      'Ingresa un correo electrónico válido';
+
+  @override
+  String get registerPasswordEmptyError => 'Ingresa tu contraseña';
+
+  @override
+  String get registerPasswordTooShortError =>
+      'La contraseña debe tener al menos 8 caracteres';
+
+  @override
+  String get registerPasswordLettersAndNumbersError => 'Usa letras y números';
+
+  @override
+  String get registerPasswordWhitespaceError =>
+      'La contraseña no puede contener espacios';
+
+  @override
+  String get registerTermsCheckboxPrefix => 'He leído y acepto los ';
+
+  @override
+  String get registerTermsCheckboxSuffix => '.';
+
+  @override
+  String get registerTermsLinkLabel => 'Términos y Condiciones';
+
+  @override
+  String get registerTermsError => 'Debes aceptar los términos para continuar';
+
+  @override
+  String get registerTermsDialogTitle => 'Términos y condiciones';
+
+  @override
+  String get registerTermsDialogBody =>
+      'Esta aplicación de demostración debe usarse de forma responsable. Al registrarte aceptas proteger tus credenciales, cumplir con las leyes aplicables y entender que el contenido es meramente ilustrativo y puede cambiar sin previo aviso. Si no estás de acuerdo, interrumpe el proceso de registro.';
+
+  @override
+  String get registerTermsAcceptButton => 'Aceptar';
+
+  @override
+  String get registerTermsRejectButton => 'Cancelar';
+
+  @override
+  String get registerTermsPrompt =>
+      'Revisa y acepta los términos antes de continuar.';
+
+  @override
+  String get registerTermsButtonLabel => 'Leer términos y condiciones';
+
+  @override
+  String get registerTermsDialogAcknowledge => 'He leído los términos';
+
+  @override
+  String get registerTermsCheckboxLabel => 'Acepto los términos y condiciones';
+
+  @override
+  String get registerTermsCheckboxDisabledHint =>
+      'Lee los términos antes de aceptarlos.';
+
+  @override
+  String get registerTermsNotAcceptedError =>
+      'Debes aceptar los términos para continuar.';
+
+  @override
+  String get registerConfirmPasswordEmptyError => 'Confirma tu contraseña';
+
+  @override
+  String get registerConfirmPasswordMismatchError =>
+      'Las contraseñas no coinciden';
+
+  @override
+  String get registerPhoneEmptyError => 'Ingresa tu número de teléfono';
+
+  @override
+  String get registerPhoneInvalidError => 'Introduce entre 6 y 15 dígitos';
+
+  @override
   String get profilePageTitle => 'Perfil';
 
   @override

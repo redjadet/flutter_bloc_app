@@ -480,6 +480,187 @@
   "@chatHistoryClearAllWarning": {
     "description": "Warning message shown before clearing all chat history"
   },
+  "registerTitle": "Register",
+  "@registerTitle": {
+    "description": "Title for the registration form page"
+  },
+  "registerFullNameLabel": "Full name",
+  "@registerFullNameLabel": {
+    "description": "Label for the full name text field on the registration form"
+  },
+  "registerFullNameHint": "Jane Doe",
+  "@registerFullNameHint": {
+    "description": "Placeholder example shown in the full name field"
+  },
+  "registerEmailLabel": "Email address",
+  "@registerEmailLabel": {
+    "description": "Label for the email text field on the registration form"
+  },
+  "registerEmailHint": "jane.doe@example.com",
+  "@registerEmailHint": {
+    "description": "Placeholder example shown in the email field"
+  },
+  "registerPhoneLabel": "Phone number",
+  "@registerPhoneLabel": {
+    "description": "Label for the phone number text field on the registration form"
+  },
+  "registerPhoneHint": "5551234567",
+  "@registerPhoneHint": {
+    "description": "Placeholder example shown in the phone number field"
+  },
+  "registerCountryPickerTitle": "Choose your country code",
+  "@registerCountryPickerTitle": {
+    "description": "Title for the country selection sheet on the register page"
+  },
+  "registerPasswordLabel": "Password",
+  "@registerPasswordLabel": {
+    "description": "Label for the password text field on the registration form"
+  },
+  "registerPasswordHint": "Create password",
+  "@registerPasswordHint": {
+    "description": "Placeholder example shown in the password field"
+  },
+  "registerConfirmPasswordLabel": "Confirm password",
+  "@registerConfirmPasswordLabel": {
+    "description": "Label for the confirm password text field on the registration form"
+  },
+  "registerConfirmPasswordHint": "Re-enter password",
+  "@registerConfirmPasswordHint": {
+    "description": "Placeholder example shown in the confirm password field"
+  },
+  "registerSubmitButton": "Next",
+  "@registerSubmitButton": {
+    "description": "Label for the button that submits the registration form"
+  },
+  "registerDialogTitle": "Registration complete",
+  "@registerDialogTitle": {
+    "description": "Title shown in the success dialog after registration"
+  },
+  "registerDialogMessage": "Welcome aboard, {name}!",
+  "@registerDialogMessage": {
+    "description": "Success message shown after the registration form is submitted",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "registerDialogOk": "OK",
+  "@registerDialogOk": {
+    "description": "Label for the button that closes the registration success dialog"
+  },
+  "registerFullNameEmptyError": "Please enter your full name",
+  "@registerFullNameEmptyError": {
+    "description": "Validation error shown when the full name field is empty"
+  },
+  "registerFullNameTooShortError": "Name must be at least 2 characters",
+  "@registerFullNameTooShortError": {
+    "description": "Validation error shown when the full name is shorter than two characters"
+  },
+  "registerEmailEmptyError": "Please enter your email",
+  "@registerEmailEmptyError": {
+    "description": "Validation error shown when the email field is empty"
+  },
+  "registerEmailInvalidError": "Please enter a valid email",
+  "@registerEmailInvalidError": {
+    "description": "Validation error shown when the email field is not a valid address"
+  },
+  "registerPasswordEmptyError": "Please enter your password",
+  "@registerPasswordEmptyError": {
+    "description": "Validation error shown when the password field is empty"
+  },
+  "registerPasswordTooShortError": "Password must be at least 8 characters",
+  "@registerPasswordTooShortError": {
+    "description": "Validation error shown when the password is too short"
+  },
+  "registerPasswordLettersAndNumbersError": "Use letters and numbers",
+  "@registerPasswordLettersAndNumbersError": {
+    "description": "Validation error shown when the password does not contain both letters and numbers"
+  },
+  "registerPasswordWhitespaceError": "Password can’t contain spaces",
+  "@registerPasswordWhitespaceError": {
+    "description": "Validation error shown when the password includes whitespace characters"
+  },
+  "registerTermsCheckboxPrefix": "I have read and agree to the ",
+  "@registerTermsCheckboxPrefix": {
+    "description": "Prefix text before the terms and conditions link in the checkbox label"
+  },
+  "registerTermsCheckboxSuffix": ".",
+  "@registerTermsCheckboxSuffix": {
+    "description": "Suffix text shown after the terms and conditions link"
+  },
+  "registerTermsLinkLabel": "Terms & Conditions",
+  "@registerTermsLinkLabel": {
+    "description": "Label for the link that opens the terms and conditions dialog"
+  },
+  "registerTermsError": "Please accept the terms to continue",
+  "@registerTermsError": {
+    "description": "Validation error shown when the user has not accepted the terms"
+  },
+  "registerTermsDialogTitle": "Terms & Conditions",
+  "@registerTermsDialogTitle": {
+    "description": "Title for the dialog that displays the terms and conditions"
+  },
+  "registerTermsDialogBody": "By creating an account, you agree to use this app responsibly, respect other users, and comply with all applicable laws. You consent to our privacy policy, acknowledge that service availability may change, and accept that your account may be suspended for misuse or violations of these terms.",
+  "@registerTermsDialogBody": {
+    "description": "Body text shown in the terms and conditions dialog"
+  },
+  "registerTermsAcceptButton": "Accept",
+  "@registerTermsAcceptButton": {
+    "description": "Button label to accept the terms in the dialog"
+  },
+  "registerTermsRejectButton": "Cancel",
+  "@registerTermsRejectButton": {
+    "description": "Button label to dismiss the terms dialog without accepting"
+  },
+  "registerTermsPrompt": "Please review and accept the terms before continuing.",
+  "@registerTermsPrompt": {
+    "description": "Instructional text shown above the terms controls"
+  },
+  "registerTermsButtonLabel": "Read terms & conditions",
+  "@registerTermsButtonLabel": {
+    "description": "Button label that opens the terms and conditions sheet"
+  },
+  "registerTermsDialogTitle": "Terms & Conditions",
+  "@registerTermsDialogTitle": {
+    "description": "Title for the terms and conditions sheet"
+  },
+  "registerTermsDialogBody": "These terms outline the acceptable use of this demo application. By continuing, you agree to handle your account responsibly, protect your credentials, and comply with any applicable laws. The content provided is illustrative only and may change without notice. If you do not agree to these terms, please discontinue the registration process.",
+  "@registerTermsDialogBody": {
+    "description": "Body copy shown inside the terms sheet"
+  },
+  "registerTermsDialogAcknowledge": "I have read the terms",
+  "@registerTermsDialogAcknowledge": {
+    "description": "Button label inside the terms sheet to confirm the user has read the content"
+  },
+  "registerTermsCheckboxLabel": "I accept the Terms & Conditions",
+  "@registerTermsCheckboxLabel": {
+    "description": "Checkbox label for accepting the terms"
+  },
+  "registerTermsCheckboxDisabledHint": "Read the terms before accepting them.",
+  "@registerTermsCheckboxDisabledHint": {
+    "description": "Helper text shown when the checkbox is disabled because the terms haven’t been viewed"
+  },
+  "registerTermsNotAcceptedError": "You must accept the terms to continue.",
+  "@registerTermsNotAcceptedError": {
+    "description": "Error shown when the form is submitted without accepting the terms"
+  },
+  "registerConfirmPasswordEmptyError": "Please confirm your password",
+  "@registerConfirmPasswordEmptyError": {
+    "description": "Validation error shown when the confirm password field is empty"
+  },
+  "registerConfirmPasswordMismatchError": "Passwords do not match",
+  "@registerConfirmPasswordMismatchError": {
+    "description": "Validation error shown when the password and confirmation do not match"
+  },
+  "registerPhoneEmptyError": "Please enter your phone number",
+  "@registerPhoneEmptyError": {
+    "description": "Validation error shown when the phone number field is empty"
+  },
+  "registerPhoneInvalidError": "Enter 6-15 digits",
+  "@registerPhoneInvalidError": {
+    "description": "Validation error shown when the phone number is outside the accepted digit range"
+  },
   "profilePageTitle": "Profile",
   "@profilePageTitle": {
     "description": "Title for the account profile management page"

@@ -770,6 +770,258 @@ abstract class AppLocalizations {
   /// **'This will permanently delete all stored conversations.'**
   String get chatHistoryClearAllWarning;
 
+  /// Title for the registration form page
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get registerTitle;
+
+  /// Label for the full name text field on the registration form
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get registerFullNameLabel;
+
+  /// Placeholder example shown in the full name field
+  ///
+  /// In en, this message translates to:
+  /// **'Jane Doe'**
+  String get registerFullNameHint;
+
+  /// Label for the email text field on the registration form
+  ///
+  /// In en, this message translates to:
+  /// **'Email address'**
+  String get registerEmailLabel;
+
+  /// Placeholder example shown in the email field
+  ///
+  /// In en, this message translates to:
+  /// **'jane.doe@example.com'**
+  String get registerEmailHint;
+
+  /// Label for the phone number text field on the registration form
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get registerPhoneLabel;
+
+  /// Placeholder example shown in the phone number field
+  ///
+  /// In en, this message translates to:
+  /// **'5551234567'**
+  String get registerPhoneHint;
+
+  /// Title for the country selection sheet on the register page
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your country code'**
+  String get registerCountryPickerTitle;
+
+  /// Label for the password text field on the registration form
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get registerPasswordLabel;
+
+  /// Placeholder example shown in the password field
+  ///
+  /// In en, this message translates to:
+  /// **'Create password'**
+  String get registerPasswordHint;
+
+  /// Label for the confirm password text field on the registration form
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get registerConfirmPasswordLabel;
+
+  /// Placeholder example shown in the confirm password field
+  ///
+  /// In en, this message translates to:
+  /// **'Re-enter password'**
+  String get registerConfirmPasswordHint;
+
+  /// Label for the button that submits the registration form
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get registerSubmitButton;
+
+  /// Title shown in the success dialog after registration
+  ///
+  /// In en, this message translates to:
+  /// **'Registration complete'**
+  String get registerDialogTitle;
+
+  /// Success message shown after the registration form is submitted
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome aboard, {name}!'**
+  String registerDialogMessage(String name);
+
+  /// Label for the button that closes the registration success dialog
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get registerDialogOk;
+
+  /// Validation error shown when the full name field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your full name'**
+  String get registerFullNameEmptyError;
+
+  /// Validation error shown when the full name is shorter than two characters
+  ///
+  /// In en, this message translates to:
+  /// **'Name must be at least 2 characters'**
+  String get registerFullNameTooShortError;
+
+  /// Validation error shown when the email field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email'**
+  String get registerEmailEmptyError;
+
+  /// Validation error shown when the email field is not a valid address
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get registerEmailInvalidError;
+
+  /// Validation error shown when the password field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password'**
+  String get registerPasswordEmptyError;
+
+  /// Validation error shown when the password is too short
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 8 characters'**
+  String get registerPasswordTooShortError;
+
+  /// Validation error shown when the password does not contain both letters and numbers
+  ///
+  /// In en, this message translates to:
+  /// **'Use letters and numbers'**
+  String get registerPasswordLettersAndNumbersError;
+
+  /// Validation error shown when the password includes whitespace characters
+  ///
+  /// In en, this message translates to:
+  /// **'Password can’t contain spaces'**
+  String get registerPasswordWhitespaceError;
+
+  /// Prefix text before the terms and conditions link in the checkbox label
+  ///
+  /// In en, this message translates to:
+  /// **'I have read and agree to the '**
+  String get registerTermsCheckboxPrefix;
+
+  /// Suffix text shown after the terms and conditions link
+  ///
+  /// In en, this message translates to:
+  /// **'.'**
+  String get registerTermsCheckboxSuffix;
+
+  /// Label for the link that opens the terms and conditions dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Conditions'**
+  String get registerTermsLinkLabel;
+
+  /// Validation error shown when the user has not accepted the terms
+  ///
+  /// In en, this message translates to:
+  /// **'Please accept the terms to continue'**
+  String get registerTermsError;
+
+  /// Title for the terms and conditions sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Conditions'**
+  String get registerTermsDialogTitle;
+
+  /// Body copy shown inside the terms sheet
+  ///
+  /// In en, this message translates to:
+  /// **'These terms outline the acceptable use of this demo application. By continuing, you agree to handle your account responsibly, protect your credentials, and comply with any applicable laws. The content provided is illustrative only and may change without notice. If you do not agree to these terms, please discontinue the registration process.'**
+  String get registerTermsDialogBody;
+
+  /// Button label to accept the terms in the dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get registerTermsAcceptButton;
+
+  /// Button label to dismiss the terms dialog without accepting
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get registerTermsRejectButton;
+
+  /// Instructional text shown above the terms controls
+  ///
+  /// In en, this message translates to:
+  /// **'Please review and accept the terms before continuing.'**
+  String get registerTermsPrompt;
+
+  /// Button label that opens the terms and conditions sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Read terms & conditions'**
+  String get registerTermsButtonLabel;
+
+  /// Button label inside the terms sheet to confirm the user has read the content
+  ///
+  /// In en, this message translates to:
+  /// **'I have read the terms'**
+  String get registerTermsDialogAcknowledge;
+
+  /// Checkbox label for accepting the terms
+  ///
+  /// In en, this message translates to:
+  /// **'I accept the Terms & Conditions'**
+  String get registerTermsCheckboxLabel;
+
+  /// Helper text shown when the checkbox is disabled because the terms haven’t been viewed
+  ///
+  /// In en, this message translates to:
+  /// **'Read the terms before accepting them.'**
+  String get registerTermsCheckboxDisabledHint;
+
+  /// Error shown when the form is submitted without accepting the terms
+  ///
+  /// In en, this message translates to:
+  /// **'You must accept the terms to continue.'**
+  String get registerTermsNotAcceptedError;
+
+  /// Validation error shown when the confirm password field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your password'**
+  String get registerConfirmPasswordEmptyError;
+
+  /// Validation error shown when the password and confirmation do not match
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get registerConfirmPasswordMismatchError;
+
+  /// Validation error shown when the phone number field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your phone number'**
+  String get registerPhoneEmptyError;
+
+  /// Validation error shown when the phone number is outside the accepted digit range
+  ///
+  /// In en, this message translates to:
+  /// **'Enter 6-15 digits'**
+  String get registerPhoneInvalidError;
+
   /// Title for the account profile management page
   ///
   /// In en, this message translates to:
