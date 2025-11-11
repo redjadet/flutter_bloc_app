@@ -42,13 +42,13 @@ void main() {
       expect(find.byType(AppBar), findsOneWidget);
     });
 
-    testWidgets('should display bottom navigation bar', (tester) async {
+    testWidgets('does not display bottom navigation bar', (tester) async {
       when(() => mockRepository.getChatContacts()).thenAnswer((_) async => []);
 
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pumpAndSettle();
 
-      expect(find.byType(ChatBottomNavigationBar), findsOneWidget);
+      expect(find.byType(ChatBottomNavigationBar), findsNothing);
     });
 
     testWidgets('should load and display chat contacts', (tester) async {
@@ -121,12 +121,13 @@ void main() {
 
       // Test mobile size
       await tester.binding.setSurfaceSize(const Size(400, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pumpAndSettle();
 
       expect(find.byType(ChatListPage), findsOneWidget);
       expect(find.byType(AppBar), findsOneWidget);
-      expect(find.byType(ChatBottomNavigationBar), findsOneWidget);
+      expect(find.byType(ChatBottomNavigationBar), findsNothing);
 
       // Test tablet size
       await tester.binding.setSurfaceSize(const Size(800, 600));
@@ -135,7 +136,7 @@ void main() {
 
       expect(find.byType(ChatListPage), findsOneWidget);
       expect(find.byType(AppBar), findsOneWidget);
-      expect(find.byType(ChatBottomNavigationBar), findsOneWidget);
+      expect(find.byType(ChatBottomNavigationBar), findsNothing);
 
       // Test desktop size
       await tester.binding.setSurfaceSize(const Size(1200, 800));
@@ -144,7 +145,7 @@ void main() {
 
       expect(find.byType(ChatListPage), findsOneWidget);
       expect(find.byType(AppBar), findsOneWidget);
-      expect(find.byType(ChatBottomNavigationBar), findsOneWidget);
+      expect(find.byType(ChatBottomNavigationBar), findsNothing);
     });
 
     testWidgets('should have correct scaffold structure', (tester) async {

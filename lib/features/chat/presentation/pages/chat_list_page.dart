@@ -38,7 +38,6 @@ class ChatListPage extends StatelessWidget {
       },
       child: const ChatListView(),
     ),
-    bottomNavigationBar: const ChatBottomNavigationBar(),
   );
 
   TextStyle _appBarTitleStyle(BuildContext context) {
