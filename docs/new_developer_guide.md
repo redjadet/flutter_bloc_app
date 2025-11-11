@@ -1,0 +1,113 @@
+# Flutter BLoC App — New Developer Guide
+
+Welcome aboard! This document distills the essentials you need to navigate, extend, and validate this codebase with confidence.
+
+## 1. Mental Model
+
+- **Purpose**: Showcase a feature-rich Flutter app built around Cubits, clean architecture, and real-world integrations (Firebase Auth/Remote Config, WebSockets, GraphQL, Google Maps, Hugging Face, etc.).
+- **Layers**: Domain → Data → Presentation. Domain stays Flutter-agnostic, Data fulfills contracts, Presentation wires Cubits/Widgets via `get_it`.
+- **State Management**: Cubits with immutable (Freezed/Equatable) states. Widgets read via `BlocBuilder`/`BlocSelector` and stay focused on layout/theming/navigation.
+- **DI & Startup**: `lib/core/di/di.dart` registers everything into `getIt`. `main_*.dart` files choose the env, call `configureDependencies()`, then bootstrap `MyApp`.
+- **Navigation**: `go_router` defined in `lib/app.dart` (`AppRoutes` in `lib/core/navigation/app_routes.dart`).
+
+## 2. Repository Layout Highlights
+
+| Path | What lives here |
+| --- | --- |
+| `lib/features/<feature>/domain` | Contracts, models, value objects (Flutter-free). |
+| `lib/features/<feature>/data` | Repositories, DTOs, remote/local sources. |
+| `lib/features/<feature>/presentation` | Cubits, pages, widgets, view models. |
+| `lib/shared/` | Cross-cutting helpers: services, widgets, responsive/layout utils, platform adapters. |
+| `lib/core/` | App-wide config (DI, logging, theme, routing, error handling). |
+| `assets/` & `l10n/` | Images/fonts plus localization ARB files. |
+| `test/` | Mirrors `lib/` with unit, bloc, widget, golden suites (see `temp_disabled_tests/` for flaky cases). |
+| `tool/` | Utilities like `update_coverage_summary.dart`. |
+| `figma-sync/` | Pulls assets/layout manifests from Figma when implementing provided designs. |
+
+## 3. Application Flow
+
+1. Entry (`main_dev.dart`, `main_prod.dart`, etc.) sets flavor configs and calls `bootstrap(const MyApp())`.
+2. `configureDependencies()` registers shared services (timer, platform, logging), repositories, and cubits’ dependencies.
+3. `MyApp` builds `AppScope` and a `MultiBlocProvider` (see `AGENTS.md` DI reference). Each cubit calls `loadInitial()` in `initState` when deterministic startup work is needed.
+4. `GoRouter` resolves screens. Feature pages assemble their cubit(s) + widgets and delegate work to the injected repositories.
+
+## 4. Feature Module Playbook
+
+1. **Domain**: Define contracts (e.g., `CounterRepository`), models, and failures using Freezed/Equatable. Keep imports Dart-only.
+2. **Data**: Implement the contracts (REST, Firebase, shared_preferences, etc.). Translate DTOs ↔ domain models inside this layer.
+3. **Presentation**: Build Cubits and UI. Use `getIt` to inject dependencies via constructors; add view-specific helpers under `presentation/widgets/`.
+4. **Registration**: Wire the concrete repository/service inside `configureDependencies()` so cubits receive it through DI.
+5. **Timer Workflows**: Use `TimerService` (or `FakeTimerService` in tests) for periodic behavior—never create raw `Timer` instances in widgets or cubits.
+6. **Platform Data**: Reach for `NativePlatformService` (MethodChannel-backed) instead of touching platform channels directly in features.
+
+## 5. Key Building Blocks
+
+- **Counter experience**: Lives under `lib/features/counter/`. Auto-decrement logic is driven by `TimerService`, and the state exposes derived values for countdown UI.
+- **Settings**: `lib/features/settings/` owns theme/locale, exposing value objects (`AppLocale`, `ThemePreference`) so domain remains UI-free.
+- **Networking**: GraphQL, WebSocket, REST integrations sit in their respective feature/data folders. Samples include `CountriesGraphqlRepository`, `EchoWebsocketRepository`, `HuggingfaceChatRepository`.
+- **Authentication**: `lib/features/auth/` wraps Firebase Auth + FirebaseUI for sign-in/sign-up flows.
+- **Remote Config & Feature Flags**: `RemoteConfigCubit` consumes `RemoteConfigService` to toggle runtime features.
+- **Deep Links**: `DeepLinkCubit` cooperates with `AppLinksDeepLinkService` to translate universal/custom links into router locations.
+- **Cross-cutting Services**: `lib/shared/services/` hosts timer, logging, biometric auth, native platform adapters, etc. Prefer extending these instead of introducing ad-hoc singletons.
+
+## 6. Development Workflow
+
+Follow the delivery checklist before merging or publishing builds:
+
+1. `flutter pub get`
+2. Codegen when needed (`dart run build_runner build --delete-conflicting-outputs`)
+3. `dart format .`
+4. `flutter analyze`
+5. `dart run custom_lint`
+6. `flutter test --coverage`
+7. `dart run tool/update_coverage_summary.dart`
+8. `flutter build ios --simulator` (only when iOS build risk exists)
+
+Tips:
+
+- Keep files <250 LOC; extract helpers into `shared/` or dedicated widgets when approaching the limit.
+- Run `custom_lint` to catch repository-specific lint rules (e.g., file length, forbidden imports).
+- `flutter test --coverage` populates `coverage/lcov.info`; the summary script updates any dashboards/PR comments.
+
+## 7. Testing Strategy
+
+- **Unit & Bloc tests**: Use `bloc_test` + fake repositories/services. Counter, GraphQL, WebSocket, Remote Config cubits all have samples to copy.
+- **Widget/Golden tests**: Live under `test/features/.../presentation`. Use `golden_toolkit` for deterministic layout tests and seed localization/theme providers as needed.
+- **Timer-dependent tests**: Inject `FakeTimerService` and advance time with `tick(n)` instead of waiting on real timers.
+- **Auth & Platform fakes**: `MockFirebaseAuth`, mock `NativePlatformService`, `FakeTimerService`, and other utilities live in `test/mocks/` or feature-specific folders.
+- **Skips**: Temporary skips sit in `temp_disabled_tests/`; remove them once flakes are resolved.
+
+## 8. Tooling & Productivity
+
+- **Figma pipeline**: When asked to implement a `Frame_Node`, configure `figma-sync/.env`, run `npm install`, then `npm run fetch`. Place outputs under `assets/figma/<Frame>_<Node>/` and update `pubspec.yaml`. Follow `layout_manifest.json` stacking order and use `ResilientSvgAssetImage` for rasterized SVGs.
+- **Secrets**: Use `SecretConfig` to load secure config. Never check real secrets into source; rely on `--dart-define` or secure storage.
+- **Logging**: Use `AppLogger` (registered in DI) instead of `print`.
+- **Error handling**: Route recoverable errors through domain failures or `ErrorHandling` helpers; surface user-facing errors via localized messages.
+- **Localization**: Update ARB files in `l10n/arb/`, run `flutter gen-l10n`, and access strings through `context.l10n`.
+
+## 9. Adding a New Feature (Cheat Sheet)
+
+1. Create `lib/features/<feature>/domain|data|presentation` folders.
+2. Define domain contracts/models (Freezed classes go in `domain/models`).
+3. Implement data sources (REST, Firebase, etc.), map DTOs to domain entities.
+4. Build Cubit + state (immutable), add widgets/pages.
+5. Register DI bindings (repository, cubit factories if needed).
+6. Add tests: repository unit tests, cubit bloc tests, and widget/golden coverage.
+7. Wire navigation via `AppRoutes` + `GoRouter` in `lib/app.dart`.
+8. Update docs/README if the feature is user-facing.
+
+## 10. Common Troubleshooting
+
+- **Stuck timers or async flows**: Ensure the cubit is disposed or the `TimerService` subscription is canceled in `close()`.
+- **Remote Config not updating**: Confirm Firebase project settings match the current flavor (`main_dev.dart`, etc.) and that `RemoteConfigCubit`’s `refreshInterval` isn’t throttling updates.
+- **GraphQL/WebSocket issues**: Check the environment constants in `lib/core/config` and confirm the emulator/network allows outbound connections.
+- **Maps API keys**: For Android, add to `android/app/src/main/AndroidManifest.xml`; for iOS, configure `ios/Runner/AppDelegate.swift` + `Info.plist`. The app gracefully falls back to Apple Maps when Google keys are missing.
+- **Coverage script fails**: Ensure `lcov` file exists (run tests with `--coverage`) and that `dart run tool/update_coverage_summary.dart` runs from repo root.
+
+## 11. What to Read Next
+
+- `README.md`: Feature tour + architecture diagram.
+- `analysis/architecture_findings.md`: Past architecture pitfalls/resolutions.
+- `docs/` (e.g., `docs/universal_links/`, `docs/figma/...`): Platform-specific guides.
+
+Stay disciplined with the guardrails, keep tests deterministic, and reach for shared services before adding new singletons. Welcome to the team!
