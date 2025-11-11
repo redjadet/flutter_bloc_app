@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
+import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
+import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/locale_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
@@ -71,7 +73,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 400));
 
       expect(themeCubit.state, ThemeMode.dark);
-      expect(repo.saved, ThemeMode.dark);
+      expect(repo.saved, ThemePreference.dark);
 
       await tester.scrollUntilVisible(
         find.text(en.languageSpanish),
@@ -188,26 +190,34 @@ void main() {
 }
 
 class _InMemoryThemeRepository implements ThemeRepository {
-  ThemeMode? saved;
+  _InMemoryThemeRepository([ThemePreference? initial]) : _stored = initial;
+
+  ThemePreference? _stored;
+  ThemePreference? saved;
 
   @override
-  Future<ThemeMode?> load() async => null;
+  Future<ThemePreference?> load() async => _stored;
 
   @override
-  Future<void> save(ThemeMode mode) async {
+  Future<void> save(ThemePreference mode) async {
     saved = mode;
+    _stored = mode;
   }
 }
 
 class _InMemoryLocaleRepository implements LocaleRepository {
-  Locale? saved;
+  _InMemoryLocaleRepository([AppLocale? initial]) : _stored = initial;
+
+  AppLocale? _stored;
+  AppLocale? saved;
 
   @override
-  Future<Locale?> load() async => saved;
+  Future<AppLocale?> load() async => _stored;
 
   @override
-  Future<void> save(Locale? locale) async {
+  Future<void> save(AppLocale? locale) async {
     saved = locale;
+    _stored = locale;
   }
 }
 

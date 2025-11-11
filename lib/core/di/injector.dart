@@ -31,6 +31,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repos
 import 'package:flutter_bloc_app/features/profile/data/mock_profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/search/data/mock_search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
@@ -125,8 +126,11 @@ Future<void> configureDependencies() async {
     _createRemoteConfigRepository,
     dispose: (final repository) => repository.dispose(),
   );
+  _registerLazySingletonIfAbsent<RemoteConfigService>(
+    () => getIt<RemoteConfigRepository>(),
+  );
   _registerLazySingletonIfAbsent<RemoteConfigCubit>(
-    () => RemoteConfigCubit(getIt<RemoteConfigRepository>()),
+    () => RemoteConfigCubit(getIt<RemoteConfigService>()),
   );
   _registerLazySingletonIfAbsent<SearchRepository>(MockSearchRepository.new);
 }

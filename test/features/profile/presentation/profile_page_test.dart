@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/profile/profile.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 
 const _testUser = ProfileUser(
   name: 'Jane',
@@ -19,14 +20,20 @@ Future<void> _pumpProfilePage(
   final WidgetTester tester, {
   required final ProfileRepository repository,
 }) async {
-  await tester.pumpWidget(
-    MaterialApp(
-      home: BlocProvider(
-        create: (_) => ProfileCubit(repository: repository)..loadProfile(),
-        child: const ProfilePage(),
+  final router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => BlocProvider(
+          create: (_) => ProfileCubit(repository: repository)..loadProfile(),
+          child: const ProfilePage(),
+        ),
       ),
-    ),
+    ],
   );
+  addTearDown(router.dispose);
+
+  await tester.pumpWidget(MaterialApp.router(routerConfig: router));
 }
 
 Future<void> _resolveAsyncWork(final WidgetTester tester) async {

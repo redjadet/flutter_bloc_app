@@ -36,10 +36,12 @@ void main() {
       cubit = _MockMapSampleCubit();
       platformService = _MockNativePlatformService();
       when(() => cubit.close()).thenAnswer((_) async {});
-      when(
-        () => cubit.stream,
-      ).thenAnswer((_) => const Stream<MapSampleState>.empty());
       when(() => cubit.state).thenReturn(MapSampleState.initial());
+      whenListen(
+        cubit,
+        Stream<MapSampleState>.empty(),
+        initialState: MapSampleState.initial(),
+      );
     });
 
     tearDown(() async {

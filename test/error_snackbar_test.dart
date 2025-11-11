@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
+import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -70,9 +71,18 @@ void main() {
 
 class _FakeThemeRepository implements ThemeRepository {
   _FakeThemeRepository(this.initial);
+
   final ThemeMode initial;
+
   @override
-  Future<ThemeMode?> load() async => initial;
+  Future<ThemePreference?> load() async => _toPreference(initial);
+
   @override
-  Future<void> save(ThemeMode mode) async {}
+  Future<void> save(ThemePreference mode) async {}
 }
+
+ThemePreference _toPreference(final ThemeMode mode) => switch (mode) {
+  ThemeMode.light => ThemePreference.light,
+  ThemeMode.dark => ThemePreference.dark,
+  ThemeMode.system => ThemePreference.system,
+};
