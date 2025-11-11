@@ -20,8 +20,7 @@
 - Issue: Domain enum references presentation navigation constants via `AppRoutes`, binding domain logic to routing details.
 - Recommendation: Keep the enum semantic-only and move route mappings to a presentation adapter or mapper.
 
-### Domain Imports Flutter Foundation
+### Domain Imports Flutter Foundation — **Resolved**
 
 - Location: `lib/features/chat/domain/chat_conversation.dart`
-- Issue: The domain model imports `package:flutter/foundation.dart` despite not needing Flutter-specific APIs, adding an unnecessary dependency.
-- Recommendation: Remove the Flutter import (rely on Freezed annotations only) or replace with a package-agnostic alternative.
+- Resolution: Removed the unused `package:flutter/foundation.dart` import so the domain layer now stays Flutter-agnostic and only relies on Freezed.

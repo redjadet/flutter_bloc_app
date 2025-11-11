@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
