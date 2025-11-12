@@ -5,8 +5,9 @@ typedef PrintFormatFormatter = Formatter Function(dynamic arg, dynamic options);
 
 class PrintFormat {
   static final RegExp specifier = RegExp(
-      r'%(?:(\d+)\$)?([\+\-\#0 ]*)(\d+|\*)?(?:\.(\d+|\*))?([a-z%])',
-      caseSensitive: false);
+    r'%(?:(\d+)\$)?([\+\-\#0 ]*)(\d+|\*)?(?:\.(\d+|\*))?([a-z%])',
+    caseSensitive: false,
+  );
   static final RegExp uppercase_rx = RegExp(r'[A-Z]', caseSensitive: true);
 
   final Map<String, PrintFormatFormatter> _formatters = {
@@ -62,14 +63,16 @@ class PrintFormat {
 
       // parse width
       if (_width != null) {
-        _options['width'] =
-            (_width == '*' ? args[arg_offset++] : int.parse(_width));
+        _options['width'] = (_width == '*'
+            ? args[arg_offset++]
+            : int.parse(_width));
       }
 
       // parse precision
       if (_precision != null) {
-        _options['precision'] =
-            (_precision == '*' ? args[arg_offset++] : int.parse(_precision));
+        _options['precision'] = (_precision == '*'
+            ? args[arg_offset++]
+            : int.parse(_precision));
       }
 
       // grab the argument we'll be dealing with

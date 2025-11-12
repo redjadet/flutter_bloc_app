@@ -4,7 +4,7 @@ class StringFormatter extends Formatter {
   var _arg;
 
   StringFormatter(this._arg, var fmt_type, var options)
-      : super(fmt_type, options) {
+    : super(fmt_type, options) {
     options['padding_char'] = ' ';
   }
   @override

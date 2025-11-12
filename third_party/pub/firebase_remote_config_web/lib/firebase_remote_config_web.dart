@@ -20,8 +20,8 @@ class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.
   FirebaseRemoteConfigWeb._()
-      : _webRemoteConfig = null,
-        super(appInstance: null);
+    : _webRemoteConfig = null,
+      super(appInstance: null);
 
   /// Instance of functions from the web plugin
   remote_config_interop.RemoteConfig? _webRemoteConfig;
@@ -184,8 +184,9 @@ class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
 
   @override
   Stream<RemoteConfigUpdate> get onConfigUpdated {
-    return _delegate.onConfigUpdated
-        .map((event) => RemoteConfigUpdate(event.updatedKeys));
+    return _delegate.onConfigUpdated.map(
+      (event) => RemoteConfigUpdate(event.updatedKeys),
+    );
   }
 
   @override
