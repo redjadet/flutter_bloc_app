@@ -719,6 +719,16 @@ Contributions are welcome—open an issue or PR with your proposed change. Make 
 
 This project is available for free use in public, non-commercial repositories under the terms described in [`LICENSE`](LICENSE). Any commercial or closed-source usage requires prior written permission from the copyright holder.
 
+## Dependency Update Monitoring
+
+This project uses automated dependency update monitoring to keep dependencies up to date and secure:
+
+- **Renovate**: Primary tool for automated dependency updates (see `renovate.json`)
+- **Dependabot**: Backup security vulnerability monitoring (see `.github/dependabot.yml`)
+- **Automated Testing**: Dependency update PRs are automatically tested via GitHub Actions
+
+See [docs/DEPENDENCY_UPDATES.md](docs/DEPENDENCY_UPDATES.md) for detailed information.
+
 ## Tooling
 
 - `flutter test --coverage` to regenerate `coverage/lcov.info` file.
@@ -726,6 +736,7 @@ This project is available for free use in public, non-commercial repositories un
 - `dart run custom_lint` – run custom linting rules including file length enforcement.
 - `test/flutter_test_config.dart` – global test configuration that automatically suppresses logging during test execution for cleaner output.
 - `flutter gen-l10n` – manually regenerate `AppLocalizations` files from `.arb` files (normally done automatically via `flutter pub get` when `generate: true` is set in `pubspec.yaml`).
+- `flutter pub outdated` – check for outdated dependencies.
 
 Optional:
 

@@ -1,0 +1,67 @@
+name: Dependency Updates
+
+on:
+  pull_request:
+    paths:
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - 'custom_lints/**/pubspec.yaml'
+    types: [opened, synchronize, reopened]
+
+jobs:
+  test-dependency-updates:
+    name: Test Dependency Updates
+    runs-on: ubuntu-latest
+    if: |
+      github.event.pull_request.user.login == 'renovate[bot]' ||
+      github.event.pull_request.user.login == 'dependabot[bot]'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.35.5"
+          channel: stable
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Flutter analyze
+        run: flutter analyze
+
+      - name: Flutter tests (with coverage)
+        run: flutter test --coverage
+
+      - name: Enforce coverage threshold
+        run: |
+          COVERAGE_FILE=coverage/lcov.info
+          TARGET=60
+          ACTUAL=$(lcov --summary "$COVERAGE_FILE" | awk '/lines/ {print $2}' | sed 's/%//')
+          echo "Coverage: $ACTUAL%"
+          awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { exit (actual + 0 >= target + 0 ? 0 : 1) }'
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-lcov
+          path: coverage/lcov.info
+
+      - name: Comment PR with test results
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const status = '${{ job.status }}';
+            const emoji = status === 'success' ? '✅' : '❌';
+            const message = `${emoji} Dependency update tests ${status === 'success' ? 'passed' : 'failed'}`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
+

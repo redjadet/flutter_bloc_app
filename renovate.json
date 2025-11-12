@@ -8,19 +8,74 @@
   ],
   "labels": ["dependencies"],
   "rangeStrategy": "bump",
+  "automerge": false,
+  "automergeType": "pr",
+  "prConcurrentLimit": 3,
+  "prHourlyLimit": 2,
+  "timezone": "UTC",
+  "schedule": ["after 9am and before 5pm on Monday to Friday"],
   "packageRules": [
     {
-      "matchManagers": ["pub"]
+      "description": "Enable Renovate for pub (Flutter/Dart) dependencies",
+      "matchManagers": ["pub"],
+      "enabled": true
     },
     {
       "description": "Group minor/patch Flutter/Dart updates",
       "matchManagers": ["pub"],
       "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "dart-minor-patch"
+      "groupName": "dart-minor-patch",
+      "schedule": ["after 9am and before 5pm on Monday to Friday"]
     },
     {
-      "description": "Schedule to weekdays",
+      "description": "Separate major version updates for Flutter SDK",
+      "matchPackageNames": ["flutter", "flutter_test"],
+      "matchManagers": ["pub"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "flutter-sdk-major",
       "schedule": ["after 9am and before 5pm on Monday to Friday"]
+    },
+    {
+      "description": "Separate major version updates for Firebase packages",
+      "matchPackagePatterns": ["^firebase_"],
+      "matchManagers": ["pub"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "firebase-major",
+      "schedule": ["after 9am and before 5pm on Monday to Friday"]
+    },
+    {
+      "description": "Separate major version updates for BLoC packages",
+      "matchPackagePatterns": ["^flutter_bloc", "^bloc_test"],
+      "matchManagers": ["pub"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "bloc-major",
+      "schedule": ["after 9am and before 5pm on Monday to Friday"]
+    },
+    {
+      "description": "Pin Flutter SDK version",
+      "matchPackageNames": ["flutter"],
+      "matchManagers": ["pub"],
+      "rangeStrategy": "pin"
+    },
+    {
+      "description": "Ignore dependency_overrides (handled manually)",
+      "matchManagers": ["pub"],
+      "matchDepTypes": ["override"],
+      "enabled": false
+    },
+    {
+      "description": "Auto-merge patch updates for dev dependencies",
+      "matchManagers": ["pub"],
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "automergeType": "pr",
+      "requiredStatusChecks": []
     }
-  ]
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "schedule": ["at any time"],
+    "labels": ["security", "dependencies"]
+  }
 }
