@@ -1,6 +1,6 @@
 # Flutter BLoC App
 
-Small demo app showcasing BLoC (Cubit) state management, local persistence, a periodic timer, and basic localization in Flutter. The app displays a counter you can increment/decrement, persists the last value, shows when it last changed, and auto-decrements every 5 seconds with a visible countdown.
+Small demo app showcasing BLoC (Cubit) state management, **encrypted local database storage** (Hive), a periodic timer, and basic localization in Flutter. The app displays a counter you can increment/decrement, persists the last value with AES-256 encryption, shows when it last changed, and auto-decrements every 5 seconds with a visible countdown.
 
 ## Features
 
@@ -8,7 +8,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Responsive UI: Uses `flutter_screenutil` and width-based helpers (see `presentation/responsive.dart`).
 - UI constants: Centralized sizing/spacing in `presentation/ui_constants.dart`.
 - Accessibility: Semantics on key widgets, overflow guards on narrow screens.
-- Persistence: Stores last count and timestamp with `shared_preferences`.
+- Persistence: Stores last count and timestamp with **Hive** (encrypted local database). Migrated from SharedPreferences with automatic data migration on first launch.
 - Auto-decrement: Decreases count every 5 seconds if above zero.
 - Countdown UI: Live “next auto-decrement in: Ns” indicator.
 - Navigation: `go_router` wiring with sample and chart pages demonstrating navigation patterns.
@@ -139,14 +139,16 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 
 ## Test Coverage
 
-- Latest line coverage: **72.16%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
+- Latest line coverage: **72.36%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
 - Test Infrastructure: Global test configuration with automatic log suppression during test execution for cleaner output.
+- **Storage Tests**: Comprehensive unit tests for Hive repositories (`HiveCounterRepository`, `HiveLocaleRepository`, `HiveThemeRepository`) and migration service, ensuring data integrity and encryption functionality.
 
 ## Tech Stack
 
 - Flutter 3.35.7 (Dart 3.9.2)
 - `flutter_bloc` for Cubit/BLoC
-- `shared_preferences` for simple storage
+- **`hive` & `hive_flutter`** for encrypted local database storage (migrated from `shared_preferences`)
+- `flutter_secure_storage` for encryption key management
 - `intl` and `flutter_localizations` for i18n
 - `flutter_screenutil` for adaptive sizing (with safe fallbacks in tests)
 - `responsive_framework` optional; helpers fall back to MediaQuery breakpoints
@@ -155,7 +157,7 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - `get_it` for dependency injection across features
 - `bloc_test`, `flutter_test`, `golden_toolkit` for testing
 - `custom_lint` for custom linting rules and file length enforcement
-- **Dependency refresh (Nov 2025):** `go_router 17.0.0`, `get_it 9.0.5`, `google_maps_flutter 2.14.0`, `firebase_core 4.2.1` (+ `firebase_auth 6.1.2`, `firebase_analytics 12.0.4`), `shared_preferences 2.5.3`, `flutter_svg 2.2.2`
+- **Dependency refresh (Nov 2025):** `go_router 17.0.0`, `get_it 9.0.5`, `google_maps_flutter 2.14.0`, `firebase_core 4.2.1` (+ `firebase_auth 6.1.2`, `firebase_analytics 12.0.4`), `hive 2.2.0`, `hive_flutter 1.1.0`, `flutter_secure_storage 9.2.4`, `flutter_svg 2.2.2`
 
 ## Security & Secrets
 
@@ -164,6 +166,16 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Rotate any leaked tokens immediately (e.g. Hugging Face Inference API key) and prefer short-lived or server-issued credentials for production.
 - Keep to least-privilege MethodChannel usage. `com.example.flutter_bloc_app/native` currently exposes only `getPlatformInfo` (no arguments). Validate future methods thoroughly and avoid returning sensitive data.
 - For production distribution, supply credentials from environment variables (e.g. CI-injected `--dart-define`s) or fetch them securely at runtime (remote config/services protected with TLS and optional certificate pinning) instead of bundling assets.
+
+## Storage & Migration
+
+- **Hive everywhere:** All local persistence now goes through `HiveService`, which wraps `Hive.initFlutter()` and ensures every box is opened with an `AES256Cipher`. The encryption key is generated once by `HiveKeyManager` and stored in `flutter_secure_storage` (fallbacks use an in-memory key for test environments).
+- **Repository base class:** `HiveRepositoryBase` provides common functionality for Hive-backed repositories (`getBox()`, `safeDeleteKey()`), reducing code duplication. All Hive repositories (`HiveCounterRepository`, `HiveLocaleRepository`, `HiveThemeRepository`) extend this base class.
+- **Migration guard:** `SharedPreferencesMigrationService.migrateIfNeeded()` runs during bootstrap (and in tests) to copy legacy SharedPreferences keys (`last_count`, `last_changed`, locale, theme) into the corresponding Hive boxes (`counter`, `settings`, `migration`). It is idempotent and logs/recovers via `StorageGuard`. Uses `MigrationHelpers` for data validation and normalization during migration.
+- **Initialization safety:** `InitializationGuard.executeSafely()` wraps non-critical initialization steps (Hive initialization, migration) to prevent app startup failures. Errors are logged but don't block app launch.
+- **Repository surface:** `HiveCounterRepository`, `HiveThemeRepository`, and `HiveLocaleRepository` are registered in `get_it` and expose the same domain contracts as their predecessors, so the rest of the app stays agnostic.
+- **Testing tips:** Widget/golden tests must initialize Hive in `setUpAll` before calling `configureDependencies()`. Use `Directory.systemTemp.createTempSync('hive_test_')` and `Hive.init(testDir.path)`. Pure unit tests can instantiate `HiveService` with `InMemorySecretStorage` to avoid touching the real keystore.
+- See `docs/migration/isar_vs_hive_comparison.md` for the decision record and `docs/migration/shared_preferences_to_isar.md` for the original evaluation notes (now superseded by the Hive implementation) plus rollout steps.
 
 ## Architecture
 
@@ -209,10 +221,11 @@ flowchart LR
   end
 
   subgraph Data
-    SharedPreferencesCounterRepository
+    HiveCounterRepository
     RealtimeDatabaseCounterRepository
-    SharedPreferencesThemeRepository
-    SharedPreferencesLocaleRepository
+    HiveThemeRepository
+    HiveLocaleRepository
+    SharedPreferencesMigrationService
     HuggingfaceChatRepository
     SecureChatHistoryRepository
     CountriesGraphqlRepository
@@ -234,6 +247,7 @@ flowchart LR
     FirebaseDatabase
     FirebaseAuth
     FirebaseRemoteConfig
+    Hive
     SharedPreferences
     HuggingFaceAPI
     GraphQLAPI
@@ -247,19 +261,21 @@ flowchart LR
   CounterActions --> CounterCubit
   CounterCubit --> CounterRepository
   CounterCubit --> TimerService
-  CounterRepository <-.implements .-> SharedPreferencesCounterRepository
+  CounterRepository <-.implements .-> HiveCounterRepository
   CounterRepository <-.implements .-> RealtimeDatabaseCounterRepository
-  SharedPreferencesCounterRepository --> SharedPreferences
+  HiveCounterRepository --> Hive
   RealtimeDatabaseCounterRepository --> FirebaseDatabase
 
   ThemeSection --> ThemeCubit
   LanguageSection --> LocaleCubit
   ThemeCubit --> ThemeRepository
   LocaleCubit --> LocaleRepository
-  ThemeRepository <-.implements .-> SharedPreferencesThemeRepository
-  LocaleRepository <-.implements .-> SharedPreferencesLocaleRepository
-  SharedPreferencesThemeRepository --> SharedPreferences
-  SharedPreferencesLocaleRepository --> SharedPreferences
+  ThemeRepository <-.implements .-> HiveThemeRepository
+  LocaleRepository <-.implements .-> HiveLocaleRepository
+  HiveThemeRepository --> Hive
+  HiveLocaleRepository --> Hive
+  SharedPreferencesMigrationService --> Hive
+  SharedPreferencesMigrationService --> SharedPreferences
 
   ChatPage --> ChatCubit
   ChatCubit --> ChatRepository
@@ -267,7 +283,7 @@ flowchart LR
   ChatRepository <-.implements .-> HuggingfaceChatRepository
   ChatHistoryRepository <-.implements .-> SecureChatHistoryRepository
   HuggingfaceChatRepository --> HuggingFaceAPI
-  SecureChatHistoryRepository --> SharedPreferences
+  SecureChatHistoryRepository --> Hive
 
   GraphqlDemoPage --> GraphqlDemoCubit
   GraphqlDemoCubit --> GraphqlDemoRepository
@@ -472,8 +488,10 @@ classDiagram
   }
 
   class DefaultTimerService
-  class SharedPreferencesCounterRepository
+  class HiveCounterRepository
   class RealtimeDatabaseCounterRepository
+  class HiveService
+  class HiveKeyManager
 
   CounterCubit --> CounterState
   CounterCubit --> CounterError
@@ -481,9 +499,11 @@ classDiagram
   CounterCubit ..> TimerService
   TimerService ..> TimerDisposable
   TimerService <|.. DefaultTimerService
-  CounterRepository <|.. SharedPreferencesCounterRepository
+  CounterRepository <|.. HiveCounterRepository
   CounterRepository <|.. RealtimeDatabaseCounterRepository
-  SharedPreferencesCounterRepository --> CounterSnapshot
+  HiveCounterRepository --> CounterSnapshot
+  HiveCounterRepository ..> HiveService
+  HiveService ..> HiveKeyManager
   RealtimeDatabaseCounterRepository --> CounterSnapshot
 
   RemoteConfigCubit --> RemoteConfigState
@@ -509,15 +529,20 @@ classDiagram
 - `lib/features/search/`: Debounced image search with mock repository, cubit, and responsive grid/list UI.
 - `lib/features/profile/`: Profile cubit, mock data, Google Fonts-driven header/gallery widgets, and a reusable bottom navigation bar.
 - `lib/features/calculator/`: Payment calculator keypad, presets, expression history, and summary presentation.
-- `lib/features/settings/`: Theme & locale repositories, cubits, and UI sections used by the settings page.
+- `lib/features/settings/`: Theme & locale repositories (Hive-backed), cubits, and UI sections used by the settings page.
+- `lib/shared/storage/`: Hive database service (`HiveService`), encryption key management (`HiveKeyManager`), SharedPreferences migration service (`SharedPreferencesMigrationService`), base repository class (`HiveRepositoryBase`), and migration helpers (`MigrationHelpers`).
+- `lib/shared/utils/`: Cross-cutting utilities including logging (`AppLogger`), storage guard (`StorageGuard`), and initialization guard (`InitializationGuard`) for safe error handling.
 - `lib/features/google_maps/`: Map sample, repositories, cubit, and widgets for traffic/map-type toggles.
 - `lib/features/websocket/`: Echo WebSocket repository, cubit, and responsive page widgets surfaced in the Example hub.
 - `lib/features/remote_config/`: Remote config repository, cubit, feature-flag models, and sample settings UI.
 - `lib/features/deeplink/`: Universal link + custom scheme handling via `AppLinksDeepLinkService` and `DeepLinkCubit`.
 - `lib/features/example/`: Example page showcasing native MethodChannel integration plus isolate demos and navigation shortcuts.
-- `lib/shared/`: Reusable UI primitives, logging, platform services, localization helpers, and shared utilities.
+- `lib/shared/`: Reusable UI primitives, logging, platform services, localization helpers, shared utilities, and storage services (Hive database, encryption key management, migration).
 - `test/`: Unit, bloc, widget, golden, and platform tests (see file names for focused coverage like `counter_*`, `settings_*`, `graphql_demo_*`).
 - `test/counter_cubit_test.dart`: Cubit behavior, timers, persistence tests.
+- `test/hive_counter_repository_test.dart`: Hive counter repository tests with encryption.
+- `test/hive_locale_repository_test.dart`: Hive locale repository tests.
+- `test/hive_theme_repository_test.dart`: Hive theme repository tests.
 - `test/countdown_bar_test.dart`: Verifies CountdownBar active/paused labels.
 - `test/counter_display_chip_test.dart`: Verifies CounterDisplay chip labels.
 - `test/error_snackbar_test.dart`: Intentionally throws to exercise SnackBar (skipped by default).
@@ -532,10 +557,12 @@ classDiagram
 
 ## How It Works
 
-- On launch, `CounterCubit.loadInitial()` restores the last count and timestamp.
+- On launch, `CounterCubit.loadInitial()` restores the last count and timestamp from **Hive** (encrypted local database).
+- **Data Migration**: On first launch after the migration, existing SharedPreferences data is automatically migrated to Hive. The migration runs once and is tracked to prevent re-migration.
+- **Encryption**: All data stored in Hive is encrypted at rest using AES-256. Encryption keys are securely managed via `flutter_secure_storage` (platform keychain/keystore).
 - Two timers run inside the cubit:
   - A 5s periodic timer that auto-decrements when `count > 0`.
-  - A 1s countdown timer that updates the UI’s remaining seconds.
+  - A 1s countdown timer that updates the UI's remaining seconds.
 - Any manual increment/decrement resets the 5s window and persists the state.
 - Tap the compass icon in the app bar to navigate to the Example page rendered via `go_router`.
 

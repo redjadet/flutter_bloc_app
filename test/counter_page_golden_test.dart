@@ -1,49 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app.dart';
+import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/core/flavor.dart';
+import 'package:flutter_bloc_app/shared/storage/shared_preferences_migration_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:io';
 
 import 'test_helpers.dart';
+
+final DateTime _goldenTimestamp = DateTime.utc(2024, 1, 1, 12);
 
 void main() {
   group('CounterPage Golden', () {
     setUpAll(() async {
       await loadAppFonts();
+      // Initialize Hive for testing
+      final Directory testDir = Directory.systemTemp.createTempSync(
+        'hive_test_',
+      );
+      Hive.init(testDir.path);
     });
 
     setUp(() async {
       SharedPreferences.setMockInitialValues({});
+      // Set flavor to non-dev to avoid skeleton delay in tests
+      FlavorManager.current = Flavor.prod;
+      await getIt.reset(dispose: true);
+      await configureDependencies();
+      overrideCounterRepository();
+      // Run migration to avoid delays during widget test
+      await getIt<SharedPreferencesMigrationService>().migrateIfNeeded();
+    });
+
+    tearDown(() async {
+      await getIt.reset(dispose: true);
     });
 
     testGoldens('renders correctly on common devices', (tester) async {
-      final builder = DeviceBuilder()
-        ..overrideDevicesForAllScenarios(
-          devices: [
-            Device.phone,
-            Device.tabletPortrait,
-            Device.tabletLandscape,
-          ],
-        )
-        ..addScenario(
-          name: 'Initial state',
-          widget: const MyApp(requireAuth: false),
-        );
-
-      await tester.pumpDeviceBuilder(builder);
-      await tester.pumpAndSettle();
-      await screenMatchesGolden(tester, 'counter_page_initial');
+      final cubit = CounterCubit(
+        repository: MockCounterRepository(),
+        timerService: FakeTimerService(),
+        now: _fixedNow,
+      )..loadInitial();
+      addTearDown(cubit.close);
+      await tester.pumpWidget(
+        _buildCounterPageApp(cubit: cubit, theme: ThemeData.light()),
+      );
+      await tester.pump();
+      await tester.pumpAndSettle(const Duration(milliseconds: 200));
+      await waitForCounterCubitsToLoad(tester);
+      expect(find.byType(CounterPage), findsOneWidget);
+      expect(find.text('0'), findsWidgets);
+      await multiScreenGolden(
+        tester,
+        'counter_page_initial',
+        devices: const [
+          Device.phone,
+          Device.tabletPortrait,
+          Device.tabletLandscape,
+        ],
+      );
     });
 
     testGoldens('renders loading state without settling', (tester) async {
       await tester.pumpWidgetBuilder(const MyApp(requireAuth: false));
+      // Wait a bit for initial render but don't wait for full settle
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
       await multiScreenGolden(
         tester,
         'counter_page_loading',
@@ -80,6 +114,7 @@ void main() {
           snapshot: const CounterSnapshot(count: 2),
         ),
         timerService: fakeTimer,
+        now: _fixedNow,
       );
       await tester.pumpWidgetBuilder(
         BlocProvider.value(
@@ -113,6 +148,7 @@ void main() {
         ),
         timerService: FakeTimerService(),
         startTicker: true,
+        now: _fixedNow,
       );
       await tester.pumpWidgetBuilder(
         BlocProvider.value(
@@ -145,6 +181,7 @@ void main() {
           snapshot: const CounterSnapshot(count: 3),
         ),
         timerService: fakeTimer,
+        now: _fixedNow,
       );
       await tester.pumpWidgetBuilder(
         BlocProvider.value(
@@ -178,6 +215,7 @@ void main() {
         ),
         timerService: FakeTimerService(),
         startTicker: true,
+        now: _fixedNow,
       );
       await tester.pumpWidgetBuilder(
         BlocProvider.value(
@@ -204,6 +242,29 @@ void main() {
     });
   });
 }
+
+DateTime _fixedNow() => _goldenTimestamp;
+
+Widget _buildCounterPageApp({required CounterCubit cubit, ThemeData? theme}) =>
+    ScreenUtilInit(
+      designSize: const Size(390, 844),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, _) => BlocProvider.value(
+        value: cubit,
+        child: MaterialApp(
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: theme ?? ThemeData.light(),
+          home: const CounterPage(title: 'Counter'),
+        ),
+      ),
+    );
 
 class _CounterComponentsDemo extends StatelessWidget {
   @override

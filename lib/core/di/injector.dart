@@ -18,8 +18,8 @@ import 'package:flutter_bloc_app/features/chat/data/secure_chat_history_reposito
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/realtime_database_counter_repository.dart';
-import 'package:flutter_bloc_app/features/counter/data/shared_preferences_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/deeplink/data/app_links_deep_link_service.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
@@ -35,9 +35,9 @@ import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_ser
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/search/data/mock_search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
+import 'package:flutter_bloc_app/features/settings/data/hive_locale_repository.dart';
+import 'package:flutter_bloc_app/features/settings/data/hive_theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/package_info_app_info_repository.dart';
-import 'package:flutter_bloc_app/features/settings/data/shared_preferences_locale_repository.dart';
-import 'package:flutter_bloc_app/features/settings/data/shared_preferences_theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
@@ -45,6 +45,10 @@ import 'package:flutter_bloc_app/features/websocket/data/echo_websocket_reposito
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
+import 'package:flutter_bloc_app/shared/storage/shared_preferences_migration_service.dart';
+import 'package:flutter_bloc_app/shared/utils/initialization_guard.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -52,6 +56,25 @@ import 'package:http/http.dart' as http;
 final GetIt getIt = GetIt.instance;
 
 Future<void> configureDependencies() async {
+  // Register Hive services first
+  _registerLazySingletonIfAbsent<HiveKeyManager>(HiveKeyManager.new);
+  _registerLazySingletonIfAbsent<HiveService>(
+    () => HiveService(keyManager: getIt<HiveKeyManager>()),
+  );
+  // Initialize Hive - handle initialization failures gracefully
+  await InitializationGuard.executeSafely(
+    () => getIt<HiveService>().initialize(),
+    context: 'configureDependencies',
+    failureMessage:
+        'Failed to initialize Hive during dependency configuration. '
+        'App may not function correctly without storage.',
+  );
+  _registerLazySingletonIfAbsent<SharedPreferencesMigrationService>(
+    () => SharedPreferencesMigrationService(
+      hiveService: getIt<HiveService>(),
+    ),
+  );
+
   _registerLazySingletonIfAbsent<CounterRepository>(_createCounterRepository);
   _registerLazySingletonIfAbsent<http.Client>(
     http.Client.new,
@@ -95,10 +118,10 @@ Future<void> configureDependencies() async {
     MockChatListRepository.new,
   );
   _registerLazySingletonIfAbsent<LocaleRepository>(
-    SharedPreferencesLocaleRepository.new,
+    () => HiveLocaleRepository(hiveService: getIt<HiveService>()),
   );
   _registerLazySingletonIfAbsent<ThemeRepository>(
-    SharedPreferencesThemeRepository.new,
+    () => HiveThemeRepository(hiveService: getIt<HiveService>()),
   );
   _registerLazySingletonIfAbsent<DeepLinkParser>(() => const DeepLinkParser());
   _registerLazySingletonIfAbsent<DeepLinkService>(AppLinksDeepLinkService.new);
@@ -150,20 +173,20 @@ CounterRepository _createCounterRepository() {
       return RealtimeDatabaseCounterRepository(database: database, auth: auth);
     } on FirebaseException catch (error, stackTrace) {
       AppLogger.error(
-        'Falling back to SharedPreferencesCounterRepository',
+        'Falling back to HiveCounterRepository',
         error,
         stackTrace,
       );
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
-        'Falling back to SharedPreferencesCounterRepository',
+        'Falling back to HiveCounterRepository',
         error,
         stackTrace,
       );
     }
     // coverage:ignore-end
   }
-  return SharedPreferencesCounterRepository();
+  return HiveCounterRepository(hiveService: getIt<HiveService>());
 }
 
 RemoteConfigRepository _createRemoteConfigRepository() {
