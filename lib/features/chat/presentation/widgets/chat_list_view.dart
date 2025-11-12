@@ -98,18 +98,8 @@ class ChatListView extends StatelessWidget {
             onPressed: () => unawaited(
               context.read<ChatListCubit>().loadChatContacts(),
             ),
-            style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(
-                horizontal: context.responsiveButtonPadding,
-                vertical: context.responsiveGap,
-              ),
-            ),
-            child: Text(
-              'Retry',
-              style: TextStyle(
-                fontSize: context.responsiveBodySize,
-              ),
-            ),
+            style: context.responsiveElevatedButtonStyle,
+            child: const Text('Retry'),
           ),
         ],
       ),
