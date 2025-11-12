@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/auth/auth.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:go_router/go_router.dart';
 
 export 'package:flutter_bloc_app/features/auth/presentation/helpers/auth_error_message.dart';
@@ -105,7 +107,10 @@ class SignInPage extends StatelessWidget {
       auth: auth,
       providers: providers,
       headerBuilder: (final context, final constraints, _) => Padding(
-        padding: const EdgeInsets.only(top: 32, bottom: 16),
+        padding: EdgeInsets.only(
+          top: context.responsiveGapL * 2,
+          bottom: context.responsiveGapL,
+        ),
         child: Text(
           l10n.appTitle,
           textAlign: TextAlign.center,
@@ -114,7 +119,7 @@ class SignInPage extends StatelessWidget {
       ),
       subtitleBuilder: upgradingAnonymous
           ? (final context, final action) => Padding(
-              padding: const EdgeInsets.only(bottom: 24),
+              padding: EdgeInsets.only(bottom: context.responsiveGapL),
               child: Text(
                 l10n.anonymousUpgradeHint,
                 textAlign: TextAlign.center,
@@ -125,17 +130,18 @@ class SignInPage extends StatelessWidget {
       footerBuilder: (final context, final action) => Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          const SizedBox(height: 24),
+          SizedBox(height: context.responsiveGapL),
           Text(
             l10n.anonymousSignInDescription,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall,
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: context.responsiveGapM),
           SizedBox(
             width: double.infinity,
-            child: FilledButton.tonal(
+            child: PlatformAdaptive.filledButton(
               key: signInGuestButtonKey,
+              context: context,
               onPressed: signInAnonymously,
               child: Text(l10n.anonymousSignInButton),
             ),

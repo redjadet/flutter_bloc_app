@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class RegisterPhoneField extends StatelessWidget {
@@ -43,7 +44,7 @@ class RegisterPhoneField extends StatelessWidget {
           }
         },
       ),
-      const SizedBox(width: 12),
+      SizedBox(width: context.responsiveHorizontalGapM),
       Expanded(
         child: TextFormField(
           key: const ValueKey('register-phone-field'),

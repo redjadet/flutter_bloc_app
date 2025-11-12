@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 /// A reusable loading widget with consistent styling
@@ -109,7 +110,7 @@ class CommonLoadingButton extends StatelessWidget {
                 ),
               ),
               if (loadingMessage != null) ...[
-                const SizedBox(width: 8),
+                SizedBox(width: context.responsiveHorizontalGapS),
                 Text(loadingMessage!),
               ],
             ],

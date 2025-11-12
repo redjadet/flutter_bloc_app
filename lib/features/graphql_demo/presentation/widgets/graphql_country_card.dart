@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 class GraphqlCountryCard extends StatelessWidget {
   const GraphqlCountryCard({
@@ -23,7 +24,7 @@ class GraphqlCountryCard extends StatelessWidget {
       elevation: 0,
       color: colors.surfaceContainerHighest,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(context.responsiveCardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -31,7 +32,7 @@ class GraphqlCountryCard extends StatelessWidget {
             Row(
               children: [
                 Text(country.emoji ?? '?', style: textTheme.headlineMedium),
-                const SizedBox(width: 12),
+                SizedBox(width: context.responsiveHorizontalGapM),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,10 +47,10 @@ class GraphqlCountryCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: context.responsiveGapM),
             Wrap(
-              spacing: 12,
-              runSpacing: 8,
+              spacing: context.responsiveHorizontalGapM,
+              runSpacing: context.responsiveGapS,
               children: [
                 if (country.capital != null && country.capital!.isNotEmpty)
                   _DetailChip(label: capitalLabel, value: country.capital!),
@@ -75,7 +76,9 @@ class _DetailChip extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     return Chip(
       label: Text('$label: $value', style: theme.textTheme.bodySmall),
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.responsiveHorizontalGapS,
+      ),
     );
   }
 }

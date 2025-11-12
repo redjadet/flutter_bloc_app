@@ -2,7 +2,9 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_sections.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class ExamplePageBody extends StatelessWidget {
   const ExamplePageBody({
@@ -76,70 +78,133 @@ class ExamplePageBody extends StatelessWidget {
               ),
             ),
             SizedBox(height: UI.gapL),
-            Icon(Icons.explore, size: 64, color: colors.primary),
-            SizedBox(height: UI.gapM),
+            Icon(
+              Icons.explore,
+              size: context.responsiveIconSize * 2.5,
+              color: colors.primary,
+            ),
+            SizedBox(height: context.responsiveGapM),
             Text(
               l10n.examplePageDescription,
               style: theme.textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: UI.gapL),
-            FilledButton(
+            SizedBox(height: context.responsiveGapL),
+            PlatformAdaptive.filledButton(
+              context: context,
               onPressed: onBackPressed,
               child: Text(l10n.exampleBackButtonLabel),
             ),
-            SizedBox(height: UI.gapL),
-            FilledButton.icon(
+            SizedBox(height: context.responsiveGapL),
+            PlatformAdaptive.filledButton(
+              context: context,
               onPressed: onLoadPlatformInfo,
-              icon: const Icon(Icons.phone_iphone),
-              label: Text(l10n.exampleNativeInfoButton),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.phone_iphone, size: context.responsiveIconSize),
+                  SizedBox(width: context.responsiveHorizontalGapS),
+                  Text(l10n.exampleNativeInfoButton),
+                ],
+              ),
             ),
-            SizedBox(height: UI.gapS),
-            FilledButton.icon(
+            SizedBox(height: context.responsiveGapS),
+            PlatformAdaptive.filledButton(
+              context: context,
               onPressed: onOpenWebsocket,
-              icon: const Icon(Icons.wifi),
-              label: Text(l10n.exampleWebsocketButton),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.wifi, size: context.responsiveIconSize),
+                  SizedBox(width: context.responsiveHorizontalGapS),
+                  Text(l10n.exampleWebsocketButton),
+                ],
+              ),
             ),
-            SizedBox(height: UI.gapS),
-            FilledButton.icon(
+            SizedBox(height: context.responsiveGapS),
+            PlatformAdaptive.filledButton(
+              context: context,
               onPressed: onOpenChatList,
-              icon: const Icon(Icons.forum_outlined),
-              label: const Text('Chat List Demo'),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.forum_outlined, size: context.responsiveIconSize),
+                  SizedBox(width: context.responsiveHorizontalGapS),
+                  const Text('Chat List Demo'),
+                ],
+              ),
             ),
-            SizedBox(height: UI.gapS),
-            FilledButton.icon(
+            SizedBox(height: context.responsiveGapS),
+            PlatformAdaptive.filledButton(
+              context: context,
               onPressed: onOpenSearch,
-              icon: const Icon(Icons.search),
-              label: const Text('Search Demo'),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.search, size: context.responsiveIconSize),
+                  SizedBox(width: context.responsiveHorizontalGapS),
+                  const Text('Search Demo'),
+                ],
+              ),
             ),
-            SizedBox(height: UI.gapS),
-            FilledButton.icon(
+            SizedBox(height: context.responsiveGapS),
+            PlatformAdaptive.filledButton(
+              context: context,
               onPressed: onOpenProfile,
-              icon: const Icon(Icons.person),
-              label: const Text('Profile Demo'),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.person, size: context.responsiveIconSize),
+                  SizedBox(width: context.responsiveHorizontalGapS),
+                  const Text('Profile Demo'),
+                ],
+              ),
             ),
-            SizedBox(height: UI.gapS),
-            FilledButton.icon(
-              onPressed: onOpenRegister,
-              icon: const Icon(Icons.app_registration),
-              label: const Text('Register Demo'),
+            SizedBox(height: context.responsiveGapS),
+            PlatformAdaptive.filledButton(
               key: const ValueKey('example-register-button'),
+              context: context,
+              onPressed: onOpenRegister,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.app_registration,
+                    size: context.responsiveIconSize,
+                  ),
+                  SizedBox(width: context.responsiveHorizontalGapS),
+                  const Text('Register Demo'),
+                ],
+              ),
             ),
-            SizedBox(height: UI.gapS),
-            FilledButton.icon(
+            SizedBox(height: context.responsiveGapS),
+            PlatformAdaptive.filledButton(
+              context: context,
               onPressed: onOpenLoggedOut,
-              icon: const Icon(Icons.logout),
-              label: const Text('Logged Out Demo'),
-              key: const ValueKey('example-logged-out-button'),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.logout, size: context.responsiveIconSize),
+                  SizedBox(width: context.responsiveHorizontalGapS),
+                  const Text('Logged Out Demo'),
+                ],
+              ),
             ),
-            SizedBox(height: UI.gapL),
-            FilledButton.icon(
+            SizedBox(height: context.responsiveGapL),
+            PlatformAdaptive.filledButton(
               key: const ValueKey('example-run-isolates-button'),
+              context: context,
               onPressed: onRunIsolates,
-              icon: const Icon(Icons.bolt_outlined),
-              label: Text(l10n.exampleRunIsolatesButton),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.bolt_outlined, size: context.responsiveIconSize),
+                  SizedBox(width: context.responsiveHorizontalGapS),
+                  Text(l10n.exampleRunIsolatesButton),
+                ],
+              ),
             ),
-            SizedBox(height: UI.gapS),
+            SizedBox(height: context.responsiveGapS),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),
               child: IsolateResultSection(

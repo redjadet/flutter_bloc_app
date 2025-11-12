@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 /// Common error handling utilities to reduce code duplication
 class ErrorHandling {
@@ -125,7 +126,7 @@ class ErrorHandling {
         content: Row(
           children: [
             const CircularProgressIndicator(),
-            const SizedBox(width: 16),
+            SizedBox(width: context.responsiveHorizontalGapL),
             Expanded(child: Text(message)),
           ],
         ),

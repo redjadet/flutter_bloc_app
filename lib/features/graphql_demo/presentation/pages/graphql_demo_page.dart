@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/graphql_demo.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class GraphqlDemoPage extends StatelessWidget {
   const GraphqlDemoPage({super.key});
@@ -22,9 +23,9 @@ class GraphqlDemoPage extends StatelessWidget {
             children: [
               if (showProgressBar) const LinearProgressIndicator(minHeight: 2),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.pageHorizontalPadding,
+                  vertical: context.responsiveGapM,
                 ),
                 child: _FilterBar(state: state, l10n: l10n),
               ),
@@ -62,7 +63,8 @@ class GraphqlDemoPage extends StatelessWidget {
         message: _errorMessageForState(l10n, state),
         isError: true,
         actions: [
-          ElevatedButton(
+          PlatformAdaptive.button(
+            context: context,
             onPressed: () =>
                 CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
                   context,
@@ -83,7 +85,7 @@ class GraphqlDemoPage extends StatelessWidget {
 
     return ListView.separated(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: context.responsiveListPadding,
       itemBuilder: (final context, final index) {
         final GraphqlCountry country = state.countries[index];
         return GraphqlCountryCard(
@@ -92,7 +94,7 @@ class GraphqlDemoPage extends StatelessWidget {
           currencyLabel: currencyLabel,
         );
       },
-      separatorBuilder: (_, _) => const SizedBox(height: 12),
+      separatorBuilder: (_, _) => SizedBox(height: context.responsiveGapM),
       itemCount: state.countries.length,
     );
   }
@@ -145,7 +147,7 @@ class _FilterBar extends StatelessWidget {
           l10n.graphqlSampleFilterLabel,
           style: Theme.of(context).textTheme.labelMedium,
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: context.responsiveGapS),
         InputDecorator(
           decoration: const InputDecoration(
             border: OutlineInputBorder(),

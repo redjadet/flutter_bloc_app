@@ -71,15 +71,17 @@ class _CustomRateDialogState extends State<_CustomRateDialog> {
       onChanged: _handleChanged,
     ),
     actions: [
-      TextButton(
+      PlatformAdaptive.dialogAction(
+        context: context,
         onPressed: () => Navigator.of(context).pop(),
-        child: Text(widget.cancelLabel),
+        label: widget.cancelLabel,
       ),
-      TextButton(
+      PlatformAdaptive.dialogAction(
+        context: context,
         onPressed: _parsedValue == null
             ? null
             : () => Navigator.of(context).pop(_parsedValue),
-        child: Text(widget.applyLabel),
+        label: widget.applyLabel,
       ),
     ],
   );
@@ -87,22 +89,26 @@ class _CustomRateDialogState extends State<_CustomRateDialog> {
   Widget _buildCupertinoDialog(final BuildContext context) =>
       CupertinoAlertDialog(
         title: Text(widget.title),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 12),
-            CupertinoTextField(
-              controller: _controller,
-              keyboardType: TextInputType.number,
-              autofocus: true,
-              placeholder: widget.fieldLabel,
-              suffix: Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Text(widget.suffixText),
+        content: Builder(
+          builder: (final BuildContext context) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: context.responsiveGapM),
+              CupertinoTextField(
+                controller: _controller,
+                keyboardType: TextInputType.number,
+                autofocus: true,
+                placeholder: widget.fieldLabel,
+                suffix: Padding(
+                  padding: EdgeInsets.only(
+                    right: context.responsiveHorizontalGapS,
+                  ),
+                  child: Text(widget.suffixText),
+                ),
+                onChanged: _handleChanged,
               ),
-              onChanged: _handleChanged,
-            ),
-          ],
+            ],
+          ),
         ),
         actions: [
           CupertinoDialogAction(

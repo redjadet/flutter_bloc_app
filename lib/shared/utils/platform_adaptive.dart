@@ -98,6 +98,7 @@ class PlatformAdaptive {
     required final BuildContext context,
     required final VoidCallback? onPressed,
     required final Widget child,
+    final Key? key,
     final EdgeInsetsGeometry? padding,
     final Color? color,
     final Color? disabledColor,
@@ -105,6 +106,7 @@ class PlatformAdaptive {
   }) {
     if (isCupertino(context)) {
       return CupertinoButton.filled(
+        key: key,
         onPressed: onPressed,
         padding: padding,
         disabledColor: disabledColor ?? CupertinoColors.quaternaryLabel,
@@ -112,6 +114,7 @@ class PlatformAdaptive {
       );
     }
     return FilledButton(
+      key: key,
       onPressed: onPressed,
       style:
           materialStyle ??
