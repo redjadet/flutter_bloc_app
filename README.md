@@ -591,7 +591,13 @@ The `AppLocalizations` files (`lib/l10n/app_localizations*.dart`) are **automati
   flutter gen-l10n
   ```
 
-- **Configuration**: Localization settings are configured in `l10n.yaml` (ARB directory, template file, output class name, etc.).
+- **Configuration**: Localization settings are configured in `l10n.yaml`:
+  - `output-dir: lib/l10n` ensures files are generated in the same directory as `.arb` files, preventing deletion during `flutter run` or build processes
+  - Files are generated alongside source `.arb` files for easier tracking and version control
+- **Preventing deletion**: The `output-dir` configuration ensures localization files persist in `lib/l10n/` and are not cleaned during build processes. Additionally:
+  - Localization files are tracked in git to ensure they persist across builds
+  - A pre-build script (`tool/ensure_localizations.dart`) automatically regenerates files if they're missing during iOS builds
+  - Files are regenerated automatically via `flutter pub get` when `.arb` files change
 
 Supported locales: English (en), Turkish (tr), German (de), French (fr), Spanish (es). Add new locales by creating corresponding `.arb` files (e.g., `app_pt.arb` for Portuguese) and updating `MaterialApp.supportedLocales` in your app configuration.
 

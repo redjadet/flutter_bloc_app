@@ -11,44 +11,32 @@ class ProfileGallery extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
-    final screenWidth = context.screenWidth;
-    final horizontalPadding = context.pageHorizontalPadding;
-
-    // Use existing responsive gap with multipliers
-    final spacing = context.responsiveGap;
-
-    // Responsive columns: use gridColumns but cap at 3 for masonry layout
-    final columnCount = context.isDesktop ? 3 : 2;
-    final totalSpacing = spacing * (columnCount - 1);
-
-    // Use contentMaxWidth if constrained, otherwise full screen width
-    final maxContentWidth = context.contentMaxWidth;
-    final availableScreenWidth = maxContentWidth < screenWidth
-        ? maxContentWidth
-        : screenWidth;
-    final availableWidth =
-        availableScreenWidth - (horizontalPadding * 2) - totalSpacing;
-    final columnWidth = availableWidth / columnCount;
+    final gridLayout = context.calculateGridLayout(
+      mobileColumns: 2,
+      tabletColumns: 2,
+      desktopColumns: 3,
+      maxContentWidth: context.contentMaxWidth,
+    );
 
     // Distribute images across columns
-    final columns = List.generate(columnCount, (_) => <ProfileImage>[]);
+    final columns = List.generate(gridLayout.columns, (_) => <ProfileImage>[]);
     for (int i = 0; i < images.length; i++) {
-      columns[i % columnCount].add(images[i]);
+      columns[i % gridLayout.columns].add(images[i]);
     }
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      padding: EdgeInsets.symmetric(horizontal: gridLayout.horizontalPadding),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (int i = 0; i < columnCount; i++) ...[
-            if (i > 0) SizedBox(width: spacing),
+          for (int i = 0; i < gridLayout.columns; i++) ...[
+            if (i > 0) SizedBox(width: gridLayout.spacing),
             Expanded(
               child: _GalleryColumn(
                 images: columns[i],
                 theme: theme,
-                columnWidth: columnWidth,
-                spacing: spacing,
+                columnWidth: gridLayout.itemWidth,
+                spacing: gridLayout.spacing,
               ),
             ),
           ],

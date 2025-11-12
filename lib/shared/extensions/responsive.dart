@@ -10,3 +10,6 @@ part 'responsive/helpers.dart';
 part 'responsive/responsive_metrics.dart';
 part 'responsive/responsive_layout.dart';
 part 'responsive/responsive_spacing.dart';
+part 'responsive/responsive_grid.dart';
+part 'responsive/responsive_typography.dart';
+part 'responsive/responsive_buttons.dart';

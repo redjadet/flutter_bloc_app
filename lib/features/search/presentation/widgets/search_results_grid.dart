@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
@@ -13,32 +11,27 @@ class SearchResultsGrid extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
-    final screenWidth = context.screenWidth;
-    final horizontalPadding = context.pageHorizontalPadding;
-    final availableWidth = screenWidth - (horizontalPadding * 2);
-    final int columns = math.max(3, context.gridColumns);
-    final double spacing = context.responsiveGap;
-    final double totalSpacing = spacing * (columns - 1);
-    final double constrainedWidth = (availableWidth - totalSpacing)
-        .clamp(0, double.maxFinite)
-        .toDouble();
-    final double itemWidth = constrainedWidth / columns;
+    final gridLayout = context.calculateGridLayout(
+      mobileColumns: 2,
+      tabletColumns: 3,
+      desktopColumns: 4,
+    );
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      padding: EdgeInsets.symmetric(horizontal: gridLayout.horizontalPadding),
       child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: columns,
-          crossAxisSpacing: spacing,
-          mainAxisSpacing: spacing,
+        gridDelegate: context.createResponsiveGridDelegate(
+          mobileColumns: 2,
+          tabletColumns: 3,
+          desktopColumns: 4,
         ),
         itemCount: results.length,
         itemBuilder: (final context, final index) {
           final result = results[index];
           return ClipRect(
             child: SizedBox(
-              width: itemWidth,
-              height: itemWidth,
+              width: gridLayout.itemWidth,
+              height: gridLayout.itemWidth,
               child: FancyShimmerImage(
                 imageUrl: result.imageUrl,
                 boxFit: BoxFit.cover,

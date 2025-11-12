@@ -1,6 +1,6 @@
 part of 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
-/// Layout-specific responsive helpers for paddings, typography, and surfaces.
+/// Layout-specific responsive helpers for paddings, margins, and surfaces.
 extension ResponsiveLayoutContext on BuildContext {
   double get pageHorizontalPadding => _scaledWidth(
     this,
@@ -39,66 +39,10 @@ extension ResponsiveLayoutContext on BuildContext {
     );
   }
 
-  double get responsiveFontSize => _scaledFont(
-    this,
-    mobile: 14,
-    tablet: 16,
-    desktop: 16,
-  );
-
-  double get responsiveIconSize => _scaledFont(
-    this,
-    mobile: 20,
-    tablet: 24,
-    desktop: 24,
-  );
-
   int get gridColumns => responsiveValue<int>(
     mobile: 2,
     tablet: 3,
     desktop: 4,
-  );
-
-  double get responsiveButtonHeight => _scaledHeight(
-    this,
-    mobile: 48,
-    tablet: 56,
-    desktop: 56,
-  );
-
-  double get responsiveButtonPadding => _scaledWidth(
-    this,
-    mobile: 16,
-    tablet: 24,
-    desktop: 24,
-  );
-
-  double get responsiveHeadlineSize => _scaledFont(
-    this,
-    mobile: 24,
-    tablet: 32,
-    desktop: 32,
-  );
-
-  double get responsiveTitleSize => _scaledFont(
-    this,
-    mobile: 20,
-    tablet: 24,
-    desktop: 24,
-  );
-
-  double get responsiveBodySize => _scaledFont(
-    this,
-    mobile: 14,
-    tablet: 16,
-    desktop: 16,
-  );
-
-  double get responsiveCaptionSize => _scaledFont(
-    this,
-    mobile: 12,
-    tablet: 14,
-    desktop: 14,
   );
 
   double get responsiveCardPadding => _scaledWidth(
@@ -205,19 +149,5 @@ extension ResponsiveLayoutContext on BuildContext {
 
   EdgeInsets get responsiveBubbleMargin => EdgeInsets.symmetric(
     vertical: responsiveGapS / 2,
-  );
-
-  double get responsiveErrorIconSize => _scaledFont(
-    this,
-    mobile: 48,
-    tablet: 64,
-    desktop: 64,
-  );
-
-  double get responsiveErrorIconSizeLarge => _scaledFont(
-    this,
-    mobile: 64,
-    tablet: 80,
-    desktop: 80,
   );
 }
