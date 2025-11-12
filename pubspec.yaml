@@ -57,6 +57,8 @@ dependencies:
   go_router: ^17.0.0
   google_fonts: ^6.2.1
   google_maps_flutter: ^2.14.0
+  hive: ^2.2.0
+  hive_flutter: ^1.1.0
   http: ^1.6.0
   intl: ^0.20.2
   json_annotation: ^4.9.0
@@ -64,6 +66,7 @@ dependencies:
   logger: ^2.6.2
   meta: ^1.16.0
   package_info_plus: ^9.0.0
+  path_provider: ^2.1.1
   responsive_framework: ^1.5.1
   shared_preferences: ^2.5.3
   skeletonizer: ^2.1.0+1

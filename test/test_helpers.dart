@@ -11,11 +11,14 @@ import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -322,4 +325,43 @@ class _FakeTimerHandle implements TimerDisposable {
   final void Function() _onDispose;
   @override
   void dispose() => _onDispose();
+}
+
+/// Waits until every rendered [CounterPage] exposes a [CounterCubit] whose
+/// state is no longer loading.
+Future<void> waitForCounterCubitsToLoad(
+  WidgetTester tester, {
+  Duration timeout = const Duration(seconds: 5),
+}) async {
+  final Stopwatch stopwatch = Stopwatch()..start();
+  final Finder counterPageFinder = find.byType(CounterPage);
+
+  while (stopwatch.elapsed < timeout) {
+    final List<Element> elements = counterPageFinder.evaluate().toList();
+    if (elements.isNotEmpty) {
+      final bool allLoaded = elements.every((final element) {
+        final CounterCubit cubit = element.read<CounterCubit>();
+        return !cubit.state.status.isLoading;
+      });
+      if (allLoaded) {
+        return;
+      }
+    }
+    await tester.pump(const Duration(milliseconds: 50));
+  }
+
+  throw StateError(
+    'CounterCubit did not finish loading within ${timeout.inMilliseconds}ms',
+  );
+}
+
+/// Overrides the CounterRepository in GetIt with a MockCounterRepository.
+///
+/// This is useful for tests that need deterministic behavior without
+/// actual database operations.
+void overrideCounterRepository() {
+  if (getIt.isRegistered<CounterRepository>()) {
+    getIt.unregister<CounterRepository>();
+  }
+  getIt.registerSingleton<CounterRepository>(MockCounterRepository());
 }

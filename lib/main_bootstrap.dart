@@ -12,6 +12,8 @@ import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/core/platform_init.dart';
 import 'package:flutter_bloc_app/firebase_options.dart';
+import 'package:flutter_bloc_app/shared/storage/shared_preferences_migration_service.dart';
+import 'package:flutter_bloc_app/shared/utils/initialization_guard.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 Future<void> runAppWithFlavor(final Flavor flavor) async {
@@ -37,6 +39,13 @@ Future<void> runAppWithFlavor(final Flavor flavor) async {
 
   await SecretConfig.load(allowAssetFallback: allowAssets);
   await configureDependencies();
+  // Run migration from SharedPreferences to Hive if needed
+  // Handle migration failures gracefully - app can continue without migration
+  await InitializationGuard.executeSafely(
+    () => getIt<SharedPreferencesMigrationService>().migrateIfNeeded(),
+    context: 'runAppWithFlavor',
+    failureMessage: 'Migration failed during app startup. App will continue.',
+  );
   runApp(const MyApp());
 }
 

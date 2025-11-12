@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -12,8 +14,15 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 void main() {
+  setUpAll(() async {
+    // Initialize Hive for testing
+    final Directory testDir = Directory.systemTemp.createTempSync('hive_test_');
+    Hive.init(testDir.path);
+  });
+
   setUp(() async {
     await configureDependencies();
   });
