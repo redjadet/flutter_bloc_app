@@ -30,8 +30,4 @@ abstract class CounterState with _$CounterState {
 
   /// Auto decrement stays active while the counter is above zero.
   bool get isAutoDecrementActive => count > 0;
-
-  /// Deprecated: Use [error] instead. Kept for backward compatibility.
-  @Deprecated('Use error instead')
-  String? get errorMessage => error?.type.name;
 }

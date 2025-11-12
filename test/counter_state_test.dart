@@ -18,16 +18,14 @@ void main() {
     expect(state.countdownSeconds, 7);
   });
 
-  test(
-    'CounterState exposes deprecated errorMessage getter for compatibility',
-    () {
-      const CounterState state = CounterState(
-        count: 0,
-        error: CounterError.cannotGoBelowZero(),
-      );
+  test('CounterState exposes error property', () {
+    const CounterState state = CounterState(
+      count: 0,
+      error: CounterError.cannotGoBelowZero(),
+    );
 
-      // ignore: deprecated_member_use_from_same_package
-      expect(state.errorMessage, CounterErrorType.cannotGoBelowZero.name);
-    },
-  );
+    expect(state.error, isNotNull);
+    expect(state.error?.type, CounterErrorType.cannotGoBelowZero);
+    expect(state.error?.type.name, CounterErrorType.cannotGoBelowZero.name);
+  });
 }
