@@ -6,76 +6,133 @@
     ":dependencyDashboard",
     ":separateMultipleMajorReleases"
   ],
-  "labels": ["dependencies"],
+  "labels": [
+    "dependencies"
+  ],
   "rangeStrategy": "bump",
   "automerge": false,
   "automergeType": "pr",
   "prConcurrentLimit": 3,
   "prHourlyLimit": 2,
   "timezone": "UTC",
-  "schedule": ["after 9am and before 5pm on Monday to Friday"],
+  "schedule": [
+    "after 9am and before 5pm on Monday to Friday"
+  ],
   "packageRules": [
     {
       "description": "Enable Renovate for pub (Flutter/Dart) dependencies",
-      "matchManagers": ["pub"],
+      "matchManagers": [
+        "pub"
+      ],
       "enabled": true
     },
     {
       "description": "Group minor/patch Flutter/Dart updates",
-      "matchManagers": ["pub"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": [
+        "pub"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "groupName": "dart-minor-patch",
-      "schedule": ["after 9am and before 5pm on Monday to Friday"]
+      "schedule": [
+        "after 9am and before 5pm on Monday to Friday"
+      ]
     },
     {
       "description": "Separate major version updates for Flutter SDK",
-      "matchPackageNames": ["flutter", "flutter_test"],
-      "matchManagers": ["pub"],
-      "matchUpdateTypes": ["major"],
+      "matchPackageNames": [
+        "flutter",
+        "flutter_test"
+      ],
+      "matchManagers": [
+        "pub"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "groupName": "flutter-sdk-major",
-      "schedule": ["after 9am and before 5pm on Monday to Friday"]
+      "schedule": [
+        "after 9am and before 5pm on Monday to Friday"
+      ]
     },
     {
       "description": "Separate major version updates for Firebase packages",
-      "matchPackagePatterns": ["^firebase_"],
-      "matchManagers": ["pub"],
-      "matchUpdateTypes": ["major"],
+      "matchManagers": [
+        "pub"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "groupName": "firebase-major",
-      "schedule": ["after 9am and before 5pm on Monday to Friday"]
+      "schedule": [
+        "after 9am and before 5pm on Monday to Friday"
+      ],
+      "matchPackageNames": [
+        "/^firebase_/"
+      ]
     },
     {
       "description": "Separate major version updates for BLoC packages",
-      "matchPackagePatterns": ["^flutter_bloc", "^bloc_test"],
-      "matchManagers": ["pub"],
-      "matchUpdateTypes": ["major"],
+      "matchManagers": [
+        "pub"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "groupName": "bloc-major",
-      "schedule": ["after 9am and before 5pm on Monday to Friday"]
+      "schedule": [
+        "after 9am and before 5pm on Monday to Friday"
+      ],
+      "matchPackageNames": [
+        "/^flutter_bloc/",
+        "/^bloc_test/"
+      ]
     },
     {
       "description": "Pin Flutter SDK version",
-      "matchPackageNames": ["flutter"],
-      "matchManagers": ["pub"],
+      "matchPackageNames": [
+        "flutter"
+      ],
+      "matchManagers": [
+        "pub"
+      ],
       "rangeStrategy": "pin"
     },
     {
       "description": "Ignore dependency_overrides (handled manually)",
-      "matchManagers": ["pub"],
-      "matchDepTypes": ["override"],
+      "matchManagers": [
+        "pub"
+      ],
+      "matchDepTypes": [
+        "override"
+      ],
       "enabled": false
     },
     {
       "description": "Auto-merge patch updates for dev dependencies",
-      "matchManagers": ["pub"],
-      "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["patch"],
+      "matchManagers": [
+        "pub"
+      ],
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
       "automerge": true,
-      "automergeType": "pr",
-      "requiredStatusChecks": []
+      "automergeType": "pr"
     }
   ],
   "vulnerabilityAlerts": {
     "enabled": true,
-    "schedule": ["at any time"],
-    "labels": ["security", "dependencies"]
+    "schedule": [
+      "at any time"
+    ],
+    "labels": [
+      "security",
+      "dependencies"
+    ]
   }
 }
