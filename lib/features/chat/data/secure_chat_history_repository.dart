@@ -60,7 +60,3 @@ class SecureChatHistoryRepository implements ChatHistoryRepository {
     );
   }
 }
-
-/// Backward-compatible alias for legacy imports.
-@Deprecated('Use SecureChatHistoryRepository instead')
-typedef SharedPreferencesChatHistoryRepository = SecureChatHistoryRepository;
