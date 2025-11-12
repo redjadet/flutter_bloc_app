@@ -92,6 +92,10 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 | --- | --- |
 | ![Payment calculator screen](assets/screenshots/calculator.png) | ![Payment summary screen](assets/screenshots/paymentSummary.png) |
 
+| Register | Country Code Picker |
+| --- | --- |
+| ![Register screen](assets/screenshots/register.png) | ![Country code picker](assets/screenshots/country_code.png) |
+
 ## Test Coverage
 
 - Latest line coverage: **72.16%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
