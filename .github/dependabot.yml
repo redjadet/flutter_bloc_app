@@ -1,0 +1,25 @@
+# Dependabot configuration as backup to Renovate
+# Note: Renovate is the primary dependency update tool
+# Dependabot will only monitor for security vulnerabilities
+
+version: 2
+updates:
+  - package-ecosystem: "pub"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "security"
+    # Only create PRs for security updates
+    ignore:
+      - dependency-type: "all"
+        update-types: ["version-update:semver-minor", "version-update:semver-patch"]
+    # Focus on security vulnerabilities
+    commit-message:
+      prefix: "security"
+      include: "scope"
+
