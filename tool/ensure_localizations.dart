@@ -1,4 +1,5 @@
 #!/usr/bin/env dart
+
 import 'dart:io';
 
 /// Ensures localization files exist before build.

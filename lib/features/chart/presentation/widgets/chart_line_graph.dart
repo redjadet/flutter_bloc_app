@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:intl/intl.dart';
 
@@ -96,7 +97,7 @@ class ChartLineGraph extends StatelessWidget {
 
     return InteractiveViewer(
       maxScale: 6,
-      boundaryMargin: const EdgeInsets.all(24),
+      boundaryMargin: EdgeInsets.all(context.responsiveGapL),
       child: chart,
     );
   }

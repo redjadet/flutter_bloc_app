@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class FallbackSignInContent extends StatelessWidget {
   const FallbackSignInContent({
@@ -25,7 +27,7 @@ class FallbackSignInContent extends StatelessWidget {
         Theme.of(context).platform == TargetPlatform.macOS;
     final Widget content = Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: context.responsiveStatePadding,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -35,10 +37,10 @@ class FallbackSignInContent extends StatelessWidget {
               textAlign: TextAlign.center,
               style: theme.textTheme.headlineSmall,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: context.responsiveGapL),
             if (upgradingAnonymous)
               Padding(
-                padding: const EdgeInsets.only(bottom: 24),
+                padding: EdgeInsets.only(bottom: context.responsiveGapL),
                 child: Text(
                   l10n.anonymousUpgradeHint,
                   textAlign: TextAlign.center,
@@ -50,9 +52,10 @@ class FallbackSignInContent extends StatelessWidget {
               textAlign: TextAlign.center,
               style: theme.textTheme.bodySmall,
             ),
-            const SizedBox(height: 12),
-            FilledButton.tonal(
+            SizedBox(height: context.responsiveGapM),
+            PlatformAdaptive.filledButton(
               key: signInGuestButtonKey,
+              context: context,
               onPressed: signInAnonymously,
               child: Text(l10n.anonymousSignInButton),
             ),
