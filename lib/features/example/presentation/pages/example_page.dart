@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/features/example/presentation/helpers/example_platform_dialogs.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_page_body.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:go_router/go_router.dart';
@@ -27,7 +28,7 @@ class _ExamplePageState extends State<ExamplePage> {
   List<int>? _parallelResult;
   Duration? _parallelDuration;
 
-  Future<void> _loadPlatformInfo(final BuildContext context) async {
+  Future<void> _loadPlatformInfo() async {
     if (_isFetchingInfo) return;
     setState(() {
       _isFetchingInfo = true;
@@ -35,13 +36,25 @@ class _ExamplePageState extends State<ExamplePage> {
     try {
       final NativePlatformInfo info = await _platformService.getPlatformInfo();
       if (!mounted) return;
-      await _showPlatformInfoDialog(info);
+      await showExamplePlatformInfoDialog(context: context, info: info);
     } on PlatformException catch (error) {
-      await _showPlatformInfoErrorDialog(error.message);
+      if (!mounted) return;
+      await showExamplePlatformInfoErrorDialog(
+        context: context,
+        message: error.message,
+      );
     } on MissingPluginException catch (error) {
-      await _showPlatformInfoErrorDialog(error.message);
+      if (!mounted) return;
+      await showExamplePlatformInfoErrorDialog(
+        context: context,
+        message: error.message,
+      );
     } on Exception catch (error) {
-      await _showPlatformInfoErrorDialog(error.toString());
+      if (!mounted) return;
+      await showExamplePlatformInfoErrorDialog(
+        context: context,
+        message: error.toString(),
+      );
     } finally {
       if (mounted) {
         setState(() {
@@ -112,111 +125,6 @@ class _ExamplePageState extends State<ExamplePage> {
     });
   }
 
-  Future<void> _showPlatformInfoDialog(final NativePlatformInfo info) async {
-    if (!mounted) return;
-    final l10n = context.l10n;
-    final List<Widget> rows = <Widget>[
-      _buildInfoRow(
-        l10n.exampleNativeInfoDialogPlatformLabel,
-        info.platform,
-      ),
-      _buildInfoRow(
-        l10n.exampleNativeInfoDialogVersionLabel,
-        info.version,
-      ),
-      if (info.manufacturer != null)
-        _buildInfoRow(
-          l10n.exampleNativeInfoDialogManufacturerLabel,
-          info.manufacturer!,
-        ),
-      if (info.model != null)
-        _buildInfoRow(
-          l10n.exampleNativeInfoDialogModelLabel,
-          info.model!,
-        ),
-      if (info.batteryLevel != null)
-        _buildInfoRow(
-          l10n.exampleNativeInfoDialogBatteryLabel,
-          '${info.batteryLevel}%',
-        ),
-    ];
-
-    await showAdaptiveDialog<void>(
-      context: context,
-      builder: (final BuildContext dialogContext) => AlertDialog.adaptive(
-        title: Text(l10n.exampleNativeInfoDialogTitle),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: rows,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(l10n.exampleDialogCloseButton),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _showPlatformInfoErrorDialog(final String? message) async {
-    if (!mounted) return;
-    final l10n = context.l10n;
-    final String? detail = (message?.trim().isNotEmpty ?? false)
-        ? message!.trim()
-        : null;
-    await showAdaptiveDialog<void>(
-      context: context,
-      builder: (final BuildContext dialogContext) => AlertDialog.adaptive(
-        title: Text(l10n.exampleNativeInfoDialogTitle),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l10n.exampleNativeInfoError),
-            if (detail != null) ...[
-              const SizedBox(height: 12),
-              Text(detail),
-            ],
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(l10n.exampleDialogCloseButton),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(final String label, final String value) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Text(
-            label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            value,
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.right,
-          ),
-        ),
-      ],
-    ),
-  );
-
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
@@ -229,9 +137,7 @@ class _ExamplePageState extends State<ExamplePage> {
         theme: theme,
         colors: colors,
         onBackPressed: () => NavigationUtils.popOrGoHome(context),
-        onLoadPlatformInfo: _isFetchingInfo
-            ? null
-            : () => _loadPlatformInfo(context),
+        onLoadPlatformInfo: _isFetchingInfo ? null : _loadPlatformInfo,
         onOpenWebsocket: () => context.pushNamed(AppRoutes.websocket),
         onOpenChatList: () => context.pushNamed(AppRoutes.chatList),
         onOpenSearch: () => context.pushNamed(AppRoutes.search),
