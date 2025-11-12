@@ -13,7 +13,17 @@ part 'rest_counter_repository_watch.dart';
 
 /// Example REST-backed implementation of [CounterRepository].
 ///
-/// This is a scaffold with TODOs. Wire endpoints, auth and models as needed.
+/// **Note:** This is an intentionally incomplete example implementation
+/// demonstrating how to structure a REST-based repository. It is not used
+/// in production and serves as a reference for other developers to
+/// implement their own REST-backed repositories.
+///
+/// To use this implementation:
+/// 1. Wire actual REST API endpoints
+/// 2. Add authentication headers/tokens
+/// 3. Implement proper error handling for your API
+/// 4. Add request/response models as needed
+/// 5. Register in `lib/core/di/injector.dart` if needed
 class RestCounterRepository implements CounterRepository {
   RestCounterRepository({
     required final String baseUrl,
