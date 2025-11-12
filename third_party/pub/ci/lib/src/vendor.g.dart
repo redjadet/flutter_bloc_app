@@ -29,8 +29,9 @@ class Vendor {
 
   /// Returns true if Azure Pipelines is the current CI vendor.
   static bool get IS_AZURE_PIPELINES {
-    return Platform.environment
-        .containsKey('SYSTEM_TEAMFOUNDATIONCOLLECTIONURI');
+    return Platform.environment.containsKey(
+      'SYSTEM_TEAMFOUNDATIONCOLLECTIONURI',
+    );
   }
 
   /// Returns true if Bamboo is the current CI vendor.

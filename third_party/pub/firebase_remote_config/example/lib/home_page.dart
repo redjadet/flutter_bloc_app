@@ -89,8 +89,9 @@ class _HomePageState extends State<HomePage> {
                   return 'Listening cancelled';
                 }
                 setState(() {
-                  subscription =
-                      remoteConfig.onConfigUpdated.listen((event) async {
+                  subscription = remoteConfig.onConfigUpdated.listen((
+                    event,
+                  ) async {
                     // Make new values available to the app.
                     await remoteConfig.activate();
 

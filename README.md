@@ -139,7 +139,7 @@ Small demo app showcasing BLoC (Cubit) state management, **encrypted local datab
 
 ## Test Coverage
 
-- Latest line coverage: **72.36%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
+- Latest line coverage: **72.51%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
 - Test Infrastructure: Global test configuration with automatic log suppression during test execution for cleaner output.
 - **Storage Tests**: Comprehensive unit tests for Hive repositories (`HiveCounterRepository`, `HiveLocaleRepository`, `HiveThemeRepository`) and migration service, ensuring data integrity and encryption functionality.
 
@@ -580,6 +580,21 @@ flutter run
 # optional when platform/build-risk changes: flutter build ios --simulator
 ```
 
+### Localization
+
+The `AppLocalizations` files (`lib/l10n/app_localizations*.dart`) are **automatically regenerated** when you run `flutter pub get` because `generate: true` is set in `pubspec.yaml`. This means:
+
+- **Automatic regeneration**: After modifying `.arb` files in `lib/l10n/`, simply run `flutter pub get` and the Dart localization files will be regenerated automatically.
+- **Manual regeneration**: If you need to regenerate localization files manually (e.g., after editing `.arb` files without running `pub get`), use:
+
+  ```bash
+  flutter gen-l10n
+  ```
+
+- **Configuration**: Localization settings are configured in `l10n.yaml` (ARB directory, template file, output class name, etc.).
+
+Supported locales: English (en), Turkish (tr), German (de), French (fr), Spanish (es). Add new locales by creating corresponding `.arb` files (e.g., `app_pt.arb` for Portuguese) and updating `MaterialApp.supportedLocales` in your app configuration.
+
 ### Secrets setup
 
 For local development, copy `assets/config/secrets.sample.json` to
@@ -704,6 +719,7 @@ This project is available for free use in public, non-commercial repositories un
 - `dart run tool/update_coverage_summary.dart` – regenerate `coverage/coverage_summary.md` from `coverage/lcov.info`, excluding generated and localization files.
 - `dart run custom_lint` – run custom linting rules including file length enforcement.
 - `test/flutter_test_config.dart` – global test configuration that automatically suppresses logging during test execution for cleaner output.
+- `flutter gen-l10n` – manually regenerate `AppLocalizations` files from `.arb` files (normally done automatically via `flutter pub get` when `generate: true` is set in `pubspec.yaml`).
 
 Optional:
 

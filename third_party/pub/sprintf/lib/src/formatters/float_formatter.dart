@@ -16,7 +16,7 @@ class FloatFormatter extends Formatter {
   String? _output;
 
   FloatFormatter(this._arg, var fmt_type, var options)
-      : super(fmt_type, options) {
+    : super(fmt_type, options) {
     if (_arg.isNaN) {
       _has_init = true;
       return;
@@ -35,8 +35,9 @@ class FloatFormatter extends Formatter {
       _arg = -_arg;
     }
 
-    var arg_str =
-        _arg == _arg.truncate() ? _arg.toStringAsFixed(1) : _arg.toString();
+    var arg_str = _arg == _arg.truncate()
+        ? _arg.toStringAsFixed(1)
+        : _arg.toString();
 
     var m1 = _number_rx.firstMatch(arg_str);
     if (m1 != null) {
@@ -62,8 +63,9 @@ class FloatFormatter extends Formatter {
           if (leading_zeroes_match != null) {
             var zeroes_count = leading_zeroes_match.group(1)!.length;
             // print("zeroes_count=${zeroes_count}");
-            _exponent =
-                zeroes_count > 0 ? -(zeroes_count + 1) : zeroes_count - 1;
+            _exponent = zeroes_count > 0
+                ? -(zeroes_count + 1)
+                : zeroes_count - 1;
           } else {
             _exponent = 0;
           }
@@ -87,12 +89,14 @@ class FloatFormatter extends Formatter {
           _digits.addAll(int_part.split('').map(int.parse));
           _digits.addAll(fraction.split('').map(int.parse));
           _digits.addAll(
-              Formatter.get_padding(diff, '0').split('').map(int.parse));
+            Formatter.get_padding(diff, '0').split('').map(int.parse),
+          );
         } else {
           var diff = int_part.length - _exponent - 1;
           _decimal = int_part.length;
           _digits.addAll(
-              Formatter.get_padding(diff, '0').split('').map(int.parse));
+            Formatter.get_padding(diff, '0').split('').map(int.parse),
+          );
           _digits.addAll(int_part.split('').map(int.parse));
           _digits.addAll(fraction.split('').map(int.parse));
         }
@@ -158,11 +162,15 @@ class FloatFormatter extends Formatter {
           sig_digs -= _decimal;
           var precision = max<num>(options['precision'] - 1 - _exp, sig_digs);
 
-          ret = asFixed(precision.toInt(),
-              remove_trailing_zeros: !options['alternate_form']);
+          ret = asFixed(
+            precision.toInt(),
+            remove_trailing_zeros: !options['alternate_form'],
+          );
         } else {
-          ret = asExponential(options['precision'] - 1,
-              remove_trailing_zeros: !options['alternate_form']);
+          ret = asExponential(
+            options['precision'] - 1,
+            remove_trailing_zeros: !options['alternate_form'],
+          );
         }
       }
     }
@@ -201,7 +209,8 @@ class FloatFormatter extends Formatter {
 
     if (extra_zeroes > 0) {
       _digits.addAll(
-          Formatter.get_padding(extra_zeroes, '0').split('').map(int.parse));
+        Formatter.get_padding(extra_zeroes, '0').split('').map(int.parse),
+      );
     }
 
     _round(offset + 1, offset);
@@ -227,7 +236,8 @@ class FloatFormatter extends Formatter {
 
     if (extra_zeroes > 0) {
       _digits.addAll(
-          Formatter.get_padding(extra_zeroes, '0').split('').map(int.parse));
+        Formatter.get_padding(extra_zeroes, '0').split('').map(int.parse),
+      );
     }
 
     _round(offset + precision, offset);
