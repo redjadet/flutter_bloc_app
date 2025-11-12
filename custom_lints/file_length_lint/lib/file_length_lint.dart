@@ -117,9 +117,9 @@ class _FileLengthLint extends DartLintRule {
 class _Glob {
   _Glob(final String pattern) : _regex = _createRegex(pattern);
 
-  final RegExp _regex;
+  final Pattern _regex;
 
-  bool matches(final String input) => _regex.hasMatch(input);
+  bool matches(final String input) => (_regex as RegExp).hasMatch(input);
 
   static RegExp _createRegex(final String pattern) {
     final StringBuffer buffer = StringBuffer('^');

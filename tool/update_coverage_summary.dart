@@ -264,13 +264,13 @@ class _Updator {
       return;
     }
     final List<String> lines = readme.readAsLinesSync();
-    final RegExp marker = RegExp(
+    final Pattern marker = RegExp(
       r'Latest line coverage: \*\*([0-9]+\.?[0-9]*)%\*\*',
     );
     bool updated = false;
     for (int i = 0; i < lines.length; i++) {
       final String line = lines[i];
-      final Match? match = marker.firstMatch(line);
+      final Match? match = (marker as RegExp).firstMatch(line);
       if (match != null) {
         final String replacement = line.replaceFirst(
           marker,

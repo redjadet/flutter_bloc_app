@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
 
 class ChatMessageList extends StatelessWidget {
   const ChatMessageList({required this.controller, super.key});
@@ -64,35 +65,14 @@ class ChatMessageList extends StatelessWidget {
           itemBuilder: (final context, final index) {
             final ChatMessage message = state.messages[index];
             final bool isUser = message.author == ChatAuthor.user;
-            final Alignment alignment = isUser
-                ? Alignment.centerRight
-                : Alignment.centerLeft;
-            final Color bubbleColor = isUser
-                ? theme.colorScheme.primary
-                : theme.colorScheme.surfaceContainerHighest;
-            final Color textColor = isUser
-                ? theme.colorScheme.onPrimary
-                : theme.colorScheme.onSurface;
 
-            return Align(
-              alignment: alignment,
-              child: Container(
-                margin: context.responsiveBubbleMargin,
-                padding: context.responsiveBubblePadding,
-                constraints: BoxConstraints(
-                  maxWidth: context.widthFraction(0.75),
-                ),
-                decoration: BoxDecoration(
-                  color: bubbleColor,
-                  borderRadius: BorderRadius.circular(
-                    context.responsiveCardRadius,
-                  ),
-                ),
-                child: Text(
-                  message.text,
-                  style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
-                ),
-              ),
+            return MessageBubble(
+              message: message.text,
+              isOutgoing: isUser,
+              outgoingColor: theme.colorScheme.primary,
+              incomingColor: theme.colorScheme.surfaceContainerHighest,
+              outgoingTextColor: theme.colorScheme.onPrimary,
+              incomingTextColor: theme.colorScheme.onSurface,
             );
           },
         );

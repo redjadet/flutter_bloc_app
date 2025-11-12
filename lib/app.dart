@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +7,7 @@ import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/features.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:go_router/go_router.dart';
 
 /// Main application widget
@@ -84,16 +83,14 @@ class _MyAppState extends State<MyApp> {
       GoRoute(
         path: AppRoutes.graphqlPath,
         name: AppRoutes.graphql,
-        builder: (final context, final state) => BlocProvider(
-          create: (_) {
-            final cubit = GraphqlDemoCubit(
-              repository: getIt<GraphqlDemoRepository>(),
-            );
-            unawaited(cubit.loadInitial());
-            return cubit;
-          },
-          child: const GraphqlDemoPage(),
-        ),
+        builder: (final context, final state) =>
+            BlocProviderHelpers.withAsyncInit<GraphqlDemoCubit>(
+              create: () => GraphqlDemoCubit(
+                repository: getIt<GraphqlDemoRepository>(),
+              ),
+              init: (cubit) => cubit.loadInitial(),
+              child: const GraphqlDemoPage(),
+            ),
       ),
       GoRoute(
         path: AppRoutes.chartsPath,
@@ -113,16 +110,14 @@ class _MyAppState extends State<MyApp> {
       GoRoute(
         path: AppRoutes.profilePath,
         name: AppRoutes.profile,
-        builder: (final context, final state) => BlocProvider(
-          create: (_) {
-            final cubit = ProfileCubit(
-              repository: getIt<ProfileRepository>(),
-            );
-            unawaited(cubit.loadProfile());
-            return cubit;
-          },
-          child: const ProfilePage(),
-        ),
+        builder: (final context, final state) =>
+            BlocProviderHelpers.withAsyncInit<ProfileCubit>(
+              create: () => ProfileCubit(
+                repository: getIt<ProfileRepository>(),
+              ),
+              init: (cubit) => cubit.loadProfile(),
+              child: const ProfilePage(),
+            ),
       ),
       GoRoute(
         path: AppRoutes.registerPath,
@@ -137,18 +132,16 @@ class _MyAppState extends State<MyApp> {
       GoRoute(
         path: AppRoutes.chatPath,
         name: AppRoutes.chat,
-        builder: (final context, final state) => BlocProvider(
-          create: (_) {
-            final cubit = ChatCubit(
-              repository: getIt<ChatRepository>(),
-              historyRepository: getIt<ChatHistoryRepository>(),
-              initialModel: SecretConfig.huggingfaceModel,
-            );
-            unawaited(cubit.loadHistory());
-            return cubit;
-          },
-          child: const ChatPage(),
-        ),
+        builder: (final context, final state) =>
+            BlocProviderHelpers.withAsyncInit<ChatCubit>(
+              create: () => ChatCubit(
+                repository: getIt<ChatRepository>(),
+                historyRepository: getIt<ChatHistoryRepository>(),
+                initialModel: SecretConfig.huggingfaceModel,
+              ),
+              init: (cubit) => cubit.loadHistory(),
+              child: const ChatPage(),
+            ),
       ),
       GoRoute(
         path: AppRoutes.chatListPath,
@@ -167,16 +160,14 @@ class _MyAppState extends State<MyApp> {
       GoRoute(
         path: AppRoutes.googleMapsPath,
         name: AppRoutes.googleMaps,
-        builder: (final context, final state) => BlocProvider(
-          create: (_) {
-            final cubit = MapSampleCubit(
-              repository: getIt<MapLocationRepository>(),
-            );
-            unawaited(cubit.loadLocations());
-            return cubit;
-          },
-          child: const GoogleMapsSamplePage(),
-        ),
+        builder: (final context, final state) =>
+            BlocProviderHelpers.withAsyncInit<MapSampleCubit>(
+              create: () => MapSampleCubit(
+                repository: getIt<MapLocationRepository>(),
+              ),
+              init: (cubit) => cubit.loadLocations(),
+              child: const GoogleMapsSamplePage(),
+            ),
       ),
       GoRoute(
         path: AppRoutes.searchPath,

@@ -145,7 +145,7 @@ Small demo app showcasing BLoC (Cubit) state management, **encrypted local datab
 
 ## Tech Stack
 
-- Flutter 3.35.7 (Dart 3.9.2)
+- Flutter 3.38.0 (Dart 3.10.0)
 - `flutter_bloc` for Cubit/BLoC
 - **`hive` & `hive_flutter`** for encrypted local database storage (migrated from `shared_preferences`)
 - `flutter_secure_storage` for encryption key management

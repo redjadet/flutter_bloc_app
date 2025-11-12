@@ -8,6 +8,8 @@ import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_g
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_header.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -30,17 +32,20 @@ class ProfilePage extends StatelessWidget {
     body: BlocBuilder<ProfileCubit, ProfileState>(
       builder: (final context, final state) {
         if (state.isLoading && !state.hasUser) {
-          return const _ProfileLoadingView();
+          return const CommonLoadingWidget(color: Colors.black);
         }
 
         if (state.hasError && !state.hasUser) {
-          return _ProfileErrorView(
+          return CommonErrorView(
+            message: 'Failed to load profile',
             onRetry: () => context.read<ProfileCubit>().loadProfile(),
           );
         }
 
         if (!state.hasUser) {
-          return const _ProfileErrorView(); // Fallback if state is unexpected
+          return const CommonErrorView(
+            message: 'Failed to load profile',
+          ); // Fallback if state is unexpected
         }
 
         final profile = state.user!;
@@ -161,83 +166,6 @@ class ProfilePage extends StatelessWidget {
           ],
         );
       },
-    ),
-  );
-}
-
-class _ProfileLoadingView extends StatelessWidget {
-  const _ProfileLoadingView();
-
-  @override
-  Widget build(final BuildContext context) => const Center(
-    child: CircularProgressIndicator(color: Colors.black),
-  );
-}
-
-class _ProfileErrorView extends StatelessWidget {
-  const _ProfileErrorView({this.onRetry});
-
-  final VoidCallback? onRetry;
-
-  @override
-  Widget build(final BuildContext context) => Padding(
-    padding: context.responsiveStatePadding,
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.error_outline,
-          size: context.responsiveErrorIconSize,
-          color: Colors.black54,
-        ),
-        SizedBox(height: context.responsiveGapL),
-        Text(
-          'Failed to load profile',
-          style: TextStyle(
-            fontSize: context.responsiveTitleSize,
-            fontWeight: FontWeight.w600,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        if (onRetry != null) ...[
-          SizedBox(height: context.responsiveGapL * 1.5),
-          SizedBox(
-            height: context.responsiveButtonHeight,
-            child: _RetryButton(onPressed: onRetry!),
-          ),
-        ],
-      ],
-    ),
-  );
-}
-
-class _RetryButton extends StatelessWidget {
-  const _RetryButton({required this.onPressed});
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(final BuildContext context) => DecoratedBox(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(6),
-      border: Border.all(color: const Color(0xFF050505), width: 1.5),
-    ),
-    child: Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(6),
-        onTap: onPressed,
-        child: const Center(
-          child: Text(
-            'TRY AGAIN',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
-              color: Colors.black,
-            ),
-          ),
-        ),
-      ),
     ),
   );
 }

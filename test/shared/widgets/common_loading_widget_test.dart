@@ -75,7 +75,13 @@ void main() {
 
       expect(find.text('Content'), findsOneWidget);
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      expect(find.byType(ColoredBox), findsOneWidget);
+      // Find the ColoredBox that's a descendant of the Stack (the overlay)
+      final stackFinder = find.byType(Stack);
+      final coloredBoxFinder = find.descendant(
+        of: stackFinder,
+        matching: find.byType(ColoredBox),
+      );
+      expect(coloredBoxFinder, findsOneWidget);
     });
 
     testWidgets('hides overlay when loading is false', (tester) async {
@@ -122,9 +128,15 @@ void main() {
         ),
       );
 
-      final coloredBox = tester.widget<ColoredBox>(
-        find.byType(ColoredBox).first,
+      // Find the ColoredBox that's a descendant of the Stack (the overlay)
+      final stackFinder = find.byType(Stack);
+      final coloredBoxFinder = find.descendant(
+        of: stackFinder,
+        matching: find.byType(ColoredBox),
       );
+      expect(coloredBoxFinder, findsOneWidget);
+
+      final coloredBox = tester.widget<ColoredBox>(coloredBoxFinder);
       expect(coloredBox.color, equals(Colors.black.withValues(alpha: 0.3)));
     });
 

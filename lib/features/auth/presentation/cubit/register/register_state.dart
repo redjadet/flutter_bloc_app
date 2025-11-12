@@ -109,7 +109,7 @@ class RegisterState extends Equatable {
     return null;
   }
 
-  static final RegExp _emailRegex = RegExp(
+  static final Pattern _emailRegex = RegExp(
     r'^[\w\.\-]+@([\w\-]+\.)+[A-Za-z]{2,}$',
   );
 
@@ -118,7 +118,7 @@ class RegisterState extends Equatable {
     if (value.isEmpty) {
       return RegisterEmailError.empty;
     }
-    if (!_emailRegex.hasMatch(value)) {
+    if (!(_emailRegex as RegExp).hasMatch(value)) {
       return RegisterEmailError.invalid;
     }
     return null;

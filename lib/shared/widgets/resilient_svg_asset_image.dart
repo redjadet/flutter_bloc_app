@@ -19,7 +19,7 @@ class ResilientSvgAssetImage extends StatelessWidget {
   final Widget Function() fallbackBuilder;
 
   static final Map<String, Uint8List?> _cache = {};
-  static final RegExp _base64Pattern = RegExp(
+  static final Pattern _base64Pattern = RegExp(
     r'data:image/[^;]+;base64,([^"\\)]+)',
   );
 
@@ -30,7 +30,7 @@ class ResilientSvgAssetImage extends StatelessWidget {
 
     try {
       final svgString = await rootBundle.loadString(assetPath);
-      final match = _base64Pattern.firstMatch(svgString);
+      final match = (_base64Pattern as RegExp).firstMatch(svgString);
       if (match != null) {
         final bytes = base64Decode(match.group(1)!);
         _cache[assetPath] = bytes;
