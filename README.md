@@ -23,6 +23,11 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 - Authentication: Firebase Auth with FirebaseUI (email/password, Google) plus anonymous “guest” sessions that can be upgraded in-place.
 - AI Chat: Conversational UI backed by Hugging Face Inference API (openai/gpt-oss).
 - Search demo: Image search experience that debounces input, pulls results from a mock repository, and presents them in a responsive grid with shimmer loading states.
+- Example hub: `ExamplePage` combines a shimmering hero, native platform info dialogs, isolate samples, and shortcut buttons that deep-link into the chat inbox, profile, register, logged-out, search, and websocket demos.
+- Register flow: Multi-field form with real-time validation, password confirmation, Cupertino/Material buttons, and a phone field that pairs emoji flags with dial codes via a modal country picker.
+- Logged-out hero: Layered, fully responsive logged-out experience that scales the reference 375×812 layout to any viewport while keeping parallax background, CTA buttons, and indicators aligned.
+- Chat inbox: Responsive chat list with mock contacts, unread indicators, mark-as-read/delete actions, and navigation into the Hugging Face-powered conversation page.
+- Profile showcase: Scroll-driven profile screen powered by `ProfileCubit`, Google Fonts typography, gallery grid, CTA buttons, and adaptive spacing/bottom navigation.
 - Native integration: MethodChannel (`com.example.flutter_bloc_app/native`) returning sanitized device metadata with Kotlin/Swift handlers.
 - Universal links: Background-safe navigation via `DeepLinkCubit`, now powered by `AppLinksDeepLinkService` (backed by the `app_links` plugin). Supports the hosted `https://links.flutterbloc.app/...` routes (with `apple-app-site-association` in `docs/universal_links/`) and the local `flutter-bloc-app://` custom scheme when running on emulators.
 - Secrets: `SecretConfig` reads from secure storage first, then from any
@@ -74,6 +79,42 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
    - Optional: keep a private copy in `assets/config/secrets.json` (ignored by git) or your preferred secrets manager.
 4. Rebuild the app. The maps sample will render once both platforms have a non-placeholder key.
 
+## Example Hub & Companion Demos
+
+### Example Page
+
+- Files: `lib/features/example/presentation/pages/example_page.dart`, `lib/features/example/presentation/widgets/example_page_body.dart`.
+- Doubles as a navigation hub with buttons that open the WebSocket, chat list, search, profile, register, and logged-out demos via `go_router`.
+- Demonstrates `NativePlatformService` dialogs plus synchronous context guards (`showExamplePlatformInfoDialog` / `showExamplePlatformInfoErrorDialog`).
+- Runs `IsolateSamples.fibonacci` and `IsolateSamples.delayedDoubleAll` in parallel, surfaces the elapsed time, and shows failures inline.
+- Adds lightweight delight (Unsplash hero rendered with `FancyShimmerImage`, adaptive buttons, AnimatedSwitcher for isolate states).
+
+### Register Flow & Country Picker
+
+- Files: `lib/features/auth/presentation/widgets/register_form.dart`, `register_phone_field.dart`, and `cubit/register/register_state.dart`.
+- Covers full name, email, phone, password, confirmation, and localized validation with dedicated helper widgets.
+- `RegisterPhoneField` pairs a dial-code chip, emoji flag, and masked text field; the country picker renders as a Cupertino action sheet on iOS and a Material bottom sheet elsewhere.
+- `CountryOption` centralizes supported markets and exposes `flagEmoji`, while the `RegisterTermsDialog` + `RegisterTermsSection` handle opt-in flows before submission.
+
+### Logged-out Experience
+
+- Files: `lib/features/auth/presentation/widgets/logged_out_page_body.dart` and its layered widgets (`logged_out_background_layer.dart`, `logged_out_user_info.dart`, etc.).
+- Recreates a Figma handoff by scaling a 375×812 reference frame, centering it inside any viewport, and reusing the same Stack layering on mobile, tablet, and desktop widths.
+- Breaks the layout into individually testable widgets: hero photo header, action buttons, and pill-style indicator.
+
+### Chat Inbox
+
+- Files: `lib/features/chat/presentation/widgets/chat_list_view.dart` plus `chat_list_cubit.dart` and `data/mock_chat_list_repository.dart`.
+- Shows a material chat roster with loading/error states, responsive padding, and dividers that mimic messaging apps.
+- `ChatListCubit` can reload contacts, delete them with confirmation dialogs, and mark them as read before navigating to `ChatPage`.
+- The view wires into the Example hub so QA can jump from the counter flow straight into a mock inbox and then into the Hugging Face-powered conversation UI.
+
+### Profile Showcase
+
+- Files: `lib/features/profile/presentation/pages/profile_page.dart` and widgets under `profile/presentation/widgets/`.
+- Uses `ProfileCubit` to load demo data, then renders a scrollable layout with `ProfileHeader`, action buttons, gallery grid, and a branded bottom nav.
+- Leans on `context.responsive*` extensions to cap widths on large screens, apply proportional spacing, and scale CTA sizes while keeping the Google Fonts typography intact.
+
 ## Screenshots
 
 | Counter Home | Auto Countdown | Settings |
@@ -84,9 +125,9 @@ Small demo app showcasing BLoC (Cubit) state management, local persistence, a pe
 | --- | --- | --- |
 | ![Charts page](assets/screenshots/small/chart.png) | ![GraphQL countries browser](assets/screenshots/small/graphQL_countries.png) | ![AI chat conversation](assets/screenshots/small/ai_chat.png) |
 
-| Google Maps Demo | Search |
-| --- | --- |
-| ![Google Maps demo](assets/screenshots/google_maps.png) | ![Search demo](assets/screenshots/search.png) |
+| Apple Maps Demo | Google Maps Demo | Search |
+| --- | --- | --- |
+| ![Apple Maps demo](assets/screenshots/apple_maps.png) | ![Google Maps demo](assets/screenshots/google_maps.png) | ![Search demo](assets/screenshots/search.png) |
 
 | Payment Calculator | Payment Summary |
 | --- | --- |
@@ -463,9 +504,17 @@ classDiagram
 - `lib/core/`: Cross-layer foundations (constants, flavor manager, dependency injection, router helpers, timer utilities).
 - `lib/features/counter/`: Counter feature split into `domain/`, `data/`, and `presentation/` (pages, cubit, and widgets under `presentation/widgets/`).
 - `lib/features/chat/`: Conversational AI feature (Hugging Face API client, payload builder, repositories, cubit, presentation widgets).
+- `lib/features/auth/`: Register flow, logged-out showcase, Firebase Auth plumbing, and shared input/terms widgets.
 - `lib/features/graphql_demo/`: Countries GraphQL browser with repository, cubit, presentation pages, and widgets.
+- `lib/features/search/`: Debounced image search with mock repository, cubit, and responsive grid/list UI.
+- `lib/features/profile/`: Profile cubit, mock data, Google Fonts-driven header/gallery widgets, and a reusable bottom navigation bar.
+- `lib/features/calculator/`: Payment calculator keypad, presets, expression history, and summary presentation.
 - `lib/features/settings/`: Theme & locale repositories, cubits, and UI sections used by the settings page.
-- `lib/features/example/`: Example page showcasing native MethodChannel integration.
+- `lib/features/google_maps/`: Map sample, repositories, cubit, and widgets for traffic/map-type toggles.
+- `lib/features/websocket/`: Echo WebSocket repository, cubit, and responsive page widgets surfaced in the Example hub.
+- `lib/features/remote_config/`: Remote config repository, cubit, feature-flag models, and sample settings UI.
+- `lib/features/deeplink/`: Universal link + custom scheme handling via `AppLinksDeepLinkService` and `DeepLinkCubit`.
+- `lib/features/example/`: Example page showcasing native MethodChannel integration plus isolate demos and navigation shortcuts.
 - `lib/shared/`: Reusable UI primitives, logging, platform services, localization helpers, and shared utilities.
 - `test/`: Unit, bloc, widget, golden, and platform tests (see file names for focused coverage like `counter_*`, `settings_*`, `graphql_demo_*`).
 - `test/counter_cubit_test.dart`: Cubit behavior, timers, persistence tests.
