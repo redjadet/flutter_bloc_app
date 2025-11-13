@@ -1,6 +1,19 @@
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 
-/// Helper utilities for common state checking patterns
+/// Helper utilities for common state checking patterns.
+///
+/// **Why this exists:** Provides a consistent API for checking ViewStatus states
+/// across the codebase, making state checks more readable and reducing duplication.
+///
+/// **Usage Example:**
+/// ```dart
+/// if (StateHelpers.isLoading(state.status)) {
+///   return const LoadingIndicator();
+/// }
+/// if (StateHelpers.hasError(state.status)) {
+///   return ErrorView(error: state.error);
+/// }
+/// ```
 class StateHelpers {
   StateHelpers._();
 

@@ -2,7 +2,7 @@
 
 **Generated:** $(date)
 **Last Updated:** $(date)
-**Total Line Coverage:** 76.84% (5796/7543 lines)
+**Total Line Coverage:** 77.29% (5830/7543 lines) - Updated automatically via `tool/test_coverage.sh`
 **Total Dart Files:** 306 files (excluding generated files)
 
 ## Status Update
@@ -16,7 +16,9 @@
 - ✅ Added tests for calculator widgets (keypad_button, rate_selector, rate_selector_dialog, payment_page)
 - ✅ Added tests for storage layer (migration_helpers, hive_repository_base, hive_service)
 - ✅ Added comprehensive tests for `shared_preferences_migration_service.dart` (improved from 51.92% coverage)
+- ✅ Added tests for `resilient_svg_asset_image.dart` (shared utility widget)
 - ✅ Created automated test coverage reporting tool (`tool/test_coverage.sh`) that automatically updates coverage reports when running `flutter test --coverage`
+- ✅ Added comprehensive documentation with "why" comments and usage examples for complex utilities (StateHelpers, BlocProviderHelpers, GoRouterRefreshStream, ResilientSvgAssetImage)
 
 **Quick Wins Completed:**
 
@@ -32,7 +34,7 @@ This document provides a comprehensive analysis of the Flutter BLoC app codebase
 
 ### Key Findings
 
-- **Test Coverage:** 76.84% overall coverage (up from 72.51%), but some files still have 0% coverage, primarily UI widgets and presentation components (recently improved with tests for shared utilities and calculator formatters)
+- **Test Coverage:** 77.29% overall coverage (up from 72.51%), but some files still have 0% coverage, primarily UI widgets and presentation components (recently improved with tests for shared utilities, calculator formatters, and resilient_svg_asset_image)
 - **Test Automation:** Coverage reports now update automatically via `tool/test_coverage.sh` wrapper script
 - **Code Quality:** Generally excellent, with only minor issues (0 TODO comments - 1 resolved, 2 deprecated members)
 - **Architecture:** Well-structured with clean architecture principles, but some areas could benefit from further abstraction
@@ -47,7 +49,7 @@ This document provides a comprehensive analysis of the Flutter BLoC app codebase
 
 ### Overall Coverage Statistics
 
-- **Total Coverage:** 76.84% (5796/7543 lines) - **Improved from 72.51%**
+- **Total Coverage:** 77.29% (5830/7543 lines) - **Improved from 72.51%**
 - **Files with 0% Coverage:** ~18 files (reduced from 36)
 - **Files with <50% Coverage:** ~50 files (reduced from 58)
 - **Files with 100% Coverage:** 60+ files
@@ -104,7 +106,7 @@ This document provides a comprehensive analysis of the Flutter BLoC app codebase
 
 #### Shared Utilities
 
-- `lib/shared/widgets/resilient_svg_asset_image.dart` (0/32 lines)
+- ~~`lib/shared/widgets/resilient_svg_asset_image.dart` (0/32 lines)~~ ✅ **RESOLVED** - Tests added in `test/shared/widgets/resilient_svg_asset_image_test.dart`
 - ~~`lib/shared/utils/cubit_state_emission_mixin.dart` (0/5 lines)~~ ✅ **RESOLVED** - Tests added in `test/shared/utils/cubit_state_emission_mixin_test.dart`
 - ~~`lib/shared/utils/bloc_provider_helpers.dart` (0/6 lines)~~ ✅ **RESOLVED** - Tests added in `test/shared/utils/bloc_provider_helpers_test.dart`
 - ~~`lib/app/router/go_router_refresh_stream.dart` (0/5 lines)~~ ✅ **RESOLVED** - Tests added in `test/app/router/go_router_refresh_stream_test.dart`
@@ -584,15 +586,21 @@ The `lib/shared/` directory is well-structured with clear separation:
    - **Effort:** High
    - **Status:** ✅ Storage layer tests completed (including SharedPreferencesMigrationService)
 
-2. **Extract Route Definitions**
-   - Split `lib/app.dart` route definitions into feature-specific files
+2. ~~**Extract Route Definitions**~~ ✅ **COMPLETED**
+   - ~~Split `lib/app.dart` route definitions into feature-specific files~~ - Routes already extracted to `lib/app/router/routes.dart` (159 lines, manageable size)
    - **Impact:** Medium - Better maintainability
    - **Effort:** Medium
+   - **Status:** ✅ Routes extracted from `lib/app.dart` to `lib/app/router/routes.dart` with comprehensive documentation
 
-3. **Add Documentation for Complex Utilities**
-   - Document mixins, helpers, and stream utilities
+3. ~~**Add Documentation for Complex Utilities**~~ ✅ **COMPLETED**
+   - ~~Document mixins, helpers, and stream utilities~~ - Added comprehensive documentation with "why" comments and usage examples:
+     - `lib/shared/utils/cubit_state_emission_mixin.dart` - Added usage examples
+     - `lib/shared/utils/bloc_provider_helpers.dart` - Added "why" comments and usage examples
+     - `lib/app/router/go_router_refresh_stream.dart` - Added lifecycle and usage documentation
+     - `lib/shared/widgets/resilient_svg_asset_image.dart` - Added "how it works" and usage examples
    - **Impact:** Medium - Better developer experience
    - **Effort:** Low
+   - **Status:** ✅ Documentation added with examples and "why" comments
 
 4. **Optimize Stream Usage**
    - Review StreamController lifecycle management
@@ -657,7 +665,7 @@ These improvements can be implemented quickly with high impact:
 
 ### Test Coverage Metrics
 
-- **Overall Coverage:** 76.84% (improved from 72.51%)
+- **Overall Coverage:** 77.29% (improved from 72.51%)
 - **Files with 0% Coverage:** ~18 (reduced from 36)
 - **Files with <50% Coverage:** ~50 (reduced from 58)
 - **Files with 100% Coverage:** 60+
@@ -689,7 +697,8 @@ The Flutter BLoC app demonstrates strong architectural patterns and code quality
    - Added tests for calculator formatters utility
    - Added comprehensive tests for calculator widgets (keypad_button, rate_selector, payment_page)
    - Added comprehensive tests for storage layer (migration_helpers, hive_repository_base, hive_service)
-   - **Coverage improved from 72.51% to 76.84%**
+   - Added tests for `resilient_svg_asset_image.dart` (shared utility widget)
+   - **Coverage improved from 72.51% to 77.29%**
 2. **Test Automation:**
    - Created `tool/test_coverage.sh` wrapper script for automated coverage report updates
    - Integrated automated coverage reporting into CI workflows
@@ -697,15 +706,18 @@ The Flutter BLoC app demonstrates strong architectural patterns and code quality
 3. **Documentation:**
    - Documented RestCounterRepository as an example implementation
    - Added comprehensive route documentation in `lib/app.dart` covering authentication redirect logic, deep link handling, and route initialization patterns
+   - Added comprehensive documentation with "why" comments and usage examples for complex utilities (StateHelpers, BlocProviderHelpers, GoRouterRefreshStream, ResilientSvgAssetImage)
 4. **Code Quality:**
    - Reviewed and confirmed proper handling of discarded futures
    - Removed deprecated code (`errorMessage` getter and `SharedPreferencesChatHistoryRepository` typedef)
-5. **Quick Wins:** All 5 quick win items completed
+5. **Architecture:**
+   - Routes already extracted from `lib/app.dart` to `lib/app/router/routes.dart` (159 lines, well-organized)
+6. **Quick Wins:** All 5 quick win items completed
 
 ### Remaining Areas for Improvement
 
-1. **Test Coverage:** Continue adding tests for remaining 0% coverage components (logged out widgets, maps components, search components, resilient_svg_asset_image)
-2. **Documentation:** Add examples and "why" comments for complex utilities
+1. **Test Coverage:** Continue adding tests for remaining 0% coverage components (logged out widgets, maps components, search components)
+2. ~~**Documentation:** Add examples and "why" comments for complex utilities~~ ✅ **COMPLETED** - Added comprehensive documentation with examples and "why" comments for StateHelpers, BlocProviderHelpers, GoRouterRefreshStream, and ResilientSvgAssetImage
 3. **Performance:** Optimize stream usage and widget rebuilds
 4. **Technical Debt:** Remove deprecated code in next major version
 5. ~~**Storage Layer:** Improve test coverage for `shared_preferences_migration_service.dart`~~ ✅ **COMPLETED** - Comprehensive tests added

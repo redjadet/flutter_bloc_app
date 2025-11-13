@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **77.03%** (5810/7543 lines)
+*Total line coverage*: **77.29%** (5830/7543 lines)
 
 Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) are excluded from these totals.
 
@@ -8,25 +8,24 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 
 | File | Coverage | Covered/Total |
 | --- | ---: | ---: |
-| `lib/shared/widgets/resilient_svg_asset_image.dart` | 0.00% | 0/32 |
-| `lib/features/search/presentation/widgets/search_results_grid.dart` | 0.00% | 0/21 |
-| `lib/features/auth/presentation/widgets/logged_out_user_info.dart` | 0.00% | 0/32 |
-| `lib/features/profile/data/mock_profile_repository.dart` | 0.00% | 0/23 |
-| `lib/features/auth/presentation/widgets/logged_out_photo_header.dart` | 0.00% | 0/22 |
-| `lib/features/search/data/mock_search_repository.dart` | 0.00% | 0/15 |
-| `lib/features/auth/presentation/widgets/logged_out_bottom_indicator.dart` | 0.00% | 0/20 |
-| `lib/features/auth/presentation/widgets/logged_out_background_layer.dart` | 0.00% | 0/15 |
-| `lib/features/auth/presentation/pages/logged_out_page.dart` | 0.00% | 0/2 |
-| `lib/features/search/domain/search_result.dart` | 0.00% | 0/2 |
-| `lib/features/google_maps/presentation/pages/google_maps_sample_sections.dart` | 0.00% | 0/54 |
 | `lib/features/google_maps/presentation/widgets/google_maps_controls.dart` | 0.00% | 0/25 |
+| `lib/features/profile/data/mock_profile_repository.dart` | 0.00% | 0/23 |
+| `lib/features/search/data/mock_search_repository.dart` | 0.00% | 0/15 |
+| `lib/features/auth/presentation/widgets/logged_out_background_layer.dart` | 0.00% | 0/15 |
+| `lib/features/search/domain/search_result.dart` | 0.00% | 0/2 |
 | `lib/app/router/auth_redirect.dart` | 0.00% | 0/9 |
-| `lib/features/google_maps/presentation/widgets/google_maps_location_list.dart` | 0.00% | 0/46 |
-| `lib/features/google_maps/presentation/widgets/map_sample_map_view.dart` | 0.00% | 0/99 |
-| `lib/features/google_maps/presentation/widgets/google_maps_layout.dart` | 0.00% | 0/26 |
-| `lib/features/profile/domain/profile_user.dart` | 0.00% | 0/6 |
 | `lib/features/deeplink/domain/deep_link_config.dart` | 0.00% | 0/1 |
+| `lib/features/profile/domain/profile_user.dart` | 0.00% | 0/6 |
+| `lib/features/search/presentation/widgets/search_results_grid.dart` | 0.00% | 0/21 |
+| `lib/features/google_maps/presentation/widgets/map_sample_map_view.dart` | 0.00% | 0/99 |
+| `lib/features/google_maps/presentation/widgets/google_maps_location_list.dart` | 0.00% | 0/46 |
+| `lib/features/auth/presentation/pages/logged_out_page.dart` | 0.00% | 0/2 |
 | `lib/features/auth/presentation/widgets/logged_out_action_buttons.dart` | 0.00% | 0/36 |
+| `lib/features/auth/presentation/widgets/logged_out_bottom_indicator.dart` | 0.00% | 0/20 |
+| `lib/features/auth/presentation/widgets/logged_out_photo_header.dart` | 0.00% | 0/22 |
+| `lib/features/auth/presentation/widgets/logged_out_user_info.dart` | 0.00% | 0/32 |
+| `lib/features/google_maps/presentation/pages/google_maps_sample_sections.dart` | 0.00% | 0/54 |
+| `lib/features/google_maps/presentation/widgets/google_maps_layout.dart` | 0.00% | 0/26 |
 | `lib/features/search/presentation/widgets/search_text_field.dart` | 2.38% | 1/42 |
 | `lib/features/calculator/presentation/pages/calculator_page.dart` | 2.63% | 2/76 |
 | `lib/features/search/presentation/pages/search_page.dart` | 3.85% | 2/52 |
@@ -36,12 +35,12 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/counter/presentation/widgets/counter_page_app_bar.dart` | 25.26% | 24/95 |
 | `lib/shared/extensions/responsive/responsive_buttons.dart` | 27.59% | 8/29 |
 | `lib/app/router/routes.dart` | 32.81% | 21/64 |
-| `lib/shared/utils/initialization_guard.dart` | 33.33% | 2/6 |
 | `lib/features/remote_config/presentation/cubit/remote_config_state.dart` | 33.33% | 2/6 |
+| `lib/shared/utils/initialization_guard.dart` | 33.33% | 2/6 |
 | `lib/features/auth/presentation/widgets/register_phone_field.dart` | 40.45% | 36/89 |
 | `lib/shared/widgets/common_app_bar.dart` | 45.00% | 18/40 |
-| `lib/features/search/domain/search_repository.dart` | 50.00% | 1/2 |
 | `lib/features/chart/domain/chart_repository.dart` | 50.00% | 1/2 |
+| `lib/features/search/domain/search_repository.dart` | 50.00% | 1/2 |
 | `lib/shared/utils/platform_adaptive.dart` | 51.43% | 18/35 |
 | `lib/features/deeplink/presentation/deep_link_listener.dart` | 52.63% | 10/19 |
 | `lib/features/auth/presentation/widgets/register_terms_dialog.dart` | 55.56% | 15/27 |
@@ -51,13 +50,14 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/widgets/common_loading_widget.dart` | 59.52% | 25/42 |
 | `lib/features/deeplink/presentation/deep_link_target_extensions.dart` | 60.00% | 6/10 |
 | `lib/features/counter/domain/counter_error.dart` | 62.50% | 10/16 |
+| `lib/shared/widgets/resilient_svg_asset_image.dart` | 62.50% | 20/32 |
 | `lib/shared/platform/biometric_authenticator.dart` | 64.00% | 16/25 |
 | `lib/features/chat/presentation/widgets/chat_list_view.dart` | 65.38% | 51/78 |
 | `lib/features/counter/presentation/counter_cubit_base.dart` | 66.20% | 47/71 |
 | `lib/shared/extensions/responsive/responsive_grid.dart` | 66.67% | 14/21 |
-| `lib/shared/utils/websocket_guard.dart` | 66.67% | 6/9 |
 | `lib/shared/storage/hive_key_manager.dart` | 66.67% | 14/21 |
 | `lib/features/search/presentation/search_state.dart` | 66.67% | 8/12 |
+| `lib/shared/utils/websocket_guard.dart` | 66.67% | 6/9 |
 | `lib/shared/widgets/root_aware_back_button.dart` | 68.42% | 13/19 |
 | `lib/features/counter/data/rest_counter_repository.dart` | 68.42% | 13/19 |
 | `lib/shared/storage/hive_service.dart` | 69.39% | 34/49 |
