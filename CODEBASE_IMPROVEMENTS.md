@@ -2,7 +2,7 @@
 
 **Generated:** $(date)
 **Last Updated:** $(date)
-**Total Line Coverage:** 72.51% (5386/7428 lines)
+**Total Line Coverage:** 76.84% (5796/7543 lines)
 **Total Dart Files:** 306 files (excluding generated files)
 
 ## Status Update
@@ -15,6 +15,8 @@
 - ✅ Reviewed discarded futures (found to be properly handled with unawaited())
 - ✅ Added tests for calculator widgets (keypad_button, rate_selector, rate_selector_dialog, payment_page)
 - ✅ Added tests for storage layer (migration_helpers, hive_repository_base, hive_service)
+- ✅ Added comprehensive tests for `shared_preferences_migration_service.dart` (improved from 51.92% coverage)
+- ✅ Created automated test coverage reporting tool (`tool/test_coverage.sh`) that automatically updates coverage reports when running `flutter test --coverage`
 
 **Quick Wins Completed:**
 
@@ -30,7 +32,8 @@ This document provides a comprehensive analysis of the Flutter BLoC app codebase
 
 ### Key Findings
 
-- **Test Coverage:** 72.51% overall coverage, but 36 files have 0% coverage, primarily UI widgets and presentation components (recently improved with tests for shared utilities and calculator formatters)
+- **Test Coverage:** 76.84% overall coverage (up from 72.51%), but some files still have 0% coverage, primarily UI widgets and presentation components (recently improved with tests for shared utilities and calculator formatters)
+- **Test Automation:** Coverage reports now update automatically via `tool/test_coverage.sh` wrapper script
 - **Code Quality:** Generally excellent, with only minor issues (0 TODO comments - 1 resolved, 2 deprecated members)
 - **Architecture:** Well-structured with clean architecture principles, but some areas could benefit from further abstraction
 - **Performance:** Good overall, but some Stream usage patterns could be optimized
@@ -44,10 +47,20 @@ This document provides a comprehensive analysis of the Flutter BLoC app codebase
 
 ### Overall Coverage Statistics
 
-- **Total Coverage:** 72.51% (5386/7428 lines)
-- **Files with 0% Coverage:** 36 files
-- **Files with <50% Coverage:** 58 files
-- **Files with 100% Coverage:** 60 files
+- **Total Coverage:** 76.84% (5796/7543 lines) - **Improved from 72.51%**
+- **Files with 0% Coverage:** ~18 files (reduced from 36)
+- **Files with <50% Coverage:** ~50 files (reduced from 58)
+- **Files with 100% Coverage:** 60+ files
+
+### Test Coverage Automation
+
+✅ **Automated Coverage Reporting:** Created `tool/test_coverage.sh` wrapper script that:
+
+- Runs `flutter test --coverage` with any provided arguments
+- Automatically runs `dart run tool/update_coverage_summary.dart` after tests
+- Updates `coverage/coverage_summary.md` and `README.md` with latest coverage percentage
+- Integrated into CI workflows (`.github/workflows/ci.yml` and `.github/workflows/dependency-updates.yml`)
+- Ensures coverage reports are always up-to-date without manual intervention
 
 ### Critical Files with 0% Coverage
 
@@ -109,7 +122,7 @@ This document provides a comprehensive analysis of the Flutter BLoC app codebase
 - ~~`lib/shared/storage/hive_repository_base.dart` (40.00% - 2/5 lines)~~ ✅ **IMPROVED** - Tests added in `test/shared/storage/hive_repository_base_test.dart`
 - ~~`lib/shared/storage/migration_helpers.dart` (40.00% - 6/15 lines)~~ ✅ **IMPROVED** - Tests added in `test/shared/storage/migration_helpers_test.dart`
 - ~~`lib/shared/storage/hive_service.dart` (46.94% - 23/49 lines)~~ ✅ **IMPROVED** - Tests added in `test/shared/storage/hive_service_test.dart`
-- `lib/shared/storage/shared_preferences_migration_service.dart` (51.92% - 27/52 lines) - Migration service
+- ~~`lib/shared/storage/shared_preferences_migration_service.dart` (51.92% - 27/52 lines)~~ ✅ **IMPROVED** - Tests added in `test/shared/storage/shared_preferences_migration_service_test.dart`
 
 #### Medium Priority
 
@@ -566,9 +579,10 @@ The `lib/shared/` directory is well-structured with clear separation:
      - `test/shared/storage/migration_helpers_test.dart`
      - `test/shared/storage/hive_repository_base_test.dart`
      - `test/shared/storage/hive_service_test.dart`
+     - `test/shared/storage/shared_preferences_migration_service_test.dart`
    - **Impact:** High - Critical infrastructure
    - **Effort:** High
-   - **Status:** ✅ Storage layer tests completed
+   - **Status:** ✅ Storage layer tests completed (including SharedPreferencesMigrationService)
 
 2. **Extract Route Definitions**
    - Split `lib/app.dart` route definitions into feature-specific files
@@ -643,10 +657,11 @@ These improvements can be implemented quickly with high impact:
 
 ### Test Coverage Metrics
 
-- **Overall Coverage:** 72.51%
-- **Files with 0% Coverage:** 36
-- **Files with <50% Coverage:** 58
-- **Files with 100% Coverage:** 60
+- **Overall Coverage:** 76.84% (improved from 72.51%)
+- **Files with 0% Coverage:** ~18 (reduced from 36)
+- **Files with <50% Coverage:** ~50 (reduced from 58)
+- **Files with 100% Coverage:** 60+
+- **Coverage Automation:** ✅ Automated via `tool/test_coverage.sh`
 
 ### Architecture Metrics
 
@@ -674,13 +689,18 @@ The Flutter BLoC app demonstrates strong architectural patterns and code quality
    - Added tests for calculator formatters utility
    - Added comprehensive tests for calculator widgets (keypad_button, rate_selector, payment_page)
    - Added comprehensive tests for storage layer (migration_helpers, hive_repository_base, hive_service)
-2. **Documentation:**
+   - **Coverage improved from 72.51% to 76.84%**
+2. **Test Automation:**
+   - Created `tool/test_coverage.sh` wrapper script for automated coverage report updates
+   - Integrated automated coverage reporting into CI workflows
+   - Coverage reports now update automatically when running `flutter test --coverage`
+3. **Documentation:**
    - Documented RestCounterRepository as an example implementation
    - Added comprehensive route documentation in `lib/app.dart` covering authentication redirect logic, deep link handling, and route initialization patterns
-3. **Code Quality:**
+4. **Code Quality:**
    - Reviewed and confirmed proper handling of discarded futures
    - Removed deprecated code (`errorMessage` getter and `SharedPreferencesChatHistoryRepository` typedef)
-4. **Quick Wins:** All 5 quick win items completed
+5. **Quick Wins:** All 5 quick win items completed
 
 ### Remaining Areas for Improvement
 
@@ -688,7 +708,7 @@ The Flutter BLoC app demonstrates strong architectural patterns and code quality
 2. **Documentation:** Add examples and "why" comments for complex utilities
 3. **Performance:** Optimize stream usage and widget rebuilds
 4. **Technical Debt:** Remove deprecated code in next major version
-5. **Storage Layer:** Improve test coverage for `shared_preferences_migration_service.dart` (currently 51.92%)
+5. ~~**Storage Layer:** Improve test coverage for `shared_preferences_migration_service.dart`~~ ✅ **COMPLETED** - Comprehensive tests added
 
 By prioritizing the high-impact, low-effort improvements first, the codebase has been enhanced incrementally without disrupting ongoing development.
 
@@ -701,3 +721,4 @@ By prioritizing the high-impact, low-effort improvements first, the codebase has
 3. ~~Schedule time for quick wins~~ ✅ **COMPLETED** - All quick wins implemented
 4. Plan architecture improvements for next major version
 5. ~~Set up automated dependency update monitoring~~ ✅ **COMPLETED** - Renovate and Dependabot configured
+6. ~~Automate test coverage reporting~~ ✅ **COMPLETED** - `tool/test_coverage.sh` created and integrated into CI
