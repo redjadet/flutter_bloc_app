@@ -1,7 +1,7 @@
 # Codebase Analysis and Improvement Findings
 
 **Generated:** $(date)
-**Last Updated:** 2025-11-13 20:00:29
+**Last Updated:** 2025-11-13 21:00:00
 **Total Line Coverage:** 82.98% (6315/7610 lines) - Updated automatically via `tool/test_coverage.sh`
 **Total Dart Files:** 306 files (excluding generated files)
 
@@ -172,7 +172,7 @@ This document provides a comprehensive analysis of the Flutter BLoC app codebase
 
 #### High Priority for Improvement
 
-- `lib/app.dart` (37.63% - 35/93 lines) - Main app configuration needs more testing
+- ~~`lib/app.dart` (37.63% - 35/93 lines)~~ ✅ **IMPROVED** - Tests added in `test/app_test.dart` covering router configuration, auth requirements, and disposal logic
 - ~~`lib/shared/storage/hive_repository_base.dart` (40.00% - 2/5 lines)~~ ✅ **IMPROVED** - Tests added in `test/shared/storage/hive_repository_base_test.dart`
 - ~~`lib/shared/storage/migration_helpers.dart` (40.00% - 6/15 lines)~~ ✅ **IMPROVED** - Tests added in `test/shared/storage/migration_helpers_test.dart`
 - ~~`lib/shared/storage/hive_service.dart` (46.94% - 23/49 lines)~~ ✅ **IMPROVED** - Tests added in `test/shared/storage/hive_service_test.dart`
@@ -197,7 +197,7 @@ This document provides a comprehensive analysis of the Flutter BLoC app codebase
 
 #### For Low Coverage Files
 
-1. **App.dart:** Test router configuration, authentication redirects, and route building
+1. ~~**App.dart:** Test router configuration, authentication redirects, and route building~~ ✅ **COMPLETED** - Tests added in `test/app_test.dart` covering router creation, auth requirements, initial location, and disposal
 2. **Hive Services:** Test initialization, encryption, error handling, and migration flows
 3. **Storage Helpers:** Test data validation, normalization, and edge cases
 4. ~~**Auth Redirect:** Test authentication redirect logic for unauthenticated/authenticated users, deep links, and anonymous account upgrading~~ ✅ **COMPLETED** - Tests added in `test/app/router/auth_redirect_test.dart`
@@ -370,10 +370,13 @@ This document provides a comprehensive analysis of the Flutter BLoC app codebase
    - **Impact:** Low - Security and features
    - **Effort:** High (testing required)
 
-3. **Add Performance Profiling**
-   - Identify widget rebuild hot paths
-   - **Impact:** Low - Performance optimization
-   - **Effort:** Medium
+3. ~~**Add Performance Profiling**~~ ✅ **COMPLETED**
+   - ~~Identify widget rebuild hot paths~~
+   - Created `PerformanceProfiler` utility (`lib/shared/utils/performance_profiler.dart`) for tracking widget rebuilds and frame times
+   - Added `PerformanceOverlay` support in dev mode (`lib/core/app_config.dart`)
+   - Created comprehensive performance profiling documentation (`docs/PERFORMANCE_PROFILING.md`)
+   - **Impact:** Medium - Performance optimization and monitoring
+   - **Status:** ✅ Performance profiling tools and documentation completed
 
 ---
 

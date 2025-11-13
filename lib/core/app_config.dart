@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/constants.dart';
@@ -8,6 +10,15 @@ import 'package:go_router/go_router.dart';
 
 /// Application configuration and theme setup
 class AppConfig {
+  /// Whether the performance overlay is enabled.
+  ///
+  /// Can be configured via the `ENABLE_PERFORMANCE_OVERLAY` environment variable.
+  /// Defaults to `false` (disabled).
+  ///
+  /// To enable, run with: `flutter run --dart-define=ENABLE_PERFORMANCE_OVERLAY=true`
+  static bool get _isPerformanceOverlayEnabled =>
+      const bool.fromEnvironment('ENABLE_PERFORMANCE_OVERLAY');
+
   /// Creates the MaterialApp with all necessary configurations
   static Widget createMaterialApp({
     required final ThemeMode themeMode,
@@ -28,8 +39,31 @@ class AppConfig {
     theme: _createLightTheme(),
     darkTheme: _createDarkTheme(),
     themeMode: themeMode,
-    builder: (final context, final appChild) =>
-        appChild ?? const SizedBox.shrink(),
+    builder: (final context, final appChild) {
+      Widget result = appChild ?? const SizedBox.shrink();
+
+      // Add performance overlay if enabled (but not during tests)
+      // Tests use kDebugMode=true, so we check for test environment
+      if (_isPerformanceOverlayEnabled && !_isTestEnvironment()) {
+        result = Stack(
+          children: [
+            result,
+            // Center the overlay and allow click-through
+            Center(
+              child: IgnorePointer(
+                child: ColoredBox(
+                  // Semi-transparent dark background (70% opacity) for better visibility
+                  color: Colors.black.withValues(alpha: 0.7),
+                  child: PerformanceOverlay.allEnabled(),
+                ),
+              ),
+            ),
+          ],
+        );
+      }
+
+      return result;
+    },
     routerConfig: router,
   );
 
@@ -77,8 +111,7 @@ class AppConfig {
 
     for (final locale in locales) {
       final matchingLocale = supportedLocales.firstWhere(
-        (final supportedLocale) =>
-            supportedLocale.languageCode == locale.languageCode,
+        (final supportedLocale) => supportedLocale.languageCode == locale.languageCode,
         orElse: () => const Locale('unsupported'),
       );
 
@@ -95,4 +128,20 @@ class AppConfig {
     final List<Locale>? locales,
     final Iterable<Locale> supported,
   ) => _localeListResolutionCallback(locales, supported) ?? _defaultLocale;
+
+  /// Detects if we're running in a test environment.
+  ///
+  /// This prevents the performance overlay from showing during golden/widget tests.
+  static bool _isTestEnvironment() {
+    // Check for common test environment indicators
+    try {
+      return Platform.environment.containsKey('FLUTTER_TEST') ||
+          Platform.environment.containsKey('DART_TEST_CONFIG') ||
+          // Check if WidgetsBinding is a test binding (without importing flutter_test)
+          WidgetsBinding.instance.runtimeType.toString().contains('Test');
+    } on Exception {
+      // If we can't determine, assume not in test
+      return false;
+    }
+  }
 }
