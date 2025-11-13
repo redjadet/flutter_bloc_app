@@ -2,6 +2,7 @@
 library;
 
 export 'app_message.dart';
+export 'cached_network_image_widget.dart';
 export 'common_app_bar.dart';
 export 'common_error_view.dart';
 export 'common_form_field.dart';

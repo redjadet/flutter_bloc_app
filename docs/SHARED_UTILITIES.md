@@ -211,6 +211,7 @@ await InitializationGuard.executeSafely(
 - `common_loading_widget.dart` - Standardized loading indicator
 - `common_page_layout.dart` - Common page layout wrapper
 - `flavor_badge.dart` - Flavor indicator badge (dev, staging, prod)
+- `cached_network_image_widget.dart` - Cached network image widget with automatic caching and error handling
 - `message_bubble.dart` - Chat message bubble widget
 - `resilient_svg_asset_image.dart` - SVG image widget with fallback support
 - `root_aware_back_button.dart` - Back button that respects root navigation
@@ -226,6 +227,14 @@ CommonErrorView(
 
 // Common loading widget
 CommonLoadingWidget(message: 'Loading...')
+
+// Cached network image
+CachedNetworkImageWidget(
+  imageUrl: 'https://example.com/image.jpg',
+  fit: BoxFit.cover,
+  width: 100,
+  height: 100,
+)
 
 // Resilient SVG image
 ResilientSvgAssetImage(

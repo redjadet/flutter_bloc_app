@@ -111,7 +111,8 @@ class AppConfig {
 
     for (final locale in locales) {
       final matchingLocale = supportedLocales.firstWhere(
-        (final supportedLocale) => supportedLocale.languageCode == locale.languageCode,
+        (final supportedLocale) =>
+            supportedLocale.languageCode == locale.languageCode,
         orElse: () => const Locale('unsupported'),
       );
 

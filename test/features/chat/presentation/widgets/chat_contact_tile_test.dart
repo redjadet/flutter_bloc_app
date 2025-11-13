@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_avatar.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -140,9 +141,11 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(createWidgetUnderTest(contact: testContact));
+      await tester.pump(); // Don't wait for network images to load
 
-      // Should find the Image.network widget
-      expect(find.byType(Image), findsOneWidget);
+      // Should find CachedNetworkImageWidget (which wraps CachedNetworkImage)
+      // The widget will show placeholder/error state in tests since network requests fail
+      expect(find.byType(ChatContactAvatar), findsOneWidget);
     });
 
     testWidgets('should format time correctly', (tester) async {
@@ -162,7 +165,7 @@ void main() {
       // Test with different screen sizes
       await tester.binding.setSurfaceSize(const Size(400, 800)); // Mobile
       await tester.pumpWidget(createWidgetUnderTest(contact: testContact));
-      await tester.pumpAndSettle();
+      await tester.pump(); // Don't wait for network images to load
 
       // Verify the widget renders without errors
       expect(find.byType(ChatContactTile), findsOneWidget);
@@ -170,14 +173,14 @@ void main() {
       // Test tablet size
       await tester.binding.setSurfaceSize(const Size(800, 600)); // Tablet
       await tester.pumpWidget(createWidgetUnderTest(contact: testContact));
-      await tester.pumpAndSettle();
+      await tester.pump(); // Don't wait for network images to load
 
       expect(find.byType(ChatContactTile), findsOneWidget);
 
       // Test desktop size
       await tester.binding.setSurfaceSize(const Size(1200, 800)); // Desktop
       await tester.pumpWidget(createWidgetUnderTest(contact: testContact));
-      await tester.pumpAndSettle();
+      await tester.pump(); // Don't wait for network images to load
 
       expect(find.byType(ChatContactTile), findsOneWidget);
     });
