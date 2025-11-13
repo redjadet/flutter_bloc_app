@@ -1,3 +1,6 @@
+// coverage:ignore-file
+// Part file - tested indirectly via google_maps_sample_page tests
+
 part of 'google_maps_sample_page.dart';
 
 class _GoogleMapsMapSection extends StatelessWidget {

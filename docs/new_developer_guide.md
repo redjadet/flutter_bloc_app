@@ -60,12 +60,16 @@ Follow the delivery checklist before merging or publishing builds:
 
 1. `flutter pub get`
 2. Codegen when needed (`dart run build_runner build --delete-conflicting-outputs`)
-3. `dart format .`
-4. `flutter analyze`
-5. `dart run custom_lint`
-6. `flutter test --coverage`
-7. `dart run tool/update_coverage_summary.dart`
-8. `flutter build ios --simulator` (only when iOS build risk exists)
+3. **Run delivery checklist:** `./bin/checklist` (or `tool/delivery_checklist.sh`)
+   - This runs steps 3-5 automatically: `dart format .` → `flutter analyze` → `tool/test_coverage.sh`
+   - **Optional:** To use just `checklist` without `./bin/`, add the `bin` directory to your PATH
+4. `flutter build ios --simulator` (only when iOS build risk exists)
+
+**Note:** The delivery checklist script (`./bin/checklist`) automatically runs:
+
+- `dart format .` - Code formatting
+- `flutter analyze` - Static analysis (includes native Dart 3.10 analyzer plugins like `file_length_lint`)
+- `tool/test_coverage.sh` - Runs tests with coverage and automatically updates coverage reports
 
 Tips:
 
@@ -78,6 +82,7 @@ Tips:
 - **Unit & Bloc tests**: Use `bloc_test` + fake repositories/services. Counter, GraphQL, WebSocket, Remote Config cubits all have samples to copy.
 - **Widget/Golden tests**: Live under `test/features/.../presentation`. Use `golden_toolkit` for deterministic layout tests and seed localization/theme providers as needed.
 - **Timer-dependent tests**: Inject `FakeTimerService` and advance time with `tick(n)` instead of waiting on real timers.
+- **Network image tests**: When testing widgets that use `CachedNetworkImageWidget`, use `pump()` instead of `pumpAndSettle()` to avoid timeouts. Network requests never complete in test environments, so `pumpAndSettle()` will wait indefinitely. Use `await tester.pump()` followed by `await tester.pump(const Duration(milliseconds: 100))` if needed for async operations.
 - **Auth & Platform fakes**: `MockFirebaseAuth`, mock `NativePlatformService`, `FakeTimerService`, and other utilities live in `test/mocks/` or feature-specific folders.
 - **Skips**: Temporary skips sit in `temp_disabled_tests/`; remove them once flakes are resolved.
 
@@ -88,6 +93,7 @@ Tips:
 - **Logging**: Use `AppLogger` (registered in DI) instead of `print`.
 - **Error handling**: Route recoverable errors through domain failures or `ErrorHandling` helpers; surface user-facing errors via localized messages.
 - **Localization**: Update ARB files in `l10n/arb/`, run `flutter gen-l10n`, and access strings through `context.l10n`.
+- **Image caching**: Use `CachedNetworkImageWidget` from `lib/shared/widgets/` for remote images. It provides automatic caching, loading placeholders, error handling, and memory optimization. `FancyShimmerImage` (used in search/profile/example pages) already includes caching via `cached_network_image` under the hood.
 
 ## 9. Adding a New Feature (Cheat Sheet)
 
