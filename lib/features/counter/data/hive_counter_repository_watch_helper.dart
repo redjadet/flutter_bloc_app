@@ -59,9 +59,17 @@ class HiveCounterRepositoryWatchHelper {
     required Future<void> Function() onCancel,
   }) {
     // If controller exists but wasn't initialized with callbacks, close and recreate
-    if (_watchController != null && !_watchController!.hasListener) {
-      unawaited(_watchController!.close());
-      _watchController = null;
+    final StreamController<CounterSnapshot>? existing = _watchController;
+    if (existing != null) {
+      // Only recreate if controller has no listeners (safe to close)
+      // This prevents unnecessary recreation when listeners are active
+      if (!existing.hasListener && !existing.isClosed) {
+        unawaited(existing.close());
+        _watchController = null;
+      } else if (existing.hasListener) {
+        // Controller already has listeners, don't recreate
+        return;
+      }
     }
     _watchController ??= StreamController<CounterSnapshot>.broadcast(
       onListen: onListen,
@@ -97,8 +105,12 @@ class HiveCounterRepositoryWatchHelper {
   }
 
   /// Starts watching the Hive box for changes.
+  ///
+  /// Optimized to prevent concurrent watch setup and handle errors gracefully.
+  /// The subscription is automatically cancelled on error to prevent repeated
+  /// error emissions.
   Future<void> _startBoxWatch() async {
-    // Prevent concurrent watch setup
+    // Prevent concurrent watch setup - early return if already watching
     if (_boxSubscription != null) {
       return;
     }
@@ -106,11 +118,17 @@ class HiveCounterRepositoryWatchHelper {
     try {
       final Box<dynamic> box = await getBox();
 
-      // Cancel existing subscription if any (shouldn't happen due to check above)
+      // Double-check after async operation (another call might have started watching)
+      if (_boxSubscription != null) {
+        return;
+      }
+
+      // Cancel any existing subscription (defensive check)
       await _boxSubscription?.cancel();
 
       _boxSubscription = box.watch().listen(
         (final BoxEvent event) {
+          // Only trigger load for relevant keys to avoid unnecessary work
           if (_isRelevantKey(event.key)) {
             unawaited(_loadAndEmitInitial());
           }
@@ -122,9 +140,12 @@ class HiveCounterRepositoryWatchHelper {
             stackTrace,
           );
           // Cancel subscription on error to prevent repeated errors
-          unawaited(_boxSubscription?.cancel());
+          // Use unawaited since we're in an error handler
+          final StreamSubscription<BoxEvent>? subscription = _boxSubscription;
           _boxSubscription = null;
+          unawaited(subscription?.cancel());
         },
+        cancelOnError: false, // We handle errors manually
       );
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
@@ -132,7 +153,7 @@ class HiveCounterRepositoryWatchHelper {
         error,
         stackTrace,
       );
-      // Reset subscription on failure
+      // Reset subscription on failure to allow retry
       _boxSubscription = null;
       // Don't crash - fallback to polling if watch fails
       // This is handled gracefully by the stream controller
@@ -144,27 +165,39 @@ class HiveCounterRepositoryWatchHelper {
       key == _keyCount || key == _keyChanged || key == _keyUserId;
 
   /// Loads and emits the initial snapshot.
+  ///
+  /// Prevents concurrent loads by reusing an existing pending load future
+  /// if one is already in progress. This optimization reduces redundant
+  /// database reads when multiple box events occur in quick succession.
   Future<void> _loadAndEmitInitial() async {
-    // Prevent concurrent loads
+    // Prevent concurrent loads by reusing existing pending load
     final Future<void>? pending = _pendingInitialNotification;
     if (pending != null) {
-      // Wait for existing load to complete
+      // Wait for existing load to complete, then check if another was triggered
       try {
         await pending;
       } on Exception {
-        // Ignore errors from pending load
+        // Ignore errors from pending load - they're handled in _performLoadAndEmit
       }
-      // Check if another load was triggered while waiting
-      if (_pendingInitialNotification != null) {
+      // If another load was triggered while waiting, return early
+      // This prevents duplicate loads when multiple events fire rapidly
+      if (_pendingInitialNotification != null &&
+          _pendingInitialNotification != pending) {
         return;
       }
     }
 
-    _pendingInitialNotification = _performLoadAndEmit();
+    // Start new load operation
+    final Future<void> currentLoad = _performLoadAndEmit();
+    _pendingInitialNotification = currentLoad;
     try {
-      await _pendingInitialNotification;
+      await currentLoad;
     } finally {
-      _pendingInitialNotification = null;
+      // Only clear if this is still the current pending operation
+      // (prevents clearing if a new load started during execution)
+      if (_pendingInitialNotification == currentLoad) {
+        _pendingInitialNotification = null;
+      }
     }
   }
 

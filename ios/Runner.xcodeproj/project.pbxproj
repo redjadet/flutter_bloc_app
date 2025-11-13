@@ -365,6 +365,7 @@
 			);
 			name = "Run Script";
 			outputPaths = (
+				"${PROJECT_DIR}/../lib/l10n/app_localizations.dart",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

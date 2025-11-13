@@ -29,6 +29,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
 
   WebSocketChannel? _channel;
   StreamSubscription<dynamic>? _channelSubscription;
+  Completer<void>? _connectionCompleter;
 
   final StreamController<WebsocketMessage> _messagesController =
       StreamController<WebsocketMessage>.broadcast();
@@ -53,9 +54,32 @@ class EchoWebsocketRepository implements WebsocketRepository {
 
   @override
   Future<void> connect() async {
+    // If already connected, return immediately
     if (_channel != null) {
       return;
     }
+
+    // If connection is in progress, wait for it to complete
+    // If it fails, the completer will be cleared and we can retry
+    final Completer<void>? existingCompleter = _connectionCompleter;
+    if (existingCompleter != null) {
+      try {
+        return await existingCompleter.future;
+      } on Object catch (_) {
+        // Connection failed, completer was cleared, retry below
+        if (_connectionCompleter == null && _channel == null) {
+          // Fall through to start new connection attempt
+        } else {
+          // Another connection succeeded or is in progress
+          return;
+        }
+      }
+    }
+
+    // Start new connection attempt
+    final Completer<void> completer = Completer<void>();
+    _connectionCompleter = completer;
+
     _updateState(const WebsocketConnectionState.connecting());
     try {
       final WebSocketChannel channel = await _connectWithTimeout();
@@ -67,11 +91,19 @@ class EchoWebsocketRepository implements WebsocketRepository {
         cancelOnError: true,
       );
       _updateState(const WebsocketConnectionState.connected());
+      completer.complete();
+      _connectionCompleter = null;
     } on TimeoutException catch (error) {
+      _connectionCompleter = null;
       await _handleError(error);
+      // Don't complete completer with error - let concurrent calls retry
+      // The rethrow will propagate the error to the current caller
       rethrow;
     } on Object catch (error) {
+      _connectionCompleter = null;
       await _handleError(error);
+      // Don't complete completer with error - let concurrent calls retry
+      // The rethrow will propagate the error to the current caller
       rethrow;
     }
   }
@@ -115,6 +147,8 @@ class EchoWebsocketRepository implements WebsocketRepository {
       await subscription.cancel();
     }
     _channel = null;
+    // Note: Don't complete _connectionCompleter here - it's handled in connect() method
+    // This prevents double completion when cleanup is called from error handlers
   }
 
   void _updateState(final WebsocketConnectionState state) {
@@ -126,6 +160,12 @@ class EchoWebsocketRepository implements WebsocketRepository {
 
   @override
   Future<void> disconnect() async {
+    // Cancel any pending connection attempt
+    _connectionCompleter?.completeError(
+      StateError('Connection cancelled due to disconnect'),
+    );
+    _connectionCompleter = null;
+
     if (_channel == null) {
       if (_state.status != WebsocketStatus.disconnected) {
         _updateState(const WebsocketConnectionState.disconnected());
@@ -150,6 +190,12 @@ class EchoWebsocketRepository implements WebsocketRepository {
 
   @override
   Future<void> dispose() async {
+    // Cancel any pending connection attempt
+    _connectionCompleter?.completeError(
+      StateError('Connection cancelled due to dispose'),
+    );
+    _connectionCompleter = null;
+
     await disconnect();
     await _messagesController.close();
     await _stateController.close();
