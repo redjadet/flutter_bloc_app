@@ -58,23 +58,25 @@ class ChatMessageList extends StatelessWidget {
             ),
           );
         }
-        return ListView.builder(
-          controller: controller,
-          padding: EdgeInsets.all(context.responsiveGapM),
-          itemCount: state.messages.length,
-          itemBuilder: (final context, final index) {
-            final ChatMessage message = state.messages[index];
-            final bool isUser = message.author == ChatAuthor.user;
+        return RepaintBoundary(
+          child: ListView.builder(
+            controller: controller,
+            padding: EdgeInsets.all(context.responsiveGapM),
+            itemCount: state.messages.length,
+            itemBuilder: (final context, final index) {
+              final ChatMessage message = state.messages[index];
+              final bool isUser = message.author == ChatAuthor.user;
 
-            return MessageBubble(
-              message: message.text,
-              isOutgoing: isUser,
-              outgoingColor: theme.colorScheme.primary,
-              incomingColor: theme.colorScheme.surfaceContainerHighest,
-              outgoingTextColor: theme.colorScheme.onPrimary,
-              incomingTextColor: theme.colorScheme.onSurface,
-            );
-          },
+              return MessageBubble(
+                message: message.text,
+                isOutgoing: isUser,
+                outgoingColor: theme.colorScheme.primary,
+                incomingColor: theme.colorScheme.surfaceContainerHighest,
+                outgoingTextColor: theme.colorScheme.onPrimary,
+                incomingTextColor: theme.colorScheme.onSurface,
+              );
+            },
+          ),
         );
       },
     );

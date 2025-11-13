@@ -27,6 +27,12 @@
   - Updated `tool/ensure_localizations.dart` to always regenerate localization files before iOS builds
   - Added output path to Xcode build script to prevent Xcode from cleaning generated files
   - Prevents `app_localizations.dart` files from being deleted when running `flutter run -t dev` on iOS simulator
+- ✅ Optimized widget rebuilds:
+  - Replaced `BlocBuilder` with `BlocSelector` in GraphqlDemoPage, SearchPage, ProfilePage, and CountdownBar to reduce unnecessary rebuilds
+  - Added `RepaintBoundary` around expensive ListView widgets (ChatMessageList, WebsocketMessageList, GraphqlDemoPage)
+  - Added `RepaintBoundary` around MapSampleMapView (expensive map rendering widget)
+  - Added `RepaintBoundary` around ProfilePage CustomScrollView and SearchResultsGrid
+  - Optimized state selectors to only rebuild when relevant data changes
 
 **Quick Wins Completed:**
 
@@ -350,19 +356,48 @@ The `lib/shared/` directory is well-structured with clear separation:
 
 ### Widget Rebuild Optimization
 
-**Current State:** ✅ Good use of BlocSelector and BlocBuilder
+**Current State:** ✅ Optimized with selective rebuilds and RepaintBoundary
 
 **Strengths:**
 
 - Proper use of `BlocSelector` to minimize rebuilds
 - `const` constructors where possible
 - Proper key usage for list items
+- `RepaintBoundary` used around expensive widgets
 
-**Recommendations:**
+**Completed Optimizations:**
 
-1. Review large widget trees for potential `RepaintBoundary` usage
-2. Consider using `AutomaticKeepAliveClientMixin` for expensive widgets that are frequently rebuilt
-3. Profile widget rebuilds in development to identify hot paths
+1. ~~**GraphqlDemoPage**~~ ✅ **OPTIMIZED**
+   - Replaced `BlocBuilder` with `BlocSelector` for progress bar, filter bar, and body content
+   - Each section only rebuilds when its specific data changes
+   - Added `RepaintBoundary` around ListView to isolate repaints
+
+2. ~~**SearchPage**~~ ✅ **OPTIMIZED**
+   - Replaced `BlocBuilder` with `BlocSelector` for body content
+   - Only rebuilds when loading/error/results state changes
+   - Added `RepaintBoundary` around SearchResultsGrid
+
+3. ~~**ProfilePage**~~ ✅ **OPTIMIZED**
+   - Replaced `BlocBuilder` with `BlocSelector` for body content
+   - Only rebuilds when loading/error/user data changes
+   - Added `RepaintBoundary` around CustomScrollView
+
+4. ~~**CountdownBar**~~ ✅ **OPTIMIZED**
+   - Replaced `BlocBuilder` with `BlocSelector`
+   - Only rebuilds when active state, loading state, or countdown seconds change
+
+5. ~~**ChatMessageList & WebsocketMessageList**~~ ✅ **OPTIMIZED**
+   - Added `RepaintBoundary` around ListView widgets to isolate repaints
+   - Prevents unnecessary repaints when parent widgets rebuild
+
+6. ~~**MapSampleMapView**~~ ✅ **OPTIMIZED**
+   - Added `RepaintBoundary` around expensive map widget
+   - Isolates map rendering from parent widget rebuilds
+
+**Remaining Recommendations:**
+
+1. Consider using `AutomaticKeepAliveClientMixin` for expensive widgets in TabView/PageView that are frequently rebuilt
+2. Profile widget rebuilds in development to identify additional hot paths
 
 ### Image Loading and Caching
 
@@ -748,13 +783,25 @@ The Flutter BLoC app demonstrates strong architectural patterns and code quality
      - Added output path to Xcode build script (`ios/Runner.xcodeproj/project.pbxproj`) to prevent Xcode from cleaning generated files
      - Ensures `app_localizations.dart` files are always present when running `flutter run -t dev` on iOS simulator
      - Pre-build script runs automatically in Xcode build phases
-8. **Quick Wins:** All 5 quick win items completed
+8. **Widget Rebuild Optimization:**
+   - Optimized widget rebuilds across multiple pages:
+     - GraphqlDemoPage: Replaced BlocBuilder with BlocSelector for progress bar, filter bar, and body (3 separate selectors)
+     - SearchPage: Replaced BlocBuilder with BlocSelector for body content
+     - ProfilePage: Replaced BlocBuilder with BlocSelector for body content
+     - CountdownBar: Replaced BlocBuilder with BlocSelector
+   - Added RepaintBoundary around expensive widgets:
+     - ListView widgets (ChatMessageList, WebsocketMessageList, GraphqlDemoPage)
+     - MapSampleMapView (expensive map rendering)
+     - ProfilePage CustomScrollView
+     - SearchResultsGrid
+   - All optimizations tested and verified
+9. **Quick Wins:** All 5 quick win items completed
 
 ### Remaining Areas for Improvement
 
 1. **Test Coverage:** Continue adding tests for remaining 0% coverage components (logged out widgets, maps components, search components)
 2. ~~**Documentation:** Add examples and "why" comments for complex utilities~~ ✅ **COMPLETED** - Added comprehensive documentation with examples and "why" comments for StateHelpers, BlocProviderHelpers, GoRouterRefreshStream, and ResilientSvgAssetImage
-3. ~~**Performance:** Optimize stream usage and widget rebuilds~~ ✅ **PARTIALLY COMPLETED** - Stream usage optimized (race conditions fixed, concurrency improved, redundant operations reduced). Widget rebuild optimization remains for future work.
+3. ~~**Performance:** Optimize stream usage and widget rebuilds~~ ✅ **COMPLETED** - Stream usage optimized (race conditions fixed, concurrency improved, redundant operations reduced). Widget rebuilds optimized (BlocSelector used selectively, RepaintBoundary added around expensive widgets).
 4. **Technical Debt:** Remove deprecated code in next major version
 5. ~~**Storage Layer:** Improve test coverage for `shared_preferences_migration_service.dart`~~ ✅ **COMPLETED** - Comprehensive tests added
 
@@ -771,3 +818,4 @@ By prioritizing the high-impact, low-effort improvements first, the codebase has
 5. ~~Set up automated dependency update monitoring~~ ✅ **COMPLETED** - Renovate and Dependabot configured
 6. ~~Automate test coverage reporting~~ ✅ **COMPLETED** - `tool/test_coverage.sh` created and integrated into CI
 7. ~~Fix iOS localization file deletion issue~~ ✅ **COMPLETED** - Pre-build script updated to always regenerate localization files, Xcode build script configured with output paths
+8. ~~Optimize widget rebuilds~~ ✅ **COMPLETED** - Replaced BlocBuilder with BlocSelector in 4 widgets, added RepaintBoundary around 6 expensive widgets, all optimizations tested and verified

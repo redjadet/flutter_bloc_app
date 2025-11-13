@@ -19,25 +19,28 @@ class WebsocketMessageList extends StatelessWidget {
     if (messages.isEmpty) {
       return AppMessage(message: emptyLabel);
     }
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(
-        horizontal: UI.horizontalGapL,
-        vertical: UI.gapS,
+    return RepaintBoundary(
+      child: ListView.builder(
+        padding: EdgeInsets.symmetric(
+          horizontal: UI.horizontalGapL,
+          vertical: UI.gapS,
+        ),
+        reverse: true,
+        itemCount: messages.length,
+        itemBuilder: (final context, final index) {
+          final WebsocketMessage message =
+              messages[messages.length - 1 - index];
+          return MessageBubble(
+            message: message.text,
+            isOutgoing: message.direction == WebsocketMessageDirection.outgoing,
+            margin: EdgeInsets.symmetric(vertical: UI.gapXS),
+            padding: EdgeInsets.symmetric(
+              horizontal: UI.gapS,
+              vertical: UI.gapXS,
+            ),
+          );
+        },
       ),
-      reverse: true,
-      itemCount: messages.length,
-      itemBuilder: (final context, final index) {
-        final WebsocketMessage message = messages[messages.length - 1 - index];
-        return MessageBubble(
-          message: message.text,
-          isOutgoing: message.direction == WebsocketMessageDirection.outgoing,
-          margin: EdgeInsets.symmetric(vertical: UI.gapXS),
-          padding: EdgeInsets.symmetric(
-            horizontal: UI.gapS,
-            vertical: UI.gapXS,
-          ),
-        );
-      },
     );
   }
 }

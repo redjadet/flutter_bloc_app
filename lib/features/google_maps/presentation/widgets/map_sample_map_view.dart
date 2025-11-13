@@ -60,9 +60,11 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
   }
 
   @override
-  Widget build(final BuildContext context) => ClipRRect(
-    borderRadius: BorderRadius.circular(UI.radiusM),
-    child: widget.useAppleMaps ? _buildAppleMap() : _buildGoogleMap(),
+  Widget build(final BuildContext context) => RepaintBoundary(
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(UI.radiusM),
+      child: widget.useAppleMaps ? _buildAppleMap() : _buildGoogleMap(),
+    ),
   );
 
   Widget _buildGoogleMap() {

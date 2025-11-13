@@ -22,37 +22,56 @@ class _CountdownBarState extends State<CountdownBar> {
   @override
   Widget build(
     final BuildContext context,
-  ) => BlocBuilder<CounterCubit, CounterState>(
-    builder: (final context, final state) {
-      final bool active = state.isAutoDecrementActive;
-      final bool isLoading = state.status.isLoading;
-      final l10n = context.l10n;
-      final ColorScheme colors = Theme.of(context).colorScheme;
+  ) {
+    final l10n = context.l10n;
+    final ColorScheme colors = Theme.of(context).colorScheme;
 
-      _updateCycleTotalSeconds(state.countdownSeconds);
-      final int total =
-          _cycleTotalSeconds ?? CounterState.defaultCountdownSeconds;
-      final double progress = (state.countdownSeconds / total).clamp(0.0, 1.0);
-
-      final Color targetColor = active
-          ? Color.lerp(colors.error, colors.primary, progress) ?? colors.primary
-          : colors.primary;
-
-      return CountdownBarContent(
-        active: active,
-        isLoading: isLoading,
-        progress: progress,
+    return BlocSelector<CounterCubit, CounterState, _CountdownBarData>(
+      selector: (final state) => _CountdownBarData(
+        active: state.isAutoDecrementActive,
+        isLoading: state.status.isLoading,
         countdownSeconds: state.countdownSeconds,
-        targetColor: targetColor,
-        colors: colors,
-        l10n: l10n,
-        animFast: _animFast,
-      );
-    },
-  );
+      ),
+      builder: (final context, final data) {
+        _updateCycleTotalSeconds(data.countdownSeconds);
+        final int total =
+            _cycleTotalSeconds ?? CounterState.defaultCountdownSeconds;
+        final double progress = (data.countdownSeconds / total).clamp(0.0, 1.0);
+
+        final Color targetColor = data.active
+            ? Color.lerp(colors.error, colors.primary, progress) ??
+                  colors.primary
+            : colors.primary;
+
+        return CountdownBarContent(
+          active: data.active,
+          isLoading: data.isLoading,
+          progress: progress,
+          countdownSeconds: data.countdownSeconds,
+          targetColor: targetColor,
+          colors: colors,
+          l10n: l10n,
+          animFast: _animFast,
+        );
+      },
+    );
+  }
 
   void _updateCycleTotalSeconds(final int seconds) {
     final int current = _cycleTotalSeconds ?? seconds;
     _cycleTotalSeconds = math.max(current, seconds);
   }
+}
+
+@immutable
+class _CountdownBarData {
+  const _CountdownBarData({
+    required this.active,
+    required this.isLoading,
+    required this.countdownSeconds,
+  });
+
+  final bool active;
+  final bool isLoading;
+  final int countdownSeconds;
 }
