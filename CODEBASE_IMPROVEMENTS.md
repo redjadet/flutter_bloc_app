@@ -19,6 +19,10 @@
 - ✅ Added tests for `resilient_svg_asset_image.dart` (shared utility widget)
 - ✅ Created automated test coverage reporting tool (`tool/test_coverage.sh`) that automatically updates coverage reports when running `flutter test --coverage`
 - ✅ Added comprehensive documentation with "why" comments and usage examples for complex utilities (StateHelpers, BlocProviderHelpers, GoRouterRefreshStream, ResilientSvgAssetImage)
+- ✅ Optimized stream usage patterns:
+  - Fixed race condition in `EchoWebsocketRepository.connect()` preventing concurrent connection attempts
+  - Improved concurrency handling in `HiveCounterRepositoryWatchHelper` reducing redundant database reads
+  - Fixed subscription race condition in `AppLinksDeepLinkService.linkStream()` ensuring proper cleanup
 
 **Quick Wins Completed:**
 
@@ -284,27 +288,39 @@ The `lib/shared/` directory is well-structured with clear separation:
 
 **Found:** 54 Stream-related patterns across 29 files
 
-**Current State:** ✅ Generally good, with some optimization opportunities
+**Current State:** ✅ Optimized and production-ready
 
 **Strengths:**
 
 - Proper use of `StreamController.broadcast()` for multiple listeners
 - Streams are properly disposed in most cases
 - Use of `watch()` methods for reactive data
+- Race conditions fixed in critical stream implementations
 
-**Areas for Improvement:**
+**Completed Optimizations:**
 
-1. **`lib/features/counter/data/rest_counter_repository.dart`**
+1. ~~**`lib/features/websocket/data/echo_websocket_repository.dart`**~~ ✅ **OPTIMIZED**
+   - Fixed race condition in `connect()` method to prevent concurrent connection attempts
+   - Added `Completer`-based synchronization to serialize connection attempts
+   - Concurrent calls now wait on the same completer and can retry on failure
+   - Improved error handling to prevent double completion
+
+2. ~~**`lib/features/counter/data/hive_counter_repository_watch_helper.dart`**~~ ✅ **OPTIMIZED**
+   - Improved controller recreation logic to avoid unnecessary recreation when listeners are active
+   - Enhanced `_loadAndEmitInitial()` to prevent duplicate loads when multiple events fire rapidly
+   - Added double-check after async operations in `_startBoxWatch()` to prevent race conditions
+   - Improved error handling with explicit `cancelOnError: false` and manual error handling
+   - Optimized concurrent load handling to reduce redundant database reads
+
+3. ~~**`lib/features/deeplink/data/app_links_deep_link_service.dart`**~~ ✅ **OPTIMIZED**
+   - Fixed potential race condition in subscription handling
+   - Restructured subscription cancellation to ensure proper cleanup in all code paths
+   - Added proper error handling with `on Object` catch clause
+   - Fixed linter warning (`avoid_catches_without_on_clauses`)
+
+4. **`lib/features/counter/data/rest_counter_repository.dart`**
    - Uses `StreamController` with `onListen` and `onCancel` callbacks
-   - **Recommendation:** Ensure proper cleanup in all code paths
-
-2. **`lib/features/counter/data/hive_counter_repository_watch_helper.dart`**
-   - Complex stream subscription management
-   - **Recommendation:** Review for potential memory leaks with long-lived subscriptions
-
-3. **`lib/features/websocket/data/echo_websocket_repository.dart`**
-   - WebSocket stream management
-   - **Recommendation:** Ensure proper reconnection logic doesn't create multiple streams
+   - **Status:** Already properly implemented with cleanup in all code paths
 
 ### Async/Await Patterns
 
@@ -602,10 +618,13 @@ The `lib/shared/` directory is well-structured with clear separation:
    - **Effort:** Low
    - **Status:** ✅ Documentation added with examples and "why" comments
 
-4. **Optimize Stream Usage**
-   - Review StreamController lifecycle management
+4. ~~**Optimize Stream Usage**~~ ✅ **COMPLETED**
+   - ~~Review StreamController lifecycle management~~
+   - Fixed race condition in `EchoWebsocketRepository.connect()` - prevents concurrent connection attempts
+   - Optimized `HiveCounterRepositoryWatchHelper` - improved concurrency handling and reduced redundant database reads
+   - Fixed potential race condition in `AppLinksDeepLinkService.linkStream()` - ensured proper subscription cleanup
    - **Impact:** Medium - Performance and memory
-   - **Effort:** Medium
+   - **Status:** ✅ All stream optimizations completed and tested
 
 ### Low Priority (Backlog)
 
@@ -710,15 +729,22 @@ The Flutter BLoC app demonstrates strong architectural patterns and code quality
 4. **Code Quality:**
    - Reviewed and confirmed proper handling of discarded futures
    - Removed deprecated code (`errorMessage` getter and `SharedPreferencesChatHistoryRepository` typedef)
+   - Fixed linter warnings (`avoid_catches_without_on_clauses` in websocket repository)
 5. **Architecture:**
    - Routes already extracted from `lib/app.dart` to `lib/app/router/routes.dart` (159 lines, well-organized)
-6. **Quick Wins:** All 5 quick win items completed
+6. **Performance:**
+   - Optimized stream usage patterns:
+     - Fixed race condition in `EchoWebsocketRepository.connect()` preventing concurrent connection attempts
+     - Improved concurrency handling in `HiveCounterRepositoryWatchHelper` reducing redundant database reads
+     - Fixed subscription race condition in `AppLinksDeepLinkService.linkStream()` ensuring proper cleanup
+   - All optimizations tested and verified
+7. **Quick Wins:** All 5 quick win items completed
 
 ### Remaining Areas for Improvement
 
 1. **Test Coverage:** Continue adding tests for remaining 0% coverage components (logged out widgets, maps components, search components)
 2. ~~**Documentation:** Add examples and "why" comments for complex utilities~~ ✅ **COMPLETED** - Added comprehensive documentation with examples and "why" comments for StateHelpers, BlocProviderHelpers, GoRouterRefreshStream, and ResilientSvgAssetImage
-3. **Performance:** Optimize stream usage and widget rebuilds
+3. ~~**Performance:** Optimize stream usage and widget rebuilds~~ ✅ **PARTIALLY COMPLETED** - Stream usage optimized (race conditions fixed, concurrency improved, redundant operations reduced). Widget rebuild optimization remains for future work.
 4. **Technical Debt:** Remove deprecated code in next major version
 5. ~~**Storage Layer:** Improve test coverage for `shared_preferences_migration_service.dart`~~ ✅ **COMPLETED** - Comprehensive tests added
 

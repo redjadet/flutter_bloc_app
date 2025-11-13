@@ -23,22 +23,33 @@ class AppLinksDeepLinkService implements DeepLinkService {
     final StreamController<Uri> controller = StreamController<Uri>.broadcast();
 
     controller.onListen = () {
+      // Store subscription in a variable accessible to both onListen and onCancel
+      // Subscription cancellation is handled by onCancel callback below.
+      // onCancel is guaranteed to be called when the stream has no more listeners,
+      // ensuring the subscription is properly cancelled even if this function exits early.
+      // ignore: cancel_subscriptions
       StreamSubscription<Uri?>? subscription;
+
+      Future<void> cancelSubscription() async {
+        final StreamSubscription<Uri?>? sub = subscription;
+        subscription = null;
+        try {
+          await sub?.cancel();
+        } on Object {
+          // Ignore cancellation errors (subscription might already be cancelled)
+        }
+      }
 
       Future<void> closeDueToMissingPlugin() async {
         _pluginAvailable = false;
-        final Future<void>? cancelFuture = subscription?.cancel();
-        if (cancelFuture != null) {
-          unawaited(cancelFuture);
-        }
+        await cancelSubscription();
         if (!controller.isClosed) {
           await controller.close();
         }
       }
 
-      controller.onCancel = () async {
-        await subscription?.cancel();
-      };
+      // Set up cancellation handler - this will be called when listeners unsubscribe
+      controller.onCancel = cancelSubscription;
 
       try {
         subscription = _api.uriLinkStream.listen(
