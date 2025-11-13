@@ -146,7 +146,7 @@ await getIt<SharedPreferencesMigrationService>().migrateIfNeeded();
 
 ### 4. Update Dependency Injection
 
-All repositories are registered in `lib/core/di/injector.dart`:
+All repositories are registered in the dependency injection system (`lib/core/di/injector_registrations.dart`, called from `lib/core/di/injector.dart`):
 
 - `IsarKeyManager` → `IsarService` → Repositories
 - Migration service runs on app startup
