@@ -167,7 +167,7 @@ void main() {
           initialState: ChatListState.loaded(contacts: mockContacts),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump(); // Don't wait for network images to load
 
       expect(find.byType(ListView), findsOneWidget);
 
@@ -178,7 +178,7 @@ void main() {
           initialState: ChatListState.loaded(contacts: mockContacts),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump(); // Don't wait for network images to load
 
       expect(find.byType(ListView), findsOneWidget);
 
@@ -189,7 +189,7 @@ void main() {
           initialState: ChatListState.loaded(contacts: mockContacts),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump(); // Don't wait for network images to load
 
       expect(find.byType(ListView), findsOneWidget);
     });

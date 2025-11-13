@@ -78,7 +78,11 @@ void main() {
       ).thenAnswer((_) async => mockContacts);
 
       await tester.pumpWidget(createWidgetUnderTest());
-      await tester.pumpAndSettle();
+      await tester.pump(); // Initial pump
+      await tester.pump(
+        const Duration(milliseconds: 100),
+      ); // Allow async operations
+      // Don't use pumpAndSettle() as it waits for network images which never load in tests
 
       expect(find.text('John Doe'), findsOneWidget);
       expect(find.text('Jane Smith'), findsOneWidget);

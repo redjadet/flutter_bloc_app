@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
+import 'package:flutter_bloc_app/shared/widgets/cached_network_image_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/resilient_svg_asset_image.dart';
 
 class ChatContactAvatar extends StatelessWidget {
@@ -47,31 +48,26 @@ class ChatContactAvatar extends StatelessWidget {
           uri != null && (uri.scheme == 'http' || uri.scheme == 'https');
 
       if (isNetworkImage) {
-        return Image.network(
-          imagePath,
+        return CachedNetworkImageWidget(
+          imageUrl: imagePath,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => buildFallback(),
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) {
-              return child;
-            }
-            return Container(
-              color: Colors.grey[300],
-              child: Center(
-                child: SizedBox(
-                  width: loadingSize,
-                  height: loadingSize,
-                  child: CircularProgressIndicator(
-                    strokeWidth: size > 50 ? 3 : 2,
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
+          width: size,
+          height: size,
+          memCacheWidth: size.toInt(),
+          memCacheHeight: size.toInt(),
+          placeholder: (context, url) => Container(
+            color: Colors.grey[300],
+            child: Center(
+              child: SizedBox(
+                width: loadingSize,
+                height: loadingSize,
+                child: CircularProgressIndicator(
+                  strokeWidth: size > 50 ? 3 : 2,
                 ),
               ),
-            );
-          },
+            ),
+          ),
+          errorWidget: (context, url, error) => buildFallback(),
         );
       }
 
