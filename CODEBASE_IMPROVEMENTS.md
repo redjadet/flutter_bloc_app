@@ -23,6 +23,10 @@
   - Fixed race condition in `EchoWebsocketRepository.connect()` preventing concurrent connection attempts
   - Improved concurrency handling in `HiveCounterRepositoryWatchHelper` reducing redundant database reads
   - Fixed subscription race condition in `AppLinksDeepLinkService.linkStream()` ensuring proper cleanup
+- ✅ Fixed iOS localization file deletion issue:
+  - Updated `tool/ensure_localizations.dart` to always regenerate localization files before iOS builds
+  - Added output path to Xcode build script to prevent Xcode from cleaning generated files
+  - Prevents `app_localizations.dart` files from being deleted when running `flutter run -t dev` on iOS simulator
 
 **Quick Wins Completed:**
 
@@ -738,7 +742,13 @@ The Flutter BLoC app demonstrates strong architectural patterns and code quality
      - Improved concurrency handling in `HiveCounterRepositoryWatchHelper` reducing redundant database reads
      - Fixed subscription race condition in `AppLinksDeepLinkService.linkStream()` ensuring proper cleanup
    - All optimizations tested and verified
-7. **Quick Wins:** All 5 quick win items completed
+7. **Build & Deployment:**
+   - Fixed iOS localization file deletion issue:
+     - Updated `tool/ensure_localizations.dart` to always regenerate localization files before iOS builds
+     - Added output path to Xcode build script (`ios/Runner.xcodeproj/project.pbxproj`) to prevent Xcode from cleaning generated files
+     - Ensures `app_localizations.dart` files are always present when running `flutter run -t dev` on iOS simulator
+     - Pre-build script runs automatically in Xcode build phases
+8. **Quick Wins:** All 5 quick win items completed
 
 ### Remaining Areas for Improvement
 
@@ -760,3 +770,4 @@ By prioritizing the high-impact, low-effort improvements first, the codebase has
 4. Plan architecture improvements for next major version
 5. ~~Set up automated dependency update monitoring~~ ✅ **COMPLETED** - Renovate and Dependabot configured
 6. ~~Automate test coverage reporting~~ ✅ **COMPLETED** - `tool/test_coverage.sh` created and integrated into CI
+7. ~~Fix iOS localization file deletion issue~~ ✅ **COMPLETED** - Pre-build script updated to always regenerate localization files, Xcode build script configured with output paths
