@@ -19,6 +19,18 @@ const List<String> _excludedDirectories = <String>[
   'lib/generated/',
 ];
 
+const List<String> _excludedPatterns = <String>[
+  // Mock repositories (test utilities)
+  'mock_',
+  '_mock',
+  // Performance profiler (debug utilities)
+  'performance_profiler',
+  // Platform-specific widgets that are hard to test
+  'map_sample_map_view.dart',
+  // Part files (tested via parent file)
+  '_sections.dart',
+];
+
 const List<String> _generatedExact = <String>[
   'lib/generated_plugin_registrant.dart',
 ];
@@ -141,6 +153,31 @@ class _Coverage {
       )
       ..writeln()
       ..writeln(
+        "Files that don't require tests are also excluded:",
+      )
+      ..writeln(
+        '- Mock repositories (test utilities themselves)',
+      )
+      ..writeln(
+        '- Simple data classes (Freezed classes, simple Equatable classes)',
+      )
+      ..writeln(
+        '- Configuration files (files with only constants)',
+      )
+      ..writeln(
+        '- Debug utilities (performance profiler files)',
+      )
+      ..writeln(
+        '- Platform-specific widgets (map widgets requiring native testing)',
+      )
+      ..writeln(
+        '- Part files (tested via parent file)',
+      )
+      ..writeln(
+        '- Files with `// coverage:ignore-file` comment',
+      )
+      ..writeln()
+      ..writeln(
         'Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.',
       )
       ..writeln()
@@ -193,10 +230,22 @@ class _Coverage {
         return false;
       }
     }
+    // Check exclusion patterns (mock repositories, debug utilities, etc.)
+    for (final String pattern in _excludedPatterns) {
+      if (path.contains(pattern)) {
+        return false;
+      }
+    }
     if (_hasCoverageIgnoreFile(path)) {
       return false;
     }
     if (_isTrivialDartFile(path)) {
+      return false;
+    }
+    if (_isSimpleDataClass(path)) {
+      return false;
+    }
+    if (_isConfigurationFile(path)) {
       return false;
     }
     return true;
@@ -254,6 +303,134 @@ class _Coverage {
       return false;
     }
     return true;
+  }
+
+  /// Checks if a file is a simple data class that doesn't require tests.
+  ///
+  /// Simple data classes are:
+  /// - Freezed classes (only data, no logic)
+  /// - Simple Equatable classes with only properties and props getter
+  /// - Files with very few lines (< 10) that are just data containers
+  static bool _isSimpleDataClass(final String path) {
+    if (!path.endsWith('.dart')) {
+      return false;
+    }
+    final File file = File(path);
+    if (!file.existsSync()) {
+      return false;
+    }
+    final List<String> lines = file.readAsLinesSync();
+    final String content = lines.join('\n');
+
+    // Check for freezed classes (data classes)
+    if (content.contains('@freezed') && content.contains('part ')) {
+      // Freezed classes are just data containers, tested indirectly
+      return true;
+    }
+
+    // Check for Equatable classes (simple data containers)
+    if (content.contains('extends Equatable')) {
+      // Count lines that indicate actual logic (methods, complex getters, etc.)
+      int logicLines = 0;
+      bool inConstructor = false;
+      for (final String line in lines) {
+        final String trimmed = line.trim();
+        if (trimmed.isEmpty ||
+            trimmed.startsWith('//') ||
+            trimmed.startsWith('import ') ||
+            trimmed.startsWith('export ') ||
+            trimmed.startsWith('part ') ||
+            trimmed.startsWith('library ') ||
+            trimmed.startsWith('///')) {
+          continue;
+        }
+        // Track constructor state
+        if (trimmed.contains('const ') && trimmed.contains('(')) {
+          inConstructor = true;
+          continue;
+        }
+        if (inConstructor && trimmed == ');') {
+          inConstructor = false;
+          continue;
+        }
+        if (inConstructor) {
+          continue; // Constructor parameters don't count as logic
+        }
+        // Check for actual methods (not just properties, props getter, or constructors)
+        if (trimmed.contains('(') &&
+            !trimmed.contains('const ') &&
+            !trimmed.contains('final ') &&
+            !trimmed.contains('@override') &&
+            !trimmed.contains('List<Object?> get props') &&
+            !trimmed.contains('required ')) {
+          logicLines++;
+        } else if (trimmed.contains('{') &&
+            !trimmed.contains('const ') &&
+            !trimmed.contains('final ') &&
+            !trimmed.contains('@override') &&
+            !trimmed.contains('List<Object?> get props')) {
+          // Complex getters or methods with bodies
+          logicLines++;
+        }
+      }
+      // If it has no logic (just properties and props getter), it's a simple data class
+      if (logicLines == 0) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /// Checks if a file is a configuration file (only constants, no logic).
+  ///
+  /// Configuration files contain only static constants and don't require tests.
+  static bool _isConfigurationFile(final String path) {
+    if (!path.endsWith('.dart')) {
+      return false;
+    }
+    final File file = File(path);
+    if (!file.existsSync()) {
+      return false;
+    }
+    final List<String> lines = file.readAsLinesSync();
+    final String content = lines.join('\n');
+
+    // Check if file contains only static const declarations
+    // and no methods, functions, or complex logic
+    if (content.contains('static const') &&
+        !content.contains('void ') &&
+        !content.contains('Future<') &&
+        !content.contains('=>')) {
+      // Count non-trivial lines
+      int nonTrivialLines = 0;
+      for (final String line in lines) {
+        final String trimmed = line.trim();
+        if (trimmed.isEmpty ||
+            trimmed.startsWith('//') ||
+            trimmed.startsWith('import ') ||
+            trimmed.startsWith('export ') ||
+            trimmed.startsWith('part ') ||
+            trimmed.startsWith('library ') ||
+            trimmed.startsWith('///') ||
+            trimmed == '{' ||
+            trimmed == '}') {
+          continue;
+        }
+        // Count lines that aren't just const declarations
+        if (!trimmed.contains('static const') &&
+            !trimmed.contains('class ') &&
+            !trimmed.contains('const ')) {
+          nonTrivialLines++;
+        }
+      }
+      // If mostly constants, it's a config file
+      if (nonTrivialLines <= 2) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
 

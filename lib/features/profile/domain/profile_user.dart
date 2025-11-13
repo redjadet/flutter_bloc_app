@@ -1,3 +1,7 @@
+// coverage:ignore-file
+// Simple data class with only properties and Equatable props getter.
+// Tested indirectly via ProfileCubit and ProfileRepository tests.
+
 import 'package:equatable/equatable.dart';
 
 class ProfileUser extends Equatable {

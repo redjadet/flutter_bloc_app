@@ -1,2 +1,6 @@
 # Exclude vendored dependencies from markdownlint checks.
 third_party/
+
+# Exclude AI agent documentation from markdownlint checks.
+AGENTS.md
+GEMINI.md

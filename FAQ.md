@@ -38,12 +38,107 @@ Pressing the `+` button triggers `CounterActions.increment()`, which calls `Coun
 
 ## How does dependency injection wire the counter repositories?
 
-`core/di/injector.dart` lazily registers repositories via `get_it`. For the counter feature, it tries the Firebase-backed repository when Firebase is available; otherwise it falls back to the SharedPreferences implementation. In tests, helpers override `getIt` registrations or inject mock repositories directly into cubits.
+Dependency injection is organized across multiple files in `core/di/`:
+- `injector.dart` - Main file with `configureDependencies()` and public API
+- `injector_registrations.dart` - All dependency registrations organized by category
+- `injector_factories.dart` - Factory functions for creating repositories
+- `injector_helpers.dart` - Helper functions for registration
+
+`configureDependencies()` lazily registers repositories via `get_it`. For the counter feature, it tries the Firebase-backed `RealtimeDatabaseCounterRepository` when Firebase is available; otherwise it falls back to the Hive-based `HiveCounterRepository`. All repositories are registered as lazy singletons. In tests, helpers override `getIt` registrations or inject mock repositories directly into cubits.
 
 ## What linting and formatting routines should I run?
 
-The project uses standard `flutter analyze`, `dart format .`, and a custom lint (`dart run custom_lint`) that checks for long files (>250 lines) in production code. Tests and tooling are excluded from the custom lint, but core feature files are expected to stay under the limit. Running all three commands before committing keeps warnings and formatting consistent.
+The project uses a **delivery checklist** that can be run with a single command: `./bin/checklist` (or `tool/delivery_checklist.sh`). This automatically runs:
+1. `dart format .` - Code formatting
+2. `flutter analyze` - Static analysis (includes native Dart 3.10 analyzer plugins like `file_length_lint`)
+3. `tool/test_coverage.sh` - Runs tests with coverage and automatically updates coverage reports
+
+**Optional:** To use just `checklist` without `./bin/`, add the `bin` directory to your PATH:
+```bash
+# Temporary (current session only)
+export PATH="$PATH:$(pwd)/bin"
+
+# Permanent (add to ~/.zshrc or ~/.bashrc)
+export PATH="$PATH:/path/to/flutter_bloc_app/bin"
+```
+
+The `file_length_lint` rule is configured as a native Dart 3.10 analyzer plugin in `analysis_options.yaml` and runs automatically with `flutter analyze`. It checks for files exceeding 250 lines and issues warnings. See <https://dart.dev/tools/analyzer-plugins> for more information about analyzer plugins.
 
 ## Why keep golden/widget/bloc tests together?
 
 Golden tests (e.g., `test/counter_page_golden_test.dart`) verify layout regressions for the counter UI. Widget tests (`chat_history_sheet_test.dart`) cover interactions such as clearing/deleting history without hitting real storage, and bloc/unit tests ensure repositories/cubits produce expected states. Running these in CI (and via the documented checklist) catches UI/state regressions early.
+
+**Test Coverage:** The project maintains **85.34% line coverage** (6186/7249 lines). Files that don't require tests are automatically excluded from coverage reports:
+- Mock repositories (test utilities themselves)
+- Simple data classes (Freezed classes, simple Equatable classes)
+- Configuration files (files with only constants)
+- Debug utilities (performance profiler files)
+- Platform-specific widgets (map widgets requiring native testing)
+- Part files (tested via parent file)
+- Files with `// coverage:ignore-file` comment
+
+See `coverage/coverage_summary.md` for the full breakdown.
+
+## How is local storage handled in this app?
+
+All local persistence goes through **Hive** (encrypted local database), which replaced SharedPreferences. The app uses:
+- `HiveService` - Core service wrapping `Hive.initFlutter()` and ensuring every box is opened with an `AES256Cipher`
+- `HiveKeyManager` - Generates and manages encryption keys stored in `flutter_secure_storage`
+- `HiveRepositoryBase` - Base class for Hive-backed repositories providing common functionality
+- `SharedPreferencesMigrationService` - Automatically migrates legacy SharedPreferences data to Hive on first launch
+
+**Important:** Never call `Hive.openBox` directly. Always use `HiveService` and extend `HiveRepositoryBase` for new repositories.
+
+## How are remote images cached?
+
+Remote images are automatically cached using the `cached_network_image` package. Use `CachedNetworkImageWidget` from `lib/shared/widgets/` for network images. It provides:
+- Automatic caching of downloaded images
+- Loading placeholder support
+- Error handling with fallback widget
+- Memory-efficient image loading with configurable cache dimensions
+
+`FancyShimmerImage` (used in search/profile/example pages) already includes caching via `cached_network_image` under the hood.
+
+**Testing Note:** When testing widgets that use `CachedNetworkImageWidget`, use `pump()` instead of `pumpAndSettle()` to avoid timeouts. Network requests never complete in test environments, so `pumpAndSettle()` will wait indefinitely.
+
+## How can I profile performance in this app?
+
+The app includes a `PerformanceProfiler` utility (`lib/shared/utils/performance_profiler.dart`) for tracking widget rebuilds and frame performance:
+
+```dart
+// Track widget rebuilds
+PerformanceProfiler.trackWidget('MyWidget', () => MyWidget());
+
+// Track frame operations
+PerformanceProfiler.trackFrame(() {
+  // Expensive operation
+});
+
+// Print report
+PerformanceProfiler.printReport();
+```
+
+The profiler is enabled by default in `kDebugMode` and can be controlled via `PerformanceProfiler.setEnabled(enabled: true/false)`.
+
+Additionally, a **Performance Overlay** can be enabled via the `ENABLE_PERFORMANCE_OVERLAY` environment variable:
+```bash
+flutter run --dart-define=ENABLE_PERFORMANCE_OVERLAY=true
+```
+
+The overlay shows frame rendering times, GPU vs CPU time, and visual indication of performance issues. See `docs/PERFORMANCE_PROFILING.md` for detailed information.
+
+## What happens if localization files are deleted during iOS builds?
+
+The app includes a pre-build script (`tool/ensure_localizations.dart`) that automatically regenerates localization files before iOS builds. This script runs automatically in Xcode build phases and ensures that `app_localizations*.dart` files are always present, even after `flutter clean`.
+
+**Note:** After running `flutter clean`, always run `flutter pub get` before `flutter run` to ensure localization files are regenerated.
+
+## How is the dependency injection code organized?
+
+The DI code is split into multiple files for better maintainability:
+- `lib/core/di/injector.dart` - Main entry point with `configureDependencies()` and public API (61 lines)
+- `lib/core/di/injector_registrations.dart` - All dependency registrations organized by category
+- `lib/core/di/injector_factories.dart` - Factory functions for creating repositories (e.g., `_createCounterRepository`)
+- `lib/core/di/injector_helpers.dart` - Helper functions (e.g., `registerLazySingletonIfAbsent`)
+
+This organization keeps the main file focused and makes it easier to find and maintain specific registrations.

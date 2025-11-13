@@ -1,3 +1,7 @@
+// coverage:ignore-file
+// Platform-specific map widget (Google Maps/Apple Maps) that requires native platform testing.
+// Tested indirectly via integration tests and manual testing.
+
 import 'dart:async';
 
 import 'package:apple_maps_flutter/apple_maps_flutter.dart' as amap;
