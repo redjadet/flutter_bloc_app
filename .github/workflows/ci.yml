@@ -35,7 +35,7 @@ jobs:
 
       - name: Flutter tests (with coverage)
         if: ${{ github.event.inputs.run_tests != 'false' }}
-        run: flutter test --coverage
+        run: tool/test_coverage.sh
 
       - name: Enforce coverage threshold
         if: ${{ github.event.inputs.run_tests != 'false' }}

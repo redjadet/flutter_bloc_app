@@ -139,7 +139,7 @@ Small demo app showcasing BLoC (Cubit) state management, **encrypted local datab
 
 ## Test Coverage
 
-- Latest line coverage: **72.51%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
+- Latest line coverage: **76.84%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
 - Test Infrastructure: Global test configuration with automatic log suppression during test execution for cleaner output.
 - **Storage Tests**: Comprehensive unit tests for Hive repositories (`HiveCounterRepository`, `HiveLocaleRepository`, `HiveThemeRepository`) and migration service, ensuring data integrity and encryption functionality.
 
@@ -572,10 +572,9 @@ classDiagram
 flutter pub get
 dart run build_runner build --delete-conflicting-outputs # only when Freezed/JSON models change
 dart format .
-flutter analyze
-dart run custom_lint
-flutter test --coverage
-dart run tool/update_coverage_summary.dart
+flutter analyze  # includes native Dart 3.10 analyzer plugin automatically (see analysis_options.yaml)
+tool/test_coverage.sh  # runs flutter test --coverage and automatically updates coverage reports
+# Or manually: flutter test --coverage && dart run tool/update_coverage_summary.dart
 flutter run
 # optional when platform/build-risk changes: flutter build ios --simulator
 ```
@@ -668,8 +667,9 @@ The `ExamplePage` includes a “Fetch native info” button that uses a MethodCh
 - `flutter test` runs unit, widget, and golden tests.
 - `flutter test test/fab_alignment_golden_test.dart` runs FAB alignment goldens.
 - `flutter test test/counter_page_golden_test.dart` runs counter page goldens.
+- `tool/test_coverage.sh` - runs `flutter test --coverage` and automatically updates coverage reports
 - `flutter test --coverage` to generate `lcov.info` used by the coverage summary.
-- `dart run tool/update_coverage_summary.dart` to regenerate coverage summary from lcov data
+- `dart run tool/update_coverage_summary.dart` to regenerate coverage summary from lcov data (runs automatically via `tool/test_coverage.sh`)
 
 Golden baselines live in `test/goldens/`.
 
@@ -731,8 +731,9 @@ See [docs/DEPENDENCY_UPDATES.md](docs/DEPENDENCY_UPDATES.md) for detailed inform
 
 ## Tooling
 
+- `tool/test_coverage.sh` – runs `flutter test --coverage` and automatically updates `coverage/coverage_summary.md` (recommended)
 - `flutter test --coverage` to regenerate `coverage/lcov.info` file.
-- `dart run tool/update_coverage_summary.dart` – regenerate `coverage/coverage_summary.md` from `coverage/lcov.info`, excluding generated and localization files.
+- `dart run tool/update_coverage_summary.dart` – regenerate `coverage/coverage_summary.md` from `coverage/lcov.info`, excluding generated and localization files (runs automatically via `tool/test_coverage.sh`).
 - `dart run custom_lint` – run custom linting rules including file length enforcement.
 - `test/flutter_test_config.dart` – global test configuration that automatically suppresses logging during test execution for cleaner output.
 - `flutter gen-l10n` – manually regenerate `AppLocalizations` files from `.arb` files (normally done automatically via `flutter pub get` when `generate: true` is set in `pubspec.yaml`).
