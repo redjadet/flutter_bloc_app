@@ -13,6 +13,8 @@
 - ✅ Added tests for calculator formatters utility
 - ✅ Documented RestCounterRepository TODO with clear explanation
 - ✅ Reviewed discarded futures (found to be properly handled with unawaited())
+- ✅ Added tests for calculator widgets (keypad_button, rate_selector, rate_selector_dialog, payment_page)
+- ✅ Added tests for storage layer (migration_helpers, hive_repository_base, hive_service)
 
 **Quick Wins Completed:**
 
@@ -62,11 +64,11 @@ This document provides a comprehensive analysis of the Flutter BLoC app codebase
 
 #### Calculator Feature
 
-- `lib/features/calculator/presentation/widgets/calculator_rate_selector_dialog.dart` (0/55 lines)
-- `lib/features/calculator/presentation/widgets/calculator_keypad_button.dart` (0/51 lines)
+- ~~`lib/features/calculator/presentation/widgets/calculator_rate_selector_dialog.dart` (0/55 lines)~~ ✅ **RESOLVED** - Tests added in `test/features/calculator/presentation/widgets/calculator_rate_selector_test.dart`
+- ~~`lib/features/calculator/presentation/widgets/calculator_keypad_button.dart` (0/51 lines)~~ ✅ **RESOLVED** - Tests added in `test/features/calculator/presentation/widgets/calculator_keypad_button_test.dart`
 - ~~`lib/features/calculator/presentation/utils/calculator_formatters.dart` (0/7 lines)~~ ✅ **RESOLVED** - Tests added in `test/features/calculator/presentation/utils/calculator_formatters_test.dart`
-- `lib/features/calculator/presentation/widgets/calculator_rate_selector.dart` (0/55 lines)
-- `lib/features/calculator/presentation/pages/calculator_payment_page.dart` (0/23 lines)
+- ~~`lib/features/calculator/presentation/widgets/calculator_rate_selector.dart` (0/55 lines)~~ ✅ **RESOLVED** - Tests added in `test/features/calculator/presentation/widgets/calculator_rate_selector_test.dart`
+- ~~`lib/features/calculator/presentation/pages/calculator_payment_page.dart` (0/23 lines)~~ ✅ **RESOLVED** - Tests added in `test/features/calculator/presentation/pages/calculator_payment_page_test.dart`
 
 **Priority:** High - Calculator is a core feature with business logic that should be thoroughly tested.
 
@@ -93,6 +95,9 @@ This document provides a comprehensive analysis of the Flutter BLoC app codebase
 - ~~`lib/shared/utils/cubit_state_emission_mixin.dart` (0/5 lines)~~ ✅ **RESOLVED** - Tests added in `test/shared/utils/cubit_state_emission_mixin_test.dart`
 - ~~`lib/shared/utils/bloc_provider_helpers.dart` (0/6 lines)~~ ✅ **RESOLVED** - Tests added in `test/shared/utils/bloc_provider_helpers_test.dart`
 - ~~`lib/app/router/go_router_refresh_stream.dart` (0/5 lines)~~ ✅ **RESOLVED** - Tests added in `test/app/router/go_router_refresh_stream_test.dart`
+- ~~`lib/shared/storage/migration_helpers.dart` (40.00% - 6/15 lines)~~ ✅ **RESOLVED** - Tests added in `test/shared/storage/migration_helpers_test.dart`
+- ~~`lib/shared/storage/hive_repository_base.dart` (40.00% - 2/5 lines)~~ ✅ **RESOLVED** - Tests added in `test/shared/storage/hive_repository_base_test.dart`
+- ~~`lib/shared/storage/hive_service.dart` (46.94% - 23/49 lines)~~ ✅ **RESOLVED** - Tests added in `test/shared/storage/hive_service_test.dart`
 
 **Priority:** High - Shared utilities are used across the app and should have comprehensive tests.
 
@@ -101,9 +106,9 @@ This document provides a comprehensive analysis of the Flutter BLoC app codebase
 #### High Priority for Improvement
 
 - `lib/app.dart` (37.63% - 35/93 lines) - Main app configuration needs more testing
-- `lib/shared/storage/hive_repository_base.dart` (40.00% - 2/5 lines) - Core storage abstraction
-- `lib/shared/storage/migration_helpers.dart` (40.00% - 6/15 lines) - Critical migration logic
-- `lib/shared/storage/hive_service.dart` (46.94% - 23/49 lines) - Core storage service
+- ~~`lib/shared/storage/hive_repository_base.dart` (40.00% - 2/5 lines)~~ ✅ **IMPROVED** - Tests added in `test/shared/storage/hive_repository_base_test.dart`
+- ~~`lib/shared/storage/migration_helpers.dart` (40.00% - 6/15 lines)~~ ✅ **IMPROVED** - Tests added in `test/shared/storage/migration_helpers_test.dart`
+- ~~`lib/shared/storage/hive_service.dart` (46.94% - 23/49 lines)~~ ✅ **IMPROVED** - Tests added in `test/shared/storage/hive_service_test.dart`
 - `lib/shared/storage/shared_preferences_migration_service.dart` (51.92% - 27/52 lines) - Migration service
 
 #### Medium Priority
@@ -535,9 +540,12 @@ The `lib/shared/` directory is well-structured with clear separation:
 
 2. ~~**Add Tests for Calculator Feature** (0% coverage on key components)~~ ✅ **COMPLETED**
    - ~~Calculator formatters utility~~ - Tests added: `test/features/calculator/presentation/utils/calculator_formatters_test.dart`
-   - Calculator widgets still need tests (rate_selector_dialog, keypad_button, etc.)
+   - ~~Calculator widgets~~ - Tests added:
+     - `test/features/calculator/presentation/widgets/calculator_keypad_button_test.dart`
+     - `test/features/calculator/presentation/widgets/calculator_rate_selector_test.dart`
+     - `test/features/calculator/presentation/pages/calculator_payment_page_test.dart`
    - **Impact:** High - Core feature
-   - **Status:** ✅ Formatters utility tested, widget tests pending
+   - **Status:** ✅ All calculator tests completed
 
 3. ~~**Review and Fix Discarded Futures**~~ ✅ **COMPLETED**
    - Reviewed 49 instances found
@@ -553,10 +561,14 @@ The `lib/shared/` directory is well-structured with clear separation:
 
 ### Medium Priority (Next Sprint)
 
-1. **Improve Test Coverage for Storage Layer**
-   - Hive services and migration logic
+1. ~~**Improve Test Coverage for Storage Layer**~~ ✅ **COMPLETED**
+   - ~~Hive services and migration logic~~ - Tests added:
+     - `test/shared/storage/migration_helpers_test.dart`
+     - `test/shared/storage/hive_repository_base_test.dart`
+     - `test/shared/storage/hive_service_test.dart`
    - **Impact:** High - Critical infrastructure
    - **Effort:** High
+   - **Status:** ✅ Storage layer tests completed
 
 2. **Extract Route Definitions**
    - Split `lib/app.dart` route definitions into feature-specific files
@@ -657,7 +669,11 @@ The Flutter BLoC app demonstrates strong architectural patterns and code quality
 
 ### ✅ Completed Improvements
 
-1. **Test Coverage:** Added tests for shared utilities (cubit_state_emission_mixin, bloc_provider_helpers, go_router_refresh_stream) and calculator formatters
+1. **Test Coverage:**
+   - Added tests for shared utilities (cubit_state_emission_mixin, bloc_provider_helpers, go_router_refresh_stream)
+   - Added tests for calculator formatters utility
+   - Added comprehensive tests for calculator widgets (keypad_button, rate_selector, payment_page)
+   - Added comprehensive tests for storage layer (migration_helpers, hive_repository_base, hive_service)
 2. **Documentation:**
    - Documented RestCounterRepository as an example implementation
    - Added comprehensive route documentation in `lib/app.dart` covering authentication redirect logic, deep link handling, and route initialization patterns
@@ -668,10 +684,11 @@ The Flutter BLoC app demonstrates strong architectural patterns and code quality
 
 ### Remaining Areas for Improvement
 
-1. **Test Coverage:** Continue adding tests for calculator widgets and other 0% coverage components
+1. **Test Coverage:** Continue adding tests for remaining 0% coverage components (logged out widgets, maps components, search components, resilient_svg_asset_image)
 2. **Documentation:** Add examples and "why" comments for complex utilities
 3. **Performance:** Optimize stream usage and widget rebuilds
 4. **Technical Debt:** Remove deprecated code in next major version
+5. **Storage Layer:** Improve test coverage for `shared_preferences_migration_service.dart` (currently 51.92%)
 
 By prioritizing the high-impact, low-effort improvements first, the codebase has been enhanced incrementally without disrupting ongoing development.
 

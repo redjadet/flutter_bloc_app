@@ -4,8 +4,24 @@
 # The issues identified by the analyzer are surfaced in the UI of Dart-enabled
 # IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
 # invoked from the command line by running `flutter analyze`.
+#
+# NOTE: Native Dart 3.10 analyzer plugin configuration
+#
+# file_length_lint is configured as a native Dart 3.10 analyzer plugin using the
+# top-level `plugins:` section. This plugin runs automatically with `flutter analyze`.
+# See https://dart.dev/tools/analyzer-plugins for more information.
+#
+# Plugin diagnostics can be configured under the plugin's diagnostics section.
+# Lint rules are disabled by default and must be explicitly enabled.
 
 include: package:very_good_analysis/analysis_options.yaml
+
+# Native Dart 3.10 analyzer plugins configuration
+plugins:
+  file_length_lint:
+    path: custom_lints/file_length_lint
+    diagnostics:
+      file_too_long: true
 
 analyzer:
   language:
@@ -40,8 +56,6 @@ analyzer:
     collection_methods_unrelated_type: error
     unrelated_type_equality_checks: error
     void_checks: error
-  plugins:
-    - custom_lint
   exclude:
     - build/**
     - .dart_tool/**
@@ -126,20 +140,3 @@ linter:
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
-
-custom_lint:
-  enable_all_lint_rules: false
-  rules:
-    - file_too_long:
-        max_lines: 250
-        exclude:
-          - '**/*.g.dart'
-          - '**/*.freezed.dart'
-          - '**/*.gen.dart'
-          - '**/*.gr.dart'
-          - '**/*.mocks.dart'
-          - 'lib/l10n/**'
-          - 'test/**'
-          - 'tool/**'
-          - 'third_party/**'
-          - '**/.pub-cache/**'

@@ -1,86 +1,103 @@
-import 'dart:async';
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
+import 'package:analyzer/file_system/file_system.dart';
 
-import 'package:analyzer/error/listener.dart';
-import 'package:analyzer/source/line_info.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+/// Lint rule that checks if a file exceeds the maximum allowed number of lines.
+class FileLengthLintRule extends AnalysisRule {
+  FileLengthLintRule()
+    : super(
+        name: 'file_too_long',
+        description: 'File exceeds the configured maximum number of lines.',
+      );
 
-PluginBase createPlugin() => _FileLengthLintPlugin();
+  static const int _defaultMaxLines = 250;
 
-class _FileLengthLintPlugin extends PluginBase {
-  @override
-  List<LintRule> getLintRules(final CustomLintConfigs configs) => <LintRule>[
-    _FileLengthLint(options: configs.rules[_FileLengthLint._lintName]),
+  static const List<String> _defaultExcludedPatterns = <String>[
+    '**/*.g.dart',
+    '**/*.freezed.dart',
+    '**/*.gen.dart',
+    '**/*.gr.dart',
+    '**/*.mocks.dart',
+    '**/*.part.dart',
+    'lib/l10n/**',
+    '**/test/**',
+    '**/tool/**',
   ];
+
+  @override
+  DiagnosticCode get diagnosticCode => _FileTooLongCode();
+
+  @override
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
+  ) {
+    registry.addCompilationUnit(this, _FileLengthVisitor(this, context));
+  }
 }
 
-class _FileLengthLint extends DartLintRule {
-  const _FileLengthLint({required this.options}) : super(code: _lintCode);
-
-  static const String _lintName = 'file_too_long';
-
-  static const LintCode _lintCode = LintCode(
-    name: _lintName,
-    problemMessage: 'File exceeds the configured maximum number of lines.',
-    correctionMessage: 'Split the file into smaller pieces or extract helpers.',
-  );
-
-  final LintOptions? options;
+class _FileTooLongCode extends DiagnosticCode {
+  _FileTooLongCode()
+    : super(
+        name: 'file_too_long',
+        problemMessage: 'File exceeds the configured maximum number of lines.',
+        uniqueName: 'file_too_long',
+      );
 
   @override
-  Future<void> run(
-    final CustomLintResolver resolver,
-    final ErrorReporter reporter,
-    final CustomLintContext context,
-  ) async {
-    final String? rawPath = _tryFilePath(resolver);
-    if (rawPath == null) {
+  DiagnosticSeverity get severity => DiagnosticSeverity.INFO;
+
+  @override
+  DiagnosticType get type => DiagnosticType.LINT;
+
+  @override
+  String get correctionMessage =>
+      'Split the file into smaller pieces or extract helpers.';
+}
+
+class _FileLengthVisitor extends RecursiveAstVisitor<void> {
+  _FileLengthVisitor(this.rule, this.context);
+
+  final FileLengthLintRule rule;
+  final RuleContext context;
+
+  @override
+  void visitCompilationUnit(CompilationUnit node) {
+    final RuleContextUnit? currentUnit = context.currentUnit;
+    if (currentUnit == null) {
       return;
     }
 
-    final String path = rawPath.replaceAll(r'\', '/');
-
-    if (_matchesAny(_excludedPatterns, path)) {
+    // Get file path from the current unit's file
+    final String? filePath = _tryFilePath(currentUnit.file);
+    if (filePath == null) {
       return;
     }
 
-    final Iterable<String>? extraExcludes = _readExcludePatterns();
-    if (extraExcludes != null && _matchesAny(extraExcludes, path)) {
+    final String path = filePath.replaceAll(r'\', '/');
+
+    // Check default exclusions
+    if (_matchesAny(FileLengthLintRule._defaultExcludedPatterns, path)) {
       return;
     }
 
-    final int maxLines = _readMaxLines();
-    final LineInfo lineInfo = resolver.lineInfo;
-    final int lineCount = lineInfo.lineCount;
+    // Get line count from the unit's line info
+    final int lineCount = currentUnit.unit.lineInfo.lineCount;
+    const int maxLines = FileLengthLintRule._defaultMaxLines;
 
-    if (lineCount <= maxLines) {
-      return;
+    if (lineCount > maxLines) {
+      rule.reportAtOffset(
+        0,
+        0,
+        arguments: [
+          'File has $lineCount lines (max allowed: $maxLines). Consider splitting it.',
+        ],
+      );
     }
-
-    reporter.atOffset(
-      errorCode: LintCode(
-        name: _lintCode.name,
-        problemMessage:
-            'File has $lineCount lines (max allowed: $maxLines). Consider splitting it.',
-        correctionMessage: _lintCode.correctionMessage,
-      ),
-      offset: 0,
-      length: 0,
-    );
-  }
-
-  int _readMaxLines() {
-    final Object? raw = options?.json['max_lines'];
-    final int? parsed = raw is int ? raw : int.tryParse('${raw ?? ''}');
-    return parsed ?? 250;
-  }
-
-  Iterable<String>? _readExcludePatterns() {
-    final Object? raw = options?.json['exclude'];
-    if (raw is String) return <String>[raw];
-    if (raw is Iterable) {
-      return raw.whereType<String>();
-    }
-    return null;
   }
 
   bool _matchesAny(final Iterable<String> patterns, final String path) {
@@ -92,25 +109,13 @@ class _FileLengthLint extends DartLintRule {
     return false;
   }
 
-  String? _tryFilePath(final CustomLintResolver resolver) {
+  String? _tryFilePath(final File file) {
     try {
-      return resolver.source.uri.toFilePath();
+      return file.path;
     } on Object catch (_) {
       return null;
     }
   }
-
-  static final List<String> _excludedPatterns = <String>[
-    '**/*.g.dart',
-    '**/*.freezed.dart',
-    '**/*.gen.dart',
-    '**/*.gr.dart',
-    '**/*.mocks.dart',
-    '**/*.part.dart',
-    'lib/l10n/**',
-    '**/test/**',
-    '**/tool/**',
-  ];
 }
 
 /// Minimal glob matcher for our use case to avoid adding the `glob` package.
