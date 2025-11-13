@@ -11,56 +11,82 @@ class GraphqlDemoPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
+    final theme = Theme.of(context);
     return CommonPageLayout(
       title: l10n.graphqlSampleTitle,
-      body: BlocBuilder<GraphqlDemoCubit, GraphqlDemoState>(
-        builder: (final context, final state) {
-          final bool showProgressBar =
-              state.isLoading && state.countries.isNotEmpty;
-          final theme = Theme.of(context);
-
-          return Column(
-            children: [
-              if (showProgressBar) const LinearProgressIndicator(minHeight: 2),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.pageHorizontalPadding,
-                  vertical: context.responsiveGapM,
-                ),
-                child: _FilterBar(state: state, l10n: l10n),
+      body: Column(
+        children: [
+          // Only rebuild progress bar when loading state changes
+          BlocSelector<GraphqlDemoCubit, GraphqlDemoState, bool>(
+            selector: (final state) =>
+                state.isLoading && state.countries.isNotEmpty,
+            builder: (final context, final showProgressBar) => showProgressBar
+                ? const LinearProgressIndicator(minHeight: 2)
+                : const SizedBox.shrink(),
+          ),
+          // Only rebuild filter bar when continents or active continent changes
+          BlocSelector<GraphqlDemoCubit, GraphqlDemoState, _FilterBarData>(
+            selector: (final state) => _FilterBarData(
+              continents: state.continents,
+              activeContinentCode: state.activeContinentCode,
+              isLoading: state.isLoading,
+            ),
+            builder: (final context, final filterData) => Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: context.pageHorizontalPadding,
+                vertical: context.responsiveGapM,
               ),
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    CubitHelpers.safeExecute<
-                      GraphqlDemoCubit,
-                      GraphqlDemoState
-                    >(context, (final cubit) => cubit.refresh());
-                  },
-                  child: _buildBody(context, state, l10n, theme),
-                ),
+              child: _FilterBar(
+                continents: filterData.continents,
+                activeContinentCode: filterData.activeContinentCode,
+                isLoading: filterData.isLoading,
+                l10n: l10n,
               ),
-            ],
-          );
-        },
+            ),
+          ),
+          // Only rebuild body when countries/error/loading changes
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
+                  context,
+                  (final cubit) => cubit.refresh(),
+                );
+              },
+              child:
+                  BlocSelector<GraphqlDemoCubit, GraphqlDemoState, _BodyData>(
+                    selector: (final state) => _BodyData(
+                      isLoading: state.isLoading,
+                      hasError: state.hasError,
+                      countries: state.countries,
+                      errorType: state.errorType,
+                      errorMessage: state.errorMessage,
+                    ),
+                    builder: (final context, final bodyData) => RepaintBoundary(
+                      child: _buildBody(context, bodyData, l10n, theme),
+                    ),
+                  ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildBody(
     final BuildContext context,
-    final GraphqlDemoState state,
+    final _BodyData bodyData,
     final AppLocalizations l10n,
     final ThemeData theme,
   ) {
-    if (state.isLoading && state.countries.isEmpty) {
+    if (bodyData.isLoading && bodyData.countries.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (state.hasError && state.countries.isEmpty) {
+    if (bodyData.hasError && bodyData.countries.isEmpty) {
       return AppMessage(
         title: l10n.graphqlSampleErrorTitle,
-        message: _errorMessageForState(l10n, state),
+        message: _errorMessageForData(l10n, bodyData),
         isError: true,
         actions: [
           PlatformAdaptive.button(
@@ -76,7 +102,7 @@ class GraphqlDemoPage extends StatelessWidget {
       );
     }
 
-    if (state.countries.isEmpty) {
+    if (bodyData.countries.isEmpty) {
       return AppMessage(message: l10n.graphqlSampleEmpty);
     }
 
@@ -87,7 +113,7 @@ class GraphqlDemoPage extends StatelessWidget {
       physics: const AlwaysScrollableScrollPhysics(),
       padding: context.responsiveListPadding,
       itemBuilder: (final context, final index) {
-        final GraphqlCountry country = state.countries[index];
+        final GraphqlCountry country = bodyData.countries[index];
         return GraphqlCountryCard(
           country: country,
           capitalLabel: capitalLabel,
@@ -95,16 +121,16 @@ class GraphqlDemoPage extends StatelessWidget {
         );
       },
       separatorBuilder: (_, _) => SizedBox(height: context.responsiveGapM),
-      itemCount: state.countries.length,
+      itemCount: bodyData.countries.length,
     );
   }
 }
 
-String _errorMessageForState(
+String _errorMessageForData(
   final AppLocalizations l10n,
-  final GraphqlDemoState state,
+  final _BodyData bodyData,
 ) {
-  switch (state.errorType) {
+  switch (bodyData.errorType) {
     case GraphqlDemoErrorType.network:
       return l10n.graphqlSampleNetworkError;
     case GraphqlDemoErrorType.invalidRequest:
@@ -118,18 +144,54 @@ String _errorMessageForState(
     case null:
       break;
   }
-  return state.errorMessage ?? l10n.graphqlSampleGenericError;
+  return bodyData.errorMessage ?? l10n.graphqlSampleGenericError;
+}
+
+@immutable
+class _FilterBarData {
+  const _FilterBarData({
+    required this.continents,
+    required this.activeContinentCode,
+    required this.isLoading,
+  });
+
+  final List<GraphqlContinent> continents;
+  final String? activeContinentCode;
+  final bool isLoading;
+}
+
+@immutable
+class _BodyData {
+  const _BodyData({
+    required this.isLoading,
+    required this.hasError,
+    required this.countries,
+    required this.errorType,
+    required this.errorMessage,
+  });
+
+  final bool isLoading;
+  final bool hasError;
+  final List<GraphqlCountry> countries;
+  final GraphqlDemoErrorType? errorType;
+  final String? errorMessage;
 }
 
 class _FilterBar extends StatelessWidget {
-  const _FilterBar({required this.state, required this.l10n});
+  const _FilterBar({
+    required this.continents,
+    required this.activeContinentCode,
+    required this.isLoading,
+    required this.l10n,
+  });
 
-  final GraphqlDemoState state;
+  final List<GraphqlContinent> continents;
+  final String? activeContinentCode;
+  final bool isLoading;
   final AppLocalizations l10n;
 
   @override
   Widget build(final BuildContext context) {
-    final continents = state.continents;
     final items = <DropdownMenuItem<String?>>[
       DropdownMenuItem<String?>(child: Text(l10n.graphqlSampleAllContinents)),
       ...continents.map(
@@ -156,9 +218,9 @@ class _FilterBar extends StatelessWidget {
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String?>(
               isExpanded: true,
-              value: state.activeContinentCode,
+              value: activeContinentCode,
               items: items,
-              onChanged: state.isLoading
+              onChanged: isLoading
                   ? null
                   : (final value) =>
                         CubitHelpers.safeExecute<

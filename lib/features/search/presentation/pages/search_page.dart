@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
+import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/features/search/presentation/search_cubit.dart';
 import 'package:flutter_bloc_app/features/search/presentation/search_state.dart';
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_app_bar.dart';
@@ -63,9 +64,15 @@ class _SearchPageContent extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: BlocBuilder<SearchCubit, SearchState>(
-              builder: (final context, final state) {
-                if (state.isLoading) {
+            child: BlocSelector<SearchCubit, SearchState, _SearchBodyData>(
+              selector: (final state) => _SearchBodyData(
+                isLoading: state.isLoading,
+                isError: state.status.isError,
+                hasResults: state.hasResults,
+                results: state.results,
+              ),
+              builder: (final context, final bodyData) {
+                if (bodyData.isLoading) {
                   return Center(
                     child: CircularProgressIndicator(
                       color: theme.colorScheme.onSurface,
@@ -73,7 +80,7 @@ class _SearchPageContent extends StatelessWidget {
                   );
                 }
 
-                if (state.status.isError) {
+                if (bodyData.isError) {
                   return Center(
                     child: Text(
                       'Error loading results',
@@ -84,7 +91,7 @@ class _SearchPageContent extends StatelessWidget {
                   );
                 }
 
-                if (!state.hasResults) {
+                if (!bodyData.hasResults) {
                   return Center(
                     child: Text(
                       'No results found',
@@ -95,7 +102,9 @@ class _SearchPageContent extends StatelessWidget {
                   );
                 }
 
-                return SearchResultsGrid(results: state.results);
+                return RepaintBoundary(
+                  child: SearchResultsGrid(results: bodyData.results),
+                );
               },
             ),
           ),
@@ -103,6 +112,21 @@ class _SearchPageContent extends StatelessWidget {
       ),
     );
   }
+}
+
+@immutable
+class _SearchBodyData {
+  const _SearchBodyData({
+    required this.isLoading,
+    required this.isError,
+    required this.hasResults,
+    required this.results,
+  });
+
+  final bool isLoading;
+  final bool isError;
+  final bool hasResults;
+  final List<SearchResult> results;
 }
 
 class _SearchPageAppBar extends StatelessWidget implements PreferredSizeWidget {
