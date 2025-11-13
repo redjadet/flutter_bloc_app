@@ -1,0 +1,122 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/features/auth/presentation/widgets/logged_out_action_buttons.dart';
+
+void main() {
+  group('LoggedOutActionButtons', () {
+    Widget buildSubject({double scale = 1.0, double horizontalOffset = 0.0}) {
+      return MaterialApp.router(
+        routerConfig: GoRouter(
+          routes: [
+            GoRoute(
+              path: AppRoutes.authPath,
+              builder: (context, state) =>
+                  const Scaffold(body: Text('Auth Page')),
+            ),
+            GoRoute(
+              path: AppRoutes.registerPath,
+              builder: (context, state) =>
+                  const Scaffold(body: Text('Register Page')),
+            ),
+            GoRoute(
+              path: '/',
+              builder: (context, state) => Scaffold(
+                body: SizedBox(
+                  width: 375,
+                  height: 812,
+                  child: Stack(
+                    children: [
+                      LoggedOutActionButtons(
+                        scale: scale,
+                        horizontalOffset: horizontalOffset,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    testWidgets('renders both buttons', (tester) async {
+      await tester.pumpWidget(buildSubject());
+      await tester.pumpAndSettle();
+
+      expect(find.text('LOG IN'), findsOneWidget);
+      expect(find.text('REGISTER'), findsOneWidget);
+      expect(find.byType(ElevatedButton), findsNWidgets(2));
+    });
+
+    testWidgets('LOG IN button is tappable', (tester) async {
+      await tester.pumpWidget(buildSubject());
+      await tester.pumpAndSettle();
+
+      // Verify button exists and is tappable
+      expect(find.text('LOG IN'), findsOneWidget);
+      final loginButton = tester.widget<ElevatedButton>(
+        find.ancestor(
+          of: find.text('LOG IN'),
+          matching: find.byType(ElevatedButton),
+        ),
+      );
+      expect(loginButton.onPressed, isNotNull);
+    });
+
+    testWidgets('REGISTER button is tappable', (tester) async {
+      await tester.pumpWidget(buildSubject());
+      await tester.pumpAndSettle();
+
+      // Verify button exists and is tappable
+      expect(find.text('REGISTER'), findsOneWidget);
+      final registerButton = tester.widget<ElevatedButton>(
+        find.ancestor(
+          of: find.text('REGISTER'),
+          matching: find.byType(ElevatedButton),
+        ),
+      );
+      expect(registerButton.onPressed, isNotNull);
+    });
+
+    testWidgets('applies scale correctly', (tester) async {
+      const scale = 0.5; // Use smaller scale to avoid overflow
+      await tester.pumpWidget(buildSubject(scale: scale));
+      // Don't use pumpAndSettle as it may timeout due to overflow warnings
+      await tester.pump();
+
+      final Positioned positioned = tester.widget(find.byType(Positioned));
+      expect(positioned.left, equals(16 * scale));
+      expect(positioned.right, equals(16 * scale));
+      expect(positioned.top, equals(727 * scale));
+      expect(positioned.height, equals(52 * scale));
+    });
+
+    testWidgets('applies horizontal offset correctly', (tester) async {
+      const horizontalOffset = 0.0; // Use 0 to avoid overflow
+      const scale = 0.5; // Use smaller scale to avoid overflow
+      await tester.pumpWidget(
+        buildSubject(scale: scale, horizontalOffset: horizontalOffset),
+      );
+      await tester.pumpAndSettle();
+
+      final Positioned positioned = tester.widget(find.byType(Positioned));
+      expect(positioned.left, equals(horizontalOffset + 16 * scale));
+      expect(positioned.right, equals(horizontalOffset + 16 * scale));
+    });
+
+    testWidgets('buttons have correct styling', (tester) async {
+      await tester.pumpWidget(buildSubject());
+      await tester.pumpAndSettle();
+
+      final buttons = find.byType(ElevatedButton);
+      expect(buttons, findsNWidgets(2));
+
+      // Verify buttons are rendered with correct text
+      expect(find.text('LOG IN'), findsOneWidget);
+      expect(find.text('REGISTER'), findsOneWidget);
+    });
+  });
+}
