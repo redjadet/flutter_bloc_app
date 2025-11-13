@@ -6,6 +6,29 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 /// Displays an SVG asset but falls back to the embedded raster payload when
 /// the vector contains base64 bitmap data that Flutter cannot render.
+///
+/// **Why this exists:** Some SVG files contain embedded base64-encoded raster images
+/// (e.g., PNG data) that Flutter's SVG renderer cannot display. This widget detects
+/// such cases and extracts the raster image for display instead.
+///
+/// **How it works:**
+/// 1. Loads the SVG file and checks for base64 image data using regex
+/// 2. If found, decodes the base64 data and displays it as `Image.memory`
+/// 3. If not found, falls back to normal SVG rendering via `SvgPicture.asset`
+/// 4. Caches the result to avoid re-parsing on rebuilds
+///
+/// **Usage Example:**
+/// ```dart
+/// ResilientSvgAssetImage(
+///   assetPath: 'assets/icons/logo.svg',
+///   fit: BoxFit.contain,
+///   fallbackBuilder: () => const CircularProgressIndicator(),
+/// )
+/// ```
+///
+/// **Performance:** Uses static caching to avoid re-parsing SVG files on every rebuild.
+/// The cache persists for the lifetime of the app, which is acceptable since asset
+/// files don't change at runtime.
 class ResilientSvgAssetImage extends StatelessWidget {
   const ResilientSvgAssetImage({
     required this.assetPath,
