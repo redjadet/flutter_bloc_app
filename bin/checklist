@@ -1,0 +1,10 @@
+#!/bin/bash
+# Shortcut command for delivery checklist
+# Usage: checklist
+# This runs tool/delivery_checklist.sh
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+exec "$PROJECT_ROOT/tool/delivery_checklist.sh" "$@"
+

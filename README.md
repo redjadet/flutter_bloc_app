@@ -139,7 +139,7 @@ Small demo app showcasing BLoC (Cubit) state management, **encrypted local datab
 
 ## Test Coverage
 
-- Latest line coverage: **77.29%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
+- Latest line coverage: **81.33%** (generated files excluded; see `coverage/coverage_summary.md` for the per-file breakdown).
 - Test Infrastructure: Global test configuration with automatic log suppression during test execution for cleaner output.
 - **Storage Tests**: Comprehensive unit tests for Hive repositories (`HiveCounterRepository`, `HiveLocaleRepository`, `HiveThemeRepository`) and migration service, ensuring data integrity and encryption functionality.
 
@@ -571,10 +571,14 @@ classDiagram
 ```bash
 flutter pub get
 dart run build_runner build --delete-conflicting-outputs # only when Freezed/JSON models change
-dart format .
-flutter analyze  # includes native Dart 3.10 analyzer plugin automatically (see analysis_options.yaml)
-tool/test_coverage.sh  # runs flutter test --coverage and automatically updates coverage reports
-# Or manually: flutter test --coverage && dart run tool/update_coverage_summary.dart
+./bin/checklist  # runs dart format ., flutter analyze, and tool/test_coverage.sh in order (or use tool/delivery_checklist.sh)
+# Optional: Add bin to PATH to use just 'checklist':
+#   export PATH="$PATH:$(pwd)/bin"  # temporary
+#   export PATH="$PATH:/path/to/flutter_bloc_app/bin"  # permanent (add to ~/.zshrc or ~/.bashrc)
+# Or run steps individually:
+#   dart format .
+#   flutter analyze  # includes native Dart 3.10 analyzer plugin automatically (see analysis_options.yaml)
+#   tool/test_coverage.sh  # runs flutter test --coverage and automatically updates coverage reports
 flutter run
 # optional when platform/build-risk changes: flutter build ios --simulator
 ```
@@ -731,7 +735,18 @@ See [docs/DEPENDENCY_UPDATES.md](docs/DEPENDENCY_UPDATES.md) for detailed inform
 
 ## Tooling
 
-- `tool/test_coverage.sh` – runs `flutter test --coverage` and automatically updates `coverage/coverage_summary.md` (recommended)
+- `./bin/checklist` (or `tool/delivery_checklist.sh`) – runs delivery checklist steps in order: `dart format .`, `flutter analyze`, and `tool/test_coverage.sh` (recommended)
+  - **Optional:** To use just `checklist` without `./bin/`, add the `bin` directory to your PATH:
+
+    ```bash
+    # Temporary (current session only)
+    export PATH="$PATH:$(pwd)/bin"
+
+    # Permanent (add to ~/.zshrc or ~/.bashrc)
+    export PATH="$PATH:/path/to/flutter_bloc_app/bin"
+    ```
+
+- `tool/test_coverage.sh` – runs `flutter test --coverage` and automatically updates `coverage/coverage_summary.md`
 - `flutter test --coverage` to regenerate `coverage/lcov.info` file.
 - `dart run tool/update_coverage_summary.dart` – regenerate `coverage/coverage_summary.md` from `coverage/lcov.info`, excluding generated and localization files (runs automatically via `tool/test_coverage.sh`).
 - `dart run custom_lint` – run custom linting rules including file length enforcement.
