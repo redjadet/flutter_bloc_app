@@ -72,6 +72,7 @@ analyzer:
     - README.md
     # Ignore vendored packages and tooling pulled in under third_party.
     - third_party/**
+    - custom_lints/**
 
 # Keep our custom preferences on top of VGV
 linter:
@@ -137,6 +138,15 @@ linter:
     prefer_iterable_whereType: true
     unrelated_type_equality_checks: true
     void_checks: true
+
+# Custom lint configuration
+file_length_lint:
+  # Default maximum number of lines allowed per file. Update as needed.
+  max_lines: 250
+  # Additional glob patterns to exclude beyond the built-in defaults.
+  # Paths are matched against the absolute file path.
+  excludes:
+    - lib/generated/**
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

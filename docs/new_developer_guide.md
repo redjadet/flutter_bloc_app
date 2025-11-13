@@ -7,7 +7,11 @@ Welcome aboard! This document distills the essentials you need to navigate, exte
 - **Purpose**: Showcase a feature-rich Flutter app built around Cubits, clean architecture, and real-world integrations (Firebase Auth/Remote Config, WebSockets, GraphQL, Google Maps, Hugging Face, etc.).
 - **Layers**: Domain → Data → Presentation. Domain stays Flutter-agnostic, Data fulfills contracts, Presentation wires Cubits/Widgets via `get_it`.
 - **State Management**: Cubits with immutable (Freezed/Equatable) states. Widgets read via `BlocBuilder`/`BlocSelector` and stay focused on layout/theming/navigation.
-- **DI & Startup**: `lib/core/di/di.dart` registers everything into `getIt`. `main_*.dart` files choose the env, call `configureDependencies()`, then bootstrap `MyApp`.
+- **DI & Startup**: `lib/core/di/injector.dart` registers everything into `getIt`. `main_*.dart` files choose the env, call `configureDependencies()`, then bootstrap `MyApp`. The DI code is organized into multiple files:
+  - `injector.dart` - Main file with `configureDependencies()` and public API
+  - `injector_registrations.dart` - All dependency registrations organized by category
+  - `injector_factories.dart` - Factory functions for creating repositories
+  - `injector_helpers.dart` - Helper functions for registration
 - **Navigation**: `go_router` defined in `lib/app.dart` (`AppRoutes` in `lib/core/navigation/app_routes.dart`).
 
 ## 2. Repository Layout Highlights
