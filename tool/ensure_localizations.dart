@@ -38,10 +38,26 @@ void main(final List<String> args) async {
     exit(1);
   }
 
-  // Verify the main file was created
-  final File mainFile = File('lib/l10n/app_localizations.dart');
-  if (!mainFile.existsSync()) {
-    stderr.writeln('Error: app_localizations.dart was not generated');
+  // Verify all expected localization files were created
+  final List<String> expectedFiles = [
+    'lib/l10n/app_localizations.dart',
+    'lib/l10n/app_localizations_en.dart',
+    'lib/l10n/app_localizations_de.dart',
+    'lib/l10n/app_localizations_es.dart',
+    'lib/l10n/app_localizations_fr.dart',
+    'lib/l10n/app_localizations_tr.dart',
+  ];
+
+  bool allFilesExist = true;
+  for (final String filePath in expectedFiles) {
+    final File file = File(filePath);
+    if (!file.existsSync()) {
+      stderr.writeln('Error: $filePath was not generated');
+      allFilesExist = false;
+    }
+  }
+
+  if (!allFilesExist) {
     exit(1);
   }
 

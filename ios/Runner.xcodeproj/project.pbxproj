@@ -366,6 +366,11 @@
 			name = "Run Script";
 			outputPaths = (
 				"${PROJECT_DIR}/../lib/l10n/app_localizations.dart",
+				"${PROJECT_DIR}/../lib/l10n/app_localizations_en.dart",
+				"${PROJECT_DIR}/../lib/l10n/app_localizations_de.dart",
+				"${PROJECT_DIR}/../lib/l10n/app_localizations_es.dart",
+				"${PROJECT_DIR}/../lib/l10n/app_localizations_fr.dart",
+				"${PROJECT_DIR}/../lib/l10n/app_localizations_tr.dart",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
