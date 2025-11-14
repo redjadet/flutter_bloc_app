@@ -267,6 +267,77 @@ void main() {
       await sub.cancel();
     });
   });
+
+  group('Common Bugs Prevention', () {
+    test(
+      'does not throw when addError is called after controller is closed',
+      () async {
+        await AppLogger.silenceAsync(() async {
+          final _FakeClient client = _FakeClient(
+            getHandler: (_) => http.Response('bad', 500),
+          );
+          final RestCounterRepository repository = RestCounterRepository(
+            baseUrl: 'https://api.example.com/',
+            client: client,
+          );
+
+          // Start watching to trigger initial load
+          final StreamSubscription<CounterSnapshot> sub = repository
+              .watch()
+              .listen((_) {}, onError: (_) {});
+
+          // Dispose repository immediately (closes controller)
+          await repository.dispose();
+
+          // Wait for async operations to complete
+          // The initial load error should be handled gracefully
+          await pumpEventQueue();
+
+          // Should not throw - addError should check isClosed
+          expect(repository, isNotNull);
+          await sub.cancel();
+        });
+      },
+    );
+
+    test(
+      'does not throw when add is called after controller is closed',
+      () async {
+        await AppLogger.silenceAsync(() async {
+          final _FakeClient client = _FakeClient(
+            getHandler: (_) => http.Response(
+              jsonEncode(<String, dynamic>{'id': 'user-1', 'count': 5}),
+              200,
+              headers: <String, String>{'content-type': 'application/json'},
+            ),
+          );
+          final RestCounterRepository repository = RestCounterRepository(
+            baseUrl: 'https://api.example.com/',
+            client: client,
+          );
+
+          // Start watching
+          final StreamSubscription<CounterSnapshot> sub = repository
+              .watch()
+              .listen((_) {});
+
+          // Wait for initial load
+          await pumpEventQueue();
+
+          // Dispose repository (closes controller)
+          await repository.dispose();
+
+          // Try to save after dispose - should not throw
+          await expectLater(
+            repository.save(CounterSnapshot(count: 10)),
+            completes,
+          );
+
+          await sub.cancel();
+        });
+      },
+    );
+  });
 }
 
 class _FakeClient extends http.BaseClient {
