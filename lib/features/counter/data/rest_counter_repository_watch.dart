@@ -10,7 +10,10 @@ Stream<CounterSnapshot> _restCounterRepositoryWatch(
       multi.add(repository._latestSnapshot);
     }
     final StreamSubscription<CounterSnapshot> subscription = sourceStream
-        .listen(multi.add, onError: multi.addError);
+        .listen(
+          multi.add,
+          onError: multi.addError,
+        );
     multi.onCancel = subscription.cancel;
   });
 }
