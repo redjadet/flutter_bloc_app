@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 
 class AppMessage extends StatelessWidget {
   const AppMessage({
@@ -31,50 +31,48 @@ class AppMessage extends StatelessWidget {
     return Center(
       child: Padding(
         padding: EdgeInsets.all(context.responsiveGapL),
-        child: Card(
+        child: CommonCard(
           color: backgroundColor,
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: context.responsiveCardPadding,
-              vertical: context.responsiveGapL,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                if (icon != null) ...<Widget>[
-                  Icon(
-                    icon,
-                    size: context.responsiveIconSize * 2,
+          padding: EdgeInsets.symmetric(
+            horizontal: context.responsiveCardPadding,
+            vertical: context.responsiveGapL,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              if (icon != null) ...<Widget>[
+                Icon(
+                  icon,
+                  size: context.responsiveIconSize * 2,
+                  color: textColor,
+                ),
+                SizedBox(height: context.responsiveGapM),
+              ],
+              if (title != null) ...<Widget>[
+                Text(
+                  title!,
+                  style: theme.textTheme.titleMedium?.copyWith(
                     color: textColor,
                   ),
-                  SizedBox(height: context.responsiveGapM),
-                ],
-                if (title != null) ...<Widget>[
-                  Text(
-                    title!,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: textColor,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: context.responsiveGapS),
-                ],
-                Text(
-                  message,
-                  style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
                   textAlign: TextAlign.center,
                 ),
-                if (actions != null && actions!.isNotEmpty) ...<Widget>[
-                  SizedBox(height: context.responsiveGapM),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: context.responsiveGapM,
-                    runSpacing: context.responsiveGapS,
-                    children: actions!,
-                  ),
-                ],
+                SizedBox(height: context.responsiveGapS),
               ],
-            ),
+              Text(
+                message,
+                style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
+                textAlign: TextAlign.center,
+              ),
+              if (actions != null && actions!.isNotEmpty) ...<Widget>[
+                SizedBox(height: context.responsiveGapM),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: context.responsiveGapM,
+                  runSpacing: context.responsiveGapS,
+                  children: actions!,
+                ),
+              ],
+            ],
           ),
         ),
       ),
