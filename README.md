@@ -2,7 +2,7 @@
 
 A production-ready Flutter application demonstrating enterprise-grade architecture patterns, secure data persistence, and modern mobile development best practices.
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.38.0-blue.svg)](https://flutter.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.38.1-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.10.0-blue.svg)](https://dart.dev)
 [![Coverage](https://img.shields.io/badge/Coverage-85%2E25%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
@@ -19,7 +19,7 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 - **Clean Architecture** - Domain → Data → Presentation layers with clear separation of concerns
 - **AES-256 Encrypted Storage** - Secure local database using Hive with keychain-backed encryption
 - **Responsive & Adaptive UI** - Material 3 design with platform-adaptive widgets
-- **85.25% Test Coverage** - Comprehensive unit, bloc, widget, and golden tests
+- **85.23% Test Coverage** - Comprehensive unit, bloc, widget, and golden tests
 - **Performance Optimized** - Built-in profiling, RepaintBoundary, and BlocSelector optimizations
 - **Multi-language Support** - 5 locales (EN, TR, DE, FR, ES) with automatic localization
 - **Firebase Integration** - Authentication, Remote Config, Analytics, and Crashlytics
@@ -125,7 +125,7 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 
 ### Prerequisites
 
-- Flutter 3.38.0 or higher
+- Flutter 3.38.1 or higher
 - Dart 3.10.0 or higher
 - iOS 12+ / Android API 21+
 - Xcode 14+ (for iOS development)
@@ -246,7 +246,7 @@ sequenceDiagram
 
 ### Test Coverage
 
-- **Current Coverage**: 85.25% (6161/7227 lines)
+- **Current Coverage**: 85.23% (6153/7219 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 
@@ -273,6 +273,20 @@ tool/test_coverage.sh
 - **Widget Tests** - UI component and interaction testing
 - **Golden Tests** - Visual regression testing
 
+### Golden Test Regeneration
+
+After Flutter version updates, golden tests may fail due to minor rendering changes. Regenerate golden files:
+
+```bash
+# Regenerate all golden files
+flutter test --update-goldens
+
+# Regenerate specific golden test file
+flutter test --update-goldens test/counter_page_golden_test.dart
+```
+
+**Note**: Always review the generated golden images to ensure they match expected visual changes before committing.
+
 ### Test Utilities
 
 - `MockFirebaseAuth` + `mock_exceptions` for authentication flows
@@ -286,7 +300,7 @@ tool/test_coverage.sh
 
 ### Core Framework
 
-- **Flutter** 3.38.0 (Dart 3.10.0)
+- **Flutter** 3.38.1 (Dart 3.10.0)
 - **Material 3** with `ColorScheme.fromSeed`
 - **Cupertino** widgets for iOS-native feel
 

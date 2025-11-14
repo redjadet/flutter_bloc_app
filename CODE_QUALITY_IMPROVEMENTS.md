@@ -182,10 +182,22 @@ This document summarizes the code quality improvements and duplicate code elimin
   - `lib/shared/widgets/common_loading_widget.dart` - Uses `context.responsiveGapM` instead of `UI.gapM`
   - `lib/features/example/presentation/widgets/example_sections.dart` - All spacing now uses responsive extensions (`responsiveGapS`, `responsiveGapXS`)
   - `lib/features/chat/presentation/pages/chat_page.dart` - Uses `context.responsiveHorizontalGapL` and `context.responsiveGap*` for consistent spacing
+  - `lib/features/counter/presentation/widgets/counter_display/counter_display_card.dart` - Uses `context.responsiveGapM` instead of `UI.gapM`
+  - `lib/features/example/presentation/widgets/example_page_body.dart` - Uses `context.responsiveGapL` instead of `UI.gapL`
 - **Benefits**:
   - Consistent device-type-aware spacing across more components
   - Better adaptation to mobile/tablet/desktop form factors
   - Improved maintainability with centralized responsive spacing logic
+
+### 16. Additional CommonCard Migrations
+
+- **Migrated more Card+Padding patterns to CommonCard**:
+  - `lib/features/counter/presentation/widgets/counter_display/counter_display_card.dart` - Now uses `CommonCard` with custom shape and margin support
+  - `lib/features/example/presentation/widgets/example_page_body.dart` - Migrated to `CommonCard` for consistent card styling
+- **Benefits**:
+  - Further reduction in Card+Padding duplication
+  - Consistent card styling across counter and example features
+  - Better maintainability with centralized card component
 
 ## Benefits Achieved
 
