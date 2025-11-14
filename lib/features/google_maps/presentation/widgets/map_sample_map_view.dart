@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_cubit.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_state.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 class MapSampleMapController {
@@ -66,7 +66,7 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
   @override
   Widget build(final BuildContext context) => RepaintBoundary(
     child: ClipRRect(
-      borderRadius: BorderRadius.circular(UI.radiusM),
+      borderRadius: BorderRadius.circular(context.responsiveCardRadius),
       child: widget.useAppleMaps ? _buildAppleMap() : _buildGoogleMap(),
     ),
   );

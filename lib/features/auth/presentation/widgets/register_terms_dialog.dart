@@ -40,13 +40,15 @@ class RegisterTermsDialog extends StatelessWidget {
         child: Text(l10n.registerTermsDialogBody),
       ),
       actions: <Widget>[
-        TextButton(
+        PlatformAdaptive.dialogAction(
+          context: context,
+          label: l10n.registerTermsRejectButton,
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text(l10n.registerTermsRejectButton),
         ),
-        FilledButton(
+        PlatformAdaptive.dialogAction(
+          context: context,
+          label: l10n.registerTermsAcceptButton,
           onPressed: () => Navigator.of(context).pop(true),
-          child: Text(l10n.registerTermsAcceptButton),
         ),
       ],
     );

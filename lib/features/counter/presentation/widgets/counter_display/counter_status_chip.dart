@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CounterStatusChip extends StatelessWidget {
@@ -27,11 +27,11 @@ class CounterStatusChip extends StatelessWidget {
       curve: Curves.easeInOut,
       decoration: BoxDecoration(
         color: active ? colors.primary.withValues(alpha: 0.12) : colors.surface,
-        borderRadius: BorderRadius.circular(UI.radiusM),
+        borderRadius: BorderRadius.circular(context.responsiveCardRadius),
       ),
       padding: EdgeInsets.symmetric(
-        horizontal: UI.horizontalGapM,
-        vertical: UI.gapXS,
+        horizontal: context.responsiveHorizontalGapM,
+        vertical: context.responsiveGapXS,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -47,7 +47,7 @@ class CounterStatusChip extends StatelessWidget {
               color: colors.primary,
             ),
           ),
-          SizedBox(width: UI.horizontalGapXS),
+          SizedBox(width: context.responsiveGapXS),
           Flexible(
             child: AnimatedSwitcher(
               duration: animDuration,

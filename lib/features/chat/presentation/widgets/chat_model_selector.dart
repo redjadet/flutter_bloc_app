@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 class ChatModelSelector extends StatelessWidget {
   const ChatModelSelector({super.key});
@@ -35,7 +35,7 @@ class ChatModelSelector extends StatelessWidget {
         return Row(
           children: <Widget>[
             Text(l10n.chatModelLabel, style: theme.textTheme.titleMedium),
-            SizedBox(width: UI.horizontalGapS),
+            SizedBox(width: context.responsiveHorizontalGapS),
             Expanded(
               child: DropdownButtonFormField<String>(
                 initialValue: effectiveModel,

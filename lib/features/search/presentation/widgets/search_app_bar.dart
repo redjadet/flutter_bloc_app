@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 
 class SearchAppBar extends StatelessWidget {
@@ -35,7 +34,7 @@ class SearchAppBar extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: context.pageHorizontalPadding,
-        vertical: UI.gapM,
+        vertical: context.responsiveGapM,
       ),
       child: Row(
         children: [
@@ -56,7 +55,7 @@ class SearchAppBar extends StatelessWidget {
               iconSize: backIconSize,
               onPressed: () => NavigationUtils.popOrGoHome(context),
             ),
-          SizedBox(width: UI.horizontalGapS),
+          SizedBox(width: context.responsiveHorizontalGapS),
           Text('Search', style: effectiveTitleStyle),
         ],
       ),

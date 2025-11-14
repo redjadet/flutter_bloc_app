@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/countdown_bar/countdown_status.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -32,18 +33,18 @@ class CountdownBarContent extends StatelessWidget {
       top: false,
       child: Padding(
         padding: EdgeInsets.fromLTRB(
-          UI.horizontalGapL,
+          context.responsiveHorizontalGapL,
           0,
-          UI.horizontalGapL,
-          UI.gapM,
+          context.responsiveHorizontalGapL,
+          context.responsiveGapM,
         ),
         child: Material(
           color: colors.surface,
-          borderRadius: BorderRadius.circular(UI.radiusM),
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: UI.horizontalGapL,
-              vertical: UI.gapM,
+              horizontal: context.responsiveHorizontalGapL,
+              vertical: context.responsiveGapM,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -63,17 +64,17 @@ class CountdownBarContent extends StatelessWidget {
                     );
                   },
                 ),
-                SizedBox(height: UI.gapS),
+                SizedBox(height: context.responsiveGapS),
                 TweenAnimationBuilder<Color?>(
                   duration: UI.animMedium,
                   tween: ColorTween(end: targetColor),
                   builder: (final context, final animatedColor, _) {
                     final Color barColor = animatedColor ?? targetColor;
                     return ClipRRect(
-                      borderRadius: BorderRadius.circular(UI.radiusPill),
+                      borderRadius: BorderRadius.circular(999),
                       child: LinearProgressIndicator(
                         value: active ? progress : 0,
-                        minHeight: UI.progressHeight,
+                        minHeight: 6,
                         backgroundColor: colors.surfaceContainerHighest,
                         valueColor: AlwaysStoppedAnimation<Color>(barColor),
                       ),

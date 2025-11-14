@@ -2,7 +2,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:intl/intl.dart';
 
 class ChartLineGraph extends StatelessWidget {
@@ -56,7 +55,7 @@ class ChartLineGraph extends StatelessWidget {
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: UI.gapL * 3,
+              reservedSize: context.responsiveGapL * 3,
               getTitlesWidget: (final value, final meta) {
                 final index = value.toInt();
                 Widget child = const SizedBox.shrink();
@@ -65,7 +64,7 @@ class ChartLineGraph extends StatelessWidget {
                 }
                 return SideTitleWidget(
                   meta: meta,
-                  space: UI.gapS,
+                  space: context.responsiveGapS,
                   child: child,
                 );
               },

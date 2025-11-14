@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 
@@ -105,16 +106,19 @@ class ChatListView extends StatelessWidget {
             'Are you sure you want to delete the chat with ${contact.name}?',
           ),
           actions: [
-            TextButton(
+            PlatformAdaptive.dialogAction(
+              context: dialogContext,
+              label: 'Cancel',
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('Cancel'),
             ),
-            TextButton(
+            PlatformAdaptive.dialogAction(
+              context: dialogContext,
+              label: 'Delete',
+              isDestructive: true,
               onPressed: () {
                 Navigator.of(dialogContext).pop();
                 unawaited(chatListCubit.deleteContact(contact.id));
               },
-              child: const Text('Delete'),
             ),
           ],
         ),

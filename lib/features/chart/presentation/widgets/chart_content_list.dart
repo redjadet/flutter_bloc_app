@@ -4,7 +4,6 @@ import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_line_
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_scrollable.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:intl/intl.dart';
 
 class ChartContentList extends StatelessWidget {
@@ -30,14 +29,14 @@ class ChartContentList extends StatelessWidget {
     return ChartScrollable(
       children: [
         Text(l10n.chartPageDescription, style: theme.textTheme.titleMedium),
-        SizedBox(height: UI.gapL),
+        SizedBox(height: context.responsiveGapL),
         SwitchListTile.adaptive(
           value: zoomEnabled,
           onChanged: onZoomChanged,
           contentPadding: EdgeInsets.zero,
           title: Text(l10n.chartZoomToggleLabel),
         ),
-        SizedBox(height: UI.gapS),
+        SizedBox(height: context.responsiveGapS),
         SizedBox(
           height: chartHeight,
           child: ChartLineGraph(
@@ -46,7 +45,7 @@ class ChartContentList extends StatelessWidget {
             zoomEnabled: zoomEnabled,
           ),
         ),
-        SizedBox(height: UI.gapL),
+        SizedBox(height: context.responsiveGapL),
       ],
     );
   }
