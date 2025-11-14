@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_cubit.dart';
@@ -167,17 +166,12 @@ class RegisterForm extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 height: isCupertino ? null : 52,
-                child: isCupertino
-                    ? CupertinoButton.filled(
-                        key: const ValueKey('register-submit-button'),
-                        onPressed: cubit.submit,
-                        child: Text(l10n.registerSubmitButton),
-                      )
-                    : FilledButton(
-                        key: const ValueKey('register-submit-button'),
-                        onPressed: cubit.submit,
-                        child: Text(l10n.registerSubmitButton),
-                      ),
+                child: PlatformAdaptive.filledButton(
+                  key: const ValueKey('register-submit-button'),
+                  context: context,
+                  onPressed: cubit.submit,
+                  child: Text(l10n.registerSubmitButton),
+                ),
               ),
             ],
           );

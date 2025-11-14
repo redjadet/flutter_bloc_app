@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -49,19 +50,34 @@ class SnackbarErrorNotificationService implements ErrorNotificationService {
       return Future<void>.value();
     }
     AppLogger.info('Showing AlertDialog error message');
-    return showDialog<void>(
+    final bool isCupertino = PlatformAdaptive.isCupertino(context);
+    return showAdaptiveDialog<void>(
       context: context,
-      builder: (final BuildContext dialogContext) => AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: <Widget>[
-          PlatformAdaptive.dialogAction(
-            context: dialogContext,
-            label: 'OK',
-            onPressed: () => Navigator.of(dialogContext).pop(),
-          ),
-        ],
-      ),
+      builder: (final BuildContext dialogContext) {
+        if (isCupertino) {
+          return CupertinoAlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        }
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: <Widget>[
+            PlatformAdaptive.dialogAction(
+              context: dialogContext,
+              label: 'OK',
+              onPressed: () => Navigator.of(dialogContext).pop(),
+            ),
+          ],
+        );
+      },
     );
   }
 }

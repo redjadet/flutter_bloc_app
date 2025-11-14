@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -80,10 +81,114 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.byType(AlertDialog), findsOneWidget);
+    // Dialog should be shown (either AlertDialog or CupertinoAlertDialog)
+    expect(
+      find.byType(AlertDialog).evaluate().isNotEmpty ||
+          find.byType(CupertinoAlertDialog).evaluate().isNotEmpty,
+      isTrue,
+    );
     await tester.tap(find.text(AppLocalizationsEn().deleteButtonLabel));
     await tester.pumpAndSettle();
 
+    expect(cubit.clearHistoryCalled, isTrue);
+  });
+
+  testWidgets('ChatPage dialog buttons are tappable on iOS', (
+    WidgetTester tester,
+  ) async {
+    final _TestChatCubit cubit = _TestChatCubit(
+      supportedModels: const <String>['only-model'],
+    );
+    addTearDown(cubit.close);
+
+    cubit.emit(
+      ChatState(
+        history: <ChatConversation>[
+          ChatConversation(
+            id: 'conversation-1',
+            createdAt: DateTime(2024),
+            updatedAt: DateTime(2024),
+            messages: const <ChatMessage>[
+              ChatMessage(author: ChatAuthor.user, text: 'Hi'),
+            ],
+          ),
+        ],
+        status: ViewStatus.success,
+      ),
+    );
+
+    // Use MaterialApp with iOS platform to simulate iOS
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(platform: TargetPlatform.iOS),
+        locale: const Locale('en'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: BlocProvider<ChatCubit>.value(
+          value: cubit,
+          child: const ChatPage(),
+        ),
+      ),
+    );
+
+    await tester.tap(
+      find.widgetWithIcon(IconButton, Icons.delete_sweep_outlined),
+    );
+    await tester.pumpAndSettle();
+
+    // Should use CupertinoAlertDialog on iOS
+    expect(find.byType(CupertinoAlertDialog), findsOneWidget);
+    expect(find.byType(AlertDialog), findsNothing);
+
+    // Cancel button should be tappable
+    final cancelButton = find.text(AppLocalizationsEn().cancelButtonLabel);
+    expect(cancelButton, findsOneWidget);
+
+    // Verify the button is actually interactive
+    final cancelAction = find.ancestor(
+      of: cancelButton,
+      matching: find.byType(CupertinoDialogAction),
+    );
+    expect(cancelAction, findsOneWidget);
+
+    final cancelActionWidget = tester.widget<CupertinoDialogAction>(
+      cancelAction,
+    );
+    expect(cancelActionWidget.onPressed, isNotNull);
+
+    // Tap Cancel - should work
+    await tester.tap(cancelButton);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(CupertinoAlertDialog), findsNothing);
+    expect(cubit.clearHistoryCalled, isFalse);
+
+    // Test Delete button
+    await tester.tap(
+      find.widgetWithIcon(IconButton, Icons.delete_sweep_outlined),
+    );
+    await tester.pumpAndSettle();
+
+    final deleteButton = find.text(AppLocalizationsEn().deleteButtonLabel);
+    expect(deleteButton, findsOneWidget);
+
+    final deleteAction = find.ancestor(
+      of: deleteButton,
+      matching: find.byType(CupertinoDialogAction),
+    );
+    expect(deleteAction, findsOneWidget);
+
+    final deleteActionWidget = tester.widget<CupertinoDialogAction>(
+      deleteAction,
+    );
+    expect(deleteActionWidget.onPressed, isNotNull);
+    expect(deleteActionWidget.isDestructiveAction, isTrue);
+
+    // Tap Delete - should work
+    await tester.tap(deleteButton);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(CupertinoAlertDialog), findsNothing);
     expect(cubit.clearHistoryCalled, isTrue);
   });
 

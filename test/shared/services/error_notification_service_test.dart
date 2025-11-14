@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -91,6 +92,59 @@ void main() {
       await dialogFuture;
 
       expect(find.byType(AlertDialog), findsNothing);
+    });
+
+    testWidgets('showAlertDialog uses CupertinoAlertDialog on iOS', (
+      WidgetTester tester,
+    ) async {
+      late BuildContext context;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(platform: TargetPlatform.iOS),
+          home: Scaffold(
+            body: Builder(
+              builder: (builderContext) {
+                context = builderContext;
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ),
+      );
+
+      final Future<void> dialogFuture = service.showAlertDialog(
+        context,
+        'Error',
+        'Details',
+      );
+      await tester.pumpAndSettle();
+
+      // Should use CupertinoAlertDialog on iOS
+      expect(find.byType(CupertinoAlertDialog), findsOneWidget);
+      expect(find.byType(AlertDialog), findsNothing);
+      expect(find.text('Error'), findsOneWidget);
+      expect(find.text('Details'), findsOneWidget);
+
+      // OK button should be tappable
+      final okButton = find.text('OK');
+      expect(okButton, findsOneWidget);
+
+      // Verify it's a CupertinoDialogAction
+      final okAction = find.ancestor(
+        of: okButton,
+        matching: find.byType(CupertinoDialogAction),
+      );
+      expect(okAction, findsOneWidget);
+
+      final okActionWidget = tester.widget<CupertinoDialogAction>(okAction);
+      expect(okActionWidget.onPressed, isNotNull);
+
+      await tester.tap(okButton);
+      await tester.pumpAndSettle();
+      await dialogFuture;
+
+      expect(find.byType(CupertinoAlertDialog), findsNothing);
     });
 
     testWidgets('showAlertDialog is skipped for unmounted context', (

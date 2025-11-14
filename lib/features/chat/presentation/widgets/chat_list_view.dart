@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -97,31 +98,56 @@ class ChatListView extends StatelessWidget {
 
   void _showDeleteDialog(BuildContext context, ChatContact contact) {
     final chatListCubit = context.read<ChatListCubit>();
+    final bool isCupertino = PlatformAdaptive.isCupertino(context);
     unawaited(
-      showDialog<void>(
+      showAdaptiveDialog<void>(
         context: context,
-        builder: (dialogContext) => AlertDialog(
-          title: const Text('Delete Chat'),
-          content: Text(
-            'Are you sure you want to delete the chat with ${contact.name}?',
-          ),
-          actions: [
-            PlatformAdaptive.dialogAction(
-              context: dialogContext,
-              label: 'Cancel',
-              onPressed: () => Navigator.of(dialogContext).pop(),
+        builder: (dialogContext) {
+          if (isCupertino) {
+            return CupertinoAlertDialog(
+              title: const Text('Delete Chat'),
+              content: Text(
+                'Are you sure you want to delete the chat with ${contact.name}?',
+              ),
+              actions: [
+                CupertinoDialogAction(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  child: const Text('Cancel'),
+                ),
+                CupertinoDialogAction(
+                  isDestructiveAction: true,
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                    unawaited(chatListCubit.deleteContact(contact.id));
+                  },
+                  child: const Text('Delete'),
+                ),
+              ],
+            );
+          }
+          return AlertDialog(
+            title: const Text('Delete Chat'),
+            content: Text(
+              'Are you sure you want to delete the chat with ${contact.name}?',
             ),
-            PlatformAdaptive.dialogAction(
-              context: dialogContext,
-              label: 'Delete',
-              isDestructive: true,
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-                unawaited(chatListCubit.deleteContact(contact.id));
-              },
-            ),
-          ],
-        ),
+            actions: [
+              PlatformAdaptive.dialogAction(
+                context: dialogContext,
+                label: 'Cancel',
+                onPressed: () => Navigator.of(dialogContext).pop(),
+              ),
+              PlatformAdaptive.dialogAction(
+                context: dialogContext,
+                label: 'Delete',
+                isDestructive: true,
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                  unawaited(chatListCubit.deleteContact(contact.id));
+                },
+              ),
+            ],
+          );
+        },
       ),
     );
   }

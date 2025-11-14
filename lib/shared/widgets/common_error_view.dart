@@ -69,13 +69,13 @@ class CommonRetryButton extends StatelessWidget {
     height: context.responsiveButtonHeight,
     child: DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(context.responsiveCardRadius),
         border: Border.all(color: const Color(0xFF050505), width: 1.5),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
           onTap: onPressed,
           child: Center(
             child: Text(

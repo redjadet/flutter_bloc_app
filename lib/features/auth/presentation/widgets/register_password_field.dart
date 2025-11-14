@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 class RegisterPasswordField extends StatefulWidget {
   const RegisterPasswordField({
@@ -81,19 +82,19 @@ class _RegisterPasswordFieldState extends State<RegisterPasswordField> {
           vertical: 12,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
           borderSide: BorderSide(
             color: colorScheme.outline.withValues(alpha: 0.4),
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
           borderSide: BorderSide(
             color: colorScheme.outline.withValues(alpha: 0.4),
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
           borderSide: BorderSide(
             color: colorScheme.primary,
             width: 1.5,
