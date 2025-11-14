@@ -48,7 +48,9 @@ void _startInitialLoad(
         error,
         stackTrace,
       );
-      repository._watchController.addError(error, stackTrace);
+      if (!repository._watchController.isClosed) {
+        repository._watchController.addError(error, stackTrace);
+      }
     } finally {
       if (!completer.isCompleted) {
         completer.complete();
