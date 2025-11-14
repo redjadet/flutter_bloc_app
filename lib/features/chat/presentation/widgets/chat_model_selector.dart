@@ -14,19 +14,19 @@ class ChatModelSelector extends StatelessWidget {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
 
-    return BlocBuilder<ChatCubit, ChatState>(
-      buildWhen: (final prev, final curr) =>
-          prev.currentModel != curr.currentModel,
-      builder: (final context, final state) {
-        final ChatCubit cubit = context.read<ChatCubit>();
-        final List<String> models = cubit.models;
-        final String currentModel = state.currentModel ?? models.first;
+    final ChatCubit cubit = context.read<ChatCubit>();
+    final List<String> models = cubit.models;
+
+    return BlocSelector<ChatCubit, ChatState, String?>(
+      selector: (final state) => state.currentModel,
+      builder: (final context, final currentModel) {
+        final String effectiveModel = currentModel ?? models.first;
 
         if (models.length <= 1) {
           return Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              '${l10n.chatModelLabel}: ${_modelLabel(l10n, currentModel)}',
+              '${l10n.chatModelLabel}: ${_modelLabel(l10n, effectiveModel)}',
               style: theme.textTheme.titleMedium,
             ),
           );
@@ -38,7 +38,7 @@ class ChatModelSelector extends StatelessWidget {
             SizedBox(width: UI.horizontalGapS),
             Expanded(
               child: DropdownButtonFormField<String>(
-                initialValue: currentModel,
+                initialValue: effectiveModel,
                 items: models
                     .map(
                       (final String model) => DropdownMenuItem<String>(
