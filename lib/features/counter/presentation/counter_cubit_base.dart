@@ -38,6 +38,8 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
       return;
     }
     _countdownTicker ??= _timerService.periodic(_countdownTickInterval, () {
+      // Check if cubit is closed before emitting to prevent errors
+      if (isClosed) return;
       if (_pauseCountdownForOneTick) {
         _pauseCountdownForOneTick = false;
         _emitCountdown(state.countdownSeconds);
@@ -77,6 +79,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
 
   /// Emits state with the provided countdown, preserving other fields.
   void _emitCountdown(final int seconds) {
+    if (isClosed) return;
     emit(state.copyWith(countdownSeconds: seconds));
   }
 
@@ -85,6 +88,10 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
     required final int count,
     final DateTime? timestamp,
   }) {
+    if (isClosed) {
+      // Return current state if cubit is closed to prevent errors
+      return state;
+    }
     _pauseCountdownForOneTick = false;
     final CounterError? existingError = state.error;
     final bool preserveError =
@@ -116,6 +123,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
 
   /// Resets to the default interval and holds one tick at that value when inactive.
   void _resetCountdownAndHold() {
+    if (isClosed) return;
     _pauseCountdownForOneTick = true;
     final CounterState next = state.copyWith(
       countdownSeconds: _defaultIntervalSeconds,
@@ -156,6 +164,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
     final String message,
   ) {
     AppLogger.error(message, error, stackTrace);
+    if (isClosed) return;
     final CounterError counterError = error is CounterError
         ? error
         : errorFactory(originalError: error);
@@ -173,6 +182,8 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
     // Set up new subscription immediately
     _repositorySubscription = _repository.watch().listen(
       (final CounterSnapshot snapshot) {
+        // Check if cubit is closed before emitting to prevent errors
+        if (isClosed) return;
         if (shouldIgnoreRemoteSnapshot(state, snapshot)) {
           return;
         }

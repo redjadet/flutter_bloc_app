@@ -80,10 +80,12 @@ class WebsocketCubit extends Cubit<WebsocketState> {
   }
 
   void _onIncomingMessage(final WebsocketMessage message) {
+    if (isClosed) return;
     emit(state.appendMessage(message));
   }
 
   void _onConnectionState(final WebsocketConnectionState connectionState) {
+    if (isClosed) return;
     emit(
       state.copyWith(
         status: connectionState.status,
