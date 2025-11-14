@@ -478,7 +478,8 @@ class _Updator {
       if (badgePattern.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           badgePattern,
-          (final match) => '${match.group(1)}$percentageUrlEncoded%25${match.group(3)}',
+          (final match) =>
+              '${match.group(1)}$percentageUrlEncoded%25${match.group(3)}',
         );
       }
       // Update "**85.34% Test Coverage**"
