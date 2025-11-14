@@ -163,10 +163,13 @@ class EchoWebsocketRepository implements WebsocketRepository {
   @override
   Future<void> disconnect() async {
     // Cancel any pending connection attempt
-    _connectionCompleter?.completeError(
-      StateError('Connection cancelled due to disconnect'),
-    );
+    final Completer<void>? completer = _connectionCompleter;
     _connectionCompleter = null;
+    if (completer != null && !completer.isCompleted) {
+      completer.completeError(
+        StateError('Connection cancelled due to disconnect'),
+      );
+    }
 
     if (_channel == null) {
       if (_state.status != WebsocketStatus.disconnected) {
@@ -193,10 +196,13 @@ class EchoWebsocketRepository implements WebsocketRepository {
   @override
   Future<void> dispose() async {
     // Cancel any pending connection attempt
-    _connectionCompleter?.completeError(
-      StateError('Connection cancelled due to dispose'),
-    );
+    final Completer<void>? completer = _connectionCompleter;
     _connectionCompleter = null;
+    if (completer != null && !completer.isCompleted) {
+      completer.completeError(
+        StateError('Connection cancelled due to dispose'),
+      );
+    }
 
     await disconnect();
     await _messagesController.close();

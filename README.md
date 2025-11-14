@@ -19,7 +19,7 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 - **Clean Architecture** - Domain → Data → Presentation layers with clear separation of concerns
 - **AES-256 Encrypted Storage** - Secure local database using Hive with keychain-backed encryption
 - **Responsive & Adaptive UI** - Material 3 design with platform-adaptive widgets
-- **85.30% Test Coverage** - Comprehensive unit, bloc, widget, and golden tests
+- **85.25% Test Coverage** - Comprehensive unit, bloc, widget, and golden tests
 - **Performance Optimized** - Built-in profiling, RepaintBoundary, and BlocSelector optimizations
 - **Multi-language Support** - 5 locales (EN, TR, DE, FR, ES) with automatic localization
 - **Firebase Integration** - Authentication, Remote Config, Analytics, and Crashlytics
@@ -247,7 +247,7 @@ sequenceDiagram
 
 ### Test Coverage
 
-- **Current Coverage**: 85.30% (6342/7435 lines)
+- **Current Coverage**: 85.25% (6342/7439 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 
