@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_d
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_display/counter_status_chip.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_display/counter_value_text.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 
 class CounterDisplayCard extends StatelessWidget {
   const CounterDisplayCard({
@@ -35,44 +35,38 @@ class CounterDisplayCard extends StatelessWidget {
     tween: ColorTween(end: cardColor),
     builder: (final context, final animatedColor, _) {
       final Color resolvedColor = animatedColor ?? cardColor;
-      return Card(
+      return CommonCard(
         elevation: 0,
         color: resolvedColor,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(UI.radiusM),
         ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: UI.cardPadH,
-            vertical: UI.cardPadV,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CounterValueText(
-                count: count,
-                textTheme: textTheme,
-                animDuration: animMedium,
-              ),
-              SizedBox(height: UI.gapM),
-              CounterStatusChip(
-                active: isActive,
-                colors: colors,
-                textTheme: textTheme,
-                l10n: l10n,
-                animDuration: animFast,
-              ),
-              SizedBox(height: UI.gapM),
-              Divider(height: UI.dividerThin, color: colors.outlineVariant),
-              SizedBox(height: UI.gapM),
-              CounterLastChangedText(
-                lastChanged: lastChanged,
-                l10n: l10n,
-                textTheme: textTheme,
-              ),
-            ],
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CounterValueText(
+              count: count,
+              textTheme: textTheme,
+              animDuration: animMedium,
+            ),
+            SizedBox(height: context.responsiveGapM),
+            CounterStatusChip(
+              active: isActive,
+              colors: colors,
+              textTheme: textTheme,
+              l10n: l10n,
+              animDuration: animFast,
+            ),
+            SizedBox(height: context.responsiveGapM),
+            Divider(height: UI.dividerThin, color: colors.outlineVariant),
+            SizedBox(height: context.responsiveGapM),
+            CounterLastChangedText(
+              lastChanged: lastChanged,
+              l10n: l10n,
+              textTheme: textTheme,
+            ),
+          ],
         ),
       );
     },
