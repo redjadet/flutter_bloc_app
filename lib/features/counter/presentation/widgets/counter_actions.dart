@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 
 class CounterActions extends StatelessWidget {
@@ -25,10 +25,12 @@ class CounterActions extends StatelessWidget {
                   ? null
                   : () => context.read<CounterCubit>().increment(),
               tooltip: l10n.incrementTooltip,
-              child: Center(child: Icon(Icons.add, size: UI.iconL)),
+              child: Center(
+                child: Icon(Icons.add, size: context.responsiveIconSize),
+              ),
             ),
           ),
-          SizedBox(height: UI.gapM),
+          SizedBox(height: context.responsiveGapM),
           Semantics(
             button: true,
             label: l10n.decrementTooltip,
@@ -38,7 +40,9 @@ class CounterActions extends StatelessWidget {
                   ? null
                   : () => context.read<CounterCubit>().decrement(),
               tooltip: l10n.decrementTooltip,
-              child: Center(child: Icon(Icons.remove, size: UI.iconL)),
+              child: Center(
+                child: Icon(Icons.remove, size: context.responsiveIconSize),
+              ),
             ),
           ),
         ],

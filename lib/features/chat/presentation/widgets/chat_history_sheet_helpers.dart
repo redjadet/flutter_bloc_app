@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 Future<bool> showClearHistoryDialog(
   final BuildContext context,
@@ -12,13 +13,16 @@ Future<bool> showClearHistoryDialog(
         title: Text(l10n.chatHistoryClearAll),
         content: Text(l10n.chatHistoryClearAllWarning),
         actions: <Widget>[
-          TextButton(
+          PlatformAdaptive.dialogAction(
+            context: context,
+            label: l10n.cancelButtonLabel,
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text(l10n.cancelButtonLabel),
           ),
-          TextButton(
+          PlatformAdaptive.dialogAction(
+            context: context,
+            label: l10n.deleteButtonLabel,
+            isDestructive: true,
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text(l10n.deleteButtonLabel),
           ),
         ],
       ),
@@ -38,13 +42,16 @@ Future<bool> showDeleteConversationDialog(
           l10n.chatHistoryDeleteConversationWarning(conversationTitle),
         ),
         actions: <Widget>[
-          TextButton(
+          PlatformAdaptive.dialogAction(
+            context: context,
+            label: l10n.cancelButtonLabel,
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text(l10n.cancelButtonLabel),
           ),
-          TextButton(
+          PlatformAdaptive.dialogAction(
+            context: context,
+            label: l10n.deleteButtonLabel,
+            isDestructive: true,
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text(l10n.deleteButtonLabel),
           ),
         ],
       ),

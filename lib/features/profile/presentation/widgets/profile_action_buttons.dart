@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfileActionButtons extends StatelessWidget {
@@ -11,13 +10,13 @@ class ProfileActionButtons extends StatelessWidget {
     padding: EdgeInsets.symmetric(horizontal: context.pageHorizontalPadding),
     child: Column(
       children: [
-        SizedBox(height: UI.gapL * 2),
+        SizedBox(height: context.responsiveGapL * 2),
         _ProfileButton(
           label: 'FOLLOW JANE',
           isPrimary: true,
           onPressed: () {},
         ),
-        SizedBox(height: UI.gapL),
+        SizedBox(height: context.responsiveGapL),
         _ProfileButton(
           label: 'MESSAGE',
           isPrimary: false,

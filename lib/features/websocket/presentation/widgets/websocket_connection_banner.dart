@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 class WebsocketConnectionBanner extends StatelessWidget {
   const WebsocketConnectionBanner({required this.state, super.key});
@@ -16,7 +16,7 @@ class WebsocketConnectionBanner extends StatelessWidget {
       return Container(
         width: double.infinity,
         color: theme.colorScheme.errorContainer,
-        padding: EdgeInsets.all(UI.gapS),
+        padding: EdgeInsets.all(context.responsiveGapS),
         child: Text(
           l10n.websocketErrorLabel(state.errorMessage!),
           style: theme.textTheme.bodySmall?.copyWith(
@@ -37,7 +37,7 @@ class WebsocketConnectionBanner extends StatelessWidget {
     return Container(
       width: double.infinity,
       color: backgroundColor,
-      padding: EdgeInsets.all(UI.gapS),
+      padding: EdgeInsets.all(context.responsiveGapS),
       child: Row(
         children: [
           if (state.isConnecting) ...[
@@ -46,10 +46,10 @@ class WebsocketConnectionBanner extends StatelessWidget {
               height: 16,
               child: CircularProgressIndicator(strokeWidth: 2),
             ),
-            SizedBox(width: UI.gapXS),
+            SizedBox(width: context.responsiveGapXS),
           ] else ...[
             Icon(Icons.bolt, color: foregroundColor),
-            SizedBox(width: UI.gapXS),
+            SizedBox(width: context.responsiveGapXS),
           ],
           Expanded(
             child: Text(

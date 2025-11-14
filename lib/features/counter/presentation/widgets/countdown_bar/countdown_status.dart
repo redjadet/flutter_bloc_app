@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CountdownStatus extends StatelessWidget {
@@ -31,10 +31,10 @@ class CountdownStatus extends StatelessWidget {
             active ? Icons.timer : Icons.pause_circle_filled,
             key: ValueKey<bool>(active),
             color: color,
-            size: UI.iconM,
+            size: context.responsiveIconSize,
           ),
         ),
-        SizedBox(width: UI.horizontalGapM),
+        SizedBox(width: context.responsiveHorizontalGapM),
         Flexible(
           child: AnimatedSwitcher(
             duration: animDuration,

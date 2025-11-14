@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 abstract class ErrorNotificationService {
   Future<void> showSnackBar(final BuildContext context, final String message);
@@ -54,9 +55,10 @@ class SnackbarErrorNotificationService implements ErrorNotificationService {
         title: Text(title),
         content: Text(message),
         actions: <Widget>[
-          TextButton(
+          PlatformAdaptive.dialogAction(
+            context: dialogContext,
+            label: 'OK',
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('OK'),
           ),
         ],
       ),

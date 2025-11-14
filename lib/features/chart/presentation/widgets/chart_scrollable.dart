@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 class ChartScrollable extends StatelessWidget {
   const ChartScrollable({required this.children, super.key});
@@ -9,7 +9,7 @@ class ChartScrollable extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => ListView(
     physics: const AlwaysScrollableScrollPhysics(),
-    padding: EdgeInsets.all(UI.gapL),
+    padding: EdgeInsets.all(context.responsiveGapL),
     children: children,
   );
 }

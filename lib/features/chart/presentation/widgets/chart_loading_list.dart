@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_scrollable.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ChartLoadingList extends StatelessWidget {
@@ -22,15 +21,15 @@ class ChartLoadingList extends StatelessWidget {
           Container(
             height: chartHeight,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(UI.radiusM),
+              borderRadius: BorderRadius.circular(context.responsiveCardRadius),
               color: skeletonColor,
             ),
           ),
-          SizedBox(height: UI.gapL),
+          SizedBox(height: context.responsiveGapL),
           Container(
             height: 48,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(UI.radiusM),
+              borderRadius: BorderRadius.circular(context.responsiveCardRadius),
               color: skeletonColor,
             ),
           ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class GoogleMapsLocationList extends StatelessWidget {
   const GoogleMapsLocationList({
@@ -89,7 +88,9 @@ class _LocationFocusActions extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               color: colors.secondaryContainer,
-              borderRadius: BorderRadius.circular(UI.radiusM / 2),
+              borderRadius: BorderRadius.circular(
+                context.responsiveCardRadius / 2,
+              ),
             ),
             child: Text(
               selectedLabel,

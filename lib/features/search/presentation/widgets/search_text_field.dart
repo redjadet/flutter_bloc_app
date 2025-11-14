@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/search/presentation/search_cubit.dart';
 import 'package:flutter_bloc_app/features/search/presentation/search_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class SearchTextField extends StatefulWidget {
   const SearchTextField({super.key});
@@ -55,7 +54,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
                 color: colors.surface,
                 border: Border.all(
                   color: colors.onSurface,
-                  width: UI.dividerThin * 2,
+                  width: 2,
                 ),
                 borderRadius: BorderRadius.circular(
                   context.responsiveBorderRadius,
@@ -69,8 +68,8 @@ class _SearchTextFieldState extends State<SearchTextField> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: UI.horizontalGapL,
-                    vertical: UI.gapM,
+                    horizontal: context.responsiveHorizontalGapL,
+                    vertical: context.responsiveGapM,
                   ),
                   hintText: 'Search...',
                   hintStyle: hintStyle,

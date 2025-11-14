@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
 import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
 
@@ -22,8 +22,8 @@ class WebsocketMessageList extends StatelessWidget {
     return RepaintBoundary(
       child: ListView.builder(
         padding: EdgeInsets.symmetric(
-          horizontal: UI.horizontalGapL,
-          vertical: UI.gapS,
+          horizontal: context.responsiveHorizontalGapL,
+          vertical: context.responsiveGapS,
         ),
         reverse: true,
         itemCount: messages.length,
@@ -33,10 +33,10 @@ class WebsocketMessageList extends StatelessWidget {
           return MessageBubble(
             message: message.text,
             isOutgoing: message.direction == WebsocketMessageDirection.outgoing,
-            margin: EdgeInsets.symmetric(vertical: UI.gapXS),
+            margin: EdgeInsets.symmetric(vertical: context.responsiveGapXS),
             padding: EdgeInsets.symmetric(
-              horizontal: UI.gapS,
-              vertical: UI.gapXS,
+              horizontal: context.responsiveGapS,
+              vertical: context.responsiveGapXS,
             ),
           );
         },

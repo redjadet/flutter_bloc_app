@@ -182,7 +182,7 @@ class _CounterContent extends StatelessWidget {
           padding: EdgeInsets.all(1),
           child: Align(alignment: Alignment.centerRight, child: FlavorBadge()),
         ),
-        SizedBox(height: UI.gapS),
+        SizedBox(height: context.responsiveGapS),
       ],
       Text(
         l10n.pushCountLabel,
@@ -191,11 +191,11 @@ class _CounterContent extends StatelessWidget {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
-      SizedBox(height: UI.gapS),
+      SizedBox(height: context.responsiveGapS),
       const CounterDisplay(),
-      SizedBox(height: UI.gapM),
+      SizedBox(height: context.responsiveGapM),
       const AwesomeFeatureWidget(),
-      SizedBox(height: UI.gapM),
+      SizedBox(height: context.responsiveGapM),
       BlocSelector<CounterCubit, CounterState, bool>(
         selector: (final state) => state.count == 0,
         builder: (final context, final showHint) {
