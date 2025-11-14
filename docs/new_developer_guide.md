@@ -118,12 +118,157 @@ Tips:
 
 Before finishing any task, verify these common bug patterns:
 
-- ✅ **Context lifecycle**: Check `context.mounted` after `await` before using `context` (navigation, dialogs, cubit reads)
-- ✅ **Cubit lifecycle**: Check `isClosed` before all `emit()` calls, especially in async callbacks, stream subscriptions, and timer callbacks
+#### Context & Widget Lifecycle
+
+- ✅ **Async operations with context**: Check `context.mounted` after `await` before using `context` (navigation, reading cubits, showing dialogs)
+
+  ```dart
+  await someAsyncOperation();
+  if (!context.mounted) return;
+  Navigator.of(context).pop();
+  ```
+
+- ✅ **addPostFrameCallback**: Check `context.mounted` or `mounted` before using context/controllers
+
+  ```dart
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    if (!context.mounted || !controller.hasClients) return;
+    await controller.animateTo(...);
+  });
+  ```
+
+- ✅ **Future.delayed callbacks**: Check `context.mounted` or `isClosed` before using context/emitting state
+
+  ```dart
+  Future.delayed(duration, () {
+    if (!context.mounted) return;
+    // Use context
+  });
+  ```
+
+- ✅ **Unawaited navigation**: Check `context.mounted` before `unawaited` navigation calls
+
+  ```dart
+  void _navigateToRoute(BuildContext context) {
+    if (!context.mounted) return;
+    unawaited(context.pushNamed(route));
+  }
+  ```
+
+#### Cubit/Bloc State Management
+
+- ✅ **Emit after close**: Check `isClosed` before all `emit()` calls, especially in:
+  - Stream subscription callbacks (`listen`, `onData`, `onError`)
+  - Timer callbacks (`Timer`, `TimerService.periodic`)
+  - Async operation callbacks (`onSuccess`, `onError` in `CubitExceptionHandler`)
+  - `Future.delayed` callbacks
+
+  ```dart
+  void _onIncomingMessage(final Message message) {
+    if (isClosed) return;
+    emit(state.appendMessage(message));
+  }
+  ```
+
+- ✅ **Multiple emit calls**: Check `isClosed` between consecutive `emit()` calls
+
+  ```dart
+  void _handleUri(final Uri uri) {
+    if (isClosed) return;
+    emit(DeepLinkNavigate(target, origin));
+    if (isClosed) return;
+    emit(const DeepLinkIdle());
+  }
+  ```
+
 - ✅ **Stream subscriptions**: Ensure subscriptions are properly cancelled in `close()` method
-- ✅ **Switch statements**: Ensure proper `break` statements to prevent fall-through
-- ✅ **Completers**: Check `isCompleted` before completing to prevent multiple completion errors
-- ✅ **Resource cleanup**: Ensure StreamControllers, Timers, and Listeners are properly disposed
+
+  ```dart
+  @override
+  Future<void> close() async {
+    await _subscription?.cancel();
+    await super.close();
+  }
+  ```
+
+- ✅ **Race conditions**: Nullify subscription reference before cancelling to prevent race conditions
+
+  ```dart
+  final StreamSubscription? oldSubscription = _subscription;
+  _subscription = null;
+  unawaited(oldSubscription?.cancel());
+  ```
+
+#### Switch Statements
+
+- ✅ **Missing breaks**: Ensure switch cases have proper `break` statements to prevent fall-through (unless intentional)
+
+  ```dart
+  switch (state) {
+    case StateA:
+      doSomething();
+      break; // Required unless fall-through is intentional
+    case StateB:
+      doSomethingElse();
+  }
+  ```
+
+#### Completers & Futures
+
+- ✅ **Multiple completions**: Check `isCompleted` before completing a `Completer` to prevent errors
+
+  ```dart
+  if (!completer.isCompleted) {
+    completer.complete(value);
+  }
+  ```
+
+- ✅ **Completer cleanup**: Complete or cancel completers in `dispose()`/`close()` methods
+
+  ```dart
+  _completer?.completeError(StateError('Cancelled'));
+  _completer = null;
+  ```
+
+#### Navigation
+
+- ✅ **Navigation after async**: Check `context.mounted` before navigation operations after `await`
+
+  ```dart
+  await someOperation();
+  if (!context.mounted) return;
+  await context.push(route);
+  ```
+
+#### Platform-Specific Dialogs
+
+- ✅ **iOS dialog buttons**: Use `showAdaptiveDialog` with explicit `CupertinoAlertDialog` on iOS, not just `AlertDialog.adaptive`
+
+  ```dart
+  final bool isCupertino = PlatformAdaptive.isCupertino(context);
+  await showAdaptiveDialog(
+    context: context,
+    builder: (dialogContext) {
+      if (isCupertino) {
+        return CupertinoAlertDialog(
+          actions: [
+            CupertinoDialogAction(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      }
+      return AlertDialog(...);
+    },
+  );
+  ```
+
+#### Resource Cleanup
+
+- ✅ **StreamControllers**: Ensure `StreamController` is closed in `dispose()`/`close()` methods
+- ✅ **Timers**: Ensure timers are cancelled/disposed in `close()` methods
+- ✅ **Listeners**: Remove listeners in `dispose()` methods
 
 **Quick verification**: Run `./bin/checklist` before committing to catch formatting, analysis, and test issues.
 

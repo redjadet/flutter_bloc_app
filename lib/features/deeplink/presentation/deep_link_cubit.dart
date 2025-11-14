@@ -58,7 +58,9 @@ class DeepLinkCubit extends Cubit<DeepLinkState> {
       return;
     }
     AppLogger.info('Deep link parsed to target: ${target.location}');
+    if (isClosed) return;
     emit(DeepLinkNavigate(target, origin));
+    if (isClosed) return;
     emit(const DeepLinkIdle());
   }
 

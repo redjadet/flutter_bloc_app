@@ -73,6 +73,7 @@ class ChatListView extends StatelessWidget {
       );
 
   void _navigateToChat(BuildContext context, ChatContact contact) {
+    if (!context.mounted) return;
     // Mark as read when opening chat
     unawaited(context.read<ChatListCubit>().markAsRead(contact.id));
 

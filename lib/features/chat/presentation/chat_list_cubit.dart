@@ -20,9 +20,11 @@ class ChatListCubit extends Cubit<ChatListState> {
     await CubitExceptionHandler.executeAsync(
       operation: _repository.getChatContacts,
       onSuccess: (final List<ChatContact> contacts) {
+        if (isClosed) return;
         emit(ChatListState.loaded(contacts: contacts));
       },
       onError: (final String message) {
+        if (isClosed) return;
         emit(ChatListState.error(message: message));
       },
       logContext: 'ChatListCubit.loadChatContacts',
@@ -36,12 +38,14 @@ class ChatListCubit extends Cubit<ChatListState> {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () async {
         await _repository.deleteChatContact(contactId);
+        if (isClosed) return;
         final List<ChatContact> updatedContacts = currentState.contacts
             .where((contact) => contact.id != contactId)
             .toList();
         emit(ChatListState.loaded(contacts: updatedContacts));
       },
       onError: (final String message) {
+        if (isClosed) return;
         emit(ChatListState.error(message: message));
       },
       logContext: 'ChatListCubit.deleteContact',
@@ -55,6 +59,7 @@ class ChatListCubit extends Cubit<ChatListState> {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () async {
         await _repository.markAsRead(contactId);
+        if (isClosed) return;
         final List<ChatContact> updatedContacts = currentState.contacts.map((
           contact,
         ) {
@@ -66,6 +71,7 @@ class ChatListCubit extends Cubit<ChatListState> {
         emit(ChatListState.loaded(contacts: updatedContacts));
       },
       onError: (final String message) {
+        if (isClosed) return;
         emit(ChatListState.error(message: message));
       },
       logContext: 'ChatListCubit.markAsRead',

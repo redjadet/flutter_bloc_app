@@ -191,6 +191,7 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
     final BuildContext context,
     final _OverflowItem item,
   ) {
+    if (!context.mounted) return;
     unawaited(context.pushNamed(item.routeName));
   }
 

@@ -91,7 +91,9 @@ class EchoWebsocketRepository implements WebsocketRepository {
         cancelOnError: true,
       );
       _updateState(const WebsocketConnectionState.connected());
-      completer.complete();
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
       _connectionCompleter = null;
     } on TimeoutException catch (error) {
       _connectionCompleter = null;

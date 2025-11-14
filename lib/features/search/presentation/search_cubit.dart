@@ -55,6 +55,7 @@ class SearchCubit extends Cubit<SearchState> {
     await CubitExceptionHandler.executeAsync(
       operation: () => _repository.search(query),
       onSuccess: (final results) {
+        if (isClosed) return;
         emit(
           state.copyWith(
             status: ViewStatus.success,
@@ -65,6 +66,7 @@ class SearchCubit extends Cubit<SearchState> {
         );
       },
       onError: (final String errorMessage) {
+        if (isClosed) return;
         emit(
           state.copyWith(
             status: ViewStatus.error,

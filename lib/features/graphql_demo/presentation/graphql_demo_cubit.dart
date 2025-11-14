@@ -101,6 +101,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
     final List<GraphqlContinent> resolvedContinents = continents != null
         ? List<GraphqlContinent>.unmodifiable(continents)
         : state.continents;
+    if (isClosed) return;
     emit(
       state.copyWith(
         status: ViewStatus.success,
@@ -117,6 +118,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
     required final String? message,
     required final GraphqlDemoErrorType? type,
   }) {
+    if (isClosed) return;
     emit(
       state.copyWith(
         status: ViewStatus.error,
