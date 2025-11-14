@@ -170,9 +170,22 @@ This document summarizes the code quality improvements and duplicate code elimin
   - Provides consistent card styling across the app
   - Reduces code duplication by ~3-5 lines per card usage
   - Supports all Card properties (color, elevation, margin, shape) with optional custom padding
+  - Uses responsive padding via `context.responsiveCardPaddingInsets` for device-type adaptation
 - **Files updated**:
   - `lib/features/google_maps/presentation/widgets/google_maps_controls.dart`
   - `lib/features/settings/presentation/widgets/app_info_section.dart`
+  - `lib/shared/widgets/app_message.dart` - Migrated to use `CommonCard` instead of manual Card+Padding
+
+### 15. Additional Responsive Spacing Updates
+
+- **Replaced `UI.gap*` with responsive extensions** in additional feature files:
+  - `lib/shared/widgets/common_loading_widget.dart` - Uses `context.responsiveGapM` instead of `UI.gapM`
+  - `lib/features/example/presentation/widgets/example_sections.dart` - All spacing now uses responsive extensions (`responsiveGapS`, `responsiveGapXS`)
+  - `lib/features/chat/presentation/pages/chat_page.dart` - Uses `context.responsiveHorizontalGapL` and `context.responsiveGap*` for consistent spacing
+- **Benefits**:
+  - Consistent device-type-aware spacing across more components
+  - Better adaptation to mobile/tablet/desktop form factors
+  - Improved maintainability with centralized responsive spacing logic
 
 ## Benefits Achieved
 

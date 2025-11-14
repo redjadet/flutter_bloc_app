@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 /// A reusable loading widget with consistent styling
 class CommonLoadingWidget extends StatelessWidget {
@@ -33,7 +32,7 @@ class CommonLoadingWidget extends StatelessWidget {
             ),
           ),
           if (message != null) ...[
-            SizedBox(height: UI.gapM),
+            SizedBox(height: context.responsiveGapM),
             Text(
               message!,
               style: theme.textTheme.bodyMedium?.copyWith(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class PlatformInfoSection extends StatelessWidget {
   const PlatformInfoSection({
@@ -20,10 +20,10 @@ class PlatformInfoSection extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final l10n = context.l10n;
     if (isLoading && info == null && errorMessage == null) {
-      return _loadingIndicator();
+      return _loadingIndicator(context);
     }
     if (errorMessage != null) {
-      return _errorText(theme, l10n.exampleNativeInfoError);
+      return _errorText(context, theme, l10n.exampleNativeInfoError);
     }
     if (info == null) {
       return const SizedBox.shrink();
@@ -31,7 +31,7 @@ class PlatformInfoSection extends StatelessWidget {
     final NativePlatformInfo resolvedInfo = info!;
     final int? batteryPercent = resolvedInfo.batteryLevel;
     return Padding(
-      padding: EdgeInsets.only(top: UI.gapS),
+      padding: EdgeInsets.only(top: context.responsiveGapS),
       child: Column(
         key: ValueKey<String>(
           'platform-info-${resolvedInfo.platform}-${resolvedInfo.version}',
@@ -42,14 +42,14 @@ class PlatformInfoSection extends StatelessWidget {
             style: theme.textTheme.titleMedium,
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: UI.gapXS),
+          SizedBox(height: context.responsiveGapXS),
           Text(
             resolvedInfo.toString(),
             style: theme.textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
           if (batteryPercent != null) ...[
-            SizedBox(height: UI.gapXS),
+            SizedBox(height: context.responsiveGapXS),
             Text(
               l10n.exampleNativeBatteryLabel(batteryPercent),
               style: theme.textTheme.bodySmall,
@@ -61,13 +61,17 @@ class PlatformInfoSection extends StatelessWidget {
     );
   }
 
-  Widget _loadingIndicator() => Padding(
-    padding: EdgeInsets.only(top: UI.gapS),
+  Widget _loadingIndicator(final BuildContext context) => Padding(
+    padding: EdgeInsets.only(top: context.responsiveGapS),
     child: const CircularProgressIndicator(),
   );
 
-  Widget _errorText(final ThemeData theme, final String message) => Padding(
-    padding: EdgeInsets.only(top: UI.gapS),
+  Widget _errorText(
+    final BuildContext context,
+    final ThemeData theme,
+    final String message,
+  ) => Padding(
+    padding: EdgeInsets.only(top: context.responsiveGapS),
     child: Text(
       message,
       style: theme.textTheme.bodySmall?.copyWith(
@@ -107,10 +111,10 @@ class IsolateResultSection extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final l10n = context.l10n;
     if (isLoading && !_hasResults && errorMessage == null) {
-      return _loadingIndicator();
+      return _loadingIndicator(context);
     }
     if (errorMessage != null) {
-      return _errorText(theme, errorMessage!);
+      return _errorText(context, theme, errorMessage!);
     }
     if (!_hasResults) {
       return const SizedBox.shrink();
@@ -126,7 +130,7 @@ class IsolateResultSection extends StatelessWidget {
     final int resolvedInput = fibonacciInput ?? 0;
     final int resolvedResult = fibonacciResult ?? 0;
     return Padding(
-      padding: EdgeInsets.only(top: UI.gapS),
+      padding: EdgeInsets.only(top: context.responsiveGapS),
       child: Column(
         key: ValueKey<String>('isolate-result-$resolvedDuration'),
         children: [
@@ -135,7 +139,7 @@ class IsolateResultSection extends StatelessWidget {
             style: theme.textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: UI.gapXS),
+          SizedBox(height: context.responsiveGapXS),
           Text(
             durationText,
             style: theme.textTheme.bodySmall,
@@ -146,13 +150,17 @@ class IsolateResultSection extends StatelessWidget {
     );
   }
 
-  Widget _loadingIndicator() => Padding(
-    padding: EdgeInsets.only(top: UI.gapS),
+  Widget _loadingIndicator(final BuildContext context) => Padding(
+    padding: EdgeInsets.only(top: context.responsiveGapS),
     child: const CircularProgressIndicator(),
   );
 
-  Widget _errorText(final ThemeData theme, final String message) => Padding(
-    padding: EdgeInsets.only(top: UI.gapS),
+  Widget _errorText(
+    final BuildContext context,
+    final ThemeData theme,
+    final String message,
+  ) => Padding(
+    padding: EdgeInsets.only(top: context.responsiveGapS),
     child: Text(
       message,
       style: theme.textTheme.bodySmall?.copyWith(

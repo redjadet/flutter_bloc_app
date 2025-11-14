@@ -100,10 +100,10 @@ class _ChatPageState extends State<ChatPage> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.fromLTRB(
-              UI.horizontalGapL,
-              UI.gapM,
-              UI.horizontalGapL,
-              UI.gapS,
+              context.responsiveHorizontalGapL,
+              context.responsiveGapM,
+              context.responsiveHorizontalGapL,
+              context.responsiveGapS,
             ),
             child: const ChatModelSelector(),
           ),
@@ -112,10 +112,10 @@ class _ChatPageState extends State<ChatPage> {
             top: false,
             child: Padding(
               padding: EdgeInsets.fromLTRB(
-                UI.horizontalGapL,
-                UI.gapS,
-                UI.horizontalGapL,
-                UI.gapS,
+                context.responsiveHorizontalGapL,
+                context.responsiveGapS,
+                context.responsiveHorizontalGapL,
+                context.responsiveGapS,
               ),
               child: ChatInputBar(
                 controller: _controller,
