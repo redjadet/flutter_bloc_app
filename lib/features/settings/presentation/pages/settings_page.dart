@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -41,7 +42,8 @@ class _SettingsView extends StatelessWidget {
           const AppInfoSection(),
           if (!const bool.fromEnvironment('dart.vm.product')) ...[
             SizedBox(height: context.responsiveGapL),
-            TextButton(
+            PlatformAdaptive.textButton(
+              context: context,
               onPressed: () =>
                   throw Exception('Test exception for error handling'),
               child: const Text('Throw Test Exception'),

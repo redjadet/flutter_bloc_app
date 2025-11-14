@@ -99,8 +99,8 @@ class CommonLoadingButton extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
-                width: 16,
-                height: 16,
+                width: context.responsiveIconSize * 0.67,
+                height: context.responsiveIconSize * 0.67,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
                   valueColor: AlwaysStoppedAnimation<Color>(

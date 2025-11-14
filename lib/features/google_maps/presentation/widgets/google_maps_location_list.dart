@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class GoogleMapsLocationList extends StatelessWidget {
@@ -42,7 +42,8 @@ class GoogleMapsLocationList extends StatelessWidget {
           Padding(
             key: ValueKey('map-location-${location.id}'),
             padding: EdgeInsets.only(bottom: context.responsiveGapS),
-            child: Card(
+            child: CommonCard(
+              padding: EdgeInsets.zero,
               child: ListTile(
                 title: Text(location.title),
                 subtitle: Text(location.description),

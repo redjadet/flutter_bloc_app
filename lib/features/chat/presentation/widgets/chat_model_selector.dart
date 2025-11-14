@@ -52,8 +52,12 @@ class ChatModelSelector extends StatelessWidget {
                     cubit.selectModel(value);
                   }
                 },
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      context.responsiveCardRadius,
+                    ),
+                  ),
                   isDense: true,
                 ),
                 isExpanded: true,

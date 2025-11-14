@@ -45,7 +45,11 @@ class ChatInputBar extends StatelessWidget {
             enableSuggestions: false,
             decoration: InputDecoration(
               hintText: l10n.chatInputHint,
-              border: const OutlineInputBorder(),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(
+                  context.responsiveCardRadius,
+                ),
+              ),
             ),
           ),
         ),
