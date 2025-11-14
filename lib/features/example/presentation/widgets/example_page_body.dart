@@ -47,6 +47,26 @@ class ExamplePageBody extends StatelessWidget {
   final List<int>? parallelValues;
   final Duration? parallelDuration;
 
+  Widget _buildIconButton({
+    required final BuildContext context,
+    required final VoidCallback? onPressed,
+    required final IconData icon,
+    required final String label,
+    final Key? key,
+  }) => PlatformAdaptive.filledButton(
+    key: key,
+    context: context,
+    onPressed: onPressed,
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: context.responsiveIconSize),
+        SizedBox(width: context.responsiveHorizontalGapS),
+        Text(label),
+      ],
+    ),
+  );
+
   @override
   Widget build(final BuildContext context) => SingleChildScrollView(
     padding: EdgeInsets.symmetric(vertical: context.responsiveGapL),
@@ -90,113 +110,62 @@ class ExamplePageBody extends StatelessWidget {
             child: Text(l10n.exampleBackButtonLabel),
           ),
           SizedBox(height: context.responsiveGapL),
-          PlatformAdaptive.filledButton(
+          _buildIconButton(
             context: context,
             onPressed: onLoadPlatformInfo,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.phone_iphone, size: context.responsiveIconSize),
-                SizedBox(width: context.responsiveHorizontalGapS),
-                Text(l10n.exampleNativeInfoButton),
-              ],
-            ),
+            icon: Icons.phone_iphone,
+            label: l10n.exampleNativeInfoButton,
           ),
           SizedBox(height: context.responsiveGapS),
-          PlatformAdaptive.filledButton(
+          _buildIconButton(
             context: context,
             onPressed: onOpenWebsocket,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.wifi, size: context.responsiveIconSize),
-                SizedBox(width: context.responsiveHorizontalGapS),
-                Text(l10n.exampleWebsocketButton),
-              ],
-            ),
+            icon: Icons.wifi,
+            label: l10n.exampleWebsocketButton,
           ),
           SizedBox(height: context.responsiveGapS),
-          PlatformAdaptive.filledButton(
+          _buildIconButton(
             context: context,
             onPressed: onOpenChatList,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.forum_outlined, size: context.responsiveIconSize),
-                SizedBox(width: context.responsiveHorizontalGapS),
-                const Text('Chat List Demo'),
-              ],
-            ),
+            icon: Icons.forum_outlined,
+            label: 'Chat List Demo',
           ),
           SizedBox(height: context.responsiveGapS),
-          PlatformAdaptive.filledButton(
+          _buildIconButton(
             context: context,
             onPressed: onOpenSearch,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.search, size: context.responsiveIconSize),
-                SizedBox(width: context.responsiveHorizontalGapS),
-                const Text('Search Demo'),
-              ],
-            ),
+            icon: Icons.search,
+            label: 'Search Demo',
           ),
           SizedBox(height: context.responsiveGapS),
-          PlatformAdaptive.filledButton(
+          _buildIconButton(
             context: context,
             onPressed: onOpenProfile,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.person, size: context.responsiveIconSize),
-                SizedBox(width: context.responsiveHorizontalGapS),
-                const Text('Profile Demo'),
-              ],
-            ),
+            icon: Icons.person,
+            label: 'Profile Demo',
           ),
           SizedBox(height: context.responsiveGapS),
-          PlatformAdaptive.filledButton(
-            key: const ValueKey('example-register-button'),
+          _buildIconButton(
             context: context,
             onPressed: onOpenRegister,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.app_registration,
-                  size: context.responsiveIconSize,
-                ),
-                SizedBox(width: context.responsiveHorizontalGapS),
-                const Text('Register Demo'),
-              ],
-            ),
+            icon: Icons.app_registration,
+            label: 'Register Demo',
+            key: const ValueKey('example-register-button'),
           ),
           SizedBox(height: context.responsiveGapS),
-          PlatformAdaptive.filledButton(
+          _buildIconButton(
             context: context,
             onPressed: onOpenLoggedOut,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.logout, size: context.responsiveIconSize),
-                SizedBox(width: context.responsiveHorizontalGapS),
-                const Text('Logged Out Demo'),
-              ],
-            ),
+            icon: Icons.logout,
+            label: 'Logged Out Demo',
           ),
           SizedBox(height: context.responsiveGapL),
-          PlatformAdaptive.filledButton(
-            key: const ValueKey('example-run-isolates-button'),
+          _buildIconButton(
             context: context,
             onPressed: onRunIsolates,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.bolt_outlined, size: context.responsiveIconSize),
-                SizedBox(width: context.responsiveHorizontalGapS),
-                Text(l10n.exampleRunIsolatesButton),
-              ],
-            ),
+            icon: Icons.bolt_outlined,
+            label: l10n.exampleRunIsolatesButton,
+            key: const ValueKey('example-run-isolates-button'),
           ),
           SizedBox(height: context.responsiveGapS),
           AnimatedSwitcher(

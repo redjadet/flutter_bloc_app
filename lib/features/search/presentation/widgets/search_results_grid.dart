@@ -29,6 +29,7 @@ class SearchResultsGrid extends StatelessWidget {
         itemBuilder: (final context, final index) {
           final result = results[index];
           return ClipRect(
+            key: ValueKey('search-result-${result.id}'),
             child: SizedBox(
               width: gridLayout.itemWidth,
               height: gridLayout.itemWidth,

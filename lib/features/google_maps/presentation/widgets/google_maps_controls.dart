@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class GoogleMapsControlsCard extends StatelessWidget {
   const GoogleMapsControlsCard({
@@ -38,10 +39,17 @@ class GoogleMapsControlsCard extends StatelessWidget {
         children: [
           Text(heading, style: theme.textTheme.titleMedium),
           SizedBox(height: context.responsiveGapS),
-          FilledButton.icon(
+          PlatformAdaptive.filledButton(
+            context: context,
             onPressed: onToggleMapType,
-            icon: const Icon(Icons.layers),
-            label: Text(mapTypeLabel),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.layers),
+                SizedBox(width: context.responsiveHorizontalGapS),
+                Text(mapTypeLabel),
+              ],
+            ),
           ),
           SizedBox(height: context.responsiveGapS),
           SwitchListTile.adaptive(
