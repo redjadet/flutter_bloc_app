@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/app_info_cubit.dart';
+import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 
@@ -12,32 +14,27 @@ class AppInfoSection extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final ThemeData theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(l10n.appInfoSectionTitle, style: theme.textTheme.titleMedium),
-        SizedBox(height: UI.gapS),
-        Card(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: UI.cardPadH,
-              vertical: UI.cardPadV,
-            ),
-            child: BlocBuilder<AppInfoCubit, AppInfoState>(
-              builder: (final context, final state) {
-                if (state.status.isSuccess && state.info != null) {
-                  return _InfoDetails(infoState: state);
-                }
-                if (state.status.isError) {
-                  return _ErrorContent(error: state.errorMessage);
-                }
-                return const _LoadingContent();
-              },
-            ),
+    return SettingsSection(
+      title: l10n.appInfoSectionTitle,
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: UI.cardPadH,
+            vertical: UI.cardPadV,
+          ),
+          child: BlocBuilder<AppInfoCubit, AppInfoState>(
+            builder: (final context, final state) {
+              if (state.status.isSuccess && state.info != null) {
+                return _InfoDetails(infoState: state);
+              }
+              if (state.status.isError) {
+                return _ErrorContent(error: state.errorMessage);
+              }
+              return const _LoadingContent();
+            },
           ),
         ),
-      ],
+      ),
     );
   }
 }
@@ -62,7 +59,7 @@ class _InfoDetails extends StatelessWidget {
           labelStyle: labelStyle,
           valueStyle: valueStyle,
         ),
-        SizedBox(height: UI.gapS),
+        SizedBox(height: context.responsiveGapS),
         _InfoRow(
           label: l10n.appInfoBuildNumberLabel,
           value: info.buildNumber,
@@ -92,7 +89,7 @@ class _InfoRow extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
       Text(label, style: labelStyle),
-      SizedBox(height: UI.gapXS),
+      SizedBox(height: context.responsiveGapXS),
       SelectableText(value, style: valueStyle),
     ],
   );
@@ -117,10 +114,10 @@ class _ErrorContent extends StatelessWidget {
           ),
         ),
         if (error != null && error!.trim().isNotEmpty) ...<Widget>[
-          SizedBox(height: UI.gapXS),
+          SizedBox(height: context.responsiveGapXS),
           Text(error!, style: theme.textTheme.bodySmall),
         ],
-        SizedBox(height: UI.gapS),
+        SizedBox(height: context.responsiveGapS),
         Align(
           alignment: Alignment.centerLeft,
           child: TextButton(

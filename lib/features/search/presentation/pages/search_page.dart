@@ -50,9 +50,9 @@ class _SearchPageContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: UI.gapL),
+                SizedBox(height: context.responsiveGapL),
                 const SearchTextField(),
-                SizedBox(height: UI.gapL),
+                SizedBox(height: context.responsiveGapL),
                 Text(
                   'ALL RESULTS',
                   style: theme.textTheme.labelMedium?.copyWith(
@@ -61,7 +61,7 @@ class _SearchPageContent extends StatelessWidget {
                     fontSize: context.responsiveCaptionSize,
                   ),
                 ),
-                SizedBox(height: UI.gapL),
+                SizedBox(height: context.responsiveGapL),
               ],
             ),
           ),
@@ -129,7 +129,9 @@ class _SearchPageAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color backgroundColor;
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight + UI.gapM);
+  Size get preferredSize => Size.fromHeight(
+    kToolbarHeight + UI.gapM,
+  );
 
   @override
   Widget build(final BuildContext context) => Material(

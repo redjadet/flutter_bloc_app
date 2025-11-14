@@ -47,7 +47,11 @@ void main(final List<String> args) {
   final File output = File('coverage/coverage_summary.md');
   output.parent.createSync(recursive: true);
   output.writeAsStringSync(coverage.toMarkdown());
-  _Updator.updateReadme(coverage.totalPercentage);
+  _Updator.updateReadme(
+    coverage.totalPercentage,
+    totalLinesHit: coverage.totalLinesHit,
+    totalLinesFound: coverage.totalLinesFound,
+  );
   stdout.writeln(
     'Wrote coverage/coverage_summary.md with ${coverage.totalPercentage.toStringAsFixed(2)}% coverage',
   );
@@ -435,31 +439,85 @@ class _Coverage {
 }
 
 class _Updator {
-  static void updateReadme(final double percentage) {
+  static void updateReadme(
+    final double percentage, {
+    required final int totalLinesHit,
+    required final int totalLinesFound,
+  }) {
     final File readme = File('README.md');
     if (!readme.existsSync()) {
       return;
     }
     final List<String> lines = readme.readAsLinesSync();
-    final Pattern marker = RegExp(
-      r'Latest line coverage: \*\*([0-9]+\.?[0-9]*)%\*\*',
-    );
+    final String percentageStr = percentage.toStringAsFixed(2);
+    final String percentageUrlEncoded = percentageStr.replaceAll('.', '%2E');
+    final String lineCountStr = '($totalLinesHit/$totalLinesFound lines)';
     bool updated = false;
+
+    // Pattern 1: Badge URL - [![Coverage](.../Coverage-85.34%25-...)](...)
+    final RegExp badgePattern = RegExp(
+      r'(\[!\[Coverage\]\([^)]+/Coverage-)([0-9]+\.?[0-9]*)%25([^)]+\))',
+    );
+
+    // Pattern 2: Text mentions - **85.34% Test Coverage** or **Current Coverage**: 85.34%
+    final RegExp textPattern1 = RegExp(
+      r'(\*\*)([0-9]+\.?[0-9]*)%(\s+Test Coverage\*\*)',
+    );
+    final RegExp textPattern2 = RegExp(
+      r'(\*\*Current Coverage\*\*:\s+)([0-9]+\.?[0-9]*)%\s+\(([0-9]+/[0-9]+\s+lines)\)',
+    );
+    final RegExp textPattern3 = RegExp(
+      r'(\*\*)([0-9]+\.?[0-9]*)%\s+\(([0-9]+/[0-9]+\s+lines)\)',
+    );
+
     for (int i = 0; i < lines.length; i++) {
       final String line = lines[i];
-      final Match? match = (marker as RegExp).firstMatch(line);
-      if (match != null) {
-        final String replacement = line.replaceFirst(
-          marker,
-          'Latest line coverage: **${percentage.toStringAsFixed(2)}%**',
+      String? replacement;
+
+      // Update badge URL
+      if (badgePattern.hasMatch(line)) {
+        replacement = line.replaceFirstMapped(
+          badgePattern,
+          (final match) => '${match.group(1)}$percentageUrlEncoded%25${match.group(3)}',
         );
+      }
+      // Update "**85.34% Test Coverage**"
+      else if (textPattern1.hasMatch(line)) {
+        replacement = line.replaceFirstMapped(
+          textPattern1,
+          (final match) => '${match.group(1)}$percentageStr%${match.group(3)}',
+        );
+      }
+      // Update "**Current Coverage**: 85.34% (6186/7249 lines)"
+      else if (textPattern2.hasMatch(line)) {
+        replacement = line.replaceFirstMapped(
+          textPattern2,
+          (final match) => '${match.group(1)}$percentageStr% $lineCountStr',
+        );
+      }
+      // Update "**85.34% (6186/7249 lines)" - update both percentage and line counts
+      else if (textPattern3.hasMatch(line)) {
+        replacement = line.replaceFirstMapped(
+          textPattern3,
+          (final match) => '${match.group(1)}$percentageStr% $lineCountStr',
+        );
+      }
+
+      if (replacement != null) {
         lines[i] = replacement;
         updated = true;
-        break;
       }
     }
+
     if (updated) {
       readme.writeAsStringSync(_withSingleTrailingNewline(lines.join('\n')));
+      stdout.writeln(
+        'Updated README.md with coverage: $percentageStr% $lineCountStr',
+      );
+    } else {
+      stderr.writeln(
+        'Warning: Could not find coverage percentage patterns in README.md',
+      );
     }
   }
 }
