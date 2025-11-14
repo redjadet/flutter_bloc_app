@@ -132,7 +132,11 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
                           enabled: data.isConnected && !data.isSending,
                           decoration: InputDecoration(
                             hintText: l10n.websocketMessageHint,
-                            border: const OutlineInputBorder(),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(
+                                context.responsiveCardRadius,
+                              ),
+                            ),
                           ),
                           onSubmitted: (_) => _sendCurrentMessage(),
                         ),

@@ -211,8 +211,10 @@ class _FilterBar extends StatelessWidget {
         ),
         SizedBox(height: context.responsiveGapS),
         InputDecorator(
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(context.responsiveCardRadius),
+            ),
             isDense: true,
           ),
           child: DropdownButtonHideUnderline(

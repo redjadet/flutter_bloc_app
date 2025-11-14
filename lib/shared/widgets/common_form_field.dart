@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 /// A reusable form field with consistent styling and validation
 class CommonFormField extends StatelessWidget {
@@ -66,29 +66,29 @@ class CommonFormField extends StatelessWidget {
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(UI.radiusM),
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(UI.radiusM),
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
           borderSide: BorderSide(
             color: theme.colorScheme.outline.withValues(alpha: 0.5),
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(UI.radiusM),
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
           borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(UI.radiusM),
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
           borderSide: BorderSide(color: theme.colorScheme.error),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(UI.radiusM),
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
           borderSide: BorderSide(color: theme.colorScheme.error, width: 2),
         ),
         contentPadding: EdgeInsets.symmetric(
-          horizontal: UI.horizontalGapL,
-          vertical: UI.gapM,
+          horizontal: context.responsiveHorizontalGapL,
+          vertical: context.responsiveGapM,
         ),
       ),
     );
@@ -171,21 +171,21 @@ class CommonDropdownField<T> extends StatelessWidget {
         labelText: labelText,
         hintText: hintText,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(UI.radiusM),
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(UI.radiusM),
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
           borderSide: BorderSide(
             color: theme.colorScheme.outline.withValues(alpha: 0.5),
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(UI.radiusM),
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
           borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
         ),
         contentPadding: EdgeInsets.symmetric(
-          horizontal: UI.horizontalGapL,
-          vertical: UI.gapM,
+          horizontal: context.responsiveHorizontalGapL,
+          vertical: context.responsiveGapM,
         ),
       ),
     );
