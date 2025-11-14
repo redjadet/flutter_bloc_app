@@ -3,10 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/app_info_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 
 class AppInfoSection extends StatelessWidget {
   const AppInfoSection({super.key});
@@ -16,23 +13,17 @@ class AppInfoSection extends StatelessWidget {
     final l10n = context.l10n;
     return SettingsSection(
       title: l10n.appInfoSectionTitle,
-      child: Card(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: UI.cardPadH,
-            vertical: UI.cardPadV,
-          ),
-          child: BlocBuilder<AppInfoCubit, AppInfoState>(
-            builder: (final context, final state) {
-              if (state.status.isSuccess && state.info != null) {
-                return _InfoDetails(infoState: state);
-              }
-              if (state.status.isError) {
-                return _ErrorContent(error: state.errorMessage);
-              }
-              return const _LoadingContent();
-            },
-          ),
+      child: CommonCard(
+        child: BlocBuilder<AppInfoCubit, AppInfoState>(
+          builder: (final context, final state) {
+            if (state.status.isSuccess && state.info != null) {
+              return _InfoDetails(infoState: state);
+            }
+            if (state.status.isError) {
+              return _ErrorContent(error: state.errorMessage);
+            }
+            return const _LoadingContent();
+          },
         ),
       ),
     );

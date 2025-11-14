@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class GoogleMapsLocationList extends StatelessWidget {
@@ -36,10 +37,10 @@ class GoogleMapsLocationList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(heading, style: theme.textTheme.titleMedium),
-        SizedBox(height: UI.gapS),
+        SizedBox(height: context.responsiveGapS),
         for (final MapLocation location in locations)
           Padding(
-            padding: EdgeInsets.only(bottom: UI.gapS),
+            padding: EdgeInsets.only(bottom: context.responsiveGapS),
             child: Card(
               child: ListTile(
                 title: Text(location.title),
@@ -81,10 +82,10 @@ class _LocationFocusActions extends StatelessWidget {
       children: [
         if (isSelected)
           Container(
-            margin: EdgeInsets.only(right: UI.gapXS),
+            margin: EdgeInsets.only(right: context.responsiveGapXS),
             padding: EdgeInsets.symmetric(
-              horizontal: UI.gapS,
-              vertical: UI.gapXS,
+              horizontal: context.responsiveGapS,
+              vertical: context.responsiveGapXS,
             ),
             decoration: BoxDecoration(
               color: colors.secondaryContainer,

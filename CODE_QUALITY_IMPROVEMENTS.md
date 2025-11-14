@@ -159,6 +159,20 @@ This document summarizes the code quality improvements and duplicate code elimin
   - `lib/features/settings/presentation/widgets/language_section.dart`
   - `lib/features/settings/presentation/widgets/app_info_section.dart`
   - `lib/features/search/presentation/pages/search_page.dart`
+  - `lib/features/google_maps/presentation/widgets/google_maps_controls.dart`
+  - `lib/features/google_maps/presentation/widgets/google_maps_location_list.dart`
+
+### 14. CommonCard Widget
+
+- **Created `CommonCard` widget** (`lib/shared/widgets/common_card.dart`) to eliminate duplicate Card+Padding patterns
+- **Benefits**:
+  - Eliminates repetitive `Card` + `Padding` + `EdgeInsets.symmetric(horizontal: UI.cardPadH, vertical: UI.cardPadV)` pattern
+  - Provides consistent card styling across the app
+  - Reduces code duplication by ~3-5 lines per card usage
+  - Supports all Card properties (color, elevation, margin, shape) with optional custom padding
+- **Files updated**:
+  - `lib/features/google_maps/presentation/widgets/google_maps_controls.dart`
+  - `lib/features/settings/presentation/widgets/app_info_section.dart`
 
 ## Benefits Achieved
 

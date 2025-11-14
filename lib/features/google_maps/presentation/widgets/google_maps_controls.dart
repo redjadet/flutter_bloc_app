@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 
 class GoogleMapsControlsCard extends StatelessWidget {
   const GoogleMapsControlsCard({
@@ -32,33 +32,27 @@ class GoogleMapsControlsCard extends StatelessWidget {
         ? mapTypeNormalLabel
         : mapTypeHybridLabel;
 
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: UI.cardPadH,
-          vertical: UI.cardPadV,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(heading, style: theme.textTheme.titleMedium),
-            SizedBox(height: UI.gapS),
-            FilledButton.icon(
-              onPressed: onToggleMapType,
-              icon: const Icon(Icons.layers),
-              label: Text(mapTypeLabel),
-            ),
-            SizedBox(height: UI.gapS),
-            SwitchListTile.adaptive(
-              contentPadding: EdgeInsets.zero,
-              value: trafficEnabled,
-              title: Text(trafficToggleLabel),
-              onChanged: onToggleTraffic,
-            ),
-            SizedBox(height: UI.gapS),
-            Text(helpText, style: theme.textTheme.bodySmall),
-          ],
-        ),
+    return CommonCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(heading, style: theme.textTheme.titleMedium),
+          SizedBox(height: context.responsiveGapS),
+          FilledButton.icon(
+            onPressed: onToggleMapType,
+            icon: const Icon(Icons.layers),
+            label: Text(mapTypeLabel),
+          ),
+          SizedBox(height: context.responsiveGapS),
+          SwitchListTile.adaptive(
+            contentPadding: EdgeInsets.zero,
+            value: trafficEnabled,
+            title: Text(trafficToggleLabel),
+            onChanged: onToggleTraffic,
+          ),
+          SizedBox(height: context.responsiveGapS),
+          Text(helpText, style: theme.textTheme.bodySmall),
+        ],
       ),
     );
   }
