@@ -1,9 +1,24 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+
+@immutable
+class _SendButtonData extends Equatable {
+  const _SendButtonData({
+    required this.canSend,
+    required this.isLoading,
+  });
+
+  final bool canSend;
+  final bool isLoading;
+
+  @override
+  List<Object?> get props => [canSend, isLoading];
+}
 
 class ChatInputBar extends StatelessWidget {
   const ChatInputBar({
@@ -34,14 +49,18 @@ class ChatInputBar extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: UI.horizontalGapS),
-        BlocBuilder<ChatCubit, ChatState>(
-          builder: (final context, final state) => IconButton(
+        SizedBox(width: context.responsiveHorizontalGapS),
+        BlocSelector<ChatCubit, ChatState, _SendButtonData>(
+          selector: (final state) => _SendButtonData(
+            canSend: state.canSend,
+            isLoading: state.isLoading,
+          ),
+          builder: (final context, final data) => IconButton(
             tooltip: l10n.chatSendButton,
-            onPressed: state.canSend ? onSend : null,
-            icon: state.isLoading
+            onPressed: data.canSend ? onSend : null,
+            icon: data.isLoading
                 ? SizedBox.square(
-                    dimension: UI.iconM,
+                    dimension: context.responsiveIconSize,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
                       color: theme.colorScheme.primary,

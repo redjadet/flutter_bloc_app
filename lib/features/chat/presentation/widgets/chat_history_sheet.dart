@@ -1,11 +1,30 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history_conversation_tile.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history_empty_state.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history_sheet_helpers.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+
+@immutable
+class _HistorySheetData extends Equatable {
+  const _HistorySheetData({
+    required this.history,
+    required this.hasHistory,
+    required this.activeConversationId,
+  });
+
+  final List<ChatConversation> history;
+  final bool hasHistory;
+  final String? activeConversationId;
+
+  @override
+  List<Object?> get props => [history, hasHistory, activeConversationId];
+}
 
 class ChatHistorySheet extends StatelessWidget {
   const ChatHistorySheet({required this.onClose, super.key});
@@ -17,8 +36,6 @@ class ChatHistorySheet extends StatelessWidget {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
     final ChatCubit cubit = context.read<ChatCubit>();
-    final MaterialLocalizations materialLocalizations =
-        MaterialLocalizations.of(context);
 
     return FractionallySizedBox(
       heightFactor: 0.9,
@@ -36,10 +53,14 @@ class ChatHistorySheet extends StatelessWidget {
                 child: Padding(
                   key: const ValueKey('chat-history-sheet-content'),
                   padding: context.responsiveSheetPadding(),
-                  child: BlocBuilder<ChatCubit, ChatState>(
-                    builder: (final context, final state) {
-                      final List<ChatConversation> conversations =
-                          state.history;
+                  child: BlocSelector<ChatCubit, ChatState, _HistorySheetData>(
+                    selector: (final state) => _HistorySheetData(
+                      history: state.history,
+                      hasHistory: state.hasHistory,
+                      activeConversationId: state.activeConversationId,
+                    ),
+                    builder: (final context, final data) {
+                      final List<ChatConversation> conversations = data.history;
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -71,7 +92,7 @@ class ChatHistorySheet extends StatelessWidget {
                           TextButton.icon(
                             icon: const Icon(Icons.delete_outline),
                             label: Text(l10n.chatHistoryClearAll),
-                            onPressed: state.hasHistory
+                            onPressed: data.hasHistory
                                 ? () async {
                                     final bool confirmed =
                                         await showClearHistoryDialog(
@@ -86,114 +107,19 @@ class ChatHistorySheet extends StatelessWidget {
                           ),
                           SizedBox(height: context.responsiveGapS),
                           Expanded(
-                            child: state.hasHistory
+                            child: data.hasHistory
                                 ? ListView.separated(
                                     itemBuilder: (final context, final index) {
                                       final ChatConversation conversation =
                                           conversations[index];
                                       final bool isActive =
                                           conversation.id ==
-                                          state.activeConversationId;
-                                      final String timestamp = formatTimestamp(
-                                        materialLocalizations,
-                                        conversation.updatedAt,
-                                      );
-                                      final String title = conversationTitle(
-                                        l10n,
-                                        index,
-                                        conversation,
-                                      );
-                                      final String? preview =
-                                          conversation.messages.isNotEmpty
-                                          ? conversation.messages.last.text
-                                          : null;
-
-                                      final Color baseTextColor = isActive
-                                          ? theme.colorScheme.onPrimaryContainer
-                                          : theme.colorScheme.onSurface;
-
-                                      return ListTile(
-                                        onTap: () {
-                                          cubit.selectConversation(
-                                            conversation.id,
-                                          );
-                                          onClose();
-                                        },
-                                        trailing: IconButton(
-                                          tooltip: l10n
-                                              .chatHistoryDeleteConversation,
-                                          icon: const Icon(
-                                            Icons.delete_outline,
-                                          ),
-                                          onPressed: () async {
-                                            final bool confirmed =
-                                                await showDeleteConversationDialog(
-                                                  context,
-                                                  l10n,
-                                                  title,
-                                                );
-                                            if (!confirmed) return;
-                                            await cubit.deleteConversation(
-                                              conversation.id,
-                                            );
-                                          },
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            context.responsiveCardRadius,
-                                          ),
-                                        ),
-                                        tileColor: isActive
-                                            ? theme.colorScheme.primaryContainer
-                                            : theme
-                                                  .colorScheme
-                                                  .surfaceContainerHighest,
-                                        title: Text(
-                                          title,
-                                          style: theme.textTheme.titleMedium
-                                              ?.copyWith(color: baseTextColor),
-                                        ),
-                                        subtitle: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              l10n.chatHistoryUpdatedAt(
-                                                timestamp,
-                                              ),
-                                              style: theme.textTheme.bodySmall
-                                                  ?.copyWith(
-                                                    color: isActive
-                                                        ? baseTextColor
-                                                              .withValues(
-                                                                alpha: 0.85,
-                                                              )
-                                                        : theme
-                                                              .colorScheme
-                                                              .onSurfaceVariant,
-                                                  ),
-                                            ),
-                                            if (preview != null &&
-                                                preview.isNotEmpty)
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                  top: context.responsiveGapXS,
-                                                ),
-                                                child: Text(
-                                                  preview,
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: theme
-                                                      .textTheme
-                                                      .bodySmall
-                                                      ?.copyWith(
-                                                        color: baseTextColor,
-                                                      ),
-                                                ),
-                                              ),
-                                          ],
-                                        ),
+                                          data.activeConversationId;
+                                      return ChatHistoryConversationTile(
+                                        conversation: conversation,
+                                        index: index,
+                                        isActive: isActive,
+                                        onClose: onClose,
                                       );
                                     },
                                     separatorBuilder: (final context, _) =>
@@ -202,19 +128,7 @@ class ChatHistorySheet extends StatelessWidget {
                                         ),
                                     itemCount: conversations.length,
                                   )
-                                : Center(
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal:
-                                            context.responsiveHorizontalGapL,
-                                      ),
-                                      child: Text(
-                                        l10n.chatHistoryEmpty,
-                                        style: theme.textTheme.bodyMedium,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
+                                : ChatHistoryEmptyState(l10n: l10n),
                           ),
                         ],
                       );
