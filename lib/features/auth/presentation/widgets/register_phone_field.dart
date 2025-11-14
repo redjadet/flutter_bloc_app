@@ -154,7 +154,12 @@ Future<CountryOption?> showCountryPicker({
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
+              padding: EdgeInsets.fromLTRB(
+                context.responsiveHorizontalGapL,
+                context.responsiveGapL,
+                context.responsiveHorizontalGapL,
+                context.responsiveGapM,
+              ),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(

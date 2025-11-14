@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:go_router/go_router.dart';
 
 class AccountSection extends StatelessWidget {
@@ -30,8 +30,8 @@ class AccountSection extends StatelessWidget {
         Card(
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: UI.cardPadH,
-              vertical: UI.cardPadV,
+              horizontal: context.responsiveCardPadding,
+              vertical: context.responsiveGapL,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +51,8 @@ class AccountSection extends StatelessWidget {
                             SizedBox(height: context.responsiveGapM),
                             SizedBox(
                               width: double.infinity,
-                              child: FilledButton(
+                              child: PlatformAdaptive.filledButton(
+                                context: context,
                                 onPressed: () => context.go(AppRoutes.authPath),
                                 child: Text(l10n.accountSignInButton),
                               ),
@@ -85,7 +86,8 @@ class AccountSection extends StatelessWidget {
                             SizedBox(height: context.responsiveGapM),
                             SizedBox(
                               width: double.infinity,
-                              child: FilledButton(
+                              child: PlatformAdaptive.filledButton(
+                                context: context,
                                 onPressed: () => context.go(AppRoutes.authPath),
                                 child: Text(l10n.accountUpgradeButton),
                               ),
@@ -115,7 +117,8 @@ class AccountSection extends StatelessWidget {
                           SizedBox(height: context.responsiveGapM),
                           SizedBox(
                             width: double.infinity,
-                            child: FilledButton.tonal(
+                            child: PlatformAdaptive.filledButton(
+                              context: context,
                               onPressed: () =>
                                   context.push(AppRoutes.manageAccountPath),
                               child: Text(l10n.accountManageButton),

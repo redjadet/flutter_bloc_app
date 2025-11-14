@@ -1,9 +1,28 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/app_info_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+
+@immutable
+class _AppInfoViewData extends Equatable {
+  const _AppInfoViewData({
+    required this.showSuccess,
+    required this.showError,
+    required this.info,
+    required this.errorMessage,
+  });
+
+  final bool showSuccess;
+  final bool showError;
+  final AppInfo? info;
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [showSuccess, showError, info, errorMessage];
+}
 
 class AppInfoSection extends StatelessWidget {
   const AppInfoSection({super.key});
@@ -14,13 +33,19 @@ class AppInfoSection extends StatelessWidget {
     return SettingsSection(
       title: l10n.appInfoSectionTitle,
       child: CommonCard(
-        child: BlocBuilder<AppInfoCubit, AppInfoState>(
-          builder: (final context, final state) {
-            if (state.status.isSuccess && state.info != null) {
-              return _InfoDetails(infoState: state);
+        child: BlocSelector<AppInfoCubit, AppInfoState, _AppInfoViewData>(
+          selector: (final state) => _AppInfoViewData(
+            showSuccess: state.status.isSuccess && state.info != null,
+            showError: state.status.isError,
+            info: state.info,
+            errorMessage: state.errorMessage,
+          ),
+          builder: (final context, final data) {
+            if (data.showSuccess) {
+              return _InfoDetails(info: data.info!);
             }
-            if (state.status.isError) {
-              return _ErrorContent(error: state.errorMessage);
+            if (data.showError) {
+              return _ErrorContent(error: data.errorMessage);
             }
             return const _LoadingContent();
           },
@@ -31,16 +56,15 @@ class AppInfoSection extends StatelessWidget {
 }
 
 class _InfoDetails extends StatelessWidget {
-  const _InfoDetails({required this.infoState});
+  const _InfoDetails({required this.info});
 
-  final AppInfoState infoState;
+  final AppInfo info;
 
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     final TextStyle? labelStyle = Theme.of(context).textTheme.bodyMedium;
     final TextStyle? valueStyle = Theme.of(context).textTheme.bodyLarge;
-    final AppInfo info = infoState.info!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -131,8 +155,8 @@ class _LoadingContent extends StatelessWidget {
     return Row(
       children: <Widget>[
         SizedBox(
-          width: UI.iconL,
-          height: UI.iconL,
+          width: context.responsiveIconSize,
+          height: context.responsiveIconSize,
           child: CircularProgressIndicator(
             strokeWidth: 2,
             valueColor: AlwaysStoppedAnimation<Color>(
@@ -140,7 +164,7 @@ class _LoadingContent extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: UI.horizontalGapM),
+        SizedBox(width: context.responsiveHorizontalGapM),
         Expanded(
           child: Text(
             l10n.appInfoLoadingLabel,
