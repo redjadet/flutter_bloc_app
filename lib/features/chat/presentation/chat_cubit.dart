@@ -57,9 +57,13 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
   ChatState get currentState => state;
 
   @protected
-  void emitState(final ChatState newState) => emit(newState);
+  void emitState(final ChatState newState) {
+    if (isClosed) return;
+    emit(newState);
+  }
 
   void clearError() {
+    if (isClosed) return;
     if (state.hasError) {
       emit(state.copyWith(error: null, status: ViewStatus.initial));
     }

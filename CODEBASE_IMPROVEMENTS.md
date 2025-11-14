@@ -50,7 +50,7 @@
   - Added `cached_network_image` package as a dependency
   - Created reusable `CachedNetworkImageWidget` in `lib/shared/widgets/cached_network_image_widget.dart` with consistent loading, error handling, and memory optimization
   - Replaced `Image.network` with `CachedNetworkImageWidget` in `ChatContactAvatar` widget
-  - Updated documentation in `docs/SHARED_UTILITIES.md` and `AGENTS.md` to document image caching strategy
+  - Updated documentation in `docs/SHARED_UTILITIES.md` to document image caching strategy
 - ✅ Fixed test timeouts related to network image loading:
   - Updated chat widget tests (`chat_contact_tile_test.dart`, `chat_list_view_test.dart`, `chat_list_page_test.dart`) to use `pump()` instead of `pumpAndSettle()` when network images are involved
   - Prevents test timeouts caused by `CachedNetworkImageWidget` waiting for network requests that never complete in test environment

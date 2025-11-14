@@ -38,8 +38,12 @@ class CounterCubit extends _CounterCubitBase {
       operation: () async {
         if (_initialLoadDelay > Duration.zero) {
           await Future<void>.delayed(_initialLoadDelay);
+          // Check if cubit is closed after delay to prevent errors
+          if (isClosed) return;
         }
         final CounterSnapshot snapshot = await _repository.load();
+        // Check if cubit is closed after async operation to prevent errors
+        if (isClosed) return;
         final RestorationResult restoration = restoreStateFromSnapshot(
           snapshot,
         );
