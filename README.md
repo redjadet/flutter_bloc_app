@@ -434,7 +434,6 @@ flutter gen-l10n
 
 ## Documentation
 
-- **[AGENTS.md](AGENTS.md)** - Comprehensive guide for AI agents
 - **[FAQ.md](FAQ.md)** - Frequently asked questions
 - **[docs/PERFORMANCE_PROFILING.md](docs/PERFORMANCE_PROFILING.md)** - Performance optimization guide
 - **[docs/SHARED_UTILITIES.md](docs/SHARED_UTILITIES.md)** - Shared utilities documentation
