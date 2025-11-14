@@ -40,7 +40,7 @@ class CounterDisplayCard extends StatelessWidget {
         color: resolvedColor,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(UI.radiusM),
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

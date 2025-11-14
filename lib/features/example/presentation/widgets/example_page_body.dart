@@ -54,13 +54,13 @@ class ExamplePageBody extends StatelessWidget {
       key: const ValueKey('example-content-card'),
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(UI.radiusM),
+        borderRadius: BorderRadius.circular(context.responsiveCardRadius),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(UI.radiusM),
+            borderRadius: BorderRadius.circular(context.responsiveCardRadius),
             child: FancyShimmerImage(
               imageUrl:
                   'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',

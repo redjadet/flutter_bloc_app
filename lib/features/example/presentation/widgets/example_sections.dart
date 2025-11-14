@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 
 class PlatformInfoSection extends StatelessWidget {
   const PlatformInfoSection({
@@ -63,7 +64,7 @@ class PlatformInfoSection extends StatelessWidget {
 
   Widget _loadingIndicator(final BuildContext context) => Padding(
     padding: EdgeInsets.only(top: context.responsiveGapS),
-    child: const CircularProgressIndicator(),
+    child: const CommonLoadingWidget(),
   );
 
   Widget _errorText(
@@ -152,7 +153,7 @@ class IsolateResultSection extends StatelessWidget {
 
   Widget _loadingIndicator(final BuildContext context) => Padding(
     padding: EdgeInsets.only(top: context.responsiveGapS),
-    child: const CircularProgressIndicator(),
+    child: const CommonLoadingWidget(),
   );
 
   Widget _errorText(
