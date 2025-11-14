@@ -99,7 +99,7 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 - **Automated Testing** - Comprehensive unit/bloc/widget/golden suites surfaced through `./bin/checklist`
 - **CI/CD Ready** - Fastlane scripts, Firebase app distribution hooks, and per-environment configurations
 - **Common Bugs Checklist** - Context lifecycle, cubit disposal, and async guardrails outlined in `docs/new_developer_guide.md`
-- **Bug Prevention Tests** - Dedicated regression tests under `test/shared/common_bugs_prevention_test.dart`
+- **Bug Prevention Tests** - Dedicated regression tests under `test/shared/common_bugs_prevention_test.dart` covering StreamController state checks, cubit lifecycle guards, context mounted checks, completer safety, and more. Automatically included in `./bin/checklist` test runs.
 
 ---
 
@@ -274,6 +274,7 @@ tool/test_coverage.sh
 - **Bloc Tests** - State flow testing with `bloc_test`
 - **Widget Tests** - UI component and interaction testing
 - **Golden Tests** - Visual regression testing
+- **Common Bugs Prevention Tests** - Regression tests for common pitfalls (context lifecycle, cubit disposal, stream cleanup, etc.) located in `test/shared/common_bugs_prevention_test.dart`
 
 ### Golden Test Regeneration
 
@@ -295,6 +296,7 @@ flutter test --update-goldens test/counter_page_golden_test.dart
 - `FakeTimerService().tick(n)` for time-dependent tests
 - `pump()` instead of `pumpAndSettle()` for `CachedNetworkImageWidget` tests
 - Hive initialization in `setUpAll` for repository tests
+- Common bugs prevention tests automatically run with `./bin/checklist` to catch regressions
 
 ---
 

@@ -81,6 +81,7 @@ Tips:
 
 - **Unit & Bloc tests**: Use `bloc_test` + fake repositories/services. Counter, GraphQL, WebSocket, Remote Config cubits all have samples to copy.
 - **Widget/Golden tests**: Live under `test/features/.../presentation`. Use `golden_toolkit` for deterministic layout tests and seed localization/theme providers as needed.
+- **Common Bugs Prevention tests**: Located in `test/shared/common_bugs_prevention_test.dart`, these regression tests verify defensive patterns (context lifecycle checks, cubit disposal guards, stream cleanup, etc.). Automatically included when running `./bin/checklist` or `tool/test_coverage.sh`.
 - **Timer-dependent tests**: Inject `FakeTimerService` and advance time with `tick(n)` instead of waiting on real timers.
 - **Network image tests**: When testing widgets that use `CachedNetworkImageWidget`, use `pump()` instead of `pumpAndSettle()` to avoid timeouts. Network requests never complete in test environments, so `pumpAndSettle()` will wait indefinitely. Use `await tester.pump()` followed by `await tester.pump(const Duration(milliseconds: 100))` if needed for async operations.
 - **Auth & Platform fakes**: `MockFirebaseAuth`, mock `NativePlatformService`, `FakeTimerService`, and other utilities live in `test/mocks/` or feature-specific folders.
