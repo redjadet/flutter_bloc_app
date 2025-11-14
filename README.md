@@ -16,16 +16,16 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 
 ### Key Highlights
 
-- **Clean Architecture** - Domain → Data → Presentation layers with clear separation of concerns
-- **AES-256 Encrypted Storage** - Secure local database using Hive with keychain-backed encryption
-- **Responsive & Adaptive UI** - Material 3 design with platform-adaptive widgets
-- **85.25% Test Coverage** - Comprehensive unit, bloc, widget, and golden tests
-- **Performance Optimized** - Built-in profiling, RepaintBoundary, and BlocSelector optimizations
-- **Multi-language Support** - 5 locales (EN, TR, DE, FR, ES) with automatic localization
-- **Firebase Integration** - Authentication, Remote Config, Analytics, and Crashlytics
-- **Maps & Location** - Google Maps with Apple Maps fallback on iOS
-- **Real-time Features** - WebSocket support, AI chat, and live updates
-- **Modern UI Patterns** - Shimmer loading, skeleton screens, and smooth animations
+| Area | Details |
+| --- | --- |
+| **Architecture** | Clean Architecture + BLoC/Cubit with `get_it` DI, `freezed` states, and repository abstractions |
+| **Secure Storage** | AES-256 encrypted Hive boxes, keychain-kept secrets, migration helpers |
+| **Responsive UI** | Material 3 + Cupertino adaptive widgets, responsive spacing helpers, reusable layout primitives |
+| **Quality Bar** | 85.25% test coverage across unit/bloc/widget/golden suites, automated linting, common bug checklist |
+| **Cloud Integrations** | Firebase Auth, Remote Config, analytics hooks, Firestore/REST/GraphQL/WebSocket demos |
+| **Internationalization** | Five fully-localized locales (EN, TR, DE, FR, ES) with automated ARB generation |
+| **Dev Experience** | One-click checklist (`./bin/checklist`), performance profiler, custom lint rules, CI-ready scripts |
+| **Real-time & Maps** | AI chat with Hugging Face OSS models, WebSocket echo client, Google/Apple Maps fallbacks |
 
 ---
 
@@ -94,11 +94,12 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 
 ### Developer Experience
 
-- **Performance Profiling** - Built-in widget rebuild tracking and frame analysis
-- **Custom Linting** - File length enforcement via native Dart 3.10 analyzer plugin
-- **Automated Testing** - Comprehensive test suite with golden tests
-- **CI/CD Ready** - Fastlane automation for iOS and Android deployments
-- **Common Bugs Checklist** - Pre-commit verification checklist for context lifecycle, cubit state management, and resource cleanup (see `docs/new_developer_guide.md`)
+- **Performance Profiling** - Built-in widget rebuild tracking, frame analysis overlays, and `PerformanceProfiler`
+- **Custom Linting** - File length + responsive spacing rules enforced by the Dart 3.10 analyzer plugin
+- **Automated Testing** - Comprehensive unit/bloc/widget/golden suites surfaced through `./bin/checklist`
+- **CI/CD Ready** - Fastlane scripts, Firebase app distribution hooks, and per-environment configurations
+- **Common Bugs Checklist** - Context lifecycle, cubit disposal, and async guardrails outlined in `docs/new_developer_guide.md`
+- **Bug Prevention Tests** - Dedicated regression tests under `test/shared/common_bugs_prevention_test.dart`
 
 ---
 
@@ -173,9 +174,9 @@ The checklist automatically runs:
 
 ---
 
-## Architecture
+## Architecture & Tooling
 
-This project follows **Clean Architecture** principles with clear separation between Domain, Data, and Presentation layers.
+This project enforces **Clean Architecture** guardrails, SOLID principles, and responsive design requirements across all modules. Every feature moves through the same pipeline: domain contracts → repositories → cubits/blocs → widgets.
 
 ### Architecture Diagram
 
@@ -247,7 +248,7 @@ sequenceDiagram
 
 ### Test Coverage
 
-- **Current Coverage**: 85.25% (6342/7439 lines)
+- **Current Coverage**: 85.33% (6350/7442 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 
