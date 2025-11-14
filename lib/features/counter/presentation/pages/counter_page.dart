@@ -80,7 +80,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
           listenWhen: (final prev, final curr) =>
               prev.count == 0 && curr.count > 0,
           listener: (final context, final state) {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ErrorHandling.clearSnackBars(context);
           },
         ),
       ],

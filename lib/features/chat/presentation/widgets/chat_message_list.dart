@@ -68,6 +68,7 @@ class ChatMessageList extends StatelessWidget {
               final bool isUser = message.author == ChatAuthor.user;
 
               return MessageBubble(
+                key: ValueKey('chat-message-$index-${message.text.hashCode}'),
                 message: message.text,
                 isOutgoing: isUser,
                 outgoingColor: theme.colorScheme.primary,

@@ -31,6 +31,7 @@ class WebsocketMessageList extends StatelessWidget {
           final WebsocketMessage message =
               messages[messages.length - 1 - index];
           return MessageBubble(
+            key: ValueKey('websocket-message-$index-${message.text.hashCode}'),
             message: message.text,
             isOutgoing: message.direction == WebsocketMessageDirection.outgoing,
             margin: EdgeInsets.symmetric(vertical: context.responsiveGapXS),
