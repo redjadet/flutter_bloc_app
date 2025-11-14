@@ -46,6 +46,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
       case AppLifecycleState.detached:
       case AppLifecycleState.hidden:
         cubit.pauseAutoDecrement();
+        break;
       case AppLifecycleState.resumed:
         cubit.resumeAutoDecrement();
     }

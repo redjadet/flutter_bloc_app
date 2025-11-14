@@ -35,7 +35,7 @@ class ChatMessageList extends StatelessWidget {
         }
         if (state.hasMessages) {
           WidgetsBinding.instance.addPostFrameCallback((_) async {
-            if (!controller.hasClients) return;
+            if (!context.mounted || !controller.hasClients) return;
             await controller.animateTo(
               controller.position.maxScrollExtent,
               duration: const Duration(milliseconds: 180),

@@ -116,6 +116,7 @@ linter:
     use_key_in_widget_constructors: true
     use_named_constants: true
     use_string_buffers: true
+    unnecessary_breaks: false
     # Stricter type inference and null-safety consistency rules
     always_declare_return_types: true
     prefer_typing_uninitialized_variables: true
