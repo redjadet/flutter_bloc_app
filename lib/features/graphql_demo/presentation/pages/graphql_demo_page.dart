@@ -80,7 +80,7 @@ class GraphqlDemoPage extends StatelessWidget {
     final ThemeData theme,
   ) {
     if (bodyData.isLoading && bodyData.countries.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
+      return const CommonLoadingWidget();
     }
 
     if (bodyData.hasError && bodyData.countries.isEmpty) {

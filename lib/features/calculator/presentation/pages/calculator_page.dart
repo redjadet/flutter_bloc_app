@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/constants.dart';
@@ -97,12 +98,13 @@ class _CalculatorDisplay extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) =>
-      BlocBuilder<CalculatorCubit, CalculatorState>(
-        buildWhen: (final previous, final current) =>
-            previous.display != current.display ||
-            previous.history != current.history ||
-            previous.error != current.error,
-        builder: (final context, final state) {
+      BlocSelector<CalculatorCubit, CalculatorState, _DisplayData>(
+        selector: (final state) => _DisplayData(
+          display: state.display,
+          history: state.history,
+          error: state.error,
+        ),
+        builder: (final context, final data) {
           final ThemeData theme = Theme.of(context);
           final ColorScheme colors = theme.colorScheme;
           final double horizontalPadding = context.responsiveHorizontalGapL;
@@ -128,28 +130,28 @@ class _CalculatorDisplay extends StatelessWidget {
                 fontWeight: FontWeight.w300,
               );
           final l10n = context.l10n;
-          final bool hasError = state.error != null;
+          final bool hasError = data.error != null;
           final TextStyle effectiveDisplayStyle = hasError
               ? displayStyle.copyWith(color: colors.error)
               : displayStyle;
-          final String displayText = switch (state.error) {
+          final String displayText = switch (data.error) {
             CalculatorError.divisionByZero =>
               l10n.calculatorErrorDivisionByZero,
             CalculatorError.invalidResult => l10n.calculatorErrorInvalidResult,
             CalculatorError.nonPositiveTotal =>
               l10n.calculatorErrorNonPositiveTotal,
-            null => state.display,
+            null => data.display,
           };
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (!hasError && state.history.isNotEmpty) ...[
+                if (!hasError && data.history.isNotEmpty) ...[
                   Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                      state.history,
+                      data.history,
                       style: historyStyle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -174,4 +176,20 @@ class _CalculatorDisplay extends StatelessWidget {
           );
         },
       );
+}
+
+@immutable
+class _DisplayData extends Equatable {
+  const _DisplayData({
+    required this.display,
+    required this.history,
+    required this.error,
+  });
+
+  final String display;
+  final String history;
+  final CalculatorError? error;
+
+  @override
+  List<Object?> get props => [display, history, error];
 }
