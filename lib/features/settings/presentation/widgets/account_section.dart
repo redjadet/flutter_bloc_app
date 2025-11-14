@@ -4,6 +4,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:go_router/go_router.dart';
 
@@ -25,7 +26,7 @@ class AccountSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(l10n.accountSectionTitle, style: theme.textTheme.titleMedium),
-        SizedBox(height: UI.gapS),
+        SizedBox(height: context.responsiveGapS),
         Card(
           child: Padding(
             padding: EdgeInsets.symmetric(
@@ -47,7 +48,7 @@ class AccountSection extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(l10n.accountSignedOutLabel),
-                            SizedBox(height: UI.gapM),
+                            SizedBox(height: context.responsiveGapM),
                             SizedBox(
                               width: double.infinity,
                               child: FilledButton(
@@ -76,12 +77,12 @@ class AccountSection extends StatelessWidget {
                               l10n.accountGuestLabel,
                               style: theme.textTheme.bodyMedium,
                             ),
-                            SizedBox(height: UI.gapS),
+                            SizedBox(height: context.responsiveGapS),
                             Text(
                               l10n.accountGuestDescription,
                               style: theme.textTheme.bodySmall,
                             ),
-                            SizedBox(height: UI.gapM),
+                            SizedBox(height: context.responsiveGapM),
                             SizedBox(
                               width: double.infinity,
                               child: FilledButton(
@@ -89,7 +90,7 @@ class AccountSection extends StatelessWidget {
                                 child: Text(l10n.accountUpgradeButton),
                               ),
                             ),
-                            SizedBox(height: UI.gapS),
+                            SizedBox(height: context.responsiveGapS),
                             const SizedBox(
                               width: double.infinity,
                               child: SignOutButton(
@@ -108,10 +109,10 @@ class AccountSection extends StatelessWidget {
                             style: theme.textTheme.bodyMedium,
                           ),
                           if (email != null && email.isNotEmpty) ...<Widget>[
-                            SizedBox(height: UI.gapS),
+                            SizedBox(height: context.responsiveGapS),
                             Text(email, style: theme.textTheme.bodySmall),
                           ],
-                          SizedBox(height: UI.gapM),
+                          SizedBox(height: context.responsiveGapM),
                           SizedBox(
                             width: double.infinity,
                             child: FilledButton.tonal(
@@ -120,7 +121,7 @@ class AccountSection extends StatelessWidget {
                               child: Text(l10n.accountManageButton),
                             ),
                           ),
-                          SizedBox(height: UI.gapS),
+                          SizedBox(height: context.responsiveGapS),
                           const SizedBox(
                             width: double.infinity,
                             child: SignOutButton(

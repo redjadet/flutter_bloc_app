@@ -33,13 +33,13 @@ class _SettingsView extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           const AccountSection(),
-          SizedBox(height: UI.gapL),
+          SizedBox(height: context.responsiveGapL),
           const ThemeSection(),
-          SizedBox(height: UI.gapL),
+          SizedBox(height: context.responsiveGapL),
           const LanguageSection(),
-          SizedBox(height: UI.gapL),
+          SizedBox(height: context.responsiveGapL),
           const AppInfoSection(),
-          SizedBox(height: UI.gapL),
+          SizedBox(height: context.responsiveGapL),
           TextButton(
             onPressed: () => throw Exception(),
             child: const Text('Throw Test Exception'),

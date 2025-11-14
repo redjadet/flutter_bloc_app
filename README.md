@@ -4,7 +4,7 @@ A production-ready Flutter application demonstrating enterprise-grade architectu
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.38.0-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.10.0-blue.svg)](https://dart.dev)
-[![Coverage](https://img.shields.io/badge/Coverage-85.34%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-85%2E25%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs)
 
@@ -19,7 +19,7 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 - **Clean Architecture** - Domain → Data → Presentation layers with clear separation of concerns
 - **AES-256 Encrypted Storage** - Secure local database using Hive with keychain-backed encryption
 - **Responsive & Adaptive UI** - Material 3 design with platform-adaptive widgets
-- **85.34% Test Coverage** - Comprehensive unit, bloc, widget, and golden tests
+- **85.25% Test Coverage** - Comprehensive unit, bloc, widget, and golden tests
 - **Performance Optimized** - Built-in profiling, RepaintBoundary, and BlocSelector optimizations
 - **Multi-language Support** - 5 locales (EN, TR, DE, FR, ES) with automatic localization
 - **Firebase Integration** - Authentication, Remote Config, Analytics, and Crashlytics
@@ -246,7 +246,7 @@ sequenceDiagram
 
 ### Test Coverage
 
-- **Current Coverage**: 85.34% (6186/7249 lines)
+- **Current Coverage**: 85.25% (6160/7226 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 
