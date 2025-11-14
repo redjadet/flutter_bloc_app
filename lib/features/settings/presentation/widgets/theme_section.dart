@@ -19,7 +19,8 @@ class ThemeSection extends StatelessWidget {
 
     return SettingsSection(
       title: l10n.themeSectionTitle,
-      child: BlocBuilder<ThemeCubit, ThemeMode>(
+      child: BlocSelector<ThemeCubit, ThemeMode, ThemeMode>(
+        selector: (final state) => state,
         builder: (final context, final currentMode) => SettingsCard<ThemeMode>(
           options: options,
           isSelected: (final mode) => mode == currentMode,

@@ -82,9 +82,14 @@ class _CountryChip extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         foregroundColor: colorScheme.onSurface,
         side: BorderSide(color: colorScheme.outline),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        padding: EdgeInsets.symmetric(
+          horizontal: context.responsiveHorizontalGapM,
+          vertical: context.responsiveGapM,
+        ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(
+            context.responsiveCardRadius * 0.5,
+          ),
         ),
       ),
       onPressed: onPressed,
@@ -95,7 +100,7 @@ class _CountryChip extends StatelessWidget {
             country.flagEmoji,
             style: const TextStyle(fontSize: 18),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: context.responsiveHorizontalGapS),
           Text(
             country.dialCode,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -213,7 +218,7 @@ class _CountryPickerRow extends StatelessWidget {
         option.flagEmoji,
         style: const TextStyle(fontSize: 24),
       ),
-      const SizedBox(width: 8),
+      SizedBox(width: context.responsiveHorizontalGapS),
       Expanded(
         child: Text(
           '${option.name} (${option.dialCode})',

@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/auth/auth.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:go_router/go_router.dart';
 
@@ -69,9 +70,8 @@ class SignInPage extends StatelessWidget {
       if (!context.mounted) return;
       if (error is FirebaseAuthException) {
         final String message = authErrorMessage(l10n, error);
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(message)));
+        ErrorHandling.clearSnackBars(context);
+        ErrorHandling.showErrorSnackBar(context, message);
       }
     }
 
@@ -84,9 +84,8 @@ class SignInPage extends StatelessWidget {
         showAuthError(error);
       } on Exception {
         if (!context.mounted) return;
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(l10n.anonymousSignInFailed)));
+        ErrorHandling.clearSnackBars(context);
+        ErrorHandling.showErrorSnackBar(context, l10n.anonymousSignInFailed);
       }
     }
 

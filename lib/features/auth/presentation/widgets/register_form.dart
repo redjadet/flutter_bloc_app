@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_pho
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_terms_dialog.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_terms_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class RegisterForm extends StatelessWidget {
@@ -53,7 +54,7 @@ class RegisterForm extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(label, style: labelStyle),
-              const SizedBox(height: 8),
+              SizedBox(height: context.responsiveGapS),
               field,
             ],
           );
@@ -62,7 +63,7 @@ class RegisterForm extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(l10n.registerTitle, style: registerTitleStyle(context)),
-              const SizedBox(height: 32),
+              SizedBox(height: context.responsiveGapL * 2),
               buildLabeledField(
                 label: l10n.registerFullNameLabel,
                 field: TextFormField(
@@ -77,7 +78,7 @@ class RegisterForm extends StatelessWidget {
                   onChanged: cubit.fullNameChanged,
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: context.responsiveGapM),
               buildLabeledField(
                 label: l10n.registerEmailLabel,
                 field: TextFormField(
@@ -93,7 +94,7 @@ class RegisterForm extends StatelessWidget {
                   onChanged: cubit.emailChanged,
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: context.responsiveGapM),
               buildLabeledField(
                 label: l10n.registerPhoneLabel,
                 field: RegisterPhoneField(
@@ -113,7 +114,7 @@ class RegisterForm extends StatelessWidget {
                   onCountryChanged: cubit.countrySelected,
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: context.responsiveGapM),
               buildLabeledField(
                 label: l10n.registerPasswordLabel,
                 field: RegisterPasswordField(
@@ -125,7 +126,7 @@ class RegisterForm extends StatelessWidget {
                   textStyle: fieldTextStyle,
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: context.responsiveGapM),
               buildLabeledField(
                 label: l10n.registerConfirmPasswordLabel,
                 field: RegisterPasswordField(
@@ -142,7 +143,7 @@ class RegisterForm extends StatelessWidget {
                   onFieldSubmitted: (_) => cubit.submit(),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: context.responsiveGapM),
               RegisterTermsSection(
                 accepted: state.acceptedTerms,
                 showError: state.termsAcceptanceError,
@@ -162,7 +163,7 @@ class RegisterForm extends StatelessWidget {
                   color: colorScheme.error,
                 ),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: context.responsiveGapL * 1.5),
               SizedBox(
                 width: double.infinity,
                 height: isCupertino ? null : 52,

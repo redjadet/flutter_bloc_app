@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 Future<void> showExamplePlatformInfoDialog({
   required BuildContext context,
@@ -48,9 +49,10 @@ Future<void> showExamplePlatformInfoDialog({
         children: rows,
       ),
       actions: [
-        TextButton(
+        PlatformAdaptive.dialogAction(
+          context: dialogContext,
+          label: l10n.exampleDialogCloseButton,
           onPressed: () => Navigator.of(dialogContext).pop(),
-          child: Text(l10n.exampleDialogCloseButton),
         ),
       ],
     ),
@@ -76,15 +78,16 @@ Future<void> showExamplePlatformInfoErrorDialog({
         children: [
           Text(l10n.exampleNativeInfoError),
           if (detail != null) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: context.responsiveGapM),
             Text(detail),
           ],
         ],
       ),
       actions: [
-        TextButton(
+        PlatformAdaptive.dialogAction(
+          context: dialogContext,
+          label: l10n.exampleDialogCloseButton,
           onPressed: () => Navigator.of(dialogContext).pop(),
-          child: Text(l10n.exampleDialogCloseButton),
         ),
       ],
     ),
@@ -96,7 +99,7 @@ Widget _buildInfoRow({
   required String label,
   required String value,
 }) => Padding(
-  padding: const EdgeInsets.only(bottom: 8),
+  padding: EdgeInsets.only(bottom: context.responsiveGapS),
   child: Row(
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +112,7 @@ Widget _buildInfoRow({
           ),
         ),
       ),
-      const SizedBox(width: 12),
+      SizedBox(width: context.responsiveGapM),
       Expanded(
         child: Text(
           value,

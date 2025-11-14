@@ -22,7 +22,8 @@ class LanguageSection extends StatelessWidget {
 
     return SettingsSection(
       title: l10n.languageSectionTitle,
-      child: BlocBuilder<LocaleCubit, Locale?>(
+      child: BlocSelector<LocaleCubit, Locale?, Locale?>(
+        selector: (final state) => state,
         builder: (final context, final currentLocale) {
           final List<SettingsOption<Locale?>> options =
               <SettingsOption<Locale?>>[
