@@ -117,6 +117,8 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     final String? error,
     final String? currentModel,
   }) {
+    // Check if cubit is closed before emitting to prevent errors
+    if (isClosed) return;
     final ChatState current = _state;
     emitState(
       current.copyWith(

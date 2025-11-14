@@ -32,7 +32,7 @@ Welcome aboard! This document distills the essentials you need to navigate, exte
 
 1. Entry (`main_dev.dart`, `main_prod.dart`, etc.) sets flavor configs and calls `bootstrap(const MyApp())`.
 2. `configureDependencies()` registers shared services (timer, platform, logging), repositories, and cubits’ dependencies.
-3. `MyApp` builds `AppScope` and a `MultiBlocProvider` (see `AGENTS.md` DI reference). Each cubit calls `loadInitial()` in `initState` when deterministic startup work is needed.
+3. `MyApp` builds `AppScope` and a `MultiBlocProvider`. Each cubit calls `loadInitial()` in `initState` when deterministic startup work is needed. See DI Reference section below for example.
 4. `GoRouter` resolves screens. Feature pages assemble their cubit(s) + widgets and delegate work to the injected repositories.
 
 ## 4. Feature Module Playbook
@@ -109,12 +109,36 @@ Tips:
 ## 10. Common Troubleshooting
 
 - **Stuck timers or async flows**: Ensure the cubit is disposed or the `TimerService` subscription is canceled in `close()`.
-- **Remote Config not updating**: Confirm Firebase project settings match the current flavor (`main_dev.dart`, etc.) and that `RemoteConfigCubit`’s `refreshInterval` isn’t throttling updates.
+- **Remote Config not updating**: Confirm Firebase project settings match the current flavor (`main_dev.dart`, etc.) and that `RemoteConfigCubit`'s `refreshInterval` isn't throttling updates.
 - **GraphQL/WebSocket issues**: Check the environment constants in `lib/core/config` and confirm the emulator/network allows outbound connections.
 - **Maps API keys**: For Android, add to `android/app/src/main/AndroidManifest.xml`; for iOS, configure `ios/Runner/AppDelegate.swift` + `Info.plist`. The app gracefully falls back to Apple Maps when Google keys are missing.
 - **Coverage script fails**: Ensure `lcov` file exists (run tests with `--coverage`) and that `dart run tool/update_coverage_summary.dart` runs from repo root.
 
-## 11. What to Read Next
+### Common Bugs to Avoid
+
+Before finishing any task, verify these common bug patterns:
+
+- ✅ **Context lifecycle**: Check `context.mounted` after `await` before using `context` (navigation, dialogs, cubit reads)
+- ✅ **Cubit lifecycle**: Check `isClosed` before all `emit()` calls, especially in async callbacks, stream subscriptions, and timer callbacks
+- ✅ **Stream subscriptions**: Ensure subscriptions are properly cancelled in `close()` method
+- ✅ **Switch statements**: Ensure proper `break` statements to prevent fall-through
+- ✅ **Completers**: Check `isCompleted` before completing to prevent multiple completion errors
+- ✅ **Resource cleanup**: Ensure StreamControllers, Timers, and Listeners are properly disposed
+
+**Quick verification**: Run `./bin/checklist` before committing to catch formatting, analysis, and test issues.
+
+## 11. DI Reference Example
+
+```dart
+MultiBlocProvider(providers: [
+  BlocProvider(create: (_) => CounterCubit(repository: getIt<CounterRepository>(), timerService: getIt<TimerService>())..loadInitial()),
+  BlocProvider(create: (_) => ThemeCubit(repository: getIt<ThemeRepository>())..loadInitial()),
+], child: ...)
+```
+
+**Pattern:** Lazy singletons via `registerLazySingletonIfAbsent` (single instance, on-demand init, thread-safe). See `lib/core/di/injector.dart` for the main entry point.
+
+## 12. What to Read Next
 
 - `README.md`: Feature tour + architecture diagram.
 - `analysis/architecture_findings.md`: Past architecture pitfalls/resolutions.

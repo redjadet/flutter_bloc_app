@@ -98,6 +98,7 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 - **Custom Linting** - File length enforcement via native Dart 3.10 analyzer plugin
 - **Automated Testing** - Comprehensive test suite with golden tests
 - **CI/CD Ready** - Fastlane automation for iOS and Android deployments
+- **Common Bugs Checklist** - Pre-commit verification checklist for context lifecycle, cubit state management, and resource cleanup (see `docs/new_developer_guide.md`)
 
 ---
 
