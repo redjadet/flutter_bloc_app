@@ -71,7 +71,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
       );
     }
     if (!_useAppleMaps && _isCheckingApiKey) {
-      return const Center(child: CircularProgressIndicator());
+      return const CommonLoadingWidget();
     }
     if (!_useAppleMaps && !_hasRequiredApiKey) {
       return GoogleMapsMissingKeyMessage(
@@ -83,7 +83,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
       buildWhen: _shouldRebuildBody,
       builder: (final BuildContext context, final MapSampleState state) {
         if (state.isLoading && state.markers.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
+          return const CommonLoadingWidget();
         }
         if (state.hasError) {
           return GoogleMapsErrorMessage(

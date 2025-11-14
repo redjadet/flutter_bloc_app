@@ -12,6 +12,8 @@ import 'package:flutter_bloc_app/features/search/presentation/widgets/search_tex
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
@@ -73,21 +75,13 @@ class _SearchPageContent extends StatelessWidget {
               ),
               builder: (final context, final bodyData) {
                 if (bodyData.isLoading) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  );
+                  return const CommonLoadingWidget();
                 }
 
                 if (bodyData.isError) {
-                  return Center(
-                    child: Text(
-                      'Error loading results',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontSize: context.responsiveBodySize,
-                      ),
-                    ),
+                  return CommonErrorView(
+                    message: 'Error loading results',
+                    onRetry: () => context.read<SearchCubit>().search('dogs'),
                   );
                 }
 

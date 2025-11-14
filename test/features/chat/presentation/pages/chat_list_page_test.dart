@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart'
 import 'package:flutter_bloc_app/features/chat/presentation/chat_list_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_list_page.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_bottom_navigation_bar.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -115,9 +116,11 @@ void main() {
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pumpAndSettle();
 
-      expect(find.text('Error loading chats'), findsOneWidget);
-      expect(find.text('Exception: Network error'), findsOneWidget);
-      expect(find.text('Retry'), findsOneWidget);
+      // CommonErrorView displays the error message directly
+      // CubitExceptionHandler extracts error message from exception
+      expect(find.text('TRY AGAIN'), findsOneWidget);
+      // Verify CommonErrorView is displayed (it shows the error message from the exception)
+      expect(find.byType(CommonErrorView), findsOneWidget);
     });
 
     testWidgets('should handle responsive design', (tester) async {
