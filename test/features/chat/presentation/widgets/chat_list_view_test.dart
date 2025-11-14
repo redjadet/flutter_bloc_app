@@ -92,10 +92,8 @@ void main() {
         ),
       );
 
-      expect(find.text('Error loading chats'), findsOneWidget);
       expect(find.text('Network error'), findsOneWidget);
-      expect(find.text('Retry'), findsOneWidget);
-      expect(find.byType(ElevatedButton), findsOneWidget);
+      expect(find.text('TRY AGAIN'), findsOneWidget);
     });
 
     testWidgets('should call loadChatContacts when retry button is tapped', (
@@ -109,7 +107,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Retry'));
+      await tester.tap(find.text('TRY AGAIN'));
       await tester.pump();
 
       verify(() => mockRepository.getChatContacts()).called(1);

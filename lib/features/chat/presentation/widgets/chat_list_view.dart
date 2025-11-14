@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 
 class ChatListView extends StatelessWidget {
   const ChatListView({super.key});
@@ -14,11 +16,7 @@ class ChatListView extends StatelessWidget {
       BlocBuilder<ChatListCubit, ChatListState>(
         builder: (context, state) => switch (state) {
           ChatListInitial() => const SizedBox.shrink(),
-          ChatListLoading() => Center(
-            child: CircularProgressIndicator(
-              strokeWidth: context.isTabletOrLarger ? 3.0 : 2.0,
-            ),
-          ),
+          ChatListLoading() => const CommonLoadingWidget(),
           ChatListLoaded(:final contacts) => _buildLoadedList(
             context,
             contacts,
@@ -66,45 +64,11 @@ class ChatListView extends StatelessWidget {
     );
   }
 
-  Widget _buildErrorState(BuildContext context, String message) => Center(
-    child: Padding(
-      padding: context.responsiveStatePadding,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: context.responsiveErrorIconSizeLarge,
-            color: Colors.grey,
-          ),
-          SizedBox(height: context.responsiveGap * 2),
-          Text(
-            'Error loading chats',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontSize: context.responsiveTitleSize,
-            ),
-          ),
-          SizedBox(height: context.responsiveGap),
-          Text(
-            message,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey,
-              fontSize: context.responsiveBodySize,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: context.responsiveGap * 2),
-          ElevatedButton(
-            onPressed: () => unawaited(
-              context.read<ChatListCubit>().loadChatContacts(),
-            ),
-            style: context.responsiveElevatedButtonStyle,
-            child: const Text('Retry'),
-          ),
-        ],
-      ),
-    ),
-  );
+  Widget _buildErrorState(BuildContext context, String message) =>
+      CommonErrorView(
+        message: message,
+        onRetry: () => context.read<ChatListCubit>().loadChatContacts(),
+      );
 
   void _navigateToChat(BuildContext context, ChatContact contact) {
     // Mark as read when opening chat
