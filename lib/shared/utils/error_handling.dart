@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 /// Common error handling utilities to reduce code duplication
 class ErrorHandling {
@@ -119,18 +121,32 @@ class ErrorHandling {
   ) async {
     if (!context.mounted) return;
 
-    await showDialog<void>(
+    await showAdaptiveDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (final BuildContext context) => AlertDialog(
-        content: Row(
-          children: [
-            const CircularProgressIndicator(),
-            SizedBox(width: context.responsiveHorizontalGapL),
-            Expanded(child: Text(message)),
-          ],
-        ),
-      ),
+      builder: (final BuildContext dialogContext) {
+        final bool isCupertino = PlatformAdaptive.isCupertino(context);
+        if (isCupertino) {
+          return CupertinoAlertDialog(
+            content: Row(
+              children: [
+                const CupertinoActivityIndicator(),
+                SizedBox(width: context.responsiveHorizontalGapL),
+                Expanded(child: Text(message)),
+              ],
+            ),
+          );
+        }
+        return AlertDialog(
+          content: Row(
+            children: [
+              const CircularProgressIndicator(),
+              SizedBox(width: context.responsiveHorizontalGapL),
+              Expanded(child: Text(message)),
+            ],
+          ),
+        );
+      },
     );
   }
 

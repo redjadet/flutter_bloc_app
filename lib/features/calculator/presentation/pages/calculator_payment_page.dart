@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_summary_card.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:go_router/go_router.dart';
 
 class CalculatorPaymentPage extends StatelessWidget {
@@ -34,7 +35,8 @@ class CalculatorPaymentPage extends StatelessWidget {
                   SizedBox(height: sectionGap * 1.5),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
+                    child: PlatformAdaptive.filledButton(
+                      context: context,
                       onPressed: context.pop,
                       child: Text(l10n.calculatorNewCalculation),
                     ),

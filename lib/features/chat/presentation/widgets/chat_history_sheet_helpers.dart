@@ -1,68 +1,116 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 Future<bool> showClearHistoryDialog(
   final BuildContext context,
-  final AppLocalizations l10n,
-) async =>
-    await showDialog<bool>(
-      context: context,
-      builder: (final context) => AlertDialog(
-        title: Text(l10n.chatHistoryClearAll),
-        content: Text(l10n.chatHistoryClearAllWarning),
-        actions: <Widget>[
-          PlatformAdaptive.dialogAction(
-            context: context,
-            label: l10n.cancelButtonLabel,
-            onPressed: () => Navigator.of(context).pop(false),
-          ),
-          PlatformAdaptive.dialogAction(
-            context: context,
-            label: l10n.deleteButtonLabel,
-            isDestructive: true,
-            onPressed: () => Navigator.of(context).pop(true),
-          ),
-        ],
-      ),
-    ) ??
-    false;
+) async {
+  final l10n = context.l10n;
+  final bool isCupertino = PlatformAdaptive.isCupertino(context);
+  return await showAdaptiveDialog<bool>(
+        context: context,
+        builder: (final dialogContext) {
+          if (isCupertino) {
+            return CupertinoAlertDialog(
+              title: Text(l10n.chatHistoryClearAll),
+              content: Text(l10n.chatHistoryClearAllWarning),
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  onPressed: () => Navigator.of(dialogContext).pop(false),
+                  child: Text(l10n.cancelButtonLabel),
+                ),
+                CupertinoDialogAction(
+                  isDestructiveAction: true,
+                  onPressed: () => Navigator.of(dialogContext).pop(true),
+                  child: Text(l10n.deleteButtonLabel),
+                ),
+              ],
+            );
+          }
+          return AlertDialog(
+            title: Text(l10n.chatHistoryClearAll),
+            content: Text(l10n.chatHistoryClearAllWarning),
+            actions: <Widget>[
+              PlatformAdaptive.dialogAction(
+                context: dialogContext,
+                label: l10n.cancelButtonLabel,
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+              ),
+              PlatformAdaptive.dialogAction(
+                context: dialogContext,
+                label: l10n.deleteButtonLabel,
+                isDestructive: true,
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+              ),
+            ],
+          );
+        },
+      ) ??
+      false;
+}
 
 Future<bool> showDeleteConversationDialog(
   final BuildContext context,
-  final AppLocalizations l10n,
   final String conversationTitle,
-) async =>
-    await showDialog<bool>(
-      context: context,
-      builder: (final context) => AlertDialog(
-        title: Text(l10n.chatHistoryDeleteConversation),
-        content: Text(
-          l10n.chatHistoryDeleteConversationWarning(conversationTitle),
-        ),
-        actions: <Widget>[
-          PlatformAdaptive.dialogAction(
-            context: context,
-            label: l10n.cancelButtonLabel,
-            onPressed: () => Navigator.of(context).pop(false),
-          ),
-          PlatformAdaptive.dialogAction(
-            context: context,
-            label: l10n.deleteButtonLabel,
-            isDestructive: true,
-            onPressed: () => Navigator.of(context).pop(true),
-          ),
-        ],
-      ),
-    ) ??
-    false;
+) async {
+  final l10n = context.l10n;
+  final bool isCupertino = PlatformAdaptive.isCupertino(context);
+  return await showAdaptiveDialog<bool>(
+        context: context,
+        builder: (final dialogContext) {
+          if (isCupertino) {
+            return CupertinoAlertDialog(
+              title: Text(l10n.chatHistoryDeleteConversation),
+              content: Text(
+                l10n.chatHistoryDeleteConversationWarning(conversationTitle),
+              ),
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  onPressed: () => Navigator.of(dialogContext).pop(false),
+                  child: Text(l10n.cancelButtonLabel),
+                ),
+                CupertinoDialogAction(
+                  isDestructiveAction: true,
+                  onPressed: () => Navigator.of(dialogContext).pop(true),
+                  child: Text(l10n.deleteButtonLabel),
+                ),
+              ],
+            );
+          }
+          return AlertDialog(
+            title: Text(l10n.chatHistoryDeleteConversation),
+            content: Text(
+              l10n.chatHistoryDeleteConversationWarning(conversationTitle),
+            ),
+            actions: <Widget>[
+              PlatformAdaptive.dialogAction(
+                context: dialogContext,
+                label: l10n.cancelButtonLabel,
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+              ),
+              PlatformAdaptive.dialogAction(
+                context: dialogContext,
+                label: l10n.deleteButtonLabel,
+                isDestructive: true,
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+              ),
+            ],
+          );
+        },
+      ) ??
+      false;
+}
 
 String conversationTitle(
-  final AppLocalizations l10n,
+  final BuildContext context,
   final int index,
   final ChatConversation conversation,
-) => conversation.model ?? l10n.chatHistoryConversationTitle(index + 1);
+) {
+  final l10n = context.l10n;
+  return conversation.model ?? l10n.chatHistoryConversationTitle(index + 1);
+}
 
 String formatTimestamp(
   final MaterialLocalizations localizations,

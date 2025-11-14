@@ -99,7 +99,9 @@ class CalculatorSummaryCard extends StatelessWidget {
                             color: Theme.of(
                               context,
                             ).colorScheme.error.withValues(alpha: 0.08),
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(
+                              context.responsiveCardRadius,
+                            ),
                           ),
                           child: Text(
                             '${l10n.calculatorErrorTitle}: $errorMessage',

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class RegisterTermsSection extends StatelessWidget {
@@ -47,7 +48,7 @@ class RegisterTermsSection extends StatelessWidget {
             }
           },
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: context.responsiveHorizontalGapS),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +86,7 @@ class RegisterTermsSection extends StatelessWidget {
               ),
               if (showError)
                 Padding(
-                  padding: const EdgeInsets.only(top: 4),
+                  padding: EdgeInsets.only(top: context.responsiveGapXS),
                   child: Text(
                     errorText,
                     style: errorStyle,

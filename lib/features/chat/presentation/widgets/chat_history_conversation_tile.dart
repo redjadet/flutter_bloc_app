@@ -32,7 +32,7 @@ class ChatHistoryConversationTile extends StatelessWidget {
       conversation.updatedAt,
     );
     final String title = conversationTitle(
-      l10n,
+      context,
       index,
       conversation,
     );
@@ -55,7 +55,6 @@ class ChatHistoryConversationTile extends StatelessWidget {
         onPressed: () async {
           final bool confirmed = await showDeleteConversationDialog(
             context,
-            l10n,
             title,
           );
           if (!confirmed) return;

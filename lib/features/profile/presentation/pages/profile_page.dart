@@ -132,7 +132,9 @@ class ProfilePage extends StatelessWidget {
                                   backgroundColor: Colors.white,
                                   side: const BorderSide(width: 2),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6),
+                                    borderRadius: BorderRadius.circular(
+                                      context.responsiveCardRadius,
+                                    ),
                                   ),
                                   padding: EdgeInsets.zero,
                                 ),

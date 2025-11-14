@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history_sheet_helpers.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 @immutable
 class _HistorySheetData extends Equatable {
@@ -81,29 +82,44 @@ class ChatHistorySheet extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: context.responsiveGapS),
-                          TextButton.icon(
-                            icon: const Icon(Icons.add),
-                            label: Text(l10n.chatHistoryStartNew),
+                          PlatformAdaptive.textButton(
+                            context: context,
                             onPressed: () async {
                               await cubit.resetConversation();
                               onClose();
                             },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.add),
+                                SizedBox(
+                                  width: context.responsiveHorizontalGapS,
+                                ),
+                                Text(l10n.chatHistoryStartNew),
+                              ],
+                            ),
                           ),
-                          TextButton.icon(
-                            icon: const Icon(Icons.delete_outline),
-                            label: Text(l10n.chatHistoryClearAll),
+                          PlatformAdaptive.textButton(
+                            context: context,
                             onPressed: data.hasHistory
                                 ? () async {
                                     final bool confirmed =
-                                        await showClearHistoryDialog(
-                                          context,
-                                          l10n,
-                                        );
+                                        await showClearHistoryDialog(context);
                                     if (!confirmed) return;
                                     await cubit.clearHistory();
                                     onClose();
                                   }
                                 : null,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.delete_outline),
+                                SizedBox(
+                                  width: context.responsiveHorizontalGapS,
+                                ),
+                                Text(l10n.chatHistoryClearAll),
+                              ],
+                            ),
                           ),
                           SizedBox(height: context.responsiveGapS),
                           Expanded(

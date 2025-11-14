@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -48,23 +50,46 @@ class _ChatPageState extends State<ChatPage> {
   Future<void> _confirmAndClearHistory(final BuildContext context) async {
     final ChatCubit cubit = context.read<ChatCubit>();
     final l10n = context.l10n;
+    final bool isCupertino = PlatformAdaptive.isCupertino(context);
     final bool confirmed =
-        await showDialog<bool>(
+        await showAdaptiveDialog<bool>(
           context: context,
-          builder: (final BuildContext dialogContext) => AlertDialog(
-            title: Text(l10n.chatHistoryClearAll),
-            content: Text(l10n.chatHistoryClearAllWarning),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.of(dialogContext).pop(false),
-                child: Text(l10n.cancelButtonLabel),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.of(dialogContext).pop(true),
-                child: Text(l10n.deleteButtonLabel),
-              ),
-            ],
-          ),
+          builder: (final BuildContext dialogContext) {
+            if (isCupertino) {
+              return CupertinoAlertDialog(
+                title: Text(l10n.chatHistoryClearAll),
+                content: Text(l10n.chatHistoryClearAllWarning),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    onPressed: () => Navigator.of(dialogContext).pop(false),
+                    child: Text(l10n.cancelButtonLabel),
+                  ),
+                  CupertinoDialogAction(
+                    isDestructiveAction: true,
+                    onPressed: () => Navigator.of(dialogContext).pop(true),
+                    child: Text(l10n.deleteButtonLabel),
+                  ),
+                ],
+              );
+            }
+            return AlertDialog(
+              title: Text(l10n.chatHistoryClearAll),
+              content: Text(l10n.chatHistoryClearAllWarning),
+              actions: <Widget>[
+                PlatformAdaptive.dialogAction(
+                  context: dialogContext,
+                  label: l10n.cancelButtonLabel,
+                  onPressed: () => Navigator.of(dialogContext).pop(false),
+                ),
+                PlatformAdaptive.dialogAction(
+                  context: dialogContext,
+                  label: l10n.deleteButtonLabel,
+                  isDestructive: true,
+                  onPressed: () => Navigator.of(dialogContext).pop(true),
+                ),
+              ],
+            );
+          },
         ) ??
         false;
 

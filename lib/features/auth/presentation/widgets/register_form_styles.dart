@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 TextStyle registerTitleStyle(final BuildContext context) =>
@@ -32,7 +33,7 @@ InputDecoration registerInputDecoration(
 }) {
   final theme = Theme.of(context);
   final colorScheme = theme.colorScheme;
-  final borderRadius = BorderRadius.circular(10);
+  final borderRadius = BorderRadius.circular(context.responsiveCardRadius);
   final double overlayAlpha = theme.brightness == Brightness.dark ? 0.16 : 0.04;
   final Color fillColor = Color.alphaBlend(
     colorScheme.onSurface.withValues(alpha: overlayAlpha),

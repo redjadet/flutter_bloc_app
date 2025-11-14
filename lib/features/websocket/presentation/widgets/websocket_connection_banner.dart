@@ -41,10 +41,10 @@ class WebsocketConnectionBanner extends StatelessWidget {
       child: Row(
         children: [
           if (state.isConnecting) ...[
-            const SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(strokeWidth: 2),
+            SizedBox(
+              width: context.responsiveIconSize * 0.67,
+              height: context.responsiveIconSize * 0.67,
+              child: const CircularProgressIndicator(strokeWidth: 2),
             ),
             SizedBox(width: context.responsiveGapXS),
           ] else ...[
