@@ -26,6 +26,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     await CubitExceptionHandler.executeAsync(
       operation: _repository.fetchSampleLocations,
       onSuccess: (final List<MapLocation> locations) {
+        if (isClosed) return;
         final gmaps.MarkerId? firstMarkerId = locations.isEmpty
             ? null
             : gmaps.MarkerId(locations.first.id);
@@ -45,6 +46,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
         );
       },
       onError: (final String errorMessage) {
+        if (isClosed) return;
         emit(
           state.copyWith(
             isLoading: false,

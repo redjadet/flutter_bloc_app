@@ -50,7 +50,9 @@ void _startInitialLoad(
       );
       repository._watchController.addError(error, stackTrace);
     } finally {
-      completer.complete();
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
       repository._initialLoadCompleter = null;
     }
   }

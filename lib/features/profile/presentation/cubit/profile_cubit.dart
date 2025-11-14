@@ -24,6 +24,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     await CubitExceptionHandler.executeAsync(
       operation: _repository.getProfile,
       onSuccess: (final user) {
+        if (isClosed) return;
         emit(
           state.copyWith(
             status: ViewStatus.success,
@@ -33,6 +34,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         );
       },
       onError: (final String errorMessage) {
+        if (isClosed) return;
         emit(
           ProfileState(
             status: ViewStatus.error,

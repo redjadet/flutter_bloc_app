@@ -88,6 +88,7 @@ class CounterCubit extends _CounterCubitBase {
   Future<void> decrement() async {
     final CounterState current = state;
     if (current.count == 0) {
+      if (isClosed) return;
       emit(state.copyWith(error: const CounterError.cannotGoBelowZero()));
       return;
     }
@@ -100,6 +101,7 @@ class CounterCubit extends _CounterCubitBase {
     if (state.error == null) {
       return;
     }
+    if (isClosed) return;
 
     // Reset status only when we previously exposed the error state.
     final CounterState next = state.status.isInitial
