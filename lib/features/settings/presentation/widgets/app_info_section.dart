@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/app_info_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 @immutable
 class _AppInfoViewData extends Equatable {
@@ -135,9 +136,10 @@ class _ErrorContent extends StatelessWidget {
         SizedBox(height: context.responsiveGapS),
         Align(
           alignment: Alignment.centerLeft,
-          child: TextButton(
+          child: PlatformAdaptive.dialogAction(
+            context: context,
+            label: l10n.appInfoRetryButtonLabel,
             onPressed: () => context.read<AppInfoCubit>().load(),
-            child: Text(l10n.appInfoRetryButtonLabel),
           ),
         ),
       ],
@@ -151,24 +153,18 @@ class _LoadingContent extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final ThemeData theme = Theme.of(context);
     return Row(
       children: <Widget>[
         SizedBox(
           width: context.responsiveIconSize,
           height: context.responsiveIconSize,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              theme.colorScheme.primary,
-            ),
-          ),
+          child: const CircularProgressIndicator(strokeWidth: 2),
         ),
         SizedBox(width: context.responsiveHorizontalGapM),
         Expanded(
           child: Text(
             l10n.appInfoLoadingLabel,
-            style: theme.textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
       ],

@@ -39,11 +39,14 @@ class _SettingsView extends StatelessWidget {
           const LanguageSection(),
           SizedBox(height: context.responsiveGapL),
           const AppInfoSection(),
-          SizedBox(height: context.responsiveGapL),
-          TextButton(
-            onPressed: () => throw Exception(),
-            child: const Text('Throw Test Exception'),
-          ),
+          if (!const bool.fromEnvironment('dart.vm.product')) ...[
+            SizedBox(height: context.responsiveGapL),
+            TextButton(
+              onPressed: () =>
+                  throw Exception('Test exception for error handling'),
+              child: const Text('Throw Test Exception'),
+            ),
+          ],
         ],
       ),
     );
