@@ -183,6 +183,7 @@ Future<void> _handleTap(
 ) async {
   final _NavDestination? destination = item.destination;
   if (destination == null) {
+    if (!context.mounted) return;
     await context.push(AppRoutes.registerPath);
     return;
   }
@@ -193,6 +194,7 @@ Future<void> _handleTap(
     return;
   }
   if (destination.route == AppRoutes.examplePath) {
+    if (!context.mounted) return;
     if (Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
     } else {
@@ -200,5 +202,6 @@ Future<void> _handleTap(
     }
     return;
   }
+  if (!context.mounted) return;
   await context.push(destination.route);
 }
