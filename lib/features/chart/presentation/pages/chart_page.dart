@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/cubit/chart_cubit.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_content_list.dart';
@@ -30,6 +32,32 @@ class ChartPage extends StatelessWidget {
   );
 }
 
+@immutable
+class _ChartViewData extends Equatable {
+  const _ChartViewData({
+    required this.showLoading,
+    required this.showError,
+    required this.showEmpty,
+    required this.points,
+    required this.zoomEnabled,
+  });
+
+  final bool showLoading;
+  final bool showError;
+  final bool showEmpty;
+  final List<ChartPoint> points;
+  final bool zoomEnabled;
+
+  @override
+  List<Object?> get props => [
+    showLoading,
+    showError,
+    showEmpty,
+    points,
+    zoomEnabled,
+  ];
+}
+
 class _ChartView extends StatelessWidget {
   const _ChartView();
 
@@ -40,18 +68,26 @@ class _ChartView extends StatelessWidget {
       title: l10n.chartPageTitle,
       body: RefreshIndicator(
         onRefresh: () => context.read<ChartCubit>().refresh(),
-        child: BlocBuilder<ChartCubit, ChartState>(
-          builder: (final context, final state) {
-            if ((state.status.isInitial || state.status.isLoading) &&
-                state.points.isEmpty) {
+        child: BlocSelector<ChartCubit, ChartState, _ChartViewData>(
+          selector: (final state) => _ChartViewData(
+            showLoading:
+                (state.status.isInitial || state.status.isLoading) &&
+                state.points.isEmpty,
+            showError: state.status.isError,
+            showEmpty: state.points.isEmpty,
+            points: state.points,
+            zoomEnabled: state.zoomEnabled,
+          ),
+          builder: (final context, final data) {
+            if (data.showLoading) {
               return const ChartLoadingList();
             }
 
-            if (state.status.isError) {
+            if (data.showError) {
               return ChartMessageList(message: l10n.chartPageError);
             }
 
-            if (state.points.isEmpty) {
+            if (data.showEmpty) {
               return ChartMessageList(message: l10n.chartPageEmpty);
             }
 
@@ -59,9 +95,9 @@ class _ChartView extends StatelessWidget {
             final dateFormat = DateFormat.Md(locale);
             return ChartContentList(
               l10n: l10n,
-              points: state.points,
+              points: data.points,
               dateFormat: dateFormat,
-              zoomEnabled: state.zoomEnabled,
+              zoomEnabled: data.zoomEnabled,
               onZoomChanged: (final value) =>
                   context.read<ChartCubit>().setZoomEnabled(isEnabled: value),
             );

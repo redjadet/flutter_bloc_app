@@ -18,6 +18,22 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 part 'google_maps_sample_sections.dart';
 
+@immutable
+class _MapBodyData extends Equatable {
+  const _MapBodyData({
+    required this.showLoading,
+    required this.hasError,
+    required this.errorMessage,
+  });
+
+  final bool showLoading;
+  final bool hasError;
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [showLoading, hasError, errorMessage];
+}
+
 class GoogleMapsSamplePage extends StatefulWidget {
   const GoogleMapsSamplePage({
     super.key,
@@ -79,15 +95,19 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
         description: l10n.googleMapsPageMissingKeyDescription,
       );
     }
-    return BlocBuilder<MapSampleCubit, MapSampleState>(
-      buildWhen: _shouldRebuildBody,
-      builder: (final BuildContext context, final MapSampleState state) {
-        if (state.isLoading && state.markers.isEmpty) {
+    return BlocSelector<MapSampleCubit, MapSampleState, _MapBodyData>(
+      selector: (final state) => _MapBodyData(
+        showLoading: state.isLoading && state.markers.isEmpty,
+        hasError: state.hasError,
+        errorMessage: state.errorMessage,
+      ),
+      builder: (final context, final data) {
+        if (data.showLoading) {
           return const CommonLoadingWidget();
         }
-        if (state.hasError) {
+        if (data.hasError) {
           return GoogleMapsErrorMessage(
-            message: state.errorMessage ?? l10n.googleMapsPageGenericError,
+            message: data.errorMessage ?? l10n.googleMapsPageGenericError,
           );
         }
         return GoogleMapsContentLayout(
@@ -131,25 +151,5 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
       _hasRequiredApiKey = hasKey;
       _isCheckingApiKey = false;
     });
-  }
-
-  bool _shouldRebuildBody(
-    final MapSampleState previous,
-    final MapSampleState current,
-  ) {
-    final bool previousShowingInitialLoader =
-        previous.isLoading && previous.markers.isEmpty;
-    final bool currentShowingInitialLoader =
-        current.isLoading && current.markers.isEmpty;
-    if (previousShowingInitialLoader != currentShowingInitialLoader) {
-      return true;
-    }
-    if (previous.hasError != current.hasError) {
-      return true;
-    }
-    if (current.hasError && previous.errorMessage != current.errorMessage) {
-      return true;
-    }
-    return false;
   }
 }

@@ -1,13 +1,34 @@
 import 'dart:async';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_cubit.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_state.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/widgets/websocket_connection_banner.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/widgets/websocket_message_list.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+
+@immutable
+class _WebsocketViewData extends Equatable {
+  const _WebsocketViewData({
+    required this.isConnecting,
+    required this.isConnected,
+    required this.isSending,
+    required this.messages,
+  });
+
+  final bool isConnecting;
+  final bool isConnected;
+  final bool isSending;
+  final List<WebsocketMessage> messages;
+
+  @override
+  List<Object?> get props => [isConnecting, isConnected, isSending, messages];
+}
 
 class WebsocketDemoPage extends StatefulWidget {
   const WebsocketDemoPage({super.key});
@@ -56,7 +77,7 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
         title: l10n.websocketDemoTitle,
         body: Center(
           child: Padding(
-            padding: EdgeInsets.all(UI.gapL),
+            padding: EdgeInsets.all(context.responsiveGapL),
             child: Text(
               l10n.websocketDemoWebUnsupported,
               style: Theme.of(context).textTheme.bodyLarge,
@@ -66,61 +87,77 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
         ),
       );
     }
-    return BlocBuilder<WebsocketCubit, WebsocketState>(
-      builder: (final context, final state) => CommonPageLayout(
+    return BlocSelector<WebsocketCubit, WebsocketState, _WebsocketViewData>(
+      selector: (final state) => _WebsocketViewData(
+        isConnecting: state.isConnecting,
+        isConnected: state.isConnected,
+        isSending: state.isSending,
+        messages: state.messages,
+      ),
+      builder: (final context, final data) => CommonPageLayout(
         title: l10n.websocketDemoTitle,
         actions: [
           IconButton(
             tooltip: l10n.websocketReconnectTooltip,
-            onPressed: state.isConnecting ? null : _cubit.reconnect,
+            onPressed: data.isConnecting ? null : _cubit.reconnect,
             icon: const Icon(Icons.refresh),
           ),
         ],
-        body: Column(
-          children: [
-            WebsocketConnectionBanner(state: state),
-            const Divider(height: 1),
-            Expanded(
-              child: WebsocketMessageList(
-                messages: state.messages,
-                emptyLabel: l10n.websocketEmptyState,
-              ),
-            ),
-            const Divider(height: 1),
-            SafeArea(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  UI.horizontalGapL,
-                  UI.gapS,
-                  UI.horizontalGapL,
-                  UI.gapS,
+        body: BlocBuilder<WebsocketCubit, WebsocketState>(
+          buildWhen: (previous, current) => previous.status != current.status,
+          builder: (final context, final state) => Column(
+            children: [
+              WebsocketConnectionBanner(state: state),
+              const Divider(height: 1),
+              Expanded(
+                child: WebsocketMessageList(
+                  messages: data.messages,
+                  emptyLabel: l10n.websocketEmptyState,
                 ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _messageController,
-                        enabled: state.isConnected && !state.isSending,
-                        decoration: InputDecoration(
-                          hintText: l10n.websocketMessageHint,
-                          border: const OutlineInputBorder(),
+              ),
+              const Divider(height: 1),
+              SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    context.responsiveHorizontalGapL,
+                    context.responsiveGapS,
+                    context.responsiveHorizontalGapL,
+                    context.responsiveGapS,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _messageController,
+                          enabled: data.isConnected && !data.isSending,
+                          decoration: InputDecoration(
+                            hintText: l10n.websocketMessageHint,
+                            border: const OutlineInputBorder(),
+                          ),
+                          onSubmitted: (_) => _sendCurrentMessage(),
                         ),
-                        onSubmitted: (_) => _sendCurrentMessage(),
                       ),
-                    ),
-                    SizedBox(width: UI.gapS),
-                    FilledButton.icon(
-                      onPressed: state.isConnected && !state.isSending
-                          ? _sendCurrentMessage
-                          : null,
-                      icon: const Icon(Icons.send),
-                      label: Text(l10n.websocketSendButton),
-                    ),
-                  ],
+                      SizedBox(width: context.responsiveGapS),
+                      PlatformAdaptive.filledButton(
+                        context: context,
+                        onPressed: data.isConnected && !data.isSending
+                            ? _sendCurrentMessage
+                            : null,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.send),
+                            SizedBox(width: context.responsiveGapXS),
+                            Text(l10n.websocketSendButton),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
