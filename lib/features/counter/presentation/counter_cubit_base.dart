@@ -25,6 +25,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
   final Duration _initialLoadDelay;
 
   TimerDisposable? _countdownTicker;
+  // ignore: cancel_subscriptions - Subscription is properly cancelled in close() method
   StreamSubscription<CounterSnapshot>? _repositorySubscription;
   // Ensures the countdown stays at the full value for one tick after a reset
   // so the progress bar remains visually consistent.
@@ -163,7 +164,13 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
   }
 
   void _subscribeToRepository() {
-    unawaited(_repositorySubscription?.cancel());
+    // Store old subscription and nullify reference to prevent race conditions
+    final StreamSubscription<CounterSnapshot>? oldSubscription =
+        _repositorySubscription;
+    _repositorySubscription = null;
+    // Cancel old subscription asynchronously (don't await to avoid blocking)
+    unawaited(oldSubscription?.cancel());
+    // Set up new subscription immediately
     _repositorySubscription = _repository.watch().listen(
       (final CounterSnapshot snapshot) {
         if (shouldIgnoreRemoteSnapshot(state, snapshot)) {

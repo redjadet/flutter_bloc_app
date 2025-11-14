@@ -40,8 +40,16 @@ class DeepLinkListener extends StatelessWidget {
         AppLogger.info('Navigating to: ${navigate.target.location}');
 
         // Add a small delay to ensure the router is ready
+        // Check if context is still mounted before navigation
         Future.delayed(const Duration(milliseconds: 100), () {
           try {
+            // Check if context is still mounted before navigation
+            if (!context.mounted) {
+              AppLogger.debug(
+                'Skipping deep link navigation – context no longer mounted',
+              );
+              return;
+            }
             router.go(navigate.target.location);
             AppLogger.info('Navigation completed successfully');
           } on Exception catch (e) {
