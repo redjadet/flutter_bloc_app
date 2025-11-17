@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 Future<bool> showClearHistoryDialog(
@@ -18,12 +19,14 @@ Future<bool> showClearHistoryDialog(
               content: Text(l10n.chatHistoryClearAllWarning),
               actions: <Widget>[
                 CupertinoDialogAction(
-                  onPressed: () => Navigator.of(dialogContext).pop(false),
+                  onPressed: () =>
+                      NavigationUtils.maybePop(dialogContext, result: false),
                   child: Text(l10n.cancelButtonLabel),
                 ),
                 CupertinoDialogAction(
                   isDestructiveAction: true,
-                  onPressed: () => Navigator.of(dialogContext).pop(true),
+                  onPressed: () =>
+                      NavigationUtils.maybePop(dialogContext, result: true),
                   child: Text(l10n.deleteButtonLabel),
                 ),
               ],
@@ -36,13 +39,15 @@ Future<bool> showClearHistoryDialog(
               PlatformAdaptive.dialogAction(
                 context: dialogContext,
                 label: l10n.cancelButtonLabel,
-                onPressed: () => Navigator.of(dialogContext).pop(false),
+                onPressed: () =>
+                    NavigationUtils.maybePop(dialogContext, result: false),
               ),
               PlatformAdaptive.dialogAction(
                 context: dialogContext,
                 label: l10n.deleteButtonLabel,
                 isDestructive: true,
-                onPressed: () => Navigator.of(dialogContext).pop(true),
+                onPressed: () =>
+                    NavigationUtils.maybePop(dialogContext, result: true),
               ),
             ],
           );
@@ -68,12 +73,14 @@ Future<bool> showDeleteConversationDialog(
               ),
               actions: <Widget>[
                 CupertinoDialogAction(
-                  onPressed: () => Navigator.of(dialogContext).pop(false),
+                  onPressed: () =>
+                      NavigationUtils.maybePop(dialogContext, result: false),
                   child: Text(l10n.cancelButtonLabel),
                 ),
                 CupertinoDialogAction(
                   isDestructiveAction: true,
-                  onPressed: () => Navigator.of(dialogContext).pop(true),
+                  onPressed: () =>
+                      NavigationUtils.maybePop(dialogContext, result: true),
                   child: Text(l10n.deleteButtonLabel),
                 ),
               ],
@@ -88,13 +95,15 @@ Future<bool> showDeleteConversationDialog(
               PlatformAdaptive.dialogAction(
                 context: dialogContext,
                 label: l10n.cancelButtonLabel,
-                onPressed: () => Navigator.of(dialogContext).pop(false),
+                onPressed: () =>
+                    NavigationUtils.maybePop(dialogContext, result: false),
               ),
               PlatformAdaptive.dialogAction(
                 context: dialogContext,
                 label: l10n.deleteButtonLabel,
                 isDestructive: true,
-                onPressed: () => Navigator.of(dialogContext).pop(true),
+                onPressed: () =>
+                    NavigationUtils.maybePop(dialogContext, result: true),
               ),
             ],
           );

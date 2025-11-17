@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 abstract class ErrorNotificationService {
@@ -60,7 +61,7 @@ class SnackbarErrorNotificationService implements ErrorNotificationService {
             content: Text(message),
             actions: <Widget>[
               CupertinoDialogAction(
-                onPressed: () => Navigator.of(dialogContext).pop(),
+                onPressed: () => NavigationUtils.maybePop(dialogContext),
                 child: const Text('OK'),
               ),
             ],
@@ -73,7 +74,7 @@ class SnackbarErrorNotificationService implements ErrorNotificationService {
             PlatformAdaptive.dialogAction(
               context: dialogContext,
               label: 'OK',
-              onPressed: () => Navigator.of(dialogContext).pop(),
+              onPressed: () => NavigationUtils.maybePop(dialogContext),
             ),
           ],
         );

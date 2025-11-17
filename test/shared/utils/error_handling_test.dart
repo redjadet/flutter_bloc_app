@@ -355,5 +355,27 @@ void main() {
 
       expect(find.byType(AlertDialog), findsNothing);
     });
+
+    testWidgets('hideLoadingDialog is safe when no dialog is present', (
+      WidgetTester tester,
+    ) async {
+      late BuildContext context;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (builderContext) {
+                context = builderContext;
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byType(AlertDialog), findsNothing);
+      expect(() => ErrorHandling.hideLoadingDialog(context), returnsNormally);
+    });
   });
 }

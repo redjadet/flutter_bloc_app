@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/regis
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_state.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_body.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 
@@ -73,7 +74,7 @@ void _handleSuccess(final BuildContext context, final RegisterState state) {
             content: Text(l10n.registerDialogMessage(displayName)),
             actions: [
               CupertinoDialogAction(
-                onPressed: () => Navigator.of(dialogContext).pop(),
+                onPressed: () => NavigationUtils.maybePop(dialogContext),
                 child: Text(l10n.registerDialogOk),
               ),
             ],
@@ -86,7 +87,7 @@ void _handleSuccess(final BuildContext context, final RegisterState state) {
             PlatformAdaptive.dialogAction(
               context: dialogContext,
               label: l10n.registerDialogOk,
-              onPressed: () => Navigator.of(dialogContext).pop(),
+              onPressed: () => NavigationUtils.maybePop(dialogContext),
             ),
           ],
         );

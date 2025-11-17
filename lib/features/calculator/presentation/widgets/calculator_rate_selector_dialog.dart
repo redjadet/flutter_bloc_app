@@ -73,14 +73,14 @@ class _CustomRateDialogState extends State<_CustomRateDialog> {
     actions: [
       PlatformAdaptive.dialogAction(
         context: context,
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () => NavigationUtils.maybePop(context),
         label: widget.cancelLabel,
       ),
       PlatformAdaptive.dialogAction(
         context: context,
         onPressed: _parsedValue == null
             ? null
-            : () => Navigator.of(context).pop(_parsedValue),
+            : () => NavigationUtils.maybePop(context, result: _parsedValue),
         label: widget.applyLabel,
       ),
     ],
@@ -112,13 +112,13 @@ class _CustomRateDialogState extends State<_CustomRateDialog> {
         ),
         actions: [
           CupertinoDialogAction(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => NavigationUtils.maybePop(context),
             child: Text(widget.cancelLabel),
           ),
           CupertinoDialogAction(
             onPressed: _parsedValue == null
                 ? null
-                : () => Navigator.of(context).pop(_parsedValue),
+                : () => NavigationUtils.maybePop(context, result: _parsedValue),
             child: Text(widget.applyLabel),
           ),
         ],

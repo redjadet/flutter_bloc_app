@@ -41,7 +41,7 @@ class _ChatPageState extends State<ChatPage> {
       builder: (final BuildContext sheetContext) => BlocProvider.value(
         value: cubit,
         child: ChatHistorySheet(
-          onClose: () => Navigator.of(sheetContext).pop(),
+          onClose: () => NavigationUtils.maybePop(sheetContext),
         ),
       ),
     );
@@ -61,12 +61,14 @@ class _ChatPageState extends State<ChatPage> {
                 content: Text(l10n.chatHistoryClearAllWarning),
                 actions: <Widget>[
                   CupertinoDialogAction(
-                    onPressed: () => Navigator.of(dialogContext).pop(false),
+                    onPressed: () =>
+                        NavigationUtils.maybePop(dialogContext, result: false),
                     child: Text(l10n.cancelButtonLabel),
                   ),
                   CupertinoDialogAction(
                     isDestructiveAction: true,
-                    onPressed: () => Navigator.of(dialogContext).pop(true),
+                    onPressed: () =>
+                        NavigationUtils.maybePop(dialogContext, result: true),
                     child: Text(l10n.deleteButtonLabel),
                   ),
                 ],
@@ -79,13 +81,15 @@ class _ChatPageState extends State<ChatPage> {
                 PlatformAdaptive.dialogAction(
                   context: dialogContext,
                   label: l10n.cancelButtonLabel,
-                  onPressed: () => Navigator.of(dialogContext).pop(false),
+                  onPressed: () =>
+                      NavigationUtils.maybePop(dialogContext, result: false),
                 ),
                 PlatformAdaptive.dialogAction(
                   context: dialogContext,
                   label: l10n.deleteButtonLabel,
                   isDestructive: true,
-                  onPressed: () => Navigator.of(dialogContext).pop(true),
+                  onPressed: () =>
+                      NavigationUtils.maybePop(dialogContext, result: true),
                 ),
               ],
             );
