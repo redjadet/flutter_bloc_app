@@ -152,16 +152,17 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
     final BuildContext context,
     final AppLocalizations l10n,
   ) async {
+    final BuildContext parentContext = context;
     await showCupertinoModalPopup<void>(
-      context: context,
-      builder: (final context) => CupertinoActionSheet(
+      context: parentContext,
+      builder: (final sheetContext) => CupertinoActionSheet(
         title: const Text(_moreTooltip),
         actions: _overflowItems
             .map(
               (final item) => CupertinoActionSheetAction(
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  _navigateToOverflowItem(context, item);
+                  Navigator.of(sheetContext).pop();
+                  _navigateToOverflowItem(parentContext, item);
                 },
                 child: Text(item.labelBuilder(l10n)),
               ),
@@ -169,7 +170,7 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
             .toList(),
         cancelButton: CupertinoActionSheetAction(
           isDestructiveAction: true,
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(sheetContext).pop(),
           child: Text(l10n.cancelButtonLabel),
         ),
       ),

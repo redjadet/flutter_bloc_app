@@ -248,7 +248,7 @@ sequenceDiagram
 
 ### Test Coverage
 
-- **Current Coverage**: 85.31% (6349/7442 lines)
+- **Current Coverage**: 86.05% (6404/7442 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 
