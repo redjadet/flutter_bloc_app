@@ -39,6 +39,7 @@ Pressing the `+` button triggers `CounterActions.increment()`, which calls `Coun
 ## How does dependency injection wire the counter repositories?
 
 Dependency injection is organized across multiple files in `core/di/`:
+
 - `injector.dart` - Main file with `configureDependencies()` and public API
 - `injector_registrations.dart` - All dependency registrations organized by category
 - `injector_factories.dart` - Factory functions for creating repositories
@@ -49,11 +50,13 @@ Dependency injection is organized across multiple files in `core/di/`:
 ## What linting and formatting routines should I run?
 
 The project uses a **delivery checklist** that can be run with a single command: `./bin/checklist` (or `tool/delivery_checklist.sh`). This automatically runs:
+
 1. `dart format .` - Code formatting
 2. `flutter analyze` - Static analysis (includes native Dart 3.10 analyzer plugins like `file_length_lint`)
 3. `tool/test_coverage.sh` - Runs tests with coverage and automatically updates coverage reports
 
 **Optional:** To use just `checklist` without `./bin/`, add the `bin` directory to your PATH:
+
 ```bash
 # Temporary (current session only)
 export PATH="$PATH:$(pwd)/bin"
@@ -69,6 +72,7 @@ The `file_length_lint` rule is configured as a native Dart 3.10 analyzer plugin 
 Golden tests (e.g., `test/counter_page_golden_test.dart`) verify layout regressions for the counter UI. Widget tests (`chat_history_sheet_test.dart`) cover interactions such as clearing/deleting history without hitting real storage, and bloc/unit tests ensure repositories/cubits produce expected states. Running these in CI (and via the documented checklist) catches UI/state regressions early.
 
 **Test Coverage:** The project maintains **85.34% line coverage** (6186/7249 lines). Files that don't require tests are automatically excluded from coverage reports:
+
 - Mock repositories (test utilities themselves)
 - Simple data classes (Freezed classes, simple Equatable classes)
 - Configuration files (files with only constants)
@@ -82,6 +86,7 @@ See `coverage/coverage_summary.md` for the full breakdown.
 ## How is local storage handled in this app?
 
 All local persistence goes through **Hive** (encrypted local database), which replaced SharedPreferences. The app uses:
+
 - `HiveService` - Core service wrapping `Hive.initFlutter()` and ensuring every box is opened with an `AES256Cipher`
 - `HiveKeyManager` - Generates and manages encryption keys stored in `flutter_secure_storage`
 - `HiveRepositoryBase` - Base class for Hive-backed repositories providing common functionality
@@ -92,6 +97,7 @@ All local persistence goes through **Hive** (encrypted local database), which re
 ## How are remote images cached?
 
 Remote images are automatically cached using the `cached_network_image` package. Use `CachedNetworkImageWidget` from `lib/shared/widgets/` for network images. It provides:
+
 - Automatic caching of downloaded images
 - Loading placeholder support
 - Error handling with fallback widget
@@ -121,6 +127,7 @@ PerformanceProfiler.printReport();
 The profiler is enabled by default in `kDebugMode` and can be controlled via `PerformanceProfiler.setEnabled(enabled: true/false)`.
 
 Additionally, a **Performance Overlay** can be enabled via the `ENABLE_PERFORMANCE_OVERLAY` environment variable:
+
 ```bash
 flutter run --dart-define=ENABLE_PERFORMANCE_OVERLAY=true
 ```
@@ -136,6 +143,7 @@ The app includes a pre-build script (`tool/ensure_localizations.dart`) that auto
 ## How is the dependency injection code organized?
 
 The DI code is split into multiple files for better maintainability:
+
 - `lib/core/di/injector.dart` - Main entry point with `configureDependencies()` and public API (61 lines)
 - `lib/core/di/injector_registrations.dart` - All dependency registrations organized by category
 - `lib/core/di/injector_factories.dart` - Factory functions for creating repositories (e.g., `_createCounterRepository`)
