@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/auth/auth.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:go_router/go_router.dart';
@@ -67,7 +68,10 @@ class SignInPage extends StatelessWidget {
     }
 
     void showAuthError(final Object error) {
-      if (!context.mounted) return;
+      if (!context.mounted) {
+        ContextUtils.logNotMounted('SignInPage.showAuthError');
+        return;
+      }
       if (error is FirebaseAuthException) {
         final String message = authErrorMessage(l10n, error);
         ErrorHandling.clearSnackBars(context);
@@ -78,12 +82,18 @@ class SignInPage extends StatelessWidget {
     Future<void> signInAnonymously() async {
       try {
         await auth.signInAnonymously();
-        if (!context.mounted) return;
+        if (!context.mounted) {
+          ContextUtils.logNotMounted('SignInPage.signInAnonymously');
+          return;
+        }
         context.go(AppRoutes.counterPath);
       } on FirebaseAuthException catch (error) {
         showAuthError(error);
       } on Exception {
-        if (!context.mounted) return;
+        if (!context.mounted) {
+          ContextUtils.logNotMounted('SignInPage.signInAnonymously.error');
+          return;
+        }
         ErrorHandling.clearSnackBars(context);
         ErrorHandling.showErrorSnackBar(context, l10n.anonymousSignInFailed);
       }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
@@ -13,7 +14,10 @@ class ErrorHandling {
     final BuildContext context,
     final SnackBar snackBar,
   ) {
-    if (!context.mounted) return null;
+    if (!context.mounted) {
+      ContextUtils.logNotMounted('ErrorHandling._showSnackBar');
+      return null;
+    }
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
       context,
     );
@@ -108,7 +112,10 @@ class ErrorHandling {
 
   /// Clear all current snackbars
   static void clearSnackBars(final BuildContext context) {
-    if (!context.mounted) return;
+    if (!context.mounted) {
+      ContextUtils.logNotMounted('ErrorHandling.clearSnackBars');
+      return;
+    }
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
       context,
     );
@@ -120,7 +127,10 @@ class ErrorHandling {
     final BuildContext context,
     final String message,
   ) async {
-    if (!context.mounted) return;
+    if (!context.mounted) {
+      ContextUtils.logNotMounted('ErrorHandling.showLoadingDialog');
+      return;
+    }
 
     await showAdaptiveDialog<void>(
       context: context,
@@ -153,7 +163,10 @@ class ErrorHandling {
 
   /// Hide loading dialog
   static void hideLoadingDialog(final BuildContext context) {
-    if (!context.mounted) return;
+    if (!context.mounted) {
+      ContextUtils.logNotMounted('ErrorHandling.hideLoadingDialog');
+      return;
+    }
     NavigationUtils.maybePop(
       context,
       useRootNavigator: true,

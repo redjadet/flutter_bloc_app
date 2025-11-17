@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
@@ -74,7 +75,10 @@ class ChatListView extends StatelessWidget {
       );
 
   void _navigateToChat(BuildContext context, ChatContact contact) {
-    if (!context.mounted) return;
+    if (!context.mounted) {
+      ContextUtils.logNotMounted('ChatListView._navigateToChat');
+      return;
+    }
     // Mark as read when opening chat
     unawaited(context.read<ChatListCubit>().markAsRead(contact.id));
 

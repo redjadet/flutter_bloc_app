@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
 
 class ChatMessageList extends StatelessWidget {
@@ -35,7 +36,13 @@ class ChatMessageList extends StatelessWidget {
         }
         if (state.hasMessages) {
           WidgetsBinding.instance.addPostFrameCallback((_) async {
-            if (!context.mounted || !controller.hasClients) return;
+            if (!context.mounted) {
+              ContextUtils.logNotMounted('ChatMessageList.scrollToBottom');
+              return;
+            }
+            if (!controller.hasClients) {
+              return;
+            }
             await controller.animateTo(
               controller.position.maxScrollExtent,
               duration: const Duration(milliseconds: 180),

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:go_router/go_router.dart';
@@ -184,7 +185,10 @@ Future<void> _handleTap(
 ) async {
   final _NavDestination? destination = item.destination;
   if (destination == null) {
-    if (!context.mounted) return;
+    if (!context.mounted) {
+      ContextUtils.logNotMounted('ProfileBottomNav._handleTap.action');
+      return;
+    }
     await context.push(AppRoutes.registerPath);
     return;
   }
@@ -195,12 +199,18 @@ Future<void> _handleTap(
     return;
   }
   if (destination.route == AppRoutes.examplePath) {
-    if (!context.mounted) return;
+    if (!context.mounted) {
+      ContextUtils.logNotMounted('ProfileBottomNav._handleTap.example');
+      return;
+    }
     if (!NavigationUtils.maybePop(context)) {
       context.go(AppRoutes.examplePath);
     }
     return;
   }
-  if (!context.mounted) return;
+  if (!context.mounted) {
+    ContextUtils.logNotMounted('ProfileBottomNav._handleTap.navigate');
+    return;
+  }
   await context.push(destination.route);
 }

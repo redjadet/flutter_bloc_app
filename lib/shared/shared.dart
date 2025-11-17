@@ -16,6 +16,7 @@ export 'ui/ui_constants.dart';
 // UI status helpers
 export 'ui/view_status.dart';
 // Utilities
+export 'utils/context_utils.dart';
 export 'utils/cubit_helpers.dart';
 export 'utils/error_handling.dart';
 export 'utils/isolate_samples.dart';

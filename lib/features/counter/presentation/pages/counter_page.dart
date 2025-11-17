@@ -118,7 +118,10 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
     final bool authenticated = await authenticator.authenticate(
       localizedReason: l10n.settingsBiometricPrompt,
     );
-    if (!context.mounted) return;
+    if (!context.mounted) {
+      ContextUtils.logNotMounted('CounterPage._handleOpenSettings');
+      return;
+    }
     if (authenticated) {
       await context.pushNamed(AppRoutes.settings);
     } else {
