@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
@@ -112,13 +113,13 @@ class ChatListView extends StatelessWidget {
               ),
               actions: [
                 CupertinoDialogAction(
-                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  onPressed: () => NavigationUtils.maybePop(dialogContext),
                   child: const Text('Cancel'),
                 ),
                 CupertinoDialogAction(
                   isDestructiveAction: true,
                   onPressed: () {
-                    Navigator.of(dialogContext).pop();
+                    NavigationUtils.maybePop(dialogContext);
                     unawaited(chatListCubit.deleteContact(contact.id));
                   },
                   child: const Text('Delete'),
@@ -135,14 +136,14 @@ class ChatListView extends StatelessWidget {
               PlatformAdaptive.dialogAction(
                 context: dialogContext,
                 label: 'Cancel',
-                onPressed: () => Navigator.of(dialogContext).pop(),
+                onPressed: () => NavigationUtils.maybePop(dialogContext),
               ),
               PlatformAdaptive.dialogAction(
                 context: dialogContext,
                 label: 'Delete',
                 isDestructive: true,
                 onPressed: () {
-                  Navigator.of(dialogContext).pop();
+                  NavigationUtils.maybePop(dialogContext);
                   unawaited(chatListCubit.deleteContact(contact.id));
                 },
               ),

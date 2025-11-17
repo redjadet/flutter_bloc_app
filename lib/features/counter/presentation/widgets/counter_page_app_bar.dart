@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:go_router/go_router.dart';
 
 class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -161,7 +162,7 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
             .map(
               (final item) => CupertinoActionSheetAction(
                 onPressed: () {
-                  Navigator.of(sheetContext).pop();
+                  NavigationUtils.maybePop(sheetContext);
                   _navigateToOverflowItem(parentContext, item);
                 },
                 child: Text(item.labelBuilder(l10n)),
@@ -170,7 +171,7 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
             .toList(),
         cancelButton: CupertinoActionSheetAction(
           isDestructiveAction: true,
-          onPressed: () => Navigator.of(sheetContext).pop(),
+          onPressed: () => NavigationUtils.maybePop(sheetContext),
           child: Text(l10n.cancelButtonLabel),
         ),
       ),

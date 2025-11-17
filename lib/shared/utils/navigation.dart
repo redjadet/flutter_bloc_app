@@ -6,13 +6,29 @@ import 'package:go_router/go_router.dart';
 class NavigationUtils {
   const NavigationUtils._();
 
+  /// Attempts to pop the current route.
+  /// Returns true if a route was popped, false otherwise.
+  static bool maybePop(
+    final BuildContext context, {
+    final Object? result,
+    final bool useRootNavigator = false,
+  }) {
+    final NavigatorState navigator = Navigator.of(
+      context,
+      rootNavigator: useRootNavigator,
+    );
+    if (!navigator.canPop()) {
+      return false;
+    }
+    navigator.pop(result);
+    return true;
+  }
+
   /// Pops the current route when possible, otherwise navigates to the home route.
   static void popOrGoHome(final BuildContext context) {
-    final NavigatorState navigator = Navigator.of(context);
-    if (navigator.canPop()) {
-      navigator.pop();
-      return;
+    final bool didPop = maybePop(context);
+    if (!didPop) {
+      context.go(AppRoutes.counterPath);
     }
-    context.go(AppRoutes.counterPath);
   }
 }

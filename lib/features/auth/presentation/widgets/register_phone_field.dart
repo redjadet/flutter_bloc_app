@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class RegisterPhoneField extends StatelessWidget {
@@ -133,13 +134,14 @@ Future<CountryOption?> showCountryPicker({
             .map(
               (final country) => CupertinoActionSheetAction(
                 isDefaultAction: country == selected,
-                onPressed: () => Navigator.of(popupContext).pop(country),
+                onPressed: () =>
+                    NavigationUtils.maybePop(popupContext, result: country),
                 child: _CountryPickerRow(option: country),
               ),
             )
             .toList(growable: false),
         cancelButton: CupertinoActionSheetAction(
-          onPressed: () => Navigator.of(popupContext).pop(),
+          onPressed: () => NavigationUtils.maybePop(popupContext),
           child: Text(l10n.cancelButtonLabel),
         ),
       ),
@@ -193,7 +195,8 @@ Future<CountryOption?> showCountryPicker({
                             color: theme.colorScheme.primary,
                           )
                         : null,
-                    onTap: () => Navigator.of(sheetContext).pop(country),
+                    onTap: () =>
+                        NavigationUtils.maybePop(sheetContext, result: country),
                   );
                 },
               ),

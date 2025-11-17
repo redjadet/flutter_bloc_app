@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class RegisterTermsDialog extends StatelessWidget {
@@ -22,12 +23,15 @@ class RegisterTermsDialog extends StatelessWidget {
         ),
         actions: <Widget>[
           CupertinoDialogAction(
-            onPressed: () => Navigator.of(context).pop(false),
+            onPressed: () => NavigationUtils.maybePop(context, result: false),
             child: Text(l10n.registerTermsRejectButton),
           ),
           CupertinoDialogAction(
             isDefaultAction: true,
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () => NavigationUtils.maybePop(
+              context,
+              result: true,
+            ),
             child: Text(l10n.registerTermsAcceptButton),
           ),
         ],
@@ -43,12 +47,12 @@ class RegisterTermsDialog extends StatelessWidget {
         PlatformAdaptive.dialogAction(
           context: context,
           label: l10n.registerTermsRejectButton,
-          onPressed: () => Navigator.of(context).pop(false),
+          onPressed: () => NavigationUtils.maybePop(context, result: false),
         ),
         PlatformAdaptive.dialogAction(
           context: context,
           label: l10n.registerTermsAcceptButton,
-          onPressed: () => Navigator.of(context).pop(true),
+          onPressed: () => NavigationUtils.maybePop(context, result: true),
         ),
       ],
     );

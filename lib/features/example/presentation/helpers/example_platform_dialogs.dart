@@ -52,7 +52,7 @@ Future<void> showExamplePlatformInfoDialog({
         PlatformAdaptive.dialogAction(
           context: dialogContext,
           label: l10n.exampleDialogCloseButton,
-          onPressed: () => Navigator.of(dialogContext).pop(),
+          onPressed: () => NavigationUtils.maybePop(dialogContext),
         ),
       ],
     ),
@@ -87,7 +87,7 @@ Future<void> showExamplePlatformInfoErrorDialog({
         PlatformAdaptive.dialogAction(
           context: dialogContext,
           label: l10n.exampleDialogCloseButton,
-          onPressed: () => Navigator.of(dialogContext).pop(),
+          onPressed: () => NavigationUtils.maybePop(dialogContext),
         ),
       ],
     ),

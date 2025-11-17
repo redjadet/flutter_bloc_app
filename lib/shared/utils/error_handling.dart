@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 /// Common error handling utilities to reduce code duplication
@@ -153,6 +154,9 @@ class ErrorHandling {
   /// Hide loading dialog
   static void hideLoadingDialog(final BuildContext context) {
     if (!context.mounted) return;
-    Navigator.of(context).pop();
+    NavigationUtils.maybePop(
+      context,
+      useRootNavigator: true,
+    );
   }
 }
