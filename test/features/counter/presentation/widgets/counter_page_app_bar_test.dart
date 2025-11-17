@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_page_app_bar.dart';
@@ -14,12 +15,14 @@ void main() {
       TargetPlatform platform = TargetPlatform.android,
     }) {
       return MaterialApp.router(
+        theme: ThemeData(platform: platform),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         routerConfig: GoRouter(
           routes: [
             GoRoute(
-              path: '/',
+              path: AppRoutes.counterPath,
+              name: AppRoutes.counter,
               builder: (context, state) => Scaffold(
                 appBar: CounterPageAppBar(
                   title: title,
@@ -31,32 +34,38 @@ void main() {
               ),
             ),
             GoRoute(
-              path: AppRoutes.calculator,
+              path: AppRoutes.calculatorPath,
+              name: AppRoutes.calculator,
               builder: (context, state) =>
                   const Scaffold(body: Text('Calculator Page')),
             ),
             GoRoute(
-              path: AppRoutes.example,
+              path: AppRoutes.examplePath,
+              name: AppRoutes.example,
               builder: (context, state) =>
                   const Scaffold(body: Text('Example Page')),
             ),
             GoRoute(
-              path: AppRoutes.charts,
+              path: AppRoutes.chartsPath,
+              name: AppRoutes.charts,
               builder: (context, state) =>
                   const Scaffold(body: Text('Charts Page')),
             ),
             GoRoute(
-              path: AppRoutes.graphql,
+              path: AppRoutes.graphqlPath,
+              name: AppRoutes.graphql,
               builder: (context, state) =>
                   const Scaffold(body: Text('GraphQL Page')),
             ),
             GoRoute(
-              path: AppRoutes.chat,
+              path: AppRoutes.chatPath,
+              name: AppRoutes.chat,
               builder: (context, state) =>
                   const Scaffold(body: Text('Chat Page')),
             ),
             GoRoute(
-              path: AppRoutes.googleMaps,
+              path: AppRoutes.googleMapsPath,
+              name: AppRoutes.googleMaps,
               builder: (context, state) =>
                   const Scaffold(body: Text('Google Maps Page')),
             ),
@@ -165,6 +174,27 @@ void main() {
         }
       }
     });
+
+    testWidgets(
+      'navigates to charts from Cupertino overflow menu using parent context',
+      (tester) async {
+        await tester.pumpWidget(buildSubject(platform: TargetPlatform.iOS));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byIcon(CupertinoIcons.ellipsis_vertical));
+        await tester.pumpAndSettle();
+
+        final BuildContext appBarContext = tester.element(
+          find.byType(CounterPageAppBar),
+        );
+        final l10n = AppLocalizations.of(appBarContext);
+
+        await tester.tap(find.text(l10n.openChartsTooltip));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Charts Page'), findsOneWidget);
+      },
+    );
 
     testWidgets('renders CupertinoNavigationBar on iOS', (tester) async {
       await tester.pumpWidget(buildSubject(platform: TargetPlatform.iOS));
