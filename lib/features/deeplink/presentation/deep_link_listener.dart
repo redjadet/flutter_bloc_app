@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart
 import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_cubit.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_state.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_target_extensions.dart';
+import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:go_router/go_router.dart';
 
@@ -45,6 +46,7 @@ class DeepLinkListener extends StatelessWidget {
           try {
             // Check if context is still mounted before navigation
             if (!context.mounted) {
+              ContextUtils.logNotMounted('DeepLinkListener.navigate');
               AppLogger.debug(
                 'Skipping deep link navigation – context no longer mounted',
               );

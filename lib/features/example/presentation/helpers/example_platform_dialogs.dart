@@ -6,7 +6,10 @@ Future<void> showExamplePlatformInfoDialog({
   required BuildContext context,
   required NativePlatformInfo info,
 }) async {
-  if (!context.mounted) return;
+  if (!context.mounted) {
+    ContextUtils.logNotMounted('ExamplePlatformDialogs.showInfo');
+    return;
+  }
   final l10n = context.l10n;
   final List<Widget> rows = <Widget>[
     _buildInfoRow(
@@ -63,7 +66,10 @@ Future<void> showExamplePlatformInfoErrorDialog({
   required BuildContext context,
   String? message,
 }) async {
-  if (!context.mounted) return;
+  if (!context.mounted) {
+    ContextUtils.logNotMounted('ExamplePlatformDialogs.showError');
+    return;
+  }
   final l10n = context.l10n;
   final String? detail = (message?.trim().isNotEmpty ?? false)
       ? message!.trim()

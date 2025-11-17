@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
@@ -21,6 +22,9 @@ class SnackbarErrorNotificationService implements ErrorNotificationService {
     final String message,
   ) async {
     if (!context.mounted) {
+      ContextUtils.logNotMounted(
+        'SnackbarErrorNotificationService.showSnackBar',
+      );
       AppLogger.debug(
         'Skipping SnackBar error message – context no longer mounted.',
       );
@@ -45,6 +49,9 @@ class SnackbarErrorNotificationService implements ErrorNotificationService {
     final String message,
   ) {
     if (!context.mounted) {
+      ContextUtils.logNotMounted(
+        'SnackbarErrorNotificationService.showAlertDialog',
+      );
       AppLogger.debug(
         'Skipping AlertDialog error message – context no longer mounted.',
       );
