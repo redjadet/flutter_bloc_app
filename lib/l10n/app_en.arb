@@ -396,6 +396,54 @@
   "@appInfoSectionTitle": {
     "description": "Heading for the section that displays application metadata"
   },
+  "settingsRemoteConfigSectionTitle": "Remote config",
+  "@settingsRemoteConfigSectionTitle": {
+    "description": "Heading for the developer-only section that surfaces remote config health"
+  },
+  "settingsRemoteConfigStatusIdle": "Waiting for first fetch",
+  "@settingsRemoteConfigStatusIdle": {
+    "description": "Status label shown before any remote config fetch completes"
+  },
+  "settingsRemoteConfigStatusLoading": "Loading latest values...",
+  "@settingsRemoteConfigStatusLoading": {
+    "description": "Status label shown while remote config values are being fetched"
+  },
+  "settingsRemoteConfigStatusLoaded": "Latest values loaded",
+  "@settingsRemoteConfigStatusLoaded": {
+    "description": "Status label shown after values load successfully"
+  },
+  "settingsRemoteConfigStatusError": "Failed to load remote config",
+  "@settingsRemoteConfigStatusError": {
+    "description": "Status label shown when remote config fetch fails"
+  },
+  "settingsRemoteConfigErrorLabel": "Last error",
+  "@settingsRemoteConfigErrorLabel": {
+    "description": "Label that prefixes the most recent remote config error message"
+  },
+  "settingsRemoteConfigFlagLabel": "Awesome feature flag",
+  "@settingsRemoteConfigFlagLabel": {
+    "description": "Label that displays the current awesome feature flag value"
+  },
+  "settingsRemoteConfigFlagEnabled": "Enabled",
+  "@settingsRemoteConfigFlagEnabled": {
+    "description": "Text shown when a boolean flag is enabled"
+  },
+  "settingsRemoteConfigFlagDisabled": "Disabled",
+  "@settingsRemoteConfigFlagDisabled": {
+    "description": "Text shown when a boolean flag is disabled"
+  },
+  "settingsRemoteConfigTestValueLabel": "Test value",
+  "@settingsRemoteConfigTestValueLabel": {
+    "description": "Label that displays the current remote config test value"
+  },
+  "settingsRemoteConfigTestValueEmpty": "Not set",
+  "@settingsRemoteConfigTestValueEmpty": {
+    "description": "Placeholder shown when the test value string is empty"
+  },
+  "settingsRemoteConfigRetryButton": "Retry fetch",
+  "@settingsRemoteConfigRetryButton": {
+    "description": "Button label that retries the remote config fetch"
+  },
   "appInfoVersionLabel": "Version",
   "@appInfoVersionLabel": {
     "description": "Label shown before the application version string"

@@ -435,6 +435,13 @@ All previously identified resiliency gaps have been addressed:
 4. ✅ **Regression coverage**
    - Added dedicated bloc tests for Remote Config and deep link cubits plus a chat history failure spec, keeping the “common bugs prevention” suite aligned with the new guardrails.
 
+## Additional Quality Observations
+
+1. ✅ **Remote Config user feedback** – Added `RemoteConfigDiagnosticsSection` to the developer-only area of `SettingsPage`. It listens to `RemoteConfigCubit`, surfaces the latest status/error payload (localized across EN/TR/DE/FR/ES), echoes the awesome feature flag value, and exposes a disabled-while-loading retry action that calls `fetchValues()`. Widget coverage lives in `test/features/settings/presentation/widgets/remote_config_diagnostics_section_test.dart`, ensuring status, error, and retry behaviors stay guarded. This closes the visibility gap so Firebase outages are surfaced immediately.
+2. **Deep link recovery telemetry** – `retryInitialize` rebuilds the stream, but repeated failures currently rely on the agent or tester to trigger the retry. Adding lightweight telemetry (e.g., log counters or a `PlatformAdaptive` dialog when initialization fails consecutively) would make persistent deep link platform misconfiguration easier to diagnose.
+3. **Chat error clearance** – `_persistHistory` now emits `ViewStatus.error`, so UI widgets should clear the error once the next successful write completes, preventing stale error banners and ensuring the retry path feels responsive.
+4. **Remote config diagnostics in settings** – The new `RemoteConfigDiagnosticsSection` surfaces flag/test values with retry controls, but it currently lives only in debug builds. Consider wiring a telemetry button to surface the last error in production QA builds and add regression coverage for the localized strings (the ARB files now list the debug section titles/status labels per locale).
+
 ---
 
 ## 9. Metrics Summary

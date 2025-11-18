@@ -644,6 +644,78 @@ abstract class AppLocalizations {
   /// **'App info'**
   String get appInfoSectionTitle;
 
+  /// Heading for the developer-only section that surfaces remote config health
+  ///
+  /// In en, this message translates to:
+  /// **'Remote config'**
+  String get settingsRemoteConfigSectionTitle;
+
+  /// Status label shown before any remote config fetch completes
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for first fetch'**
+  String get settingsRemoteConfigStatusIdle;
+
+  /// Status label shown while remote config values are being fetched
+  ///
+  /// In en, this message translates to:
+  /// **'Loading latest values...'**
+  String get settingsRemoteConfigStatusLoading;
+
+  /// Status label shown after values load successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Latest values loaded'**
+  String get settingsRemoteConfigStatusLoaded;
+
+  /// Status label shown when remote config fetch fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load remote config'**
+  String get settingsRemoteConfigStatusError;
+
+  /// Label that prefixes the most recent remote config error message
+  ///
+  /// In en, this message translates to:
+  /// **'Last error'**
+  String get settingsRemoteConfigErrorLabel;
+
+  /// Label that displays the current awesome feature flag value
+  ///
+  /// In en, this message translates to:
+  /// **'Awesome feature flag'**
+  String get settingsRemoteConfigFlagLabel;
+
+  /// Text shown when a boolean flag is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get settingsRemoteConfigFlagEnabled;
+
+  /// Text shown when a boolean flag is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get settingsRemoteConfigFlagDisabled;
+
+  /// Label that displays the current remote config test value
+  ///
+  /// In en, this message translates to:
+  /// **'Test value'**
+  String get settingsRemoteConfigTestValueLabel;
+
+  /// Placeholder shown when the test value string is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get settingsRemoteConfigTestValueEmpty;
+
+  /// Button label that retries the remote config fetch
+  ///
+  /// In en, this message translates to:
+  /// **'Retry fetch'**
+  String get settingsRemoteConfigRetryButton;
+
   /// Label shown before the application version string
   ///
   /// In en, this message translates to:

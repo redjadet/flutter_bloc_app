@@ -9,6 +9,9 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
   RemoteConfigCubit(this._remoteConfigService)
     : super(const RemoteConfigInitial());
 
+  static const String _awesomeFeatureKey = 'awesome_feature_enabled';
+  static const String _testValueKey = 'test_value_1';
+
   final RemoteConfigService _remoteConfigService;
 
   Future<void> initialize() async {
@@ -64,8 +67,9 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
     emit(
       RemoteConfigLoaded(
         isAwesomeFeatureEnabled: _remoteConfigService.getBool(
-          'awesome_feature_enabled',
+          _awesomeFeatureKey,
         ),
+        testValue: _remoteConfigService.getString(_testValueKey),
       ),
     );
   }

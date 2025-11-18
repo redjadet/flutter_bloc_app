@@ -296,6 +296,43 @@ class AppLocalizationsTr extends AppLocalizations {
   String get appInfoSectionTitle => 'Uygulama bilgileri';
 
   @override
+  String get settingsRemoteConfigSectionTitle => 'Uzak yapılandırma';
+
+  @override
+  String get settingsRemoteConfigStatusIdle => 'İlk veri bekleniyor';
+
+  @override
+  String get settingsRemoteConfigStatusLoading =>
+      'Güncel değerler yükleniyor...';
+
+  @override
+  String get settingsRemoteConfigStatusLoaded => 'Güncel değerler yüklendi';
+
+  @override
+  String get settingsRemoteConfigStatusError => 'Uzak yapılandırma alınamadı';
+
+  @override
+  String get settingsRemoteConfigErrorLabel => 'Son hata';
+
+  @override
+  String get settingsRemoteConfigFlagLabel => 'Awesome özelliği bayrağı';
+
+  @override
+  String get settingsRemoteConfigFlagEnabled => 'Etkin';
+
+  @override
+  String get settingsRemoteConfigFlagDisabled => 'Devre dışı';
+
+  @override
+  String get settingsRemoteConfigTestValueLabel => 'Test değeri';
+
+  @override
+  String get settingsRemoteConfigTestValueEmpty => 'Ayarlanmamış';
+
+  @override
+  String get settingsRemoteConfigRetryButton => 'Yeniden getir';
+
+  @override
   String get appInfoVersionLabel => 'Sürüm';
 
   @override

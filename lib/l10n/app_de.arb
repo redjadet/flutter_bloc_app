@@ -170,6 +170,54 @@
   "@appInfoSectionTitle": {
     "description": "Überschrift für den Abschnitt mit App-Metadaten"
   },
+  "settingsRemoteConfigSectionTitle": "Remote Config",
+  "@settingsRemoteConfigSectionTitle": {
+    "description": "Überschrift für den Entwicklerbereich mit Remote-Config-Status"
+  },
+  "settingsRemoteConfigStatusIdle": "Warte auf ersten Abruf",
+  "@settingsRemoteConfigStatusIdle": {
+    "description": "Statusanzeige bevor Remote Config zum ersten Mal geladen wurde"
+  },
+  "settingsRemoteConfigStatusLoading": "Lade aktuelle Werte...",
+  "@settingsRemoteConfigStatusLoading": {
+    "description": "Statusanzeige während Remote Config geladen wird"
+  },
+  "settingsRemoteConfigStatusLoaded": "Aktuelle Werte geladen",
+  "@settingsRemoteConfigStatusLoaded": {
+    "description": "Statusanzeige nach erfolgreichem Laden"
+  },
+  "settingsRemoteConfigStatusError": "Remote Config konnte nicht geladen werden",
+  "@settingsRemoteConfigStatusError": {
+    "description": "Statusanzeige wenn Remote Config fehlschlägt"
+  },
+  "settingsRemoteConfigErrorLabel": "Letzter Fehler",
+  "@settingsRemoteConfigErrorLabel": {
+    "description": "Label vor der letzten Remote-Config-Fehlermeldung"
+  },
+  "settingsRemoteConfigFlagLabel": "Awesome-Feature-Flag",
+  "@settingsRemoteConfigFlagLabel": {
+    "description": "Label für den aktuellen Wert des Awesome-Feature-Flags"
+  },
+  "settingsRemoteConfigFlagEnabled": "Aktiviert",
+  "@settingsRemoteConfigFlagEnabled": {
+    "description": "Text wenn ein Boolean-Flag aktiv ist"
+  },
+  "settingsRemoteConfigFlagDisabled": "Deaktiviert",
+  "@settingsRemoteConfigFlagDisabled": {
+    "description": "Text wenn ein Boolean-Flag deaktiviert ist"
+  },
+  "settingsRemoteConfigTestValueLabel": "Testwert",
+  "@settingsRemoteConfigTestValueLabel": {
+    "description": "Beschriftung für den aktuellen Remote-Config-Testwert"
+  },
+  "settingsRemoteConfigTestValueEmpty": "Nicht gesetzt",
+  "@settingsRemoteConfigTestValueEmpty": {
+    "description": "Platzhalter, wenn der Testwert leer ist"
+  },
+  "settingsRemoteConfigRetryButton": "Erneut abrufen",
+  "@settingsRemoteConfigRetryButton": {
+    "description": "Button-Beschriftung zum erneuten Abrufen der Remote Config"
+  },
   "appInfoVersionLabel": "Version",
   "@appInfoVersionLabel": {
     "description": "Beschriftung vor der App-Versionsnummer"

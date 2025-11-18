@@ -170,6 +170,54 @@
   "@appInfoSectionTitle": {
     "description": "Encabezado para la sección que muestra los metadatos de la aplicación"
   },
+  "settingsRemoteConfigSectionTitle": "Configuración remota",
+  "@settingsRemoteConfigSectionTitle": {
+    "description": "Encabezado de la sección para desarrolladores que muestra el estado de Remote Config"
+  },
+  "settingsRemoteConfigStatusIdle": "Esperando la primera actualización",
+  "@settingsRemoteConfigStatusIdle": {
+    "description": "Estado mostrado antes de completar la primera carga de Remote Config"
+  },
+  "settingsRemoteConfigStatusLoading": "Cargando los valores más recientes...",
+  "@settingsRemoteConfigStatusLoading": {
+    "description": "Estado mostrado mientras se cargan los valores de Remote Config"
+  },
+  "settingsRemoteConfigStatusLoaded": "Últimos valores cargados",
+  "@settingsRemoteConfigStatusLoaded": {
+    "description": "Estado mostrado después de cargar correctamente"
+  },
+  "settingsRemoteConfigStatusError": "No se pudo cargar la configuración remota",
+  "@settingsRemoteConfigStatusError": {
+    "description": "Estado mostrado cuando falla Remote Config"
+  },
+  "settingsRemoteConfigErrorLabel": "Último error",
+  "@settingsRemoteConfigErrorLabel": {
+    "description": "Etiqueta que precede al mensaje de error más reciente de Remote Config"
+  },
+  "settingsRemoteConfigFlagLabel": "Indicador de la función Awesome",
+  "@settingsRemoteConfigFlagLabel": {
+    "description": "Etiqueta para el valor actual del indicador de la función Awesome"
+  },
+  "settingsRemoteConfigFlagEnabled": "Activado",
+  "@settingsRemoteConfigFlagEnabled": {
+    "description": "Texto mostrado cuando un indicador booleano está activado"
+  },
+  "settingsRemoteConfigFlagDisabled": "Desactivado",
+  "@settingsRemoteConfigFlagDisabled": {
+    "description": "Texto mostrado cuando un indicador booleano está desactivado"
+  },
+  "settingsRemoteConfigTestValueLabel": "Valor de prueba",
+  "@settingsRemoteConfigTestValueLabel": {
+    "description": "Etiqueta que muestra el valor de prueba actual de Remote Config"
+  },
+  "settingsRemoteConfigTestValueEmpty": "Sin definir",
+  "@settingsRemoteConfigTestValueEmpty": {
+    "description": "Texto mostrado cuando el valor de prueba está vacío"
+  },
+  "settingsRemoteConfigRetryButton": "Reintentar carga",
+  "@settingsRemoteConfigRetryButton": {
+    "description": "Etiqueta del botón que vuelve a lanzar la carga de Remote Config"
+  },
   "appInfoVersionLabel": "Versión",
   "@appInfoVersionLabel": {
     "description": "Etiqueta que precede a la versión de la aplicación"
