@@ -183,46 +183,85 @@ This project enforces **Clean Architecture** guardrails, SOLID principles, and r
 ```mermaid
 flowchart LR
   subgraph Presentation
-    CounterPage
+    Widgets["Responsive Widgets\n(PlatformAdaptive, BlocSelector)"]
     CounterCubit
     ThemeCubit
     LocaleCubit
+    AuthCubit
   end
 
   subgraph Domain
-    CounterRepository
-    ThemeRepository
-    LocaleRepository
+    UseCases["Use Cases & Contracts\n(Domain-layer logic)"]
+    Repositories["Repository Interfaces\n(CounterRepository, ThemeRepository, AuthRepository)"]
   end
 
   subgraph Data
-    HiveCounterRepository
-    HiveThemeRepository
-    HiveLocaleRepository
+    HiveRepos["Hive*Repository implementations\n(HiveCounterRepository, HiveThemeRepository, HiveLocaleRepository)"]
+    NetworkRepos["FirebaseAuthRepository\nRemoteConfigRepository\nChatGraphQLRepository"]
   end
 
   subgraph Services
     TimerService
     HiveService
     BiometricAuthenticator
+    NativePlatformService
+    RemoteConfigService
   end
 
-  CounterPage --> CounterCubit
-  CounterCubit --> CounterRepository
-  CounterRepository <-.implements .-> HiveCounterRepository
-  HiveCounterRepository --> HiveService
+  Injector["Dependency Injection\n(get_it + injector_*.dart)"]
+
+  subgraph Shared
+    ResponsiveExt["Responsive Extensions\n(spacing, typography, grids)"]
+    ContextUtilsNode["ContextUtils\n(mounted + lifecycle guards)"]
+    NavigationUtilsNode["NavigationUtils\n(popOrGoHome, maybePop)"]
+    ErrorHandlingNode["ErrorHandling\n(snackbars, dialogs, loading)"]
+  end
+
+  Widgets --> CounterCubit
+  Widgets --> ThemeCubit
+  Widgets --> LocaleCubit
+  Widgets --> AuthCubit
+  Widgets --> ResponsiveExt
+  Widgets --> NavigationUtilsNode
+  Widgets --> ErrorHandlingNode
+  Widgets --> ContextUtilsNode
+  CounterCubit --> UseCases
+  ThemeCubit --> UseCases
+  LocaleCubit --> UseCases
+  AuthCubit --> UseCases
+  UseCases --> Repositories
+  Repositories --> HiveRepos
+  Repositories --> NetworkRepos
+  HiveRepos --> HiveService
+  HiveRepos --> RemoteConfigService
+  NetworkRepos --> BiometricAuthenticator
+  NetworkRepos --> NativePlatformService
+  CounterCubit --> TimerService
+  Injector --> CounterCubit
+  Injector --> ThemeCubit
+  Injector --> LocaleCubit
+  Injector --> AuthCubit
+  Injector --> TimerService
+  Injector --> HiveService
+  Injector --> UseCases
+
+  ContextUtilsNode -.-> Cubit
+  ErrorHandlingNode -.-> Cubit
+  NavigationUtilsNode -.-> Widgets
+  ResponsiveExt -.-> Widgets
 ```
 
 ### Key Principles
 
-- **Domain Layer** - Flutter-agnostic business logic and contracts
-- **Data Layer** - Repository implementations with Hive/Firebase backends
-- **Presentation Layer** - BLoC/Cubit state management with responsive widgets
-- **Dependency Injection** - Organized `get_it` setup across multiple files:
-  - `injector.dart` - Main entry point (61 lines)
-  - `injector_registrations.dart` - All registrations by category
-  - `injector_factories.dart` - Factory functions for repositories
-  - `injector_helpers.dart` - Helper utilities
+- **Clean Architecture pipeline** - Domain contracts, data repositories (Hive, Firebase, GraphQL), and presentation widgets remain isolated; use cases live in Dart-only modules and state flows through immutable `freezed` states.
+- **Presentation quality** - Widgets rely on responsive extensions (`responsiveGap*`, `pagePadding`, `responsiveFontSize`) and `PlatformAdaptive` builders instead of raw Material buttons, with `BlocSelector`/`RepaintBoundary` to minimize rebuilds.
+- **Dependency Injection** - `get_it` wires widgets, cubits, services, and repositories via `injector.dart`, modular `injector_registrations.dart`, factory helpers, and `injector_helpers.dart` to keep instantiation predictable.
+- **State safety** - Cubits use `CubitStateEmissionMixin`, `CubitExceptionHandler`, and `isClosed` guards; stream/timer/completer cleanup lives in overridden `close()`/`dispose()` paths to prevent leaks and race conditions.
+- **Context & navigation safety** - `ContextUtils.logNotMounted()` plus `NavigationUtils.maybePop()/popOrGoHome()` consolidate lifecycle guards and dialog dismissal so every widget handles async gaps and navigation consistently.
+- **Responsive + adaptive UX** - Layouts honor `contentMaxWidth`, `pagePadding`, adaptive grids, and platform-aware dialogs; gestures, images, and spacing reference shared responsive extensions for every screen size.
+- **Secure persistence** - `HiveService` (never `Hive.openBox` directly) encrypts data via `HiveKeyManager` and `flutter_secure_storage`, migrations run through `SharedPreferencesMigrationService`, and `BiometricAuthenticator`/`NativePlatformService` guard sensitive flows.
+- **Testing & quality gates** - `./bin/checklist` (`dart format`, `flutter analyze`, coverage) + `tool/test_coverage.sh` enforce `file_length_lint`, common-bug prevention suites, and coverage thresholds before commits.
+- **Localization & platform polish** - `.arb` regeneration happens through `flutter pub get`/`flutter gen-l10n`, `tool/ensure_localizations.dart` feeds iOS builds, and five locales (EN, TR, DE, FR, ES) are always available at runtime.
 
 ### State Management Flow
 
@@ -230,17 +269,31 @@ flowchart LR
 sequenceDiagram
   participant User
   participant View
+  participant SharedUtils
   participant Cubit
+  participant UseCase
   participant Repository
   participant Storage
+  participant Services
 
-  User->>View: Tap increment
-  View->>Cubit: increment()
-  Cubit->>Repository: save(snapshot)
-  Repository->>Storage: persist (encrypted)
-  Cubit-->>View: emit new state
-  View-->>User: Update UI
+  User->>View: Trigger interaction (tap, navigation, lifecycle)
+  View->>SharedUtils: Apply responsive spacing + mounted guards
+  SharedUtils->>View: Safe callbacks (ContextUtils, NavigationUtils)
+  View->>Cubit: call exposed method (e.g., increment, load)
+  Cubit->>UseCase: enforce business rule (Flutter-agnostic logic)
+  UseCase->>Repository: read/write contract
+  Repository->>Storage: persist via `HiveService` (encrypted, migration-safe)
+  Repository->>Services: invoke `TimerService`, `RemoteConfig`, `Firebase`, `NativePlatformService`, or `BiometricAuthenticator`
+  Services-->>Repository: results / failure info
+  Repository-->>Cubit: `Either` result or data (wrapped in failure handling)
+  Cubit->>View: emit new `freezed` state (guards `isClosed`, `mounted`)
+  View->>SharedUtils: show dialogs/snackbars via ErrorHandling + NavigationUtils
+  SharedUtils-->>View: Safe dialog dismissal/loading overlays
+  View-->>User: rebuild UI, show dialogs/loading/animations
+  Cubit->>View: optional navigation via `GoRouter`/`ContextScopedNavigation` only after `ContextUtils.ensureMounted`
 ```
+
+Shared utilities are treated as first-class participants in every flow: `ContextUtils` guarantees navigation only occurs while widgets are mounted, `NavigationUtils` centralizes pop/back handling, `ErrorHandling` wraps transient UI (snackbars, dialogs, loaders), and the responsive extensions keep layouts device-appropriate without duplicating spacing math.
 
 ---
 
@@ -248,7 +301,7 @@ sequenceDiagram
 
 ### Test Coverage
 
-- **Current Coverage**: 85.77% (6419/7484 lines)
+- **Current Coverage**: 85.73% (6417/7485 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 
