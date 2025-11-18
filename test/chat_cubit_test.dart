@@ -204,6 +204,35 @@ void main() {
 
       expect(history.conversations, isNotEmpty);
       expect(history.conversations.first.messages, isNotEmpty);
+      // Error should be cleared on successful write
+      expect(cubit.state.status, ViewStatus.success);
+      expect(cubit.state.error, isNull);
+    });
+
+    test('persistHistory clears error on successful write', () async {
+      final FakeChatRepository repo = FakeChatRepository();
+      final _ThrowingChatHistoryRepository history =
+          _ThrowingChatHistoryRepository();
+      final ChatCubit cubit = createCubit(
+        repository: repo,
+        historyRepository: history,
+      );
+
+      // Trigger a persistence failure
+      await cubit.sendMessage('Test');
+      await pumpEventQueue();
+
+      expect(cubit.state.status, ViewStatus.error);
+      expect(cubit.state.error, isNotNull);
+
+      // Recover and verify error is cleared
+      history.setShouldThrow(false);
+      await cubit.resetConversation();
+      await pumpEventQueue();
+
+      // Error should be cleared after successful persistence
+      expect(cubit.state.status, ViewStatus.success);
+      expect(cubit.state.error, isNull);
     });
 
     test('sendMessage ignores re-entrant calls while loading', () async {
