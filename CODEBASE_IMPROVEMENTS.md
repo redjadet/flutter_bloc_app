@@ -421,20 +421,19 @@ These improvements can be implemented quickly with high impact:
 
 ## New Findings (Stability & Resilience)
 
-1. **Remote Config lacks failure isolation**
-   - Problem: `RemoteConfigCubit.initialize()`/`fetchValues()` call `_remoteConfigService.initialize()`/`forceFetch()` directly. Any Firebase exception bubbles up, the cubit never emits a loading/error state, and the UI may crash on startup.
-   - Fix: Introduce `RemoteConfigLoading`/`RemoteConfigError` states, wrap the async work in `CubitExceptionHandler.executeAsync` (or try/catch), gate every `emit` with `isClosed`, and surface a retry callback so the UI can recover instead of exiting. Add logging via `AppLogger`.
+All previously identified resiliency gaps have been addressed:
 
-2. **Deep link setup reports success before it is ready**
-   - Problem: `_initialized` flips to `true` before `getInitialLink()`/`linkStream()` run and any thrown exception leaves the cubit thinking it is live while no subscription exists.
-   - Fix: Only mark `_initialized = true` after both initial-link retrieval and stream subscription succeed. Wrap the entire block in try/catch, emit a `DeepLinkError`/`DeepLinkIdle` state on failure, and expose a `retryInitialize()` that tears down the previous subscription before re-running setup.
+1. ✅ **Remote Config failure isolation**
+   - Added `RemoteConfigLoading`/`RemoteConfigError` states plus `_isLoading` guards so Firebase errors surface safely. Logic now wraps `initialize()`/`fetchValues()` with `CubitExceptionHandler`, `AppLogger`, and explicit `isClosed` checks. Regression tests live in `test/features/remote_config/presentation/cubit/remote_config_cubit_test.dart`.
 
-3. **Chat history persistence is fire-and-forget**
-   - Problem: `_persistHistory()` is awaited nowhere; IO failures from `_historyRepository.save()` become unhandled asynchronous errors and history silently disappears.
-   - Fix: Route the save through `CubitExceptionHandler.executeAsync`, swallow/log benign failures, and optionally surface a non-blocking banner when history cannot be persisted. Ensure `_persistHistory` checks `isClosed` before emitting any state to avoid post-dispose writes.
+2. ✅ **Deep link initialization reliability**
+   - `DeepLinkCubit` now defers `_initialized` until subscriptions succeed, emits `DeepLinkLoading`/`DeepLinkError`, exposes `retryInitialize()`, and disposes the stream when failures occur. `test/features/deeplink/presentation/deep_link_cubit_test.dart` validates success, failure, overlap prevention, and recovery.
 
-4. **Regression tests missing for the above resiliency gaps**
-   - Add bloc tests for the new `RemoteConfigCubit` states (success, failure, retry), deep link initialization retries, and chat history persistence failures. Include at least one widget/bloc test per scenario inside `test/shared/common_bugs_prevention_test.dart` or feature-specific suites so the guardrails stay green.
+3. ✅ **Chat history persistence safety**
+   - `_persistHistory` routes through `CubitExceptionHandler` and logs failures via `AppLogger`, surfacing a non-blocking `ViewStatus.error` while allowing future saves. `test/chat_cubit_test.dart` includes a new scenario using `_ThrowingChatHistoryRepository` to prove recovery.
+
+4. ✅ **Regression coverage**
+   - Added dedicated bloc tests for Remote Config and deep link cubits plus a chat history failure spec, keeping the “common bugs prevention” suite aligned with the new guardrails.
 
 ---
 
@@ -475,6 +474,11 @@ The Flutter BLoC app demonstrates strong architectural patterns and code quality
    - Added comprehensive tests for Google Maps widgets (google_maps_controls, google_maps_location_list)
    - Fixed test timeouts in chat widget tests by using `pump()` instead of `pumpAndSettle()` for network images
    - **Coverage improved from 72.51% to 85.34%**
+
+1. **Resilience Guardrails**
+   - Hardened `RemoteConfigCubit` (loading/error states, `_isLoading` guard, `CubitExceptionHandler`) and added bloc tests covering success/failure/retry flows.
+   - Reinforced `DeepLinkCubit` with `DeepLinkLoading`/`DeepLinkError`, teardown + retry logic, and comprehensive bloc tests for init failures, overlapping calls, and stream errors.
+   - Safeguarded chat history persistence via centralized exception handling/logging and new tests that simulate repository write failures to ensure the UI recovers gracefully.
 
 1. **Test Automation:**
    - Created `tool/test_coverage.sh` wrapper script for automated coverage report updates
