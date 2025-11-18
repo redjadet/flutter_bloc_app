@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
@@ -40,9 +41,11 @@ class _SettingsView extends StatelessWidget {
           const LanguageSection(),
           SizedBox(height: context.responsiveGapL),
           const AppInfoSection(),
-          if (!const bool.fromEnvironment('dart.vm.product')) ...[
+          if (FlavorManager.I.isDev || FlavorManager.I.isQa) ...[
             SizedBox(height: context.responsiveGapL),
             const RemoteConfigDiagnosticsSection(),
+          ],
+          if (!const bool.fromEnvironment('dart.vm.product')) ...[
             SizedBox(height: context.responsiveGapL),
             PlatformAdaptive.textButton(
               context: context,
