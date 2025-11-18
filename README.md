@@ -183,7 +183,7 @@ This project enforces **Clean Architecture** guardrails, SOLID principles, and r
 ```mermaid
 flowchart LR
   subgraph Presentation
-    Widgets["Responsive Widgets\n(PlatformAdaptive, BlocSelector)"]
+    Widgets["Responsive Widgets<br/>(PlatformAdaptive, BlocSelector)"]
     CounterCubit
     ThemeCubit
     LocaleCubit
@@ -191,13 +191,13 @@ flowchart LR
   end
 
   subgraph Domain
-    UseCases["Use Cases & Contracts\n(Domain-layer logic)"]
-    Repositories["Repository Interfaces\n(CounterRepository, ThemeRepository, AuthRepository)"]
+    UseCases["Use Cases & Contracts<br/>(Domain-layer logic)"]
+    Repositories["Repository Interfaces<br/>(CounterRepository, ThemeRepository, AuthRepository)"]
   end
 
   subgraph Data
-    HiveRepos["Hive*Repository implementations\n(HiveCounterRepository, HiveThemeRepository, HiveLocaleRepository)"]
-    NetworkRepos["FirebaseAuthRepository\nRemoteConfigRepository\nChatGraphQLRepository"]
+    HiveRepos["Hive*Repository implementations<br/>(HiveCounterRepository, HiveThemeRepository, HiveLocaleRepository)"]
+    NetworkRepos["FirebaseAuthRepository<br/>RemoteConfigRepository<br/>ChatGraphQLRepository"]
   end
 
   subgraph Services
@@ -208,13 +208,13 @@ flowchart LR
     RemoteConfigService
   end
 
-  Injector["Dependency Injection\n(get_it + injector_*.dart)"]
+  Injector["Dependency Injection<br/>(get_it + injector_*.dart)"]
 
   subgraph Shared
-    ResponsiveExt["Responsive Extensions\n(spacing, typography, grids)"]
-    ContextUtilsNode["ContextUtils\n(mounted + lifecycle guards)"]
-    NavigationUtilsNode["NavigationUtils\n(popOrGoHome, maybePop)"]
-    ErrorHandlingNode["ErrorHandling\n(snackbars, dialogs, loading)"]
+    ResponsiveExt["Responsive Extensions<br/>(spacing, typography, grids)"]
+    ContextUtilsNode["ContextUtils<br/>(mounted + lifecycle guards)"]
+    NavigationUtilsNode["NavigationUtils<br/>(popOrGoHome, maybePop)"]
+    ErrorHandlingNode["ErrorHandling<br/>(snackbars, dialogs, loading)"]
   end
 
   Widgets --> CounterCubit
