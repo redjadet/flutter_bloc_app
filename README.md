@@ -301,7 +301,7 @@ Shared utilities are treated as first-class participants in every flow: `Context
 
 ### Test Coverage
 
-- **Current Coverage**: 85.85% (6443/7505 lines)
+- **Current Coverage**: 85.87% (6470/7535 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 

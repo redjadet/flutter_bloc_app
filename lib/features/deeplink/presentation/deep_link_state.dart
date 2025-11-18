@@ -17,6 +17,11 @@ class DeepLinkIdle extends DeepLinkState {
   const DeepLinkIdle();
 }
 
+/// Indicates the cubit is preparing deep link subscriptions.
+class DeepLinkLoading extends DeepLinkState {
+  const DeepLinkLoading();
+}
+
 /// Signals that navigation to [target] should occur.
 class DeepLinkNavigate extends DeepLinkState {
   const DeepLinkNavigate(this.target, this.origin);
@@ -26,4 +31,14 @@ class DeepLinkNavigate extends DeepLinkState {
 
   @override
   List<Object?> get props => <Object?>[target, origin];
+}
+
+/// Emitted when initialization fails or the stream encounters an error.
+class DeepLinkError extends DeepLinkState {
+  const DeepLinkError(this.message);
+
+  final String message;
+
+  @override
+  List<Object?> get props => <Object?>[message];
 }

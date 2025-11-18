@@ -21,22 +21,53 @@ class DeepLinkCubit extends Cubit<DeepLinkState> {
 
   StreamSubscription<Uri>? _subscription;
   bool _initialized = false;
+  bool _isInitializing = false;
 
   /// Begins listening to deep link events. Safe to call multiple times.
   Future<void> initialize() async {
-    if (_initialized) {
+    if (_initialized || _isInitializing) {
       return;
     }
-    _initialized = true;
-
+    _isInitializing = true;
     AppLogger.info('Initializing deep link cubit');
+    if (!isClosed) {
+      emit(const DeepLinkLoading());
+    }
 
+    try {
+      await _startListening();
+      _initialized = true;
+      AppLogger.info('Deep link cubit initialized successfully');
+      if (!isClosed && state is! DeepLinkIdle) {
+        emit(const DeepLinkIdle());
+      }
+    } on Object catch (error, stackTrace) {
+      AppLogger.error('Deep link initialization failed', error, stackTrace);
+      await _disposeSubscription();
+      _initialized = false;
+      if (!isClosed) {
+        emit(DeepLinkError(error.toString()));
+      }
+    } finally {
+      _isInitializing = false;
+    }
+  }
+
+  Future<void> retryInitialize() async {
+    AppLogger.info('Retrying deep link initialization');
+    await _disposeSubscription();
+    _initialized = false;
+    await initialize();
+  }
+
+  Future<void> _startListening() async {
     final Uri? initialUri = await _service.getInitialLink();
     if (initialUri != null) {
       AppLogger.info('Found initial URI: $initialUri');
       _handleUri(initialUri, DeepLinkOrigin.initial);
     }
 
+    await _disposeSubscription();
     _subscription = _service.linkStream().listen(
       (final Uri uri) {
         AppLogger.info('Received deep link from stream: $uri');
@@ -44,10 +75,14 @@ class DeepLinkCubit extends Cubit<DeepLinkState> {
       },
       onError: (final Object error, final StackTrace stackTrace) {
         AppLogger.error('Deep link stream error', error, stackTrace);
+        unawaited(_disposeSubscription());
+        _initialized = false;
+        if (isClosed) {
+          return;
+        }
+        emit(DeepLinkError(error.toString()));
       },
     );
-
-    AppLogger.info('Deep link cubit initialized successfully');
   }
 
   void _handleUri(final Uri uri, final DeepLinkOrigin origin) {
@@ -66,7 +101,12 @@ class DeepLinkCubit extends Cubit<DeepLinkState> {
 
   @override
   Future<void> close() async {
-    await _subscription?.cancel();
+    await _disposeSubscription();
     return super.close();
+  }
+
+  Future<void> _disposeSubscription() async {
+    await _subscription?.cancel();
+    _subscription = null;
   }
 }
