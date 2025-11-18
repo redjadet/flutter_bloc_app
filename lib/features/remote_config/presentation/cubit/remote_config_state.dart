@@ -18,12 +18,14 @@ class RemoteConfigLoading extends RemoteConfigState {
 class RemoteConfigLoaded extends RemoteConfigState {
   const RemoteConfigLoaded({
     required this.isAwesomeFeatureEnabled,
+    required this.testValue,
   });
 
   final bool isAwesomeFeatureEnabled;
+  final String testValue;
 
   @override
-  List<Object?> get props => <Object?>[isAwesomeFeatureEnabled];
+  List<Object?> get props => <Object?>[isAwesomeFeatureEnabled, testValue];
 }
 
 class RemoteConfigError extends RemoteConfigState {

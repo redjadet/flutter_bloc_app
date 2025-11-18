@@ -302,6 +302,43 @@ class AppLocalizationsDe extends AppLocalizations {
   String get appInfoSectionTitle => 'App-Informationen';
 
   @override
+  String get settingsRemoteConfigSectionTitle => 'Remote Config';
+
+  @override
+  String get settingsRemoteConfigStatusIdle => 'Warte auf ersten Abruf';
+
+  @override
+  String get settingsRemoteConfigStatusLoading => 'Lade aktuelle Werte...';
+
+  @override
+  String get settingsRemoteConfigStatusLoaded => 'Aktuelle Werte geladen';
+
+  @override
+  String get settingsRemoteConfigStatusError =>
+      'Remote Config konnte nicht geladen werden';
+
+  @override
+  String get settingsRemoteConfigErrorLabel => 'Letzter Fehler';
+
+  @override
+  String get settingsRemoteConfigFlagLabel => 'Awesome-Feature-Flag';
+
+  @override
+  String get settingsRemoteConfigFlagEnabled => 'Aktiviert';
+
+  @override
+  String get settingsRemoteConfigFlagDisabled => 'Deaktiviert';
+
+  @override
+  String get settingsRemoteConfigTestValueLabel => 'Testwert';
+
+  @override
+  String get settingsRemoteConfigTestValueEmpty => 'Nicht gesetzt';
+
+  @override
+  String get settingsRemoteConfigRetryButton => 'Erneut abrufen';
+
+  @override
   String get appInfoVersionLabel => 'Version';
 
   @override

@@ -297,6 +297,45 @@ class AppLocalizationsEs extends AppLocalizations {
   String get appInfoSectionTitle => 'Información de la app';
 
   @override
+  String get settingsRemoteConfigSectionTitle => 'Configuración remota';
+
+  @override
+  String get settingsRemoteConfigStatusIdle =>
+      'Esperando la primera actualización';
+
+  @override
+  String get settingsRemoteConfigStatusLoading =>
+      'Cargando los valores más recientes...';
+
+  @override
+  String get settingsRemoteConfigStatusLoaded => 'Últimos valores cargados';
+
+  @override
+  String get settingsRemoteConfigStatusError =>
+      'No se pudo cargar la configuración remota';
+
+  @override
+  String get settingsRemoteConfigErrorLabel => 'Último error';
+
+  @override
+  String get settingsRemoteConfigFlagLabel => 'Indicador de la función Awesome';
+
+  @override
+  String get settingsRemoteConfigFlagEnabled => 'Activado';
+
+  @override
+  String get settingsRemoteConfigFlagDisabled => 'Desactivado';
+
+  @override
+  String get settingsRemoteConfigTestValueLabel => 'Valor de prueba';
+
+  @override
+  String get settingsRemoteConfigTestValueEmpty => 'Sin definir';
+
+  @override
+  String get settingsRemoteConfigRetryButton => 'Reintentar carga';
+
+  @override
   String get appInfoVersionLabel => 'Versión';
 
   @override

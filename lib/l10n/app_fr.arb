@@ -170,6 +170,54 @@
   "@appInfoSectionTitle": {
     "description": "Titre de la section affichant les métadonnées de l'application"
   },
+  "settingsRemoteConfigSectionTitle": "Configuration distante",
+  "@settingsRemoteConfigSectionTitle": {
+    "description": "Titre de la section développeur qui affiche l'état de Remote Config"
+  },
+  "settingsRemoteConfigStatusIdle": "En attente du premier chargement",
+  "@settingsRemoteConfigStatusIdle": {
+    "description": "Statut affiché avant le premier chargement de Remote Config"
+  },
+  "settingsRemoteConfigStatusLoading": "Chargement des dernières valeurs...",
+  "@settingsRemoteConfigStatusLoading": {
+    "description": "Statut affiché pendant le chargement de Remote Config"
+  },
+  "settingsRemoteConfigStatusLoaded": "Dernières valeurs chargées",
+  "@settingsRemoteConfigStatusLoaded": {
+    "description": "Statut affiché après un chargement réussi"
+  },
+  "settingsRemoteConfigStatusError": "Échec du chargement de la configuration distante",
+  "@settingsRemoteConfigStatusError": {
+    "description": "Statut affiché quand Remote Config échoue"
+  },
+  "settingsRemoteConfigErrorLabel": "Dernière erreur",
+  "@settingsRemoteConfigErrorLabel": {
+    "description": "Libellé précédant le dernier message d'erreur Remote Config"
+  },
+  "settingsRemoteConfigFlagLabel": "Indicateur de fonctionnalité Awesome",
+  "@settingsRemoteConfigFlagLabel": {
+    "description": "Libellé pour la valeur actuelle du drapeau Awesome"
+  },
+  "settingsRemoteConfigFlagEnabled": "Activé",
+  "@settingsRemoteConfigFlagEnabled": {
+    "description": "Texte affiché lorsqu'un drapeau booléen est activé"
+  },
+  "settingsRemoteConfigFlagDisabled": "Désactivé",
+  "@settingsRemoteConfigFlagDisabled": {
+    "description": "Texte affiché lorsqu'un drapeau booléen est désactivé"
+  },
+  "settingsRemoteConfigTestValueLabel": "Valeur de test",
+  "@settingsRemoteConfigTestValueLabel": {
+    "description": "Libellé qui affiche la valeur de test actuelle de Remote Config"
+  },
+  "settingsRemoteConfigTestValueEmpty": "Non défini",
+  "@settingsRemoteConfigTestValueEmpty": {
+    "description": "Texte affiché lorsque la valeur de test est vide"
+  },
+  "settingsRemoteConfigRetryButton": "Relancer la récupération",
+  "@settingsRemoteConfigRetryButton": {
+    "description": "Libellé du bouton qui relance la récupération Remote Config"
+  },
   "appInfoVersionLabel": "Version",
   "@appInfoVersionLabel": {
     "description": "Intitulé affiché avant la version de l'application"

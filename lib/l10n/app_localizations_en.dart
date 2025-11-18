@@ -294,6 +294,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appInfoSectionTitle => 'App info';
 
   @override
+  String get settingsRemoteConfigSectionTitle => 'Remote config';
+
+  @override
+  String get settingsRemoteConfigStatusIdle => 'Waiting for first fetch';
+
+  @override
+  String get settingsRemoteConfigStatusLoading => 'Loading latest values...';
+
+  @override
+  String get settingsRemoteConfigStatusLoaded => 'Latest values loaded';
+
+  @override
+  String get settingsRemoteConfigStatusError => 'Failed to load remote config';
+
+  @override
+  String get settingsRemoteConfigErrorLabel => 'Last error';
+
+  @override
+  String get settingsRemoteConfigFlagLabel => 'Awesome feature flag';
+
+  @override
+  String get settingsRemoteConfigFlagEnabled => 'Enabled';
+
+  @override
+  String get settingsRemoteConfigFlagDisabled => 'Disabled';
+
+  @override
+  String get settingsRemoteConfigTestValueLabel => 'Test value';
+
+  @override
+  String get settingsRemoteConfigTestValueEmpty => 'Not set';
+
+  @override
+  String get settingsRemoteConfigRetryButton => 'Retry fetch';
+
+  @override
   String get appInfoVersionLabel => 'Version';
 
   @override

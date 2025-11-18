@@ -17,6 +17,9 @@ void main() {
       when(
         () => remoteConfigService.getBool('awesome_feature_enabled'),
       ).thenReturn(false);
+      when(
+        () => remoteConfigService.getString('test_value_1'),
+      ).thenReturn('initial');
     });
 
     blocTest<RemoteConfigCubit, RemoteConfigState>(
@@ -27,12 +30,15 @@ void main() {
         when(
           () => remoteConfigService.getBool('awesome_feature_enabled'),
         ).thenReturn(true);
+        when(
+          () => remoteConfigService.getString('test_value_1'),
+        ).thenReturn('awesome');
         return RemoteConfigCubit(remoteConfigService);
       },
       act: (cubit) => cubit.initialize(),
       expect: () => const <RemoteConfigState>[
         RemoteConfigLoading(),
-        RemoteConfigLoaded(isAwesomeFeatureEnabled: true),
+        RemoteConfigLoaded(isAwesomeFeatureEnabled: true, testValue: 'awesome'),
       ],
       verify: (_) {
         verify(() => remoteConfigService.initialize()).called(1);
@@ -68,6 +74,9 @@ void main() {
         when(
           () => remoteConfigService.getBool('awesome_feature_enabled'),
         ).thenReturn(true);
+        when(
+          () => remoteConfigService.getString('test_value_1'),
+        ).thenReturn('initial');
         return RemoteConfigCubit(remoteConfigService);
       },
       act: (cubit) async {
@@ -75,13 +84,19 @@ void main() {
         when(
           () => remoteConfigService.getBool('awesome_feature_enabled'),
         ).thenReturn(false);
+        when(
+          () => remoteConfigService.getString('test_value_1'),
+        ).thenReturn('updated');
         await cubit.fetchValues();
       },
       expect: () => const <RemoteConfigState>[
         RemoteConfigLoading(),
-        RemoteConfigLoaded(isAwesomeFeatureEnabled: true),
+        RemoteConfigLoaded(isAwesomeFeatureEnabled: true, testValue: 'initial'),
         RemoteConfigLoading(),
-        RemoteConfigLoaded(isAwesomeFeatureEnabled: false),
+        RemoteConfigLoaded(
+          isAwesomeFeatureEnabled: false,
+          testValue: 'updated',
+        ),
       ],
       verify: (_) {
         verify(() => remoteConfigService.initialize()).called(1);
@@ -97,6 +112,9 @@ void main() {
         when(
           () => remoteConfigService.getBool('awesome_feature_enabled'),
         ).thenReturn(true);
+        when(
+          () => remoteConfigService.getString('test_value_1'),
+        ).thenReturn('initial');
         return RemoteConfigCubit(remoteConfigService);
       },
       act: (cubit) async {
@@ -108,7 +126,7 @@ void main() {
       },
       expect: () => const <RemoteConfigState>[
         RemoteConfigLoading(),
-        RemoteConfigLoaded(isAwesomeFeatureEnabled: true),
+        RemoteConfigLoaded(isAwesomeFeatureEnabled: true, testValue: 'initial'),
         RemoteConfigLoading(),
         RemoteConfigError('Exception: forceFetch after init failed'),
       ],
@@ -131,6 +149,9 @@ void main() {
         when(
           () => remoteConfigService.getBool('awesome_feature_enabled'),
         ).thenReturn(true);
+        when(
+          () => remoteConfigService.getString('test_value_1'),
+        ).thenReturn('overlap');
         return RemoteConfigCubit(remoteConfigService);
       },
       act: (cubit) async {
@@ -142,7 +163,7 @@ void main() {
       },
       expect: () => const <RemoteConfigState>[
         RemoteConfigLoading(),
-        RemoteConfigLoaded(isAwesomeFeatureEnabled: true),
+        RemoteConfigLoaded(isAwesomeFeatureEnabled: true, testValue: 'overlap'),
       ],
       verify: (_) {
         verify(() => remoteConfigService.forceFetch()).called(1);

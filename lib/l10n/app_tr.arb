@@ -171,6 +171,54 @@
   "@appInfoSectionTitle": {
     "description": "Uygulama meta verilerinin gösterildiği bölümün başlığı"
   },
+  "settingsRemoteConfigSectionTitle": "Uzak yapılandırma",
+  "@settingsRemoteConfigSectionTitle": {
+    "description": "Uzak yapılandırma durumunu gösteren geliştirici bölümünün başlığı"
+  },
+  "settingsRemoteConfigStatusIdle": "İlk veri bekleniyor",
+  "@settingsRemoteConfigStatusIdle": {
+    "description": "Herhangi bir uzak yapılandırma çağrısı tamamlanmadan önce gösterilen durum etiketi"
+  },
+  "settingsRemoteConfigStatusLoading": "Güncel değerler yükleniyor...",
+  "@settingsRemoteConfigStatusLoading": {
+    "description": "Uzak yapılandırma değerleri alınırken gösterilen durum etiketi"
+  },
+  "settingsRemoteConfigStatusLoaded": "Güncel değerler yüklendi",
+  "@settingsRemoteConfigStatusLoaded": {
+    "description": "Değerler başarıyla yüklendiğinde gösterilen durum etiketi"
+  },
+  "settingsRemoteConfigStatusError": "Uzak yapılandırma alınamadı",
+  "@settingsRemoteConfigStatusError": {
+    "description": "Uzak yapılandırma çağrısı başarısız olduğunda gösterilen durum etiketi"
+  },
+  "settingsRemoteConfigErrorLabel": "Son hata",
+  "@settingsRemoteConfigErrorLabel": {
+    "description": "En son uzak yapılandırma hata mesajını başlatan etiket"
+  },
+  "settingsRemoteConfigFlagLabel": "Awesome özelliği bayrağı",
+  "@settingsRemoteConfigFlagLabel": {
+    "description": "Şu anki awesome feature bayrağını gösteren etiket"
+  },
+  "settingsRemoteConfigFlagEnabled": "Etkin",
+  "@settingsRemoteConfigFlagEnabled": {
+    "description": "Bir boolean bayrak etkin olduğunda gösterilen metin"
+  },
+  "settingsRemoteConfigFlagDisabled": "Devre dışı",
+  "@settingsRemoteConfigFlagDisabled": {
+    "description": "Bir boolean bayrak devre dışı olduğunda gösterilen metin"
+  },
+  "settingsRemoteConfigTestValueLabel": "Test değeri",
+  "@settingsRemoteConfigTestValueLabel": {
+    "description": "Geçerli uzak yapılandırma test değerini gösteren etiket"
+  },
+  "settingsRemoteConfigTestValueEmpty": "Ayarlanmamış",
+  "@settingsRemoteConfigTestValueEmpty": {
+    "description": "Test değeri boş olduğunda gösterilen yer tutucu"
+  },
+  "settingsRemoteConfigRetryButton": "Yeniden getir",
+  "@settingsRemoteConfigRetryButton": {
+    "description": "Uzak yapılandırmayı yeniden getiren düğme etiketi"
+  },
   "appInfoVersionLabel": "Sürüm",
   "@appInfoVersionLabel": {
     "description": "Uygulama sürüm numarasının önündeki etiket"
