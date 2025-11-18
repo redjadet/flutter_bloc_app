@@ -4,7 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/remote_config_diagnostics_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations_de.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations_es.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations_fr.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations_tr.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -98,6 +102,94 @@ void main() {
       await tester.pump();
 
       verify(() => cubit.fetchValues()).called(1);
+    });
+
+    group('localization regression', () {
+      test('all remote config diagnostic strings exist in all supported locales', () {
+        final List<AppLocalizations> localizations = [
+          AppLocalizationsEn(),
+          AppLocalizationsTr(),
+          AppLocalizationsDe(),
+          AppLocalizationsFr(),
+          AppLocalizationsEs(),
+        ];
+
+        for (final AppLocalizations l10n in localizations) {
+          // Verify all required strings are non-empty
+          expect(
+            l10n.settingsRemoteConfigSectionTitle,
+            isNotEmpty,
+            reason:
+                'settingsRemoteConfigSectionTitle missing in ${l10n.localeName}',
+          );
+          expect(
+            l10n.settingsRemoteConfigErrorLabel,
+            isNotEmpty,
+            reason:
+                'settingsRemoteConfigErrorLabel missing in ${l10n.localeName}',
+          );
+          expect(
+            l10n.settingsRemoteConfigRetryButton,
+            isNotEmpty,
+            reason:
+                'settingsRemoteConfigRetryButton missing in ${l10n.localeName}',
+          );
+          expect(
+            l10n.settingsRemoteConfigFlagLabel,
+            isNotEmpty,
+            reason:
+                'settingsRemoteConfigFlagLabel missing in ${l10n.localeName}',
+          );
+          expect(
+            l10n.settingsRemoteConfigFlagEnabled,
+            isNotEmpty,
+            reason:
+                'settingsRemoteConfigFlagEnabled missing in ${l10n.localeName}',
+          );
+          expect(
+            l10n.settingsRemoteConfigFlagDisabled,
+            isNotEmpty,
+            reason:
+                'settingsRemoteConfigFlagDisabled missing in ${l10n.localeName}',
+          );
+          expect(
+            l10n.settingsRemoteConfigTestValueLabel,
+            isNotEmpty,
+            reason:
+                'settingsRemoteConfigTestValueLabel missing in ${l10n.localeName}',
+          );
+          expect(
+            l10n.settingsRemoteConfigTestValueEmpty,
+            isNotEmpty,
+            reason:
+                'settingsRemoteConfigTestValueEmpty missing in ${l10n.localeName}',
+          );
+          expect(
+            l10n.settingsRemoteConfigStatusLoading,
+            isNotEmpty,
+            reason:
+                'settingsRemoteConfigStatusLoading missing in ${l10n.localeName}',
+          );
+          expect(
+            l10n.settingsRemoteConfigStatusLoaded,
+            isNotEmpty,
+            reason:
+                'settingsRemoteConfigStatusLoaded missing in ${l10n.localeName}',
+          );
+          expect(
+            l10n.settingsRemoteConfigStatusError,
+            isNotEmpty,
+            reason:
+                'settingsRemoteConfigStatusError missing in ${l10n.localeName}',
+          );
+          expect(
+            l10n.settingsRemoteConfigStatusIdle,
+            isNotEmpty,
+            reason:
+                'settingsRemoteConfigStatusIdle missing in ${l10n.localeName}',
+          );
+        }
+      });
     });
   });
 }
