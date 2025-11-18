@@ -1,9 +1,11 @@
 # Codebase Analysis and Improvement Findings
 
-**Generated:** $(date)
-**Last Updated:** 2025-01-14 00:00:00
-**Total Line Coverage:** 81.80% (6365/7781 lines) - Updated automatically via `tool/test_coverage.sh`
-**Total Dart Files:** 306 files (excluding generated files)
+<!-- markdownlint-disable MD013 -->
+
+**Generated:** 2025-11-18 00:00:00
+**Last Updated:** 2025-11-18 00:00:00
+**Total Line Coverage:** 85.34% (6186/7249 lines) - Updated automatically via `tool/test_coverage.sh`
+**Total Dart Files:** 308 files (excluding generated files)
 
 ## Status Update
 
@@ -54,6 +56,10 @@
 - ✅ Fixed test timeouts related to network image loading:
   - Updated chat widget tests (`chat_contact_tile_test.dart`, `chat_list_view_test.dart`, `chat_list_page_test.dart`) to use `pump()` instead of `pumpAndSettle()` when network images are involved
   - Prevents test timeouts caused by `CachedNetworkImageWidget` waiting for network requests that never complete in test environment
+- ✅ Centralized context + navigation safety:
+  - Added `ContextUtils.logNotMounted()` helper and refactored async guards (counter, chat, auth, calculator, profile, shared dialogs) to remove duplicate `context.mounted` logging
+  - Adopted `NavigationUtils.maybePop()`/`popOrGoHome()` everywhere dialogs or sheets dismiss, preventing `Navigator.pop` after dispose crashes
+  - Documented the guardrails in `README.md` and enforced them via the new “common bugs prevention” regression suite
 
 **Quick Wins Completed:**
 
@@ -69,7 +75,7 @@ This document provides a comprehensive analysis of the Flutter BLoC app codebase
 
 ### Key Findings
 
-- **Test Coverage:** 82.98% overall coverage (up from 77.29%), with comprehensive test coverage for most UI widgets and presentation components (recently improved with tests for search_page, auth_redirect, calculator_page, and other low-coverage components)
+- **Test Coverage:** 85.34% overall coverage (up from 77.29%), with comprehensive suites for UI widgets, calculator flows, and the dedicated “common bugs prevention” regression tests (run via `tool/test_coverage.sh`)
 - **Test Automation:** Coverage reports now update automatically via `tool/test_coverage.sh` wrapper script
 - **Delivery Checklist Automation:** Created `tool/delivery_checklist.sh` (accessible via `./bin/checklist`) to run `dart format .`, `flutter analyze`, and `tool/test_coverage.sh` in a single command
   - **Optional:** To use just `checklist` without `./bin/`, add the `bin` directory to your PATH:
@@ -95,10 +101,10 @@ This document provides a comprehensive analysis of the Flutter BLoC app codebase
 
 ### Overall Coverage Statistics
 
-- **Total Coverage:** 81.80% (6365/7781 lines) - **Improved from 77.29%**
-- **Files with 0% Coverage:** ~12 files (reduced from 18) - Mostly mock repositories, simple data classes, and debug utilities that don't require tests
-- **Files with <50% Coverage:** ~40 files (reduced from 50)
-- **Files with 100% Coverage:** 70+ files
+- **Total Coverage:** 85.34% (6186/7249 lines) - **Improved from 77.29%**
+- **Files with 0% Coverage:** ~8 files (reduced from 18) - Mostly mock repositories, simple data classes, and debug utilities that don't require tests
+- **Files with <50% Coverage:** ~28 files (reduced from 50)
+- **Files with 100% Coverage:** 90+ files
 
 ### Test Coverage Automation
 
@@ -413,13 +419,30 @@ These improvements can be implemented quickly with high impact:
    - ~~Document authentication redirect logic in `lib/app.dart`~~
    - **Status:** Added comprehensive documentation for route structure, authentication redirect logic, deep link handling, anonymous account upgrading, and route initialization patterns
 
+## New Findings (Stability & Resilience)
+
+1. **Remote Config lacks failure isolation**
+   - Problem: `RemoteConfigCubit.initialize()`/`fetchValues()` call `_remoteConfigService.initialize()`/`forceFetch()` directly. Any Firebase exception bubbles up, the cubit never emits a loading/error state, and the UI may crash on startup.
+   - Fix: Introduce `RemoteConfigLoading`/`RemoteConfigError` states, wrap the async work in `CubitExceptionHandler.executeAsync` (or try/catch), gate every `emit` with `isClosed`, and surface a retry callback so the UI can recover instead of exiting. Add logging via `AppLogger`.
+
+2. **Deep link setup reports success before it is ready**
+   - Problem: `_initialized` flips to `true` before `getInitialLink()`/`linkStream()` run and any thrown exception leaves the cubit thinking it is live while no subscription exists.
+   - Fix: Only mark `_initialized = true` after both initial-link retrieval and stream subscription succeed. Wrap the entire block in try/catch, emit a `DeepLinkError`/`DeepLinkIdle` state on failure, and expose a `retryInitialize()` that tears down the previous subscription before re-running setup.
+
+3. **Chat history persistence is fire-and-forget**
+   - Problem: `_persistHistory()` is awaited nowhere; IO failures from `_historyRepository.save()` become unhandled asynchronous errors and history silently disappears.
+   - Fix: Route the save through `CubitExceptionHandler.executeAsync`, swallow/log benign failures, and optionally surface a non-blocking banner when history cannot be persisted. Ensure `_persistHistory` checks `isClosed` before emitting any state to avoid post-dispose writes.
+
+4. **Regression tests missing for the above resiliency gaps**
+   - Add bloc tests for the new `RemoteConfigCubit` states (success, failure, retry), deep link initialization retries, and chat history persistence failures. Include at least one widget/bloc test per scenario inside `test/shared/common_bugs_prevention_test.dart` or feature-specific suites so the guardrails stay green.
+
 ---
 
 ## 9. Metrics Summary
 
 | Category | Metric | Value |
 |----------|--------|-------|
-| **Test Coverage** | Overall | 81.80% (↑ from 77.29%) |
+| **Test Coverage** | Overall | 85.34% (↑ from 77.29%) |
 | | Files with 0% | ~12 (↓ from 18) |
 | | Files with 100% | 70+ |
 | **Code Quality** | Total Files | 306 Dart files |
@@ -451,37 +474,44 @@ The Flutter BLoC app demonstrates strong architectural patterns and code quality
    - Added comprehensive tests for authentication widgets (logged_out_* widgets)
    - Added comprehensive tests for Google Maps widgets (google_maps_controls, google_maps_location_list)
    - Fixed test timeouts in chat widget tests by using `pump()` instead of `pumpAndSettle()` for network images
-   - **Coverage improved from 72.51% to 81.80%**
-2. **Test Automation:**
+   - **Coverage improved from 72.51% to 85.34%**
+
+1. **Test Automation:**
    - Created `tool/test_coverage.sh` wrapper script for automated coverage report updates
    - Integrated automated coverage reporting into CI workflows
    - Coverage reports now update automatically when running `flutter test --coverage`
-3. **Documentation:**
+
+1. **Documentation:**
    - Documented RestCounterRepository as an example implementation
    - Added comprehensive route documentation in `lib/app.dart` covering authentication redirect logic, deep link handling, and route initialization patterns
    - Added comprehensive documentation with "why" comments and usage examples for complex utilities (StateHelpers, BlocProviderHelpers, GoRouterRefreshStream, ResilientSvgAssetImage)
    - Added DI documentation explaining singleton vs factory patterns and dispose callbacks (`lib/core/di/injector.dart`)
    - Created repository lifecycle documentation (`docs/REPOSITORY_LIFECYCLE.md`)
    - Created shared utilities documentation (`docs/SHARED_UTILITIES.md`)
-4. **Code Quality:**
+
+1. **Code Quality:**
    - Reviewed and confirmed proper handling of discarded futures
    - Removed deprecated code (`errorMessage` getter and `SharedPreferencesChatHistoryRepository` typedef)
    - Fixed linter warnings (`avoid_catches_without_on_clauses` in websocket repository)
-5. **Architecture:**
+
+1. **Architecture:**
    - Routes already extracted from `lib/app.dart` to `lib/app/router/routes.dart` (159 lines, well-organized)
-6. **Performance:**
+
+1. **Performance:**
    - Optimized stream usage patterns:
      - Fixed race condition in `EchoWebsocketRepository.connect()` preventing concurrent connection attempts
      - Improved concurrency handling in `HiveCounterRepositoryWatchHelper` reducing redundant database reads
      - Fixed subscription race condition in `AppLinksDeepLinkService.linkStream()` ensuring proper cleanup
    - All optimizations tested and verified
-7. **Build & Deployment:**
+
+1. **Build & Deployment:**
    - Fixed iOS localization file deletion issue:
      - Updated `tool/ensure_localizations.dart` to always regenerate localization files before iOS builds
      - Added output path to Xcode build script (`ios/Runner.xcodeproj/project.pbxproj`) to prevent Xcode from cleaning generated files
      - Ensures `app_localizations.dart` files are always present when running `flutter run -t dev` on iOS simulator
      - Pre-build script runs automatically in Xcode build phases
-8. **Widget Rebuild Optimization:**
+
+1. **Widget Rebuild Optimization:**
    - Optimized widget rebuilds across multiple pages:
      - GraphqlDemoPage: Replaced BlocBuilder with BlocSelector for progress bar, filter bar, and body (3 separate selectors)
      - SearchPage: Replaced BlocBuilder with BlocSelector for body content
@@ -493,9 +523,9 @@ The Flutter BLoC app demonstrates strong architectural patterns and code quality
      - ProfilePage CustomScrollView
      - SearchResultsGrid
    - All optimizations tested and verified
-9. **Quick Wins:** All 5 quick win items completed
-10. **Additional Test Coverage:** Added comprehensive tests for `search_page.dart` (7 tests), `auth_redirect.dart` (8 tests), and `calculator_page.dart` (5 tests). All 21 new tests passing successfully
-11. **Architecture Documentation:** Added DI documentation, repository lifecycle guide (`docs/REPOSITORY_LIFECYCLE.md`), and shared utilities documentation (`docs/SHARED_UTILITIES.md`)
+1. **Quick Wins:** All 5 quick win items completed
+1. **Additional Test Coverage:** Added comprehensive tests for `search_page.dart` (7 tests), `auth_redirect.dart` (8 tests), and `calculator_page.dart` (5 tests). All 21 new tests passing successfully
+1. **Architecture Documentation:** Added DI documentation, repository lifecycle guide (`docs/REPOSITORY_LIFECYCLE.md`), and shared utilities documentation (`docs/SHARED_UTILITIES.md`)
 
 ### Remaining Areas for Improvement
 
@@ -517,14 +547,16 @@ By prioritizing the high-impact, low-effort improvements first, the codebase has
 **Next Steps:**
 
 1. Review and prioritize recommendations with the team
-2. Create tickets for high-priority items
-3. ~~Schedule time for quick wins~~ ✅ **COMPLETED** - All quick wins implemented
-4. Plan architecture improvements for next major version
-5. ~~Set up automated dependency update monitoring~~ ✅ **COMPLETED** - Renovate and Dependabot configured
-6. ~~Automate test coverage reporting~~ ✅ **COMPLETED** - `tool/test_coverage.sh` created and integrated into CI
-7. ~~Fix iOS localization file deletion issue~~ ✅ **COMPLETED** - Pre-build script updated to always regenerate localization files, Xcode build script configured with output paths
-8. ~~Optimize widget rebuilds~~ ✅ **COMPLETED** - Replaced BlocBuilder with BlocSelector in 4 widgets, added RepaintBoundary around 6 expensive widgets, all optimizations tested and verified
-9. ~~Add tests for remaining low-coverage pages~~ ✅ **COMPLETED** - Added comprehensive tests for search_page (7 tests), auth_redirect (8 tests), and calculator_page (5 tests), all 21 tests passing successfully
-10. ~~Add architecture documentation~~ ✅ **COMPLETED** - Added DI documentation, repository lifecycle guide, and shared utilities documentation
-11. ~~Implement image caching for remote images~~ ✅ **COMPLETED** - Added `cached_network_image` package, created `CachedNetworkImageWidget`, replaced `Image.network` in `ChatContactAvatar`, updated documentation
-12. ~~Fix test timeouts related to network image loading~~ ✅ **COMPLETED** - Updated chat widget tests to use `pump()` instead of `pumpAndSettle()` when network images are involved
+1. Create tickets for high-priority items
+1. ~~Schedule time for quick wins~~ ✅ **COMPLETED** - All quick wins implemented
+1. Plan architecture improvements for next major version
+1. ~~Set up automated dependency update monitoring~~ ✅ **COMPLETED** - Renovate and Dependabot configured
+1. ~~Automate test coverage reporting~~ ✅ **COMPLETED** - `tool/test_coverage.sh` created and integrated into CI
+1. ~~Fix iOS localization file deletion issue~~ ✅ **COMPLETED** - Pre-build script updated to always regenerate localization files, Xcode build script configured with output paths
+1. ~~Optimize widget rebuilds~~ ✅ **COMPLETED** - Replaced BlocBuilder with BlocSelector in 4 widgets, added RepaintBoundary around 6 expensive widgets, all optimizations tested and verified
+1. ~~Add tests for remaining low-coverage pages~~ ✅ **COMPLETED** - Added comprehensive tests for search_page (7 tests), auth_redirect (8 tests), and calculator_page (5 tests), all 21 tests passing successfully
+1. ~~Add architecture documentation~~ ✅ **COMPLETED** - Added DI documentation, repository lifecycle guide, and shared utilities documentation
+1. ~~Implement image caching for remote images~~ ✅ **COMPLETED** - Added `cached_network_image` package, created `CachedNetworkImageWidget`, replaced `Image.network` in `ChatContactAvatar`, updated documentation
+1. ~~Fix test timeouts related to network image loading~~ ✅ **COMPLETED** - Updated chat widget tests to use `pump()` instead of `pumpAndSettle()` when network images are involved
+
+<!-- markdownlint-enable MD013 -->
