@@ -51,7 +51,9 @@ Welcome aboard! This document distills the essentials you need to navigate, exte
 - **Networking**: GraphQL, WebSocket, REST integrations sit in their respective feature/data folders. Samples include `CountriesGraphqlRepository`, `EchoWebsocketRepository`, `HuggingfaceChatRepository`.
 - **Authentication**: `lib/features/auth/` wraps Firebase Auth + FirebaseUI for sign-in/sign-up flows.
 - **Remote Config & Feature Flags**: `RemoteConfigCubit` consumes `RemoteConfigService` to toggle runtime features.
+  Recent updates expose `RemoteConfigLoading`/`RemoteConfigError` states and wrap calls in `CubitExceptionHandler`, so transient failures log nicely and expose retryable errors instead of crashing the cubit.
 - **Deep Links**: `DeepLinkCubit` cooperates with `AppLinksDeepLinkService` to translate universal/custom links into router locations.
+  The cubit also emits `DeepLinkLoading`/`DeepLinkError`, guards against overlapping `initialize()` calls, and exposes `retryInitialize()` so stream errors tear down safely and restart deterministically.
 - **Cross-cutting Services**: `lib/shared/services/` hosts timer, logging, biometric auth, native platform adapters, etc. Prefer extending these instead of introducing ad-hoc singletons.
 
 ## 6. Development Workflow
