@@ -159,5 +159,45 @@ void main() {
         verify(() => service.linkStream()).called(2);
       },
     );
+
+    blocTest<DeepLinkCubit, DeepLinkState>(
+      'tracks consecutive failures and resets on success',
+      build: () {
+        when(service.getInitialLink).thenThrow(Exception('init failed'));
+        return DeepLinkCubit(service: service, parser: parser);
+      },
+      act: (cubit) async {
+        // First failure
+        await cubit.initialize();
+        // Second failure
+        await cubit.retryInitialize();
+        // Third failure (should trigger telemetry at threshold)
+        await cubit.retryInitialize();
+        // Fourth failure
+        await cubit.retryInitialize();
+        // Fifth failure (should trigger telemetry at threshold)
+        await cubit.retryInitialize();
+        // Success - should reset counter
+        when(service.getInitialLink).thenAnswer((_) async => null);
+        await cubit.retryInitialize();
+      },
+      expect: () => const <DeepLinkState>[
+        DeepLinkLoading(),
+        DeepLinkError('Exception: init failed'),
+        DeepLinkLoading(),
+        DeepLinkError('Exception: init failed'),
+        DeepLinkLoading(),
+        DeepLinkError('Exception: init failed'),
+        DeepLinkLoading(),
+        DeepLinkError('Exception: init failed'),
+        DeepLinkLoading(),
+        DeepLinkError('Exception: init failed'),
+        DeepLinkLoading(),
+        DeepLinkIdle(),
+      ],
+      verify: (_) {
+        verify(service.getInitialLink).called(6);
+      },
+    );
   });
 }
