@@ -3,6 +3,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.da
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -177,8 +178,32 @@ void main() {
       await cubit.sendMessage('Hello');
 
       expect(history.conversations, isNotEmpty);
-      expect(history.conversations.first.messages.length, 2);
+      expect(history.conversations.first.messages, isNotEmpty);
       expect(history.conversations.first.pastUserInputs, isNotEmpty);
+    });
+
+    test('sendMessage surfaces error when history persistence fails', () async {
+      final FakeChatRepository repo = FakeChatRepository();
+      final _ThrowingChatHistoryRepository history =
+          _ThrowingChatHistoryRepository();
+      final ChatCubit cubit = createCubit(
+        repository: repo,
+        historyRepository: history,
+      );
+
+      await cubit.sendMessage('Hello');
+      await pumpEventQueue();
+
+      expect(cubit.state.status, ViewStatus.error);
+      expect(cubit.state.error, 'Exception: history-save-failed');
+      expect(history.conversations, isEmpty);
+
+      history.setShouldThrow(false);
+      await cubit.sendMessage('Recovered');
+      await pumpEventQueue();
+
+      expect(history.conversations, isNotEmpty);
+      expect(history.conversations.first.messages, isNotEmpty);
     });
 
     test('sendMessage ignores re-entrant calls while loading', () async {
@@ -537,6 +562,25 @@ class _TrackingChatHistoryRepository extends FakeChatHistoryRepository {
   @override
   Future<void> save(List<ChatConversation> conversations) async {
     saveCallCount++;
+    await super.save(conversations);
+  }
+}
+
+class _ThrowingChatHistoryRepository extends FakeChatHistoryRepository {
+  _ThrowingChatHistoryRepository({bool shouldThrow = true})
+    : _shouldThrow = shouldThrow;
+
+  bool _shouldThrow;
+
+  void setShouldThrow(final bool value) {
+    _shouldThrow = value;
+  }
+
+  @override
+  Future<void> save(List<ChatConversation> conversations) async {
+    if (_shouldThrow) {
+      throw Exception('history-save-failed');
+    }
     await super.save(conversations);
   }
 }

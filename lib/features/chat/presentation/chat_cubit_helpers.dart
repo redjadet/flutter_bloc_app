@@ -102,8 +102,28 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     return null;
   }
 
-  Future<void> _persistHistory(final List<ChatConversation> history) =>
-      _historyRepository.save(history);
+  Future<void> _persistHistory(final List<ChatConversation> history) async {
+    if (isClosed) {
+      return;
+    }
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: () => _historyRepository.save(history),
+      logContext: 'ChatCubit._persistHistory',
+      onError: (final String message) {
+        AppLogger.error('Chat history persistence failed: $message');
+        if (isClosed) {
+          return;
+        }
+        final ChatState current = _state;
+        emitState(
+          current.copyWith(
+            error: current.error ?? message,
+            status: ViewStatus.error,
+          ),
+        );
+      },
+    );
+  }
 
   String _generateConversationId(final DateTime timestamp) =>
       'conversation_${timestamp.microsecondsSinceEpoch}';
