@@ -109,6 +109,21 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _historyRepository.save(history),
       logContext: 'ChatCubit._persistHistory',
+      onSuccess: () {
+        // Clear error on successful write to prevent stale error banners
+        if (isClosed) {
+          return;
+        }
+        final ChatState current = _state;
+        if (current.status == ViewStatus.error || current.error != null) {
+          emitState(
+            current.copyWith(
+              error: null,
+              status: ViewStatus.success,
+            ),
+          );
+        }
+      },
       onError: (final String message) {
         AppLogger.error('Chat history persistence failed: $message');
         if (isClosed) {
