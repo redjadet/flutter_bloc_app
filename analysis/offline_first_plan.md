@@ -1,6 +1,6 @@
 # Offline-First Implementation Plan
 
-This document revalidates the offline-first requirements after another pass over the codebase and folds in the guardrails from `AGENTS.md` (Hive everywhere, DI through `getIt`, responsive widgets, and checklist-driven delivery). It is intentionally implementation-oriented so each workstream can be executed without re-triaging requirements.
+This document revalidates the offline-first requirements after another pass over the codebase and folds in the existing guardrails (Hive everywhere, DI through `getIt`, responsive widgets, and checklist-driven delivery). It is intentionally implementation-oriented so each workstream can be executed without re-triaging requirements.
 
 ## 1. Current State & Observations
 
@@ -99,7 +99,7 @@ This document revalidates the offline-first requirements after another pass over
 ## 6. Reference Implementation Guides
 
 - Flutter’s official offline-first guidance on synchronization flags and push-triggered sync informs the metadata and background task design: <https://docs.flutter.dev/app-architecture/design-patterns/offline-first>
-- `AGENTS.md`, `README.md`, and `docs/new_developer_guide.md` stay canonical for guardrails (Hive usage, DI lifecycle, responsive UI expectations, checklist workflow).
+- `README.md`, `docs/new_developer_guide.md`, and other repo docs stay canonical for guardrails (Hive usage, DI lifecycle, responsive UI expectations, checklist workflow).
 
 ## 7. Feature Adoption Matrix
 
