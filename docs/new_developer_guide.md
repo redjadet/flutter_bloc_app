@@ -116,6 +116,21 @@ Tips:
 - **GraphQL/WebSocket issues**: Check the environment constants in `lib/core/config` and confirm the emulator/network allows outbound connections.
 - **Maps API keys**: For Android, add to `android/app/src/main/AndroidManifest.xml`; for iOS, configure `ios/Runner/AppDelegate.swift` + `Info.plist`. The app gracefully falls back to Apple Maps when Google keys are missing.
 - **Coverage script fails**: Ensure `lcov` file exists (run tests with `--coverage`) and that `dart run tool/update_coverage_summary.dart` runs from repo root.
+- **Firebase upgrades break iOS build**: After bumping Firebase packages, run the clean sweep Firebase recommends so the simulator doesn't load stale pods:
+
+  ```bash
+  flutter clean
+  cd ios
+  rm -rf Pods Podfile.lock
+  pod repo update
+  pod install
+  cd ..
+  flutter pub get
+  rm -rf ~/Library/Developer/Xcode/DerivedData # optional but fixes module cache issues
+  flutter run
+  ```
+
+  This clears cached frameworks so duplicate symbol/module errors like `FLTFirebaseDatabasePlugin has different definitions` disappear.
 
 ### Common Bugs to Avoid
 

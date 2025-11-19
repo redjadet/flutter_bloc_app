@@ -385,9 +385,9 @@ flutter test --update-goldens test/counter_page_golden_test.dart
 - `firebase_core` ^4.2.1
 - `firebase_auth` ^6.1.2
 - `firebase_analytics` ^12.0.4
-- `firebase_crashlytics` ^5.0.4
-- `firebase_remote_config` ^6.1.0
-- `firebase_database` ^12.0.4
+- `firebase_crashlytics` ^5.0.5
+- `firebase_remote_config` ^6.1.2
+- `firebase_database` ^12.1.0
 - `firebase_ui_auth` ^3.0.0
 
 ### UI & Design
@@ -424,7 +424,7 @@ flutter test --update-goldens test/counter_page_golden_test.dart
 
 ### Development Tools
 
-- `build_runner` ^2.10.2 - Code generation
+- `build_runner` ^2.10.4 - Code generation
 - `bloc_test` ^10.0.0 - BLoC testing
 - `golden_toolkit` ^0.15.0 - Golden tests
 - `mocktail` ^1.0.4 - Mocking framework
