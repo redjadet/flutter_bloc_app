@@ -1,0 +1,129 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
+
+/// Represents simplified connectivity states for offline-first coordination.
+enum NetworkStatus { unknown, online, offline }
+
+abstract class NetworkStatusService {
+  Stream<NetworkStatus> get statusStream;
+  Future<NetworkStatus> getCurrentStatus();
+  Future<void> dispose();
+}
+
+class ConnectivityNetworkStatusService implements NetworkStatusService {
+  ConnectivityNetworkStatusService({
+    Connectivity? connectivity,
+    Duration debounce = const Duration(milliseconds: 250),
+  }) : _connectivity = connectivity ?? Connectivity(),
+       _debounce = debounce {
+    _controller = StreamController<NetworkStatus>.broadcast(
+      onListen: _onListen,
+      onCancel: _onCancel,
+    );
+  }
+
+  final Connectivity _connectivity;
+  final Duration _debounce;
+  late final StreamController<NetworkStatus> _controller;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  Timer? _debounceTimer;
+  NetworkStatus _latest = NetworkStatus.unknown;
+  bool _disposed = false;
+
+  @override
+  Stream<NetworkStatus> get statusStream => _controller.stream.distinct();
+
+  @override
+  Future<NetworkStatus> getCurrentStatus() async {
+    final dynamic raw = await _connectivity.checkConnectivity();
+    final ConnectivityResult result = raw is List<ConnectivityResult>
+        ? (raw.isNotEmpty ? raw.first : ConnectivityResult.none)
+        : raw as ConnectivityResult;
+    final NetworkStatus next = _mapConnectivity(result);
+    _latest = next;
+    return next;
+  }
+
+  void _onListen() {
+    if (_connectivitySubscription != null) {
+      return;
+    }
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      (final List<ConnectivityResult> results) {
+        final ConnectivityResult result = results.isNotEmpty
+            ? results.first
+            : ConnectivityResult.none;
+        _handleConnectivityResult(result);
+      },
+      onError: (Object error, StackTrace stackTrace) {
+        AppLogger.error(
+          'ConnectivityNetworkStatusService.listen failed',
+          error,
+          stackTrace,
+        );
+      },
+    );
+    unawaited(
+      getCurrentStatus().then((NetworkStatus status) {
+        if (_controller.hasListener && !_controller.isClosed) {
+          _controller.add(status);
+        }
+      }),
+    );
+  }
+
+  void _onCancel() {
+    if (_controller.hasListener) {
+      return;
+    }
+    _debounceTimer?.cancel();
+    _debounceTimer = null;
+    unawaited(_connectivitySubscription?.cancel());
+    _connectivitySubscription = null;
+  }
+
+  void _handleConnectivityResult(final ConnectivityResult result) {
+    final NetworkStatus next = _mapConnectivity(result);
+    if (next == _latest) {
+      return;
+    }
+    _latest = next;
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(_debounce, () {
+      if (_controller.isClosed) {
+        return;
+      }
+      _controller.add(next);
+    });
+  }
+
+  NetworkStatus _mapConnectivity(final ConnectivityResult result) {
+    switch (result) {
+      case ConnectivityResult.bluetooth:
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.ethernet:
+      case ConnectivityResult.mobile:
+      case ConnectivityResult.vpn:
+        return NetworkStatus.online;
+      case ConnectivityResult.none:
+        return NetworkStatus.offline;
+      case ConnectivityResult.other:
+        return NetworkStatus.unknown;
+    }
+  }
+
+  @override
+  Future<void> dispose() async {
+    if (_disposed) {
+      return;
+    }
+    _disposed = true;
+    _debounceTimer?.cancel();
+    _debounceTimer = null;
+    await _connectivitySubscription?.cancel();
+    _connectivitySubscription = null;
+    await _controller.close();
+  }
+}

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CounterSnapshot {
 
- int get count; String? get userId; DateTime? get lastChanged;
+ int get count; String? get userId; DateTime? get lastChanged; String? get changeId; DateTime? get lastSyncedAt; bool get synchronized;
 /// Create a copy of CounterSnapshot
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $CounterSnapshotCopyWith<CounterSnapshot> get copyWith => _$CounterSnapshotCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CounterSnapshot&&(identical(other.count, count) || other.count == count)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.lastChanged, lastChanged) || other.lastChanged == lastChanged));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CounterSnapshot&&(identical(other.count, count) || other.count == count)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.lastChanged, lastChanged) || other.lastChanged == lastChanged)&&(identical(other.changeId, changeId) || other.changeId == changeId)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.synchronized, synchronized) || other.synchronized == synchronized));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,count,userId,lastChanged);
+int get hashCode => Object.hash(runtimeType,count,userId,lastChanged,changeId,lastSyncedAt,synchronized);
 
 @override
 String toString() {
-  return 'CounterSnapshot(count: $count, userId: $userId, lastChanged: $lastChanged)';
+  return 'CounterSnapshot(count: $count, userId: $userId, lastChanged: $lastChanged, changeId: $changeId, lastSyncedAt: $lastSyncedAt, synchronized: $synchronized)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $CounterSnapshotCopyWith<$Res>  {
   factory $CounterSnapshotCopyWith(CounterSnapshot value, $Res Function(CounterSnapshot) _then) = _$CounterSnapshotCopyWithImpl;
 @useResult
 $Res call({
- int count, String? userId, DateTime? lastChanged
+ int count, String? userId, DateTime? lastChanged, String? changeId, DateTime? lastSyncedAt, bool synchronized
 });
 
 
@@ -65,12 +65,15 @@ class _$CounterSnapshotCopyWithImpl<$Res>
 
 /// Create a copy of CounterSnapshot
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? count = null,Object? userId = freezed,Object? lastChanged = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? count = null,Object? userId = freezed,Object? lastChanged = freezed,Object? changeId = freezed,Object? lastSyncedAt = freezed,Object? synchronized = null,}) {
   return _then(_self.copyWith(
 count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
 as int,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,lastChanged: freezed == lastChanged ? _self.lastChanged : lastChanged // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,changeId: freezed == changeId ? _self.changeId : changeId // ignore: cast_nullable_to_non_nullable
+as String?,lastSyncedAt: freezed == lastSyncedAt ? _self.lastSyncedAt : lastSyncedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,synchronized: null == synchronized ? _self.synchronized : synchronized // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -155,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int count,  String? userId,  DateTime? lastChanged)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int count,  String? userId,  DateTime? lastChanged,  String? changeId,  DateTime? lastSyncedAt,  bool synchronized)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CounterSnapshot() when $default != null:
-return $default(_that.count,_that.userId,_that.lastChanged);case _:
+return $default(_that.count,_that.userId,_that.lastChanged,_that.changeId,_that.lastSyncedAt,_that.synchronized);case _:
   return orElse();
 
 }
@@ -176,10 +179,10 @@ return $default(_that.count,_that.userId,_that.lastChanged);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int count,  String? userId,  DateTime? lastChanged)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int count,  String? userId,  DateTime? lastChanged,  String? changeId,  DateTime? lastSyncedAt,  bool synchronized)  $default,) {final _that = this;
 switch (_that) {
 case _CounterSnapshot():
-return $default(_that.count,_that.userId,_that.lastChanged);case _:
+return $default(_that.count,_that.userId,_that.lastChanged,_that.changeId,_that.lastSyncedAt,_that.synchronized);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +199,10 @@ return $default(_that.count,_that.userId,_that.lastChanged);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int count,  String? userId,  DateTime? lastChanged)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int count,  String? userId,  DateTime? lastChanged,  String? changeId,  DateTime? lastSyncedAt,  bool synchronized)?  $default,) {final _that = this;
 switch (_that) {
 case _CounterSnapshot() when $default != null:
-return $default(_that.count,_that.userId,_that.lastChanged);case _:
+return $default(_that.count,_that.userId,_that.lastChanged,_that.changeId,_that.lastSyncedAt,_that.synchronized);case _:
   return null;
 
 }
@@ -211,12 +214,15 @@ return $default(_that.count,_that.userId,_that.lastChanged);case _:
 @JsonSerializable()
 
 class _CounterSnapshot implements CounterSnapshot {
-  const _CounterSnapshot({required this.count, this.userId, this.lastChanged});
+  const _CounterSnapshot({required this.count, this.userId, this.lastChanged, this.changeId, this.lastSyncedAt, this.synchronized = false});
   factory _CounterSnapshot.fromJson(Map<String, dynamic> json) => _$CounterSnapshotFromJson(json);
 
 @override final  int count;
 @override final  String? userId;
 @override final  DateTime? lastChanged;
+@override final  String? changeId;
+@override final  DateTime? lastSyncedAt;
+@override@JsonKey() final  bool synchronized;
 
 /// Create a copy of CounterSnapshot
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CounterSnapshot&&(identical(other.count, count) || other.count == count)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.lastChanged, lastChanged) || other.lastChanged == lastChanged));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CounterSnapshot&&(identical(other.count, count) || other.count == count)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.lastChanged, lastChanged) || other.lastChanged == lastChanged)&&(identical(other.changeId, changeId) || other.changeId == changeId)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.synchronized, synchronized) || other.synchronized == synchronized));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,count,userId,lastChanged);
+int get hashCode => Object.hash(runtimeType,count,userId,lastChanged,changeId,lastSyncedAt,synchronized);
 
 @override
 String toString() {
-  return 'CounterSnapshot(count: $count, userId: $userId, lastChanged: $lastChanged)';
+  return 'CounterSnapshot(count: $count, userId: $userId, lastChanged: $lastChanged, changeId: $changeId, lastSyncedAt: $lastSyncedAt, synchronized: $synchronized)';
 }
 
 
@@ -251,7 +257,7 @@ abstract mixin class _$CounterSnapshotCopyWith<$Res> implements $CounterSnapshot
   factory _$CounterSnapshotCopyWith(_CounterSnapshot value, $Res Function(_CounterSnapshot) _then) = __$CounterSnapshotCopyWithImpl;
 @override @useResult
 $Res call({
- int count, String? userId, DateTime? lastChanged
+ int count, String? userId, DateTime? lastChanged, String? changeId, DateTime? lastSyncedAt, bool synchronized
 });
 
 
@@ -268,12 +274,15 @@ class __$CounterSnapshotCopyWithImpl<$Res>
 
 /// Create a copy of CounterSnapshot
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? count = null,Object? userId = freezed,Object? lastChanged = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? count = null,Object? userId = freezed,Object? lastChanged = freezed,Object? changeId = freezed,Object? lastSyncedAt = freezed,Object? synchronized = null,}) {
   return _then(_CounterSnapshot(
 count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
 as int,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,lastChanged: freezed == lastChanged ? _self.lastChanged : lastChanged // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,changeId: freezed == changeId ? _self.changeId : changeId // ignore: cast_nullable_to_non_nullable
+as String?,lastSyncedAt: freezed == lastSyncedAt ? _self.lastSyncedAt : lastSyncedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,synchronized: null == synchronized ? _self.synchronized : synchronized // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

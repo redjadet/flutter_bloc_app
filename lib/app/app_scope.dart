@@ -6,6 +6,9 @@ import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/features.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/shared/responsive/responsive.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:go_router/go_router.dart';
 
 class AppScope extends StatelessWidget {
@@ -17,8 +20,17 @@ class AppScope extends StatelessWidget {
   Widget build(final BuildContext context) {
     // Ensure DI is configured when running tests that directly pump MyApp
     ensureConfigured();
+    final BackgroundSyncCoordinator syncCoordinator =
+        getIt<BackgroundSyncCoordinator>();
+    unawaited(syncCoordinator.start());
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (_) => SyncStatusCubit(
+            networkStatusService: getIt<NetworkStatusService>(),
+            coordinator: syncCoordinator,
+          ),
+        ),
         BlocProvider(
           create: (_) {
             final cubit = CounterCubit(

@@ -2,6 +2,24 @@
 
 This document revalidates the offline-first requirements after another pass over the codebase and folds in the existing guardrails (Hive everywhere, DI through `getIt`, responsive widgets, and checklist-driven delivery). It is intentionally implementation-oriented so each workstream can be executed without re-triaging requirements.
 
+## Progress Update (2025-11-19)
+
+- ✅ **Foundational services wired:** Added `ConnectivityNetworkStatusService`, `PendingSyncRepository`, and `BackgroundSyncCoordinator` with new DI registrations so every feature can subscribe to sync/connection state (see `lib/shared/services/network_status_service.dart` and `lib/shared/sync/*`).
+- ✅ **Sync operation primitives:** Defined the `SyncOperation` Freezed model + Hive-backed storage, plus unit tests (`test/shared/sync/pending_sync_repository_test.dart`) ensuring queue behavior.
+- ✅ **Coordinator hooks + status surface:** Introduced `SyncableRepository` + registry, taught `BackgroundSyncCoordinator` to pull/process operations per entity, autostarted it from `AppScope`, and added `SyncStatusCubit` so widgets can consume live network/sync state.
+- ✅ **Counter UX wiring:** Counter page now shows `CounterSyncBanner` state (offline/syncing/pending) and dev-only sync inspector, backed by new l10n strings across locales.
+- ⚙️ **Immediate focus:** Finalize counter-specific tests + metadata migrations and onboard the next feature into the sync registry.
+
+## Immediate Next Steps
+
+1. **Finalize counter offline UX/tests**
+   - Counter bloc/widget tests need to validate queued operations, sync banners, and last-synced metadata now that `OfflineFirstCounterRepository` is in place.
+   - Surface `SyncStatusCubit` output on the counter page (badge + queued count), plus add dev-only inspector for pending operations.
+2. **Coordinator test coverage**
+   - Add unit tests for `ConnectivityNetworkStatusService` (debounce/dispose) and `BackgroundSyncCoordinator` (pullRemote, retry scheduling) using fakes.
+3. **Expand sync adoption**
+   - Begin wiring the next feature (chat/search) into the sync registry following the matrix in §7, documenting contracts under `docs/offline_first/`.
+
 ## 1. Current State & Observations
 
 - **Architecture:** Features follow the clean Domain → Data → Presentation split enforced through cubits/blocs (see `lib/features/**`) and DI via GetIt (`lib/core/di/injector_registrations.dart`). Storage primitives are centralized in `lib/shared/storage` with `HiveService` + `HiveRepositoryBase` handling encrypted boxes and error guards.

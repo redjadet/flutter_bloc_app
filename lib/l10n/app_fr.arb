@@ -543,5 +543,15 @@
   },
   "googleMapsPageMissingKeyTitle": "Ajoutez une clé d’API Google Maps",
   "googleMapsPageMissingKeyDescription": "Configurez des clés Google Maps valides dans les projets natifs pour utiliser cette démo.",
-  "googleMapsPageUnsupportedDescription": "La démo Google Maps est disponible uniquement sur Android et iOS."
+  "googleMapsPageUnsupportedDescription": "La démo Google Maps est disponible uniquement sur Android et iOS.",
+  "syncStatusOfflineTitle": "Vous êtes hors ligne",
+  "syncStatusOfflineMessage": "Nous synchroniserons {pendingCount, plural, =0 {vos changements} one {# changement} other {# changements}} dès que vous serez reconnecté(e).",
+  "syncStatusSyncingTitle": "Synchronisation en cours",
+  "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Finalisation des dernières mises à jour.} one {Synchronisation de # changement…} other {Synchronisation de # changements…}}",
+  "syncStatusPendingTitle": "Changements en attente",
+  "syncStatusPendingMessage": "{pendingCount, plural, one {# changement en attente de synchronisation.} other {# changements en attente de synchronisation.}}",
+  "syncQueueInspectorButton": "Voir la file de synchro",
+  "syncQueueInspectorEmpty": "Aucune opération en attente.",
+  "syncQueueInspectorTitle": "Opérations de synchronisation",
+  "syncQueueInspectorOperation": "Entité : {entity}, tentatives : {attempts}"
 }

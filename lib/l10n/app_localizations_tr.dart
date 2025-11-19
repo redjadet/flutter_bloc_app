@@ -765,4 +765,62 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get googleMapsPageUnsupportedDescription =>
       'Google Haritalar demosu yalnızca Android ve iOS derlemelerinde kullanılabilir.';
+
+  @override
+  String get syncStatusOfflineTitle => 'Çevrimdışısın';
+
+  @override
+  String syncStatusOfflineMessage(int pendingCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pendingCount,
+      locale: localeName,
+      other: '# değişikliği',
+      one: '# değişikliği',
+      zero: 'Değişikliklerini',
+    );
+    return '$_temp0 çevrimiçi olduğunda senkronize edeceğiz.';
+  }
+
+  @override
+  String get syncStatusSyncingTitle => 'Değişiklikler senkronize ediliyor';
+
+  @override
+  String syncStatusSyncingMessage(int pendingCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pendingCount,
+      locale: localeName,
+      other: '# değişiklik senkronize ediliyor…',
+      one: '# değişiklik senkronize ediliyor…',
+      zero: 'Son güncellemeler tamamlanıyor.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncStatusPendingTitle => 'Bekleyen değişiklikler';
+
+  @override
+  String syncStatusPendingMessage(int pendingCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pendingCount,
+      locale: localeName,
+      other: 'Senkronizasyon bekleyen # değişiklik.',
+      one: 'Senkronizasyon bekleyen # değişiklik.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncQueueInspectorButton => 'Senkron kuyruğunu göster';
+
+  @override
+  String get syncQueueInspectorEmpty => 'Bekleyen işlem yok.';
+
+  @override
+  String get syncQueueInspectorTitle => 'Bekleyen senkron işlemleri';
+
+  @override
+  String syncQueueInspectorOperation(String entity, int attempts) {
+    return 'Varlık: $entity, deneme: $attempts';
+  }
 }

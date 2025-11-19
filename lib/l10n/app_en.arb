@@ -1007,5 +1007,68 @@
   "googleMapsPageUnsupportedDescription": "The Google Maps demo is only available on Android and iOS builds.",
   "@googleMapsPageUnsupportedDescription": {
     "description": "Message shown when the Google Maps demo is opened on an unsupported platform"
+  },
+  "syncStatusOfflineTitle": "You're offline",
+  "@syncStatusOfflineTitle": {
+    "description": "Title displayed when device is offline"
+  },
+  "syncStatusOfflineMessage": "We will sync {pendingCount, plural, =0 {your changes} one {# change} other {# changes}} once you're back online.",
+  "@syncStatusOfflineMessage": {
+    "description": "Explains queued sync while offline",
+    "placeholders": {
+      "pendingCount": {
+        "type": "int"
+      }
+    }
+  },
+  "syncStatusSyncingTitle": "Syncing changes",
+  "@syncStatusSyncingTitle": {
+    "description": "Title when sync is in progress"
+  },
+  "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Wrapping up your latest updates.} one {Syncing # change…} other {Syncing # changes…}}",
+  "@syncStatusSyncingMessage": {
+    "description": "Message when sync is running",
+    "placeholders": {
+      "pendingCount": {
+        "type": "int"
+      }
+    }
+  },
+  "syncStatusPendingTitle": "Changes queued",
+  "@syncStatusPendingTitle": {
+    "description": "Title when changes are still pending"
+  },
+  "syncStatusPendingMessage": "{pendingCount, plural, one {# change waiting to sync.} other {# changes waiting to sync.}}",
+  "@syncStatusPendingMessage": {
+    "description": "Message describing pending operations",
+    "placeholders": {
+      "pendingCount": {
+        "type": "int"
+      }
+    }
+  },
+  "syncQueueInspectorButton": "View sync queue",
+  "@syncQueueInspectorButton": {
+    "description": "Button label for opening the sync queue inspector"
+  },
+  "syncQueueInspectorEmpty": "No pending operations.",
+  "@syncQueueInspectorEmpty": {
+    "description": "Shown when inspector has no items"
+  },
+  "syncQueueInspectorTitle": "Pending Sync Operations",
+  "@syncQueueInspectorTitle": {
+    "description": "Title for the sync queue inspector sheet"
+  },
+  "syncQueueInspectorOperation": "Entity: {entity}, attempts: {attempts}",
+  "@syncQueueInspectorOperation": {
+    "description": "Describes a pending operation",
+    "placeholders": {
+      "entity": {
+        "type": "String"
+      },
+      "attempts": {
+        "type": "int"
+      }
+    }
   }
 }

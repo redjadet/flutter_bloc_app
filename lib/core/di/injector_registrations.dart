@@ -42,9 +42,13 @@ import 'package:flutter_bloc_app/features/websocket/data/echo_websocket_reposito
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/storage/shared_preferences_migration_service.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
+import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:http/http.dart' as http;
 
 /// Registers all application dependencies.
@@ -64,6 +68,7 @@ Future<void> registerAllDependencies() async {
   _registerRemoteConfigServices();
   _registerSearchServices();
   _registerUtilityServices();
+  _registerSyncServices();
 }
 
 /// Registers storage-related services (Hive, migration).
@@ -215,5 +220,27 @@ void _registerUtilityServices() {
   );
   registerLazySingletonIfAbsent<ErrorNotificationService>(
     SnackbarErrorNotificationService.new,
+  );
+}
+
+void _registerSyncServices() {
+  registerLazySingletonIfAbsent<NetworkStatusService>(
+    ConnectivityNetworkStatusService.new,
+    dispose: (final service) => service.dispose(),
+  );
+  registerLazySingletonIfAbsent<SyncableRepositoryRegistry>(
+    SyncableRepositoryRegistry.new,
+  );
+  registerLazySingletonIfAbsent<PendingSyncRepository>(
+    () => PendingSyncRepository(hiveService: getIt<HiveService>()),
+  );
+  registerLazySingletonIfAbsent<BackgroundSyncCoordinator>(
+    () => BackgroundSyncCoordinator(
+      repository: getIt<PendingSyncRepository>(),
+      networkStatusService: getIt<NetworkStatusService>(),
+      timerService: getIt<TimerService>(),
+      registry: getIt<SyncableRepositoryRegistry>(),
+    ),
+    dispose: (final coordinator) => coordinator.dispose(),
   );
 }

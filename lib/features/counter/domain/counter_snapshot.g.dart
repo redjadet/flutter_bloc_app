@@ -13,6 +13,11 @@ _CounterSnapshot _$CounterSnapshotFromJson(Map<String, dynamic> json) =>
       lastChanged: json['lastChanged'] == null
           ? null
           : DateTime.parse(json['lastChanged'] as String),
+      changeId: json['changeId'] as String?,
+      lastSyncedAt: json['lastSyncedAt'] == null
+          ? null
+          : DateTime.parse(json['lastSyncedAt'] as String),
+      synchronized: json['synchronized'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$CounterSnapshotToJson(_CounterSnapshot instance) =>
@@ -20,4 +25,7 @@ Map<String, dynamic> _$CounterSnapshotToJson(_CounterSnapshot instance) =>
       'count': instance.count,
       'userId': instance.userId,
       'lastChanged': instance.lastChanged?.toIso8601String(),
+      'changeId': instance.changeId,
+      'lastSyncedAt': instance.lastSyncedAt?.toIso8601String(),
+      'synchronized': instance.synchronized,
     };
