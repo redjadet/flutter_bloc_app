@@ -1,5 +1,7 @@
 # Offline-First Implementation Plan
 
+This document revalidates the offline-first requirements after another pass over the codebase and folds in the guardrails from `AGENTS.md` (Hive everywhere, DI through `getIt`, responsive widgets, and checklist-driven delivery). It is intentionally implementation-oriented so each workstream can be executed without re-triaging requirements.
+
 ## 1. Current State & Observations
 
 - **Architecture:** Features follow the clean Domain → Data → Presentation split enforced through cubits/blocs (see `lib/features/**`) and DI via GetIt (`lib/core/di/injector_registrations.dart`). Storage primitives are centralized in `lib/shared/storage` with `HiveService` + `HiveRepositoryBase` handling encrypted boxes and error guards.
@@ -19,13 +21,13 @@
 ### 3.1 Local data persistence layer
 
 - **Introduce feature-specific local data sources**: For every remote repository, add a Hive-backed counterpart (e.g., `ChatLocalDataSource`, `ProfileLocalDataSource`, `GraphqlCountriesCache`, `SearchHistoryRepository`) that extends `HiveRepositoryBase` and follows the `StorageGuard` pattern established in `lib/features/counter/data/hive_counter_repository.dart`.
-- **Schema planning**: Create one encrypted box per bounded context (`chat_conversations`, `chat_pending_messages`, `profile`, `remote_config_cache`, etc.) and document keys. Keep payloads serialized via existing domain models (Freezed/JSON) to avoid double maintenance.
-- **Migrations**: Update `SharedPreferencesMigrationService` (or add a dedicated `OfflineDataMigrationService`) to copy legacy SharedPreferences data into new boxes on upgrade and to seed defaults for fresh installs.
-- **DI wiring**: Register the new local data sources in `_registerStorageServices`/feature-specific sections, and expose them through repositories so cubits consume a single `OfflineFirst*Repository` instead of juggling multiple sources manually.
+- **Schema planning**: Create one encrypted box per bounded context (`chat_conversations`, `chat_pending_messages`, `profile`, `remote_config_cache`, etc.) and document keys. Keep payloads serialized via existing domain models (Freezed/JSON) to avoid double maintenance and stay under the `file_length_lint` limit by breaking helpers into dedicated files when needed.
+- **Migrations**: Update `SharedPreferencesMigrationService` (or add a dedicated `OfflineDataMigrationService`) to copy legacy SharedPreferences data into new boxes on upgrade and to seed defaults for fresh installs. Use `InitializationGuard.executeSafely` so failed migrations never brick startup.
+- **DI wiring**: Register the new local data sources in `_registerStorageServices`/feature-specific sections, and expose them through repositories so cubits consume a single `OfflineFirst*Repository` instead of juggling multiple sources manually. Remember to register dispose callbacks for queue/controllers so `getIt.reset()` in tests remains deterministic.
 
 ### 3.2 Domain layer metadata & contracts
 
-- **Augment domain models** with sync metadata: add `DateTime lastSyncedAt`, `int version`/`String etag`, and optional `SyncStatus status` enums to entities like `ChatConversation`, `ChatMessage`, `CounterSnapshot`, and any list items that can be mutated offline.
+- **Augment domain models** with sync metadata: add `DateTime lastSyncedAt`, `int version`/`String etag`, a `bool synchronized` flag (per Flutter’s offline-first guidance), and optional `SyncStatus status` enums to entities like `ChatConversation`, `ChatMessage`, `CounterSnapshot`, and any list items that can be mutated offline.
 - **Repository contracts** should expand beyond `load/save` to include `upsert`, `markPending`, `resolveConflict`, and `watchPendingOperations` as needed. Keep interfaces pure (no Flutter imports) so they remain testable.
 
 ### 3.3 Conflict resolution strategies
@@ -37,13 +39,14 @@
 
 ### 3.4 Pending operation queue & sync orchestration
 
-- **SyncOperation model**: Define a `SyncOperation` Freezed class (box-backed) capturing entity type, payload snapshot, dependencies, and retry metadata (attempt count, nextRetryAt).
-- **Queue repository**: Build `PendingSyncRepository` on Hive to enqueue operations whenever the user mutates data while offline or when remote calls fail. Provide APIs to peek + lock batches for processing.
+- **SyncOperation model**: Define a `SyncOperation` Freezed class (box-backed) capturing entity type, payload snapshot, dependencies, retry metadata (attempt count, `nextRetryAt`), and an idempotency token so remote APIs can drop duplicates.
+- **Queue repository**: Build `PendingSyncRepository` on Hive to enqueue operations whenever the user mutates data while offline or when remote calls fail. Provide APIs to peek + lock batches for processing, and rely on `StorageGuard` + `HiveService` to guarantee encrypted storage.
 - **Sync coordinator service**: Implement a `BackgroundSyncCoordinator` singleton that:
   - Observes connectivity via a new `NetworkStatusService` (wrapping `connectivity_plus` or platform channels) and app lifecycle events.
   - Uses `TimerService` to trigger periodic flushes (e.g., every 60s while online) and exponential-backoff retries for failed batches.
-  - Streams `SyncStatus` updates (idle, syncing, degraded) to interested cubits/selectors so widgets can show inline indicators.
-- **Remote pull channel**: For features that support push (WebSocket, Firebase listeners), persist incoming payloads immediately and mark them as synced so offline consumers read the same boxes.
+  - Streams `SyncStatus` updates (idle, syncing, degraded) to interested cubits/selectors so widgets can show inline indicators and stay responsive via `BlocSelector`.
+- **Remote pull channel**: For features that support push (WebSocket, Firebase listeners, Firebase Cloud Messaging), persist incoming payloads immediately and mark them as synced so offline consumers read the same boxes. Combine push notifications (server-triggered sync) with the periodic background task so devices stay current without polling.
+- **Safety rails**: Guard coordinator emits with `CubitExceptionHandler`, never call `emit()` after close, and ensure timers/streams are disposed via `TimerService` + repository `dispose()` callbacks when `getIt.reset()` runs in tests.
 
 ### 3.5 Presentation & UX updates
 
@@ -53,39 +56,60 @@
 
 ### 3.6 Testing & diagnostics
 
-- **Unit tests**: For every new local data source and queue repository, add tests under `test/shared/storage` or feature folders that cover serialization, migrations, and error paths using temporary Hive directories (pattern already used in `test/hive_counter_repository_test.dart`).
-- **Bloc tests**: Update cubit tests to simulate offline flows by injecting fake repositories/timer services. Ensure `ChatCubit`, `CounterCubit`, etc., emit the correct states when sync succeeds/fails.
-- **Integration/golden**: Cover offline banners and queued indicators in widget + golden tests to catch regressions.
-- **Observability**: Add structured logs via `AppLogger` and consider simple metrics (counts) flushed to Crashlytics once online.
+- **Unit tests**: For every new local data source and queue repository, add tests under `test/shared/storage` or feature folders that cover serialization, migrations, and error paths using temporary Hive directories (pattern already used in `test/hive_counter_repository_test.dart`). Keep each file <250 LOC per lint.
+- **Bloc tests**: Update cubit tests to simulate offline flows by injecting fake repositories/timer services. Ensure `ChatCubit`, `CounterCubit`, etc., emit the correct states when sync succeeds/fails, and assert pending-queue interactions.
+- **Integration/golden**: Cover offline banners and queued indicators in widget + golden tests to catch regressions and keep responsive padding in sync with `shared/extensions/responsive.dart`.
+- **Observability**: Add structured logs via `AppLogger`, emit analytics/sync metrics when online, and pipe severe sync failures through `ErrorNotificationService` for a consistent UX.
 
 ## 4. Execution Roadmap
 
 1. **Foundational services**
-   - Add `NetworkStatusService` + `ConnectivityCubit` to track reachability.
-   - Create `PendingSyncRepository` + `SyncOperation` models and register them in DI.
-   - Implement `BackgroundSyncCoordinator` using `TimerService` and expose it via GetIt.
+   - Add `NetworkStatusService` + `ConnectivityCubit` to track reachability (wrap `connectivity_plus` and expose derived `ConnectivityViewState` for widgets).
+   - Create `PendingSyncRepository` + `SyncOperation` models and register them in DI, including dispose callbacks so tests can reset cleanly.
+   - Implement `BackgroundSyncCoordinator` using `TimerService` and expose it via GetIt; start it from `AppScope` after `configureDependencies()` completes.
 2. **Domain metadata updates**
    - Update Freezed models (`CounterSnapshot`, `ChatConversation`, `ChatMessage`, etc.) with sync fields + migrations.
-   - Adjust JSON serialization + ensure `flutter pub run build_runner build` stays in sync.
+   - Adjust JSON serialization + ensure `flutter pub run build_runner build --delete-conflicting-outputs` stays in sync; update `coverage/coverage_summary.md` after running `./bin/checklist`.
 3. **Repository layering per feature**
    - Counter: Wrap remote + Hive repos into an `OfflineFirstCounterRepository` that always writes to Hive, mirrors to remote when online, and enqueues operations when offline.
    - Chat: Introduce `ChatLocalDataSource` (Hive) to replace `SecureChatHistoryRepository`, persist conversations/messages/pending sends, and reroute `ChatCubit` to hydrate from disk first.
-   - GraphQL/Search/Profile: Cache latest payloads + user-generated changes in dedicated boxes and apply similar offline wrappers.
+   - GraphQL/Search/Profile (and other data reads): Cache latest payloads + user-generated changes in dedicated boxes and apply similar offline wrappers.
 4. **Conflict resolution logic**
-   - Implement merge strategies + helpers under each domain (`counter/domain/conflict_resolver.dart`, `chat/domain/message_merger.dart`).
-   - Unit test conflict scenarios and ensure cubits surface actionable errors.
+   - Implement merge strategies + helpers under each domain (`counter/domain/conflict_resolver.dart`, `chat/domain/message_merger.dart`), keeping heavy transforms off the UI thread via `compute()` when needed.
+   - Unit test conflict scenarios and ensure cubits surface actionable errors through `ErrorNotificationService`.
 5. **Background sync flows**
-   - Wire coordinator to repositories via interfaces like `SyncableRepository` (methods: `pullRemote`, `pushPending`).
-   - Add app-wide listeners (e.g., in `AppScope` or a root widget) to start/stop sync based on lifecycle + permissions.
+   - Wire coordinator to repositories via interfaces like `SyncableRepository` (methods: `pullRemote`, `pushPending`, `onRemoteEvent`).
+   - Add app-wide listeners (e.g., in `AppScope` or a root widget) to start/stop sync based on lifecycle + permissions, and gate iOS background fetch hooks for future phases.
 6. **Presentation updates**
    - Update feature cubits/states + widgets to show offline data, queued operations, and manual retry actions.
-   - Add `BlocSelector`s for sync banners to avoid unnecessary rebuilds.
+   - Add `BlocSelector`s for sync banners to avoid unnecessary rebuilds and ensure responsive spacing when banners appear.
 7. **Testing + checklist**
    - Expand unit/bloc/widget coverage for new flows.
-   - Update `./bin/checklist` expectations if new scripts/configs are needed, and document the offline-first architecture in `docs/`.
+   - Update `./bin/checklist` expectations if new scripts/configs are needed, and document the offline-first architecture in `docs/` (e.g., `docs/offline_first.md`).
 
 ## 5. Open Considerations
 
-- **Remote API capabilities**: Hugging Face + Firebase endpoints must tolerate idempotent retries; confirm API limits and adjust queue batch sizes accordingly.
-- **Device storage limits**: Evaluate pruning policies for chat history/pending ops to avoid unbounded Hive growth.
-- **Background execution**: For long-running sync (esp. iOS/Android), consider integrating platform-specific background fetch/WorkManager after the initial in-app coordinator lands.
+- **Remote API capabilities**: Hugging Face + Firebase endpoints must tolerate idempotent retries; confirm API limits and adjust queue batch sizes accordingly. If APIs lack etags, fall back to timestamp-based merges with caution.
+- **Device storage limits**: Evaluate pruning policies for chat history/pending ops to avoid unbounded Hive growth, and expose settings toggles if storage pressure becomes user-facing.
+- **Background execution**: For long-running sync (esp. iOS/Android), consider integrating platform-specific background fetch/WorkManager after the initial in-app coordinator lands, honoring platform battery constraints.
+- **Push notification contracts**: If we rely on Firebase Cloud Messaging to trigger sync, define payload schemas, authentication requirements, and fallbacks when push delivery fails. Document these contracts under `docs/`.
+- **Security & privacy**: All local data stays encrypted via `HiveService` + `HiveKeyManager`. Review whether sensitive payloads (e.g., chat) require additional secure storage or user controls for clearing caches.
+- **Operational readiness**: Extend runbooks so on-call engineers know how to inspect sync queues (e.g., via debug menu), clear corrupted boxes, or temporarily disable background sync without shipping a new build.
+
+## 6. Reference Implementation Guides
+
+- Flutter’s official offline-first guidance on synchronization flags and push-triggered sync informs the metadata and background task design: <https://docs.flutter.dev/app-architecture/design-patterns/offline-first>
+- `AGENTS.md`, `README.md`, and `docs/new_developer_guide.md` stay canonical for guardrails (Hive usage, DI lifecycle, responsive UI expectations, checklist workflow).
+
+## 7. Feature Adoption Matrix
+
+| Feature | Local Store | Pending Ops / Conflict Strategy | Presentation updates | Tests & Tooling |
+| --- | --- | --- | --- | --- |
+| Counter | Reuse `counter` Hive box with new `changeId`, `lastSyncedAt` columns | Maintain FIFO queue of increments/decrements; replay unapplied changeIds when online | Show sync badge + queued count on counter page; reuse `PlatformAdaptive` banners | Extend `hive_counter_repository_test.dart`, add bloc tests for queued ops, update golden tests for new banner |
+| Chat | New `chat_conversations`, `chat_pending_messages` boxes storing `ChatConversationDto` & message draft entity | Pending send queue with `clientMessageId`; detect conflicts by matching IDs + timestamps, mark `resurrected` when needed | Hydrate history instantly, show pending indicator per message, add manual “Sync now” CTA | Unit tests for persistence/helpers, bloc/widget tests for pending message UI, update `SecureChatHistoryRepository` coverage |
+| Search | `search_cache` box storing last results + queries | Queue query mutations (e.g., saved filters) with last-applied version; prefer server wins but surface diff prompts | Indicate offline mode in Search page header, disable destructive actions when stale | Add repo tests for cache eviction, bloc tests for offline query replay |
+| Profile | `profile_cache` storing `ProfileUser` + gallery assets metadata | Read-only today; future edits use optimistic update with merge-by-field version stamps | Add offline badge + “Last synced …” copy; ensure responsive layout obeys spacing tokens | Widget tests verifying offline badge renders, repo tests for JSON serialization |
+| Remote Config & Settings | Extend existing Hive settings boxes with version + checksum, persist remote-config payloads | On conflict, prefer newest `lastFetched` but keep fallback value for rollback | `SettingsPage` shows sync status + retry button; `RemoteConfigCubit` exposes explicit offline/error states | Bloc tests covering retry flows, integration test verifying DI wiring |
+| Maps / Websocket demos | Cache map samples + recent locations per feature; queue pin updates | Use simple “last write wins” with timestamp; for WebSocket, persist inbound events for offline replay | Display offline overlay and disable streaming-only UI until sync catches up | Add fake repositories for widget tests, ensure `EchoWebsocketRepository` flushes persistent backlog |
+
+Document per-feature decisions (box names, DTO contracts, sync strategies) under `docs/offline_first/<feature>.md` so future contributors follow the same conventions.
