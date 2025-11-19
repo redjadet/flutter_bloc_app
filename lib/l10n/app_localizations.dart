@@ -1489,6 +1489,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The Google Maps demo is only available on Android and iOS builds.'**
   String get googleMapsPageUnsupportedDescription;
+
+  /// Title displayed when device is offline
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re offline'**
+  String get syncStatusOfflineTitle;
+
+  /// Explains queued sync while offline
+  ///
+  /// In en, this message translates to:
+  /// **'We will sync {pendingCount, plural, =0 {your changes} one {# change} other {# changes}} once you\'re back online.'**
+  String syncStatusOfflineMessage(int pendingCount);
+
+  /// Title when sync is in progress
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing changes'**
+  String get syncStatusSyncingTitle;
+
+  /// Message when sync is running
+  ///
+  /// In en, this message translates to:
+  /// **'{pendingCount, plural, =0 {Wrapping up your latest updates.} one {Syncing # change…} other {Syncing # changes…}}'**
+  String syncStatusSyncingMessage(int pendingCount);
+
+  /// Title when changes are still pending
+  ///
+  /// In en, this message translates to:
+  /// **'Changes queued'**
+  String get syncStatusPendingTitle;
+
+  /// Message describing pending operations
+  ///
+  /// In en, this message translates to:
+  /// **'{pendingCount, plural, one {# change waiting to sync.} other {# changes waiting to sync.}}'**
+  String syncStatusPendingMessage(int pendingCount);
+
+  /// Button label for opening the sync queue inspector
+  ///
+  /// In en, this message translates to:
+  /// **'View sync queue'**
+  String get syncQueueInspectorButton;
+
+  /// Shown when inspector has no items
+  ///
+  /// In en, this message translates to:
+  /// **'No pending operations.'**
+  String get syncQueueInspectorEmpty;
+
+  /// Title for the sync queue inspector sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Sync Operations'**
+  String get syncQueueInspectorTitle;
+
+  /// Describes a pending operation
+  ///
+  /// In en, this message translates to:
+  /// **'Entity: {entity}, attempts: {attempts}'**
+  String syncQueueInspectorOperation(String entity, int attempts);
 }
 
 class _AppLocalizationsDelegate

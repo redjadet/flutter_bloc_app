@@ -776,4 +776,62 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get googleMapsPageUnsupportedDescription =>
       'La demo de Google Maps solo está disponible en compilaciones de Android y iOS.';
+
+  @override
+  String get syncStatusOfflineTitle => 'Sin conexión';
+
+  @override
+  String syncStatusOfflineMessage(int pendingCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pendingCount,
+      locale: localeName,
+      other: '# cambios',
+      one: '# cambio',
+      zero: 'tus cambios',
+    );
+    return 'Sincronizaremos $_temp0 cuando vuelvas a estar en línea.';
+  }
+
+  @override
+  String get syncStatusSyncingTitle => 'Sincronizando cambios';
+
+  @override
+  String syncStatusSyncingMessage(int pendingCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pendingCount,
+      locale: localeName,
+      other: 'Sincronizando # cambios…',
+      one: 'Sincronizando # cambio…',
+      zero: 'Terminando tus últimas actualizaciones.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncStatusPendingTitle => 'Cambios en cola';
+
+  @override
+  String syncStatusPendingMessage(int pendingCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pendingCount,
+      locale: localeName,
+      other: '# cambios esperando sincronización.',
+      one: '# cambio esperando sincronización.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncQueueInspectorButton => 'Ver cola de sincronización';
+
+  @override
+  String get syncQueueInspectorEmpty => 'No hay operaciones pendientes.';
+
+  @override
+  String get syncQueueInspectorTitle => 'Operaciones pendientes';
+
+  @override
+  String syncQueueInspectorOperation(String entity, int attempts) {
+    return 'Entidad: $entity, intentos: $attempts';
+  }
 }

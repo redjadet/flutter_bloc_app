@@ -25,9 +25,14 @@ class HiveCounterRepository extends HiveRepositoryBase
   static const String _keyChanged = 'last_changed';
   static const String _keyUserId = 'user_id';
   static const String _localUserId = 'local';
+  static const String _keyChangeId = 'change_id';
+  static const String _keyLastSynced = 'last_synced_at';
+  static const String _keySynchronized = 'synchronized';
+
   static const CounterSnapshot _emptySnapshot = CounterSnapshot(
     userId: _localUserId,
     count: 0,
+    synchronized: true,
   );
 
   @override
@@ -67,10 +72,28 @@ class HiveCounterRepository extends HiveRepositoryBase
       // Ensure count is non-negative
       final int safeCount = count < 0 ? 0 : count;
 
+      final dynamic changeIdValue = box.get(_keyChangeId);
+      final String? changeId =
+          changeIdValue is String && changeIdValue.isNotEmpty
+          ? changeIdValue
+          : null;
+      final dynamic lastSyncedMsValue = box.get(_keyLastSynced);
+      final int? lastSyncedMs = lastSyncedMsValue is int
+          ? lastSyncedMsValue
+          : (lastSyncedMsValue is num ? lastSyncedMsValue.toInt() : null);
+      final DateTime? lastSynced = HiveCounterRepositoryHelpers.parseTimestamp(
+        lastSyncedMs,
+      );
+      final bool synchronized =
+          box.get(_keySynchronized, defaultValue: false) as bool? ?? false;
+
       final CounterSnapshot snapshot = CounterSnapshot(
         userId: userId ?? _localUserId,
         count: safeCount,
         lastChanged: changed,
+        changeId: changeId,
+        lastSyncedAt: lastSynced,
+        synchronized: synchronized,
       );
       _watchHelper.cachedSnapshot = snapshot;
       return snapshot;
@@ -103,6 +126,20 @@ class HiveCounterRepository extends HiveRepositoryBase
           } else {
             await box.delete(_keyChanged);
           }
+          if (normalized.changeId != null && normalized.changeId!.isNotEmpty) {
+            await box.put(_keyChangeId, normalized.changeId);
+          } else {
+            await box.delete(_keyChangeId);
+          }
+          if (normalized.lastSyncedAt != null) {
+            await box.put(
+              _keyLastSynced,
+              normalized.lastSyncedAt!.millisecondsSinceEpoch,
+            );
+          } else {
+            await box.delete(_keyLastSynced);
+          }
+          await box.put(_keySynchronized, normalized.synchronized);
           await box.put(_keyUserId, normalized.userId ?? _localUserId);
 
           _watchHelper.emitSnapshot(normalized);

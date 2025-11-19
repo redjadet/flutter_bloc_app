@@ -544,5 +544,15 @@
   },
   "googleMapsPageMissingKeyTitle": "Google Haritalar API anahtarı ekle",
   "googleMapsPageMissingKeyDescription": "Bu demoyu kullanmak için yerel projelere geçerli Google Haritalar API anahtarlarını ekleyin.",
-  "googleMapsPageUnsupportedDescription": "Google Haritalar demosu yalnızca Android ve iOS derlemelerinde kullanılabilir."
+  "googleMapsPageUnsupportedDescription": "Google Haritalar demosu yalnızca Android ve iOS derlemelerinde kullanılabilir.",
+  "syncStatusOfflineTitle": "Çevrimdışısın",
+  "syncStatusOfflineMessage": "{pendingCount, plural, =0 {Değişikliklerini} one {# değişikliği} other {# değişikliği}} çevrimiçi olduğunda senkronize edeceğiz.",
+  "syncStatusSyncingTitle": "Değişiklikler senkronize ediliyor",
+  "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Son güncellemeler tamamlanıyor.} one {# değişiklik senkronize ediliyor…} other {# değişiklik senkronize ediliyor…}}",
+  "syncStatusPendingTitle": "Bekleyen değişiklikler",
+  "syncStatusPendingMessage": "{pendingCount, plural, one {Senkronizasyon bekleyen # değişiklik.} other {Senkronizasyon bekleyen # değişiklik.}}",
+  "syncQueueInspectorButton": "Senkron kuyruğunu göster",
+  "syncQueueInspectorEmpty": "Bekleyen işlem yok.",
+  "syncQueueInspectorTitle": "Bekleyen senkron işlemleri",
+  "syncQueueInspectorOperation": "Varlık: {entity}, deneme: {attempts}"
 }

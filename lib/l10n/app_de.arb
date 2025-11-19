@@ -543,5 +543,15 @@
   },
   "googleMapsPageMissingKeyTitle": "Google-Maps-API-Schlüssel hinzufügen",
   "googleMapsPageMissingKeyDescription": "Hinterlege gültige Google-Maps-API-Schlüssel in den Plattformprojekten, um diese Demo zu verwenden.",
-  "googleMapsPageUnsupportedDescription": "Die Google-Maps-Demo ist nur auf Android- und iOS-Builds verfügbar."
+  "googleMapsPageUnsupportedDescription": "Die Google-Maps-Demo ist nur auf Android- und iOS-Builds verfügbar.",
+  "syncStatusOfflineTitle": "Du bist offline",
+  "syncStatusOfflineMessage": "Wir synchronisieren {pendingCount, plural, =0 {deine Änderungen} one {# Änderung} other {# Änderungen}}, sobald du wieder online bist.",
+  "syncStatusSyncingTitle": "Änderungen werden synchronisiert",
+  "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Aktualisiere letzte Änderungen.} one {Synchronisiere # Änderung…} other {Synchronisiere # Änderungen…}}",
+  "syncStatusPendingTitle": "Änderungen in Warteschlange",
+  "syncStatusPendingMessage": "{pendingCount, plural, one {# Änderung wartet auf Synchronisierung.} other {# Änderungen warten auf Synchronisierung.}}",
+  "syncQueueInspectorButton": "Sync-Warteschlange anzeigen",
+  "syncQueueInspectorEmpty": "Keine ausstehenden Vorgänge.",
+  "syncQueueInspectorTitle": "Ausstehende Synchronisationen",
+  "syncQueueInspectorOperation": "Eintrag: {entity}, Versuche: {attempts}"
 }

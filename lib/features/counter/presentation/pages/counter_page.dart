@@ -181,6 +181,11 @@ class _CounterContent extends StatelessWidget {
     mainAxisAlignment: MainAxisAlignment.center,
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
+      CounterSyncBanner(l10n: l10n),
+      if (FlavorManager.I.isDev || FlavorManager.I.isStaging) ...[
+        SizedBox(height: context.responsiveGapS),
+        const CounterSyncQueueInspectorButton(),
+      ],
       if (showFlavorBadge) ...[
         const Padding(
           padding: EdgeInsets.all(1),
