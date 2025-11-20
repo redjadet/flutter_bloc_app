@@ -103,11 +103,62 @@ void main() {
       coordinator.statusStream.listen(emitted.add);
 
       await coordinator.start();
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+
+      verify(() => syncableRepo.processOperation(operation)).called(1);
+      expect(emitted.contains(SyncStatus.syncing), isTrue);
+      await coordinator.stop();
+    });
+
+    test('retries failed operations with exponential backoff', () async {
+      final SyncOperation operation = SyncOperation.create(
+        entityType: 'counter',
+        payload: const <String, dynamic>{'count': 2},
+        idempotencyKey: 'retry-key',
+      );
+      when(
+        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+      ).thenAnswer((_) async => <SyncOperation>[operation]);
+      final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
+      when(() => syncableRepo.entityType).thenReturn('counter');
+      when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
+      when(() => syncableRepo.processOperation(operation)).thenThrow(
+        Exception('fail'),
+      );
+      registry.register(syncableRepo);
+
+      DateTime? capturedRetryAt;
+      int? capturedRetryCount;
+      final DateTime measurementStart = DateTime.now().toUtc();
+      when(
+        () => pendingRepository.markFailed(
+          operationId: operation.id,
+          nextRetryAt: any(named: 'nextRetryAt'),
+          retryCount: any(named: 'retryCount'),
+        ),
+      ).thenAnswer((invocation) async {
+        capturedRetryAt = invocation.namedArguments[#nextRetryAt] as DateTime?;
+        capturedRetryCount = invocation.namedArguments[#retryCount] as int?;
+      });
+
+      final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
+        repository: pendingRepository,
+        networkStatusService: networkService,
+        timerService: timerService,
+        registry: registry,
+        syncInterval: const Duration(milliseconds: 10),
+      );
+      final List<SyncStatus> emitted = <SyncStatus>[];
+      coordinator.statusStream.listen(emitted.add);
+
+      await coordinator.start();
       networkController.add(NetworkStatus.online);
       await Future<void>.delayed(const Duration(milliseconds: 20));
 
-      verify(() => syncableRepo.processOperation(operation)).called(2);
-      expect(emitted.contains(SyncStatus.syncing), isTrue);
+      expect(capturedRetryCount, 1);
+      expect(capturedRetryAt, isNotNull);
+      expect(capturedRetryAt!.isAfter(measurementStart), isTrue);
+      expect(emitted.contains(SyncStatus.degraded), isTrue);
       await coordinator.stop();
     });
   });
