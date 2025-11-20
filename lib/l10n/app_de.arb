@@ -553,5 +553,7 @@
   "syncQueueInspectorButton": "Sync-Warteschlange anzeigen",
   "syncQueueInspectorEmpty": "Keine ausstehenden Vorgänge.",
   "syncQueueInspectorTitle": "Ausstehende Synchronisationen",
-  "syncQueueInspectorOperation": "Eintrag: {entity}, Versuche: {attempts}"
+  "syncQueueInspectorOperation": "Eintrag: {entity}, Versuche: {attempts}",
+  "counterLastSynced": "Zuletzt synchronisiert: {timestamp}",
+  "counterChangeId": "Änderungs-ID: {changeId}"
 }

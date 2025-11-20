@@ -16,16 +16,25 @@ class _MockPendingSyncRepository extends Mock
 
 class _MockNetworkStatusService extends Mock implements NetworkStatusService {}
 
-class _FakeTimerService extends Fake implements TimerService {
+class _ControllableTimerService extends Fake implements TimerService {
+  void Function()? _lastOnTick;
+
   @override
   TimerDisposable periodic(
     final Duration interval,
     final void Function() onTick,
-  ) => _FakeTimerDisposable(onTick);
+  ) {
+    _lastOnTick = onTick;
+    return _ControllableTimerDisposable(onTick);
+  }
+
+  void tick() {
+    _lastOnTick?.call();
+  }
 }
 
-class _FakeTimerDisposable implements TimerDisposable {
-  _FakeTimerDisposable(this.onTick);
+class _ControllableTimerDisposable implements TimerDisposable {
+  _ControllableTimerDisposable(this.onTick);
   final void Function() onTick;
   @override
   void dispose() {}
@@ -54,7 +63,7 @@ void main() {
     setUp(() {
       pendingRepository = _MockPendingSyncRepository();
       networkService = _MockNetworkStatusService();
-      timerService = _FakeTimerService();
+      timerService = _ControllableTimerService();
       registry = SyncableRepositoryRegistry();
       networkController = StreamController<NetworkStatus>.broadcast();
       when(
@@ -122,9 +131,9 @@ void main() {
       final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
       when(() => syncableRepo.entityType).thenReturn('counter');
       when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
-      when(() => syncableRepo.processOperation(operation)).thenThrow(
-        Exception('fail'),
-      );
+      when(
+        () => syncableRepo.processOperation(operation),
+      ).thenThrow(Exception('fail'));
       registry.register(syncableRepo);
 
       DateTime? capturedRetryAt;
@@ -159,6 +168,125 @@ void main() {
       expect(capturedRetryAt, isNotNull);
       expect(capturedRetryAt!.isAfter(measurementStart), isTrue);
       expect(emitted.contains(SyncStatus.degraded), isTrue);
+      await coordinator.stop();
+    });
+
+    test(
+      'processes successes and retries failures within the same batch',
+      () async {
+        final SyncOperation successOp = SyncOperation.create(
+          entityType: 'counter',
+          payload: const <String, dynamic>{'count': 3},
+          idempotencyKey: 'success',
+        );
+        final SyncOperation failOp = SyncOperation.create(
+          entityType: 'counter',
+          payload: const <String, dynamic>{'count': 4},
+          idempotencyKey: 'fail',
+        );
+        final List<List<SyncOperation>> batches = <List<SyncOperation>>[
+          <SyncOperation>[successOp, failOp],
+          <SyncOperation>[],
+        ];
+        when(
+          () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+        ).thenAnswer(
+          (_) async => batches.isNotEmpty ? batches.removeAt(0) : [],
+        );
+
+        final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
+        when(() => syncableRepo.entityType).thenReturn('counter');
+        when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
+        when(
+          () => syncableRepo.processOperation(successOp),
+        ).thenAnswer((_) async {});
+        when(
+          () => syncableRepo.processOperation(failOp),
+        ).thenThrow(Exception('fail op'));
+        registry.register(syncableRepo);
+
+        when(
+          () => pendingRepository.markCompleted(successOp.id),
+        ).thenAnswer((_) async {});
+        DateTime? failedRetryAt;
+        when(
+          () => pendingRepository.markFailed(
+            operationId: failOp.id,
+            nextRetryAt: any(named: 'nextRetryAt'),
+            retryCount: any(named: 'retryCount'),
+          ),
+        ).thenAnswer((invocation) async {
+          failedRetryAt = invocation.namedArguments[#nextRetryAt] as DateTime?;
+        });
+
+        final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
+          repository: pendingRepository,
+          networkStatusService: networkService,
+          timerService: timerService,
+          registry: registry,
+          syncInterval: const Duration(milliseconds: 10),
+        );
+        final List<SyncStatus> emitted = <SyncStatus>[];
+        coordinator.statusStream.listen(emitted.add);
+
+        await coordinator.start();
+        networkController.add(NetworkStatus.online);
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+
+        verify(() => syncableRepo.processOperation(successOp)).called(1);
+        verify(() => pendingRepository.markCompleted(successOp.id)).called(1);
+        verify(() => syncableRepo.processOperation(failOp)).called(1);
+        verify(
+          () => pendingRepository.markFailed(
+            operationId: failOp.id,
+            nextRetryAt: any(named: 'nextRetryAt'),
+            retryCount: 1,
+          ),
+        ).called(1);
+        expect(failedRetryAt, isNotNull);
+        expect(emitted.contains(SyncStatus.degraded), isTrue);
+
+        // Trigger a subsequent periodic sync to drain and emit idle
+        (timerService as _ControllableTimerService).tick();
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+        expect(emitted.contains(SyncStatus.idle), isTrue);
+        await coordinator.stop();
+      },
+    );
+
+    test('ignores offline events and only syncs when online', () async {
+      when(
+        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+      ).thenAnswer((_) async => <SyncOperation>[]);
+      final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
+      when(() => syncableRepo.entityType).thenReturn('counter');
+      when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
+      registry.register(syncableRepo);
+
+      final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
+        repository: pendingRepository,
+        networkStatusService: networkService,
+        timerService: timerService,
+        registry: registry,
+        syncInterval: const Duration(milliseconds: 10),
+      );
+      final List<SyncStatus> emitted = <SyncStatus>[];
+      coordinator.statusStream.listen(emitted.add);
+
+      await coordinator.start();
+      networkController.add(NetworkStatus.offline);
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+      expect(
+        emitted.where((final SyncStatus s) => s == SyncStatus.syncing),
+        isEmpty,
+      );
+
+      networkController.add(NetworkStatus.online);
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+      expect(
+        emitted.where((final SyncStatus s) => s == SyncStatus.degraded),
+        isEmpty,
+      );
       await coordinator.stop();
     });
   });

@@ -13,6 +13,10 @@ import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -124,8 +128,11 @@ void main() {
         locale: const Locale('en'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: BlocProvider<ChatCubit>.value(
-          value: cubit,
+        home: MultiBlocProvider(
+          providers: <BlocProvider<dynamic>>[
+            BlocProvider<ChatCubit>.value(value: cubit),
+            BlocProvider<SyncStatusCubit>.value(value: _buildSyncStatusCubit()),
+          ],
           child: const ChatPage(),
         ),
       ),
@@ -213,14 +220,55 @@ void main() {
   });
 }
 
-Widget _wrapWithCubit(ChatCubit cubit) {
+class FakeNetworkStatusService implements NetworkStatusService {
+  @override
+  Stream<NetworkStatus> get statusStream => const Stream<NetworkStatus>.empty();
+
+  @override
+  Future<NetworkStatus> getCurrentStatus() async => NetworkStatus.online;
+
+  @override
+  Future<void> dispose() async {}
+}
+
+class FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
+  @override
+  Stream<SyncStatus> get statusStream => const Stream<SyncStatus>.empty();
+
+  @override
+  SyncStatus get currentStatus => SyncStatus.idle;
+
+  @override
+  Future<void> start() async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> dispose() async {}
+}
+
+Widget _wrapWithCubit(ChatCubit cubit, [SyncStatusCubit? syncCubit]) {
+  final SyncStatusCubit sync = syncCubit ?? _buildSyncStatusCubit();
+  addTearDown(sync.close);
   return MaterialApp(
     locale: const Locale('en'),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
-    home: BlocProvider<ChatCubit>.value(value: cubit, child: const ChatPage()),
+    home: MultiBlocProvider(
+      providers: <BlocProvider<dynamic>>[
+        BlocProvider<ChatCubit>.value(value: cubit),
+        BlocProvider<SyncStatusCubit>.value(value: sync),
+      ],
+      child: const ChatPage(),
+    ),
   );
 }
+
+SyncStatusCubit _buildSyncStatusCubit() => SyncStatusCubit(
+  networkStatusService: FakeNetworkStatusService(),
+  coordinator: FakeBackgroundSyncCoordinator(),
+);
 
 class _TestChatCubit extends ChatCubit {
   _TestChatCubit({super.initialModel, super.supportedModels})
@@ -260,6 +308,8 @@ class _StubChatRepository implements ChatRepository {
     required List<String> generatedResponses,
     required String prompt,
     String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async => const ChatResult(
     reply: ChatMessage(author: ChatAuthor.assistant, text: ''),
     pastUserInputs: <String>[],

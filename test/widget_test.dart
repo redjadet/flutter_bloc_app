@@ -11,7 +11,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/storage/shared_preferences_migration_service.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -32,6 +37,7 @@ void main() {
     FlavorManager.current = Flavor.prod;
     await getIt.reset(dispose: true);
     await configureDependencies();
+    await _overrideNetworkAndSync();
     overrideCounterRepository();
     // Run migration to avoid delays during widget test
     await getIt<SharedPreferencesMigrationService>().migrateIfNeeded();
@@ -103,4 +109,93 @@ void main() {
 
     expect(find.text('0'), findsWidgets);
   });
+}
+
+Future<void> _overrideNetworkAndSync() async {
+  if (getIt.isRegistered<BackgroundSyncCoordinator>()) {
+    getIt.unregister<BackgroundSyncCoordinator>();
+  }
+  if (getIt.isRegistered<PendingSyncRepository>()) {
+    getIt.unregister<PendingSyncRepository>();
+  }
+  if (getIt.isRegistered<NetworkStatusService>()) {
+    getIt.unregister<NetworkStatusService>();
+  }
+
+  getIt.registerLazySingleton<NetworkStatusService>(
+    _FakeNetworkStatusService.new,
+  );
+  getIt.registerLazySingleton<BackgroundSyncCoordinator>(
+    _FakeBackgroundSyncCoordinator.new,
+  );
+  getIt.registerLazySingleton<PendingSyncRepository>(
+    _FakePendingSyncRepository.new,
+  );
+}
+
+class _FakeNetworkStatusService implements NetworkStatusService {
+  @override
+  Stream<NetworkStatus> get statusStream => const Stream<NetworkStatus>.empty();
+
+  @override
+  Future<NetworkStatus> getCurrentStatus() async => NetworkStatus.online;
+
+  @override
+  Future<void> dispose() async {}
+}
+
+class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
+  @override
+  Stream<SyncStatus> get statusStream => const Stream<SyncStatus>.empty();
+
+  @override
+  SyncStatus get currentStatus => SyncStatus.idle;
+
+  @override
+  Future<void> start() async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> dispose() async {}
+}
+
+class _FakePendingSyncRepository implements PendingSyncRepository {
+  final List<SyncOperation> _operations = <SyncOperation>[];
+
+  @override
+  String get boxName => 'fake-pending-sync-box';
+
+  @override
+  Future<SyncOperation> enqueue(final SyncOperation operation) async {
+    _operations.add(operation);
+    return operation;
+  }
+
+  @override
+  Future<List<SyncOperation>> getPendingOperations({
+    DateTime? now,
+    int? limit,
+  }) async => _operations.toList(growable: false);
+
+  @override
+  Future<void> markCompleted(final String operationId) async {}
+
+  @override
+  Future<void> markFailed({
+    required final String operationId,
+    required final DateTime nextRetryAt,
+    final int? retryCount,
+  }) async {}
+
+  @override
+  Future<void> clear() async => _operations.clear();
+
+  @override
+  Future<Box<dynamic>> getBox() =>
+      Future<Box<dynamic>>.error(UnimplementedError('Not used in fake'));
+
+  @override
+  Future<void> safeDeleteKey(final Box<dynamic> box, final String key) async {}
 }

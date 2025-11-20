@@ -94,6 +94,8 @@ class _StubChatRepository implements ChatRepository {
     required List<String> generatedResponses,
     required String prompt,
     String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async => const ChatResult(
     reply: ChatMessage(author: ChatAuthor.assistant, text: ''),
     pastUserInputs: <String>[],

@@ -553,5 +553,7 @@
   "syncQueueInspectorButton": "Ver cola de sincronización",
   "syncQueueInspectorEmpty": "No hay operaciones pendientes.",
   "syncQueueInspectorTitle": "Operaciones pendientes",
-  "syncQueueInspectorOperation": "Entidad: {entity}, intentos: {attempts}"
+  "syncQueueInspectorOperation": "Entidad: {entity}, intentos: {attempts}",
+  "counterLastSynced": "Última sincronización: {timestamp}",
+  "counterChangeId": "ID de cambio: {changeId}"
 }

@@ -11,6 +11,10 @@ import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dar
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -47,15 +51,60 @@ class _FakeBiometricAuthenticator implements BiometricAuthenticator {
   }
 }
 
+class _FakeNetworkStatusService implements NetworkStatusService {
+  @override
+  Stream<NetworkStatus> get statusStream => const Stream<NetworkStatus>.empty();
+
+  @override
+  Future<NetworkStatus> getCurrentStatus() async => NetworkStatus.online;
+
+  @override
+  Future<void> dispose() async {}
+}
+
+class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
+  @override
+  Stream<SyncStatus> get statusStream => const Stream<SyncStatus>.empty();
+
+  @override
+  SyncStatus get currentStatus => SyncStatus.idle;
+
+  @override
+  Future<void> start() async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> dispose() async {}
+}
+
 Widget _buildApp(GoRouter router) => ScreenUtilInit(
   designSize: AppConstants.designSize,
   minTextAdapt: true,
   splitScreenMode: true,
-  builder: (context, child) => MaterialApp.router(
-    routerConfig: router,
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
-    supportedLocales: AppLocalizations.supportedLocales,
-    theme: ThemeData(useMaterial3: true),
+  builder: (context, child) => MultiBlocProvider(
+    providers: <BlocProvider<dynamic>>[
+      BlocProvider<SyncStatusCubit>(
+        create: (_) => SyncStatusCubit(
+          networkStatusService: _FakeNetworkStatusService(),
+          coordinator: _FakeBackgroundSyncCoordinator(),
+        ),
+      ),
+      BlocProvider<CounterCubit>(
+        create: (_) => CounterCubit(
+          repository: _FakeCounterRepository(),
+          timerService: FakeTimerService(),
+          startTicker: false,
+        )..loadInitial(),
+      ),
+    ],
+    child: MaterialApp.router(
+      routerConfig: router,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      theme: ThemeData(useMaterial3: true),
+    ),
   ),
 );
 
@@ -71,12 +120,22 @@ GoRouter _createRouter(
         path: AppRoutes.counterPath,
         name: AppRoutes.counter,
         builder: (context, state) {
-          return BlocProvider(
-            create: (_) => CounterCubit(
-              repository: repository,
-              timerService: FakeTimerService(),
-              startTicker: startTicker,
-            )..loadInitial(),
+          return MultiBlocProvider(
+            providers: <BlocProvider<dynamic>>[
+              BlocProvider(
+                create: (_) => CounterCubit(
+                  repository: repository,
+                  timerService: FakeTimerService(),
+                  startTicker: startTicker,
+                )..loadInitial(),
+              ),
+              BlocProvider<SyncStatusCubit>(
+                create: (_) => SyncStatusCubit(
+                  networkStatusService: _FakeNetworkStatusService(),
+                  coordinator: _FakeBackgroundSyncCoordinator(),
+                ),
+              ),
+            ],
             child: const CounterPage(title: 'Counter'),
           );
         },

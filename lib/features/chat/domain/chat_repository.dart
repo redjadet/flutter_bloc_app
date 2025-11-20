@@ -6,6 +6,8 @@ mixin ChatRepository {
     required final List<String> generatedResponses,
     required final String prompt,
     final String? model,
+    final String? conversationId,
+    final String? clientMessageId,
   });
 }
 

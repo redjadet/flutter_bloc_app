@@ -812,6 +812,16 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String counterLastSynced(Object timestamp) {
+    return 'Last synced: $timestamp';
+  }
+
+  @override
+  String counterChangeId(Object changeId) {
+    return 'Change ID: $changeId';
+  }
+
+  @override
   String get syncQueueInspectorButton => 'View sync queue';
 
   @override
