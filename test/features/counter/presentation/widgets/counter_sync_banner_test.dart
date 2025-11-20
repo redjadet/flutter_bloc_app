@@ -1,0 +1,235 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/features/counter/counter.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockNetworkStatusService extends Mock implements NetworkStatusService {}
+
+class MockBackgroundSyncCoordinator extends Mock
+    implements BackgroundSyncCoordinator {}
+
+class MockPendingSyncRepository extends Mock implements PendingSyncRepository {}
+
+class TestSyncStatusCubit extends SyncStatusCubit {
+  TestSyncStatusCubit({
+    required super.networkStatusService,
+    required super.coordinator,
+  });
+
+  void emitState(final SyncStatusState state) => emit(state);
+}
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  group('CounterSyncBanner', () {
+    late MockNetworkStatusService networkStatusService;
+    late MockBackgroundSyncCoordinator coordinator;
+    late MockPendingSyncRepository pendingRepository;
+    late TestSyncStatusCubit cubit;
+
+    setUp(() async {
+      await getIt.reset();
+      networkStatusService = MockNetworkStatusService();
+      coordinator = MockBackgroundSyncCoordinator();
+      pendingRepository = MockPendingSyncRepository();
+
+      when(
+        () => networkStatusService.statusStream,
+      ).thenAnswer((_) => const Stream<NetworkStatus>.empty());
+      when(
+        () => coordinator.statusStream,
+      ).thenAnswer((_) => const Stream<SyncStatus>.empty());
+      when(() => coordinator.currentStatus).thenReturn(SyncStatus.idle);
+      getIt.registerSingleton<PendingSyncRepository>(pendingRepository);
+
+      cubit = TestSyncStatusCubit(
+        networkStatusService: networkStatusService,
+        coordinator: coordinator,
+      );
+    });
+
+    tearDown(() async {
+      await cubit.close();
+      await getIt.reset();
+    });
+
+    Widget buildBanner(final Widget child) => MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: ResponsiveScope(child: child),
+    );
+
+    testWidgets('shows offline banner with message', (tester) async {
+      when(
+        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+      ).thenAnswer((final _) async => <SyncOperation>[]);
+
+      cubit.emitState(
+        const SyncStatusState(
+          networkStatus: NetworkStatus.offline,
+          syncStatus: SyncStatus.idle,
+        ),
+      );
+
+      await tester.pumpWidget(
+        buildBanner(
+          BlocProvider<SyncStatusCubit>.value(
+            value: cubit,
+            child: Builder(
+              builder: (final context) =>
+                  CounterSyncBanner(l10n: AppLocalizations.of(context)),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      final AppLocalizations l10n = AppLocalizations.of(
+        tester.element(find.byType(CounterSyncBanner)),
+      );
+      expect(find.text(l10n.syncStatusOfflineTitle), findsOneWidget);
+      expect(find.text(l10n.syncStatusOfflineMessage(0)), findsOneWidget);
+    });
+
+    testWidgets('shows syncing banner when operations pending', (tester) async {
+      when(
+        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+      ).thenAnswer(
+        (final _) async => <SyncOperation>[
+          SyncOperation.create(
+            entityType: 'counter',
+            payload: const CounterSnapshot(count: 1).toJson(),
+            idempotencyKey: 'key',
+          ),
+        ],
+      );
+
+      cubit.emitState(
+        const SyncStatusState(
+          networkStatus: NetworkStatus.online,
+          syncStatus: SyncStatus.syncing,
+        ),
+      );
+
+      await tester.pumpWidget(
+        buildBanner(
+          BlocProvider<SyncStatusCubit>.value(
+            value: cubit,
+            child: Builder(
+              builder: (final context) =>
+                  CounterSyncBanner(l10n: AppLocalizations.of(context)),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      final AppLocalizations l10n = AppLocalizations.of(
+        tester.element(find.byType(CounterSyncBanner)),
+      );
+      expect(find.text(l10n.syncStatusSyncingTitle), findsOneWidget);
+      expect(find.text(l10n.syncStatusSyncingMessage(1)), findsOneWidget);
+    });
+
+    testWidgets('shows pending banner when queued items exist', (tester) async {
+      when(
+        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+      ).thenAnswer(
+        (final _) async => <SyncOperation>[
+          SyncOperation.create(
+            entityType: 'counter',
+            payload: const CounterSnapshot(count: 2).toJson(),
+            idempotencyKey: 'key2',
+          ),
+          SyncOperation.create(
+            entityType: 'counter',
+            payload: const CounterSnapshot(count: 3).toJson(),
+            idempotencyKey: 'key3',
+          ),
+        ],
+      );
+
+      cubit.emitState(
+        const SyncStatusState(
+          networkStatus: NetworkStatus.online,
+          syncStatus: SyncStatus.idle,
+        ),
+      );
+
+      await tester.pumpWidget(
+        buildBanner(
+          BlocProvider<SyncStatusCubit>.value(
+            value: cubit,
+            child: Builder(
+              builder: (final context) =>
+                  CounterSyncBanner(l10n: AppLocalizations.of(context)),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      final AppLocalizations l10n = AppLocalizations.of(
+        tester.element(find.byType(CounterSyncBanner)),
+      );
+      expect(find.text(l10n.syncStatusPendingTitle), findsOneWidget);
+      expect(find.text(l10n.syncStatusPendingMessage(2)), findsOneWidget);
+    });
+  });
+
+  group('CounterSyncQueueInspectorButton', () {
+    late MockPendingSyncRepository pendingRepository;
+
+    setUp(() async {
+      pendingRepository = MockPendingSyncRepository();
+      await getIt.reset();
+      getIt.registerSingleton<PendingSyncRepository>(pendingRepository);
+    });
+
+    tearDown(() async {
+      await getIt.reset();
+    });
+
+    testWidgets('shows bottom sheet with operations when tapped', (
+      tester,
+    ) async {
+      final List<SyncOperation> operations = <SyncOperation>[
+        SyncOperation.create(
+          entityType: 'counter',
+          payload: const CounterSnapshot(count: 1).toJson(),
+          idempotencyKey: 'a',
+        ),
+      ];
+      when(
+        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+      ).thenAnswer((final _) async => operations);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: ResponsiveScope(
+            child: Scaffold(body: const CounterSyncQueueInspectorButton()),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('View sync queue'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Pending Sync Operations'), findsOneWidget);
+      expect(find.textContaining('Entity: counter'), findsOneWidget);
+    });
+  });
+}
