@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
@@ -11,7 +12,6 @@ import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
-import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
@@ -19,7 +19,22 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockNetworkStatusService extends Mock implements NetworkStatusService {}
 
-class _MockSyncableRepository extends Mock implements SyncableRepository {}
+class _FakeRemoteCounterRepository implements CounterRepository {
+  CounterSnapshot _snapshot = const CounterSnapshot(count: 0);
+
+  @override
+  Future<CounterSnapshot> load() async => _snapshot;
+
+  @override
+  Future<void> save(final CounterSnapshot snapshot) async {
+    _snapshot = snapshot;
+  }
+
+  @override
+  Stream<CounterSnapshot> watch() async* {
+    yield _snapshot;
+  }
+}
 
 class _FakeStreamController<T> {
   _FakeStreamController() : controller = StreamController<T>.broadcast();
@@ -73,6 +88,7 @@ void main() {
         localRepository: localRepository,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        remoteRepository: _FakeRemoteCounterRepository(),
       );
 
       final CounterSnapshot snapshot = const CounterSnapshot(count: 3);
@@ -80,16 +96,6 @@ void main() {
       final List<SyncOperation> pendingBefore = await pendingRepository
           .getPendingOperations(now: DateTime.now().toUtc());
       expect(pendingBefore.length, 1);
-
-      final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
-      when(
-        () => syncableRepo.entityType,
-      ).thenReturn(OfflineFirstCounterRepository.counterEntity);
-      when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
-      when(() => syncableRepo.processOperation(any())).thenAnswer((_) async {
-        await localRepository.save(const CounterSnapshot(count: 99));
-      });
-      registry.register(syncableRepo);
 
       final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
         repository: pendingRepository,
@@ -107,7 +113,7 @@ void main() {
           .getPendingOperations(now: DateTime.now().toUtc());
       expect(pendingAfter, isEmpty);
       final CounterSnapshot updated = await localRepository.load();
-      expect(updated.count, 99);
+      expect(updated.count, 3);
       await coordinator.stop();
     });
   });

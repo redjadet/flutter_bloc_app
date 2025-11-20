@@ -181,6 +181,22 @@ void main() {
       expect(cubit.state.countdownSeconds, 5);
     });
 
+    test('updates state when repository emits flushed snapshot', () async {
+      final _RecordingCounterRepository recordingRepo =
+          _RecordingCounterRepository(const CounterSnapshot(count: 1));
+      final CounterCubit cubit = createCubit(
+        repository: recordingRepo,
+        startTicker: false,
+      );
+      await cubit.loadInitial();
+      expect(cubit.state.count, 1);
+
+      await recordingRepo.save(const CounterSnapshot(count: 6));
+      await pumpEventQueue();
+
+      expect(cubit.state.count, 6);
+    });
+
     test(
       'offline repository queues operations when remote unavailable',
       () async {

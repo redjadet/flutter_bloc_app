@@ -10,18 +10,75 @@ This document revalidates the offline-first requirements after another pass over
 - ✅ **Counter UX wiring:** Counter page now shows `CounterSyncBanner` state (offline/syncing/pending) and dev-only sync inspector, backed by new l10n strings across locales.
 - ✅ **Counter widget coverage:** Added widget/bottom-sheet tests (`test/features/counter/presentation/widgets/counter_sync_banner_test.dart`) to lock down banner states and inspector behavior.
 - ✅ **Offline repo regression test:** Added `CounterCubit` unit coverage ensuring the offline-first repository queues operations when a remote backend is unavailable (`test/counter_cubit_test.dart`).
-- ✅ **Offline repo integration tests:** Covered `processOperation` and `pullRemote` flows via `test/features/counter/data/offline_first_counter_repository_test.dart`.
+- ✅ **Offline repo integration tests:** Covered `processOperation`/`pullRemote` flows via `test/features/counter/data/offline_first_counter_repository_test.dart` and verified a coordinator flush path in `test/features/counter/data/background_sync_counter_flow_test.dart`.
+- ✅ **Counter replay coverage:** `test/counter_cubit_test.dart` now asserts cubit state updates when the repository emits flushed snapshots.
+- ✅ **Coordinator retry tests:** Added failure/backoff coverage in `test/shared/sync/background_sync_coordinator_test.dart`.
 - ✅ **Coordinator test coverage:** Added unit tests for `ConnectivityNetworkStatusService` and `BackgroundSyncCoordinator` to lock down status emissions (`test/shared/services/network_status_service_test.dart`, `test/shared/sync/background_sync_coordinator_test.dart`).
 - ⚙️ **Immediate focus:** Cover counter replay/flush behavior, expand coordinator retry tests, and onboard the next feature into the sync registry.
 
 ## Immediate Next Steps
 
 1. **Counter coverage**
-   - Extend integration/bloc tests to cover replay/flush flows and sync metadata migrations (current coverage now covers queueing + remote pull, still need end-to-end flush via coordinator).
+   - Finalize metadata migration tests and add UI assertions that persisted `lastSyncedAt`/`changeId` surface correctly (queueing + coordinator flush are already covered by repo/cubit tests).
 2. **Coordinator test coverage**
    - Expand coordinator tests to cover retry/backoff edge cases and network failure handling beyond the initial happy-path coverage now in place.
 3. **Expand sync adoption**
    - Begin wiring the next feature (chat/search) into the sync registry following the matrix in §7, documenting contracts under `docs/offline_first/`.
+
+## Recommendations / Next Improvements
+
+### Code Quality & Architecture
+
+- **Coordinator test isolation**: Ensure retry/backoff tests use deterministic time (e.g., `FakeTimerService`) to avoid flakiness. Consider injecting a clock abstraction for precise delay verification.
+- **SyncableRepository interface evolution**: As more features adopt sync, consider adding optional hooks like `onSyncStart()`, `onSyncComplete()`, `onSyncError()` for feature-specific side effects (analytics, notifications).
+- **Batch processing optimization**: When multiple operations queue for the same entity type, batch them into a single remote call where APIs support it (e.g., counter increments can be summed before syncing).
+- **Memory management**: For large payloads (chat history, search results), implement pagination in local stores and eviction policies to prevent unbounded Hive growth. Consider `compute()` for heavy serialization work.
+
+### Performance Optimizations
+
+- **Debounced sync triggers**: Avoid triggering sync on every single mutation; batch operations within a short window (e.g., 2-5 seconds) before enqueueing.
+- **Selective pull strategies**: Not all features need full remote pulls on every sync cycle. Add flags like `requiresFullPull` vs `incrementalSync` to reduce bandwidth.
+- **Stream subscription management**: Ensure `watch()` streams in repositories properly cancel when cubits dispose, and use `BlocSelector` to minimize rebuilds when sync status changes.
+- **Background sync throttling**: Respect platform battery constraints by reducing sync frequency when the device is in low-power mode or backgrounded.
+
+### Testing Enhancements
+
+- **Integration test coverage**: Add end-to-end tests that simulate full offline→online transitions with multiple queued operations across different entity types.
+- **Golden test updates**: Update golden tests to include sync banners/indicators in various states (offline, syncing, degraded) to catch visual regressions.
+- **Network simulation**: Create a test utility that simulates network failures, slow connections, and intermittent connectivity to validate retry/backoff behavior.
+- **Coordinator edge cases**: Test scenarios like coordinator restart after app resume, concurrent sync attempts, and queue corruption recovery.
+
+### Documentation & Developer Experience
+
+- **Architecture decision records**: Document why we chose `SyncableRepository` over alternatives, retry strategies, and conflict resolution approaches in `docs/offline_first/decisions/`.
+- **Feature adoption guide**: Create a step-by-step guide in `docs/offline_first/adoption_guide.md` showing how to wire a new feature into the sync system (local store → repository wrapper → registry → UI).
+- **Debug tooling**: Extend the dev-only sync inspector to show operation history, retry counts, and failure reasons. Consider adding a "force sync" button for testing.
+- **Migration runbook**: Document the process for migrating existing features (e.g., `SecureChatHistoryRepository` → `ChatLocalDataSource`) including data migration scripts and rollback procedures.
+
+### Security & Privacy
+
+- **Encryption key rotation**: Plan for Hive encryption key rotation without data loss, especially for sensitive features like chat. Document the migration path.
+- **User data controls**: Add settings toggles allowing users to clear cached data, disable background sync, or view storage usage per feature.
+- **Audit logging**: For sensitive operations (chat messages, profile edits), consider logging sync attempts to secure storage for compliance/debugging.
+
+### Monitoring & Observability
+
+- **Sync metrics**: Track metrics like `sync_operations_queued`, `sync_operations_completed`, `sync_operations_failed`, `sync_duration_ms` and expose them via analytics/Crashlytics.
+- **Error categorization**: Classify sync failures (network timeout, auth error, conflict, server error) and surface actionable error messages to users.
+- **Health checks**: Add periodic validation that local stores are consistent (e.g., checksums) and alert if corruption is detected.
+
+### Edge Cases & Error Handling
+
+- **Queue size limits**: Implement max queue size (e.g., 1000 operations) with eviction policies (FIFO or priority-based) to prevent storage exhaustion.
+- **Operation dependencies**: For features with dependent operations (e.g., chat message → conversation), ensure operations sync in correct order or handle dependency failures gracefully.
+- **Partial sync failures**: When a batch sync partially fails, ensure completed operations are marked as such and only failed ones are retried.
+- **App lifecycle handling**: Test coordinator behavior during app backgrounding, termination, and resume to ensure sync state persists correctly.
+
+### Migration & Rollout Strategy
+
+- **Feature flags**: Use Remote Config to gradually roll out offline-first features, allowing rollback if issues arise.
+- **Data migration safety**: For existing users, ensure migrations from SharedPreferences → Hive boxes are idempotent and can be re-run safely.
+- **Backward compatibility**: Maintain compatibility with older app versions that don't support offline-first, especially for shared data (e.g., Firebase Realtime Database).
 
 ## 1. Current State & Observations
 
