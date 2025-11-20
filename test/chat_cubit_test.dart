@@ -533,6 +533,8 @@ class FakeChatRepository implements ChatRepository {
     required List<String> generatedResponses,
     required String prompt,
     String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async {
     return ChatResult(
       reply: const ChatMessage(author: ChatAuthor.assistant, text: 'Hi there!'),
@@ -554,6 +556,8 @@ class _DelayedChatRepository implements ChatRepository {
     required List<String> generatedResponses,
     required String prompt,
     String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) {
     callCount++;
     return Future<ChatResult>.delayed(
@@ -621,6 +625,8 @@ class _ErrorChatRepository implements ChatRepository {
     required List<String> generatedResponses,
     required String prompt,
     String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) {
     throw const ChatException('fail');
   }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
@@ -25,31 +26,41 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
   final PendingSyncRepository _pendingRepository =
       getIt<PendingSyncRepository>();
   int _pendingCount = 0;
+  DateTime? _lastSyncedAt;
+  String? _lastChangeId;
 
   @override
   void initState() {
     super.initState();
-    unawaited(_refreshPendingCount());
+    unawaited(_refreshSyncDetails());
   }
 
-  Future<void> _refreshPendingCount() async {
+  Future<void> _refreshSyncDetails() async {
     final int count = (await _pendingRepository.getPendingOperations(
       now: DateTime.now().toUtc(),
     )).length;
+    final CounterRepository counterRepository = getIt<CounterRepository>();
+    final CounterSnapshot snapshot = await counterRepository.load();
     if (!mounted) return;
     setState(() => _pendingCount = count);
+    setState(() {
+      _lastSyncedAt = snapshot.lastSyncedAt;
+      _lastChangeId = snapshot.changeId;
+    });
   }
 
   @override
   Widget build(final BuildContext context) =>
       BlocConsumer<SyncStatusCubit, SyncStatusState>(
         listener: (final context, final state) =>
-            unawaited(_refreshPendingCount()),
+            unawaited(_refreshSyncDetails()),
         builder: (final context, final state) {
           final bool isOffline = state.networkStatus == NetworkStatus.offline;
           final bool isSyncing = state.syncStatus == SyncStatus.syncing;
+          final bool hasMetadata =
+              (_lastSyncedAt != null) || (_lastChangeId?.isNotEmpty ?? false);
           final bool shouldHide =
-              !isOffline && !isSyncing && _pendingCount == 0;
+              !isOffline && !isSyncing && _pendingCount == 0 && !hasMetadata;
           if (shouldHide) {
             return const SizedBox.shrink();
           }
@@ -67,16 +78,56 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
             title = l10n.syncStatusPendingTitle;
             message = l10n.syncStatusPendingMessage(_pendingCount);
           }
+          final MaterialLocalizations materialLocalizations =
+              MaterialLocalizations.of(context);
+          final String? lastSyncedText = _lastSyncedAt != null
+              ? _formatLastSynced(materialLocalizations, _lastSyncedAt!)
+              : null;
+          final String? changeIdText =
+              _lastChangeId != null && _lastChangeId!.isNotEmpty
+              ? l10n.counterChangeId(_lastChangeId!)
+              : null;
+
           return Padding(
             padding: EdgeInsets.only(bottom: context.responsiveGapS),
-            child: AppMessage(
-              title: title,
-              message: message,
-              isError: isError,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                AppMessage(
+                  title: title,
+                  message: message,
+                  isError: isError,
+                ),
+                if (lastSyncedText != null || changeIdText != null) ...[
+                  SizedBox(height: context.responsiveGapXS),
+                  if (lastSyncedText != null)
+                    Text(
+                      l10n.counterLastSynced(lastSyncedText),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  if (changeIdText != null)
+                    Text(
+                      changeIdText,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                ],
+              ],
             ),
           );
         },
       );
+
+  String _formatLastSynced(
+    final MaterialLocalizations localizations,
+    final DateTime timestamp,
+  ) {
+    final DateTime local = timestamp.toLocal();
+    final String date = localizations.formatShortDate(local);
+    final String time = localizations.formatTimeOfDay(
+      TimeOfDay.fromDateTime(local),
+    );
+    return '$date · $time';
+  }
 }
 
 class CounterSyncQueueInspectorButton extends StatelessWidget {

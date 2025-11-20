@@ -1047,6 +1047,20 @@
       }
     }
   },
+  "counterLastSynced": "Last synced: {timestamp}",
+  "@counterLastSynced": {
+    "description": "Label showing the last time the counter synced",
+    "placeholders": {
+      "timestamp": {}
+    }
+  },
+  "counterChangeId": "Change ID: {changeId}",
+  "@counterChangeId": {
+    "description": "Label showing the last change id used for sync",
+    "placeholders": {
+      "changeId": {}
+    }
+  },
   "syncQueueInspectorButton": "View sync queue",
   "@syncQueueInspectorButton": {
     "description": "Button label for opening the sync queue inspector"

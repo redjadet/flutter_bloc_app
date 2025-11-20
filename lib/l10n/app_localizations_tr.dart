@@ -811,6 +811,16 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String counterLastSynced(Object timestamp) {
+    return 'Son senkronizasyon: $timestamp';
+  }
+
+  @override
+  String counterChangeId(Object changeId) {
+    return 'Değişiklik kimliği: $changeId';
+  }
+
+  @override
   String get syncQueueInspectorButton => 'Senkron kuyruğunu göster';
 
   @override

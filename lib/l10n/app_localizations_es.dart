@@ -822,6 +822,16 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String counterLastSynced(Object timestamp) {
+    return 'Última sincronización: $timestamp';
+  }
+
+  @override
+  String counterChangeId(Object changeId) {
+    return 'ID de cambio: $changeId';
+  }
+
+  @override
   String get syncQueueInspectorButton => 'Ver cola de sincronización';
 
   @override

@@ -1526,6 +1526,18 @@ abstract class AppLocalizations {
   /// **'{pendingCount, plural, one {# change waiting to sync.} other {# changes waiting to sync.}}'**
   String syncStatusPendingMessage(int pendingCount);
 
+  /// Label showing the last time the counter synced
+  ///
+  /// In en, this message translates to:
+  /// **'Last synced: {timestamp}'**
+  String counterLastSynced(Object timestamp);
+
+  /// Label showing the last change id used for sync
+  ///
+  /// In en, this message translates to:
+  /// **'Change ID: {changeId}'**
+  String counterChangeId(Object changeId);
+
   /// Button label for opening the sync queue inspector
   ///
   /// In en, this message translates to:

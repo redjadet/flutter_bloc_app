@@ -178,6 +178,8 @@ class _FakeChatRepository implements ChatRepository {
     required List<String> generatedResponses,
     required String prompt,
     String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async {
     return ChatResult(
       reply: const ChatMessage(author: ChatAuthor.assistant, text: 'Mock'),

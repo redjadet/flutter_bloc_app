@@ -833,6 +833,16 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String counterLastSynced(Object timestamp) {
+    return 'Dernière synchro : $timestamp';
+  }
+
+  @override
+  String counterChangeId(Object changeId) {
+    return 'ID de changement : $changeId';
+  }
+
+  @override
   String get syncQueueInspectorButton => 'Voir la file de synchro';
 
   @override

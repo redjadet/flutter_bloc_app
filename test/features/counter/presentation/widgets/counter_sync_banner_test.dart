@@ -13,6 +13,30 @@ import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+class _FakeCounterRepository implements CounterRepository {
+  _FakeCounterRepository({DateTime? lastSyncedAt, String? changeId})
+    : _snapshot = CounterSnapshot(
+        count: 1,
+        lastSyncedAt: lastSyncedAt,
+        changeId: changeId,
+      );
+
+  CounterSnapshot _snapshot;
+
+  @override
+  Future<CounterSnapshot> load() async => _snapshot;
+
+  @override
+  Future<void> save(final CounterSnapshot snapshot) async {
+    _snapshot = snapshot;
+  }
+
+  @override
+  Stream<CounterSnapshot> watch() async* {
+    yield _snapshot;
+  }
+}
+
 class MockNetworkStatusService extends Mock implements NetworkStatusService {}
 
 class MockBackgroundSyncCoordinator extends Mock
@@ -37,12 +61,17 @@ void main() {
     late MockBackgroundSyncCoordinator coordinator;
     late MockPendingSyncRepository pendingRepository;
     late TestSyncStatusCubit cubit;
+    late _FakeCounterRepository counterRepository;
 
     setUp(() async {
       await getIt.reset();
       networkStatusService = MockNetworkStatusService();
       coordinator = MockBackgroundSyncCoordinator();
       pendingRepository = MockPendingSyncRepository();
+      counterRepository = _FakeCounterRepository(
+        lastSyncedAt: DateTime.utc(2024, 1, 1, 12, 0),
+        changeId: 'abc123',
+      );
 
       when(
         () => networkStatusService.statusStream,
@@ -52,6 +81,7 @@ void main() {
       ).thenAnswer((_) => const Stream<SyncStatus>.empty());
       when(() => coordinator.currentStatus).thenReturn(SyncStatus.idle);
       getIt.registerSingleton<PendingSyncRepository>(pendingRepository);
+      getIt.registerSingleton<CounterRepository>(counterRepository);
 
       cubit = TestSyncStatusCubit(
         networkStatusService: networkStatusService,
@@ -65,6 +95,7 @@ void main() {
     });
 
     Widget buildBanner(final Widget child) => MaterialApp(
+      locale: const Locale('en'),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: ResponsiveScope(child: child),
@@ -93,7 +124,7 @@ void main() {
           ),
         ),
       );
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       final AppLocalizations l10n = AppLocalizations.of(
         tester.element(find.byType(CounterSyncBanner)),
@@ -185,6 +216,51 @@ void main() {
       );
       expect(find.text(l10n.syncStatusPendingTitle), findsOneWidget);
       expect(find.text(l10n.syncStatusPendingMessage(2)), findsOneWidget);
+    });
+
+    testWidgets('renders last synced metadata when provided', (tester) async {
+      when(
+        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+      ).thenAnswer((final _) async => <SyncOperation>[]);
+
+      cubit.emitState(
+        const SyncStatusState(
+          networkStatus: NetworkStatus.online,
+          syncStatus: SyncStatus.idle,
+        ),
+      );
+
+      await tester.pumpWidget(
+        buildBanner(
+          BlocProvider<SyncStatusCubit>.value(
+            value: cubit,
+            child: Builder(
+              builder: (final context) =>
+                  CounterSyncBanner(l10n: AppLocalizations.of(context)),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      final BuildContext bannerContext = tester.element(
+        find.byType(CounterSyncBanner),
+      );
+      final MaterialLocalizations locales = MaterialLocalizations.of(
+        bannerContext,
+      );
+      final DateTime lastSynced = DateTime.utc(2024, 1, 1, 12, 0);
+      final String expectedTimestamp =
+          '${locales.formatShortDate(lastSynced.toLocal())} · ${locales.formatTimeOfDay(TimeOfDay.fromDateTime(lastSynced.toLocal()))}';
+      final AppLocalizations l10n = AppLocalizations.of(bannerContext);
+
+      expect(
+        find.textContaining(
+          l10n.counterLastSynced(expectedTimestamp).split(':').first,
+        ),
+        findsOneWidget,
+      );
+      expect(find.text(l10n.counterChangeId('abc123')), findsOneWidget);
     });
   });
 

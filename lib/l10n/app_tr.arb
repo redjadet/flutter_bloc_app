@@ -554,5 +554,7 @@
   "syncQueueInspectorButton": "Senkron kuyruğunu göster",
   "syncQueueInspectorEmpty": "Bekleyen işlem yok.",
   "syncQueueInspectorTitle": "Bekleyen senkron işlemleri",
-  "syncQueueInspectorOperation": "Varlık: {entity}, deneme: {attempts}"
+  "syncQueueInspectorOperation": "Varlık: {entity}, deneme: {attempts}",
+  "counterLastSynced": "Son senkronizasyon: {timestamp}",
+  "counterChangeId": "Değişiklik kimliği: {changeId}"
 }

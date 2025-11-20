@@ -106,5 +106,53 @@ void main() {
       expect(updated.lastChanged, remoteTimestamp);
       expect(updated.synchronized, isTrue);
     });
+
+    test(
+      'save generates changeId and enqueues operation when remote exists',
+      () async {
+        final _FakeRemoteRepository remote = _FakeRemoteRepository();
+        final OfflineFirstCounterRepository repository =
+            OfflineFirstCounterRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        await repository.save(const CounterSnapshot(count: 10));
+
+        final CounterSnapshot stored = await localRepository.load();
+        expect(stored.changeId, isNotEmpty);
+        expect(stored.synchronized, isFalse);
+
+        final List<SyncOperation> pending = await pendingRepository
+            .getPendingOperations(now: DateTime.now().toUtc());
+        expect(pending.length, 1);
+      },
+    );
+
+    test(
+      'save stamps lastSyncedAt and synchronized when no remote repository',
+      () async {
+        final OfflineFirstCounterRepository repository =
+            OfflineFirstCounterRepository(
+              localRepository: localRepository,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        final DateTime before = DateTime.now().toUtc();
+        await repository.save(const CounterSnapshot(count: 2));
+
+        final CounterSnapshot stored = await localRepository.load();
+        final DateTime after = DateTime.now().toUtc();
+        expect(stored.synchronized, isTrue);
+        expect(stored.lastSyncedAt, isNotNull);
+        final DateTime lastSynced = stored.lastSyncedAt!;
+        final int lastSyncedMs = lastSynced.millisecondsSinceEpoch;
+        expect(lastSyncedMs >= before.millisecondsSinceEpoch, isTrue);
+        expect(lastSyncedMs <= after.millisecondsSinceEpoch, isTrue);
+      },
+    );
   });
 }

@@ -553,5 +553,7 @@
   "syncQueueInspectorButton": "Voir la file de synchro",
   "syncQueueInspectorEmpty": "Aucune opération en attente.",
   "syncQueueInspectorTitle": "Opérations de synchronisation",
-  "syncQueueInspectorOperation": "Entité : {entity}, tentatives : {attempts}"
+  "syncQueueInspectorOperation": "Entité : {entity}, tentatives : {attempts}",
+  "counterLastSynced": "Dernière synchro : {timestamp}",
+  "counterChangeId": "ID de changement : {changeId}"
 }
