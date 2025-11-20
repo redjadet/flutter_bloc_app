@@ -8,15 +8,18 @@ This document revalidates the offline-first requirements after another pass over
 - ✅ **Sync operation primitives:** Defined the `SyncOperation` Freezed model + Hive-backed storage, plus unit tests (`test/shared/sync/pending_sync_repository_test.dart`) ensuring queue behavior.
 - ✅ **Coordinator hooks + status surface:** Introduced `SyncableRepository` + registry, taught `BackgroundSyncCoordinator` to pull/process operations per entity, autostarted it from `AppScope`, and added `SyncStatusCubit` so widgets can consume live network/sync state.
 - ✅ **Counter UX wiring:** Counter page now shows `CounterSyncBanner` state (offline/syncing/pending) and dev-only sync inspector, backed by new l10n strings across locales.
-- ⚙️ **Immediate focus:** Finalize counter-specific tests + metadata migrations and onboard the next feature into the sync registry.
+- ✅ **Counter widget coverage:** Added widget/bottom-sheet tests (`test/features/counter/presentation/widgets/counter_sync_banner_test.dart`) to lock down banner states and inspector behavior.
+- ✅ **Offline repo regression test:** Added `CounterCubit` unit coverage ensuring the offline-first repository queues operations when a remote backend is unavailable (`test/counter_cubit_test.dart`).
+- ✅ **Offline repo integration tests:** Covered `processOperation` and `pullRemote` flows via `test/features/counter/data/offline_first_counter_repository_test.dart`.
+- ✅ **Coordinator test coverage:** Added unit tests for `ConnectivityNetworkStatusService` and `BackgroundSyncCoordinator` to lock down status emissions (`test/shared/services/network_status_service_test.dart`, `test/shared/sync/background_sync_coordinator_test.dart`).
+- ⚙️ **Immediate focus:** Cover counter replay/flush behavior, expand coordinator retry tests, and onboard the next feature into the sync registry.
 
 ## Immediate Next Steps
 
-1. **Finalize counter offline UX/tests**
-   - Counter bloc/widget tests need to validate queued operations, sync banners, and last-synced metadata now that `OfflineFirstCounterRepository` is in place.
-   - Surface `SyncStatusCubit` output on the counter page (badge + queued count), plus add dev-only inspector for pending operations.
+1. **Counter coverage**
+   - Extend integration/bloc tests to cover replay/flush flows and sync metadata migrations (current coverage now covers queueing + remote pull, still need end-to-end flush via coordinator).
 2. **Coordinator test coverage**
-   - Add unit tests for `ConnectivityNetworkStatusService` (debounce/dispose) and `BackgroundSyncCoordinator` (pullRemote, retry scheduling) using fakes.
+   - Expand coordinator tests to cover retry/backoff edge cases and network failure handling beyond the initial happy-path coverage now in place.
 3. **Expand sync adoption**
    - Begin wiring the next feature (chat/search) into the sync registry following the matrix in §7, documenting contracts under `docs/offline_first/`.
 
