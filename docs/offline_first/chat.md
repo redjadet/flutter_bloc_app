@@ -59,12 +59,12 @@ This document defines how the chat feature will adopt the shared offline-first s
   - `processOperation` persists user message before remote call (even when conversation doesn't exist yet).
   - `processOperation` marks messages synced after successful remote response.
   - `pullRemote` merges newer remote data.
-- Bloc/widget tests: chat page renders cached history, shows pending pill, and updates when a flush delivers synced messages. `chat_cubit_test.dart` now asserts that offline enqueued sends (via `ChatOfflineEnqueuedException`) avoid error states while leaving messages marked as pending, and new widget tests should prove pending bubbles flip to synced after a coordinator-driven flush (pending pills + banner counts disappear).
+- Bloc/widget tests: chat page renders cached history, shows pending pill, and updates when a flush delivers synced messages. `test/chat_cubit_test.dart` now covers the full coordinator-driven flush pipeline, while `test/chat_page_test.dart` exercises `ChatSyncBanner` + pending labels during manual sync. Use these as reference patterns.
 - Widget tests: `test/chat_sync_banner_test.dart` covers offline messaging, disabled CTA state, and the manual flush path.
 - Use `FakeTimerService` + mock connectivity to cover retry/backoff paths.
 
 ## Next Actions
 
-1) Add bloc/widget coverage that pending chat messages flip to synced after `BackgroundSyncCoordinator.flush()` processes the queue (pending labels disappear, assistant reply shows as synced).
-2) Add a ChatPage widget test to validate `ChatSyncBanner` + pending message labels together.
-3) Explore a per-message “retry now” affordance once replay coverage is in place (e.g., long-press action that queues a retry).
+1) Explore a per-message “retry now” affordance (swipe/long-press) that replays a single pending send without waiting for the full coordinator batch.
+2) Surface conversation-level metadata (e.g., “Last synced …”, pending count chips) in the history list so users know which threads are current.
+3) Feed sync metrics/telemetry (queue depth, flush duration) into `ErrorNotificationService`/analytics so we can monitor chat reliability in the wild.

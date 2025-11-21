@@ -30,7 +30,7 @@ This guide describes how to onboard a feature into the shared offline-first stac
 5. **Tests**
    - Unit tests for local store serialization + migrations.
    - Repository tests for `save` queueing and `processOperation`/`pullRemote` paths.
-   - Bloc/widget tests verifying UI reacts to `SyncStatusCubit` and queue counts.
+   - Bloc/widget tests verifying UI reacts to `SyncStatusCubit` and queue counts (see `test/chat_cubit_test.dart`, `test/chat_page_test.dart`, and `test/features/counter/presentation/pages/counter_page_sync_metadata_test.dart` for reference patterns).
 6. **Docs + runbook**
    - Document box names/keys under `docs/offline_first/<feature>.md`.
    - Define and document the data retention policy for the feature's local cache (e.g., "prune synced items older than 90 days"). This is critical for managing storage.

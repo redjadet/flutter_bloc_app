@@ -156,6 +156,21 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
       clientMessageId: clientMessageId,
     );
 
+    // Mark the user's message as synchronized now that the remote call succeeded
+    for (int i = 0; i < messages.length; i++) {
+      final ChatMessage message = messages[i];
+      if (message.clientMessageId == clientMessageId) {
+        messages[i] = ChatMessage(
+          author: message.author,
+          text: message.text,
+          clientMessageId: message.clientMessageId,
+          createdAt: message.createdAt,
+          lastSyncedAt: now,
+        );
+        break;
+      }
+    }
+
     // Update with assistant reply and mark as synchronized
     messages.add(
       ChatMessage(
