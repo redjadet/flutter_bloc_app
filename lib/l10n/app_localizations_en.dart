@@ -394,6 +394,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'This will permanently delete all stored conversations.';
 
   @override
+  String get chatMessageStatusPending => 'Pending sync';
+
+  @override
+  String get chatMessageStatusSyncing => 'Syncing…';
+
+  @override
+  String get chatMessageStatusOffline => 'Offline — will send when connected';
+
+  @override
   String get registerTitle => 'Register';
 
   @override
@@ -810,6 +819,9 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get syncStatusSyncNowButton => 'Sync now';
 
   @override
   String counterLastSynced(Object timestamp) {

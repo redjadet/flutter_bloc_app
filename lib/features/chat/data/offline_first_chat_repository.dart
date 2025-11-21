@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_sync_constants.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
@@ -23,7 +24,7 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
     _registry.register(this);
   }
 
-  static const String chatEntity = 'chat_message';
+  static const String chatEntity = chatSyncEntityType;
 
   final ChatRepository _remoteRepository;
   final ChatHistoryRepository _localDataSource;
@@ -74,7 +75,7 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
         idempotencyKey: changeId,
       );
       await _pendingSyncRepository.enqueue(operation);
-      rethrow;
+      throw const ChatOfflineEnqueuedException();
     }
   }
 

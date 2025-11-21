@@ -266,6 +266,18 @@
   "@chatHistoryClearAllWarning": {
     "description": "Warnhinweis vor dem Löschen des gesamten Gesprächsverlaufs"
   },
+  "chatMessageStatusPending": "Synchronisation ausstehend",
+  "@chatMessageStatusPending": {
+    "description": "Status unter einer Benutzernachricht, die noch nicht synchronisiert wurde"
+  },
+  "chatMessageStatusSyncing": "Wird synchronisiert…",
+  "@chatMessageStatusSyncing": {
+    "description": "Status unter einer Benutzernachricht während der Synchronisierung"
+  },
+  "chatMessageStatusOffline": "Offline – wird bei Verbindung gesendet",
+  "@chatMessageStatusOffline": {
+    "description": "Status unter einer Benutzernachricht, wenn das Gerät offline ist"
+  },
   "registerTitle": "Registrieren",
   "registerFullNameLabel": "Vollständiger Name",
   "registerFullNameHint": "Max Mustermann",
@@ -550,6 +562,10 @@
   "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Aktualisiere letzte Änderungen.} one {Synchronisiere # Änderung…} other {Synchronisiere # Änderungen…}}",
   "syncStatusPendingTitle": "Änderungen in Warteschlange",
   "syncStatusPendingMessage": "{pendingCount, plural, one {# Änderung wartet auf Synchronisierung.} other {# Änderungen warten auf Synchronisierung.}}",
+  "syncStatusSyncNowButton": "Jetzt synchronisieren",
+  "@syncStatusSyncNowButton": {
+    "description": "Schaltfläche zum manuellen Synchronisieren ausstehender Änderungen."
+  },
   "syncQueueInspectorButton": "Sync-Warteschlange anzeigen",
   "syncQueueInspectorEmpty": "Keine ausstehenden Vorgänge.",
   "syncQueueInspectorTitle": "Ausstehende Synchronisationen",

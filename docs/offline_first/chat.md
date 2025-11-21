@@ -46,8 +46,8 @@ This document defines how the chat feature will adopt the shared offline-first s
 ## UI Integration
 
 - Hydrate chat cubit from local store first, then trigger `pullRemote`.
-- Show pending-send indicator per message (`synchronized == false`) and an offline/sync banner driven by `SyncStatusCubit` (now surfaced on chat page).
-- Expose a manual “Sync now” action that calls `BackgroundSyncCoordinator.flush()`.
+- Show pending-send indicator per message (`synchronized == false`) and an offline/sync banner driven by `SyncStatusCubit`.
+- The reusable `ChatSyncBanner` widget (added under `lib/features/chat/presentation/widgets/`) displays the offline/sync/pending copy, shows queued counts, and wires the `syncStatusSyncNowButton` CTA to `SyncStatusCubit.flush()` so users can manually retry when back online.
 
 ## Testing Checklist
 
@@ -57,12 +57,12 @@ This document defines how the chat feature will adopt the shared offline-first s
   - `processOperation` persists user message before remote call (even when conversation doesn't exist yet).
   - `processOperation` marks messages synced after successful remote response.
   - `pullRemote` merges newer remote data.
-- Bloc/widget tests: chat page renders cached history, shows pending pill, and updates when a flush delivers synced messages.
+- Bloc/widget tests: chat page renders cached history, shows pending pill, and updates when a flush delivers synced messages. `chat_cubit_test.dart` now asserts that offline enqueued sends avoid error states while leaving messages marked as pending.
+- Widget tests: `test/chat_sync_banner_test.dart` covers offline messaging, disabled CTA state, and the manual flush path.
 - Use `FakeTimerService` + mock connectivity to cover retry/backoff paths.
 
 ## Next Actions
 
-1) Scaffold `ChatLocalDataSource` + Hive adapters and register via DI.
-2) Implement `OfflineFirstChatRepository` and add it to the sync registry.
-3) Update chat cubit/page to consume offline store and surface pending/sync state.
-4) Add the above tests and update `docs/offline_first/offline_first_plan.md` once landed.
+1) Add bloc/widget coverage that pending chat messages flip to synced after `BackgroundSyncCoordinator.flush()` processes the queue (pending labels disappear, assistant reply shows as synced).
+2) Add a ChatPage widget test to validate `ChatSyncBanner` + pending message labels together.
+3) Explore a per-message “retry now” affordance once replay coverage is in place (e.g., long-press action that queues a retry).

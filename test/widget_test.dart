@@ -159,6 +159,9 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 
   @override
   Future<void> dispose() async {}
+
+  @override
+  Future<void> flush() async {}
 }
 
 class _FakePendingSyncRepository implements PendingSyncRepository {

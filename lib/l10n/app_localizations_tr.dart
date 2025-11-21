@@ -397,6 +397,16 @@ class AppLocalizationsTr extends AppLocalizations {
       'Bu işlem tüm kayıtlı sohbetleri kalıcı olarak silecek.';
 
   @override
+  String get chatMessageStatusPending => 'Senkron bekleniyor';
+
+  @override
+  String get chatMessageStatusSyncing => 'Senkronize ediliyor…';
+
+  @override
+  String get chatMessageStatusOffline =>
+      'Çevrimdışı – bağlantı sağlandığında gönderilecek';
+
+  @override
   String get registerTitle => 'Kayıt Ol';
 
   @override
@@ -809,6 +819,9 @@ class AppLocalizationsTr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get syncStatusSyncNowButton => 'Şimdi senkronize et';
 
   @override
   String counterLastSynced(Object timestamp) {

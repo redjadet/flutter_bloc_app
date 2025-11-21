@@ -404,6 +404,16 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dadurch werden alle gespeicherten Unterhaltungen dauerhaft gelöscht.';
 
   @override
+  String get chatMessageStatusPending => 'Synchronisation ausstehend';
+
+  @override
+  String get chatMessageStatusSyncing => 'Wird synchronisiert…';
+
+  @override
+  String get chatMessageStatusOffline =>
+      'Offline – wird bei Verbindung gesendet';
+
+  @override
   String get registerTitle => 'Registrieren';
 
   @override
@@ -830,6 +840,9 @@ class AppLocalizationsDe extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get syncStatusSyncNowButton => 'Jetzt synchronisieren';
 
   @override
   String counterLastSynced(Object timestamp) {

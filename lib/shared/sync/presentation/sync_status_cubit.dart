@@ -59,6 +59,8 @@ class SyncStatusCubit extends Cubit<SyncStatusState> {
   StreamSubscription<NetworkStatus>? _networkSubscription;
   StreamSubscription<SyncStatus>? _syncSubscription;
 
+  Future<void> flush() => _coordinator.flush();
+
   @override
   Future<void> close() async {
     await _networkSubscription?.cancel();

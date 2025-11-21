@@ -27,7 +27,11 @@ This document revalidates the offline-first requirements after another pass over
 - ⏩ **Chat sync banner:** Chat page now surfaces offline/sync status via `SyncStatusCubit` to prep for pending-send UX.
 - ✅ **Counter goldens refreshed:** Updated counter page goldens with fake sync/network services so the new banner/metadata states stay stable without hitting platform plugins.
 - ✅ **Chat data persistence improvement:** Enhanced `OfflineFirstChatRepository.processOperation` to persist user messages locally before remote calls, ensuring no data loss if sync fails. Added test coverage for this behavior.
-- ⚙️ **Immediate focus:** Finish chat onboarding by surfacing pending-send indicators + manual sync, and hook queued chat sends into coordinator flush; keep adding counter migration tests as needed.
+- ✅ **Test harness hardened:** App and widget tests stub sync/network services to avoid background timers during coverage runs, keeping offline-first infra isolated in non-sync suites.
+- ✅ **Chat pending-state UI:** Chat messages now surface pending/sync/offline status underneath user bubbles to reflect unsent messages even when offline.
+- ✅ **Chat offline send flow:** `OfflineFirstChatRepository` now throws a dedicated `ChatOfflineEnqueuedException` when it queues messages, and `ChatCubit` treats that as success so pending messages no longer surface error states (see `test/chat_cubit_test.dart`).
+- ✅ **Chat manual sync banner:** Added `ChatSyncBanner` with offline/pending messaging, pending counts, and a manual “Sync now” action wired to `BackgroundSyncCoordinator.flush()` so users can retry queued sends.
+- ⚙️ **Immediate focus:** Shift to the next feature onboarding (search) and keep hardening coordinator/counter coverage per the next steps below.
 
 ## Immediate Next Steps
 
@@ -35,9 +39,12 @@ This document revalidates the offline-first requirements after another pass over
    - Add UI assertions that persisted `lastSyncedAt`/`changeId` render correctly (queueing + coordinator flush paths and sync stamp regression tests are already covered by repo/cubit tests).
 2. **Coordinator edge cases**
    - Expand tests to cover partial batch failure, queue corruption/retry recovery, and connectivity flapping while a flush is running (use `FakeTimerService` for determinism).
-3. **Next feature onboarding (chat first)**
-   - Surface pending-send/sync status in chat UI hooked to `SyncStatusCubit` and ensure queued sends flush via coordinator; document under `docs/offline_first/chat.md` with unit/bloc/widget coverage for pending-send queues and replay flows.
-   - Added a starter adoption guide documenting the steps (`docs/offline_first/adoption_guide.md`).
+3. **Chat polish + validation**
+   - Add bloc/widget coverage proving pending chat messages flip to synced after `BackgroundSyncCoordinator.flush()` processes the queue.
+   - Add a ChatPage-level widget test to validate `ChatSyncBanner` integration and pending labels together.
+   - Consider a per-message “retry now” affordance once replay coverage lands so users can nudge a stuck send.
+4. **Next feature onboarding (search is next)**
+   - With chat pending UI/manual sync in place, begin wiring the next feature (search) into the sync registry following the matrix in §7. Cache recent results locally, surface offline banners, and document the contracts under `docs/offline_first/search.md`.
 
 ## 1. Current State & Observations
 
@@ -126,8 +133,9 @@ This document revalidates the offline-first requirements after another pass over
 
 ## 5. Open Considerations
 
-- **Remote API capabilities**: Hugging Face + Firebase endpoints must tolerate idempotent retries; confirm API limits and adjust queue batch sizes accordingly. If APIs lack etags, fall back to timestamp-based merges with caution.
-- **Device storage limits**: Evaluate pruning policies for chat history/pending ops to avoid unbounded Hive growth, and expose settings toggles if storage pressure becomes user-facing.
+- **Remote API capabilities**: Hugging Face + Firebase endpoints must tolerate idempotent retries and ideally support batch processing to reduce network overhead. Confirm API limits and adjust queue batch sizes accordingly. If APIs lack etags, fall back to timestamp-based merges with caution.
+- **Device storage limits**: Evaluate and define clear pruning policies for chat history and pending operations to avoid unbounded Hive growth. This could involve periodic, automated compaction tasks triggered by the `BackgroundSyncCoordinator`. Expose settings toggles if storage pressure becomes user-facing.
+- **Data Pruning/Compaction Strategy**: Define a formal strategy for data lifecycle management. For example, automatically prune locally cached data (like messages) older than a specific period (e.g., 90 days) if it's confirmed to be synced on the server. The `PendingSyncRepository` should also have a mechanism to clear out long-completed operations to keep the queue size manageable.
 - **Background execution**: For long-running sync (esp. iOS/Android), consider integrating platform-specific background fetch/WorkManager after the initial in-app coordinator lands, honoring platform battery constraints.
 - **Push notification contracts**: If we rely on Firebase Cloud Messaging to trigger sync, define payload schemas, authentication requirements, and fallbacks when push delivery fails. Document these contracts under `docs/`.
 - **Security & privacy**: All local data stays encrypted via `HiveService` + `HiveKeyManager`. Review whether sensitive payloads (e.g., chat) require additional secure storage or user controls for clearing caches.

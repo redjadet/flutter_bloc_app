@@ -267,6 +267,18 @@
   "@chatHistoryClearAllWarning": {
     "description": "Tüm sohbet geçmişi silinmeden önce gösterilen uyarı"
   },
+  "chatMessageStatusPending": "Senkron bekleniyor",
+  "@chatMessageStatusPending": {
+    "description": "Henüz senkronize edilmemiş kullanıcı mesajı için durum etiketi"
+  },
+  "chatMessageStatusSyncing": "Senkronize ediliyor…",
+  "@chatMessageStatusSyncing": {
+    "description": "Bekleyen mesaj senkronize edilirken gösterilen durum"
+  },
+  "chatMessageStatusOffline": "Çevrimdışı – bağlantı sağlandığında gönderilecek",
+  "@chatMessageStatusOffline": {
+    "description": "Çevrimdışıyken mesajın daha sonra gönderileceğini belirten durum"
+  },
   "registerTitle": "Kayıt Ol",
   "registerFullNameLabel": "Ad Soyad",
   "registerFullNameHint": "Ayşe Yılmaz",
@@ -551,6 +563,10 @@
   "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Son güncellemeler tamamlanıyor.} one {# değişiklik senkronize ediliyor…} other {# değişiklik senkronize ediliyor…}}",
   "syncStatusPendingTitle": "Bekleyen değişiklikler",
   "syncStatusPendingMessage": "{pendingCount, plural, one {Senkronizasyon bekleyen # değişiklik.} other {Senkronizasyon bekleyen # değişiklik.}}",
+  "syncStatusSyncNowButton": "Şimdi senkronize et",
+  "@syncStatusSyncNowButton": {
+    "description": "Bekleyen değişiklikleri elle senkronize etmeyi başlatan düğme."
+  },
   "syncQueueInspectorButton": "Senkron kuyruğunu göster",
   "syncQueueInspectorEmpty": "Bekleyen işlem yok.",
   "syncQueueInspectorTitle": "Bekleyen senkron işlemleri",
