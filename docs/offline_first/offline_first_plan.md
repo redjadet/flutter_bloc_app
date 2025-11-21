@@ -31,20 +31,25 @@ This document revalidates the offline-first requirements after another pass over
 - ✅ **Chat pending-state UI:** Chat messages now surface pending/sync/offline status underneath user bubbles to reflect unsent messages even when offline.
 - ✅ **Chat offline send flow:** `OfflineFirstChatRepository` now throws a dedicated `ChatOfflineEnqueuedException` when it queues messages, and `ChatCubit` treats that as success so pending messages no longer surface error states (see `test/chat_cubit_test.dart`).
 - ✅ **Chat manual sync banner:** Added `ChatSyncBanner` with offline/pending messaging, pending counts, and a manual “Sync now” action wired to `BackgroundSyncCoordinator.flush()` so users can retry queued sends.
-- ⚙️ **Immediate focus:** Finish the remaining chat validation tests, then move on to the next feature onboarding (search) while continuing to harden coordinator/counter coverage per the steps below.
+- ✅ **Chat flush regression tests:** `test/chat_cubit_test.dart` now covers the full offline-first pipeline, proving coordinator-driven flushes clear pending user messages and append the assistant reply.
+- ✅ **Chat banner widget coverage:** `test/chat_page_test.dart` adds a widget test that wires `ChatSyncBanner` + pending pills to a manual flush flow, ensuring the UI clears pending labels/counts after replay.
+- ✅ **Counter page metadata widget test:** `test/features/counter/presentation/pages/counter_page_sync_metadata_test.dart` verifies the `CounterSyncBanner` renders the localized `counterLastSynced` + `counterChangeId` copy when metadata exists.
+- ✅ **Coordinator edge-case suite expanded:** `test/shared/sync/background_sync_coordinator_test.dart` now exercises orphaned operations, retry-on-next-flush behavior, and connectivity flapping mid-flush to keep regression coverage high.
+- ⚙️ **Immediate focus:** Start onboarding the next feature (search) while deepening instrumentation/pruning plans and exploring per-message retry UX for chat.
 
 ## Immediate Next Steps
 
-1. **Chat polish + validation**
-   - Add bloc/widget coverage proving pending chat messages flip to synced after `BackgroundSyncCoordinator.flush()` processes the queue.
-   - Add a ChatPage-level widget test to validate `ChatSyncBanner` integration and pending labels together.
-   - Consider a per-message “retry now” affordance once replay coverage lands so users can nudge a stuck send.
-2. **Counter coverage**
-   - Add UI assertions that persisted `lastSyncedAt`/`changeId` render correctly (queueing + coordinator flush paths and sync stamp regression tests are already covered by repo/cubit tests).
-3. **Coordinator edge cases**
-   - Expand tests to cover partial batch failure, queue corruption/retry recovery, and connectivity flapping while a flush is running (use `FakeTimerService` for determinism).
-4. **Next feature onboarding (search is next)**
-   - With chat pending UI/manual sync in place, begin wiring the next feature (search) into the sync registry following the matrix in §7. Cache recent results locally, surface offline banners, and document the contracts under `docs/offline_first/search.md`.
+1. **Search feature onboarding**
+   - Stand up `SearchCacheRepository` (Hive) + offline-first wrapper, hydrate the search page from disk, and enqueue query/filter mutations when offline.
+   - Add sync banner/pending affordances similar to chat/counter plus bloc/widget tests covering offline replay.
+   - Document the contracts under `docs/offline_first/search.md` and register search in `SyncableRepositoryRegistry`.
+2. **Chat UX enhancements**
+   - Explore per-message “retry now” or swipe actions that re-enqueue a specific pending message once replay coverage and flush telemetry land.
+   - Surface “last synced” metadata inline with conversation headers so users know when a thread last synced.
+3. **Coordinator observability & pruning**
+   - Emit structured metrics when batches succeed/fail, track queue depth, and hook into the new pruning policies (see §3.7) to keep boxes trimmed.
+4. **Feature rollout prep**
+   - Start mapping GraphQL/Profile feature onboarding, including box schemas, banners, and test scaffolding so search isn’t a one-off.
 
 ## 1. Current State & Observations
 
@@ -110,7 +115,7 @@ This document revalidates the offline-first requirements after another pass over
 - **Bloc tests**: Update cubit tests to simulate offline flows by injecting fake repositories/timer services. Ensure `ChatCubit`, `CounterCubit`, etc., emit the correct states when sync succeeds/fails, and assert pending-queue interactions.
 - **Integration/golden**: Cover offline banners and queued indicators in widget + golden tests to catch regressions and keep responsive padding in sync with `shared/extensions/responsive.dart`.
 - **Observability**: Add structured logs via `AppLogger`, emit analytics/sync metrics when online, and pipe severe sync failures through `ErrorNotificationService` for a consistent UX.
-- **Chat validation coverage**: `chat_cubit_test.dart` and new Chat page/widget tests must assert that `ChatOfflineEnqueuedException` paths keep the UI in a pending-success state and that a coordinator-driven `flush()` flips pending bubbles to synced (pending pills + banner counts disappear after replay).
+- **Chat validation coverage**: `test/chat_cubit_test.dart` (integration) and `test/chat_page_test.dart` (widget) now assert that `ChatOfflineEnqueuedException` paths keep the UI in a pending-success state and that coordinator/manual flush flows flip pending bubbles + banner counts to synced. Use these tests as the template for future features adopting the queue.
 
 ### 3.7 Data Lifecycle and Pruning
 

@@ -289,5 +289,154 @@ void main() {
       );
       await coordinator.stop();
     });
+
+    test('drops operations with unknown entity types', () async {
+      final SyncOperation orphan = SyncOperation.create(
+        entityType: 'ghost',
+        payload: const <String, dynamic>{},
+        idempotencyKey: 'ghost',
+      );
+      int requestCount = 0;
+      when(
+        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+      ).thenAnswer((_) async {
+        requestCount++;
+        return requestCount == 1 ? <SyncOperation>[orphan] : <SyncOperation>[];
+      });
+      when(
+        () => pendingRepository.markCompleted(orphan.id),
+      ).thenAnswer((_) async {});
+
+      final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
+        repository: pendingRepository,
+        networkStatusService: networkService,
+        timerService: timerService,
+        registry: registry,
+        syncInterval: const Duration(milliseconds: 10),
+      );
+      final List<SyncStatus> emitted = <SyncStatus>[];
+      coordinator.statusStream.listen(emitted.add);
+
+      await coordinator.flush();
+      await Future<void>.delayed(const Duration(milliseconds: 1));
+
+      verify(() => pendingRepository.markCompleted(orphan.id)).called(1);
+      expect(
+        emitted.where((final SyncStatus s) => s == SyncStatus.syncing),
+        isNotEmpty,
+      );
+      expect(emitted.contains(SyncStatus.idle), isTrue);
+    });
+
+    test('retries failed operation on subsequent manual flush', () async {
+      final SyncOperation retryOp = SyncOperation.create(
+        entityType: 'counter',
+        payload: const <String, dynamic>{'count': 5},
+        idempotencyKey: 'retry',
+      );
+      int fetchCount = 0;
+      when(
+        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+      ).thenAnswer((_) async {
+        fetchCount++;
+        return fetchCount <= 2 ? <SyncOperation>[retryOp] : <SyncOperation>[];
+      });
+      final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
+      when(() => syncableRepo.entityType).thenReturn('counter');
+      when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
+      int attempts = 0;
+      when(() => syncableRepo.processOperation(retryOp)).thenAnswer((_) async {
+        attempts++;
+        if (attempts == 1) {
+          throw Exception('temporary failure');
+        }
+      });
+      registry.register(syncableRepo);
+      when(
+        () => pendingRepository.markFailed(
+          operationId: retryOp.id,
+          nextRetryAt: any(named: 'nextRetryAt'),
+          retryCount: any(named: 'retryCount'),
+        ),
+      ).thenAnswer((_) async {});
+      when(
+        () => pendingRepository.markCompleted(retryOp.id),
+      ).thenAnswer((_) async {});
+
+      final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
+        repository: pendingRepository,
+        networkStatusService: networkService,
+        timerService: timerService,
+        registry: registry,
+        syncInterval: const Duration(milliseconds: 10),
+      );
+      final List<SyncStatus> emitted = <SyncStatus>[];
+      coordinator.statusStream.listen(emitted.add);
+
+      await coordinator.flush();
+      await Future<void>.delayed(const Duration(milliseconds: 1));
+      await coordinator.flush();
+      await Future<void>.delayed(const Duration(milliseconds: 1));
+
+      expect(attempts, 2);
+      verify(
+        () => pendingRepository.markFailed(
+          operationId: retryOp.id,
+          nextRetryAt: any(named: 'nextRetryAt'),
+          retryCount: 1,
+        ),
+      ).called(1);
+      verify(() => pendingRepository.markCompleted(retryOp.id)).called(1);
+      expect(emitted.contains(SyncStatus.degraded), isTrue);
+      expect(emitted.contains(SyncStatus.idle), isTrue);
+    });
+
+    test('continues in-flight flush while connectivity flaps', () async {
+      final SyncOperation op = SyncOperation.create(
+        entityType: 'counter',
+        payload: const <String, dynamic>{'count': 9},
+        idempotencyKey: 'flap',
+      );
+      int fetchCount = 0;
+      when(
+        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+      ).thenAnswer((_) async {
+        fetchCount++;
+        return fetchCount == 1 ? <SyncOperation>[op] : <SyncOperation>[];
+      });
+      final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
+      when(() => syncableRepo.entityType).thenReturn('counter');
+      when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
+      when(() => syncableRepo.processOperation(op)).thenAnswer(
+        (_) async => Future<void>.delayed(const Duration(milliseconds: 5)),
+      );
+      registry.register(syncableRepo);
+      when(
+        () => pendingRepository.markCompleted(op.id),
+      ).thenAnswer((_) async {});
+
+      final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
+        repository: pendingRepository,
+        networkStatusService: networkService,
+        timerService: timerService,
+        registry: registry,
+        syncInterval: const Duration(milliseconds: 10),
+      );
+      final List<SyncStatus> emitted = <SyncStatus>[];
+      coordinator.statusStream.listen(emitted.add);
+
+      await coordinator.start();
+      final Future<void> flushFuture = coordinator.flush();
+      networkController.add(NetworkStatus.offline);
+      networkController.add(NetworkStatus.online);
+      await flushFuture;
+      await Future<void>.delayed(const Duration(milliseconds: 1));
+
+      verify(() => syncableRepo.processOperation(op)).called(1);
+      verify(() => pendingRepository.markCompleted(op.id)).called(1);
+      expect(emitted.contains(SyncStatus.syncing), isTrue);
+      expect(emitted.contains(SyncStatus.idle), isTrue);
+      await coordinator.stop();
+    });
   });
 }
