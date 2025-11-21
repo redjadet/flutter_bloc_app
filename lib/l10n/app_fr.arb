@@ -266,6 +266,18 @@
   "@chatHistoryClearAllWarning": {
     "description": "Avertissement affiché avant de supprimer tout l'historique"
   },
+  "chatMessageStatusPending": "Synchronisation en attente",
+  "@chatMessageStatusPending": {
+    "description": "Statut affiché sous un message utilisateur qui n'est pas encore synchronisé"
+  },
+  "chatMessageStatusSyncing": "Synchronisation…",
+  "@chatMessageStatusSyncing": {
+    "description": "Statut affiché pendant la synchronisation d'un message en attente"
+  },
+  "chatMessageStatusOffline": "Hors ligne – sera envoyé une fois connecté",
+  "@chatMessageStatusOffline": {
+    "description": "Statut affiché lorsqu'un message sera envoyé après reconnexion"
+  },
   "registerTitle": "Inscription",
   "registerFullNameLabel": "Nom complet",
   "registerFullNameHint": "Marie Dupont",
@@ -550,6 +562,10 @@
   "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Finalisation des dernières mises à jour.} one {Synchronisation de # changement…} other {Synchronisation de # changements…}}",
   "syncStatusPendingTitle": "Changements en attente",
   "syncStatusPendingMessage": "{pendingCount, plural, one {# changement en attente de synchronisation.} other {# changements en attente de synchronisation.}}",
+  "syncStatusSyncNowButton": "Synchroniser maintenant",
+  "@syncStatusSyncNowButton": {
+    "description": "Bouton pour lancer manuellement la synchronisation des changements en attente."
+  },
   "syncQueueInspectorButton": "Voir la file de synchro",
   "syncQueueInspectorEmpty": "Aucune opération en attente.",
   "syncQueueInspectorTitle": "Opérations de synchronisation",

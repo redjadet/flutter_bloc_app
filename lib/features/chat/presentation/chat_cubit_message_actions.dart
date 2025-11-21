@@ -101,6 +101,14 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
             status: ViewStatus.error,
           );
         },
+        ChatOfflineEnqueuedException: (final error, final stackTrace) {
+          AppLogger.info('Chat message queued for offline sync');
+          _emitConversationSnapshot(
+            active: withUser,
+            history: historyAfterUser,
+            isLoading: false,
+          );
+        },
       },
     );
   }

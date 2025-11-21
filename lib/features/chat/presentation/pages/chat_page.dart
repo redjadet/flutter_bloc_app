@@ -2,10 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
-import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
-import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class ChatPage extends StatefulWidget {
@@ -113,8 +110,6 @@ class _ChatPageState extends State<ChatPage> {
     final bool hasHistory = context.select(
       (final ChatCubit cubit) => cubit.state.hasHistory,
     );
-    final SyncStatusState syncState = context.watch<SyncStatusCubit>().state;
-
     return CommonPageLayout(
       title: l10n.chatPageTitle,
       actions: <Widget>[
@@ -131,23 +126,7 @@ class _ChatPageState extends State<ChatPage> {
       ],
       body: Column(
         children: <Widget>[
-          if (syncState.syncStatus == SyncStatus.syncing ||
-              syncState.networkStatus == NetworkStatus.offline)
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: context.responsiveHorizontalGapL,
-                vertical: context.responsiveGapS,
-              ),
-              child: AppMessage(
-                title: syncState.networkStatus == NetworkStatus.offline
-                    ? l10n.syncStatusOfflineTitle
-                    : l10n.syncStatusSyncingTitle,
-                message: syncState.networkStatus == NetworkStatus.offline
-                    ? l10n.syncStatusOfflineMessage(0)
-                    : l10n.syncStatusSyncingMessage(0),
-                isError: syncState.networkStatus == NetworkStatus.offline,
-              ),
-            ),
+          const ChatSyncBanner(),
           Padding(
             padding: EdgeInsets.fromLTRB(
               context.responsiveHorizontalGapL,

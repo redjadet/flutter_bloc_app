@@ -266,6 +266,18 @@
   "@chatHistoryClearAllWarning": {
     "description": "Advertencia mostrada antes de borrar todo el historial"
   },
+  "chatMessageStatusPending": "Sincronización pendiente",
+  "@chatMessageStatusPending": {
+    "description": "Estado mostrado bajo un mensaje de usuario que aún no se ha sincronizado"
+  },
+  "chatMessageStatusSyncing": "Sincronizando…",
+  "@chatMessageStatusSyncing": {
+    "description": "Estado mostrado mientras se sincroniza un mensaje pendiente"
+  },
+  "chatMessageStatusOffline": "Sin conexión: se enviará al conectarse",
+  "@chatMessageStatusOffline": {
+    "description": "Estado mostrado cuando el dispositivo está sin conexión"
+  },
   "registerTitle": "Registrarse",
   "registerFullNameLabel": "Nombre completo",
   "registerFullNameHint": "María Pérez",
@@ -550,6 +562,10 @@
   "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Terminando tus últimas actualizaciones.} one {Sincronizando # cambio…} other {Sincronizando # cambios…}}",
   "syncStatusPendingTitle": "Cambios en cola",
   "syncStatusPendingMessage": "{pendingCount, plural, one {# cambio esperando sincronización.} other {# cambios esperando sincronización.}}",
+  "syncStatusSyncNowButton": "Sincronizar ahora",
+  "@syncStatusSyncNowButton": {
+    "description": "Botón para forzar la sincronización manual de los cambios pendientes."
+  },
   "syncQueueInspectorButton": "Ver cola de sincronización",
   "syncQueueInspectorEmpty": "No hay operaciones pendientes.",
   "syncQueueInspectorTitle": "Operaciones pendientes",

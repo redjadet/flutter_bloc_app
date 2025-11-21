@@ -50,6 +50,22 @@ void main() {
       expect(cubit.state.isLoading, false);
     });
 
+    test('queues message without error when offline enqueue occurs', () async {
+      final ChatCubit cubit = createCubit(
+        repository: _OfflineQueueingChatRepository(),
+        historyRepository: FakeChatHistoryRepository(),
+      );
+
+      await cubit.sendMessage('offline');
+
+      expect(cubit.state.error, isNull);
+      expect(cubit.state.status, anyOf(ViewStatus.success, ViewStatus.initial));
+      expect(cubit.state.messages.length, 1);
+      final ChatMessage message = cubit.state.messages.single;
+      expect(message.author, ChatAuthor.user);
+      expect(message.synchronized, isFalse);
+    });
+
     test('selectModel resets conversation and updates currentModel', () async {
       final FakeChatRepository repo = FakeChatRepository();
       final FakeChatHistoryRepository history = FakeChatHistoryRepository();
@@ -629,5 +645,19 @@ class _ErrorChatRepository implements ChatRepository {
     String? clientMessageId,
   }) {
     throw const ChatException('fail');
+  }
+}
+
+class _OfflineQueueingChatRepository implements ChatRepository {
+  @override
+  Future<ChatResult> sendMessage({
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
+  }) {
+    throw const ChatOfflineEnqueuedException();
   }
 }

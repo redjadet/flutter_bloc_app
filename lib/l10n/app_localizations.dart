@@ -842,6 +842,24 @@ abstract class AppLocalizations {
   /// **'This will permanently delete all stored conversations.'**
   String get chatHistoryClearAllWarning;
 
+  /// Status label shown under a user message that has not been synchronized yet
+  ///
+  /// In en, this message translates to:
+  /// **'Pending sync'**
+  String get chatMessageStatusPending;
+
+  /// Status label shown while a pending message is being synchronized
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing…'**
+  String get chatMessageStatusSyncing;
+
+  /// Status label shown when offline to indicate the message will sync later
+  ///
+  /// In en, this message translates to:
+  /// **'Offline — will send when connected'**
+  String get chatMessageStatusOffline;
+
   /// Title for the registration form page
   ///
   /// In en, this message translates to:
@@ -1525,6 +1543,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{pendingCount, plural, one {# change waiting to sync.} other {# changes waiting to sync.}}'**
   String syncStatusPendingMessage(int pendingCount);
+
+  /// Button label to trigger manual syncing of pending changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync now'**
+  String get syncStatusSyncNowButton;
 
   /// Label showing the last time the counter synced
   ///

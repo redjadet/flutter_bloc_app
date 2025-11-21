@@ -113,7 +113,7 @@ void main() {
           conversationId: 'c2',
           clientMessageId: 'm2',
         ),
-        throwsA(isA<ChatException>()),
+        throwsA(isA<ChatOfflineEnqueuedException>()),
       );
 
       final List<SyncOperation> pending = await pendingRepository

@@ -77,6 +77,9 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 
   @override
   Future<void> dispose() async {}
+
+  @override
+  Future<void> flush() async {}
 }
 
 Widget _buildApp(GoRouter router) => ScreenUtilInit(

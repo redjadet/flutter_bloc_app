@@ -84,12 +84,23 @@ class BackgroundSyncCoordinator {
     await _statusController.close();
   }
 
+  Future<void> flush() => _triggerSync(immediate: true);
+
   Future<void> _triggerSync({required final bool immediate}) async {
-    if (!_isRunning) {
+    final bool startedTemporarily = !_isRunning && immediate;
+    if (!immediate && !_isRunning) {
       return;
+    }
+    if (startedTemporarily) {
+      _isRunning = true;
     }
     try {
       await _processPendingOperations();
+      if (!immediate) {
+        _emit(SyncStatus.idle);
+      } else if (startedTemporarily) {
+        _emit(SyncStatus.idle);
+      }
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'BackgroundSyncCoordinator._triggerSync failed',
@@ -97,9 +108,10 @@ class BackgroundSyncCoordinator {
         stackTrace,
       );
       _emit(SyncStatus.degraded);
-    }
-    if (!immediate) {
-      _emit(SyncStatus.idle);
+    } finally {
+      if (startedTemporarily) {
+        _isRunning = false;
+      }
     }
   }
 

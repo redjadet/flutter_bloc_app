@@ -528,6 +528,18 @@
   "@chatHistoryClearAllWarning": {
     "description": "Warning message shown before clearing all chat history"
   },
+  "chatMessageStatusPending": "Pending sync",
+  "@chatMessageStatusPending": {
+    "description": "Status label shown under a user message that has not been synchronized yet"
+  },
+  "chatMessageStatusSyncing": "Syncing…",
+  "@chatMessageStatusSyncing": {
+    "description": "Status label shown while a pending message is being synchronized"
+  },
+  "chatMessageStatusOffline": "Offline — will send when connected",
+  "@chatMessageStatusOffline": {
+    "description": "Status label shown when offline to indicate the message will sync later"
+  },
   "registerTitle": "Register",
   "@registerTitle": {
     "description": "Title for the registration form page"
@@ -1046,6 +1058,10 @@
         "type": "int"
       }
     }
+  },
+  "syncStatusSyncNowButton": "Sync now",
+  "@syncStatusSyncNowButton": {
+    "description": "Button label to trigger manual syncing of pending changes."
   },
   "counterLastSynced": "Last synced: {timestamp}",
   "@counterLastSynced": {

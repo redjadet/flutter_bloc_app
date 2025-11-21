@@ -246,6 +246,9 @@ class FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 
   @override
   Future<void> dispose() async {}
+
+  @override
+  Future<void> flush() async {}
 }
 
 Widget _wrapWithCubit(ChatCubit cubit, [SyncStatusCubit? syncCubit]) {

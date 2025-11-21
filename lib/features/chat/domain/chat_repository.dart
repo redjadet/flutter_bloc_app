@@ -19,6 +19,13 @@ class ChatException implements Exception {
   String toString() => 'ChatException: $message';
 }
 
+/// Exception thrown when a chat message is queued for offline sync.
+class ChatOfflineEnqueuedException extends ChatException {
+  const ChatOfflineEnqueuedException([
+    super.message = 'Message queued; will sync when back online.',
+  ]);
+}
+
 class ChatResult {
   const ChatResult({
     required this.reply,
