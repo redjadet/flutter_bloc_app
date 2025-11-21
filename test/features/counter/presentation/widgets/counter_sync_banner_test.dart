@@ -77,6 +77,9 @@ void main() {
         () => networkStatusService.statusStream,
       ).thenAnswer((_) => const Stream<NetworkStatus>.empty());
       when(
+        () => networkStatusService.getCurrentStatus(),
+      ).thenAnswer((_) async => NetworkStatus.online);
+      when(
         () => coordinator.statusStream,
       ).thenAnswer((_) => const Stream<SyncStatus>.empty());
       when(() => coordinator.currentStatus).thenReturn(SyncStatus.idle);

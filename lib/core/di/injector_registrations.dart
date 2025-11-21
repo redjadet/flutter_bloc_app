@@ -32,6 +32,8 @@ import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/search/data/mock_search_repository.dart';
+import 'package:flutter_bloc_app/features/search/data/offline_first_search_repository.dart';
+import 'package:flutter_bloc_app/features/search/data/search_cache_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/hive_locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/hive_theme_repository.dart';
@@ -190,7 +192,17 @@ void _registerRemoteConfigServices() {
 }
 
 void _registerSearchServices() {
-  registerLazySingletonIfAbsent<SearchRepository>(MockSearchRepository.new);
+  registerLazySingletonIfAbsent<SearchCacheRepository>(
+    () => SearchCacheRepository(hiveService: getIt<HiveService>()),
+  );
+  registerLazySingletonIfAbsent<SearchRepository>(
+    () => OfflineFirstSearchRepository(
+      remoteRepository: MockSearchRepository(),
+      cacheRepository: getIt<SearchCacheRepository>(),
+      networkStatusService: getIt<NetworkStatusService>(),
+      registry: getIt<SyncableRepositoryRegistry>(),
+    ),
+  );
 }
 
 void _registerUtilityServices() {
