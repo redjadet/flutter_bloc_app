@@ -34,6 +34,7 @@ This document defines how the chat feature will adopt the shared offline-first s
     - If user message doesn't exist locally yet, create conversation and add user message first, then attempt remote call.
   - `pullRemote`: refresh conversations/messages list and merge into local when remote is newer.
   - Register in `SyncableRepositoryRegistry`.
+- `sendMessage`: persist the user bubble immediately, attempt the remote call, and when a failure occurs enqueue the `SyncOperation` and throw `ChatOfflineEnqueuedException`. The cubit treats this as a success state so pending messages stay visible without error banners.
 
 ## Conflict Resolution
 
@@ -48,6 +49,7 @@ This document defines how the chat feature will adopt the shared offline-first s
 - Hydrate chat cubit from local store first, then trigger `pullRemote`.
 - Show pending-send indicator per message (`synchronized == false`) and an offline/sync banner driven by `SyncStatusCubit`.
 - The reusable `ChatSyncBanner` widget (added under `lib/features/chat/presentation/widgets/`) displays the offline/sync/pending copy, shows queued counts, and wires the `syncStatusSyncNowButton` CTA to `SyncStatusCubit.flush()` so users can manually retry when back online.
+- `ChatCubit` must clear any previous errors when it catches `ChatOfflineEnqueuedException`, leave the conversation in a pending state, and allow the coordinator/manual flush to flip messages to synced later on.
 
 ## Testing Checklist
 
@@ -57,7 +59,7 @@ This document defines how the chat feature will adopt the shared offline-first s
   - `processOperation` persists user message before remote call (even when conversation doesn't exist yet).
   - `processOperation` marks messages synced after successful remote response.
   - `pullRemote` merges newer remote data.
-- Bloc/widget tests: chat page renders cached history, shows pending pill, and updates when a flush delivers synced messages. `chat_cubit_test.dart` now asserts that offline enqueued sends avoid error states while leaving messages marked as pending.
+- Bloc/widget tests: chat page renders cached history, shows pending pill, and updates when a flush delivers synced messages. `chat_cubit_test.dart` now asserts that offline enqueued sends (via `ChatOfflineEnqueuedException`) avoid error states while leaving messages marked as pending, and new widget tests should prove pending bubbles flip to synced after a coordinator-driven flush (pending pills + banner counts disappear).
 - Widget tests: `test/chat_sync_banner_test.dart` covers offline messaging, disabled CTA state, and the manual flush path.
 - Use `FakeTimerService` + mock connectivity to cover retry/backoff paths.
 
