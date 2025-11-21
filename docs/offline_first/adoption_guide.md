@@ -16,6 +16,7 @@ This guide describes how to onboard a feature into the shared offline-first stac
 2. **Wrap with OfflineFirst repository**
    - Implement `<Feature>OfflineRepository` that composes the local + remote repos and implements `SyncableRepository`.
    - On `save`, write to Hive first, mark `synchronized: false`, generate `idempotencyKey`/`changeId`, and enqueue a `SyncOperation`.
+   - When remote calls fail, enqueue the operation and throw/return a feature-specific “queued” signal (e.g., `ChatOfflineEnqueuedException`) so cubits can treat it as a pending success instead of an error.
    - On `processOperation`:
      - **Critical**: Persist user-generated data locally BEFORE attempting remote call to prevent data loss if sync fails.
      - Push to remote (if available) then mark local as synced.
@@ -32,6 +33,7 @@ This guide describes how to onboard a feature into the shared offline-first stac
    - Bloc/widget tests verifying UI reacts to `SyncStatusCubit` and queue counts.
 6. **Docs + runbook**
    - Document box names/keys under `docs/offline_first/<feature>.md`.
+   - Define and document the data retention policy for the feature's local cache (e.g., "prune synced items older than 90 days"). This is critical for managing storage.
    - Update `docs/offline_first/offline_first_plan.md` progress and run `./bin/checklist` before committing.
 
 ## Debugging tips

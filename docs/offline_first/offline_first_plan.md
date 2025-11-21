@@ -17,32 +17,32 @@ This document revalidates the offline-first requirements after another pass over
 - ✅ **Coordinator test coverage:** Added unit tests for `ConnectivityNetworkStatusService` and `BackgroundSyncCoordinator` to lock down status emissions (`test/shared/services/network_status_service_test.dart`, `test/shared/sync/background_sync_coordinator_test.dart`).
 - ✅ **Docs centralized:** Offline-first plan + adoption guide now live under `docs/offline_first/` for a single source of truth.
 - ✅ **Chat adoption contract drafted:** Added `docs/offline_first/chat.md` outlining store/repo/queue/UI/testing steps for chat onboarding.
-- ⏩ **Chat local store wired:** Added Hive-backed `ChatLocalDataSource` with round-trip persistence tests and DI swap away from secure storage as the first step of chat onboarding.
-- ⏩ **Coordinator edge cases covered:** Added partial-batch failure, retry, and offline-event handling coverage in `test/shared/sync/background_sync_coordinator_test.dart`.
-- ⏩ **Chat metadata added:** `ChatConversation`/`ChatMessage` now carry sync fields (`changeId`, `lastSyncedAt`, `synchronized`, `clientMessageId`) to support pending-send queues.
+- ✅ **Chat local store wired:** Added Hive-backed `ChatLocalDataSource` with round-trip persistence tests and DI swap away from secure storage as the first step of chat onboarding.
+- ✅ **Coordinator edge cases covered:** Added partial-batch failure, retry, and offline-event handling coverage in `test/shared/sync/background_sync_coordinator_test.dart`.
+- ✅ **Chat metadata added:** `ChatConversation`/`ChatMessage` now carry sync fields (`changeId`, `lastSyncedAt`, `synchronized`, `clientMessageId`) to support pending-send queues.
 - ✅ **Chat offline-first repo:** Added `OfflineFirstChatRepository` wired through DI, with pending-operation enqueue + processing tests and sync registry registration. **Improved**: `processOperation` now persists user messages locally before remote calls to prevent data loss during sync failures.
-- ⏩ **Counter sync stamp test:** Added regression test ensuring local-only counter saves set `lastSyncedAt`/`synchronized` for UI display.
-- ⏩ **Counter UI assertions:** Added banner widget coverage to validate sync messaging under different states, prep for rendering last-synced metadata.
-- ⏩ **Counter metadata surfaced:** Counter sync banner now shows last synced timestamp + changeId when available with l10n support and widget tests.
-- ⏩ **Chat sync banner:** Chat page now surfaces offline/sync status via `SyncStatusCubit` to prep for pending-send UX.
+- ✅ **Counter sync stamp test:** Added regression test ensuring local-only counter saves set `lastSyncedAt`/`synchronized` for UI display.
+- ✅ **Counter UI assertions:** Added banner widget coverage to validate sync messaging under different states, prep for rendering last-synced metadata.
+- ✅ **Counter metadata surfaced:** Counter sync banner now shows last synced timestamp + changeId when available with l10n support and widget tests.
+- ✅ **Chat sync banner:** Chat page now surfaces offline/sync status via `SyncStatusCubit` to prep for pending-send UX.
 - ✅ **Counter goldens refreshed:** Updated counter page goldens with fake sync/network services so the new banner/metadata states stay stable without hitting platform plugins.
 - ✅ **Chat data persistence improvement:** Enhanced `OfflineFirstChatRepository.processOperation` to persist user messages locally before remote calls, ensuring no data loss if sync fails. Added test coverage for this behavior.
 - ✅ **Test harness hardened:** App and widget tests stub sync/network services to avoid background timers during coverage runs, keeping offline-first infra isolated in non-sync suites.
 - ✅ **Chat pending-state UI:** Chat messages now surface pending/sync/offline status underneath user bubbles to reflect unsent messages even when offline.
 - ✅ **Chat offline send flow:** `OfflineFirstChatRepository` now throws a dedicated `ChatOfflineEnqueuedException` when it queues messages, and `ChatCubit` treats that as success so pending messages no longer surface error states (see `test/chat_cubit_test.dart`).
 - ✅ **Chat manual sync banner:** Added `ChatSyncBanner` with offline/pending messaging, pending counts, and a manual “Sync now” action wired to `BackgroundSyncCoordinator.flush()` so users can retry queued sends.
-- ⚙️ **Immediate focus:** Shift to the next feature onboarding (search) and keep hardening coordinator/counter coverage per the next steps below.
+- ⚙️ **Immediate focus:** Finish the remaining chat validation tests, then move on to the next feature onboarding (search) while continuing to harden coordinator/counter coverage per the steps below.
 
 ## Immediate Next Steps
 
-1. **Counter coverage**
-   - Add UI assertions that persisted `lastSyncedAt`/`changeId` render correctly (queueing + coordinator flush paths and sync stamp regression tests are already covered by repo/cubit tests).
-2. **Coordinator edge cases**
-   - Expand tests to cover partial batch failure, queue corruption/retry recovery, and connectivity flapping while a flush is running (use `FakeTimerService` for determinism).
-3. **Chat polish + validation**
+1. **Chat polish + validation**
    - Add bloc/widget coverage proving pending chat messages flip to synced after `BackgroundSyncCoordinator.flush()` processes the queue.
    - Add a ChatPage-level widget test to validate `ChatSyncBanner` integration and pending labels together.
    - Consider a per-message “retry now” affordance once replay coverage lands so users can nudge a stuck send.
+2. **Counter coverage**
+   - Add UI assertions that persisted `lastSyncedAt`/`changeId` render correctly (queueing + coordinator flush paths and sync stamp regression tests are already covered by repo/cubit tests).
+3. **Coordinator edge cases**
+   - Expand tests to cover partial batch failure, queue corruption/retry recovery, and connectivity flapping while a flush is running (use `FakeTimerService` for determinism).
 4. **Next feature onboarding (search is next)**
    - With chat pending UI/manual sync in place, begin wiring the next feature (search) into the sync registry following the matrix in §7. Cache recent results locally, surface offline banners, and document the contracts under `docs/offline_first/search.md`.
 
@@ -55,10 +55,11 @@ This document revalidates the offline-first requirements after another pass over
 
 ## 2. Offline-First Goals
 
-1. **Deterministic local data persistence** for every feature that consumes remote sources so the app boots from Hive/secure storage without hitting the network.
-2. **Explicit conflict resolution paths** so concurrent edits (same entity on server & device) converge predictably.
-3. **Background synchronization** that monitors connectivity, periodically flushes pending operations, and replays missed remote updates while keeping cubits informed of sync status.
-4. **Test coverage & diagnostics**: each new store/sync path must have unit + bloc tests and logging/metrics to debug failures.
+1. **Single Source of Truth**: The local database (Hive) is the single source of truth for the UI. The UI reads from and writes to local repositories, never directly to the network. The sync layer is responsible for keeping the local database synchronized with the remote backend.
+2. **Deterministic local data persistence** for every feature that consumes remote sources so the app boots from Hive/secure storage without hitting the network.
+3. **Explicit conflict resolution paths** so concurrent edits (same entity on server & device) converge predictably.
+4. **Background synchronization** that monitors connectivity, periodically flushes pending operations, and replays missed remote updates while keeping cubits informed of sync status.
+5. **Resilient UX & diagnostics**: surface queued work as “pending” instead of “failed,” add logging/metrics for permanent errors, and back every flow with deterministic unit/bloc/widget coverage.
 
 ## 3. Architecture Additions
 
@@ -72,7 +73,7 @@ This document revalidates the offline-first requirements after another pass over
 ### 3.2 Domain layer metadata & contracts
 
 - **Augment domain models** with sync metadata: add `DateTime lastSyncedAt`, `int version`/`String etag`, a `bool synchronized` flag (per Flutter’s offline-first guidance), and optional `SyncStatus status` enums to entities like `ChatConversation`, `ChatMessage`, `CounterSnapshot`, and any list items that can be mutated offline.
-- **Repository contracts** should expand beyond `load/save` to include `upsert`, `markPending`, `resolveConflict`, and `watchPendingOperations` as needed. Keep interfaces pure (no Flutter imports) so they remain testable.
+- **Repository contracts** should expand beyond `load/save` to include `upsert`, `markPending`, `resolveConflict`, and `watchPendingOperations` as needed. Keep interfaces pure (no Flutter imports) so they remain testable, and define explicit “queued” semantics (e.g., feature-specific `*OfflineEnqueuedException`s) so cubits can distinguish between real failures and pending work.
 
 ### 3.3 Conflict resolution strategies
 
@@ -87,15 +88,20 @@ This document revalidates the offline-first requirements after another pass over
 - **Queue repository**: Build `PendingSyncRepository` on Hive to enqueue operations whenever the user mutates data while offline or when remote calls fail. Provide APIs to peek + lock batches for processing, and rely on `StorageGuard` + `HiveService` to guarantee encrypted storage.
 - **Sync coordinator service**: Implement a `BackgroundSyncCoordinator` singleton that:
   - Observes connectivity via a new `NetworkStatusService` (wrapping `connectivity_plus` or platform channels) and app lifecycle events.
+  - Fetches pending operations from the `PendingSyncRepository` in batches to process them efficiently.
   - Uses `TimerService` to trigger periodic flushes (e.g., every 60s while online) and exponential-backoff retries for failed batches.
-  - Streams `SyncStatus` updates (idle, syncing, degraded) to interested cubits/selectors so widgets can show inline indicators and stay responsive via `BlocSelector`.
+  - Streams `SyncStatus` updates (idle, syncing, degraded, error) to interested cubits/selectors so widgets can show inline indicators and stay responsive via `BlocSelector`.
 - **Remote pull channel**: For features that support push (WebSocket, Firebase listeners, Firebase Cloud Messaging), persist incoming payloads immediately and mark them as synced so offline consumers read the same boxes. Combine push notifications (server-triggered sync) with the periodic background task so devices stay current without polling.
 - **Safety rails**: Guard coordinator emits with `CubitExceptionHandler`, never call `emit()` after close, and ensure timers/streams are disposed via `TimerService` + repository `dispose()` callbacks when `getIt.reset()` runs in tests.
 
 ### 3.5 Presentation & UX updates
 
 - **State modeling**: Extend shared `ViewStatus` usage with offline nuances (`ViewStatus.offline`, `ViewStatus.syncing`) or add derived getters on feature states to surface `hasPendingSync`, `lastSyncedAt`, etc.
-- **User feedback**: Reuse `PlatformAdaptive` components to show toasts/banners when the device falls back to offline mode, display queued actions count, and offer manual "Sync now" actions that call the coordinator.
+- **Granular User Feedback**: The UI should provide feedback based on the nature of a sync issue.
+  - **Transient Errors** (e.g., temporary network loss): The coordinator should handle these automatically with retries. The UI might show a subtle, temporary indicator (e.g., "Syncing paused...").
+  - **Permanent Errors** (e.g., auth failure, invalid API key): The system should stop retrying and show a clear, actionable error message to the user (e.g., "Please log in again to sync your data.").
+  - **Conflict Errors**: As defined in the conflict resolution strategy, these should surface prompts for the user to resolve the conflict.
+- **User Actions**: Reuse `PlatformAdaptive` components to show toasts/banners when the device falls back to offline mode, display queued actions count, and offer manual "Sync now" actions that call the coordinator. `CounterSyncBanner` and `ChatSyncBanner` are now the reference implementations (manual flush wired through `SyncStatusCubit.flush()` with pending counts).
 - **Navigation guards**: Ensure pages that require fresh remote data (e.g., GraphQL demo) check `SyncStatus` before letting users perform destructive actions, falling back to cached data instead of blank screens.
 
 ### 3.6 Testing & diagnostics
@@ -104,6 +110,14 @@ This document revalidates the offline-first requirements after another pass over
 - **Bloc tests**: Update cubit tests to simulate offline flows by injecting fake repositories/timer services. Ensure `ChatCubit`, `CounterCubit`, etc., emit the correct states when sync succeeds/fails, and assert pending-queue interactions.
 - **Integration/golden**: Cover offline banners and queued indicators in widget + golden tests to catch regressions and keep responsive padding in sync with `shared/extensions/responsive.dart`.
 - **Observability**: Add structured logs via `AppLogger`, emit analytics/sync metrics when online, and pipe severe sync failures through `ErrorNotificationService` for a consistent UX.
+- **Chat validation coverage**: `chat_cubit_test.dart` and new Chat page/widget tests must assert that `ChatOfflineEnqueuedException` paths keep the UI in a pending-success state and that a coordinator-driven `flush()` flips pending bubbles to synced (pending pills + banner counts disappear after replay).
+
+### 3.7 Data Lifecycle and Pruning
+
+- **Pruning Strategy**: To manage device storage and maintain performance, a data pruning strategy is essential. The `BackgroundSyncCoordinator` will be responsible for triggering a periodic compaction/pruning task.
+- **Data Retention Policies**: Each feature adopting offline-first must define a retention policy. For example, chat messages older than 90 days that are confirmed as synced may be pruned from the local cache.
+- **Queue Maintenance**: The `PendingSyncRepository` must include a mechanism to clear out completed (or obsolete) operations to prevent the queue from growing indefinitely.
+- **User Controls**: For data-heavy features, consider exposing settings to allow users to control how much data is stored locally (e.g., "Sync 30 days of history").
 
 ## 4. Execution Roadmap
 
