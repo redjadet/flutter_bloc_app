@@ -44,20 +44,41 @@ class SyncStatusCubit extends Cubit<SyncStatusState> {
        ) {
     _networkSubscription = _networkStatusService.statusStream.listen(
       (final NetworkStatus status) {
+        if (isClosed) {
+          return;
+        }
         emit(state.copyWith(networkStatus: status));
       },
     );
     _syncSubscription = _coordinator.statusStream.listen(
       (final SyncStatus status) {
+        if (isClosed) {
+          return;
+        }
         emit(state.copyWith(syncStatus: status));
       },
     );
+    unawaited(_seedInitialStatus());
   }
 
   final NetworkStatusService _networkStatusService;
   final BackgroundSyncCoordinator _coordinator;
   StreamSubscription<NetworkStatus>? _networkSubscription;
   StreamSubscription<SyncStatus>? _syncSubscription;
+
+  Future<void> _seedInitialStatus() async {
+    final NetworkStatus currentStatus = await _networkStatusService
+        .getCurrentStatus();
+    if (isClosed) {
+      return;
+    }
+    emit(
+      state.copyWith(
+        networkStatus: currentStatus,
+        syncStatus: _coordinator.currentStatus,
+      ),
+    );
+  }
 
   Future<void> flush() => _coordinator.flush();
 

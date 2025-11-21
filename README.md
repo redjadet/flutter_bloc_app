@@ -2,8 +2,8 @@
 
 A production-ready Flutter application demonstrating enterprise-grade architecture patterns, secure data persistence, and modern mobile development best practices.
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.38.2-blue.svg)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/Dart-3.10.0-blue.svg)](https://dart.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.38.3-blue.svg)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.10.1-blue.svg)](https://dart.dev)
 [![Coverage](https://img.shields.io/badge/Coverage-85%2E25%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs)
@@ -301,7 +301,7 @@ Shared utilities are treated as first-class participants in every flow: `Context
 
 ### Test Coverage
 
-- **Current Coverage**: 86.23% (7190/8338 lines)
+- **Current Coverage**: 86.31% (7314/8474 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 

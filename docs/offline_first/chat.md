@@ -65,6 +65,17 @@ This document defines how the chat feature will adopt the shared offline-first s
 
 ## Next Actions
 
-1) Explore a per-message “retry now” affordance (swipe/long-press) that replays a single pending send without waiting for the full coordinator batch.
-2) Surface conversation-level metadata (e.g., “Last synced …”, pending count chips) in the history list so users know which threads are current.
-3) Feed sync metrics/telemetry (queue depth, flush duration) into `ErrorNotificationService`/analytics so we can monitor chat reliability in the wild.
+1. **Per-message retry UX** (Priority: Medium)
+   - Explore a per-message "retry now" affordance (swipe/long-press) that replays a single pending send without waiting for the full coordinator batch.
+   - Add visual feedback when individual message retry is triggered.
+   - Ensure retry operations are idempotent and don't create duplicate messages.
+
+2. **Conversation metadata** (Priority: Medium)
+   - Surface conversation-level metadata (e.g., "Last synced …", pending count chips) in the history list so users know which threads are current.
+   - Add conversation title and last message preview updates on sync.
+   - Show sync status indicators in conversation list items.
+
+3. **Observability & telemetry** (Priority: Low)
+   - Feed sync metrics/telemetry (queue depth, flush duration, success/failure rates) into `ErrorNotificationService`/analytics so we can monitor chat reliability in the wild.
+   - Add debug menu to inspect pending operations and sync queue state.
+   - Implement structured logging for sync operations with correlation IDs.

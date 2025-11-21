@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/search/presentation/search_cubit.dart'
 import 'package:flutter_bloc_app/features/search/presentation/search_state.dart';
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_app_bar.dart';
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_results_grid.dart';
+import 'package:flutter_bloc_app/features/search/presentation/widgets/search_sync_banner.dart';
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_text_field.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
@@ -52,6 +53,7 @@ class _SearchPageContent extends StatelessWidget {
               children: [
                 SizedBox(height: context.responsiveGapL),
                 const SearchTextField(),
+                const SearchSyncBanner(),
                 SizedBox(height: context.responsiveGapL),
                 Text(
                   'ALL RESULTS',

@@ -26,18 +26,47 @@ This guide describes how to onboard a feature into the shared offline-first stac
    - Wire the offline repo via `create<Feature>Repository` and register it in `SyncableRepositoryRegistry` within `lib/core/di/injector_registrations.dart`.
 4. **Expose status to UI**
    - Consume `SyncStatusCubit` + `NetworkStatusService` to show offline/syncing/pending indicators and queued counts; add a dev-only inspector if helpful.
-   - Use existing reference widgets such as `CounterSyncBanner` and `ChatSyncBanner` as patterns—they display offline/pending copy and expose manual “Sync now” actions wired to `SyncStatusCubit.flush()`.
+   - Use existing reference widgets such as `CounterSyncBanner`, `ChatSyncBanner`, and `SearchSyncBanner` as patterns—they display offline/pending copy and expose manual "Sync now" actions wired to `SyncStatusCubit.flush()` (where applicable).
 5. **Tests**
    - Unit tests for local store serialization + migrations.
-   - Repository tests for `save` queueing and `processOperation`/`pullRemote` paths.
-   - Bloc/widget tests verifying UI reacts to `SyncStatusCubit` and queue counts (see `test/chat_cubit_test.dart`, `test/chat_page_test.dart`, and `test/features/counter/presentation/pages/counter_page_sync_metadata_test.dart` for reference patterns).
+   - Repository tests for `save` queueing (if applicable) and `processOperation`/`pullRemote` paths.
+   - Bloc/widget tests verifying UI reacts to `SyncStatusCubit` and queue counts.
+   - **Reference patterns**:
+     - **Write-heavy features (Counter/Chat)**: See `test/chat_cubit_test.dart`, `test/chat_page_test.dart`, and `test/features/counter/presentation/pages/counter_page_sync_metadata_test.dart`.
+     - **Read-only/cache-first features (Search)**: See `test/features/search/data/search_cache_repository_test.dart`, `test/features/search/data/offline_first_search_repository_test.dart`, and `test/features/search/presentation/widgets/search_sync_banner_test.dart`.
 6. **Docs + runbook**
    - Document box names/keys under `docs/offline_first/<feature>.md`.
    - Define and document the data retention policy for the feature's local cache (e.g., "prune synced items older than 90 days"). This is critical for managing storage.
    - Update `docs/offline_first/offline_first_plan.md` progress and run `./bin/checklist` before committing.
+
+## Next Steps After Adoption
+
+Once a feature is onboarded, consider these enhancements:
+
+1. **User-facing improvements**
+   - Add cache management UI (clear cache, view cache size) for data-heavy features.
+   - Surface sync status in feature-specific UI (e.g., conversation list, profile header).
+   - Add manual sync triggers beyond the global "Sync now" button.
+
+2. **Observability**
+   - Add sync metrics to analytics (queue depth, flush duration, success rates).
+   - Implement debug menus to inspect pending operations and cache state.
+   - Add structured logging with correlation IDs for sync operations.
+
+3. **Performance optimizations**
+   - Implement automatic cache eviction based on retention policies.
+   - Add cache size monitoring and alerts for storage pressure.
+   - Optimize `pullRemote` to only refresh changed data (differential sync).
+
+4. **Advanced features**
+   - Add conflict resolution UI for features that support concurrent edits.
+   - Implement differential sync for large datasets.
+   - Add background sync scheduling based on user behavior patterns.
 
 ## Debugging tips
 
 - Use the pending sync inspector (where available) to view queued operations.
 - Inject fake timers and mock connectivity to deterministically test retry/backoff.
 - Keep files under 250 LOC to satisfy `file_length_lint`.
+- Check `BackgroundSyncCoordinator.statusStream` to monitor sync state in real-time.
+- Use `PendingSyncRepository.getPendingOperations()` to inspect queued operations during development.
