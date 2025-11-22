@@ -27,6 +27,8 @@ import 'package:flutter_bloc_app/features/google_maps/domain/map_location_reposi
 import 'package:flutter_bloc_app/features/graphql_demo/data/countries_graphql_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/profile/data/mock_profile_repository.dart';
+import 'package:flutter_bloc_app/features/profile/data/offline_first_profile_repository.dart';
+import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
@@ -173,8 +175,16 @@ void _registerMapServices() {
 }
 
 void _registerProfileServices() {
+  registerLazySingletonIfAbsent<ProfileCacheRepository>(
+    () => ProfileCacheRepository(hiveService: getIt<HiveService>()),
+  );
   registerLazySingletonIfAbsent<ProfileRepository>(
-    MockProfileRepository.new,
+    () => OfflineFirstProfileRepository(
+      remoteRepository: const MockProfileRepository(),
+      cacheRepository: getIt<ProfileCacheRepository>(),
+      networkStatusService: getIt<NetworkStatusService>(),
+      registry: getIt<SyncableRepositoryRegistry>(),
+    ),
   );
 }
 

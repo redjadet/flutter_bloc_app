@@ -58,6 +58,7 @@ This document defines how the search feature adopts the shared offline-first sta
   - Registry registration.
 - ✅ **Bloc/widget tests**: `test/features/search/presentation/widgets/search_sync_banner_test.dart` covers banner visibility, offline/syncing states, and status change updates. `test/features/search/presentation/pages/search_page_test.dart` covers `SearchSyncBanner` integration in the search page.
 - All tests use `FakeTimerService` + mock connectivity to cover offline/online transitions deterministically.
+- `SyncStatusCubit` seeds its initial status via `getCurrentStatus()`; stub this in tests and use `tester.runAsync` when awaiting stream emissions after widget build to avoid timing flakes.
 
 ## Data Retention Policy
 
@@ -68,6 +69,7 @@ This document defines how the search feature adopts the shared offline-first sta
 ## Implementation Status
 
 ✅ **Complete**: All components implemented and tested:
+
 - `SearchCacheRepository` with Hive-backed caching (`lib/features/search/data/search_cache_repository.dart`)
 - `OfflineFirstSearchRepository` implementing `SyncableRepository` (`lib/features/search/data/offline_first_search_repository.dart`)
 - `SearchSyncBanner` widget integrated into `SearchPage` (`lib/features/search/presentation/widgets/search_sync_banner.dart`)
@@ -91,4 +93,3 @@ This document defines how the search feature adopts the shared offline-first sta
 3. **Enhanced features** (Priority: Low)
    - Consider adding "saved searches" feature that would queue save/delete operations.
    - Add search history UI to show recent queries with quick re-search actions.
-

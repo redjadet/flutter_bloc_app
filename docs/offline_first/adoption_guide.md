@@ -27,6 +27,8 @@ This guide describes how to onboard a feature into the shared offline-first stac
 4. **Expose status to UI**
    - Consume `SyncStatusCubit` + `NetworkStatusService` to show offline/syncing/pending indicators and queued counts; add a dev-only inspector if helpful.
    - Use existing reference widgets such as `CounterSyncBanner`, `ChatSyncBanner`, and `SearchSyncBanner` as patterns—they display offline/pending copy and expose manual "Sync now" actions wired to `SyncStatusCubit.flush()` (where applicable).
+   - `SyncStatusCubit` seeds its initial status via `NetworkStatusService.getCurrentStatus()`. Stub this in tests and wait for stream emissions (use `tester.runAsync` when needed) so widgets see updates that occur after build.
+   - Even for read-only/cache-first flows (search/profile), consider exposing a manual refresh CTA that calls `SyncStatusCubit.flush()` so users can pull latest data after reconnecting.
 5. **Tests**
    - Unit tests for local store serialization + migrations.
    - Repository tests for `save` queueing (if applicable) and `processOperation`/`pullRemote` paths.
@@ -37,7 +39,7 @@ This guide describes how to onboard a feature into the shared offline-first stac
 6. **Docs + runbook**
    - Document box names/keys under `docs/offline_first/<feature>.md`.
    - Define and document the data retention policy for the feature's local cache (e.g., "prune synced items older than 90 days"). This is critical for managing storage.
-   - Update `docs/offline_first/offline_first_plan.md` progress and run `./bin/checklist` before committing.
+   - Update `docs/offline_first/offline_first_plan.md` progress and run `./bin/checklist` before committing. Keep the feature row in the adoption matrix current (cache strategy, UI status surfaces, tests).
 
 ## Next Steps After Adoption
 
