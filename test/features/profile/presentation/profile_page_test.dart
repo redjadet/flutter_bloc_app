@@ -1,6 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/profile/profile.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -19,13 +26,26 @@ const _testUser = ProfileUser(
 Future<void> _pumpProfilePage(
   final WidgetTester tester, {
   required final ProfileRepository repository,
+  SyncStatusCubit? syncStatusCubit,
 }) async {
+  final SyncStatusCubit cubit =
+      syncStatusCubit ??
+      SyncStatusCubit(
+        networkStatusService: _FakeNetworkStatusService(),
+        coordinator: _FakeBackgroundSyncCoordinator(),
+      );
   final router = GoRouter(
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => BlocProvider(
-          create: (_) => ProfileCubit(repository: repository)..loadProfile(),
+        builder: (context, state) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) =>
+                  ProfileCubit(repository: repository)..loadProfile(),
+            ),
+            BlocProvider<SyncStatusCubit>.value(value: cubit),
+          ],
           child: const ProfilePage(),
         ),
       ),
@@ -33,7 +53,13 @@ Future<void> _pumpProfilePage(
   );
   addTearDown(router.dispose);
 
-  await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+  await tester.pumpWidget(
+    MaterialApp.router(
+      routerConfig: router,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+    ),
+  );
 }
 
 Future<void> _resolveAsyncWork(final WidgetTester tester) async {
@@ -61,6 +87,63 @@ class _FlakyProfileRepository implements ProfileRepository {
   }
 }
 
+class _FakeNetworkStatusService implements NetworkStatusService {
+  _FakeNetworkStatusService();
+
+  NetworkStatus status = NetworkStatus.online;
+  final StreamController<NetworkStatus> _controller =
+      StreamController<NetworkStatus>.broadcast();
+
+  @override
+  Stream<NetworkStatus> get statusStream => _controller.stream;
+
+  @override
+  Future<NetworkStatus> getCurrentStatus() async => status;
+
+  @override
+  Future<void> dispose() async {
+    await _controller.close();
+  }
+
+  void emit(final NetworkStatus newStatus) {
+    status = newStatus;
+    _controller.add(newStatus);
+  }
+}
+
+class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
+  _FakeBackgroundSyncCoordinator();
+
+  SyncStatus status = SyncStatus.idle;
+  final StreamController<SyncStatus> _controller =
+      StreamController<SyncStatus>.broadcast();
+
+  @override
+  Stream<SyncStatus> get statusStream => _controller.stream;
+
+  @override
+  SyncStatus get currentStatus => status;
+
+  @override
+  Future<void> start() async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> dispose() async {
+    await _controller.close();
+  }
+
+  @override
+  Future<void> flush() async {}
+
+  void emit(final SyncStatus newStatus) {
+    status = newStatus;
+    _controller.add(newStatus);
+  }
+}
+
 void main() {
   group('ProfilePage', () {
     testWidgets('renders loading then profile content', (final tester) async {
@@ -84,6 +167,28 @@ void main() {
         const Offset(0, -200),
       );
       expect(find.text('SEE MORE'), findsOneWidget);
+    });
+
+    testWidgets('shows sync banner when offline', (final tester) async {
+      final _FakeNetworkStatusService networkService = _FakeNetworkStatusService()
+        ..status = NetworkStatus.offline;
+      final _FakeBackgroundSyncCoordinator coordinator =
+          _FakeBackgroundSyncCoordinator();
+      networkService.emit(NetworkStatus.offline);
+      final SyncStatusCubit syncCubit = SyncStatusCubit(
+        networkStatusService: networkService,
+        coordinator: coordinator,
+      );
+
+      await _pumpProfilePage(
+        tester,
+        repository: const _SuccessProfileRepository(),
+        syncStatusCubit: syncCubit,
+      );
+
+      await _resolveAsyncWork(tester);
+
+      expect(find.byType(ProfileSyncBanner), findsOneWidget);
     });
 
     testWidgets('displays profile sections', (final tester) async {
