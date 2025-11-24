@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_factories.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
+import 'package:flutter_bloc_app/core/di/register_remote_config_services.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/payment_calculator.dart';
 import 'package:flutter_bloc_app/features/chart/data/delayed_chart_repository.dart';
@@ -30,9 +31,6 @@ import 'package:flutter_bloc_app/features/profile/data/mock_profile_repository.d
 import 'package:flutter_bloc_app/features/profile/data/offline_first_profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
-import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
-import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
-import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/search/data/mock_search_repository.dart';
 import 'package:flutter_bloc_app/features/search/data/offline_first_search_repository.dart';
 import 'package:flutter_bloc_app/features/search/data/search_cache_repository.dart';
@@ -66,7 +64,7 @@ Future<void> registerAllDependencies() async {
   _registerWebSocketServices();
   _registerMapServices();
   _registerProfileServices();
-  _registerRemoteConfigServices();
+  registerRemoteConfigServices();
   _registerSearchServices();
   _registerUtilityServices();
   _registerSyncServices();
@@ -185,19 +183,6 @@ void _registerProfileServices() {
       networkStatusService: getIt<NetworkStatusService>(),
       registry: getIt<SyncableRepositoryRegistry>(),
     ),
-  );
-}
-
-void _registerRemoteConfigServices() {
-  registerLazySingletonIfAbsent<RemoteConfigRepository>(
-    createRemoteConfigRepository,
-    dispose: (final repository) => repository.dispose(),
-  );
-  registerLazySingletonIfAbsent<RemoteConfigService>(
-    () => getIt<RemoteConfigRepository>(),
-  );
-  registerLazySingletonIfAbsent<RemoteConfigCubit>(
-    () => RemoteConfigCubit(getIt<RemoteConfigService>()),
   );
 }
 

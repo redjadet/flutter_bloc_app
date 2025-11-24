@@ -9,29 +9,44 @@ import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_es.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_fr.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_tr.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _MockRemoteConfigCubit extends MockCubit<RemoteConfigState>
     implements RemoteConfigCubit {}
 
+class _MockSyncStatusCubit extends MockCubit<SyncStatusState>
+    implements SyncStatusCubit {}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('RemoteConfigDiagnosticsSection', () {
     late _MockRemoteConfigCubit cubit;
+    late _MockSyncStatusCubit syncStatusCubit;
 
     setUp(() {
       cubit = _MockRemoteConfigCubit();
+      syncStatusCubit = _MockSyncStatusCubit();
     });
 
-    Future<void> pumpWidget(final WidgetTester tester) {
+    Future<void> pumpWidget(
+      final WidgetTester tester, {
+      bool includeSyncCubit = false,
+    }) {
       return tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: BlocProvider<RemoteConfigCubit>.value(
-            value: cubit,
+          home: MultiBlocProvider(
+            providers: <BlocProvider<dynamic>>[
+              BlocProvider<RemoteConfigCubit>.value(value: cubit),
+              if (includeSyncCubit)
+                BlocProvider<SyncStatusCubit>.value(value: syncStatusCubit),
+            ],
             child: const Scaffold(body: RemoteConfigDiagnosticsSection()),
           ),
         ),
@@ -96,12 +111,46 @@ void main() {
       when(() => cubit.fetchValues()).thenAnswer((_) async {});
 
       await pumpWidget(tester);
+
       await tester.tap(
         find.text(AppLocalizationsEn().settingsRemoteConfigRetryButton),
       );
       await tester.pump();
 
       verify(() => cubit.fetchValues()).called(1);
+    });
+
+    testWidgets('shows sync status banner when offline', (
+      final WidgetTester tester,
+    ) async {
+      const RemoteConfigLoaded state = RemoteConfigLoaded(
+        isAwesomeFeatureEnabled: true,
+        testValue: 'cached',
+      );
+      when(() => cubit.state).thenReturn(state);
+      whenListen(
+        cubit,
+        Stream<RemoteConfigState>.value(state),
+        initialState: state,
+      );
+
+      const SyncStatusState syncState = SyncStatusState(
+        networkStatus: NetworkStatus.offline,
+        syncStatus: SyncStatus.idle,
+      );
+      when(() => syncStatusCubit.state).thenReturn(syncState);
+      whenListen(
+        syncStatusCubit,
+        Stream<SyncStatusState>.value(syncState),
+        initialState: syncState,
+      );
+
+      await pumpWidget(tester, includeSyncCubit: true);
+
+      expect(
+        find.text(AppLocalizationsEn().syncStatusOfflineTitle),
+        findsOneWidget,
+      );
     });
 
     group('localization regression', () {

@@ -2,7 +2,7 @@
 
 This document revalidates the offline-first requirements after another pass over the codebase and folds in the existing guardrails (Hive everywhere, DI through `getIt`, responsive widgets, and checklist-driven delivery). It is intentionally implementation-oriented so each workstream can be executed without re-triaging requirements.
 
-## Progress Update (2025-11-20)
+## Progress Update (2025-11-24)
 
 - ✅ **Foundational services wired:** Added `ConnectivityNetworkStatusService`, `PendingSyncRepository`, and `BackgroundSyncCoordinator` with new DI registrations so every feature can subscribe to sync/connection state (see `lib/shared/services/network_status_service.dart` and `lib/shared/sync/*`).
 - ✅ **Sync operation primitives:** Defined the `SyncOperation` Freezed model + Hive-backed storage, plus unit tests (`test/shared/sync/pending_sync_repository_test.dart`) ensuring queue behavior.
@@ -41,39 +41,36 @@ This document revalidates the offline-first requirements after another pass over
 - ✅ **Profile offline-first foundation:** Added `ProfileCacheRepository` (Hive) and `OfflineFirstProfileRepository` (Syncable, read-only) with DI wiring through `getIt`, leveraging `NetworkStatusService` to serve cached data offline and refresh when online. Documented in `docs/offline_first/profile.md` with cache + repository tests.
 - ✅ **Profile sync surface:** Added `ProfileSyncBanner` widget and integrated it into `ProfilePage` so offline/syncing states surface via `SyncStatusCubit`. Added widget and page tests to cover banner visibility in offline/online flows.
 - ✅ **Profile manual refresh:** `ProfileSyncBanner` now exposes a “Sync now” action wired to `SyncStatusCubit.flush()`, enabling manual refresh even when coming back from offline.
-- ⚙️ **Immediate focus:** Continue with next feature onboarding (profile/remote config) while deepening instrumentation/pruning plans.
+- ✅ **Remote Config offline-first adoption:** Added `RemoteConfigCacheRepository` + `OfflineFirstRemoteConfigRepository`, wired DI to serve cached config values when offline, surfaced `SyncStatusCubit` inside `RemoteConfigDiagnosticsSection`, and documented contracts/tests under `docs/offline_first/remote_config.md`.
+- ✅ **Profile cache controls:** Added a dev/QA-only `ProfileCacheControlsSection` to Settings so engineers can clear the cached profile snapshot, with new l10n strings and widget tests guarding the behavior (`test/features/settings/presentation/widgets/profile_cache_controls_section_test.dart`).
+- ⚙️ **Immediate focus:** Push Remote Config telemetry/cache UX plus broader coordinator observability + pruning while staging the next feature onboardings.
 
 ## Immediate Next Steps
 
-1. **Profile offline-first onboarding** (Priority: High)
-   - Add cache management affordance (clear profile cache) if storage becomes a concern.
+1. **Remote Config telemetry + cache UX** (Priority: Medium)
+   - Surface `lastSyncedAt` + `dataSource` metadata alongside diagnostics.
+   - Add optional “reset config cache” action for developers to clear Hive state.
+   - Pipe Remote Config refresh metrics into `BackgroundSyncCoordinator` analytics hooks.
+   - Evaluate differential sync/version pinning for staged rollouts.
 
-2. **Remote Config offline-first adoption** (Priority: Medium)
-   - Create `RemoteConfigCacheRepository` (Hive-backed) to cache config values locally.
-   - Wrap `RemoteConfigRepository` with `OfflineFirstRemoteConfigRepository` to serve cached values when offline.
-   - Update `RemoteConfigCubit` to load from cache first, then refresh from remote.
-   - Add sync status indicators to settings page.
-   - Document contracts under `docs/offline_first/remote_config.md`.
-   - **Reference**: Similar to Search pattern but with config-specific considerations (versioning, defaults).
-
-3. **Chat UX enhancements** (Priority: Medium)
+2. **Chat UX enhancements** (Priority: Medium)
    - Explore per-message "retry now" affordance (swipe/long-press) that re-enqueues a specific pending message without waiting for full coordinator batch.
    - Surface "last synced" metadata inline with conversation headers so users know when a thread last synced.
    - Add conversation-level pending count chips in history list.
    - Feed sync metrics/telemetry (queue depth, flush duration) into `ErrorNotificationService`/analytics for observability.
 
-4. **Coordinator observability & pruning** (Priority: Medium)
+3. **Coordinator observability & pruning** (Priority: Medium)
    - Emit structured metrics when batches succeed/fail, track queue depth, and expose via `BackgroundSyncCoordinator`.
    - Hook into pruning policies (see §3.7) to keep boxes trimmed automatically.
    - Implement queue maintenance in `PendingSyncRepository` to clear completed/obsolete operations.
    - Add periodic data pruning for local caches (e.g., chat history older than 90 days, search queries older than 30 days).
 
-5. **GraphQL demo offline-first** (Priority: Low)
+4. **GraphQL demo offline-first** (Priority: Low)
    - Cache countries/continents data locally for offline access.
    - Follow Search pattern for read-only cache-first approach.
    - Document contracts under `docs/offline_first/graphql_demo.md`.
 
-6. **Testing & quality improvements** (Priority: Low)
+5. **Testing & quality improvements** (Priority: Low)
    - Expand integration tests for end-to-end offline scenarios across all features.
    - Add golden tests for sync banners in different states.
    - Improve test determinism with better `FakeTimerService` usage patterns.
@@ -208,8 +205,8 @@ This document revalidates the offline-first requirements after another pass over
 | Counter | Reuse `counter` Hive box with new `changeId`, `lastSyncedAt` columns | Maintain FIFO queue of increments/decrements; replay unapplied changeIds when online | Show sync badge + queued count on counter page; reuse `PlatformAdaptive` banners | Extend `hive_counter_repository_test.dart`, add bloc tests for queued ops, update golden tests for new banner |
 | Chat | New `chat_conversations`, `chat_pending_messages` boxes storing `ChatConversationDto` & message draft entity | Pending send queue with `clientMessageId`; detect conflicts by matching IDs + timestamps, mark `resurrected` when needed | Hydrate history instantly, show pending indicator per message, add manual “Sync now” CTA | Unit tests for persistence/helpers, bloc/widget tests for pending message UI, update `SecureChatHistoryRepository` coverage |
 | Search | `search_cache` box storing last results + queries | Cache-first strategy: serve cached results when offline, refresh in background when online. `pullRemote` refreshes top 10 recent queries. | `SearchSyncBanner` shows offline/syncing status. Search page works transparently with cached results. | ✅ Complete: `test/features/search/data/search_cache_repository_test.dart`, `test/features/search/data/offline_first_search_repository_test.dart`, `test/features/search/presentation/widgets/search_sync_banner_test.dart`, `test/features/search/presentation/pages/search_page_test.dart` |
-| Profile | `profile_cache` storing `ProfileUser` + gallery assets metadata | Cache-first strategy (read-only): serve cached profile when offline, refresh in background when online. `pullRemote` refreshes cached profile. Future edits use optimistic update with merge-by-field version stamps. | `ProfileSyncBanner` shows offline/syncing status + manual sync CTA. Profile page works transparently with cached data. | ✅ Cache/repo tests (`test/features/profile/data/profile_cache_repository_test.dart`, `test/features/profile/data/offline_first_profile_repository_test.dart`); banner/page widget tests |
-| Remote Config & Settings | `remote_config_cache` storing config values + version/checksum | Cache-first strategy: serve cached config when offline, refresh when online. On conflict, prefer newest `lastFetched` but keep fallback value for rollback. | `SettingsPage` shows sync status + retry button; `RemoteConfigCubit` exposes explicit offline/error states. | ⏩ **Next**: Cache repository tests, offline-first wrapper tests, cubit state tests for offline behavior |
+| Profile | `profile_cache` storing `ProfileUser` + gallery assets metadata | Cache-first strategy (read-only): serve cached profile when offline, refresh in background when online. `pullRemote` refreshes cached profile. Future edits use optimistic update with merge-by-field version stamps. | `ProfileSyncBanner` surfaces offline/syncing states + manual sync CTA, and dev/QA builds expose a `ProfileCacheControlsSection` in Settings to clear cached data. | ✅ Cache/repo tests (`test/features/profile/data/profile_cache_repository_test.dart`, `test/features/profile/data/offline_first_profile_repository_test.dart`); banner/page widget tests + `test/features/settings/presentation/widgets/profile_cache_controls_section_test.dart` |
+| Remote Config & Settings | `remote_config_cache` storing config values + version/checksum | Cache-first strategy via `OfflineFirstRemoteConfigRepository`; serves cache offline, refreshes via sync registry when online. | `SettingsPage` diagnostics now include sync banner + retry action fed by `SyncStatusCubit`. | ✅ Cache + repo tests (`test/features/remote_config/data/remote_config_cache_repository_test.dart`, `test/features/remote_config/data/offline_first_remote_config_repository_test.dart`); widget regression in `remote_config_diagnostics_section_test.dart` |
 | Maps / Websocket demos | Cache map samples + recent locations per feature; queue pin updates | Use simple “last write wins” with timestamp; for WebSocket, persist inbound events for offline replay | Display offline overlay and disable streaming-only UI until sync catches up | Add fake repositories for widget tests, ensure `EchoWebsocketRepository` flushes persistent backlog |
 
 Document per-feature decisions (box names, DTO contracts, sync strategies) under `docs/offline_first/<feature>.md` so future contributors follow the same conventions.

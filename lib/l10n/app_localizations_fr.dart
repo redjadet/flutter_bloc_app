@@ -341,6 +341,23 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsRemoteConfigRetryButton => 'Relancer la récupération';
 
   @override
+  String get settingsProfileCacheSectionTitle => 'Cache du profil';
+
+  @override
+  String get settingsProfileCacheDescription =>
+      'Supprimez l\'instantané de profil stocké localement utilisé pour afficher l\'écran du profil hors ligne.';
+
+  @override
+  String get settingsProfileCacheClearButton => 'Vider le cache du profil';
+
+  @override
+  String get settingsProfileCacheClearedMessage => 'Cache du profil vidé';
+
+  @override
+  String get settingsProfileCacheErrorMessage =>
+      'Impossible de vider le cache du profil';
+
+  @override
   String get appInfoVersionLabel => 'Version';
 
   @override

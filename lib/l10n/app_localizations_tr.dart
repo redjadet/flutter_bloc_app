@@ -333,6 +333,24 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsRemoteConfigRetryButton => 'Yeniden getir';
 
   @override
+  String get settingsProfileCacheSectionTitle => 'Profil önbelleği';
+
+  @override
+  String get settingsProfileCacheDescription =>
+      'Profil ekranını çevrimdışı göstermek için kullanılan yerel profil anlık görüntüsünü temizleyin.';
+
+  @override
+  String get settingsProfileCacheClearButton => 'Profil önbelleğini temizle';
+
+  @override
+  String get settingsProfileCacheClearedMessage =>
+      'Profil önbelleği temizlendi';
+
+  @override
+  String get settingsProfileCacheErrorMessage =>
+      'Profil önbelleği temizlenemedi';
+
+  @override
   String get appInfoVersionLabel => 'Sürüm';
 
   @override

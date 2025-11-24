@@ -218,6 +218,26 @@
   "@settingsRemoteConfigRetryButton": {
     "description": "Etiqueta del botón que vuelve a lanzar la carga de Remote Config"
   },
+  "settingsProfileCacheSectionTitle": "Caché de perfil",
+  "@settingsProfileCacheSectionTitle": {
+    "description": "Encabezado de la sección para desarrolladores que gestiona el caché del perfil"
+  },
+  "settingsProfileCacheDescription": "Borra la instantánea de perfil guardada localmente que permite mostrar la pantalla de perfil sin conexión.",
+  "@settingsProfileCacheDescription": {
+    "description": "Texto de ayuda que explica para qué sirve el caché del perfil"
+  },
+  "settingsProfileCacheClearButton": "Borrar caché de perfil",
+  "@settingsProfileCacheClearButton": {
+    "description": "Botón que elimina la instantánea de perfil almacenada en caché"
+  },
+  "settingsProfileCacheClearedMessage": "Se borró el caché de perfil",
+  "@settingsProfileCacheClearedMessage": {
+    "description": "Mensaje de confirmación tras borrar el caché del perfil"
+  },
+  "settingsProfileCacheErrorMessage": "No se pudo borrar el caché de perfil",
+  "@settingsProfileCacheErrorMessage": {
+    "description": "Mensaje de error si falla el borrado del caché del perfil"
+  },
   "appInfoVersionLabel": "Versión",
   "@appInfoVersionLabel": {
     "description": "Etiqueta que precede a la versión de la aplicación"

@@ -336,6 +336,24 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsRemoteConfigRetryButton => 'Reintentar carga';
 
   @override
+  String get settingsProfileCacheSectionTitle => 'Caché de perfil';
+
+  @override
+  String get settingsProfileCacheDescription =>
+      'Borra la instantánea de perfil guardada localmente que permite mostrar la pantalla de perfil sin conexión.';
+
+  @override
+  String get settingsProfileCacheClearButton => 'Borrar caché de perfil';
+
+  @override
+  String get settingsProfileCacheClearedMessage =>
+      'Se borró el caché de perfil';
+
+  @override
+  String get settingsProfileCacheErrorMessage =>
+      'No se pudo borrar el caché de perfil';
+
+  @override
   String get appInfoVersionLabel => 'Versión';
 
   @override

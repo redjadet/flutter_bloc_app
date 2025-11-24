@@ -218,6 +218,26 @@
   "@settingsRemoteConfigRetryButton": {
     "description": "Button-Beschriftung zum erneuten Abrufen der Remote Config"
   },
+  "settingsProfileCacheSectionTitle": "Profil-Cache",
+  "@settingsProfileCacheSectionTitle": {
+    "description": "Überschrift für den Entwicklerbereich, der den Profil-Cache verwaltet"
+  },
+  "settingsProfileCacheDescription": "Lösche den lokal gespeicherten Profil-Snapshot, der die Profilseite offline rendert.",
+  "@settingsProfileCacheDescription": {
+    "description": "Hilfetext, der erklärt, wozu der Profil-Cache dient"
+  },
+  "settingsProfileCacheClearButton": "Profil-Cache löschen",
+  "@settingsProfileCacheClearButton": {
+    "description": "Schaltfläche zum Löschen des zwischengespeicherten Profils"
+  },
+  "settingsProfileCacheClearedMessage": "Profil-Cache gelöscht",
+  "@settingsProfileCacheClearedMessage": {
+    "description": "Bestätigungsnachricht nach dem Löschen des Profil-Caches"
+  },
+  "settingsProfileCacheErrorMessage": "Profil-Cache konnte nicht gelöscht werden",
+  "@settingsProfileCacheErrorMessage": {
+    "description": "Fehlermeldung, wenn das Löschen des Profil-Caches fehlschlägt"
+  },
   "appInfoVersionLabel": "Version",
   "@appInfoVersionLabel": {
     "description": "Beschriftung vor der App-Versionsnummer"
