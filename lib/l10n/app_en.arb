@@ -444,6 +444,26 @@
   "@settingsRemoteConfigRetryButton": {
     "description": "Button label that retries the remote config fetch"
   },
+  "settingsProfileCacheSectionTitle": "Profile cache",
+  "@settingsProfileCacheSectionTitle": {
+    "description": "Heading for the developer-only section that manages the profile cache"
+  },
+  "settingsProfileCacheDescription": "Clear the locally cached profile snapshot used to render the profile screen offline.",
+  "@settingsProfileCacheDescription": {
+    "description": "Helper text describing what the profile cache does"
+  },
+  "settingsProfileCacheClearButton": "Clear profile cache",
+  "@settingsProfileCacheClearButton": {
+    "description": "Button label that clears the cached profile snapshot"
+  },
+  "settingsProfileCacheClearedMessage": "Profile cache cleared",
+  "@settingsProfileCacheClearedMessage": {
+    "description": "Confirmation snackbar message displayed after clearing the profile cache"
+  },
+  "settingsProfileCacheErrorMessage": "Couldn't clear profile cache",
+  "@settingsProfileCacheErrorMessage": {
+    "description": "Error snackbar message displayed if clearing the profile cache fails"
+  },
   "appInfoVersionLabel": "Version",
   "@appInfoVersionLabel": {
     "description": "Label shown before the application version string"

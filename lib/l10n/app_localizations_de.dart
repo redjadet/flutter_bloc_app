@@ -339,6 +339,23 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsRemoteConfigRetryButton => 'Erneut abrufen';
 
   @override
+  String get settingsProfileCacheSectionTitle => 'Profil-Cache';
+
+  @override
+  String get settingsProfileCacheDescription =>
+      'Lösche den lokal gespeicherten Profil-Snapshot, der die Profilseite offline rendert.';
+
+  @override
+  String get settingsProfileCacheClearButton => 'Profil-Cache löschen';
+
+  @override
+  String get settingsProfileCacheClearedMessage => 'Profil-Cache gelöscht';
+
+  @override
+  String get settingsProfileCacheErrorMessage =>
+      'Profil-Cache konnte nicht gelöscht werden';
+
+  @override
   String get appInfoVersionLabel => 'Version';
 
   @override

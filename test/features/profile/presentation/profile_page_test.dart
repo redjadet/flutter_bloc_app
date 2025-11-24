@@ -170,8 +170,8 @@ void main() {
     });
 
     testWidgets('shows sync banner when offline', (final tester) async {
-      final _FakeNetworkStatusService networkService = _FakeNetworkStatusService()
-        ..status = NetworkStatus.offline;
+      final _FakeNetworkStatusService networkService =
+          _FakeNetworkStatusService()..status = NetworkStatus.offline;
       final _FakeBackgroundSyncCoordinator coordinator =
           _FakeBackgroundSyncCoordinator();
       networkService.emit(NetworkStatus.offline);

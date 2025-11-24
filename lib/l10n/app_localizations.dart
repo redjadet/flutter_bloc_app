@@ -716,6 +716,36 @@ abstract class AppLocalizations {
   /// **'Retry fetch'**
   String get settingsRemoteConfigRetryButton;
 
+  /// Heading for the developer-only section that manages the profile cache
+  ///
+  /// In en, this message translates to:
+  /// **'Profile cache'**
+  String get settingsProfileCacheSectionTitle;
+
+  /// Helper text describing what the profile cache does
+  ///
+  /// In en, this message translates to:
+  /// **'Clear the locally cached profile snapshot used to render the profile screen offline.'**
+  String get settingsProfileCacheDescription;
+
+  /// Button label that clears the cached profile snapshot
+  ///
+  /// In en, this message translates to:
+  /// **'Clear profile cache'**
+  String get settingsProfileCacheClearButton;
+
+  /// Confirmation snackbar message displayed after clearing the profile cache
+  ///
+  /// In en, this message translates to:
+  /// **'Profile cache cleared'**
+  String get settingsProfileCacheClearedMessage;
+
+  /// Error snackbar message displayed if clearing the profile cache fails
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t clear profile cache'**
+  String get settingsProfileCacheErrorMessage;
+
   /// Label shown before the application version string
   ///
   /// In en, this message translates to:

@@ -218,6 +218,26 @@
   "@settingsRemoteConfigRetryButton": {
     "description": "Libellé du bouton qui relance la récupération Remote Config"
   },
+  "settingsProfileCacheSectionTitle": "Cache du profil",
+  "@settingsProfileCacheSectionTitle": {
+    "description": "Titre de la section développeur qui gère le cache du profil"
+  },
+  "settingsProfileCacheDescription": "Supprimez l'instantané de profil stocké localement utilisé pour afficher l'écran du profil hors ligne.",
+  "@settingsProfileCacheDescription": {
+    "description": "Texte d'aide qui explique à quoi sert le cache du profil"
+  },
+  "settingsProfileCacheClearButton": "Vider le cache du profil",
+  "@settingsProfileCacheClearButton": {
+    "description": "Bouton qui efface l'instantané de profil mis en cache"
+  },
+  "settingsProfileCacheClearedMessage": "Cache du profil vidé",
+  "@settingsProfileCacheClearedMessage": {
+    "description": "Message de confirmation après la suppression du cache du profil"
+  },
+  "settingsProfileCacheErrorMessage": "Impossible de vider le cache du profil",
+  "@settingsProfileCacheErrorMessage": {
+    "description": "Message d'erreur si la suppression du cache du profil échoue"
+  },
   "appInfoVersionLabel": "Version",
   "@appInfoVersionLabel": {
     "description": "Intitulé affiché avant la version de l'application"

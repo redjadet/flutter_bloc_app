@@ -219,6 +219,26 @@
   "@settingsRemoteConfigRetryButton": {
     "description": "Uzak yapılandırmayı yeniden getiren düğme etiketi"
   },
+  "settingsProfileCacheSectionTitle": "Profil önbelleği",
+  "@settingsProfileCacheSectionTitle": {
+    "description": "Profil önbelleğini yöneten geliştirici bölümünün başlığı"
+  },
+  "settingsProfileCacheDescription": "Profil ekranını çevrimdışı göstermek için kullanılan yerel profil anlık görüntüsünü temizleyin.",
+  "@settingsProfileCacheDescription": {
+    "description": "Profil önbelleğinin ne yaptığını açıklayan yardımcı metin"
+  },
+  "settingsProfileCacheClearButton": "Profil önbelleğini temizle",
+  "@settingsProfileCacheClearButton": {
+    "description": "Önbelleğe alınan profil anlık görüntüsünü temizleyen düğme etiketi"
+  },
+  "settingsProfileCacheClearedMessage": "Profil önbelleği temizlendi",
+  "@settingsProfileCacheClearedMessage": {
+    "description": "Profil önbelleği temizlendikten sonra gösterilen onay mesajı"
+  },
+  "settingsProfileCacheErrorMessage": "Profil önbelleği temizlenemedi",
+  "@settingsProfileCacheErrorMessage": {
+    "description": "Profil önbelleği temizleme işlemi başarısız olursa gösterilen hata mesajı"
+  },
   "appInfoVersionLabel": "Sürüm",
   "@appInfoVersionLabel": {
     "description": "Uygulama sürüm numarasının önündeki etiket"
