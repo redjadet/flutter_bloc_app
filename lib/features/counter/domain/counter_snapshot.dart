@@ -10,6 +10,9 @@ abstract class CounterSnapshot with _$CounterSnapshot {
     required final int count,
     final String? userId,
     final DateTime? lastChanged,
+    final String? changeId,
+    final DateTime? lastSyncedAt,
+    @Default(false) final bool synchronized,
   }) = _CounterSnapshot;
 
   factory CounterSnapshot.fromJson(final Map<String, dynamic> json) =>

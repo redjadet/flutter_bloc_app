@@ -60,6 +60,11 @@ class CubitExceptionHandler {
 
   /// Extract a user-friendly error message from an exception.
   static String _extractErrorMessage(final Object error) {
+    // Handle TypeError specially - it doesn't have a message property
+    if (error is TypeError) {
+      return error.toString();
+    }
+
     final String fallback = error.toString();
     if (fallback.startsWith('Exception:')) {
       return fallback;

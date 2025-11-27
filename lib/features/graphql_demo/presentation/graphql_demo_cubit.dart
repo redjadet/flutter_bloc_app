@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/data/offline_first_graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_state.dart';
@@ -12,6 +14,13 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
       super(const GraphqlDemoState());
 
   final GraphqlDemoRepository _repository;
+
+  GraphqlDataSource get _repositorySource {
+    if (_repository is OfflineFirstGraphqlDemoRepository) {
+      return _repository.lastSource;
+    }
+    return GraphqlDataSource.unknown;
+  }
 
   Future<void> loadInitial() async {
     _emitLoading();
@@ -27,6 +36,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         _emitSuccess(
           continents: result.continents,
           countries: result.countries,
+          source: _repositorySource,
         );
       },
       onError: (final String message) {
@@ -63,7 +73,11 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         continentCode: continentCode,
       ),
       onSuccess: (final List<GraphqlCountry> countries) {
-        _emitSuccess(countries: countries);
+        _emitSuccess(
+          countries: countries,
+          activeContinentCode: continentCode,
+          source: _repositorySource,
+        );
       },
       onError: (final String message) {
         // For unknown exceptions, set errorMessage to null to match original behavior
@@ -94,6 +108,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
     final List<GraphqlCountry>? countries,
     final List<GraphqlContinent>? continents,
     final String? activeContinentCode,
+    final GraphqlDataSource? source,
   }) {
     final List<GraphqlCountry> resolvedCountries = countries != null
         ? List<GraphqlCountry>.unmodifiable(countries)
@@ -110,6 +125,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         activeContinentCode: activeContinentCode ?? state.activeContinentCode,
         errorMessage: null,
         errorType: null,
+        dataSource: source ?? state.dataSource,
       ),
     );
   }

@@ -55,6 +55,14 @@ Welcome aboard! This document distills the essentials you need to navigate, exte
 - **Deep Links**: `DeepLinkCubit` cooperates with `AppLinksDeepLinkService` to translate universal/custom links into router locations.
   The cubit also emits `DeepLinkLoading`/`DeepLinkError`, guards against overlapping `initialize()` calls, and exposes `retryInitialize()` so stream errors tear down safely and restart deterministically.
 - **Cross-cutting Services**: `lib/shared/services/` hosts timer, logging, biometric auth, native platform adapters, etc. Prefer extending these instead of introducing ad-hoc singletons.
+- **Offline-First Architecture**: The app implements a complete offline-first pattern across all core features. See `docs/offline_first/` for detailed documentation.
+  - **Background Sync**: `BackgroundSyncCoordinator` automatically syncs pending operations when online (60s interval)
+  - **Sync Status**: `SyncStatusCubit` tracks network status and sync state; widgets consume via `BlocSelector`
+  - **Pending Queue**: `PendingSyncRepository` stores operations that failed while offline; coordinator processes them when online
+  - **Repository Pattern**: Features implement `SyncableRepository` interface with `pullRemote()` and `processOperation()` methods
+  - **Sync Metadata**: Domain models include `synchronized`, `lastSyncedAt`, and `changeId` fields for conflict resolution
+  - **UI Indicators**: Sync banners (`CounterSyncBanner`, `ChatSyncBanner`, etc.) show offline/syncing/pending states
+  - **Adoption Guide**: See `docs/offline_first/adoption_guide.md` for step-by-step instructions on adding offline-first to new features
 
 ## 6. Development Workflow
 
@@ -103,11 +111,18 @@ Tips:
 1. Create `lib/features/<feature>/domain|data|presentation` folders.
 2. Define domain contracts/models (Freezed classes go in `domain/models`).
 3. Implement data sources (REST, Firebase, etc.), map DTOs to domain entities.
-4. Build Cubit + state (immutable), add widgets/pages.
-5. Register DI bindings (repository, cubit factories if needed).
-6. Add tests: repository unit tests, cubit bloc tests, and widget/golden coverage.
-7. Wire navigation via `AppRoutes` + `GoRouter` in `lib/app.dart`.
-8. Update docs/README if the feature is user-facing.
+4. **For offline-first features**: Follow `docs/offline_first/adoption_guide.md`:
+   - Add sync metadata to domain models (`synchronized`, `lastSyncedAt`, `changeId`)
+   - Create local cache repository (Hive-backed)
+   - Implement `OfflineFirst<Feature>Repository` with `SyncableRepository` interface
+   - Register in `SyncableRepositoryRegistry` (auto-registers on construction)
+   - Add sync status UI (banner widget) using `SyncStatusCubit`
+5. Build Cubit + state (immutable), add widgets/pages.
+6. Register DI bindings (repository, cubit factories if needed).
+7. Add tests: repository unit tests, cubit bloc tests, and widget/golden coverage.
+8. Wire navigation via `AppRoutes` + `GoRouter` in `lib/app.dart`.
+9. Update docs/README if the feature is user-facing.
+10. **For offline-first**: Document in `docs/offline_first/<feature>.md` following existing patterns.
 
 ## 10. Common Troubleshooting
 

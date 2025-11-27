@@ -42,6 +42,8 @@ class HuggingfaceChatRepository implements ChatRepository {
     required final List<String> generatedResponses,
     required final String prompt,
     final String? model,
+    final String? conversationId,
+    final String? clientMessageId,
   }) async {
     if (!_apiClient.hasApiKey) {
       throw const ChatException('Missing Hugging Face API token.');

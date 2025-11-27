@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Tests to catch common bugs/pitfalls/mistakes as documented in AGENTS.md
+/// Tests to catch common bugs, pitfalls, and defensive patterns outlined in the project's guidelines.
 void main() {
   group('Common Bugs Prevention Tests', () {
     group('StreamController State Checks', () {

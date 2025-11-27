@@ -16,6 +16,8 @@ RestorationResult restoreStateFromSnapshot(final CounterSnapshot snapshot) {
     state: CounterState.success(
       count: safeCount,
       lastChanged: snapshot.lastChanged,
+      lastSyncedAt: snapshot.lastSyncedAt,
+      changeId: snapshot.changeId,
     ),
     shouldPersist: shouldPersist,
     holdCountdown: holdCountdown,

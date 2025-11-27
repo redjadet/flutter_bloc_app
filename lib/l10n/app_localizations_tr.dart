@@ -333,6 +333,81 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsRemoteConfigRetryButton => 'Yeniden getir';
 
   @override
+  String get settingsRemoteConfigClearCacheButton =>
+      'Yapılandırma önbelleğini temizle';
+
+  @override
+  String get settingsSyncDiagnosticsTitle => 'Senkronizasyon tanılama';
+
+  @override
+  String get settingsSyncDiagnosticsEmpty =>
+      'Henüz senkronizasyon çalıştırması yok.';
+
+  @override
+  String settingsSyncLastRunLabel(String timestamp) {
+    return 'Son çalıştırma: $timestamp';
+  }
+
+  @override
+  String settingsSyncOperationsLabel(int processed, int failed) {
+    return 'İşlem: $processed tamamlandı, $failed başarısız';
+  }
+
+  @override
+  String settingsSyncPendingLabel(int count) {
+    return 'Başlangıçtaki bekleyen: $count';
+  }
+
+  @override
+  String settingsSyncPrunedLabel(int count) {
+    return 'Temizlenen: $count';
+  }
+
+  @override
+  String settingsSyncDurationLabel(int ms) {
+    return 'Süre: ${ms}ms';
+  }
+
+  @override
+  String get settingsSyncHistoryTitle => 'Son senkronizasyonlar';
+
+  @override
+  String get settingsGraphqlCacheSectionTitle => 'GraphQL önbelleği';
+
+  @override
+  String get settingsGraphqlCacheDescription =>
+      'GraphQL demo\'sunda kullanılan ülke/kıta önbelleğini temizle. Veriler bir sonraki yüklemede yenilenir.';
+
+  @override
+  String get settingsGraphqlCacheClearButton => 'GraphQL önbelleğini temizle';
+
+  @override
+  String get settingsGraphqlCacheClearedMessage =>
+      'GraphQL önbelleği temizlendi';
+
+  @override
+  String get settingsGraphqlCacheErrorMessage =>
+      'GraphQL önbelleği temizlenemedi';
+
+  @override
+  String get settingsProfileCacheSectionTitle => 'Profil önbelleği';
+
+  @override
+  String get settingsProfileCacheDescription =>
+      'Profil ekranını çevrimdışı göstermek için kullanılan yerel profil anlık görüntüsünü temizleyin.';
+
+  @override
+  String get settingsProfileCacheClearButton => 'Profil önbelleğini temizle';
+
+  @override
+  String get settingsProfileCacheClearedMessage =>
+      'Profil önbelleği temizlendi';
+
+  @override
+  String get settingsProfileCacheErrorMessage =>
+      'Profil önbelleği temizlenemedi';
+
+  @override
   String get appInfoVersionLabel => 'Sürüm';
 
   @override
@@ -395,6 +470,16 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get chatHistoryClearAllWarning =>
       'Bu işlem tüm kayıtlı sohbetleri kalıcı olarak silecek.';
+
+  @override
+  String get chatMessageStatusPending => 'Senkron bekleniyor';
+
+  @override
+  String get chatMessageStatusSyncing => 'Senkronize ediliyor…';
+
+  @override
+  String get chatMessageStatusOffline =>
+      'Çevrimdışı – bağlantı sağlandığında gönderilecek';
 
   @override
   String get registerTitle => 'Kayıt Ol';
@@ -765,4 +850,75 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get googleMapsPageUnsupportedDescription =>
       'Google Haritalar demosu yalnızca Android ve iOS derlemelerinde kullanılabilir.';
+
+  @override
+  String get syncStatusOfflineTitle => 'Çevrimdışısın';
+
+  @override
+  String syncStatusOfflineMessage(int pendingCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pendingCount,
+      locale: localeName,
+      other: '# değişikliği',
+      one: '# değişikliği',
+      zero: 'Değişikliklerini',
+    );
+    return '$_temp0 çevrimiçi olduğunda senkronize edeceğiz.';
+  }
+
+  @override
+  String get syncStatusSyncingTitle => 'Değişiklikler senkronize ediliyor';
+
+  @override
+  String syncStatusSyncingMessage(int pendingCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pendingCount,
+      locale: localeName,
+      other: '# değişiklik senkronize ediliyor…',
+      one: '# değişiklik senkronize ediliyor…',
+      zero: 'Son güncellemeler tamamlanıyor.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncStatusPendingTitle => 'Bekleyen değişiklikler';
+
+  @override
+  String syncStatusPendingMessage(int pendingCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pendingCount,
+      locale: localeName,
+      other: 'Senkronizasyon bekleyen # değişiklik.',
+      one: 'Senkronizasyon bekleyen # değişiklik.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncStatusSyncNowButton => 'Şimdi senkronize et';
+
+  @override
+  String counterLastSynced(Object timestamp) {
+    return 'Son senkronizasyon: $timestamp';
+  }
+
+  @override
+  String counterChangeId(Object changeId) {
+    return 'Değişiklik kimliği: $changeId';
+  }
+
+  @override
+  String get syncQueueInspectorButton => 'Senkron kuyruğunu göster';
+
+  @override
+  String get syncQueueInspectorEmpty => 'Bekleyen işlem yok.';
+
+  @override
+  String get syncQueueInspectorTitle => 'Bekleyen senkron işlemleri';
+
+  @override
+  String syncQueueInspectorOperation(String entity, int attempts) {
+    return 'Varlık: $entity, deneme: $attempts';
+  }
 }

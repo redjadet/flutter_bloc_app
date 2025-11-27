@@ -1,14 +1,22 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
+import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/shared_preferences_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
+import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
+import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 import 'test_helpers.dart';
 
@@ -172,6 +180,56 @@ void main() {
       expect(cubit.state.count, 42);
       expect(cubit.state.countdownSeconds, 5);
     });
+
+    test('updates state when repository emits flushed snapshot', () async {
+      final _RecordingCounterRepository recordingRepo =
+          _RecordingCounterRepository(const CounterSnapshot(count: 1));
+      final CounterCubit cubit = createCubit(
+        repository: recordingRepo,
+        startTicker: false,
+      );
+      await cubit.loadInitial();
+      expect(cubit.state.count, 1);
+
+      await recordingRepo.save(const CounterSnapshot(count: 6));
+      await pumpEventQueue();
+
+      expect(cubit.state.count, 6);
+    });
+
+    test(
+      'offline repository queues operations when remote unavailable',
+      () async {
+        final Directory tempDir = Directory.systemTemp.createTempSync(
+          'offline_counter_test_',
+        );
+        addTearDown(() async {
+          await Hive.close();
+          tempDir.deleteSync(recursive: true);
+        });
+        Hive.init(tempDir.path);
+        final HiveService hiveService = HiveService(
+          keyManager: HiveKeyManager(),
+        );
+        await hiveService.initialize();
+        final PendingSyncRepository pendingRepository = PendingSyncRepository(
+          hiveService: hiveService,
+        );
+        final OfflineFirstCounterRepository repo =
+            OfflineFirstCounterRepository(
+              localRepository: HiveCounterRepository(hiveService: hiveService),
+              pendingSyncRepository: pendingRepository,
+              registry: SyncableRepositoryRegistry(),
+              remoteRepository: MockCounterRepository(),
+            );
+
+        final CounterCubit cubit = createCubit(repository: repo);
+        await cubit.increment();
+        final List<SyncOperation> pending = await pendingRepository
+            .getPendingOperations(now: DateTime.now().toUtc());
+        expect(pending, isNotEmpty);
+      },
+    );
 
     test('increment persists value and timestamp', () async {
       SharedPreferences.setMockInitialValues(<String, Object>{});

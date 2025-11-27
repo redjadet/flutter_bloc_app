@@ -8,3 +8,4 @@ export 'presentation/widgets/profile_action_buttons.dart';
 export 'presentation/widgets/profile_bottom_nav.dart';
 export 'presentation/widgets/profile_gallery.dart';
 export 'presentation/widgets/profile_header.dart';
+export 'presentation/widgets/profile_sync_banner.dart';

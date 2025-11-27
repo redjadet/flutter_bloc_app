@@ -330,6 +330,77 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsRemoteConfigRetryButton => 'Retry fetch';
 
   @override
+  String get settingsRemoteConfigClearCacheButton => 'Clear config cache';
+
+  @override
+  String get settingsSyncDiagnosticsTitle => 'Sync diagnostics';
+
+  @override
+  String get settingsSyncDiagnosticsEmpty => 'No sync runs recorded yet.';
+
+  @override
+  String settingsSyncLastRunLabel(String timestamp) {
+    return 'Last run: $timestamp';
+  }
+
+  @override
+  String settingsSyncOperationsLabel(int processed, int failed) {
+    return 'Ops: $processed processed, $failed failed';
+  }
+
+  @override
+  String settingsSyncPendingLabel(int count) {
+    return 'Pending at start: $count';
+  }
+
+  @override
+  String settingsSyncPrunedLabel(int count) {
+    return 'Pruned: $count';
+  }
+
+  @override
+  String settingsSyncDurationLabel(int ms) {
+    return 'Duration: ${ms}ms';
+  }
+
+  @override
+  String get settingsSyncHistoryTitle => 'Recent sync runs';
+
+  @override
+  String get settingsGraphqlCacheSectionTitle => 'GraphQL cache';
+
+  @override
+  String get settingsGraphqlCacheDescription =>
+      'Clear the cached countries/continents used by the GraphQL demo. Fresh data will be fetched on next load.';
+
+  @override
+  String get settingsGraphqlCacheClearButton => 'Clear GraphQL cache';
+
+  @override
+  String get settingsGraphqlCacheClearedMessage => 'GraphQL cache cleared';
+
+  @override
+  String get settingsGraphqlCacheErrorMessage =>
+      'Couldn\'t clear GraphQL cache';
+
+  @override
+  String get settingsProfileCacheSectionTitle => 'Profile cache';
+
+  @override
+  String get settingsProfileCacheDescription =>
+      'Clear the locally cached profile snapshot used to render the profile screen offline.';
+
+  @override
+  String get settingsProfileCacheClearButton => 'Clear profile cache';
+
+  @override
+  String get settingsProfileCacheClearedMessage => 'Profile cache cleared';
+
+  @override
+  String get settingsProfileCacheErrorMessage =>
+      'Couldn\'t clear profile cache';
+
+  @override
   String get appInfoVersionLabel => 'Version';
 
   @override
@@ -392,6 +463,15 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get chatHistoryClearAllWarning =>
       'This will permanently delete all stored conversations.';
+
+  @override
+  String get chatMessageStatusPending => 'Pending sync';
+
+  @override
+  String get chatMessageStatusSyncing => 'Syncing…';
+
+  @override
+  String get chatMessageStatusOffline => 'Offline — will send when connected';
 
   @override
   String get registerTitle => 'Register';
@@ -766,4 +846,75 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get googleMapsPageUnsupportedDescription =>
       'The Google Maps demo is only available on Android and iOS builds.';
+
+  @override
+  String get syncStatusOfflineTitle => 'You\'re offline';
+
+  @override
+  String syncStatusOfflineMessage(int pendingCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pendingCount,
+      locale: localeName,
+      other: '# changes',
+      one: '# change',
+      zero: 'your changes',
+    );
+    return 'We will sync $_temp0 once you\'re back online.';
+  }
+
+  @override
+  String get syncStatusSyncingTitle => 'Syncing changes';
+
+  @override
+  String syncStatusSyncingMessage(int pendingCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pendingCount,
+      locale: localeName,
+      other: 'Syncing # changes…',
+      one: 'Syncing # change…',
+      zero: 'Wrapping up your latest updates.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncStatusPendingTitle => 'Changes queued';
+
+  @override
+  String syncStatusPendingMessage(int pendingCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pendingCount,
+      locale: localeName,
+      other: '# changes waiting to sync.',
+      one: '# change waiting to sync.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncStatusSyncNowButton => 'Sync now';
+
+  @override
+  String counterLastSynced(Object timestamp) {
+    return 'Last synced: $timestamp';
+  }
+
+  @override
+  String counterChangeId(Object changeId) {
+    return 'Change ID: $changeId';
+  }
+
+  @override
+  String get syncQueueInspectorButton => 'View sync queue';
+
+  @override
+  String get syncQueueInspectorEmpty => 'No pending operations.';
+
+  @override
+  String get syncQueueInspectorTitle => 'Pending Sync Operations';
+
+  @override
+  String syncQueueInspectorOperation(String entity, int attempts) {
+    return 'Entity: $entity, attempts: $attempts';
+  }
 }
