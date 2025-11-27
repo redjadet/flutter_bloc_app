@@ -282,6 +282,26 @@
   "@settingsSyncHistoryTitle": {
     "description": "Encabezado para la lista de historial de sincronización en diagnósticos"
   },
+  "settingsGraphqlCacheSectionTitle": "Caché de GraphQL",
+  "@settingsGraphqlCacheSectionTitle": {
+    "description": "Encabezado de la sección para limpiar la caché de la demo de GraphQL"
+  },
+  "settingsGraphqlCacheDescription": "Borra los países/continentes en caché usados por la demo GraphQL. Los datos se renovarán en la siguiente carga.",
+  "@settingsGraphqlCacheDescription": {
+    "description": "Texto de ayuda que describe la caché de la demo GraphQL"
+  },
+  "settingsGraphqlCacheClearButton": "Limpiar caché de GraphQL",
+  "@settingsGraphqlCacheClearButton": {
+    "description": "Etiqueta del botón que limpia los datos de la demo GraphQL"
+  },
+  "settingsGraphqlCacheClearedMessage": "Caché de GraphQL limpiada",
+  "@settingsGraphqlCacheClearedMessage": {
+    "description": "Mensaje de confirmación tras limpiar la caché de GraphQL"
+  },
+  "settingsGraphqlCacheErrorMessage": "No se pudo limpiar la caché de GraphQL",
+  "@settingsGraphqlCacheErrorMessage": {
+    "description": "Mensaje de error si falla la limpieza de la caché de GraphQL"
+  },
   "settingsProfileCacheSectionTitle": "Caché de perfil",
   "@settingsProfileCacheSectionTitle": {
     "description": "Encabezado de la sección para desarrolladores que gestiona el caché del perfil"

@@ -282,6 +282,26 @@
   "@settingsSyncHistoryTitle": {
     "description": "Überschrift für die Sync-Verlaufsanzeige in der Diagnostik"
   },
+  "settingsGraphqlCacheSectionTitle": "GraphQL-Cache",
+  "@settingsGraphqlCacheSectionTitle": {
+    "description": "Überschrift für den Entwicklerbereich zum Leeren des GraphQL-Demo-Caches"
+  },
+  "settingsGraphqlCacheDescription": "Lösche den zwischengespeicherten Länder/Kontinente-Datensatz der GraphQL-Demo. Daten werden beim nächsten Laden erneuert.",
+  "@settingsGraphqlCacheDescription": {
+    "description": "Hilfetext, der erklärt, was der GraphQL-Demo-Cache macht"
+  },
+  "settingsGraphqlCacheClearButton": "GraphQL-Cache leeren",
+  "@settingsGraphqlCacheClearButton": {
+    "description": "Button-Beschriftung zum Leeren der GraphQL-Demo-Daten"
+  },
+  "settingsGraphqlCacheClearedMessage": "GraphQL-Cache geleert",
+  "@settingsGraphqlCacheClearedMessage": {
+    "description": "Bestätigungsnachricht nach dem Leeren des GraphQL-Caches"
+  },
+  "settingsGraphqlCacheErrorMessage": "GraphQL-Cache konnte nicht geleert werden",
+  "@settingsGraphqlCacheErrorMessage": {
+    "description": "Fehlermeldung, falls das Leeren des GraphQL-Caches scheitert"
+  },
   "settingsProfileCacheSectionTitle": "Profil-Cache",
   "@settingsProfileCacheSectionTitle": {
     "description": "Überschrift für den Entwicklerbereich, der den Profil-Cache verwaltet"

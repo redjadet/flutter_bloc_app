@@ -508,6 +508,26 @@
   "@settingsSyncHistoryTitle": {
     "description": "Heading for the sync history list in diagnostics"
   },
+  "settingsGraphqlCacheSectionTitle": "GraphQL cache",
+  "@settingsGraphqlCacheSectionTitle": {
+    "description": "Heading for the developer-only section that clears the GraphQL demo cache"
+  },
+  "settingsGraphqlCacheDescription": "Clear the cached countries/continents used by the GraphQL demo. Fresh data will be fetched on next load.",
+  "@settingsGraphqlCacheDescription": {
+    "description": "Helper text describing what the GraphQL demo cache does"
+  },
+  "settingsGraphqlCacheClearButton": "Clear GraphQL cache",
+  "@settingsGraphqlCacheClearButton": {
+    "description": "Button label that clears the cached GraphQL demo data"
+  },
+  "settingsGraphqlCacheClearedMessage": "GraphQL cache cleared",
+  "@settingsGraphqlCacheClearedMessage": {
+    "description": "Confirmation snackbar message displayed after clearing the GraphQL cache"
+  },
+  "settingsGraphqlCacheErrorMessage": "Couldn't clear GraphQL cache",
+  "@settingsGraphqlCacheErrorMessage": {
+    "description": "Error snackbar message displayed if clearing the GraphQL cache fails"
+  },
   "settingsProfileCacheSectionTitle": "Profile cache",
   "@settingsProfileCacheSectionTitle": {
     "description": "Heading for the developer-only section that manages the profile cache"
