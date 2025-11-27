@@ -28,10 +28,8 @@ class CubitExceptionHandler {
     final StackTrace? stackTrace,
     final String logContext, {
     required final void Function(String errorMessage) onError,
-    final Map<Type, void Function(Object error, StackTrace? stackTrace)>?
-    specificExceptionHandlers,
-    final void Function(Object error, StackTrace? stackTrace)?
-    onErrorWithDetails,
+    final Map<Type, void Function(Object error, StackTrace? stackTrace)>? specificExceptionHandlers,
+    final void Function(Object error, StackTrace? stackTrace)? onErrorWithDetails,
   }) {
     // Handle specific exceptions first if provided
     if (specificExceptionHandlers != null) {
@@ -60,6 +58,11 @@ class CubitExceptionHandler {
 
   /// Extract a user-friendly error message from an exception.
   static String _extractErrorMessage(final Object error) {
+    // Handle TypeError specially - it doesn't have a message property
+    if (error is TypeError) {
+      return error.toString();
+    }
+
     final String fallback = error.toString();
     if (fallback.startsWith('Exception:')) {
       return fallback;
@@ -98,10 +101,8 @@ class CubitExceptionHandler {
     required final void Function(T result) onSuccess,
     required final void Function(String errorMessage) onError,
     required final String logContext,
-    final Map<Type, void Function(Object error, StackTrace? stackTrace)>?
-    specificExceptionHandlers,
-    final void Function(Object error, StackTrace? stackTrace)?
-    onErrorWithDetails,
+    final Map<Type, void Function(Object error, StackTrace? stackTrace)>? specificExceptionHandlers,
+    final void Function(Object error, StackTrace? stackTrace)? onErrorWithDetails,
   }) async {
     try {
       final T result = await operation();
@@ -136,10 +137,8 @@ class CubitExceptionHandler {
     required final void Function(String errorMessage) onError,
     required final String logContext,
     final void Function()? onSuccess,
-    final Map<Type, void Function(Object error, StackTrace? stackTrace)>?
-    specificExceptionHandlers,
-    final void Function(Object error, StackTrace? stackTrace)?
-    onErrorWithDetails,
+    final Map<Type, void Function(Object error, StackTrace? stackTrace)>? specificExceptionHandlers,
+    final void Function(Object error, StackTrace? stackTrace)? onErrorWithDetails,
   }) async {
     await executeAsync(
       operation: operation,
