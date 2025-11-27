@@ -309,6 +309,7 @@ void main() {
         ),
       );
 
+      await tester.pump();
       await tester.tap(find.text('View sync queue'));
       await tester.pumpAndSettle();
 

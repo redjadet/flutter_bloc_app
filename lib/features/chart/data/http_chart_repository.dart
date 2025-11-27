@@ -83,6 +83,9 @@ class HttpChartRepository extends ChartRepository {
     return cached;
   }
 
+  @override
+  List<ChartPoint>? getCachedTrendingCounts() => _cached;
+
   List<ChartPoint> _parseBody(final String body) {
     final dynamic decoded = json.decode(body);
     if (decoded is! Map<String, dynamic>) {
