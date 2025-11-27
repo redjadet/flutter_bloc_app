@@ -261,6 +261,15 @@
       }
     }
   },
+  "settingsSyncPrunedLabel": "Temizlenen: {count}",
+  "@settingsSyncPrunedLabel": {
+    "description": "Senkronizasyon sonrası temizlenen kuyruk elemanlarını gösterir",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "settingsSyncDurationLabel": "Süre: {ms}ms",
   "@settingsSyncDurationLabel": {
     "description": "Son senkronizasyon süresini milisaniye cinsinden gösterir",

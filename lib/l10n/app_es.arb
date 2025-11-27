@@ -260,6 +260,15 @@
       }
     }
   },
+  "settingsSyncPrunedLabel": "Depurados: {count}",
+  "@settingsSyncPrunedLabel": {
+    "description": "Muestra cuántos elementos de la cola se depuraron tras la sincronización",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "settingsSyncDurationLabel": "Duración: {ms}ms",
   "@settingsSyncDurationLabel": {
     "description": "Etiqueta que muestra la duración de la última sincronización en milisegundos",

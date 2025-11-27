@@ -359,6 +359,11 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String settingsSyncPrunedLabel(int count) {
+    return 'Temizlenen: $count';
+  }
+
+  @override
   String settingsSyncDurationLabel(int ms) {
     return 'Süre: ${ms}ms';
   }

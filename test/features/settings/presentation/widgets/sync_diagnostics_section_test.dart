@@ -62,6 +62,7 @@ void main() {
         pendingAtStart: 2,
         operationsProcessed: 2,
         operationsFailed: 0,
+        prunedCount: 3,
         pendingByEntity: <String, int>{'chat': 1, 'counter': 1},
       );
       final SyncStatusState state = SyncStatusState(
@@ -82,9 +83,40 @@ void main() {
       expect(find.textContaining('Last run'), findsOneWidget);
       expect(find.textContaining('Ops:'), findsOneWidget);
       expect(find.textContaining('Pending at start'), findsOneWidget);
+      expect(find.textContaining('Pruned'), findsOneWidget);
       expect(find.textContaining('chat: 1'), findsOneWidget);
       expect(find.textContaining('Duration'), findsOneWidget);
       expect(find.textContaining('Recent sync runs'), findsOneWidget);
+    });
+
+    testWidgets('hides pruned row when zero', (tester) async {
+      final SyncCycleSummary summary = SyncCycleSummary(
+        recordedAt: DateTime.utc(2024, 1, 1, 12, 0),
+        durationMs: 50,
+        pullRemoteCount: 0,
+        pullRemoteFailures: 0,
+        pendingAtStart: 0,
+        operationsProcessed: 0,
+        operationsFailed: 0,
+        prunedCount: 0,
+        pendingByEntity: const <String, int>{},
+      );
+      final SyncStatusState state = SyncStatusState(
+        networkStatus: NetworkStatus.online,
+        syncStatus: SyncStatus.idle,
+        lastSummary: summary,
+        history: <SyncCycleSummary>[summary],
+      );
+      when(() => cubit.state).thenReturn(state);
+      whenListen(
+        cubit,
+        Stream<SyncStatusState>.value(state),
+        initialState: state,
+      );
+
+      await pump(tester);
+
+      expect(find.textContaining('Pruned'), findsNothing);
     });
   });
 }

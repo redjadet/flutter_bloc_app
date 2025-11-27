@@ -752,6 +752,12 @@ abstract class AppLocalizations {
   /// **'Pending at start: {count}'**
   String settingsSyncPendingLabel(int count);
 
+  /// Label showing how many queued operations were pruned after sync
+  ///
+  /// In en, this message translates to:
+  /// **'Pruned: {count}'**
+  String settingsSyncPrunedLabel(int count);
+
   /// Label showing last sync duration in milliseconds
   ///
   /// In en, this message translates to:

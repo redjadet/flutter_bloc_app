@@ -366,6 +366,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String settingsSyncPrunedLabel(int count) {
+    return 'Nettoyés : $count';
+  }
+
+  @override
   String settingsSyncDurationLabel(int ms) {
     return 'Durée : $ms ms';
   }
