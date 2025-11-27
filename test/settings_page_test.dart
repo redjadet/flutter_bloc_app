@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -12,6 +14,10 @@ import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cub
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -31,6 +37,15 @@ void main() {
       return cubit;
     }
 
+    SyncStatusCubit createSyncStatusCubit() {
+      final SyncStatusCubit cubit = SyncStatusCubit(
+        networkStatusService: _StubNetworkStatusService(),
+        coordinator: _StubBackgroundSyncCoordinator(),
+      );
+      addTearDown(() => cubit.close());
+      return cubit;
+    }
+
     LocaleCubit createLocaleCubit(LocaleRepository repository) {
       final LocaleCubit cubit = LocaleCubit(repository: repository);
       addTearDown(() => cubit.close());
@@ -44,6 +59,7 @@ void main() {
       final ThemeCubit themeCubit = createThemeCubit(repo);
       final _InMemoryLocaleRepository localeRepo = _InMemoryLocaleRepository();
       final LocaleCubit localeCubit = createLocaleCubit(localeRepo);
+      final SyncStatusCubit syncCubit = createSyncStatusCubit();
 
       final AppLocalizationsEn en = AppLocalizationsEn();
 
@@ -56,6 +72,7 @@ void main() {
             providers: [
               BlocProvider<ThemeCubit>.value(value: themeCubit),
               BlocProvider<LocaleCubit>.value(value: localeCubit),
+              BlocProvider<SyncStatusCubit>.value(value: syncCubit),
             ],
             child: const SettingsPage(),
           ),
@@ -99,6 +116,7 @@ void main() {
       final ThemeCubit themeCubit = createThemeCubit(themeRepo);
       final _InMemoryLocaleRepository localeRepo = _InMemoryLocaleRepository();
       final LocaleCubit localeCubit = createLocaleCubit(localeRepo);
+      final SyncStatusCubit syncCubit = createSyncStatusCubit();
       final AppLocalizationsEn en = AppLocalizationsEn();
 
       await tester.pumpWidget(
@@ -110,6 +128,7 @@ void main() {
             providers: [
               BlocProvider<ThemeCubit>.value(value: themeCubit),
               BlocProvider<LocaleCubit>.value(value: localeCubit),
+              BlocProvider<SyncStatusCubit>.value(value: syncCubit),
             ],
             child: const SettingsPage(),
           ),
@@ -137,6 +156,7 @@ void main() {
       final ThemeCubit themeCubit = createThemeCubit(themeRepo);
       final _InMemoryLocaleRepository localeRepo = _InMemoryLocaleRepository();
       final LocaleCubit localeCubit = createLocaleCubit(localeRepo);
+      final SyncStatusCubit syncCubit = createSyncStatusCubit();
       final _FlakyAppInfoRepository appInfoRepo = _FlakyAppInfoRepository();
 
       getIt.unregister<AppInfoRepository>();
@@ -153,6 +173,7 @@ void main() {
             providers: [
               BlocProvider<ThemeCubit>.value(value: themeCubit),
               BlocProvider<LocaleCubit>.value(value: localeCubit),
+              BlocProvider<SyncStatusCubit>.value(value: syncCubit),
             ],
             child: const SettingsPage(),
           ),
@@ -239,4 +260,52 @@ class _FlakyAppInfoRepository implements AppInfoRepository {
     }
     return const AppInfo(version: '9.9.9', buildNumber: '77');
   }
+}
+
+class _StubNetworkStatusService implements NetworkStatusService {
+  @override
+  Stream<NetworkStatus> get statusStream => const Stream<NetworkStatus>.empty();
+
+  @override
+  Future<NetworkStatus> getCurrentStatus() async => NetworkStatus.online;
+
+  @override
+  Future<void> dispose() async {}
+}
+
+class _StubBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
+  _StubBackgroundSyncCoordinator();
+
+  final StreamController<SyncStatus> _statusController =
+      StreamController<SyncStatus>.broadcast();
+
+  @override
+  SyncStatus get currentStatus => SyncStatus.idle;
+
+  @override
+  Stream<SyncStatus> get statusStream => _statusController.stream;
+
+  @override
+  Stream<SyncCycleSummary> get summaryStream =>
+      const Stream<SyncCycleSummary>.empty();
+
+  @override
+  SyncCycleSummary? get latestSummary => null;
+
+  @override
+  List<SyncCycleSummary> get history => const <SyncCycleSummary>[];
+
+  @override
+  Future<void> dispose() async {
+    await _statusController.close();
+  }
+
+  @override
+  Future<void> flush() async {}
+
+  @override
+  Future<void> start() async {}
+
+  @override
+  Future<void> stop() async {}
 }

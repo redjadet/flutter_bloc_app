@@ -43,7 +43,13 @@ class _SettingsView extends StatelessWidget {
           const AppInfoSection(),
           if (FlavorManager.I.isDev || FlavorManager.I.isQa) ...[
             SizedBox(height: context.responsiveGapL),
+            const GraphqlCacheControlsSection(),
+            SizedBox(height: context.responsiveGapL),
+            const ProfileCacheControlsSection(),
+            SizedBox(height: context.responsiveGapL),
             const RemoteConfigDiagnosticsSection(),
+            SizedBox(height: context.responsiveGapL),
+            const SyncDiagnosticsSection(),
           ],
           if (!const bool.fromEnvironment('dart.vm.product')) ...[
             SizedBox(height: context.responsiveGapL),

@@ -11,6 +11,8 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
 
   static const String _awesomeFeatureKey = 'awesome_feature_enabled';
   static const String _testValueKey = 'test_value_1';
+  static const String _dataSourceKey = 'last_data_source';
+  static const String _lastSyncedKey = 'last_synced_at';
 
   final RemoteConfigService _remoteConfigService;
 
@@ -29,11 +31,20 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
     );
   }
 
+  Future<void> clearCache() async {
+    await _loadRemoteConfig(
+      logContext: 'RemoteConfigCubit.clearCache',
+      showLoading: true,
+      preFetch: _remoteConfigService.clearCache,
+    );
+  }
+
   bool _isLoading = false;
 
   Future<void> _loadRemoteConfig({
     required final String logContext,
     Future<void> Function()? setup,
+    Future<void> Function()? preFetch,
     bool showLoading = false,
   }) async {
     if (isClosed || _isLoading) return;
@@ -47,6 +58,9 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
         operation: () async {
           if (setup != null) {
             await setup();
+          }
+          if (preFetch != null) {
+            await preFetch();
           }
           await _remoteConfigService.forceFetch();
         },
@@ -64,12 +78,19 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
 
   void _emitLoadedState() {
     if (isClosed) return;
+    final String dataSource = _remoteConfigService.getString(_dataSourceKey);
+    final String lastSyncedRaw = _remoteConfigService.getString(_lastSyncedKey);
+    final DateTime? lastSyncedAt = lastSyncedRaw.isEmpty
+        ? null
+        : DateTime.tryParse(lastSyncedRaw)?.toUtc();
     emit(
       RemoteConfigLoaded(
         isAwesomeFeatureEnabled: _remoteConfigService.getBool(
           _awesomeFeatureKey,
         ),
         testValue: _remoteConfigService.getString(_testValueKey),
+        dataSource: dataSource.isEmpty ? null : dataSource,
+        lastSyncedAt: lastSyncedAt,
       ),
     );
   }

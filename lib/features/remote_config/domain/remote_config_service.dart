@@ -2,6 +2,7 @@
 abstract class RemoteConfigService {
   Future<void> initialize();
   Future<void> forceFetch();
+  Future<void> clearCache();
 
   bool getBool(String key);
   String getString(String key);

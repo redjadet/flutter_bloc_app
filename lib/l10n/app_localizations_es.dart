@@ -336,6 +336,79 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsRemoteConfigRetryButton => 'Reintentar carga';
 
   @override
+  String get settingsRemoteConfigClearCacheButton => 'Borrar caché de config';
+
+  @override
+  String get settingsSyncDiagnosticsTitle => 'Diagnósticos de sincronización';
+
+  @override
+  String get settingsSyncDiagnosticsEmpty =>
+      'Aún no hay ejecuciones de sincronización.';
+
+  @override
+  String settingsSyncLastRunLabel(String timestamp) {
+    return 'Última ejecución: $timestamp';
+  }
+
+  @override
+  String settingsSyncOperationsLabel(int processed, int failed) {
+    return 'Ops: $processed procesadas, $failed fallidas';
+  }
+
+  @override
+  String settingsSyncPendingLabel(int count) {
+    return 'Pendientes al inicio: $count';
+  }
+
+  @override
+  String settingsSyncPrunedLabel(int count) {
+    return 'Depurados: $count';
+  }
+
+  @override
+  String settingsSyncDurationLabel(int ms) {
+    return 'Duración: ${ms}ms';
+  }
+
+  @override
+  String get settingsSyncHistoryTitle => 'Ejecuciones recientes de sync';
+
+  @override
+  String get settingsGraphqlCacheSectionTitle => 'Caché de GraphQL';
+
+  @override
+  String get settingsGraphqlCacheDescription =>
+      'Borra los países/continentes en caché usados por la demo GraphQL. Los datos se renovarán en la siguiente carga.';
+
+  @override
+  String get settingsGraphqlCacheClearButton => 'Limpiar caché de GraphQL';
+
+  @override
+  String get settingsGraphqlCacheClearedMessage => 'Caché de GraphQL limpiada';
+
+  @override
+  String get settingsGraphqlCacheErrorMessage =>
+      'No se pudo limpiar la caché de GraphQL';
+
+  @override
+  String get settingsProfileCacheSectionTitle => 'Caché de perfil';
+
+  @override
+  String get settingsProfileCacheDescription =>
+      'Borra la instantánea de perfil guardada localmente que permite mostrar la pantalla de perfil sin conexión.';
+
+  @override
+  String get settingsProfileCacheClearButton => 'Borrar caché de perfil';
+
+  @override
+  String get settingsProfileCacheClearedMessage =>
+      'Se borró el caché de perfil';
+
+  @override
+  String get settingsProfileCacheErrorMessage =>
+      'No se pudo borrar el caché de perfil';
+
+  @override
   String get appInfoVersionLabel => 'Versión';
 
   @override
@@ -399,6 +472,16 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get chatHistoryClearAllWarning =>
       'Esto eliminará permanentemente todas las conversaciones guardadas.';
+
+  @override
+  String get chatMessageStatusPending => 'Sincronización pendiente';
+
+  @override
+  String get chatMessageStatusSyncing => 'Sincronizando…';
+
+  @override
+  String get chatMessageStatusOffline =>
+      'Sin conexión: se enviará al conectarse';
 
   @override
   String get registerTitle => 'Registrarse';
@@ -776,4 +859,75 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get googleMapsPageUnsupportedDescription =>
       'La demo de Google Maps solo está disponible en compilaciones de Android y iOS.';
+
+  @override
+  String get syncStatusOfflineTitle => 'Sin conexión';
+
+  @override
+  String syncStatusOfflineMessage(int pendingCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pendingCount,
+      locale: localeName,
+      other: '# cambios',
+      one: '# cambio',
+      zero: 'tus cambios',
+    );
+    return 'Sincronizaremos $_temp0 cuando vuelvas a estar en línea.';
+  }
+
+  @override
+  String get syncStatusSyncingTitle => 'Sincronizando cambios';
+
+  @override
+  String syncStatusSyncingMessage(int pendingCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pendingCount,
+      locale: localeName,
+      other: 'Sincronizando # cambios…',
+      one: 'Sincronizando # cambio…',
+      zero: 'Terminando tus últimas actualizaciones.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncStatusPendingTitle => 'Cambios en cola';
+
+  @override
+  String syncStatusPendingMessage(int pendingCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pendingCount,
+      locale: localeName,
+      other: '# cambios esperando sincronización.',
+      one: '# cambio esperando sincronización.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get syncStatusSyncNowButton => 'Sincronizar ahora';
+
+  @override
+  String counterLastSynced(Object timestamp) {
+    return 'Última sincronización: $timestamp';
+  }
+
+  @override
+  String counterChangeId(Object changeId) {
+    return 'ID de cambio: $changeId';
+  }
+
+  @override
+  String get syncQueueInspectorButton => 'Ver cola de sincronización';
+
+  @override
+  String get syncQueueInspectorEmpty => 'No hay operaciones pendientes.';
+
+  @override
+  String get syncQueueInspectorTitle => 'Operaciones pendientes';
+
+  @override
+  String syncQueueInspectorOperation(String entity, int attempts) {
+    return 'Entidad: $entity, intentos: $attempts';
+  }
 }

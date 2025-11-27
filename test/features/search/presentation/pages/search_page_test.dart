@@ -1,12 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/features/search/presentation/pages/search_page.dart';
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_results_grid.dart';
+import 'package:flutter_bloc_app/features/search/presentation/widgets/search_sync_banner.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -35,6 +42,73 @@ class _FakeTimerDisposable implements TimerDisposable {
   @override
   void dispose() {
     // No-op for fake timer
+  }
+}
+
+class _FakeNetworkStatusService implements NetworkStatusService {
+  _FakeNetworkStatusService({this.status = NetworkStatus.online});
+
+  NetworkStatus status;
+  final StreamController<NetworkStatus> _controller =
+      StreamController<NetworkStatus>.broadcast();
+
+  @override
+  Stream<NetworkStatus> get statusStream => _controller.stream;
+
+  @override
+  Future<NetworkStatus> getCurrentStatus() async => status;
+
+  @override
+  Future<void> dispose() async {
+    await _controller.close();
+  }
+
+  void emit(final NetworkStatus newStatus) {
+    status = newStatus;
+    _controller.add(newStatus);
+  }
+}
+
+class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
+  _FakeBackgroundSyncCoordinator({this.status = SyncStatus.idle});
+
+  SyncStatus status;
+  final StreamController<SyncStatus> _controller =
+      StreamController<SyncStatus>.broadcast();
+
+  @override
+  Stream<SyncStatus> get statusStream => _controller.stream;
+
+  @override
+  SyncStatus get currentStatus => status;
+
+  @override
+  List<SyncCycleSummary> get history => const <SyncCycleSummary>[];
+
+  @override
+  Stream<SyncCycleSummary> get summaryStream =>
+      const Stream<SyncCycleSummary>.empty();
+
+  @override
+  SyncCycleSummary? get latestSummary => null;
+
+  @override
+  Future<void> start() async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> dispose() async {
+    await _controller.close();
+  }
+
+  @override
+  Future<void> flush() async {}
+
+  void emit(final SyncStatus newStatus) {
+    status = newStatus;
+    _controller.add(newStatus);
   }
 }
 
@@ -70,7 +144,23 @@ void main() {
     });
 
     Widget buildSubject() {
-      return MaterialApp(home: const SearchPage());
+      final _FakeNetworkStatusService networkService =
+          _FakeNetworkStatusService();
+      final _FakeBackgroundSyncCoordinator coordinator =
+          _FakeBackgroundSyncCoordinator();
+      final SyncStatusCubit syncCubit = SyncStatusCubit(
+        networkStatusService: networkService,
+        coordinator: coordinator,
+      );
+
+      return MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: BlocProvider<SyncStatusCubit>.value(
+          value: syncCubit,
+          child: const SearchPage(),
+        ),
+      );
     }
 
     testWidgets('renders SearchPage with app bar', (tester) async {
@@ -200,6 +290,66 @@ void main() {
 
       // Now verify the repository was called
       verify(() => mockRepository.search('dogs')).called(1);
+    });
+
+    testWidgets('displays SearchSyncBanner when offline', (tester) async {
+      final _FakeNetworkStatusService networkService =
+          _FakeNetworkStatusService(status: NetworkStatus.offline);
+      final _FakeBackgroundSyncCoordinator coordinator =
+          _FakeBackgroundSyncCoordinator();
+      final SyncStatusCubit syncCubit = SyncStatusCubit(
+        networkStatusService: networkService,
+        coordinator: coordinator,
+      );
+      networkService.emit(NetworkStatus.offline);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: BlocProvider<SyncStatusCubit>.value(
+            value: syncCubit,
+            child: const SearchPage(),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      final AppLocalizations l10n = AppLocalizations.of(
+        tester.element(find.byType(SearchPage)),
+      );
+      expect(find.byType(SearchSyncBanner), findsOneWidget);
+      expect(find.text(l10n.syncStatusOfflineTitle), findsOneWidget);
+    });
+
+    testWidgets('displays SearchSyncBanner when syncing', (tester) async {
+      final _FakeNetworkStatusService networkService =
+          _FakeNetworkStatusService(status: NetworkStatus.online);
+      final _FakeBackgroundSyncCoordinator coordinator =
+          _FakeBackgroundSyncCoordinator(status: SyncStatus.syncing);
+      final SyncStatusCubit syncCubit = SyncStatusCubit(
+        networkStatusService: networkService,
+        coordinator: coordinator,
+      );
+      coordinator.emit(SyncStatus.syncing);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: BlocProvider<SyncStatusCubit>.value(
+            value: syncCubit,
+            child: const SearchPage(),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      final AppLocalizations l10n = AppLocalizations.of(
+        tester.element(find.byType(SearchPage)),
+      );
+      expect(find.byType(SearchSyncBanner), findsOneWidget);
+      expect(find.text(l10n.syncStatusSyncingTitle), findsOneWidget);
     });
   });
 }

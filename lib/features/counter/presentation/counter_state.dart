@@ -9,6 +9,8 @@ abstract class CounterState with _$CounterState {
   const factory CounterState({
     required final int count,
     final DateTime? lastChanged,
+    final DateTime? lastSyncedAt,
+    final String? changeId,
     @Default(CounterState.defaultCountdownSeconds) final int countdownSeconds,
     final CounterError? error,
     @Default(ViewStatus.initial) final ViewStatus status,
@@ -18,10 +20,14 @@ abstract class CounterState with _$CounterState {
   factory CounterState.success({
     required final int count,
     final DateTime? lastChanged,
+    final DateTime? lastSyncedAt,
+    final String? changeId,
     final int countdownSeconds = CounterState.defaultCountdownSeconds,
   }) => CounterState(
     count: count,
     lastChanged: lastChanged,
+    lastSyncedAt: lastSyncedAt,
+    changeId: changeId,
     countdownSeconds: countdownSeconds,
     status: ViewStatus.success,
   );

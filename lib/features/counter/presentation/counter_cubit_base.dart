@@ -100,6 +100,8 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
     final CounterState next = state.copyWith(
       count: count,
       lastChanged: timestamp ?? _now(),
+      lastSyncedAt: state.lastSyncedAt,
+      changeId: state.changeId,
       countdownSeconds: _defaultIntervalSeconds,
       status: preserveError ? ViewStatus.error : ViewStatus.success,
       error: preserveError ? existingError : null,
@@ -138,6 +140,8 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
         CounterSnapshot(
           count: snapshotState.count,
           lastChanged: snapshotState.lastChanged,
+          lastSyncedAt: snapshotState.lastSyncedAt,
+          changeId: snapshotState.changeId,
         ),
       );
     } on CounterError catch (error, stackTrace) {

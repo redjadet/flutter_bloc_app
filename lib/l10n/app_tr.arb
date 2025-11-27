@@ -219,6 +219,110 @@
   "@settingsRemoteConfigRetryButton": {
     "description": "Uzak yapılandırmayı yeniden getiren düğme etiketi"
   },
+  "settingsRemoteConfigClearCacheButton": "Yapılandırma önbelleğini temizle",
+  "@settingsRemoteConfigClearCacheButton": {
+    "description": "Uzak Yapılandırma'nın yerel önbelleğini temizleyen düğme etiketi"
+  },
+  "settingsSyncDiagnosticsTitle": "Senkronizasyon tanılama",
+  "@settingsSyncDiagnosticsTitle": {
+    "description": "Geliştiriciye özel senkronizasyon tanılama bölümünün başlığı"
+  },
+  "settingsSyncDiagnosticsEmpty": "Henüz senkronizasyon çalıştırması yok.",
+  "@settingsSyncDiagnosticsEmpty": {
+    "description": "Henüz özet yokken gösterilen yer tutucu metin"
+  },
+  "settingsSyncLastRunLabel": "Son çalıştırma: {timestamp}",
+  "@settingsSyncLastRunLabel": {
+    "description": "Son senkronizasyon zaman damgasını gösteren etiket",
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSyncOperationsLabel": "İşlem: {processed} tamamlandı, {failed} başarısız",
+  "@settingsSyncOperationsLabel": {
+    "description": "Son senkronizasyonda işlenen/başarısız olan işlemleri gösteren etiket",
+    "placeholders": {
+      "processed": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncPendingLabel": "Başlangıçtaki bekleyen: {count}",
+  "@settingsSyncPendingLabel": {
+    "description": "Son senkronizasyon başlangıcındaki bekleyen işlem sayısını gösterir",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncPrunedLabel": "Temizlenen: {count}",
+  "@settingsSyncPrunedLabel": {
+    "description": "Senkronizasyon sonrası temizlenen kuyruk elemanlarını gösterir",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncDurationLabel": "Süre: {ms}ms",
+  "@settingsSyncDurationLabel": {
+    "description": "Son senkronizasyon süresini milisaniye cinsinden gösterir",
+    "placeholders": {
+      "ms": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncHistoryTitle": "Son senkronizasyonlar",
+  "@settingsSyncHistoryTitle": {
+    "description": "Tanılama bölümündeki senkronizasyon geçmişi başlığı"
+  },
+  "settingsGraphqlCacheSectionTitle": "GraphQL önbelleği",
+  "@settingsGraphqlCacheSectionTitle": {
+    "description": "GraphQL demo önbelleğini temizleyen geliştirici bölümünün başlığı"
+  },
+  "settingsGraphqlCacheDescription": "GraphQL demo'sunda kullanılan ülke/kıta önbelleğini temizle. Veriler bir sonraki yüklemede yenilenir.",
+  "@settingsGraphqlCacheDescription": {
+    "description": "GraphQL demo önbelleğinin ne yaptığını açıklayan metin"
+  },
+  "settingsGraphqlCacheClearButton": "GraphQL önbelleğini temizle",
+  "@settingsGraphqlCacheClearButton": {
+    "description": "GraphQL demo verilerini temizleyen düğme etiketi"
+  },
+  "settingsGraphqlCacheClearedMessage": "GraphQL önbelleği temizlendi",
+  "@settingsGraphqlCacheClearedMessage": {
+    "description": "GraphQL önbelleği temizlendikten sonra gösterilen onay mesajı"
+  },
+  "settingsGraphqlCacheErrorMessage": "GraphQL önbelleği temizlenemedi",
+  "@settingsGraphqlCacheErrorMessage": {
+    "description": "GraphQL önbelleği temizlenemezse gösterilen hata mesajı"
+  },
+  "settingsProfileCacheSectionTitle": "Profil önbelleği",
+  "@settingsProfileCacheSectionTitle": {
+    "description": "Profil önbelleğini yöneten geliştirici bölümünün başlığı"
+  },
+  "settingsProfileCacheDescription": "Profil ekranını çevrimdışı göstermek için kullanılan yerel profil anlık görüntüsünü temizleyin.",
+  "@settingsProfileCacheDescription": {
+    "description": "Profil önbelleğinin ne yaptığını açıklayan yardımcı metin"
+  },
+  "settingsProfileCacheClearButton": "Profil önbelleğini temizle",
+  "@settingsProfileCacheClearButton": {
+    "description": "Önbelleğe alınan profil anlık görüntüsünü temizleyen düğme etiketi"
+  },
+  "settingsProfileCacheClearedMessage": "Profil önbelleği temizlendi",
+  "@settingsProfileCacheClearedMessage": {
+    "description": "Profil önbelleği temizlendikten sonra gösterilen onay mesajı"
+  },
+  "settingsProfileCacheErrorMessage": "Profil önbelleği temizlenemedi",
+  "@settingsProfileCacheErrorMessage": {
+    "description": "Profil önbelleği temizleme işlemi başarısız olursa gösterilen hata mesajı"
+  },
   "appInfoVersionLabel": "Sürüm",
   "@appInfoVersionLabel": {
     "description": "Uygulama sürüm numarasının önündeki etiket"
@@ -266,6 +370,18 @@
   "chatHistoryClearAllWarning": "Bu işlem tüm kayıtlı sohbetleri kalıcı olarak silecek.",
   "@chatHistoryClearAllWarning": {
     "description": "Tüm sohbet geçmişi silinmeden önce gösterilen uyarı"
+  },
+  "chatMessageStatusPending": "Senkron bekleniyor",
+  "@chatMessageStatusPending": {
+    "description": "Henüz senkronize edilmemiş kullanıcı mesajı için durum etiketi"
+  },
+  "chatMessageStatusSyncing": "Senkronize ediliyor…",
+  "@chatMessageStatusSyncing": {
+    "description": "Bekleyen mesaj senkronize edilirken gösterilen durum"
+  },
+  "chatMessageStatusOffline": "Çevrimdışı – bağlantı sağlandığında gönderilecek",
+  "@chatMessageStatusOffline": {
+    "description": "Çevrimdışıyken mesajın daha sonra gönderileceğini belirten durum"
   },
   "registerTitle": "Kayıt Ol",
   "registerFullNameLabel": "Ad Soyad",
@@ -544,5 +660,21 @@
   },
   "googleMapsPageMissingKeyTitle": "Google Haritalar API anahtarı ekle",
   "googleMapsPageMissingKeyDescription": "Bu demoyu kullanmak için yerel projelere geçerli Google Haritalar API anahtarlarını ekleyin.",
-  "googleMapsPageUnsupportedDescription": "Google Haritalar demosu yalnızca Android ve iOS derlemelerinde kullanılabilir."
+  "googleMapsPageUnsupportedDescription": "Google Haritalar demosu yalnızca Android ve iOS derlemelerinde kullanılabilir.",
+  "syncStatusOfflineTitle": "Çevrimdışısın",
+  "syncStatusOfflineMessage": "{pendingCount, plural, =0 {Değişikliklerini} one {# değişikliği} other {# değişikliği}} çevrimiçi olduğunda senkronize edeceğiz.",
+  "syncStatusSyncingTitle": "Değişiklikler senkronize ediliyor",
+  "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Son güncellemeler tamamlanıyor.} one {# değişiklik senkronize ediliyor…} other {# değişiklik senkronize ediliyor…}}",
+  "syncStatusPendingTitle": "Bekleyen değişiklikler",
+  "syncStatusPendingMessage": "{pendingCount, plural, one {Senkronizasyon bekleyen # değişiklik.} other {Senkronizasyon bekleyen # değişiklik.}}",
+  "syncStatusSyncNowButton": "Şimdi senkronize et",
+  "@syncStatusSyncNowButton": {
+    "description": "Bekleyen değişiklikleri elle senkronize etmeyi başlatan düğme."
+  },
+  "syncQueueInspectorButton": "Senkron kuyruğunu göster",
+  "syncQueueInspectorEmpty": "Bekleyen işlem yok.",
+  "syncQueueInspectorTitle": "Bekleyen senkron işlemleri",
+  "syncQueueInspectorOperation": "Varlık: {entity}, deneme: {attempts}",
+  "counterLastSynced": "Son senkronizasyon: {timestamp}",
+  "counterChangeId": "Değişiklik kimliği: {changeId}"
 }

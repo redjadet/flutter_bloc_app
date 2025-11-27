@@ -218,6 +218,110 @@
   "@settingsRemoteConfigRetryButton": {
     "description": "Button-Beschriftung zum erneuten Abrufen der Remote Config"
   },
+  "settingsRemoteConfigClearCacheButton": "Konfig-Cache löschen",
+  "@settingsRemoteConfigClearCacheButton": {
+    "description": "Button-Beschriftung zum Löschen des lokal gespeicherten Remote-Config-Caches"
+  },
+  "settingsSyncDiagnosticsTitle": "Sync-Diagnostik",
+  "@settingsSyncDiagnosticsTitle": {
+    "description": "Überschrift für den Entwicklerbereich mit Sync-Diagnostik"
+  },
+  "settingsSyncDiagnosticsEmpty": "Noch keine Sync-Durchläufe aufgezeichnet.",
+  "@settingsSyncDiagnosticsEmpty": {
+    "description": "Platzhaltertext, wenn noch keine Zusammenfassung vorhanden ist"
+  },
+  "settingsSyncLastRunLabel": "Letzter Lauf: {timestamp}",
+  "@settingsSyncLastRunLabel": {
+    "description": "Beschriftung für den Zeitstempel des letzten Syncs",
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSyncOperationsLabel": "Vorgänge: {processed} verarbeitet, {failed} fehlgeschlagen",
+  "@settingsSyncOperationsLabel": {
+    "description": "Beschriftung für verarbeitete/fehlgeschlagene Vorgänge im letzten Sync",
+    "placeholders": {
+      "processed": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncPendingLabel": "Zu Beginn offen: {count}",
+  "@settingsSyncPendingLabel": {
+    "description": "Beschriftung für Anzahl offener Vorgänge zu Sync-Beginn",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncPrunedLabel": "Bereinigt: {count}",
+  "@settingsSyncPrunedLabel": {
+    "description": "Zeigt, wie viele Queue-Elemente nach dem Sync bereinigt wurden",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncDurationLabel": "Dauer: {ms}ms",
+  "@settingsSyncDurationLabel": {
+    "description": "Beschriftung für die Dauer des letzten Syncs in Millisekunden",
+    "placeholders": {
+      "ms": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncHistoryTitle": "Aktuelle Sync-Läufe",
+  "@settingsSyncHistoryTitle": {
+    "description": "Überschrift für die Sync-Verlaufsanzeige in der Diagnostik"
+  },
+  "settingsGraphqlCacheSectionTitle": "GraphQL-Cache",
+  "@settingsGraphqlCacheSectionTitle": {
+    "description": "Überschrift für den Entwicklerbereich zum Leeren des GraphQL-Demo-Caches"
+  },
+  "settingsGraphqlCacheDescription": "Lösche den zwischengespeicherten Länder/Kontinente-Datensatz der GraphQL-Demo. Daten werden beim nächsten Laden erneuert.",
+  "@settingsGraphqlCacheDescription": {
+    "description": "Hilfetext, der erklärt, was der GraphQL-Demo-Cache macht"
+  },
+  "settingsGraphqlCacheClearButton": "GraphQL-Cache leeren",
+  "@settingsGraphqlCacheClearButton": {
+    "description": "Button-Beschriftung zum Leeren der GraphQL-Demo-Daten"
+  },
+  "settingsGraphqlCacheClearedMessage": "GraphQL-Cache geleert",
+  "@settingsGraphqlCacheClearedMessage": {
+    "description": "Bestätigungsnachricht nach dem Leeren des GraphQL-Caches"
+  },
+  "settingsGraphqlCacheErrorMessage": "GraphQL-Cache konnte nicht geleert werden",
+  "@settingsGraphqlCacheErrorMessage": {
+    "description": "Fehlermeldung, falls das Leeren des GraphQL-Caches scheitert"
+  },
+  "settingsProfileCacheSectionTitle": "Profil-Cache",
+  "@settingsProfileCacheSectionTitle": {
+    "description": "Überschrift für den Entwicklerbereich, der den Profil-Cache verwaltet"
+  },
+  "settingsProfileCacheDescription": "Lösche den lokal gespeicherten Profil-Snapshot, der die Profilseite offline rendert.",
+  "@settingsProfileCacheDescription": {
+    "description": "Hilfetext, der erklärt, wozu der Profil-Cache dient"
+  },
+  "settingsProfileCacheClearButton": "Profil-Cache löschen",
+  "@settingsProfileCacheClearButton": {
+    "description": "Schaltfläche zum Löschen des zwischengespeicherten Profils"
+  },
+  "settingsProfileCacheClearedMessage": "Profil-Cache gelöscht",
+  "@settingsProfileCacheClearedMessage": {
+    "description": "Bestätigungsnachricht nach dem Löschen des Profil-Caches"
+  },
+  "settingsProfileCacheErrorMessage": "Profil-Cache konnte nicht gelöscht werden",
+  "@settingsProfileCacheErrorMessage": {
+    "description": "Fehlermeldung, wenn das Löschen des Profil-Caches fehlschlägt"
+  },
   "appInfoVersionLabel": "Version",
   "@appInfoVersionLabel": {
     "description": "Beschriftung vor der App-Versionsnummer"
@@ -265,6 +369,18 @@
   "chatHistoryClearAllWarning": "Dadurch werden alle gespeicherten Unterhaltungen dauerhaft gelöscht.",
   "@chatHistoryClearAllWarning": {
     "description": "Warnhinweis vor dem Löschen des gesamten Gesprächsverlaufs"
+  },
+  "chatMessageStatusPending": "Synchronisation ausstehend",
+  "@chatMessageStatusPending": {
+    "description": "Status unter einer Benutzernachricht, die noch nicht synchronisiert wurde"
+  },
+  "chatMessageStatusSyncing": "Wird synchronisiert…",
+  "@chatMessageStatusSyncing": {
+    "description": "Status unter einer Benutzernachricht während der Synchronisierung"
+  },
+  "chatMessageStatusOffline": "Offline – wird bei Verbindung gesendet",
+  "@chatMessageStatusOffline": {
+    "description": "Status unter einer Benutzernachricht, wenn das Gerät offline ist"
   },
   "registerTitle": "Registrieren",
   "registerFullNameLabel": "Vollständiger Name",
@@ -543,5 +659,21 @@
   },
   "googleMapsPageMissingKeyTitle": "Google-Maps-API-Schlüssel hinzufügen",
   "googleMapsPageMissingKeyDescription": "Hinterlege gültige Google-Maps-API-Schlüssel in den Plattformprojekten, um diese Demo zu verwenden.",
-  "googleMapsPageUnsupportedDescription": "Die Google-Maps-Demo ist nur auf Android- und iOS-Builds verfügbar."
+  "googleMapsPageUnsupportedDescription": "Die Google-Maps-Demo ist nur auf Android- und iOS-Builds verfügbar.",
+  "syncStatusOfflineTitle": "Du bist offline",
+  "syncStatusOfflineMessage": "Wir synchronisieren {pendingCount, plural, =0 {deine Änderungen} one {# Änderung} other {# Änderungen}}, sobald du wieder online bist.",
+  "syncStatusSyncingTitle": "Änderungen werden synchronisiert",
+  "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Aktualisiere letzte Änderungen.} one {Synchronisiere # Änderung…} other {Synchronisiere # Änderungen…}}",
+  "syncStatusPendingTitle": "Änderungen in Warteschlange",
+  "syncStatusPendingMessage": "{pendingCount, plural, one {# Änderung wartet auf Synchronisierung.} other {# Änderungen warten auf Synchronisierung.}}",
+  "syncStatusSyncNowButton": "Jetzt synchronisieren",
+  "@syncStatusSyncNowButton": {
+    "description": "Schaltfläche zum manuellen Synchronisieren ausstehender Änderungen."
+  },
+  "syncQueueInspectorButton": "Sync-Warteschlange anzeigen",
+  "syncQueueInspectorEmpty": "Keine ausstehenden Vorgänge.",
+  "syncQueueInspectorTitle": "Ausstehende Synchronisationen",
+  "syncQueueInspectorOperation": "Eintrag: {entity}, Versuche: {attempts}",
+  "counterLastSynced": "Zuletzt synchronisiert: {timestamp}",
+  "counterChangeId": "Änderungs-ID: {changeId}"
 }

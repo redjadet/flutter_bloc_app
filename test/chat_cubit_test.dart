@@ -1,10 +1,21 @@
+import 'dart:io';
+
+import 'package:flutter_bloc_app/features/chat/data/chat_local_data_source.dart';
+import 'package:flutter_bloc_app/features/chat/data/offline_first_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
+import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
+import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
+import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hive/hive.dart';
 
 void main() {
   group('ChatCubit', () {
@@ -48,6 +59,22 @@ void main() {
 
       expect(cubit.state.error, isNotNull);
       expect(cubit.state.isLoading, false);
+    });
+
+    test('queues message without error when offline enqueue occurs', () async {
+      final ChatCubit cubit = createCubit(
+        repository: _OfflineQueueingChatRepository(),
+        historyRepository: FakeChatHistoryRepository(),
+      );
+
+      await cubit.sendMessage('offline');
+
+      expect(cubit.state.error, isNull);
+      expect(cubit.state.status, anyOf(ViewStatus.success, ViewStatus.initial));
+      expect(cubit.state.messages.length, 1);
+      final ChatMessage message = cubit.state.messages.single;
+      expect(message.author, ChatAuthor.user);
+      expect(message.synchronized, isFalse);
     });
 
     test('selectModel resets conversation and updates currentModel', () async {
@@ -523,7 +550,121 @@ void main() {
         expect(cubit.state, initialState);
       },
     );
+
+    group('offline-first integration', () {
+      late Directory tempDir;
+      late HiveService hiveService;
+      late ChatLocalDataSource localDataSource;
+      late PendingSyncRepository pendingRepository;
+      late SyncableRepositoryRegistry registry;
+      late _FlakyRemoteChatRepository remoteRepository;
+      late OfflineFirstChatRepository offlineRepository;
+
+      setUp(() async {
+        tempDir = Directory.systemTemp.createTempSync('chat_cubit_offline_');
+        Hive.init(tempDir.path);
+        hiveService = HiveService(
+          keyManager: HiveKeyManager(storage: InMemorySecretStorage()),
+        );
+        await hiveService.initialize();
+        localDataSource = ChatLocalDataSource(hiveService: hiveService);
+        pendingRepository = PendingSyncRepository(hiveService: hiveService);
+        registry = SyncableRepositoryRegistry();
+        remoteRepository = _FlakyRemoteChatRepository();
+        offlineRepository = OfflineFirstChatRepository(
+          remoteRepository: remoteRepository,
+          localDataSource: localDataSource,
+          pendingSyncRepository: pendingRepository,
+          registry: registry,
+        );
+      });
+
+      tearDown(() async {
+        await pendingRepository.clear();
+        await Hive.deleteFromDisk();
+        tempDir.deleteSync(recursive: true);
+      });
+
+      test(
+        'pending messages flip to synced after coordinator-style flush',
+        () async {
+          remoteRepository.shouldFail = true;
+          final ChatCubit cubit = ChatCubit(
+            repository: offlineRepository,
+            historyRepository: localDataSource,
+            initialModel: 'offline-demo',
+          );
+          addTearDown(cubit.close);
+
+          await cubit.sendMessage('Queue me while offline');
+
+          expect(cubit.state.messages.length, 1);
+          final ChatMessage pending = cubit.state.messages.single;
+          expect(pending.synchronized, isFalse);
+
+          List<SyncOperation> queued = await pendingRepository
+              .getPendingOperations(now: DateTime.now().toUtc());
+          expect(queued, hasLength(1));
+
+          remoteRepository.shouldFail = false;
+          await _drainPendingOperations(
+            repository: offlineRepository,
+            pendingRepository: pendingRepository,
+          );
+          await cubit.loadHistory();
+
+          expect(
+            cubit.state.messages.where((ChatMessage m) => !m.synchronized),
+            isEmpty,
+          );
+          expect(cubit.state.messages.length, 2);
+          expect(cubit.state.messages.last.author, ChatAuthor.assistant);
+          queued = await pendingRepository.getPendingOperations(
+            now: DateTime.now().toUtc(),
+          );
+          expect(queued, isEmpty);
+        },
+      );
+    });
   });
+}
+
+Future<void> _drainPendingOperations({
+  required OfflineFirstChatRepository repository,
+  required PendingSyncRepository pendingRepository,
+}) async {
+  final List<SyncOperation> operations = await pendingRepository
+      .getPendingOperations(now: DateTime.now().toUtc());
+  for (final SyncOperation op in operations) {
+    await repository.processOperation(op);
+    await pendingRepository.markCompleted(op.id);
+  }
+}
+
+class _FlakyRemoteChatRepository implements ChatRepository {
+  _FlakyRemoteChatRepository();
+
+  bool shouldFail = false;
+  String replyText = 'Synced';
+
+  @override
+  Future<ChatResult> sendMessage({
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
+  }) async {
+    if (shouldFail) {
+      throw const ChatException('offline');
+    }
+    return ChatResult(
+      reply: ChatMessage(author: ChatAuthor.assistant, text: replyText),
+      pastUserInputs: <String>[...pastUserInputs, prompt],
+      generatedResponses: <String>[...generatedResponses, replyText],
+    );
+  }
 }
 
 class FakeChatRepository implements ChatRepository {
@@ -533,6 +674,8 @@ class FakeChatRepository implements ChatRepository {
     required List<String> generatedResponses,
     required String prompt,
     String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async {
     return ChatResult(
       reply: const ChatMessage(author: ChatAuthor.assistant, text: 'Hi there!'),
@@ -554,6 +697,8 @@ class _DelayedChatRepository implements ChatRepository {
     required List<String> generatedResponses,
     required String prompt,
     String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) {
     callCount++;
     return Future<ChatResult>.delayed(
@@ -621,7 +766,23 @@ class _ErrorChatRepository implements ChatRepository {
     required List<String> generatedResponses,
     required String prompt,
     String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) {
     throw const ChatException('fail');
+  }
+}
+
+class _OfflineQueueingChatRepository implements ChatRepository {
+  @override
+  Future<ChatResult> sendMessage({
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
+  }) {
+    throw const ChatOfflineEnqueuedException();
   }
 }

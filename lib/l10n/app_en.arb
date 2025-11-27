@@ -444,6 +444,110 @@
   "@settingsRemoteConfigRetryButton": {
     "description": "Button label that retries the remote config fetch"
   },
+  "settingsRemoteConfigClearCacheButton": "Clear config cache",
+  "@settingsRemoteConfigClearCacheButton": {
+    "description": "Button label that clears the locally cached Remote Config values"
+  },
+  "settingsSyncDiagnosticsTitle": "Sync diagnostics",
+  "@settingsSyncDiagnosticsTitle": {
+    "description": "Heading for the developer-only sync diagnostics section"
+  },
+  "settingsSyncDiagnosticsEmpty": "No sync runs recorded yet.",
+  "@settingsSyncDiagnosticsEmpty": {
+    "description": "Placeholder copy when no sync cycle summary exists"
+  },
+  "settingsSyncLastRunLabel": "Last run: {timestamp}",
+  "@settingsSyncLastRunLabel": {
+    "description": "Label showing the last sync timestamp",
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSyncOperationsLabel": "Ops: {processed} processed, {failed} failed",
+  "@settingsSyncOperationsLabel": {
+    "description": "Label showing operations processed/failed during last sync",
+    "placeholders": {
+      "processed": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncPendingLabel": "Pending at start: {count}",
+  "@settingsSyncPendingLabel": {
+    "description": "Label showing pending operations count at the start of last sync",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncPrunedLabel": "Pruned: {count}",
+  "@settingsSyncPrunedLabel": {
+    "description": "Label showing how many queued operations were pruned after sync",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncDurationLabel": "Duration: {ms}ms",
+  "@settingsSyncDurationLabel": {
+    "description": "Label showing last sync duration in milliseconds",
+    "placeholders": {
+      "ms": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncHistoryTitle": "Recent sync runs",
+  "@settingsSyncHistoryTitle": {
+    "description": "Heading for the sync history list in diagnostics"
+  },
+  "settingsGraphqlCacheSectionTitle": "GraphQL cache",
+  "@settingsGraphqlCacheSectionTitle": {
+    "description": "Heading for the developer-only section that clears the GraphQL demo cache"
+  },
+  "settingsGraphqlCacheDescription": "Clear the cached countries/continents used by the GraphQL demo. Fresh data will be fetched on next load.",
+  "@settingsGraphqlCacheDescription": {
+    "description": "Helper text describing what the GraphQL demo cache does"
+  },
+  "settingsGraphqlCacheClearButton": "Clear GraphQL cache",
+  "@settingsGraphqlCacheClearButton": {
+    "description": "Button label that clears the cached GraphQL demo data"
+  },
+  "settingsGraphqlCacheClearedMessage": "GraphQL cache cleared",
+  "@settingsGraphqlCacheClearedMessage": {
+    "description": "Confirmation snackbar message displayed after clearing the GraphQL cache"
+  },
+  "settingsGraphqlCacheErrorMessage": "Couldn't clear GraphQL cache",
+  "@settingsGraphqlCacheErrorMessage": {
+    "description": "Error snackbar message displayed if clearing the GraphQL cache fails"
+  },
+  "settingsProfileCacheSectionTitle": "Profile cache",
+  "@settingsProfileCacheSectionTitle": {
+    "description": "Heading for the developer-only section that manages the profile cache"
+  },
+  "settingsProfileCacheDescription": "Clear the locally cached profile snapshot used to render the profile screen offline.",
+  "@settingsProfileCacheDescription": {
+    "description": "Helper text describing what the profile cache does"
+  },
+  "settingsProfileCacheClearButton": "Clear profile cache",
+  "@settingsProfileCacheClearButton": {
+    "description": "Button label that clears the cached profile snapshot"
+  },
+  "settingsProfileCacheClearedMessage": "Profile cache cleared",
+  "@settingsProfileCacheClearedMessage": {
+    "description": "Confirmation snackbar message displayed after clearing the profile cache"
+  },
+  "settingsProfileCacheErrorMessage": "Couldn't clear profile cache",
+  "@settingsProfileCacheErrorMessage": {
+    "description": "Error snackbar message displayed if clearing the profile cache fails"
+  },
   "appInfoVersionLabel": "Version",
   "@appInfoVersionLabel": {
     "description": "Label shown before the application version string"
@@ -527,6 +631,18 @@
   "chatHistoryClearAllWarning": "This will permanently delete all stored conversations.",
   "@chatHistoryClearAllWarning": {
     "description": "Warning message shown before clearing all chat history"
+  },
+  "chatMessageStatusPending": "Pending sync",
+  "@chatMessageStatusPending": {
+    "description": "Status label shown under a user message that has not been synchronized yet"
+  },
+  "chatMessageStatusSyncing": "Syncing…",
+  "@chatMessageStatusSyncing": {
+    "description": "Status label shown while a pending message is being synchronized"
+  },
+  "chatMessageStatusOffline": "Offline — will send when connected",
+  "@chatMessageStatusOffline": {
+    "description": "Status label shown when offline to indicate the message will sync later"
   },
   "registerTitle": "Register",
   "@registerTitle": {
@@ -1007,5 +1123,86 @@
   "googleMapsPageUnsupportedDescription": "The Google Maps demo is only available on Android and iOS builds.",
   "@googleMapsPageUnsupportedDescription": {
     "description": "Message shown when the Google Maps demo is opened on an unsupported platform"
+  },
+  "syncStatusOfflineTitle": "You're offline",
+  "@syncStatusOfflineTitle": {
+    "description": "Title displayed when device is offline"
+  },
+  "syncStatusOfflineMessage": "We will sync {pendingCount, plural, =0 {your changes} one {# change} other {# changes}} once you're back online.",
+  "@syncStatusOfflineMessage": {
+    "description": "Explains queued sync while offline",
+    "placeholders": {
+      "pendingCount": {
+        "type": "int"
+      }
+    }
+  },
+  "syncStatusSyncingTitle": "Syncing changes",
+  "@syncStatusSyncingTitle": {
+    "description": "Title when sync is in progress"
+  },
+  "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Wrapping up your latest updates.} one {Syncing # change…} other {Syncing # changes…}}",
+  "@syncStatusSyncingMessage": {
+    "description": "Message when sync is running",
+    "placeholders": {
+      "pendingCount": {
+        "type": "int"
+      }
+    }
+  },
+  "syncStatusPendingTitle": "Changes queued",
+  "@syncStatusPendingTitle": {
+    "description": "Title when changes are still pending"
+  },
+  "syncStatusPendingMessage": "{pendingCount, plural, one {# change waiting to sync.} other {# changes waiting to sync.}}",
+  "@syncStatusPendingMessage": {
+    "description": "Message describing pending operations",
+    "placeholders": {
+      "pendingCount": {
+        "type": "int"
+      }
+    }
+  },
+  "syncStatusSyncNowButton": "Sync now",
+  "@syncStatusSyncNowButton": {
+    "description": "Button label to trigger manual syncing of pending changes."
+  },
+  "counterLastSynced": "Last synced: {timestamp}",
+  "@counterLastSynced": {
+    "description": "Label showing the last time the counter synced",
+    "placeholders": {
+      "timestamp": {}
+    }
+  },
+  "counterChangeId": "Change ID: {changeId}",
+  "@counterChangeId": {
+    "description": "Label showing the last change id used for sync",
+    "placeholders": {
+      "changeId": {}
+    }
+  },
+  "syncQueueInspectorButton": "View sync queue",
+  "@syncQueueInspectorButton": {
+    "description": "Button label for opening the sync queue inspector"
+  },
+  "syncQueueInspectorEmpty": "No pending operations.",
+  "@syncQueueInspectorEmpty": {
+    "description": "Shown when inspector has no items"
+  },
+  "syncQueueInspectorTitle": "Pending Sync Operations",
+  "@syncQueueInspectorTitle": {
+    "description": "Title for the sync queue inspector sheet"
+  },
+  "syncQueueInspectorOperation": "Entity: {entity}, attempts: {attempts}",
+  "@syncQueueInspectorOperation": {
+    "description": "Describes a pending operation",
+    "placeholders": {
+      "entity": {
+        "type": "String"
+      },
+      "attempts": {
+        "type": "int"
+      }
+    }
   }
 }

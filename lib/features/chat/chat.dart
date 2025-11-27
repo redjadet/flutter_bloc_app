@@ -24,3 +24,4 @@ export 'presentation/widgets/chat_input_bar.dart';
 export 'presentation/widgets/chat_list_view.dart';
 export 'presentation/widgets/chat_message_list.dart';
 export 'presentation/widgets/chat_model_selector.dart';
+export 'presentation/widgets/chat_sync_banner.dart';

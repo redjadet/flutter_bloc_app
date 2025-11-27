@@ -10,8 +10,8 @@ class RemoteConfigRepository implements RemoteConfigService {
     final void Function(String message)? debugLogger,
   }) : _logDebug = debugLogger ?? AppLogger.debug;
 
-  static const String _awesomeFeatureKey = 'awesome_feature_enabled';
-  static const String _testValueKey = 'test_value_1';
+  static const String awesomeFeatureKey = 'awesome_feature_enabled';
+  static const String testValueKey = 'test_value_1';
 
   final FirebaseRemoteConfig _remoteConfig;
   final void Function(String message) _logDebug;
@@ -33,10 +33,12 @@ class RemoteConfigRepository implements RemoteConfigService {
         minimumFetchInterval: const Duration(hours: 1),
       ),
     );
-    await _remoteConfig.setDefaults(const <String, dynamic>{
-      _awesomeFeatureKey: false,
-      _testValueKey: '',
-    });
+    await _remoteConfig.setDefaults(
+      const <String, dynamic>{
+        awesomeFeatureKey: false,
+        testValueKey: '',
+      },
+    );
 
     _subscribeToRealtimeUpdates();
   }
@@ -49,10 +51,15 @@ class RemoteConfigRepository implements RemoteConfigService {
   }
 
   @override
+  Future<void> clearCache() async {
+    // Firebase Remote Config SDK manages its own cache; nothing to clear here.
+  }
+
+  @override
   String getString(final String key) {
     final String value = _remoteConfig.getString(key);
 
-    if (key == _testValueKey) {
+    if (key == testValueKey) {
       _logDebug('RemoteConfig[getString] $key="$value"');
     }
 
@@ -63,7 +70,7 @@ class RemoteConfigRepository implements RemoteConfigService {
   bool getBool(final String key) {
     final bool value = _remoteConfig.getBool(key);
 
-    if (key == _awesomeFeatureKey) {
+    if (key == awesomeFeatureKey) {
       _logDebug('RemoteConfig[getBool] $key=$value');
     }
 
@@ -86,10 +93,10 @@ class RemoteConfigRepository implements RemoteConfigService {
     _configUpdatesSubscription ??= _remoteConfig.onConfigUpdated.listen(
       (final RemoteConfigUpdate update) async {
         final bool shouldLogTestValue = update.updatedKeys.contains(
-          _testValueKey,
+          testValueKey,
         );
         final bool shouldLogAwesomeFeature = update.updatedKeys.contains(
-          _awesomeFeatureKey,
+          awesomeFeatureKey,
         );
 
         if (!shouldLogTestValue && !shouldLogAwesomeFeature) {
@@ -100,7 +107,7 @@ class RemoteConfigRepository implements RemoteConfigService {
           await _remoteConfig.fetchAndActivate();
         } on Exception catch (error, stackTrace) {
           AppLogger.error(
-            'Remote Config realtime fetch failed for $_testValueKey',
+            'Remote Config realtime fetch failed for $testValueKey',
             error,
             stackTrace,
           );
@@ -125,12 +132,12 @@ class RemoteConfigRepository implements RemoteConfigService {
   }
 
   void _logTestValue({required final String source}) {
-    final String value = _remoteConfig.getString(_testValueKey);
-    _logDebug('RemoteConfig[$source] $_testValueKey="$value"');
+    final String value = _remoteConfig.getString(testValueKey);
+    _logDebug('RemoteConfig[$source] $testValueKey="$value"');
   }
 
   void _logAwesomeFeatureFlag({required final String source}) {
-    final bool value = _remoteConfig.getBool(_awesomeFeatureKey);
-    _logDebug('RemoteConfig[$source] $_awesomeFeatureKey=$value');
+    final bool value = _remoteConfig.getBool(awesomeFeatureKey);
+    _logDebug('RemoteConfig[$source] $awesomeFeatureKey=$value');
   }
 }

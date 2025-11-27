@@ -6,5 +6,9 @@ abstract class ChartRepository {
 
   Future<List<ChartPoint>> fetchTrendingCounts();
 
+  /// Optional local cache hook to surface previously fetched points instantly.
+  /// Default is no cache.
+  List<ChartPoint>? getCachedTrendingCounts() => null;
+
   Future<List<ChartPoint>> call() => fetchTrendingCounts();
 }

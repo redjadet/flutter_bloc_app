@@ -9,6 +9,12 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/shared/storage/shared_preferences_migration_service.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
@@ -38,6 +44,7 @@ void main() {
       FlavorManager.current = Flavor.prod;
       await getIt.reset(dispose: true);
       await configureDependencies();
+      await _overrideNetworkAndSync();
       overrideCounterRepository();
       // Run migration to avoid delays during widget test
       await getIt<SharedPreferencesMigrationService>().migrateIfNeeded();
@@ -116,23 +123,13 @@ void main() {
         timerService: fakeTimer,
         now: _fixedNow,
       );
-      await tester.pumpWidgetBuilder(
-        BlocProvider.value(
-          value: cubit..loadInitial(),
-          child: const CounterPage(title: 'Counter'),
-        ),
-        wrapper: materialAppWrapper(
-          localizations: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          theme: ThemeData.light(),
-        ),
+      cubit.loadInitial();
+      await tester.pumpWidget(
+        _buildCounterPageApp(cubit: cubit, theme: ThemeData.light()),
       );
       fakeTimer.tick(2);
       await tester.pump();
+      await waitForCounterCubitsToLoad(tester);
       await multiScreenGolden(
         tester,
         'counter_page_active',
@@ -150,22 +147,12 @@ void main() {
         startTicker: true,
         now: _fixedNow,
       );
-      await tester.pumpWidgetBuilder(
-        BlocProvider.value(
-          value: cubit..loadInitial(),
-          child: const CounterPage(title: 'Counter'),
-        ),
-        wrapper: materialAppWrapper(
-          localizations: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          theme: ThemeData.light(),
-        ),
+      cubit.loadInitial();
+      await tester.pumpWidget(
+        _buildCounterPageApp(cubit: cubit, theme: ThemeData.light()),
       );
       await tester.pump();
+      await waitForCounterCubitsToLoad(tester);
       await multiScreenGolden(
         tester,
         'counter_page_paused',
@@ -183,23 +170,13 @@ void main() {
         timerService: fakeTimer,
         now: _fixedNow,
       );
-      await tester.pumpWidgetBuilder(
-        BlocProvider.value(
-          value: cubit..loadInitial(),
-          child: const CounterPage(title: 'Counter'),
-        ),
-        wrapper: materialAppWrapper(
-          localizations: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          theme: ThemeData.dark(),
-        ),
+      cubit.loadInitial();
+      await tester.pumpWidget(
+        _buildCounterPageApp(cubit: cubit, theme: ThemeData.dark()),
       );
       fakeTimer.tick(2);
       await tester.pump();
+      await waitForCounterCubitsToLoad(tester);
       await multiScreenGolden(
         tester,
         'counter_page_active_dark',
@@ -217,22 +194,12 @@ void main() {
         startTicker: true,
         now: _fixedNow,
       );
-      await tester.pumpWidgetBuilder(
-        BlocProvider.value(
-          value: cubit..loadInitial(),
-          child: const CounterPage(title: 'Counter'),
-        ),
-        wrapper: materialAppWrapper(
-          localizations: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          theme: ThemeData.dark(),
-        ),
+      cubit.loadInitial();
+      await tester.pumpWidget(
+        _buildCounterPageApp(cubit: cubit, theme: ThemeData.dark()),
       );
       await tester.pump();
+      await waitForCounterCubitsToLoad(tester);
       await multiScreenGolden(
         tester,
         'counter_page_paused_dark',
@@ -250,8 +217,16 @@ Widget _buildCounterPageApp({required CounterCubit cubit, ThemeData? theme}) =>
       designSize: const Size(390, 844),
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: (context, _) => BlocProvider.value(
-        value: cubit,
+      builder: (context, _) => MultiBlocProvider(
+        providers: <BlocProvider<dynamic>>[
+          BlocProvider<CounterCubit>.value(value: cubit),
+          BlocProvider<SyncStatusCubit>(
+            create: (_) => SyncStatusCubit(
+              networkStatusService: _FakeNetworkStatusService(),
+              coordinator: _FakeBackgroundSyncCoordinator(),
+            ),
+          ),
+        ],
         child: MaterialApp(
           localizationsDelegates: const [
             AppLocalizations.delegate,
@@ -265,6 +240,28 @@ Widget _buildCounterPageApp({required CounterCubit cubit, ThemeData? theme}) =>
         ),
       ),
     );
+
+Future<void> _overrideNetworkAndSync() async {
+  if (getIt.isRegistered<BackgroundSyncCoordinator>()) {
+    getIt.unregister<BackgroundSyncCoordinator>();
+  }
+  if (getIt.isRegistered<PendingSyncRepository>()) {
+    getIt.unregister<PendingSyncRepository>();
+  }
+  if (getIt.isRegistered<NetworkStatusService>()) {
+    getIt.unregister<NetworkStatusService>();
+  }
+
+  getIt.registerLazySingleton<NetworkStatusService>(
+    _FakeNetworkStatusService.new,
+  );
+  getIt.registerLazySingleton<BackgroundSyncCoordinator>(
+    _FakeBackgroundSyncCoordinator.new,
+  );
+  getIt.registerLazySingleton<PendingSyncRepository>(
+    _FakePendingSyncRepository.new,
+  );
+}
 
 class _CounterComponentsDemo extends StatelessWidget {
   @override
@@ -315,4 +312,122 @@ class _CounterComponentsDemo extends StatelessWidget {
       ),
     );
   }
+}
+
+class _FakeNetworkStatusService implements NetworkStatusService {
+  @override
+  Stream<NetworkStatus> get statusStream => const Stream<NetworkStatus>.empty();
+
+  @override
+  Future<NetworkStatus> getCurrentStatus() async => NetworkStatus.online;
+
+  @override
+  Future<void> dispose() async {}
+}
+
+class _FakePendingSyncRepository implements PendingSyncRepository {
+  final List<SyncOperation> _operations = <SyncOperation>[];
+
+  @override
+  String get boxName => 'fake-pending-sync-box';
+
+  @override
+  Future<SyncOperation> enqueue(final SyncOperation operation) async {
+    _operations
+      ..removeWhere((final SyncOperation op) => op.id == operation.id)
+      ..add(operation);
+    return operation;
+  }
+
+  @override
+  Future<List<SyncOperation>> getPendingOperations({
+    DateTime? now,
+    int? limit,
+  }) async {
+    final DateTime threshold = (now ?? DateTime.now()).toUtc();
+    final Iterable<SyncOperation> ready = _operations.where(
+      (final SyncOperation op) =>
+          op.nextRetryAt == null || !op.nextRetryAt!.isAfter(threshold),
+    );
+    final List<SyncOperation> pending = ready.toList(growable: false);
+    if (limit == null) return pending;
+    return pending.take(limit).toList(growable: false);
+  }
+
+  @override
+  Future<void> markCompleted(final String operationId) async {
+    _operations.removeWhere((final SyncOperation op) => op.id == operationId);
+  }
+
+  @override
+  Future<void> markFailed({
+    required final String operationId,
+    required final DateTime nextRetryAt,
+    final int? retryCount,
+  }) async {
+    final int index = _operations.indexWhere(
+      (final SyncOperation op) => op.id == operationId,
+    );
+    if (index == -1) return;
+    final SyncOperation current = _operations[index];
+    _operations[index] = current.copyWith(
+      nextRetryAt: nextRetryAt,
+      retryCount: retryCount ?? (current.retryCount + 1),
+    );
+  }
+
+  @override
+  Future<void> clear() async {
+    _operations.clear();
+  }
+
+  @override
+  Future<int> prune({
+    int maxRetryCount = 10,
+    Duration maxAge = const Duration(days: 30),
+  }) async => 0;
+
+  @override
+  Future<Box<dynamic>> getBox() =>
+      Future<Box<dynamic>>.error(UnimplementedError('Not used in fake'));
+
+  @override
+  Future<void> safeDeleteKey(final Box<dynamic> box, final String key) async {}
+
+  @override
+  bool operator ==(final Object other) =>
+      identical(this, other) || other.runtimeType == runtimeType;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+}
+
+class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
+  @override
+  Stream<SyncStatus> get statusStream => const Stream<SyncStatus>.empty();
+
+  @override
+  SyncStatus get currentStatus => SyncStatus.idle;
+
+  @override
+  List<SyncCycleSummary> get history => const <SyncCycleSummary>[];
+
+  @override
+  Stream<SyncCycleSummary> get summaryStream =>
+      const Stream<SyncCycleSummary>.empty();
+
+  @override
+  SyncCycleSummary? get latestSummary => null;
+
+  @override
+  Future<void> start() async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> dispose() async {}
+
+  @override
+  Future<void> flush() async {}
 }

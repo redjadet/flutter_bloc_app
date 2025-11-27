@@ -218,6 +218,110 @@
   "@settingsRemoteConfigRetryButton": {
     "description": "Etiqueta del botón que vuelve a lanzar la carga de Remote Config"
   },
+  "settingsRemoteConfigClearCacheButton": "Borrar caché de config",
+  "@settingsRemoteConfigClearCacheButton": {
+    "description": "Etiqueta del botón que borra la caché de Remote Config almacenada localmente"
+  },
+  "settingsSyncDiagnosticsTitle": "Diagnósticos de sincronización",
+  "@settingsSyncDiagnosticsTitle": {
+    "description": "Encabezado de la sección de diagnósticos de sincronización para desarrolladores"
+  },
+  "settingsSyncDiagnosticsEmpty": "Aún no hay ejecuciones de sincronización.",
+  "@settingsSyncDiagnosticsEmpty": {
+    "description": "Texto mostrado cuando aún no hay resumen de sincronización"
+  },
+  "settingsSyncLastRunLabel": "Última ejecución: {timestamp}",
+  "@settingsSyncLastRunLabel": {
+    "description": "Etiqueta que muestra la marca de tiempo de la última sincronización",
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSyncOperationsLabel": "Ops: {processed} procesadas, {failed} fallidas",
+  "@settingsSyncOperationsLabel": {
+    "description": "Etiqueta que muestra operaciones procesadas/fallidas en la última sincronización",
+    "placeholders": {
+      "processed": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncPendingLabel": "Pendientes al inicio: {count}",
+  "@settingsSyncPendingLabel": {
+    "description": "Etiqueta que muestra cuántas operaciones pendientes había al iniciar",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncPrunedLabel": "Depurados: {count}",
+  "@settingsSyncPrunedLabel": {
+    "description": "Muestra cuántos elementos de la cola se depuraron tras la sincronización",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncDurationLabel": "Duración: {ms}ms",
+  "@settingsSyncDurationLabel": {
+    "description": "Etiqueta que muestra la duración de la última sincronización en milisegundos",
+    "placeholders": {
+      "ms": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncHistoryTitle": "Ejecuciones recientes de sync",
+  "@settingsSyncHistoryTitle": {
+    "description": "Encabezado para la lista de historial de sincronización en diagnósticos"
+  },
+  "settingsGraphqlCacheSectionTitle": "Caché de GraphQL",
+  "@settingsGraphqlCacheSectionTitle": {
+    "description": "Encabezado de la sección para limpiar la caché de la demo de GraphQL"
+  },
+  "settingsGraphqlCacheDescription": "Borra los países/continentes en caché usados por la demo GraphQL. Los datos se renovarán en la siguiente carga.",
+  "@settingsGraphqlCacheDescription": {
+    "description": "Texto de ayuda que describe la caché de la demo GraphQL"
+  },
+  "settingsGraphqlCacheClearButton": "Limpiar caché de GraphQL",
+  "@settingsGraphqlCacheClearButton": {
+    "description": "Etiqueta del botón que limpia los datos de la demo GraphQL"
+  },
+  "settingsGraphqlCacheClearedMessage": "Caché de GraphQL limpiada",
+  "@settingsGraphqlCacheClearedMessage": {
+    "description": "Mensaje de confirmación tras limpiar la caché de GraphQL"
+  },
+  "settingsGraphqlCacheErrorMessage": "No se pudo limpiar la caché de GraphQL",
+  "@settingsGraphqlCacheErrorMessage": {
+    "description": "Mensaje de error si falla la limpieza de la caché de GraphQL"
+  },
+  "settingsProfileCacheSectionTitle": "Caché de perfil",
+  "@settingsProfileCacheSectionTitle": {
+    "description": "Encabezado de la sección para desarrolladores que gestiona el caché del perfil"
+  },
+  "settingsProfileCacheDescription": "Borra la instantánea de perfil guardada localmente que permite mostrar la pantalla de perfil sin conexión.",
+  "@settingsProfileCacheDescription": {
+    "description": "Texto de ayuda que explica para qué sirve el caché del perfil"
+  },
+  "settingsProfileCacheClearButton": "Borrar caché de perfil",
+  "@settingsProfileCacheClearButton": {
+    "description": "Botón que elimina la instantánea de perfil almacenada en caché"
+  },
+  "settingsProfileCacheClearedMessage": "Se borró el caché de perfil",
+  "@settingsProfileCacheClearedMessage": {
+    "description": "Mensaje de confirmación tras borrar el caché del perfil"
+  },
+  "settingsProfileCacheErrorMessage": "No se pudo borrar el caché de perfil",
+  "@settingsProfileCacheErrorMessage": {
+    "description": "Mensaje de error si falla el borrado del caché del perfil"
+  },
   "appInfoVersionLabel": "Versión",
   "@appInfoVersionLabel": {
     "description": "Etiqueta que precede a la versión de la aplicación"
@@ -265,6 +369,18 @@
   "chatHistoryClearAllWarning": "Esto eliminará permanentemente todas las conversaciones guardadas.",
   "@chatHistoryClearAllWarning": {
     "description": "Advertencia mostrada antes de borrar todo el historial"
+  },
+  "chatMessageStatusPending": "Sincronización pendiente",
+  "@chatMessageStatusPending": {
+    "description": "Estado mostrado bajo un mensaje de usuario que aún no se ha sincronizado"
+  },
+  "chatMessageStatusSyncing": "Sincronizando…",
+  "@chatMessageStatusSyncing": {
+    "description": "Estado mostrado mientras se sincroniza un mensaje pendiente"
+  },
+  "chatMessageStatusOffline": "Sin conexión: se enviará al conectarse",
+  "@chatMessageStatusOffline": {
+    "description": "Estado mostrado cuando el dispositivo está sin conexión"
   },
   "registerTitle": "Registrarse",
   "registerFullNameLabel": "Nombre completo",
@@ -543,5 +659,21 @@
   },
   "googleMapsPageMissingKeyTitle": "Añade una clave de API de Google Maps",
   "googleMapsPageMissingKeyDescription": "Configura claves válidas de Google Maps en los proyectos nativos para usar esta demostración.",
-  "googleMapsPageUnsupportedDescription": "La demo de Google Maps solo está disponible en compilaciones de Android y iOS."
+  "googleMapsPageUnsupportedDescription": "La demo de Google Maps solo está disponible en compilaciones de Android y iOS.",
+  "syncStatusOfflineTitle": "Sin conexión",
+  "syncStatusOfflineMessage": "Sincronizaremos {pendingCount, plural, =0 {tus cambios} one {# cambio} other {# cambios}} cuando vuelvas a estar en línea.",
+  "syncStatusSyncingTitle": "Sincronizando cambios",
+  "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Terminando tus últimas actualizaciones.} one {Sincronizando # cambio…} other {Sincronizando # cambios…}}",
+  "syncStatusPendingTitle": "Cambios en cola",
+  "syncStatusPendingMessage": "{pendingCount, plural, one {# cambio esperando sincronización.} other {# cambios esperando sincronización.}}",
+  "syncStatusSyncNowButton": "Sincronizar ahora",
+  "@syncStatusSyncNowButton": {
+    "description": "Botón para forzar la sincronización manual de los cambios pendientes."
+  },
+  "syncQueueInspectorButton": "Ver cola de sincronización",
+  "syncQueueInspectorEmpty": "No hay operaciones pendientes.",
+  "syncQueueInspectorTitle": "Operaciones pendientes",
+  "syncQueueInspectorOperation": "Entidad: {entity}, intentos: {attempts}",
+  "counterLastSynced": "Última sincronización: {timestamp}",
+  "counterChangeId": "ID de cambio: {changeId}"
 }

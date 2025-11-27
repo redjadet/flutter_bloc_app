@@ -5,8 +5,12 @@ import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remot
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
 
 part 'remote_config_diagnostics_section_models.dart';
 
@@ -23,6 +27,10 @@ class RemoteConfigDiagnosticsSection extends StatelessWidget {
 
     final ThemeData theme = Theme.of(context);
     final double gap = context.responsiveGapS;
+    final bool hasSyncStatusCubit =
+        CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
+          context,
+        );
 
     return SettingsSection(
       title: context.l10n.settingsRemoteConfigSectionTitle,
@@ -42,6 +50,8 @@ class RemoteConfigDiagnosticsSection extends StatelessWidget {
                 builder: (final context, final data) => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    if (hasSyncStatusCubit)
+                      _RemoteConfigSyncStatusBanner(gap: gap),
                     _RemoteConfigStatusBadge(
                       status: data.status,
                       theme: theme,
@@ -58,6 +68,13 @@ class RemoteConfigDiagnosticsSection extends StatelessWidget {
                         testValue: data.testValue ?? '',
                       ),
                     ],
+                    if (data.showMetadata) ...<Widget>[
+                      SizedBox(height: gap),
+                      _RemoteConfigMetadataRow(
+                        dataSource: data.dataSource,
+                        lastSyncedAt: data.lastSyncedAt,
+                      ),
+                    ],
                     if (data.errorMessage != null &&
                         data.errorMessage!.isNotEmpty)
                       Padding(
@@ -71,19 +88,34 @@ class RemoteConfigDiagnosticsSection extends StatelessWidget {
                         ),
                       ),
                     SizedBox(height: context.responsiveGapM),
-                    SizedBox(
-                      width: double.infinity,
-                      child: PlatformAdaptive.filledButton(
-                        context: context,
-                        onPressed: data.isLoading
-                            ? null
-                            : () => context
-                                  .read<RemoteConfigCubit>()
-                                  .fetchValues(),
-                        child: Text(
-                          context.l10n.settingsRemoteConfigRetryButton,
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: PlatformAdaptive.filledButton(
+                            context: context,
+                            onPressed: data.isLoading
+                                ? null
+                                : () => context
+                                      .read<RemoteConfigCubit>()
+                                      .fetchValues(),
+                            child: Text(
+                              context.l10n.settingsRemoteConfigRetryButton,
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(width: gap),
+                        PlatformAdaptive.textButton(
+                          context: context,
+                          onPressed: data.isLoading
+                              ? null
+                              : () => context
+                                    .read<RemoteConfigCubit>()
+                                    .clearCache(),
+                          child: Text(
+                            context.l10n.settingsRemoteConfigClearCacheButton,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

@@ -110,7 +110,6 @@ class _ChatPageState extends State<ChatPage> {
     final bool hasHistory = context.select(
       (final ChatCubit cubit) => cubit.state.hasHistory,
     );
-
     return CommonPageLayout(
       title: l10n.chatPageTitle,
       actions: <Widget>[
@@ -127,6 +126,7 @@ class _ChatPageState extends State<ChatPage> {
       ],
       body: Column(
         children: <Widget>[
+          const ChatSyncBanner(),
           Padding(
             padding: EdgeInsets.fromLTRB(
               context.responsiveHorizontalGapL,

@@ -13,6 +13,9 @@ abstract class ChatConversation with _$ChatConversation {
     @Default(<String>[]) final List<String> pastUserInputs,
     @Default(<String>[]) final List<String> generatedResponses,
     final String? model,
+    final DateTime? lastSyncedAt,
+    @Default(true) final bool synchronized,
+    final String? changeId,
   }) = _ChatConversation;
   const ChatConversation._();
 
@@ -40,6 +43,9 @@ abstract class ChatConversation with _$ChatConversation {
       createdAt: createdAt,
       updatedAt: updatedAt,
       model: _normalizeModel(json['model']),
+      lastSyncedAt: _parseOptionalDate(json['lastSyncedAt']),
+      synchronized: json['synchronized'] as bool? ?? true,
+      changeId: _normalizeChangeId(json['changeId']),
     );
   }
 
@@ -51,6 +57,9 @@ abstract class ChatConversation with _$ChatConversation {
     'createdAt': createdAt.toIso8601String(),
     'updatedAt': updatedAt.toIso8601String(),
     if (model != null) 'model': model,
+    if (lastSyncedAt != null) 'lastSyncedAt': lastSyncedAt!.toIso8601String(),
+    'synchronized': synchronized,
+    if (changeId != null && changeId!.isNotEmpty) 'changeId': changeId,
   };
 
   bool get hasContent =>
@@ -88,6 +97,24 @@ DateTime _parseDate(final dynamic value, {final DateTime? fallback}) {
 }
 
 String? _normalizeModel(final dynamic value) {
+  if (value is! String) {
+    return null;
+  }
+  final String trimmed = value.trim();
+  return trimmed.isEmpty ? null : trimmed;
+}
+
+DateTime? _parseOptionalDate(final dynamic value) {
+  if (value is String && value.isNotEmpty) {
+    return DateTime.tryParse(value);
+  }
+  if (value is num) {
+    return DateTime.fromMillisecondsSinceEpoch(value.toInt(), isUtc: true);
+  }
+  return null;
+}
+
+String? _normalizeChangeId(final dynamic value) {
   if (value is! String) {
     return null;
   }

@@ -143,6 +143,9 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
   String _generateConversationId(final DateTime timestamp) =>
       'conversation_${timestamp.microsecondsSinceEpoch}';
 
+  String _generateMessageId(final DateTime timestamp) =>
+      'message_${timestamp.microsecondsSinceEpoch}';
+
   void _emitConversationSnapshot({
     required final ChatConversation active,
     required final List<ChatConversation> history,
