@@ -372,6 +372,24 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsSyncHistoryTitle => 'Son senkronizasyonlar';
 
   @override
+  String get settingsGraphqlCacheSectionTitle => 'GraphQL önbelleği';
+
+  @override
+  String get settingsGraphqlCacheDescription =>
+      'GraphQL demo\'sunda kullanılan ülke/kıta önbelleğini temizle. Veriler bir sonraki yüklemede yenilenir.';
+
+  @override
+  String get settingsGraphqlCacheClearButton => 'GraphQL önbelleğini temizle';
+
+  @override
+  String get settingsGraphqlCacheClearedMessage =>
+      'GraphQL önbelleği temizlendi';
+
+  @override
+  String get settingsGraphqlCacheErrorMessage =>
+      'GraphQL önbelleği temizlenemedi';
+
+  @override
   String get settingsProfileCacheSectionTitle => 'Profil önbelleği';
 
   @override

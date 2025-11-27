@@ -17,6 +17,7 @@ export 'presentation/cubits/theme_cubit.dart';
 export 'presentation/pages/settings_page.dart';
 export 'presentation/widgets/account_section.dart';
 export 'presentation/widgets/app_info_section.dart';
+export 'presentation/widgets/graphql_cache_controls_section.dart';
 export 'presentation/widgets/language_section.dart';
 export 'presentation/widgets/profile_cache_controls_section.dart';
 export 'presentation/widgets/remote_config_diagnostics_section.dart';

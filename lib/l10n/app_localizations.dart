@@ -770,6 +770,36 @@ abstract class AppLocalizations {
   /// **'Recent sync runs'**
   String get settingsSyncHistoryTitle;
 
+  /// Heading for the developer-only section that clears the GraphQL demo cache
+  ///
+  /// In en, this message translates to:
+  /// **'GraphQL cache'**
+  String get settingsGraphqlCacheSectionTitle;
+
+  /// Helper text describing what the GraphQL demo cache does
+  ///
+  /// In en, this message translates to:
+  /// **'Clear the cached countries/continents used by the GraphQL demo. Fresh data will be fetched on next load.'**
+  String get settingsGraphqlCacheDescription;
+
+  /// Button label that clears the cached GraphQL demo data
+  ///
+  /// In en, this message translates to:
+  /// **'Clear GraphQL cache'**
+  String get settingsGraphqlCacheClearButton;
+
+  /// Confirmation snackbar message displayed after clearing the GraphQL cache
+  ///
+  /// In en, this message translates to:
+  /// **'GraphQL cache cleared'**
+  String get settingsGraphqlCacheClearedMessage;
+
+  /// Error snackbar message displayed if clearing the GraphQL cache fails
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t clear GraphQL cache'**
+  String get settingsGraphqlCacheErrorMessage;
+
   /// Heading for the developer-only section that manages the profile cache
   ///
   /// In en, this message translates to:

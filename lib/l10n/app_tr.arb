@@ -283,6 +283,26 @@
   "@settingsSyncHistoryTitle": {
     "description": "Tanılama bölümündeki senkronizasyon geçmişi başlığı"
   },
+  "settingsGraphqlCacheSectionTitle": "GraphQL önbelleği",
+  "@settingsGraphqlCacheSectionTitle": {
+    "description": "GraphQL demo önbelleğini temizleyen geliştirici bölümünün başlığı"
+  },
+  "settingsGraphqlCacheDescription": "GraphQL demo'sunda kullanılan ülke/kıta önbelleğini temizle. Veriler bir sonraki yüklemede yenilenir.",
+  "@settingsGraphqlCacheDescription": {
+    "description": "GraphQL demo önbelleğinin ne yaptığını açıklayan metin"
+  },
+  "settingsGraphqlCacheClearButton": "GraphQL önbelleğini temizle",
+  "@settingsGraphqlCacheClearButton": {
+    "description": "GraphQL demo verilerini temizleyen düğme etiketi"
+  },
+  "settingsGraphqlCacheClearedMessage": "GraphQL önbelleği temizlendi",
+  "@settingsGraphqlCacheClearedMessage": {
+    "description": "GraphQL önbelleği temizlendikten sonra gösterilen onay mesajı"
+  },
+  "settingsGraphqlCacheErrorMessage": "GraphQL önbelleği temizlenemedi",
+  "@settingsGraphqlCacheErrorMessage": {
+    "description": "GraphQL önbelleği temizlenemezse gösterilen hata mesajı"
+  },
   "settingsProfileCacheSectionTitle": "Profil önbelleği",
   "@settingsProfileCacheSectionTitle": {
     "description": "Profil önbelleğini yöneten geliştirici bölümünün başlığı"

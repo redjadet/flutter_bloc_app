@@ -282,6 +282,26 @@
   "@settingsSyncHistoryTitle": {
     "description": "Titre de la liste d'historique de synchro dans les diagnostics"
   },
+  "settingsGraphqlCacheSectionTitle": "Cache GraphQL",
+  "@settingsGraphqlCacheSectionTitle": {
+    "description": "Titre de la section développeur qui efface le cache de la démo GraphQL"
+  },
+  "settingsGraphqlCacheDescription": "Efface les pays/continents mis en cache par la démo GraphQL. Les données seront rafraîchies au prochain chargement.",
+  "@settingsGraphqlCacheDescription": {
+    "description": "Texte d'aide décrivant le cache de la démo GraphQL"
+  },
+  "settingsGraphqlCacheClearButton": "Vider le cache GraphQL",
+  "@settingsGraphqlCacheClearButton": {
+    "description": "Libellé du bouton qui vide les données de la démo GraphQL"
+  },
+  "settingsGraphqlCacheClearedMessage": "Cache GraphQL vidé",
+  "@settingsGraphqlCacheClearedMessage": {
+    "description": "Message de confirmation après vidage du cache GraphQL"
+  },
+  "settingsGraphqlCacheErrorMessage": "Impossible de vider le cache GraphQL",
+  "@settingsGraphqlCacheErrorMessage": {
+    "description": "Message d'erreur si le vidage du cache GraphQL échoue"
+  },
   "settingsProfileCacheSectionTitle": "Cache du profil",
   "@settingsProfileCacheSectionTitle": {
     "description": "Titre de la section développeur qui gère le cache du profil"

@@ -26,6 +26,8 @@ import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart
 import 'package:flutter_bloc_app/features/google_maps/data/sample_map_location_repository.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/countries_graphql_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_demo_cache_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/data/offline_first_graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/profile/data/mock_profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/data/offline_first_profile_repository.dart';
@@ -97,7 +99,14 @@ void _registerHttpServices() {
   );
   registerLazySingletonIfAbsent<PaymentCalculator>(PaymentCalculator.new);
   registerLazySingletonIfAbsent<GraphqlDemoRepository>(
-    () => CountriesGraphqlRepository(client: getIt<http.Client>()),
+    () => OfflineFirstGraphqlDemoRepository(
+      remoteRepository: CountriesGraphqlRepository(
+        client: getIt<http.Client>(),
+      ),
+      cacheRepository: GraphqlDemoCacheRepository(
+        hiveService: getIt<HiveService>(),
+      ),
+    ),
   );
 }
 

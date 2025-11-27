@@ -377,6 +377,23 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsSyncHistoryTitle => 'Aktuelle Sync-Läufe';
 
   @override
+  String get settingsGraphqlCacheSectionTitle => 'GraphQL-Cache';
+
+  @override
+  String get settingsGraphqlCacheDescription =>
+      'Lösche den zwischengespeicherten Länder/Kontinente-Datensatz der GraphQL-Demo. Daten werden beim nächsten Laden erneuert.';
+
+  @override
+  String get settingsGraphqlCacheClearButton => 'GraphQL-Cache leeren';
+
+  @override
+  String get settingsGraphqlCacheClearedMessage => 'GraphQL-Cache geleert';
+
+  @override
+  String get settingsGraphqlCacheErrorMessage =>
+      'GraphQL-Cache konnte nicht geleert werden';
+
+  @override
   String get settingsProfileCacheSectionTitle => 'Profil-Cache';
 
   @override

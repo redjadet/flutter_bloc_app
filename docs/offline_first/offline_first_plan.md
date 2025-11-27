@@ -48,10 +48,11 @@ This document revalidates the offline-first requirements after another pass over
 - ✅ **Sync telemetry hooks:** BackgroundSyncCoordinator and Remote Config offline-first repo now emit lightweight telemetry events (durations, counts, sources) for future analytics/observability.
 - ✅ **Sync diagnostics UI:** Added a dev-only Sync Diagnostics section in Settings that surfaces the latest sync cycle summary (duration, per-entity queue depth, pending counts) from `SyncStatusCubit`.
 - ✅ **Sync runner refactor:** Extracted `runSyncCycle` + `SyncCycleSummary` into a dedicated runner to keep `BackgroundSyncCoordinator` lean and lints compliant while exposing summary streams for diagnostics.
-- ⚙️ **Immediate focus:** Push Remote Config telemetry/cache UX plus broader coordinator observability + pruning while staging the next feature onboardings.
 - ✅ **Prune visibility:** Sync diagnostics now surface `prunedCount` per cycle so queue maintenance is transparent during QA.
 - ✅ **Runner resilience tests:** Added unit tests for `runSyncCycle` covering empty queues, successful processing, and failure/backoff telemetry to lock down coordinator behavior.
 - ✅ **Telemetry completeness:** Sync runner tests now assert telemetry includes pruned counts and per-entity pending metadata so diagnostics stay reliable.
+- ✅ **GraphQL demo cache-first:** Added Hive cache + offline-first wrapper so countries/continents load offline and refresh cache on success; documented in `docs/offline_first/graphql_demo.md`.
+- ⚙️ **Immediate focus:** Remote Config offline-first is complete; now polish observability (telemetry exports, history UI) and continue GraphQL demo polish (staleness metadata, cache clear control).
 
 ## Immediate Next Steps
 
@@ -72,9 +73,10 @@ This document revalidates the offline-first requirements after another pass over
    - Add periodic data pruning for local caches (e.g., chat history older than 90 days, search queries older than 30 days).
 
 4. **GraphQL demo offline-first** (Priority: Low)
-   - Cache countries/continents data locally for offline access.
-   - Follow Search pattern for read-only cache-first approach.
-   - Document contracts under `docs/offline_first/graphql_demo.md`.
+   - ✅ Cache countries/continents data locally for offline access.
+   - ✅ Follow Search pattern for read-only cache-first approach.
+   - ✅ Document contracts under `docs/offline_first/graphql_demo.md`.
+   - ✅ Add staleness metadata (24h expiry) to avoid serving stale cache; optional dev clear-cache control remains future work.
 
 5. **Testing & quality improvements** (Priority: Low)
    - Expand integration tests for end-to-end offline scenarios across all features.

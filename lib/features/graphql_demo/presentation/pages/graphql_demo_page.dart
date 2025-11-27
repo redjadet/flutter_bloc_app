@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/graphql_demo.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_view_models.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
@@ -11,7 +13,7 @@ class GraphqlDemoPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
+    Theme.of(context);
     return CommonPageLayout(
       title: l10n.graphqlSampleTitle,
       body: Column(
@@ -25,8 +27,12 @@ class GraphqlDemoPage extends StatelessWidget {
                 : const SizedBox.shrink(),
           ),
           // Only rebuild filter bar when continents or active continent changes
-          BlocSelector<GraphqlDemoCubit, GraphqlDemoState, _FilterBarData>(
-            selector: (final state) => _FilterBarData(
+          BlocSelector<
+            GraphqlDemoCubit,
+            GraphqlDemoState,
+            GraphqlFilterBarData
+          >(
+            selector: (final state) => GraphqlFilterBarData(
               continents: state.continents,
               activeContinentCode: state.activeContinentCode,
               isLoading: state.isLoading,
@@ -44,6 +50,19 @@ class GraphqlDemoPage extends StatelessWidget {
               ),
             ),
           ),
+          BlocSelector<GraphqlDemoCubit, GraphqlDemoState, GraphqlDataSource>(
+            selector: (final state) => state.dataSource,
+            builder: (final context, final source) => Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  right: context.pageHorizontalPadding,
+                  bottom: context.responsiveGapS,
+                ),
+                child: _DataSourceBadge(source: source),
+              ),
+            ),
+          ),
           // Only rebuild body when countries/error/loading changes
           Expanded(
             child: RefreshIndicator(
@@ -54,8 +73,12 @@ class GraphqlDemoPage extends StatelessWidget {
                 );
               },
               child:
-                  BlocSelector<GraphqlDemoCubit, GraphqlDemoState, _BodyData>(
-                    selector: (final state) => _BodyData(
+                  BlocSelector<
+                    GraphqlDemoCubit,
+                    GraphqlDemoState,
+                    GraphqlBodyData
+                  >(
+                    selector: (final state) => GraphqlBodyData(
                       isLoading: state.isLoading,
                       hasError: state.hasError,
                       countries: state.countries,
@@ -63,7 +86,7 @@ class GraphqlDemoPage extends StatelessWidget {
                       errorMessage: state.errorMessage,
                     ),
                     builder: (final context, final bodyData) => RepaintBoundary(
-                      child: _buildBody(context, bodyData, l10n, theme),
+                      child: _buildBody(context, bodyData, l10n),
                     ),
                   ),
             ),
@@ -75,9 +98,8 @@ class GraphqlDemoPage extends StatelessWidget {
 
   Widget _buildBody(
     final BuildContext context,
-    final _BodyData bodyData,
+    final GraphqlBodyData bodyData,
     final AppLocalizations l10n,
-    final ThemeData theme,
   ) {
     if (bodyData.isLoading && bodyData.countries.isEmpty) {
       return const CommonLoadingWidget();
@@ -128,7 +150,7 @@ class GraphqlDemoPage extends StatelessWidget {
 
 String _errorMessageForData(
   final AppLocalizations l10n,
-  final _BodyData bodyData,
+  final GraphqlBodyData bodyData,
 ) {
   switch (bodyData.errorType) {
     case GraphqlDemoErrorType.network:
@@ -148,33 +170,22 @@ String _errorMessageForData(
 }
 
 @immutable
-class _FilterBarData {
-  const _FilterBarData({
-    required this.continents,
-    required this.activeContinentCode,
-    required this.isLoading,
-  });
+class _DataSourceBadge extends StatelessWidget {
+  const _DataSourceBadge({required this.source});
 
-  final List<GraphqlContinent> continents;
-  final String? activeContinentCode;
-  final bool isLoading;
-}
+  final GraphqlDataSource source;
 
-@immutable
-class _BodyData {
-  const _BodyData({
-    required this.isLoading,
-    required this.hasError,
-    required this.countries,
-    required this.errorType,
-    required this.errorMessage,
-  });
-
-  final bool isLoading;
-  final bool hasError;
-  final List<GraphqlCountry> countries;
-  final GraphqlDemoErrorType? errorType;
-  final String? errorMessage;
+  @override
+  Widget build(final BuildContext context) {
+    if (source == GraphqlDataSource.unknown) {
+      return const SizedBox.shrink();
+    }
+    final bool isCache = source == GraphqlDataSource.cache;
+    return Chip(
+      label: Text(isCache ? 'Cache' : 'Remote'),
+      visualDensity: VisualDensity.compact,
+    );
+  }
 }
 
 class _FilterBar extends StatelessWidget {

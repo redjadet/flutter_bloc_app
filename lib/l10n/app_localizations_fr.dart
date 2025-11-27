@@ -379,6 +379,23 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsSyncHistoryTitle => 'Exécutions de synchro récentes';
 
   @override
+  String get settingsGraphqlCacheSectionTitle => 'Cache GraphQL';
+
+  @override
+  String get settingsGraphqlCacheDescription =>
+      'Efface les pays/continents mis en cache par la démo GraphQL. Les données seront rafraîchies au prochain chargement.';
+
+  @override
+  String get settingsGraphqlCacheClearButton => 'Vider le cache GraphQL';
+
+  @override
+  String get settingsGraphqlCacheClearedMessage => 'Cache GraphQL vidé';
+
+  @override
+  String get settingsGraphqlCacheErrorMessage =>
+      'Impossible de vider le cache GraphQL';
+
+  @override
   String get settingsProfileCacheSectionTitle => 'Cache du profil';
 
   @override

@@ -10,7 +10,7 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart
 import 'package:flutter_bloc_app/features/deeplink/data/app_links_deep_link_service.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/data/countries_graphql_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/data/offline_first_graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/hive_locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/hive_theme_repository.dart';
@@ -45,7 +45,7 @@ void main() {
 
     final GraphqlDemoRepository graphqlRepository =
         injector<GraphqlDemoRepository>();
-    expect(graphqlRepository, isA<CountriesGraphqlRepository>());
+    expect(graphqlRepository, isA<OfflineFirstGraphqlDemoRepository>());
 
     final ChatRepository chatRepository = injector<ChatRepository>();
     expect(chatRepository, isA<OfflineFirstChatRepository>());
