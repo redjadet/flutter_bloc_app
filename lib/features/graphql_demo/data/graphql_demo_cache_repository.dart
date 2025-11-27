@@ -36,9 +36,11 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase {
       return items
           .whereType<Map<dynamic, dynamic>>()
           .map(
-            (final Map<dynamic, dynamic> json) => GraphqlContinent.fromJson(
-              json.cast<String, dynamic>(),
-            ),
+            (final Map<dynamic, dynamic> json) {
+              // Hive returns Map<dynamic, dynamic>, convert to Map<String, dynamic>
+              final Map<String, dynamic> typedJson = _convertMapToTyped(json);
+              return GraphqlContinent.fromJson(typedJson);
+            },
           )
           .toList(growable: false);
     },
@@ -85,9 +87,11 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase {
       return items
           .whereType<Map<dynamic, dynamic>>()
           .map(
-            (final Map<dynamic, dynamic> json) => GraphqlCountry.fromJson(
-              json.cast<String, dynamic>(),
-            ),
+            (final Map<dynamic, dynamic> json) {
+              // Hive returns Map<dynamic, dynamic>, recursively convert to Map<String, dynamic>
+              final Map<String, dynamic> typedJson = _convertMapToTyped(json);
+              return GraphqlCountry.fromJson(typedJson);
+            },
           )
           .toList(growable: false);
     },
@@ -154,5 +158,35 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase {
   bool _isStale(final DateTime? updatedAt, final Duration? maxAge) {
     if (updatedAt == null || maxAge == null) return false;
     return updatedAt.isBefore(DateTime.now().toUtc().subtract(maxAge));
+  }
+
+  /// Recursively converts `Map<dynamic, dynamic>` to `Map<String, dynamic>`.
+  /// Handles nested maps and lists that may contain maps.
+  Map<String, dynamic> _convertMapToTyped(final Map<dynamic, dynamic> source) {
+    final Map<String, dynamic> result = <String, dynamic>{};
+    for (final MapEntry<dynamic, dynamic> entry in source.entries) {
+      if (entry.key is! String) {
+        continue;
+      }
+      final String key = entry.key as String;
+      final dynamic value = entry.value;
+
+      if (value is Map<dynamic, dynamic>) {
+        // Recursively convert nested maps
+        result[key] = _convertMapToTyped(value);
+      } else if (value is List<dynamic>) {
+        // Convert lists that may contain maps
+        result[key] = value.map((final dynamic item) {
+          if (item is Map<dynamic, dynamic>) {
+            return _convertMapToTyped(item);
+          }
+          return item;
+        }).toList();
+      } else {
+        // Primitive values can be copied directly
+        result[key] = value;
+      }
+    }
+    return result;
   }
 }
