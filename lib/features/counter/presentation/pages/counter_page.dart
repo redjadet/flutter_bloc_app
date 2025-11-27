@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/counter/counter.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/widgets/awesome_feature_widget.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -22,6 +23,17 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   final ErrorNotificationService _errorNotificationService =
       getIt<ErrorNotificationService>();
   late final bool _showFlavorBadge;
+
+  Future<void> _flushSyncIfPossible(final BuildContext context) async {
+    try {
+      final SyncStatusCubit syncCubit = context.read<SyncStatusCubit>();
+      if (syncCubit.state.isOnline) {
+        unawaited(syncCubit.flush());
+      }
+    } on Object {
+      // SyncStatusCubit not available in this subtree (e.g., tests/minimal shells).
+    }
+  }
 
   @override
   void initState() {
@@ -46,6 +58,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
       case AppLifecycleState.detached:
       case AppLifecycleState.hidden:
         cubit.pauseAutoDecrement();
+        unawaited(_flushSyncIfPossible(context));
         break;
       case AppLifecycleState.resumed:
         cubit.resumeAutoDecrement();
@@ -82,6 +95,13 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
               prev.count == 0 && curr.count > 0,
           listener: (final context, final state) {
             ErrorHandling.clearSnackBars(context);
+          },
+        ),
+        BlocListener<CounterCubit, CounterState>(
+          listenWhen: (final prev, final curr) => prev.count != curr.count,
+          listener: (final context, final state) async {
+            // Kick off a sync flush immediately when counter changes, but only if SyncStatusCubit is available.
+            unawaited(_flushSyncIfPossible(context));
           },
         ),
       ],
@@ -182,9 +202,9 @@ class _CounterContent extends StatelessWidget {
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
       CounterSyncBanner(l10n: l10n),
-      if (FlavorManager.I.isDev || FlavorManager.I.isStaging) ...[
-        SizedBox(height: context.responsiveGapS),
+      if (FlavorManager.I.isDev) ...[
         const CounterSyncQueueInspectorButton(),
+        SizedBox(height: context.responsiveGapS),
       ],
       if (showFlavorBadge) ...[
         const Padding(

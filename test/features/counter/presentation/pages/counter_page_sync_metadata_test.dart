@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/constants.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
@@ -111,6 +112,7 @@ void main() {
   });
 
   setUp(() async {
+    FlavorManager.current = Flavor.dev;
     getIt.pushNewScope();
     await configureDependencies();
   });
@@ -172,9 +174,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    final BuildContext bannerContext = tester.element(
-      find.byType(CounterSyncBanner),
-    );
+    final Finder bannerFinder = find.byType(CounterSyncBanner);
+    final BuildContext bannerContext = tester.element(bannerFinder);
     final AppLocalizations l10n = AppLocalizations.of(bannerContext);
     final MaterialLocalizations materialL10n = MaterialLocalizations.of(
       bannerContext,

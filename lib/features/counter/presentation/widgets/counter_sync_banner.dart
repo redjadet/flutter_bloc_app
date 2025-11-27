@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class CounterSyncBanner extends StatefulWidget {
   const CounterSyncBanner({required this.l10n, super.key});
@@ -25,97 +24,141 @@ class CounterSyncBanner extends StatefulWidget {
 class _CounterSyncBannerState extends State<CounterSyncBanner> {
   final PendingSyncRepository _pendingRepository =
       getIt<PendingSyncRepository>();
+  final CounterRepository _counterRepository = getIt<CounterRepository>();
   int _pendingCount = 0;
   DateTime? _lastSyncedAt;
   String? _lastChangeId;
+  StreamSubscription<CounterSnapshot>? _counterSubscription;
 
   @override
   void initState() {
     super.initState();
-    unawaited(_refreshSyncDetails());
-  }
-
-  Future<void> _refreshSyncDetails() async {
-    final int count = (await _pendingRepository.getPendingOperations(
-      now: DateTime.now().toUtc(),
-    )).length;
-    final CounterRepository counterRepository = getIt<CounterRepository>();
-    final CounterSnapshot snapshot = await counterRepository.load();
-    if (!mounted) return;
-    setState(() => _pendingCount = count);
-    setState(() {
-      _lastSyncedAt = snapshot.lastSyncedAt;
-      _lastChangeId = snapshot.changeId;
-    });
+    try {
+      final CounterCubit cubit = context.read<CounterCubit>();
+      _lastSyncedAt = cubit.state.lastSyncedAt;
+      _lastChangeId = cubit.state.changeId;
+    } on Object {
+      // CounterCubit not available; rely on repository stream below.
+    }
+    unawaited(_refreshPendingCount());
+    // Listen to counter snapshot changes for real-time lastSyncedAt/changeId updates
+    _counterSubscription = _counterRepository.watch().listen(
+      (final CounterSnapshot snapshot) {
+        if (!mounted) return;
+        setState(() {
+          _lastSyncedAt = snapshot.lastSyncedAt;
+          _lastChangeId = snapshot.changeId;
+        });
+      },
+    );
   }
 
   @override
-  Widget build(final BuildContext context) =>
-      BlocConsumer<SyncStatusCubit, SyncStatusState>(
-        listener: (final context, final state) =>
-            unawaited(_refreshSyncDetails()),
-        builder: (final context, final state) {
-          final bool isOffline = state.networkStatus == NetworkStatus.offline;
-          final bool isSyncing = state.syncStatus == SyncStatus.syncing;
-          final bool hasMetadata =
-              (_lastSyncedAt != null) || (_lastChangeId?.isNotEmpty ?? false);
-          final bool shouldHide =
-              !isOffline && !isSyncing && _pendingCount == 0 && !hasMetadata;
-          if (shouldHide) {
-            return const SizedBox.shrink();
-          }
-          final AppLocalizations l10n = widget.l10n;
-          final bool isError = isOffline;
-          final String title;
-          final String message;
-          if (isOffline) {
-            title = l10n.syncStatusOfflineTitle;
-            message = l10n.syncStatusOfflineMessage(_pendingCount);
-          } else if (isSyncing) {
-            title = l10n.syncStatusSyncingTitle;
-            message = l10n.syncStatusSyncingMessage(_pendingCount);
-          } else {
-            title = l10n.syncStatusPendingTitle;
-            message = l10n.syncStatusPendingMessage(_pendingCount);
-          }
-          final MaterialLocalizations materialLocalizations =
-              MaterialLocalizations.of(context);
-          final String? lastSyncedText = _lastSyncedAt != null
-              ? _formatLastSynced(materialLocalizations, _lastSyncedAt!)
-              : null;
-          final String? changeIdText =
-              _lastChangeId != null && _lastChangeId!.isNotEmpty
-              ? l10n.counterChangeId(_lastChangeId!)
-              : null;
+  void dispose() {
+    unawaited(_counterSubscription?.cancel());
+    super.dispose();
+  }
 
-          return Padding(
-            padding: EdgeInsets.only(bottom: context.responsiveGapS),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                AppMessage(
-                  title: title,
-                  message: message,
-                  isError: isError,
-                ),
-                if (lastSyncedText != null || changeIdText != null) ...[
-                  SizedBox(height: context.responsiveGapXS),
-                  if (lastSyncedText != null)
-                    Text(
-                      l10n.counterLastSynced(lastSyncedText),
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  if (changeIdText != null)
-                    Text(
-                      changeIdText,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                ],
+  Future<void> _refreshPendingCount() async {
+    final int count = (await _pendingRepository.getPendingOperations(
+      now: DateTime.now().toUtc(),
+    )).length;
+    if (!mounted) return;
+    setState(() => _pendingCount = count);
+  }
+
+  @override
+  Widget build(
+    final BuildContext context,
+  ) {
+    final Widget banner = BlocConsumer<SyncStatusCubit, SyncStatusState>(
+      listener: (final context, final state) {
+        // Refresh pending count when sync status changes (operations may have been processed)
+        unawaited(_refreshPendingCount());
+      },
+      builder: (final context, final state) {
+        final bool isOffline = state.networkStatus == NetworkStatus.offline;
+        final bool isSyncing = state.syncStatus == SyncStatus.syncing;
+        final bool hasMetadata =
+            (_lastSyncedAt != null) || (_lastChangeId?.isNotEmpty ?? false);
+        final bool shouldHide =
+            !isOffline && !isSyncing && _pendingCount == 0 && !hasMetadata;
+        if (shouldHide) {
+          return const SizedBox.shrink();
+        }
+        final AppLocalizations l10n = widget.l10n;
+        final bool isError = isOffline;
+        final String title;
+        final String message;
+        if (isOffline) {
+          title = l10n.syncStatusOfflineTitle;
+          message = l10n.syncStatusOfflineMessage(_pendingCount);
+        } else if (isSyncing) {
+          title = l10n.syncStatusSyncingTitle;
+          message = l10n.syncStatusSyncingMessage(_pendingCount);
+        } else {
+          title = l10n.syncStatusPendingTitle;
+          message = l10n.syncStatusPendingMessage(_pendingCount);
+        }
+        final MaterialLocalizations materialLocalizations =
+            MaterialLocalizations.of(context);
+        final String? lastSyncedText = _lastSyncedAt != null
+            ? _formatLastSynced(materialLocalizations, _lastSyncedAt!)
+            : null;
+        final String? changeIdText =
+            _lastChangeId != null && _lastChangeId!.isNotEmpty
+            ? l10n.counterChangeId(_lastChangeId!)
+            : null;
+
+        return Padding(
+          padding: EdgeInsets.only(bottom: context.responsiveGapS),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              AppMessage(
+                title: title,
+                message: message,
+                isError: isError,
+              ),
+              if (lastSyncedText != null || changeIdText != null) ...[
+                SizedBox(height: context.responsiveGapXS),
+                if (lastSyncedText != null)
+                  Text(
+                    l10n.counterLastSynced(lastSyncedText),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                if (changeIdText != null)
+                  Text(
+                    changeIdText,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
               ],
-            ),
-          );
-        },
-      );
+            ],
+          ),
+        );
+      },
+    );
+
+    CounterCubit? counterCubit;
+    try {
+      counterCubit = BlocProvider.of<CounterCubit>(context);
+    } on Object {
+      counterCubit = null;
+    }
+
+    if (counterCubit == null) {
+      return banner;
+    }
+
+    return BlocListener<CounterCubit, CounterState>(
+      bloc: counterCubit,
+      listenWhen: (final previous, final current) =>
+          previous.count != current.count,
+      listener: (final context, final state) =>
+          unawaited(_refreshPendingCount()),
+      child: banner,
+    );
+  }
 
   String _formatLastSynced(
     final MaterialLocalizations localizations,
@@ -127,100 +170,5 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
       TimeOfDay.fromDateTime(local),
     );
     return '$date · $time';
-  }
-}
-
-class CounterSyncQueueInspectorButton extends StatelessWidget {
-  const CounterSyncQueueInspectorButton({super.key});
-
-  @override
-  Widget build(final BuildContext context) {
-    final AppLocalizations l10n = context.l10n;
-    return Align(
-      alignment: Alignment.centerRight,
-      child: PlatformAdaptive.textButton(
-        context: context,
-        onPressed: () => _showInspector(context, l10n),
-        child: Text(l10n.syncQueueInspectorButton),
-      ),
-    );
-  }
-
-  Future<void> _showInspector(
-    final BuildContext context,
-    final AppLocalizations l10n,
-  ) async {
-    final PendingSyncRepository repository = getIt<PendingSyncRepository>();
-    final List<SyncOperation> operations = await repository
-        .getPendingOperations(
-          now: DateTime.now().toUtc(),
-        );
-    if (!context.mounted) return;
-    await showModalBottomSheet<void>(
-      context: context,
-      builder: (final BuildContext sheetContext) => _SyncQueueInspectorSheet(
-        operations: operations,
-        l10n: l10n,
-      ),
-    );
-  }
-}
-
-class _SyncQueueInspectorSheet extends StatelessWidget {
-  const _SyncQueueInspectorSheet({
-    required this.operations,
-    required this.l10n,
-  });
-
-  final List<SyncOperation> operations;
-  final AppLocalizations l10n;
-
-  @override
-  Widget build(final BuildContext context) {
-    if (operations.isEmpty) {
-      return Padding(
-        padding: context.pagePadding,
-        child: AppMessage(message: l10n.syncQueueInspectorEmpty),
-      );
-    }
-    return SafeArea(
-      child: Padding(
-        padding: context.pagePadding,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              l10n.syncQueueInspectorTitle,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            SizedBox(height: context.responsiveGapM),
-            Flexible(
-              child: ListView.separated(
-                shrinkWrap: true,
-                itemBuilder: (final BuildContext itemContext, final int index) {
-                  final SyncOperation operation = operations[index];
-                  final String subtitle = l10n.syncQueueInspectorOperation(
-                    operation.entityType,
-                    operation.retryCount,
-                  );
-                  return ListTile(
-                    dense: true,
-                    title: Text(operation.id),
-                    subtitle: Text(subtitle),
-                  );
-                },
-                separatorBuilder:
-                    (
-                      final BuildContext itemContext,
-                      final int _,
-                    ) => SizedBox(height: context.responsiveGapS),
-                itemCount: operations.length,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
