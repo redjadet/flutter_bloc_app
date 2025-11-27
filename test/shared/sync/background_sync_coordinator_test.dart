@@ -281,13 +281,23 @@ void main() {
       coordinator.statusStream.listen(emitted.add);
 
       await coordinator.start();
+
+      // When offline, getCurrentStatus should return offline to prevent sync
+      when(
+        () => networkService.getCurrentStatus(),
+      ).thenAnswer((_) async => NetworkStatus.offline);
       networkController.add(NetworkStatus.offline);
       await Future<void>.delayed(const Duration(milliseconds: 10));
       expect(
         emitted.where((final SyncStatus s) => s == SyncStatus.syncing),
         isEmpty,
       );
+      // Network check in _triggerSync prevents sync when offline
 
+      // When online, getCurrentStatus should return online to allow sync
+      when(
+        () => networkService.getCurrentStatus(),
+      ).thenAnswer((_) async => NetworkStatus.online);
       networkController.add(NetworkStatus.online);
       await Future<void>.delayed(const Duration(milliseconds: 10));
       expect(

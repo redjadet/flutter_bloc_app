@@ -4,6 +4,8 @@ This document revalidates the offline-first requirements after another pass over
 
 ## Progress Update (2025-11-24)
 
+- ⚙️ **Immediate focus:** Observability polish (telemetry exports/history UI) and optional chat UX retries; core Remote Config and GraphQL offline-first work are complete.
+
 - ✅ **Foundational services wired:** Added `ConnectivityNetworkStatusService`, `PendingSyncRepository`, and `BackgroundSyncCoordinator` with new DI registrations so every feature can subscribe to sync/connection state (see `lib/shared/services/network_status_service.dart` and `lib/shared/sync/*`).
 - ✅ **Sync operation primitives:** Defined the `SyncOperation` Freezed model + Hive-backed storage, plus unit tests (`test/shared/sync/pending_sync_repository_test.dart`) ensuring queue behavior.
 - ✅ **Coordinator hooks + status surface:** Introduced `SyncableRepository` + registry, taught `BackgroundSyncCoordinator` to pull/process operations per entity, autostarted it from `AppScope`, and added `SyncStatusCubit` so widgets can consume live network/sync state.
@@ -52,7 +54,8 @@ This document revalidates the offline-first requirements after another pass over
 - ✅ **Runner resilience tests:** Added unit tests for `runSyncCycle` covering empty queues, successful processing, and failure/backoff telemetry to lock down coordinator behavior.
 - ✅ **Telemetry completeness:** Sync runner tests now assert telemetry includes pruned counts and per-entity pending metadata so diagnostics stay reliable.
 - ✅ **GraphQL demo cache-first:** Added Hive cache + offline-first wrapper so countries/continents load offline and refresh cache on success; documented in `docs/offline_first/graphql_demo.md`.
-- ⚙️ **Immediate focus:** Remote Config offline-first is complete; now polish observability (telemetry exports, history UI) and continue GraphQL demo polish (staleness metadata, cache clear control).
+- ✅ **GraphQL demo polish:** Staleness metadata (24h expiry) and cache clear control (`GraphqlCacheControlsSection` in Settings) are complete.
+- ✅ **Counter documentation:** Added `docs/offline_first/counter.md` documenting offline-first counter implementation, storage plan, conflict resolution, UI integration, and testing coverage.
 
 ## Immediate Next Steps
 
@@ -72,11 +75,12 @@ This document revalidates the offline-first requirements after another pass over
    - Hook into pruning policies (see §3.7) to keep boxes trimmed automatically.
    - Add periodic data pruning for local caches (e.g., chat history older than 90 days, search queries older than 30 days).
 
-4. **GraphQL demo offline-first** (Priority: Low)
+4. **GraphQL demo offline-first** (Priority: Done)
    - ✅ Cache countries/continents data locally for offline access.
    - ✅ Follow Search pattern for read-only cache-first approach.
    - ✅ Document contracts under `docs/offline_first/graphql_demo.md`.
-   - ✅ Add staleness metadata (24h expiry) to avoid serving stale cache; optional dev clear-cache control remains future work.
+   - ✅ Add staleness metadata (24h expiry) to avoid serving stale cache.
+   - ✅ Add dev/QA cache clear control in Settings (`GraphqlCacheControlsSection`).
 
 5. **Testing & quality improvements** (Priority: Low)
    - Expand integration tests for end-to-end offline scenarios across all features.
@@ -86,9 +90,9 @@ This document revalidates the offline-first requirements after another pass over
 ## 1. Current State & Observations
 
 - **Architecture:** Features follow the clean Domain → Data → Presentation split enforced through cubits/blocs (see `lib/features/**`) and DI via GetIt (`lib/core/di/injector_registrations.dart`). Storage primitives are centralized in `lib/shared/storage` with `HiveService` + `HiveRepositoryBase` handling encrypted boxes and error guards.
-- **Local persistence today:** Core repositories persist data locally (`HiveCounterRepository`, `HiveLocaleRepository`, `HiveThemeRepository`, `ChatLocalDataSource`, `SearchCacheRepository`, `ProfileCacheRepository`). Counter, Chat, Search, and Profile hydrate from disk before calling their APIs. GraphQL demo still needs offline-first adoption.
-- **Conflict signals:** `CounterSnapshot` already tracks `lastChanged`, but other domain models lack timestamps, versions, or sync flags, so the app cannot reconcile divergent local/remote states if the device was offline.
-- **Background work:** We have `TimerService` abstractions and lifecycle hooks (e.g., counter auto-decrement) but no shared scheduler/coordinator dedicated to sync, no network reachability service, and no retry queues. Cubits rely on `CubitExceptionHandler`/`StorageGuard` but swallow offline errors rather than exposing dedicated view states.
+- **Local persistence today:** Core repositories persist data locally (`HiveCounterRepository`, `HiveLocaleRepository`, `HiveThemeRepository`, `ChatLocalDataSource`, `SearchCacheRepository`, `ProfileCacheRepository`, `GraphqlDemoCacheRepository`). Counter, Chat, Search, Profile, Remote Config, and GraphQL hydrate from disk before calling their APIs.
+- **Conflict signals:** `CounterSnapshot` already tracks `lastChanged`; other domain models now carry sync metadata (e.g., chat, profile snapshots, remote config, graphql cache staleness) but still avoid heavy conflict UIs—future work could add per-entity resolution prompts where needed.
+- **Background work:** Shared sync stack is in place (`BackgroundSyncCoordinator`, `NetworkStatusService`, `SyncStatusCubit`, `PendingSyncRepository`); remaining gaps are observability polish and optional UX niceties (per-message retries, cache clear UX where relevant).
 
 ## 2. Offline-First Goals
 

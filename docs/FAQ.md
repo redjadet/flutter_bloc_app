@@ -94,6 +94,21 @@ All local persistence goes through **Hive** (encrypted local database), which re
 
 **Important:** Never call `Hive.openBox` directly. Always use `HiveService` and extend `HiveRepositoryBase` for new repositories.
 
+## How does offline-first work in this app?
+
+The app implements a complete offline-first architecture following Flutter's best practices. All core features work seamlessly offline:
+
+- **Background Sync**: `BackgroundSyncCoordinator` automatically syncs pending operations every 60 seconds when online
+- **Pending Queue**: `PendingSyncRepository` stores operations that failed while offline; they're automatically processed when connectivity returns
+- **Sync Status**: `SyncStatusCubit` tracks network status and sync state; UI widgets show offline/syncing/pending indicators
+- **Repository Pattern**: Features implement `OfflineFirst<Feature>Repository` that wraps local (Hive) and remote repositories
+- **Sync Metadata**: Domain models include `synchronized`, `lastSyncedAt`, and `changeId` fields for conflict resolution
+- **Strategies**:
+  - **Write-first** (Counter, Chat): Operations are queued when offline, synced when online
+  - **Cache-first** (Search, Profile, Remote Config, GraphQL): Cached data served immediately, refreshed in background when online
+
+See `docs/offline_first/` for detailed documentation and `docs/offline_first/adoption_guide.md` for adding offline-first to new features.
+
 ## How are remote images cached?
 
 Remote images are automatically cached using the `cached_network_image` package. Use `CachedNetworkImageWidget` from `lib/shared/widgets/` for network images. It provides:
