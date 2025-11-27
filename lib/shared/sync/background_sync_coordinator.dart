@@ -116,6 +116,20 @@ class BackgroundSyncCoordinator {
     if (!immediate && !_isRunning) {
       return;
     }
+
+    // Check network status before attempting sync (per Flutter's guidance)
+    final NetworkStatus networkStatus = await _networkStatusService
+        .getCurrentStatus();
+    if (networkStatus != NetworkStatus.online) {
+      AppLogger.debug(
+        'BackgroundSyncCoordinator._triggerSync skipped: network offline',
+      );
+      if (startedTemporarily) {
+        _isRunning = false;
+      }
+      return;
+    }
+
     if (startedTemporarily) {
       _isRunning = true;
     }

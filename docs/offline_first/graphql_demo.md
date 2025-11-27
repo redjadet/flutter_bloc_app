@@ -31,8 +31,22 @@
 - Cache round-trip: `test/features/graphql_demo/data/graphql_demo_cache_repository_test.dart`.
 - Offline-first fallback + cache refresh: `test/features/graphql_demo/data/offline_first_graphql_demo_repository_test.dart`.
 
+## Implementation Status
+
+✅ **Complete**: All components implemented and tested:
+
+- `GraphqlDemoCacheRepository` with Hive-backed caching and staleness support (`lib/features/graphql_demo/data/graphql_demo_cache_repository.dart`)
+- `OfflineFirstGraphqlDemoRepository` implementing cache-first strategy (`lib/features/graphql_demo/data/offline_first_graphql_demo_repository.dart`)
+- Staleness metadata (24h expiry) to avoid serving stale cache
+- Dev/QA cache clear control in Settings (`GraphqlCacheControlsSection`)
+- UI badge showing data source (cache/remote) in GraphQL demo page
+- Full DI wiring in `lib/core/di/injector_registrations.dart`
+- Comprehensive test coverage:
+  - Cache tests: `test/features/graphql_demo/data/graphql_demo_cache_repository_test.dart`
+  - Repository tests: `test/features/graphql_demo/data/offline_first_graphql_demo_repository_test.dart`
+
 ## Next Ideas
 
-- Add staleness metadata (e.g., `lastSyncedAt`) and expire cached lists after N hours.
-- Surface cache/remote source in the UI for debugging.
-- Add a dev-only “Clear GraphQL cache” control alongside other diagnostics.
+- Consider adding cache size monitoring and display to users.
+- Implement automatic cache eviction for entries older than 30 days if storage becomes a concern.
+- Add cache hit/miss metrics to telemetry for observability.

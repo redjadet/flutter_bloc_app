@@ -4,7 +4,7 @@ A production-ready Flutter application demonstrating enterprise-grade architectu
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.38.3-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.10.1-blue.svg)](https://dart.dev)
-[![Coverage](https://img.shields.io/badge/Coverage-85%2E25%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-86%2E04%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs)
 
@@ -20,8 +20,9 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 | --- | --- |
 | **Architecture** | Clean Architecture + BLoC/Cubit with `get_it` DI, `freezed` states, and repository abstractions |
 | **Secure Storage** | AES-256 encrypted Hive boxes, keychain-kept secrets, migration helpers |
+| **Offline-First** | Complete offline-first implementation with background sync, pending operations queue, and cache-first strategies across all core features |
 | **Responsive UI** | Material 3 + Cupertino adaptive widgets, responsive spacing helpers, reusable layout primitives |
-| **Quality Bar** | 85.25% test coverage across unit/bloc/widget/golden suites, automated linting, common bug checklist |
+| **Quality Bar** | 86.04% test coverage (7990/9286 lines) across unit/bloc/widget/golden suites, automated linting, common bug checklist |
 | **Cloud Integrations** | Firebase Auth, Remote Config, analytics hooks, Firestore/REST/GraphQL/WebSocket demos |
 | **Internationalization** | Five fully-localized locales (EN, TR, DE, FR, ES) with automated ARB generation |
 | **Dev Experience** | One-click checklist (`./bin/checklist`), performance profiler, custom lint rules, CI-ready scripts |
@@ -62,6 +63,13 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 
 ### Data & Networking
 
+- **Offline-First Architecture** - Complete offline-first implementation with background sync coordinator, pending operations queue, and cache-first strategies
+  - **Counter** - Write-first with sync metadata and pending operation queue
+  - **Chat** - Offline message queuing with conflict resolution
+  - **Search** - Cache-first with background refresh
+  - **Profile** - Cache-first with manual sync support
+  - **Remote Config** - Cache-first with version tracking
+  - **GraphQL Demo** - Cache-first with 24h staleness expiry
 - **GraphQL Integration** - Countries browser with continent filtering
 - **REST APIs** - Bitcoin price charts via CoinGecko API
 - **WebSocket Support** - Real-time echo server with reconnect handling
@@ -197,6 +205,7 @@ flowchart LR
 
   subgraph Data
     HiveRepos["Hive*Repository implementations<br/>(HiveCounterRepository, HiveThemeRepository, HiveLocaleRepository)"]
+    OfflineFirstRepos["OfflineFirst*Repository<br/>(Counter, Chat, Search, Profile, RemoteConfig, GraphQL)"]
     NetworkRepos["FirebaseAuthRepository<br/>RemoteConfigRepository<br/>ChatGraphQLRepository"]
   end
 
@@ -206,6 +215,9 @@ flowchart LR
     BiometricAuthenticator
     NativePlatformService
     RemoteConfigService
+    BackgroundSyncCoordinator
+    NetworkStatusService
+    PendingSyncRepository
   end
 
   Injector["Dependency Injection<br/>(get_it + injector_*.dart)"]
@@ -231,8 +243,15 @@ flowchart LR
   AuthCubit --> UseCases
   UseCases --> Repositories
   Repositories --> HiveRepos
+  Repositories --> OfflineFirstRepos
   Repositories --> NetworkRepos
   HiveRepos --> HiveService
+  OfflineFirstRepos --> HiveRepos
+  OfflineFirstRepos --> NetworkRepos
+  OfflineFirstRepos --> PendingSyncRepository
+  OfflineFirstRepos --> BackgroundSyncCoordinator
+  BackgroundSyncCoordinator --> NetworkStatusService
+  BackgroundSyncCoordinator --> PendingSyncRepository
   HiveRepos --> RemoteConfigService
   NetworkRepos --> BiometricAuthenticator
   NetworkRepos --> NativePlatformService
@@ -260,6 +279,7 @@ flowchart LR
 - **Context & navigation safety** - `ContextUtils.logNotMounted()` plus `NavigationUtils.maybePop()/popOrGoHome()` consolidate lifecycle guards and dialog dismissal so every widget handles async gaps and navigation consistently.
 - **Responsive + adaptive UX** - Layouts honor `contentMaxWidth`, `pagePadding`, adaptive grids, and platform-aware dialogs; gestures, images, and spacing reference shared responsive extensions for every screen size.
 - **Secure persistence** - `HiveService` (never `Hive.openBox` directly) encrypts data via `HiveKeyManager` and `flutter_secure_storage`, migrations run through `SharedPreferencesMigrationService`, and `BiometricAuthenticator`/`NativePlatformService` guard sensitive flows.
+- **Offline-first architecture** - Complete offline-first implementation with `BackgroundSyncCoordinator`, `PendingSyncRepository`, and `SyncableRepository` pattern. All core features (Counter, Chat, Search, Profile, Remote Config, GraphQL) work seamlessly offline with automatic background sync when online. See `docs/offline_first/` for detailed documentation.
 - **Testing & quality gates** - `./bin/checklist` (`dart format`, `flutter analyze`, coverage) + `tool/test_coverage.sh` enforce `file_length_lint`, common-bug prevention suites, and coverage thresholds before commits.
 - **Localization & platform polish** - `.arb` regeneration happens through `flutter pub get`/`flutter gen-l10n`, `tool/ensure_localizations.dart` feeds iOS builds, and five locales (EN, TR, DE, FR, ES) are always available at runtime.
 
@@ -301,7 +321,7 @@ Shared utilities are treated as first-class participants in every flow: `Context
 
 ### Test Coverage
 
-- **Current Coverage**: 86.04% (7990/9286 lines)
+- **Current Coverage**: 86.05% (7991/9286 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 
