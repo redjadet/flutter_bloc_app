@@ -1,14 +1,14 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_runner.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
-import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+
+export 'background_sync_runner.dart' show SyncCycleSummary;
 
 class BackgroundSyncCoordinator {
   BackgroundSyncCoordinator({
@@ -17,20 +17,36 @@ class BackgroundSyncCoordinator {
     required TimerService timerService,
     required SyncableRepositoryRegistry registry,
     Duration syncInterval = const Duration(seconds: 60),
+    void Function(String event, Map<String, Object?> payload)? telemetry,
+    int maxHistory = 5,
+    int maxRetryCount = 10,
+    Duration maxOperationAge = const Duration(days: 30),
   }) : _repository = repository,
        _networkStatusService = networkStatusService,
        _timerService = timerService,
        _registry = registry,
-       _syncInterval = syncInterval;
+       _syncInterval = syncInterval,
+       _telemetry = telemetry ?? _defaultTelemetry,
+       _maxHistory = maxHistory,
+       _maxRetryCount = maxRetryCount,
+       _maxOperationAge = maxOperationAge;
 
   final PendingSyncRepository _repository;
   final NetworkStatusService _networkStatusService;
   final TimerService _timerService;
   final SyncableRepositoryRegistry _registry;
   final Duration _syncInterval;
+  final void Function(String event, Map<String, Object?> payload) _telemetry;
+  final int _maxHistory;
+  final int _maxRetryCount;
+  final Duration _maxOperationAge;
 
   final StreamController<SyncStatus> _statusController =
       StreamController<SyncStatus>.broadcast();
+  final StreamController<SyncCycleSummary> _summaryController =
+      StreamController<SyncCycleSummary>.broadcast();
+  SyncCycleSummary? _latestSummary;
+  final List<SyncCycleSummary> _history = <SyncCycleSummary>[];
   StreamSubscription<NetworkStatus>? _networkSubscription;
   TimerDisposable? _periodicTimer;
   bool _isRunning = false;
@@ -38,12 +54,20 @@ class BackgroundSyncCoordinator {
 
   Stream<SyncStatus> get statusStream => _statusController.stream.distinct();
   SyncStatus get currentStatus => _currentStatus;
+  Stream<SyncCycleSummary> get summaryStream =>
+      _summaryController.stream.distinct();
+  SyncCycleSummary? get latestSummary => _latestSummary;
+  List<SyncCycleSummary> get history =>
+      List<SyncCycleSummary>.unmodifiable(_history);
 
   Future<void> start() async {
     if (_isRunning) {
       return;
     }
     _isRunning = true;
+    _telemetry('sync_start', <String, Object?>{
+      'intervalSeconds': _syncInterval.inSeconds,
+    });
     await _networkSubscription?.cancel();
     _networkSubscription = _networkStatusService.statusStream.listen(
       (final NetworkStatus status) {
@@ -82,6 +106,7 @@ class BackgroundSyncCoordinator {
   Future<void> dispose() async {
     await stop();
     await _statusController.close();
+    await _summaryController.close();
   }
 
   Future<void> flush() => _triggerSync(immediate: true);
@@ -116,70 +141,26 @@ class BackgroundSyncCoordinator {
   }
 
   Future<void> _processPendingOperations() async {
-    final List<SyncableRepository> syncables = _registry.repositories;
-    if (syncables.isNotEmpty) {
-      for (final SyncableRepository repo in syncables) {
-        try {
-          await repo.pullRemote();
-        } on Exception catch (error, stackTrace) {
-          AppLogger.error(
-            'BackgroundSyncCoordinator.pullRemote failed for ${repo.entityType}',
-            error,
-            stackTrace,
-          );
-          _emit(SyncStatus.degraded);
-        }
-      }
-    }
-
-    final List<SyncOperation> pending = await _repository.getPendingOperations(
-      now: DateTime.now().toUtc(),
+    final SyncCycleSummary summary = await runSyncCycle(
+      registry: _registry,
+      pendingRepository: _repository,
+      emitStatus: _emit,
+      telemetry: _telemetry,
     );
-    if (pending.isEmpty) {
-      _emit(SyncStatus.idle);
-      return;
-    }
-    _emit(SyncStatus.syncing);
-    for (final SyncOperation operation in pending) {
-      final SyncableRepository? repository = _registry.resolve(
-        operation.entityType,
-      );
-      if (repository == null) {
-        AppLogger.warning(
-          'No SyncableRepository registered for ${operation.entityType}, '
-          'discarding operation ${operation.id}',
-        );
-        await _repository.markCompleted(operation.id);
-        continue;
-      }
-      AppLogger.debug(
-        'BackgroundSyncCoordinator processing ${operation.entityType} '
-        '(id=${operation.id}, retry=${operation.retryCount})',
-      );
-      try {
-        await repository.processOperation(operation);
-        await _repository.markCompleted(operation.id);
-      } on Exception catch (error, stackTrace) {
-        AppLogger.error(
-          'BackgroundSyncCoordinator.processOperation failed for '
-          '${operation.entityType}',
-          error,
-          stackTrace,
-        );
-        final int backoffMinutes = pow(
-          2,
-          operation.retryCount.clamp(0, 5),
-        ).toInt();
-        await _repository.markFailed(
-          operationId: operation.id,
-          nextRetryAt: DateTime.now().toUtc().add(
-            Duration(minutes: backoffMinutes),
-          ),
-          retryCount: operation.retryCount + 1,
-        );
-        _emit(SyncStatus.degraded);
-      }
-    }
+    final int pruned = await _repository.prune(
+      maxRetryCount: _maxRetryCount,
+      maxAge: _maxOperationAge,
+    );
+    final SyncCycleSummary enriched = summary.copyWith(prunedCount: pruned);
+    _telemetry(
+      'sync_prune_completed',
+      <String, Object?>{
+        'pruned': pruned,
+        'maxRetryCount': _maxRetryCount,
+        'maxAgeDays': _maxOperationAge.inDays,
+      },
+    );
+    _publishSummary(enriched);
   }
 
   void _emit(final SyncStatus status) {
@@ -191,5 +172,24 @@ class BackgroundSyncCoordinator {
       return;
     }
     _statusController.add(status);
+  }
+
+  static void _defaultTelemetry(
+    final String event,
+    final Map<String, Object?> payload,
+  ) {
+    AppLogger.debug('SyncTelemetry[$event] $payload');
+  }
+
+  void _publishSummary(final SyncCycleSummary summary) {
+    _latestSummary = summary;
+    _history.add(summary);
+    if (_history.length > _maxHistory) {
+      _history.removeAt(0);
+    }
+    if (_summaryController.isClosed) {
+      return;
+    }
+    _summaryController.add(summary);
   }
 }

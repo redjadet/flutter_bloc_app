@@ -339,6 +339,39 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsRemoteConfigRetryButton => 'Erneut abrufen';
 
   @override
+  String get settingsRemoteConfigClearCacheButton => 'Konfig-Cache löschen';
+
+  @override
+  String get settingsSyncDiagnosticsTitle => 'Sync-Diagnostik';
+
+  @override
+  String get settingsSyncDiagnosticsEmpty =>
+      'Noch keine Sync-Durchläufe aufgezeichnet.';
+
+  @override
+  String settingsSyncLastRunLabel(String timestamp) {
+    return 'Letzter Lauf: $timestamp';
+  }
+
+  @override
+  String settingsSyncOperationsLabel(int processed, int failed) {
+    return 'Vorgänge: $processed verarbeitet, $failed fehlgeschlagen';
+  }
+
+  @override
+  String settingsSyncPendingLabel(int count) {
+    return 'Zu Beginn offen: $count';
+  }
+
+  @override
+  String settingsSyncDurationLabel(int ms) {
+    return 'Dauer: ${ms}ms';
+  }
+
+  @override
+  String get settingsSyncHistoryTitle => 'Aktuelle Sync-Läufe';
+
+  @override
   String get settingsProfileCacheSectionTitle => 'Profil-Cache';
 
   @override

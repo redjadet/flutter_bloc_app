@@ -10,24 +10,37 @@ class SyncStatusState extends Equatable {
   const SyncStatusState({
     required this.networkStatus,
     required this.syncStatus,
+    this.lastSummary,
+    this.history = const <SyncCycleSummary>[],
   });
 
   final NetworkStatus networkStatus;
   final SyncStatus syncStatus;
+  final SyncCycleSummary? lastSummary;
+  final List<SyncCycleSummary> history;
 
   SyncStatusState copyWith({
     NetworkStatus? networkStatus,
     SyncStatus? syncStatus,
+    SyncCycleSummary? lastSummary,
+    List<SyncCycleSummary>? history,
   }) => SyncStatusState(
     networkStatus: networkStatus ?? this.networkStatus,
     syncStatus: syncStatus ?? this.syncStatus,
+    lastSummary: lastSummary ?? this.lastSummary,
+    history: history ?? this.history,
   );
 
   bool get isOnline => networkStatus == NetworkStatus.online;
   bool get isSyncing => syncStatus == SyncStatus.syncing;
 
   @override
-  List<Object> get props => <Object>[networkStatus, syncStatus];
+  List<Object?> get props => <Object?>[
+    networkStatus,
+    syncStatus,
+    lastSummary,
+    history,
+  ];
 }
 
 class SyncStatusCubit extends Cubit<SyncStatusState> {
@@ -40,6 +53,8 @@ class SyncStatusCubit extends Cubit<SyncStatusState> {
          SyncStatusState(
            networkStatus: NetworkStatus.unknown,
            syncStatus: coordinator.currentStatus,
+           lastSummary: coordinator.latestSummary,
+           history: coordinator.history,
          ),
        ) {
     _networkSubscription = _networkStatusService.statusStream.listen(
@@ -58,6 +73,19 @@ class SyncStatusCubit extends Cubit<SyncStatusState> {
         emit(state.copyWith(syncStatus: status));
       },
     );
+    _summarySubscription = _coordinator.summaryStream.listen(
+      (final SyncCycleSummary summary) {
+        if (isClosed) {
+          return;
+        }
+        emit(
+          state.copyWith(
+            lastSummary: summary,
+            history: _coordinator.history,
+          ),
+        );
+      },
+    );
     unawaited(_seedInitialStatus());
   }
 
@@ -65,6 +93,7 @@ class SyncStatusCubit extends Cubit<SyncStatusState> {
   final BackgroundSyncCoordinator _coordinator;
   StreamSubscription<NetworkStatus>? _networkSubscription;
   StreamSubscription<SyncStatus>? _syncSubscription;
+  StreamSubscription<SyncCycleSummary>? _summarySubscription;
 
   Future<void> _seedInitialStatus() async {
     final NetworkStatus currentStatus = await _networkStatusService
@@ -86,6 +115,7 @@ class SyncStatusCubit extends Cubit<SyncStatusState> {
   Future<void> close() async {
     await _networkSubscription?.cancel();
     await _syncSubscription?.cancel();
+    await _summarySubscription?.cancel();
     return super.close();
   }
 }

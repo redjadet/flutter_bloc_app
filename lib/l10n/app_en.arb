@@ -444,6 +444,61 @@
   "@settingsRemoteConfigRetryButton": {
     "description": "Button label that retries the remote config fetch"
   },
+  "settingsRemoteConfigClearCacheButton": "Clear config cache",
+  "@settingsRemoteConfigClearCacheButton": {
+    "description": "Button label that clears the locally cached Remote Config values"
+  },
+  "settingsSyncDiagnosticsTitle": "Sync diagnostics",
+  "@settingsSyncDiagnosticsTitle": {
+    "description": "Heading for the developer-only sync diagnostics section"
+  },
+  "settingsSyncDiagnosticsEmpty": "No sync runs recorded yet.",
+  "@settingsSyncDiagnosticsEmpty": {
+    "description": "Placeholder copy when no sync cycle summary exists"
+  },
+  "settingsSyncLastRunLabel": "Last run: {timestamp}",
+  "@settingsSyncLastRunLabel": {
+    "description": "Label showing the last sync timestamp",
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSyncOperationsLabel": "Ops: {processed} processed, {failed} failed",
+  "@settingsSyncOperationsLabel": {
+    "description": "Label showing operations processed/failed during last sync",
+    "placeholders": {
+      "processed": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncPendingLabel": "Pending at start: {count}",
+  "@settingsSyncPendingLabel": {
+    "description": "Label showing pending operations count at the start of last sync",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncDurationLabel": "Duration: {ms}ms",
+  "@settingsSyncDurationLabel": {
+    "description": "Label showing last sync duration in milliseconds",
+    "placeholders": {
+      "ms": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncHistoryTitle": "Recent sync runs",
+  "@settingsSyncHistoryTitle": {
+    "description": "Heading for the sync history list in diagnostics"
+  },
   "settingsProfileCacheSectionTitle": "Profile cache",
   "@settingsProfileCacheSectionTitle": {
     "description": "Heading for the developer-only section that manages the profile cache"

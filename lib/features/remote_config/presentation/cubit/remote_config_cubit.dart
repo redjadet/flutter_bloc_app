@@ -31,11 +31,20 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
     );
   }
 
+  Future<void> clearCache() async {
+    await _loadRemoteConfig(
+      logContext: 'RemoteConfigCubit.clearCache',
+      showLoading: true,
+      preFetch: _remoteConfigService.clearCache,
+    );
+  }
+
   bool _isLoading = false;
 
   Future<void> _loadRemoteConfig({
     required final String logContext,
     Future<void> Function()? setup,
+    Future<void> Function()? preFetch,
     bool showLoading = false,
   }) async {
     if (isClosed || _isLoading) return;
@@ -49,6 +58,9 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
         operation: () async {
           if (setup != null) {
             await setup();
+          }
+          if (preFetch != null) {
+            await preFetch();
           }
           await _remoteConfigService.forceFetch();
         },

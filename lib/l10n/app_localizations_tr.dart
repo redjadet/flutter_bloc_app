@@ -333,6 +333,40 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsRemoteConfigRetryButton => 'Yeniden getir';
 
   @override
+  String get settingsRemoteConfigClearCacheButton =>
+      'Yapılandırma önbelleğini temizle';
+
+  @override
+  String get settingsSyncDiagnosticsTitle => 'Senkronizasyon tanılama';
+
+  @override
+  String get settingsSyncDiagnosticsEmpty =>
+      'Henüz senkronizasyon çalıştırması yok.';
+
+  @override
+  String settingsSyncLastRunLabel(String timestamp) {
+    return 'Son çalıştırma: $timestamp';
+  }
+
+  @override
+  String settingsSyncOperationsLabel(int processed, int failed) {
+    return 'İşlem: $processed tamamlandı, $failed başarısız';
+  }
+
+  @override
+  String settingsSyncPendingLabel(int count) {
+    return 'Başlangıçtaki bekleyen: $count';
+  }
+
+  @override
+  String settingsSyncDurationLabel(int ms) {
+    return 'Süre: ${ms}ms';
+  }
+
+  @override
+  String get settingsSyncHistoryTitle => 'Son senkronizasyonlar';
+
+  @override
   String get settingsProfileCacheSectionTitle => 'Profil önbelleği';
 
   @override

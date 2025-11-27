@@ -27,6 +27,7 @@ This guide describes how to onboard a feature into the shared offline-first stac
 4. **Expose status to UI**
    - Consume `SyncStatusCubit` + `NetworkStatusService` to show offline/syncing/pending indicators and queued counts; add a dev-only inspector if helpful.
    - Use existing reference widgets such as `CounterSyncBanner`, `ChatSyncBanner`, and `SearchSyncBanner` as patterns—they display offline/pending copy and expose manual "Sync now" actions wired to `SyncStatusCubit.flush()` (where applicable).
+   - For global observability, surface the latest `SyncCycleSummary` via the Sync Diagnostics section (see Settings dev-only UI) so engineering/QA can validate sync health per build.
    - `SyncStatusCubit` seeds its initial status via `NetworkStatusService.getCurrentStatus()`. Stub this in tests and wait for stream emissions (use `tester.runAsync` when needed) so widgets see updates that occur after build.
    - Even for read-only/cache-first flows (search/profile), consider exposing a manual refresh CTA that calls `SyncStatusCubit.flush()` so users can pull latest data after reconnecting.
 5. **Tests**

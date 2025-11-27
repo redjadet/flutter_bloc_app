@@ -382,6 +382,12 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
   }
 
   @override
+  Future<int> prune({
+    int maxRetryCount = 10,
+    Duration maxAge = const Duration(days: 30),
+  }) async => 0;
+
+  @override
   Future<Box<dynamic>> getBox() =>
       Future<Box<dynamic>>.error(UnimplementedError('Not used in fake'));
 
@@ -402,6 +408,16 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 
   @override
   SyncStatus get currentStatus => SyncStatus.idle;
+
+  @override
+  List<SyncCycleSummary> get history => const <SyncCycleSummary>[];
+
+  @override
+  Stream<SyncCycleSummary> get summaryStream =>
+      const Stream<SyncCycleSummary>.empty();
+
+  @override
+  SyncCycleSummary? get latestSummary => null;
 
   @override
   Future<void> start() async {}

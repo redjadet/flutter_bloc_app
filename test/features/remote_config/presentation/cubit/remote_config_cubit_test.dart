@@ -26,6 +26,7 @@ void main() {
       when(
         () => remoteConfigService.getString('last_synced_at'),
       ).thenReturn('');
+      when(() => remoteConfigService.clearCache()).thenAnswer((_) async {});
     });
 
     blocTest<RemoteConfigCubit, RemoteConfigState>(
@@ -107,6 +108,29 @@ void main() {
       verify: (_) {
         verify(() => remoteConfigService.initialize()).called(1);
         verify(() => remoteConfigService.forceFetch()).called(2);
+      },
+    );
+
+    blocTest<RemoteConfigCubit, RemoteConfigState>(
+      'clears cache then fetches latest values',
+      build: () {
+        when(() => remoteConfigService.forceFetch()).thenAnswer((_) async {});
+        when(
+          () => remoteConfigService.getBool('awesome_feature_enabled'),
+        ).thenReturn(true);
+        when(
+          () => remoteConfigService.getString('test_value_1'),
+        ).thenReturn('cached');
+        return RemoteConfigCubit(remoteConfigService);
+      },
+      act: (cubit) => cubit.clearCache(),
+      expect: () => const <RemoteConfigState>[
+        RemoteConfigLoading(),
+        RemoteConfigLoaded(isAwesomeFeatureEnabled: true, testValue: 'cached'),
+      ],
+      verify: (_) {
+        verify(() => remoteConfigService.clearCache()).called(1);
+        verify(() => remoteConfigService.forceFetch()).called(1);
       },
     );
 

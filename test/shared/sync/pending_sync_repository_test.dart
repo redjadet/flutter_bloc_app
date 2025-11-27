@@ -93,4 +93,31 @@ void main() {
     );
     expect(scheduled.first.retryCount, equals(1));
   });
+
+  test('prune removes old or over-retried operations', () async {
+    final DateTime now = DateTime.now().toUtc();
+    final SyncOperation stale = SyncOperation.create(
+      entityType: 'chat',
+      payload: <String, dynamic>{},
+      idempotencyKey: 'stale',
+    ).copyWith(nextRetryAt: now.subtract(const Duration(days: 40)));
+    final SyncOperation retries = SyncOperation.create(
+      entityType: 'counter',
+      payload: <String, dynamic>{},
+      idempotencyKey: 'retry',
+    ).copyWith(retryCount: 12);
+    await repository.enqueue(stale);
+    await repository.enqueue(retries);
+
+    final int pruned = await repository.prune(
+      maxRetryCount: 10,
+      maxAge: const Duration(days: 30),
+    );
+
+    expect(pruned, 2);
+    final List<SyncOperation> remaining = await repository.getPendingOperations(
+      now: now,
+    );
+    expect(remaining, isEmpty);
+  });
 }

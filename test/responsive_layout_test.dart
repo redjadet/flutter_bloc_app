@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -18,6 +20,10 @@ import 'package:flutter_bloc_app/features/settings/presentation/cubits/locale_cu
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -54,6 +60,8 @@ void main() {
     ) async {
       await getIt.reset(dispose: true);
       getIt.registerSingleton<AppInfoRepository>(_FakeAppInfoRepository());
+      final SyncStatusCubit syncCubit = _buildSyncStatusCubit();
+      addTearDown(syncCubit.close);
       addTearDown(() => getIt.reset(dispose: true));
 
       await binding.setSurfaceSize(const Size(1400, 1000));
@@ -76,6 +84,7 @@ void main() {
                     LocaleCubit(repository: _FakeLocaleRepository())
                       ..loadInitial(),
               ),
+              BlocProvider<SyncStatusCubit>.value(value: syncCubit),
             ],
             child: const SettingsPage(),
           ),
@@ -170,6 +179,57 @@ class _FakeAppInfoRepository implements AppInfoRepository {
   Future<AppInfo> load() async =>
       const AppInfo(version: '1.0.0', buildNumber: '1');
 }
+
+class _StubNetworkStatusService implements NetworkStatusService {
+  @override
+  Stream<NetworkStatus> get statusStream => const Stream<NetworkStatus>.empty();
+
+  @override
+  Future<NetworkStatus> getCurrentStatus() async => NetworkStatus.online;
+
+  @override
+  Future<void> dispose() async {}
+}
+
+class _StubBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
+  final StreamController<SyncStatus> _controller =
+      StreamController<SyncStatus>.broadcast();
+
+  @override
+  SyncStatus get currentStatus => SyncStatus.idle;
+
+  @override
+  Stream<SyncStatus> get statusStream => _controller.stream;
+
+  @override
+  List<SyncCycleSummary> get history => const <SyncCycleSummary>[];
+
+  @override
+  Stream<SyncCycleSummary> get summaryStream =>
+      const Stream<SyncCycleSummary>.empty();
+
+  @override
+  SyncCycleSummary? get latestSummary => null;
+
+  @override
+  Future<void> dispose() async {
+    await _controller.close();
+  }
+
+  @override
+  Future<void> flush() async {}
+
+  @override
+  Future<void> start() async {}
+
+  @override
+  Future<void> stop() async {}
+}
+
+SyncStatusCubit _buildSyncStatusCubit() => SyncStatusCubit(
+  networkStatusService: _StubNetworkStatusService(),
+  coordinator: _StubBackgroundSyncCoordinator(),
+);
 
 class _FakeChatRepository implements ChatRepository {
   @override

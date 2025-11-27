@@ -78,6 +78,16 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   SyncStatus get currentStatus => SyncStatus.idle;
 
   @override
+  List<SyncCycleSummary> get history => const <SyncCycleSummary>[];
+
+  @override
+  Stream<SyncCycleSummary> get summaryStream =>
+      const Stream<SyncCycleSummary>.empty();
+
+  @override
+  SyncCycleSummary? get latestSummary => null;
+
+  @override
   Future<void> start() async {}
 
   @override

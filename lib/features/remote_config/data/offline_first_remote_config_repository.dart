@@ -20,10 +20,12 @@ class OfflineFirstRemoteConfigRepository
     required RemoteConfigCacheRepository cacheRepository,
     required NetworkStatusService networkStatusService,
     required SyncableRepositoryRegistry registry,
+    void Function(String event, Map<String, Object?> payload)? telemetry,
   }) : _remoteRepository = remoteRepository,
        _cacheRepository = cacheRepository,
        _networkStatusService = networkStatusService,
-       _registry = registry {
+       _registry = registry,
+       _telemetry = telemetry ?? _defaultTelemetry {
     _registry.register(this);
   }
 
@@ -41,6 +43,7 @@ class OfflineFirstRemoteConfigRepository
   final RemoteConfigCacheRepository _cacheRepository;
   final NetworkStatusService _networkStatusService;
   final SyncableRepositoryRegistry _registry;
+  final void Function(String event, Map<String, Object?> payload) _telemetry;
 
   RemoteConfigSnapshot _snapshot = RemoteConfigSnapshot.empty;
 
@@ -94,6 +97,12 @@ class OfflineFirstRemoteConfigRepository
   }
 
   @override
+  Future<void> clearCache() async {
+    _snapshot = RemoteConfigSnapshot.empty;
+    await _cacheRepository.clear();
+  }
+
+  @override
   Future<void> processOperation(final SyncOperation operation) async {
     // Remote Config is read-only today, but this method is required so the
     // repository participates in the sync registry. Reserved for future ops.
@@ -123,9 +132,17 @@ class OfflineFirstRemoteConfigRepository
         AppLogger.debug(
           'OfflineFirstRemoteConfigRepository.$reason skipped (offline)',
         );
+        _telemetry(
+          'remote_config_fetch_skipped',
+          <String, Object?>{
+            'reason': 'offline',
+            'hasCache': _snapshot.hasValues,
+          },
+        );
         return;
       }
     }
+    final Stopwatch stopwatch = Stopwatch()..start();
     try {
       await _remoteRepository.forceFetch();
     } on Exception catch (error, stackTrace) {
@@ -133,6 +150,13 @@ class OfflineFirstRemoteConfigRepository
         'OfflineFirstRemoteConfigRepository.$reason failed',
         error,
         stackTrace,
+      );
+      _telemetry(
+        'remote_config_fetch_failed',
+        <String, Object?>{
+          'reason': reason,
+          'durationMs': stopwatch.elapsedMilliseconds,
+        },
       );
       if (!_snapshot.hasValues) {
         rethrow;
@@ -155,6 +179,16 @@ class OfflineFirstRemoteConfigRepository
     );
     _snapshot = nextSnapshot;
     await _cacheRepository.saveSnapshot(nextSnapshot);
+    stopwatch.stop();
+    _telemetry(
+      'remote_config_fetch_succeeded',
+      <String, Object?>{
+        'reason': reason,
+        'durationMs': stopwatch.elapsedMilliseconds,
+        'dataSource': nextSnapshot.dataSource ?? 'unknown',
+        'hasValues': nextSnapshot.hasValues,
+      },
+    );
   }
 
   Map<String, dynamic> _readTrackedValues() {
@@ -166,5 +200,12 @@ class OfflineFirstRemoteConfigRepository
       values[key] = _remoteRepository.getString(key);
     }
     return values;
+  }
+
+  static void _defaultTelemetry(
+    final String event,
+    final Map<String, Object?> payload,
+  ) {
+    AppLogger.debug('RemoteConfigTelemetry[$event] $payload');
   }
 }

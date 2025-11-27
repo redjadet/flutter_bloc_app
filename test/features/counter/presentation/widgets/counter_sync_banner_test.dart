@@ -83,6 +83,11 @@ void main() {
         () => coordinator.statusStream,
       ).thenAnswer((_) => const Stream<SyncStatus>.empty());
       when(() => coordinator.currentStatus).thenReturn(SyncStatus.idle);
+      when(() => coordinator.history).thenReturn(const <SyncCycleSummary>[]);
+      when(
+        () => coordinator.summaryStream,
+      ).thenAnswer((_) => const Stream<SyncCycleSummary>.empty());
+      when(() => coordinator.latestSummary).thenReturn(null);
       getIt.registerSingleton<PendingSyncRepository>(pendingRepository);
       getIt.registerSingleton<CounterRepository>(counterRepository);
 

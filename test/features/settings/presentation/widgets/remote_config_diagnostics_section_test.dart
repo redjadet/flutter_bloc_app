@@ -31,6 +31,7 @@ void main() {
     setUp(() {
       cubit = _MockRemoteConfigCubit();
       syncStatusCubit = _MockSyncStatusCubit();
+      when(() => cubit.clearCache()).thenAnswer((_) async {});
     });
 
     Future<void> pumpWidget(
@@ -122,6 +123,30 @@ void main() {
       verify(() => cubit.fetchValues()).called(1);
     });
 
+    testWidgets('invokes clearCache when clear button tapped', (
+      final WidgetTester tester,
+    ) async {
+      const RemoteConfigLoaded state = RemoteConfigLoaded(
+        isAwesomeFeatureEnabled: true,
+        testValue: 'cached',
+      );
+      when(() => cubit.state).thenReturn(state);
+      whenListen(
+        cubit,
+        Stream<RemoteConfigState>.value(state),
+        initialState: state,
+      );
+
+      await pumpWidget(tester);
+
+      await tester.tap(
+        find.text(AppLocalizationsEn().settingsRemoteConfigClearCacheButton),
+      );
+      await tester.pump();
+
+      verify(() => cubit.clearCache()).called(1);
+    });
+
     testWidgets('shows sync status banner when offline', (
       final WidgetTester tester,
     ) async {
@@ -184,6 +209,12 @@ void main() {
             isNotEmpty,
             reason:
                 'settingsRemoteConfigRetryButton missing in ${l10n.localeName}',
+          );
+          expect(
+            l10n.settingsRemoteConfigClearCacheButton,
+            isNotEmpty,
+            reason:
+                'settingsRemoteConfigClearCacheButton missing in ${l10n.localeName}',
           );
           expect(
             l10n.settingsRemoteConfigFlagLabel,
