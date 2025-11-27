@@ -68,6 +68,13 @@ class RemoteConfigDiagnosticsSection extends StatelessWidget {
                         testValue: data.testValue ?? '',
                       ),
                     ],
+                    if (data.showMetadata) ...<Widget>[
+                      SizedBox(height: gap),
+                      _RemoteConfigMetadataRow(
+                        dataSource: data.dataSource,
+                        lastSyncedAt: data.lastSyncedAt,
+                      ),
+                    ],
                     if (data.errorMessage != null &&
                         data.errorMessage!.isNotEmpty)
                       Padding(

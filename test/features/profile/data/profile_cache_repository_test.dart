@@ -34,6 +34,13 @@ void main() {
       expect(result, isNull);
     });
 
+    test('loadMetadata returns defaults when empty', () async {
+      final ProfileCacheMetadata metadata = await repository.loadMetadata();
+      expect(metadata.hasProfile, isFalse);
+      expect(metadata.lastSyncedAt, isNull);
+      expect(metadata.sizeBytes, isNull);
+    });
+
     test('saveProfile and loadProfile round-trip', () async {
       const ProfileUser user = ProfileUser(
         name: 'Jane',
@@ -55,6 +62,25 @@ void main() {
       expect(loaded.galleryImages.first.aspectRatio, 1.5);
     });
 
+    test('metadata captures lastSyncedAt and sizeBytes', () async {
+      const ProfileUser user = ProfileUser(
+        name: 'Jane',
+        location: 'SF',
+        avatarUrl: 'https://example.com/avatar.png',
+        galleryImages: <ProfileImage>[
+          ProfileImage(url: 'https://example.com/1.png', aspectRatio: 1.5),
+        ],
+      );
+
+      await repository.saveProfile(user);
+      final ProfileCacheMetadata metadata = await repository.loadMetadata();
+
+      expect(metadata.hasProfile, isTrue);
+      expect(metadata.lastSyncedAt, isNotNull);
+      expect(metadata.sizeBytes, isNotNull);
+      expect(metadata.sizeBytes! > 0, isTrue);
+    });
+
     test('clearProfile removes cached profile', () async {
       const ProfileUser user = ProfileUser(
         name: 'Jane',
@@ -70,6 +96,9 @@ void main() {
 
       await repository.clearProfile();
       expect(await repository.loadProfile(), isNull);
+      final ProfileCacheMetadata metadata = await repository.loadMetadata();
+      expect(metadata.hasProfile, isFalse);
+      expect(metadata.lastSyncedAt, isNull);
     });
   });
 }

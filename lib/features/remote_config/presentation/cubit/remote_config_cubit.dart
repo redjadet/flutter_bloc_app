@@ -11,6 +11,8 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
 
   static const String _awesomeFeatureKey = 'awesome_feature_enabled';
   static const String _testValueKey = 'test_value_1';
+  static const String _dataSourceKey = 'last_data_source';
+  static const String _lastSyncedKey = 'last_synced_at';
 
   final RemoteConfigService _remoteConfigService;
 
@@ -64,12 +66,19 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
 
   void _emitLoadedState() {
     if (isClosed) return;
+    final String dataSource = _remoteConfigService.getString(_dataSourceKey);
+    final String lastSyncedRaw = _remoteConfigService.getString(_lastSyncedKey);
+    final DateTime? lastSyncedAt = lastSyncedRaw.isEmpty
+        ? null
+        : DateTime.tryParse(lastSyncedRaw)?.toUtc();
     emit(
       RemoteConfigLoaded(
         isAwesomeFeatureEnabled: _remoteConfigService.getBool(
           _awesomeFeatureKey,
         ),
         testValue: _remoteConfigService.getString(_testValueKey),
+        dataSource: dataSource.isEmpty ? null : dataSource,
+        lastSyncedAt: lastSyncedAt,
       ),
     );
   }

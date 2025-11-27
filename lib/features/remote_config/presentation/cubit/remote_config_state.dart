@@ -19,13 +19,22 @@ class RemoteConfigLoaded extends RemoteConfigState {
   const RemoteConfigLoaded({
     required this.isAwesomeFeatureEnabled,
     required this.testValue,
+    this.dataSource,
+    this.lastSyncedAt,
   });
 
   final bool isAwesomeFeatureEnabled;
   final String testValue;
+  final String? dataSource;
+  final DateTime? lastSyncedAt;
 
   @override
-  List<Object?> get props => <Object?>[isAwesomeFeatureEnabled, testValue];
+  List<Object?> get props => <Object?>[
+    isAwesomeFeatureEnabled,
+    testValue,
+    dataSource,
+    lastSyncedAt,
+  ];
 }
 
 class RemoteConfigError extends RemoteConfigState {

@@ -79,6 +79,7 @@ void main() {
       const RemoteConfigLoaded state = RemoteConfigLoaded(
         isAwesomeFeatureEnabled: true,
         testValue: 'test-123',
+        dataSource: 'remote',
       );
       when(() => cubit.state).thenReturn(state);
       whenListen(
@@ -96,6 +97,7 @@ void main() {
         findsOneWidget,
       );
       expect(find.textContaining('test-123'), findsOneWidget);
+      expect(find.textContaining('remote'), findsOneWidget);
     });
 
     testWidgets('invokes fetchValues when retry button tapped', (

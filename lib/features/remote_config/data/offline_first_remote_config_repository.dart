@@ -34,6 +34,8 @@ class OfflineFirstRemoteConfigRepository
   static const List<String> _trackedStringKeys = <String>[
     RemoteConfigRepository.testValueKey,
   ];
+  static const String _lastSyncedKey = 'last_synced_at';
+  static const String _lastDataSourceKey = 'last_data_source';
 
   final RemoteConfigRepository _remoteRepository;
   final RemoteConfigCacheRepository _cacheRepository;
@@ -142,10 +144,14 @@ class OfflineFirstRemoteConfigRepository
     final Map<String, dynamic> updatedValues = <String, dynamic>{
       ..._snapshot.values,
       ..._readTrackedValues(),
+      _lastSyncedKey: fetchedAt.toIso8601String(),
+      _lastDataSourceKey: 'remote',
     };
     final RemoteConfigSnapshot nextSnapshot = _snapshot.copyWith(
       values: updatedValues,
       lastFetchedAt: fetchedAt,
+      dataSource: 'remote',
+      lastSyncedAt: fetchedAt,
     );
     _snapshot = nextSnapshot;
     await _cacheRepository.saveSnapshot(nextSnapshot);
