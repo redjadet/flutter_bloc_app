@@ -486,6 +486,15 @@
       }
     }
   },
+  "settingsSyncPrunedLabel": "Pruned: {count}",
+  "@settingsSyncPrunedLabel": {
+    "description": "Label showing how many queued operations were pruned after sync",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "settingsSyncDurationLabel": "Duration: {ms}ms",
   "@settingsSyncDurationLabel": {
     "description": "Label showing last sync duration in milliseconds",

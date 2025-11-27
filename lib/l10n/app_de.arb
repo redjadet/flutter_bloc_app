@@ -260,6 +260,15 @@
       }
     }
   },
+  "settingsSyncPrunedLabel": "Bereinigt: {count}",
+  "@settingsSyncPrunedLabel": {
+    "description": "Zeigt, wie viele Queue-Elemente nach dem Sync bereinigt wurden",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "settingsSyncDurationLabel": "Dauer: {ms}ms",
   "@settingsSyncDurationLabel": {
     "description": "Beschriftung für die Dauer des letzten Syncs in Millisekunden",

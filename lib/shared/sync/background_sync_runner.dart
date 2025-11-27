@@ -97,9 +97,10 @@ Future<SyncCycleSummary> runSyncCycle({
     }
   }
 
-  final List<SyncOperation> pending = await pendingRepository.getPendingOperations(
-    now: DateTime.now().toUtc(),
-  );
+  final List<SyncOperation> pending = await pendingRepository
+      .getPendingOperations(
+        now: DateTime.now().toUtc(),
+      );
   final Map<String, int> pendingByEntity = <String, int>{};
   for (final SyncOperation operation in pending) {
     pendingByEntity.update(

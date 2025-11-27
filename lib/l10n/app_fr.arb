@@ -260,6 +260,15 @@
       }
     }
   },
+  "settingsSyncPrunedLabel": "Nettoyés : {count}",
+  "@settingsSyncPrunedLabel": {
+    "description": "Indique combien d'éléments de file ont été nettoyés après la synchro",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "settingsSyncDurationLabel": "Durée : {ms} ms",
   "@settingsSyncDurationLabel": {
     "description": "Libellé pour la durée de la dernière synchro en millisecondes",

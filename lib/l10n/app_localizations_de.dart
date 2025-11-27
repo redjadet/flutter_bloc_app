@@ -364,6 +364,11 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String settingsSyncPrunedLabel(int count) {
+    return 'Bereinigt: $count';
+  }
+
+  @override
   String settingsSyncDurationLabel(int ms) {
     return 'Dauer: ${ms}ms';
   }

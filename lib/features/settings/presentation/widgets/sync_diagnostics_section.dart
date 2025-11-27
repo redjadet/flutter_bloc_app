@@ -53,9 +53,14 @@ class SyncDiagnosticsSection extends StatelessWidget {
                           '${material.formatShortDate(local)} · ${material.formatTimeOfDay(
                             TimeOfDay.fromDateTime(local),
                           )}';
-                      final List<Widget> pendingChips = summary
-                          .pendingByEntity
-                          .entries
+                      final List<MapEntry<String, int>> pendingEntries =
+                          summary.pendingByEntity.entries.toList()..sort(
+                            (
+                              final MapEntry<String, int> a,
+                              final MapEntry<String, int> b,
+                            ) => a.key.compareTo(b.key),
+                          );
+                      final List<Widget> pendingChips = pendingEntries
                           .map(
                             (final MapEntry<String, int> entry) => Chip(
                               label: Text('${entry.key}: ${entry.value}'),
@@ -86,6 +91,15 @@ class SyncDiagnosticsSection extends StatelessWidget {
                               ),
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
+                            if (summary.prunedCount > 0) ...<Widget>[
+                              SizedBox(height: gap),
+                              Text(
+                                l10n.settingsSyncPrunedLabel(
+                                  summary.prunedCount,
+                                ),
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
                             if (pendingChips.isNotEmpty) ...<Widget>[
                               SizedBox(height: gap),
                               Wrap(
