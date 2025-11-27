@@ -336,6 +336,39 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsRemoteConfigRetryButton => 'Reintentar carga';
 
   @override
+  String get settingsRemoteConfigClearCacheButton => 'Borrar caché de config';
+
+  @override
+  String get settingsSyncDiagnosticsTitle => 'Diagnósticos de sincronización';
+
+  @override
+  String get settingsSyncDiagnosticsEmpty =>
+      'Aún no hay ejecuciones de sincronización.';
+
+  @override
+  String settingsSyncLastRunLabel(String timestamp) {
+    return 'Última ejecución: $timestamp';
+  }
+
+  @override
+  String settingsSyncOperationsLabel(int processed, int failed) {
+    return 'Ops: $processed procesadas, $failed fallidas';
+  }
+
+  @override
+  String settingsSyncPendingLabel(int count) {
+    return 'Pendientes al inicio: $count';
+  }
+
+  @override
+  String settingsSyncDurationLabel(int ms) {
+    return 'Duración: ${ms}ms';
+  }
+
+  @override
+  String get settingsSyncHistoryTitle => 'Ejecuciones recientes de sync';
+
+  @override
   String get settingsProfileCacheSectionTitle => 'Caché de perfil';
 
   @override

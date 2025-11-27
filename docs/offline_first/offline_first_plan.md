@@ -44,14 +44,17 @@ This document revalidates the offline-first requirements after another pass over
 - ✅ **Remote Config offline-first adoption:** Added `RemoteConfigCacheRepository` + `OfflineFirstRemoteConfigRepository`, wired DI to serve cached config values when offline, surfaced `SyncStatusCubit` inside `RemoteConfigDiagnosticsSection`, and documented contracts/tests under `docs/offline_first/remote_config.md`.
 - ✅ **Remote Config metadata surfaced:** `RemoteConfigSnapshot` now tracks `dataSource` and `lastSyncedAt`, persisted via the cache repository; diagnostics display the source when loaded.
 - ✅ **Profile cache controls:** Added a dev/QA-only `ProfileCacheControlsSection` to Settings so engineers can clear the cached profile snapshot, with new l10n strings and widget tests guarding the behavior (`test/features/settings/presentation/widgets/profile_cache_controls_section_test.dart`).
+- ✅ **Remote Config cache reset:** Settings → Remote Config diagnostics now include a clear-cache control that wipes the Hive snapshot and refetches values via the offline-first repository; covered by widget + cubit tests.
+- ✅ **Sync telemetry hooks:** BackgroundSyncCoordinator and Remote Config offline-first repo now emit lightweight telemetry events (durations, counts, sources) for future analytics/observability.
+- ✅ **Sync diagnostics UI:** Added a dev-only Sync Diagnostics section in Settings that surfaces the latest sync cycle summary (duration, per-entity queue depth, pending counts) from `SyncStatusCubit`.
+- ✅ **Sync runner refactor:** Extracted `runSyncCycle` + `SyncCycleSummary` into a dedicated runner to keep `BackgroundSyncCoordinator` lean and lints compliant while exposing summary streams for diagnostics.
 - ⚙️ **Immediate focus:** Push Remote Config telemetry/cache UX plus broader coordinator observability + pruning while staging the next feature onboardings.
 
 ## Immediate Next Steps
 
-1. **Remote Config telemetry + cache UX** (Priority: Medium)
-   - Add optional “reset config cache” action for developers to clear Hive state.
-   - Pipe Remote Config refresh metrics into `BackgroundSyncCoordinator` analytics hooks.
-   - Evaluate differential sync/version pinning for staged rollouts.
+1. **Remote Config telemetry + metrics** (Priority: Done)
+   - ✅ Pipe Remote Config refresh metrics into `BackgroundSyncCoordinator` analytics hooks.
+   - ✅ Evaluated staged rollouts/version pinning; current payload size + tracked keys are minimal, so no differential sync is needed. Revisit only if new config payloads grow or rollout gating is introduced.
 
 2. **Chat UX enhancements** (Priority: Medium)
    - Explore per-message "retry now" affordance (swipe/long-press) that re-enqueues a specific pending message without waiting for full coordinator batch.
@@ -60,9 +63,9 @@ This document revalidates the offline-first requirements after another pass over
    - Feed sync metrics/telemetry (queue depth, flush duration) into `ErrorNotificationService`/analytics for observability.
 
 3. **Coordinator observability & pruning** (Priority: Medium)
-   - Emit structured metrics when batches succeed/fail, track queue depth, and expose via `BackgroundSyncCoordinator`.
+   - ✅ Add diagnostics history: persist the last N `SyncCycleSummary` items and render them in the Sync Diagnostics dev UI.
+   - ✅ Implement queue maintenance in `PendingSyncRepository` to clear obsolete operations via `prune()`; coordinator now triggers pruning after each sync cycle.
    - Hook into pruning policies (see §3.7) to keep boxes trimmed automatically.
-   - Implement queue maintenance in `PendingSyncRepository` to clear completed/obsolete operations.
    - Add periodic data pruning for local caches (e.g., chat history older than 90 days, search queries older than 30 days).
 
 4. **GraphQL demo offline-first** (Priority: Low)

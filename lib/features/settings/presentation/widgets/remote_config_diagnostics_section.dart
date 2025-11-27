@@ -88,19 +88,34 @@ class RemoteConfigDiagnosticsSection extends StatelessWidget {
                         ),
                       ),
                     SizedBox(height: context.responsiveGapM),
-                    SizedBox(
-                      width: double.infinity,
-                      child: PlatformAdaptive.filledButton(
-                        context: context,
-                        onPressed: data.isLoading
-                            ? null
-                            : () => context
-                                  .read<RemoteConfigCubit>()
-                                  .fetchValues(),
-                        child: Text(
-                          context.l10n.settingsRemoteConfigRetryButton,
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: PlatformAdaptive.filledButton(
+                            context: context,
+                            onPressed: data.isLoading
+                                ? null
+                                : () => context
+                                      .read<RemoteConfigCubit>()
+                                      .fetchValues(),
+                            child: Text(
+                              context.l10n.settingsRemoteConfigRetryButton,
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(width: gap),
+                        PlatformAdaptive.textButton(
+                          context: context,
+                          onPressed: data.isLoading
+                              ? null
+                              : () => context
+                                    .read<RemoteConfigCubit>()
+                                    .clearCache(),
+                          child: Text(
+                            context.l10n.settingsRemoteConfigClearCacheButton,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

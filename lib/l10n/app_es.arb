@@ -218,6 +218,61 @@
   "@settingsRemoteConfigRetryButton": {
     "description": "Etiqueta del botón que vuelve a lanzar la carga de Remote Config"
   },
+  "settingsRemoteConfigClearCacheButton": "Borrar caché de config",
+  "@settingsRemoteConfigClearCacheButton": {
+    "description": "Etiqueta del botón que borra la caché de Remote Config almacenada localmente"
+  },
+  "settingsSyncDiagnosticsTitle": "Diagnósticos de sincronización",
+  "@settingsSyncDiagnosticsTitle": {
+    "description": "Encabezado de la sección de diagnósticos de sincronización para desarrolladores"
+  },
+  "settingsSyncDiagnosticsEmpty": "Aún no hay ejecuciones de sincronización.",
+  "@settingsSyncDiagnosticsEmpty": {
+    "description": "Texto mostrado cuando aún no hay resumen de sincronización"
+  },
+  "settingsSyncLastRunLabel": "Última ejecución: {timestamp}",
+  "@settingsSyncLastRunLabel": {
+    "description": "Etiqueta que muestra la marca de tiempo de la última sincronización",
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSyncOperationsLabel": "Ops: {processed} procesadas, {failed} fallidas",
+  "@settingsSyncOperationsLabel": {
+    "description": "Etiqueta que muestra operaciones procesadas/fallidas en la última sincronización",
+    "placeholders": {
+      "processed": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncPendingLabel": "Pendientes al inicio: {count}",
+  "@settingsSyncPendingLabel": {
+    "description": "Etiqueta que muestra cuántas operaciones pendientes había al iniciar",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncDurationLabel": "Duración: {ms}ms",
+  "@settingsSyncDurationLabel": {
+    "description": "Etiqueta que muestra la duración de la última sincronización en milisegundos",
+    "placeholders": {
+      "ms": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncHistoryTitle": "Ejecuciones recientes de sync",
+  "@settingsSyncHistoryTitle": {
+    "description": "Encabezado para la lista de historial de sincronización en diagnósticos"
+  },
   "settingsProfileCacheSectionTitle": "Caché de perfil",
   "@settingsProfileCacheSectionTitle": {
     "description": "Encabezado de la sección para desarrolladores que gestiona el caché del perfil"

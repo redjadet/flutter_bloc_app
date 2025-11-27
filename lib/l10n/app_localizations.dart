@@ -716,6 +716,54 @@ abstract class AppLocalizations {
   /// **'Retry fetch'**
   String get settingsRemoteConfigRetryButton;
 
+  /// Button label that clears the locally cached Remote Config values
+  ///
+  /// In en, this message translates to:
+  /// **'Clear config cache'**
+  String get settingsRemoteConfigClearCacheButton;
+
+  /// Heading for the developer-only sync diagnostics section
+  ///
+  /// In en, this message translates to:
+  /// **'Sync diagnostics'**
+  String get settingsSyncDiagnosticsTitle;
+
+  /// Placeholder copy when no sync cycle summary exists
+  ///
+  /// In en, this message translates to:
+  /// **'No sync runs recorded yet.'**
+  String get settingsSyncDiagnosticsEmpty;
+
+  /// Label showing the last sync timestamp
+  ///
+  /// In en, this message translates to:
+  /// **'Last run: {timestamp}'**
+  String settingsSyncLastRunLabel(String timestamp);
+
+  /// Label showing operations processed/failed during last sync
+  ///
+  /// In en, this message translates to:
+  /// **'Ops: {processed} processed, {failed} failed'**
+  String settingsSyncOperationsLabel(int processed, int failed);
+
+  /// Label showing pending operations count at the start of last sync
+  ///
+  /// In en, this message translates to:
+  /// **'Pending at start: {count}'**
+  String settingsSyncPendingLabel(int count);
+
+  /// Label showing last sync duration in milliseconds
+  ///
+  /// In en, this message translates to:
+  /// **'Duration: {ms}ms'**
+  String settingsSyncDurationLabel(int ms);
+
+  /// Heading for the sync history list in diagnostics
+  ///
+  /// In en, this message translates to:
+  /// **'Recent sync runs'**
+  String get settingsSyncHistoryTitle;
+
   /// Heading for the developer-only section that manages the profile cache
   ///
   /// In en, this message translates to:

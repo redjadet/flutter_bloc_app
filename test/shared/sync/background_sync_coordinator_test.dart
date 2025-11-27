@@ -58,6 +58,7 @@ void main() {
           idempotencyKey: 'key',
         ),
       );
+      registerFallbackValue(const Duration());
     });
 
     setUp(() {
@@ -75,6 +76,12 @@ void main() {
       when(
         () => pendingRepository.getPendingOperations(now: any(named: 'now')),
       ).thenAnswer((_) async => <SyncOperation>[]);
+      when(
+        () => pendingRepository.prune(
+          maxRetryCount: any(named: 'maxRetryCount'),
+          maxAge: any(named: 'maxAge'),
+        ),
+      ).thenAnswer((_) async => 0);
     });
 
     tearDown(() async {

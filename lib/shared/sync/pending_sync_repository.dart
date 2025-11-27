@@ -113,6 +113,39 @@ class PendingSyncRepository extends HiveRepositoryBase {
     );
   }
 
+  /// Prunes operations that have exceeded retry limits or are too old to retry.
+  ///
+  /// Returns the number of pruned operations.
+  Future<int> prune({
+    int maxRetryCount = 10,
+    Duration maxAge = const Duration(days: 30),
+  }) async => StorageGuard.run<int>(
+    logContext: 'PendingSyncRepository.prune',
+    action: () async {
+      final Box<dynamic> box = await getBox();
+      final DateTime cutoff = DateTime.now().toUtc().subtract(maxAge);
+      final List<dynamic> keysToDelete = <dynamic>[];
+      for (final MapEntry<dynamic, dynamic> entry in box.toMap().entries) {
+        final dynamic value = entry.value;
+        if (value is! Map<dynamic, dynamic>) {
+          continue;
+        }
+        final SyncOperation op = _operationFromJson(value);
+        final bool tooManyRetries = op.retryCount >= maxRetryCount;
+        final bool tooOld =
+            op.nextRetryAt != null && op.nextRetryAt!.isBefore(cutoff);
+        if (tooManyRetries || tooOld) {
+          keysToDelete.add(entry.key);
+        }
+      }
+      for (final dynamic key in keysToDelete) {
+        await box.delete(key);
+      }
+      return keysToDelete.length;
+    },
+    fallback: () => 0,
+  );
+
   // When reading from a Hive box with no explicit type, the map keys
   // are dynamic. We cast them to String, which is the expected type for JSON.
   SyncOperation _operationFromJson(Map<dynamic, dynamic> json) =>

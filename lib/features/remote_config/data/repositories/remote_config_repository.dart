@@ -51,6 +51,11 @@ class RemoteConfigRepository implements RemoteConfigService {
   }
 
   @override
+  Future<void> clearCache() async {
+    // Firebase Remote Config SDK manages its own cache; nothing to clear here.
+  }
+
+  @override
   String getString(final String key) {
     final String value = _remoteConfig.getString(key);
 

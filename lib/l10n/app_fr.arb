@@ -218,6 +218,61 @@
   "@settingsRemoteConfigRetryButton": {
     "description": "Libellé du bouton qui relance la récupération Remote Config"
   },
+  "settingsRemoteConfigClearCacheButton": "Vider le cache config",
+  "@settingsRemoteConfigClearCacheButton": {
+    "description": "Libellé du bouton qui supprime le cache Remote Config stocké localement"
+  },
+  "settingsSyncDiagnosticsTitle": "Diagnostics de synchronisation",
+  "@settingsSyncDiagnosticsTitle": {
+    "description": "Titre de la section de diagnostics de synchronisation pour les développeurs"
+  },
+  "settingsSyncDiagnosticsEmpty": "Aucune exécution de synchro pour le moment.",
+  "@settingsSyncDiagnosticsEmpty": {
+    "description": "Texte affiché quand aucun résumé de synchro n'est disponible"
+  },
+  "settingsSyncLastRunLabel": "Dernière exécution : {timestamp}",
+  "@settingsSyncLastRunLabel": {
+    "description": "Libellé affichant l'horodatage de la dernière synchro",
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSyncOperationsLabel": "Ops : {processed} traitées, {failed} échouées",
+  "@settingsSyncOperationsLabel": {
+    "description": "Libellé pour les opérations réussies/échouées lors de la dernière synchro",
+    "placeholders": {
+      "processed": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncPendingLabel": "En attente au départ : {count}",
+  "@settingsSyncPendingLabel": {
+    "description": "Libellé pour le nombre d'opérations en attente au début de la synchro",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncDurationLabel": "Durée : {ms} ms",
+  "@settingsSyncDurationLabel": {
+    "description": "Libellé pour la durée de la dernière synchro en millisecondes",
+    "placeholders": {
+      "ms": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncHistoryTitle": "Exécutions de synchro récentes",
+  "@settingsSyncHistoryTitle": {
+    "description": "Titre de la liste d'historique de synchro dans les diagnostics"
+  },
   "settingsProfileCacheSectionTitle": "Cache du profil",
   "@settingsProfileCacheSectionTitle": {
     "description": "Titre de la section développeur qui gère le cache du profil"

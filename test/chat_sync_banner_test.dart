@@ -148,6 +148,16 @@ class _TestBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Stream<SyncStatus> get statusStream => _controller.stream;
 
   @override
+  Stream<SyncCycleSummary> get summaryStream =>
+      const Stream<SyncCycleSummary>.empty();
+
+  @override
+  List<SyncCycleSummary> get history => const <SyncCycleSummary>[];
+
+  @override
+  SyncCycleSummary? get latestSummary => null;
+
+  @override
   Future<void> dispose() async {
     await _controller.close();
   }

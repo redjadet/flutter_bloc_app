@@ -95,5 +95,8 @@ class FakeRemoteConfigRepository implements RemoteConfigRepository {
   double getDouble(final String key) => 0;
 
   @override
+  Future<void> clearCache() async {}
+
+  @override
   Future<void> dispose() async {}
 }

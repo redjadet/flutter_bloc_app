@@ -218,6 +218,61 @@
   "@settingsRemoteConfigRetryButton": {
     "description": "Button-Beschriftung zum erneuten Abrufen der Remote Config"
   },
+  "settingsRemoteConfigClearCacheButton": "Konfig-Cache löschen",
+  "@settingsRemoteConfigClearCacheButton": {
+    "description": "Button-Beschriftung zum Löschen des lokal gespeicherten Remote-Config-Caches"
+  },
+  "settingsSyncDiagnosticsTitle": "Sync-Diagnostik",
+  "@settingsSyncDiagnosticsTitle": {
+    "description": "Überschrift für den Entwicklerbereich mit Sync-Diagnostik"
+  },
+  "settingsSyncDiagnosticsEmpty": "Noch keine Sync-Durchläufe aufgezeichnet.",
+  "@settingsSyncDiagnosticsEmpty": {
+    "description": "Platzhaltertext, wenn noch keine Zusammenfassung vorhanden ist"
+  },
+  "settingsSyncLastRunLabel": "Letzter Lauf: {timestamp}",
+  "@settingsSyncLastRunLabel": {
+    "description": "Beschriftung für den Zeitstempel des letzten Syncs",
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSyncOperationsLabel": "Vorgänge: {processed} verarbeitet, {failed} fehlgeschlagen",
+  "@settingsSyncOperationsLabel": {
+    "description": "Beschriftung für verarbeitete/fehlgeschlagene Vorgänge im letzten Sync",
+    "placeholders": {
+      "processed": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncPendingLabel": "Zu Beginn offen: {count}",
+  "@settingsSyncPendingLabel": {
+    "description": "Beschriftung für Anzahl offener Vorgänge zu Sync-Beginn",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncDurationLabel": "Dauer: {ms}ms",
+  "@settingsSyncDurationLabel": {
+    "description": "Beschriftung für die Dauer des letzten Syncs in Millisekunden",
+    "placeholders": {
+      "ms": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncHistoryTitle": "Aktuelle Sync-Läufe",
+  "@settingsSyncHistoryTitle": {
+    "description": "Überschrift für die Sync-Verlaufsanzeige in der Diagnostik"
+  },
   "settingsProfileCacheSectionTitle": "Profil-Cache",
   "@settingsProfileCacheSectionTitle": {
     "description": "Überschrift für den Entwicklerbereich, der den Profil-Cache verwaltet"

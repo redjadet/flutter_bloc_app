@@ -219,6 +219,61 @@
   "@settingsRemoteConfigRetryButton": {
     "description": "Uzak yapılandırmayı yeniden getiren düğme etiketi"
   },
+  "settingsRemoteConfigClearCacheButton": "Yapılandırma önbelleğini temizle",
+  "@settingsRemoteConfigClearCacheButton": {
+    "description": "Uzak Yapılandırma'nın yerel önbelleğini temizleyen düğme etiketi"
+  },
+  "settingsSyncDiagnosticsTitle": "Senkronizasyon tanılama",
+  "@settingsSyncDiagnosticsTitle": {
+    "description": "Geliştiriciye özel senkronizasyon tanılama bölümünün başlığı"
+  },
+  "settingsSyncDiagnosticsEmpty": "Henüz senkronizasyon çalıştırması yok.",
+  "@settingsSyncDiagnosticsEmpty": {
+    "description": "Henüz özet yokken gösterilen yer tutucu metin"
+  },
+  "settingsSyncLastRunLabel": "Son çalıştırma: {timestamp}",
+  "@settingsSyncLastRunLabel": {
+    "description": "Son senkronizasyon zaman damgasını gösteren etiket",
+    "placeholders": {
+      "timestamp": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSyncOperationsLabel": "İşlem: {processed} tamamlandı, {failed} başarısız",
+  "@settingsSyncOperationsLabel": {
+    "description": "Son senkronizasyonda işlenen/başarısız olan işlemleri gösteren etiket",
+    "placeholders": {
+      "processed": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncPendingLabel": "Başlangıçtaki bekleyen: {count}",
+  "@settingsSyncPendingLabel": {
+    "description": "Son senkronizasyon başlangıcındaki bekleyen işlem sayısını gösterir",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncDurationLabel": "Süre: {ms}ms",
+  "@settingsSyncDurationLabel": {
+    "description": "Son senkronizasyon süresini milisaniye cinsinden gösterir",
+    "placeholders": {
+      "ms": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSyncHistoryTitle": "Son senkronizasyonlar",
+  "@settingsSyncHistoryTitle": {
+    "description": "Tanılama bölümündeki senkronizasyon geçmişi başlığı"
+  },
   "settingsProfileCacheSectionTitle": "Profil önbelleği",
   "@settingsProfileCacheSectionTitle": {
     "description": "Profil önbelleğini yöneten geliştirici bölümünün başlığı"
