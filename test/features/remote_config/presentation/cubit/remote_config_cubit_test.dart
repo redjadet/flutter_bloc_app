@@ -20,6 +20,12 @@ void main() {
       when(
         () => remoteConfigService.getString('test_value_1'),
       ).thenReturn('initial');
+      when(
+        () => remoteConfigService.getString('last_data_source'),
+      ).thenReturn('');
+      when(
+        () => remoteConfigService.getString('last_synced_at'),
+      ).thenReturn('');
     });
 
     blocTest<RemoteConfigCubit, RemoteConfigState>(

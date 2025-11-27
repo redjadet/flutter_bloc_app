@@ -12,6 +12,8 @@ class RemoteConfigCacheRepository extends HiveRepositoryBase {
   static const String _valuesKey = 'values';
   static const String _lastFetchedKey = 'lastFetchedAt';
   static const String _templateVersionKey = 'templateVersion';
+  static const String _dataSourceKey = 'dataSource';
+  static const String _lastSyncedKey = 'lastSyncedAt';
 
   @override
   String get boxName => _boxName;
@@ -30,10 +32,17 @@ class RemoteConfigCacheRepository extends HiveRepositoryBase {
           ? null
           : DateTime.tryParse(lastFetchedRaw);
       final String? templateVersion = raw[_templateVersionKey] as String?;
+      final String? dataSource = raw[_dataSourceKey] as String?;
+      final String? lastSyncedRaw = raw[_lastSyncedKey] as String?;
+      final DateTime? lastSyncedAt = lastSyncedRaw == null
+          ? null
+          : DateTime.tryParse(lastSyncedRaw);
       return RemoteConfigSnapshot(
         values: values,
         lastFetchedAt: lastFetchedAt,
         templateVersion: templateVersion,
+        dataSource: dataSource,
+        lastSyncedAt: lastSyncedAt,
       );
     },
     fallback: () => null,
@@ -50,6 +59,8 @@ class RemoteConfigCacheRepository extends HiveRepositoryBase {
               _valuesKey: Map<String, dynamic>.from(snapshot.values),
               _lastFetchedKey: snapshot.lastFetchedAt?.toIso8601String(),
               _templateVersionKey: snapshot.templateVersion,
+              _dataSourceKey: snapshot.dataSource,
+              _lastSyncedKey: snapshot.lastSyncedAt?.toIso8601String(),
             },
           );
         },

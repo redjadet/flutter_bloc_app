@@ -42,6 +42,8 @@ void main() {
         },
         lastFetchedAt: DateTime.utc(2025, 01, 01),
         templateVersion: 'v1',
+        dataSource: 'remote',
+        lastSyncedAt: DateTime.utc(2025, 01, 02, 12, 30),
       );
 
       await repository.saveSnapshot(snapshot);
@@ -52,6 +54,8 @@ void main() {
       expect(loaded.values, containsPair('test_value_1', 'cached'));
       expect(loaded.lastFetchedAt, snapshot.lastFetchedAt);
       expect(loaded.templateVersion, 'v1');
+      expect(loaded.dataSource, 'remote');
+      expect(loaded.lastSyncedAt, snapshot.lastSyncedAt);
     });
 
     test('clear removes stored snapshot', () async {

@@ -1,7 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
+
+class ProfileCacheMetadata {
+  const ProfileCacheMetadata({
+    required this.hasProfile,
+    required this.lastSyncedAt,
+    required this.sizeBytes,
+  });
+
+  final bool hasProfile;
+  final DateTime? lastSyncedAt;
+  final int? sizeBytes;
+}
 
 /// Hive-backed cache for profile data so the profile page can hydrate offline.
 class ProfileCacheRepository extends HiveRepositoryBase {
@@ -9,6 +23,7 @@ class ProfileCacheRepository extends HiveRepositoryBase {
 
   static const String _boxName = 'profile_cache';
   static const String _profileKey = 'profile';
+  static const String _lastSyncedKey = 'profile_last_synced_at';
 
   @override
   String get boxName => _boxName;
@@ -28,7 +43,12 @@ class ProfileCacheRepository extends HiveRepositoryBase {
         logContext: 'ProfileCacheRepository.saveProfile',
         action: () async {
           final Box<dynamic> box = await getBox();
-          await box.put(_profileKey, _profileToJson(user));
+          final Map<String, dynamic> payload = _profileToJson(user);
+          await box.put(_profileKey, payload);
+          await box.put(
+            _lastSyncedKey,
+            DateTime.now().toUtc().toIso8601String(),
+          );
         },
       );
 
@@ -37,7 +57,32 @@ class ProfileCacheRepository extends HiveRepositoryBase {
     action: () async {
       final Box<dynamic> box = await getBox();
       await safeDeleteKey(box, _profileKey);
+      await safeDeleteKey(box, _lastSyncedKey);
     },
+  );
+
+  Future<ProfileCacheMetadata> loadMetadata() async => StorageGuard.run(
+    logContext: 'ProfileCacheRepository.loadMetadata',
+    action: () async {
+      final Box<dynamic> box = await getBox();
+      final dynamic rawProfile = box.get(_profileKey);
+      final bool hasProfile = rawProfile != null;
+      final int? sizeBytes = _estimateSizeBytes(rawProfile);
+      final String? rawDate = box.get(_lastSyncedKey) as String?;
+      final DateTime? lastSynced = rawDate == null
+          ? null
+          : DateTime.tryParse(rawDate)?.toUtc();
+      return ProfileCacheMetadata(
+        hasProfile: hasProfile,
+        lastSyncedAt: lastSynced,
+        sizeBytes: sizeBytes,
+      );
+    },
+    fallback: () => const ProfileCacheMetadata(
+      hasProfile: false,
+      lastSyncedAt: null,
+      sizeBytes: null,
+    ),
   );
 
   ProfileUser? _parseProfile(final dynamic raw) {
@@ -94,4 +139,16 @@ class ProfileCacheRepository extends HiveRepositoryBase {
             )
             .toList(growable: false),
       };
+
+  int? _estimateSizeBytes(final dynamic raw) {
+    if (raw == null) {
+      return null;
+    }
+    try {
+      final String encoded = jsonEncode(raw);
+      return utf8.encode(encoded).length;
+    } on Exception {
+      return null;
+    }
+  }
 }

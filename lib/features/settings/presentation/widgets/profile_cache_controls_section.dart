@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
@@ -24,19 +26,33 @@ class ProfileCacheControlsSection extends StatefulWidget {
 class _ProfileCacheControlsSectionState
     extends State<ProfileCacheControlsSection> {
   bool _isClearing = false;
+  ProfileCacheMetadata? _metadata;
+  bool _loadingMetadata = false;
 
-  ProfileCacheRepository get _repository =>
-      widget.profileCacheRepository ?? getIt<ProfileCacheRepository>();
+  ProfileCacheRepository? get _repository =>
+      widget.profileCacheRepository ??
+      (getIt.isRegistered<ProfileCacheRepository>()
+          ? getIt<ProfileCacheRepository>()
+          : null);
+
+  @override
+  void initState() {
+    super.initState();
+    // Fire-and-forget so initState stays synchronous
+    unawaited(_loadMetadata());
+  }
 
   Future<void> _handleClearCache() async {
-    if (_isClearing) {
+    final ProfileCacheRepository? repo = _repository;
+    if (_isClearing || repo == null) {
       return;
     }
     setState(() => _isClearing = true);
     final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
     final l10n = context.l10n;
     try {
-      await _repository.clearProfile();
+      await repo.clearProfile();
+      await _loadMetadata();
       if (!mounted) {
         return;
       }
@@ -66,6 +82,26 @@ class _ProfileCacheControlsSectionState
     }
   }
 
+  Future<void> _loadMetadata() async {
+    final ProfileCacheRepository? repo = _repository;
+    if (repo == null) {
+      setState(() {
+        _metadata = null;
+        _loadingMetadata = false;
+      });
+      return;
+    }
+    setState(() => _loadingMetadata = true);
+    final ProfileCacheMetadata metadata = await repo.loadMetadata();
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _metadata = metadata;
+      _loadingMetadata = false;
+    });
+  }
+
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
@@ -88,6 +124,23 @@ class _ProfileCacheControlsSectionState
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               SizedBox(height: gap),
+              if (_loadingMetadata)
+                Padding(
+                  padding: EdgeInsets.only(bottom: gap),
+                  child: SizedBox(
+                    height: context.responsiveGapM,
+                    width: context.responsiveGapM,
+                    child: const CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                )
+              else if (_metadata != null)
+                Padding(
+                  padding: EdgeInsets.only(bottom: gap),
+                  child: Text(
+                    _formatMetadata(context, _metadata!),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
               Align(
                 alignment: Alignment.centerRight,
                 child: PlatformAdaptive.textButton(
@@ -109,5 +162,27 @@ class _ProfileCacheControlsSectionState
         ),
       ),
     );
+  }
+
+  String _formatMetadata(
+    final BuildContext context,
+    final ProfileCacheMetadata metadata,
+  ) {
+    final List<String> parts = <String>[];
+    if (metadata.lastSyncedAt != null) {
+      final DateTime local = metadata.lastSyncedAt!.toLocal();
+      final MaterialLocalizations material = MaterialLocalizations.of(context);
+      parts.add(
+        'Last synced: ${material.formatShortDate(local)} ${material.formatTimeOfDay(TimeOfDay.fromDateTime(local))}',
+      );
+    }
+    if (metadata.sizeBytes != null) {
+      final int kb = (metadata.sizeBytes! / 1024).ceil();
+      parts.add('Cache size: ${kb}KB');
+    }
+    if (parts.isEmpty) {
+      return 'No cached profile';
+    }
+    return parts.join(' · ');
   }
 }

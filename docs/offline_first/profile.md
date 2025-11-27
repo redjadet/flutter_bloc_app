@@ -38,7 +38,7 @@ This document captures the offline-first plan for the Profile feature so enginee
 - Profile page now shows `ProfileSyncBanner` using `SyncStatusCubit` (offline/syncing states; no pending queue).
 - Manual “Sync now” action is available in the banner and calls `SyncStatusCubit.flush()` to trigger a refresh.
 - Since profile is read-only, no pending queue is surfaced; banners show offline/syncing only.
-- Settings (dev/QA flavors) expose a `ProfileCacheControlsSection` that lets engineers clear the cached `ProfileUser` snapshot; the widget lives under `lib/features/settings/presentation/widgets/profile_cache_controls_section.dart` with dedicated tests.
+- Settings (dev/QA flavors) expose a `ProfileCacheControlsSection` that lets engineers view cache size/last synced and clear the cached `ProfileUser` snapshot; the widget lives under `lib/features/settings/presentation/widgets/profile_cache_controls_section.dart` with dedicated tests.
 
 ## Testing Checklist
 
@@ -52,5 +52,6 @@ This document captures the offline-first plan for the Profile feature so enginee
 
 ## Next Actions
 
-1. Surface cache size + `lastSyncedAt` metadata inside the cache controls so QA can monitor retention.
-2. If profile ever supports edits, extend the repository to queue `SyncOperation`s and add conflict resolution similar to chat/counter.
+1. Consider surfacing cache size + `lastSyncedAt` in end-user settings (dev/QA already covered).
+2. Keep `ProfileCacheControlsSection` visible in settings to let users/QA clear stale snapshots (wired to `ProfileCacheRepository.clearProfile()`).
+3. If profile ever supports edits, extend the repository to queue `SyncOperation`s and add conflict resolution similar to chat/counter.
