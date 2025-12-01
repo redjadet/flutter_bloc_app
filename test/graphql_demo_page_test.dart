@@ -128,6 +128,58 @@ void main() {
     );
     expect(dropdown.onChanged, isNull);
   });
+
+  testWidgets(
+    'GraphqlDemoPage shows "All continents" when active filter is cleared',
+    (final WidgetTester tester) async {
+      final _StubGraphqlDemoCubit cubit = _StubGraphqlDemoCubit();
+      addTearDown(cubit.close);
+
+      await tester.pumpWidget(_wrapWithCubit(cubit));
+
+      const List<GraphqlContinent> continents = <GraphqlContinent>[
+        GraphqlContinent(code: 'NA', name: 'North America'),
+        GraphqlContinent(code: 'EU', name: 'Europe'),
+      ];
+
+      // Start with North America selected.
+      cubit.emit(
+        const GraphqlDemoState(
+          status: ViewStatus.success,
+          continents: continents,
+          activeContinentCode: 'NA',
+        ),
+      );
+      await tester.pump();
+
+      DropdownButton<String?> dropdown = tester.widget(
+        find.byType(DropdownButton<String?>),
+      );
+      expect(dropdown.value, 'NA');
+      expect(find.textContaining('North America'), findsWidgets);
+
+      // User selects "All continents" (null); cubit should receive null.
+      dropdown.onChanged?.call(null);
+      expect(cubit.selectCalls, contains(null));
+
+      // When cubit emits the cleared selection, UI should reflect "All continents".
+      cubit.emit(
+        const GraphqlDemoState(
+          status: ViewStatus.success,
+          continents: continents,
+          activeContinentCode: null,
+        ),
+      );
+      await tester.pump();
+
+      dropdown = tester.widget(find.byType(DropdownButton<String?>));
+      expect(dropdown.value, isNull);
+      expect(
+        find.text(AppLocalizationsEn().graphqlSampleAllContinents),
+        findsOneWidget,
+      );
+    },
+  );
 }
 
 Widget _wrapWithCubit(GraphqlDemoCubit cubit) {
