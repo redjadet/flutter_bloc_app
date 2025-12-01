@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -60,6 +61,59 @@ void main() {
         find.byType(CircularProgressIndicator),
       );
       expect(progressIndicator.color, equals(Colors.blue));
+    });
+
+    testWidgets('applies custom color when provided', (tester) async {
+      const customColor = Colors.red;
+
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: CommonLoadingWidget(color: customColor)),
+        ),
+      );
+
+      final progressIndicator = tester.widget<CircularProgressIndicator>(
+        find.byType(CircularProgressIndicator),
+      );
+      expect(progressIndicator.color, equals(customColor));
+    });
+
+    testWidgets('applies custom size when provided', (tester) async {
+      const customSize = 48.0;
+
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: CommonLoadingWidget(size: customSize)),
+        ),
+      );
+
+      final sizedBox = tester.widget<SizedBox>(
+        find
+            .descendant(
+              of: find.byType(Column),
+              matching: find.byType(SizedBox),
+            )
+            .first,
+      );
+      expect(sizedBox.width, equals(customSize));
+      expect(sizedBox.height, equals(customSize));
+    });
+
+    testWidgets('uses default size when not provided', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(home: Scaffold(body: CommonLoadingWidget())),
+      );
+
+      final sizedBox = tester.widget<SizedBox>(
+        find
+            .descendant(
+              of: find.byType(Column),
+              matching: find.byType(SizedBox),
+            )
+            .first,
+      );
+      expect(sizedBox.width, equals(24.0));
+      expect(sizedBox.height, equals(24.0));
     });
   });
 
@@ -159,6 +213,155 @@ void main() {
         ),
         findsOneWidget,
       );
+    });
+  });
+
+  group('CommonLoadingButton', () {
+    testWidgets('renders child when not loading', (tester) async {
+      const child = Text('Submit');
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CommonLoadingButton(onPressed: () {}, child: child),
+          ),
+        ),
+      );
+
+      expect(find.text('Submit'), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(find.byType(CupertinoActivityIndicator), findsNothing);
+    });
+
+    testWidgets('shows loading indicator when loading', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CommonLoadingButton(
+              onPressed: () {},
+              isLoading: true,
+              child: const Text('Submit'),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Submit'), findsNothing);
+      // Should show either CircularProgressIndicator or CupertinoActivityIndicator
+      final hasMaterialIndicator = find
+          .byType(CircularProgressIndicator)
+          .evaluate()
+          .isNotEmpty;
+      final hasCupertinoIndicator = find
+          .byType(CupertinoActivityIndicator)
+          .evaluate()
+          .isNotEmpty;
+      expect(hasMaterialIndicator || hasCupertinoIndicator, isTrue);
+    });
+
+    testWidgets('disables button when loading', (tester) async {
+      bool wasPressed = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CommonLoadingButton(
+              onPressed: () {
+                wasPressed = true;
+              },
+              isLoading: true,
+              child: const Text('Submit'),
+            ),
+          ),
+        ),
+      );
+
+      final button = find.byType(CommonLoadingButton);
+      await tester.tap(button);
+      await tester.pump();
+
+      expect(wasPressed, isFalse);
+    });
+
+    testWidgets('enables button when not loading', (tester) async {
+      bool wasPressed = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CommonLoadingButton(
+              onPressed: () {
+                wasPressed = true;
+              },
+              isLoading: false,
+              child: const Text('Submit'),
+            ),
+          ),
+        ),
+      );
+
+      final button = find.byType(CommonLoadingButton);
+      await tester.tap(button);
+      await tester.pump();
+
+      expect(wasPressed, isTrue);
+    });
+
+    testWidgets('shows loading message when provided', (tester) async {
+      const loadingMessage = 'Processing...';
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CommonLoadingButton(
+              onPressed: () {},
+              isLoading: true,
+              loadingMessage: loadingMessage,
+              child: const Text('Submit'),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text(loadingMessage), findsOneWidget);
+    });
+
+    testWidgets('does not show loading message when null', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CommonLoadingButton(
+              onPressed: () {},
+              isLoading: true,
+              child: const Text('Submit'),
+            ),
+          ),
+        ),
+      );
+
+      // Should not find any text except possibly button text
+      final textWidgets = find.byType(Text);
+      expect(textWidgets, findsNothing);
+    });
+
+    testWidgets('handles null onPressed callback', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CommonLoadingButton(
+              onPressed: null,
+              child: const Text('Submit'),
+            ),
+          ),
+        ),
+      );
+
+      final button = find.byType(CommonLoadingButton);
+      await tester.tap(button);
+      await tester.pump();
+
+      // Should not crash
+      expect(find.text('Submit'), findsOneWidget);
     });
   });
 }

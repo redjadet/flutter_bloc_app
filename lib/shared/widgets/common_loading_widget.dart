@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 /// A reusable loading widget with consistent styling
 class CommonLoadingWidget extends StatelessWidget {
@@ -91,29 +93,38 @@ class CommonLoadingButton extends StatelessWidget {
   final ButtonStyle? style;
 
   @override
-  Widget build(final BuildContext context) => ElevatedButton(
-    onPressed: isLoading ? null : onPressed,
-    style: style,
-    child: isLoading
-        ? Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: context.responsiveIconSize * 0.67,
-                height: context.responsiveIconSize * 0.67,
-                child: CircularProgressIndicator(
+  Widget build(final BuildContext context) {
+    final indicatorColor = Theme.of(context).colorScheme.onPrimary;
+    final indicatorSize = context.responsiveIconSize * 0.67;
+
+    final loadingChild = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: indicatorSize,
+          height: indicatorSize,
+          child: PlatformAdaptive.isCupertino(context)
+              ? CupertinoActivityIndicator(
+                  color: indicatorColor,
+                  radius: indicatorSize / 2,
+                )
+              : CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).colorScheme.onPrimary,
-                  ),
+                  color: indicatorColor,
                 ),
-              ),
-              if (loadingMessage != null) ...[
-                SizedBox(width: context.responsiveHorizontalGapS),
-                Text(loadingMessage!),
-              ],
-            ],
-          )
-        : child,
-  );
+        ),
+        if (loadingMessage != null) ...[
+          SizedBox(width: context.responsiveHorizontalGapS),
+          Text(loadingMessage!),
+        ],
+      ],
+    );
+
+    return PlatformAdaptive.filledButton(
+      context: context,
+      onPressed: isLoading ? null : onPressed,
+      materialStyle: style,
+      child: isLoading ? loadingChild : child,
+    );
+  }
 }
