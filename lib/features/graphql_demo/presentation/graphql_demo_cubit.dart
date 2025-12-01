@@ -67,7 +67,10 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         state.activeContinentCode == continentCode) {
       return;
     }
-    _emitLoading(activeContinentCode: continentCode);
+    _emitLoading(
+      activeContinentCode: continentCode,
+      shouldUpdateActiveContinent: true,
+    );
     await CubitExceptionHandler.executeAsync(
       operation: () => _repository.fetchCountries(
         continentCode: continentCode,
@@ -76,6 +79,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         _emitSuccess(
           countries: countries,
           activeContinentCode: continentCode,
+          shouldUpdateActiveContinent: true,
           source: _repositorySource,
         );
       },
@@ -93,13 +97,18 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
     );
   }
 
-  void _emitLoading({final String? activeContinentCode}) {
+  void _emitLoading({
+    final String? activeContinentCode,
+    final bool shouldUpdateActiveContinent = false,
+  }) {
     emit(
       state.copyWith(
         status: ViewStatus.loading,
         errorMessage: null,
         errorType: null,
-        activeContinentCode: activeContinentCode ?? state.activeContinentCode,
+        activeContinentCode: shouldUpdateActiveContinent
+            ? activeContinentCode
+            : state.activeContinentCode,
       ),
     );
   }
@@ -109,6 +118,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
     final List<GraphqlContinent>? continents,
     final String? activeContinentCode,
     final GraphqlDataSource? source,
+    final bool shouldUpdateActiveContinent = false,
   }) {
     final List<GraphqlCountry> resolvedCountries = countries != null
         ? List<GraphqlCountry>.unmodifiable(countries)
@@ -122,7 +132,9 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         status: ViewStatus.success,
         countries: resolvedCountries,
         continents: resolvedContinents,
-        activeContinentCode: activeContinentCode ?? state.activeContinentCode,
+        activeContinentCode: shouldUpdateActiveContinent
+            ? activeContinentCode
+            : state.activeContinentCode,
         errorMessage: null,
         errorType: null,
         dataSource: source ?? state.dataSource,

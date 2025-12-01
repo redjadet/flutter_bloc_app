@@ -204,7 +204,9 @@ class _FilterBar extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final items = <DropdownMenuItem<String?>>[
-      DropdownMenuItem<String?>(child: Text(l10n.graphqlSampleAllContinents)),
+      DropdownMenuItem<String?>(
+        child: Text(l10n.graphqlSampleAllContinents),
+      ),
       ...continents.map(
         (final continent) => DropdownMenuItem<String?>(
           value: continent.code,
