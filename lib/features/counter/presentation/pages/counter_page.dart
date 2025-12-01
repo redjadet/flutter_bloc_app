@@ -23,13 +23,25 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   final ErrorNotificationService _errorNotificationService =
       getIt<ErrorNotificationService>();
   late final bool _showFlavorBadge;
+  DateTime? _lastFlushTime;
+  static const Duration _flushThrottleDuration = Duration(milliseconds: 500);
 
   Future<void> _flushSyncIfPossible(final BuildContext context) async {
     try {
       final SyncStatusCubit syncCubit = context.read<SyncStatusCubit>();
-      if (syncCubit.state.isOnline) {
-        unawaited(syncCubit.flush());
+      if (!syncCubit.state.isOnline) {
+        return;
       }
+
+      // Throttle flushes to prevent concurrent calls
+      final DateTime now = DateTime.now();
+      if (_lastFlushTime != null &&
+          now.difference(_lastFlushTime!) < _flushThrottleDuration) {
+        return;
+      }
+      _lastFlushTime = now;
+
+      unawaited(syncCubit.flush());
     } on Object {
       // SyncStatusCubit not available in this subtree (e.g., tests/minimal shells).
     }

@@ -124,7 +124,18 @@ class CommonLoadingButton extends StatelessWidget {
       context: context,
       onPressed: isLoading ? null : onPressed,
       materialStyle: style,
-      child: isLoading ? loadingChild : child,
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        child: isLoading
+            ? KeyedSubtree(
+                key: const ValueKey('loading'),
+                child: loadingChild,
+              )
+            : KeyedSubtree(
+                key: const ValueKey('content'),
+                child: child,
+              ),
+      ),
     );
   }
 }
