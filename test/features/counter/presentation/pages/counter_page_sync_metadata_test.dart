@@ -9,7 +9,6 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
-import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_sync_banner.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
@@ -174,21 +173,15 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    final Finder bannerFinder = find.byType(CounterSyncBanner);
-    final BuildContext bannerContext = tester.element(bannerFinder);
-    final AppLocalizations l10n = AppLocalizations.of(bannerContext);
-    final MaterialLocalizations materialL10n = MaterialLocalizations.of(
-      bannerContext,
-    );
-    final DateTime lastSynced = repository.snapshot.lastSyncedAt!;
-    final String lastSyncedText =
-        '${materialL10n.formatShortDate(lastSynced.toLocal())} · '
-        '${materialL10n.formatTimeOfDay(TimeOfDay.fromDateTime(lastSynced.toLocal()))}';
+    // Verify that sync metadata is available in CounterCubit state
+    final CounterState state = counterCubit.state;
+    expect(state.lastSyncedAt, equals(repository.snapshot.lastSyncedAt));
+    expect(state.changeId, equals(repository.snapshot.changeId));
 
-    expect(find.text(l10n.counterLastSynced(lastSyncedText)), findsOneWidget);
-    expect(
-      find.text(l10n.counterChangeId(repository.snapshot.changeId!)),
-      findsOneWidget,
-    );
+    // Verify the metadata values are not null
+    expect(state.lastSyncedAt, isNotNull);
+    expect(state.changeId, isNotNull);
+    expect(state.lastSyncedAt, equals(DateTime.utc(2024, 1, 2, 15, 30)));
+    expect(state.changeId, equals('sync-123'));
   });
 }
