@@ -56,7 +56,7 @@ class OfflineFirstProfileRepository
     if (isOnline) {
       try {
         final ProfileUser profile = await _remoteRepository.getProfile();
-        await _cacheRepository.saveProfile(profile);
+        await _saveProfileToCache(profile);
         return profile;
       } on Exception catch (error, stackTrace) {
         AppLogger.error(
@@ -90,10 +90,22 @@ class OfflineFirstProfileRepository
   Future<void> _refreshAndCache() async {
     try {
       final ProfileUser profile = await _remoteRepository.getProfile();
-      await _cacheRepository.saveProfile(profile);
+      await _saveProfileToCache(profile);
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'OfflineFirstProfileRepository._refreshAndCache failed',
+        error,
+        stackTrace,
+      );
+    }
+  }
+
+  Future<void> _saveProfileToCache(final ProfileUser profile) async {
+    try {
+      await _cacheRepository.saveProfile(profile);
+    } on Exception catch (error, stackTrace) {
+      AppLogger.error(
+        'OfflineFirstProfileRepository._saveProfileToCache failed',
         error,
         stackTrace,
       );
