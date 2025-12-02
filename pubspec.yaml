@@ -32,7 +32,7 @@ dependencies:
   apple_maps_flutter: ^1.4.0
   cached_network_image: ^3.4.1
   collection: ^1.18.0
-  connectivity_plus: ^6.1.0
+  connectivity_plus: ^7.0.0
   cupertino_icons: ^1.0.8
   equatable: ^2.0.5
   fancy_shimmer_image: ^2.0.3
