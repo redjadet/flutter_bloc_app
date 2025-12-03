@@ -83,10 +83,25 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     if (location == null) {
       return;
     }
+    _emitSelection(location, updateCameraPosition: null);
+  }
+
+  void focusLocation(final MapLocation location) {
+    _emitSelection(
+      location,
+      updateCameraPosition: cameraPositionForLocation(location),
+    );
+  }
+
+  void _emitSelection(
+    final MapLocation location, {
+    required final gmaps.CameraPosition? updateCameraPosition,
+  }) {
     final gmaps.MarkerId markerId = gmaps.MarkerId(location.id);
     emit(
       state.copyWith(
         selectedMarkerId: markerId,
+        cameraPosition: updateCameraPosition ?? state.cameraPosition,
         markers: _buildMarkers(
           locations: state.locations,
           selectedMarkerId: markerId,
@@ -97,15 +112,19 @@ class MapSampleCubit extends Cubit<MapSampleState> {
 
   gmaps.CameraUpdate cameraUpdateForLocation(final MapLocation location) =>
       gmaps.CameraUpdate.newCameraPosition(
-        gmaps.CameraPosition(
-          target: gmaps.LatLng(
-            location.coordinate.latitude,
-            location.coordinate.longitude,
-          ),
-          zoom: 14,
-          tilt: 22,
-        ),
+        cameraPositionForLocation(location),
       );
+
+  gmaps.CameraPosition cameraPositionForLocation(
+    final MapLocation location,
+  ) => gmaps.CameraPosition(
+    target: gmaps.LatLng(
+      location.coordinate.latitude,
+      location.coordinate.longitude,
+    ),
+    zoom: 16,
+    tilt: 45,
+  );
 
   gmaps.CameraPosition? _resolveInitialCamera(
     final List<MapLocation> locations,
