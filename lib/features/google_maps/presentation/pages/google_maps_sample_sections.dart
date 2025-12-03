@@ -16,25 +16,38 @@ class _GoogleMapsMapSection extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) =>
-      BlocBuilder<MapSampleCubit, MapSampleState>(
-        buildWhen:
-            (final MapSampleState previous, final MapSampleState current) =>
-                previous.cameraPosition != current.cameraPosition ||
-                previous.markers != current.markers ||
-                previous.mapType != current.mapType ||
-                previous.trafficEnabled != current.trafficEnabled ||
-                previous.locations != current.locations ||
-                previous.selectedMarkerId != current.selectedMarkerId,
-        builder: (final BuildContext context, final MapSampleState state) =>
-            RepaintBoundary(
-              child: MapSampleMapView(
-                state: state,
-                cubit: cubit,
-                useAppleMaps: useAppleMaps,
-                controller: controller,
+      BlocListener<MapSampleCubit, MapSampleState>(
+        listenWhen: _mapStateChanged,
+        listener:
+            (final BuildContext context, final MapSampleState state) async {
+              await controller.syncWithState(state);
+            },
+        child: BlocBuilder<MapSampleCubit, MapSampleState>(
+          buildWhen:
+              (final MapSampleState previous, final MapSampleState current) =>
+                  false,
+          builder: (final BuildContext context, final MapSampleState state) =>
+              RepaintBoundary(
+                child: MapSampleMapView(
+                  initialState: state,
+                  cubit: cubit,
+                  useAppleMaps: useAppleMaps,
+                  controller: controller,
+                ),
               ),
-            ),
+        ),
       );
+
+  bool _mapStateChanged(
+    final MapSampleState previous,
+    final MapSampleState current,
+  ) =>
+      previous.cameraPosition != current.cameraPosition ||
+      previous.markers != current.markers ||
+      previous.mapType != current.mapType ||
+      previous.trafficEnabled != current.trafficEnabled ||
+      previous.locations != current.locations ||
+      previous.selectedMarkerId != current.selectedMarkerId;
 }
 
 class _GoogleMapsControlsSection extends StatelessWidget {

@@ -11,6 +11,7 @@ import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/googl
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/google_maps_layout.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/google_maps_location_list.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/google_maps_messages.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_sample_map_controller.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_sample_map_view.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
