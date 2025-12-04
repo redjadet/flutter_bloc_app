@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
+import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
@@ -28,6 +29,10 @@ class _SettingsView extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
+    final ProfileCacheRepository? profileCacheRepository =
+        getIt.isRegistered<ProfileCacheRepository>()
+        ? getIt<ProfileCacheRepository>()
+        : null;
     return CommonPageLayout(
       title: l10n.settingsPageTitle,
       body: ListView(
@@ -45,7 +50,10 @@ class _SettingsView extends StatelessWidget {
             SizedBox(height: context.responsiveGapL),
             const GraphqlCacheControlsSection(),
             SizedBox(height: context.responsiveGapL),
-            const ProfileCacheControlsSection(),
+            if (profileCacheRepository != null)
+              ProfileCacheControlsSection(
+                profileCacheRepository: profileCacheRepository,
+              ),
             SizedBox(height: context.responsiveGapL),
             const RemoteConfigDiagnosticsSection(),
             SizedBox(height: context.responsiveGapL),

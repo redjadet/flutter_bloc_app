@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
@@ -11,12 +10,11 @@ import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class ProfileCacheControlsSection extends StatefulWidget {
   const ProfileCacheControlsSection({
+    required this.profileCacheRepository,
     super.key,
-    this.profileCacheRepository,
   });
 
-  @visibleForTesting
-  final ProfileCacheRepository? profileCacheRepository;
+  final ProfileCacheRepository profileCacheRepository;
 
   @override
   State<ProfileCacheControlsSection> createState() =>
@@ -29,12 +27,6 @@ class _ProfileCacheControlsSectionState
   ProfileCacheMetadata? _metadata;
   bool _loadingMetadata = false;
 
-  ProfileCacheRepository? get _repository =>
-      widget.profileCacheRepository ??
-      (getIt.isRegistered<ProfileCacheRepository>()
-          ? getIt<ProfileCacheRepository>()
-          : null);
-
   @override
   void initState() {
     super.initState();
@@ -43,8 +35,8 @@ class _ProfileCacheControlsSectionState
   }
 
   Future<void> _handleClearCache() async {
-    final ProfileCacheRepository? repo = _repository;
-    if (_isClearing || repo == null) {
+    final ProfileCacheRepository repo = widget.profileCacheRepository;
+    if (_isClearing) {
       return;
     }
     setState(() => _isClearing = true);
@@ -83,16 +75,9 @@ class _ProfileCacheControlsSectionState
   }
 
   Future<void> _loadMetadata() async {
-    final ProfileCacheRepository? repo = _repository;
-    if (repo == null) {
-      setState(() {
-        _metadata = null;
-        _loadingMetadata = false;
-      });
-      return;
-    }
     setState(() => _loadingMetadata = true);
-    final ProfileCacheMetadata metadata = await repo.loadMetadata();
+    final ProfileCacheMetadata metadata = await widget.profileCacheRepository
+        .loadMetadata();
     if (!mounted) {
       return;
     }

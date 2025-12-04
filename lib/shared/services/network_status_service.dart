@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Represents simplified connectivity states for offline-first coordination.
@@ -16,8 +17,10 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
   ConnectivityNetworkStatusService({
     Connectivity? connectivity,
     Duration debounce = const Duration(milliseconds: 250),
+    TimerService? timerService,
   }) : _connectivity = connectivity ?? Connectivity(),
-       _debounce = debounce {
+       _debounce = debounce,
+       _timerService = timerService ?? DefaultTimerService() {
     _controller = StreamController<NetworkStatus>.broadcast(
       onListen: _onListen,
       onCancel: _onCancel,
@@ -26,9 +29,10 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
 
   final Connectivity _connectivity;
   final Duration _debounce;
+  final TimerService _timerService;
   late final StreamController<NetworkStatus> _controller;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
-  Timer? _debounceTimer;
+  TimerDisposable? _debounceTimer;
   NetworkStatus _latest = NetworkStatus.unknown;
   bool _disposed = false;
 
@@ -78,7 +82,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
     if (_controller.hasListener) {
       return;
     }
-    _debounceTimer?.cancel();
+    _debounceTimer?.dispose();
     _debounceTimer = null;
     unawaited(_connectivitySubscription?.cancel());
     _connectivitySubscription = null;
@@ -90,8 +94,8 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
       return;
     }
     _latest = next;
-    _debounceTimer?.cancel();
-    _debounceTimer = Timer(_debounce, () {
+    _debounceTimer?.dispose();
+    _debounceTimer = _timerService.runOnce(_debounce, () {
       if (_controller.isClosed) {
         return;
       }
@@ -120,7 +124,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
       return;
     }
     _disposed = true;
-    _debounceTimer?.cancel();
+    _debounceTimer?.dispose();
     _debounceTimer = null;
     await _connectivitySubscription?.cancel();
     _connectivitySubscription = null;
