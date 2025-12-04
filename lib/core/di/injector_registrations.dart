@@ -221,7 +221,9 @@ void _registerUtilityServices() {
 
 void _registerSyncServices() {
   registerLazySingletonIfAbsent<NetworkStatusService>(
-    ConnectivityNetworkStatusService.new,
+    () => ConnectivityNetworkStatusService(
+      timerService: getIt<TimerService>(),
+    ),
     dispose: (final service) => service.dispose(),
   );
   registerLazySingletonIfAbsent<SyncableRepositoryRegistry>(
