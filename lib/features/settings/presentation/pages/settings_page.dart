@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
@@ -10,29 +9,37 @@ import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  const SettingsPage({
+    required this.appInfoRepository,
+    this.profileCacheRepository,
+    super.key,
+  });
+
+  final AppInfoRepository appInfoRepository;
+  final ProfileCacheRepository? profileCacheRepository;
 
   @override
   Widget build(final BuildContext context) => BlocProvider(
     create: (_) {
-      final cubit = AppInfoCubit(repository: getIt<AppInfoRepository>());
+      final cubit = AppInfoCubit(repository: appInfoRepository);
       unawaited(cubit.load());
       return cubit;
     },
-    child: const _SettingsView(),
+    child: _SettingsView(
+      profileCacheRepository: profileCacheRepository,
+    ),
   );
 }
 
 class _SettingsView extends StatelessWidget {
-  const _SettingsView();
+  const _SettingsView({this.profileCacheRepository});
+
+  final ProfileCacheRepository? profileCacheRepository;
 
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final ProfileCacheRepository? profileCacheRepository =
-        getIt.isRegistered<ProfileCacheRepository>()
-        ? getIt<ProfileCacheRepository>()
-        : null;
+    final ProfileCacheRepository? cacheRepo = profileCacheRepository;
     return CommonPageLayout(
       title: l10n.settingsPageTitle,
       body: ListView(
@@ -50,9 +57,9 @@ class _SettingsView extends StatelessWidget {
             SizedBox(height: context.responsiveGapL),
             const GraphqlCacheControlsSection(),
             SizedBox(height: context.responsiveGapL),
-            if (profileCacheRepository != null)
+            if (cacheRepo != null)
               ProfileCacheControlsSection(
-                profileCacheRepository: profileCacheRepository,
+                profileCacheRepository: cacheRepo,
               ),
             SizedBox(height: context.responsiveGapL),
             const RemoteConfigDiagnosticsSection(),

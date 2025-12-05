@@ -8,6 +8,8 @@ import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_pag
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
+import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
+import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/storage/shared_preferences_migration_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
@@ -236,7 +238,11 @@ Widget _buildCounterPageApp({required CounterCubit cubit, ThemeData? theme}) =>
           ],
           supportedLocales: AppLocalizations.supportedLocales,
           theme: theme ?? ThemeData.light(),
-          home: const CounterPage(title: 'Counter'),
+          home: CounterPage(
+            title: 'Counter',
+            errorNotificationService: _FakeErrorNotificationService(),
+            biometricAuthenticator: _FakeBiometricAuthenticator(),
+          ),
         ),
       ),
     );
@@ -261,6 +267,23 @@ Future<void> _overrideNetworkAndSync() async {
   getIt.registerLazySingleton<PendingSyncRepository>(
     _FakePendingSyncRepository.new,
   );
+}
+
+class _FakeErrorNotificationService implements ErrorNotificationService {
+  @override
+  Future<void> showAlertDialog(
+    BuildContext context,
+    String title,
+    String message,
+  ) async {}
+
+  @override
+  Future<void> showSnackBar(BuildContext context, String message) async {}
+}
+
+class _FakeBiometricAuthenticator implements BiometricAuthenticator {
+  @override
+  Future<bool> authenticate({String? localizedReason}) async => true;
 }
 
 class _CounterComponentsDemo extends StatelessWidget {

@@ -12,16 +12,21 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CounterPage extends StatefulWidget {
-  const CounterPage({required this.title, super.key});
+  const CounterPage({
+    required this.title,
+    required this.errorNotificationService,
+    required this.biometricAuthenticator,
+    super.key,
+  });
   final String title;
+  final ErrorNotificationService errorNotificationService;
+  final BiometricAuthenticator biometricAuthenticator;
 
   @override
   State<CounterPage> createState() => _CounterPageState();
 }
 
 class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
-  final ErrorNotificationService _errorNotificationService =
-      getIt<ErrorNotificationService>();
   late final bool _showFlavorBadge;
   DateTime? _lastFlushTime;
   static const Duration _flushThrottleDuration = Duration(milliseconds: 500);
@@ -145,9 +150,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
 
   Future<void> _handleOpenSettings(final BuildContext context) async {
     final l10n = context.l10n;
-    final BiometricAuthenticator authenticator =
-        getIt<BiometricAuthenticator>();
-    final bool authenticated = await authenticator.authenticate(
+    final bool authenticated = await widget.biometricAuthenticator.authenticate(
       localizedReason: l10n.settingsBiometricPrompt,
     );
     if (!context.mounted) {
@@ -158,7 +161,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
       await context.pushNamed(AppRoutes.settings);
     } else {
       unawaited(
-        _errorNotificationService.showSnackBar(
+        widget.errorNotificationService.showSnackBar(
           context,
           l10n.settingsBiometricFailed,
         ),

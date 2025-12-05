@@ -2,7 +2,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/features.dart';
+import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
+import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,8 +27,11 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.counterPath,
     name: AppRoutes.counter,
-    builder: (final context, final state) =>
-        CounterPage(title: context.l10n.homeTitle),
+    builder: (final context, final state) => CounterPage(
+      title: context.l10n.homeTitle,
+      errorNotificationService: getIt<ErrorNotificationService>(),
+      biometricAuthenticator: getIt<BiometricAuthenticator>(),
+    ),
   ),
   GoRoute(
     path: AppRoutes.calculatorPath,
@@ -83,7 +89,10 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.settingsPath,
     name: AppRoutes.settings,
-    builder: (final context, final state) => const SettingsPage(),
+    builder: (final context, final state) => SettingsPage(
+      appInfoRepository: getIt<AppInfoRepository>(),
+      profileCacheRepository: getIt<ProfileCacheRepository>(),
+    ),
   ),
   GoRoute(
     path: AppRoutes.manageAccountPath,
@@ -154,6 +163,9 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.searchPath,
     name: AppRoutes.search,
-    builder: (final context, final state) => const SearchPage(),
+    builder: (final context, final state) => SearchPage(
+      repository: getIt<SearchRepository>(),
+      timerService: getIt<TimerService>(),
+    ),
   ),
 ];

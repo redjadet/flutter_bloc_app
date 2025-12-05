@@ -88,9 +88,6 @@ void main() {
         () => coordinator.summaryStream,
       ).thenAnswer((_) => const Stream<SyncCycleSummary>.empty());
       when(() => coordinator.latestSummary).thenReturn(null);
-      getIt.registerSingleton<PendingSyncRepository>(pendingRepository);
-      getIt.registerSingleton<CounterRepository>(counterRepository);
-
       cubit = TestSyncStatusCubit(
         networkStatusService: networkStatusService,
         coordinator: coordinator,
@@ -126,8 +123,11 @@ void main() {
           BlocProvider<SyncStatusCubit>.value(
             value: cubit,
             child: Builder(
-              builder: (final context) =>
-                  CounterSyncBanner(l10n: AppLocalizations.of(context)),
+              builder: (final context) => CounterSyncBanner(
+                l10n: AppLocalizations.of(context),
+                pendingRepository: pendingRepository,
+                counterRepository: counterRepository,
+              ),
             ),
           ),
         ),
@@ -166,8 +166,11 @@ void main() {
           BlocProvider<SyncStatusCubit>.value(
             value: cubit,
             child: Builder(
-              builder: (final context) =>
-                  CounterSyncBanner(l10n: AppLocalizations.of(context)),
+              builder: (final context) => CounterSyncBanner(
+                l10n: AppLocalizations.of(context),
+                pendingRepository: pendingRepository,
+                counterRepository: counterRepository,
+              ),
             ),
           ),
         ),
@@ -211,8 +214,11 @@ void main() {
           BlocProvider<SyncStatusCubit>.value(
             value: cubit,
             child: Builder(
-              builder: (final context) =>
-                  CounterSyncBanner(l10n: AppLocalizations.of(context)),
+              builder: (final context) => CounterSyncBanner(
+                l10n: AppLocalizations.of(context),
+                pendingRepository: pendingRepository,
+                counterRepository: counterRepository,
+              ),
             ),
           ),
         ),
@@ -243,8 +249,11 @@ void main() {
           BlocProvider<SyncStatusCubit>.value(
             value: cubit,
             child: Builder(
-              builder: (final context) =>
-                  CounterSyncBanner(l10n: AppLocalizations.of(context)),
+              builder: (final context) => CounterSyncBanner(
+                l10n: AppLocalizations.of(context),
+                pendingRepository: pendingRepository,
+                counterRepository: counterRepository,
+              ),
             ),
           ),
         ),

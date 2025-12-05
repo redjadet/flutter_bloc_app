@@ -10,7 +10,9 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
+import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
@@ -100,6 +102,23 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 }
 
+class _FakeBiometricAuthenticator implements BiometricAuthenticator {
+  @override
+  Future<bool> authenticate({String? localizedReason}) async => true;
+}
+
+class _FakeErrorNotificationService implements ErrorNotificationService {
+  @override
+  Future<void> showAlertDialog(
+    BuildContext context,
+    String title,
+    String message,
+  ) async {}
+
+  @override
+  Future<void> showSnackBar(BuildContext context, String message) async {}
+}
+
 void main() {
   setUpAll(() async {
     final Directory testDir = Directory.systemTemp.createTempSync('hive_test_');
@@ -126,6 +145,10 @@ void main() {
     final _MetadataCounterRepository repository = _MetadataCounterRepository();
     final _MockPendingSyncRepository pendingRepository =
         _MockPendingSyncRepository();
+    final _FakeBiometricAuthenticator authenticator =
+        _FakeBiometricAuthenticator();
+    final _FakeErrorNotificationService errorNotifications =
+        _FakeErrorNotificationService();
 
     if (getIt.isRegistered<CounterRepository>()) {
       getIt.unregister<CounterRepository>();
@@ -166,7 +189,11 @@ void main() {
               BlocProvider<CounterCubit>.value(value: counterCubit),
               BlocProvider<SyncStatusCubit>.value(value: syncCubit),
             ],
-            child: const CounterPage(title: 'Counter'),
+            child: CounterPage(
+              title: 'Counter',
+              errorNotificationService: errorNotifications,
+              biometricAuthenticator: authenticator,
+            ),
           ),
         ),
       ),

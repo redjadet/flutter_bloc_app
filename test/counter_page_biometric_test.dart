@@ -14,6 +14,7 @@ import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
+import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -92,6 +93,23 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 }
 
+class _FakeErrorNotificationService implements ErrorNotificationService {
+  @override
+  Future<void> showAlertDialog(
+    BuildContext context,
+    String title,
+    String message,
+  ) async {}
+
+  @override
+  Future<void> showSnackBar(BuildContext context, String message) async {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+  }
+}
+
 Widget _buildApp(GoRouter router) => ScreenUtilInit(
   designSize: AppConstants.designSize,
   minTextAdapt: true,
@@ -149,7 +167,11 @@ GoRouter _createRouter(
                 ),
               ),
             ],
-            child: const CounterPage(title: 'Counter'),
+            child: CounterPage(
+              title: 'Counter',
+              errorNotificationService: getIt<ErrorNotificationService>(),
+              biometricAuthenticator: auth,
+            ),
           );
         },
       ),
@@ -173,6 +195,12 @@ void main() {
   setUp(() async {
     getIt.pushNewScope();
     await configureDependencies();
+    if (getIt.isRegistered<ErrorNotificationService>()) {
+      getIt.unregister<ErrorNotificationService>();
+    }
+    getIt.registerSingleton<ErrorNotificationService>(
+      _FakeErrorNotificationService(),
+    );
   });
 
   tearDown(() {

@@ -11,6 +11,8 @@ import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_pag
 import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
+import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
+import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -54,7 +56,13 @@ void main() {
               ),
             ),
           ],
-          child: const MaterialApp(home: CounterPage(title: 'Test Home')),
+          child: MaterialApp(
+            home: CounterPage(
+              title: 'Test Home',
+              errorNotificationService: _FakeErrorNotificationService(),
+              biometricAuthenticator: _FakeBiometricAuthenticator(),
+            ),
+          ),
         ),
       ),
     );
@@ -79,6 +87,23 @@ class _FakeThemeRepository implements ThemeRepository {
 
   @override
   Future<void> save(ThemePreference mode) async {}
+}
+
+class _FakeErrorNotificationService implements ErrorNotificationService {
+  @override
+  Future<void> showAlertDialog(
+    BuildContext context,
+    String title,
+    String message,
+  ) async {}
+
+  @override
+  Future<void> showSnackBar(BuildContext context, String message) async {}
+}
+
+class _FakeBiometricAuthenticator implements BiometricAuthenticator {
+  @override
+  Future<bool> authenticate({String? localizedReason}) async => true;
 }
 
 ThemePreference _toPreference(final ThemeMode mode) => switch (mode) {

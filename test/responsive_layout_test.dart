@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
@@ -58,11 +57,8 @@ void main() {
     testWidgets('SettingsPage list respects content width on desktop', (
       WidgetTester tester,
     ) async {
-      await getIt.reset(dispose: true);
-      getIt.registerSingleton<AppInfoRepository>(_FakeAppInfoRepository());
       final SyncStatusCubit syncCubit = _buildSyncStatusCubit();
       addTearDown(syncCubit.close);
-      addTearDown(() => getIt.reset(dispose: true));
 
       await binding.setSurfaceSize(const Size(1400, 1000));
       addTearDown(() => binding.setSurfaceSize(const Size(390, 844)));
@@ -86,7 +82,7 @@ void main() {
               ),
               BlocProvider<SyncStatusCubit>.value(value: syncCubit),
             ],
-            child: const SettingsPage(),
+            child: SettingsPage(appInfoRepository: _FakeAppInfoRepository()),
           ),
         ),
       );
