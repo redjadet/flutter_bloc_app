@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
@@ -121,26 +120,6 @@ void main() {
       mockRepository = MockSearchRepository();
       fakeTimerService = FakeTimerService();
       when(() => mockRepository.search(any())).thenAnswer((_) async => []);
-
-      // Register dependencies in GetIt for SearchPage which uses getIt<SearchRepository>()
-      if (getIt.isRegistered<SearchRepository>()) {
-        getIt.unregister<SearchRepository>();
-      }
-      getIt.registerSingleton<SearchRepository>(mockRepository);
-
-      if (getIt.isRegistered<TimerService>()) {
-        getIt.unregister<TimerService>();
-      }
-      getIt.registerSingleton<TimerService>(fakeTimerService);
-    });
-
-    tearDown(() {
-      if (getIt.isRegistered<SearchRepository>()) {
-        getIt.unregister<SearchRepository>();
-      }
-      if (getIt.isRegistered<TimerService>()) {
-        getIt.unregister<TimerService>();
-      }
     });
 
     Widget buildSubject() {
@@ -158,7 +137,10 @@ void main() {
         supportedLocales: AppLocalizations.supportedLocales,
         home: BlocProvider<SyncStatusCubit>.value(
           value: syncCubit,
-          child: const SearchPage(),
+          child: SearchPage(
+            repository: mockRepository,
+            timerService: fakeTimerService,
+          ),
         ),
       );
     }
@@ -309,7 +291,10 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           home: BlocProvider<SyncStatusCubit>.value(
             value: syncCubit,
-            child: const SearchPage(),
+            child: SearchPage(
+              repository: mockRepository,
+              timerService: fakeTimerService,
+            ),
           ),
         ),
       );
@@ -339,7 +324,10 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           home: BlocProvider<SyncStatusCubit>.value(
             value: syncCubit,
-            child: const SearchPage(),
+            child: SearchPage(
+              repository: mockRepository,
+              timerService: fakeTimerService,
+            ),
           ),
         ),
       );

@@ -77,7 +77,6 @@ Future<void> _registerStorageServices() async {
   registerLazySingletonIfAbsent<HiveService>(
     () => HiveService(keyManager: getIt<HiveKeyManager>()),
   );
-  await getIt<HiveService>().initialize();
   registerLazySingletonIfAbsent<SharedPreferencesMigrationService>(
     () => SharedPreferencesMigrationService(
       hiveService: getIt<HiveService>(),

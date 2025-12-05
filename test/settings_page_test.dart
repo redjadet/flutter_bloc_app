@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
@@ -22,15 +21,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('SettingsPage', () {
-    setUp(() async {
-      await getIt.reset(dispose: true);
-      getIt.registerSingleton<AppInfoRepository>(_InMemoryAppInfoRepository());
-    });
-
-    tearDown(() async {
-      await getIt.reset(dispose: true);
-    });
-
     ThemeCubit createThemeCubit(ThemeRepository repository) {
       final ThemeCubit cubit = ThemeCubit(repository: repository);
       addTearDown(() => cubit.close());
@@ -74,7 +64,9 @@ void main() {
               BlocProvider<LocaleCubit>.value(value: localeCubit),
               BlocProvider<SyncStatusCubit>.value(value: syncCubit),
             ],
-            child: const SettingsPage(),
+            child: SettingsPage(
+              appInfoRepository: _InMemoryAppInfoRepository(),
+            ),
           ),
         ),
       );
@@ -130,7 +122,9 @@ void main() {
               BlocProvider<LocaleCubit>.value(value: localeCubit),
               BlocProvider<SyncStatusCubit>.value(value: syncCubit),
             ],
-            child: const SettingsPage(),
+            child: SettingsPage(
+              appInfoRepository: _InMemoryAppInfoRepository(),
+            ),
           ),
         ),
       );
@@ -159,9 +153,6 @@ void main() {
       final SyncStatusCubit syncCubit = createSyncStatusCubit();
       final _FlakyAppInfoRepository appInfoRepo = _FlakyAppInfoRepository();
 
-      getIt.unregister<AppInfoRepository>();
-      getIt.registerSingleton<AppInfoRepository>(appInfoRepo);
-
       final AppLocalizationsEn en = AppLocalizationsEn();
 
       await tester.pumpWidget(
@@ -175,7 +166,7 @@ void main() {
               BlocProvider<LocaleCubit>.value(value: localeCubit),
               BlocProvider<SyncStatusCubit>.value(value: syncCubit),
             ],
-            child: const SettingsPage(),
+            child: SettingsPage(appInfoRepository: appInfoRepo),
           ),
         ),
       );

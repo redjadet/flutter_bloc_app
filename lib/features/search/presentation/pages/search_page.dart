@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
@@ -17,13 +16,20 @@ import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 
 class SearchPage extends StatelessWidget {
-  const SearchPage({super.key});
+  const SearchPage({
+    required this.repository,
+    required this.timerService,
+    super.key,
+  });
+
+  final SearchRepository repository;
+  final TimerService timerService;
 
   @override
   Widget build(final BuildContext context) => BlocProvider(
     create: (final context) => SearchCubit(
-      repository: getIt<SearchRepository>(),
-      timerService: getIt<TimerService>(),
+      repository: repository,
+      timerService: timerService,
     )..search('dogs'),
     child: const _SearchPageContent(),
   );

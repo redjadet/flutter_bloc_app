@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -13,18 +12,22 @@ import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 
 class CounterSyncBanner extends StatefulWidget {
-  const CounterSyncBanner({required this.l10n, super.key});
+  const CounterSyncBanner({
+    required this.l10n,
+    required this.pendingRepository,
+    required this.counterRepository,
+    super.key,
+  });
 
   final AppLocalizations l10n;
+  final PendingSyncRepository pendingRepository;
+  final CounterRepository counterRepository;
 
   @override
   State<CounterSyncBanner> createState() => _CounterSyncBannerState();
 }
 
 class _CounterSyncBannerState extends State<CounterSyncBanner> {
-  final PendingSyncRepository _pendingRepository =
-      getIt<PendingSyncRepository>();
-  final CounterRepository _counterRepository = getIt<CounterRepository>();
   int _pendingCount = 0;
   DateTime? _lastSyncedAt;
   String? _lastChangeId;
@@ -42,7 +45,7 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
     }
     unawaited(_refreshPendingCount());
     // Listen to counter snapshot changes for real-time lastSyncedAt/changeId updates
-    _counterSubscription = _counterRepository.watch().listen(
+    _counterSubscription = widget.counterRepository.watch().listen(
       (final CounterSnapshot snapshot) {
         if (!mounted) return;
         setState(() {
@@ -60,7 +63,7 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
   }
 
   Future<void> _refreshPendingCount() async {
-    final int count = (await _pendingRepository.getPendingOperations(
+    final int count = (await widget.pendingRepository.getPendingOperations(
       now: DateTime.now().toUtc(),
     )).length;
     if (!mounted) return;

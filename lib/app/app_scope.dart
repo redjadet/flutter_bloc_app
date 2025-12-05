@@ -68,6 +68,8 @@ class AppScope extends StatelessWidget {
       ],
       child: DeepLinkListener(
         router: router,
+        service: getIt<DeepLinkService>(),
+        parser: getIt<DeepLinkParser>(),
         child: ResponsiveScope(
           child: BlocBuilder<LocaleCubit, Locale?>(
             builder: (final context, final locale) =>
