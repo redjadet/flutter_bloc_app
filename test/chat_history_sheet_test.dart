@@ -116,6 +116,57 @@ void main() {
     // No additional close callback for delete path.
     expect(closeCount, 3);
   });
+
+  testWidgets('preselects active conversation only when messages exist', (
+    WidgetTester tester,
+  ) async {
+    final ChatConversation conversationWithMessages = ChatConversation(
+      id: 'conversation-1',
+      messages: const <ChatMessage>[
+        ChatMessage(author: ChatAuthor.user, text: 'Hi'),
+      ],
+      pastUserInputs: const <String>['Hi'],
+      generatedResponses: const <String>['Hello'],
+      createdAt: DateTime(2024, 1, 1),
+      updatedAt: DateTime(2024, 1, 1, 0, 1),
+    );
+
+    final ChatState withMessagesState = ChatState(
+      history: <ChatConversation>[conversationWithMessages],
+      activeConversationId: conversationWithMessages.id,
+      messages: conversationWithMessages.messages,
+      status: ViewStatus.success,
+    );
+
+    final _StubChatCubit cubitWithMessages = _StubChatCubit(withMessagesState);
+    addTearDown(cubitWithMessages.close);
+
+    await tester.pumpWidget(_buildSheet(cubitWithMessages, onClose: () {}));
+    await tester.pump();
+
+    ListTile tile = tester.widget<ListTile>(find.byType(ListTile));
+    expect(tile.selected, isTrue);
+    expect(find.byIcon(Icons.check_circle), findsOneWidget);
+
+    // Now seed a state with no messages (e.g., initial load) and verify nothing is selected.
+    final ChatConversation conversationNoMessages = conversationWithMessages
+        .copyWith(messages: const <ChatMessage>[]);
+    final ChatState withoutMessagesState = ChatState(
+      history: <ChatConversation>[conversationNoMessages],
+      activeConversationId: conversationNoMessages.id,
+      messages: const <ChatMessage>[],
+      status: ViewStatus.success,
+    );
+    final _StubChatCubit cubitNoMessages = _StubChatCubit(withoutMessagesState);
+    addTearDown(cubitNoMessages.close);
+
+    await tester.pumpWidget(_buildSheet(cubitNoMessages, onClose: () {}));
+    await tester.pump();
+
+    tile = tester.widget<ListTile>(find.byType(ListTile));
+    expect(tile.selected, isFalse);
+    expect(find.byIcon(Icons.check_circle), findsNothing);
+  });
 }
 
 Widget _buildSheet(ChatCubit cubit, {required VoidCallback onClose}) {

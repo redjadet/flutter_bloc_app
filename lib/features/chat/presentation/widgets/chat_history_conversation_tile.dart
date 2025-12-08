@@ -45,6 +45,13 @@ class ChatHistoryConversationTile extends StatelessWidget {
         : theme.colorScheme.onSurface;
 
     return ListTile(
+      leading: isActive
+          ? Icon(
+              Icons.check_circle,
+              color: theme.colorScheme.primary,
+            )
+          : null,
+      selected: isActive,
       onTap: () async {
         await cubit.selectConversation(conversation.id);
         onClose();

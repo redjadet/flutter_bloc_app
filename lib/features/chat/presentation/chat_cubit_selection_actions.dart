@@ -26,18 +26,22 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
   }
 
   Future<void> selectConversation(final String conversationId) async {
-    if (state.activeConversationId == conversationId) {
+    if (state.activeConversationId == conversationId &&
+        state.messages.isNotEmpty) {
       return;
     }
 
     List<ChatConversation> targetHistory = state.history;
 
+    ChatConversation? conversation;
     final _LoadedConversation? loaded = await _loadConversationFromRepository(
       conversationId,
       existingHistory: targetHistory,
     );
-    ChatConversation? conversation = loaded?.conversation;
-    targetHistory = loaded?.history ?? targetHistory;
+    if (loaded != null) {
+      conversation = loaded.conversation;
+      targetHistory = loaded.history;
+    }
 
     conversation ??= _conversationById(targetHistory, conversationId);
     if (conversation == null) {
@@ -76,6 +80,20 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
       }
     }
 
+    // Keep the selected conversation (potentially hydrated) in memory so subsequent
+    // selections and UI rebuilds use the full copy with messages.
+    targetHistory = _replaceConversation(conversation, history: targetHistory);
+
+    // If messages are missing but transcripts exist (legacy persisted data),
+    // rebuild a minimal message timeline so the UI shows prior content.
+    if (conversation.messages.isEmpty &&
+        (conversation.pastUserInputs.isNotEmpty ||
+            conversation.generatedResponses.isNotEmpty)) {
+      final ChatConversation rebuilt = _rebuildFromTranscripts(conversation);
+      targetHistory = _replaceConversation(rebuilt, history: targetHistory);
+      conversation = rebuilt;
+    }
+
     _emitConversationSnapshot(
       active: conversation,
       history: targetHistory,
@@ -91,8 +109,9 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
   }) async {
     final List<ChatConversation> refreshed = await _historyRepository.load();
     // Use refreshed if available, otherwise fall back to existingHistory
-    final List<ChatConversation> sourceHistory =
-        refreshed.isNotEmpty ? refreshed : existingHistory;
+    final List<ChatConversation> sourceHistory = refreshed.isNotEmpty
+        ? refreshed
+        : existingHistory;
     if (sourceHistory.isEmpty) {
       return null;
     }
@@ -101,6 +120,7 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
       mergedHistory,
       conversationId,
     );
+    // If nothing matches, don't set an active selection.
     if (found == null) {
       return null;
     }
@@ -108,6 +128,35 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
       conversation: found,
       history: mergedHistory,
     );
+  }
+
+  ChatConversation _rebuildFromTranscripts(
+    final ChatConversation conversation,
+  ) {
+    final List<ChatMessage> messages = <ChatMessage>[];
+    final int pairs = conversation.pastUserInputs.length;
+    final int responses = conversation.generatedResponses.length;
+    for (int i = 0; i < pairs; i++) {
+      final String userText = conversation.pastUserInputs[i];
+      messages.add(
+        ChatMessage(
+          author: ChatAuthor.user,
+          text: userText,
+          createdAt: conversation.createdAt.add(Duration(seconds: i * 2)),
+        ),
+      );
+      if (i < responses) {
+        final String reply = conversation.generatedResponses[i];
+        messages.add(
+          ChatMessage(
+            author: ChatAuthor.assistant,
+            text: reply,
+            createdAt: conversation.createdAt.add(Duration(seconds: i * 2 + 1)),
+          ),
+        );
+      }
+    }
+    return conversation.copyWith(messages: messages);
   }
 }
 

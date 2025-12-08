@@ -551,6 +551,40 @@ void main() {
       },
     );
 
+    test(
+      'selectConversation hydrates active conversation when messages are empty',
+      () async {
+        final FakeChatRepository repo = FakeChatRepository();
+        final ChatConversation fullConversation = ChatConversation(
+          id: 'conv-1',
+          messages: const <ChatMessage>[
+            ChatMessage(author: ChatAuthor.user, text: 'Hi'),
+            ChatMessage(author: ChatAuthor.assistant, text: 'Hello'),
+          ],
+          pastUserInputs: const <String>['Hi'],
+          generatedResponses: const <String>['Hello'],
+          createdAt: DateTime(2024, 1, 1, 12, 0),
+          updatedAt: DateTime(2024, 1, 1, 12, 1),
+        );
+        final _HydratingHistoryRepository history = _HydratingHistoryRepository(
+          fullConversation,
+        );
+
+        final ChatCubit cubit = createCubit(
+          repository: repo,
+          historyRepository: history,
+        );
+
+        await cubit.loadHistory();
+        expect(cubit.state.messages, isEmpty);
+
+        await cubit.selectConversation('conv-1');
+
+        expect(cubit.state.messages.length, 2);
+        expect(cubit.state.messages.last.text, 'Hello');
+      },
+    );
+
     group('offline-first integration', () {
       late Directory tempDir;
       late HiveService hiveService;
@@ -757,6 +791,25 @@ class _ThrowingChatHistoryRepository extends FakeChatHistoryRepository {
     }
     await super.save(conversations);
   }
+}
+
+class _HydratingHistoryRepository implements ChatHistoryRepository {
+  _HydratingHistoryRepository(this._full);
+
+  final ChatConversation _full;
+  bool _returnedTrimmed = false;
+
+  @override
+  Future<List<ChatConversation>> load() async {
+    if (_returnedTrimmed) {
+      return <ChatConversation>[_full];
+    }
+    _returnedTrimmed = true;
+    return <ChatConversation>[_full.copyWith(messages: const <ChatMessage>[])];
+  }
+
+  @override
+  Future<void> save(List<ChatConversation> conversations) async {}
 }
 
 class _ErrorChatRepository implements ChatRepository {
