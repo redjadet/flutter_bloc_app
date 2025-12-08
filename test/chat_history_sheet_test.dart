@@ -163,7 +163,7 @@ class _StubChatCubit extends ChatCubit {
   }
 
   @override
-  void selectConversation(String conversationId) {
+  Future<void> selectConversation(String conversationId) async {
     selectedId = conversationId;
   }
 }

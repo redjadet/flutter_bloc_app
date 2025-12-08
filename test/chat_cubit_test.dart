@@ -496,7 +496,7 @@ void main() {
       );
 
       await cubit.loadHistory();
-      cubit.selectConversation('conv-1');
+      await cubit.selectConversation('conv-1');
 
       expect(cubit.state.activeConversationId, 'conv-1');
       expect(cubit.state.currentModel, 'openai/gpt-oss-20b');
@@ -527,7 +527,7 @@ void main() {
 
         await cubit.loadHistory();
         final initialState = cubit.state;
-        cubit.selectConversation('conv-1');
+        await cubit.selectConversation('conv-1');
 
         expect(cubit.state, initialState);
       },
@@ -545,7 +545,7 @@ void main() {
 
         await cubit.loadHistory();
         final initialState = cubit.state;
-        cubit.selectConversation('not-found');
+        await cubit.selectConversation('not-found');
 
         expect(cubit.state, initialState);
       },

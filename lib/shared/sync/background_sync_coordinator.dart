@@ -49,6 +49,7 @@ class BackgroundSyncCoordinator {
   final List<SyncCycleSummary> _history = <SyncCycleSummary>[];
   StreamSubscription<NetworkStatus>? _networkSubscription;
   TimerDisposable? _periodicTimer;
+  Future<void>? _currentSync;
   bool _isRunning = false;
   SyncStatus _currentStatus = SyncStatus.idle;
 
@@ -96,10 +97,18 @@ class BackgroundSyncCoordinator {
       return;
     }
     _isRunning = false;
+    final Future<void>? inFlight = _currentSync;
     _periodicTimer?.dispose();
     _periodicTimer = null;
     await _networkSubscription?.cancel();
     _networkSubscription = null;
+    if (inFlight != null) {
+      try {
+        await inFlight;
+      } on Exception {
+        // Ignore errors from in-flight sync during shutdown
+      }
+    }
     _emit(SyncStatus.idle);
   }
 
@@ -133,8 +142,10 @@ class BackgroundSyncCoordinator {
     if (startedTemporarily) {
       _isRunning = true;
     }
+    final Future<void> syncFuture = _processPendingOperations();
+    _currentSync = syncFuture;
     try {
-      await _processPendingOperations();
+      await syncFuture;
       if (!immediate) {
         _emit(SyncStatus.idle);
       } else if (startedTemporarily) {
@@ -148,6 +159,9 @@ class BackgroundSyncCoordinator {
       );
       _emit(SyncStatus.degraded);
     } finally {
+      if (identical(_currentSync, syncFuture)) {
+        _currentSync = null;
+      }
       if (startedTemporarily) {
         _isRunning = false;
       }

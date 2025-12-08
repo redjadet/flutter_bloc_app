@@ -45,8 +45,8 @@ class ChatHistoryConversationTile extends StatelessWidget {
         : theme.colorScheme.onSurface;
 
     return ListTile(
-      onTap: () {
-        cubit.selectConversation(conversation.id);
+      onTap: () async {
+        await cubit.selectConversation(conversation.id);
         onClose();
       },
       trailing: IconButton(

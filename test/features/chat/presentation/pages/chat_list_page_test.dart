@@ -8,6 +8,8 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart'
 import 'package:flutter_bloc_app/features/chat/presentation/chat_list_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_list_page.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_bottom_navigation_bar.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -30,7 +32,11 @@ void main() {
     });
 
     Widget createWidgetUnderTest() {
-      return MaterialApp(home: ChatListPage(repository: mockRepository));
+      return MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: ChatListPage(repository: mockRepository),
+      );
     }
 
     testWidgets('should display app bar with correct title', (tester) async {
@@ -39,7 +45,10 @@ void main() {
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pumpAndSettle();
 
-      expect(find.text('Chats'), findsOneWidget);
+      expect(
+        find.text(AppLocalizationsEn().chatHistoryPanelTitle),
+        findsOneWidget,
+      );
       expect(find.byType(AppBar), findsOneWidget);
     });
 
@@ -89,6 +98,15 @@ void main() {
       expect(find.text('Jane Smith'), findsOneWidget);
       expect(find.text('Hello there!'), findsOneWidget);
       expect(find.text('How are you?'), findsOneWidget);
+    });
+
+    testWidgets('shows empty state when there are no contacts', (tester) async {
+      when(() => mockRepository.getChatContacts()).thenAnswer((_) async => []);
+
+      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.pumpAndSettle();
+
+      expect(find.text(AppLocalizationsEn().chatHistoryEmpty), findsOneWidget);
     });
 
     testWidgets('should show loading state initially', (tester) async {

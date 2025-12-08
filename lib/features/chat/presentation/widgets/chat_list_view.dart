@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
@@ -35,6 +37,19 @@ class ChatListView extends StatelessWidget {
     List<ChatContact> contacts,
   ) {
     final listPadding = context.responsiveListPadding;
+    if (contacts.isEmpty) {
+      final theme = Theme.of(context);
+      return Center(
+        child: Padding(
+          padding: context.responsiveStatePadding,
+          child: Text(
+            context.l10n.chatHistoryEmpty,
+            style: theme.textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
@@ -91,6 +106,7 @@ class ChatListView extends StatelessWidget {
               final cubit = ChatCubit(
                 repository: getIt<ChatRepository>(),
                 historyRepository: getIt<ChatHistoryRepository>(),
+                initialModel: SecretConfig.huggingfaceModel,
               );
               unawaited(cubit.loadHistory());
               return cubit;
@@ -105,20 +121,21 @@ class ChatListView extends StatelessWidget {
   void _showDeleteDialog(BuildContext context, ChatContact contact) {
     final chatListCubit = context.read<ChatListCubit>();
     final bool isCupertino = PlatformAdaptive.isCupertino(context);
+    final l10n = context.l10n;
     unawaited(
       showAdaptiveDialog<void>(
         context: context,
         builder: (dialogContext) {
           if (isCupertino) {
             return CupertinoAlertDialog(
-              title: const Text('Delete Chat'),
+              title: Text(l10n.chatHistoryDeleteConversation),
               content: Text(
-                'Are you sure you want to delete the chat with ${contact.name}?',
+                l10n.chatHistoryDeleteConversationWarning(contact.name),
               ),
               actions: [
                 CupertinoDialogAction(
                   onPressed: () => NavigationUtils.maybePop(dialogContext),
-                  child: const Text('Cancel'),
+                  child: Text(l10n.cancelButtonLabel),
                 ),
                 CupertinoDialogAction(
                   isDestructiveAction: true,
@@ -126,25 +143,25 @@ class ChatListView extends StatelessWidget {
                     NavigationUtils.maybePop(dialogContext);
                     unawaited(chatListCubit.deleteContact(contact.id));
                   },
-                  child: const Text('Delete'),
+                  child: Text(l10n.deleteButtonLabel),
                 ),
               ],
             );
           }
           return AlertDialog(
-            title: const Text('Delete Chat'),
+            title: Text(l10n.chatHistoryDeleteConversation),
             content: Text(
-              'Are you sure you want to delete the chat with ${contact.name}?',
+              l10n.chatHistoryDeleteConversationWarning(contact.name),
             ),
             actions: [
               PlatformAdaptive.dialogAction(
                 context: dialogContext,
-                label: 'Cancel',
+                label: l10n.cancelButtonLabel,
                 onPressed: () => NavigationUtils.maybePop(dialogContext),
               ),
               PlatformAdaptive.dialogAction(
                 context: dialogContext,
-                label: 'Delete',
+                label: l10n.deleteButtonLabel,
                 isDestructive: true,
                 onPressed: () {
                   NavigationUtils.maybePop(dialogContext);
