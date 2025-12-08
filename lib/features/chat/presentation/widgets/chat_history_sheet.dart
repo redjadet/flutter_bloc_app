@@ -17,14 +17,21 @@ class _HistorySheetData extends Equatable {
     required this.history,
     required this.hasHistory,
     required this.activeConversationId,
+    required this.hasActiveMessages,
   });
 
   final List<ChatConversation> history;
   final bool hasHistory;
   final String? activeConversationId;
+  final bool hasActiveMessages;
 
   @override
-  List<Object?> get props => [history, hasHistory, activeConversationId];
+  List<Object?> get props => [
+    history,
+    hasHistory,
+    activeConversationId,
+    hasActiveMessages,
+  ];
 }
 
 class ChatHistorySheet extends StatelessWidget {
@@ -59,6 +66,7 @@ class ChatHistorySheet extends StatelessWidget {
                       history: state.history,
                       hasHistory: state.hasHistory,
                       activeConversationId: state.activeConversationId,
+                      hasActiveMessages: state.messages.isNotEmpty,
                     ),
                     builder: (final context, final data) {
                       final List<ChatConversation> conversations = data.history;
@@ -129,8 +137,9 @@ class ChatHistorySheet extends StatelessWidget {
                                       final ChatConversation conversation =
                                           conversations[index];
                                       final bool isActive =
+                                          data.hasActiveMessages &&
                                           conversation.id ==
-                                          data.activeConversationId;
+                                              data.activeConversationId;
                                       return ChatHistoryConversationTile(
                                         conversation: conversation,
                                         index: index,
