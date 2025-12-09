@@ -8,6 +8,26 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+class _FailingHiveService extends HiveService {
+  _FailingHiveService({
+    required super.keyManager,
+    required final Set<String> failingBoxes,
+  }) : _failingBoxes = failingBoxes;
+
+  final Set<String> _failingBoxes;
+
+  @override
+  Future<Box<dynamic>> openBox(
+    final String name, {
+    final bool encrypted = true,
+  }) {
+    if (_failingBoxes.contains(name)) {
+      throw Exception('Failed to open box: $name');
+    }
+    return super.openBox(name, encrypted: encrypted);
+  }
+}
+
 void main() {
   group('SharedPreferencesMigrationService', () {
     late Directory testDir;
@@ -256,26 +276,48 @@ void main() {
         expect(settingsBox.get('theme_mode'), isNull);
       });
 
-      test(
-        'marks migration complete when at least one migration succeeds',
-        () async {
-          SharedPreferences.setMockInitialValues(<String, Object>{
-            'last_count': 5,
-          });
+      test('marks migration complete when all migrations succeed', () async {
+        SharedPreferences.setMockInitialValues(<String, Object>{
+          'last_count': 5,
+        });
 
-          final SharedPreferences prefs = await SharedPreferences.getInstance();
-          final SharedPreferencesMigrationService service =
-              SharedPreferencesMigrationService(
-                hiveService: hiveService,
-                sharedPreferences: prefs,
-              );
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        final SharedPreferencesMigrationService service =
+            SharedPreferencesMigrationService(
+              hiveService: hiveService,
+              sharedPreferences: prefs,
+            );
 
-          await service.migrateIfNeeded();
+        await service.migrateIfNeeded();
 
-          final bool completed = await service.isMigrationCompleted();
-          expect(completed, isTrue);
-        },
-      );
+        final bool completed = await service.isMigrationCompleted();
+        expect(completed, isTrue);
+      });
+
+      test('keeps migration pending when any migration step fails', () async {
+        SharedPreferences.setMockInitialValues(<String, Object>{
+          'last_count': 5,
+          'preferred_locale_code': 'en',
+        });
+
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        final SharedPreferencesMigrationService failingService =
+            SharedPreferencesMigrationService(
+              hiveService: _FailingHiveService(
+                keyManager: keyManager,
+                failingBoxes: <String>{'settings'},
+              ),
+              sharedPreferences: prefs,
+            );
+
+        await failingService.migrateIfNeeded();
+
+        final bool completed = await failingService.isMigrationCompleted();
+        expect(completed, isFalse);
+
+        final Box<dynamic> counterBox = await hiveService.openBox('counter');
+        expect(counterBox.get('count'), 5);
+      });
     });
   });
 }

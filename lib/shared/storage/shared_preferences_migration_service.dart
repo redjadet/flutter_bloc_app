@@ -101,9 +101,13 @@ class SharedPreferencesMigrationService {
           );
         }
 
-        // Mark migration as complete only if at least one migration succeeded
-        // This allows retrying failed migrations on next app start
-        if (counterMigrated || localeMigrated || themeMigrated) {
+        final bool allMigrated =
+            counterMigrated && localeMigrated && themeMigrated;
+
+        // Mark migration as complete only if every step finished successfully.
+        // This keeps partially migrated installs eligible for a retry on the
+        // next app start.
+        if (allMigrated) {
           final Box<dynamic> migrationBox = await _hiveService.openBox(
             _migrationBoxName,
             encrypted: false,
@@ -115,7 +119,9 @@ class SharedPreferencesMigrationService {
           );
         } else {
           AppLogger.warning(
-            'All migration steps failed. Migration will be retried on next app start.',
+            'Migration incomplete '
+            '(counter: $counterMigrated, locale: $localeMigrated, theme: $themeMigrated). '
+            'Migration will be retried on next app start.',
           );
         }
       },
