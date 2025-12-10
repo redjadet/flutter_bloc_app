@@ -1,5 +1,6 @@
 import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesThemeRepository implements ThemeRepository {
@@ -14,25 +15,33 @@ class SharedPreferencesThemeRepository implements ThemeRepository {
       : SharedPreferences.getInstance();
 
   @override
-  Future<ThemePreference?> load() async {
-    final SharedPreferences preferences = await _preferences();
-    final String? stored = preferences.getString(_preferencesKey);
-    return switch (stored) {
-      'light' => ThemePreference.light,
-      'dark' => ThemePreference.dark,
-      'system' => ThemePreference.system,
-      _ => null,
-    };
-  }
+  Future<ThemePreference?> load() async => StorageGuard.run<ThemePreference?>(
+    logContext: 'SharedPreferencesThemeRepository.load',
+    action: () async {
+      final SharedPreferences preferences = await _preferences();
+      final String? stored = preferences.getString(_preferencesKey);
+      return switch (stored) {
+        'light' => ThemePreference.light,
+        'dark' => ThemePreference.dark,
+        'system' => ThemePreference.system,
+        _ => null,
+      };
+    },
+    fallback: () => null,
+  );
 
   @override
-  Future<void> save(final ThemePreference mode) async {
-    final SharedPreferences preferences = await _preferences();
-    final String value = switch (mode) {
-      ThemePreference.light => 'light',
-      ThemePreference.dark => 'dark',
-      ThemePreference.system => 'system',
-    };
-    await preferences.setString(_preferencesKey, value);
-  }
+  Future<void> save(final ThemePreference mode) async => StorageGuard.run<void>(
+    logContext: 'SharedPreferencesThemeRepository.save',
+    action: () async {
+      final SharedPreferences preferences = await _preferences();
+      final String value = switch (mode) {
+        ThemePreference.light => 'light',
+        ThemePreference.dark => 'dark',
+        ThemePreference.system => 'system',
+      };
+      await preferences.setString(_preferencesKey, value);
+    },
+    fallback: () {},
+  );
 }

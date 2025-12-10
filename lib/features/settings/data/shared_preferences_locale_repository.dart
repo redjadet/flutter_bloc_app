@@ -1,5 +1,6 @@
 import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesLocaleRepository implements LocaleRepository {
@@ -14,19 +15,27 @@ class SharedPreferencesLocaleRepository implements LocaleRepository {
       : SharedPreferences.getInstance();
 
   @override
-  Future<AppLocale?> load() async {
-    final SharedPreferences preferences = await _preferences();
-    final String? code = preferences.getString(_preferencesKey);
-    return AppLocale.fromTag(code);
-  }
+  Future<AppLocale?> load() async => StorageGuard.run<AppLocale?>(
+    logContext: 'SharedPreferencesLocaleRepository.load',
+    action: () async {
+      final SharedPreferences preferences = await _preferences();
+      final String? code = preferences.getString(_preferencesKey);
+      return AppLocale.fromTag(code);
+    },
+    fallback: () => null,
+  );
 
   @override
-  Future<void> save(final AppLocale? locale) async {
-    final SharedPreferences preferences = await _preferences();
-    if (locale == null) {
-      await preferences.remove(_preferencesKey);
-      return;
-    }
-    await preferences.setString(_preferencesKey, locale.tag);
-  }
+  Future<void> save(final AppLocale? locale) async => StorageGuard.run<void>(
+    logContext: 'SharedPreferencesLocaleRepository.save',
+    action: () async {
+      final SharedPreferences preferences = await _preferences();
+      if (locale == null) {
+        await preferences.remove(_preferencesKey);
+        return;
+      }
+      await preferences.setString(_preferencesKey, locale.tag);
+    },
+    fallback: () {},
+  );
 }
