@@ -136,7 +136,9 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
         model: model,
       );
       // Persist user message before remote call
-      final List<ChatConversation> withUserMessage = index >= 0
+      // Defensive check: ensure index is valid before using sublist
+      final List<ChatConversation> withUserMessage =
+          index >= 0 && index < existing.length
           ? (<ChatConversation>[
               ...existing.sublist(0, index),
               conversation,
@@ -191,7 +193,8 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
       changeId: clientMessageId,
     );
 
-    final List<ChatConversation> merged = index >= 0
+    // Defensive check: ensure index is valid before using sublist
+    final List<ChatConversation> merged = index >= 0 && index < existing.length
         ? (<ChatConversation>[
             ...existing.sublist(0, index),
             updated,

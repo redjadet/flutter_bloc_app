@@ -52,7 +52,13 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
   final List<String> _models;
 
   List<String> get models => _models;
-  String get _currentModel => state.currentModel ?? _models.first;
+  String get _currentModel {
+    if (_models.isEmpty) {
+      // Defensive fallback: should never happen as _buildModelList always adds defaults
+      return 'openai/gpt-oss-20b';
+    }
+    return state.currentModel ?? _models.first;
+  }
 
   @protected
   ChatState get currentState => state;

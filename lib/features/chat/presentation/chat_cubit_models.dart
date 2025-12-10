@@ -30,6 +30,10 @@ String _resolveInitialModel(
   final String? trimmed = _normalize(initialModel);
   if (trimmed != null) return trimmed;
   final List<String> models = _buildModelList(initialModel, supportedModels);
+  // Defensive check: should never be empty as _buildModelList always adds defaults
+  if (models.isEmpty) {
+    return 'openai/gpt-oss-20b';
+  }
   return models.first;
 }
 
