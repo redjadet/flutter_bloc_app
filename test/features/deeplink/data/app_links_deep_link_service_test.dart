@@ -66,6 +66,29 @@ void main() {
       expect(await service.linkStream().isEmpty, isTrue);
     },
   );
+
+  test(
+    'linkStream closes controller when MissingPluginException is thrown during listen setup',
+    () async {
+      final FakeAppLinksApi api = FakeAppLinksApi(
+        throwsOnListen: MissingPluginException(),
+      );
+      final AppLinksDeepLinkService service = AppLinksDeepLinkService(api: api);
+
+      bool isDone = false;
+      service.linkStream().listen(
+        (_) {},
+        onDone: () {
+          isDone = true;
+        },
+      );
+
+      await pumpEventQueue();
+
+      expect(isDone, isTrue);
+      expect(await service.linkStream().isEmpty, isTrue);
+    },
+  );
 }
 
 class FakeAppLinksApi implements AppLinksApi {
@@ -73,15 +96,22 @@ class FakeAppLinksApi implements AppLinksApi {
     Stream<Uri?>? uriStream,
     this.initialUri,
     this.initialUriError,
+    this.throwsOnListen,
   }) : _uriStream = uriStream ?? const Stream<Uri?>.empty();
 
   final Stream<Uri?> _uriStream;
 
   final Uri? initialUri;
   final Object? initialUriError;
+  final Object? throwsOnListen;
 
   @override
-  Stream<Uri?> get uriLinkStream => _uriStream;
+  Stream<Uri?> get uriLinkStream {
+    if (throwsOnListen != null) {
+      throw throwsOnListen!;
+    }
+    return _uriStream;
+  }
 
   @override
   Future<Uri?> getInitialUri() {

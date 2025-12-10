@@ -427,6 +427,37 @@ void main() {
         CounterState.defaultCountdownSeconds,
       );
     });
+
+    test('countdown ticker does not emit after cubit is closed', () async {
+      final fakeTimer = FakeTimerService();
+      final CounterCubit cubit = createCubit(timerService: fakeTimer);
+
+      // Increment to start the countdown ticker
+      await cubit.increment();
+      expect(cubit.state.count, 1);
+      expect(
+        cubit.state.countdownSeconds,
+        CounterState.defaultCountdownSeconds,
+      );
+
+      // Record the state before closing
+      final int countdownBeforeClose = cubit.state.countdownSeconds;
+      final int countBeforeClose = cubit.state.count;
+
+      // Close the cubit
+      await cubit.close();
+      expect(cubit.isClosed, isTrue);
+
+      // Tick multiple times - should not emit since cubit is closed
+      // The isClosed check in _emitCountdown prevents emit-after-close errors
+      fakeTimer.tick(10);
+
+      // Verify cubit is still closed and state is accessible (not corrupted)
+      expect(cubit.isClosed, isTrue);
+      // State should be accessible after close (cubit maintains last state)
+      expect(cubit.state.countdownSeconds, countdownBeforeClose);
+      expect(cubit.state.count, countBeforeClose);
+    });
   });
 }
 
