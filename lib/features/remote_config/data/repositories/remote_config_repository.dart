@@ -16,6 +16,7 @@ class RemoteConfigRepository implements RemoteConfigService {
   final FirebaseRemoteConfig _remoteConfig;
   final void Function(String message) _logDebug;
 
+  // ignore: cancel_subscriptions - Subscription is properly cancelled in dispose() method
   StreamSubscription<RemoteConfigUpdate>? _configUpdatesSubscription;
   bool _isInitialized = false;
 
@@ -84,8 +85,11 @@ class RemoteConfigRepository implements RemoteConfigService {
   double getDouble(final String key) => _remoteConfig.getDouble(key);
 
   Future<void> dispose() async {
-    await _configUpdatesSubscription?.cancel();
+    // Nullify reference before canceling to prevent race conditions
+    final StreamSubscription<RemoteConfigUpdate>? subscription =
+        _configUpdatesSubscription;
     _configUpdatesSubscription = null;
+    await subscription?.cancel();
     _isInitialized = false;
   }
 

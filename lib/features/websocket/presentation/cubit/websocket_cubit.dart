@@ -20,7 +20,9 @@ class WebsocketCubit extends Cubit<WebsocketState> {
   }
 
   final WebsocketRepository _repository;
+  // ignore: cancel_subscriptions - Subscription is properly cancelled in close() method
   StreamSubscription<WebsocketConnectionState>? _statusSubscription;
+  // ignore: cancel_subscriptions - Subscription is properly cancelled in close() method
   StreamSubscription<WebsocketMessage>? _messageSubscription;
 
   Future<void> connect() async {
@@ -100,8 +102,16 @@ class WebsocketCubit extends Cubit<WebsocketState> {
 
   @override
   Future<void> close() async {
-    await _statusSubscription?.cancel();
-    await _messageSubscription?.cancel();
+    // Nullify references before canceling to prevent race conditions
+    final StreamSubscription<WebsocketConnectionState>? statusSub =
+        _statusSubscription;
+    _statusSubscription = null;
+    final StreamSubscription<WebsocketMessage>? messageSub =
+        _messageSubscription;
+    _messageSubscription = null;
+
+    await statusSub?.cancel();
+    await messageSub?.cancel();
     await _repository.disconnect();
     return super.close();
   }
