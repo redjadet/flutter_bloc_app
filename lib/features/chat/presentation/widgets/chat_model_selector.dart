@@ -20,6 +20,10 @@ class ChatModelSelector extends StatelessWidget {
     return BlocSelector<ChatCubit, ChatState, String?>(
       selector: (final state) => state.currentModel,
       builder: (final context, final currentModel) {
+        // Defensive check: ensure models list is not empty
+        if (models.isEmpty) {
+          return const SizedBox.shrink();
+        }
         final String effectiveModel = currentModel ?? models.first;
 
         if (models.length <= 1) {

@@ -183,6 +183,10 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
     final BuildContext context,
     final _OverflowAction action,
   ) {
+    // Defensive check: ensure overflow items list is not empty
+    if (_overflowItems.isEmpty) {
+      return;
+    }
     final _OverflowItem item = _overflowItems.firstWhere(
       (final entry) => entry.action == action,
       orElse: () => _overflowItems.first,

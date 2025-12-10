@@ -8,7 +8,12 @@ bool reachedDecimalLimit(final String buffer, final int scale) {
   if (!buffer.contains('.')) {
     return false;
   }
-  final int decimals = buffer.split('.')[1].length;
+  // Defensive check: ensure split result has enough elements
+  final List<String> parts = buffer.split('.');
+  if (parts.length < 2) {
+    return false;
+  }
+  final int decimals = parts[1].length;
   return decimals >= scale;
 }
 
@@ -43,7 +48,8 @@ CalculatorState toggleSignState(
 ) {
   final double value = calculator.parseCurrency(current.display);
   if (value == 0) {
-    if (current.display.startsWith('-')) {
+    // Defensive check: ensure display is not empty before substring
+    if (current.display.isNotEmpty && current.display.startsWith('-')) {
       return current.copyWith(display: current.display.substring(1));
     }
     return current;

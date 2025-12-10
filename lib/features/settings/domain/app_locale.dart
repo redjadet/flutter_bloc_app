@@ -22,6 +22,10 @@ class AppLocale extends Equatable {
     if (parts.length == 1) {
       return AppLocale(languageCode: parts.first);
     }
+    // Defensive check: ensure parts[1] exists before accessing
+    if (parts.length < 2) {
+      return AppLocale(languageCode: parts.first);
+    }
     return AppLocale(languageCode: parts.first, countryCode: parts[1]);
   }
 

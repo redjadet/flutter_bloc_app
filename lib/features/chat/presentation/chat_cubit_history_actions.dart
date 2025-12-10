@@ -90,6 +90,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
       return;
     }
 
+    // History is guaranteed to be non-empty here due to early return above
     final ChatConversation desiredActive =
         state.activeConversationId == conversationId
         ? history.first
