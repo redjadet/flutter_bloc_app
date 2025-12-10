@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/calculator/calculator.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/calculator_error.dart';
+import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_cubit_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -371,4 +372,17 @@ void main() {
       CalculatorState(display: '5', replaceInput: false),
     ],
   );
+
+  group('helpers', () {
+    test('reachedDecimalLimit handles trailing dot safely', () {
+      expect(reachedDecimalLimit('123.', calculator.scale), isFalse);
+    });
+
+    test('toggleSignState handles lone minus display without throwing', () {
+      const CalculatorState current = CalculatorState(display: '-');
+      final CalculatorState next = toggleSignState(current, calculator);
+      expect(next.display, '');
+      expect(next.replaceInput, isTrue);
+    });
+  });
 }
