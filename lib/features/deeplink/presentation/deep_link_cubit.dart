@@ -19,6 +19,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState> {
   final DeepLinkService _service;
   final DeepLinkParser _parser;
 
+  // ignore: cancel_subscriptions - Subscription is properly cancelled in close() method
   StreamSubscription<Uri>? _subscription;
   bool _initialized = false;
   bool _isInitializing = false;
@@ -112,8 +113,10 @@ class DeepLinkCubit extends Cubit<DeepLinkState> {
   }
 
   Future<void> _disposeSubscription() async {
-    await _subscription?.cancel();
+    // Nullify reference before canceling to prevent race conditions
+    final StreamSubscription<Uri>? subscription = _subscription;
     _subscription = null;
+    await subscription?.cancel();
   }
 
   void _logFailureTelemetry(final Object error) {

@@ -91,8 +91,11 @@ class SyncStatusCubit extends Cubit<SyncStatusState> {
 
   final NetworkStatusService _networkStatusService;
   final BackgroundSyncCoordinator _coordinator;
+  // ignore: cancel_subscriptions - Subscriptions are properly cancelled in close() method
   StreamSubscription<NetworkStatus>? _networkSubscription;
+  // ignore: cancel_subscriptions - Subscriptions are properly cancelled in close() method
   StreamSubscription<SyncStatus>? _syncSubscription;
+  // ignore: cancel_subscriptions - Subscriptions are properly cancelled in close() method
   StreamSubscription<SyncCycleSummary>? _summarySubscription;
 
   Future<void> _seedInitialStatus() async {
@@ -113,9 +116,18 @@ class SyncStatusCubit extends Cubit<SyncStatusState> {
 
   @override
   Future<void> close() async {
-    await _networkSubscription?.cancel();
-    await _syncSubscription?.cancel();
-    await _summarySubscription?.cancel();
+    // Nullify references before canceling to prevent race conditions
+    final StreamSubscription<NetworkStatus>? networkSub = _networkSubscription;
+    _networkSubscription = null;
+    final StreamSubscription<SyncStatus>? syncSub = _syncSubscription;
+    _syncSubscription = null;
+    final StreamSubscription<SyncCycleSummary>? summarySub =
+        _summarySubscription;
+    _summarySubscription = null;
+
+    await networkSub?.cancel();
+    await syncSub?.cancel();
+    await summarySub?.cancel();
     return super.close();
   }
 }
