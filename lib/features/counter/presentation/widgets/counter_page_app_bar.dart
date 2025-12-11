@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_page_app_bar_helpers.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
@@ -19,26 +20,36 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback onOpenSettings;
   static const String _moreTooltip = 'More';
-  static final List<_OverflowItem> _overflowItems = <_OverflowItem>[
-    _OverflowItem(
-      action: _OverflowAction.charts,
+  static final List<OverflowItem> _overflowItems = <OverflowItem>[
+    OverflowItem(
+      action: OverflowAction.charts,
       routeName: AppRoutes.charts,
       labelBuilder: (final l10n) => l10n.openChartsTooltip,
     ),
-    _OverflowItem(
-      action: _OverflowAction.graphql,
+    OverflowItem(
+      action: OverflowAction.graphql,
       routeName: AppRoutes.graphql,
       labelBuilder: (final l10n) => l10n.openGraphqlTooltip,
     ),
-    _OverflowItem(
-      action: _OverflowAction.chat,
+    OverflowItem(
+      action: OverflowAction.chat,
       routeName: AppRoutes.chat,
       labelBuilder: (final l10n) => l10n.openChatTooltip,
     ),
-    _OverflowItem(
-      action: _OverflowAction.googleMaps,
+    OverflowItem(
+      action: OverflowAction.googleMaps,
       routeName: AppRoutes.googleMaps,
       labelBuilder: (final l10n) => l10n.openGoogleMapsTooltip,
+    ),
+    OverflowItem(
+      action: OverflowAction.whiteboard,
+      routeName: AppRoutes.whiteboard,
+      labelBuilder: (final l10n) => l10n.openWhiteboardTooltip,
+    ),
+    OverflowItem(
+      action: OverflowAction.markdownEditor,
+      routeName: AppRoutes.markdownEditor,
+      labelBuilder: (final l10n) => l10n.openMarkdownEditorTooltip,
     ),
   ];
 
@@ -83,7 +94,7 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
         onPressed: onOpenSettings,
         icon: const Icon(Icons.settings),
       ),
-      PopupMenuButton<_OverflowAction>(
+      PopupMenuButton<OverflowAction>(
         tooltip: _moreTooltip,
         onSelected: (final action) => _handleOverflowSelection(
           context,
@@ -91,7 +102,7 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         itemBuilder: (final context) => _overflowItems
             .map(
-              (final item) => PopupMenuItem<_OverflowAction>(
+              (final item) => PopupMenuItem<OverflowAction>(
                 value: item.action,
                 child: Text(item.labelBuilder(l10n)),
               ),
@@ -125,22 +136,22 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _CupertinoIconButton(
+          CupertinoIconButton(
             icon: CupertinoIcons.money_dollar,
             onPressed: () => context.pushNamed(AppRoutes.calculator),
             tooltip: l10n.openCalculatorTooltip,
           ),
-          _CupertinoIconButton(
+          CupertinoIconButton(
             icon: CupertinoIcons.compass,
             onPressed: () => context.pushNamed(AppRoutes.example),
             tooltip: l10n.openExampleTooltip,
           ),
-          _CupertinoIconButton(
+          CupertinoIconButton(
             icon: CupertinoIcons.settings,
             onPressed: onOpenSettings,
             tooltip: l10n.openSettingsTooltip,
           ),
-          _CupertinoIconButton(
+          CupertinoIconButton(
             icon: CupertinoIcons.ellipsis_vertical,
             onPressed: () => _showOverflowSheet(context, l10n),
             tooltip: _moreTooltip,
@@ -181,13 +192,13 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   void _handleOverflowSelection(
     final BuildContext context,
-    final _OverflowAction action,
+    final OverflowAction action,
   ) {
     // Defensive check: ensure overflow items list is not empty
     if (_overflowItems.isEmpty) {
       return;
     }
-    final _OverflowItem item = _overflowItems.firstWhere(
+    final OverflowItem item = _overflowItems.firstWhere(
       (final entry) => entry.action == action,
       orElse: () => _overflowItems.first,
     );
@@ -196,7 +207,7 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   void _navigateToOverflowItem(
     final BuildContext context,
-    final _OverflowItem item,
+    final OverflowItem item,
   ) {
     if (!context.mounted) {
       ContextUtils.logNotMounted(
@@ -209,40 +220,4 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   bool _isCupertinoPlatform(final TargetPlatform platform) =>
       platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
-}
-
-enum _OverflowAction { charts, graphql, chat, googleMaps }
-
-class _OverflowItem {
-  const _OverflowItem({
-    required this.action,
-    required this.routeName,
-    required this.labelBuilder,
-  });
-
-  final _OverflowAction action;
-  final String routeName;
-  final String Function(AppLocalizations l10n) labelBuilder;
-}
-
-class _CupertinoIconButton extends StatelessWidget {
-  const _CupertinoIconButton({
-    required this.icon,
-    required this.onPressed,
-    required this.tooltip,
-  });
-
-  final IconData icon;
-  final VoidCallback onPressed;
-  final String tooltip;
-
-  @override
-  Widget build(final BuildContext context) => Tooltip(
-    message: tooltip,
-    child: CupertinoButton(
-      padding: EdgeInsets.zero,
-      onPressed: onPressed,
-      child: Icon(icon, size: 22),
-    ),
-  );
 }

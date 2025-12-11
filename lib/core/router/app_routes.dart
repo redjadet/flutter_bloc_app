@@ -53,4 +53,10 @@ class AppRoutes {
 
   static const loggedOut = 'logged-out';
   static const loggedOutPath = '/logged-out';
+
+  static const whiteboard = 'whiteboard';
+  static const whiteboardPath = '/whiteboard';
+
+  static const markdownEditor = 'markdown-editor';
+  static const markdownEditorPath = '/markdown-editor';
 }

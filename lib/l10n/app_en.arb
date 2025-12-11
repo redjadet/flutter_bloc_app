@@ -576,6 +576,14 @@
   "@openGoogleMapsTooltip": {
     "description": "Tooltip for navigating to the Google/Apple Maps sample page"
   },
+  "openWhiteboardTooltip": "Open Whiteboard",
+  "@openWhiteboardTooltip": {
+    "description": "Tooltip for navigating to the Whiteboard feature"
+  },
+  "openMarkdownEditorTooltip": "Open Markdown Editor",
+  "@openMarkdownEditorTooltip": {
+    "description": "Tooltip for navigating to the Markdown Editor feature"
+  },
   "chatPageTitle": "AI Chat",
   "@chatPageTitle": {
     "description": "Title for the AI chat page"

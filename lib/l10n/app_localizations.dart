@@ -872,6 +872,18 @@ abstract class AppLocalizations {
   /// **'Open Google/Apple Maps demo'**
   String get openGoogleMapsTooltip;
 
+  /// Tooltip for navigating to the Whiteboard feature
+  ///
+  /// In en, this message translates to:
+  /// **'Open Whiteboard'**
+  String get openWhiteboardTooltip;
+
+  /// Tooltip for navigating to the Markdown Editor feature
+  ///
+  /// In en, this message translates to:
+  /// **'Open Markdown Editor'**
+  String get openMarkdownEditorTooltip;
+
   /// Title for the AI chat page
   ///
   /// In en, this message translates to:

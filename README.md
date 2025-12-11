@@ -22,6 +22,7 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 | **Secure Storage** | AES-256 encrypted Hive boxes, keychain-kept secrets, migration helpers |
 | **Offline-First** | Complete offline-first implementation with background sync, pending operations queue, and cache-first strategies across all core features |
 | **Responsive UI** | Material 3 + Cupertino adaptive widgets, responsive spacing helpers, reusable layout primitives |
+| **Low-Level Rendering** | Custom `CustomPainter` for whiteboard drawing and custom `RenderObject` for markdown text layout |
 | **Quality Bar** | 86.53% test coverage (8116/9379 lines) across unit/bloc/widget/golden suites, automated linting, common bug checklist |
 | **Cloud Integrations** | Firebase Auth, Remote Config, analytics hooks, Firestore/REST/GraphQL/WebSocket demos |
 | **Internationalization** | Five fully-localized locales (EN, TR, DE, FR, ES) with automated ARB generation |
@@ -53,6 +54,7 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 - **Loading States** - Skeleton screens, shimmer effects, and smooth transitions
 - **Image Caching** - Automatic remote image caching with `CachedNetworkImageWidget`
 - **Accessibility** - Semantic widgets and overflow guards
+- **Low-Level Rendering** - Custom `CustomPainter` for canvas drawing and custom `RenderObject` for advanced text layout
 
 ### Authentication & Security
 
@@ -94,6 +96,29 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 - **Tax & Tip Presets** - Quick percentage calculations
 - **Payment Summary** - Dedicated summary screen with breakdown
 
+### Advanced UI Features
+
+- **Whiteboard** - Interactive drawing canvas using `CustomPainter` for low-level rendering
+  - Touch/pointer drawing with smooth stroke rendering using quadratic bezier curves
+  - Multiple colors with color picker dialog (`flex_color_picker`)
+  - Adjustable stroke widths (1-20px) with preset buttons (Thin, Medium, Thick, Extra)
+  - Visual width preview showing current stroke size and color
+  - Undo/redo functionality with immediate visual updates
+  - Clear all strokes with confirmation
+  - Responsive toolbar with tooltips and Material 3 styling
+  - Efficient repainting with `RepaintBoundary` and optimized `shouldRepaint` logic
+- **Markdown Editor** - Rich text editor with live preview using custom `RenderObject`
+  - Real-time markdown parsing and syntax highlighting
+  - Custom `RenderBox` subclass (`MarkdownRenderObject`) for efficient text layout
+  - Support for headers (H1-H6), bold, italic, inline code, code blocks, lists, and blockquotes
+  - GitHub Flavored Markdown support via `markdown` package
+  - Formatting toolbar with quick insert buttons (header, bold, italic, code, code block)
+  - Split view: editor (`TextField`) and live preview (`RenderObject`)
+  - Proper handling of unbounded constraints in scrollable contexts
+  - Responsive design with proper text direction handling
+
+**Access**: Open the Whiteboard and Markdown Editor from the Home page overflow menu/action sheet alongside Charts, GraphQL, Chat, and Google/Apple Maps.
+
 ### Deep Links & Navigation
 
 - **Universal Links** - `https://links.flutterbloc.app/...` routes
@@ -128,6 +153,10 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 | Payment Calculator | Payment Summary | Register |
 | --- | --- | --- |
 | ![Payment calculator screen](assets/screenshots/calculator.png) | ![Payment summary screen](assets/screenshots/paymentSummary.png) | ![Register screen](assets/screenshots/register.png) |
+
+| Whiteboard | Markdown Editor | Color Picker |
+| --- | --- | --- |
+| ![Whiteboard](assets/screenshots/whiteboard.png) | ![Markdown Editor](assets/screenshots/markdown_editor.png) | ![Whiteboard color picker](assets/screenshots/whiteboard_color_pick.png) |
 
 ---
 
@@ -273,7 +302,7 @@ flowchart LR
 ### Key Principles
 
 - **Clean Architecture pipeline** - Domain contracts, data repositories (Hive, Firebase, GraphQL), and presentation widgets remain isolated; use cases live in Dart-only modules and state flows through immutable `freezed` states.
-- **Presentation quality** - Widgets rely on responsive extensions (`responsiveGap*`, `pagePadding`, `responsiveFontSize`) and `PlatformAdaptive` builders instead of raw Material buttons, with `BlocSelector`/`RepaintBoundary` to minimize rebuilds.
+- **Presentation quality** - Widgets rely on responsive extensions (`responsiveGap*`, `pagePadding`, `responsiveFontSize`) and `PlatformAdaptive` builders instead of raw Material buttons, with `BlocSelector`/`RepaintBoundary` to minimize rebuilds. Advanced UI features demonstrate low-level Flutter rendering: `CustomPainter` for canvas drawing (whiteboard) and custom `RenderObject` for text layout (markdown editor).
 - **Dependency Injection** - `get_it` wires widgets, cubits, services, and repositories via `injector.dart`, modular `injector_registrations.dart`, factory helpers, and `injector_helpers.dart` to keep instantiation predictable.
 - **State safety** - Cubits use `CubitStateEmissionMixin`, `CubitExceptionHandler`, and `isClosed` guards; stream/timer/completer cleanup lives in overridden `close()`/`dispose()` paths to prevent leaks and race conditions.
 - **Context & navigation safety** - `ContextUtils.logNotMounted()` plus `NavigationUtils.maybePop()/popOrGoHome()` consolidate lifecycle guards and dialog dismissal so every widget handles async gaps and navigation consistently.
@@ -321,7 +350,7 @@ Shared utilities are treated as first-class participants in every flow: `Context
 
 ### Test Coverage
 
-- **Current Coverage**: 85.82% (8204/9559 lines)
+- **Current Coverage**: 85.44% (8633/10104 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 
@@ -418,6 +447,8 @@ flutter test --update-goldens test/counter_page_golden_test.dart
 - `skeletonizer` ^2.1.0+1 - Skeleton screens
 - `google_fonts` ^6.2.1 - Typography
 - `fl_chart` ^1.1.1 - Charts and graphs
+- `flex_color_picker` ^3.3.0 - Color picker for whiteboard
+- `markdown` ^7.3.0 - Markdown parsing for editor
 
 ### Navigation & Routing
 

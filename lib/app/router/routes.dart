@@ -70,6 +70,16 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
     builder: (final context, final state) => const ExamplePage(),
   ),
   GoRoute(
+    path: AppRoutes.whiteboardPath,
+    name: AppRoutes.whiteboard,
+    builder: (final context, final state) => const WhiteboardPage(),
+  ),
+  GoRoute(
+    path: AppRoutes.markdownEditorPath,
+    name: AppRoutes.markdownEditor,
+    builder: (final context, final state) => const MarkdownEditorPage(),
+  ),
+  GoRoute(
     path: AppRoutes.graphqlPath,
     name: AppRoutes.graphql,
     builder: (final context, final state) =>

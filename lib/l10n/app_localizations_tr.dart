@@ -429,6 +429,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get openGoogleMapsTooltip => 'Google Haritalar demosunu aç';
 
   @override
+  String get openWhiteboardTooltip => 'Open Whiteboard';
+
+  @override
+  String get openMarkdownEditorTooltip => 'Open Markdown Editor';
+
+  @override
   String get chatPageTitle => 'Yapay Zekâ Sohbeti';
 
   @override
