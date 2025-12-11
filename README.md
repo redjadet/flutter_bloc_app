@@ -156,7 +156,7 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 
 | Whiteboard | Markdown Editor | Color Picker |
 | --- | --- | --- |
-| ![Whiteboard](assets/screenshots/whiteboard.png) | ![Markdown Editor](assets/screenshots/markdown_editor.png) | ![Whiteboard color picker](assets/screenshots/whiteboard_color_pick.png) |
+| ![Whiteboard color picker](assets/screenshots/whiteboard_color_pick.png) | ![Whiteboard](assets/screenshots/whiteboard.png) | ![Markdown Editor](assets/screenshots/markdown_editor.png) |
 
 ---
 
