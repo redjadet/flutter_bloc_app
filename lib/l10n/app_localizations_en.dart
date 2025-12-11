@@ -422,6 +422,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openGoogleMapsTooltip => 'Open Google/Apple Maps demo';
 
   @override
+  String get openWhiteboardTooltip => 'Open Whiteboard';
+
+  @override
+  String get openMarkdownEditorTooltip => 'Open Markdown Editor';
+
+  @override
   String get chatPageTitle => 'AI Chat';
 
   @override

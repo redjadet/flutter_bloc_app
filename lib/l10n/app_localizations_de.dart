@@ -433,6 +433,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get openGoogleMapsTooltip => 'Google-Maps-Demo öffnen';
 
   @override
+  String get openWhiteboardTooltip => 'Open Whiteboard';
+
+  @override
+  String get openMarkdownEditorTooltip => 'Open Markdown Editor';
+
+  @override
   String get chatPageTitle => 'KI-Chat';
 
   @override

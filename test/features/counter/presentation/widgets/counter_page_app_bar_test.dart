@@ -69,6 +69,18 @@ void main() {
               builder: (context, state) =>
                   const Scaffold(body: Text('Google Maps Page')),
             ),
+            GoRoute(
+              path: AppRoutes.whiteboardPath,
+              name: AppRoutes.whiteboard,
+              builder: (context, state) =>
+                  const Scaffold(body: Text('Whiteboard Page')),
+            ),
+            GoRoute(
+              path: AppRoutes.markdownEditorPath,
+              name: AppRoutes.markdownEditor,
+              builder: (context, state) =>
+                  const Scaffold(body: Text('Markdown Editor Page')),
+            ),
           ],
         ),
       );
