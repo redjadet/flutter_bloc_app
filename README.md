@@ -2,8 +2,8 @@
 
 A production-ready Flutter application demonstrating enterprise-grade architecture patterns, secure data persistence, and modern mobile development best practices.
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.38.4-blue.svg)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/Dart-3.10.3-blue.svg)](https://dart.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.38.5-blue.svg)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.10.4-blue.svg)](https://dart.dev)
 [![Coverage](https://img.shields.io/badge/Coverage-86%2E53%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs)
@@ -128,7 +128,7 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 ### Developer Experience
 
 - **Performance Profiling** - Built-in widget rebuild tracking, frame analysis overlays, and `PerformanceProfiler`
-- **Custom Linting** - File length + responsive spacing rules enforced by the Dart 3.10.3 analyzer plugin
+- **Custom Linting** - File length + responsive spacing rules enforced by the Dart 3.10.4 analyzer plugin
 - **Automated Testing** - Comprehensive unit/bloc/widget/golden suites surfaced through `./bin/checklist`
 - **CI/CD Ready** - Fastlane scripts, Firebase app distribution hooks, and per-environment configurations
 - **Common Bugs Checklist** - Context lifecycle, cubit disposal, and async guardrails outlined in `docs/new_developer_guide.md`
@@ -164,8 +164,8 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 
 ### Prerequisites
 
-- Flutter 3.38.4 or higher
-- Dart 3.10.3 or higher
+- Flutter 3.38.5 or higher
+- Dart 3.10.4 or higher
 - iOS 12+ / Android API 21+
 - Xcode 14+ (for iOS development)
 - Android Studio / VS Code with Flutter extensions
@@ -350,7 +350,7 @@ Shared utilities are treated as first-class participants in every flow: `Context
 
 ### Test Coverage
 
-- **Current Coverage**: 85.44% (8633/10104 lines)
+- **Current Coverage**: 85.45% (8634/10104 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 
@@ -406,7 +406,7 @@ flutter test --update-goldens test/counter_page_golden_test.dart
 
 ### Core Framework
 
-- **Flutter** 3.38.4 (Dart 3.10.3)
+- **Flutter** 3.38.5 (Dart 3.10.4)
 - **Material 3** with `ColorScheme.fromSeed`
 - **Cupertino** widgets for iOS-native feel
 
