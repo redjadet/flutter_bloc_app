@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/shared/responsive/responsive.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:go_router/go_router.dart';
 
 class AppScope extends StatelessWidget {
@@ -31,39 +32,27 @@ class AppScope extends StatelessWidget {
             coordinator: syncCoordinator,
           ),
         ),
-        BlocProvider(
-          create: (_) {
-            final cubit = CounterCubit(
-              repository: getIt<CounterRepository>(),
-              timerService: getIt(),
-              loadDelay: FlavorManager.I.isDev
-                  ? AppConstants.devSkeletonDelay
-                  : Duration.zero,
-            );
-            unawaited(cubit.loadInitial());
-            return cubit;
-          },
+        BlocProviderHelpers.providerWithAsyncInit<CounterCubit>(
+          create: () => CounterCubit(
+            repository: getIt<CounterRepository>(),
+            timerService: getIt(),
+            loadDelay: FlavorManager.I.isDev
+                ? AppConstants.devSkeletonDelay
+                : Duration.zero,
+          ),
+          init: (cubit) => cubit.loadInitial(),
         ),
-        BlocProvider(
-          create: (_) {
-            final cubit = LocaleCubit(repository: getIt<LocaleRepository>());
-            unawaited(cubit.loadInitial());
-            return cubit;
-          },
+        BlocProviderHelpers.providerWithAsyncInit<LocaleCubit>(
+          create: () => LocaleCubit(repository: getIt<LocaleRepository>()),
+          init: (cubit) => cubit.loadInitial(),
         ),
-        BlocProvider(
-          create: (_) {
-            final cubit = ThemeCubit(repository: getIt<ThemeRepository>());
-            unawaited(cubit.loadInitial());
-            return cubit;
-          },
+        BlocProviderHelpers.providerWithAsyncInit<ThemeCubit>(
+          create: () => ThemeCubit(repository: getIt<ThemeRepository>()),
+          init: (cubit) => cubit.loadInitial(),
         ),
-        BlocProvider(
-          create: (_) {
-            final cubit = getIt<RemoteConfigCubit>();
-            unawaited(cubit.initialize());
-            return cubit;
-          },
+        BlocProviderHelpers.providerWithAsyncInit<RemoteConfigCubit>(
+          create: () => getIt<RemoteConfigCubit>(),
+          init: (cubit) => cubit.initialize(),
         ),
       ],
       child: DeepLinkListener(

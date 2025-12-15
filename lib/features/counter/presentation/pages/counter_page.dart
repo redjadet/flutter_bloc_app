@@ -235,21 +235,7 @@ class _CounterContent extends StatelessWidget {
       SizedBox(height: context.responsiveGapM),
       const AwesomeFeatureWidget(),
       SizedBox(height: context.responsiveGapM),
-      BlocSelector<CounterCubit, CounterState, bool>(
-        selector: (final state) => state.count == 0,
-        builder: (final context, final showHint) {
-          if (!showHint) {
-            return const SizedBox.shrink();
-          }
-          return Text(
-            l10n.startAutoHint,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.primary,
-            ),
-            textAlign: TextAlign.center,
-          );
-        },
-      ),
+      const CounterHint(),
     ],
   );
 }

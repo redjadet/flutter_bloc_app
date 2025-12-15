@@ -97,7 +97,7 @@ CounterSnapshot _storeSnapshot(
   final CounterSnapshot normalized = _normalizeSnapshot(repository, snapshot);
   repository
     .._latestSnapshot = normalized
-    .._hasResolvedInitialValue = true;
+    .._initialLoadHelper.markResolved();
   return normalized;
 }
 

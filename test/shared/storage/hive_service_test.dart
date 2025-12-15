@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import '../../test_helpers.dart' as test_helpers;
 
 void main() {
   group('HiveService', () {
@@ -14,10 +13,7 @@ void main() {
 
     setUpAll(() async {
       TestWidgetsFlutterBinding.ensureInitialized();
-      final Directory testDir = Directory.systemTemp.createTempSync(
-        'hive_test_',
-      );
-      Hive.init(testDir.path);
+      await test_helpers.setupHiveForTesting();
     });
 
     setUp(() {

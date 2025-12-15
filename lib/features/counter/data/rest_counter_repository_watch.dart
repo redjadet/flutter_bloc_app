@@ -6,7 +6,7 @@ Stream<CounterSnapshot> _restCounterRepositoryWatch(
   final Stream<CounterSnapshot> sourceStream =
       repository._watchController.stream;
   return Stream<CounterSnapshot>.multi((final multi) {
-    if (repository._hasResolvedInitialValue) {
+    if (repository._initialLoadHelper.hasResolvedInitialValue) {
       multi.add(repository._latestSnapshot);
     }
     final StreamSubscription<CounterSnapshot> subscription = sourceStream
@@ -29,45 +29,30 @@ void _emitSnapshot(
 }
 
 void _triggerInitialLoadIfNeeded(final RestCounterRepository repository) {
-  if (repository._initialLoadCompleter != null) {
-    return;
-  }
-  final Completer<void> completer = Completer<void>();
-  repository._initialLoadCompleter = completer;
-  _startInitialLoad(repository, completer);
-}
-
-void _startInitialLoad(
-  final RestCounterRepository repository,
-  final Completer<void> completer,
-) {
-  Future<void> run() async {
-    try {
-      final CounterSnapshot snapshot = await repository.load();
-      _emitSnapshot(repository, snapshot);
-    } on CounterError catch (error, stackTrace) {
-      AppLogger.error(
-        'RestCounterRepository.initialLoad failed',
-        error,
-        stackTrace,
-      );
-      if (!repository._watchController.isClosed) {
-        repository._watchController.addError(error, stackTrace);
-      }
-    } finally {
-      if (!completer.isCompleted) {
-        completer.complete();
-      }
-      repository._initialLoadCompleter = null;
-    }
-  }
-
-  unawaited(run());
+  unawaited(
+    repository._initialLoadHelper.ensureInitialLoad(
+      load: repository.load,
+      onValue: (final CounterSnapshot snapshot) =>
+          _emitSnapshot(repository, snapshot),
+      onError: (final Object error, final StackTrace stackTrace) {
+        AppLogger.error(
+          'RestCounterRepository.initialLoad failed',
+          error,
+          stackTrace,
+        );
+        if (!repository._watchController.isClosed) {
+          repository._watchController.addError(error, stackTrace);
+        }
+      },
+    ),
+  );
 }
 
 Future<void> _handleWatchCancel(final RestCounterRepository repository) async {
   if (repository._watchController.hasListener) {
     return;
   }
-  repository._hasResolvedInitialValue = false;
+  repository
+    .._latestSnapshot = RestCounterRepository._emptySnapshot
+    .._initialLoadHelper.resetResolution();
 }

@@ -47,4 +47,38 @@ class BlocProviderHelpers {
     },
     child: child,
   );
+
+  /// Creates a BlocProvider with async initialization for use in MultiBlocProvider.
+  ///
+  /// This is a convenience method that returns a BlocProvider directly (without
+  /// wrapping it in a Widget) for use in MultiBlocProvider's providers list.
+  ///
+  /// **When to use:** When you need to add a cubit with async initialization
+  /// to a MultiBlocProvider's providers list.
+  ///
+  /// **Example:**
+  /// ```dart
+  /// MultiBlocProvider(
+  ///   providers: [
+  ///     BlocProviderHelpers.providerWithAsyncInit<CounterCubit>(
+  ///       create: () => CounterCubit(repository: getIt<CounterRepository>()),
+  ///       init: (cubit) => cubit.loadInitial(),
+  ///     ),
+  ///   ],
+  ///   child: MyWidget(),
+  /// )
+  /// ```
+  static BlocProvider<T>
+  providerWithAsyncInit<T extends StateStreamableSource<Object?>>({
+    required final T Function() create,
+    required final Future<void> Function(T cubit) init,
+  }) => BlocProvider<T>(
+    create: (_) {
+      final cubit = create();
+      unawaited(init(cubit));
+      return cubit;
+    },
+    child:
+        const SizedBox.shrink(), // Placeholder child, not used in MultiBlocProvider
+  );
 }

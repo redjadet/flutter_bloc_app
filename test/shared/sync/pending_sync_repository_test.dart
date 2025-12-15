@@ -1,36 +1,26 @@
-import 'dart:io';
-
-import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive/hive.dart';
+import '../../test_helpers.dart' as test_helpers;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  late Directory tempDir;
   late HiveService hiveService;
   late PendingSyncRepository repository;
 
+  setUpAll(() async {
+    await test_helpers.setupHiveForTesting();
+  });
+
   setUp(() async {
-    tempDir = Directory.systemTemp.createTempSync('hive_test_');
-    Hive.init(tempDir.path);
-    final HiveKeyManager keyManager = HiveKeyManager(
-      storage: InMemorySecretStorage(),
-    );
-    hiveService = HiveService(keyManager: keyManager);
-    await hiveService.initialize();
+    hiveService = await test_helpers.createHiveService();
     repository = PendingSyncRepository(hiveService: hiveService);
   });
 
   tearDown(() async {
     await repository.clear();
-    try {
-      await Hive.deleteBoxFromDisk('pending_sync_operations');
-    } catch (_) {}
-    tempDir.deleteSync(recursive: true);
+    await test_helpers.cleanupHiveBoxes(['pending_sync_operations']);
   });
 
   test('enqueue and getPendingOperations returns stored operation', () async {
