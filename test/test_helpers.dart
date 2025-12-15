@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
@@ -18,7 +20,17 @@ import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cub
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
+import 'package:flutter_bloc_app/shared/storage/shared_preferences_migration_service.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -364,4 +376,235 @@ void overrideCounterRepository() {
     getIt.unregister<CounterRepository>();
   }
   getIt.registerSingleton<CounterRepository>(MockCounterRepository());
+}
+
+/// Options for test setup configuration
+class TestSetupOptions {
+  const TestSetupOptions({
+    this.overrideCounterRepository = false,
+    this.setFlavorToProd = false,
+    this.initialSharedPreferencesValues,
+  });
+
+  final bool overrideCounterRepository;
+  final bool setFlavorToProd;
+  final Map<String, Object>? initialSharedPreferencesValues;
+}
+
+/// Sets up Hive for testing. Call this in setUpAll.
+///
+/// Example:
+/// ```dart
+/// setUpAll(() async {
+///   await setupHiveForTesting();
+/// });
+/// ```
+Future<void> setupHiveForTesting() async {
+  final Directory testDir = Directory.systemTemp.createTempSync('hive_test_');
+  Hive.init(testDir.path);
+}
+
+/// Sets up common test dependencies. Call this in setUp.
+///
+/// This function:
+/// - Initializes SharedPreferences mock
+/// - Optionally sets flavor to prod
+/// - Resets GetIt
+/// - Configures dependencies
+/// - Overrides network and sync services
+/// - Optionally overrides counter repository
+/// - Runs migration if needed
+///
+/// Example:
+/// ```dart
+/// setUp(() async {
+///   await setupTestDependencies(
+///     TestSetupOptions(
+///       overrideCounterRepository: true,
+///       setFlavorToProd: true,
+///     ),
+///   );
+/// });
+/// ```
+Future<void> setupTestDependencies([
+  TestSetupOptions options = const TestSetupOptions(),
+]) async {
+  SharedPreferences.setMockInitialValues(
+    options.initialSharedPreferencesValues ?? <String, Object>{},
+  );
+  if (options.setFlavorToProd) {
+    FlavorManager.current = Flavor.prod;
+  }
+  await getIt.reset(dispose: true);
+  await configureDependencies();
+  await overrideNetworkAndSync();
+  if (options.overrideCounterRepository) {
+    overrideCounterRepository();
+  }
+  // Run migration to avoid delays during widget test
+  await getIt<SharedPreferencesMigrationService>().migrateIfNeeded();
+}
+
+/// Tears down test dependencies. Call this in tearDown.
+///
+/// Example:
+/// ```dart
+/// tearDown(() async {
+///   await tearDownTestDependencies();
+/// });
+/// ```
+Future<void> tearDownTestDependencies() async {
+  await getIt.reset(dispose: true);
+}
+
+/// Overrides network and sync services with fake implementations.
+///
+/// This is automatically called by [setupTestDependencies] but can be
+/// called separately if needed.
+Future<void> overrideNetworkAndSync() async {
+  if (getIt.isRegistered<BackgroundSyncCoordinator>()) {
+    getIt.unregister<BackgroundSyncCoordinator>();
+  }
+  if (getIt.isRegistered<PendingSyncRepository>()) {
+    getIt.unregister<PendingSyncRepository>();
+  }
+  if (getIt.isRegistered<NetworkStatusService>()) {
+    getIt.unregister<NetworkStatusService>();
+  }
+
+  getIt.registerLazySingleton<NetworkStatusService>(
+    _FakeNetworkStatusService.new,
+  );
+  getIt.registerLazySingleton<BackgroundSyncCoordinator>(
+    _FakeBackgroundSyncCoordinator.new,
+  );
+  getIt.registerLazySingleton<PendingSyncRepository>(
+    _FakePendingSyncRepository.new,
+  );
+}
+
+class _FakeNetworkStatusService implements NetworkStatusService {
+  @override
+  Stream<NetworkStatus> get statusStream => const Stream<NetworkStatus>.empty();
+
+  @override
+  Future<NetworkStatus> getCurrentStatus() async => NetworkStatus.online;
+
+  @override
+  Future<void> dispose() async {}
+}
+
+class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
+  @override
+  Stream<SyncStatus> get statusStream => const Stream<SyncStatus>.empty();
+
+  @override
+  SyncStatus get currentStatus => SyncStatus.idle;
+
+  @override
+  List<SyncCycleSummary> get history => const <SyncCycleSummary>[];
+
+  @override
+  Stream<SyncCycleSummary> get summaryStream =>
+      const Stream<SyncCycleSummary>.empty();
+
+  @override
+  SyncCycleSummary? get latestSummary => null;
+
+  @override
+  Future<void> start() async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> dispose() async {}
+
+  @override
+  Future<void> flush() async {}
+}
+
+class _FakePendingSyncRepository implements PendingSyncRepository {
+  final List<SyncOperation> _operations = <SyncOperation>[];
+
+  @override
+  String get boxName => 'fake-pending-sync-box';
+
+  @override
+  Future<SyncOperation> enqueue(final SyncOperation operation) async {
+    _operations.add(operation);
+    return operation;
+  }
+
+  @override
+  Future<int> prune({
+    int maxRetryCount = 10,
+    Duration maxAge = const Duration(days: 30),
+  }) async => 0;
+
+  @override
+  Future<List<SyncOperation>> getPendingOperations({
+    DateTime? now,
+    int? limit,
+  }) async => _operations.toList(growable: false);
+
+  @override
+  Future<void> markCompleted(final String operationId) async {}
+
+  @override
+  Future<void> markFailed({
+    required final String operationId,
+    required final DateTime nextRetryAt,
+    final int? retryCount,
+  }) async {}
+
+  @override
+  Future<void> clear() async => _operations.clear();
+
+  @override
+  Future<Box<dynamic>> getBox() =>
+      Future<Box<dynamic>>.error(UnimplementedError('Not used in fake'));
+
+  @override
+  Future<void> safeDeleteKey(final Box<dynamic> box, final String key) async {}
+}
+
+/// Creates a fresh HiveService instance for testing.
+///
+/// This is useful for repository tests that need a clean HiveService
+/// for each test case.
+///
+/// Example:
+/// ```dart
+/// setUp(() async {
+///   hiveService = await test_helpers.createHiveService();
+///   repository = MyRepository(hiveService: hiveService);
+/// });
+/// ```
+Future<HiveService> createHiveService() async {
+  final InMemorySecretStorage storage = InMemorySecretStorage();
+  final HiveKeyManager keyManager = HiveKeyManager(storage: storage);
+  final HiveService hiveService = HiveService(keyManager: keyManager);
+  await hiveService.initialize();
+  return hiveService;
+}
+
+/// Cleans up Hive boxes after tests.
+///
+/// Attempts to delete the specified boxes, ignoring errors if they don't exist.
+///
+/// Example:
+/// ```dart
+/// tearDown(() async {
+///   await test_helpers.cleanupHiveBoxes(['my_box', 'other_box']);
+/// });
+/// ```
+Future<void> cleanupHiveBoxes(List<String> boxNames) async {
+  for (final boxName in boxNames) {
+    try {
+      await Hive.deleteBoxFromDisk(boxName);
+    } catch (_) {
+      // Box might not exist, ignore
+    }
+  }
 }

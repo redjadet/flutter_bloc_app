@@ -5,46 +5,31 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
-import 'package:flutter_bloc_app/core/flavor.dart';
-import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
-import 'package:flutter_bloc_app/shared/storage/shared_preferences_migration_service.dart';
-import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'test_helpers.dart' as test_helpers;
 
-import 'test_helpers.dart';
+// Import waitForCounterCubitsToLoad directly
+import 'test_helpers.dart' show waitForCounterCubitsToLoad;
 
 void main() {
   setUpAll(() async {
-    // Initialize Hive for testing
-    final Directory testDir = Directory.systemTemp.createTempSync('hive_test_');
-    Hive.init(testDir.path);
+    await test_helpers.setupHiveForTesting();
   });
 
   setUp(() async {
-    SharedPreferences.setMockInitialValues({});
-    // Set flavor to non-dev to avoid skeleton delay in tests
-    FlavorManager.current = Flavor.prod;
-    await getIt.reset(dispose: true);
-    await configureDependencies();
-    await _overrideNetworkAndSync();
-    overrideCounterRepository();
-    // Run migration to avoid delays during widget test
-    await getIt<SharedPreferencesMigrationService>().migrateIfNeeded();
+    await test_helpers.setupTestDependencies(
+      const test_helpers.TestSetupOptions(
+        overrideCounterRepository: true,
+        setFlavorToProd: true,
+      ),
+    );
   });
 
   tearDown(() async {
-    await getIt.reset(dispose: true);
+    await test_helpers.tearDownTestDependencies();
   });
 
   testWidgets('Counter increments and decrements using Bloc', (
@@ -109,112 +94,4 @@ void main() {
 
     expect(find.text('0'), findsWidgets);
   });
-}
-
-Future<void> _overrideNetworkAndSync() async {
-  if (getIt.isRegistered<BackgroundSyncCoordinator>()) {
-    getIt.unregister<BackgroundSyncCoordinator>();
-  }
-  if (getIt.isRegistered<PendingSyncRepository>()) {
-    getIt.unregister<PendingSyncRepository>();
-  }
-  if (getIt.isRegistered<NetworkStatusService>()) {
-    getIt.unregister<NetworkStatusService>();
-  }
-
-  getIt.registerLazySingleton<NetworkStatusService>(
-    _FakeNetworkStatusService.new,
-  );
-  getIt.registerLazySingleton<BackgroundSyncCoordinator>(
-    _FakeBackgroundSyncCoordinator.new,
-  );
-  getIt.registerLazySingleton<PendingSyncRepository>(
-    _FakePendingSyncRepository.new,
-  );
-}
-
-class _FakeNetworkStatusService implements NetworkStatusService {
-  @override
-  Stream<NetworkStatus> get statusStream => const Stream<NetworkStatus>.empty();
-
-  @override
-  Future<NetworkStatus> getCurrentStatus() async => NetworkStatus.online;
-
-  @override
-  Future<void> dispose() async {}
-}
-
-class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
-  @override
-  Stream<SyncStatus> get statusStream => const Stream<SyncStatus>.empty();
-
-  @override
-  SyncStatus get currentStatus => SyncStatus.idle;
-
-  @override
-  List<SyncCycleSummary> get history => const <SyncCycleSummary>[];
-
-  @override
-  Stream<SyncCycleSummary> get summaryStream =>
-      const Stream<SyncCycleSummary>.empty();
-
-  @override
-  SyncCycleSummary? get latestSummary => null;
-
-  @override
-  Future<void> start() async {}
-
-  @override
-  Future<void> stop() async {}
-
-  @override
-  Future<void> dispose() async {}
-
-  @override
-  Future<void> flush() async {}
-}
-
-class _FakePendingSyncRepository implements PendingSyncRepository {
-  final List<SyncOperation> _operations = <SyncOperation>[];
-
-  @override
-  String get boxName => 'fake-pending-sync-box';
-
-  @override
-  Future<SyncOperation> enqueue(final SyncOperation operation) async {
-    _operations.add(operation);
-    return operation;
-  }
-
-  @override
-  Future<List<SyncOperation>> getPendingOperations({
-    DateTime? now,
-    int? limit,
-  }) async => _operations.toList(growable: false);
-
-  @override
-  Future<void> markCompleted(final String operationId) async {}
-
-  @override
-  Future<void> markFailed({
-    required final String operationId,
-    required final DateTime nextRetryAt,
-    final int? retryCount,
-  }) async {}
-
-  @override
-  Future<void> clear() async => _operations.clear();
-
-  @override
-  Future<Box<dynamic>> getBox() =>
-      Future<Box<dynamic>>.error(UnimplementedError('Not used in fake'));
-
-  @override
-  Future<void> safeDeleteKey(final Box<dynamic> box, final String key) async {}
-
-  @override
-  Future<int> prune({
-    int maxRetryCount = 10,
-    Duration maxAge = const Duration(days: 30),
-  }) async => 0;
 }

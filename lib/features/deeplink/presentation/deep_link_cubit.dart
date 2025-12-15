@@ -5,10 +5,12 @@ import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart'
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_state.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_target_extensions.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Handles incoming deep/universal links and exposes navigation events.
-class DeepLinkCubit extends Cubit<DeepLinkState> {
+class DeepLinkCubit extends Cubit<DeepLinkState>
+    with CubitSubscriptionMixin<DeepLinkState> {
   DeepLinkCubit({
     required final DeepLinkService service,
     required final DeepLinkParser parser,
@@ -19,7 +21,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState> {
   final DeepLinkService _service;
   final DeepLinkParser _parser;
 
-  // ignore: cancel_subscriptions - Subscription is properly cancelled in close() method
+  // ignore: cancel_subscriptions - Subscription is managed by CubitSubscriptionMixin
   StreamSubscription<Uri>? _subscription;
   bool _initialized = false;
   bool _isInitializing = false;
@@ -90,6 +92,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState> {
         emit(DeepLinkError(error.toString()));
       },
     );
+    registerSubscription(_subscription);
   }
 
   void _handleUri(final Uri uri, final DeepLinkOrigin origin) {
@@ -108,7 +111,8 @@ class DeepLinkCubit extends Cubit<DeepLinkState> {
 
   @override
   Future<void> close() async {
-    await _disposeSubscription();
+    await closeAllSubscriptions();
+    _subscription = null;
     return super.close();
   }
 

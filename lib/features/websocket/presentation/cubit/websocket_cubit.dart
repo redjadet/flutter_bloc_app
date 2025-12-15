@@ -6,8 +6,10 @@ import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dar
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_state.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 
-class WebsocketCubit extends Cubit<WebsocketState> {
+class WebsocketCubit extends Cubit<WebsocketState>
+    with CubitSubscriptionMixin<WebsocketState> {
   WebsocketCubit({required final WebsocketRepository repository})
     : _repository = repository,
       super(WebsocketState.initial(repository.endpoint)) {
@@ -17,12 +19,14 @@ class WebsocketCubit extends Cubit<WebsocketState> {
     _messageSubscription = _repository.incomingMessages.listen(
       _onIncomingMessage,
     );
+    registerSubscription(_statusSubscription);
+    registerSubscription(_messageSubscription);
   }
 
   final WebsocketRepository _repository;
-  // ignore: cancel_subscriptions - Subscription is properly cancelled in close() method
+  // ignore: cancel_subscriptions - Subscriptions are managed by CubitSubscriptionMixin
   StreamSubscription<WebsocketConnectionState>? _statusSubscription;
-  // ignore: cancel_subscriptions - Subscription is properly cancelled in close() method
+  // ignore: cancel_subscriptions - Subscriptions are managed by CubitSubscriptionMixin
   StreamSubscription<WebsocketMessage>? _messageSubscription;
 
   Future<void> connect() async {
@@ -102,16 +106,9 @@ class WebsocketCubit extends Cubit<WebsocketState> {
 
   @override
   Future<void> close() async {
-    // Nullify references before canceling to prevent race conditions
-    final StreamSubscription<WebsocketConnectionState>? statusSub =
-        _statusSubscription;
+    await closeAllSubscriptions();
     _statusSubscription = null;
-    final StreamSubscription<WebsocketMessage>? messageSub =
-        _messageSubscription;
     _messageSubscription = null;
-
-    await statusSub?.cancel();
-    await messageSub?.cancel();
     await _repository.disconnect();
     return super.close();
   }
