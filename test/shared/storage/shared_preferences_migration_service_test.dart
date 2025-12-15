@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
@@ -7,6 +5,7 @@ import 'package:flutter_bloc_app/shared/storage/shared_preferences_migration_ser
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../test_helpers.dart' as test_helpers;
 
 class _FailingHiveService extends HiveService {
   _FailingHiveService({
@@ -30,7 +29,6 @@ class _FailingHiveService extends HiveService {
 
 void main() {
   group('SharedPreferencesMigrationService', () {
-    late Directory testDir;
     late HiveService hiveService;
     late HiveKeyManager keyManager;
     late InMemorySecretStorage storage;
@@ -38,8 +36,7 @@ void main() {
 
     setUpAll(() async {
       TestWidgetsFlutterBinding.ensureInitialized();
-      testDir = Directory.systemTemp.createTempSync('hive_test_');
-      Hive.init(testDir.path);
+      await test_helpers.setupHiveForTesting();
     });
 
     setUp(() async {
@@ -64,10 +61,6 @@ void main() {
       } catch (_) {
         // Boxes might not exist
       }
-    });
-
-    tearDownAll(() {
-      testDir.deleteSync(recursive: true);
     });
 
     group('isMigrationCompleted', () {

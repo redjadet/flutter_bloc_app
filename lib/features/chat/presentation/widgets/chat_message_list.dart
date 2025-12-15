@@ -11,7 +11,9 @@ import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
+import 'package:flutter_bloc_app/shared/widgets/view_status_switcher.dart';
 
 class ChatMessageList extends StatelessWidget {
   const ChatMessageList({required this.controller, super.key});
@@ -54,81 +56,96 @@ class ChatMessageList extends StatelessWidget {
           });
         }
       },
-      builder: (final context, final state) {
-        if (!state.hasMessages) {
-          return Center(
-            child: Padding(
-              padding: context.responsiveStatePadding,
-              child: Text(
-                l10n.chatEmptyState,
-                style: theme.textTheme.bodyLarge,
-                textAlign: TextAlign.center,
-              ),
+      builder: (final context, final state) =>
+          ViewStatusSwitcher<ChatCubit, ChatState, _ChatListData>(
+            selector: (final state) => _ChatListData(
+              hasMessages: state.hasMessages,
+              isLoading: state.isLoading,
+              messages: state.messages,
             ),
-          );
-        }
-        return RepaintBoundary(
-          child: ListView.builder(
-            controller: controller,
-            padding: EdgeInsets.all(context.responsiveGapM),
-            itemCount: state.messages.length,
-            itemBuilder: (final context, final index) {
-              final ChatMessage message = state.messages[index];
-              final bool isUser = message.author == ChatAuthor.user;
-              final SyncStatusState syncState = _resolveSyncState(context);
-              final bool isPending = isUser && !message.synchronized;
-              final bool isOffline =
-                  syncState.networkStatus == NetworkStatus.offline;
-              final bool isSyncing =
-                  syncState.syncStatus == SyncStatus.syncing && !isOffline;
-
-              String? statusLabel;
-              if (isPending) {
-                statusLabel = isOffline
-                    ? l10n.chatMessageStatusOffline
-                    : isSyncing
-                    ? l10n.chatMessageStatusSyncing
-                    : l10n.chatMessageStatusPending;
-              }
-
-              return Column(
-                crossAxisAlignment: isUser
-                    ? CrossAxisAlignment.end
-                    : CrossAxisAlignment.start,
-                children: <Widget>[
-                  MessageBubble(
-                    key: ValueKey(
-                      'chat-message-$index-${message.text.hashCode}',
+            isLoading: (final data) => data.isLoading && !data.hasMessages,
+            isError: (_) => false,
+            loadingBuilder: (final _) => const CommonLoadingWidget(),
+            builder: (final context, final data) {
+              if (!data.hasMessages) {
+                return Center(
+                  child: Padding(
+                    padding: context.responsiveStatePadding,
+                    child: Text(
+                      l10n.chatEmptyState,
+                      style: theme.textTheme.bodyLarge,
+                      textAlign: TextAlign.center,
                     ),
-                    message: message.text,
-                    isOutgoing: isUser,
-                    outgoingColor: theme.colorScheme.primary,
-                    incomingColor: theme.colorScheme.surfaceContainerHighest,
-                    outgoingTextColor: theme.colorScheme.onPrimary,
-                    incomingTextColor: theme.colorScheme.onSurface,
                   ),
-                  if (statusLabel != null)
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: isUser ? context.responsiveGapXS : 0,
-                        right: isUser ? 0 : context.responsiveGapXS,
-                        bottom: context.responsiveGapXS,
-                      ),
-                      child: Text(
-                        statusLabel,
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: isOffline
-                              ? theme.colorScheme.error
-                              : theme.colorScheme.primary,
+                );
+              }
+              return RepaintBoundary(
+                child: ListView.builder(
+                  controller: controller,
+                  padding: EdgeInsets.all(context.responsiveGapM),
+                  itemCount: data.messages.length,
+                  itemBuilder: (final context, final index) {
+                    final ChatMessage message = data.messages[index];
+                    final bool isUser = message.author == ChatAuthor.user;
+                    final SyncStatusState syncState = _resolveSyncState(
+                      context,
+                    );
+                    final bool isPending = isUser && !message.synchronized;
+                    final bool isOffline =
+                        syncState.networkStatus == NetworkStatus.offline;
+                    final bool isSyncing =
+                        syncState.syncStatus == SyncStatus.syncing &&
+                        !isOffline;
+
+                    String? statusLabel;
+                    if (isPending) {
+                      statusLabel = isOffline
+                          ? l10n.chatMessageStatusOffline
+                          : isSyncing
+                          ? l10n.chatMessageStatusSyncing
+                          : l10n.chatMessageStatusPending;
+                    }
+
+                    return Column(
+                      crossAxisAlignment: isUser
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
+                      children: <Widget>[
+                        MessageBubble(
+                          key: ValueKey(
+                            'chat-message-$index-${message.text.hashCode}',
+                          ),
+                          message: message.text,
+                          isOutgoing: isUser,
+                          outgoingColor: theme.colorScheme.primary,
+                          incomingColor:
+                              theme.colorScheme.surfaceContainerHighest,
+                          outgoingTextColor: theme.colorScheme.onPrimary,
+                          incomingTextColor: theme.colorScheme.onSurface,
                         ),
-                      ),
-                    ),
-                ],
+                        if (statusLabel != null)
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: isUser ? context.responsiveGapXS : 0,
+                              right: isUser ? 0 : context.responsiveGapXS,
+                              bottom: context.responsiveGapXS,
+                            ),
+                            child: Text(
+                              statusLabel,
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: isOffline
+                                    ? theme.colorScheme.error
+                                    : theme.colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
+                ),
               );
             },
           ),
-        );
-      },
     );
   }
 }
@@ -142,4 +159,17 @@ SyncStatusState _resolveSyncState(final BuildContext context) {
       syncStatus: SyncStatus.idle,
     );
   }
+}
+
+@immutable
+class _ChatListData {
+  const _ChatListData({
+    required this.hasMessages,
+    required this.isLoading,
+    required this.messages,
+  });
+
+  final bool hasMessages;
+  final bool isLoading;
+  final List<ChatMessage> messages;
 }

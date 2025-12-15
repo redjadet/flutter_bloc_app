@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/constants.dart';
@@ -19,9 +17,11 @@ import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
-import 'test_helpers.dart';
+import 'test_helpers.dart' as test_helpers;
+
+// Import test helpers directly for convenience
+import 'test_helpers.dart' show FakeTimerService;
 
 class _FakeCounterRepository implements CounterRepository {
   @override
@@ -187,9 +187,7 @@ GoRouter _createRouter(
 
 void main() {
   setUpAll(() async {
-    // Initialize Hive for testing
-    final Directory testDir = Directory.systemTemp.createTempSync('hive_test_');
-    Hive.init(testDir.path);
+    await test_helpers.setupHiveForTesting();
   });
 
   setUp(() async {

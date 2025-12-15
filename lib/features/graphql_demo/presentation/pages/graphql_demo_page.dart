@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/view_status_switcher.dart';
 
 class GraphqlDemoPage extends StatelessWidget {
   const GraphqlDemoPage({super.key});
@@ -73,7 +74,7 @@ class GraphqlDemoPage extends StatelessWidget {
                 );
               },
               child:
-                  BlocSelector<
+                  ViewStatusSwitcher<
                     GraphqlDemoCubit,
                     GraphqlDemoState,
                     GraphqlBodyData
@@ -84,6 +85,30 @@ class GraphqlDemoPage extends StatelessWidget {
                       countries: state.countries,
                       errorType: state.errorType,
                       errorMessage: state.errorMessage,
+                    ),
+                    isLoading: (final data) =>
+                        data.isLoading && data.countries.isEmpty,
+                    isError: (final data) =>
+                        data.hasError && data.countries.isEmpty,
+                    loadingBuilder: (final _) => const CommonLoadingWidget(),
+                    errorBuilder: (final context, final data) => AppMessage(
+                      title: l10n.graphqlSampleErrorTitle,
+                      message: _errorMessageForData(l10n, data),
+                      isError: true,
+                      actions: [
+                        PlatformAdaptive.button(
+                          context: context,
+                          onPressed: () =>
+                              CubitHelpers.safeExecute<
+                                GraphqlDemoCubit,
+                                GraphqlDemoState
+                              >(
+                                context,
+                                (final cubit) => cubit.loadInitial(),
+                              ),
+                          child: Text(l10n.graphqlSampleRetryButton),
+                        ),
+                      ],
                     ),
                     builder: (final context, final bodyData) => RepaintBoundary(
                       child: _buildBody(context, bodyData, l10n),
@@ -101,29 +126,6 @@ class GraphqlDemoPage extends StatelessWidget {
     final GraphqlBodyData bodyData,
     final AppLocalizations l10n,
   ) {
-    if (bodyData.isLoading && bodyData.countries.isEmpty) {
-      return const CommonLoadingWidget();
-    }
-
-    if (bodyData.hasError && bodyData.countries.isEmpty) {
-      return AppMessage(
-        title: l10n.graphqlSampleErrorTitle,
-        message: _errorMessageForData(l10n, bodyData),
-        isError: true,
-        actions: [
-          PlatformAdaptive.button(
-            context: context,
-            onPressed: () =>
-                CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
-                  context,
-                  (final cubit) => cubit.loadInitial(),
-                ),
-            child: Text(l10n.graphqlSampleRetryButton),
-          ),
-        ],
-      );
-    }
-
     if (bodyData.countries.isEmpty) {
       return AppMessage(message: l10n.graphqlSampleEmpty);
     }

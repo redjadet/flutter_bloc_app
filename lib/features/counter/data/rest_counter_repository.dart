@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
+import 'package:flutter_bloc_app/shared/utils/repository_initial_load_helper.dart';
 import 'package:http/http.dart' as http;
 
 part 'rest_counter_repository_internal.dart';
@@ -52,8 +53,8 @@ class RestCounterRepository implements CounterRepository {
   );
   late final StreamController<CounterSnapshot> _watchController;
   CounterSnapshot _latestSnapshot = _emptySnapshot;
-  Completer<void>? _initialLoadCompleter;
-  bool _hasResolvedInitialValue = false;
+  final RepositoryInitialLoadHelper<CounterSnapshot> _initialLoadHelper =
+      RepositoryInitialLoadHelper<CounterSnapshot>();
 
   Uri get _counterUri => _baseUri.resolve('counter');
 

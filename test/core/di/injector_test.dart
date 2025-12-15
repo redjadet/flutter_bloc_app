@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.dart';
 import 'package:flutter_bloc_app/features/chat/data/offline_first_chat_repository.dart';
@@ -18,16 +16,14 @@ import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
+import '../../test_helpers.dart' as test_helpers;
 
 void main() {
   final GetIt injector = getIt;
 
   setUpAll(() async {
-    // Initialize Hive for testing
-    final Directory testDir = Directory.systemTemp.createTempSync('hive_test_');
-    Hive.init(testDir.path);
+    await test_helpers.setupHiveForTesting();
   });
 
   setUp(() async {

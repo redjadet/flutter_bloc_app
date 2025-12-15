@@ -18,8 +18,6 @@ import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart'
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
@@ -30,51 +28,64 @@ import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Test helper for creating mock repositories
-class MockCounterRepository implements CounterRepository {
-  CounterSnapshot _snapshot;
-  final bool _shouldThrowOnLoad;
-  final bool _shouldThrowOnSave;
-  StreamController<CounterSnapshot>? _watchController;
+/// Generic in-memory repository used by tests to reduce bespoke mock classes.
+class InMemoryRepository<T> {
+  InMemoryRepository({
+    required T initialValue,
+    this.shouldThrowOnLoad = false,
+    this.shouldThrowOnSave = false,
+  }) : _value = initialValue;
 
-  MockCounterRepository({
-    CounterSnapshot? snapshot,
-    bool shouldThrowOnLoad = false,
-    bool shouldThrowOnSave = false,
-  }) : _snapshot = snapshot ?? const CounterSnapshot(userId: 'mock', count: 0),
-       _shouldThrowOnLoad = shouldThrowOnLoad,
-       _shouldThrowOnSave = shouldThrowOnSave;
+  T _value;
+  final bool shouldThrowOnLoad;
+  final bool shouldThrowOnSave;
+  StreamController<T>? _controller;
 
-  @override
-  Future<CounterSnapshot> load() async {
-    if (_shouldThrowOnLoad) {
+  Future<T> load() async {
+    if (shouldThrowOnLoad) {
       throw Exception('Mock load error');
     }
-    return _snapshot;
+    return _value;
   }
 
-  @override
-  Future<void> save(CounterSnapshot snapshot) async {
-    if (_shouldThrowOnSave) {
+  Future<void> save(final T value) async {
+    if (shouldThrowOnSave) {
       throw Exception('Mock save error');
     }
-    _snapshot = snapshot;
-    _watchController?.add(_snapshot);
+    _value = value;
+    _controller?.add(_value);
   }
 
-  @override
-  Stream<CounterSnapshot> watch() {
-    _watchController ??= StreamController<CounterSnapshot>.broadcast(
-      onListen: () {
-        _watchController?.add(_snapshot);
-      },
+  Stream<T> watch() {
+    _controller ??= StreamController<T>.broadcast(
+      onListen: () => _controller?.add(_value),
     );
-    return _watchController!.stream;
+    return _controller!.stream;
   }
+
+  Future<void> dispose() async {
+    await _controller?.close();
+    _controller = null;
+  }
+}
+
+/// Counter repository mock backed by [InMemoryRepository] to share logic.
+class MockCounterRepository extends InMemoryRepository<CounterSnapshot>
+    implements CounterRepository {
+  MockCounterRepository({
+    CounterSnapshot? snapshot,
+    super.shouldThrowOnLoad,
+    super.shouldThrowOnSave,
+  }) : super(
+         initialValue:
+             snapshot ?? const CounterSnapshot(userId: 'mock', count: 0),
+       );
 }
 
 /// Test helper for wrapping widgets with necessary providers
