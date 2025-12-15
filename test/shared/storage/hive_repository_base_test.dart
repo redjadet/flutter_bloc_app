@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import '../../test_helpers.dart' as test_helpers;
 
 void main() {
   group('HiveRepositoryBase', () {
@@ -14,26 +10,16 @@ void main() {
 
     setUpAll(() async {
       TestWidgetsFlutterBinding.ensureInitialized();
-      final Directory testDir = Directory.systemTemp.createTempSync(
-        'hive_test_',
-      );
-      Hive.init(testDir.path);
+      await test_helpers.setupHiveForTesting();
     });
 
     setUp(() async {
-      final InMemorySecretStorage storage = InMemorySecretStorage();
-      final HiveKeyManager keyManager = HiveKeyManager(storage: storage);
-      hiveService = HiveService(keyManager: keyManager);
-      await hiveService.initialize();
+      hiveService = await test_helpers.createHiveService();
       repository = TestRepository(hiveService: hiveService);
     });
 
     tearDown(() async {
-      try {
-        await Hive.deleteBoxFromDisk('test_box');
-      } catch (_) {
-        // Box might not exist
-      }
+      await test_helpers.cleanupHiveBoxes(['test_box']);
     });
 
     test('getBox opens and returns the correct box', () async {

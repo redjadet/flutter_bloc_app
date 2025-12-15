@@ -1,6 +1,7 @@
 part of 'counter_cubit.dart';
 
-abstract class _CounterCubitBase extends Cubit<CounterState> {
+abstract class _CounterCubitBase extends Cubit<CounterState>
+    with CubitSubscriptionMixin<CounterState> {
   _CounterCubitBase({
     required final CounterRepository repository,
     required final TimerService timerService,
@@ -25,7 +26,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
   final Duration _initialLoadDelay;
 
   TimerDisposable? _countdownTicker;
-  // ignore: cancel_subscriptions - Subscription is properly cancelled in close() method
+  // ignore: cancel_subscriptions - Subscription is managed by CubitSubscriptionMixin
   StreamSubscription<CounterSnapshot>? _repositorySubscription;
   // Ensures the countdown stays at the full value for one tick after a reset
   // so the progress bar remains visually consistent.
@@ -202,5 +203,6 @@ abstract class _CounterCubitBase extends Cubit<CounterState> {
         AppLogger.error('CounterCubit.watch failed', error, stackTrace);
       },
     );
+    registerSubscription(_repositorySubscription);
   }
 }

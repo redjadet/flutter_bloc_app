@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/counter/presentation/counter_state.dar
 import 'package:flutter_bloc_app/features/counter/presentation/helpers/counter_snapshot_utils.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 export 'package:flutter_bloc_app/features/counter/presentation/counter_state.dart';
@@ -71,12 +72,8 @@ class CounterCubit extends _CounterCubitBase {
   @override
   Future<void> close() async {
     _stopCountdownTicker();
-    final StreamSubscription<CounterSnapshot>? subscription =
-        _repositorySubscription;
+    await closeAllSubscriptions();
     _repositorySubscription = null;
-    if (subscription != null) {
-      await subscription.cancel();
-    }
     await super.close();
   }
 

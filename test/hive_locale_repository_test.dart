@@ -1,11 +1,8 @@
 import 'package:flutter_bloc_app/features/settings/data/hive_locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
-import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'dart:io';
+import 'test_helpers.dart' as test_helpers;
 
 void main() {
   late HiveService hiveService;
@@ -13,31 +10,16 @@ void main() {
 
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
-    // Initialize Hive for testing with a test directory
-    final Directory testDir = Directory.systemTemp.createTempSync('hive_test_');
-    Hive.init(testDir.path);
+    await test_helpers.setupHiveForTesting();
   });
 
   setUp(() async {
-    // Create fresh service and repository for each test
-    final InMemorySecretStorage storage = InMemorySecretStorage();
-    final HiveKeyManager keyManager = HiveKeyManager(storage: storage);
-    hiveService = HiveService(keyManager: keyManager);
-    await hiveService.initialize();
+    hiveService = await test_helpers.createHiveService();
     repository = HiveLocaleRepository(hiveService: hiveService);
   });
 
   tearDown(() async {
-    try {
-      await Hive.deleteBoxFromDisk('settings');
-    } catch (_) {
-      // Box might not exist
-    }
-    try {
-      await Hive.deleteBoxFromDisk('counter');
-    } catch (_) {
-      // Box might not exist
-    }
+    await test_helpers.cleanupHiveBoxes(['settings', 'counter']);
   });
 
   test('HiveLocaleRepository saves and loads locales', () async {
