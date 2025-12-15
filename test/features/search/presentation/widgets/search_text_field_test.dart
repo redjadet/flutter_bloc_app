@@ -4,37 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/search/presentation/search_cubit.dart';
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_text_field.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:mocktail/mocktail.dart';
+import '../../../../test_helpers.dart';
 
 class MockSearchRepository extends Mock implements SearchRepository {}
-
-class FakeTimerService extends Fake implements TimerService {
-  TimerDisposable? _lastTimer;
-
-  @override
-  TimerDisposable runOnce(Duration duration, void Function() callback) {
-    _lastTimer = _FakeTimerDisposable(callback);
-    return _lastTimer!;
-  }
-
-  void tick() {
-    // Simulate timer completion
-    if (_lastTimer != null) {
-      (_lastTimer as _FakeTimerDisposable).callback();
-    }
-  }
-}
-
-class _FakeTimerDisposable implements TimerDisposable {
-  _FakeTimerDisposable(this.callback);
-  final void Function() callback;
-
-  @override
-  void dispose() {
-    // No-op for fake timer
-  }
-}
 
 void main() {
   group('SearchTextField', () {

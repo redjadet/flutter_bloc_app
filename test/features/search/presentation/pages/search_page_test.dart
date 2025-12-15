@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/features/search/presentation/pages/search_page.dart';
@@ -15,34 +14,9 @@ import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import '../../../../test_helpers.dart';
 
 class MockSearchRepository extends Mock implements SearchRepository {}
-
-class FakeTimerService extends Fake implements TimerService {
-  TimerDisposable? _lastTimer;
-
-  @override
-  TimerDisposable runOnce(Duration duration, void Function() callback) {
-    _lastTimer = _FakeTimerDisposable(callback);
-    return _lastTimer!;
-  }
-
-  void tick() {
-    if (_lastTimer != null) {
-      (_lastTimer as _FakeTimerDisposable).callback();
-    }
-  }
-}
-
-class _FakeTimerDisposable implements TimerDisposable {
-  _FakeTimerDisposable(this.callback);
-  final void Function() callback;
-
-  @override
-  void dispose() {
-    // No-op for fake timer
-  }
-}
 
 class _FakeNetworkStatusService implements NetworkStatusService {
   _FakeNetworkStatusService({this.status = NetworkStatus.online});
@@ -179,7 +153,7 @@ void main() {
 
       // SearchCubit.search('dogs') is called immediately, which triggers debounce
       // After debounce timer fires, _executeSearch is called which emits loading state
-      fakeTimerService.tick();
+      fakeTimerService.elapse(const Duration(milliseconds: 500));
       await tester
           .pump(); // Pump after debounce fires - this calls _executeSearch
 
@@ -213,7 +187,7 @@ void main() {
       await tester.pump(); // Don't settle immediately
 
       // Wait for debounce timer
-      fakeTimerService.tick();
+      fakeTimerService.elapse(const Duration(milliseconds: 500));
       await tester.pumpAndSettle();
 
       expect(find.text('No results found'), findsOneWidget);
@@ -242,7 +216,7 @@ void main() {
       await tester.pump(); // Initial pump
 
       // Wait for debounce timer to fire
-      fakeTimerService.tick();
+      fakeTimerService.elapse(const Duration(milliseconds: 500));
       await tester.pump(); // Pump to allow debounce callback to execute
 
       // The async operation needs to complete
@@ -261,7 +235,7 @@ void main() {
 
       // SearchCubit.search('dogs') is called immediately, which triggers debounce
       // Wait for debounce timer to fire
-      fakeTimerService.tick();
+      fakeTimerService.elapse(const Duration(milliseconds: 500));
       await tester.pump(); // Pump to allow debounce callback to execute
 
       // The debounce callback calls _executeSearch which is async
