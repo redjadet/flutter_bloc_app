@@ -436,10 +436,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get openGoogleMapsTooltip => 'Ouvrir la démo Google Maps';
 
   @override
-  String get openWhiteboardTooltip => 'Open Whiteboard';
+  String get openWhiteboardTooltip => 'Ouvrir le Whiteboard';
 
   @override
-  String get openMarkdownEditorTooltip => 'Open Markdown Editor';
+  String get openMarkdownEditorTooltip => 'Ouvrir l\'Éditeur Markdown';
 
   @override
   String get chatPageTitle => 'Discussion IA';
@@ -587,11 +587,11 @@ class AppLocalizationsFr extends AppLocalizations {
       'Veuillez accepter les conditions pour continuer';
 
   @override
-  String get registerTermsDialogTitle => 'Conditions générales';
+  String get registerTermsDialogTitle => 'Conditions générales d’utilisation';
 
   @override
   String get registerTermsDialogBody =>
-      'Cette application de démonstration doit être utilisée de manière responsable. En vous inscrivant, vous acceptez de protéger vos identifiants, de respecter les lois en vigueur et de reconnaître que le contenu est fourni à titre illustratif et peut être modifié sans préavis. Si vous n’acceptez pas ces conditions, interrompez l’inscription.';
+      'En créant un compte, vous vous engagez à utiliser l’application de manière responsable, à respecter les autres utilisateurs et à respecter toutes les lois applicables. Vous acceptez notre politique de confidentialité, reconnaissez que la disponibilité du service peut évoluer et acceptez que votre compte puisse être suspendu en cas d’usage abusif ou de non-respect de ces conditions.';
 
   @override
   String get registerTermsAcceptButton => 'Accepter';
@@ -605,6 +605,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get registerTermsButtonLabel => 'Lire les conditions générales';
+
+  @override
+  String get registerTermsSheetTitle => 'Conditions générales';
+
+  @override
+  String get registerTermsSheetBody =>
+      'Cette application de démonstration doit être utilisée de manière responsable. En vous inscrivant, vous acceptez de protéger vos identifiants, de respecter les lois en vigueur et de reconnaître que le contenu est fourni à titre illustratif et peut être modifié sans préavis. Si vous n\'acceptez pas ces conditions, interrompez l\'inscription.';
 
   @override
   String get registerTermsDialogAcknowledge => 'J’ai lu les conditions';

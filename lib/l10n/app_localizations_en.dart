@@ -573,7 +573,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get registerTermsDialogBody =>
-      'These terms outline the acceptable use of this demo application. By continuing, you agree to handle your account responsibly, protect your credentials, and comply with any applicable laws. The content provided is illustrative only and may change without notice. If you do not agree to these terms, please discontinue the registration process.';
+      'By creating an account, you agree to use this app responsibly, respect other users, and comply with all applicable laws. You consent to our privacy policy, acknowledge that service availability may change, and accept that your account may be suspended for misuse or violations of these terms.';
 
   @override
   String get registerTermsAcceptButton => 'Accept';
@@ -587,6 +587,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get registerTermsButtonLabel => 'Read terms & conditions';
+
+  @override
+  String get registerTermsSheetTitle => 'Terms & Conditions';
+
+  @override
+  String get registerTermsSheetBody =>
+      'These terms outline the acceptable use of this demo application. By continuing, you agree to handle your account responsibly, protect your credentials, and comply with any applicable laws. The content provided is illustrative only and may change without notice. If you do not agree to these terms, please discontinue the registration process.';
 
   @override
   String get registerTermsDialogAcknowledge => 'I have read the terms';

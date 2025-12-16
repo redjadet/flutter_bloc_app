@@ -1154,16 +1154,16 @@ abstract class AppLocalizations {
   /// **'Please accept the terms to continue'**
   String get registerTermsError;
 
-  /// Title for the terms and conditions sheet
+  /// Title for the dialog that displays the terms and conditions
   ///
   /// In en, this message translates to:
   /// **'Terms & Conditions'**
   String get registerTermsDialogTitle;
 
-  /// Body copy shown inside the terms sheet
+  /// Body text shown in the terms and conditions dialog
   ///
   /// In en, this message translates to:
-  /// **'These terms outline the acceptable use of this demo application. By continuing, you agree to handle your account responsibly, protect your credentials, and comply with any applicable laws. The content provided is illustrative only and may change without notice. If you do not agree to these terms, please discontinue the registration process.'**
+  /// **'By creating an account, you agree to use this app responsibly, respect other users, and comply with all applicable laws. You consent to our privacy policy, acknowledge that service availability may change, and accept that your account may be suspended for misuse or violations of these terms.'**
   String get registerTermsDialogBody;
 
   /// Button label to accept the terms in the dialog
@@ -1189,6 +1189,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read terms & conditions'**
   String get registerTermsButtonLabel;
+
+  /// Title for the terms and conditions sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Conditions'**
+  String get registerTermsSheetTitle;
+
+  /// Body copy shown inside the terms sheet
+  ///
+  /// In en, this message translates to:
+  /// **'These terms outline the acceptable use of this demo application. By continuing, you agree to handle your account responsibly, protect your credentials, and comply with any applicable laws. The content provided is illustrative only and may change without notice. If you do not agree to these terms, please discontinue the registration process.'**
+  String get registerTermsSheetBody;
 
   /// Button label inside the terms sheet to confirm the user has read the content
   ///

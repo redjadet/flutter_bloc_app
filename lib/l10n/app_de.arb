@@ -416,8 +416,8 @@
   "registerTermsRejectButton": "Abbrechen",
   "registerTermsPrompt": "Bitte lesen und akzeptieren Sie die Bedingungen, bevor Sie fortfahren.",
   "registerTermsButtonLabel": "Allgemeine Geschäftsbedingungen lesen",
-  "registerTermsDialogTitle": "Allgemeine Geschäftsbedingungen",
-  "registerTermsDialogBody": "Diese Demo-Anwendung darf nur verantwortungsvoll genutzt werden. Durch die Registrierung verpflichten Sie sich, Ihre Zugangsdaten zu schützen, geltende Gesetze einzuhalten und zu akzeptieren, dass Inhalte ausschließlich illustrativen Charakter haben und ohne Ankündigung geändert werden können. Wenn Sie nicht zustimmen, brechen Sie die Registrierung ab.",
+  "registerTermsSheetTitle": "Allgemeine Geschäftsbedingungen",
+  "registerTermsSheetBody": "Diese Demo-Anwendung darf nur verantwortungsvoll genutzt werden. Durch die Registrierung verpflichten Sie sich, Ihre Zugangsdaten zu schützen, geltende Gesetze einzuhalten und zu akzeptieren, dass Inhalte ausschließlich illustrativen Charakter haben und ohne Ankündigung geändert werden können. Wenn Sie nicht zustimmen, brechen Sie die Registrierung ab.",
   "registerTermsDialogAcknowledge": "Ich habe die Bedingungen gelesen",
   "registerTermsCheckboxLabel": "Ich akzeptiere die Allgemeinen Geschäftsbedingungen",
   "registerTermsCheckboxDisabledHint": "Bitte lesen Sie zuerst die Bedingungen.",
@@ -675,5 +675,25 @@
   "syncQueueInspectorTitle": "Ausstehende Synchronisationen",
   "syncQueueInspectorOperation": "Eintrag: {entity}, Versuche: {attempts}",
   "counterLastSynced": "Zuletzt synchronisiert: {timestamp}",
-  "counterChangeId": "Änderungs-ID: {changeId}"
+  "@counterLastSynced": {
+    "description": "Label showing the last time the counter synced",
+    "placeholders": {
+      "timestamp": {}
+    }
+  },
+  "counterChangeId": "Änderungs-ID: {changeId}",
+  "@counterChangeId": {
+    "description": "Label showing the last change id used for sync",
+    "placeholders": {
+      "changeId": {}
+    }
+  },
+  "openWhiteboardTooltip": "Whiteboard öffnen",
+  "@openWhiteboardTooltip": {
+    "description": "Tooltip for navigating to the Whiteboard feature"
+  },
+  "openMarkdownEditorTooltip": "Markdown-Editor öffnen",
+  "@openMarkdownEditorTooltip": {
+    "description": "Tooltip for navigating to the Markdown Editor feature"
+  }
 }

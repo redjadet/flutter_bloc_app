@@ -429,10 +429,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get openGoogleMapsTooltip => 'Google Haritalar demosunu aç';
 
   @override
-  String get openWhiteboardTooltip => 'Open Whiteboard';
+  String get openWhiteboardTooltip => 'Whiteboard\'u aç';
 
   @override
-  String get openMarkdownEditorTooltip => 'Open Markdown Editor';
+  String get openMarkdownEditorTooltip => 'Markdown Düzenleyici\'yi aç';
 
   @override
   String get chatPageTitle => 'Yapay Zekâ Sohbeti';
@@ -579,7 +579,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get registerTermsDialogBody =>
-      'Bu demo uygulamasını kullanırken hesap bilgilerinizi korumayı, ilgili tüm yasalara uymayı ve içeriğin yalnızca örnek amaçlı olduğunu kabul edersiniz. Şartları kabul etmiyorsanız kayıt işlemini sonlandırın.';
+      'Hesap oluşturarak uygulamayı sorumlu bir şekilde kullanmayı, diğer kullanıcılara saygı göstermeyi ve geçerli tüm yasalara uymayı kabul edersiniz. Gizlilik politikamızı kabul ettiğinizi, hizmet erişiminin değişebileceğini ve kuralları ihlal etmeniz durumunda hesabınızın askıya alınabileceğini kabul edersiniz.';
 
   @override
   String get registerTermsAcceptButton => 'Kabul Et';
@@ -593,6 +593,13 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get registerTermsButtonLabel => 'Şartları ve koşulları oku';
+
+  @override
+  String get registerTermsSheetTitle => 'Şartlar ve Koşullar';
+
+  @override
+  String get registerTermsSheetBody =>
+      'Bu demo uygulamasını kullanırken hesap bilgilerinizi korumayı, ilgili tüm yasalara uymayı ve içeriğin yalnızca örnek amaçlı olduğunu kabul edersiniz. Şartları kabul etmiyorsanız kayıt işlemini sonlandırın.';
 
   @override
   String get registerTermsDialogAcknowledge => 'Şartları okudum';

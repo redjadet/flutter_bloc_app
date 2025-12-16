@@ -417,8 +417,8 @@
   "registerTermsRejectButton": "İptal",
   "registerTermsPrompt": "Devam etmeden önce şartları okuyup kabul edin.",
   "registerTermsButtonLabel": "Şartları ve koşulları oku",
-  "registerTermsDialogTitle": "Şartlar ve Koşullar",
-  "registerTermsDialogBody": "Bu demo uygulamasını kullanırken hesap bilgilerinizi korumayı, ilgili tüm yasalara uymayı ve içeriğin yalnızca örnek amaçlı olduğunu kabul edersiniz. Şartları kabul etmiyorsanız kayıt işlemini sonlandırın.",
+  "registerTermsSheetTitle": "Şartlar ve Koşullar",
+  "registerTermsSheetBody": "Bu demo uygulamasını kullanırken hesap bilgilerinizi korumayı, ilgili tüm yasalara uymayı ve içeriğin yalnızca örnek amaçlı olduğunu kabul edersiniz. Şartları kabul etmiyorsanız kayıt işlemini sonlandırın.",
   "registerTermsDialogAcknowledge": "Şartları okudum",
   "registerTermsCheckboxLabel": "Şartları ve koşulları kabul ediyorum",
   "registerTermsCheckboxDisabledHint": "Lütfen önce şartları okuyun.",
@@ -676,5 +676,25 @@
   "syncQueueInspectorTitle": "Bekleyen senkron işlemleri",
   "syncQueueInspectorOperation": "Varlık: {entity}, deneme: {attempts}",
   "counterLastSynced": "Son senkronizasyon: {timestamp}",
-  "counterChangeId": "Değişiklik kimliği: {changeId}"
+  "@counterLastSynced": {
+    "description": "Label showing the last time the counter synced",
+    "placeholders": {
+      "timestamp": {}
+    }
+  },
+  "counterChangeId": "Değişiklik kimliği: {changeId}",
+  "@counterChangeId": {
+    "description": "Label showing the last change id used for sync",
+    "placeholders": {
+      "changeId": {}
+    }
+  },
+  "openWhiteboardTooltip": "Whiteboard'u aç",
+  "@openWhiteboardTooltip": {
+    "description": "Tooltip for navigating to the Whiteboard feature"
+  },
+  "openMarkdownEditorTooltip": "Markdown Düzenleyici'yi aç",
+  "@openMarkdownEditorTooltip": {
+    "description": "Tooltip for navigating to the Markdown Editor feature"
+  }
 }

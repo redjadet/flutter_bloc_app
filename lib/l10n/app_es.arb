@@ -416,8 +416,8 @@
   "registerTermsRejectButton": "Cancelar",
   "registerTermsPrompt": "Revisa y acepta los términos antes de continuar.",
   "registerTermsButtonLabel": "Leer términos y condiciones",
-  "registerTermsDialogTitle": "Términos y condiciones",
-  "registerTermsDialogBody": "Esta aplicación de demostración debe usarse de forma responsable. Al registrarte aceptas proteger tus credenciales, cumplir con las leyes aplicables y entender que el contenido es meramente ilustrativo y puede cambiar sin previo aviso. Si no estás de acuerdo, interrumpe el proceso de registro.",
+  "registerTermsSheetTitle": "Términos y condiciones",
+  "registerTermsSheetBody": "Esta aplicación de demostración debe usarse de forma responsable. Al registrarte aceptas proteger tus credenciales, cumplir con las leyes aplicables y entender que el contenido es meramente ilustrativo y puede cambiar sin previo aviso. Si no estás de acuerdo, interrumpe el proceso de registro.",
   "registerTermsDialogAcknowledge": "He leído los términos",
   "registerTermsCheckboxLabel": "Acepto los términos y condiciones",
   "registerTermsCheckboxDisabledHint": "Lee los términos antes de aceptarlos.",
@@ -675,5 +675,25 @@
   "syncQueueInspectorTitle": "Operaciones pendientes",
   "syncQueueInspectorOperation": "Entidad: {entity}, intentos: {attempts}",
   "counterLastSynced": "Última sincronización: {timestamp}",
-  "counterChangeId": "ID de cambio: {changeId}"
+  "@counterLastSynced": {
+    "description": "Label showing the last time the counter synced",
+    "placeholders": {
+      "timestamp": {}
+    }
+  },
+  "counterChangeId": "ID de cambio: {changeId}",
+  "@counterChangeId": {
+    "description": "Label showing the last change id used for sync",
+    "placeholders": {
+      "changeId": {}
+    }
+  },
+  "openWhiteboardTooltip": "Abrir Whiteboard",
+  "@openWhiteboardTooltip": {
+    "description": "Tooltip for navigating to the Whiteboard feature"
+  },
+  "openMarkdownEditorTooltip": "Abrir Editor de Markdown",
+  "@openMarkdownEditorTooltip": {
+    "description": "Tooltip for navigating to the Markdown Editor feature"
+  }
 }

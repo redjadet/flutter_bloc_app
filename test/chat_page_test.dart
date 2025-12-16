@@ -285,12 +285,12 @@ void main() {
     );
     expect(find.text(l10n.syncStatusPendingTitle), findsOneWidget);
     expect(find.text(l10n.syncStatusSyncNowButton), findsOneWidget);
-    expect(find.text(l10n.chatMessageStatusPending), findsOneWidget);
+    // Individual message pending sync text is no longer displayed in the UI
 
     await tester.tap(find.text(l10n.syncStatusSyncNowButton));
     await tester.pump();
 
-    expect(find.text(l10n.chatMessageStatusPending), findsNothing);
+    // Individual message pending sync text is no longer displayed in the UI
     expect(find.text(l10n.syncStatusPendingTitle), findsNothing);
     expect(find.byType(MessageBubble), findsNWidgets(2));
   });

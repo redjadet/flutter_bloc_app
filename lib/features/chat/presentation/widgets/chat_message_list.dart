@@ -7,9 +7,6 @@ import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
-import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
-import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
@@ -87,24 +84,7 @@ class ChatMessageList extends StatelessWidget {
                   itemBuilder: (final context, final index) {
                     final ChatMessage message = data.messages[index];
                     final bool isUser = message.author == ChatAuthor.user;
-                    final SyncStatusState syncState = _resolveSyncState(
-                      context,
-                    );
-                    final bool isPending = isUser && !message.synchronized;
-                    final bool isOffline =
-                        syncState.networkStatus == NetworkStatus.offline;
-                    final bool isSyncing =
-                        syncState.syncStatus == SyncStatus.syncing &&
-                        !isOffline;
-
-                    String? statusLabel;
-                    if (isPending) {
-                      statusLabel = isOffline
-                          ? l10n.chatMessageStatusOffline
-                          : isSyncing
-                          ? l10n.chatMessageStatusSyncing
-                          : l10n.chatMessageStatusPending;
-                    }
+                    // Sync status text removed as requested
 
                     return Column(
                       crossAxisAlignment: isUser
@@ -123,22 +103,6 @@ class ChatMessageList extends StatelessWidget {
                           outgoingTextColor: theme.colorScheme.onPrimary,
                           incomingTextColor: theme.colorScheme.onSurface,
                         ),
-                        if (statusLabel != null)
-                          Padding(
-                            padding: EdgeInsets.only(
-                              left: isUser ? context.responsiveGapXS : 0,
-                              right: isUser ? 0 : context.responsiveGapXS,
-                              bottom: context.responsiveGapXS,
-                            ),
-                            child: Text(
-                              statusLabel,
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                color: isOffline
-                                    ? theme.colorScheme.error
-                                    : theme.colorScheme.primary,
-                              ),
-                            ),
-                          ),
                       ],
                     );
                   },
@@ -146,17 +110,6 @@ class ChatMessageList extends StatelessWidget {
               );
             },
           ),
-    );
-  }
-}
-
-SyncStatusState _resolveSyncState(final BuildContext context) {
-  try {
-    return context.read<SyncStatusCubit>().state;
-  } on ProviderNotFoundException {
-    return const SyncStatusState(
-      networkStatus: NetworkStatus.online,
-      syncStatus: SyncStatus.idle,
     );
   }
 }

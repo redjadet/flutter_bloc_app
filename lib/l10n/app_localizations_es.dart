@@ -431,10 +431,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get openGoogleMapsTooltip => 'Abrir demo de Google Maps';
 
   @override
-  String get openWhiteboardTooltip => 'Open Whiteboard';
+  String get openWhiteboardTooltip => 'Abrir Whiteboard';
 
   @override
-  String get openMarkdownEditorTooltip => 'Open Markdown Editor';
+  String get openMarkdownEditorTooltip => 'Abrir Editor de Markdown';
 
   @override
   String get chatPageTitle => 'Chat con IA';
@@ -580,11 +580,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registerTermsError => 'Debes aceptar los términos para continuar';
 
   @override
-  String get registerTermsDialogTitle => 'Términos y condiciones';
+  String get registerTermsDialogTitle => 'Términos y Condiciones';
 
   @override
   String get registerTermsDialogBody =>
-      'Esta aplicación de demostración debe usarse de forma responsable. Al registrarte aceptas proteger tus credenciales, cumplir con las leyes aplicables y entender que el contenido es meramente ilustrativo y puede cambiar sin previo aviso. Si no estás de acuerdo, interrumpe el proceso de registro.';
+      'Al crear una cuenta te comprometes a usar la aplicación de forma responsable, respetar a otros usuarios y cumplir con todas las leyes aplicables. Aceptas nuestra política de privacidad, reconoces que la disponibilidad del servicio puede cambiar y aceptas que tu cuenta puede suspenderse en caso de uso indebido o violaciones de estos términos.';
 
   @override
   String get registerTermsAcceptButton => 'Aceptar';
@@ -598,6 +598,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get registerTermsButtonLabel => 'Leer términos y condiciones';
+
+  @override
+  String get registerTermsSheetTitle => 'Términos y condiciones';
+
+  @override
+  String get registerTermsSheetBody =>
+      'Esta aplicación de demostración debe usarse de forma responsable. Al registrarte aceptas proteger tus credenciales, cumplir con las leyes aplicables y entender que el contenido es meramente ilustrativo y puede cambiar sin previo aviso. Si no estás de acuerdo, interrumpe el proceso de registro.';
 
   @override
   String get registerTermsDialogAcknowledge => 'He leído los términos';
