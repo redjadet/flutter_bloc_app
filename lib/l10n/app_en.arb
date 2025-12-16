@@ -793,12 +793,12 @@
   "@registerTermsButtonLabel": {
     "description": "Button label that opens the terms and conditions sheet"
   },
-  "registerTermsDialogTitle": "Terms & Conditions",
-  "@registerTermsDialogTitle": {
+  "registerTermsSheetTitle": "Terms & Conditions",
+  "@registerTermsSheetTitle": {
     "description": "Title for the terms and conditions sheet"
   },
-  "registerTermsDialogBody": "These terms outline the acceptable use of this demo application. By continuing, you agree to handle your account responsibly, protect your credentials, and comply with any applicable laws. The content provided is illustrative only and may change without notice. If you do not agree to these terms, please discontinue the registration process.",
-  "@registerTermsDialogBody": {
+  "registerTermsSheetBody": "These terms outline the acceptable use of this demo application. By continuing, you agree to handle your account responsibly, protect your credentials, and comply with any applicable laws. The content provided is illustrative only and may change without notice. If you do not agree to these terms, please discontinue the registration process.",
+  "@registerTermsSheetBody": {
     "description": "Body copy shown inside the terms sheet"
   },
   "registerTermsDialogAcknowledge": "I have read the terms",

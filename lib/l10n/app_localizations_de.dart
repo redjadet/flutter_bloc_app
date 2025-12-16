@@ -433,10 +433,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get openGoogleMapsTooltip => 'Google-Maps-Demo öffnen';
 
   @override
-  String get openWhiteboardTooltip => 'Open Whiteboard';
+  String get openWhiteboardTooltip => 'Whiteboard öffnen';
 
   @override
-  String get openMarkdownEditorTooltip => 'Open Markdown Editor';
+  String get openMarkdownEditorTooltip => 'Markdown-Editor öffnen';
 
   @override
   String get chatPageTitle => 'KI-Chat';
@@ -590,7 +590,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get registerTermsDialogBody =>
-      'Diese Demo-Anwendung darf nur verantwortungsvoll genutzt werden. Durch die Registrierung verpflichten Sie sich, Ihre Zugangsdaten zu schützen, geltende Gesetze einzuhalten und zu akzeptieren, dass Inhalte ausschließlich illustrativen Charakter haben und ohne Ankündigung geändert werden können. Wenn Sie nicht zustimmen, brechen Sie die Registrierung ab.';
+      'Mit der Kontoerstellung verpflichten Sie sich, die App verantwortungsvoll zu nutzen, andere Nutzer zu respektieren und alle geltenden Gesetze einzuhalten. Sie stimmen unserer Datenschutzrichtlinie zu, erkennen an, dass sich die Verfügbarkeit des Dienstes ändern kann, und akzeptieren, dass Ihr Konto bei Missbrauch oder Verstößen gesperrt werden kann.';
 
   @override
   String get registerTermsAcceptButton => 'Akzeptieren';
@@ -605,6 +605,13 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get registerTermsButtonLabel =>
       'Allgemeine Geschäftsbedingungen lesen';
+
+  @override
+  String get registerTermsSheetTitle => 'Allgemeine Geschäftsbedingungen';
+
+  @override
+  String get registerTermsSheetBody =>
+      'Diese Demo-Anwendung darf nur verantwortungsvoll genutzt werden. Durch die Registrierung verpflichten Sie sich, Ihre Zugangsdaten zu schützen, geltende Gesetze einzuhalten und zu akzeptieren, dass Inhalte ausschließlich illustrativen Charakter haben und ohne Ankündigung geändert werden können. Wenn Sie nicht zustimmen, brechen Sie die Registrierung ab.';
 
   @override
   String get registerTermsDialogAcknowledge =>

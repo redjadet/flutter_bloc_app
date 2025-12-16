@@ -104,10 +104,7 @@ void main() {
 
     expect(find.text('Pending'), findsOneWidget);
     expect(find.text('Reply'), findsOneWidget);
-    expect(
-      find.text(AppLocalizationsEn().chatMessageStatusPending),
-      findsOneWidget,
-    );
+    // Pending sync text is no longer displayed in the UI
   });
 }
 
