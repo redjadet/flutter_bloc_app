@@ -15,6 +15,13 @@ import 'package:flutter_bloc_app/firebase_options.dart';
 import 'package:flutter_bloc_app/shared/storage/shared_preferences_migration_service.dart';
 import 'package:flutter_bloc_app/shared/utils/initialization_guard.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
+// Global app version storage for synchronous access
+String? _appVersion;
+
+/// Get the app version synchronously, with fallback to default
+String getAppVersion() => _appVersion ?? '1.0.0';
 
 Future<void> runAppWithFlavor(final Flavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +45,8 @@ Future<void> runAppWithFlavor(final Flavor flavor) async {
       enableAssetSecrets && (FlavorManager.I.isDev || kDebugMode);
 
   await SecretConfig.load(allowAssetFallback: allowAssets);
+  // Load app version synchronously for DI registration
+  await _loadAppVersion();
   await configureDependencies();
   // Run migration from SharedPreferences to Hive if needed
   // Handle migration failures gracefully - app can continue without migration
@@ -207,4 +216,21 @@ void _registerCrashlyticsGlobalHandlers() {
     );
     return previousPlatformHandler?.call(error, stackTrace) ?? true;
   };
+}
+
+Future<void> _loadAppVersion() async {
+  try {
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    _appVersion = info.version.trim().isNotEmpty
+        ? info.version.trim()
+        : '1.0.0';
+    AppLogger.debug('App version loaded: $_appVersion');
+  } on Object catch (error, stackTrace) {
+    AppLogger.error(
+      'Failed to load app version, using default',
+      error,
+      stackTrace,
+    );
+    _appVersion = '1.0.0';
+  }
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_factories.dart';
@@ -45,6 +46,8 @@ import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/data/echo_websocket_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
+import 'package:flutter_bloc_app/main_bootstrap.dart';
+import 'package:flutter_bloc_app/shared/http/resilient_http_client.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
@@ -91,6 +94,17 @@ void _registerCounterRepository() {
 void _registerHttpServices() {
   registerLazySingletonIfAbsent<http.Client>(
     http.Client.new,
+    dispose: (final client) => client.close(),
+  );
+
+  // Register resilient HTTP client with enhanced capabilities
+  registerLazySingletonIfAbsent<ResilientHttpClient>(
+    () => ResilientHttpClient(
+      innerClient: getIt<http.Client>(),
+      networkStatusService: getIt<NetworkStatusService>(),
+      userAgent: 'FlutterBlocApp/${getAppVersion()}',
+      firebaseAuth: getIt<FirebaseAuth>(),
+    ),
     dispose: (final client) => client.close(),
   );
   registerLazySingletonIfAbsent<ChartRepository>(

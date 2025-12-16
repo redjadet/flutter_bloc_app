@@ -27,10 +27,8 @@ class GoogleMapsLocationList extends StatelessWidget {
   Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     if (locations.isEmpty) {
-      return Text(
-        emptyLabel,
-        style: theme.textTheme.bodyMedium,
-        textAlign: TextAlign.center,
+      return CommonEmptyState(
+        message: emptyLabel,
       );
     }
     return Column(
