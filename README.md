@@ -213,102 +213,105 @@ The checklist automatically runs:
 
 ## Architecture & Tooling
 
-This project enforces **Clean Architecture** guardrails, SOLID principles, and responsive design requirements across all modules. Every feature moves through the same pipeline: domain contracts → repositories → cubits/blocs → widgets.
+This project enforces **Clean Architecture** guardrails, SOLID principles, and responsive design requirements across all modules. `AppScope` bootstraps DI, ResponsiveScope, DeepLinkListener, and the global cubits (sync status, locale, theme, counter, remote config) using `BlocProviderHelpers` so each cubit can async-initialize safely.
 
 ### Architecture Diagram
 
 ```mermaid
 flowchart LR
+  AppScope["AppScope<br/>(MultiBlocProvider + DeepLinkListener + Sync bootstrap)"]
+
   subgraph Presentation
-    Widgets["Responsive Widgets<br/>(PlatformAdaptive, BlocSelector)"]
-    CounterCubit
-    ThemeCubit
-    LocaleCubit
-    AuthCubit
+    Widgets["Widgets & Pages<br/>(ResponsiveScope, PlatformAdaptive, BlocSelector)"]
+    FeatureCubits["Feature Cubits<br/>(Counter, Chat, Search, Profile, GraphQL, WebSocket, Calculator)"]
+    InfraCubits["Infra Cubits<br/>(Theme, Locale, RemoteConfig, DeepLink, SyncStatus)"]
+    Router["GoRouter / Navigation"]
   end
 
   subgraph Domain
-    UseCases["Use Cases & Contracts<br/>(Domain-layer logic)"]
-    Repositories["Repository Interfaces<br/>(CounterRepository, ThemeRepository, AuthRepository)"]
+    Contracts["Domain Contracts + Models<br/>(Repository interfaces, value objects)"]
   end
 
   subgraph Data
-    HiveRepos["Hive*Repository implementations<br/>(HiveCounterRepository, HiveThemeRepository, HiveLocaleRepository)"]
-    OfflineFirstRepos["OfflineFirst*Repository<br/>(Counter, Chat, Search, Profile, RemoteConfig, GraphQL)"]
-    NetworkRepos["FirebaseAuthRepository<br/>RemoteConfigRepository<br/>ChatGraphQLRepository"]
+    OfflineRepos["OfflineFirst* Repositories<br/>(Counter, Chat, Search, Profile, RemoteConfig, GraphQL)"]
+    CacheRepos["Hive Cache Repositories<br/>(Locale, Theme, Search, Profile, Remote Config)"]
+    RemoteRepos["Remote APIs<br/>(HTTP/REST, GraphQL, HuggingFace, Firebase, Maps)"]
+  end
+
+  subgraph Sync
+    PendingSync["PendingSyncRepository (Hive)"]
+    Registry["SyncableRepositoryRegistry"]
+    Coordinator["BackgroundSyncCoordinator"]
+    NetworkStatus["NetworkStatusService"]
   end
 
   subgraph Services
-    TimerService
     HiveService
+    TimerService
     BiometricAuthenticator
-    NativePlatformService
+    DeepLinkService
     RemoteConfigService
-    BackgroundSyncCoordinator
-    NetworkStatusService
-    PendingSyncRepository
+    NativePlatformService
+    ErrorNotificationService
+  end
+
+  subgraph Shared
+    ResponsiveExt["Responsive Extensions<br/>(spacing, typography, grids)"]
+    ContextUtilsNode["Context/Navigation Utils<br/>(mounted guards, pop helpers)"]
+    ErrorHandlingNode["ErrorHandling<br/>(snackbars, dialogs, loaders)"]
+    BlocProviderHelpers["BlocProviderHelpers<br/>(async init safeguards)"]
   end
 
   Injector["Dependency Injection<br/>(get_it + injector_*.dart)"]
 
-  subgraph Shared
-    ResponsiveExt["Responsive Extensions<br/>(spacing, typography, grids)"]
-    ContextUtilsNode["ContextUtils<br/>(mounted + lifecycle guards)"]
-    NavigationUtilsNode["NavigationUtils<br/>(popOrGoHome, maybePop)"]
-    ErrorHandlingNode["ErrorHandling<br/>(snackbars, dialogs, loading)"]
-  end
-
-  Widgets --> CounterCubit
-  Widgets --> ThemeCubit
-  Widgets --> LocaleCubit
-  Widgets --> AuthCubit
+  AppScope --> Widgets
+  AppScope --> FeatureCubits
+  AppScope --> InfraCubits
+  Widgets --> FeatureCubits
+  Widgets --> InfraCubits
   Widgets --> ResponsiveExt
-  Widgets --> NavigationUtilsNode
-  Widgets --> ErrorHandlingNode
-  Widgets --> ContextUtilsNode
-  CounterCubit --> UseCases
-  ThemeCubit --> UseCases
-  LocaleCubit --> UseCases
-  AuthCubit --> UseCases
-  UseCases --> Repositories
-  Repositories --> HiveRepos
-  Repositories --> OfflineFirstRepos
-  Repositories --> NetworkRepos
-  HiveRepos --> HiveService
-  OfflineFirstRepos --> HiveRepos
-  OfflineFirstRepos --> NetworkRepos
-  OfflineFirstRepos --> PendingSyncRepository
-  OfflineFirstRepos --> BackgroundSyncCoordinator
-  BackgroundSyncCoordinator --> NetworkStatusService
-  BackgroundSyncCoordinator --> PendingSyncRepository
-  HiveRepos --> RemoteConfigService
-  NetworkRepos --> BiometricAuthenticator
-  NetworkRepos --> NativePlatformService
-  CounterCubit --> TimerService
-  Injector --> CounterCubit
-  Injector --> ThemeCubit
-  Injector --> LocaleCubit
-  Injector --> AuthCubit
-  Injector --> TimerService
-  Injector --> HiveService
-  Injector --> UseCases
-
-  ContextUtilsNode -.-> Cubit
-  ErrorHandlingNode -.-> Cubit
-  NavigationUtilsNode -.-> Widgets
+  Widgets --> Router
+  FeatureCubits --> Contracts
+  InfraCubits --> Contracts
+  Contracts --> OfflineRepos
+  Contracts --> CacheRepos
+  Contracts --> RemoteRepos
+  OfflineRepos --> PendingSync
+  OfflineRepos --> CacheRepos
+  OfflineRepos --> RemoteRepos
+  CacheRepos --> HiveService
+  OfflineRepos --> HiveService
+  FeatureCubits --> TimerService
+  InfraCubits --> ErrorNotificationService
+  RemoteRepos --> RemoteConfigService
+  RemoteRepos --> DeepLinkService
+  RemoteRepos --> NativePlatformService
+  PendingSync --> Coordinator
+  Registry --> Coordinator
+  NetworkStatus --> Coordinator
+  Coordinator --> PendingSync
+  Coordinator --> InfraCubits
+  Injector --> AppScope
+  Injector --> Services
+  Injector --> OfflineRepos
+  Injector --> CacheRepos
+  Injector --> RemoteRepos
   ResponsiveExt -.-> Widgets
+  ContextUtilsNode -.-> Widgets
+  ErrorHandlingNode -.-> Widgets
+  BlocProviderHelpers -.-> AppScope
 ```
 
 ### Key Principles
 
-- **Clean Architecture pipeline** - Domain contracts, data repositories (Hive, Firebase, GraphQL), and presentation widgets remain isolated; use cases live in Dart-only modules and state flows through immutable `freezed` states.
+- **Clean boundaries** - Domain contracts and value objects sit at the seam; cubits talk to repository interfaces injected via `get_it`, and state is kept immutable with `Equatable`/`freezed` where appropriate.
 - **Presentation quality** - Widgets rely on responsive extensions (`responsiveGap*`, `pagePadding`, `responsiveFontSize`) and `PlatformAdaptive` builders instead of raw Material buttons, with `BlocSelector`/`RepaintBoundary` to minimize rebuilds. Advanced UI features demonstrate low-level Flutter rendering: `CustomPainter` for canvas drawing (whiteboard) and custom `RenderObject` for text layout (markdown editor).
-- **Dependency Injection** - `get_it` wires widgets, cubits, services, and repositories via `injector.dart`, modular `injector_registrations.dart`, factory helpers, and `injector_helpers.dart` to keep instantiation predictable.
-- **State safety** - Cubits use `CubitStateEmissionMixin`, `CubitExceptionHandler`, and `isClosed` guards; stream/timer/completer cleanup lives in overridden `close()`/`dispose()` paths to prevent leaks and race conditions.
-- **Context & navigation safety** - `ContextUtils.logNotMounted()` plus `NavigationUtils.maybePop()/popOrGoHome()` consolidate lifecycle guards and dialog dismissal so every widget handles async gaps and navigation consistently.
+- **Dependency injection & bootstrap** - `ensureConfigured()` + `registerAllDependencies()` wire repositories/services through `get_it`. `AppScope` starts the `BackgroundSyncCoordinator`, seeds `SyncStatusCubit`, runs `RemoteConfigCubit.initialize()`, and wraps the tree with `DeepLinkListener` and `ResponsiveScope`.
+- **State safety** - Cubits use `CubitExceptionHandler`, `CubitSubscriptionMixin`, and `CubitStateEmissionMixin` to avoid emit-after-close; timers/streams/completers are cancelled in `close()` with explicit `isClosed` guards.
+- **Context & navigation safety** - `ContextUtils.logNotMounted()` plus `NavigationUtils.maybePop()/popOrGoHome()` centralize mounted checks and dialog dismissal so async flows cannot navigate after dispose.
 - **Responsive + adaptive UX** - Layouts honor `contentMaxWidth`, `pagePadding`, adaptive grids, and platform-aware dialogs; gestures, images, and spacing reference shared responsive extensions for every screen size.
 - **Secure persistence** - `HiveService` (never `Hive.openBox` directly) encrypts data via `HiveKeyManager` and `flutter_secure_storage`, migrations run through `SharedPreferencesMigrationService`, and `BiometricAuthenticator`/`NativePlatformService` guard sensitive flows.
-- **Offline-first architecture** - Complete offline-first implementation with `BackgroundSyncCoordinator`, `PendingSyncRepository`, and `SyncableRepository` pattern. All core features (Counter, Chat, Search, Profile, Remote Config, GraphQL) work seamlessly offline with automatic background sync when online. See `docs/offline_first/` for detailed documentation.
+- **Offline-first architecture** - Offline-first repositories (counter, chat, search, profile, remote config, GraphQL) register with `SyncableRepositoryRegistry` and queue writes in `PendingSyncRepository`; `BackgroundSyncCoordinator` + `NetworkStatusService` + `TimerService` flush the queue, while `SyncStatusCubit` surfaces status/telemetry in the UI.
 - **Testing & quality gates** - `./bin/checklist` (`dart format`, `flutter analyze`, coverage) + `tool/test_coverage.sh` enforce `file_length_lint`, common-bug prevention suites, and coverage thresholds before commits.
 - **Localization & platform polish** - `.arb` regeneration happens through `flutter pub get`/`flutter gen-l10n`, `tool/ensure_localizations.dart` feeds iOS builds, and five locales (EN, TR, DE, FR, ES) are always available at runtime.
 
@@ -316,33 +319,39 @@ flowchart LR
 
 ```mermaid
 sequenceDiagram
+  participant AppScope
+  participant DI
   participant User
   participant View
   participant SharedUtils
   participant Cubit
-  participant UseCase
   participant Repository
-  participant Storage
+  participant Cache
+  participant Remote
+  participant SyncLayer
   participant Services
 
+  AppScope->>DI: ensureConfigured() + registerAllDependencies()
+  AppScope->>SyncLayer: start BackgroundSyncCoordinator + seed SyncStatusCubit
+  AppScope->>Cubit: create via BlocProviderHelpers.providerWithAsyncInit()
+  AppScope->>View: wrap with ResponsiveScope + DeepLinkListener + GoRouter
   User->>View: Trigger interaction (tap, navigation, lifecycle)
-  View->>SharedUtils: Apply responsive spacing + mounted guards
-  SharedUtils->>View: Safe callbacks (ContextUtils, NavigationUtils)
-  View->>Cubit: call exposed method (e.g., increment, load)
-  Cubit->>UseCase: enforce business rule (Flutter-agnostic logic)
-  UseCase->>Repository: read/write contract
-  Repository->>Storage: persist via `HiveService` (encrypted, migration-safe)
-  Repository->>Services: invoke `TimerService`, `RemoteConfig`, `Firebase`, `NativePlatformService`, or `BiometricAuthenticator`
-  Services-->>Repository: results / failure info
-  Repository-->>Cubit: `Either` result or data (wrapped in failure handling)
-  Cubit->>View: emit new `freezed` state (guards `isClosed`, `mounted`)
-  View->>SharedUtils: show dialogs/snackbars via ErrorHandling + NavigationUtils
-  SharedUtils-->>View: Safe dialog dismissal/loading overlays
-  View-->>User: rebuild UI, show dialogs/loading/animations
-  Cubit->>View: optional navigation via `GoRouter`/`ContextScopedNavigation` only after `ContextUtils.ensureMounted`
+  View->>SharedUtils: Apply responsive spacing + mounted/nav guards
+  SharedUtils-->>View: Guarded callbacks (ContextUtils, NavigationUtils)
+  View->>Cubit: Invoke feature action (load, fetch, increment)
+  Cubit->>Repository: Call domain contract via get_it
+  Repository->>Cache: Read/write via HiveService + cache repositories
+  Repository->>Remote: HTTP/GraphQL/HuggingFace/Firebase/RemoteConfig/DeepLink
+  Repository->>SyncLayer: Queue offline ops in PendingSyncRepository and register with SyncableRepositoryRegistry
+  SyncLayer-->>Repository: Flush queued writes when NetworkStatusService reports online (TimerService-driven)
+  Remote-->>Repository: Data/errors (normalized via CubitExceptionHandler)
+  Repository-->>Cubit: Domain models or failures
+  Cubit-->>View: Emit new Equatable/freezed state (ViewStatus + derived data)
+  View->>SharedUtils: Surface errors/toasts via ErrorHandling/NavigationUtils
+  SharedUtils-->>User: UI updates, dialogs, snackbars
 ```
 
-Shared utilities are treated as first-class participants in every flow: `ContextUtils` guarantees navigation only occurs while widgets are mounted, `NavigationUtils` centralizes pop/back handling, `ErrorHandling` wraps transient UI (snackbars, dialogs, loaders), and the responsive extensions keep layouts device-appropriate without duplicating spacing math.
+Startup is part of the flow: `AppScope` calls `ensureConfigured()`, starts background sync, initializes Remote Config, wires DeepLinkListener, and wraps the tree with ResponsiveScope so every cubit begins in a consistent, responsive context. Shared utilities (ContextUtils, NavigationUtils, ErrorHandling, responsive extensions) keep navigation, dialogs, and spacing guarded against unmounted contexts and async races.
 
 ---
 
