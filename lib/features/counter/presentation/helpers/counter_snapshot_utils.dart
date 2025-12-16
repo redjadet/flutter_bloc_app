@@ -1,11 +1,8 @@
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_state.dart';
+import 'package:flutter_bloc_app/shared/utils/state_restoration_mixin.dart';
 
-typedef RestorationResult = ({
-  CounterState state,
-  bool shouldPersist,
-  bool holdCountdown,
-});
+typedef RestorationResult = StateRestorationOutcome<CounterState>;
 
 RestorationResult restoreStateFromSnapshot(final CounterSnapshot snapshot) {
   final int safeCount = snapshot.count < 0 ? 0 : snapshot.count;
@@ -20,7 +17,7 @@ RestorationResult restoreStateFromSnapshot(final CounterSnapshot snapshot) {
       changeId: snapshot.changeId,
     ),
     shouldPersist: shouldPersist,
-    holdCountdown: holdCountdown,
+    holdSideEffects: holdCountdown,
   );
 }
 

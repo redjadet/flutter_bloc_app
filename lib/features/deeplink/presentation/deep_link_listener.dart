@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
@@ -8,8 +6,8 @@ import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_cubit.
 import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_state.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_target_extensions.dart';
 import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
-import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:go_router/go_router.dart';
 
 /// Listens for deep link events and navigates using the provided [GoRouter].
@@ -38,28 +36,19 @@ class DeepLinkListener extends StatelessWidget {
         child: BlocListener<DeepLinkCubit, DeepLinkState>(
           listenWhen: (final previous, final current) =>
               current is DeepLinkNavigate,
-          listener: (final context, final state) {
+          listener: (final context, final state) async {
             final DeepLinkNavigate navigate = state as DeepLinkNavigate;
             AppLogger.info('Navigating to: ${navigate.target.location}');
 
-            // Add a small delay to ensure the router is ready
-            // Check if context is still mounted before navigation
-            Future.delayed(const Duration(milliseconds: 100), () {
-              try {
-                // Check if context is still mounted before navigation
-                if (!context.mounted) {
-                  ContextUtils.logNotMounted('DeepLinkListener.navigate');
-                  AppLogger.debug(
-                    'Skipping deep link navigation – context no longer mounted',
-                  );
-                  return;
-                }
-                router.go(navigate.target.location);
-                AppLogger.info('Navigation completed successfully');
-              } on Exception catch (e) {
-                AppLogger.error('Navigation failed', e);
-              }
-            });
+            await NavigationUtils.safeGo(
+              context,
+              router: router,
+              location: navigate.target.location,
+              logContext: 'DeepLinkListener.navigate',
+              onSkipped: () => AppLogger.debug(
+                'Skipping deep link navigation – context no longer mounted',
+              ),
+            );
           },
           child: child,
         ),

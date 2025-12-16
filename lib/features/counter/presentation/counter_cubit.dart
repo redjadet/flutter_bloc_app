@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/state_restoration_mixin.dart';
 
 export 'package:flutter_bloc_app/features/counter/presentation/counter_state.dart';
 
@@ -48,12 +49,14 @@ class CounterCubit extends _CounterCubitBase {
         final RestorationResult restoration = restoreStateFromSnapshot(
           snapshot,
         );
-        _pauseCountdownForOneTick = restoration.holdCountdown;
-        emit(restoration.state);
-        _syncTickerForState(restoration.state);
-        if (restoration.shouldPersist) {
-          await _persistState(restoration.state);
-        }
+        await applyRestorationOutcome(
+          restoration,
+          onHoldChanged: ({required final bool holdSideEffects}) =>
+              _pauseCountdownForOneTick = holdSideEffects,
+          onAfterEmit: _syncTickerForState,
+          onPersist: _persistState,
+          logContext: 'CounterCubit.loadInitial',
+        );
         _subscribeToRepository();
       },
       onError: (_) {},
