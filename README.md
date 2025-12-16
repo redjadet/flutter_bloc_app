@@ -154,7 +154,7 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 | --- | --- | --- |
 | ![Payment calculator screen](assets/screenshots/calculator.png) | ![Payment summary screen](assets/screenshots/paymentSummary.png) | ![Register screen](assets/screenshots/register.png) |
 
-| Whiteboard | Markdown Editor | Color Picker |
+| Color Picker | Whiteboard | Markdown Editor |
 | --- | --- | --- |
 | ![Whiteboard color picker](assets/screenshots/whiteboard_color_pick.png) | ![Whiteboard](assets/screenshots/whiteboard.png) | ![Markdown Editor](assets/screenshots/markdown_editor.png) |
 
