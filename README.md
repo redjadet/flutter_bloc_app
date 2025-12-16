@@ -62,6 +62,7 @@ This comprehensive Flutter demo application showcases **Clean Architecture** pri
 - **Biometric Auth** - Fingerprint and face recognition support
 - **Secure Storage** - Keychain/Keystore-backed encryption key management
 - **Secrets Management** - Environment-based configuration with secure fallbacks
+- See `docs/authentication.md` for current auth routing, flows, and gaps.
 
 ### Data & Networking
 
