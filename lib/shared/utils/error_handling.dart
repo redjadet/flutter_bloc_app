@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
+import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 /// Common error handling utilities to reduce code duplication
@@ -76,39 +77,12 @@ class ErrorHandling {
     showErrorSnackBar(context, message, action: action);
   }
 
-  /// Get user-friendly error message from various error types
-  static String _getErrorMessage(final dynamic error) {
-    if (error == null) return 'An unknown error occurred';
-
-    final String errorString = error.toString().toLowerCase();
-
-    if (errorString.contains('network') || errorString.contains('connection')) {
-      return 'Network connection error. Please check your internet connection.';
-    }
-
-    if (errorString.contains('timeout')) {
-      return 'Request timed out. Please try again.';
-    }
-
-    if (errorString.contains('unauthorized') || errorString.contains('401')) {
-      return 'Authentication required. Please sign in again.';
-    }
-
-    if (errorString.contains('forbidden') || errorString.contains('403')) {
-      return "Access denied. You don't have permission for this action.";
-    }
-
-    if (errorString.contains('not found') || errorString.contains('404')) {
-      return 'The requested resource was not found.';
-    }
-
-    if (errorString.contains('server') || errorString.contains('500')) {
-      return 'Server error. Please try again later.';
-    }
-
-    // Default fallback
-    return 'Something went wrong. Please try again.';
-  }
+  /// Get user-friendly error message from various error types.
+  ///
+  /// Delegates to [NetworkErrorMapper] for consistent error handling
+  /// across UI and repository layers.
+  static String _getErrorMessage(final dynamic error) =>
+      NetworkErrorMapper.getErrorMessage(error);
 
   /// Clear all current snackbars
   static void clearSnackBars(final BuildContext context) {
