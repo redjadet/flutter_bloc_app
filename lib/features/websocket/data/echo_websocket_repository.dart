@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_connection_state.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/completer_helper.dart';
 import 'package:flutter_bloc_app/shared/utils/websocket_guard.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -29,7 +30,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
 
   WebSocketChannel? _channel;
   StreamSubscription<dynamic>? _channelSubscription;
-  Completer<void>? _connectionCompleter;
+  final CompleterHelper<void> _connectionCompleter = CompleterHelper<void>();
 
   final StreamController<WebsocketMessage> _messagesController =
       StreamController<WebsocketMessage>.broadcast();
@@ -61,13 +62,13 @@ class EchoWebsocketRepository implements WebsocketRepository {
 
     // If connection is in progress, wait for it to complete
     // If it fails, the completer will be cleared and we can retry
-    final Completer<void>? existingCompleter = _connectionCompleter;
+    final Completer<void>? existingCompleter = _connectionCompleter.pending;
     if (existingCompleter != null) {
       try {
         return await existingCompleter.future;
       } on Object catch (_) {
         // Connection failed, completer was cleared, retry below
-        if (_connectionCompleter == null && _channel == null) {
+        if (_connectionCompleter.pending == null && _channel == null) {
           // Fall through to start new connection attempt
         } else {
           // Another connection succeeded or is in progress
@@ -77,8 +78,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
     }
 
     // Start new connection attempt
-    final Completer<void> completer = Completer<void>();
-    _connectionCompleter = completer;
+    _connectionCompleter.start();
 
     _updateState(const WebsocketConnectionState.connecting());
     try {
@@ -91,18 +91,15 @@ class EchoWebsocketRepository implements WebsocketRepository {
         cancelOnError: true,
       );
       _updateState(const WebsocketConnectionState.connected());
-      if (!completer.isCompleted) {
-        completer.complete();
-      }
-      _connectionCompleter = null;
+      _connectionCompleter.completeAndReset();
     } on TimeoutException catch (error) {
-      _connectionCompleter = null;
+      _connectionCompleter.reset();
       await _handleError(error);
       // Don't complete completer with error - let concurrent calls retry
       // The rethrow will propagate the error to the current caller
       rethrow;
     } on Object catch (error) {
-      _connectionCompleter = null;
+      _connectionCompleter.reset();
       await _handleError(error);
       // Don't complete completer with error - let concurrent calls retry
       // The rethrow will propagate the error to the current caller
@@ -163,13 +160,9 @@ class EchoWebsocketRepository implements WebsocketRepository {
   @override
   Future<void> disconnect() async {
     // Cancel any pending connection attempt
-    final Completer<void>? completer = _connectionCompleter;
-    _connectionCompleter = null;
-    if (completer != null && !completer.isCompleted) {
-      completer.completeError(
-        StateError('Connection cancelled due to disconnect'),
-      );
-    }
+    _connectionCompleter.completeErrorAndReset(
+      StateError('Connection cancelled due to disconnect'),
+    );
 
     if (_channel == null) {
       if (_state.status != WebsocketStatus.disconnected) {
@@ -196,13 +189,9 @@ class EchoWebsocketRepository implements WebsocketRepository {
   @override
   Future<void> dispose() async {
     // Cancel any pending connection attempt
-    final Completer<void>? completer = _connectionCompleter;
-    _connectionCompleter = null;
-    if (completer != null && !completer.isCompleted) {
-      completer.completeError(
-        StateError('Connection cancelled due to dispose'),
-      );
-    }
+    _connectionCompleter.completeErrorAndReset(
+      StateError('Connection cancelled due to dispose'),
+    );
 
     await disconnect();
     await _messagesController.close();

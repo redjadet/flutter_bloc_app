@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:go_router/go_router.dart';
 
 /// Navigation helpers shared across presentation layer widgets.
@@ -29,6 +31,33 @@ class NavigationUtils {
     final bool didPop = maybePop(context);
     if (!didPop) {
       context.go(AppRoutes.counterPath);
+    }
+  }
+
+  /// Safely navigates using [GoRouter.go] after ensuring the [context] is still mounted.
+  ///
+  /// Useful for delayed navigation flows (e.g. deep links) where the caller might
+  /// no longer be active by the time navigation occurs.
+  static Future<void> safeGo(
+    final BuildContext context, {
+    required final GoRouter router,
+    required final String location,
+    final Duration delay = const Duration(milliseconds: 100),
+    final String logContext = 'NavigationUtils.safeGo',
+    final VoidCallback? onSkipped,
+  }) async {
+    if (delay > Duration.zero) {
+      await Future<void>.delayed(delay);
+    }
+    if (!context.mounted) {
+      ContextUtils.logNotMounted(logContext);
+      onSkipped?.call();
+      return;
+    }
+    try {
+      router.go(location);
+    } on Exception catch (error, stackTrace) {
+      AppLogger.error('$logContext failed', error, stackTrace);
     }
   }
 }

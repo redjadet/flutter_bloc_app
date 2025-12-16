@@ -1,7 +1,9 @@
 part of 'counter_cubit.dart';
 
 abstract class _CounterCubitBase extends Cubit<CounterState>
-    with CubitSubscriptionMixin<CounterState> {
+    with
+        CubitSubscriptionMixin<CounterState>,
+        StateRestorationMixin<CounterState> {
   _CounterCubitBase({
     required final CounterRepository repository,
     required final TimerService timerService,
@@ -189,15 +191,20 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
       (final CounterSnapshot snapshot) {
         // Check if cubit is closed before emitting to prevent errors
         if (isClosed) return;
-        if (shouldIgnoreRemoteSnapshot(state, snapshot)) {
-          return;
-        }
+        if (shouldIgnoreRemoteSnapshot(state, snapshot)) return;
+
         final RestorationResult restoration = restoreStateFromSnapshot(
           snapshot,
         );
-        _pauseCountdownForOneTick = restoration.holdCountdown;
-        emit(restoration.state);
-        _syncTickerForState(restoration.state);
+        unawaited(
+          applyRestorationOutcome(
+            restoration,
+            onHoldChanged: ({required final bool holdSideEffects}) =>
+                _pauseCountdownForOneTick = holdSideEffects,
+            onAfterEmit: _syncTickerForState,
+            logContext: 'CounterCubit._subscribeToRepository',
+          ),
+        );
       },
       onError: (final Object error, final StackTrace stackTrace) {
         AppLogger.error('CounterCubit.watch failed', error, stackTrace);

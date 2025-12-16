@@ -35,6 +35,12 @@ The following duplication reduction tasks have already been completed:
 
 8. **ViewStatusSwitcher Adoption** - Extended `ViewStatusSwitcher` usage to `GraphqlDemoPage` and `ChatMessageList` to remove duplicated loading/empty/error branching and aligned the counter hint with the shared switcher.
 
+9. **Navigation Pattern Standardization** - Added `NavigationUtils.safeGo` to centralize mounted checks, delays, and logging for router navigation; applied to `DeepLinkListener` to replace ad-hoc delayed navigation blocks.
+
+10. **State Restoration Pattern** - Added `StateRestorationMixin` + `StateRestorationOutcome` to standardize restoration flows; applied to the counter cubit and snapshot helpers to unify hold/persist behavior.
+
+11. **Completer Pattern Standardization** - Added `CompleterHelper` to wrap safe completion/error/reset patterns; adopted in `EchoWebsocketRepository` to remove bespoke completer handling.
+
 ---
 
 ## High Priority Tasks ✅
@@ -171,76 +177,7 @@ Previously identified medium-priority duplication tasks (widget error/loading ha
 
 ## Low Priority Tasks
 
-### 8. Navigation Pattern Standardization
-
-**Problem**: Similar navigation patterns with context checks:
-
-- Checking `context.mounted` before navigation
-- Error handling in navigation
-- Deep link navigation patterns
-
-**Files to Analyze**:
-
-- `lib/features/deeplink/presentation/deep_link_listener.dart`
-- Various route handlers
-
-**Potential Solution**:
-Create navigation helper utilities that:
-
-- Automatically check `context.mounted`
-- Handle navigation errors
-- Provide consistent navigation patterns
-
-**Estimated Impact**: ~50-80 lines of duplicate code eliminated
-
----
-
-### 9. State Restoration Pattern
-
-**Problem**: Similar state restoration patterns in cubits:
-
-- Restoring from snapshots
-- Handling restoration results
-- Persisting restored state
-
-**Files to Analyze**:
-
-- `lib/features/counter/presentation/counter_cubit_base.dart`
-- Other cubits with restoration logic
-
-**Potential Solution**:
-Create a `StateRestorationMixin` that provides:
-
-- Standardized restoration logic
-- Result handling
-- State persistence
-
-**Estimated Impact**: ~60-100 lines of duplicate code eliminated
-
----
-
-### 10. Completer Pattern Standardization
-
-**Problem**: Similar `Completer` usage patterns:
-
-- Checking `isCompleted` before completing
-- Error handling in completers
-- Cleanup in dispose
-
-**Files to Analyze**:
-
-- `lib/features/counter/data/rest_counter_repository.dart`
-- `lib/features/websocket/data/echo_websocket_repository.dart`
-- `lib/features/remote_config/data/repositories/remote_config_repository.dart`
-
-**Potential Solution**:
-Create a `CompleterHelper` utility that provides:
-
-- Safe completion methods
-- Error handling
-- Cleanup helpers
-
-**Estimated Impact**: ~40-60 lines of duplicate code eliminated
+Backlog cleared. Add new low-priority items below as they surface.
 
 ---
 
@@ -279,16 +216,17 @@ For each refactoring:
 
 **Completed Tasks**:
 
-- **High Priority**: ✅ All 3 tasks completed - Utilities created and ready for use
-  - `RepositoryWatchHelper<T>` - Generic repository watch helper
-  - `StreamControllerLifecycle<T>` - StreamController lifecycle mixin
-  - `CubitErrorHandler<S>` - Cubit error handling mixin
+- **High Priority**: ✅ All 3 tasks completed - Utilities created and ready for use.
+  - `RepositoryWatchHelper<T>` - Generic repository watch helper.
+  - `StreamControllerLifecycle<T>` - StreamController lifecycle mixin.
+  - `CubitErrorHandler<S>` - Cubit error handling mixin.
+- **Low Priority**: ✅ Navigation, state restoration, and completer patterns standardized and adopted in first consumers.
 
 **Remaining Tasks**:
 
 - **Medium Priority**: Add new items as they are identified (current backlog cleared)
-- **Low Priority**: ~150-240 lines can be eliminated
-- **Total Potential**: ~150-240 additional lines of duplicate code can be eliminated (based on low-priority backlog)
+- **Low Priority**: New items can be logged here as they surface
+- **Total Potential**: Track as new duplication candidates are added
 
 **Note**: The high priority utilities are now available for use. Repositories, services, and cubits can be incrementally refactored to use these utilities, which will eliminate the estimated duplicate code as they are adopted.
 
