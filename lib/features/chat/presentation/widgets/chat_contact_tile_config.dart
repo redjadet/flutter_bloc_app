@@ -8,6 +8,10 @@ class ChatContactTileConfig {
     required this.messageFontSize,
     required this.messageLineHeight,
     required this.timeFontSize,
+    required this.textColor,
+    required this.subtleTextColor,
+    required this.unreadBackgroundColor,
+    required this.unreadTextColor,
     required this.horizontalPadding,
     required this.verticalPadding,
     required this.horizontalGap,
@@ -17,11 +21,11 @@ class ChatContactTileConfig {
     nameTextStyle = TextStyle(
       fontSize: nameFontSize,
       fontWeight: FontWeight.bold,
-      color: Colors.black,
+      color: textColor,
       fontFamily: 'Roboto',
     );
     unreadTextStyle = TextStyle(
-      color: Colors.white,
+      color: unreadTextColor,
       fontSize: isTabletOrLarger ? 13 : 12,
       fontWeight: FontWeight.bold,
       fontFamily: 'Roboto',
@@ -29,12 +33,12 @@ class ChatContactTileConfig {
     messageTextStyle = TextStyle(
       fontSize: messageFontSize,
       height: messageLineHeight / messageFontSize,
-      color: Colors.black,
+      color: subtleTextColor,
       fontFamily: 'Roboto',
     );
     timeTextStyle = TextStyle(
       fontSize: timeFontSize,
-      color: Colors.black,
+      color: subtleTextColor,
       fontFamily: 'Roboto',
     );
   }
@@ -43,6 +47,10 @@ class ChatContactTileConfig {
     final isDesktopLayout = context.isDesktop;
     final isTabletOrLarger = context.isTabletOrLarger;
     final usesTabletTypography = isTabletOrLarger && !isDesktopLayout;
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+    final subtleTextColor =
+        theme.textTheme.bodyMedium?.color ?? colors.onSurfaceVariant;
 
     final profileImageSize = isDesktopLayout
         ? 60.0
@@ -98,6 +106,10 @@ class ChatContactTileConfig {
       messageFontSize: messageFontSize,
       messageLineHeight: messageLineHeight,
       timeFontSize: timeFontSize,
+      textColor: colors.onSurface,
+      subtleTextColor: subtleTextColor,
+      unreadBackgroundColor: colors.primary,
+      unreadTextColor: colors.onPrimary,
       horizontalPadding: horizontalPadding,
       verticalPadding: verticalPadding,
       horizontalGap: horizontalGap,
@@ -111,6 +123,10 @@ class ChatContactTileConfig {
   final double messageFontSize;
   final double messageLineHeight;
   final double timeFontSize;
+  final Color textColor;
+  final Color subtleTextColor;
+  final Color unreadBackgroundColor;
+  final Color unreadTextColor;
   final double horizontalPadding;
   final double verticalPadding;
   final double horizontalGap;
