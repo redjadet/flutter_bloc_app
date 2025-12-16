@@ -3,6 +3,11 @@ library;
 
 // Extensions
 export 'extensions/build_context_l10n.dart';
+// HTTP
+export 'http/auth_token_manager.dart';
+export 'http/http_request_extensions.dart';
+export 'http/resilient_http_client.dart';
+export 'http/resilient_http_client_extensions.dart';
 // Platform services
 export 'platform/biometric_authenticator.dart';
 export 'platform/native_platform_service.dart';

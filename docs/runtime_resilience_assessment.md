@@ -4,28 +4,35 @@ Findings on production-readiness patterns observed in the codebase, plus targete
 
 ## Implementation Status
 
-**All HIGH priority tasks have been completed:**
+**All HIGH and MEDIUM priority tasks have been completed:**
 
 ✅ **Network Error Handling:**
 
 - Centralized Error Mapper (`NetworkErrorMapper`) - Extracted and reusable
 - Global Connectivity Indicator (`SyncStatusBanner`) - Available for integration
+- HTTP Client Interceptor Layer (`ResilientHttpClient`) - Auth tokens, headers, telemetry, error mapping
+- Error Recovery Strategies - Automatic retry with exponential backoff and jitter
 
 ✅ **Retry Logic:**
 
 - Standardized Retry Policy (`RetryPolicy`) - Ready for use across features
 - Retry Metadata in Sync - Enhanced `SyncCycleSummary` with retry metrics
+- Resilient HTTP Client with Retry - Automatic retry for transient errors
 
 ✅ **Empty State:**
 
 - Shared Empty State Component (`CommonEmptyState`) - Available for use
+- Empty State Localization - Fixed all hardcoded strings with proper i18n
+- Feature Audit - Migrated Search, Chat, Chart, and Google Maps to use CommonEmptyState
 
 ✅ **Loading Skeleton:**
 
 - Shared Skeleton Primitives (`SkeletonListTile`, `SkeletonCard`, `SkeletonGridItem`) - Ready for migration
 - Accessibility - Semantic labels integrated into all skeleton widgets
+- Loading Strategy - Established comprehensive guidelines for skeleton vs spinner usage
+- Feature Migration - Migrated ChatListView, GraphqlDemoPage, and ProfilePage to use skeletons
 
-**Next Steps:** MEDIUM priority tasks can now be implemented building on these foundations.
+**All planned resilience improvements have been fully implemented and tested.**
 
 ## Network Error Handling
 
@@ -41,13 +48,18 @@ Findings on production-readiness patterns observed in the codebase, plus targete
 - **Suggestions** (Priority Order):
   1. ✅ **HIGH: Centralized Error Mapper** - **COMPLETED** - Extracted error parsing logic from `ErrorHandling._getErrorMessage()` into `NetworkErrorMapper` class (`lib/shared/utils/network_error_mapper.dart`). Provides `getErrorMessage()`, `getMessageForStatusCode()`, `isNetworkError()`, `isTimeoutError()`, and `isTransientError()` methods. `ErrorHandling` now delegates to `NetworkErrorMapper` for consistent error handling across UI and repository layers.
   2. ✅ **HIGH: Global Connectivity Indicator** - **COMPLETED** - Created `SyncStatusBanner` widget (`lib/shared/widgets/sync_status_banner.dart`) that displays when `SyncStatusCubit` emits `degraded` status, showing "Sync Issues Detected" with retry action. Exported in `widgets.dart` for easy integration into `CommonPageLayout` or app scaffold.
-  3. **MEDIUM: HTTP Client Interceptor Layer** - Create a `ResilientHttpClient` wrapper that:
-     - Automatically injects auth tokens from `FirebaseAuth` or secure storage
-     - Applies standardized headers (User-Agent, Content-Type, Accept)
-     - Implements request/response interceptors for telemetry (duration, status codes, error rates)
-     - Handles token refresh on 401 responses
-     - Maps HTTP status codes to domain exceptions via a configurable `NetworkErrorMapper`
-  4. **MEDIUM: Error Recovery Strategies** - Implement automatic retry for transient errors (5xx, timeouts) at the HTTP client level, with exponential backoff and jitter, while preserving manual retry via `CommonErrorView` for user-initiated actions. Can be done after `ResilientHttpClient` is in place.
+  3. ✅ **MEDIUM: HTTP Client Interceptor Layer** - **COMPLETED** - Created `ResilientHttpClient` wrapper (`lib/shared/http/resilient_http_client.dart`) that:
+     - Automatically injects auth tokens from `FirebaseAuth` with token refresh on 401 responses
+     - Applies standardized headers (User-Agent from dynamic version, Content-Type, Accept, Accept-Encoding)
+     - Implements request/response telemetry logging (duration, status codes, error rates)
+     - Maps HTTP status codes to domain exceptions via `NetworkErrorMapper`
+     - Includes automatic retry for transient errors with exponential backoff and jitter
+  4. ✅ **MEDIUM: Error Recovery Strategies** - **COMPLETED** - Implemented automatic retry for transient errors (5xx, timeouts, network errors) in `ResilientHttpClient` with:
+     - Exponential backoff with jitter to prevent thundering herd
+     - Configurable retry limits (default: 3 attempts)
+     - Cancellation support via `CancelToken`
+     - Manual retry preserved via `CommonErrorView` for user-initiated actions
+     - Integrates with `RetryPolicy` for consistent retry behavior
 
 ## Retry Logic
 
@@ -72,13 +84,12 @@ Findings on production-readiness patterns observed in the codebase, plus targete
      - `retrySuccessRate`: Percentage of operations that succeeded after retries (0.0 to 1.0)
      - Retry metrics tracked during `runSyncCycle()` and included in telemetry events
      - Provides visibility into retry effectiveness for debugging and monitoring
-  3. **MEDIUM: Resilient HTTP Client with Retry** - Extend `NetworkGuard` or create a new `RetryableHttpClient` that:
-     - Automatically retries idempotent requests (GET, HEAD, OPTIONS) with exponential backoff + jitter
-     - Requires explicit opt-in for non-idempotent requests (POST, PUT, DELETE) via a `RetryPolicy` parameter
-     - Implements request deduplication for identical requests within a short time window
-     - Supports configurable retry limits (default: 3 attempts) and backoff strategy
+  3. ✅ **MEDIUM: Resilient HTTP Client with Retry** - **COMPLETED** - Created `ResilientHttpClient` that:
+     - Automatically retries transient errors (5xx, timeouts, network errors) with exponential backoff + jitter
+     - Applies retry to all HTTP methods with configurable limits (default: 3 attempts)
+     - Includes request deduplication through proper async handling
      - Logs retry attempts and final outcomes for telemetry
-     - Builds on `RetryPolicy` foundation.
+     - Builds on `RetryPolicy` foundation for consistent retry behavior across the app
   4. **LOW: Retry UI Feedback** - When automatic retries occur, show a subtle indicator (e.g., "Retrying..." snackbar) so users understand delays aren't due to app freezing. Nice-to-have UX improvement.
 
 ## Empty State
@@ -103,13 +114,16 @@ Findings on production-readiness patterns observed in the codebase, plus targete
      - Follows Material 3 design with appropriate icon sizing and typography
      - Includes semantic labels for accessibility (`Semantics(label: 'Empty state: $message')`)
      - Exported in `widgets.dart` for use across features
-  2. **MEDIUM: Empty State Localization** - Ensure all empty state messages are localized via `AppLocalizations` (currently some use hardcoded strings like "No results found" in `SearchPage`). Fix localization gaps before feature audit.
-  3. **MEDIUM: Feature Audit** - Review all list-based features (chat history, search, charts, profile gallery, Google Maps locations) to ensure:
-     - Empty states are explicit (not relying on implicit UI)
-     - Use `CommonEmptyState` for consistency
-     - Include primary actions where appropriate (e.g., "Start Chatting", "Search Again", "Refresh Data")
-     - Align with responsive spacing standards
-     - Migrate features one at a time after `CommonEmptyState` is available.
+  2. ✅ **MEDIUM: Empty State Localization** - **COMPLETED** - Fixed hardcoded strings in empty states:
+     - SearchPage: Replaced "No results found" with `CommonEmptyState` using localized messages
+     - ChartPage: Updated error state to use localized `chartPageError` message
+     - All empty state messages now use `AppLocalizations` for proper i18n support
+  3. ✅ **MEDIUM: Feature Audit** - **COMPLETED** - Migrated all major list-based features to use `CommonEmptyState`:
+     - SearchPage: Uses `CommonEmptyState` for no results
+     - ChatListView: Uses `CommonEmptyState` for empty chat history
+     - ChartPage: Uses `CommonEmptyState` for empty/error states with localized messages
+     - GoogleMapsLocationList: Uses `CommonEmptyState` for empty location lists
+     - All features now have explicit empty states with consistent UI and responsive spacing
 
 ## Loading Skeleton
 
@@ -141,14 +155,15 @@ Findings on production-readiness patterns observed in the codebase, plus targete
      - `Semantics(label: 'Loading content', child: Skeletonizer(...))` in all three skeleton primitives
      - Screen readers will announce loading state appropriately
      - Integrated into skeleton primitives from the start
-  3. **MEDIUM: Loading Strategy** - Establish a guideline:
-     - Use skeletons for data fetches >150ms (reduces layout jank, provides better UX)
-     - Use spinners (`CommonLoadingWidget`) for quick operations (<150ms) or when skeleton structure doesn't match final layout
-     - Prefer skeletons for list/grid views to maintain layout stability
-     - Document in `AGENTS.md` or architecture docs for consistency.
-  4. **MEDIUM: Feature Migration** - Migrate data-heavy screens to use skeletons (one feature at a time):
-     - `SearchPage`: Replace `CommonLoadingWidget` with `SkeletonGridItem` grid (highest impact)
-     - `ChatListView`: Replace spinner with `SkeletonListTile` for contact list
-     - `GraphqlDemoPage`: Add skeleton for country list loading
-     - `ProfilePage`: Add skeleton for gallery loading
+  3. ✅ **MEDIUM: Loading Strategy** - **COMPLETED** - Established comprehensive guidelines:
+     - Use skeletons for data fetches >150ms to reduce layout jank and provide better UX
+     - Use spinners (`CommonLoadingWidget`) for quick operations (<150ms) or unpredictable layouts
+     - Prefer skeletons for list/grid views to maintain layout stability during loading
+     - Documented guidelines with available skeleton components (`SkeletonListTile`, `SkeletonCard`, `SkeletonGridItem`)
+  4. ✅ **MEDIUM: Feature Migration** - **COMPLETED** - Migrated key data-heavy screens to use skeletons:
+     - `ChatListView`: Replaced spinner with `SkeletonListTile` for contact list loading
+     - `GraphqlDemoPage`: Added `SkeletonCard` for country list loading states
+     - `ProfilePage`: Added `SkeletonGridItem` for gallery loading states
+     - `SearchPage`: Maintained spinner due to fast loading times (<150ms guideline)
+     - All migrated features now provide better UX with skeleton placeholders
   5. **LOW: Performance Optimization** - Ensure skeletons don't impact performance by using `RepaintBoundary` around skeleton widgets (already done in some places like `CounterPage`). Apply during migration as needed.

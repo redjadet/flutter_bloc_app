@@ -9,7 +9,6 @@ import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/cubit/chart_cubit.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_content_list.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_loading_list.dart';
-import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_message_list.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:intl/intl.dart';
 
@@ -84,11 +83,16 @@ class _ChartView extends StatelessWidget {
             }
 
             if (data.showError) {
-              return ChartMessageList(message: l10n.chartPageError);
+              return CommonEmptyState(
+                message: l10n.chartPageError,
+                icon: Icons.error_outline,
+              );
             }
 
             if (data.showEmpty) {
-              return ChartMessageList(message: l10n.chartPageEmpty);
+              return CommonEmptyState(
+                message: l10n.chartPageEmpty,
+              );
             }
 
             final locale = Localizations.localeOf(context).toString();

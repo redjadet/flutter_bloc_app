@@ -12,6 +12,7 @@ import 'package:flutter_bloc_app/features/search/presentation/widgets/search_tex
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_empty_state.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/view_status_switcher.dart';
@@ -92,13 +93,8 @@ class _SearchPageContent extends StatelessWidget {
                   ),
                   builder: (final context, final bodyData) {
                     if (!bodyData.hasResults) {
-                      return Center(
-                        child: Text(
-                          'No results found',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontSize: context.responsiveBodySize,
-                          ),
-                        ),
+                      return const CommonEmptyState(
+                        message: 'No results found',
                       );
                     }
 

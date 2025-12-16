@@ -11,6 +11,7 @@ import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_empty_state.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 
@@ -43,16 +44,8 @@ class ChatListView extends StatelessWidget {
       ),
     );
     if (contacts.isEmpty) {
-      final theme = Theme.of(context);
-      return Center(
-        child: Padding(
-          padding: context.responsiveStatePadding,
-          child: Text(
-            context.l10n.chatHistoryEmpty,
-            style: theme.textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-        ),
+      return CommonEmptyState(
+        message: context.l10n.chatHistoryEmpty,
       );
     }
     return SafeArea(
