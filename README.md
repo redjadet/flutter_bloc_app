@@ -1,6 +1,6 @@
 # Flutter BLoC App
 
-A production-ready Flutter application demonstrating enterprise-grade architecture patterns, secure data persistence, and modern mobile development best practices.
+A production-ready Flutter application demonstrating enterprise-grade architecture patterns, secure data persistence, and modern mobile development best practices. Integrated AI-powered chat using Hugging Face OSS models.
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.38.5-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.10.4-blue.svg)](https://dart.dev)
@@ -10,24 +10,42 @@ A production-ready Flutter application demonstrating enterprise-grade architectu
 
 ---
 
-## Overview
+## What This App Demonstrates
 
-This comprehensive Flutter demo application showcases **Clean Architecture** principles, **BLoC/Cubit state management**, encrypted local storage, real-time features, authentication flows, and modern UI/UX patterns. Built with production-ready practices, the app serves as both a learning resource and a reference implementation for Flutter developers.
+- Production-grade Flutter architecture with offline-first data flow, responsive/adaptive UI, and real-time features (websockets, maps, chat).
+- Security-minded patterns: encrypted Hive storage, biometric gating for sensitive navigation, auth-aware routing, and localization-backed error handling.
+- DevEx focus: high coverage, lint-enforced file-length/spacing rules, single-command delivery checklist, and DI-driven testability.
 
-### Key Highlights
+## Architecture Decisions
 
-| Area | Details |
-| --- | --- |
-| **Architecture** | Clean Architecture + BLoC/Cubit with `get_it` DI, `freezed` states, and repository abstractions |
-| **Secure Storage** | AES-256 encrypted Hive boxes, keychain-kept secrets, migration helpers |
-| **Offline-First** | Complete offline-first implementation with background sync, pending operations queue, and cache-first strategies across all core features |
-| **Responsive UI** | Material 3 + Cupertino adaptive widgets, responsive spacing helpers, reusable layout primitives |
-| **Low-Level Rendering** | Custom `CustomPainter` for whiteboard drawing and custom `RenderObject` for markdown text layout |
-| **Quality Bar** | 86.53% test coverage (8116/9379 lines) across unit/bloc/widget/golden suites, automated linting, common bug checklist |
-| **Cloud Integrations** | Firebase Auth, Remote Config, analytics hooks, Firestore/REST/GraphQL/WebSocket demos |
-| **Internationalization** | Five fully-localized locales (EN, TR, DE, FR, ES) with automated ARB generation |
-| **Dev Experience** | One-click checklist (`./bin/checklist`), performance profiler, custom lint rules, CI-ready scripts |
-| **Real-time & Maps** | AI chat with Hugging Face OSS models, WebSocket echo client, Google/Apple Maps fallbacks |
+- Clean Architecture layering (domain → data → presentation) keeps business logic Flutter-agnostic; repositories wrap Hive/Firebase/REST/GraphQL and expose contracts.
+- Dependency injection via `get_it` at the composition root (`injector.dart`, `injector_registrations.dart`, `injector_factories.dart`); widgets/cubits receive dependencies through constructors for testability.
+- Offline-first by default: local repos paired with remote repos through sync registries and pending operation queues, so features keep working without connectivity.
+- Responsive/adaptive UI baseline with shared spacing/typography utilities and platform-aware components.
+
+## State Management Rationale (Why BLoC)
+
+- Predictable, replayable state transitions (events in, state out) with bloc observers for debugging.
+- Cubits/blocs isolate business rules from widgets, enabling fast unit/bloc tests without pumps or platform fakes.
+- `BlocSelector`-driven rebuild control keeps large trees performant; immutable states reduce accidental side effects.
+
+## Backend & Authentication Flow
+
+- Firebase Auth + FirebaseUI for email/password, Google, and anonymous sign-in; GoRouter redirect guards authenticated vs unauthenticated flows while allowing deep links.
+- Anonymous users can upgrade accounts; Firebase ID tokens managed by the SDK, with Realtime Database keyed by `user.uid` and a 5s auth wait guard.
+- Registration page validates client-side only; real account creation lives in the FirebaseUI flow. Biometric prompt protects settings access.
+
+## AI Integration Overview
+
+- Chat feature uses Hugging Face Inference API via an offline-first repository that queues messages locally and syncs replies, with cached history storage and guarded error handling.
+- Model selection comes from config (`SecretConfig`) and responses are parsed/validated before surfacing in UI.
+
+## Trade-offs & Future Improvements
+
+- Deep links bypass auth redirect for non-root routes; page-level guards may be needed if features require strict auth.
+- No role/claims-based authorization yet; current model is authenticated vs anonymous only.
+- Token handling relies on Firebase defaults; non-Firebase HTTP clients don’t attach auth headers automatically.
+- Biometric authenticator allows access when sensors are unavailable/not enrolled—tighten policy if stronger gating is required.
 
 ---
 
