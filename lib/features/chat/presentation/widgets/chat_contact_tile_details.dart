@@ -129,7 +129,7 @@ class _ChatUnreadBadge extends StatelessWidget {
       vertical: config.isTabletOrLarger ? 6 : 4,
     ),
     decoration: BoxDecoration(
-      color: const Color(0xFF007AFF),
+      color: config.unreadBackgroundColor,
       borderRadius: BorderRadius.circular(
         config.isTabletOrLarger ? 14 : 12,
       ),
