@@ -1,73 +1,13 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_cycle_summary.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
-
-/// Immutable summary of a sync cycle for diagnostics/telemetry.
-class SyncCycleSummary extends Equatable {
-  const SyncCycleSummary({
-    required this.recordedAt,
-    required this.durationMs,
-    required this.pullRemoteCount,
-    required this.pullRemoteFailures,
-    required this.pendingAtStart,
-    required this.operationsProcessed,
-    required this.operationsFailed,
-    required this.pendingByEntity,
-    this.prunedCount = 0,
-  });
-
-  final DateTime recordedAt;
-  final int durationMs;
-  final int pullRemoteCount;
-  final int pullRemoteFailures;
-  final int pendingAtStart;
-  final int operationsProcessed;
-  final int operationsFailed;
-  final Map<String, int> pendingByEntity;
-  final int prunedCount;
-
-  SyncCycleSummary copyWith({
-    DateTime? recordedAt,
-    int? durationMs,
-    int? pullRemoteCount,
-    int? pullRemoteFailures,
-    int? pendingAtStart,
-    int? operationsProcessed,
-    int? operationsFailed,
-    Map<String, int>? pendingByEntity,
-    int? prunedCount,
-  }) => SyncCycleSummary(
-    recordedAt: recordedAt ?? this.recordedAt,
-    durationMs: durationMs ?? this.durationMs,
-    pullRemoteCount: pullRemoteCount ?? this.pullRemoteCount,
-    pullRemoteFailures: pullRemoteFailures ?? this.pullRemoteFailures,
-    pendingAtStart: pendingAtStart ?? this.pendingAtStart,
-    operationsProcessed: operationsProcessed ?? this.operationsProcessed,
-    operationsFailed: operationsFailed ?? this.operationsFailed,
-    pendingByEntity: pendingByEntity ?? this.pendingByEntity,
-    prunedCount: prunedCount ?? this.prunedCount,
-  );
-
-  @override
-  List<Object?> get props => <Object?>[
-    recordedAt,
-    durationMs,
-    pullRemoteCount,
-    pullRemoteFailures,
-    pendingAtStart,
-    operationsProcessed,
-    operationsFailed,
-    pendingByEntity,
-    prunedCount,
-  ];
-}
 
 /// Runs a single sync cycle and returns a summary for diagnostics.
 Future<SyncCycleSummary> runSyncCycle({
@@ -132,6 +72,9 @@ Future<SyncCycleSummary> runSyncCycle({
         'operationsFailed': summary.operationsFailed,
         'pendingByEntity': pendingByEntity,
         'prunedCount': summary.prunedCount,
+        'retryAttemptsByEntity': summary.retryAttemptsByEntity,
+        'lastErrorByEntity': summary.lastErrorByEntity,
+        'retrySuccessRate': summary.retrySuccessRate,
       },
     );
     emitStatus(SyncStatus.idle);
@@ -141,6 +84,10 @@ Future<SyncCycleSummary> runSyncCycle({
   emitStatus(SyncStatus.syncing);
   int processed = 0;
   int failed = 0;
+  int successfulAfterRetry = 0;
+  final Map<String, List<int>> retryCountsByEntity = <String, List<int>>{};
+  final Map<String, String> lastErrorByEntity = <String, String>{};
+
   for (final SyncOperation operation in pending) {
     final SyncableRepository? repository = registry.resolve(
       operation.entityType,
@@ -157,10 +104,20 @@ Future<SyncCycleSummary> runSyncCycle({
       'BackgroundSyncCoordinator processing ${operation.entityType} '
       '(id=${operation.id}, retry=${operation.retryCount})',
     );
+
+    // Track retry count for this entity
+    retryCountsByEntity.putIfAbsent(operation.entityType, () => <int>[]);
+    retryCountsByEntity[operation.entityType]!.add(operation.retryCount);
+
     try {
       processed++;
       await repository.processOperation(operation);
       await pendingRepository.markCompleted(operation.id);
+
+      // If this operation had retries and succeeded, count it
+      if (operation.retryCount > 0) {
+        successfulAfterRetry++;
+      }
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'BackgroundSyncCoordinator.processOperation failed for '
@@ -169,6 +126,8 @@ Future<SyncCycleSummary> runSyncCycle({
         stackTrace,
       );
       failed++;
+      lastErrorByEntity[operation.entityType] = error.toString();
+
       final int backoffMinutes = pow(
         2,
         operation.retryCount.clamp(0, 5),
@@ -184,6 +143,25 @@ Future<SyncCycleSummary> runSyncCycle({
     }
   }
 
+  // Calculate average retry attempts by entity
+  final Map<String, double> retryAttemptsByEntity = <String, double>{};
+  for (final MapEntry<String, List<int>> entry in retryCountsByEntity.entries) {
+    final List<int> counts = entry.value;
+    if (counts.isNotEmpty) {
+      final double average = counts.reduce((a, b) => a + b) / counts.length;
+      retryAttemptsByEntity[entry.key] = average;
+    }
+  }
+
+  // Calculate retry success rate
+  final int totalOperationsWithRetries = retryCountsByEntity.values
+      .expand((list) => list)
+      .where((count) => count > 0)
+      .length;
+  final double retrySuccessRate = totalOperationsWithRetries > 0
+      ? successfulAfterRetry / totalOperationsWithRetries
+      : 0.0;
+
   stopwatch.stop();
   final SyncCycleSummary summary = SyncCycleSummary(
     recordedAt: DateTime.now().toUtc(),
@@ -194,6 +172,9 @@ Future<SyncCycleSummary> runSyncCycle({
     operationsProcessed: processed,
     operationsFailed: failed,
     pendingByEntity: pendingByEntity,
+    retryAttemptsByEntity: retryAttemptsByEntity,
+    lastErrorByEntity: lastErrorByEntity,
+    retrySuccessRate: retrySuccessRate,
   );
   telemetry(
     'sync_cycle_completed',
@@ -206,6 +187,9 @@ Future<SyncCycleSummary> runSyncCycle({
       'operationsFailed': summary.operationsFailed,
       'pendingByEntity': pendingByEntity,
       'prunedCount': summary.prunedCount,
+      'retryAttemptsByEntity': retryAttemptsByEntity,
+      'lastErrorByEntity': lastErrorByEntity,
+      'retrySuccessRate': retrySuccessRate,
     },
   );
   return summary;

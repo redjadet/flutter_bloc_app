@@ -4,11 +4,12 @@ import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_runner.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_cycle_summary.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
-export 'background_sync_runner.dart' show SyncCycleSummary;
+export 'sync_cycle_summary.dart';
 
 class BackgroundSyncCoordinator {
   BackgroundSyncCoordinator({
