@@ -401,6 +401,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Couldn\'t clear profile cache';
 
   @override
+  String get networkRetryingSnackBarMessage => 'Retrying…';
+
+  @override
   String get appInfoVersionLabel => 'Version';
 
   @override

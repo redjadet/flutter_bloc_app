@@ -413,6 +413,9 @@ class AppLocalizationsFr extends AppLocalizations {
       'Impossible de vider le cache du profil';
 
   @override
+  String get networkRetryingSnackBarMessage => 'Nouvelle tentative…';
+
+  @override
   String get appInfoVersionLabel => 'Version';
 
   @override

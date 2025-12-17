@@ -411,6 +411,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Profil-Cache konnte nicht gelöscht werden';
 
   @override
+  String get networkRetryingSnackBarMessage => 'Wird erneut versucht…';
+
+  @override
   String get appInfoVersionLabel => 'Version';
 
   @override

@@ -548,6 +548,10 @@
   "@settingsProfileCacheErrorMessage": {
     "description": "Error snackbar message displayed if clearing the profile cache fails"
   },
+  "networkRetryingSnackBarMessage": "Retrying…",
+  "@networkRetryingSnackBarMessage": {
+    "description": "Short snackbar message shown while the app is automatically retrying a network request"
+  },
   "appInfoVersionLabel": "Version",
   "@appInfoVersionLabel": {
     "description": "Label shown before the application version string"

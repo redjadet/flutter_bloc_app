@@ -24,6 +24,7 @@ class AppConfig {
     required final ThemeMode themeMode,
     required final GoRouter router,
     final Locale? locale,
+    final TransitionBuilder? appOverlayBuilder,
   }) => MaterialApp.router(
     onGenerateTitle: (final ctx) => ctx.l10n.appTitle,
     localizationsDelegates: const [
@@ -60,6 +61,10 @@ class AppConfig {
             ),
           ],
         );
+      }
+
+      if (appOverlayBuilder != null) {
+        result = appOverlayBuilder(context, result);
       }
 
       return result;

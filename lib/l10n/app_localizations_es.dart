@@ -409,6 +409,9 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudo borrar el caché de perfil';
 
   @override
+  String get networkRetryingSnackBarMessage => 'Reintentando…';
+
+  @override
   String get appInfoVersionLabel => 'Versión';
 
   @override

@@ -322,6 +322,10 @@
   "@settingsProfileCacheErrorMessage": {
     "description": "Message d'erreur si la suppression du cache du profil échoue"
   },
+  "networkRetryingSnackBarMessage": "Nouvelle tentative…",
+  "@networkRetryingSnackBarMessage": {
+    "description": "Message snackbar court lorsque l'application réessaie automatiquement une requête réseau"
+  },
   "appInfoVersionLabel": "Version",
   "@appInfoVersionLabel": {
     "description": "Intitulé affiché avant la version de l'application"

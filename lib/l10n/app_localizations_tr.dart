@@ -408,6 +408,9 @@ class AppLocalizationsTr extends AppLocalizations {
       'Profil önbelleği temizlenemedi';
 
   @override
+  String get networkRetryingSnackBarMessage => 'Yeniden deneniyor…';
+
+  @override
   String get appInfoVersionLabel => 'Sürüm';
 
   @override

@@ -830,6 +830,12 @@ abstract class AppLocalizations {
   /// **'Couldn\'t clear profile cache'**
   String get settingsProfileCacheErrorMessage;
 
+  /// Short snackbar message shown while the app is automatically retrying a network request
+  ///
+  /// In en, this message translates to:
+  /// **'Retrying…'**
+  String get networkRetryingSnackBarMessage;
+
   /// Label shown before the application version string
   ///
   /// In en, this message translates to:

@@ -4,20 +4,21 @@ Findings on production-readiness patterns observed in the codebase, plus targete
 
 ## Implementation Status
 
-**All HIGH and MEDIUM priority tasks have been completed:**
+**All HIGH, MEDIUM, and LOW priority tasks have been completed:**
 
 ✅ **Network Error Handling:**
 
 - Centralized Error Mapper (`NetworkErrorMapper`) - Extracted and reusable
 - Global Connectivity Indicator (`SyncStatusBanner`) - Available for integration
-- HTTP Client Interceptor Layer (`ResilientHttpClient`) - Auth tokens, headers, telemetry, error mapping
-- Error Recovery Strategies - Automatic retry with exponential backoff and jitter
+- HTTP Client Interceptor Layer (`ResilientHttpClient`) - Standard headers, optional Firebase auth token injection, telemetry, retry
+- Error Recovery Strategies - Automatic retry with exponential backoff and jitter + user feedback hook
 
 ✅ **Retry Logic:**
 
 - Standardized Retry Policy (`RetryPolicy`) - Ready for use across features
 - Retry Metadata in Sync - Enhanced `SyncCycleSummary` with retry metrics
 - Resilient HTTP Client with Retry - Automatic retry for transient errors
+- Retry UI Feedback - Subtle SnackBar feedback when automatic retries occur
 
 ✅ **Empty State:**
 
@@ -31,8 +32,13 @@ Findings on production-readiness patterns observed in the codebase, plus targete
 - Accessibility - Semantic labels integrated into all skeleton widgets
 - Loading Strategy - Established comprehensive guidelines for skeleton vs spinner usage
 - Feature Migration - Migrated ChatListView, GraphqlDemoPage, and ProfilePage to use skeletons
+- Performance Optimization - `RepaintBoundary` added to shared skeleton primitives
 
 **All planned resilience improvements have been fully implemented and tested.**
+
+## Regression Tests Added
+
+- `test/shared/http/resilient_http_client_headers_test.dart` asserts `ResilientHttpClient` does not advertise brotli (`br`) and does not override caller-provided `Accept-Encoding` / `Authorization` headers.
 
 ## Network Error Handling
 
@@ -49,17 +55,17 @@ Findings on production-readiness patterns observed in the codebase, plus targete
   1. ✅ **HIGH: Centralized Error Mapper** - **COMPLETED** - Extracted error parsing logic from `ErrorHandling._getErrorMessage()` into `NetworkErrorMapper` class (`lib/shared/utils/network_error_mapper.dart`). Provides `getErrorMessage()`, `getMessageForStatusCode()`, `isNetworkError()`, `isTimeoutError()`, and `isTransientError()` methods. `ErrorHandling` now delegates to `NetworkErrorMapper` for consistent error handling across UI and repository layers.
   2. ✅ **HIGH: Global Connectivity Indicator** - **COMPLETED** - Created `SyncStatusBanner` widget (`lib/shared/widgets/sync_status_banner.dart`) that displays when `SyncStatusCubit` emits `degraded` status, showing "Sync Issues Detected" with retry action. Exported in `widgets.dart` for easy integration into `CommonPageLayout` or app scaffold.
   3. ✅ **MEDIUM: HTTP Client Interceptor Layer** - **COMPLETED** - Created `ResilientHttpClient` wrapper (`lib/shared/http/resilient_http_client.dart`) that:
-     - Automatically injects auth tokens from `FirebaseAuth` with token refresh on 401 responses
+     - Automatically injects auth tokens from `FirebaseAuth` (when registered) with token refresh on 401 responses
+     - Skips auth injection when an `Authorization` header is already provided (e.g., Hugging Face API key)
      - Applies standardized headers (User-Agent from dynamic version, Content-Type, Accept, Accept-Encoding)
      - Implements request/response telemetry logging (duration, status codes, error rates)
-     - Maps HTTP status codes to domain exceptions via `NetworkErrorMapper`
-     - Includes automatic retry for transient errors with exponential backoff and jitter
+     - Includes automatic retry for transient errors (408/429/5xx + transient client exceptions) with exponential backoff and jitter
+     - Is now wired into DI for active usage by `HuggingFaceApiClient`, `CountriesGraphqlRepository`, and `DelayedChartRepository`
   4. ✅ **MEDIUM: Error Recovery Strategies** - **COMPLETED** - Implemented automatic retry for transient errors (5xx, timeouts, network errors) in `ResilientHttpClient` with:
      - Exponential backoff with jitter to prevent thundering herd
      - Configurable retry limits (default: 3 attempts)
-     - Cancellation support via `CancelToken`
      - Manual retry preserved via `CommonErrorView` for user-initiated actions
-     - Integrates with `RetryPolicy` for consistent retry behavior
+     - Emits retry notifications via `RetryNotificationService` for optional UI feedback
 
 ## Retry Logic
 
@@ -89,8 +95,10 @@ Findings on production-readiness patterns observed in the codebase, plus targete
      - Applies retry to all HTTP methods with configurable limits (default: 3 attempts)
      - Includes request deduplication through proper async handling
      - Logs retry attempts and final outcomes for telemetry
-     - Builds on `RetryPolicy` foundation for consistent retry behavior across the app
-  4. **LOW: Retry UI Feedback** - When automatic retries occur, show a subtle indicator (e.g., "Retrying..." snackbar) so users understand delays aren't due to app freezing. Nice-to-have UX improvement.
+  4. ✅ **LOW: Retry UI Feedback** - **COMPLETED** - Added opt-in retry feedback for automatic retries:
+     - `RetryNotificationService` (`lib/shared/services/retry_notification_service.dart`) emits retry events from `ResilientHttpClient`
+     - `RetrySnackBarListener` (`lib/shared/widgets/retry_snackbar_listener.dart`) shows a short localized SnackBar (throttled)
+     - Localization key: `networkRetryingSnackBarMessage`
 
 ## Empty State
 
@@ -166,4 +174,4 @@ Findings on production-readiness patterns observed in the codebase, plus targete
      - `ProfilePage`: Added `SkeletonGridItem` for gallery loading states
      - `SearchPage`: Maintained spinner due to fast loading times (<150ms guideline)
      - All migrated features now provide better UX with skeleton placeholders
-  5. **LOW: Performance Optimization** - Ensure skeletons don't impact performance by using `RepaintBoundary` around skeleton widgets (already done in some places like `CounterPage`). Apply during migration as needed.
+  5. ✅ **LOW: Performance Optimization** - **COMPLETED** - Added `RepaintBoundary` to shared skeleton primitives (`SkeletonListTile`, `SkeletonCard`, `SkeletonGridItem`) to isolate shimmer repaints.

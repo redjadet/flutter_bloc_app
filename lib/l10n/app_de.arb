@@ -322,6 +322,10 @@
   "@settingsProfileCacheErrorMessage": {
     "description": "Fehlermeldung, wenn das Löschen des Profil-Caches fehlschlägt"
   },
+  "networkRetryingSnackBarMessage": "Wird erneut versucht…",
+  "@networkRetryingSnackBarMessage": {
+    "description": "Kurze Snackbar-Nachricht, während die App automatisch eine Netzwerkanfrage erneut versucht"
+  },
   "appInfoVersionLabel": "Version",
   "@appInfoVersionLabel": {
     "description": "Beschriftung vor der App-Versionsnummer"
