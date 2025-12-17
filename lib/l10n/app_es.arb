@@ -322,6 +322,10 @@
   "@settingsProfileCacheErrorMessage": {
     "description": "Mensaje de error si falla el borrado del caché del perfil"
   },
+  "networkRetryingSnackBarMessage": "Reintentando…",
+  "@networkRetryingSnackBarMessage": {
+    "description": "Mensaje breve de snackbar cuando la app reintenta automáticamente una solicitud de red"
+  },
   "appInfoVersionLabel": "Versión",
   "@appInfoVersionLabel": {
     "description": "Etiqueta que precede a la versión de la aplicación"

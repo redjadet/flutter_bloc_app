@@ -323,6 +323,10 @@
   "@settingsProfileCacheErrorMessage": {
     "description": "Profil önbelleği temizleme işlemi başarısız olursa gösterilen hata mesajı"
   },
+  "networkRetryingSnackBarMessage": "Yeniden deneniyor…",
+  "@networkRetryingSnackBarMessage": {
+    "description": "Ağ isteği otomatik olarak yeniden denenirken gösterilen kısa snackbar mesajı"
+  },
   "appInfoVersionLabel": "Sürüm",
   "@appInfoVersionLabel": {
     "description": "Uygulama sürüm numarasının önündeki etiket"

@@ -4,9 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthTokenManager {
   AuthTokenManager({
     FirebaseAuth? firebaseAuth,
-  }) : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
+  }) : _firebaseAuth = firebaseAuth;
 
-  final FirebaseAuth _firebaseAuth;
+  final FirebaseAuth? _firebaseAuth;
 
   /// Current auth token, cached to avoid repeated Firebase calls
   String? _cachedAuthToken;
@@ -41,7 +41,7 @@ class AuthTokenManager {
   /// Refresh the authentication token
   Future<bool> refreshToken() async {
     try {
-      final User? user = _firebaseAuth.currentUser;
+      final User? user = _firebaseAuth?.currentUser;
       if (user == null) return false;
 
       await user.getIdToken(true); // Force refresh
@@ -53,6 +53,14 @@ class AuthTokenManager {
       _tokenExpiry = null;
       Error.throwWithStackTrace(error, stackTrace);
     }
+  }
+
+  /// Force-refresh the authentication token and return the updated token value.
+  Future<String?> refreshTokenAndGet(final User user) async {
+    await user.getIdToken(true);
+    _cachedAuthToken = null;
+    _tokenExpiry = null;
+    return getValidAuthToken(user);
   }
 
   /// Clear cached token
