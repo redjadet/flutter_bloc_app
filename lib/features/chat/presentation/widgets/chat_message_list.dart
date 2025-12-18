@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
@@ -47,7 +48,7 @@ class ChatMessageList extends StatelessWidget {
             }
             await controller.animateTo(
               controller.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 180),
+              duration: UI.animFast,
               curve: Curves.easeOut,
             );
           });

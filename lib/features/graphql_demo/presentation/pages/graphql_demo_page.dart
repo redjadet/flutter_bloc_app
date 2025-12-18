@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/graphql_demo.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_view_models.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/view_status_switcher.dart';
 
 class GraphqlDemoPage extends StatelessWidget {
@@ -14,7 +10,6 @@ class GraphqlDemoPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    Theme.of(context);
     return CommonPageLayout(
       title: l10n.graphqlSampleTitle,
       body: Column(
@@ -43,7 +38,7 @@ class GraphqlDemoPage extends StatelessWidget {
                 horizontal: context.pageHorizontalPadding,
                 vertical: context.responsiveGapM,
               ),
-              child: _FilterBar(
+              child: GraphqlFilterBar(
                 continents: filterData.continents,
                 activeContinentCode: filterData.activeContinentCode,
                 isLoading: filterData.isLoading,
@@ -60,7 +55,7 @@ class GraphqlDemoPage extends StatelessWidget {
                   right: context.pageHorizontalPadding,
                   bottom: context.responsiveGapS,
                 ),
-                child: _DataSourceBadge(source: source),
+                child: GraphqlDataSourceBadge(source: source),
               ),
             ),
           ),
@@ -91,166 +86,16 @@ class GraphqlDemoPage extends StatelessWidget {
                     isError: (final data) =>
                         data.hasError && data.countries.isEmpty,
                     loadingBuilder: (final _) => const CommonLoadingWidget(),
-                    errorBuilder: (final context, final data) => AppMessage(
-                      title: l10n.graphqlSampleErrorTitle,
-                      message: _errorMessageForData(l10n, data),
-                      isError: true,
-                      actions: [
-                        PlatformAdaptive.button(
-                          context: context,
-                          onPressed: () =>
-                              CubitHelpers.safeExecute<
-                                GraphqlDemoCubit,
-                                GraphqlDemoState
-                              >(
-                                context,
-                                (final cubit) => cubit.loadInitial(),
-                              ),
-                          child: Text(l10n.graphqlSampleRetryButton),
-                        ),
-                      ],
-                    ),
+                    errorBuilder: (final context, final data) =>
+                        buildGraphqlErrorWidget(context, data, l10n),
                     builder: (final context, final bodyData) => RepaintBoundary(
-                      child: _buildBody(context, bodyData, l10n),
+                      child: GraphqlBody(bodyData: bodyData, l10n: l10n),
                     ),
                   ),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildBody(
-    final BuildContext context,
-    final GraphqlBodyData bodyData,
-    final AppLocalizations l10n,
-  ) {
-    if (bodyData.countries.isEmpty) {
-      return AppMessage(message: l10n.graphqlSampleEmpty);
-    }
-
-    final String capitalLabel = l10n.graphqlSampleCapitalLabel;
-    final String currencyLabel = l10n.graphqlSampleCurrencyLabel;
-
-    return ListView.separated(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: context.responsiveListPadding,
-      itemBuilder: (final context, final index) {
-        final GraphqlCountry country = bodyData.countries[index];
-        return GraphqlCountryCard(
-          country: country,
-          capitalLabel: capitalLabel,
-          currencyLabel: currencyLabel,
-        );
-      },
-      separatorBuilder: (_, _) => SizedBox(height: context.responsiveGapM),
-      itemCount: bodyData.countries.length,
-    );
-  }
-}
-
-String _errorMessageForData(
-  final AppLocalizations l10n,
-  final GraphqlBodyData bodyData,
-) {
-  switch (bodyData.errorType) {
-    case GraphqlDemoErrorType.network:
-      return l10n.graphqlSampleNetworkError;
-    case GraphqlDemoErrorType.invalidRequest:
-      return l10n.graphqlSampleInvalidRequestError;
-    case GraphqlDemoErrorType.server:
-      return l10n.graphqlSampleServerError;
-    case GraphqlDemoErrorType.data:
-      return l10n.graphqlSampleDataError;
-    case GraphqlDemoErrorType.unknown:
-      break;
-    case null:
-      break;
-  }
-  return bodyData.errorMessage ?? l10n.graphqlSampleGenericError;
-}
-
-@immutable
-class _DataSourceBadge extends StatelessWidget {
-  const _DataSourceBadge({required this.source});
-
-  final GraphqlDataSource source;
-
-  @override
-  Widget build(final BuildContext context) {
-    if (source == GraphqlDataSource.unknown) {
-      return const SizedBox.shrink();
-    }
-    final bool isCache = source == GraphqlDataSource.cache;
-    return Chip(
-      label: Text(isCache ? 'Cache' : 'Remote'),
-      visualDensity: VisualDensity.compact,
-    );
-  }
-}
-
-class _FilterBar extends StatelessWidget {
-  const _FilterBar({
-    required this.continents,
-    required this.activeContinentCode,
-    required this.isLoading,
-    required this.l10n,
-  });
-
-  final List<GraphqlContinent> continents;
-  final String? activeContinentCode;
-  final bool isLoading;
-  final AppLocalizations l10n;
-
-  @override
-  Widget build(final BuildContext context) {
-    final items = <DropdownMenuItem<String?>>[
-      DropdownMenuItem<String?>(
-        child: Text(l10n.graphqlSampleAllContinents),
-      ),
-      ...continents.map(
-        (final continent) => DropdownMenuItem<String?>(
-          value: continent.code,
-          child: Text('${continent.name} (${continent.code})'),
-        ),
-      ),
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l10n.graphqlSampleFilterLabel,
-          style: Theme.of(context).textTheme.labelMedium,
-        ),
-        SizedBox(height: context.responsiveGapS),
-        InputDecorator(
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-            ),
-            isDense: true,
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String?>(
-              isExpanded: true,
-              value: activeContinentCode,
-              items: items,
-              onChanged: isLoading
-                  ? null
-                  : (final value) =>
-                        CubitHelpers.safeExecute<
-                          GraphqlDemoCubit,
-                          GraphqlDemoState
-                        >(
-                          context,
-                          (final cubit) => cubit.selectContinent(value),
-                        ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

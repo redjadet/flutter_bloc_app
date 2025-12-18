@@ -6,8 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_cubit.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_state.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/apple_maps_view.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/google_maps_view.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_camera_controller.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_sample_map_controller.dart';
-import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_sample_map_utils.dart';
+import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_state_manager.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
@@ -30,27 +33,27 @@ class MapSampleMapView extends StatefulWidget {
 }
 
 class _MapSampleMapViewState extends State<MapSampleMapView> {
-  late gmaps.MapType _mapType;
-  bool _trafficEnabled = false;
+  late final MapStateManager _stateManager;
+  late final Completer<gmaps.GoogleMapController> _googleMapController;
+  late final MapCameraController _cameraController;
   bool _isAnimatingCamera = false;
-  late Set<gmaps.Marker> _markers;
-  late List<MapLocation> _locations;
-  gmaps.MarkerId? _selectedMarkerId;
-  late gmaps.CameraPosition _cameraPosition;
-  final Completer<gmaps.GoogleMapController> _googleMapController =
-      Completer<gmaps.GoogleMapController>();
-  gmaps.GoogleMapController? _googleMapControllerInstance;
-  amap.AppleMapController? _appleMapController;
 
   @override
   void initState() {
     super.initState();
-    _mapType = widget.initialState.mapType;
-    _trafficEnabled = widget.initialState.trafficEnabled;
-    _markers = widget.initialState.markers;
-    _locations = widget.initialState.locations;
-    _selectedMarkerId = widget.initialState.selectedMarkerId;
-    _cameraPosition = widget.initialState.cameraPosition;
+    _stateManager = MapStateManager(
+      cubit: widget.cubit,
+      useAppleMaps: widget.useAppleMaps,
+    );
+    _stateManager.initialize(widget.initialState);
+    _googleMapController = Completer<gmaps.GoogleMapController>();
+    _cameraController = MapCameraController(
+      cubit: widget.cubit,
+      useAppleMaps: widget.useAppleMaps,
+      googleController: _googleMapController,
+      appleController: null, // Will be set when Apple Maps view is created
+    );
+
     widget.controller.focusHandler = _focusOnLocation;
     widget.controller.syncStateHandler = _applyStateUpdate;
   }
@@ -73,185 +76,71 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
   Widget build(final BuildContext context) => RepaintBoundary(
     child: ClipRRect(
       borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-      child: widget.useAppleMaps ? _buildAppleMap() : _buildGoogleMap(),
+      child: widget.useAppleMaps
+          ? AppleMapsView(
+              stateManager: _stateManager,
+              cubit: widget.cubit,
+              onCameraMove: _handleCameraMove,
+              onMapCreated: (final amap.AppleMapController controller) {
+                _cameraController.appleController = controller;
+              },
+            )
+          : GoogleMapsView(
+              stateManager: _stateManager,
+              controller: _googleMapController,
+              onCameraMove: _handleCameraMove,
+            ),
     ),
   );
 
-  Widget _buildGoogleMap() => gmaps.GoogleMap(
-    mapType: _mapType,
-    initialCameraPosition: _cameraPosition,
-    markers: _markers,
-    trafficEnabled: _trafficEnabled,
-    onMapCreated: (final gmaps.GoogleMapController controller) {
-      _googleMapControllerInstance = controller;
-      if (!_googleMapController.isCompleted) {
-        _googleMapController.complete(controller);
-      }
-    },
-    onCameraMove: (final gmaps.CameraPosition position) {
-      _cameraPosition = position;
-      if (!_isAnimatingCamera) {
-        widget.cubit.updateCameraPosition(position);
-      }
-    },
-  );
-
-  Widget _buildAppleMap() => amap.AppleMap(
-    mapType: resolveAppleMapType(_mapType),
-    initialCameraPosition: appleCameraPositionFromGoogle(_cameraPosition),
-    annotations: _buildAppleAnnotations(),
-    trafficEnabled: _trafficEnabled,
-    onMapCreated: (final amap.AppleMapController controller) {
-      _appleMapController = controller;
-    },
-    onCameraMove: (final amap.CameraPosition position) {
-      _cameraPosition = googleCameraPositionFromApple(position);
-      if (!_isAnimatingCamera) {
-        widget.cubit.updateCameraPosition(_cameraPosition);
-      }
-    },
-  );
-
-  Set<amap.Annotation> _buildAppleAnnotations() {
-    final String? selectedId = _selectedMarkerId?.value;
-    return _locations
-        .map(
-          (final MapLocation location) => amap.Annotation(
-            annotationId: amap.AnnotationId(location.id),
-            position: amap.LatLng(
-              location.coordinate.latitude,
-              location.coordinate.longitude,
-            ),
-            infoWindow: amap.InfoWindow(
-              title: location.title,
-              snippet: location.description,
-            ),
-            zIndex: selectedId == location.id ? 1 : 0,
-            onTap: () => widget.cubit.selectLocation(location.id),
-          ),
-        )
-        .toSet();
-  }
-
-  Future<gmaps.GoogleMapController?> _ensureGoogleController() async {
-    if (_googleMapControllerInstance != null) {
-      return _googleMapControllerInstance;
-    }
-    if (!_googleMapController.isCompleted) {
-      return null;
-    }
-    return _googleMapControllerInstance = await _googleMapController.future;
-  }
-
   Future<void> _applyStateUpdate(final MapSampleState state) async {
-    if (!mounted) {
-      return;
-    }
-    final bool shouldMoveCamera = state.cameraPosition != _cameraPosition;
-    final bool shouldUpdateMapType = state.mapType != _mapType;
-    final bool shouldUpdateTraffic = state.trafficEnabled != _trafficEnabled;
-    final bool shouldUpdateMarkers = state.markers != _markers;
-    final bool shouldUpdateSelection =
-        state.selectedMarkerId != _selectedMarkerId;
-    final bool shouldUpdateLocations = state.locations != _locations;
+    if (!mounted) return;
 
-    if (shouldMoveCamera) {
-      await _moveCamera(state.cameraPosition);
-      if (!mounted) {
-        return;
-      }
+    final MapStateChanges changes = _stateManager.applyStateUpdate(state);
+
+    // Handle camera movement if needed
+    if (changes.cameraChanged && !_isAnimatingCamera) {
+      await _cameraController.moveCamera(state.cameraPosition);
+      if (!mounted) return;
     }
 
-    if (shouldUpdateMapType ||
-        shouldUpdateTraffic ||
-        shouldUpdateMarkers ||
-        shouldUpdateSelection ||
-        shouldUpdateLocations) {
-      setState(() {
-        if (shouldUpdateMapType) {
-          _mapType = state.mapType;
-        }
-        if (shouldUpdateTraffic) {
-          _trafficEnabled = state.trafficEnabled;
-        }
-        if (shouldUpdateMarkers) {
-          _markers = state.markers;
-        }
-        if (shouldUpdateSelection) {
-          _selectedMarkerId = state.selectedMarkerId;
-        }
-        if (shouldUpdateLocations) {
-          _locations = state.locations;
-        }
-      });
+    // Update UI if any state changes require rebuild
+    if (changes.hasAnyChange) {
+      setState(() {});
     }
-    _cameraPosition = state.cameraPosition;
   }
 
-  Future<void> _moveCamera(final gmaps.CameraPosition position) async {
-    if (widget.useAppleMaps) {
-      final amap.AppleMapController? appleController = _appleMapController;
-      if (appleController == null) {
-        return;
-      }
-      await appleController.moveCamera(
-        appleCameraUpdateForPosition(position),
-      );
-      return;
-    }
-    final gmaps.GoogleMapController? controller =
-        await _ensureGoogleController();
-    if (controller == null) {
-      return;
-    }
-    await controller.moveCamera(
-      gmaps.CameraUpdate.newCameraPosition(
-        position,
-      ),
-    );
+  void _handleCameraMove(final gmaps.CameraPosition position) {
+    if (_isAnimatingCamera) return;
+    _stateManager.updateCameraPosition(position);
   }
 
   Future<void> _focusOnLocation(final MapLocation location) async {
     final gmaps.CameraPosition targetPosition = widget.cubit
         .cameraPositionForLocation(location);
+    _stateManager.setCameraPosition(targetPosition);
     _isAnimatingCamera = true;
-    if (widget.useAppleMaps) {
-      final amap.AppleMapController? appleController = _appleMapController;
-      if (appleController == null) {
-        _isAnimatingCamera = false;
-        return;
-      }
-      await appleController.animateCamera(
-        appleCameraUpdateForLocation(location),
+    try {
+      await _cameraController.focusOnLocation(
+        location,
+        onAnimationStart: () {
+          _isAnimatingCamera = true;
+        },
+        onAnimationEnd: () {
+          _isAnimatingCamera = false;
+        },
       );
-    } else {
-      final gmaps.GoogleMapController? controller =
-          await _ensureGoogleController();
-      if (controller == null) {
-        _isAnimatingCamera = false;
-        return;
-      }
-      await controller.animateCamera(
-        widget.cubit.cameraUpdateForLocation(location),
-      );
+    } finally {
+      _isAnimatingCamera = false;
     }
-    // Keep local camera position synced to avoid redundant moves.
-    _cameraPosition = targetPosition;
-    _isAnimatingCamera = false;
-    if (mounted) {
-      widget.cubit.focusLocation(location);
-    }
+    if (!mounted) return;
+    widget.cubit.focusLocation(location);
   }
 
   @override
   void dispose() {
     widget.controller.focusHandler = null;
     widget.controller.syncStateHandler = null;
-    if (!widget.useAppleMaps) {
-      _googleMapControllerInstance?.dispose();
-      _googleMapControllerInstance = null;
-    }
-    _appleMapController = null;
     super.dispose();
   }
 }
