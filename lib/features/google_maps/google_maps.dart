@@ -11,7 +11,4 @@ export 'domain/map_location_repository.dart';
 export 'presentation/cubit/map_sample_cubit.dart';
 export 'presentation/cubit/map_sample_state.dart';
 export 'presentation/pages/google_maps_sample_page.dart';
-export 'presentation/widgets/google_maps_controls.dart';
-export 'presentation/widgets/google_maps_layout.dart';
-export 'presentation/widgets/google_maps_location_list.dart';
-export 'presentation/widgets/google_maps_messages.dart';
+export 'presentation/widgets/widgets.dart';
