@@ -1,5 +1,44 @@
 # Code Quality Analysis Report - COMPLETED
 
+## Current Snapshot (Repo Inspection)
+
+This section reflects the current repo state and supersedes older metrics below.
+
+### Metrics
+
+- **Test coverage**: 81.20% (8948/11020 lines) per `coverage/coverage_summary.md`
+- **File length lint**: `max_lines` is 250 in `analysis_options.yaml` (default is 250 in the plugin)
+- **Largest handwritten files (>= 220 LOC)**:
+  - `lib/features/counter/data/hive_counter_repository_watch_helper.dart` (243)
+  - `lib/features/counter/presentation/pages/counter_page.dart` (241)
+  - `lib/features/settings/presentation/widgets/remote_config_diagnostics_section.dart` (238)
+  - `lib/features/auth/presentation/cubit/register/register_state.dart` (238)
+  - `lib/main_bootstrap.dart` (236)
+  - `lib/features/auth/presentation/widgets/register_phone_field.dart` (233)
+  - `lib/features/chat/data/offline_first_chat_repository.dart` (227)
+  - `lib/shared/sync/background_sync_coordinator.dart` (224)
+  - `lib/features/counter/presentation/widgets/counter_page_app_bar.dart` (223)
+  - `lib/features/graphql_demo/data/countries_graphql_repository.dart` (221)
+
+### Areas to Improve (Actionable)
+
+1. **Custom lint tool reliability**
+   - `custom_lint.log` shows repeated plugin startup failures (non-Mach-O shared object / AOT snapshot errors).
+   - Action: verify lint tooling is aligned with the analyzer plugin setup or remove stale custom_lint usage to avoid silent lint gaps.
+
+2. **Low coverage in critical non-UI utilities**
+   - Added tests for retry/backoff rules, auth token refresh, error mapping, repository watch flows, stream lifecycle guards, and HTTP extension mapping.
+   - Remaining gaps: `lib/main_bootstrap.dart` and any residual uncovered paths in the HTTP/bootstrapping layer.
+   - Action: run coverage to confirm deltas, then target remaining bootstrap paths.
+
+3. **Initialization and infrastructure gaps**
+   - `lib/main_bootstrap.dart` is large (236 LOC) with 1.08% coverage.
+   - Action: extract bootstrap steps into smaller testable units (e.g., initialization coordinator, environment/config loader) and add integration tests to cover the happy path and failure recovery.
+
+4. **Skeleton widgets still untested**
+   - `lib/shared/widgets/skeletons/*` remain at 0% coverage.
+   - Action: add lightweight widget/golden tests to lock down layout and accessibility semantics for loading states.
+
 ## Executive Summary
 
 This comprehensive analysis examined and **successfully improved** the Flutter BLoC app codebase for adherence to best practices, architecture patterns, test coverage, and code quality standards. The codebase demonstrates **exceptional architectural foundations** with Clean Architecture principles and comprehensive tooling.
@@ -238,7 +277,7 @@ class LargeWidget extends StatelessWidget {
 ### File Size Reductions Achieved
 
 | Original File | Original Lines | New Lines | Reduction | Status |
-|---------------|----------------|-----------|-----------|---------|
+| ------------- | -------------- | --------- | --------- | ------- |
 | `markdown_editor_widget.dart` | 258 | 58 | 78% | ✅ Completed |
 | `map_sample_map_view.dart` | 257 | 112 | 56% | ✅ Completed |
 | `graphql_demo_page.dart` | 256 | 106 | 59% | ✅ Completed |
@@ -397,7 +436,7 @@ The codebase now has **PERFECT CODE QUALITY** with zero linting issues while mai
 ## 📊 **Transformation Summary**
 
 | Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
+| ------ | ------ | ----- | ----------- |
 | Linting Issues | 24 issues | 0 issues | 100% ✅ |
 | Files > 250 lines | 3 files | 0 files | 100% ✅ |
 | Largest file size | 258 lines | 112 lines | 57% reduction |
