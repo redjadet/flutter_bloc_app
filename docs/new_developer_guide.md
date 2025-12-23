@@ -86,7 +86,7 @@ Follow the delivery checklist before merging or publishing builds:
 Tips:
 
 - Keep files <250 LOC; extract helpers into `shared/` or dedicated widgets when approaching the limit.
-- Run `custom_lint` to catch repository-specific lint rules (e.g., file length, forbidden imports).
+- Run `flutter analyze` to catch repository-specific analyzer plugins (e.g., file length, forbidden imports).
 - `flutter test --coverage` populates `coverage/lcov.info`; the summary script updates any dashboards/PR comments.
 
 ## 7. Testing Strategy
