@@ -321,7 +321,7 @@ MultiBlocProvider(providers: [
 ## 12. What to Read Next
 
 - `README.md`: Feature tour + architecture diagram.
-- `analysis/architecture_findings.md`: Past architecture pitfalls/resolutions.
+- `docs/CODE_QUALITY_ANALYSIS.md`: Architecture findings and related quality/resilience notes.
 - `docs/` (e.g., `docs/universal_links/`, `docs/figma/...`): Platform-specific guides.
 
 Stay disciplined with the guardrails, keep tests deterministic, and reach for shared services before adding new singletons. Welcome to the team!
