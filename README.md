@@ -15,7 +15,7 @@ A production-ready Flutter application demonstrating enterprise-grade architectu
 - Production-grade Flutter architecture with offline-first data flow, responsive/adaptive UI, and real-time features (websockets, maps, chat).
 - Security-minded patterns: encrypted Hive storage, biometric gating for sensitive navigation, auth-aware routing, and localization-backed error handling.
 - DevEx focus: high coverage, lint-enforced file-length/spacing rules, single-command delivery checklist, and DI-driven testability.
-- Runtime resilience review: see `docs/runtime_resilience_assessment.md` for error handling, retry strategy, empty states, and skeleton coverage.
+- Runtime resilience review: see `docs/CODE_QUALITY_ANALYSIS.md` for error handling, retry strategy, empty states, and skeleton coverage.
 
 ## Architecture Decisions
 
@@ -379,7 +379,7 @@ Startup is part of the flow: `AppScope` calls `ensureConfigured()`, starts backg
 
 ### Test Coverage
 
-- **Current Coverage**: 82.50% (9091/11020 lines)
+- **Current Coverage**: 83.54% (9206/11020 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 
