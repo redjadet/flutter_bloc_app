@@ -589,7 +589,7 @@ flutter gen-l10n
 ## Documentation
 
 - **[FAQ.md](FAQ.md)** - Frequently asked questions
-- **[docs/PERFORMANCE_PROFILING.md](docs/PERFORMANCE_PROFILING.md)** - Performance optimization guide
+- **[docs/CODE_QUALITY_ANALYSIS.md](docs/CODE_QUALITY_ANALYSIS.md)** - Code quality analysis, performance profiling, and optimization guide
 - **[docs/SHARED_UTILITIES.md](docs/SHARED_UTILITIES.md)** - Shared utilities documentation
 - **[docs/REPOSITORY_LIFECYCLE.md](docs/REPOSITORY_LIFECYCLE.md)** - Repository lifecycle guide
 - **[coverage/coverage_summary.md](coverage/coverage_summary.md)** - Test coverage report

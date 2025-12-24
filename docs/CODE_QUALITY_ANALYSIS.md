@@ -1,117 +1,124 @@
-# Code Quality & Resilience Report
+# Code Quality Analysis
 
-## Current Snapshot (Repo Inspection)
+## 📊 Current State
 
-This section reflects the current repo state and supersedes older metrics.
+**Test Coverage:** 82.50% (9091/11020 lines) | **File Length Limit:** 250 LOC
 
-### Metrics
+### Largest Files (≥220 LOC)
 
-- **Test coverage**: 82.50% (9091/11020 lines) per `coverage/coverage_summary.md`
-- **File length lint**: `max_lines` is 250 in `analysis_options.yaml` (default is 250 in the plugin)
-- **Largest handwritten files (>= 220 LOC)**:
-  - `lib/features/counter/data/hive_counter_repository_watch_helper.dart` (243)
-  - `lib/features/counter/presentation/pages/counter_page.dart` (241)
-  - `lib/features/settings/presentation/widgets/remote_config_diagnostics_section.dart` (238)
-  - `lib/features/auth/presentation/cubit/register/register_state.dart` (238)
-  - `lib/main_bootstrap.dart` (236)
-  - `lib/features/auth/presentation/widgets/register_phone_field.dart` (233)
-  - `lib/features/chat/data/offline_first_chat_repository.dart` (227)
-  - `lib/shared/sync/background_sync_coordinator.dart` (224)
-  - `lib/features/counter/presentation/widgets/counter_page_app_bar.dart` (223)
-  - `lib/features/graphql_demo/data/countries_graphql_repository.dart` (221)
+- `lib/features/counter/data/hive_counter_repository_watch_helper.dart` (243)
+- `lib/features/counter/presentation/pages/counter_page.dart` (241)
+- `lib/features/settings/presentation/widgets/remote_config_diagnostics_section.dart` (238)
+- `lib/features/auth/presentation/cubit/register/register_state.dart` (238)
+- `lib/main_bootstrap.dart` (236)
 
-### Areas to Improve (Actionable)
+## 🎯 Priority Actions (Next 30 Days)
 
-1. **Custom lint tool reliability**
-   - `custom_lint.log` shows repeated plugin startup failures (non-Mach-O shared object / AOT snapshot errors).
-   - Action: verify lint tooling is aligned with the analyzer plugin setup or remove stale custom_lint usage to avoid silent lint gaps.
+### 🔥 Critical (Week 1-2)
 
-2. **Low coverage in critical non-UI utilities**
-   - Added tests for retry/backoff rules, auth token refresh, error mapping, repository watch flows, stream lifecycle guards, HTTP extension mapping, and `CubitErrorHandler`.
-   - Remaining gaps: `lib/main_bootstrap.dart` and any residual uncovered paths in the HTTP/bootstrapping layer.
-   - Action: run coverage to confirm deltas, then target remaining bootstrap paths.
+- [ ] **Fix main_bootstrap.dart** (236 LOC, 1.08% coverage)
+  - Extract initialization logic into testable units
+  - Add integration tests for bootstrap flow
+  - Target: Split into 3-4 focused modules
 
-3. **Initialization and infrastructure gaps**
-   - `lib/main_bootstrap.dart` is large (236 LOC) with 1.08% coverage.
-   - Action: extract bootstrap steps into smaller testable units (e.g., initialization coordinator, environment/config loader) and add integration tests to cover the happy path and failure recovery.
+- [ ] **Resolve custom lint failures**
+  - Investigate `custom_lint.log` startup errors
+  - Either fix plugin compatibility or remove stale linting
+  - Ensure no silent lint gaps in CI
 
-4. **Skeleton widget coverage**
-   - Baseline widget tests added in `test/shared/widgets/skeletons_test.dart`.
-   - Action: re-run coverage to confirm the new tests lift skeleton widget coverage.
+### 📈 High Priority (Week 3-4)
 
-## Architecture Compliance (Merged)
+- [ ] **Increase bootstrap coverage**
+  - Add tests for HTTP client initialization
+  - Test dependency injection setup
+  - Cover error recovery paths
 
-**Status:** 6 findings resolved; 0 open. Composition-root `getIt` usage in `app_scope.dart` remains intentional.
+- [ ] **Split large counter files**
+  - Break down `counter_page.dart` (241 LOC)
+  - Extract widget helpers from repository watch helper (243 LOC)
+  - Target: Keep all files under 200 LOC
 
-### Resolved Findings
+### 📋 Medium Priority (Month 2)
 
-- **Presentation depended on data implementation** (`lib/features/remote_config/presentation/cubit/remote_config_cubit.dart`) now uses a domain contract.
-- **Domain leaked Flutter UI types** (`Locale`, `ThemeMode`) replaced with `AppLocale` and `ThemePreference` value objects.
-- **Domain coupled to routing** (`deep_link_target.dart`) now maps in presentation via an extension.
-- **Domain imported Flutter Foundation** (`chat_conversation.dart`) removed.
-- **Duplicate Hive initialization in DI** consolidated into a single bootstrap path.
-- **Widget-level `getIt` lookups** removed for feature widgets; composition root remains the exception.
+- [ ] **Validate skeleton test coverage**
+  - Run updated coverage report
+  - Ensure new skeleton tests improve metrics
+  - Add integration tests for loading states
 
-## Runtime Resilience (Merged)
+- [ ] **Review auth presentation files**
+  - Analyze `register_state.dart` (238 LOC) for splitting
+  - Check `register_phone_field.dart` (233 LOC) complexity
 
-**Status:** All high/medium/low items documented as implemented and tested.
+## ✅ Implemented Quality Improvements
 
-- **Network error handling:** `NetworkErrorMapper` centralizes messages; `ResilientHttpClient` injects auth headers (when available), logs telemetry, and retries transient errors.
-- **Retry logic:** `RetryPolicy` standardizes backoff strategies; sync flow tracks retry metrics in `SyncCycleSummary`.
-- **Connectivity visibility:** `SyncStatusBanner` surfaces degraded sync with retry UI hooks.
-- **Empty states:** `CommonEmptyState` is the shared pattern with i18n coverage.
-- **Loading skeletons:** `SkeletonListTile`, `SkeletonCard`, `SkeletonGridItem` added with accessibility semantics and `RepaintBoundary`.
-- **Regression coverage:** `test/shared/http/resilient_http_client_headers_test.dart` guards headers behavior.
-- **Retry UI feedback:** `RetryNotificationService` and `RetrySnackBarListener` provide optional user feedback for automatic retries.
+### Architecture Compliance
 
-## Duplicate Code Reduction (Merged)
+- **6/6 findings resolved** - Clean Architecture violations fixed
+- Domain layer properly isolated from Flutter dependencies
+- Composition root pattern maintained in `app_scope.dart`
 
-**Status:** High-priority duplication reduction utilities implemented; backlog cleared.
+### Runtime Resilience
 
-- **Test helpers:** `test/test_helpers.dart` standardizes Hive setup, DI setup, and in-memory repositories.
-- **Cubit subscriptions:** `CubitSubscriptionMixin` centralizes stream cleanup.
-- **Async init helpers:** `BlocProviderHelpers.withAsyncInit` and `providerWithAsyncInit` reduce boilerplate.
-- **Repository watch flows:** `RepositoryWatchHelper<T>` centralizes watch initialization and caching.
-- **Repository initial load:** `RepositoryInitialLoadHelper` standardizes initial watch loads and resolution tracking.
-- **Stream controller lifecycle:** `StreamControllerLifecycle<T>` provides safe emit and disposal.
-- **Error handling:** `CubitErrorHandler` standardizes error mapping and `isClosed` guards.
-- **View status patterns:** `ViewStatusSwitcher` consolidates loading/error/empty branching.
-- **Navigation safety:** `NavigationUtils.safeGo` and dialog helpers centralize mounted checks.
-- **State restoration:** `StateRestorationMixin` and `StateRestorationOutcome` unify restore flows.
-- **Completer safety:** `CompleterHelper` standardizes safe completion/error/reset handling.
+- **Network resilience:** `ResilientHttpClient` with retry logic and telemetry
+- **Error handling:** Centralized error mapping and user feedback
+- **Offline support:** Sync status banners and background retry mechanisms
+- **Loading states:** Consistent skeleton components with accessibility
 
-## Codebase Improvements (Historical Summary)
+### Code Deduplication
 
-This section captures prior improvements reported in analysis docs. Use the snapshot above for current truth.
+- **Shared utilities:** 10+ helper classes reduce boilerplate
+- **Test infrastructure:** Standardized test helpers and mocks
+- **State management:** Consistent patterns for async operations and error handling
+- **UI patterns:** Reusable components for common interactions
 
-- **Coverage automation:** `tool/test_coverage.sh` updates `coverage/coverage_summary.md` and `README.md`.
-- **Delivery checklist:** `./bin/checklist` runs format, analyze, and coverage.
-- **Shared UI consistency:** `CommonPageLayout`, `CommonAppBar`, `CommonCard`, and shared form/loading widgets reduce duplication.
-- **Responsive spacing:** migrated to `context.responsiveGap*` and responsive layout helpers.
-- **Performance patterns:** `RepaintBoundary` and `BlocSelector` applied to heavy widgets.
+## 🔄 Continuous Quality Processes
 
-## Dependencies & Security (Merged)
+- **Automated testing:** `./bin/checklist` runs format → analyze → coverage
+- **Dependency management:** Renovate primary, Dependabot backup (see `docs/DEPENDENCY_UPDATES.md`)
+- **Coverage reporting:** Auto-updates on test completion
+- **CI validation:** All PRs tested with quality gates
 
-- **Monitoring:** Renovate is primary; Dependabot is backup for security-only updates.
-- **CI checks:** dependency PRs run format, analyze, and tests with coverage.
-- **Manual workflow:** `flutter pub outdated` and `flutter pub upgrade` remain the standard entry points.
+## ⚡ Performance Guidelines
 
-For detailed dependency workflow, see `docs/DEPENDENCY_UPDATES.md`.
+### Key Optimizations Applied
 
-## Performance Profiling (Reference)
+- **RepaintBoundary:** Applied to `ChatMessageList`, `ProfilePage`, `SearchResultsGrid`
+- **BlocSelector:** Used instead of `BlocBuilder` in `GraphqlDemoPage`, `CountdownBar`
+- **Performance Profiler:** Available via `lib/shared/utils/performance_profiler.dart`
 
-Performance tooling lives in `docs/PERFORMANCE_PROFILING.md` and includes:
+### Quick Performance Checks
 
-- `PerformanceProfiler` usage and reporting.
-- `RepaintBoundary` and `BlocSelector` adoption guidance.
-- DevTools profiling steps and release validation checklist.
+- [ ] Enable overlay: `flutter run --dart-define=ENABLE_PERFORMANCE_OVERLAY=true`
+- [ ] Profile with: `PerformanceProfiler.printReport()`
+- [ ] Use DevTools: `flutter run --profile`
 
-## Testing & Coverage Notes (Reference)
+### Performance Resources
 
-- **Test types:** unit, bloc, widget, golden, and common bugs prevention.
-- **Common bug prevention suite:** validates lifecycle guards, completer safety, and stream cleanup.
-- **Coverage target:** 85.34% documented baseline (re-verify after major changes).
+- **Flutter DevTools:** CPU profiler, memory analysis, widget rebuild inspector
+- **Performance Overlay:** Visual frame timing (green=60fps, red=jank)
+- **Common fixes:** `BlocSelector` for selective rebuilds, `RepaintBoundary` for isolation
 
-## Report Sources
+See [Flutter Performance Best Practices](https://docs.flutter.dev/perf/best-practices) for detailed guidance.
 
-This report consolidates prior analysis documents that are now merged into this file.
+## 🧪 Testing Standards
+
+**Coverage Target:** 85.34% baseline | **Current:** 82.50%
+
+### Test Types Required
+
+- **Unit tests:** Pure logic, repositories, utilities
+- **Bloc tests:** State machine behavior with `bloc_test`
+- **Widget tests:** UI interactions and rendering
+- **Golden tests:** Visual regression prevention
+- **Integration:** Bootstrapping, error recovery paths
+
+### Quality Gates
+
+- [ ] `./bin/checklist` passes (format → analyze → coverage)
+- [ ] New features include all test types
+- [ ] Critical paths maintain >80% coverage
+- [ ] Common bug prevention tests pass
+
+---
+
+*This analysis focuses on actionable quality improvements. Historical context moved to git history.*
