@@ -27,7 +27,7 @@ This section reflects the current repo state and supersedes older metrics.
    - Action: verify lint tooling is aligned with the analyzer plugin setup or remove stale custom_lint usage to avoid silent lint gaps.
 
 2. **Low coverage in critical non-UI utilities**
-   - Added tests for retry/backoff rules, auth token refresh, error mapping, repository watch flows, stream lifecycle guards, and HTTP extension mapping.
+   - Added tests for retry/backoff rules, auth token refresh, error mapping, repository watch flows, stream lifecycle guards, HTTP extension mapping, and `CubitErrorHandler`.
    - Remaining gaps: `lib/main_bootstrap.dart` and any residual uncovered paths in the HTTP/bootstrapping layer.
    - Action: run coverage to confirm deltas, then target remaining bootstrap paths.
 
