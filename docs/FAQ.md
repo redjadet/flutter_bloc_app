@@ -147,7 +147,7 @@ Additionally, a **Performance Overlay** can be enabled via the `ENABLE_PERFORMAN
 flutter run --dart-define=ENABLE_PERFORMANCE_OVERLAY=true
 ```
 
-The overlay shows frame rendering times, GPU vs CPU time, and visual indication of performance issues. See `docs/PERFORMANCE_PROFILING.md` for detailed information.
+The overlay shows frame rendering times, GPU vs CPU time, and visual indication of performance issues. See `docs/CODE_QUALITY_ANALYSIS.md` for detailed information.
 
 ## What happens if localization files are deleted during iOS builds?
 

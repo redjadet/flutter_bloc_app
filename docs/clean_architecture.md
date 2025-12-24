@@ -2,12 +2,14 @@
 
 This app follows a strict Domain → Data → Presentation pipeline backed by `get_it` dependency injection. The notes below explain how the layers stay isolated here, plus concrete examples you can copy when adding new features.
 
+> **Related:** See [`solid_principles.md`](solid_principles.md) for how SOLID principles are applied throughout this architecture.
+
 ## Layer Responsibilities
 
 - **Domain** — Pure Dart contracts and models; no Flutter imports. Examples: `lib/features/counter/domain/counter_repository.dart`, `lib/features/remote_config/domain/remote_config_service.dart`, `lib/features/deeplink/domain/deep_link_parser.dart`.
 - **Data** — Adapters that implement domain contracts and coordinate platforms, caching, and sync. Examples: `lib/features/counter/data/offline_first_counter_repository.dart` (Hive + optional remote), `lib/features/remote_config/data/offline_first_remote_config_repository.dart` (Firebase Remote Config + Hive cache), `lib/features/deeplink/data/app_links_deep_link_service.dart` (App Links listener).
 - **Presentation** — Cubits/Blocs and widgets that orchestrate user flows while depending only on domain abstractions. Examples: `lib/features/counter/presentation/counter_cubit.dart`, `lib/features/remote_config/presentation/cubit/remote_config_cubit.dart`, `lib/features/deeplink/presentation/deep_link_listener.dart`.
-- **Shared cross-cutting** — Reusable utilities that stay Flutter-agnostic when possible (`lib/shared/sync/`, `lib/shared/storage/`, `lib/shared/utils/`). Remote images go through `CachedNetworkImageWidget`, timers through `TimerService`, and persistence through `HiveService` (never call `Hive.openBox` directly).
+- **Shared cross-cutting** — Reusable utilities that stay Flutter-agnostic when possible (`lib/shared/sync/`, `lib/shared/storage/`, `lib/shared/utils/`). Remote images go through `CachedNetworkImageWidget`, timers through `TimerService`, and persistence through `HiveService` (never call `Hive.openBox` directly). See [`SHARED_UTILITIES.md`](SHARED_UTILITIES.md) for detailed documentation of all shared utilities.
 - **Dependency injection** — `lib/core/di/injector.dart` bootstraps everything via `registerAllDependencies()` in `lib/core/di/injector_registrations.dart`, wiring domain contracts to concrete implementations (often lazy singletons with dispose callbacks). Use `registerLazySingletonIfAbsent` helpers to keep DI idempotent.
 
 ## How Dependencies Flow

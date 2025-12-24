@@ -2,6 +2,8 @@
 
 This app follows Clean Architecture (Domain → Data → Presentation) and uses Cubits/Repositories with dependency injection. Below is a quick map of how SOLID shows up in the codebase with concrete references.
 
+> **Related:** See [`clean_architecture.md`](clean_architecture.md) for the overall architecture overview and layer responsibilities.
+
 ## Single Responsibility
 
 - Classes/modules should have one reason to change.
