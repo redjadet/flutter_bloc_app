@@ -32,7 +32,7 @@ class PerformanceProfiler {
   static bool get enabled => _enabled;
 
   /// Enable or disable performance profiling.
-  static void setEnabled({required bool enabled}) {
+  static void setEnabled({required final bool enabled}) {
     _enabled = enabled;
     if (!enabled) {
       _rebuildCounts.clear();
@@ -46,7 +46,10 @@ class PerformanceProfiler {
   /// ```dart
   /// PerformanceProfiler.trackWidget('CounterDisplay', () => CounterDisplay());
   /// ```
-  static Widget trackWidget(String name, Widget Function() builder) {
+  static Widget trackWidget(
+    final String name,
+    final Widget Function() builder,
+  ) {
     if (!_enabled) {
       return builder();
     }
@@ -65,7 +68,7 @@ class PerformanceProfiler {
   ///   // Expensive operation
   /// });
   /// ```
-  static T trackFrame<T>(T Function() operation) {
+  static T trackFrame<T>(final T Function() operation) {
     if (!_enabled) {
       return operation();
     }
@@ -87,7 +90,9 @@ class PerformanceProfiler {
   ///   // Async operation
   /// });
   /// ```
-  static Future<T> trackFrameAsync<T>(Future<T> Function() operation) async {
+  static Future<T> trackFrameAsync<T>(
+    final Future<T> Function() operation,
+  ) async {
     if (!_enabled) {
       return operation();
     }
@@ -102,7 +107,7 @@ class PerformanceProfiler {
   }
 
   /// Get rebuild statistics for a widget.
-  static WidgetRebuildInfo? getRebuildInfo(String name) {
+  static WidgetRebuildInfo? getRebuildInfo(final String name) {
     final info = _rebuildCounts[name];
     if (info == null) return null;
     return WidgetRebuildInfo(
@@ -115,7 +120,7 @@ class PerformanceProfiler {
   /// Get all rebuild statistics.
   static Map<String, WidgetRebuildInfo> getAllRebuildStats() =>
       _rebuildCounts.map(
-        (key, value) => MapEntry(
+        (final key, final value) => MapEntry(
           key,
           WidgetRebuildInfo(
             name: value.name,
@@ -136,10 +141,10 @@ class PerformanceProfiler {
       );
     }
 
-    final times = _frameTimes.map((f) => f.microseconds).toList();
-    final average = times.reduce((a, b) => a + b) / times.length;
-    final max = times.reduce((a, b) => a > b ? a : b);
-    final min = times.reduce((a, b) => a < b ? a : b);
+    final times = _frameTimes.map((final f) => f.microseconds).toList();
+    final average = times.reduce((final a, final b) => a + b) / times.length;
+    final max = times.reduce((final a, final b) => a > b ? a : b);
+    final min = times.reduce((final a, final b) => a < b ? a : b);
 
     return FrameStats(
       averageFrameTime: average,
@@ -169,7 +174,7 @@ class PerformanceProfiler {
   }
 
   /// Records a widget rebuild (internal use only).
-  static void recordRebuild(String name, Duration duration) {
+  static void recordRebuild(final String name, final Duration duration) {
     final info = _rebuildCounts.putIfAbsent(
       name,
       () => WidgetRebuildInfoInternal(name: name),
@@ -178,7 +183,7 @@ class PerformanceProfiler {
     info.lastRebuildTime = duration.inMicroseconds / 1000;
   }
 
-  static void _recordFrameTime(int microseconds) {
+  static void _recordFrameTime(final int microseconds) {
     _frameTimes.add(
       _FrameInfo(
         microseconds: microseconds,

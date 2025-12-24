@@ -43,7 +43,7 @@ class ChatContactTileConfig {
     );
   }
 
-  factory ChatContactTileConfig.fromContext(BuildContext context) {
+  factory ChatContactTileConfig.fromContext(final BuildContext context) {
     final isDesktopLayout = context.isDesktop;
     final isTabletOrLarger = context.isTabletOrLarger;
     final usesTabletTypography = isTabletOrLarger && !isDesktopLayout;

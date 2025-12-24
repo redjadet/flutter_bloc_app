@@ -5,7 +5,7 @@ class ChatBottomNavigationBar extends StatelessWidget {
   const ChatBottomNavigationBar({super.key});
 
   @override
-  Widget build(BuildContext context) => const DecoratedBox(
+  Widget build(final BuildContext context) => const DecoratedBox(
     decoration: BoxDecoration(
       color: Colors.white,
       border: Border(
@@ -25,7 +25,7 @@ class _ChatBottomNavigationBarContent extends StatelessWidget {
   const _ChatBottomNavigationBarContent();
 
   @override
-  Widget build(BuildContext context) => Padding(
+  Widget build(final BuildContext context) => Padding(
     padding: EdgeInsets.symmetric(
       horizontal: context.pageHorizontalPadding,
       vertical: context.responsiveGap,
@@ -64,10 +64,10 @@ class _ChatBottomNavigationBarContent extends StatelessWidget {
   );
 
   Widget _buildNavItem(
-    IconData icon, {
-    required bool isSelected,
-    required BuildContext context,
-    bool isPrimary = false,
+    final IconData icon, {
+    required final bool isSelected,
+    required final BuildContext context,
+    final bool isPrimary = false,
   }) {
     final iconSize = context.responsiveIconSize;
     final containerSize = context.responsiveButtonHeight;

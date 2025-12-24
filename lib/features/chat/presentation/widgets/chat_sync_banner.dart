@@ -80,7 +80,8 @@ class _ChatSyncBannerState extends State<ChatSyncBanner> {
   @override
   Widget build(final BuildContext context) =>
       BlocListener<SyncStatusCubit, SyncStatusState>(
-        listener: (context, state) => unawaited(_refreshPendingCount()),
+        listener: (final context, final state) =>
+            unawaited(_refreshPendingCount()),
         child: BlocBuilder<SyncStatusCubit, SyncStatusState>(
           builder: (final context, final syncState) {
             final bool isOffline =

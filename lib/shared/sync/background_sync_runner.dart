@@ -11,10 +11,11 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Runs a single sync cycle and returns a summary for diagnostics.
 Future<SyncCycleSummary> runSyncCycle({
-  required SyncableRepositoryRegistry registry,
-  required PendingSyncRepository pendingRepository,
-  required void Function(SyncStatus status) emitStatus,
-  required void Function(String event, Map<String, Object?> payload) telemetry,
+  required final SyncableRepositoryRegistry registry,
+  required final PendingSyncRepository pendingRepository,
+  required final void Function(SyncStatus status) emitStatus,
+  required final void Function(String event, Map<String, Object?> payload)
+  telemetry,
 }) async {
   final List<SyncableRepository> syncables = registry.repositories;
   final Stopwatch stopwatch = Stopwatch()..start();
@@ -148,15 +149,16 @@ Future<SyncCycleSummary> runSyncCycle({
   for (final MapEntry<String, List<int>> entry in retryCountsByEntity.entries) {
     final List<int> counts = entry.value;
     if (counts.isNotEmpty) {
-      final double average = counts.reduce((a, b) => a + b) / counts.length;
+      final double average =
+          counts.reduce((final a, final b) => a + b) / counts.length;
       retryAttemptsByEntity[entry.key] = average;
     }
   }
 
   // Calculate retry success rate
   final int totalOperationsWithRetries = retryCountsByEntity.values
-      .expand((list) => list)
-      .where((count) => count > 0)
+      .expand((final list) => list)
+      .where((final count) => count > 0)
       .length;
   final double retrySuccessRate = totalOperationsWithRetries > 0
       ? successfulAfterRetry / totalOperationsWithRetries

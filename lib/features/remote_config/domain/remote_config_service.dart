@@ -4,8 +4,8 @@ abstract class RemoteConfigService {
   Future<void> forceFetch();
   Future<void> clearCache();
 
-  bool getBool(String key);
-  String getString(String key);
-  int getInt(String key);
-  double getDouble(String key);
+  bool getBool(final String key);
+  String getString(final String key);
+  int getInt(final String key);
+  double getDouble(final String key);
 }

@@ -36,8 +36,8 @@ class PendingSyncRepository extends HiveRepositoryBase {
   /// based on their `nextRetryAt` timestamp, which is useful for testing.
   /// The [limit] parameter can be used to control the batch size.
   Future<List<SyncOperation>> getPendingOperations({
-    DateTime? now,
-    int? limit,
+    final DateTime? now,
+    final int? limit,
   }) async => StorageGuard.run<List<SyncOperation>>(
     logContext: 'PendingSyncRepository.getPendingOperations',
     action: () async {
@@ -117,8 +117,8 @@ class PendingSyncRepository extends HiveRepositoryBase {
   ///
   /// Returns the number of pruned operations.
   Future<int> prune({
-    int maxRetryCount = 10,
-    Duration maxAge = const Duration(days: 30),
+    final int maxRetryCount = 10,
+    final Duration maxAge = const Duration(days: 30),
   }) async => StorageGuard.run<int>(
     logContext: 'PendingSyncRepository.prune',
     action: () async {

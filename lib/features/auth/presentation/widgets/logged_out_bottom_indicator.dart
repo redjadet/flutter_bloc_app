@@ -12,7 +12,7 @@ class LoggedOutBottomIndicator extends StatelessWidget {
   final double horizontalOffset;
 
   @override
-  Widget build(BuildContext context) => Positioned(
+  Widget build(final BuildContext context) => Positioned(
     left: horizontalOffset + 120 * scale,
     top: 799 * scale,
     width: 135 * scale,
@@ -34,12 +34,12 @@ class _ShapeIndicator extends StatelessWidget {
   final double height;
 
   @override
-  Widget build(BuildContext context) => SvgPicture.asset(
+  Widget build(final BuildContext context) => SvgPicture.asset(
     'assets/figma/Logged_out_0-2/Shape_0-115.svg',
     width: width,
     height: height,
     fit: BoxFit.fill,
-    placeholderBuilder: (context) => Container(
+    placeholderBuilder: (final context) => Container(
       width: width,
       height: height,
       decoration: BoxDecoration(

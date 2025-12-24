@@ -16,11 +16,11 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class OfflineFirstRemoteConfigRepository
     implements RemoteConfigService, SyncableRepository {
   OfflineFirstRemoteConfigRepository({
-    required RemoteConfigRepository remoteRepository,
-    required RemoteConfigCacheRepository cacheRepository,
-    required NetworkStatusService networkStatusService,
-    required SyncableRepositoryRegistry registry,
-    void Function(String event, Map<String, Object?> payload)? telemetry,
+    required final RemoteConfigRepository remoteRepository,
+    required final RemoteConfigCacheRepository cacheRepository,
+    required final NetworkStatusService networkStatusService,
+    required final SyncableRepositoryRegistry registry,
+    final void Function(String event, Map<String, Object?> payload)? telemetry,
   }) : _remoteRepository = remoteRepository,
        _cacheRepository = cacheRepository,
        _networkStatusService = networkStatusService,
@@ -123,7 +123,7 @@ class OfflineFirstRemoteConfigRepository
 
   Future<void> _refreshFromRemote({
     required final String reason,
-    bool skipNetworkCheck = false,
+    final bool skipNetworkCheck = false,
   }) async {
     if (!skipNetworkCheck) {
       final NetworkStatus status = await _networkStatusService

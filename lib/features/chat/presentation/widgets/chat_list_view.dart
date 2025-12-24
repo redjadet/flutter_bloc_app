@@ -19,9 +19,9 @@ class ChatListView extends StatelessWidget {
   const ChatListView({super.key});
 
   @override
-  Widget build(BuildContext context) =>
+  Widget build(final BuildContext context) =>
       BlocBuilder<ChatListCubit, ChatListState>(
-        builder: (context, state) => switch (state) {
+        builder: (final context, final state) => switch (state) {
           ChatListInitial() => const SizedBox.shrink(),
           ChatListLoading() => const CommonLoadingWidget(),
           ChatListLoaded(:final contacts) => _buildLoadedList(
@@ -34,8 +34,8 @@ class ChatListView extends StatelessWidget {
       );
 
   Widget _buildLoadedList(
-    BuildContext context,
-    List<ChatContact> contacts,
+    final BuildContext context,
+    final List<ChatContact> contacts,
   ) {
     final listPadding = context.responsiveListPadding;
     final safeListPadding = listPadding.add(
@@ -58,8 +58,9 @@ class ChatListView extends StatelessWidget {
           child: ListView.separated(
             padding: safeListPadding,
             itemCount: contacts.length,
-            separatorBuilder: (context, index) => const _ChatDivider(),
-            itemBuilder: (context, index) {
+            separatorBuilder: (final context, final index) =>
+                const _ChatDivider(),
+            itemBuilder: (final context, final index) {
               final contact = contacts[index];
               final isFirst = index == 0;
               final isLast = index == contacts.length - 1;
@@ -83,13 +84,13 @@ class ChatListView extends StatelessWidget {
     );
   }
 
-  Widget _buildErrorState(BuildContext context, String message) =>
+  Widget _buildErrorState(final BuildContext context, final String message) =>
       CommonErrorView(
         message: message,
         onRetry: () => context.read<ChatListCubit>().loadChatContacts(),
       );
 
-  void _navigateToChat(BuildContext context, ChatContact contact) {
+  void _navigateToChat(final BuildContext context, final ChatContact contact) {
     if (!context.mounted) {
       ContextUtils.logNotMounted('ChatListView._navigateToChat');
       return;
@@ -101,8 +102,8 @@ class ChatListView extends StatelessWidget {
     unawaited(
       Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (context) => BlocProvider(
-            create: (context) {
+          builder: (final context) => BlocProvider(
+            create: (final context) {
               final cubit = ChatCubit(
                 repository: getIt<ChatRepository>(),
                 historyRepository: getIt<ChatHistoryRepository>(),
@@ -118,14 +119,17 @@ class ChatListView extends StatelessWidget {
     );
   }
 
-  void _showDeleteDialog(BuildContext context, ChatContact contact) {
+  void _showDeleteDialog(
+    final BuildContext context,
+    final ChatContact contact,
+  ) {
     final chatListCubit = context.read<ChatListCubit>();
     final bool isCupertino = PlatformAdaptive.isCupertino(context);
     final l10n = context.l10n;
     unawaited(
       showAdaptiveDialog<void>(
         context: context,
-        builder: (dialogContext) {
+        builder: (final dialogContext) {
           if (isCupertino) {
             return CupertinoAlertDialog(
               title: Text(l10n.chatHistoryDeleteConversation),
@@ -180,7 +184,7 @@ class _ChatDivider extends StatelessWidget {
   const _ChatDivider();
 
   @override
-  Widget build(BuildContext context) => const Divider(
+  Widget build(final BuildContext context) => const Divider(
     height: 0.5,
     thickness: 0.5,
     color: Color(0x4D000000),

@@ -8,7 +8,7 @@ part 'chat_list_state.dart';
 
 class ChatListCubit extends Cubit<ChatListState> {
   ChatListCubit({
-    required ChatListRepository repository,
+    required final ChatListRepository repository,
   }) : _repository = repository,
        super(const ChatListState.initial());
 
@@ -31,7 +31,7 @@ class ChatListCubit extends Cubit<ChatListState> {
     );
   }
 
-  Future<void> deleteContact(String contactId) async {
+  Future<void> deleteContact(final String contactId) async {
     final currentState = state;
     if (currentState is! ChatListLoaded) return;
 
@@ -40,7 +40,7 @@ class ChatListCubit extends Cubit<ChatListState> {
         await _repository.deleteChatContact(contactId);
         if (isClosed) return;
         final List<ChatContact> updatedContacts = currentState.contacts
-            .where((contact) => contact.id != contactId)
+            .where((final contact) => contact.id != contactId)
             .toList();
         emit(ChatListState.loaded(contacts: updatedContacts));
       },
@@ -52,7 +52,7 @@ class ChatListCubit extends Cubit<ChatListState> {
     );
   }
 
-  Future<void> markAsRead(String contactId) async {
+  Future<void> markAsRead(final String contactId) async {
     final currentState = state;
     if (currentState is! ChatListLoaded) return;
 
@@ -61,7 +61,7 @@ class ChatListCubit extends Cubit<ChatListState> {
         await _repository.markAsRead(contactId);
         if (isClosed) return;
         final List<ChatContact> updatedContacts = currentState.contacts.map((
-          contact,
+          final contact,
         ) {
           if (contact.id == contactId) {
             return contact.copyWith(unreadCount: 0);

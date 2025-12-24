@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
-
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile_config.dart';
 
 class ChatContactTileDetails extends StatelessWidget {
@@ -16,8 +15,8 @@ class ChatContactTileDetails extends StatelessWidget {
   final String timeText;
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) {
+  Widget build(final BuildContext context) => LayoutBuilder(
+    builder: (final context, final constraints) {
       final timePainter = TextPainter(
         text: TextSpan(text: timeText, style: config.timeTextStyle),
         textDirection: TextDirection.ltr,
@@ -118,7 +117,7 @@ class _ChatUnreadBadge extends StatelessWidget {
   final ChatContactTileConfig config;
 
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(final BuildContext context) => Container(
     alignment: Alignment.center,
     constraints: BoxConstraints(
       minWidth: config.unreadMinSize,

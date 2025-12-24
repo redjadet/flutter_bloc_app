@@ -16,10 +16,10 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class OfflineFirstSearchRepository
     implements SearchRepository, SyncableRepository {
   OfflineFirstSearchRepository({
-    required SearchRepository remoteRepository,
-    required SearchCacheRepository cacheRepository,
-    required NetworkStatusService networkStatusService,
-    required SyncableRepositoryRegistry registry,
+    required final SearchRepository remoteRepository,
+    required final SearchCacheRepository cacheRepository,
+    required final NetworkStatusService networkStatusService,
+    required final SyncableRepositoryRegistry registry,
   }) : _remoteRepository = remoteRepository,
        _cacheRepository = cacheRepository,
        _networkStatusService = networkStatusService,

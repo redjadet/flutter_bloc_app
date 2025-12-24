@@ -20,10 +20,10 @@ class SyncStatusState extends Equatable {
   final List<SyncCycleSummary> history;
 
   SyncStatusState copyWith({
-    NetworkStatus? networkStatus,
-    SyncStatus? syncStatus,
-    SyncCycleSummary? lastSummary,
-    List<SyncCycleSummary>? history,
+    final NetworkStatus? networkStatus,
+    final SyncStatus? syncStatus,
+    final SyncCycleSummary? lastSummary,
+    final List<SyncCycleSummary>? history,
   }) => SyncStatusState(
     networkStatus: networkStatus ?? this.networkStatus,
     syncStatus: syncStatus ?? this.syncStatus,
@@ -45,8 +45,8 @@ class SyncStatusState extends Equatable {
 
 class SyncStatusCubit extends Cubit<SyncStatusState> {
   SyncStatusCubit({
-    required NetworkStatusService networkStatusService,
-    required BackgroundSyncCoordinator coordinator,
+    required final NetworkStatusService networkStatusService,
+    required final BackgroundSyncCoordinator coordinator,
   }) : _networkStatusService = networkStatusService,
        _coordinator = coordinator,
        super(

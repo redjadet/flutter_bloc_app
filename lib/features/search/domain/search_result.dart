@@ -6,10 +6,10 @@ part 'search_result.g.dart';
 @freezed
 abstract class SearchResult with _$SearchResult {
   const factory SearchResult({
-    required String id,
-    required String imageUrl,
-    String? title,
-    String? description,
+    required final String id,
+    required final String imageUrl,
+    final String? title,
+    final String? description,
   }) = _SearchResult;
 
   factory SearchResult.fromJson(final Map<String, dynamic> json) =>

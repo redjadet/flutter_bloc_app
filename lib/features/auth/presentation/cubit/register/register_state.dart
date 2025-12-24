@@ -58,16 +58,16 @@ class RegisterState extends Equatable {
   bool get termsAcceptanceError => showErrors && !acceptedTerms;
 
   RegisterState copyWith({
-    RegisterFieldState? fullName,
-    RegisterFieldState? email,
-    RegisterFieldState? password,
-    RegisterFieldState? confirmPassword,
-    RegisterFieldState? phoneNumber,
-    CountryOption? selectedCountry,
-    bool? showErrors,
-    RegisterSubmissionStatus? submissionStatus,
-    bool? hasViewedTerms,
-    bool? acceptedTerms,
+    final RegisterFieldState? fullName,
+    final RegisterFieldState? email,
+    final RegisterFieldState? password,
+    final RegisterFieldState? confirmPassword,
+    final RegisterFieldState? phoneNumber,
+    final CountryOption? selectedCountry,
+    final bool? showErrors,
+    final RegisterSubmissionStatus? submissionStatus,
+    final bool? hasViewedTerms,
+    final bool? acceptedTerms,
   }) => RegisterState(
     fullName: fullName ?? this.fullName,
     email: email ?? this.email,

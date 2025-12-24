@@ -54,13 +54,13 @@ mixin CalculatorCubitHelpers on Cubit<CalculatorState> {
   }
 
   CalculatorState _applyEvaluation({
-    required CalculatorState current,
-    required double lhs,
-    required double rhs,
-    required CalculatorOperation operation,
-    required String? historyOverride,
-    bool updateRepeatOperation = false,
-    bool clearPendingOperation = false,
+    required final CalculatorState current,
+    required final double lhs,
+    required final double rhs,
+    required final CalculatorOperation operation,
+    required final String? historyOverride,
+    final bool updateRepeatOperation = false,
+    final bool clearPendingOperation = false,
   }) {
     if (operation == CalculatorOperation.divide && rhs == 0) {
       return _errorState(current, CalculatorError.divisionByZero);
@@ -123,7 +123,7 @@ mixin CalculatorCubitHelpers on Cubit<CalculatorState> {
         error: null,
       );
 
-  bool _ensureEditable({required bool resetForInput}) {
+  bool _ensureEditable({required final bool resetForInput}) {
     if (state.error == null) {
       return true;
     }

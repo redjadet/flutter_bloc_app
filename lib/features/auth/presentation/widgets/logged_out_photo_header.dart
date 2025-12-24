@@ -12,7 +12,7 @@ class LoggedOutPhotoHeader extends StatelessWidget {
   final double horizontalOffset;
 
   @override
-  Widget build(BuildContext context) => Positioned(
+  Widget build(final BuildContext context) => Positioned(
     left: horizontalOffset + 84 * scale,
     top: 307 * scale,
     width: 206 * scale,

@@ -125,7 +125,7 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   Future<T> _executeForUser<T>({
     required final String operation,
     required final Future<T> Function(User user) action,
-    Future<T> Function()? onFailureFallback,
+    final Future<T> Function()? onFailureFallback,
   }) async {
     try {
       final User user = await waitForAuthUser(_auth);

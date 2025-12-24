@@ -72,14 +72,14 @@ class CachedNetworkImageWidget extends StatelessWidget {
   final int? memCacheHeight;
 
   @override
-  Widget build(BuildContext context) => CachedNetworkImage(
+  Widget build(final BuildContext context) => CachedNetworkImage(
     imageUrl: imageUrl,
     fit: fit,
     width: width,
     height: height,
     placeholder:
         placeholder ??
-        (context, url) => ColoredBox(
+        (final context, final url) => ColoredBox(
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
           child: Center(
             child: CircularProgressIndicator(
@@ -90,7 +90,7 @@ class CachedNetworkImageWidget extends StatelessWidget {
         ),
     errorWidget:
         errorWidget ??
-        (context, url, error) => ColoredBox(
+        (final context, final url, final error) => ColoredBox(
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
           child: Icon(
             Icons.error_outline,

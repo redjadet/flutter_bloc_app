@@ -9,5 +9,5 @@ abstract class SyncableRepository {
   Future<void> pullRemote();
 
   /// Processes a pending sync operation that was queued while offline.
-  Future<void> processOperation(SyncOperation operation);
+  Future<void> processOperation(final SyncOperation operation);
 }

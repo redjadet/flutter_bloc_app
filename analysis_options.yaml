@@ -73,72 +73,23 @@ analyzer:
     # Ignore vendored packages and tooling pulled in under third_party.
     - third_party/**
     - custom_lints/**
+    - tool/**
 
 # Keep our custom preferences on top of VGV
 linter:
   rules:
-    avoid_dynamic_calls: true
-    always_use_package_imports: true
-    prefer_single_quotes: true
-    close_sinks: true
-    cancel_subscriptions: true
-    discarded_futures: true
-    require_trailing_commas: true
-    avoid_redundant_argument_values: true
-    unawaited_futures: true
-    use_build_context_synchronously: true
-    cascade_invocations: true
-    unnecessary_raw_strings: true
-    avoid_multiple_declarations_per_line: true
     prefer_expression_function_bodies: true
+    type_annotate_public_apis: true
     avoid_final_parameters: false
-    prefer_const_constructors: true
-    prefer_const_constructors_in_immutables: true
-    prefer_const_declarations: true
-    prefer_const_literals_to_create_immutables: true
+    prefer_final_parameters: true
     public_member_api_docs: false
     omit_local_variable_types: false
     lines_longer_than_80_chars: false
     no_default_cases: false
     unnecessary_lambdas: false
-    always_put_required_named_parameters_first: true
-    use_setters_to_change_properties: true
     one_member_abstracts: false
-    avoid_slow_async_io: true
-    only_throw_errors: true
-    prefer_final_fields: true
-    prefer_final_in_for_each: true
-    prefer_final_locals: true
-    prefer_spread_collections: true
-    use_colored_box: true
     use_decorated_box: true
-    use_enums: true
-    use_key_in_widget_constructors: true
-    use_named_constants: true
-    use_string_buffers: true
     unnecessary_breaks: false
-    # Stricter type inference and null-safety consistency rules
-    always_declare_return_types: true
-    prefer_typing_uninitialized_variables: true
-    null_check_on_nullable_type_parameter: true
-    unnecessary_nullable_for_final_variable_declarations: true
-    unnecessary_null_in_if_null_operators: true
-    avoid_null_checks_in_equality_operators: true
-    prefer_if_null_operators: true
-    prefer_null_aware_operators: true
-    unnecessary_null_aware_assignments: true
-    prefer_function_declarations_over_variables: true
-    # Dart 3.10.4 new static analysis rules
-    strict_top_level_inference: true
-    no_wildcard_variable_uses: true
-    implicit_call_tearoffs: true
-    type_literal_in_constant_pattern: true
-    avoid_shadowing_type_parameters: true
-    avoid_types_as_parameter_names: true
-    collection_methods_unrelated_type: true
-    prefer_iterable_whereType: true
-    unrelated_type_equality_checks: true
-    void_checks: true
 
 # Custom lint configuration
 file_length_lint:

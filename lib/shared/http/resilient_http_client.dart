@@ -18,11 +18,11 @@ part 'resilient_http_client_helpers.dart';
 /// - HTTP status code mapping to domain exceptions
 class ResilientHttpClient extends http.BaseClient {
   ResilientHttpClient({
-    required http.Client innerClient,
-    required NetworkStatusService networkStatusService,
-    required String userAgent,
-    FirebaseAuth? firebaseAuth,
-    RetryNotificationService? retryNotificationService,
+    required final http.Client innerClient,
+    required final NetworkStatusService networkStatusService,
+    required final String userAgent,
+    final FirebaseAuth? firebaseAuth,
+    final RetryNotificationService? retryNotificationService,
     this.enableTelemetry = true,
     this.enableRetry = true,
     this.maxRetries = 3,

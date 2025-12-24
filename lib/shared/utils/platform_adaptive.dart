@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 class PlatformAdaptive {
   const PlatformAdaptive._();
 
-  static bool isCupertino(BuildContext context) =>
+  static bool isCupertino(final BuildContext context) =>
       isCupertinoFromTheme(Theme.of(context));
 
-  static bool isCupertinoFromTheme(ThemeData theme) =>
+  static bool isCupertinoFromTheme(final ThemeData theme) =>
       isCupertinoPlatform(theme.platform);
 
-  static bool isCupertinoPlatform(TargetPlatform platform) =>
+  static bool isCupertinoPlatform(final TargetPlatform platform) =>
       platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
 
   /// Returns a platform-adaptive button widget

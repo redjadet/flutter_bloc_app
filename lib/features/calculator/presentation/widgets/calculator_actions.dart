@@ -3,8 +3,8 @@ import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculat
 
 /// Abstraction describing the calculator interactions exposed to presentation.
 abstract class CalculatorActions {
-  void inputDigit(String digit);
-  void inputOperation(CalculatorOperation operation);
+  void inputDigit(final String digit);
+  void inputOperation(final CalculatorOperation operation);
   void inputDecimalPoint();
   void evaluate();
   void toggleSign();
@@ -49,7 +49,7 @@ class CalculatorCubitActions implements CalculatorActions {
 abstract class CalculatorCommand {
   const CalculatorCommand();
 
-  void execute(CalculatorActions actions);
+  void execute(final CalculatorActions actions);
 }
 
 class DigitCommand extends CalculatorCommand {

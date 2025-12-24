@@ -12,8 +12,8 @@ class LoggedOutPageBody extends StatelessWidget {
   static const double _baseHeight = 812;
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) {
+  Widget build(final BuildContext context) => LayoutBuilder(
+    builder: (final context, final constraints) {
       final scale = _resolveScale(constraints);
       final horizontalOffset = _horizontalOffset(constraints.maxWidth, scale);
 
@@ -44,13 +44,13 @@ class LoggedOutPageBody extends StatelessWidget {
     },
   );
 
-  double _resolveScale(BoxConstraints constraints) {
+  double _resolveScale(final BoxConstraints constraints) {
     final widthScale = constraints.maxWidth / _baseWidth;
     final heightScale = constraints.maxHeight / _baseHeight;
     return widthScale < heightScale ? widthScale : heightScale;
   }
 
-  double _horizontalOffset(double maxWidth, double scale) {
+  double _horizontalOffset(final double maxWidth, final double scale) {
     final scaledWidth = _baseWidth * scale;
     return (maxWidth - scaledWidth) / 2;
   }

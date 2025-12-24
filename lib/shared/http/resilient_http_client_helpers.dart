@@ -19,7 +19,7 @@ extension _ResilientHttpClientHelpers on ResilientHttpClient {
 
   Future<void> _injectAuthToken(
     final http.BaseRequest request, {
-    bool forceRefresh = false,
+    final bool forceRefresh = false,
   }) async {
     final FirebaseAuth? firebaseAuth = _firebaseAuth;
     if (firebaseAuth == null) {

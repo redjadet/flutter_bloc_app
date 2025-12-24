@@ -13,10 +13,10 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
   OfflineFirstChatRepository({
-    required ChatRepository remoteRepository,
-    required ChatHistoryRepository localDataSource,
-    required PendingSyncRepository pendingSyncRepository,
-    required SyncableRepositoryRegistry registry,
+    required final ChatRepository remoteRepository,
+    required final ChatHistoryRepository localDataSource,
+    required final PendingSyncRepository pendingSyncRepository,
+    required final SyncableRepositoryRegistry registry,
   }) : _remoteRepository = remoteRepository,
        _localDataSource = localDataSource,
        _pendingSyncRepository = pendingSyncRepository,

@@ -47,16 +47,16 @@ class MockChatListRepository implements ChatListRepository {
   }
 
   @override
-  Future<void> deleteChatContact(String contactId) async {
+  Future<void> deleteChatContact(final String contactId) async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
-    _mockContacts.removeWhere((contact) => contact.id == contactId);
+    _mockContacts.removeWhere((final contact) => contact.id == contactId);
   }
 
   @override
-  Future<void> markAsRead(String contactId) async {
+  Future<void> markAsRead(final String contactId) async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
     final index = _mockContacts.indexWhere(
-      (contact) => contact.id == contactId,
+      (final contact) => contact.id == contactId,
     );
     if (index != -1) {
       _mockContacts[index] = _mockContacts[index].copyWith(unreadCount: 0);

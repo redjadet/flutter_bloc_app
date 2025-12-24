@@ -19,7 +19,7 @@ class ChatContactTile extends StatelessWidget {
   final bool isTabletLayout;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final config = ChatContactTileConfig.fromContext(context);
     final timeText = _formatTime(contact.lastMessageTime);
 
@@ -53,7 +53,7 @@ class ChatContactTile extends StatelessWidget {
     );
   }
 
-  String _formatTime(DateTime time) {
+  String _formatTime(final DateTime time) {
     final now = DateTime.now();
     final difference = now.difference(time);
 

@@ -17,10 +17,10 @@ class _ButtonConfig {
   });
 
   const _ButtonConfig.number({
-    required String label,
-    required CalculatorCommand command,
-    String? semanticsLabel,
-    String? tooltip,
+    required final String label,
+    required final CalculatorCommand command,
+    final String? semanticsLabel,
+    final String? tooltip,
   }) : this._(
          label: label,
          type: _ButtonType.number,
@@ -30,10 +30,10 @@ class _ButtonConfig {
        );
 
   const _ButtonConfig.operation({
-    required String label,
-    required CalculatorCommand command,
-    String? semanticsLabel,
-    String? tooltip,
+    required final String label,
+    required final CalculatorCommand command,
+    final String? semanticsLabel,
+    final String? tooltip,
   }) : this._(
          label: label,
          type: _ButtonType.operation,
@@ -43,10 +43,10 @@ class _ButtonConfig {
        );
 
   const _ButtonConfig.function({
-    required String label,
-    required CalculatorCommand command,
-    String? semanticsLabel,
-    String? tooltip,
+    required final String label,
+    required final CalculatorCommand command,
+    final String? semanticsLabel,
+    final String? tooltip,
   }) : this._(
          label: label,
          type: _ButtonType.function,

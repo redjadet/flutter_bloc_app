@@ -14,7 +14,7 @@ class LoggedOutActionButtons extends StatelessWidget {
   final double horizontalOffset;
 
   @override
-  Widget build(BuildContext context) => Positioned(
+  Widget build(final BuildContext context) => Positioned(
     left: horizontalOffset + 16 * scale,
     right: horizontalOffset + 16 * scale,
     top: 727 * scale,
@@ -64,7 +64,7 @@ class _LoggedOutActionButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
+  Widget build(final BuildContext context) => SizedBox(
     width: width,
     height: double.infinity,
     child: ElevatedButton(

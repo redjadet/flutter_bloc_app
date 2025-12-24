@@ -25,8 +25,8 @@ class SkeletonListTile extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colors = theme.colorScheme;
     final effectiveHeight = height ?? context.responsiveButtonHeight * 1.5;
 
     return RepaintBoundary(

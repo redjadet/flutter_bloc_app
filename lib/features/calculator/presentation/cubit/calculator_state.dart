@@ -7,17 +7,17 @@ part 'calculator_state.freezed.dart';
 @freezed
 abstract class CalculatorState with _$CalculatorState {
   const factory CalculatorState({
-    @Default('0') String display,
-    double? accumulator,
-    CalculatorOperation? operation,
-    CalculatorOperation? lastOperation,
-    double? lastOperand,
-    @Default(true) bool replaceInput,
-    @Default(0.0) double taxRate,
-    @Default(0.0) double tipRate,
-    @Default(0.0) double settledAmount,
-    @Default('') String history,
-    CalculatorError? error,
+    @Default('0') final String display,
+    final double? accumulator,
+    final CalculatorOperation? operation,
+    final CalculatorOperation? lastOperation,
+    final double? lastOperand,
+    @Default(true) final bool replaceInput,
+    @Default(0.0) final double taxRate,
+    @Default(0.0) final double tipRate,
+    @Default(0.0) final double settledAmount,
+    @Default('') final String history,
+    final CalculatorError? error,
   }) = _CalculatorState;
 
   const CalculatorState._();

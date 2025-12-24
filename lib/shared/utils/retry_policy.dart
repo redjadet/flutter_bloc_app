@@ -49,9 +49,9 @@ class RetryPolicy {
   ///
   /// If [cancelToken] is provided and cancelled, throws [CancellationException].
   Future<T> executeWithRetry<T>({
-    required Future<T> Function() action,
-    CancelToken? cancelToken,
-    bool Function(Object error)? shouldRetry,
+    required final Future<T> Function() action,
+    final CancelToken? cancelToken,
+    final bool Function(Object error)? shouldRetry,
   }) async {
     Object? lastError;
     for (int attempt = 0; attempt < maxAttempts; attempt++) {

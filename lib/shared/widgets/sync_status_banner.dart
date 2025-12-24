@@ -19,7 +19,7 @@ class SyncStatusBanner extends StatelessWidget {
   Widget build(
     final BuildContext context,
   ) => BlocBuilder<SyncStatusCubit, SyncStatusState>(
-    builder: (final context, final state) {
+    builder: (final BuildContext context, final SyncStatusState state) {
       final bool isDegraded = state.syncStatus == SyncStatus.degraded;
       if (!isDegraded) {
         return const SizedBox.shrink();
@@ -35,11 +35,11 @@ class SyncStatusBanner extends StatelessWidget {
           message:
               'Some data may not be synced. Tap retry to attempt synchronization.',
           isError: true,
-          actions: [
+          actions: <Widget>[
             PlatformAdaptive.textButton(
               context: context,
               onPressed: () {
-                final cubit = context.read<SyncStatusCubit>();
+                final SyncStatusCubit cubit = context.read<SyncStatusCubit>();
                 unawaited(cubit.flush());
               },
               child: const Text('Retry'),
