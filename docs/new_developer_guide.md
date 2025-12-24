@@ -79,6 +79,7 @@ Follow the delivery checklist before merging or publishing builds:
 
 **Note:** The delivery checklist script (`./bin/checklist`) automatically runs:
 
+- `flutter pub get` - Ensures dependencies (and analyzer config) resolve correctly
 - `dart format .` - Code formatting
 - `flutter analyze` - Static analysis (includes native Dart 3.10 analyzer plugins like `file_length_lint`)
 - `tool/test_coverage.sh` - Runs tests with coverage and automatically updates coverage reports
@@ -104,6 +105,7 @@ Tips:
 - **Figma pipeline**: When asked to implement a `Frame_Node`, configure `figma-sync/.env`, run `npm install`, then `npm run fetch`. Place outputs under `assets/figma/<Frame>_<Node>/` and update `pubspec.yaml`. Follow `layout_manifest.json` stacking order and use `ResilientSvgAssetImage` for rasterized SVGs.
 - **Secrets**: Use `SecretConfig` to load secure config. Never check real secrets into source; rely on `--dart-define` or secure storage.
 - **Logging**: Use `AppLogger` (registered in DI) instead of `print`.
+- **Lint rationale**: `prefer_final_parameters` keeps method inputs immutable, improving readability, reducing accidental reassignment during refactors, and making data flow easier to audit. Performance gains are modest, but immutable parameters can enable clearer intent and reduce defensive copies in hot paths.
 - **Error handling**: Route recoverable errors through domain failures or `ErrorHandling` helpers; surface user-facing errors via localized messages.
 - **Localization**: Update ARB files in `l10n/arb/`, run `flutter gen-l10n`, and access strings through `context.l10n`.
 - **Image caching**: Use `CachedNetworkImageWidget` from `lib/shared/widgets/` for remote images. It provides automatic caching, loading placeholders, error handling, and memory optimization. `FancyShimmerImage` (used in search/profile/example pages) already includes caching via `cached_network_image` under the hood.

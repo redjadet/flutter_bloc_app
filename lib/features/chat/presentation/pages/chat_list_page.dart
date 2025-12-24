@@ -14,7 +14,7 @@ class ChatListPage extends StatelessWidget {
   final ChatListRepository? repository;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final Color backgroundColor = theme.scaffoldBackgroundColor;
     final Color foregroundColor = theme.colorScheme.onSurface;
@@ -37,7 +37,7 @@ class ChatListPage extends StatelessWidget {
         ),
       ),
       body: BlocProvider(
-        create: (context) {
+        create: (final context) {
           final cubit = ChatListCubit(
             repository: repository ?? getIt<ChatListRepository>(),
           );
@@ -49,7 +49,7 @@ class ChatListPage extends StatelessWidget {
     );
   }
 
-  TextStyle _appBarTitleStyle(BuildContext context, Color color) {
+  TextStyle _appBarTitleStyle(final BuildContext context, final Color color) {
     final TextStyle baseStyle =
         (Theme.of(context).textTheme.titleMedium ?? const TextStyle()).copyWith(
           color: color,

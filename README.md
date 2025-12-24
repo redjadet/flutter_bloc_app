@@ -4,7 +4,7 @@ A production-ready Flutter application demonstrating enterprise-grade architectu
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.38.5-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.10.4-blue.svg)](https://dart.dev)
-[![Coverage](https://img.shields.io/badge/Coverage-86%2E53%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-83%2E62%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs)
 
@@ -379,7 +379,7 @@ Startup is part of the flow: `AppScope` calls `ensureConfigured()`, starts backg
 
 ### Test Coverage
 
-- **Current Coverage**: 83.62% (9215/11020 lines)
+- **Current Coverage**: 83.60% (9218/11026 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 
@@ -449,7 +449,7 @@ flutter test --update-goldens test/counter_page_golden_test.dart
 
 - `hive` ^2.2.0 - Encrypted local database
 - `hive_flutter` ^1.1.0 - Flutter integration
-- `flutter_secure_storage` ^9.2.4 - Keychain/Keystore access
+- `flutter_secure_storage` ^10.0.0 - Keychain/Keystore access
 - `shared_preferences` ^2.5.3 - Legacy migration support
 
 ### Networking & APIs
@@ -467,6 +467,8 @@ flutter test --update-goldens test/counter_page_golden_test.dart
 - `firebase_remote_config` ^6.1.2
 - `firebase_database` ^12.1.0
 - `firebase_ui_auth` ^3.0.0
+- `firebase_ui_localizations` ^2.0.0
+- `firebase_ui_oauth_google` ^2.0.0
 
 ### UI & Design
 
@@ -475,6 +477,7 @@ flutter test --update-goldens test/counter_page_golden_test.dart
 - `fancy_shimmer_image` ^2.0.3 - Loading effects
 - `skeletonizer` ^2.1.0+1 - Skeleton screens
 - `google_fonts` ^6.2.1 - Typography
+- `flutter_svg` ^2.2.2 - SVG rendering
 - `fl_chart` ^1.1.1 - Charts and graphs
 - `flex_color_picker` ^3.3.0 - Color picker for whiteboard
 - `markdown` ^7.3.0 - Markdown parsing for editor

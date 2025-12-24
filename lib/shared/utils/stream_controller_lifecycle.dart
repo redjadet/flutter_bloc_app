@@ -30,7 +30,6 @@ mixin StreamControllerLifecycle<T> {
   /// Classes using this mixin should call [disposeController] in their
   /// dispose/close methods to properly clean up the controller.
   StreamController<T>? get controller => _controller;
-  // ignore: close_sinks - Controller is disposed via disposeController() method
   StreamController<T>? _controller;
 
   /// Safely emits a value to the stream controller.
@@ -40,7 +39,7 @@ mixin StreamControllerLifecycle<T> {
   ///
   /// Note: The controller should be properly disposed using [disposeController]
   /// when no longer needed to avoid resource leaks.
-  void safeEmit(T value) {
+  void safeEmit(final T value) {
     final StreamController<T>? controller = _controller;
     if (controller != null && !controller.isClosed) {
       controller.add(value);
@@ -50,7 +49,7 @@ mixin StreamControllerLifecycle<T> {
   /// Safely emits an error to the stream controller.
   ///
   /// Checks if the controller exists and is not closed before adding the error.
-  void safeEmitError(Object error, [StackTrace? stackTrace]) {
+  void safeEmitError(final Object error, [final StackTrace? stackTrace]) {
     final StreamController<T>? controller = _controller;
     if (controller != null && !controller.isClosed) {
       controller.addError(error, stackTrace);
@@ -73,8 +72,8 @@ mixin StreamControllerLifecycle<T> {
   /// If a controller already exists, it will be disposed first.
   /// Optionally accepts onListen and onCancel callbacks.
   Future<void> createController({
-    void Function()? onListen,
-    Future<void> Function()? onCancel,
+    final void Function()? onListen,
+    final Future<void> Function()? onCancel,
   }) async {
     await disposeController();
     _controller = StreamController<T>.broadcast(

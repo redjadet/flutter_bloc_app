@@ -20,13 +20,13 @@ class ChatContact extends Equatable {
   final int unreadCount;
 
   ChatContact copyWith({
-    String? id,
-    String? name,
-    String? lastMessage,
-    String? profileImageUrl,
-    DateTime? lastMessageTime,
-    bool? isOnline,
-    int? unreadCount,
+    final String? id,
+    final String? name,
+    final String? lastMessage,
+    final String? profileImageUrl,
+    final DateTime? lastMessageTime,
+    final bool? isOnline,
+    final int? unreadCount,
   }) => ChatContact(
     id: id ?? this.id,
     name: name ?? this.name,

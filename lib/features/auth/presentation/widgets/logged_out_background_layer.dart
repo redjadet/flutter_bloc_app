@@ -11,7 +11,7 @@ class LoggedOutBackgroundLayer extends StatelessWidget {
   final BoxConstraints constraints;
 
   @override
-  Widget build(BuildContext context) => Positioned(
+  Widget build(final BuildContext context) => Positioned(
     left: 0,
     top: 0,
     right: 0,
@@ -33,12 +33,12 @@ class _BackgroundImage extends StatelessWidget {
   final double height;
 
   @override
-  Widget build(BuildContext context) => Image.asset(
+  Widget build(final BuildContext context) => Image.asset(
     'assets/figma/Logged_out_0-2/Rectangle_0-42.png',
     width: width,
     height: height,
     fit: BoxFit.fill,
-    errorBuilder: (context, error, stackTrace) => Container(
+    errorBuilder: (final context, final error, final stackTrace) => Container(
       width: width,
       height: height,
       color: const Color(0xFF0B0C0D),

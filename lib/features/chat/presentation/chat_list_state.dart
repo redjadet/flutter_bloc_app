@@ -6,10 +6,10 @@ abstract class ChatListState extends Equatable {
   const factory ChatListState.initial() = ChatListInitial;
   const factory ChatListState.loading() = ChatListLoading;
   const factory ChatListState.loaded({
-    required List<ChatContact> contacts,
+    required final List<ChatContact> contacts,
   }) = ChatListLoaded;
   const factory ChatListState.error({
-    required String message,
+    required final String message,
   }) = ChatListError;
 
   @override

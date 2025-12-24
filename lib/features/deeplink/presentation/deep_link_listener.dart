@@ -32,7 +32,7 @@ class DeepLinkListener extends StatelessWidget {
           service: service,
           parser: parser,
         ),
-        init: (cubit) => cubit.initialize(),
+        init: (final cubit) => cubit.initialize(),
         child: BlocListener<DeepLinkCubit, DeepLinkState>(
           listenWhen: (final previous, final current) =>
               current is DeepLinkNavigate,

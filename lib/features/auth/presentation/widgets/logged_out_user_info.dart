@@ -14,7 +14,7 @@ class LoggedOutUserInfo extends StatelessWidget {
   final double horizontalOffset;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     const double nameLineHeight = 15.234;
     const double handleLineHeight = 12.891;
     const double avatarSize = 28;
@@ -38,19 +38,20 @@ class LoggedOutUserInfo extends StatelessWidget {
               width: avatarExtent,
               height: avatarExtent,
               fit: BoxFit.fill,
-              errorBuilder: (context, error, stackTrace) => Container(
-                width: avatarExtent,
-                height: avatarExtent,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.grey[300],
-                ),
-                child: Icon(
-                  Icons.person,
-                  size: 20 * scale,
-                  color: Colors.grey[600],
-                ),
-              ),
+              errorBuilder: (final context, final error, final stackTrace) =>
+                  Container(
+                    width: avatarExtent,
+                    height: avatarExtent,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey[300],
+                    ),
+                    child: Icon(
+                      Icons.person,
+                      size: 20 * scale,
+                      color: Colors.grey[600],
+                    ),
+                  ),
             ),
           ),
           SizedBox(width: 8 * scale),

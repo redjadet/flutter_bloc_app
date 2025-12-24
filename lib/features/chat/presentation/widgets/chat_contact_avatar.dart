@@ -14,7 +14,7 @@ class ChatContactAvatar extends StatelessWidget {
   final double size;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final onlineIndicatorSize = size * 0.28;
     final borderWidth = size > 50 ? 3.0 : 2.0;
     final iconSize = size * 0.6;
@@ -55,7 +55,7 @@ class ChatContactAvatar extends StatelessWidget {
           height: size,
           memCacheWidth: size.toInt(),
           memCacheHeight: size.toInt(),
-          placeholder: (context, url) => Container(
+          placeholder: (final context, final url) => Container(
             color: Colors.grey[300],
             child: Center(
               child: SizedBox(
@@ -67,14 +67,16 @@ class ChatContactAvatar extends StatelessWidget {
               ),
             ),
           ),
-          errorWidget: (context, url, error) => buildFallback(),
+          errorWidget: (final context, final url, final error) =>
+              buildFallback(),
         );
       }
 
       return Image.asset(
         imagePath,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => buildFallback(),
+        errorBuilder: (final context, final error, final stackTrace) =>
+            buildFallback(),
       );
     }
 

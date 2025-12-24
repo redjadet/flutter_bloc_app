@@ -29,7 +29,7 @@ class _TrackedWidgetState extends State<TrackedWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     if (PerformanceProfiler.enabled) {
       final stopwatch = Stopwatch()..start();
       final result = widget.child;

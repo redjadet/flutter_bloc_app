@@ -80,7 +80,7 @@ class ResilientSvgAssetImage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     if (_cache.containsKey(assetPath)) {
       final bytes = _cache[assetPath];
       if (bytes != null) {
@@ -91,7 +91,7 @@ class ResilientSvgAssetImage extends StatelessWidget {
 
     return FutureBuilder<Uint8List?>(
       future: _loadBytes(),
-      builder: (context, snapshot) {
+      builder: (final context, final snapshot) {
         final bytes = snapshot.data;
         if (bytes != null) {
           return Image.memory(bytes, fit: fit);

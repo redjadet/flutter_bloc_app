@@ -12,10 +12,10 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class OfflineFirstCounterRepository
     implements CounterRepository, SyncableRepository {
   OfflineFirstCounterRepository({
-    required HiveCounterRepository localRepository,
-    required PendingSyncRepository pendingSyncRepository,
-    required SyncableRepositoryRegistry registry,
-    CounterRepository? remoteRepository,
+    required final HiveCounterRepository localRepository,
+    required final PendingSyncRepository pendingSyncRepository,
+    required final SyncableRepositoryRegistry registry,
+    final CounterRepository? remoteRepository,
   }) : _localRepository = localRepository,
        _remoteRepository = remoteRepository,
        _pendingSyncRepository = pendingSyncRepository,

@@ -80,7 +80,7 @@ class WhiteboardPainter extends CustomPainter {
 @immutable
 class WhiteboardStroke {
   WhiteboardStroke({
-    required List<Offset> points,
+    required final List<Offset> points,
     required this.color,
     required this.width,
   }) : points = List<Offset>.unmodifiable(points);
@@ -90,9 +90,9 @@ class WhiteboardStroke {
   final double width;
 
   WhiteboardStroke copyWith({
-    List<Offset>? points,
-    Color? color,
-    double? width,
+    final List<Offset>? points,
+    final Color? color,
+    final double? width,
   }) => WhiteboardStroke(
     points: points ?? this.points,
     color: color ?? this.color,

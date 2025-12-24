@@ -8,13 +8,13 @@ part 'sync_operation.g.dart';
 @freezed
 abstract class SyncOperation with _$SyncOperation {
   const factory SyncOperation({
-    required String id,
-    required String entityType,
-    required Map<String, dynamic> payload,
-    required String idempotencyKey,
-    required DateTime createdAt,
-    DateTime? nextRetryAt,
-    @Default(0) int retryCount,
+    required final String id,
+    required final String entityType,
+    required final Map<String, dynamic> payload,
+    required final String idempotencyKey,
+    required final DateTime createdAt,
+    final DateTime? nextRetryAt,
+    @Default(0) final int retryCount,
   }) = _SyncOperation;
 
   const SyncOperation._();

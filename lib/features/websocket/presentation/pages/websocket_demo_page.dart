@@ -104,7 +104,8 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
           ),
         ],
         body: BlocBuilder<WebsocketCubit, WebsocketState>(
-          buildWhen: (previous, current) => previous.status != current.status,
+          buildWhen: (final previous, final current) =>
+              previous.status != current.status,
           builder: (final context, final state) => Column(
             children: [
               WebsocketConnectionBanner(state: state),

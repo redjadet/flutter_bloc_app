@@ -37,7 +37,8 @@ class HiveCounterRepositoryWatchHelper {
   CounterSnapshot? get cachedSnapshot => _cachedSnapshot;
 
   /// Sets the cached snapshot.
-  set cachedSnapshot(CounterSnapshot snapshot) => _cachedSnapshot = snapshot;
+  set cachedSnapshot(final CounterSnapshot snapshot) =>
+      _cachedSnapshot = snapshot;
 
   /// Gets the stream for watching snapshots.
   ///
@@ -55,8 +56,8 @@ class HiveCounterRepositoryWatchHelper {
   /// If the controller was already created (e.g., by accessing [stream]),
   /// this method will recreate it with the proper callbacks.
   void createWatchController({
-    required void Function() onListen,
-    required Future<void> Function() onCancel,
+    required final void Function() onListen,
+    required final Future<void> Function() onCancel,
   }) {
     // If controller exists but wasn't initialized with callbacks, close and recreate
     final StreamController<CounterSnapshot>? existing = _watchController;

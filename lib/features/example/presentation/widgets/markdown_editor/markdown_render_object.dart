@@ -10,11 +10,11 @@ import 'package:flutter_bloc_app/features/example/presentation/widgets/markdown_
 /// - Uses low-level painting for performance
 class MarkdownRenderObject extends RenderBox {
   MarkdownRenderObject({
-    required String text,
-    required TextStyle textStyle,
+    required final String text,
+    required final TextStyle textStyle,
     required this.onTextChanged,
-    required TextDirection textDirection,
-    EdgeInsets padding = EdgeInsets.zero,
+    required final TextDirection textDirection,
+    final EdgeInsets padding = EdgeInsets.zero,
   }) : _text = text,
        _textStyle = textStyle,
        _textDirection = textDirection,

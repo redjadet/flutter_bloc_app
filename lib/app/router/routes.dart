@@ -87,7 +87,7 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
           create: () => GraphqlDemoCubit(
             repository: getIt<GraphqlDemoRepository>(),
           ),
-          init: (cubit) => cubit.loadInitial(),
+          init: (final cubit) => cubit.loadInitial(),
           child: const GraphqlDemoPage(),
         ),
   ),
@@ -117,7 +117,7 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
           create: () => ProfileCubit(
             repository: getIt<ProfileRepository>(),
           ),
-          init: (cubit) => cubit.loadProfile(),
+          init: (final cubit) => cubit.loadProfile(),
           child: const ProfilePage(),
         ),
   ),
@@ -141,7 +141,7 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
             historyRepository: getIt<ChatHistoryRepository>(),
             initialModel: SecretConfig.huggingfaceModel,
           ),
-          init: (cubit) => cubit.loadHistory(),
+          init: (final cubit) => cubit.loadHistory(),
           child: const ChatPage(),
         ),
   ),
@@ -166,7 +166,7 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
           create: () => MapSampleCubit(
             repository: getIt<MapLocationRepository>(),
           ),
-          init: (cubit) => cubit.loadLocations(),
+          init: (final cubit) => cubit.loadLocations(),
           child: const GoogleMapsSamplePage(),
         ),
   ),

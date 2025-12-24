@@ -6,7 +6,7 @@ class LoggedOutPage extends StatelessWidget {
   const LoggedOutPage({super.key});
 
   @override
-  Widget build(BuildContext context) => const CommonPageLayout(
+  Widget build(final BuildContext context) => const CommonPageLayout(
     title: 'Logged Out',
     body: LoggedOutPageBody(),
   );

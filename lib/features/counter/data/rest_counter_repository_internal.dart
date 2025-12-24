@@ -60,7 +60,7 @@ Future<http.Response> _restCounterRepositorySendRequest({
     String? message,
   })
   errorFactory,
-  CounterError Function(http.Response response)? onHttpFailure,
+  final CounterError Function(http.Response response)? onHttpFailure,
 }) => NetworkGuard.execute<CounterError>(
   request: request,
   timeout: repository._requestTimeout,

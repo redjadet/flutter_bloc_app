@@ -52,8 +52,8 @@ class MapCameraController {
   /// Animate camera to focus on a location.
   Future<void> focusOnLocation(
     final MapLocation location, {
-    required VoidCallback onAnimationStart,
-    required VoidCallback onAnimationEnd,
+    required final VoidCallback onAnimationStart,
+    required final VoidCallback onAnimationEnd,
   }) async {
     onAnimationStart();
 

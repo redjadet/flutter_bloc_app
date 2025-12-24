@@ -33,7 +33,7 @@ mixin CubitSubscriptionMixin<S> on Cubit<S> {
   /// Registers a subscription to be automatically cancelled when the cubit closes.
   ///
   /// Subscriptions should be registered immediately after creation.
-  void registerSubscription(StreamSubscription<dynamic>? subscription) {
+  void registerSubscription(final StreamSubscription<dynamic>? subscription) {
     if (subscription != null) {
       _subscriptions.add(subscription);
     }

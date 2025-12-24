@@ -5,7 +5,8 @@ import 'dart:async';
 /// whether an initial value has been resolved, and allows resetting when
 /// all listeners detach.
 class RepositoryInitialLoadHelper<T> {
-  RepositoryInitialLoadHelper({void Function()? onReset}) : _onReset = onReset;
+  RepositoryInitialLoadHelper({final void Function()? onReset})
+    : _onReset = onReset;
 
   Completer<void>? _initialLoadCompleter;
   bool _hasResolvedInitialValue = false;
@@ -17,9 +18,9 @@ class RepositoryInitialLoadHelper<T> {
   /// Subsequent calls while the initial load is in-flight will await the same
   /// completer to avoid duplicate requests.
   Future<void> ensureInitialLoad({
-    required Future<T> Function() load,
-    required void Function(T value) onValue,
-    void Function(Object error, StackTrace stackTrace)? onError,
+    required final Future<T> Function() load,
+    required final void Function(T value) onValue,
+    final void Function(Object error, StackTrace stackTrace)? onError,
   }) {
     if (_initialLoadCompleter != null) {
       return _initialLoadCompleter!.future;

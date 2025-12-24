@@ -1,10 +1,11 @@
 # Test Coverage Summary
 
-*Total line coverage*: **83.62%** (9215/11020 lines)
+*Total line coverage*: **83.60%** (9218/11026 lines)
 
 Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) are excluded from these totals.
 
 Files that don't require tests are also excluded:
+
 - Mock repositories (test utilities themselves)
 - Simple data classes (Freezed classes, simple Equatable classes)
 - Configuration files (files with only constants)
@@ -84,6 +85,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/core/config/secret_config_sources.dart` | 76.39% | 55/72 |
 | `lib/shared/utils/network_guard.dart` | 76.92% | 10/13 |
 | `lib/features/google_maps/presentation/pages/google_maps_sample_page.dart` | 77.05% | 47/61 |
+| `lib/features/chat/presentation/widgets/chat_contact_avatar.dart` | 77.08% | 37/48 |
 | `lib/shared/sync/background_sync_coordinator.dart` | 77.27% | 68/88 |
 | `lib/features/counter/presentation/widgets/counter_page_app_bar.dart` | 77.66% | 73/94 |
 | `lib/features/calculator/presentation/widgets/calculator_summary_card.dart` | 77.88% | 88/113 |
@@ -91,7 +93,8 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/google_maps/presentation/widgets/map_state_manager.dart` | 78.05% | 32/41 |
 | `lib/features/auth/presentation/widgets/fallback_sign_in_content.dart` | 78.13% | 25/32 |
 | `lib/features/search/presentation/widgets/search_app_bar.dart` | 78.26% | 18/23 |
-| `lib/features/counter/data/hive_counter_repository_watch_helper.dart` | 78.38% | 58/74 |
+| `lib/features/counter/data/hive_counter_repository_watch_helper.dart` | 78.67% | 59/75 |
+| `lib/features/auth/presentation/widgets/logged_out_user_info.dart` | 78.79% | 26/33 |
 | `lib/features/remote_config/data/offline_first_remote_config_repository.dart` | 78.95% | 60/76 |
 | `lib/features/example/presentation/widgets/whiteboard/whiteboard_widget.dart` | 79.01% | 64/81 |
 | `lib/features/settings/data/hive_theme_repository.dart` | 79.17% | 19/24 |
@@ -105,9 +108,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/core/di/injector_registrations.dart` | 80.20% | 81/101 |
 | `lib/features/counter/presentation/pages/counter_page.dart` | 80.20% | 81/101 |
 | `lib/features/calculator/presentation/widgets/calculator_keypad_button.dart` | 80.39% | 41/51 |
-| `lib/features/chat/presentation/widgets/chat_contact_avatar.dart` | 80.43% | 37/46 |
 | `lib/features/graphql_demo/presentation/widgets/graphql_body.dart` | 80.49% | 33/41 |
-| `lib/features/auth/presentation/widgets/logged_out_user_info.dart` | 81.25% | 26/32 |
 | `lib/features/chart/presentation/cubit/chart_state.dart` | 81.25% | 13/16 |
 | `lib/features/websocket/presentation/cubit/websocket_cubit.dart` | 81.48% | 44/54 |
 | `lib/features/remote_config/presentation/widgets/awesome_feature_widget.dart` | 81.82% | 9/11 |
@@ -146,12 +147,12 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/extensions/responsive/responsive_typography.dart` | 87.50% | 7/8 |
 | `lib/features/counter/data/offline_first_counter_repository.dart` | 87.50% | 49/56 |
 | `lib/shared/extensions/responsive/responsive_layout.dart` | 87.50% | 42/48 |
-| `lib/features/chat/presentation/widgets/chat_sync_banner.dart` | 87.72% | 50/57 |
 | `lib/shared/sync/pending_sync_repository.dart` | 87.91% | 80/91 |
+| `lib/features/chat/presentation/widgets/chat_sync_banner.dart` | 87.93% | 51/58 |
 | `lib/features/auth/presentation/helpers/google_provider_helper.dart` | 88.24% | 15/17 |
 | `lib/features/graphql_demo/data/graphql_demo_cache_repository.dart` | 88.30% | 83/94 |
 | `lib/features/counter/data/rest_counter_repository_internal.dart` | 88.41% | 61/69 |
-| `lib/features/websocket/presentation/pages/websocket_demo_page.dart` | 88.61% | 70/79 |
+| `lib/features/websocket/presentation/pages/websocket_demo_page.dart` | 88.75% | 71/80 |
 | `lib/features/settings/presentation/widgets/profile_cache_controls_section.dart` | 88.89% | 72/81 |
 | `lib/shared/utils/error_handling.dart` | 88.89% | 40/45 |
 | `lib/features/search/data/offline_first_search_repository.dart` | 88.89% | 32/36 |

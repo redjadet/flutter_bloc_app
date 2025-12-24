@@ -3,8 +3,8 @@ import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 Future<void> showExamplePlatformInfoDialog({
-  required BuildContext context,
-  required NativePlatformInfo info,
+  required final BuildContext context,
+  required final NativePlatformInfo info,
 }) async {
   if (!context.mounted) {
     ContextUtils.logNotMounted('ExamplePlatformDialogs.showInfo');
@@ -63,8 +63,8 @@ Future<void> showExamplePlatformInfoDialog({
 }
 
 Future<void> showExamplePlatformInfoErrorDialog({
-  required BuildContext context,
-  String? message,
+  required final BuildContext context,
+  final String? message,
 }) async {
   if (!context.mounted) {
     ContextUtils.logNotMounted('ExamplePlatformDialogs.showError');
@@ -101,9 +101,9 @@ Future<void> showExamplePlatformInfoErrorDialog({
 }
 
 Widget _buildInfoRow({
-  required BuildContext context,
-  required String label,
-  required String value,
+  required final BuildContext context,
+  required final String label,
+  required final String value,
 }) => Padding(
   padding: EdgeInsets.only(bottom: context.responsiveGapS),
   child: Row(

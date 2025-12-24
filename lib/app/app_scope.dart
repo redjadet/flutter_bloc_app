@@ -42,19 +42,19 @@ class AppScope extends StatelessWidget {
                 ? AppConstants.devSkeletonDelay
                 : Duration.zero,
           ),
-          init: (cubit) => cubit.loadInitial(),
+          init: (final cubit) => cubit.loadInitial(),
         ),
         BlocProviderHelpers.providerWithAsyncInit<LocaleCubit>(
           create: () => LocaleCubit(repository: getIt<LocaleRepository>()),
-          init: (cubit) => cubit.loadInitial(),
+          init: (final cubit) => cubit.loadInitial(),
         ),
         BlocProviderHelpers.providerWithAsyncInit<ThemeCubit>(
           create: () => ThemeCubit(repository: getIt<ThemeRepository>()),
-          init: (cubit) => cubit.loadInitial(),
+          init: (final cubit) => cubit.loadInitial(),
         ),
         BlocProviderHelpers.providerWithAsyncInit<RemoteConfigCubit>(
           create: () => getIt<RemoteConfigCubit>(),
-          init: (cubit) => cubit.initialize(),
+          init: (final cubit) => cubit.initialize(),
         ),
       ],
       child: DeepLinkListener(

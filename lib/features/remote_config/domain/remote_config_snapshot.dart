@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 /// Immutable snapshot of cached Remote Config values + metadata.
 class RemoteConfigSnapshot extends Equatable {
   RemoteConfigSnapshot({
-    required Map<String, dynamic> values,
+    required final Map<String, dynamic> values,
     this.lastFetchedAt,
     this.templateVersion,
     this.dataSource,
@@ -32,11 +32,11 @@ class RemoteConfigSnapshot extends Equatable {
   }
 
   RemoteConfigSnapshot copyWith({
-    Map<String, dynamic>? values,
-    DateTime? lastFetchedAt,
-    String? templateVersion,
-    String? dataSource,
-    DateTime? lastSyncedAt,
+    final Map<String, dynamic>? values,
+    final DateTime? lastFetchedAt,
+    final String? templateVersion,
+    final String? dataSource,
+    final DateTime? lastSyncedAt,
   }) => RemoteConfigSnapshot(
     values: values ?? this.values,
     lastFetchedAt: lastFetchedAt ?? this.lastFetchedAt,

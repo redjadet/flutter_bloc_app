@@ -34,9 +34,9 @@ class _NavItem {
       _cupertinoIconOverride = null;
 
   const _NavItem.action({
-    required String label,
-    required IconData materialIcon,
-    required IconData cupertinoIcon,
+    required final String label,
+    required final IconData materialIcon,
+    required final IconData cupertinoIcon,
   }) : destination = null,
        isAction = true,
        _labelOverride = label,

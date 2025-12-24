@@ -16,7 +16,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase {
   String get boxName => _boxName;
 
   Future<List<GraphqlContinent>> readContinents({
-    Duration? maxAge,
+    final Duration? maxAge,
   }) async => StorageGuard.run<List<GraphqlContinent>>(
     logContext: 'GraphqlDemoCacheRepository.readContinents',
     action: () async {
@@ -67,7 +67,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase {
 
   Future<List<GraphqlCountry>> readCountries({
     final String? continentCode,
-    Duration? maxAge,
+    final Duration? maxAge,
   }) async => StorageGuard.run<List<GraphqlCountry>>(
     logContext: 'GraphqlDemoCacheRepository.readCountries',
     action: () async {

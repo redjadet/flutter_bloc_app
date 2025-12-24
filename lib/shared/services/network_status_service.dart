@@ -15,9 +15,9 @@ abstract class NetworkStatusService {
 
 class ConnectivityNetworkStatusService implements NetworkStatusService {
   ConnectivityNetworkStatusService({
-    Connectivity? connectivity,
-    Duration debounce = const Duration(milliseconds: 250),
-    TimerService? timerService,
+    final Connectivity? connectivity,
+    final Duration debounce = const Duration(milliseconds: 250),
+    final TimerService? timerService,
   }) : _connectivity = connectivity ?? Connectivity(),
        _debounce = debounce,
        _timerService = timerService ?? DefaultTimerService() {
@@ -61,7 +61,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
             : ConnectivityResult.none;
         _handleConnectivityResult(result);
       },
-      onError: (Object error, StackTrace stackTrace) {
+      onError: (final Object error, final StackTrace stackTrace) {
         AppLogger.error(
           'ConnectivityNetworkStatusService.listen failed',
           error,
@@ -70,7 +70,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
       },
     );
     unawaited(
-      getCurrentStatus().then((NetworkStatus status) {
+      getCurrentStatus().then((final NetworkStatus status) {
         if (_controller.hasListener && !_controller.isClosed) {
           _controller.add(status);
         }

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 /// Manages Firebase authentication tokens with caching and refresh capabilities.
 class AuthTokenManager {
   AuthTokenManager({
-    FirebaseAuth? firebaseAuth,
+    final FirebaseAuth? firebaseAuth,
   }) : _firebaseAuth = firebaseAuth;
 
   final FirebaseAuth? _firebaseAuth;
