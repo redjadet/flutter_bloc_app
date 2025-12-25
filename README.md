@@ -10,6 +10,15 @@ A production-ready Flutter application demonstrating enterprise-grade architectu
 
 ---
 
+## Quality Highlights
+
+- Clean Architecture with strict separation of concerns and dependency injection for testability.
+- Offline-first data layer with sync queues, migrations, and resilience patterns.
+- High automated test coverage across unit/bloc/widget/golden suites with a single-command checklist.
+- Robust runtime resilience: network guards, retries, error mapping, and guarded async flows.
+- Performance-conscious UI using responsive/adaptive tooling, `BlocSelector`, and profiling hooks.
+- Security-minded foundations: encrypted local storage, biometric gating, and auth-aware routing.
+
 ## What This App Demonstrates
 
 - Production-grade Flutter architecture with offline-first data flow, responsive/adaptive UI, and real-time features (websockets, maps, chat).
