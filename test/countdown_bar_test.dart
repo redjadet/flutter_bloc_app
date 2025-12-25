@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 Widget _wrapWithApp(Widget child) => ScreenUtilInit(
   designSize: const Size(390, 844),
@@ -77,6 +78,31 @@ void main() {
 
       final en = AppLocalizationsEn();
       expect(find.text(en.autoDecrementPaused), findsOneWidget);
+    });
+
+    testWidgets('shows skeletons while loading', (tester) async {
+      final cubit = createCubit();
+
+      await tester.pumpWidget(
+        _wrapWithApp(
+          BlocProvider.value(value: cubit, child: const CountdownBar()),
+        ),
+      );
+
+      cubit.emit(
+        CounterState(
+          count: 0,
+          lastChanged: DateTime.now(),
+          countdownSeconds: 5,
+          status: ViewStatus.loading,
+        ),
+      );
+      await tester.pump();
+
+      expect(
+        find.byWidgetPredicate((widget) => widget is Skeletonizer),
+        findsOneWidget,
+      );
     });
   });
 }

@@ -6,10 +6,11 @@
 
 ### Largest Files (≥220 LOC)
 
-- `lib/features/counter/data/hive_counter_repository_watch_helper.dart` (243)
-- `lib/features/counter/presentation/pages/counter_page.dart` (241)
 - `lib/features/settings/presentation/widgets/remote_config_diagnostics_section.dart` (238)
-- `lib/features/auth/presentation/cubit/register/register_state.dart` (238)
+- `lib/features/chat/data/offline_first_chat_repository.dart` (227)
+- `lib/shared/sync/background_sync_coordinator.dart` (224)
+- `lib/features/counter/presentation/widgets/counter_page_app_bar.dart` (223)
+- `lib/features/graphql_demo/data/countries_graphql_repository.dart` (221)
 
 ## 🎯 Priority Actions (Next 30 Days)
 
@@ -42,14 +43,17 @@
 
 ### 📋 Medium Priority (Month 2)
 
-- [ ] **Validate skeleton test coverage**
-  - Run updated coverage report
-  - Ensure new skeleton tests improve metrics
-  - Add integration tests for loading states
+- [x] **Validate skeleton test coverage**
+  - ✅ Added widget coverage for CounterPageBody skeleton loading state
+  - ✅ Added widget coverage for CountdownBar + ChartLoadingList loading states
+  - ✅ Run updated coverage report
+  - ✅ Ensure new skeleton tests improve metrics
+  - ✅ Added integration tests for loading states
 
-- [ ] **Review auth presentation files**
-  - Analyze `register_state.dart` (238 LOC) for splitting
-  - Check `register_phone_field.dart` (233 LOC) complexity
+- [x] **Review auth presentation files**
+  - ✅ Extracted `CountryOption` + list into `register_country_option.dart`
+  - ✅ Moved country picker UI into `register_country_picker.dart`
+  - ✅ `register_state.dart` and `register_phone_field.dart` now under 200 LOC
 
 ## ✅ Implemented Quality Improvements
 
@@ -129,7 +133,7 @@ See [Flutter Performance Best Practices](https://docs.flutter.dev/perf/best-prac
 
 ### Quality Gates
 
-- [ ] `./bin/checklist` passes (format → analyze → coverage)
+- [x] `./bin/checklist` passes (format → analyze → coverage)
 - [ ] New features include all test types
 - [ ] Critical paths maintain >80% coverage
 - [ ] Common bug prevention tests pass
