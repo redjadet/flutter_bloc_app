@@ -4,5 +4,6 @@ export 'counter_display/counter_display.dart';
 export 'counter_hint.dart';
 export 'counter_page_app_bar.dart';
 export 'counter_page_app_bar_helpers.dart';
+export 'counter_page_body.dart';
 export 'counter_sync_banner.dart';
 export 'counter_sync_queue_inspector_button.dart';
