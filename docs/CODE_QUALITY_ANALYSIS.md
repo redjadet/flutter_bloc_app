@@ -28,6 +28,8 @@
   - Ensure no silent lint gaps in CI
   - **Result**: Migrated to the native analyzer plugin (`file_length_lint`) and kept it enabled without startup failures
 
+Critical items verified in the current codebase; no further fixes needed.
+
 ### 📈 High Priority (Week 3-4)
 
 - [x] **Increase bootstrap coverage**
@@ -40,6 +42,8 @@
   - ✅ `counter_page.dart` moved body widgets into `counter_page_body.dart` (169 LOC)
   - ✅ `hive_counter_repository_watch_helper.dart` split with `hive_counter_repository_watch_state.dart` (151 LOC)
   - ✅ All related files now under 200 LOC
+
+High-priority items verified; no further fixes needed.
 
 ### 📋 Medium Priority (Month 2)
 
@@ -107,6 +111,8 @@
 
 ### Quick Performance Checks
 
+Manual verification items (run as needed; not tracked as backlog tasks):
+
 - [ ] Enable overlay: `flutter run --dart-define=ENABLE_PERFORMANCE_OVERLAY=true`
 - [ ] Profile with: `PerformanceProfiler.printReport()`
 - [ ] Use DevTools: `flutter run --profile`
@@ -132,6 +138,8 @@ See [Flutter Performance Best Practices](https://docs.flutter.dev/perf/best-prac
 - **Integration:** Bootstrapping, error recovery paths
 
 ### Quality Gates
+
+Manual verification items (run in CI or pre-release; not tracked as backlog tasks):
 
 - [x] `./bin/checklist` passes (format → analyze → coverage)
 - [ ] New features include all test types
