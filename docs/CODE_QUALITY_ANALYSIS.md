@@ -35,10 +35,10 @@
   - ✅ Added unit tests for app version service (version loading and caching)
   - 📋 HTTP client initialization tests deferred (requires complex NetworkStatusService mocking)
 
-- [ ] **Split large counter files**
-  - Break down `counter_page.dart` (241 LOC)
-  - Extract widget helpers from repository watch helper (243 LOC)
-  - Target: Keep all files under 200 LOC
+- [x] **Split large counter files**
+  - ✅ `counter_page.dart` moved body widgets into `counter_page_body.dart` (169 LOC)
+  - ✅ `hive_counter_repository_watch_helper.dart` split with `hive_counter_repository_watch_state.dart` (151 LOC)
+  - ✅ All related files now under 200 LOC
 
 ### 📋 Medium Priority (Month 2)
 
