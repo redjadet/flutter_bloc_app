@@ -159,6 +159,7 @@ class _Coverage {
       ..writeln(
         "Files that don't require tests are also excluded:",
       )
+      ..writeln()
       ..writeln(
         '- Mock repositories (test utilities themselves)',
       )
