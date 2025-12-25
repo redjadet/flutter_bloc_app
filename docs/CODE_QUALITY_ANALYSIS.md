@@ -26,7 +26,7 @@
   - Investigate `custom_lint.log` startup errors
   - Either fix plugin compatibility or remove stale linting
   - Ensure no silent lint gaps in CI
-  - **Result**: Temporarily disabled custom lint plugin to resolve "Mach-O shared object" errors
+  - **Result**: Migrated to the native analyzer plugin (`file_length_lint`) and kept it enabled without startup failures
 
 ### 📈 High Priority (Week 3-4)
 
@@ -34,7 +34,7 @@
   - ✅ Added integration tests for bootstrap coordinator (flavor handling)
   - ✅ Added unit tests for Firebase bootstrap service (initialization, UI config, crash reporting)
   - ✅ Added unit tests for app version service (version loading and caching)
-  - 📋 HTTP client initialization tests deferred (requires complex NetworkStatusService mocking)
+  - ✅ Added HTTP client initialization tests with mocked NetworkStatusService
 
 - [x] **Split large counter files**
   - ✅ `counter_page.dart` moved body widgets into `counter_page_body.dart` (169 LOC)
