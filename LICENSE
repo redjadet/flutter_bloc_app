@@ -1,24 +1,44 @@
 Custom Free Public Repository License
 =====================================
 
-Copyright (c) 2024 Ilker Sevim
+Copyright (c) 2024-2025 Ilker Sevim
+All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
-Software solely when the Software (or any substantial portion of it) remains in
-public, freely accessible source code repositories.
+Definitions:
 
-Subject to the following conditions:
+- "Software" means this source code repository and associated documentation.
+- "Public Repository" means a publicly accessible, freely available source code
+  repository with no paywall or access restriction.
+- "Commercial Use" means any use primarily intended for commercial advantage,
+  monetary compensation, or inclusion in paid products or services.
 
-1. The above copyright notice and this permission notice shall be included in
-   all copies or substantial portions of the Software.
-2. The Software may not be used in proprietary, closed-source, or commercial
-   products or repositories without prior written permission from the copyright
-   holder.
-3. Any distribution of modified versions of the Software must make the modified
-   source code publicly available under the same terms as this license.
+Grant of Permission (Public Use Only):
+Permission is granted, free of charge, to use, copy, modify, merge, publish, and
+distribute the Software only when the Software (or any substantial portion of
+it) remains in a Public Repository and is made available at no charge.
 
+Conditions:
+
+1. This notice must be included in all copies or substantial portions of the
+   Software.
+2. Any free-of-charge use, distribution, or deployment must include clear
+   attribution to this project in documentation, about dialogs, or a NOTICE
+   file (linking to the original repository and naming the copyright holder).
+3. Proprietary, closed-source, or Commercial Use is prohibited without prior
+   written permission from the copyright holder.
+4. Distributions of modified versions must make the modified source code
+   available under the same terms as this license.
+5. This license does not grant any rights in the name, logo, or trademarks of
+   the copyright holder.
+
+Contact:
+<ilkersevim2007@gmail.com>
+
+Termination:
+Any violation of the above terms immediately terminates the permissions granted
+by this license.
+
+Disclaimer of Warranty:
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
