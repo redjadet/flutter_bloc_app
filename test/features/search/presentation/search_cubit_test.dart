@@ -111,5 +111,39 @@ void main() {
             .having((final state) => state.error, 'error', isA<Exception>()),
       ],
     );
+
+    blocTest<SearchCubit, SearchState>(
+      'handles rapid consecutive searches correctly (race condition fix)',
+      build: () => buildCubit(
+        (final query) async => <SearchResult>[
+          SearchResult(id: query, imageUrl: 'https://example.com/$query.png'),
+        ],
+      ),
+      act: (final cubit) {
+        // Trigger multiple searches rapidly
+        cubit.search('first');
+        cubit.search('second');
+        cubit.search('third');
+        // Only the latest search should execute after debounce
+        timerService.elapse(const Duration(milliseconds: 300));
+      },
+      expect: () => <dynamic>[
+        const SearchState(query: 'first'),
+        const SearchState(query: 'second'),
+        const SearchState(query: 'third'),
+        isA<SearchState>()
+            .having((final state) => state.status, 'status', ViewStatus.loading)
+            .having((final state) => state.query, 'query', 'third'),
+        isA<SearchState>()
+            .having((final state) => state.status, 'status', ViewStatus.success)
+            .having((final state) => state.query, 'query', 'third')
+            .having(
+              (final state) => state.results.single.id,
+              'result id',
+              'third',
+            ),
+      ],
+      verify: (_) => expect(capturedQueries, equals(<String>['third'])),
+    );
   });
 }

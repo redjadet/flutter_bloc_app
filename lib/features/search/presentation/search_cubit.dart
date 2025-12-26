@@ -21,9 +21,11 @@ class SearchCubit extends Cubit<SearchState> {
   final TimerService _timerService;
   final Duration debounceDuration;
   TimerDisposable? _debounceHandle;
+  int _searchRequestId = 0;
 
   void search(final String query) {
     _cancelDebounce();
+    final int requestId = _nextSearchRequestId();
 
     emit(state.copyWith(query: query, clearError: true));
 
@@ -34,16 +36,23 @@ class SearchCubit extends Cubit<SearchState> {
 
     _debounceHandle = _timerService.runOnce(
       debounceDuration,
-      () => unawaited(_executeSearch(query)),
+      () => unawaited(_executeSearch(query, requestId)),
     );
   }
 
   void clearSearch() {
     _cancelDebounce();
+    _nextSearchRequestId(); // Invalidate any pending search requests
     emit(const SearchState());
   }
 
-  Future<void> _executeSearch(final String query) async {
+  Future<void> _executeSearch(
+    final String query,
+    final int requestId,
+  ) async {
+    if (!_isRequestActive(requestId, query)) {
+      return;
+    }
     emit(
       state.copyWith(
         status: ViewStatus.loading,
@@ -55,7 +64,7 @@ class SearchCubit extends Cubit<SearchState> {
     await CubitExceptionHandler.executeAsync(
       operation: () => _repository.search(query),
       onSuccess: (final results) {
-        if (isClosed) return;
+        if (!_isRequestActive(requestId, query)) return;
         emit(
           state.copyWith(
             status: ViewStatus.success,
@@ -66,7 +75,7 @@ class SearchCubit extends Cubit<SearchState> {
         );
       },
       onError: (final String errorMessage) {
-        if (isClosed) return;
+        if (!_isRequestActive(requestId, query)) return;
         emit(
           state.copyWith(
             status: ViewStatus.error,
@@ -83,6 +92,11 @@ class SearchCubit extends Cubit<SearchState> {
     _debounceHandle?.dispose();
     _debounceHandle = null;
   }
+
+  int _nextSearchRequestId() => ++_searchRequestId;
+
+  bool _isRequestActive(final int requestId, final String query) =>
+      !isClosed && requestId == _searchRequestId && state.query == query;
 
   @override
   Future<void> close() {

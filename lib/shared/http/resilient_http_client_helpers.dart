@@ -91,7 +91,13 @@ extension _ResilientHttpClientHelpers on ResilientHttpClient {
   }
 
   http.BaseRequest _cloneOrFallback(final http.BaseRequest request) {
-    if (request is http.Request || request is http.MultipartRequest) {
+    if (request is http.MultipartRequest) {
+      AppLogger.warning(
+        'ResilientHttpClient retry disabled (multipart request is single-use)',
+      );
+      return request;
+    }
+    if (request is http.Request) {
       return request.clone();
     }
     AppLogger.warning(
