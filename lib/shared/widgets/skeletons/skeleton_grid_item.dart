@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:flutter_bloc_app/shared/widgets/skeletons/skeleton_base.dart';
 
 /// A reusable skeleton grid item for grid layouts.
 ///
@@ -24,60 +24,51 @@ class SkeletonGridItem extends StatelessWidget {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
 
-    return RepaintBoundary(
-      child: Semantics(
-        label: 'Loading content',
-        child: Skeletonizer(
-          effect: ShimmerEffect(
-            baseColor: colors.surfaceContainerHigh,
-            highlightColor: colors.surface,
+    return SkeletonBase(
+      child: AspectRatio(
+        aspectRatio: aspectRatio,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: colors.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(
+              context.responsiveCardRadius,
+            ),
           ),
-          child: AspectRatio(
-            aspectRatio: aspectRatio,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: colors.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(
-                  context.responsiveCardRadius,
-                ),
-              ),
-              child: hasOverlay
-                  ? Stack(
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          decoration: BoxDecoration(
-                            color: colors.surfaceContainerHigh,
-                            borderRadius: BorderRadius.circular(
+          child: hasOverlay
+              ? Stack(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      decoration: BoxDecoration(
+                        color: colors.surfaceContainerHigh,
+                        borderRadius: BorderRadius.circular(
+                          context.responsiveCardRadius,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: colors.surfaceContainerHighest,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(
+                              context.responsiveCardRadius,
+                            ),
+                            bottomRight: Radius.circular(
                               context.responsiveCardRadius,
                             ),
                           ),
                         ),
-                        Positioned(
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          child: Container(
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: colors.surfaceContainerHighest,
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(
-                                  context.responsiveCardRadius,
-                                ),
-                                bottomRight: Radius.circular(
-                                  context.responsiveCardRadius,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  : null,
-            ),
-          ),
+                      ),
+                    ),
+                  ],
+                )
+              : null,
         ),
       ),
     );
