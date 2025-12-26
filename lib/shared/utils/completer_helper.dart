@@ -26,6 +26,11 @@ class CompleterHelper<T> {
   bool complete([final T? value]) {
     final Completer<T>? current = pending;
     if (current == null) return false;
+    if (value == null && null is! T) {
+      throw ArgumentError(
+        'Cannot complete non-nullable type $T without a value',
+      );
+    }
     current.complete(value as T);
     return true;
   }
