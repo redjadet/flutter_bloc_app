@@ -13,15 +13,9 @@ extension HttpRequestExtensions on http.BaseRequest {
       }
       return cloned;
     } else if (this is http.MultipartRequest) {
-      final http.MultipartRequest original = this as http.MultipartRequest;
-      final http.MultipartRequest cloned = http.MultipartRequest(
-        original.method,
-        original.url,
+      throw UnsupportedError(
+        'Cannot clone MultipartRequest safely; file streams are single-use.',
       );
-      cloned.headers.addAll(original.headers);
-      cloned.fields.addAll(original.fields);
-      cloned.files.addAll(original.files);
-      return cloned;
     } else {
       throw UnsupportedError('Cannot clone request of type $runtimeType');
     }

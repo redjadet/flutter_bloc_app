@@ -1,5 +1,144 @@
 # Code Quality Analysis
 
+## Current Findings (Actionable)
+
+### ✅ Recently Fixed (High Priority Issues)
+
+**Summary:** Two critical race condition and data integrity issues have been resolved:
+
+1. **SearchCubit Race Conditions** - Implemented request token system to prevent stale search results during rapid typing
+2. **Multipart HTTP Retries** - Disabled cloning of multipart requests to prevent stream reuse failures
+
+Both fixes include comprehensive test coverage and maintain backward compatibility.
+
+### 🟡 Medium Priority
+
+#### 1. Stale Search Results During Fast Typing
+
+**Location:** `lib/features/search/presentation/search_cubit.dart:46-105`
+**Status:** ✅ Fixed (request token system + active request validation)
+
+**Issue:** `SearchCubit._executeSearch` captures the query at debounce time, but if a new search is triggered while a previous request is still in-flight, slower responses can overwrite newer query results, causing stale data to appear.
+
+**Impact:** Users may see incorrect search results when typing quickly, leading to confusion and poor UX.
+
+**Root Cause:** No mechanism to identify and cancel stale asynchronous operations.
+
+**Implementation:**
+
+- Added `_searchRequestId` counter that increments on each new search
+- Modified `_executeSearch` to accept a `requestId` parameter
+- Added `_isRequestActive()` method that validates request ID matches current search
+- Guards in success/error handlers prevent stale results from being emitted
+- `clearSearch()` invalidates pending requests by incrementing the request ID
+
+**Test Coverage:** Added test case for rapid consecutive searches to verify race condition prevention.
+
+---
+
+#### 2. Multipart Retries Reuse Consumed Streams
+
+**Location:** `lib/shared/http/http_request_extensions.dart:15-22`
+**Status:** ✅ Fixed (multipart cloning disabled + retry prevention)
+
+**Issue:** `HttpRequestExtensions.clone` copies `MultipartRequest.files` by reference. Since `MultipartFile` streams are single-use, retrying a multipart request will fail or send empty bodies.
+
+**Impact:** File uploads may fail silently on retry, causing data loss or user frustration.
+
+**Root Cause:** HTTP streams are consumed on first send and cannot be replayed.
+
+**Implementation:**
+
+- Modified `HttpRequestExtensions.clone()` to throw `UnsupportedError` for `MultipartRequest`
+- Updated `ResilientHttpClient._cloneOrFallback()` to detect multipart requests and skip retries
+- Added warning logging when multipart retry is prevented
+- Regular HTTP requests continue to support retries as before
+
+**Benefits:** Prevents silent upload failures while maintaining retry capability for other request types.
+
+---
+
+### 🟡 Remaining Medium Priority Issues
+
+#### 3. Auth Token Cache Not Keyed to User
+
+**Location:** `lib/shared/http/auth_token_manager.dart:11-26`
+
+**Issue:** `AuthTokenManager` caches a single token without tracking the user ID. If the signed-in user changes (e.g., logout/login or account switch), cached tokens may be reused incorrectly.
+
+**Impact:** Potential security issue where tokens from one user could be used for another user's requests.
+
+**Root Cause:** Cache is global, not per-user.
+
+**Suggested Fix:**
+
+- Store current `User.uid` with the cached token
+- Clear cache when `getValidAuthToken` is called with a different user
+- Or listen to `FirebaseAuth.authStateChanges()` and clear cache on user change
+
+**Recommended:** Add `String? _cachedUserId` and compare in `getValidAuthToken`.
+
+---
+
+#### 4. CompleterHelper May Throw on Null Default
+
+**Location:** `lib/shared/utils/completer_helper.dart:25-31`
+
+**Issue:** `CompleterHelper.complete` casts `value as T` on line 29, which throws `TypeError` when `T` is non-nullable and `complete()` is called without a value.
+
+**Impact:** Runtime crashes when completing non-nullable futures without explicit values.
+
+**Root Cause:** Unsafe cast assumes `value` is always provided for non-nullable types.
+
+**Suggested Fix:**
+
+```dart
+bool complete([final T? value]) {
+  final Completer<T>? current = pending;
+  if (current == null) return false;
+  if (value == null && null is! T) {
+    throw ArgumentError('Cannot complete non-nullable type $T without a value');
+  }
+  current.complete(value as T);
+  return true;
+}
+```
+
+**Alternative:** Provide separate methods: `complete()` for nullable/void, `completeWith(T value)` for non-nullable.
+
+---
+
+### 🟢 Low Priority
+
+#### 5. JSON Decode Errors Leak as Generic Exceptions
+
+**Location:** `lib/features/chat/data/huggingface_api_client.dart:79`
+
+**Issue:** `HuggingFaceApiClient.postJson` calls `jsonDecode(response.body)` without guarding `FormatException`. Malformed JSON responses bypass `ChatException` handling and throw raw exceptions.
+
+**Impact:** Poor error messages for users; exceptions may not be properly logged or handled by error boundaries.
+
+**Root Cause:** Missing try/catch around `jsonDecode`.
+
+**Suggested Fix:**
+
+```dart
+try {
+  final dynamic decoded = jsonDecode(response.body);
+  if (decoded is JsonMap) {
+    return decoded;
+  }
+  // ... existing type check ...
+} on FormatException catch (e, stackTrace) {
+  AppLogger.error(
+    'HuggingFaceApiClient.$context failed',
+    'Invalid JSON response: ${e.message}',
+    stackTrace,
+  );
+  throw const ChatException('Chat service returned invalid response format.');
+}
+```
+
 ## 📊 Current State
 
 **Test Coverage:** 82.50% (9091/11020 lines) | **File Length Limit:** 250 LOC
