@@ -76,17 +76,28 @@ class HuggingFaceApiClient {
       throw const ChatException('Chat service returned unsupported content.');
     }
 
-    final dynamic decoded = jsonDecode(response.body);
-    if (decoded is JsonMap) {
-      return decoded;
-    }
+    try {
+      final dynamic decoded = jsonDecode(response.body);
+      if (decoded is JsonMap) {
+        return decoded;
+      }
 
-    AppLogger.error(
-      'HuggingFaceApiClient.$context failed',
-      'Unexpected payload structure: ${decoded.runtimeType}',
-      StackTrace.current,
-    );
-    throw const ChatException('Chat service returned unexpected payload.');
+      AppLogger.error(
+        'HuggingFaceApiClient.$context failed',
+        'Unexpected payload structure: ${decoded.runtimeType}',
+        StackTrace.current,
+      );
+      throw const ChatException('Chat service returned unexpected payload.');
+    } on FormatException catch (e, stackTrace) {
+      AppLogger.error(
+        'HuggingFaceApiClient.$context failed',
+        'Invalid JSON response: ${e.message}',
+        stackTrace,
+      );
+      throw const ChatException(
+        'Chat service returned invalid response format.',
+      );
+    }
   }
 
   void dispose() {

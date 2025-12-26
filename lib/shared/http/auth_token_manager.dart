@@ -14,13 +14,17 @@ class AuthTokenManager {
   /// When the cached auth token expires
   DateTime? _tokenExpiry;
 
+  /// User ID associated with the cached token
+  String? _cachedUserId;
+
   /// Get a valid auth token, refreshing if necessary
   Future<String?> getValidAuthToken(final User user) async {
     final DateTime now = DateTime.now().toUtc();
 
-    // Use cached token if still valid
+    // Use cached token if still valid and belongs to the same user
     if (_cachedAuthToken != null &&
         _tokenExpiry != null &&
+        _cachedUserId == user.uid &&
         now.isBefore(_tokenExpiry!.subtract(const Duration(minutes: 5)))) {
       return _cachedAuthToken;
     }
@@ -29,11 +33,13 @@ class AuthTokenManager {
       final IdTokenResult tokenResult = await user.getIdTokenResult();
       _cachedAuthToken = tokenResult.token;
       _tokenExpiry = tokenResult.expirationTime?.toUtc();
+      _cachedUserId = user.uid;
       return _cachedAuthToken;
     } catch (error, stackTrace) {
       // Clear cache on error
       _cachedAuthToken = null;
       _tokenExpiry = null;
+      _cachedUserId = null;
       Error.throwWithStackTrace(error, stackTrace);
     }
   }
@@ -51,6 +57,7 @@ class AuthTokenManager {
     } catch (error, stackTrace) {
       _cachedAuthToken = null;
       _tokenExpiry = null;
+      _cachedUserId = null;
       Error.throwWithStackTrace(error, stackTrace);
     }
   }
@@ -60,6 +67,7 @@ class AuthTokenManager {
     await user.getIdToken(true);
     _cachedAuthToken = null;
     _tokenExpiry = null;
+    _cachedUserId = null;
     return getValidAuthToken(user);
   }
 
@@ -67,5 +75,6 @@ class AuthTokenManager {
   void clearCache() {
     _cachedAuthToken = null;
     _tokenExpiry = null;
+    _cachedUserId = null;
   }
 }
