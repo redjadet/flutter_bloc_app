@@ -2,15 +2,17 @@
 
 ## Current Findings (Actionable)
 
-### ✅ Recently Fixed Issues
+### ✅ All Quality Issues Resolved
 
-**Summary:** Three critical issues have been resolved with targeted fixes:
+**Summary:** All 5 identified code quality issues have been successfully resolved with comprehensive fixes:
 
 1. **SearchCubit Race Conditions** - Implemented request token system to prevent stale search results during rapid typing
 2. **Multipart HTTP Retries** - Disabled cloning of multipart requests to prevent stream reuse failures
 3. **CompleterHelper Type Safety** - Added runtime validation to prevent crashes when completing non-nullable futures without values
+4. **Auth Token Cache Security** - Added user-specific token caching to prevent cross-user token reuse
+5. **JSON Decode Error Handling** - Added proper exception handling for malformed API responses
 
-All fixes maintain backward compatibility. Search and completer helper fixes include targeted unit tests; multipart retry coverage remains recommended.
+All fixes maintain backward compatibility. Targeted unit tests cover search, multipart retry behavior, auth token caching, completer helper, and Hugging Face API parsing.
 
 ### 🟡 Medium Priority
 
@@ -57,13 +59,16 @@ All fixes maintain backward compatibility. Search and completer helper fixes inc
 
 **Benefits:** Prevents silent upload failures while maintaining retry capability for other request types.
 
+**Test Coverage:** Added multipart retry test in `test/shared/http/resilient_http_client_test.dart`.
+
 ---
 
 ### 🟡 Remaining Medium Priority Issues
 
 #### 3. Auth Token Cache Not Keyed to User
 
-**Location:** `lib/shared/http/auth_token_manager.dart:11-26`
+**Location:** `lib/shared/http/auth_token_manager.dart:11-28`
+**Status:** ✅ Fixed (user-specific token caching with security validation)
 
 **Issue:** `AuthTokenManager` caches a single token without tracking the user ID. If the signed-in user changes (e.g., logout/login or account switch), cached tokens may be reused incorrectly.
 
@@ -71,13 +76,14 @@ All fixes maintain backward compatibility. Search and completer helper fixes inc
 
 **Root Cause:** Cache is global, not per-user.
 
-**Suggested Fix:**
+**Implementation:**
 
-- Store current `User.uid` with the cached token
-- Clear cache when `getValidAuthToken` is called with a different user
-- Or listen to `FirebaseAuth.authStateChanges()` and clear cache on user change
+- Added `_cachedUserId` field to track which user owns the cached token
+- Updated `getValidAuthToken()` to validate token belongs to requesting user
+- Modified all cache clearing operations to reset user ID
+- Prevents cross-user token reuse while maintaining performance benefits of caching
 
-**Recommended:** Add `String? _cachedUserId` and compare in `getValidAuthToken`.
+**Test Coverage:** Added `test/shared/http/auth_token_manager_user_cache_test.dart` with 4 test cases validating user-specific caching behavior and security.
 
 ---
 
@@ -107,7 +113,8 @@ All fixes maintain backward compatibility. Search and completer helper fixes inc
 
 #### 5. JSON Decode Errors Leak as Generic Exceptions
 
-**Location:** `lib/features/chat/data/huggingface_api_client.dart:79`
+**Location:** `lib/features/chat/data/huggingface_api_client.dart:79-95`
+**Status:** ✅ Fixed (try/catch around JSON decoding with proper error handling)
 
 **Issue:** `HuggingFaceApiClient.postJson` calls `jsonDecode(response.body)` without guarding `FormatException`. Malformed JSON responses bypass `ChatException` handling and throw raw exceptions.
 
@@ -115,24 +122,14 @@ All fixes maintain backward compatibility. Search and completer helper fixes inc
 
 **Root Cause:** Missing try/catch around `jsonDecode`.
 
-**Suggested Fix:**
+**Implementation:**
 
-```dart
-try {
-  final dynamic decoded = jsonDecode(response.body);
-  if (decoded is JsonMap) {
-    return decoded;
-  }
-  // ... existing type check ...
-} on FormatException catch (e, stackTrace) {
-  AppLogger.error(
-    'HuggingFaceApiClient.$context failed',
-    'Invalid JSON response: ${e.message}',
-    stackTrace,
-  );
-  throw const ChatException('Chat service returned invalid response format.');
-}
-```
+- Added try/catch block around `jsonDecode()` call
+- Catches `FormatException` specifically and converts to user-friendly `ChatException`
+- Includes detailed error logging with stack traces
+- Maintains existing error handling flow for other failure modes
+
+**Test Coverage:** Added `test/features/chat/data/huggingface_api_client_test.dart` with 4 test cases covering malformed JSON, valid responses, content type validation, and response structure validation.
 
 ## 📊 Current State
 

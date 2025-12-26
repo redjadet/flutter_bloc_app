@@ -35,18 +35,34 @@
 - Auth errors map `FirebaseAuthException.code` to localized strings for sign-in flows (`lib/features/auth/presentation/helpers/auth_error_message.dart`, `lib/l10n/app_*.arb`).
 - Error toasts/snackbars are cleared before display to avoid stacking (`shared/utils/error_handling.dart` usage inside `SignInPage`).
 
+## Token Handling (Non-Firebase HTTP)
+
+- `ResilientHttpClient` injects Firebase ID tokens into outgoing requests when a `FirebaseAuth` instance is provided (`lib/shared/http/resilient_http_client.dart`, `lib/shared/http/resilient_http_client_helpers.dart`).
+- Tokens are retrieved and cached by `AuthTokenManager`, which:
+  - Tracks cached token expiration and refresh window (5 minutes before expiry).
+  - Caches per user ID to avoid cross-user token reuse.
+  - Clears cached token/user on refresh, errors, or explicit `clearCache()` calls.
+  (`lib/shared/http/auth_token_manager.dart`)
+- If Firebase Auth is not configured, `ResilientHttpClient` will skip token injection and proceed with standard headers only.
+
+## Auth Cache Safety
+
+- Cache keying by `user.uid` prevents stale tokens being reused after logout/login or account switching.
+- Refresh paths (`refreshToken()` and `refreshTokenAndGet()`) clear cached token and user ID to ensure a fresh token is fetched.
+
 ## Notable Gaps / Risks
 
 - Deep links to non-root routes bypass the auth redirect and can surface pages without an authenticated user; features should defensively handle missing user context if required.
 - The registration flow is non-functional for account creation; users must use the FirebaseUI sign-in/registration path for real accounts.
 - Biometric authenticator returns `true` when biometrics are unsupported or not enrolled, which may be acceptable for settings access but is not a hard security gate.
 - Firebase-dependent flows auto-fallback to anonymous-only UI when Firebase is uninitialized, which may hide configuration issues in some environments.
+- Token injection only applies to HTTP requests made via `ResilientHttpClient`; other clients (raw `http.Client`, third-party SDKs) will not include auth headers automatically.
 
 ## Request Checklist (Current State)
 
 - **Firebase integration**: Yes — Firebase Auth + FirebaseUI drive sign-in, routing guards, and Realtime Database scoping (`lib/app.dart`, `lib/app/router/auth_redirect.dart`, `lib/features/auth/presentation/pages/sign_in_page.dart`, `lib/features/counter/data/realtime_database_counter_repository.dart`).
 - **Email + password auth**: Yes — Always included in provider list via `buildAuthProviders()` to guarantee availability even when FirebaseUI config is minimal (`lib/features/auth/presentation/helpers/provider_builder.dart`).
-- **Token handling**: Partial — Firebase SDK issues and refreshes ID tokens automatically; we do not store/manage tokens manually or attach them to non-Firebase HTTP clients.
+- **Token handling**: Partial — Firebase SDK issues and refreshes ID tokens automatically. For non-Firebase HTTP calls, `ResilientHttpClient` injects Firebase ID tokens via `AuthTokenManager`, which caches tokens per user and clears on refresh or auth changes (`lib/shared/http/auth_token_manager.dart`, `lib/shared/http/resilient_http_client.dart`).
 - **User session persistence**: Yes — Relies on Firebase Auth’s built-in persisted sessions; navigation listens to `authStateChanges()` to react to sign-in/sign-out (`lib/app/router/go_router_refresh_stream.dart`).
 - **Role-based access (e.g., student/teacher)**: No — No role/claims parsing or role-aware route guards; only authenticated vs unauthenticated (with anonymous upgrade exception).
-- **Authentication: OAuth, token management**: OAuth: Yes (Google provider added when available via `helpers/google_provider_helper.dart`); token management: No (no custom token lifecycle beyond Firebase defaults).
+- **Authentication: OAuth, token management**: OAuth: Yes (Google provider added when available via `helpers/google_provider_helper.dart`); token management: Partial (custom token injection for non-Firebase HTTP clients with per-user caching; lifecycle still relies on Firebase defaults).

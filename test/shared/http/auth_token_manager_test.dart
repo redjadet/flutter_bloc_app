@@ -18,6 +18,7 @@ void main() {
         const Duration(hours: 1),
       );
 
+      when(() => user.uid).thenReturn('user-id');
       when(() => tokenResult.token).thenReturn('token');
       when(() => tokenResult.expirationTime).thenReturn(expiry);
       when(
@@ -65,6 +66,7 @@ void main() {
         const Duration(hours: 1),
       );
 
+      when(() => user.uid).thenReturn('user-id');
       when(
         () => user.getIdToken(true),
       ).thenAnswer((final invocation) async => 'token');

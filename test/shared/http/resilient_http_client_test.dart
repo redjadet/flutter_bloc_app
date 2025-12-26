@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/shared/http/resilient_http_client.dart';
@@ -21,6 +24,20 @@ class _FakeNetworkStatusService implements NetworkStatusService {
 
   @override
   Future<void> dispose() => Future<void>.value();
+}
+
+class _CountingClient extends http.BaseClient {
+  _CountingClient(this._handler);
+
+  final Future<http.StreamedResponse> Function(http.BaseRequest request)
+  _handler;
+  int callCount = 0;
+
+  @override
+  Future<http.StreamedResponse> send(final http.BaseRequest request) {
+    callCount += 1;
+    return _handler(request);
+  }
 }
 
 void main() {
@@ -87,5 +104,44 @@ void main() {
       client.send(http.Request('GET', Uri.parse('https://example.com'))),
       throwsA(isA<http.ClientException>()),
     );
+  });
+
+  test('does not retry multipart requests with transient failures', () async {
+    final InMemoryRetryNotificationService retryService =
+        InMemoryRetryNotificationService();
+    final List<RetryNotification> notifications = <RetryNotification>[];
+    final subscription = retryService.notifications.listen(notifications.add);
+
+    final _CountingClient inner = _CountingClient(
+      (final request) async => http.StreamedResponse(
+        Stream<List<int>>.value(utf8.encode('server error')),
+        500,
+        headers: const <String, String>{'content-type': 'text/plain'},
+      ),
+    );
+
+    final ResilientHttpClient client = ResilientHttpClient(
+      innerClient: inner,
+      networkStatusService: _FakeNetworkStatusService(NetworkStatus.online),
+      userAgent: 'TestAgent/1.0',
+      retryNotificationService: retryService,
+      maxRetries: 1,
+    );
+
+    final http.MultipartRequest request = http.MultipartRequest(
+      'POST',
+      Uri.parse('https://example.com/upload'),
+    )..fields['name'] = 'sample';
+
+    final http.Response response = await http.Response.fromStream(
+      await client.send(request),
+    );
+
+    expect(response.statusCode, 500);
+    expect(inner.callCount, 1);
+    expect(notifications, isEmpty);
+
+    await subscription.cancel();
+    await retryService.dispose();
   });
 }
