@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:flutter_bloc_app/shared/widgets/skeletons/skeleton_base.dart';
 
 /// A reusable skeleton card for card-based layouts.
 ///
@@ -38,67 +38,58 @@ class SkeletonCard extends StatelessWidget {
     final effectiveHeight = height ?? context.heightFraction(0.2);
     final effectiveWidth = width ?? double.infinity;
 
-    return RepaintBoundary(
-      child: Semantics(
-        label: 'Loading content',
-        child: Skeletonizer(
-          effect: ShimmerEffect(
-            baseColor: colors.surfaceContainerHigh,
-            highlightColor: colors.surface,
-          ),
-          child: Container(
-            width: effectiveWidth,
-            height: effectiveHeight,
-            decoration: BoxDecoration(
-              color: colors.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-            ),
-            padding: EdgeInsets.all(context.responsiveCardPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (hasImage) ...[
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: colors.surfaceContainerHigh,
-                        borderRadius: BorderRadius.circular(
-                          context.responsiveCardRadius,
-                        ),
-                      ),
+    return SkeletonBase(
+      child: Container(
+        width: effectiveWidth,
+        height: effectiveHeight,
+        decoration: BoxDecoration(
+          color: colors.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
+        ),
+        padding: EdgeInsets.all(context.responsiveCardPadding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (hasImage) ...[
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: colors.surfaceContainerHigh,
+                    borderRadius: BorderRadius.circular(
+                      context.responsiveCardRadius,
                     ),
                   ),
-                  SizedBox(height: context.responsiveGapM),
-                ],
-                if (hasTitle) ...[
-                  Container(
-                    width: effectiveWidth * 0.6,
-                    height: effectiveHeight * 0.1,
-                    decoration: BoxDecoration(
-                      color: colors.surfaceContainerHigh,
-                      borderRadius: BorderRadius.circular(
-                        context.responsiveCardRadius,
-                      ),
-                    ),
+                ),
+              ),
+              SizedBox(height: context.responsiveGapM),
+            ],
+            if (hasTitle) ...[
+              Container(
+                width: effectiveWidth * 0.6,
+                height: effectiveHeight * 0.1,
+                decoration: BoxDecoration(
+                  color: colors.surfaceContainerHigh,
+                  borderRadius: BorderRadius.circular(
+                    context.responsiveCardRadius,
                   ),
-                  if (hasSubtitle) SizedBox(height: context.responsiveGapS),
-                ],
-                if (hasSubtitle) ...[
-                  Container(
-                    width: double.infinity,
-                    height: effectiveHeight * 0.08,
-                    decoration: BoxDecoration(
-                      color: colors.surfaceContainerHigh,
-                      borderRadius: BorderRadius.circular(
-                        context.responsiveCardRadius,
-                      ),
-                    ),
+                ),
+              ),
+              if (hasSubtitle) SizedBox(height: context.responsiveGapS),
+            ],
+            if (hasSubtitle) ...[
+              Container(
+                width: double.infinity,
+                height: effectiveHeight * 0.08,
+                decoration: BoxDecoration(
+                  color: colors.surfaceContainerHigh,
+                  borderRadius: BorderRadius.circular(
+                    context.responsiveCardRadius,
                   ),
-                ],
-              ],
-            ),
-          ),
+                ),
+              ),
+            ],
+          ],
         ),
       ),
     );

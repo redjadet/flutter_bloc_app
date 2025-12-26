@@ -11,32 +11,12 @@ extension ResilientHttpClientExtensions on ResilientHttpClient {
     final Uri url, {
     final Map<String, String>? headers,
     final Duration timeout = const Duration(seconds: 30),
-  }) async {
-    try {
-      final http.Request request = http.Request('GET', url);
-      if (headers != null) {
-        request.headers.addAll(headers);
-      }
-      final http.StreamedResponse streamedResponse = await send(request);
-      final http.Response response = await http.Response.fromStream(
-        streamedResponse,
-      );
-
-      if (response.statusCode >= 400) {
-        final String? errorMessage = NetworkErrorMapper.getMessageForStatusCode(
-          response.statusCode,
-        );
-        throw http.ClientException(
-          errorMessage ?? 'HTTP ${response.statusCode}',
-          url,
-        );
-      }
-
-      return response;
-    } on TimeoutException {
-      throw http.ClientException('Request timed out', url);
-    }
-  }
+  }) => _sendMappedRequest(
+    method: 'GET',
+    url: url,
+    headers: headers,
+    timeout: timeout,
+  );
 
   /// Send a POST request and map errors using NetworkErrorMapper
   Future<http.Response> postMapped(
@@ -44,19 +24,34 @@ extension ResilientHttpClientExtensions on ResilientHttpClient {
     final Map<String, String>? headers,
     final Object? body,
     final Duration timeout = const Duration(seconds: 30),
+  }) => _sendMappedRequest(
+    method: 'POST',
+    url: url,
+    headers: headers,
+    body: body,
+    timeout: timeout,
+  );
+
+  /// Common method to send HTTP requests with error mapping
+  Future<http.Response> _sendMappedRequest({
+    required final String method,
+    required final Uri url,
+    required final Duration timeout,
+    final Map<String, String>? headers,
+    final Object? body,
   }) async {
     try {
-      final http.Request request = http.Request('POST', url);
+      final http.Request request = http.Request(method, url);
       if (headers != null) {
         request.headers.addAll(headers);
       }
       if (body != null) {
         request.body = body.toString();
       }
-      final http.StreamedResponse streamedResponse = await send(request);
-      final http.Response response = await http.Response.fromStream(
-        streamedResponse,
+      final Future<http.Response> responseFuture = send(request).then(
+        http.Response.fromStream,
       );
+      final http.Response response = await responseFuture.timeout(timeout);
 
       if (response.statusCode >= 400) {
         final String? errorMessage = NetworkErrorMapper.getMessageForStatusCode(

@@ -240,6 +240,20 @@ The checklist automatically runs:
 
 ---
 
+## DRY Principles Applied
+
+This codebase actively applies **DRY (Don't Repeat Yourself)** principles to reduce duplication and improve maintainability. Key consolidations include:
+
+- **Skeleton Widgets**: `SkeletonBase` consolidates common shimmer, accessibility, and styling (~60 lines removed)
+- **HTTP Extensions**: `_sendMappedRequest()` shared method for GET/POST requests (~40 lines removed)
+- **Settings Repositories**: `HiveSettingsRepository<T>` generic base class for locale/theme repos (~120 lines removed)
+
+**Total Impact**: ~220+ lines of duplicate code removed across 6 files.
+
+See [`docs/dry_principles.md`](docs/dry_principles.md) for detailed documentation, examples, and guidelines.
+
+---
+
 ## Architecture & Tooling
 
 This project enforces **Clean Architecture** guardrails, SOLID principles, and responsive design requirements across all modules. `AppScope` bootstraps DI, ResponsiveScope, DeepLinkListener, and the global cubits (sync status, locale, theme, counter, remote config) using `BlocProviderHelpers` so each cubit can async-initialize safely.
@@ -388,7 +402,7 @@ Startup is part of the flow: `AppScope` calls `ensureConfigured()`, starts backg
 
 ### Test Coverage
 
-- **Current Coverage**: 84.03% (9294/11060 lines)
+- **Current Coverage**: 84.06% (9288/11049 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 
@@ -599,6 +613,7 @@ flutter gen-l10n
 
 - **[FAQ.md](FAQ.md)** - Frequently asked questions
 - **[docs/CODE_QUALITY_ANALYSIS.md](docs/CODE_QUALITY_ANALYSIS.md)** - Code quality analysis, performance profiling, and optimization guide
+- **[docs/dry_principles.md](docs/dry_principles.md)** - DRY principles applied, consolidations, and guidelines
 - **[docs/SHARED_UTILITIES.md](docs/SHARED_UTILITIES.md)** - Shared utilities documentation
 - **[docs/REPOSITORY_LIFECYCLE.md](docs/REPOSITORY_LIFECYCLE.md)** - Repository lifecycle guide
 - **[coverage/coverage_summary.md](coverage/coverage_summary.md)** - Test coverage report
