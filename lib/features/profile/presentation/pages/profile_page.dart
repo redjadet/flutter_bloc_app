@@ -12,6 +12,7 @@ import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -62,16 +63,38 @@ class ProfilePage extends StatelessWidget {
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: context.contentMaxWidth,
+                child: CommonMaxWidth(
+                  child: Column(
+                    children: [
+                      const ProfileSyncBanner(),
+                      ProfileHeader(user: profile),
+                      const ProfileActionButtons(),
+                      SizedBox(
+                        height:
+                            context.pageVerticalPadding *
+                            (context.isDesktop
+                                ? 3
+                                : context.isTabletOrLarger
+                                ? 2.5
+                                : 2),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: CommonMaxWidth(
+                  child: ProfileGallery(images: profile.galleryImages),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: CommonMaxWidth(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.pageHorizontalPadding,
                     ),
                     child: Column(
                       children: [
-                        const ProfileSyncBanner(),
-                        ProfileHeader(user: profile),
-                        const ProfileActionButtons(),
                         SizedBox(
                           height:
                               context.pageVerticalPadding *
@@ -81,96 +104,59 @@ class ProfilePage extends StatelessWidget {
                                   ? 2.5
                                   : 2),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: context.contentMaxWidth,
-                    ),
-                    child: ProfileGallery(images: profile.galleryImages),
-                  ),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: context.contentMaxWidth,
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.pageHorizontalPadding,
-                      ),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height:
-                                context.pageVerticalPadding *
-                                (context.isDesktop
-                                    ? 3
-                                    : context.isTabletOrLarger
-                                    ? 2.5
-                                    : 2),
-                          ),
-                          SizedBox(
-                            width: double.infinity,
-                            height: context.responsiveButtonHeight,
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxWidth: context.isDesktop
-                                    ? 600
-                                    : context.isTabletOrLarger
-                                    ? 500
-                                    : double.infinity,
-                              ),
-                              child: OutlinedButton(
-                                onPressed: () {},
-                                style: OutlinedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  side: const BorderSide(width: 2),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      context.responsiveCardRadius,
-                                    ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: context.responsiveButtonHeight,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: context.isDesktop
+                                  ? 600
+                                  : context.isTabletOrLarger
+                                  ? 500
+                                  : double.infinity,
+                            ),
+                            child: OutlinedButton(
+                              onPressed: () {},
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                side: const BorderSide(width: 2),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    context.responsiveCardRadius,
                                   ),
-                                  padding: EdgeInsets.zero,
                                 ),
-                                child: Text(
-                                  'SEE MORE',
-                                  style: GoogleFonts.roboto(
-                                    fontSize:
-                                        context.responsiveBodySize *
-                                        (context.isDesktop
-                                            ? 0.875
-                                            : context.isTabletOrLarger
-                                            ? 0.844
-                                            : 0.813),
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: 0.52,
-                                    color: Colors.black,
-                                    height: 15.234375 / 13,
-                                  ),
+                                padding: EdgeInsets.zero,
+                              ),
+                              child: Text(
+                                'SEE MORE',
+                                style: GoogleFonts.roboto(
+                                  fontSize:
+                                      context.responsiveBodySize *
+                                      (context.isDesktop
+                                          ? 0.875
+                                          : context.isTabletOrLarger
+                                          ? 0.844
+                                          : 0.813),
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 0.52,
+                                  color: Colors.black,
+                                  height: 15.234375 / 13,
                                 ),
                               ),
                             ),
                           ),
-                          SizedBox(
-                            height:
-                                context.pageVerticalPadding *
-                                    (context.isDesktop
-                                        ? 3
-                                        : context.isTabletOrLarger
-                                        ? 2.5
-                                        : 2) +
-                                context.safeAreaInsets.bottom,
-                          ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(
+                          height:
+                              context.pageVerticalPadding *
+                                  (context.isDesktop
+                                      ? 3
+                                      : context.isTabletOrLarger
+                                      ? 2.5
+                                      : 2) +
+                              context.safeAreaInsets.bottom,
+                        ),
+                      ],
                     ),
                   ),
                 ),

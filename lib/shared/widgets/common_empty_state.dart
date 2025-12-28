@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_status_view.dart';
 
 /// A reusable empty state widget with consistent styling and optional actions.
 ///
@@ -37,53 +38,27 @@ class CommonEmptyState extends StatelessWidget {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
 
-    return Semantics(
-      label: 'Empty state: $message',
-      child: Center(
-        child: Padding(
-          padding: context.responsiveStatePadding,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (icon != null) ...[
-                Icon(
-                  icon,
-                  size: context.responsiveIconSize * 2.5,
-                  color: colors.onSurface.withValues(alpha: 0.6),
-                ),
-                SizedBox(height: context.responsiveGapL),
-              ],
-              if (title != null) ...[
-                Text(
-                  title!,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    color: colors.onSurface,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: context.responsiveGapM),
-              ],
-              Text(
-                message,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: colors.onSurface.withValues(alpha: 0.7),
-                ),
-                textAlign: TextAlign.center,
-              ),
-              if (primaryAction != null) ...[
-                SizedBox(height: context.responsiveGapL * 1.5),
-                PlatformAdaptive.filledButton(
-                  context: context,
-                  onPressed: primaryAction,
-                  child: Text(primaryActionLabel ?? 'Try Again'),
-                ),
-              ],
-            ],
-          ),
-        ),
+    return CommonStatusView(
+      message: message,
+      title: title,
+      icon: icon,
+      iconSize: context.responsiveIconSize * 2.5,
+      iconColor: colors.onSurface.withValues(alpha: 0.6),
+      titleStyle: theme.textTheme.titleLarge?.copyWith(
+        color: colors.onSurface,
+        fontWeight: FontWeight.w600,
       ),
+      messageStyle: theme.textTheme.bodyLarge?.copyWith(
+        color: colors.onSurface.withValues(alpha: 0.7),
+      ),
+      action: primaryAction == null
+          ? null
+          : PlatformAdaptive.filledButton(
+              context: context,
+              onPressed: primaryAction,
+              child: Text(primaryActionLabel ?? 'Try Again'),
+            ),
+      semanticsLabel: 'Empty state: $message',
     );
   }
 }

@@ -25,24 +25,21 @@ class CalculatorPaymentPage extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: padding,
-          child: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: context.contentMaxWidth),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const CalculatorSummaryCard(padding: EdgeInsets.zero),
-                  SizedBox(height: sectionGap * 1.5),
-                  SizedBox(
-                    width: double.infinity,
-                    child: PlatformAdaptive.filledButton(
-                      context: context,
-                      onPressed: context.pop,
-                      child: Text(l10n.calculatorNewCalculation),
-                    ),
+          child: CommonMaxWidth(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const CalculatorSummaryCard(padding: EdgeInsets.zero),
+                SizedBox(height: sectionGap * 1.5),
+                SizedBox(
+                  width: double.infinity,
+                  child: PlatformAdaptive.filledButton(
+                    context: context,
+                    onPressed: context.pop,
+                    child: Text(l10n.calculatorNewCalculation),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

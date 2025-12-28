@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_status_view.dart';
 
 /// A reusable error view widget with consistent styling
 class CommonErrorView extends StatelessWidget {
@@ -24,31 +25,16 @@ class CommonErrorView extends StatelessWidget {
     final effectiveIconSize = iconSize ?? context.responsiveErrorIconSize;
     final effectiveIconColor = iconColor ?? Colors.black54;
 
-    return Padding(
-      padding: context.responsiveStatePadding,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            effectiveIcon,
-            size: effectiveIconSize,
-            color: effectiveIconColor,
-          ),
-          SizedBox(height: context.responsiveGapL),
-          Text(
-            message,
-            style: TextStyle(
-              fontSize: context.responsiveTitleSize,
-              fontWeight: FontWeight.w600,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          if (onRetry != null) ...[
-            SizedBox(height: context.responsiveGapL * 1.5),
-            CommonRetryButton(onPressed: onRetry!),
-          ],
-        ],
+    return CommonStatusView(
+      message: message,
+      icon: effectiveIcon,
+      iconSize: effectiveIconSize,
+      iconColor: effectiveIconColor,
+      messageStyle: TextStyle(
+        fontSize: context.responsiveTitleSize,
+        fontWeight: FontWeight.w600,
       ),
+      action: onRetry == null ? null : CommonRetryButton(onPressed: onRetry!),
     );
   }
 }

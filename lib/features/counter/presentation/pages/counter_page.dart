@@ -127,14 +127,11 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
         body: SingleChildScrollView(
           child: Padding(
             padding: context.pagePadding,
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: context.contentMaxWidth),
-                child: CounterPageBody(
-                  theme: theme,
-                  l10n: l10n,
-                  showFlavorBadge: _showFlavorBadge,
-                ),
+            child: CommonMaxWidth(
+              child: CounterPageBody(
+                theme: theme,
+                l10n: l10n,
+                showFlavorBadge: _showFlavorBadge,
               ),
             ),
           ),
