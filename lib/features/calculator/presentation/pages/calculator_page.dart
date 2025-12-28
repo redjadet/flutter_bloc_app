@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calcul
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 
 class CalculatorPage extends StatelessWidget {
   const CalculatorPage({super.key});
@@ -61,11 +62,9 @@ class CalculatorPage extends StatelessWidget {
               );
             }
 
-            return Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: _maxContentWidth),
-                child: content,
-              ),
+            return CommonMaxWidth(
+              maxWidth: _maxContentWidth,
+              child: content,
             );
           },
         ),

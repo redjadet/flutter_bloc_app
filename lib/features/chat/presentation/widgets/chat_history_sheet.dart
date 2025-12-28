@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 
 @immutable
 class _HistorySheetData extends Equatable {
@@ -55,111 +56,107 @@ class ChatHistorySheet extends StatelessWidget {
           color: theme.colorScheme.surface,
           child: SafeArea(
             top: false,
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: context.barMaxWidth),
-                child: Padding(
-                  key: const ValueKey('chat-history-sheet-content'),
-                  padding: context.responsiveSheetPadding(),
-                  child: BlocSelector<ChatCubit, ChatState, _HistorySheetData>(
-                    selector: (final state) => _HistorySheetData(
-                      history: state.history,
-                      hasHistory: state.hasHistory,
-                      activeConversationId: state.activeConversationId,
-                      hasActiveMessages: state.messages.isNotEmpty,
-                    ),
-                    builder: (final context, final data) {
-                      final List<ChatConversation> conversations = data.history;
+            child: CommonMaxWidth(
+              maxWidth: context.barMaxWidth,
+              padding: context.responsiveSheetPadding(),
+              child: BlocSelector<ChatCubit, ChatState, _HistorySheetData>(
+                key: const ValueKey('chat-history-sheet-content'),
+                selector: (final state) => _HistorySheetData(
+                  history: state.history,
+                  hasHistory: state.hasHistory,
+                  activeConversationId: state.activeConversationId,
+                  hasActiveMessages: state.messages.isNotEmpty,
+                ),
+                builder: (final context, final data) {
+                  final List<ChatConversation> conversations = data.history;
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Row(
                         children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Text(
-                                  l10n.chatHistoryPanelTitle,
-                                  style: theme.textTheme.titleMedium,
-                                ),
-                              ),
-                              IconButton(
-                                tooltip: l10n.chatHistoryHideTooltip,
-                                onPressed: onClose,
-                                icon: const Icon(Icons.close),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: context.responsiveGapS),
-                          PlatformAdaptive.textButton(
-                            context: context,
-                            onPressed: () async {
-                              await cubit.resetConversation();
-                              onClose();
-                            },
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.add),
-                                SizedBox(
-                                  width: context.responsiveHorizontalGapS,
-                                ),
-                                Text(l10n.chatHistoryStartNew),
-                              ],
-                            ),
-                          ),
-                          PlatformAdaptive.textButton(
-                            context: context,
-                            onPressed: data.hasHistory
-                                ? () async {
-                                    final bool confirmed =
-                                        await showClearHistoryDialog(context);
-                                    if (!confirmed) return;
-                                    await cubit.clearHistory();
-                                    onClose();
-                                  }
-                                : null,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.delete_outline),
-                                SizedBox(
-                                  width: context.responsiveHorizontalGapS,
-                                ),
-                                Text(l10n.chatHistoryClearAll),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: context.responsiveGapS),
                           Expanded(
-                            child: data.hasHistory
-                                ? ListView.separated(
-                                    itemBuilder: (final context, final index) {
-                                      final ChatConversation conversation =
-                                          conversations[index];
-                                      final bool isActive =
-                                          data.hasActiveMessages &&
-                                          conversation.id ==
-                                              data.activeConversationId;
-                                      return ChatHistoryConversationTile(
-                                        conversation: conversation,
-                                        index: index,
-                                        isActive: isActive,
-                                        onClose: onClose,
-                                      );
-                                    },
-                                    separatorBuilder: (final context, _) =>
-                                        SizedBox(
-                                          height: context.responsiveGapS,
-                                        ),
-                                    itemCount: conversations.length,
-                                  )
-                                : ChatHistoryEmptyState(l10n: l10n),
+                            child: Text(
+                              l10n.chatHistoryPanelTitle,
+                              style: theme.textTheme.titleMedium,
+                            ),
+                          ),
+                          IconButton(
+                            tooltip: l10n.chatHistoryHideTooltip,
+                            onPressed: onClose,
+                            icon: const Icon(Icons.close),
                           ),
                         ],
-                      );
-                    },
-                  ),
-                ),
+                      ),
+                      SizedBox(height: context.responsiveGapS),
+                      PlatformAdaptive.textButton(
+                        context: context,
+                        onPressed: () async {
+                          await cubit.resetConversation();
+                          onClose();
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.add),
+                            SizedBox(
+                              width: context.responsiveHorizontalGapS,
+                            ),
+                            Text(l10n.chatHistoryStartNew),
+                          ],
+                        ),
+                      ),
+                      PlatformAdaptive.textButton(
+                        context: context,
+                        onPressed: data.hasHistory
+                            ? () async {
+                                final bool confirmed =
+                                    await showClearHistoryDialog(context);
+                                if (!confirmed) return;
+                                await cubit.clearHistory();
+                                onClose();
+                              }
+                            : null,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.delete_outline),
+                            SizedBox(
+                              width: context.responsiveHorizontalGapS,
+                            ),
+                            Text(l10n.chatHistoryClearAll),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: context.responsiveGapS),
+                      Expanded(
+                        child: data.hasHistory
+                            ? ListView.separated(
+                                itemBuilder: (final context, final index) {
+                                  final ChatConversation conversation =
+                                      conversations[index];
+                                  final bool isActive =
+                                      data.hasActiveMessages &&
+                                      conversation.id ==
+                                          data.activeConversationId;
+                                  return ChatHistoryConversationTile(
+                                    conversation: conversation,
+                                    index: index,
+                                    isActive: isActive,
+                                    onClose: onClose,
+                                  );
+                                },
+                                separatorBuilder: (final context, _) =>
+                                    SizedBox(
+                                      height: context.responsiveGapS,
+                                    ),
+                                itemCount: conversations.length,
+                              )
+                            : ChatHistoryEmptyState(l10n: l10n),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ),

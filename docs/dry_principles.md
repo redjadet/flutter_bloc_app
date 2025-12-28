@@ -254,6 +254,40 @@ CommonMaxWidth(
 );
 ```
 
+### 7. Centered Message Layout Consolidation
+
+**Problem**: Multiple widgets used the same centered message layout with
+padding and text styling.
+
+**Solution**: Reused `CommonStatusView` for centered text-only empty states,
+adding optional padding support for variants.
+
+**Locations**:
+
+- `lib/shared/widgets/common_status_view.dart`
+- `lib/features/chat/presentation/widgets/chat_message_list.dart`
+- `lib/features/chat/presentation/widgets/chat_history_empty_state.dart`
+
+**Impact**:
+
+- Reduced repeated `Center` + `Padding` + `Text` blocks
+- Keeps empty-state layout consistent while allowing custom padding
+
+### 8. Profile Button Style Consolidation
+
+**Problem**: Profile screens duplicated `OutlinedButton` styling and Roboto
+label text configuration.
+
+**Solution**: Centralized the style and text helpers in a shared profile
+widget utility.
+
+**Location**: `lib/features/profile/presentation/widgets/profile_button_styles.dart`
+
+**Impact**:
+
+- Keeps profile button styling consistent across screens
+- Reduces repeated `OutlinedButton.styleFrom` and font configuration
+
 ## Further DRY Opportunities
 
 These are candidate areas for consolidation; implement incrementally as patterns

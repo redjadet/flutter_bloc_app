@@ -15,6 +15,7 @@ class CommonStatusView extends StatelessWidget {
     this.titleStyle,
     this.action,
     this.semanticsLabel,
+    this.padding,
   });
 
   final String message;
@@ -26,13 +27,14 @@ class CommonStatusView extends StatelessWidget {
   final TextStyle? titleStyle;
   final Widget? action;
   final String? semanticsLabel;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
     final Widget content = Center(
       child: Padding(
-        padding: context.responsiveStatePadding,
+        padding: padding ?? context.responsiveStatePadding,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,

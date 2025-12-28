@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/shared/services/error_notification_service.dart
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_status_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
 import 'package:flutter_bloc_app/shared/widgets/view_status_switcher.dart';
 
@@ -66,15 +67,9 @@ class ChatMessageList extends StatelessWidget {
             loadingBuilder: (final _) => const CommonLoadingWidget(),
             builder: (final context, final data) {
               if (!data.hasMessages) {
-                return Center(
-                  child: Padding(
-                    padding: context.responsiveStatePadding,
-                    child: Text(
-                      l10n.chatEmptyState,
-                      style: theme.textTheme.bodyLarge,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+                return CommonStatusView(
+                  message: l10n.chatEmptyState,
+                  messageStyle: theme.textTheme.bodyLarge,
                 );
               }
               return RepaintBoundary(
