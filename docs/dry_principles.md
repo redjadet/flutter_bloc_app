@@ -172,6 +172,141 @@ class HiveLocaleRepository extends HiveSettingsRepository<AppLocale>
 }
 ```
 
+### 4. Status View Layout Consolidation
+
+**Problem**: `CommonErrorView` and `CommonEmptyState` duplicated the same layout:
+
+- Centered column structure
+- Responsive padding/spacing
+- Optional icon/title/action sections
+
+**Solution**: Introduced `CommonStatusView` as a shared layout widget.
+
+**Location**: `lib/shared/widgets/common_status_view.dart`
+
+**Impact**:
+
+- Reduced duplicated layout code across empty/error views
+- Keeps styling differences in the callers while reusing structure
+- Single place to adjust spacing and layout behavior
+
+**Usage Example**:
+
+```dart
+// After: Shared status layout with per-view styling
+return CommonStatusView(
+  message: message,
+  icon: Icons.error_outline,
+  messageStyle: TextStyle(
+    fontSize: context.responsiveTitleSize,
+    fontWeight: FontWeight.w600,
+  ),
+  action: CommonRetryButton(onPressed: onRetry),
+);
+```
+
+### 5. Form Input Decoration Consolidation
+
+**Problem**: `CommonFormField` and `CommonDropdownField` duplicated:
+
+- Border radius and border styles
+- Focused/disabled styling
+- Responsive content padding
+
+**Solution**: Extracted a shared input decoration builder.
+
+**Location**: `lib/shared/widgets/common_form_field.dart`
+
+**Impact**:
+
+- Reduced duplicate decoration code across shared form widgets
+- Keeps visual consistency for form fields
+- Makes future styling tweaks a single change
+
+### 6. Max-Width Layout Consolidation
+
+**Problem**: Multiple pages repeated the same pattern:
+
+- `Center`/`Align` wrapper
+- `ConstrainedBox` with `contentMaxWidth`
+- Optional padding around the constrained content
+
+**Solution**: Added `CommonMaxWidth` to encapsulate the shared layout.
+
+**Location**: `lib/shared/widgets/common_max_width.dart`
+
+**Impact**:
+
+- Removed repeated max-width boilerplate across pages
+- Keeps layout intent consistent and easy to tweak
+- Makes further reuse straightforward in new screens
+
+**Usage Example**:
+
+```dart
+// After: Shared max-width wrapper
+CommonMaxWidth(
+  child: Column(
+    children: [
+      // page content
+    ],
+  ),
+);
+```
+
+## Further DRY Opportunities
+
+These are candidate areas for consolidation; implement incrementally as patterns
+repeat across 2-3+ locations.
+
+### Input Decorations in Feature Widgets
+
+**Pattern**: Custom `InputDecoration` appears in multiple feature widgets with
+similar padding, borders, and focus styles.
+
+**Examples**:
+
+- `lib/features/auth/presentation/widgets/register_form_styles.dart`
+- `lib/features/search/presentation/widgets/search_text_field.dart`
+- `lib/features/chat/presentation/widgets/chat_input_bar.dart`
+- `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart`
+
+**Opportunity**:
+
+- Reuse `CommonFormField`/`CommonDropdownField` where possible.
+- If custom layouts require raw `TextField`, expose a shared helper (e.g.
+  `CommonInputDecoration`) to centralize border/padding styles.
+
+### Repeated ViewStatus Branching
+
+**Pattern**: Multiple pages manually branch on loading/error/empty states.
+
+**Examples**:
+
+- `lib/features/profile/presentation/pages/profile_page.dart`
+- `lib/features/chat/presentation/widgets/chat_list_view.dart`
+
+**Opportunity**:
+
+- Prefer `ViewStatusSwitcher` + `CommonStatusView` for consistent status
+  handling with shared builders.
+
+### Repeated Max-Width Layout Wrappers
+
+**Pattern**: `Center` + `ConstrainedBox` + `Padding` sequences are repeated for
+content width constraints.
+
+**Examples**:
+
+- `lib/features/profile/presentation/pages/profile_page.dart`
+- `lib/features/chat/presentation/widgets/chat_message_list.dart`
+- `lib/features/chart/presentation/pages/chart_page.dart`
+
+**Opportunity**:
+
+- Introduce a small shared wrapper (or expand `CommonPageLayout` usage) to
+  unify max-width layout patterns and responsive padding.
+
 ## DRY Patterns Used
 
 The codebase uses several patterns to achieve DRY:

@@ -402,7 +402,7 @@ Startup is part of the flow: `AppScope` calls `ensureConfigured()`, starts backg
 
 ### Test Coverage
 
-- **Current Coverage**: 84.06% (9288/11049 lines)
+- **Current Coverage**: 84.05% (9277/11038 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 

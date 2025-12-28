@@ -14,6 +14,7 @@ import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_empty_state.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 
 class ChatListView extends StatelessWidget {
   const ChatListView({super.key});
@@ -51,34 +52,30 @@ class ChatListView extends StatelessWidget {
     return SafeArea(
       top: false,
       bottom: false,
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: context.contentMaxWidth),
-          child: ListView.separated(
-            padding: safeListPadding,
-            itemCount: contacts.length,
-            separatorBuilder: (final context, final index) =>
-                const _ChatDivider(),
-            itemBuilder: (final context, final index) {
-              final contact = contacts[index];
-              final isFirst = index == 0;
-              final isLast = index == contacts.length - 1;
+      child: CommonMaxWidth(
+        child: ListView.separated(
+          padding: safeListPadding,
+          itemCount: contacts.length,
+          separatorBuilder: (final context, final index) =>
+              const _ChatDivider(),
+          itemBuilder: (final context, final index) {
+            final contact = contacts[index];
+            final isFirst = index == 0;
+            final isLast = index == contacts.length - 1;
 
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (isFirst) const _ChatDivider(),
-                  ChatContactTile(
-                    contact: contact,
-                    onTap: () => _navigateToChat(context, contact),
-                    onLongPress: () => _showDeleteDialog(context, contact),
-                  ),
-                  if (isLast) const _ChatDivider(),
-                ],
-              );
-            },
-          ),
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isFirst) const _ChatDivider(),
+                ChatContactTile(
+                  contact: contact,
+                  onTap: () => _navigateToChat(context, contact),
+                  onLongPress: () => _showDeleteDialog(context, contact),
+                ),
+                if (isLast) const _ChatDivider(),
+              ],
+            );
+          },
         ),
       ),
     );

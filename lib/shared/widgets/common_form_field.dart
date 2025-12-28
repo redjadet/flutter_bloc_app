@@ -1,6 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
+InputDecoration _buildCommonInputDecoration({
+  required final BuildContext context,
+  required final ThemeData theme,
+  final String? labelText,
+  final String? hintText,
+  final String? helperText,
+  final String? errorText,
+  final Widget? prefixIcon,
+  final Widget? suffixIcon,
+  final bool includeErrorBorders = true,
+}) {
+  final borderRadius = BorderRadius.circular(context.responsiveCardRadius);
+  final baseDecoration = InputDecoration(
+    labelText: labelText,
+    hintText: hintText,
+    helperText: helperText,
+    errorText: errorText,
+    prefixIcon: prefixIcon,
+    suffixIcon: suffixIcon,
+    border: OutlineInputBorder(borderRadius: borderRadius),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: borderRadius,
+      borderSide: BorderSide(
+        color: theme.colorScheme.outline.withValues(alpha: 0.5),
+      ),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: borderRadius,
+      borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+    ),
+    contentPadding: EdgeInsets.symmetric(
+      horizontal: context.responsiveHorizontalGapL,
+      vertical: context.responsiveGapM,
+    ),
+  );
+
+  if (!includeErrorBorders) {
+    return baseDecoration;
+  }
+
+  return baseDecoration.copyWith(
+    errorBorder: OutlineInputBorder(
+      borderRadius: borderRadius,
+      borderSide: BorderSide(color: theme.colorScheme.error),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderRadius: borderRadius,
+      borderSide: BorderSide(color: theme.colorScheme.error, width: 2),
+    ),
+  );
+}
+
 /// A reusable form field with consistent styling and validation
 class CommonFormField extends StatelessWidget {
   const CommonFormField({
@@ -58,38 +110,15 @@ class CommonFormField extends StatelessWidget {
       maxLength: maxLength,
       enabled: enabled,
       autofocus: autofocus,
-      decoration: InputDecoration(
+      decoration: _buildCommonInputDecoration(
+        context: context,
+        theme: theme,
         labelText: labelText,
         hintText: hintText,
         helperText: helperText,
         errorText: errorText,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-          borderSide: BorderSide(
-            color: theme.colorScheme.outline.withValues(alpha: 0.5),
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-          borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-          borderSide: BorderSide(color: theme.colorScheme.error),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-          borderSide: BorderSide(color: theme.colorScheme.error, width: 2),
-        ),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: context.responsiveHorizontalGapL,
-          vertical: context.responsiveGapM,
-        ),
       ),
     );
   }
@@ -167,26 +196,12 @@ class CommonDropdownField<T> extends StatelessWidget {
       onChanged: enabled ? onChanged : null,
       validator: validator,
       isExpanded: isExpanded,
-      decoration: InputDecoration(
+      decoration: _buildCommonInputDecoration(
+        context: context,
+        theme: theme,
         labelText: labelText,
         hintText: hintText,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-          borderSide: BorderSide(
-            color: theme.colorScheme.outline.withValues(alpha: 0.5),
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-          borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
-        ),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: context.responsiveHorizontalGapL,
-          vertical: context.responsiveGapM,
-        ),
+        includeErrorBorders: false,
       ),
     );
   }
