@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_cub
 import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_state.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_action_buttons.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_bottom_nav.dart';
+import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_button_styles.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_gallery.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_header.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_sync_banner.dart';
@@ -13,7 +14,6 @@ import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -117,19 +117,14 @@ class ProfilePage extends StatelessWidget {
                             ),
                             child: OutlinedButton(
                               onPressed: () {},
-                              style: OutlinedButton.styleFrom(
+                              style: profileOutlinedButtonStyle(
+                                context,
                                 backgroundColor: Colors.white,
-                                side: const BorderSide(width: 2),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    context.responsiveCardRadius,
-                                  ),
-                                ),
-                                padding: EdgeInsets.zero,
                               ),
                               child: Text(
                                 'SEE MORE',
-                                style: GoogleFonts.roboto(
+                                style: profileButtonTextStyle(
+                                  color: Colors.black,
                                   fontSize:
                                       context.responsiveBodySize *
                                       (context.isDesktop
@@ -137,10 +132,6 @@ class ProfilePage extends StatelessWidget {
                                           : context.isTabletOrLarger
                                           ? 0.844
                                           : 0.813),
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: 0.52,
-                                  color: Colors.black,
-                                  height: 15.234375 / 13,
                                 ),
                               ),
                             ),
