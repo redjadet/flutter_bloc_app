@@ -67,7 +67,7 @@ class _ChartView extends StatelessWidget {
       title: l10n.chartPageTitle,
       body: RefreshIndicator(
         onRefresh: () => context.read<ChartCubit>().refresh(),
-        child: BlocSelector<ChartCubit, ChartState, _ChartViewData>(
+        child: ViewStatusSwitcher<ChartCubit, ChartState, _ChartViewData>(
           selector: (final state) => _ChartViewData(
             showLoading:
                 (state.status.isInitial || state.status.isLoading) &&
@@ -77,18 +77,14 @@ class _ChartView extends StatelessWidget {
             points: state.points,
             zoomEnabled: state.zoomEnabled,
           ),
+          isLoading: (final data) => data.showLoading,
+          isError: (final data) => data.showError,
+          loadingBuilder: (final _) => const ChartLoadingList(),
+          errorBuilder: (final context, final _) => CommonEmptyState(
+            message: l10n.chartPageError,
+            icon: Icons.error_outline,
+          ),
           builder: (final context, final data) {
-            if (data.showLoading) {
-              return const ChartLoadingList();
-            }
-
-            if (data.showError) {
-              return CommonEmptyState(
-                message: l10n.chartPageError,
-                icon: Icons.error_outline,
-              );
-            }
-
             if (data.showEmpty) {
               return CommonEmptyState(
                 message: l10n.chartPageEmpty,
