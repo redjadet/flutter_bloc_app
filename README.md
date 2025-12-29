@@ -8,6 +8,7 @@ A production-ready Flutter application demonstrating enterprise-grade architectu
 [![Coverage](https://img.shields.io/badge/Coverage-84%2E00%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs)
+[![DRY Principles](https://img.shields.io/badge/DRY-Principles-2B7A78.svg)](docs/dry_principles.md)
 
 ---
 
