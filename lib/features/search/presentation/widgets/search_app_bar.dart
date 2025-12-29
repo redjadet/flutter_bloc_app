@@ -32,9 +32,8 @@ class SearchAppBar extends StatelessWidget {
         );
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: context.pageHorizontalPadding,
-        vertical: context.responsiveGapM,
+      padding: context.pageHorizontalPaddingWithVertical(
+        context.responsiveGapM,
       ),
       child: Row(
         children: [

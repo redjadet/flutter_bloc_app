@@ -17,7 +17,7 @@ class MarkdownPreview extends StatelessWidget {
     final ColorScheme colors = theme.colorScheme;
 
     return Container(
-      padding: EdgeInsets.all(context.responsiveGapM),
+      padding: context.allGapM,
       color: colors.surface,
       child: SingleChildScrollView(
         child: IntrinsicWidth(

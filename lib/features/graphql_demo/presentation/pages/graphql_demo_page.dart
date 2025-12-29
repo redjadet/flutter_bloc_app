@@ -33,9 +33,8 @@ class GraphqlDemoPage extends StatelessWidget {
               isLoading: state.isLoading,
             ),
             builder: (final context, final filterData) => Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: context.pageHorizontalPadding,
-                vertical: context.responsiveGapM,
+              padding: context.pageHorizontalPaddingWithVertical(
+                context.responsiveGapM,
               ),
               child: GraphqlFilterBar(
                 continents: filterData.continents,

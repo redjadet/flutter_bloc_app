@@ -40,7 +40,7 @@ class GoogleMapsContentLayout extends StatelessWidget {
 
       if (useHorizontalLayout) {
         return Padding(
-          padding: EdgeInsets.all(context.responsiveGapL),
+          padding: context.allGapL,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -53,7 +53,7 @@ class GoogleMapsContentLayout extends StatelessWidget {
       }
 
       return SingleChildScrollView(
-        padding: EdgeInsets.all(context.responsiveGapL),
+        padding: context.allGapL,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

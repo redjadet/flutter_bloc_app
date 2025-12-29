@@ -53,9 +53,7 @@ class _SearchPageContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: context.pageHorizontalPadding,
-            ),
+            padding: context.pageHorizontalPaddingInsets,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

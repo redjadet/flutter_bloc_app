@@ -29,12 +29,12 @@ class CalculatorPage extends StatelessWidget {
             final bool compactHeight =
                 constraints.maxHeight < AppConstants.compactHeightBreakpoint;
             final bool shouldScroll = compactHeight || context.isCompactWidth;
-            final EdgeInsetsGeometry padding = EdgeInsets.symmetric(
-              horizontal: context.pageHorizontalPadding,
-              vertical: shouldScroll
-                  ? context.responsiveGapM
-                  : context.responsiveGapS,
-            );
+            final EdgeInsetsGeometry padding = context
+                .pageHorizontalPaddingWithVertical(
+                  shouldScroll
+                      ? context.responsiveGapM
+                      : context.responsiveGapS,
+                );
             final double verticalGap = context.responsiveGapL * 2;
 
             Widget content;

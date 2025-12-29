@@ -88,9 +88,7 @@ class ProfilePage extends StatelessWidget {
               SliverToBoxAdapter(
                 child: CommonMaxWidth(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: context.pageHorizontalPadding,
-                    ),
+                    padding: context.pageHorizontalPaddingInsets,
                     child: Column(
                       children: [
                         SizedBox(height: sectionSpacing),

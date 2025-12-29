@@ -96,7 +96,7 @@ class ChartLineGraph extends StatelessWidget {
 
     return InteractiveViewer(
       maxScale: 6,
-      boundaryMargin: EdgeInsets.all(context.responsiveGapL),
+      boundaryMargin: context.allGapL,
       child: chart,
     );
   }

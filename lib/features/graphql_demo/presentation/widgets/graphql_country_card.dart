@@ -24,7 +24,7 @@ class GraphqlCountryCard extends StatelessWidget {
       elevation: 0,
       color: colors.surfaceContainerHighest,
       child: Padding(
-        padding: EdgeInsets.all(context.responsiveCardPadding),
+        padding: context.allCardPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,

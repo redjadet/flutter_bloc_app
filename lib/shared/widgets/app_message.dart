@@ -30,7 +30,7 @@ class AppMessage extends StatelessWidget {
 
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(context.responsiveGapL),
+        padding: context.allGapL,
         child: CommonCard(
           color: backgroundColor,
           padding: EdgeInsets.symmetric(

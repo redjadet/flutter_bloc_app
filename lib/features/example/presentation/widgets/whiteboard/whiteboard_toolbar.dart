@@ -36,7 +36,7 @@ class WhiteboardToolbar extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => Container(
-    padding: EdgeInsets.all(context.responsiveGapS),
+    padding: context.allGapS,
     decoration: BoxDecoration(
       color: colors.surfaceContainerHighest,
       border: Border(

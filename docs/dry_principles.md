@@ -303,7 +303,39 @@ page build method.
 - Reduces repeated calculations and improves readability
 - Makes layout tuning easier by updating a single value
 
-### 10. Filled Input Decoration Consolidation
+### 10. Horizontal Page Padding Consolidation
+
+**Problem**: Many widgets repeated `EdgeInsets.symmetric(horizontal:
+context.pageHorizontalPadding)` for consistent horizontal layout spacing.
+
+**Solution**: Added `pageHorizontalPaddingInsets` to the responsive layout
+extensions and reused it across widgets.
+
+**Location**: `lib/shared/extensions/responsive/responsive_layout.dart`
+
+**Impact**:
+
+- Reduced repeated `EdgeInsets.symmetric` boilerplate
+- Centralized horizontal page padding usage for consistency
+
+### 11. Horizontal + Vertical Page Padding Consolidation
+
+**Problem**: Widgets often combined `pageHorizontalPadding` with a vertical gap
+using `EdgeInsets.symmetric(...)`.
+
+**Solution**: Added `pageHorizontalPaddingWithVertical()` helper to build the
+combined padding consistently.
+
+**Location**: `lib/shared/extensions/responsive/responsive_layout.dart`
+
+**Impact**:
+
+- Reduced repeated `EdgeInsets.symmetric` usage with horizontal + vertical
+  padding
+- Keeps horizontal padding aligned with page layout defaults
+- Applied in layout-heavy screens like the calculator page
+
+### 12. Filled Input Decoration Consolidation
 
 **Problem**: `registerInputDecoration` function and `RegisterPasswordField` duplicated
 the same filled input decoration pattern:
@@ -350,7 +382,7 @@ InputDecoration registerInputDecoration(...) {
 }
 ```
 
-### 11. ViewStatus Branching Consolidation (Profile Page)
+### 13. ViewStatus Branching Consolidation (Profile Page)
 
 **Problem**: `ProfilePage` manually branched on loading/error states with repetitive
 if-else logic.
@@ -386,7 +418,7 @@ ViewStatusSwitcher<ProfileCubit, ProfileState, _ProfileBodyData>(
 )
 ```
 
-### 12. ViewStatus Branching Consolidation (Chart Page)
+### 14. ViewStatus Branching Consolidation (Chart Page)
 
 **Problem**: `ChartPage` manually branched on loading/error/empty states with
 repetitive if-else logic.
@@ -400,6 +432,56 @@ repetitive if-else logic.
 - Reduced repetitive status checking code
 - Consistent status handling pattern matching other pages
 - Easier to maintain status transitions
+
+### 15. EdgeInsets.all Consolidation
+
+**Problem**: Multiple widgets repeated `EdgeInsets.all(context.responsiveGapL)`,
+`EdgeInsets.all(context.responsiveGapM)`, `EdgeInsets.all(context.responsiveGapS)`,
+and `EdgeInsets.all(context.responsiveCardPadding)` patterns throughout the codebase.
+
+**Solution**: Added helper getters (`allGapXS`, `allGapS`, `allGapM`, `allGapL`,
+`allCardPadding`) to the responsive layout extensions.
+
+**Location**: `lib/shared/extensions/responsive/responsive_layout.dart`
+
+**Impact**:
+
+- ~15 instances of `EdgeInsets.all(context.responsiveGapX)` replaced with concise helpers
+- Reduced boilerplate and improved readability
+- Centralized EdgeInsets.all patterns for consistency
+- Easier to maintain and update padding values
+
+**Usage Example**:
+
+```dart
+// Before: Verbose EdgeInsets.all pattern
+Padding(
+  padding: EdgeInsets.all(context.responsiveGapL),
+  child: content,
+)
+
+// After: Concise helper
+Padding(
+  padding: context.allGapL,
+  child: content,
+)
+```
+
+**Files Refactored**:
+
+- `lib/features/google_maps/presentation/widgets/google_maps_layout.dart`
+- `lib/shared/widgets/app_message.dart`
+- `lib/features/chat/presentation/widgets/chat_message_list.dart`
+- `lib/features/websocket/presentation/pages/websocket_demo_page.dart`
+- `lib/features/chart/presentation/widgets/chart_line_graph.dart`
+- `lib/features/chart/presentation/widgets/chart_scrollable.dart`
+- `lib/features/example/presentation/widgets/markdown_editor/markdown_preview.dart`
+- `lib/features/example/presentation/widgets/markdown_editor/markdown_editor_field.dart`
+- `lib/features/example/presentation/widgets/markdown_editor/markdown_toolbar.dart`
+- `lib/features/example/presentation/widgets/whiteboard/whiteboard_toolbar.dart`
+- `lib/features/websocket/presentation/widgets/websocket_connection_banner.dart`
+- `lib/shared/widgets/skeletons/skeleton_card.dart`
+- `lib/features/graphql_demo/presentation/widgets/graphql_country_card.dart`
 
 ## Further DRY Opportunities
 
@@ -531,6 +613,7 @@ For stateless utility functions that provide shared behavior:
 - Cubits use `CubitExceptionHandler` instead of duplicating try-catch blocks
 - Registration forms use `buildFilledInputDecoration` for consistent filled input styling
 - Pages use `ViewStatusSwitcher` for consistent loading/error/success state handling
+- Widgets use `context.allGapL` instead of `EdgeInsets.all(context.responsiveGapL)`
 
 ❌ **Bad Practices**:
 
