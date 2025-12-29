@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_input_decoration_helpers.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 TextStyle registerTitleStyle(final BuildContext context) =>
@@ -32,45 +32,19 @@ InputDecoration registerInputDecoration(
   final String? errorText,
 }) {
   final theme = Theme.of(context);
-  final colorScheme = theme.colorScheme;
-  final borderRadius = BorderRadius.circular(context.responsiveCardRadius);
-  final double overlayAlpha = theme.brightness == Brightness.dark ? 0.16 : 0.04;
-  final Color fillColor = Color.alphaBlend(
-    colorScheme.onSurface.withValues(alpha: overlayAlpha),
-    colorScheme.surface,
-  );
-
-  return InputDecoration(
+  return buildFilledInputDecoration(
+    context,
     hintText: hint,
+    errorText: errorText,
     hintStyle:
         theme.textTheme.bodyMedium?.copyWith(
-          color: colorScheme.onSurfaceVariant,
+          color: theme.colorScheme.onSurfaceVariant,
         ) ??
         GoogleFonts.roboto(
           fontSize: 15,
           fontWeight: FontWeight.w400,
           height: 18.0 / 15,
-          color: colorScheme.onSurfaceVariant,
+          color: theme.colorScheme.onSurfaceVariant,
         ),
-    errorText: errorText,
-    filled: true,
-    fillColor: fillColor,
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-    border: OutlineInputBorder(
-      borderRadius: borderRadius,
-      borderSide: BorderSide(
-        color: colorScheme.outline.withValues(alpha: 0.4),
-      ),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: borderRadius,
-      borderSide: BorderSide(
-        color: colorScheme.outline.withValues(alpha: 0.4),
-      ),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: borderRadius,
-      borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
-    ),
   );
 }

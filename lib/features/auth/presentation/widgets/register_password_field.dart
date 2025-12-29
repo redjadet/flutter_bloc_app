@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_input_decoration_helpers.dart';
 
 class RegisterPasswordField extends StatefulWidget {
   const RegisterPasswordField({
@@ -64,50 +64,23 @@ class _RegisterPasswordFieldState extends State<RegisterPasswordField> {
       keyboardAppearance: theme.brightness == Brightness.dark
           ? Brightness.dark
           : Brightness.light,
-      decoration: InputDecoration(
-        hintText: widget.hint,
-        hintStyle: theme.textTheme.bodyMedium?.copyWith(
-          color: colorScheme.onSurfaceVariant,
-        ),
-        errorText: widget.errorText,
-        filled: true,
-        fillColor: Color.alphaBlend(
-          colorScheme.onSurface.withValues(
-            alpha: theme.brightness == Brightness.dark ? 0.16 : 0.04,
+      decoration:
+          buildFilledInputDecoration(
+            context,
+            hintText: widget.hint,
+            errorText: widget.errorText,
+            hintStyle: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ).copyWith(
+            suffixIcon: IconButton(
+              onPressed: () => setState(() => _obscure = !_obscure),
+              icon: Icon(
+                _obscure ? Icons.visibility_off : Icons.visibility,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
           ),
-          colorScheme.surface,
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 12,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-          borderSide: BorderSide(
-            color: colorScheme.outline.withValues(alpha: 0.4),
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-          borderSide: BorderSide(
-            color: colorScheme.outline.withValues(alpha: 0.4),
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-          borderSide: BorderSide(
-            color: colorScheme.primary,
-            width: 1.5,
-          ),
-        ),
-        suffixIcon: IconButton(
-          onPressed: () => setState(() => _obscure = !_obscure),
-          icon: Icon(
-            _obscure ? Icons.visibility_off : Icons.visibility,
-            color: colorScheme.onSurfaceVariant,
-          ),
-        ),
-      ),
       textInputAction: widget.textInputAction,
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onFieldSubmitted,

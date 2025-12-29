@@ -14,6 +14,7 @@ import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
+import 'package:flutter_bloc_app/shared/widgets/view_status_switcher.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -32,25 +33,22 @@ class ProfilePage extends StatelessWidget {
       ),
     ),
     bottomNavigationBar: const ProfileBottomNav(),
-    body: BlocSelector<ProfileCubit, ProfileState, _ProfileBodyData>(
+    body: ViewStatusSwitcher<ProfileCubit, ProfileState, _ProfileBodyData>(
       selector: (final state) => _ProfileBodyData(
         isLoading: state.isLoading,
         hasError: state.hasError,
         hasUser: state.hasUser,
         user: state.user,
       ),
+      isLoading: (final data) => data.isLoading && !data.hasUser,
+      isError: (final data) => data.hasError && !data.hasUser,
+      loadingBuilder: (final _) =>
+          const CommonLoadingWidget(color: Colors.black),
+      errorBuilder: (final context, final _) => CommonErrorView(
+        message: 'Failed to load profile',
+        onRetry: () => context.read<ProfileCubit>().loadProfile(),
+      ),
       builder: (final context, final bodyData) {
-        if (bodyData.isLoading && !bodyData.hasUser) {
-          return const CommonLoadingWidget(color: Colors.black);
-        }
-
-        if (bodyData.hasError && !bodyData.hasUser) {
-          return CommonErrorView(
-            message: 'Failed to load profile',
-            onRetry: () => context.read<ProfileCubit>().loadProfile(),
-          );
-        }
-
         if (!bodyData.hasUser) {
           return const CommonErrorView(
             message: 'Failed to load profile',
@@ -118,7 +116,8 @@ class ProfilePage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          height: sectionSpacing + context.safeAreaInsets.bottom,
+                          height:
+                              sectionSpacing + context.safeAreaInsets.bottom,
                         ),
                       ],
                     ),

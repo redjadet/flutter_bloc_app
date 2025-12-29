@@ -303,6 +303,104 @@ page build method.
 - Reduces repeated calculations and improves readability
 - Makes layout tuning easier by updating a single value
 
+### 10. Filled Input Decoration Consolidation
+
+**Problem**: `registerInputDecoration` function and `RegisterPasswordField` duplicated
+the same filled input decoration pattern:
+
+- Filled background color calculation (alpha blending)
+- Border radius and border styles
+- Focused/enabled border styling
+- Content padding
+
+**Solution**: Created `buildFilledInputDecoration` helper function to centralize the
+filled input decoration pattern.
+
+**Location**: `lib/shared/widgets/common_input_decoration_helpers.dart`
+
+**Impact**:
+
+- ~50 lines of duplicate code removed across 2 files
+- Consistent filled input styling across registration forms
+- Single point of change for filled input decoration updates
+- Easier to maintain and extend registration form fields
+
+**Usage Example**:
+
+```dart
+// Before: Duplicated filled decoration logic
+InputDecoration registerInputDecoration(...) {
+  final double overlayAlpha = theme.brightness == Brightness.dark ? 0.16 : 0.04;
+  final Color fillColor = Color.alphaBlend(...);
+  return InputDecoration(
+    filled: true,
+    fillColor: fillColor,
+    // ... 30+ lines of border/padding configuration
+  );
+}
+
+// After: Use shared helper
+InputDecoration registerInputDecoration(...) {
+  return buildFilledInputDecoration(
+    context,
+    hintText: hint,
+    errorText: errorText,
+    hintStyle: customHintStyle,
+  );
+}
+```
+
+### 11. ViewStatus Branching Consolidation (Profile Page)
+
+**Problem**: `ProfilePage` manually branched on loading/error states with repetitive
+if-else logic.
+
+**Solution**: Refactored to use `ViewStatusSwitcher` for consistent status handling.
+
+**Location**: `lib/features/profile/presentation/pages/profile_page.dart`
+
+**Impact**:
+
+- Reduced repetitive status checking code
+- Consistent status handling pattern across pages
+- Easier to maintain status transitions
+
+**Usage Example**:
+
+```dart
+// Before: Manual branching
+if (bodyData.isLoading && !bodyData.hasUser) {
+  return const CommonLoadingWidget(color: Colors.black);
+}
+if (bodyData.hasError && !bodyData.hasUser) {
+  return CommonErrorView(...);
+}
+
+// After: Use ViewStatusSwitcher
+ViewStatusSwitcher<ProfileCubit, ProfileState, _ProfileBodyData>(
+  isLoading: (data) => data.isLoading && !data.hasUser,
+  isError: (data) => data.hasError && !data.hasUser,
+  loadingBuilder: (_) => const CommonLoadingWidget(color: Colors.black),
+  errorBuilder: (context, _) => CommonErrorView(...),
+  builder: (context, bodyData) => /* success content */,
+)
+```
+
+### 12. ViewStatus Branching Consolidation (Chart Page)
+
+**Problem**: `ChartPage` manually branched on loading/error/empty states with
+repetitive if-else logic.
+
+**Solution**: Refactored to use `ViewStatusSwitcher` for consistent status handling.
+
+**Location**: `lib/features/chart/presentation/pages/chart_page.dart`
+
+**Impact**:
+
+- Reduced repetitive status checking code
+- Consistent status handling pattern matching other pages
+- Easier to maintain status transitions
+
 ## Further DRY Opportunities
 
 These are candidate areas for consolidation; implement incrementally as patterns
@@ -310,12 +408,11 @@ repeat across 2-3+ locations.
 
 ### Input Decorations in Feature Widgets
 
-**Pattern**: Custom `InputDecoration` appears in multiple feature widgets with
-similar padding, borders, and focus styles.
+**Pattern**: Custom `InputDecoration` may still appear in some feature widgets that
+don't use the filled pattern.
 
 **Examples**:
 
-- `lib/features/auth/presentation/widgets/register_form_styles.dart`
 - `lib/features/search/presentation/widgets/search_text_field.dart`
 - `lib/features/chat/presentation/widgets/chat_input_bar.dart`
 - `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart`
@@ -323,22 +420,21 @@ similar padding, borders, and focus styles.
 **Opportunity**:
 
 - Reuse `CommonFormField`/`CommonDropdownField` where possible.
-- If custom layouts require raw `TextField`, expose a shared helper (e.g.
-  `CommonInputDecoration`) to centralize border/padding styles.
+- For custom layouts requiring raw `TextField`, consider if existing helpers
+  (`buildFilledInputDecoration` or `_buildCommonInputDecoration`) can be extended.
 
 ### Repeated ViewStatus Branching
 
-**Pattern**: Multiple pages manually branch on loading/error/empty states.
+**Pattern**: Some pages may still manually branch on loading/error/empty states.
 
 **Examples**:
 
-- `lib/features/profile/presentation/pages/profile_page.dart`
-- `lib/features/chat/presentation/widgets/chat_list_view.dart`
+- `lib/features/chat/presentation/widgets/chat_list_view.dart` (uses switch expressions, which is acceptable)
 
 **Opportunity**:
 
 - Prefer `ViewStatusSwitcher` + `CommonStatusView` for consistent status
-  handling with shared builders.
+  handling with shared builders where manual branching becomes repetitive.
 
 ### Repeated Max-Width Layout Wrappers
 
@@ -400,6 +496,15 @@ For stateless utilities that don't fit into a class hierarchy:
 
 **When to use**: When functionality is stateless and doesn't belong to a specific class hierarchy.
 
+### Helper Functions
+
+For stateless utility functions that provide shared behavior:
+
+- **`buildFilledInputDecoration`**: Filled input decoration styling for registration forms
+- **`_buildCommonInputDecoration`**: Common input decoration styling for form fields
+
+**When to use**: When functionality is a simple function that doesn't require class state or complex behavior.
+
 ## When to Apply DRY
 
 ### Consolidation Thresholds
@@ -424,6 +529,8 @@ For stateless utilities that don't fit into a class hierarchy:
 - All skeleton widgets use `SkeletonBase` for common shimmer/accessibility logic
 - HTTP extensions use `_sendMappedRequest` for shared request/response handling
 - Cubits use `CubitExceptionHandler` instead of duplicating try-catch blocks
+- Registration forms use `buildFilledInputDecoration` for consistent filled input styling
+- Pages use `ViewStatusSwitcher` for consistent loading/error/success state handling
 
 ❌ **Bad Practices**:
 
@@ -431,6 +538,8 @@ For stateless utilities that don't fit into a class hierarchy:
 - Copy-pasting repository load/save patterns without base class
 - Creating new skeleton widgets without using `SkeletonBase`
 - Reimplementing HTTP request logic instead of using extensions
+- Duplicating input decoration styling across form fields
+- Manual status branching when `ViewStatusSwitcher` can be used
 
 ## Validation After DRY Refactoring
 
