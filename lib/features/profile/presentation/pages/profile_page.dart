@@ -58,6 +58,14 @@ class ProfilePage extends StatelessWidget {
         }
 
         final profile = bodyData.user!;
+        final double sectionSpacing =
+            context.pageVerticalPadding *
+            (context.isDesktop
+                ? 3
+                : context.isTabletOrLarger
+                ? 2.5
+                : 2);
+        final double buttonMaxWidth = context.clampWidthTo(500);
 
         return RepaintBoundary(
           child: CustomScrollView(
@@ -69,15 +77,7 @@ class ProfilePage extends StatelessWidget {
                       const ProfileSyncBanner(),
                       ProfileHeader(user: profile),
                       const ProfileActionButtons(),
-                      SizedBox(
-                        height:
-                            context.pageVerticalPadding *
-                            (context.isDesktop
-                                ? 3
-                                : context.isTabletOrLarger
-                                ? 2.5
-                                : 2),
-                      ),
+                      SizedBox(height: sectionSpacing),
                     ],
                   ),
                 ),
@@ -95,26 +95,12 @@ class ProfilePage extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        SizedBox(
-                          height:
-                              context.pageVerticalPadding *
-                              (context.isDesktop
-                                  ? 3
-                                  : context.isTabletOrLarger
-                                  ? 2.5
-                                  : 2),
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          height: context.responsiveButtonHeight,
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              maxWidth: context.isDesktop
-                                  ? 600
-                                  : context.isTabletOrLarger
-                                  ? 500
-                                  : double.infinity,
-                            ),
+                        SizedBox(height: sectionSpacing),
+                        CommonMaxWidth(
+                          maxWidth: buttonMaxWidth,
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: context.responsiveButtonHeight,
                             child: OutlinedButton(
                               onPressed: () {},
                               style: profileOutlinedButtonStyle(
@@ -125,27 +111,14 @@ class ProfilePage extends StatelessWidget {
                                 'SEE MORE',
                                 style: profileButtonTextStyle(
                                   color: Colors.black,
-                                  fontSize:
-                                      context.responsiveBodySize *
-                                      (context.isDesktop
-                                          ? 0.875
-                                          : context.isTabletOrLarger
-                                          ? 0.844
-                                          : 0.813),
+                                  fontSize: 13,
                                 ),
                               ),
                             ),
                           ),
                         ),
                         SizedBox(
-                          height:
-                              context.pageVerticalPadding *
-                                  (context.isDesktop
-                                      ? 3
-                                      : context.isTabletOrLarger
-                                      ? 2.5
-                                      : 2) +
-                              context.safeAreaInsets.bottom,
+                          height: sectionSpacing + context.safeAreaInsets.bottom,
                         ),
                       ],
                     ),
