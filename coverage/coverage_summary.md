@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **84.05%** (9267/11026 lines)
+*Total line coverage*: **84.04%** (9259/11018 lines)
 
 Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) are excluded from these totals.
 
@@ -239,8 +239,8 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/search/presentation/search_cubit.dart` | 97.50% | 39/40 |
 | `lib/features/auth/presentation/cubit/register/register_state.dart` | 97.50% | 78/80 |
 | `lib/features/chat/presentation/pages/chat_page.dart` | 97.53% | 79/81 |
+| `lib/features/profile/presentation/pages/profile_page.dart` | 98.18% | 54/55 |
 | `lib/features/calculator/presentation/widgets/calculator_rate_selector.dart` | 98.21% | 55/56 |
-| `lib/features/profile/presentation/pages/profile_page.dart` | 98.41% | 62/63 |
 | `lib/features/example/presentation/widgets/whiteboard/whiteboard_toolbar.dart` | 98.73% | 78/79 |
 | `lib/features/chat/domain/chat_repository.dart` | 100.00% | 5/5 |
 | `lib/features/example/presentation/widgets/markdown_editor/markdown_editor_field.dart` | 100.00% | 15/15 |
