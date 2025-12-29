@@ -22,7 +22,7 @@ class MarkdownToolbar extends StatelessWidget {
     final ColorScheme colors = theme.colorScheme;
 
     return Container(
-      padding: EdgeInsets.all(context.responsiveGapS),
+      padding: context.allGapS,
       decoration: BoxDecoration(
         color: colors.surfaceContainerHighest,
         border: Border(

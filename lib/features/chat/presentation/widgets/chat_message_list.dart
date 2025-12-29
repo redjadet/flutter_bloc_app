@@ -75,7 +75,7 @@ class ChatMessageList extends StatelessWidget {
               return RepaintBoundary(
                 child: ListView.builder(
                   controller: controller,
-                  padding: EdgeInsets.all(context.responsiveGapM),
+                  padding: context.allGapM,
                   itemCount: data.messages.length,
                   itemBuilder: (final context, final index) {
                     final ChatMessage message = data.messages[index];

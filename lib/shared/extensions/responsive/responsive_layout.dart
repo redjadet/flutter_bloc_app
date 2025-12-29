@@ -57,6 +57,15 @@ extension ResponsiveLayoutContext on BuildContext {
     vertical: pageVerticalPadding,
   );
 
+  EdgeInsets get pageHorizontalPaddingInsets =>
+      EdgeInsets.symmetric(horizontal: pageHorizontalPadding);
+
+  EdgeInsets pageHorizontalPaddingWithVertical(final double vertical) =>
+      EdgeInsets.symmetric(
+        horizontal: pageHorizontalPadding,
+        vertical: vertical,
+      );
+
   EdgeInsets get responsiveCardMargin => EdgeInsets.all(
     _scaledWidth(
       this,
@@ -150,4 +159,19 @@ extension ResponsiveLayoutContext on BuildContext {
   EdgeInsets get responsiveBubbleMargin => EdgeInsets.symmetric(
     vertical: responsiveGapS / 2,
   );
+
+  /// Returns EdgeInsets.all with responsiveGapXS
+  EdgeInsets get allGapXS => EdgeInsets.all(responsiveGapXS);
+
+  /// Returns EdgeInsets.all with responsiveGapS
+  EdgeInsets get allGapS => EdgeInsets.all(responsiveGapS);
+
+  /// Returns EdgeInsets.all with responsiveGapM
+  EdgeInsets get allGapM => EdgeInsets.all(responsiveGapM);
+
+  /// Returns EdgeInsets.all with responsiveGapL
+  EdgeInsets get allGapL => EdgeInsets.all(responsiveGapL);
+
+  /// Returns EdgeInsets.all with responsiveCardPadding
+  EdgeInsets get allCardPadding => EdgeInsets.all(responsiveCardPadding);
 }

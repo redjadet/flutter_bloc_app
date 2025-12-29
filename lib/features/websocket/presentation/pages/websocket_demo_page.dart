@@ -77,7 +77,7 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
         title: l10n.websocketDemoTitle,
         body: Center(
           child: Padding(
-            padding: EdgeInsets.all(context.responsiveGapL),
+            padding: context.allGapL,
             child: Text(
               l10n.websocketDemoWebUnsupported,
               style: Theme.of(context).textTheme.bodyLarge,

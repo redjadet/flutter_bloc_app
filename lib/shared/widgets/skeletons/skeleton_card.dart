@@ -46,7 +46,7 @@ class SkeletonCard extends StatelessWidget {
           color: colors.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(context.responsiveCardRadius),
         ),
-        padding: EdgeInsets.all(context.responsiveCardPadding),
+        padding: context.allCardPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

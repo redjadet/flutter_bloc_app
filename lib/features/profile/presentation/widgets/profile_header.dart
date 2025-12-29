@@ -53,7 +53,7 @@ class ProfileHeader extends StatelessWidget {
             : 1.5);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: context.pageHorizontalPadding),
+      padding: context.pageHorizontalPaddingInsets,
       child: Column(
         children: [
           SizedBox(height: topSpacing),

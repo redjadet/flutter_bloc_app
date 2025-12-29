@@ -16,7 +16,7 @@ class WebsocketConnectionBanner extends StatelessWidget {
       return Container(
         width: double.infinity,
         color: theme.colorScheme.errorContainer,
-        padding: EdgeInsets.all(context.responsiveGapS),
+        padding: context.allGapS,
         child: Text(
           l10n.websocketErrorLabel(state.errorMessage!),
           style: theme.textTheme.bodySmall?.copyWith(
@@ -37,7 +37,7 @@ class WebsocketConnectionBanner extends StatelessWidget {
     return Container(
       width: double.infinity,
       color: backgroundColor,
-      padding: EdgeInsets.all(context.responsiveGapS),
+      padding: context.allGapS,
       child: Row(
         children: [
           if (state.isConnecting) ...[

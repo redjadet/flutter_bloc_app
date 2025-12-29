@@ -26,10 +26,7 @@ class _ChatBottomNavigationBarContent extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => Padding(
-    padding: EdgeInsets.symmetric(
-      horizontal: context.pageHorizontalPadding,
-      vertical: context.responsiveGap,
-    ),
+    padding: context.pageHorizontalPaddingWithVertical(context.responsiveGap),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [

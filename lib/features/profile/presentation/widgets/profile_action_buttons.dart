@@ -8,7 +8,7 @@ class ProfileActionButtons extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => Padding(
-    padding: EdgeInsets.symmetric(horizontal: context.pageHorizontalPadding),
+    padding: context.pageHorizontalPaddingInsets,
     child: CommonMaxWidth(
       maxWidth: context.clampWidthTo(500),
       child: Column(
