@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket
 import 'package:flutter_bloc_app/features/websocket/presentation/pages/websocket_demo_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -44,8 +45,30 @@ void main() {
     await tester.pump();
     await tester.pump();
 
-    expect(find.text('hi'), findsOneWidget);
-    expect(find.text('echo: hi'), findsOneWidget);
+    // RichText widgets contain the message text
+    // Find all MessageBubbles and check their text content
+    expect(find.byType(MessageBubble), findsAtLeastNWidgets(1));
+
+    final List<String> messageTexts = <String>[];
+    final FinderResult<Element> messageBubbleElements = find
+        .byType(MessageBubble)
+        .evaluate();
+    for (final Element bubbleElement in messageBubbleElements) {
+      final RichText richText = tester.widget<RichText>(
+        find.descendant(
+          of: find.byWidget(bubbleElement.widget),
+          matching: find.byType(RichText),
+        ),
+      );
+      messageTexts.add(richText.text.toPlainText());
+    }
+
+    // Check that both messages are present
+    expect(
+      messageTexts.any((text) => text.contains('hi') && !text.contains('echo')),
+      isTrue,
+    );
+    expect(messageTexts.any((text) => text.contains('echo: hi')), isTrue);
   });
 }
 

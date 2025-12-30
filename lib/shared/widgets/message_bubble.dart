@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/example/presentation/widgets/markdown_editor/markdown_parser.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 /// A reusable message bubble widget for chat-like interfaces
+/// Supports markdown rendering for rich text formatting
 class MessageBubble extends StatelessWidget {
   const MessageBubble({
     required this.message,
@@ -62,6 +64,16 @@ class MessageBubble extends StatelessWidget {
 
     final double effectiveMaxWidth = maxWidth ?? context.widthFraction(0.75);
 
+    final TextStyle baseTextStyle =
+        theme.textTheme.bodyMedium?.copyWith(color: textColor) ??
+        TextStyle(color: textColor);
+
+    final MarkdownParser markdownParser = MarkdownParser();
+    final TextSpan textSpan = markdownParser.buildTextSpan(
+      message,
+      baseTextStyle,
+    );
+
     return Align(
       alignment: alignment,
       child: Container(
@@ -72,9 +84,8 @@ class MessageBubble extends StatelessWidget {
           color: bubbleColor,
           borderRadius: BorderRadius.circular(effectiveBorderRadius),
         ),
-        child: Text(
-          message,
-          style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
+        child: RichText(
+          text: textSpan,
         ),
       ),
     );

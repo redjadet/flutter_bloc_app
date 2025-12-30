@@ -16,6 +16,7 @@ import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
+import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -186,8 +187,22 @@ void main() {
         await tester.pumpAndSettle();
 
         // Verify messages from selected conversation render
-        expect(find.text('Another'), findsOneWidget);
-        expect(find.text('Reply'), findsOneWidget);
+        // RichText widgets contain the message text
+        final RichText anotherRichText = tester.widget<RichText>(
+          find.descendant(
+            of: find.byType(MessageBubble).first,
+            matching: find.byType(RichText),
+          ),
+        );
+        expect(anotherRichText.text.toPlainText(), contains('Another'));
+
+        final RichText replyRichText = tester.widget<RichText>(
+          find.descendant(
+            of: find.byType(MessageBubble).last,
+            matching: find.byType(RichText),
+          ),
+        );
+        expect(replyRichText.text.toPlainText(), contains('Reply'));
         expect(cubit.state.activeConversationId, 'conv-2');
       },
     );
