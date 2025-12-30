@@ -348,6 +348,10 @@ Scripts and intent:
   timing.
 - `tool/check_direct_getit.sh` — Prevents direct `GetIt` access in presentation
   widgets; dependencies should be injected.
+- `tool/check_raw_dialogs.sh` — Enforces `showAdaptiveDialog` over raw dialog APIs.
+- `tool/check_raw_network_images.sh` — Enforces `CachedNetworkImageWidget` for
+  remote images.
+- `tool/check_raw_print.sh` — Blocks raw `print()` usage; use `AppLogger`.
 - `tool/check_side_effects_build.sh` — Heuristic scan for side effects in
   `build()` (does not fail the checklist on its own).
 

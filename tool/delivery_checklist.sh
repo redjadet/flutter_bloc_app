@@ -63,6 +63,18 @@ echo "  Checking for direct GetIt usage in presentation..."
 bash tool/check_direct_getit.sh || VALIDATION_FAILED=1
 echo ""
 
+echo "  Checking for raw dialog APIs..."
+bash tool/check_raw_dialogs.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for raw network image usage..."
+bash tool/check_raw_network_images.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for raw print() usage..."
+bash tool/check_raw_print.sh || VALIDATION_FAILED=1
+echo ""
+
 echo "  Checking for side effects in build() method..."
 bash tool/check_side_effects_build.sh || VALIDATION_FAILED=1
 echo ""
