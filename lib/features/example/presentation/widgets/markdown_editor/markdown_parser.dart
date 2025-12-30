@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/example/presentation/widgets/markdown_editor/markdown_table_renderer.dart';
 import 'package:markdown/markdown.dart' as md;
 
 /// Markdown parser that leverages the `markdown` package for accurate AST parsing
@@ -41,6 +42,11 @@ class MarkdownParser {
     }
 
     if (node is! md.Element) return const <InlineSpan>[];
+
+    // Handle tables - render as formatted text
+    if (node.tag == 'table') {
+      return MarkdownTableRenderer.buildTableSpans(node, currentStyle);
+    }
 
     final TextStyle resolvedStyle =
         _styleForTag(node.tag, currentStyle) ?? currentStyle;
@@ -92,6 +98,13 @@ class MarkdownParser {
           const TextSpan(text: '\n\n'),
         ];
       case 'code':
+        return <InlineSpan>[TextSpan(children: children, style: resolvedStyle)];
+      case 'thead':
+      case 'tbody':
+      case 'tr':
+      case 'th':
+      case 'td':
+        // These are handled in MarkdownTableRenderer, but fall through for safety
         return <InlineSpan>[TextSpan(children: children, style: resolvedStyle)];
       default:
         return <InlineSpan>[TextSpan(children: children, style: resolvedStyle)];

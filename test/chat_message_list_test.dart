@@ -15,6 +15,7 @@ import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'test_helpers.dart' as test_helpers;
 
@@ -66,8 +67,23 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('hi'), findsOneWidget);
-    expect(find.text('hello'), findsOneWidget);
+    // RichText widgets contain the message text
+    final RichText hiRichText = tester.widget<RichText>(
+      find.descendant(
+        of: find.byType(MessageBubble).first,
+        matching: find.byType(RichText),
+      ),
+    );
+    expect(hiRichText.text.toPlainText(), contains('hi'));
+
+    final RichText helloRichText = tester.widget<RichText>(
+      find.descendant(
+        of: find.byType(MessageBubble).last,
+        matching: find.byType(RichText),
+      ),
+    );
+    expect(helloRichText.text.toPlainText(), contains('hello'));
+
     expect(find.text('boom'), findsOneWidget);
 
     final ScaffoldMessengerState messenger = ScaffoldMessenger.of(
@@ -102,8 +118,22 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('Pending'), findsOneWidget);
-    expect(find.text('Reply'), findsOneWidget);
+    // RichText widgets contain the message text
+    final RichText pendingRichText = tester.widget<RichText>(
+      find.descendant(
+        of: find.byType(MessageBubble).first,
+        matching: find.byType(RichText),
+      ),
+    );
+    expect(pendingRichText.text.toPlainText(), contains('Pending'));
+
+    final RichText replyRichText = tester.widget<RichText>(
+      find.descendant(
+        of: find.byType(MessageBubble).last,
+        matching: find.byType(RichText),
+      ),
+    );
+    expect(replyRichText.text.toPlainText(), contains('Reply'));
     // Pending sync text is no longer displayed in the UI
   });
 }
