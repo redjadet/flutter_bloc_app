@@ -1,6 +1,5 @@
 # Flutter + Mobile Best Practices Review
 
-**Last Updated:** 2024
 **Scope:** Quick audit of configuration, bootstrap, app shell, and representative feature layers (counter, settings, auth, profile, shared utilities). Findings focus on Flutter/mobile best practices, architecture hygiene, and UI adaptiveness.
 
 ## Table of Contents
