@@ -20,6 +20,7 @@ class MarkdownEditorWidget extends StatefulWidget {
 class _MarkdownEditorWidgetState extends State<MarkdownEditorWidget> {
   final TextEditingController _controller = TextEditingController(
     text:
+        // check-ignore: sample code block contains print() text
         '# Markdown Editor\n\nThis editor uses a **custom RenderObject** for rendering.\n\n- Supports *italic* and **bold** text\n- `Inline code` and code blocks\n- Headers with # symbols\n\n```dart\nvoid main() {\n  print("Hello, Flutter!");\n}\n```',
   );
   final ScrollController _scrollController = ScrollController();

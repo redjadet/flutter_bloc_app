@@ -630,6 +630,9 @@ The delivery checklist runs automated best-practice checks to catch common viola
 - `tool/check_no_hive_openbox.sh` — Disallow direct `Hive.openBox` usage.
 - `tool/check_raw_timer.sh` — Enforce `TimerService` over raw `Timer`.
 - `tool/check_direct_getit.sh` — Avoid direct `GetIt` access in presentation widgets.
+- `tool/check_raw_dialogs.sh` — Enforce `showAdaptiveDialog` over raw dialog APIs.
+- `tool/check_raw_network_images.sh` — Enforce `CachedNetworkImageWidget` for remote images.
+- `tool/check_raw_print.sh` — Replace raw `print()` with `AppLogger`.
 - `tool/check_side_effects_build.sh` — Heuristic scan for side effects in `build()` (non-blocking).
 
 **Allowlist:** Add `// check-ignore: reason` on the same line or the line above to suppress a specific match. Ignored entries are reported with the reason to keep exceptions explicit.
