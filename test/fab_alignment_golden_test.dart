@@ -25,7 +25,7 @@ class _FabHost extends StatelessWidget {
 void main() {
   group('FAB Alignment Goldens', () {
     setUpAll(() async {
-      await loadAppFonts();
+      await loadAppFontsForTests();
     });
 
     setUp(() async {

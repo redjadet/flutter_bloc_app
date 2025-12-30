@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
@@ -11,7 +10,12 @@ import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class CounterSyncQueueInspectorButton extends StatefulWidget {
-  const CounterSyncQueueInspectorButton({super.key});
+  const CounterSyncQueueInspectorButton({
+    required this.pendingRepository,
+    super.key,
+  });
+
+  final PendingSyncRepository pendingRepository;
 
   @override
   State<CounterSyncQueueInspectorButton> createState() =>
@@ -20,8 +24,6 @@ class CounterSyncQueueInspectorButton extends StatefulWidget {
 
 class _CounterSyncQueueInspectorButtonState
     extends State<CounterSyncQueueInspectorButton> {
-  final PendingSyncRepository _pendingRepository =
-      getIt<PendingSyncRepository>();
   int _pendingCount = 0;
 
   @override
@@ -31,7 +33,7 @@ class _CounterSyncQueueInspectorButtonState
   }
 
   Future<void> _refreshPendingCount() async {
-    final int count = (await _pendingRepository.getPendingOperations(
+    final int count = (await widget.pendingRepository.getPendingOperations(
       now: DateTime.now().toUtc(),
     )).length;
     if (!mounted) return;
@@ -66,6 +68,7 @@ class _CounterSyncQueueInspectorButtonState
       bloc: syncCubit,
       listener: (final context, final state) {
         // Refresh pending count when sync status changes
+        // check-ignore: listener callback is event-driven, not a build side effect
         unawaited(_refreshPendingCount());
       },
       child: child,
@@ -76,8 +79,7 @@ class _CounterSyncQueueInspectorButtonState
     final BuildContext context,
     final AppLocalizations l10n,
   ) async {
-    final PendingSyncRepository repository = getIt<PendingSyncRepository>();
-    final List<SyncOperation> operations = await repository
+    final List<SyncOperation> operations = await widget.pendingRepository
         .getPendingOperations(
           now: DateTime.now().toUtc(),
         );

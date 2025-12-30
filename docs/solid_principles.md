@@ -46,3 +46,11 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 - Prefer constructor injection (or DI factories) for widgets/cubits; avoid calling `getIt` inside widgets except at composition boundaries.
 - When adding services that schedule work or touch hardware, create an interface + fake and register via `getIt` to preserve DIP and testability.
 - New features should expose small, focused contracts and inject collaborators rather than passing global state.
+
+## Review Checklist
+
+- Constructors accept abstractions (interfaces) rather than concrete types.
+- New data sources implement the domain repository interface instead of expanding existing classes.
+- DI registrations bind interfaces to implementations in `lib/core/di/`.
+- UI widgets avoid `getIt` lookups except at composition boundaries.
+- Avoid adding optional methods to existing interfaces; create new interfaces if needed.

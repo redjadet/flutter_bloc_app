@@ -36,6 +36,9 @@ GEMINI.md
 /build/
 /coverage/lcov.info
 
+# Golden test failure artifacts
+test/failures/
+
 # Symbolication related
 app.*.symbols
 

@@ -30,6 +30,8 @@ import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -121,6 +123,11 @@ Widget wrapWithProviders({
 /// Test helper for setting up SharedPreferences mock
 void setupSharedPreferencesMock({Map<String, Object>? initialValues}) {
   SharedPreferences.setMockInitialValues(initialValues ?? <String, Object>{});
+}
+
+Future<void> loadAppFontsForTests() async {
+  GoogleFonts.config.allowRuntimeFetching = false;
+  await loadAppFonts();
 }
 
 /// Overrides the shared Hugging Face HTTP client so tests can inject mocks.

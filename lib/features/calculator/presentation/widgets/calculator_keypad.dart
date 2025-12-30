@@ -48,6 +48,7 @@ class CalculatorKeypad extends StatelessWidget {
           if (cubit.state.error != null) {
             return;
           }
+          // check-ignore: navigation is triggered by user action
           unawaited(
             context.pushNamed(
               AppRoutes.calculatorPayment,

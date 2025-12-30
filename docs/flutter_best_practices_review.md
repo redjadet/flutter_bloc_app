@@ -144,7 +144,7 @@ These items address potential bugs, performance issues, or architectural violati
 
 **Owner:** Mobile Platform
 **Effort:** M (1-2 days)
-**Status:** ⬜
+**Status:** ✅
 **Files:** `lib/app/app_scope.dart`
 
 **Problem:** `AppScope.build()` triggers DI configuration and background sync startup on every build, risking duplicate work on hot reload/rebuilds.
@@ -158,16 +158,16 @@ These items address potential bugs, performance issues, or architectural violati
 
 **Acceptance Criteria:**
 
-- [ ] `AppScope` is a `StatefulWidget` with `initState()` lifecycle
-- [ ] `ensureConfigured()` and `syncCoordinator.start()` called only once per widget lifecycle
-- [ ] Widget test verifies coordinator start count is 1 after multiple rebuilds
+- [x] `AppScope` is a `StatefulWidget` with `initState()` lifecycle
+- [x] `ensureConfigured()` and `syncCoordinator.start()` called only once per widget lifecycle
+- [x] Widget test verifies coordinator start count is 1 after multiple rebuilds
 - [ ] Hot reload doesn't trigger duplicate initialization
-- [ ] All existing tests pass
+- [x] All existing tests pass
 
 **Test Requirements:**
 
-- Add `test/app/app_scope_test.dart` with rebuild verification
-- Mock `BackgroundSyncCoordinator` and verify `start()` called exactly once
+- Added `test/app/app_scope_test.dart` with rebuild verification
+- Mocked `BackgroundSyncCoordinator` and verified `start()` called exactly once
 - Test hot reload scenario (rebuild widget multiple times)
 
 **Verification:**
@@ -183,7 +183,7 @@ flutter run --hot-reload  # Verify no duplicate initialization logs
 
 **Owner:** Platform
 **Effort:** XS (<0.5 day)
-**Status:** ⬜
+**Status:** ✅
 **Files:** `lib/core/di/injector.dart`, `lib/core/di/injector_registrations.dart`, `lib/core/di/injector_factories.dart`
 
 **Problem:** Risk of domain types importing Flutter, breaking clean architecture boundaries.
@@ -196,10 +196,10 @@ flutter run --hot-reload  # Verify no duplicate initialization logs
 
 **Acceptance Criteria:**
 
-- [ ] PR template or checklist includes domain layer validation
-- [ ] Documentation updated with enforcement guidance
-- [ ] Review process includes domain import check
-- [ ] Example violations documented for reference
+- [x] PR template or checklist includes domain layer validation
+- [x] Documentation updated with enforcement guidance
+- [x] Review process includes domain import check
+- [x] Example violations documented for reference
 
 **Verification:**
 
@@ -214,7 +214,7 @@ grep -r "package:flutter" lib/features/*/domain/ || echo "No violations found"
 
 **Owner:** Platform
 **Effort:** XS (<0.5 day)
-**Status:** ⬜
+**Status:** ✅
 **Files:** `lib/shared/storage/hive_repository_base.dart`, `lib/shared/storage/hive_settings_repository.dart`
 
 **Problem:** Direct `Hive.openBox()` usage bypasses centralized Hive management.
@@ -227,10 +227,10 @@ grep -r "package:flutter" lib/features/*/domain/ || echo "No violations found"
 
 **Acceptance Criteria:**
 
-- [ ] Documentation updated with Hive repository requirements
-- [ ] Lint/search script identifies violations
-- [ ] Review process checks for base class usage
-- [ ] Existing violations documented (if any)
+- [x] Documentation updated with Hive repository requirements
+- [x] Lint/search script identifies violations
+- [x] Review process checks for base class usage
+- [x] Existing violations documented (if any)
 
 **Verification:**
 
@@ -245,7 +245,7 @@ grep -r "Hive\.openBox" lib/features/ lib/core/ | grep -v "lib/shared/storage" |
 
 **Owner:** Feature Dev
 **Effort:** S (0.5-1 day)
-**Status:** ⬜
+**Status:** ✅
 **Files:** All cubit files, `lib/shared/utils/cubit_subscription_mixin.dart`
 
 **Problem:** Async callbacks can emit after cubit is closed, causing errors.
@@ -259,19 +259,20 @@ grep -r "Hive\.openBox" lib/features/ lib/core/ | grep -v "lib/shared/storage" |
 
 **Acceptance Criteria:**
 
-- [ ] All async `emit()` calls guarded with `if (isClosed) return;`
-- [ ] Subscriptions use `CubitSubscriptionMixin` or manual cleanup in `close()`
-- [ ] `close()` cancels all timers, streams, and completers
-- [ ] Widget tests verify no emissions after disposal
+- [x] All async `emit()` calls guarded with `if (isClosed) return;`
+- [x] Subscriptions use `CubitSubscriptionMixin` or manual cleanup in `close()`
+- [x] `close()` cancels all timers, streams, and completers
+- [x] Bloc/unit tests verify no emissions after disposal
 
 **Test Requirements:**
 
-- Add test that disposes cubit during async operation
-- Verify no exceptions from post-disposal emissions
+- Added `websocket_cubit_test.dart` case to emit after close
+- Verified no exceptions from post-disposal emissions
 
 **Verification:**
 
 ```bash
+flutter test test/features/websocket/presentation/websocket_cubit_test.dart
 flutter test --concurrency=1  # Catch race conditions
 flutter analyze  # Check for unguarded emits
 ```
@@ -282,7 +283,7 @@ flutter analyze  # Check for unguarded emits
 
 **Owner:** Feature Dev
 **Effort:** XS (<0.5 day)
-**Status:** ⬜
+**Status:** ✅
 **Files:** All presentation widgets
 
 **Problem:** Business logic state mixed with UI state reduces testability and separation.
@@ -296,10 +297,10 @@ flutter analyze  # Check for unguarded emits
 
 **Acceptance Criteria:**
 
-- [ ] No business logic state in `setState` blocks
-- [ ] `setState` used only for UI-only toggles (loading, focus, visibility)
-- [ ] Documentation updated with state management guidelines
-- [ ] Examples added to `docs/` or project guidelines
+- [x] No business logic state in `setState` blocks
+- [x] `setState` used only for UI-only toggles (loading, focus, visibility)
+- [x] Documentation updated with state management guidelines
+- [x] Examples added to `docs/` or project guidelines
 
 **Verification:**
 
@@ -318,7 +319,7 @@ These items improve code quality, maintainability, and reduce technical debt.
 
 **Owner:** Feature Dev
 **Effort:** S (0.5-1 day)
-**Status:** ⬜
+**Status:** ✅
 **Files:**
 
 - `lib/features/settings/presentation/widgets/graphql_cache_controls_section.dart`
@@ -335,10 +336,10 @@ These items improve code quality, maintainability, and reduce technical debt.
 
 **Acceptance Criteria:**
 
-- [ ] All non-tooling widgets use constructor injection or cubits
-- [ ] Debug widgets documented as exception
-- [ ] No `GetIt` calls in production presentation code (except documented exceptions)
-- [ ] Tests updated to use injected dependencies
+- [x] All non-tooling widgets use constructor injection or cubits
+- [x] No `GetIt` calls in production presentation code
+- [x] Tests updated to use injected dependencies
+- [x] No debug/tooling exceptions required
 
 **Verification:**
 
@@ -352,7 +353,7 @@ grep -r "getIt<" lib/features/*/presentation/ | grep -v "test" | grep -v "debug"
 
 **Owner:** Feature Dev
 **Effort:** XS (<0.5 day)
-**Status:** ⬜
+**Status:** ✅
 **Files:** All cubits and widgets, `lib/core/time/timer_service.dart`
 
 **Problem:** Direct `Timer` usage makes tests non-deterministic.
@@ -366,10 +367,10 @@ grep -r "getIt<" lib/features/*/presentation/ | grep -v "test" | grep -v "debug"
 
 **Acceptance Criteria:**
 
-- [ ] No direct `Timer` usage in feature code
-- [ ] All timers use `TimerService` abstraction
-- [ ] Tests use `FakeTimerService` for deterministic behavior
-- [ ] Documentation updated with timer patterns
+- [x] No direct `Timer` usage in feature code
+- [x] All timers use `TimerService` abstraction
+- [x] Tests use `FakeTimerService` for deterministic behavior
+- [x] Documentation updated with timer patterns
 
 **Verification:**
 
@@ -385,7 +386,7 @@ Additional medium-priority items focus on consistency, UX, and developer experie
 
 **Owner:** Design Systems
 **Effort:** S (0.5-1 day)
-**Status:** ⬜
+**Status:** ✅
 **Files:**
 
 - `lib/features/auth/presentation/widgets/logged_out_action_buttons.dart`
@@ -404,10 +405,10 @@ Additional medium-priority items focus on consistency, UX, and developer experie
 
 **Acceptance Criteria:**
 
-- [ ] All buttons use `PlatformAdaptive.filledButton`, `PlatformAdaptive.button`, or `PlatformAdaptive.textButton`
-- [ ] Button styles extracted to shared helper
-- [ ] iOS/Android behavior consistent across app
-- [ ] Widget tests verify platform-adaptive behavior
+- [x] All buttons use `PlatformAdaptive.filledButton`, `PlatformAdaptive.button`, or `PlatformAdaptive.textButton`
+- [x] Button styles extracted to shared helper
+- [x] iOS/Android behavior consistent across app
+- [x] Widget tests verify platform-adaptive behavior
 - [ ] Visual regression tests pass
 
 **Test Requirements:**
@@ -429,7 +430,7 @@ flutter test
 
 **Owner:** QA + Design
 **Effort:** S (0.5-1 day)
-**Status:** ⬜
+**Status:** ✅
 **Files:**
 
 - `lib/features/auth/presentation/widgets/logged_out_page_body.dart`
@@ -449,8 +450,8 @@ flutter test
 
 - [ ] Layout works with text scale 1.0-2.0
 - [ ] No clipped content in landscape
-- [ ] Safe area padding respects device cutouts
-- [ ] Keyboard doesn't obscure content
+- [x] Safe area padding respects device cutouts
+- [x] Keyboard doesn't obscure content
 - [ ] Accessibility audit passes
 
 **Test Requirements:**
@@ -475,7 +476,7 @@ flutter test
 
 **Owner:** Feature Dev
 **Effort:** XS (<0.5 day)
-**Status:** ⬜
+**Status:** ✅
 **Files:** All cubits, `lib/shared/utils/cubit_async_operations.dart`
 
 **Problem:** Ad-hoc try/catch blocks duplicate error handling logic.
@@ -489,10 +490,10 @@ flutter test
 
 **Acceptance Criteria:**
 
-- [ ] All async cubit operations use `CubitExceptionHandler`
-- [ ] Error states use consistent `ViewStatus` transitions
-- [ ] `isClosed` checks in all error callbacks
-- [ ] Documentation updated with error handling pattern
+- [x] All async cubit operations use `CubitExceptionHandler`
+- [x] Error states use consistent `ViewStatus` transitions
+- [x] `isClosed` checks in all error callbacks
+- [x] Documentation updated with error handling pattern
 
 **Verification:**
 
@@ -507,7 +508,7 @@ grep -r "try {" lib/features/*/presentation/cubit/ | grep -v "CubitExceptionHand
 
 **Owner:** Platform
 **Effort:** S (0.5-1 day)
-**Status:** ⬜
+**Status:** ✅
 **Files:** `lib/core/di/`, all feature constructors
 
 **Problem:** Concrete dependencies reduce testability and violate DIP.
@@ -521,10 +522,10 @@ grep -r "try {" lib/features/*/presentation/cubit/ | grep -v "CubitExceptionHand
 
 **Acceptance Criteria:**
 
-- [ ] All constructors accept interfaces/abstractions
-- [ ] DI registrations use interface types
+- [x] All constructors accept interfaces/abstractions
+- [x] DI registrations use interface types
 - [ ] Multi-responsibility classes split
-- [ ] Review checklist includes SOLID checks
+- [x] Review checklist includes SOLID checks
 
 **Verification:**
 
@@ -539,7 +540,7 @@ grep -r "try {" lib/features/*/presentation/cubit/ | grep -v "CubitExceptionHand
 
 **Owner:** Feature Dev
 **Effort:** XS (<0.5 day)
-**Status:** ⬜
+**Status:** ✅
 **Files:** All repository implementations
 
 **Problem:** Extending existing classes instead of implementing interfaces reduces flexibility.
@@ -553,10 +554,10 @@ grep -r "try {" lib/features/*/presentation/cubit/ | grep -v "CubitExceptionHand
 
 **Acceptance Criteria:**
 
-- [ ] New repos implement domain interfaces
-- [ ] No optional methods added to existing interfaces
-- [ ] Each data source has separate implementation
-- [ ] DI registrations use interface types
+- [x] New repos implement domain interfaces
+- [x] No optional methods added to existing interfaces
+- [x] Each data source has separate implementation
+- [x] DI registrations use interface types
 
 **Verification:**
 
@@ -573,7 +574,7 @@ These items are nice-to-have improvements that can be addressed when time permit
 
 **Owner:** Design Systems
 **Effort:** S (0.5-1 day)
-**Status:** ⬜
+**Status:** ✅
 **Files:** `lib/core/app_config.dart`, `lib/features/auth/presentation/widgets/logged_out_action_buttons.dart`
 
 **Problem:** Per-widget `GoogleFonts` usage reduces consistency and text scaling support.
@@ -587,10 +588,10 @@ These items are nice-to-have improvements that can be addressed when time permit
 
 **Acceptance Criteria:**
 
-- [ ] No per-widget `GoogleFonts` declarations
-- [ ] Typography defined in `AppConfig` theme
-- [ ] Text scale factors work correctly
-- [ ] Consistent typography across app
+- [x] No per-widget `GoogleFonts` declarations
+- [x] Typography defined in `AppConfig` theme
+- [x] Text scale factors work correctly
+- [x] Consistent typography across app
 
 **Verification:**
 
@@ -619,3 +620,16 @@ grep -r "GoogleFonts\." lib/features/*/presentation/ | grep -v "test"
 ### Tracking Progress
 
 Update status emoji (⬜ 🟡 ✅ ⏸️) in this document as items progress. Consider using a project management tool for detailed tracking.
+
+## Validation Scripts
+
+The delivery checklist runs automated best-practice checks to catch common violations early:
+
+- `tool/check_flutter_domain_imports.sh` — Domain layer must be Flutter-agnostic.
+- `tool/check_material_buttons.sh` — Presentation must use `PlatformAdaptive` buttons.
+- `tool/check_no_hive_openbox.sh` — Disallow direct `Hive.openBox` usage.
+- `tool/check_raw_timer.sh` — Enforce `TimerService` over raw `Timer`.
+- `tool/check_direct_getit.sh` — Avoid direct `GetIt` access in presentation widgets.
+- `tool/check_side_effects_build.sh` — Heuristic scan for side effects in `build()` (non-blocking).
+
+**Allowlist:** Add `// check-ignore: reason` on the same line or the line above to suppress a specific match. Ignored entries are reported with the reason to keep exceptions explicit.

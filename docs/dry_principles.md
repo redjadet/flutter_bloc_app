@@ -624,6 +624,18 @@ For stateless utility functions that provide shared behavior:
 - Duplicating input decoration styling across form fields
 - Manual status branching when `ViewStatusSwitcher` can be used
 
+## Storage DRY Rule (Hive)
+
+- New Hive-backed repositories must extend `HiveRepositoryBase` or
+  `HiveSettingsRepository<T>` and use `HiveService.openBox`.
+- Direct `Hive.openBox` calls should live only in shared storage utilities.
+
+Quick check:
+
+```bash
+rg "Hive\\.openBox" lib/features lib/core lib/shared | rg -v "lib/shared/storage"
+```
+
 ## Validation After DRY Refactoring
 
 All DRY consolidations must be validated through:

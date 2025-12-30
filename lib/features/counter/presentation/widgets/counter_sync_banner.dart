@@ -77,6 +77,7 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
     final Widget banner = BlocConsumer<SyncStatusCubit, SyncStatusState>(
       listener: (final context, final state) {
         // Refresh pending count when sync status changes (operations may have been processed)
+        // check-ignore: listener callback is event-driven, not a build side effect
         unawaited(_refreshPendingCount());
       },
       builder: (final context, final state) {
@@ -157,8 +158,10 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
       bloc: counterCubit,
       listenWhen: (final previous, final current) =>
           previous.count != current.count,
-      listener: (final context, final state) =>
-          unawaited(_refreshPendingCount()),
+      listener: (final context, final state) {
+        // check-ignore: listener callback is event-driven, not a build side effect
+        unawaited(_refreshPendingCount());
+      },
       child: banner,
     );
   }

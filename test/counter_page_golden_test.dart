@@ -28,7 +28,7 @@ final DateTime _goldenTimestamp = DateTime.utc(2024, 1, 1, 12);
 void main() {
   group('CounterPage Golden', () {
     setUpAll(() async {
-      await loadAppFonts();
+      await test_helpers.loadAppFontsForTests();
       await test_helpers.setupHiveForTesting();
     });
 

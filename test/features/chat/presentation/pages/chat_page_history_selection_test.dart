@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
@@ -77,7 +76,6 @@ void main() {
     late _MockErrorNotificationService errorNotificationService;
 
     setUp(() {
-      getIt.reset();
       pendingSyncRepository = _MockPendingSyncRepository();
       networkStatusService = _MockNetworkStatusService();
       coordinator = _MockBackgroundSyncCoordinator();
@@ -108,16 +106,9 @@ void main() {
       when(
         () => errorNotificationService.showSnackBar(any(), any()),
       ).thenAnswer((_) async {});
-
-      getIt.registerSingleton<PendingSyncRepository>(pendingSyncRepository);
-      getIt.registerSingleton<ErrorNotificationService>(
-        errorNotificationService,
-      );
     });
 
-    tearDown(() {
-      getIt.reset();
-    });
+    tearDown(() {});
 
     Widget buildSubject(ChatCubit cubit) => MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -132,7 +123,10 @@ void main() {
             ),
           ),
         ],
-        child: const ChatPage(),
+        child: ChatPage(
+          errorNotificationService: errorNotificationService,
+          pendingSyncRepository: pendingSyncRepository,
+        ),
       ),
     );
 

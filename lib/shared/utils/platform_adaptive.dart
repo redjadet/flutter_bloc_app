@@ -127,6 +127,72 @@ class PlatformAdaptive {
     );
   }
 
+  /// Returns a platform-adaptive outlined button widget.
+  static Widget outlinedButton({
+    required final BuildContext context,
+    required final VoidCallback? onPressed,
+    required final Widget child,
+    final EdgeInsetsGeometry? padding,
+    final Color? backgroundColor,
+    final Color? foregroundColor,
+    final Color? disabledColor,
+    final BorderSide? side,
+    final BorderRadius? borderRadius,
+    final ButtonStyle? materialStyle,
+  }) {
+    if (isCupertino(context)) {
+      final bool isDisabled = onPressed == null;
+      final BorderSide resolvedSide =
+          side ??
+          BorderSide(
+            color:
+                foregroundColor ??
+                (isDisabled
+                    ? CupertinoColors.quaternaryLabel
+                    : CupertinoColors.activeBlue),
+          );
+      final Color resolvedTextColor = isDisabled
+          ? (disabledColor ?? CupertinoColors.quaternaryLabel)
+          : (foregroundColor ?? CupertinoColors.activeBlue);
+      final BorderRadius resolvedRadius =
+          borderRadius ?? BorderRadius.circular(8);
+      return DecoratedBox(
+        decoration: BoxDecoration(
+          color: backgroundColor ?? Colors.transparent,
+          borderRadius: resolvedRadius,
+          border: Border.fromBorderSide(resolvedSide),
+        ),
+        child: CupertinoButton(
+          onPressed: onPressed,
+          padding: padding,
+          color: Colors.transparent,
+          disabledColor: Colors.transparent,
+          borderRadius: resolvedRadius,
+          child: DefaultTextStyle(
+            style: TextStyle(color: resolvedTextColor),
+            child: child,
+          ),
+        ),
+      );
+    }
+    return OutlinedButton(
+      onPressed: onPressed,
+      style:
+          materialStyle ??
+          OutlinedButton.styleFrom(
+            padding: padding,
+            backgroundColor: backgroundColor,
+            foregroundColor: foregroundColor,
+            disabledForegroundColor: disabledColor,
+            side: side,
+            shape: RoundedRectangleBorder(
+              borderRadius: borderRadius ?? BorderRadius.circular(8),
+            ),
+          ),
+      child: child,
+    );
+  }
+
   /// Returns a platform-adaptive dialog action button
   static Widget dialogAction({
     required final BuildContext context,

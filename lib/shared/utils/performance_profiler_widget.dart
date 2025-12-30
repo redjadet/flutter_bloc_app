@@ -20,23 +20,25 @@ class TrackedWidget extends StatefulWidget {
 }
 
 class _TrackedWidgetState extends State<TrackedWidget> {
-  @override
-  void initState() {
-    super.initState();
-    if (PerformanceProfiler.enabled) {
-      PerformanceProfiler.recordRebuild(widget.name, Duration.zero);
+  void _recordRebuild() {
+    if (!PerformanceProfiler.enabled) {
+      return;
     }
+    PerformanceProfiler.recordRebuild(widget.name, Duration.zero);
   }
 
   @override
-  Widget build(final BuildContext context) {
-    if (PerformanceProfiler.enabled) {
-      final stopwatch = Stopwatch()..start();
-      final result = widget.child;
-      stopwatch.stop();
-      PerformanceProfiler.recordRebuild(widget.name, stopwatch.elapsed);
-      return result;
-    }
-    return widget.child;
+  void initState() {
+    super.initState();
+    _recordRebuild();
   }
+
+  @override
+  void didUpdateWidget(final TrackedWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _recordRebuild();
+  }
+
+  @override
+  Widget build(final BuildContext context) => widget.child;
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_button_styles.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 
 class ProfileActionButtons extends StatelessWidget {
@@ -53,15 +54,20 @@ class _ProfileButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       height: buttonHeight,
-      child: OutlinedButton(
+      child: PlatformAdaptive.outlinedButton(
+        context: context,
         onPressed: onPressed,
-        style: profileOutlinedButtonStyle(
+        backgroundColor: isPrimary ? Colors.black : Colors.white,
+        foregroundColor: isPrimary ? Colors.white : Colors.black,
+        borderRadius: BorderRadius.circular(context.responsiveCardRadius),
+        materialStyle: profileOutlinedButtonStyle(
           context,
           backgroundColor: isPrimary ? Colors.black : Colors.white,
         ),
         child: Text(
           label,
           style: profileButtonTextStyle(
+            context,
             fontSize: 13, // Match Figma: fontSize 13
             color: isPrimary ? Colors.white : Colors.black,
           ),

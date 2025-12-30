@@ -12,37 +12,48 @@ class LoggedOutPageBody extends StatelessWidget {
   static const double _baseHeight = 812;
 
   @override
-  Widget build(final BuildContext context) => LayoutBuilder(
-    builder: (final context, final constraints) {
-      final scale = _resolveScale(constraints);
-      final horizontalOffset = _horizontalOffset(constraints.maxWidth, scale);
+  Widget build(final BuildContext context) {
+    final EdgeInsets viewInsets = MediaQuery.viewInsetsOf(context);
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.only(bottom: viewInsets.bottom),
+        child: LayoutBuilder(
+          builder: (final context, final constraints) {
+            final scale = _resolveScale(constraints);
+            final horizontalOffset = _horizontalOffset(
+              constraints.maxWidth,
+              scale,
+            );
 
-      return Stack(
-        children: [
-          LoggedOutBackgroundLayer(
-            scale: scale,
-            constraints: constraints,
-          ),
-          LoggedOutPhotoHeader(
-            scale: scale,
-            horizontalOffset: horizontalOffset,
-          ),
-          LoggedOutUserInfo(
-            scale: scale,
-            horizontalOffset: horizontalOffset,
-          ),
-          LoggedOutActionButtons(
-            scale: scale,
-            horizontalOffset: horizontalOffset,
-          ),
-          LoggedOutBottomIndicator(
-            scale: scale,
-            horizontalOffset: horizontalOffset,
-          ),
-        ],
-      );
-    },
-  );
+            return Stack(
+              children: [
+                LoggedOutBackgroundLayer(
+                  scale: scale,
+                  constraints: constraints,
+                ),
+                LoggedOutPhotoHeader(
+                  scale: scale,
+                  horizontalOffset: horizontalOffset,
+                ),
+                LoggedOutUserInfo(
+                  scale: scale,
+                  horizontalOffset: horizontalOffset,
+                ),
+                LoggedOutActionButtons(
+                  scale: scale,
+                  horizontalOffset: horizontalOffset,
+                ),
+                LoggedOutBottomIndicator(
+                  scale: scale,
+                  horizontalOffset: horizontalOffset,
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
 
   double _resolveScale(final BoxConstraints constraints) {
     final widthScale = constraints.maxWidth / _baseWidth;

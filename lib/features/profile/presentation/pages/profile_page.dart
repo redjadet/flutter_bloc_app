@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_g
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_header.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_sync_banner.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
@@ -97,15 +98,22 @@ class ProfilePage extends StatelessWidget {
                           child: SizedBox(
                             width: double.infinity,
                             height: context.responsiveButtonHeight,
-                            child: OutlinedButton(
+                            child: PlatformAdaptive.outlinedButton(
+                              context: context,
                               onPressed: () {},
-                              style: profileOutlinedButtonStyle(
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.black,
+                              borderRadius: BorderRadius.circular(
+                                context.responsiveCardRadius,
+                              ),
+                              materialStyle: profileOutlinedButtonStyle(
                                 context,
                                 backgroundColor: Colors.white,
                               ),
                               child: Text(
                                 'SEE MORE',
                                 style: profileButtonTextStyle(
+                                  context,
                                   color: Colors.black,
                                   fontSize: 13,
                                 ),

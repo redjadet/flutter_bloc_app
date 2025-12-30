@@ -7,16 +7,15 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
-import 'package:get_it/get_it.dart';
 
 class GraphqlCacheControlsSection extends StatefulWidget {
   const GraphqlCacheControlsSection({
+    required this.cacheRepository,
     super.key,
-    this.cacheRepository,
   });
 
   @visibleForTesting
-  final GraphqlDemoCacheRepository? cacheRepository;
+  final GraphqlDemoCacheRepository cacheRepository;
 
   @override
   State<GraphqlCacheControlsSection> createState() =>
@@ -27,15 +26,9 @@ class _GraphqlCacheControlsSectionState
     extends State<GraphqlCacheControlsSection> {
   bool _isClearing = false;
 
-  GraphqlDemoCacheRepository? get _repository =>
-      widget.cacheRepository ??
-      (GetIt.instance.isRegistered<GraphqlDemoCacheRepository>()
-          ? GetIt.instance<GraphqlDemoCacheRepository>()
-          : null);
-
   Future<void> _handleClear() async {
-    final GraphqlDemoCacheRepository? repo = _repository;
-    if (_isClearing || repo == null) return;
+    final GraphqlDemoCacheRepository repo = widget.cacheRepository;
+    if (_isClearing) return;
     setState(() => _isClearing = true);
     final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
     final l10n = context.l10n;

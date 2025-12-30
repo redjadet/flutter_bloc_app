@@ -86,6 +86,7 @@ class MessageBubble extends StatelessWidget {
         ),
         child: RichText(
           text: textSpan,
+          textScaler: MediaQuery.textScalerOf(context),
         ),
       ),
     );

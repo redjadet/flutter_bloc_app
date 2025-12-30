@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
@@ -32,70 +31,59 @@ class RegisterTermsSection extends StatelessWidget {
   final TextStyle? errorStyle;
 
   @override
-  Widget build(final BuildContext context) {
-    final bool isCupertino = PlatformAdaptive.isCupertino(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Checkbox.adaptive(
-          key: const ValueKey('register-terms-checkbox'),
-          value: accepted,
-          onChanged: (final bool? checked) async {
-            if (checked ?? false) {
-              await onAcceptRequested();
-            } else {
-              onRevokeAcceptance();
-            }
-          },
-        ),
-        SizedBox(width: context.responsiveHorizontalGapS),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Text(prefixText, style: bodyStyle),
-                  if (isCupertino)
-                    CupertinoButton(
-                      key: const ValueKey('register-terms-link'),
+  Widget build(final BuildContext context) => Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Checkbox.adaptive(
+        key: const ValueKey('register-terms-checkbox'),
+        value: accepted,
+        onChanged: (final bool? checked) async {
+          if (checked ?? false) {
+            await onAcceptRequested();
+          } else {
+            onRevokeAcceptance();
+          }
+        },
+      ),
+      SizedBox(width: context.responsiveHorizontalGapS),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text(prefixText, style: bodyStyle),
+                KeyedSubtree(
+                  key: const ValueKey('register-terms-link'),
+                  child: PlatformAdaptive.textButton(
+                    context: context,
+                    onPressed: onAcceptRequested,
+                    materialStyle: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
-                      onPressed: onAcceptRequested,
-                      child: Text(
-                        linkLabel,
-                        style: linkStyle,
-                      ),
-                    )
-                  else
-                    TextButton(
-                      key: const ValueKey('register-terms-link'),
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      onPressed: onAcceptRequested,
-                      child: Text(
-                        linkLabel,
-                        style: linkStyle,
-                      ),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                  Text(suffixText, style: bodyStyle),
-                ],
-              ),
-              if (showError)
-                Padding(
-                  padding: EdgeInsets.only(top: context.responsiveGapXS),
-                  child: Text(
-                    errorText,
-                    style: errorStyle,
+                    child: Text(
+                      linkLabel,
+                      style: linkStyle,
+                    ),
                   ),
                 ),
-            ],
-          ),
+                Text(suffixText, style: bodyStyle),
+              ],
+            ),
+            if (showError)
+              Padding(
+                padding: EdgeInsets.only(top: context.responsiveGapXS),
+                child: Text(
+                  errorText,
+                  style: errorStyle,
+                ),
+              ),
+          ],
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
 }

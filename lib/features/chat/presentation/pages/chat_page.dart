@@ -3,10 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+  const ChatPage({
+    required this.errorNotificationService,
+    required this.pendingSyncRepository,
+    super.key,
+  });
+
+  final ErrorNotificationService errorNotificationService;
+  final PendingSyncRepository pendingSyncRepository;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -126,7 +134,9 @@ class _ChatPageState extends State<ChatPage> {
       ],
       body: Column(
         children: <Widget>[
-          const ChatSyncBanner(),
+          ChatSyncBanner(
+            pendingRepository: widget.pendingSyncRepository,
+          ),
           Padding(
             padding: EdgeInsets.fromLTRB(
               context.responsiveHorizontalGapL,
@@ -136,7 +146,12 @@ class _ChatPageState extends State<ChatPage> {
             ),
             child: const ChatModelSelector(),
           ),
-          Expanded(child: ChatMessageList(controller: _scrollController)),
+          Expanded(
+            child: ChatMessageList(
+              controller: _scrollController,
+              errorNotificationService: widget.errorNotificationService,
+            ),
+          ),
           SafeArea(
             top: false,
             child: Padding(

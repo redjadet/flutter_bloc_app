@@ -181,6 +181,20 @@ class MyCubit extends Cubit<MyState> with CubitStateEmissionMixin {
   }
 }
 
+// Standardized async error handling
+await CubitExceptionHandler.executeAsync(
+  operation: _repository.load,
+  onSuccess: (data) {
+    if (isClosed) return;
+    emit(state.copyWith(data: data));
+  },
+  onError: (message) {
+    if (isClosed) return;
+    emit(state.copyWith(errorMessage: message));
+  },
+  logContext: 'MyCubit.load',
+);
+
 // Error handling
 try {
   await riskyOperation();

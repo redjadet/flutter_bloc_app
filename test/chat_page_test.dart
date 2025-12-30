@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
@@ -14,6 +13,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
@@ -23,23 +23,10 @@ import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'test_helpers.dart' as test_helpers;
-
 void main() {
-  setUpAll(() async {
-    await test_helpers.setupHiveForTesting();
-  });
-
-  setUp(() async {
-    await configureDependencies();
-  });
-
-  tearDown(() async {
-    await getIt.reset();
-  });
-
   testWidgets('ChatPage sends message via ChatCubit', (
     WidgetTester tester,
   ) async {
@@ -137,7 +124,10 @@ void main() {
             BlocProvider<ChatCubit>.value(value: cubit),
             BlocProvider<SyncStatusCubit>.value(value: _buildSyncStatusCubit()),
           ],
-          child: const ChatPage(),
+          child: ChatPage(
+            errorNotificationService: _FakeErrorNotificationService(),
+            pendingSyncRepository: _FakePendingSyncRepository(),
+          ),
         ),
       ),
     );
@@ -247,11 +237,6 @@ void main() {
     );
     when(() => pendingRepository.markCompleted(any())).thenAnswer((_) async {});
 
-    if (getIt.isRegistered<PendingSyncRepository>()) {
-      getIt.unregister<PendingSyncRepository>();
-    }
-    getIt.registerSingleton<PendingSyncRepository>(pendingRepository);
-
     final _TestNetworkStatusService networkService =
         _TestNetworkStatusService();
     final _ManualFlushCoordinator coordinator = _ManualFlushCoordinator(
@@ -267,7 +252,14 @@ void main() {
     addTearDown(syncCubit.close);
     networkService.emit(NetworkStatus.online);
 
-    await tester.pumpWidget(_wrapWithCubit(cubit, syncCubit));
+    await tester.pumpWidget(
+      _wrapWithCubit(
+        cubit,
+        syncCubit,
+        _FakeErrorNotificationService(),
+        pendingRepository,
+      ),
+    );
     await tester.pump();
 
     pendingCount = 1;
@@ -337,7 +329,12 @@ class FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 }
 
-Widget _wrapWithCubit(ChatCubit cubit, [SyncStatusCubit? syncCubit]) {
+Widget _wrapWithCubit(
+  ChatCubit cubit, [
+  SyncStatusCubit? syncCubit,
+  ErrorNotificationService? errorNotificationService,
+  PendingSyncRepository? pendingSyncRepository,
+]) {
   final SyncStatusCubit sync = syncCubit ?? _buildSyncStatusCubit();
   addTearDown(sync.close);
   return MaterialApp(
@@ -349,7 +346,12 @@ Widget _wrapWithCubit(ChatCubit cubit, [SyncStatusCubit? syncCubit]) {
         BlocProvider<ChatCubit>.value(value: cubit),
         BlocProvider<SyncStatusCubit>.value(value: sync),
       ],
-      child: const ChatPage(),
+      child: ChatPage(
+        errorNotificationService:
+            errorNotificationService ?? _FakeErrorNotificationService(),
+        pendingSyncRepository:
+            pendingSyncRepository ?? _FakePendingSyncRepository(),
+      ),
     ),
   );
 }
@@ -412,6 +414,59 @@ class _StubHistoryRepository implements ChatHistoryRepository {
 
   @override
   Future<void> save(List<ChatConversation> conversations) async {}
+}
+
+class _FakeErrorNotificationService implements ErrorNotificationService {
+  @override
+  Future<void> showSnackBar(BuildContext context, String message) async {}
+
+  @override
+  Future<void> showAlertDialog(
+    BuildContext context,
+    String title,
+    String message,
+  ) async {}
+}
+
+class _FakePendingSyncRepository implements PendingSyncRepository {
+  @override
+  String get boxName => 'fake-pending-sync';
+
+  @override
+  Future<SyncOperation> enqueue(final SyncOperation operation) async =>
+      operation;
+
+  @override
+  Future<int> prune({
+    int maxRetryCount = 10,
+    Duration maxAge = const Duration(days: 30),
+  }) async => 0;
+
+  @override
+  Future<List<SyncOperation>> getPendingOperations({
+    DateTime? now,
+    int? limit,
+  }) async => const <SyncOperation>[];
+
+  @override
+  Future<void> markCompleted(final String operationId) async {}
+
+  @override
+  Future<void> markFailed({
+    required final String operationId,
+    required final DateTime nextRetryAt,
+    final int? retryCount,
+  }) async {}
+
+  @override
+  Future<void> clear() async {}
+
+  @override
+  Future<Box<dynamic>> getBox() =>
+      Future<Box<dynamic>>.error(UnimplementedError('Not used in fake'));
+
+  @override
+  Future<void> safeDeleteKey(final Box<dynamic> box, final String key) async {}
 }
 
 class _PendingStateChatCubit extends ChatCubit {

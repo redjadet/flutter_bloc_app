@@ -329,3 +329,37 @@ MultiBlocProvider(providers: [
 - `docs/` (e.g., `docs/universal_links/`, `docs/figma/...`): Platform-specific guides.
 
 Stay disciplined with the guardrails, keep tests deterministic, and reach for shared services before adding new singletons. Welcome to the team!
+
+## 11. Best‑Practice Validation Scripts
+
+The delivery checklist runs automated checks to prevent common architecture and
+Flutter hygiene regressions. Each script targets a high‑impact class of issues
+that is easy to miss during review but costly to fix later.
+
+Scripts and intent:
+
+- `tool/check_flutter_domain_imports.sh` — Keeps Domain Dart‑only (no Flutter UI
+  imports) to preserve clean architecture boundaries.
+- `tool/check_material_buttons.sh` — Enforces platform‑adaptive buttons in
+  presentation instead of raw Material buttons.
+- `tool/check_no_hive_openbox.sh` — Blocks direct `Hive.openBox` usage so
+  encryption/migration stay centralized via `HiveService`.
+- `tool/check_raw_timer.sh` — Requires `TimerService` for testable, deterministic
+  timing.
+- `tool/check_direct_getit.sh` — Prevents direct `GetIt` access in presentation
+  widgets; dependencies should be injected.
+- `tool/check_side_effects_build.sh` — Heuristic scan for side effects in
+  `build()` (does not fail the checklist on its own).
+
+Allowlisting exceptions:
+
+If a specific line must violate a check (e.g., user‑initiated async callback),
+add an inline comment on the same line or the line above:
+
+```dart
+// check-ignore: user action triggers async work
+unawaited(cubit.flush());
+```
+
+Ignored entries are reported with the reason so exceptions remain explicit and
+reviewable.

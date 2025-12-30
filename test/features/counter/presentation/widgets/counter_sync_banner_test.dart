@@ -313,7 +313,11 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: ResponsiveScope(
-            child: Scaffold(body: const CounterSyncQueueInspectorButton()),
+            child: Scaffold(
+              body: CounterSyncQueueInspectorButton(
+                pendingRepository: pendingRepository,
+              ),
+            ),
           ),
         ),
       );

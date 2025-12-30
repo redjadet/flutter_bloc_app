@@ -45,14 +45,16 @@ void registerHttpServices() {
 
   registerLazySingletonIfAbsent<PaymentCalculator>(PaymentCalculator.new);
 
+  registerLazySingletonIfAbsent<GraphqlDemoCacheRepository>(
+    () => GraphqlDemoCacheRepository(hiveService: getIt<HiveService>()),
+  );
+
   registerLazySingletonIfAbsent<GraphqlDemoRepository>(
     () => OfflineFirstGraphqlDemoRepository(
       remoteRepository: CountriesGraphqlRepository(
         client: getIt<ResilientHttpClient>(),
       ),
-      cacheRepository: GraphqlDemoCacheRepository(
-        hiveService: getIt<HiveService>(),
-      ),
+      cacheRepository: getIt<GraphqlDemoCacheRepository>(),
     ),
   );
 }

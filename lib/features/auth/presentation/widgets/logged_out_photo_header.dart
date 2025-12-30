@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class LoggedOutPhotoHeader extends StatelessWidget {
   const LoggedOutPhotoHeader({
@@ -50,7 +49,7 @@ class LoggedOutPhotoHeader extends StatelessWidget {
             SizedBox(width: 8 * scale),
             Text(
               'photo',
-              style: GoogleFonts.comfortaa(
+              style: Theme.of(context).textTheme.displayLarge?.copyWith(
                 fontSize: 48 * scale,
                 fontWeight: FontWeight.w400,
                 color: Colors.black,
