@@ -3,15 +3,47 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 
-class ChatListPage extends StatelessWidget {
-  const ChatListPage({super.key, this.repository});
+class ChatListPage extends StatefulWidget {
+  const ChatListPage({
+    required this.repository,
+    required this.chatRepository,
+    required this.historyRepository,
+    required this.errorNotificationService,
+    required this.pendingSyncRepository,
+    super.key,
+  });
 
-  final ChatListRepository? repository;
+  final ChatListRepository repository;
+  final ChatRepository chatRepository;
+  final ChatHistoryRepository historyRepository;
+  final ErrorNotificationService errorNotificationService;
+  final PendingSyncRepository pendingSyncRepository;
+
+  @override
+  State<ChatListPage> createState() => _ChatListPageState();
+}
+
+class _ChatListPageState extends State<ChatListPage> {
+  late final ChatListCubit _cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit = ChatListCubit(repository: widget.repository);
+    unawaited(_cubit.loadChatContacts());
+  }
+
+  @override
+  void dispose() {
+    unawaited(_cubit.close());
+    super.dispose();
+  }
 
   @override
   Widget build(final BuildContext context) {
@@ -36,15 +68,14 @@ class ChatListPage extends StatelessWidget {
               : Brightness.dark,
         ),
       ),
-      body: BlocProvider(
-        create: (final context) {
-          final cubit = ChatListCubit(
-            repository: repository ?? getIt<ChatListRepository>(),
-          );
-          unawaited(cubit.loadChatContacts());
-          return cubit;
-        },
-        child: const ChatListView(),
+      body: BlocProvider.value(
+        value: _cubit,
+        child: ChatListView(
+          chatRepository: widget.chatRepository,
+          historyRepository: widget.historyRepository,
+          errorNotificationService: widget.errorNotificationService,
+          pendingSyncRepository: widget.pendingSyncRepository,
+        ),
       ),
     );
   }

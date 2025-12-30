@@ -48,7 +48,8 @@ void main() {
 
       expect(find.text('LOG IN'), findsOneWidget);
       expect(find.text('REGISTER'), findsOneWidget);
-      expect(find.byType(ElevatedButton), findsNWidgets(2));
+      expect(find.byType(ElevatedButton), findsOneWidget);
+      expect(find.byType(OutlinedButton), findsOneWidget);
     });
 
     testWidgets('LOG IN button is tappable', (tester) async {
@@ -57,10 +58,10 @@ void main() {
 
       // Verify button exists and is tappable
       expect(find.text('LOG IN'), findsOneWidget);
-      final loginButton = tester.widget<ElevatedButton>(
+      final loginButton = tester.widget<OutlinedButton>(
         find.ancestor(
           of: find.text('LOG IN'),
-          matching: find.byType(ElevatedButton),
+          matching: find.byType(OutlinedButton),
         ),
       );
       expect(loginButton.onPressed, isNotNull);
@@ -111,8 +112,8 @@ void main() {
       await tester.pumpWidget(buildSubject());
       await tester.pumpAndSettle();
 
-      final buttons = find.byType(ElevatedButton);
-      expect(buttons, findsNWidgets(2));
+      expect(find.byType(ElevatedButton), findsOneWidget);
+      expect(find.byType(OutlinedButton), findsOneWidget);
 
       // Verify buttons are rendered with correct text
       expect(find.text('LOG IN'), findsOneWidget);

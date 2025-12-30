@@ -115,6 +115,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
           listenWhen: (final prev, final curr) => prev.count != curr.count,
           listener: (final context, final state) async {
             // Kick off a sync flush immediately when counter changes, but only if SyncStatusCubit is available.
+            // check-ignore: listener callback is event-driven, not a build side effect
             unawaited(_flushSyncIfPossible(context));
           },
         ),

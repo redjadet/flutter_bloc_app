@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({required this.user, super.key});
@@ -82,7 +81,7 @@ class ProfileHeader extends StatelessWidget {
           // Responsive name text style
           Text(
             user.name,
-            style: GoogleFonts.comfortaa(
+            style: Theme.of(context).textTheme.displaySmall?.copyWith(
               fontSize: nameFontSize,
               fontWeight: FontWeight.w400,
               letterSpacing: -0.54 * (nameFontSize / 36),
@@ -95,7 +94,7 @@ class ProfileHeader extends StatelessWidget {
           // Responsive location text style
           Text(
             user.location.toUpperCase(),
-            style: GoogleFonts.roboto(
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
               fontSize: locationFontSize,
               fontWeight: FontWeight.w900,
               letterSpacing: 0.52 * (locationFontSize / 13),

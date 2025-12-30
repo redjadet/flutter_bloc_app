@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart'
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_state.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_target_extensions.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
@@ -39,22 +40,20 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
     }
 
     try {
-      await _startListening();
-      _initialized = true;
-      _consecutiveFailureCount = 0;
-      AppLogger.info('Deep link cubit initialized successfully');
-      if (!isClosed && state is! DeepLinkIdle) {
-        emit(const DeepLinkIdle());
-      }
-    } on Object catch (error, stackTrace) {
-      _consecutiveFailureCount++;
-      AppLogger.error('Deep link initialization failed', error, stackTrace);
-      _logFailureTelemetry(error);
-      await _disposeSubscription();
-      _initialized = false;
-      if (!isClosed) {
-        emit(DeepLinkError(error.toString()));
-      }
+      await CubitExceptionHandler.executeAsyncVoid(
+        operation: _startListening,
+        logContext: 'DeepLinkCubit.initialize',
+        onSuccess: () {
+          _initialized = true;
+          _consecutiveFailureCount = 0;
+          AppLogger.info('Deep link cubit initialized successfully');
+          if (!isClosed && state is! DeepLinkIdle) {
+            emit(const DeepLinkIdle());
+          }
+        },
+        onError: (_) {},
+        onErrorWithDetails: _handleInitializeError,
+      );
     } finally {
       _isInitializing = false;
     }
@@ -121,6 +120,20 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
     final StreamSubscription<Uri>? subscription = _subscription;
     _subscription = null;
     await subscription?.cancel();
+  }
+
+  void _handleInitializeError(
+    final Object error,
+    final StackTrace? stackTrace,
+  ) {
+    _consecutiveFailureCount++;
+    AppLogger.error('Deep link initialization failed', error, stackTrace);
+    _logFailureTelemetry(error);
+    unawaited(_disposeSubscription());
+    _initialized = false;
+    if (!isClosed) {
+      emit(DeepLinkError(error.toString()));
+    }
   }
 
   void _logFailureTelemetry(final Object error) {

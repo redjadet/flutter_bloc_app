@@ -2,40 +2,59 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_list_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_list_page.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_bottom_navigation_bar.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockChatListRepository extends Mock implements ChatListRepository {}
 
+class MockChatRepository extends Mock implements ChatRepository {}
+
+class MockChatHistoryRepository extends Mock implements ChatHistoryRepository {}
+
+class MockErrorNotificationService extends Mock
+    implements ErrorNotificationService {}
+
+class MockPendingSyncRepository extends Mock implements PendingSyncRepository {}
+
 void main() {
   group('ChatListPage', () {
     late MockChatListRepository mockRepository;
+    late MockChatRepository chatRepository;
+    late MockChatHistoryRepository historyRepository;
+    late MockErrorNotificationService errorNotificationService;
+    late MockPendingSyncRepository pendingSyncRepository;
 
     setUp(() {
       mockRepository = MockChatListRepository();
-      // Register mock repository in GetIt for testing
-      getIt.reset();
-      getIt.registerLazySingleton<ChatListRepository>(() => mockRepository);
-    });
-
-    tearDown(() {
-      getIt.reset();
+      chatRepository = MockChatRepository();
+      historyRepository = MockChatHistoryRepository();
+      errorNotificationService = MockErrorNotificationService();
+      pendingSyncRepository = MockPendingSyncRepository();
     });
 
     Widget createWidgetUnderTest() {
       return MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: ChatListPage(repository: mockRepository),
+        home: ChatListPage(
+          repository: mockRepository,
+          chatRepository: chatRepository,
+          historyRepository: historyRepository,
+          errorNotificationService: errorNotificationService,
+          pendingSyncRepository: pendingSyncRepository,
+        ),
       );
     }
 

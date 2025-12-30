@@ -40,6 +40,7 @@ class SyncStatusBanner extends StatelessWidget {
               context: context,
               onPressed: () {
                 final SyncStatusCubit cubit = context.read<SyncStatusCubit>();
+                // check-ignore: user action triggers async flush
                 unawaited(cubit.flush());
               },
               child: const Text('Retry'),

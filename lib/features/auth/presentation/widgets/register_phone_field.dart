@@ -3,6 +3,7 @@ import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/regis
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_state.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_country_picker.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class RegisterPhoneField extends StatelessWidget {
   const RegisterPhoneField({
@@ -76,9 +77,16 @@ class _CountryChip extends StatelessWidget {
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    return OutlinedButton(
-      key: const ValueKey('register-country-selector'),
-      style: OutlinedButton.styleFrom(
+    return PlatformAdaptive.outlinedButton(
+      context: context,
+      onPressed: onPressed,
+      foregroundColor: colorScheme.onSurface,
+      backgroundColor: colorScheme.surface,
+      side: BorderSide(color: colorScheme.outline),
+      borderRadius: BorderRadius.circular(
+        context.responsiveCardRadius * 0.5,
+      ),
+      materialStyle: OutlinedButton.styleFrom(
         foregroundColor: colorScheme.onSurface,
         side: BorderSide(color: colorScheme.outline),
         padding: EdgeInsets.symmetric(
@@ -91,7 +99,6 @@ class _CountryChip extends StatelessWidget {
           ),
         ),
       ),
-      onPressed: onPressed,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

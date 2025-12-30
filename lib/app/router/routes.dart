@@ -2,10 +2,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/features.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_demo_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:go_router/go_router.dart';
 
@@ -94,13 +96,16 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.chartsPath,
     name: AppRoutes.charts,
-    builder: (final context, final state) => const ChartPage(),
+    builder: (final context, final state) => ChartPage(
+      repository: getIt<ChartRepository>(),
+    ),
   ),
   GoRoute(
     path: AppRoutes.settingsPath,
     name: AppRoutes.settings,
     builder: (final context, final state) => SettingsPage(
       appInfoRepository: getIt<AppInfoRepository>(),
+      graphqlCacheRepository: getIt<GraphqlDemoCacheRepository>(),
       profileCacheRepository: getIt<ProfileCacheRepository>(),
     ),
   ),
@@ -142,13 +147,22 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
             initialModel: SecretConfig.huggingfaceModel,
           ),
           init: (final cubit) => cubit.loadHistory(),
-          child: const ChatPage(),
+          child: ChatPage(
+            errorNotificationService: getIt<ErrorNotificationService>(),
+            pendingSyncRepository: getIt<PendingSyncRepository>(),
+          ),
         ),
   ),
   GoRoute(
     path: AppRoutes.chatListPath,
     name: AppRoutes.chatList,
-    builder: (final context, final state) => const ChatListPage(),
+    builder: (final context, final state) => ChatListPage(
+      repository: getIt<ChatListRepository>(),
+      chatRepository: getIt<ChatRepository>(),
+      historyRepository: getIt<ChatHistoryRepository>(),
+      errorNotificationService: getIt<ErrorNotificationService>(),
+      pendingSyncRepository: getIt<PendingSyncRepository>(),
+    ),
   ),
   GoRoute(
     path: AppRoutes.websocketPath,

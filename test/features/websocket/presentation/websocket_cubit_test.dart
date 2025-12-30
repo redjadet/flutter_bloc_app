@@ -131,4 +131,21 @@ void main() {
       ).copyWith(status: WebsocketStatus.error, errorMessage: 'boom'),
     ],
   );
+
+  test('ignores stream events after close without emitting', () async {
+    final WebsocketCubit cubit = WebsocketCubit(repository: repository);
+
+    await cubit.close();
+
+    connectionController.add(const WebsocketConnectionState.connected());
+    messageController.add(
+      const WebsocketMessage(
+        direction: WebsocketMessageDirection.incoming,
+        text: 'late message',
+      ),
+    );
+    await Future<void>.delayed(Duration.zero);
+
+    expect(cubit.isClosed, true);
+  });
 }

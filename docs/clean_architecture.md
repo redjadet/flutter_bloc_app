@@ -52,3 +52,29 @@ This separation lets the cubit and UI remain testable without Firebase while the
 - Create **responsive, platform-adaptive widgets** that invoke cubit methods and render `Equatable`/`freezed` states. Avoid putting business logic in widgets.
 - For persistence or timers, rely on shared abstractions (`HiveService`, `SharedPreferencesMigrationService`, `TimerService`, `NetworkStatusService`) to keep layers consistent and testable.
 - Add tests per layer: pure unit tests for domain/data, `bloc_test` for cubits, widget/golden tests for UI; run `./bin/checklist` before shipping.
+
+## Review Checklist
+
+- Domain files use pure Dart only (no `package:flutter` imports).
+- Data layer implements domain contracts and stays free of presentation imports.
+- Presentation depends on abstractions and does not construct repositories.
+- Feature wiring happens in `lib/core/di/` via `registerLazySingletonIfAbsent`.
+- Use constructor injection for cubits/repositories to keep dependencies explicit.
+- New Hive repositories extend `HiveRepositoryBase` or `HiveSettingsRepository<T>`.
+- Do not call `Hive.openBox` outside `lib/shared/storage/`.
+- `setState` is reserved for UI-only toggles; business state lives in cubits.
+- Async cubit operations use `CubitExceptionHandler`; clean up timers/streams in
+  `close()`.
+
+Example violation (domain):
+
+```dart
+// ❌ Do not import Flutter in domain
+import 'package:flutter/material.dart';
+```
+
+Quick check:
+
+```bash
+./tool/check_no_hive_openbox.sh
+```

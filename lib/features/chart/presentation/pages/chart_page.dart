@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/cubit/chart_cubit.dart';
@@ -12,21 +11,37 @@ import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_loadi
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:intl/intl.dart';
 
-class ChartPage extends StatelessWidget {
-  const ChartPage({super.key, final ChartRepository? repository})
-    : _repository = repository;
+class ChartPage extends StatefulWidget {
+  const ChartPage({
+    required final ChartRepository repository,
+    super.key,
+  }) : _repository = repository;
 
-  final ChartRepository? _repository;
+  final ChartRepository _repository;
 
   @override
-  Widget build(final BuildContext context) => BlocProvider(
-    create: (_) {
-      final cubit = ChartCubit(
-        repository: _repository ?? getIt<ChartRepository>(),
-      );
-      unawaited(cubit.load());
-      return cubit;
-    },
+  State<ChartPage> createState() => _ChartPageState();
+}
+
+class _ChartPageState extends State<ChartPage> {
+  late final ChartCubit _cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit = ChartCubit(repository: widget._repository);
+    unawaited(_cubit.load());
+  }
+
+  @override
+  void dispose() {
+    unawaited(_cubit.close());
+    super.dispose();
+  }
+
+  @override
+  Widget build(final BuildContext context) => BlocProvider.value(
+    value: _cubit,
     child: const _ChartView(),
   );
 }

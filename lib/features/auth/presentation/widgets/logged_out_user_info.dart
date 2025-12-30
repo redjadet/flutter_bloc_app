@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class LoggedOutUserInfo extends StatelessWidget {
   const LoggedOutUserInfo({
@@ -63,7 +62,7 @@ class LoggedOutUserInfo extends StatelessWidget {
               children: [
                 Text(
                   'Pawel Czerwinski',
-                  style: GoogleFonts.roboto(
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     fontSize: 13 * scale,
                     fontWeight: FontWeight.w700,
                     color: Colors.black,
@@ -74,7 +73,7 @@ class LoggedOutUserInfo extends StatelessWidget {
                 ),
                 Text(
                   '@pawel_czerwinski',
-                  style: GoogleFonts.roboto(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontSize: 11 * scale,
                     fontWeight: FontWeight.w400,
                     color: Colors.black.withValues(alpha: 0.8),

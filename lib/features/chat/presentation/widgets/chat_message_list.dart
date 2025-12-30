@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
@@ -15,16 +14,19 @@ import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
 import 'package:flutter_bloc_app/shared/widgets/view_status_switcher.dart';
 
 class ChatMessageList extends StatelessWidget {
-  const ChatMessageList({required this.controller, super.key});
+  const ChatMessageList({
+    required this.controller,
+    required this.errorNotificationService,
+    super.key,
+  });
 
   final ScrollController controller;
+  final ErrorNotificationService errorNotificationService;
 
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
-    final ErrorNotificationService errorNotificationService =
-        getIt<ErrorNotificationService>();
 
     return BlocConsumer<ChatCubit, ChatState>(
       listener: (final context, final state) async {

@@ -138,30 +138,26 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
   }
 
   Future<void> _persistState(final CounterState snapshotState) async {
-    try {
-      await _repository.save(
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: () => _repository.save(
         CounterSnapshot(
           count: snapshotState.count,
           lastChanged: snapshotState.lastChanged,
           lastSyncedAt: snapshotState.lastSyncedAt,
           changeId: snapshotState.changeId,
         ),
-      );
-    } on CounterError catch (error, stackTrace) {
-      _handleError(
-        error,
-        stackTrace,
-        CounterError.save,
-        'CounterCubit._persistState failed',
-      );
-    } on Exception catch (error, stackTrace) {
-      _handleError(
-        error,
-        stackTrace,
-        CounterError.save,
-        'CounterCubit._persistState failed',
-      );
-    }
+      ),
+      onError: (_) {},
+      onErrorWithDetails: (final Object error, final StackTrace? stackTrace) {
+        _handleError(
+          error,
+          stackTrace ?? StackTrace.current,
+          CounterError.save,
+          'CounterCubit._persistState failed',
+        );
+      },
+      logContext: 'CounterCubit._persistState',
+    );
   }
 
   void _handleError(

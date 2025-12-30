@@ -13,11 +13,9 @@ import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
-  final GetIt getIt = GetIt.instance;
   late MockPendingSyncRepository pendingRepository;
   late _TestBackgroundSyncCoordinator coordinator;
   late _TestNetworkStatusService networkStatusService;
@@ -30,14 +28,11 @@ void main() {
     pendingRepository = MockPendingSyncRepository();
     coordinator = _TestBackgroundSyncCoordinator();
     networkStatusService = _TestNetworkStatusService();
-    getIt.registerSingleton<PendingSyncRepository>(pendingRepository);
-    getIt.registerSingleton<BackgroundSyncCoordinator>(coordinator);
   });
 
   tearDown(() async {
     await networkStatusService.dispose();
     await coordinator.dispose();
-    await getIt.reset();
   });
 
   SyncStatusCubit buildSyncStatusCubit() => SyncStatusCubit(
@@ -50,7 +45,9 @@ void main() {
     supportedLocales: AppLocalizations.supportedLocales,
     home: BlocProvider<SyncStatusCubit>(
       create: (_) => cubit,
-      child: const Scaffold(body: ChatSyncBanner()),
+      child: Scaffold(
+        body: ChatSyncBanner(pendingRepository: pendingRepository),
+      ),
     ),
   );
 

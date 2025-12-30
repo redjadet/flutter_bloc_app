@@ -14,6 +14,7 @@ class AppInfoCubit extends Cubit<AppInfoState> {
 
   Future<void> load() async {
     if (state.status.isLoading) return;
+    if (isClosed) return;
 
     emit(state.copyWith(status: ViewStatus.loading, clearError: true));
 

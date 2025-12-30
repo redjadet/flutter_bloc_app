@@ -3,42 +3,67 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_demo_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({
     required this.appInfoRepository,
+    this.graphqlCacheRepository,
     this.profileCacheRepository,
     super.key,
   });
 
   final AppInfoRepository appInfoRepository;
+  final GraphqlDemoCacheRepository? graphqlCacheRepository;
   final ProfileCacheRepository? profileCacheRepository;
 
   @override
-  Widget build(final BuildContext context) => BlocProvider(
-    create: (_) {
-      final cubit = AppInfoCubit(repository: appInfoRepository);
-      unawaited(cubit.load());
-      return cubit;
-    },
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  late final AppInfoCubit _cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit = AppInfoCubit(repository: widget.appInfoRepository);
+    unawaited(_cubit.load());
+  }
+
+  @override
+  void dispose() {
+    unawaited(_cubit.close());
+    super.dispose();
+  }
+
+  @override
+  Widget build(final BuildContext context) => BlocProvider.value(
+    value: _cubit,
     child: _SettingsView(
-      profileCacheRepository: profileCacheRepository,
+      graphqlCacheRepository: widget.graphqlCacheRepository,
+      profileCacheRepository: widget.profileCacheRepository,
     ),
   );
 }
 
 class _SettingsView extends StatelessWidget {
-  const _SettingsView({this.profileCacheRepository});
+  const _SettingsView({
+    this.graphqlCacheRepository,
+    this.profileCacheRepository,
+  });
 
+  final GraphqlDemoCacheRepository? graphqlCacheRepository;
   final ProfileCacheRepository? profileCacheRepository;
 
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
+    final GraphqlDemoCacheRepository? graphqlRepo = graphqlCacheRepository;
     final ProfileCacheRepository? cacheRepo = profileCacheRepository;
     return CommonPageLayout(
       title: l10n.settingsPageTitle,
@@ -55,7 +80,10 @@ class _SettingsView extends StatelessWidget {
           const AppInfoSection(),
           if (FlavorManager.I.isDev || FlavorManager.I.isQa) ...[
             SizedBox(height: context.responsiveGapL),
-            const GraphqlCacheControlsSection(),
+            if (graphqlRepo != null)
+              GraphqlCacheControlsSection(
+                cacheRepository: graphqlRepo,
+              ),
             SizedBox(height: context.responsiveGapL),
             if (cacheRepo != null)
               ProfileCacheControlsSection(
