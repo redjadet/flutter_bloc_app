@@ -402,7 +402,7 @@ if-else logic.
 ```dart
 // Before: Manual branching
 if (bodyData.isLoading && !bodyData.hasUser) {
-  return const CommonLoadingWidget(color: Colors.black);
+  return const CommonLoadingWidget(); // Uses theme-aware color by default
 }
 if (bodyData.hasError && !bodyData.hasUser) {
   return CommonErrorView(...);
@@ -412,7 +412,10 @@ if (bodyData.hasError && !bodyData.hasUser) {
 ViewStatusSwitcher<ProfileCubit, ProfileState, _ProfileBodyData>(
   isLoading: (data) => data.isLoading && !data.hasUser,
   isError: (data) => data.hasError && !data.hasUser,
-  loadingBuilder: (_) => const CommonLoadingWidget(color: Colors.black),
+  loadingBuilder: (context) => CommonLoadingWidget(
+    // Uses theme.colorScheme.secondary by default, or pass custom color
+    color: Theme.of(context).colorScheme.secondary,
+  ),
   errorBuilder: (context, _) => CommonErrorView(...),
   builder: (context, bodyData) => /* success content */,
 )

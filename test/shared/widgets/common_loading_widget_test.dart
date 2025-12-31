@@ -5,12 +5,23 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('CommonLoadingWidget', () {
-    testWidgets('renders circular progress indicator', (tester) async {
+    testWidgets('renders progress indicator (platform-adaptive)', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: CommonLoadingWidget())),
       );
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      // Should show either CircularProgressIndicator (Android) or CupertinoActivityIndicator (iOS)
+      final hasMaterialIndicator = find
+          .byType(CircularProgressIndicator)
+          .evaluate()
+          .isNotEmpty;
+      final hasCupertinoIndicator = find
+          .byType(CupertinoActivityIndicator)
+          .evaluate()
+          .isNotEmpty;
+      expect(hasMaterialIndicator || hasCupertinoIndicator, isTrue);
       expect(find.byType(CommonLoadingWidget), findsOneWidget);
     });
 
@@ -23,7 +34,16 @@ void main() {
         ),
       );
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      // Should show either CircularProgressIndicator (Android) or CupertinoActivityIndicator (iOS)
+      final hasMaterialIndicator = find
+          .byType(CircularProgressIndicator)
+          .evaluate()
+          .isNotEmpty;
+      final hasCupertinoIndicator = find
+          .byType(CupertinoActivityIndicator)
+          .evaluate()
+          .isNotEmpty;
+      expect(hasMaterialIndicator || hasCupertinoIndicator, isTrue);
       expect(find.text(message), findsOneWidget);
     });
 
@@ -32,7 +52,16 @@ void main() {
         const MaterialApp(home: Scaffold(body: CommonLoadingWidget())),
       );
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      // Should show either CircularProgressIndicator (Android) or CupertinoActivityIndicator (iOS)
+      final hasMaterialIndicator = find
+          .byType(CircularProgressIndicator)
+          .evaluate()
+          .isNotEmpty;
+      final hasCupertinoIndicator = find
+          .byType(CupertinoActivityIndicator)
+          .evaluate()
+          .isNotEmpty;
+      expect(hasMaterialIndicator || hasCupertinoIndicator, isTrue);
       expect(find.byType(Text), findsNothing);
     });
 
@@ -57,10 +86,25 @@ void main() {
         ),
       );
 
-      final progressIndicator = tester.widget<CircularProgressIndicator>(
-        find.byType(CircularProgressIndicator),
-      );
-      expect(progressIndicator.color, equals(Colors.blue));
+      // Check for either CircularProgressIndicator or CupertinoActivityIndicator
+      final materialIndicator = find.byType(CircularProgressIndicator);
+      final cupertinoIndicator = find.byType(CupertinoActivityIndicator);
+
+      if (materialIndicator.evaluate().isNotEmpty) {
+        final progressIndicator = tester.widget<CircularProgressIndicator>(
+          materialIndicator,
+        );
+        expect(progressIndicator.color, equals(Colors.blue));
+      } else if (cupertinoIndicator.evaluate().isNotEmpty) {
+        final activityIndicator = tester.widget<CupertinoActivityIndicator>(
+          cupertinoIndicator,
+        );
+        expect(activityIndicator.color, equals(Colors.blue));
+      } else {
+        fail(
+          'Expected either CircularProgressIndicator or CupertinoActivityIndicator',
+        );
+      }
     });
 
     testWidgets('applies custom color when provided', (tester) async {
@@ -72,10 +116,25 @@ void main() {
         ),
       );
 
-      final progressIndicator = tester.widget<CircularProgressIndicator>(
-        find.byType(CircularProgressIndicator),
-      );
-      expect(progressIndicator.color, equals(customColor));
+      // Check for either CircularProgressIndicator or CupertinoActivityIndicator
+      final materialIndicator = find.byType(CircularProgressIndicator);
+      final cupertinoIndicator = find.byType(CupertinoActivityIndicator);
+
+      if (materialIndicator.evaluate().isNotEmpty) {
+        final progressIndicator = tester.widget<CircularProgressIndicator>(
+          materialIndicator,
+        );
+        expect(progressIndicator.color, equals(customColor));
+      } else if (cupertinoIndicator.evaluate().isNotEmpty) {
+        final activityIndicator = tester.widget<CupertinoActivityIndicator>(
+          cupertinoIndicator,
+        );
+        expect(activityIndicator.color, equals(customColor));
+      } else {
+        fail(
+          'Expected either CircularProgressIndicator or CupertinoActivityIndicator',
+        );
+      }
     });
 
     testWidgets('applies custom size when provided', (tester) async {
@@ -128,7 +187,16 @@ void main() {
       );
 
       expect(find.text('Content'), findsOneWidget);
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      // Should show either CircularProgressIndicator (Android) or CupertinoActivityIndicator (iOS)
+      final hasMaterialIndicator = find
+          .byType(CircularProgressIndicator)
+          .evaluate()
+          .isNotEmpty;
+      final hasCupertinoIndicator = find
+          .byType(CupertinoActivityIndicator)
+          .evaluate()
+          .isNotEmpty;
+      expect(hasMaterialIndicator || hasCupertinoIndicator, isTrue);
       // Find the ColoredBox that's a descendant of the Stack (the overlay)
       final stackFinder = find.byType(Stack);
       final coloredBoxFinder = find.descendant(
@@ -152,6 +220,7 @@ void main() {
 
       expect(find.text('Content'), findsOneWidget);
       expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(find.byType(CupertinoActivityIndicator), findsNothing);
     });
 
     testWidgets('shows custom message in overlay', (tester) async {
@@ -170,7 +239,16 @@ void main() {
       );
 
       expect(find.text(message), findsOneWidget);
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      // Should show either CircularProgressIndicator (Android) or CupertinoActivityIndicator (iOS)
+      final hasMaterialIndicator = find
+          .byType(CircularProgressIndicator)
+          .evaluate()
+          .isNotEmpty;
+      final hasCupertinoIndicator = find
+          .byType(CupertinoActivityIndicator)
+          .evaluate()
+          .isNotEmpty;
+      expect(hasMaterialIndicator || hasCupertinoIndicator, isTrue);
     });
 
     testWidgets('applies semi-transparent background', (tester) async {

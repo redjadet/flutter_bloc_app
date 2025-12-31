@@ -109,8 +109,207 @@ Tips:
 - **Linting philosophy**: We lean on Very Good Analysis for baseline safety and keep project rules focused on clarity and maintainability. `type_annotate_public_apis` makes public surfaces explicit for reviewers and tooling. The file-length lint (250 LOC) encourages smaller units that are easier to test and can reduce rebuild scope in large widgets.
 - **Performance-oriented linting**: VGV enforces `prefer_const_constructors`, `prefer_const_literals_to_create_immutables`, `avoid_unnecessary_containers`, `use_colored_box`, and `no_logic_in_create_state`. These reduce widget tree depth, keep builds lightweight, and make rebuild costs more predictable.
 - **Error handling**: Route recoverable errors through domain failures or `ErrorHandling` helpers; surface user-facing errors via localized messages.
-- **Localization**: Update ARB files in `l10n/arb/`, run `flutter gen-l10n`, and access strings through `context.l10n`.
+- **Localization**: Update ARB files in `lib/l10n/app_*.arb` (en, tr, de, fr, es), run `flutter gen-l10n`, and access strings through `context.l10n`. Never hard-code user-facing strings; always use localization keys.
 - **Image caching**: Use `CachedNetworkImageWidget` from `lib/shared/widgets/` for remote images. It provides automatic caching, loading placeholders, error handling, and memory optimization. `FancyShimmerImage` (used in search/profile/example pages) already includes caching via `cached_network_image` under the hood.
+
+## 8.5. Responsive & Adaptive UI Guidelines
+
+The app follows mobile-first responsive design principles with platform-adaptive components. See `docs/ui_ux_responsive_review.md` for comprehensive UI/UX guidelines.
+
+### Responsive System
+
+Import `package:flutter_bloc_app/shared/extensions/responsive.dart` to access responsive helpers:
+
+**Spacing:**
+
+- `context.responsiveGapXS/S/M/L` - Vertical gaps (scaled by device)
+- `context.responsiveHorizontalGapS/M/L` - Horizontal gaps
+- `context.pageHorizontalPadding` / `context.pageVerticalPadding` - Page-level padding
+- `context.pagePadding` - Full page padding (includes safe-area and keyboard insets)
+- `context.responsiveCardPadding` / `context.responsiveCardMargin` - Card spacing
+
+**Layout:**
+
+- `context.contentMaxWidth` - Maximum content width (560/720/840 for mobile/tablet/desktop)
+- `context.responsiveBorderRadius` / `context.responsiveCardRadius` - Border radii
+- `context.responsiveElevation` / `context.responsiveCardElevation` - Material elevation
+- `context.calculateGridLayout()` - Responsive grid calculations
+- `context.createResponsiveGridDelegate()` - SliverGrid delegate
+
+**Typography:**
+
+- `context.responsiveFontSize` - Base font size (14/16/16)
+- `context.responsiveHeadlineSize` - Headlines (24/32/32)
+- `context.responsiveTitleSize` - Titles (20/24/24)
+- `context.responsiveBodySize` - Body text (14/16/16)
+- `context.responsiveCaptionSize` - Captions (12/14/14)
+- `context.responsiveIconSize` - Icon sizes (20/24/24)
+
+**Example:**
+
+```dart
+Padding(
+  padding: context.pageHorizontalPaddingInsets,
+  child: Column(
+    children: [
+      Text('Title', style: TextStyle(fontSize: context.responsiveTitleSize)),
+      SizedBox(height: context.responsiveGapM),
+      Text('Body', style: TextStyle(fontSize: context.responsiveBodySize)),
+    ],
+  ),
+)
+```
+
+### Platform-Adaptive Components
+
+Always use platform-adaptive helpers instead of raw Material widgets:
+
+**Buttons:**
+
+- `PlatformAdaptive.filledButton()` - Filled button (CupertinoButton.filled on iOS, FilledButton on Android)
+- `PlatformAdaptive.outlinedButton()` - Outlined button (CupertinoButton on iOS, OutlinedButton on Android)
+- `PlatformAdaptive.textButton()` - Text button (CupertinoButton on iOS, TextButton on Android)
+- `PlatformAdaptive.button()` - Generic button (CupertinoButton on iOS, ElevatedButton on Android)
+
+**Dialogs:**
+
+- `PlatformAdaptive.dialogAction()` - Dialog action button
+- Always use `showAdaptiveDialog()` instead of `showDialog()`
+
+**Loading Indicators:**
+
+- `CommonLoadingWidget` - Platform-adaptive (CupertinoActivityIndicator on iOS, CircularProgressIndicator on Android)
+- `CommonLoadingButton` - Button with platform-adaptive loading indicator
+
+**Example:**
+
+```dart
+PlatformAdaptive.filledButton(
+  context: context,
+  onPressed: () {},
+  child: Text(l10n.submitButton),
+)
+```
+
+### Theme-Aware Colors
+
+**Never use hard-coded colors.** Always use `Theme.of(context).colorScheme`:
+
+- **Text:** `colorScheme.onSurface`, `colorScheme.onSurfaceVariant`
+- **Backgrounds:** `colorScheme.surface`, `colorScheme.surfaceContainerHighest`
+- **Borders:** `colorScheme.outline`, `colorScheme.outlineVariant`
+- **Primary:** `colorScheme.primary`, `colorScheme.onPrimary`
+- **Errors:** `colorScheme.error`, `colorScheme.onError`, `colorScheme.errorContainer`
+
+**Example:**
+
+```dart
+final theme = Theme.of(context);
+final colors = theme.colorScheme;
+Container(
+  color: colors.surface,
+  child: Text(
+    'Hello',
+    style: TextStyle(color: colors.onSurface),
+  ),
+)
+```
+
+### Safe Area & Keyboard Handling
+
+**CommonPageLayout** automatically handles safe-area and keyboard insets. For custom layouts:
+
+- Use `context.pagePadding` which includes safe-area and keyboard insets
+- Or wrap with `SafeArea` and add `MediaQuery.viewInsetsOf(context).bottom` for keyboard
+- Use `AnimatedPadding` for smooth keyboard transitions
+
+**Example:**
+
+```dart
+// Good: CommonPageLayout handles this automatically
+CommonPageLayout(
+  title: 'My Page',
+  body: MyContent(),
+)
+
+// Custom layout with safe area
+SafeArea(
+  child: Padding(
+    padding: EdgeInsets.only(
+      bottom: MediaQuery.viewInsetsOf(context).bottom,
+    ),
+    child: MyContent(),
+  ),
+)
+```
+
+### Text Scaling & Accessibility
+
+- Flutter automatically scales text via `MediaQuery.textScalerOf(context)`
+- Use flexible layouts (Column, CustomScrollView) that adapt to text size
+- Avoid fixed heights on text containers; use `minHeight` or flexible constraints
+- Test with text scale 1.3+ (iOS Dynamic Type Largest, Android Font Size Largest)
+- Minimum tap targets: 44x44 (iOS), 48x48 (Android)
+
+**Example:**
+
+```dart
+// Good: Flexible layout
+Column(
+  children: [
+    Text('Title', style: theme.textTheme.headlineSmall),
+    Text('Body', style: theme.textTheme.bodyMedium),
+  ],
+)
+
+// Avoid: Fixed heights that break with large text
+Container(
+  height: 50, // ❌ Breaks with large text
+  child: Text('Content'),
+)
+```
+
+### Shared Layout Components
+
+- **CommonPageLayout**: Consistent page shell with safe-area-aware padding, app bar, and responsive constraints
+- **CommonAppBar**: Platform-adaptive app bar with consistent navigation
+- **CommonErrorView**: Error display with platform-adaptive retry button
+- **CommonLoadingWidget**: Platform-adaptive loading indicator
+- **CommonStatusView**: Status messages (loading, error, empty states)
+
+**Example:**
+
+```dart
+CommonPageLayout(
+  title: l10n.myPageTitle,
+  body: Column(
+    children: [
+      // Your content here
+    ],
+  ),
+)
+```
+
+### Testing Responsive/Adaptive UI
+
+- **Text scaling tests**: Use `MediaQueryData(textScaler: TextScaler.linear(1.3))` in widget tests
+- **Platform tests**: Test both Material and Cupertino themes
+- **Safe area tests**: Test with different safe-area insets
+- **Device coverage**: Test on compact (iPhone SE), standard (iPhone 14 Pro), and tablet (iPad Pro) sizes
+
+**Example:**
+
+```dart
+testWidgets('scales text at 1.3x', (tester) async {
+  await tester.pumpWidget(
+    MediaQuery(
+      data: const MediaQueryData(textScaler: TextScaler.linear(1.3)),
+      child: MaterialApp(home: MyWidget()),
+    ),
+  );
+  // Assertions...
+});
+```
 
 ## 9. Adding a New Feature (Cheat Sheet)
 
@@ -124,11 +323,19 @@ Tips:
    - Register in `SyncableRepositoryRegistry` (auto-registers on construction)
    - Add sync status UI (banner widget) using `SyncStatusCubit`
 5. Build Cubit + state (immutable), add widgets/pages.
-6. Register DI bindings (repository, cubit factories if needed).
-7. Add tests: repository unit tests, cubit bloc tests, and widget/golden coverage.
-8. Wire navigation via `AppRoutes` + `GoRouter` in `lib/app.dart`.
-9. Update docs/README if the feature is user-facing.
-10. **For offline-first**: Document in `docs/offline_first/<feature>.md` following existing patterns.
+6. **UI/UX requirements**:
+   - Use `CommonPageLayout` for consistent page structure
+   - Use `PlatformAdaptive` helpers for buttons/dialogs (never raw Material buttons)
+   - Use `context.responsive*` helpers for spacing/sizing (no hard-coded values)
+   - Use `Theme.of(context).colorScheme` for colors (never `Colors.black/white/grey`)
+   - Use `context.l10n.*` for all user-facing strings (never hard-coded English)
+   - Ensure safe-area and keyboard handling (use `CommonPageLayout` or handle manually)
+   - Test with text scale 1.3+ and verify no overflow
+7. Register DI bindings (repository, cubit factories if needed).
+8. Add tests: repository unit tests, cubit bloc tests, widget/golden coverage, and text scaling tests.
+9. Wire navigation via `AppRoutes` + `GoRouter` in `lib/app.dart`.
+10. Update docs/README if the feature is user-facing.
+11. **For offline-first**: Document in `docs/offline_first/<feature>.md` following existing patterns.
 
 ## 10. Common Troubleshooting
 
@@ -309,6 +516,16 @@ Before finishing any task, verify these common bug patterns:
 - ✅ **Timers**: Ensure timers are cancelled/disposed in `close()` methods
 - ✅ **Listeners**: Remove listeners in `dispose()` methods
 
+#### UI/UX Best Practices
+
+- ✅ **Hard-coded colors**: Never use `Colors.black`, `Colors.white`, `Colors.grey`; always use `Theme.of(context).colorScheme`
+- ✅ **Hard-coded strings**: Never hard-code user-facing text; always use `context.l10n.*` from ARB files
+- ✅ **Raw Material buttons**: Never use `ElevatedButton`, `OutlinedButton`, `TextButton` directly; use `PlatformAdaptive.*` helpers
+- ✅ **Fixed spacing/sizing**: Never use hard-coded pixel values; use `context.responsive*` helpers
+- ✅ **Safe area**: Always handle safe-area insets (use `CommonPageLayout` or `SafeArea` + keyboard insets)
+- ✅ **Text scaling**: Test layouts with text scale 1.3+; use flexible constraints, avoid fixed heights
+- ✅ **Platform adaptation**: Use `PlatformAdaptive` helpers for buttons, dialogs, loading indicators
+
 **Quick verification**: Run `./bin/checklist` before committing to catch formatting, analysis, and test issues.
 
 ## 11. DI Reference Example
@@ -322,15 +539,7 @@ MultiBlocProvider(providers: [
 
 **Pattern:** Lazy singletons via `registerLazySingletonIfAbsent` (single instance, on-demand init, thread-safe). See `lib/core/di/injector.dart` for the main entry point.
 
-## 12. What to Read Next
-
-- `README.md`: Feature tour + architecture diagram.
-- `docs/CODE_QUALITY_ANALYSIS.md`: Architecture findings and related quality/resilience notes.
-- `docs/` (e.g., `docs/universal_links/`, `docs/figma/...`): Platform-specific guides.
-
-Stay disciplined with the guardrails, keep tests deterministic, and reach for shared services before adding new singletons. Welcome to the team!
-
-## 11. Best‑Practice Validation Scripts
+## 12. Best‑Practice Validation Scripts
 
 The delivery checklist runs automated checks to prevent common architecture and
 Flutter hygiene regressions. Each script targets a high‑impact class of issues
@@ -367,3 +576,12 @@ unawaited(cubit.flush());
 
 Ignored entries are reported with the reason so exceptions remain explicit and
 reviewable.
+
+## 13. What to Read Next
+
+- `README.md`: Feature tour + architecture diagram.
+- `docs/CODE_QUALITY_ANALYSIS.md`: Architecture findings and related quality/resilience notes.
+- `docs/ui_ux_responsive_review.md`: Comprehensive UI/UX guidelines, responsive design patterns, platform-adaptive components, accessibility best practices, and completed improvements.
+- `docs/` (e.g., `docs/universal_links/`, `docs/figma/...`): Platform-specific guides.
+
+Stay disciplined with the guardrails, keep tests deterministic, and reach for shared services before adding new singletons. Welcome to the team!

@@ -843,16 +843,18 @@ void main() {
     });
 
     testWidgets('shouldRepaint returns true when progress changes', (tester) async {
+      // Note: In production code, use Theme.of(context).colorScheme colors
+      // For test examples, using Colors directly is acceptable
       final painter1 = CounterRingPainter(
         progress: 0.5,
         activeColor: Colors.blue,
-        trackColor: Colors.grey,
+        trackColor: Colors.grey, // In production: colorScheme.surfaceContainerHighest
       );
 
       final painter2 = CounterRingPainter(
         progress: 0.6, // Different progress
         activeColor: Colors.blue,
-        trackColor: Colors.grey,
+        trackColor: Colors.grey, // In production: colorScheme.surfaceContainerHighest
       );
 
       expect(painter1.shouldRepaint(painter2), isTrue);
