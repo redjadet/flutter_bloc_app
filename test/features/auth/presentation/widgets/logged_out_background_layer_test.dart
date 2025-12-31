@@ -4,76 +4,48 @@ import 'package:flutter_bloc_app/features/auth/presentation/widgets/logged_out_b
 
 void main() {
   group('LoggedOutBackgroundLayer', () {
-    Widget buildSubject({double scale = 1.0, BoxConstraints? constraints}) {
+    Widget buildSubject({double height = 707.0}) {
       return MaterialApp(
         home: Scaffold(
-          body: Stack(
-            children: [
-              LoggedOutBackgroundLayer(
-                scale: scale,
-                constraints: constraints ?? const BoxConstraints(),
-              ),
-            ],
-          ),
+          body: Stack(children: [LoggedOutBackgroundLayer(height: height)]),
         ),
       );
     }
 
     testWidgets('renders with correct positioning', (tester) async {
-      await tester.pumpWidget(
-        buildSubject(
-          constraints: const BoxConstraints(maxWidth: 375, maxHeight: 812),
-        ),
-      );
+      await tester.pumpWidget(buildSubject());
       await tester.pumpAndSettle();
 
       expect(find.byType(LoggedOutBackgroundLayer), findsOneWidget);
-      expect(find.byType(Positioned), findsOneWidget);
+      expect(find.byType(SizedBox), findsOneWidget);
     });
 
     testWidgets('renders image asset', (tester) async {
-      await tester.pumpWidget(
-        buildSubject(
-          constraints: const BoxConstraints(maxWidth: 375, maxHeight: 812),
-        ),
-      );
+      await tester.pumpWidget(buildSubject());
       await tester.pumpAndSettle();
 
       expect(find.byType(Image), findsOneWidget);
     });
 
     testWidgets('applies scale correctly', (tester) async {
-      const scale = 0.5; // Use smaller scale to avoid overflow
-      await tester.pumpWidget(
-        buildSubject(
-          scale: scale,
-          constraints: const BoxConstraints(maxWidth: 375, maxHeight: 812),
-        ),
-      );
+      const height = 350.0;
+      await tester.pumpWidget(buildSubject(height: height));
       // Don't use pumpAndSettle as it may timeout due to overflow warnings
       await tester.pump();
 
-      final Positioned positioned = tester.widget(find.byType(Positioned));
-      expect(positioned.height, equals(707 * scale));
-    });
-
-    testWidgets('uses constraints maxWidth for image width', (tester) async {
-      const maxWidth = 400.0;
-      await tester.pumpWidget(
-        buildSubject(constraints: const BoxConstraints(maxWidth: maxWidth)),
+      final SizedBox sizedBox = tester.widget(
+        find
+            .descendant(
+              of: find.byType(LoggedOutBackgroundLayer),
+              matching: find.byType(SizedBox),
+            )
+            .first,
       );
-      await tester.pumpAndSettle();
-
-      final Image image = tester.widget(find.byType(Image));
-      expect(image.width, equals(maxWidth));
+      expect(sizedBox.height, equals(height));
     });
 
     testWidgets('has error builder fallback', (tester) async {
-      await tester.pumpWidget(
-        buildSubject(
-          constraints: const BoxConstraints(maxWidth: 375, maxHeight: 812),
-        ),
-      );
+      await tester.pumpWidget(buildSubject());
       await tester.pumpAndSettle();
 
       // The widget should have an errorBuilder that shows a Container

@@ -8,6 +8,7 @@ class LoggedOutPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => const CommonPageLayout(
     title: 'Logged Out',
+    useResponsiveBody: false,
     body: LoggedOutPageBody(),
   );
 }
