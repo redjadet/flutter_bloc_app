@@ -4,22 +4,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 class LoggedOutBottomIndicator extends StatelessWidget {
   const LoggedOutBottomIndicator({
     required this.scale,
-    required this.horizontalOffset,
+    required this.verticalScale,
     super.key,
   });
 
   final double scale;
-  final double horizontalOffset;
+  final double verticalScale;
 
   @override
-  Widget build(final BuildContext context) => Positioned(
-    left: horizontalOffset + 120 * scale,
-    top: 799 * scale,
+  Widget build(final BuildContext context) => SizedBox(
     width: 135 * scale,
-    height: 5 * scale,
+    height: 5 * verticalScale,
     child: _ShapeIndicator(
       width: 135 * scale,
-      height: 5 * scale,
+      height: 5 * verticalScale,
     ),
   );
 }

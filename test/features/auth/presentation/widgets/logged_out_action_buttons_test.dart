@@ -6,7 +6,8 @@ import 'package:flutter_bloc_app/features/auth/presentation/widgets/logged_out_a
 
 void main() {
   group('LoggedOutActionButtons', () {
-    Widget buildSubject({double scale = 1.0, double horizontalOffset = 0.0}) {
+    Widget buildSubject({double scale = 1.0, double? verticalScale}) {
+      final double resolvedVerticalScale = verticalScale ?? scale;
       return MaterialApp.router(
         routerConfig: GoRouter(
           routes: [
@@ -26,13 +27,9 @@ void main() {
                 body: SizedBox(
                   width: 375,
                   height: 812,
-                  child: Stack(
-                    children: [
-                      LoggedOutActionButtons(
-                        scale: scale,
-                        horizontalOffset: horizontalOffset,
-                      ),
-                    ],
+                  child: LoggedOutActionButtons(
+                    scale: scale,
+                    verticalScale: resolvedVerticalScale,
                   ),
                 ),
               ),
@@ -88,24 +85,23 @@ void main() {
       // Don't use pumpAndSettle as it may timeout due to overflow warnings
       await tester.pump();
 
-      final Positioned positioned = tester.widget(find.byType(Positioned));
-      expect(positioned.left, equals(16 * scale));
-      expect(positioned.right, equals(16 * scale));
-      expect(positioned.top, equals(727 * scale));
-      expect(positioned.height, equals(52 * scale));
+      final sizedBox = tester.widget<SizedBox>(
+        find
+            .descendant(
+              of: find.byType(LoggedOutActionButtons),
+              matching: find.byType(SizedBox),
+            )
+            .first,
+      );
+      expect(sizedBox.height, equals(52 * scale));
     });
 
-    testWidgets('applies horizontal offset correctly', (tester) async {
-      const horizontalOffset = 0.0; // Use 0 to avoid overflow
+    testWidgets('renders row layout', (tester) async {
       const scale = 0.5; // Use smaller scale to avoid overflow
-      await tester.pumpWidget(
-        buildSubject(scale: scale, horizontalOffset: horizontalOffset),
-      );
+      await tester.pumpWidget(buildSubject(scale: scale));
       await tester.pumpAndSettle();
 
-      final Positioned positioned = tester.widget(find.byType(Positioned));
-      expect(positioned.left, equals(horizontalOffset + 16 * scale));
-      expect(positioned.right, equals(horizontalOffset + 16 * scale));
+      expect(find.byType(Row), findsWidgets);
     });
 
     testWidgets('buttons have correct styling', (tester) async {

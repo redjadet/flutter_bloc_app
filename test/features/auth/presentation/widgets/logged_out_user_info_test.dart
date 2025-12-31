@@ -4,7 +4,8 @@ import 'package:flutter_bloc_app/features/auth/presentation/widgets/logged_out_u
 
 void main() {
   group('LoggedOutUserInfo', () {
-    Widget buildSubject({double scale = 1.0, double horizontalOffset = 0.0}) {
+    Widget buildSubject({double scale = 1.0, double? verticalScale}) {
+      final double resolvedVerticalScale = verticalScale ?? scale;
       return MaterialApp(
         home: Scaffold(
           body: SizedBox(
@@ -14,7 +15,7 @@ void main() {
               children: [
                 LoggedOutUserInfo(
                   scale: scale,
-                  horizontalOffset: horizontalOffset,
+                  verticalScale: resolvedVerticalScale,
                 ),
               ],
             ),
@@ -28,7 +29,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(LoggedOutUserInfo), findsOneWidget);
-      expect(find.byType(Positioned), findsOneWidget);
+      expect(find.byType(Row), findsOneWidget);
     });
 
     testWidgets('displays user name and handle', (tester) async {
@@ -52,24 +53,24 @@ void main() {
       // Don't use pumpAndSettle as it may timeout due to overflow warnings
       await tester.pump();
 
-      final Positioned positioned = tester.widget(find.byType(Positioned));
-      expect(positioned.left, equals(16 * scale));
-      expect(positioned.right, equals(16 * scale));
-      expect(positioned.top, equals(659 * scale));
+      final sizedBox = tester.widget<SizedBox>(
+        find
+            .descendant(
+              of: find.byType(LoggedOutUserInfo),
+              matching: find.byType(SizedBox),
+            )
+            .first,
+      );
+      expect(sizedBox.height, greaterThan(0));
     });
 
-    testWidgets('applies horizontal offset correctly', (tester) async {
-      const horizontalOffset = 0.0; // Use 0 to avoid overflow
+    testWidgets('renders row layout', (tester) async {
       const scale = 0.5; // Use smaller scale to avoid overflow
-      await tester.pumpWidget(
-        buildSubject(scale: scale, horizontalOffset: horizontalOffset),
-      );
+      await tester.pumpWidget(buildSubject(scale: scale));
       // Don't use pumpAndSettle as it may timeout due to overflow warnings
       await tester.pump();
 
-      final Positioned positioned = tester.widget(find.byType(Positioned));
-      expect(positioned.left, equals(horizontalOffset + 16 * scale));
-      expect(positioned.right, equals(horizontalOffset + 16 * scale));
+      expect(find.byType(Row), findsOneWidget);
     });
 
     testWidgets('has error builder for avatar', (tester) async {

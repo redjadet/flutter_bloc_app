@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
@@ -70,18 +72,28 @@ class _ResponsiveBody extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => LayoutBuilder(
-    builder: (final context, final constraints) => Align(
-      alignment: Alignment.topCenter,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: context.contentMaxWidth),
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: context.pageHorizontalPadding,
-            vertical: context.pageVerticalPadding,
+    builder: (final context, final constraints) {
+      final double keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
+      final double bottomInset = math.max(context.bottomInset, keyboardInset);
+      final EdgeInsets resolvedPadding = EdgeInsets.fromLTRB(
+        context.pageHorizontalPadding,
+        context.pageVerticalPadding,
+        context.pageHorizontalPadding,
+        context.pageVerticalPadding + bottomInset,
+      );
+
+      return Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: context.contentMaxWidth),
+          child: AnimatedPadding(
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOut,
+            padding: resolvedPadding,
+            child: child,
           ),
-          child: child,
         ),
-      ),
-    ),
+      );
+    },
   );
 }

@@ -4,7 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('LoggedOutPhotoHeader', () {
-    Widget buildSubject({double scale = 1.0, double horizontalOffset = 0.0}) {
+    Widget buildSubject({double scale = 1.0, double? verticalScale}) {
+      final double resolvedVerticalScale = verticalScale ?? scale;
       return MaterialApp(
         home: Scaffold(
           body: SizedBox(
@@ -15,7 +16,7 @@ void main() {
               children: [
                 LoggedOutPhotoHeader(
                   scale: scale,
-                  horizontalOffset: horizontalOffset,
+                  verticalScale: resolvedVerticalScale,
                 ),
               ],
             ),
@@ -29,7 +30,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(LoggedOutPhotoHeader), findsOneWidget);
-      expect(find.byType(Positioned), findsOneWidget);
+      expect(find.byType(Row), findsOneWidget);
     });
 
     testWidgets('displays photo text', (tester) async {
@@ -52,23 +53,23 @@ void main() {
       await tester.pumpWidget(buildSubject(scale: scale));
       await tester.pumpAndSettle();
 
-      final Positioned positioned = tester.widget(find.byType(Positioned));
-      expect(positioned.left, equals(84 * scale));
-      expect(positioned.top, equals(307 * scale));
-      expect(positioned.width, equals(206 * scale));
-      expect(positioned.height, equals(54 * scale));
+      final sizedBox = tester.widget<SizedBox>(
+        find
+            .descendant(
+              of: find.byType(LoggedOutPhotoHeader),
+              matching: find.byType(SizedBox),
+            )
+            .first,
+      );
+      expect(sizedBox.height, equals(54 * scale));
     });
 
-    testWidgets('applies horizontal offset correctly', (tester) async {
-      const horizontalOffset = 50.0;
+    testWidgets('renders row layout', (tester) async {
       const scale = 1.0;
-      await tester.pumpWidget(
-        buildSubject(scale: scale, horizontalOffset: horizontalOffset),
-      );
+      await tester.pumpWidget(buildSubject(scale: scale));
       await tester.pumpAndSettle();
 
-      final Positioned positioned = tester.widget(find.byType(Positioned));
-      expect(positioned.left, equals(horizontalOffset + 84 * scale));
+      expect(find.byType(Row), findsOneWidget);
     });
 
     testWidgets('icon container has gradient', (tester) async {

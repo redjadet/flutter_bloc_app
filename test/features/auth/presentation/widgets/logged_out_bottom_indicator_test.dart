@@ -4,7 +4,8 @@ import 'package:flutter_bloc_app/features/auth/presentation/widgets/logged_out_b
 
 void main() {
   group('LoggedOutBottomIndicator', () {
-    Widget buildSubject({double scale = 1.0, double horizontalOffset = 0.0}) {
+    Widget buildSubject({double scale = 1.0, double? verticalScale}) {
+      final double resolvedVerticalScale = verticalScale ?? scale;
       return MaterialApp(
         home: Scaffold(
           body: SizedBox(
@@ -14,7 +15,7 @@ void main() {
               children: [
                 LoggedOutBottomIndicator(
                   scale: scale,
-                  horizontalOffset: horizontalOffset,
+                  verticalScale: resolvedVerticalScale,
                 ),
               ],
             ),
@@ -28,7 +29,14 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(LoggedOutBottomIndicator), findsOneWidget);
-      expect(find.byType(Positioned), findsOneWidget);
+      // Verify the widget has a SizedBox (may have multiple due to SVG rendering)
+      expect(
+        find.descendant(
+          of: find.byType(LoggedOutBottomIndicator),
+          matching: find.byType(SizedBox),
+        ),
+        findsWidgets,
+      );
     });
 
     testWidgets('applies scale correctly', (tester) async {
@@ -37,24 +45,25 @@ void main() {
       // Don't use pumpAndSettle as it may timeout due to overflow warnings
       await tester.pump();
 
-      final Positioned positioned = tester.widget(find.byType(Positioned));
-      expect(positioned.left, equals(120 * scale));
-      expect(positioned.top, equals(799 * scale));
-      expect(positioned.width, equals(135 * scale));
-      expect(positioned.height, equals(5 * scale));
+      final SizedBox sizedBox = tester.widget(
+        find
+            .descendant(
+              of: find.byType(LoggedOutBottomIndicator),
+              matching: find.byType(SizedBox),
+            )
+            .first,
+      );
+      expect(sizedBox.width, equals(135 * scale));
+      expect(sizedBox.height, equals(5 * scale));
     });
 
-    testWidgets('applies horizontal offset correctly', (tester) async {
-      const horizontalOffset = 0.0; // Use 0 to avoid overflow
+    testWidgets('renders sized box layout', (tester) async {
       const scale = 0.5; // Use smaller scale to avoid overflow
-      await tester.pumpWidget(
-        buildSubject(scale: scale, horizontalOffset: horizontalOffset),
-      );
+      await tester.pumpWidget(buildSubject(scale: scale));
       // Don't use pumpAndSettle as it may timeout due to overflow warnings
       await tester.pump();
 
-      final Positioned positioned = tester.widget(find.byType(Positioned));
-      expect(positioned.left, equals(horizontalOffset + 120 * scale));
+      expect(find.byType(SizedBox), findsWidgets);
     });
 
     testWidgets('renders SVG with placeholder', (tester) async {

@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 class LoggedOutUserInfo extends StatelessWidget {
   const LoggedOutUserInfo({
     required this.scale,
-    required this.horizontalOffset,
+    required this.verticalScale,
     super.key,
   });
 
   final double scale;
-  final double horizontalOffset;
+  final double verticalScale;
 
   @override
   Widget build(final BuildContext context) {
@@ -18,13 +18,12 @@ class LoggedOutUserInfo extends StatelessWidget {
     const double handleLineHeight = 12.891;
     const double avatarSize = 28;
     final double avatarExtent = avatarSize * scale;
-    final double textExtent = (nameLineHeight + handleLineHeight) * scale;
-    final double containerHeight = math.max(avatarExtent, textExtent) + scale;
+    final double textExtent =
+        (nameLineHeight + handleLineHeight) * verticalScale;
+    final double containerHeight =
+        math.max(avatarExtent, textExtent) + verticalScale;
 
-    return Positioned(
-      left: horizontalOffset + 16 * scale,
-      right: horizontalOffset + 16 * scale,
-      top: 659 * scale,
+    return SizedBox(
       height: containerHeight,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -55,34 +54,41 @@ class LoggedOutUserInfo extends StatelessWidget {
           ),
           SizedBox(width: 8 * scale),
           Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Pawel Czerwinski',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    fontSize: 13 * scale,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black,
-                    height: nameLineHeight / 13,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Pawel Czerwinski',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        fontSize: 13 * scale,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                        height: nameLineHeight / 13,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                    Text(
+                      '@pawel_czerwinski',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontSize: 11 * scale,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black.withValues(alpha: 0.8),
+                        height: handleLineHeight / 11,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ],
                 ),
-                Text(
-                  '@pawel_czerwinski',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontSize: 11 * scale,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black.withValues(alpha: 0.8),
-                    height: handleLineHeight / 11,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ],
+              ),
             ),
           ),
         ],
