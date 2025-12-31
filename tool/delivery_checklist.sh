@@ -75,8 +75,36 @@ echo "  Checking for raw print() usage..."
 bash tool/check_raw_print.sh || VALIDATION_FAILED=1
 echo ""
 
+echo "  Checking for per-widget GoogleFonts usage..."
+bash tool/check_raw_google_fonts.sh || VALIDATION_FAILED=1
+echo ""
+
 echo "  Checking for side effects in build() method..."
 bash tool/check_side_effects_build.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for missing context.mounted checks after async operations..."
+bash tool/check_context_mounted.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for missing mounted checks before setState() after await..."
+bash tool/check_setstate_mounted.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for hard-coded colors..."
+bash tool/check_hardcoded_colors.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for hard-coded strings in Text widgets..."
+bash tool/check_hardcoded_strings.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for missing isClosed checks before emit() in cubits..."
+bash tool/check_cubit_isclosed.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for missing const constructors in StatelessWidget..."
+bash tool/check_missing_const.sh || VALIDATION_FAILED=1
 echo ""
 
 if [ $VALIDATION_FAILED -eq 1 ]; then

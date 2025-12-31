@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({required this.user, super.key});
@@ -65,7 +66,7 @@ class ProfileHeader extends StatelessWidget {
               errorBuilder: (final context, final error, final stackTrace) {
                 final theme = Theme.of(context);
                 final colors = theme.colorScheme;
-                debugPrint('Image Error: $error');
+                AppLogger.error('Image Error: $error', error, stackTrace);
                 return Container(
                   width: avatarSize,
                   height: avatarSize,
