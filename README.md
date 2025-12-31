@@ -167,6 +167,7 @@ A production-ready Flutter application demonstrating enterprise-grade architectu
 - **CI/CD Ready** - Fastlane scripts, Firebase app distribution hooks, and per-environment configurations
 - **Common Bugs Checklist** - Context lifecycle, cubit disposal, and async guardrails outlined in `docs/new_developer_guide.md`
 - **Bug Prevention Tests** - Dedicated regression tests under `test/shared/common_bugs_prevention_test.dart` covering StreamController state checks, cubit lifecycle guards, context mounted checks, completer safety, and more. Automatically included in `./bin/checklist` test runs.
+- **Automated Validation Scripts** - 14 validation scripts automatically catch common Flutter bugs and enforce best practices before commits (see [Validation Scripts](#validation-scripts) section)
 
 ---
 
@@ -241,7 +242,85 @@ The checklist automatically runs:
 
 1. `dart format .` - Code formatting
 2. `flutter analyze` - Static analysis (includes custom file length lint)
-3. `tool/test_coverage.sh` - Test coverage generation
+3. **Best practices validation** - 14 automated checks to catch bugs early (see [Validation Scripts](#validation-scripts) below)
+4. `tool/test_coverage.sh` - Test coverage generation
+
+See [`docs/validation_scripts.md`](docs/validation_scripts.md) for complete documentation of all validation scripts.
+
+---
+
+## Validation Scripts
+
+This project includes **14 automated validation scripts** that run as part of the delivery checklist to catch common Flutter bugs and enforce best practices early. These scripts were created based on:
+
+1. **Common Flutter pitfalls** identified in production codebases and community best practices
+2. **Architecture violations** that break clean architecture principles
+3. **UI/UX anti-patterns** that reduce accessibility, localization, and platform adaptiveness
+4. **State management bugs** that cause crashes and memory leaks
+
+### Why These Scripts Exist
+
+Flutter development has many subtle pitfalls that are easy to miss during code review but costly to fix later. These scripts catch issues **before they reach production**:
+
+- **Context lifecycle bugs**: Using `context` after `await` without checking `mounted` causes "setState() called after dispose()" crashes
+- **State management bugs**: Calling `emit()` after cubit is closed throws exceptions in async callbacks
+- **Theme violations**: Hard-coded colors break dark mode and Material 3 compliance
+- **Localization gaps**: Hard-coded strings prevent multi-language support
+- **Architecture leaks**: Direct `GetIt`/`Hive.openBox` usage breaks dependency injection and encryption
+
+### Validation Script Categories
+
+#### Architecture & Dependency Injection
+
+- `check_flutter_domain_imports.sh` - Ensures domain layer stays Flutter-agnostic
+- `check_direct_getit.sh` - Prevents direct `GetIt` access in presentation (should inject via constructors)
+- `check_no_hive_openbox.sh` - Prevents direct `Hive.openBox` usage (should use `HiveService`)
+
+#### UI/UX Best Practices
+
+- `check_material_buttons.sh` - Enforces platform-adaptive buttons (`PlatformAdaptive.*` helpers)
+- `check_raw_dialogs.sh` - Enforces `showAdaptiveDialog()` over raw dialog APIs
+- `check_raw_network_images.sh` - Enforces `CachedNetworkImageWidget` for remote images
+- `check_hardcoded_colors.sh` - Prevents hard-coded colors (should use `Theme.of(context).colorScheme`)
+- `check_hardcoded_strings.sh` - Prevents hard-coded strings (should use `context.l10n.*`)
+
+#### Context & Async Safety
+
+- `check_context_mounted.sh` - Ensures `context.mounted` checks after async operations
+- `check_cubit_isclosed.sh` - Ensures `isClosed` checks before `emit()` in async callbacks
+
+#### Services & Utilities
+
+- `check_raw_timer.sh` - Enforces `TimerService` for testable timing
+- `check_raw_print.sh` - Enforces `AppLogger` over raw `print()`
+- `check_raw_google_fonts.sh` - Prevents per-widget `GoogleFonts.*` usage (should use theme)
+
+#### Widget Lifecycle (Heuristic)
+
+- `check_side_effects_build.sh` - Heuristic check for side effects in `build()` method
+- `check_missing_const.sh` - Heuristic check for missing `const` constructors in `StatelessWidget`
+
+### Suppressing Violations
+
+If a specific line must violate a check (e.g., user-initiated async callback), add an inline comment:
+
+```dart
+// check-ignore: reason for ignoring
+Navigator.of(context).pop(); // This line will be ignored
+```
+
+Ignored violations are reported with reasons so exceptions remain explicit and reviewable.
+
+### Complete Documentation
+
+For detailed information about each script, including:
+
+- What each script checks
+- Why it matters
+- Example violations and correct patterns
+- Suppression instructions
+
+See [`docs/validation_scripts.md`](docs/validation_scripts.md).
 
 ---
 

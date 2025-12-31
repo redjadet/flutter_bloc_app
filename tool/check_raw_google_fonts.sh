@@ -1,33 +1,30 @@
 #!/usr/bin/env bash
-# Check for raw Material buttons (should use PlatformAdaptive instead)
-# Raw buttons: ElevatedButton, OutlinedButton, TextButton
+# Check for per-widget GoogleFonts usage (should be defined in app_config.dart theme)
 
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
-echo "🔍 Checking for raw Material buttons in presentation layer..."
+echo "🔍 Checking for per-widget GoogleFonts usage..."
 
 IGNORED=""
 
 source "$PROJECT_ROOT/tool/check_helpers.sh"
 
-# Use ripgrep if available, otherwise grep
 if command -v rg &> /dev/null; then
-  VIOLATIONS=$(rg -n "ElevatedButton|OutlinedButton|TextButton" lib/features 2>/dev/null \
-    --glob "*/presentation/**" \
+  VIOLATIONS=$(rg -n "GoogleFonts\\." lib 2>/dev/null \
     --glob "!**/*.g.dart" \
     --glob "!**/*.freezed.dart" \
     --glob "!**/*.gr.dart" \
-    | rg -v "PlatformAdaptive" \
+    --glob "!**/core/app_config.dart" \
     | rg -v "test" \
     | rg -v "^[[:space:]]*//" \
     || true)
 else
-  VIOLATIONS=$(grep -rn "ElevatedButton\|OutlinedButton\|TextButton" lib/features 2>/dev/null \
+  VIOLATIONS=$(grep -rn "GoogleFonts\." lib 2>/dev/null \
     | grep -v "/test/" \
-    | grep -v "PlatformAdaptive" \
+    | grep -v "core/app_config.dart" \
     | grep -v "^[[:space:]]*//" \
     || true)
 fi
@@ -40,10 +37,12 @@ if [ -n "${IGNORED:-}" ]; then
 fi
 
 if [ -n "$VIOLATIONS" ]; then
-  echo "❌ Violations found: Raw Material buttons (use PlatformAdaptive instead)"
+  echo "❌ Violations found: Per-widget GoogleFonts usage"
+  echo "Note: Define fonts in app_config.dart and use Theme.of(context).textTheme"
+  echo ""
   echo "$VIOLATIONS"
   exit 1
 else
-  echo "✅ No raw Material buttons found"
+  echo "✅ No per-widget GoogleFonts usage found"
   exit 0
 fi
