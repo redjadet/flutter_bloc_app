@@ -63,15 +63,17 @@ class ProfileHeader extends StatelessWidget {
               height: avatarSize,
               fit: BoxFit.cover,
               errorBuilder: (final context, final error, final stackTrace) {
+                final theme = Theme.of(context);
+                final colors = theme.colorScheme;
                 debugPrint('Image Error: $error');
                 return Container(
                   width: avatarSize,
                   height: avatarSize,
-                  color: Colors.grey[300],
+                  color: colors.surfaceContainerHighest,
                   child: Icon(
                     Icons.error,
                     size: avatarSize * 0.5,
-                    color: Colors.red,
+                    color: colors.error,
                   ),
                 );
               },
@@ -85,7 +87,7 @@ class ProfileHeader extends StatelessWidget {
               fontSize: nameFontSize,
               fontWeight: FontWeight.w400,
               letterSpacing: -0.54 * (nameFontSize / 36),
-              color: Colors.black,
+              color: Theme.of(context).colorScheme.onSurface,
               height: 40.14 / 36, // Maintain aspect ratio
             ),
             textAlign: TextAlign.center,
@@ -98,7 +100,7 @@ class ProfileHeader extends StatelessWidget {
               fontSize: locationFontSize,
               fontWeight: FontWeight.w900,
               letterSpacing: 0.52 * (locationFontSize / 13),
-              color: Colors.black,
+              color: Theme.of(context).colorScheme.onSurface,
               height: 15.234375 / 13, // Maintain aspect ratio
             ),
             textAlign: TextAlign.center,

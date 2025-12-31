@@ -45,11 +45,16 @@ class _ProfileButton extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
     final buttonHeight = context.responsiveValue<double>(
       mobile: 52,
       tablet: 56,
       desktop: 56,
     );
+
+    final backgroundColor = isPrimary ? colors.primary : colors.surface;
+    final foregroundColor = isPrimary ? colors.onPrimary : colors.onSurface;
 
     return SizedBox(
       width: double.infinity,
@@ -57,19 +62,19 @@ class _ProfileButton extends StatelessWidget {
       child: PlatformAdaptive.outlinedButton(
         context: context,
         onPressed: onPressed,
-        backgroundColor: isPrimary ? Colors.black : Colors.white,
-        foregroundColor: isPrimary ? Colors.white : Colors.black,
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
         borderRadius: BorderRadius.circular(context.responsiveCardRadius),
         materialStyle: profileOutlinedButtonStyle(
           context,
-          backgroundColor: isPrimary ? Colors.black : Colors.white,
+          backgroundColor: backgroundColor,
         ),
         child: Text(
           label,
           style: profileButtonTextStyle(
             context,
             fontSize: 13, // Match Figma: fontSize 13
-            color: isPrimary ? Colors.white : Colors.black,
+            color: foregroundColor,
           ),
         ),
       ),

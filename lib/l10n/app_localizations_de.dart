@@ -448,6 +448,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get chatInputHint => 'Frag den Assistenten etwas...';
 
   @override
+  String get searchHint => 'Suchen...';
+
+  @override
+  String get retryButtonLabel => 'ERNEUT VERSUCHEN';
+
+  @override
   String get chatSendButton => 'Nachricht senden';
 
   @override

@@ -596,6 +596,14 @@
   "@chatInputHint": {
     "description": "Placeholder text shown in the chat input field"
   },
+  "searchHint": "Search...",
+  "@searchHint": {
+    "description": "Placeholder text shown in search input fields"
+  },
+  "retryButtonLabel": "TRY AGAIN",
+  "@retryButtonLabel": {
+    "description": "Label for retry button in error views"
+  },
   "chatSendButton": "Send message",
   "@chatSendButton": {
     "description": "Tooltip and accessibility label for the button that sends a chat message"

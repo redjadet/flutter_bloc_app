@@ -902,6 +902,18 @@ abstract class AppLocalizations {
   /// **'Ask the assistant anything...'**
   String get chatInputHint;
 
+  /// Placeholder text shown in search input fields
+  ///
+  /// In en, this message translates to:
+  /// **'Search...'**
+  String get searchHint;
+
+  /// Label for retry button in error views
+  ///
+  /// In en, this message translates to:
+  /// **'TRY AGAIN'**
+  String get retryButtonLabel;
+
   /// Tooltip and accessibility label for the button that sends a chat message
   ///
   /// In en, this message translates to:

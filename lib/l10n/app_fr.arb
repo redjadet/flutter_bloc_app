@@ -350,6 +350,8 @@
   "openGoogleMapsTooltip": "Ouvrir la démo Google Maps",
   "chatPageTitle": "Discussion IA",
   "chatInputHint": "Posez votre question à l'assistant...",
+  "searchHint": "Rechercher...",
+  "retryButtonLabel": "RÉESSAYER",
   "chatSendButton": "Envoyer le message",
   "chatEmptyState": "Commencez la conversation en envoyant un message.",
   "chatModelLabel": "Modèle",

@@ -444,6 +444,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get chatInputHint => 'Asistana bir şey sor...';
 
   @override
+  String get searchHint => 'Ara...';
+
+  @override
+  String get retryButtonLabel => 'TEKRAR DENE';
+
+  @override
   String get chatSendButton => 'Mesaj gönder';
 
   @override

@@ -21,121 +21,128 @@ class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
-  Widget build(final BuildContext context) => Scaffold(
-    backgroundColor: Colors.white,
-    appBar: const CommonAppBar(
-      title: 'Profile',
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.black,
-      cupertinoBackgroundColor: Colors.white,
-      cupertinoTitleStyle: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w600,
+  Widget build(final BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+    return Scaffold(
+      backgroundColor: colors.surface,
+      appBar: CommonAppBar(
+        title: 'Profile',
+        backgroundColor: colors.surface,
+        foregroundColor: colors.onSurface,
+        cupertinoBackgroundColor: colors.surface,
+        cupertinoTitleStyle: TextStyle(
+          color: colors.onSurface,
+          fontWeight: FontWeight.w600,
+        ),
       ),
-    ),
-    bottomNavigationBar: const ProfileBottomNav(),
-    body: ViewStatusSwitcher<ProfileCubit, ProfileState, _ProfileBodyData>(
-      selector: (final state) => _ProfileBodyData(
-        isLoading: state.isLoading,
-        hasError: state.hasError,
-        hasUser: state.hasUser,
-        user: state.user,
-      ),
-      isLoading: (final data) => data.isLoading && !data.hasUser,
-      isError: (final data) => data.hasError && !data.hasUser,
-      loadingBuilder: (final _) =>
-          const CommonLoadingWidget(color: Colors.black),
-      errorBuilder: (final context, final _) => CommonErrorView(
-        message: 'Failed to load profile',
-        onRetry: () => context.read<ProfileCubit>().loadProfile(),
-      ),
-      builder: (final context, final bodyData) {
-        if (!bodyData.hasUser) {
-          return const CommonErrorView(
-            message: 'Failed to load profile',
-          ); // Fallback if state is unexpected
-        }
+      bottomNavigationBar: const ProfileBottomNav(),
+      body: ViewStatusSwitcher<ProfileCubit, ProfileState, _ProfileBodyData>(
+        selector: (final state) => _ProfileBodyData(
+          isLoading: state.isLoading,
+          hasError: state.hasError,
+          hasUser: state.hasUser,
+          user: state.user,
+        ),
+        isLoading: (final data) => data.isLoading && !data.hasUser,
+        isError: (final data) => data.hasError && !data.hasUser,
+        loadingBuilder: (final context) {
+          final colors = Theme.of(context).colorScheme;
+          return CommonLoadingWidget(color: colors.onSurface);
+        },
+        errorBuilder: (final context, final _) => CommonErrorView(
+          message: 'Failed to load profile',
+          onRetry: () => context.read<ProfileCubit>().loadProfile(),
+        ),
+        builder: (final context, final bodyData) {
+          final colors = Theme.of(context).colorScheme;
+          if (!bodyData.hasUser) {
+            return const CommonErrorView(
+              message: 'Failed to load profile',
+            ); // Fallback if state is unexpected
+          }
 
-        final profile = bodyData.user!;
-        final double sectionSpacing =
-            context.pageVerticalPadding *
-            (context.isDesktop
-                ? 3
-                : context.isTabletOrLarger
-                ? 2.5
-                : 2);
-        final double buttonMaxWidth = context.clampWidthTo(500);
+          final profile = bodyData.user!;
+          final double sectionSpacing =
+              context.pageVerticalPadding *
+              (context.isDesktop
+                  ? 3
+                  : context.isTabletOrLarger
+                  ? 2.5
+                  : 2);
+          final double buttonMaxWidth = context.clampWidthTo(500);
 
-        return RepaintBoundary(
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: CommonMaxWidth(
-                  child: Column(
-                    children: [
-                      const ProfileSyncBanner(),
-                      ProfileHeader(user: profile),
-                      const ProfileActionButtons(),
-                      SizedBox(height: sectionSpacing),
-                    ],
-                  ),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: CommonMaxWidth(
-                  child: ProfileGallery(images: profile.galleryImages),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: CommonMaxWidth(
-                  child: Padding(
-                    padding: context.pageHorizontalPaddingInsets,
+          return RepaintBoundary(
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: CommonMaxWidth(
                     child: Column(
                       children: [
+                        const ProfileSyncBanner(),
+                        ProfileHeader(user: profile),
+                        const ProfileActionButtons(),
                         SizedBox(height: sectionSpacing),
-                        CommonMaxWidth(
-                          maxWidth: buttonMaxWidth,
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: context.responsiveButtonHeight,
-                            child: PlatformAdaptive.outlinedButton(
-                              context: context,
-                              onPressed: () {},
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black,
-                              borderRadius: BorderRadius.circular(
-                                context.responsiveCardRadius,
-                              ),
-                              materialStyle: profileOutlinedButtonStyle(
-                                context,
-                                backgroundColor: Colors.white,
-                              ),
-                              child: Text(
-                                'SEE MORE',
-                                style: profileButtonTextStyle(
-                                  context,
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height:
-                              sectionSpacing + context.safeAreaInsets.bottom,
-                        ),
                       ],
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
-    ),
-  );
+                SliverToBoxAdapter(
+                  child: CommonMaxWidth(
+                    child: ProfileGallery(images: profile.galleryImages),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: CommonMaxWidth(
+                    child: Padding(
+                      padding: context.pageHorizontalPaddingInsets,
+                      child: Column(
+                        children: [
+                          SizedBox(height: sectionSpacing),
+                          CommonMaxWidth(
+                            maxWidth: buttonMaxWidth,
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: context.responsiveButtonHeight,
+                              child: PlatformAdaptive.outlinedButton(
+                                context: context,
+                                onPressed: () {},
+                                backgroundColor: colors.surface,
+                                foregroundColor: colors.onSurface,
+                                borderRadius: BorderRadius.circular(
+                                  context.responsiveCardRadius,
+                                ),
+                                materialStyle: profileOutlinedButtonStyle(
+                                  context,
+                                  backgroundColor: colors.surface,
+                                ),
+                                child: Text(
+                                  'SEE MORE',
+                                  style: profileButtonTextStyle(
+                                    context,
+                                    color: colors.onSurface,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height:
+                                sectionSpacing + context.safeAreaInsets.bottom,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
 }
 
 @immutable

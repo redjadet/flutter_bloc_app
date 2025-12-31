@@ -351,6 +351,8 @@
   "openGoogleMapsTooltip": "Google Haritalar demosunu aç",
   "chatPageTitle": "Yapay Zekâ Sohbeti",
   "chatInputHint": "Asistana bir şey sor...",
+  "searchHint": "Ara...",
+  "retryButtonLabel": "TEKRAR DENE",
   "chatSendButton": "Mesaj gönder",
   "chatEmptyState": "Sohbete bir mesaj göndererek başla.",
   "chatModelLabel": "Model",

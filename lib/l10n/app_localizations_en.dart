@@ -437,6 +437,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatInputHint => 'Ask the assistant anything...';
 
   @override
+  String get searchHint => 'Search...';
+
+  @override
+  String get retryButtonLabel => 'TRY AGAIN';
+
+  @override
   String get chatSendButton => 'Send message';
 
   @override

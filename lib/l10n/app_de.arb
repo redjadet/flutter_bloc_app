@@ -350,6 +350,8 @@
   "openGoogleMapsTooltip": "Google-Maps-Demo öffnen",
   "chatPageTitle": "KI-Chat",
   "chatInputHint": "Frag den Assistenten etwas...",
+  "searchHint": "Suchen...",
+  "retryButtonLabel": "ERNEUT VERSUCHEN",
   "chatSendButton": "Nachricht senden",
   "chatEmptyState": "Beginne das Gespräch mit einer Nachricht.",
   "chatModelLabel": "Modell",

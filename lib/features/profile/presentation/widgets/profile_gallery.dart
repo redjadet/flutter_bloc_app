@@ -72,9 +72,12 @@ class _GalleryColumn extends StatelessWidget {
               boxFit: BoxFit.cover,
               shimmerBaseColor: theme.colorScheme.surfaceContainerHighest,
               shimmerHighlightColor: theme.colorScheme.surface,
-              errorWidget: Container(
-                color: Colors.grey[300],
-                child: const Icon(Icons.image, color: Colors.black54),
+              errorWidget: ColoredBox(
+                color: theme.colorScheme.surfaceContainerHighest,
+                child: Icon(
+                  Icons.image,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
           ),
