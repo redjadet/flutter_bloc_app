@@ -79,11 +79,14 @@ A production-ready Flutter application demonstrating enterprise-grade architectu
 
 ### UI/UX Excellence
 
-- **Responsive Design** - Adaptive layouts for mobile, tablet, and desktop
-- **Platform-Adaptive Widgets** - Material 3 on Android, Cupertino on iOS
+- **Responsive Design** - Adaptive layouts for mobile, tablet, and desktop with centralized spacing, typography, and grid helpers (`context.responsive*`)
+- **Platform-Adaptive Widgets** - Material 3 on Android, Cupertino on iOS via `PlatformAdaptive.*` helpers (buttons, dialogs, loading indicators)
+- **Theme-Aware Colors** - All colors use `Theme.of(context).colorScheme` for consistent dark mode and Material 3 support
+- **Safe Area & Keyboard Handling** - Automatic safe-area and keyboard-aware padding via `CommonPageLayout`
+- **Text Scaling & Accessibility** - Flexible layouts that adapt to 1.3+ text scale; minimum tap targets (44x44 iOS, 48x48 Android)
+- **Localization** - Complete localization support (EN, TR, DE, FR, ES) with no hard-coded strings
 - **Loading States** - Skeleton screens, shimmer effects, and smooth transitions
 - **Image Caching** - Automatic remote image caching with `CachedNetworkImageWidget`
-- **Accessibility** - Semantic widgets and overflow guards
 - **Low-Level Rendering** - Custom `CustomPainter` for canvas drawing and custom `RenderObject` for advanced text layout
 
 ### Authentication & Security
@@ -354,7 +357,7 @@ flowchart LR
 - **Dependency injection & bootstrap** - `ensureConfigured()` + `registerAllDependencies()` wire repositories/services through `get_it`. `AppScope` starts the `BackgroundSyncCoordinator`, seeds `SyncStatusCubit`, runs `RemoteConfigCubit.initialize()`, and wraps the tree with `DeepLinkListener` and `ResponsiveScope`.
 - **State safety** - Cubits use `CubitExceptionHandler`, `CubitSubscriptionMixin`, and `CubitStateEmissionMixin` to avoid emit-after-close; timers/streams/completers are cancelled in `close()` with explicit `isClosed` guards.
 - **Context & navigation safety** - `ContextUtils.logNotMounted()` plus `NavigationUtils.maybePop()/popOrGoHome()` centralize mounted checks and dialog dismissal so async flows cannot navigate after dispose.
-- **Responsive + adaptive UX** - Layouts honor `contentMaxWidth`, `pagePadding`, adaptive grids, and platform-aware dialogs; gestures, images, and spacing reference shared responsive extensions for every screen size.
+- **Responsive + adaptive UX** - Layouts honor `contentMaxWidth`, `pagePadding`, adaptive grids, and platform-aware dialogs; gestures, images, and spacing reference shared responsive extensions for every screen size. All buttons use `PlatformAdaptive.*` helpers; all colors use `colorScheme`; all strings use `context.l10n.*`. Safe-area and keyboard handling via `CommonPageLayout`. See `docs/ui_ux_responsive_review.md` for comprehensive guidelines.
 - **Secure persistence** - `HiveService` (never `Hive.openBox` directly) encrypts data via `HiveKeyManager` and `flutter_secure_storage`, migrations run through `SharedPreferencesMigrationService`, and `BiometricAuthenticator`/`NativePlatformService` guard sensitive flows.
 - **Offline-first architecture** - Offline-first repositories (counter, chat, search, profile, remote config, GraphQL) register with `SyncableRepositoryRegistry` and queue writes in `PendingSyncRepository`; `BackgroundSyncCoordinator` + `NetworkStatusService` + `TimerService` flush the queue, while `SyncStatusCubit` surfaces status/telemetry in the UI.
 - **Testing & quality gates** - `./bin/checklist` (`dart format`, `flutter analyze`, coverage) + `tool/test_coverage.sh` enforce `file_length_lint`, common-bug prevention suites, and coverage thresholds before commits.
@@ -613,6 +616,8 @@ flutter gen-l10n
 
 ## Documentation
 
+- **[docs/new_developer_guide.md](docs/new_developer_guide.md)** - Essential guide for new developers (architecture, workflow, best practices)
+- **[docs/ui_ux_responsive_review.md](docs/ui_ux_responsive_review.md)** - Comprehensive UI/UX guidelines, responsive design patterns, platform-adaptive components, and accessibility best practices
 - **[FAQ.md](FAQ.md)** - Frequently asked questions
 - **[docs/CODE_QUALITY_ANALYSIS.md](docs/CODE_QUALITY_ANALYSIS.md)** - Code quality analysis, performance profiling, and optimization guide
 - **[docs/dry_principles.md](docs/dry_principles.md)** - DRY principles applied, consolidations, and guidelines
@@ -660,8 +665,13 @@ Contributions are welcome! Please follow these guidelines:
 2. **Write tests** for new features
 3. **Update documentation** as needed
 4. **Follow Clean Architecture** principles
-5. **Use responsive extensions** for UI components
-6. **Keep files under 250 lines** (enforced by linter)
+5. **Use responsive extensions** for UI components (`context.responsive*`)
+6. **Use platform-adaptive components** (`PlatformAdaptive.*` helpers, never raw Material buttons)
+7. **Use theme-aware colors** (`Theme.of(context).colorScheme`, never hard-coded colors)
+8. **Use localization** (`context.l10n.*`, never hard-coded strings)
+9. **Handle safe areas and keyboard** (use `CommonPageLayout` or handle manually)
+10. **Test text scaling** (1.3+ scale) and accessibility
+11. **Keep files under 250 lines** (enforced by linter)
 
 ---
 
