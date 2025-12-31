@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/search/presentation/search_cubit.dart';
 import 'package:flutter_bloc_app/features/search/presentation/search_state.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 class SearchTextField extends StatefulWidget {
@@ -37,6 +38,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
         },
         child: Builder(
           builder: (final context) {
+            final l10n = context.l10n;
             final theme = Theme.of(context);
             final colors = theme.colorScheme;
             final textStyle = theme.textTheme.bodyMedium?.copyWith(
@@ -71,7 +73,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
                     horizontal: context.responsiveHorizontalGapL,
                     vertical: context.responsiveGapM,
                   ),
-                  hintText: 'Search...',
+                  hintText: l10n.searchHint,
                   hintStyle: hintStyle,
                 ),
               ),

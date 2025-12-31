@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
@@ -43,7 +44,7 @@ class SyncStatusBanner extends StatelessWidget {
                 // check-ignore: user action triggers async flush
                 unawaited(cubit.flush());
               },
-              child: const Text('Retry'),
+              child: Text(context.l10n.appInfoRetryButtonLabel),
             ),
           ],
         ),
