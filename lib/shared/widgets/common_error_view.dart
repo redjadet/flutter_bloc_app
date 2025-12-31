@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_status_view.dart';
 
 /// A reusable error view widget with consistent styling
@@ -48,6 +49,7 @@ class CommonErrorView extends StatelessWidget {
 }
 
 /// A reusable retry button with consistent styling
+/// Uses platform-adaptive button styling (CupertinoButton on iOS, OutlinedButton on Android)
 class CommonRetryButton extends StatelessWidget {
   const CommonRetryButton({
     required this.onPressed,
@@ -64,29 +66,27 @@ class CommonRetryButton extends StatelessWidget {
     final colors = theme.colorScheme;
     return SizedBox(
       height: context.responsiveButtonHeight,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-          border: Border.all(
-            color: colors.outline,
-            width: 1.5,
+      child: PlatformAdaptive.outlinedButton(
+        context: context,
+        onPressed: onPressed,
+        backgroundColor: Colors.transparent,
+        foregroundColor: colors.onSurface,
+        borderRadius: BorderRadius.circular(context.responsiveCardRadius),
+        side: BorderSide(
+          color: colors.outline,
+          width: 1.5,
+        ),
+        materialStyle: OutlinedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(context.responsiveCardRadius),
           ),
         ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-            onTap: onPressed,
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.2,
-                  color: colors.onSurface,
-                ),
-              ),
-            ),
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
           ),
         ),
       ),

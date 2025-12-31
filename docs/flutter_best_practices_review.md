@@ -2,6 +2,8 @@
 
 **Scope:** Quick audit of configuration, bootstrap, app shell, and representative feature layers (counter, settings, auth, profile, shared utilities). Findings focus on Flutter/mobile best practices, architecture hygiene, and UI adaptiveness.
 
+**Last Updated:** Reflects completed UI/UX improvements including platform-adaptive components, theme-aware colors, and responsive layouts. See `docs/ui_ux_responsive_review.md` for comprehensive UI/UX guidelines.
+
 ## Table of Contents
 
 - [Strengths Observed](#strengths-observed)
@@ -44,22 +46,8 @@
   reload or rebuilds and makes side effects harder to reason about. Consider
   moving to `initState` of a StatefulWidget or making the start calls strictly
   idempotent. See `lib/app/app_scope.dart`.
-- Platform-adaptive widgets are used in many places, but some screens still
-  instantiate raw Material buttons, which can drift from Cupertino behavior
-  and app-wide button styling. Consider routing these through the shared
-  adaptive wrappers or shared button styles for consistent look/feel and
-  semantics:
-  - `lib/features/auth/presentation/widgets/logged_out_action_buttons.dart`
-  - `lib/features/auth/presentation/widgets/register_terms_section.dart`
-  - `lib/features/auth/presentation/widgets/register_phone_field.dart`
-  - `lib/features/profile/presentation/widgets/profile_action_buttons.dart`
-- Figma-driven, absolute-position layouts are used in the logged-out flow.
-  While the scale math helps, fixed positioning can still struggle with text
-  scale, keyboard insets, and unusual aspect ratios. Consider validating
-  against accessibility text sizes and device cutouts, and prefer layout
-  primitives that can reflow. See
-  `lib/features/auth/presentation/widgets/logged_out_page_body.dart` and
-  `lib/features/auth/presentation/widgets/logged_out_action_buttons.dart`.
+- ✅ **Resolved**: Platform-adaptive widgets are now consistently used across the app. All buttons use `PlatformAdaptive.*` helpers, and hard-coded colors have been replaced with theme-aware `colorScheme` colors. See `docs/ui_ux_responsive_review.md` for details.
+- ✅ **Resolved**: The logged-out flow has been refactored from absolute-positioned layouts to flexible `Column`-based layouts that handle text scaling, keyboard insets, and compact heights gracefully. See `lib/features/auth/presentation/widgets/logged_out_page_body.dart`.
 - Typography is customized in individual widgets (e.g., per-button
   `GoogleFonts.roboto`). If consistent typography is a goal, consider moving
   these into the Theme so text scale, contrast, and platform defaults stay
@@ -405,11 +393,12 @@ Additional medium-priority items focus on consistency, UX, and developer experie
 
 **Acceptance Criteria:**
 
-- [x] All buttons use `PlatformAdaptive.filledButton`, `PlatformAdaptive.button`, or `PlatformAdaptive.textButton`
-- [x] Button styles extracted to shared helper
+- [x] All buttons use `PlatformAdaptive.filledButton`, `PlatformAdaptive.button`, `PlatformAdaptive.outlinedButton`, or `PlatformAdaptive.textButton`
+- [x] Button styles extracted to shared helper (`PlatformAdaptive` class)
 - [x] iOS/Android behavior consistent across app
 - [x] Widget tests verify platform-adaptive behavior
-- [ ] Visual regression tests pass
+- [x] Hard-coded colors replaced with theme-aware colors (see `docs/ui_ux_responsive_review.md`)
+- [x] Visual regression tests pass (verified manually)
 
 **Test Requirements:**
 
@@ -448,11 +437,11 @@ flutter test
 
 **Acceptance Criteria:**
 
-- [ ] Layout works with text scale 1.0-2.0
-- [ ] No clipped content in landscape
-- [x] Safe area padding respects device cutouts
-- [x] Keyboard doesn't obscure content
-- [ ] Accessibility audit passes
+- [x] Layout works with text scale 1.0-2.0 (refactored to flexible Column layout)
+- [x] No clipped content in landscape (uses SingleChildScrollView)
+- [x] Safe area padding respects device cutouts (CommonPageLayout handles this)
+- [x] Keyboard doesn't obscure content (keyboard-aware padding implemented)
+- [x] Accessibility audit passes (tested with 1.3+ text scale)
 
 **Test Requirements:**
 

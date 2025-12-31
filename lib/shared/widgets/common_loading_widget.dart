@@ -28,10 +28,15 @@ class CommonLoadingWidget extends StatelessWidget {
           SizedBox(
             width: size,
             height: size,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: effectiveColor,
-            ),
+            child: PlatformAdaptive.isCupertino(context)
+                ? CupertinoActivityIndicator(
+                    color: effectiveColor,
+                    radius: size / 2,
+                  )
+                : CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: effectiveColor,
+                  ),
           ),
           if (message != null) ...[
             SizedBox(height: context.responsiveGapM),

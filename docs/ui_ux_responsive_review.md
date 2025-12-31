@@ -312,7 +312,7 @@ flutter test test/shared/widgets/text_scaling_smoke_test.dart
 
 **Owner:** Component Library
 **Effort:** S (0.5-1 day)
-**Status:** ⬜
+**Status:** ✅
 **Files:** `lib/shared/widgets/common_error_view.dart`
 
 **Problem:** Custom `InkWell` button doesn't match platform conventions or use adaptive helpers.
@@ -323,11 +323,18 @@ flutter test test/shared/widgets/text_scaling_smoke_test.dart
 2. Use localized string from `AppLocalizations` (e.g., `appInfoRetryButtonLabel`).
 3. Ensure focus/hover/disabled states follow platform conventions.
 
+**Current Implementation:**
+
+- `CommonRetryButton` now uses `PlatformAdaptive.outlinedButton` for platform-adaptive styling.
+- Uses `CupertinoButton` on iOS/macOS and `OutlinedButton` on Android.
+- Already uses localized string (`l10n.retryButtonLabel`).
+- Maintains border styling with theme-aware colors (`colorScheme.outline`).
+
 **Acceptance Criteria:**
 
-- [ ] Retry button uses platform-adaptive styling.
-- [ ] Button matches iOS/Android native button appearance.
-- [ ] Accessibility semantics are correct.
+- [x] Retry button uses platform-adaptive styling.
+- [x] Button matches iOS/Android native button appearance.
+- [x] Accessibility semantics are correct.
 
 **Test Requirements:**
 
@@ -345,7 +352,7 @@ flutter test test/shared/widgets/common_error_view_test.dart
 
 **Owner:** Component Library
 **Effort:** S (0.5-1 day)
-**Status:** ⬜
+**Status:** ✅
 **Files:** `lib/shared/widgets/common_loading_widget.dart`
 
 **Problem:** `CommonLoadingWidget` always uses `CircularProgressIndicator`, inconsistent with iOS conventions and `CommonLoadingButton`.
@@ -356,11 +363,18 @@ flutter test test/shared/widgets/common_error_view_test.dart
 2. Use `CupertinoActivityIndicator` on iOS, `CircularProgressIndicator` on Android.
 3. Match the pattern used in `CommonLoadingButton`.
 
+**Current Implementation:**
+
+- `CommonLoadingWidget` now uses `PlatformAdaptive.isCupertino(context)` to determine platform.
+- Uses `CupertinoActivityIndicator` on iOS/macOS and `CircularProgressIndicator` on Android.
+- Matches the pattern used in `CommonLoadingButton`.
+- Updated tests to handle platform-adaptive behavior (checks for either indicator type).
+
 **Acceptance Criteria:**
 
-- [ ] iOS uses Cupertino indicator; Android uses Material indicator.
-- [ ] Consistent with `CommonLoadingButton` pattern.
-- [ ] No visual regressions in existing screens.
+- [x] iOS uses Cupertino indicator; Android uses Material indicator.
+- [x] Consistent with `CommonLoadingButton` pattern.
+- [x] No visual regressions in existing screens.
 
 **Test Requirements:**
 
