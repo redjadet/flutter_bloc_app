@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,8 +16,23 @@ class _FeatureEnabledData extends Equatable {
   List<Object?> get props => [isEnabled];
 }
 
-class AwesomeFeatureWidget extends StatelessWidget {
+class AwesomeFeatureWidget extends StatefulWidget {
   const AwesomeFeatureWidget({super.key});
+
+  @override
+  State<AwesomeFeatureWidget> createState() => _AwesomeFeatureWidgetState();
+}
+
+class _AwesomeFeatureWidgetState extends State<AwesomeFeatureWidget> {
+  @override
+  void initState() {
+    super.initState();
+    if (CubitHelpers.isCubitAvailable<RemoteConfigCubit, RemoteConfigState>(
+      context,
+    )) {
+      unawaited(context.read<RemoteConfigCubit>().ensureInitialized());
+    }
+  }
 
   @override
   Widget build(final BuildContext context) {

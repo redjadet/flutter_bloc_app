@@ -114,6 +114,10 @@ class SyncStatusCubit extends Cubit<SyncStatusState> {
 
   Future<void> flush() => _coordinator.flush();
 
+  void ensureStarted() {
+    unawaited(_coordinator.ensureStarted());
+  }
+
   @override
   Future<void> close() async {
     // Nullify references before canceling to prevent race conditions

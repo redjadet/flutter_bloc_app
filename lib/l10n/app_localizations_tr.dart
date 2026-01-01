@@ -450,6 +450,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get retryButtonLabel => 'TEKRAR DENE';
 
   @override
+  String get featureLoadError =>
+      'Bu özellik yüklenemedi. Lütfen tekrar deneyin.';
+
+  @override
   String get chatSendButton => 'Mesaj gönder';
 
   @override

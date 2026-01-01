@@ -19,6 +19,16 @@ class ProfileSyncBanner extends StatefulWidget {
 class _ProfileSyncBannerState extends State<ProfileSyncBanner> {
   bool _isManualSyncing = false;
 
+  @override
+  void initState() {
+    super.initState();
+    if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
+      context,
+    )) {
+      context.read<SyncStatusCubit>().ensureStarted();
+    }
+  }
+
   Future<void> _handleSyncNow(final SyncStatusCubit cubit) async {
     if (_isManualSyncing) {
       return;

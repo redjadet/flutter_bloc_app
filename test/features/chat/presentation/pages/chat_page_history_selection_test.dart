@@ -103,6 +103,7 @@ void main() {
         () => coordinator.summaryStream,
       ).thenAnswer((_) => const Stream<SyncCycleSummary>.empty());
       when(() => coordinator.flush()).thenAnswer((_) async {});
+      when(() => coordinator.ensureStarted()).thenAnswer((_) async {});
       when(
         () => errorNotificationService.showSnackBar(any(), any()),
       ).thenAnswer((_) async {});

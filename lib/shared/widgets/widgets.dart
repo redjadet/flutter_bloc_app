@@ -13,6 +13,7 @@ export 'common_loading_widget.dart';
 export 'common_max_width.dart';
 export 'common_page_layout.dart';
 export 'common_status_view.dart';
+export 'deferred_page.dart';
 export 'flavor_badge.dart';
 export 'message_bubble.dart';
 export 'resilient_svg_asset_image.dart';

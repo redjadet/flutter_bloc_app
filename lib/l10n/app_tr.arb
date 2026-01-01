@@ -353,6 +353,10 @@
   "chatInputHint": "Asistana bir şey sor...",
   "searchHint": "Ara...",
   "retryButtonLabel": "TEKRAR DENE",
+  "featureLoadError": "Bu özellik yüklenemedi. Lütfen tekrar deneyin.",
+  "@featureLoadError": {
+    "description": "Ertelenmiş bir özellik yüklenemediğinde gösterilir"
+  },
   "chatSendButton": "Mesaj gönder",
   "chatEmptyState": "Sohbete bir mesaj göndererek başla.",
   "chatModelLabel": "Model",

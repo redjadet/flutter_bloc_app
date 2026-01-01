@@ -443,6 +443,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get retryButtonLabel => 'TRY AGAIN';
 
   @override
+  String get featureLoadError =>
+      'Unable to load this feature. Please try again.';
+
+  @override
   String get chatSendButton => 'Send message';
 
   @override

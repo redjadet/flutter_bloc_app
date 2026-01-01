@@ -8,7 +8,7 @@ This document captures the architecture diagram, key principles, state managemen
 
 ```mermaid
 flowchart LR
-  AppScope["AppScope<br/>(MultiBlocProvider + DeepLinkListener + Sync bootstrap)"]
+  AppScope["AppScope<br/>(MultiBlocProvider + DeepLinkListener + Lazy sync bootstrap)"]
 
   subgraph Presentation
     Widgets["Widgets & Pages<br/>(ResponsiveScope, PlatformAdaptive, BlocSelector)"]
@@ -97,6 +97,8 @@ flowchart LR
 - Presentation uses responsive helpers and `PlatformAdaptive.*` components
 - DI and bootstrap centralized in `injector*.dart` and `AppScope`
 - Offline-first repositories coordinate cache, remote, and sync queues
+- Deferred route loading keeps heavy features out of the initial bundle
+- Lazy startup: background sync and remote config initialize on first use
 - Lifecycle safety via `CubitExceptionHandler`, `CubitSubscriptionMixin`,
   `CubitStateEmissionMixin`, and mounted checks
 
@@ -106,6 +108,22 @@ flowchart LR
 - Business rules isolated from widgets for unit/bloc testing
 - `BlocSelector` limits rebuild scope for performance
 - Immutable states reduce accidental side effects
+
+## Lazy Loading Patterns
+
+- **Deferred routes**: Heavy features are loaded via `DeferredPage` + `deferred as` imports in `lib/app/router/routes.dart`.
+- **On-demand services**: `BackgroundSyncCoordinator` starts via `SyncStatusCubit.ensureStarted()`, and `RemoteConfigCubit.ensureInitialized()` triggers only when a feature requests config values.
+
+```dart
+GoRoute(
+  path: AppRoutes.googleMapsPath,
+  name: AppRoutes.googleMaps,
+  builder: (context, state) => DeferredPage(
+    loadLibrary: google_maps_page.loadLibrary,
+    builder: (context) => google_maps_page.buildGoogleMapsPage(context, state),
+  ),
+),
+```
 
 ## State Management Flow
 
@@ -124,7 +142,7 @@ sequenceDiagram
   participant Services
 
   AppScope->>DI: ensureConfigured() + registerAllDependencies()
-  AppScope->>SyncLayer: start BackgroundSyncCoordinator + seed SyncStatusCubit
+  AppScope->>SyncLayer: seed SyncStatusCubit (starts background sync on demand)
   AppScope->>Cubit: create via BlocProviderHelpers.withAsyncInit()
   AppScope->>View: wrap with ResponsiveScope + DeepLinkListener + GoRouter
   User->>View: Trigger interaction (tap, navigation, lifecycle)

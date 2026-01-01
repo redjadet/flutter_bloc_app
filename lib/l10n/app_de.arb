@@ -352,6 +352,10 @@
   "chatInputHint": "Frag den Assistenten etwas...",
   "searchHint": "Suchen...",
   "retryButtonLabel": "ERNEUT VERSUCHEN",
+  "featureLoadError": "Diese Funktion konnte nicht geladen werden. Bitte versuche es erneut.",
+  "@featureLoadError": {
+    "description": "Wird angezeigt, wenn eine verzögerte Funktion nicht geladen werden kann"
+  },
   "chatSendButton": "Nachricht senden",
   "chatEmptyState": "Beginne das Gespräch mit einer Nachricht.",
   "chatModelLabel": "Modell",

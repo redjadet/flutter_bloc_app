@@ -26,6 +26,10 @@ class AppleMapsView extends StatefulWidget {
 }
 
 class _AppleMapsViewState extends State<AppleMapsView> {
+  Set<amap.Annotation>? _cachedAnnotations;
+  String? _cachedSelectedId;
+  List<MapLocation>? _cachedLocations;
+
   @override
   Widget build(final BuildContext context) => amap.AppleMap(
     mapType: resolveAppleMapType(widget.stateManager.mapType),
@@ -41,7 +45,18 @@ class _AppleMapsViewState extends State<AppleMapsView> {
 
   Set<amap.Annotation> _buildAnnotations() {
     final String? selectedId = widget.stateManager.selectedMarkerId?.value;
-    return widget.stateManager.locations
+    final List<MapLocation> locations = widget.stateManager.locations;
+
+    // Cache annotations to avoid rebuilding on every build call
+    if (_cachedAnnotations != null &&
+        _cachedSelectedId == selectedId &&
+        _cachedLocations == locations) {
+      return _cachedAnnotations!;
+    }
+
+    _cachedSelectedId = selectedId;
+    _cachedLocations = locations;
+    _cachedAnnotations = locations
         .map(
           (final MapLocation location) => amap.Annotation(
             annotationId: amap.AnnotationId(location.id),
@@ -58,6 +73,8 @@ class _AppleMapsViewState extends State<AppleMapsView> {
           ),
         )
         .toSet();
+
+    return _cachedAnnotations!;
   }
 
   @override

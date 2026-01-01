@@ -62,6 +62,13 @@ class BackgroundSyncCoordinator {
   List<SyncCycleSummary> get history =>
       List<SyncCycleSummary>.unmodifiable(_history);
 
+  Future<void> ensureStarted() async {
+    if (_isRunning) {
+      return;
+    }
+    await start();
+  }
+
   Future<void> start() async {
     if (_isRunning) {
       return;

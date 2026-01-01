@@ -320,6 +320,9 @@ class FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> start() async {}
 
   @override
+  Future<void> ensureStarted() async {}
+
+  @override
   Future<void> stop() async {}
 
   @override
@@ -609,6 +612,9 @@ class _ManualFlushCoordinator implements BackgroundSyncCoordinator {
 
   @override
   Future<void> start() async {}
+
+  @override
+  Future<void> ensureStarted() async {}
 
   @override
   Future<void> stop() async {}

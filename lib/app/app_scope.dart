@@ -1,10 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/core.dart';
-import 'package:flutter_bloc_app/features/features.dart';
+import 'package:flutter_bloc_app/features/counter/counter.dart';
+import 'package:flutter_bloc_app/features/deeplink/deeplink.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
+import 'package:flutter_bloc_app/features/settings/settings.dart';
 import 'package:flutter_bloc_app/shared/responsive/responsive.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/services/retry_notification_service.dart';
@@ -32,7 +32,6 @@ class _AppScopeState extends State<AppScope> {
     // Ensure DI is configured when running tests that directly pump MyApp.
     ensureConfigured();
     _syncCoordinator = getIt<BackgroundSyncCoordinator>();
-    unawaited(_syncCoordinator.start());
   }
 
   @override
@@ -62,9 +61,8 @@ class _AppScopeState extends State<AppScope> {
         create: () => ThemeCubit(repository: getIt<ThemeRepository>()),
         init: (final cubit) => cubit.loadInitial(),
       ),
-      BlocProviderHelpers.providerWithAsyncInit<RemoteConfigCubit>(
-        create: () => getIt<RemoteConfigCubit>(),
-        init: (final cubit) => cubit.initialize(),
+      BlocProvider(
+        create: (_) => getIt<RemoteConfigCubit>(),
       ),
     ],
     child: DeepLinkListener(
