@@ -52,9 +52,13 @@ This app implements several performance optimizations:
 1. **Widget Rebuilds**: Use `BlocSelector` instead of `BlocBuilder` to minimize rebuilds
 2. **RepaintBoundary**: Wrap expensive widgets (e.g., charts, custom painters) in `RepaintBoundary`
 3. **Image Caching**: Use `CachedNetworkImageWidget` for automatic image caching
-4. **Lazy Loading**: Use `ListView.builder` for large lists instead of `ListView`
-5. **Performance Profiling**: Built-in `PerformanceProfiler` tracks widget rebuilds and frame performance
-6. **Const Constructors**: Use `const` widgets wherever possible to reduce rebuilds
+4. **Lazy List Rendering**: Use `ListView.builder` for large lists instead of `ListView`
+5. **Deferred Imports**: Heavy features (Google Maps, Markdown Editor, Charts, WebSocket) load on-demand via deferred imports
+6. **Lazy Dependency Injection**: All services use lazy singletons - instances created only on first access
+7. **Route-Level Initialization**: Feature cubits created at route level, not app scope
+8. **On-Demand Services**: BackgroundSyncCoordinator and RemoteConfigCubit start/initialize only when needed
+9. **Performance Profiling**: Built-in `PerformanceProfiler` tracks widget rebuilds and frame performance
+10. **Const Constructors**: Use `const` widgets wherever possible to reduce rebuilds
 
 **Common Mistakes to Avoid:**
 
@@ -62,8 +66,12 @@ This app implements several performance optimizations:
 - ❌ Using `setState` for business logic (use cubits instead)
 - ❌ Not disposing controllers/subscriptions
 - ❌ Hard-coding dimensions instead of using responsive helpers
+- ❌ Eager initialization of heavy services or features
+- ❌ Creating feature cubits at app scope when they're only needed on specific routes
 
-See `docs/CODE_QUALITY_ANALYSIS.md` for detailed performance guidelines.
+**See also:**
+- `docs/CODE_QUALITY_ANALYSIS.md` - Detailed performance guidelines
+- `analysis/lazy_loading_late_review.md` - Comprehensive lazy loading analysis and deferred imports explanation
 
 ### How do I make my Flutter app responsive?
 
