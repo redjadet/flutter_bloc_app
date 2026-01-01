@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
+import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
 
@@ -114,26 +113,28 @@ class SearchCacheRepository extends HiveRepositoryBase {
     await box.put(_keyRecentQueries, trimmed);
   }
 
-  List<SearchResult>? _parseStored(final dynamic raw) {
+  Future<List<SearchResult>?> _parseStored(final dynamic raw) async {
     if (raw == null) {
       return null;
     }
     if (raw is String && raw.isNotEmpty) {
       try {
-        final dynamic decoded = jsonDecode(raw);
-        return _parseStored(decoded);
+        final List<dynamic> decoded = await decodeJsonList(raw);
+        return _parseIterable(decoded);
       } on Exception {
         return null;
       }
     }
     if (raw is Iterable<dynamic>) {
-      return raw
-          .whereType<Map<dynamic, dynamic>>()
-          .map(_mapToResult)
-          .toList(growable: false);
+      return _parseIterable(raw);
     }
     return null;
   }
+
+  List<SearchResult> _parseIterable(final Iterable<dynamic> raw) => raw
+      .whereType<Map<dynamic, dynamic>>()
+      .map(_mapToResult)
+      .toList(growable: false);
 
   SearchResult _mapToResult(final Map<dynamic, dynamic> raw) {
     final Map<String, dynamic> normalized = raw.map(

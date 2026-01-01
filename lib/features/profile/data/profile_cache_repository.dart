@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
+import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
 
@@ -61,7 +62,7 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
       final Box<dynamic> box = await getBox();
       final dynamic rawProfile = box.get(_profileKey);
       final bool hasProfile = rawProfile != null;
-      final int? sizeBytes = _estimateSizeBytes(rawProfile);
+      final int? sizeBytes = await _estimateSizeBytes(rawProfile);
       final String? rawDate = box.get(_lastSyncedKey) as String?;
       final DateTime? lastSynced = rawDate == null
           ? null
@@ -134,12 +135,12 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
             .toList(growable: false),
       };
 
-  int? _estimateSizeBytes(final dynamic raw) {
+  Future<int?> _estimateSizeBytes(final dynamic raw) async {
     if (raw == null) {
       return null;
     }
     try {
-      final String encoded = jsonEncode(raw);
+      final String encoded = await encodeJsonIsolate(raw);
       return utf8.encode(encoded).length;
     } on Exception {
       return null;
