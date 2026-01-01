@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_bloc_app/features/chat/data/chat_local_data_source.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_local_conversation_updater.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_sync_operation_factory.dart';
 import 'package:flutter_bloc_app/features/chat/data/offline_first_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
@@ -593,6 +595,8 @@ void main() {
       late SyncableRepositoryRegistry registry;
       late _FlakyRemoteChatRepository remoteRepository;
       late OfflineFirstChatRepository offlineRepository;
+      late ChatSyncOperationFactory syncOperationFactory;
+      late ChatLocalConversationUpdater localConversationUpdater;
 
       setUp(() async {
         tempDir = Directory.systemTemp.createTempSync('chat_cubit_offline_');
@@ -605,11 +609,18 @@ void main() {
         pendingRepository = PendingSyncRepository(hiveService: hiveService);
         registry = SyncableRepositoryRegistry();
         remoteRepository = _FlakyRemoteChatRepository();
+        syncOperationFactory = ChatSyncOperationFactory(
+          entityType: OfflineFirstChatRepository.chatEntity,
+        );
+        localConversationUpdater = ChatLocalConversationUpdater(
+          localDataSource: localDataSource,
+        );
         offlineRepository = OfflineFirstChatRepository(
           remoteRepository: remoteRepository,
-          localDataSource: localDataSource,
           pendingSyncRepository: pendingRepository,
           registry: registry,
+          syncOperationFactory: syncOperationFactory,
+          localConversationUpdater: localConversationUpdater,
         );
       });
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_factories.dart';
@@ -6,7 +7,9 @@ import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/core/di/register_http_services.dart';
 import 'package:flutter_bloc_app/core/di/register_remote_config_services.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_local_conversation_updater.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_local_data_source.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_sync_operation_factory.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';
@@ -110,12 +113,23 @@ void _registerChatServices() {
   registerLazySingletonIfAbsent<ChatHistoryRepository>(
     () => ChatLocalDataSource(hiveService: getIt<HiveService>()),
   );
+  registerLazySingletonIfAbsent<ChatSyncOperationFactory>(
+    () => ChatSyncOperationFactory(
+      entityType: OfflineFirstChatRepository.chatEntity,
+    ),
+  );
+  registerLazySingletonIfAbsent<ChatLocalConversationUpdater>(
+    () => ChatLocalConversationUpdater(
+      localDataSource: getIt<ChatHistoryRepository>(),
+    ),
+  );
   registerLazySingletonIfAbsent<ChatRepository>(
     () => OfflineFirstChatRepository(
       remoteRepository: getIt<HuggingfaceChatRepository>(),
-      localDataSource: getIt<ChatHistoryRepository>(),
       pendingSyncRepository: getIt<PendingSyncRepository>(),
       registry: getIt<SyncableRepositoryRegistry>(),
+      syncOperationFactory: getIt<ChatSyncOperationFactory>(),
+      localConversationUpdater: getIt<ChatLocalConversationUpdater>(),
     ),
   );
   registerLazySingletonIfAbsent<ChatListRepository>(

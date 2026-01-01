@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_bloc_app/features/chat/data/chat_local_data_source.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_local_conversation_updater.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_sync_operation_factory.dart';
 import 'package:flutter_bloc_app/features/chat/data/offline_first_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
@@ -48,6 +50,8 @@ void main() {
     late ChatHistoryRepository localDataSource;
     late PendingSyncRepository pendingRepository;
     late SyncableRepositoryRegistry registry;
+    late ChatSyncOperationFactory syncOperationFactory;
+    late ChatLocalConversationUpdater localConversationUpdater;
 
     setUp(() async {
       tempDir = Directory.systemTemp.createTempSync('offline_chat_repo_');
@@ -59,6 +63,12 @@ void main() {
       localDataSource = ChatLocalDataSource(hiveService: hiveService);
       pendingRepository = PendingSyncRepository(hiveService: hiveService);
       registry = SyncableRepositoryRegistry();
+      syncOperationFactory = ChatSyncOperationFactory(
+        entityType: OfflineFirstChatRepository.chatEntity,
+      );
+      localConversationUpdater = ChatLocalConversationUpdater(
+        localDataSource: localDataSource,
+      );
     });
 
     tearDown(() async {
@@ -74,9 +84,10 @@ void main() {
         final OfflineFirstChatRepository repository =
             OfflineFirstChatRepository(
               remoteRepository: remote,
-              localDataSource: localDataSource,
               pendingSyncRepository: pendingRepository,
               registry: registry,
+              syncOperationFactory: syncOperationFactory,
+              localConversationUpdater: localConversationUpdater,
             );
 
         final ChatResult result = await repository.sendMessage(
@@ -100,9 +111,10 @@ void main() {
       );
       final OfflineFirstChatRepository repository = OfflineFirstChatRepository(
         remoteRepository: remote,
-        localDataSource: localDataSource,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        syncOperationFactory: syncOperationFactory,
+        localConversationUpdater: localConversationUpdater,
       );
 
       await expectLater(
@@ -132,9 +144,10 @@ void main() {
         final OfflineFirstChatRepository repository =
             OfflineFirstChatRepository(
               remoteRepository: remote,
-              localDataSource: localDataSource,
               pendingSyncRepository: pendingRepository,
               registry: registry,
+              syncOperationFactory: syncOperationFactory,
+              localConversationUpdater: localConversationUpdater,
             );
 
         final ChatConversation conversation = ChatConversation(
@@ -191,9 +204,10 @@ void main() {
         final OfflineFirstChatRepository repository =
             OfflineFirstChatRepository(
               remoteRepository: remote,
-              localDataSource: localDataSource,
               pendingSyncRepository: pendingRepository,
               registry: registry,
+              syncOperationFactory: syncOperationFactory,
+              localConversationUpdater: localConversationUpdater,
             );
 
         // No existing conversation

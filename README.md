@@ -9,6 +9,7 @@ A production-ready Flutter application demonstrating enterprise-grade architectu
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs)
 [![DRY Principles](https://img.shields.io/badge/DRY-Principles-2B7A78.svg)](docs/dry_principles.md)
+[![SOLID Principles](https://img.shields.io/badge/SOLID-Principles-6C5CE7.svg)](docs/solid_principles.md)
 
 ---
 
@@ -486,7 +487,7 @@ Startup is part of the flow: `AppScope` calls `ensureConfigured()`, starts backg
 
 ### Test Coverage
 
-- **Current Coverage**: 84.11% (9464/11252 lines)
+- **Current Coverage**: 84.26% (9515/11293 lines)
 - **Excluded**: Mocks, simple data classes, configs, debug utils, platform widgets, part files
 - **Full Report**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md)
 
