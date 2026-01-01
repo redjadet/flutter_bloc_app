@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
@@ -26,7 +24,9 @@ class SyncableRepositoryRegistry {
       _repositories[entityType];
 
   List<SyncableRepository> get repositories =>
-      UnmodifiableListView<SyncableRepository>(_repositories.values);
+      List<SyncableRepository>.unmodifiable(
+        _repositories.values.toList(growable: false),
+      );
 
   bool get isEmpty => _repositories.isEmpty;
 }
