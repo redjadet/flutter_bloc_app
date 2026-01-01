@@ -1,5 +1,5 @@
 import 'package:flutter_bloc_app/features/graphql_demo/data/countries_graphql_repository.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_demo_cache_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/offline_first_graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
@@ -9,7 +9,7 @@ import 'package:mocktail/mocktail.dart';
 class _MockRemoteRepository extends Mock
     implements CountriesGraphqlRepository {}
 
-class _MockCacheRepository extends Mock implements GraphqlDemoCacheRepository {}
+class _MockCacheRepository extends Mock implements GraphqlCacheRepository {}
 
 void main() {
   setUpAll(() {

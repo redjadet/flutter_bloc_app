@@ -25,6 +25,7 @@ import 'package:flutter_bloc_app/features/google_maps/domain/map_location_reposi
 import 'package:flutter_bloc_app/features/profile/data/mock_profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/data/offline_first_profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
+import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/search/data/mock_search_repository.dart';
 import 'package:flutter_bloc_app/features/search/data/offline_first_search_repository.dart';
@@ -154,7 +155,7 @@ void _registerMapServices() {
 
 void _registerProfileServices() {
   registerLazySingletonIfAbsent<ProfileCacheRepository>(
-    () => ProfileCacheRepository(hiveService: getIt<HiveService>()),
+    () => HiveProfileCacheRepository(hiveService: getIt<HiveService>()),
   );
   registerLazySingletonIfAbsent<ProfileRepository>(
     () => OfflineFirstProfileRepository(

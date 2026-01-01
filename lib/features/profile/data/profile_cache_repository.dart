@@ -1,25 +1,15 @@
 import 'dart:convert';
 
+import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
 
-class ProfileCacheMetadata {
-  const ProfileCacheMetadata({
-    required this.hasProfile,
-    required this.lastSyncedAt,
-    required this.sizeBytes,
-  });
-
-  final bool hasProfile;
-  final DateTime? lastSyncedAt;
-  final int? sizeBytes;
-}
-
 /// Hive-backed cache for profile data so the profile page can hydrate offline.
-class ProfileCacheRepository extends HiveRepositoryBase {
-  ProfileCacheRepository({required super.hiveService});
+class HiveProfileCacheRepository extends HiveRepositoryBase
+    implements ProfileCacheRepository {
+  HiveProfileCacheRepository({required super.hiveService});
 
   static const String _boxName = 'profile_cache';
   static const String _profileKey = 'profile';
@@ -28,8 +18,9 @@ class ProfileCacheRepository extends HiveRepositoryBase {
   @override
   String get boxName => _boxName;
 
+  @override
   Future<ProfileUser?> loadProfile() async => StorageGuard.run<ProfileUser?>(
-    logContext: 'ProfileCacheRepository.loadProfile',
+    logContext: 'HiveProfileCacheRepository.loadProfile',
     action: () async {
       final Box<dynamic> box = await getBox();
       final dynamic raw = box.get(_profileKey);
@@ -38,9 +29,10 @@ class ProfileCacheRepository extends HiveRepositoryBase {
     fallback: () => null,
   );
 
+  @override
   Future<void> saveProfile(final ProfileUser user) async =>
       StorageGuard.run<void>(
-        logContext: 'ProfileCacheRepository.saveProfile',
+        logContext: 'HiveProfileCacheRepository.saveProfile',
         action: () async {
           final Box<dynamic> box = await getBox();
           final Map<String, dynamic> payload = _profileToJson(user);
@@ -52,8 +44,9 @@ class ProfileCacheRepository extends HiveRepositoryBase {
         },
       );
 
+  @override
   Future<void> clearProfile() async => StorageGuard.run<void>(
-    logContext: 'ProfileCacheRepository.clearProfile',
+    logContext: 'HiveProfileCacheRepository.clearProfile',
     action: () async {
       final Box<dynamic> box = await getBox();
       await safeDeleteKey(box, _profileKey);
@@ -61,8 +54,9 @@ class ProfileCacheRepository extends HiveRepositoryBase {
     },
   );
 
+  @override
   Future<ProfileCacheMetadata> loadMetadata() async => StorageGuard.run(
-    logContext: 'ProfileCacheRepository.loadMetadata',
+    logContext: 'HiveProfileCacheRepository.loadMetadata',
     action: () async {
       final Box<dynamic> box = await getBox();
       final dynamic rawProfile = box.get(_profileKey);

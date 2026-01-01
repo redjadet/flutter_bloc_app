@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_bloc_app/features/profile/data/offline_first_profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
+import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
@@ -76,7 +77,7 @@ void main() {
         keyManager: HiveKeyManager(storage: InMemorySecretStorage()),
       );
       await hiveService.initialize();
-      cacheRepository = ProfileCacheRepository(hiveService: hiveService);
+      cacheRepository = HiveProfileCacheRepository(hiveService: hiveService);
       registry = SyncableRepositoryRegistry();
       networkStatus = _FakeNetworkStatusService(NetworkStatus.online);
     });

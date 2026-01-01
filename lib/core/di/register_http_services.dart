@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/countries_graphql_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_demo_cache_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/offline_first_graphql_demo_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/main_bootstrap.dart';
 import 'package:flutter_bloc_app/shared/http/resilient_http_client.dart';
@@ -45,7 +46,7 @@ void registerHttpServices() {
 
   registerLazySingletonIfAbsent<PaymentCalculator>(PaymentCalculator.new);
 
-  registerLazySingletonIfAbsent<GraphqlDemoCacheRepository>(
+  registerLazySingletonIfAbsent<GraphqlCacheRepository>(
     () => GraphqlDemoCacheRepository(hiveService: getIt<HiveService>()),
   );
 
@@ -54,7 +55,7 @@ void registerHttpServices() {
       remoteRepository: CountriesGraphqlRepository(
         client: getIt<ResilientHttpClient>(),
       ),
-      cacheRepository: getIt<GraphqlDemoCacheRepository>(),
+      cacheRepository: getIt<GraphqlCacheRepository>(),
     ),
   );
 }

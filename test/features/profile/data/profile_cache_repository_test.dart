@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
+import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
@@ -9,10 +10,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 
 void main() {
-  group('ProfileCacheRepository', () {
+  group('HiveProfileCacheRepository', () {
     late Directory tempDir;
     late HiveService hiveService;
-    late ProfileCacheRepository repository;
+    late HiveProfileCacheRepository repository;
 
     setUp(() async {
       tempDir = Directory.systemTemp.createTempSync('profile_cache_');
@@ -21,7 +22,7 @@ void main() {
         keyManager: HiveKeyManager(storage: InMemorySecretStorage()),
       );
       await hiveService.initialize();
-      repository = ProfileCacheRepository(hiveService: hiveService);
+      repository = HiveProfileCacheRepository(hiveService: hiveService);
     });
 
     tearDown(() async {

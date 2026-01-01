@@ -1,9 +1,11 @@
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-class GraphqlDemoCacheRepository extends HiveRepositoryBase {
+class GraphqlDemoCacheRepository extends HiveRepositoryBase
+    implements GraphqlCacheRepository {
   GraphqlDemoCacheRepository({required super.hiveService});
 
   static const String _boxName = 'graphql_demo_cache';
@@ -15,6 +17,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase {
   @override
   String get boxName => _boxName;
 
+  @override
   Future<List<GraphqlContinent>> readContinents({
     final Duration? maxAge,
   }) async => StorageGuard.run<List<GraphqlContinent>>(
@@ -47,6 +50,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase {
     fallback: () => const <GraphqlContinent>[],
   );
 
+  @override
   Future<void> writeContinents(
     final List<GraphqlContinent> continents,
   ) async {
@@ -65,6 +69,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase {
     );
   }
 
+  @override
   Future<List<GraphqlCountry>> readCountries({
     final String? continentCode,
     final Duration? maxAge,
@@ -98,6 +103,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase {
     fallback: () => const <GraphqlCountry>[],
   );
 
+  @override
   Future<void> writeCountries({
     required final List<GraphqlCountry> countries,
     final String? continentCode,
@@ -123,6 +129,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase {
     return '$_countriesPrefix:$suffix';
   }
 
+  @override
   Future<void> clear() async {
     await StorageGuard.run<void>(
       logContext: 'GraphqlDemoCacheRepository.clear',
