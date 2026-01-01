@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_demo_cache_repository.dart';
-import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
+import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
@@ -18,7 +18,7 @@ class SettingsPage extends StatefulWidget {
   });
 
   final AppInfoRepository appInfoRepository;
-  final GraphqlDemoCacheRepository? graphqlCacheRepository;
+  final GraphqlCacheRepository? graphqlCacheRepository;
   final ProfileCacheRepository? profileCacheRepository;
 
   @override
@@ -57,13 +57,13 @@ class _SettingsView extends StatelessWidget {
     this.profileCacheRepository,
   });
 
-  final GraphqlDemoCacheRepository? graphqlCacheRepository;
+  final GraphqlCacheRepository? graphqlCacheRepository;
   final ProfileCacheRepository? profileCacheRepository;
 
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final GraphqlDemoCacheRepository? graphqlRepo = graphqlCacheRepository;
+    final GraphqlCacheRepository? graphqlRepo = graphqlCacheRepository;
     final ProfileCacheRepository? cacheRepo = profileCacheRepository;
     return CommonPageLayout(
       title: l10n.settingsPageTitle,

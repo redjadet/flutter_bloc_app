@@ -2,8 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/features.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_demo_cache_repository.dart';
-import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
+import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
@@ -105,7 +105,7 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
     name: AppRoutes.settings,
     builder: (final context, final state) => SettingsPage(
       appInfoRepository: getIt<AppInfoRepository>(),
-      graphqlCacheRepository: getIt<GraphqlDemoCacheRepository>(),
+      graphqlCacheRepository: getIt<GraphqlCacheRepository>(),
       profileCacheRepository: getIt<ProfileCacheRepository>(),
     ),
   ),

@@ -1,5 +1,5 @@
 import 'package:flutter_bloc_app/features/graphql_demo/data/countries_graphql_repository.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_demo_cache_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
@@ -15,7 +15,7 @@ class OfflineFirstGraphqlDemoRepository implements GraphqlDemoRepository {
   GraphqlDataSource lastSource = GraphqlDataSource.unknown;
 
   final CountriesGraphqlRepository remoteRepository;
-  final GraphqlDemoCacheRepository cacheRepository;
+  final GraphqlCacheRepository cacheRepository;
 
   @override
   Future<List<GraphqlContinent>> fetchContinents() async {

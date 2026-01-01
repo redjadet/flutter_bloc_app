@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_demo_cache_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/graphql_cache_controls_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class _MockCacheRepository extends Mock implements GraphqlDemoCacheRepository {}
+class _MockCacheRepository extends Mock implements GraphqlCacheRepository {}
 
 void main() {
   group('GraphqlCacheControlsSection', () {
