@@ -6,37 +6,96 @@ All rights reserved.
 
 Definitions:
 
-- "Software" means this source code repository and associated documentation.
+- "Software" means this source code repository and associated documentation,
+  including but not limited to source code, configuration files, documentation,
+  and related materials.
 - "Public Repository" means a publicly accessible, freely available source code
-  repository with no paywall or access restriction.
+  repository with no paywall or access restriction, where the Software (or any
+  substantial portion of it) remains publicly accessible at no charge.
 - "Commercial Use" means any use primarily intended for commercial advantage,
-  monetary compensation, or inclusion in paid products or services.
+  monetary compensation, or inclusion in paid products or services, including
+  but not limited to:
+  - Proprietary or closed-source applications
+  - Paid software products or services
+  - Internal use by for-profit organizations in non-public repositories
+  - SaaS (Software as a Service) offerings
+  - Any distribution where the Software is not publicly accessible
+- "Commercial License" means a separate, written license agreement granted by
+  the copyright holder that permits Commercial Use, typically in exchange for
+  a fee or other consideration.
+- "Substantial Portion" means any portion of the Software that represents a
+  significant part of the codebase, architecture, or functionality, typically
+  more than 10% of the total codebase or any core feature or module.
 
-Grant of Permission (Public Use Only):
+Grant of Permission (Non-Commercial, Public Use Only):
 Permission is granted, free of charge, to use, copy, modify, merge, publish, and
-distribute the Software only when the Software (or any substantial portion of
-it) remains in a Public Repository and is made available at no charge.
+distribute the Software only when the Software (or any Substantial Portion of
+it) remains in a Public Repository and is made available at no charge. Any
+Commercial Use requires a Commercial License obtained from the copyright holder.
 
 Conditions:
 
-1. This notice must be included in all copies or substantial portions of the
-   Software.
-2. Any free-of-charge use, distribution, or deployment must include clear
-   attribution to this project in documentation, about dialogs, or a NOTICE
-   file (linking to the original repository and naming the copyright holder).
-3. Proprietary, closed-source, or Commercial Use is prohibited without prior
-   written permission from the copyright holder.
-4. Distributions of modified versions must make the modified source code
-   available under the same terms as this license.
-5. This license does not grant any rights in the name, logo, or trademarks of
-   the copyright holder.
+1. LICENSE NOTICE: This entire license notice, including the copyright notice,
+   must be included in all copies or substantial portions of the Software,
+   including in LICENSE files, source code headers, or documentation.
 
-Contact:
-<ilkersevim2007@gmail.com>
+2. ATTRIBUTION REQUIREMENTS: Any use, distribution, or deployment of the Software
+   (or any Substantial Portion of it) must include clear and visible attribution
+   to this project. Attribution must include:
+   a) The copyright holder's name: "Ilker Sevim"
+   b) A link to the original repository (if applicable)
+   c) A statement that the Software is based on or derived from this project
+
+   Attribution must be placed in at least one of the following locations:
+   - User-visible "About" or "Credits" section in the application
+   - Application documentation or README file
+   - A NOTICE file included with the distribution
+   - Source code headers in files that use or derive from this Software
+
+   Example attribution format:
+   "This software includes components from [Project Name] by Ilker Sevim.
+   Original repository: [repository URL]"
+
+3. COMMERCIAL USE RESTRICTION: Proprietary, closed-source, or Commercial Use is
+   strictly prohibited without a Commercial License granted by the copyright
+   holder. To obtain a Commercial License, contact the copyright holder at
+   `<ilkersevim2007@gmail.com>` with:
+   - Description of intended use
+   - Scope of usage (internal, distribution, SaaS, etc.)
+   - Expected number of users or deployments
+   - Any other relevant information
+
+4. DERIVATIVE WORKS: Distributions of modified versions must:
+   a) Make the modified source code available under the same terms as this license
+   b) Clearly indicate what modifications were made
+   c) Maintain all attribution requirements as specified in condition 2
+   d) Include this license notice in all distributions
+
+5. TRADEMARKS: This license does not grant any rights in the name, logo, or
+   trademarks of the copyright holder. Use of the copyright holder's name or
+   trademarks requires separate written permission.
+
+6. NO WARRANTY: The Software is provided "AS IS" without warranty of any kind.
+   See the Disclaimer of Warranty section below.
+
+Commercial Licensing:
+
+For Commercial Use, please contact the copyright holder at:
+Email: <ilkersevim2007@gmail.com>
+
+Commercial licenses are typically granted on a case-by-case basis and may
+include terms regarding:
+
+- License fees or royalties
+- Usage scope and limitations
+- Support and maintenance options
+- Custom licensing terms for enterprise use
 
 Termination:
 Any violation of the above terms immediately terminates the permissions granted
-by this license.
+by this license. Upon termination, you must immediately cease all use,
+distribution, and deployment of the Software and destroy all copies in your
+possession or control.
 
 Disclaimer of Warranty:
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
