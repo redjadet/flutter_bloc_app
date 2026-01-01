@@ -53,7 +53,7 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 ### Opportunities
 
 - **DIP (presentation depending on data-layer types):** Addressed for settings cache widgets by introducing cache interfaces and injecting them from DI. Continue to watch for new data-layer imports in presentation (`lib/features/settings/presentation/pages/settings_page.dart`, `lib/features/settings/presentation/widgets/graphql_cache_controls_section.dart`, `lib/features/settings/presentation/widgets/profile_cache_controls_section.dart`).
-- **SRP (offline-first repositories doing multiple jobs):** `OfflineFirstChatRepository` handles remote calls, local persistence, sync operation creation, and registry registration in one class (`lib/features/chat/data/offline_first_chat_repository.dart`). This is cohesive but makes the class harder to evolve or test in isolation.
+- **SRP (offline-first repositories doing multiple jobs):** Addressed for chat by extracting sync payload creation and local persistence into dedicated collaborators (`lib/features/chat/data/chat_sync_operation_factory.dart`, `lib/features/chat/data/chat_local_conversation_updater.dart`), keeping `OfflineFirstChatRepository` focused on orchestration.
 
 ## Action Checklist (SOLID Improvements)
 
@@ -70,6 +70,7 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 - **High Instructions:** Split `lib/features/chat/data/offline_first_chat_repository.dart` into smaller collaborators (e.g., `ChatSyncOperationFactory` for sync payloads, `ChatLocalConversationUpdater` for local persistence and merge logic). Inject collaborators so `OfflineFirstChatRepository` focuses on orchestration and delegates persistence/mapping.
 - **High Acceptance Criteria:** `OfflineFirstChatRepository` delegates sync payload creation and local persistence; new collaborators have focused unit tests; method bodies are shorter and more readable.
 - **High Verification Commands:** `rg \"ChatSyncOperationFactory|ChatLocalConversationUpdater\" lib/features/chat -g\"*.dart\"` and `rg \"OfflineFirstChatRepository\" -n lib/features/chat/data/offline_first_chat_repository.dart`.
+- **High Status:** Implemented (chat sync payload factory + local updater extracted, injected, and covered by focused tests).
 - **Medium:** Audit presentation entrypoints for concrete data-layer types.
 - **Medium Instructions:** Search `lib/features/**/presentation` for imports from `lib/features/**/data` and replace dependencies with domain/shared interfaces; update DI bindings where needed. Allow exceptions only for tooling/debug widgets.
 - **Medium Acceptance Criteria:** No presentation modules import data-layer classes unless explicitly exempted; interface usage is consistent across feature pages and widgets.
