@@ -651,5 +651,12 @@ The delivery checklist runs automated best-practice checks to catch common viola
 - `tool/check_raw_network_images.sh` — Enforce `CachedNetworkImageWidget` for remote images.
 - `tool/check_raw_print.sh` — Replace raw `print()` with `AppLogger`.
 - `tool/check_side_effects_build.sh` — Heuristic scan for side effects in `build()` (non-blocking).
+- `tool/check_solid_presentation_data_imports.sh` — Presentation cannot import data-layer types.
+- `tool/check_solid_data_presentation_imports.sh` — Data layer cannot import presentation.
+- `tool/check_perf_shrinkwrap_lists.sh` — Flags `shrinkWrap: true` in presentation lists.
+- `tool/check_perf_nonbuilder_lists.sh` — Flags non-builder `ListView`/`GridView` in presentation.
+- `tool/check_perf_missing_repaint_boundary.sh` — Flags heavy widgets lacking `RepaintBoundary` (heuristic).
+- `tool/check_memory_unclosed_streams.sh` — Flags `StreamController` without `.close()` (heuristic).
+- `tool/check_memory_missing_dispose.sh` — Flags controllers without `dispose()` in State classes (heuristic).
 
 **Allowlist:** Add `// check-ignore: reason` on the same line or the line above to suppress a specific match. Ignored entries are reported with the reason to keep exceptions explicit.
