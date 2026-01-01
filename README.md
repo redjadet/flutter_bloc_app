@@ -7,7 +7,7 @@ Hugging Face, real-time updates, maps, and advanced rendering demos.
 [![Flutter](https://img.shields.io/badge/Flutter-3.38.5-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.10.4-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-84%2E00%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-83%2E91%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
 [![State Management](https://img.shields.io/badge/State%20Management-BLOC%2FCubit-2196F3.svg)](https://pub.dev/packages/flutter_bloc)
@@ -34,7 +34,7 @@ Hugging Face, real-time updates, maps, and advanced rendering demos.
 - **Offline-first**: pending sync queues, cache-first reads, and background flushing
 - **UI/UX**: Material 3 + Cupertino adaptive widgets, text scaling, and safe-area handling
 - **Resilience**: error mapping, retries, guarded async flows, and lifecycle safety
-- **Performance**: `BlocSelector`, repaint isolation, and responsive layout helpers
+- **Performance**: `BlocSelector`, repaint isolation, responsive layout helpers, and [lazy loading optimizations](analysis/lazy_loading_late_review.md)
 
 ## Features (Selected)
 
@@ -54,6 +54,7 @@ Full feature catalog: `docs/feature_overview.md`.
 - Architecture diagrams and state flow: `docs/architecture_details.md`
 - Offline-first patterns: `docs/offline_first/adoption_guide.md`
 - UI/UX responsive rules: `docs/ui_ux_responsive_review.md`
+- Performance optimization: [`analysis/lazy_loading_late_review.md`](analysis/lazy_loading_late_review.md) (comprehensive lazy loading guide)
 - Auth and security flow: `docs/authentication.md`
 - SOLID and DRY reviews: `docs/solid_principles.md`, `docs/dry_principles.md`
 - AI integration notes: `docs/ai_integration.md`
@@ -80,6 +81,13 @@ Full feature catalog: `docs/feature_overview.md`.
 - Shared utilities documentation: `docs/SHARED_UTILITIES.md`
 - Repository lifecycle guide: `docs/REPOSITORY_LIFECYCLE.md`
 - Dependency update monitoring: `docs/DEPENDENCY_UPDATES.md`
+
+### Performance & Optimization
+
+- [Lazy loading analysis](analysis/lazy_loading_late_review.md) - Comprehensive guide to deferred imports, lazy DI, route-level initialization, and optimization opportunities
+- [Compute/isolate usage](docs/compute_isolate_review.md) - Guide to using `compute()` and isolates for JSON decoding and CPU-intensive operations
+- [Startup time profiling](docs/STARTUP_TIME_PROFILING.md) - Measuring and profiling app startup time
+- [Bundle size monitoring](docs/BUNDLE_SIZE_MONITORING.md) - Monitoring and optimizing app bundle size
 
 ### Reference & Support
 

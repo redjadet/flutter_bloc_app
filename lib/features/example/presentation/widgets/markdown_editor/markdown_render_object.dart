@@ -30,6 +30,8 @@ class MarkdownRenderObject extends RenderBox {
   set text(final String value) {
     if (_text == value) return;
     _text = value;
+    _cachedSpan = null;
+    _cachedText = null;
     markNeedsLayout();
     markNeedsPaint();
   }
@@ -38,6 +40,8 @@ class MarkdownRenderObject extends RenderBox {
   set textStyle(final TextStyle value) {
     if (_textStyle == value) return;
     _textStyle = value;
+    _cachedSpan = null;
+    _cachedStyle = null;
     markNeedsLayout();
     markNeedsPaint();
   }
@@ -60,6 +64,9 @@ class MarkdownRenderObject extends RenderBox {
 
   final MarkdownParser _parser = MarkdownParser();
   TextPainter? _textPainter;
+  TextSpan? _cachedSpan;
+  String? _cachedText;
+  TextStyle? _cachedStyle;
 
   @override
   void performLayout() {
@@ -139,7 +146,18 @@ class MarkdownRenderObject extends RenderBox {
       ..layout(maxWidth: effectiveMaxWidth);
   }
 
-  TextSpan _buildTextSpan() => _parser.buildTextSpan(_text, _textStyle);
+  TextSpan _buildTextSpan() {
+    if (_cachedSpan != null &&
+        _cachedText == _text &&
+        _cachedStyle == _textStyle) {
+      return _cachedSpan!;
+    }
+    final TextSpan span = _parser.buildTextSpan(_text, _textStyle);
+    _cachedSpan = span;
+    _cachedText = _text;
+    _cachedStyle = _textStyle;
+    return span;
+  }
 
   @override
   void paint(final PaintingContext context, final Offset offset) {

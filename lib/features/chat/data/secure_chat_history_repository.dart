@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
+import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 
@@ -24,19 +25,20 @@ class SecureChatHistoryRepository implements ChatHistoryRepository {
           if (stored == null || stored.isEmpty) {
             return const <ChatConversation>[];
           }
-          final dynamic decoded = jsonDecode(stored);
-          if (decoded is List) {
+          try {
+            final List<dynamic> decoded = await decodeJsonList(stored);
             return decoded
                 .whereType<Map<String, dynamic>>()
                 .map(ChatConversation.fromJson)
                 .toList(growable: false);
+          } on FormatException catch (error, stackTrace) {
+            AppLogger.error(
+              'SecureChatHistoryRepository.load invalid payload',
+              error,
+              stackTrace,
+            );
+            return const <ChatConversation>[];
           }
-          AppLogger.error(
-            'SecureChatHistoryRepository.load invalid payload',
-            decoded,
-            StackTrace.current,
-          );
-          return const <ChatConversation>[];
         },
         fallback: () => const <ChatConversation>[],
       );
