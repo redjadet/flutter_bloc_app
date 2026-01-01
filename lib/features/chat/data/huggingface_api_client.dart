@@ -41,6 +41,7 @@ class HuggingFaceApiClient {
       request: () => _client.post(
         uri,
         headers: _headers(),
+        // check-ignore: small payload (<8KB) - request body is small
         body: jsonEncode(payload),
       ),
       timeout: _requestTimeout,
@@ -117,6 +118,7 @@ class HuggingFaceApiClient {
     String? detail;
 
     try {
+      // check-ignore: small payload (error response bodies are typically <1KB)
       final dynamic decoded = jsonDecode(body);
       if (decoded is Map<String, dynamic>) {
         detail = (decoded['error'] ?? decoded['message']) as String?;

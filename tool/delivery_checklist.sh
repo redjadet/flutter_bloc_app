@@ -147,6 +147,18 @@ echo "  Checking for potential unnecessary rebuilds (performance)..."
 bash tool/check_perf_unnecessary_rebuilds.sh || VALIDATION_FAILED=1
 echo ""
 
+echo "  Checking for raw jsonDecode/jsonEncode usage (isolate optimization)..."
+bash tool/check_raw_json_decode.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for compute() usage in domain layer (architecture)..."
+bash tool/check_compute_domain_layer.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for compute() usage in lifecycle methods (heuristic)..."
+bash tool/check_compute_lifecycle.sh || VALIDATION_FAILED=1
+echo ""
+
 if [ $VALIDATION_FAILED -eq 1 ]; then
   echo "❌ Best practices validation failed! Please fix the violations above."
   exit 1

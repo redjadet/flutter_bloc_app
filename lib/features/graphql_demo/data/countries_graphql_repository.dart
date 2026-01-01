@@ -117,6 +117,7 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
       request: () => _client.post(
         uri,
         headers: _headers,
+        // check-ignore: small payload (<8KB) - GraphQL request body is small
         body: jsonEncode(payload),
       ),
       timeout: timeout,
