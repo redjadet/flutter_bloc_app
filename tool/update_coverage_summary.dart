@@ -457,7 +457,7 @@ class _Updator {
 
     // Pattern 1: Badge URL - [![Coverage](.../Coverage-85.34%25-...)](...)
     final RegExp badgePattern = RegExp(
-      r'(\[!\[Coverage\]\([^)]+/Coverage-)([0-9]+\.?[0-9]*)%25([^)]+\))',
+      r'(\[!\[Coverage\]\([^)]+/Coverage-)([0-9]+(?:%2E[0-9]+|\.[0-9]+)?)%25([^)]+\))',
     );
 
     // Pattern 2: Text mentions - **85.34% Test Coverage** or **Current Coverage**: 85.34%
