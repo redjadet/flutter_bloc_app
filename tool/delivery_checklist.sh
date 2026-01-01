@@ -127,12 +127,24 @@ echo "  Checking for missing RepaintBoundary around heavy widgets (perf)..."
 bash tool/check_perf_missing_repaint_boundary.sh || VALIDATION_FAILED=1
 echo ""
 
+echo "  Checking for unnecessary rebuilds (perf)..."
+bash tool/check_perf_unnecessary_rebuilds.sh || VALIDATION_FAILED=1
+echo ""
+
 echo "  Checking for StreamController without close() (memory)..."
 bash tool/check_memory_unclosed_streams.sh || VALIDATION_FAILED=1
 echo ""
 
 echo "  Checking for controllers without dispose() in presentation (memory)..."
 bash tool/check_memory_missing_dispose.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for potential concurrent modification issues..."
+bash tool/check_concurrent_modification.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for potential unnecessary rebuilds (performance)..."
+bash tool/check_perf_unnecessary_rebuilds.sh || VALIDATION_FAILED=1
 echo ""
 
 if [ $VALIDATION_FAILED -eq 1 ]; then
