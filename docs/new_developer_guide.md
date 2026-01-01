@@ -563,6 +563,20 @@ Scripts and intent:
 - `tool/check_raw_print.sh` — Blocks raw `print()` usage; use `AppLogger`.
 - `tool/check_side_effects_build.sh` — Heuristic scan for side effects in
   `build()` (does not fail the checklist on its own).
+- `tool/check_solid_presentation_data_imports.sh` — Blocks presentation imports
+  of data-layer types.
+- `tool/check_solid_data_presentation_imports.sh` — Blocks data-layer imports of
+  presentation.
+- `tool/check_perf_shrinkwrap_lists.sh` — Flags `shrinkWrap: true` in
+  presentation lists.
+- `tool/check_perf_nonbuilder_lists.sh` — Flags non-builder lists/grids in
+  presentation.
+- `tool/check_perf_missing_repaint_boundary.sh` — Flags heavy widgets missing
+  `RepaintBoundary` (heuristic).
+- `tool/check_memory_unclosed_streams.sh` — Flags `StreamController` without
+  `.close()` (heuristic).
+- `tool/check_memory_missing_dispose.sh` — Flags controllers without
+  `dispose()` in State classes (heuristic).
 
 Allowlisting exceptions:
 

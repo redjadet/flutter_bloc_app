@@ -9,6 +9,8 @@ This document describes all validation scripts in the `tool/` directory that are
 - **`check_flutter_domain_imports.sh`**: Ensures domain layer is Flutter-agnostic (no `package:flutter` imports)
 - **`check_direct_getit.sh`**: Prevents direct `GetIt` access in presentation widgets (should inject via constructors/cubits)
 - **`check_no_hive_openbox.sh`**: Prevents direct `Hive.openBox` usage (should use `HiveService`/`HiveRepositoryBase`)
+- **`check_solid_presentation_data_imports.sh`**: Prevents presentation importing data-layer types (DIP)
+- **`check_solid_data_presentation_imports.sh`**: Prevents data layer importing presentation (layering)
 
 ### UI/UX Best Practices
 
@@ -230,6 +232,127 @@ class MyWidget extends StatelessWidget {
 
 ---
 
+#### `check_perf_shrinkwrap_lists.sh`
+
+**Purpose**: Flags `shrinkWrap: true` on presentation lists (potential perf issue).
+
+**What it checks**:
+
+- `shrinkWrap: true` in presentation widgets
+
+**Why it matters**:
+
+- `shrinkWrap` forces additional layout passes and can be expensive on large lists
+- Often avoidable with constrained layouts or builders
+
+**Example violation**:
+
+```dart
+ListView(shrinkWrap: true, children: items) // ❌ Potential perf hit
+```
+
+**Correct pattern**:
+
+```dart
+ListView.builder(itemCount: items.length, itemBuilder: ...) // ✅
+```
+
+**Suppression**: Add `// check-ignore: reason` on the same line or line above
+
+---
+
+#### `check_perf_nonbuilder_lists.sh`
+
+**Purpose**: Flags `ListView`/`GridView` with `children` in presentation (eager build).
+
+**What it checks**:
+
+- `ListView`/`GridView` with `children:` in presentation files
+
+**Why it matters**:
+
+- Eager list builds can be slow for large/dynamic data sets
+- Builder variants are more efficient
+
+**Example violation**:
+
+```dart
+ListView(children: items) // ❌ Eager build
+```
+
+**Correct pattern**:
+
+```dart
+ListView.builder(itemCount: items.length, itemBuilder: ...) // ✅
+```
+
+**Suppression**: Add `// check-ignore: reason` on the same line or line above
+
+---
+
+#### `check_perf_missing_repaint_boundary.sh`
+
+**Purpose**: Flags heavy widgets without `RepaintBoundary` in presentation (heuristic).
+
+**What it checks**:
+
+- Uses of `CustomPaint`, `ShaderMask`, `BackdropFilter`, `ImageFiltered`, `ClipPath` without `RepaintBoundary` in the same file
+
+**Why it matters**:
+
+- Heavy paint/filter widgets can trigger costly repaints
+- `RepaintBoundary` can isolate expensive subtrees
+
+**Example violation**:
+
+```dart
+CustomPaint(painter: painter) // ❌ No RepaintBoundary in file
+```
+
+**Correct pattern**:
+
+```dart
+RepaintBoundary(child: CustomPaint(painter: painter)) // ✅
+```
+
+**Suppression**: Add `// check-ignore: reason` on the same line or line above
+
+---
+
+### Memory Safety
+
+#### `check_memory_unclosed_streams.sh`
+
+**Purpose**: Flags `StreamController` usage without `.close()` (heuristic).
+
+**What it checks**:
+
+- `StreamController` usage without a `.close()` call in the same file
+
+**Why it matters**:
+
+- Unclosed controllers can leak memory and subscriptions
+
+**Suppression**: Add `// check-ignore: reason` on the same line or line above
+
+---
+
+#### `check_memory_missing_dispose.sh`
+
+**Purpose**: Flags controller instantiation in `State` classes without `dispose()` (heuristic).
+
+**What it checks**:
+
+- `TextEditingController`, `ScrollController`, `AnimationController`, `PageController`, `TabController`, `FocusNode` instantiation in StatefulWidgets without `dispose()`
+
+**Why it matters**:
+
+- Controllers hold resources and need cleanup to avoid leaks
+
+**Suppression**: Add `// check-ignore: reason` on the same line or line above
+
+---
+
 ### Typography
 
 #### `check_raw_google_fonts.sh`
@@ -292,6 +415,19 @@ bash tool/check_cubit_isclosed.sh
 
 # Check for missing const constructors (heuristic)
 bash tool/check_missing_const.sh
+
+# Check SOLID layering
+bash tool/check_solid_presentation_data_imports.sh
+bash tool/check_solid_data_presentation_imports.sh
+
+# Check performance heuristics
+bash tool/check_perf_shrinkwrap_lists.sh
+bash tool/check_perf_nonbuilder_lists.sh
+bash tool/check_perf_missing_repaint_boundary.sh
+
+# Check memory heuristics
+bash tool/check_memory_unclosed_streams.sh
+bash tool/check_memory_missing_dispose.sh
 ```
 
 ## Suppressing Violations
