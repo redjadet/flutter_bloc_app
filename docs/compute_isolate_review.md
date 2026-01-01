@@ -29,9 +29,10 @@ This document analyzes potential opportunities to use `compute()` and isolates t
 
 ## Current Usage
 
-- **Production code**: `lib/shared/utils/isolate_json.dart` provides `decodeJsonMap()`/`decodeJsonList()` and uses `compute()` for payloads >8KB (configurable threshold: `_kIsolateDecodeThreshold`)
-- **Network repositories**: Chart, GraphQL, and Hugging Face responses now decode JSON via `decodeJsonMap()`
-- **Local storage**: Chat history parsing now decodes JSON via `decodeJsonList()`
+- **Production code**: `lib/shared/utils/isolate_json.dart` provides `decodeJsonMap()`/`decodeJsonList()` for JSON decoding and `encodeJsonIsolate()` for JSON encoding, using `compute()` for payloads >8KB (configurable threshold: `_kIsolateDecodeThreshold`)
+- **Network repositories**: Chart, GraphQL, and Hugging Face responses decode JSON via `decodeJsonMap()`
+- **Local storage**: Chat history and search cache parsing decode JSON via `decodeJsonList()`
+- **Size estimation**: Profile cache size estimation encodes JSON via `encodeJsonIsolate()`
 - **Demo/Testing**: Isolate samples in `lib/shared/utils/isolate_samples.dart` demonstrating Fibonacci calculations and parallel processing
 - **Tests**: `test/isolate_samples_test.dart` validates isolate behavior
 
@@ -141,22 +142,21 @@ final Map<String, dynamic> decoded = await decodeJsonMap(response.body);
 
 **Location:** `lib/features/search/data/search_cache_repository.dart`
 
-**Current Implementation:**
+**Current Implementation (Updated):**
 
 ```dart
-List<SearchResult> _parseStored(String stored) {
-  final decoded = jsonDecode(stored);  // Blocks UI thread
-  // ... mapping to SearchResult
+Future<List<SearchResult>?> _parseStored(final dynamic raw) async {
+  if (raw is String && raw.isNotEmpty) {
+    final List<dynamic> decoded = await decodeJsonList(raw);
+    return _parseIterable(decoded);
+  }
+  // ... handle Iterable case
 }
 ```
 
 **Impact:** Cached search results can be large (1000+ items)
 
-**Recommendation:**
-
-- Offload JSON decoding and normalization
-- Return `List<Map<String, dynamic>>` to UI isolate
-- Build `SearchResult` models on UI isolate
+**Status:** ✅ Completed (decode offloaded via `decodeJsonList()`)
 
 **Estimated Impact:** Prevents 50-200ms UI stalls when loading cached results
 
@@ -166,25 +166,25 @@ List<SearchResult> _parseStored(String stored) {
 
 **Location:** `lib/features/profile/data/profile_cache_repository.dart`
 
-**Current Implementation:**
+**Current Implementation (Updated):**
 
 ```dart
-ProfileUser _parseProfile(Map<String, dynamic> raw) {
-  // Synchronous parsing, size estimation
-}
-
-int _estimateSizeBytes(ProfileUser user) {
-  return jsonEncode(user.toJson()).length;  // Blocks UI thread
+Future<int?> _estimateSizeBytes(final dynamic raw) async {
+  if (raw == null) {
+    return null;
+  }
+  try {
+    final String encoded = await encodeJsonIsolate(raw);
+    return utf8.encode(encoded).length;
+  } on Exception {
+    return null;
+  }
 }
 ```
 
 **Impact:** Large profile galleries can cause significant parsing overhead
 
-**Recommendation:**
-
-- Offload `jsonEncode` for size estimation via `compute()`
-- Consider isolating large list normalization
-- Keep `ProfileUser` creation on UI isolate
+**Status:** ✅ Completed (JSON encoding for size estimation offloaded via `encodeJsonIsolate()`)
 
 **Estimated Impact:** Prevents 50-150ms UI stalls for large profiles
 
@@ -279,9 +279,9 @@ class MarkdownRenderObject {
 
 ### Medium Priority
 
-1. **Search cache parsing** - Moderate impact (pending)
+1. **Search cache parsing** - ✅ Completed
 2. **Hugging Face response parsing** - ✅ Completed
-3. **Profile cache parsing** - Moderate impact (pending)
+3. **Profile cache parsing** - ✅ Completed
 
 ### Low Priority (Optimization)
 
@@ -338,21 +338,20 @@ class MarkdownRenderObject {
 
 ## Summary
 
-**Status:** `compute()` now used for JSON decoding in network repositories; markdown parsing is cached. Additional opportunities remain in local cache parsing.
+**Status:** `compute()` now used for JSON decoding/encoding across network repositories and local cache parsing; markdown parsing is cached.
 
-**Key Opportunities:**
+**Key Opportunities (All Completed):**
 
-- JSON decoding for large payloads (chart, GraphQL) now offloaded
-- Hugging Face response decoding now offloaded
-- Markdown parsing caching now in place
-- Remaining: search/profile cache parsing
+- JSON decoding for large payloads (chart, GraphQL, Hugging Face) offloaded
+- Chat history and search cache JSON decoding offloaded
+- Profile cache size estimation JSON encoding offloaded
+- Markdown parsing caching in place
 
 **Next Steps:**
 
-1. Evaluate search/profile cache parsing for isolate offloading (currently pending)
-2. Measure performance improvements from implemented optimizations
-3. Consider markdown isolate parsing for very large documents (>50KB)
-4. Use `decodeJsonMap()`/`decodeJsonList()` for any new large JSON payloads
-5. Add tests for `isolate_json.dart` if not already present
+1. Measure performance improvements from implemented optimizations
+2. Consider markdown isolate parsing for very large documents (>50KB)
+3. Use `decodeJsonMap()`/`decodeJsonList()`/`encodeJsonIsolate()` for any new large JSON operations
+4. Add tests for `isolate_json.dart` if not already present
 
 **Expected Impact:** 50-500ms reduction in UI stalls, improved perceived performance, especially for features handling large datasets.

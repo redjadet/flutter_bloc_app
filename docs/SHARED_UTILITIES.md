@@ -163,7 +163,7 @@ const kAnimationDuration = Duration(milliseconds: 300);
 - `cubit_state_emission_mixin.dart` - Mixin for safe state emission in Cubits
 - `error_handling.dart` - Error handling utilities and domain failures
 - `initialization_guard.dart` - Safe initialization wrapper for critical operations
-- `isolate_json.dart` - JSON decoding with automatic isolate offloading for large payloads (>8KB)
+- `isolate_json.dart` - JSON decoding/encoding with automatic isolate offloading for large payloads (>8KB)
 - `isolate_samples.dart` - Examples of isolate usage for heavy computations
 - `logger.dart` - App-wide logging utility
 - `navigation.dart` - Navigation helper functions
@@ -212,11 +212,12 @@ await InitializationGuard.executeSafely(
   failureMessage: 'Failed to initialize feature',
 );
 
-// JSON decoding with isolate offloading (for payloads >8KB)
+// JSON decoding/encoding with isolate offloading (for payloads >8KB)
 import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 
 final Map<String, dynamic> decoded = await decodeJsonMap(response.body);
 final List<dynamic> list = await decodeJsonList(storedJson);
+final String encoded = await encodeJsonIsolate(object); // For size estimation
 ```
 
 ### 8. Widgets (`lib/shared/widgets/`)
