@@ -17,7 +17,11 @@ Future<SyncCycleSummary> runSyncCycle({
   required final void Function(String event, Map<String, Object?> payload)
   telemetry,
 }) async {
-  final List<SyncableRepository> syncables = registry.repositories;
+  // Create a snapshot copy to avoid concurrent modification during iteration
+  // even if the registry is modified concurrently
+  final List<SyncableRepository> syncables = List<SyncableRepository>.from(
+    registry.repositories,
+  );
   final Stopwatch stopwatch = Stopwatch()..start();
   int pullCount = 0;
   int pullFailures = 0;

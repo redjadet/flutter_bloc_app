@@ -197,14 +197,8 @@ late final TextStyle unreadTextStyle; // computed in constructor
 
 - **Google Maps** (`google_maps_flutter`, `apple_maps_flutter`) ✅ deferred
 - **Markdown Editor** (`markdown` package) ✅ deferred
-
-- **WebSocket** (`web_socket_channel`)
-  - Only used on `/websocket` route
-  - Connection libraries can add overhead
-
-- **Charts** (`fl_chart`)
-  - Only used on `/charts` route
-  - Chart rendering libraries can be substantial
+- **WebSocket** (`web_socket_channel`) ✅ deferred
+- **Charts** (`fl_chart`) ✅ deferred
 
 **Implementation Strategy:**
 
@@ -378,10 +372,8 @@ class RemoteConfigCubit {
 
 ### Medium Priority Optimizations
 
-- [ ] **Evaluate CounterCubit location**
-  - Profile app startup with counter at route vs app scope
-  - If significant improvement, move to route level
-  - Consider if counter data needed globally
+- [x] **Evaluate CounterCubit location**
+  - Counter cubit moved to route-level provider for on-demand initialization
 
 - [ ] **Review Firebase Auth initialization**
   - Only relevant if making auth optional
@@ -430,16 +422,16 @@ The codebase demonstrates **strong lazy loading practices**:
 
 ### Recent Improvements: 🚀 Completed
 
-1. **Deferred imports** enabled for Google Maps and Markdown Editor routes
-2. **Gated background sync** via `SyncStatusCubit.ensureStarted()`
-3. **Lazy remote config** initialization via `RemoteConfigCubit.ensureInitialized()`
+1. **Deferred imports** enabled for Google Maps, Markdown Editor, WebSocket, and Charts routes
+2. **Gated background sync** via `SyncStatusCubit.ensureStarted()` (called from sync banners and counter page)
+3. **Lazy remote config** initialization via `RemoteConfigCubit.ensureInitialized()` (called from settings and feature widgets)
+4. **CounterCubit moved to route level** for on-demand initialization
+5. **Apple Maps annotations optimized** with caching to prevent unnecessary rebuilds
 
 ### Remaining Opportunities
 
-1. **Deferred imports** for WebSocket and Charts routes
-2. **Profile startup time** (baseline + post-change)
-3. **Monitor bundle size** and set budgets
-4. **Evaluate CounterCubit location** with profiling data
+1. **Profile startup time** (baseline + post-change)
+2. **Monitor bundle size** and set budgets
 
 ---
 

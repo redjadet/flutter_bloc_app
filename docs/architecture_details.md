@@ -94,6 +94,7 @@ flowchart LR
 ## Key Principles
 
 - Clean boundaries: widgets depend on cubits, cubits depend on domain contracts
+- Feature cubits (including Counter) are created at route scope to minimize startup work
 - Presentation uses responsive helpers and `PlatformAdaptive.*` components
 - DI and bootstrap centralized in `injector*.dart` and `AppScope`
 - Offline-first repositories coordinate cache, remote, and sync queues

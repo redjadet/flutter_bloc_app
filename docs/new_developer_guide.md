@@ -32,7 +32,7 @@ Welcome aboard! This document distills the essentials you need to navigate, exte
 
 1. Entry (`main_dev.dart`, `main_prod.dart`, etc.) sets flavor configs and calls `bootstrap(const MyApp())`.
 2. `configureDependencies()` registers shared services (timer, platform, logging), repositories, and cubits’ dependencies.
-3. `MyApp` builds `AppScope` and a `MultiBlocProvider`. Each cubit calls `loadInitial()` in `initState` when deterministic startup work is needed. See DI Reference section below for example.
+3. `MyApp` builds `AppScope` and a `MultiBlocProvider`. Most feature cubits (including Counter) are now created at the route level and call `loadInitial()` when deterministic startup work is needed. See DI Reference section below for example.
 4. `GoRouter` resolves screens. Feature pages assemble their cubit(s) + widgets and delegate work to the injected repositories.
 
 ### Deferred Feature Loading

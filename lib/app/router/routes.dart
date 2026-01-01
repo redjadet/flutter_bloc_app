@@ -1,8 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/router/deferred_pages/chart_page.dart'
+    deferred as chart_page;
 import 'package:flutter_bloc_app/app/router/deferred_pages/google_maps_page.dart'
     deferred as google_maps_page;
 import 'package:flutter_bloc_app/app/router/deferred_pages/markdown_editor_page.dart'
     deferred as markdown_editor_page;
+import 'package:flutter_bloc_app/app/router/deferred_pages/websocket_page.dart'
+    deferred as websocket_page;
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/logged_out_page.dart';
@@ -10,8 +14,6 @@ import 'package:flutter_bloc_app/features/auth/presentation/pages/profile_page.d
 import 'package:flutter_bloc_app/features/auth/presentation/pages/register_page.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:flutter_bloc_app/features/calculator/calculator.dart';
-import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
-import 'package:flutter_bloc_app/features/chart/presentation/pages/chart_page.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
@@ -33,9 +35,6 @@ import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/presentation/pages/search_page.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
-import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
-import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_cubit.dart';
-import 'package:flutter_bloc_app/features/websocket/presentation/pages/websocket_demo_page.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
@@ -62,11 +61,22 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.counterPath,
     name: AppRoutes.counter,
-    builder: (final context, final state) => CounterPage(
-      title: context.l10n.homeTitle,
-      errorNotificationService: getIt<ErrorNotificationService>(),
-      biometricAuthenticator: getIt<BiometricAuthenticator>(),
-    ),
+    builder: (final context, final state) =>
+        BlocProviderHelpers.withAsyncInit<CounterCubit>(
+          create: () => CounterCubit(
+            repository: getIt<CounterRepository>(),
+            timerService: getIt<TimerService>(),
+            loadDelay: FlavorManager.I.isDev
+                ? AppConstants.devSkeletonDelay
+                : Duration.zero,
+          ),
+          init: (final cubit) => cubit.loadInitial(),
+          child: CounterPage(
+            title: context.l10n.homeTitle,
+            errorNotificationService: getIt<ErrorNotificationService>(),
+            biometricAuthenticator: getIt<BiometricAuthenticator>(),
+          ),
+        ),
   ),
   GoRoute(
     path: AppRoutes.calculatorPath,
@@ -133,8 +143,9 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.chartsPath,
     name: AppRoutes.charts,
-    builder: (final context, final state) => ChartPage(
-      repository: getIt<ChartRepository>(),
+    builder: (final context, final state) => DeferredPage(
+      loadLibrary: chart_page.loadLibrary,
+      builder: (final context) => chart_page.buildChartPage(),
     ),
   ),
   GoRoute(
@@ -204,9 +215,9 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.websocketPath,
     name: AppRoutes.websocket,
-    builder: (final context, final state) => BlocProvider(
-      create: (_) => WebsocketCubit(repository: getIt<WebsocketRepository>()),
-      child: const WebsocketDemoPage(),
+    builder: (final context, final state) => DeferredPage(
+      loadLibrary: websocket_page.loadLibrary,
+      builder: (final context) => websocket_page.buildWebsocketPage(),
     ),
   ),
   GoRoute(

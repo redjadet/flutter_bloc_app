@@ -105,14 +105,23 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
     }
 
     // Update UI if any state changes require rebuild
-    if (changes.hasAnyChange) {
+    // Exclude camera changes from triggering rebuilds to prevent blinking
+    // Camera updates from user interaction don't need widget rebuilds
+    if (changes.mapTypeChanged ||
+        changes.trafficChanged ||
+        changes.markersChanged ||
+        changes.selectionChanged ||
+        changes.locationsChanged) {
       setState(() {});
     }
+    // Camera changes are handled by moveCamera above and don't need setState
   }
 
   void _handleCameraMove(final gmaps.CameraPosition position) {
     if (_isAnimatingCamera) return;
-    _stateManager.updateCameraPosition(position);
+    // Update local state only - don't notify cubit to prevent rebuilds/blinking
+    // The cubit only needs camera position for programmatic updates
+    _stateManager.updateCameraPosition(position, notifyCubit: false);
   }
 
   Future<void> _focusOnLocation(final MapLocation location) async {

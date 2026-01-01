@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/core.dart';
-import 'package:flutter_bloc_app/features/counter/counter.dart';
 import 'package:flutter_bloc_app/features/deeplink/deeplink.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
@@ -42,16 +41,6 @@ class _AppScopeState extends State<AppScope> {
           networkStatusService: getIt<NetworkStatusService>(),
           coordinator: _syncCoordinator,
         ),
-      ),
-      BlocProviderHelpers.providerWithAsyncInit<CounterCubit>(
-        create: () => CounterCubit(
-          repository: getIt<CounterRepository>(),
-          timerService: getIt(),
-          loadDelay: FlavorManager.I.isDev
-              ? AppConstants.devSkeletonDelay
-              : Duration.zero,
-        ),
-        init: (final cubit) => cubit.loadInitial(),
       ),
       BlocProviderHelpers.providerWithAsyncInit<LocaleCubit>(
         create: () => LocaleCubit(repository: getIt<LocaleRepository>()),
