@@ -66,6 +66,7 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 - **High Instructions:** Register interface-to-implementation mappings in `lib/core/di/injector_registrations.dart` (or `lib/core/di/register_http_services.dart` if applicable), and update `lib/app/router/routes.dart` to request interfaces from `getIt` rather than concrete cache repository classes. Keep interface registrations near similar service registrations for discoverability.
 - **High Acceptance Criteria:** DI resolves interface types successfully; route builders and page constructors do not reference concrete cache repository classes.
 - **High Verification Commands:** `rg \"GraphqlDemoCacheRepository|ProfileCacheRepository\" lib/app/router/routes.dart`, `rg \"register.*<GraphqlCacheRepository>|register.*<ProfileCacheRepository\" lib/core/di -g\"*.dart\"`, and `flutter test test/core/di/injector_test.dart`.
+- **High Status:** Implemented (GraphqlCacheRepository registered in `register_http_services.dart`, ProfileCacheRepository registered in `injector_registrations.dart`, routes.dart uses interface types from getIt).
 - **High:** Extract offline-first responsibilities to tighten SRP in chat data layer.
 - **High Instructions:** Split `lib/features/chat/data/offline_first_chat_repository.dart` into smaller collaborators (e.g., `ChatSyncOperationFactory` for sync payloads, `ChatLocalConversationUpdater` for local persistence and merge logic). Inject collaborators so `OfflineFirstChatRepository` focuses on orchestration and delegates persistence/mapping.
 - **High Acceptance Criteria:** `OfflineFirstChatRepository` delegates sync payload creation and local persistence; new collaborators have focused unit tests; method bodies are shorter and more readable.
@@ -75,10 +76,12 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 - **Medium Instructions:** Search `lib/features/**/presentation` for imports from `lib/features/**/data` and replace dependencies with domain/shared interfaces; update DI bindings where needed. Allow exceptions only for tooling/debug widgets.
 - **Medium Acceptance Criteria:** No presentation modules import data-layer classes unless explicitly exempted; interface usage is consistent across feature pages and widgets.
 - **Medium Verification Commands:** `rg \"features/.*/data\" lib/features -g\"*presentation*.dart\"` and `rg \"// check-ignore\" lib/features -g\"*presentation*.dart\"`.
+- **Medium Status:** Verified (no presentation modules import data-layer classes).
 - **Low:** Add SOLID review items to dev checklists/templates.
 - **Low Instructions:** Update `docs/flutter_best_practices_review.md` or `docs/new_developer_guide.md` with a brief checklist item that calls out interface-driven boundaries and disallows presentation-level data-layer imports.
 - **Low Acceptance Criteria:** Documentation includes a clear, one-line SOLID verification step and references the interface-first rule.
 - **Low Verification Commands:** `rg \"SOLID\" docs/flutter_best_practices_review.md docs/new_developer_guide.md` and `rg \"interface\" docs/flutter_best_practices_review.md docs/new_developer_guide.md`.
+- **Low Status:** Implemented (SOLID interface-first checklist added to `docs/flutter_best_practices_review.md`).
 
 ## Practical patterns to keep
 

@@ -559,6 +559,34 @@ grep -r "try {" lib/features/*/presentation/cubit/ | grep -v "CubitExceptionHand
 
 These items are nice-to-have improvements that can be addressed when time permits.
 
+#### L1. SOLID: Enforce Interface-First Boundaries in Presentation
+
+**Owner:** Feature Dev
+**Effort:** XS (<0.5 day)
+**Status:** ✅
+**Files:** `lib/features/**/presentation`, `lib/core/di/`
+
+**Problem:** Presentation importing data-layer types weakens DIP and makes UI harder to test.
+
+**Solution:**
+
+1. Add a review checklist item: presentation depends on domain/shared interfaces only
+2. Disallow `lib/features/**/data` imports in presentation (except tooling/debug)
+3. Ensure DI resolves interface types at composition boundaries
+
+**Acceptance Criteria:**
+
+- [x] Presentation modules avoid `lib/features/**/data` imports
+- [x] Routes/pages use interfaces, not concrete cache/data classes
+- [x] Checklist or review guidance explicitly calls out the interface-first rule
+
+**Verification:**
+
+```bash
+rg "features/.*/data" lib/features -g"*presentation*.dart"
+rg "getIt<.*Repository>" lib/app/router/routes.dart
+```
+
 #### 13. UI Foundations: Consolidate Typography into Theme
 
 **Owner:** Design Systems
