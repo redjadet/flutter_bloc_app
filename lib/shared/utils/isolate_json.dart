@@ -51,7 +51,7 @@ dynamic _decodeJson(final String payload) => jsonDecode(payload);
 Future<String> encodeJsonIsolate(final dynamic object) async {
   if (object is String) {
     if (object.length < _kIsolateDecodeThreshold) {
-      return object;
+      return jsonEncode(object);
     }
     return compute(_encodeJson, object);
   }

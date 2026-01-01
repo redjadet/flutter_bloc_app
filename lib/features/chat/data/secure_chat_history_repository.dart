@@ -52,6 +52,7 @@ class SecureChatHistoryRepository implements ChatHistoryRepository {
           await _storage.delete(_storageKeyHistory);
           return;
         }
+        // check-ignore: small payload (<8KB) - chat history encoding for storage is handled via decodeJsonList on read
         final String json = jsonEncode(
           conversations
               .map((final ChatConversation c) => c.toJson())

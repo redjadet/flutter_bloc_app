@@ -127,6 +127,7 @@ Future<Map<String, dynamic>?> _readAssetSecrets() async {
   }
 
   try {
+    // check-ignore: small payload (<8KB) - config files are small
     final dynamic decoded = jsonDecode(raw);
     if (decoded is Map<String, dynamic>) {
       return decoded;

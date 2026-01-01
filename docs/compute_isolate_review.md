@@ -34,7 +34,9 @@ This document analyzes potential opportunities to use `compute()` and isolates t
 - **Local storage**: Chat history and search cache parsing decode JSON via `decodeJsonList()`
 - **Size estimation**: Profile cache size estimation encodes JSON via `encodeJsonIsolate()`
 - **Demo/Testing**: Isolate samples in `lib/shared/utils/isolate_samples.dart` demonstrating Fibonacci calculations and parallel processing
-- **Tests**: `test/isolate_samples_test.dart` validates isolate behavior
+- **Tests**:
+  - `test/isolate_samples_test.dart` validates isolate behavior
+  - `test/shared/utils/isolate_json_test.dart` validates JSON decode/encode functions with isolate offloading
 
 ---
 
@@ -264,7 +266,9 @@ class MarkdownRenderObject {
 
 - **Overhead:** Isolate creation has ~5-20ms overhead
 - **Memory:** Each isolate uses additional memory (~2-5MB)
-- **Threshold:** `decodeJsonMap()`/`decodeJsonList()` use isolates for payloads >8KB (configurable via `_kIsolateDecodeThreshold`)
+- **Threshold:**
+  - `decodeJsonMap()`/`decodeJsonList()` use isolates for payloads >8KB (configurable via `_kIsolateDecodeThreshold`)
+  - `encodeJsonIsolate()` uses isolates for lists/maps with >20 items (configurable via `_kIsolateEncodeSmallCollectionMax`) or strings >8KB
 - **Only worth it for:** Operations taking >50ms or payloads >8KB
 
 ---
@@ -317,11 +321,13 @@ class MarkdownRenderObject {
 
 ## Testing Considerations
 
-- **Unit tests:** Test decode functions in isolation
-- **Integration tests:** Test repository methods with mocked `compute()`
+- **Unit tests:** Test decode/encode functions in isolation (see `test/shared/utils/isolate_json_test.dart`)
+- **Integration tests:** Test repository methods that use isolate JSON functions
 - **Performance tests:** Measure parsing time before/after
 - **Error tests:** Verify fallback behavior when isolates fail
-- **Example:** See `test/isolate_samples_test.dart` for isolate testing patterns
+- **Examples:**
+  - `test/isolate_samples_test.dart` - Isolate testing patterns
+  - `test/shared/utils/isolate_json_test.dart` - JSON decode/encode with isolate offloading
 
 ---
 
@@ -352,6 +358,11 @@ class MarkdownRenderObject {
 1. Measure performance improvements from implemented optimizations
 2. Consider markdown isolate parsing for very large documents (>50KB)
 3. Use `decodeJsonMap()`/`decodeJsonList()`/`encodeJsonIsolate()` for any new large JSON operations
-4. Add tests for `isolate_json.dart` if not already present
+
+**Validation Scripts:**
+
+- `tool/check_raw_json_decode.sh` - Ensures `jsonDecode()`/`jsonEncode()` are not used directly (should use isolate functions for large payloads)
+- `tool/check_compute_domain_layer.sh` - Ensures `compute()` is not used in domain layer (domain should be Flutter-agnostic)
+- `tool/check_compute_lifecycle.sh` - Heuristically detects `compute()` usage in lifecycle methods (warns but doesn't fail)
 
 **Expected Impact:** 50-500ms reduction in UI stalls, improved perceived performance, especially for features handling large datasets.

@@ -33,6 +33,7 @@ Future<void> _restCounterRepositorySave(
         repository,
         overrides: const {'Content-Type': 'application/json'},
       ),
+      // check-ignore: small payload (<8KB) - request body is small
       body: jsonEncode(<String, dynamic>{
         'userId': normalized.userId,
         'count': normalized.count,
@@ -116,6 +117,7 @@ CounterSnapshot _normalizeSnapshot(
 
 CounterSnapshot _parseSnapshot(final String body) {
   try {
+    // check-ignore: small payload (<8KB) - counter snapshot responses are small
     final dynamic decoded = jsonDecode(body);
     if (decoded is! Map<String, dynamic>) {
       throw CounterError.load(
