@@ -65,45 +65,47 @@ class _SettingsView extends StatelessWidget {
     final l10n = context.l10n;
     final GraphqlCacheRepository? graphqlRepo = graphqlCacheRepository;
     final ProfileCacheRepository? cacheRepo = profileCacheRepository;
+    final List<Widget> sections = <Widget>[
+      const AccountSection(),
+      SizedBox(height: context.responsiveGapL),
+      const ThemeSection(),
+      SizedBox(height: context.responsiveGapL),
+      const LanguageSection(),
+      SizedBox(height: context.responsiveGapL),
+      const AppInfoSection(),
+      if (FlavorManager.I.isDev || FlavorManager.I.isQa) ...[
+        SizedBox(height: context.responsiveGapL),
+        if (graphqlRepo != null)
+          GraphqlCacheControlsSection(
+            cacheRepository: graphqlRepo,
+          ),
+        SizedBox(height: context.responsiveGapL),
+        if (cacheRepo != null)
+          ProfileCacheControlsSection(
+            profileCacheRepository: cacheRepo,
+          ),
+        SizedBox(height: context.responsiveGapL),
+        const RemoteConfigDiagnosticsSection(),
+        SizedBox(height: context.responsiveGapL),
+        const SyncDiagnosticsSection(),
+      ],
+      if (!const bool.fromEnvironment('dart.vm.product')) ...[
+        SizedBox(height: context.responsiveGapL),
+        PlatformAdaptive.textButton(
+          context: context,
+          onPressed: () => throw Exception('Test exception for error handling'),
+          child: const Text('Throw Test Exception'),
+        ),
+      ],
+    ];
     return CommonPageLayout(
       title: l10n.settingsPageTitle,
-      body: ListView(
+      body: ListView.builder(
         key: const ValueKey('settings-list'),
         padding: EdgeInsets.zero,
-        children: <Widget>[
-          const AccountSection(),
-          SizedBox(height: context.responsiveGapL),
-          const ThemeSection(),
-          SizedBox(height: context.responsiveGapL),
-          const LanguageSection(),
-          SizedBox(height: context.responsiveGapL),
-          const AppInfoSection(),
-          if (FlavorManager.I.isDev || FlavorManager.I.isQa) ...[
-            SizedBox(height: context.responsiveGapL),
-            if (graphqlRepo != null)
-              GraphqlCacheControlsSection(
-                cacheRepository: graphqlRepo,
-              ),
-            SizedBox(height: context.responsiveGapL),
-            if (cacheRepo != null)
-              ProfileCacheControlsSection(
-                profileCacheRepository: cacheRepo,
-              ),
-            SizedBox(height: context.responsiveGapL),
-            const RemoteConfigDiagnosticsSection(),
-            SizedBox(height: context.responsiveGapL),
-            const SyncDiagnosticsSection(),
-          ],
-          if (!const bool.fromEnvironment('dart.vm.product')) ...[
-            SizedBox(height: context.responsiveGapL),
-            PlatformAdaptive.textButton(
-              context: context,
-              onPressed: () =>
-                  throw Exception('Test exception for error handling'),
-              child: const Text('Throw Test Exception'),
-            ),
-          ],
-        ],
+        itemCount: sections.length,
+        itemBuilder: (final BuildContext context, final int index) =>
+            sections[index],
       ),
     );
   }

@@ -107,6 +107,34 @@ echo "  Checking for missing const constructors in StatelessWidget..."
 bash tool/check_missing_const.sh || VALIDATION_FAILED=1
 echo ""
 
+echo "  Checking for data-layer imports in presentation (SOLID DIP)..."
+bash tool/check_solid_presentation_data_imports.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for presentation imports in data layer (SOLID layering)..."
+bash tool/check_solid_data_presentation_imports.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for shrinkWrap: true in presentation lists (perf)..."
+bash tool/check_perf_shrinkwrap_lists.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for non-builder ListView/GridView in presentation (perf)..."
+bash tool/check_perf_nonbuilder_lists.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for missing RepaintBoundary around heavy widgets (perf)..."
+bash tool/check_perf_missing_repaint_boundary.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for StreamController without close() (memory)..."
+bash tool/check_memory_unclosed_streams.sh || VALIDATION_FAILED=1
+echo ""
+
+echo "  Checking for controllers without dispose() in presentation (memory)..."
+bash tool/check_memory_missing_dispose.sh || VALIDATION_FAILED=1
+echo ""
+
 if [ $VALIDATION_FAILED -eq 1 ]; then
   echo "❌ Best practices validation failed! Please fix the violations above."
   exit 1
