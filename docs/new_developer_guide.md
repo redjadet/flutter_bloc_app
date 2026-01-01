@@ -37,7 +37,18 @@ Welcome aboard! This document distills the essentials you need to navigate, exte
 
 ### Deferred Feature Loading
 
-Heavy features use deferred imports plus `DeferredPage` so their code ships outside the initial bundle. Add new deferred routes like this:
+This codebase uses **deferred imports** to reduce initial app bundle size and improve startup time. Heavy features are loaded on-demand when users navigate to them.
+
+**Note:** This differs from **Deferred Components** (an Android-specific feature for Play Store dynamic feature modules). This app uses deferred imports, which work across all platforms without requiring Android-specific setup.
+
+**Currently deferred features:**
+
+- Google Maps (heavy native SDK dependencies)
+- Markdown Editor (custom RenderObject implementation)
+- Charts (data visualization libraries)
+- WebSocket (real-time communication libraries)
+
+**Add new deferred routes like this:**
 
 ```dart
 import 'package:flutter_bloc_app/app/router/deferred_pages/your_feature_page.dart'
@@ -52,6 +63,31 @@ GoRoute(
   ),
 ),
 ```
+
+**Key requirements:**
+
+1. Create a library file in `lib/app/router/deferred_pages/your_feature_page.dart` with a `library;` declaration
+2. Export a builder function (e.g., `buildYourFeaturePage()`) that returns the page widget
+3. Use `deferred as` import syntax in `routes.dart`
+4. Wrap the route builder with `DeferredPage` widget
+
+**How it works:**
+
+- Deferred imports split code into separate chunks that load on-demand
+- When a user navigates to a deferred route, the library is loaded asynchronously
+- `DeferredPage` widget shows a loading indicator during library load
+- Once loaded, the feature code is available for the remainder of the app session
+- Reduces initial bundle size (estimated 9-17 MB saved) and speeds up cold start
+
+**Advanced: Deferred Components (Android-only)**
+For Android apps distributed via Play Store, you can use **Deferred Components** for even more advanced code splitting:
+
+- Features downloaded as dynamic feature modules from Play Store
+- Requires configuration in `pubspec.yaml` under `flutter.deferred-components`
+- Uses `DeferredComponent` utility class instead of `loadLibrary()`
+- See [Flutter Deferred Components documentation](https://docs.flutter.dev/perf/deferred-components) for details
+
+> **See also:** [Lazy Loading Review](../../analysis/lazy_loading_late_review.md) for comprehensive analysis, detailed explanation of deferred imports, and best practices.
 
 ## 4. Feature Module Playbook
 

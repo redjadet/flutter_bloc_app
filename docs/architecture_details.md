@@ -112,8 +112,16 @@ flowchart LR
 
 ## Lazy Loading Patterns
 
-- **Deferred routes**: Heavy features are loaded via `DeferredPage` + `deferred as` imports in `lib/app/router/routes.dart`.
-- **On-demand services**: `BackgroundSyncCoordinator` starts via `SyncStatusCubit.ensureStarted()`, and `RemoteConfigCubit.ensureInitialized()` triggers only when a feature requests config values.
+This codebase implements comprehensive lazy loading strategies to optimize startup time and bundle size:
+
+### Deferred Routes
+
+Heavy features are loaded via `DeferredPage` + `deferred as` imports in `lib/app/router/routes.dart`. These features ship outside the initial bundle and load on-demand when the user navigates to them:
+
+- **Google Maps** - Heavy native SDK dependencies
+- **Markdown Editor** - Custom RenderObject implementation
+- **Charts** - Data visualization libraries
+- **WebSocket** - Real-time communication libraries
 
 ```dart
 GoRoute(
@@ -121,10 +129,24 @@ GoRoute(
   name: AppRoutes.googleMaps,
   builder: (context, state) => DeferredPage(
     loadLibrary: google_maps_page.loadLibrary,
-    builder: (context) => google_maps_page.buildGoogleMapsPage(context, state),
+    builder: (context) => google_maps_page.buildGoogleMapsPage(),
   ),
 ),
 ```
+
+**Impact:** Significant reduction in initial app bundle size (estimated 9-17 MB saved) and faster startup time.
+
+### On-Demand Services
+
+- **BackgroundSyncCoordinator**: Starts via `SyncStatusCubit.ensureStarted()` when first sync-dependent feature is accessed
+- **RemoteConfigCubit**: Initializes via `RemoteConfigCubit.ensureInitialized()` only when a feature requests config values
+- **Dependency Injection**: All services use lazy singletons (`registerLazySingletonIfAbsent`) - instances created only on first access
+
+### Route-Level Cubit Initialization
+
+Most feature-specific cubits (Chat, Maps, GraphQL, Profile, WebSocket) are created at route level rather than app scope, reducing memory footprint for unused features.
+
+> **See also:** [Lazy Loading Review](../analysis/lazy_loading_late_review.md) for comprehensive analysis, implementation details, and best practices.
 
 ## State Management Flow
 
