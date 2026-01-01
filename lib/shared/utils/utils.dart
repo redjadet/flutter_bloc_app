@@ -8,6 +8,7 @@ export 'cubit_helpers.dart';
 export 'cubit_state_emission_mixin.dart';
 export 'cubit_subscription_mixin.dart';
 export 'error_handling.dart';
+export 'isolate_json.dart';
 export 'isolate_samples.dart';
 export 'logger.dart';
 export 'navigation.dart';

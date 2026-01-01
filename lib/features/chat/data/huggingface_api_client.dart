@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
 import 'package:http/http.dart' as http;
@@ -77,18 +78,16 @@ class HuggingFaceApiClient {
     }
 
     try {
-      final dynamic decoded = jsonDecode(response.body);
-      if (decoded is JsonMap) {
-        return decoded;
-      }
-
-      AppLogger.error(
-        'HuggingFaceApiClient.$context failed',
-        'Unexpected payload structure: ${decoded.runtimeType}',
-        StackTrace.current,
-      );
-      throw const ChatException('Chat service returned unexpected payload.');
+      return await decodeJsonMap(response.body);
     } on FormatException catch (e, stackTrace) {
+      if (e.message == 'Expected a JSON object') {
+        AppLogger.error(
+          'HuggingFaceApiClient.$context failed',
+          'Unexpected payload structure: ${e.message}',
+          stackTrace,
+        );
+        throw const ChatException('Chat service returned unexpected payload.');
+      }
       AppLogger.error(
         'HuggingFaceApiClient.$context failed',
         'Invalid JSON response: ${e.message}',

@@ -57,8 +57,9 @@ This app implements several performance optimizations:
 6. **Lazy Dependency Injection**: All services use lazy singletons - instances created only on first access
 7. **Route-Level Initialization**: Feature cubits created at route level, not app scope
 8. **On-Demand Services**: BackgroundSyncCoordinator and RemoteConfigCubit start/initialize only when needed
-9. **Performance Profiling**: Built-in `PerformanceProfiler` tracks widget rebuilds and frame performance
-10. **Const Constructors**: Use `const` widgets wherever possible to reduce rebuilds
+9. **Isolate JSON Decoding**: Large JSON payloads (>8KB) decoded in isolates via `decodeJsonMap()`/`decodeJsonList()` to prevent UI stalls
+10. **Performance Profiling**: Built-in `PerformanceProfiler` tracks widget rebuilds and frame performance
+11. **Const Constructors**: Use `const` widgets wherever possible to reduce rebuilds
 
 **Common Mistakes to Avoid:**
 
@@ -70,8 +71,10 @@ This app implements several performance optimizations:
 - ❌ Creating feature cubits at app scope when they're only needed on specific routes
 
 **See also:**
+
 - `docs/CODE_QUALITY_ANALYSIS.md` - Detailed performance guidelines
 - `analysis/lazy_loading_late_review.md` - Comprehensive lazy loading analysis and deferred imports explanation
+- `docs/compute_isolate_review.md` - Compute/isolate usage guide for JSON decoding and CPU-intensive operations
 
 ### How do I make my Flutter app responsive?
 

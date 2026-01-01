@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
 import 'package:http/http.dart' as http;
@@ -145,8 +146,10 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
       },
     );
 
-    final dynamic decoded = jsonDecode(response.body);
-    if (decoded is! Map<String, dynamic>) {
+    final Map<String, dynamic> decoded;
+    try {
+      decoded = await decodeJsonMap(response.body);
+    } on FormatException {
       throw GraphqlDemoException(
         'Malformed GraphQL response',
         type: GraphqlDemoErrorType.data,

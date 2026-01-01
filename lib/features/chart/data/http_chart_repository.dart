@@ -1,8 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
@@ -45,7 +45,7 @@ class HttpChartRepository extends ChartRepository {
         headers: _headers,
       );
       if (response.statusCode == HttpStatus.ok) {
-        final parsed = _parseBody(response.body);
+        final parsed = await _parseBody(response.body);
         return _cache(parsed, now);
       }
       AppLogger.warning(
@@ -86,11 +86,8 @@ class HttpChartRepository extends ChartRepository {
   @override
   List<ChartPoint>? getCachedTrendingCounts() => _cached;
 
-  List<ChartPoint> _parseBody(final String body) {
-    final dynamic decoded = json.decode(body);
-    if (decoded is! Map<String, dynamic>) {
-      throw const FormatException('Invalid chart payload shape');
-    }
+  Future<List<ChartPoint>> _parseBody(final String body) async {
+    final Map<String, dynamic> decoded = await decodeJsonMap(body);
     final dynamic prices = decoded['prices'];
     if (prices is! List) {
       throw const FormatException('Invalid chart payload content');

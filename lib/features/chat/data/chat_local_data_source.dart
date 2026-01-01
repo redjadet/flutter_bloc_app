@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
+import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
 
@@ -50,25 +49,27 @@ class ChatLocalDataSource extends HiveRepositoryBase
         },
       );
 
-  List<ChatConversation> _parseStored(final dynamic raw) {
+  Future<List<ChatConversation>> _parseStored(final dynamic raw) async {
     if (raw is String && raw.isNotEmpty) {
       try {
-        final dynamic decoded = jsonDecode(raw);
-        return _parseStored(decoded);
+        final List<dynamic> decoded = await decodeJsonList(raw);
+        return _parseIterable(decoded);
       } on Exception {
         return const <ChatConversation>[];
       }
     }
 
     if (raw is Iterable<dynamic>) {
-      return raw
-          .whereType<Map<dynamic, dynamic>>()
-          .map(_mapToConversation)
-          .toList(growable: false);
+      return _parseIterable(raw);
     }
 
     return const <ChatConversation>[];
   }
+
+  List<ChatConversation> _parseIterable(final Iterable<dynamic> raw) => raw
+      .whereType<Map<dynamic, dynamic>>()
+      .map(_mapToConversation)
+      .toList(growable: false);
 
   ChatConversation _mapToConversation(final Map<dynamic, dynamic> raw) {
     final Map<String, dynamic> normalized = raw.map(
