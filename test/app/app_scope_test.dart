@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/shared/responsive/responsive.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -33,6 +36,11 @@ class _CountingBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   }
 
   @override
+  Future<void> ensureStarted() async {
+    await start();
+  }
+
+  @override
   Future<void> stop() async {}
 
   @override
@@ -57,7 +65,7 @@ void main() {
     await test_helpers.tearDownTestDependencies();
   });
 
-  testWidgets('starts background sync once per widget lifecycle', (
+  testWidgets('starts background sync only when requested', (
     WidgetTester tester,
   ) async {
     final coordinator = _CountingBackgroundSyncCoordinator();
@@ -86,9 +94,15 @@ void main() {
     );
     await tester.pump();
 
-    expect(coordinator.startCount, 1);
+    expect(coordinator.startCount, 0);
 
     triggerRebuild(() {});
+    await tester.pump();
+
+    expect(coordinator.startCount, 0);
+
+    final BuildContext context = tester.element(find.byType(ResponsiveScope));
+    context.read<SyncStatusCubit>().ensureStarted();
     await tester.pump();
 
     expect(coordinator.startCount, 1);

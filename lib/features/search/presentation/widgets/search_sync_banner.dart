@@ -10,8 +10,23 @@ import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 ///
 /// Search doesn't queue operations, so this banner only shows network/sync
 /// status to inform users when results are being refreshed or when offline.
-class SearchSyncBanner extends StatelessWidget {
+class SearchSyncBanner extends StatefulWidget {
   const SearchSyncBanner({super.key});
+
+  @override
+  State<SearchSyncBanner> createState() => _SearchSyncBannerState();
+}
+
+class _SearchSyncBannerState extends State<SearchSyncBanner> {
+  @override
+  void initState() {
+    super.initState();
+    if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
+      context,
+    )) {
+      context.read<SyncStatusCubit>().ensureStarted();
+    }
+  }
 
   @override
   Widget build(

@@ -61,6 +61,9 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> start() async {}
 
   @override
+  Future<void> ensureStarted() async {}
+
+  @override
   Future<void> stop() async {}
 
   @override

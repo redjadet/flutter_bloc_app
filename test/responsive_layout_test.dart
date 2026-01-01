@@ -219,6 +219,9 @@ class _StubBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> start() async {}
 
   @override
+  Future<void> ensureStarted() async {}
+
+  @override
   Future<void> stop() async {}
 }
 

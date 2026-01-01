@@ -15,6 +15,26 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
   static const String _lastSyncedKey = 'last_synced_at';
 
   final RemoteConfigService _remoteConfigService;
+  bool _hasInitialized = false;
+  Future<void>? _initializationFuture;
+
+  Future<void> ensureInitialized() {
+    if (_hasInitialized) {
+      return Future.value();
+    }
+    final Future<void>? inFlight = _initializationFuture;
+    if (inFlight != null) {
+      return inFlight;
+    }
+    late final Future<void> loadFuture;
+    loadFuture = initialize().whenComplete(() {
+      if (identical(_initializationFuture, loadFuture)) {
+        _initializationFuture = null;
+      }
+    });
+    _initializationFuture = loadFuture;
+    return loadFuture;
+  }
 
   Future<void> initialize() async {
     await _loadRemoteConfig(
@@ -78,6 +98,7 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
 
   void _emitLoadedState() {
     if (isClosed) return;
+    _hasInitialized = true;
     final String dataSource = _remoteConfigService.getString(_dataSourceKey);
     final String lastSyncedRaw = _remoteConfigService.getString(_lastSyncedKey);
     final DateTime? lastSyncedAt = lastSyncedRaw.isEmpty

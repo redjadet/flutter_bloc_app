@@ -52,6 +52,11 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
+      context,
+    )) {
+      context.read<SyncStatusCubit>().ensureStarted();
+    }
     _showFlavorBadge = FlavorManager.I.flavor != Flavor.prod;
     WidgetsBinding.instance.addObserver(this);
   }

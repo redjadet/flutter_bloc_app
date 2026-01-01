@@ -20,6 +20,12 @@ This document describes all validation scripts in the `tool/` directory that are
 - **`check_raw_print.sh`**: Prevents raw `print()`/`debugPrint()` usage - should use `AppLogger`
 - **`check_raw_google_fonts.sh`**: Prevents per-widget `GoogleFonts.*` usage - should define fonts in `app_config.dart`
 
+### Performance
+
+- **`check_perf_shrinkwrap_lists.sh`**: Flags `shrinkWrap: true` lists/grids in presentation code
+- **`check_perf_nonbuilder_lists.sh`**: Ensures lists/grids use builder constructors for lazy rendering
+- **`check_perf_missing_repaint_boundary.sh`**: Warns when heavy widgets lack `RepaintBoundary`
+
 ### Timing & Services
 
 - **`check_raw_timer.sh`**: Prevents raw `Timer` usage - should use `TimerService` for testability

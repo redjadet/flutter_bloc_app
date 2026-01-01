@@ -914,6 +914,12 @@ abstract class AppLocalizations {
   /// **'TRY AGAIN'**
   String get retryButtonLabel;
 
+  /// Shown when a deferred feature fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load this feature. Please try again.'**
+  String get featureLoadError;
+
   /// Tooltip and accessibility label for the button that sends a chat message
   ///
   /// In en, this message translates to:

@@ -167,6 +167,9 @@ class _TestBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   }
 
   @override
+  Future<void> ensureStarted() async {}
+
+  @override
   Future<void> start() async {}
 
   @override

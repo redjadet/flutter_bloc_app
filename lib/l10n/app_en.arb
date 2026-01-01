@@ -604,6 +604,10 @@
   "@retryButtonLabel": {
     "description": "Label for retry button in error views"
   },
+  "featureLoadError": "Unable to load this feature. Please try again.",
+  "@featureLoadError": {
+    "description": "Shown when a deferred feature fails to load"
+  },
   "chatSendButton": "Send message",
   "@chatSendButton": {
     "description": "Tooltip and accessibility label for the button that sends a chat message"

@@ -352,6 +352,10 @@
   "chatInputHint": "Pregunta lo que quieras al asistente...",
   "searchHint": "Buscar...",
   "retryButtonLabel": "REINTENTAR",
+  "featureLoadError": "No se pudo cargar esta función. Inténtalo de nuevo.",
+  "@featureLoadError": {
+    "description": "Se muestra cuando una función diferida no se puede cargar"
+  },
   "chatSendButton": "Enviar mensaje",
   "chatEmptyState": "Comienza la conversación enviando un mensaje.",
   "chatModelLabel": "Modelo",

@@ -454,6 +454,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get retryButtonLabel => 'ERNEUT VERSUCHEN';
 
   @override
+  String get featureLoadError =>
+      'Diese Funktion konnte nicht geladen werden. Bitte versuche es erneut.';
+
+  @override
   String get chatSendButton => 'Nachricht senden';
 
   @override

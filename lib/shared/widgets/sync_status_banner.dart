@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
 
@@ -13,8 +14,23 @@ import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
 ///
 /// Shows "Sync issues detected" message with retry action when sync status
 /// is degraded. Can be integrated into CommonPageLayout or app scaffold.
-class SyncStatusBanner extends StatelessWidget {
+class SyncStatusBanner extends StatefulWidget {
   const SyncStatusBanner({super.key});
+
+  @override
+  State<SyncStatusBanner> createState() => _SyncStatusBannerState();
+}
+
+class _SyncStatusBannerState extends State<SyncStatusBanner> {
+  @override
+  void initState() {
+    super.initState();
+    if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
+      context,
+    )) {
+      context.read<SyncStatusCubit>().ensureStarted();
+    }
+  }
 
   @override
   Widget build(

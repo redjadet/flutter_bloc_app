@@ -21,6 +21,7 @@ void main() {
 
     setUp(() {
       cubit = _MockSyncStatusCubit();
+      when(() => cubit.ensureStarted()).thenAnswer((_) {});
     });
 
     Future<void> pump(final WidgetTester tester) {

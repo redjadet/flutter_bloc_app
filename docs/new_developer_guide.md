@@ -35,6 +35,24 @@ Welcome aboard! This document distills the essentials you need to navigate, exte
 3. `MyApp` builds `AppScope` and a `MultiBlocProvider`. Each cubit calls `loadInitial()` in `initState` when deterministic startup work is needed. See DI Reference section below for example.
 4. `GoRouter` resolves screens. Feature pages assemble their cubit(s) + widgets and delegate work to the injected repositories.
 
+### Deferred Feature Loading
+
+Heavy features use deferred imports plus `DeferredPage` so their code ships outside the initial bundle. Add new deferred routes like this:
+
+```dart
+import 'package:flutter_bloc_app/app/router/deferred_pages/your_feature_page.dart'
+    deferred as your_feature_page;
+
+GoRoute(
+  path: AppRoutes.yourFeaturePath,
+  name: AppRoutes.yourFeature,
+  builder: (context, state) => DeferredPage(
+    loadLibrary: your_feature_page.loadLibrary,
+    builder: (context) => your_feature_page.buildYourFeaturePage(context, state),
+  ),
+),
+```
+
 ## 4. Feature Module Playbook
 
 1. **Domain**: Define contracts (e.g., `CounterRepository`), models, and failures using Freezed/Equatable. Keep imports Dart-only.
@@ -52,13 +70,13 @@ Welcome aboard! This document distills the essentials you need to navigate, exte
 - **Markdown Editor**: Located in `lib/features/example/presentation/widgets/markdown_editor/`. Demonstrates custom `RenderObject` subclass (`MarkdownRenderObject`) for efficient text layout. Uses `markdown` package for parsing and supports GitHub Flavored Markdown. Accessible via the app bar overflow menu.
 - **Networking**: GraphQL, WebSocket, REST integrations sit in their respective feature/data folders. Samples include `CountriesGraphqlRepository`, `EchoWebsocketRepository`, `HuggingfaceChatRepository`.
 - **Authentication**: `lib/features/auth/` wraps Firebase Auth + FirebaseUI for sign-in/sign-up flows.
-- **Remote Config & Feature Flags**: `RemoteConfigCubit` consumes `RemoteConfigService` to toggle runtime features.
+- **Remote Config & Feature Flags**: `RemoteConfigCubit` consumes `RemoteConfigService` to toggle runtime features and initializes lazily via `ensureInitialized()` when a feature needs values.
   Recent updates expose `RemoteConfigLoading`/`RemoteConfigError` states and wrap calls in `CubitExceptionHandler`, so transient failures log nicely and expose retryable errors instead of crashing the cubit.
 - **Deep Links**: `DeepLinkCubit` cooperates with `AppLinksDeepLinkService` to translate universal/custom links into router locations.
   The cubit also emits `DeepLinkLoading`/`DeepLinkError`, guards against overlapping `initialize()` calls, and exposes `retryInitialize()` so stream errors tear down safely and restart deterministically.
 - **Cross-cutting Services**: `lib/shared/services/` hosts timer, logging, biometric auth, native platform adapters, etc. Prefer extending these instead of introducing ad-hoc singletons.
 - **Offline-First Architecture**: The app implements a complete offline-first pattern across all core features. See `docs/offline_first/` for detailed documentation.
-  - **Background Sync**: `BackgroundSyncCoordinator` automatically syncs pending operations when online (60s interval)
+  - **Background Sync**: `BackgroundSyncCoordinator` syncs pending operations when online (60s interval) and starts on demand via `SyncStatusCubit.ensureStarted()`
   - **Sync Status**: `SyncStatusCubit` tracks network status and sync state; widgets consume via `BlocSelector`
   - **Pending Queue**: `PendingSyncRepository` stores operations that failed while offline; coordinator processes them when online
   - **Repository Pattern**: Features implement `SyncableRepository` interface with `pullRemote()` and `processOperation()` methods

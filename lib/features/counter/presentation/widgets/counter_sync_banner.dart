@@ -36,6 +36,11 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
   @override
   void initState() {
     super.initState();
+    if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
+      context,
+    )) {
+      context.read<SyncStatusCubit>().ensureStarted();
+    }
     try {
       final CounterCubit cubit = context.read<CounterCubit>();
       _lastSyncedAt = cubit.state.lastSyncedAt;

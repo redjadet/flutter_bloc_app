@@ -5,9 +5,25 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
 
-class SyncDiagnosticsSection extends StatelessWidget {
+class SyncDiagnosticsSection extends StatefulWidget {
   const SyncDiagnosticsSection({super.key});
+
+  @override
+  State<SyncDiagnosticsSection> createState() => _SyncDiagnosticsSectionState();
+}
+
+class _SyncDiagnosticsSectionState extends State<SyncDiagnosticsSection> {
+  @override
+  void initState() {
+    super.initState();
+    if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
+      context,
+    )) {
+      context.read<SyncStatusCubit>().ensureStarted();
+    }
+  }
 
   @override
   Widget build(final BuildContext context) {

@@ -31,6 +31,8 @@ void main() {
     setUp(() {
       cubit = _MockRemoteConfigCubit();
       syncStatusCubit = _MockSyncStatusCubit();
+      when(() => cubit.ensureInitialized()).thenAnswer((_) async {});
+      when(() => syncStatusCubit.ensureStarted()).thenAnswer((_) {});
       when(() => cubit.clearCache()).thenAnswer((_) async {});
     });
 

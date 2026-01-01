@@ -29,6 +29,11 @@ class _CounterSyncQueueInspectorButtonState
   @override
   void initState() {
     super.initState();
+    if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
+      context,
+    )) {
+      context.read<SyncStatusCubit>().ensureStarted();
+    }
     unawaited(_refreshPendingCount());
   }
 
