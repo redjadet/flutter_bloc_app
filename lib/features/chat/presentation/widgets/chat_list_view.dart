@@ -42,7 +42,6 @@ class ChatListView extends StatelessWidget {
             contacts,
           ),
           ChatListError(:final message) => _buildErrorState(context, message),
-          _ => const SizedBox.shrink(),
         },
       );
 

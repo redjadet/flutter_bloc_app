@@ -33,7 +33,9 @@ class WebsocketCubit extends Cubit<WebsocketState>
     if (state.isConnected || state.isConnecting) {
       return;
     }
-    emit(state.copyWith(status: WebsocketStatus.connecting, clearError: true));
+    emit(
+      state.copyWith(status: WebsocketStatus.connecting, errorMessage: null),
+    );
     await CubitExceptionHandler.executeAsyncVoid(
       operation: _repository.connect,
       onError: (final String errorMessage) {
@@ -72,7 +74,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
               text: message,
             ),
           )
-          .copyWith(isSending: true, clearError: true),
+          .copyWith(isSending: true, errorMessage: null),
     );
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.send(message),
@@ -99,7 +101,6 @@ class WebsocketCubit extends Cubit<WebsocketState>
       state.copyWith(
         status: connectionState.status,
         errorMessage: connectionState.errorMessage,
-        clearError: connectionState.errorMessage == null,
       ),
     );
   }

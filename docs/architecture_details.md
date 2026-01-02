@@ -109,6 +109,9 @@ flowchart LR
 - Business rules isolated from widgets for unit/bloc testing
 - `BlocSelector` limits rebuild scope for performance
 - Immutable states reduce accidental side effects
+- **Compile-time safety** via type-safe extensions and widgets (see [Compile-Time Safety Usage Guide](compile_time_safety_usage.md))
+
+> **For detailed comparison with Riverpod and comprehensive rationale, see [State Management Choice](state_management_choice.md)**
 
 ## Lazy Loading Patterns
 

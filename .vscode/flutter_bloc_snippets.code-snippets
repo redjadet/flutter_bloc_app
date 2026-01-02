@@ -1,0 +1,201 @@
+{
+  "Type-Safe Cubit Access": {
+    "prefix": "bloc-cubit",
+    "body": [
+      "final ${1:cubit} = context.cubit<${2:CubitType}>();"
+    ],
+    "description": "Type-safe cubit access using context.cubit<T>()"
+  },
+  "Type-Safe State Access": {
+    "prefix": "bloc-state",
+    "body": [
+      "final ${1:state} = context.state<${2:CubitType}, ${3:StateType}>();"
+    ],
+    "description": "Type-safe state access using context.state<C, S>()"
+  },
+  "Type-Safe Watch Cubit": {
+    "prefix": "bloc-watch-cubit",
+    "body": [
+      "final ${1:cubit} = context.watchCubit<${2:CubitType}>();"
+    ],
+    "description": "Type-safe watch cubit using context.watchCubit<T>()"
+  },
+  "Type-Safe Watch State": {
+    "prefix": "bloc-watch-state",
+    "body": [
+      "final ${1:state} = context.watchState<${2:CubitType}, ${3:StateType}>();"
+    ],
+    "description": "Type-safe watch state using context.watchState<C, S>()"
+  },
+  "Type-Safe Select State": {
+    "prefix": "bloc-select-state",
+    "body": [
+      "final ${1:selected} = context.selectState<${2:CubitType}, ${3:StateType}, ${4:SelectedType}>(",
+      "  selector: (state) => state.${5:field},",
+      ");"
+    ],
+    "description": "Type-safe select state using context.selectState<C, S, T>()"
+  },
+  "Freezed State Class": {
+    "prefix": "bloc-freezed-state",
+    "body": [
+      "import 'package:freezed_annotation/freezed_annotation.dart';",
+      "",
+      "part '${TM_FILENAME_BASE}.freezed.dart';",
+      "",
+      "@freezed",
+      "abstract class ${1:StateName} with _$${1:StateName} {",
+      "  const factory ${1:StateName}({",
+      "    @Default(${2:ViewStatus.initial}) final ${3:ViewStatus} ${4:status},",
+      "    final ${5:Object}? ${6:error},",
+      "  }) = _${1:StateName};",
+      "",
+      "  const ${1:StateName}._();",
+      "}"
+    ],
+    "description": "Freezed state class template"
+  },
+  "Sealed State Class": {
+    "prefix": "bloc-sealed-state",
+    "body": [
+      "sealed class ${1:StateName} extends Equatable {",
+      "  const ${1:StateName}();",
+      "",
+      "  @override",
+      "  List<Object?> get props => <Object?>[];",
+      "}",
+      "",
+      "class ${1:StateName}Initial extends ${1:StateName} {",
+      "  const ${1:StateName}Initial();",
+      "}",
+      "",
+      "class ${1:StateName}Loading extends ${1:StateName} {",
+      "  const ${1:StateName}Loading();",
+      "}",
+      "",
+      "class ${1:StateName}Loaded extends ${1:StateName} {",
+      "  const ${1:StateName}Loaded({",
+      "    required this.${2:data},",
+      "  });",
+      "",
+      "  final ${3:Object} ${2:data};",
+      "",
+      "  @override",
+      "  List<Object?> get props => [${2:data}];",
+      "}",
+      "",
+      "class ${1:StateName}Error extends ${1:StateName} {",
+      "  const ${1:StateName}Error(this.message);",
+      "",
+      "  final String message;",
+      "",
+      "  @override",
+      "  List<Object?> get props => [message];",
+      "}"
+    ],
+    "description": "Sealed class state hierarchy template"
+  },
+  "Type-Safe BlocSelector": {
+    "prefix": "bloc-type-safe-selector",
+    "body": [
+      "TypeSafeBlocSelector<${1:CubitType}, ${2:StateType}, ${3:SelectedType}>(",
+      "  selector: (state) => state.${4:field},",
+      "  builder: (context, ${5:selected}) => ${6:Widget},",
+      ")"
+    ],
+    "description": "Type-safe BLoC selector widget"
+  },
+  "Type-Safe BlocBuilder": {
+    "prefix": "bloc-type-safe-builder",
+    "body": [
+      "TypeSafeBlocBuilder<${1:CubitType}, ${2:StateType}>(",
+      "  builder: (context, state) => ${3:Widget},",
+      ")"
+    ],
+    "description": "Type-safe BLoC builder widget"
+  },
+  "Type-Safe BlocConsumer": {
+    "prefix": "bloc-type-safe-consumer",
+    "body": [
+      "TypeSafeBlocConsumer<${1:CubitType}, ${2:StateType}>(",
+      "  listener: (context, state) {",
+      "    ${3:// Handle state changes}",
+      "  },",
+      "  builder: (context, state) => ${4:Widget},",
+      ")"
+    ],
+    "description": "Type-safe BLoC consumer widget"
+  },
+  "Switch Expression for Sealed State": {
+    "prefix": "bloc-switch-sealed",
+    "body": [
+      "switch (${1:state}) {",
+      "  ${2:StateName}Initial() => ${3:Widget},",
+      "  ${2:StateName}Loading() => ${4:Widget},",
+      "  ${2:StateName}Loaded(:final ${5:data}) => ${6:Widget},",
+      "  ${2:StateName}Error(:final message) => ${7:Widget},",
+      "}"
+    ],
+    "description": "Exhaustive switch expression for sealed state"
+  },
+  "BlocProvider with Type-Safe Helper": {
+    "prefix": "bloc-provider-helper",
+    "body": [
+      "BlocProviderHelpers.withCubit<${1:CubitType}, ${2:StateType}>(",
+      "  create: () => ${1:CubitType}(",
+      "    ${3:// constructor parameters}",
+      "  ),",
+      "  builder: (context, cubit) => ${4:Widget},",
+      ")"
+    ],
+    "description": "Type-safe BlocProvider helper"
+  },
+  "BlocProvider with Async Init": {
+    "prefix": "bloc-provider-async",
+    "body": [
+      "BlocProviderHelpers.withCubitAsyncInit<${1:CubitType}, ${2:StateType}>(",
+      "  create: () => ${1:CubitType}(",
+      "    ${3:// constructor parameters}",
+      "  ),",
+      "  init: (cubit) async {",
+      "    ${4:// async initialization}",
+      "  },",
+      "  builder: (context, cubit) => ${5:Widget},",
+      ")"
+    ],
+    "description": "Type-safe BlocProvider with async initialization"
+  },
+  "State Transition Validator": {
+    "prefix": "bloc-state-validator",
+    "body": [
+      "class ${1:StateName}Validator extends StateTransitionValidator<${2:StateType}> {",
+      "  @override",
+      "  bool isValidTransition(${2:StateType} from, ${2:StateType} to) {",
+      "    ${3:// Validation logic}",
+      "    return true;",
+      "  }",
+      "}"
+    ],
+    "description": "State transition validator class"
+  },
+  "Cubit with Lifecycle Guards": {
+    "prefix": "bloc-cubit-guards",
+    "body": [
+      "class ${1:CubitName} extends Cubit<${2:StateType}> {",
+      "  ${1:CubitName}() : super(${3:initialState});",
+      "",
+      "  Future<void> ${4:methodName}() async {",
+      "    if (isClosed) return;",
+      "    ${5:// Method implementation}",
+      "  }",
+      "",
+      "  void ${6:syncMethod}() {",
+      "    if (isClosed) return;",
+      "    emit(${7:newState});",
+      "  }",
+      "}"
+    ],
+    "description": "Cubit template with lifecycle guards"
+  }
+}
+

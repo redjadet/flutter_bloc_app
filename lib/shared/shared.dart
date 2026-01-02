@@ -3,6 +3,7 @@ library;
 
 // Extensions
 export 'extensions/build_context_l10n.dart';
+export 'extensions/type_safe_bloc_access.dart';
 // HTTP
 export 'http/auth_token_manager.dart';
 export 'http/http_request_extensions.dart';
@@ -20,12 +21,15 @@ export 'services/error_notification_service.dart';
 export 'ui/ui_constants.dart';
 // UI status helpers
 export 'ui/view_status.dart';
+export 'utils/bloc_lint_helpers.dart';
 // Utilities
 export 'utils/context_utils.dart';
 export 'utils/cubit_helpers.dart';
 export 'utils/error_handling.dart';
 export 'utils/isolate_samples.dart';
 export 'utils/logger.dart';
+export 'utils/sealed_state_helpers.dart';
+export 'utils/state_transition_validator.dart';
 export 'utils/utils.dart';
 // Widgets
 export 'widgets/app_message.dart';

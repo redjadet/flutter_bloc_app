@@ -1,6 +1,6 @@
 part of 'chat_list_cubit.dart';
 
-abstract class ChatListState extends Equatable {
+sealed class ChatListState extends Equatable {
   const ChatListState();
 
   const factory ChatListState.initial() = ChatListInitial;

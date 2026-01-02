@@ -1,9 +1,11 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'app_info_cubit.freezed.dart';
 
 class AppInfoCubit extends Cubit<AppInfoState> {
   AppInfoCubit({required final AppInfoRepository repository})
@@ -16,7 +18,7 @@ class AppInfoCubit extends Cubit<AppInfoState> {
     if (state.status.isLoading) return;
     if (isClosed) return;
 
-    emit(state.copyWith(status: ViewStatus.loading, clearError: true));
+    emit(state.copyWith(status: ViewStatus.loading, errorMessage: null));
 
     await CubitExceptionHandler.executeAsync(
       operation: _repository.load,
@@ -26,7 +28,7 @@ class AppInfoCubit extends Cubit<AppInfoState> {
           state.copyWith(
             status: ViewStatus.success,
             info: info,
-            clearError: true,
+            errorMessage: null,
           ),
         );
       },
@@ -44,29 +46,11 @@ class AppInfoCubit extends Cubit<AppInfoState> {
   }
 }
 
-class AppInfoState extends Equatable {
-  const AppInfoState({
-    this.status = ViewStatus.initial,
-    this.info,
-    this.errorMessage,
-  });
-
-  final ViewStatus status;
-  final AppInfo? info;
-  final String? errorMessage;
-
-  AppInfoState copyWith({
-    final ViewStatus? status,
+@freezed
+abstract class AppInfoState with _$AppInfoState {
+  const factory AppInfoState({
+    @Default(ViewStatus.initial) final ViewStatus status,
     final AppInfo? info,
-    final bool clearInfo = false,
     final String? errorMessage,
-    final bool clearError = false,
-  }) => AppInfoState(
-    status: status ?? this.status,
-    info: clearInfo ? null : (info ?? this.info),
-    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-  );
-
-  @override
-  List<Object?> get props => <Object?>[status, info, errorMessage];
+  }) = _AppInfoState;
 }

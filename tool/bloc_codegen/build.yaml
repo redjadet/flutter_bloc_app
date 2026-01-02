@@ -1,0 +1,12 @@
+targets:
+  $default:
+    builders:
+      bloc_codegen|sealed_state_switch_generator:
+        enabled: true
+        generate_for:
+          - lib/**/*.dart
+      bloc_codegen|state_validator_generator:
+        enabled: true
+        generate_for:
+          - lib/**/*.dart
+

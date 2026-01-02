@@ -6,7 +6,7 @@ Welcome aboard! This document distills the essentials you need to navigate, exte
 
 - **Purpose**: Showcase a feature-rich Flutter app built around Cubits, clean architecture, and real-world integrations (Firebase Auth/Remote Config, WebSockets, GraphQL, Google Maps, Hugging Face, Whiteboard with CustomPainter, Markdown Editor with RenderObject, etc.).
 - **Layers**: Domain → Data → Presentation. Domain stays Flutter-agnostic, Data fulfills contracts, Presentation wires Cubits/Widgets via `get_it`.
-- **State Management**: Cubits with immutable (Freezed/Equatable) states. Widgets read via `BlocBuilder`/`BlocSelector` and stay focused on layout/theming/navigation.
+- **State Management**: Cubits with immutable (Freezed/Equatable) states. Widgets read via `BlocBuilder`/`BlocSelector` and stay focused on layout/theming/navigation. **Type-safe extensions** (`context.cubit<T>()`, `TypeSafeBlocSelector`, etc.) provide compile-time safety. See [Compile-Time Safety Usage Guide](../docs/compile_time_safety_usage.md).
 - **DI & Startup**: `lib/core/di/injector.dart` registers everything into `getIt`. `main_*.dart` files choose the env, call `configureDependencies()`, then bootstrap `MyApp`. The DI code is organized into multiple files:
   - `injector.dart` - Main file with `configureDependencies()` and public API
   - `injector_registrations.dart` - All dependency registrations organized by category
@@ -131,12 +131,22 @@ Follow the delivery checklist before merging or publishing builds:
    - **Optional:** To use just `checklist` without `./bin/`, add the `bin` directory to your PATH
 4. `flutter build ios --simulator` (only when iOS build risk exists)
 
-**Note:** The delivery checklist script (`./bin/checklist`) automatically runs:
+### Quality Gates
+
+The delivery checklist script (`./bin/checklist`) automatically runs:
 
 - `flutter pub get` - Ensures dependencies (and analyzer config) resolve correctly
 - `dart format .` - Code formatting
 - `flutter analyze` - Static analysis (includes native Dart 3.10 analyzer plugins like `file_length_lint`)
 - `tool/test_coverage.sh` - Runs tests with coverage and automatically updates coverage reports
+
+**Run the full checklist before commits:**
+
+```bash
+./bin/checklist
+```
+
+This runs formatting, analysis, validation scripts, and coverage. The validation scripts provide automated guards for architecture, UI/UX, async safety, performance, and memory hygiene. See [Validation Scripts Documentation](validation_scripts.md) for complete details on what each script checks and how to suppress false positives when necessary.
 
 Tips:
 

@@ -1,10 +1,11 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'chart_cubit.freezed.dart';
 part 'chart_state.dart';
 
 class ChartCubit extends Cubit<ChartState> {
@@ -43,7 +44,7 @@ class ChartCubit extends Cubit<ChartState> {
     emit(
       state.copyWith(
         status: ViewStatus.loading,
-        clearError: true,
+        errorMessage: null,
         points: resetExistingData ? const <ChartPoint>[] : state.points,
       ),
     );
