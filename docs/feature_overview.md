@@ -4,6 +4,51 @@ This document provides a comprehensive catalog of features implemented in this F
 
 > **Quick Links**: [Architecture Details](architecture_details.md) | [Testing Overview](testing_overview.md) | [UI/UX Guidelines](ui_ux_responsive_review.md)
 
+## Highlights
+
+This application demonstrates production-grade Flutter development with:
+
+- **Clean Architecture** - Domain → Data → Presentation separation with dependency injection and testable boundaries
+- **Offline-First Repositories** - Background sync, retries, and cache-first reads for resilient data access
+- **Responsive/Adaptive UI** - Platform-aware components and shared design system for consistent cross-platform experience
+- **Robust Quality Gates** - Formatting, analysis, validation scripts, and comprehensive test coverage
+- **Security-Minded Foundations** - Encrypted storage, biometric gating, and secure authentication routing
+
+## What This App Demonstrates
+
+### Architecture
+
+- **Repository Pattern** - Abstracted data access with clear contracts and implementations
+- **Dependency Injection Composition Root** - Centralized DI via `get_it` with lazy singleton pattern
+- **Flutter-Agnostic Domain** - Domain layer remains pure Dart, enabling testability and platform independence
+
+### Offline-First
+
+- **Pending Sync Queues** - Operations queued when offline, processed when connectivity returns
+- **Cache-First Reads** - Local data served immediately, remote updates in background
+- **Background Flushing** - Automatic sync coordination with configurable intervals
+
+### UI/UX
+
+- **Material 3 + Cupertino Adaptive Widgets** - Platform-native feel on iOS and Android
+- **Text Scaling Support** - Handles accessibility text scaling (1.3+) without layout breaks
+- **Safe-Area Handling** - Proper insets for notches, keyboards, and device cutouts
+- **Responsive Layout Helpers** - Shared spacing, typography, and grid utilities
+
+### Resilience
+
+- **Error Mapping** - Domain failures translate to user-friendly messages
+- **Retries** - Configurable retry logic with exponential backoff
+- **Guarded Async Flows** - Lifecycle safety checks prevent crashes during async operations
+- **Lifecycle Safety** - Context mounted checks, cubit disposal guards, stream cleanup
+
+### Performance
+
+- **BlocSelector** - Granular rebuilds for optimal performance
+- **Repaint Isolation** - `RepaintBoundary` widgets prevent unnecessary repaints
+- **Responsive Layout Helpers** - Efficient grid calculations and layout constraints
+- **Lazy Loading Optimizations** - Deferred imports for heavy features, reducing initial bundle size (see [Lazy Loading Analysis](../analysis/lazy_loading_late_review.md))
+
 ## Core Counter Feature
 
 - Auto-decrement timer (never below zero)

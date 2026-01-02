@@ -45,6 +45,34 @@ class _StubProfileRepository implements ProfileRepository {
   }
 }
 
+class _CompletingProfileCacheRepository implements ProfileCacheRepository {
+  _CompletingProfileCacheRepository({
+    required ProfileCacheRepository delegate,
+    required Completer<void> saveCompleter,
+  }) : _delegate = delegate,
+       _saveCompleter = saveCompleter;
+
+  final ProfileCacheRepository _delegate;
+  final Completer<void> _saveCompleter;
+
+  @override
+  Future<ProfileUser?> loadProfile() => _delegate.loadProfile();
+
+  @override
+  Future<void> saveProfile(final ProfileUser profile) async {
+    await _delegate.saveProfile(profile);
+    if (!_saveCompleter.isCompleted) {
+      _saveCompleter.complete();
+    }
+  }
+
+  @override
+  Future<void> clearProfile() => _delegate.clearProfile();
+
+  @override
+  Future<ProfileCacheMetadata> loadMetadata() => _delegate.loadMetadata();
+}
+
 void main() {
   const ProfileUser cachedUser = ProfileUser(
     name: 'Cached',
@@ -114,17 +142,23 @@ void main() {
     test('returns cached immediately and refreshes when online', () async {
       await cacheRepository.saveProfile(cachedUser);
       final Completer<void> fetchStarted = Completer<void>();
+      final Completer<void> cacheSaved = Completer<void>();
       final _StubProfileRepository remote = _StubProfileRepository(
         onGetProfile: () async {
           fetchStarted.complete();
           return remoteUser;
         },
       );
+      final ProfileCacheRepository completingCacheRepository =
+          _CompletingProfileCacheRepository(
+            delegate: cacheRepository,
+            saveCompleter: cacheSaved,
+          );
 
       final OfflineFirstProfileRepository repository =
           OfflineFirstProfileRepository(
             remoteRepository: remote,
-            cacheRepository: cacheRepository,
+            cacheRepository: completingCacheRepository,
             networkStatusService: networkStatus,
             registry: registry,
           );
@@ -132,8 +166,7 @@ void main() {
       final ProfileUser result = await repository.getProfile();
       expect(result.name, cachedUser.name);
       await fetchStarted.future;
-      // Allow background refresh to write cache
-      await Future<void>.delayed(const Duration(milliseconds: 10));
+      await cacheSaved.future;
       final ProfileUser? refreshed = await cacheRepository.loadProfile();
       expect(refreshed!.name, remoteUser.name);
     });

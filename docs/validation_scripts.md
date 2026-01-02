@@ -2,6 +2,20 @@
 
 This document describes all validation scripts in the `tool/` directory that are automatically run by `./bin/checklist` to catch bugs and enforce best practices early.
 
+## Overview
+
+The validation scripts provide automated guards for architecture, UI/UX, async safety, performance, and memory hygiene. These scripts are automatically executed when you run `./bin/checklist` before commits, ensuring code quality and consistency across the codebase.
+
+The checklist includes automated guards for:
+
+- **Architecture compliance** - Ensures clean architecture boundaries and dependency injection patterns
+- **UI/UX best practices** - Enforces platform-adaptive widgets, proper image caching, and responsive design
+- **Async safety** - Detects missing lifecycle guards and context usage after async operations
+- **Performance** - Flags performance anti-patterns like unnecessary rebuilds and missing repaint boundaries
+- **Memory hygiene** - Prevents leaks and ensures proper cleanup of resources
+
+Full documentation and suppression guidance is provided in the sections below.
+
 ## Existing Validation Scripts
 
 ### Architecture & Dependency Injection

@@ -1,0 +1,16 @@
+name: bloc_codegen
+description: Custom code generators for BLoC/Cubit patterns
+version: 1.0.0
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  analyzer: ^6.0.0
+  build: ^2.4.0
+  source_gen: ^1.5.0
+  dart_style: ^2.3.0
+
+dev_dependencies:
+  test: ^1.24.0
+

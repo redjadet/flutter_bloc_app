@@ -17,10 +17,10 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     emit(
       state.copyWith(
         isLoading: true,
-        clearError: true,
+        errorMessage: null,
         markers: const <gmaps.Marker>{},
         locations: const <MapLocation>[],
-        clearSelectedMarker: true,
+        selectedMarkerId: null,
       ),
     );
     await CubitExceptionHandler.executeAsync(
@@ -53,7 +53,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
             errorMessage: errorMessage,
             markers: const <gmaps.Marker>{},
             locations: const <MapLocation>[],
-            clearSelectedMarker: true,
+            selectedMarkerId: null,
           ),
         );
       },

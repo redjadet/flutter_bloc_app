@@ -21,4 +21,5 @@ export 'retry_snackbar_listener.dart';
 export 'root_aware_back_button.dart';
 export 'skeletons/skeletons.dart';
 export 'sync_status_banner.dart';
+export 'type_safe_bloc_selector.dart';
 export 'view_status_switcher.dart';

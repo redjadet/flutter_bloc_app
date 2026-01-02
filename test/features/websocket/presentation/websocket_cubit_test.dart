@@ -56,10 +56,10 @@ void main() {
     expect: () => <WebsocketState>[
       WebsocketState.initial(
         endpoint,
-      ).copyWith(status: WebsocketStatus.connecting, clearError: true),
+      ).copyWith(status: WebsocketStatus.connecting, errorMessage: null),
       WebsocketState.initial(
         endpoint,
-      ).copyWith(status: WebsocketStatus.connected, clearError: true),
+      ).copyWith(status: WebsocketStatus.connected, errorMessage: null),
     ],
   );
 
@@ -95,13 +95,13 @@ void main() {
       );
       final WebsocketState connected = WebsocketState.initial(
         endpoint,
-      ).copyWith(status: WebsocketStatus.connected, clearError: true);
+      ).copyWith(status: WebsocketStatus.connected, errorMessage: null);
       final WebsocketState sending = connected
           .appendMessage(outgoing)
           .copyWith(
             status: WebsocketStatus.connected,
             isSending: true,
-            clearError: true,
+            errorMessage: null,
           );
       final WebsocketState withIncoming = sending
           .appendMessage(incoming)

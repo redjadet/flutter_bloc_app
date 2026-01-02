@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart'
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 part 'chat_list_state.dart';
+part 'chat_list_state.switch_helper.dart';
 
 class ChatListCubit extends Cubit<ChatListState> {
   ChatListCubit({

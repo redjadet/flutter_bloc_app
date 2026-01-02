@@ -27,7 +27,7 @@ class SearchCubit extends Cubit<SearchState> {
     _cancelDebounce();
     final int requestId = _nextSearchRequestId();
 
-    emit(state.copyWith(query: query, clearError: true));
+    emit(state.copyWith(query: query, error: null));
 
     if (query.isEmpty) {
       emit(const SearchState());
@@ -57,7 +57,7 @@ class SearchCubit extends Cubit<SearchState> {
       state.copyWith(
         status: ViewStatus.loading,
         query: query,
-        clearError: true,
+        error: null,
       ),
     );
 
@@ -70,7 +70,7 @@ class SearchCubit extends Cubit<SearchState> {
             status: ViewStatus.success,
             query: query,
             results: List<SearchResult>.unmodifiable(results),
-            clearError: true,
+            error: null,
           ),
         );
       },

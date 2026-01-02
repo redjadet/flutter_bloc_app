@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_ser
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 part 'remote_config_state.dart';
+part 'remote_config_state.switch_helper.dart';
 
 class RemoteConfigCubit extends Cubit<RemoteConfigState> {
   RemoteConfigCubit(this._remoteConfigService)

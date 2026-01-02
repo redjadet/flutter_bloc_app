@@ -17,7 +17,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(
       state.copyWith(
         status: ViewStatus.loading,
-        clearError: true,
+        error: null,
       ),
     );
 
@@ -29,7 +29,7 @@ class ProfileCubit extends Cubit<ProfileState> {
           state.copyWith(
             status: ViewStatus.success,
             user: user,
-            clearError: true,
+            error: null,
           ),
         );
       },

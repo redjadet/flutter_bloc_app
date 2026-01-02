@@ -81,4 +81,61 @@ class BlocProviderHelpers {
     child:
         const SizedBox.shrink(), // Placeholder child, not used in MultiBlocProvider
   );
+
+  /// Creates a type-safe BlocProvider with compile-time type checking.
+  ///
+  /// This method provides compile-time safety by ensuring that:
+  /// - The cubit type [C] extends `Cubit<S>`
+  /// - The state type [S] matches the cubit's state type
+  /// - Type inference works correctly
+  ///
+  /// **Usage Example:**
+  /// ```dart
+  /// BlocProviderHelpers.withCubit<CounterCubit, CounterState>(
+  ///   create: () => CounterCubit(repository: getIt<CounterRepository>()),
+  ///   builder: (context, cubit) => CounterPage(cubit: cubit),
+  /// )
+  /// ```
+  static Widget withCubit<C extends Cubit<S>, S>({
+    required final C Function() create,
+    required final Widget Function(BuildContext context, C cubit) builder,
+  }) => BlocProvider<C>(
+    create: (_) => create(),
+    child: Builder(
+      builder: (final BuildContext context) {
+        final cubit = context.read<C>();
+        return builder(context, cubit);
+      },
+    ),
+  );
+
+  /// Creates a type-safe BlocProvider with async initialization.
+  ///
+  /// This combines type safety with async initialization for compile-time safety.
+  ///
+  /// **Usage Example:**
+  /// ```dart
+  /// BlocProviderHelpers.withCubitAsyncInit<CounterCubit, CounterState>(
+  ///   create: () => CounterCubit(repository: getIt<CounterRepository>()),
+  ///   init: (cubit) => cubit.loadInitial(),
+  ///   builder: (context, cubit) => CounterPage(cubit: cubit),
+  /// )
+  /// ```
+  static Widget withCubitAsyncInit<C extends Cubit<S>, S>({
+    required final C Function() create,
+    required final Future<void> Function(C cubit) init,
+    required final Widget Function(BuildContext context, C cubit) builder,
+  }) => BlocProvider<C>(
+    create: (_) {
+      final cubit = create();
+      unawaited(init(cubit));
+      return cubit;
+    },
+    child: Builder(
+      builder: (final BuildContext context) {
+        final cubit = context.read<C>();
+        return builder(context, cubit);
+      },
+    ),
+  );
 }
