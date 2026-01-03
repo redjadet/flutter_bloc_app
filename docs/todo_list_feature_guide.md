@@ -20,8 +20,10 @@ This document provides a comprehensive guide for implementing a Todo List featur
 - Create a todo with title and optional description.
 - Edit an existing todo.
 - Toggle completion status.
-- Delete a todo.
+- Delete a todo with undo support.
 - View list grouped or filtered by status (All, Active, Completed).
+- Search todos by title or description.
+- View statistics (total, active, completed counts).
 - Persist todos locally across app launches.
 - **Swipe gestures on mobile devices**:
   - Swipe right: Complete active items or uncomplete completed items
@@ -215,6 +217,7 @@ abstract class TodoListState with _$TodoListState {
     @Default(ViewStatus.initial) final ViewStatus status,
     @Default(<TodoItem>[]) final List<TodoItem> items,
     @Default(TodoFilter.all) final TodoFilter filter,
+    @Default('') final String searchQuery,
     final String? errorMessage,
   }) = _TodoListState;
 
@@ -224,11 +227,28 @@ abstract class TodoListState with _$TodoListState {
   bool get hasError => status.isError;
   bool get hasItems => items.isNotEmpty;
 
-  List<TodoItem> get filteredItems => switch (filter) {
-    TodoFilter.all => items,
-    TodoFilter.active => items.where((item) => !item.isCompleted).toList(),
-    TodoFilter.completed => items.where((item) => item.isCompleted).toList(),
-  };
+  List<TodoItem> get filteredItems {
+    List<TodoItem> result = switch (filter) {
+      TodoFilter.all => items,
+      TodoFilter.active =>
+        items.where((final item) => !item.isCompleted).toList(growable: false),
+      TodoFilter.completed =>
+        items.where((final item) => item.isCompleted).toList(growable: false),
+    };
+
+    if (searchQuery.isNotEmpty) {
+      final String query = searchQuery.toLowerCase();
+      result = result
+          .where(
+            (final item) =>
+                item.title.toLowerCase().contains(query) ||
+                (item.description?.toLowerCase().contains(query) ?? false),
+          )
+          .toList(growable: false);
+    }
+
+    return result;
+  }
 }
 
 enum TodoFilter { all, active, completed }
@@ -276,7 +296,20 @@ class TodoListCubit extends Cubit<TodoListState>
 
   Future<void> deleteTodo(final TodoItem item) async {
     if (isClosed) return;
+    _lastDeletedItem = item; // Store for undo
     // ... implementation with optimistic updates and state rollback
+  }
+
+  Future<void> undoDelete() async {
+    if (isClosed || _lastDeletedItem == null) return;
+    final TodoItem item = _lastDeletedItem!;
+    _lastDeletedItem = null;
+    await saveItem(item, logContext: 'TodoListCubit.undoDelete');
+  }
+
+  void setSearchQuery(final String query) {
+    if (isClosed) return;
+    emit(state.copyWith(searchQuery: query.trim()));
   }
 
   // ... other methods
@@ -366,6 +399,10 @@ TypeSafeBlocBuilder<TodoListCubit, TodoListState>(
 - **Loading**: Use `CommonLoadingWidget` for loading states
 - **Empty State**: Use `CommonStatusView` for empty/error states
 - **Dialogs**: Use `showAdaptiveDialog()` (never raw Material dialogs)
+- **TodoStats Widget**: Displays total, active, and completed counts using `TypeSafeBlocSelector` for efficient rebuilds. Only shows when there are items.
+- **TodoSearchField**: Real-time search with clear button. Filters todos by title and description as user types.
+- **Undo Snackbar**: Shows after delete actions with undo button. Uses `ScaffoldMessenger` with 3-second duration.
+- **RepaintBoundary**: Wraps each `TodoListItem` to prevent unnecessary repaints and improve performance.
 - **Swipe Gestures**: Use `Dismissible` widget for swipe actions on mobile devices:
   - Background widgets show action labels and icons
   - Platform-adaptive styling (iOS vs Material)
@@ -451,7 +488,8 @@ DI updates:
 
 **Cubit Implementation:**
 
-- Create `TodoListCubit` with methods: `loadInitial()`, `addTodo()`, `updateTodo()`, `toggleTodo()`, `deleteTodo()`, `setFilter()`, `clearCompleted()`
+- Create `TodoListCubit` with methods: `loadInitial()`, `addTodo()`, `updateTodo()`, `toggleTodo()`, `deleteTodo()`, `undoDelete()`, `setFilter()`, `setSearchQuery()`, `clearCompleted()`
+- Store `_lastDeletedItem` for undo functionality
 - Use `CubitExceptionHandler` for all async operations
 - Guard all `emit()` calls with `if (isClosed) return;`
 - Implement optimistic updates for all mutations
@@ -467,15 +505,22 @@ DI updates:
 
 **UI Components:**
 
-- Build page with list + filter controls + add/edit dialogs
+- Build page with stats widget, search field, filter controls, list, and add/edit dialogs
+- Add `TodoStatsWidget` at the top (shows when items exist)
+- Add `TodoSearchField` below stats (shows when items exist)
 - Use `TypeSafeBlocSelector` for list items to prevent unnecessary rebuilds
 - Use `TypeSafeBlocBuilder` for full state rendering
+- Wrap each `TodoListItem` in `RepaintBoundary` for performance
 - **Implement swipe gestures** in `TodoListItem`:
   - Wrap item in `Dismissible` widget (mobile only)
   - Swipe right: Toggle completion status
   - Swipe left: Delete with confirmation dialog
   - Use `onDeleteWithoutConfirmation` callback to avoid double dialogs
   - Platform-adaptive swipe backgrounds (iOS vs Material styling)
+- **Implement undo snackbar**:
+  - Show snackbar after delete actions
+  - Include undo action button
+  - Restore deleted item if undo is pressed
 
 **Dialog Implementation:**
 
@@ -657,6 +702,8 @@ lib/features/todo_list/
       todo_list_item.dart (with swipe gesture support)
       todo_filter_bar.dart
       todo_empty_state.dart
+      todo_stats_widget.dart (stats display)
+      todo_search_field.dart (search input)
     helpers/
       todo_list_dialogs.dart (adaptive dialogs)
 test/features/todo_list/
@@ -714,8 +761,8 @@ test/features/todo_list/
 
 ### Performance Optimizations
 
-- Add a `TodoStats` widget with completed/remaining counts using `TypeSafeBlocSelector`
-- Add `RepaintBoundary` around list items if they become visually heavy
+- ✅ **TodoStats widget** (implemented): Displays total, active, and completed counts using `TypeSafeBlocSelector`
+- ✅ **RepaintBoundary** (implemented): Wraps each list item to prevent unnecessary repaints
 - Use `ListView.builder` for large lists (100+ items)
 - Consider lazy loading if list grows beyond 1000 items
 
@@ -726,9 +773,10 @@ test/features/todo_list/
   - Swipe left: Delete items with confirmation
   - Native iOS-style swipe backgrounds with icons and labels
   - Mobile-only (disabled on desktop)
-- Add undo snackbar via `CommonStatusView` patterns
+- ✅ **Undo snackbar** (implemented): Shows after delete actions with undo button using `ScaffoldMessenger`
+- ✅ **Search functionality** (implemented): Real-time search by title and description with clear button
 - Add drag-to-reorder functionality
-- Add search and sorting capabilities
+- Add sorting capabilities
 
 ### Feature Enhancements
 
