@@ -60,7 +60,7 @@ mixin _TodoListCubitMethods
     required final String logContext,
   }) async {
     final TodoListState previousState = state;
-    final List<TodoItem> updatedItems = _TodoListCubitHelpers.upsertInList(
+    final List<TodoItem> updatedItems = _TodoListCubitHelpers.saveInList(
       state.items,
       item,
     );
@@ -73,7 +73,7 @@ mixin _TodoListCubitMethods
       ),
     );
     await CubitExceptionHandler.executeAsyncVoid(
-      operation: () => repository.upsert(item),
+      operation: () => repository.save(item),
       onError: (final String errorMessage) {
         if (isClosed) return;
         emit(
