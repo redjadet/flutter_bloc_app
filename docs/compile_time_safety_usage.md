@@ -240,7 +240,7 @@ final count = context.selectState<CounterCubit, CounterState, int>(
 
 - [Quick Reference Guide](compile_time_safety_quick_reference.md) - Quick lookup for type-safe patterns
 - [Migration Guide](migration_to_type_safe_bloc.md) - Step-by-step migration instructions
-- [Improvements Analysis](compile_time_safety_improvements_analysis.md) - Recent improvements and optimizations
+- [Implementation Summary](compile_time_safety_implementation_summary.md) - Complete feature list and recent improvements
 - [Code Generation Guide](code_generation_guide.md) - Setting up custom code generators
 - [Custom Lint Rules Guide](custom_lint_rules_guide.md) - Creating analyzer plugins
 - [State Management Choice](state_management_choice.md) - Why BLoC/Cubit and compile-time safety
