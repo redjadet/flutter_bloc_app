@@ -13,6 +13,7 @@ class TodoListItem extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
     this.onDeleteWithoutConfirmation,
+    this.showDragHandle = false,
     super.key,
   });
 
@@ -21,6 +22,7 @@ class TodoListItem extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback? onDeleteWithoutConfirmation;
+  final bool showDragHandle;
 
   @override
   Widget build(final BuildContext context) {
@@ -50,6 +52,14 @@ class TodoListItem extends StatelessWidget {
       ),
       child: Row(
         children: [
+          if (showDragHandle) ...[
+            Icon(
+              Icons.drag_handle,
+              color: colors.onSurfaceVariant,
+              size: context.responsiveIconSize * 0.9,
+            ),
+            SizedBox(width: context.responsiveHorizontalGapS),
+          ],
           Checkbox.adaptive(
             value: item.isCompleted,
             onChanged: (_) => onToggle(),

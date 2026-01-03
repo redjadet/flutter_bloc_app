@@ -1832,6 +1832,42 @@ abstract class AppLocalizations {
   /// **'Todo deleted'**
   String get todoListDeleteUndone;
 
+  /// Label for the sort action button
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get todoListSortAction;
+
+  /// Sort option for date descending
+  ///
+  /// In en, this message translates to:
+  /// **'Date (newest first)'**
+  String get todoListSortDateDesc;
+
+  /// Sort option for date ascending
+  ///
+  /// In en, this message translates to:
+  /// **'Date (oldest first)'**
+  String get todoListSortDateAsc;
+
+  /// Sort option for title ascending
+  ///
+  /// In en, this message translates to:
+  /// **'Title (A-Z)'**
+  String get todoListSortTitleAsc;
+
+  /// Sort option for title descending
+  ///
+  /// In en, this message translates to:
+  /// **'Title (Z-A)'**
+  String get todoListSortTitleDesc;
+
+  /// Sort option for manual ordering
+  ///
+  /// In en, this message translates to:
+  /// **'Manual (drag to reorder)'**
+  String get todoListSortManual;
+
   /// Title for the add todo dialog
   ///
   /// In en, this message translates to:

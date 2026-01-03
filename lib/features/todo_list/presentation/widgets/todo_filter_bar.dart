@@ -21,8 +21,6 @@ class TodoFilterBar extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -47,23 +45,6 @@ class TodoFilterBar extends StatelessWidget {
               onPressed: () => onFilterChanged(TodoFilter.completed),
             ),
           ],
-        ),
-        SizedBox(height: context.responsiveGapS),
-        Align(
-          alignment: Alignment.centerRight,
-          child: PlatformAdaptive.textButton(
-            context: context,
-            onPressed: onClearCompleted,
-            child: Text(
-              l10n.todoListClearCompletedAction,
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontSize: context.responsiveCaptionSize,
-                color: onClearCompleted == null
-                    ? colors.onSurfaceVariant
-                    : colors.primary,
-              ),
-            ),
-          ),
         ),
       ],
     );

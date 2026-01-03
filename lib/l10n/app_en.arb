@@ -1290,6 +1290,30 @@
   "@todoListDeleteUndone": {
     "description": "Message shown when a todo is deleted"
   },
+  "todoListSortAction": "Sort",
+  "@todoListSortAction": {
+    "description": "Label for the sort action button"
+  },
+  "todoListSortDateDesc": "Date (newest first)",
+  "@todoListSortDateDesc": {
+    "description": "Sort option for date descending"
+  },
+  "todoListSortDateAsc": "Date (oldest first)",
+  "@todoListSortDateAsc": {
+    "description": "Sort option for date ascending"
+  },
+  "todoListSortTitleAsc": "Title (A-Z)",
+  "@todoListSortTitleAsc": {
+    "description": "Sort option for title ascending"
+  },
+  "todoListSortTitleDesc": "Title (Z-A)",
+  "@todoListSortTitleDesc": {
+    "description": "Sort option for title descending"
+  },
+  "todoListSortManual": "Manual (drag to reorder)",
+  "@todoListSortManual": {
+    "description": "Sort option for manual ordering"
+  },
   "todoListAddDialogTitle": "New todo",
   "@todoListAddDialogTitle": {
     "description": "Title for the add todo dialog"
