@@ -236,6 +236,7 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
         BlocProviderHelpers.withAsyncInit<TodoListCubit>(
           create: () => TodoListCubit(
             repository: getIt<TodoRepository>(),
+            timerService: getIt<TimerService>(),
           ),
           init: (final cubit) => cubit.loadInitial(),
           child: const TodoListPage(),

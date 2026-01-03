@@ -52,6 +52,7 @@ class _TodoSearchFieldState extends State<TodoSearchField> {
         controller: _controller,
         onChanged: (final value) {
           setState(() {});
+          // Debouncing is handled in the cubit
           context.cubit<TodoListCubit>().setSearchQuery(value);
         },
         style: textStyle,

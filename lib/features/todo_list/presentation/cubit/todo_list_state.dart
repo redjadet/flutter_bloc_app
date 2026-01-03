@@ -33,6 +33,12 @@ abstract class TodoListState with _$TodoListState {
   bool get hasItems => items.isNotEmpty;
 
   List<TodoItem> get filteredItems {
+    // Early return if no items
+    if (items.isEmpty) {
+      return const <TodoItem>[];
+    }
+
+    // Apply filter
     List<TodoItem> result = switch (filter) {
       TodoFilter.all => items,
       TodoFilter.active =>
@@ -41,6 +47,12 @@ abstract class TodoListState with _$TodoListState {
         items.where((final item) => item.isCompleted).toList(growable: false),
     };
 
+    // Early return if filter resulted in empty list
+    if (result.isEmpty) {
+      return const <TodoItem>[];
+    }
+
+    // Apply search query if present
     if (searchQuery.isNotEmpty) {
       final String query = searchQuery.toLowerCase();
       result = result
@@ -50,6 +62,11 @@ abstract class TodoListState with _$TodoListState {
                 (item.description?.toLowerCase().contains(query) ?? false),
           )
           .toList(growable: false);
+
+      // Early return if search resulted in empty list
+      if (result.isEmpty) {
+        return const <TodoItem>[];
+      }
     }
 
     // Apply sorting

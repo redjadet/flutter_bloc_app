@@ -8,6 +8,8 @@ import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../test_helpers.dart';
+
 void main() {
   group('TodoListCubit', () {
     late _FakeTodoRepository repository;
@@ -15,7 +17,10 @@ void main() {
     TodoListCubit buildCubit({final List<TodoItem>? initialItems}) {
       repository = _FakeTodoRepository(initialItems: initialItems);
       addTearDown(repository.dispose);
-      return TodoListCubit(repository: repository);
+      return TodoListCubit(
+        repository: repository,
+        timerService: FakeTimerService(),
+      );
     }
 
     blocTest<TodoListCubit, TodoListState>(

@@ -8,6 +8,13 @@ mixin _TodoListCubitMethods
   set subscription(final StreamSubscription<List<TodoItem>>? value);
   bool get isLoading;
   set isLoading(final bool value);
+  TimerService get timerService;
+  Duration get searchDebounceDuration;
+  TimerDisposable? get searchDebounceHandle;
+  set searchDebounceHandle(final TimerDisposable? value);
+  TodoItem? get lastDeletedItem;
+  set lastDeletedItem(final TodoItem? value);
+  bool Function() get stopLoadingIfClosed;
 
   void emitOptimisticUpdate(final List<TodoItem> items) {
     if (isClosed) return;
@@ -55,50 +62,77 @@ mixin _TodoListCubitMethods
     subscription = newSubscription;
   }
 
-  Future<void> saveItem(
-    final TodoItem item, {
-    required final String logContext,
-  }) async {
-    final TodoListState previousState = state;
-    final List<TodoItem> updatedItems = _TodoListCubitHelpers.saveInList(
-      state.items,
-      item,
-    );
-    if (isClosed) return;
-
-    // If in manual sort mode and item is new, add it to the end of manual order
-    Map<String, int> updatedManualOrder = state.manualOrder;
-    if (state.sortOrder == TodoSortOrder.manual &&
-        !state.items.any((final existing) => existing.id == item.id)) {
-      updatedManualOrder = Map<String, int>.from(state.manualOrder);
-      final int maxOrder = updatedManualOrder.values.isEmpty
-          ? -1
-          : updatedManualOrder.values.reduce(
-              (final a, final b) => a > b ? a : b,
-            );
-      updatedManualOrder[item.id] = maxOrder + 1;
-    }
-
-    emit(
-      state.copyWith(
-        items: List<TodoItem>.unmodifiable(updatedItems),
-        status: ViewStatus.success,
-        errorMessage: null,
-        manualOrder: updatedManualOrder,
-      ),
-    );
-    await CubitExceptionHandler.executeAsyncVoid(
-      operation: () => repository.save(item),
-      onError: (final String errorMessage) {
-        if (isClosed) return;
+  Future<void> loadInitial() async {
+    if (isClosed || isLoading) return;
+    isLoading = true;
+    if (stopLoadingIfClosed()) return;
+    emit(state.copyWith(status: ViewStatus.loading, errorMessage: null));
+    await CubitExceptionHandler.executeAsync<List<TodoItem>>(
+      operation: repository.fetchAll,
+      onSuccess: (final items) async {
+        if (stopLoadingIfClosed()) return;
         emit(
-          previousState.copyWith(
+          state.copyWith(
+            status: ViewStatus.success,
+            items: List<TodoItem>.unmodifiable(items),
+            errorMessage: null,
+          ),
+        );
+        try {
+          await startWatching();
+        } finally {
+          isLoading = false;
+        }
+      },
+      onError: (final String errorMessage) {
+        if (stopLoadingIfClosed()) return;
+        emit(
+          state.copyWith(
             status: ViewStatus.error,
             errorMessage: errorMessage,
           ),
         );
+        isLoading = false;
       },
-      logContext: logContext,
+      logContext: 'TodoListCubit.loadInitial',
     );
+  }
+
+  void reorderItems({
+    required final int oldIndex,
+    required final int newIndex,
+  }) {
+    if (isClosed) return;
+    if (state.sortOrder != TodoSortOrder.manual) {
+      // Switch to manual sort mode
+      final Map<String, int> newManualOrder = <String, int>{};
+      for (int i = 0; i < state.filteredItems.length; i++) {
+        newManualOrder[state.filteredItems[i].id] = i;
+      }
+      emit(
+        state.copyWith(
+          sortOrder: TodoSortOrder.manual,
+          manualOrder: newManualOrder,
+        ),
+      );
+    }
+
+    final List<TodoItem> items = List<TodoItem>.from(state.filteredItems);
+    int adjustedNewIndex = newIndex;
+    if (oldIndex < newIndex) {
+      adjustedNewIndex -= 1;
+    }
+    final TodoItem item = items.removeAt(oldIndex);
+    items.insert(adjustedNewIndex, item);
+
+    // Update manual order
+    final Map<String, int> updatedOrder = Map<String, int>.from(
+      state.manualOrder,
+    );
+    for (int i = 0; i < items.length; i++) {
+      updatedOrder[items[i].id] = i;
+    }
+
+    emit(state.copyWith(manualOrder: updatedOrder));
   }
 }

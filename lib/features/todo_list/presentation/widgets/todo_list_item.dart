@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/helpers/todo_list_dialogs.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
@@ -62,7 +65,10 @@ class TodoListItem extends StatelessWidget {
           ],
           Checkbox.adaptive(
             value: item.isCompleted,
-            onChanged: (_) => onToggle(),
+            onChanged: (_) {
+              unawaited(HapticFeedback.selectionClick());
+              onToggle();
+            },
             visualDensity: VisualDensity.compact,
           ),
           SizedBox(width: context.responsiveHorizontalGapS),
@@ -89,7 +95,10 @@ class TodoListItem extends StatelessWidget {
                 button: true,
                 child: PlatformAdaptive.textButton(
                   context: context,
-                  onPressed: onEdit,
+                  onPressed: () {
+                    unawaited(HapticFeedback.selectionClick());
+                    onEdit();
+                  },
                   child: Icon(
                     Icons.edit_outlined,
                     color: colors.primary,
@@ -102,7 +111,10 @@ class TodoListItem extends StatelessWidget {
                 button: true,
                 child: PlatformAdaptive.textButton(
                   context: context,
-                  onPressed: onDelete,
+                  onPressed: () {
+                    unawaited(HapticFeedback.mediumImpact());
+                    onDelete();
+                  },
                   child: Icon(
                     Icons.delete_outline,
                     color: colors.error,
@@ -157,14 +169,17 @@ class TodoListItem extends StatelessWidget {
         ),
         confirmDismiss: (final DismissDirection direction) async {
           if (direction == DismissDirection.startToEnd) {
+            unawaited(HapticFeedback.selectionClick());
             onToggle();
             return false;
           } else {
+            unawaited(HapticFeedback.mediumImpact());
             return _confirmDelete(context, item.title);
           }
         },
         onDismissed: (final DismissDirection direction) {
           if (direction == DismissDirection.endToStart) {
+            unawaited(HapticFeedback.mediumImpact());
             (onDeleteWithoutConfirmation ?? onDelete)();
           }
         },
