@@ -15,6 +15,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.onOpenWebsocket,
     required this.onOpenChatList,
     required this.onOpenSearch,
+    required this.onOpenTodoList,
     required this.onOpenProfile,
     required this.onOpenRegister,
     required this.onOpenLoggedOut,
@@ -36,6 +37,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onOpenWebsocket;
   final VoidCallback onOpenChatList;
   final VoidCallback onOpenSearch;
+  final VoidCallback onOpenTodoList;
   final VoidCallback onOpenProfile;
   final VoidCallback onOpenRegister;
   final VoidCallback onOpenLoggedOut;
@@ -136,6 +138,13 @@ class ExamplePageBody extends StatelessWidget {
             onPressed: onOpenSearch,
             icon: Icons.search,
             label: 'Search Demo',
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenTodoList,
+            icon: Icons.checklist,
+            label: l10n.exampleTodoListButton,
           ),
           SizedBox(height: context.responsiveGapS),
           _buildIconButton(

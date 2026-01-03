@@ -141,6 +141,7 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenWebsocket: () => context.pushNamed(AppRoutes.websocket),
         onOpenChatList: () => context.pushNamed(AppRoutes.chatList),
         onOpenSearch: () => context.pushNamed(AppRoutes.search),
+        onOpenTodoList: () => context.pushNamed(AppRoutes.todoList),
         onOpenProfile: () => context.pushNamed(AppRoutes.profile),
         onOpenRegister: () => context.pushNamed(AppRoutes.register),
         onOpenLoggedOut: () => context.pushNamed(AppRoutes.loggedOut),

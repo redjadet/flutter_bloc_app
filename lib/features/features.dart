@@ -10,4 +10,5 @@ export 'graphql_demo/graphql_demo.dart';
 export 'profile/profile.dart';
 export 'search/search.dart';
 export 'settings/settings.dart';
+export 'todo_list/todo_list.dart';
 export 'websocket/websocket.dart';

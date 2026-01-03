@@ -1747,6 +1747,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Entity: {entity}, attempts: {attempts}'**
   String syncQueueInspectorOperation(String entity, int attempts);
+
+  /// Button label for opening the todo list demo
+  ///
+  /// In en, this message translates to:
+  /// **'Todo List Demo'**
+  String get exampleTodoListButton;
+
+  /// Title for the todo list page
+  ///
+  /// In en, this message translates to:
+  /// **'Todo List'**
+  String get todoListTitle;
+
+  /// Error message shown when todos fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load todos'**
+  String get todoListLoadError;
+
+  /// Primary action label for adding a todo
+  ///
+  /// In en, this message translates to:
+  /// **'Add todo'**
+  String get todoListAddAction;
+
+  /// Label for saving a todo in the dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get todoListSaveAction;
+
+  /// Label for cancelling a todo dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get todoListCancelAction;
+
+  /// Label for deleting a todo
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get todoListDeleteAction;
+
+  /// Title for the delete confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete todo?'**
+  String get todoListDeleteDialogTitle;
+
+  /// Confirmation message for deleting a todo
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{title}\"? This cannot be undone.'**
+  String todoListDeleteDialogMessage(String title);
+
+  /// Title for the add todo dialog
+  ///
+  /// In en, this message translates to:
+  /// **'New todo'**
+  String get todoListAddDialogTitle;
+
+  /// Title for the edit todo dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Edit todo'**
+  String get todoListEditDialogTitle;
+
+  /// Placeholder for the todo title field
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get todoListTitlePlaceholder;
+
+  /// Placeholder for the todo description field
+  ///
+  /// In en, this message translates to:
+  /// **'Description (optional)'**
+  String get todoListDescriptionPlaceholder;
+
+  /// Title shown when the todo list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No todos yet'**
+  String get todoListEmptyTitle;
+
+  /// Message shown when the todo list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first task to get started.'**
+  String get todoListEmptyMessage;
+
+  /// Filter label for all todos
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get todoListFilterAll;
+
+  /// Filter label for active todos
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get todoListFilterActive;
+
+  /// Filter label for completed todos
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get todoListFilterCompleted;
+
+  /// Action label for clearing completed todos
+  ///
+  /// In en, this message translates to:
+  /// **'Clear completed'**
+  String get todoListClearCompletedAction;
 }
 
 class _AppLocalizationsDelegate

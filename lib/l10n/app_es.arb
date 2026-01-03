@@ -705,5 +705,86 @@
   "openMarkdownEditorTooltip": "Abrir Editor de Markdown",
   "@openMarkdownEditorTooltip": {
     "description": "Tooltip for navigating to the Markdown Editor feature"
+  },
+  "exampleTodoListButton": "Todo List Demo",
+  "@exampleTodoListButton": {
+    "description": "Button label for opening the todo list demo"
+  },
+  "todoListTitle": "Todo List",
+  "@todoListTitle": {
+    "description": "Title for the todo list page"
+  },
+  "todoListLoadError": "Unable to load todos",
+  "@todoListLoadError": {
+    "description": "Error message shown when todos fail to load"
+  },
+  "todoListAddAction": "Add todo",
+  "@todoListAddAction": {
+    "description": "Primary action label for adding a todo"
+  },
+  "todoListSaveAction": "Save",
+  "@todoListSaveAction": {
+    "description": "Label for saving a todo in the dialog"
+  },
+  "todoListCancelAction": "Cancel",
+  "@todoListCancelAction": {
+    "description": "Label for cancelling a todo dialog"
+  },
+  "todoListDeleteAction": "Delete",
+  "@todoListDeleteAction": {
+    "description": "Label for deleting a todo"
+  },
+  "todoListDeleteDialogTitle": "Delete todo?",
+  "@todoListDeleteDialogTitle": {
+    "description": "Title for the delete confirmation dialog"
+  },
+  "todoListDeleteDialogMessage": "Delete \"{title}\"? This cannot be undone.",
+  "@todoListDeleteDialogMessage": {
+    "description": "Confirmation message for deleting a todo",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "todoListAddDialogTitle": "New todo",
+  "@todoListAddDialogTitle": {
+    "description": "Title for the add todo dialog"
+  },
+  "todoListEditDialogTitle": "Edit todo",
+  "@todoListEditDialogTitle": {
+    "description": "Title for the edit todo dialog"
+  },
+  "todoListTitlePlaceholder": "Title",
+  "@todoListTitlePlaceholder": {
+    "description": "Placeholder for the todo title field"
+  },
+  "todoListDescriptionPlaceholder": "Description (optional)",
+  "@todoListDescriptionPlaceholder": {
+    "description": "Placeholder for the todo description field"
+  },
+  "todoListEmptyTitle": "No todos yet",
+  "@todoListEmptyTitle": {
+    "description": "Title shown when the todo list is empty"
+  },
+  "todoListEmptyMessage": "Add your first task to get started.",
+  "@todoListEmptyMessage": {
+    "description": "Message shown when the todo list is empty"
+  },
+  "todoListFilterAll": "All",
+  "@todoListFilterAll": {
+    "description": "Filter label for all todos"
+  },
+  "todoListFilterActive": "Active",
+  "@todoListFilterActive": {
+    "description": "Filter label for active todos"
+  },
+  "todoListFilterCompleted": "Completed",
+  "@todoListFilterCompleted": {
+    "description": "Filter label for completed todos"
+  },
+  "todoListClearCompletedAction": "Clear completed",
+  "@todoListClearCompletedAction": {
+    "description": "Action label for clearing completed todos"
   }
 }

@@ -35,6 +35,7 @@ import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/presentation/pages/search_page.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
+import 'package:flutter_bloc_app/features/todo_list/todo_list.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
@@ -43,15 +44,7 @@ import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/shared/widgets/deferred_page.dart';
 import 'package:go_router/go_router.dart';
 
-/// Creates the list of application routes.
-///
-/// **Route Initialization:**
-/// Routes that require async initialization use `BlocProviderHelpers.withAsyncInit`
-/// to load data without blocking the widget tree. Examples:
-/// - `/graphql`: Loads countries data
-/// - `/profile`: Loads user profile
-/// - `/chat`: Loads chat history
-/// - `/google-maps`: Loads map locations
+/// Creates the list of application routes with async init where needed.
 List<GoRoute> createAppRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.authPath,
@@ -235,5 +228,17 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
       repository: getIt<SearchRepository>(),
       timerService: getIt<TimerService>(),
     ),
+  ),
+  GoRoute(
+    path: AppRoutes.todoListPath,
+    name: AppRoutes.todoList,
+    builder: (final context, final state) =>
+        BlocProviderHelpers.withAsyncInit<TodoListCubit>(
+          create: () => TodoListCubit(
+            repository: getIt<TodoRepository>(),
+          ),
+          init: (final cubit) => cubit.loadInitial(),
+          child: const TodoListPage(),
+        ),
   ),
 ];

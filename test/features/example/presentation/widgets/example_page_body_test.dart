@@ -20,6 +20,7 @@ void main() {
             onLoadPlatformInfo: () {},
             onOpenWebsocket: () {},
             onOpenSearch: () {},
+            onOpenTodoList: () {},
             onOpenProfile: () {},
             onOpenRegister: () {
               registerTapped = true;

@@ -51,6 +51,9 @@ class AppRoutes {
   static const search = 'search';
   static const searchPath = '/search';
 
+  static const todoList = 'todo-list';
+  static const todoListPath = '/todo-list';
+
   static const loggedOut = 'logged-out';
   static const loggedOutPath = '/logged-out';
 
