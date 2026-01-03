@@ -79,6 +79,49 @@ class TodoListCubit extends Cubit<TodoListState>
     emit(state.copyWith(searchQuery: query.trim()));
   }
 
+  void setSortOrder(final TodoSortOrder sortOrder) {
+    if (isClosed || sortOrder == state.sortOrder) return;
+    emit(state.copyWith(sortOrder: sortOrder));
+  }
+
+  void reorderItems({
+    required final int oldIndex,
+    required final int newIndex,
+  }) {
+    if (isClosed) return;
+    if (state.sortOrder != TodoSortOrder.manual) {
+      // Switch to manual sort mode
+      final Map<String, int> newManualOrder = <String, int>{};
+      for (int i = 0; i < state.filteredItems.length; i++) {
+        newManualOrder[state.filteredItems[i].id] = i;
+      }
+      emit(
+        state.copyWith(
+          sortOrder: TodoSortOrder.manual,
+          manualOrder: newManualOrder,
+        ),
+      );
+    }
+
+    final List<TodoItem> items = List<TodoItem>.from(state.filteredItems);
+    int adjustedNewIndex = newIndex;
+    if (oldIndex < newIndex) {
+      adjustedNewIndex -= 1;
+    }
+    final TodoItem item = items.removeAt(oldIndex);
+    items.insert(adjustedNewIndex, item);
+
+    // Update manual order
+    final Map<String, int> updatedOrder = Map<String, int>.from(
+      state.manualOrder,
+    );
+    for (int i = 0; i < items.length; i++) {
+      updatedOrder[items[i].id] = i;
+    }
+
+    emit(state.copyWith(manualOrder: updatedOrder));
+  }
+
   Future<void> addTodo({
     required final String title,
     final String? description,

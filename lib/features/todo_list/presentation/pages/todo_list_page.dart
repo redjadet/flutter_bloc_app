@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_em
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_filter_bar.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_search_field.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_sort_bar.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_stats_widget.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
@@ -17,6 +18,8 @@ import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
+
+part 'todo_list_page_handlers.dart';
 
 class TodoListPage extends StatelessWidget {
   const TodoListPage({super.key});
@@ -46,6 +49,7 @@ class _TodoListBody extends StatelessWidget {
           filter: state.filter,
           hasCompleted: state.hasCompleted,
           searchQuery: state.searchQuery,
+          sortOrder: state.sortOrder,
         ),
         builder: (final context, final data) {
           if (data.isLoading) {
@@ -79,11 +83,75 @@ class _TodoListBody extends StatelessWidget {
                       ? () => cubit.clearCompleted()
                       : null,
                 ),
+                if (data.items.isNotEmpty) ...[
+                  SizedBox(height: context.responsiveGapS),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      if (data.hasCompleted)
+                        PlatformAdaptive.textButton(
+                          context: context,
+                          onPressed: () => cubit.clearCompleted(),
+                          child: Text(
+                            context.l10n.todoListClearCompletedAction,
+                            style: Theme.of(context).textTheme.labelLarge
+                                ?.copyWith(
+                                  fontSize: context.responsiveCaptionSize,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                          ),
+                        ),
+                      if (data.hasCompleted)
+                        SizedBox(width: context.responsiveHorizontalGapS),
+                      TodoSortBar(
+                        sortOrder: data.sortOrder,
+                        onSortChanged: cubit.setSortOrder,
+                      ),
+                    ],
+                  ),
+                ],
                 SizedBox(height: context.responsiveGapM),
                 Expanded(
                   child: data.filteredItems.isEmpty
                       ? TodoEmptyState(
                           onAddTodo: () => _handleAddTodo(context),
+                        )
+                      : data.sortOrder == TodoSortOrder.manual
+                      ? ReorderableListView.builder(
+                          padding: context.responsiveListPadding,
+                          itemCount: data.filteredItems.length,
+                          onReorder: (final int oldIndex, final int newIndex) {
+                            cubit.reorderItems(
+                              oldIndex: oldIndex,
+                              newIndex: newIndex,
+                            );
+                          },
+                          itemBuilder: (final context, final index) {
+                            final TodoItem item = data.filteredItems[index];
+                            return RepaintBoundary(
+                              key: ValueKey('todo-${item.id}'),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: context.responsiveGapS,
+                                ),
+                                child: TodoListItem(
+                                  item: item,
+                                  showDragHandle:
+                                      data.sortOrder == TodoSortOrder.manual,
+                                  onToggle: () => cubit.toggleTodo(item),
+                                  onEdit: () => _handleEditTodo(context, item),
+                                  onDelete: () =>
+                                      _handleDeleteTodo(context, item),
+                                  onDeleteWithoutConfirmation: () =>
+                                      _handleDeleteWithUndo(
+                                        context,
+                                        item,
+                                        cubit,
+                                      ),
+                                ),
+                              ),
+                            );
+                          },
                         )
                       : ListView.separated(
                           padding: context.responsiveListPadding,
@@ -93,8 +161,8 @@ class _TodoListBody extends StatelessWidget {
                           itemBuilder: (final context, final index) {
                             final TodoItem item = data.filteredItems[index];
                             return RepaintBoundary(
+                              key: ValueKey('todo-${item.id}'),
                               child: TodoListItem(
-                                key: ValueKey('todo-${item.id}'),
                                 item: item,
                                 onToggle: () => cubit.toggleTodo(item),
                                 onEdit: () => _handleEditTodo(context, item),
@@ -133,6 +201,7 @@ class _TodoListViewData {
     required this.filter,
     required this.hasCompleted,
     required this.searchQuery,
+    required this.sortOrder,
   });
 
   final bool isLoading;
@@ -143,82 +212,5 @@ class _TodoListViewData {
   final TodoFilter filter;
   final bool hasCompleted;
   final String searchQuery;
-}
-
-Future<void> _handleAddTodo(final BuildContext context) async {
-  final TodoEditorResult? result = await showTodoEditorDialog(context: context);
-  if (result == null) {
-    return;
-  }
-  if (!context.mounted) {
-    return;
-  }
-  await context.cubit<TodoListCubit>().addTodo(
-    title: result.title,
-    description: result.description,
-  );
-}
-
-Future<void> _handleEditTodo(
-  final BuildContext context,
-  final TodoItem item,
-) async {
-  final TodoEditorResult? result = await showTodoEditorDialog(
-    context: context,
-    existing: item,
-  );
-  if (result == null) {
-    return;
-  }
-  if (!context.mounted) {
-    return;
-  }
-  await context.cubit<TodoListCubit>().updateTodo(
-    item: item,
-    title: result.title,
-    description: result.description,
-  );
-}
-
-Future<void> _handleDeleteTodo(
-  final BuildContext context,
-  final TodoItem item,
-) async {
-  final bool? shouldDelete = await showTodoDeleteConfirmDialog(
-    context: context,
-    title: item.title,
-  );
-  if (shouldDelete != true) {
-    return;
-  }
-  if (!context.mounted) {
-    return;
-  }
-  await _handleDeleteWithUndo(context, item, context.cubit<TodoListCubit>());
-}
-
-Future<void> _handleDeleteWithUndo(
-  final BuildContext context,
-  final TodoItem item,
-  final TodoListCubit cubit,
-) async {
-  await cubit.deleteTodo(item);
-  if (!context.mounted) {
-    return;
-  }
-
-  final TodoItem? lastDeleted = cubit.lastDeletedItem;
-  if (lastDeleted != null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(context.l10n.todoListDeleteUndone),
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: context.l10n.todoListUndoAction,
-          onPressed: () => cubit.undoDelete(),
-        ),
-      ),
-    );
-  }
+  final TodoSortOrder sortOrder;
 }

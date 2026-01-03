@@ -65,11 +65,26 @@ mixin _TodoListCubitMethods
       item,
     );
     if (isClosed) return;
+
+    // If in manual sort mode and item is new, add it to the end of manual order
+    Map<String, int> updatedManualOrder = state.manualOrder;
+    if (state.sortOrder == TodoSortOrder.manual &&
+        !state.items.any((final existing) => existing.id == item.id)) {
+      updatedManualOrder = Map<String, int>.from(state.manualOrder);
+      final int maxOrder = updatedManualOrder.values.isEmpty
+          ? -1
+          : updatedManualOrder.values.reduce(
+              (final a, final b) => a > b ? a : b,
+            );
+      updatedManualOrder[item.id] = maxOrder + 1;
+    }
+
     emit(
       state.copyWith(
         items: List<TodoItem>.unmodifiable(updatedItems),
         status: ViewStatus.success,
         errorMessage: null,
+        manualOrder: updatedManualOrder,
       ),
     );
     await CubitExceptionHandler.executeAsyncVoid(

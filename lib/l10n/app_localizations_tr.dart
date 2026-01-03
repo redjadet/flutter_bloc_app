@@ -993,6 +993,24 @@ class AppLocalizationsTr extends AppLocalizations {
   String get todoListDeleteUndone => 'Görev silindi';
 
   @override
+  String get todoListSortAction => 'Sort';
+
+  @override
+  String get todoListSortDateDesc => 'Date (newest first)';
+
+  @override
+  String get todoListSortDateAsc => 'Date (oldest first)';
+
+  @override
+  String get todoListSortTitleAsc => 'Title (A-Z)';
+
+  @override
+  String get todoListSortTitleDesc => 'Title (Z-A)';
+
+  @override
+  String get todoListSortManual => 'Manual (drag to reorder)';
+
+  @override
   String get todoListAddDialogTitle => 'New todo';
 
   @override

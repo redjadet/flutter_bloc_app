@@ -69,7 +69,8 @@ class _TodoSearchFieldState extends State<TodoSearchField> {
             size: context.responsiveIconSize,
           ),
           prefixIconConstraints: BoxConstraints(
-            minWidth: context.responsiveIconSize + context.responsiveHorizontalGapM,
+            minWidth:
+                context.responsiveIconSize + context.responsiveHorizontalGapM,
             minHeight: context.responsiveIconSize,
           ),
           suffixIcon: _controller.text.isNotEmpty
@@ -88,7 +89,8 @@ class _TodoSearchFieldState extends State<TodoSearchField> {
                 )
               : null,
           suffixIconConstraints: BoxConstraints(
-            minWidth: context.responsiveIconSize + context.responsiveHorizontalGapM,
+            minWidth:
+                context.responsiveIconSize + context.responsiveHorizontalGapM,
             minHeight: context.responsiveIconSize,
           ),
         ),
