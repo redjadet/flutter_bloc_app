@@ -970,6 +970,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get todoListDeleteAction => 'Delete';
 
   @override
+  String get todoListEditAction => 'Düzenle';
+
+  @override
+  String get todoListCompleteAction => 'Tamamla';
+
+  @override
+  String get todoListUndoAction => 'Aktif yap';
+
+  @override
   String get todoListDeleteDialogTitle => 'Delete todo?';
 
   @override

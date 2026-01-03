@@ -734,6 +734,18 @@
   "@todoListDeleteAction": {
     "description": "Label for deleting a todo"
   },
+  "todoListEditAction": "Editar",
+  "@todoListEditAction": {
+    "description": "Label for editing a todo"
+  },
+  "todoListCompleteAction": "Completar",
+  "@todoListCompleteAction": {
+    "description": "Label for completing a todo"
+  },
+  "todoListUndoAction": "Marcar como activa",
+  "@todoListUndoAction": {
+    "description": "Label for undoing completion and marking a todo active"
+  },
   "todoListDeleteDialogTitle": "Delete todo?",
   "@todoListDeleteDialogTitle": {
     "description": "Title for the delete confirmation dialog"

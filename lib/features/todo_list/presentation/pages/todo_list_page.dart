@@ -89,6 +89,8 @@ class _TodoListBody extends StatelessWidget {
                               onToggle: () => cubit.toggleTodo(item),
                               onEdit: () => _handleEditTodo(context, item),
                               onDelete: () => _handleDeleteTodo(context, item),
+                              onDeleteWithoutConfirmation: () =>
+                                  cubit.deleteTodo(item),
                             );
                           },
                         ),
