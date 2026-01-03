@@ -289,6 +289,7 @@ Widget buildStateWidget(DeepLinkState state) {
 **Change:** The `selectState` method now uses `context.select` instead of `context.watch`, ensuring rebuilds only occur when the selected value changes.
 
 **Benefits:**
+
 - Performance optimization: Widgets only rebuild when the selected slice of state actually changes
 - Matches documentation: Implementation correctly matches documented behavior
 - Proper Flutter pattern: Uses Flutter's built-in `context.select` for optimal performance
@@ -300,6 +301,7 @@ Widget buildStateWidget(DeepLinkState state) {
 **Change:** The method now accepts a generic return type `R` for the handler, allowing any return type instead of requiring the same type as the state.
 
 **Benefits:**
+
 - Matches documented examples: Switch expressions returning strings now compile correctly
 - More flexible API: Handlers can return any type (String, Widget, bool, etc.)
 - Better type safety: Generic `R` type is properly inferred
@@ -311,6 +313,7 @@ Widget buildStateWidget(DeepLinkState state) {
 **Change:** Tightened error handling to only intercept `ProviderNotFoundException` and preserve stack traces for better debugging.
 
 **Benefits:**
+
 - Better debugging: Original stack traces preserved
 - No error masking: Unrelated errors pass through unchanged
 - Clearer error messages: Only missing provider errors are intercepted
@@ -318,15 +321,18 @@ Widget buildStateWidget(DeepLinkState state) {
 ### 4. Switch Helper Signature Improvements
 
 **Files:**
+
 - `lib/features/chat/presentation/chat_list_state.switch_helper.dart`
 - `lib/features/remote_config/presentation/cubit/remote_config_state.switch_helper.dart`
 
 **Changes:**
+
 - Uses concrete types (`List<ChatContact>`, `String`) instead of `dynamic`
 - Uses named parameters for functions with boolean parameters
 - Satisfies lint rules automatically (`avoid_positional_boolean_parameters`)
 
 **Benefits:**
+
 - Better compile-time type checking
 - Improved IDE autocomplete
 - Lint compliance achieved
@@ -334,6 +340,7 @@ Widget buildStateWidget(DeepLinkState state) {
 ### 5. Code Generation Improvements
 
 The `tool/generate_sealed_switch.dart` script has been improved to:
+
 - Generate concrete types instead of `dynamic` (extracts from field declarations)
 - Use named parameters for functions with boolean parameters or when constructor uses named parameters
 - Extract proper types from state class definitions using improved regex patterns
