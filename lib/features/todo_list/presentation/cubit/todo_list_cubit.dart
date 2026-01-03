@@ -23,6 +23,8 @@ class TodoListCubit extends Cubit<TodoListState>
   StreamSubscription<List<TodoItem>>? subscription;
   @override
   bool isLoading = false;
+  TodoItem? _lastDeletedItem;
+
   bool _stopLoadingIfClosed() {
     if (isClosed) {
       isLoading = false;
@@ -70,6 +72,11 @@ class TodoListCubit extends Cubit<TodoListState>
   void setFilter(final TodoFilter filter) {
     if (isClosed || filter == state.filter) return;
     emit(state.copyWith(filter: filter));
+  }
+
+  void setSearchQuery(final String query) {
+    if (isClosed) return;
+    emit(state.copyWith(searchQuery: query.trim()));
   }
 
   Future<void> addTodo({
@@ -125,6 +132,7 @@ class TodoListCubit extends Cubit<TodoListState>
         state.items.every((final current) => current.id != item.id)) {
       return;
     }
+    _lastDeletedItem = item;
     final TodoListState previousState = state;
     final List<TodoItem> updatedItems = state.items
         .where((final current) => current.id != item.id)
@@ -134,6 +142,7 @@ class TodoListCubit extends Cubit<TodoListState>
       operation: () => repository.delete(item.id),
       onError: (final String errorMessage) {
         if (isClosed) return;
+        _lastDeletedItem = null;
         emit(
           previousState.copyWith(
             status: ViewStatus.error,
@@ -144,6 +153,15 @@ class TodoListCubit extends Cubit<TodoListState>
       logContext: 'TodoListCubit.deleteTodo',
     );
   }
+
+  Future<void> undoDelete() async {
+    if (isClosed || _lastDeletedItem == null) return;
+    final TodoItem item = _lastDeletedItem!;
+    _lastDeletedItem = null;
+    await saveItem(item, logContext: 'TodoListCubit.undoDelete');
+  }
+
+  TodoItem? get lastDeletedItem => _lastDeletedItem;
 
   Future<void> clearCompleted() async {
     if (isClosed || !state.items.any((final item) => item.isCompleted)) {

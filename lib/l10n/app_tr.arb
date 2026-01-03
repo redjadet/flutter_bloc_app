@@ -799,5 +799,13 @@
   "todoListClearCompletedAction": "Clear completed",
   "@todoListClearCompletedAction": {
     "description": "Action label for clearing completed todos"
+  },
+  "todoListSearchHint": "Görevleri ara...",
+  "@todoListSearchHint": {
+    "description": "Hint text for the todo search field"
+  },
+  "todoListDeleteUndone": "Görev silindi",
+  "@todoListDeleteUndone": {
+    "description": "Message shown after a todo is deleted"
   }
 }

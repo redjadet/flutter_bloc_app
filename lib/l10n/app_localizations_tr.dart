@@ -987,6 +987,12 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get todoListSearchHint => 'Görevleri ara...';
+
+  @override
+  String get todoListDeleteUndone => 'Görev silindi';
+
+  @override
   String get todoListAddDialogTitle => 'New todo';
 
   @override

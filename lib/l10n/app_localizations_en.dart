@@ -983,6 +983,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get todoListSearchHint => 'Search todos...';
+
+  @override
+  String get todoListDeleteUndone => 'Todo deleted';
+
+  @override
   String get todoListAddDialogTitle => 'New todo';
 
   @override

@@ -798,5 +798,13 @@
   "todoListClearCompletedAction": "Clear completed",
   "@todoListClearCompletedAction": {
     "description": "Action label for clearing completed todos"
+  },
+  "todoListSearchHint": "Buscar tareas...",
+  "@todoListSearchHint": {
+    "description": "Hint text for the todo search field"
+  },
+  "todoListDeleteUndone": "Tarea eliminada",
+  "@todoListDeleteUndone": {
+    "description": "Message shown after a todo is deleted"
   }
 }

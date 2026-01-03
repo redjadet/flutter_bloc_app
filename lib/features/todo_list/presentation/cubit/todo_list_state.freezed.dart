@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TodoListState {
 
- ViewStatus get status; List<TodoItem> get items; TodoFilter get filter; String? get errorMessage;
+ ViewStatus get status; List<TodoItem> get items; TodoFilter get filter; String get searchQuery; String? get errorMessage;
 /// Create a copy of TodoListState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $TodoListStateCopyWith<TodoListState> get copyWith => _$TodoListStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoListState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.filter, filter) || other.filter == filter)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoListState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.filter, filter) || other.filter == filter)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(items),filter,errorMessage);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(items),filter,searchQuery,errorMessage);
 
 @override
 String toString() {
-  return 'TodoListState(status: $status, items: $items, filter: $filter, errorMessage: $errorMessage)';
+  return 'TodoListState(status: $status, items: $items, filter: $filter, searchQuery: $searchQuery, errorMessage: $errorMessage)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $TodoListStateCopyWith<$Res>  {
   factory $TodoListStateCopyWith(TodoListState value, $Res Function(TodoListState) _then) = _$TodoListStateCopyWithImpl;
 @useResult
 $Res call({
- ViewStatus status, List<TodoItem> items, TodoFilter filter, String? errorMessage
+ ViewStatus status, List<TodoItem> items, TodoFilter filter, String searchQuery, String? errorMessage
 });
 
 
@@ -62,12 +62,13 @@ class _$TodoListStateCopyWithImpl<$Res>
 
 /// Create a copy of TodoListState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? items = null,Object? filter = null,Object? errorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? items = null,Object? filter = null,Object? searchQuery = null,Object? errorMessage = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ViewStatus,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<TodoItem>,filter: null == filter ? _self.filter : filter // ignore: cast_nullable_to_non_nullable
-as TodoFilter,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as TodoFilter,searchQuery: null == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
+as String,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -153,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ViewStatus status,  List<TodoItem> items,  TodoFilter filter,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ViewStatus status,  List<TodoItem> items,  TodoFilter filter,  String searchQuery,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TodoListState() when $default != null:
-return $default(_that.status,_that.items,_that.filter,_that.errorMessage);case _:
+return $default(_that.status,_that.items,_that.filter,_that.searchQuery,_that.errorMessage);case _:
   return orElse();
 
 }
@@ -174,10 +175,10 @@ return $default(_that.status,_that.items,_that.filter,_that.errorMessage);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ViewStatus status,  List<TodoItem> items,  TodoFilter filter,  String? errorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ViewStatus status,  List<TodoItem> items,  TodoFilter filter,  String searchQuery,  String? errorMessage)  $default,) {final _that = this;
 switch (_that) {
 case _TodoListState():
-return $default(_that.status,_that.items,_that.filter,_that.errorMessage);case _:
+return $default(_that.status,_that.items,_that.filter,_that.searchQuery,_that.errorMessage);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +195,10 @@ return $default(_that.status,_that.items,_that.filter,_that.errorMessage);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ViewStatus status,  List<TodoItem> items,  TodoFilter filter,  String? errorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ViewStatus status,  List<TodoItem> items,  TodoFilter filter,  String searchQuery,  String? errorMessage)?  $default,) {final _that = this;
 switch (_that) {
 case _TodoListState() when $default != null:
-return $default(_that.status,_that.items,_that.filter,_that.errorMessage);case _:
+return $default(_that.status,_that.items,_that.filter,_that.searchQuery,_that.errorMessage);case _:
   return null;
 
 }
@@ -209,7 +210,7 @@ return $default(_that.status,_that.items,_that.filter,_that.errorMessage);case _
 
 
 class _TodoListState extends TodoListState {
-  const _TodoListState({this.status = ViewStatus.initial, final  List<TodoItem> items = const <TodoItem>[], this.filter = TodoFilter.all, this.errorMessage}): _items = items,super._();
+  const _TodoListState({this.status = ViewStatus.initial, final  List<TodoItem> items = const <TodoItem>[], this.filter = TodoFilter.all, this.searchQuery = '', this.errorMessage}): _items = items,super._();
   
 
 @override@JsonKey() final  ViewStatus status;
@@ -221,6 +222,7 @@ class _TodoListState extends TodoListState {
 }
 
 @override@JsonKey() final  TodoFilter filter;
+@override@JsonKey() final  String searchQuery;
 @override final  String? errorMessage;
 
 /// Create a copy of TodoListState
@@ -233,16 +235,16 @@ _$TodoListStateCopyWith<_TodoListState> get copyWith => __$TodoListStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoListState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.filter, filter) || other.filter == filter)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoListState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.filter, filter) || other.filter == filter)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_items),filter,errorMessage);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_items),filter,searchQuery,errorMessage);
 
 @override
 String toString() {
-  return 'TodoListState(status: $status, items: $items, filter: $filter, errorMessage: $errorMessage)';
+  return 'TodoListState(status: $status, items: $items, filter: $filter, searchQuery: $searchQuery, errorMessage: $errorMessage)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$TodoListStateCopyWith<$Res> implements $TodoListStateCopy
   factory _$TodoListStateCopyWith(_TodoListState value, $Res Function(_TodoListState) _then) = __$TodoListStateCopyWithImpl;
 @override @useResult
 $Res call({
- ViewStatus status, List<TodoItem> items, TodoFilter filter, String? errorMessage
+ ViewStatus status, List<TodoItem> items, TodoFilter filter, String searchQuery, String? errorMessage
 });
 
 
@@ -270,12 +272,13 @@ class __$TodoListStateCopyWithImpl<$Res>
 
 /// Create a copy of TodoListState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? items = null,Object? filter = null,Object? errorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? items = null,Object? filter = null,Object? searchQuery = null,Object? errorMessage = freezed,}) {
   return _then(_TodoListState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ViewStatus,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
 as List<TodoItem>,filter: null == filter ? _self.filter : filter // ignore: cast_nullable_to_non_nullable
-as TodoFilter,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as TodoFilter,searchQuery: null == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
+as String,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

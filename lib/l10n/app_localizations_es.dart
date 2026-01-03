@@ -996,6 +996,12 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get todoListSearchHint => 'Buscar tareas...';
+
+  @override
+  String get todoListDeleteUndone => 'Tarea eliminada';
+
+  @override
   String get todoListAddDialogTitle => 'New todo';
 
   @override

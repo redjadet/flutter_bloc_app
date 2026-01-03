@@ -1820,6 +1820,18 @@ abstract class AppLocalizations {
   /// **'Delete \"{title}\"? This cannot be undone.'**
   String todoListDeleteDialogMessage(String title);
 
+  /// Hint text for the todo search field
+  ///
+  /// In en, this message translates to:
+  /// **'Search todos...'**
+  String get todoListSearchHint;
+
+  /// Message shown when a todo is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Todo deleted'**
+  String get todoListDeleteUndone;
+
   /// Title for the add todo dialog
   ///
   /// In en, this message translates to:
