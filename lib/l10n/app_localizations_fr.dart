@@ -966,4 +966,63 @@ class AppLocalizationsFr extends AppLocalizations {
   String syncQueueInspectorOperation(String entity, int attempts) {
     return 'Entité : $entity, tentatives : $attempts';
   }
+
+  @override
+  String get exampleTodoListButton => 'Todo List Demo';
+
+  @override
+  String get todoListTitle => 'Todo List';
+
+  @override
+  String get todoListLoadError => 'Unable to load todos';
+
+  @override
+  String get todoListAddAction => 'Add todo';
+
+  @override
+  String get todoListSaveAction => 'Save';
+
+  @override
+  String get todoListCancelAction => 'Cancel';
+
+  @override
+  String get todoListDeleteAction => 'Delete';
+
+  @override
+  String get todoListDeleteDialogTitle => 'Delete todo?';
+
+  @override
+  String todoListDeleteDialogMessage(String title) {
+    return 'Delete \"$title\"? This cannot be undone.';
+  }
+
+  @override
+  String get todoListAddDialogTitle => 'New todo';
+
+  @override
+  String get todoListEditDialogTitle => 'Edit todo';
+
+  @override
+  String get todoListTitlePlaceholder => 'Title';
+
+  @override
+  String get todoListDescriptionPlaceholder => 'Description (optional)';
+
+  @override
+  String get todoListEmptyTitle => 'No todos yet';
+
+  @override
+  String get todoListEmptyMessage => 'Add your first task to get started.';
+
+  @override
+  String get todoListFilterAll => 'All';
+
+  @override
+  String get todoListFilterActive => 'Active';
+
+  @override
+  String get todoListFilterCompleted => 'Completed';
+
+  @override
+  String get todoListClearCompletedAction => 'Clear completed';
 }
