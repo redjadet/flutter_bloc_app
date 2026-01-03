@@ -1790,6 +1790,24 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get todoListDeleteAction;
 
+  /// Label for editing a todo
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get todoListEditAction;
+
+  /// Label for completing a todo
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get todoListCompleteAction;
+
+  /// Label for undoing completion and marking a todo active
+  ///
+  /// In en, this message translates to:
+  /// **'Mark active'**
+  String get todoListUndoAction;
+
   /// Title for the delete confirmation dialog
   ///
   /// In en, this message translates to:

@@ -23,6 +23,9 @@ This document provides a comprehensive guide for implementing a Todo List featur
 - Delete a todo.
 - View list grouped or filtered by status (All, Active, Completed).
 - Persist todos locally across app launches.
+- **Swipe gestures on mobile devices**:
+  - Swipe right: Complete active items or uncomplete completed items
+  - Swipe left: Delete items with confirmation dialog
 
 ### Non-Functional Requirements
 
@@ -113,7 +116,7 @@ abstract class TodoRepository {
   Future<List<TodoItem>> fetchAll();
 
   /// Create or update a todo item
-  Future<void> upsert(TodoItem item);
+  Future<void> save(TodoItem item);
 
   /// Delete a todo by ID
   Future<void> delete(String id);
@@ -186,10 +189,15 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
 
 ### Presentation Layer (`lib/features/todo_list/presentation/`)
 
-- `cubit/todo_list_cubit.dart`
+- `cubit/todo_list_cubit.dart` (main cubit, ~180 lines)
+- `cubit/todo_list_cubit_helpers.dart` (static helper methods)
+- `cubit/todo_list_cubit_logging.dart` (logging helpers)
+- `cubit/todo_list_cubit_methods.dart` (mixin with private methods)
 - `cubit/todo_list_state.dart` (Freezed)
 - `pages/todo_list_page.dart`
-- `widgets/` for list items, filters, empty state
+- `widgets/todo_list_item.dart` (with swipe gesture support)
+- `widgets/` for filters, empty state
+- `helpers/todo_list_dialogs.dart` (adaptive dialogs)
 
 **State Definition (Freezed):**
 
@@ -228,132 +236,72 @@ enum TodoFilter { all, active, completed }
 
 **Cubit Implementation Pattern:**
 
+The cubit is split into multiple files to keep the main file under 250 lines:
+
 ```dart
 // lib/features/todo_list/presentation/cubit/todo_list_cubit.dart
-class TodoListCubit extends Cubit<TodoListState> {
-  TodoListCubit({
-    required final TodoRepository repository,
-  })  : _repository = repository,
-        super(const TodoListState()) {
-    _subscribeToRepository();
-  }
+part 'todo_list_cubit_helpers.dart';
+part 'todo_list_cubit_logging.dart';
+part 'todo_list_cubit_methods.dart';
 
-  final TodoRepository _repository;
-  StreamSubscription<List<TodoItem>>? _subscription;
+class TodoListCubit extends Cubit<TodoListState>
+    with CubitSubscriptionMixin<TodoListState>, _TodoListCubitMethods {
+  TodoListCubit({required this.repository}) : super(const TodoListState());
 
-  void _subscribeToRepository() {
-    _subscription = _repository.watchAll().listen(
-      (items) {
-        if (isClosed) return;
-        emit(state.copyWith(
-          items: items,
-          status: ViewStatus.success,
-          errorMessage: null,
-        ));
-      },
-      onError: (error, stackTrace) {
-        CubitExceptionHandler.handleException(
-          error,
-          stackTrace,
-          'TodoListCubit._subscribeToRepository',
-          onError: (message) {
-            if (isClosed) return;
-            emit(state.copyWith(
-              errorMessage: message,
-              status: ViewStatus.error,
-            ));
-          },
-        );
-      },
-    );
-  }
+  @override
+  final TodoRepository repository;
+  @override
+  StreamSubscription<List<TodoItem>>? subscription;
+  @override
+  bool isLoading = false;
 
-  Future<void> loadTodos() async {
-    if (isClosed) return;
-    emit(state.copyWith(status: ViewStatus.loading));
-
-    await CubitExceptionHandler.executeAsync<List<TodoItem>>(
-      operation: () => _repository.fetchAll(),
-      onSuccess: (items) {
-        if (isClosed) return;
-        emit(state.copyWith(
-          items: items,
-          status: ViewStatus.success,
-          errorMessage: null,
-        ));
-      },
-      onError: (message) {
-        if (isClosed) return;
-        emit(state.copyWith(
-          errorMessage: message,
-          status: ViewStatus.error,
-        ));
-      },
-      logContext: 'TodoListCubit.loadTodos',
-    );
+  Future<void> loadInitial() async {
+    if (isClosed || isLoading) return;
+    isLoading = true;
+    // ... implementation with optimistic updates and stream watching
   }
 
   Future<void> addTodo({
     required final String title,
     final String? description,
   }) async {
-    final todo = TodoItem.create(title: title, description: description);
-    await CubitExceptionHandler.executeAsyncVoid(
-      operation: () => _repository.upsert(todo),
-      onError: (message) {
-        if (isClosed) return;
-        emit(state.copyWith(errorMessage: message, status: ViewStatus.error));
-      },
-      logContext: 'TodoListCubit.addTodo',
-    );
-  }
-
-  Future<void> toggleTodo(final String id) async {
-    final todo = state.items.firstWhere((item) => item.id == id);
-    final updated = todo.copyWith(
-      isCompleted: !todo.isCompleted,
-      updatedAt: DateTime.now(),
-    );
-    await CubitExceptionHandler.executeAsyncVoid(
-      operation: () => _repository.upsert(updated),
-      onError: (message) {
-        if (isClosed) return;
-        emit(state.copyWith(errorMessage: message, status: ViewStatus.error));
-      },
-      logContext: 'TodoListCubit.toggleTodo',
-    );
-  }
-
-  Future<void> deleteTodo(final String id) async {
-    await CubitExceptionHandler.executeAsyncVoid(
-      operation: () => _repository.delete(id),
-      onError: (message) {
-        if (isClosed) return;
-        emit(state.copyWith(errorMessage: message, status: ViewStatus.error));
-      },
-      logContext: 'TodoListCubit.deleteTodo',
-    );
-  }
-
-  void setFilter(final TodoFilter filter) {
     if (isClosed) return;
-    emit(state.copyWith(filter: filter));
+    // ... implementation with optimistic updates
   }
 
-  @override
-  Future<void> close() {
-    _subscription?.cancel();
-    return super.close();
+  Future<void> toggleTodo(final TodoItem item) async {
+    if (isClosed) return;
+    // ... implementation with optimistic updates
   }
+
+  Future<void> deleteTodo(final TodoItem item) async {
+    if (isClosed) return;
+    // ... implementation with optimistic updates and state rollback
+  }
+
+  // ... other methods
 }
 ```
+
+**Key Implementation Details:**
+
+- **Optimistic Updates**: All mutations (add, update, delete, toggle) immediately update the UI, then persist to repository
+- **State Rollback**: If persistence fails, the previous state is restored to maintain UI consistency
+- **Stream Watching**: After initial load, subscribes to repository stream for real-time updates
+- **File Splitting**: Main cubit (~180 lines) with helper files for:
+  - `todo_list_cubit_helpers.dart`: Static list manipulation utilities
+  - `todo_list_cubit_logging.dart`: Logging helper functions
+  - `todo_list_cubit_methods.dart`: Mixin with private methods (saveItem, startWatching, etc.)
+- **Offline-First**: Handles persistence failures gracefully with state rollback
 
 **Key Patterns:**
 
 - Use `CubitExceptionHandler` for all async operations
 - Guard all `emit()` calls with `if (isClosed) return;`
 - Use `TypeSafeBlocSelector` for granular rebuilds
-- Cancel subscriptions in `close()`
+- Use `CubitSubscriptionMixin` for automatic subscription cleanup
+- Implement optimistic updates with state rollback for offline-first behavior
+- Split large cubit files into helper files to maintain <250 line limit
 
 ## UI/UX Guidance
 
@@ -374,7 +322,7 @@ class TodoListPage extends StatelessWidget {
         create: () => TodoListCubit(
           repository: getIt<TodoRepository>(),
         ),
-        init: (cubit) => cubit.loadTodos(),
+        init: (cubit) => cubit.loadInitial(),
         builder: (context, cubit) => const _TodoListContent(),
       ),
     );
@@ -418,6 +366,56 @@ TypeSafeBlocBuilder<TodoListCubit, TodoListState>(
 - **Loading**: Use `CommonLoadingWidget` for loading states
 - **Empty State**: Use `CommonStatusView` for empty/error states
 - **Dialogs**: Use `showAdaptiveDialog()` (never raw Material dialogs)
+- **Swipe Gestures**: Use `Dismissible` widget for swipe actions on mobile devices:
+  - Background widgets show action labels and icons
+  - Platform-adaptive styling (iOS vs Material)
+  - Swipe right: Complete/uncomplete items (no confirmation)
+  - Swipe left: Delete items with confirmation dialog
+  - Use `onDeleteWithoutConfirmation` callback to avoid double dialogs
+  - Only enabled on mobile devices (check `!context.isDesktop`)
+
+**Swipe Gesture Implementation:**
+
+```dart
+// lib/features/todo_list/presentation/widgets/todo_list_item.dart
+if (!isMobile) {
+  return cardContent; // No swipe on desktop
+}
+
+return Dismissible(
+  key: ValueKey('todo-dismissible-${item.id}'),
+  background: _buildSwipeBackground(
+    context: context,
+    alignment: Alignment.centerLeft,
+    color: colors.primary,
+    icon: item.isCompleted ? Icons.undo_outlined : Icons.check_circle_outline,
+    label: item.isCompleted
+        ? l10n.todoListUndoAction
+        : l10n.todoListCompleteAction,
+  ),
+  secondaryBackground: _buildSwipeBackground(
+    context: context,
+    alignment: Alignment.centerRight,
+    color: colors.error,
+    icon: Icons.delete_outline,
+    label: l10n.todoListDeleteAction,
+  ),
+  confirmDismiss: (final DismissDirection direction) async {
+    if (direction == DismissDirection.startToEnd) {
+      onToggle(); // Immediate toggle, no dismissal
+      return false;
+    } else {
+      return _confirmDelete(context, item.title, l10n);
+    }
+  },
+  onDismissed: (final DismissDirection direction) {
+    if (direction == DismissDirection.endToStart) {
+      (onDeleteWithoutConfirmation ?? onDelete)();
+    }
+  },
+  child: cardContent,
+);
+```
 
 ## Step-By-Step Implementation Plan
 
@@ -453,11 +451,14 @@ DI updates:
 
 **Cubit Implementation:**
 
-- Create `TodoListCubit` with methods: `loadTodos()`, `addTodo()`, `toggleTodo()`, `deleteTodo()`, `setFilter()`, `clearCompleted()`
+- Create `TodoListCubit` with methods: `loadInitial()`, `addTodo()`, `updateTodo()`, `toggleTodo()`, `deleteTodo()`, `setFilter()`, `clearCompleted()`
 - Use `CubitExceptionHandler` for all async operations
 - Guard all `emit()` calls with `if (isClosed) return;`
-- Subscribe to repository stream in constructor
-- Cancel subscription in `close()`
+- Implement optimistic updates for all mutations
+- Store previous state before mutations for rollback on persistence failure
+- Subscribe to repository stream after initial load
+- Use `CubitSubscriptionMixin` for automatic subscription cleanup
+- Split large methods into helper files to keep main file under 250 lines
 
 **Provider Setup:**
 
@@ -469,6 +470,12 @@ DI updates:
 - Build page with list + filter controls + add/edit dialogs
 - Use `TypeSafeBlocSelector` for list items to prevent unnecessary rebuilds
 - Use `TypeSafeBlocBuilder` for full state rendering
+- **Implement swipe gestures** in `TodoListItem`:
+  - Wrap item in `Dismissible` widget (mobile only)
+  - Swipe right: Toggle completion status
+  - Swipe left: Delete with confirmation dialog
+  - Use `onDeleteWithoutConfirmation` callback to avoid double dialogs
+  - Platform-adaptive swipe backgrounds (iOS vs Material styling)
 
 **Dialog Implementation:**
 
@@ -532,29 +539,40 @@ Future<void> _showAddTodoDialog(BuildContext context) async {
 **Cubit Tests (bloc_test):**
 
 - Test initial state
-- Test `loadTodos()` success and error cases
-- Test `addTodo()`, `toggleTodo()`, `deleteTodo()` flows
+- Test `loadInitial()` success and error cases
+- Test `addTodo()`, `updateTodo()`, `toggleTodo()`, `deleteTodo()` flows with optimistic updates
 - Test filter changes
 - Test subscription cleanup
+- Test state rollback on persistence failures
+- Test no-op conditions (e.g., setFilter with same filter, deleteTodo with missing item)
 
 **Example Cubit Test:**
 
 ```dart
 // test/features/todo_list/presentation/cubit/todo_list_cubit_test.dart
 blocTest<TodoListCubit, TodoListState>(
-  'loadTodos emits success with items',
-  build: () {
-    final repository = MockTodoRepository();
-    when(() => repository.fetchAll()).thenAnswer((_) async => [todo1, todo2]);
-    return TodoListCubit(repository: repository);
+  'loadInitial emits loading then success states',
+  build: () => buildCubit(),
+  act: (final cubit) async {
+    await cubit.loadInitial();
   },
-  act: (cubit) => cubit.loadTodos(),
   expect: () => [
-    const TodoListState(status: ViewStatus.loading),
-    TodoListState(
-      status: ViewStatus.success,
-      items: [todo1, todo2],
-    ),
+    _hasStatus(ViewStatus.loading),
+    _hasStatus(ViewStatus.success),
+  ],
+);
+
+blocTest<TodoListCubit, TodoListState>(
+  'addTodo emits updated list',
+  build: () => buildCubit(),
+  seed: () => const TodoListState(status: ViewStatus.success, items: []),
+  act: (final cubit) async {
+    await cubit.addTodo(title: 'Write tests', description: '');
+  },
+  expect: () => [
+    isA<TodoListState>()
+        .having((final s) => s.items.length, 'items length', 1)
+        .having((final s) => s.items.first.title, 'title', 'Write tests'),
   ],
 );
 ```
@@ -566,6 +584,44 @@ blocTest<TodoListCubit, TodoListState>(
 - Test filter behavior
 - Test add/edit dialogs
 - Test error state display
+- **Test swipe gestures** (mobile only):
+  - Swipe right on active item completes it
+  - Swipe right on completed item uncompletes it
+  - Swipe left shows delete confirmation dialog
+  - Swipe left cancel does not delete item
+  - Swipe right does not dismiss item
+  - Swipe actions only work on mobile devices
+
+**Example Widget Test for Swipe Actions:**
+
+```dart
+// test/features/todo_list/presentation/widgets/todo_list_item_test.dart
+testWidgets('swipe right on active item completes it', (
+  final WidgetTester tester,
+) async {
+  final TodoItem activeItem = TodoItem.create(
+    title: 'Active Task',
+    description: null,
+  );
+
+  await tester.pumpWidget(buildWidget(item: activeItem));
+  await tester.pumpAndSettle();
+
+  final Finder dismissible = find.byType(Dismissible);
+  expect(dismissible, findsOneWidget);
+
+  final Offset start = tester.getCenter(dismissible);
+  final Offset end = start + const Offset(400, 0);
+
+  await tester.drag(dismissible, end - start);
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 300));
+  await tester.pumpAndSettle();
+
+  expect(onToggleCalled, isTrue);
+  expect(toggledItem, equals(activeItem));
+});
+```
 
 **Coverage:**
 
@@ -590,14 +646,27 @@ lib/features/todo_list/
     todo_item_dto.dart
   presentation/
     cubit/
-      todo_list_cubit.dart
+      todo_list_cubit.dart (main, ~180 lines)
+      todo_list_cubit_helpers.dart (static helpers)
+      todo_list_cubit_logging.dart (logging)
+      todo_list_cubit_methods.dart (mixin with private methods)
       todo_list_state.dart
     pages/
       todo_list_page.dart
     widgets/
-      todo_list_item.dart
+      todo_list_item.dart (with swipe gesture support)
       todo_filter_bar.dart
       todo_empty_state.dart
+    helpers/
+      todo_list_dialogs.dart (adaptive dialogs)
+test/features/todo_list/
+  data/
+    hive_todo_repository_test.dart
+  presentation/
+    cubit/
+      todo_list_cubit_test.dart
+    widgets/
+      todo_list_item_test.dart (swipe gesture tests)
 ```
 
 ## Critical Guardrails
@@ -614,6 +683,9 @@ lib/features/todo_list/
 - ✅ **Always guard** async emits: `if (isClosed) return; emit(...)`
 - ✅ **Always cancel** subscriptions/streams in `close()`
 - ✅ **Always use** `CubitExceptionHandler` for async operations
+- ✅ **Always use** `CubitSubscriptionMixin` for automatic subscription cleanup
+- ✅ **Always implement** optimistic updates with state rollback for offline-first behavior
+- ✅ **Always check** `isClosed` at the start of public methods
 - ❌ **Never** perform side effects in `build()`
 - ❌ **Never** emit after cubit is closed
 
@@ -632,8 +704,11 @@ lib/features/todo_list/
 - ✅ **Always use** `PlatformAdaptive.*` widgets (never raw Material buttons)
 - ✅ **Always use** `showAdaptiveDialog()` (never raw Material dialogs)
 - ✅ **Always use** responsive helpers: `context.pagePadding`, `context.responsiveGap`
+- ✅ **Always implement** swipe gestures on mobile devices for better UX (iOS-style)
+- ✅ **Always provide** `onDeleteWithoutConfirmation` callback for swipe-to-delete to avoid double dialogs
 - ❌ **Never** use `Colors.black`, `Colors.white`, etc.
 - ❌ **Never** hard-code strings in widgets
+- ❌ **Never** enable swipe gestures on desktop (use `context.isDesktop` check)
 
 ## Optional Enhancements
 
@@ -646,8 +721,12 @@ lib/features/todo_list/
 
 ### UX Enhancements
 
+- ✅ **Swipe gesture support** (implemented):
+  - Swipe right: Complete/uncomplete items
+  - Swipe left: Delete items with confirmation
+  - Native iOS-style swipe backgrounds with icons and labels
+  - Mobile-only (disabled on desktop)
 - Add undo snackbar via `CommonStatusView` patterns
-- Add swipe-to-delete gesture support
 - Add drag-to-reorder functionality
 - Add search and sorting capabilities
 

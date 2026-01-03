@@ -988,6 +988,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get todoListDeleteAction => 'Delete';
 
   @override
+  String get todoListEditAction => 'Bearbeiten';
+
+  @override
+  String get todoListCompleteAction => 'Abschließen';
+
+  @override
+  String get todoListUndoAction => 'Als aktiv markieren';
+
+  @override
   String get todoListDeleteDialogTitle => 'Delete todo?';
 
   @override

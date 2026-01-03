@@ -989,6 +989,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get todoListDeleteAction => 'Delete';
 
   @override
+  String get todoListEditAction => 'Modifier';
+
+  @override
+  String get todoListCompleteAction => 'Terminer';
+
+  @override
+  String get todoListUndoAction => 'Marquer comme active';
+
+  @override
   String get todoListDeleteDialogTitle => 'Delete todo?';
 
   @override
