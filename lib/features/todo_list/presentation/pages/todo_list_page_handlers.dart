@@ -8,6 +8,7 @@ Future<void> _handleAddTodo(final BuildContext context) async {
   if (!context.mounted) {
     return;
   }
+  unawaited(HapticFeedback.selectionClick());
   await context.cubit<TodoListCubit>().addTodo(
     title: result.title,
     description: result.description,

@@ -24,6 +24,8 @@ This document provides a comprehensive guide for implementing a Todo List featur
 - View list grouped or filtered by status (All, Active, Completed).
 - Search todos by title or description.
 - View statistics (total, active, completed counts).
+- **Sort todos** by date (newest/oldest first), title (A-Z/Z-A), or manual order.
+- **Drag-to-reorder** items when manual sorting is active.
 - Persist todos locally across app launches.
 - **Swipe gestures on mobile devices**:
   - Swipe right: Complete active items or uncomplete completed items
@@ -44,8 +46,7 @@ This document provides a comprehensive guide for implementing a Todo List featur
 ### Stretch Goals (Optional)
 
 - Due dates and priority.
-- Search and sorting.
-- Batch actions (clear completed, select multiple).
+- Batch actions (select multiple).
 - Deferred route loading if dependencies grow heavy.
 
 ## Data Model
@@ -198,7 +199,11 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
 - `cubit/todo_list_state.dart` (Freezed)
 - `pages/todo_list_page.dart`
 - `widgets/todo_list_item.dart` (with swipe gesture support)
-- `widgets/` for filters, empty state
+- `widgets/todo_filter_bar.dart` (filter chips)
+- `widgets/todo_empty_state.dart` (empty state)
+- `widgets/todo_stats_widget.dart` (statistics display)
+- `widgets/todo_search_field.dart` (search input)
+- `widgets/todo_sort_bar.dart` (sort selection)
 - `helpers/todo_list_dialogs.dart` (adaptive dialogs)
 
 **State Definition (Freezed):**
@@ -218,6 +223,8 @@ abstract class TodoListState with _$TodoListState {
     @Default(<TodoItem>[]) final List<TodoItem> items,
     @Default(TodoFilter.all) final TodoFilter filter,
     @Default('') final String searchQuery,
+    @Default(TodoSortOrder.dateDesc) final TodoSortOrder sortOrder,
+    @Default(<String, int>{}) final Map<String, int> manualOrder,
     final String? errorMessage,
   }) = _TodoListState;
 
@@ -228,6 +235,12 @@ abstract class TodoListState with _$TodoListState {
   bool get hasItems => items.isNotEmpty;
 
   List<TodoItem> get filteredItems {
+    // Early return if no items
+    if (items.isEmpty) {
+      return const <TodoItem>[];
+    }
+
+    // Apply filter
     List<TodoItem> result = switch (filter) {
       TodoFilter.all => items,
       TodoFilter.active =>
@@ -236,6 +249,12 @@ abstract class TodoListState with _$TodoListState {
         items.where((final item) => item.isCompleted).toList(growable: false),
     };
 
+    // Early return if filter resulted in empty list
+    if (result.isEmpty) {
+      return const <TodoItem>[];
+    }
+
+    // Apply search query if present
     if (searchQuery.isNotEmpty) {
       final String query = searchQuery.toLowerCase();
       result = result
@@ -245,13 +264,67 @@ abstract class TodoListState with _$TodoListState {
                 (item.description?.toLowerCase().contains(query) ?? false),
           )
           .toList(growable: false);
+
+      // Early return if search resulted in empty list
+      if (result.isEmpty) {
+        return const <TodoItem>[];
+      }
     }
 
-    return result;
+    // Apply sorting
+    return _applySorting(result);
   }
+
+  List<TodoItem> _applySorting(final List<TodoItem> items) {
+    final List<TodoItem> sorted = List<TodoItem>.from(items);
+
+    switch (sortOrder) {
+      case TodoSortOrder.dateDesc:
+        sorted.sort((final a, final b) => b.updatedAt.compareTo(a.updatedAt));
+        break;
+      case TodoSortOrder.dateAsc:
+        sorted.sort((final a, final b) => a.updatedAt.compareTo(b.updatedAt));
+        break;
+      case TodoSortOrder.titleAsc:
+        sorted.sort(
+          (final a, final b) =>
+              a.title.toLowerCase().compareTo(b.title.toLowerCase()),
+        );
+        break;
+      case TodoSortOrder.titleDesc:
+        sorted.sort(
+          (final a, final b) =>
+              b.title.toLowerCase().compareTo(a.title.toLowerCase()),
+        );
+        break;
+      case TodoSortOrder.manual:
+        sorted.sort((final a, final b) {
+          final int orderA = manualOrder[a.id] ?? 0;
+          final int orderB = manualOrder[b.id] ?? 0;
+          if (orderA != orderB) {
+            return orderA.compareTo(orderB);
+          }
+          // Fallback to date desc if order not set
+          return b.updatedAt.compareTo(a.updatedAt);
+        });
+        break;
+    }
+
+    return List<TodoItem>.unmodifiable(sorted);
+  }
+
+  bool get hasCompleted => items.any((final item) => item.isCompleted);
 }
 
 enum TodoFilter { all, active, completed }
+
+enum TodoSortOrder {
+  dateDesc,
+  dateAsc,
+  titleAsc,
+  titleDesc,
+  manual,
+}
 ```
 
 **Cubit Implementation Pattern:**
@@ -266,14 +339,22 @@ part 'todo_list_cubit_methods.dart';
 
 class TodoListCubit extends Cubit<TodoListState>
     with CubitSubscriptionMixin<TodoListState>, _TodoListCubitMethods {
-  TodoListCubit({required this.repository}) : super(const TodoListState());
+  TodoListCubit({
+    required this.repository,
+    required final TimerService timerService,
+    this.searchDebounceDuration = const Duration(milliseconds: 300),
+  })  : _timerService = timerService,
+        super(const TodoListState());
 
   @override
   final TodoRepository repository;
+  final TimerService _timerService;
+  final Duration searchDebounceDuration;
   @override
   StreamSubscription<List<TodoItem>>? subscription;
   @override
   bool isLoading = false;
+  TimerDisposable? _searchDebounceHandle;
 
   Future<void> loadInitial() async {
     if (isClosed || isLoading) return;
@@ -309,7 +390,71 @@ class TodoListCubit extends Cubit<TodoListState>
 
   void setSearchQuery(final String query) {
     if (isClosed) return;
-    emit(state.copyWith(searchQuery: query.trim()));
+    _cancelSearchDebounce();
+    final String trimmedQuery = query.trim();
+
+    // If query is empty, update immediately
+    if (trimmedQuery.isEmpty) {
+      emit(state.copyWith(searchQuery: ''));
+      return;
+    }
+
+    // Debounce the search query update (300ms default)
+    _searchDebounceHandle = _timerService.runOnce(
+      searchDebounceDuration,
+      () {
+        if (isClosed) return;
+        emit(state.copyWith(searchQuery: trimmedQuery));
+      },
+    );
+  }
+
+  void _cancelSearchDebounce() {
+    _searchDebounceHandle?.dispose();
+    _searchDebounceHandle = null;
+  }
+
+  void setSortOrder(final TodoSortOrder sortOrder) {
+    if (isClosed || sortOrder == state.sortOrder) return;
+    emit(state.copyWith(sortOrder: sortOrder));
+  }
+
+  void reorderItems({
+    required final int oldIndex,
+    required final int newIndex,
+  }) {
+    if (isClosed) return;
+    if (state.sortOrder != TodoSortOrder.manual) {
+      // Switch to manual sort mode
+      final Map<String, int> newManualOrder = <String, int>{};
+      for (int i = 0; i < state.filteredItems.length; i++) {
+        newManualOrder[state.filteredItems[i].id] = i;
+      }
+      emit(
+        state.copyWith(
+          sortOrder: TodoSortOrder.manual,
+          manualOrder: newManualOrder,
+        ),
+      );
+    }
+
+    final List<TodoItem> items = List<TodoItem>.from(state.filteredItems);
+    int adjustedNewIndex = newIndex;
+    if (oldIndex < newIndex) {
+      adjustedNewIndex -= 1;
+    }
+    final TodoItem item = items.removeAt(oldIndex);
+    items.insert(adjustedNewIndex, item);
+
+    // Update manual order
+    final Map<String, int> updatedOrder = Map<String, int>.from(
+      state.manualOrder,
+    );
+    for (int i = 0; i < items.length; i++) {
+      updatedOrder[items[i].id] = i;
+    }
+
+    emit(state.copyWith(manualOrder: updatedOrder));
   }
 
   // ... other methods
@@ -401,8 +546,11 @@ TypeSafeBlocBuilder<TodoListCubit, TodoListState>(
 - **Dialogs**: Use `showAdaptiveDialog()` (never raw Material dialogs)
 - **TodoStats Widget**: Displays total, active, and completed counts using `TypeSafeBlocSelector` for efficient rebuilds. Only shows when there are items.
 - **TodoSearchField**: Real-time search with clear button. Filters todos by title and description as user types.
+- **TodoSortBar**: Popup menu button showing current sort method (Date, Title, Manual) with dropdown arrow. Displays selected sort method text next to sort icon.
 - **Undo Snackbar**: Shows after delete actions with undo button. Uses `ScaffoldMessenger` with 3-second duration.
 - **RepaintBoundary**: Wraps each `TodoListItem` to prevent unnecessary repaints and improve performance.
+- **Drag Handle**: Visible only when manual sorting is active. Shows drag handle icon (☰) on the left side of each item.
+- **ReorderableListView**: Used when manual sort mode is active, allowing drag-to-reorder functionality.
 - **Swipe Gestures**: Use `Dismissible` widget for swipe actions on mobile devices:
   - Background widgets show action labels and icons
   - Platform-adaptive styling (iOS vs Material)
@@ -488,7 +636,9 @@ DI updates:
 
 **Cubit Implementation:**
 
-- Create `TodoListCubit` with methods: `loadInitial()`, `addTodo()`, `updateTodo()`, `toggleTodo()`, `deleteTodo()`, `undoDelete()`, `setFilter()`, `setSearchQuery()`, `clearCompleted()`
+- Create `TodoListCubit` with methods: `loadInitial()`, `addTodo()`, `updateTodo()`, `toggleTodo()`, `deleteTodo()`, `undoDelete()`, `setFilter()`, `setSearchQuery()`, `setSortOrder()`, `reorderItems()`, `clearCompleted()`, `refresh()`
+- Inject `TimerService` for search debouncing (300ms default)
+- Implement search debouncing to reduce filtering operations while typing
 - Store `_lastDeletedItem` for undo functionality
 - Use `CubitExceptionHandler` for all async operations
 - Guard all `emit()` calls with `if (isClosed) return;`
@@ -505,12 +655,19 @@ DI updates:
 
 **UI Components:**
 
-- Build page with stats widget, search field, filter controls, list, and add/edit dialogs
+- Build page with stats widget, search field, filter controls, sort button, list, and add/edit dialogs
 - Add `TodoStatsWidget` at the top (shows when items exist)
 - Add `TodoSearchField` below stats (shows when items exist)
+- Add `TodoFilterBar` with filter chips (All, Active, Completed)
+- Add `TodoSortBar` and "Clear Completed" button in the same row, right-aligned (shows when items exist)
+- Use `ReorderableListView` when `sortOrder == TodoSortOrder.manual` for drag-to-reorder
+- Use `ListView.separated` for other sort modes
 - Use `TypeSafeBlocSelector` for list items to prevent unnecessary rebuilds
 - Use `TypeSafeBlocBuilder` for full state rendering
 - Wrap each `TodoListItem` in `RepaintBoundary` for performance
+- Show drag handle icon only when manual sorting is active
+- Use `ListView.builder` for lists with 100+ items (automatic switch from `ListView.separated`)
+- Set `cacheExtent: 500` on all list views for better scrolling performance
 - **Implement swipe gestures** in `TodoListItem`:
   - Wrap item in `Dismissible` widget (mobile only)
   - Swipe right: Toggle completion status
@@ -587,9 +744,11 @@ Future<void> _showAddTodoDialog(BuildContext context) async {
 - Test `loadInitial()` success and error cases
 - Test `addTodo()`, `updateTodo()`, `toggleTodo()`, `deleteTodo()` flows with optimistic updates
 - Test filter changes
+- Test sort order changes (`setSortOrder()`)
+- Test drag-to-reorder (`reorderItems()`)
 - Test subscription cleanup
 - Test state rollback on persistence failures
-- Test no-op conditions (e.g., setFilter with same filter, deleteTodo with missing item)
+- Test no-op conditions (e.g., setFilter with same filter, setSortOrder with same order, deleteTodo with missing item)
 
 **Example Cubit Test:**
 
@@ -698,12 +857,15 @@ lib/features/todo_list/
       todo_list_state.dart
     pages/
       todo_list_page.dart
+      todo_list_page_handlers.dart (part file with handler functions)
     widgets/
       todo_list_item.dart (with swipe gesture support)
       todo_filter_bar.dart
       todo_empty_state.dart
       todo_stats_widget.dart (stats display)
       todo_search_field.dart (search input)
+      todo_sort_bar.dart (sort selection with popup menu)
+      todo_list_view.dart (optimized list view widget)
     helpers/
       todo_list_dialogs.dart (adaptive dialogs)
 test/features/todo_list/
@@ -753,9 +915,13 @@ test/features/todo_list/
 - ✅ **Always use** responsive helpers: `context.pagePadding`, `context.responsiveGap`
 - ✅ **Always implement** swipe gestures on mobile devices for better UX (iOS-style)
 - ✅ **Always provide** `onDeleteWithoutConfirmation` callback for swipe-to-delete to avoid double dialogs
+- ✅ **Always show** drag handle only when manual sorting is active
+- ✅ **Always use** `ReorderableListView` for manual sort mode, `ListView.separated` for other modes
+- ✅ **Always display** selected sort method next to sort button icon
 - ❌ **Never** use `Colors.black`, `Colors.white`, etc.
 - ❌ **Never** hard-code strings in widgets
 - ❌ **Never** enable swipe gestures on desktop (use `context.isDesktop` check)
+- ❌ **Never** show drag handle when manual sorting is not active
 
 ## Optional Enhancements
 
@@ -763,8 +929,11 @@ test/features/todo_list/
 
 - ✅ **TodoStats widget** (implemented): Displays total, active, and completed counts using `TypeSafeBlocSelector`
 - ✅ **RepaintBoundary** (implemented): Wraps each list item to prevent unnecessary repaints
-- Use `ListView.builder` for large lists (100+ items)
-- Consider lazy loading if list grows beyond 1000 items
+- ✅ **Search debouncing** (implemented): 300ms debounce on search input to reduce unnecessary filtering operations while typing
+- ✅ **ListView cache optimization** (implemented): `cacheExtent: 500` on all list views to improve scrolling performance
+- ✅ **Filtered items optimization** (implemented): Early returns for empty lists to avoid unnecessary filtering/sorting operations
+- ✅ **ListView.builder for large lists** (implemented): Automatically switches to `ListView.builder` when list has 100+ items for better performance
+- Consider lazy loading if list grows beyond 1000 items (future enhancement)
 
 ### UX Enhancements
 
@@ -775,8 +944,17 @@ test/features/todo_list/
   - Mobile-only (disabled on desktop)
 - ✅ **Undo snackbar** (implemented): Shows after delete actions with undo button using `ScaffoldMessenger`
 - ✅ **Search functionality** (implemented): Real-time search by title and description with clear button
-- Add drag-to-reorder functionality
-- Add sorting capabilities
+- ✅ **Sorting capabilities** (implemented):
+  - Sort by date (newest/oldest first)
+  - Sort by title (A-Z/Z-A)
+  - Manual sort with drag-to-reorder
+  - Sort button displays current selection
+  - Sort order persists during session
+- ✅ **Drag-to-reorder functionality** (implemented):
+  - Enabled when manual sort mode is active
+  - Uses `ReorderableListView` for smooth drag interactions
+  - Drag handle icon (☰) visible only in manual mode
+  - Manual order stored in state and preserved when adding new items
 
 ### Feature Enhancements
 
