@@ -35,7 +35,7 @@ void main() {
       expect(result, isEmpty);
     });
 
-    test('upsert persists items and sorts by updatedAt desc', () async {
+    test('save persists items and sorts by updatedAt desc', () async {
       final TodoItem older = _todoItem(
         id: 'a',
         title: 'Older',
@@ -47,8 +47,8 @@ void main() {
         updatedAt: DateTime.utc(2024, 1, 2),
       );
 
-      await repository.upsert(older);
-      await repository.upsert(newer);
+      await repository.save(older);
+      await repository.save(newer);
 
       final List<TodoItem> result = await repository.fetchAll();
       expect(result.length, 2);
@@ -56,7 +56,7 @@ void main() {
       expect(result.last.id, 'a');
     });
 
-    test('upsert updates an existing item', () async {
+    test('save updates an existing item', () async {
       final TodoItem original = _todoItem(
         id: 'a',
         title: 'Original',
@@ -67,8 +67,8 @@ void main() {
         updatedAt: DateTime.utc(2024, 1, 3),
       );
 
-      await repository.upsert(original);
-      await repository.upsert(updated);
+      await repository.save(original);
+      await repository.save(updated);
 
       final List<TodoItem> result = await repository.fetchAll();
       expect(result.length, 1);
@@ -78,7 +78,7 @@ void main() {
 
     test('delete removes an item', () async {
       final TodoItem item = _todoItem(id: 'a', title: 'Delete');
-      await repository.upsert(item);
+      await repository.save(item);
 
       await repository.delete('a');
 
@@ -94,8 +94,8 @@ void main() {
         isCompleted: true,
       );
 
-      await repository.upsert(active);
-      await repository.upsert(completed);
+      await repository.save(active);
+      await repository.save(completed);
 
       await repository.clearCompleted();
 
@@ -121,8 +121,8 @@ void main() {
       // Wait a bit to ensure the watch is set up
       await Future<void>.delayed(const Duration(milliseconds: 10));
 
-      // Now upsert - the watch should emit
-      await repository.upsert(item);
+      // Now save - the watch should emit
+      await repository.save(item);
       await expectation;
     });
   });

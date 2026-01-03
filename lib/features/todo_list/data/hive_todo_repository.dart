@@ -42,12 +42,12 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
   }
 
   @override
-  Future<void> upsert(final TodoItem item) async => StorageGuard.run<void>(
-    logContext: 'HiveTodoRepository.upsert',
+  Future<void> save(final TodoItem item) async => StorageGuard.run<void>(
+    logContext: 'HiveTodoRepository.save',
     action: () async {
       final Box<dynamic> box = await getBox();
       final List<TodoItem> existing = await _loadFromBox(box);
-      final List<TodoItem> updated = _upsertItem(existing, item);
+      final List<TodoItem> updated = _applyItem(existing, item);
       await _save(box, updated);
     },
   );
@@ -105,7 +105,7 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
     // The box.watch() in watchAll() will automatically emit when _keyTodos changes
   }
 
-  List<TodoItem> _upsertItem(
+  List<TodoItem> _applyItem(
     final List<TodoItem> existing,
     final TodoItem item,
   ) {

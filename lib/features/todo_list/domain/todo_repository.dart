@@ -5,7 +5,7 @@ abstract class TodoRepository {
 
   Future<List<TodoItem>> fetchAll();
 
-  Future<void> upsert(final TodoItem item);
+  Future<void> save(final TodoItem item);
 
   Future<void> delete(final String id);
 

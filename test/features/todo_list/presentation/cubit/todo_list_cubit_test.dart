@@ -251,7 +251,7 @@ class _FakeTodoRepository implements TodoRepository {
   Future<List<TodoItem>> fetchAll() async => _snapshot();
 
   @override
-  Future<void> upsert(final TodoItem item) async {
+  Future<void> save(final TodoItem item) async {
     final int index = _items.indexWhere(
       (final current) => current.id == item.id,
     );

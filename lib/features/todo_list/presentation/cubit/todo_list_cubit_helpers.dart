@@ -4,8 +4,8 @@ part of 'todo_list_cubit.dart';
 class _TodoListCubitHelpers {
   _TodoListCubitHelpers._();
 
-  /// upsets an item into a list, maintaining sort order by updatedAt descending.
-  static List<TodoItem> upsertInList(
+  /// saves an item into a list, maintaining sort order by updatedAt descending.
+  static List<TodoItem> saveInList(
     final List<TodoItem> items,
     final TodoItem item,
   ) {
