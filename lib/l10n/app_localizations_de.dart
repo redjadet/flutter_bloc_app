@@ -1005,6 +1005,12 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get todoListSearchHint => 'Todos suchen...';
+
+  @override
+  String get todoListDeleteUndone => 'Todo gelöscht';
+
+  @override
   String get todoListAddDialogTitle => 'New todo';
 
   @override

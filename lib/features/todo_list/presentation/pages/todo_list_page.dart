@@ -6,6 +6,8 @@ import 'package:flutter_bloc_app/features/todo_list/presentation/helpers/todo_li
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_empty_state.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_filter_bar.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_search_field.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_stats_widget.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
@@ -43,6 +45,7 @@ class _TodoListBody extends StatelessWidget {
           filteredItems: state.filteredItems,
           filter: state.filter,
           hasCompleted: state.hasCompleted,
+          searchQuery: state.searchQuery,
         ),
         builder: (final context, final data) {
           if (data.isLoading) {
@@ -62,6 +65,12 @@ class _TodoListBody extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                const TodoStatsWidget(),
+                if (data.items.isNotEmpty) ...[
+                  SizedBox(height: context.responsiveGapM),
+                  const TodoSearchField(),
+                ],
+                SizedBox(height: context.responsiveGapM),
                 TodoFilterBar(
                   filter: data.filter,
                   hasCompleted: data.hasCompleted,
@@ -83,14 +92,17 @@ class _TodoListBody extends StatelessWidget {
                               SizedBox(height: context.responsiveGapS),
                           itemBuilder: (final context, final index) {
                             final TodoItem item = data.filteredItems[index];
-                            return TodoListItem(
-                              key: ValueKey('todo-${item.id}'),
-                              item: item,
-                              onToggle: () => cubit.toggleTodo(item),
-                              onEdit: () => _handleEditTodo(context, item),
-                              onDelete: () => _handleDeleteTodo(context, item),
-                              onDeleteWithoutConfirmation: () =>
-                                  cubit.deleteTodo(item),
+                            return RepaintBoundary(
+                              child: TodoListItem(
+                                key: ValueKey('todo-${item.id}'),
+                                item: item,
+                                onToggle: () => cubit.toggleTodo(item),
+                                onEdit: () => _handleEditTodo(context, item),
+                                onDelete: () =>
+                                    _handleDeleteTodo(context, item),
+                                onDeleteWithoutConfirmation: () =>
+                                    _handleDeleteWithUndo(context, item, cubit),
+                              ),
                             );
                           },
                         ),
@@ -120,6 +132,7 @@ class _TodoListViewData {
     required this.filteredItems,
     required this.filter,
     required this.hasCompleted,
+    required this.searchQuery,
   });
 
   final bool isLoading;
@@ -129,6 +142,7 @@ class _TodoListViewData {
   final List<TodoItem> filteredItems;
   final TodoFilter filter;
   final bool hasCompleted;
+  final String searchQuery;
 }
 
 Future<void> _handleAddTodo(final BuildContext context) async {
@@ -180,5 +194,31 @@ Future<void> _handleDeleteTodo(
   if (!context.mounted) {
     return;
   }
-  await context.cubit<TodoListCubit>().deleteTodo(item);
+  await _handleDeleteWithUndo(context, item, context.cubit<TodoListCubit>());
+}
+
+Future<void> _handleDeleteWithUndo(
+  final BuildContext context,
+  final TodoItem item,
+  final TodoListCubit cubit,
+) async {
+  await cubit.deleteTodo(item);
+  if (!context.mounted) {
+    return;
+  }
+
+  final TodoItem? lastDeleted = cubit.lastDeletedItem;
+  if (lastDeleted != null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(context.l10n.todoListDeleteUndone),
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: context.l10n.todoListUndoAction,
+          onPressed: () => cubit.undoDelete(),
+        ),
+      ),
+    );
+  }
 }

@@ -1282,6 +1282,14 @@
       }
     }
   },
+  "todoListSearchHint": "Search todos...",
+  "@todoListSearchHint": {
+    "description": "Hint text for the todo search field"
+  },
+  "todoListDeleteUndone": "Todo deleted",
+  "@todoListDeleteUndone": {
+    "description": "Message shown when a todo is deleted"
+  },
   "todoListAddDialogTitle": "New todo",
   "@todoListAddDialogTitle": {
     "description": "Title for the add todo dialog"

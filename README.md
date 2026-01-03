@@ -5,7 +5,7 @@ A production-grade Flutter application demonstrating enterprise-level architectu
 [![Flutter](https://img.shields.io/badge/Flutter-3.38.5-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.10.4-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-81%2E73%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-80%2E94%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
 [![State Management](https://img.shields.io/badge/State%20Management-BLOC%2FCubit-2196F3.svg)](https://pub.dev/packages/flutter_bloc)
@@ -91,6 +91,10 @@ This project follows industry best practices:
 | Color Picker | Whiteboard | Markdown Editor |
 | --- | --- | --- |
 | ![Whiteboard color picker](assets/screenshots/whiteboard_color_pick.png) | ![Whiteboard](assets/screenshots/whiteboard.png) | ![Markdown Editor](assets/screenshots/markdown_editor.png) |
+
+| Todo List | Todo List Swipe Action |
+| --- | --- |
+| ![Todo List screen](assets/screenshots/todolist.png) | ![Todo List swipe action](assets/screenshots/todolistSwipe.png) |
 
 ## 🚀 Quick Start
 

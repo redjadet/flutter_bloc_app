@@ -1006,6 +1006,12 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get todoListSearchHint => 'Rechercher des tâches...';
+
+  @override
+  String get todoListDeleteUndone => 'Tâche supprimée';
+
+  @override
   String get todoListAddDialogTitle => 'New todo';
 
   @override
