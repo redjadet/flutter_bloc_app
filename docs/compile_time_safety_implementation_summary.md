@@ -2,7 +2,7 @@
 
 This document summarizes all compile-time safety features implemented for BLoC/Cubit in this codebase.
 
-**Recent Improvements:** See [Improvements Analysis](compile_time_safety_improvements_analysis.md) for details on recent optimizations to `selectState` and `validateStateExhaustiveness`.
+**Recent Improvements:** See [Recent Improvements](#recent-improvements) section below for details on optimizations to `selectState`, `validateStateExhaustiveness`, error handling, and code generation.
 
 ## Implementation Status
 
@@ -185,9 +185,7 @@ Widget buildStateWidget(DeepLinkState state) {
 12. `docs/remaining_tasks_plan.md`
 13. `docs/equatable_to_freezed_conversion.md`
 14. `docs/sealed_classes_migration.md`
-15. `docs/remaining_tasks_summary.md`
-16. `docs/compile_time_safety_improvements_analysis.md`
-17. `docs/compile_time_safety_implementation_summary.md`
+15. `docs/compile_time_safety_implementation_summary.md`
 
 ### Modified Files (Recent)
 
@@ -282,6 +280,67 @@ Widget buildStateWidget(DeepLinkState state) {
 - Consistent with other states in codebase
 - Reduced boilerplate code
 
+## Recent Improvements
+
+### 1. `selectState` - Performance Optimization with `context.select`
+
+**File:** `lib/shared/extensions/type_safe_bloc_access.dart`
+
+**Change:** The `selectState` method now uses `context.select` instead of `context.watch`, ensuring rebuilds only occur when the selected value changes.
+
+**Benefits:**
+- Performance optimization: Widgets only rebuild when the selected slice of state actually changes
+- Matches documentation: Implementation correctly matches documented behavior
+- Proper Flutter pattern: Uses Flutter's built-in `context.select` for optimal performance
+
+### 2. `validateStateExhaustiveness` - Flexible Return Type
+
+**File:** `lib/shared/utils/bloc_lint_helpers.dart`
+
+**Change:** The method now accepts a generic return type `R` for the handler, allowing any return type instead of requiring the same type as the state.
+
+**Benefits:**
+- Matches documented examples: Switch expressions returning strings now compile correctly
+- More flexible API: Handlers can return any type (String, Widget, bool, etc.)
+- Better type safety: Generic `R` type is properly inferred
+
+### 3. Type-Safe BLoC Access Error Handling Improvements
+
+**File:** `lib/shared/extensions/type_safe_bloc_access.dart`
+
+**Change:** Tightened error handling to only intercept `ProviderNotFoundException` and preserve stack traces for better debugging.
+
+**Benefits:**
+- Better debugging: Original stack traces preserved
+- No error masking: Unrelated errors pass through unchanged
+- Clearer error messages: Only missing provider errors are intercepted
+
+### 4. Switch Helper Signature Improvements
+
+**Files:**
+- `lib/features/chat/presentation/chat_list_state.switch_helper.dart`
+- `lib/features/remote_config/presentation/cubit/remote_config_state.switch_helper.dart`
+
+**Changes:**
+- Uses concrete types (`List<ChatContact>`, `String`) instead of `dynamic`
+- Uses named parameters for functions with boolean parameters
+- Satisfies lint rules automatically (`avoid_positional_boolean_parameters`)
+
+**Benefits:**
+- Better compile-time type checking
+- Improved IDE autocomplete
+- Lint compliance achieved
+
+### 5. Code Generation Improvements
+
+The `tool/generate_sealed_switch.dart` script has been improved to:
+- Generate concrete types instead of `dynamic` (extracts from field declarations)
+- Use named parameters for functions with boolean parameters or when constructor uses named parameters
+- Extract proper types from state class definitions using improved regex patterns
+- Satisfy lint rules automatically
+
+**See:** [Code Generation Guide](code_generation_guide.md) for details on using the generator.
+
 ## Next Steps
 
 ### High Priority
@@ -298,7 +357,6 @@ Widget buildStateWidget(DeepLinkState state) {
 
 - [Compile-Time Safety Usage Guide](compile_time_safety_usage.md) - How to use all features
 - [Quick Reference](compile_time_safety_quick_reference.md) - Quick lookup
-- [Improvements Analysis](compile_time_safety_improvements_analysis.md) - Recent optimizations and improvements
 - [Migration Guide](migration_to_type_safe_bloc.md) - Step-by-step migration instructions
 - [Code Generation Guide](code_generation_guide.md) - Complete guide for script-based and build_runner code generation
 - [State Management Choice](state_management_choice.md) - Complete rationale and comparison

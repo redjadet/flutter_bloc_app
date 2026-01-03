@@ -118,4 +118,6 @@ BlocProviderHelpers.withCubitAsyncInit<CounterCubit, CounterState>(
 ## Related Documentation
 
 - [Complete Usage Guide](compile_time_safety_usage.md) - Detailed examples and best practices
+- [Implementation Summary](compile_time_safety_implementation_summary.md) - Complete feature list and recent improvements
+- [Migration Guide](migration_to_type_safe_bloc.md) - Step-by-step migration instructions
 - [State Management Choice](state_management_choice.md) - Why BLoC/Cubit and compile-time safety rationale
