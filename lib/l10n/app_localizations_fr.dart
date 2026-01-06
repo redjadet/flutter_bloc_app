@@ -1012,22 +1012,80 @@ class AppLocalizationsFr extends AppLocalizations {
   String get todoListDeleteUndone => 'Tâche supprimée';
 
   @override
-  String get todoListSortAction => 'Sort';
+  String get todoListSortAction => 'Trier';
 
   @override
-  String get todoListSortDateDesc => 'Date (newest first)';
+  String get todoListSortDateDesc => 'Date (la plus récente d\'abord)';
 
   @override
-  String get todoListSortDateAsc => 'Date (oldest first)';
+  String get todoListSortDateAsc => 'Date (la plus ancienne d\'abord)';
 
   @override
-  String get todoListSortTitleAsc => 'Title (A-Z)';
+  String get todoListSortTitleAsc => 'Titre (A à Z)';
 
   @override
-  String get todoListSortTitleDesc => 'Title (Z-A)';
+  String get todoListSortTitleDesc => 'Titre (Z à A)';
 
   @override
-  String get todoListSortManual => 'Manual (drag to reorder)';
+  String get todoListSortManual => 'Manuel (glisser pour réorganiser)';
+
+  @override
+  String get todoListSortPriorityDesc => 'Priorité (élevée à faible)';
+
+  @override
+  String get todoListSortPriorityAsc => 'Priorité (faible à élevée)';
+
+  @override
+  String get todoListSortDueDateAsc =>
+      'Date d\'échéance (la plus proche d\'abord)';
+
+  @override
+  String get todoListSortDueDateDesc =>
+      'Date d\'échéance (la plus éloignée d\'abord)';
+
+  @override
+  String get todoListPriorityNone => 'None';
+
+  @override
+  String get todoListPriorityLow => 'Low';
+
+  @override
+  String get todoListPriorityMedium => 'Medium';
+
+  @override
+  String get todoListPriorityHigh => 'High';
+
+  @override
+  String get todoListDueDateLabel => 'Due date';
+
+  @override
+  String get todoListNoDueDate => 'Aucune date d\'échéance';
+
+  @override
+  String get todoListClearDueDate => 'Effacer la date d\'échéance';
+
+  @override
+  String get todoListPriorityLabel => 'Priority';
+
+  @override
+  String get todoListSelectAll => 'Select all';
+
+  @override
+  String get todoListClearSelection => 'Clear selection';
+
+  @override
+  String get todoListBatchDelete => 'Delete selected';
+
+  @override
+  String get todoListBatchComplete => 'Complete selected';
+
+  @override
+  String get todoListBatchUncomplete => 'Uncomplete selected';
+
+  @override
+  String todoListItemsSelected(int count) {
+    return '$count selected';
+  }
 
   @override
   String get todoListAddDialogTitle => 'New todo';

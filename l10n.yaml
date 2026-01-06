@@ -5,3 +5,4 @@ output-class: AppLocalizations
 output-dir: lib/l10n
 nullable-getter: false
 use-deferred-loading: false
+untranslated-messages-file: untranslated_messages.json

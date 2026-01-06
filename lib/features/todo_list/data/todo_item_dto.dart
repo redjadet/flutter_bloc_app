@@ -8,6 +8,8 @@ class TodoItemDto {
     required this.isCompleted,
     required this.createdAt,
     required this.updatedAt,
+    this.dueDate,
+    this.priority = TodoPriority.none,
   });
 
   TodoItemDto.fromDomain(final TodoItem item)
@@ -16,7 +18,9 @@ class TodoItemDto {
       description = item.description,
       isCompleted = item.isCompleted,
       createdAt = item.createdAt,
-      updatedAt = item.updatedAt;
+      updatedAt = item.updatedAt,
+      dueDate = item.dueDate,
+      priority = item.priority;
 
   factory TodoItemDto.fromMap(final Map<dynamic, dynamic> raw) {
     final Map<String, dynamic> normalized = raw.map(
@@ -32,6 +36,8 @@ class TodoItemDto {
     final bool isCompleted = _coerceBool(normalized['isCompleted']);
     final DateTime? createdAt = _parseDate(normalized['createdAt']);
     final DateTime? updatedAt = _parseDate(normalized['updatedAt']);
+    final DateTime? dueDate = _parseDate(normalized['dueDate']);
+    final TodoPriority priority = _parsePriority(normalized['priority']);
     if (createdAt == null || updatedAt == null) {
       throw const FormatException('Invalid TodoItem payload');
     }
@@ -42,6 +48,8 @@ class TodoItemDto {
       isCompleted: isCompleted,
       createdAt: createdAt,
       updatedAt: updatedAt,
+      dueDate: dueDate,
+      priority: priority,
     );
   }
 
@@ -51,6 +59,8 @@ class TodoItemDto {
   final bool isCompleted;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final DateTime? dueDate;
+  final TodoPriority priority;
 
   TodoItem toDomain() => TodoItem(
     id: id,
@@ -59,6 +69,8 @@ class TodoItemDto {
     isCompleted: isCompleted,
     createdAt: createdAt,
     updatedAt: updatedAt,
+    dueDate: dueDate,
+    priority: priority,
   );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
@@ -68,6 +80,8 @@ class TodoItemDto {
     'isCompleted': isCompleted,
     'createdAt': createdAt.toIso8601String(),
     'updatedAt': updatedAt.toIso8601String(),
+    if (dueDate != null) 'dueDate': dueDate!.toIso8601String(),
+    'priority': priority.name,
   };
 
   static bool _coerceBool(final dynamic value) {
@@ -91,5 +105,18 @@ class TodoItemDto {
       return DateTime.tryParse(value)?.toUtc();
     }
     return null;
+  }
+
+  static TodoPriority _parsePriority(final dynamic value) {
+    if (value is TodoPriority) {
+      return value;
+    }
+    if (value is String) {
+      return TodoPriority.values.firstWhere(
+        (final p) => p.name == value,
+        orElse: () => TodoPriority.none,
+      );
+    }
+    return TodoPriority.none;
   }
 }

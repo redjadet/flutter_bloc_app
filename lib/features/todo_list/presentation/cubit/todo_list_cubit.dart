@@ -111,6 +111,69 @@ class TodoListCubit extends Cubit<TodoListState>
     await saveItem(item, logContext: 'TodoListCubit.undoDelete');
   }
 
+  void toggleItemSelection(final String itemId) {
+    if (isClosed) return;
+    final Set<String> updated = Set<String>.from(state.selectedItemIds);
+    if (updated.contains(itemId)) {
+      updated.remove(itemId);
+    } else {
+      updated.add(itemId);
+    }
+    emit(state.copyWith(selectedItemIds: updated));
+  }
+
+  void selectAllItems() {
+    if (isClosed) return;
+    final Set<String> allIds = state.filteredItems
+        .map((final item) => item.id)
+        .toSet();
+    emit(state.copyWith(selectedItemIds: allIds));
+  }
+
+  void clearSelection() {
+    if (isClosed) return;
+    emit(state.copyWith(selectedItemIds: const <String>{}));
+  }
+
+  Future<void> batchDeleteSelected() async {
+    if (isClosed || state.selectedItemIds.isEmpty) return;
+    final List<TodoItem> itemsToDelete = state.items
+        .where((final item) => state.selectedItemIds.contains(item.id))
+        .toList();
+    for (final TodoItem item in itemsToDelete) {
+      await deleteTodo(item);
+    }
+    emit(state.copyWith(selectedItemIds: const <String>{}));
+  }
+
+  Future<void> batchCompleteSelected() async {
+    if (isClosed || state.selectedItemIds.isEmpty) return;
+    final List<TodoItem> itemsToComplete = state.items
+        .where(
+          (final item) =>
+              state.selectedItemIds.contains(item.id) && !item.isCompleted,
+        )
+        .toList();
+    for (final TodoItem item in itemsToComplete) {
+      await toggleTodo(item);
+    }
+    emit(state.copyWith(selectedItemIds: const <String>{}));
+  }
+
+  Future<void> batchUncompleteSelected() async {
+    if (isClosed || state.selectedItemIds.isEmpty) return;
+    final List<TodoItem> itemsToUncomplete = state.items
+        .where(
+          (final item) =>
+              state.selectedItemIds.contains(item.id) && item.isCompleted,
+        )
+        .toList();
+    for (final TodoItem item in itemsToUncomplete) {
+      await toggleTodo(item);
+    }
+    emit(state.copyWith(selectedItemIds: const <String>{}));
+  }
+
   @override
   Future<void> close() async {
     _cancelSearchDebounce();
