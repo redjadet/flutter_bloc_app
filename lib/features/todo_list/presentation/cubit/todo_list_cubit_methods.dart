@@ -16,24 +16,42 @@ mixin _TodoListCubitMethods
   set lastDeletedItem(final TodoItem? value);
   bool Function() get stopLoadingIfClosed;
 
+  Set<String> _trimSelection(final List<TodoItem> items) {
+    if (state.selectedItemIds.isEmpty) {
+      return state.selectedItemIds;
+    }
+    final Set<String> itemIds = items.map((final item) => item.id).toSet();
+    final Set<String> trimmed = state.selectedItemIds
+        .where(itemIds.contains)
+        .toSet();
+    if (trimmed.length == state.selectedItemIds.length) {
+      return state.selectedItemIds;
+    }
+    return trimmed;
+  }
+
   void emitOptimisticUpdate(final List<TodoItem> items) {
     if (isClosed) return;
+    final Set<String> updatedSelection = _trimSelection(items);
     emit(
       state.copyWith(
         items: List<TodoItem>.unmodifiable(items),
         status: ViewStatus.success,
         errorMessage: null,
+        selectedItemIds: updatedSelection,
       ),
     );
   }
 
   void onItemsUpdated(final List<TodoItem> items) {
     if (isClosed) return;
+    final Set<String> updatedSelection = _trimSelection(items);
     emit(
       state.copyWith(
         status: ViewStatus.success,
         items: List<TodoItem>.unmodifiable(items),
         errorMessage: null,
+        selectedItemIds: updatedSelection,
       ),
     );
   }

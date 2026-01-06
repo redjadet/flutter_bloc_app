@@ -1314,6 +1314,83 @@
   "@todoListSortManual": {
     "description": "Sort option for manual ordering"
   },
+  "todoListSortPriorityDesc": "Priority (high to low)",
+  "@todoListSortPriorityDesc": {
+    "description": "Label for priority descending sort option"
+  },
+  "todoListSortPriorityAsc": "Priority (low to high)",
+  "@todoListSortPriorityAsc": {
+    "description": "Label for priority ascending sort option"
+  },
+  "todoListSortDueDateAsc": "Due date (earliest first)",
+  "@todoListSortDueDateAsc": {
+    "description": "Label for due date ascending sort option"
+  },
+  "todoListSortDueDateDesc": "Due date (latest first)",
+  "@todoListSortDueDateDesc": {
+    "description": "Label for due date descending sort option"
+  },
+  "todoListPriorityNone": "None",
+  "@todoListPriorityNone": {
+    "description": "Label for no priority"
+  },
+  "todoListPriorityLow": "Low",
+  "@todoListPriorityLow": {
+    "description": "Label for low priority"
+  },
+  "todoListPriorityMedium": "Medium",
+  "@todoListPriorityMedium": {
+    "description": "Label for medium priority"
+  },
+  "todoListPriorityHigh": "High",
+  "@todoListPriorityHigh": {
+    "description": "Label for high priority"
+  },
+  "todoListDueDateLabel": "Due date",
+  "@todoListDueDateLabel": {
+    "description": "Label for due date field"
+  },
+  "todoListNoDueDate": "No due date",
+  "@todoListNoDueDate": {
+    "description": "Placeholder when no due date is selected"
+  },
+  "todoListClearDueDate": "Clear due date",
+  "@todoListClearDueDate": {
+    "description": "Label for clearing the due date"
+  },
+  "todoListPriorityLabel": "Priority",
+  "@todoListPriorityLabel": {
+    "description": "Label for priority field"
+  },
+  "todoListSelectAll": "Select all",
+  "@todoListSelectAll": {
+    "description": "Label for select all action"
+  },
+  "todoListClearSelection": "Clear selection",
+  "@todoListClearSelection": {
+    "description": "Label for clear selection action"
+  },
+  "todoListBatchDelete": "Delete selected",
+  "@todoListBatchDelete": {
+    "description": "Label for batch delete action"
+  },
+  "todoListBatchComplete": "Complete selected",
+  "@todoListBatchComplete": {
+    "description": "Label for batch complete action"
+  },
+  "todoListBatchUncomplete": "Uncomplete selected",
+  "@todoListBatchUncomplete": {
+    "description": "Label for batch uncomplete action"
+  },
+  "todoListItemsSelected": "{count} selected",
+  "@todoListItemsSelected": {
+    "description": "Label showing number of selected items",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "todoListAddDialogTitle": "New todo",
   "@todoListAddDialogTitle": {
     "description": "Title for the add todo dialog"

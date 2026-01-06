@@ -11,6 +11,10 @@ enum TodoSortOrder {
   dateAsc,
   titleAsc,
   titleDesc,
+  priorityDesc,
+  priorityAsc,
+  dueDateAsc,
+  dueDateDesc,
   manual,
 }
 
@@ -23,6 +27,7 @@ abstract class TodoListState with _$TodoListState {
     @Default('') final String searchQuery,
     @Default(TodoSortOrder.dateDesc) final TodoSortOrder sortOrder,
     @Default(<String, int>{}) final Map<String, int> manualOrder,
+    @Default(<String>{}) final Set<String> selectedItemIds,
     final String? errorMessage,
   }) = _TodoListState;
 
@@ -95,6 +100,48 @@ abstract class TodoListState with _$TodoListState {
               b.title.toLowerCase().compareTo(a.title.toLowerCase()),
         );
         break;
+      case TodoSortOrder.priorityDesc:
+        sorted.sort((final a, final b) {
+          final int priorityCompare = b.priorityValue.compareTo(
+            a.priorityValue,
+          );
+          if (priorityCompare != 0) return priorityCompare;
+          return b.updatedAt.compareTo(a.updatedAt);
+        });
+        break;
+      case TodoSortOrder.priorityAsc:
+        sorted.sort((final a, final b) {
+          final int priorityCompare = a.priorityValue.compareTo(
+            b.priorityValue,
+          );
+          if (priorityCompare != 0) return priorityCompare;
+          return b.updatedAt.compareTo(a.updatedAt);
+        });
+        break;
+      case TodoSortOrder.dueDateAsc:
+        sorted.sort((final a, final b) {
+          if (a.dueDate == null && b.dueDate == null) {
+            return b.updatedAt.compareTo(a.updatedAt);
+          }
+          if (a.dueDate == null) return 1;
+          if (b.dueDate == null) return -1;
+          final int dateCompare = a.dueDate!.compareTo(b.dueDate!);
+          if (dateCompare != 0) return dateCompare;
+          return b.updatedAt.compareTo(a.updatedAt);
+        });
+        break;
+      case TodoSortOrder.dueDateDesc:
+        sorted.sort((final a, final b) {
+          if (a.dueDate == null && b.dueDate == null) {
+            return b.updatedAt.compareTo(a.updatedAt);
+          }
+          if (a.dueDate == null) return 1;
+          if (b.dueDate == null) return -1;
+          final int dateCompare = b.dueDate!.compareTo(a.dueDate!);
+          if (dateCompare != 0) return dateCompare;
+          return b.updatedAt.compareTo(a.updatedAt);
+        });
+        break;
       case TodoSortOrder.manual:
         sorted.sort((final a, final b) {
           final int orderA = manualOrder[a.id] ?? 0;
@@ -112,4 +159,10 @@ abstract class TodoListState with _$TodoListState {
   }
 
   bool get hasCompleted => items.any((final item) => item.isCompleted);
+
+  bool get hasSelectedItems => selectedItemIds.isNotEmpty;
+
+  bool isItemSelected(final String itemId) => selectedItemIds.contains(itemId);
+
+  int get selectedCount => selectedItemIds.length;
 }

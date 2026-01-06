@@ -12,6 +12,8 @@ Future<void> _handleAddTodo(final BuildContext context) async {
   await context.cubit<TodoListCubit>().addTodo(
     title: result.title,
     description: result.description,
+    dueDate: result.dueDate,
+    priority: result.priority,
   );
 }
 
@@ -33,6 +35,8 @@ Future<void> _handleEditTodo(
     item: item,
     title: result.title,
     description: result.description,
+    dueDate: result.dueDate,
+    priority: result.priority,
   );
 }
 

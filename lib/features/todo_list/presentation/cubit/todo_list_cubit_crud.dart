@@ -52,6 +52,8 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
   Future<void> addTodo({
     required final String title,
     final String? description,
+    final DateTime? dueDate,
+    final TodoPriority priority = TodoPriority.none,
   }) async {
     if (isClosed) return;
     final String trimmedTitle = title.trim();
@@ -63,6 +65,8 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
       description: description?.trim().isEmpty ?? true
           ? null
           : description!.trim(),
+      dueDate: dueDate,
+      priority: priority,
     );
     await saveItem(item, logContext: 'TodoListCubit.addTodo');
   }
@@ -71,6 +75,8 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
     required final TodoItem item,
     required final String title,
     final String? description,
+    final DateTime? dueDate,
+    final TodoPriority? priority,
   }) async {
     if (isClosed) return;
     final String trimmedTitle = title.trim();
@@ -83,6 +89,8 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
       description: trimmedDescription == null || trimmedDescription.isEmpty
           ? null
           : trimmedDescription,
+      dueDate: dueDate?.toUtc(),
+      priority: priority ?? item.priority,
       updatedAt: DateTime.now().toUtc(),
     );
     await saveItem(updated, logContext: 'TodoListCubit.updateTodo');

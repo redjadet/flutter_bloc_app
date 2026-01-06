@@ -1868,6 +1868,114 @@ abstract class AppLocalizations {
   /// **'Manual (drag to reorder)'**
   String get todoListSortManual;
 
+  /// Label for priority descending sort option
+  ///
+  /// In en, this message translates to:
+  /// **'Priority (high to low)'**
+  String get todoListSortPriorityDesc;
+
+  /// Label for priority ascending sort option
+  ///
+  /// In en, this message translates to:
+  /// **'Priority (low to high)'**
+  String get todoListSortPriorityAsc;
+
+  /// Label for due date ascending sort option
+  ///
+  /// In en, this message translates to:
+  /// **'Due date (earliest first)'**
+  String get todoListSortDueDateAsc;
+
+  /// Label for due date descending sort option
+  ///
+  /// In en, this message translates to:
+  /// **'Due date (latest first)'**
+  String get todoListSortDueDateDesc;
+
+  /// Label for no priority
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get todoListPriorityNone;
+
+  /// Label for low priority
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get todoListPriorityLow;
+
+  /// Label for medium priority
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get todoListPriorityMedium;
+
+  /// Label for high priority
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get todoListPriorityHigh;
+
+  /// Label for due date field
+  ///
+  /// In en, this message translates to:
+  /// **'Due date'**
+  String get todoListDueDateLabel;
+
+  /// Placeholder when no due date is selected
+  ///
+  /// In en, this message translates to:
+  /// **'No due date'**
+  String get todoListNoDueDate;
+
+  /// Label for clearing the due date
+  ///
+  /// In en, this message translates to:
+  /// **'Clear due date'**
+  String get todoListClearDueDate;
+
+  /// Label for priority field
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get todoListPriorityLabel;
+
+  /// Label for select all action
+  ///
+  /// In en, this message translates to:
+  /// **'Select all'**
+  String get todoListSelectAll;
+
+  /// Label for clear selection action
+  ///
+  /// In en, this message translates to:
+  /// **'Clear selection'**
+  String get todoListClearSelection;
+
+  /// Label for batch delete action
+  ///
+  /// In en, this message translates to:
+  /// **'Delete selected'**
+  String get todoListBatchDelete;
+
+  /// Label for batch complete action
+  ///
+  /// In en, this message translates to:
+  /// **'Complete selected'**
+  String get todoListBatchComplete;
+
+  /// Label for batch uncomplete action
+  ///
+  /// In en, this message translates to:
+  /// **'Uncomplete selected'**
+  String get todoListBatchUncomplete;
+
+  /// Label showing number of selected items
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String todoListItemsSelected(int count);
+
   /// Title for the add todo dialog
   ///
   /// In en, this message translates to:

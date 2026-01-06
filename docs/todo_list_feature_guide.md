@@ -958,9 +958,20 @@ test/features/todo_list/
 
 ### Feature Enhancements
 
-- Add due dates and priority levels
+- ✅ **Due dates and priority levels** (implemented):
+  - Due dates with date picker in add/edit dialogs
+  - Priority levels (None, Low, Medium, High) with visual badges
+  - Overdue items highlighted in red
+  - Sort by priority (high to low, low to high)
+  - Sort by due date (earliest first, latest first)
+- ✅ **Batch actions** (implemented):
+  - Select all items
+  - Individual item selection checkboxes
+  - Batch delete selected items
+  - Batch complete/uncomplete selected items
+  - Clear selection
+  - Selection count display
 - Add categories/tags
-- Add batch actions (select multiple, clear completed)
 - Add export/import functionality
 
 ### Architecture Enhancements

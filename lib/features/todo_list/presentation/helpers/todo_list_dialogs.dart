@@ -1,15 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/helpers/todo_list_dialog_content.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class TodoEditorResult {
-  const TodoEditorResult({required this.title, required this.description});
+  const TodoEditorResult({
+    required this.title,
+    required this.description,
+    this.dueDate,
+    this.priority = TodoPriority.none,
+  });
 
   final String title;
   final String description;
+  final DateTime? dueDate;
+  final TodoPriority priority;
 }
 
 Future<TodoEditorResult?> showTodoEditorDialog({
@@ -23,6 +31,8 @@ Future<TodoEditorResult?> showTodoEditorDialog({
   final TextEditingController descriptionController = TextEditingController(
     text: existing?.description ?? '',
   );
+  DateTime? selectedDueDate = existing?.dueDate?.toLocal();
+  TodoPriority selectedPriority = existing?.priority ?? TodoPriority.none;
 
   final bool isCupertino = PlatformAdaptive.isCupertino(context);
 
@@ -33,63 +43,23 @@ Future<TodoEditorResult?> showTodoEditorDialog({
         final String trimmedTitle = titleController.text.trim();
         final bool canSave = trimmedTitle.isNotEmpty;
 
-        Widget buildTextField({
-          required final TextEditingController controller,
-          required final String placeholder,
-          final int maxLines = 1,
-        }) {
-          if (isCupertino) {
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: context.responsiveGapXS,
-              ),
-              child: CupertinoTextField(
-                controller: controller,
-                placeholder: placeholder,
-                maxLines: maxLines,
-                padding: EdgeInsets.all(context.responsiveGapS),
-                onChanged: (_) => setState(() {}),
-              ),
-            );
-          }
-          return TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              hintText: placeholder,
-              contentPadding: EdgeInsets.all(context.responsiveGapS),
-            ),
-            maxLines: maxLines,
-            onChanged: (_) => setState(() {}),
-          );
-        }
-
-        final Widget content = ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: context.isDesktop
-                ? 500
-                : context.isTabletOrLarger
-                ? 400
-                : double.infinity,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              buildTextField(
-                controller: titleController,
-                placeholder: l10n.todoListTitlePlaceholder,
-              ),
-              SizedBox(height: context.responsiveGapS),
-              buildTextField(
-                controller: descriptionController,
-                placeholder: l10n.todoListDescriptionPlaceholder,
-                maxLines: context.isDesktop
-                    ? 4
-                    : context.isTabletOrLarger
-                    ? 3
-                    : 3,
-              ),
-            ],
-          ),
+        final Widget content = buildTodoEditorDialogContent(
+          context: context,
+          titleController: titleController,
+          descriptionController: descriptionController,
+          isCupertino: isCupertino,
+          selectedDueDate: selectedDueDate,
+          selectedPriority: selectedPriority,
+          onDueDateChanged: (final DateTime? date) {
+            setState(() {
+              selectedDueDate = date;
+            });
+          },
+          onPriorityChanged: (final TodoPriority priority) {
+            setState(() {
+              selectedPriority = priority;
+            });
+          },
         );
 
         return isCupertino
@@ -116,6 +86,8 @@ Future<TodoEditorResult?> showTodoEditorDialog({
                             TodoEditorResult(
                               title: trimmedTitle,
                               description: descriptionController.text.trim(),
+                              dueDate: selectedDueDate,
+                              priority: selectedPriority,
                             ),
                           )
                         : null,
@@ -143,6 +115,8 @@ Future<TodoEditorResult?> showTodoEditorDialog({
                             TodoEditorResult(
                               title: trimmedTitle,
                               description: descriptionController.text.trim(),
+                              dueDate: selectedDueDate,
+                              priority: selectedPriority,
                             ),
                           )
                         : null,

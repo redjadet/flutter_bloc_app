@@ -14,6 +14,8 @@ class TodoListView extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
     required this.onDeleteWithoutConfirmation,
+    this.selectedItemIds = const <String>{},
+    this.onItemSelectionChanged,
     super.key,
   });
 
@@ -23,6 +25,9 @@ class TodoListView extends StatelessWidget {
   final void Function(TodoItem) onEdit;
   final void Function(TodoItem) onDelete;
   final void Function(TodoItem) onDeleteWithoutConfirmation;
+  final Set<String> selectedItemIds;
+  final void Function(String itemId, {required bool selected})?
+  onItemSelectionChanged;
 
   @override
   Widget build(final BuildContext context) {
@@ -44,6 +49,11 @@ class TodoListView extends StatelessWidget {
             child: TodoListItem(
               item: item,
               showDragHandle: sortOrder == TodoSortOrder.manual,
+              isSelected: selectedItemIds.contains(item.id),
+              onSelectionChanged: onItemSelectionChanged != null
+                  ? (final bool selected) =>
+                        onItemSelectionChanged!(item.id, selected: selected)
+                  : null,
               onToggle: () => onToggle(item),
               onEdit: () => onEdit(item),
               onDelete: () => onDelete(item),
@@ -69,6 +79,11 @@ class TodoListView extends StatelessWidget {
           child: TodoListItem(
             item: item,
             showDragHandle: sortOrder == TodoSortOrder.manual,
+            isSelected: selectedItemIds.contains(item.id),
+            onSelectionChanged: onItemSelectionChanged != null
+                ? (final bool selected) =>
+                      onItemSelectionChanged!(item.id, selected: selected)
+                : null,
             onToggle: () => onToggle(item),
             onEdit: () => onEdit(item),
             onDelete: () => onDelete(item),

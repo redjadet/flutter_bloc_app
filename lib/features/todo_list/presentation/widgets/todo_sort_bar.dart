@@ -18,6 +18,10 @@ class TodoSortBar extends StatelessWidget {
     TodoSortOrder.dateAsc => context.l10n.todoListSortDateAsc,
     TodoSortOrder.titleAsc => context.l10n.todoListSortTitleAsc,
     TodoSortOrder.titleDesc => context.l10n.todoListSortTitleDesc,
+    TodoSortOrder.priorityDesc => context.l10n.todoListSortPriorityDesc,
+    TodoSortOrder.priorityAsc => context.l10n.todoListSortPriorityAsc,
+    TodoSortOrder.dueDateAsc => context.l10n.todoListSortDueDateAsc,
+    TodoSortOrder.dueDateDesc => context.l10n.todoListSortDueDateDesc,
     TodoSortOrder.manual => context.l10n.todoListSortManual,
   };
 
@@ -124,6 +128,78 @@ class TodoSortBar extends StatelessWidget {
               ),
               SizedBox(width: context.responsiveHorizontalGapS),
               Text(context.l10n.todoListSortTitleDesc),
+            ],
+          ),
+        ),
+        PopupMenuItem<TodoSortOrder>(
+          value: TodoSortOrder.priorityDesc,
+          child: Row(
+            children: [
+              Icon(
+                sortOrder == TodoSortOrder.priorityDesc
+                    ? Icons.check
+                    : Icons.check_box_outline_blank,
+                size: context.responsiveIconSize * 0.8,
+                color: sortOrder == TodoSortOrder.priorityDesc
+                    ? colors.primary
+                    : colors.onSurfaceVariant,
+              ),
+              SizedBox(width: context.responsiveHorizontalGapS),
+              Text(context.l10n.todoListSortPriorityDesc),
+            ],
+          ),
+        ),
+        PopupMenuItem<TodoSortOrder>(
+          value: TodoSortOrder.priorityAsc,
+          child: Row(
+            children: [
+              Icon(
+                sortOrder == TodoSortOrder.priorityAsc
+                    ? Icons.check
+                    : Icons.check_box_outline_blank,
+                size: context.responsiveIconSize * 0.8,
+                color: sortOrder == TodoSortOrder.priorityAsc
+                    ? colors.primary
+                    : colors.onSurfaceVariant,
+              ),
+              SizedBox(width: context.responsiveHorizontalGapS),
+              Text(context.l10n.todoListSortPriorityAsc),
+            ],
+          ),
+        ),
+        PopupMenuItem<TodoSortOrder>(
+          value: TodoSortOrder.dueDateAsc,
+          child: Row(
+            children: [
+              Icon(
+                sortOrder == TodoSortOrder.dueDateAsc
+                    ? Icons.check
+                    : Icons.check_box_outline_blank,
+                size: context.responsiveIconSize * 0.8,
+                color: sortOrder == TodoSortOrder.dueDateAsc
+                    ? colors.primary
+                    : colors.onSurfaceVariant,
+              ),
+              SizedBox(width: context.responsiveHorizontalGapS),
+              Text(context.l10n.todoListSortDueDateAsc),
+            ],
+          ),
+        ),
+        PopupMenuItem<TodoSortOrder>(
+          value: TodoSortOrder.dueDateDesc,
+          child: Row(
+            children: [
+              Icon(
+                sortOrder == TodoSortOrder.dueDateDesc
+                    ? Icons.check
+                    : Icons.check_box_outline_blank,
+                size: context.responsiveIconSize * 0.8,
+                color: sortOrder == TodoSortOrder.dueDateDesc
+                    ? colors.primary
+                    : colors.onSurfaceVariant,
+              ),
+              SizedBox(width: context.responsiveHorizontalGapS),
+              Text(context.l10n.todoListSortDueDateDesc),
             ],
           ),
         ),

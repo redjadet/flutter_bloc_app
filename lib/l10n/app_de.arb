@@ -806,5 +806,106 @@
   "todoListDeleteUndone": "Todo gelöscht",
   "@todoListDeleteUndone": {
     "description": "Message shown after a todo is deleted"
+  },
+  "todoListSortPriorityDesc": "Priorität (hoch bis niedrig)",
+  "@todoListSortPriorityDesc": {
+    "description": "Label for priority descending sort option"
+  },
+  "todoListSortPriorityAsc": "Priorität (niedrig bis hoch)",
+  "@todoListSortPriorityAsc": {
+    "description": "Label for priority ascending sort option"
+  },
+  "todoListSortDueDateAsc": "Fälligkeitsdatum (frühestes zuerst)",
+  "@todoListSortDueDateAsc": {
+    "description": "Label for due date ascending sort option"
+  },
+  "todoListSortDueDateDesc": "Fälligkeitsdatum (spätestes zuerst)",
+  "@todoListSortDueDateDesc": {
+    "description": "Label for due date descending sort option"
+  },
+  "todoListPriorityNone": "None",
+  "@todoListPriorityNone": {
+    "description": "Label for no priority"
+  },
+  "todoListPriorityLow": "Low",
+  "@todoListPriorityLow": {
+    "description": "Label for low priority"
+  },
+  "todoListPriorityMedium": "Medium",
+  "@todoListPriorityMedium": {
+    "description": "Label for medium priority"
+  },
+  "todoListPriorityHigh": "High",
+  "@todoListPriorityHigh": {
+    "description": "Label for high priority"
+  },
+  "todoListDueDateLabel": "Due date",
+  "@todoListDueDateLabel": {
+    "description": "Label for due date field"
+  },
+  "todoListNoDueDate": "Kein Fälligkeitsdatum",
+  "@todoListNoDueDate": {
+    "description": "Placeholder when no due date is selected"
+  },
+  "todoListClearDueDate": "Fälligkeitsdatum entfernen",
+  "@todoListClearDueDate": {
+    "description": "Label for clearing the due date"
+  },
+  "todoListPriorityLabel": "Priority",
+  "@todoListPriorityLabel": {
+    "description": "Label for priority field"
+  },
+  "todoListSelectAll": "Select all",
+  "@todoListSelectAll": {
+    "description": "Label for select all action"
+  },
+  "todoListClearSelection": "Clear selection",
+  "@todoListClearSelection": {
+    "description": "Label for clear selection action"
+  },
+  "todoListBatchDelete": "Delete selected",
+  "@todoListBatchDelete": {
+    "description": "Label for batch delete action"
+  },
+  "todoListBatchComplete": "Complete selected",
+  "@todoListBatchComplete": {
+    "description": "Label for batch complete action"
+  },
+  "todoListBatchUncomplete": "Uncomplete selected",
+  "@todoListBatchUncomplete": {
+    "description": "Label for batch uncomplete action"
+  },
+  "todoListItemsSelected": "{count} selected",
+  "@todoListItemsSelected": {
+    "description": "Label showing number of selected items",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todoListSortAction": "Sortieren",
+  "@todoListSortAction": {
+    "description": "Tooltip label for the sort action"
+  },
+  "todoListSortDateDesc": "Datum (neueste zuerst)",
+  "@todoListSortDateDesc": {
+    "description": "Sort option for newest date first"
+  },
+  "todoListSortDateAsc": "Datum (älteste zuerst)",
+  "@todoListSortDateAsc": {
+    "description": "Sort option for oldest date first"
+  },
+  "todoListSortTitleAsc": "Titel (A bis Z)",
+  "@todoListSortTitleAsc": {
+    "description": "Sort option for title ascending"
+  },
+  "todoListSortTitleDesc": "Titel (Z bis A)",
+  "@todoListSortTitleDesc": {
+    "description": "Sort option for title descending"
+  },
+  "todoListSortManual": "Manuell (zum Sortieren ziehen)",
+  "@todoListSortManual": {
+    "description": "Sort option for manual ordering"
   }
 }

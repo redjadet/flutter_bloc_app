@@ -75,9 +75,13 @@ void main() {
       final Offset start = tester.getCenter(dismissible);
       final Offset end = start + const Offset(400, 0);
 
-      await tester.drag(dismissible, end - start);
+      // Simulate a complete swipe gesture using gesture test helpers
+      final TestGesture gesture = await tester.startGesture(start);
+      await gesture.moveTo(end);
+      await gesture.up();
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 200));
+      await tester.pump(const Duration(milliseconds: 100));
+      // Wait for confirmDismiss async callback to complete
       await tester.pumpAndSettle();
 
       expect(
@@ -105,9 +109,13 @@ void main() {
       final Offset start = tester.getCenter(dismissible);
       final Offset end = start + const Offset(400, 0);
 
-      await tester.drag(dismissible, end - start);
+      // Simulate a complete swipe gesture using gesture test helpers
+      final TestGesture gesture = await tester.startGesture(start);
+      await gesture.moveTo(end);
+      await gesture.up();
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 200));
+      await tester.pump(const Duration(milliseconds: 100));
+      // Wait for confirmDismiss async callback to complete
       await tester.pumpAndSettle();
 
       expect(
@@ -217,9 +225,13 @@ void main() {
       final Offset start = tester.getCenter(dismissible);
       final Offset end = start + const Offset(400, 0);
 
-      await tester.drag(dismissible, end - start);
+      // Simulate a complete swipe gesture using gesture test helpers
+      final TestGesture gesture = await tester.startGesture(start);
+      await gesture.moveTo(end);
+      await gesture.up();
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 100));
+      // Wait for confirmDismiss async callback to complete
       await tester.pumpAndSettle();
 
       expect(onToggleCalled, isTrue, reason: 'onToggle should be called');
