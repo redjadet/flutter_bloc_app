@@ -113,6 +113,10 @@ class TodoListCubit extends Cubit<TodoListState>
 
   void toggleItemSelection(final String itemId) {
     if (isClosed) return;
+    // Verify item exists before allowing selection
+    if (!state.items.any((final item) => item.id == itemId)) {
+      return;
+    }
     final Set<String> updated = Set<String>.from(state.selectedItemIds);
     if (updated.contains(itemId)) {
       updated.remove(itemId);
@@ -137,40 +141,71 @@ class TodoListCubit extends Cubit<TodoListState>
 
   Future<void> batchDeleteSelected() async {
     if (isClosed || state.selectedItemIds.isEmpty) return;
+    // Capture current state to avoid race conditions
+    final Set<String> selectedIds = Set<String>.from(state.selectedItemIds);
     final List<TodoItem> itemsToDelete = state.items
-        .where((final item) => state.selectedItemIds.contains(item.id))
+        .where((final item) => selectedIds.contains(item.id))
         .toList();
     for (final TodoItem item in itemsToDelete) {
-      await deleteTodo(item);
+      if (isClosed) return;
+      // Verify item still exists before deleting
+      if (state.items.any((final current) => current.id == item.id)) {
+        await deleteTodo(item);
+      }
     }
+    if (isClosed) return;
     emit(state.copyWith(selectedItemIds: const <String>{}));
   }
 
   Future<void> batchCompleteSelected() async {
     if (isClosed || state.selectedItemIds.isEmpty) return;
+    // Capture current state to avoid race conditions
+    final Set<String> selectedIds = Set<String>.from(state.selectedItemIds);
     final List<TodoItem> itemsToComplete = state.items
         .where(
-          (final item) =>
-              state.selectedItemIds.contains(item.id) && !item.isCompleted,
+          (final item) => selectedIds.contains(item.id) && !item.isCompleted,
         )
         .toList();
     for (final TodoItem item in itemsToComplete) {
-      await toggleTodo(item);
+      if (isClosed) return;
+      // Verify item still exists and matches condition before toggling
+      final List<TodoItem> matchingItems = state.items
+          .where((final current) => current.id == item.id)
+          .toList();
+      if (matchingItems.isNotEmpty) {
+        final TodoItem currentItem = matchingItems.first;
+        if (!currentItem.isCompleted) {
+          await toggleTodo(currentItem);
+        }
+      }
     }
+    if (isClosed) return;
     emit(state.copyWith(selectedItemIds: const <String>{}));
   }
 
   Future<void> batchUncompleteSelected() async {
     if (isClosed || state.selectedItemIds.isEmpty) return;
+    // Capture current state to avoid race conditions
+    final Set<String> selectedIds = Set<String>.from(state.selectedItemIds);
     final List<TodoItem> itemsToUncomplete = state.items
         .where(
-          (final item) =>
-              state.selectedItemIds.contains(item.id) && item.isCompleted,
+          (final item) => selectedIds.contains(item.id) && item.isCompleted,
         )
         .toList();
     for (final TodoItem item in itemsToUncomplete) {
-      await toggleTodo(item);
+      if (isClosed) return;
+      // Verify item still exists and matches condition before toggling
+      final List<TodoItem> matchingItems = state.items
+          .where((final current) => current.id == item.id)
+          .toList();
+      if (matchingItems.isNotEmpty) {
+        final TodoItem currentItem = matchingItems.first;
+        if (currentItem.isCompleted) {
+          await toggleTodo(currentItem);
+        }
+      }
     }
+    if (isClosed) return;
     emit(state.copyWith(selectedItemIds: const <String>{}));
   }
 

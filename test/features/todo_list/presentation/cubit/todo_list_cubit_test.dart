@@ -188,6 +188,54 @@ void main() {
       expect: () => <TodoListState>[],
     );
 
+    blocTest<TodoListCubit, TodoListState>(
+      'reorderItems is a no-op when filtered',
+      build: () => buildCubit(
+        initialItems: [
+          _todoItem(id: 'a', title: 'Active'),
+          _todoItem(id: 'b', title: 'Done', isCompleted: true),
+        ],
+      ),
+      seed: () => TodoListState(
+        status: ViewStatus.success,
+        items: [
+          _todoItem(id: 'a', title: 'Active'),
+          _todoItem(id: 'b', title: 'Done', isCompleted: true),
+        ],
+        filter: TodoFilter.completed,
+        sortOrder: TodoSortOrder.manual,
+        manualOrder: const <String, int>{'a': 0, 'b': 1},
+      ),
+      act: (final cubit) {
+        cubit.reorderItems(oldIndex: 0, newIndex: 1);
+      },
+      expect: () => <TodoListState>[],
+    );
+
+    blocTest<TodoListCubit, TodoListState>(
+      'reorderItems is a no-op when searching',
+      build: () => buildCubit(
+        initialItems: [
+          _todoItem(id: 'a', title: 'Alpha'),
+          _todoItem(id: 'b', title: 'Beta'),
+        ],
+      ),
+      seed: () => TodoListState(
+        status: ViewStatus.success,
+        items: [
+          _todoItem(id: 'a', title: 'Alpha'),
+          _todoItem(id: 'b', title: 'Beta'),
+        ],
+        searchQuery: 'a',
+        sortOrder: TodoSortOrder.manual,
+        manualOrder: const <String, int>{'a': 0, 'b': 1},
+      ),
+      act: (final cubit) {
+        cubit.reorderItems(oldIndex: 0, newIndex: 1);
+      },
+      expect: () => <TodoListState>[],
+    );
+
     test('addTodo ignores blank titles', () async {
       final TodoListCubit cubit = buildCubit();
       await cubit.addTodo(title: '   ', description: null);
