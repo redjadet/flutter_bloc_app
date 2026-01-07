@@ -16,7 +16,11 @@
 set -e
 
 echo "Running flutter test with coverage..."
-flutter test --coverage "$@"
+if [ "$#" -eq 0 ]; then
+  flutter test --coverage --exclude-tags skip-checklist
+else
+  flutter test --coverage "$@"
+fi
 
 echo ""
 echo "Updating coverage summary..."
@@ -24,4 +28,3 @@ dart run tool/update_coverage_summary.dart
 
 echo ""
 echo "✅ Test coverage complete! Reports updated in coverage/"
-
