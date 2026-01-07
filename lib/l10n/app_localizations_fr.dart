@@ -1130,4 +1130,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get todoListClearCompletedAction => 'Clear completed';
+
+  @override
+  String get todoListClearCompletedDialogTitle => 'Clear completed todos?';
+
+  @override
+  String todoListClearCompletedDialogMessage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count completed todos',
+      one: '1 completed todo',
+    );
+    return 'Delete $_temp0? This cannot be undone.';
+  }
 }

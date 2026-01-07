@@ -2042,11 +2042,23 @@ abstract class AppLocalizations {
   /// **'Completed'**
   String get todoListFilterCompleted;
 
-  /// Action label for clearing completed todos
+  /// Label for clear completed action
   ///
   /// In en, this message translates to:
   /// **'Clear completed'**
   String get todoListClearCompletedAction;
+
+  /// Title for the clear completed confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Clear completed todos?'**
+  String get todoListClearCompletedDialogTitle;
+
+  /// Confirmation message for clearing completed todos
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {count, plural, =1 {1 completed todo} other {{count} completed todos}}? This cannot be undone.'**
+  String todoListClearCompletedDialogMessage(int count);
 }
 
 class _AppLocalizationsDelegate
