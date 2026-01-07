@@ -13,8 +13,10 @@ Widget buildTodoEditorDialogContent({
   required final bool isCupertino,
   required final DateTime? selectedDueDate,
   required final TodoPriority selectedPriority,
+  required final bool isCompleted,
   required final ValueChanged<DateTime?> onDueDateChanged,
   required final ValueChanged<TodoPriority> onPriorityChanged,
+  required final ValueChanged<bool> onCompletedChanged,
 }) {
   final l10n = context.l10n;
 
@@ -59,6 +61,13 @@ Widget buildTodoEditorDialogContent({
           context: context,
           selectedPriority: selectedPriority,
           onPriorityChanged: onPriorityChanged,
+        ),
+        SizedBox(height: context.responsiveGapS),
+        buildTodoCompletionCheckbox(
+          context: context,
+          isCompleted: isCompleted,
+          onCompletedChanged: onCompletedChanged,
+          isCupertino: isCupertino,
         ),
       ],
     ),

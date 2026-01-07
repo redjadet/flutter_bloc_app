@@ -37,6 +37,7 @@ Future<void> _handleEditTodo(
     description: result.description,
     dueDate: result.dueDate,
     priority: result.priority,
+    isCompleted: result.isCompleted,
   );
 }
 

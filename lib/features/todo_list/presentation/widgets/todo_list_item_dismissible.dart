@@ -12,8 +12,8 @@ Widget buildTodoItemDismissible({
   required final BuildContext context,
   required final TodoItem item,
   required final Widget child,
-  required final VoidCallback onToggle,
   required final VoidCallback onDelete,
+  final VoidCallback? onToggle,
   final VoidCallback? onDeleteWithoutConfirmation,
 }) {
   final l10n = context.l10n;
@@ -62,7 +62,7 @@ Widget buildTodoItemDismissible({
         if (direction == DismissDirection.startToEnd) {
           // check-ignore: side_effects_build - triggered by user gesture callback.
           unawaited(HapticFeedback.selectionClick());
-          onToggle();
+          onToggle?.call();
           return false;
         } else {
           // check-ignore: side_effects_build - triggered by user gesture callback.

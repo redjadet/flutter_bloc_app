@@ -1052,6 +1052,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get todoListBatchDelete => 'Delete selected';
 
   @override
+  String get todoListBatchDeleteDialogTitle => 'Delete selected todos?';
+
+  @override
+  String todoListBatchDeleteDialogMessage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count todos',
+      one: '1 todo',
+    );
+    return 'Delete $_temp0? This cannot be undone.';
+  }
+
+  @override
   String get todoListBatchComplete => 'Complete selected';
 
   @override

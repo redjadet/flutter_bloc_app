@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item_actions.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item_content.dart';
@@ -13,9 +10,9 @@ import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 class TodoListItem extends StatelessWidget {
   const TodoListItem({
     required this.item,
-    required this.onToggle,
     required this.onEdit,
     required this.onDelete,
+    this.onToggle,
     this.onDeleteWithoutConfirmation,
     this.showDragHandle = false,
     this.isSelected = false,
@@ -24,9 +21,9 @@ class TodoListItem extends StatelessWidget {
   });
 
   final TodoItem item;
-  final VoidCallback onToggle;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  final VoidCallback? onToggle;
   final VoidCallback? onDeleteWithoutConfirmation;
   final bool showDragHandle;
   final bool isSelected;
@@ -93,16 +90,6 @@ class TodoListItem extends StatelessWidget {
                 ),
                 SizedBox(width: context.responsiveHorizontalGapS),
               ],
-              Checkbox.adaptive(
-                value: item.isCompleted,
-                onChanged: (_) {
-                  // check-ignore: side_effects_build - triggered by user gesture callback.
-                  unawaited(HapticFeedback.selectionClick());
-                  onToggle();
-                },
-                visualDensity: VisualDensity.compact,
-              ),
-              SizedBox(width: context.responsiveHorizontalGapS),
               Expanded(
                 child: buildTodoItemContent(
                   context: context,
