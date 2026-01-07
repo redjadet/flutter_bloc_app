@@ -442,6 +442,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get openMarkdownEditorTooltip => 'Markdown-Editor öffnen';
 
   @override
+  String get openTodoTooltip => 'Todo-Liste öffnen';
+
+  @override
   String get chatPageTitle => 'KI-Chat';
 
   @override

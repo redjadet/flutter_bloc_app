@@ -431,6 +431,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openMarkdownEditorTooltip => 'Open Markdown Editor';
 
   @override
+  String get openTodoTooltip => 'Open Todo List';
+
+  @override
   String get chatPageTitle => 'AI Chat';
 
   @override

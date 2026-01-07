@@ -51,6 +51,11 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
       routeName: AppRoutes.markdownEditor,
       labelBuilder: (final l10n) => l10n.openMarkdownEditorTooltip,
     ),
+    OverflowItem(
+      action: OverflowAction.todo,
+      routeName: AppRoutes.todoList,
+      labelBuilder: (final l10n) => l10n.openTodoTooltip,
+    ),
   ];
 
   @override

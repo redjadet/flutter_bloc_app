@@ -588,6 +588,10 @@
   "@openMarkdownEditorTooltip": {
     "description": "Tooltip for navigating to the Markdown Editor feature"
   },
+  "openTodoTooltip": "Open Todo List",
+  "@openTodoTooltip": {
+    "description": "Tooltip for navigating to the Todo List feature"
+  },
   "chatPageTitle": "AI Chat",
   "@chatPageTitle": {
     "description": "Title for the AI chat page"
