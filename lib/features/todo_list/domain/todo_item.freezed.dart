@@ -11,30 +11,33 @@ part of 'todo_item.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$TodoItem {
 
- String get id; String get title; DateTime get createdAt; DateTime get updatedAt; String? get description; bool get isCompleted; DateTime? get dueDate; TodoPriority get priority;
+ String get id; String get title; DateTime get createdAt; DateTime get updatedAt; String? get description; bool get isCompleted; DateTime? get dueDate; TodoPriority get priority; String? get changeId; DateTime? get lastSyncedAt; bool get synchronized;
 /// Create a copy of TodoItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $TodoItemCopyWith<TodoItem> get copyWith => _$TodoItemCopyWithImpl<TodoItem>(this as TodoItem, _$identity);
 
+  /// Serializes this TodoItem to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.description, description) || other.description == description)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.priority, priority) || other.priority == priority));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.description, description) || other.description == description)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.changeId, changeId) || other.changeId == changeId)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.synchronized, synchronized) || other.synchronized == synchronized));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,createdAt,updatedAt,description,isCompleted,dueDate,priority);
+int get hashCode => Object.hash(runtimeType,id,title,createdAt,updatedAt,description,isCompleted,dueDate,priority,changeId,lastSyncedAt,synchronized);
 
 @override
 String toString() {
-  return 'TodoItem(id: $id, title: $title, createdAt: $createdAt, updatedAt: $updatedAt, description: $description, isCompleted: $isCompleted, dueDate: $dueDate, priority: $priority)';
+  return 'TodoItem(id: $id, title: $title, createdAt: $createdAt, updatedAt: $updatedAt, description: $description, isCompleted: $isCompleted, dueDate: $dueDate, priority: $priority, changeId: $changeId, lastSyncedAt: $lastSyncedAt, synchronized: $synchronized)';
 }
 
 
@@ -45,7 +48,7 @@ abstract mixin class $TodoItemCopyWith<$Res>  {
   factory $TodoItemCopyWith(TodoItem value, $Res Function(TodoItem) _then) = _$TodoItemCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, DateTime createdAt, DateTime updatedAt, String? description, bool isCompleted, DateTime? dueDate, TodoPriority priority
+ String id, String title, DateTime createdAt, DateTime updatedAt, String? description, bool isCompleted, DateTime? dueDate, TodoPriority priority, String? changeId, DateTime? lastSyncedAt, bool synchronized
 });
 
 
@@ -62,7 +65,7 @@ class _$TodoItemCopyWithImpl<$Res>
 
 /// Create a copy of TodoItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? createdAt = null,Object? updatedAt = null,Object? description = freezed,Object? isCompleted = null,Object? dueDate = freezed,Object? priority = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? createdAt = null,Object? updatedAt = null,Object? description = freezed,Object? isCompleted = null,Object? dueDate = freezed,Object? priority = null,Object? changeId = freezed,Object? lastSyncedAt = freezed,Object? synchronized = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -72,7 +75,10 @@ as DateTime,description: freezed == description ? _self.description : descriptio
 as String?,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
 as bool,dueDate: freezed == dueDate ? _self.dueDate : dueDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
-as TodoPriority,
+as TodoPriority,changeId: freezed == changeId ? _self.changeId : changeId // ignore: cast_nullable_to_non_nullable
+as String?,lastSyncedAt: freezed == lastSyncedAt ? _self.lastSyncedAt : lastSyncedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,synchronized: null == synchronized ? _self.synchronized : synchronized // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -157,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  DateTime createdAt,  DateTime updatedAt,  String? description,  bool isCompleted,  DateTime? dueDate,  TodoPriority priority)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  DateTime createdAt,  DateTime updatedAt,  String? description,  bool isCompleted,  DateTime? dueDate,  TodoPriority priority,  String? changeId,  DateTime? lastSyncedAt,  bool synchronized)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TodoItem() when $default != null:
-return $default(_that.id,_that.title,_that.createdAt,_that.updatedAt,_that.description,_that.isCompleted,_that.dueDate,_that.priority);case _:
+return $default(_that.id,_that.title,_that.createdAt,_that.updatedAt,_that.description,_that.isCompleted,_that.dueDate,_that.priority,_that.changeId,_that.lastSyncedAt,_that.synchronized);case _:
   return orElse();
 
 }
@@ -178,10 +184,10 @@ return $default(_that.id,_that.title,_that.createdAt,_that.updatedAt,_that.descr
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  DateTime createdAt,  DateTime updatedAt,  String? description,  bool isCompleted,  DateTime? dueDate,  TodoPriority priority)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  DateTime createdAt,  DateTime updatedAt,  String? description,  bool isCompleted,  DateTime? dueDate,  TodoPriority priority,  String? changeId,  DateTime? lastSyncedAt,  bool synchronized)  $default,) {final _that = this;
 switch (_that) {
 case _TodoItem():
-return $default(_that.id,_that.title,_that.createdAt,_that.updatedAt,_that.description,_that.isCompleted,_that.dueDate,_that.priority);case _:
+return $default(_that.id,_that.title,_that.createdAt,_that.updatedAt,_that.description,_that.isCompleted,_that.dueDate,_that.priority,_that.changeId,_that.lastSyncedAt,_that.synchronized);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +204,10 @@ return $default(_that.id,_that.title,_that.createdAt,_that.updatedAt,_that.descr
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  DateTime createdAt,  DateTime updatedAt,  String? description,  bool isCompleted,  DateTime? dueDate,  TodoPriority priority)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  DateTime createdAt,  DateTime updatedAt,  String? description,  bool isCompleted,  DateTime? dueDate,  TodoPriority priority,  String? changeId,  DateTime? lastSyncedAt,  bool synchronized)?  $default,) {final _that = this;
 switch (_that) {
 case _TodoItem() when $default != null:
-return $default(_that.id,_that.title,_that.createdAt,_that.updatedAt,_that.description,_that.isCompleted,_that.dueDate,_that.priority);case _:
+return $default(_that.id,_that.title,_that.createdAt,_that.updatedAt,_that.description,_that.isCompleted,_that.dueDate,_that.priority,_that.changeId,_that.lastSyncedAt,_that.synchronized);case _:
   return null;
 
 }
@@ -210,11 +216,11 @@ return $default(_that.id,_that.title,_that.createdAt,_that.updatedAt,_that.descr
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _TodoItem extends TodoItem {
-  const _TodoItem({required this.id, required this.title, required this.createdAt, required this.updatedAt, this.description, this.isCompleted = false, this.dueDate, this.priority = TodoPriority.none}): super._();
-  
+  const _TodoItem({required this.id, required this.title, required this.createdAt, required this.updatedAt, this.description, this.isCompleted = false, this.dueDate, this.priority = TodoPriority.none, this.changeId, this.lastSyncedAt, this.synchronized = false}): super._();
+  factory _TodoItem.fromJson(Map<String, dynamic> json) => _$TodoItemFromJson(json);
 
 @override final  String id;
 @override final  String title;
@@ -224,6 +230,9 @@ class _TodoItem extends TodoItem {
 @override@JsonKey() final  bool isCompleted;
 @override final  DateTime? dueDate;
 @override@JsonKey() final  TodoPriority priority;
+@override final  String? changeId;
+@override final  DateTime? lastSyncedAt;
+@override@JsonKey() final  bool synchronized;
 
 /// Create a copy of TodoItem
 /// with the given fields replaced by the non-null parameter values.
@@ -231,20 +240,23 @@ class _TodoItem extends TodoItem {
 @pragma('vm:prefer-inline')
 _$TodoItemCopyWith<_TodoItem> get copyWith => __$TodoItemCopyWithImpl<_TodoItem>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$TodoItemToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.description, description) || other.description == description)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.priority, priority) || other.priority == priority));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.description, description) || other.description == description)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.changeId, changeId) || other.changeId == changeId)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.synchronized, synchronized) || other.synchronized == synchronized));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,createdAt,updatedAt,description,isCompleted,dueDate,priority);
+int get hashCode => Object.hash(runtimeType,id,title,createdAt,updatedAt,description,isCompleted,dueDate,priority,changeId,lastSyncedAt,synchronized);
 
 @override
 String toString() {
-  return 'TodoItem(id: $id, title: $title, createdAt: $createdAt, updatedAt: $updatedAt, description: $description, isCompleted: $isCompleted, dueDate: $dueDate, priority: $priority)';
+  return 'TodoItem(id: $id, title: $title, createdAt: $createdAt, updatedAt: $updatedAt, description: $description, isCompleted: $isCompleted, dueDate: $dueDate, priority: $priority, changeId: $changeId, lastSyncedAt: $lastSyncedAt, synchronized: $synchronized)';
 }
 
 
@@ -255,7 +267,7 @@ abstract mixin class _$TodoItemCopyWith<$Res> implements $TodoItemCopyWith<$Res>
   factory _$TodoItemCopyWith(_TodoItem value, $Res Function(_TodoItem) _then) = __$TodoItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, DateTime createdAt, DateTime updatedAt, String? description, bool isCompleted, DateTime? dueDate, TodoPriority priority
+ String id, String title, DateTime createdAt, DateTime updatedAt, String? description, bool isCompleted, DateTime? dueDate, TodoPriority priority, String? changeId, DateTime? lastSyncedAt, bool synchronized
 });
 
 
@@ -272,7 +284,7 @@ class __$TodoItemCopyWithImpl<$Res>
 
 /// Create a copy of TodoItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? createdAt = null,Object? updatedAt = null,Object? description = freezed,Object? isCompleted = null,Object? dueDate = freezed,Object? priority = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? createdAt = null,Object? updatedAt = null,Object? description = freezed,Object? isCompleted = null,Object? dueDate = freezed,Object? priority = null,Object? changeId = freezed,Object? lastSyncedAt = freezed,Object? synchronized = null,}) {
   return _then(_TodoItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -282,7 +294,10 @@ as DateTime,description: freezed == description ? _self.description : descriptio
 as String?,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
 as bool,dueDate: freezed == dueDate ? _self.dueDate : dueDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
-as TodoPriority,
+as TodoPriority,changeId: freezed == changeId ? _self.changeId : changeId // ignore: cast_nullable_to_non_nullable
+as String?,lastSyncedAt: freezed == lastSyncedAt ? _self.lastSyncedAt : lastSyncedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,synchronized: null == synchronized ? _self.synchronized : synchronized // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

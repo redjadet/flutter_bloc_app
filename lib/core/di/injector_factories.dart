@@ -8,6 +8,10 @@ import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_rep
 import 'package:flutter_bloc_app/features/counter/data/realtime_database_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
+import 'package:flutter_bloc_app/features/todo_list/data/hive_todo_repository.dart';
+import 'package:flutter_bloc_app/features/todo_list/data/offline_first_todo_repository.dart';
+import 'package:flutter_bloc_app/features/todo_list/data/realtime_database_todo_repository.dart';
+import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
@@ -52,6 +56,51 @@ CounterRepository? _createRemoteCounterRepositoryOrNull() {
   } on Exception catch (error, stackTrace) {
     AppLogger.error(
       'Creating remote counter repository failed',
+      error,
+      stackTrace,
+    );
+    return null;
+  }
+  // coverage:ignore-end
+}
+
+/// Creates a TodoRepository instance.
+///
+/// Uses offline-first architecture: local Hive storage with optional remote Firebase sync.
+TodoRepository createTodoRepository() {
+  final HiveTodoRepository localRepository = HiveTodoRepository(
+    hiveService: getIt<HiveService>(),
+  );
+  final TodoRepository? remoteRepository = _createRemoteTodoRepositoryOrNull();
+  return OfflineFirstTodoRepository(
+    localRepository: localRepository,
+    remoteRepository: remoteRepository,
+    pendingSyncRepository: getIt<PendingSyncRepository>(),
+    registry: getIt<SyncableRepositoryRegistry>(),
+  );
+}
+
+TodoRepository? _createRemoteTodoRepositoryOrNull() {
+  if (Firebase.apps.isEmpty) {
+    return null;
+  }
+  // coverage:ignore-start
+  try {
+    final FirebaseApp app = Firebase.app();
+    final FirebaseDatabase database = FirebaseDatabase.instanceFor(app: app)
+      ..setPersistenceEnabled(true);
+    final FirebaseAuth auth = FirebaseAuth.instanceFor(app: app);
+    return RealtimeDatabaseTodoRepository(database: database, auth: auth);
+  } on FirebaseException catch (error, stackTrace) {
+    AppLogger.error(
+      'Creating remote todo repository failed',
+      error,
+      stackTrace,
+    );
+    return null;
+  } on Exception catch (error, stackTrace) {
+    AppLogger.error(
+      'Creating remote todo repository failed',
       error,
       stackTrace,
     );

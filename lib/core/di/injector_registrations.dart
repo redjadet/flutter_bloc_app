@@ -40,7 +40,6 @@ import 'package:flutter_bloc_app/features/settings/data/package_info_app_info_re
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
-import 'package:flutter_bloc_app/features/todo_list/data/hive_todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/data/echo_websocket_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
@@ -200,7 +199,7 @@ void _registerSearchServices() {
 
 void _registerTodoListServices() {
   registerLazySingletonIfAbsent<TodoRepository>(
-    () => HiveTodoRepository(hiveService: getIt<HiveService>()),
+    createTodoRepository, // Use factory instead of direct instantiation
   );
 }
 

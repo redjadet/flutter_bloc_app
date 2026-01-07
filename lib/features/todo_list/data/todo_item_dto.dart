@@ -10,6 +10,9 @@ class TodoItemDto {
     required this.updatedAt,
     this.dueDate,
     this.priority = TodoPriority.none,
+    this.changeId,
+    this.lastSyncedAt,
+    this.synchronized = false,
   });
 
   TodoItemDto.fromDomain(final TodoItem item)
@@ -20,7 +23,10 @@ class TodoItemDto {
       createdAt = item.createdAt,
       updatedAt = item.updatedAt,
       dueDate = item.dueDate,
-      priority = item.priority;
+      priority = item.priority,
+      changeId = item.changeId,
+      lastSyncedAt = item.lastSyncedAt,
+      synchronized = item.synchronized;
 
   factory TodoItemDto.fromMap(final Map<dynamic, dynamic> raw) {
     final Map<String, dynamic> normalized = raw.map(
@@ -38,6 +44,9 @@ class TodoItemDto {
     final DateTime? updatedAt = _parseDate(normalized['updatedAt']);
     final DateTime? dueDate = _parseDate(normalized['dueDate']);
     final TodoPriority priority = _parsePriority(normalized['priority']);
+    final String? changeId = normalized['changeId'] as String?;
+    final DateTime? lastSyncedAt = _parseDate(normalized['lastSyncedAt']);
+    final bool synchronized = _coerceBool(normalized['synchronized']);
     if (createdAt == null || updatedAt == null) {
       throw const FormatException('Invalid TodoItem payload');
     }
@@ -50,6 +59,9 @@ class TodoItemDto {
       updatedAt: updatedAt,
       dueDate: dueDate,
       priority: priority,
+      changeId: changeId,
+      lastSyncedAt: lastSyncedAt,
+      synchronized: synchronized,
     );
   }
 
@@ -61,6 +73,9 @@ class TodoItemDto {
   final DateTime updatedAt;
   final DateTime? dueDate;
   final TodoPriority priority;
+  final String? changeId;
+  final DateTime? lastSyncedAt;
+  final bool synchronized;
 
   TodoItem toDomain() => TodoItem(
     id: id,
@@ -71,6 +86,9 @@ class TodoItemDto {
     updatedAt: updatedAt,
     dueDate: dueDate,
     priority: priority,
+    changeId: changeId,
+    lastSyncedAt: lastSyncedAt,
+    synchronized: synchronized,
   );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
@@ -82,6 +100,9 @@ class TodoItemDto {
     'updatedAt': updatedAt.toIso8601String(),
     if (dueDate != null) 'dueDate': dueDate!.toIso8601String(),
     'priority': priority.name,
+    if (changeId != null) 'changeId': changeId,
+    if (lastSyncedAt != null) 'lastSyncedAt': lastSyncedAt?.toIso8601String(),
+    'synchronized': synchronized,
   };
 
   static bool _coerceBool(final dynamic value) {

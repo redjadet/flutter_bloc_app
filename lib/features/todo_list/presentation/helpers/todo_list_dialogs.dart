@@ -95,7 +95,7 @@ Future<TodoEditorResult?> showTodoEditorDialog({
                     onPressed: canSave
                         ? () => Navigator.of(context).pop(
                             TodoEditorResult(
-                              title: trimmedTitle,
+                              title: titleController.text.trim(),
                               description: descriptionController.text.trim(),
                               dueDate: selectedDueDate,
                               priority: selectedPriority,
@@ -125,7 +125,7 @@ Future<TodoEditorResult?> showTodoEditorDialog({
                     onPressed: canSave
                         ? () => Navigator.of(context).pop(
                             TodoEditorResult(
-                              title: trimmedTitle,
+                              title: titleController.text.trim(),
                               description: descriptionController.text.trim(),
                               dueDate: selectedDueDate,
                               priority: selectedPriority,
