@@ -799,6 +799,19 @@
   "@todoListClearCompletedAction": {
     "description": "Action label for clearing completed todos"
   },
+  "todoListClearCompletedDialogTitle": "Clear completed todos?",
+  "@todoListClearCompletedDialogTitle": {
+    "description": "Title for the clear completed confirmation dialog"
+  },
+  "todoListClearCompletedDialogMessage": "Delete {count, plural, =1 {1 completed todo} other {{count} completed todos}}? This cannot be undone.",
+  "@todoListClearCompletedDialogMessage": {
+    "description": "Confirmation message for clearing completed todos",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "todoListSearchHint": "Rechercher des tâches...",
   "@todoListSearchHint": {
     "description": "Hint text for the todo search field"

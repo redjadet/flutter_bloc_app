@@ -99,7 +99,19 @@ class _TodoListBody extends StatelessWidget {
                 hasCompleted: data.hasCompleted,
                 onFilterChanged: cubit.setFilter,
                 onClearCompleted: data.hasCompleted
-                    ? () => cubit.clearCompleted()
+                    ? () async {
+                        final int completedCount = data.items
+                            .where((final item) => item.isCompleted)
+                            .length;
+                        final bool? shouldClear =
+                            await showTodoClearCompletedConfirmDialog(
+                              context: context,
+                              count: completedCount,
+                            );
+                        if ((shouldClear ?? false) && context.mounted) {
+                          await cubit.clearCompleted();
+                        }
+                      }
                     : null,
               ),
               if (data.items.isNotEmpty) ...[
@@ -113,12 +125,25 @@ class _TodoListBody extends StatelessWidget {
                     if (data.hasCompleted)
                       PlatformAdaptive.textButton(
                         context: context,
-                        onPressed: () => cubit.clearCompleted(),
+                        onPressed: () async {
+                          final int completedCount = data.items
+                              .where((final item) => item.isCompleted)
+                              .length;
+                          final bool? shouldClear =
+                              await showTodoClearCompletedConfirmDialog(
+                                context: context,
+                                count: completedCount,
+                              );
+                          if ((shouldClear ?? false) && context.mounted) {
+                            await cubit.clearCompleted();
+                          }
+                        },
+                        color: colors.error,
                         child: Text(
                           context.l10n.todoListClearCompletedAction,
                           style: theme.textTheme.labelLarge?.copyWith(
                             fontSize: context.responsiveCaptionSize,
-                            color: colors.primary,
+                            color: colors.error,
                           ),
                         ),
                       ),

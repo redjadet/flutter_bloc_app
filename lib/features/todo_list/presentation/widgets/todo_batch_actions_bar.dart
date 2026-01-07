@@ -33,6 +33,14 @@ class TodoBatchActionsBar extends StatelessWidget {
       (final item) => selectedItemIds.contains(item.id) && !item.isCompleted,
     );
 
+    // Check if all filtered items are selected
+    final Set<String> filteredItemIds = filteredItems
+        .map((final item) => item.id)
+        .toSet();
+    final bool allFilteredItemsSelected =
+        filteredItems.isNotEmpty &&
+        filteredItemIds.every((final id) => selectedItemIds.contains(id));
+
     return Wrap(
       spacing: context.responsiveHorizontalGapS,
       runSpacing: context.responsiveGapXS,
@@ -46,51 +54,49 @@ class TodoBatchActionsBar extends StatelessWidget {
               color: colors.onSurface,
             ),
           ),
-        PlatformAdaptive.textButton(
-          context: context,
-          onPressed: filteredItems.isNotEmpty ? cubit.selectAllItems : null,
-          child: Text(context.l10n.todoListSelectAll),
-        ),
-        PlatformAdaptive.textButton(
-          context: context,
-          onPressed: hasSelection ? cubit.clearSelection : null,
-          child: Text(context.l10n.todoListClearSelection),
-        ),
-        PlatformAdaptive.textButton(
-          context: context,
-          onPressed: hasSelectedActive
-              ? () async {
-                  await cubit.batchCompleteSelected();
-                }
-              : null,
-          child: Text(context.l10n.todoListBatchComplete),
-        ),
-        PlatformAdaptive.textButton(
-          context: context,
-          onPressed: hasSelectedCompleted
-              ? () async {
-                  await cubit.batchUncompleteSelected();
-                }
-              : null,
-          child: Text(context.l10n.todoListBatchUncomplete),
-        ),
-        PlatformAdaptive.textButton(
-          context: context,
-          onPressed: hasSelection
-              ? () async {
-                  final bool? shouldDelete =
-                      await showTodoBatchDeleteConfirmDialog(
-                        context: context,
-                        count: selectedItemIds.length,
-                      );
-                  if ((shouldDelete ?? false) && context.mounted) {
-                    await cubit.batchDeleteSelected();
-                  }
-                }
-              : null,
-          color: colors.error,
-          child: Text(context.l10n.todoListBatchDelete),
-        ),
+        if (filteredItems.isNotEmpty)
+          PlatformAdaptive.textButton(
+            context: context,
+            onPressed: allFilteredItemsSelected
+                ? cubit.clearSelection
+                : cubit.selectAllItems,
+            child: Text(
+              allFilteredItemsSelected
+                  ? context.l10n.todoListClearSelection
+                  : context.l10n.todoListSelectAll,
+            ),
+          ),
+        if (hasSelectedActive)
+          PlatformAdaptive.textButton(
+            context: context,
+            onPressed: () async {
+              await cubit.batchCompleteSelected();
+            },
+            child: Text(context.l10n.todoListBatchComplete),
+          ),
+        if (hasSelectedCompleted)
+          PlatformAdaptive.textButton(
+            context: context,
+            onPressed: () async {
+              await cubit.batchUncompleteSelected();
+            },
+            child: Text(context.l10n.todoListBatchUncomplete),
+          ),
+        if (hasSelection)
+          PlatformAdaptive.textButton(
+            context: context,
+            onPressed: () async {
+              final bool? shouldDelete = await showTodoBatchDeleteConfirmDialog(
+                context: context,
+                count: selectedItemIds.length,
+              );
+              if ((shouldDelete ?? false) && context.mounted) {
+                await cubit.batchDeleteSelected();
+              }
+            },
+            color: colors.error,
+            child: Text(context.l10n.todoListBatchDelete),
+          ),
       ],
     );
   }

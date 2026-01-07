@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **76.97%** (9917/12884 lines)
+*Total line coverage*: **76.69%** (9917/12932 lines)
 
 Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) are excluded from these totals.
 
@@ -50,16 +50,16 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart` | 0.00% | 0/50 |
 | `lib/features/chat/presentation/chat_list_state.switch_helper.dart` | 0.00% | 0/5 |
 | `lib/features/todo_list/presentation/helpers/todo_list_dialog_content.dart` | 0.00% | 0/21 |
-| `lib/features/todo_list/presentation/widgets/todo_batch_actions_bar.dart` | 0.00% | 0/41 |
+| `lib/features/todo_list/presentation/widgets/todo_batch_actions_bar.dart` | 0.00% | 0/47 |
 | `lib/features/todo_list/presentation/helpers/todo_list_dialog_due_date.dart` | 0.00% | 0/23 |
 | `lib/features/google_maps/presentation/widgets/map_camera_controller.dart` | 0.00% | 0/22 |
-| `lib/features/todo_list/presentation/pages/todo_list_page.dart` | 1.85% | 2/108 |
+| `lib/features/todo_list/presentation/pages/todo_list_page.dart` | 1.65% | 2/121 |
 | `lib/features/todo_list/presentation/widgets/todo_search_field.dart` | 1.89% | 1/53 |
 | `lib/features/todo_list/presentation/helpers/todo_list_date_picker.dart` | 2.04% | 1/49 |
 | `lib/features/todo_list/presentation/widgets/todo_stats_widget.dart` | 2.13% | 1/47 |
+| `lib/features/todo_list/presentation/helpers/todo_list_delete_dialogs.dart` | 18.39% | 16/87 |
 | `lib/features/todo_list/presentation/cubit/todo_list_cubit.dart` | 20.62% | 20/97 |
 | `lib/features/todo_list/presentation/widgets/todo_list_item_content.dart` | 27.03% | 10/37 |
-| `lib/features/todo_list/presentation/helpers/todo_list_delete_dialogs.dart` | 27.59% | 16/58 |
 | `lib/main_bootstrap.dart` | 33.33% | 1/3 |
 | `lib/app/router/routes.dart` | 34.02% | 33/97 |
 | `lib/shared/utils/bloc_provider_helpers.dart` | 37.04% | 10/27 |
