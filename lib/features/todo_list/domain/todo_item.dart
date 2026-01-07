@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'todo_item.freezed.dart';
+part 'todo_item.g.dart';
 
 enum TodoPriority { none, low, medium, high }
 
@@ -17,7 +18,13 @@ abstract class TodoItem with _$TodoItem {
     @Default(false) final bool isCompleted,
     final DateTime? dueDate,
     @Default(TodoPriority.none) final TodoPriority priority,
+    final String? changeId,
+    final DateTime? lastSyncedAt,
+    @Default(false) final bool synchronized,
   }) = _TodoItem;
+
+  factory TodoItem.fromJson(final Map<String, dynamic> json) =>
+      _$TodoItemFromJson(json);
 
   const TodoItem._();
 

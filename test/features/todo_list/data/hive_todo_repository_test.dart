@@ -107,23 +107,19 @@ void main() {
     test('watchAll emits updates when items change', () async {
       final TodoItem item = _todoItem(id: 'a', title: 'Watch');
 
-      // Start listening to ensure watch is active
-      final Stream<List<TodoItem>> stream = repository.watchAll();
-      final Future<void> expectation = expectLater(
-        stream,
-        emitsThrough(
-          predicate<List<TodoItem>>(
-            (final items) => items.length == 1 && items.first.id == 'a',
-          ),
-        ),
+      final StreamIterator<List<TodoItem>> iterator = StreamIterator(
+        repository.watchAll(),
       );
+      addTearDown(iterator.cancel);
 
-      // Wait a bit to ensure the watch is set up
-      await Future<void>.delayed(const Duration(milliseconds: 10));
+      expect(await iterator.moveNext(), isTrue);
+      expect(iterator.current, isEmpty);
 
-      // Now save - the watch should emit
       await repository.save(item);
-      await expectation;
+
+      expect(await iterator.moveNext(), isTrue);
+      final List<TodoItem> result = iterator.current;
+      expect(result.first.title, 'Watch');
     });
   });
 }

@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
+import 'package:flutter_bloc_app/shared/firebase/auth_helpers.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Firebase Realtime Database backed implementation of [CounterRepository].
@@ -21,7 +22,6 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
 
   static const String _defaultCounterPath = 'counter';
   static const CounterSnapshot _emptySnapshot = CounterSnapshot(count: 0);
-  static const Duration _authWaitTimeout = Duration(seconds: 5);
 
   final DatabaseReference _counterRef;
   final FirebaseAuth _auth;
@@ -159,31 +159,5 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
 void _debugLog(final String message) {
   if (kDebugMode) {
     AppLogger.debug(message);
-  }
-}
-
-@visibleForTesting
-Future<User> waitForAuthUser(
-  final FirebaseAuth auth, {
-  final Duration timeout = RealtimeDatabaseCounterRepository._authWaitTimeout,
-}) async {
-  final User? current = auth.currentUser;
-  if (current != null) {
-    return current;
-  }
-
-  try {
-    return await auth
-        .authStateChanges()
-        .where((final User? user) => user != null)
-        .cast<User>()
-        .first
-        .timeout(timeout);
-  } on TimeoutException {
-    throw FirebaseAuthException(
-      code: 'no-current-user',
-      message:
-          'FirebaseAuth did not supply a user within ${timeout.inMilliseconds}ms.',
-    );
   }
 }

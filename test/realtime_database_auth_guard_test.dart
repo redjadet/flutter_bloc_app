@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_bloc_app/features/counter/data/realtime_database_counter_repository.dart';
+import 'package:flutter_bloc_app/shared/firebase/auth_helpers.dart';
 
 void main() {
   group('waitForAuthUser', () {
