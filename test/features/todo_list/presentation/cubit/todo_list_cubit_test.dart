@@ -236,6 +236,61 @@ void main() {
       expect: () => <TodoListState>[],
     );
 
+    blocTest<TodoListCubit, TodoListState>(
+      'deleteTodo removes id from manual order when sorting manually',
+      build: () => buildCubit(
+        initialItems: [
+          _todoItem(id: 'a', title: 'Alpha'),
+          _todoItem(id: 'b', title: 'Beta'),
+        ],
+      ),
+      seed: () => TodoListState(
+        status: ViewStatus.success,
+        items: [
+          _todoItem(id: 'a', title: 'Alpha'),
+          _todoItem(id: 'b', title: 'Beta'),
+        ],
+        sortOrder: TodoSortOrder.manual,
+        manualOrder: const <String, int>{'a': 0, 'b': 1},
+      ),
+      act: (final cubit) async {
+        await cubit.deleteTodo(_todoItem(id: 'a', title: 'Alpha'));
+      },
+      expect: () => [
+        isA<TodoListState>().having(
+          (final s) => s.manualOrder.containsKey('a'),
+          'manual order contains deleted id',
+          false,
+        ),
+      ],
+    );
+
+    test(
+      'manual order appends new items received while sorting manually',
+      () async {
+        final TodoListCubit cubit = buildCubit(
+          initialItems: [
+            _todoItem(id: 'a', title: 'Alpha'),
+            _todoItem(id: 'b', title: 'Beta'),
+          ],
+        );
+        addTearDown(cubit.close);
+
+        await cubit.loadInitial();
+        cubit.reorderItems(oldIndex: 0, newIndex: 1);
+
+        final int maxOrder = cubit.state.manualOrder.values.reduce(
+          (final a, final b) => a > b ? a : b,
+        );
+
+        await repository.save(_todoItem(id: 'c', title: 'Gamma'));
+        await Future<void>.delayed(Duration.zero);
+
+        expect(cubit.state.manualOrder.containsKey('c'), isTrue);
+        expect(cubit.state.manualOrder['c']!, greaterThan(maxOrder));
+      },
+    );
+
     test('addTodo ignores blank titles', () async {
       final TodoListCubit cubit = buildCubit();
       await cubit.addTodo(title: '   ', description: null);

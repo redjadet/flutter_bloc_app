@@ -30,15 +30,50 @@ mixin _TodoListCubitMethods
     return trimmed;
   }
 
+  Map<String, int> _normalizeManualOrder(final List<TodoItem> items) {
+    if (items.isEmpty) {
+      return const <String, int>{};
+    }
+
+    final Set<String> itemIds = items.map((final item) => item.id).toSet();
+    final Map<String, int> normalized = <String, int>{};
+    int maxOrder = -1;
+
+    for (final entry in state.manualOrder.entries) {
+      if (!itemIds.contains(entry.key)) {
+        continue;
+      }
+      normalized[entry.key] = entry.value;
+      if (entry.value > maxOrder) {
+        maxOrder = entry.value;
+      }
+    }
+
+    for (final item in items) {
+      if (normalized.containsKey(item.id)) {
+        continue;
+      }
+      maxOrder += 1;
+      normalized[item.id] = maxOrder;
+    }
+
+    return normalized;
+  }
+
   void emitOptimisticUpdate(final List<TodoItem> items) {
     if (isClosed) return;
     final Set<String> updatedSelection = _trimSelection(items);
+    final Map<String, int> updatedManualOrder =
+        state.sortOrder == TodoSortOrder.manual
+        ? _normalizeManualOrder(items)
+        : state.manualOrder;
     emit(
       state.copyWith(
         items: List<TodoItem>.unmodifiable(items),
         status: ViewStatus.success,
         errorMessage: null,
         selectedItemIds: updatedSelection,
+        manualOrder: updatedManualOrder,
       ),
     );
   }
@@ -46,12 +81,17 @@ mixin _TodoListCubitMethods
   void onItemsUpdated(final List<TodoItem> items) {
     if (isClosed) return;
     final Set<String> updatedSelection = _trimSelection(items);
+    final Map<String, int> updatedManualOrder =
+        state.sortOrder == TodoSortOrder.manual
+        ? _normalizeManualOrder(items)
+        : state.manualOrder;
     emit(
       state.copyWith(
         status: ViewStatus.success,
         items: List<TodoItem>.unmodifiable(items),
         errorMessage: null,
         selectedItemIds: updatedSelection,
+        manualOrder: updatedManualOrder,
       ),
     );
   }
