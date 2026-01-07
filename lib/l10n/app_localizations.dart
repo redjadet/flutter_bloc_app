@@ -890,6 +890,12 @@ abstract class AppLocalizations {
   /// **'Open Markdown Editor'**
   String get openMarkdownEditorTooltip;
 
+  /// Tooltip for navigating to the Todo List feature
+  ///
+  /// In en, this message translates to:
+  /// **'Open Todo List'**
+  String get openTodoTooltip;
+
   /// Title for the AI chat page
   ///
   /// In en, this message translates to:

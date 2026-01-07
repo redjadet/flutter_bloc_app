@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **76.54%** (9924/12965 lines)
+*Total line coverage*: **76.55%** (9926/12967 lines)
 
 Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) are excluded from these totals.
 
@@ -126,7 +126,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/chat/presentation/widgets/chat_contact_avatar.dart` | 77.08% | 37/48 |
 | `lib/features/search/presentation/widgets/search_app_bar.dart` | 77.27% | 17/22 |
 | `lib/features/profile/presentation/widgets/profile_header.dart` | 77.55% | 38/49 |
-| `lib/features/counter/presentation/widgets/counter_page_app_bar.dart` | 77.66% | 73/94 |
 | `lib/features/profile/presentation/widgets/profile_button_styles.dart` | 77.78% | 7/9 |
 | `lib/shared/http/auth_token_manager.dart` | 77.78% | 28/36 |
 | `lib/features/calculator/presentation/widgets/calculator_summary_card.dart` | 77.88% | 88/113 |
@@ -134,6 +133,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/google_maps/presentation/widgets/map_state_manager.dart` | 78.05% | 32/41 |
 | `lib/features/auth/presentation/widgets/fallback_sign_in_content.dart` | 78.13% | 25/32 |
 | `lib/features/auth/presentation/widgets/logged_out_user_info.dart` | 78.13% | 25/32 |
+| `lib/features/counter/presentation/widgets/counter_page_app_bar.dart` | 78.13% | 75/96 |
 | `lib/features/counter/data/hive_counter_repository_watch_helper.dart` | 78.57% | 33/42 |
 | `lib/core/app_config.dart` | 78.95% | 45/57 |
 | `lib/features/remote_config/data/offline_first_remote_config_repository.dart` | 78.95% | 60/76 |

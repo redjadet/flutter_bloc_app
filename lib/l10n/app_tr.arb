@@ -705,7 +705,11 @@
   },
   "openMarkdownEditorTooltip": "Markdown Düzenleyici'yi aç",
   "@openMarkdownEditorTooltip": {
-    "description": "Tooltip for navigating to the Markdown Editor feature"
+    "description": "Markdown Düzenleyici özelliğine gitmek için tooltip"
+  },
+  "openTodoTooltip": "Todo Listesi'ni aç",
+  "@openTodoTooltip": {
+    "description": "Todo Listesi özelliğine gitmek için tooltip"
   },
   "exampleTodoListButton": "Todo List Demo",
   "@exampleTodoListButton": {

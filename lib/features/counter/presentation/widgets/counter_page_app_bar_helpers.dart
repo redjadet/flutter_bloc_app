@@ -10,6 +10,7 @@ enum OverflowAction {
   googleMaps,
   whiteboard,
   markdownEditor,
+  todo,
 }
 
 /// Represents an item in the overflow menu.

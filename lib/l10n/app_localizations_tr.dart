@@ -438,6 +438,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get openMarkdownEditorTooltip => 'Markdown Düzenleyici\'yi aç';
 
   @override
+  String get openTodoTooltip => 'Todo Listesi\'ni aç';
+
+  @override
   String get chatPageTitle => 'Yapay Zekâ Sohbeti';
 
   @override

@@ -704,7 +704,11 @@
   },
   "openMarkdownEditorTooltip": "Ouvrir l'Éditeur Markdown",
   "@openMarkdownEditorTooltip": {
-    "description": "Tooltip for navigating to the Markdown Editor feature"
+    "description": "Tooltip pour naviguer vers la fonctionnalité Éditeur Markdown"
+  },
+  "openTodoTooltip": "Ouvrir la Liste de Tâches",
+  "@openTodoTooltip": {
+    "description": "Tooltip pour naviguer vers la fonctionnalité Liste de Tâches"
   },
   "exampleTodoListButton": "Todo List Demo",
   "@exampleTodoListButton": {
