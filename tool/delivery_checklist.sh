@@ -99,6 +99,10 @@ echo "  Checking for hard-coded strings in Text widgets..."
 bash tool/check_hardcoded_strings.sh || VALIDATION_FAILED=1
 echo ""
 
+echo "  Checking for missing localization keys..."
+bash tool/check_missing_localizations.sh || VALIDATION_FAILED=1
+echo ""
+
 echo "  Checking for missing isClosed checks before emit() in cubits..."
 bash tool/check_cubit_isclosed.sh || VALIDATION_FAILED=1
 echo ""

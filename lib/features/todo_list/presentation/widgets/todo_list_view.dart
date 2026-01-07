@@ -13,7 +13,7 @@ class TodoListView extends StatelessWidget {
     required this.onToggle,
     required this.onEdit,
     required this.onDelete,
-    required this.onDeleteWithoutConfirmation,
+    this.onDeleteWithoutConfirmation,
     this.selectedItemIds = const <String>{},
     this.onItemSelectionChanged,
     super.key,
@@ -24,7 +24,7 @@ class TodoListView extends StatelessWidget {
   final void Function(TodoItem) onToggle;
   final void Function(TodoItem) onEdit;
   final void Function(TodoItem) onDelete;
-  final void Function(TodoItem) onDeleteWithoutConfirmation;
+  final void Function(TodoItem)? onDeleteWithoutConfirmation;
   final Set<String> selectedItemIds;
   final void Function(String itemId, {required bool selected})?
   onItemSelectionChanged;
@@ -57,8 +57,9 @@ class TodoListView extends StatelessWidget {
               onToggle: () => onToggle(item),
               onEdit: () => onEdit(item),
               onDelete: () => onDelete(item),
-              onDeleteWithoutConfirmation: () =>
-                  onDeleteWithoutConfirmation(item),
+              onDeleteWithoutConfirmation: onDeleteWithoutConfirmation != null
+                  ? () => onDeleteWithoutConfirmation!(item)
+                  : null,
             ),
           );
         },
@@ -87,8 +88,9 @@ class TodoListView extends StatelessWidget {
             onToggle: () => onToggle(item),
             onEdit: () => onEdit(item),
             onDelete: () => onDelete(item),
-            onDeleteWithoutConfirmation: () =>
-                onDeleteWithoutConfirmation(item),
+            onDeleteWithoutConfirmation: onDeleteWithoutConfirmation != null
+                ? () => onDeleteWithoutConfirmation!(item)
+                : null,
           ),
         );
       },

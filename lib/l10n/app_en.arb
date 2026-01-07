@@ -1374,6 +1374,19 @@
   "@todoListBatchDelete": {
     "description": "Label for batch delete action"
   },
+  "todoListBatchDeleteDialogTitle": "Delete selected todos?",
+  "@todoListBatchDeleteDialogTitle": {
+    "description": "Title for the batch delete confirmation dialog"
+  },
+  "todoListBatchDeleteDialogMessage": "Delete {count, plural, =1 {1 todo} other {{count} todos}}? This cannot be undone.",
+  "@todoListBatchDeleteDialogMessage": {
+    "description": "Confirmation message for batch deleting todos",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "todoListBatchComplete": "Complete selected",
   "@todoListBatchComplete": {
     "description": "Label for batch complete action"

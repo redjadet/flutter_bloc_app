@@ -126,6 +126,37 @@ void main() {
       expect(toggledItem, equals(completedItem));
     });
 
+    testWidgets('swipe right does not dismiss item', (
+      final WidgetTester tester,
+    ) async {
+      final TodoItem item = TodoItem.create(title: 'Task', description: null);
+
+      await tester.pumpWidget(buildWidget(item: item));
+      await tester.pumpAndSettle();
+
+      final Finder dismissible = find.byType(Dismissible);
+      expect(dismissible, findsOneWidget);
+
+      final Offset start = tester.getCenter(dismissible);
+      final Offset end = start + const Offset(400, 0);
+
+      // Simulate a complete swipe gesture using gesture test helpers
+      final TestGesture gesture = await tester.startGesture(start);
+      await gesture.moveTo(end);
+      await gesture.up();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      // Wait for confirmDismiss async callback to complete
+      await tester.pumpAndSettle();
+
+      expect(onToggleCalled, isTrue, reason: 'onToggle should be called');
+      expect(
+        dismissible,
+        findsOneWidget,
+        reason: 'Item should not be dismissed on right swipe',
+      );
+    });
+
     testWidgets('swipe left shows delete confirmation dialog', (
       final WidgetTester tester,
     ) async {
@@ -211,36 +242,8 @@ void main() {
       expect(deletedItem, isNull);
     });
 
-    testWidgets('swipe right does not dismiss item', (
-      final WidgetTester tester,
-    ) async {
-      final TodoItem item = TodoItem.create(title: 'Task', description: null);
-
-      await tester.pumpWidget(buildWidget(item: item));
-      await tester.pumpAndSettle();
-
-      final Finder dismissible = find.byType(Dismissible);
-      expect(dismissible, findsOneWidget);
-
-      final Offset start = tester.getCenter(dismissible);
-      final Offset end = start + const Offset(400, 0);
-
-      // Simulate a complete swipe gesture using gesture test helpers
-      final TestGesture gesture = await tester.startGesture(start);
-      await gesture.moveTo(end);
-      await gesture.up();
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 100));
-      // Wait for confirmDismiss async callback to complete
-      await tester.pumpAndSettle();
-
-      expect(onToggleCalled, isTrue, reason: 'onToggle should be called');
-      expect(
-        dismissible,
-        findsOneWidget,
-        reason: 'Item should not be dismissed on right swipe',
-      );
-    });
+    // Note: Swipe-to-complete functionality removed - completion status
+    // can only be changed from the edit dialog now.
 
     testWidgets('swipe actions only work on mobile', (
       final WidgetTester tester,

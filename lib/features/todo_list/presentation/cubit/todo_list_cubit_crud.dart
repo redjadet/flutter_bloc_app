@@ -77,6 +77,7 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
     final String? description,
     final DateTime? dueDate,
     final TodoPriority? priority,
+    final bool? isCompleted,
   }) async {
     if (isClosed) return;
     final String trimmedTitle = title.trim();
@@ -91,6 +92,7 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
           : trimmedDescription,
       dueDate: dueDate?.toUtc(),
       priority: priority ?? item.priority,
+      isCompleted: isCompleted ?? item.isCompleted,
       updatedAt: DateTime.now().toUtc(),
     );
     await saveItem(updated, logContext: 'TodoListCubit.updateTodo');

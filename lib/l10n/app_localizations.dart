@@ -1958,6 +1958,18 @@ abstract class AppLocalizations {
   /// **'Delete selected'**
   String get todoListBatchDelete;
 
+  /// Title for the batch delete confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete selected todos?'**
+  String get todoListBatchDeleteDialogTitle;
+
+  /// Confirmation message for batch deleting todos
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {count, plural, =1 {1 todo} other {{count} todos}}? This cannot be undone.'**
+  String todoListBatchDeleteDialogMessage(int count);
+
   /// Label for batch complete action
   ///
   /// In en, this message translates to:

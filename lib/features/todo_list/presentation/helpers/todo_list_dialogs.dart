@@ -6,18 +6,22 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
+export 'todo_list_delete_dialogs.dart';
+
 class TodoEditorResult {
   const TodoEditorResult({
     required this.title,
     required this.description,
     this.dueDate,
     this.priority = TodoPriority.none,
+    this.isCompleted = false,
   });
 
   final String title;
   final String description;
   final DateTime? dueDate;
   final TodoPriority priority;
+  final bool isCompleted;
 }
 
 Future<TodoEditorResult?> showTodoEditorDialog({
@@ -33,6 +37,7 @@ Future<TodoEditorResult?> showTodoEditorDialog({
   );
   DateTime? selectedDueDate = existing?.dueDate?.toLocal();
   TodoPriority selectedPriority = existing?.priority ?? TodoPriority.none;
+  bool isCompleted = existing?.isCompleted ?? false;
 
   final bool isCupertino = PlatformAdaptive.isCupertino(context);
 
@@ -50,6 +55,7 @@ Future<TodoEditorResult?> showTodoEditorDialog({
           isCupertino: isCupertino,
           selectedDueDate: selectedDueDate,
           selectedPriority: selectedPriority,
+          isCompleted: isCompleted,
           onDueDateChanged: (final DateTime? date) {
             setState(() {
               selectedDueDate = date;
@@ -58,6 +64,11 @@ Future<TodoEditorResult?> showTodoEditorDialog({
           onPriorityChanged: (final TodoPriority priority) {
             setState(() {
               selectedPriority = priority;
+            });
+          },
+          onCompletedChanged: (final bool completed) {
+            setState(() {
+              isCompleted = completed;
             });
           },
         );
@@ -88,6 +99,7 @@ Future<TodoEditorResult?> showTodoEditorDialog({
                               description: descriptionController.text.trim(),
                               dueDate: selectedDueDate,
                               priority: selectedPriority,
+                              isCompleted: isCompleted,
                             ),
                           )
                         : null,
@@ -117,6 +129,7 @@ Future<TodoEditorResult?> showTodoEditorDialog({
                               description: descriptionController.text.trim(),
                               dueDate: selectedDueDate,
                               priority: selectedPriority,
+                              isCompleted: isCompleted,
                             ),
                           )
                         : null,
@@ -132,57 +145,4 @@ Future<TodoEditorResult?> showTodoEditorDialog({
   descriptionController.dispose();
 
   return result;
-}
-
-Future<bool?> showTodoDeleteConfirmDialog({
-  required final BuildContext context,
-  required final String title,
-}) async {
-  final l10n = context.l10n;
-  final bool isCupertino = PlatformAdaptive.isCupertino(context);
-  return showAdaptiveDialog<bool>(
-    context: context,
-    builder: (final context) => isCupertino
-        ? CupertinoAlertDialog(
-            title: Text(l10n.todoListDeleteDialogTitle),
-            content: Padding(
-              padding: EdgeInsets.only(top: context.responsiveGapS),
-              child: Text(
-                l10n.todoListDeleteDialogMessage(title),
-              ),
-            ),
-            actions: [
-              PlatformAdaptive.dialogAction(
-                context: context,
-                onPressed: () => Navigator.of(context).pop(false),
-                label: l10n.todoListCancelAction,
-              ),
-              PlatformAdaptive.dialogAction(
-                context: context,
-                onPressed: () => Navigator.of(context).pop(true),
-                label: l10n.todoListDeleteAction,
-                isDestructive: true,
-              ),
-            ],
-          )
-        : AlertDialog(
-            title: Text(l10n.todoListDeleteDialogTitle),
-            content: Text(
-              l10n.todoListDeleteDialogMessage(title),
-            ),
-            actions: [
-              PlatformAdaptive.dialogAction(
-                context: context,
-                onPressed: () => Navigator.of(context).pop(false),
-                label: l10n.todoListCancelAction,
-              ),
-              PlatformAdaptive.dialogAction(
-                context: context,
-                onPressed: () => Navigator.of(context).pop(true),
-                label: l10n.todoListDeleteAction,
-                isDestructive: true,
-              ),
-            ],
-          ),
-  );
 }
