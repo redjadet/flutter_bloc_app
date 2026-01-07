@@ -6,7 +6,11 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
     final TodoItem item, {
     required final String logContext,
   }) async {
+    if (isClosed) return;
     final TodoListState previousState = state;
+    final bool itemExists = state.items.any(
+      (final existing) => existing.id == item.id,
+    );
     final List<TodoItem> updatedItems = _TodoListCubitHelpers.saveInList(
       state.items,
       item,
@@ -15,8 +19,7 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
 
     // If in manual sort mode and item is new, add it to the end of manual order
     Map<String, int> updatedManualOrder = state.manualOrder;
-    if (state.sortOrder == TodoSortOrder.manual &&
-        !state.items.any((final existing) => existing.id == item.id)) {
+    if (state.sortOrder == TodoSortOrder.manual && !itemExists) {
       updatedManualOrder = Map<String, int>.from(state.manualOrder);
       final int maxOrder = updatedManualOrder.values.isEmpty
           ? -1

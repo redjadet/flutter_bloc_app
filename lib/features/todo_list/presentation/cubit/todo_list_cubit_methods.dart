@@ -121,11 +121,26 @@ mixin _TodoListCubitMethods
     required final int newIndex,
   }) {
     if (isClosed) return;
+    if (state.filter != TodoFilter.all || state.searchQuery.isNotEmpty) {
+      // Avoid inconsistent manual ordering while filtered or searching.
+      return;
+    }
+    final List<TodoItem> filteredItems = state.filteredItems;
+
+    // Validate indices
+    if (filteredItems.isEmpty ||
+        oldIndex < 0 ||
+        oldIndex >= filteredItems.length ||
+        newIndex < 0 ||
+        newIndex >= filteredItems.length) {
+      return;
+    }
+
     if (state.sortOrder != TodoSortOrder.manual) {
       // Switch to manual sort mode
       final Map<String, int> newManualOrder = <String, int>{};
-      for (int i = 0; i < state.filteredItems.length; i++) {
-        newManualOrder[state.filteredItems[i].id] = i;
+      for (int i = 0; i < filteredItems.length; i++) {
+        newManualOrder[filteredItems[i].id] = i;
       }
       emit(
         state.copyWith(
@@ -135,7 +150,7 @@ mixin _TodoListCubitMethods
       );
     }
 
-    final List<TodoItem> items = List<TodoItem>.from(state.filteredItems);
+    final List<TodoItem> items = List<TodoItem>.from(filteredItems);
     int adjustedNewIndex = newIndex;
     if (oldIndex < newIndex) {
       adjustedNewIndex -= 1;

@@ -69,7 +69,7 @@ Future<void> _handleDeleteWithUndo(
   }
 
   final TodoItem? lastDeleted = cubit.lastDeletedItem;
-  if (lastDeleted != null) {
+  if (lastDeleted != null && context.mounted) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(context.l10n.todoListDeleteUndone),

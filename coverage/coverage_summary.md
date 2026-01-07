@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **76.69%** (9917/12932 lines)
+*Total line coverage*: **76.54%** (9924/12965 lines)
 
 Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) are excluded from these totals.
 
@@ -36,7 +36,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/todo_list/presentation/widgets/todo_list_content.dart` | 0.00% | 0/49 |
 | `lib/features/todo_list/presentation/widgets/todo_priority_badge.dart` | 0.00% | 0/28 |
 | `lib/features/google_maps/presentation/widgets/map_sample_map_utils.dart` | 0.00% | 0/30 |
-| `lib/features/todo_list/presentation/pages/todo_list_page_handlers.dart` | 0.00% | 0/34 |
+| `lib/features/todo_list/presentation/pages/todo_list_page_handlers.dart` | 0.00% | 0/35 |
 | `lib/features/todo_list/presentation/helpers/todo_list_dialogs.dart` | 0.00% | 0/53 |
 | `lib/shared/utils/bloc_lint_helpers.dart` | 0.00% | 0/11 |
 | `lib/shared/sync/sync_status.dart` | 0.00% | 0/3 |
@@ -51,14 +51,14 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/chat/presentation/chat_list_state.switch_helper.dart` | 0.00% | 0/5 |
 | `lib/features/todo_list/presentation/helpers/todo_list_dialog_content.dart` | 0.00% | 0/21 |
 | `lib/features/todo_list/presentation/widgets/todo_batch_actions_bar.dart` | 0.00% | 0/47 |
-| `lib/features/todo_list/presentation/helpers/todo_list_dialog_due_date.dart` | 0.00% | 0/23 |
+| `lib/features/todo_list/presentation/helpers/todo_list_dialog_due_date.dart` | 0.00% | 0/24 |
 | `lib/features/google_maps/presentation/widgets/map_camera_controller.dart` | 0.00% | 0/22 |
 | `lib/features/todo_list/presentation/pages/todo_list_page.dart` | 1.65% | 2/121 |
 | `lib/features/todo_list/presentation/widgets/todo_search_field.dart` | 1.89% | 1/53 |
 | `lib/features/todo_list/presentation/helpers/todo_list_date_picker.dart` | 2.04% | 1/49 |
 | `lib/features/todo_list/presentation/widgets/todo_stats_widget.dart` | 2.13% | 1/47 |
+| `lib/features/todo_list/presentation/cubit/todo_list_cubit.dart` | 16.95% | 20/118 |
 | `lib/features/todo_list/presentation/helpers/todo_list_delete_dialogs.dart` | 18.39% | 16/87 |
-| `lib/features/todo_list/presentation/cubit/todo_list_cubit.dart` | 20.62% | 20/97 |
 | `lib/features/todo_list/presentation/widgets/todo_list_item_content.dart` | 27.03% | 10/37 |
 | `lib/main_bootstrap.dart` | 33.33% | 1/3 |
 | `lib/app/router/routes.dart` | 34.02% | 33/97 |
@@ -81,8 +81,8 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/example/presentation/widgets/markdown_editor/markdown_render_object.dart` | 51.61% | 48/93 |
 | `lib/features/chat/presentation/chat_cubit_selection_actions.dart` | 51.72% | 30/58 |
 | `lib/features/profile/presentation/widgets/profile_bottom_nav.dart` | 53.23% | 33/62 |
+| `lib/features/todo_list/presentation/cubit/todo_list_cubit_methods.dart` | 53.66% | 44/82 |
 | `lib/core/bootstrap/firebase_bootstrap_service.dart` | 54.29% | 38/70 |
-| `lib/features/todo_list/presentation/cubit/todo_list_cubit_methods.dart` | 54.67% | 41/75 |
 | `lib/shared/utils/platform_adaptive.dart` | 55.10% | 27/49 |
 | `lib/features/auth/presentation/widgets/register_terms_dialog.dart` | 55.56% | 15/27 |
 | `lib/shared/http/http_request_extensions.dart` | 55.56% | 5/9 |
@@ -105,13 +105,13 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/platform/biometric_authenticator.dart` | 68.00% | 17/25 |
 | `lib/features/example/presentation/pages/example_page.dart` | 68.60% | 59/86 |
 | `lib/features/calculator/presentation/pages/calculator_page.dart` | 68.83% | 53/77 |
-| `lib/features/todo_list/presentation/cubit/todo_list_cubit_crud.dart` | 69.23% | 54/78 |
 | `lib/shared/storage/hive_service.dart` | 69.39% | 34/49 |
 | `lib/features/graphql_demo/data/offline_first_graphql_demo_repository.dart` | 69.44% | 25/36 |
 | `lib/features/websocket/presentation/widgets/websocket_connection_banner.dart` | 69.44% | 25/36 |
 | `lib/core/config/secret_config.dart` | 70.00% | 14/20 |
 | `lib/shared/responsive/responsive_config.dart` | 70.37% | 19/27 |
 | `lib/features/remote_config/data/repositories/remote_config_repository.dart` | 70.83% | 34/48 |
+| `lib/features/todo_list/presentation/cubit/todo_list_cubit_crud.dart` | 71.25% | 57/80 |
 | `lib/shared/utils/state_restoration_mixin.dart` | 71.43% | 5/7 |
 | `lib/app.dart` | 71.43% | 15/21 |
 | `lib/features/counter/presentation/counter_cubit_base.dart` | 71.59% | 63/88 |
@@ -347,7 +347,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/core/di/register_remote_config_services.dart` | 100.00% | 13/13 |
 | `lib/core/di/injector_helpers.dart` | 100.00% | 4/4 |
 | `lib/core/time/timer_service.dart` | 100.00% | 9/9 |
-| `lib/features/todo_list/presentation/widgets/todo_list_item_dismissible.dart` | 100.00% | 33/33 |
+| `lib/features/todo_list/presentation/widgets/todo_list_item_dismissible.dart` | 100.00% | 34/34 |
 | `lib/shared/widgets/common_card.dart` | 100.00% | 10/10 |
 | `lib/core/platform_init.dart` | 100.00% | 8/8 |
 | `lib/features/todo_list/presentation/widgets/todo_list_item_swipe.dart` | 100.00% | 15/15 |

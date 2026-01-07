@@ -33,6 +33,7 @@ Widget buildTodoDueDatePicker({
           clearLabel: l10n.todoListClearDueDate,
           saveLabel: l10n.todoListSaveAction,
         );
+        if (!context.mounted) return;
         // pickedDate is null when cleared or cancelled
         // We need to distinguish, but for simplicity, we'll update if it changed
         if (pickedDate != selectedDueDate) {

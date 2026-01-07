@@ -27,6 +27,7 @@ Widget buildTodoItemDismissible({
       context: context,
       title: title,
     );
+    if (!context.mounted) return false;
     return shouldDelete ?? false;
   }
 
