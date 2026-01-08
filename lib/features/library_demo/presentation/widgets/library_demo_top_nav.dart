@@ -8,18 +8,22 @@ class LibraryTopNav extends StatelessWidget {
   const LibraryTopNav({
     required this.l10n,
     required this.onBack,
+    this.padding,
     super.key,
   });
 
   final AppLocalizations l10n;
   final VoidCallback onBack;
+  final EdgeInsets? padding;
 
   @override
   Widget build(final BuildContext context) => Padding(
-    padding: EdgeInsets.only(
-      top: EpochSpacing.topPadding,
-      left: EpochSpacing.panelPadding,
-    ),
+    padding:
+        padding ??
+        EdgeInsets.only(
+          top: EpochSpacing.topPadding,
+          left: EpochSpacing.panelPadding,
+        ),
     child: LibraryDemoIconButton(
       icon: const LibraryMenuIcon(),
       onPressed: onBack,
