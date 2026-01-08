@@ -17,7 +17,8 @@ class _FakeRemoteRepository extends TodoRepository {
     List<TodoItem>? initial,
     this.shouldThrowOnSave = false,
     this.shouldThrowOnDelete = false,
-    this.enableWatch = true,
+    // Keep disabled by default to avoid background merges affecting tests.
+    this.enableWatch = false,
   }) : _items = initial ?? [];
 
   List<TodoItem> _items = [];
@@ -205,97 +206,88 @@ void main() {
       expect(local.first.lastSyncedAt, isNotNull);
     });
 
-    // TODO(maint): Fix sync resolution and remove skip-checklist tag.
-    test(
-      'pullRemote applies remote when local item is older',
-      () async {
-        final DateTime remoteTimestamp = DateTime.now().toUtc();
-        final DateTime localTimestamp = remoteTimestamp.subtract(
-          const Duration(hours: 1),
-        );
+    test('pullRemote applies remote when local item is older', () async {
+      final DateTime localTimestamp = DateTime.utc(2024, 1, 1, 10);
+      final DateTime remoteTimestamp = DateTime.utc(2024, 1, 1, 12);
 
-        final TodoItem remoteItem = TodoItem.create(
-          title: 'Remote Updated',
-          description: 'Newer',
-        ).copyWith(updatedAt: remoteTimestamp);
+      final TodoItem remoteItem = TodoItem.create(
+        title: 'Remote Updated',
+        description: 'Newer',
+        now: remoteTimestamp,
+      );
 
-        final TodoItem localItem = TodoItem.create(
-          title: 'Local Old',
-          description: 'Older',
-        ).copyWith(id: remoteItem.id, updatedAt: localTimestamp);
+      final TodoItem localItem =
+          TodoItem.create(
+            title: 'Local Old',
+            description: 'Older',
+            now: localTimestamp,
+          ).copyWith(
+            id: remoteItem.id,
+            updatedAt: localTimestamp,
+            synchronized: true,
+          );
 
-        final _FakeRemoteRepository remote = _FakeRemoteRepository(
-          initial: [remoteItem],
-          enableWatch: false,
-        );
-        final OfflineFirstTodoRepository repository =
-            OfflineFirstTodoRepository(
-              localRepository: localRepository,
-              remoteRepository: remote,
-              pendingSyncRepository: pendingRepository,
-              registry: registry,
-            );
+      final _FakeRemoteRepository remote = _FakeRemoteRepository(
+        initial: [remoteItem],
+        enableWatch: false,
+      );
+      final OfflineFirstTodoRepository repository = OfflineFirstTodoRepository(
+        localRepository: localRepository,
+        remoteRepository: remote,
+        pendingSyncRepository: pendingRepository,
+        registry: registry,
+      );
 
-        await localRepository.save(localItem);
-        final List<TodoItem> beforePull = await localRepository.fetchAll();
-        expect(beforePull.length, 1);
-        expect(beforePull.first.title, 'Local Updated');
-        expect(
-          beforePull.first.updatedAt.isAfter(remoteItem.updatedAt),
-          isTrue,
-        );
-        await repository.pullRemote();
+      await localRepository.save(localItem);
+      final List<TodoItem> beforePull = await localRepository.fetchAll();
+      expect(beforePull.length, 1);
+      expect(beforePull.first.title, 'Local Old');
+      expect(beforePull.first.updatedAt.isBefore(remoteItem.updatedAt), isTrue);
+      await repository.pullRemote();
 
-        final List<TodoItem> local = await localRepository.fetchAll();
-        expect(local.length, 1);
-        expect(local.first.title, 'Remote Updated');
-        expect(local.first.synchronized, isTrue);
-      },
-      tags: ['skip-checklist'],
-    );
+      final List<TodoItem> local = await localRepository.fetchAll();
+      expect(local.length, 1);
+      expect(local.first.title, 'Remote Updated');
+      expect(local.first.synchronized, isTrue);
+    });
 
-    // TODO(maint): Fix sync resolution and remove skip-checklist tag.
-    test(
-      'pullRemote does not apply remote when local item is newer',
-      () async {
-        final DateTime remoteTimestamp = DateTime.utc(2024, 1, 1, 10);
-        final DateTime localTimestamp = DateTime.utc(2024, 1, 1, 12);
+    test('pullRemote does not apply remote when local item is newer', () async {
+      final DateTime remoteTimestamp = DateTime.utc(2024, 1, 1, 10);
+      final DateTime localTimestamp = DateTime.utc(2024, 1, 1, 12);
 
-        final TodoItem remoteItem = TodoItem.create(
-          title: 'Remote Old',
-          description: 'Older',
-        ).copyWith(updatedAt: remoteTimestamp);
+      final TodoItem remoteItem = TodoItem.create(
+        title: 'Remote Old',
+        description: 'Older',
+      ).copyWith(updatedAt: remoteTimestamp);
 
-        final TodoItem localItem =
-            TodoItem.create(
-              title: 'Local Updated',
-              description: 'Newer',
-            ).copyWith(
-              id: remoteItem.id,
-              updatedAt: localTimestamp,
-              synchronized: true,
-            );
+      final TodoItem localItem =
+          TodoItem.create(
+            title: 'Local Updated',
+            description: 'Newer',
+          ).copyWith(
+            id: remoteItem.id,
+            updatedAt: localTimestamp,
+            synchronized: true,
+          );
 
-        final _FakeRemoteRepository remote = _FakeRemoteRepository(
-          initial: [remoteItem],
-        );
-        final OfflineFirstTodoRepository repository =
-            OfflineFirstTodoRepository(
-              localRepository: localRepository,
-              remoteRepository: remote,
-              pendingSyncRepository: pendingRepository,
-              registry: registry,
-            );
+      final _FakeRemoteRepository remote = _FakeRemoteRepository(
+        initial: [remoteItem],
+        enableWatch: false,
+      );
+      final OfflineFirstTodoRepository repository = OfflineFirstTodoRepository(
+        localRepository: localRepository,
+        remoteRepository: remote,
+        pendingSyncRepository: pendingRepository,
+        registry: registry,
+      );
 
-        await localRepository.save(localItem);
-        await repository.pullRemote();
+      await localRepository.save(localItem);
+      await repository.pullRemote();
 
-        final List<TodoItem> local = await localRepository.fetchAll();
-        expect(local.length, 1);
-        expect(local.first.title, 'Local Updated');
-      },
-      tags: ['skip-checklist'],
-    );
+      final List<TodoItem> local = await localRepository.fetchAll();
+      expect(local.length, 1);
+      expect(local.first.title, 'Local Updated');
+    });
 
     test('save syncs immediately to remote when remote exists', () async {
       final _FakeRemoteRepository remote = _FakeRemoteRepository();
