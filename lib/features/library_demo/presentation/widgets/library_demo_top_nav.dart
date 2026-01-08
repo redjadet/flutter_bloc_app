@@ -16,7 +16,10 @@ class LibraryTopNav extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => Padding(
-    padding: EdgeInsets.only(top: EpochSpacing.topPadding),
+    padding: EdgeInsets.only(
+      top: EpochSpacing.topPadding,
+      left: EpochSpacing.panelPadding,
+    ),
     child: LibraryDemoIconButton(
       icon: const LibraryMenuIcon(),
       onPressed: onBack,
