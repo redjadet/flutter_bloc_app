@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/libr
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_wordmark.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 
 class LibraryDemoBody extends StatelessWidget {
@@ -19,53 +20,92 @@ class LibraryDemoBody extends StatelessWidget {
     final AppLocalizations l10n = context.l10n;
     final List<LibraryAsset> assets = _libraryAssets(l10n);
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          LibraryTopNav(
-            l10n: l10n,
-            onBack: () => NavigationUtils.popOrGoHome(context),
-          ),
-          SizedBox(height: EpochSpacing.gapMedium),
-          LibraryWordmark(
-            title: l10n.libraryDemoBrandName,
-          ),
-          SizedBox(height: EpochSpacing.gapMedium),
-          Container(
-            decoration: const BoxDecoration(
-              color: EpochColors.darkGrey,
-            ),
-            padding: EdgeInsets.fromLTRB(
-              EpochSpacing.panelPadding,
-              EpochSpacing.panelPaddingTop,
-              EpochSpacing.panelPadding,
-              EpochSpacing.panelPaddingBottom,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.libraryDemoPanelTitle,
-                  style: EpochTextStyles.heading(context),
+    return LayoutBuilder(
+      builder: (final context, final constraints) {
+        final bool isCompactHeight = constraints.maxHeight < 700;
+        final bool isCompactWidth = constraints.maxWidth < 360;
+        final double navTopPadding = isCompactHeight
+            ? EpochSpacing.gapLarge
+            : EpochSpacing.topPadding;
+        final double wordmarkHeight = isCompactHeight
+            ? EpochSpacing.wordmarkHeight * 0.7
+            : EpochSpacing.wordmarkHeight;
+        final double wordmarkGap = isCompactHeight
+            ? EpochSpacing.gapTight
+            : EpochSpacing.gapMedium;
+        final double panelTopPadding = isCompactHeight
+            ? EpochSpacing.gapMedium
+            : EpochSpacing.panelPaddingTop;
+        final double panelBottomPadding = isCompactHeight
+            ? EpochSpacing.gapLarge
+            : EpochSpacing.panelPaddingBottom;
+        final double sectionGap = isCompactHeight
+            ? EpochSpacing.gapMedium
+            : EpochSpacing.gapSection;
+        final double categoryGap = isCompactHeight
+            ? EpochSpacing.gapMedium
+            : EpochSpacing.gapLarge;
+        final double horizontalPadding = isCompactWidth
+            ? EpochSpacing.panelPadding
+            : context.pageHorizontalPadding;
+
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              LibraryTopNav(
+                l10n: l10n,
+                onBack: () => NavigationUtils.popOrGoHome(context),
+                padding: EdgeInsets.only(
+                  top: navTopPadding,
+                  left: horizontalPadding,
                 ),
-                SizedBox(height: EpochSpacing.gapMedium),
-                LibrarySearchRow(l10n: l10n),
-                SizedBox(height: EpochSpacing.gapLarge),
-                LibraryCategoryList(l10n: l10n),
-                SizedBox(height: EpochSpacing.gapSection),
-                LibraryAssetsHeader(l10n: l10n),
-                SizedBox(height: EpochSpacing.gapSection),
-                ...assets.map(
-                  (final asset) => LibraryAssetTile(
-                    asset: asset,
+              ),
+              SizedBox(height: wordmarkGap),
+              LibraryWordmark(
+                title: l10n.libraryDemoBrandName,
+                height: wordmarkHeight,
+              ),
+              SizedBox(height: wordmarkGap),
+              Container(
+                decoration: BoxDecoration(
+                  color: EpochColors.darkGrey,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(EpochSpacing.borderRadiusLarge),
                   ),
                 ),
-              ],
-            ),
+                padding: EdgeInsets.fromLTRB(
+                  EpochSpacing.panelPadding,
+                  panelTopPadding,
+                  EpochSpacing.panelPadding,
+                  panelBottomPadding,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.libraryDemoPanelTitle,
+                      style: EpochTextStyles.heading(context),
+                    ),
+                    SizedBox(height: EpochSpacing.gapMedium),
+                    LibrarySearchRow(l10n: l10n),
+                    SizedBox(height: categoryGap),
+                    LibraryCategoryList(l10n: l10n),
+                    SizedBox(height: sectionGap),
+                    LibraryAssetsHeader(l10n: l10n),
+                    SizedBox(height: sectionGap),
+                    ...assets.map(
+                      (final asset) => LibraryAssetTile(
+                        asset: asset,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

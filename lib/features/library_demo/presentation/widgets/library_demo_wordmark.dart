@@ -5,14 +5,16 @@ import 'package:flutter_bloc_app/shared/widgets/resilient_svg_asset_image.dart';
 class LibraryWordmark extends StatelessWidget {
   const LibraryWordmark({
     required this.title,
+    this.height,
     super.key,
   });
 
   final String title;
+  final double? height;
 
   @override
   Widget build(final BuildContext context) => Container(
-    height: EpochSpacing.wordmarkHeight,
+    height: height ?? EpochSpacing.wordmarkHeight,
     alignment: Alignment.center,
     child: Semantics(
       label: title,
