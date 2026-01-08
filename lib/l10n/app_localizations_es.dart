@@ -964,6 +964,81 @@ class AppLocalizationsEs extends AppLocalizations {
   String get exampleTodoListButton => 'Todo List Demo';
 
   @override
+  String get exampleChatListButton => 'Chat List Demo';
+
+  @override
+  String get exampleSearchDemoButton => 'Search Demo';
+
+  @override
+  String get exampleProfileButton => 'Profile Demo';
+
+  @override
+  String get exampleRegisterButton => 'Register Demo';
+
+  @override
+  String get exampleLoggedOutButton => 'Logged Out Demo';
+
+  @override
+  String get exampleLibraryDemoButton => 'Library Demo';
+
+  @override
+  String get libraryDemoPageTitle => 'Library Demo';
+
+  @override
+  String get libraryDemoBrandName => 'Epoch';
+
+  @override
+  String get libraryDemoPanelTitle => 'Library';
+
+  @override
+  String get libraryDemoSearchHint => 'Search your library';
+
+  @override
+  String get libraryDemoCategoryScapes => 'Scapes';
+
+  @override
+  String get libraryDemoCategoryPacks => 'Packs';
+
+  @override
+  String get libraryDemoAssetsTitle => 'All Assets';
+
+  @override
+  String get libraryDemoAssetName => 'Asset Name';
+
+  @override
+  String get libraryDemoAssetTypeObject => 'Object';
+
+  @override
+  String get libraryDemoAssetTypeImage => 'Image';
+
+  @override
+  String get libraryDemoAssetTypeSound => 'Sound';
+
+  @override
+  String get libraryDemoAssetTypeFootage => 'Footage';
+
+  @override
+  String get libraryDemoAssetDuration => '00:00';
+
+  @override
+  String get libraryDemoFormatObj => 'OBJ';
+
+  @override
+  String get libraryDemoFormatJpg => 'JPG';
+
+  @override
+  String get libraryDemoFormatMp4 => 'MP4';
+
+  @override
+  String get libraryDemoFormatMp3 => 'MP3';
+
+  @override
+  String get libraryDemoBackButtonLabel => 'Back';
+
+  @override
+  String get libraryDemoFilterButtonLabel => 'Filter';
+
+  @override
   String get todoListTitle => 'Todo List';
 
   @override

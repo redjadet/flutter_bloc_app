@@ -714,6 +714,106 @@
   "@exampleTodoListButton": {
     "description": "Button label for opening the todo list demo"
   },
+  "exampleChatListButton": "Chat List Demo",
+  "@exampleChatListButton": {
+    "description": "Button label for opening the chat list demo"
+  },
+  "exampleSearchDemoButton": "Search Demo",
+  "@exampleSearchDemoButton": {
+    "description": "Button label for opening the search demo"
+  },
+  "exampleProfileButton": "Profile Demo",
+  "@exampleProfileButton": {
+    "description": "Button label for opening the profile demo"
+  },
+  "exampleRegisterButton": "Register Demo",
+  "@exampleRegisterButton": {
+    "description": "Button label for opening the register demo"
+  },
+  "exampleLoggedOutButton": "Logged Out Demo",
+  "@exampleLoggedOutButton": {
+    "description": "Button label for opening the logged out demo"
+  },
+  "exampleLibraryDemoButton": "Library Demo",
+  "@exampleLibraryDemoButton": {
+    "description": "Button label for opening the library demo"
+  },
+  "libraryDemoPageTitle": "Library Demo",
+  "@libraryDemoPageTitle": {
+    "description": "Title for the library demo page"
+  },
+  "libraryDemoBrandName": "Epoch",
+  "@libraryDemoBrandName": {
+    "description": "Brand wordmark shown on the library demo page"
+  },
+  "libraryDemoPanelTitle": "Library",
+  "@libraryDemoPanelTitle": {
+    "description": "Title for the library panel section"
+  },
+  "libraryDemoSearchHint": "Search your library",
+  "@libraryDemoSearchHint": {
+    "description": "Hint text for the library search field"
+  },
+  "libraryDemoCategoryScapes": "Scapes",
+  "@libraryDemoCategoryScapes": {
+    "description": "Label for the Scapes category"
+  },
+  "libraryDemoCategoryPacks": "Packs",
+  "@libraryDemoCategoryPacks": {
+    "description": "Label for the Packs category"
+  },
+  "libraryDemoAssetsTitle": "All Assets",
+  "@libraryDemoAssetsTitle": {
+    "description": "Heading for the assets list section"
+  },
+  "libraryDemoAssetName": "Asset Name",
+  "@libraryDemoAssetName": {
+    "description": "Placeholder asset name shown in the demo list"
+  },
+  "libraryDemoAssetTypeObject": "Object",
+  "@libraryDemoAssetTypeObject": {
+    "description": "Label for object asset type"
+  },
+  "libraryDemoAssetTypeImage": "Image",
+  "@libraryDemoAssetTypeImage": {
+    "description": "Label for image asset type"
+  },
+  "libraryDemoAssetTypeSound": "Sound",
+  "@libraryDemoAssetTypeSound": {
+    "description": "Label for sound asset type"
+  },
+  "libraryDemoAssetTypeFootage": "Footage",
+  "@libraryDemoAssetTypeFootage": {
+    "description": "Label for footage asset type"
+  },
+  "libraryDemoAssetDuration": "00:00",
+  "@libraryDemoAssetDuration": {
+    "description": "Placeholder duration for assets"
+  },
+  "libraryDemoFormatObj": "OBJ",
+  "@libraryDemoFormatObj": {
+    "description": "Format label for OBJ assets"
+  },
+  "libraryDemoFormatJpg": "JPG",
+  "@libraryDemoFormatJpg": {
+    "description": "Format label for JPG assets"
+  },
+  "libraryDemoFormatMp4": "MP4",
+  "@libraryDemoFormatMp4": {
+    "description": "Format label for MP4 assets"
+  },
+  "libraryDemoFormatMp3": "MP3",
+  "@libraryDemoFormatMp3": {
+    "description": "Format label for MP3 assets"
+  },
+  "libraryDemoBackButtonLabel": "Back",
+  "@libraryDemoBackButtonLabel": {
+    "description": "Accessibility label for the back button on the library demo page"
+  },
+  "libraryDemoFilterButtonLabel": "Filter",
+  "@libraryDemoFilterButtonLabel": {
+    "description": "Accessibility label for the filter button on the library demo page"
+  },
   "todoListTitle": "Todo List",
   "@todoListTitle": {
     "description": "Title for the todo list page"

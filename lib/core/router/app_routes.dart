@@ -57,6 +57,9 @@ class AppRoutes {
   static const loggedOut = 'logged-out';
   static const loggedOutPath = '/logged-out';
 
+  static const libraryDemo = 'library-demo';
+  static const libraryDemoPath = '/library-demo';
+
   static const whiteboard = 'whiteboard';
   static const whiteboardPath = '/whiteboard';
 

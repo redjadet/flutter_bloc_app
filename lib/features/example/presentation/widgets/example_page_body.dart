@@ -19,6 +19,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.onOpenProfile,
     required this.onOpenRegister,
     required this.onOpenLoggedOut,
+    required this.onOpenLibraryDemo,
     required this.onRunIsolates,
     required this.isRunningIsolates,
     required this.isolateError,
@@ -41,6 +42,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onOpenProfile;
   final VoidCallback onOpenRegister;
   final VoidCallback onOpenLoggedOut;
+  final VoidCallback onOpenLibraryDemo;
   final VoidCallback? onRunIsolates;
   final bool isRunningIsolates;
   final String? isolateError;
@@ -130,14 +132,14 @@ class ExamplePageBody extends StatelessWidget {
             context: context,
             onPressed: onOpenChatList,
             icon: Icons.forum_outlined,
-            label: 'Chat List Demo',
+            label: l10n.exampleChatListButton,
           ),
           SizedBox(height: context.responsiveGapS),
           _buildIconButton(
             context: context,
             onPressed: onOpenSearch,
             icon: Icons.search,
-            label: 'Search Demo',
+            label: l10n.exampleSearchDemoButton,
           ),
           SizedBox(height: context.responsiveGapS),
           _buildIconButton(
@@ -151,14 +153,14 @@ class ExamplePageBody extends StatelessWidget {
             context: context,
             onPressed: onOpenProfile,
             icon: Icons.person,
-            label: 'Profile Demo',
+            label: l10n.exampleProfileButton,
           ),
           SizedBox(height: context.responsiveGapS),
           _buildIconButton(
             context: context,
             onPressed: onOpenRegister,
             icon: Icons.app_registration,
-            label: 'Register Demo',
+            label: l10n.exampleRegisterButton,
             key: const ValueKey('example-register-button'),
           ),
           SizedBox(height: context.responsiveGapS),
@@ -166,7 +168,14 @@ class ExamplePageBody extends StatelessWidget {
             context: context,
             onPressed: onOpenLoggedOut,
             icon: Icons.logout,
-            label: 'Logged Out Demo',
+            label: l10n.exampleLoggedOutButton,
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenLibraryDemo,
+            icon: Icons.auto_stories_outlined,
+            label: l10n.exampleLibraryDemoButton,
           ),
           SizedBox(height: context.responsiveGapL),
           _buildIconButton(
