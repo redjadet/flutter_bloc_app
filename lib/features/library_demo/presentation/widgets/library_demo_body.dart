@@ -9,7 +9,6 @@ import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/libr
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_wordmark.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 
 class LibraryDemoBody extends StatelessWidget {
@@ -21,9 +20,6 @@ class LibraryDemoBody extends StatelessWidget {
     final List<LibraryAsset> assets = _libraryAssets(l10n);
 
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(
-        horizontal: context.pageHorizontalPadding,
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -37,11 +33,8 @@ class LibraryDemoBody extends StatelessWidget {
           ),
           SizedBox(height: EpochSpacing.gapMedium),
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: EpochColors.darkGrey,
-              borderRadius: BorderRadius.circular(
-                EpochSpacing.borderRadiusLarge,
-              ),
             ),
             padding: EdgeInsets.fromLTRB(
               EpochSpacing.panelPadding,
@@ -60,19 +53,17 @@ class LibraryDemoBody extends StatelessWidget {
                 LibrarySearchRow(l10n: l10n),
                 SizedBox(height: EpochSpacing.gapLarge),
                 LibraryCategoryList(l10n: l10n),
-                SizedBox(height: EpochSpacing.gapSections),
+                SizedBox(height: EpochSpacing.gapSection),
                 LibraryAssetsHeader(l10n: l10n),
                 SizedBox(height: EpochSpacing.gapSection),
-                ...assets.asMap().entries.map(
-                  (final entry) => LibraryAssetTile(
-                    asset: entry.value,
-                    isLast: entry.key == assets.length - 1,
+                ...assets.map(
+                  (final asset) => LibraryAssetTile(
+                    asset: asset,
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(height: EpochSpacing.gapLarge),
         ],
       ),
     );

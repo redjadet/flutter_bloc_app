@@ -9,84 +9,93 @@ import 'package:flutter_bloc_app/shared/widgets/resilient_svg_asset_image.dart';
 class LibraryAssetTile extends StatelessWidget {
   const LibraryAssetTile({
     required this.asset,
-    this.isLast = false,
     super.key,
   });
 
   final LibraryAsset asset;
-  final bool isLast;
 
   @override
   Widget build(final BuildContext context) => Container(
-    padding: EdgeInsets.only(
-      bottom: isLast ? 0 : EpochSpacing.gapMedium,
+    padding: EdgeInsets.symmetric(
+      vertical: EpochSpacing.gapMedium / 2,
     ),
-    decoration: isLast
-        ? null
-        : BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: EpochColors.warmGrey.withValues(alpha: 0.35),
-              ),
+    decoration: BoxDecoration(
+      border: Border(
+        bottom: BorderSide(
+          color: EpochColors.warmGrey.withValues(alpha: 0.35),
+        ),
+      ),
+    ),
+    child: SizedBox(
+      height: EpochSpacing.assetThumbnailSize,
+      child: Row(
+        children: [
+          // Asset art and info
+          Expanded(
+            child: Row(
+              children: [
+                // Thumbnail
+                _buildThumbnail(),
+                const SizedBox(width: 12),
+                // Asset info
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          asset.name,
+                          style: EpochTextStyles.assetName(context),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          asset.type.toUpperCase(),
+                          style: EpochTextStyles.assetType(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-    child: Row(
-      children: [
-        // Asset art and info
-        Expanded(
-          child: Row(
+          SizedBox(width: EpochSpacing.gapAssetGroup),
+          // Metadata and icons
+          Row(
             children: [
-              // Thumbnail
-              _buildThumbnail(),
-              const SizedBox(width: 12),
-              // Asset info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      asset.name,
-                      style: EpochTextStyles.assetName(context),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      asset.type.toUpperCase(),
-                      style: EpochTextStyles.assetType(context),
-                    ),
-                  ],
+              SizedBox(
+                width: 41,
+                child: Text(
+                  asset.durationLabel,
+                  style: EpochTextStyles.metadata(context),
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                  textAlign: TextAlign.left,
                 ),
               ),
+              SizedBox(width: EpochSpacing.gapSection),
+              SizedBox(
+                width: 35,
+                child: Text(
+                  asset.formatLabel,
+                  style: EpochTextStyles.metadata(context),
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              SizedBox(width: EpochSpacing.gapSection),
+              const LibraryFavoriteIcon(),
+              SizedBox(width: EpochSpacing.gapLarge),
+              const LibraryThreeDotIcon(),
             ],
           ),
-        ),
-        SizedBox(width: EpochSpacing.gapAssetGroup),
-        // Metadata and icons
-        Row(
-          children: [
-            SizedBox(
-              width: 41,
-              child: Text(
-                asset.durationLabel,
-                style: EpochTextStyles.metadata(context),
-              ),
-            ),
-            SizedBox(width: EpochSpacing.gapSection),
-            SizedBox(
-              width: 25,
-              child: Text(
-                asset.formatLabel,
-                style: EpochTextStyles.metadata(context),
-              ),
-            ),
-            SizedBox(width: EpochSpacing.gapSection),
-            const LibraryFavoriteIcon(),
-            SizedBox(width: EpochSpacing.gapLarge),
-            const LibraryThreeDotIcon(),
-          ],
-        ),
-      ],
+        ],
+      ),
     ),
   );
 
@@ -114,7 +123,7 @@ class LibraryAssetTile extends StatelessWidget {
           child: isSvg
               ? ResilientSvgAssetImage(
                   assetPath: assetPath,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                   fallbackBuilder: () => Container(
                     color: EpochColors.warmGreyLightest.withValues(
                       alpha: 0.2,
@@ -123,7 +132,7 @@ class LibraryAssetTile extends StatelessWidget {
                 )
               : Image.asset(
                   assetPath,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                   width: EpochSpacing.assetThumbnailSize,
                   height: EpochSpacing.assetThumbnailSize,
                 ),

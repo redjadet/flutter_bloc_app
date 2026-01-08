@@ -6,8 +6,8 @@ import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 class EpochColors {
   const EpochColors._();
 
-  /// Warm Grey Lightest (#E8E7DE) - Primary text and UI on dark backgrounds
-  static const Color warmGreyLightest = Color(0xFFE8E7DE);
+  /// Warm Grey Lightest (#E8E7DD) - Primary text and UI on dark backgrounds
+  static const Color warmGreyLightest = Color(0xFFE8E7DD);
 
   /// Warm Grey (#9D9C93) - Placeholder text
   static const Color warmGrey = Color(0xFF9D9C93);
