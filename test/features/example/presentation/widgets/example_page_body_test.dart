@@ -34,6 +34,7 @@ void main() {
             parallelValues: const <int>[],
             parallelDuration: Duration.zero,
             onOpenChatList: () {},
+            onOpenLibraryDemo: () {},
           ),
         ),
       );

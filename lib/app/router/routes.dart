@@ -1,12 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/router/deferred_pages/chart_page.dart'
     deferred as chart_page;
-import 'package:flutter_bloc_app/app/router/deferred_pages/google_maps_page.dart'
-    deferred as google_maps_page;
 import 'package:flutter_bloc_app/app/router/deferred_pages/markdown_editor_page.dart'
     deferred as markdown_editor_page;
-import 'package:flutter_bloc_app/app/router/deferred_pages/websocket_page.dart'
-    deferred as websocket_page;
+import 'package:flutter_bloc_app/app/router/route_groups.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/logged_out_page.dart';
@@ -27,15 +24,13 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repo
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/pages/graphql_demo_page.dart';
+import 'package:flutter_bloc_app/features/library_demo/presentation/pages/library_demo_page.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/pages/profile_page.dart';
-import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
-import 'package:flutter_bloc_app/features/search/presentation/pages/search_page.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
-import 'package:flutter_bloc_app/features/todo_list/todo_list.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
@@ -178,6 +173,11 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
     builder: (final context, final state) => const LoggedOutPage(),
   ),
   GoRoute(
+    path: AppRoutes.libraryDemoPath,
+    name: AppRoutes.libraryDemo,
+    builder: (final context, final state) => const LibraryDemoPage(),
+  ),
+  GoRoute(
     path: AppRoutes.chatPath,
     name: AppRoutes.chat,
     builder: (final context, final state) =>
@@ -205,41 +205,5 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
       pendingSyncRepository: getIt<PendingSyncRepository>(),
     ),
   ),
-  GoRoute(
-    path: AppRoutes.websocketPath,
-    name: AppRoutes.websocket,
-    builder: (final context, final state) => DeferredPage(
-      loadLibrary: websocket_page.loadLibrary,
-      builder: (final context) => websocket_page.buildWebsocketPage(),
-    ),
-  ),
-  GoRoute(
-    path: AppRoutes.googleMapsPath,
-    name: AppRoutes.googleMaps,
-    builder: (final context, final state) => DeferredPage(
-      loadLibrary: google_maps_page.loadLibrary,
-      builder: (final context) => google_maps_page.buildGoogleMapsPage(),
-    ),
-  ),
-  GoRoute(
-    path: AppRoutes.searchPath,
-    name: AppRoutes.search,
-    builder: (final context, final state) => SearchPage(
-      repository: getIt<SearchRepository>(),
-      timerService: getIt<TimerService>(),
-    ),
-  ),
-  GoRoute(
-    path: AppRoutes.todoListPath,
-    name: AppRoutes.todoList,
-    builder: (final context, final state) =>
-        BlocProviderHelpers.withAsyncInit<TodoListCubit>(
-          create: () => TodoListCubit(
-            repository: getIt<TodoRepository>(),
-            timerService: getIt<TimerService>(),
-          ),
-          init: (final cubit) => cubit.loadInitial(),
-          child: const TodoListPage(),
-        ),
-  ),
+  ...createAuxiliaryRoutes(),
 ];

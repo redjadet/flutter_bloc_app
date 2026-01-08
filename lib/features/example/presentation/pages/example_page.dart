@@ -145,6 +145,7 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenProfile: () => context.pushNamed(AppRoutes.profile),
         onOpenRegister: () => context.pushNamed(AppRoutes.register),
         onOpenLoggedOut: () => context.pushNamed(AppRoutes.loggedOut),
+        onOpenLibraryDemo: () => context.pushNamed(AppRoutes.libraryDemo),
         onRunIsolates: _isRunningIsolates ? null : _runIsolateSamples,
         isRunningIsolates: _isRunningIsolates,
         isolateError: _isolateError,

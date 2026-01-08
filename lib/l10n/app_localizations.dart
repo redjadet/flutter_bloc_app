@@ -1760,6 +1760,156 @@ abstract class AppLocalizations {
   /// **'Todo List Demo'**
   String get exampleTodoListButton;
 
+  /// Button label for opening the chat list demo
+  ///
+  /// In en, this message translates to:
+  /// **'Chat List Demo'**
+  String get exampleChatListButton;
+
+  /// Button label for opening the search demo
+  ///
+  /// In en, this message translates to:
+  /// **'Search Demo'**
+  String get exampleSearchDemoButton;
+
+  /// Button label for opening the profile demo
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Demo'**
+  String get exampleProfileButton;
+
+  /// Button label for opening the register demo
+  ///
+  /// In en, this message translates to:
+  /// **'Register Demo'**
+  String get exampleRegisterButton;
+
+  /// Button label for opening the logged out demo
+  ///
+  /// In en, this message translates to:
+  /// **'Logged Out Demo'**
+  String get exampleLoggedOutButton;
+
+  /// Button label for opening the library demo
+  ///
+  /// In en, this message translates to:
+  /// **'Library Demo'**
+  String get exampleLibraryDemoButton;
+
+  /// Title for the library demo page
+  ///
+  /// In en, this message translates to:
+  /// **'Library Demo'**
+  String get libraryDemoPageTitle;
+
+  /// Brand wordmark shown on the library demo page
+  ///
+  /// In en, this message translates to:
+  /// **'Epoch'**
+  String get libraryDemoBrandName;
+
+  /// Title for the library panel section
+  ///
+  /// In en, this message translates to:
+  /// **'Library'**
+  String get libraryDemoPanelTitle;
+
+  /// Hint text for the library search field
+  ///
+  /// In en, this message translates to:
+  /// **'Search your library'**
+  String get libraryDemoSearchHint;
+
+  /// Label for the Scapes category
+  ///
+  /// In en, this message translates to:
+  /// **'Scapes'**
+  String get libraryDemoCategoryScapes;
+
+  /// Label for the Packs category
+  ///
+  /// In en, this message translates to:
+  /// **'Packs'**
+  String get libraryDemoCategoryPacks;
+
+  /// Heading for the assets list section
+  ///
+  /// In en, this message translates to:
+  /// **'All Assets'**
+  String get libraryDemoAssetsTitle;
+
+  /// Placeholder asset name shown in the demo list
+  ///
+  /// In en, this message translates to:
+  /// **'Asset Name'**
+  String get libraryDemoAssetName;
+
+  /// Label for object asset type
+  ///
+  /// In en, this message translates to:
+  /// **'Object'**
+  String get libraryDemoAssetTypeObject;
+
+  /// Label for image asset type
+  ///
+  /// In en, this message translates to:
+  /// **'Image'**
+  String get libraryDemoAssetTypeImage;
+
+  /// Label for sound asset type
+  ///
+  /// In en, this message translates to:
+  /// **'Sound'**
+  String get libraryDemoAssetTypeSound;
+
+  /// Label for footage asset type
+  ///
+  /// In en, this message translates to:
+  /// **'Footage'**
+  String get libraryDemoAssetTypeFootage;
+
+  /// Placeholder duration for assets
+  ///
+  /// In en, this message translates to:
+  /// **'00:00'**
+  String get libraryDemoAssetDuration;
+
+  /// Format label for OBJ assets
+  ///
+  /// In en, this message translates to:
+  /// **'OBJ'**
+  String get libraryDemoFormatObj;
+
+  /// Format label for JPG assets
+  ///
+  /// In en, this message translates to:
+  /// **'JPG'**
+  String get libraryDemoFormatJpg;
+
+  /// Format label for MP4 assets
+  ///
+  /// In en, this message translates to:
+  /// **'MP4'**
+  String get libraryDemoFormatMp4;
+
+  /// Format label for MP3 assets
+  ///
+  /// In en, this message translates to:
+  /// **'MP3'**
+  String get libraryDemoFormatMp3;
+
+  /// Accessibility label for the back button on the library demo page
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get libraryDemoBackButtonLabel;
+
+  /// Accessibility label for the filter button on the library demo page
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get libraryDemoFilterButtonLabel;
+
   /// Title for the todo list page
   ///
   /// In en, this message translates to:
