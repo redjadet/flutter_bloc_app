@@ -4,7 +4,7 @@ This document lists all the technologies, packages, and tools used in this Flutt
 
 ## Core Framework
 
-- **Flutter** 3.38.5 (Dart 3.10.4)
+- **Flutter** 3.38.6 (Dart 3.10.7)
 - **Material 3** with `ColorScheme.fromSeed`
 - **Cupertino** widgets for iOS-native feel
 
@@ -91,4 +91,3 @@ See `pubspec.yaml` for the complete list with exact version constraints.
 - Dependency updates: `docs/DEPENDENCY_UPDATES.md`
 - Architecture: `docs/architecture_details.md`
 - Testing: `docs/testing_overview.md`
-
