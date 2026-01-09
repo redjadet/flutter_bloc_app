@@ -5,9 +5,9 @@
 # IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
 # invoked from the command line by running `flutter analyze`.
 #
-# NOTE: Native Dart 3.10.4 analyzer plugin configuration
+# NOTE: Native Dart 3.10.7 analyzer plugin configuration
 #
-# file_length_lint is configured as a native Dart 3.10.4 analyzer plugin using the
+# file_length_lint is configured as a native Dart 3.10.7 analyzer plugin using the
 # top-level `plugins:` section. This plugin runs automatically with `flutter analyze`.
 # See https://dart.dev/tools/analyzer-plugins for more information.
 #
@@ -16,7 +16,7 @@
 
 include: package:very_good_analysis/analysis_options.yaml
 
-# Native Dart 3.10.4 analyzer plugins configuration
+# Native Dart 3.10.7 analyzer plugins configuration
 plugins:
   file_length_lint:
     path: custom_lints/file_length_lint
@@ -47,7 +47,7 @@ analyzer:
     unnecessary_nullable_for_final_variable_declarations: warning
     unnecessary_null_in_if_null_operators: warning
     avoid_null_checks_in_equality_operators: warning
-    # Dart 3.10.4 new analyzer rules
+    # Dart 3.10.7 new analyzer rules
     strict_top_level_inference: error
     no_wildcard_variable_uses: error
     implicit_call_tearoffs: warning

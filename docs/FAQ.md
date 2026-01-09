@@ -4,7 +4,7 @@
 
 ### What Flutter version does this app use?
 
-This app uses **Flutter 3.38.5** with **Dart 3.10.4**. The codebase follows Flutter 3.38 best practices, including:
+This app uses **Flutter 3.38.6** with **Dart 3.10.7**. The codebase follows Flutter 3.38 best practices, including:
 
 - **Impeller Rendering Engine**: Optimized rendering for smoother animations and reduced latency on iOS and Android
 - **Material 3 Support**: Full Material Design 3 implementation with `ColorScheme.fromSeed`
