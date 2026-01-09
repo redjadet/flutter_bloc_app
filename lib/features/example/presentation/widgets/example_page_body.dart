@@ -20,6 +20,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.onOpenRegister,
     required this.onOpenLoggedOut,
     required this.onOpenLibraryDemo,
+    required this.onOpenScapes,
     required this.onRunIsolates,
     required this.isRunningIsolates,
     required this.isolateError,
@@ -43,6 +44,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onOpenRegister;
   final VoidCallback onOpenLoggedOut;
   final VoidCallback onOpenLibraryDemo;
+  final VoidCallback onOpenScapes;
   final VoidCallback? onRunIsolates;
   final bool isRunningIsolates;
   final String? isolateError;
@@ -176,6 +178,13 @@ class ExamplePageBody extends StatelessWidget {
             onPressed: onOpenLibraryDemo,
             icon: Icons.auto_stories_outlined,
             label: l10n.exampleLibraryDemoButton,
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenScapes,
+            icon: Icons.grid_view_outlined,
+            label: l10n.exampleScapesButton,
           ),
           SizedBox(height: context.responsiveGapL),
           _buildIconButton(

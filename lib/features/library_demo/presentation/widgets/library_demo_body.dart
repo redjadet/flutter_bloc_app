@@ -7,13 +7,23 @@ import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/libr
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_theme.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_top_nav.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_wordmark.dart';
+import 'package:flutter_bloc_app/features/scapes/scapes.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 
 class LibraryDemoBody extends StatelessWidget {
-  const LibraryDemoBody({super.key});
+  const LibraryDemoBody({
+    required this.isGridView,
+    required this.onGridPressed,
+    required this.onListPressed,
+    super.key,
+  });
+
+  final bool isGridView;
+  final VoidCallback onGridPressed;
+  final VoidCallback onListPressed;
 
   @override
   Widget build(final BuildContext context) {
@@ -92,13 +102,21 @@ class LibraryDemoBody extends StatelessWidget {
                     SizedBox(height: categoryGap),
                     LibraryCategoryList(l10n: l10n),
                     SizedBox(height: sectionGap),
-                    LibraryAssetsHeader(l10n: l10n),
-                    SizedBox(height: sectionGap),
-                    ...assets.map(
-                      (final asset) => LibraryAssetTile(
-                        asset: asset,
-                      ),
+                    LibraryAssetsHeader(
+                      l10n: l10n,
+                      isGridView: isGridView,
+                      onGridPressed: onGridPressed,
+                      onListPressed: onListPressed,
                     ),
+                    SizedBox(height: sectionGap),
+                    if (isGridView)
+                      const ScapesGridContent()
+                    else
+                      ...assets.map(
+                        (final asset) => LibraryAssetTile(
+                          asset: asset,
+                        ),
+                      ),
                   ],
                 ),
               ),

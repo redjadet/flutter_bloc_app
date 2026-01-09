@@ -1560,5 +1560,49 @@
         "type": "int"
       }
     }
+  },
+  "exampleScapesButton": "Scapes Demo",
+  "@exampleScapesButton": {
+    "description": "Button label for opening the scapes demo"
+  },
+  "scapesPageTitle": "Library / Scapes",
+  "@scapesPageTitle": {
+    "description": "Title for the scapes page"
+  },
+  "scapeNameLabel": "Scape Name",
+  "@scapeNameLabel": {
+    "description": "Label for scape name"
+  },
+  "scapeMetadataFormat": "{duration} • {assetCount, plural, =1 {1 ASSET} other {{assetCount} ASSETS}}",
+  "@scapeMetadataFormat": {
+    "description": "Format for scape metadata showing duration and asset count",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "assetCount": {
+        "type": "int"
+      }
+    }
+  },
+  "scapeFavoriteAddTooltip": "Add favorite",
+  "@scapeFavoriteAddTooltip": {
+    "description": "Tooltip for adding a scape to favorites"
+  },
+  "scapeFavoriteRemoveTooltip": "Remove favorite",
+  "@scapeFavoriteRemoveTooltip": {
+    "description": "Tooltip for removing a scape from favorites"
+  },
+  "scapeMoreOptionsTooltip": "More options",
+  "@scapeMoreOptionsTooltip": {
+    "description": "Tooltip for scape item more options button"
+  },
+  "scapesGridViewTooltip": "Grid view",
+  "@scapesGridViewTooltip": {
+    "description": "Tooltip for grid view icon"
+  },
+  "scapesListViewTooltip": "List view",
+  "@scapesListViewTooltip": {
+    "description": "Tooltip for list view icon"
   }
 }

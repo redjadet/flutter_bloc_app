@@ -1201,4 +1201,39 @@ class AppLocalizationsTr extends AppLocalizations {
     );
     return 'Delete $_temp0? This cannot be undone.';
   }
+
+  @override
+  String get exampleScapesButton => 'Scapes Demo';
+
+  @override
+  String get scapesPageTitle => 'Library / Scapes';
+
+  @override
+  String get scapeNameLabel => 'Scape Name';
+
+  @override
+  String scapeMetadataFormat(String duration, int assetCount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      assetCount,
+      locale: localeName,
+      other: '$assetCount ASSETS',
+      one: '1 ASSET',
+    );
+    return '$duration • $_temp0';
+  }
+
+  @override
+  String get scapeFavoriteAddTooltip => 'Add favorite';
+
+  @override
+  String get scapeFavoriteRemoveTooltip => 'Remove favorite';
+
+  @override
+  String get scapeMoreOptionsTooltip => 'More options';
+
+  @override
+  String get scapesGridViewTooltip => 'Grid view';
+
+  @override
+  String get scapesListViewTooltip => 'List view';
 }
