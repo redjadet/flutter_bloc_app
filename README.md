@@ -96,9 +96,9 @@ This project follows industry best practices:
 | --- | --- |
 | ![Todo List screen](assets/screenshots/todolist.png) | ![Todo List swipe action](assets/screenshots/todolistSwipe.png) |
 
-| Library Demo |
-| --- |
-| ![Library Demo screen](assets/screenshots/library_demo.png) |
+| Library Demo | Library Demo 2 |
+| --- | --- |
+| ![Library Demo screen](assets/screenshots/library_demo.png) | ![Library Demo 2 screen](assets/screenshots/library_demo2.png) |
 
 ## 🚀 Quick Start
 
