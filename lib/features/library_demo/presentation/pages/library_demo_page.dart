@@ -3,8 +3,27 @@ import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/libr
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_theme.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 
-class LibraryDemoPage extends StatelessWidget {
+class LibraryDemoPage extends StatefulWidget {
   const LibraryDemoPage({super.key});
+
+  @override
+  State<LibraryDemoPage> createState() => _LibraryDemoPageState();
+}
+
+class _LibraryDemoPageState extends State<LibraryDemoPage> {
+  bool _isGridView = false;
+
+  void _toggleToGridView() {
+    setState(() {
+      _isGridView = true;
+    });
+  }
+
+  void _toggleToListView() {
+    setState(() {
+      _isGridView = false;
+    });
+  }
 
   @override
   Widget build(final BuildContext context) {
@@ -23,9 +42,12 @@ class LibraryDemoPage extends StatelessWidget {
       child: CommonPageLayout(
         title: context.l10n.libraryDemoPageTitle,
         useResponsiveBody: false,
-        automaticallyImplyLeading: false,
-        body: const SafeArea(
-          child: LibraryDemoBody(),
+        body: SafeArea(
+          child: LibraryDemoBody(
+            isGridView: _isGridView,
+            onGridPressed: _toggleToGridView,
+            onListPressed: _toggleToListView,
+          ),
         ),
       ),
     );

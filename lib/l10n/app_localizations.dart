@@ -2215,6 +2215,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete {count, plural, =1 {1 completed todo} other {{count} completed todos}}? This cannot be undone.'**
   String todoListClearCompletedDialogMessage(int count);
+
+  /// Button label for opening the scapes demo
+  ///
+  /// In en, this message translates to:
+  /// **'Scapes Demo'**
+  String get exampleScapesButton;
+
+  /// Title for the scapes page
+  ///
+  /// In en, this message translates to:
+  /// **'Library / Scapes'**
+  String get scapesPageTitle;
+
+  /// Label for scape name
+  ///
+  /// In en, this message translates to:
+  /// **'Scape Name'**
+  String get scapeNameLabel;
+
+  /// Format for scape metadata showing duration and asset count
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} • {assetCount, plural, =1 {1 ASSET} other {{assetCount} ASSETS}}'**
+  String scapeMetadataFormat(String duration, int assetCount);
+
+  /// Tooltip for adding a scape to favorites
+  ///
+  /// In en, this message translates to:
+  /// **'Add favorite'**
+  String get scapeFavoriteAddTooltip;
+
+  /// Tooltip for removing a scape from favorites
+  ///
+  /// In en, this message translates to:
+  /// **'Remove favorite'**
+  String get scapeFavoriteRemoveTooltip;
+
+  /// Tooltip for scape item more options button
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get scapeMoreOptionsTooltip;
+
+  /// Tooltip for grid view icon
+  ///
+  /// In en, this message translates to:
+  /// **'Grid view'**
+  String get scapesGridViewTooltip;
+
+  /// Tooltip for list view icon
+  ///
+  /// In en, this message translates to:
+  /// **'List view'**
+  String get scapesListViewTooltip;
 }
 
 class _AppLocalizationsDelegate

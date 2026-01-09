@@ -35,6 +35,7 @@ void main() {
             parallelDuration: Duration.zero,
             onOpenChatList: () {},
             onOpenLibraryDemo: () {},
+            onOpenScapes: () {},
           ),
         ),
       );

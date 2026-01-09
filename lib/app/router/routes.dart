@@ -29,6 +29,7 @@ import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repositor
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/pages/profile_page.dart';
+import 'package:flutter_bloc_app/features/scapes/scapes.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
@@ -106,6 +107,11 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
     path: AppRoutes.whiteboardPath,
     name: AppRoutes.whiteboard,
     builder: (final context, final state) => const WhiteboardPage(),
+  ),
+  GoRoute(
+    path: AppRoutes.scapesPath,
+    name: AppRoutes.scapes,
+    builder: (final context, final state) => const ScapesPage(),
   ),
   GoRoute(
     path: AppRoutes.markdownEditorPath,

@@ -119,6 +119,7 @@
     "gmaps",
     "huggingface",
     "loggedout",
+    "nonbuilder",
     "preferences",
     "prefs",
     "pubspec",

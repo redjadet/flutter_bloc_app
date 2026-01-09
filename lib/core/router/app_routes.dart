@@ -65,4 +65,7 @@ class AppRoutes {
 
   static const markdownEditor = 'markdown-editor';
   static const markdownEditorPath = '/markdown-editor';
+
+  static const scapes = 'scapes';
+  static const scapesPath = '/scapes';
 }
