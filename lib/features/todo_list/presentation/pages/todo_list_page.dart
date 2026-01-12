@@ -101,19 +101,7 @@ class _TodoListBody extends StatelessWidget {
                 hasCompleted: data.hasCompleted,
                 onFilterChanged: cubit.setFilter,
                 onClearCompleted: data.hasCompleted
-                    ? () async {
-                        final int completedCount = data.items
-                            .where((final item) => item.isCompleted)
-                            .length;
-                        final bool? shouldClear =
-                            await showTodoClearCompletedConfirmDialog(
-                              context: context,
-                              count: completedCount,
-                            );
-                        if ((shouldClear ?? false) && context.mounted) {
-                          await cubit.clearCompleted();
-                        }
-                      }
+                    ? () => _handleClearCompleted(context, data.items, cubit)
                     : null,
               ),
               if (data.items.isNotEmpty) ...[
@@ -127,19 +115,11 @@ class _TodoListBody extends StatelessWidget {
                     if (data.hasCompleted)
                       PlatformAdaptive.textButton(
                         context: context,
-                        onPressed: () async {
-                          final int completedCount = data.items
-                              .where((final item) => item.isCompleted)
-                              .length;
-                          final bool? shouldClear =
-                              await showTodoClearCompletedConfirmDialog(
-                                context: context,
-                                count: completedCount,
-                              );
-                          if ((shouldClear ?? false) && context.mounted) {
-                            await cubit.clearCompleted();
-                          }
-                        },
+                        onPressed: () => _handleClearCompleted(
+                          context,
+                          data.items,
+                          cubit,
+                        ),
                         color: colors.error,
                         child: Text(
                           context.l10n.todoListClearCompletedAction,

@@ -1,5 +1,22 @@
 part of 'todo_list_page.dart';
 
+Future<void> _handleClearCompleted(
+  final BuildContext context,
+  final List<TodoItem> items,
+  final TodoListCubit cubit,
+) async {
+  final int completedCount = items
+      .where((final item) => item.isCompleted)
+      .length;
+  final bool? shouldClear = await showTodoClearCompletedConfirmDialog(
+    context: context,
+    count: completedCount,
+  );
+  if ((shouldClear ?? false) && context.mounted) {
+    await cubit.clearCompleted();
+  }
+}
+
 Future<void> _handleAddTodo(final BuildContext context) async {
   final TodoEditorResult? result = await showTodoEditorDialog(context: context);
   if (result == null) {
