@@ -42,7 +42,8 @@ class GoogleMapsLocationList extends StatelessWidget {
             padding: EdgeInsets.only(bottom: context.responsiveGapS),
             child: CommonCard(
               padding: EdgeInsets.zero,
-              child: ListTile(
+              child: PlatformAdaptive.listTile(
+                context: context,
                 title: Text(location.title),
                 subtitle: Text(location.description),
                 trailing: _LocationFocusActions(

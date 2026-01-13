@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/features/search/presentation/search_cubit.dart'
 import 'package:flutter_bloc_app/features/search/presentation/search_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class SearchTextField extends StatefulWidget {
   const SearchTextField({super.key});
@@ -50,6 +51,50 @@ class _SearchTextFieldState extends State<SearchTextField> {
               fontSize: context.responsiveBodySize,
             );
 
+            final isCupertino = PlatformAdaptive.isCupertino(context);
+            final textField = PlatformAdaptive.textField(
+              context: context,
+              controller: _controller,
+              hintText: l10n.searchHint,
+              onChanged: (final value) =>
+                  context.read<SearchCubit>().search(value),
+              style: textStyle,
+              padding: isCupertino
+                  ? EdgeInsets.symmetric(
+                      horizontal: context.responsiveHorizontalGapL,
+                      vertical: context.responsiveGapM,
+                    )
+                  : null,
+              decoration: isCupertino
+                  ? null
+                  : InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: context.responsiveHorizontalGapL,
+                        vertical: context.responsiveGapM,
+                      ),
+                      hintText: l10n.searchHint,
+                      hintStyle: hintStyle,
+                    ),
+            );
+
+            if (isCupertino) {
+              return Container(
+                height: context.responsiveButtonHeight,
+                decoration: BoxDecoration(
+                  color: colors.surface,
+                  border: Border.all(
+                    color: colors.onSurface,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    context.responsiveBorderRadius,
+                  ),
+                ),
+                child: textField,
+              );
+            }
+
             return Container(
               height: context.responsiveButtonHeight,
               decoration: BoxDecoration(
@@ -62,21 +107,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
                   context.responsiveBorderRadius,
                 ),
               ),
-              child: TextField(
-                controller: _controller,
-                onChanged: (final value) =>
-                    context.read<SearchCubit>().search(value),
-                style: textStyle,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: context.responsiveHorizontalGapL,
-                    vertical: context.responsiveGapM,
-                  ),
-                  hintText: l10n.searchHint,
-                  hintStyle: hintStyle,
-                ),
-              ),
+              child: textField,
             );
           },
         ),

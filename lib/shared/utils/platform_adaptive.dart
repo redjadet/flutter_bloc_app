@@ -1,5 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive_buttons.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive_inputs.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive_sheets.dart';
 
 /// Helpers to keep platform-adaptive branching consistent across the app.
 class PlatformAdaptive {
@@ -27,32 +29,18 @@ class PlatformAdaptive {
     final double? pressedOpacity,
     final BorderRadius? borderRadius,
     final ButtonStyle? materialStyle,
-  }) {
-    if (isCupertino(context)) {
-      return CupertinoButton(
-        onPressed: onPressed,
-        padding: padding,
-        color: color ?? CupertinoColors.activeBlue,
-        disabledColor: disabledColor ?? CupertinoColors.quaternaryLabel,
-        minimumSize: minSize != null ? Size(minSize, minSize) : null,
-        pressedOpacity: pressedOpacity,
-        borderRadius: borderRadius ?? BorderRadius.circular(8),
-        child: child,
-      );
-    }
-    return ElevatedButton(
-      onPressed: onPressed,
-      style:
-          materialStyle ??
-          ElevatedButton.styleFrom(
-            padding: padding,
-            backgroundColor: color,
-            disabledBackgroundColor: disabledColor,
-            minimumSize: minSize != null ? Size(minSize, minSize) : null,
-          ),
-      child: child,
-    );
-  }
+  }) => PlatformAdaptiveButtons.button(
+    context: context,
+    onPressed: onPressed,
+    child: child,
+    padding: padding,
+    color: color,
+    disabledColor: disabledColor,
+    minSize: minSize,
+    pressedOpacity: pressedOpacity,
+    borderRadius: borderRadius,
+    materialStyle: materialStyle,
+  );
 
   /// Returns a platform-adaptive text button widget
   static Widget textButton({
@@ -63,35 +51,15 @@ class PlatformAdaptive {
     final Color? color,
     final Color? disabledColor,
     final ButtonStyle? materialStyle,
-  }) {
-    if (isCupertino(context)) {
-      return CupertinoButton(
-        onPressed: onPressed,
-        padding: padding,
-        color: Colors.transparent,
-        disabledColor: disabledColor ?? CupertinoColors.quaternaryLabel,
-        child: DefaultTextStyle(
-          style: TextStyle(
-            color: onPressed == null
-                ? (disabledColor ?? CupertinoColors.quaternaryLabel)
-                : (color ?? CupertinoColors.activeBlue),
-          ),
-          child: child,
-        ),
-      );
-    }
-    return TextButton(
-      onPressed: onPressed,
-      style:
-          materialStyle ??
-          TextButton.styleFrom(
-            padding: padding,
-            foregroundColor: color,
-            disabledForegroundColor: disabledColor,
-          ),
-      child: child,
-    );
-  }
+  }) => PlatformAdaptiveButtons.textButton(
+    context: context,
+    onPressed: onPressed,
+    child: child,
+    padding: padding,
+    color: color,
+    disabledColor: disabledColor,
+    materialStyle: materialStyle,
+  );
 
   /// Returns a platform-adaptive filled button widget
   static Widget filledButton({
@@ -103,29 +71,16 @@ class PlatformAdaptive {
     final Color? color,
     final Color? disabledColor,
     final ButtonStyle? materialStyle,
-  }) {
-    if (isCupertino(context)) {
-      return CupertinoButton.filled(
-        key: key,
-        onPressed: onPressed,
-        padding: padding,
-        disabledColor: disabledColor ?? CupertinoColors.quaternaryLabel,
-        child: child,
-      );
-    }
-    return FilledButton(
-      key: key,
-      onPressed: onPressed,
-      style:
-          materialStyle ??
-          FilledButton.styleFrom(
-            padding: padding,
-            backgroundColor: color,
-            disabledBackgroundColor: disabledColor,
-          ),
-      child: child,
-    );
-  }
+  }) => PlatformAdaptiveButtons.filledButton(
+    context: context,
+    onPressed: onPressed,
+    child: child,
+    key: key,
+    padding: padding,
+    color: color,
+    disabledColor: disabledColor,
+    materialStyle: materialStyle,
+  );
 
   /// Returns a platform-adaptive outlined button widget.
   static Widget outlinedButton({
@@ -139,59 +94,18 @@ class PlatformAdaptive {
     final BorderSide? side,
     final BorderRadius? borderRadius,
     final ButtonStyle? materialStyle,
-  }) {
-    if (isCupertino(context)) {
-      final bool isDisabled = onPressed == null;
-      final BorderSide resolvedSide =
-          side ??
-          BorderSide(
-            color:
-                foregroundColor ??
-                (isDisabled
-                    ? CupertinoColors.quaternaryLabel
-                    : CupertinoColors.activeBlue),
-          );
-      final Color resolvedTextColor = isDisabled
-          ? (disabledColor ?? CupertinoColors.quaternaryLabel)
-          : (foregroundColor ?? CupertinoColors.activeBlue);
-      final BorderRadius resolvedRadius =
-          borderRadius ?? BorderRadius.circular(8);
-      return DecoratedBox(
-        decoration: BoxDecoration(
-          color: backgroundColor ?? Colors.transparent,
-          borderRadius: resolvedRadius,
-          border: Border.fromBorderSide(resolvedSide),
-        ),
-        child: CupertinoButton(
-          onPressed: onPressed,
-          padding: padding,
-          color: Colors.transparent,
-          disabledColor: Colors.transparent,
-          borderRadius: resolvedRadius,
-          child: DefaultTextStyle(
-            style: TextStyle(color: resolvedTextColor),
-            child: child,
-          ),
-        ),
-      );
-    }
-    return OutlinedButton(
-      onPressed: onPressed,
-      style:
-          materialStyle ??
-          OutlinedButton.styleFrom(
-            padding: padding,
-            backgroundColor: backgroundColor,
-            foregroundColor: foregroundColor,
-            disabledForegroundColor: disabledColor,
-            side: side,
-            shape: RoundedRectangleBorder(
-              borderRadius: borderRadius ?? BorderRadius.circular(8),
-            ),
-          ),
-      child: child,
-    );
-  }
+  }) => PlatformAdaptiveButtons.outlinedButton(
+    context: context,
+    onPressed: onPressed,
+    child: child,
+    padding: padding,
+    backgroundColor: backgroundColor,
+    foregroundColor: foregroundColor,
+    disabledColor: disabledColor,
+    side: side,
+    borderRadius: borderRadius,
+    materialStyle: materialStyle,
+  );
 
   /// Returns a platform-adaptive dialog action button
   static Widget dialogAction({
@@ -199,22 +113,121 @@ class PlatformAdaptive {
     required final VoidCallback? onPressed,
     required final String label,
     final bool isDestructive = false,
-  }) {
-    if (isCupertino(context)) {
-      return CupertinoDialogAction(
-        onPressed: onPressed,
-        isDestructiveAction: isDestructive,
-        child: Text(label),
-      );
-    }
-    return TextButton(
-      onPressed: onPressed,
-      style: isDestructive
-          ? TextButton.styleFrom(
-              foregroundColor: Theme.of(context).colorScheme.error,
-            )
-          : null,
-      child: Text(label),
-    );
-  }
+  }) => PlatformAdaptiveButtons.dialogAction(
+    context: context,
+    onPressed: onPressed,
+    label: label,
+    isDestructive: isDestructive,
+  );
+
+  /// Returns a platform-adaptive text field widget
+  /// Uses CupertinoTextField on iOS/macOS, TextField elsewhere
+  static Widget textField({
+    required final BuildContext context,
+    required final TextEditingController controller,
+    final String? placeholder,
+    final String? hintText,
+    final void Function(String)? onChanged,
+    final void Function(String)? onSubmitted,
+    final TextInputType? keyboardType,
+    final bool obscureText = false,
+    final int? maxLines = 1,
+    final bool enabled = true,
+    final bool autofocus = false,
+    final EdgeInsetsGeometry? padding,
+    final InputDecoration? decoration,
+    final TextStyle? style,
+  }) => PlatformAdaptiveInputs.textField(
+    context: context,
+    controller: controller,
+    placeholder: placeholder,
+    hintText: hintText,
+    onChanged: onChanged,
+    onSubmitted: onSubmitted,
+    keyboardType: keyboardType,
+    obscureText: obscureText,
+    maxLines: maxLines,
+    enabled: enabled,
+    autofocus: autofocus,
+    padding: padding,
+    decoration: decoration,
+    style: style,
+  );
+
+  /// Returns a platform-adaptive checkbox widget
+  /// Uses CupertinoCheckbox on iOS/macOS, Checkbox elsewhere
+  static Widget checkbox({
+    required final BuildContext context,
+    required final bool? value,
+    required final ValueChanged<bool?>? onChanged,
+    final Color? activeColor,
+    final Color? checkColor,
+  }) => PlatformAdaptiveInputs.checkbox(
+    context: context,
+    value: value,
+    onChanged: onChanged,
+    activeColor: activeColor,
+    checkColor: checkColor,
+  );
+
+  /// Returns a platform-adaptive list tile widget
+  /// Uses CupertinoListTile on iOS/macOS, ListTile elsewhere
+  static Widget listTile({
+    required final BuildContext context,
+    required final Widget title,
+    final Widget? subtitle,
+    final Widget? leading,
+    final Widget? trailing,
+    final VoidCallback? onTap,
+    final bool selected = false,
+    final Color? selectedTileColor,
+  }) => PlatformAdaptiveInputs.listTile(
+    context: context,
+    title: title,
+    subtitle: subtitle,
+    leading: leading,
+    trailing: trailing,
+    onTap: onTap,
+    selected: selected,
+    selectedTileColor: selectedTileColor,
+  );
+
+  /// Shows a platform-adaptive modal bottom sheet
+  /// Uses CupertinoActionSheet on iOS/macOS, Material showModalBottomSheet elsewhere
+  static Future<T?> showAdaptiveModalBottomSheet<T>({
+    required final BuildContext context,
+    required final WidgetBuilder builder,
+    final bool isScrollControlled = false,
+    final Color? backgroundColor,
+    final bool useSafeArea = false,
+    final bool isDismissible = true,
+    final bool enableDrag = true,
+  }) => PlatformAdaptiveSheets.showAdaptiveModalBottomSheet(
+    context: context,
+    builder: builder,
+    isScrollControlled: isScrollControlled,
+    backgroundColor: backgroundColor,
+    useSafeArea: useSafeArea,
+    isDismissible: isDismissible,
+    enableDrag: enableDrag,
+  );
+
+  /// Shows a platform-adaptive picker modal for selecting from a list of items
+  /// On iOS/macOS: Shows CupertinoPicker in a CupertinoActionSheet
+  /// On Android: Shows a bottom sheet with a list
+  static Future<T?> showPickerModal<T>({
+    required final BuildContext context,
+    required final List<T> items,
+    required final T selectedItem,
+    required final String Function(T) itemLabel,
+    final String? title,
+    final Widget Function(BuildContext, T)? itemBuilder,
+  }) => PlatformAdaptiveSheets.showPickerModal(
+    context: context,
+    items: items,
+    selectedItem: selectedItem,
+    itemLabel: itemLabel,
+    title: title,
+    itemBuilder: itemBuilder,
+  );
 }

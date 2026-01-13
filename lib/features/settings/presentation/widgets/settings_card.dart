@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class SettingsOption<T> {
   const SettingsOption({required this.label, required this.value});
@@ -51,7 +52,8 @@ class _SettingsTile extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return ListTile(
+    return PlatformAdaptive.listTile(
+      context: context,
       title: Text(label),
       trailing: selected
           ? Icon(Icons.check, color: theme.colorScheme.primary)

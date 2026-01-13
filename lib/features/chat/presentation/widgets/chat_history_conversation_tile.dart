@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history_sheet_helpers.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class ChatHistoryConversationTile extends StatelessWidget {
   const ChatHistoryConversationTile({
@@ -44,7 +45,12 @@ class ChatHistoryConversationTile extends StatelessWidget {
         ? theme.colorScheme.onPrimaryContainer
         : theme.colorScheme.onSurface;
 
-    return ListTile(
+    final tileColor = isActive
+        ? theme.colorScheme.primaryContainer
+        : theme.colorScheme.surfaceContainerHighest;
+
+    return PlatformAdaptive.listTile(
+      context: context,
       leading: isActive
           ? Icon(
               Icons.check_circle,
@@ -52,6 +58,7 @@ class ChatHistoryConversationTile extends StatelessWidget {
             )
           : null,
       selected: isActive,
+      selectedTileColor: tileColor,
       onTap: () async {
         await cubit.selectConversation(conversation.id);
         onClose();
@@ -68,12 +75,6 @@ class ChatHistoryConversationTile extends StatelessWidget {
           await cubit.deleteConversation(conversation.id);
         },
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-      ),
-      tileColor: isActive
-          ? theme.colorScheme.primaryContainer
-          : theme.colorScheme.surfaceContainerHighest,
       title: Text(
         title,
         style: theme.textTheme.titleMedium?.copyWith(color: baseTextColor),
