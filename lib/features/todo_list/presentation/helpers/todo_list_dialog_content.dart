@@ -28,48 +28,50 @@ Widget buildTodoEditorDialogContent({
           ? 400
           : double.infinity,
     ),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        buildTodoTextField(
-          context: context,
-          controller: titleController,
-          placeholder: l10n.todoListTitlePlaceholder,
-          isCupertino: isCupertino,
-        ),
-        SizedBox(height: context.responsiveGapS),
-        buildTodoTextField(
-          context: context,
-          controller: descriptionController,
-          placeholder: l10n.todoListDescriptionPlaceholder,
-          isCupertino: isCupertino,
-          maxLines: context.isDesktop
-              ? 4
-              : context.isTabletOrLarger
-              ? 3
-              : 3,
-        ),
-        SizedBox(height: context.responsiveGapS),
-        buildTodoDueDatePicker(
-          context: context,
-          isCupertino: isCupertino,
-          selectedDueDate: selectedDueDate,
-          onDueDateChanged: onDueDateChanged,
-        ),
-        SizedBox(height: context.responsiveGapS),
-        buildTodoPrioritySelector(
-          context: context,
-          selectedPriority: selectedPriority,
-          onPriorityChanged: onPriorityChanged,
-        ),
-        SizedBox(height: context.responsiveGapS),
-        buildTodoCompletionCheckbox(
-          context: context,
-          isCompleted: isCompleted,
-          onCompletedChanged: onCompletedChanged,
-          isCupertino: isCupertino,
-        ),
-      ],
+    child: SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          buildTodoTextField(
+            context: context,
+            controller: titleController,
+            placeholder: l10n.todoListTitlePlaceholder,
+            isCupertino: isCupertino,
+          ),
+          SizedBox(height: context.responsiveGapS),
+          buildTodoTextField(
+            context: context,
+            controller: descriptionController,
+            placeholder: l10n.todoListDescriptionPlaceholder,
+            isCupertino: isCupertino,
+            maxLines: context.isDesktop
+                ? 4
+                : context.isTabletOrLarger
+                ? 3
+                : 3,
+          ),
+          SizedBox(height: context.responsiveGapS),
+          buildTodoDueDatePicker(
+            context: context,
+            isCupertino: isCupertino,
+            selectedDueDate: selectedDueDate,
+            onDueDateChanged: onDueDateChanged,
+          ),
+          SizedBox(height: context.responsiveGapS),
+          buildTodoPrioritySelector(
+            context: context,
+            selectedPriority: selectedPriority,
+            onPriorityChanged: onPriorityChanged,
+          ),
+          SizedBox(height: context.responsiveGapS),
+          buildTodoCompletionCheckbox(
+            context: context,
+            isCompleted: isCompleted,
+            onCompletedChanged: onCompletedChanged,
+            isCupertino: isCupertino,
+          ),
+        ],
+      ),
     ),
   );
 }
