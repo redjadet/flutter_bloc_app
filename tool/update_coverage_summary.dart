@@ -35,6 +35,15 @@ const List<String> _generatedExact = <String>[
   'lib/generated_plugin_registrant.dart',
 ];
 
+// Documentation files that should be updated with coverage percentages
+const List<String> _documentationFiles = <String>[
+  'README.md',
+  'docs/testing_overview.md',
+  'docs/CODE_QUALITY_ANALYSIS.md',
+  'docs/CODE_QUALITY_ANALYSIS_IMPROVEMENTS.md',
+  'docs/feature_overview.md',
+];
+
 void main(final List<String> args) {
   final File lcov = File('coverage/lcov.info');
   if (!lcov.existsSync()) {
@@ -47,15 +56,24 @@ void main(final List<String> args) {
   final File output = File('coverage/coverage_summary.md');
   output.parent.createSync(recursive: true);
   output.writeAsStringSync(coverage.toMarkdown());
-  _Updator.updateReadme(
+
+  // Update all documentation files
+  final int updatedCount = _Updator.updateAllDocumentation(
     coverage.totalPercentage,
     totalLinesHit: coverage.totalLinesHit,
     totalLinesFound: coverage.totalLinesFound,
   );
-  stdout.writeln(
-    'Wrote coverage/coverage_summary.md with ${coverage.totalPercentage.toStringAsFixed(2)}% coverage',
-  );
+
+  stdout
+    ..writeln(
+      'Wrote coverage/coverage_summary.md with ${coverage.totalPercentage.toStringAsFixed(2)}% coverage',
+    )
+    ..writeln(
+      'Updated $updatedCount documentation file(s) with coverage percentage',
+    );
 }
+
+// ... existing _CoverageRecord, _Coverage classes remain the same ...
 
 class _CoverageRecord {
   _CoverageRecord({
@@ -440,16 +458,35 @@ class _Coverage {
 }
 
 class _Updator {
-  static void updateReadme(
+  /// Updates all documentation files with the latest coverage percentage.
+  /// Returns the number of files that were successfully updated.
+  static int updateAllDocumentation(
     final double percentage, {
     required final int totalLinesHit,
     required final int totalLinesFound,
   }) {
-    final File readme = File('README.md');
-    if (!readme.existsSync()) {
-      return;
+    int updatedCount = 0;
+    for (final String filePath in _documentationFiles) {
+      final File file = File(filePath);
+      if (!file.existsSync()) {
+        continue;
+      }
+      if (_updateFile(file, percentage, totalLinesHit, totalLinesFound)) {
+        updatedCount++;
+      }
     }
-    final List<String> lines = readme.readAsLinesSync();
+    return updatedCount;
+  }
+
+  /// Updates a single file with the latest coverage percentage.
+  /// Returns true if the file was updated, false otherwise.
+  static bool _updateFile(
+    final File file,
+    final double percentage,
+    final int totalLinesHit,
+    final int totalLinesFound,
+  ) {
+    final List<String> lines = file.readAsLinesSync();
     final String percentageStr = percentage.toStringAsFixed(2);
     final String percentageUrlEncoded = percentageStr.replaceAll('.', '%2E');
     final String lineCountStr = '($totalLinesHit/$totalLinesFound lines)';
@@ -467,8 +504,52 @@ class _Updator {
     final RegExp textPattern2 = RegExp(
       r'(\*\*Current Coverage\*\*:\s+)([0-9]+\.?[0-9]*)%\s+\(([0-9]+/[0-9]+\s+lines)\)',
     );
+    // Pattern 2b: "- **Current Coverage:** X% (Y/Z lines)" (with leading dash)
+    final RegExp textPattern2b = RegExp(
+      r'(-\s+\*\*Current Coverage\*\*:\s+)([0-9]+\.[0-9]+)%\s+\(([0-9]+/[0-9]+\s+lines)\)',
+    );
     final RegExp textPattern3 = RegExp(
       r'(\*\*)([0-9]+\.?[0-9]*)%\s+\(([0-9]+/[0-9]+\s+lines)\)',
+    );
+
+    // Pattern 4: "with 83.97% code coverage" or "coverage with 83.97%"
+    final RegExp textPattern4 = RegExp(
+      r'(\bwith\s+)([0-9]+\.?[0-9]*)%(\s+code coverage)',
+      caseSensitive: false,
+    );
+
+    // Pattern 4b: "- **Code Coverage** - 83.97% test coverage"
+    final RegExp textPattern4b = RegExp(
+      r'(-\s+\*\*Code Coverage\*\*\s+-\s+)([0-9]+\.?[0-9]*)%(\s+test coverage)',
+      caseSensitive: false,
+    );
+
+    // Pattern 4c: Just percentage followed by "test coverage" (simpler pattern)
+    final RegExp textPattern4c = RegExp(
+      r'([0-9]+\.?[0-9]*)%(\s+test coverage)',
+      caseSensitive: false,
+    );
+
+    // Pattern 5: "**Current:** 77.32%" (used in CODE_QUALITY_ANALYSIS.md)
+    final RegExp textPattern5 = RegExp(
+      r'(\*\*Current:\*\*\s+)([0-9]+\.?[0-9]*)%',
+    );
+
+    // Pattern 5b: "**Coverage Target:** 85.34% baseline | **Current:** 77.32%"
+    final RegExp textPattern5b = RegExp(
+      r'(\*\*Coverage Target:\*\*\s+85\.34%\s+baseline\s+\|\s+\*\*Current:\*\*\s+)([0-9]+\.?[0-9]*)%',
+    );
+
+    // Pattern 5c: "**Current Coverage:** 77.32% (9919/12829 lines) | **Target:** 85.34%"
+    final RegExp textPattern5c = RegExp(
+      r'(\*\*Current Coverage:\*\*\s+)([0-9]+\.?[0-9]*)%\s+\([0-9]+/[0-9]+\s+lines\)(\s+\|\s+\*\*Target:\*\*\s+85\.34%)',
+    );
+
+    // Pattern 6: "**Target:** 85.34%" (used in CODE_QUALITY_ANALYSIS.md) - DON'T update this
+    // Pattern 8: "coverage: **73.63%**" or "coverage is **73.63%**"
+    final RegExp textPattern8 = RegExp(
+      r'(coverage(?:\s+is)?:\s+\*\*)([0-9]+\.?[0-9]*)%(\*\*)',
+      caseSensitive: false,
     );
 
     for (int i = 0; i < lines.length; i++) {
@@ -497,6 +578,13 @@ class _Updator {
           (final match) => '${match.group(1)}$percentageStr% $lineCountStr',
         );
       }
+      // Update "- **Current Coverage:** 82.50% (9091/11020 lines)"
+      else if (textPattern2b.hasMatch(line)) {
+        replacement = line.replaceFirstMapped(
+          textPattern2b,
+          (final match) => '${match.group(1)}$percentageStr% $lineCountStr',
+        );
+      }
       // Update "**85.34% (6186/7249 lines)" - update both percentage and line counts
       else if (textPattern3.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
@@ -504,23 +592,71 @@ class _Updator {
           (final match) => '${match.group(1)}$percentageStr% $lineCountStr',
         );
       }
+      // Update "with 83.97% code coverage"
+      else if (textPattern4.hasMatch(line)) {
+        replacement = line.replaceFirstMapped(
+          textPattern4,
+          (final match) => '${match.group(1)}$percentageStr%${match.group(3)}',
+        );
+      }
+      // Update "- **Code Coverage** - 83.97% test coverage"
+      else if (textPattern4b.hasMatch(line)) {
+        replacement = line.replaceFirstMapped(
+          textPattern4b,
+          (final match) => '${match.group(1)}$percentageStr%${match.group(3)}',
+        );
+      }
+      // Update "83.97% test coverage" (simple pattern, check after other patterns to avoid conflicts)
+      else if (textPattern4c.hasMatch(line) &&
+          !textPattern1.hasMatch(line) &&
+          !textPattern2.hasMatch(line) &&
+          !textPattern3.hasMatch(line)) {
+        replacement = line.replaceFirstMapped(
+          textPattern4c,
+          (final match) => '$percentageStr%${match.group(2)}',
+        );
+      }
+      // Update "**Coverage Target:** 85.34% baseline | **Current:** 77.32%"
+      else if (textPattern5b.hasMatch(line)) {
+        replacement = line.replaceFirstMapped(
+          textPattern5b,
+          (final match) => '${match.group(1)}$percentageStr%',
+        );
+      }
+      // Update "**Current Coverage:** 77.32% (9919/12829 lines) | **Target:** 85.34%"
+      else if (textPattern5c.hasMatch(line)) {
+        replacement = line.replaceFirstMapped(
+          textPattern5c,
+          (final match) =>
+              '${match.group(1)}$percentageStr% $lineCountStr${match.group(3)}',
+        );
+      }
+      // Update "**Current:** 77.32%" (but not Target)
+      else if (textPattern5.hasMatch(line) && !line.contains('**Target:**')) {
+        replacement = line.replaceFirstMapped(
+          textPattern5,
+          (final match) => '${match.group(1)}$percentageStr%',
+        );
+      }
+      // Update "coverage: **73.63%**"
+      else if (textPattern8.hasMatch(line)) {
+        replacement = line.replaceFirstMapped(
+          textPattern8,
+          (final match) => '${match.group(1)}$percentageStr%${match.group(3)}',
+        );
+      }
 
-      if (replacement != null) {
+      if (replacement != null && replacement != line) {
         lines[i] = replacement;
         updated = true;
       }
     }
 
     if (updated) {
-      readme.writeAsStringSync(_withSingleTrailingNewline(lines.join('\n')));
-      stdout.writeln(
-        'Updated README.md with coverage: $percentageStr% $lineCountStr',
-      );
-    } else {
-      stderr.writeln(
-        'Warning: Could not find coverage percentage patterns in README.md',
-      );
+      file.writeAsStringSync(_withSingleTrailingNewline(lines.join('\n')));
+      return true;
     }
+    return false;
   }
 }
 
