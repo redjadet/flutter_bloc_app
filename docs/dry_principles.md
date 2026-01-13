@@ -213,15 +213,21 @@ return CommonStatusView(
 - Focused/disabled styling
 - Responsive content padding
 
-**Solution**: Extracted a shared input decoration builder.
+**Solution**: Extracted shared input decoration builders.
 
-**Location**: `lib/shared/widgets/common_form_field.dart`
+**Location**: `lib/shared/widgets/common_input_decoration_helpers.dart`
+
+**Functions**:
+
+- `buildCommonInputDecoration()` - For outline input decorations (used by `CommonFormField` and `CommonDropdownField`)
+- `buildFilledInputDecoration()` - For filled input decorations (used by registration forms)
 
 **Impact**:
 
 - Reduced duplicate decoration code across shared form widgets
 - Keeps visual consistency for form fields
 - Makes future styling tweaks a single change
+- Separated file structure: form widgets in `common_form_field.dart`, dropdown in `common_dropdown_field.dart`, helpers in `common_input_decoration_helpers.dart`
 
 ### 6. Max-Width Layout Consolidation
 
@@ -506,7 +512,7 @@ don't use the filled pattern.
 
 - Reuse `CommonFormField`/`CommonDropdownField` where possible.
 - For custom layouts requiring raw `TextField`, consider if existing helpers
-  (`buildFilledInputDecoration` or `_buildCommonInputDecoration`) can be extended.
+  (`buildFilledInputDecoration` or `buildCommonInputDecoration`) can be extended.
 
 ### Repeated ViewStatus Branching
 
@@ -586,7 +592,7 @@ For stateless utilities that don't fit into a class hierarchy:
 For stateless utility functions that provide shared behavior:
 
 - **`buildFilledInputDecoration`**: Filled input decoration styling for registration forms
-- **`_buildCommonInputDecoration`**: Common input decoration styling for form fields
+- **`buildCommonInputDecoration`**: Common input decoration styling for form fields
 
 **When to use**: When functionality is a simple function that doesn't require class state or complex behavior.
 

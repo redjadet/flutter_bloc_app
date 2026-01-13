@@ -229,7 +229,9 @@ final String encoded = await encodeJsonIsolate(object); // For size estimation
 - `app_message.dart` - App-wide message display widget
 - `common_app_bar.dart` - Common app bar implementation
 - `common_error_view.dart` - Standardized error display widget
-- `common_form_field.dart` - Reusable form field widgets (text, dropdown, etc.)
+- `common_form_field.dart` - Reusable form field widgets (`CommonFormField`, `CommonSearchField`)
+- `common_dropdown_field.dart` - Platform-adaptive dropdown widget (`CommonDropdownField`, `DropdownLabelPosition`)
+- `common_input_decoration_helpers.dart` - Input decoration helper functions (`buildCommonInputDecoration`, `buildFilledInputDecoration`)
 - `common_loading_widget.dart` - Standardized loading indicator
 - `common_page_layout.dart` - Common page layout wrapper
 - `flavor_badge.dart` - Flavor indicator badge (dev, staging, prod)
