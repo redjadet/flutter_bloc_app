@@ -54,3 +54,55 @@ InputDecoration buildFilledInputDecoration(
     ),
   );
 }
+
+InputDecoration buildCommonInputDecoration({
+  required final BuildContext context,
+  required final ThemeData theme,
+  final String? labelText,
+  final String? hintText,
+  final String? helperText,
+  final String? errorText,
+  final Widget? prefixIcon,
+  final Widget? suffixIcon,
+  final bool includeErrorBorders = true,
+}) {
+  final borderRadius = BorderRadius.circular(context.responsiveCardRadius);
+  final baseDecoration = InputDecoration(
+    labelText: labelText,
+    hintText: hintText,
+    helperText: helperText,
+    errorText: errorText,
+    prefixIcon: prefixIcon,
+    suffixIcon: suffixIcon,
+    border: OutlineInputBorder(borderRadius: borderRadius),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: borderRadius,
+      borderSide: BorderSide(
+        color: theme.colorScheme.outline.withValues(alpha: 0.5),
+      ),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: borderRadius,
+      borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+    ),
+    contentPadding: EdgeInsets.symmetric(
+      horizontal: context.responsiveHorizontalGapL,
+      vertical: context.responsiveGapM,
+    ),
+  );
+
+  if (!includeErrorBorders) {
+    return baseDecoration;
+  }
+
+  return baseDecoration.copyWith(
+    errorBorder: OutlineInputBorder(
+      borderRadius: borderRadius,
+      borderSide: BorderSide(color: theme.colorScheme.error),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderRadius: borderRadius,
+      borderSide: BorderSide(color: theme.colorScheme.error, width: 2),
+    ),
+  );
+}

@@ -13,7 +13,7 @@ The codebase already had platform-adaptive implementations for:
 - **Navigation**: `CommonAppBar` uses `CupertinoNavigationBar` on iOS/macOS
 - **Bottom Navigation**: `ProfileBottomNav` uses `CupertinoTabBar` on iOS/macOS
 - **Loading Indicators**: `CommonLoadingWidget` uses `CupertinoActivityIndicator` on iOS/macOS
-- **Date Pickers**: `showAdaptiveTodoDatePicker` uses `CupertinoDatePicker` on iOS/macOS
+- **Date Pickers**: `showAdaptiveTodoDatePicker` uses `CupertinoDatePicker` in a modal bottom sheet on iOS/macOS (updated to fix clipping issues)
 - **Buttons**: `PlatformAdaptive` helpers use `CupertinoButton` on iOS/macOS
 - **Dialogs**: `showAdaptiveDialog` uses `CupertinoAlertDialog` on iOS/macOS
 - **Some TextFields**: Todo dialog fields use `CupertinoTextField` on iOS/macOS
@@ -26,6 +26,7 @@ The codebase already had platform-adaptive implementations for:
 3. **Checkboxes** - Verified `Checkbox.adaptive` works correctly (already platform-adaptive)
 4. **List Tiles** - Settings cards and list items now use `CupertinoListTile` on iOS/macOS
 5. **Modal Bottom Sheets** - Updated to use platform-adaptive helper
+6. **Date Pickers** - Todo list due date picker uses `showCupertinoModalPopup` with `CupertinoDatePicker` (fixed clipping issues)
 
 ## Implementation Details
 
@@ -164,7 +165,19 @@ Updated `buildTodoPrioritySelector()` in `lib/features/todo_list/presentation/he
 
 The iOS implementation provides a native picker experience with Cancel/Done buttons, matching iOS design patterns.
 
-**Note**: Other dropdowns (GraphQL filter bar, chat model selector) can be migrated using the same pattern when needed.
+#### GraphQL Filter Bar
+
+Updated `GraphqlFilterBar` in `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart`:
+
+- **iOS/macOS**: Shows a tappable container that opens `CupertinoPicker` modal for continent selection
+- **Android**: Continues using `DropdownButton` with `InputDecorator`
+
+#### Chat Model Selector
+
+Updated `ChatModelSelector` in `lib/features/chat/presentation/widgets/chat_model_selector.dart`:
+
+- **iOS/macOS**: Shows a tappable container in a Row layout that opens `CupertinoPicker` modal for model selection
+- **Android**: Continues using `DropdownButtonFormField`
 
 ### Phase 4: Checkbox Verification
 
@@ -224,6 +237,13 @@ Updated modal bottom sheet calls to use `PlatformAdaptive.showAdaptiveModalBotto
 ### Dropdowns
 
 - `lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart`
+- `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart`
+- `lib/features/chat/presentation/widgets/chat_model_selector.dart`
+- `lib/shared/widgets/common_form_field.dart` (CommonDropdownField)
+
+### Date Pickers
+
+- `lib/features/todo_list/presentation/helpers/todo_list_date_picker.dart` - Updated to use `showCupertinoModalPopup` instead of `CupertinoAlertDialog` to fix clipping issues on iOS
 
 ### List Tiles
 
@@ -274,11 +294,11 @@ Scaffold migration to `CupertinoPageScaffold` is complex due to:
 
 ### Other Dropdowns
 
-Additional dropdowns that could be migrated using the same pattern:
+Additional dropdowns migrated using the same pattern:
 
-- `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart`
-- `lib/features/chat/presentation/widgets/chat_model_selector.dart`
-- `lib/shared/widgets/common_form_field.dart` (CommonDropdownField)
+- ✅ `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart` - Migrated to use `PlatformAdaptive.showPickerModal()` on iOS
+- ✅ `lib/features/chat/presentation/widgets/chat_model_selector.dart` - Migrated to use `PlatformAdaptive.showPickerModal()` on iOS
+- ✅ `lib/shared/widgets/common_form_field.dart` (CommonDropdownField) - Reusable widget made platform-adaptive with `PlatformAdaptive.showPickerModal()` on iOS
 
 ## Testing Considerations
 
@@ -315,7 +335,7 @@ When implementing platform-adaptive widgets:
 
 ## Future Enhancements
 
-1. **Refresh Indicators**: Implement platform-adaptive refresh control wrapper
+1. **Refresh Indicators**: Implement platform-adaptive refresh control wrapper (complex - requires CustomScrollView refactoring)
 2. **Form Fields**: Consider migration strategy for `TextFormField` with validation
 3. **Complex Widgets**: Handle edge cases like `expands: true` TextFields
 4. **Testing**: Add comprehensive tests for platform-adaptive widgets
