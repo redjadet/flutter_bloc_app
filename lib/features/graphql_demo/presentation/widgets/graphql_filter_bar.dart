@@ -20,52 +20,44 @@ class GraphqlFilterBar extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final items = <DropdownMenuItem<String?>>[
-      DropdownMenuItem<String?>(
-        child: Text(l10n.graphqlSampleAllContinents),
-      ),
-      ...continents.map(
-        (final continent) => DropdownMenuItem<String?>(
-          value: continent.code,
-          child: Text('${continent.name} (${continent.code})'),
-        ),
-      ),
+    // Create list of items for picker (null for "All", then continents)
+    final List<String?> allItems = [
+      null,
+      ...continents.map((final c) => c.code),
     ];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l10n.graphqlSampleFilterLabel,
-          style: Theme.of(context).textTheme.labelMedium,
+    return CommonDropdownField<String?>(
+      value: activeContinentCode,
+      items: [
+        DropdownMenuItem<String?>(
+          child: Text(l10n.graphqlSampleAllContinents),
         ),
-        SizedBox(height: context.responsiveGapS),
-        InputDecorator(
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-            ),
-            isDense: true,
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String?>(
-              isExpanded: true,
-              value: activeContinentCode,
-              items: items,
-              onChanged: isLoading
-                  ? null
-                  : (final value) =>
-                        CubitHelpers.safeExecute<
-                          GraphqlDemoCubit,
-                          GraphqlDemoState
-                        >(
-                          context,
-                          (final cubit) => cubit.selectContinent(value),
-                        ),
-            ),
+        ...continents.map(
+          (final continent) => DropdownMenuItem<String?>(
+            value: continent.code,
+            child: Text('${continent.name} (${continent.code})'),
           ),
         ),
       ],
+      onChanged: isLoading
+          ? null
+          : (final value) =>
+                CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
+                  context,
+                  (final cubit) => cubit.selectContinent(value),
+                ),
+      labelText: l10n.graphqlSampleFilterLabel,
+      enabled: !isLoading,
+      customPickerItems: allItems,
+      customItemLabel: (final String? code) {
+        if (code == null) {
+          return l10n.graphqlSampleAllContinents;
+        }
+        final continent = continents.firstWhere(
+          (final c) => c.code == code,
+        );
+        return '${continent.name} (${continent.code})';
+      },
     );
   }
 }

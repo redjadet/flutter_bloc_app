@@ -3,8 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 
 class ChatModelSelector extends StatelessWidget {
   const ChatModelSelector({super.key});
@@ -36,38 +35,24 @@ class ChatModelSelector extends StatelessWidget {
           );
         }
 
-        return Row(
-          children: <Widget>[
-            Text(l10n.chatModelLabel, style: theme.textTheme.titleMedium),
-            SizedBox(width: context.responsiveHorizontalGapS),
-            Expanded(
-              child: DropdownButtonFormField<String>(
-                initialValue: effectiveModel,
-                items: models
-                    .map(
-                      (final String model) => DropdownMenuItem<String>(
-                        value: model,
-                        child: Text(_modelLabel(l10n, model)),
-                      ),
-                    )
-                    .toList(growable: false),
-                onChanged: (final String? value) {
-                  if (value != null) {
-                    cubit.selectModel(value);
-                  }
-                },
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      context.responsiveCardRadius,
-                    ),
-                  ),
-                  isDense: true,
+        return CommonDropdownField<String>(
+          value: effectiveModel,
+          items: models
+              .map(
+                (final String model) => DropdownMenuItem<String>(
+                  value: model,
+                  child: Text(_modelLabel(l10n, model)),
                 ),
-                isExpanded: true,
-              ),
-            ),
-          ],
+              )
+              .toList(growable: false),
+          onChanged: (final String? value) {
+            if (value != null) {
+              cubit.selectModel(value);
+            }
+          },
+          labelText: l10n.chatModelLabel,
+          labelPosition: DropdownLabelPosition.left,
+          customItemLabel: (final String model) => _modelLabel(l10n, model),
         );
       },
     );

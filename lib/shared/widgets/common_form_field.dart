@@ -1,58 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-
-InputDecoration _buildCommonInputDecoration({
-  required final BuildContext context,
-  required final ThemeData theme,
-  final String? labelText,
-  final String? hintText,
-  final String? helperText,
-  final String? errorText,
-  final Widget? prefixIcon,
-  final Widget? suffixIcon,
-  final bool includeErrorBorders = true,
-}) {
-  final borderRadius = BorderRadius.circular(context.responsiveCardRadius);
-  final baseDecoration = InputDecoration(
-    labelText: labelText,
-    hintText: hintText,
-    helperText: helperText,
-    errorText: errorText,
-    prefixIcon: prefixIcon,
-    suffixIcon: suffixIcon,
-    border: OutlineInputBorder(borderRadius: borderRadius),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: borderRadius,
-      borderSide: BorderSide(
-        color: theme.colorScheme.outline.withValues(alpha: 0.5),
-      ),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: borderRadius,
-      borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
-    ),
-    contentPadding: EdgeInsets.symmetric(
-      horizontal: context.responsiveHorizontalGapL,
-      vertical: context.responsiveGapM,
-    ),
-  );
-
-  if (!includeErrorBorders) {
-    return baseDecoration;
-  }
-
-  return baseDecoration.copyWith(
-    errorBorder: OutlineInputBorder(
-      borderRadius: borderRadius,
-      borderSide: BorderSide(color: theme.colorScheme.error),
-    ),
-    focusedErrorBorder: OutlineInputBorder(
-      borderRadius: borderRadius,
-      borderSide: BorderSide(color: theme.colorScheme.error, width: 2),
-    ),
-  );
-}
+import 'package:flutter_bloc_app/shared/widgets/common_input_decoration_helpers.dart';
 
 /// A reusable form field with consistent styling and validation
 class CommonFormField extends StatelessWidget {
@@ -111,7 +59,7 @@ class CommonFormField extends StatelessWidget {
       maxLength: maxLength,
       enabled: enabled,
       autofocus: autofocus,
-      decoration: _buildCommonInputDecoration(
+      decoration: buildCommonInputDecoration(
         context: context,
         theme: theme,
         labelText: labelText,
@@ -163,50 +111,6 @@ class CommonSearchField extends StatelessWidget {
               },
             )
           : null,
-    );
-  }
-}
-
-/// A reusable dropdown field with consistent styling
-class CommonDropdownField<T> extends StatelessWidget {
-  const CommonDropdownField({
-    required this.value,
-    required this.items,
-    required this.onChanged,
-    super.key,
-    this.labelText,
-    this.hintText,
-    this.validator,
-    this.enabled = true,
-    this.isExpanded = true,
-  });
-
-  final T? value;
-  final List<DropdownMenuItem<T>> items;
-  final void Function(T?)? onChanged;
-  final String? labelText;
-  final String? hintText;
-  final String? Function(T?)? validator;
-  final bool enabled;
-  final bool isExpanded;
-
-  @override
-  Widget build(final BuildContext context) {
-    final theme = Theme.of(context);
-
-    return DropdownButtonFormField<T>(
-      initialValue: value,
-      items: items,
-      onChanged: enabled ? onChanged : null,
-      validator: validator,
-      isExpanded: isExpanded,
-      decoration: _buildCommonInputDecoration(
-        context: context,
-        theme: theme,
-        labelText: labelText,
-        hintText: hintText,
-        includeErrorBorders: false,
-      ),
     );
   }
 }
