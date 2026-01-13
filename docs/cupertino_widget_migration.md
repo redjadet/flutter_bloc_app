@@ -169,15 +169,18 @@ The iOS implementation provides a native picker experience with Cancel/Done butt
 
 Updated `GraphqlFilterBar` in `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart`:
 
-- **iOS/macOS**: Shows a tappable container that opens `CupertinoPicker` modal for continent selection
-- **Android**: Continues using `DropdownButton` with `InputDecorator`
+- Now uses `CommonDropdownField<String?>` for both platforms
+- **iOS/macOS**: Uses `CommonDropdownField` which shows a tappable container that opens `CupertinoPicker` modal for continent selection
+- **Android**: Uses `CommonDropdownField` which uses `DropdownButtonFormField`
+- Supports nullable types with null values (for "All continents" option) via `customPickerItems` and `customItemLabel` parameters
 
 #### Chat Model Selector
 
 Updated `ChatModelSelector` in `lib/features/chat/presentation/widgets/chat_model_selector.dart`:
 
-- **iOS/macOS**: Shows a tappable container in a Row layout that opens `CupertinoPicker` modal for model selection
-- **Android**: Continues using `DropdownButtonFormField`
+- Now uses `CommonDropdownField<String>` for both platforms
+- **iOS/macOS**: Uses `CommonDropdownField` with `labelPosition: DropdownLabelPosition.left` to show label on left in a Row layout
+- **Android**: Uses `CommonDropdownField` which uses `DropdownButtonFormField`
 
 ### Phase 4: Checkbox Verification
 
@@ -236,10 +239,10 @@ Updated modal bottom sheet calls to use `PlatformAdaptive.showAdaptiveModalBotto
 
 ### Dropdowns
 
-- `lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart`
-- `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart`
-- `lib/features/chat/presentation/widgets/chat_model_selector.dart`
-- `lib/shared/widgets/common_form_field.dart` (CommonDropdownField)
+- `lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart` - Uses `CommonDropdownField`
+- `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart` - Uses `CommonDropdownField` with nullable type support
+- `lib/features/chat/presentation/widgets/chat_model_selector.dart` - Uses `CommonDropdownField` with left label position
+- `lib/shared/widgets/common_dropdown_field.dart` - Platform-adaptive dropdown widget with `DropdownLabelPosition` enum
 
 ### Date Pickers
 
@@ -294,11 +297,18 @@ Scaffold migration to `CupertinoPageScaffold` is complex due to:
 
 ### Other Dropdowns
 
-Additional dropdowns migrated using the same pattern:
+All dropdowns now use the unified `CommonDropdownField` widget which is platform-adaptive:
 
-- ✅ `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart` - Migrated to use `PlatformAdaptive.showPickerModal()` on iOS
-- ✅ `lib/features/chat/presentation/widgets/chat_model_selector.dart` - Migrated to use `PlatformAdaptive.showPickerModal()` on iOS
-- ✅ `lib/shared/widgets/common_form_field.dart` (CommonDropdownField) - Reusable widget made platform-adaptive with `PlatformAdaptive.showPickerModal()` on iOS
+- ✅ `lib/shared/widgets/common_dropdown_field.dart` (CommonDropdownField) - Reusable platform-adaptive dropdown widget with support for:
+  - Nullable types with custom picker items (`customPickerItems` parameter)
+  - Custom label functions (`customItemLabel` parameter)
+  - Flexible label positioning (`DropdownLabelPosition` enum: `top` or `left`)
+  - Uses `PlatformAdaptive.showPickerModal()` on iOS/macOS, `DropdownButtonFormField` on Android
+- ✅ `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart` - Now uses `CommonDropdownField<String?>` with nullable type support
+- ✅ `lib/features/chat/presentation/widgets/chat_model_selector.dart` - Now uses `CommonDropdownField<String>` with `labelPosition: DropdownLabelPosition.left`
+- ✅ `lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart` - Uses `CommonDropdownField<TodoPriority>`
+
+All custom iOS implementations have been removed in favor of the unified `CommonDropdownField` widget.
 
 ## Testing Considerations
 
