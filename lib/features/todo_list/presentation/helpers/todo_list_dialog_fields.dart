@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 /// Builds a platform-adaptive text field for the todo editor dialog.
 Widget buildTodoTextField({
@@ -12,29 +13,30 @@ Widget buildTodoTextField({
   required final bool isCupertino,
   final int maxLines = 1,
 }) {
+  final textField = PlatformAdaptive.textField(
+    context: context,
+    controller: controller,
+    placeholder: placeholder,
+    hintText: placeholder,
+    maxLines: maxLines,
+    padding: isCupertino ? EdgeInsets.all(context.responsiveGapS) : null,
+    decoration: isCupertino
+        ? null
+        : InputDecoration(
+            hintText: placeholder,
+            contentPadding: EdgeInsets.all(context.responsiveGapS),
+          ),
+  );
+
   if (isCupertino) {
     return Padding(
       padding: EdgeInsets.symmetric(
         vertical: context.responsiveGapXS,
       ),
-      child: CupertinoTextField(
-        controller: controller,
-        placeholder: placeholder,
-        maxLines: maxLines,
-        padding: EdgeInsets.all(context.responsiveGapS),
-        onChanged: (_) {},
-      ),
+      child: textField,
     );
   }
-  return TextField(
-    controller: controller,
-    decoration: InputDecoration(
-      hintText: placeholder,
-      contentPadding: EdgeInsets.all(context.responsiveGapS),
-    ),
-    maxLines: maxLines,
-    onChanged: (_) {},
-  );
+  return textField;
 }
 
 /// Builds a priority selector dropdown for the todo editor dialog.
@@ -44,6 +46,70 @@ Widget buildTodoPrioritySelector({
   required final ValueChanged<TodoPriority> onPriorityChanged,
 }) {
   final l10n = context.l10n;
+  final isCupertino = PlatformAdaptive.isCupertino(context);
+
+  if (isCupertino) {
+    final String selectedLabel = switch (selectedPriority) {
+      TodoPriority.none => l10n.todoListPriorityNone,
+      TodoPriority.low => l10n.todoListPriorityLow,
+      TodoPriority.medium => l10n.todoListPriorityMedium,
+      TodoPriority.high => l10n.todoListPriorityHigh,
+    };
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: context.responsiveGapXS,
+      ),
+      child: GestureDetector(
+        onTap: () async {
+          final TodoPriority? result =
+              await PlatformAdaptive.showPickerModal<TodoPriority>(
+                context: context,
+                items: TodoPriority.values,
+                selectedItem: selectedPriority,
+                itemLabel: (final priority) => switch (priority) {
+                  TodoPriority.none => l10n.todoListPriorityNone,
+                  TodoPriority.low => l10n.todoListPriorityLow,
+                  TodoPriority.medium => l10n.todoListPriorityMedium,
+                  TodoPriority.high => l10n.todoListPriorityHigh,
+                },
+                title: l10n.todoListPriorityLabel,
+              );
+          if (result != null && context.mounted) {
+            onPriorityChanged(result);
+          }
+        },
+        child: Container(
+          padding: EdgeInsets.all(context.responsiveGapS),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Theme.of(
+                context,
+              ).colorScheme.outline.withValues(alpha: 0.5),
+            ),
+            borderRadius: BorderRadius.circular(context.responsiveCardRadius),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                selectedLabel,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              Icon(
+                CupertinoIcons.chevron_down,
+                size: 16,
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   return Material(
     color: Colors.transparent,
     child: DropdownButtonFormField<TodoPriority>(

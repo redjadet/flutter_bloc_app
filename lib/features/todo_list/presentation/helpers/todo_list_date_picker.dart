@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 
 class _DatePickerResult {
   const _DatePickerResult.confirmed(DateTime this.date) : didConfirm = true;
@@ -75,83 +74,142 @@ Future<DateTime?> showAdaptiveTodoDatePicker({
 
   DateTime selected = resolvedInitial;
 
-  final _DatePickerResult? result = await showAdaptiveDialog<_DatePickerResult>(
+  if (isCupertino) {
+    // Use modal bottom sheet for iOS - CupertinoAlertDialog is too constrained
+    final _DatePickerResult?
+    result = await showCupertinoModalPopup<_DatePickerResult>(
+      context: context,
+      builder: (final popupContext) => StatefulBuilder(
+        builder: (final context, final setState) {
+          // Ensure initialDateTime is not before minimumDate for CupertinoDatePicker
+          final DateTime safeInitialDateTime = selected.isBefore(firstDate)
+              ? firstDate
+              : selected.isAfter(lastDate)
+              ? lastDate
+              : selected;
+
+          final theme = Theme.of(context);
+          return Container(
+            height: 350,
+            padding: const EdgeInsets.only(top: 6),
+            margin: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            color: CupertinoColors.systemBackground.resolveFrom(context),
+            child: SafeArea(
+              top: false,
+              child: Column(
+                children: [
+                  // Title
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    child: Text(
+                      title,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  // Date Picker
+                  Expanded(
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.date,
+                      initialDateTime: safeInitialDateTime,
+                      minimumDate: firstDate,
+                      maximumDate: lastDate,
+                      onDateTimeChanged: (final DateTime value) {
+                        setState(() {
+                          selected = value;
+                        });
+                      },
+                    ),
+                  ),
+                  // Actions
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CupertinoButton(
+                        onPressed: () => NavigationUtils.maybePop(popupContext),
+                        child: Text(cancelLabel),
+                      ),
+                      if (initialDate != null)
+                        CupertinoButton(
+                          onPressed: () => NavigationUtils.maybePop(
+                            popupContext,
+                            result: const _DatePickerResult.cleared(),
+                          ),
+                          child: Text(clearLabel),
+                        ),
+                      CupertinoButton(
+                        onPressed: () => NavigationUtils.maybePop(
+                          popupContext,
+                          result: _DatePickerResult.confirmed(selected),
+                        ),
+                        child: Text(saveLabel),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+
+    if (result == null || !result.didConfirm) {
+      return null;
+    }
+    return result.date;
+  }
+
+  // Material dialog for Android
+  final _DatePickerResult? result = await showDialog<_DatePickerResult>(
     context: context,
     builder: (final context) => StatefulBuilder(
       builder: (final context, final setState) {
-        // Ensure initialDateTime is not before minimumDate for CupertinoDatePicker
-        final DateTime safeInitialDateTime = selected.isBefore(firstDate)
-            ? firstDate
-            : selected.isAfter(lastDate)
-            ? lastDate
-            : selected;
-
-        final Widget picker = isCupertino
-            ? SizedBox(
-                height: 200,
-                child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.date,
-                  initialDateTime: safeInitialDateTime,
-                  minimumDate: firstDate,
-                  maximumDate: lastDate,
-                  onDateTimeChanged: (final DateTime value) {
-                    setState(() {
-                      selected = value;
-                    });
-                  },
-                ),
-              )
-            : SizedBox(
-                height: 320,
-                child: CalendarDatePicker(
-                  initialDate: selected,
-                  firstDate: firstDate,
-                  lastDate: lastDate,
-                  onDateChanged: (final DateTime value) {
-                    setState(() {
-                      selected = value;
-                    });
-                  },
-                ),
-              );
+        final Widget picker = SizedBox(
+          height: 320,
+          child: CalendarDatePicker(
+            initialDate: selected,
+            firstDate: firstDate,
+            lastDate: lastDate,
+            onDateChanged: (final DateTime value) {
+              setState(() {
+                selected = value;
+              });
+            },
+          ),
+        );
 
         final List<Widget> actions = [
-          PlatformAdaptive.dialogAction(
-            context: context,
+          TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            label: cancelLabel,
+            child: Text(cancelLabel),
           ),
           if (initialDate != null)
-            PlatformAdaptive.dialogAction(
-              context: context,
+            TextButton(
               onPressed: () => Navigator.of(context).pop(
                 const _DatePickerResult.cleared(),
               ),
-              label: clearLabel,
+              child: Text(clearLabel),
             ),
-          PlatformAdaptive.dialogAction(
-            context: context,
+          TextButton(
             onPressed: () => Navigator.of(context).pop(
               _DatePickerResult.confirmed(selected),
             ),
-            label: saveLabel,
+            child: Text(saveLabel),
           ),
         ];
 
-        return isCupertino
-            ? CupertinoAlertDialog(
-                title: Text(title),
-                content: Padding(
-                  padding: EdgeInsets.only(top: context.responsiveGapS),
-                  child: picker,
-                ),
-                actions: actions,
-              )
-            : AlertDialog(
-                title: Text(title),
-                content: picker,
-                actions: actions,
-              );
+        return AlertDialog(
+          title: Text(title),
+          content: picker,
+          actions: actions,
+        );
       },
     ),
   );

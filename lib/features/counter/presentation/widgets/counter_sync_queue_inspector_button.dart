@@ -89,7 +89,7 @@ class _CounterSyncQueueInspectorButtonState
           now: DateTime.now().toUtc(),
         );
     if (!context.mounted) return;
-    await showModalBottomSheet<void>(
+    await PlatformAdaptive.showAdaptiveModalBottomSheet<void>(
       context: context,
       builder: (final BuildContext sheetContext) => _SyncQueueInspectorSheet(
         operations: operations,
@@ -137,8 +137,8 @@ class _SyncQueueInspectorSheet extends StatelessWidget {
                     operation.entityType,
                     operation.retryCount,
                   );
-                  return ListTile(
-                    dense: true,
+                  return PlatformAdaptive.listTile(
+                    context: itemContext,
                     title: Text(operation.id),
                     subtitle: Text(subtitle),
                   );

@@ -128,8 +128,10 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: TextField(
+                        child: PlatformAdaptive.textField(
+                          context: context,
                           controller: _messageController,
+                          hintText: l10n.websocketMessageHint,
                           enabled: data.isConnected && !data.isSending,
                           decoration: InputDecoration(
                             hintText: l10n.websocketMessageHint,
