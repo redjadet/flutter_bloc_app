@@ -42,8 +42,8 @@ CounterRepository? _createRemoteCounterRepositoryOrNull() {
   // coverage:ignore-start
   try {
     final FirebaseApp app = Firebase.app();
-    final FirebaseDatabase database = FirebaseDatabase.instanceFor(app: app)
-      ..setPersistenceEnabled(true);
+    // Persistence is enabled in FirebaseBootstrapService.initializeFirebase()
+    final FirebaseDatabase database = FirebaseDatabase.instanceFor(app: app);
     final FirebaseAuth auth = FirebaseAuth.instanceFor(app: app);
     return RealtimeDatabaseCounterRepository(database: database, auth: auth);
   } on FirebaseException catch (error, stackTrace) {
@@ -87,8 +87,8 @@ TodoRepository? _createRemoteTodoRepositoryOrNull() {
   // coverage:ignore-start
   try {
     final FirebaseApp app = Firebase.app();
-    final FirebaseDatabase database = FirebaseDatabase.instanceFor(app: app)
-      ..setPersistenceEnabled(true);
+    // Persistence is enabled in FirebaseBootstrapService.initializeFirebase()
+    final FirebaseDatabase database = FirebaseDatabase.instanceFor(app: app);
     final FirebaseAuth auth = FirebaseAuth.instanceFor(app: app);
     return RealtimeDatabaseTodoRepository(database: database, auth: auth);
   } on FirebaseException catch (error, stackTrace) {

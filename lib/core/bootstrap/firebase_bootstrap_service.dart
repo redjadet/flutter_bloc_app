@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/foundation.dart';
@@ -28,6 +29,8 @@ class FirebaseBootstrapService {
           'Firebase already initialized: '
           '${Firebase.apps.map((final app) => app.name).join(', ')}',
         );
+        // Enable persistence even if Firebase was already initialized
+        _enableDatabasePersistence();
         return true;
       }
 
@@ -45,6 +48,10 @@ class FirebaseBootstrapService {
 
       await Firebase.initializeApp(options: options);
       AppLogger.info('Firebase initialized for project: ${options.projectId}');
+
+      // Enable persistence immediately after initialization, before any database usage
+      _enableDatabasePersistence();
+
       return true;
     } on FirebaseException catch (error, stackTrace) {
       if (error.code == 'duplicate-app') {
@@ -52,6 +59,8 @@ class FirebaseBootstrapService {
           'Firebase already initialized natively. Reusing existing instance.',
         );
         Firebase.app();
+        // Enable persistence even if Firebase was already initialized natively
+        _enableDatabasePersistence();
         return true;
       }
       AppLogger.error('Firebase initialization failed', error, stackTrace);
@@ -82,6 +91,22 @@ class FirebaseBootstrapService {
           'Skip initialization.',
         );
         return null;
+    }
+  }
+
+  /// Enable Firebase Database persistence.
+  /// Must be called before any database operations.
+  static void _enableDatabasePersistence() {
+    try {
+      final FirebaseApp app = Firebase.app();
+      FirebaseDatabase.instanceFor(app: app).setPersistenceEnabled(true);
+      AppLogger.debug('Firebase Database persistence enabled');
+    } on Exception catch (error, stackTrace) {
+      // If persistence is already enabled or fails, log but don't fail initialization
+      AppLogger.warning(
+        'Failed to enable Firebase Database persistence: $error',
+      );
+      AppLogger.debug('Persistence setup stack trace\n$stackTrace');
     }
   }
 

@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **75.65%** (10672/14107 lines)
+*Total line coverage*: **75.46%** (10672/14142 lines)
 
 Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) are excluded from these totals.
 
@@ -20,45 +20,45 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | --- | ---: | ---: |
 | `lib/features/todo_list/presentation/pages/todo_list_page_handlers.dart` | 0.00% | 0/41 |
 | `lib/features/library_demo/presentation/widgets/library_demo_category_list.dart` | 0.00% | 0/44 |
-| `lib/features/todo_list/presentation/helpers/todo_list_dialog_due_date.dart` | 0.00% | 0/24 |
-| `lib/features/todo_list/presentation/helpers/todo_list_dialog_content.dart` | 0.00% | 0/21 |
-| `lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart` | 0.00% | 0/44 |
-| `lib/shared/sync/sync_status.dart` | 0.00% | 0/3 |
 | `lib/features/google_maps/presentation/widgets/map_sample_map_controller.dart` | 0.00% | 0/6 |
-| `lib/features/google_maps/presentation/widgets/apple_maps_view.dart` | 0.00% | 0/38 |
+| `lib/features/todo_list/presentation/helpers/todo_list_dialog_content.dart` | 0.00% | 0/22 |
+| `lib/shared/widgets/sync_status_banner.dart` | 0.00% | 0/23 |
+| `lib/features/library_demo/presentation/widgets/library_demo_models.dart` | 0.00% | 0/3 |
+| `lib/features/library_demo/presentation/widgets/library_demo_asset_tile.dart` | 0.00% | 0/69 |
+| `lib/features/library_demo/presentation/widgets/library_demo_theme.dart` | 0.00% | 0/45 |
 | `lib/features/remote_config/presentation/cubit/remote_config_state.switch_helper.dart` | 0.00% | 0/10 |
 | `lib/features/todo_list/presentation/cubit/todo_list_cubit_logging.dart` | 0.00% | 0/3 |
-| `lib/features/chat/presentation/chat_list_state.switch_helper.dart` | 0.00% | 0/5 |
+| `lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart` | 0.00% | 0/44 |
 | `lib/app/router/deferred_pages/chart_page.dart` | 0.00% | 0/2 |
-| `lib/features/todo_list/presentation/helpers/todo_list_dialogs.dart` | 0.00% | 0/55 |
+| `lib/features/todo_list/presentation/helpers/todo_list_dialogs.dart` | 0.00% | 0/78 |
 | `lib/app/router/deferred_pages/google_maps_page.dart` | 0.00% | 0/5 |
 | `lib/app/router/deferred_pages/markdown_editor_page.dart` | 0.00% | 0/1 |
 | `lib/app/router/deferred_pages/websocket_page.dart` | 0.00% | 0/2 |
-| `lib/features/google_maps/presentation/widgets/google_maps_view.dart` | 0.00% | 0/18 |
+| `lib/shared/sync/sync_status.dart` | 0.00% | 0/3 |
 | `lib/shared/widgets/deferred_page.dart` | 0.00% | 0/21 |
-| `lib/features/google_maps/presentation/widgets/map_camera_controller.dart` | 0.00% | 0/22 |
-| `lib/features/todo_list/presentation/widgets/todo_priority_badge.dart` | 0.00% | 0/28 |
+| `lib/features/library_demo/presentation/widgets/library_demo_assets_header.dart` | 0.00% | 0/17 |
+| `lib/features/todo_list/presentation/helpers/todo_list_dialog_due_date.dart` | 0.00% | 0/24 |
 | `lib/features/scapes/presentation/widgets/scape_grid_item_helpers.dart` | 0.00% | 0/11 |
 | `lib/features/library_demo/presentation/widgets/library_demo_wordmark.dart` | 0.00% | 0/10 |
-| `lib/features/auth/presentation/widgets/register_country_picker.dart` | 0.00% | 0/57 |
+| `lib/features/library_demo/presentation/widgets/library_demo_icon_button.dart` | 0.00% | 0/16 |
 | `lib/features/scapes/presentation/widgets/scape_grid_item.dart` | 0.00% | 0/94 |
 | `lib/features/google_maps/presentation/widgets/map_sample_map_utils.dart` | 0.00% | 0/30 |
 | `lib/features/library_demo/presentation/widgets/library_demo_body.dart` | 0.00% | 0/95 |
 | `lib/core/bootstrap/bootstrap_coordinator.dart` | 0.00% | 0/18 |
+| `lib/features/google_maps/presentation/widgets/apple_maps_view.dart` | 0.00% | 0/38 |
 | `lib/features/scapes/presentation/widgets/scape_favorite_icon.dart` | 0.00% | 0/9 |
 | `lib/firebase_options.dart` | 0.00% | 0/11 |
 | `lib/features/scapes/presentation/widgets/scapes_grid_view.dart` | 0.00% | 0/45 |
-| `lib/features/library_demo/presentation/widgets/library_demo_theme.dart` | 0.00% | 0/45 |
-| `lib/features/library_demo/presentation/widgets/library_demo_asset_tile.dart` | 0.00% | 0/69 |
-| `lib/shared/widgets/sync_status_banner.dart` | 0.00% | 0/23 |
-| `lib/features/library_demo/presentation/widgets/library_demo_assets_header.dart` | 0.00% | 0/17 |
-| `lib/features/library_demo/presentation/widgets/library_demo_icon_button.dart` | 0.00% | 0/16 |
-| `lib/shared/utils/sealed_state_helpers.dart` | 0.00% | 0/21 |
 | `lib/features/library_demo/presentation/widgets/library_demo_view_icons.dart` | 0.00% | 0/14 |
-| `lib/shared/utils/bloc_lint_helpers.dart` | 0.00% | 0/11 |
+| `lib/features/chat/presentation/chat_list_state.switch_helper.dart` | 0.00% | 0/5 |
+| `lib/features/google_maps/presentation/widgets/google_maps_view.dart` | 0.00% | 0/18 |
+| `lib/features/google_maps/presentation/widgets/map_camera_controller.dart` | 0.00% | 0/22 |
 | `lib/features/library_demo/presentation/widgets/library_demo_search_row.dart` | 0.00% | 0/24 |
+| `lib/shared/utils/sealed_state_helpers.dart` | 0.00% | 0/21 |
 | `lib/features/library_demo/presentation/widgets/library_demo_top_nav.dart` | 0.00% | 0/11 |
-| `lib/features/library_demo/presentation/widgets/library_demo_models.dart` | 0.00% | 0/3 |
+| `lib/shared/utils/bloc_lint_helpers.dart` | 0.00% | 0/11 |
+| `lib/features/auth/presentation/widgets/register_country_picker.dart` | 0.00% | 0/57 |
+| `lib/features/todo_list/presentation/widgets/todo_priority_badge.dart` | 0.00% | 0/28 |
 | `lib/features/todo_list/presentation/helpers/todo_list_date_picker.dart` | 1.32% | 1/76 |
 | `lib/features/scapes/presentation/pages/scapes_page.dart` | 2.94% | 1/34 |
 | `lib/features/library_demo/presentation/pages/library_demo_page.dart` | 4.76% | 1/21 |
@@ -67,11 +67,11 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/extensions/type_safe_bloc_access.dart` | 10.53% | 2/19 |
 | `lib/features/todo_list/presentation/widgets/todo_sort_bar.dart` | 18.18% | 24/132 |
 | `lib/features/todo_list/presentation/helpers/todo_list_delete_dialogs.dart` | 18.39% | 16/87 |
-| `lib/features/library_demo/presentation/widgets/library_demo_filter_icon.dart` | 25.00% | 1/4 |
 | `lib/features/library_demo/presentation/widgets/library_demo_menu_icon.dart` | 25.00% | 1/4 |
-| `lib/features/library_demo/presentation/widgets/library_demo_waveform.dart` | 25.00% | 1/4 |
-| `lib/features/library_demo/presentation/widgets/library_demo_three_dot_icon.dart` | 25.00% | 1/4 |
 | `lib/features/library_demo/presentation/widgets/library_demo_favorite_icon.dart` | 25.00% | 1/4 |
+| `lib/features/library_demo/presentation/widgets/library_demo_waveform.dart` | 25.00% | 1/4 |
+| `lib/features/library_demo/presentation/widgets/library_demo_filter_icon.dart` | 25.00% | 1/4 |
+| `lib/features/library_demo/presentation/widgets/library_demo_three_dot_icon.dart` | 25.00% | 1/4 |
 | `lib/features/todo_list/presentation/widgets/todo_list_item_content.dart` | 27.03% | 10/37 |
 | `lib/app/router/route_groups.dart` | 27.78% | 5/18 |
 | `lib/shared/widgets/type_safe_bloc_selector.dart` | 29.41% | 5/17 |
@@ -88,23 +88,23 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/utils/navigation.dart` | 41.18% | 7/17 |
 | `lib/shared/utils/context_utils.dart` | 42.86% | 3/7 |
 | `lib/core/di/injector_factories.dart` | 46.67% | 14/30 |
+| `lib/core/bootstrap/firebase_bootstrap_service.dart` | 46.91% | 38/81 |
 | `lib/features/remote_config/domain/remote_config_snapshot.dart` | 47.62% | 10/21 |
 | `lib/shared/sync/sync_cycle_summary.dart` | 48.28% | 14/29 |
 | `lib/features/todo_list/presentation/widgets/todo_sync_banner.dart` | 48.57% | 17/35 |
 | `lib/shared/http/resilient_http_client.dart` | 49.40% | 41/83 |
 | `lib/features/todo_list/presentation/widgets/todo_list_item_actions.dart` | 50.00% | 19/38 |
-| `lib/shared/widgets/retry_snackbar_listener.dart` | 50.00% | 14/28 |
-| `lib/features/example/presentation/pages/whiteboard_page.dart` | 50.00% | 1/2 |
 | `lib/features/example/presentation/pages/markdown_editor_page.dart` | 50.00% | 1/2 |
 | `lib/features/search/domain/search_repository.dart` | 50.00% | 1/2 |
 | `lib/features/graphql_demo/presentation/widgets/graphql_data_source_badge.dart` | 50.00% | 3/6 |
+| `lib/shared/widgets/retry_snackbar_listener.dart` | 50.00% | 14/28 |
+| `lib/features/example/presentation/pages/whiteboard_page.dart` | 50.00% | 1/2 |
 | `lib/features/todo_list/presentation/widgets/todo_batch_actions_bar.dart` | 51.06% | 24/47 |
 | `lib/features/example/presentation/widgets/markdown_editor/markdown_render_object.dart` | 51.61% | 48/93 |
 | `lib/shared/widgets/common_dropdown_field.dart` | 51.69% | 46/89 |
 | `lib/features/chat/presentation/chat_cubit_selection_actions.dart` | 51.72% | 30/58 |
 | `lib/features/profile/presentation/widgets/profile_bottom_nav.dart` | 53.23% | 33/62 |
 | `lib/shared/utils/platform_adaptive_buttons.dart` | 53.49% | 23/43 |
-| `lib/core/bootstrap/firebase_bootstrap_service.dart` | 54.29% | 38/70 |
 | `lib/shared/http/http_request_extensions.dart` | 55.56% | 5/9 |
 | `lib/features/auth/presentation/widgets/register_terms_dialog.dart` | 55.56% | 15/27 |
 | `lib/shared/storage/hive_settings_repository.dart` | 56.25% | 18/32 |
