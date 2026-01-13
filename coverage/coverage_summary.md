@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **73.22%** (10195/13923 lines)
+*Total line coverage*: **73.35%** (10195/13900 lines)
 
 Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) are excluded from these totals.
 
@@ -78,8 +78,8 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/scapes/presentation/pages/scapes_page.dart` | 2.94% | 1/34 |
 | `lib/features/library_demo/presentation/pages/library_demo_page.dart` | 4.76% | 1/21 |
 | `lib/features/scapes/presentation/widgets/scapes_grid_content.dart` | 10.00% | 2/20 |
-| `lib/features/todo_list/presentation/cubit/todo_list_cubit.dart` | 16.95% | 20/118 |
 | `lib/features/todo_list/presentation/helpers/todo_list_delete_dialogs.dart` | 18.39% | 16/87 |
+| `lib/features/todo_list/presentation/cubit/todo_list_cubit.dart` | 21.05% | 20/95 |
 | `lib/features/library_demo/presentation/widgets/library_demo_menu_icon.dart` | 25.00% | 1/4 |
 | `lib/features/library_demo/presentation/widgets/library_demo_filter_icon.dart` | 25.00% | 1/4 |
 | `lib/features/library_demo/presentation/widgets/library_demo_waveform.dart` | 25.00% | 1/4 |

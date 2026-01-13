@@ -131,7 +131,8 @@
     "Streamable",
     "Syncable",
     "syncables",
-    "Türkçe"
+    "Türkçe",
+    "Uncomplete"
   ],
   "files.associations": {
     "*.config": "plaintext"
