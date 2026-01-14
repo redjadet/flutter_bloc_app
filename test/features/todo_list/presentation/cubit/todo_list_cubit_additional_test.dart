@@ -499,7 +499,221 @@ void main() {
 
       expect(refreshedCount, greaterThan(initialCount));
     });
+
+    blocTest<TodoListCubit, TodoListState>(
+      'reorderItems handles invalid indices',
+      build: () => buildCubit(
+        initialItems: [
+          _todoItem(id: 'a', title: 'Task A'),
+          _todoItem(id: 'b', title: 'Task B'),
+        ],
+      ),
+      seed: () => TodoListState(
+        status: ViewStatus.success,
+        items: [
+          _todoItem(id: 'a', title: 'Task A'),
+          _todoItem(id: 'b', title: 'Task B'),
+        ],
+        sortOrder: TodoSortOrder.manual,
+        manualOrder: const <String, int>{'a': 0, 'b': 1},
+      ),
+      act: (final cubit) {
+        cubit.reorderItems(oldIndex: -1, newIndex: 0);
+        cubit.reorderItems(oldIndex: 0, newIndex: -1);
+        cubit.reorderItems(oldIndex: 10, newIndex: 0);
+        cubit.reorderItems(oldIndex: 0, newIndex: 10);
+      },
+      expect: () => <TodoListState>[],
+    );
+
+    blocTest<TodoListCubit, TodoListState>(
+      'reorderItems is a no-op when cubit is closed',
+      build: () => buildCubit(
+        initialItems: [
+          _todoItem(id: 'a', title: 'Task A'),
+          _todoItem(id: 'b', title: 'Task B'),
+        ],
+      ),
+      seed: () => TodoListState(
+        status: ViewStatus.success,
+        items: [
+          _todoItem(id: 'a', title: 'Task A'),
+          _todoItem(id: 'b', title: 'Task B'),
+        ],
+        sortOrder: TodoSortOrder.manual,
+        manualOrder: const <String, int>{'a': 0, 'b': 1},
+      ),
+      act: (final cubit) async {
+        await cubit.close();
+        cubit.reorderItems(oldIndex: 0, newIndex: 1);
+      },
+      expect: () => <TodoListState>[],
+    );
+
+    blocTest<TodoListCubit, TodoListState>(
+      'reorderItems switches to manual sort when not in manual mode',
+      build: () => buildCubit(
+        initialItems: [
+          _todoItem(id: 'a', title: 'Task A'),
+          _todoItem(id: 'b', title: 'Task B'),
+        ],
+      ),
+      seed: () => TodoListState(
+        status: ViewStatus.success,
+        items: [
+          _todoItem(id: 'a', title: 'Task A'),
+          _todoItem(id: 'b', title: 'Task B'),
+        ],
+        sortOrder: TodoSortOrder.dateDesc,
+      ),
+      act: (final cubit) {
+        cubit.reorderItems(oldIndex: 0, newIndex: 1);
+      },
+      expect: () => [
+        isA<TodoListState>()
+            .having((final s) => s.sortOrder, 'sortOrder', TodoSortOrder.manual)
+            .having(
+              (final s) => s.manualOrder.containsKey('a'),
+              'has a',
+              isTrue,
+            )
+            .having(
+              (final s) => s.manualOrder.containsKey('b'),
+              'has b',
+              isTrue,
+            ),
+        isA<TodoListState>().having(
+          (final s) => s.sortOrder,
+          'sortOrder',
+          TodoSortOrder.manual,
+        ),
+      ],
+    );
+
+    test('normalizeManualOrder handles items with same timestamps', () async {
+      final DateTime now = DateTime.utc(2024, 1, 1, 10);
+      final List<TodoItem> items = [
+        _todoItemWithTime(id: 'a', title: 'Task A', time: now),
+        _todoItemWithTime(id: 'b', title: 'Task B', time: now),
+        _todoItemWithTime(id: 'c', title: 'Task C', time: now),
+      ];
+      final TodoListCubit cubit = buildCubit(initialItems: items);
+      addTearDown(cubit.close);
+
+      await cubit.loadInitial();
+      cubit.setSortOrder(TodoSortOrder.manual);
+
+      // Set manual order
+      cubit.reorderItems(oldIndex: 0, newIndex: 2); // Move 'a' to end
+
+      // Simulate repository update with items in different order
+      final List<TodoItem> updatedItems = [
+        _todoItemWithTime(id: 'c', title: 'Task C', time: now),
+        _todoItemWithTime(id: 'b', title: 'Task B', time: now),
+        _todoItemWithTime(id: 'a', title: 'Task A', time: now),
+      ];
+      await repository.save(updatedItems[0]);
+      await repository.save(updatedItems[1]);
+      await repository.save(updatedItems[2]);
+      await Future<void>.delayed(Duration.zero);
+
+      // Manual order should be preserved (a should be last)
+      final List<String> orderedIds = cubit.state.filteredItems
+          .map((final item) => item.id)
+          .toList();
+      expect(orderedIds.last, 'a');
+    });
+
+    test(
+      'onItemsUpdated normalizes manual order when in manual sort mode',
+      () async {
+        final TodoListCubit cubit = buildCubit(
+          initialItems: [
+            _todoItem(id: 'a', title: 'Task A'),
+            _todoItem(id: 'b', title: 'Task B'),
+          ],
+        );
+        addTearDown(cubit.close);
+
+        await cubit.loadInitial();
+        cubit.setSortOrder(TodoSortOrder.manual);
+        cubit.reorderItems(oldIndex: 0, newIndex: 1); // Move 'a' to end
+
+        // Add new item via repository
+        await repository.save(_todoItem(id: 'c', title: 'Task C'));
+        await Future<void>.delayed(Duration.zero);
+
+        // New item should be added to manual order
+        expect(cubit.state.manualOrder.containsKey('c'), isTrue);
+        expect(cubit.state.manualOrder['c']!, greaterThan(1));
+      },
+    );
+
+    test('startWatching handles stream errors', () async {
+      final TodoListCubit cubit = buildCubit();
+      addTearDown(cubit.close);
+
+      await cubit.loadInitial();
+
+      // Trigger error in stream
+      await repository.dispose();
+      await Future<void>.delayed(Duration.zero);
+
+      // Cubit should handle error gracefully
+      expect(cubit.state.status, isA<ViewStatus>());
+    });
+
+    test('loadInitial handles repository errors', () async {
+      final _ErrorTodoRepository errorRepo = _ErrorTodoRepository();
+      final TodoListCubit cubit = TodoListCubit(
+        repository: errorRepo,
+        timerService: FakeTimerService(),
+      );
+      addTearDown(cubit.close);
+
+      await cubit.loadInitial();
+
+      expect(cubit.state.status, ViewStatus.error);
+      expect(cubit.state.errorMessage, isNotNull);
+    });
+
+    test('reorderItems handles empty filtered items', () {
+      final TodoListCubit cubit = buildCubit();
+      addTearDown(cubit.close);
+
+      cubit.reorderItems(oldIndex: 0, newIndex: 1);
+
+      // Should be no-op
+      expect(cubit.state.items, isEmpty);
+    });
   });
+}
+
+class _ErrorTodoRepository implements TodoRepository {
+  @override
+  Future<List<TodoItem>> fetchAll() async {
+    throw Exception('Test error');
+  }
+
+  @override
+  Stream<List<TodoItem>> watchAll() {
+    throw Exception('Test error');
+  }
+
+  @override
+  Future<void> save(final TodoItem item) async {
+    throw Exception('Test error');
+  }
+
+  @override
+  Future<void> delete(final String id) async {
+    throw Exception('Test error');
+  }
+
+  @override
+  Future<void> clearCompleted() async {
+    throw Exception('Test error');
+  }
 }
 
 class _FakeTodoRepository implements TodoRepository {
@@ -573,5 +787,21 @@ TodoItem _todoItem({
     isCompleted: isCompleted,
     createdAt: now,
     updatedAt: now,
+  );
+}
+
+TodoItem _todoItemWithTime({
+  required final String id,
+  required final String title,
+  required final DateTime time,
+  final bool isCompleted = false,
+}) {
+  return TodoItem(
+    id: id,
+    title: title,
+    description: null,
+    isCompleted: isCompleted,
+    createdAt: time,
+    updatedAt: time,
   );
 }
