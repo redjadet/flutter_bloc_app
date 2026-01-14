@@ -59,10 +59,8 @@ mixin _TodoListCubitMethods
         if (dateComparison != 0) {
           return dateComparison;
         }
-        final int indexA =
-            originalIndex[a.id] ?? originalIndex.length + 1;
-        final int indexB =
-            originalIndex[b.id] ?? originalIndex.length + 1;
+        final int indexA = originalIndex[a.id] ?? originalIndex.length + 1;
+        final int indexB = originalIndex[b.id] ?? originalIndex.length + 1;
         if (indexA != indexB) {
           return indexA.compareTo(indexB);
         }

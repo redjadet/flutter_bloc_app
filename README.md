@@ -5,7 +5,7 @@ A production-grade Flutter application demonstrating enterprise-level architectu
 [![Flutter](https://img.shields.io/badge/Flutter-3.38.6-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.10.7-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-75%2E45%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-76%2E13%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
 [![State Management](https://img.shields.io/badge/State%20Management-BLOC%2FCubit-2196F3.svg)](https://pub.dev/packages/flutter_bloc)
@@ -25,7 +25,7 @@ This application showcases advanced Flutter development skills including:
 - **Clean Architecture** with clear separation of concerns (Domain → Data → Presentation)
 - **Offline-First Architecture** with intelligent caching and background synchronization
 - **Responsive & Adaptive UI** supporting iOS, Android, and multiple screen sizes
-- **Comprehensive Testing** with 75.45% code coverage across unit, widget, and integration tests
+- **Comprehensive Testing** with 76.13% code coverage across unit, widget, and integration tests
 - **Production-Ready Features** including authentication, real-time updates, maps, AI integration, and more
 
 ## ✨ Key Features
@@ -186,7 +186,7 @@ This project includes comprehensive documentation covering all aspects of develo
 The project maintains high quality standards through:
 
 - **Automated Validation** - Pre-commit checks via `./bin/checklist`
-- **Code Coverage** - 75.45% test coverage with comprehensive test suites
+- **Code Coverage** - 76.13% test coverage with comprehensive test suites
 - **Static Analysis** - Very Good Analysis rules with custom lints
 - **Architecture Guards** - Automated checks for architecture compliance
 
