@@ -291,6 +291,34 @@ void main() {
       },
     );
 
+    test(
+      'manual order preserves incoming order when timestamps are equal',
+      () async {
+        final List<TodoItem> initialItems = [
+          _todoItem(id: 'b', title: 'Beta'),
+          _todoItem(id: 'a', title: 'Alpha'),
+          _todoItem(id: 'c', title: 'Gamma'),
+        ];
+        final TodoListCubit cubit = buildCubit(initialItems: initialItems);
+        addTearDown(cubit.close);
+
+        await cubit.loadInitial();
+        cubit.setSortOrder(TodoSortOrder.manual);
+
+        await repository.save(_todoItem(id: 'b', title: 'Beta'));
+        await Future<void>.delayed(Duration.zero);
+
+        final List<MapEntry<String, int>> entries =
+            cubit.state.manualOrder.entries.toList()
+              ..sort((final a, final b) => a.value.compareTo(b.value));
+        final List<String> orderedIds = entries
+            .map((final entry) => entry.key)
+            .toList(growable: false);
+
+        expect(orderedIds, <String>['b', 'a', 'c']);
+      },
+    );
+
     test('addTodo ignores blank titles', () async {
       final TodoListCubit cubit = buildCubit();
       await cubit.addTodo(title: '   ', description: null);
