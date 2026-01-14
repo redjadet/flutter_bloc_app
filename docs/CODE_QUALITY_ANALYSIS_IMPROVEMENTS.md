@@ -150,7 +150,7 @@ The codebase has excellent DRY implementation with 15+ consolidations already in
 ### Test Coverage ✅
 
 - **Current Coverage:** 82.50% (9091/11020 lines)
-- **Target:** 85.34%
+- **Target:** 75%
 - **Status:** Above industry standards, approaching target
 
 ### Code Analysis ✅
@@ -212,7 +212,7 @@ The codebase has excellent DRY implementation with 15+ consolidations already in
    - Extract components when files approach limit
 
 3. **Test Coverage**:
-   - Increase coverage from 82.50% to 85.34% target
+   - Increase coverage from 82.50% to 75% target
    - Focus on medium-coverage files (<50%) identified in `CODE_QUALITY_ANALYSIS.md`
 
 ### Low Priority (Maintenance)

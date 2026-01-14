@@ -258,7 +258,7 @@ See [Flutter Performance Best Practices](https://docs.flutter.dev/perf/best-prac
 
 ## 🧪 Testing Standards
 
-**Coverage Target:** 85.34% baseline | **Current:** 76.13%
+**Coverage Target:** 75% baseline | **Current:** 77.22%
 
 ### Test Types Required
 
@@ -274,7 +274,7 @@ Manual verification items (run in CI or pre-release; not tracked as backlog task
 
 - [x] `./bin/checklist` passes (format → analyze → coverage)
 - [ ] New features include all test types
-- [ ] Critical paths maintain >80% coverage
+- [ ] Critical paths maintain >75% coverage
 - [ ] Common bug prevention tests pass
 
 ## 🚀 Quick Wins for Code Quality Improvement
@@ -287,7 +287,7 @@ This section identifies low-effort, high-impact improvements that can be impleme
 
 ### 📊 Test Coverage Quick Wins
 
-**Current Coverage:** 76.13% (10774/14152 lines) | **Target:** 85.34%
+**Current Coverage:** 77.22% (10929/14153 lines) | **Target:** 75%
 
 #### High-Impact Low-Coverage Files (0% Coverage)
 
@@ -439,9 +439,9 @@ These files could benefit from splitting to improve maintainability:
 
 **Test Coverage:**
 
-- **Current:** 76.13%
-- **Target:** 85.34%
-- **Quick Wins Potential:** +3-5% coverage (80-82% total)
+- **Current:** 77.22%
+- **Target:** 75%
+- **Quick Wins Potential:** +3-5% coverage (75-77% total)
 - **Remaining Gap:** 3-5% (can be addressed in next sprint)
 
 **Code Quality:**

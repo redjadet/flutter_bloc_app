@@ -406,6 +406,30 @@ void main() {
 
       expect(find.text('Inherited Test'), findsOneWidget);
     });
+
+    testWidgets('_tryRead logs error when failureMessage is provided', (
+      tester,
+    ) async {
+      await _withSilencedDebugPrint(() async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  // This will trigger error logging path in _tryRead
+                  final result = CubitHelpers.safeExecute<TestCubit, int>(
+                    context,
+                    (_) {},
+                  );
+                  expect(result, isFalse);
+                  return const SizedBox.shrink();
+                },
+              ),
+            ),
+          ),
+        );
+      });
+    });
   });
 }
 

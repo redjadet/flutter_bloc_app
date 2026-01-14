@@ -104,8 +104,12 @@ class BlocLintHelpers {
     for (final event in allEvents) {
       try {
         bloc.add(event);
-      } on Exception {
-        return false;
+      } catch (error) {
+        if (error is Exception || error is StateError) {
+          // bloc.add() throws StateError when there's no handler for the event.
+          return false;
+        }
+        rethrow;
       }
     }
     return true;

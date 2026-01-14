@@ -54,7 +54,7 @@ class _RetrySnackBarListenerState extends State<RetrySnackBarListener> {
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
       context,
     );
-    if (messenger == null) {
+    if (messenger == null || Scaffold.maybeOf(context) == null) {
       return;
     }
 

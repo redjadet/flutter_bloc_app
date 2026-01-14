@@ -76,6 +76,7 @@ class PlatformAdaptiveInputs {
       onChanged: onChanged,
       activeColor: activeColor,
       checkColor: checkColor,
+      tristate: value == null,
     );
   }
 
