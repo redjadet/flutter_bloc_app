@@ -1,125 +1,117 @@
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/state_transition_validator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Example state for testing state transition validation.
-class TestState {
-  const TestState(this.status);
-
-  final ViewStatus status;
-
-  @override
-  String toString() => 'TestState(status: $status)';
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is TestState && status == other.status;
-
-  @override
-  int get hashCode => status.hashCode;
-}
-
-/// Example validator for testing.
-class TestStateValidator extends StateTransitionValidator<TestState> {
-  @override
-  bool isValidTransition(TestState from, TestState to) {
-    return switch ((from.status, to.status)) {
-      (ViewStatus.initial, ViewStatus.loading) => true,
-      (ViewStatus.loading, ViewStatus.success) => true,
-      (ViewStatus.loading, ViewStatus.error) => true,
-      (ViewStatus.success, ViewStatus.loading) => true,
-      (ViewStatus.error, ViewStatus.loading) => true,
-      _ => false,
-    };
-  }
-}
-
 void main() {
   group('StateTransitionValidator', () {
-    late TestStateValidator validator;
+    test('isValidTransition returns true for valid transition', () {
+      final TestValidator validator = TestValidator();
+      const TestState from = TestState(value: 0);
+      const TestState to = TestState(value: 1);
 
-    setUp(() {
-      validator = TestStateValidator();
+      final bool result = validator.isValidTransition(from, to);
+
+      expect(result, isTrue);
     });
 
-    test('validates allowed transitions', () {
-      expect(
-        validator.isValidTransition(
-          const TestState(ViewStatus.initial),
-          const TestState(ViewStatus.loading),
-        ),
-        isTrue,
-      );
+    test('isValidTransition returns false for invalid transition', () {
+      final TestValidator validator = TestValidator();
+      const TestState from = TestState(value: 0);
+      const TestState to = TestState(value: 2);
 
-      expect(
-        validator.isValidTransition(
-          const TestState(ViewStatus.loading),
-          const TestState(ViewStatus.success),
-        ),
-        isTrue,
-      );
+      final bool result = validator.isValidTransition(from, to);
+
+      expect(result, isFalse);
     });
 
-    test('rejects invalid transitions', () {
-      expect(
-        validator.isValidTransition(
-          const TestState(ViewStatus.initial),
-          const TestState(ViewStatus.success),
-        ),
-        isFalse,
-      );
+    test('validateTransition does not throw for valid transition', () {
+      final TestValidator validator = TestValidator();
+      const TestState from = TestState(value: 0);
+      const TestState to = TestState(value: 1);
 
-      expect(
-        validator.isValidTransition(
-          const TestState(ViewStatus.success),
-          const TestState(ViewStatus.error),
-        ),
-        isFalse,
-      );
+      expect(() => validator.validateTransition(from, to), returnsNormally);
     });
 
-    test('validateTransition throws on invalid transition', () {
+    test('validateTransition throws StateError for invalid transition', () {
+      final TestValidator validator = TestValidator();
+      const TestState from = TestState(value: 0);
+      const TestState to = TestState(value: 2);
+
       expect(
-        () => validator.validateTransition(
-          const TestState(ViewStatus.initial),
-          const TestState(ViewStatus.success),
-        ),
+        () => validator.validateTransition(from, to),
         throwsA(isA<StateError>()),
-      );
-    });
-
-    test('validateTransition does not throw on valid transition', () {
-      expect(
-        () => validator.validateTransition(
-          const TestState(ViewStatus.initial),
-          const TestState(ViewStatus.loading),
-        ),
-        returnsNormally,
       );
     });
   });
 
   group('FunctionStateTransitionValidator', () {
-    test('creates validator from function', () {
+    test('isValidTransition uses provided function', () {
       final validator = FunctionStateTransitionValidator<TestState>(
-        (from, to) => from.status != to.status,
+        (from, to) => from.value < to.value,
       );
+      const TestState from = TestState(value: 0);
+      const TestState to = TestState(value: 1);
 
-      expect(
-        validator.isValidTransition(
-          const TestState(ViewStatus.initial),
-          const TestState(ViewStatus.loading),
-        ),
-        isTrue,
-      );
+      final bool result = validator.isValidTransition(from, to);
 
-      expect(
-        validator.isValidTransition(
-          const TestState(ViewStatus.initial),
-          const TestState(ViewStatus.initial),
-        ),
-        isFalse,
-      );
+      expect(result, isTrue);
     });
   });
+
+  group('StateTransitionValidatorExtension', () {
+    test('fromFunction creates validator from function', () {
+      final validator =
+          StateTransitionValidatorExtension.fromFunction<TestState>(
+            (from, to) => from.value < to.value,
+          );
+      const TestState from = TestState(value: 0);
+      const TestState to = TestState(value: 1);
+
+      final bool result = validator.isValidTransition(from, to);
+
+      expect(result, isTrue);
+    });
+  });
+
+  group('createStateTransitionValidator', () {
+    test('creates validator from function', () {
+      final validator = createStateTransitionValidator<TestState>(
+        (from, to) => from.value < to.value,
+      );
+      const TestState from = TestState(value: 0);
+      const TestState to = TestState(value: 1);
+
+      final bool result = validator.isValidTransition(from, to);
+
+      expect(result, isTrue);
+    });
+  });
+
+  // Note: StateTransitionValidation mixin uses a private _validator field
+  // which makes it difficult to test directly. The mixin is tested indirectly
+  // through its usage in production code. The validator classes themselves
+  // are well-tested above.
+}
+
+class TestValidator extends StateTransitionValidator<TestState> {
+  @override
+  bool isValidTransition(final TestState from, final TestState to) {
+    // Allow transitions where value increases by 1
+    return to.value == from.value + 1;
+  }
+}
+
+class TestState {
+  const TestState({required this.value});
+
+  final int value;
+
+  @override
+  bool operator ==(final Object other) =>
+      identical(this, other) ||
+      other is TestState &&
+          runtimeType == other.runtimeType &&
+          value == other.value;
+
+  @override
+  int get hashCode => value.hashCode;
 }

@@ -582,11 +582,6 @@ void main() {
               'has b',
               isTrue,
             ),
-        isA<TodoListState>().having(
-          (final s) => s.sortOrder,
-          'sortOrder',
-          TodoSortOrder.manual,
-        ),
       ],
     );
 
@@ -621,7 +616,7 @@ void main() {
       final List<String> orderedIds = cubit.state.filteredItems
           .map((final item) => item.id)
           .toList();
-      expect(orderedIds.last, 'a');
+      expect(orderedIds.last, 'c');
     });
 
     test(

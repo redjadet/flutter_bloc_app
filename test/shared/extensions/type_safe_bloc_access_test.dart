@@ -60,15 +60,17 @@ void main() {
       final TestCubit cubit = TestCubit();
       int buildCount = 0;
       await tester.pumpWidget(
-        BlocProvider<TestCubit>(
-          create: (_) => cubit,
-          child: Builder(
-            builder: (final context) {
-              buildCount++;
-              final watchedCubit = context.watchCubit<TestCubit>();
-              expect(watchedCubit, same(cubit));
-              return const SizedBox();
-            },
+        MaterialApp(
+          home: BlocProvider<TestCubit>(
+            create: (_) => cubit,
+            child: Builder(
+              builder: (final context) {
+                buildCount++;
+                final watchedCubit = context.watchCubit<TestCubit>();
+                expect(watchedCubit, same(cubit));
+                return const SizedBox();
+              },
+            ),
           ),
         ),
       );
@@ -101,14 +103,16 @@ void main() {
       final TestCubit cubit = TestCubit();
       int buildCount = 0;
       await tester.pumpWidget(
-        BlocProvider<TestCubit>(
-          create: (_) => cubit,
-          child: Builder(
-            builder: (final context) {
-              buildCount++;
-              final state = context.watchState<TestCubit, TestState>();
-              return Text('${state.value}');
-            },
+        MaterialApp(
+          home: BlocProvider<TestCubit>(
+            create: (_) => cubit,
+            child: Builder(
+              builder: (final context) {
+                buildCount++;
+                final state = context.watchState<TestCubit, TestState>();
+                return Text('${state.value}');
+              },
+            ),
           ),
         ),
       );
@@ -128,16 +132,18 @@ void main() {
         final TestCubit cubit = TestCubit();
         int buildCount = 0;
         await tester.pumpWidget(
-          BlocProvider<TestCubit>(
-            create: (_) => cubit,
-            child: Builder(
-              builder: (final context) {
-                buildCount++;
-                final value = context.selectState<TestCubit, TestState, int>(
-                  selector: (final state) => state.value,
-                );
-                return Text('$value');
-              },
+          MaterialApp(
+            home: BlocProvider<TestCubit>(
+              create: (_) => cubit,
+              child: Builder(
+                builder: (final context) {
+                  buildCount++;
+                  final value = context.selectState<TestCubit, TestState, int>(
+                    selector: (final state) => state.value,
+                  );
+                  return Text('$value');
+                },
+              ),
             ),
           ),
         );
@@ -148,11 +154,18 @@ void main() {
         // Emit state with same value - should not rebuild
         cubit.emit(const TestState(value: 0));
         await tester.pump();
+        // Note: context.select from provider may not detect BLoC state changes
+        // as it compares the cubit instance, not the state
+        // This is a limitation of using provider's select with BLoC
         expect(buildCount, 1);
 
         // Emit state with different value - should rebuild
         cubit.emit(const TestState(value: 42));
         await tester.pump();
+        // Note: context.select from flutter_bloc should detect state changes
+        // but may need an extra pump to propagate
+        await tester.pump();
+        // Verify rebuild happened (should be 2: initial + state change)
         expect(buildCount, 2);
         expect(find.text('42'), findsOneWidget);
       },

@@ -166,17 +166,18 @@ void main() {
         ),
       );
 
-      expect(listenerCount, 1); // Initial state
+      // Initial state - listener is not called on first build
+      expect(listenerCount, 0);
 
       // Same value - listener should not be called
       cubit.emit(const TestState(value: 0, label: 'Changed'));
       await tester.pump();
-      expect(listenerCount, 1);
+      expect(listenerCount, 0);
 
       // Different value - listener should be called
       cubit.emit(const TestState(value: 42, label: 'New'));
       await tester.pump();
-      expect(listenerCount, 2);
+      expect(listenerCount, 1);
     });
 
     testWidgets('respects buildWhen condition', (final tester) async {

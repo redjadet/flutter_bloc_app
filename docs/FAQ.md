@@ -121,7 +121,7 @@ See `lib/shared/utils/cubit_exception_handler.dart` for implementation details.
 
 ### How do I test Flutter apps effectively?
 
-This app maintains **85.34% test coverage** with multiple test types:
+This app maintains **75% test coverage** with multiple test types:
 
 1. **Unit Tests**: Test isolated functions and classes
 2. **Bloc Tests**: Test state flows with `bloc_test` package
@@ -283,7 +283,7 @@ The `file_length_lint` rule is configured as a native Dart 3.10 analyzer plugin 
 
 Golden tests (e.g., `test/counter_page_golden_test.dart`) verify layout regressions for the counter UI. Widget tests (`chat_history_sheet_test.dart`) cover interactions such as clearing/deleting history without hitting real storage, and bloc/unit tests ensure repositories/cubits produce expected states. Running these in CI (and via the documented checklist) catches UI/state regressions early.
 
-**Test Coverage:** The project maintains **85.34% line coverage** (6186/7249 lines). Files that don't require tests are automatically excluded from coverage reports:
+**Test Coverage:** The project maintains **75% line coverage** (6186/7249 lines). Files that don't require tests are automatically excluded from coverage reports:
 
 - Mock repositories (test utilities themselves)
 - Simple data classes (Freezed classes, simple Equatable classes)

@@ -71,11 +71,11 @@ void main() {
       expect(result, isTrue);
     });
 
-    test('validateEventHandlers returns false when event throws', () {
+    test('validateEventHandlers returns false when event has no handler', () {
       final TestBloc bloc = TestBloc();
       final List<TestEvent> allEvents = [
         const TestEvent.increment(),
-        const TestEvent.invalid(),
+        const TestEvent.invalid(), // No handler registered for this event
       ];
 
       final bool result =
@@ -84,9 +84,9 @@ void main() {
             allEvents,
           );
 
-      // This will return true because add() doesn't throw immediately
-      // The actual validation happens in the event handler
-      expect(result, isTrue);
+      // add() throws StateError immediately when there's no handler
+      // So the method should return false
+      expect(result, isFalse);
     });
   });
 

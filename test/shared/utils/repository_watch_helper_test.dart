@@ -85,5 +85,98 @@ void main() {
         emitsInOrder(<String>['loaded', 'loaded']),
       );
     });
+
+    test(
+      'createWatchController does not recreate when controller has listeners',
+      () async {
+        final RepositoryWatchHelper<String> helper =
+            RepositoryWatchHelper<String>(
+              loadInitial: () async => 'loaded',
+              emptyValue: 'empty',
+            );
+
+        // Access stream to create controller
+        final stream = helper.stream;
+        final subscription = stream.listen((_) {});
+
+        // Try to create controller - should not recreate
+        helper.createWatchController(
+          onListen: helper.handleOnListen,
+          onCancel: helper.handleOnCancel,
+        );
+
+        await subscription.cancel();
+      },
+    );
+
+    test('emitValue does not emit when controller is closed', () {
+      final RepositoryWatchHelper<String> helper =
+          RepositoryWatchHelper<String>(
+            loadInitial: () async => 'loaded',
+            emptyValue: 'empty',
+          );
+
+      // Access stream to create controller
+      helper.stream;
+      // Close controller
+      helper.dispose();
+
+      // Should not throw
+      expect(() => helper.emitValue('test'), returnsNormally);
+    });
+
+    test('handleOnCancel returns early when controller is null', () async {
+      final RepositoryWatchHelper<String> helper =
+          RepositoryWatchHelper<String>(
+            loadInitial: () async => 'loaded',
+            emptyValue: 'empty',
+          );
+
+      await helper.handleOnCancel();
+
+      // Should not throw
+      expect(helper.cachedValue, isNull);
+    });
+
+    test(
+      'handleOnCancel does not close when controller has listeners',
+      () async {
+        final RepositoryWatchHelper<String> helper =
+            RepositoryWatchHelper<String>(
+              loadInitial: () async => 'loaded',
+              emptyValue: 'empty',
+            );
+        helper.createWatchController(
+          onListen: helper.handleOnListen,
+          onCancel: helper.handleOnCancel,
+        );
+
+        final subscription = helper.stream.listen((_) {});
+
+        await helper.handleOnCancel();
+
+        // Controller should still exist
+        expect(helper.stream, isNotNull);
+
+        await subscription.cancel();
+      },
+    );
+
+    test('dispose closes controller and clears pending operations', () async {
+      final RepositoryWatchHelper<String> helper =
+          RepositoryWatchHelper<String>(
+            loadInitial: () async => 'loaded',
+            emptyValue: 'empty',
+          );
+      helper.createWatchController(
+        onListen: helper.handleOnListen,
+        onCancel: helper.handleOnCancel,
+      );
+
+      await helper.dispose();
+
+      // Should not throw
+      expect(() => helper.emitValue('test'), returnsNormally);
+    });
   });
 }

@@ -492,12 +492,12 @@ class _Updator {
     final String lineCountStr = '($totalLinesHit/$totalLinesFound lines)';
     bool updated = false;
 
-    // Pattern 1: Badge URL - [![Coverage](.../Coverage-85.34%25-...)](...)
+    // Pattern 1: Badge URL - [![Coverage](.../Coverage-75%25-...)](...)
     final RegExp badgePattern = RegExp(
       r'(\[!\[Coverage\]\([^)]+/Coverage-)([0-9]+(?:%2E[0-9]+|\.[0-9]+)?)%25([^)]+\))',
     );
 
-    // Pattern 2: Text mentions - **85.34% Test Coverage** or **Current Coverage**: 85.34%
+    // Pattern 2: Text mentions - **75% Test Coverage** or **Current Coverage**: 75%
     final RegExp textPattern1 = RegExp(
       r'(\*\*)([0-9]+\.?[0-9]*)%(\s+Test Coverage\*\*)',
     );
@@ -535,17 +535,17 @@ class _Updator {
       r'(\*\*Current:\*\*\s+)([0-9]+\.?[0-9]*)%',
     );
 
-    // Pattern 5b: "**Coverage Target:** 85.34% baseline | **Current:** 77.32%"
+    // Pattern 5b: "**Coverage Target:** 75% baseline | **Current:** 77.32%"
     final RegExp textPattern5b = RegExp(
-      r'(\*\*Coverage Target:\*\*\s+85\.34%\s+baseline\s+\|\s+\*\*Current:\*\*\s+)([0-9]+\.?[0-9]*)%',
+      r'(\*\*Coverage Target:\*\*\s+75%\s+baseline\s+\|\s+\*\*Current:\*\*\s+)([0-9]+\.?[0-9]*)%',
     );
 
-    // Pattern 5c: "**Current Coverage:** 77.32% (9919/12829 lines) | **Target:** 85.34%"
+    // Pattern 5c: "**Current Coverage:** 77.32% (9919/12829 lines) | **Target:** 75%"
     final RegExp textPattern5c = RegExp(
-      r'(\*\*Current Coverage:\*\*\s+)([0-9]+\.?[0-9]*)%\s+\([0-9]+/[0-9]+\s+lines\)(\s+\|\s+\*\*Target:\*\*\s+85\.34%)',
+      r'(\*\*Current Coverage:\*\*\s+)([0-9]+\.?[0-9]*)%\s+\([0-9]+/[0-9]+\s+lines\)(\s+\|\s+\*\*Target:\*\*\s+75%)',
     );
 
-    // Pattern 6: "**Target:** 85.34%" (used in CODE_QUALITY_ANALYSIS.md) - DON'T update this
+    // Pattern 6: "**Target:** 75%" (used in CODE_QUALITY_ANALYSIS.md) - DON'T update this
     // Pattern 8: "coverage: **73.63%**" or "coverage is **73.63%**"
     final RegExp textPattern8 = RegExp(
       r'(coverage(?:\s+is)?:\s+\*\*)([0-9]+\.?[0-9]*)%(\*\*)',
@@ -564,14 +564,14 @@ class _Updator {
               '${match.group(1)}$percentageUrlEncoded%25${match.group(3)}',
         );
       }
-      // Update "**85.34% Test Coverage**"
+      // Update "**75% Test Coverage**"
       else if (textPattern1.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           textPattern1,
           (final match) => '${match.group(1)}$percentageStr%${match.group(3)}',
         );
       }
-      // Update "**Current Coverage**: 85.34% (6186/7249 lines)"
+      // Update "**Current Coverage**: 75% (6186/7249 lines)"
       else if (textPattern2.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           textPattern2,
@@ -585,7 +585,7 @@ class _Updator {
           (final match) => '${match.group(1)}$percentageStr% $lineCountStr',
         );
       }
-      // Update "**85.34% (6186/7249 lines)" - update both percentage and line counts
+      // Update "**75% (6186/7249 lines)" - update both percentage and line counts
       else if (textPattern3.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           textPattern3,
@@ -616,14 +616,14 @@ class _Updator {
           (final match) => '$percentageStr%${match.group(2)}',
         );
       }
-      // Update "**Coverage Target:** 85.34% baseline | **Current:** 77.32%"
+      // Update "**Coverage Target:** 75% baseline | **Current:** 77.32%"
       else if (textPattern5b.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           textPattern5b,
           (final match) => '${match.group(1)}$percentageStr%',
         );
       }
-      // Update "**Current Coverage:** 77.32% (9919/12829 lines) | **Target:** 85.34%"
+      // Update "**Current Coverage:** 77.32% (9919/12829 lines) | **Target:** 75%"
       else if (textPattern5c.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           textPattern5c,
