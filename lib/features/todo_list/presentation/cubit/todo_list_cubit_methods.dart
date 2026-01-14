@@ -35,26 +35,44 @@ mixin _TodoListCubitMethods
       return const <String, int>{};
     }
 
-    final Set<String> itemIds = items.map((final item) => item.id).toSet();
+    // Calculate max order value for items that have order set
+    final int maxOrder = state.manualOrder.values.isEmpty
+        ? -1
+        : state.manualOrder.values.reduce(
+            (final a, final b) => a > b ? a : b,
+          );
+
+    final Map<String, int> originalIndex = <String, int>{
+      for (int i = 0; i < items.length; i++) items[i].id: i,
+    };
+
+    // Sort items according to current manual order to preserve user's ordering
+    final List<TodoItem> sortedItems = List<TodoItem>.from(items)
+      ..sort((final a, final b) {
+        final int orderA = state.manualOrder[a.id] ?? maxOrder + 1;
+        final int orderB = state.manualOrder[b.id] ?? maxOrder + 1;
+        if (orderA != orderB) {
+          return orderA.compareTo(orderB);
+        }
+        // Fallback to date desc if order not set (for new items)
+        final int dateComparison = b.updatedAt.compareTo(a.updatedAt);
+        if (dateComparison != 0) {
+          return dateComparison;
+        }
+        final int indexA =
+            originalIndex[a.id] ?? originalIndex.length + 1;
+        final int indexB =
+            originalIndex[b.id] ?? originalIndex.length + 1;
+        if (indexA != indexB) {
+          return indexA.compareTo(indexB);
+        }
+        return a.id.compareTo(b.id);
+      });
+
+    // Reindex sequentially (0, 1, 2, ...) while preserving the sorted order
     final Map<String, int> normalized = <String, int>{};
-    int maxOrder = -1;
-
-    for (final entry in state.manualOrder.entries) {
-      if (!itemIds.contains(entry.key)) {
-        continue;
-      }
-      normalized[entry.key] = entry.value;
-      if (entry.value > maxOrder) {
-        maxOrder = entry.value;
-      }
-    }
-
-    for (final item in items) {
-      if (normalized.containsKey(item.id)) {
-        continue;
-      }
-      maxOrder += 1;
-      normalized[item.id] = maxOrder;
+    for (int i = 0; i < sortedItems.length; i++) {
+      normalized[sortedItems[i].id] = i;
     }
 
     return normalized;
