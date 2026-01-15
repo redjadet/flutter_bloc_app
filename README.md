@@ -2,7 +2,7 @@
 
 A production-grade Flutter application demonstrating enterprise-level architecture, modern UI/UX patterns, and best practices. Built with clean architecture principles, offline-first data access, and comprehensive testing coverage.
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.38.6-blue.svg)](https://flutter.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.38.7-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.10.7-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
 [![Coverage](https://img.shields.io/badge/Coverage-77%2E22%25-brightgreen.svg)](coverage/coverage_summary.md)
@@ -56,7 +56,7 @@ This project follows industry best practices:
 
 ### Core Framework
 
-- Flutter 3.38.6 (Dart 3.10.7)
+- Flutter 3.38.7 (Dart 3.10.7)
 - Material 3 Design System
 - Cupertino widgets for iOS-native experience
 
@@ -104,7 +104,7 @@ This project follows industry best practices:
 
 ### Prerequisites
 
-- Flutter 3.38.6
+- Flutter 3.38.7
 - Dart 3.10.7
 - iOS 12+ / Android API 21+
 
