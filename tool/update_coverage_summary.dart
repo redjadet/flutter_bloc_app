@@ -39,8 +39,7 @@ const List<String> _generatedExact = <String>[
 const List<String> _documentationFiles = <String>[
   'README.md',
   'docs/testing_overview.md',
-  'docs/CODE_QUALITY_ANALYSIS.md',
-  'docs/CODE_QUALITY_ANALYSIS_IMPROVEMENTS.md',
+  'docs/CODE_QUALITY.md',
   'docs/feature_overview.md',
 ];
 
@@ -530,7 +529,7 @@ class _Updator {
       caseSensitive: false,
     );
 
-    // Pattern 5: "**Current:** 77.32%" (used in CODE_QUALITY_ANALYSIS.md)
+    // Pattern 5: "**Current:** 77.32%" (used in CODE_QUALITY.md)
     final RegExp textPattern5 = RegExp(
       r'(\*\*Current:\*\*\s+)([0-9]+\.?[0-9]*)%',
     );
@@ -545,7 +544,7 @@ class _Updator {
       r'(\*\*Current Coverage:\*\*\s+)([0-9]+\.?[0-9]*)%\s+\([0-9]+/[0-9]+\s+lines\)(\s+\|\s+\*\*Target:\*\*\s+75%)',
     );
 
-    // Pattern 6: "**Target:** 75%" (used in CODE_QUALITY_ANALYSIS.md) - DON'T update this
+    // Pattern 6: "**Target:** 75%" (used in CODE_QUALITY.md) - DON'T update this
     // Pattern 8: "coverage: **73.63%**" or "coverage is **73.63%**"
     final RegExp textPattern8 = RegExp(
       r'(coverage(?:\s+is)?:\s+\*\*)([0-9]+\.?[0-9]*)%(\*\*)',

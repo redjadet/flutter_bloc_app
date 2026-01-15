@@ -33,12 +33,14 @@ The easiest way to add IDE support is through VS Code snippets. We've created a 
 **Location**: `.vscode/flutter_bloc_snippets.code-snippets`
 
 **Features**:
+
 - Type-safe cubit access snippets
 - Freezed state templates
 - Sealed class state templates
 - Type-safe BLoC widget templates
 
 **Installation**:
+
 1. Copy `.vscode/flutter_bloc_snippets.code-snippets` to your VS Code user snippets
 2. Or place it in `.vscode/` folder in your project
 
@@ -52,13 +54,14 @@ yo code
 ```
 
 Select:
+
 - TypeScript
 - New Extension (TypeScript)
 - Name: `flutter-bloc-helper`
 - Identifier: `flutter-bloc-helper`
 - Description: "Enhanced support for Flutter BLoC/Cubit patterns"
 
-### Step 2: Add Dependencies
+### Step 2: Add Extension Dependencies
 
 In `package.json`:
 
@@ -319,7 +322,7 @@ vsce publish
 2. Install Plugin Development Kit (PDK)
 3. Create new project: **IntelliJ Platform Plugin**
 
-### Step 2: Add Dependencies
+### Step 2: Add Plugin Dependencies
 
 In `build.gradle.kts`:
 
@@ -472,6 +475,7 @@ class BlocLspServer {
 ### Step 2: Register with IDEs
 
 The LSP server can be used by:
+
 - VS Code (via extension)
 - IntelliJ/Android Studio (via plugin)
 - Any LSP-compatible editor
@@ -483,6 +487,7 @@ We've created a practical implementation using VS Code snippets that you can use
 **File**: `.vscode/flutter_bloc_snippets.code-snippets`
 
 This provides:
+
 - Type-safe cubit access snippets
 - Freezed state templates
 - Sealed class templates
@@ -529,11 +534,10 @@ code --extensionDevelopmentPath=./path/to/extension
 
 - [Custom Lint Rules Guide](custom_lint_rules_guide.md) - For analyzer-based validation
 - [Code Generation Guide](code_generation_guide.md) - For code generation features
-- [Compile-Time Safety Usage](compile_time_safety_usage.md) - Usage patterns for IDE support
+- [Compile-Time Safety Guide](compile_time_safety.md) - Usage patterns for IDE support
 
 ## Next Steps
 
 1. **Immediate**: Use the VS Code snippets file (`.vscode/flutter_bloc_snippets.code-snippets`)
 2. **Short-term**: Create VS Code extension with snippets and basic quick fixes
 3. **Long-term**: Develop full IntelliJ plugin or LSP server for cross-IDE support
-

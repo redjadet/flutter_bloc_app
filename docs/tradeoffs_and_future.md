@@ -1,7 +1,12 @@
 # Trade-offs & Future Improvements
 
-This section captures known trade-offs and future improvements that were
-previously listed in the README.
+This document captures known trade-offs and future improvements for the codebase.
+
+> **Related Documentation:**
+>
+> - [Code Quality](CODE_QUALITY.md) - Code quality analysis and recommendations
+> - [Flutter Best Practices Review](flutter_best_practices_review.md) - Best practices audit with action checklist
+> - [Architecture Details](architecture_details.md) - Architecture patterns and principles
 
 ## Current Trade-offs
 

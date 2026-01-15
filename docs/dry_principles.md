@@ -2,7 +2,11 @@
 
 This app actively applies **DRY (Don't Repeat Yourself)** principles to reduce code duplication and improve maintainability. This document outlines the consolidations implemented, patterns used, and guidelines for future development.
 
-> **Related:** See [`README.md`](../README.md) for a quick overview.
+> **Related Documentation:**
+>
+> - [Code Quality](CODE_QUALITY.md) - Comprehensive DRY principles analysis with verification results
+> - [Architecture Details](architecture_details.md) - Architecture patterns and principles
+> - [Flutter Best Practices Review](flutter_best_practices_review.md) - DRY principles review section
 
 ## Overview
 

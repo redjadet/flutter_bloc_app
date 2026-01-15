@@ -2,7 +2,13 @@
 
 This app follows a strict Domain → Data → Presentation pipeline backed by `get_it` dependency injection. The notes below explain how the layers stay isolated here, plus concrete examples you can copy when adding new features.
 
-> **Related:** See [`solid_principles.md`](solid_principles.md) for how SOLID principles are applied throughout this architecture.
+> **Related Documentation:**
+>
+> - [Architecture Details](architecture_details.md) - High-level architecture diagrams, principles, and state management flow
+> - [SOLID Principles](solid_principles.md) - How SOLID principles are applied throughout this architecture
+> - [DRY Principles](dry_principles.md) - DRY consolidations and patterns
+> - [Code Quality](CODE_QUALITY.md) - Architecture compliance verification and code quality metrics
+> - [Flutter Best Practices Review](flutter_best_practices_review.md) - Architecture review and best practices checklist
 
 ## Layer Responsibilities
 

@@ -231,7 +231,7 @@ Create `tool/check_startup_performance.sh` that:
 
 ## Related Documentation
 
-- [Lazy Loading Review](../analysis/lazy_loading_late_review.md) - Comprehensive analysis of lazy loading patterns, `late` keyword usage, deferred imports explanation, and performance optimization opportunities
+- [Lazy Loading Review](lazy_loading_review.md) - Comprehensive analysis of lazy loading patterns, `late` keyword usage, deferred imports explanation, and performance optimization opportunities
 - [Bundle Size Monitoring](BUNDLE_SIZE_MONITORING.md) - Monitoring and optimizing app bundle size
 - [Architecture Details](architecture_details.md)
 

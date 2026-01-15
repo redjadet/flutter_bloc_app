@@ -2,7 +2,13 @@
 
 This document provides a comprehensive catalog of features implemented in this Flutter app, with links to deeper technical references where applicable.
 
-> **Quick Links**: [Architecture Details](architecture_details.md) | [Testing Overview](testing_overview.md) | [UI/UX Guidelines](ui_ux_responsive_review.md)
+> **Quick Links**:
+>
+> - [Architecture Details](architecture_details.md) - Architecture diagrams and principles
+> - [Testing Overview](testing_overview.md) - Testing strategy and patterns
+> - [UI/UX Guidelines](ui_ux_responsive_review.md) - Responsive design and platform adaptation
+> - [New Developer Guide](new_developer_guide.md) - Getting started guide for new developers
+> - [Code Quality](CODE_QUALITY.md) - Code quality analysis and best practices
 
 ## Highlights
 
@@ -47,7 +53,7 @@ This application demonstrates production-grade Flutter development with:
 - **BlocSelector** - Granular rebuilds for optimal performance
 - **Repaint Isolation** - `RepaintBoundary` widgets prevent unnecessary repaints
 - **Responsive Layout Helpers** - Efficient grid calculations and layout constraints
-- **Lazy Loading Optimizations** - Deferred imports for heavy features, reducing initial bundle size (see [Lazy Loading Analysis](../analysis/lazy_loading_late_review.md))
+- **Lazy Loading Optimizations** - Deferred imports for heavy features, reducing initial bundle size (see [Lazy Loading Analysis](lazy_loading_review.md))
 
 ## Core Counter Feature
 

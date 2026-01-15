@@ -367,12 +367,12 @@ For simpler use cases, consider using runtime helpers instead of code generation
 - `SealedStateHelpers` - Runtime pattern matching helpers
 - Type-safe extensions - Compile-time type checking without generation
 
-See [Compile-Time Safety Usage Guide](compile_time_safety_usage.md) for runtime helper examples.
+See [Compile-Time Safety Guide](compile_time_safety.md) for runtime helper examples.
 
 ## Related Documentation
 
-- [Compile-Time Safety Usage Guide](compile_time_safety_usage.md) - Using type-safe features and generated code
+- [Compile-Time Safety Guide](compile_time_safety.md) - Using type-safe features and generated code
 - [State Management Choice](state_management_choice.md) - Why BLoC/Cubit and compile-time safety
 - [Sealed Classes Migration](sealed_classes_migration.md) - Sealed class patterns
 - [Testing Overview](testing_overview.md) - Testing with generated code
-- [Compile-Time Safety Implementation Summary](compile_time_safety_implementation_summary.md) - Complete feature overview
+- [Compile-Time Safety Guide](compile_time_safety.md) - Complete feature overview

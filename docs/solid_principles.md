@@ -2,7 +2,12 @@
 
 This app follows Clean Architecture (Domain → Data → Presentation) and uses Cubits/Repositories with dependency injection. Below is a quick map of how SOLID shows up in the codebase with concrete references.
 
-> **Related:** See [`clean_architecture.md`](clean_architecture.md) for the overall architecture overview and layer responsibilities.
+> **Related Documentation:**
+>
+> - [Clean Architecture](clean_architecture.md) - Overall architecture overview and layer responsibilities
+> - [Code Quality](CODE_QUALITY.md) - Comprehensive SOLID principles analysis with verification results
+> - [Architecture Details](architecture_details.md) - Architecture diagrams and dependency flow
+> - [Flutter Best Practices Review](flutter_best_practices_review.md) - SOLID principles review section
 
 ## Single Responsibility
 

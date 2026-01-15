@@ -14,7 +14,7 @@ class SceneDelegate: FlutterSceneDelegate {
         AppLinks.shared.handleLink(url: urlContext.url)
       }
     }
-    
+
     // Handle initial user activity (universal links)
     if !connectionOptions.userActivities.isEmpty {
       for userActivity in connectionOptions.userActivities {
@@ -23,7 +23,7 @@ class SceneDelegate: FlutterSceneDelegate {
         }
       }
     }
-    
+
     super.scene(scene, willConnectTo: session, options: connectionOptions)
   }
 
@@ -35,7 +35,7 @@ class SceneDelegate: FlutterSceneDelegate {
     for urlContext in URLContexts {
       AppLinks.shared.handleLink(url: urlContext.url)
     }
-    
+
     super.scene(scene, openURLContexts: URLContexts)
   }
 
@@ -47,7 +47,7 @@ class SceneDelegate: FlutterSceneDelegate {
     if let url = userActivity.webpageURL {
       AppLinks.shared.handleLink(url: url)
     }
-    
+
     super.scene(scene, continue: userActivity)
   }
 }

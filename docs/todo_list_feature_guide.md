@@ -983,7 +983,7 @@ test/features/todo_list/
 ## Related References
 
 - `docs/clean_architecture.md`
-- `docs/compile_time_safety_usage.md`
+- `docs/compile_time_safety.md`
 - `docs/ui_ux_responsive_review.md`
 - `docs/testing_overview.md`
 - `docs/validation_scripts.md`

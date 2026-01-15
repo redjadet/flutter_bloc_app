@@ -72,8 +72,8 @@ This app implements several performance optimizations:
 
 **See also:**
 
-- `docs/CODE_QUALITY_ANALYSIS.md` - Detailed performance guidelines
-- `analysis/lazy_loading_late_review.md` - Comprehensive lazy loading analysis and deferred imports explanation
+- `docs/CODE_QUALITY.md` - Comprehensive code quality analysis and performance guidelines
+- `docs/lazy_loading_review.md` - Comprehensive lazy loading analysis and deferred imports explanation
 - `docs/compute_isolate_review.md` - Compute/isolate usage guide for JSON decoding and CPU-intensive operations
 
 ### How do I make my Flutter app responsive?
@@ -359,7 +359,7 @@ Additionally, a **Performance Overlay** can be enabled via the `ENABLE_PERFORMAN
 flutter run --dart-define=ENABLE_PERFORMANCE_OVERLAY=true
 ```
 
-The overlay shows frame rendering times, GPU vs CPU time, and visual indication of performance issues. See `docs/CODE_QUALITY_ANALYSIS.md` for detailed information.
+The overlay shows frame rendering times, GPU vs CPU time, and visual indication of performance issues. See `docs/CODE_QUALITY.md` for detailed information.
 
 ### What happens if localization files are deleted during iOS builds?
 

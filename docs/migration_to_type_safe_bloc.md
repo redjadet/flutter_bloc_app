@@ -451,6 +451,5 @@ MultiBlocProvider(
 
 ## Related Documentation
 
-- [Compile-Time Safety Usage Guide](compile_time_safety_usage.md) - Detailed usage examples
-- [Quick Reference](compile_time_safety_quick_reference.md) - Quick lookup
+- [Compile-Time Safety Guide](compile_time_safety.md) - Complete guide with usage examples and quick reference
 - [State Management Choice](state_management_choice.md) - Why these patterns were chosen

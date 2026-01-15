@@ -6,7 +6,7 @@ Welcome aboard! This document distills the essentials you need to navigate, exte
 
 - **Purpose**: Showcase a feature-rich Flutter app built around Cubits, clean architecture, and real-world integrations (Firebase Auth/Remote Config, WebSockets, GraphQL, Google Maps, Hugging Face, Whiteboard with CustomPainter, Markdown Editor with RenderObject, etc.).
 - **Layers**: Domain → Data → Presentation. Domain stays Flutter-agnostic, Data fulfills contracts, Presentation wires Cubits/Widgets via `get_it`.
-- **State Management**: Cubits with immutable (Freezed/Equatable) states. Widgets read via `BlocBuilder`/`BlocSelector` and stay focused on layout/theming/navigation. **Type-safe extensions** (`context.cubit<T>()`, `TypeSafeBlocSelector`, etc.) provide compile-time safety. See [Compile-Time Safety Usage Guide](../docs/compile_time_safety_usage.md).
+- **State Management**: Cubits with immutable (Freezed/Equatable) states. Widgets read via `BlocBuilder`/`BlocSelector` and stay focused on layout/theming/navigation. **Type-safe extensions** (`context.cubit<T>()`, `TypeSafeBlocSelector`, etc.) provide compile-time safety. See [Compile-Time Safety Guide](../docs/compile_time_safety.md).
 - **DI & Startup**: `lib/core/di/injector.dart` registers everything into `getIt`. `main_*.dart` files choose the env, call `configureDependencies()`, then bootstrap `MyApp`. The DI code is organized into multiple files:
   - `injector.dart` - Main file with `configureDependencies()` and public API
   - `injector_registrations.dart` - All dependency registrations organized by category
@@ -87,7 +87,7 @@ For Android apps distributed via Play Store, you can use **Deferred Components**
 - Uses `DeferredComponent` utility class instead of `loadLibrary()`
 - See [Flutter Deferred Components documentation](https://docs.flutter.dev/perf/deferred-components) for details
 
-> **See also:** [Lazy Loading Review](../../analysis/lazy_loading_late_review.md) for comprehensive analysis, detailed explanation of deferred imports, and best practices.
+> **See also:** [Lazy Loading Review](../lazy_loading_review.md) for comprehensive analysis, detailed explanation of deferred imports, and best practices.
 
 ## 4. Feature Module Playbook
 
@@ -657,9 +657,30 @@ reviewable.
 
 ## 13. What to Read Next
 
-- `README.md`: Feature tour + architecture diagram.
-- `docs/CODE_QUALITY_ANALYSIS.md`: Architecture findings and related quality/resilience notes.
-- `docs/ui_ux_responsive_review.md`: Comprehensive UI/UX guidelines, responsive design patterns, platform-adaptive components, accessibility best practices, and completed improvements.
-- `docs/` (e.g., `docs/universal_links/`, `docs/figma/...`): Platform-specific guides.
+### Essential Reading
+
+- **`README.md`**: Feature tour + architecture diagram
+- **`docs/CODE_QUALITY.md`**: Comprehensive code quality analysis, architecture findings, and quality/resilience notes
+- **`docs/ui_ux_responsive_review.md`**: Comprehensive UI/UX guidelines, responsive design patterns, platform-adaptive components, accessibility best practices
+- **`docs/feature_overview.md`**: Complete catalog of features and capabilities
+
+### Architecture & Design
+
+- **`docs/architecture_details.md`**: High-level architecture diagrams, principles, and state management flow
+- **`docs/clean_architecture.md`**: Practical guide with layer responsibilities, examples, and review checklist
+- **`docs/solid_principles.md`**: Detailed SOLID principles with codebase examples
+- **`docs/dry_principles.md`**: DRY consolidations and patterns
+
+### Development Guides
+
+- **`docs/compile_time_safety.md`**: Complete guide to type-safe BLoC/Cubit patterns
+- **`docs/flutter_best_practices_review.md`**: Best practices audit with action checklist
+- **`docs/validation_scripts.md`**: Automated validation scripts and their purposes
+
+### Platform-Specific
+
+- **`docs/universal_links/`**: Universal links setup
+- **`docs/figma/...`**: Figma integration guides
+- **`docs/offline_first/`**: Offline-first architecture patterns
 
 Stay disciplined with the guardrails, keep tests deterministic, and reach for shared services before adding new singletons. Welcome to the team!

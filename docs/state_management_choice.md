@@ -639,8 +639,7 @@ After implementing the checklist above, BLoC/Cubit will have:
 
 **📖 Documentation:**
 
-- [Compile-Time Safety Usage Guide](compile_time_safety_usage.md) - Complete usage examples and migration guide
-- [Compile-Time Safety Quick Reference](compile_time_safety_quick_reference.md) - Quick lookup for type-safe patterns
+- [Compile-Time Safety Guide](compile_time_safety.md) - Complete guide with usage examples, quick reference, and migration patterns
 
 **✅ Completed (Phase 3, 4, 5 & 6):**
 
@@ -813,10 +812,9 @@ While Riverpod is an excellent state management solution, BLoC/Cubit better fits
 
 ## Related Documentation
 
-- [Compile-Time Safety Usage Guide](compile_time_safety_usage.md) - How to use the type-safe BLoC/Cubit features
-- [Compile-Time Safety Quick Reference](compile_time_safety_quick_reference.md) - Quick lookup for type-safe patterns
+- [Compile-Time Safety Guide](compile_time_safety.md) - Complete guide on how to use the type-safe BLoC/Cubit features
 - [Code Generation Guide](code_generation_guide.md) - Setting up custom code generators
-- [Implementation Summary](compile_time_safety_implementation_summary.md) - Complete implementation status
+- [Compile-Time Safety Guide](compile_time_safety.md) - Complete implementation status and verification
 - [Architecture Details](architecture_details.md) - Overall architecture and state management rationale
 - [Clean Architecture](clean_architecture.md) - Architecture principles
 - [Testing Overview](testing_overview.md) - Testing strategies with BLoC/Cubit
