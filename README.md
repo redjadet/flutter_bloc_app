@@ -1,6 +1,6 @@
 # Flutter BLoC App
 
-A production-grade Flutter application that demonstrates clean architecture, offline-first data access, and rigorous testing. Designed to showcase senior-level Flutter practices across feature development, performance, and maintainability.
+A reference Flutter application that demonstrates clean architecture, offline-first data access, and production-minded tooling across multiple feature types. This repository is designed to showcase senior Flutter engineering practices in a realistic, testable codebase.
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.38.7-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.10.7-blue.svg)](https://dart.dev)
@@ -18,57 +18,37 @@ A production-grade Flutter application that demonstrates clean architecture, off
 
 ---
 
-## 🎯 Project Overview
+## 🎯 Overview
 
-This application showcases advanced Flutter development across:
+This codebase focuses on maintainability, correctness, and performance:
 
-- **Clean Architecture** with clear separation of concerns (Domain → Data → Presentation)
-- **Offline-First Architecture** with intelligent caching and background synchronization
-- **Responsive & Adaptive UI** supporting iOS, Android, and multiple screen sizes
-- **Comprehensive Testing** with coverage tracked in `coverage/coverage_summary.md`
-- **Production-Ready Features** including authentication, real-time updates, maps, AI integration, and more
+- Clean architecture with strict Domain -> Data -> Presentation boundaries
+- Offline-first repositories with background sync queues
+- Responsive and platform-adaptive UI (Material 3 + Cupertino)
+- Lifecycle safety for async flows and UI state updates
+- Automated validation scripts and broad test coverage
 
-## ✨ Key Features
+## ✨ Product Features
 
-- **AI Chat Integration** - Hugging Face inference with offline queueing
-- **Real-Time Updates** - WebSocket connections with reconnection handling
-- **Maps Integration** - Google Maps with Apple Maps fallback
-- **GraphQL Client** - Efficient data fetching with caching strategies
-- **Advanced UI Components** - Custom painters, markdown editor, charts, and more
-- **Secure Authentication** - Firebase Auth with biometric support
-- **Offline Support** - Cache-first reads with background sync queues
+- Authentication and settings flows with secure storage
+- Offline-first chat (Hugging Face inference) with local queueing
+- Maps (Google Maps with Apple Maps fallback)
+- GraphQL countries browser
+- WebSocket demo with reconnect logic
+- Search, profile, and todo list features
+- Charts, markdown editor, and whiteboard samples
 
-For a complete feature catalog, see [Feature Overview](docs/feature_overview.md).
+For entry points and module details, see [Feature Overview](docs/feature_overview.md).
 
-## 🏗️ Architecture & Design
+## ⚙️ Configuration
 
-This project follows industry best practices:
+Some features require API keys or platform setup to fully enable:
 
-- **Clean Architecture** - Domain-driven design with dependency inversion
-- **SOLID Principles** - Maintainable, testable, and extensible codebase
-- **Repository Pattern** - Abstracted data access with offline-first support
-- **Dependency Injection** - Lazy singleton pattern with `get_it`
-- **State Management** - BLoC/Cubit pattern for predictable state flows
+- Firebase (Auth, Remote Config, etc.)
+- Google Maps (Android/iOS keys)
+- Hugging Face Inference API
 
-📖 **Documentation**: [Architecture Details](docs/architecture_details.md) | [Clean Architecture Guide](docs/clean_architecture.md) | [SOLID Principles](docs/solid_principles.md)
-
-## 🛠️ Tech Stack
-
-### Core Framework
-
-- Flutter 3.38.7 (Dart 3.10.7)
-- Material 3 Design System
-- Cupertino widgets for iOS-native experience
-
-### Key Libraries
-
-- State Management: `flutter_bloc`
-- Storage: `hive` (encrypted), `flutter_secure_storage`
-- Networking: `http`, `web_socket_channel`, GraphQL
-- Firebase: Auth, Analytics, Crashlytics, Remote Config
-- UI: Responsive framework, cached images, charts, markdown editor
-
-📖 **Complete Tech Stack**: [Tech Stack Documentation](docs/tech_stack.md)
+See [Security & Secrets](docs/security_and_secrets.md) for setup guidance and sample config files.
 
 ## 📱 Screenshots
 
@@ -115,79 +95,56 @@ flutter pub get
 flutter run
 ```
 
-📖 **Detailed Setup**: [Developer Guide](docs/new_developer_guide.md)
+Detailed setup: [Developer Guide](docs/new_developer_guide.md)
 
 ## 📚 Documentation
 
-### Start Here
+Start here:
 
-- [Developer Guide](docs/new_developer_guide.md) - Setup and development workflow
-- [Feature Overview](docs/feature_overview.md) - Feature catalog and entry points
-- [Architecture Details](docs/architecture_details.md) - Diagrams and state flow
-- [Clean Architecture](docs/clean_architecture.md) - Layer responsibilities and examples
+- [Developer Guide](docs/new_developer_guide.md)
+- [Feature Overview](docs/feature_overview.md)
+- [Architecture Details](docs/architecture_details.md)
+- [Testing Overview](docs/testing_overview.md)
 
-### Quality & Testing
+Engineering references:
 
-- [Code Quality](docs/CODE_QUALITY.md) - Quality review, SOLID/DRY, and guardrails
-- [Testing Overview](docs/testing_overview.md) - Testing strategy and patterns
-- [Validation Scripts](docs/validation_scripts.md) - Automated quality gates
-- [Flutter Best Practices](docs/flutter_best_practices_review.md) - Best practices checklist
+- [Clean Architecture](docs/clean_architecture.md)
+- [Offline-First Guide](docs/offline_first/adoption_guide.md)
+- [Type-Safe BLoC](docs/compile_time_safety.md)
+- [Performance](docs/performance_bottlenecks.md)
+- [Validation Scripts](docs/validation_scripts.md)
 
-### Performance
+## 🛠️ Tech Stack (Short)
 
-- [Lazy Loading Review](docs/lazy_loading_review.md) - Deferred imports and patterns
-- [Compute/Isolate Usage](docs/compute_isolate_review.md) - Isolate patterns for performance
-- [Startup Time Profiling](docs/STARTUP_TIME_PROFILING.md) - Measurement workflow
-- [Bundle Size Monitoring](docs/BUNDLE_SIZE_MONITORING.md) - Bundle optimization
-- [Performance Bottlenecks](docs/performance_bottlenecks.md) - Completed fixes and follow-up ideas
+- Flutter 3.38.7 / Dart 3.10.7
+- BLoC/Cubit for state management
+- Hive + secure storage for persistence
+- Firebase (Auth, Remote Config)
+- GraphQL + WebSocket networking
+- Material 3 + Cupertino for adaptive UI
 
-### Platform, Security, and Delivery
+Full details: [Tech Stack Documentation](docs/tech_stack.md)
 
-- [Security & Secrets](docs/security_and_secrets.md) - Security practices
-- [Localization](docs/localization.md) - i18n setup and usage
-- [Deployment](docs/deployment.md) - Deployment guide
-- [Contributing](docs/contributing.md) - Contribution guidelines
+## 🧭 Design Decisions
 
-### Deep Dives
+- [ADR 0001 - Architecture and Layering](docs/adr/0001-architecture-and-layering.md)
+- [ADR 0002 - Offline-First Data Access](docs/adr/0002-offline-first-data.md)
+- [ADR 0003 - Deferred Feature Loading](docs/adr/0003-deferred-feature-loading.md)
+- [ADR 0004 - Type-Safe Cubit Access](docs/adr/0004-type-safe-cubit-access.md)
 
-- [State Management Choice](docs/state_management_choice.md) - Why BLoC/Cubit over Riverpod
-- [Compile-Time Safety Guide](docs/compile_time_safety.md) - Type-safe BLoC/Cubit patterns
-- [Migration Guide](docs/migration_to_type_safe_bloc.md) - Migration to type-safe patterns
-- [Code Generation Guide](docs/code_generation_guide.md) - Custom generators for BLoC
-- [AI Integration](docs/ai_integration.md) - Hugging Face integration details
-- [Authentication](docs/authentication.md) - Auth flow and security
-- [UI/UX Responsive Review](docs/ui_ux_responsive_review.md) - Responsive design patterns
-- [Custom Painter & RenderObject](docs/custom_painter_and_render_object.md) - Advanced rendering
-- [Shared Utilities](docs/SHARED_UTILITIES.md) - Reusable utilities documentation
-- [Repository Lifecycle](docs/REPOSITORY_LIFECYCLE.md) - Repository patterns
-- [Dependency Updates](docs/DEPENDENCY_UPDATES.md) - Dependency management
-- [FAQ](docs/FAQ.md) - Frequently asked questions
-- [Trade-offs & Future](docs/tradeoffs_and_future.md) - Design decisions and roadmap
+## ✅ Quality Signals
 
-## ✅ Quality Assurance
+- Validation scripts: `./bin/checklist`
+- Coverage tracking: `coverage/coverage_summary.md`
+- Custom lint rules and codegen utilities
+- Golden and widget tests for UI regressions
 
-The project maintains high quality standards through:
+## 🙏 Acknowledgments
 
-- **Automated Validation** - Pre-commit checks via `./bin/checklist`
-- **Code Coverage** - Current coverage is tracked in `coverage/coverage_summary.md`
-- **Static Analysis** - Very Good Analysis rules with custom lints
-- **Architecture Guards** - Automated checks for architecture compliance
-
-📖 **Quality Details**: [Validation Scripts](docs/validation_scripts.md) | [Testing Overview](docs/testing_overview.md)
+- Flutter and Dart teams
+- BLoC and package maintainers
+- Open-source community contributors
 
 ## 📄 License
 
 This project is available for free use in public, non-commercial repositories under the terms described in [LICENSE](LICENSE). Any commercial or closed-source usage requires prior written permission from the copyright holder.
-
----
-
-## 🙏 Acknowledgments
-
-- Flutter team for the amazing framework
-- BLoC library maintainers
-- All package contributors
-- The open-source community
-
----
-
-Built with Flutter.
