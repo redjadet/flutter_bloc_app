@@ -1,140 +1,47 @@
 # Feature Overview
 
-This document provides a comprehensive catalog of features implemented in this Flutter app, with links to deeper technical references where applicable.
+This document lists feature modules with entry points and notes. It is intended for reviewers who want quick navigation into real code, not a marketing overview.
 
-> **Quick Links**:
->
-> - [Architecture Details](architecture_details.md) - Architecture diagrams and principles
-> - [Testing Overview](testing_overview.md) - Testing strategy and patterns
-> - [UI/UX Guidelines](ui_ux_responsive_review.md) - Responsive design and platform adaptation
-> - [New Developer Guide](new_developer_guide.md) - Getting started guide for new developers
-> - [Code Quality](CODE_QUALITY.md) - Code quality analysis and best practices
+## Quick Links
 
-## Highlights
+- [Architecture Details](architecture_details.md)
+- [Testing Overview](testing_overview.md)
+- [UI/UX Guidelines](ui_ux_responsive_review.md)
+- [Developer Guide](new_developer_guide.md)
+- [Code Quality](CODE_QUALITY.md)
 
-This application demonstrates production-grade Flutter development with:
+## Feature Catalog
 
-- **Clean Architecture** - Domain → Data → Presentation separation with dependency injection and testable boundaries
-- **Offline-First Repositories** - Background sync, retries, and cache-first reads for resilient data access
-- **Responsive/Adaptive UI** - Platform-aware components and shared design system for consistent cross-platform experience
-- **Robust Quality Gates** - Formatting, analysis, validation scripts, and comprehensive test coverage
-- **Security-Minded Foundations** - Encrypted storage, biometric gating, and secure authentication routing
+| Feature | Entry points | Notes |
+| --- | --- | --- |
+| Counter | `lib/features/counter/` | Core demo feature with offline storage and timer service. |
+| Chat | `lib/features/chat/` | Offline-first chat with Hugging Face inference and sync queue. |
+| Search | `lib/features/search/` | Cache-first repository with background refresh. |
+| Settings | `lib/features/settings/` | Theme, locale, app info, diagnostics. |
+| Profile | `lib/features/profile/` | Offline-first profile cache with sync banner. |
+| Todo List | `lib/features/todo_list/` | Realtime database + offline-first implementation. |
+| Charts | `lib/features/chart/` | Data visualization with isolated rebuilds. |
+| WebSocket | `lib/features/websocket/` | Reconnect logic and message streaming. |
+| Maps | `lib/features/google_maps/` | Google Maps with Apple Maps fallback. |
+| Calculator | `lib/features/calculator/` | Custom keypad and summary flow. |
+| Library Demo | `lib/features/library_demo/` | Figma-inspired UI showcase. |
+| Markdown Editor | `lib/app/router/deferred_pages/markdown_editor_page.dart` | Deferred feature with preview/rendering. |
+| Whiteboard | `lib/features/example/` | CustomPainter drawing demo. |
 
-## What This App Demonstrates
+## Cross-Cutting Modules
 
-### Architecture
+- **Dependency injection**: `lib/core/di/`
+- **Routing**: `lib/app/router/`
+- **Responsive utilities**: `lib/shared/extensions/responsive.dart`
+- **Platform-adaptive UI**: `lib/shared/utils/platform_adaptive.dart`
+- **Offline-first helpers**: `lib/shared/sync/`
 
-- **Repository Pattern** - Abstracted data access with clear contracts and implementations
-- **Dependency Injection Composition Root** - Centralized DI via `get_it` with lazy singleton pattern
-- **Flutter-Agnostic Domain** - Domain layer remains pure Dart, enabling testability and platform independence
+## Configuration Notes
 
-### Offline-First
+Some modules require platform keys or API access:
 
-- **Pending Sync Queues** - Operations queued when offline, processed when connectivity returns
-- **Cache-First Reads** - Local data served immediately, remote updates in background
-- **Background Flushing** - Automatic sync coordination with configurable intervals
+- Firebase features require `google-services.json` / `GoogleService-Info.plist`.
+- Chat requires a Hugging Face API key.
+- Maps require Google Maps API keys (Android/iOS).
 
-### UI/UX
-
-- **Material 3 + Cupertino Adaptive Widgets** - Platform-native feel on iOS and Android
-- **Text Scaling Support** - Handles accessibility text scaling (1.3+) without layout breaks
-- **Safe-Area Handling** - Proper insets for notches, keyboards, and device cutouts
-- **Responsive Layout Helpers** - Shared spacing, typography, and grid utilities
-
-### Resilience
-
-- **Error Mapping** - Domain failures translate to user-friendly messages
-- **Retries** - Configurable retry logic with exponential backoff
-- **Guarded Async Flows** - Lifecycle safety checks prevent crashes during async operations
-- **Lifecycle Safety** - Context mounted checks, cubit disposal guards, stream cleanup
-
-### Performance
-
-- **BlocSelector** - Granular rebuilds for optimal performance
-- **Repaint Isolation** - `RepaintBoundary` widgets prevent unnecessary repaints
-- **Responsive Layout Helpers** - Efficient grid calculations and layout constraints
-- **Lazy Loading Optimizations** - Deferred imports for heavy features, reducing initial bundle size (see [Lazy Loading Analysis](lazy_loading_review.md))
-
-## Core Counter Feature
-
-- Auto-decrement timer (never below zero)
-- Live countdown indicator
-- Encrypted persistence with Hive + migrations
-- Biometric gating for sensitive actions
-
-## UI/UX Excellence
-
-- Responsive design via shared spacing/typography helpers
-- Platform-adaptive widgets (`PlatformAdaptive.*`) for iOS/Android parity
-- Theme-aware colors using `Theme.of(context).colorScheme`
-- Safe area + keyboard handling via `CommonPageLayout`
-- Text scaling support (1.3+), minimum tap targets
-- Localization for EN/TR/DE/FR/ES using `context.l10n.*`
-- Skeleton loading and shimmer effects
-- Cached remote images with `CachedNetworkImageWidget`
-
-## Authentication & Security
-
-- Firebase Auth with email/password, Google, and anonymous sessions
-- Biometric authentication support
-- Secure storage (Keychain/Keystore-backed)
-- Environment-based secret configuration
-- Details: `docs/authentication.md`
-
-## Data & Networking
-
-- Offline-first by default with sync queues and cache-first reads
-- REST, GraphQL, WebSocket, and Firebase integrations
-- Remote config with cache + version tracking
-- Offline-first feature notes: `docs/offline_first/adoption_guide.md`
-
-## Maps & Location
-
-- Google Maps with curated location list
-- Apple Maps fallback when Google keys are unavailable
-- Runtime map controls (type switching, marker selection)
-
-## Chat & Communication
-
-- AI chat via Hugging Face Inference API
-- Offline queueing and sync for chat messages
-- Cached local history with encryption
-- Chat offline-first details: `docs/offline_first/chat.md`
-
-## Payment Calculator
-
-- iOS-style keypad
-- Expression history
-- Tax/tip presets
-- Payment summary screen
-
-## Advanced UI Features
-
-- Whiteboard with `CustomPainter`:
-  - Touch/pointer drawing with smooth strokes
-  - Color picker (`flex_color_picker`) and adjustable stroke widths
-  - Undo/redo and clear actions
-  - Optimized repaint via `RepaintBoundary`
-- Markdown editor with custom `RenderObject`:
-  - Live preview with markdown parsing and syntax highlighting
-  - Formatting toolbar (headers, bold, italic, code)
-  - Split view with editor + preview
-- Rendering guidance: `docs/custom_painter_and_render_object.md`
-
-## Deep Links & Navigation
-
-- Universal links (`https://links.flutterbloc.app/...`)
-- Custom schemes (`flutter-bloc-app://`)
-- Declarative navigation via GoRouter
-
-## Developer Experience
-
-- Built-in performance profiling tools
-- Custom linting (file length, responsive spacing)
-- Automated validation scripts via `./bin/checklist`
-- Bug-prevention tests (`test/shared/common_bugs_prevention_test.dart`)
-- CI/CD hooks via Fastlane and environment configs
-
-## Access
-
-- Whiteboard and Markdown Editor are accessible from the Home overflow menu.
+See [Security & Secrets](security_and_secrets.md) for setup details.
