@@ -1062,7 +1062,7 @@ testWidgets('CounterRing updates when cubit state changes', (tester) async {
 Use Flutter DevTools to identify performance bottlenecks:
 
 1. Enable performance overlay: `MaterialApp(showPerformanceOverlay: true)`
-2. Use `PerformanceProfiler` widget (see `docs/CODE_QUALITY_ANALYSIS.md`)
+2. Use `PerformanceProfiler` widget (see `docs/CODE_QUALITY.md`)
 3. Check repaint boundaries with "Show Repaint Rainbow" in DevTools
 4. Monitor frame rendering times; target 16ms for 60fps
 

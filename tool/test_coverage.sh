@@ -14,8 +14,7 @@
 # 3. Updates coverage/coverage_summary.md and ALL documentation files with latest coverage percentage:
 #    - README.md (badge URL and text mentions)
 #    - docs/testing_overview.md
-#    - docs/CODE_QUALITY_ANALYSIS.md
-#    - docs/CODE_QUALITY_ANALYSIS_IMPROVEMENTS.md
+#    - docs/CODE_QUALITY.md
 #    - docs/feature_overview.md
 
 set -e

@@ -2,7 +2,7 @@
 
 This document analyzes potential opportunities to use `compute()` and isolates to improve application responsiveness by offloading CPU-intensive work from the UI thread.
 
-> **Related:** [Lazy Loading Analysis](../analysis/lazy_loading_late_review.md) | [Performance Profiling](STARTUP_TIME_PROFILING.md) | [Bundle Size Monitoring](BUNDLE_SIZE_MONITORING.md)
+> **Related:** [Lazy Loading Analysis](lazy_loading_review.md) | [Performance Profiling](STARTUP_TIME_PROFILING.md) | [Bundle Size Monitoring](BUNDLE_SIZE_MONITORING.md)
 
 ---
 
@@ -336,7 +336,7 @@ class MarkdownRenderObject {
 - [Flutter `compute()` Documentation](https://api.flutter.dev/flutter/foundation/compute.html)
 - [Dart Isolates Documentation](https://dart.dev/language/concurrency)
 - [Performance Best Practices](https://docs.flutter.dev/perf/best-practices)
-- [Lazy Loading Analysis](../analysis/lazy_loading_late_review.md) - Related performance optimizations
+- [Lazy Loading Analysis](lazy_loading_review.md) - Related performance optimizations
 - [Startup Time Profiling](STARTUP_TIME_PROFILING.md) - Measuring performance improvements
 - [Bundle Size Monitoring](BUNDLE_SIZE_MONITORING.md) - Monitoring app size
 

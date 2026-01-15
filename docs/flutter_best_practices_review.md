@@ -4,6 +4,14 @@
 
 **Last Updated:** Reflects completed UI/UX improvements including platform-adaptive components, theme-aware colors, and responsive layouts. See `docs/ui_ux_responsive_review.md` for comprehensive UI/UX guidelines.
 
+> **Related Documentation:**
+>
+> - [Architecture Details](architecture_details.md) - High-level architecture diagrams and principles
+> - [Clean Architecture](clean_architecture.md) - Layer responsibilities, examples, and review checklist
+> - [Code Quality](CODE_QUALITY.md) - Comprehensive code quality analysis (includes detailed architecture, SOLID, and DRY analysis)
+> - [SOLID Principles](solid_principles.md) - Detailed SOLID principles with codebase examples
+> - [DRY Principles](dry_principles.md) - DRY consolidations and patterns
+
 ## Table of Contents
 
 - [Strengths Observed](#strengths-observed)

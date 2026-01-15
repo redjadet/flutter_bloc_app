@@ -152,7 +152,7 @@ Already implemented for:
 
 **Impact:** Reduces initial bundle size by excluding heavy dependencies until needed. Estimated 9-17 MB saved from initial bundle, resulting in faster startup time.
 
-> **See also:** [Lazy Loading Review](../analysis/lazy_loading_late_review.md) for detailed explanation of deferred loading, implementation patterns, and best practices.
+> **See also:** [Lazy Loading Review](lazy_loading_review.md) for detailed explanation of deferred loading, implementation patterns, and best practices.
 
 ### 2. Remove Unused Dependencies
 
@@ -296,7 +296,7 @@ EOF
 
 ## Related Documentation
 
-- [Lazy Loading Review](../analysis/lazy_loading_late_review.md) - Comprehensive analysis of lazy loading patterns, deferred imports explanation, and performance optimization opportunities
+- [Lazy Loading Review](lazy_loading_review.md) - Comprehensive analysis of lazy loading patterns, deferred imports explanation, and performance optimization opportunities
 - [Startup Time Profiling](STARTUP_TIME_PROFILING.md) - Guide for measuring and profiling app startup time
 - [Architecture Details](architecture_details.md) - Architecture overview including lazy loading patterns
 

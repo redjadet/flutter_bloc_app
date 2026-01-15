@@ -2,7 +2,13 @@
 
 This document captures the architecture diagram, key principles, state management rationale, and dependency flow patterns used throughout the app.
 
-> **Related:** [Clean Architecture](clean_architecture.md) | [SOLID Principles](solid_principles.md) | [DRY Principles](dry_principles.md)
+> **Related Documentation:**
+>
+> - [Clean Architecture](clean_architecture.md) - Practical guide with layer responsibilities, examples, and review checklist
+> - [SOLID Principles](solid_principles.md) - Detailed SOLID principles analysis with codebase examples
+> - [DRY Principles](dry_principles.md) - DRY consolidations and patterns implemented
+> - [Code Quality](CODE_QUALITY.md) - Comprehensive code quality analysis including architecture compliance
+> - [Flutter Best Practices Review](flutter_best_practices_review.md) - Best practices audit with action checklist
 
 ## Architecture Diagram
 
@@ -109,7 +115,7 @@ flowchart LR
 - Business rules isolated from widgets for unit/bloc testing
 - `BlocSelector` limits rebuild scope for performance
 - Immutable states reduce accidental side effects
-- **Compile-time safety** via type-safe extensions and widgets (see [Compile-Time Safety Usage Guide](compile_time_safety_usage.md))
+- **Compile-time safety** via type-safe extensions and widgets (see [Compile-Time Safety Guide](compile_time_safety.md))
 
 > **For detailed comparison with Riverpod and comprehensive rationale, see [State Management Choice](state_management_choice.md)**
 
@@ -149,7 +155,7 @@ GoRoute(
 
 Most feature-specific cubits (Chat, Maps, GraphQL, Profile, WebSocket) are created at route level rather than app scope, reducing memory footprint for unused features.
 
-> **See also:** [Lazy Loading Review](../analysis/lazy_loading_late_review.md) for comprehensive analysis, implementation details, and best practices.
+> **See also:** [Lazy Loading Review](lazy_loading_review.md) for comprehensive analysis, implementation details, and best practices.
 
 ## State Management Flow
 

@@ -1,6 +1,6 @@
 # Flutter BLoC App
 
-A production-grade Flutter application demonstrating enterprise-level architecture, modern UI/UX patterns, and best practices. Built with clean architecture principles, offline-first data access, and comprehensive testing coverage.
+A production-grade Flutter application that demonstrates clean architecture, offline-first data access, and rigorous testing. Designed to showcase senior-level Flutter practices across feature development, performance, and maintainability.
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.38.7-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.10.7-blue.svg)](https://dart.dev)
@@ -20,12 +20,12 @@ A production-grade Flutter application demonstrating enterprise-level architectu
 
 ## 🎯 Project Overview
 
-This application showcases advanced Flutter development skills including:
+This application showcases advanced Flutter development across:
 
 - **Clean Architecture** with clear separation of concerns (Domain → Data → Presentation)
 - **Offline-First Architecture** with intelligent caching and background synchronization
 - **Responsive & Adaptive UI** supporting iOS, Android, and multiple screen sizes
-- **Comprehensive Testing** with 77.22% code coverage across unit, widget, and integration tests
+- **Comprehensive Testing** with coverage tracked in `coverage/coverage_summary.md`
 - **Production-Ready Features** including authentication, real-time updates, maps, AI integration, and more
 
 ## ✨ Key Features
@@ -119,62 +119,45 @@ flutter run
 
 ## 📚 Documentation
 
-This project includes comprehensive documentation covering all aspects of development:
+### Start Here
 
-### Architecture & Design
-
-- [Clean Architecture](docs/clean_architecture.md) - Architecture overview and principles
-- [Architecture Details](docs/architecture_details.md) - Detailed diagrams and state flows
-- [State Management Choice](docs/state_management_choice.md) - Why BLoC/Cubit over Riverpod
-- [SOLID Principles](docs/solid_principles.md) - SOLID implementation guide
-- [DRY Principles](docs/dry_principles.md) - Code reusability patterns
-
-### Features & Implementation
-
-- [Feature Overview](docs/feature_overview.md) - Complete feature catalog
-- [Offline-First Guide](docs/offline_first/adoption_guide.md) - Offline architecture patterns
-- [AI Integration](docs/ai_integration.md) - Hugging Face integration details
-- [Authentication](docs/authentication.md) - Auth flow and security
-
-### UI/UX & Design
-
-- [UI/UX Responsive Review](docs/ui_ux_responsive_review.md) - Responsive design patterns
-- [Custom Painter & RenderObject](docs/custom_painter_and_render_object.md) - Advanced rendering
-
-### Performance & Optimization
-
-- [Lazy Loading Analysis](analysis/lazy_loading_late_review.md) - Deferred imports and optimization
-- [Compute/Isolate Usage](docs/compute_isolate_review.md) - Isolate patterns for performance
-- [Startup Time Profiling](docs/STARTUP_TIME_PROFILING.md) - Performance measurement
-- [Bundle Size Monitoring](docs/BUNDLE_SIZE_MONITORING.md) - Bundle optimization
+- [Developer Guide](docs/new_developer_guide.md) - Setup and development workflow
+- [Feature Overview](docs/feature_overview.md) - Feature catalog and entry points
+- [Architecture Details](docs/architecture_details.md) - Diagrams and state flow
+- [Clean Architecture](docs/clean_architecture.md) - Layer responsibilities and examples
 
 ### Quality & Testing
 
-- [Testing Overview](docs/testing_overview.md) - Testing strategies and patterns
-- [Code Quality Analysis](docs/CODE_QUALITY_ANALYSIS.md) - Quality metrics and practices
+- [Code Quality](docs/CODE_QUALITY.md) - Quality review, SOLID/DRY, and guardrails
+- [Testing Overview](docs/testing_overview.md) - Testing strategy and patterns
 - [Validation Scripts](docs/validation_scripts.md) - Automated quality gates
-- [Flutter Best Practices](docs/flutter_best_practices_review.md) - Best practices guide
-- [Compile-Time Safety Usage](docs/compile_time_safety_usage.md) - Type-safe BLoC/Cubit usage guide
-- [Compile-Time Safety Quick Reference](docs/compile_time_safety_quick_reference.md) - Quick lookup for type-safe patterns
-- [Migration Guide](docs/migration_to_type_safe_bloc.md) - Migrating to type-safe BLoC patterns
-- [Improvements Analysis](docs/compile_time_safety_improvements_analysis.md) - Recent optimizations and improvements
-- [Remaining Tasks Plan](docs/remaining_tasks_plan.md) - Plan for completing remaining compile-time safety tasks
-- [Equatable to Freezed Guide](docs/equatable_to_freezed_conversion.md) - Converting Equatable states to Freezed
-- [Sealed Classes Migration](docs/sealed_classes_migration.md) - Converting to sealed classes
-- [Code Generation Guide](docs/code_generation_guide.md) - Setting up custom code generators for BLoC
-- [Custom Lint Rules Guide](docs/custom_lint_rules_guide.md) - Creating custom analyzer plugins
+- [Flutter Best Practices](docs/flutter_best_practices_review.md) - Best practices checklist
 
-### Development & Operations
+### Performance
 
-- [Developer Guide](docs/new_developer_guide.md) - Setup and development workflow
-- [Tech Stack](docs/tech_stack.md) - Complete technology list
+- [Lazy Loading Review](docs/lazy_loading_review.md) - Deferred imports and patterns
+- [Compute/Isolate Usage](docs/compute_isolate_review.md) - Isolate patterns for performance
+- [Startup Time Profiling](docs/STARTUP_TIME_PROFILING.md) - Measurement workflow
+- [Bundle Size Monitoring](docs/BUNDLE_SIZE_MONITORING.md) - Bundle optimization
+- [Performance Bottlenecks](docs/performance_bottlenecks.md) - Completed fixes and follow-up ideas
+
+### Platform, Security, and Delivery
+
 - [Security & Secrets](docs/security_and_secrets.md) - Security practices
 - [Localization](docs/localization.md) - i18n setup and usage
 - [Deployment](docs/deployment.md) - Deployment guide
 - [Contributing](docs/contributing.md) - Contribution guidelines
 
-### Reference
+### Deep Dives
 
+- [State Management Choice](docs/state_management_choice.md) - Why BLoC/Cubit over Riverpod
+- [Compile-Time Safety Guide](docs/compile_time_safety.md) - Type-safe BLoC/Cubit patterns
+- [Migration Guide](docs/migration_to_type_safe_bloc.md) - Migration to type-safe patterns
+- [Code Generation Guide](docs/code_generation_guide.md) - Custom generators for BLoC
+- [AI Integration](docs/ai_integration.md) - Hugging Face integration details
+- [Authentication](docs/authentication.md) - Auth flow and security
+- [UI/UX Responsive Review](docs/ui_ux_responsive_review.md) - Responsive design patterns
+- [Custom Painter & RenderObject](docs/custom_painter_and_render_object.md) - Advanced rendering
 - [Shared Utilities](docs/SHARED_UTILITIES.md) - Reusable utilities documentation
 - [Repository Lifecycle](docs/REPOSITORY_LIFECYCLE.md) - Repository patterns
 - [Dependency Updates](docs/DEPENDENCY_UPDATES.md) - Dependency management
@@ -186,7 +169,7 @@ This project includes comprehensive documentation covering all aspects of develo
 The project maintains high quality standards through:
 
 - **Automated Validation** - Pre-commit checks via `./bin/checklist`
-- **Code Coverage** - 77.22% test coverage with comprehensive test suites
+- **Code Coverage** - Current coverage is tracked in `coverage/coverage_summary.md`
 - **Static Analysis** - Very Good Analysis rules with custom lints
 - **Architecture Guards** - Automated checks for architecture compliance
 
@@ -207,4 +190,4 @@ This project is available for free use in public, non-commercial repositories un
 
 ---
 
-Built with ❤️ using Flutter
+Built with Flutter.

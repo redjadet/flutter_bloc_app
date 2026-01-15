@@ -70,6 +70,6 @@ OfflineFirstChatRepository
 ## Related Documentation
 
 - Offline-first chat contract: `docs/offline_first/chat.md`
-- Error handling patterns: `docs/CODE_QUALITY_ANALYSIS.md`
+- Error handling patterns: `docs/CODE_QUALITY.md`
 - Clean architecture: `docs/clean_architecture.md`
 - Security and secrets: `README.md` (Security & Secrets section)
