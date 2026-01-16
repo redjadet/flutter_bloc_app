@@ -17,6 +17,8 @@ export 'platform/secure_secret_storage.dart';
 export 'responsive/responsive.dart';
 // Services
 export 'services/error_notification_service.dart';
+// UI typography helpers
+export 'ui/typography.dart';
 // UI constants
 export 'ui/ui_constants.dart';
 // UI status helpers

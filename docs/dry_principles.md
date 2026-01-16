@@ -446,7 +446,170 @@ repetitive if-else logic.
 - Consistent status handling pattern matching other pages
 - Easier to maintain status transitions
 
-### 15. EdgeInsets.all Consolidation
+### 15. Dependency Injection Organization Consolidation
+
+**Problem**: `injector_registrations.dart` contained all dependency registrations in a single file (239 lines), making it harder to maintain as features grow.
+
+**Solution**: Split into feature-specific registration files:
+
+- `register_chat_services.dart` - Chat-related services and repositories
+- `register_profile_services.dart` - Profile-related services and repositories
+- `register_search_services.dart` - Search-related services and repositories
+- `register_todo_services.dart` - Todo list-related services and repositories
+- Core services (storage, sync, utility) remain in main `injector_registrations.dart`
+
+**Location**: `lib/core/di/register_*_services.dart`
+
+**Impact**:
+
+- Better separation of concerns (SRP)
+- Easier to locate feature-specific DI setup
+- Reduced main file size below 250-line limit
+- Each feature registration file is self-contained
+
+**Usage Example**:
+
+```dart
+// Before: All registrations in one file
+Future<void> registerAllDependencies() async {
+  await _registerStorageServices();
+  _registerChatServices();
+  _registerProfileServices();
+  // ... many more
+}
+
+// After: Feature-specific files
+Future<void> registerAllDependencies() async {
+  await _registerStorageServices();
+  registerChatServices();  // From register_chat_services.dart
+  registerProfileServices();  // From register_profile_services.dart
+  // ... more feature registrations
+}
+```
+
+### 16. Repository Factory Pattern Consolidation
+
+**Problem**: `createCounterRepository()` and `createTodoRepository()` in `injector_factories.dart` duplicated error handling and null-checking logic for remote repository creation.
+
+**Solution**: Created generic `createRemoteRepositoryOrNull<T>()` helper that handles:
+
+- Firebase availability checking
+- Error handling (FirebaseException and generic Exception)
+- Consistent error logging
+- Null return on failure
+
+**Location**: `lib/core/di/injector_helpers.dart`
+
+**Impact**:
+
+- ~50 lines of duplicate code removed
+- Consistent error handling across repository factories
+- Easier to add new offline-first repositories
+- Single point of change for remote repository creation logic
+
+**Usage Example**:
+
+```dart
+// Before: Duplicated error handling
+CounterRepository? _createRemoteCounterRepositoryOrNull() {
+  if (Firebase.apps.isEmpty) return null;
+  try {
+    final app = Firebase.app();
+    final database = FirebaseDatabase.instanceFor(app: app);
+    final auth = FirebaseAuth.instanceFor(app: app);
+    return RealtimeDatabaseCounterRepository(database: database, auth: auth);
+  } on FirebaseException catch (error, stackTrace) {
+    AppLogger.error('Creating remote counter repository failed', error, stackTrace);
+    return null;
+  } on Exception catch (error, stackTrace) {
+    AppLogger.error('Creating remote counter repository failed', error, stackTrace);
+    return null;
+  }
+}
+
+// After: Use shared helper
+CounterRepository? _createRemoteCounterRepositoryOrNull() {
+  return createRemoteRepositoryOrNull<CounterRepository>(
+    context: 'counter repository',
+    factory: () {
+      final app = Firebase.app();
+      final database = FirebaseDatabase.instanceFor(app: app);
+      final auth = FirebaseAuth.instanceFor(app: app);
+      return RealtimeDatabaseCounterRepository(database: database, auth: auth);
+    },
+  );
+}
+```
+
+### 17. Typography Consolidation
+
+**Problem**: Typography customization appeared in multiple widgets, which could lead to drift and inconsistency.
+
+**Solution**: Created `AppTypography` helper class in `lib/shared/ui/typography.dart` that provides common text style helpers using the theme as single source of truth.
+
+**Location**: `lib/shared/ui/typography.dart`
+
+**Impact**:
+
+- Consistent typography across the app
+- Easier theme updates (single source of truth)
+- Reduced duplication of text style definitions
+- Theme-aware text styles by default
+
+**Usage Example**:
+
+```dart
+// Before: Direct theme access with manual styling
+TextStyle profileButtonTextStyle(BuildContext context, {...}) =>
+    Theme.of(context).textTheme.labelLarge?.copyWith(
+      fontSize: fontSize,
+      fontWeight: FontWeight.w900,
+      // ... more properties
+    ) ?? TextStyle(...);
+
+// After: Use typography helper
+TextStyle profileButtonTextStyle(BuildContext context, {...}) =>
+    AppTypography.buttonText(
+      context,
+      fontWeight: FontWeight.w900,
+      fontSize: fontSize,
+      // ... more properties
+    );
+```
+
+### 18. Input Decoration Consolidation (Additional Widgets)
+
+**Problem**: Some feature widgets still had custom `InputDecoration` that could use shared helpers.
+
+**Solution**: Refactored remaining widgets to use `buildCommonInputDecoration` helper:
+
+- `lib/features/chat/presentation/widgets/chat_input_bar.dart` - Now uses `buildCommonInputDecoration`
+
+**Location**: Feature widgets updated to use `lib/shared/widgets/common_input_decoration_helpers.dart`
+
+**Impact**:
+
+- Consistent input styling across more widgets
+- Reduced duplication
+- Easier maintenance
+
+### 19. ViewStatus Branching Consolidation (Additional Pages)
+
+**Problem**: Some pages still manually branched on loading/error states instead of using `ViewStatusSwitcher`.
+
+**Solution**: Refactored additional pages to use `ViewStatusSwitcher`:
+
+- `lib/features/scapes/presentation/pages/scapes_page.dart` - Now uses `ViewStatusSwitcher`
+
+**Location**: Updated pages use `lib/shared/widgets/view_status_switcher.dart`
+
+**Impact**:
+
+- Consistent status handling pattern
+- Reduced boilerplate
+- Easier to maintain status transitions
+
+### 20. EdgeInsets.all Consolidation
 
 **Problem**: Multiple widgets repeated `EdgeInsets.all(context.responsiveGapL)`,
 `EdgeInsets.all(context.responsiveGapM)`, `EdgeInsets.all(context.responsiveGapS)`,
