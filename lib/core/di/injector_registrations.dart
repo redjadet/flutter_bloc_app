@@ -1,49 +1,29 @@
 import 'dart:async';
 
-import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_factories.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
+import 'package:flutter_bloc_app/core/di/register_chat_services.dart';
 import 'package:flutter_bloc_app/core/di/register_http_services.dart';
+import 'package:flutter_bloc_app/core/di/register_profile_services.dart';
 import 'package:flutter_bloc_app/core/di/register_remote_config_services.dart';
+import 'package:flutter_bloc_app/core/di/register_search_services.dart';
+import 'package:flutter_bloc_app/core/di/register_todo_services.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
-import 'package:flutter_bloc_app/features/chat/data/chat_local_conversation_updater.dart';
-import 'package:flutter_bloc_app/features/chat/data/chat_local_data_source.dart';
-import 'package:flutter_bloc_app/features/chat/data/chat_sync_operation_factory.dart';
-import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
-import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
-import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';
-import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.dart';
-import 'package:flutter_bloc_app/features/chat/data/mock_chat_list_repository.dart';
-import 'package:flutter_bloc_app/features/chat/data/offline_first_chat_repository.dart';
-import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
-import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
-import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/deeplink/data/app_links_deep_link_service.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
 import 'package:flutter_bloc_app/features/google_maps/data/sample_map_location_repository.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
-import 'package:flutter_bloc_app/features/profile/data/mock_profile_repository.dart';
-import 'package:flutter_bloc_app/features/profile/data/offline_first_profile_repository.dart';
-import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
-import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
-import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
-import 'package:flutter_bloc_app/features/search/data/mock_search_repository.dart';
-import 'package:flutter_bloc_app/features/search/data/offline_first_search_repository.dart';
-import 'package:flutter_bloc_app/features/search/data/search_cache_repository.dart';
-import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/hive_locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/hive_theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/package_info_app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
-import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/data/echo_websocket_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
-import 'package:flutter_bloc_app/shared/http/resilient_http_client.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
@@ -58,15 +38,15 @@ Future<void> registerAllDependencies() async {
   await _registerStorageServices();
   _registerCounterRepository();
   registerHttpServices();
-  _registerChatServices();
+  registerChatServices();
   _registerSettingsServices();
   _registerDeepLinkServices();
   _registerWebSocketServices();
   _registerMapServices();
-  _registerProfileServices();
+  registerProfileServices();
   registerRemoteConfigServices();
-  _registerSearchServices();
-  _registerTodoListServices();
+  registerSearchServices();
+  registerTodoServices();
   _registerUtilityServices();
   _registerSyncServices();
 }
@@ -85,58 +65,6 @@ Future<void> _registerStorageServices() async {
 
 void _registerCounterRepository() {
   registerLazySingletonIfAbsent<CounterRepository>(createCounterRepository);
-}
-
-void _registerChatServices() {
-  registerLazySingletonIfAbsent<HuggingFaceApiClient>(
-    () => HuggingFaceApiClient(
-      httpClient: getIt<ResilientHttpClient>(),
-      apiKey: SecretConfig.huggingfaceApiKey,
-    ),
-    dispose: (final client) => client.dispose(),
-  );
-  registerLazySingletonIfAbsent<HuggingFacePayloadBuilder>(
-    () => const HuggingFacePayloadBuilder(),
-  );
-  registerLazySingletonIfAbsent<HuggingFaceResponseParser>(
-    () => const HuggingFaceResponseParser(
-      fallbackMessage: HuggingfaceChatRepository.fallbackMessage,
-    ),
-  );
-  registerLazySingletonIfAbsent<HuggingfaceChatRepository>(
-    () => HuggingfaceChatRepository(
-      apiClient: getIt<HuggingFaceApiClient>(),
-      payloadBuilder: getIt<HuggingFacePayloadBuilder>(),
-      responseParser: getIt<HuggingFaceResponseParser>(),
-      model: SecretConfig.huggingfaceModel,
-      useChatCompletions: SecretConfig.useChatCompletions,
-    ),
-  );
-  registerLazySingletonIfAbsent<ChatHistoryRepository>(
-    () => ChatLocalDataSource(hiveService: getIt<HiveService>()),
-  );
-  registerLazySingletonIfAbsent<ChatSyncOperationFactory>(
-    () => ChatSyncOperationFactory(
-      entityType: OfflineFirstChatRepository.chatEntity,
-    ),
-  );
-  registerLazySingletonIfAbsent<ChatLocalConversationUpdater>(
-    () => ChatLocalConversationUpdater(
-      localDataSource: getIt<ChatHistoryRepository>(),
-    ),
-  );
-  registerLazySingletonIfAbsent<ChatRepository>(
-    () => OfflineFirstChatRepository(
-      remoteRepository: getIt<HuggingfaceChatRepository>(),
-      pendingSyncRepository: getIt<PendingSyncRepository>(),
-      registry: getIt<SyncableRepositoryRegistry>(),
-      syncOperationFactory: getIt<ChatSyncOperationFactory>(),
-      localConversationUpdater: getIt<ChatLocalConversationUpdater>(),
-    ),
-  );
-  registerLazySingletonIfAbsent<ChatListRepository>(
-    MockChatListRepository.new,
-  );
 }
 
 void _registerSettingsServices() {
@@ -166,40 +94,6 @@ void _registerWebSocketServices() {
 void _registerMapServices() {
   registerLazySingletonIfAbsent<MapLocationRepository>(
     () => const SampleMapLocationRepository(),
-  );
-}
-
-void _registerProfileServices() {
-  registerLazySingletonIfAbsent<ProfileCacheRepository>(
-    () => HiveProfileCacheRepository(hiveService: getIt<HiveService>()),
-  );
-  registerLazySingletonIfAbsent<ProfileRepository>(
-    () => OfflineFirstProfileRepository(
-      remoteRepository: const MockProfileRepository(),
-      cacheRepository: getIt<ProfileCacheRepository>(),
-      networkStatusService: getIt<NetworkStatusService>(),
-      registry: getIt<SyncableRepositoryRegistry>(),
-    ),
-  );
-}
-
-void _registerSearchServices() {
-  registerLazySingletonIfAbsent<SearchCacheRepository>(
-    () => SearchCacheRepository(hiveService: getIt<HiveService>()),
-  );
-  registerLazySingletonIfAbsent<SearchRepository>(
-    () => OfflineFirstSearchRepository(
-      remoteRepository: MockSearchRepository(),
-      cacheRepository: getIt<SearchCacheRepository>(),
-      networkStatusService: getIt<NetworkStatusService>(),
-      registry: getIt<SyncableRepositoryRegistry>(),
-    ),
-  );
-}
-
-void _registerTodoListServices() {
-  registerLazySingletonIfAbsent<TodoRepository>(
-    createTodoRepository, // Use factory instead of direct instantiation
   );
 }
 

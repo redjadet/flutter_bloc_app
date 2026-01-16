@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_input_decoration_helpers.dart';
 
 @immutable
 class _SendButtonData extends Equatable {
@@ -46,13 +47,10 @@ class ChatInputBar extends StatelessWidget {
             keyboardType: TextInputType.multiline,
             maxLines: 5,
             onSubmitted: (_) => onSend(),
-            decoration: InputDecoration(
+            decoration: buildCommonInputDecoration(
+              context: context,
+              theme: theme,
               hintText: l10n.chatInputHint,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                  context.responsiveCardRadius,
-                ),
-              ),
             ),
           ),
         ),

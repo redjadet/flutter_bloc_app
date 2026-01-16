@@ -33,33 +33,19 @@ class ScapesPage extends StatelessWidget {
             style: theme.textTheme.titleLarge,
           ),
         ),
-        body: TypeSafeBlocBuilder<ScapesCubit, ScapesState>(
+        body: ViewStatusSwitcher<ScapesCubit, ScapesState, ScapesState>(
+          selector: (final state) => state,
+          isLoading: (final state) => state.isLoading,
+          isError: (final state) => state.hasError,
+          loadingBuilder: (final _) => const CommonLoadingWidget(),
+          errorBuilder: (final context, final state) => CommonErrorView(
+            message: state.errorMessage ?? 'An error occurred',
+            onRetry: () => context.read<ScapesCubit>().reload(),
+          ),
           builder: (final context, final state) {
-            if (state.isLoading) {
-              return const CommonLoadingWidget();
-            }
-
-            if (state.hasError) {
-              return CommonErrorView(
-                message: state.errorMessage ?? 'An error occurred',
-                onRetry: () => context.read<ScapesCubit>().reload(),
-              );
-            }
-
             if (state.scapes.isEmpty) {
               return const CommonEmptyState(
                 message: 'No scapes available',
-              );
-            }
-
-            if (state.viewMode == ScapesViewMode.list) {
-              return ScapesGridView(
-                scapes: state.scapes,
-                onFavoritePressed: (final id) =>
-                    context.read<ScapesCubit>().toggleFavorite(id),
-                onMorePressed: (final id) {
-                  AppLogger.debug('options menu clicked');
-                },
               );
             }
 

@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/realtime_database_counter_repository.dart';
@@ -15,7 +16,6 @@ import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart'
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Creates a CounterRepository instance.
 ///
@@ -35,34 +35,22 @@ CounterRepository createCounterRepository() {
   );
 }
 
-CounterRepository? _createRemoteCounterRepositoryOrNull() {
-  if (Firebase.apps.isEmpty) {
-    return null;
-  }
-  // coverage:ignore-start
-  try {
-    final FirebaseApp app = Firebase.app();
-    // Persistence is enabled in FirebaseBootstrapService.initializeFirebase()
-    final FirebaseDatabase database = FirebaseDatabase.instanceFor(app: app);
-    final FirebaseAuth auth = FirebaseAuth.instanceFor(app: app);
-    return RealtimeDatabaseCounterRepository(database: database, auth: auth);
-  } on FirebaseException catch (error, stackTrace) {
-    AppLogger.error(
-      'Creating remote counter repository failed',
-      error,
-      stackTrace,
+CounterRepository? _createRemoteCounterRepositoryOrNull() =>
+    createRemoteRepositoryOrNull<CounterRepository>(
+      context: 'counter repository',
+      factory: () {
+        final FirebaseApp app = Firebase.app();
+        // Persistence is enabled in FirebaseBootstrapService.initializeFirebase()
+        final FirebaseDatabase database = FirebaseDatabase.instanceFor(
+          app: app,
+        );
+        final FirebaseAuth auth = FirebaseAuth.instanceFor(app: app);
+        return RealtimeDatabaseCounterRepository(
+          database: database,
+          auth: auth,
+        );
+      },
     );
-    return null;
-  } on Exception catch (error, stackTrace) {
-    AppLogger.error(
-      'Creating remote counter repository failed',
-      error,
-      stackTrace,
-    );
-    return null;
-  }
-  // coverage:ignore-end
-}
 
 /// Creates a TodoRepository instance.
 ///
@@ -80,34 +68,19 @@ TodoRepository createTodoRepository() {
   );
 }
 
-TodoRepository? _createRemoteTodoRepositoryOrNull() {
-  if (Firebase.apps.isEmpty) {
-    return null;
-  }
-  // coverage:ignore-start
-  try {
-    final FirebaseApp app = Firebase.app();
-    // Persistence is enabled in FirebaseBootstrapService.initializeFirebase()
-    final FirebaseDatabase database = FirebaseDatabase.instanceFor(app: app);
-    final FirebaseAuth auth = FirebaseAuth.instanceFor(app: app);
-    return RealtimeDatabaseTodoRepository(database: database, auth: auth);
-  } on FirebaseException catch (error, stackTrace) {
-    AppLogger.error(
-      'Creating remote todo repository failed',
-      error,
-      stackTrace,
+TodoRepository? _createRemoteTodoRepositoryOrNull() =>
+    createRemoteRepositoryOrNull<TodoRepository>(
+      context: 'todo repository',
+      factory: () {
+        final FirebaseApp app = Firebase.app();
+        // Persistence is enabled in FirebaseBootstrapService.initializeFirebase()
+        final FirebaseDatabase database = FirebaseDatabase.instanceFor(
+          app: app,
+        );
+        final FirebaseAuth auth = FirebaseAuth.instanceFor(app: app);
+        return RealtimeDatabaseTodoRepository(database: database, auth: auth);
+      },
     );
-    return null;
-  } on Exception catch (error, stackTrace) {
-    AppLogger.error(
-      'Creating remote todo repository failed',
-      error,
-      stackTrace,
-    );
-    return null;
-  }
-  // coverage:ignore-end
-}
 
 /// Creates a RemoteConfigRepository instance.
 ///

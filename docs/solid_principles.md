@@ -42,15 +42,16 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 
 - Depend on abstractions, not concrete implementations.
 
-- All services are wired through `getIt` (`injector_registrations.dart`), depending on interfaces (e.g., `NetworkStatusService`, `TimerService`, repositories) rather than concrete classes.
+- All services are wired through `getIt` (feature-specific registration files in `lib/core/di/`), depending on interfaces (e.g., `NetworkStatusService`, `TimerService`, repositories) rather than concrete classes.
+- DI registrations are organized by feature (`register_chat_services.dart`, `register_profile_services.dart`, etc.) to improve SRP and maintainability.
 - UI layers receive dependencies via constructors (e.g., `ProfileCacheControlsSection`, page providers) or DI factory functions, keeping Flutter widgets free of new allocations of data sources.
 
 ## Current Findings (Codebase Review)
 
 ### Strengths
 
-- **SRP:** Core orchestration components isolate concerns behind services. Example: `BackgroundSyncCoordinator` delegates scheduling to `TimerService`, connectivity checks to `NetworkStatusService`, and persistence to `PendingSyncRepository` (`lib/shared/sync/background_sync_coordinator.dart`).
-- **OCP:** Reusable base repositories allow adding settings or cache types without editing existing consumers. Example: `HiveSettingsRepository<T>` and `HiveRepositoryBase` (`lib/shared/storage/hive_settings_repository.dart`, `lib/shared/storage/hive_repository_base.dart`).
+- **SRP:** Core orchestration components isolate concerns behind services. Example: `BackgroundSyncCoordinator` delegates scheduling to `TimerService`, connectivity checks to `NetworkStatusService`, and persistence to `PendingSyncRepository` (`lib/shared/sync/background_sync_coordinator.dart`). DI registrations are split into feature-specific files (`register_chat_services.dart`, `register_profile_services.dart`, etc.) to maintain single responsibility per file.
+- **OCP:** Reusable base repositories allow adding settings or cache types without editing existing consumers. Example: `HiveSettingsRepository<T>` and `HiveRepositoryBase` (`lib/shared/storage/hive_settings_repository.dart`, `lib/shared/storage/hive_repository_base.dart`). Generic factory helpers (`createRemoteRepositoryOrNull`) enable adding new offline-first repositories without duplicating error handling logic.
 - **LSP:** Production services are substitutable with fakes in tests (e.g., `FakeTimerService` used across cubit/widget tests) without behavior changes (`test/test_helpers.dart`).
 - **ISP:** Feature interfaces remain small and focused (e.g., `ChatRepository` only exposes `sendMessage`, `ChatHistoryRepository` only load/save) (`lib/features/chat/domain/chat_repository.dart`, `lib/features/chat/domain/chat_history_repository.dart`).
 - **DIP:** Most cubits and pages receive interfaces via constructors and `getIt`, keeping widget layers decoupled from concrete implementations (`lib/app/app_scope.dart`, `lib/app/router/routes.dart`).
@@ -99,6 +100,7 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 
 - Constructors accept abstractions (interfaces) rather than concrete types.
 - New data sources implement the domain repository interface instead of expanding existing classes.
-- DI registrations bind interfaces to implementations in `lib/core/di/`.
+- DI registrations bind interfaces to implementations in feature-specific files under `lib/core/di/` (e.g., `register_chat_services.dart`, `register_profile_services.dart`).
 - UI widgets avoid `getIt` lookups except at composition boundaries.
 - Avoid adding optional methods to existing interfaces; create new interfaces if needed.
+- Use generic factory helpers (`createRemoteRepositoryOrNull`) for consistent error handling when creating remote repositories.
