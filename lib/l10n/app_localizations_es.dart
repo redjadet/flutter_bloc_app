@@ -431,6 +431,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get openChatTooltip => 'Chatear con IA';
 
   @override
+  String get openGenuiDemoTooltip => 'Demo GenUI';
+
+  @override
   String get openGoogleMapsTooltip => 'Abrir demo de Google Maps';
 
   @override
@@ -1247,4 +1250,20 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get scapesListViewTooltip => 'List view';
+
+  @override
+  String get genuiDemoPageTitle => 'Demo GenUI';
+
+  @override
+  String get genuiDemoHintText => 'Ingrese un mensaje para generar UI...';
+
+  @override
+  String get genuiDemoSendButton => 'Enviar';
+
+  @override
+  String get genuiDemoErrorTitle => 'Error';
+
+  @override
+  String get genuiDemoNoApiKey =>
+      'GEMINI_API_KEY no configurado. Por favor, agréguelo a secrets.json o use --dart-define=GEMINI_API_KEY=...';
 }

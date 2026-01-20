@@ -5,7 +5,7 @@ A reference Flutter application that demonstrates clean architecture, offline-fi
 [![Flutter](https://img.shields.io/badge/Flutter-3.38.7-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.10.7-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-76%2E96%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-76%2E59%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
 [![State Management](https://img.shields.io/badge/State%20Management-BLOC%2FCubit-2196F3.svg)](https://pub.dev/packages/flutter_bloc)
@@ -32,6 +32,7 @@ This codebase focuses on maintainability, correctness, and performance:
 
 - Authentication and settings flows with secure storage
 - Offline-first chat (Hugging Face inference) with local queueing
+- GenUI Demo (AI-generated dynamic UI with Google Gemini)
 - Maps (Google Maps with Apple Maps fallback)
 - GraphQL countries browser
 - WebSocket demo with reconnect logic
@@ -40,6 +41,8 @@ This codebase focuses on maintainability, correctness, and performance:
 
 For entry points and module details, see [Feature Overview](docs/feature_overview.md).
 
+**New Feature**: [GenUI Demo User Guide](docs/genui_demo_user_guide.md) - AI-generated dynamic UI with Google Gemini.
+
 ## ⚙️ Configuration
 
 Some features require API keys or platform setup to fully enable:
@@ -47,6 +50,7 @@ Some features require API keys or platform setup to fully enable:
 - Firebase (Auth, Remote Config, etc.)
 - Google Maps (Android/iOS keys)
 - Hugging Face Inference API
+- Google Gemini API (for GenUI Demo)
 
 See [Security & Secrets](docs/security_and_secrets.md) for setup guidance and sample config files.
 
@@ -59,6 +63,10 @@ See [Security & Secrets](docs/security_and_secrets.md) for setup guidance and sa
 | Charts | GraphQL | AI Chat |
 | --- | --- | --- |
 | ![Charts page](assets/screenshots/small/chart.png) | ![GraphQL countries browser](assets/screenshots/small/graphQL_countries.png) | ![AI chat conversation](assets/screenshots/small/ai_chat.png) |
+
+| GenUI Demo |
+| --- |
+| ![GenUI Demo - AI-generated dynamic UI](assets/screenshots/gen_ui.png) |
 
 | Apple Maps Demo | Google Maps Demo | Search |
 | --- | --- | --- |

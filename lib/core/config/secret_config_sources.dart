@@ -10,10 +10,12 @@ Future<Map<String, dynamic>?> _readSecureSecrets(
       SecretConfig._keyHfUseChatCompletions,
     );
     final String? mapsKey = await storage.read(SecretConfig._keyGoogleMaps);
+    final String? geminiKey = await storage.read(SecretConfig._keyGeminiApiKey);
     if ((token == null || token.isEmpty) &&
         (model == null || model.isEmpty) &&
         (flag == null || flag.isEmpty) &&
-        (mapsKey == null || mapsKey.isEmpty)) {
+        (mapsKey == null || mapsKey.isEmpty) &&
+        (geminiKey == null || geminiKey.isEmpty)) {
       return null;
     }
     return <String, dynamic>{
@@ -21,6 +23,7 @@ Future<Map<String, dynamic>?> _readSecureSecrets(
       'HUGGINGFACE_MODEL': model,
       'HUGGINGFACE_USE_CHAT_COMPLETIONS': flag == 'true',
       'GOOGLE_MAPS_API_KEY': mapsKey,
+      'GEMINI_API_KEY': geminiKey,
     };
   } on Exception catch (e) {
     AppLogger.warning('SecretConfig secure read failed: $e');
@@ -45,6 +48,10 @@ Future<void> _persistToSecureStorage(final SecretStorage storage) async {
   if (mapsKey != null) {
     await storage.write(SecretConfig._keyGoogleMaps, mapsKey);
   }
+  final String? geminiKey = SecretConfig._geminiApiKey;
+  if (geminiKey != null) {
+    await storage.write(SecretConfig._keyGeminiApiKey, geminiKey);
+  }
 }
 
 void _applySecrets(final Map<String, dynamic> json) {
@@ -64,6 +71,15 @@ void _applySecrets(final Map<String, dynamic> json) {
 
   final String? mapsKey = (json['GOOGLE_MAPS_API_KEY'] as String?)?.trim();
   SecretConfig._googleMapsApiKey = (mapsKey?.isEmpty ?? true) ? null : mapsKey;
+
+  final String? geminiKey = (json['GEMINI_API_KEY'] as String?)?.trim();
+  final String? googleKey = (json['GOOGLE_API_KEY'] as String?)?.trim();
+  final String? resolvedKey = (geminiKey?.isNotEmpty ?? false)
+      ? geminiKey
+      : googleKey;
+  SecretConfig._geminiApiKey = (resolvedKey?.isEmpty ?? true)
+      ? null
+      : resolvedKey;
 }
 
 bool _hasSecrets(final Map<String, dynamic>? source) {
@@ -72,14 +88,23 @@ bool _hasSecrets(final Map<String, dynamic>? source) {
   final String? model = (source['HUGGINGFACE_MODEL'] as String?)?.trim();
   final Object? flag = source['HUGGINGFACE_USE_CHAT_COMPLETIONS'];
   final String? maps = (source['GOOGLE_MAPS_API_KEY'] as String?)?.trim();
+  final String? gemini = (source['GEMINI_API_KEY'] as String?)?.trim();
+  final String? googleKey = (source['GOOGLE_API_KEY'] as String?)?.trim();
 
   final bool hasToken = token != null && token.isNotEmpty;
   final bool hasModel = model != null && model.isNotEmpty;
   final bool hasFlag =
       flag is bool || (flag is String && flag.trim().isNotEmpty);
   final bool hasMaps = maps != null && maps.isNotEmpty;
+  final bool hasGemini = gemini != null && gemini.isNotEmpty;
+  final bool hasGoogleKey = googleKey != null && googleKey.isNotEmpty;
 
-  return hasToken || hasModel || hasFlag || hasMaps;
+  return hasToken ||
+      hasModel ||
+      hasFlag ||
+      hasMaps ||
+      hasGemini ||
+      hasGoogleKey;
 }
 
 Map<String, dynamic>? _readEnvironmentSecrets() {
@@ -89,6 +114,9 @@ Map<String, dynamic>? _readEnvironmentSecrets() {
     'HUGGINGFACE_USE_CHAT_COMPLETIONS',
   );
   const String mapsKey = String.fromEnvironment('GOOGLE_MAPS_API_KEY');
+  const String geminiKey = String.fromEnvironment('GEMINI_API_KEY');
+  const String googleKey = String.fromEnvironment('GOOGLE_API_KEY');
+  final String resolvedKey = geminiKey.isNotEmpty ? geminiKey : googleKey;
 
   final Map<String, dynamic> result = <String, dynamic>{};
   if (token.isNotEmpty) {
@@ -102,6 +130,9 @@ Map<String, dynamic>? _readEnvironmentSecrets() {
   }
   if (mapsKey.isNotEmpty) {
     result['GOOGLE_MAPS_API_KEY'] = mapsKey;
+  }
+  if (resolvedKey.isNotEmpty) {
+    result['GEMINI_API_KEY'] = resolvedKey;
   }
 
   if (SecretConfig.debugEnvironment != null) {

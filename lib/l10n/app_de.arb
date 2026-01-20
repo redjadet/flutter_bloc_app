@@ -1081,5 +1081,29 @@
   "scapesListViewTooltip": "List view",
   "@scapesListViewTooltip": {
     "description": "Tooltip for list view icon"
+  },
+  "genuiDemoPageTitle": "GenUI Demo",
+  "@genuiDemoPageTitle": {
+    "description": "Title for the GenUI demo page"
+  },
+  "genuiDemoHintText": "Geben Sie eine Nachricht ein, um UI zu generieren...",
+  "@genuiDemoHintText": {
+    "description": "Placeholder text shown in the GenUI demo input field"
+  },
+  "genuiDemoSendButton": "Senden",
+  "@genuiDemoSendButton": {
+    "description": "Label for the button that sends a message to generate UI"
+  },
+  "genuiDemoErrorTitle": "Fehler",
+  "@genuiDemoErrorTitle": {
+    "description": "Title displayed when an error occurs in the GenUI demo"
+  },
+  "genuiDemoNoApiKey": "GEMINI_API_KEY nicht konfiguriert. Bitte fügen Sie es zu secrets.json hinzu oder verwenden Sie --dart-define=GEMINI_API_KEY=...",
+  "@genuiDemoNoApiKey": {
+    "description": "Error message shown when the Gemini API key is not configured"
+  },
+  "openGenuiDemoTooltip": "GenUI Demo",
+  "@openGenuiDemoTooltip": {
+    "description": "Tooltip for navigating to the GenUI demo feature"
   }
 }

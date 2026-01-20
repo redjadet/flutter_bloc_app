@@ -4,7 +4,7 @@ Welcome aboard! This document distills the essentials you need to navigate, exte
 
 ## 1. Mental Model
 
-- **Purpose**: Showcase a feature-rich Flutter app built around Cubits, clean architecture, and real-world integrations (Firebase Auth/Remote Config, WebSockets, GraphQL, Google Maps, Hugging Face, Whiteboard with CustomPainter, Markdown Editor with RenderObject, etc.).
+- **Purpose**: Showcase a feature-rich Flutter app built around Cubits, clean architecture, and real-world integrations (Firebase Auth/Remote Config, WebSockets, GraphQL, Google Maps, Hugging Face, GenUI AI-generated UI, Whiteboard with CustomPainter, Markdown Editor with RenderObject, etc.).
 - **Layers**: Domain → Data → Presentation. Domain stays Flutter-agnostic, Data fulfills contracts, Presentation wires Cubits/Widgets via `get_it`.
 - **State Management**: Cubits with immutable (Freezed/Equatable) states. Widgets read via `BlocBuilder`/`BlocSelector` and stay focused on layout/theming/navigation. **Type-safe extensions** (`context.cubit<T>()`, `TypeSafeBlocSelector`, etc.) provide compile-time safety. See [Compile-Time Safety Guide](../docs/compile_time_safety.md).
 - **DI & Startup**: `lib/core/di/injector.dart` registers everything into `getIt`. `main_*.dart` files choose the env, call `configureDependencies()`, then bootstrap `MyApp`. The DI code is organized into multiple files:
@@ -47,6 +47,8 @@ This codebase uses **deferred imports** to reduce initial app bundle size and im
 - Markdown Editor (custom RenderObject implementation)
 - Charts (data visualization libraries)
 - WebSocket (real-time communication libraries)
+
+**Note:** GenUI Demo is not deferred because it uses lightweight SDK dependencies and is intended for quick access during development.
 
 **Add new deferred routes like this:**
 
@@ -104,7 +106,7 @@ For Android apps distributed via Play Store, you can use **Deferred Components**
 - **Settings**: `lib/features/settings/` owns theme/locale, exposing value objects (`AppLocale`, `ThemePreference`) so domain remains UI-free.
 - **Whiteboard**: Located in `lib/features/example/presentation/widgets/whiteboard/`. Demonstrates low-level Flutter rendering using `CustomPainter` for canvas drawing. Features include stroke management, color selection, width presets, and undo/redo functionality. Accessible via the app bar overflow menu.
 - **Markdown Editor**: Located in `lib/features/example/presentation/widgets/markdown_editor/`. Demonstrates custom `RenderObject` subclass (`MarkdownRenderObject`) for efficient text layout. Uses `markdown` package for parsing and supports GitHub Flavored Markdown. Accessible via the app bar overflow menu.
-- **Networking**: GraphQL, WebSocket, REST integrations sit in their respective feature/data folders. Samples include `CountriesGraphqlRepository`, `EchoWebsocketRepository`, `HuggingfaceChatRepository`.
+- **Networking**: GraphQL, WebSocket, REST integrations sit in their respective feature/data folders. Samples include `CountriesGraphqlRepository`, `EchoWebsocketRepository`, `HuggingfaceChatRepository`, `GenUiDemoAgentImpl`.
 - **Authentication**: `lib/features/auth/` wraps Firebase Auth + FirebaseUI for sign-in/sign-up flows.
 - **Remote Config & Feature Flags**: `RemoteConfigCubit` consumes `RemoteConfigService` to toggle runtime features and initializes lazily via `ensureInitialized()` when a feature needs values.
   Recent updates expose `RemoteConfigLoading`/`RemoteConfigError` states and wrap calls in `CubitExceptionHandler`, so transient failures log nicely and expose retryable errors instead of crashing the cubit.
@@ -407,6 +409,7 @@ testWidgets('scales text at 1.3x', (tester) async {
 - **Remote Config not updating**: Confirm Firebase project settings match the current flavor (`main_dev.dart`, etc.) and that `RemoteConfigCubit`'s `refreshInterval` isn't throttling updates.
 - **GraphQL/WebSocket issues**: Check the environment constants in `lib/core/config` and confirm the emulator/network allows outbound connections.
 - **Maps API keys**: For Android, add to `android/app/src/main/AndroidManifest.xml`; for iOS, configure `ios/Runner/AppDelegate.swift` + `Info.plist`. The app gracefully falls back to Apple Maps when Google keys are missing.
+- **GenUI Demo API key**: Requires `GEMINI_API_KEY` configured in `assets/config/secrets.json` (dev) or via `--dart-define=GEMINI_API_KEY=...`. Get your key from [Google AI Studio](https://makersuite.google.com/app/apikey). The app shows an error message if the key is missing.
 - **Coverage script fails**: Ensure `lcov` file exists (run tests with `--coverage`) and that `dart run tool/update_coverage_summary.dart` runs from repo root.
 - **Firebase upgrades break iOS build**: After bumping Firebase packages, run the clean sweep Firebase recommends so the simulator doesn't load stale pods:
 

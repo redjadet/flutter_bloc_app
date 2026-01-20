@@ -872,6 +872,12 @@ abstract class AppLocalizations {
   /// **'Chat with AI'**
   String get openChatTooltip;
 
+  /// Tooltip for navigating to the GenUI demo feature
+  ///
+  /// In en, this message translates to:
+  /// **'GenUI Demo'**
+  String get openGenuiDemoTooltip;
+
   /// Tooltip for navigating to the Google/Apple Maps sample page
   ///
   /// In en, this message translates to:
@@ -2269,6 +2275,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'List view'**
   String get scapesListViewTooltip;
+
+  /// Title for the GenUI demo page
+  ///
+  /// In en, this message translates to:
+  /// **'GenUI Demo'**
+  String get genuiDemoPageTitle;
+
+  /// Placeholder text shown in the GenUI demo input field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a message to generate UI...'**
+  String get genuiDemoHintText;
+
+  /// Label for the button that sends a message to generate UI
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get genuiDemoSendButton;
+
+  /// Title displayed when an error occurs in the GenUI demo
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get genuiDemoErrorTitle;
+
+  /// Error message shown when the Gemini API key is not configured
+  ///
+  /// In en, this message translates to:
+  /// **'GEMINI_API_KEY not configured. Please add it to secrets.json or use --dart-define=GEMINI_API_KEY=...'**
+  String get genuiDemoNoApiKey;
 }
 
 class _AppLocalizationsDelegate
