@@ -59,6 +59,8 @@ class CommonStatusView extends StatelessWidget {
               message,
               style: messageStyle ?? theme.textTheme.bodyLarge,
               textAlign: TextAlign.center,
+              softWrap: true,
+              overflow: TextOverflow.visible,
             ),
             if (action != null) ...[
               SizedBox(height: context.responsiveGapL * 1.5),

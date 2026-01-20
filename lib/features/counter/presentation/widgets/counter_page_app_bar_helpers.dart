@@ -7,6 +7,7 @@ enum OverflowAction {
   charts,
   graphql,
   chat,
+  genuiDemo,
   googleMaps,
   whiteboard,
   markdownEditor,

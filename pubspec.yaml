@@ -42,7 +42,7 @@ dependencies:
   firebase_crashlytics: ^5.0.5
   firebase_database: ^12.1.0
   firebase_remote_config: ^6.1.2
-  firebase_ui_auth: ^3.0.0
+  firebase_ui_auth: ^3.0.1
   firebase_ui_localizations: ^2.0.0
   firebase_ui_oauth_google: ^2.0.0
   fl_chart: ^1.1.1
@@ -56,6 +56,8 @@ dependencies:
   flutter_secure_storage: ^10.0.0
   flutter_svg: ^2.2.2
   freezed_annotation: ^3.1.0
+  genui: ^0.5.1
+  genui_google_generative_ai: ^0.5.1
   get_it: ^9.0.5
   go_router: ^17.0.0
   google_fonts: ^7.0.0
@@ -97,6 +99,12 @@ dev_dependencies:
   mocktail: ^1.0.4
   very_good_analysis: ^10.0.0
 
+dependency_overrides:
+  # Resolve email_validator conflict: genui requires ^3.0.0, firebase_ui_auth 3.0.1 requires ^2.1.17
+  # Using the newer version required by genui
+  # Note: genui_google_generative_ai 0.5.1 only supports genui ^0.5.1 (not 0.6.1 yet)
+  # Once genui_google_generative_ai 0.6.x is released, we can upgrade to genui 0.6.1
+  email_validator: ^3.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

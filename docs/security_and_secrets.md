@@ -26,10 +26,21 @@ flutter run --dart-define=ENABLE_ASSET_SECRETS=true
 # Use environment variables (recommended)
 flutter run \
   --dart-define=HUGGINGFACE_API_KEY=your_key \
-  --dart-define=HUGGINGFACE_MODEL=openai/gpt-oss-20b
+  --dart-define=HUGGINGFACE_MODEL=openai/gpt-oss-20b \
+  --dart-define=GEMINI_API_KEY=your_gemini_key
 
 # Or inject via CI/CD secrets
 ```
+
+## Required API Keys
+
+The following API keys are required for specific features:
+
+- **Hugging Face API Key** (`HUGGINGFACE_API_KEY`): Required for the Chat feature
+- **Google Gemini API Key** (`GEMINI_API_KEY`): Required for the GenUI Demo feature
+  - Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+  - Can also be provided via `GOOGLE_API_KEY` as a fallback
+- **Google Maps API Keys**: Required for Maps feature (Android/iOS platform-specific)
 
 **Important**: Never commit `assets/config/secrets.json`. The repo includes only `secrets.sample.json`.
 
@@ -44,4 +55,3 @@ flutter run \
 - Authentication flow: `docs/authentication.md`
 - Hive storage: `docs/REPOSITORY_LIFECYCLE.md`
 - Clean architecture: `docs/clean_architecture.md`
-

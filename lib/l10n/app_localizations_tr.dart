@@ -429,6 +429,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get openChatTooltip => 'Yapay zekâ ile sohbet et';
 
   @override
+  String get openGenuiDemoTooltip => 'GenUI Demo';
+
+  @override
   String get openGoogleMapsTooltip => 'Google Haritalar demosunu aç';
 
   @override
@@ -1236,4 +1239,20 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get scapesListViewTooltip => 'List view';
+
+  @override
+  String get genuiDemoPageTitle => 'GenUI Demo';
+
+  @override
+  String get genuiDemoHintText => 'UI oluşturmak için bir mesaj girin...';
+
+  @override
+  String get genuiDemoSendButton => 'Gönder';
+
+  @override
+  String get genuiDemoErrorTitle => 'Hata';
+
+  @override
+  String get genuiDemoNoApiKey =>
+      'GEMINI_API_KEY yapılandırılmamış. Lütfen secrets.json\'a ekleyin veya --dart-define=GEMINI_API_KEY=... kullanın';
 }

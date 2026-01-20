@@ -20,6 +20,9 @@ import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart
 import 'package:flutter_bloc_app/features/counter/counter.dart';
 import 'package:flutter_bloc_app/features/example/presentation/pages/example_page.dart';
 import 'package:flutter_bloc_app/features/example/presentation/pages/whiteboard_page.dart';
+import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_agent.dart';
+import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_demo_cubit.dart';
+import 'package:flutter_bloc_app/features/genui_demo/presentation/pages/genui_demo_page.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_cubit.dart';
@@ -37,6 +40,8 @@ import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/shared/widgets/deferred_page.dart';
 import 'package:go_router/go_router.dart';
 
@@ -210,6 +215,26 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
       errorNotificationService: getIt<ErrorNotificationService>(),
       pendingSyncRepository: getIt<PendingSyncRepository>(),
     ),
+  ),
+  GoRoute(
+    path: AppRoutes.genuiDemoPath,
+    name: AppRoutes.genuiDemo,
+    builder: (final context, final state) {
+      final apiKey = SecretConfig.geminiApiKey;
+      if (apiKey == null || apiKey.isEmpty) {
+        return CommonPageLayout(
+          title: context.l10n.genuiDemoPageTitle,
+          body: CommonErrorView(
+            message: context.l10n.genuiDemoNoApiKey,
+          ),
+        );
+      }
+      return BlocProviderHelpers.withAsyncInit<GenUiDemoCubit>(
+        create: () => GenUiDemoCubit(agent: getIt<GenUiDemoAgent>()),
+        init: (final cubit) => cubit.initialize(),
+        child: const GenUiDemoPage(),
+      );
+    },
   ),
   ...createAuxiliaryRoutes(),
 ];

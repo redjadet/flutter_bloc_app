@@ -68,4 +68,7 @@ class AppRoutes {
 
   static const scapes = 'scapes';
   static const scapesPath = '/scapes';
+
+  static const genuiDemo = 'genui-demo';
+  static const genuiDemoPath = '/genui-demo';
 }
