@@ -23,5 +23,6 @@ class GenUiDemoState with _$GenUiDemoState {
     required final String message,
     @Default(<String>[]) final List<String> surfaceIds,
     final genui.GenUiManager? hostHandle,
+    @Default(false) final bool isSending,
   }) = _Error;
 }

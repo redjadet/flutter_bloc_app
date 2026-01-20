@@ -56,30 +56,37 @@ class _GenUiDemoContentState extends State<GenUiDemoContent> {
             isSending: isSending,
             hostHandle: hostHandle,
           ),
-      error: (final message, final surfaceIds, final hostHandle) => Column(
-        children: [
-          Expanded(
-            child: LayoutBuilder(
-              builder: (final context, final constraints) => SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: constraints.maxHeight,
-                  ),
-                  child: CommonErrorView(message: message),
+      error:
+          (
+            final message,
+            final surfaceIds,
+            final hostHandle,
+            final isSending,
+          ) => Column(
+            children: [
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (final context, final constraints) =>
+                      SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
+                          ),
+                          child: CommonErrorView(message: message),
+                        ),
+                      ),
                 ),
               ),
-            ),
+              if (hostHandle != null && surfaceIds.isNotEmpty)
+                Expanded(
+                  child: _buildSurfacesList(
+                    surfaceIds: surfaceIds,
+                    hostHandle: hostHandle,
+                  ),
+                ),
+              _buildInputRow(context: context, isSending: isSending),
+            ],
           ),
-          if (hostHandle != null && surfaceIds.isNotEmpty)
-            Expanded(
-              child: _buildSurfacesList(
-                surfaceIds: surfaceIds,
-                hostHandle: hostHandle,
-              ),
-            ),
-          _buildInputRow(context: context, isSending: false),
-        ],
-      ),
     );
   }
 

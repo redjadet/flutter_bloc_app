@@ -45,7 +45,7 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
 
     if (isClosed) return;
     final bool isError = state.maybeWhen(
-      error: (_, final _, final _) => true,
+      error: (_, final _, final _, final _) => true,
       orElse: () => false,
     );
     if (isError) return;
@@ -71,7 +71,7 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
     final bool canSend = state.maybeWhen(
       ready: (_, final _, final _) => true,
       loading: (_, final _, final _) => true,
-      error: (_, final _, final hostHandle) => hostHandle != null,
+      error: (_, final _, final hostHandle, final _) => hostHandle != null,
       orElse: () => false,
     );
     if (!canSend) return;
@@ -118,6 +118,12 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
               hostHandle: state.hostHandle,
             ),
           ),
+          error: (final state) => emit(
+            state.copyWith(
+              message: message,
+              isSending: false,
+            ),
+          ),
         );
       },
     );
@@ -130,6 +136,10 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
         emit(state.copyWith(isSending: false));
       },
       loading: (final state) {
+        if (isClosed) return;
+        emit(state.copyWith(isSending: false));
+      },
+      error: (final state) {
         if (isClosed) return;
         emit(state.copyWith(isSending: false));
       },

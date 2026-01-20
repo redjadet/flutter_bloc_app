@@ -128,13 +128,13 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function( List<String> surfaceIds,  bool isSending,  genui.GenUiManager? hostHandle)?  loading,TResult Function( List<String> surfaceIds,  genui.GenUiManager? hostHandle,  bool isSending)?  ready,TResult Function( String message,  List<String> surfaceIds,  genui.GenUiManager? hostHandle)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function( List<String> surfaceIds,  bool isSending,  genui.GenUiManager? hostHandle)?  loading,TResult Function( List<String> surfaceIds,  genui.GenUiManager? hostHandle,  bool isSending)?  ready,TResult Function( String message,  List<String> surfaceIds,  genui.GenUiManager? hostHandle,  bool isSending)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading(_that.surfaceIds,_that.isSending,_that.hostHandle);case _Ready() when ready != null:
 return ready(_that.surfaceIds,_that.hostHandle,_that.isSending);case _Error() when error != null:
-return error(_that.message,_that.surfaceIds,_that.hostHandle);case _:
+return error(_that.message,_that.surfaceIds,_that.hostHandle,_that.isSending);case _:
   return orElse();
 
 }
@@ -152,13 +152,13 @@ return error(_that.message,_that.surfaceIds,_that.hostHandle);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function( List<String> surfaceIds,  bool isSending,  genui.GenUiManager? hostHandle)  loading,required TResult Function( List<String> surfaceIds,  genui.GenUiManager? hostHandle,  bool isSending)  ready,required TResult Function( String message,  List<String> surfaceIds,  genui.GenUiManager? hostHandle)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function( List<String> surfaceIds,  bool isSending,  genui.GenUiManager? hostHandle)  loading,required TResult Function( List<String> surfaceIds,  genui.GenUiManager? hostHandle,  bool isSending)  ready,required TResult Function( String message,  List<String> surfaceIds,  genui.GenUiManager? hostHandle,  bool isSending)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
 return loading(_that.surfaceIds,_that.isSending,_that.hostHandle);case _Ready():
 return ready(_that.surfaceIds,_that.hostHandle,_that.isSending);case _Error():
-return error(_that.message,_that.surfaceIds,_that.hostHandle);case _:
+return error(_that.message,_that.surfaceIds,_that.hostHandle,_that.isSending);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -175,13 +175,13 @@ return error(_that.message,_that.surfaceIds,_that.hostHandle);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function( List<String> surfaceIds,  bool isSending,  genui.GenUiManager? hostHandle)?  loading,TResult? Function( List<String> surfaceIds,  genui.GenUiManager? hostHandle,  bool isSending)?  ready,TResult? Function( String message,  List<String> surfaceIds,  genui.GenUiManager? hostHandle)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function( List<String> surfaceIds,  bool isSending,  genui.GenUiManager? hostHandle)?  loading,TResult? Function( List<String> surfaceIds,  genui.GenUiManager? hostHandle,  bool isSending)?  ready,TResult? Function( String message,  List<String> surfaceIds,  genui.GenUiManager? hostHandle,  bool isSending)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading(_that.surfaceIds,_that.isSending,_that.hostHandle);case _Ready() when ready != null:
 return ready(_that.surfaceIds,_that.hostHandle,_that.isSending);case _Error() when error != null:
-return error(_that.message,_that.surfaceIds,_that.hostHandle);case _:
+return error(_that.message,_that.surfaceIds,_that.hostHandle,_that.isSending);case _:
   return null;
 
 }
@@ -377,7 +377,7 @@ as bool,
 
 
 class _Error implements GenUiDemoState {
-  const _Error({required this.message, final  List<String> surfaceIds = const <String>[], this.hostHandle}): _surfaceIds = surfaceIds;
+  const _Error({required this.message, final  List<String> surfaceIds = const <String>[], this.hostHandle, this.isSending = false}): _surfaceIds = surfaceIds;
   
 
  final  String message;
@@ -389,6 +389,7 @@ class _Error implements GenUiDemoState {
 }
 
  final  genui.GenUiManager? hostHandle;
+@JsonKey() final  bool isSending;
 
 /// Create a copy of GenUiDemoState
 /// with the given fields replaced by the non-null parameter values.
@@ -400,16 +401,16 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message)&&const DeepCollectionEquality().equals(other._surfaceIds, _surfaceIds)&&(identical(other.hostHandle, hostHandle) || other.hostHandle == hostHandle));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message)&&const DeepCollectionEquality().equals(other._surfaceIds, _surfaceIds)&&(identical(other.hostHandle, hostHandle) || other.hostHandle == hostHandle)&&(identical(other.isSending, isSending) || other.isSending == isSending));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message,const DeepCollectionEquality().hash(_surfaceIds),hostHandle);
+int get hashCode => Object.hash(runtimeType,message,const DeepCollectionEquality().hash(_surfaceIds),hostHandle,isSending);
 
 @override
 String toString() {
-  return 'GenUiDemoState.error(message: $message, surfaceIds: $surfaceIds, hostHandle: $hostHandle)';
+  return 'GenUiDemoState.error(message: $message, surfaceIds: $surfaceIds, hostHandle: $hostHandle, isSending: $isSending)';
 }
 
 
@@ -420,7 +421,7 @@ abstract mixin class _$ErrorCopyWith<$Res> implements $GenUiDemoStateCopyWith<$R
   factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) = __$ErrorCopyWithImpl;
 @useResult
 $Res call({
- String message, List<String> surfaceIds, genui.GenUiManager? hostHandle
+ String message, List<String> surfaceIds, genui.GenUiManager? hostHandle, bool isSending
 });
 
 
@@ -437,12 +438,13 @@ class __$ErrorCopyWithImpl<$Res>
 
 /// Create a copy of GenUiDemoState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? message = null,Object? surfaceIds = null,Object? hostHandle = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? message = null,Object? surfaceIds = null,Object? hostHandle = freezed,Object? isSending = null,}) {
   return _then(_Error(
 message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,surfaceIds: null == surfaceIds ? _self._surfaceIds : surfaceIds // ignore: cast_nullable_to_non_nullable
 as List<String>,hostHandle: freezed == hostHandle ? _self.hostHandle : hostHandle // ignore: cast_nullable_to_non_nullable
-as genui.GenUiManager?,
+as genui.GenUiManager?,isSending: null == isSending ? _self.isSending : isSending // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

@@ -115,7 +115,7 @@ void main() {
         const GenUiDemoState.loading(),
         isA<GenUiDemoState>().having(
           (final state) => state.maybeWhen(
-            error: (message, _, _) => message.isNotEmpty,
+            error: (message, _, _, _) => message.isNotEmpty,
             orElse: () => false,
           ),
           'isError',
@@ -125,7 +125,7 @@ void main() {
     );
 
     blocTest<GenUiDemoCubit, GenUiDemoState>(
-      'sendMessage updates isSending flag',
+      'sendMessage updates isSending flag and resets on success',
       build: buildCubit,
       seed: () => GenUiDemoState.ready(
         surfaceIds: const [],
@@ -135,6 +135,7 @@ void main() {
         await cubit.sendMessage('Hello');
       },
       expect: () => [
+        // First: isSending becomes true
         isA<GenUiDemoState>().having(
           (final state) => state.maybeWhen(
             ready: (_, _, isSending) => isSending,
@@ -143,13 +144,14 @@ void main() {
           'isSending',
           true,
         ),
+        // Second: isSending is reset to false after successful send
         isA<GenUiDemoState>().having(
           (final state) => state.maybeWhen(
-            ready: (_, _, isSending) => isSending,
+            ready: (_, _, isSending) => !isSending,
             orElse: () => false,
           ),
-          'isSending',
-          false,
+          'isSendingFalse',
+          true,
         ),
       ],
       verify: (final cubit) {
@@ -187,7 +189,79 @@ void main() {
     );
 
     blocTest<GenUiDemoCubit, GenUiDemoState>(
-      'sendMessage emits error on failure',
+      'sendMessage from loading state resets isSending flag on failure',
+      build: () {
+        final agent = _MockGenUiDemoAgent();
+        surfaceEventsController =
+            StreamController<GenUiSurfaceEvent>.broadcast();
+        errorsController = StreamController<String>.broadcast();
+
+        when(
+          () => agent.surfaceEvents,
+        ).thenAnswer((_) => surfaceEventsController.stream);
+        when(() => agent.errors).thenAnswer((_) => errorsController.stream);
+        when(() => agent.hostHandle).thenReturn(mockHostHandle);
+        when(() => agent.initialize()).thenAnswer((_) async {});
+        when(
+          () => agent.sendMessage(any()),
+        ).thenThrow(Exception('Send failed'));
+        when(() => agent.dispose()).thenAnswer((_) async {});
+
+        final cubit = GenUiDemoCubit(agent: agent);
+        addTearDown(() async {
+          await surfaceEventsController.close();
+          await errorsController.close();
+          await cubit.close();
+        });
+        return cubit;
+      },
+      seed: () => GenUiDemoState.loading(
+        surfaceIds: const ['surface1'],
+        hostHandle: mockHostHandle,
+      ),
+      act: (final cubit) async {
+        await cubit.sendMessage('Hello');
+      },
+      expect: () => [
+        // First: isSending becomes true
+        isA<GenUiDemoState>().having(
+          (final state) => state.maybeWhen(
+            loading: (_, isSending, _) => isSending,
+            orElse: () => false,
+          ),
+          'isSending',
+          true,
+        ),
+        // Second: error state is emitted with isSending = false
+        isA<GenUiDemoState>().having(
+          (final state) => state.maybeWhen(
+            error: (message, surfaceIds, _, isSending) =>
+                message.isNotEmpty &&
+                surfaceIds.contains('surface1') &&
+                !isSending,
+            orElse: () => false,
+          ),
+          'errorWithIsSendingFalse',
+          true,
+        ),
+      ],
+      verify: (final cubit) {
+        // Verify final state has isSending = false (critical bug check)
+        expect(
+          cubit.state.maybeWhen(
+            error: (message, surfaceIds, _, isSending) =>
+                message.isNotEmpty && !isSending,
+            orElse: () => false,
+          ),
+          isTrue,
+          reason:
+              'isSending must be false in error state after sendMessage failure',
+        );
+      },
+    );
+
+    blocTest<GenUiDemoCubit, GenUiDemoState>(
+      'sendMessage emits error on failure and resets isSending flag',
       build: () {
         final agent = _MockGenUiDemoAgent();
         surfaceEventsController =
@@ -221,6 +295,7 @@ void main() {
         await cubit.sendMessage('Hello');
       },
       expect: () => [
+        // First: isSending becomes true
         isA<GenUiDemoState>().having(
           (final state) => state.maybeWhen(
             ready: (_, _, isSending) => isSending,
@@ -229,13 +304,16 @@ void main() {
           'isSending',
           true,
         ),
+        // Second: error state is emitted with isSending = false (default)
         isA<GenUiDemoState>().having(
           (final state) => state.maybeWhen(
-            error: (message, surfaceIds, _) =>
-                message.isNotEmpty && surfaceIds.contains('surface1'),
+            error: (message, surfaceIds, _, isSending) =>
+                message.isNotEmpty &&
+                surfaceIds.contains('surface1') &&
+                !isSending,
             orElse: () => false,
           ),
-          'isError',
+          'isErrorWithIsSendingFalse',
           true,
         ),
       ],
@@ -299,6 +377,80 @@ void main() {
       );
     });
 
+    blocTest<GenUiDemoCubit, GenUiDemoState>(
+      'sendMessage from error state resets isSending flag on failure',
+      build: () {
+        final agent = _MockGenUiDemoAgent();
+        surfaceEventsController =
+            StreamController<GenUiSurfaceEvent>.broadcast();
+        errorsController = StreamController<String>.broadcast();
+
+        when(
+          () => agent.surfaceEvents,
+        ).thenAnswer((_) => surfaceEventsController.stream);
+        when(() => agent.errors).thenAnswer((_) => errorsController.stream);
+        when(() => agent.hostHandle).thenReturn(mockHostHandle);
+        when(() => agent.initialize()).thenAnswer((_) async {});
+        when(
+          () => agent.sendMessage(any()),
+        ).thenThrow(Exception('Send failed'));
+        when(() => agent.dispose()).thenAnswer((_) async {});
+
+        final cubit = GenUiDemoCubit(agent: agent);
+        addTearDown(() async {
+          await surfaceEventsController.close();
+          await errorsController.close();
+          await cubit.close();
+        });
+        return cubit;
+      },
+      seed: () => GenUiDemoState.error(
+        message: 'Previous error',
+        surfaceIds: const ['surface1'],
+        hostHandle: mockHostHandle,
+      ),
+      act: (final cubit) async {
+        await cubit.sendMessage('Hello');
+      },
+      expect: () => [
+        // First: error state transitions to ready with isSending = true
+        isA<GenUiDemoState>().having(
+          (final state) => state.maybeWhen(
+            ready: (surfaceIds, _, isSending) =>
+                surfaceIds.contains('surface1') && isSending,
+            orElse: () => false,
+          ),
+          'readyWithIsSendingTrue',
+          true,
+        ),
+        // Second: error state is emitted with isSending = false
+        isA<GenUiDemoState>().having(
+          (final state) => state.maybeWhen(
+            error: (message, surfaceIds, _, isSending) =>
+                message.isNotEmpty &&
+                surfaceIds.contains('surface1') &&
+                !isSending,
+            orElse: () => false,
+          ),
+          'errorWithIsSendingFalse',
+          true,
+        ),
+      ],
+      verify: (final cubit) {
+        // Verify final state has isSending = false (critical bug check)
+        expect(
+          cubit.state.maybeWhen(
+            error: (message, surfaceIds, _, isSending) =>
+                message.isNotEmpty && !isSending,
+            orElse: () => false,
+          ),
+          isTrue,
+          reason:
+              'isSending must be false in error state after sendMessage failure',
+        );
+      },
+    );
+
     test('error stream updates state to error', () async {
       final cubit = buildCubit();
       await cubit.initialize();
@@ -317,7 +469,7 @@ void main() {
 
       expect(
         cubit.state.maybeWhen(
-          error: (message, surfaceIds, _) =>
+          error: (message, surfaceIds, _, _) =>
               message == 'Test error message' &&
               surfaceIds.contains('surface1'),
           orElse: () => false,
