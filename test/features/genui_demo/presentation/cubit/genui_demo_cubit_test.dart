@@ -16,7 +16,7 @@ void main() {
     late _MockGenUiDemoAgent mockAgent;
     late StreamController<GenUiSurfaceEvent> surfaceEventsController;
     late StreamController<String> errorsController;
-    late genui.GenUiManager mockHostHandle;
+    late genui.A2uiMessageProcessor mockHostHandle;
 
     GenUiDemoCubit buildCubit() {
       mockAgent = _MockGenUiDemoAgent();
@@ -42,9 +42,9 @@ void main() {
     }
 
     setUp(() {
-      // Create a mock host handle (GenUiManager)
+      // Create a mock host handle (A2uiMessageProcessor)
       // Since it's an abstract interface, we'll use a mock
-      mockHostHandle = _MockGenUiManager();
+      mockHostHandle = _MockA2uiMessageProcessor();
     });
 
     test('initial state is initial', () {
@@ -480,5 +480,6 @@ void main() {
   });
 }
 
-// Mock for GenUiManager since it's an abstract interface
-class _MockGenUiManager extends Mock implements genui.GenUiManager {}
+// Mock for A2uiMessageProcessor since it's an abstract interface
+class _MockA2uiMessageProcessor extends Mock
+    implements genui.A2uiMessageProcessor {}

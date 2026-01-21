@@ -128,7 +128,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function( List<String> surfaceIds,  bool isSending,  genui.GenUiManager? hostHandle)?  loading,TResult Function( List<String> surfaceIds,  genui.GenUiManager? hostHandle,  bool isSending)?  ready,TResult Function( String message,  List<String> surfaceIds,  genui.GenUiManager? hostHandle,  bool isSending)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function( List<String> surfaceIds,  bool isSending,  genui.A2uiMessageProcessor? hostHandle)?  loading,TResult Function( List<String> surfaceIds,  genui.A2uiMessageProcessor? hostHandle,  bool isSending)?  ready,TResult Function( String message,  List<String> surfaceIds,  genui.A2uiMessageProcessor? hostHandle,  bool isSending)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -152,7 +152,7 @@ return error(_that.message,_that.surfaceIds,_that.hostHandle,_that.isSending);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function( List<String> surfaceIds,  bool isSending,  genui.GenUiManager? hostHandle)  loading,required TResult Function( List<String> surfaceIds,  genui.GenUiManager? hostHandle,  bool isSending)  ready,required TResult Function( String message,  List<String> surfaceIds,  genui.GenUiManager? hostHandle,  bool isSending)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function( List<String> surfaceIds,  bool isSending,  genui.A2uiMessageProcessor? hostHandle)  loading,required TResult Function( List<String> surfaceIds,  genui.A2uiMessageProcessor? hostHandle,  bool isSending)  ready,required TResult Function( String message,  List<String> surfaceIds,  genui.A2uiMessageProcessor? hostHandle,  bool isSending)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
@@ -175,7 +175,7 @@ return error(_that.message,_that.surfaceIds,_that.hostHandle,_that.isSending);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function( List<String> surfaceIds,  bool isSending,  genui.GenUiManager? hostHandle)?  loading,TResult? Function( List<String> surfaceIds,  genui.GenUiManager? hostHandle,  bool isSending)?  ready,TResult? Function( String message,  List<String> surfaceIds,  genui.GenUiManager? hostHandle,  bool isSending)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function( List<String> surfaceIds,  bool isSending,  genui.A2uiMessageProcessor? hostHandle)?  loading,TResult? Function( List<String> surfaceIds,  genui.A2uiMessageProcessor? hostHandle,  bool isSending)?  ready,TResult? Function( String message,  List<String> surfaceIds,  genui.A2uiMessageProcessor? hostHandle,  bool isSending)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -236,7 +236,7 @@ class _Loading implements GenUiDemoState {
 }
 
 @JsonKey() final  bool isSending;
- final  genui.GenUiManager? hostHandle;
+ final  genui.A2uiMessageProcessor? hostHandle;
 
 /// Create a copy of GenUiDemoState
 /// with the given fields replaced by the non-null parameter values.
@@ -268,7 +268,7 @@ abstract mixin class _$LoadingCopyWith<$Res> implements $GenUiDemoStateCopyWith<
   factory _$LoadingCopyWith(_Loading value, $Res Function(_Loading) _then) = __$LoadingCopyWithImpl;
 @useResult
 $Res call({
- List<String> surfaceIds, bool isSending, genui.GenUiManager? hostHandle
+ List<String> surfaceIds, bool isSending, genui.A2uiMessageProcessor? hostHandle
 });
 
 
@@ -290,7 +290,7 @@ class __$LoadingCopyWithImpl<$Res>
 surfaceIds: null == surfaceIds ? _self._surfaceIds : surfaceIds // ignore: cast_nullable_to_non_nullable
 as List<String>,isSending: null == isSending ? _self.isSending : isSending // ignore: cast_nullable_to_non_nullable
 as bool,hostHandle: freezed == hostHandle ? _self.hostHandle : hostHandle // ignore: cast_nullable_to_non_nullable
-as genui.GenUiManager?,
+as genui.A2uiMessageProcessor?,
   ));
 }
 
@@ -311,7 +311,7 @@ class _Ready implements GenUiDemoState {
   return EqualUnmodifiableListView(_surfaceIds);
 }
 
- final  genui.GenUiManager? hostHandle;
+ final  genui.A2uiMessageProcessor? hostHandle;
 @JsonKey() final  bool isSending;
 
 /// Create a copy of GenUiDemoState
@@ -344,7 +344,7 @@ abstract mixin class _$ReadyCopyWith<$Res> implements $GenUiDemoStateCopyWith<$R
   factory _$ReadyCopyWith(_Ready value, $Res Function(_Ready) _then) = __$ReadyCopyWithImpl;
 @useResult
 $Res call({
- List<String> surfaceIds, genui.GenUiManager? hostHandle, bool isSending
+ List<String> surfaceIds, genui.A2uiMessageProcessor? hostHandle, bool isSending
 });
 
 
@@ -365,7 +365,7 @@ class __$ReadyCopyWithImpl<$Res>
   return _then(_Ready(
 surfaceIds: null == surfaceIds ? _self._surfaceIds : surfaceIds // ignore: cast_nullable_to_non_nullable
 as List<String>,hostHandle: freezed == hostHandle ? _self.hostHandle : hostHandle // ignore: cast_nullable_to_non_nullable
-as genui.GenUiManager?,isSending: null == isSending ? _self.isSending : isSending // ignore: cast_nullable_to_non_nullable
+as genui.A2uiMessageProcessor?,isSending: null == isSending ? _self.isSending : isSending // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -388,7 +388,7 @@ class _Error implements GenUiDemoState {
   return EqualUnmodifiableListView(_surfaceIds);
 }
 
- final  genui.GenUiManager? hostHandle;
+ final  genui.A2uiMessageProcessor? hostHandle;
 @JsonKey() final  bool isSending;
 
 /// Create a copy of GenUiDemoState
@@ -421,7 +421,7 @@ abstract mixin class _$ErrorCopyWith<$Res> implements $GenUiDemoStateCopyWith<$R
   factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) = __$ErrorCopyWithImpl;
 @useResult
 $Res call({
- String message, List<String> surfaceIds, genui.GenUiManager? hostHandle, bool isSending
+ String message, List<String> surfaceIds, genui.A2uiMessageProcessor? hostHandle, bool isSending
 });
 
 
@@ -443,7 +443,7 @@ class __$ErrorCopyWithImpl<$Res>
 message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,surfaceIds: null == surfaceIds ? _self._surfaceIds : surfaceIds // ignore: cast_nullable_to_non_nullable
 as List<String>,hostHandle: freezed == hostHandle ? _self.hostHandle : hostHandle // ignore: cast_nullable_to_non_nullable
-as genui.GenUiManager?,isSending: null == isSending ? _self.isSending : isSending // ignore: cast_nullable_to_non_nullable
+as genui.A2uiMessageProcessor?,isSending: null == isSending ? _self.isSending : isSending // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
