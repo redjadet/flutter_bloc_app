@@ -94,7 +94,7 @@ class _GenUiDemoContentState extends State<GenUiDemoContent> {
     required final BuildContext context,
     required final List<String> surfaceIds,
     required final bool isSending,
-    required final genui.GenUiManager? hostHandle,
+    required final genui.A2uiMessageProcessor? hostHandle,
   }) {
     final l10n = context.l10n;
     return Column(
@@ -119,7 +119,7 @@ class _GenUiDemoContentState extends State<GenUiDemoContent> {
 
   Widget _buildSurfacesList({
     required final List<String> surfaceIds,
-    required final genui.GenUiManager hostHandle,
+    required final genui.A2uiMessageProcessor hostHandle,
   }) => ListView.builder(
     cacheExtent: 500,
     itemCount: surfaceIds.length,

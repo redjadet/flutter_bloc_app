@@ -23,7 +23,7 @@ abstract interface class GenUiDemoAgent {
 
   /// Opaque handle to pass into GenUiSurface widget.
   /// Keep the type consistent with GenUiSurface.host (verify SDK type).
-  genui.GenUiManager? get hostHandle;
+  genui.A2uiMessageProcessor? get hostHandle;
 
   /// Disposes all resources.
   Future<void> dispose();

@@ -10,9 +10,11 @@ class GenUiDemoAgentImpl implements GenUiDemoAgent {
   GenUiDemoAgentImpl();
 
   bool _isInitialized = false;
-  late final genui.GenUiManager _genUiManager;
+  late final genui.A2uiMessageProcessor _messageProcessor;
   late final GoogleGenerativeAiContentGenerator _contentGenerator;
   late final genui.GenUiConversation _conversation;
+  StreamSubscription<String>? _textResponsesSubscription;
+  StreamSubscription<genui.ContentGeneratorError>? _errorsSubscription;
   final _surfaceEventsController =
       StreamController<GenUiSurfaceEvent>.broadcast();
   final _textResponsesController = StreamController<String>.broadcast();
@@ -30,8 +32,8 @@ class GenUiDemoAgentImpl implements GenUiDemoAgent {
     // Build catalog
     final catalog = genui.CoreCatalogItems.asCatalog();
 
-    // Create GenUI manager
-    _genUiManager = genui.GenUiManager(catalog: catalog);
+    // Create message processor
+    _messageProcessor = genui.A2uiMessageProcessor(catalogs: [catalog]);
 
     // Create content generator
     _contentGenerator = GoogleGenerativeAiContentGenerator(
@@ -43,7 +45,7 @@ class GenUiDemoAgentImpl implements GenUiDemoAgent {
     // Create conversation
     _conversation = genui.GenUiConversation(
       contentGenerator: _contentGenerator,
-      genUiManager: _genUiManager,
+      a2uiMessageProcessor: _messageProcessor,
       onSurfaceAdded: (final genui.SurfaceAdded update) {
         _surfaceEventsController.add(
           GenUiSurfaceEvent.added(surfaceId: update.surfaceId),
@@ -54,12 +56,16 @@ class GenUiDemoAgentImpl implements GenUiDemoAgent {
           GenUiSurfaceEvent.removed(surfaceId: update.surfaceId),
         );
       },
-      onTextResponse: (final String text) {
-        _textResponsesController.add(text);
-      },
-      onError: (final genui.ContentGeneratorError error) {
-        _errorsController.add(error.error.toString());
-      },
+    );
+
+    // Forward streams
+    _textResponsesSubscription = _contentGenerator.textResponseStream.listen(
+      (final String text) => _textResponsesController.add(text),
+    );
+
+    _errorsSubscription = _contentGenerator.errorStream.listen(
+      (final genui.ContentGeneratorError error) =>
+          _errorsController.add(error.error.toString()),
     );
 
     _isInitialized = true;
@@ -80,13 +86,15 @@ class GenUiDemoAgentImpl implements GenUiDemoAgent {
   Stream<String> get errors => _errorsController.stream;
 
   @override
-  genui.GenUiManager? get hostHandle => _genUiManager;
+  genui.A2uiMessageProcessor? get hostHandle => _messageProcessor;
 
   @override
   Future<void> dispose() async {
     if (_isInitialized) {
+      await _textResponsesSubscription?.cancel();
+      await _errorsSubscription?.cancel();
       _conversation.dispose();
-      _genUiManager.dispose();
+      _messageProcessor.dispose();
       _contentGenerator.dispose();
     }
     await _surfaceEventsController.close();

@@ -21,11 +21,11 @@ class _FakeGenUiDemoAgent implements GenUiDemoAgent {
 
   late final StreamController<GenUiSurfaceEvent> _surfaceEventsController;
   late final StreamController<String> _errorsController;
-  genui.GenUiManager? _hostHandle;
+  genui.A2uiMessageProcessor? _hostHandle;
 
   @override
   Future<void> initialize() async {
-    _hostHandle = _FakeGenUiManager();
+    _hostHandle = _FakeA2uiMessageProcessor();
   }
 
   @override
@@ -44,7 +44,7 @@ class _FakeGenUiDemoAgent implements GenUiDemoAgent {
   Stream<String> get errors => _errorsController.stream;
 
   @override
-  genui.GenUiManager? get hostHandle => _hostHandle;
+  genui.A2uiMessageProcessor? get hostHandle => _hostHandle;
 
   @override
   Future<void> dispose() async {
@@ -67,8 +67,9 @@ class _FakeGenUiDemoAgent implements GenUiDemoAgent {
   }
 }
 
-// Fake implementation of GenUiManager for testing
-class _FakeGenUiManager extends Mock implements genui.GenUiManager {}
+// Fake implementation of A2uiMessageProcessor for testing
+class _FakeA2uiMessageProcessor extends Mock
+    implements genui.A2uiMessageProcessor {}
 
 // Helper widget that matches the internal structure of GenUiDemoPage
 class _GenUiDemoView extends StatelessWidget {

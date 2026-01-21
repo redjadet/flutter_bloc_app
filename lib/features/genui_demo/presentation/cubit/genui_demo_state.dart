@@ -10,19 +10,19 @@ class GenUiDemoState with _$GenUiDemoState {
   const factory GenUiDemoState.loading({
     @Default(<String>[]) final List<String> surfaceIds,
     @Default(false) final bool isSending,
-    final genui.GenUiManager? hostHandle,
+    final genui.A2uiMessageProcessor? hostHandle,
   }) = _Loading;
 
   const factory GenUiDemoState.ready({
     required final List<String> surfaceIds,
-    required final genui.GenUiManager? hostHandle,
+    required final genui.A2uiMessageProcessor? hostHandle,
     @Default(false) final bool isSending,
   }) = _Ready;
 
   const factory GenUiDemoState.error({
     required final String message,
     @Default(<String>[]) final List<String> surfaceIds,
-    final genui.GenUiManager? hostHandle,
+    final genui.A2uiMessageProcessor? hostHandle,
     @Default(false) final bool isSending,
   }) = _Error;
 }
