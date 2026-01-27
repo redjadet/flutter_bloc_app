@@ -1,0 +1,107 @@
+# Generated Files
+# These are auto-generated and don't provide useful context for AI
+**/*.g.dart
+**/*.freezed.dart
+**/*.gen.dart
+**/*.mocks.dart
+**/*.g.dart.swp
+lib/l10n/app_localizations*.dart
+lib/l10n/app_*.g.dart
+
+# Build Artifacts
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+coverage/lcov.info
+coverage/lcov-report/
+
+# Test Artifacts
+test/failures/
+test/goldens/
+
+# Platform-Specific Native Code
+# These are platform-specific and not relevant for Flutter/Dart AI context
+android/
+ios/
+macos/
+linux/
+windows/
+web/
+
+# Large Binary Assets
+# Images, videos, and other large binary files don't help AI understanding
+assets/images/
+assets/screenshots/
+assets/figma/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.webp
+*.ico
+*.pdf
+*.mp4
+*.mov
+*.avi
+
+# Fonts (binary files)
+assets/fonts/
+
+# Third-Party Code
+# External dependencies shouldn't be indexed
+third_party/
+.pub-cache/
+
+# Tooling & Scripts
+# Build tools and scripts are less relevant for AI code generation
+tool/
+bin/checklist
+custom_lints/
+
+# Logs & Temporary Files
+*.log
+*.tmp
+*.swp
+*.swo
+*~
+.DS_Store
+.firebase/
+firepit-log.txt
+
+# Secrets & Config (already in .gitignore, but explicit here)
+assets/config/secrets.json
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+lib/firebase_options.dart
+
+# Documentation that's git-ignored (internal notes)
+# Note: AGENTS.md is kept for AI context as it contains project rules and patterns
+GEMINI.md
+INTERVIEW_QA.md
+
+# Analysis & Lint Config (less relevant for code generation)
+analysis/
+devtools_options.yaml
+renovate.json
+
+# Coverage Reports
+coverage/coverage_summary.md
+
+# Untranslated messages (temporary)
+untranslated_messages.json
+
+# GitHub workflows (less relevant for code context)
+.github/
+
+# VS Code settings (less relevant for code generation)
+.vscode/
+
+# Sample files
+*.sample
+lib/firebase_options.dart.sample
