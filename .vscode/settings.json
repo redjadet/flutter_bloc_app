@@ -115,8 +115,10 @@
     "behaviour",
     "Comfortaa",
     "deeplink",
+    "firepit",
     "flutterfire",
     "gmaps",
+    "goldens",
     "huggingface",
     "loggedout",
     "nonbuilder",
@@ -132,7 +134,8 @@
     "Syncable",
     "syncables",
     "Türkçe",
-    "Uncomplete"
+    "Uncomplete",
+    "webp"
   ],
   "files.associations": {
     "*.config": "plaintext"
