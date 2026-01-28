@@ -1,12 +1,68 @@
 # Flutter BLoC App — New Developer Guide
 
-Welcome aboard! This document distills the essentials you need to navigate, extend, and validate this codebase with confidence.
+Welcome aboard! This document is the fastest path to getting the app running locally, understanding the architecture, and shipping changes safely.
+
+## Contents
+
+- [Quickstart (first 30 minutes)](#quickstart-first-30-minutes)
+- [Mental model](#1-mental-model)
+- [Repo layout highlights](#2-repository-layout-highlights)
+- [Application flow](#3-application-flow)
+- [Feature module playbook](#4-feature-module-playbook)
+- [Key building blocks](#5-key-building-blocks)
+- [Development workflow](#6-development-workflow)
+- [Testing strategy](#7-testing-strategy)
+- [Tooling & productivity](#8-tooling--productivity)
+- [Responsive & adaptive UI guidelines](#85-responsive--adaptive-ui-guidelines)
+- [Adding a new feature (cheat sheet)](#9-adding-a-new-feature-cheat-sheet)
+- [Common troubleshooting](#10-common-troubleshooting)
+- [DI reference example](#11-di-reference-example)
+- [Best-practice validation scripts](#12-bestpractice-validation-scripts)
+- [What to read next](#13-what-to-read-next)
+
+## Quickstart (first 30 minutes)
+
+### Prerequisites
+
+- **Flutter SDK**: Use the version pinned by the repo/tooling (for example, in internal project documentation or CI configuration).
+- **Platform toolchains**:
+  - iOS: Xcode + CocoaPods
+  - Android: Android Studio + SDKs
+  - Optional: Chrome (web), a desktop target (macOS/windows/linux) if you intend to run there
+
+### Get dependencies
+
+```bash
+flutter pub get
+```
+
+### Run the app (pick a flavor)
+
+This repo supports multiple entrypoints (for example `main_dev.dart`, `main_prod.dart`). Run the one you need:
+
+```bash
+flutter run -t lib/main_dev.dart
+```
+
+### Run the project’s quality gates locally
+
+This is the “one command” check that formats, analyzes, runs validation scripts, and runs tests/coverage:
+
+```bash
+./bin/checklist
+```
+
+### Common codegen (when you touch Freezed/JSON/etc.)
+
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
 
 ## 1. Mental Model
 
 - **Purpose**: Showcase a feature-rich Flutter app built around Cubits, clean architecture, and real-world integrations (Firebase Auth/Remote Config, WebSockets, GraphQL, Google Maps, Hugging Face, GenUI AI-generated UI, Whiteboard with CustomPainter, Markdown Editor with RenderObject, etc.).
 - **Layers**: Domain → Data → Presentation. Domain stays Flutter-agnostic, Data fulfills contracts, Presentation wires Cubits/Widgets via `get_it`.
-- **State Management**: Cubits with immutable (Freezed/Equatable) states. Widgets read via `BlocBuilder`/`BlocSelector` and stay focused on layout/theming/navigation. **Type-safe extensions** (`context.cubit<T>()`, `TypeSafeBlocSelector`, etc.) provide compile-time safety. See [Compile-Time Safety Guide](../docs/compile_time_safety.md).
+- **State Management**: Cubits with immutable (Freezed/Equatable) states. Widgets read via `BlocBuilder`/`BlocSelector` and stay focused on layout/theming/navigation. **Type-safe extensions** (`context.cubit<T>()`, `TypeSafeBlocSelector`, etc.) provide compile-time safety. See [Compile-Time Safety Guide](compile_time_safety.md).
 - **DI & Startup**: `lib/core/di/injector.dart` registers everything into `getIt`. `main_*.dart` files choose the env, call `configureDependencies()`, then bootstrap `MyApp`. The DI code is organized into multiple files:
   - `injector.dart` - Main file with `configureDependencies()` and public API
   - `injector_registrations.dart` - All dependency registrations organized by category
@@ -89,7 +145,7 @@ For Android apps distributed via Play Store, you can use **Deferred Components**
 - Uses `DeferredComponent` utility class instead of `loadLibrary()`
 - See [Flutter Deferred Components documentation](https://docs.flutter.dev/perf/deferred-components) for details
 
-> **See also:** [Lazy Loading Review](../lazy_loading_review.md) for comprehensive analysis, detailed explanation of deferred imports, and best practices.
+> **See also:** [Lazy Loading Review](lazy_loading_review.md) for a deeper dive into deferred imports and best practices.
 
 ## 4. Feature Module Playbook
 
@@ -148,7 +204,7 @@ The delivery checklist script (`./bin/checklist`) automatically runs:
 ./bin/checklist
 ```
 
-This runs formatting, analysis, validation scripts, and coverage. The validation scripts provide automated guards for architecture, UI/UX, async safety, performance, and memory hygiene. See [Validation Scripts Documentation](validation_scripts.md) for complete details on what each script checks and how to suppress false positives when necessary.
+This runs formatting, analysis, validation scripts, and coverage. The validation scripts provide automated guards for architecture, UI/UX, async safety, performance, and memory hygiene. See [Validation Scripts Documentation](validation_scripts.md) for what each script checks and how to suppress false positives when necessary.
 
 Tips:
 
@@ -409,7 +465,7 @@ testWidgets('scales text at 1.3x', (tester) async {
 - **Remote Config not updating**: Confirm Firebase project settings match the current flavor (`main_dev.dart`, etc.) and that `RemoteConfigCubit`'s `refreshInterval` isn't throttling updates.
 - **GraphQL/WebSocket issues**: Check the environment constants in `lib/core/config` and confirm the emulator/network allows outbound connections.
 - **Maps API keys**: For Android, add to `android/app/src/main/AndroidManifest.xml`; for iOS, configure `ios/Runner/AppDelegate.swift` + `Info.plist`. The app gracefully falls back to Apple Maps when Google keys are missing.
-- **GenUI Demo API key**: Requires `GEMINI_API_KEY` configured in `assets/config/secrets.json` (dev) or via `--dart-define=GEMINI_API_KEY=...`. Get your key from [Google AI Studio](https://makersuite.google.com/app/apikey). The app shows an error message if the key is missing.
+- **GenUI Demo API key**: Requires `GEMINI_API_KEY` via `--dart-define=GEMINI_API_KEY=...` (recommended) or a local, git-ignored secrets mechanism used by `SecretConfig` (see the feature’s README/docs if present). Get your key from [Google AI Studio](https://makersuite.google.com/app/apikey). The app should show a user-facing error if the key is missing.
 - **Coverage script fails**: Ensure `lcov` file exists (run tests with `--coverage`) and that `dart run tool/update_coverage_summary.dart` runs from repo root.
 - **Firebase upgrades break iOS build**: After bumping Firebase packages, run the clean sweep Firebase recommends so the simulator doesn't load stale pods:
 
@@ -663,27 +719,27 @@ reviewable.
 ### Essential Reading
 
 - **`README.md`**: Feature tour + architecture diagram
-- **`docs/CODE_QUALITY.md`**: Comprehensive code quality analysis, architecture findings, and quality/resilience notes
-- **`docs/ui_ux_responsive_review.md`**: Comprehensive UI/UX guidelines, responsive design patterns, platform-adaptive components, accessibility best practices
-- **`docs/feature_overview.md`**: Complete catalog of features and capabilities
+- **`CODE_QUALITY.md`**: Comprehensive code quality analysis, architecture findings, and quality/resilience notes
+- **`ui_ux_responsive_review.md`**: Comprehensive UI/UX guidelines, responsive design patterns, platform-adaptive components, accessibility best practices
+- **`feature_overview.md`**: Complete catalog of features and capabilities
 
 ### Architecture & Design
 
-- **`docs/architecture_details.md`**: High-level architecture diagrams, principles, and state management flow
-- **`docs/clean_architecture.md`**: Practical guide with layer responsibilities, examples, and review checklist
-- **`docs/solid_principles.md`**: Detailed SOLID principles with codebase examples
-- **`docs/dry_principles.md`**: DRY consolidations and patterns
+- **`architecture_details.md`**: High-level architecture diagrams, principles, and state management flow
+- **`clean_architecture.md`**: Practical guide with layer responsibilities, examples, and review checklist
+- **`solid_principles.md`**: Detailed SOLID principles with codebase examples
+- **`dry_principles.md`**: DRY consolidations and patterns
 
 ### Development Guides
 
-- **`docs/compile_time_safety.md`**: Complete guide to type-safe BLoC/Cubit patterns
-- **`docs/flutter_best_practices_review.md`**: Best practices audit with action checklist
-- **`docs/validation_scripts.md`**: Automated validation scripts and their purposes
+- **`compile_time_safety.md`**: Complete guide to type-safe BLoC/Cubit patterns
+- **`flutter_best_practices_review.md`**: Best practices audit with action checklist
+- **`validation_scripts.md`**: Automated validation scripts and their purposes
 
 ### Platform-Specific
 
-- **`docs/universal_links/`**: Universal links setup
-- **`docs/figma/...`**: Figma integration guides
-- **`docs/offline_first/`**: Offline-first architecture patterns
+- **`universal_links/`**: Universal links setup
+- **`figma/`**: Figma integration guides
+- **`offline_first/`**: Offline-first architecture patterns
 
 Stay disciplined with the guardrails, keep tests deterministic, and reach for shared services before adding new singletons. Welcome to the team!
