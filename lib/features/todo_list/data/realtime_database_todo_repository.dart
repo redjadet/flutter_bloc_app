@@ -146,6 +146,18 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
         return onFailureFallback();
       }
       rethrow;
+    } catch (error, stackTrace) {
+      // Catch any other errors (e.g. TypeError from Firebase SDK exception
+      // conversion when platform exceptions have unexpected formats)
+      AppLogger.error(
+        'RealtimeDatabaseTodoRepository.$operation failed with unexpected error',
+        error,
+        stackTrace,
+      );
+      if (onFailureFallback != null) {
+        return onFailureFallback();
+      }
+      rethrow;
     }
   }
 
