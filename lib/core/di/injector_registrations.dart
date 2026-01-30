@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/core/di/register_profile_services.dart';
 import 'package:flutter_bloc_app/core/di/register_remote_config_services.dart';
 import 'package:flutter_bloc_app/core/di/register_search_services.dart';
 import 'package:flutter_bloc_app/core/di/register_todo_services.dart';
+import 'package:flutter_bloc_app/core/di/register_walletconnect_auth_services.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/deeplink/data/app_links_deep_link_service.dart';
@@ -49,6 +50,7 @@ Future<void> registerAllDependencies() async {
   registerSearchServices();
   registerTodoServices();
   registerGenUiServices();
+  registerWalletConnectAuthServices();
   _registerUtilityServices();
   _registerSyncServices();
 }

@@ -902,6 +902,12 @@ abstract class AppLocalizations {
   /// **'Open Todo List'**
   String get openTodoTooltip;
 
+  /// Tooltip for navigating to the WalletConnect Auth feature
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Wallet'**
+  String get openWalletconnectAuthTooltip;
+
   /// Title for the AI chat page
   ///
   /// In en, this message translates to:
@@ -2228,6 +2234,12 @@ abstract class AppLocalizations {
   /// **'Scapes Demo'**
   String get exampleScapesButton;
 
+  /// Button label for opening the WalletConnect Auth demo from the example page
+  ///
+  /// In en, this message translates to:
+  /// **'WalletConnect Auth (Demo)'**
+  String get exampleWalletconnectAuthButton;
+
   /// Title for the scapes page
   ///
   /// In en, this message translates to:
@@ -2305,6 +2317,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'GEMINI_API_KEY not configured. Please add it to secrets.json or use --dart-define=GEMINI_API_KEY=...'**
   String get genuiDemoNoApiKey;
+
+  /// Title for the WalletConnect authentication page
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Wallet'**
+  String get walletconnectAuthTitle;
+
+  /// Label for the button that initiates wallet connection
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Wallet'**
+  String get connectWalletButton;
+
+  /// Label for displaying the wallet address
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet Address'**
+  String get walletAddress;
+
+  /// Label for the button that links wallet to Firebase Auth account
+  ///
+  /// In en, this message translates to:
+  /// **'Link to Account'**
+  String get linkToFirebase;
+
+  /// Label for the button that disconnects the wallet
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get disconnectWallet;
+
+  /// Message shown when wallet is successfully connected
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet Connected'**
+  String get walletConnected;
+
+  /// Message shown when wallet is successfully linked to Firebase Auth account
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet Linked to Account'**
+  String get walletLinked;
+
+  /// Error message shown when wallet connection fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to connect wallet'**
+  String get walletConnectError;
+
+  /// Error message shown when linking wallet to account fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to link wallet to account'**
+  String get walletLinkError;
 }
 
 class _AppLocalizationsDelegate

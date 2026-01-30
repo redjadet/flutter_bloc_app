@@ -71,4 +71,7 @@ class AppRoutes {
 
   static const genuiDemo = 'genui-demo';
   static const genuiDemoPath = '/genui-demo';
+
+  static const walletconnectAuth = 'walletconnect-auth';
+  static const walletconnectAuthPath = '/walletconnect-auth';
 }

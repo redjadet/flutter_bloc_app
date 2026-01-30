@@ -9,6 +9,8 @@ This document lists feature modules with entry points and notes. It is intended 
 - [UI/UX Guidelines](ui_ux_responsive_review.md)
 - [Developer Guide](new_developer_guide.md)
 - [Code Quality](CODE_QUALITY.md)
+- [WalletConnect Auth Status](walletconnect_auth_status.md) – Demo feature status and Firebase setup
+- [Firebase UI Auth overflow fix](firebase_ui_auth_overflow_fix.md) – Profile screen display name overflow (e.g. after linking wallet)
 
 ## Feature Catalog
 
@@ -28,6 +30,7 @@ This document lists feature modules with entry points and notes. It is intended 
 | Library Demo | `lib/features/library_demo/` | Figma-inspired UI showcase. |
 | Markdown Editor | `lib/app/router/deferred_pages/markdown_editor_page.dart` | Deferred feature with preview/rendering. |
 | Whiteboard | `lib/features/example/` | CustomPainter drawing demo. |
+| WalletConnect Auth | **Example page** → “WalletConnect Auth (Demo)” button; route `/walletconnect-auth`. Code: `lib/features/walletconnect_auth/` | Demo: connect wallet (mock), link to Firebase Auth, store in Firestore. See [WalletConnect Auth Status](walletconnect_auth_status.md) for Firebase setup. |
 
 ## Cross-Cutting Modules
 
@@ -45,5 +48,6 @@ Some modules require platform keys or API access:
 - Chat requires a Hugging Face API key.
 - GenUI Demo requires a Google Gemini API key (`GEMINI_API_KEY`).
 - Maps require Google Maps API keys (Android/iOS).
+- WalletConnect Auth requires a WalletConnect project ID (configured in `WalletConnectService`).
 
 See [Security & Secrets](security_and_secrets.md) for setup details.

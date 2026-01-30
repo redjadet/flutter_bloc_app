@@ -55,6 +55,8 @@ class AppMessage extends StatelessWidget {
                     color: textColor,
                   ),
                   textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: context.responsiveGapS),
               ],
@@ -62,6 +64,8 @@ class AppMessage extends StatelessWidget {
                 message,
                 style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
                 textAlign: TextAlign.center,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
               ),
               if (actions != null && actions!.isNotEmpty) ...<Widget>[
                 SizedBox(height: context.responsiveGapM),

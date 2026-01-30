@@ -710,6 +710,10 @@
   "@openTodoTooltip": {
     "description": "Tooltip para navegar a la función Lista de Tareas"
   },
+  "openWalletconnectAuthTooltip": "Conectar billetera",
+  "@openWalletconnectAuthTooltip": {
+    "description": "Tooltip for navigating to the WalletConnect Auth feature"
+  },
   "exampleTodoListButton": "Todo List Demo",
   "@exampleTodoListButton": {
     "description": "Button label for opening the todo list demo"
@@ -1042,6 +1046,10 @@
   "@exampleScapesButton": {
     "description": "Button label for opening the scapes demo"
   },
+  "exampleWalletconnectAuthButton": "WalletConnect Auth (Demo)",
+  "@exampleWalletconnectAuthButton": {
+    "description": "Button label for opening the WalletConnect Auth demo from the example page"
+  },
   "scapesPageTitle": "Library / Scapes",
   "@scapesPageTitle": {
     "description": "Title for the scapes page"
@@ -1105,5 +1113,41 @@
   "openGenuiDemoTooltip": "Demo GenUI",
   "@openGenuiDemoTooltip": {
     "description": "Tooltip for navigating to the GenUI demo feature"
+  },
+  "walletconnectAuthTitle": "Conectar billetera",
+  "@walletconnectAuthTitle": {
+    "description": "Title for the WalletConnect authentication page"
+  },
+  "connectWalletButton": "Conectar billetera",
+  "@connectWalletButton": {
+    "description": "Label for the button that initiates wallet connection"
+  },
+  "walletAddress": "Dirección de billetera",
+  "@walletAddress": {
+    "description": "Label for displaying the wallet address"
+  },
+  "linkToFirebase": "Vincular a cuenta",
+  "@linkToFirebase": {
+    "description": "Label for the button that links wallet to Firebase Auth account"
+  },
+  "disconnectWallet": "Desconectar",
+  "@disconnectWallet": {
+    "description": "Label for the button that disconnects the wallet"
+  },
+  "walletConnected": "Billetera conectada",
+  "@walletConnected": {
+    "description": "Message shown when wallet is successfully connected"
+  },
+  "walletLinked": "Billetera vinculada a cuenta",
+  "@walletLinked": {
+    "description": "Message shown when wallet is successfully linked to Firebase Auth account"
+  },
+  "walletConnectError": "Error al conectar billetera",
+  "@walletConnectError": {
+    "description": "Error message shown when wallet connection fails"
+  },
+  "walletLinkError": "Error al vincular billetera a cuenta",
+  "@walletLinkError": {
+    "description": "Error message shown when linking wallet to account fails"
   }
 }

@@ -451,6 +451,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get openTodoTooltip => 'Ouvrir la Liste de Tâches';
 
   @override
+  String get openWalletconnectAuthTooltip => 'Connecter le portefeuille';
+
+  @override
   String get chatPageTitle => 'Discussion IA';
 
   @override
@@ -1230,6 +1233,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get exampleScapesButton => 'Scapes Demo';
 
   @override
+  String get exampleWalletconnectAuthButton => 'WalletConnect Auth (Demo)';
+
+  @override
   String get scapesPageTitle => 'Library / Scapes';
 
   @override
@@ -1277,4 +1283,31 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get genuiDemoNoApiKey =>
       'GEMINI_API_KEY non configuré. Veuillez l\'ajouter à secrets.json ou utiliser --dart-define=GEMINI_API_KEY=...';
+
+  @override
+  String get walletconnectAuthTitle => 'Connecter le portefeuille';
+
+  @override
+  String get connectWalletButton => 'Connecter le portefeuille';
+
+  @override
+  String get walletAddress => 'Adresse du portefeuille';
+
+  @override
+  String get linkToFirebase => 'Lier au compte';
+
+  @override
+  String get disconnectWallet => 'Déconnecter';
+
+  @override
+  String get walletConnected => 'Portefeuille connecté';
+
+  @override
+  String get walletLinked => 'Portefeuille lié au compte';
+
+  @override
+  String get walletConnectError => 'Échec de la connexion du portefeuille';
+
+  @override
+  String get walletLinkError => 'Échec de la liaison du portefeuille au compte';
 }

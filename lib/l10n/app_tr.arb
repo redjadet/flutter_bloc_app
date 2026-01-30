@@ -711,6 +711,10 @@
   "@openTodoTooltip": {
     "description": "Todo Listesi özelliğine gitmek için tooltip"
   },
+  "openWalletconnectAuthTooltip": "Cüzdan Bağla",
+  "@openWalletconnectAuthTooltip": {
+    "description": "Tooltip for navigating to the WalletConnect Auth feature"
+  },
   "exampleTodoListButton": "Todo List Demo",
   "@exampleTodoListButton": {
     "description": "Button label for opening the todo list demo"
@@ -1043,6 +1047,10 @@
   "@exampleScapesButton": {
     "description": "Button label for opening the scapes demo"
   },
+  "exampleWalletconnectAuthButton": "WalletConnect Auth (Demo)",
+  "@exampleWalletconnectAuthButton": {
+    "description": "Button label for opening the WalletConnect Auth demo from the example page"
+  },
   "scapesPageTitle": "Library / Scapes",
   "@scapesPageTitle": {
     "description": "Title for the scapes page"
@@ -1106,5 +1114,41 @@
   "openGenuiDemoTooltip": "GenUI Demo",
   "@openGenuiDemoTooltip": {
     "description": "Tooltip for navigating to the GenUI demo feature"
+  },
+  "walletconnectAuthTitle": "Cüzdan Bağla",
+  "@walletconnectAuthTitle": {
+    "description": "Title for the WalletConnect authentication page"
+  },
+  "connectWalletButton": "Cüzdan Bağla",
+  "@connectWalletButton": {
+    "description": "Label for the button that initiates wallet connection"
+  },
+  "walletAddress": "Cüzdan Adresi",
+  "@walletAddress": {
+    "description": "Label for displaying the wallet address"
+  },
+  "linkToFirebase": "Hesaba Bağla",
+  "@linkToFirebase": {
+    "description": "Label for the button that links wallet to Firebase Auth account"
+  },
+  "disconnectWallet": "Bağlantıyı Kes",
+  "@disconnectWallet": {
+    "description": "Label for the button that disconnects the wallet"
+  },
+  "walletConnected": "Cüzdan Bağlandı",
+  "@walletConnected": {
+    "description": "Message shown when wallet is successfully connected"
+  },
+  "walletLinked": "Cüzdan Hesaba Bağlandı",
+  "@walletLinked": {
+    "description": "Message shown when wallet is successfully linked to Firebase Auth account"
+  },
+  "walletConnectError": "Cüzdan bağlantısı başarısız",
+  "@walletConnectError": {
+    "description": "Error message shown when wallet connection fails"
+  },
+  "walletLinkError": "Cüzdan hesaba bağlanamadı",
+  "@walletLinkError": {
+    "description": "Error message shown when linking wallet to account fails"
   }
 }

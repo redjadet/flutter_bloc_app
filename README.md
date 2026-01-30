@@ -38,6 +38,7 @@ This codebase focuses on maintainability, correctness, and performance:
 - WebSocket demo with reconnect logic
 - Search, profile, and todo list features
 - Charts, markdown editor, and whiteboard samples
+- WalletConnect Auth demo (Example page): connect wallet, link to Firebase; see [WalletConnect Auth Status](docs/walletconnect_auth_status.md)
 
 For entry points and module details, see [Feature Overview](docs/feature_overview.md).
 

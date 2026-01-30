@@ -448,6 +448,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get openTodoTooltip => 'Todo-Liste öffnen';
 
   @override
+  String get openWalletconnectAuthTooltip => 'Wallet verbinden';
+
+  @override
   String get chatPageTitle => 'KI-Chat';
 
   @override
@@ -1227,6 +1230,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get exampleScapesButton => 'Scapes Demo';
 
   @override
+  String get exampleWalletconnectAuthButton => 'WalletConnect Auth (Demo)';
+
+  @override
   String get scapesPageTitle => 'Library / Scapes';
 
   @override
@@ -1274,4 +1280,32 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get genuiDemoNoApiKey =>
       'GEMINI_API_KEY nicht konfiguriert. Bitte fügen Sie es zu secrets.json hinzu oder verwenden Sie --dart-define=GEMINI_API_KEY=...';
+
+  @override
+  String get walletconnectAuthTitle => 'Wallet verbinden';
+
+  @override
+  String get connectWalletButton => 'Wallet verbinden';
+
+  @override
+  String get walletAddress => 'Wallet-Adresse';
+
+  @override
+  String get linkToFirebase => 'Mit Konto verknüpfen';
+
+  @override
+  String get disconnectWallet => 'Trennen';
+
+  @override
+  String get walletConnected => 'Wallet verbunden';
+
+  @override
+  String get walletLinked => 'Wallet mit Konto verknüpft';
+
+  @override
+  String get walletConnectError => 'Wallet-Verbindung fehlgeschlagen';
+
+  @override
+  String get walletLinkError =>
+      'Wallet konnte nicht mit Konto verknüpft werden';
 }

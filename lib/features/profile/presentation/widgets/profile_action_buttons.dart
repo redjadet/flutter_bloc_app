@@ -76,6 +76,8 @@ class _ProfileButton extends StatelessWidget {
             fontSize: 13, // Match Figma: fontSize 13
             color: foregroundColor,
           ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );
