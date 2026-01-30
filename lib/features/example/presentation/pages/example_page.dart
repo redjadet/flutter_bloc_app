@@ -147,6 +147,8 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenLoggedOut: () => context.pushNamed(AppRoutes.loggedOut),
         onOpenLibraryDemo: () => context.pushNamed(AppRoutes.libraryDemo),
         onOpenScapes: () => context.pushNamed(AppRoutes.scapes),
+        onOpenWalletconnectAuth: () =>
+            context.pushNamed(AppRoutes.walletconnectAuth),
         onRunIsolates: _isRunningIsolates ? null : _runIsolateSamples,
         isRunningIsolates: _isRunningIsolates,
         isolateError: _isolateError,

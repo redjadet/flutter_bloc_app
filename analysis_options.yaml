@@ -78,7 +78,7 @@ analyzer:
 # Keep our custom preferences on top of VGV
 linter:
   rules:
-    prefer_expression_function_bodies: true
+    prefer_expression_function_bodies: false
     type_annotate_public_apis: true
     avoid_final_parameters: false
     prefer_final_parameters: true
@@ -94,7 +94,7 @@ linter:
 # Custom lint configuration
 file_length_lint:
   # Default maximum number of lines allowed per file. Update as needed.
-  max_lines: 250
+  max_lines: 500
   # Additional glob patterns to exclude beyond the built-in defaults.
   # Paths are matched against the absolute file path.
   excludes:

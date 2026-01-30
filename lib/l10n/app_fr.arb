@@ -710,6 +710,10 @@
   "@openTodoTooltip": {
     "description": "Tooltip pour naviguer vers la fonctionnalité Liste de Tâches"
   },
+  "openWalletconnectAuthTooltip": "Connecter le portefeuille",
+  "@openWalletconnectAuthTooltip": {
+    "description": "Tooltip for navigating to the WalletConnect Auth feature"
+  },
   "exampleTodoListButton": "Todo List Demo",
   "@exampleTodoListButton": {
     "description": "Button label for opening the todo list demo"
@@ -1042,6 +1046,10 @@
   "@exampleScapesButton": {
     "description": "Button label for opening the scapes demo"
   },
+  "exampleWalletconnectAuthButton": "WalletConnect Auth (Demo)",
+  "@exampleWalletconnectAuthButton": {
+    "description": "Button label for opening the WalletConnect Auth demo from the example page"
+  },
   "scapesPageTitle": "Library / Scapes",
   "@scapesPageTitle": {
     "description": "Title for the scapes page"
@@ -1105,5 +1113,41 @@
   "openGenuiDemoTooltip": "Démo GenUI",
   "@openGenuiDemoTooltip": {
     "description": "Tooltip for navigating to the GenUI demo feature"
+  },
+  "walletconnectAuthTitle": "Connecter le portefeuille",
+  "@walletconnectAuthTitle": {
+    "description": "Title for the WalletConnect authentication page"
+  },
+  "connectWalletButton": "Connecter le portefeuille",
+  "@connectWalletButton": {
+    "description": "Label for the button that initiates wallet connection"
+  },
+  "walletAddress": "Adresse du portefeuille",
+  "@walletAddress": {
+    "description": "Label for displaying the wallet address"
+  },
+  "linkToFirebase": "Lier au compte",
+  "@linkToFirebase": {
+    "description": "Label for the button that links wallet to Firebase Auth account"
+  },
+  "disconnectWallet": "Déconnecter",
+  "@disconnectWallet": {
+    "description": "Label for the button that disconnects the wallet"
+  },
+  "walletConnected": "Portefeuille connecté",
+  "@walletConnected": {
+    "description": "Message shown when wallet is successfully connected"
+  },
+  "walletLinked": "Portefeuille lié au compte",
+  "@walletLinked": {
+    "description": "Message shown when wallet is successfully linked to Firebase Auth account"
+  },
+  "walletConnectError": "Échec de la connexion du portefeuille",
+  "@walletConnectError": {
+    "description": "Error message shown when wallet connection fails"
+  },
+  "walletLinkError": "Échec de la liaison du portefeuille au compte",
+  "@walletLinkError": {
+    "description": "Error message shown when linking wallet to account fails"
   }
 }

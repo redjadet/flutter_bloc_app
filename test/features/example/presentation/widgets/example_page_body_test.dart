@@ -36,6 +36,7 @@ void main() {
             onOpenChatList: () {},
             onOpenLibraryDemo: () {},
             onOpenScapes: () {},
+            onOpenWalletconnectAuth: () {},
           ),
         ),
       );

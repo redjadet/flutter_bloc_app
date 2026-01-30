@@ -446,6 +446,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get openTodoTooltip => 'Abrir Lista de Tareas';
 
   @override
+  String get openWalletconnectAuthTooltip => 'Conectar billetera';
+
+  @override
   String get chatPageTitle => 'Chat con IA';
 
   @override
@@ -1220,6 +1223,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get exampleScapesButton => 'Scapes Demo';
 
   @override
+  String get exampleWalletconnectAuthButton => 'WalletConnect Auth (Demo)';
+
+  @override
   String get scapesPageTitle => 'Library / Scapes';
 
   @override
@@ -1266,4 +1272,31 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get genuiDemoNoApiKey =>
       'GEMINI_API_KEY no configurado. Por favor, agréguelo a secrets.json o use --dart-define=GEMINI_API_KEY=...';
+
+  @override
+  String get walletconnectAuthTitle => 'Conectar billetera';
+
+  @override
+  String get connectWalletButton => 'Conectar billetera';
+
+  @override
+  String get walletAddress => 'Dirección de billetera';
+
+  @override
+  String get linkToFirebase => 'Vincular a cuenta';
+
+  @override
+  String get disconnectWallet => 'Desconectar';
+
+  @override
+  String get walletConnected => 'Billetera conectada';
+
+  @override
+  String get walletLinked => 'Billetera vinculada a cuenta';
+
+  @override
+  String get walletConnectError => 'Error al conectar billetera';
+
+  @override
+  String get walletLinkError => 'Error al vincular billetera a cuenta';
 }

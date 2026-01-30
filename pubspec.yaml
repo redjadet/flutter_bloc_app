@@ -31,6 +31,8 @@ dependencies:
   app_links: ^6.4.1
   apple_maps_flutter: ^1.4.0
   cached_network_image: ^3.4.1
+  cloud_firestore: ^6.1.2
+  cloud_functions: ^6.0.6
   collection: ^1.18.0
   connectivity_plus: ^7.0.0
   cupertino_icons: ^1.0.8
@@ -76,6 +78,7 @@ dependencies:
   responsive_framework: ^1.5.1
   shared_preferences: ^2.5.3
   skeletonizer: ^2.1.0+1
+  wallet_connect_v2: ^1.0.0
   web_socket_channel: ^3.0.3
   window_manager: ^0.5.1
 

@@ -596,6 +596,10 @@
   "@openTodoTooltip": {
     "description": "Tooltip for navigating to the Todo List feature"
   },
+  "openWalletconnectAuthTooltip": "Connect Wallet",
+  "@openWalletconnectAuthTooltip": {
+    "description": "Tooltip for navigating to the WalletConnect Auth feature"
+  },
   "chatPageTitle": "AI Chat",
   "@chatPageTitle": {
     "description": "Title for the AI chat page"
@@ -1569,6 +1573,10 @@
   "@exampleScapesButton": {
     "description": "Button label for opening the scapes demo"
   },
+  "exampleWalletconnectAuthButton": "WalletConnect Auth (Demo)",
+  "@exampleWalletconnectAuthButton": {
+    "description": "Button label for opening the WalletConnect Auth demo from the example page"
+  },
   "scapesPageTitle": "Library / Scapes",
   "@scapesPageTitle": {
     "description": "Title for the scapes page"
@@ -1628,5 +1636,41 @@
   "genuiDemoNoApiKey": "GEMINI_API_KEY not configured. Please add it to secrets.json or use --dart-define=GEMINI_API_KEY=...",
   "@genuiDemoNoApiKey": {
     "description": "Error message shown when the Gemini API key is not configured"
+  },
+  "walletconnectAuthTitle": "Connect Wallet",
+  "@walletconnectAuthTitle": {
+    "description": "Title for the WalletConnect authentication page"
+  },
+  "connectWalletButton": "Connect Wallet",
+  "@connectWalletButton": {
+    "description": "Label for the button that initiates wallet connection"
+  },
+  "walletAddress": "Wallet Address",
+  "@walletAddress": {
+    "description": "Label for displaying the wallet address"
+  },
+  "linkToFirebase": "Link to Account",
+  "@linkToFirebase": {
+    "description": "Label for the button that links wallet to Firebase Auth account"
+  },
+  "disconnectWallet": "Disconnect",
+  "@disconnectWallet": {
+    "description": "Label for the button that disconnects the wallet"
+  },
+  "walletConnected": "Wallet Connected",
+  "@walletConnected": {
+    "description": "Message shown when wallet is successfully connected"
+  },
+  "walletLinked": "Wallet Linked to Account",
+  "@walletLinked": {
+    "description": "Message shown when wallet is successfully linked to Firebase Auth account"
+  },
+  "walletConnectError": "Failed to connect wallet",
+  "@walletConnectError": {
+    "description": "Error message shown when wallet connection fails"
+  },
+  "walletLinkError": "Failed to link wallet to account",
+  "@walletLinkError": {
+    "description": "Error message shown when linking wallet to account fails"
   }
 }

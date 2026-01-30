@@ -444,6 +444,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get openTodoTooltip => 'Todo Listesi\'ni aç';
 
   @override
+  String get openWalletconnectAuthTooltip => 'Cüzdan Bağla';
+
+  @override
   String get chatPageTitle => 'Yapay Zekâ Sohbeti';
 
   @override
@@ -1209,6 +1212,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get exampleScapesButton => 'Scapes Demo';
 
   @override
+  String get exampleWalletconnectAuthButton => 'WalletConnect Auth (Demo)';
+
+  @override
   String get scapesPageTitle => 'Library / Scapes';
 
   @override
@@ -1255,4 +1261,31 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get genuiDemoNoApiKey =>
       'GEMINI_API_KEY yapılandırılmamış. Lütfen secrets.json\'a ekleyin veya --dart-define=GEMINI_API_KEY=... kullanın';
+
+  @override
+  String get walletconnectAuthTitle => 'Cüzdan Bağla';
+
+  @override
+  String get connectWalletButton => 'Cüzdan Bağla';
+
+  @override
+  String get walletAddress => 'Cüzdan Adresi';
+
+  @override
+  String get linkToFirebase => 'Hesaba Bağla';
+
+  @override
+  String get disconnectWallet => 'Bağlantıyı Kes';
+
+  @override
+  String get walletConnected => 'Cüzdan Bağlandı';
+
+  @override
+  String get walletLinked => 'Cüzdan Hesaba Bağlandı';
+
+  @override
+  String get walletConnectError => 'Cüzdan bağlantısı başarısız';
+
+  @override
+  String get walletLinkError => 'Cüzdan hesaba bağlanamadı';
 }

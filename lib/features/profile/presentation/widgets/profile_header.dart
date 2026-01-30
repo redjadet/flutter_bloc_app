@@ -92,6 +92,8 @@ class ProfileHeader extends StatelessWidget {
               height: 40.14 / 36, // Maintain aspect ratio
             ),
             textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: locationSpacing),
           // Responsive location text style
@@ -105,6 +107,8 @@ class ProfileHeader extends StatelessWidget {
               height: 15.234375 / 13, // Maintain aspect ratio
             ),
             textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
