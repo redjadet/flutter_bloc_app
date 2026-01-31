@@ -2342,6 +2342,12 @@ abstract class AppLocalizations {
   /// **'Link to Account'**
   String get linkToFirebase;
 
+  /// Label for the button that re-links the already linked wallet (e.g. refresh profile)
+  ///
+  /// In en, this message translates to:
+  /// **'Re-link to Account'**
+  String get relinkToAccount;
+
   /// Label for the button that disconnects the wallet
   ///
   /// In en, this message translates to:
@@ -2371,6 +2377,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to link wallet to account'**
   String get walletLinkError;
+
+  /// Section title for wallet user profile on connect wallet screen
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get walletProfileSection;
+
+  /// Label for off-chain balance in wallet profile
+  ///
+  /// In en, this message translates to:
+  /// **'Balance (off-chain)'**
+  String get balanceOffChain;
+
+  /// Label for on-chain balance in wallet profile
+  ///
+  /// In en, this message translates to:
+  /// **'Balance (on-chain)'**
+  String get balanceOnChain;
+
+  /// Label for rewards in wallet profile
+  ///
+  /// In en, this message translates to:
+  /// **'Rewards'**
+  String get rewards;
+
+  /// Label for last claim date in wallet profile
+  ///
+  /// In en, this message translates to:
+  /// **'Last claim'**
+  String get lastClaim;
+
+  /// Shown when user has never claimed rewards
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get lastClaimNever;
+
+  /// Label for NFTs in wallet profile
+  ///
+  /// In en, this message translates to:
+  /// **'NFTs'**
+  String get nfts;
+
+  /// Number of NFTs in wallet profile
+  ///
+  /// In en, this message translates to:
+  /// **'{count} NFT(s)'**
+  String nftsCount(int count);
 }
 
 class _AppLocalizationsDelegate

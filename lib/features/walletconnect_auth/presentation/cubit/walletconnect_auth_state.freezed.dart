@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$WalletConnectAuthState {
 
- ViewStatus get status; WalletAddress? get walletAddress; WalletAddress? get linkedWalletAddress; String? get errorMessage;
+ ViewStatus get status; WalletAddress? get walletAddress; WalletAddress? get linkedWalletAddress; WalletUserProfile? get userProfile; String? get errorMessage;
 /// Create a copy of WalletConnectAuthState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $WalletConnectAuthStateCopyWith<WalletConnectAuthState> get copyWith => _$Wallet
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WalletConnectAuthState&&(identical(other.status, status) || other.status == status)&&(identical(other.walletAddress, walletAddress) || other.walletAddress == walletAddress)&&(identical(other.linkedWalletAddress, linkedWalletAddress) || other.linkedWalletAddress == linkedWalletAddress)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WalletConnectAuthState&&(identical(other.status, status) || other.status == status)&&(identical(other.walletAddress, walletAddress) || other.walletAddress == walletAddress)&&(identical(other.linkedWalletAddress, linkedWalletAddress) || other.linkedWalletAddress == linkedWalletAddress)&&(identical(other.userProfile, userProfile) || other.userProfile == userProfile)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,walletAddress,linkedWalletAddress,errorMessage);
+int get hashCode => Object.hash(runtimeType,status,walletAddress,linkedWalletAddress,userProfile,errorMessage);
 
 @override
 String toString() {
-  return 'WalletConnectAuthState(status: $status, walletAddress: $walletAddress, linkedWalletAddress: $linkedWalletAddress, errorMessage: $errorMessage)';
+  return 'WalletConnectAuthState(status: $status, walletAddress: $walletAddress, linkedWalletAddress: $linkedWalletAddress, userProfile: $userProfile, errorMessage: $errorMessage)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $WalletConnectAuthStateCopyWith<$Res>  {
   factory $WalletConnectAuthStateCopyWith(WalletConnectAuthState value, $Res Function(WalletConnectAuthState) _then) = _$WalletConnectAuthStateCopyWithImpl;
 @useResult
 $Res call({
- ViewStatus status, WalletAddress? walletAddress, WalletAddress? linkedWalletAddress, String? errorMessage
+ ViewStatus status, WalletAddress? walletAddress, WalletAddress? linkedWalletAddress, WalletUserProfile? userProfile, String? errorMessage
 });
 
 
@@ -62,12 +62,13 @@ class _$WalletConnectAuthStateCopyWithImpl<$Res>
 
 /// Create a copy of WalletConnectAuthState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? walletAddress = freezed,Object? linkedWalletAddress = freezed,Object? errorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? walletAddress = freezed,Object? linkedWalletAddress = freezed,Object? userProfile = freezed,Object? errorMessage = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ViewStatus,walletAddress: freezed == walletAddress ? _self.walletAddress : walletAddress // ignore: cast_nullable_to_non_nullable
 as WalletAddress?,linkedWalletAddress: freezed == linkedWalletAddress ? _self.linkedWalletAddress : linkedWalletAddress // ignore: cast_nullable_to_non_nullable
-as WalletAddress?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as WalletAddress?,userProfile: freezed == userProfile ? _self.userProfile : userProfile // ignore: cast_nullable_to_non_nullable
+as WalletUserProfile?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -153,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ViewStatus status,  WalletAddress? walletAddress,  WalletAddress? linkedWalletAddress,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ViewStatus status,  WalletAddress? walletAddress,  WalletAddress? linkedWalletAddress,  WalletUserProfile? userProfile,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WalletConnectAuthState() when $default != null:
-return $default(_that.status,_that.walletAddress,_that.linkedWalletAddress,_that.errorMessage);case _:
+return $default(_that.status,_that.walletAddress,_that.linkedWalletAddress,_that.userProfile,_that.errorMessage);case _:
   return orElse();
 
 }
@@ -174,10 +175,10 @@ return $default(_that.status,_that.walletAddress,_that.linkedWalletAddress,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ViewStatus status,  WalletAddress? walletAddress,  WalletAddress? linkedWalletAddress,  String? errorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ViewStatus status,  WalletAddress? walletAddress,  WalletAddress? linkedWalletAddress,  WalletUserProfile? userProfile,  String? errorMessage)  $default,) {final _that = this;
 switch (_that) {
 case _WalletConnectAuthState():
-return $default(_that.status,_that.walletAddress,_that.linkedWalletAddress,_that.errorMessage);case _:
+return $default(_that.status,_that.walletAddress,_that.linkedWalletAddress,_that.userProfile,_that.errorMessage);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +195,10 @@ return $default(_that.status,_that.walletAddress,_that.linkedWalletAddress,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ViewStatus status,  WalletAddress? walletAddress,  WalletAddress? linkedWalletAddress,  String? errorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ViewStatus status,  WalletAddress? walletAddress,  WalletAddress? linkedWalletAddress,  WalletUserProfile? userProfile,  String? errorMessage)?  $default,) {final _that = this;
 switch (_that) {
 case _WalletConnectAuthState() when $default != null:
-return $default(_that.status,_that.walletAddress,_that.linkedWalletAddress,_that.errorMessage);case _:
+return $default(_that.status,_that.walletAddress,_that.linkedWalletAddress,_that.userProfile,_that.errorMessage);case _:
   return null;
 
 }
@@ -209,12 +210,13 @@ return $default(_that.status,_that.walletAddress,_that.linkedWalletAddress,_that
 
 
 class _WalletConnectAuthState extends WalletConnectAuthState {
-  const _WalletConnectAuthState({this.status = ViewStatus.initial, this.walletAddress, this.linkedWalletAddress, this.errorMessage}): super._();
+  const _WalletConnectAuthState({this.status = ViewStatus.initial, this.walletAddress, this.linkedWalletAddress, this.userProfile, this.errorMessage}): super._();
   
 
 @override@JsonKey() final  ViewStatus status;
 @override final  WalletAddress? walletAddress;
 @override final  WalletAddress? linkedWalletAddress;
+@override final  WalletUserProfile? userProfile;
 @override final  String? errorMessage;
 
 /// Create a copy of WalletConnectAuthState
@@ -227,16 +229,16 @@ _$WalletConnectAuthStateCopyWith<_WalletConnectAuthState> get copyWith => __$Wal
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WalletConnectAuthState&&(identical(other.status, status) || other.status == status)&&(identical(other.walletAddress, walletAddress) || other.walletAddress == walletAddress)&&(identical(other.linkedWalletAddress, linkedWalletAddress) || other.linkedWalletAddress == linkedWalletAddress)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WalletConnectAuthState&&(identical(other.status, status) || other.status == status)&&(identical(other.walletAddress, walletAddress) || other.walletAddress == walletAddress)&&(identical(other.linkedWalletAddress, linkedWalletAddress) || other.linkedWalletAddress == linkedWalletAddress)&&(identical(other.userProfile, userProfile) || other.userProfile == userProfile)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,walletAddress,linkedWalletAddress,errorMessage);
+int get hashCode => Object.hash(runtimeType,status,walletAddress,linkedWalletAddress,userProfile,errorMessage);
 
 @override
 String toString() {
-  return 'WalletConnectAuthState(status: $status, walletAddress: $walletAddress, linkedWalletAddress: $linkedWalletAddress, errorMessage: $errorMessage)';
+  return 'WalletConnectAuthState(status: $status, walletAddress: $walletAddress, linkedWalletAddress: $linkedWalletAddress, userProfile: $userProfile, errorMessage: $errorMessage)';
 }
 
 
@@ -247,7 +249,7 @@ abstract mixin class _$WalletConnectAuthStateCopyWith<$Res> implements $WalletCo
   factory _$WalletConnectAuthStateCopyWith(_WalletConnectAuthState value, $Res Function(_WalletConnectAuthState) _then) = __$WalletConnectAuthStateCopyWithImpl;
 @override @useResult
 $Res call({
- ViewStatus status, WalletAddress? walletAddress, WalletAddress? linkedWalletAddress, String? errorMessage
+ ViewStatus status, WalletAddress? walletAddress, WalletAddress? linkedWalletAddress, WalletUserProfile? userProfile, String? errorMessage
 });
 
 
@@ -264,12 +266,13 @@ class __$WalletConnectAuthStateCopyWithImpl<$Res>
 
 /// Create a copy of WalletConnectAuthState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? walletAddress = freezed,Object? linkedWalletAddress = freezed,Object? errorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? walletAddress = freezed,Object? linkedWalletAddress = freezed,Object? userProfile = freezed,Object? errorMessage = freezed,}) {
   return _then(_WalletConnectAuthState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ViewStatus,walletAddress: freezed == walletAddress ? _self.walletAddress : walletAddress // ignore: cast_nullable_to_non_nullable
 as WalletAddress?,linkedWalletAddress: freezed == linkedWalletAddress ? _self.linkedWalletAddress : linkedWalletAddress // ignore: cast_nullable_to_non_nullable
-as WalletAddress?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as WalletAddress?,userProfile: freezed == userProfile ? _self.userProfile : userProfile // ignore: cast_nullable_to_non_nullable
+as WalletUserProfile?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

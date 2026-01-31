@@ -1653,6 +1653,10 @@
   "@linkToFirebase": {
     "description": "Label for the button that links wallet to Firebase Auth account"
   },
+  "relinkToAccount": "Re-link to Account",
+  "@relinkToAccount": {
+    "description": "Label for the button that re-links the already linked wallet (e.g. refresh profile)"
+  },
   "disconnectWallet": "Disconnect",
   "@disconnectWallet": {
     "description": "Label for the button that disconnects the wallet"
@@ -1672,5 +1676,42 @@
   "walletLinkError": "Failed to link wallet to account",
   "@walletLinkError": {
     "description": "Error message shown when linking wallet to account fails"
+  },
+  "walletProfileSection": "Profile",
+  "@walletProfileSection": {
+    "description": "Section title for wallet user profile on connect wallet screen"
+  },
+  "balanceOffChain": "Balance (off-chain)",
+  "@balanceOffChain": {
+    "description": "Label for off-chain balance in wallet profile"
+  },
+  "balanceOnChain": "Balance (on-chain)",
+  "@balanceOnChain": {
+    "description": "Label for on-chain balance in wallet profile"
+  },
+  "rewards": "Rewards",
+  "@rewards": {
+    "description": "Label for rewards in wallet profile"
+  },
+  "lastClaim": "Last claim",
+  "@lastClaim": {
+    "description": "Label for last claim date in wallet profile"
+  },
+  "lastClaimNever": "Never",
+  "@lastClaimNever": {
+    "description": "Shown when user has never claimed rewards"
+  },
+  "nfts": "NFTs",
+  "@nfts": {
+    "description": "Label for NFTs in wallet profile"
+  },
+  "nftsCount": "{count} NFT(s)",
+  "@nftsCount": {
+    "description": "Number of NFTs in wallet profile",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

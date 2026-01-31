@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/cubit/walletconnect_auth_cubit.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/cubit/walletconnect_auth_state.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/widgets/connect_wallet_button.dart';
@@ -61,8 +62,9 @@ class WalletConnectAuthPage extends StatelessWidget {
                           color: colors.onErrorContainer,
                           size: context.responsiveIconSize,
                         ),
-                        onPressed: () =>
-                            context.cubit<WalletConnectAuthCubit>().clearError(),
+                        onPressed: () => context
+                            .cubit<WalletConnectAuthCubit>()
+                            .clearError(),
                       ),
                     ],
                   ),
@@ -107,6 +109,22 @@ class WalletConnectAuthPage extends StatelessWidget {
               // Linked wallet address display
               if (state.linkedWalletAddress != null) ...[
                 WalletAddressDisplay(address: state.linkedWalletAddress!),
+                SizedBox(height: context.responsiveGapM),
+                // Re-link to account (refresh Firestore profile, etc.)
+                if (state.status != ViewStatus.loading)
+                  PlatformAdaptive.outlinedButton(
+                    context: context,
+                    onPressed: () => context
+                        .cubit<WalletConnectAuthCubit>()
+                        .relinkWalletToUser(),
+                    child: Text(l10n.relinkToAccount),
+                  ),
+                SizedBox(height: context.responsiveGapL),
+              ],
+
+              // User profile (balance, rewards, NFTs) when linked
+              if (state.isLinked && state.userProfile != null) ...[
+                _WalletProfileSection(profile: state.userProfile!),
                 SizedBox(height: context.responsiveGapL),
               ],
 
@@ -116,8 +134,10 @@ class WalletConnectAuthPage extends StatelessWidget {
                 SizedBox(height: context.responsiveGapM),
               ],
 
-              // Connect Wallet button
-              if (!state.isConnected && !state.isConnecting) ...[
+              // Connect Wallet button (hidden when already connected or linked)
+              if (!state.isConnected &&
+                  !state.isConnecting &&
+                  !state.isLinked) ...[
                 ConnectWalletButton(
                   onPressed: () =>
                       context.cubit<WalletConnectAuthCubit>().connectWallet(),
@@ -128,15 +148,18 @@ class WalletConnectAuthPage extends StatelessWidget {
               if (state.isConnected && !state.isLinked && !state.isLinking) ...[
                 PlatformAdaptive.outlinedButton(
                   context: context,
-                  onPressed: () =>
-                      context.cubit<WalletConnectAuthCubit>().linkWalletToUser(),
+                  onPressed: () => context
+                      .cubit<WalletConnectAuthCubit>()
+                      .linkWalletToUser(),
                   child: Text(l10n.linkToFirebase),
                 ),
                 SizedBox(height: context.responsiveGapM),
               ],
 
-              // Loading indicator
-              if (state.isConnecting || state.isLinking) ...[
+              // Loading indicator (connecting, linking, or re-linking)
+              if (state.isConnecting ||
+                  state.isLinking ||
+                  (state.isLinked && state.status == ViewStatus.loading)) ...[
                 Center(
                   child: Padding(
                     padding: context.responsiveCardPaddingInsets,
@@ -162,6 +185,119 @@ class WalletConnectAuthPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Displays wallet user profile (balance, rewards, last claim, NFTs) on the connect wallet screen.
+class _WalletProfileSection extends StatelessWidget {
+  const _WalletProfileSection({required this.profile});
+
+  final WalletUserProfile profile;
+
+  @override
+  Widget build(final BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+    final l10n = context.l10n;
+    final material = MaterialLocalizations.of(context);
+
+    final dateText = profile.lastClaim != null
+        ? material.formatShortDate(profile.lastClaim!)
+        : l10n.lastClaimNever;
+
+    return Container(
+      padding: context.responsiveCardPaddingInsets,
+      decoration: BoxDecoration(
+        color: colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(context.responsiveCardRadius),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            l10n.walletProfileSection,
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: colors.onSurface,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: context.responsiveGapM),
+          _ProfileRow(
+            label: l10n.balanceOffChain,
+            value: profile.balanceOffChain.toStringAsFixed(2),
+            theme: theme,
+            colors: colors,
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _ProfileRow(
+            label: l10n.balanceOnChain,
+            value: profile.balanceOnChain.toStringAsFixed(2),
+            theme: theme,
+            colors: colors,
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _ProfileRow(
+            label: l10n.rewards,
+            value: profile.rewards.toStringAsFixed(2),
+            theme: theme,
+            colors: colors,
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _ProfileRow(
+            label: l10n.lastClaim,
+            value: dateText,
+            theme: theme,
+            colors: colors,
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _ProfileRow(
+            label: l10n.nfts,
+            value: l10n.nftsCount(profile.nfts.length),
+            theme: theme,
+            colors: colors,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProfileRow extends StatelessWidget {
+  const _ProfileRow({
+    required this.label,
+    required this.value,
+    required this.theme,
+    required this.colors,
+  });
+
+  final String label;
+  final String value;
+  final ThemeData theme;
+  final ColorScheme colors;
+
+  @override
+  Widget build(final BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Text(
+            label,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colors.onSurfaceVariant,
+            ),
+          ),
+        ),
+        if (value.isNotEmpty)
+          Text(
+            value,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colors.onSurface,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+      ],
     );
   }
 }

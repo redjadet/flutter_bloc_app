@@ -1297,6 +1297,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get linkToFirebase => 'Lier au compte';
 
   @override
+  String get relinkToAccount => 'Relier au compte';
+
+  @override
   String get disconnectWallet => 'Déconnecter';
 
   @override
@@ -1310,4 +1313,30 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get walletLinkError => 'Échec de la liaison du portefeuille au compte';
+
+  @override
+  String get walletProfileSection => 'Profil';
+
+  @override
+  String get balanceOffChain => 'Solde (hors chaîne)';
+
+  @override
+  String get balanceOnChain => 'Solde (sur chaîne)';
+
+  @override
+  String get rewards => 'Récompenses';
+
+  @override
+  String get lastClaim => 'Dernière réclamation';
+
+  @override
+  String get lastClaimNever => 'Jamais';
+
+  @override
+  String get nfts => 'NFTs';
+
+  @override
+  String nftsCount(int count) {
+    return '$count NFT(s)';
+  }
 }

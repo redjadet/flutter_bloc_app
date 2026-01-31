@@ -32,12 +32,13 @@ The WalletConnect Auth feature provides a demo implementation for wallet-based a
 
 3. **Domain Layer**
    - ✅ `WalletAddress` - Value object with validation and truncation
-   - ✅ `WalletConnectAuthRepository` - Clean contract interface
+   - ✅ `WalletConnectAuthRepository` - Clean contract interface (including `upsertWalletUserProfile`, `getWalletUserProfile`)
+   - ✅ `WalletUserProfile` / `NftMetadata` - Models for wallet-keyed profile at `users/{walletAddress}`
    - ✅ `WalletConnectException` - Proper exception types
 
 4. **Data Layer**
    - ✅ `WalletConnectAuthRepositoryImpl` - Firebase integration complete
-   - ✅ Firestore storage for wallet addresses (`/users/{uid}/walletAddress`)
+   - ✅ Firestore: **single doc per user** at `users/{uid}` (linkage + profile: walletAddress, walletAddressNormalized, connectedAt, balance, rewards, lastClaim, nfts, updatedAt)
    - ✅ Firebase Auth user creation (anonymous if needed)
    - ✅ User profile updates with wallet address
    - ✅ Error handling and logging
@@ -46,7 +47,7 @@ The WalletConnect Auth feature provides a demo implementation for wallet-based a
    - ✅ Dependency injection setup
    - ✅ Route configuration (`/walletconnect-auth`)
    - ✅ Localization (en, tr, de, fr, es)
-   - ✅ Tests (unit tests for domain, bloc tests for cubit)
+   - ✅ Tests (unit tests for domain + mapper, bloc tests for cubit, repository tests for link + profile upsert)
 
 ### ⚠️ Mock/Placeholder Implementation
 
@@ -72,7 +73,7 @@ Address displayed in UI
     ↓
 User clicks "Link to Account"
     ↓
-Wallet address stored in Firestore
+Single users/{uid} doc written (linkage + profile: walletAddress, balance, rewards, nfts, etc.)
     ↓
 Firebase Auth user profile updated
     ↓
@@ -479,13 +480,28 @@ Future<WalletAddress> connect() async {
 }
 ```
 
-### Firestore Structure
+### Firestore layout (single document per user)
+
+The app uses **one document per user** at `users/{uid}` (Firebase Auth UID). Linkage and profile fields are stored in the same document so there is no separate “wallet-keyed” doc.
+
+| Document | Key | Purpose |
+| --- | --- | --- |
+| **User (linkage + profile)** | `users/{uid}` | One doc per user: `walletAddress`, `walletAddressNormalized`, `connectedAt` (linkage) plus `balanceOffChain`, `balanceOnChain`, `rewards`, `lastClaim`, `nfts`, `updatedAt` (profile). |
+
+On **Link to Account**, the app writes/merges a single `users/{uid}` document with both linkage and default profile fields. Re-link and profile upserts also write to `users/{uid}`.
+
+### Firestore structure (fields) — `users/{userId}`
 
 ```text
-/users/{userId}/
-  walletAddress: "0x..." (string)
-  connectedAt: timestamp
-  chainId: 1 (optional, for multi-chain support)
+walletAddress: "0x..." (string, as returned by wallet)
+walletAddressNormalized: "0x..." (string, lowercase)
+connectedAt: timestamp
+balanceOffChain: number
+balanceOnChain: number
+rewards: number
+lastClaim: timestamp | null
+nfts: array of { tokenId, contractAddress, name, imageUrl? }
+updatedAt: timestamp (serverTimestamp on each write)
 ```
 
 ### Dependencies to Add
@@ -510,25 +526,17 @@ Linking creates an anonymous user when none exists.
 
 ### 2. Firestore security rules
 
-The app writes the wallet to `users/{userId}`. Rules must allow the signed-in user to write their own document.
+The app uses a single rule for `users/{userId}`: only the signed-in user (by Firebase Auth UID) can read/write their own document (linkage + profile).
 
-**Example rules** (Firebase Console → Firestore → Rules):
+**Reference rules** are in the repo: [firestore.rules](../firestore.rules). To deploy from the CLI, ensure [firebase.json](../firebase.json) includes a `firestore` target (e.g. `"firestore": { "rules": "firestore.rules" }`), then run `firebase deploy --only firestore:rules`. Example:
 
 ```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    // Allow authenticated users to read/write their own user document
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-  }
+match /users/{userId} {
+  allow read, write: if request.auth != null && request.auth.uid == userId;
 }
 ```
 
-Deploy rules (e.g. `firebase deploy --only firestore:rules` if you use the Firebase CLI).
-
-After enabling Anonymous auth and updating Firestore rules, “Link to Account” should succeed. The app will now show the underlying error (e.g. permission-denied or auth code) in the message if something still fails.
+After enabling Anonymous auth and deploying Firestore rules, “Link to Account” should succeed. The app will show the underlying error (e.g. permission-denied or auth code) in the message if something still fails.
 
 ## Known Limitations
 
@@ -578,3 +586,4 @@ After enabling Anonymous auth and updating Firestore rules, “Link to Account�
 ## See also
 
 - [Firebase UI Auth overflow fix](firebase_ui_auth_overflow_fix.md) – If the **profile screen** shows a RenderFlex overflow after linking a wallet (long display name), apply the fix described there.
+- **Firestore rules** – [firestore.rules](../firestore.rules) in the project root defines rules for `users/{userId}` (one doc per user: linkage + profile). [firebase.json](../firebase.json) must include a `firestore` target for `firebase deploy --only firestore:rules` to work.
