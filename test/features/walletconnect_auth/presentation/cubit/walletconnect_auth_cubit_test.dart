@@ -42,6 +42,9 @@ void main() {
       when(
         () => mockRepository.getLinkedWalletAddress(),
       ).thenAnswer((_) async => address);
+      when(
+        () => mockRepository.getWalletUserProfile(any()),
+      ).thenAnswer((_) async => null);
 
       await cubit.loadLinkedWallet();
 
@@ -124,6 +127,9 @@ void main() {
       when(
         () => mockRepository.getLinkedWalletAddress(),
       ).thenAnswer((_) async => linkedAddress);
+      when(
+        () => mockRepository.getWalletUserProfile(any()),
+      ).thenAnswer((_) async => null);
 
       await cubit.linkWalletToUser();
 
@@ -152,6 +158,67 @@ void main() {
       ).thenThrow(const WalletConnectException('Linking failed'));
 
       await cubit.linkWalletToUser();
+
+      expect(cubit.state.status, ViewStatus.error);
+      expect(cubit.state.errorMessage, isNotNull);
+    });
+  });
+
+  group('relinkWalletToUser', () {
+    test('re-links already linked wallet successfully', () async {
+      const linkedAddress = WalletAddress(
+        '0x1234567890123456789012345678901234567890',
+      );
+      when(
+        () => mockRepository.getLinkedWalletAddress(),
+      ).thenAnswer((_) async => linkedAddress);
+      when(
+        () => mockRepository.getWalletUserProfile(any()),
+      ).thenAnswer((_) async => null);
+      await cubit.loadLinkedWallet();
+
+      when(
+        () => mockRepository.linkWalletToFirebaseUser(any()),
+      ).thenAnswer((_) async {});
+      when(
+        () => mockRepository.getLinkedWalletAddress(),
+      ).thenAnswer((_) async => linkedAddress);
+      when(
+        () => mockRepository.getWalletUserProfile(any()),
+      ).thenAnswer((_) async => null);
+
+      await cubit.relinkWalletToUser();
+
+      expect(cubit.state.linkedWalletAddress, linkedAddress);
+      expect(cubit.state.status, ViewStatus.success);
+    });
+
+    test('handles error when no wallet linked', () async {
+      when(
+        () => mockRepository.getLinkedWalletAddress(),
+      ).thenAnswer((_) async => null);
+      await cubit.loadLinkedWallet();
+
+      await cubit.relinkWalletToUser();
+
+      expect(cubit.state.status, ViewStatus.error);
+      expect(cubit.state.errorMessage, contains('No wallet linked'));
+    });
+
+    test('handles re-linking error', () async {
+      const linkedAddress = WalletAddress(
+        '0x1234567890123456789012345678901234567890',
+      );
+      when(
+        () => mockRepository.getLinkedWalletAddress(),
+      ).thenAnswer((_) async => linkedAddress);
+      await cubit.loadLinkedWallet();
+
+      when(
+        () => mockRepository.linkWalletToFirebaseUser(any()),
+      ).thenThrow(const WalletConnectException('Re-link failed'));
+
+      await cubit.relinkWalletToUser();
 
       expect(cubit.state.status, ViewStatus.error);
       expect(cubit.state.errorMessage, isNotNull);

@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/data/walletconnect_auth_repository_impl.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/data/walletconnect_service.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_address.dart';
+import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/walletconnect_auth_repository.dart';
 
 /// Registers WalletConnect Auth services.
@@ -41,7 +42,9 @@ void registerWalletConnectAuthServices() {
 /// Creates a mock repository for testing or when Firebase is unavailable.
 WalletConnectAuthRepository _createMockWalletConnectAuthRepository({
   required final WalletConnectService walletConnectService,
-}) => _MockWalletConnectAuthRepository(walletConnectService: walletConnectService);
+}) => _MockWalletConnectAuthRepository(
+  walletConnectService: walletConnectService,
+);
 
 /// Mock implementation for testing.
 class _MockWalletConnectAuthRepository implements WalletConnectAuthRepository {
@@ -76,5 +79,19 @@ class _MockWalletConnectAuthRepository implements WalletConnectAuthRepository {
     }
 
     _linkedAddress = address;
+    await upsertWalletUserProfile(walletAddress);
   }
+
+  @override
+  Future<void> upsertWalletUserProfile(
+    final String walletAddress, {
+    final WalletUserProfile? profile,
+  }) async {
+    // No-op for mock
+  }
+
+  @override
+  Future<WalletUserProfile?> getWalletUserProfile(
+    final String walletAddress,
+  ) async => null;
 }

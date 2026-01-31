@@ -1275,6 +1275,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get linkToFirebase => 'Hesaba Bağla';
 
   @override
+  String get relinkToAccount => 'Hesaba Yeniden Bağla';
+
+  @override
   String get disconnectWallet => 'Bağlantıyı Kes';
 
   @override
@@ -1288,4 +1291,30 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get walletLinkError => 'Cüzdan hesaba bağlanamadı';
+
+  @override
+  String get walletProfileSection => 'Profil';
+
+  @override
+  String get balanceOffChain => 'Bakiye (zincir dışı)';
+
+  @override
+  String get balanceOnChain => 'Bakiye (zincir üzeri)';
+
+  @override
+  String get rewards => 'Ödüller';
+
+  @override
+  String get lastClaim => 'Son talep';
+
+  @override
+  String get lastClaimNever => 'Hiç';
+
+  @override
+  String get nfts => 'NFT\'ler';
+
+  @override
+  String nftsCount(int count) {
+    return '$count NFT';
+  }
 }

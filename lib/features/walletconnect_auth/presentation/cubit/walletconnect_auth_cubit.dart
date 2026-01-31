@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/walletconnect_auth_repository.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/cubit/walletconnect_auth_state.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
@@ -25,10 +26,17 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
         final linkedAddress = await _repository.getLinkedWalletAddress();
         if (isClosed) return;
 
+        WalletUserProfile? profile;
+        if (linkedAddress != null) {
+          profile = await _repository.getWalletUserProfile(linkedAddress.value);
+          if (isClosed) return;
+        }
+
         emit(
           state.copyWith(
             status: ViewStatus.success,
             linkedWalletAddress: linkedAddress,
+            userProfile: profile,
           ),
         );
       },
@@ -99,14 +107,20 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
         await _repository.linkWalletToFirebaseUser(currentAddress.value);
         if (isClosed) return;
 
-        // Reload linked address
         final linkedAddress = await _repository.getLinkedWalletAddress();
         if (isClosed) return;
+
+        WalletUserProfile? profile;
+        if (linkedAddress != null) {
+          profile = await _repository.getWalletUserProfile(linkedAddress.value);
+          if (isClosed) return;
+        }
 
         emit(
           state.copyWith(
             status: ViewStatus.success,
             linkedWalletAddress: linkedAddress,
+            userProfile: profile,
             errorMessage: null,
           ),
         );
@@ -152,6 +166,59 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
         );
       },
       logContext: 'WalletConnectAuthCubit.disconnectWallet',
+    );
+  }
+
+  /// Re-links the already-linked wallet to the Firebase Auth user (e.g. to refresh profile doc).
+  Future<void> relinkWalletToUser() async {
+    final linkedAddress = state.linkedWalletAddress;
+    if (linkedAddress == null) {
+      if (isClosed) return;
+      emit(
+        state.copyWith(
+          status: ViewStatus.error,
+          errorMessage: 'No wallet linked. Connect and link first.',
+        ),
+      );
+      return;
+    }
+
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: () async {
+        if (isClosed) return;
+        emit(state.copyWith(status: ViewStatus.loading, errorMessage: null));
+
+        await _repository.linkWalletToFirebaseUser(linkedAddress.value);
+        if (isClosed) return;
+
+        final updated = await _repository.getLinkedWalletAddress();
+        if (isClosed) return;
+
+        WalletUserProfile? profile;
+        if (updated != null) {
+          profile = await _repository.getWalletUserProfile(updated.value);
+          if (isClosed) return;
+        }
+
+        emit(
+          state.copyWith(
+            status: ViewStatus.success,
+            linkedWalletAddress: updated,
+            userProfile: profile,
+            errorMessage: null,
+          ),
+        );
+      },
+      onError: (final message) {
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            status: ViewStatus.error,
+            errorMessage: message,
+          ),
+        );
+      },
+      logContext: 'WalletConnectAuthCubit.relinkWalletToUser',
     );
   }
 

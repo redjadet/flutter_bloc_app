@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_address.dart';
+import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
 
 /// Repository contract for WalletConnect authentication.
 ///
@@ -26,6 +27,22 @@ abstract class WalletConnectAuthRepository {
   ///
   /// Does not sign out the Firebase Auth user.
   Future<void> disconnectWallet();
+
+  /// Creates or updates the wallet-keyed user profile at Firestore `users/{walletAddress}`.
+  ///
+  /// If [profile] is null, writes defaults (zero balances, empty rewards, null lastClaim,
+  /// empty nfts). Always sets updatedAt to server timestamp.
+  ///
+  /// Throws [WalletConnectException] if the write fails.
+  Future<void> upsertWalletUserProfile(
+    final String walletAddress, {
+    final WalletUserProfile? profile,
+  });
+
+  /// Retrieves the wallet-keyed user profile for [walletAddress].
+  ///
+  /// Returns `null` if the document does not exist or is invalid.
+  Future<WalletUserProfile?> getWalletUserProfile(final String walletAddress);
 }
 
 /// Exception thrown by WalletConnect operations.

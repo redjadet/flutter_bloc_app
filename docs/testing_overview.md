@@ -67,6 +67,12 @@ This document summarizes test coverage, test types, testing patterns, and common
 - `FakeTimerService().tick(n)` for time-dependent tests
 - `FakeNetworkStatusService` for connectivity testing
 
+### Firestore-Backed Repository Tests
+
+- Mock `FirebaseFirestore`, `CollectionReference`, and `DocumentReference` (or use fakes) to verify writes and reads without hitting Firestore.
+- Record `set()` / `get()` arguments to assert document IDs and payloads (e.g. auth linkage doc vs wallet profile doc).
+- Example: `test/features/walletconnect_auth/data/walletconnect_auth_repository_impl_test.dart`.
+
 ## Common Commands
 
 ```bash

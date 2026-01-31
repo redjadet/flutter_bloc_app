@@ -1131,6 +1131,10 @@
   "@linkToFirebase": {
     "description": "Label for the button that links wallet to Firebase Auth account"
   },
+  "relinkToAccount": "Hesaba Yeniden Bağla",
+  "@relinkToAccount": {
+    "description": "Label for the button that re-links the already linked wallet (e.g. refresh profile)"
+  },
   "disconnectWallet": "Bağlantıyı Kes",
   "@disconnectWallet": {
     "description": "Label for the button that disconnects the wallet"
@@ -1150,5 +1154,42 @@
   "walletLinkError": "Cüzdan hesaba bağlanamadı",
   "@walletLinkError": {
     "description": "Error message shown when linking wallet to account fails"
+  },
+  "walletProfileSection": "Profil",
+  "@walletProfileSection": {
+    "description": "Section title for wallet user profile on connect wallet screen"
+  },
+  "balanceOffChain": "Bakiye (zincir dışı)",
+  "@balanceOffChain": {
+    "description": "Label for off-chain balance in wallet profile"
+  },
+  "balanceOnChain": "Bakiye (zincir üzeri)",
+  "@balanceOnChain": {
+    "description": "Label for on-chain balance in wallet profile"
+  },
+  "rewards": "Ödüller",
+  "@rewards": {
+    "description": "Label for rewards in wallet profile"
+  },
+  "lastClaim": "Son talep",
+  "@lastClaim": {
+    "description": "Label for last claim date in wallet profile"
+  },
+  "lastClaimNever": "Hiç",
+  "@lastClaimNever": {
+    "description": "Shown when user has never claimed rewards"
+  },
+  "nfts": "NFT'ler",
+  "@nfts": {
+    "description": "Label for NFTs in wallet profile"
+  },
+  "nftsCount": "{count} NFT",
+  "@nftsCount": {
+    "description": "Number of NFTs in wallet profile",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

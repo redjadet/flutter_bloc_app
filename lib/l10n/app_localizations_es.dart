@@ -1286,6 +1286,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get linkToFirebase => 'Vincular a cuenta';
 
   @override
+  String get relinkToAccount => 'Volver a vincular a cuenta';
+
+  @override
   String get disconnectWallet => 'Desconectar';
 
   @override
@@ -1299,4 +1302,30 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get walletLinkError => 'Error al vincular billetera a cuenta';
+
+  @override
+  String get walletProfileSection => 'Perfil';
+
+  @override
+  String get balanceOffChain => 'Saldo (fuera de cadena)';
+
+  @override
+  String get balanceOnChain => 'Saldo (en cadena)';
+
+  @override
+  String get rewards => 'Recompensas';
+
+  @override
+  String get lastClaim => 'Última reclamación';
+
+  @override
+  String get lastClaimNever => 'Nunca';
+
+  @override
+  String get nfts => 'NFTs';
+
+  @override
+  String nftsCount(int count) {
+    return '$count NFT(s)';
+  }
 }

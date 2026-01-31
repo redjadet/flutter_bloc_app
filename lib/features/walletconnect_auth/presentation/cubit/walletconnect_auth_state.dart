@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_address.dart';
+import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -10,6 +11,7 @@ abstract class WalletConnectAuthState with _$WalletConnectAuthState {
     @Default(ViewStatus.initial) final ViewStatus status,
     final WalletAddress? walletAddress,
     final WalletAddress? linkedWalletAddress,
+    final WalletUserProfile? userProfile,
     final String? errorMessage,
   }) = _WalletConnectAuthState;
 
