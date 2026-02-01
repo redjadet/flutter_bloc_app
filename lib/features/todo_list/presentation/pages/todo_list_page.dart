@@ -13,7 +13,7 @@ import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_li
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_search_field.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_sort_bar.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_stats_widget.dart';
-import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_sync_banner.dart';
+// import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_sync_banner.dart'; // Hidden per user request
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
@@ -89,7 +89,8 @@ class _TodoListBody extends StatelessWidget {
                 : context.responsiveGapS;
 
             final List<Widget> headerChildren = [
-              const TodoSyncBanner(),
+              // Sync banner hidden per user request
+              // const TodoSyncBanner(),
               const TodoStatsWidget(),
               if (data.items.isNotEmpty) ...[
                 SizedBox(height: gapM),

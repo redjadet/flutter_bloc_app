@@ -49,3 +49,20 @@ android {
 flutter {
     source = "../.."
 }
+
+afterEvaluate {
+    tasks.named("assembleDebug").configure {
+        doLast {
+            val sourceApk =
+                layout.buildDirectory.file("outputs/flutter-apk/app-debug.apk").get().asFile
+            if (sourceApk.exists()) {
+                val destApk =
+                    rootProject.projectDir
+                        .resolve("../build/app/outputs/flutter-apk/app-debug.apk")
+                        .canonicalFile
+                destApk.parentFile.mkdirs()
+                sourceApk.copyTo(destApk, overwrite = true)
+            }
+        }
+    }
+}

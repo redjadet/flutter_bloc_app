@@ -65,45 +65,4 @@ platform :android do
       skip_upload_screenshots: true,
     )
   end
-  desc 'Build APK and upload to Firebase App Distribution'
-  lane :firebase_distribute do |options|
-    release_notes = options[:release_notes] || ENV['FIREBASE_RELEASE_NOTES'] || "Pre-release Android - " + Time.now.strftime('%Y-%m-%d %H:%M')
-    groups = options[:groups] || ENV['FIREBASE_GROUPS']
-    testers = options[:testers] || ENV['FIREBASE_TESTERS']
-    skip_build = options[:skip_build] || (ENV['FIREBASE_SKIP_BUILD'] == 'true')
-    use_apk = options.fetch(:apk, ENV['FIREBASE_USE_APK'] != 'false')
-
-    project_root = File.expand_path('../..', __dir__)
-    Dir.chdir(project_root) do
-      unless skip_build
-        sh('flutter', 'pub', 'get')
-        sh('dart', 'run', 'tool/prepare_release.dart')
-        if use_apk
-          sh('flutter', 'build', 'apk', '--release')
-        else
-          invoke(:build)
-        end
-      end
-
-      binary = if use_apk
-                 apk = File.join(project_root, 'build/app/outputs/flutter-apk/app-release.apk')
-                 UI.user_error!("No APK found at \#{apk}") unless File.exist?(apk)
-                 apk
-               else
-                 aab = File.join(project_root, 'build/app/outputs/bundle/release/app-release.aab')
-                 UI.user_error!("No AAB found at \#{aab}") unless File.exist?(aab)
-                 aab
-               end
-
-      firebase_args = ['firebase', 'appdistribution:distribute', binary,
-        '--app', ENV.fetch('FIREBASE_ANDROID_APP_ID', '1:473097776453:android:80db6a1c2b04bfc0bd222c'),
-        '--release-notes', release_notes]
-      firebase_args.concat(['--groups', groups]) if groups && !groups.empty?
-      firebase_args.concat(['--testers', testers]) if testers && !testers.empty?
-
-      sh(*firebase_args)
-    end
-    UI.success('Firebase App Distribution upload complete. Check Firebase Console.')
-  end
-
 end

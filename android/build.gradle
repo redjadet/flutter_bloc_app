@@ -1,0 +1,34 @@
+// Fix "Namespace not specified" and manifest package attribute for plugin modules (e.g. wallet_connect_v2) when using AGP 8+.
+// See docs/firebase_app_distribution.md § Namespace not specified (Android).
+subprojects { subproject ->
+    subproject.afterEvaluate {
+        if (subproject.plugins.hasPlugin("com.android.library")) {
+            subproject.android {
+                if (namespace == null || namespace.isEmpty()) {
+                    namespace = (subproject.group ?: "unknown").toString() + ".android"
+                }
+                // wallet_connect_v2: AGP 8+ rejects package in AndroidManifest; set namespace in build.gradle to match.
+                if (subproject.name == "wallet_connect_v2") {
+                    namespace = "com.avacus.wallet_connect_v2"
+                }
+            }
+        }
+    }
+}
+
+// Strip package attribute from wallet_connect_v2 manifest (AGP 8+ rejects it when namespace is in build.gradle).
+subprojects { subproject ->
+    if (subproject.name == "wallet_connect_v2") {
+        subproject.tasks.configureEach { task ->
+            if (task.name.contains("processReleaseManifest") || task.name.contains("processDebugManifest")) {
+                task.doFirst {
+                    def manifest = subproject.file("src/main/AndroidManifest.xml")
+                    if (manifest.exists()) {
+                        def text = manifest.text.replaceFirst(/\s+package="[^"]*"/, " ")
+                        manifest.text = text
+                    }
+                }
+            }
+        }
+    }
+}
