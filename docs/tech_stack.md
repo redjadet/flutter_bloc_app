@@ -58,8 +58,10 @@ This document lists all the technologies, packages, and tools used in this Flutt
 
 ## Maps
 
-- `google_maps_flutter` ^2.14.0 - Google Maps
-- `apple_maps_flutter` ^1.4.0 - Apple Maps (iOS)
+- `google_maps_flutter` ^2.14.0 - Google Maps (Android, iOS, Web)
+- `apple_maps_flutter` ^1.4.0 - Apple Maps (**iOS-only**)
+
+> **Note:** The app automatically uses Apple Maps on iOS and Google Maps on Android/Web. See [Platform-Specific Dependencies](#platform-specific-dependencies) below.
 
 ## Authentication
 
@@ -85,6 +87,48 @@ This document lists all the technologies, packages, and tools used in this Flutt
 ## Package Management
 
 See `pubspec.yaml` for the complete list with exact version constraints.
+
+## Platform-Specific Dependencies
+
+Some packages have platform-specific behavior or requirements:
+
+- **`apple_maps_flutter`** – iOS-only; app uses `google_maps_flutter` on Android
+- **`google_maps_flutter`** – Android ✅, iOS ✅; requires API key in `AndroidManifest.xml`
+- **`window_manager`** – Desktop-only (Windows/macOS/Linux); no-op on mobile
+- **`local_auth`** – Android (fingerprint) ✅, iOS (Face ID/Touch ID) ✅
+- **`flutter_secure_storage`** – Android (EncryptedSharedPrefs) ✅, iOS (Keychain) ✅
+- **`wallet_connect_v2`** – Android ✅, iOS ✅; currently uses mock implementation
+
+### Android Requirements
+
+1. **Google Maps API Key** - Add to `android/app/src/main/AndroidManifest.xml`:
+
+   ```xml
+   <meta-data
+       android:name="com.google.android.geo.API_KEY"
+       android:value="YOUR_API_KEY"/>
+   ```
+
+2. **Firebase Configuration** - Place `google-services.json` in `android/app/`
+
+3. **Biometrics** - `local_auth` uses Android BiometricPrompt (fingerprint, face unlock)
+
+### iOS Requirements
+
+1. **Apple Maps** - No API key needed; uses native MapKit
+2. **Firebase Configuration** - Place `GoogleService-Info.plist` in `ios/Runner/`
+3. **Biometrics** - `local_auth` uses Face ID/Touch ID (add `NSFaceIDUsageDescription` to `Info.plist`)
+4. **Associated Domains** - Requires paid Apple Developer account; see [deployment.md](deployment.md#ios-entitlements-development-vs-distribution)
+
+### Platform Detection in Code
+
+The app handles platform-specific features automatically:
+
+```dart
+// Maps (from google_maps_sample_page.dart)
+_useAppleMaps = !kIsWeb && _platform == TargetPlatform.iOS;
+// iOS → Apple Maps, Android/Web → Google Maps
+```
 
 ## Related Documentation
 

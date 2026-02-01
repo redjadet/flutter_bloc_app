@@ -71,9 +71,33 @@ Select the appropriate entry point based on your deployment target.
 - Firebase App Distribution hooks configured
 - Per-environment configurations available
 
+## Platform-Specific Requirements
+
+### Android
+
+- **Firebase config** – `android/app/google-services.json` (gitignored; generate via `flutterfire configure`)
+- **Google Maps API key** – `android/app/src/main/AndroidManifest.xml` (required for maps feature)
+- **Signing keystore** – `android/app/*.jks` or `~/.android/` (release builds only)
+
+### iOS
+
+- **Firebase config** – `ios/Runner/GoogleService-Info.plist` (gitignored; generate via `flutterfire configure`)
+- **Entitlements** – `ios/Runner/Runner.entitlements` (use `./tool/ios_entitlements.sh` to switch)
+- **Apple Developer account** – **Paid** required for Ad Hoc/App Store; **Free** works for personal device
+
+### Platform-Specific Packages
+
+Some dependencies only work on specific platforms:
+
+- **`apple_maps_flutter`** – iOS-only; app uses `google_maps_flutter` on Android
+- **`window_manager`** – Desktop-only; no-op on mobile
+
+See [tech_stack.md](tech_stack.md#platform-specific-dependencies) for the full list.
+
 ## Related Documentation
 
 - **Firebase App Distribution**: [firebase_app_distribution.md](firebase_app_distribution.md) – Distribute pre-release iOS and Android builds to testers via Firebase App Distribution.
+- **Tech Stack**: [tech_stack.md](tech_stack.md) – Dependencies and platform-specific packages
 - Security and secrets: [security_and_secrets.md](security_and_secrets.md)
 - Developer guide: [new_developer_guide.md](new_developer_guide.md)
 
