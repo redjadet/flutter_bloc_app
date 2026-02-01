@@ -30,6 +30,32 @@ Welcome aboard! This document is the fastest path to getting the app running loc
   - Android: Android Studio + SDKs
   - Optional: Chrome (web), a desktop target (macOS/windows/linux) if you intend to run there
 
+### Platform-Specific Setup
+
+**Android:**
+
+1. Place `google-services.json` in `android/app/` (Firebase config, gitignored)
+2. Add Google Maps API key to `android/app/src/main/AndroidManifest.xml` if using maps feature
+3. Run `flutter build apk` to verify Android build works
+
+**iOS:**
+
+1. Place `GoogleService-Info.plist` in `ios/Runner/` (Firebase config, gitignored)
+2. Run `cd ios && pod install && cd ..` after `flutter pub get`
+3. For device deployment with personal Apple ID, use development entitlements:
+
+   ```bash
+   ./tool/ios_entitlements.sh development
+   ```
+
+4. For Ad Hoc/App Store builds (requires paid Apple Developer account):
+
+   ```bash
+   ./tool/ios_entitlements.sh distribution
+   ```
+
+> **Note:** Some packages are platform-specific. See [tech_stack.md](tech_stack.md#platform-specific-dependencies) for details on `apple_maps_flutter` (iOS-only), `window_manager` (desktop-only), etc.
+
 ### Get dependencies
 
 ```bash

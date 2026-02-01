@@ -52,6 +52,16 @@ For platform setup and configuration, see [Developer Guide](new_developer_guide.
 
 See [Security & Secrets](security_and_secrets.md) for setup details.
 
+## 📱 Are there platform-specific dependencies?
+
+Yes. Some packages only work on certain platforms:
+
+- **`apple_maps_flutter`** – iOS-only; app uses `google_maps_flutter` on Android
+- **`window_manager`** – Desktop-only; no-op on mobile
+- **`local_auth`** – Both platforms; uses fingerprint on Android, Face ID/Touch ID on iOS
+
+The app handles this automatically (e.g., maps switch based on platform). See [Tech Stack](tech_stack.md#platform-specific-dependencies) for the full list.
+
 ## ✅ How is testing handled?
 
 The project uses unit, bloc, widget, and golden tests. Common pitfalls are captured in `test/shared/common_bugs_prevention_test.dart`.
