@@ -50,6 +50,9 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Platform build outputs – all files and subfolders recursively (do not commit)
+**/build/**
+
 # Local secrets
 assets/config/secrets.json
 android/app/google-services.json

@@ -64,42 +64,4 @@ platform :ios do
       force: true,
     )
   end
-  desc 'Build IPA and upload to Firebase App Distribution'
-  lane :firebase_distribute do |options|
-    release_notes = options[:release_notes] || ENV['FIREBASE_RELEASE_NOTES'] || "Pre-release iOS - " + Time.now.strftime('%Y-%m-%d %H:%M')
-    groups = options[:groups] || ENV['FIREBASE_GROUPS']
-    testers = options[:testers] || ENV['FIREBASE_TESTERS']
-    skip_build = options[:skip_build] || (ENV['FIREBASE_SKIP_BUILD'] == 'true')
-    use_distribution_entitlements = options[:distribution_entitlements].nil? ? (ENV['FIREBASE_DISTRIBUTION_ENTITLEMENTS'] != 'false') : options[:distribution_entitlements]
-
-    project_root = File.expand_path('../..', __dir__)
-    Dir.chdir(project_root) do
-      unless skip_build
-        if use_distribution_entitlements
-          UI.message('Switching to distribution entitlements for IPA build')
-          sh('bash', 'tool/ios_entitlements.sh', 'distribution')
-        end
-        invoke(:build)
-      end
-
-      ipa = Dir.glob(File.join(project_root, 'build/ios/**/*.ipa')).first
-      ipa ||= File.join(project_root, 'build/ios/ipa/Runner.ipa')
-      UI.user_error!("No IPA found. Build first with: bundle exec fastlane ios build") unless File.exist?(ipa)
-
-      firebase_args = ['firebase', 'appdistribution:distribute', ipa,
-        '--app', ENV.fetch('FIREBASE_IOS_APP_ID', '1:473097776453:ios:6962f6ddc4d7ea12bd222c'),
-        '--release-notes', release_notes]
-      firebase_args.concat(['--groups', groups]) if groups && !groups.empty?
-      firebase_args.concat(['--testers', testers]) if testers && !testers.empty?
-
-      sh(*firebase_args)
-
-      if use_distribution_entitlements && !skip_build
-        UI.message('Reverting to development entitlements')
-        sh('bash', 'tool/ios_entitlements.sh', 'development')
-      end
-    end
-    UI.success('Firebase App Distribution upload complete. Check Firebase Console.')
-  end
-
 end
