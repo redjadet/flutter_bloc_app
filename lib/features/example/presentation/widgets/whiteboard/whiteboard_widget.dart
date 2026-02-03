@@ -124,7 +124,7 @@ class _WhiteboardWidgetState extends State<WhiteboardWidget> {
           canRedo: _undoStack.isNotEmpty,
           canClear: allStrokes.isNotEmpty,
           onPickColor: _pickColor,
-          onWidthChanged: (final double value) {
+          onWidthChanged: (final value) {
             setState(() {
               _currentWidth = value;
             });
@@ -137,20 +137,20 @@ class _WhiteboardWidgetState extends State<WhiteboardWidget> {
         Expanded(
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onPanStart: (final DragStartDetails details) {
+            onPanStart: (final details) {
               _startStroke(details.localPosition);
             },
-            onPanUpdate: (final DragUpdateDetails details) {
+            onPanUpdate: (final details) {
               _updateStroke(details.localPosition);
             },
-            onPanEnd: (final DragEndDetails details) {
+            onPanEnd: (final details) {
               _endStroke();
             },
             child: LayoutBuilder(
               builder:
                   (
-                    final BuildContext context,
-                    final BoxConstraints constraints,
+                    final context,
+                    final constraints,
                   ) => RepaintBoundary(
                     child: CustomPaint(
                       key: ValueKey<int>(_version),

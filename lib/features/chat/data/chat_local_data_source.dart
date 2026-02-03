@@ -43,7 +43,7 @@ class ChatLocalDataSource extends HiveRepositoryBase
           }
 
           final List<Map<String, dynamic>> serialized = conversations
-              .map((final ChatConversation c) => c.toJson())
+              .map((final c) => c.toJson())
               .toList(growable: false);
           await box.put(_keyConversations, serialized);
         },

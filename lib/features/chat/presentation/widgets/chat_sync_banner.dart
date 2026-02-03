@@ -46,7 +46,7 @@ class _ChatSyncBannerState extends State<ChatSyncBanner> {
 
       final int chatPending = operations
           .where(
-            (final SyncOperation op) => op.entityType == chatSyncEntityType,
+            (final op) => op.entityType == chatSyncEntityType,
           )
           .length;
       if (!mounted) return;

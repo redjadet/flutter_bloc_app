@@ -99,7 +99,7 @@ class HiveCounterRepositoryWatchHelper {
       await _boxSubscription?.cancel();
 
       _boxSubscription = box.watch().listen(
-        (final BoxEvent event) {
+        (final event) {
           // Only trigger load for relevant keys to avoid unnecessary work
           if (_isRelevantKey(event.key)) {
             unawaited(_watchState.loadAndEmitInitial());

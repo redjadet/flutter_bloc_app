@@ -23,7 +23,7 @@ Future<User> waitForAuthUser(
   try {
     return await auth
         .authStateChanges()
-        .where((final User? user) => user != null)
+        .where((final user) => user != null)
         .cast<User>()
         .first
         .timeout(timeout);

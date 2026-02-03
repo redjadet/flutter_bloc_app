@@ -46,12 +46,12 @@ class GenUiDemoAgentImpl implements GenUiDemoAgent {
     _conversation = genui.GenUiConversation(
       contentGenerator: _contentGenerator,
       a2uiMessageProcessor: _messageProcessor,
-      onSurfaceAdded: (final genui.SurfaceAdded update) {
+      onSurfaceAdded: (final update) {
         _surfaceEventsController.add(
           GenUiSurfaceEvent.added(surfaceId: update.surfaceId),
         );
       },
-      onSurfaceDeleted: (final genui.SurfaceRemoved update) {
+      onSurfaceDeleted: (final update) {
         _surfaceEventsController.add(
           GenUiSurfaceEvent.removed(surfaceId: update.surfaceId),
         );
@@ -60,11 +60,11 @@ class GenUiDemoAgentImpl implements GenUiDemoAgent {
 
     // Forward streams
     _textResponsesSubscription = _contentGenerator.textResponseStream.listen(
-      (final String text) => _textResponsesController.add(text),
+      (final text) => _textResponsesController.add(text),
     );
 
     _errorsSubscription = _contentGenerator.errorStream.listen(
-      (final genui.ContentGeneratorError error) =>
+      (final error) =>
           _errorsController.add(error.error.toString()),
     );
 

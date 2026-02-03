@@ -59,7 +59,7 @@ Widget buildTodoItemDismissible({
         icon: Icons.delete_outline,
         label: l10n.todoListDeleteAction,
       ),
-      confirmDismiss: (final DismissDirection direction) async {
+      confirmDismiss: (final direction) async {
         if (direction == DismissDirection.startToEnd) {
           // check-ignore: side_effects_build - triggered by user gesture callback.
           unawaited(HapticFeedback.selectionClick());
@@ -71,7 +71,7 @@ Widget buildTodoItemDismissible({
           return confirmDelete(context, item.title);
         }
       },
-      onDismissed: (final DismissDirection direction) {
+      onDismissed: (final direction) {
         if (direction == DismissDirection.endToStart) {
           // check-ignore: side_effects_build - triggered by user gesture callback.
           unawaited(HapticFeedback.mediumImpact());

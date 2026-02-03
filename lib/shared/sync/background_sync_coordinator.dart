@@ -79,7 +79,7 @@ class BackgroundSyncCoordinator {
     });
     await _networkSubscription?.cancel();
     _networkSubscription = _networkStatusService.statusStream.listen(
-      (final NetworkStatus status) {
+      (final status) {
         if (status == NetworkStatus.online) {
           unawaited(_triggerSync(immediate: true));
         }

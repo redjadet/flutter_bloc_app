@@ -39,20 +39,20 @@ class ChatModelSelector extends StatelessWidget {
           value: effectiveModel,
           items: models
               .map(
-                (final String model) => DropdownMenuItem<String>(
+                (final model) => DropdownMenuItem<String>(
                   value: model,
                   child: Text(_modelLabel(l10n, model)),
                 ),
               )
               .toList(growable: false),
-          onChanged: (final String? value) {
+          onChanged: (final value) {
             if (value != null) {
               cubit.selectModel(value);
             }
           },
           labelText: l10n.chatModelLabel,
           labelPosition: DropdownLabelPosition.left,
-          customItemLabel: (final String model) => _modelLabel(l10n, model),
+          customItemLabel: (final model) => _modelLabel(l10n, model),
         );
       },
     );

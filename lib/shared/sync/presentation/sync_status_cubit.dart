@@ -58,7 +58,7 @@ class SyncStatusCubit extends Cubit<SyncStatusState> {
          ),
        ) {
     _networkSubscription = _networkStatusService.statusStream.listen(
-      (final NetworkStatus status) {
+      (final status) {
         if (isClosed) {
           return;
         }
@@ -66,7 +66,7 @@ class SyncStatusCubit extends Cubit<SyncStatusState> {
       },
     );
     _syncSubscription = _coordinator.statusStream.listen(
-      (final SyncStatus status) {
+      (final status) {
         if (isClosed) {
           return;
         }
@@ -74,7 +74,7 @@ class SyncStatusCubit extends Cubit<SyncStatusState> {
       },
     );
     _summarySubscription = _coordinator.summaryStream.listen(
-      (final SyncCycleSummary summary) {
+      (final summary) {
         if (isClosed) {
           return;
         }

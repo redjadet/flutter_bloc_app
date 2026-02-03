@@ -123,7 +123,7 @@ class MarkdownShortcutsMenu extends StatelessWidget {
   Widget build(final BuildContext context) => PopupMenuButton<String>(
     icon: const Icon(Icons.more_vert),
     onSelected: _insertMarkdown,
-    itemBuilder: (final BuildContext context) => <PopupMenuEntry<String>>[
+    itemBuilder: (final context) => <PopupMenuEntry<String>>[
       const PopupMenuItem<String>(
         value: 'header',
         child: Text('Header (#)'),

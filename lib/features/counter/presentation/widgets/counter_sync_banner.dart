@@ -51,7 +51,7 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
     unawaited(_refreshPendingCount());
     // Listen to counter snapshot changes for real-time lastSyncedAt/changeId updates
     _counterSubscription = widget.counterRepository.watch().listen(
-      (final CounterSnapshot snapshot) {
+      (final snapshot) {
         if (!mounted) return;
         setState(() {
           _lastSyncedAt = snapshot.lastSyncedAt;

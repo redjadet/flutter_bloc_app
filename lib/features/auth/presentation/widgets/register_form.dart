@@ -100,8 +100,8 @@ class RegisterForm extends StatelessWidget {
                   state: state,
                   decorationBuilder:
                       ({
-                        required final String hint,
-                        final String? errorText,
+                        required final hint,
+                        final errorText,
                       }) => decorationBuilder(
                         hint: hint,
                         errorText: errorText,

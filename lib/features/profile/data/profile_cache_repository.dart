@@ -127,7 +127,7 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
         'avatarUrl': user.avatarUrl,
         'galleryImages': user.galleryImages
             .map(
-              (final ProfileImage image) => <String, dynamic>{
+              (final image) => <String, dynamic>{
                 'url': image.url,
                 'aspectRatio': image.aspectRatio,
               },

@@ -29,7 +29,7 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   @override
   Future<CounterSnapshot> load() async => _executeForUser<CounterSnapshot>(
     operation: 'load',
-    action: (final User user) async {
+    action: (final user) async {
       _debugLog(
         'RealtimeDatabaseCounterRepository.load requesting counter value',
       );
@@ -50,7 +50,7 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   Future<void> save(final CounterSnapshot snapshot) async {
     await _executeForUser<void>(
       operation: 'save',
-      action: (final User user) async {
+      action: (final user) async {
         _debugLog(
           'RealtimeDatabaseCounterRepository.save writing counter value',
         );
@@ -67,11 +67,11 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   @override
   Stream<CounterSnapshot> watch() => Stream.fromFuture(waitForAuthUser(_auth))
       .asyncExpand(
-        (final User user) => _counterRef
+        (final user) => _counterRef
             .child(user.uid)
             .onValue
             .map(
-              (final DatabaseEvent event) =>
+              (final event) =>
                   snapshotFromValue(event.snapshot.value, userId: user.uid),
             ),
       )

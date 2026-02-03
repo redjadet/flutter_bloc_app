@@ -13,7 +13,7 @@ class ChatMessage {
   factory ChatMessage.fromJson(final Map<String, dynamic> json) {
     final String authorValue = (json['author'] ?? '').toString();
     final ChatAuthor author = ChatAuthor.values.firstWhere(
-      (final ChatAuthor value) => value.name == authorValue,
+      (final value) => value.name == authorValue,
       orElse: () => ChatAuthor.system,
     );
     final String text = (json['text'] ?? '').toString();

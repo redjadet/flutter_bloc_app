@@ -148,7 +148,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
         ),
       ),
       onError: (_) {},
-      onErrorWithDetails: (final Object error, final StackTrace? stackTrace) {
+      onErrorWithDetails: (final error, final stackTrace) {
         _handleError(
           error,
           stackTrace ?? StackTrace.current,
@@ -184,7 +184,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
     unawaited(oldSubscription?.cancel());
     // Set up new subscription immediately
     _repositorySubscription = _repository.watch().listen(
-      (final CounterSnapshot snapshot) {
+      (final snapshot) {
         // Check if cubit is closed before emitting to prevent errors
         if (isClosed) return;
         if (shouldIgnoreRemoteSnapshot(state, snapshot)) return;
@@ -195,7 +195,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
         unawaited(
           applyRestorationOutcome(
             restoration,
-            onHoldChanged: ({required final bool holdSideEffects}) =>
+            onHoldChanged: ({required final holdSideEffects}) =>
                 _pauseCountdownForOneTick = holdSideEffects,
             onAfterEmit: _syncTickerForState,
             logContext: 'CounterCubit._subscribeToRepository',

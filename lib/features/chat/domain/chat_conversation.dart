@@ -51,7 +51,7 @@ abstract class ChatConversation with _$ChatConversation {
 
   Map<String, dynamic> toJson() => <String, dynamic>{
     'id': id,
-    'messages': messages.map((final ChatMessage m) => m.toJson()).toList(),
+    'messages': messages.map((final m) => m.toJson()).toList(),
     'pastUserInputs': pastUserInputs,
     'generatedResponses': generatedResponses,
     'createdAt': createdAt.toIso8601String(),

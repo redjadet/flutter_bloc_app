@@ -48,13 +48,13 @@ class PendingSyncRepository extends HiveRepositoryBase {
               .map(_operationFromJson)
               .toList(growable: false)
             ..sort(
-              (final SyncOperation a, final SyncOperation b) =>
+              (final a, final b) =>
                   a.createdAt.compareTo(b.createdAt),
             );
 
       final DateTime threshold = (now ?? DateTime.now()).toUtc();
       final Iterable<SyncOperation> ready = operations.where(
-        (final SyncOperation op) =>
+        (final op) =>
             op.nextRetryAt == null || !op.nextRetryAt!.isAfter(threshold),
       );
 

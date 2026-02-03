@@ -20,11 +20,11 @@ class ChatListCubit extends Cubit<ChatListState> {
 
     await CubitExceptionHandler.executeAsync(
       operation: _repository.getChatContacts,
-      onSuccess: (final List<ChatContact> contacts) {
+      onSuccess: (final contacts) {
         if (isClosed) return;
         emit(ChatListState.loaded(contacts: contacts));
       },
-      onError: (final String message) {
+      onError: (final message) {
         if (isClosed) return;
         emit(ChatListState.error(message: message));
       },
@@ -45,7 +45,7 @@ class ChatListCubit extends Cubit<ChatListState> {
             .toList();
         emit(ChatListState.loaded(contacts: updatedContacts));
       },
-      onError: (final String message) {
+      onError: (final message) {
         if (isClosed) return;
         emit(ChatListState.error(message: message));
       },
@@ -71,7 +71,7 @@ class ChatListCubit extends Cubit<ChatListState> {
         }).toList();
         emit(ChatListState.loaded(contacts: updatedContacts));
       },
-      onError: (final String message) {
+      onError: (final message) {
         if (isClosed) return;
         emit(ChatListState.error(message: message));
       },

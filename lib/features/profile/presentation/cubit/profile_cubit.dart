@@ -33,7 +33,7 @@ class ProfileCubit extends Cubit<ProfileState> {
           ),
         );
       },
-      onError: (final String errorMessage) {
+      onError: (final errorMessage) {
         if (isClosed) return;
         emit(
           ProfileState(

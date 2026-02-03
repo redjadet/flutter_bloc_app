@@ -20,7 +20,7 @@ class CountryOption extends Equatable {
     final List<int> chars = code
         .toUpperCase()
         .codeUnits
-        .map((final int unit) => base + unit - alphaBase)
+        .map((final unit) => base + unit - alphaBase)
         .toList();
     return String.fromCharCodes(chars);
   }

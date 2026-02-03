@@ -150,7 +150,7 @@ Future<Map<String, dynamic>?> _readAssetSecrets() async {
       .then<String?>((final value) => value)
       .catchError(
         (Object _) => null,
-        test: (final Object error) => error is FlutterError,
+        test: (final error) => error is FlutterError,
       );
   if (raw == null) {
     // Asset not bundled; ignore silently for developers without a local file.

@@ -90,7 +90,7 @@ class _CustomRateDialogState extends State<_CustomRateDialog> {
       CupertinoAlertDialog(
         title: Text(widget.title),
         content: Builder(
-          builder: (final BuildContext context) => Column(
+          builder: (final context) => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(height: context.responsiveGapM),

@@ -63,7 +63,7 @@ class _SyncDiagnosticsSectionState extends State<SyncDiagnosticsSection> {
                   ),
                   SizedBox(height: gap),
                   ...history.map(
-                    (final SyncCycleSummary summary) {
+                    (final summary) {
                       final DateTime local = summary.recordedAt.toLocal();
                       final String timestamp =
                           '${material.formatShortDate(local)} · ${material.formatTimeOfDay(
@@ -72,13 +72,13 @@ class _SyncDiagnosticsSectionState extends State<SyncDiagnosticsSection> {
                       final List<MapEntry<String, int>> pendingEntries =
                           summary.pendingByEntity.entries.toList()..sort(
                             (
-                              final MapEntry<String, int> a,
-                              final MapEntry<String, int> b,
+                              final a,
+                              final b,
                             ) => a.key.compareTo(b.key),
                           );
                       final List<Widget> pendingChips = pendingEntries
                           .map(
-                            (final MapEntry<String, int> entry) => Chip(
+                            (final entry) => Chip(
                               label: Text('${entry.key}: ${entry.value}'),
                             ),
                           )

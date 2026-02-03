@@ -18,7 +18,7 @@ class GoogleMapsContentLayout extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => LayoutBuilder(
-    builder: (final BuildContext context, final BoxConstraints constraints) {
+    builder: (final context, final constraints) {
       final bool useHorizontalLayout = constraints.maxWidth >= 900;
       final Widget mapSection = SizedBox(
         height: useHorizontalLayout ? double.infinity : 320,

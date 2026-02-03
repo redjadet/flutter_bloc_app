@@ -38,7 +38,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
     );
     await CubitExceptionHandler.executeAsyncVoid(
       operation: _repository.connect,
-      onError: (final String errorMessage) {
+      onError: (final errorMessage) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -82,7 +82,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
         if (isClosed) return;
         emit(state.copyWith(isSending: false));
       },
-      onError: (final String errorMessage) {
+      onError: (final errorMessage) {
         if (isClosed) return;
         emit(state.copyWith(isSending: false, errorMessage: errorMessage));
       },

@@ -124,7 +124,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
           ),
           locations: _GoogleMapsLocationListSection(
             l10n: l10n,
-            onFocus: (final MapLocation location) {
+            onFocus: (final location) {
               unawaited(_mapViewController.focusOnLocation(location));
             },
           ),

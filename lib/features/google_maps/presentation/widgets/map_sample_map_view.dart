@@ -1,7 +1,6 @@
 // coverage:ignore-file
 import 'dart:async';
 
-import 'package:apple_maps_flutter/apple_maps_flutter.dart' as amap;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_cubit.dart';
@@ -81,7 +80,7 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
               stateManager: _stateManager,
               cubit: widget.cubit,
               onCameraMove: _handleCameraMove,
-              onMapCreated: (final amap.AppleMapController controller) {
+              onMapCreated: (final controller) {
                 _cameraController.appleController = controller;
               },
             )

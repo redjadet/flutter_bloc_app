@@ -122,6 +122,7 @@ Engineering references:
 - [Type-Safe BLoC](docs/compile_time_safety.md)
 - [Performance](docs/performance_bottlenecks.md)
 - [Validation Scripts](docs/validation_scripts.md)
+- [Known Workarounds](docs/workarounds.md) – temporary fixes (e.g. iOS simulator); prefer upstream fixes when available
 
 ## 🛠️ Tech Stack (Short)
 

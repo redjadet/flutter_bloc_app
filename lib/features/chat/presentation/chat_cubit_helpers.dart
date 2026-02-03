@@ -63,7 +63,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
       history ?? _state.history,
     );
     final int index = updated.indexWhere(
-      (final ChatConversation c) => c.id == conversation.id,
+      (final c) => c.id == conversation.id,
     );
 
     if (index >= 0) {
@@ -124,7 +124,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
           );
         }
       },
-      onError: (final String message) {
+      onError: (final message) {
         AppLogger.error('Chat history persistence failed: $message');
         if (isClosed) {
           return;

@@ -1190,5 +1190,11 @@
         "type": "int"
       }
     }
-  }
+  },
+  "playlearnTitle": "Playlearn",
+  "playlearnTopicAnimals": "Tiere",
+  "playlearnListen": "Hören",
+  "playlearnTapToListen": "Tippen zum Hören",
+  "playlearnBack": "Zurück",
+  "openPlaylearnTooltip": "Playlearn öffnen"
 }

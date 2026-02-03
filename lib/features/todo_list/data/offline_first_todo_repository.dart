@@ -61,7 +61,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
     }
 
     _remoteWatchSubscription = remoteRepo.watchAll().listen(
-      (final List<TodoItem> remoteItems) {
+      (final remoteItems) {
         // Merge remote changes into local storage
         // This will trigger the local watch stream to emit
         unawaited(

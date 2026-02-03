@@ -95,7 +95,7 @@ class RemoteConfigRepository implements RemoteConfigService {
 
   void _subscribeToRealtimeUpdates() {
     _configUpdatesSubscription ??= _remoteConfig.onConfigUpdated.listen(
-      (final RemoteConfigUpdate update) async {
+      (final update) async {
         final bool shouldLogTestValue = update.updatedKeys.contains(
           testValueKey,
         );

@@ -74,4 +74,10 @@ class AppRoutes {
 
   static const walletconnectAuth = 'walletconnect-auth';
   static const walletconnectAuthPath = '/walletconnect-auth';
+
+  static const playlearn = 'playlearn';
+  static const playlearnPath = '/playlearn';
+
+  static const playlearnVocabulary = 'playlearn-vocabulary';
+  static const playlearnVocabularyPath = '/playlearn/vocabulary/:topicId';
 }

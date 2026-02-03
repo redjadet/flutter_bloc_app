@@ -44,7 +44,7 @@ Future<void> showExamplePlatformInfoDialog({
 
   await showAdaptiveDialog<void>(
     context: context,
-    builder: (final BuildContext dialogContext) => AlertDialog.adaptive(
+    builder: (final dialogContext) => AlertDialog.adaptive(
       title: Text(l10n.exampleNativeInfoDialogTitle),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -76,7 +76,7 @@ Future<void> showExamplePlatformInfoErrorDialog({
       : null;
   await showAdaptiveDialog<void>(
     context: context,
-    builder: (final BuildContext dialogContext) => AlertDialog.adaptive(
+    builder: (final dialogContext) => AlertDialog.adaptive(
       title: Text(l10n.exampleNativeInfoDialogTitle),
       content: Column(
         mainAxisSize: MainAxisSize.min,

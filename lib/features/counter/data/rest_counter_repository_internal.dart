@@ -11,7 +11,7 @@ Future<CounterSnapshot> _restCounterRepositoryLoad(
       headers: _headers(repository),
     ),
     errorFactory: CounterError.load,
-    onHttpFailure: (final http.Response res) => CounterError.load(
+    onHttpFailure: (final res) => CounterError.load(
       message: 'REST load failed (HTTP ${res.statusCode}).',
     ),
   );
@@ -41,7 +41,7 @@ Future<void> _restCounterRepositorySave(
       }),
     ),
     errorFactory: CounterError.save,
-    onHttpFailure: (final http.Response res) => CounterError.save(
+    onHttpFailure: (final res) => CounterError.save(
       originalError: http.ClientException(
         'Counter save failed (HTTP ${res.statusCode})',
         repository._counterUri,
@@ -67,7 +67,7 @@ Future<http.Response> _restCounterRepositorySendRequest({
   timeout: repository._requestTimeout,
   isSuccess: _isSuccess,
   logContext: 'RestCounterRepository.$operation',
-  onHttpFailure: (final http.Response response) =>
+  onHttpFailure: (final response) =>
       onHttpFailure?.call(response) ??
       errorFactory(
         originalError: http.ClientException(
@@ -76,8 +76,8 @@ Future<http.Response> _restCounterRepositorySendRequest({
         ),
         message: 'REST $operation failed (HTTP ${response.statusCode}).',
       ),
-  onException: (final Object error) => errorFactory(originalError: error),
-  onFailureLog: (final http.Response response) =>
+  onException: (final error) => errorFactory(originalError: error),
+  onFailureLog: (final response) =>
       _logHttpError(operation, response),
 );
 

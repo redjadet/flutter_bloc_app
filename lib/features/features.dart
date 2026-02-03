@@ -8,6 +8,7 @@ export 'example/example.dart';
 export 'genui_demo/genui_demo.dart';
 export 'google_maps/google_maps.dart';
 export 'graphql_demo/graphql_demo.dart';
+export 'playlearn/playlearn.dart';
 export 'profile/profile.dart';
 export 'search/search.dart';
 export 'settings/settings.dart';

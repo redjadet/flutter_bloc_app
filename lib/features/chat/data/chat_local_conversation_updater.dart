@@ -32,7 +32,7 @@ class ChatLocalConversationUpdater {
   ) async {
     final List<ChatConversation> existing = await _localDataSource.load();
     final int index = existing.indexWhere(
-      (final ChatConversation c) => c.id == payload.conversationId,
+      (final c) => c.id == payload.conversationId,
     );
     final DateTime now = DateTime.now().toUtc();
     ChatConversation conversation = index >= 0
@@ -47,7 +47,7 @@ class ChatLocalConversationUpdater {
       conversation.messages,
     );
     final bool hasUserMessage = messages.any(
-      (final ChatMessage m) => m.clientMessageId == payload.clientMessageId,
+      (final m) => m.clientMessageId == payload.clientMessageId,
     );
     if (!hasUserMessage) {
       messages.add(payload.userMessage(promptText: payload.prompt));

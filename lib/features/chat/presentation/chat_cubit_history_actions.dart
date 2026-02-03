@@ -4,7 +4,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
   Future<void> loadHistory() async {
     final List<ChatConversation> stored = await _historyRepository.load();
     final List<ChatConversation> filtered = stored
-        .where((final ChatConversation c) => c.hasContent)
+        .where((final c) => c.hasContent)
         .toList();
     List<ChatConversation> history = _sortHistory(filtered);
     bool needsPersist = filtered.length != stored.length;
@@ -21,7 +21,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
     final String resolvedModel = _resolveModelForConversation(active);
     if (active.model != resolvedModel) {
       active = active.copyWith(model: resolvedModel);
-      if (history.any((final ChatConversation c) => c.id == active!.id)) {
+      if (history.any((final c) => c.id == active!.id)) {
         history = _replaceConversation(active, history: history);
         needsPersist = true;
       }
@@ -69,7 +69,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
       state.history,
     );
     final int index = history.indexWhere(
-      (final ChatConversation c) => c.id == conversationId,
+      (final c) => c.id == conversationId,
     );
     if (index < 0) {
       return;

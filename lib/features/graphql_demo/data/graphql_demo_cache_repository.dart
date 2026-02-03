@@ -39,7 +39,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
       return items
           .whereType<Map<dynamic, dynamic>>()
           .map(
-            (final Map<dynamic, dynamic> json) {
+            (final json) {
               // Hive returns Map<dynamic, dynamic>, convert to Map<String, dynamic>
               final Map<String, dynamic> typedJson = _convertMapToTyped(json);
               return GraphqlContinent.fromJson(typedJson);
@@ -92,7 +92,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
       return items
           .whereType<Map<dynamic, dynamic>>()
           .map(
-            (final Map<dynamic, dynamic> json) {
+            (final json) {
               // Hive returns Map<dynamic, dynamic>, recursively convert to Map<String, dynamic>
               final Map<String, dynamic> typedJson = _convertMapToTyped(json);
               return GraphqlCountry.fromJson(typedJson);
