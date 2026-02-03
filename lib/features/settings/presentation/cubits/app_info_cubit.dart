@@ -22,7 +22,7 @@ class AppInfoCubit extends Cubit<AppInfoState> {
 
     await CubitExceptionHandler.executeAsync(
       operation: _repository.load,
-      onSuccess: (final AppInfo info) {
+      onSuccess: (final info) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -32,7 +32,7 @@ class AppInfoCubit extends Cubit<AppInfoState> {
           ),
         );
       },
-      onError: (final String errorMessage) {
+      onError: (final errorMessage) {
         if (isClosed) return;
         emit(
           state.copyWith(

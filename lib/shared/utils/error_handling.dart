@@ -109,7 +109,7 @@ class ErrorHandling {
     await showAdaptiveDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (final BuildContext dialogContext) {
+      builder: (final dialogContext) {
         final bool isCupertino = PlatformAdaptive.isCupertino(context);
         if (isCupertino) {
           return CupertinoAlertDialog(

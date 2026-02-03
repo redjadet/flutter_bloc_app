@@ -121,9 +121,9 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
         body: jsonEncode(payload),
       ),
       timeout: timeout,
-      isSuccess: (final int statusCode) => statusCode == 200,
+      isSuccess: (final statusCode) => statusCode == 200,
       logContext: 'CountriesGraphqlRepository._postQuery',
-      onHttpFailure: (final http.Response res) {
+      onHttpFailure: (final res) {
         final bool isServerError = res.statusCode >= 500;
         return GraphqlDemoException(
           'Unexpected status code: ${res.statusCode}',
@@ -133,12 +133,12 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
               : GraphqlDemoErrorType.invalidRequest,
         );
       },
-      onException: (final Object error) => GraphqlDemoException(
+      onException: (final error) => GraphqlDemoException(
         'Failed to reach GraphQL endpoint',
         cause: error,
         type: GraphqlDemoErrorType.network,
       ),
-      onFailureLog: (final http.Response res) {
+      onFailureLog: (final res) {
         AppLogger.error(
           'CountriesGraphqlRepository._postQuery non-success: ${res.statusCode}',
           'Response body omitted',

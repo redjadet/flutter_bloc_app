@@ -73,7 +73,7 @@ class TodoListItem extends StatelessWidget {
               if (onSelectionChanged != null) ...[
                 Checkbox.adaptive(
                   value: isSelected,
-                  onChanged: (final bool? value) {
+                  onChanged: (final value) {
                     if (value != null) {
                       onSelectionChanged!(value);
                     }

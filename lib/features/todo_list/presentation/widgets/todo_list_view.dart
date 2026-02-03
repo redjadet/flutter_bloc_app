@@ -51,7 +51,7 @@ class TodoListView extends StatelessWidget {
               showDragHandle: sortOrder == TodoSortOrder.manual,
               isSelected: selectedItemIds.contains(item.id),
               onSelectionChanged: onItemSelectionChanged != null
-                  ? (final bool selected) =>
+                  ? (final selected) =>
                         onItemSelectionChanged!(item.id, selected: selected)
                   : null,
               onToggle: () => onToggle(item),
@@ -82,7 +82,7 @@ class TodoListView extends StatelessWidget {
             showDragHandle: sortOrder == TodoSortOrder.manual,
             isSelected: selectedItemIds.contains(item.id),
             onSelectionChanged: onItemSelectionChanged != null
-                ? (final bool selected) =>
+                ? (final selected) =>
                       onItemSelectionChanged!(item.id, selected: selected)
                 : null,
             onToggle: () => onToggle(item),

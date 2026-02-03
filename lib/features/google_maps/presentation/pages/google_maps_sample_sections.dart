@@ -19,14 +19,14 @@ class _GoogleMapsMapSection extends StatelessWidget {
       BlocListener<MapSampleCubit, MapSampleState>(
         listenWhen: _mapStateChanged,
         listener:
-            (final BuildContext context, final MapSampleState state) async {
+            (final context, final state) async {
               await controller.syncWithState(state);
             },
         child: BlocBuilder<MapSampleCubit, MapSampleState>(
           buildWhen:
-              (final MapSampleState previous, final MapSampleState current) =>
+              (final previous, final current) =>
                   false,
-          builder: (final BuildContext context, final MapSampleState state) =>
+          builder: (final context, final state) =>
               RepaintBoundary(
                 child: MapSampleMapView(
                   initialState: state,
@@ -64,12 +64,12 @@ class _GoogleMapsControlsSection extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       BlocSelector<MapSampleCubit, MapSampleState, _ControlsViewModel>(
-        selector: (final MapSampleState state) => _ControlsViewModel(
+        selector: (final state) => _ControlsViewModel(
           isHybridMapType: state.mapType == gmaps.MapType.hybrid,
           trafficEnabled: state.trafficEnabled,
         ),
         builder:
-            (final BuildContext context, final _ControlsViewModel viewModel) =>
+            (final context, final viewModel) =>
                 GoogleMapsControlsCard(
                   heading: l10n.googleMapsPageControlsHeading,
                   helpText: l10n.googleMapsPageApiKeyHelp,
@@ -96,14 +96,14 @@ class _GoogleMapsLocationListSection extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       BlocSelector<MapSampleCubit, MapSampleState, _LocationListViewModel>(
-        selector: (final MapSampleState state) => _LocationListViewModel(
+        selector: (final state) => _LocationListViewModel(
           locations: state.locations,
           selectedMarkerId: state.selectedMarkerId?.value,
         ),
         builder:
             (
-              final BuildContext context,
-              final _LocationListViewModel viewModel,
+              final context,
+              final viewModel,
             ) => GoogleMapsLocationList(
               locations: viewModel.locations,
               selectedMarkerId: viewModel.selectedMarkerId,

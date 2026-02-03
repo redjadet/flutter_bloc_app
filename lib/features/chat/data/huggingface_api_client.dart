@@ -45,9 +45,9 @@ class HuggingFaceApiClient {
         body: jsonEncode(payload),
       ),
       timeout: _requestTimeout,
-      isSuccess: (final int statusCode) => statusCode < 400,
+      isSuccess: (final statusCode) => statusCode < 400,
       logContext: 'HuggingFaceApiClient.$context',
-      onHttpFailure: (final http.Response res) {
+      onHttpFailure: (final res) {
         if (res.statusCode == 429) {
           return const ChatException(
             'Hugging Face rate limit hit. Please wait before trying again.',
@@ -56,9 +56,9 @@ class HuggingFaceApiClient {
         final String message = formatError(res);
         return ChatException(message);
       },
-      onException: (final Object error) =>
+      onException: (final error) =>
           const ChatException('Failed to contact chat service.'),
-      onFailureLog: (final http.Response res) {
+      onFailureLog: (final res) {
         AppLogger.error(
           'HuggingFaceApiClient.$context non-success (HTTP ${res.statusCode})',
           'Response body omitted for privacy',

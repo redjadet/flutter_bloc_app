@@ -12,6 +12,7 @@ enum OverflowAction {
   whiteboard,
   markdownEditor,
   todo,
+  playlearn,
 }
 
 /// Represents an item in the overflow menu.

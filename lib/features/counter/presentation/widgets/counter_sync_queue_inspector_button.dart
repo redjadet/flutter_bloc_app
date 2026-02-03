@@ -91,7 +91,7 @@ class _CounterSyncQueueInspectorButtonState
     if (!context.mounted) return;
     await PlatformAdaptive.showAdaptiveModalBottomSheet<void>(
       context: context,
-      builder: (final BuildContext sheetContext) => _SyncQueueInspectorSheet(
+      builder: (final sheetContext) => _SyncQueueInspectorSheet(
         operations: operations,
         l10n: l10n,
       ),
@@ -131,7 +131,7 @@ class _SyncQueueInspectorSheet extends StatelessWidget {
             Flexible(
               child: ListView.separated(
                 shrinkWrap: true,
-                itemBuilder: (final BuildContext itemContext, final int index) {
+                itemBuilder: (final itemContext, final index) {
                   final SyncOperation operation = operations[index];
                   final String subtitle = l10n.syncQueueInspectorOperation(
                     operation.entityType,
@@ -145,8 +145,8 @@ class _SyncQueueInspectorSheet extends StatelessWidget {
                 },
                 separatorBuilder:
                     (
-                      final BuildContext itemContext,
-                      final int _,
+                      final itemContext,
+                      final _,
                     ) => SizedBox(height: context.responsiveGapS),
                 itemCount: operations.length,
               ),

@@ -46,7 +46,7 @@ class _ChatPageState extends State<ChatPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (final BuildContext sheetContext) => BlocProvider.value(
+      builder: (final sheetContext) => BlocProvider.value(
         value: cubit,
         child: ChatHistorySheet(
           onClose: () => NavigationUtils.maybePop(sheetContext),
@@ -62,7 +62,7 @@ class _ChatPageState extends State<ChatPage> {
     final bool confirmed =
         await showAdaptiveDialog<bool>(
           context: context,
-          builder: (final BuildContext dialogContext) {
+          builder: (final dialogContext) {
             if (isCupertino) {
               return CupertinoAlertDialog(
                 title: Text(l10n.chatHistoryClearAll),
@@ -115,8 +115,8 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final bool hasHistory = context.select(
-      (final ChatCubit cubit) => cubit.state.hasHistory,
+    final bool hasHistory = context.selectState<ChatCubit, ChatState, bool>(
+      selector: (final state) => state.hasHistory,
     );
     return CommonPageLayout(
       title: l10n.chatPageTitle,

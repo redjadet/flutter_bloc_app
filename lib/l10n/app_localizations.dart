@@ -2425,6 +2425,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} NFT(s)'**
   String nftsCount(int count);
+
+  /// Title for the kids vocabulary playlearn feature
+  ///
+  /// In en, this message translates to:
+  /// **'Playlearn'**
+  String get playlearnTitle;
+
+  /// Topic name for animals vocabulary
+  ///
+  /// In en, this message translates to:
+  /// **'Animals'**
+  String get playlearnTopicAnimals;
+
+  /// Label for tap-to-hear button
+  ///
+  /// In en, this message translates to:
+  /// **'Listen'**
+  String get playlearnListen;
+
+  /// Accessibility hint for listen button
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to hear'**
+  String get playlearnTapToListen;
+
+  /// Back button label for playlearn pages
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get playlearnBack;
+
+  /// Tooltip for Playlearn entry in app bar or menu
+  ///
+  /// In en, this message translates to:
+  /// **'Open Playlearn'**
+  String get openPlaylearnTooltip;
 }
 
 class _AppLocalizationsDelegate

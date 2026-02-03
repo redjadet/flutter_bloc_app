@@ -55,7 +55,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
       return;
     }
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
-      (final List<ConnectivityResult> results) {
+      (final results) {
         final ConnectivityResult result = results.isNotEmpty
             ? results.first
             : ConnectivityResult.none;
@@ -70,7 +70,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
       },
     );
     unawaited(
-      getCurrentStatus().then((final NetworkStatus status) {
+      getCurrentStatus().then((final status) {
         if (_controller.hasListener && !_controller.isClosed) {
           _controller.add(status);
         }

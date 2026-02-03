@@ -9,6 +9,6 @@ class HiveLocaleRepository extends HiveSettingsRepository<AppLocale>
     : super(
         key: 'preferred_locale_code',
         fromString: AppLocale.fromTag,
-        toStringValue: (final AppLocale locale) => locale.tag,
+        toStringValue: (final locale) => locale.tag,
       );
 }

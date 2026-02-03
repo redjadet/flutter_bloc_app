@@ -58,7 +58,7 @@ class TodoSortBar extends StatelessWidget {
           ),
         ],
       ),
-      itemBuilder: (final BuildContext context) => [
+      itemBuilder: (final context) => [
         PopupMenuItem<TodoSortOrder>(
           value: TodoSortOrder.dateDesc,
           child: Row(

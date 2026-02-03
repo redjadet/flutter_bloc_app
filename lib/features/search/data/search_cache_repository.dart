@@ -50,7 +50,7 @@ class SearchCacheRepository extends HiveRepositoryBase {
       final String key = '$_keyPrefix$normalizedQuery';
 
       final List<Map<String, dynamic>> serialized = results
-          .map((final SearchResult r) => r.toJson())
+          .map((final r) => r.toJson())
           .toList(growable: false);
       await box.put(key, serialized);
 
@@ -84,7 +84,7 @@ class SearchCacheRepository extends HiveRepositoryBase {
       final Box<dynamic> box = await getBox();
       final List<String> keys = box.keys
           .whereType<String>()
-          .where((final String k) => k.startsWith(_keyPrefix))
+          .where((final k) => k.startsWith(_keyPrefix))
           .toList(growable: false);
       for (final String key in keys) {
         await safeDeleteKey(box, key);

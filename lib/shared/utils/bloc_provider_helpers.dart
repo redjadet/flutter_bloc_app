@@ -102,7 +102,7 @@ class BlocProviderHelpers {
   }) => BlocProvider<C>(
     create: (_) => create(),
     child: Builder(
-      builder: (final BuildContext context) {
+      builder: (final context) {
         final cubit = context.read<C>();
         return builder(context, cubit);
       },
@@ -132,7 +132,7 @@ class BlocProviderHelpers {
       return cubit;
     },
     child: Builder(
-      builder: (final BuildContext context) {
+      builder: (final context) {
         final cubit = context.read<C>();
         return builder(context, cubit);
       },

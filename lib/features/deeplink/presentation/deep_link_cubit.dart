@@ -75,7 +75,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
 
     await _disposeSubscription();
     _subscription = _service.linkStream().listen(
-      (final Uri uri) {
+      (final uri) {
         AppLogger.info('Received deep link from stream: $uri');
         _handleUri(uri, DeepLinkOrigin.resumed);
       },

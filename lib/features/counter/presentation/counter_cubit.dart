@@ -51,7 +51,7 @@ class CounterCubit extends _CounterCubitBase {
         );
         await applyRestorationOutcome(
           restoration,
-          onHoldChanged: ({required final bool holdSideEffects}) =>
+          onHoldChanged: ({required final holdSideEffects}) =>
               _pauseCountdownForOneTick = holdSideEffects,
           onAfterEmit: _syncTickerForState,
           onPersist: _persistState,
@@ -61,7 +61,7 @@ class CounterCubit extends _CounterCubitBase {
       },
       onError: (_) {},
       logContext: 'CounterCubit.loadInitial',
-      onErrorWithDetails: (final Object error, final StackTrace? stackTrace) {
+      onErrorWithDetails: (final error, final stackTrace) {
         _handleError(
           error,
           stackTrace ?? StackTrace.current,
@@ -132,7 +132,7 @@ class CounterCubit extends _CounterCubitBase {
       ),
       onError: (_) {},
       logContext: 'CounterCubit._persistState',
-      onErrorWithDetails: (final Object error, final StackTrace? stackTrace) {
+      onErrorWithDetails: (final error, final stackTrace) {
         _handleError(
           error,
           stackTrace ?? StackTrace.current,

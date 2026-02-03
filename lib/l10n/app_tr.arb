@@ -1191,5 +1191,29 @@
         "type": "int"
       }
     }
+  },
+  "playlearnTitle": "Playlearn",
+  "@playlearnTitle": {
+    "description": "Title for the kids vocabulary playlearn feature"
+  },
+  "playlearnTopicAnimals": "Hayvanlar",
+  "@playlearnTopicAnimals": {
+    "description": "Topic name for animals vocabulary"
+  },
+  "playlearnListen": "Dinle",
+  "@playlearnListen": {
+    "description": "Label for tap-to-hear button"
+  },
+  "playlearnTapToListen": "Dinlemek için dokun",
+  "@playlearnTapToListen": {
+    "description": "Accessibility hint for listen button"
+  },
+  "playlearnBack": "Geri",
+  "@playlearnBack": {
+    "description": "Back button label for playlearn pages"
+  },
+  "openPlaylearnTooltip": "Playlearn'i Aç",
+  "@openPlaylearnTooltip": {
+    "description": "Tooltip for Playlearn entry in app bar or menu"
   }
 }

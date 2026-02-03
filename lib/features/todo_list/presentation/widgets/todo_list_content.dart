@@ -57,7 +57,7 @@ class TodoListContent extends StatelessWidget {
             padding: context.responsiveListPadding,
             cacheExtent: 500,
             itemCount: filteredItems.length,
-            onReorder: (final int oldIndex, final int newIndex) {
+            onReorder: (final oldIndex, final newIndex) {
               cubit.reorderItems(
                 oldIndex: oldIndex,
                 newIndex: newIndex,
@@ -75,7 +75,7 @@ class TodoListContent extends StatelessWidget {
                     item: item,
                     showDragHandle: sortOrder == TodoSortOrder.manual,
                     isSelected: selectedItemIds.contains(item.id),
-                    onSelectionChanged: (final bool selected) {
+                    onSelectionChanged: (final selected) {
                       if (selected != selectedItemIds.contains(item.id)) {
                         onItemSelectionChanged(item.id, selected: selected);
                       }

@@ -50,7 +50,7 @@ Future<SyncCycleSummary> runSyncCycle({
   for (final SyncOperation operation in pending) {
     pendingByEntity.update(
       operation.entityType,
-      (final int count) => count + 1,
+      (final count) => count + 1,
       ifAbsent: () => 1,
     );
   }

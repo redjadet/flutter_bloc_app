@@ -39,7 +39,7 @@ class _AppleMapsViewState extends State<AppleMapsView> {
     annotations: _buildAnnotations(),
     trafficEnabled: widget.stateManager.trafficEnabled,
     onMapCreated: widget.onMapCreated,
-    onCameraMove: (final amap.CameraPosition position) =>
+    onCameraMove: (final position) =>
         widget.onCameraMove(googleCameraPositionFromApple(position)),
   );
 
@@ -58,7 +58,7 @@ class _AppleMapsViewState extends State<AppleMapsView> {
     _cachedLocations = locations;
     _cachedAnnotations = locations
         .map(
-          (final MapLocation location) => amap.Annotation(
+          (final location) => amap.Annotation(
             annotationId: amap.AnnotationId(location.id),
             position: amap.LatLng(
               location.coordinate.latitude,

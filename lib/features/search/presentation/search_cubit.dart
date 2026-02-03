@@ -74,7 +74,7 @@ class SearchCubit extends Cubit<SearchState> {
           ),
         );
       },
-      onError: (final String errorMessage) {
+      onError: (final errorMessage) {
         if (!_isRequestActive(requestId, query)) return;
         emit(
           state.copyWith(

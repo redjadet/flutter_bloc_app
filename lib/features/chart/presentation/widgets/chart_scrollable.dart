@@ -11,7 +11,7 @@ class ChartScrollable extends StatelessWidget {
     physics: const AlwaysScrollableScrollPhysics(),
     padding: context.allGapL,
     itemCount: children.length,
-    itemBuilder: (final BuildContext context, final int index) =>
+    itemBuilder: (final context, final index) =>
         children[index],
   );
 }

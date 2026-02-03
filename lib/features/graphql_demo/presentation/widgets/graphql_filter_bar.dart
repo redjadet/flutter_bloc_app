@@ -49,7 +49,7 @@ class GraphqlFilterBar extends StatelessWidget {
       labelText: l10n.graphqlSampleFilterLabel,
       enabled: !isLoading,
       customPickerItems: allItems,
-      customItemLabel: (final String? code) {
+      customItemLabel: (final code) {
         if (code == null) {
           return l10n.graphqlSampleAllContinents;
         }

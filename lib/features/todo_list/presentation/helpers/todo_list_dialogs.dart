@@ -85,17 +85,17 @@ class _TodoEditorDialogState extends State<_TodoEditorDialog> {
       selectedDueDate: _selectedDueDate,
       selectedPriority: _selectedPriority,
       isCompleted: _isCompleted,
-      onDueDateChanged: (final DateTime? date) {
+      onDueDateChanged: (final date) {
         setState(() {
           _selectedDueDate = date;
         });
       },
-      onPriorityChanged: (final TodoPriority priority) {
+      onPriorityChanged: (final priority) {
         setState(() {
           _selectedPriority = priority;
         });
       },
-      onCompletedChanged: (final bool completed) {
+      onCompletedChanged: (final completed) {
         setState(() {
           _isCompleted = completed;
         });

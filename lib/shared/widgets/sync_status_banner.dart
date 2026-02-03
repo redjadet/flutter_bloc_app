@@ -36,7 +36,7 @@ class _SyncStatusBannerState extends State<SyncStatusBanner> {
   Widget build(
     final BuildContext context,
   ) => BlocBuilder<SyncStatusCubit, SyncStatusState>(
-    builder: (final BuildContext context, final SyncStatusState state) {
+    builder: (final context, final state) {
       final bool isDegraded = state.syncStatus == SyncStatus.degraded;
       if (!isDegraded) {
         return const SizedBox.shrink();

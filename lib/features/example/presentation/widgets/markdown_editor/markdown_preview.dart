@@ -25,7 +25,7 @@ class MarkdownPreview extends StatelessWidget {
             text: text,
             textStyle: theme.textTheme.bodyLarge!,
             textDirection: Directionality.of(context),
-            onTextChanged: (final String value) {},
+            onTextChanged: (final value) {},
           ),
         ),
       ),

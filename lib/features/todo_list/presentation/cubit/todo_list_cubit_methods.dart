@@ -158,7 +158,7 @@ mixin _TodoListCubitMethods
           isLoading = false;
         }
       },
-      onError: (final String errorMessage) {
+      onError: (final errorMessage) {
         if (stopLoadingIfClosed()) return;
         emit(
           state.copyWith(

@@ -66,7 +66,7 @@ class PlatformAdaptiveInputs {
       return CupertinoCheckbox(
         value: value ?? false,
         onChanged: onChanged != null
-            ? (final bool? newValue) => onChanged(newValue)
+            ? (final newValue) => onChanged(newValue)
             : null,
         activeColor: activeColor ?? theme.colorScheme.primary,
       );

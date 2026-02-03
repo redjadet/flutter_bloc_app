@@ -120,7 +120,7 @@ Future<DateTime?> showAdaptiveTodoDatePicker({
                       initialDateTime: safeInitialDateTime,
                       minimumDate: firstDate,
                       maximumDate: lastDate,
-                      onDateTimeChanged: (final DateTime value) {
+                      onDateTimeChanged: (final value) {
                         setState(() {
                           selected = value;
                         });
@@ -177,7 +177,7 @@ Future<DateTime?> showAdaptiveTodoDatePicker({
             initialDate: selected,
             firstDate: firstDate,
             lastDate: lastDate,
-            onDateChanged: (final DateTime value) {
+            onDateChanged: (final value) {
               setState(() {
                 selected = value;
               });

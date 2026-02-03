@@ -53,7 +53,7 @@ class AppLinksDeepLinkService implements DeepLinkService {
 
       try {
         subscription = _api.uriLinkStream.listen(
-          (final Uri? uri) {
+          (final uri) {
             if (uri != null && !controller.isClosed) {
               controller.add(uri);
             }

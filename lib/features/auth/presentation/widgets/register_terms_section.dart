@@ -37,7 +37,7 @@ class RegisterTermsSection extends StatelessWidget {
       Checkbox.adaptive(
         key: const ValueKey('register-terms-checkbox'),
         value: accepted,
-        onChanged: (final bool? checked) async {
+        onChanged: (final checked) async {
           if (checked ?? false) {
             await onAcceptRequested();
           } else {

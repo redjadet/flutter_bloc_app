@@ -28,6 +28,8 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repos
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/pages/graphql_demo_page.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/pages/library_demo_page.dart';
+import 'package:flutter_bloc_app/features/playlearn/presentation/pages/playlearn_page.dart';
+import 'package:flutter_bloc_app/features/playlearn/presentation/pages/vocabulary_list_page.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_cubit.dart';
@@ -235,6 +237,21 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
         child: const GenUiDemoPage(),
       );
     },
+  ),
+  GoRoute(
+    path: AppRoutes.playlearnPath,
+    name: AppRoutes.playlearn,
+    builder: (final context, final state) => const PlaylearnPage(),
+    routes: <GoRoute>[
+      GoRoute(
+        path: 'vocabulary/:topicId',
+        name: AppRoutes.playlearnVocabulary,
+        builder: (final context, final state) {
+          final topicId = state.pathParameters['topicId'] ?? '';
+          return VocabularyListPage(topicId: topicId);
+        },
+      ),
+    ],
   ),
   ...createAuxiliaryRoutes(),
 ];

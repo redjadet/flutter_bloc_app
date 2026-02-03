@@ -74,7 +74,7 @@ class PlatformAdaptiveSheets {
                           initialItem: selectedIndex >= 0 ? selectedIndex : 0,
                         ),
                         itemExtent: 32,
-                        onSelectedItemChanged: (final int index) {
+                        onSelectedItemChanged: (final index) {
                           setState(() {
                             currentSelection = items[index];
                           });

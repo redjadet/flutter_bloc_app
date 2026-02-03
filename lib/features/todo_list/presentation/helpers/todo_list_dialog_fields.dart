@@ -61,7 +61,7 @@ Widget buildTodoPrioritySelector({
           );
         })
         .toList(growable: false),
-    onChanged: (final TodoPriority? value) {
+    onChanged: (final value) {
       if (value != null) {
         onPriorityChanged(value);
       }
@@ -88,7 +88,7 @@ Widget buildTodoCompletionCheckbox({
         children: [
           Checkbox.adaptive(
             value: isCompleted,
-            onChanged: (final bool? value) {
+            onChanged: (final value) {
               if (value != null) {
                 onCompletedChanged(value);
               }
@@ -114,7 +114,7 @@ Widget buildTodoCompletionCheckbox({
     child: CheckboxListTile(
       title: Text(l10n.todoListCompleteAction),
       value: isCompleted,
-      onChanged: (final bool? value) {
+      onChanged: (final value) {
         if (value != null) {
           onCompletedChanged(value);
         }

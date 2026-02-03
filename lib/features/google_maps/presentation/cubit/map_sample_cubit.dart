@@ -25,7 +25,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     );
     await CubitExceptionHandler.executeAsync(
       operation: _repository.fetchSampleLocations,
-      onSuccess: (final List<MapLocation> locations) {
+      onSuccess: (final locations) {
         if (isClosed) return;
         final gmaps.MarkerId? firstMarkerId = locations.isEmpty
             ? null
@@ -45,7 +45,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
           ),
         );
       },
-      onError: (final String errorMessage) {
+      onError: (final errorMessage) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -78,7 +78,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
 
   void selectLocation(final String locationId) {
     final MapLocation? location = state.locations.firstWhereOrNull(
-      (final MapLocation candidate) => candidate.id == locationId,
+      (final candidate) => candidate.id == locationId,
     );
     if (location == null) {
       return;
@@ -147,7 +147,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     required final gmaps.MarkerId? selectedMarkerId,
   }) => locations
       .map(
-        (final MapLocation location) => gmaps.Marker(
+        (final location) => gmaps.Marker(
           markerId: gmaps.MarkerId(location.id),
           position: gmaps.LatLng(
             location.coordinate.latitude,

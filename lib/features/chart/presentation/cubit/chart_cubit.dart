@@ -51,7 +51,7 @@ class ChartCubit extends Cubit<ChartState> {
 
     await CubitExceptionHandler.executeAsync(
       operation: _repository.fetchTrendingCounts,
-      onSuccess: (final List<ChartPoint> points) {
+      onSuccess: (final points) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -60,7 +60,7 @@ class ChartCubit extends Cubit<ChartState> {
           ),
         );
       },
-      onError: (final String errorMessage) {
+      onError: (final errorMessage) {
         if (isClosed) return;
         emit(
           state.copyWith(

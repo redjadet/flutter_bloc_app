@@ -61,7 +61,7 @@ class SnackbarErrorNotificationService implements ErrorNotificationService {
     final bool isCupertino = PlatformAdaptive.isCupertino(context);
     return showAdaptiveDialog<void>(
       context: context,
-      builder: (final BuildContext dialogContext) {
+      builder: (final dialogContext) {
         if (isCupertino) {
           return CupertinoAlertDialog(
             title: Text(title),

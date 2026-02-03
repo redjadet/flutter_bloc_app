@@ -15,7 +15,7 @@ List<firebase_ui.AuthProvider> buildAuthProviders({
       );
 
   if (!providers.any(
-    (final firebase_ui.AuthProvider provider) =>
+    (final provider) =>
         provider is firebase_ui.EmailAuthProvider,
   )) {
     providers.insert(0, firebase_ui.EmailAuthProvider());
@@ -26,7 +26,7 @@ List<firebase_ui.AuthProvider> buildAuthProviders({
   }
 
   final bool hasGoogleProvider = providers.any(
-    (final firebase_ui.AuthProvider provider) =>
+    (final provider) =>
         provider is firebase_ui_google.GoogleProvider,
   );
 

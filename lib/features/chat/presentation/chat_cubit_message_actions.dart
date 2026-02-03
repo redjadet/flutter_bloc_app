@@ -53,7 +53,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
         conversationId: withUser.id,
         clientMessageId: clientMessageId,
       ),
-      onSuccess: (final ChatResult result) {
+      onSuccess: (final result) {
         final DateTime replyTimestamp = DateTime.now();
         final ChatMessage replyWithMetadata = ChatMessage(
           author: result.reply.author,
@@ -80,7 +80,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
 
         unawaited(_persistHistory(finalHistory));
       },
-      onError: (final String errorMessage) {
+      onError: (final errorMessage) {
         _emitConversationSnapshot(
           active: withUser,
           history: historyAfterUser,

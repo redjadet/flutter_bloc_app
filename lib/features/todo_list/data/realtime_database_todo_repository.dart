@@ -28,7 +28,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   @override
   Future<List<TodoItem>> fetchAll() async => _executeForUser<List<TodoItem>>(
     operation: 'fetchAll',
-    action: (final User user) async {
+    action: (final user) async {
       _debugLog(
         'RealtimeDatabaseTodoRepository.fetchAll requesting todos',
       );
@@ -45,11 +45,11 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   @override
   Stream<List<TodoItem>> watchAll() => Stream.fromFuture(waitForAuthUser(_auth))
       .asyncExpand(
-        (final User user) => _todoRef
+        (final user) => _todoRef
             .child(user.uid)
             .onValue
             .map(
-              (final DatabaseEvent event) =>
+              (final event) =>
                   _itemsFromValue(event.snapshot.value, userId: user.uid),
             ),
       )
@@ -64,7 +64,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   @override
   Future<void> save(final TodoItem item) async => _executeForUser<void>(
     operation: 'save',
-    action: (final User user) async {
+    action: (final user) async {
       _debugLog(
         'RealtimeDatabaseTodoRepository.save writing todo item',
       );
@@ -77,7 +77,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   @override
   Future<void> delete(final String id) async => _executeForUser<void>(
     operation: 'delete',
-    action: (final User user) async {
+    action: (final user) async {
       _debugLog(
         'RealtimeDatabaseTodoRepository.delete removing todo item',
       );
@@ -89,7 +89,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   @override
   Future<void> clearCompleted() async => _executeForUser<void>(
     operation: 'clearCompleted',
-    action: (final User user) async {
+    action: (final user) async {
       _debugLog(
         'RealtimeDatabaseTodoRepository.clearCompleted removing completed todos',
       );

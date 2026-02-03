@@ -1339,4 +1339,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String nftsCount(int count) {
     return '$count NFT(s)';
   }
+
+  @override
+  String get playlearnTitle => 'Playlearn';
+
+  @override
+  String get playlearnTopicAnimals => 'Animaux';
+
+  @override
+  String get playlearnListen => 'Écouter';
+
+  @override
+  String get playlearnTapToListen => 'Appuyez pour écouter';
+
+  @override
+  String get playlearnBack => 'Retour';
+
+  @override
+  String get openPlaylearnTooltip => 'Ouvrir Playlearn';
 }

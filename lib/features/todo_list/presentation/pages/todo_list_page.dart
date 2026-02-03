@@ -157,8 +157,8 @@ class _TodoListBody extends StatelessWidget {
                 cubit: cubit,
                 onItemSelectionChanged:
                     (
-                      final String itemId, {
-                      required final bool selected,
+                      final itemId, {
+                      required final selected,
                     }) {
                       if (selected != data.selectedItemIds.contains(itemId)) {
                         cubit.toggleItemSelection(itemId);

@@ -1713,5 +1713,29 @@
         "type": "int"
       }
     }
+  },
+  "playlearnTitle": "Playlearn",
+  "@playlearnTitle": {
+    "description": "Title for the kids vocabulary playlearn feature"
+  },
+  "playlearnTopicAnimals": "Animals",
+  "@playlearnTopicAnimals": {
+    "description": "Topic name for animals vocabulary"
+  },
+  "playlearnListen": "Listen",
+  "@playlearnListen": {
+    "description": "Label for tap-to-hear button"
+  },
+  "playlearnTapToListen": "Tap to hear",
+  "@playlearnTapToListen": {
+    "description": "Accessibility hint for listen button"
+  },
+  "playlearnBack": "Back",
+  "@playlearnBack": {
+    "description": "Back button label for playlearn pages"
+  },
+  "openPlaylearnTooltip": "Open Playlearn",
+  "@openPlaylearnTooltip": {
+    "description": "Tooltip for Playlearn entry in app bar or menu"
   }
 }
