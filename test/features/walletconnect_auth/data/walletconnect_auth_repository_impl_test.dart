@@ -123,6 +123,9 @@ void main() {
             ));
             return Future<void>.value();
           });
+          when(
+            () => mockUsersCollection.doc('test-uid'),
+          ).thenReturn(mockDocRef);
           when(() => mockUsersCollection.doc(any())).thenAnswer((invocation) {
             final docId = invocation.positionalArguments[0] as String;
             if (docId == 'test-uid') return mockDocRef;
@@ -138,9 +141,6 @@ void main() {
             });
             return ref;
           });
-          when(
-            () => mockUsersCollection.doc('test-uid'),
-          ).thenReturn(mockDocRef);
 
           final repository = WalletConnectAuthRepositoryImpl(
             walletConnectService: mockWalletConnectService,
@@ -201,6 +201,9 @@ void main() {
             ));
             return Future<void>.value();
           });
+          when(
+            () => mockUsersCollection.doc('test-uid'),
+          ).thenReturn(mockDocRef);
           when(() => mockUsersCollection.doc(any())).thenAnswer((invocation) {
             final docId = invocation.positionalArguments[0] as String;
             if (docId == 'test-uid') return mockDocRef;
@@ -350,7 +353,7 @@ void main() {
             WalletUserProfileFields.nfts: <Map<String, dynamic>>[],
           };
           final mockDocRef = MockDocumentReference();
-          when(() => mockDocRef.get()).thenAnswer(
+          when(() => mockDocRef.get(any())).thenAnswer(
             (_) async => _FakeDocumentSnapshot(exists: true, data: data),
           );
           when(() => mockUsersCollection.doc(any())).thenAnswer((invocation) {
