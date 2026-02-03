@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_b
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_button_styles.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_gallery.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_header.dart';
+import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_sync_banner.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
@@ -78,8 +79,7 @@ class ProfilePage extends StatelessWidget {
                   child: CommonMaxWidth(
                     child: Column(
                       children: [
-                        // Sync banner hidden per user request
-                        // const ProfileSyncBanner(),
+                        const ProfileSyncBanner(),
                         ProfileHeader(user: profile),
                         const ProfileActionButtons(),
                         SizedBox(height: sectionSpacing),

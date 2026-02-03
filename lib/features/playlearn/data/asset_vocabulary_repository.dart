@@ -54,7 +54,8 @@ class AssetVocabularyRepository implements VocabularyRepository {
   List<TopicItem> getTopics() => List<TopicItem>.unmodifiable(_topics);
 
   @override
-  List<VocabularyItem> getWordsByTopic(final String topicId) => List<VocabularyItem>.unmodifiable(
-    _words.where((final w) => w.topicId == topicId).toList(),
-  );
+  List<VocabularyItem> getWordsByTopic(final String topicId) =>
+      List<VocabularyItem>.unmodifiable(
+        _words.where((final w) => w.topicId == topicId).toList(),
+      );
 }

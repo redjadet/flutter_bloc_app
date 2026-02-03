@@ -64,8 +64,7 @@ class GenUiDemoAgentImpl implements GenUiDemoAgent {
     );
 
     _errorsSubscription = _contentGenerator.errorStream.listen(
-      (final error) =>
-          _errorsController.add(error.error.toString()),
+      (final error) => _errorsController.add(error.error.toString()),
     );
 
     _isInitialized = true;

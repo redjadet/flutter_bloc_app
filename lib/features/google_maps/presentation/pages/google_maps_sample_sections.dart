@@ -18,23 +18,19 @@ class _GoogleMapsMapSection extends StatelessWidget {
   Widget build(final BuildContext context) =>
       BlocListener<MapSampleCubit, MapSampleState>(
         listenWhen: _mapStateChanged,
-        listener:
-            (final context, final state) async {
-              await controller.syncWithState(state);
-            },
+        listener: (final context, final state) async {
+          await controller.syncWithState(state);
+        },
         child: BlocBuilder<MapSampleCubit, MapSampleState>(
-          buildWhen:
-              (final previous, final current) =>
-                  false,
-          builder: (final context, final state) =>
-              RepaintBoundary(
-                child: MapSampleMapView(
-                  initialState: state,
-                  cubit: cubit,
-                  useAppleMaps: useAppleMaps,
-                  controller: controller,
-                ),
-              ),
+          buildWhen: (final previous, final current) => false,
+          builder: (final context, final state) => RepaintBoundary(
+            child: MapSampleMapView(
+              initialState: state,
+              cubit: cubit,
+              useAppleMaps: useAppleMaps,
+              controller: controller,
+            ),
+          ),
         ),
       );
 
@@ -68,19 +64,17 @@ class _GoogleMapsControlsSection extends StatelessWidget {
           isHybridMapType: state.mapType == gmaps.MapType.hybrid,
           trafficEnabled: state.trafficEnabled,
         ),
-        builder:
-            (final context, final viewModel) =>
-                GoogleMapsControlsCard(
-                  heading: l10n.googleMapsPageControlsHeading,
-                  helpText: l10n.googleMapsPageApiKeyHelp,
-                  isHybridMapType: viewModel.isHybridMapType,
-                  trafficEnabled: viewModel.trafficEnabled,
-                  onToggleMapType: onToggleMapType,
-                  onToggleTraffic: onToggleTraffic,
-                  mapTypeHybridLabel: l10n.googleMapsPageMapTypeHybrid,
-                  mapTypeNormalLabel: l10n.googleMapsPageMapTypeNormal,
-                  trafficToggleLabel: l10n.googleMapsPageTrafficToggle,
-                ),
+        builder: (final context, final viewModel) => GoogleMapsControlsCard(
+          heading: l10n.googleMapsPageControlsHeading,
+          helpText: l10n.googleMapsPageApiKeyHelp,
+          isHybridMapType: viewModel.isHybridMapType,
+          trafficEnabled: viewModel.trafficEnabled,
+          onToggleMapType: onToggleMapType,
+          onToggleTraffic: onToggleTraffic,
+          mapTypeHybridLabel: l10n.googleMapsPageMapTypeHybrid,
+          mapTypeNormalLabel: l10n.googleMapsPageMapTypeNormal,
+          trafficToggleLabel: l10n.googleMapsPageTrafficToggle,
+        ),
       );
 }
 

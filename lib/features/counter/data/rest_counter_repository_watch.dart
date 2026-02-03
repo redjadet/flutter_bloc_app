@@ -32,8 +32,7 @@ void _triggerInitialLoadIfNeeded(final RestCounterRepository repository) {
   unawaited(
     repository._initialLoadHelper.ensureInitialLoad(
       load: repository.load,
-      onValue: (final snapshot) =>
-          _emitSnapshot(repository, snapshot),
+      onValue: (final snapshot) => _emitSnapshot(repository, snapshot),
       onError: (final error, final stackTrace) {
         AppLogger.error(
           'RestCounterRepository.initialLoad failed',
