@@ -77,8 +77,7 @@ Future<http.Response> _restCounterRepositorySendRequest({
         message: 'REST $operation failed (HTTP ${response.statusCode}).',
       ),
   onException: (final error) => errorFactory(originalError: error),
-  onFailureLog: (final response) =>
-      _logHttpError(operation, response),
+  onFailureLog: (final response) => _logHttpError(operation, response),
 );
 
 Map<String, String> _headers(

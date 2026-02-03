@@ -35,7 +35,8 @@ class WordCard extends StatelessWidget {
             final bool isCompact = maxW < 260;
             const minSpaceForTextAndButton = 140.0;
             final size =
-                (maxW > minSpaceForTextAndButton && imageSize > maxW - minSpaceForTextAndButton)
+                (maxW > minSpaceForTextAndButton &&
+                    imageSize > maxW - minSpaceForTextAndButton)
                 ? maxW - minSpaceForTextAndButton
                 : imageSize;
             if (isCompact) {
@@ -89,7 +90,12 @@ class WordCard extends StatelessWidget {
                       height: size,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: _buildImage(context, item.imageAssetPath!, size, theme),
+                        child: _buildImage(
+                          context,
+                          item.imageAssetPath!,
+                          size,
+                          theme,
+                        ),
                       ),
                     ),
                   ),

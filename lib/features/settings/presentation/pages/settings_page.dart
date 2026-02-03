@@ -104,8 +104,7 @@ class _SettingsView extends StatelessWidget {
         key: const ValueKey('settings-list'),
         padding: EdgeInsets.zero,
         itemCount: sections.length,
-        itemBuilder: (final context, final index) =>
-            sections[index],
+        itemBuilder: (final context, final index) => sections[index],
       ),
     );
   }
