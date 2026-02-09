@@ -1240,7 +1240,7 @@ PODS:
   - Firebase/RemoteConfig (12.8.0):
     - Firebase/CoreOnly
     - FirebaseRemoteConfig (~> 12.8.0)
-  - firebase_analytics (12.1.1):
+  - firebase_analytics (12.1.2):
     - firebase_core
     - FirebaseAnalytics (= 12.8.0)
     - Flutter
@@ -1255,7 +1255,7 @@ PODS:
     - Firebase/Crashlytics (= 12.8.0)
     - firebase_core
     - Flutter
-  - firebase_database (12.1.2):
+  - firebase_database (12.1.3):
     - Firebase/Database (= 12.8.0)
     - firebase_core
     - Flutter
@@ -1752,11 +1752,11 @@ SPEC CHECKSUMS:
   connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd
   desktop_webview_auth: 4cf620136c3d79796496eef85e59508e3a1a003d
   Firebase: 9a58fdbc9d8655ed7b79a19cf9690bb007d3d46d
-  firebase_analytics: b5a19eaf3e4bf4187b0815ef4850b8916e2bc549
+  firebase_analytics: a3285a9ab410456957496cdb659f00c1cf19a95f
   firebase_auth: e9031a1dbe04a90d98e8d11ff2302352a1c6d9e8
   firebase_core: ee30637e6744af8e0c12a6a1e8a9718506ec2398
   firebase_crashlytics: 28b8f39df8104131376393e6af658b8b77dd120f
-  firebase_database: 1a8f01fc41f3a8ae8a85b7acb5308db15e3c36e3
+  firebase_database: 38e589a933d0115ed4c35816f90c585b2686cd41
   firebase_remote_config: 3a5639062e130c4d4b7c4bae347cc3bac90f5a1e
   FirebaseABTesting: 31266c7845f9adde0f2e8a59267e9c82e4050898
   FirebaseAnalytics: f20bbad8cb7f65d8a5eaefeb424ae8800a31bdfc

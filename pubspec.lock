@@ -329,6 +329,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.15.0"
+  cross_file:
+    dependency: transitive
+    description:
+      name: cross_file
+      sha256: "28bb3ae56f117b5aec029d702a90f57d285cd975c3c5c281eaca38dbc47c5937"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.5+2"
   crypto:
     dependency: transitive
     description:
@@ -468,10 +476,10 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_analytics
-      sha256: "91e2739bad690da2826c0cd5b28328fd15fb87adf54634cded703f34fd797a81"
+      sha256: "07e0a82e9b045dbd14522a0b23764e2dbcc269720e785d63c6a021133ebb766a"
       url: "https://pub.dev"
     source: hosted
-    version: "12.1.1"
+    version: "12.1.2"
   firebase_analytics_platform_interface:
     dependency: transitive
     description:
@@ -564,10 +572,10 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_database
-      sha256: "03fb81310cd525b627bb9ee184e41ddddaf58e48be93e4fbf5219508ef5b474a"
+      sha256: f13676fab84671a808eb5eaeecfa2bcb5a3fed2802798c0dd16cb786139a6492
       url: "https://pub.dev"
     source: hosted
-    version: "12.1.2"
+    version: "12.1.3"
   firebase_database_platform_interface:
     dependency: transitive
     description:
@@ -836,22 +844,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  genai_primitives:
+    dependency: transitive
+    description:
+      name: genai_primitives
+      sha256: e35142ecc8059394f7fb4d1b8edc3ee081319c6b007ddd242687182bd6ad4cf8
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.2"
   genui:
     dependency: "direct main"
     description:
       name: genui
-      sha256: "3bd70b5cd2d22d294fb47d064ab15b420b21e8632139e36635725d1623705452"
+      sha256: c9d18f79ce39e4a906b31e469461c6ee5f46c5fb270dbc8cb8716e0e48791b37
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.1"
+    version: "0.7.0"
   genui_google_generative_ai:
     dependency: "direct main"
     description:
       name: genui_google_generative_ai
-      sha256: "89df3a89a9428692dc9976cb089884a9b088012b5ecacbc7757e6e2d9d842848"
+      sha256: "1cd34bb1269d84231859db546f5fe07ac4af0e8f1fe68f5545ecc3413fff475c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.1"
+    version: "0.7.0"
   get_it:
     dependency: "direct main"
     description:
@@ -888,42 +904,42 @@ packages:
     dependency: transitive
     description:
       name: google_cloud_ai_generativelanguage_v1beta
-      sha256: b98c7b0c7369d796e8ba177e6743f959e7700dc9a7d0aef6c0431a147e014062
+      sha256: "846770122f0dd98226892d00865a72d237c6ae11e069d2ba67283e60828df4f8"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0"
+    version: "0.4.0"
   google_cloud_longrunning:
     dependency: transitive
     description:
       name: google_cloud_longrunning
-      sha256: b724fc477c300d1c641a109bb5aafbc44f8b15833f509f4d69484add0ba6b96e
+      sha256: "2b1e82d3e5b7a5a8880cab0e17ee7399720cf418d9938a644acb3ee2d24ef142"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0"
+    version: "0.4.0"
   google_cloud_protobuf:
     dependency: transitive
     description:
       name: google_cloud_protobuf
-      sha256: "644f7b0be6293fdf5222f7be48a6d218dc28d3ac10e45b815bbff1ae9a43a572"
+      sha256: cadadac845ad26f874363e3a002099d93b14bde9159bf974e537c47df86845e7
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0"
+    version: "0.4.0"
   google_cloud_rpc:
     dependency: transitive
     description:
       name: google_cloud_rpc
-      sha256: "60cf014120298ac2229e755a74f659265fbf062f54b9512a9e38f24e84c26e1f"
+      sha256: "5eedf63d438db69c31b3db52f1ee5081df269c80388234e6873fac34ae57b0d2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0"
+    version: "0.4.0"
   google_cloud_type:
     dependency: transitive
     description:
       name: google_cloud_type
-      sha256: "355a5648b9e1eaeb37baf8bd16f2d446e2f55ccdba22480792b829b0776208e7"
+      sha256: f5e8d649b7a99815f7c6c352597099858e3dbd041435d6567d871886944771a2
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0"
+    version: "0.4.0"
   google_fonts:
     dependency: "direct main"
     description:
