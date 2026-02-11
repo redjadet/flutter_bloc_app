@@ -2461,6 +2461,336 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open Playlearn'**
   String get openPlaylearnTooltip;
+
+  /// Tooltip for Dispersion Analyzer entry in app bar or menu
+  ///
+  /// In en, this message translates to:
+  /// **'Dispersion Analyzer'**
+  String get openDispersionTooltip;
+
+  /// No description provided for @dispersionPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dispersion Analyzer'**
+  String get dispersionPageTitle;
+
+  /// No description provided for @dispersionCreateGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Create group'**
+  String get dispersionCreateGroup;
+
+  /// No description provided for @dispersionCompare.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare datasets'**
+  String get dispersionCompare;
+
+  /// No description provided for @dispersionDatasets.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} datasets'**
+  String dispersionDatasets(int count);
+
+  /// No description provided for @dispersionNoDatasets.
+  ///
+  /// In en, this message translates to:
+  /// **'No datasets yet. Create a group to get started.'**
+  String get dispersionNoDatasets;
+
+  /// No description provided for @dispersionPoints.
+  ///
+  /// In en, this message translates to:
+  /// **'points'**
+  String get dispersionPoints;
+
+  /// No description provided for @dispersionDerived.
+  ///
+  /// In en, this message translates to:
+  /// **'Derived'**
+  String get dispersionDerived;
+
+  /// No description provided for @dispersionCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get dispersionCamera;
+
+  /// No description provided for @dispersionGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get dispersionGallery;
+
+  /// No description provided for @dispersionKnownLengthMm.
+  ///
+  /// In en, this message translates to:
+  /// **'Known length (mm)'**
+  String get dispersionKnownLengthMm;
+
+  /// No description provided for @dispersionDistanceM.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance (m)'**
+  String get dispersionDistanceM;
+
+  /// No description provided for @dispersionHoleDiameterMm.
+  ///
+  /// In en, this message translates to:
+  /// **'Hole diameter (mm)'**
+  String get dispersionHoleDiameterMm;
+
+  /// No description provided for @dispersionGroupName.
+  ///
+  /// In en, this message translates to:
+  /// **'Group name'**
+  String get dispersionGroupName;
+
+  /// No description provided for @dispersionGroupNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Session 1'**
+  String get dispersionGroupNameHint;
+
+  /// No description provided for @dispersionBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get dispersionBack;
+
+  /// No description provided for @dispersionSaveGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Save group'**
+  String get dispersionSaveGroup;
+
+  /// No description provided for @dispersionCalibrationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Calibration: enter endpoint coordinates (pixels) and known length.'**
+  String get dispersionCalibrationHint;
+
+  /// No description provided for @dispersionCalibrationE1x.
+  ///
+  /// In en, this message translates to:
+  /// **'Endpoint 1 X (px)'**
+  String get dispersionCalibrationE1x;
+
+  /// No description provided for @dispersionCalibrationE1y.
+  ///
+  /// In en, this message translates to:
+  /// **'Endpoint 1 Y (px)'**
+  String get dispersionCalibrationE1y;
+
+  /// No description provided for @dispersionCalibrationE2x.
+  ///
+  /// In en, this message translates to:
+  /// **'Endpoint 2 X (px)'**
+  String get dispersionCalibrationE2x;
+
+  /// No description provided for @dispersionCalibrationE2y.
+  ///
+  /// In en, this message translates to:
+  /// **'Endpoint 2 Y (px)'**
+  String get dispersionCalibrationE2y;
+
+  /// No description provided for @dispersionAimPointPx.
+  ///
+  /// In en, this message translates to:
+  /// **'Aim point (pixels)'**
+  String get dispersionAimPointPx;
+
+  /// No description provided for @dispersionAimPointX.
+  ///
+  /// In en, this message translates to:
+  /// **'Aim X (px)'**
+  String get dispersionAimPointX;
+
+  /// No description provided for @dispersionAimPointY.
+  ///
+  /// In en, this message translates to:
+  /// **'Aim Y (px)'**
+  String get dispersionAimPointY;
+
+  /// No description provided for @dispersionDatasetA.
+  ///
+  /// In en, this message translates to:
+  /// **'Dataset A'**
+  String get dispersionDatasetA;
+
+  /// No description provided for @dispersionDatasetB.
+  ///
+  /// In en, this message translates to:
+  /// **'Dataset B'**
+  String get dispersionDatasetB;
+
+  /// No description provided for @dispersionAlpha.
+  ///
+  /// In en, this message translates to:
+  /// **'Alpha'**
+  String get dispersionAlpha;
+
+  /// No description provided for @dispersionExcludeOutliers.
+  ///
+  /// In en, this message translates to:
+  /// **'Exclude outliers from test'**
+  String get dispersionExcludeOutliers;
+
+  /// No description provided for @dispersionRunComparison.
+  ///
+  /// In en, this message translates to:
+  /// **'Run comparison'**
+  String get dispersionRunComparison;
+
+  /// No description provided for @dispersionComparisonResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Comparison result'**
+  String get dispersionComparisonResult;
+
+  /// No description provided for @dispersionSignificant.
+  ///
+  /// In en, this message translates to:
+  /// **'Difference is statistically significant'**
+  String get dispersionSignificant;
+
+  /// No description provided for @dispersionNotSignificant.
+  ///
+  /// In en, this message translates to:
+  /// **'Difference is not statistically significant'**
+  String get dispersionNotSignificant;
+
+  /// No description provided for @dispersionSmallSampleCaution.
+  ///
+  /// In en, this message translates to:
+  /// **'Small sample (n<20): p-value is approximate.'**
+  String get dispersionSmallSampleCaution;
+
+  /// No description provided for @dispersionUseTestImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Use test image'**
+  String get dispersionUseTestImage;
+
+  /// No description provided for @dispersionAddSamplePoints.
+  ///
+  /// In en, this message translates to:
+  /// **'Add sample points'**
+  String get dispersionAddSamplePoints;
+
+  /// No description provided for @dispersionSelectedPoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected point'**
+  String get dispersionSelectedPoint;
+
+  /// No description provided for @dispersionDeleteSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete selected'**
+  String get dispersionDeleteSelected;
+
+  /// No description provided for @dispersionCombineDatasets.
+  ///
+  /// In en, this message translates to:
+  /// **'Combine datasets'**
+  String get dispersionCombineDatasets;
+
+  /// No description provided for @dispersionCombineDatasetsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Combine datasets'**
+  String get dispersionCombineDatasetsTitle;
+
+  /// No description provided for @dispersionDerivedDatasetName.
+  ///
+  /// In en, this message translates to:
+  /// **'Combined dataset name'**
+  String get dispersionDerivedDatasetName;
+
+  /// No description provided for @dispersionDerivedDatasetNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Session A + B'**
+  String get dispersionDerivedDatasetNameHint;
+
+  /// No description provided for @dispersionSelectAtLeastTwo.
+  ///
+  /// In en, this message translates to:
+  /// **'Select at least 2 datasets'**
+  String get dispersionSelectAtLeastTwo;
+
+  /// No description provided for @dispersionCreateCombined.
+  ///
+  /// In en, this message translates to:
+  /// **'Create combined dataset'**
+  String get dispersionCreateCombined;
+
+  /// No description provided for @dispersionDerivedDatasetNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name for the combined dataset'**
+  String get dispersionDerivedDatasetNameRequired;
+
+  /// No description provided for @dispersionPointList.
+  ///
+  /// In en, this message translates to:
+  /// **'Points'**
+  String get dispersionPointList;
+
+  /// No description provided for @dispersionRadialMm.
+  ///
+  /// In en, this message translates to:
+  /// **'Radial (mm)'**
+  String get dispersionRadialMm;
+
+  /// No description provided for @dispersionOutlierAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto'**
+  String get dispersionOutlierAuto;
+
+  /// No description provided for @dispersionOutlierManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual'**
+  String get dispersionOutlierManual;
+
+  /// No description provided for @dispersionOutlierEffective.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlier'**
+  String get dispersionOutlierEffective;
+
+  /// No description provided for @dispersionMarkAsOutlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as outlier'**
+  String get dispersionMarkAsOutlier;
+
+  /// No description provided for @dispersionGraphTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dispersion'**
+  String get dispersionGraphTitle;
+
+  /// No description provided for @dispersionGraphOutlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlier'**
+  String get dispersionGraphOutlier;
+
+  /// No description provided for @dispersionGraphNoPoints.
+  ///
+  /// In en, this message translates to:
+  /// **'No points'**
+  String get dispersionGraphNoPoints;
+
+  /// No description provided for @dispersionFillTestValues.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill test values'**
+  String get dispersionFillTestValues;
 }
 
 class _AppLocalizationsDelegate

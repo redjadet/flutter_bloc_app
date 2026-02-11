@@ -1355,4 +1355,177 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get openPlaylearnTooltip => 'Playlearn öffnen';
+
+  @override
+  String get openDispersionTooltip => 'Streuungsanalyse';
+
+  @override
+  String get dispersionPageTitle => 'Streuungsanalyse';
+
+  @override
+  String get dispersionCreateGroup => 'Gruppe erstellen';
+
+  @override
+  String get dispersionCompare => 'Datensätze vergleichen';
+
+  @override
+  String dispersionDatasets(int count) {
+    return '$count Datensätze';
+  }
+
+  @override
+  String get dispersionNoDatasets =>
+      'Noch keine Datensätze. Erstellen Sie eine Gruppe, um zu beginnen.';
+
+  @override
+  String get dispersionPoints => 'Punkte';
+
+  @override
+  String get dispersionDerived => 'Abgeleitet';
+
+  @override
+  String get dispersionCamera => 'Kamera';
+
+  @override
+  String get dispersionGallery => 'Galerie';
+
+  @override
+  String get dispersionKnownLengthMm => 'Bekannte Länge (mm)';
+
+  @override
+  String get dispersionDistanceM => 'Entfernung (m)';
+
+  @override
+  String get dispersionHoleDiameterMm => 'Lochdurchmesser (mm)';
+
+  @override
+  String get dispersionGroupName => 'Gruppenname';
+
+  @override
+  String get dispersionGroupNameHint => 'z. B. Sitzung 1';
+
+  @override
+  String get dispersionBack => 'Zurück';
+
+  @override
+  String get dispersionSaveGroup => 'Gruppe speichern';
+
+  @override
+  String get dispersionCalibrationHint =>
+      'Kalibrierung: Endpunktkoordinaten (Pixel) und bekannte Länge eingeben.';
+
+  @override
+  String get dispersionCalibrationE1x => 'Endpunkt 1 X (px)';
+
+  @override
+  String get dispersionCalibrationE1y => 'Endpunkt 1 Y (px)';
+
+  @override
+  String get dispersionCalibrationE2x => 'Endpunkt 2 X (px)';
+
+  @override
+  String get dispersionCalibrationE2y => 'Endpunkt 2 Y (px)';
+
+  @override
+  String get dispersionAimPointPx => 'Zielpunkt (Pixel)';
+
+  @override
+  String get dispersionAimPointX => 'Ziel X (px)';
+
+  @override
+  String get dispersionAimPointY => 'Ziel Y (px)';
+
+  @override
+  String get dispersionDatasetA => 'Datensatz A';
+
+  @override
+  String get dispersionDatasetB => 'Datensatz B';
+
+  @override
+  String get dispersionAlpha => 'Alpha';
+
+  @override
+  String get dispersionExcludeOutliers => 'Ausreißer vom Test ausschließen';
+
+  @override
+  String get dispersionRunComparison => 'Vergleich ausführen';
+
+  @override
+  String get dispersionComparisonResult => 'Vergleichsergebnis';
+
+  @override
+  String get dispersionSignificant => 'Unterschied ist statistisch signifikant';
+
+  @override
+  String get dispersionNotSignificant =>
+      'Unterschied ist nicht statistisch signifikant';
+
+  @override
+  String get dispersionSmallSampleCaution =>
+      'Kleine Stichprobe (n<20): p-Wert ist näherungsweise.';
+
+  @override
+  String get dispersionUseTestImage => 'Testbild verwenden';
+
+  @override
+  String get dispersionAddSamplePoints => 'Testpunkte hinzufügen';
+
+  @override
+  String get dispersionSelectedPoint => 'Ausgewählter Punkt';
+
+  @override
+  String get dispersionDeleteSelected => 'Ausgewählte löschen';
+
+  @override
+  String get dispersionCombineDatasets => 'Datensätze kombinieren';
+
+  @override
+  String get dispersionCombineDatasetsTitle => 'Datensätze kombinieren';
+
+  @override
+  String get dispersionDerivedDatasetName =>
+      'Name des kombinierten Datensatzes';
+
+  @override
+  String get dispersionDerivedDatasetNameHint => 'z. B. Session A + B';
+
+  @override
+  String get dispersionSelectAtLeastTwo => 'Mindestens 2 Datensätze auswählen';
+
+  @override
+  String get dispersionCreateCombined => 'Kombinierten Datensatz erstellen';
+
+  @override
+  String get dispersionDerivedDatasetNameRequired =>
+      'Geben Sie einen Namen für den kombinierten Datensatz ein';
+
+  @override
+  String get dispersionPointList => 'Punkte';
+
+  @override
+  String get dispersionRadialMm => 'Radial (mm)';
+
+  @override
+  String get dispersionOutlierAuto => 'Auto';
+
+  @override
+  String get dispersionOutlierManual => 'Manuell';
+
+  @override
+  String get dispersionOutlierEffective => 'Ausreißer';
+
+  @override
+  String get dispersionMarkAsOutlier => 'Als Ausreißer markieren';
+
+  @override
+  String get dispersionGraphTitle => 'Streuung';
+
+  @override
+  String get dispersionGraphOutlier => 'Ausreißer';
+
+  @override
+  String get dispersionGraphNoPoints => 'Keine Punkte';
+
+  @override
+  String get dispersionFillTestValues => 'Testwerte eintragen';
 }

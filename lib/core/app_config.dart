@@ -27,6 +27,7 @@ class AppConfig {
     final Locale? locale,
     final TransitionBuilder? appOverlayBuilder,
   }) => MaterialApp.router(
+    debugShowCheckedModeBanner: false,
     onGenerateTitle: (final ctx) => ctx.l10n.appTitle,
     localizationsDelegates: const [
       GlobalMaterialLocalizations.delegate,

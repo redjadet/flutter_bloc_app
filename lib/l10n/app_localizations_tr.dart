@@ -1335,4 +1335,176 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get openPlaylearnTooltip => 'Playlearn\'i Aç';
+
+  @override
+  String get openDispersionTooltip => 'Dağılım Analizörü';
+
+  @override
+  String get dispersionPageTitle => 'Dağılım Analizörü';
+
+  @override
+  String get dispersionCreateGroup => 'Grup oluştur';
+
+  @override
+  String get dispersionCompare => 'Veri setlerini karşılaştır';
+
+  @override
+  String dispersionDatasets(int count) {
+    return '$count veri seti';
+  }
+
+  @override
+  String get dispersionNoDatasets =>
+      'Henüz veri seti yok. Başlamak için bir grup oluşturun.';
+
+  @override
+  String get dispersionPoints => 'nokta';
+
+  @override
+  String get dispersionDerived => 'Türetilmiş';
+
+  @override
+  String get dispersionCamera => 'Kamera';
+
+  @override
+  String get dispersionGallery => 'Galeri';
+
+  @override
+  String get dispersionKnownLengthMm => 'Bilinen uzunluk (mm)';
+
+  @override
+  String get dispersionDistanceM => 'Mesafe (m)';
+
+  @override
+  String get dispersionHoleDiameterMm => 'Delik çapı (mm)';
+
+  @override
+  String get dispersionGroupName => 'Grup adı';
+
+  @override
+  String get dispersionGroupNameHint => 'örn. Oturum 1';
+
+  @override
+  String get dispersionBack => 'Geri';
+
+  @override
+  String get dispersionSaveGroup => 'Grubu kaydet';
+
+  @override
+  String get dispersionCalibrationHint =>
+      'Kalibrasyon: uç noktaların koordinatlarını (piksel) ve bilinen uzunluğu girin.';
+
+  @override
+  String get dispersionCalibrationE1x => 'Uç nokta 1 X (px)';
+
+  @override
+  String get dispersionCalibrationE1y => 'Uç nokta 1 Y (px)';
+
+  @override
+  String get dispersionCalibrationE2x => 'Uç nokta 2 X (px)';
+
+  @override
+  String get dispersionCalibrationE2y => 'Uç nokta 2 Y (px)';
+
+  @override
+  String get dispersionAimPointPx => 'Nişan noktası (piksel)';
+
+  @override
+  String get dispersionAimPointX => 'Nişan X (px)';
+
+  @override
+  String get dispersionAimPointY => 'Nişan Y (px)';
+
+  @override
+  String get dispersionDatasetA => 'Veri seti A';
+
+  @override
+  String get dispersionDatasetB => 'Veri seti B';
+
+  @override
+  String get dispersionAlpha => 'Alfa';
+
+  @override
+  String get dispersionExcludeOutliers => 'Aykırı değerleri testten çıkar';
+
+  @override
+  String get dispersionRunComparison => 'Karşılaştırmayı çalıştır';
+
+  @override
+  String get dispersionComparisonResult => 'Karşılaştırma sonucu';
+
+  @override
+  String get dispersionSignificant => 'Fark istatistiksel olarak anlamlı';
+
+  @override
+  String get dispersionNotSignificant =>
+      'Fark istatistiksel olarak anlamlı değil';
+
+  @override
+  String get dispersionSmallSampleCaution =>
+      'Küçük örneklem (n<20): p-değeri yaklaşık.';
+
+  @override
+  String get dispersionUseTestImage => 'Test görseli kullan';
+
+  @override
+  String get dispersionAddSamplePoints => 'Örnek noktalar ekle';
+
+  @override
+  String get dispersionSelectedPoint => 'Seçili nokta';
+
+  @override
+  String get dispersionDeleteSelected => 'Seçileni sil';
+
+  @override
+  String get dispersionCombineDatasets => 'Veri kümelerini birleştir';
+
+  @override
+  String get dispersionCombineDatasetsTitle => 'Veri kümelerini birleştir';
+
+  @override
+  String get dispersionDerivedDatasetName => 'Birleşik veri kümesi adı';
+
+  @override
+  String get dispersionDerivedDatasetNameHint => 'örn. Oturum A + B';
+
+  @override
+  String get dispersionSelectAtLeastTwo => 'En az 2 veri kümesi seçin';
+
+  @override
+  String get dispersionCreateCombined => 'Birleşik veri kümesi oluştur';
+
+  @override
+  String get dispersionDerivedDatasetNameRequired =>
+      'Birleşik veri kümesi için bir ad girin';
+
+  @override
+  String get dispersionPointList => 'Noktalar';
+
+  @override
+  String get dispersionRadialMm => 'Radyal (mm)';
+
+  @override
+  String get dispersionOutlierAuto => 'Otomatik';
+
+  @override
+  String get dispersionOutlierManual => 'Manuel';
+
+  @override
+  String get dispersionOutlierEffective => 'Aykırı';
+
+  @override
+  String get dispersionMarkAsOutlier => 'Aykırı olarak işaretle';
+
+  @override
+  String get dispersionGraphTitle => 'Dağılım';
+
+  @override
+  String get dispersionGraphOutlier => 'Aykırı';
+
+  @override
+  String get dispersionGraphNoPoints => 'Nokta yok';
+
+  @override
+  String get dispersionFillTestValues => 'Test değerlerini doldur';
 }

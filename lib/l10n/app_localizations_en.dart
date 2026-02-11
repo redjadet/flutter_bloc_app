@@ -1331,4 +1331,176 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openPlaylearnTooltip => 'Open Playlearn';
+
+  @override
+  String get openDispersionTooltip => 'Dispersion Analyzer';
+
+  @override
+  String get dispersionPageTitle => 'Dispersion Analyzer';
+
+  @override
+  String get dispersionCreateGroup => 'Create group';
+
+  @override
+  String get dispersionCompare => 'Compare datasets';
+
+  @override
+  String dispersionDatasets(int count) {
+    return '$count datasets';
+  }
+
+  @override
+  String get dispersionNoDatasets =>
+      'No datasets yet. Create a group to get started.';
+
+  @override
+  String get dispersionPoints => 'points';
+
+  @override
+  String get dispersionDerived => 'Derived';
+
+  @override
+  String get dispersionCamera => 'Camera';
+
+  @override
+  String get dispersionGallery => 'Gallery';
+
+  @override
+  String get dispersionKnownLengthMm => 'Known length (mm)';
+
+  @override
+  String get dispersionDistanceM => 'Distance (m)';
+
+  @override
+  String get dispersionHoleDiameterMm => 'Hole diameter (mm)';
+
+  @override
+  String get dispersionGroupName => 'Group name';
+
+  @override
+  String get dispersionGroupNameHint => 'e.g. Session 1';
+
+  @override
+  String get dispersionBack => 'Back';
+
+  @override
+  String get dispersionSaveGroup => 'Save group';
+
+  @override
+  String get dispersionCalibrationHint =>
+      'Calibration: enter endpoint coordinates (pixels) and known length.';
+
+  @override
+  String get dispersionCalibrationE1x => 'Endpoint 1 X (px)';
+
+  @override
+  String get dispersionCalibrationE1y => 'Endpoint 1 Y (px)';
+
+  @override
+  String get dispersionCalibrationE2x => 'Endpoint 2 X (px)';
+
+  @override
+  String get dispersionCalibrationE2y => 'Endpoint 2 Y (px)';
+
+  @override
+  String get dispersionAimPointPx => 'Aim point (pixels)';
+
+  @override
+  String get dispersionAimPointX => 'Aim X (px)';
+
+  @override
+  String get dispersionAimPointY => 'Aim Y (px)';
+
+  @override
+  String get dispersionDatasetA => 'Dataset A';
+
+  @override
+  String get dispersionDatasetB => 'Dataset B';
+
+  @override
+  String get dispersionAlpha => 'Alpha';
+
+  @override
+  String get dispersionExcludeOutliers => 'Exclude outliers from test';
+
+  @override
+  String get dispersionRunComparison => 'Run comparison';
+
+  @override
+  String get dispersionComparisonResult => 'Comparison result';
+
+  @override
+  String get dispersionSignificant => 'Difference is statistically significant';
+
+  @override
+  String get dispersionNotSignificant =>
+      'Difference is not statistically significant';
+
+  @override
+  String get dispersionSmallSampleCaution =>
+      'Small sample (n<20): p-value is approximate.';
+
+  @override
+  String get dispersionUseTestImage => 'Use test image';
+
+  @override
+  String get dispersionAddSamplePoints => 'Add sample points';
+
+  @override
+  String get dispersionSelectedPoint => 'Selected point';
+
+  @override
+  String get dispersionDeleteSelected => 'Delete selected';
+
+  @override
+  String get dispersionCombineDatasets => 'Combine datasets';
+
+  @override
+  String get dispersionCombineDatasetsTitle => 'Combine datasets';
+
+  @override
+  String get dispersionDerivedDatasetName => 'Combined dataset name';
+
+  @override
+  String get dispersionDerivedDatasetNameHint => 'e.g. Session A + B';
+
+  @override
+  String get dispersionSelectAtLeastTwo => 'Select at least 2 datasets';
+
+  @override
+  String get dispersionCreateCombined => 'Create combined dataset';
+
+  @override
+  String get dispersionDerivedDatasetNameRequired =>
+      'Enter a name for the combined dataset';
+
+  @override
+  String get dispersionPointList => 'Points';
+
+  @override
+  String get dispersionRadialMm => 'Radial (mm)';
+
+  @override
+  String get dispersionOutlierAuto => 'Auto';
+
+  @override
+  String get dispersionOutlierManual => 'Manual';
+
+  @override
+  String get dispersionOutlierEffective => 'Outlier';
+
+  @override
+  String get dispersionMarkAsOutlier => 'Mark as outlier';
+
+  @override
+  String get dispersionGraphTitle => 'Dispersion';
+
+  @override
+  String get dispersionGraphOutlier => 'Outlier';
+
+  @override
+  String get dispersionGraphNoPoints => 'No points';
+
+  @override
+  String get dispersionFillTestValues => 'Fill test values';
 }

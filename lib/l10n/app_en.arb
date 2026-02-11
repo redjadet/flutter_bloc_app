@@ -1737,5 +1737,70 @@
   "openPlaylearnTooltip": "Open Playlearn",
   "@openPlaylearnTooltip": {
     "description": "Tooltip for Playlearn entry in app bar or menu"
-  }
+  },
+  "openDispersionTooltip": "Dispersion Analyzer",
+  "@openDispersionTooltip": {
+    "description": "Tooltip for Dispersion Analyzer entry in app bar or menu"
+  },
+  "dispersionPageTitle": "Dispersion Analyzer",
+  "dispersionCreateGroup": "Create group",
+  "dispersionCompare": "Compare datasets",
+  "dispersionDatasets": "{count} datasets",
+  "@dispersionDatasets": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dispersionNoDatasets": "No datasets yet. Create a group to get started.",
+  "dispersionPoints": "points",
+  "dispersionDerived": "Derived",
+  "dispersionCamera": "Camera",
+  "dispersionGallery": "Gallery",
+  "dispersionKnownLengthMm": "Known length (mm)",
+  "dispersionDistanceM": "Distance (m)",
+  "dispersionHoleDiameterMm": "Hole diameter (mm)",
+  "dispersionGroupName": "Group name",
+  "dispersionGroupNameHint": "e.g. Session 1",
+  "dispersionBack": "Back",
+  "dispersionSaveGroup": "Save group",
+  "dispersionCalibrationHint": "Calibration: enter endpoint coordinates (pixels) and known length.",
+  "dispersionCalibrationE1x": "Endpoint 1 X (px)",
+  "dispersionCalibrationE1y": "Endpoint 1 Y (px)",
+  "dispersionCalibrationE2x": "Endpoint 2 X (px)",
+  "dispersionCalibrationE2y": "Endpoint 2 Y (px)",
+  "dispersionAimPointPx": "Aim point (pixels)",
+  "dispersionAimPointX": "Aim X (px)",
+  "dispersionAimPointY": "Aim Y (px)",
+  "dispersionDatasetA": "Dataset A",
+  "dispersionDatasetB": "Dataset B",
+  "dispersionAlpha": "Alpha",
+  "dispersionExcludeOutliers": "Exclude outliers from test",
+  "dispersionRunComparison": "Run comparison",
+  "dispersionComparisonResult": "Comparison result",
+  "dispersionSignificant": "Difference is statistically significant",
+  "dispersionNotSignificant": "Difference is not statistically significant",
+  "dispersionSmallSampleCaution": "Small sample (n<20): p-value is approximate.",
+  "dispersionUseTestImage": "Use test image",
+  "dispersionAddSamplePoints": "Add sample points",
+  "dispersionSelectedPoint": "Selected point",
+  "dispersionDeleteSelected": "Delete selected",
+  "dispersionCombineDatasets": "Combine datasets",
+  "dispersionCombineDatasetsTitle": "Combine datasets",
+  "dispersionDerivedDatasetName": "Combined dataset name",
+  "dispersionDerivedDatasetNameHint": "e.g. Session A + B",
+  "dispersionSelectAtLeastTwo": "Select at least 2 datasets",
+  "dispersionCreateCombined": "Create combined dataset",
+  "dispersionDerivedDatasetNameRequired": "Enter a name for the combined dataset",
+  "dispersionPointList": "Points",
+  "dispersionRadialMm": "Radial (mm)",
+  "dispersionOutlierAuto": "Auto",
+  "dispersionOutlierManual": "Manual",
+  "dispersionOutlierEffective": "Outlier",
+  "dispersionMarkAsOutlier": "Mark as outlier",
+  "dispersionGraphTitle": "Dispersion",
+  "dispersionGraphOutlier": "Outlier",
+  "dispersionGraphNoPoints": "No points",
+  "dispersionFillTestValues": "Fill test values"
 }

@@ -3,6 +3,10 @@ import 'package:flutter_bloc_app/app/router/deferred_pages/google_maps_page.dart
 import 'package:flutter_bloc_app/app/router/deferred_pages/websocket_page.dart'
     deferred as websocket_page;
 import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/features/dispersion/data/image_import_service.dart';
+import 'package:flutter_bloc_app/features/dispersion/domain/dispersion_repository.dart';
+import 'package:flutter_bloc_app/features/dispersion/presentation/cubit/dispersion_cubit.dart';
+import 'package:flutter_bloc_app/features/dispersion/presentation/pages/dispersion_page.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/presentation/pages/search_page.dart';
 import 'package:flutter_bloc_app/features/todo_list/todo_list.dart';
@@ -61,6 +65,22 @@ List<GoRoute> createAuxiliaryRoutes() => <GoRoute>[
           ),
           init: (final cubit) => cubit.loadLinkedWallet(),
           child: const WalletConnectAuthPage(),
+        ),
+  ),
+  GoRoute(
+    path: AppRoutes.dispersionPath,
+    name: AppRoutes.dispersion,
+    builder: (final context, final state) =>
+        BlocProviderHelpers.withAsyncInit<DispersionCubit>(
+          create: () => DispersionCubit(
+            repository: getIt<DispersionRepository>(),
+            imageImportService: getIt<ImageImportService>(),
+          ),
+          init: (final cubit) async {
+            await cubit.load();
+            cubit.watchData();
+          },
+          child: const DispersionPage(),
         ),
   ),
 ];

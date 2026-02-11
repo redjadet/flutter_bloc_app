@@ -1215,5 +1215,70 @@
   "openPlaylearnTooltip": "Playlearn'i Aç",
   "@openPlaylearnTooltip": {
     "description": "Tooltip for Playlearn entry in app bar or menu"
-  }
+  },
+  "openDispersionTooltip": "Dağılım Analizörü",
+  "@openDispersionTooltip": {
+    "description": "Tooltip for Dispersion Analyzer entry in app bar or menu"
+  },
+  "dispersionPageTitle": "Dağılım Analizörü",
+  "dispersionCreateGroup": "Grup oluştur",
+  "dispersionCompare": "Veri setlerini karşılaştır",
+  "dispersionDatasets": "{count} veri seti",
+  "@dispersionDatasets": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dispersionNoDatasets": "Henüz veri seti yok. Başlamak için bir grup oluşturun.",
+  "dispersionPoints": "nokta",
+  "dispersionDerived": "Türetilmiş",
+  "dispersionCamera": "Kamera",
+  "dispersionGallery": "Galeri",
+  "dispersionKnownLengthMm": "Bilinen uzunluk (mm)",
+  "dispersionDistanceM": "Mesafe (m)",
+  "dispersionHoleDiameterMm": "Delik çapı (mm)",
+  "dispersionGroupName": "Grup adı",
+  "dispersionGroupNameHint": "örn. Oturum 1",
+  "dispersionBack": "Geri",
+  "dispersionSaveGroup": "Grubu kaydet",
+  "dispersionCalibrationHint": "Kalibrasyon: uç noktaların koordinatlarını (piksel) ve bilinen uzunluğu girin.",
+  "dispersionCalibrationE1x": "Uç nokta 1 X (px)",
+  "dispersionCalibrationE1y": "Uç nokta 1 Y (px)",
+  "dispersionCalibrationE2x": "Uç nokta 2 X (px)",
+  "dispersionCalibrationE2y": "Uç nokta 2 Y (px)",
+  "dispersionAimPointPx": "Nişan noktası (piksel)",
+  "dispersionAimPointX": "Nişan X (px)",
+  "dispersionAimPointY": "Nişan Y (px)",
+  "dispersionDatasetA": "Veri seti A",
+  "dispersionDatasetB": "Veri seti B",
+  "dispersionAlpha": "Alfa",
+  "dispersionExcludeOutliers": "Aykırı değerleri testten çıkar",
+  "dispersionRunComparison": "Karşılaştırmayı çalıştır",
+  "dispersionComparisonResult": "Karşılaştırma sonucu",
+  "dispersionSignificant": "Fark istatistiksel olarak anlamlı",
+  "dispersionNotSignificant": "Fark istatistiksel olarak anlamlı değil",
+  "dispersionSmallSampleCaution": "Küçük örneklem (n<20): p-değeri yaklaşık.",
+  "dispersionUseTestImage": "Test görseli kullan",
+  "dispersionAddSamplePoints": "Örnek noktalar ekle",
+  "dispersionSelectedPoint": "Seçili nokta",
+  "dispersionDeleteSelected": "Seçileni sil",
+  "dispersionCombineDatasets": "Veri kümelerini birleştir",
+  "dispersionCombineDatasetsTitle": "Veri kümelerini birleştir",
+  "dispersionDerivedDatasetName": "Birleşik veri kümesi adı",
+  "dispersionDerivedDatasetNameHint": "örn. Oturum A + B",
+  "dispersionSelectAtLeastTwo": "En az 2 veri kümesi seçin",
+  "dispersionCreateCombined": "Birleşik veri kümesi oluştur",
+  "dispersionDerivedDatasetNameRequired": "Birleşik veri kümesi için bir ad girin",
+  "dispersionPointList": "Noktalar",
+  "dispersionRadialMm": "Radyal (mm)",
+  "dispersionOutlierAuto": "Otomatik",
+  "dispersionOutlierManual": "Manuel",
+  "dispersionOutlierEffective": "Aykırı",
+  "dispersionMarkAsOutlier": "Aykırı olarak işaretle",
+  "dispersionGraphTitle": "Dağılım",
+  "dispersionGraphOutlier": "Aykırı",
+  "dispersionGraphNoPoints": "Nokta yok",
+  "dispersionFillTestValues": "Test değerlerini doldur"
 }

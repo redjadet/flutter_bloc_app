@@ -80,4 +80,7 @@ class AppRoutes {
 
   static const playlearnVocabulary = 'playlearn-vocabulary';
   static const playlearnVocabularyPath = '/playlearn/vocabulary/:topicId';
+
+  static const dispersion = 'dispersion';
+  static const dispersionPath = '/dispersion';
 }
