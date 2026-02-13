@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/constants.dart';
+import 'package:flutter_bloc_app/core/constants/constants.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_page_body.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';

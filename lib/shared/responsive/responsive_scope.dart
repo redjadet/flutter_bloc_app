@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/constants.dart';
+import 'package:flutter_bloc_app/core/constants/constants.dart';
 import 'package:flutter_bloc_app/shared/responsive/responsive_config.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

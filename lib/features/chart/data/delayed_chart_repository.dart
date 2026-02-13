@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_bloc_app/core/constants.dart';
+import 'package:flutter_bloc_app/core/constants/constants.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/chart/data/http_chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';

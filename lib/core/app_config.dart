@@ -2,12 +2,11 @@ import 'dart:io';
 
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/constants.dart';
+import 'package:flutter_bloc_app/core/theme/theme.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// Application configuration and theme setup
 class AppConfig {
@@ -38,8 +37,8 @@ class AppConfig {
     supportedLocales: AppLocalizations.supportedLocales,
     localeListResolutionCallback: _localeListResolutionCallback,
     locale: locale,
-    theme: _createLightTheme(),
-    darkTheme: _createDarkTheme(),
+    theme: AppTheme.lightTheme(),
+    darkTheme: AppTheme.darkTheme(),
     themeMode: themeMode,
     builder: (final context, final appChild) {
       Widget result = appChild ?? const SizedBox.shrink();
@@ -72,38 +71,6 @@ class AppConfig {
     },
     routerConfig: router,
   );
-
-  /// Creates light theme
-  static ThemeData _createLightTheme() => ThemeData(
-    useMaterial3: true,
-    colorScheme: ColorScheme.fromSeed(seedColor: AppConstants.primarySeedColor),
-    textTheme: _createTextTheme(Brightness.light),
-  );
-
-  /// Creates dark theme
-  static ThemeData _createDarkTheme() => ThemeData(
-    useMaterial3: true,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: AppConstants.primarySeedColor,
-      brightness: Brightness.dark,
-    ),
-    textTheme: _createTextTheme(Brightness.dark),
-  );
-
-  static TextTheme _createTextTheme(final Brightness brightness) {
-    final ThemeData baseTheme = ThemeData(brightness: brightness);
-    final TextTheme robotoTheme = GoogleFonts.robotoTextTheme(
-      baseTheme.textTheme,
-    );
-    final String? comfortaaFamily = GoogleFonts.comfortaa().fontFamily;
-    TextStyle? withComfortaa(final TextStyle? style) =>
-        style?.copyWith(fontFamily: comfortaaFamily);
-    return robotoTheme.copyWith(
-      displayLarge: withComfortaa(robotoTheme.displayLarge),
-      displayMedium: withComfortaa(robotoTheme.displayMedium),
-      displaySmall: withComfortaa(robotoTheme.displaySmall),
-    );
-  }
 
   static const Locale _defaultLocale = Locale('en');
 

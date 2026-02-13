@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 /// Application-wide constants
 class AppConstants {
+  AppConstants._();
+
   // Colors
   static const Color primarySeedColor = Color(0xFF6750A4);
 

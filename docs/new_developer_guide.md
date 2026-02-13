@@ -103,8 +103,8 @@ dart run build_runner build --delete-conflicting-outputs
 | `lib/features/<feature>/domain` | Contracts, models, value objects (Flutter-free). |
 | `lib/features/<feature>/data` | Repositories, DTOs, remote/local sources. |
 | `lib/features/<feature>/presentation` | Cubits, pages, widgets, view models. |
-| `lib/shared/` | Cross-cutting helpers: services, widgets, responsive/layout utils, platform adapters. |
-| `lib/core/` | App-wide config (DI, logging, theme, routing, error handling). |
+| `lib/shared/` | Cross-cutting helpers: services, widgets, **components** (design primitives), responsive/layout utils, platform adapters. |
+| `lib/core/` | App-wide config: DI, theme (`core/theme/`), constants (`core/constants/`), extensions (`core/extensions/`), routing, error handling. |
 | `assets/` & `l10n/` | Images/fonts plus localization ARB files. |
 | `test/` | Mirrors `lib/` with unit, bloc, widget, golden suites (see `temp_disabled_tests/` for flaky cases). |
 | `tool/` | Utilities like `update_coverage_summary.dart`. |
