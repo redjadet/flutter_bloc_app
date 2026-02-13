@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Check for per-widget GoogleFonts usage (should be defined in app_config.dart theme)
+# Check for per-widget GoogleFonts usage (should be defined in core/theme/ or app_config)
 
 set -euo pipefail
 
@@ -18,6 +18,7 @@ if command -v rg &> /dev/null; then
     --glob "!**/*.freezed.dart" \
     --glob "!**/*.gr.dart" \
     --glob "!**/core/app_config.dart" \
+    --glob "!**/core/theme/app_theme.dart" \
     | rg -v "test" \
     | rg -v "^[[:space:]]*//" \
     || true)
@@ -25,6 +26,7 @@ else
   VIOLATIONS=$(grep -rn "GoogleFonts\." lib 2>/dev/null \
     | grep -v "/test/" \
     | grep -v "core/app_config.dart" \
+    | grep -v "core/theme/app_theme.dart" \
     | grep -v "^[[:space:]]*//" \
     || true)
 fi
@@ -38,7 +40,7 @@ fi
 
 if [ -n "$VIOLATIONS" ]; then
   echo "❌ Violations found: Per-widget GoogleFonts usage"
-  echo "Note: Define fonts in app_config.dart and use Theme.of(context).textTheme"
+  echo "Note: Define fonts in lib/core/theme/ and use Theme.of(context).textTheme"
   echo ""
   echo "$VIOLATIONS"
   exit 1

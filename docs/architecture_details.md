@@ -109,6 +109,18 @@ flowchart LR
 - Lifecycle safety via `CubitExceptionHandler`, `CubitSubscriptionMixin`,
   `CubitStateEmissionMixin`, and mounted checks
 
+## Design system
+
+Theme, constants, and shared UI are organized as follows:
+
+- **`lib/core/theme/`** – ThemeData, light/dark ColorScheme, and TextTheme (e.g. `AppTheme.lightTheme()`). Used by `AppConfig` when building `MaterialApp`.
+- **`lib/core/constants/`** – App-wide constants (colors, breakpoints, window sizes, durations). Use `AppConstants` from the barrel.
+- **`lib/core/extensions/`** – Core-level extensions (e.g. BuildContext helpers for theme/router/config). Responsive, bloc, and l10n extensions remain in `lib/shared/extensions/`.
+- **`lib/shared/components/`** – Design system primitives (buttons, form fields, chips, icons). Add new reusable design building blocks here.
+- **`lib/shared/widgets/`** – App-level composite widgets (e.g. `CommonPageLayout`, `CommonStatusView`, `CommonLoadingWidget`, skeletons). Use for composed screens and status UI.
+
+Typography helpers live in `lib/shared/ui/typography.dart`; layout/spacing tokens in `lib/shared/ui/ui_constants.dart`. See [Design System](design_system.md) for a quick reference.
+
 ## State Management Rationale (Why BLoC)
 
 - Predictable, replayable state transitions (events in, state out)

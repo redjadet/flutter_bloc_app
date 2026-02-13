@@ -1,7 +1,7 @@
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/core/constants.dart';
+import 'package:flutter_bloc_app/core/constants/constants.dart';
 import 'package:window_manager/window_manager.dart';
 
 /// Platform-specific initialization utilities
