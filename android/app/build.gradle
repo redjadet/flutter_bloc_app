@@ -1,0 +1,55 @@
+plugins {
+    id "com.android.application"
+    id "com.google.gms.google-services"
+    id "com.google.firebase.crashlytics"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace = "com.example.flutter_bloc_app"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.toString()
+    }
+
+    defaultConfig {
+        applicationId = "com.example.flutter_bloc_app"
+        minSdk = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] =
+            project.findProperty("GOOGLE_MAPS_ANDROID_API_KEY") ?: "YOUR_ANDROID_GOOGLE_MAPS_API_KEY"
+    }
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.getByName("debug")
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}
+
+afterEvaluate {
+    tasks.named("assembleDebug").configure {
+        doLast {
+            def sourceApk = layout.buildDirectory.file("outputs/flutter-apk/app-debug.apk").get().asFile
+            if (sourceApk.exists()) {
+                def destApk = rootProject.projectDir.toPath().resolve("../build/app/outputs/flutter-apk/app-debug.apk").toFile().canonicalFile
+                destApk.parentFile.mkdirs()
+                sourceApk.copyTo(destApk, true)
+            }
+        }
+    }
+}
