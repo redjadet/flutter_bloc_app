@@ -54,6 +54,8 @@ Welcome aboard! This document is the fastest path to getting the app running loc
    ./tool/ios_entitlements.sh distribution
    ```
 
+   For automated builds, use [Fastlane](deployment.md#fastlane-ios-lanes-ad-hoc-testflight-app-store): `bundle exec fastlane ios adhoc` (Ad Hoc IPA), `ios testflight` (upload to TestFlight), or `ios appstore` (upload to App Store Connect).
+
 > **Note:** Some packages are platform-specific. See [tech_stack.md](tech_stack.md#platform-specific-dependencies) for details on `apple_maps_flutter` (iOS-only), `window_manager` (desktop-only), etc.
 
 ### Get dependencies

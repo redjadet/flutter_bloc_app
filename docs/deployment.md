@@ -71,12 +71,58 @@ flutter build ios --release
 
 #### Option B – Fastlane (automated)
 
+From the **project root**:
+
 ```bash
 bundle install
+# Upload to TestFlight (same as deploy)
+bundle exec fastlane ios testflight
+# Or use the deploy alias
 bundle exec fastlane ios deploy
+# To upload for App Store (build appears in TestFlight and App Store build list)
+bundle exec fastlane ios appstore
 ```
 
-This automates archive, upload, and (optionally) submission to App Store Connect.
+This automates distribution entitlements, archive, and upload to App Store Connect. See [Fastlane iOS lanes (Ad Hoc, TestFlight, App Store)](#fastlane-ios-lanes-ad-hoc-testflight-app-store) for all lanes.
+
+### Step 4b: Deploy to TestFlight (iOS beta)
+
+TestFlight is Apple’s beta distribution channel. The same build you upload to App Store Connect can be distributed to testers via TestFlight before (or instead of) submitting for App Store review.
+
+**Signing:** TestFlight uses **App Store** distribution, not Ad Hoc. Use the same **distribution certificate** and **App Store provisioning profile** as for App Store submission. When archiving in Xcode, choose **Distribute App** → **App Store Connect** → **Upload**. Ad Hoc profiles are for direct installs to registered devices (outside TestFlight) and cannot be used for TestFlight.
+
+**Prerequisites:** Same as App Store (Apple Developer Program, Xcode, distribution entitlements, App Store provisioning profile). The app must exist in App Store Connect.
+
+1. **Build and upload**  
+   Follow [Step 2: Switch to Distribution Entitlements](#step-2-switch-to-distribution-entitlements), [Step 3: Prepare Release Build](#step-3-prepare-release-build), and [Step 4: Archive and Upload](#step-4-archive-and-upload). Upload the build to App Store Connect (Xcode Organizer or Fastlane).
+
+2. **Wait for processing**  
+   In [App Store Connect](https://appstoreconnect.apple.com/) → **My Apps** → your app → **TestFlight** tab, the new build appears after upload. Wait until its status is **Ready to Submit** (processing usually takes 5–30 minutes). Resolve any missing compliance or email questions if prompted.
+
+3. **Internal testers (no review)**  
+   - **TestFlight** → **Internal Testing** → create or select a group.  
+   - Click **+** to add testers (they must be listed in **Users and Access** → **App Store Connect users** with Admin, App Manager, Developer, or Marketing role).  
+   - Select the build for that group. Internal testers receive an email and can install via the TestFlight app (up to 100 internal testers).
+
+4. **External testers (Beta App Review)**  
+   - **TestFlight** → **External Testing** → create or select a group.  
+   - Add the build; fill in **What to Test** and (if first time) **Export Compliance**, **Content Rights**, **Advertising Identifier** as required.  
+   - **Submit for Review**. After Beta App Review approval (often 24–48 hours), add external testers by email or enable a public link. Up to 10,000 external testers per app.
+
+5. **Installation for testers**  
+   Testers install the [TestFlight app](https://apps.apple.com/app/testflight/id899247664) from the App Store, accept the invite or use the public link, then install your build.
+
+**Fastlane (TestFlight):**  
+Run `bundle exec fastlane ios testflight` (or `ios deploy`) from the project root to build and upload; then use App Store Connect → TestFlight to assign the build to internal/external groups.
+
+**TestFlight troubleshooting:**
+
+| Issue | Solution |
+| ----- | -------- |
+| **Build not in TestFlight** | Ensure you uploaded to **App Store Connect** (not Ad Hoc). Wait for processing; refresh the TestFlight build list. |
+| **Missing compliance** | In TestFlight → build → answer **Export Compliance**, **Encryption**, and **Content Rights** so the build becomes **Ready to Submit**. |
+| **Internal testers can’t install** | Confirm they are in **Users and Access** with a role that includes TestFlight; they must use the same Apple ID in TestFlight as in App Store Connect. |
+| **External build “In Review”** | Beta App Review is required once per build for external testing; subsequent builds may reuse approval for the same group. |
 
 ### Step 5: Submit for Review in App Store Connect
 
@@ -112,6 +158,7 @@ This automates archive, upload, and (optionally) submission to App Store Connect
 
 ### Related
 
+- [Deploy to TestFlight (Step 4b)](#step-4b-deploy-to-testflight-ios-beta) – Distribute iOS builds to internal and external testers via TestFlight
 - [iOS Entitlements (Development vs Distribution)](#ios-entitlements-development-vs-distribution) – Switch entitlements before App Store builds
 - [Firebase App Distribution](firebase_app_distribution.md) – Pre-release testing before store submission
 - [Security & Secrets](security_and_secrets.md) – API keys and secrets handling
@@ -233,21 +280,28 @@ Switch entitlements with the `ios_entitlements.sh` script:
 **When to use each mode:**
 
 - **`development`** – `flutter run` on your device, day-to-day development
-- **`distribution`** – `flutter build ipa`, Xcode Archive, Ad Hoc or App Store distribution
+- **`distribution`** – Xcode Archive for **App Store Connect** (including TestFlight) or **Ad Hoc**. Use **App Store provisioning profile** for TestFlight and App Store; use **Ad Hoc provisioning profile** only when distributing directly to registered devices (e.g. `flutter build ipa` for Ad Hoc export), not for TestFlight.
 
 Templates are in `ios/Runner/`: `Runner.entitlements.development` and `Runner.entitlements.distribution`.
 
 ## Fastlane Automation
 
-This project includes Fastlane configurations for automated deployments:
+This project includes Fastlane configurations for automated deployments. Run all commands from the **project root** after `bundle install`.
+
+### Fastlane iOS lanes (Ad Hoc, TestFlight, App Store)
+
+| Lane | Purpose |
+| ---- | ------- |
+| `bundle exec fastlane ios adhoc` | Build and export an **Ad Hoc** IPA. Use for direct install to registered devices (e.g. Firebase App Distribution). Does not upload. Requires Ad Hoc provisioning profile. |
+| `bundle exec fastlane ios testflight` | Build and **upload to TestFlight**. Uses App Store provisioning. Add testers in App Store Connect → TestFlight. |
+| `bundle exec fastlane ios appstore` | Build and upload to **App Store Connect** (same binary as TestFlight). Select the build for a version and submit for review in App Store Connect. |
+| `bundle exec fastlane ios deploy` | Alias for `testflight` (backward compatibility). |
+
+**Configuration:** Set `FASTLANE_APP_IDENTIFIER`, `FASTLANE_APPLE_ID`, and optionally `FASTLANE_TEAM_ID` (or edit `ios/fastlane/Appfile`). The scripts run `./tool/ios_entitlements.sh distribution` before building for TestFlight and App Store.
+
+### Fastlane – other platforms
 
 ```bash
-# Install dependencies
-bundle install
-
-# Deploy to iOS App Store
-bundle exec fastlane ios deploy
-
 # Deploy to Google Play Store
 bundle exec fastlane android deploy track:internal
 
@@ -311,6 +365,8 @@ See [tech_stack.md](tech_stack.md#platform-specific-dependencies) for the full l
 ## Related Documentation
 
 - **App Store deployment**: [Deploy Flutter App to the App Store](#deploy-flutter-app-to-the-app-store) – Step-by-step guide for iOS App Store submission
+- **TestFlight**: [Step 4b: Deploy to TestFlight](#step-4b-deploy-to-testflight-ios-beta) – Distribute iOS beta builds to internal and external testers
+- **Fastlane iOS**: [Fastlane iOS lanes (Ad Hoc, TestFlight, App Store)](#fastlane-ios-lanes-ad-hoc-testflight-app-store) – Automate Ad Hoc, TestFlight, and App Store builds
 - **Google Play deployment**: [Deploy Flutter App to Google Play Store](#deploy-flutter-app-to-google-play-store) – Step-by-step guide for Android Play Store submission
 - **Firebase App Distribution**: [firebase_app_distribution.md](firebase_app_distribution.md) – Distribute pre-release iOS and Android builds to testers via Firebase App Distribution.
 - **Tech Stack**: [tech_stack.md](tech_stack.md) – Dependencies and platform-specific packages

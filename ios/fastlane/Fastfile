@@ -1,105 +1,72 @@
-fastlane_version '2.221.0'
+# iOS Fastlane: Ad Hoc, TestFlight, and App Store distribution.
+# Run from project root: bundle exec fastlane ios [adhoc|testflight|appstore|deploy]
+# Prerequisites: Xcode, Apple Developer account, ./tool/ios_entitlements.sh distribution for App Store/TestFlight/Ad Hoc.
 
 default_platform(:ios)
 
-def bump_pubspec_build_number
-  pubspec_path = File.expand_path('../../pubspec.yaml', __dir__)
-  UI.user_error!("pubspec.yaml not found at #{pubspec_path}") unless File.exist?(pubspec_path)
-
-  content = File.read(pubspec_path)
-  match = content.match(/^version:\s*(\d+\.\d+\.\d+)\+(\d+)/)
-  UI.user_error!('Could not locate version line in pubspec.yaml') unless match
-
-  semantic_version = match[1]
-  build_number = match[2].to_i + 1
-  updated_line = "version: #{semantic_version}+#{build_number}"
-
-  File.write(pubspec_path, content.sub(match[0], updated_line))
-  UI.message("Updated pubspec.yaml build number to #{build_number}")
-
-  { version: semantic_version, build_number: build_number }
-end
-
 platform :ios do
-  desc 'Build an .ipa using Flutter'
-  lane :build do |options|
-    configuration = options[:configuration] || ENV['IOS_CONFIGURATION'] || 'Release'
-    flavor = options[:flavor] || ENV['IOS_BUILD_FLAVOR']
-
-    sh('flutter', 'pub', 'get')
-    sh('dart', 'run', 'tool/prepare_release.dart')
-
-    build_args = %w[flutter build ipa]
-    build_args << '--release' unless configuration.casecmp?('debug')
-    build_args << '--flavor' << flavor if flavor
-    sh(*build_args)
+  # Switch to distribution entitlements (required for Ad Hoc, TestFlight, App Store).
+  def ensure_distribution_entitlements
+    project_root = File.expand_path("../..", __dir__)
+    sh("cd #{project_root} && ./tool/ios_entitlements.sh distribution")
   end
 
-  desc 'Upload ipa to App Store Connect'
-  lane :deploy do |options|
-    configuration = options[:configuration] || ENV['IOS_CONFIGURATION'] || 'Release'
-    flavor = options[:flavor] || ENV['IOS_BUILD_FLAVOR']
-
-    build_info = bump_pubspec_build_number
-    UI.message(
-      "Preparing deploy for #{build_info[:version]}+#{build_info[:build_number]}",
-    )
-
-    invoke(:build, configuration: configuration, flavor: flavor)
-
-    ipa = if flavor
-            "build/ios/ipa/#{flavor}.ipa"
-          else
-            'build/ios/ipa/Runner.ipa'
-          end
-
-    UI.user_error!("Could not find ipa at #{ipa}") unless File.exist?(ipa)
-
-    deliver(
-      ipa: ipa,
-      submit_for_review: false,
-      automatic_release: false,
-      skip_metadata: true,
-      skip_screenshots: true,
-      force: true,
+  # Build IPA with gym (Xcode archive + export). export_method: "ad-hoc" | "app-store"
+  def build_ipa(export_method:, output_dir: nil)
+    ensure_distribution_entitlements
+    output_dir ||= File.expand_path("../../build/ios/ipa", __dir__)
+    gym(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      export_method: export_method,
+      output_directory: output_dir,
+      clean: true
     )
   end
-  desc 'Build IPA and upload to Firebase App Distribution'
-  lane :firebase_distribute do |options|
-    release_notes = options[:release_notes] || ENV['FIREBASE_RELEASE_NOTES'] || "Pre-release iOS - " + Time.now.strftime('%Y-%m-%d %H:%M')
-    groups = options[:groups] || ENV['FIREBASE_GROUPS']
-    testers = options[:testers] || ENV['FIREBASE_TESTERS']
-    skip_build = options[:skip_build] || (ENV['FIREBASE_SKIP_BUILD'] == 'true')
-    use_distribution_entitlements = options[:distribution_entitlements].nil? ? (ENV['FIREBASE_DISTRIBUTION_ENTITLEMENTS'] != 'false') : options[:distribution_entitlements]
 
-    project_root = File.expand_path('../..', __dir__)
-    Dir.chdir(project_root) do
-      unless skip_build
-        if use_distribution_entitlements
-          UI.message('Switching to distribution entitlements for IPA build')
-          sh('bash', 'tool/ios_entitlements.sh', 'distribution')
-        end
-        invoke(:build)
-      end
-
-      ipa = Dir.glob(File.join(project_root, 'build/ios/**/*.ipa')).first
-      ipa ||= File.join(project_root, 'build/ios/ipa/Runner.ipa')
-      UI.user_error!("No IPA found. Build first with: bundle exec fastlane ios build") unless File.exist?(ipa)
-
-      firebase_args = ['firebase', 'appdistribution:distribute', ipa,
-        '--app', ENV.fetch('FIREBASE_IOS_APP_ID', '1:473097776453:ios:6962f6ddc4d7ea12bd222c'),
-        '--release-notes', release_notes]
-      firebase_args.concat(['--groups', groups]) if groups && !groups.empty?
-      firebase_args.concat(['--testers', testers]) if testers && !testers.empty?
-
-      sh(*firebase_args)
-
-      if use_distribution_entitlements && !skip_build
-        UI.message('Reverting to development entitlements')
-        sh('bash', 'tool/ios_entitlements.sh', 'development')
-      end
-    end
-    UI.success('Firebase App Distribution upload complete. Check Firebase Console.')
+  # Ad Hoc: build and export IPA for direct install to registered devices (no TestFlight).
+  # Devices must be registered in Apple Developer and included in the Ad Hoc provisioning profile.
+  lane :adhoc do
+    build_ipa(export_method: "ad-hoc")
+    UI.success("Ad Hoc IPA exported. Distribute to registered devices (e.g. via Firebase App Distribution or direct install).")
   end
 
+  # TestFlight: build and upload to App Store Connect for TestFlight beta distribution.
+  # Uses App Store provisioning. Add testers in App Store Connect → TestFlight.
+  lane :testflight do
+    ensure_distribution_entitlements
+    gym(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      export_method: "app-store",
+      clean: true
+    )
+    upload_to_testflight(
+      skip_waiting_for_build_processing: false,
+      distribute_external: false
+    )
+    UI.success("Build uploaded to TestFlight. Add testers in App Store Connect → TestFlight.")
+  end
+
+  # App Store: build and upload to App Store Connect (same as TestFlight upload).
+  # Build appears in TestFlight and in the App Store build list; submit for review in App Store Connect.
+  lane :appstore do
+    ensure_distribution_entitlements
+    gym(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      export_method: "app-store",
+      clean: true
+    )
+    upload_to_testflight(
+      skip_waiting_for_build_processing: false,
+      distribute_external: false
+    )
+    UI.success("Build uploaded to App Store Connect. Select it for a version and submit for review in App Store Connect.")
+  end
+
+  # Deploy: alias for TestFlight (backward compatibility with docs).
+  lane :deploy do
+    testflight
+  end
 end

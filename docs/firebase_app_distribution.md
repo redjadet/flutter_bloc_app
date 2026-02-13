@@ -196,6 +196,10 @@ flutter build ipa -t lib/main_staging.dart
 2. Select **Product → Archive**.
 3. In the Organizer, **Distribute App** → **Ad Hoc** (or **Enterprise**) → export IPA.
 
+**Option C – Fastlane (Ad Hoc IPA):**
+
+From the project root, run `bundle exec fastlane ios adhoc`. The IPA is exported to `build/ios/ipa/`. See [Deployment – Fastlane iOS lanes](deployment.md#fastlane-ios-lanes-ad-hoc-testflight-app-store) for all iOS lanes (adhoc, testflight, appstore).
+
 Use the path to the exported `.ipa` file in the next step.
 
 ### 4. Distribute via Firebase CLI
@@ -333,6 +337,8 @@ FIREBASE_GROUPS=qa-team bundle exec fastlane ios firebase_distribute
 
 **Note:** iOS lane runs `tool/ios_entitlements.sh distribution` before building (requires paid Apple Developer account for IPA export). To upload an IPA you built elsewhere, use `FIREBASE_SKIP_BUILD=true` and ensure the IPA is at `build/ios/ipa/Runner.ipa` or anywhere under `build/ios/**/*.ipa`.
 
+For other iOS distribution (Ad Hoc IPA only, TestFlight upload, App Store upload), see [Deployment – Fastlane iOS lanes](deployment.md#fastlane-ios-lanes-ad-hoc-testflight-app-store): `fastlane ios adhoc`, `ios testflight`, `ios appstore`.
+
 ### CI
 
 - Use `firebase login:ci` to get a token and set `FIREBASE_TOKEN`; the Firebase CLI will use it when run from Fastlane.
@@ -388,7 +394,7 @@ Then run `flutter build apk --release` again. If the plugin’s `AndroidManifest
 
 ## Related documentation
 
-- [Deployment](deployment.md) – Release preparation, Fastlane, environments.
+- [Deployment](deployment.md) – App Store, TestFlight, Google Play, Fastlane iOS lanes (Ad Hoc, TestFlight, App Store).
 - [Security and secrets](security_and_secrets.md) – Handling secrets when building.
 - [Firebase (WalletConnect Auth)](walletconnect_auth_status.md) – Firebase setup for this project.
 - [Firebase App Distribution – Android CLI](https://firebase.google.com/docs/app-distribution/android/distribute-cli)
