@@ -118,6 +118,7 @@ Start here:
 Engineering references:
 
 - [Clean Architecture](docs/clean_architecture.md)
+- [Deployment](docs/deployment.md) – App Store, TestFlight, Google Play, Fastlane (Ad Hoc, TestFlight, App Store)
 - [Offline-First Guide](docs/offline_first/adoption_guide.md)
 - [Type-Safe BLoC](docs/compile_time_safety.md)
 - [Performance](docs/performance_bottlenecks.md)
