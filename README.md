@@ -2,7 +2,7 @@
 
 A reference Flutter application that demonstrates clean architecture, offline-first data access, and production-minded tooling across multiple feature types. This repository is designed to showcase senior Flutter engineering practices in a realistic, testable codebase.
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.41.0-blue.svg)](https://flutter.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.41.1-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.0-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
 [![Coverage](https://img.shields.io/badge/Coverage-74%2E14%25-brightgreen.svg)](coverage/coverage_summary.md)
@@ -93,7 +93,7 @@ See [Security & Secrets](docs/security_and_secrets.md) for setup guidance and sa
 
 ### Prerequisites
 
-- Flutter 3.41.0
+- Flutter 3.41.1
 - Dart 3.11.0
 - iOS 12+ / Android API 21+
 
@@ -127,7 +127,7 @@ Engineering references:
 
 ## 🛠️ Tech Stack (Short)
 
-- Flutter 3.41.0 / Dart 3.11.0
+- Flutter 3.41.1 / Dart 3.11.0
 - BLoC/Cubit for state management
 - Hive + secure storage for persistence
 - Firebase (Auth, Remote Config)
