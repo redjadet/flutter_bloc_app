@@ -41,6 +41,8 @@ class _LibraryDemoPageState extends State<LibraryDemoPage> {
       data: pageTheme,
       child: CommonPageLayout(
         title: context.l10n.libraryDemoPageTitle,
+        appBarBackgroundColor: EpochColors.warmGrey,
+        appBarForegroundColor: EpochColors.darkGrey,
         useResponsiveBody: false,
         body: SafeArea(
           child: LibraryDemoBody(
