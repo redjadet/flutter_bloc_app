@@ -13,6 +13,8 @@ class CommonPageLayout extends StatelessWidget {
     required this.body,
     super.key,
     this.actions,
+    this.appBarBackgroundColor,
+    this.appBarForegroundColor,
     this.floatingActionButton,
     this.bottomNavigationBar,
     this.persistentFooterButtons,
@@ -24,6 +26,13 @@ class CommonPageLayout extends StatelessWidget {
   });
 
   final String title;
+
+  /// Optional custom app bar background color (applied to both Material
+  /// and Cupertino navigation bars).
+  final Color? appBarBackgroundColor;
+
+  /// Optional custom app bar foreground color (icons, title).
+  final Color? appBarForegroundColor;
   final Widget body;
   final List<Widget>? actions;
   final Widget? floatingActionButton;
@@ -52,6 +61,9 @@ class CommonPageLayout extends StatelessWidget {
           actions: actions,
           automaticallyImplyLeading: automaticallyImplyLeading,
           homeTooltip: l10n.homeTitle,
+          backgroundColor: appBarBackgroundColor,
+          foregroundColor: appBarForegroundColor,
+          cupertinoBackgroundColor: appBarBackgroundColor,
         ),
         body: content,
         floatingActionButton: floatingActionButton,
