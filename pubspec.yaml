@@ -109,8 +109,8 @@ dependency_overrides:
   # Note: genui_google_generative_ai 0.5.1 only supports genui ^0.5.1 (not 0.6.1 yet)
   # Once genui_google_generative_ai 0.6.x is released, we can upgrade to genui 0.6.1
   email_validator: ^3.0.0
-  # path_provider_foundation: see docs/workarounds.md (iOS 26.2 simulator FFI crash)
-  path_provider_foundation: 2.5.1
+  # Long-term fix for iOS 26.2 simulator FFI crash: use 2.6.0 (see docs/workarounds.md)
+  path_provider_foundation: 2.6.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
