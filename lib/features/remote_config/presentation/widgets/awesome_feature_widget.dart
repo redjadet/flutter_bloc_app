@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
 
 @immutable
@@ -30,7 +31,7 @@ class _AwesomeFeatureWidgetState extends State<AwesomeFeatureWidget> {
     if (CubitHelpers.isCubitAvailable<RemoteConfigCubit, RemoteConfigState>(
       context,
     )) {
-      unawaited(context.read<RemoteConfigCubit>().ensureInitialized());
+      unawaited(context.cubit<RemoteConfigCubit>().ensureInitialized());
     }
   }
 

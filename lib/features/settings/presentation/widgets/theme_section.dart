@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cub
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_card.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 
 class ThemeSection extends StatelessWidget {
   const ThemeSection({super.key});
@@ -24,7 +25,7 @@ class ThemeSection extends StatelessWidget {
         builder: (final context, final currentMode) => SettingsCard<ThemeMode>(
           options: options,
           isSelected: (final mode) => mode == currentMode,
-          onSelect: (final mode) => context.read<ThemeCubit>().setMode(mode),
+          onSelect: (final mode) => context.cubit<ThemeCubit>().setMode(mode),
         ),
       ),
     );

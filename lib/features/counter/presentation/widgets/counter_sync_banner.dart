@@ -39,10 +39,10 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
     if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
       context,
     )) {
-      context.read<SyncStatusCubit>().ensureStarted();
+      context.cubit<SyncStatusCubit>().ensureStarted();
     }
     try {
-      final CounterCubit cubit = context.read<CounterCubit>();
+      final CounterCubit cubit = context.cubit<CounterCubit>();
       _lastSyncedAt = cubit.state.lastSyncedAt;
       _lastChangeId = cubit.state.changeId;
     } on Object {
@@ -149,9 +149,11 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
     );
 
     CounterCubit? counterCubit;
-    try {
-      counterCubit = BlocProvider.of<CounterCubit>(context);
-    } on Object {
+    if (CubitHelpers.isCubitAvailable<CounterCubit, CounterState>(
+      context,
+    )) {
+      counterCubit = context.cubit<CounterCubit>();
+    } else {
       counterCubit = null;
     }
 

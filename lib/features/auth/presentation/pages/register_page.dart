@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/regis
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_state.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_body.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
@@ -59,7 +60,7 @@ class _RegisterView extends StatelessWidget {
 }
 
 void _handleSuccess(final BuildContext context, final RegisterState state) {
-  final cubit = context.read<RegisterCubit>();
+  final cubit = context.cubit<RegisterCubit>();
   final l10n = context.l10n;
   final displayName = state.fullName.value.trim();
 

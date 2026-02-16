@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
@@ -31,7 +32,7 @@ class ChatMessageList extends StatelessWidget {
     return BlocConsumer<ChatCubit, ChatState>(
       listener: (final context, final state) async {
         if (state.hasError) {
-          final ChatCubit chatCubit = context.read<ChatCubit>();
+          final ChatCubit chatCubit = context.cubit<ChatCubit>();
           await errorNotificationService
               .showSnackBar(context, state.error!)
               .whenComplete(() {

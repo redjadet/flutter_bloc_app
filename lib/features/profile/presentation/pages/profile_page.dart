@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_state.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_g
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_header.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_sync_banner.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
@@ -52,7 +52,7 @@ class ProfilePage extends StatelessWidget {
         },
         errorBuilder: (final context, final _) => CommonErrorView(
           message: 'Failed to load profile',
-          onRetry: () => context.read<ProfileCubit>().loadProfile(),
+          onRetry: () => context.cubit<ProfileCubit>().loadProfile(),
         ),
         builder: (final context, final bodyData) {
           final colors = Theme.of(context).colorScheme;

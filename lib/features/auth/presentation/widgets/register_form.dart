@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_ter
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_terms_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class RegisterForm extends StatelessWidget {
@@ -19,7 +20,7 @@ class RegisterForm extends StatelessWidget {
   Widget build(final BuildContext context) =>
       BlocBuilder<RegisterCubit, RegisterState>(
         builder: (final context, final state) {
-          final cubit = context.read<RegisterCubit>();
+          final cubit = context.cubit<RegisterCubit>();
           final l10n = AppLocalizations.of(context);
           final theme = Theme.of(context);
           final colorScheme = theme.colorScheme;

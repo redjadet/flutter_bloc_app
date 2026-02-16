@@ -13,7 +13,7 @@ class ChatModelSelector extends StatelessWidget {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
 
-    final ChatCubit cubit = context.read<ChatCubit>();
+    final ChatCubit cubit = context.cubit<ChatCubit>();
     final List<String> models = cubit.models;
 
     return BlocSelector<ChatCubit, ChatState, String?>(

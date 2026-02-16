@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
@@ -95,7 +96,7 @@ class ChatListView extends StatelessWidget {
   Widget _buildErrorState(final BuildContext context, final String message) =>
       CommonErrorView(
         message: message,
-        onRetry: () => context.read<ChatListCubit>().loadChatContacts(),
+        onRetry: () => context.cubit<ChatListCubit>().loadChatContacts(),
       );
 
   void _navigateToChat(final BuildContext context, final ChatContact contact) {
@@ -104,7 +105,7 @@ class ChatListView extends StatelessWidget {
       return;
     }
     // Mark as read when opening chat
-    unawaited(context.read<ChatListCubit>().markAsRead(contact.id));
+    unawaited(context.cubit<ChatListCubit>().markAsRead(contact.id));
 
     // Navigate to chat page
     unawaited(
@@ -134,7 +135,7 @@ class ChatListView extends StatelessWidget {
     final BuildContext context,
     final ChatContact contact,
   ) {
-    final chatListCubit = context.read<ChatListCubit>();
+    final chatListCubit = context.cubit<ChatListCubit>();
     final bool isCupertino = PlatformAdaptive.isCupertino(context);
     final l10n = context.l10n;
     unawaited(

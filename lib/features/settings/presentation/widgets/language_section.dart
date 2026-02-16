@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 
 class LanguageSection extends StatelessWidget {
   const LanguageSection({super.key});
@@ -44,7 +45,7 @@ class LanguageSection extends StatelessWidget {
             options: options,
             isSelected: (final locale) => _sameLocale(locale, currentLocale),
             onSelect: (final locale) =>
-                context.read<LocaleCubit>().setLocale(locale),
+                context.cubit<LocaleCubit>().setLocale(locale),
           );
         },
       ),

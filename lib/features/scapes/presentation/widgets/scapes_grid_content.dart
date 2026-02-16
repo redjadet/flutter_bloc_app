@@ -31,7 +31,7 @@ class _ScapesGridContentBody extends StatelessWidget {
           if (state.hasError) {
             return CommonErrorView(
               message: state.errorMessage ?? 'An error occurred',
-              onRetry: () => context.read<ScapesCubit>().reload(),
+              onRetry: () => context.cubit<ScapesCubit>().reload(),
             );
           }
 
@@ -45,7 +45,7 @@ class _ScapesGridContentBody extends StatelessWidget {
             scapes: state.scapes,
             shrinkWrap: true,
             onFavoritePressed: (final id) =>
-                context.read<ScapesCubit>().toggleFavorite(id),
+                context.cubit<ScapesCubit>().toggleFavorite(id),
             onMorePressed: (final id) {
               AppLogger.debug('options menu clicked');
             },

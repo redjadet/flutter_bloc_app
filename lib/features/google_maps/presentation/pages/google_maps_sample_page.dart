@@ -57,7 +57,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
   late final TargetPlatform _platform;
   late final bool _useAppleMaps;
 
-  MapSampleCubit get _cubit => context.read<MapSampleCubit>();
+  MapSampleCubit get _cubit => context.cubit<MapSampleCubit>();
 
   @override
   void initState() {

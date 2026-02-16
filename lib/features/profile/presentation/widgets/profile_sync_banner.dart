@@ -25,7 +25,7 @@ class _ProfileSyncBannerState extends State<ProfileSyncBanner> {
     if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
       context,
     )) {
-      context.read<SyncStatusCubit>().ensureStarted();
+      context.cubit<SyncStatusCubit>().ensureStarted();
     }
   }
 
@@ -53,7 +53,7 @@ class _ProfileSyncBannerState extends State<ProfileSyncBanner> {
   Widget build(final BuildContext context) =>
       BlocBuilder<SyncStatusCubit, SyncStatusState>(
         builder: (final context, final syncState) {
-          final SyncStatusCubit syncCubit = context.read<SyncStatusCubit>();
+          final SyncStatusCubit syncCubit = context.cubit<SyncStatusCubit>();
           final bool isOffline =
               syncState.networkStatus == NetworkStatus.offline;
           final bool isSyncing = syncState.syncStatus == SyncStatus.syncing;

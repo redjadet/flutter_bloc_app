@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/features/search/presentation/search_cubit.dart'
 import 'package:flutter_bloc_app/features/search/presentation/search_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class SearchTextField extends StatefulWidget {
@@ -57,7 +58,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
               controller: _controller,
               hintText: l10n.searchHint,
               onChanged: (final value) =>
-                  context.read<SearchCubit>().search(value),
+                  context.cubit<SearchCubit>().search(value),
               style: textStyle,
               padding: isCupertino
                   ? EdgeInsets.symmetric(
