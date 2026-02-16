@@ -15,6 +15,7 @@ figma-sync/
 AGENTS.md
 GEMINI.md
 .cursor/skills/
+.cursor/rules/
 
 # IntelliJ related
 *.iml
