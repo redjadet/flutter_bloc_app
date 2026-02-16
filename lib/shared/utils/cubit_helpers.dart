@@ -69,8 +69,10 @@ class CubitHelpers {
 
 /// Utility extension for common Cubit operations on [BuildContext].
 extension CubitContextHelpers on BuildContext {
-  /// A convenient way to access a Cubit of type [T] from the widget tree.
+  /// Reads a Cubit of type [T] from the widget tree (one-off, no rebuild).
   ///
-  /// This is a shorthand for `BlocProvider.of<T>(this)`.
+  /// Prefer `context.cubit<T>()` from the type-safe BLoC access extension in
+  /// UI code for consistent type-safe access and clearer errors when the
+  /// cubit is missing.
   T readCubit<T extends Cubit<dynamic>>() => read<T>();
 }

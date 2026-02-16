@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 
 /// Helper utilities for creating BlocProviders with common patterns.
 ///
@@ -103,7 +104,7 @@ class BlocProviderHelpers {
     create: (_) => create(),
     child: Builder(
       builder: (final context) {
-        final cubit = context.read<C>();
+        final cubit = context.cubit<C>();
         return builder(context, cubit);
       },
     ),
@@ -133,7 +134,7 @@ class BlocProviderHelpers {
     },
     child: Builder(
       builder: (final context) {
-        final cubit = context.read<C>();
+        final cubit = context.cubit<C>();
         return builder(context, cubit);
       },
     ),
