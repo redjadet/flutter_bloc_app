@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/features/search/presentation/widgets/search_res
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_sync_banner.dart';
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_text_field.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_empty_state.dart';
@@ -87,7 +88,7 @@ class _SearchPageContent extends StatelessWidget {
                   loadingBuilder: (final _) => const CommonLoadingWidget(),
                   errorBuilder: (final context, final _) => CommonErrorView(
                     message: 'Error loading results',
-                    onRetry: () => context.read<SearchCubit>().search('dogs'),
+                    onRetry: () => context.cubit<SearchCubit>().search('dogs'),
                   ),
                   builder: (final context, final bodyData) {
                     if (!bodyData.hasResults) {

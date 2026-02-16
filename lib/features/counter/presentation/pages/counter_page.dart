@@ -30,7 +30,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
 
   Future<void> _flushSyncIfPossible(final BuildContext context) async {
     try {
-      final SyncStatusCubit syncCubit = context.read<SyncStatusCubit>();
+      final SyncStatusCubit syncCubit = context.cubit<SyncStatusCubit>();
       if (!syncCubit.state.isOnline) {
         return;
       }
@@ -55,7 +55,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
     if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
       context,
     )) {
-      context.read<SyncStatusCubit>().ensureStarted();
+      context.cubit<SyncStatusCubit>().ensureStarted();
     }
     _showFlavorBadge = FlavorManager.I.flavor != Flavor.prod;
     WidgetsBinding.instance.addObserver(this);
@@ -70,7 +70,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(final AppLifecycleState state) {
     if (!mounted) return;
-    final CounterCubit cubit = context.read<CounterCubit>();
+    final CounterCubit cubit = context.cubit<CounterCubit>();
     switch (state) {
       case AppLifecycleState.paused:
       case AppLifecycleState.inactive:

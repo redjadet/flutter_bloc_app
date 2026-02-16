@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/calculator/presentation/utils/calculat
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_rate_selector.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:intl/intl.dart';
 
 class CalculatorSummaryCard extends StatelessWidget {
@@ -22,7 +23,7 @@ class CalculatorSummaryCard extends StatelessWidget {
     buildWhen: (final previous, final current) => previous != current,
     builder: (final context, final state) {
       final l10n = context.l10n;
-      final CalculatorCubit cubit = context.read<CalculatorCubit>();
+      final CalculatorCubit cubit = context.cubit<CalculatorCubit>();
       final PaymentCalculator calculator = cubit.calculator;
       final CalculatorFormatters formatters = CalculatorFormatters.of(
         context,

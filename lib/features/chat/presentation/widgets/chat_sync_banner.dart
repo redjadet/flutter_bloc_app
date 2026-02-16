@@ -32,7 +32,7 @@ class _ChatSyncBannerState extends State<ChatSyncBanner> {
   @override
   void initState() {
     super.initState();
-    _syncCubit = context.read<SyncStatusCubit>();
+    _syncCubit = context.cubit<SyncStatusCubit>();
     _syncCubit.ensureStarted();
     unawaited(_refreshPendingCount());
   }

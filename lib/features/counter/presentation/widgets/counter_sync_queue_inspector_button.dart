@@ -32,7 +32,7 @@ class _CounterSyncQueueInspectorButtonState
     if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
       context,
     )) {
-      context.read<SyncStatusCubit>().ensureStarted();
+      context.cubit<SyncStatusCubit>().ensureStarted();
     }
     unawaited(_refreshPendingCount());
   }
@@ -48,9 +48,11 @@ class _CounterSyncQueueInspectorButtonState
   @override
   Widget build(final BuildContext context) {
     SyncStatusCubit? syncCubit;
-    try {
-      syncCubit = BlocProvider.of<SyncStatusCubit>(context);
-    } on Object {
+    if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
+      context,
+    )) {
+      syncCubit = context.cubit<SyncStatusCubit>();
+    } else {
       syncCubit = null;
     }
 

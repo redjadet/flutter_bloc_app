@@ -24,7 +24,7 @@ class _SearchSyncBannerState extends State<SearchSyncBanner> {
     if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
       context,
     )) {
-      context.read<SyncStatusCubit>().ensureStarted();
+      context.cubit<SyncStatusCubit>().ensureStarted();
     }
   }
 

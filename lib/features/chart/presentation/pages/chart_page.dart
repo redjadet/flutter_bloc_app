@@ -81,7 +81,7 @@ class _ChartView extends StatelessWidget {
     return CommonPageLayout(
       title: l10n.chartPageTitle,
       body: RefreshIndicator(
-        onRefresh: () => context.read<ChartCubit>().refresh(),
+        onRefresh: () => context.cubit<ChartCubit>().refresh(),
         child: ViewStatusSwitcher<ChartCubit, ChartState, _ChartViewData>(
           selector: (final state) => _ChartViewData(
             showLoading:
@@ -114,7 +114,7 @@ class _ChartView extends StatelessWidget {
               dateFormat: dateFormat,
               zoomEnabled: data.zoomEnabled,
               onZoomChanged: (final value) =>
-                  context.read<ChartCubit>().setZoomEnabled(isEnabled: value),
+                  context.cubit<ChartCubit>().setZoomEnabled(isEnabled: value),
             );
           },
         ),

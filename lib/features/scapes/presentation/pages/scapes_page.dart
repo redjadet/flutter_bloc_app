@@ -40,7 +40,7 @@ class ScapesPage extends StatelessWidget {
           loadingBuilder: (final _) => const CommonLoadingWidget(),
           errorBuilder: (final context, final state) => CommonErrorView(
             message: state.errorMessage ?? 'An error occurred',
-            onRetry: () => context.read<ScapesCubit>().reload(),
+            onRetry: () => context.cubit<ScapesCubit>().reload(),
           ),
           builder: (final context, final state) {
             if (state.scapes.isEmpty) {
@@ -52,7 +52,7 @@ class ScapesPage extends StatelessWidget {
             return ScapesGridView(
               scapes: state.scapes,
               onFavoritePressed: (final id) =>
-                  context.read<ScapesCubit>().toggleFavorite(id),
+                  context.cubit<ScapesCubit>().toggleFavorite(id),
               onMorePressed: (final id) {
                 AppLogger.debug('options menu clicked');
               },

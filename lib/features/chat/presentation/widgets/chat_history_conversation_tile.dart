@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history_sheet_helpers.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class ChatHistoryConversationTile extends StatelessWidget {
@@ -25,7 +25,7 @@ class ChatHistoryConversationTile extends StatelessWidget {
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
     final l10n = context.l10n;
-    final cubit = context.read<ChatCubit>();
+    final cubit = context.cubit<ChatCubit>();
     final materialLocalizations = MaterialLocalizations.of(context);
 
     final String timestamp = formatTimestamp(

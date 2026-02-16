@@ -41,7 +41,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> _showHistorySheet(final BuildContext context) async {
-    final ChatCubit cubit = context.read<ChatCubit>();
+    final ChatCubit cubit = context.cubit<ChatCubit>();
     await PlatformAdaptive.showAdaptiveModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -56,7 +56,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> _confirmAndClearHistory(final BuildContext context) async {
-    final ChatCubit cubit = context.read<ChatCubit>();
+    final ChatCubit cubit = context.cubit<ChatCubit>();
     final l10n = context.l10n;
     final bool isCupertino = PlatformAdaptive.isCupertino(context);
     final bool confirmed =

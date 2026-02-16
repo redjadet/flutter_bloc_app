@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
@@ -28,7 +29,7 @@ class _SyncStatusBannerState extends State<SyncStatusBanner> {
     if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
       context,
     )) {
-      context.read<SyncStatusCubit>().ensureStarted();
+      context.cubit<SyncStatusCubit>().ensureStarted();
     }
   }
 
@@ -56,7 +57,7 @@ class _SyncStatusBannerState extends State<SyncStatusBanner> {
             PlatformAdaptive.textButton(
               context: context,
               onPressed: () {
-                final SyncStatusCubit cubit = context.read<SyncStatusCubit>();
+                final SyncStatusCubit cubit = context.cubit<SyncStatusCubit>();
                 // check-ignore: user action triggers async flush
                 unawaited(cubit.flush());
               },

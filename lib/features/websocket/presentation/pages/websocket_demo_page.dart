@@ -44,7 +44,7 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
   @override
   void initState() {
     super.initState();
-    _cubit = context.read<WebsocketCubit>();
+    _cubit = context.cubit<WebsocketCubit>();
     if (!kIsWeb) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (!mounted) return;

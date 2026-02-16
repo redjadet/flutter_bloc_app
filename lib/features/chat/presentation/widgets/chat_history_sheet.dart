@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history_sheet_helpers.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 
@@ -44,7 +45,7 @@ class ChatHistorySheet extends StatelessWidget {
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
-    final ChatCubit cubit = context.read<ChatCubit>();
+    final ChatCubit cubit = context.cubit<ChatCubit>();
 
     return FractionallySizedBox(
       heightFactor: 0.9,

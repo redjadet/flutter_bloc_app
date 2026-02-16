@@ -139,7 +139,7 @@ class _ErrorContent extends StatelessWidget {
           child: PlatformAdaptive.dialogAction(
             context: context,
             label: l10n.appInfoRetryButtonLabel,
-            onPressed: () => context.read<AppInfoCubit>().load(),
+            onPressed: () => context.cubit<AppInfoCubit>().load(),
           ),
         ),
       ],
