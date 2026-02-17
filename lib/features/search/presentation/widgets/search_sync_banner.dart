@@ -4,6 +4,8 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_banner_helpers.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 
 /// Banner widget that displays search sync status (offline/syncing).
@@ -21,11 +23,7 @@ class _SearchSyncBannerState extends State<SearchSyncBanner> {
   @override
   void initState() {
     super.initState();
-    if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
-      context,
-    )) {
-      context.cubit<SyncStatusCubit>().ensureStarted();
-    }
+    context.ensureSyncStartedIfAvailable();
   }
 
   @override
@@ -41,15 +39,12 @@ class _SearchSyncBannerState extends State<SearchSyncBanner> {
       }
       final AppLocalizations l10n = context.l10n;
       final bool isError = isOffline;
-      final String title;
-      final String message;
-      if (isOffline) {
-        title = l10n.syncStatusOfflineTitle;
-        message = l10n.syncStatusOfflineMessage(0); // No pending ops for search
-      } else {
-        title = l10n.syncStatusSyncingTitle;
-        message = l10n.syncStatusSyncingMessage(0);
-      }
+      final (String title, String message) = syncBannerTitleAndMessage(
+        l10n,
+        isOffline: isOffline,
+        isSyncing: isSyncing,
+        pendingCount: 0,
+      );
 
       return Padding(
         padding: EdgeInsets.symmetric(

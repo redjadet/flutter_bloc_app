@@ -41,6 +41,20 @@ class AppLogger {
     _logger.d(message);
   }
 
+  /// Logs [message] at debug level only in debug mode (avoids work in release).
+  static void debugInDebugMode(final String message) {
+    if (kDebugMode) {
+      _logger.d(message);
+    }
+  }
+
+  /// Returns a stream error handler that logs with [logContext] and swallows.
+  static void Function(Object error, StackTrace stackTrace) streamErrorHandler(
+    final String logContext,
+  ) =>
+      (final err, final stackTrace) =>
+          AppLogger.error('$logContext failed', err, stackTrace);
+
   static T silence<T>(final T Function() action) {
     _silenceDepth++;
     try {

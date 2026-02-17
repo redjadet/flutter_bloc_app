@@ -4,6 +4,8 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_banner_helpers.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
@@ -22,11 +24,7 @@ class _ProfileSyncBannerState extends State<ProfileSyncBanner> {
   @override
   void initState() {
     super.initState();
-    if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
-      context,
-    )) {
-      context.cubit<SyncStatusCubit>().ensureStarted();
-    }
+    context.ensureSyncStartedIfAvailable();
   }
 
   Future<void> _handleSyncNow(final SyncStatusCubit cubit) async {
@@ -62,12 +60,12 @@ class _ProfileSyncBannerState extends State<ProfileSyncBanner> {
           }
           final AppLocalizations l10n = context.l10n;
           final bool isError = isOffline;
-          final String title = isOffline
-              ? l10n.syncStatusOfflineTitle
-              : l10n.syncStatusSyncingTitle;
-          final String message = isOffline
-              ? l10n.syncStatusOfflineMessage(0)
-              : l10n.syncStatusSyncingMessage(0);
+          final (String title, String message) = syncBannerTitleAndMessage(
+            l10n,
+            isOffline: isOffline,
+            isSyncing: isSyncing,
+            pendingCount: 0,
+          );
           final bool canManualSync = !isSyncing && !_isManualSyncing;
 
           return Padding(

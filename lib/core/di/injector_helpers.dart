@@ -45,13 +45,6 @@ T? createRemoteRepositoryOrNull<T>({
   // coverage:ignore-start
   try {
     return factory();
-  } on FirebaseException catch (error, stackTrace) {
-    AppLogger.error(
-      'Creating remote $context failed',
-      error,
-      stackTrace,
-    );
-    return null;
   } on Exception catch (error, stackTrace) {
     AppLogger.error(
       'Creating remote $context failed',

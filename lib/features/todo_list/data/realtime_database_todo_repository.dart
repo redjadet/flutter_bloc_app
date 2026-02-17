@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/todo_item_dto.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
-import 'package:flutter_bloc_app/shared/firebase/auth_helpers.dart';
+import 'package:flutter_bloc_app/shared/firebase/run_with_auth_user.dart';
+import 'package:flutter_bloc_app/shared/firebase/stream_with_auth_user.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Firebase Realtime Database backed implementation of [TodoRepository].
@@ -29,11 +29,11 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   Future<List<TodoItem>> fetchAll() async => _executeForUser<List<TodoItem>>(
     operation: 'fetchAll',
     action: (final user) async {
-      _debugLog(
+      AppLogger.debugInDebugMode(
         'RealtimeDatabaseTodoRepository.fetchAll requesting todos',
       );
       final DataSnapshot snapshot = await _todoRef.child(user.uid).get();
-      _debugLog(
+      AppLogger.debugInDebugMode(
         'RealtimeDatabaseTodoRepository.fetchAll response exists: '
         '${snapshot.exists}',
       );
@@ -43,29 +43,23 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   );
 
   @override
-  Stream<List<TodoItem>> watchAll() => Stream.fromFuture(waitForAuthUser(_auth))
-      .asyncExpand(
-        (final user) => _todoRef
-            .child(user.uid)
-            .onValue
-            .map(
-              (final event) =>
-                  _itemsFromValue(event.snapshot.value, userId: user.uid),
-            ),
-      )
-      .handleError((final Object error, final StackTrace stackTrace) {
-        AppLogger.error(
-          'RealtimeDatabaseTodoRepository.watchAll failed',
-          error,
-          stackTrace,
-        );
-      });
+  Stream<List<TodoItem>> watchAll() => streamWithAuthUser<List<TodoItem>>(
+    auth: _auth,
+    logContext: 'RealtimeDatabaseTodoRepository.watchAll',
+    streamPerUser: (final user) => _todoRef
+        .child(user.uid)
+        .onValue
+        .map(
+          (final event) =>
+              _itemsFromValue(event.snapshot.value, userId: user.uid),
+        ),
+  );
 
   @override
   Future<void> save(final TodoItem item) async => _executeForUser<void>(
     operation: 'save',
     action: (final user) async {
-      _debugLog(
+      AppLogger.debugInDebugMode(
         'RealtimeDatabaseTodoRepository.save writing todo item',
       );
       final Map<String, dynamic> data = _todoToMap(item, userId: user.uid);
@@ -78,7 +72,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   Future<void> delete(final String id) async => _executeForUser<void>(
     operation: 'delete',
     action: (final user) async {
-      _debugLog(
+      AppLogger.debugInDebugMode(
         'RealtimeDatabaseTodoRepository.delete removing todo item',
       );
       await _todoRef.child(user.uid).child(id).remove();
@@ -90,7 +84,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   Future<void> clearCompleted() async => _executeForUser<void>(
     operation: 'clearCompleted',
     action: (final user) async {
-      _debugLog(
+      AppLogger.debugInDebugMode(
         'RealtimeDatabaseTodoRepository.clearCompleted removing completed todos',
       );
       final DataSnapshot snapshot = await _todoRef.child(user.uid).get();
@@ -120,46 +114,12 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
     required final String operation,
     required final Future<T> Function(User user) action,
     final Future<T> Function()? onFailureFallback,
-  }) async {
-    try {
-      final User user = await waitForAuthUser(_auth);
-      return await action(user);
-    } on FirebaseAuthException {
-      rethrow;
-    } on FirebaseException catch (error, stackTrace) {
-      AppLogger.error(
-        'RealtimeDatabaseTodoRepository.$operation failed',
-        error,
-        stackTrace,
-      );
-      if (onFailureFallback != null) {
-        return onFailureFallback();
-      }
-      rethrow;
-    } on Exception catch (error, stackTrace) {
-      AppLogger.error(
-        'RealtimeDatabaseTodoRepository.$operation failed',
-        error,
-        stackTrace,
-      );
-      if (onFailureFallback != null) {
-        return onFailureFallback();
-      }
-      rethrow;
-    } catch (error, stackTrace) {
-      // Catch any other errors (e.g. TypeError from Firebase SDK exception
-      // conversion when platform exceptions have unexpected formats)
-      AppLogger.error(
-        'RealtimeDatabaseTodoRepository.$operation failed with unexpected error',
-        error,
-        stackTrace,
-      );
-      if (onFailureFallback != null) {
-        return onFailureFallback();
-      }
-      rethrow;
-    }
-  }
+  }) => runWithAuthUser<T>(
+    auth: _auth,
+    logContext: 'RealtimeDatabaseTodoRepository.$operation',
+    action: action,
+    onFailureFallback: onFailureFallback,
+  );
 
   List<TodoItem> _itemsFromValue(
     final Object? value, {
@@ -218,11 +178,5 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
         (final a, final b) => b.updatedAt.compareTo(a.updatedAt),
       );
     return List<TodoItem>.unmodifiable(sorted);
-  }
-}
-
-void _debugLog(final String message) {
-  if (kDebugMode) {
-    AppLogger.debug(message);
   }
 }

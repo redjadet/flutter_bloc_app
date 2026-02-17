@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/counter/counter.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
 import 'package:go_router/go_router.dart';
 
 class CounterPage extends StatefulWidget {
@@ -52,11 +53,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
-      context,
-    )) {
-      context.cubit<SyncStatusCubit>().ensureStarted();
-    }
+    context.ensureSyncStartedIfAvailable();
     _showFlavorBadge = FlavorManager.I.flavor != Flavor.prod;
     WidgetsBinding.instance.addObserver(this);
   }
