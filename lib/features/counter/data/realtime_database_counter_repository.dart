@@ -5,7 +5,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
-import 'package:flutter_bloc_app/shared/firebase/auth_helpers.dart';
+import 'package:flutter_bloc_app/shared/firebase/run_with_auth_user.dart';
+import 'package:flutter_bloc_app/shared/firebase/stream_with_auth_user.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Firebase Realtime Database backed implementation of [CounterRepository].
@@ -30,11 +31,11 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   Future<CounterSnapshot> load() async => _executeForUser<CounterSnapshot>(
     operation: 'load',
     action: (final user) async {
-      _debugLog(
+      AppLogger.debugInDebugMode(
         'RealtimeDatabaseCounterRepository.load requesting counter value',
       );
       final DataSnapshot snapshot = await _counterRef.child(user.uid).get();
-      _debugLog(
+      AppLogger.debugInDebugMode(
         'RealtimeDatabaseCounterRepository.load response exists: '
         '${snapshot.exists}',
       );
@@ -51,7 +52,7 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
     await _executeForUser<void>(
       operation: 'save',
       action: (final user) async {
-        _debugLog(
+        AppLogger.debugInDebugMode(
           'RealtimeDatabaseCounterRepository.save writing counter value',
         );
         await _counterRef.child(user.uid).set(<String, Object?>{
@@ -65,23 +66,17 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   }
 
   @override
-  Stream<CounterSnapshot> watch() => Stream.fromFuture(waitForAuthUser(_auth))
-      .asyncExpand(
-        (final user) => _counterRef
-            .child(user.uid)
-            .onValue
-            .map(
-              (final event) =>
-                  snapshotFromValue(event.snapshot.value, userId: user.uid),
-            ),
-      )
-      .handleError((final Object error, final StackTrace stackTrace) {
-        AppLogger.error(
-          'RealtimeDatabaseCounterRepository.watch failed',
-          error,
-          stackTrace,
-        );
-      });
+  Stream<CounterSnapshot> watch() => streamWithAuthUser<CounterSnapshot>(
+    auth: _auth,
+    logContext: 'RealtimeDatabaseCounterRepository.watch',
+    streamPerUser: (final user) => _counterRef
+        .child(user.uid)
+        .onValue
+        .map(
+          (final event) =>
+              snapshotFromValue(event.snapshot.value, userId: user.uid),
+        ),
+  );
 
   @visibleForTesting
   static CounterSnapshot snapshotFromValue(
@@ -126,50 +121,10 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
     required final String operation,
     required final Future<T> Function(User user) action,
     final Future<T> Function()? onFailureFallback,
-  }) async {
-    try {
-      final User user = await waitForAuthUser(_auth);
-      return await action(user);
-    } on FirebaseAuthException {
-      rethrow;
-    } on FirebaseException catch (error, stackTrace) {
-      AppLogger.error(
-        'RealtimeDatabaseCounterRepository.$operation failed',
-        error,
-        stackTrace,
-      );
-      if (onFailureFallback != null) {
-        return onFailureFallback();
-      }
-      rethrow;
-    } on Exception catch (error, stackTrace) {
-      AppLogger.error(
-        'RealtimeDatabaseCounterRepository.$operation failed',
-        error,
-        stackTrace,
-      );
-      if (onFailureFallback != null) {
-        return onFailureFallback();
-      }
-      rethrow;
-    } catch (error, stackTrace) {
-      // Catch any other errors (e.g. TypeError from Firebase SDK exception
-      // conversion when platform exceptions have unexpected formats)
-      AppLogger.error(
-        'RealtimeDatabaseCounterRepository.$operation failed with unexpected error',
-        error,
-        stackTrace,
-      );
-      if (onFailureFallback != null) {
-        return onFailureFallback();
-      }
-      rethrow;
-    }
-  }
-}
-
-void _debugLog(final String message) {
-  if (kDebugMode) {
-    AppLogger.debug(message);
-  }
+  }) => runWithAuthUser<T>(
+    auth: _auth,
+    logContext: 'RealtimeDatabaseCounterRepository.$operation',
+    action: action,
+    onFailureFallback: onFailureFallback,
+  );
 }

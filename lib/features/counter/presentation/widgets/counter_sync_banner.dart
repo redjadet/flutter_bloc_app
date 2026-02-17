@@ -9,6 +9,8 @@ import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_banner_helpers.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 
 class CounterSyncBanner extends StatefulWidget {
@@ -36,11 +38,7 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
   @override
   void initState() {
     super.initState();
-    if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
-      context,
-    )) {
-      context.cubit<SyncStatusCubit>().ensureStarted();
-    }
+    context.ensureSyncStartedIfAvailable();
     try {
       final CounterCubit cubit = context.cubit<CounterCubit>();
       _lastSyncedAt = cubit.state.lastSyncedAt;
@@ -97,18 +95,12 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
         }
         final AppLocalizations l10n = widget.l10n;
         final bool isError = isOffline;
-        final String title;
-        final String message;
-        if (isOffline) {
-          title = l10n.syncStatusOfflineTitle;
-          message = l10n.syncStatusOfflineMessage(_pendingCount);
-        } else if (isSyncing) {
-          title = l10n.syncStatusSyncingTitle;
-          message = l10n.syncStatusSyncingMessage(_pendingCount);
-        } else {
-          title = l10n.syncStatusPendingTitle;
-          message = l10n.syncStatusPendingMessage(_pendingCount);
-        }
+        final (String title, String message) = syncBannerTitleAndMessage(
+          l10n,
+          isOffline: isOffline,
+          isSyncing: isSyncing,
+          pendingCount: _pendingCount,
+        );
         final MaterialLocalizations materialLocalizations =
             MaterialLocalizations.of(context);
         final String? lastSyncedText = _lastSyncedAt != null

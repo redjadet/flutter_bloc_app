@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
@@ -29,11 +30,7 @@ class _CounterSyncQueueInspectorButtonState
   @override
   void initState() {
     super.initState();
-    if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
-      context,
-    )) {
-      context.cubit<SyncStatusCubit>().ensureStarted();
-    }
+    context.ensureSyncStartedIfAvailable();
     unawaited(_refreshPendingCount());
   }
 

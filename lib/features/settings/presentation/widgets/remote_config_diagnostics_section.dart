@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
@@ -36,11 +37,7 @@ class _RemoteConfigDiagnosticsSectionState
     )) {
       unawaited(context.cubit<RemoteConfigCubit>().ensureInitialized());
     }
-    if (CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
-      context,
-    )) {
-      context.cubit<SyncStatusCubit>().ensureStarted();
-    }
+    context.ensureSyncStartedIfAvailable();
   }
 
   @override
