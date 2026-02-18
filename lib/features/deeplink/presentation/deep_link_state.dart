@@ -1,44 +1,26 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_target.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'deep_link_state.freezed.dart';
 
 /// Origin describing how a deep link was received.
 enum DeepLinkOrigin { initial, resumed }
 
-/// Base state for the deep link cubit.
-sealed class DeepLinkState extends Equatable {
-  const DeepLinkState();
+/// Union state for the deep link cubit.
+@freezed
+sealed class DeepLinkState with _$DeepLinkState {
+  /// Idle state when no navigation is pending.
+  const factory DeepLinkState.idle() = DeepLinkIdle;
 
-  @override
-  List<Object?> get props => const <Object?>[];
-}
+  /// Indicates the cubit is preparing deep link subscriptions.
+  const factory DeepLinkState.loading() = DeepLinkLoading;
 
-/// Idle state when no navigation is pending.
-class DeepLinkIdle extends DeepLinkState {
-  const DeepLinkIdle();
-}
+  /// Signals that navigation to [target] should occur.
+  const factory DeepLinkState.navigate(
+    final DeepLinkTarget target,
+    final DeepLinkOrigin origin,
+  ) = DeepLinkNavigate;
 
-/// Indicates the cubit is preparing deep link subscriptions.
-class DeepLinkLoading extends DeepLinkState {
-  const DeepLinkLoading();
-}
-
-/// Signals that navigation to [target] should occur.
-class DeepLinkNavigate extends DeepLinkState {
-  const DeepLinkNavigate(this.target, this.origin);
-
-  final DeepLinkTarget target;
-  final DeepLinkOrigin origin;
-
-  @override
-  List<Object?> get props => <Object?>[target, origin];
-}
-
-/// Emitted when initialization fails or the stream encounters an error.
-class DeepLinkError extends DeepLinkState {
-  const DeepLinkError(this.message);
-
-  final String message;
-
-  @override
-  List<Object?> get props => <Object?>[message];
+  /// Emitted when initialization fails or the stream encounters an error.
+  const factory DeepLinkState.error(final String message) = DeepLinkError;
 }

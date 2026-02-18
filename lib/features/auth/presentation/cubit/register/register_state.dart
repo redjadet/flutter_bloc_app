@@ -1,5 +1,7 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_country_option.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'register_state.freezed.dart';
 
 enum RegisterSubmissionStatus { initial, success, failure }
 
@@ -13,30 +15,36 @@ enum RegisterConfirmPasswordError { empty, mismatch }
 
 enum RegisterPhoneError { empty, invalid }
 
-class RegisterState extends Equatable {
-  const RegisterState({
-    this.fullName = const RegisterFieldState(),
-    this.email = const RegisterFieldState(),
-    this.password = const RegisterFieldState(),
-    this.confirmPassword = const RegisterFieldState(),
-    this.phoneNumber = const RegisterFieldState(),
-    this.selectedCountry = CountryOption.defaultCountry,
-    this.showErrors = false,
-    this.submissionStatus = RegisterSubmissionStatus.initial,
-    this.hasViewedTerms = false,
-    this.acceptedTerms = false,
-  });
+@freezed
+abstract class RegisterFieldState with _$RegisterFieldState {
+  const factory RegisterFieldState({
+    @Default('') final String value,
+    @Default(false) final bool isDirty,
+  }) = _RegisterFieldState;
 
-  final RegisterFieldState fullName;
-  final RegisterFieldState email;
-  final RegisterFieldState password;
-  final RegisterFieldState confirmPassword;
-  final RegisterFieldState phoneNumber;
-  final CountryOption selectedCountry;
-  final bool showErrors;
-  final RegisterSubmissionStatus submissionStatus;
-  final bool hasViewedTerms;
-  final bool acceptedTerms;
+  const RegisterFieldState._();
+
+  RegisterFieldState update(final String value) =>
+      copyWith(value: value, isDirty: true);
+}
+
+@freezed
+abstract class RegisterState with _$RegisterState {
+  const factory RegisterState({
+    @Default(RegisterFieldState()) final RegisterFieldState fullName,
+    @Default(RegisterFieldState()) final RegisterFieldState email,
+    @Default(RegisterFieldState()) final RegisterFieldState password,
+    @Default(RegisterFieldState()) final RegisterFieldState confirmPassword,
+    @Default(RegisterFieldState()) final RegisterFieldState phoneNumber,
+    @Default(CountryOption.defaultCountry) final CountryOption selectedCountry,
+    @Default(false) final bool showErrors,
+    @Default(RegisterSubmissionStatus.initial)
+    final RegisterSubmissionStatus submissionStatus,
+    @Default(false) final bool hasViewedTerms,
+    @Default(false) final bool acceptedTerms,
+  }) = _RegisterState;
+
+  const RegisterState._();
 
   bool get isValid =>
       _validateFullName() == null &&
@@ -57,44 +65,6 @@ class RegisterState extends Equatable {
   RegisterPhoneError? get phoneError =>
       _shouldShowError(phoneNumber) ? _validatePhoneNumber() : null;
   bool get termsAcceptanceError => showErrors && !acceptedTerms;
-
-  RegisterState copyWith({
-    final RegisterFieldState? fullName,
-    final RegisterFieldState? email,
-    final RegisterFieldState? password,
-    final RegisterFieldState? confirmPassword,
-    final RegisterFieldState? phoneNumber,
-    final CountryOption? selectedCountry,
-    final bool? showErrors,
-    final RegisterSubmissionStatus? submissionStatus,
-    final bool? hasViewedTerms,
-    final bool? acceptedTerms,
-  }) => RegisterState(
-    fullName: fullName ?? this.fullName,
-    email: email ?? this.email,
-    password: password ?? this.password,
-    confirmPassword: confirmPassword ?? this.confirmPassword,
-    phoneNumber: phoneNumber ?? this.phoneNumber,
-    selectedCountry: selectedCountry ?? this.selectedCountry,
-    showErrors: showErrors ?? this.showErrors,
-    submissionStatus: submissionStatus ?? this.submissionStatus,
-    hasViewedTerms: hasViewedTerms ?? this.hasViewedTerms,
-    acceptedTerms: acceptedTerms ?? this.acceptedTerms,
-  );
-
-  @override
-  List<Object> get props => <Object>[
-    fullName,
-    email,
-    password,
-    confirmPassword,
-    phoneNumber,
-    selectedCountry,
-    showErrors,
-    submissionStatus,
-    hasViewedTerms,
-    acceptedTerms,
-  ];
 
   bool _shouldShowError(final RegisterFieldState field) =>
       showErrors || field.isDirty;
@@ -167,23 +137,4 @@ class RegisterState extends Equatable {
     }
     return null;
   }
-}
-
-class RegisterFieldState extends Equatable {
-  const RegisterFieldState({this.value = '', this.isDirty = false});
-
-  final String value;
-  final bool isDirty;
-
-  RegisterFieldState copyWith({final String? value, final bool? isDirty}) =>
-      RegisterFieldState(
-        value: value ?? this.value,
-        isDirty: isDirty ?? this.isDirty,
-      );
-
-  RegisterFieldState update(final String value) =>
-      copyWith(value: value, isDirty: true);
-
-  @override
-  List<Object> get props => <Object>[value, isDirty];
 }

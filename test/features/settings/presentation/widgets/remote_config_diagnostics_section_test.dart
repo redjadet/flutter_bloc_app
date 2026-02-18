@@ -59,7 +59,9 @@ void main() {
     testWidgets('shows error message when remote config fails', (
       final WidgetTester tester,
     ) async {
-      const RemoteConfigError state = RemoteConfigError('Network unavailable');
+      const RemoteConfigState state = RemoteConfigState.error(
+        'Network unavailable',
+      );
       when(() => cubit.state).thenReturn(state);
       whenListen(
         cubit,
@@ -79,7 +81,7 @@ void main() {
     testWidgets('shows flag status and test value when config loads', (
       final WidgetTester tester,
     ) async {
-      const RemoteConfigLoaded state = RemoteConfigLoaded(
+      const RemoteConfigState state = RemoteConfigState.loaded(
         isAwesomeFeatureEnabled: true,
         testValue: 'test-123',
         dataSource: 'remote',
@@ -106,7 +108,7 @@ void main() {
     testWidgets('invokes fetchValues when retry button tapped', (
       final WidgetTester tester,
     ) async {
-      const RemoteConfigError state = RemoteConfigError('boom');
+      const RemoteConfigState state = RemoteConfigState.error('boom');
       when(() => cubit.state).thenReturn(state);
       whenListen(
         cubit,
@@ -128,7 +130,7 @@ void main() {
     testWidgets('invokes clearCache when clear button tapped', (
       final WidgetTester tester,
     ) async {
-      const RemoteConfigLoaded state = RemoteConfigLoaded(
+      const RemoteConfigState state = RemoteConfigState.loaded(
         isAwesomeFeatureEnabled: true,
         testValue: 'cached',
       );
@@ -152,7 +154,7 @@ void main() {
     testWidgets('shows sync status banner when offline', (
       final WidgetTester tester,
     ) async {
-      const RemoteConfigLoaded state = RemoteConfigLoaded(
+      const RemoteConfigState state = RemoteConfigState.loaded(
         isAwesomeFeatureEnabled: true,
         testValue: 'cached',
       );

@@ -1,15 +1,16 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class CountryOption extends Equatable {
-  const CountryOption({
-    required this.code,
-    required this.name,
-    required this.dialCode,
-  });
+part 'register_country_option.freezed.dart';
 
-  final String code;
-  final String name;
-  final String dialCode;
+@freezed
+abstract class CountryOption with _$CountryOption {
+  const factory CountryOption({
+    required final String code,
+    required final String name,
+    required final String dialCode,
+  }) = _CountryOption;
+
+  const CountryOption._();
 
   String get flagEmoji {
     if (code.length != 2) {
@@ -30,9 +31,6 @@ class CountryOption extends Equatable {
     name: 'United States',
     dialCode: '+1',
   );
-
-  @override
-  List<Object> get props => <Object>[code, name, dialCode];
 }
 
 const List<CountryOption> kSupportedCountries = <CountryOption>[

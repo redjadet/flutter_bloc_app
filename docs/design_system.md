@@ -14,7 +14,7 @@ Quick reference for where theme, constants, and shared UI live in the Flutter BL
 | Components | `lib/shared/components/` | Design system primitives (buttons, inputs, chips). |
 | Widgets | `lib/shared/widgets/` | App-level composite widgets (e.g. `CommonPageLayout`, `CommonStatusView`). |
 
-## Rules (see AGENTS.md)
+## Rules
 
 - Define fonts and theme in `lib/core/theme/`; wire in `AppConfig`.
 - Use `Theme.of(context).colorScheme` and theme-derived text styles; avoid hardcoded colors and per-widget `GoogleFonts.*`.

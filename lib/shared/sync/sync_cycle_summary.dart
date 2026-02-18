@@ -1,82 +1,23 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'sync_cycle_summary.freezed.dart';
 
 /// Immutable summary of a sync cycle for diagnostics/telemetry.
-class SyncCycleSummary extends Equatable {
-  const SyncCycleSummary({
-    required this.recordedAt,
-    required this.durationMs,
-    required this.pullRemoteCount,
-    required this.pullRemoteFailures,
-    required this.pendingAtStart,
-    required this.operationsProcessed,
-    required this.operationsFailed,
-    required this.pendingByEntity,
-    this.prunedCount = 0,
-    this.retryAttemptsByEntity = const <String, double>{},
-    this.lastErrorByEntity = const <String, String>{},
-    this.retrySuccessRate = 0.0,
-  });
-
-  final DateTime recordedAt;
-  final int durationMs;
-  final int pullRemoteCount;
-  final int pullRemoteFailures;
-  final int pendingAtStart;
-  final int operationsProcessed;
-  final int operationsFailed;
-  final Map<String, int> pendingByEntity;
-  final int prunedCount;
-
-  /// Map of entity type to average retry count.
-  final Map<String, double> retryAttemptsByEntity;
-
-  /// Map of entity type to most recent error message.
-  final Map<String, String> lastErrorByEntity;
-
-  /// Percentage of operations that succeeded after retries (0.0 to 1.0).
-  final double retrySuccessRate;
-
-  SyncCycleSummary copyWith({
-    final DateTime? recordedAt,
-    final int? durationMs,
-    final int? pullRemoteCount,
-    final int? pullRemoteFailures,
-    final int? pendingAtStart,
-    final int? operationsProcessed,
-    final int? operationsFailed,
-    final Map<String, int>? pendingByEntity,
-    final int? prunedCount,
-    final Map<String, double>? retryAttemptsByEntity,
-    final Map<String, String>? lastErrorByEntity,
-    final double? retrySuccessRate,
-  }) => SyncCycleSummary(
-    recordedAt: recordedAt ?? this.recordedAt,
-    durationMs: durationMs ?? this.durationMs,
-    pullRemoteCount: pullRemoteCount ?? this.pullRemoteCount,
-    pullRemoteFailures: pullRemoteFailures ?? this.pullRemoteFailures,
-    pendingAtStart: pendingAtStart ?? this.pendingAtStart,
-    operationsProcessed: operationsProcessed ?? this.operationsProcessed,
-    operationsFailed: operationsFailed ?? this.operationsFailed,
-    pendingByEntity: pendingByEntity ?? this.pendingByEntity,
-    prunedCount: prunedCount ?? this.prunedCount,
-    retryAttemptsByEntity: retryAttemptsByEntity ?? this.retryAttemptsByEntity,
-    lastErrorByEntity: lastErrorByEntity ?? this.lastErrorByEntity,
-    retrySuccessRate: retrySuccessRate ?? this.retrySuccessRate,
-  );
-
-  @override
-  List<Object?> get props => <Object?>[
-    recordedAt,
-    durationMs,
-    pullRemoteCount,
-    pullRemoteFailures,
-    pendingAtStart,
-    operationsProcessed,
-    operationsFailed,
-    pendingByEntity,
-    prunedCount,
-    retryAttemptsByEntity,
-    lastErrorByEntity,
-    retrySuccessRate,
-  ];
+@freezed
+abstract class SyncCycleSummary with _$SyncCycleSummary {
+  const factory SyncCycleSummary({
+    required final DateTime recordedAt,
+    required final int durationMs,
+    required final int pullRemoteCount,
+    required final int pullRemoteFailures,
+    required final int pendingAtStart,
+    required final int operationsProcessed,
+    required final int operationsFailed,
+    required final Map<String, int> pendingByEntity,
+    @Default(0) final int prunedCount,
+    @Default(<String, double>{})
+    final Map<String, double> retryAttemptsByEntity,
+    @Default(<String, String>{}) final Map<String, String> lastErrorByEntity,
+    @Default(0.0) final double retrySuccessRate,
+  }) = _SyncCycleSummary;
 }

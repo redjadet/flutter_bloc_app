@@ -17,7 +17,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
     required final DeepLinkParser parser,
   }) : _service = service,
        _parser = parser,
-       super(const DeepLinkIdle());
+       super(const DeepLinkState.idle());
 
   final DeepLinkService _service;
   final DeepLinkParser _parser;
@@ -36,7 +36,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
     _isInitializing = true;
     AppLogger.info('Initializing deep link cubit');
     if (!isClosed) {
-      emit(const DeepLinkLoading());
+      emit(const DeepLinkState.loading());
     }
 
     try {
@@ -48,7 +48,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
           _consecutiveFailureCount = 0;
           AppLogger.info('Deep link cubit initialized successfully');
           if (!isClosed && state is! DeepLinkIdle) {
-            emit(const DeepLinkIdle());
+            emit(const DeepLinkState.idle());
           }
         },
         onError: (_) {},
@@ -88,7 +88,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
         if (isClosed) {
           return;
         }
-        emit(DeepLinkError(error.toString()));
+        emit(DeepLinkState.error(error.toString()));
       },
     );
     registerSubscription(_subscription);
@@ -103,9 +103,9 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
     }
     AppLogger.info('Deep link parsed to target: ${target.location}');
     if (isClosed) return;
-    emit(DeepLinkNavigate(target, origin));
+    emit(DeepLinkState.navigate(target, origin));
     if (isClosed) return;
-    emit(const DeepLinkIdle());
+    emit(const DeepLinkState.idle());
   }
 
   @override
@@ -132,7 +132,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
     unawaited(_disposeSubscription());
     _initialized = false;
     if (!isClosed) {
-      emit(DeepLinkError(error.toString()));
+      emit(DeepLinkState.error(error.toString()));
     }
   }
 

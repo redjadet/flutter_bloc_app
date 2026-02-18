@@ -14,7 +14,7 @@ BLoC/Cubit follows a unidirectional data flow pattern where:
 
 - **Events/Inputs** → **BLoC/Cubit** → **States/Outputs**
 - State changes are explicit and traceable
-- Immutable states with `Equatable`/`freezed` ensure predictable state transitions
+- Immutable states with Freezed (or Equatable) ensure predictable state transitions; this project prefers **Freezed** for new state and domain models (see [Freezed Usage Analysis](freezed_usage_analysis.md#why-use-freezed-with-bloc)).
 - Every state change is intentional and can be logged/debugged
 
 **Example from this codebase:**

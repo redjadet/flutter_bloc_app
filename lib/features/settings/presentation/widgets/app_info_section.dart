@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
@@ -6,23 +5,18 @@ import 'package:flutter_bloc_app/features/settings/presentation/cubits/app_info_
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@immutable
-class _AppInfoViewData extends Equatable {
-  const _AppInfoViewData({
-    required this.showSuccess,
-    required this.showError,
-    required this.info,
-    required this.errorMessage,
-  });
+part 'app_info_section.freezed.dart';
 
-  final bool showSuccess;
-  final bool showError;
-  final AppInfo? info;
-  final String? errorMessage;
-
-  @override
-  List<Object?> get props => [showSuccess, showError, info, errorMessage];
+@freezed
+abstract class _AppInfoViewData with _$AppInfoViewData {
+  const factory _AppInfoViewData({
+    required final bool showSuccess,
+    required final bool showError,
+    required final AppInfo? info,
+    required final String? errorMessage,
+  }) = __AppInfoViewData;
 }
 
 class AppInfoSection extends StatelessWidget {

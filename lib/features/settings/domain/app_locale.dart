@@ -1,13 +1,15 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class AppLocale extends Equatable {
-  const AppLocale({
-    required this.languageCode,
-    this.countryCode,
-  });
+part 'app_locale.freezed.dart';
 
-  final String languageCode;
-  final String? countryCode;
+@freezed
+abstract class AppLocale with _$AppLocale {
+  const factory AppLocale({
+    required final String languageCode,
+    final String? countryCode,
+  }) = _AppLocale;
+
+  const AppLocale._();
 
   String get tag => countryCode == null || countryCode!.isEmpty
       ? languageCode
@@ -17,18 +19,14 @@ class AppLocale extends Equatable {
     if (tag == null || tag.isEmpty) {
       return null;
     }
-    final parts = tag.split('_');
+    final List<String> parts = tag.split('_');
     if (parts.isEmpty) return null;
     if (parts.length == 1) {
       return AppLocale(languageCode: parts.first);
     }
-    // Defensive check: ensure parts[1] exists before accessing
     if (parts.length < 2) {
       return AppLocale(languageCode: parts.first);
     }
     return AppLocale(languageCode: parts.first, countryCode: parts[1]);
   }
-
-  @override
-  List<Object?> get props => [languageCode, countryCode];
 }

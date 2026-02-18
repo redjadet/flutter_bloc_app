@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
+import 'package:flutter_bloc_app/features/settings/presentation/widgets/remote_config_view_data.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
@@ -67,9 +67,9 @@ class _RemoteConfigDiagnosticsSectionState
               BlocSelector<
                 RemoteConfigCubit,
                 RemoteConfigState,
-                _RemoteConfigViewData
+                RemoteConfigViewData
               >(
-                selector: _RemoteConfigViewData.fromState,
+                selector: RemoteConfigViewData.fromState,
                 builder: (final context, final data) => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[

@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # Check for missing isClosed checks before emit() in cubits (async callbacks, onSuccess/onError, or after await).
-# See AGENTS.md "Race condition prevention".
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"

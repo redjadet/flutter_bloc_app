@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,24 +14,35 @@ import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_s
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_sample_map_view.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
+part 'google_maps_sample_page.freezed.dart';
 part 'google_maps_sample_sections.dart';
 
-@immutable
-class _MapBodyData extends Equatable {
-  const _MapBodyData({
-    required this.showLoading,
-    required this.hasError,
-    required this.errorMessage,
-  });
+@freezed
+abstract class _MapBodyData with _$MapBodyData {
+  const factory _MapBodyData({
+    required final bool showLoading,
+    required final bool hasError,
+    required final String? errorMessage,
+  }) = __MapBodyData;
+}
 
-  final bool showLoading;
-  final bool hasError;
-  final String? errorMessage;
+@freezed
+abstract class _ControlsViewModel with _$ControlsViewModel {
+  const factory _ControlsViewModel({
+    required final bool isHybridMapType,
+    required final bool trafficEnabled,
+  }) = __ControlsViewModel;
+}
 
-  @override
-  List<Object?> get props => [showLoading, hasError, errorMessage];
+@freezed
+abstract class _LocationListViewModel with _$LocationListViewModel {
+  const factory _LocationListViewModel({
+    required final List<MapLocation> locations,
+    required final String? selectedMarkerId,
+  }) = __LocationListViewModel;
 }
 
 class GoogleMapsSamplePage extends StatefulWidget {

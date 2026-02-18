@@ -109,29 +109,3 @@ class _GoogleMapsLocationListSection extends StatelessWidget {
             ),
       );
 }
-
-class _ControlsViewModel extends Equatable {
-  const _ControlsViewModel({
-    required this.isHybridMapType,
-    required this.trafficEnabled,
-  });
-
-  final bool isHybridMapType;
-  final bool trafficEnabled;
-
-  @override
-  List<Object?> get props => <Object?>[isHybridMapType, trafficEnabled];
-}
-
-class _LocationListViewModel extends Equatable {
-  const _LocationListViewModel({
-    required this.locations,
-    required this.selectedMarkerId,
-  });
-
-  final List<MapLocation> locations;
-  final String? selectedMarkerId;
-
-  @override
-  List<Object?> get props => <Object?>[locations, selectedMarkerId];
-}

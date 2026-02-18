@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
@@ -9,7 +8,10 @@ import 'package:flutter_bloc_app/features/chart/presentation/cubit/chart_cubit.d
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_content_list.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_loading_list.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
+
+part 'chart_page.freezed.dart';
 
 class ChartPage extends StatefulWidget {
   const ChartPage({
@@ -46,30 +48,15 @@ class _ChartPageState extends State<ChartPage> {
   );
 }
 
-@immutable
-class _ChartViewData extends Equatable {
-  const _ChartViewData({
-    required this.showLoading,
-    required this.showError,
-    required this.showEmpty,
-    required this.points,
-    required this.zoomEnabled,
-  });
-
-  final bool showLoading;
-  final bool showError;
-  final bool showEmpty;
-  final List<ChartPoint> points;
-  final bool zoomEnabled;
-
-  @override
-  List<Object?> get props => [
-    showLoading,
-    showError,
-    showEmpty,
-    points,
-    zoomEnabled,
-  ];
+@freezed
+abstract class _ChartViewData with _$ChartViewData {
+  const factory _ChartViewData({
+    required final bool showLoading,
+    required final bool showError,
+    required final bool showEmpty,
+    required final List<ChartPoint> points,
+    required final bool zoomEnabled,
+  }) = __ChartViewData;
 }
 
 class _ChartView extends StatelessWidget {

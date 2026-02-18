@@ -761,6 +761,8 @@ reviewable.
 ### Development Guides
 
 - **`compile_time_safety.md`**: Complete guide to type-safe BLoC/Cubit patterns
+- **`freezed_usage_analysis.md`**: Where Freezed is used and **why use Freezed with BLoC** (immutability, equality, sealed unions, copyWith)
+- **`equatable_to_freezed_conversion.md`**: Step-by-step conversion from Equatable to Freezed
 - **`flutter_best_practices_review.md`**: Best practices audit with action checklist
 - **`validation_scripts.md`**: Automated validation scripts and their purposes
 

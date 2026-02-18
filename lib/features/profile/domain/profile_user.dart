@@ -1,35 +1,24 @@
 // coverage:ignore-file
-// Simple data class with only properties and Equatable props getter.
-// Tested indirectly via ProfileCubit and ProfileRepository tests.
+// Simple data class; tested indirectly via ProfileCubit and ProfileRepository tests.
 
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class ProfileUser extends Equatable {
-  const ProfileUser({
-    required this.name,
-    required this.location,
-    required this.avatarUrl,
-    required this.galleryImages,
-  });
+part 'profile_user.freezed.dart';
 
-  final String name;
-  final String location;
-  final String avatarUrl;
-  final List<ProfileImage> galleryImages;
-
-  @override
-  List<Object?> get props => [name, location, avatarUrl, galleryImages];
+@freezed
+abstract class ProfileUser with _$ProfileUser {
+  const factory ProfileUser({
+    required final String name,
+    required final String location,
+    required final String avatarUrl,
+    required final List<ProfileImage> galleryImages,
+  }) = _ProfileUser;
 }
 
-class ProfileImage extends Equatable {
-  const ProfileImage({
-    required this.url,
-    required this.aspectRatio,
-  });
-
-  final String url;
-  final double aspectRatio;
-
-  @override
-  List<Object?> get props => [url, aspectRatio];
+@freezed
+abstract class ProfileImage with _$ProfileImage {
+  const factory ProfileImage({
+    required final String url,
+    required final double aspectRatio,
+  }) = _ProfileImage;
 }

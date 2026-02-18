@@ -98,16 +98,14 @@ void main() {
       expect(contact1, isNot(equals(contact3)));
     });
 
-    test('should include all properties in props for equality', () {
-      final props = testContact.props;
-
-      expect(props, contains('1'));
-      expect(props, contains('John Doe'));
-      expect(props, contains('Hello there!'));
-      expect(props, contains('https://example.com/image1.jpg'));
-      expect(props, contains(DateTime(2024, 1, 1, 12, 0)));
-      expect(props, contains(true));
-      expect(props, contains(2));
+    test('equality uses all properties', () {
+      expect(testContact.id, '1');
+      expect(testContact.name, 'John Doe');
+      expect(testContact.lastMessage, 'Hello there!');
+      expect(testContact.profileImageUrl, 'https://example.com/image1.jpg');
+      expect(testContact.lastMessageTime, DateTime(2024, 1, 1, 12, 0));
+      expect(testContact.isOnline, true);
+      expect(testContact.unreadCount, 2);
     });
   });
 }

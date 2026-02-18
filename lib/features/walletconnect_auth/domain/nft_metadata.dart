@@ -1,21 +1,16 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'nft_metadata.freezed.dart';
 
 /// Immutable metadata for an NFT in the user profile.
 ///
 /// Domain model; serialization to/from Firestore is done in the data layer.
-class NftMetadata extends Equatable {
-  const NftMetadata({
-    required this.tokenId,
-    required this.contractAddress,
-    required this.name,
-    this.imageUrl,
-  });
-
-  final String tokenId;
-  final String contractAddress;
-  final String name;
-  final String? imageUrl;
-
-  @override
-  List<Object?> get props => [tokenId, contractAddress, name, imageUrl];
+@freezed
+abstract class NftMetadata with _$NftMetadata {
+  const factory NftMetadata({
+    required final String tokenId,
+    required final String contractAddress,
+    required final String name,
+    final String? imageUrl,
+  }) = _NftMetadata;
 }

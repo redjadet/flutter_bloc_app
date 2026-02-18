@@ -49,7 +49,7 @@ $Res call({
 });
 
 
-
+$WalletAddressCopyWith<$Res>? get walletAddress;$WalletAddressCopyWith<$Res>? get linkedWalletAddress;$WalletUserProfileCopyWith<$Res>? get userProfile;
 
 }
 /// @nodoc
@@ -72,7 +72,43 @@ as WalletUserProfile?,errorMessage: freezed == errorMessage ? _self.errorMessage
 as String?,
   ));
 }
+/// Create a copy of WalletConnectAuthState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$WalletAddressCopyWith<$Res>? get walletAddress {
+    if (_self.walletAddress == null) {
+    return null;
+  }
 
+  return $WalletAddressCopyWith<$Res>(_self.walletAddress!, (value) {
+    return _then(_self.copyWith(walletAddress: value));
+  });
+}/// Create a copy of WalletConnectAuthState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$WalletAddressCopyWith<$Res>? get linkedWalletAddress {
+    if (_self.linkedWalletAddress == null) {
+    return null;
+  }
+
+  return $WalletAddressCopyWith<$Res>(_self.linkedWalletAddress!, (value) {
+    return _then(_self.copyWith(linkedWalletAddress: value));
+  });
+}/// Create a copy of WalletConnectAuthState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$WalletUserProfileCopyWith<$Res>? get userProfile {
+    if (_self.userProfile == null) {
+    return null;
+  }
+
+  return $WalletUserProfileCopyWith<$Res>(_self.userProfile!, (value) {
+    return _then(_self.copyWith(userProfile: value));
+  });
+}
 }
 
 
@@ -253,7 +289,7 @@ $Res call({
 });
 
 
-
+@override $WalletAddressCopyWith<$Res>? get walletAddress;@override $WalletAddressCopyWith<$Res>? get linkedWalletAddress;@override $WalletUserProfileCopyWith<$Res>? get userProfile;
 
 }
 /// @nodoc
@@ -277,7 +313,43 @@ as String?,
   ));
 }
 
+/// Create a copy of WalletConnectAuthState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$WalletAddressCopyWith<$Res>? get walletAddress {
+    if (_self.walletAddress == null) {
+    return null;
+  }
 
+  return $WalletAddressCopyWith<$Res>(_self.walletAddress!, (value) {
+    return _then(_self.copyWith(walletAddress: value));
+  });
+}/// Create a copy of WalletConnectAuthState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$WalletAddressCopyWith<$Res>? get linkedWalletAddress {
+    if (_self.linkedWalletAddress == null) {
+    return null;
+  }
+
+  return $WalletAddressCopyWith<$Res>(_self.linkedWalletAddress!, (value) {
+    return _then(_self.copyWith(linkedWalletAddress: value));
+  });
+}/// Create a copy of WalletConnectAuthState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$WalletUserProfileCopyWith<$Res>? get userProfile {
+    if (_self.userProfile == null) {
+    return null;
+  }
+
+  return $WalletUserProfileCopyWith<$Res>(_self.userProfile!, (value) {
+    return _then(_self.copyWith(userProfile: value));
+  });
+}
 }
 
 // dart format on

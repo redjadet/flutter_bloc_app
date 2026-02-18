@@ -1,47 +1,21 @@
-part of 'remote_config_cubit.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-sealed class RemoteConfigState extends Equatable {
-  const RemoteConfigState();
+part 'remote_config_state.freezed.dart';
 
-  @override
-  List<Object?> get props => <Object?>[];
-}
+/// Union state for the remote config cubit.
+@freezed
+sealed class RemoteConfigState with _$RemoteConfigState {
+  const factory RemoteConfigState.initial() = RemoteConfigInitial;
 
-class RemoteConfigInitial extends RemoteConfigState {
-  const RemoteConfigInitial();
-}
+  const factory RemoteConfigState.loading() = RemoteConfigLoading;
 
-class RemoteConfigLoading extends RemoteConfigState {
-  const RemoteConfigLoading();
-}
+  const factory RemoteConfigState.loaded({
+    required final bool isAwesomeFeatureEnabled,
+    required final String testValue,
+    final String? dataSource,
+    final DateTime? lastSyncedAt,
+  }) = RemoteConfigLoaded;
 
-class RemoteConfigLoaded extends RemoteConfigState {
-  const RemoteConfigLoaded({
-    required this.isAwesomeFeatureEnabled,
-    required this.testValue,
-    this.dataSource,
-    this.lastSyncedAt,
-  });
-
-  final bool isAwesomeFeatureEnabled;
-  final String testValue;
-  final String? dataSource;
-  final DateTime? lastSyncedAt;
-
-  @override
-  List<Object?> get props => <Object?>[
-    isAwesomeFeatureEnabled,
-    testValue,
-    dataSource,
-    lastSyncedAt,
-  ];
-}
-
-class RemoteConfigError extends RemoteConfigState {
-  const RemoteConfigError(this.message);
-
-  final String message;
-
-  @override
-  List<Object?> get props => <Object?>[message];
+  const factory RemoteConfigState.error(final String message) =
+      RemoteConfigError;
 }

@@ -1,47 +1,25 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class GraphqlFilterBarData extends Equatable {
-  const GraphqlFilterBarData({
-    required this.continents,
-    required this.activeContinentCode,
-    required this.isLoading,
-  });
+part 'graphql_demo_view_models.freezed.dart';
 
-  final List<GraphqlContinent> continents;
-  final String? activeContinentCode;
-  final bool isLoading;
-
-  @override
-  List<Object?> get props => <Object?>[
-    continents,
-    activeContinentCode,
-    isLoading,
-  ];
+@freezed
+abstract class GraphqlFilterBarData with _$GraphqlFilterBarData {
+  const factory GraphqlFilterBarData({
+    required final List<GraphqlContinent> continents,
+    required final String? activeContinentCode,
+    required final bool isLoading,
+  }) = _GraphqlFilterBarData;
 }
 
-class GraphqlBodyData extends Equatable {
-  const GraphqlBodyData({
-    required this.isLoading,
-    required this.hasError,
-    required this.countries,
-    required this.errorType,
-    required this.errorMessage,
-  });
-
-  final bool isLoading;
-  final bool hasError;
-  final List<GraphqlCountry> countries;
-  final GraphqlDemoErrorType? errorType;
-  final String? errorMessage;
-
-  @override
-  List<Object?> get props => <Object?>[
-    isLoading,
-    hasError,
-    countries,
-    errorType,
-    errorMessage,
-  ];
+@freezed
+abstract class GraphqlBodyData with _$GraphqlBodyData {
+  const factory GraphqlBodyData({
+    required final bool isLoading,
+    required final bool hasError,
+    required final List<GraphqlCountry> countries,
+    required final GraphqlDemoErrorType? errorType,
+    required final String? errorMessage,
+  }) = _GraphqlBodyData;
 }
