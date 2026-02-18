@@ -119,7 +119,7 @@ class _RemoteConfigDiagnosticsSectionState
                             onPressed: data.isLoading
                                 ? null
                                 : () => context
-                                      .read<RemoteConfigCubit>()
+                                      .cubit<RemoteConfigCubit>()
                                       .fetchValues(),
                             child: Text(
                               context.l10n.settingsRemoteConfigRetryButton,
@@ -132,7 +132,7 @@ class _RemoteConfigDiagnosticsSectionState
                           onPressed: data.isLoading
                               ? null
                               : () => context
-                                    .read<RemoteConfigCubit>()
+                                    .cubit<RemoteConfigCubit>()
                                     .clearCache(),
                           child: Text(
                             context.l10n.settingsRemoteConfigClearCacheButton,

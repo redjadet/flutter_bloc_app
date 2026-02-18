@@ -42,6 +42,18 @@ extension TypeSafeBlocAccess on BuildContext {
     }
   }
 
+  /// Optionally gets a cubit of type [T] from the widget tree.
+  ///
+  /// Returns null if the cubit is not found (e.g. optional feature).
+  /// Use [cubit] when the cubit is required.
+  T? tryCubit<T extends Cubit<Object?>>() {
+    try {
+      return read<T>();
+    } on ProviderNotFoundException {
+      return null;
+    }
+  }
+
   /// Gets the current state of a cubit of type [C] from the widget tree.
   ///
   /// Throws a [StateError] if the cubit is not found in the widget tree.
