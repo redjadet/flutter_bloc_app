@@ -163,6 +163,10 @@ echo "  Checking for compute() usage in lifecycle methods (heuristic)..."
 bash tool/check_compute_lifecycle.sh || VALIDATION_FAILED=1
 echo ""
 
+echo "  Checking for Equatable usage (Freezed preferred)..."
+bash tool/check_freezed_preferred.sh || VALIDATION_FAILED=1
+echo ""
+
 if [ $VALIDATION_FAILED -eq 1 ]; then
   echo "❌ Best practices validation failed! Please fix the violations above."
   exit 1
