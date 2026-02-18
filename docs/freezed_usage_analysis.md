@@ -151,3 +151,4 @@ These are **private or feature-local** Equatable classes used for BlocSelector/v
   - Follow [equatable_to_freezed_conversion.md](equatable_to_freezed_conversion.md).
   - Run `dart run build_runner build --delete-conflicting-outputs` after changes.
   - Run `./bin/checklist` and tests (and coverage script if present) before commit.
+  - The checklist runs `tool/check_freezed_preferred.sh`: it fails if any **class** in `lib/` extends or mixes in `Equatable` (Freezed is preferred for state/domain models). To allowlist a specific line, add `// check-ignore: reason` on that line or the line above.
