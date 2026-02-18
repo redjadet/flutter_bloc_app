@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,23 +10,18 @@ import 'package:flutter_bloc_app/features/websocket/presentation/widgets/websock
 import 'package:flutter_bloc_app/features/websocket/presentation/widgets/websocket_message_list.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@immutable
-class _WebsocketViewData extends Equatable {
-  const _WebsocketViewData({
-    required this.isConnecting,
-    required this.isConnected,
-    required this.isSending,
-    required this.messages,
-  });
+part 'websocket_demo_page.freezed.dart';
 
-  final bool isConnecting;
-  final bool isConnected;
-  final bool isSending;
-  final List<WebsocketMessage> messages;
-
-  @override
-  List<Object?> get props => [isConnecting, isConnected, isSending, messages];
+@freezed
+abstract class _WebsocketViewData with _$WebsocketViewData {
+  const factory _WebsocketViewData({
+    required final bool isConnecting,
+    required final bool isConnected,
+    required final bool isSending,
+    required final List<WebsocketMessage> messages,
+  }) = __WebsocketViewData;
 }
 
 class WebsocketDemoPage extends StatefulWidget {

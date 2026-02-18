@@ -1,25 +1,36 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'websocket_connection_state.freezed.dart';
 
 enum WebsocketStatus { disconnected, connecting, connected, error }
 
-class WebsocketConnectionState extends Equatable {
-  const WebsocketConnectionState({required this.status, this.errorMessage});
+@freezed
+sealed class WebsocketConnectionState with _$WebsocketConnectionState {
+  const WebsocketConnectionState._();
 
-  const WebsocketConnectionState.disconnected()
-    : this(status: WebsocketStatus.disconnected);
+  const factory WebsocketConnectionState.disconnected() =
+      WebsocketConnectionStateDisconnected;
 
-  const WebsocketConnectionState.connecting()
-    : this(status: WebsocketStatus.connecting);
+  const factory WebsocketConnectionState.connecting() =
+      WebsocketConnectionStateConnecting;
 
-  const WebsocketConnectionState.connected()
-    : this(status: WebsocketStatus.connected);
+  const factory WebsocketConnectionState.connected() =
+      WebsocketConnectionStateConnected;
 
-  const WebsocketConnectionState.error(final String message)
-    : this(status: WebsocketStatus.error, errorMessage: message);
+  const factory WebsocketConnectionState.error(final String message) =
+      WebsocketConnectionStateError;
 
-  final WebsocketStatus status;
-  final String? errorMessage;
+  WebsocketStatus get status => when(
+    disconnected: () => WebsocketStatus.disconnected,
+    connecting: () => WebsocketStatus.connecting,
+    connected: () => WebsocketStatus.connected,
+    error: (_) => WebsocketStatus.error,
+  );
 
-  @override
-  List<Object?> get props => <Object?>[status, errorMessage];
+  String? get errorMessage => when(
+    disconnected: () => null,
+    connecting: () => null,
+    connected: () => null,
+    error: (final m) => m,
+  );
 }

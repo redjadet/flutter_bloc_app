@@ -14,63 +14,6 @@ class _StatusPalette {
   final String label;
 }
 
-enum _RemoteConfigStatus { idle, loading, loaded, error }
-
-class _RemoteConfigViewData extends Equatable {
-  const _RemoteConfigViewData({
-    required this.status,
-    this.errorMessage,
-    this.isAwesomeFeatureEnabled = false,
-    this.testValue,
-    this.dataSource,
-    this.lastSyncedAt,
-  });
-
-  factory _RemoteConfigViewData.fromState(final RemoteConfigState state) {
-    if (state is RemoteConfigLoading) {
-      return const _RemoteConfigViewData(status: _RemoteConfigStatus.loading);
-    }
-    if (state is RemoteConfigLoaded) {
-      return _RemoteConfigViewData(
-        status: _RemoteConfigStatus.loaded,
-        isAwesomeFeatureEnabled: state.isAwesomeFeatureEnabled,
-        testValue: state.testValue,
-        dataSource: state.dataSource,
-        lastSyncedAt: state.lastSyncedAt,
-      );
-    }
-    if (state is RemoteConfigError) {
-      return _RemoteConfigViewData(
-        status: _RemoteConfigStatus.error,
-        errorMessage: state.message,
-      );
-    }
-    return const _RemoteConfigViewData(status: _RemoteConfigStatus.idle);
-  }
-
-  final _RemoteConfigStatus status;
-  final String? errorMessage;
-  final bool isAwesomeFeatureEnabled;
-  final String? testValue;
-  final String? dataSource;
-  final DateTime? lastSyncedAt;
-
-  bool get showFlagStatus => status == _RemoteConfigStatus.loaded;
-  bool get showTestValue => status == _RemoteConfigStatus.loaded;
-  bool get isLoading => status == _RemoteConfigStatus.loading;
-  bool get showMetadata => dataSource != null || lastSyncedAt != null;
-
-  @override
-  List<Object?> get props => <Object?>[
-    status,
-    errorMessage,
-    isAwesomeFeatureEnabled,
-    testValue,
-    dataSource,
-    lastSyncedAt,
-  ];
-}
-
 class _RemoteConfigSyncStatusBanner extends StatelessWidget {
   const _RemoteConfigSyncStatusBanner({required this.gap});
 

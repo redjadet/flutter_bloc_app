@@ -1,14 +1,13 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
+import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_state.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
-part 'remote_config_state.dart';
-part 'remote_config_state.switch_helper.dart';
+export 'remote_config_state.dart';
 
 class RemoteConfigCubit extends Cubit<RemoteConfigState> {
   RemoteConfigCubit(this._remoteConfigService)
-    : super(const RemoteConfigInitial());
+    : super(const RemoteConfigState.initial());
 
   static const String _awesomeFeatureKey = 'awesome_feature_enabled';
   static const String _testValueKey = 'test_value_1';
@@ -71,7 +70,7 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
     if (isClosed || _isLoading) return;
     _isLoading = true;
     if (showLoading) {
-      emit(const RemoteConfigLoading());
+      emit(const RemoteConfigState.loading());
     }
 
     try {
@@ -89,7 +88,7 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
         onSuccess: _emitLoadedState,
         onError: (final message) {
           if (isClosed) return;
-          emit(RemoteConfigError(message));
+          emit(RemoteConfigState.error(message));
         },
       );
     } finally {
@@ -106,7 +105,7 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
         ? null
         : DateTime.tryParse(lastSyncedRaw)?.toUtc();
     emit(
-      RemoteConfigLoaded(
+      RemoteConfigState.loaded(
         isAwesomeFeatureEnabled: _remoteConfigService.getBool(
           _awesomeFeatureKey,
         ),

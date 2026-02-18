@@ -1,25 +1,24 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'remote_config_snapshot.freezed.dart';
 
 /// Immutable snapshot of cached Remote Config values + metadata.
-class RemoteConfigSnapshot extends Equatable {
-  RemoteConfigSnapshot({
+@freezed
+abstract class RemoteConfigSnapshot with _$RemoteConfigSnapshot {
+  factory RemoteConfigSnapshot({
     required final Map<String, dynamic> values,
-    this.lastFetchedAt,
-    this.templateVersion,
-    this.dataSource,
-    this.lastSyncedAt,
-  }) : values = Map<String, dynamic>.unmodifiable(values);
+    final DateTime? lastFetchedAt,
+    final String? templateVersion,
+    final String? dataSource,
+    final DateTime? lastSyncedAt,
+  }) = _RemoteConfigSnapshot;
+
+  const RemoteConfigSnapshot._();
 
   /// Convenience empty snapshot used when cache is missing.
   static final RemoteConfigSnapshot empty = RemoteConfigSnapshot(
     values: const <String, dynamic>{},
   );
-
-  final Map<String, dynamic> values;
-  final DateTime? lastFetchedAt;
-  final String? templateVersion;
-  final String? dataSource;
-  final DateTime? lastSyncedAt;
 
   bool get hasValues => values.isNotEmpty;
 
@@ -30,27 +29,4 @@ class RemoteConfigSnapshot extends Equatable {
     }
     return null;
   }
-
-  RemoteConfigSnapshot copyWith({
-    final Map<String, dynamic>? values,
-    final DateTime? lastFetchedAt,
-    final String? templateVersion,
-    final String? dataSource,
-    final DateTime? lastSyncedAt,
-  }) => RemoteConfigSnapshot(
-    values: values ?? this.values,
-    lastFetchedAt: lastFetchedAt ?? this.lastFetchedAt,
-    templateVersion: templateVersion ?? this.templateVersion,
-    dataSource: dataSource ?? this.dataSource,
-    lastSyncedAt: lastSyncedAt ?? this.lastSyncedAt,
-  );
-
-  @override
-  List<Object?> get props => <Object?>[
-    values,
-    lastFetchedAt,
-    templateVersion,
-    dataSource,
-    lastSyncedAt,
-  ];
 }

@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
@@ -7,19 +6,16 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_input_decoration_helpers.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@immutable
-class _SendButtonData extends Equatable {
-  const _SendButtonData({
-    required this.canSend,
-    required this.isLoading,
-  });
+part 'chat_input_bar.freezed.dart';
 
-  final bool canSend;
-  final bool isLoading;
-
-  @override
-  List<Object?> get props => [canSend, isLoading];
+@freezed
+abstract class _SendButtonData with _$SendButtonData {
+  const factory _SendButtonData({
+    required final bool canSend,
+    required final bool isLoading,
+  }) = __SendButtonData;
 }
 
 class ChatInputBar extends StatelessWidget {

@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/constants/constants.dart';
@@ -10,6 +9,9 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'calculator_page.freezed.dart';
 
 class CalculatorPage extends StatelessWidget {
   const CalculatorPage({super.key});
@@ -176,18 +178,11 @@ class _CalculatorDisplay extends StatelessWidget {
       );
 }
 
-@immutable
-class _DisplayData extends Equatable {
-  const _DisplayData({
-    required this.display,
-    required this.history,
-    required this.error,
-  });
-
-  final String display;
-  final String history;
-  final CalculatorError? error;
-
-  @override
-  List<Object?> get props => [display, history, error];
+@freezed
+abstract class _DisplayData with _$DisplayData {
+  const factory _DisplayData({
+    required final String display,
+    required final String history,
+    required final CalculatorError? error,
+  }) = __DisplayData;
 }

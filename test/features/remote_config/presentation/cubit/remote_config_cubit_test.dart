@@ -44,8 +44,11 @@ void main() {
       },
       act: (cubit) => cubit.initialize(),
       expect: () => const <RemoteConfigState>[
-        RemoteConfigLoading(),
-        RemoteConfigLoaded(isAwesomeFeatureEnabled: true, testValue: 'awesome'),
+        RemoteConfigState.loading(),
+        RemoteConfigState.loaded(
+          isAwesomeFeatureEnabled: true,
+          testValue: 'awesome',
+        ),
       ],
       verify: (_) {
         verify(() => remoteConfigService.initialize()).called(1);
@@ -64,8 +67,8 @@ void main() {
       },
       act: (cubit) => cubit.initialize(),
       expect: () => const <RemoteConfigState>[
-        RemoteConfigLoading(),
-        RemoteConfigError('Exception: forceFetch failed'),
+        RemoteConfigState.loading(),
+        RemoteConfigState.error('Exception: forceFetch failed'),
       ],
       verify: (_) {
         verify(() => remoteConfigService.initialize()).called(1);
@@ -97,10 +100,13 @@ void main() {
         await cubit.fetchValues();
       },
       expect: () => const <RemoteConfigState>[
-        RemoteConfigLoading(),
-        RemoteConfigLoaded(isAwesomeFeatureEnabled: true, testValue: 'initial'),
-        RemoteConfigLoading(),
-        RemoteConfigLoaded(
+        RemoteConfigState.loading(),
+        RemoteConfigState.loaded(
+          isAwesomeFeatureEnabled: true,
+          testValue: 'initial',
+        ),
+        RemoteConfigState.loading(),
+        RemoteConfigState.loaded(
           isAwesomeFeatureEnabled: false,
           testValue: 'updated',
         ),
@@ -125,8 +131,11 @@ void main() {
       },
       act: (cubit) => cubit.clearCache(),
       expect: () => const <RemoteConfigState>[
-        RemoteConfigLoading(),
-        RemoteConfigLoaded(isAwesomeFeatureEnabled: true, testValue: 'cached'),
+        RemoteConfigState.loading(),
+        RemoteConfigState.loaded(
+          isAwesomeFeatureEnabled: true,
+          testValue: 'cached',
+        ),
       ],
       verify: (_) {
         verify(() => remoteConfigService.clearCache()).called(1);
@@ -155,10 +164,13 @@ void main() {
         await cubit.fetchValues();
       },
       expect: () => const <RemoteConfigState>[
-        RemoteConfigLoading(),
-        RemoteConfigLoaded(isAwesomeFeatureEnabled: true, testValue: 'initial'),
-        RemoteConfigLoading(),
-        RemoteConfigError('Exception: forceFetch after init failed'),
+        RemoteConfigState.loading(),
+        RemoteConfigState.loaded(
+          isAwesomeFeatureEnabled: true,
+          testValue: 'initial',
+        ),
+        RemoteConfigState.loading(),
+        RemoteConfigState.error('Exception: forceFetch after init failed'),
       ],
       verify: (_) {
         verify(() => remoteConfigService.initialize()).called(1);
@@ -192,8 +204,11 @@ void main() {
         await firstCall;
       },
       expect: () => const <RemoteConfigState>[
-        RemoteConfigLoading(),
-        RemoteConfigLoaded(isAwesomeFeatureEnabled: true, testValue: 'overlap'),
+        RemoteConfigState.loading(),
+        RemoteConfigState.loaded(
+          isAwesomeFeatureEnabled: true,
+          testValue: 'overlap',
+        ),
       ],
       verify: (_) {
         verify(() => remoteConfigService.forceFetch()).called(1);

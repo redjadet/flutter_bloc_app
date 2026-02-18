@@ -49,7 +49,7 @@ $Res call({
 });
 
 
-
+$AppInfoCopyWith<$Res>? get info;
 
 }
 /// @nodoc
@@ -70,7 +70,19 @@ as AppInfo?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMe
 as String?,
   ));
 }
+/// Create a copy of AppInfoState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AppInfoCopyWith<$Res>? get info {
+    if (_self.info == null) {
+    return null;
+  }
 
+  return $AppInfoCopyWith<$Res>(_self.info!, (value) {
+    return _then(_self.copyWith(info: value));
+  });
+}
 }
 
 
@@ -249,7 +261,7 @@ $Res call({
 });
 
 
-
+@override $AppInfoCopyWith<$Res>? get info;
 
 }
 /// @nodoc
@@ -271,7 +283,19 @@ as String?,
   ));
 }
 
+/// Create a copy of AppInfoState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AppInfoCopyWith<$Res>? get info {
+    if (_self.info == null) {
+    return null;
+  }
 
+  return $AppInfoCopyWith<$Res>(_self.info!, (value) {
+    return _then(_self.copyWith(info: value));
+  });
+}
 }
 
 // dart format on

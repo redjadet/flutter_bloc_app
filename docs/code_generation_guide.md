@@ -39,7 +39,9 @@ dart run tool/generate_sealed_switch.dart lib/features/remote_config/presentatio
 
 ##### Step 2: Generated file
 
-Creates `remote_config_state.switch_helper.dart`:
+**Note:** `RemoteConfigState` now uses Freezed (see [Freezed Usage Analysis](freezed_usage_analysis.md)); the switch helper is no longer used. The following is kept for reference when using the generator for other sealed states.
+
+Creates `remote_config_state.switch_helper.dart` (legacy pattern):
 
 ```dart
 part of 'remote_config_cubit.dart';

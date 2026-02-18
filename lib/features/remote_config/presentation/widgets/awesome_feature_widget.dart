@@ -1,20 +1,18 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@immutable
-class _FeatureEnabledData extends Equatable {
-  const _FeatureEnabledData({required this.isEnabled});
+part 'awesome_feature_widget.freezed.dart';
 
-  final bool isEnabled;
-
-  @override
-  List<Object?> get props => [isEnabled];
+@freezed
+abstract class _FeatureEnabledData with _$FeatureEnabledData {
+  const factory _FeatureEnabledData({required final bool isEnabled}) =
+      __FeatureEnabledData;
 }
 
 class AwesomeFeatureWidget extends StatefulWidget {

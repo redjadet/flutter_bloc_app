@@ -1,43 +1,20 @@
-part of 'chat_list_cubit.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-sealed class ChatListState extends Equatable {
-  const ChatListState();
+part 'chat_list_state.freezed.dart';
 
+/// Union state for the chat list cubit.
+@freezed
+sealed class ChatListState with _$ChatListState {
   const factory ChatListState.initial() = ChatListInitial;
+
   const factory ChatListState.loading() = ChatListLoading;
+
   const factory ChatListState.loaded({
     required final List<ChatContact> contacts,
   }) = ChatListLoaded;
+
   const factory ChatListState.error({
     required final String message,
   }) = ChatListError;
-
-  @override
-  List<Object?> get props => [];
-}
-
-class ChatListInitial extends ChatListState {
-  const ChatListInitial();
-}
-
-class ChatListLoading extends ChatListState {
-  const ChatListLoading();
-}
-
-class ChatListLoaded extends ChatListState {
-  const ChatListLoaded({required this.contacts});
-
-  final List<ChatContact> contacts;
-
-  @override
-  List<Object?> get props => [contacts];
-}
-
-class ChatListError extends ChatListState {
-  const ChatListError({required this.message});
-
-  final String message;
-
-  @override
-  List<Object?> get props => [message];
 }

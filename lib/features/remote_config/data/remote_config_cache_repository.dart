@@ -38,7 +38,7 @@ class RemoteConfigCacheRepository extends HiveRepositoryBase {
           ? null
           : DateTime.tryParse(lastSyncedRaw);
       return RemoteConfigSnapshot(
-        values: values,
+        values: Map<String, dynamic>.unmodifiable(values),
         lastFetchedAt: lastFetchedAt,
         templateVersion: templateVersion,
         dataSource: dataSource,

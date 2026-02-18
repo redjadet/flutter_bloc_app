@@ -1,11 +1,11 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class AppInfo extends Equatable {
-  const AppInfo({required this.version, required this.buildNumber});
+part 'app_info.freezed.dart';
 
-  final String version;
-  final String buildNumber;
-
-  @override
-  List<Object> get props => <Object>[version, buildNumber];
+@freezed
+abstract class AppInfo with _$AppInfo {
+  const factory AppInfo({
+    required final String version,
+    required final String buildNumber,
+  }) = _AppInfo;
 }

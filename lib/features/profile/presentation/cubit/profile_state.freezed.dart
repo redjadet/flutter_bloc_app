@@ -49,7 +49,7 @@ $Res call({
 });
 
 
-
+$ProfileUserCopyWith<$Res>? get user;
 
 }
 /// @nodoc
@@ -69,7 +69,19 @@ as ViewStatus,user: freezed == user ? _self.user : user // ignore: cast_nullable
 as ProfileUser?,error: freezed == error ? _self.error : error ,
   ));
 }
+/// Create a copy of ProfileState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ProfileUserCopyWith<$Res>? get user {
+    if (_self.user == null) {
+    return null;
+  }
 
+  return $ProfileUserCopyWith<$Res>(_self.user!, (value) {
+    return _then(_self.copyWith(user: value));
+  });
+}
 }
 
 
@@ -248,7 +260,7 @@ $Res call({
 });
 
 
-
+@override $ProfileUserCopyWith<$Res>? get user;
 
 }
 /// @nodoc
@@ -269,7 +281,19 @@ as ProfileUser?,error: freezed == error ? _self.error : error ,
   ));
 }
 
+/// Create a copy of ProfileState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ProfileUserCopyWith<$Res>? get user {
+    if (_self.user == null) {
+    return null;
+  }
 
+  return $ProfileUserCopyWith<$Res>(_self.user!, (value) {
+    return _then(_self.copyWith(user: value));
+  });
+}
 }
 
 // dart format on

@@ -1,47 +1,12 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_state.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 
-class SyncStatusState extends Equatable {
-  const SyncStatusState({
-    required this.networkStatus,
-    required this.syncStatus,
-    this.lastSummary,
-    this.history = const <SyncCycleSummary>[],
-  });
-
-  final NetworkStatus networkStatus;
-  final SyncStatus syncStatus;
-  final SyncCycleSummary? lastSummary;
-  final List<SyncCycleSummary> history;
-
-  SyncStatusState copyWith({
-    final NetworkStatus? networkStatus,
-    final SyncStatus? syncStatus,
-    final SyncCycleSummary? lastSummary,
-    final List<SyncCycleSummary>? history,
-  }) => SyncStatusState(
-    networkStatus: networkStatus ?? this.networkStatus,
-    syncStatus: syncStatus ?? this.syncStatus,
-    lastSummary: lastSummary ?? this.lastSummary,
-    history: history ?? this.history,
-  );
-
-  bool get isOnline => networkStatus == NetworkStatus.online;
-  bool get isSyncing => syncStatus == SyncStatus.syncing;
-
-  @override
-  List<Object?> get props => <Object?>[
-    networkStatus,
-    syncStatus,
-    lastSummary,
-    history,
-  ];
-}
+export 'sync_status_state.dart';
 
 class SyncStatusCubit extends Cubit<SyncStatusState> {
   SyncStatusCubit({

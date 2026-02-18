@@ -2,14 +2,22 @@
 
 This guide provides detailed instructions for converting Equatable-based state classes to Freezed.
 
+**Why use Freezed with BLoC?** — BLoC/Cubit rely on immutable state and equality to drive rebuilds; Freezed gives you generated immutability, `==`/`hashCode`, sealed unions, and `copyWith` with minimal boilerplate. For a concise rationale, see [Why use Freezed with BLoC?](freezed_usage_analysis.md#why-use-freezed-with-bloc) in the Freezed Usage Analysis.
+
+## Benefits of Freezed
+
+Using Freezed for immutable state and domain models (instead of hand-written Equatable classes) gives:
+
+- **Generated boilerplate** — `copyWith`, `==`, `hashCode`, and `toString` are generated, so you avoid typos, missing props, and drift when adding fields.
+- **Type safety** — Factory constructors and generated `copyWith` are null-safe and consistent; optional parameters are explicit.
+- **Union types** — Sealed state hierarchies (e.g. Initial / Loading / Loaded / Error) are expressed as one `@freezed sealed class` with multiple factories, giving exhaustive `.when()` / `.map()` and Dart 3 `switch` support without manual subclasses.
+- **Immutability by default** — All generated types are immutable; no risk of mutating lists or nested objects if you use the generated `copyWith` and avoid exposing mutable collections.
+- **Consistency** — The same pattern across states and domain models makes the codebase easier to read and refactor, and aligns with rule: *"Immutable states (`freezed` > `Equatable`)."*
+- **Less maintenance** — Adding or renaming a field only requires updating the factory and running `build_runner`; no manual `props`, `copyWith`, or equality logic.
+
 ## Overview
 
-Converting states from `Equatable` to `Freezed` provides:
-
-- Automatic code generation (`copyWith`, `toString`, `==`, `hashCode`)
-- Better type safety
-- Union type support
-- Consistent patterns across codebase
+This guide walks through converting an Equatable-based state to Freezed step by step.
 
 ## Prerequisites
 

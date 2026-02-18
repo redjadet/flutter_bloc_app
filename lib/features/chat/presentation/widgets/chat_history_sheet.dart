@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
@@ -12,28 +11,18 @@ import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@immutable
-class _HistorySheetData extends Equatable {
-  const _HistorySheetData({
-    required this.history,
-    required this.hasHistory,
-    required this.activeConversationId,
-    required this.hasActiveMessages,
-  });
+part 'chat_history_sheet.freezed.dart';
 
-  final List<ChatConversation> history;
-  final bool hasHistory;
-  final String? activeConversationId;
-  final bool hasActiveMessages;
-
-  @override
-  List<Object?> get props => [
-    history,
-    hasHistory,
-    activeConversationId,
-    hasActiveMessages,
-  ];
+@freezed
+abstract class _HistorySheetData with _$HistorySheetData {
+  const factory _HistorySheetData({
+    required final List<ChatConversation> history,
+    required final bool hasHistory,
+    required final String? activeConversationId,
+    required final bool hasActiveMessages,
+  }) = __HistorySheetData;
 }
 
 class ChatHistorySheet extends StatelessWidget {
