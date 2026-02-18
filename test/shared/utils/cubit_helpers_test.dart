@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -41,7 +42,7 @@ void main() {
 
                 expect(result, isTrue);
                 expect(callCount, 1);
-                expect(context.read<TestCubit>().state, 1);
+                expect(context.cubit<TestCubit>().state, 1);
                 return const SizedBox.shrink();
               },
             ),
@@ -75,7 +76,7 @@ void main() {
             create: (_) => TestCubit(),
             child: Builder(
               builder: (context) {
-                final cubit = context.read<TestCubit>();
+                final cubit = context.cubit<TestCubit>();
                 cubit
                   ..increment()
                   ..increment();
@@ -255,7 +256,7 @@ void main() {
         expect(
           () =>
               tester.element(find.byType(Builder).first).readCubit<TestCubit>(),
-          throwsA(isA<ProviderNotFoundException>()),
+          throwsA(isA<StateError>()),
         );
       });
     });
@@ -407,7 +408,7 @@ void main() {
       expect(find.text('Inherited Test'), findsOneWidget);
     });
 
-    testWidgets('_tryRead logs error when failureMessage is provided', (
+    testWidgets('_tryCubit logs error when failureMessage is provided', (
       tester,
     ) async {
       await _withSilencedDebugPrint(() async {
@@ -416,7 +417,7 @@ void main() {
             home: Scaffold(
               body: Builder(
                 builder: (context) {
-                  // This will trigger error logging path in _tryRead
+                  // This will trigger error logging path in _tryCubit
                   final result = CubitHelpers.safeExecute<TestCubit, int>(
                     context,
                     (_) {},

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/responsive/responsive.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
@@ -102,7 +102,7 @@ void main() {
     expect(coordinator.startCount, 0);
 
     final BuildContext context = tester.element(find.byType(ResponsiveScope));
-    context.read<SyncStatusCubit>().ensureStarted();
+    context.cubit<SyncStatusCubit>().ensureStarted();
     await tester.pump();
 
     expect(coordinator.startCount, 1);
