@@ -12,6 +12,7 @@ class LocaleCubit extends Cubit<Locale?> {
 
   Future<void> loadInitial() async {
     final AppLocale? stored = await _repository.load();
+    if (isClosed) return;
     final Locale? resolved = _toLocale(stored);
     if (!_isSame(resolved, state)) {
       emit(resolved);

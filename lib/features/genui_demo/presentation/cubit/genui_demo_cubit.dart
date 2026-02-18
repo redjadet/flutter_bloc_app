@@ -152,30 +152,38 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
     event.when(
       added: (final surfaceId) {
         state.mapOrNull(
-          ready: (final state) => emit(
-            state.copyWith(surfaceIds: [...state.surfaceIds, surfaceId]),
-          ),
-          loading: (final state) => emit(
-            state.copyWith(surfaceIds: [...state.surfaceIds, surfaceId]),
-          ),
+          ready: (final state) {
+            if (isClosed) return;
+            emit(state.copyWith(surfaceIds: [...state.surfaceIds, surfaceId]));
+          },
+          loading: (final state) {
+            if (isClosed) return;
+            emit(state.copyWith(surfaceIds: [...state.surfaceIds, surfaceId]));
+          },
         );
       },
       removed: (final surfaceId) {
         state.mapOrNull(
-          ready: (final state) => emit(
-            state.copyWith(
-              surfaceIds: state.surfaceIds
-                  .where((final id) => id != surfaceId)
-                  .toList(),
-            ),
-          ),
-          loading: (final state) => emit(
-            state.copyWith(
-              surfaceIds: state.surfaceIds
-                  .where((final id) => id != surfaceId)
-                  .toList(),
-            ),
-          ),
+          ready: (final state) {
+            if (isClosed) return;
+            emit(
+              state.copyWith(
+                surfaceIds: state.surfaceIds
+                    .where((final id) => id != surfaceId)
+                    .toList(),
+              ),
+            );
+          },
+          loading: (final state) {
+            if (isClosed) return;
+            emit(
+              state.copyWith(
+                surfaceIds: state.surfaceIds
+                    .where((final id) => id != surfaceId)
+                    .toList(),
+              ),
+            );
+          },
         );
       },
     );
@@ -185,20 +193,26 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
     if (isClosed) return;
 
     state.mapOrNull(
-      ready: (final state) => emit(
-        GenUiDemoState.error(
-          message: error,
-          surfaceIds: state.surfaceIds,
-          hostHandle: state.hostHandle,
-        ),
-      ),
-      loading: (final state) => emit(
-        GenUiDemoState.error(
-          message: error,
-          surfaceIds: state.surfaceIds,
-          hostHandle: state.hostHandle,
-        ),
-      ),
+      ready: (final state) {
+        if (isClosed) return;
+        emit(
+          GenUiDemoState.error(
+            message: error,
+            surfaceIds: state.surfaceIds,
+            hostHandle: state.hostHandle,
+          ),
+        );
+      },
+      loading: (final state) {
+        if (isClosed) return;
+        emit(
+          GenUiDemoState.error(
+            message: error,
+            surfaceIds: state.surfaceIds,
+            hostHandle: state.hostHandle,
+          ),
+        );
+      },
     );
   }
 

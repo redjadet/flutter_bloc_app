@@ -12,6 +12,7 @@ class ThemeCubit extends Cubit<ThemeMode> {
 
   Future<void> loadInitial() async {
     final ThemePreference? loaded = await _repository.load();
+    if (isClosed) return;
     if (loaded != null) emit(_toThemeMode(loaded));
   }
 
