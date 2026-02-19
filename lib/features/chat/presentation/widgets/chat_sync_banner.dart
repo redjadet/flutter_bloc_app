@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_sync_constants.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
@@ -84,7 +83,7 @@ class _ChatSyncBannerState extends State<ChatSyncBanner> {
   @override
   Widget build(
     final BuildContext context,
-  ) => BlocListener<SyncStatusCubit, SyncStatusState>(
+  ) => TypeSafeBlocListener<SyncStatusCubit, SyncStatusState>(
     listener: (final context, final state) {
       // check-ignore: listener callback is event-driven, not a build side effect
       unawaited(_refreshPendingCount());

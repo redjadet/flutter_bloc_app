@@ -1,5 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+// provider is transitive via flutter_bloc; SingleChildStatelessWidget required for MultiBlocListener
+// ignore: depend_on_referenced_packages
+import 'package:provider/single_child_widget.dart';
 
 /// A type-safe wrapper around `BlocSelector` that provides compile-time safety.
 ///
@@ -81,6 +84,75 @@ class TypeSafeBlocBuilder<C extends Cubit<S>, S> extends StatelessWidget {
   Widget build(final BuildContext context) => BlocBuilder<C, S>(
     buildWhen: buildWhen,
     builder: builder,
+  );
+}
+
+/// A type-safe wrapper around `BlocListener` that provides compile-time safety.
+///
+/// This widget ensures that:
+/// - Generic types are checked at compile time
+/// - Listener callbacks receive strongly-typed state
+///
+/// Compatible with [MultiBlocListener] (extends [SingleChildWidget]).
+///
+/// **Usage Example:**
+/// ```dart
+/// TypeSafeBlocListener<CounterCubit, CounterState>(
+///   listenWhen: (previous, current) => previous.count != current.count,
+///   listener: (context, state) {
+///     if (state.hasError) {
+///       ScaffoldMessenger.of(context).showSnackBar(
+///         SnackBar(content: Text(state.error)),
+///       );
+///     }
+///   },
+///   child: MyChildWidget(),
+/// )
+/// ```
+///
+/// **In MultiBlocListener (omit child):**
+/// ```dart
+/// MultiBlocListener(
+///   listeners: [
+///     TypeSafeBlocListener<CounterCubit, CounterState>(...),
+///   ],
+///   child: MyChildWidget(),
+/// )
+/// ```
+class TypeSafeBlocListener<C extends Cubit<S>, S>
+    extends SingleChildStatelessWidget {
+  /// Creates a type-safe bloc listener.
+  ///
+  /// The [listener] function is called for side effects (e.g., navigation,
+  /// showing dialogs) whenever the state changes.
+  ///
+  /// When used in [MultiBlocListener], omit [child]; the child is injected.
+  const TypeSafeBlocListener({
+    required this.listener,
+    this.bloc,
+    this.listenWhen,
+    super.key,
+    super.child,
+  });
+
+  /// Listener function called when state changes (unless [listenWhen] returns false).
+  final BlocWidgetListener<S> listener;
+
+  /// Optional bloc instance. If omitted, looks up via [BlocProvider].
+  final C? bloc;
+
+  /// Optional function to determine whether to call the listener.
+  final bool Function(S previous, S current)? listenWhen;
+
+  @override
+  Widget buildWithChild(
+    final BuildContext context,
+    final Widget? child,
+  ) => BlocListener<C, S>(
+    bloc: bloc,
+    listenWhen: listenWhen,
+    listener: listener,
+    child: child,
   );
 }
 

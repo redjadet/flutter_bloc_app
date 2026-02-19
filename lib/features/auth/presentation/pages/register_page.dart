@@ -11,6 +11,7 @@ import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
@@ -18,7 +19,7 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => BlocProvider(
     create: (_) => RegisterCubit(),
-    child: BlocListener<RegisterCubit, RegisterState>(
+    child: TypeSafeBlocListener<RegisterCubit, RegisterState>(
       listenWhen: (final previous, final current) =>
           previous.submissionStatus != current.submissionStatus,
       listener: (final context, final state) {

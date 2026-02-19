@@ -159,7 +159,7 @@ class CounterRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ✅ GOOD: Widget reads state via BlocSelector, derives visual value
-    return BlocSelector<CounterCubit, CounterState, int>(
+    return TypeSafeBlocSelector<CounterCubit, CounterState, int>(
       selector: (state) => state.count, // Select only what's needed
       builder: (context, count) {
         // Derive visual value from state
@@ -212,12 +212,12 @@ class BadPainter extends CustomPainter {
   }
 }
 
-// ❌ BAD: Widget not using BlocSelector
+// ❌ BAD: Widget not using TypeSafeBlocSelector (rebuilds on every state change)
 class BadWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Rebuilds on ANY state change, even unrelated ones
-    return BlocBuilder<CounterCubit, CounterState>(
+    return TypeSafeBlocBuilder<CounterCubit, CounterState>(
       builder: (context, state) {
         return CustomPaint(
           painter: CounterRingPainter(progress: state.count / 20),
@@ -236,7 +236,7 @@ class GoodWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Only rebuilds when count changes (not on status/error changes)
-    return BlocSelector<CounterCubit, CounterState, int>(
+    return TypeSafeBlocSelector<CounterCubit, CounterState, int>(
       selector: (state) => state.count,
       builder: (context, count) {
         // Derive visual value in widget layer
@@ -308,7 +308,7 @@ class CounterRing extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return BlocSelector<CounterCubit, CounterState, int>(
+    return TypeSafeBlocSelector<CounterCubit, CounterState, int>(
       selector: (final state) => state.count,
       builder: (final context, final count) {
         // Derive progress value from count (0.0 to 1.0)
@@ -616,7 +616,7 @@ class CounterPage extends StatelessWidget {
         children: [
           // Step 1: BlocSelector reads only 'count' from CounterState
           // This widget rebuilds ONLY when count changes, not on status/error changes
-          BlocSelector<CounterCubit, CounterState, int>(
+          TypeSafeBlocSelector<CounterCubit, CounterState, int>(
             selector: (state) => state.count,
             builder: (context, count) {
               // Step 2: Widget derives visual values from state
@@ -724,7 +724,7 @@ class CounterVisualizationPage extends StatelessWidget {
 
   /// CustomPainter example: Circular progress ring
   Widget _buildProgressRing(BuildContext context) {
-    return BlocSelector<CounterCubit, CounterState, int>(
+    return TypeSafeBlocSelector<CounterCubit, CounterState, int>(
       selector: (state) => state.count,
       builder: (context, count) {
         // Derive visual value from state
@@ -757,7 +757,7 @@ class CounterVisualizationPage extends StatelessWidget {
 
   /// RenderObject example: Segmented progress bar
   Widget _buildSegmentedBar(BuildContext context) {
-    return BlocSelector<CounterCubit, CounterState, int>(
+    return TypeSafeBlocSelector<CounterCubit, CounterState, int>(
       selector: (state) => state.count,
       builder: (context, count) {
         // Derive visual value from state
@@ -776,21 +776,21 @@ class CounterVisualizationPage extends StatelessWidget {
 
   /// Controls that update state through Cubit
   Widget _buildControls(BuildContext context) {
-    return BlocBuilder<CounterCubit, CounterState>(
+    return TypeSafeBlocBuilder<CounterCubit, CounterState>(
       builder: (context, state) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             PlatformAdaptive.filledButton(
               context: context,
-              onPressed: () => context.read<CounterCubit>().increment(),
+              onPressed: () => context.cubit<CounterCubit>().increment(),
               child: const Text('Increment'),
             ),
             SizedBox(width: context.responsiveGapM),
             PlatformAdaptive.filledButton(
               context: context,
               onPressed: state.count > 0
-                  ? () => context.read<CounterCubit>().decrement()
+                  ? () => context.cubit<CounterCubit>().decrement()
                   : null,
               child: const Text('Decrement'),
             ),
@@ -805,7 +805,7 @@ class CounterVisualizationPage extends StatelessWidget {
 ### What This Example Demonstrates
 
 1. **Multiple rendering approaches**: Shows both CustomPainter and RenderObject in the same page
-2. **Selective state reading**: Uses `BlocSelector` to read only `count`, preventing rebuilds on status/error changes
+2. **Selective state reading**: Uses `TypeSafeBlocSelector` to read only `count`, preventing rebuilds on status/error changes
 3. **Data derivation**: Widgets derive visual values (`progress`, `activeSegments`) from state
 4. **Performance optimization**: Both rendering components wrapped in `RepaintBoundary`
 5. **Clean separation**: Rendering code has no knowledge of repositories or business logic
@@ -1017,7 +1017,7 @@ testWidgets('CounterRing updates when cubit state changes', (tester) async {
 2. **BlocSelector precision**: Select only the data needed for painting
 
    ```dart
-   BlocSelector<CounterCubit, CounterState, int>(
+   TypeSafeBlocSelector<CounterCubit, CounterState, int>(
      selector: (state) => state.count, // Only count, not entire state
      builder: (context, count) => ...,
    )
@@ -1083,7 +1083,7 @@ class BadPainter extends CustomPainter {
 
 ```dart
 // GOOD: Data flows through widget tree
-BlocSelector<CounterCubit, CounterState, int>(
+TypeSafeBlocSelector<CounterCubit, CounterState, int>(
   selector: (state) => state.count,
   builder: (context, count) => CustomPaint(
     painter: GoodPainter(count: count),

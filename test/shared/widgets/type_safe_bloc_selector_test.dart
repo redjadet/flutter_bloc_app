@@ -115,6 +115,113 @@ void main() {
     });
   });
 
+  group('TypeSafeBlocListener', () {
+    testWidgets('calls listener on state change', (final tester) async {
+      final TestCubit cubit = TestCubit();
+      int listenerCount = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<TestCubit>(
+            create: (_) => cubit,
+            child: TypeSafeBlocListener<TestCubit, TestState>(
+              listener: (final context, final state) {
+                listenerCount++;
+              },
+              child: const Text('Child'),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Child'), findsOneWidget);
+      expect(listenerCount, 0);
+
+      cubit.emit(const TestState(value: 1, label: 'Changed'));
+      await tester.pump();
+      expect(listenerCount, 1);
+    });
+
+    testWidgets('respects listenWhen condition', (final tester) async {
+      final TestCubit cubit = TestCubit();
+      int listenerCount = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<TestCubit>(
+            create: (_) => cubit,
+            child: TypeSafeBlocListener<TestCubit, TestState>(
+              listenWhen: (final previous, final current) =>
+                  previous.value != current.value,
+              listener: (final context, final state) {
+                listenerCount++;
+              },
+              child: const Text('Child'),
+            ),
+          ),
+        ),
+      );
+
+      expect(listenerCount, 0);
+
+      cubit.emit(const TestState(value: 0, label: 'LabelChanged'));
+      await tester.pump();
+      expect(listenerCount, 0);
+
+      cubit.emit(const TestState(value: 42, label: 'New'));
+      await tester.pump();
+      expect(listenerCount, 1);
+    });
+
+    testWidgets('passes child widget', (final tester) async {
+      final TestCubit cubit = TestCubit();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<TestCubit>(
+            create: (_) => cubit,
+            child: TypeSafeBlocListener<TestCubit, TestState>(
+              listener: (final _, final _) {},
+              child: const Text('Custom Child'),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Custom Child'), findsOneWidget);
+    });
+
+    testWidgets('works inside MultiBlocListener', (final tester) async {
+      final TestCubit cubit = TestCubit();
+      int listenerCount = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<TestCubit>(
+            create: (_) => cubit,
+            child: MultiBlocListener(
+              listeners: [
+                TypeSafeBlocListener<TestCubit, TestState>(
+                  listener: (final context, final state) {
+                    listenerCount++;
+                  },
+                ),
+              ],
+              child: const Text('Injected Child'),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Injected Child'), findsOneWidget);
+      expect(listenerCount, 0);
+
+      cubit.emit(const TestState(value: 7, label: 'Changed'));
+      await tester.pump();
+      expect(listenerCount, 1);
+    });
+  });
+
   group('TypeSafeBlocConsumer', () {
     testWidgets('calls listener and builder', (final tester) async {
       final TestCubit cubit = TestCubit();
