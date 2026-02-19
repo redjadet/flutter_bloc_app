@@ -34,7 +34,7 @@ class PlaylearnPage extends StatelessWidget {
       ),
       child: CommonPageLayout(
         title: l10n.playlearnTitle,
-        body: BlocBuilder<PlaylearnCubit, PlaylearnState>(
+        body: TypeSafeBlocBuilder<PlaylearnCubit, PlaylearnState>(
           builder: (final context, final state) {
             if (state.isLoading) {
               return const CommonLoadingWidget();

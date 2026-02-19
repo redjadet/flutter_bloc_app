@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/counter.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/widgets/awesome_feature_widget.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -20,7 +19,7 @@ class CounterPageBody extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) =>
-      BlocSelector<CounterCubit, CounterState, bool>(
+      TypeSafeBlocSelector<CounterCubit, CounterState, bool>(
         selector: (final state) => state.status.isLoading,
         builder: (final context, final isLoading) => Skeletonizer(
           enabled: isLoading,

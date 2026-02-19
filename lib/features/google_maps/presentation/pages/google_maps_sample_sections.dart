@@ -21,7 +21,7 @@ class _GoogleMapsMapSection extends StatelessWidget {
         listener: (final context, final state) async {
           await controller.syncWithState(state);
         },
-        child: BlocBuilder<MapSampleCubit, MapSampleState>(
+        child: TypeSafeBlocBuilder<MapSampleCubit, MapSampleState>(
           buildWhen: (final previous, final current) => false,
           builder: (final context, final state) => RepaintBoundary(
             child: MapSampleMapView(
@@ -59,7 +59,7 @@ class _GoogleMapsControlsSection extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) =>
-      BlocSelector<MapSampleCubit, MapSampleState, _ControlsViewModel>(
+      TypeSafeBlocSelector<MapSampleCubit, MapSampleState, _ControlsViewModel>(
         selector: (final state) => _ControlsViewModel(
           isHybridMapType: state.mapType == gmaps.MapType.hybrid,
           trafficEnabled: state.trafficEnabled,
@@ -89,7 +89,11 @@ class _GoogleMapsLocationListSection extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) =>
-      BlocSelector<MapSampleCubit, MapSampleState, _LocationListViewModel>(
+      TypeSafeBlocSelector<
+        MapSampleCubit,
+        MapSampleState,
+        _LocationListViewModel
+      >(
         selector: (final state) => _LocationListViewModel(
           locations: state.locations,
           selectedMarkerId: state.selectedMarkerId?.value,

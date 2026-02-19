@@ -17,6 +17,7 @@ import 'package:flutter_bloc_app/shared/widgets/common_empty_state.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 class ChatListView extends StatelessWidget {
   const ChatListView({
@@ -34,7 +35,7 @@ class ChatListView extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) =>
-      BlocBuilder<ChatListCubit, ChatListState>(
+      TypeSafeBlocBuilder<ChatListCubit, ChatListState>(
         builder: (final context, final state) => switch (state) {
           ChatListInitial() => const SizedBox.shrink(),
           ChatListLoading() => const CommonLoadingWidget(),

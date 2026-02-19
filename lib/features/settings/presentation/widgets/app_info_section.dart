@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/app_info_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
@@ -28,23 +27,24 @@ class AppInfoSection extends StatelessWidget {
     return SettingsSection(
       title: l10n.appInfoSectionTitle,
       child: CommonCard(
-        child: BlocSelector<AppInfoCubit, AppInfoState, _AppInfoViewData>(
-          selector: (final state) => _AppInfoViewData(
-            showSuccess: state.status.isSuccess && state.info != null,
-            showError: state.status.isError,
-            info: state.info,
-            errorMessage: state.errorMessage,
-          ),
-          builder: (final context, final data) {
-            if (data.showSuccess) {
-              return _InfoDetails(info: data.info!);
-            }
-            if (data.showError) {
-              return _ErrorContent(error: data.errorMessage);
-            }
-            return const _LoadingContent();
-          },
-        ),
+        child:
+            TypeSafeBlocSelector<AppInfoCubit, AppInfoState, _AppInfoViewData>(
+              selector: (final state) => _AppInfoViewData(
+                showSuccess: state.status.isSuccess && state.info != null,
+                showError: state.status.isError,
+                info: state.info,
+                errorMessage: state.errorMessage,
+              ),
+              builder: (final context, final data) {
+                if (data.showSuccess) {
+                  return _InfoDetails(info: data.info!);
+                }
+                if (data.showError) {
+                  return _ErrorContent(error: data.errorMessage);
+                }
+                return const _LoadingContent();
+              },
+            ),
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
@@ -49,7 +48,7 @@ class _ProfileSyncBannerState extends State<ProfileSyncBanner> {
 
   @override
   Widget build(final BuildContext context) =>
-      BlocBuilder<SyncStatusCubit, SyncStatusState>(
+      TypeSafeBlocBuilder<SyncStatusCubit, SyncStatusState>(
         builder: (final context, final syncState) {
           final SyncStatusCubit syncCubit = context.cubit<SyncStatusCubit>();
           final bool isOffline =

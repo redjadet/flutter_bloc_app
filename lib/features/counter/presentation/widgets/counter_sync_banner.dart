@@ -77,7 +77,8 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
   Widget build(
     final BuildContext context,
   ) {
-    final Widget banner = BlocConsumer<SyncStatusCubit, SyncStatusState>(
+    final Widget
+    banner = TypeSafeBlocConsumer<SyncStatusCubit, SyncStatusState>(
       listener: (final context, final state) {
         // Refresh pending count when sync status changes (operations may have been processed)
         // check-ignore: listener callback is event-driven, not a build side effect

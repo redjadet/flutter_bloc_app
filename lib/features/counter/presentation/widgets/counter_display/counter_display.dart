@@ -1,11 +1,11 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_display/counter_display_card.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 class CounterDisplay extends StatefulWidget {
   const CounterDisplay({super.key});
@@ -27,7 +27,7 @@ class _CounterDisplayState extends State<CounterDisplay> {
     final ColorScheme colors = theme.colorScheme;
     final l10n = context.l10n;
 
-    return BlocSelector<CounterCubit, CounterState, _DisplayState>(
+    return TypeSafeBlocSelector<CounterCubit, CounterState, _DisplayState>(
       selector: (final state) => _DisplayState(
         count: state.count,
         countdownSeconds: state.countdownSeconds,

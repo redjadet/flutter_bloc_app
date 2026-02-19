@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/calculator_error.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/payment_calculator.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_cubit.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calcul
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:intl/intl.dart';
 
 class CalculatorSummaryCard extends StatelessWidget {
@@ -19,7 +19,7 @@ class CalculatorSummaryCard extends StatelessWidget {
   @override
   Widget build(
     final BuildContext context,
-  ) => BlocBuilder<CalculatorCubit, CalculatorState>(
+  ) => TypeSafeBlocBuilder<CalculatorCubit, CalculatorState>(
     buildWhen: (final previous, final current) => previous != current,
     builder: (final context, final state) {
       final l10n = context.l10n;

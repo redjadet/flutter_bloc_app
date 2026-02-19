@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 class SyncDiagnosticsSection extends StatefulWidget {
   const SyncDiagnosticsSection({super.key});
@@ -35,7 +35,7 @@ class _SyncDiagnosticsSectionState extends State<SyncDiagnosticsSection> {
             horizontal: cardPadding,
             vertical: context.responsiveGapM,
           ),
-          child: BlocBuilder<SyncStatusCubit, SyncStatusState>(
+          child: TypeSafeBlocBuilder<SyncStatusCubit, SyncStatusState>(
             buildWhen: (final previous, final current) =>
                 previous.history != current.history,
             builder: (final context, final state) {

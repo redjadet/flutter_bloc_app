@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/remote_config_view_data.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
@@ -15,6 +14,7 @@ import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 part 'remote_config_diagnostics_section_components.dart';
 part 'remote_config_diagnostics_section_models.dart';
@@ -64,7 +64,7 @@ class _RemoteConfigDiagnosticsSectionState
             vertical: context.responsiveGapM,
           ),
           child:
-              BlocSelector<
+              TypeSafeBlocSelector<
                 RemoteConfigCubit,
                 RemoteConfigState,
                 RemoteConfigViewData

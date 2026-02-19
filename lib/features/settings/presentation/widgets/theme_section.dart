@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_card.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 class ThemeSection extends StatelessWidget {
   const ThemeSection({super.key});
@@ -20,7 +20,7 @@ class ThemeSection extends StatelessWidget {
 
     return SettingsSection(
       title: l10n.themeSectionTitle,
-      child: BlocSelector<ThemeCubit, ThemeMode, ThemeMode>(
+      child: TypeSafeBlocSelector<ThemeCubit, ThemeMode, ThemeMode>(
         selector: (final state) => state,
         builder: (final context, final currentMode) => SettingsCard<ThemeMode>(
           options: options,
