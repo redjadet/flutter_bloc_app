@@ -1,23 +1,21 @@
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class ChatSyncPayload {
-  const ChatSyncPayload({
-    required this.conversationId,
-    required this.prompt,
-    required this.pastUserInputs,
-    required this.generatedResponses,
-    required this.model,
-    required this.clientMessageId,
-    required this.createdAt,
-  });
+part 'chat_sync_payload.freezed.dart';
 
-  final String conversationId;
-  final String prompt;
-  final List<String> pastUserInputs;
-  final List<String> generatedResponses;
-  final String? model;
-  final String clientMessageId;
-  final DateTime createdAt;
+@freezed
+abstract class ChatSyncPayload with _$ChatSyncPayload {
+  const factory ChatSyncPayload({
+    required final String conversationId,
+    required final String prompt,
+    required final List<String> pastUserInputs,
+    required final List<String> generatedResponses,
+    required final String? model,
+    required final String clientMessageId,
+    required final DateTime createdAt,
+  }) = _ChatSyncPayload;
+
+  const ChatSyncPayload._();
 
   ChatMessage userMessage({
     required final String promptText,

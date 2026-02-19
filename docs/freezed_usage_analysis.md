@@ -134,6 +134,24 @@ These are **private or feature-local** Equatable classes used for BlocSelector/v
 
 ---
 
+### Tier 4 – Further candidates (optional)
+
+These are **plain immutable data classes** (no Equatable) that could use Freezed for consistency, generated `copyWith`/equality, and less boilerplate. Lower priority; migrate when touching the feature.
+
+| File | Class | Note |
+| ------ | -------- | ------ |
+| `lib/features/scapes/domain/scape.dart` | ~~`Scape`~~ | **Done.** Freezed; `formattedDuration` in private constructor. |
+| `lib/features/example/presentation/widgets/whiteboard/whiteboard_painter.dart` | ~~`WhiteboardStroke`~~ | **Done.** Freezed; public `WhiteboardStroke()` enforces unmodifiable points, internal `WhiteboardStroke.raw()` for implementation. |
+| `lib/features/chat/data/chat_sync_payload.dart` | ~~`ChatSyncPayload`~~ | **Done.** Freezed; `userMessage()` in private constructor. |
+| `lib/features/chat/data/chat_local_conversation_updater.dart` | ~~`ChatLocalConversationState`~~ | **Done.** Freezed. |
+| `lib/features/todo_list/presentation/helpers/todo_list_date_picker.dart` | ~~`_DatePickerResult`~~ | **Done.** Freezed union (`.confirmed(date)`, `.cleared()`); `date` and `didConfirm` getters in private constructor. |
+
+**Not recommended for Freezed (or low priority):**
+
+- **ChatContactTileConfig** (`lib/features/chat/presentation/widgets/chat_contact_tile_config.dart`) — Uses `late final` styles derived in constructor and `fromContext(BuildContext)`; Flutter-heavy and not a simple data bag. Keeping as-is is fine.
+
+---
+
 ## Summary
 
 - **Use Freezed for:**
