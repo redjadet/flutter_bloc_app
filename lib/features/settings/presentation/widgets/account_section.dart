@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:go_router/go_router.dart';
 
 class AccountSection extends StatelessWidget {
@@ -38,11 +39,21 @@ class AccountSection extends StatelessWidget {
               children: <Widget>[
                 if (!firebaseReady)
                   Text(l10n.accountSignedOutLabel)
-                else
+                else if (auth case final FirebaseAuth effectiveAuth)
                   StreamBuilder<User?>(
-                    stream: auth!.authStateChanges(),
+                    initialData: effectiveAuth.currentUser,
+                    stream: effectiveAuth.authStateChanges(),
                     builder: (final context, final snapshot) {
-                      final User? user = snapshot.data;
+                      final User? user =
+                          snapshot.data ?? effectiveAuth.currentUser;
+                      final bool waitingForFirstAuthEvent =
+                          snapshot.connectionState == ConnectionState.waiting &&
+                          user == null;
+
+                      if (waitingForFirstAuthEvent) {
+                        return const CommonLoadingWidget();
+                      }
+
                       if (user == null) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,7 +145,9 @@ class AccountSection extends StatelessWidget {
                         ],
                       );
                     },
-                  ),
+                  )
+                else
+                  Text(l10n.accountSignedOutLabel),
               ],
             ),
           ),
