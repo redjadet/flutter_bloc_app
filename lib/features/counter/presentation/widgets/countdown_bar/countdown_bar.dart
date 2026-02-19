@@ -1,12 +1,12 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/countdown_bar/countdown_bar_content.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 class CountdownBar extends StatefulWidget {
   const CountdownBar({super.key});
@@ -26,7 +26,7 @@ class _CountdownBarState extends State<CountdownBar> {
     final l10n = context.l10n;
     final ColorScheme colors = Theme.of(context).colorScheme;
 
-    return BlocSelector<CounterCubit, CounterState, _CountdownBarData>(
+    return TypeSafeBlocSelector<CounterCubit, CounterState, _CountdownBarData>(
       selector: (final state) => _CountdownBarData(
         active: state.isAutoDecrementActive,
         isLoading: state.status.isLoading,

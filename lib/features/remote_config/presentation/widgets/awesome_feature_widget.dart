@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'awesome_feature_widget.freezed.dart';
@@ -42,7 +42,7 @@ class _AwesomeFeatureWidgetState extends State<AwesomeFeatureWidget> {
       return const SizedBox.shrink();
     }
 
-    return BlocSelector<
+    return TypeSafeBlocSelector<
       RemoteConfigCubit,
       RemoteConfigState,
       _FeatureEnabledData

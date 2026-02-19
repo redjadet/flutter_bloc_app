@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_cubit.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_state.dart';
@@ -81,7 +80,11 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
         ),
       );
     }
-    return BlocSelector<WebsocketCubit, WebsocketState, _WebsocketViewData>(
+    return TypeSafeBlocSelector<
+      WebsocketCubit,
+      WebsocketState,
+      _WebsocketViewData
+    >(
       selector: (final state) => _WebsocketViewData(
         isConnecting: state.isConnecting,
         isConnected: state.isConnected,
@@ -97,7 +100,7 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
             icon: const Icon(Icons.refresh),
           ),
         ],
-        body: BlocBuilder<WebsocketCubit, WebsocketState>(
+        body: TypeSafeBlocBuilder<WebsocketCubit, WebsocketState>(
           buildWhen: (final previous, final current) =>
               previous.status != current.status,
           builder: (final context, final state) => Column(

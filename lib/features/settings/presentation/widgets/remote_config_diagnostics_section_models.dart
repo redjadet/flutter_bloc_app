@@ -21,7 +21,7 @@ class _RemoteConfigSyncStatusBanner extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) =>
-      BlocBuilder<SyncStatusCubit, SyncStatusState>(
+      TypeSafeBlocBuilder<SyncStatusCubit, SyncStatusState>(
         builder: (final context, final syncState) {
           final bool isOffline =
               syncState.networkStatus == NetworkStatus.offline;

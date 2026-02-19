@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/graphql_demo.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 
@@ -14,7 +13,7 @@ class GraphqlDemoPage extends StatelessWidget {
       body: Column(
         children: [
           // Only rebuild progress bar when loading state changes
-          BlocSelector<GraphqlDemoCubit, GraphqlDemoState, bool>(
+          TypeSafeBlocSelector<GraphqlDemoCubit, GraphqlDemoState, bool>(
             selector: (final state) =>
                 state.isLoading && state.countries.isNotEmpty,
             builder: (final context, final showProgressBar) => showProgressBar
@@ -22,7 +21,7 @@ class GraphqlDemoPage extends StatelessWidget {
                 : const SizedBox.shrink(),
           ),
           // Only rebuild filter bar when continents or active continent changes
-          BlocSelector<
+          TypeSafeBlocSelector<
             GraphqlDemoCubit,
             GraphqlDemoState,
             GraphqlFilterBarData
@@ -44,7 +43,11 @@ class GraphqlDemoPage extends StatelessWidget {
               ),
             ),
           ),
-          BlocSelector<GraphqlDemoCubit, GraphqlDemoState, GraphqlDataSource>(
+          TypeSafeBlocSelector<
+            GraphqlDemoCubit,
+            GraphqlDemoState,
+            GraphqlDataSource
+          >(
             selector: (final state) => state.dataSource,
             builder: (final context, final source) => Align(
               alignment: Alignment.centerRight,

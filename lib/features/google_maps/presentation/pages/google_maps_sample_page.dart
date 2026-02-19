@@ -106,7 +106,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
         description: l10n.googleMapsPageMissingKeyDescription,
       );
     }
-    return BlocSelector<MapSampleCubit, MapSampleState, _MapBodyData>(
+    return TypeSafeBlocSelector<MapSampleCubit, MapSampleState, _MapBodyData>(
       selector: (final state) => _MapBodyData(
         showLoading: state.isLoading && state.markers.isEmpty,
         hasError: state.hasError,

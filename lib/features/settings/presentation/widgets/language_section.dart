@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/locale_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_card.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 class LanguageSection extends StatelessWidget {
   const LanguageSection({super.key});
@@ -23,7 +23,7 @@ class LanguageSection extends StatelessWidget {
 
     return SettingsSection(
       title: l10n.languageSectionTitle,
-      child: BlocSelector<LocaleCubit, Locale?, Locale?>(
+      child: TypeSafeBlocSelector<LocaleCubit, Locale?, Locale?>(
         selector: (final state) => state,
         builder: (final context, final currentLocale) {
           final List<SettingsOption<Locale?>> options =

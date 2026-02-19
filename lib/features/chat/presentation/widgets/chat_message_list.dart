@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_status_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/shared/widgets/view_status_switcher.dart';
 
 class ChatMessageList extends StatelessWidget {
@@ -29,7 +29,7 @@ class ChatMessageList extends StatelessWidget {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
 
-    return BlocConsumer<ChatCubit, ChatState>(
+    return TypeSafeBlocConsumer<ChatCubit, ChatState>(
       listener: (final context, final state) async {
         if (state.hasError) {
           final ChatCubit chatCubit = context.cubit<ChatCubit>();

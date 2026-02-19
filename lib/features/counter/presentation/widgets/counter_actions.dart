@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 class CounterActions extends StatelessWidget {
   const CounterActions({super.key});
@@ -12,7 +12,7 @@ class CounterActions extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    return BlocSelector<CounterCubit, CounterState, bool>(
+    return TypeSafeBlocSelector<CounterCubit, CounterState, bool>(
       selector: (final state) => state.status.isLoading,
       builder: (final context, final isLoading) => Column(
         mainAxisSize: MainAxisSize.min,

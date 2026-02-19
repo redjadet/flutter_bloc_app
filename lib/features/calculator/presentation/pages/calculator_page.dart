@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/constants/constants.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/calculator_error.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_cubit.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'calculator_page.freezed.dart';
@@ -98,7 +98,7 @@ class _CalculatorDisplay extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) =>
-      BlocSelector<CalculatorCubit, CalculatorState, _DisplayData>(
+      TypeSafeBlocSelector<CalculatorCubit, CalculatorState, _DisplayData>(
         selector: (final state) => _DisplayData(
           display: state.display,
           history: state.history,

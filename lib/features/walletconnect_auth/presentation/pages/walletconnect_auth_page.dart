@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/cubit/walletconnect_auth_cubit.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/cubit/walletconnect_auth_state.dart';
@@ -20,7 +19,7 @@ class WalletConnectAuthPage extends StatelessWidget {
 
     return CommonPageLayout(
       title: l10n.walletconnectAuthTitle,
-      body: BlocBuilder<WalletConnectAuthCubit, WalletConnectAuthState>(
+      body: TypeSafeBlocBuilder<WalletConnectAuthCubit, WalletConnectAuthState>(
         builder: (final context, final state) => SingleChildScrollView(
           padding: context.pagePadding,
           child: Column(

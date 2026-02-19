@@ -11,6 +11,7 @@ import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/shared/widgets/retry_snackbar_listener.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:go_router/go_router.dart';
 
 class AppScope extends StatefulWidget {
@@ -59,9 +60,9 @@ class _AppScopeState extends State<AppScope> {
       service: getIt<DeepLinkService>(),
       parser: getIt<DeepLinkParser>(),
       child: ResponsiveScope(
-        child: BlocBuilder<LocaleCubit, Locale?>(
+        child: TypeSafeBlocBuilder<LocaleCubit, Locale?>(
           builder: (final context, final locale) =>
-              BlocBuilder<ThemeCubit, ThemeMode>(
+              TypeSafeBlocBuilder<ThemeCubit, ThemeMode>(
                 builder: (final context, final themeMode) =>
                     AppConfig.createMaterialApp(
                       themeMode: themeMode,

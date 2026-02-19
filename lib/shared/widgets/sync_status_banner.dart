@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 /// Global sync status banner that displays when sync is degraded or error.
 ///
@@ -32,7 +32,7 @@ class _SyncStatusBannerState extends State<SyncStatusBanner> {
   @override
   Widget build(
     final BuildContext context,
-  ) => BlocBuilder<SyncStatusCubit, SyncStatusState>(
+  ) => TypeSafeBlocBuilder<SyncStatusCubit, SyncStatusState>(
     builder: (final context, final state) {
       final bool isDegraded = state.syncStatus == SyncStatus.degraded;
       if (!isDegraded) {

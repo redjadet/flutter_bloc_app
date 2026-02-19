@@ -27,7 +27,7 @@ class VocabularyListPage extends StatelessWidget {
       )..loadWordsForTopic(topicId),
       child: CommonPageLayout(
         title: l10n.playlearnTitle,
-        body: BlocBuilder<PlaylearnCubit, PlaylearnState>(
+        body: TypeSafeBlocBuilder<PlaylearnCubit, PlaylearnState>(
           builder: (final context, final state) {
             if (state.words.isEmpty && !state.isLoading) {
               return const CommonEmptyState(message: 'No words');

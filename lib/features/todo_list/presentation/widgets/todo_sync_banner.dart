@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
@@ -52,7 +51,8 @@ class _TodoSyncBannerState extends State<TodoSyncBanner> {
       return const SizedBox.shrink();
     }
     final AppLocalizations l10n = context.l10n;
-    final Widget banner = BlocConsumer<SyncStatusCubit, SyncStatusState>(
+    final Widget
+    banner = TypeSafeBlocConsumer<SyncStatusCubit, SyncStatusState>(
       listener: (final context, final state) {
         // Refresh pending count when sync status changes (operations may have been processed)
         // check-ignore: listener callback is event-driven, not a build side effect

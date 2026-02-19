@@ -89,7 +89,7 @@ class _ChatSyncBannerState extends State<ChatSyncBanner> {
       // check-ignore: listener callback is event-driven, not a build side effect
       unawaited(_refreshPendingCount());
     },
-    child: BlocBuilder<SyncStatusCubit, SyncStatusState>(
+    child: TypeSafeBlocBuilder<SyncStatusCubit, SyncStatusState>(
       builder: (final context, final syncState) {
         final bool isOffline = syncState.networkStatus == NetworkStatus.offline;
         final bool isSyncing = syncState.syncStatus == SyncStatus.syncing;

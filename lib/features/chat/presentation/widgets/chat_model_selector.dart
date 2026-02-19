@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -16,7 +15,7 @@ class ChatModelSelector extends StatelessWidget {
     final ChatCubit cubit = context.cubit<ChatCubit>();
     final List<String> models = cubit.models;
 
-    return BlocSelector<ChatCubit, ChatState, String?>(
+    return TypeSafeBlocSelector<ChatCubit, ChatState, String?>(
       selector: (final state) => state.currentModel,
       builder: (final context, final currentModel) {
         // Defensive check: ensure models list is not empty
