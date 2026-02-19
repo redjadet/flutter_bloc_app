@@ -201,6 +201,35 @@ void main() {
       expect(map['last_changed'], timestamp.millisecondsSinceEpoch);
     });
 
+    test(
+      'save falls back gracefully when FlutterFire throws details cast TypeError',
+      () async {
+        final MockFirebaseAuth auth = MockFirebaseAuth(
+          signedIn: true,
+          mockUser: MockUser(uid: 'user-typed'),
+        );
+        final _MockDatabaseReference rootRef = _MockDatabaseReference();
+        final _MockDatabaseReference userRef = _MockDatabaseReference();
+
+        when(() => rootRef.path).thenReturn('counter');
+        when(() => rootRef.child('user-typed')).thenReturn(userRef);
+        when(() => userRef.set(any<dynamic>())).thenAnswer((_) async {
+          final dynamic details = 'permission-denied';
+          details as Map<dynamic, dynamic>;
+          return;
+        });
+
+        final RealtimeDatabaseCounterRepository repository =
+            RealtimeDatabaseCounterRepository(counterRef: rootRef, auth: auth);
+
+        await AppLogger.silenceAsync(() async {
+          await repository.save(const CounterSnapshot(userId: '', count: 2));
+        });
+
+        verify(() => userRef.set(any<dynamic>())).called(1);
+      },
+    );
+
     test('watch emits snapshots from database stream', () async {
       final MockFirebaseAuth auth = MockFirebaseAuth(
         signedIn: true,
