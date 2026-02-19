@@ -18,7 +18,8 @@ import 'package:provider/single_child_widget.dart';
 ///   builder: (context, count) => Text('Count: $count'),
 /// )
 /// ```
-class TypeSafeBlocSelector<C extends Cubit<S>, S, T> extends StatelessWidget {
+class TypeSafeBlocSelector<C extends StateStreamableSource<S>, S, T>
+    extends StatelessWidget {
   /// Creates a type-safe bloc selector.
   ///
   /// The [selector] function extracts a value of type [T] from the state [S].
@@ -60,7 +61,8 @@ class TypeSafeBlocSelector<C extends Cubit<S>, S, T> extends StatelessWidget {
 ///   builder: (context, state) => Text('Count: ${state.count}'),
 /// )
 /// ```
-class TypeSafeBlocBuilder<C extends Cubit<S>, S> extends StatelessWidget {
+class TypeSafeBlocBuilder<C extends StateStreamableSource<S>, S>
+    extends StatelessWidget {
   /// Creates a type-safe bloc builder.
   ///
   /// The [builder] function is called whenever the state changes.
@@ -119,7 +121,7 @@ class TypeSafeBlocBuilder<C extends Cubit<S>, S> extends StatelessWidget {
 ///   child: MyChildWidget(),
 /// )
 /// ```
-class TypeSafeBlocListener<C extends Cubit<S>, S>
+class TypeSafeBlocListener<C extends StateStreamableSource<S>, S>
     extends SingleChildStatelessWidget {
   /// Creates a type-safe bloc listener.
   ///
@@ -173,7 +175,8 @@ class TypeSafeBlocListener<C extends Cubit<S>, S>
 ///   builder: (context, state) => Text('Count: ${state.count}'),
 /// )
 /// ```
-class TypeSafeBlocConsumer<C extends Cubit<S>, S> extends StatelessWidget {
+class TypeSafeBlocConsumer<C extends StateStreamableSource<S>, S>
+    extends StatelessWidget {
   /// Creates a type-safe bloc consumer.
   ///
   /// The [listener] function is called for side effects (e.g., navigation, showing dialogs).

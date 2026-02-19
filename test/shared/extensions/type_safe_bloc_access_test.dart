@@ -5,6 +5,22 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('TypeSafeBlocAccess', () {
+    testWidgets('bloc returns bloc from context', (final tester) async {
+      final TestBloc bloc = TestBloc();
+      await tester.pumpWidget(
+        BlocProvider<TestBloc>(
+          create: (_) => bloc,
+          child: Builder(
+            builder: (final context) {
+              final retrievedBloc = context.bloc<TestBloc>();
+              expect(retrievedBloc, same(bloc));
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+    });
+
     testWidgets('cubit returns cubit from context', (final tester) async {
       final TestCubit cubit = TestCubit();
       await tester.pumpWidget(
@@ -37,6 +53,34 @@ void main() {
       );
     });
 
+    testWidgets('tryBloc returns null when bloc not found', (
+      final tester,
+    ) async {
+      await tester.pumpWidget(
+        Builder(
+          builder: (final context) {
+            final TestBloc? bloc = context.tryBloc<TestBloc>();
+            expect(bloc, isNull);
+            return const SizedBox();
+          },
+        ),
+      );
+    });
+
+    testWidgets('tryCubit returns null when cubit not found', (
+      final tester,
+    ) async {
+      await tester.pumpWidget(
+        Builder(
+          builder: (final context) {
+            final TestCubit? cubit = context.tryCubit<TestCubit>();
+            expect(cubit, isNull);
+            return const SizedBox();
+          },
+        ),
+      );
+    });
+
     testWidgets('state returns state from cubit', (final tester) async {
       const TestState initialState = TestState(value: 42);
       final TestCubit cubit = TestCubit(initialState);
@@ -47,6 +91,22 @@ void main() {
             builder: (final context) {
               final state = context.state<TestCubit, TestState>();
               expect(state.value, 42);
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+    });
+
+    testWidgets('state returns state from bloc', (final tester) async {
+      final TestBloc bloc = TestBloc();
+      await tester.pumpWidget(
+        BlocProvider<TestBloc>(
+          create: (_) => bloc,
+          child: Builder(
+            builder: (final context) {
+              final state = context.state<TestBloc, TestState>();
+              expect(state.value, 0);
               return const SizedBox();
             },
           ),
@@ -95,6 +155,33 @@ void main() {
           },
         ),
       );
+    });
+
+    testWidgets('watchBloc returns bloc and rebuilds on state change', (
+      final tester,
+    ) async {
+      final TestBloc bloc = TestBloc();
+      int buildCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<TestBloc>(
+            create: (_) => bloc,
+            child: Builder(
+              builder: (final context) {
+                buildCount++;
+                final watchedBloc = context.watchBloc<TestBloc>();
+                expect(watchedBloc, same(bloc));
+                return const SizedBox();
+              },
+            ),
+          ),
+        ),
+      );
+
+      expect(buildCount, 1);
+      bloc.add(const TestIncremented());
+      await tester.pump();
+      expect(buildCount, 2);
     });
 
     testWidgets('watchState returns state and rebuilds on change', (
@@ -194,6 +281,22 @@ void main() {
 class TestCubit extends Cubit<TestState> {
   TestCubit([final TestState? initialState])
     : super(initialState ?? const TestState(value: 0));
+}
+
+sealed class TestEvent {
+  const TestEvent();
+}
+
+class TestIncremented extends TestEvent {
+  const TestIncremented();
+}
+
+class TestBloc extends Bloc<TestEvent, TestState> {
+  TestBloc() : super(const TestState(value: 0)) {
+    on<TestIncremented>((final event, final emit) {
+      emit(TestState(value: state.value + 1));
+    });
+  }
 }
 
 class TestState {

@@ -6,7 +6,8 @@ import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 /// Switches between loading, error, and success content using a single
 /// [TypeSafeBlocSelector]. Intended to reduce repeated status checks in widgets.
-class ViewStatusSwitcher<C extends Cubit<S>, S, T> extends StatelessWidget {
+class ViewStatusSwitcher<C extends StateStreamableSource<S>, S, T>
+    extends StatelessWidget {
   const ViewStatusSwitcher({
     required this.selector,
     required this.isLoading,
