@@ -1,9 +1,13 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/account_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
 Widget _wrap(Widget child) {
   return MaterialApp(
@@ -34,6 +38,39 @@ void main() {
 
     expect(find.text(AppLocalizationsEn().accountSignInButton), findsOneWidget);
   });
+
+  testWidgets(
+    'AccountSection waits for first auth event before showing signed-out UI',
+    (WidgetTester tester) async {
+      final StreamController<User?> authStreamController =
+          StreamController<User?>();
+      addTearDown(authStreamController.close);
+      final _DelayedStreamFirebaseAuth auth = _DelayedStreamFirebaseAuth();
+      final MockUser signedInUser = MockUser(
+        uid: 'delayed-user',
+        email: 'delayed@example.com',
+        displayName: 'Delayed User',
+      );
+
+      when(() => auth.currentUser).thenReturn(null);
+      when(
+        () => auth.authStateChanges(),
+      ).thenAnswer((_) => authStreamController.stream);
+
+      await tester.pumpWidget(_wrap(AccountSection(auth: auth)));
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().accountSignInButton), findsNothing);
+
+      authStreamController.add(signedInUser);
+      await tester.pump();
+
+      expect(
+        find.text(AppLocalizationsEn().accountSignedInAs('Delayed User')),
+        findsOneWidget,
+      );
+    },
+  );
 
   testWidgets('AccountSection handles guest users', (
     WidgetTester tester,
@@ -73,3 +110,5 @@ void main() {
     expect(find.text(AppLocalizationsEn().accountManageButton), findsOneWidget);
   });
 }
+
+class _DelayedStreamFirebaseAuth extends Mock implements FirebaseAuth {}
