@@ -55,11 +55,12 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
         AppLogger.debugInDebugMode(
           'RealtimeDatabaseCounterRepository.save writing counter value',
         );
-        await _counterRef.child(user.uid).set(<String, Object?>{
+        final Map<String, Object?> data = <String, Object?>{
           'userId': user.uid,
           'count': snapshot.count,
           'last_changed': snapshot.lastChanged?.millisecondsSinceEpoch,
-        });
+        };
+        await _setCounterWithPlatformErrorGuard(userId: user.uid, data: data);
       },
       onFailureFallback: () async {},
     );
@@ -127,4 +128,33 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
     action: action,
     onFailureFallback: onFailureFallback,
   );
+
+  Future<void> _setCounterWithPlatformErrorGuard({
+    required final String userId,
+    required final Map<String, Object?> data,
+  }) async {
+    try {
+      await _counterRef.child(userId).set(data);
+    } catch (error, stackTrace) {
+      if (error is TypeError) {
+        final String errorMessage = error.toString();
+        final bool isFlutterFireDetailsCastIssue = errorMessage.contains(
+          "'String' is not a subtype of type 'Map",
+        );
+        if (isFlutterFireDetailsCastIssue) {
+          Error.throwWithStackTrace(
+            FirebaseException(
+              plugin: 'firebase_database',
+              code: 'database-platform-error-details',
+              message:
+                  'Realtime Database write failed while saving counter. '
+                  'Check database rules and auth state.',
+            ),
+            stackTrace,
+          );
+        }
+      }
+      rethrow;
+    }
+  }
 }

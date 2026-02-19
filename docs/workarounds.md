@@ -18,7 +18,9 @@ This document lists **temporary workarounds** used in this project when upstream
 
 **Root cause:** `_flutterfire_internals` assumes `PlatformException.details` is a `Map`; native Firebase can return a string message.
 
-**Current workaround:** In `run_with_auth_user.dart` we catch `TypeError` and log a clearer message. RTDB write code uses `Map<String, Object?>` for `.set()` to ensure JSON-safe payloads. To fix the underlying save failure, verify: (1) Firebase Realtime Database rules are deployed and allow writes for the auth path (see `docs/todo_list_firebase_security_rules.md`), (2) user is authenticated, (3) path `todos/{userId}/{todoId}` is valid.
+**Current workaround:** RTDB write code (`RealtimeDatabaseTodoRepository.save`, `RealtimeDatabaseCounterRepository.save`) uses `Map<String, Object?>` for `.set()` and wraps writes with a TypeError guard. If FlutterFire throws the known details-cast error, we rethrow a clearer `FirebaseException` (`database-platform-error-details`) so repository-level fallbacks and logs remain actionable.
+
+To fix the underlying write failure itself, verify: (1) Firebase Realtime Database rules are deployed and allow writes for the auth path (see `docs/todo_list_firebase_security_rules.md`), (2) user is authenticated, (3) paths `todos/{userId}/{todoId}` and `counter/{userId}` are valid.
 
 ---
 
