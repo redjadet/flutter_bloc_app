@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_de
 import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_demo_state.dart';
 import 'package:flutter_bloc_app/features/genui_demo/presentation/widgets/genui_demo_content.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:genui/genui.dart' as genui;
@@ -80,7 +81,7 @@ class _GenUiDemoView extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.genuiDemoPageTitle)),
-      body: BlocBuilder<GenUiDemoCubit, GenUiDemoState>(
+      body: TypeSafeBlocBuilder<GenUiDemoCubit, GenUiDemoState>(
         builder: (final context, final state) {
           return GenUiDemoContent(state: state);
         },

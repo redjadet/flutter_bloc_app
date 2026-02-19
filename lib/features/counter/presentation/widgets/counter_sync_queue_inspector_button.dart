@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
@@ -68,7 +67,7 @@ class _CounterSyncQueueInspectorButtonState
       return child;
     }
 
-    return BlocListener<SyncStatusCubit, SyncStatusState>(
+    return TypeSafeBlocListener<SyncStatusCubit, SyncStatusState>(
       bloc: syncCubit,
       listener: (final context, final state) {
         // Refresh pending count when sync status changes

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Mock Cubit for testing
@@ -293,7 +294,7 @@ void main() {
         MaterialApp(
           home: BlocProvider<TestCubit>(
             create: (_) => testCubit,
-            child: BlocBuilder<TestCubit, int>(
+            child: TypeSafeBlocBuilder<TestCubit, int>(
               builder: (context, state) {
                 final cubit = context.readCubit<TestCubit>();
                 expect(cubit, equals(testCubit));
@@ -314,7 +315,7 @@ void main() {
         MaterialApp(
           home: BlocProvider<TestCubit>(
             create: (_) => testCubit,
-            child: BlocListener<TestCubit, int>(
+            child: TypeSafeBlocListener<TestCubit, int>(
               listener: (context, state) {
                 final cubit = context.readCubit<TestCubit>();
                 expect(cubit, equals(testCubit));
@@ -335,7 +336,7 @@ void main() {
         MaterialApp(
           home: BlocProvider<TestCubit>(
             create: (_) => testCubit,
-            child: BlocConsumer<TestCubit, int>(
+            child: TypeSafeBlocConsumer<TestCubit, int>(
               listener: (context, state) {
                 final cubit = context.readCubit<TestCubit>();
                 expect(cubit, equals(testCubit));

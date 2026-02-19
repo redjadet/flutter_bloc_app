@@ -87,7 +87,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
     final l10n = context.l10n;
     return MultiBlocListener(
       listeners: [
-        BlocListener<CounterCubit, CounterState>(
+        TypeSafeBlocListener<CounterCubit, CounterState>(
           listenWhen: (final prev, final curr) => prev.error != curr.error,
           listener: (final context, final state) {
             final error = state.error;
@@ -106,14 +106,14 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
             }
           },
         ),
-        BlocListener<CounterCubit, CounterState>(
+        TypeSafeBlocListener<CounterCubit, CounterState>(
           listenWhen: (final prev, final curr) =>
               prev.count == 0 && curr.count > 0,
           listener: (final context, final state) {
             ErrorHandling.clearSnackBars(context);
           },
         ),
-        BlocListener<CounterCubit, CounterState>(
+        TypeSafeBlocListener<CounterCubit, CounterState>(
           listenWhen: (final prev, final curr) => prev.count != curr.count,
           listener: (final context, final state) async {
             // Kick off a sync flush immediately when counter changes, but only if SyncStatusCubit is available.

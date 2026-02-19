@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/search/presentation/search_cubit.dart';
 import 'package:flutter_bloc_app/features/search/presentation/search_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 class SearchTextField extends StatefulWidget {
   const SearchTextField({super.key});
@@ -31,7 +31,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
 
   @override
   Widget build(final BuildContext context) =>
-      BlocListener<SearchCubit, SearchState>(
+      TypeSafeBlocListener<SearchCubit, SearchState>(
         listenWhen: (final prev, final curr) => prev.query != curr.query,
         listener: (final context, final state) {
           if (state.query.isEmpty && _controller.text.isNotEmpty) {

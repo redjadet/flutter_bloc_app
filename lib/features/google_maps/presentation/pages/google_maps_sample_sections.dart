@@ -16,7 +16,7 @@ class _GoogleMapsMapSection extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) =>
-      BlocListener<MapSampleCubit, MapSampleState>(
+      TypeSafeBlocListener<MapSampleCubit, MapSampleState>(
         listenWhen: _mapStateChanged,
         listener: (final context, final state) async {
           await controller.syncWithState(state);
