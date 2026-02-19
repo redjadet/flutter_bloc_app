@@ -63,7 +63,16 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
         'RealtimeDatabaseTodoRepository.save writing todo item',
       );
       final Map<String, dynamic> data = _todoToMap(item, userId: user.uid);
-      await _todoRef.child(user.uid).child(item.id).set(data);
+      // Use Map<String, Object?> to ensure JSON-safe types for platform channel.
+      // FlutterFire may mishandle non-primitive values; explicit copy avoids issues.
+      final Map<String, Object?> jsonSafe = data.map(
+        (final k, final v) => MapEntry(k, v as Object?),
+      );
+      await _setTodoWithPlatformErrorGuard(
+        userId: user.uid,
+        todoId: item.id,
+        data: jsonSafe,
+      );
     },
     onFailureFallback: () async {},
   );
@@ -178,5 +187,35 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
         (final a, final b) => b.updatedAt.compareTo(a.updatedAt),
       );
     return List<TodoItem>.unmodifiable(sorted);
+  }
+
+  Future<void> _setTodoWithPlatformErrorGuard({
+    required final String userId,
+    required final String todoId,
+    required final Map<String, Object?> data,
+  }) async {
+    try {
+      await _todoRef.child(userId).child(todoId).set(data);
+    } catch (error, stackTrace) {
+      if (error is TypeError) {
+        final String errorMessage = error.toString();
+        final bool isFlutterFireDetailsCastIssue = errorMessage.contains(
+          "'String' is not a subtype of type 'Map",
+        );
+        if (isFlutterFireDetailsCastIssue) {
+          Error.throwWithStackTrace(
+            FirebaseException(
+              plugin: 'firebase_database',
+              code: 'database-platform-error-details',
+              message:
+                  'Realtime Database write failed while saving todo. '
+                  'Check database rules and path keys.',
+            ),
+            stackTrace,
+          );
+        }
+      }
+      rethrow;
+    }
   }
 }

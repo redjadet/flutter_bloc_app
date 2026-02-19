@@ -34,6 +34,22 @@ Future<T> runWithAuthUser<T>({
     }
     rethrow;
   } catch (error, stackTrace) {
+    if (error is TypeError) {
+      // FlutterFire SDK bug: when native Firebase returns an error (e.g.
+      // permission-denied), PlatformException.details can be a String, but
+      // platformExceptionToFirebaseException expects Map. Log a cleaner message.
+      final String message =
+          error.toString().contains("'String'") &&
+              error.toString().contains("'Map'")
+          ? '$logContext failed (Firebase error: check rules/auth; '
+                'SDK may have returned error details as String)'
+          : '$logContext failed with type error';
+      AppLogger.error(message, error, stackTrace);
+      if (onFailureFallback != null) {
+        return onFailureFallback();
+      }
+      rethrow;
+    }
     AppLogger.error(
       '$logContext failed with unexpected error',
       error,

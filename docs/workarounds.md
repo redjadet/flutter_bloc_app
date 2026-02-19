@@ -12,9 +12,19 @@ This document lists **temporary workarounds** used in this project when upstream
 
 ---
 
-## 2. Other workarounds (template)
+## 2. [Partial] Firebase RTDB: FlutterFire String/Map TypeError on write failure
 
-Add new workarounds below in the same format:
+**Symptom:** When `RealtimeDatabaseTodoRepository.save` fails (e.g. permission denied, rules mismatch), the FlutterFire SDK throws `type 'String' is not a subtype of type 'Map<dynamic, dynamic>'` because native error `details` are sometimes a `String` while `platformExceptionToFirebaseException` expects a `Map`.
+
+**Root cause:** `_flutterfire_internals` assumes `PlatformException.details` is a `Map`; native Firebase can return a string message.
+
+**Current workaround:** In `run_with_auth_user.dart` we catch `TypeError` and log a clearer message. RTDB write code uses `Map<String, Object?>` for `.set()` to ensure JSON-safe payloads. To fix the underlying save failure, verify: (1) Firebase Realtime Database rules are deployed and allow writes for the auth path (see `docs/todo_list_firebase_security_rules.md`), (2) user is authenticated, (3) path `todos/{userId}/{todoId}` is valid.
+
+---
+
+## 3. Other workarounds (template)
+
+Add new workarounds below (between ## 2 and ## 3) in the same format:
 
 - **Title:** Short name of the issue.
 - **Symptom:** What fails (error message, platform, version).

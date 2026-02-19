@@ -502,5 +502,55 @@ void main() {
       expect(items.length, 1);
       expect(items.first.title, 'Item');
     });
+
+    test('dispose unregisters repository from syncable registry', () async {
+      final OfflineFirstTodoRepository repository = OfflineFirstTodoRepository(
+        localRepository: localRepository,
+        pendingSyncRepository: pendingRepository,
+        registry: registry,
+      );
+
+      expect(
+        registry.resolve(OfflineFirstTodoRepository.todoEntity),
+        same(repository),
+      );
+
+      await repository.dispose();
+
+      expect(registry.resolve(OfflineFirstTodoRepository.todoEntity), isNull);
+    });
+
+    test(
+      'dispose does not unregister a newer repository instance for same entity',
+      () async {
+        final OfflineFirstTodoRepository firstRepository =
+            OfflineFirstTodoRepository(
+              localRepository: localRepository,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+        final OfflineFirstTodoRepository secondRepository =
+            OfflineFirstTodoRepository(
+              localRepository: localRepository,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        expect(
+          registry.resolve(OfflineFirstTodoRepository.todoEntity),
+          same(secondRepository),
+        );
+
+        await firstRepository.dispose();
+
+        expect(
+          registry.resolve(OfflineFirstTodoRepository.todoEntity),
+          same(secondRepository),
+        );
+
+        await secondRepository.dispose();
+        expect(registry.resolve(OfflineFirstTodoRepository.todoEntity), isNull);
+      },
+    );
   });
 }
