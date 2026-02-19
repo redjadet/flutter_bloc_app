@@ -87,15 +87,24 @@ Future<void> _handleDeleteWithUndo(
 
   final TodoItem? lastDeleted = cubit.lastDeletedItem;
   if (lastDeleted != null && context.mounted) {
-    ScaffoldMessenger.of(context).showSnackBar(
+    final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
+    snackBarController = ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(context.l10n.todoListDeleteUndone),
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
           label: context.l10n.todoListUndoAction,
           onPressed: () => cubit.undoDelete(),
         ),
+      ),
+    );
+    // Keep timeout deterministic even when platforms/a11y prevent action
+    // snackbars from auto-timing out.
+    unawaited(
+      Future<void>.delayed(
+        const Duration(seconds: 2),
+        snackBarController.close,
       ),
     );
   }

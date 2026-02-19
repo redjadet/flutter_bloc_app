@@ -41,77 +41,17 @@ class PlatformAdaptiveSheets {
     final Widget Function(BuildContext, T)? itemBuilder,
   }) async {
     if (PlatformAdaptive.isCupertino(context)) {
-      T currentSelection = selectedItem;
       return showCupertinoModalPopup<T>(
         context: context,
-        builder: (final popupContext) => StatefulBuilder(
-          builder: (final context, final setState) {
-            final theme = Theme.of(context);
-            final selectedIndex = items.indexOf(selectedItem);
-
-            return Container(
-              height: 250,
-              padding: const EdgeInsets.only(top: 6),
-              margin: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              color: CupertinoColors.systemBackground.resolveFrom(context),
-              child: SafeArea(
-                top: false,
-                child: Column(
-                  children: [
-                    if (title != null)
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(
-                          title,
-                          style: theme.textTheme.titleMedium,
-                        ),
-                      ),
-                    Expanded(
-                      child: CupertinoPicker(
-                        scrollController: FixedExtentScrollController(
-                          initialItem: selectedIndex >= 0 ? selectedIndex : 0,
-                        ),
-                        itemExtent: 32,
-                        onSelectedItemChanged: (final index) {
-                          setState(() {
-                            currentSelection = items[index];
-                          });
-                        },
-                        children: items
-                            .map(
-                              (final item) => Center(
-                                child: itemBuilder != null
-                                    ? itemBuilder(context, item)
-                                    : Text(itemLabel(item)),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        CupertinoButton(
-                          onPressed: () =>
-                              NavigationUtils.maybePop(popupContext),
-                          child: const Text('Cancel'),
-                        ),
-                        CupertinoButton(
-                          onPressed: () => NavigationUtils.maybePop(
-                            popupContext,
-                            result: currentSelection,
-                          ),
-                          child: const Text('Done'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
+        builder: (final popupContext) => _CupertinoPickerSheetContent<T>(
+          items: items,
+          selectedItem: selectedItem,
+          title: title,
+          itemLabel: itemLabel,
+          itemBuilder: itemBuilder,
+          onDone: (final result) =>
+              NavigationUtils.maybePop(popupContext, result: result),
+          onCancel: () => NavigationUtils.maybePop(popupContext),
         ),
       );
     }
@@ -161,6 +101,117 @@ class PlatformAdaptiveSheets {
           ),
         );
       },
+    );
+  }
+}
+
+/// Stateful widget that owns `FixedExtentScrollController` for `CupertinoPicker`.
+///
+/// Controllers must be created in initState and disposed in dispose per
+/// Flutter ownership rules.
+class _CupertinoPickerSheetContent<T> extends StatefulWidget {
+  const _CupertinoPickerSheetContent({
+    required this.items,
+    required this.selectedItem,
+    required this.itemLabel,
+    required this.onDone,
+    required this.onCancel,
+    this.title,
+    this.itemBuilder,
+  });
+
+  final List<T> items;
+  final T selectedItem;
+  final String? title;
+  final String Function(T) itemLabel;
+  final Widget Function(BuildContext, T)? itemBuilder;
+  final void Function(T result) onDone;
+  final VoidCallback onCancel;
+
+  @override
+  State<_CupertinoPickerSheetContent<T>> createState() =>
+      _CupertinoPickerSheetContentState<T>();
+}
+
+class _CupertinoPickerSheetContentState<T>
+    extends State<_CupertinoPickerSheetContent<T>> {
+  late final FixedExtentScrollController _scrollController;
+  late T _currentSelection;
+
+  @override
+  void initState() {
+    super.initState();
+    final int selectedIndex = widget.items.indexOf(widget.selectedItem);
+    _scrollController = FixedExtentScrollController(
+      initialItem: selectedIndex >= 0 ? selectedIndex : 0,
+    );
+    _currentSelection = widget.selectedItem;
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(final BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      height: 250,
+      padding: const EdgeInsets.only(top: 6),
+      margin: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      color: CupertinoColors.systemBackground.resolveFrom(context),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          children: [
+            if (widget.title != null)
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  widget.title!,
+                  style: theme.textTheme.titleMedium,
+                ),
+              ),
+            Expanded(
+              child: CupertinoPicker(
+                scrollController: _scrollController,
+                itemExtent: 32,
+                onSelectedItemChanged: (final index) {
+                  setState(() {
+                    _currentSelection = widget.items[index];
+                  });
+                },
+                children: widget.items
+                    .map(
+                      (final item) => Center(
+                        child: widget.itemBuilder != null
+                            ? widget.itemBuilder!(context, item)
+                            : Text(widget.itemLabel(item)),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CupertinoButton(
+                  onPressed: widget.onCancel,
+                  child: const Text('Cancel'),
+                ),
+                CupertinoButton(
+                  onPressed: () => widget.onDone(_currentSelection),
+                  child: const Text('Done'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

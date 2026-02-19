@@ -67,6 +67,8 @@ See `docs/testing_overview.md` for the full testing playbook.
 
 ## Related Documentation
 
+- [Race Conditions and Bugs Analysis](race_conditions_and_bugs_analysis.md) – Deep analysis of lifecycle, async, and stream patterns
+- [Memory Leaks Analysis](memory_leaks_analysis.md) – StreamController, subscription, and controller disposal patterns
 - [Clean Architecture](clean_architecture.md)
 - [SOLID Principles](solid_principles.md)
 - [DRY Principles](dry_principles.md)

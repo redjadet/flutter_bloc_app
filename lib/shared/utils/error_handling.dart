@@ -40,6 +40,7 @@ class ErrorHandling {
     SnackBar(
       content: Text(message),
       duration: duration,
+      persist: false,
       action: action,
       behavior: SnackBarBehavior.floating,
     ),
@@ -56,6 +57,7 @@ class ErrorHandling {
     SnackBar(
       content: Text(message),
       duration: duration,
+      persist: false,
       backgroundColor: Colors.green,
       behavior: SnackBarBehavior.floating,
     ),

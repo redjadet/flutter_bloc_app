@@ -28,6 +28,9 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   late final bool _showFlavorBadge;
   DateTime? _lastFlushTime;
   static const Duration _flushThrottleDuration = Duration(milliseconds: 500);
+  static const Duration _cannotGoBelowZeroSnackBarDuration = Duration(
+    seconds: 2,
+  );
 
   Future<void> _flushSyncIfPossible(final BuildContext context) async {
     try {
@@ -93,6 +96,10 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
             final error = state.error;
             if (error != null) {
               final String localizedMessage = counterErrorMessage(l10n, error);
+              if (error.type == CounterErrorType.cannotGoBelowZero) {
+                _showCannotGoBelowZeroSnackBar(localizedMessage);
+                return;
+              }
               ErrorHandling.handleCubitError(
                 context,
                 error,
@@ -142,6 +149,31 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
         bottomNavigationBar: const CountdownBar(),
         floatingActionButton: const CounterActions(),
       ),
+    );
+  }
+
+  void _showCannotGoBelowZeroSnackBar(final String message) {
+    final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
+    controller = ErrorHandling.showErrorSnackBar(
+      context,
+      message,
+      duration: _cannotGoBelowZeroSnackBarDuration,
+    );
+    if (controller == null) {
+      return;
+    }
+    bool isClosed = false;
+    unawaited(controller.closed.whenComplete(() => isClosed = true));
+    unawaited(
+      Future<void>.delayed(_cannotGoBelowZeroSnackBarDuration, () {
+        if (!mounted || isClosed) {
+          return;
+        }
+        final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+          context,
+        );
+        messenger?.hideCurrentSnackBar(reason: SnackBarClosedReason.timeout);
+      }),
     );
   }
 

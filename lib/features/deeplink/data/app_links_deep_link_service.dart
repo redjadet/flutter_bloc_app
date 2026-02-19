@@ -48,8 +48,17 @@ class AppLinksDeepLinkService implements DeepLinkService {
         }
       }
 
-      // Set up cancellation handler - this will be called when listeners unsubscribe
-      controller.onCancel = cancelSubscription;
+      Future<void> onCancelHandler() async {
+        await cancelSubscription();
+        if (!controller.isClosed) {
+          await controller.close();
+        }
+      }
+
+      // Set up cancellation handler - called when last listener unsubscribes.
+      // Close controller to avoid leak; for broadcast, onCancel runs when
+      // subscription count goes from 1 to 0.
+      controller.onCancel = onCancelHandler;
 
       try {
         subscription = _api.uriLinkStream.listen(

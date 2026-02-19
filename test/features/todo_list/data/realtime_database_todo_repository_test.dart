@@ -268,6 +268,43 @@ void main() {
       expect(writtenData['userId'], 'user-123');
     });
 
+    test(
+      'save falls back gracefully when FlutterFire throws details cast TypeError',
+      () async {
+        final MockFirebaseAuth auth = MockFirebaseAuth(
+          signedIn: true,
+          mockUser: MockUser(uid: 'user-123'),
+        );
+        final _MockDatabaseReference rootRef = _MockDatabaseReference();
+        final _MockDatabaseReference userRef = _MockDatabaseReference();
+        final _MockDatabaseReference todoRef = _MockDatabaseReference();
+        final DateTime now = DateTime.now().toUtc();
+        final TodoItem item = TodoItem.create(
+          title: 'Type Error Todo',
+          now: now,
+        );
+
+        when(() => rootRef.path).thenReturn('todos');
+        when(() => rootRef.child('user-123')).thenReturn(userRef);
+        when(() => userRef.child(item.id)).thenReturn(todoRef);
+        when(() => todoRef.set(any())).thenAnswer((_) async {
+          final dynamic details = 'permission-denied';
+          // Simulate FlutterFire internals cast failure:
+          // String cannot be cast to Map<dynamic, dynamic>.
+          details as Map<dynamic, dynamic>;
+        });
+
+        final RealtimeDatabaseTodoRepository repository =
+            RealtimeDatabaseTodoRepository(todoRef: rootRef, auth: auth);
+
+        await AppLogger.silenceAsync(() {
+          return repository.save(item);
+        });
+
+        verify(() => todoRef.set(any())).called(1);
+      },
+    );
+
     test('delete removes todo from database', () async {
       final MockFirebaseAuth auth = MockFirebaseAuth(
         signedIn: true,

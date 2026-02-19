@@ -228,4 +228,19 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
       );
     }
   }
+
+  /// Cancels the remote watch subscription.
+  ///
+  /// Call when the repository is disposed (e.g. on logout/reset).
+  Future<void> dispose() async {
+    final sub = _remoteWatchSubscription;
+    _remoteWatchSubscription = null;
+    await sub?.cancel();
+    final SyncableRepository? registeredRepository = _registry.resolve(
+      entityType,
+    );
+    if (identical(registeredRepository, this)) {
+      _registry.unregister(entityType);
+    }
+  }
 }

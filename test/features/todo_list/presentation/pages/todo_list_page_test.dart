@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart'
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/pages/todo_list_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -196,5 +197,41 @@ void main() {
       // Verify cubit is accessible and page is rendered
       expect(find.byType(TodoListPage), findsOneWidget);
     });
+
+    testWidgets(
+      'delete snackbar auto-dismisses after two seconds with undo action',
+      (tester) async {
+        final TodoItem item = _todoItem(id: '1', title: 'Delete me');
+        await tester.pumpWidget(buildSubject(initialItems: <TodoItem>[item]));
+
+        cubit.loadInitial();
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pump();
+
+        await tester.tap(find.byIcon(Icons.delete_outline).first);
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text(AppLocalizationsEn().todoListDeleteAction));
+        await tester.pump();
+
+        expect(
+          find.text(AppLocalizationsEn().todoListDeleteUndone),
+          findsOneWidget,
+        );
+        expect(
+          find.text(AppLocalizationsEn().todoListUndoAction),
+          findsOneWidget,
+        );
+
+        await tester.pump(const Duration(seconds: 3));
+        await tester.pumpAndSettle();
+
+        expect(
+          find.text(AppLocalizationsEn().todoListDeleteUndone),
+          findsNothing,
+        );
+      },
+    );
   });
 }
