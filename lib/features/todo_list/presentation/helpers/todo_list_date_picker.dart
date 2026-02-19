@@ -1,14 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class _DatePickerResult {
-  const _DatePickerResult.confirmed(DateTime this.date) : didConfirm = true;
+part 'todo_list_date_picker.freezed.dart';
 
-  const _DatePickerResult.cleared() : date = null, didConfirm = true;
+@freezed
+abstract class _DatePickerResult with _$DatePickerResult {
+  const _DatePickerResult._();
 
-  final DateTime? date;
-  final bool didConfirm;
+  const factory _DatePickerResult.confirmed(final DateTime date) =
+      _DatePickerResultConfirmed;
+
+  const factory _DatePickerResult.cleared() = _DatePickerResultCleared;
+
+  DateTime? get date => when(
+    confirmed: (final date) => date,
+    cleared: () => null,
+  );
+
+  bool get didConfirm => true;
 }
 
 String formatTodoDate(final DateTime date) {

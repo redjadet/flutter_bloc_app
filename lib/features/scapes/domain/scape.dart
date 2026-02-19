@@ -1,40 +1,24 @@
-/// Represents a scape item in the library.
-class Scape {
-  const Scape({
-    required this.id,
-    required this.name,
-    required this.imageUrl,
-    required this.duration,
-    required this.assetCount,
-    this.isFavorite = false,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  final String id;
-  final String name;
-  final String imageUrl;
-  final Duration duration;
-  final int assetCount;
-  final bool isFavorite;
+part 'scape.freezed.dart';
+
+/// Represents a scape item in the library.
+@freezed
+abstract class Scape with _$Scape {
+  const factory Scape({
+    required final String id,
+    required final String name,
+    required final String imageUrl,
+    required final Duration duration,
+    required final int assetCount,
+    @Default(false) final bool isFavorite,
+  }) = _Scape;
+
+  const Scape._();
 
   String get formattedDuration {
     final minutes = duration.inMinutes;
     final seconds = duration.inSeconds % 60;
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
-
-  Scape copyWith({
-    final String? id,
-    final String? name,
-    final String? imageUrl,
-    final Duration? duration,
-    final int? assetCount,
-    final bool? isFavorite,
-  }) => Scape(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    imageUrl: imageUrl ?? this.imageUrl,
-    duration: duration ?? this.duration,
-    assetCount: assetCount ?? this.assetCount,
-    isFavorite: isFavorite ?? this.isFavorite,
-  );
 }

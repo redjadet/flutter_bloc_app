@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'whiteboard_painter.freezed.dart';
 
 /// Custom painter for drawing strokes on a whiteboard canvas.
 ///
@@ -77,36 +80,21 @@ class WhiteboardPainter extends CustomPainter {
 }
 
 /// Represents a single stroke on the whiteboard.
-@immutable
-class WhiteboardStroke {
-  WhiteboardStroke({
+@freezed
+abstract class WhiteboardStroke with _$WhiteboardStroke {
+  factory WhiteboardStroke({
     required final List<Offset> points,
-    required this.color,
-    required this.width,
-  }) : points = List<Offset>.unmodifiable(points);
-
-  final List<Offset> points;
-  final Color color;
-  final double width;
-
-  WhiteboardStroke copyWith({
-    final List<Offset>? points,
-    final Color? color,
-    final double? width,
-  }) => WhiteboardStroke(
-    points: points ?? this.points,
-    color: color ?? this.color,
-    width: width ?? this.width,
+    required final Color color,
+    required final double width,
+  }) => WhiteboardStroke.raw(
+    points: List<Offset>.unmodifiable(points),
+    color: color,
+    width: width,
   );
 
-  @override
-  bool operator ==(final Object other) =>
-      identical(this, other) ||
-      (other is WhiteboardStroke &&
-          listEquals(other.points, points) &&
-          other.color == color &&
-          other.width == width);
-
-  @override
-  int get hashCode => Object.hash(color, width, Object.hashAll(points));
+  const factory WhiteboardStroke.raw({
+    required final List<Offset> points,
+    required final Color color,
+    required final double width,
+  }) = _WhiteboardStroke;
 }

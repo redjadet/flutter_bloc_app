@@ -3,21 +3,19 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class ChatLocalConversationState {
-  ChatLocalConversationState({
-    required this.conversation,
-    required this.messages,
-    required this.existing,
-    required this.index,
-    required this.now,
-  });
+part 'chat_local_conversation_updater.freezed.dart';
 
-  final ChatConversation conversation;
-  final List<ChatMessage> messages;
-  final List<ChatConversation> existing;
-  final int index;
-  final DateTime now;
+@freezed
+abstract class ChatLocalConversationState with _$ChatLocalConversationState {
+  const factory ChatLocalConversationState({
+    required final ChatConversation conversation,
+    required final List<ChatMessage> messages,
+    required final List<ChatConversation> existing,
+    required final int index,
+    required final DateTime now,
+  }) = _ChatLocalConversationState;
 }
 
 class ChatLocalConversationUpdater {
