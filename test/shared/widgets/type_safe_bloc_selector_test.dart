@@ -45,6 +45,27 @@ void main() {
       await tester.pump();
       expect(find.text('Value: 42'), findsOneWidget);
     });
+
+    testWidgets('works with Bloc state sources', (final tester) async {
+      final TestBloc bloc = TestBloc();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<TestBloc>(
+            create: (_) => bloc,
+            child: TypeSafeBlocSelector<TestBloc, TestState, int>(
+              selector: (final state) => state.value,
+              builder: (final context, final value) => Text('Value: $value'),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Value: 0'), findsOneWidget);
+
+      bloc.add(const TestIncremented());
+      await tester.pump();
+      expect(find.text('Value: 1'), findsOneWidget);
+    });
   });
 
   group('TypeSafeBlocBuilder', () {
@@ -112,6 +133,28 @@ void main() {
       cubit.emit(const TestState(value: 42, label: 'New'));
       await tester.pump();
       expect(find.text('42: New'), findsOneWidget);
+    });
+
+    testWidgets('works with Bloc state sources', (final tester) async {
+      final TestBloc bloc = TestBloc();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<TestBloc>(
+            create: (_) => bloc,
+            child: TypeSafeBlocBuilder<TestBloc, TestState>(
+              builder: (final context, final state) =>
+                  Text('${state.value}: ${state.label}'),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('0: Initial'), findsOneWidget);
+
+      bloc.add(const TestIncremented());
+      await tester.pump();
+      expect(find.text('1: Bloc'), findsOneWidget);
     });
   });
 
@@ -220,6 +263,32 @@ void main() {
       await tester.pump();
       expect(listenerCount, 1);
     });
+
+    testWidgets('works with Bloc state sources', (final tester) async {
+      final TestBloc bloc = TestBloc();
+      int listenerCount = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<TestBloc>(
+            create: (_) => bloc,
+            child: TypeSafeBlocListener<TestBloc, TestState>(
+              listener: (final context, final state) {
+                listenerCount++;
+              },
+              child: const Text('Bloc Child'),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Bloc Child'), findsOneWidget);
+      expect(listenerCount, 0);
+
+      bloc.add(const TestIncremented());
+      await tester.pump();
+      expect(listenerCount, 1);
+    });
   });
 
   group('TypeSafeBlocConsumer', () {
@@ -312,11 +381,55 @@ void main() {
       await tester.pump();
       expect(find.text('42: New'), findsOneWidget);
     });
+
+    testWidgets('works with Bloc state sources', (final tester) async {
+      final TestBloc bloc = TestBloc();
+      int listenerCount = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<TestBloc>(
+            create: (_) => bloc,
+            child: TypeSafeBlocConsumer<TestBloc, TestState>(
+              listener: (final context, final state) {
+                listenerCount++;
+              },
+              builder: (final context, final state) =>
+                  Text('${state.value}: ${state.label}'),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('0: Initial'), findsOneWidget);
+      expect(listenerCount, 0);
+
+      bloc.add(const TestIncremented());
+      await tester.pump();
+      expect(find.text('1: Bloc'), findsOneWidget);
+      expect(listenerCount, 1);
+    });
   });
 }
 
 class TestCubit extends Cubit<TestState> {
   TestCubit() : super(const TestState(value: 0, label: 'Initial'));
+}
+
+sealed class TestEvent {
+  const TestEvent();
+}
+
+class TestIncremented extends TestEvent {
+  const TestIncremented();
+}
+
+class TestBloc extends Bloc<TestEvent, TestState> {
+  TestBloc() : super(const TestState(value: 0, label: 'Initial')) {
+    on<TestIncremented>((final event, final emit) {
+      emit(TestState(value: state.value + 1, label: 'Bloc'));
+    });
+  }
 }
 
 class TestState {
