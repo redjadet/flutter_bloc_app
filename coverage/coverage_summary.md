@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **73.80%** (10601/14364 lines)
+*Total line coverage*: **73.82%** (10609/14372 lines)
 
 Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) are excluded from these totals.
 
@@ -162,7 +162,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/graphql_demo/presentation/widgets/graphql_body.dart` | 80.49% | 33/41 |
 | `lib/shared/utils/logger.dart` | 80.56% | 29/36 |
 | `lib/shared/utils/retry_policy.dart` | 80.56% | 29/36 |
-| `lib/features/counter/presentation/pages/counter_page.dart` | 81.18% | 69/85 |
 | `lib/features/websocket/presentation/cubit/websocket_cubit.dart` | 81.48% | 44/54 |
 | `lib/features/auth/presentation/widgets/logged_out_background_layer.dart` | 81.82% | 9/11 |
 | `lib/features/genui_demo/presentation/cubit/genui_demo_cubit.dart` | 81.82% | 99/121 |
@@ -171,6 +170,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/chart/presentation/widgets/chart_line_graph.dart` | 82.05% | 32/39 |
 | `lib/shared/ui/ui_constants.dart` | 82.05% | 32/39 |
 | `lib/features/settings/presentation/widgets/graphql_cache_controls_section.dart` | 82.22% | 37/45 |
+| `lib/features/counter/presentation/pages/counter_page.dart` | 82.22% | 74/90 |
 | `lib/shared/utils/navigation.dart` | 82.35% | 14/17 |
 | `lib/shared/http/resilient_http_client_extensions.dart` | 82.35% | 14/17 |
 | `lib/features/counter/data/hive_counter_repository_watch_state.dart` | 82.61% | 38/46 |
@@ -199,8 +199,8 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/utils/context_utils.dart` | 85.71% | 6/7 |
 | `lib/shared/platform/native_platform_service.dart` | 85.71% | 30/35 |
 | `lib/features/calculator/domain/payment_calculator.dart` | 85.71% | 12/14 |
-| `lib/features/counter/presentation/counter_cubit.dart` | 85.94% | 55/64 |
 | `lib/features/chart/data/http_chart_repository.dart` | 86.05% | 37/43 |
+| `lib/features/counter/presentation/counter_cubit.dart` | 86.57% | 58/67 |
 | `lib/features/chat/presentation/widgets/chat_model_selector.dart` | 86.67% | 26/30 |
 | `lib/features/calculator/presentation/cubit/calculator_cubit.dart` | 87.36% | 76/87 |
 | `lib/features/chat/data/offline_first_chat_repository.dart` | 87.50% | 21/24 |
