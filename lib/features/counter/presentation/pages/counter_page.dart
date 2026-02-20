@@ -42,8 +42,9 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
 
       // Throttle flushes to prevent concurrent calls
       final DateTime now = DateTime.now();
-      if (_lastFlushTime != null &&
-          now.difference(_lastFlushTime!) < _flushThrottleDuration) {
+      final DateTime? lastFlush = _lastFlushTime;
+      if (lastFlush != null &&
+          now.difference(lastFlush) < _flushThrottleDuration) {
         return;
       }
       _lastFlushTime = now;
@@ -95,9 +96,12 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
           listenWhen: (final prev, final curr) => prev.error != curr.error,
           listener: (final context, final state) {
             final error = state.error;
-            if (error != null) {
-              final String localizedMessage = counterErrorMessage(l10n, error);
-              if (error.type == CounterErrorType.cannotGoBelowZero) {
+            if (error case final currentError?) {
+              final String localizedMessage = counterErrorMessage(
+                l10n,
+                currentError,
+              );
+              if (currentError.type == CounterErrorType.cannotGoBelowZero) {
                 if (!_isCannotGoBelowZeroSnackBarVisible) {
                   _showCannotGoBelowZeroSnackBar(localizedMessage);
                 }
@@ -105,7 +109,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
               }
               ErrorHandling.handleCubitError(
                 context,
-                error,
+                currentError,
                 customMessage: localizedMessage,
                 onRetry: () =>
                     CubitHelpers.safeExecute<CounterCubit, CounterState>(

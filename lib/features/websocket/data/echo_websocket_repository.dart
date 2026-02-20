@@ -56,16 +56,16 @@ class EchoWebsocketRepository implements WebsocketRepository {
   @override
   Future<void> connect() async {
     // If already connected, return immediately
-    if (_channel != null) {
+    if (_channel case final WebSocketChannel _) {
       return;
     }
 
     // If connection is in progress, wait for it to complete
     // If it fails, the completer will be cleared and we can retry
     final Completer<void>? existingCompleter = _connectionCompleter.pending;
-    if (existingCompleter != null) {
+    if (existingCompleter case final completer?) {
       try {
-        return await existingCompleter.future;
+        return await completer.future;
       } on Object catch (_) {
         // Connection failed, completer was cleared, retry below
         if (_connectionCompleter.pending == null && _channel == null) {
@@ -142,8 +142,8 @@ class EchoWebsocketRepository implements WebsocketRepository {
   Future<void> _cleanupChannel() async {
     final StreamSubscription<dynamic>? subscription = _channelSubscription;
     _channelSubscription = null;
-    if (subscription != null) {
-      await subscription.cancel();
+    if (subscription case final current?) {
+      await current.cancel();
     }
     _channel = null;
     // Note: Don't complete _connectionCompleter here - it's handled in connect() method
@@ -164,13 +164,14 @@ class EchoWebsocketRepository implements WebsocketRepository {
       StateError('Connection cancelled due to disconnect'),
     );
 
-    if (_channel == null) {
+    final WebSocketChannel? channel = _channel;
+    if (channel == null) {
       if (_state.status != WebsocketStatus.disconnected) {
         _updateState(const WebsocketConnectionState.disconnected());
       }
       return;
     }
-    await _channel!.sink.close();
+    await channel.sink.close();
     await _channelSubscription?.cancel();
     _channel = null;
     _channelSubscription = null;

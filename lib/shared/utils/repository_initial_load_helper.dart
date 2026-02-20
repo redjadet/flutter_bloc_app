@@ -22,9 +22,7 @@ class RepositoryInitialLoadHelper<T> {
     required final void Function(T value) onValue,
     final void Function(Object error, StackTrace stackTrace)? onError,
   }) {
-    if (_initialLoadCompleter != null) {
-      return _initialLoadCompleter!.future;
-    }
+    if (_initialLoadCompleter case final c?) return c.future;
 
     final Completer<void> completer = Completer<void>();
     _initialLoadCompleter = completer;

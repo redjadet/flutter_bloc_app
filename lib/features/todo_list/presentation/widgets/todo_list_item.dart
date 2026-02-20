@@ -31,6 +31,7 @@ class TodoListItem extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final selectionChanged = onSelectionChanged;
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
@@ -70,12 +71,12 @@ class TodoListItem extends StatelessWidget {
 
           return Row(
             children: [
-              if (onSelectionChanged != null) ...[
+              if (selectionChanged case final onSelectionChanged?) ...[
                 Checkbox.adaptive(
                   value: isSelected,
                   onChanged: (final value) {
-                    if (value != null) {
-                      onSelectionChanged!(value);
+                    if (value case final selected?) {
+                      onSelectionChanged(selected);
                     }
                   },
                   visualDensity: VisualDensity.compact,

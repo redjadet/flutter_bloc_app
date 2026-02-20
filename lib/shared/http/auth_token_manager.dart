@@ -22,10 +22,11 @@ class AuthTokenManager {
     final DateTime now = DateTime.now().toUtc();
 
     // Use cached token if still valid and belongs to the same user
+    final DateTime? expiry = _tokenExpiry;
     if (_cachedAuthToken != null &&
-        _tokenExpiry != null &&
+        expiry != null &&
         _cachedUserId == user.uid &&
-        now.isBefore(_tokenExpiry!.subtract(const Duration(minutes: 5)))) {
+        now.isBefore(expiry.subtract(const Duration(minutes: 5)))) {
       return _cachedAuthToken;
     }
 

@@ -46,17 +46,13 @@ class CommonDropdownField<T> extends StatelessWidget {
   // Extract all values from DropdownMenuItem list (filters out nulls)
   // Use customPickerItems if provided, otherwise extract from items
   List<T> _getPickerValues() {
-    if (customPickerItems != null) {
-      return customPickerItems!;
-    }
+    if (customPickerItems case final list?) return list;
     return items.map((final item) => item.value).whereType<T>().toList();
   }
 
   // Extract label text from DropdownMenuItem child widget (for picker items)
   String _getItemLabel(final T itemValue) {
-    if (customItemLabel != null) {
-      return customItemLabel!(itemValue);
-    }
+    if (customItemLabel case final fn?) return fn(itemValue);
 
     final item = items.firstWhere(
       (final item) => item.value == itemValue,
@@ -71,33 +67,31 @@ class CommonDropdownField<T> extends StatelessWidget {
 
   // Extract label text for the selected value (for display)
   String _getSelectedLabel() {
-    if (value == null) {
+    if (value case final selectedValue?) {
+      if (customItemLabel case final fn?) return fn(selectedValue);
+
+      final item = items.firstWhere(
+        (final item) => item.value == selectedValue,
+        orElse: () => items.first,
+      );
+      final child = item.child;
+      if (child is Text) {
+        return child.data ?? selectedValue.toString();
+      }
+      return selectedValue.toString();
+    } else {
       // For null value, try to get label from first item with null value, or use hintText/labelText
       final nullItem = items
           .where((final item) => item.value == null)
           .firstOrNull;
-      if (nullItem != null) {
-        final child = nullItem.child;
+      if (nullItem case final item?) {
+        final child = item.child;
         if (child is Text) {
           return child.data ?? (hintText ?? labelText ?? '');
         }
       }
       return hintText ?? labelText ?? '';
     }
-
-    if (customItemLabel != null) {
-      return customItemLabel!(value as T);
-    }
-
-    final item = items.firstWhere(
-      (final item) => item.value == value,
-      orElse: () => items.first,
-    );
-    final child = item.child;
-    if (child is Text) {
-      return child.data ?? (value?.toString() ?? '');
-    }
-    return value?.toString() ?? '';
   }
 
   @override
@@ -113,9 +107,10 @@ class CommonDropdownField<T> extends StatelessWidget {
         onTap: enabled && pickerValues.isNotEmpty
             ? () async {
                 // Use first item as default if value is null
-                final T defaultItem = value != null
-                    ? (value as T)
-                    : pickerValues.first;
+                final T defaultItem = switch (value) {
+                  final selected? => selected,
+                  _ => pickerValues.first,
+                };
                 final T? result = await PlatformAdaptive.showPickerModal<T>(
                   context: context,
                   items: pickerValues,
@@ -143,9 +138,10 @@ class CommonDropdownField<T> extends StatelessWidget {
                 child: Text(
                   selectedLabel,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: value != null
-                        ? null
-                        : theme.colorScheme.onSurfaceVariant,
+                    color: switch (value) {
+                      final _? => null,
+                      _ => theme.colorScheme.onSurfaceVariant,
+                    },
                   ),
                 ),
               ),
@@ -163,8 +159,11 @@ class CommonDropdownField<T> extends StatelessWidget {
         // Row layout with label on left
         return Row(
           children: [
-            if (labelText != null) ...[
-              Text(labelText!, style: theme.textTheme.titleMedium),
+            if (labelText case final t?) ...[
+              Text(
+                t,
+                style: theme.textTheme.titleMedium,
+              ),
               SizedBox(width: context.responsiveHorizontalGapS),
             ],
             Expanded(child: pickerField),
@@ -176,9 +175,9 @@ class CommonDropdownField<T> extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (labelText != null) ...[
+          if (labelText case final t?) ...[
             Text(
-              labelText!,
+              t,
               style: theme.textTheme.labelMedium,
             ),
             SizedBox(height: context.responsiveGapS),
@@ -189,7 +188,10 @@ class CommonDropdownField<T> extends StatelessWidget {
     }
 
     return DropdownButtonFormField<T>(
-      key: value != null ? ValueKey(value) : null,
+      key: switch (value) {
+        final selected? => ValueKey<T>(selected),
+        _ => null,
+      },
       initialValue: value,
       items: items,
       onChanged: enabled ? onChanged : null,

@@ -25,10 +25,10 @@ class WhiteboardPainter extends CustomPainter {
   @override
   void paint(final Canvas canvas, final Size size) {
     // Draw background
-    if (backgroundColor != null) {
+    if (backgroundColor case final c?) {
       canvas.drawRect(
         Rect.fromLTWH(0, 0, size.width, size.height),
-        Paint()..color = backgroundColor!,
+        Paint()..color = c,
       );
     }
 

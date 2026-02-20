@@ -51,8 +51,10 @@ class ChatMessage {
     'author': author.name,
     'text': text,
     if (clientMessageId != null) 'clientMessageId': clientMessageId,
-    if (createdAt != null) 'createdAt': createdAt!.toIso8601String(),
+    if (createdAt case final timestamp?)
+      'createdAt': timestamp.toIso8601String(),
     'synchronized': synchronized,
-    if (lastSyncedAt != null) 'lastSyncedAt': lastSyncedAt!.toIso8601String(),
+    if (lastSyncedAt case final syncedAt?)
+      'lastSyncedAt': syncedAt.toIso8601String(),
   };
 }

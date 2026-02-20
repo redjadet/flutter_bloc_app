@@ -31,9 +31,10 @@ class WalletUserProfileMapper {
       WalletUserProfileFields.balanceOffChain: profile.balanceOffChain,
       WalletUserProfileFields.balanceOnChain: profile.balanceOnChain,
       WalletUserProfileFields.rewards: profile.rewards,
-      WalletUserProfileFields.lastClaim: profile.lastClaim != null
-          ? Timestamp.fromDate(profile.lastClaim!)
-          : null,
+      WalletUserProfileFields.lastClaim: switch (profile.lastClaim) {
+        final d? => Timestamp.fromDate(d),
+        _ => null,
+      },
       WalletUserProfileFields.nfts: profile.nfts.map(_nftToMap).toList(),
     };
   }

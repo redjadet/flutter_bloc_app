@@ -21,7 +21,8 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
     final String resolvedModel = _resolveModelForConversation(active);
     if (active.model != resolvedModel) {
       active = active.copyWith(model: resolvedModel);
-      if (history.any((final c) => c.id == active!.id)) {
+      final ChatConversation currentActive = active;
+      if (history.any((final c) => c.id == currentActive.id)) {
         history = _replaceConversation(active, history: history);
         needsPersist = true;
       }

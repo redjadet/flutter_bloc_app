@@ -28,7 +28,7 @@ class WalletConnectAuthPage extends StatelessWidget {
               SizedBox(height: context.responsiveGapL),
 
               // Error message
-              if (state.errorMessage != null) ...[
+              if (state.errorMessage case final msg?) ...[
                 Container(
                   padding: context.responsiveCardPaddingInsets,
                   decoration: BoxDecoration(
@@ -47,7 +47,7 @@ class WalletConnectAuthPage extends StatelessWidget {
                       SizedBox(width: context.responsiveHorizontalGapM),
                       Expanded(
                         child: Text(
-                          state.errorMessage!,
+                          msg,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: colors.onErrorContainer,
                           ),
@@ -106,8 +106,8 @@ class WalletConnectAuthPage extends StatelessWidget {
               ],
 
               // Linked wallet address display
-              if (state.linkedWalletAddress != null) ...[
-                WalletAddressDisplay(address: state.linkedWalletAddress!),
+              if (state.linkedWalletAddress case final addr?) ...[
+                WalletAddressDisplay(address: addr),
                 SizedBox(height: context.responsiveGapM),
                 // Re-link to account (refresh Firestore profile, etc.)
                 if (state.status != ViewStatus.loading)
@@ -122,14 +122,20 @@ class WalletConnectAuthPage extends StatelessWidget {
               ],
 
               // User profile (balance, rewards, NFTs) when linked
-              if (state.isLinked && state.userProfile != null) ...[
-                _WalletProfileSection(profile: state.userProfile!),
+              if ((state.isLinked, state.userProfile) case (
+                true,
+                final profile?,
+              )) ...[
+                _WalletProfileSection(profile: profile),
                 SizedBox(height: context.responsiveGapL),
               ],
 
               // Connected wallet address display
-              if (state.walletAddress != null && !state.isLinked) ...[
-                WalletAddressDisplay(address: state.walletAddress!),
+              if ((state.isLinked, state.walletAddress) case (
+                false,
+                final addr?,
+              )) ...[
+                WalletAddressDisplay(address: addr),
                 SizedBox(height: context.responsiveGapM),
               ],
 
@@ -201,9 +207,10 @@ class _WalletProfileSection extends StatelessWidget {
     final l10n = context.l10n;
     final material = MaterialLocalizations.of(context);
 
-    final dateText = profile.lastClaim != null
-        ? material.formatShortDate(profile.lastClaim!)
-        : l10n.lastClaimNever;
+    final dateText = switch (profile.lastClaim) {
+      final d? => material.formatShortDate(d),
+      _ => l10n.lastClaimNever,
+    };
 
     return Container(
       padding: context.responsiveCardPaddingInsets,

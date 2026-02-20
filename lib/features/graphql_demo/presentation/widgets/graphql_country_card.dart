@@ -52,10 +52,12 @@ class GraphqlCountryCard extends StatelessWidget {
               spacing: context.responsiveHorizontalGapM,
               runSpacing: context.responsiveGapS,
               children: [
-                if (country.capital != null && country.capital!.isNotEmpty)
-                  _DetailChip(label: capitalLabel, value: country.capital!),
-                if (country.currency != null && country.currency!.isNotEmpty)
-                  _DetailChip(label: currencyLabel, value: country.currency!),
+                if (country.capital case final capital?)
+                  if (capital.isNotEmpty)
+                    _DetailChip(label: capitalLabel, value: capital),
+                if (country.currency case final currency?)
+                  if (currency.isNotEmpty)
+                    _DetailChip(label: currencyLabel, value: currency),
               ],
             ),
           ],

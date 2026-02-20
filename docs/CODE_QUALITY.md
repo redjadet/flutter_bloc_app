@@ -48,6 +48,8 @@ This document consolidates code-quality analysis and improvement notes. It is a 
 - Use builder constructors for lists and set `cacheExtent` where appropriate.
 - Use `CachedNetworkImageWidget` for remote images.
 - Guard `context.mounted` after `await` and avoid side effects in `build()`.
+- Prefer Dart optional-to-non-null pattern matching (`if (x case final value?)`, `switch` null patterns) over force unwrapping (`!`) and repeated nullable branching.
+- Avoid null assertion where possible; pattern matching gives a compile-time non-null local and lowers runtime crash risk.
 
 For full guidance, see `docs/flutter_best_practices_review.md`.
 

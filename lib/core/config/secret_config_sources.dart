@@ -34,23 +34,23 @@ Future<Map<String, dynamic>?> _readSecureSecrets(
 Future<void> _persistToSecureStorage(final SecretStorage storage) async {
   final String? token = SecretConfig._huggingfaceApiKey;
   final String? model = SecretConfig._huggingfaceModel;
-  if (token != null) {
-    await storage.write(SecretConfig._keyHfToken, token);
+  if (token case final value?) {
+    await storage.write(SecretConfig._keyHfToken, value);
   }
-  if (model != null) {
-    await storage.write(SecretConfig._keyHfModel, model);
+  if (model case final value?) {
+    await storage.write(SecretConfig._keyHfModel, value);
   }
   await storage.write(
     SecretConfig._keyHfUseChatCompletions,
     SecretConfig._useChatCompletions.toString(),
   );
   final String? mapsKey = SecretConfig._googleMapsApiKey;
-  if (mapsKey != null) {
-    await storage.write(SecretConfig._keyGoogleMaps, mapsKey);
+  if (mapsKey case final value?) {
+    await storage.write(SecretConfig._keyGoogleMaps, value);
   }
   final String? geminiKey = SecretConfig._geminiApiKey;
-  if (geminiKey != null) {
-    await storage.write(SecretConfig._keyGeminiApiKey, geminiKey);
+  if (geminiKey case final value?) {
+    await storage.write(SecretConfig._keyGeminiApiKey, value);
   }
 }
 
@@ -135,8 +135,8 @@ Map<String, dynamic>? _readEnvironmentSecrets() {
     result['GEMINI_API_KEY'] = resolvedKey;
   }
 
-  if (SecretConfig.debugEnvironment != null) {
-    result.addAll(SecretConfig.debugEnvironment!);
+  if (SecretConfig.debugEnvironment case final env?) {
+    result.addAll(env);
   }
 
   return result.isEmpty ? null : result;
@@ -176,8 +176,8 @@ Future<Map<String, dynamic>?> _readAssetSecrets() async {
 
 Future<void> _persistGoogleMapsKey(final SecretStorage storage) async {
   final String? mapsKey = SecretConfig._googleMapsApiKey;
-  if (mapsKey != null) {
-    await storage.write(SecretConfig._keyGoogleMaps, mapsKey);
+  if (mapsKey case final value?) {
+    await storage.write(SecretConfig._keyGoogleMaps, value);
   }
 }
 
@@ -187,13 +187,10 @@ Future<bool> _loadFromSource(
 }) async {
   final Map<String, dynamic>? secrets =
       await Future<Map<String, dynamic>?>.value(read());
-  if (!_hasSecrets(secrets)) {
-    return false;
+  if (secrets case final s? when _hasSecrets(s)) {
+    _applySecrets(s);
+    if (afterApply case final runAfterApply?) await runAfterApply();
+    return true;
   }
-
-  _applySecrets(secrets!);
-  if (afterApply != null) {
-    await afterApply();
-  }
-  return true;
+  return false;
 }

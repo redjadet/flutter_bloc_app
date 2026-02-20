@@ -105,10 +105,11 @@ class TodoListCubit extends Cubit<TodoListState>
   }
 
   Future<void> undoDelete() async {
-    if (isClosed || _lastDeletedItem == null) return;
-    final TodoItem item = _lastDeletedItem!;
-    _lastDeletedItem = null;
-    await saveItem(item, logContext: 'TodoListCubit.undoDelete');
+    if (isClosed) return;
+    if (_lastDeletedItem case final item?) {
+      _lastDeletedItem = null;
+      await saveItem(item, logContext: 'TodoListCubit.undoDelete');
+    }
   }
 
   void toggleItemSelection(final String itemId) {

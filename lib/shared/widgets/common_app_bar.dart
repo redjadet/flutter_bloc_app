@@ -41,7 +41,10 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     final theme = Theme.of(context);
     final String effectiveHomeTooltip = homeTooltip ?? l10n.homeTitle;
     final bool useCupertino = PlatformAdaptive.isCupertinoFromTheme(theme);
-    final bool hasActions = actions != null && actions!.isNotEmpty;
+    final bool hasActions = switch (actions) {
+      final list? when list.isNotEmpty => true,
+      _ => false,
+    };
 
     if (useCupertino) {
       final colorScheme = theme.colorScheme;
@@ -91,13 +94,15 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget _buildCupertinoActions() {
-    if (actions!.length == 1) {
-      return actions!.first;
+    final List<Widget>? actionList = actions;
+    if (actionList case final list?) {
+      if (list.length == 1) return list.first;
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: list,
+      );
     }
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: actions!,
-    );
+    return const SizedBox.shrink();
   }
 
   @override

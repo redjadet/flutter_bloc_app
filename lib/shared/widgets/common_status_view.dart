@@ -39,17 +39,17 @@ class CommonStatusView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (icon != null) ...[
+            if (icon case final iconData?) ...[
               Icon(
-                icon,
+                iconData,
                 size: iconSize,
                 color: iconColor,
               ),
               SizedBox(height: context.responsiveGapL),
             ],
-            if (title != null) ...[
+            if (title case final t?) ...[
               Text(
-                title!,
+                t,
                 style: titleStyle ?? theme.textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
@@ -62,9 +62,9 @@ class CommonStatusView extends StatelessWidget {
               softWrap: true,
               overflow: TextOverflow.visible,
             ),
-            if (action != null) ...[
+            if (action case final a?) ...[
               SizedBox(height: context.responsiveGapL * 1.5),
-              action!,
+              a,
             ],
           ],
         ),

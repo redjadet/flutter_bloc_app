@@ -11,9 +11,10 @@ abstract class AppLocale with _$AppLocale {
 
   const AppLocale._();
 
-  String get tag => countryCode == null || countryCode!.isEmpty
-      ? languageCode
-      : '${languageCode}_$countryCode';
+  String get tag => switch (countryCode) {
+    final code? when code.isNotEmpty => '${languageCode}_$code',
+    _ => languageCode,
+  };
 
   static AppLocale? fromTag(final String? tag) {
     if (tag == null || tag.isEmpty) {

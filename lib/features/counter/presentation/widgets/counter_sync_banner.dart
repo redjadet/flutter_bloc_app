@@ -103,13 +103,14 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
         );
         final MaterialLocalizations materialLocalizations =
             MaterialLocalizations.of(context);
-        final String? lastSyncedText = _lastSyncedAt != null
-            ? _formatLastSynced(materialLocalizations, _lastSyncedAt!)
-            : null;
-        final String? changeIdText =
-            _lastChangeId != null && _lastChangeId!.isNotEmpty
-            ? l10n.counterChangeId(_lastChangeId!)
-            : null;
+        final String? lastSyncedText = switch (_lastSyncedAt) {
+          final t? => _formatLastSynced(materialLocalizations, t),
+          _ => null,
+        };
+        final String? changeIdText = switch (_lastChangeId) {
+          final id? when id.isNotEmpty => l10n.counterChangeId(id),
+          _ => null,
+        };
 
         return Padding(
           padding: EdgeInsets.only(bottom: context.responsiveGapS),
@@ -121,18 +122,23 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
                 message: message,
                 isError: isError,
               ),
-              if (lastSyncedText != null || changeIdText != null) ...[
+              if (lastSyncedText case final synced?) ...[
                 SizedBox(height: context.responsiveGapXS),
-                if (lastSyncedText != null)
+                Text(
+                  l10n.counterLastSynced(synced),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                if (changeIdText case final changeId?)
                   Text(
-                    l10n.counterLastSynced(lastSyncedText),
+                    changeId,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
-                if (changeIdText != null)
-                  Text(
-                    changeIdText,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
+              ] else if (changeIdText case final changeId?) ...[
+                SizedBox(height: context.responsiveGapXS),
+                Text(
+                  changeId,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
               ],
             ],
           ),

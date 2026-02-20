@@ -118,11 +118,11 @@ class _ProfileCacheControlsSectionState
                     child: const CircularProgressIndicator(strokeWidth: 2),
                   ),
                 )
-              else if (_metadata != null)
+              else if (_metadata case final meta?)
                 Padding(
                   padding: EdgeInsets.only(bottom: gap),
                   child: Text(
-                    _formatMetadata(context, _metadata!),
+                    _formatMetadata(context, meta),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
@@ -154,15 +154,15 @@ class _ProfileCacheControlsSectionState
     final ProfileCacheMetadata metadata,
   ) {
     final List<String> parts = <String>[];
-    if (metadata.lastSyncedAt != null) {
-      final DateTime local = metadata.lastSyncedAt!.toLocal();
+    if (metadata.lastSyncedAt case final t?) {
+      final DateTime local = t.toLocal();
       final MaterialLocalizations material = MaterialLocalizations.of(context);
       parts.add(
         'Last synced: ${material.formatShortDate(local)} ${material.formatTimeOfDay(TimeOfDay.fromDateTime(local))}',
       );
     }
-    if (metadata.sizeBytes != null) {
-      final int kb = (metadata.sizeBytes! / 1024).ceil();
+    if (metadata.sizeBytes case final b?) {
+      final int kb = (b / 1024).ceil();
       parts.add('Cache size: ${kb}KB');
     }
     if (parts.isEmpty) {

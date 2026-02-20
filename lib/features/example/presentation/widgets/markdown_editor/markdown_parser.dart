@@ -163,11 +163,15 @@ class MarkdownParser {
     final List<InlineSpan> result = List<InlineSpan>.from(spans);
     while (result.isNotEmpty) {
       final InlineSpan last = result.last;
+      final String? text = last is TextSpan ? last.text : null;
+      final List<InlineSpan>? children = last is TextSpan
+          ? last.children
+          : null;
       if (last is TextSpan &&
-          last.text != null &&
-          last.text!.trim().isEmpty &&
-          (last.text!.contains('\n') || last.text!.contains(' ')) &&
-          (last.children == null || last.children!.isEmpty)) {
+          text != null &&
+          text.trim().isEmpty &&
+          (text.contains('\n') || text.contains(' ')) &&
+          (children == null || children.isEmpty)) {
         result.removeLast();
       } else {
         break;

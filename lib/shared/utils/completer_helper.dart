@@ -17,9 +17,10 @@ class CompleterHelper<T> {
   /// Creates a new completer if none is pending, otherwise returns the existing one.
   Completer<T> start() {
     final Completer<T>? existing = pending;
-    if (existing != null) return existing;
-    _completer = Completer<T>();
-    return _completer!;
+    if (existing case final current?) return current;
+    final Completer<T> created = Completer<T>();
+    _completer = created;
+    return created;
   }
 
   /// Completes the pending completer when available.

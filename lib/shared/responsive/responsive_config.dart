@@ -72,8 +72,7 @@ class ResponsiveConfig {
   }
 
   static Orientation orientation(final BuildContext context) {
-    final data = maybeDataOf(context);
-    if (data != null) {
+    if (maybeDataOf(context) case final data?) {
       return data.orientation;
     }
     return MediaQuery.orientationOf(context);

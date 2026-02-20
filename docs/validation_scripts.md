@@ -228,6 +228,38 @@ stream.listen((data) {
 
 ---
 
+#### `check_unguarded_null_assertion.sh`
+
+**Purpose**: Flags use of the null assertion operator `!` that does not have a same-line null check, to prevent runtime crashes from unguarded assertions.
+
+**What it checks**:
+
+- Lines in `lib/` (excluding generated and test) that contain `!` (null assertion) and do **not** contain a same-line guard: `!= null`, `== null`, or `??=`
+- Detects assertion use before member access and calls (for example `value!.field` and `callback!(...)`)
+- Excludes boolean negation (`if (!`, `&& !`, etc.), `is!` (type check), `!=` (not equals), comments, and l10n/GraphQL string patterns
+
+**Why it matters**:
+
+- Unguarded `!` throws at runtime if the value is null (e.g. after async, or from nullable API returns)
+- Follow the repository null-safety rules for allowed `!` usage and high-risk spots
+
+**Correct patterns**:
+
+- Preferred optional-to-non-null pattern: `if (x case final value?) { value.method(); }`
+- Preferred switch null pattern: `final label = switch (x) { final value? => value.toString(), _ => '-' };`
+- Legacy same-line guard (allowed but less preferred): `if (x != null) ... x!.method()`
+- Or add `// check-ignore: reason` when the guard is on the previous line or otherwise verified (e.g. `putIfAbsent` then map lookup)
+
+**Suppression**: Add `// check-ignore: reason` on the same line or line above when the value is provably non-null (e.g. guard on previous line).
+
+**Why this style is preferred**:
+
+- `if (x case final value?)` and `switch` null patterns produce a non-null local value at compile time without `!`
+- This removes an entire class of runtime null-assertion crashes in async and callback-heavy code
+- Pattern matching also keeps branches explicit and easier to review than repeated nullable checks plus force unwrapping
+
+---
+
 ### Performance Optimization
 
 #### `check_missing_const.sh`

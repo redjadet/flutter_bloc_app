@@ -36,8 +36,8 @@ class AppInfoSection extends StatelessWidget {
                 errorMessage: state.errorMessage,
               ),
               builder: (final context, final data) {
-                if (data.showSuccess) {
-                  return _InfoDetails(info: data.info!);
+                if ((data.showSuccess, data.info) case (true, final info?)) {
+                  return _InfoDetails(info: info);
                 }
                 if (data.showError) {
                   return _ErrorContent(error: data.errorMessage);
@@ -123,9 +123,11 @@ class _ErrorContent extends StatelessWidget {
             color: theme.colorScheme.error,
           ),
         ),
-        if (error != null && error!.trim().isNotEmpty) ...<Widget>[
-          SizedBox(height: context.responsiveGapXS),
-          Text(error!, style: theme.textTheme.bodySmall),
+        if (error case final e?) ...<Widget>[
+          if (e.trim().isNotEmpty) ...[
+            SizedBox(height: context.responsiveGapXS),
+            Text(e, style: theme.textTheme.bodySmall),
+          ],
         ],
         SizedBox(height: context.responsiveGapS),
         Align(

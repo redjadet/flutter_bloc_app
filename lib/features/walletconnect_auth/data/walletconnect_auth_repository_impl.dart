@@ -82,7 +82,8 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
       try {
         await user.updateDisplayName(walletAddress);
         await user.reload();
-        user = _firebaseAuth.currentUser!;
+        final User? updated = _firebaseAuth.currentUser;
+        if (updated case final latestUser?) user = latestUser;
       } on Exception catch (error) {
         // Non-critical: display name update is optional
         AppLogger.warning('Failed to update user display name: $error');
@@ -268,10 +269,17 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
   Future<User> _createAnonymousUser() async {
     try {
       final credential = await _firebaseAuth.signInAnonymously();
+      final User? newUser = credential.user;
+      if (newUser == null) {
+        throw WalletConnectException(
+          'Failed to create Firebase Auth user: no user in credential',
+          StateError('signInAnonymously returned null user'),
+        );
+      }
       AppLogger.debug(
-        'WalletConnectAuthRepository: Created anonymous user: ${credential.user?.uid}',
+        'WalletConnectAuthRepository: Created anonymous user: ${newUser.uid}',
       );
-      return credential.user!;
+      return newUser;
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'WalletConnectAuthRepository: Failed to create anonymous user',

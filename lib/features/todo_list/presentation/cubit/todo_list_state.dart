@@ -120,24 +120,28 @@ abstract class TodoListState with _$TodoListState {
         break;
       case TodoSortOrder.dueDateAsc:
         sorted.sort((final a, final b) {
-          if (a.dueDate == null && b.dueDate == null) {
+          final aDue = a.dueDate;
+          final bDue = b.dueDate;
+          if (aDue == null && bDue == null) {
             return b.updatedAt.compareTo(a.updatedAt);
           }
-          if (a.dueDate == null) return 1;
-          if (b.dueDate == null) return -1;
-          final int dateCompare = a.dueDate!.compareTo(b.dueDate!);
+          if (aDue == null) return 1;
+          if (bDue == null) return -1;
+          final int dateCompare = aDue.compareTo(bDue);
           if (dateCompare != 0) return dateCompare;
           return b.updatedAt.compareTo(a.updatedAt);
         });
         break;
       case TodoSortOrder.dueDateDesc:
         sorted.sort((final a, final b) {
-          if (a.dueDate == null && b.dueDate == null) {
+          final aDue = a.dueDate;
+          final bDue = b.dueDate;
+          if (aDue == null && bDue == null) {
             return b.updatedAt.compareTo(a.updatedAt);
           }
-          if (a.dueDate == null) return 1;
-          if (b.dueDate == null) return -1;
-          final int dateCompare = b.dueDate!.compareTo(a.dueDate!);
+          if (aDue == null) return 1;
+          if (bDue == null) return -1;
+          final int dateCompare = bDue.compareTo(aDue);
           if (dateCompare != 0) return dateCompare;
           return b.updatedAt.compareTo(a.updatedAt);
         });

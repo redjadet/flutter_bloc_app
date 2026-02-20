@@ -54,8 +54,9 @@ class ResilientSvgAssetImage extends StatelessWidget {
     try {
       final svgString = await rootBundle.loadString(assetPath);
       final match = (_base64Pattern as RegExp).firstMatch(svgString);
-      if (match != null) {
-        final bytes = base64Decode(match.group(1)!);
+      final String? base64Group = match?.group(1);
+      if (base64Group != null && base64Group.isNotEmpty) {
+        final bytes = base64Decode(base64Group);
         _cache[assetPath] = bytes;
         return bytes;
       }
@@ -83,8 +84,8 @@ class ResilientSvgAssetImage extends StatelessWidget {
   Widget build(final BuildContext context) {
     if (_cache.containsKey(assetPath)) {
       final bytes = _cache[assetPath];
-      if (bytes != null) {
-        return Image.memory(bytes, fit: fit);
+      if (bytes case final data?) {
+        return Image.memory(data, fit: fit);
       }
       return _buildSvgPicture();
     }
@@ -93,8 +94,8 @@ class ResilientSvgAssetImage extends StatelessWidget {
       future: _loadBytes(),
       builder: (final context, final snapshot) {
         final bytes = snapshot.data;
-        if (bytes != null) {
-          return Image.memory(bytes, fit: fit);
+        if (bytes case final data?) {
+          return Image.memory(data, fit: fit);
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {

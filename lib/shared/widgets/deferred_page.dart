@@ -44,13 +44,13 @@ class _DeferredPageState extends State<DeferredPage> {
     builder: (final context, final snapshot) {
       if (snapshot.connectionState == ConnectionState.done) {
         if (snapshot.hasError) {
-          final String message =
-              widget.errorMessageBuilder?.call(
-                context,
-                snapshot.error!,
-              ) ??
-              context.l10n.featureLoadError;
-          return CommonErrorView(message: message, onRetry: _retry);
+          final Object? error = snapshot.error;
+          if (error case final resolvedError?) {
+            final String message =
+                widget.errorMessageBuilder?.call(context, resolvedError) ??
+                context.l10n.featureLoadError;
+            return CommonErrorView(message: message, onRetry: _retry);
+          }
         }
         return widget.builder(context);
       }

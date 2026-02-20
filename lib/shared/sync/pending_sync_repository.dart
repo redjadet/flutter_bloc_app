@@ -53,8 +53,10 @@ class PendingSyncRepository extends HiveRepositoryBase {
 
       final DateTime threshold = (now ?? DateTime.now()).toUtc();
       final Iterable<SyncOperation> ready = operations.where(
-        (final op) =>
-            op.nextRetryAt == null || !op.nextRetryAt!.isAfter(threshold),
+        (final op) => switch (op.nextRetryAt) {
+          final nextRetryAt? => !nextRetryAt.isAfter(threshold),
+          _ => true,
+        },
       );
 
       final List<SyncOperation> pending = limit != null
@@ -131,8 +133,10 @@ class PendingSyncRepository extends HiveRepositoryBase {
         }
         final SyncOperation op = _operationFromJson(value);
         final bool tooManyRetries = op.retryCount >= maxRetryCount;
-        final bool tooOld =
-            op.nextRetryAt != null && op.nextRetryAt!.isBefore(cutoff);
+        final bool tooOld = switch (op.nextRetryAt) {
+          final nextRetryAt? => nextRetryAt.isBefore(cutoff),
+          _ => false,
+        };
         if (tooManyRetries || tooOld) {
           keysToDelete.add(entry.key);
         }

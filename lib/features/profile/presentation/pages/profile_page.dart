@@ -56,13 +56,12 @@ class ProfilePage extends StatelessWidget {
         ),
         builder: (final context, final bodyData) {
           final colors = Theme.of(context).colorScheme;
-          if (!bodyData.hasUser) {
+          final profile = bodyData.user;
+          if (!bodyData.hasUser || profile == null) {
             return const CommonErrorView(
               message: 'Failed to load profile',
             ); // Fallback if state is unexpected
           }
-
-          final profile = bodyData.user!;
           final double sectionSpacing =
               context.pageVerticalPadding *
               (context.isDesktop

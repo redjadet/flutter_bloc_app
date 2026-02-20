@@ -98,18 +98,18 @@ class _RemoteConfigDiagnosticsSectionState
                         lastSyncedAt: data.lastSyncedAt,
                       ),
                     ],
-                    if (data.errorMessage != null &&
-                        data.errorMessage!.isNotEmpty)
-                      Padding(
-                        padding: EdgeInsets.only(top: gap),
-                        child: Text(
-                          '${context.l10n.settingsRemoteConfigErrorLabel}: '
-                          '${data.errorMessage}',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.error,
+                    if (data.errorMessage case final msg?)
+                      if (msg.isNotEmpty)
+                        Padding(
+                          padding: EdgeInsets.only(top: gap),
+                          child: Text(
+                            '${context.l10n.settingsRemoteConfigErrorLabel}: '
+                            '$msg',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.error,
+                            ),
                           ),
                         ),
-                      ),
                     SizedBox(height: context.responsiveGapM),
                     Row(
                       children: <Widget>[
