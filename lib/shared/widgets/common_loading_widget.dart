@@ -73,7 +73,7 @@ class CommonLoadingOverlay extends StatelessWidget {
       child,
       if (isLoading)
         ColoredBox(
-          color: Colors.black.withValues(alpha: 0.3),
+          color: Theme.of(context).colorScheme.scrim.withValues(alpha: 0.3),
           child: CommonLoadingWidget(message: message),
         ),
     ],

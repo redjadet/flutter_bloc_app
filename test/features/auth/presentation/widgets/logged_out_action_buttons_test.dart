@@ -3,12 +3,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/logged_out_action_buttons.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 void main() {
   group('LoggedOutActionButtons', () {
+    /// Labels from l10n (English): accountSignInButton -> "Sign in", registerTitle -> "Register".
+    final String signInLabel = 'SIGN IN';
+    final String registerLabel = 'REGISTER';
+
     Widget buildSubject({double scale = 1.0, double? verticalScale}) {
       final double resolvedVerticalScale = verticalScale ?? scale;
       return MaterialApp.router(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('en'),
         routerConfig: GoRouter(
           routes: [
             GoRoute(
@@ -43,8 +51,8 @@ void main() {
       await tester.pumpWidget(buildSubject());
       await tester.pumpAndSettle();
 
-      expect(find.text('LOG IN'), findsOneWidget);
-      expect(find.text('REGISTER'), findsOneWidget);
+      expect(find.text(signInLabel), findsOneWidget);
+      expect(find.text(registerLabel), findsOneWidget);
       expect(find.byType(ElevatedButton), findsOneWidget);
       expect(find.byType(OutlinedButton), findsOneWidget);
     });
@@ -54,10 +62,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify button exists and is tappable
-      expect(find.text('LOG IN'), findsOneWidget);
+      expect(find.text(signInLabel), findsOneWidget);
       final loginButton = tester.widget<OutlinedButton>(
         find.ancestor(
-          of: find.text('LOG IN'),
+          of: find.text(signInLabel),
           matching: find.byType(OutlinedButton),
         ),
       );
@@ -69,10 +77,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify button exists and is tappable
-      expect(find.text('REGISTER'), findsOneWidget);
+      expect(find.text(registerLabel), findsOneWidget);
       final registerButton = tester.widget<ElevatedButton>(
         find.ancestor(
-          of: find.text('REGISTER'),
+          of: find.text(registerLabel),
           matching: find.byType(ElevatedButton),
         ),
       );
@@ -111,9 +119,9 @@ void main() {
       expect(find.byType(ElevatedButton), findsOneWidget);
       expect(find.byType(OutlinedButton), findsOneWidget);
 
-      // Verify buttons are rendered with correct text
-      expect(find.text('LOG IN'), findsOneWidget);
-      expect(find.text('REGISTER'), findsOneWidget);
+      // Verify buttons are rendered with correct text (from l10n)
+      expect(find.text(signInLabel), findsOneWidget);
+      expect(find.text(registerLabel), findsOneWidget);
     });
   });
 }

@@ -15,17 +15,18 @@ class ChatContactAvatar extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final onlineIndicatorSize = size * 0.28;
     final borderWidth = size > 50 ? 3.0 : 2.0;
     final iconSize = size * 0.6;
     final loadingSize = size * 0.4;
     final imagePath = contact.profileImageUrl;
 
-    Widget buildFallback() => Container(
-      color: Colors.grey[300],
+    Widget buildFallback() => ColoredBox(
+      color: colors.surfaceContainerHighest,
       child: Icon(
         Icons.person,
-        color: Colors.grey[600],
+        color: colors.onSurfaceVariant,
         size: iconSize,
       ),
     );
@@ -55,8 +56,8 @@ class ChatContactAvatar extends StatelessWidget {
           height: size,
           memCacheWidth: size.toInt(),
           memCacheHeight: size.toInt(),
-          placeholder: (final context, final url) => Container(
-            color: Colors.grey[300],
+          placeholder: (final context, final url) => ColoredBox(
+            color: colors.surfaceContainerHighest,
             child: Center(
               child: SizedBox(
                 width: loadingSize,
@@ -89,7 +90,7 @@ class ChatContactAvatar extends StatelessWidget {
           height: size,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.grey[300],
+            color: colors.surfaceContainerHighest,
           ),
           child: ClipOval(
             child: imageWidget ?? buildFallback(),
@@ -103,10 +104,10 @@ class ChatContactAvatar extends StatelessWidget {
               width: onlineIndicatorSize,
               height: onlineIndicatorSize,
               decoration: BoxDecoration(
-                color: const Color(0xFF4CAF50),
+                color: colors.primary,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.white,
+                  color: colors.surface,
                   width: borderWidth,
                 ),
               ),

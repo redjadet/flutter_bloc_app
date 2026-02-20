@@ -46,22 +46,25 @@ class ErrorHandling {
     ),
   );
 
-  /// Show a success snackbar
+  /// Show a success snackbar using theme colors.
   static ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
   showSuccessSnackBar(
     final BuildContext context,
     final String message, {
     final Duration duration = const Duration(seconds: 3),
-  }) => _showSnackBar(
-    context,
-    SnackBar(
-      content: Text(message),
-      duration: duration,
-      persist: false,
-      backgroundColor: Colors.green,
-      behavior: SnackBarBehavior.floating,
-    ),
-  );
+  }) {
+    final ColorScheme colors = Theme.of(context).colorScheme;
+    return _showSnackBar(
+      context,
+      SnackBar(
+        content: Text(message),
+        duration: duration,
+        persist: false,
+        backgroundColor: colors.primaryContainer,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
 
   /// Handle common Cubit errors with user-friendly messages
   static void handleCubitError(

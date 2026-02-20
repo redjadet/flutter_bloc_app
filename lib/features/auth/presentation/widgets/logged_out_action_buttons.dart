@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:go_router/go_router.dart';
 
@@ -14,33 +15,38 @@ class LoggedOutActionButtons extends StatelessWidget {
   final double verticalScale;
 
   @override
-  Widget build(final BuildContext context) => SizedBox(
-    height: 52 * verticalScale,
-    child: Row(
-      children: [
-        Expanded(
-          child: _LoggedOutActionButton(
-            label: 'LOG IN',
-            scale: scale,
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.black,
-            border: const BorderSide(width: 2),
-            onPressed: () => context.go(AppRoutes.authPath),
+  Widget build(final BuildContext context) {
+    final ColorScheme colors = Theme.of(context).colorScheme;
+    final String signInLabel = context.l10n.accountSignInButton.toUpperCase();
+    final String registerLabel = context.l10n.registerTitle.toUpperCase();
+    return SizedBox(
+      height: 52 * verticalScale,
+      child: Row(
+        children: [
+          Expanded(
+            child: _LoggedOutActionButton(
+              label: signInLabel,
+              scale: scale,
+              backgroundColor: colors.surface,
+              foregroundColor: colors.onSurface,
+              border: BorderSide(width: 2, color: colors.outline),
+              onPressed: () => context.go(AppRoutes.authPath),
+            ),
           ),
-        ),
-        SizedBox(width: 9 * scale),
-        Expanded(
-          child: _LoggedOutActionButton(
-            label: 'REGISTER',
-            scale: scale,
-            backgroundColor: Colors.black,
-            foregroundColor: Colors.white,
-            onPressed: () => context.go(AppRoutes.registerPath),
+          SizedBox(width: 9 * scale),
+          Expanded(
+            child: _LoggedOutActionButton(
+              label: registerLabel,
+              scale: scale,
+              backgroundColor: colors.primary,
+              foregroundColor: colors.onPrimary,
+              onPressed: () => context.go(AppRoutes.registerPath),
+            ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
 
 class _LoggedOutActionButton extends StatelessWidget {

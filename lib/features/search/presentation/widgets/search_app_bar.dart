@@ -1,35 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/utils/navigation.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
 
 class SearchAppBar extends StatelessWidget {
   const SearchAppBar({super.key});
 
-  static const TextStyle _titleStyle = TextStyle(
-    fontFamily: 'Comfortaa',
-    fontSize: 36,
-    fontWeight: FontWeight.w400,
-    letterSpacing: -0.54,
-    color: Colors.black,
-  );
-
   @override
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
+    final colors = theme.colorScheme;
     final bool useCupertino =
         theme.platform == TargetPlatform.iOS ||
         theme.platform == TargetPlatform.macOS;
     final double headlineSize = context.responsiveHeadlineSize;
     final double backIconSize = context.responsiveIconSize;
-    final Color titleColor = theme.brightness == Brightness.dark
-        ? theme.colorScheme.onSurface
-        : Colors.black;
+    final Color titleColor = colors.onSurface;
     final TextStyle effectiveTitleStyle =
-        (theme.textTheme.displaySmall ?? _titleStyle).copyWith(
-          fontSize: headlineSize,
-          color: titleColor,
-        );
+        (theme.textTheme.displaySmall ?? TextStyle(color: colors.onSurface))
+            .copyWith(
+              fontSize: headlineSize,
+              color: titleColor,
+            );
 
     return Padding(
       padding: context.pageHorizontalPaddingWithVertical(
@@ -55,7 +46,10 @@ class SearchAppBar extends StatelessWidget {
               onPressed: () => NavigationUtils.popOrGoHome(context),
             ),
           SizedBox(width: context.responsiveHorizontalGapS),
-          Text('Search', style: effectiveTitleStyle),
+          Text(
+            context.l10n.searchHint.replaceFirst('...', ''),
+            style: effectiveTitleStyle,
+          ),
         ],
       ),
     );

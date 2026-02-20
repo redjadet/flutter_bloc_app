@@ -33,7 +33,7 @@ class LoggedOutPhotoHeader extends StatelessWidget {
           child: Icon(
             Icons.add,
             size: 24 * scale,
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
         ),
         SizedBox(width: 8 * scale),
@@ -42,7 +42,7 @@ class LoggedOutPhotoHeader extends StatelessWidget {
           style: Theme.of(context).textTheme.displayLarge?.copyWith(
             fontSize: 48 * scale,
             fontWeight: FontWeight.w400,
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.onSurface,
             letterSpacing: -0.72 * scale,
             height: 53.52 / 48,
           ),

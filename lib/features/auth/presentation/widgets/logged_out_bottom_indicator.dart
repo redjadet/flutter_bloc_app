@@ -41,7 +41,7 @@ class _ShapeIndicator extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: Colors.black,
+        color: Theme.of(context).colorScheme.onSurface,
         borderRadius: BorderRadius.circular(10),
       ),
     ),
