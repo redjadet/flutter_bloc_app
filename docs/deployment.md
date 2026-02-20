@@ -12,7 +12,7 @@ This section provides a step-by-step guide to deploy this Flutter app to the App
 | ----------- | ------- |
 | **Apple Developer Program** | Paid membership ($99/year) required for App Store distribution |
 | **Xcode** | Latest stable version (macOS only) |
-| **Flutter** | Flutter 3.41.1+ with iOS support |
+| **Flutter** | Flutter 3.41.2+ with iOS support |
 | **Firebase** | `GoogleService-Info.plist` in `ios/Runner/` (generate via `flutterfire configure`) |
 | **Signing identity** | Distribution certificate and App Store provisioning profile |
 
@@ -93,26 +93,26 @@ TestFlight is Apple’s beta distribution channel. The same build you upload to 
 
 **Prerequisites:** Same as App Store (Apple Developer Program, Xcode, distribution entitlements, App Store provisioning profile). The app must exist in App Store Connect.
 
-1. **Build and upload**  
+1. **Build and upload**
    Follow [Step 2: Switch to Distribution Entitlements](#step-2-switch-to-distribution-entitlements), [Step 3: Prepare Release Build](#step-3-prepare-release-build), and [Step 4: Archive and Upload](#step-4-archive-and-upload). Upload the build to App Store Connect (Xcode Organizer or Fastlane).
 
-2. **Wait for processing**  
+2. **Wait for processing**
    In [App Store Connect](https://appstoreconnect.apple.com/) → **My Apps** → your app → **TestFlight** tab, the new build appears after upload. Wait until its status is **Ready to Submit** (processing usually takes 5–30 minutes). Resolve any missing compliance or email questions if prompted.
 
-3. **Internal testers (no review)**  
-   - **TestFlight** → **Internal Testing** → create or select a group.  
-   - Click **+** to add testers (they must be listed in **Users and Access** → **App Store Connect users** with Admin, App Manager, Developer, or Marketing role).  
+3. **Internal testers (no review)**
+   - **TestFlight** → **Internal Testing** → create or select a group.
+   - Click **+** to add testers (they must be listed in **Users and Access** → **App Store Connect users** with Admin, App Manager, Developer, or Marketing role).
    - Select the build for that group. Internal testers receive an email and can install via the TestFlight app (up to 100 internal testers).
 
-4. **External testers (Beta App Review)**  
-   - **TestFlight** → **External Testing** → create or select a group.  
-   - Add the build; fill in **What to Test** and (if first time) **Export Compliance**, **Content Rights**, **Advertising Identifier** as required.  
+4. **External testers (Beta App Review)**
+   - **TestFlight** → **External Testing** → create or select a group.
+   - Add the build; fill in **What to Test** and (if first time) **Export Compliance**, **Content Rights**, **Advertising Identifier** as required.
    - **Submit for Review**. After Beta App Review approval (often 24–48 hours), add external testers by email or enable a public link. Up to 10,000 external testers per app.
 
-5. **Installation for testers**  
+5. **Installation for testers**
    Testers install the [TestFlight app](https://apps.apple.com/app/testflight/id899247664) from the App Store, accept the invite or use the public link, then install your build.
 
-**Fastlane (TestFlight):**  
+**Fastlane (TestFlight):**
 Run `bundle exec fastlane ios testflight` (or `ios deploy`) from the project root to build and upload; then use App Store Connect → TestFlight to assign the build to internal/external groups.
 
 **TestFlight troubleshooting:**
@@ -174,7 +174,7 @@ This section provides a step-by-step guide to deploy this Flutter app to the Goo
 | Requirement | Details |
 | ----------- | ------- |
 | **Google Play Developer account** | One-time registration fee ($25); [Play Console](https://play.google.com/console/signup) |
-| **Flutter** | Flutter 3.41.1+ with Android support |
+| **Flutter** | Flutter 3.41.2+ with Android support |
 | **Firebase** | `android/app/google-services.json` (generate via `flutterfire configure`) |
 | **Signing** | Release keystore (`.jks` or `.keystore`); store credentials securely |
 

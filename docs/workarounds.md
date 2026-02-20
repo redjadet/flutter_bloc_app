@@ -8,7 +8,7 @@ This document lists **temporary workarounds** used in this project when upstream
 
 ## 1. [Resolved 2026-02] path_provider_foundation on iOS 26.2 Simulator (objective_c FFI crash)
 
-**Long-term solution applied:** Override to **path_provider_foundation 2.6.0** (not 2.5.1). Version 2.6.0 re-landed the FFI implementation with fixes for iOS 26 simulator compatibility (Flutter 3.38.4+, objective_c 9.2.1, Flutter issue #178915). The project uses Flutter 3.41.1, so the fix is valid. We keep a `dependency_overrides: path_provider_foundation: 2.6.0` until `path_provider` updates its dependency range to include 2.6.0; then the override can be removed.
+**Long-term solution applied:** Override to **path_provider_foundation 2.6.0** (not 2.5.1). Version 2.6.0 re-landed the FFI implementation with fixes for iOS 26 simulator compatibility (Flutter 3.38.4+, objective_c 9.2.1, Flutter issue #178915). The project uses Flutter 3.41.2, so the fix is valid. We keep a `dependency_overrides: path_provider_foundation: 2.6.0` until `path_provider` updates its dependency range to include 2.6.0; then the override can be removed.
 
 ---
 
