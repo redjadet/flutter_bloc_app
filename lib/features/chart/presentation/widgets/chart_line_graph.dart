@@ -25,8 +25,8 @@ class ChartLineGraph extends StatelessWidget {
           color: theme.colorScheme.onSurface,
           fontWeight: FontWeight.w600,
         ) ??
-        const TextStyle(
-          color: Colors.white,
+        TextStyle(
+          color: theme.colorScheme.onSurface,
           fontWeight: FontWeight.w600,
           fontSize: 14,
         );

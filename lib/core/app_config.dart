@@ -53,8 +53,9 @@ class AppConfig {
             Center(
               child: IgnorePointer(
                 child: ColoredBox(
-                  // Semi-transparent dark background (70% opacity) for better visibility
-                  color: Colors.black.withValues(alpha: 0.7),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.scrim.withValues(alpha: 0.7),
                   child: PerformanceOverlay.allEnabled(),
                 ),
               ),

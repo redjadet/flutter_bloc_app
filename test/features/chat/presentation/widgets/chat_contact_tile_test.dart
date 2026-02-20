@@ -48,14 +48,15 @@ void main() {
     ) async {
       await tester.pumpWidget(createWidgetUnderTest(contact: testContact));
 
-      // Look for the online indicator (green circle)
-      final onlineIndicator = find.byWidgetPredicate(
-        (widget) =>
-            widget is Container &&
-            widget.decoration is BoxDecoration &&
-            (widget.decoration as BoxDecoration).color ==
-                const Color(0xFF4CAF50),
-      );
+      // Online indicator uses theme primary and BoxShape.circle
+      final scheme = ThemeData().colorScheme;
+      final onlineIndicator = find.byWidgetPredicate((widget) {
+        if (widget is! Container) return false;
+        final decoration = widget.decoration;
+        if (decoration is! BoxDecoration) return false;
+        return decoration.shape == BoxShape.circle &&
+            decoration.color == scheme.primary;
+      });
       expect(onlineIndicator, findsOneWidget);
     });
 
@@ -74,14 +75,15 @@ void main() {
 
       await tester.pumpWidget(createWidgetUnderTest(contact: offlineContact));
 
-      // Should not find the online indicator
-      final onlineIndicator = find.byWidgetPredicate(
-        (widget) =>
-            widget is Container &&
-            widget.decoration is BoxDecoration &&
-            (widget.decoration as BoxDecoration).color ==
-                const Color(0xFF4CAF50),
-      );
+      // Online indicator (theme primary circle) should not be present when offline
+      final scheme = ThemeData().colorScheme;
+      final onlineIndicator = find.byWidgetPredicate((widget) {
+        if (widget is! Container) return false;
+        final decoration = widget.decoration;
+        if (decoration is! BoxDecoration) return false;
+        return decoration.shape == BoxShape.circle &&
+            decoration.color == scheme.primary;
+      });
       expect(onlineIndicator, findsNothing);
     });
 

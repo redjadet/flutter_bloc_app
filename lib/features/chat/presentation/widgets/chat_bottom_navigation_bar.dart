@@ -5,20 +5,23 @@ class ChatBottomNavigationBar extends StatelessWidget {
   const ChatBottomNavigationBar({super.key});
 
   @override
-  Widget build(final BuildContext context) => const DecoratedBox(
-    decoration: BoxDecoration(
-      color: Colors.white,
-      border: Border(
-        top: BorderSide(
-          color: Color(0xFFE5E5E5),
-          width: 0.5,
+  Widget build(final BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colors.surface,
+        border: Border(
+          top: BorderSide(
+            color: colors.outlineVariant,
+            width: 0.5,
+          ),
         ),
       ),
-    ),
-    child: SafeArea(
-      child: _ChatBottomNavigationBarContent(),
-    ),
-  );
+      child: const SafeArea(
+        child: _ChatBottomNavigationBarContent(),
+      ),
+    );
+  }
 }
 
 class _ChatBottomNavigationBarContent extends StatelessWidget {
@@ -70,14 +73,18 @@ class _ChatBottomNavigationBarContent extends StatelessWidget {
     final containerSize = context.responsiveButtonHeight;
     final borderRadius = context.responsiveBorderRadius;
 
+    final colors = Theme.of(context).colorScheme;
     if (isPrimary) {
       return SizedBox(
         width: containerSize,
         height: containerSize,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFFFF6B6B), Color(0xFFFF8E53)],
+            gradient: LinearGradient(
+              colors: [
+                colors.primary,
+                colors.tertiary,
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -86,7 +93,7 @@ class _ChatBottomNavigationBarContent extends StatelessWidget {
           child: Center(
             child: Icon(
               icon,
-              color: Colors.white,
+              color: colors.onPrimary,
               size: iconSize,
             ),
           ),
@@ -96,7 +103,7 @@ class _ChatBottomNavigationBarContent extends StatelessWidget {
 
     return Icon(
       icon,
-      color: isSelected ? Colors.black : Colors.grey,
+      color: isSelected ? colors.onSurface : colors.onSurfaceVariant,
       size: iconSize,
     );
   }

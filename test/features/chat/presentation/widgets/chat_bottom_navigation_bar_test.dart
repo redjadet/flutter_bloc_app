@@ -90,7 +90,8 @@ void main() {
     testWidgets('should have proper styling', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
 
-      // Should have white background
+      // Should use theme surface color and have top border
+      final defaultSurface = ThemeData().colorScheme.surface;
       final decoratedBox = tester.widget<DecoratedBox>(
         find
             .byWidgetPredicate(
@@ -102,7 +103,7 @@ void main() {
             .first,
       );
       final decoration = decoratedBox.decoration as BoxDecoration;
-      expect(decoration.color, equals(Colors.white));
+      expect(decoration.color, equals(defaultSurface));
 
       // Should have top border
       expect(decoration.border, isNotNull);
@@ -111,7 +112,7 @@ void main() {
     testWidgets('should display primary button with gradient', (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
 
-      // Find the add button container
+      // Find the add button container (uses theme primary/tertiary gradient)
       final addIcon = find.byIcon(Icons.add);
       final addContainer = find.ancestor(
         of: addIcon,
@@ -125,13 +126,14 @@ void main() {
 
       expect(addContainer, findsOneWidget);
 
-      // Verify the gradient colors
+      // Verify the gradient uses theme primary and tertiary
+      final scheme = ThemeData().colorScheme;
       final decoratedBox = tester.widget<DecoratedBox>(addContainer);
       final decoration = decoratedBox.decoration as BoxDecoration;
       final gradient = decoration.gradient as LinearGradient;
 
-      expect(gradient.colors, contains(const Color(0xFFFF6B6B)));
-      expect(gradient.colors, contains(const Color(0xFFFF8E53)));
+      expect(gradient.colors, contains(scheme.primary));
+      expect(gradient.colors, contains(scheme.tertiary));
     });
   });
 }

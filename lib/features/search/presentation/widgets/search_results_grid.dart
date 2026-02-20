@@ -38,9 +38,17 @@ class SearchResultsGrid extends StatelessWidget {
                 boxFit: BoxFit.cover,
                 shimmerBaseColor: theme.colorScheme.surfaceContainerHighest,
                 shimmerHighlightColor: theme.colorScheme.surface,
-                errorWidget: Container(
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.error_outline, color: Colors.black54),
+                errorWidget: Builder(
+                  builder: (final context) {
+                    final colors = Theme.of(context).colorScheme;
+                    return ColoredBox(
+                      color: colors.surfaceContainerHighest,
+                      child: Icon(
+                        Icons.error_outline,
+                        color: colors.onSurfaceVariant,
+                      ),
+                    );
+                  },
                 ),
               ),
             ),

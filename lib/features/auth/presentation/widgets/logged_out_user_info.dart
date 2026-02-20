@@ -36,20 +36,22 @@ class LoggedOutUserInfo extends StatelessWidget {
               width: avatarExtent,
               height: avatarExtent,
               fit: BoxFit.fill,
-              errorBuilder: (final context, final error, final stackTrace) =>
-                  Container(
-                    width: avatarExtent,
-                    height: avatarExtent,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey[300],
-                    ),
-                    child: Icon(
-                      Icons.person,
-                      size: 20 * scale,
-                      color: Colors.grey[600],
-                    ),
+              errorBuilder: (final context, final error, final stackTrace) {
+                final colors = Theme.of(context).colorScheme;
+                return Container(
+                  width: avatarExtent,
+                  height: avatarExtent,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: colors.surfaceContainerHighest,
                   ),
+                  child: Icon(
+                    Icons.person,
+                    size: 20 * scale,
+                    color: colors.onSurfaceVariant,
+                  ),
+                );
+              },
             ),
           ),
           SizedBox(width: 8 * scale),
@@ -69,7 +71,7 @@ class LoggedOutUserInfo extends StatelessWidget {
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         fontSize: 13 * scale,
                         fontWeight: FontWeight.w700,
-                        color: Colors.black,
+                        color: Theme.of(context).colorScheme.onSurface,
                         height: nameLineHeight / 13,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -80,7 +82,9 @@ class LoggedOutUserInfo extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 11 * scale,
                         fontWeight: FontWeight.w400,
-                        color: Colors.black.withValues(alpha: 0.8),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.8),
                         height: handleLineHeight / 11,
                       ),
                       overflow: TextOverflow.ellipsis,

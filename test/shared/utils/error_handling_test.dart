@@ -213,12 +213,18 @@ void main() {
       expect(find.byType(SnackBar), findsOneWidget);
     });
 
-    testWidgets('showSuccessSnackBar shows green snackbar', (tester) async {
+    testWidgets('showSuccessSnackBar uses theme primaryContainer', (
+      tester,
+    ) async {
       const successMessage = 'Operation succeeded';
       late BuildContext context;
+      const primaryContainer = Color(0xFFD0BCFF);
 
       await tester.pumpWidget(
         MaterialApp(
+          theme: ThemeData(
+            colorScheme: ColorScheme.light(primaryContainer: primaryContainer),
+          ),
           home: Scaffold(
             body: Builder(
               builder: (builderContext) {
@@ -234,7 +240,7 @@ void main() {
       await tester.pump();
 
       final SnackBar snackBar = tester.widget(find.byType(SnackBar));
-      expect(snackBar.backgroundColor, Colors.green);
+      expect(snackBar.backgroundColor, primaryContainer);
       expect(find.text(successMessage), findsOneWidget);
     });
 
