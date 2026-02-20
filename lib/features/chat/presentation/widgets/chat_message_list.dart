@@ -31,15 +31,17 @@ class ChatMessageList extends StatelessWidget {
 
     return TypeSafeBlocConsumer<ChatCubit, ChatState>(
       listener: (final context, final state) async {
-        if (state.hasError) {
+        if (state.error case final err?) {
           final ChatCubit chatCubit = context.cubit<ChatCubit>();
           await errorNotificationService
-              .showSnackBar(context, state.error!)
-              .whenComplete(() {
-                if (!chatCubit.isClosed) {
-                  chatCubit.clearError();
-                }
-              });
+              .showSnackBar(context, err)
+              .whenComplete(
+                () {
+                  if (!chatCubit.isClosed) {
+                    chatCubit.clearError();
+                  }
+                },
+              );
         }
         if (state.hasMessages) {
           WidgetsBinding.instance.addPostFrameCallback((_) async {

@@ -15,6 +15,7 @@
 - Offline-first repositories use consistent queueing and sync helpers.
 - UI layout uses responsive extensions and adaptive components.
 - Async safety patterns are applied (mounted checks, guarded emits).
+- Null-safe pattern matching is used to convert optional values to non-null locals (`if (x case final value?)`, `switch` null patterns), which reduces reliance on `!`.
 - Custom lint rules and validation scripts help enforce architecture rules.
 
 ## ⚠️ Risks and Follow-Ups

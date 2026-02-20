@@ -48,15 +48,16 @@ class _AppleMapsViewState extends State<AppleMapsView> {
     final List<MapLocation> locations = widget.stateManager.locations;
 
     // Cache annotations to avoid rebuilding on every build call
-    if (_cachedAnnotations != null &&
+    final existing = _cachedAnnotations;
+    if (existing != null &&
         _cachedSelectedId == selectedId &&
         _cachedLocations == locations) {
-      return _cachedAnnotations!;
+      return existing;
     }
 
     _cachedSelectedId = selectedId;
     _cachedLocations = locations;
-    _cachedAnnotations = locations
+    final annotations = locations
         .map(
           (final location) => amap.Annotation(
             annotationId: amap.AnnotationId(location.id),
@@ -73,8 +74,8 @@ class _AppleMapsViewState extends State<AppleMapsView> {
           ),
         )
         .toSet();
-
-    return _cachedAnnotations!;
+    _cachedAnnotations = annotations;
+    return annotations;
   }
 
   @override

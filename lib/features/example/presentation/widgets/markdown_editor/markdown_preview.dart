@@ -16,6 +16,7 @@ class MarkdownPreview extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
 
+    final TextStyle? bodyLarge = theme.textTheme.bodyLarge;
     return Container(
       padding: context.allGapM,
       color: colors.surface,
@@ -23,7 +24,10 @@ class MarkdownPreview extends StatelessWidget {
         child: IntrinsicWidth(
           child: _MarkdownRenderObjectWidget(
             text: text,
-            textStyle: theme.textTheme.bodyLarge!,
+            textStyle:
+                bodyLarge ??
+                theme.textTheme.bodyMedium ??
+                const TextStyle(fontSize: 16),
             textDirection: Directionality.of(context),
             onTextChanged: (final value) {},
           ),

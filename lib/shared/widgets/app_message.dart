@@ -40,17 +40,17 @@ class AppMessage extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              if (icon != null) ...<Widget>[
+              if (icon case final iconData?) ...<Widget>[
                 Icon(
-                  icon,
+                  iconData,
                   size: context.responsiveIconSize * 2,
                   color: textColor,
                 ),
                 SizedBox(height: context.responsiveGapM),
               ],
-              if (title != null) ...<Widget>[
+              if (title case final t?) ...<Widget>[
                 Text(
-                  title!,
+                  t,
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: textColor,
                   ),
@@ -67,14 +67,16 @@ class AppMessage extends StatelessWidget {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
-              if (actions != null && actions!.isNotEmpty) ...<Widget>[
-                SizedBox(height: context.responsiveGapM),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: context.responsiveGapM,
-                  runSpacing: context.responsiveGapS,
-                  children: actions!,
-                ),
+              if (actions case final list?) ...<Widget>[
+                if (list.isNotEmpty) ...[
+                  SizedBox(height: context.responsiveGapM),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: context.responsiveGapM,
+                    runSpacing: context.responsiveGapS,
+                    children: list,
+                  ),
+                ],
               ],
             ],
           ),

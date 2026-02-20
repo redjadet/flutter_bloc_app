@@ -147,10 +147,9 @@ class MarkdownRenderObject extends RenderBox {
   }
 
   TextSpan _buildTextSpan() {
-    if (_cachedSpan != null &&
-        _cachedText == _text &&
-        _cachedStyle == _textStyle) {
-      return _cachedSpan!;
+    final TextSpan? cached = _cachedSpan;
+    if (cached != null && _cachedText == _text && _cachedStyle == _textStyle) {
+      return cached;
     }
     final TextSpan span = _parser.buildTextSpan(_text, _textStyle);
     _cachedSpan = span;

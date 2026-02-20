@@ -49,11 +49,31 @@ class _NavItem {
   final IconData? _materialIconOverride;
   final IconData? _cupertinoIconOverride;
 
-  String get label => destination?.label ?? _labelOverride!;
-  IconData get materialIcon =>
-      destination?.materialIcon ?? _materialIconOverride!;
-  IconData get cupertinoIcon =>
-      destination?.cupertinoIcon ?? _cupertinoIconOverride!;
+  String get label => switch ((destination?.label, _labelOverride)) {
+    (final l?, _) => l,
+    (_, final o?) => o,
+    _ => throw StateError('_NavItem: destination or label override required'),
+  };
+  IconData get materialIcon => switch ((
+    destination?.materialIcon,
+    _materialIconOverride,
+  )) {
+    (final i?, _) => i,
+    (_, final o?) => o,
+    _ => throw StateError(
+      '_NavItem: destination or materialIcon override required',
+    ),
+  };
+  IconData get cupertinoIcon => switch ((
+    destination?.cupertinoIcon,
+    _cupertinoIconOverride,
+  )) {
+    (final i?, _) => i,
+    (_, final o?) => o,
+    _ => throw StateError(
+      '_NavItem: destination or cupertinoIcon override required',
+    ),
+  };
 }
 
 const int _profileTabIndex = 0;

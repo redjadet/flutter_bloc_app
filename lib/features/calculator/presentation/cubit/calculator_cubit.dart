@@ -84,7 +84,7 @@ class CalculatorCubit extends Cubit<CalculatorState>
     final CalculatorState current = state;
     final double currentValue = _parseDisplay(current);
 
-    if (current.operation != null) {
+    if (current.operation case final op?) {
       final double lhsCandidate = current.accumulator ?? currentValue;
       if (_isNonPositiveTotal(lhsCandidate)) {
         emit(_errorState(current, CalculatorError.nonPositiveTotal));
@@ -95,7 +95,7 @@ class CalculatorCubit extends Cubit<CalculatorState>
           current: current,
           lhs: current.accumulator ?? currentValue,
           rhs: currentValue,
-          operation: current.operation!,
+          operation: op,
           historyOverride: null,
           updateRepeatOperation: true,
           clearPendingOperation: true,
@@ -104,7 +104,10 @@ class CalculatorCubit extends Cubit<CalculatorState>
       return;
     }
 
-    if (current.lastOperation != null && current.lastOperand != null) {
+    if ((current.lastOperation, current.lastOperand) case (
+      final lastOp?,
+      final lastOperand?,
+    )) {
       if (_isNonPositiveTotal(currentValue)) {
         emit(_errorState(current, CalculatorError.nonPositiveTotal));
         return;
@@ -113,8 +116,8 @@ class CalculatorCubit extends Cubit<CalculatorState>
         _applyEvaluation(
           current: current,
           lhs: currentValue,
-          rhs: current.lastOperand!,
-          operation: current.lastOperation!,
+          rhs: lastOperand,
+          operation: lastOp,
           historyOverride: '',
         ),
       );

@@ -108,13 +108,14 @@ class PerformanceProfiler {
 
   /// Get rebuild statistics for a widget.
   static WidgetRebuildInfo? getRebuildInfo(final String name) {
-    final info = _rebuildCounts[name];
-    if (info == null) return null;
-    return WidgetRebuildInfo(
-      name: info.name,
-      rebuildCount: info.rebuildCount,
-      lastRebuildTime: info.lastRebuildTime,
-    );
+    if (_rebuildCounts[name] case final info?) {
+      return WidgetRebuildInfo(
+        name: info.name,
+        rebuildCount: info.rebuildCount,
+        lastRebuildTime: info.lastRebuildTime,
+      );
+    }
+    return null;
   }
 
   /// Get all rebuild statistics.

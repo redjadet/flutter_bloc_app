@@ -22,23 +22,23 @@ Future<void> showExamplePlatformInfoDialog({
       label: l10n.exampleNativeInfoDialogVersionLabel,
       value: info.version,
     ),
-    if (info.manufacturer != null)
+    if (info.manufacturer case final m?)
       _buildInfoRow(
         context: context,
         label: l10n.exampleNativeInfoDialogManufacturerLabel,
-        value: info.manufacturer!,
+        value: m,
       ),
-    if (info.model != null)
+    if (info.model case final m?)
       _buildInfoRow(
         context: context,
         label: l10n.exampleNativeInfoDialogModelLabel,
-        value: info.model!,
+        value: m,
       ),
-    if (info.batteryLevel != null)
+    if (info.batteryLevel case final batteryLevel?)
       _buildInfoRow(
         context: context,
         label: l10n.exampleNativeInfoDialogBatteryLabel,
-        value: '${info.batteryLevel}%',
+        value: '$batteryLevel%',
       ),
   ];
 
@@ -71,9 +71,10 @@ Future<void> showExamplePlatformInfoErrorDialog({
     return;
   }
   final l10n = context.l10n;
-  final String? detail = (message?.trim().isNotEmpty ?? false)
-      ? message!.trim()
-      : null;
+  final String? detail = switch (message) {
+    final m? when m.trim().isNotEmpty => m.trim(),
+    _ => null,
+  };
   await showAdaptiveDialog<void>(
     context: context,
     builder: (final dialogContext) => AlertDialog.adaptive(
@@ -83,9 +84,9 @@ Future<void> showExamplePlatformInfoErrorDialog({
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(l10n.exampleNativeInfoError),
-          if (detail != null) ...[
+          if (detail case final message?) ...[
             SizedBox(height: context.responsiveGapM),
-            Text(detail),
+            Text(message),
           ],
         ],
       ),

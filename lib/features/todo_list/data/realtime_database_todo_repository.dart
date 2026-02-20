@@ -147,13 +147,12 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
     final Map<Object?, Object?> data = Map<Object?, Object?>.from(value);
     final List<TodoItem> items = <TodoItem>[];
     for (final MapEntry<Object?, Object?> entry in data.entries) {
-      if (entry.value is! Map) {
+      final value = entry.value;
+      if (value is! Map) {
         continue;
       }
       try {
-        final Map<dynamic, dynamic> itemMap = Map<dynamic, dynamic>.from(
-          entry.value! as Map,
-        );
+        final Map<dynamic, dynamic> itemMap = Map<dynamic, dynamic>.from(value);
         final Object? rawId = itemMap['id'];
         if (rawId == null || (rawId is String && rawId.trim().isEmpty)) {
           itemMap['id'] = entry.key?.toString();

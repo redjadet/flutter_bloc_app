@@ -36,8 +36,12 @@ class HttpChartRepository extends ChartRepository {
   @override
   Future<List<ChartPoint>> fetchTrendingCounts() async {
     final now = _now();
-    if (_hasFreshCache(now)) {
-      return _cached!;
+    final List<ChartPoint>? cached = _cached;
+    final DateTime? lastFetched = _lastFetched;
+    if (cached != null &&
+        lastFetched != null &&
+        now.difference(lastFetched) < _cacheDuration) {
+      return cached;
     }
     try {
       final http.Response response = await _client.get(
@@ -64,13 +68,6 @@ class HttpChartRepository extends ChartRepository {
       AppLogger.error('HttpChartRepository failure', error, stackTrace);
       return _cached ?? _cache(_fallbackData(now), now);
     }
-  }
-
-  bool _hasFreshCache(final DateTime now) {
-    if (_cached == null || _lastFetched == null) {
-      return false;
-    }
-    return now.difference(_lastFetched!) < _cacheDuration;
   }
 
   List<ChartPoint> _cache(

@@ -38,10 +38,10 @@ class CommonLoadingWidget extends StatelessWidget {
                     color: effectiveColor,
                   ),
           ),
-          if (message != null) ...[
+          if (message case final msg?) ...[
             SizedBox(height: context.responsiveGapM),
             Text(
-              message!,
+              msg,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
@@ -118,9 +118,9 @@ class CommonLoadingButton extends StatelessWidget {
                   color: indicatorColor,
                 ),
         ),
-        if (loadingMessage != null) ...[
+        if (loadingMessage case final msg?) ...[
           SizedBox(width: context.responsiveHorizontalGapS),
-          Text(loadingMessage!),
+          Text(msg),
         ],
       ],
     );

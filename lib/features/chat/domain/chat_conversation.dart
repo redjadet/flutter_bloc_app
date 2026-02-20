@@ -57,9 +57,10 @@ abstract class ChatConversation with _$ChatConversation {
     'createdAt': createdAt.toIso8601String(),
     'updatedAt': updatedAt.toIso8601String(),
     if (model != null) 'model': model,
-    if (lastSyncedAt != null) 'lastSyncedAt': lastSyncedAt!.toIso8601String(),
+    if (lastSyncedAt case final syncedAt?)
+      'lastSyncedAt': syncedAt.toIso8601String(),
     'synchronized': synchronized,
-    if (changeId != null && changeId!.isNotEmpty) 'changeId': changeId,
+    if (changeId?.isNotEmpty ?? false) 'changeId': changeId,
   };
 
   bool get hasContent =>

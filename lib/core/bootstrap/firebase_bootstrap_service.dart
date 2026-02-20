@@ -134,8 +134,8 @@ class FirebaseBootstrapService {
     final providers = <AuthProvider>[EmailAuthProvider()];
 
     final googleProvider = _createGoogleProvider();
-    if (googleProvider != null) {
-      providers.add(googleProvider);
+    if (googleProvider case final provider?) {
+      providers.add(provider);
     }
 
     FirebaseUIAuth.configureProviders(providers);
@@ -158,9 +158,10 @@ class FirebaseBootstrapService {
           : options.androidClientId;
       final preferPlist = isIOS && (platformClientId?.isEmpty ?? true);
 
-      final resolvedClientId = (platformClientId?.trim().isNotEmpty ?? false)
-          ? platformClientId!.trim()
-          : options.appId;
+      final resolvedClientId = switch (platformClientId) {
+        final id? when id.trim().isNotEmpty => id.trim(),
+        _ => options.appId,
+      };
 
       return GoogleProvider(
         clientId: resolvedClientId,

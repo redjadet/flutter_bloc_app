@@ -125,13 +125,11 @@ class OfflineFirstCounterRepository
     final CounterSnapshot localSnapshot,
     final CounterSnapshot remoteSnapshot,
   ) {
-    if (remoteSnapshot.lastChanged == null) {
-      return false;
-    }
-    if (localSnapshot.lastChanged == null) {
-      return true;
-    }
-    return remoteSnapshot.lastChanged!.isAfter(localSnapshot.lastChanged!);
+    final DateTime? remote = remoteSnapshot.lastChanged;
+    final DateTime? local = localSnapshot.lastChanged;
+    if (remote == null) return false;
+    if (local == null) return true;
+    return remote.isAfter(local);
   }
 
   static String _generateChangeId() =>

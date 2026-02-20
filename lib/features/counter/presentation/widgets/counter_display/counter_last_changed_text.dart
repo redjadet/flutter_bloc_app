@@ -18,9 +18,10 @@ class CounterLastChangedText extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final locale = Localizations.localeOf(context).languageCode;
-    final formatted = lastChanged == null
-        ? '-'
-        : DateFormat.yMd(locale).add_jm().format(lastChanged!);
+    final formatted = switch (lastChanged) {
+      final d? => DateFormat.yMd(locale).add_jm().format(d),
+      _ => '-',
+    };
     final double fontSize = (textTheme.bodySmall?.fontSize ?? 11).sp;
     return Text(
       '${l10n.lastChangedLabel} $formatted',

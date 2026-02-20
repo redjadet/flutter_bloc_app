@@ -35,9 +35,10 @@ class SharedPreferencesCounterRepository implements CounterRepository {
       final SharedPreferences preferences = await _preferences();
       final int count = preferences.getInt(_preferencesKeyCount) ?? 0;
       final int? changedMs = preferences.getInt(_preferencesKeyChanged);
-      final DateTime? changed = changedMs != null
-          ? DateTime.fromMillisecondsSinceEpoch(changedMs)
-          : null;
+      final DateTime? changed = switch (changedMs) {
+        final millis? => DateTime.fromMillisecondsSinceEpoch(millis),
+        _ => null,
+      };
       final CounterSnapshot snapshot = CounterSnapshot(
         userId: _localUserId,
         count: count,
@@ -61,10 +62,10 @@ class SharedPreferencesCounterRepository implements CounterRepository {
           final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
           await preferences.setInt(_preferencesKeyCount, normalized.count);
           final DateTime? lastChanged = normalized.lastChanged;
-          if (lastChanged != null) {
+          if (lastChanged case final timestamp?) {
             await preferences.setInt(
               _preferencesKeyChanged,
-              lastChanged.millisecondsSinceEpoch,
+              timestamp.millisecondsSinceEpoch,
             );
           } else {
             await preferences.remove(_preferencesKeyChanged);
@@ -76,17 +77,18 @@ class SharedPreferencesCounterRepository implements CounterRepository {
 
   @override
   Stream<CounterSnapshot> watch() {
-    _watchController ??= StreamController<CounterSnapshot>.broadcast(
-      onListen: _handleOnListen,
-      onCancel: _handleOnCancel,
-    );
-    return _watchController!.stream;
+    final controller = _watchController ??=
+        StreamController<CounterSnapshot>.broadcast(
+          onListen: _handleOnListen,
+          onCancel: _handleOnCancel,
+        );
+    return controller.stream;
   }
 
   void _handleOnListen() {
     final CounterSnapshot? cached = _cachedSnapshot;
-    if (cached != null) {
-      _emitSnapshot(cached);
+    if (cached case final snapshot?) {
+      _emitSnapshot(snapshot);
       return;
     }
     _pendingInitialNotification ??= _loadAndEmitInitial();
@@ -120,9 +122,10 @@ class SharedPreferencesCounterRepository implements CounterRepository {
         snapshot.lastChanged == null) {
       return _emptySnapshot;
     }
-    return snapshot.userId != null
-        ? snapshot
-        : snapshot.copyWith(userId: _localUserId);
+    return switch (snapshot.userId) {
+      final _? => snapshot,
+      _ => snapshot.copyWith(userId: _localUserId),
+    };
   }
 
   void _emitSnapshot(final CounterSnapshot snapshot) {

@@ -48,16 +48,15 @@ abstract class TodoItem with _$TodoItem {
   }
 
   bool get isOverdue {
-    if (isCompleted || dueDate == null) {
-      return false;
-    }
+    final DateTime? due = dueDate;
+    if (isCompleted || due == null) return false;
     final DateTime nowLocal = DateTime.now();
     final DateTime todayLocal = DateTime(
       nowLocal.year,
       nowLocal.month,
       nowLocal.day,
     );
-    final DateTime dueLocal = dueDate!.toLocal();
+    final DateTime dueLocal = due.toLocal();
     final DateTime dueDateOnly = DateTime(
       dueLocal.year,
       dueLocal.month,

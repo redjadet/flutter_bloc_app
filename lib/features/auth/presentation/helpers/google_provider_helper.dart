@@ -26,10 +26,10 @@ firebase_ui_google.GoogleProvider? maybeCreateGoogleProvider([
     final bool preferPlist =
         isIOS && (platformClientId?.trim().isEmpty ?? true);
 
-    final String resolvedClientId =
-        (platformClientId?.trim().isNotEmpty ?? false)
-        ? platformClientId!.trim()
-        : options.appId;
+    final String resolvedClientId = switch (platformClientId) {
+      final id? when id.trim().isNotEmpty => id.trim(),
+      _ => options.appId,
+    };
 
     return firebase_ui_google.GoogleProvider(
       clientId: resolvedClientId,

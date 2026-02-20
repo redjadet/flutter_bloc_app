@@ -31,6 +31,9 @@ class TodoListView extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final itemSelectionChanged = onItemSelectionChanged;
+    final deleteWithoutConfirmation = onDeleteWithoutConfirmation;
+
     if (items.length >= 100) {
       // Use ListView.builder for large lists (better performance)
       return ListView.builder(
@@ -50,15 +53,15 @@ class TodoListView extends StatelessWidget {
               item: item,
               showDragHandle: sortOrder == TodoSortOrder.manual,
               isSelected: selectedItemIds.contains(item.id),
-              onSelectionChanged: onItemSelectionChanged != null
+              onSelectionChanged: itemSelectionChanged != null
                   ? (final selected) =>
-                        onItemSelectionChanged!(item.id, selected: selected)
+                        itemSelectionChanged(item.id, selected: selected)
                   : null,
               onToggle: () => onToggle(item),
               onEdit: () => onEdit(item),
               onDelete: () => onDelete(item),
-              onDeleteWithoutConfirmation: onDeleteWithoutConfirmation != null
-                  ? () => onDeleteWithoutConfirmation!(item)
+              onDeleteWithoutConfirmation: deleteWithoutConfirmation != null
+                  ? () => deleteWithoutConfirmation(item)
                   : null,
             ),
           );
@@ -81,15 +84,15 @@ class TodoListView extends StatelessWidget {
             item: item,
             showDragHandle: sortOrder == TodoSortOrder.manual,
             isSelected: selectedItemIds.contains(item.id),
-            onSelectionChanged: onItemSelectionChanged != null
+            onSelectionChanged: itemSelectionChanged != null
                 ? (final selected) =>
-                      onItemSelectionChanged!(item.id, selected: selected)
+                      itemSelectionChanged(item.id, selected: selected)
                 : null,
             onToggle: () => onToggle(item),
             onEdit: () => onEdit(item),
             onDelete: () => onDelete(item),
-            onDeleteWithoutConfirmation: onDeleteWithoutConfirmation != null
-                ? () => onDeleteWithoutConfirmation!(item)
+            onDeleteWithoutConfirmation: deleteWithoutConfirmation != null
+                ? () => deleteWithoutConfirmation(item)
                 : null,
           ),
         );

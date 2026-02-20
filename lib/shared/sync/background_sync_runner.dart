@@ -111,8 +111,9 @@ Future<SyncCycleSummary> runSyncCycle({
     );
 
     // Track retry count for this entity
-    retryCountsByEntity.putIfAbsent(operation.entityType, () => <int>[]);
-    retryCountsByEntity[operation.entityType]!.add(operation.retryCount);
+    retryCountsByEntity
+        .putIfAbsent(operation.entityType, () => <int>[])
+        .add(operation.retryCount);
 
     try {
       processed++;

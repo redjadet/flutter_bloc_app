@@ -12,13 +12,13 @@ class WebsocketConnectionBanner extends StatelessWidget {
   Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final l10n = context.l10n;
-    if (state.errorMessage != null) {
+    if (state.errorMessage case final msg?) {
       return Container(
         width: double.infinity,
         color: theme.colorScheme.errorContainer,
         padding: context.allGapS,
         child: Text(
-          l10n.websocketErrorLabel(state.errorMessage!),
+          l10n.websocketErrorLabel(msg),
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onErrorContainer,
           ),

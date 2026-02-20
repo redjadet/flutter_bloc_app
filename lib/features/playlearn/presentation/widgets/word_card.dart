@@ -44,7 +44,7 @@ class WordCard extends StatelessWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  if (item.imageAssetPath != null)
+                  if (item.imageAssetPath case final path?)
                     Center(
                       child: SizedBox(
                         width: compactSize,
@@ -53,7 +53,7 @@ class WordCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                           child: _buildImage(
                             context,
-                            item.imageAssetPath!,
+                            path,
                             compactSize,
                             theme,
                           ),
@@ -82,7 +82,7 @@ class WordCard extends StatelessWidget {
             }
             return Row(
               children: <Widget>[
-                if (item.imageAssetPath != null)
+                if (item.imageAssetPath case final path?)
                   Padding(
                     padding: EdgeInsets.only(right: gapM),
                     child: SizedBox(
@@ -92,7 +92,7 @@ class WordCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                         child: _buildImage(
                           context,
-                          item.imageAssetPath!,
+                          path,
                           size,
                           theme,
                         ),

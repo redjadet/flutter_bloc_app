@@ -25,12 +25,10 @@ class CommonMaxWidth extends StatelessWidget {
       child: child,
     );
 
-    final Widget padded = padding == null
-        ? constrained
-        : Padding(
-            padding: padding!,
-            child: constrained,
-          );
+    final Widget padded = switch (padding) {
+      final p? => Padding(padding: p, child: constrained),
+      _ => constrained,
+    };
 
     return Align(
       alignment: alignment,

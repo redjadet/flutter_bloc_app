@@ -22,14 +22,14 @@ mixin CalculatorCubitHelpers on Cubit<CalculatorState> {
     final CalculatorState current,
     final double currentValue,
   ) {
-    if (current.accumulator != null &&
-        current.operation != null &&
-        !current.replaceInput) {
-      return _applyOperation(
-        lhs: current.accumulator!,
-        rhs: currentValue,
-        operation: current.operation!,
-      );
+    if ((current.accumulator, current.operation) case (final lhs?, final op?)) {
+      if (!current.replaceInput) {
+        return _applyOperation(
+          lhs: lhs,
+          rhs: currentValue,
+          operation: op,
+        );
+      }
     }
     return current.accumulator ?? currentValue;
   }

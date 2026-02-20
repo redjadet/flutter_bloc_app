@@ -22,8 +22,9 @@ class HiveCounterRepositoryWatchState {
       _cachedSnapshot = snapshot;
 
   Stream<CounterSnapshot> get stream {
-    _watchController ??= StreamController<CounterSnapshot>.broadcast();
-    return _watchController!.stream;
+    final controller = _watchController ??=
+        StreamController<CounterSnapshot>.broadcast();
+    return controller.stream;
   }
 
   void createController({
@@ -31,11 +32,11 @@ class HiveCounterRepositoryWatchState {
     required final Future<void> Function() onCancel,
   }) {
     final StreamController<CounterSnapshot>? existing = _watchController;
-    if (existing != null) {
-      if (!existing.hasListener && !existing.isClosed) {
-        unawaited(existing.close());
+    if (existing case final controller?) {
+      if (!controller.hasListener && !controller.isClosed) {
+        unawaited(controller.close());
         _watchController = null;
-      } else if (existing.hasListener) {
+      } else if (controller.hasListener) {
         return;
       }
     }
@@ -68,14 +69,14 @@ class HiveCounterRepositoryWatchState {
 
   Future<void> loadAndEmitInitial() async {
     final Future<void>? pending = _pendingInitialNotification;
-    if (pending != null) {
+    if (pending case final existingPending?) {
       try {
-        await pending;
+        await existingPending;
       } on Exception {
         // Errors are handled in _performLoadAndEmit.
       }
       if (_pendingInitialNotification != null &&
-          _pendingInitialNotification != pending) {
+          _pendingInitialNotification != existingPending) {
         return;
       }
     }
@@ -102,11 +103,11 @@ class HiveCounterRepositoryWatchState {
         stackTrace,
       );
       final CounterSnapshot? cached = _cachedSnapshot;
-      if (cached != null) {
-        emitSnapshot(cached);
-      } else {
-        emitSnapshot(emptySnapshot);
+      if (cached case final snapshot?) {
+        emitSnapshot(snapshot);
+        return;
       }
+      emitSnapshot(emptySnapshot);
     }
   }
 

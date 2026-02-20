@@ -169,6 +169,9 @@ echo ""
 
 echo "  Running focused regression guard tests..."
 bash tool/check_regression_guards.sh || VALIDATION_FAILED=1
+
+echo "  Checking for unguarded null assertion (!) usage..."
+bash tool/check_unguarded_null_assertion.sh || VALIDATION_FAILED=1
 echo ""
 
 if [ $VALIDATION_FAILED -eq 1 ]; then

@@ -65,8 +65,8 @@ class RepositoryWatchHelper<T> {
   /// if one doesn't exist yet. The controller will be properly initialized
   /// when [createWatchController] is called.
   Stream<T> get stream {
-    _watchController ??= StreamController<T>.broadcast();
-    return _watchController!.stream;
+    final controller = _watchController ??= StreamController<T>.broadcast();
+    return controller.stream;
   }
 
   /// Creates and initializes the watch controller if not already created.
@@ -80,13 +80,13 @@ class RepositoryWatchHelper<T> {
   }) {
     // If controller exists but wasn't initialized with callbacks, close and recreate
     final StreamController<T>? existing = _watchController;
-    if (existing != null) {
+    if (existing case final controller?) {
       // Only recreate if controller has no listeners (safe to close)
       // This prevents unnecessary recreation when listeners are active
-      if (!existing.hasListener && !existing.isClosed) {
-        unawaited(existing.close());
+      if (!controller.hasListener && !controller.isClosed) {
+        unawaited(controller.close());
         _watchController = null;
-      } else if (existing.hasListener) {
+      } else if (controller.hasListener) {
         // Controller already has listeners, don't recreate
         return;
       }
@@ -102,8 +102,8 @@ class RepositoryWatchHelper<T> {
   /// Emits cached value if available, then triggers initial load if needed.
   void handleOnListen() {
     final T? cached = _cachedValue;
-    if (cached != null) {
-      emitValue(cached);
+    if (cached case final value?) {
+      emitValue(value);
     }
     _pendingInitialNotification ??= _loadAndEmitInitial();
     unawaited(_pendingInitialNotification);
@@ -114,13 +114,12 @@ class RepositoryWatchHelper<T> {
   /// Cleans up the controller if no listeners remain.
   Future<void> handleOnCancel() async {
     final StreamController<T>? controller = _watchController;
-    if (controller == null) {
-      return;
-    }
-    if (!controller.hasListener) {
-      _watchController = null;
-      _pendingInitialNotification = null;
-      await controller.close();
+    if (controller case final activeController?) {
+      if (!activeController.hasListener) {
+        _watchController = null;
+        _pendingInitialNotification = null;
+        await activeController.close();
+      }
     }
   }
 
@@ -131,17 +130,17 @@ class RepositoryWatchHelper<T> {
   Future<void> _loadAndEmitInitial() async {
     // Prevent concurrent loads by reusing existing pending load
     final Future<void>? pending = _pendingInitialNotification;
-    if (pending != null) {
+    if (pending case final existingPending?) {
       // Wait for existing load to complete, then check if another was triggered
       try {
-        await pending;
+        await existingPending;
       } on Exception {
         // Ignore errors from pending load - they're handled in _performLoadAndEmit
       }
       // If another load was triggered while waiting, return early
       // This prevents duplicate loads when multiple events fire rapidly
       if (_pendingInitialNotification != null &&
-          _pendingInitialNotification != pending) {
+          _pendingInitialNotification != existingPending) {
         return;
       }
     }
@@ -165,9 +164,11 @@ class RepositoryWatchHelper<T> {
     try {
       final T value = await loadInitial();
       emitValue(value);
+      return;
     } on Exception catch (error, stackTrace) {
-      if (onError != null) {
-        onError!(error, stackTrace);
+      final errorHandler = onError;
+      if (errorHandler case final handle?) {
+        handle(error, stackTrace);
       } else {
         AppLogger.error(
           'RepositoryWatchHelper.loadInitial failed',
@@ -177,11 +178,11 @@ class RepositoryWatchHelper<T> {
       }
       // Emit cached value or empty value on error
       final T? cached = _cachedValue;
-      if (cached != null) {
-        emitValue(cached);
-      } else {
-        emitValue(emptyValue);
+      if (cached case final value?) {
+        emitValue(value);
+        return;
       }
+      emitValue(emptyValue);
     }
   }
 
@@ -191,10 +192,11 @@ class RepositoryWatchHelper<T> {
   void emitValue(final T value) {
     _cachedValue = value;
     final StreamController<T>? controller = _watchController;
-    if (controller == null || controller.isClosed) {
-      return;
+    if (controller case final activeController?) {
+      if (!activeController.isClosed) {
+        activeController.add(value);
+      }
     }
-    controller.add(value);
   }
 
   /// Disposes of all resources.

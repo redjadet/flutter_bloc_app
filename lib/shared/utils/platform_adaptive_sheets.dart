@@ -64,11 +64,11 @@ class PlatformAdaptiveSheets {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (title != null)
+              if (title case final resolvedTitle?)
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: Text(
-                    title,
+                    resolvedTitle,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -168,11 +168,11 @@ class _CupertinoPickerSheetContentState<T>
         top: false,
         child: Column(
           children: [
-            if (widget.title != null)
+            if (widget.title case final t?)
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Text(
-                  widget.title!,
+                  t,
                   style: theme.textTheme.titleMedium,
                 ),
               ),
@@ -188,9 +188,10 @@ class _CupertinoPickerSheetContentState<T>
                 children: widget.items
                     .map(
                       (final item) => Center(
-                        child: widget.itemBuilder != null
-                            ? widget.itemBuilder!(context, item)
-                            : Text(widget.itemLabel(item)),
+                        child: switch (widget.itemBuilder) {
+                          final fn? => fn(context, item),
+                          _ => Text(widget.itemLabel(item)),
+                        },
                       ),
                     )
                     .toList(),

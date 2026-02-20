@@ -65,9 +65,10 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
     }
     final TodoItem item = TodoItem.create(
       title: trimmedTitle,
-      description: description?.trim().isEmpty ?? true
-          ? null
-          : description!.trim(),
+      description: switch (description) {
+        final d? when d.trim().isNotEmpty => d.trim(),
+        _ => null,
+      },
       dueDate: dueDate,
       priority: priority,
     );

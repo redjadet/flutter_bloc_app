@@ -38,12 +38,13 @@ class CommonErrorView extends StatelessWidget {
         fontSize: context.responsiveTitleSize,
         fontWeight: FontWeight.w600,
       ),
-      action: onRetry == null
-          ? null
-          : CommonRetryButton(
-              onPressed: onRetry!,
-              label: context.l10n.retryButtonLabel,
-            ),
+      action: switch (onRetry) {
+        final cb? => CommonRetryButton(
+          onPressed: cb,
+          label: context.l10n.retryButtonLabel,
+        ),
+        _ => null,
+      },
     );
   }
 }

@@ -98,7 +98,7 @@ class TodoItemDto {
     'isCompleted': isCompleted,
     'createdAt': createdAt.toIso8601String(),
     'updatedAt': updatedAt.toIso8601String(),
-    if (dueDate != null) 'dueDate': dueDate!.toIso8601String(),
+    if (dueDate case final date?) 'dueDate': date.toIso8601String(),
     'priority': priority.name,
     if (changeId != null) 'changeId': changeId,
     if (lastSyncedAt != null) 'lastSyncedAt': lastSyncedAt?.toIso8601String(),

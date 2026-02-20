@@ -57,20 +57,20 @@ class _WhiteboardWidgetState extends State<WhiteboardWidget> {
   }
 
   void _updateStroke(final Offset position) {
-    if (_currentStroke == null) return;
-
+    final WhiteboardStroke? stroke = _currentStroke;
+    if (stroke == null) return;
     setState(() {
-      _currentStroke = _currentStroke!.copyWith(
-        points: <Offset>[..._currentStroke!.points, position],
+      _currentStroke = stroke.copyWith(
+        points: <Offset>[...stroke.points, position],
       );
     });
   }
 
   void _endStroke() {
-    if (_currentStroke == null) return;
-
+    final WhiteboardStroke? stroke = _currentStroke;
+    if (stroke == null) return;
     setState(() {
-      _strokes.add(_currentStroke!);
+      _strokes.add(stroke);
       _undoStack.clear(); // Clear undo stack when new stroke is added
       _currentStroke = null;
     });
@@ -108,9 +108,10 @@ class _WhiteboardWidgetState extends State<WhiteboardWidget> {
   Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
-    final List<WhiteboardStroke> allStrokes = _currentStroke != null
-        ? <WhiteboardStroke>[..._strokes, _currentStroke!]
-        : _strokes;
+    final List<WhiteboardStroke> allStrokes = switch (_currentStroke) {
+      final s? => <WhiteboardStroke>[..._strokes, s],
+      _ => _strokes,
+    };
 
     return Column(
       children: <Widget>[

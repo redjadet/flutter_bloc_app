@@ -64,11 +64,11 @@ class _RemoteConfigMetadataRow extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final List<String> parts = <String>[];
-    if (dataSource != null && dataSource!.isNotEmpty) {
-      parts.add('Source: $dataSource');
+    if (dataSource case final s?) {
+      if (s.isNotEmpty) parts.add('Source: $s');
     }
-    if (lastSyncedAt != null) {
-      final DateTime local = lastSyncedAt!.toLocal();
+    if (lastSyncedAt case final t?) {
+      final DateTime local = t.toLocal();
       final MaterialLocalizations material = MaterialLocalizations.of(context);
       parts.add(
         'Last synced: ${material.formatShortDate(local)} ${material.formatTimeOfDay(TimeOfDay.fromDateTime(local))}',

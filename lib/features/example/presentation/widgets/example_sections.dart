@@ -23,43 +23,42 @@ class PlatformInfoSection extends StatelessWidget {
     if (isLoading && info == null && errorMessage == null) {
       return _loadingIndicator(context);
     }
-    if (errorMessage != null) {
+    if (errorMessage case final _?) {
       return _errorText(context, theme, l10n.exampleNativeInfoError);
     }
-    if (info == null) {
-      return const SizedBox.shrink();
-    }
-    final NativePlatformInfo resolvedInfo = info!;
-    final int? batteryPercent = resolvedInfo.batteryLevel;
-    return Padding(
-      padding: EdgeInsets.only(top: context.responsiveGapS),
-      child: Column(
-        key: ValueKey<String>(
-          'platform-info-${resolvedInfo.platform}-${resolvedInfo.version}',
-        ),
-        children: [
-          Text(
-            l10n.exampleNativeInfoTitle,
-            style: theme.textTheme.titleMedium,
-            textAlign: TextAlign.center,
+    if (info case final resolvedInfo?) {
+      final int? batteryPercent = resolvedInfo.batteryLevel;
+      return Padding(
+        padding: EdgeInsets.only(top: context.responsiveGapS),
+        child: Column(
+          key: ValueKey<String>(
+            'platform-info-${resolvedInfo.platform}-${resolvedInfo.version}',
           ),
-          SizedBox(height: context.responsiveGapXS),
-          Text(
-            resolvedInfo.toString(),
-            style: theme.textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-          if (batteryPercent != null) ...[
-            SizedBox(height: context.responsiveGapXS),
+          children: [
             Text(
-              l10n.exampleNativeBatteryLabel(batteryPercent),
-              style: theme.textTheme.bodySmall,
+              l10n.exampleNativeInfoTitle,
+              style: theme.textTheme.titleMedium,
               textAlign: TextAlign.center,
             ),
+            SizedBox(height: context.responsiveGapXS),
+            Text(
+              resolvedInfo.toString(),
+              style: theme.textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+            if (batteryPercent case final level?) ...[
+              SizedBox(height: context.responsiveGapXS),
+              Text(
+                l10n.exampleNativeBatteryLabel(level),
+                style: theme.textTheme.bodySmall,
+                textAlign: TextAlign.center,
+              ),
+            ],
           ],
-        ],
-      ),
-    );
+        ),
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   Widget _loadingIndicator(final BuildContext context) => Padding(
@@ -114,41 +113,43 @@ class IsolateResultSection extends StatelessWidget {
     if (isLoading && !_hasResults && errorMessage == null) {
       return _loadingIndicator(context);
     }
-    if (errorMessage != null) {
-      return _errorText(context, theme, errorMessage!);
+    if (errorMessage case final msg?) {
+      return _errorText(context, theme, msg);
     }
     if (!_hasResults) {
       return const SizedBox.shrink();
     }
-    final List<int> resolvedValues = parallelValues!;
-    final Duration? resolvedDuration = parallelDuration;
-    final String durationText = resolvedDuration == null
-        ? l10n.exampleIsolateParallelPending
-        : l10n.exampleIsolateParallelComplete(
-            resolvedValues.join(', '),
-            resolvedDuration.inMilliseconds,
-          );
-    final int resolvedInput = fibonacciInput ?? 0;
-    final int resolvedResult = fibonacciResult ?? 0;
-    return Padding(
-      padding: EdgeInsets.only(top: context.responsiveGapS),
-      child: Column(
-        key: ValueKey<String>('isolate-result-$resolvedDuration'),
-        children: [
-          Text(
-            l10n.exampleIsolateFibonacciLabel(resolvedInput, resolvedResult),
-            style: theme.textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: context.responsiveGapXS),
-          Text(
-            durationText,
-            style: theme.textTheme.bodySmall,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
+    if (parallelValues case final resolvedValues?) {
+      final Duration? resolvedDuration = parallelDuration;
+      final String durationText = resolvedDuration == null
+          ? l10n.exampleIsolateParallelPending
+          : l10n.exampleIsolateParallelComplete(
+              resolvedValues.join(', '),
+              resolvedDuration.inMilliseconds,
+            );
+      final int resolvedInput = fibonacciInput ?? 0;
+      final int resolvedResult = fibonacciResult ?? 0;
+      return Padding(
+        padding: EdgeInsets.only(top: context.responsiveGapS),
+        child: Column(
+          key: ValueKey<String>('isolate-result-$resolvedDuration'),
+          children: [
+            Text(
+              l10n.exampleIsolateFibonacciLabel(resolvedInput, resolvedResult),
+              style: theme.textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: context.responsiveGapXS),
+            Text(
+              durationText,
+              style: theme.textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   Widget _loadingIndicator(final BuildContext context) => Padding(

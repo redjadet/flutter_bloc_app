@@ -64,10 +64,11 @@ abstract class HiveSettingsRepository<T> extends HiveRepositoryBase {
         }
 
         // Validate the parsed value if validator is provided
-        if (validateValue != null) {
-          final String? validationError = validateValue!(parsedValue);
-          if (validationError != null) {
-            throw FormatException('Validation failed: $validationError');
+        final validator = validateValue;
+        if (validator case final validate?) {
+          final String? validationError = validate(parsedValue);
+          if (validationError case final error?) {
+            throw FormatException('Validation failed: $error');
           }
         }
 

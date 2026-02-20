@@ -118,24 +118,22 @@ class HiveCounterRepository extends HiveRepositoryBase
               );
 
           await box.put(_keyCount, normalized.count);
-          if (normalized.lastChanged != null) {
-            await box.put(
-              _keyChanged,
-              normalized.lastChanged!.millisecondsSinceEpoch,
-            );
+          if (normalized.lastChanged case final d?) {
+            await box.put(_keyChanged, d.millisecondsSinceEpoch);
           } else {
             await box.delete(_keyChanged);
           }
-          if (normalized.changeId != null && normalized.changeId!.isNotEmpty) {
-            await box.put(_keyChangeId, normalized.changeId);
+          if (normalized.changeId case final id?) {
+            if (id.isNotEmpty) {
+              await box.put(_keyChangeId, id);
+            } else {
+              await box.delete(_keyChangeId);
+            }
           } else {
             await box.delete(_keyChangeId);
           }
-          if (normalized.lastSyncedAt != null) {
-            await box.put(
-              _keyLastSynced,
-              normalized.lastSyncedAt!.millisecondsSinceEpoch,
-            );
+          if (normalized.lastSyncedAt case final t?) {
+            await box.put(_keyLastSynced, t.millisecondsSinceEpoch);
           } else {
             await box.delete(_keyLastSynced);
           }

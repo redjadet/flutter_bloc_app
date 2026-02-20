@@ -112,8 +112,7 @@ class LibraryAssetTile extends StatelessWidget {
       );
     }
 
-    if (asset.thumbnailAssetPath != null) {
-      final String assetPath = asset.thumbnailAssetPath!;
+    if (asset.thumbnailAssetPath case final assetPath?) {
       final bool isSvg = assetPath.toLowerCase().endsWith('.svg');
       return ClipRRect(
         borderRadius: BorderRadius.circular(EpochSpacing.borderRadiusSmall),
