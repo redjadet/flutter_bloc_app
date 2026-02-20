@@ -89,6 +89,12 @@ class CounterCubit extends _CounterCubitBase {
     final CounterState current = state;
     if (current.count == 0) {
       if (isClosed) return;
+      // Clear error first when already set so listener sees a transition and
+      // shows the snackbar again on every decrement attempt at zero.
+      if (current.error?.type == CounterErrorType.cannotGoBelowZero) {
+        emit(current.copyWith(error: null));
+        if (isClosed) return;
+      }
       emit(state.copyWith(error: const CounterError.cannotGoBelowZero()));
       return;
     }

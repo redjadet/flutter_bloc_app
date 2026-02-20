@@ -27,6 +27,7 @@ class CounterPage extends StatefulWidget {
 class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   late final bool _showFlavorBadge;
   DateTime? _lastFlushTime;
+  bool _isCannotGoBelowZeroSnackBarVisible = false;
   static const Duration _flushThrottleDuration = Duration(milliseconds: 500);
   static const Duration _cannotGoBelowZeroSnackBarDuration = Duration(
     seconds: 2,
@@ -97,7 +98,9 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
             if (error != null) {
               final String localizedMessage = counterErrorMessage(l10n, error);
               if (error.type == CounterErrorType.cannotGoBelowZero) {
-                _showCannotGoBelowZeroSnackBar(localizedMessage);
+                if (!_isCannotGoBelowZeroSnackBarVisible) {
+                  _showCannotGoBelowZeroSnackBar(localizedMessage);
+                }
                 return;
               }
               ErrorHandling.handleCubitError(
@@ -117,6 +120,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
           listenWhen: (final prev, final curr) =>
               prev.count == 0 && curr.count > 0,
           listener: (final context, final state) {
+            _isCannotGoBelowZeroSnackBarVisible = false;
             ErrorHandling.clearSnackBars(context);
           },
         ),
@@ -162,8 +166,16 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
     if (controller == null) {
       return;
     }
+    _isCannotGoBelowZeroSnackBarVisible = true;
     bool isClosed = false;
-    unawaited(controller.closed.whenComplete(() => isClosed = true));
+    unawaited(
+      controller.closed.whenComplete(() {
+        if (mounted) {
+          _isCannotGoBelowZeroSnackBarVisible = false;
+        }
+        isClosed = true;
+      }),
+    );
     unawaited(
       Future<void>.delayed(_cannotGoBelowZeroSnackBarDuration, () {
         if (!mounted || isClosed) {
