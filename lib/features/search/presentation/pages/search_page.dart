@@ -17,6 +17,9 @@ import 'package:flutter_bloc_app/shared/widgets/common_empty_state.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/view_status_switcher.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'search_page.freezed.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({
@@ -109,19 +112,14 @@ class _SearchPageContent extends StatelessWidget {
   }
 }
 
-@immutable
-class _SearchBodyData {
-  const _SearchBodyData({
-    required this.isLoading,
-    required this.isError,
-    required this.hasResults,
-    required this.results,
-  });
-
-  final bool isLoading;
-  final bool isError;
-  final bool hasResults;
-  final List<SearchResult> results;
+@freezed
+abstract class _SearchBodyData with _$SearchBodyData {
+  const factory _SearchBodyData({
+    required final bool isLoading,
+    required final bool isError,
+    required final bool hasResults,
+    required final List<SearchResult> results,
+  }) = __SearchBodyData;
 }
 
 class _SearchPageAppBar extends StatelessWidget implements PreferredSizeWidget {

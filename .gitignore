@@ -55,6 +55,9 @@ app.*.map.json
 # Platform build outputs – all files and subfolders recursively (do not commit)
 **/build/**
 
+# Gradle cache (e.g. third_party plugin builds)
+**/.gradle/
+
 # Local secrets
 assets/config/secrets.json
 android/app/google-services.json
@@ -66,3 +69,4 @@ third_party/pub/firebase_remote_config/example/lib/firebase_options.dart
 INTERVIEW_QA.md
 
 .config/
+.agents/rules/rules.md

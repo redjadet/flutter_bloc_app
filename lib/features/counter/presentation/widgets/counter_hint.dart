@@ -3,6 +3,9 @@ import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dar
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/widgets/view_status_switcher.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'counter_hint.freezed.dart';
 
 class CounterHint extends StatelessWidget {
   const CounterHint({super.key});
@@ -36,10 +39,10 @@ class CounterHint extends StatelessWidget {
   }
 }
 
-@immutable
-class _CounterHintData {
-  const _CounterHintData({required this.count, required this.isLoading});
-
-  final int count;
-  final bool isLoading;
+@freezed
+abstract class _CounterHintData with _$CounterHintData {
+  const factory _CounterHintData({
+    required final int count,
+    required final bool isLoading,
+  }) = __CounterHintData;
 }
