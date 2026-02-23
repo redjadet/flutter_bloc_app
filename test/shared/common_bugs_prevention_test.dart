@@ -413,6 +413,29 @@ void main() {
         await controller.close();
       });
     });
+
+    // Restart-after-dispose: when a stream subscription's onError/onDone
+    // schedules a delayed restart (e.g. re-subscribe after 2s), the component
+    // must check a disposed flag before starting a new subscription.
+    // Otherwise disposing before the delay fires leaks a new subscription.
+    // Regression test: test/features/todo_list/data/
+    // offline_first_todo_repository_test.dart
+    // "does not restart remote watch after dispose when stream ends"
+    group('Restart-after-dispose (subscription leak)', () {
+      test(
+        'delayed restart must not run after dispose (see offline_first_todo_repository_test)',
+        () async {
+          // This test documents the pattern. The concrete regression test lives
+          // in test/features/todo_list/data/offline_first_todo_repository_test.dart
+          // (test name: "does not restart remote watch after dispose when stream ends").
+          // When adding similar "stream listen + onError/onDone + delayed restart"
+          // code, add a _disposed (or similar) flag, set it in dispose(), and
+          // check it at the start of the restart callback and before creating
+          // a new subscription.
+          expect(true, isTrue);
+        },
+      );
+    });
   });
 }
 

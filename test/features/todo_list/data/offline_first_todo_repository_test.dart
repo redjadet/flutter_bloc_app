@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_bloc_app/features/todo_list/data/hive_todo_repository.dart';
@@ -11,6 +12,100 @@ import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+
+/// Fake remote that tracks [watchAll] calls and exposes a stream that can be
+/// closed to trigger onDone. Used to assert no restart-after-dispose (no second
+/// watchAll call after dispose).
+class _FakeRemoteRepositoryWithWatchTracking extends TodoRepository {
+  _FakeRemoteRepositoryWithWatchTracking() {
+    _watchController.add(List<TodoItem>.from(_items));
+  }
+
+  final List<TodoItem> _items = [];
+  final StreamController<List<TodoItem>> _watchController =
+      StreamController<List<TodoItem>>.broadcast();
+
+  int watchAllCallCount = 0;
+
+  void closeWatchStream() {
+    if (!_watchController.isClosed) {
+      _watchController.close();
+    }
+  }
+
+  @override
+  Future<List<TodoItem>> fetchAll() async => List<TodoItem>.from(_items);
+
+  @override
+  Stream<List<TodoItem>> watchAll() {
+    watchAllCallCount++;
+    return _watchController.stream;
+  }
+
+  @override
+  Future<void> save(final TodoItem item) async {
+    _items.removeWhere((final i) => i.id == item.id);
+    _items.add(item);
+  }
+
+  @override
+  Future<void> delete(final String id) async {
+    _items.removeWhere((final i) => i.id == id);
+  }
+
+  @override
+  Future<void> clearCompleted() async {}
+}
+
+/// Fake remote that tracks active stream listeners so tests can detect
+/// duplicate subscriptions after error-triggered restarts.
+class _FakeRemoteRepositoryWithErrorTracking extends TodoRepository {
+  _FakeRemoteRepositoryWithErrorTracking() {
+    _watchController = StreamController<List<TodoItem>>.broadcast(
+      onListen: () => activeWatchListeners++,
+      onCancel: () => activeWatchListeners--,
+    );
+    _watchController.add(List<TodoItem>.from(_items));
+  }
+
+  final List<TodoItem> _items = [];
+  late final StreamController<List<TodoItem>> _watchController;
+  int watchAllCallCount = 0;
+  int activeWatchListeners = 0;
+
+  void emitWatchError() {
+    _watchController.addError(Exception('Simulated remote watch error'));
+  }
+
+  Future<void> closeWatchStream() async {
+    if (!_watchController.isClosed) {
+      await _watchController.close();
+    }
+  }
+
+  @override
+  Future<List<TodoItem>> fetchAll() async => List<TodoItem>.from(_items);
+
+  @override
+  Stream<List<TodoItem>> watchAll() {
+    watchAllCallCount++;
+    return _watchController.stream;
+  }
+
+  @override
+  Future<void> save(final TodoItem item) async {
+    _items.removeWhere((final i) => i.id == item.id);
+    _items.add(item);
+  }
+
+  @override
+  Future<void> delete(final String id) async {
+    _items.removeWhere((final i) => i.id == id);
+  }
+
+  @override
+  Future<void> clearCompleted() async {}
+}
 
 class _FakeRemoteRepository extends TodoRepository {
   _FakeRemoteRepository({
@@ -550,6 +645,74 @@ void main() {
 
         await secondRepository.dispose();
         expect(registry.resolve(OfflineFirstTodoRepository.todoEntity), isNull);
+      },
+    );
+
+    test('does not restart remote watch after dispose when stream ends '
+        '(regression: restart-after-dispose subscription leak)', () async {
+      final _FakeRemoteRepositoryWithWatchTracking remote =
+          _FakeRemoteRepositoryWithWatchTracking();
+      final OfflineFirstTodoRepository repository = OfflineFirstTodoRepository(
+        localRepository: localRepository,
+        remoteRepository: remote,
+        pendingSyncRepository: pendingRepository,
+        registry: registry,
+      );
+
+      expect(remote.watchAllCallCount, 1, reason: 'watch started in ctor');
+
+      // Trigger onDone so repo schedules _restartRemoteWatch (2s delay).
+      remote.closeWatchStream();
+
+      // Dispose before the restart delay fires.
+      await repository.dispose();
+
+      // Wait longer than the restart delay (2s in implementation).
+      await Future<void>.delayed(const Duration(milliseconds: 2500));
+
+      // Without a _disposed guard, _restartRemoteWatch would call _startRemoteWatch
+      // and watchAll() would be invoked again. With the fix, it must stay 1.
+      expect(
+        remote.watchAllCallCount,
+        1,
+        reason: 'restart must not run after dispose (would leak subscription)',
+      );
+    });
+
+    test(
+      'restarts remote watch after error without leaking old subscription',
+      () async {
+        final _FakeRemoteRepositoryWithErrorTracking remote =
+            _FakeRemoteRepositoryWithErrorTracking();
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        expect(remote.watchAllCallCount, 1, reason: 'watch started in ctor');
+        expect(remote.activeWatchListeners, 1);
+
+        // Trigger onError; previous listener must be canceled before restart.
+        remote.emitWatchError();
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+        expect(
+          remote.activeWatchListeners,
+          0,
+          reason: 'error path must release existing listener',
+        );
+
+        // Restart runs after repository delay (2s).
+        await Future<void>.delayed(const Duration(milliseconds: 2500));
+        expect(remote.watchAllCallCount, 2);
+        expect(remote.activeWatchListeners, 1);
+
+        await repository.dispose();
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+        expect(remote.activeWatchListeners, 0);
+        await remote.closeWatchStream();
       },
     );
   });
