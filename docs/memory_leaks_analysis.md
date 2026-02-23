@@ -29,7 +29,12 @@ The codebase handles most resource lifecycle correctly. Previously identified is
 
 **Location:** `lib/features/todo_list/data/offline_first_todo_repository.dart`
 
-**Status:** Fixed. Added `dispose()` that cancels `_remoteWatchSubscription`. Wired into DI via `registerTodoServices` dispose callback.
+**Status:** Fixed. Added `dispose()` that cancels `_remoteWatchSubscription`. Wired into DI via `registerTodoServices` dispose callback. **Restart-after-dispose:** When the remote stream emits `onError` or `onDone`, the repo schedules `_restartRemoteWatch()` after 2 seconds. If the repository was disposed in the meantime, that would have created a new subscription that was never cancelled. Fixed by adding a `_disposed` flag set in `dispose()` and checked in `_startRemoteWatch()` and `_restartRemoteWatch()` so no new subscription is created after disposal.
+
+**Additional fix (error path):** On remote stream `onError`, the previous code nulled `_remoteWatchSubscription` and scheduled restart, but the old listener could remain active and overlap with the restarted listener. Fixed by listening with `cancelOnError: true` and deduplicating restart scheduling via `_remoteRestartScheduled`, preventing stacked delayed restarts and duplicate active subscriptions.
+
+**Regression test:** To catch this class of bug early, run:
+`flutter test test/features/todo_list/data/offline_first_todo_repository_test.dart --name "does not restart remote watch after dispose when stream ends"`. Consider adding this test file to `tool/check_regression_guards.sh` so the checklist runs it. When adding similar "stream listen + onError/onDone + delayed restart" code elsewhere, add a disposed flag and check it before creating a new subscription; add a similar regression test that disposes before the delay and asserts no second subscription.
 
 ### 2.2 AppLinksDeepLinkService – StreamController ✓
 

@@ -35,6 +35,11 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   final PendingSyncRepository _pendingSyncRepository;
   final SyncableRepositoryRegistry _registry;
 
+  /// Set to true when [dispose] is called so [_restartRemoteWatch] does not
+  /// create a new subscription after the repository is disposed.
+  bool _disposed = false;
+  bool _remoteRestartScheduled = false;
+
   @override
   String get entityType => todoEntity;
 
@@ -54,6 +59,9 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   }
 
   void _startRemoteWatch() {
+    if (_disposed) {
+      return;
+    }
     // Only watch remote if we have a remote repository and aren't already watching
     final TodoRepository? remoteRepo = _remoteRepository;
     if (remoteRepo == null || _remoteWatchSubscription != null) {
@@ -80,17 +88,30 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
           stackTrace,
         );
         _remoteWatchSubscription = null;
-        unawaited(_restartRemoteWatch());
+        _scheduleRemoteRestart();
       },
       onDone: () {
         _remoteWatchSubscription = null;
-        unawaited(_restartRemoteWatch());
+        _scheduleRemoteRestart();
       },
+      cancelOnError: true,
     );
+  }
+
+  void _scheduleRemoteRestart() {
+    if (_disposed || _remoteRestartScheduled) {
+      return;
+    }
+    _remoteRestartScheduled = true;
+    unawaited(_restartRemoteWatch());
   }
 
   Future<void> _restartRemoteWatch() async {
     await Future<void>.delayed(const Duration(seconds: 2));
+    _remoteRestartScheduled = false;
+    if (_disposed) {
+      return;
+    }
     _startRemoteWatch();
   }
 
@@ -233,6 +254,8 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   ///
   /// Call when the repository is disposed (e.g. on logout/reset).
   Future<void> dispose() async {
+    _disposed = true;
+    _remoteRestartScheduled = false;
     final sub = _remoteWatchSubscription;
     _remoteWatchSubscription = null;
     await sub?.cancel();
