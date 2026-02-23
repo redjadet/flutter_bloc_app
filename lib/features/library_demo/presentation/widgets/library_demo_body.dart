@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_asset_tile.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_assets_header.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_category_list.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/libr
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_theme.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_top_nav.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_wordmark.dart';
+import 'package:flutter_bloc_app/features/scapes/presentation/scapes_cubit.dart';
 import 'package:flutter_bloc_app/features/scapes/scapes.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
@@ -59,6 +61,86 @@ class LibraryDemoBody extends StatelessWidget {
             ? EpochSpacing.panelPadding
             : context.pageHorizontalPadding;
 
+        if (isGridView) {
+          return BlocProvider<ScapesCubit>(
+            create: (_) => ScapesCubit(),
+            child: ColoredBox(
+              color: EpochColors.darkGrey,
+              child: CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ColoredBox(
+                          color: EpochColors.warmGrey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              LibraryTopNav(
+                                l10n: l10n,
+                                onBack: () => NavigationUtils.popOrGoHome(context),
+                                padding: EdgeInsets.only(
+                                  top: navTopPadding,
+                                  left: horizontalPadding,
+                                ),
+                              ),
+                              SizedBox(height: wordmarkGap),
+                              LibraryWordmark(
+                                title: l10n.libraryDemoBrandName,
+                                height: wordmarkHeight,
+                              ),
+                              SizedBox(height: wordmarkGap),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: EpochColors.darkGrey,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(
+                                EpochSpacing.borderRadiusLarge,
+                              ),
+                            ),
+                          ),
+                          padding: EdgeInsets.fromLTRB(
+                            EpochSpacing.panelPadding,
+                            panelTopPadding,
+                            EpochSpacing.panelPadding,
+                            panelBottomPadding,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.libraryDemoPanelTitle,
+                                style: EpochTextStyles.heading(context),
+                              ),
+                              SizedBox(height: EpochSpacing.gapMedium),
+                              LibrarySearchRow(l10n: l10n),
+                              SizedBox(height: categoryGap),
+                              LibraryCategoryList(l10n: l10n),
+                              SizedBox(height: sectionGap),
+                              LibraryAssetsHeader(
+                                l10n: l10n,
+                                isGridView: isGridView,
+                                onGridPressed: onGridPressed,
+                                onListPressed: onListPressed,
+                              ),
+                              SizedBox(height: sectionGap),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const ScapesGridSliverContent(),
+                ],
+              ),
+            ),
+          );
+        }
+
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,14 +191,11 @@ class LibraryDemoBody extends StatelessWidget {
                       onListPressed: onListPressed,
                     ),
                     SizedBox(height: sectionGap),
-                    if (isGridView)
-                      const ScapesGridContent()
-                    else
-                      ...assets.map(
-                        (final asset) => LibraryAssetTile(
-                          asset: asset,
-                        ),
+                    ...assets.map(
+                      (final asset) => LibraryAssetTile(
+                        asset: asset,
                       ),
+                    ),
                   ],
                 ),
               ),

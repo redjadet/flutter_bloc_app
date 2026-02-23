@@ -164,7 +164,7 @@ dart run build_runner build --delete-conflicting-outputs \
 
 ### Problem 3: Confetti `Colors.*` usage vs project rules
 
-**Root cause:** Project rules (`AGENTS.md`) forbid `Colors.black/white/grey` but the confetti particle colors use `Colors.green`, `Colors.blue`, etc. These are decorative and not part of the design system.
+**Root cause:** Project rules forbid `Colors.black/white/grey` but the confetti particle colors use `Colors.green`, `Colors.blue`, etc. These are decorative and not part of the design system.
 
 **Solution (if strict compliance is required):**
 

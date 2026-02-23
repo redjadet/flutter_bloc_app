@@ -2288,6 +2288,36 @@ abstract class AppLocalizations {
   /// **'List view'**
   String get scapesListViewTooltip;
 
+  /// Error when user tries to link wallet without being connected
+  ///
+  /// In en, this message translates to:
+  /// **'No wallet connected. Please connect a wallet first.'**
+  String get noWalletConnected;
+
+  /// Error when user tries to relink without a linked wallet
+  ///
+  /// In en, this message translates to:
+  /// **'No wallet linked. Connect and link first.'**
+  String get noWalletLinked;
+
+  /// Error when audio playback fails in Playlearn
+  ///
+  /// In en, this message translates to:
+  /// **'Could not play audio'**
+  String get couldNotPlayAudio;
+
+  /// Generic error message on Scapes page
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get scapesErrorOccurred;
+
+  /// Empty state when Scapes list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No scapes available'**
+  String get noScapesAvailable;
+
   /// Title for the GenUI demo page
   ///
   /// In en, this message translates to:

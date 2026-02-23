@@ -87,7 +87,9 @@ class CubitExceptionHandler {
   /// Execute an async operation with standardized exception handling.
   ///
   /// This is a convenience method that wraps try-catch with standardized
-  /// exception handling.
+  /// exception handling. When [isAlive] is provided, [onSuccess] and [onError]
+  /// are only invoked if [isAlive] returns true (e.g. pass `() => !cubit.isClosed`
+  /// to avoid emitting after the cubit is closed).
   ///
   /// Example:
   /// ```dart
@@ -96,6 +98,7 @@ class CubitExceptionHandler {
   ///   onSuccess: (data) => emit(state.copyWith(data: data)),
   ///   onError: (message) => emit(state.copyWith(errorMessage: message)),
   ///   logContext: 'MyCubit.loadData',
+  ///   isAlive: () => !isClosed,
   /// );
   /// ```
   static Future<void> executeAsync<T>({
@@ -103,6 +106,7 @@ class CubitExceptionHandler {
     required final void Function(T result) onSuccess,
     required final void Function(String errorMessage) onError,
     required final String logContext,
+    final bool Function()? isAlive,
     final Map<Type, void Function(Object error, StackTrace? stackTrace)>?
     specificExceptionHandlers,
     final void Function(Object error, StackTrace? stackTrace)?
@@ -110,8 +114,10 @@ class CubitExceptionHandler {
   }) async {
     try {
       final T result = await operation();
+      if (isAlive != null && !isAlive()) return;
       onSuccess(result);
     } on Object catch (error, stackTrace) {
+      if (isAlive != null && !isAlive()) return;
       handleException(
         error,
         stackTrace,
@@ -126,6 +132,7 @@ class CubitExceptionHandler {
   /// Execute an async operation that returns void with standardized exception handling.
   ///
   /// Convenience method for operations that don't return a value.
+  /// When [isAlive] is provided, callbacks are only invoked if [isAlive] returns true.
   ///
   /// Example:
   /// ```dart
@@ -134,6 +141,7 @@ class CubitExceptionHandler {
   ///   onSuccess: () => emit(state.copyWith(isConnected: true)),
   ///   onError: (message) => emit(state.copyWith(errorMessage: message)),
   ///   logContext: 'MyCubit.connect',
+  ///   isAlive: () => !isClosed,
   /// );
   /// ```
   static Future<void> executeAsyncVoid({
@@ -141,6 +149,7 @@ class CubitExceptionHandler {
     required final void Function(String errorMessage) onError,
     required final String logContext,
     final void Function()? onSuccess,
+    final bool Function()? isAlive,
     final Map<Type, void Function(Object error, StackTrace? stackTrace)>?
     specificExceptionHandlers,
     final void Function(Object error, StackTrace? stackTrace)?
@@ -151,6 +160,7 @@ class CubitExceptionHandler {
       onSuccess: (_) => onSuccess?.call(),
       onError: onError,
       logContext: logContext,
+      isAlive: isAlive,
       specificExceptionHandlers: specificExceptionHandlers,
       onErrorWithDetails: onErrorWithDetails,
     );
