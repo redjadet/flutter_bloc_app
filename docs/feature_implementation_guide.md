@@ -353,6 +353,34 @@ tool/test_coverage.sh
 
 ---
 
+## Implementation Time Estimates (Missing Features)
+
+Rough effort for **one developer** familiar with this repo (clean architecture, DI, tests, `./bin/checklist`). Includes feature module (domain/data/presentation), DI, routing, tests, and doc updates. **Excludes** store/console setup, backend deployment, or external account approval time unless noted.
+
+<!-- markdownlint-disable MD060 -->
+| Feature | Status | Estimated effort | Assumptions |
+| --- | --- | --- | --- |
+| Payment integration (Stripe) | Plan only | **4–6 days** | App: payments feature, PaymentSheet, SecretConfig, demo page, tests (~3–4 d). Backend: Firebase Callable for SetupIntent (~1–2 d) if not already available. |
+| Push notifications | Not implemented | **2–4 days** | FCM: permission, token, onMessage/onOpen; optional sync trigger. iOS: APNs capability + key in Firebase. No backend send API. |
+| In-app purchases | Not implemented | **5–8 days** | Products in App Store Connect / Play Console, purchase/restore flow, optional backend validation. Platform quirks and sandbox testing add time. |
+| Ads | Not implemented | **2–4 days** | AdMob: app + unit IDs, banner/interstitial, lifecycle. iOS: ATT if personalized. Store declarations and policy compliance extra. |
+| Realm | Not used | **3–5 days** | Only if required. New persistence layer, DI, migration from Hive/Isar if replacing. Realm Sync adds ~2–3 d if needed. |
+| Social (Apple / Facebook) | Partial | **1–2 days per provider** | Add package, extend `buildAuthProviders()`, Firebase + provider console config. Apple: capability + plist. |
+<!-- markdownlint-enable MD060 -->
+
+**Totals (if implementing all missing):**
+
+- **Minimum (Stripe + Push + IAP + Ads, no Realm, no extra social):** ~**13–22 days** (about **2.5–4.5 weeks**).
+- **With Realm and two extra social providers:** +**5–9 days** (~**3.5–6 weeks** total).
+
+**Notes:**
+
+- **Backend/DevOps:** Stripe backend, FCM send API, or IAP receipt validation add 1–3 days each if you build them.
+- **Store/console:** First-time App Store Connect, Play Console, AdMob, or Stripe account setup can add 0.5–1 day each.
+- **Review/iteration:** Store review, sandbox quirks, or policy fixes often add 1–3 days buffer per feature.
+
+---
+
 ## Summary Table
 
 <!-- markdownlint-disable MD060 -->
