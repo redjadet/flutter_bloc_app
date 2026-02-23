@@ -16,7 +16,7 @@ class WalletConnectService {
   static const String _defaultProjectId = 'YOUR_PROJECT_ID';
 
   /// Project ID for WalletConnect Cloud; used when initializing the real client.
-  // ignore: unused_field - used when TODO: wire WalletConnect SDK
+  // ignore: unused_field - placeholder until WalletConnect SDK is wired
   final String _projectId;
 
   /// Placeholder until WalletConnect client is integrated; replace with actual client.
@@ -40,9 +40,10 @@ class WalletConnectService {
     }
 
     try {
-      _client =
-          <String, dynamic>{}; // Placeholder until WalletConnect SDK is wired
-      AppLogger.debug('WalletConnectService initialized');
+      // NOTE: This is a placeholder client dictionary.
+      // When integrating the official walletconnect_flutter_v2 SDK, initialize `Web3App` here.
+      _client = <String, dynamic>{};
+      AppLogger.debug('WalletConnectService initialized (Mock)');
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'WalletConnectService initialization failed',
@@ -62,7 +63,7 @@ class WalletConnectService {
     }
 
     try {
-      // TODO(username): Connect to actual WalletConnect relay service
+      // Connect to actual WalletConnect relay service when SDK is wired
 
       // Wait for session to be established
       // In a real implementation, this would show QR code and wait for approval

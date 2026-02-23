@@ -16,6 +16,9 @@ import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 import 'package:flutter_bloc_app/shared/widgets/view_status_switcher.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'profile_page.freezed.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -144,17 +147,12 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-@immutable
-class _ProfileBodyData {
-  const _ProfileBodyData({
-    required this.isLoading,
-    required this.hasError,
-    required this.hasUser,
-    required this.user,
-  });
-
-  final bool isLoading;
-  final bool hasError;
-  final bool hasUser;
-  final ProfileUser? user;
+@freezed
+abstract class _ProfileBodyData with _$ProfileBodyData {
+  const factory _ProfileBodyData({
+    required final bool isLoading,
+    required final bool hasError,
+    required final bool hasUser,
+    required final ProfileUser? user,
+  }) = __ProfileBodyData;
 }

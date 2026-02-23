@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/core.dart';
@@ -26,12 +27,22 @@ class CounterPage extends StatefulWidget {
 
 class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   late final bool _showFlavorBadge;
+  late final ConfettiController _confettiController;
   DateTime? _lastFlushTime;
   bool _isCannotGoBelowZeroSnackBarVisible = false;
   static const Duration _flushThrottleDuration = Duration(milliseconds: 500);
   static const Duration _cannotGoBelowZeroSnackBarDuration = Duration(
     seconds: 2,
   );
+
+  /// Decorative particle colors for confetti (not UI theme colors).
+  static const List<Color> _confettiColors = [
+    Colors.green,
+    Colors.blue,
+    Colors.pink,
+    Colors.orange,
+    Colors.purple,
+  ];
 
   Future<void> _flushSyncIfPossible(final BuildContext context) async {
     try {
@@ -60,12 +71,16 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
     super.initState();
     context.ensureSyncStartedIfAvailable();
     _showFlavorBadge = FlavorManager.I.flavor != Flavor.prod;
+    _confettiController = ConfettiController(
+      duration: const Duration(milliseconds: 800),
+    );
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _confettiController.dispose();
     super.dispose();
   }
 
@@ -121,6 +136,12 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
           },
         ),
         TypeSafeBlocListener<CounterCubit, CounterState>(
+          listenWhen: (final prev, final curr) => curr.count > prev.count,
+          listener: (final context, final state) {
+            _confettiController.play();
+          },
+        ),
+        TypeSafeBlocListener<CounterCubit, CounterState>(
           listenWhen: (final prev, final curr) =>
               prev.count == 0 && curr.count > 0,
           listener: (final context, final state) {
@@ -137,25 +158,39 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
           },
         ),
       ],
-      child: Scaffold(
-        appBar: CounterPageAppBar(
-          title: widget.title,
-          onOpenSettings: () => _handleOpenSettings(context),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: context.pagePadding,
-            child: CommonMaxWidth(
-              child: CounterPageBody(
-                theme: theme,
-                l10n: l10n,
-                showFlavorBadge: _showFlavorBadge,
+      child: Stack(
+        children: [
+          Scaffold(
+            appBar: CounterPageAppBar(
+              title: widget.title,
+              onOpenSettings: () => _handleOpenSettings(context),
+            ),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: context.pagePadding,
+                child: CommonMaxWidth(
+                  child: CounterPageBody(
+                    theme: theme,
+                    l10n: l10n,
+                    showFlavorBadge: _showFlavorBadge,
+                  ),
+                ),
+              ),
+            ),
+            bottomNavigationBar: const CountdownBar(),
+            floatingActionButton: const CounterActions(),
+          ),
+          IgnorePointer(
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: ConfettiWidget(
+                confettiController: _confettiController,
+                blastDirectionality: BlastDirectionality.explosive,
+                colors: _confettiColors,
               ),
             ),
           ),
-        ),
-        bottomNavigationBar: const CountdownBar(),
-        floatingActionButton: const CounterActions(),
+        ],
       ),
     );
   }

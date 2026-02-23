@@ -13,6 +13,9 @@ import 'package:flutter_bloc_app/shared/widgets/common_status_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/shared/widgets/view_status_switcher.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'chat_message_list.freezed.dart';
 
 class ChatMessageList extends StatelessWidget {
   const ChatMessageList({
@@ -85,7 +88,6 @@ class ChatMessageList extends StatelessWidget {
                   itemBuilder: (final context, final index) {
                     final ChatMessage message = data.messages[index];
                     final bool isUser = message.author == ChatAuthor.user;
-                    // Sync status text removed as requested
 
                     return Column(
                       crossAxisAlignment: isUser
@@ -115,15 +117,11 @@ class ChatMessageList extends StatelessWidget {
   }
 }
 
-@immutable
-class _ChatListData {
-  const _ChatListData({
-    required this.hasMessages,
-    required this.isLoading,
-    required this.messages,
-  });
-
-  final bool hasMessages;
-  final bool isLoading;
-  final List<ChatMessage> messages;
+@freezed
+abstract class _ChatListData with _$ChatListData {
+  const factory _ChatListData({
+    required final bool hasMessages,
+    required final bool isLoading,
+    required final List<ChatMessage> messages,
+  }) = __ChatListData;
 }
