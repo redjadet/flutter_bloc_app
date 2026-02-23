@@ -1265,6 +1265,22 @@ class AppLocalizationsDe extends AppLocalizations {
   String get scapesListViewTooltip => 'List view';
 
   @override
+  String get noWalletConnected =>
+      'No wallet connected. Please connect a wallet first.';
+
+  @override
+  String get noWalletLinked => 'No wallet linked. Connect and link first.';
+
+  @override
+  String get couldNotPlayAudio => 'Could not play audio';
+
+  @override
+  String get scapesErrorOccurred => 'An error occurred';
+
+  @override
+  String get noScapesAvailable => 'No scapes available';
+
+  @override
   String get genuiDemoPageTitle => 'GenUI Demo';
 
   @override

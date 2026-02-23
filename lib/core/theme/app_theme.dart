@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/constants/constants.dart';
+import 'package:flutter_bloc_app/core/theme/theme_extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+/// Default decorative particle colors (confetti, etc.); not UI theme colors.
+/// Use for [ConfettiTheme.particleColors] and as fallback when extension is null.
+const List<Color> defaultConfettiParticleColors = [
+  Colors.green,
+  Colors.blue,
+  Colors.pink,
+  Colors.orange,
+  Colors.purple,
+];
 
 /// Application theme factory.
 ///
@@ -14,6 +25,9 @@ class AppTheme {
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(seedColor: AppConstants.primarySeedColor),
     textTheme: createAppTextTheme(Brightness.light),
+    extensions: const <ThemeExtension<dynamic>>[
+      ConfettiTheme(particleColors: defaultConfettiParticleColors),
+    ],
   );
 
   /// Dark theme for the app.
@@ -24,6 +38,9 @@ class AppTheme {
       brightness: Brightness.dark,
     ),
     textTheme: createAppTextTheme(Brightness.dark),
+    extensions: const <ThemeExtension<dynamic>>[
+      ConfettiTheme(particleColors: defaultConfettiParticleColors),
+    ],
   );
 
   /// Text theme using Roboto with Comfortaa for display styles.

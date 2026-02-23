@@ -39,13 +39,13 @@ class ScapesPage extends StatelessWidget {
           isError: (final state) => state.hasError,
           loadingBuilder: (final _) => const CommonLoadingWidget(),
           errorBuilder: (final context, final state) => CommonErrorView(
-            message: state.errorMessage ?? 'An error occurred',
+            message: state.errorMessage ?? l10n.scapesErrorOccurred,
             onRetry: () => context.cubit<ScapesCubit>().reload(),
           ),
           builder: (final context, final state) {
             if (state.scapes.isEmpty) {
-              return const CommonEmptyState(
-                message: 'No scapes available',
+              return CommonEmptyState(
+                message: l10n.noScapesAvailable,
               );
             }
 

@@ -5,10 +5,12 @@ import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_state.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 
 export 'sync_status_state.dart';
 
-class SyncStatusCubit extends Cubit<SyncStatusState> {
+class SyncStatusCubit extends Cubit<SyncStatusState>
+    with CubitSubscriptionMixin<SyncStatusState> {
   SyncStatusCubit({
     required final NetworkStatusService networkStatusService,
     required final BackgroundSyncCoordinator coordinator,
@@ -24,25 +26,23 @@ class SyncStatusCubit extends Cubit<SyncStatusState> {
        ) {
     _networkSubscription = _networkStatusService.statusStream.listen(
       (final status) {
-        if (isClosed) {
-          return;
-        }
+        if (isClosed) return;
         emit(state.copyWith(networkStatus: status));
       },
     );
+    registerSubscription(_networkSubscription);
+
     _syncSubscription = _coordinator.statusStream.listen(
       (final status) {
-        if (isClosed) {
-          return;
-        }
+        if (isClosed) return;
         emit(state.copyWith(syncStatus: status));
       },
     );
+    registerSubscription(_syncSubscription);
+
     _summarySubscription = _coordinator.summaryStream.listen(
       (final summary) {
-        if (isClosed) {
-          return;
-        }
+        if (isClosed) return;
         emit(
           state.copyWith(
             lastSummary: summary,
@@ -51,16 +51,18 @@ class SyncStatusCubit extends Cubit<SyncStatusState> {
         );
       },
     );
+    registerSubscription(_summarySubscription);
+
     unawaited(_seedInitialStatus());
   }
 
   final NetworkStatusService _networkStatusService;
   final BackgroundSyncCoordinator _coordinator;
-  // ignore: cancel_subscriptions - Subscriptions are properly cancelled in close() method
+  // ignore: cancel_subscriptions - Subscriptions managed by CubitSubscriptionMixin
   StreamSubscription<NetworkStatus>? _networkSubscription;
-  // ignore: cancel_subscriptions - Subscriptions are properly cancelled in close() method
+  // ignore: cancel_subscriptions - Subscriptions managed by CubitSubscriptionMixin
   StreamSubscription<SyncStatus>? _syncSubscription;
-  // ignore: cancel_subscriptions - Subscriptions are properly cancelled in close() method
+  // ignore: cancel_subscriptions - Subscriptions managed by CubitSubscriptionMixin
   StreamSubscription<SyncCycleSummary>? _summarySubscription;
 
   Future<void> _seedInitialStatus() async {
@@ -85,18 +87,10 @@ class SyncStatusCubit extends Cubit<SyncStatusState> {
 
   @override
   Future<void> close() async {
-    // Nullify references before canceling to prevent race conditions
-    final StreamSubscription<NetworkStatus>? networkSub = _networkSubscription;
     _networkSubscription = null;
-    final StreamSubscription<SyncStatus>? syncSub = _syncSubscription;
     _syncSubscription = null;
-    final StreamSubscription<SyncCycleSummary>? summarySub =
-        _summarySubscription;
     _summarySubscription = null;
-
-    await networkSub?.cancel();
-    await syncSub?.cancel();
-    await summarySub?.cancel();
+    await closeAllSubscriptions();
     return super.close();
   }
 }

@@ -40,7 +40,7 @@ class TodoListContent extends StatelessWidget {
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.6,
+            height: context.heightFraction(0.6),
             child: TodoEmptyState(
               onAddTodo: onAddTodo,
             ),

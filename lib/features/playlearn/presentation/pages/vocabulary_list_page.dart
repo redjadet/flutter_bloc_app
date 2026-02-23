@@ -21,9 +21,10 @@ class VocabularyListPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     return BlocProvider(
-      create: (_) => PlaylearnCubit(
+      create: (final context) => PlaylearnCubit(
         repository: getIt<VocabularyRepository>(),
         audioService: getIt<AudioPlaybackService>(),
+        l10n: context.l10n,
       )..loadWordsForTopic(topicId),
       child: CommonPageLayout(
         title: l10n.playlearnTitle,

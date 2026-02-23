@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/walletconnect_auth_repository.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/cubit/walletconnect_auth_state.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
@@ -11,10 +12,13 @@ import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
   WalletConnectAuthCubit({
     required final WalletConnectAuthRepository repository,
+    final AppLocalizations? l10n,
   }) : _repository = repository,
+       _l10n = l10n,
        super(const WalletConnectAuthState());
 
   final WalletConnectAuthRepository _repository;
+  final AppLocalizations? _l10n;
 
   /// Loads the linked wallet address if available.
   Future<void> loadLinkedWallet() async {
@@ -93,7 +97,9 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
       emit(
         state.copyWith(
           status: ViewStatus.error,
-          errorMessage: 'No wallet connected. Please connect a wallet first.',
+          errorMessage:
+              _l10n?.noWalletConnected ??
+              'No wallet connected. Please connect a wallet first.',
         ),
       );
       return;
@@ -177,7 +183,9 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
       emit(
         state.copyWith(
           status: ViewStatus.error,
-          errorMessage: 'No wallet linked. Connect and link first.',
+          errorMessage:
+              _l10n?.noWalletLinked ??
+              'No wallet linked. Connect and link first.',
         ),
       );
       return;

@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/todo_list/todo_list.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/walletconnect_auth_repository.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/cubit/walletconnect_auth_cubit.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/pages/walletconnect_auth_page.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/shared/widgets/deferred_page.dart';
 import 'package:go_router/go_router.dart';
@@ -54,13 +55,16 @@ List<GoRoute> createAuxiliaryRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.walletconnectAuthPath,
     name: AppRoutes.walletconnectAuth,
-    builder: (final context, final state) =>
-        BlocProviderHelpers.withAsyncInit<WalletConnectAuthCubit>(
-          create: () => WalletConnectAuthCubit(
-            repository: getIt<WalletConnectAuthRepository>(),
-          ),
-          init: (final cubit) => cubit.loadLinkedWallet(),
-          child: const WalletConnectAuthPage(),
+    builder: (final context, final state) {
+      final l10n = context.l10n;
+      return BlocProviderHelpers.withAsyncInit<WalletConnectAuthCubit>(
+        create: () => WalletConnectAuthCubit(
+          repository: getIt<WalletConnectAuthRepository>(),
+          l10n: l10n,
         ),
+        init: (final cubit) => cubit.loadLinkedWallet(),
+        child: const WalletConnectAuthPage(),
+      );
+    },
   ),
 ];

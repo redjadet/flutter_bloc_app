@@ -1,29 +1,38 @@
 import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scape.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_state.dart';
 
 class ScapesCubit extends Cubit<ScapesState> {
-  ScapesCubit() : super(const ScapesState()) {
+  ScapesCubit({final TimerService? timerService})
+    : _timerService = timerService ?? DefaultTimerService(),
+      super(const ScapesState()) {
     _loadScapes();
   }
+
+  final TimerService _timerService;
+  TimerDisposable? _loadDelayHandle;
 
   void _loadScapes() {
     emit(state.copyWith(isLoading: true, errorMessage: null));
 
-    // Simulate loading delay
-    Future<void>.delayed(const Duration(milliseconds: 300), () {
-      if (isClosed) return;
-
-      final scapes = _generateMockScapes();
-      emit(
-        state.copyWith(
-          scapes: scapes,
-          isLoading: false,
-        ),
-      );
-    });
+    _loadDelayHandle?.dispose();
+    _loadDelayHandle = _timerService.runOnce(
+      const Duration(milliseconds: 300),
+      () {
+        if (isClosed) return;
+        final scapes = _generateMockScapes();
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            scapes: scapes,
+            isLoading: false,
+          ),
+        );
+      },
+    );
   }
 
   List<Scape> _generateMockScapes() {
@@ -69,5 +78,12 @@ class ScapesCubit extends Cubit<ScapesState> {
 
   void reload() {
     _loadScapes();
+  }
+
+  @override
+  Future<void> close() {
+    _loadDelayHandle?.dispose();
+    _loadDelayHandle = null;
+    return super.close();
   }
 }
