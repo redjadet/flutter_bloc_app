@@ -39,6 +39,7 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
     );
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => repository.save(item),
+      isAlive: () => !isClosed,
       onError: (final errorMessage) {
         if (isClosed) return;
         emit(
@@ -124,6 +125,7 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
     emitOptimisticUpdate(updatedItems);
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => repository.delete(item.id),
+      isAlive: () => !isClosed,
       onError: (final errorMessage) {
         if (isClosed) return;
         lastDeletedItem = null;
@@ -149,6 +151,7 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
     emitOptimisticUpdate(updatedItems);
     await CubitExceptionHandler.executeAsyncVoid(
       operation: repository.clearCompleted,
+      isAlive: () => !isClosed,
       onError: (final errorMessage) {
         if (isClosed) return;
         emit(

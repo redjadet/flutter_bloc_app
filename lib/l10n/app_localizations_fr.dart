@@ -1373,4 +1373,34 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get openPlaylearnTooltip => 'Ouvrir Playlearn';
+
+  @override
+  String get whiteboardChoosePenColor => 'Choisir la couleur du stylet';
+
+  @override
+  String get whiteboardPickColor => 'Choisir une couleur';
+
+  @override
+  String get whiteboardUndo => 'Annuler';
+
+  @override
+  String get whiteboardUndoLastStroke => 'Annuler le dernier trait';
+
+  @override
+  String get whiteboardRedo => 'Rétablir';
+
+  @override
+  String get whiteboardRedoLastStroke => 'Rétablir le dernier trait annulé';
+
+  @override
+  String get whiteboardClear => 'Effacer';
+
+  @override
+  String get whiteboardClearAllStrokes => 'Effacer tous les traits';
+
+  @override
+  String get whiteboardPenColor => 'Couleur du stylet';
+
+  @override
+  String get whiteboardStrokeWidth => 'Épaisseur du trait';
 }

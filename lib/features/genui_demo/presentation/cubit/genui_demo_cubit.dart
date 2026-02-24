@@ -14,9 +14,9 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
       super(const GenUiDemoState.initial());
 
   final GenUiDemoAgent _agent;
-  // ignore: cancel_subscriptions - Subscriptions are properly cancelled in close() method
+  // ignore: cancel_subscriptions - Subscriptions are managed by CubitSubscriptionMixin
   StreamSubscription<GenUiSurfaceEvent>? _surfaceSubscription;
-  // ignore: cancel_subscriptions - Subscriptions are properly cancelled in close() method
+  // ignore: cancel_subscriptions - Subscriptions are managed by CubitSubscriptionMixin
   StreamSubscription<String>? _errorSubscription;
 
   Future<void> initialize() async {
@@ -36,6 +36,7 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
 
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _agent.initialize(),
+      isAlive: () => !isClosed,
       logContext: 'GenUiDemoCubit.initialize',
       onError: (final message) {
         if (isClosed) return;
@@ -100,6 +101,7 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
 
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _agent.sendMessage(text),
+      isAlive: () => !isClosed,
       logContext: 'GenUiDemoCubit.sendMessage',
       onError: (final message) {
         if (isClosed) return;
@@ -214,11 +216,5 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
         );
       },
     );
-  }
-
-  @override
-  Future<void> close() async {
-    await closeAllSubscriptions();
-    return super.close();
   }
 }

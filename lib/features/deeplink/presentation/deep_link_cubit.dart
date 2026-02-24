@@ -42,6 +42,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
     try {
       await CubitExceptionHandler.executeAsyncVoid(
         operation: _startListening,
+        isAlive: () => !isClosed,
         logContext: 'DeepLinkCubit.initialize',
         onSuccess: () {
           _initialized = true;
@@ -110,7 +111,6 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
 
   @override
   Future<void> close() async {
-    await closeAllSubscriptions();
     _subscription = null;
     return super.close();
   }

@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/subscription_manager.dart';
 
 part 'offline_first_todo_repository_helpers.dart';
 
@@ -35,9 +36,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   final PendingSyncRepository _pendingSyncRepository;
   final SyncableRepositoryRegistry _registry;
 
-  /// Set to true when [dispose] is called so [_restartRemoteWatch] does not
-  /// create a new subscription after the repository is disposed.
-  bool _disposed = false;
+  final SubscriptionManager _subscriptionManager = SubscriptionManager();
   bool _remoteRestartScheduled = false;
 
   @override
@@ -59,7 +58,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   }
 
   void _startRemoteWatch() {
-    if (_disposed) {
+    if (_subscriptionManager.isDisposed) {
       return;
     }
     // Only watch remote if we have a remote repository and aren't already watching
@@ -87,19 +86,26 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
           error,
           stackTrace,
         );
+        final StreamSubscription<List<TodoItem>>? currentSubscription =
+            _remoteWatchSubscription;
         _remoteWatchSubscription = null;
+        _subscriptionManager.unregister(currentSubscription);
         _scheduleRemoteRestart();
       },
       onDone: () {
+        final StreamSubscription<List<TodoItem>>? currentSubscription =
+            _remoteWatchSubscription;
         _remoteWatchSubscription = null;
+        _subscriptionManager.unregister(currentSubscription);
         _scheduleRemoteRestart();
       },
       cancelOnError: true,
     );
+    _subscriptionManager.register(_remoteWatchSubscription);
   }
 
   void _scheduleRemoteRestart() {
-    if (_disposed || _remoteRestartScheduled) {
+    if (_subscriptionManager.isDisposed || _remoteRestartScheduled) {
       return;
     }
     _remoteRestartScheduled = true;
@@ -109,7 +115,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   Future<void> _restartRemoteWatch() async {
     await Future<void>.delayed(const Duration(seconds: 2));
     _remoteRestartScheduled = false;
-    if (_disposed) {
+    if (_subscriptionManager.isDisposed) {
       return;
     }
     _startRemoteWatch();
@@ -254,11 +260,9 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   ///
   /// Call when the repository is disposed (e.g. on logout/reset).
   Future<void> dispose() async {
-    _disposed = true;
-    _remoteRestartScheduled = false;
-    final sub = _remoteWatchSubscription;
     _remoteWatchSubscription = null;
-    await sub?.cancel();
+    _remoteRestartScheduled = false;
+    await _subscriptionManager.dispose();
     final SyncableRepository? registeredRepository = _registry.resolve(
       entityType,
     );

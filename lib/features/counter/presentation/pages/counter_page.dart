@@ -45,7 +45,8 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
       // Throttle flushes to prevent concurrent calls
       final DateTime now = DateTime.now();
       final DateTime? lastFlush = _lastFlushTime;
-      if (lastFlush != null && now.difference(lastFlush) < _flushThrottleDuration) {
+      if (lastFlush != null &&
+          now.difference(lastFlush) < _flushThrottleDuration) {
         return;
       }
       _lastFlushTime = now;
@@ -116,10 +117,11 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
                 context,
                 currentError,
                 customMessage: localizedMessage,
-                onRetry: () => CubitHelpers.safeExecute<CounterCubit, CounterState>(
-                  context,
-                  (final cubit) => cubit.clearError(),
-                ),
+                onRetry: () =>
+                    CubitHelpers.safeExecute<CounterCubit, CounterState>(
+                      context,
+                      (final cubit) => cubit.clearError(),
+                    ),
               );
             }
           },
@@ -131,7 +133,8 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
           },
         ),
         TypeSafeBlocListener<CounterCubit, CounterState>(
-          listenWhen: (final prev, final curr) => prev.count == 0 && curr.count > 0,
+          listenWhen: (final prev, final curr) =>
+              prev.count == 0 && curr.count > 0,
           listener: (final context, final state) {
             _isCannotGoBelowZeroSnackBarVisible = false;
             ErrorHandling.clearSnackBars(context);
@@ -188,12 +191,12 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   }
 
   void _showCannotGoBelowZeroSnackBar(final String message) {
-    final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? controller =
-        ErrorHandling.showErrorSnackBar(
-          context,
-          message,
-          duration: _cannotGoBelowZeroSnackBarDuration,
-        );
+    final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
+    controller = ErrorHandling.showErrorSnackBar(
+      context,
+      message,
+      duration: _cannotGoBelowZeroSnackBarDuration,
+    );
     if (controller == null) {
       return;
     }

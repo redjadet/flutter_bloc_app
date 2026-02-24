@@ -108,6 +108,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     }
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _historyRepository.save(history),
+      isAlive: () => !isClosed,
       logContext: 'ChatCubit._persistHistory',
       onSuccess: () {
         // Clear error on successful write to prevent stale error banners

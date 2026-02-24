@@ -1216,5 +1216,15 @@
   "playlearnListen": "Escuchar",
   "playlearnTapToListen": "Toca para escuchar",
   "playlearnBack": "Atrás",
-  "openPlaylearnTooltip": "Abrir Playlearn"
+  "openPlaylearnTooltip": "Abrir Playlearn",
+  "whiteboardChoosePenColor": "Elegir color del lápiz",
+  "whiteboardPickColor": "Elegir un color",
+  "whiteboardUndo": "Deshacer",
+  "whiteboardUndoLastStroke": "Deshacer último trazo",
+  "whiteboardRedo": "Rehacer",
+  "whiteboardRedoLastStroke": "Rehacer último trazo deshecho",
+  "whiteboardClear": "Borrar",
+  "whiteboardClearAllStrokes": "Borrar todos los trazos",
+  "whiteboardPenColor": "Color del lápiz",
+  "whiteboardStrokeWidth": "Grosor del trazo"
 }

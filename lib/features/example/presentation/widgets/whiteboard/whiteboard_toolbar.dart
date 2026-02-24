@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/whiteboard/whiteboard_toolbar_helpers.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
@@ -65,21 +66,21 @@ class WhiteboardToolbar extends StatelessWidget {
           runSpacing: context.responsiveGapXS,
           children: <Widget>[
             WhiteboardActionButton(
-              label: 'Undo',
+              label: context.l10n.whiteboardUndo,
               icon: Icons.undo,
-              tooltip: 'Undo last stroke',
+              tooltip: context.l10n.whiteboardUndoLastStroke,
               onPressed: canUndo ? onUndo : null,
             ),
             WhiteboardActionButton(
-              label: 'Redo',
+              label: context.l10n.whiteboardRedo,
               icon: Icons.redo,
-              tooltip: 'Redo last undone stroke',
+              tooltip: context.l10n.whiteboardRedoLastStroke,
               onPressed: canRedo ? onRedo : null,
             ),
             WhiteboardActionButton(
-              label: 'Clear',
+              label: context.l10n.whiteboardClear,
               icon: Icons.clear_all,
-              tooltip: 'Clear all strokes',
+              tooltip: context.l10n.whiteboardClearAllStrokes,
               onPressed: canClear ? onClear : null,
             ),
           ],
@@ -89,7 +90,7 @@ class WhiteboardToolbar extends StatelessWidget {
   );
 
   Widget _buildColorButton(final BuildContext context) => Tooltip(
-    message: 'Choose pen color',
+    message: context.l10n.whiteboardChoosePenColor,
     child: PlatformAdaptive.filledButton(
       key: const ValueKey('whiteboard-color-button'),
       context: context,
@@ -112,7 +113,7 @@ class WhiteboardToolbar extends StatelessWidget {
           SizedBox(width: context.responsiveHorizontalGapS),
           const Icon(Icons.palette_outlined, size: 18),
           SizedBox(width: context.responsiveHorizontalGapS),
-          const Text('Pen color'),
+          Text(context.l10n.whiteboardPenColor),
         ],
       ),
     ),
@@ -127,7 +128,7 @@ class WhiteboardToolbar extends StatelessWidget {
         Row(
           children: <Widget>[
             Text(
-              'Stroke width',
+              context.l10n.whiteboardStrokeWidth,
               style: theme.textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w500,
               ),

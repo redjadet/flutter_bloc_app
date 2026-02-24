@@ -2491,6 +2491,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open Playlearn'**
   String get openPlaylearnTooltip;
+
+  /// Tooltip and dialog title for whiteboard pen color picker
+  ///
+  /// In en, this message translates to:
+  /// **'Choose pen color'**
+  String get whiteboardChoosePenColor;
+
+  /// Heading in whiteboard color picker dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a color'**
+  String get whiteboardPickColor;
+
+  /// Label for undo last stroke button
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get whiteboardUndo;
+
+  /// Tooltip for whiteboard undo button
+  ///
+  /// In en, this message translates to:
+  /// **'Undo last stroke'**
+  String get whiteboardUndoLastStroke;
+
+  /// Label for redo button
+  ///
+  /// In en, this message translates to:
+  /// **'Redo'**
+  String get whiteboardRedo;
+
+  /// Tooltip for whiteboard redo button
+  ///
+  /// In en, this message translates to:
+  /// **'Redo last undone stroke'**
+  String get whiteboardRedoLastStroke;
+
+  /// Label for clear all strokes button
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get whiteboardClear;
+
+  /// Tooltip for whiteboard clear button
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all strokes'**
+  String get whiteboardClearAllStrokes;
+
+  /// Label for pen color control
+  ///
+  /// In en, this message translates to:
+  /// **'Pen color'**
+  String get whiteboardPenColor;
+
+  /// Label for stroke width control
+  ///
+  /// In en, this message translates to:
+  /// **'Stroke width'**
+  String get whiteboardStrokeWidth;
 }
 
 class _AppLocalizationsDelegate

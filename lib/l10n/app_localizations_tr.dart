@@ -1351,4 +1351,34 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get openPlaylearnTooltip => 'Playlearn\'i Aç';
+
+  @override
+  String get whiteboardChoosePenColor => 'Kalem rengi seç';
+
+  @override
+  String get whiteboardPickColor => 'Renk seç';
+
+  @override
+  String get whiteboardUndo => 'Geri al';
+
+  @override
+  String get whiteboardUndoLastStroke => 'Son çizgiyi geri al';
+
+  @override
+  String get whiteboardRedo => 'Yinele';
+
+  @override
+  String get whiteboardRedoLastStroke => 'Geri alınan çizgiyi yinele';
+
+  @override
+  String get whiteboardClear => 'Temizle';
+
+  @override
+  String get whiteboardClearAllStrokes => 'Tüm çizgileri temizle';
+
+  @override
+  String get whiteboardPenColor => 'Kalem rengi';
+
+  @override
+  String get whiteboardStrokeWidth => 'Çizgi kalınlığı';
 }

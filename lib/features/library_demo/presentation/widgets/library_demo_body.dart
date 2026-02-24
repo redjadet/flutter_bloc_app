@@ -79,7 +79,8 @@ class LibraryDemoBody extends StatelessWidget {
                             children: [
                               LibraryTopNav(
                                 l10n: l10n,
-                                onBack: () => NavigationUtils.popOrGoHome(context),
+                                onBack: () =>
+                                    NavigationUtils.popOrGoHome(context),
                                 padding: EdgeInsets.only(
                                   top: navTopPadding,
                                   left: horizontalPadding,

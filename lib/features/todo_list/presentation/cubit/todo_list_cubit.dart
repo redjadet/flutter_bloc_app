@@ -193,7 +193,6 @@ class TodoListCubit extends Cubit<TodoListState>
   Future<void> close() async {
     _cancelSearchDebounce();
     isLoading = false;
-    await closeAllSubscriptions();
     subscription = null;
     return super.close();
   }

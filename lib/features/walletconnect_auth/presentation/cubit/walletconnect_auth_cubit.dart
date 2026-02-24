@@ -44,6 +44,7 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
           ),
         );
       },
+      isAlive: () => !isClosed,
       onError: (final message) {
         if (isClosed) return;
         emit(
@@ -75,6 +76,7 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
           ),
         );
       },
+      isAlive: () => !isClosed,
       onError: (final message) {
         if (isClosed) return;
         emit(
@@ -131,6 +133,7 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
           ),
         );
       },
+      isAlive: () => !isClosed,
       onError: (final message) {
         if (isClosed) return;
         emit(
@@ -162,6 +165,7 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
           ),
         );
       },
+      isAlive: () => !isClosed,
       onError: (final message) {
         if (isClosed) return;
         emit(
@@ -217,6 +221,7 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
           ),
         );
       },
+      isAlive: () => !isClosed,
       onError: (final message) {
         if (isClosed) return;
         emit(

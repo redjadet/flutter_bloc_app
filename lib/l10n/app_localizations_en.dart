@@ -1347,4 +1347,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openPlaylearnTooltip => 'Open Playlearn';
+
+  @override
+  String get whiteboardChoosePenColor => 'Choose pen color';
+
+  @override
+  String get whiteboardPickColor => 'Pick a color';
+
+  @override
+  String get whiteboardUndo => 'Undo';
+
+  @override
+  String get whiteboardUndoLastStroke => 'Undo last stroke';
+
+  @override
+  String get whiteboardRedo => 'Redo';
+
+  @override
+  String get whiteboardRedoLastStroke => 'Redo last undone stroke';
+
+  @override
+  String get whiteboardClear => 'Clear';
+
+  @override
+  String get whiteboardClearAllStrokes => 'Clear all strokes';
+
+  @override
+  String get whiteboardPenColor => 'Pen color';
+
+  @override
+  String get whiteboardStrokeWidth => 'Stroke width';
 }
