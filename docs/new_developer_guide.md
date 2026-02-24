@@ -15,6 +15,7 @@ Welcome aboard! This document is the fastest path to getting the app running loc
 - [Tooling & productivity](#8-tooling--productivity)
 - [Responsive & adaptive UI guidelines](#85-responsive--adaptive-ui-guidelines)
 - [Adding a new feature (cheat sheet)](#9-adding-a-new-feature-cheat-sheet)
+- [How do you approach adding new logic to production?](#95-how-do-you-approach-adding-new-logic-to-production)
 - [Common troubleshooting](#10-common-troubleshooting)
 - [DI reference example](#11-di-reference-example)
 - [Best-practice validation scripts](#12-bestpractice-validation-scripts)
@@ -486,6 +487,60 @@ testWidgets('scales text at 1.3x', (tester) async {
 9. Wire navigation via `AppRoutes` + `GoRouter` in `lib/app.dart`.
 10. Update docs/README if the feature is user-facing.
 11. **For offline-first**: Document in `docs/offline_first/<feature>.md` following existing patterns.
+
+## 9.5. How do you approach adding new logic to production?
+
+This section answers the question from two angles: **this project’s workflow** and **general best practices** for any production codebase.
+
+### In this project
+
+1. **Understand before changing**
+   - Locate the right layer: domain (contracts, models), data (repositories, DTOs), or presentation (cubits, widgets). See [Feature module playbook](#4-feature-module-playbook) and [Repository layout](#2-repository-layout-highlights).
+   - Read existing code in that feature and related tests. Follow established patterns (e.g. `CubitExceptionHandler`, `TimerService`, type-safe `context.cubit<T>()`).
+   - Check `docs/architecture_details.md` and `docs/clean_architecture.md` so new logic respects boundaries (e.g. no Flutter in domain, no direct `GetIt` in presentation).
+
+2. **Add logic in the right place**
+   - **Domain**: New business rules, contracts, or value objects (Dart-only, no Flutter).
+   - **Data**: New or extended repository methods, DTOs, and mapping; use shared services (`ResilientHttpClient`, `HiveService`, `TimerService`) where applicable.
+   - **Presentation**: New or updated cubit methods and state; keep widgets focused on layout/theming/navigation and lifecycle-safe (e.g. `context.mounted` after `await`, `isClosed` before `emit()`).
+
+3. **Wire and validate**
+   - Register new dependencies in `lib/core/di/` (e.g. `injector_registrations.dart`). Use `registerLazySingletonIfAbsent` for singletons.
+   - Add or extend tests (unit, bloc, widget/golden as needed). Preserve or improve coverage.
+   - Run the quality gate: **`./bin/checklist`** (format, analyze, validation scripts, tests/coverage). Fix any reported violations before merging.
+   - For user-facing or risky changes, run the relevant app flows manually (e.g. the affected feature and navigation).
+
+4. **Lifecycle and safety**
+   - After every `await` in cubits: guard `emit()` with `if (isClosed) return;`. In widgets: guard use of `context` with `if (!context.mounted) return;` and `setState` with `if (!mounted) return;`.
+   - Do not call `context.l10n` or `Theme.of(context)` inside `BlocProvider`/`Provider` `create` or in `initState`; read inherited values in `build()` and pass them in.
+   - Use `CubitSubscriptionMixin` and `registerSubscription()` for stream subscriptions; use `TimerService` (or `FakeTimerService` in tests) for delays instead of raw `Timer`/`Future.delayed` where cancellation matters.
+
+5. **Document and ship**
+   - Update docs if you add a new feature or change behavior (e.g. `docs/feature_implementation_guide.md`, `docs/offline_first/` for offline features).
+   - Review your diff before commit; keep changes as small and focused as possible for the goal.
+
+### General best practices (any production app)
+
+1. **Understand first**
+   - Read the code you’re changing and its tests. Identify dependencies and side effects.
+   - Follow existing patterns and conventions instead of introducing new styles or layers unless there’s a documented reason.
+
+2. **Minimize risk**
+   - Prefer small, reviewable changes. Break large work into incremental PRs.
+   - Add or update tests for new behavior (and for bug fixes, add a regression test).
+   - Use feature flags or configuration where appropriate so new logic can be toggled or rolled back without a full release.
+
+3. **Respect boundaries**
+   - Keep architecture layers clear: business logic out of UI, data access behind abstractions, no bypassing of dependency injection or shared services where they’re the standard.
+
+4. **Validate before merge**
+   - Run the project’s full quality pipeline (lint, analyze, tests, any automated guards). Fix failures; don’t merge on “it works on my machine” alone.
+   - Do a quick manual check of affected flows when the change is user-facing or touches critical paths.
+
+5. **Make changes reversible**
+   - Avoid one-way data migrations or destructive changes without a rollback plan. Prefer backward-compatible APIs and feature flags so you can disable or revert new logic if needed.
+
+**Summary:** In this app, “adding new logic” means placing it in the correct layer, following existing patterns and lifecycle rules, wiring it through DI, testing it, and running `./bin/checklist` before merge. In general, it means understanding the codebase, making small and testable changes, respecting architecture, running full validation, and keeping the option to roll back.
 
 ## 10. Common Troubleshooting
 
