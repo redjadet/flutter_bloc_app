@@ -55,6 +55,7 @@ Full documentation and suppression guidance is provided in the sections below.
 ### Widget Lifecycle
 
 - **`check_side_effects_build.sh`**: Heuristic check for side effects in `build()` method (warns but doesn't fail)
+- **`check_inherited_widget_in_create.sh`**: Prevents `context.l10n`/`Theme.of(context)` inside BlocProvider/Provider `create` (see Context & Async Safety below)
 
 ## New Validation Scripts (Added 2025)
 
@@ -121,6 +122,44 @@ setState(() => _value = 1);
 ```
 
 **Suppression**: Add `// check-ignore: reason` on the same line or line above
+
+---
+
+#### `check_inherited_widget_in_create.sh`
+
+**Purpose**: Ensures `context.l10n`, `Theme.of(context)`, `Localizations.of(context)`, and `AppLocalizations.of(context)` are not used inside BlocProvider/Provider `create` callbacks.
+
+**What it checks**:
+
+- In any `create: (...)` callback, the script flags lines that contain `context.l10n`, `Theme.of(context)`, `Localizations.of(context)`, or `AppLocalizations.of(context)` within the callback body (same line or next 20 lines, stopping when callback body ends heuristically).
+
+**Why it matters**:
+
+- Using InheritedWidget reads inside `create` or `initState` throws: "Tried to listen to an InheritedWidget in a life-cycle that will never be called again."
+- The `create` callback runs once; registering as a listener there is invalid. Read l10n/theme in `build()` and pass the value into the created object.
+
+**Example violation**:
+
+```dart
+return BlocProvider(
+  create: (context) => MyCubit(l10n: context.l10n), // ❌ context.l10n in create
+  child: ...,
+);
+```
+
+**Correct pattern**:
+
+```dart
+final l10n = context.l10n; // ✅ Read in build()
+return BlocProvider(
+  create: (_) => MyCubit(l10n: l10n),
+  child: ...,
+);
+```
+
+**Suppression**: Add `// check-ignore: reason` on the violating line.
+
+**Regression tests**: `test/shared/inherited_widget_lifecycle_regression_test.dart` (also run via `tool/check_regression_guards.sh`).
 
 ---
 
