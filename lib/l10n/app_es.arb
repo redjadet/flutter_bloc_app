@@ -1226,5 +1226,16 @@
   "whiteboardClear": "Borrar",
   "whiteboardClearAllStrokes": "Borrar todos los trazos",
   "whiteboardPenColor": "Color del lápiz",
-  "whiteboardStrokeWidth": "Grosor del trazo"
+  "whiteboardStrokeWidth": "Grosor del trazo",
+  "errorUnknown": "Ha ocurrido un error desconocido",
+  "errorNetwork": "Error de conexión de red. Compruebe su conexión a internet.",
+  "errorTimeout": "La solicitud ha tardado demasiado. Inténtelo de nuevo.",
+  "errorUnauthorized": "Se requiere autenticación. Inicie sesión de nuevo.",
+  "errorForbidden": "Acceso denegado. No tiene permiso para esta acción.",
+  "errorNotFound": "No se encontró el recurso solicitado.",
+  "errorServer": "Error del servidor. Inténtelo más tarde.",
+  "errorGeneric": "Algo ha ido mal. Inténtelo de nuevo.",
+  "errorClient": "Error del cliente. Compruebe su solicitud e inténtelo de nuevo.",
+  "errorTooManyRequests": "Demasiadas solicitudes. Espere antes de intentarlo de nuevo.",
+  "retryButtonLabel": "Reintentar"
 }

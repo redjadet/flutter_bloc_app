@@ -26,7 +26,7 @@ Add these rules to your Firebase Console under Realtime Database → Rules:
 
 ### Path Structure
 
-```
+```text
 /todos/{userId}/{todoId}
 ```
 
@@ -85,4 +85,3 @@ After updating rules:
 
 - [Todo List Firebase Realtime Database Plan](todo_list_firebase_realtime_database_plan.md)
 - [Firebase Realtime Database Security Rules Documentation](https://firebase.google.com/docs/database/security)
-

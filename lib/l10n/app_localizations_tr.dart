@@ -456,7 +456,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get searchHint => 'Ara...';
 
   @override
-  String get retryButtonLabel => 'TEKRAR DENE';
+  String get retryButtonLabel => 'Tekrar dene';
 
   @override
   String get featureLoadError =>
@@ -1381,4 +1381,39 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get whiteboardStrokeWidth => 'Çizgi kalınlığı';
+
+  @override
+  String get errorUnknown => 'Bilinmeyen bir hata oluştu';
+
+  @override
+  String get errorNetwork =>
+      'Ağ bağlantı hatası. İnternet bağlantınızı kontrol edin.';
+
+  @override
+  String get errorTimeout =>
+      'İstek zaman aşımına uğradı. Lütfen tekrar deneyin.';
+
+  @override
+  String get errorUnauthorized =>
+      'Kimlik doğrulama gerekli. Lütfen tekrar giriş yapın.';
+
+  @override
+  String get errorForbidden => 'Erişim reddedildi. Bu işlem için yetkiniz yok.';
+
+  @override
+  String get errorNotFound => 'İstenen kaynak bulunamadı.';
+
+  @override
+  String get errorServer => 'Sunucu hatası. Lütfen daha sonra tekrar deneyin.';
+
+  @override
+  String get errorGeneric => 'Bir şeyler yanlış gitti. Lütfen tekrar deneyin.';
+
+  @override
+  String get errorClient =>
+      'İstemci hatası. İsteğinizi kontrol edip tekrar deneyin.';
+
+  @override
+  String get errorTooManyRequests =>
+      'Çok fazla istek. Tekrar denemeden önce bekleyin.';
 }

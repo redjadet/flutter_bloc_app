@@ -1797,5 +1797,45 @@
   "whiteboardStrokeWidth": "Stroke width",
   "@whiteboardStrokeWidth": {
     "description": "Label for stroke width control"
+  },
+  "errorUnknown": "An unknown error occurred",
+  "@errorUnknown": {
+    "description": "Generic unknown error message"
+  },
+  "errorNetwork": "Network connection error. Please check your internet connection.",
+  "@errorNetwork": {
+    "description": "Network/connection error message"
+  },
+  "errorTimeout": "Request timed out. Please try again.",
+  "@errorTimeout": {
+    "description": "Timeout error message"
+  },
+  "errorUnauthorized": "Authentication required. Please sign in again.",
+  "@errorUnauthorized": {
+    "description": "401 unauthorized error message"
+  },
+  "errorForbidden": "Access denied. You don't have permission for this action.",
+  "@errorForbidden": {
+    "description": "403 forbidden error message"
+  },
+  "errorNotFound": "The requested resource was not found.",
+  "@errorNotFound": {
+    "description": "404 not found error message"
+  },
+  "errorServer": "Server error. Please try again later.",
+  "@errorServer": {
+    "description": "5xx server error message"
+  },
+  "errorGeneric": "Something went wrong. Please try again.",
+  "@errorGeneric": {
+    "description": "Generic fallback error message"
+  },
+  "errorClient": "Client error. Please check your request and try again.",
+  "@errorClient": {
+    "description": "4xx client error message"
+  },
+  "errorTooManyRequests": "Too many requests. Please wait before trying again.",
+  "@errorTooManyRequests": {
+    "description": "429 rate limit error message"
   }
 }

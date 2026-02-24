@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/shared/http/http_request_extensions.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/services/retry_notification_service.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/retry_policy.dart';
 import 'package:http/http.dart' as http;
 
 part 'resilient_http_client_helpers.dart';

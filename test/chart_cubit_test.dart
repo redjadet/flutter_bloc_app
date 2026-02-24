@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:bloc_test/bloc_test.dart';
@@ -12,6 +13,7 @@ void main() {
     ChartPoint(date: DateTime.utc(2024, 1, 1), value: 42),
     ChartPoint(date: DateTime.utc(2024, 1, 2), value: 43),
   ];
+  late _RaceChartRepository raceRepository;
 
   blocTest<ChartCubit, ChartState>(
     'emits loading then success when load succeeds',
@@ -149,6 +151,49 @@ void main() {
       ),
     ],
   );
+
+  blocTest<ChartCubit, ChartState>(
+    'ignores stale completion when a newer fetch finishes first',
+    build: () {
+      raceRepository = _RaceChartRepository();
+      return ChartCubit(repository: raceRepository);
+    },
+    act: (final cubit) async {
+      unawaited(cubit.load());
+      await Future<void>.delayed(Duration.zero);
+
+      unawaited(cubit.refresh());
+      await Future<void>.delayed(Duration.zero);
+
+      raceRepository.completeSecond(<ChartPoint>[
+        ChartPoint(date: DateTime.utc(2024, 1, 2), value: 200),
+      ]);
+      await Future<void>.delayed(Duration.zero);
+
+      raceRepository.completeFirst(<ChartPoint>[
+        ChartPoint(date: DateTime.utc(2024, 1, 1), value: 100),
+      ]);
+      await Future<void>.delayed(Duration.zero);
+    },
+    expect: () => <Matcher>[
+      isA<ChartState>().having(
+        (final state) => state.status,
+        'status',
+        ViewStatus.loading,
+      ),
+      isA<ChartState>()
+          .having((final state) => state.status, 'status', ViewStatus.success)
+          .having(
+            (final state) =>
+                state.points.map((final point) => point.value).toList(),
+            'values',
+            equals(<double>[200]),
+          ),
+    ],
+    verify: (_) {
+      expect(raceRepository.callCount, 2);
+    },
+  );
 }
 
 class _StubChartRepository extends ChartRepository {
@@ -171,5 +216,33 @@ class _QueueChartRepository extends ChartRepository {
       throw StateError('no more responses');
     }
     return _responses.removeFirst();
+  }
+}
+
+class _RaceChartRepository extends ChartRepository {
+  final Completer<List<ChartPoint>> _first = Completer<List<ChartPoint>>();
+  final Completer<List<ChartPoint>> _second = Completer<List<ChartPoint>>();
+  int _callCount = 0;
+  int get callCount => _callCount;
+
+  @override
+  Future<List<ChartPoint>> fetchTrendingCounts() {
+    _callCount++;
+    if (_callCount == 1) {
+      return _first.future;
+    }
+    return _second.future;
+  }
+
+  void completeFirst(final List<ChartPoint> points) {
+    if (!_first.isCompleted) {
+      _first.complete(points);
+    }
+  }
+
+  void completeSecond(final List<ChartPoint> points) {
+    if (!_second.isCompleted) {
+      _second.complete(points);
+    }
   }
 }

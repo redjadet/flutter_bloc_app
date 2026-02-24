@@ -102,6 +102,7 @@ void main() {
         baseDelay: Duration(milliseconds: 50),
       );
       final cancelToken = CancelToken();
+      int callCount = 0;
 
       unawaited(
         Future<void>.delayed(const Duration(milliseconds: 25), () {
@@ -112,12 +113,15 @@ void main() {
       expect(
         () => policy.executeWithRetry<int>(
           action: () async {
+            callCount++;
             throw Exception('Error');
           },
           cancelToken: cancelToken,
         ),
         throwsA(isA<CancellationException>()),
       );
+
+      expect(callCount, 1);
     });
 
     test('_calculateDelay uses exponential strategy', () {
@@ -149,6 +153,36 @@ void main() {
       expect(policy.strategy, RetryStrategy.fixed);
     });
 
+    test('calculateDelay does not exceed maxDelay when jitter is enabled', () {
+      const Duration maxDelay = Duration(milliseconds: 50);
+
+      for (int i = 0; i < 100; i++) {
+        final Duration delay = RetryPolicy.calculateDelay(
+          attempt: 8,
+          baseDelay: const Duration(milliseconds: 10),
+          maxDelay: maxDelay,
+          strategy: RetryStrategy.exponential,
+          jitter: true,
+        );
+        expect(delay <= maxDelay, isTrue);
+      }
+    });
+
+    test(
+      'calculateDelay returns deterministic value when jitter is disabled',
+      () {
+        final Duration delay = RetryPolicy.calculateDelay(
+          attempt: 2,
+          baseDelay: const Duration(milliseconds: 100),
+          maxDelay: const Duration(milliseconds: 10 * 1000),
+          strategy: RetryStrategy.exponential,
+          jitter: false,
+        );
+
+        expect(delay, const Duration(milliseconds: 400));
+      },
+    );
+
     test('transientErrors creates policy with correct maxDelay', () {
       expect(RetryPolicy.transientErrors.maxDelay, const Duration(seconds: 10));
     });
@@ -175,6 +209,12 @@ void main() {
     test('toString returns formatted message', () {
       final exception = CancellationException('Test cancellation');
       expect(exception.toString(), 'CancellationException: Test cancellation');
+    });
+  });
+
+  group('RetryPolicy constructor', () {
+    test('asserts when maxAttempts is zero', () {
+      expect(() => RetryPolicy(maxAttempts: 0), throwsAssertionError);
     });
   });
 }

@@ -203,6 +203,14 @@ Create `tool/check_startup_performance.sh` that:
 3. Compares to baseline
 4. Fails if metrics exceed thresholds
 
+### Enterprise: Startup regression gate
+
+To protect startup targets in CI (e.g. for enterprise or high-traffic builds), add a job that:
+
+1. Runs `flutter run --profile --trace-startup` (with a fixed device or simulator ID when available).
+2. Parses the trace (e.g. with `dart tool/analyze_startup_trace.dart` or similar) to obtain TTFF (time to first frame).
+3. Fails the build if TTFF exceeds a configured threshold (e.g. 3000 ms); keep the threshold in a single place (env or config) so it can be tuned per branch or flavor.
+
 ## Common Issues
 
 ### Slow Startup Causes

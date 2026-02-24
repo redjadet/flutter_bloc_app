@@ -1377,4 +1377,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get whiteboardStrokeWidth => 'Stroke width';
+
+  @override
+  String get errorUnknown => 'An unknown error occurred';
+
+  @override
+  String get errorNetwork =>
+      'Network connection error. Please check your internet connection.';
+
+  @override
+  String get errorTimeout => 'Request timed out. Please try again.';
+
+  @override
+  String get errorUnauthorized =>
+      'Authentication required. Please sign in again.';
+
+  @override
+  String get errorForbidden =>
+      'Access denied. You don\'t have permission for this action.';
+
+  @override
+  String get errorNotFound => 'The requested resource was not found.';
+
+  @override
+  String get errorServer => 'Server error. Please try again later.';
+
+  @override
+  String get errorGeneric => 'Something went wrong. Please try again.';
+
+  @override
+  String get errorClient =>
+      'Client error. Please check your request and try again.';
+
+  @override
+  String get errorTooManyRequests =>
+      'Too many requests. Please wait before trying again.';
 }

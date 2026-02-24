@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
@@ -66,28 +67,28 @@ class ErrorHandling {
     );
   }
 
-  /// Handle common Cubit errors with user-friendly messages
+  /// Handle common Cubit errors with user-friendly messages.
+  ///
+  /// Uses BuildContext l10n for localized error message and retry button label.
   static void handleCubitError(
     final BuildContext context,
     final dynamic error, {
     final String? customMessage,
     final VoidCallback? onRetry,
   }) {
-    final String message = customMessage ?? _getErrorMessage(error);
+    final String message =
+        customMessage ??
+        NetworkErrorMapper.getErrorMessage(error, l10n: context.l10n);
 
     final SnackBarAction? action = onRetry != null
-        ? SnackBarAction(label: 'Retry', onPressed: onRetry)
+        ? SnackBarAction(
+            label: context.l10n.retryButtonLabel,
+            onPressed: onRetry,
+          )
         : null;
 
     showErrorSnackBar(context, message, action: action);
   }
-
-  /// Get user-friendly error message from various error types.
-  ///
-  /// Delegates to [NetworkErrorMapper] for consistent error handling
-  /// across UI and repository layers.
-  static String _getErrorMessage(final dynamic error) =>
-      NetworkErrorMapper.getErrorMessage(error);
 
   /// Clear all current snackbars
   static void clearSnackBars(final BuildContext context) {

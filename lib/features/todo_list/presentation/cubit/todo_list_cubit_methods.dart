@@ -15,6 +15,8 @@ mixin _TodoListCubitMethods
   TodoItem? get lastDeletedItem;
   set lastDeletedItem(final TodoItem? value);
   bool Function() get stopLoadingIfClosed;
+  int get loadRequestId;
+  set loadRequestId(final int value);
 
   Set<String> _trimSelection(final List<TodoItem> items) {
     if (state.selectedItemIds.isEmpty) {
@@ -140,12 +142,14 @@ mixin _TodoListCubitMethods
     if (isClosed || isLoading) return;
     isLoading = true;
     if (stopLoadingIfClosed()) return;
+    loadRequestId++;
+    final int requestId = loadRequestId;
     emit(state.copyWith(status: ViewStatus.loading, errorMessage: null));
     await CubitExceptionHandler.executeAsync<List<TodoItem>>(
       operation: repository.fetchAll,
       isAlive: () => !isClosed,
       onSuccess: (final items) async {
-        if (stopLoadingIfClosed()) return;
+        if (stopLoadingIfClosed() || requestId != loadRequestId) return;
         emit(
           state.copyWith(
             status: ViewStatus.success,
@@ -160,7 +164,7 @@ mixin _TodoListCubitMethods
         }
       },
       onError: (final errorMessage) {
-        if (stopLoadingIfClosed()) return;
+        if (stopLoadingIfClosed() || requestId != loadRequestId) return;
         emit(
           state.copyWith(
             status: ViewStatus.error,

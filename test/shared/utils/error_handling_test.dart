@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -299,7 +300,7 @@ void main() {
       final SnackBar snackBar = tester.widget(find.byType(SnackBar));
       final SnackBarAction? action = snackBar.action;
       expect(action, isNotNull);
-      expect(action!.label, 'Retry');
+      expect(action!.label, context.l10n.retryButtonLabel);
 
       action.onPressed();
       expect(retried, isTrue);

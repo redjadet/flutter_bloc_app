@@ -1226,5 +1226,16 @@
   "whiteboardClear": "Löschen",
   "whiteboardClearAllStrokes": "Alle Striche löschen",
   "whiteboardPenColor": "Stiftfarbe",
-  "whiteboardStrokeWidth": "Strichstärke"
+  "whiteboardStrokeWidth": "Strichstärke",
+  "errorUnknown": "Ein unbekannter Fehler ist aufgetreten",
+  "errorNetwork": "Netzwerkverbindungsfehler. Bitte überprüfen Sie Ihre Internetverbindung.",
+  "errorTimeout": "Zeitüberschreitung der Anfrage. Bitte versuchen Sie es erneut.",
+  "errorUnauthorized": "Anmeldung erforderlich. Bitte melden Sie sich erneut an.",
+  "errorForbidden": "Zugriff verweigert. Sie haben keine Berechtigung für diese Aktion.",
+  "errorNotFound": "Die angeforderte Ressource wurde nicht gefunden.",
+  "errorServer": "Serverfehler. Bitte versuchen Sie es später erneut.",
+  "errorGeneric": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+  "errorClient": "Clientfehler. Bitte überprüfen Sie Ihre Anfrage und versuchen Sie es erneut.",
+  "errorTooManyRequests": "Zu viele Anfragen. Bitte warten Sie, bevor Sie es erneut versuchen.",
+  "retryButtonLabel": "Erneut versuchen"
 }

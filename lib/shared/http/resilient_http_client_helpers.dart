@@ -76,19 +76,12 @@ extension _ResilientHttpClientHelpers on ResilientHttpClient {
   bool _isTransientStatusCode(final int statusCode) =>
       statusCode == 408 || statusCode == 429 || statusCode >= 500;
 
-  Duration _calculateRetryDelay(final int attempt) {
-    final int baseDelayMs = 1000 * (1 << attempt);
-    const int maxDelayMs = 30000;
-    final int delayMs = baseDelayMs > maxDelayMs ? maxDelayMs : baseDelayMs;
-    final int jitterRange = (delayMs * 0.25).toInt();
-    final int jitter =
-        (jitterRange *
-                2 *
-                (0.5 - DateTime.now().microsecondsSinceEpoch % 1000 / 1000))
-            .toInt();
-    final int finalDelayMs = delayMs + jitter;
-    return Duration(milliseconds: finalDelayMs.clamp(1000, maxDelayMs));
-  }
+  Duration _calculateRetryDelay(final int attempt) =>
+      RetryPolicy.calculateDelay(
+        attempt: attempt,
+        baseDelay: const Duration(seconds: 1),
+        maxDelay: const Duration(seconds: 30),
+      );
 
   http.BaseRequest _cloneOrFallback(final http.BaseRequest request) {
     if (request is http.MultipartRequest) {

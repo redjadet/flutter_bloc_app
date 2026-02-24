@@ -458,7 +458,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get searchHint => 'Buscar...';
 
   @override
-  String get retryButtonLabel => 'REINTENTAR';
+  String get retryButtonLabel => 'Reintentar';
 
   @override
   String get featureLoadError =>
@@ -1392,4 +1392,40 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get whiteboardStrokeWidth => 'Grosor del trazo';
+
+  @override
+  String get errorUnknown => 'Ha ocurrido un error desconocido';
+
+  @override
+  String get errorNetwork =>
+      'Error de conexión de red. Compruebe su conexión a internet.';
+
+  @override
+  String get errorTimeout =>
+      'La solicitud ha tardado demasiado. Inténtelo de nuevo.';
+
+  @override
+  String get errorUnauthorized =>
+      'Se requiere autenticación. Inicie sesión de nuevo.';
+
+  @override
+  String get errorForbidden =>
+      'Acceso denegado. No tiene permiso para esta acción.';
+
+  @override
+  String get errorNotFound => 'No se encontró el recurso solicitado.';
+
+  @override
+  String get errorServer => 'Error del servidor. Inténtelo más tarde.';
+
+  @override
+  String get errorGeneric => 'Algo ha ido mal. Inténtelo de nuevo.';
+
+  @override
+  String get errorClient =>
+      'Error del cliente. Compruebe su solicitud e inténtelo de nuevo.';
+
+  @override
+  String get errorTooManyRequests =>
+      'Demasiadas solicitudes. Espere antes de intentarlo de nuevo.';
 }

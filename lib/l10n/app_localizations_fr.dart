@@ -463,7 +463,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get searchHint => 'Rechercher...';
 
   @override
-  String get retryButtonLabel => 'RÉESSAYER';
+  String get retryButtonLabel => 'Réessayer';
 
   @override
   String get featureLoadError =>
@@ -1403,4 +1403,39 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get whiteboardStrokeWidth => 'Épaisseur du trait';
+
+  @override
+  String get errorUnknown => 'Une erreur inconnue s\'est produite';
+
+  @override
+  String get errorNetwork =>
+      'Erreur de connexion réseau. Vérifiez votre connexion internet.';
+
+  @override
+  String get errorTimeout => 'Délai d\'attente dépassé. Veuillez réessayer.';
+
+  @override
+  String get errorUnauthorized =>
+      'Authentification requise. Veuillez vous reconnecter.';
+
+  @override
+  String get errorForbidden =>
+      'Accès refusé. Vous n\'avez pas la permission pour cette action.';
+
+  @override
+  String get errorNotFound => 'La ressource demandée est introuvable.';
+
+  @override
+  String get errorServer => 'Erreur serveur. Veuillez réessayer plus tard.';
+
+  @override
+  String get errorGeneric => 'Une erreur s\'est produite. Veuillez réessayer.';
+
+  @override
+  String get errorClient =>
+      'Erreur client. Vérifiez votre requête et réessayez.';
+
+  @override
+  String get errorTooManyRequests =>
+      'Trop de requêtes. Veuillez patienter avant de réessayer.';
 }
