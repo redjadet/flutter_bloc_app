@@ -12,8 +12,14 @@ class ProfileCubit extends Cubit<ProfileState> {
       super(const ProfileState());
 
   final ProfileRepository _repository;
+  int _loadRequestId = 0;
 
   Future<void> loadProfile() async {
+    if (isClosed) {
+      return;
+    }
+    final int requestId = ++_loadRequestId;
+
     emit(
       state.copyWith(
         status: ViewStatus.loading,
@@ -25,7 +31,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       operation: _repository.getProfile,
       isAlive: () => !isClosed,
       onSuccess: (final user) {
-        if (isClosed) return;
+        if (isClosed || requestId != _loadRequestId) return;
         emit(
           state.copyWith(
             status: ViewStatus.success,
@@ -35,7 +41,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         );
       },
       onError: (final errorMessage) {
-        if (isClosed) return;
+        if (isClosed || requestId != _loadRequestId) return;
         emit(
           ProfileState(
             status: ViewStatus.error,

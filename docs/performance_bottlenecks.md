@@ -37,6 +37,18 @@
   - calculator rate selector interactions
 - Use DevTools CPU and memory profiles to confirm reduced rebuilds and allocations.
 
+## List and scroll performance (guidelines)
+
+- **Heavy list items:** Wrap list item widgets that do custom paint, many children, or images in `RepaintBoundary` so repaints are isolated and scrolling stays smooth.
+- **Long lists:** Prefer `CustomScrollView` with slivers (`SliverList`, `SliverList.builder`, `SliverGrid`) over nested scrollables with `shrinkWrap: true` to avoid unbounded height and layout cost. Use `ListView.builder` / `ListView.separated` (or sliver equivalents) for dynamic length; avoid non-builder `ListView(children: ...)` for long lists.
+- **Existing audit:** See [shrinkwrap_slivers_audit.md](audits/shrinkwrap_slivers_audit.md) for current usage and optional refactors.
+
+## High-frequency events (rate limiting / debouncing)
+
+- **Pattern:** For actions that trigger network or heavy work at high frequency (search-as-you-type, scroll-driven load, rapid taps), use **debounce or throttle** and, where order matters, **in-flight/request-id guards** so the app does not flood the backend or UI.
+- **Existing patterns:** Counter page uses a 500 ms throttle for sync flush; SearchCubit uses debounce + request-id; TodoListCubit uses debounce for search query. Prefer `TimerService.runOnce` for cancellable delays and the SearchCubit-style request-id check before emit for async loads.
+- **When adding new triggers:** Apply debounce/throttle and optional request-id in the cubit; document in this file if it becomes a shared pattern.
+
 ## Follow-up Ideas
 
 - Add an integration test that stresses the calculator page and asserts stable rebuild counts.

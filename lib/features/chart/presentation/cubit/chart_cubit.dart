@@ -14,8 +14,12 @@ class ChartCubit extends Cubit<ChartState> {
       super(const ChartState());
 
   final ChartRepository _repository;
+  int _fetchRequestId = 0;
 
   Future<void> load() async {
+    if (isClosed) {
+      return;
+    }
     if (state.status.isLoading) {
       return;
     }
@@ -31,9 +35,17 @@ class ChartCubit extends Cubit<ChartState> {
     await _fetch(resetExistingData: cached == null || cached.isEmpty);
   }
 
-  Future<void> refresh() => _fetch(resetExistingData: false);
+  Future<void> refresh() async {
+    if (isClosed) {
+      return;
+    }
+    await _fetch(resetExistingData: false);
+  }
 
   void setZoomEnabled({required final bool isEnabled}) {
+    if (isClosed) {
+      return;
+    }
     if (state.zoomEnabled == isEnabled) {
       return;
     }
@@ -41,6 +53,11 @@ class ChartCubit extends Cubit<ChartState> {
   }
 
   Future<void> _fetch({required final bool resetExistingData}) async {
+    if (isClosed) {
+      return;
+    }
+    final int requestId = ++_fetchRequestId;
+
     emit(
       state.copyWith(
         status: ViewStatus.loading,
@@ -53,7 +70,7 @@ class ChartCubit extends Cubit<ChartState> {
       operation: _repository.fetchTrendingCounts,
       isAlive: () => !isClosed,
       onSuccess: (final points) {
-        if (isClosed) return;
+        if (isClosed || requestId != _fetchRequestId) return;
         emit(
           state.copyWith(
             status: ViewStatus.success,
@@ -62,7 +79,7 @@ class ChartCubit extends Cubit<ChartState> {
         );
       },
       onError: (final errorMessage) {
-        if (isClosed) return;
+        if (isClosed || requestId != _fetchRequestId) return;
         emit(
           state.copyWith(
             status: ViewStatus.error,

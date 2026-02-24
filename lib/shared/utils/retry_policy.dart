@@ -25,7 +25,7 @@ class RetryPolicy {
     this.maxDelay = const Duration(seconds: 30),
     this.strategy = RetryStrategy.exponential,
     this.jitter = true,
-  });
+  }) : assert(maxAttempts > 0, 'maxAttempts must be greater than 0');
 
   /// Maximum number of retry attempts (including initial attempt).
   final int maxAttempts;
@@ -54,50 +54,61 @@ class RetryPolicy {
     final bool Function(Object error)? shouldRetry,
   }) async {
     Object? lastError;
+    StackTrace? lastStackTrace;
     for (int attempt = 0; attempt < maxAttempts; attempt++) {
-      // Check cancellation before each attempt
-      if (cancelToken?.isCancelled ?? false) {
-        throw CancellationException('Retry cancelled');
-      }
+      _throwIfCancelled(cancelToken);
 
       try {
         return await action();
-      } on Object catch (error) {
+      } on Object catch (error, stackTrace) {
         lastError = error;
+        lastStackTrace = stackTrace;
 
-        // Check if we should retry this error
+        if (error is CancellationException) {
+          rethrow;
+        }
+
         if (shouldRetry != null && !shouldRetry(error)) {
           rethrow;
         }
 
-        // Don't delay after the last attempt
         if (attempt < maxAttempts - 1) {
           final Duration delay = _calculateDelay(attempt);
-          await Future.delayed(delay, () {
-            // Check cancellation during delay
-            if (cancelToken?.isCancelled ?? false) {
-              throw CancellationException('Retry cancelled during delay');
-            }
-          });
+          await _waitBeforeRetry(delay, cancelToken);
         }
       }
     }
 
-    // All retries exhausted, throw last error
     if (lastError == null) {
       throw Exception('Retry failed: unknown error');
     }
-    if (lastError is Exception) {
-      throw lastError;
+
+    if (lastStackTrace != null) {
+      Error.throwWithStackTrace(lastError, lastStackTrace);
     }
-    if (lastError is Error) {
-      throw lastError;
-    }
+
     throw Exception(lastError.toString());
   }
 
   /// Calculate delay for the given attempt number (0-indexed).
-  Duration _calculateDelay(final int attempt) {
+  Duration _calculateDelay(final int attempt) => calculateDelay(
+    attempt: attempt,
+    baseDelay: baseDelay,
+    maxDelay: maxDelay,
+    strategy: strategy,
+    jitter: jitter,
+  );
+
+  /// Shared delay calculation for use by other layers (e.g. HTTP client).
+  ///
+  /// Uses exponential backoff by default with cap and optional jitter.
+  static Duration calculateDelay({
+    required final int attempt,
+    required final Duration baseDelay,
+    required final Duration maxDelay,
+    final RetryStrategy strategy = RetryStrategy.exponential,
+    final bool jitter = true,
+  }) {
     final Duration calculatedDelay = switch (strategy) {
       RetryStrategy.exponential => Duration(
         milliseconds: (baseDelay.inMilliseconds * pow(2, attempt)).toInt(),
@@ -108,20 +119,58 @@ class RetryPolicy {
       RetryStrategy.fixed => baseDelay,
     };
 
-    // Cap at maxDelay
     final Duration cappedDelay = calculatedDelay > maxDelay
         ? maxDelay
         : calculatedDelay;
 
-    // Add jitter if enabled (random value between 0 and 25% of delay)
-    if (jitter) {
+    if (jitter && cappedDelay > Duration.zero) {
       final Random random = Random();
-      final int jitterMs =
-          (cappedDelay.inMilliseconds * 0.25 * random.nextDouble()).toInt();
-      return Duration(milliseconds: cappedDelay.inMilliseconds + jitterMs);
+      final int cappedMs = cappedDelay.inMilliseconds;
+      final int maxMs = maxDelay.inMilliseconds;
+      final int jitterRange = (cappedMs * 0.25).toInt();
+      final int jitterOffset =
+          random.nextInt((jitterRange * 2) + 1) - jitterRange;
+      final int jitteredMs = cappedMs + jitterOffset;
+      final int clampedMs = jitteredMs.clamp(0, maxMs);
+      return Duration(milliseconds: clampedMs);
     }
 
     return cappedDelay;
+  }
+
+  void _throwIfCancelled(
+    final CancelToken? cancelToken, {
+    final bool duringDelay = false,
+  }) {
+    if (cancelToken?.isCancelled ?? false) {
+      throw CancellationException(
+        duringDelay ? 'Retry cancelled during delay' : 'Retry cancelled',
+      );
+    }
+  }
+
+  Future<void> _waitBeforeRetry(
+    final Duration delay,
+    final CancelToken? cancelToken,
+  ) async {
+    if (cancelToken == null) {
+      await Future<void>.delayed(delay);
+      return;
+    }
+
+    const Duration checkInterval = Duration(milliseconds: 50);
+    final Stopwatch stopwatch = Stopwatch()..start();
+
+    while (stopwatch.elapsed < delay) {
+      _throwIfCancelled(cancelToken, duringDelay: true);
+      final Duration remaining = delay - stopwatch.elapsed;
+      final Duration waitDuration = remaining < checkInterval
+          ? remaining
+          : checkInterval;
+      await Future<void>.delayed(waitDuration);
+    }
+
+    _throwIfCancelled(cancelToken, duringDelay: true);
   }
 
   /// Create a default retry policy for transient errors (5xx, timeouts).

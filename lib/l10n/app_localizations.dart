@@ -2551,6 +2551,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stroke width'**
   String get whiteboardStrokeWidth;
+
+  /// Generic unknown error message
+  ///
+  /// In en, this message translates to:
+  /// **'An unknown error occurred'**
+  String get errorUnknown;
+
+  /// Network/connection error message
+  ///
+  /// In en, this message translates to:
+  /// **'Network connection error. Please check your internet connection.'**
+  String get errorNetwork;
+
+  /// Timeout error message
+  ///
+  /// In en, this message translates to:
+  /// **'Request timed out. Please try again.'**
+  String get errorTimeout;
+
+  /// 401 unauthorized error message
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication required. Please sign in again.'**
+  String get errorUnauthorized;
+
+  /// 403 forbidden error message
+  ///
+  /// In en, this message translates to:
+  /// **'Access denied. You don\'t have permission for this action.'**
+  String get errorForbidden;
+
+  /// 404 not found error message
+  ///
+  /// In en, this message translates to:
+  /// **'The requested resource was not found.'**
+  String get errorNotFound;
+
+  /// 5xx server error message
+  ///
+  /// In en, this message translates to:
+  /// **'Server error. Please try again later.'**
+  String get errorServer;
+
+  /// Generic fallback error message
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get errorGeneric;
+
+  /// 4xx client error message
+  ///
+  /// In en, this message translates to:
+  /// **'Client error. Please check your request and try again.'**
+  String get errorClient;
+
+  /// 429 rate limit error message
+  ///
+  /// In en, this message translates to:
+  /// **'Too many requests. Please wait before trying again.'**
+  String get errorTooManyRequests;
 }
 
 class _AppLocalizationsDelegate

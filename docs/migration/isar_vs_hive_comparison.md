@@ -59,7 +59,7 @@ final box = await Hive.openBox(
 ### 2. Performance
 
 | Metric | Isar | Hive |
-|--------|------|------|
+| ------ | ---- | ---- |
 | **Read Speed** | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good |
 | **Write Speed** | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐⭐ Very Good |
 | **Complex Queries** | ⭐⭐⭐⭐⭐ Excellent | ⭐⭐⭐ Limited |
@@ -145,7 +145,7 @@ box.put('key', value);
 ### 6. Platform Support Comparison
 
 | Platform | Isar | Hive |
-|----------|------|------|
+| ---------- | ---- | ---- |
 | **Android** | ✅ Full | ✅ Full |
 | **iOS** | ✅ Full | ✅ Full |
 | **Web** | ⚠️ Experimental | ✅ Full |

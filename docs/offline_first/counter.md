@@ -98,4 +98,3 @@ This document defines how the counter feature adopts the shared offline-first st
 3. **User-facing improvements** (Priority: Low)
    - Consider adding manual "Sync now" action in the sync banner (currently handled by global `SyncStatusCubit.flush()`).
    - Surface sync status in counter display card for more visibility.
-

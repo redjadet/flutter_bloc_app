@@ -3,6 +3,8 @@ import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
+import 'package:flutter_bloc_app/shared/utils/retry_policy.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'app_info_cubit.freezed.dart';
@@ -13,15 +15,25 @@ class AppInfoCubit extends Cubit<AppInfoState> {
       super(const AppInfoState());
 
   final AppInfoRepository _repository;
+  CancelToken? _loadToken;
 
   Future<void> load() async {
     if (state.status.isLoading) return;
     if (isClosed) return;
 
+    _loadToken?.cancel();
+    _loadToken = CancelToken();
+
     emit(state.copyWith(status: ViewStatus.loading, errorMessage: null));
 
     await CubitExceptionHandler.executeAsync(
-      operation: _repository.load,
+      operation: () => RetryPolicy.transientErrors.executeWithRetry(
+        action: _repository.load,
+        cancelToken: _loadToken,
+        shouldRetry: (final e) =>
+            NetworkErrorMapper.isNetworkError(e) ||
+            NetworkErrorMapper.isTimeoutError(e),
+      ),
       isAlive: () => !isClosed,
       onSuccess: (final info) {
         if (isClosed) return;
@@ -44,6 +56,12 @@ class AppInfoCubit extends Cubit<AppInfoState> {
       },
       logContext: 'AppInfoCubit.load',
     );
+  }
+
+  @override
+  Future<void> close() {
+    _loadToken?.cancel();
+    return super.close();
   }
 }
 

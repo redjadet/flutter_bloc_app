@@ -171,6 +171,56 @@ const kAnimationDuration = Duration(milliseconds: 300);
 - `platform_adaptive.dart` - Platform-adaptive widget utilities
 - `storage_guard.dart` - Storage availability checking utilities
 - `websocket_guard.dart` - WebSocket connectivity checking utilities
+- `retry_policy.dart` - Standardized retry with backoff and cancellation for non-HTTP async work
+
+### Reliability and retries
+
+- **ResilientHttpClient** (`lib/shared/http/resilient_http_client.dart`): Use for **HTTP** requests. It provides automatic retries for transient failures, 401 token refresh, network check before send, and telemetry. All HTTP entry points should go through this client (or its extensions) with an explicit timeout.
+- **RetryPolicy** (`lib/shared/utils/retry_policy.dart`): Use for **non-HTTP** retriable work (e.g. repository load, sync steps, external SDK calls). It supports exponential/linear/fixed backoff, jitter, and `CancelToken` so cubits can cancel in-flight retries in `close()`.
+
+When to use which:
+
+| Use case | Use |
+| ---------- | ----- |
+| HTTP GET/POST (API, REST) | ResilientHttpClient + timeout extension |
+| Single async repository call that may fail transiently | RetryPolicy.executeWithRetry with CancelToken from cubit |
+| Stream or watch | No RetryPolicy; handle errors in listener and optionally restart |
+
+**Timeouts:** Use explicit timeouts for all HTTP calls. The resilient client extensions accept a `timeout` parameter (default 30s). Recommended: 15–30s for typical API calls, longer for uploads or slow endpoints. Configure per call site; for enterprise tuning, consider a shared config (e.g. `HttpClientOptions`) injected via DI.
+
+**Circuit breaker (optional):** For high-traffic or enterprise builds, use [CircuitBreaker](lib/shared/http/circuit_breaker.dart) to fail fast when an endpoint is repeatedly failing. Wrap repository or HTTP calls with `CircuitBreaker(key: 'endpoint-name').execute(() => ...)`. Enable via feature-flag or build config. Use when protecting the backend from thundering herd is important.
+
+Example: cubit that retries a one-off load and cancels on close:
+
+```dart
+class MyCubit extends Cubit<MyState> {
+  MyCubit({required MyRepository repo}) : _repo = repo, super(MyState.initial());
+  final MyRepository _repo;
+  CancelToken? _loadToken;
+
+  Future<void> load() async {
+    _loadToken?.cancel();
+    _loadToken = CancelToken();
+    await CubitExceptionHandler.executeAsync(
+      operation: () => RetryPolicy.transientErrors.executeWithRetry(
+        action: _repo.load,
+        cancelToken: _loadToken,
+        shouldRetry: (e) => e is TimeoutException || NetworkErrorMapper.isNetworkError(e),
+      ),
+      isAlive: () => !isClosed,
+      onSuccess: (data) { if (!isClosed) emit(state.copyWith(data: data)); },
+      onError: (msg) { if (!isClosed) emit(state.copyWith(error: msg)); },
+      logContext: 'MyCubit.load',
+    );
+  }
+
+  @override
+  Future<void> close() {
+    _loadToken?.cancel();
+    return super.close();
+  }
+}
+```
 
 **Usage Example:**
 

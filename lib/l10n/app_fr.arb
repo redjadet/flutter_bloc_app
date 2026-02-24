@@ -1226,5 +1226,16 @@
   "whiteboardClear": "Effacer",
   "whiteboardClearAllStrokes": "Effacer tous les traits",
   "whiteboardPenColor": "Couleur du stylet",
-  "whiteboardStrokeWidth": "Épaisseur du trait"
+  "whiteboardStrokeWidth": "Épaisseur du trait",
+  "errorUnknown": "Une erreur inconnue s'est produite",
+  "errorNetwork": "Erreur de connexion réseau. Vérifiez votre connexion internet.",
+  "errorTimeout": "Délai d'attente dépassé. Veuillez réessayer.",
+  "errorUnauthorized": "Authentification requise. Veuillez vous reconnecter.",
+  "errorForbidden": "Accès refusé. Vous n'avez pas la permission pour cette action.",
+  "errorNotFound": "La ressource demandée est introuvable.",
+  "errorServer": "Erreur serveur. Veuillez réessayer plus tard.",
+  "errorGeneric": "Une erreur s'est produite. Veuillez réessayer.",
+  "errorClient": "Erreur client. Vérifiez votre requête et réessayez.",
+  "errorTooManyRequests": "Trop de requêtes. Veuillez patienter avant de réessayer.",
+  "retryButtonLabel": "Réessayer"
 }

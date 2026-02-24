@@ -1245,5 +1245,16 @@
   "whiteboardClear": "Temizle",
   "whiteboardClearAllStrokes": "Tüm çizgileri temizle",
   "whiteboardPenColor": "Kalem rengi",
-  "whiteboardStrokeWidth": "Çizgi kalınlığı"
+  "whiteboardStrokeWidth": "Çizgi kalınlığı",
+  "errorUnknown": "Bilinmeyen bir hata oluştu",
+  "errorNetwork": "Ağ bağlantı hatası. İnternet bağlantınızı kontrol edin.",
+  "errorTimeout": "İstek zaman aşımına uğradı. Lütfen tekrar deneyin.",
+  "errorUnauthorized": "Kimlik doğrulama gerekli. Lütfen tekrar giriş yapın.",
+  "errorForbidden": "Erişim reddedildi. Bu işlem için yetkiniz yok.",
+  "errorNotFound": "İstenen kaynak bulunamadı.",
+  "errorServer": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
+  "errorGeneric": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
+  "errorClient": "İstemci hatası. İsteğinizi kontrol edip tekrar deneyin.",
+  "errorTooManyRequests": "Çok fazla istek. Tekrar denemeden önce bekleyin.",
+  "retryButtonLabel": "Tekrar dene"
 }

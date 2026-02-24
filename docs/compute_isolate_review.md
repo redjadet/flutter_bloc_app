@@ -359,6 +359,8 @@ class MarkdownRenderObject {
 2. Consider markdown isolate parsing for very large documents (>50KB)
 3. Use `decodeJsonMap()`/`decodeJsonList()`/`encodeJsonIsolate()` for any new large JSON operations
 
+**Enterprise / high-traffic:** For low-end devices or high-traffic scenarios, consider making the isolate threshold configurable (e.g. lower than 8KB) so more decoding is offloaded; the default remains 8KB in `lib/shared/utils/isolate_json.dart`.
+
 **Validation Scripts:**
 
 - `tool/check_raw_json_decode.sh` - Ensures `jsonDecode()`/`jsonEncode()` are not used directly (should use isolate functions for large payloads)

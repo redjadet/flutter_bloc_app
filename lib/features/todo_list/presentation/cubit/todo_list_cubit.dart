@@ -49,11 +49,16 @@ class TodoListCubit extends Cubit<TodoListState>
   set lastDeletedItem(final TodoItem? value) => _lastDeletedItem = value;
   @override
   bool Function() get stopLoadingIfClosed => _stopLoadingIfClosed;
+  @override
+  int get loadRequestId => _loadRequestId;
+  @override
+  set loadRequestId(final int value) => _loadRequestId = value;
 
   final TimerService _timerService;
   final Duration _searchDebounceDuration;
   TimerDisposable? _searchDebounceHandle;
   TodoItem? _lastDeletedItem;
+  int _loadRequestId = 0;
 
   bool _stopLoadingIfClosed() {
     if (isClosed) {

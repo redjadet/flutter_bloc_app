@@ -460,7 +460,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get searchHint => 'Suchen...';
 
   @override
-  String get retryButtonLabel => 'ERNEUT VERSUCHEN';
+  String get retryButtonLabel => 'Erneut versuchen';
 
   @override
   String get featureLoadError =>
@@ -1402,4 +1402,43 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get whiteboardStrokeWidth => 'Strichstärke';
+
+  @override
+  String get errorUnknown => 'Ein unbekannter Fehler ist aufgetreten';
+
+  @override
+  String get errorNetwork =>
+      'Netzwerkverbindungsfehler. Bitte überprüfen Sie Ihre Internetverbindung.';
+
+  @override
+  String get errorTimeout =>
+      'Zeitüberschreitung der Anfrage. Bitte versuchen Sie es erneut.';
+
+  @override
+  String get errorUnauthorized =>
+      'Anmeldung erforderlich. Bitte melden Sie sich erneut an.';
+
+  @override
+  String get errorForbidden =>
+      'Zugriff verweigert. Sie haben keine Berechtigung für diese Aktion.';
+
+  @override
+  String get errorNotFound =>
+      'Die angeforderte Ressource wurde nicht gefunden.';
+
+  @override
+  String get errorServer =>
+      'Serverfehler. Bitte versuchen Sie es später erneut.';
+
+  @override
+  String get errorGeneric =>
+      'Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.';
+
+  @override
+  String get errorClient =>
+      'Clientfehler. Bitte überprüfen Sie Ihre Anfrage und versuchen Sie es erneut.';
+
+  @override
+  String get errorTooManyRequests =>
+      'Zu viele Anfragen. Bitte warten Sie, bevor Sie es erneut versuchen.';
 }

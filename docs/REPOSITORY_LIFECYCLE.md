@@ -49,6 +49,10 @@ Implement a `dispose()` method if your repository:
    - Example: Repositories with background polling or periodic updates
    - **Why:** Stops timers to prevent unnecessary work
 
+### Memory pressure and cache trim (enterprise / high-traffic)
+
+For high-traffic or memory-constrained environments, consider reacting to **memory pressure** (e.g. Flutter or platform callbacks when the system is under pressure) by trimming in-memory caches. Caches that are good candidates for trim-on-pressure include: search cache, profile cache, image cache (e.g. `CachedNetworkImage` provider), and any repository that holds large in-memory lists. Prefer a single entry point (e.g. a service or bootstrap callback) that calls `trim()` or equivalent on cache abstractions; document eviction policy and trim behavior here or in a short memory doc. This is optional and not required for normal usage.
+
 ### ❌ Repositories That Don't Need Dispose
 
 Most repositories **don't need** a `dispose()` method:
