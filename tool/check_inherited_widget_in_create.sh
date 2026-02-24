@@ -3,7 +3,6 @@
 # BlocProvider/Provider create callbacks.
 # Such usage throws "Tried to listen to an InheritedWidget in a life-cycle
 # that will never be called again." Read l10n/theme in build() and pass in.
-# See AGENTS.md "InheritedWidget in one-time lifecycles".
 
 set -euo pipefail
 
