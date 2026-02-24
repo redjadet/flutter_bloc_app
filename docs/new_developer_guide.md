@@ -464,6 +464,8 @@ testWidgets('scales text at 1.3x', (tester) async {
 
 ## 9. Adding a New Feature (Cheat Sheet)
 
+For the *approach* (understand first, add in the right place, validate, lifecycle, ship), see [§9.5](#95-how-do-you-approach-adding-new-logic-to-production). Below are the mechanical steps.
+
 1. Create `lib/features/<feature>/domain|data|presentation` folders.
 2. Define domain contracts/models (Freezed classes go in `domain/models`).
 3. Implement data sources (REST, Firebase, etc.), map DTOs to domain entities.
@@ -494,30 +496,15 @@ This section answers the question from two angles: **this project’s workflow**
 
 ### In this project
 
-1. **Understand before changing**
-   - Locate the right layer: domain (contracts, models), data (repositories, DTOs), or presentation (cubits, widgets). See [Feature module playbook](#4-feature-module-playbook) and [Repository layout](#2-repository-layout-highlights).
-   - Read existing code in that feature and related tests. Follow established patterns (e.g. `CubitExceptionHandler`, `TimerService`, type-safe `context.cubit<T>()`).
-   - Check `docs/architecture_details.md` and `docs/clean_architecture.md` so new logic respects boundaries (e.g. no Flutter in domain, no direct `GetIt` in presentation).
+1. **Understand before changing** — Locate the right layer and read existing code and tests. See [Feature module playbook](#4-feature-module-playbook) and [Repository layout](#2-repository-layout-highlights). Check `docs/architecture_details.md` and `docs/clean_architecture.md` for boundaries.
 
-2. **Add logic in the right place**
-   - **Domain**: New business rules, contracts, or value objects (Dart-only, no Flutter).
-   - **Data**: New or extended repository methods, DTOs, and mapping; use shared services (`ResilientHttpClient`, `HiveService`, `TimerService`) where applicable.
-   - **Presentation**: New or updated cubit methods and state; keep widgets focused on layout/theming/navigation and lifecycle-safe (e.g. `context.mounted` after `await`, `isClosed` before `emit()`).
+2. **Add logic in the right place** — Domain (contracts, models; Dart-only), Data (repositories, DTOs; use shared services), or Presentation (cubits, widgets; lifecycle-safe). Follow patterns already used in that feature.
 
-3. **Wire and validate**
-   - Register new dependencies in `lib/core/di/` (e.g. `injector_registrations.dart`). Use `registerLazySingletonIfAbsent` for singletons.
-   - Add or extend tests (unit, bloc, widget/golden as needed). Preserve or improve coverage.
-   - Run the quality gate: **`./bin/checklist`** (format, analyze, validation scripts, tests/coverage). Fix any reported violations before merging.
-   - For user-facing or risky changes, run the relevant app flows manually (e.g. the affected feature and navigation).
+3. **Wire and validate** — Register in [DI](#11-di-reference-example), add or extend [tests](#7-testing-strategy), run [**`./bin/checklist`**](#6-development-workflow). For user-facing or risky changes, run the affected flows manually. Mechanical steps: [Adding a new feature](#9-adding-a-new-feature-cheat-sheet).
 
-4. **Lifecycle and safety**
-   - After every `await` in cubits: guard `emit()` with `if (isClosed) return;`. In widgets: guard use of `context` with `if (!context.mounted) return;` and `setState` with `if (!mounted) return;`.
-   - Do not call `context.l10n` or `Theme.of(context)` inside `BlocProvider`/`Provider` `create` or in `initState`; read inherited values in `build()` and pass them in.
-   - Use `CubitSubscriptionMixin` and `registerSubscription()` for stream subscriptions; use `TimerService` (or `FakeTimerService` in tests) for delays instead of raw `Timer`/`Future.delayed` where cancellation matters.
+4. **Lifecycle and safety** — Apply the guards in [Common Bugs to Avoid](#common-bugs-to-avoid) (context after `await`, `isClosed` before `emit()`, no inherited context in `create`/`initState`, subscription/timer cleanup).
 
-5. **Document and ship**
-   - Update docs if you add a new feature or change behavior (e.g. `docs/feature_implementation_guide.md`, `docs/offline_first/` for offline features).
-   - Review your diff before commit; keep changes as small and focused as possible for the goal.
+5. **Document and ship** — Update feature or offline docs if behavior changes. Review the diff; keep changes small and focused.
 
 ### General best practices (any production app)
 
