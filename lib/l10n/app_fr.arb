@@ -1216,5 +1216,15 @@
   "playlearnListen": "Écouter",
   "playlearnTapToListen": "Appuyez pour écouter",
   "playlearnBack": "Retour",
-  "openPlaylearnTooltip": "Ouvrir Playlearn"
+  "openPlaylearnTooltip": "Ouvrir Playlearn",
+  "whiteboardChoosePenColor": "Choisir la couleur du stylet",
+  "whiteboardPickColor": "Choisir une couleur",
+  "whiteboardUndo": "Annuler",
+  "whiteboardUndoLastStroke": "Annuler le dernier trait",
+  "whiteboardRedo": "Rétablir",
+  "whiteboardRedoLastStroke": "Rétablir le dernier trait annulé",
+  "whiteboardClear": "Effacer",
+  "whiteboardClearAllStrokes": "Effacer tous les traits",
+  "whiteboardPenColor": "Couleur du stylet",
+  "whiteboardStrokeWidth": "Épaisseur du trait"
 }

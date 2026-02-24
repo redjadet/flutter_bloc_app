@@ -32,6 +32,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
             .fetchCountries();
         return (continents: continents, countries: countries);
       },
+      isAlive: () => !isClosed,
       onSuccess: (final result) {
         _emitSuccess(
           continents: result.continents,
@@ -75,6 +76,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
       operation: () => _repository.fetchCountries(
         continentCode: continentCode,
       ),
+      isAlive: () => !isClosed,
       onSuccess: (final countries) {
         _emitSuccess(
           countries: countries,

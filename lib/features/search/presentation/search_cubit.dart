@@ -63,6 +63,7 @@ class SearchCubit extends Cubit<SearchState> {
 
     await CubitExceptionHandler.executeAsync(
       operation: () => _repository.search(query),
+      isAlive: () => !isClosed,
       onSuccess: (final results) {
         if (!_isRequestActive(requestId, query)) return;
         emit(

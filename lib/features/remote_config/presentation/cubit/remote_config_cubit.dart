@@ -84,6 +84,7 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
           }
           await _remoteConfigService.forceFetch();
         },
+        isAlive: () => !isClosed,
         logContext: logContext,
         onSuccess: _emitLoadedState,
         onError: (final message) {

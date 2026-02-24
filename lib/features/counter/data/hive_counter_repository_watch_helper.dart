@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository_watch_state.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/subscription_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 /// Helper class for managing Hive box watch subscriptions and stream emissions.
@@ -30,6 +31,7 @@ class HiveCounterRepositoryWatchHelper {
 
   StreamSubscription<BoxEvent>? _boxSubscription;
   final HiveCounterRepositoryWatchState _watchState;
+  final SubscriptionManager _subscriptionManager = SubscriptionManager();
 
   static const String _keyCount = 'count';
   static const String _keyChanged = 'last_changed';
@@ -71,8 +73,10 @@ class HiveCounterRepositoryWatchHelper {
 
   /// Handles when a listener unsubscribes from the watch stream.
   Future<void> handleOnCancel() async {
-    await _boxSubscription?.cancel();
+    final StreamSubscription<BoxEvent>? subscription = _boxSubscription;
     _boxSubscription = null;
+    _subscriptionManager.unregister(subscription);
+    await subscription?.cancel();
     await _watchState.closeIfNoListeners();
   }
 
@@ -82,16 +86,16 @@ class HiveCounterRepositoryWatchHelper {
   /// The subscription is automatically cancelled on error to prevent repeated
   /// error emissions.
   Future<void> _startBoxWatch() async {
-    // Prevent concurrent watch setup - early return if already watching
-    if (_boxSubscription != null) {
+    // Prevent concurrent watch setup - early return if already watching or disposed
+    if (_boxSubscription != null || _subscriptionManager.isDisposed) {
       return;
     }
 
     try {
       final Box<dynamic> box = await getBox();
 
-      // Double-check after async operation (another call might have started watching)
-      if (_boxSubscription != null) {
+      // After async: avoid creating subscription if disposed or another watch started
+      if (_boxSubscription != null || _subscriptionManager.isDisposed) {
         return;
       }
 
@@ -115,10 +119,12 @@ class HiveCounterRepositoryWatchHelper {
           // Use unawaited since we're in an error handler
           final StreamSubscription<BoxEvent>? subscription = _boxSubscription;
           _boxSubscription = null;
+          _subscriptionManager.unregister(subscription);
           unawaited(subscription?.cancel());
         },
         cancelOnError: false, // We handle errors manually
       );
+      _subscriptionManager.register(_boxSubscription);
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'Failed to start Hive box watch',
@@ -143,8 +149,8 @@ class HiveCounterRepositoryWatchHelper {
 
   /// Disposes of all resources.
   Future<void> dispose() async {
-    await _boxSubscription?.cancel();
     _boxSubscription = null;
+    await _subscriptionManager.dispose();
     await _watchState.dispose();
   }
 }

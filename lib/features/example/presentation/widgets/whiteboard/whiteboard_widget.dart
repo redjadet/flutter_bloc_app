@@ -2,6 +2,7 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/whiteboard/whiteboard_painter.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/whiteboard/whiteboard_toolbar.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 
 /// An interactive whiteboard widget using CustomPainter for low-level rendering.
 ///
@@ -20,17 +21,29 @@ class WhiteboardWidget extends StatefulWidget {
 class _WhiteboardWidgetState extends State<WhiteboardWidget> {
   final List<WhiteboardStroke> _strokes = <WhiteboardStroke>[];
   final List<WhiteboardStroke> _undoStack = <WhiteboardStroke>[];
-  Color _currentColor = Colors.black;
+  Color? _currentColor;
   double _currentWidth = 3;
   WhiteboardStroke? _currentStroke;
   int _version = 0;
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _currentColor ??= Theme.of(context).colorScheme.onSurface;
+  }
+
+  Color get _effectiveColor =>
+      _currentColor ?? Theme.of(context).colorScheme.onSurface;
+
   Future<void> _pickColor() async {
+    final BuildContext pickerContext = context;
+    final String chooseTitle = pickerContext.l10n.whiteboardChoosePenColor;
+    final String pickHeading = pickerContext.l10n.whiteboardPickColor;
     final Color color = await showColorPickerDialog(
       context,
-      _currentColor,
-      title: const Text('Choose pen color'),
-      heading: const Text('Pick a color'),
+      _effectiveColor,
+      title: Text(chooseTitle),
+      heading: Text(pickHeading),
       subheading: const Text(''),
       wheelDiameter: 180,
       pickersEnabled: const <ColorPickerType, bool>{
@@ -50,7 +63,7 @@ class _WhiteboardWidgetState extends State<WhiteboardWidget> {
     setState(() {
       _currentStroke = WhiteboardStroke(
         points: <Offset>[position],
-        color: _currentColor,
+        color: _effectiveColor,
         width: _currentWidth,
       );
     });
@@ -119,7 +132,7 @@ class _WhiteboardWidgetState extends State<WhiteboardWidget> {
         WhiteboardToolbar(
           theme: theme,
           colors: colors,
-          currentColor: _currentColor,
+          currentColor: _effectiveColor,
           currentWidth: _currentWidth,
           canUndo: _strokes.isNotEmpty,
           canRedo: _undoStack.isNotEmpty,

@@ -1216,5 +1216,15 @@
   "playlearnListen": "Hören",
   "playlearnTapToListen": "Tippen zum Hören",
   "playlearnBack": "Zurück",
-  "openPlaylearnTooltip": "Playlearn öffnen"
+  "openPlaylearnTooltip": "Playlearn öffnen",
+  "whiteboardChoosePenColor": "Stiftfarbe wählen",
+  "whiteboardPickColor": "Farbe wählen",
+  "whiteboardUndo": "Rückgängig",
+  "whiteboardUndoLastStroke": "Letzten Strich rückgängig",
+  "whiteboardRedo": "Wiederholen",
+  "whiteboardRedoLastStroke": "Rückgängig gemachten Strich wiederherstellen",
+  "whiteboardClear": "Löschen",
+  "whiteboardClearAllStrokes": "Alle Striche löschen",
+  "whiteboardPenColor": "Stiftfarbe",
+  "whiteboardStrokeWidth": "Strichstärke"
 }

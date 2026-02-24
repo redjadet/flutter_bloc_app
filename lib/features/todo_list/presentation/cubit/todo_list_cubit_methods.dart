@@ -143,6 +143,7 @@ mixin _TodoListCubitMethods
     emit(state.copyWith(status: ViewStatus.loading, errorMessage: null));
     await CubitExceptionHandler.executeAsync<List<TodoItem>>(
       operation: repository.fetchAll,
+      isAlive: () => !isClosed,
       onSuccess: (final items) async {
         if (stopLoadingIfClosed()) return;
         emit(

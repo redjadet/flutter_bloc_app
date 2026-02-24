@@ -90,7 +90,6 @@ class SyncStatusCubit extends Cubit<SyncStatusState>
     _networkSubscription = null;
     _syncSubscription = null;
     _summarySubscription = null;
-    await closeAllSubscriptions();
     return super.close();
   }
 }

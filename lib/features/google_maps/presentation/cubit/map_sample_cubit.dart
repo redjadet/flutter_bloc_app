@@ -25,6 +25,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     );
     await CubitExceptionHandler.executeAsync(
       operation: _repository.fetchSampleLocations,
+      isAlive: () => !isClosed,
       onSuccess: (final locations) {
         if (isClosed) return;
         final gmaps.MarkerId? firstMarkerId = locations.isEmpty

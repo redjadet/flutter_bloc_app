@@ -53,6 +53,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
         conversationId: withUser.id,
         clientMessageId: clientMessageId,
       ),
+      isAlive: () => !isClosed,
       onSuccess: (final result) {
         final DateTime replyTimestamp = DateTime.now();
         final ChatMessage replyWithMetadata = ChatMessage(

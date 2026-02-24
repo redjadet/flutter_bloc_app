@@ -22,6 +22,7 @@ class AppInfoCubit extends Cubit<AppInfoState> {
 
     await CubitExceptionHandler.executeAsync(
       operation: _repository.load,
+      isAlive: () => !isClosed,
       onSuccess: (final info) {
         if (isClosed) return;
         emit(

@@ -51,6 +51,7 @@ class ChartCubit extends Cubit<ChartState> {
 
     await CubitExceptionHandler.executeAsync(
       operation: _repository.fetchTrendingCounts,
+      isAlive: () => !isClosed,
       onSuccess: (final points) {
         if (isClosed) return;
         emit(

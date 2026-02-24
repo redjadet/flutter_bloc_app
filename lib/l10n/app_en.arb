@@ -1757,5 +1757,45 @@
   "openPlaylearnTooltip": "Open Playlearn",
   "@openPlaylearnTooltip": {
     "description": "Tooltip for Playlearn entry in app bar or menu"
+  },
+  "whiteboardChoosePenColor": "Choose pen color",
+  "@whiteboardChoosePenColor": {
+    "description": "Tooltip and dialog title for whiteboard pen color picker"
+  },
+  "whiteboardPickColor": "Pick a color",
+  "@whiteboardPickColor": {
+    "description": "Heading in whiteboard color picker dialog"
+  },
+  "whiteboardUndo": "Undo",
+  "@whiteboardUndo": {
+    "description": "Label for undo last stroke button"
+  },
+  "whiteboardUndoLastStroke": "Undo last stroke",
+  "@whiteboardUndoLastStroke": {
+    "description": "Tooltip for whiteboard undo button"
+  },
+  "whiteboardRedo": "Redo",
+  "@whiteboardRedo": {
+    "description": "Label for redo button"
+  },
+  "whiteboardRedoLastStroke": "Redo last undone stroke",
+  "@whiteboardRedoLastStroke": {
+    "description": "Tooltip for whiteboard redo button"
+  },
+  "whiteboardClear": "Clear",
+  "@whiteboardClear": {
+    "description": "Label for clear all strokes button"
+  },
+  "whiteboardClearAllStrokes": "Clear all strokes",
+  "@whiteboardClearAllStrokes": {
+    "description": "Tooltip for whiteboard clear button"
+  },
+  "whiteboardPenColor": "Pen color",
+  "@whiteboardPenColor": {
+    "description": "Label for pen color control"
+  },
+  "whiteboardStrokeWidth": "Stroke width",
+  "@whiteboardStrokeWidth": {
+    "description": "Label for stroke width control"
   }
 }

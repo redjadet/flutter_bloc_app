@@ -1235,5 +1235,15 @@
   "openPlaylearnTooltip": "Playlearn'i Aç",
   "@openPlaylearnTooltip": {
     "description": "Tooltip for Playlearn entry in app bar or menu"
-  }
+  },
+  "whiteboardChoosePenColor": "Kalem rengi seç",
+  "whiteboardPickColor": "Renk seç",
+  "whiteboardUndo": "Geri al",
+  "whiteboardUndoLastStroke": "Son çizgiyi geri al",
+  "whiteboardRedo": "Yinele",
+  "whiteboardRedoLastStroke": "Geri alınan çizgiyi yinele",
+  "whiteboardClear": "Temizle",
+  "whiteboardClearAllStrokes": "Tüm çizgileri temizle",
+  "whiteboardPenColor": "Kalem rengi",
+  "whiteboardStrokeWidth": "Çizgi kalınlığı"
 }

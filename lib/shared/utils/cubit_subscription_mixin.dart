@@ -4,9 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Mixin for managing stream subscriptions in cubits.
 ///
-/// This mixin provides a standardized way to manage subscriptions and
-/// ensures they are properly cancelled when the cubit is closed, reducing
-/// code duplication across cubits.
+/// Subscriptions registered via [registerSubscription] are automatically
+/// cancelled when the cubit is closed. [close] is overridden to run
+/// [closeAllSubscriptions] then [Cubit.close], so subclasses that override
+/// [close] should perform their own cleanup (e.g. null refs, dispose timer
+/// handles) then call `super.close()` to run subscription cancellation and
+/// bloc teardown.
 ///
 /// Example:
 /// ```dart
@@ -25,6 +28,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 ///     if (isClosed) return;
 ///     emit(state.copyWith(data: data));
 ///   }
+///
+///   @override
+///   Future<void> close() async {
+///     _subscription = null; // optional: null ref before super.close()
+///     return super.close(); // cancels all registered subscriptions then closes
+///   }
 /// }
 /// ```
 mixin CubitSubscriptionMixin<S> on Cubit<S> {
@@ -41,8 +50,7 @@ mixin CubitSubscriptionMixin<S> on Cubit<S> {
 
   /// Cancels all registered subscriptions.
   ///
-  /// This is called automatically in [closeAllSubscriptions] but can be
-  /// called manually if needed.
+  /// Called automatically from [close]; can be called manually if needed.
   Future<void> cancelAllSubscriptions() async {
     final List<StreamSubscription<dynamic>?> subscriptions = List.from(
       _subscriptions,
@@ -56,17 +64,14 @@ mixin CubitSubscriptionMixin<S> on Cubit<S> {
     }
   }
 
-  /// Closes all subscriptions. Override [close] and call this before super.close().
-  ///
-  /// Example:
-  /// ```dart
-  /// @override
-  /// Future<void> close() async {
-  ///   await closeAllSubscriptions();
-  ///   return super.close();
-  /// }
-  /// ```
+  /// Cancels all registered subscriptions. Invoked automatically by [close].
   Future<void> closeAllSubscriptions() async {
     await cancelAllSubscriptions();
+  }
+
+  @override
+  Future<void> close() async {
+    await closeAllSubscriptions();
+    return super.close();
   }
 }

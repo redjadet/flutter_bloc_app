@@ -147,6 +147,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
           changeId: snapshotState.changeId,
         ),
       ),
+      isAlive: () => !isClosed,
       onError: (_) {},
       onErrorWithDetails: (final error, final stackTrace) {
         _handleError(

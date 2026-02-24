@@ -33,18 +33,27 @@ class CounterCubit extends _CounterCubitBase {
     }
   }
 
+  TimerDisposable? _initialLoadHandle;
+
   Future<void> loadInitial() async {
     emit(state.copyWith(status: ViewStatus.loading));
 
+    if (_initialLoadDelay > Duration.zero) {
+      _initialLoadHandle?.dispose();
+      _initialLoadHandle = _timerService.runOnce(_initialLoadDelay, () {
+        if (isClosed) return;
+        unawaited(_runLoadInitialAfterDelay());
+      });
+      return;
+    }
+
+    await _runLoadInitialAfterDelay();
+  }
+
+  Future<void> _runLoadInitialAfterDelay() async {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () async {
-        if (_initialLoadDelay > Duration.zero) {
-          await Future<void>.delayed(_initialLoadDelay);
-          // Check if cubit is closed after delay to prevent errors
-          if (isClosed) return;
-        }
         final CounterSnapshot snapshot = await _repository.load();
-        // Check if cubit is closed after async operation to prevent errors
         if (isClosed) return;
         final RestorationResult restoration = restoreStateFromSnapshot(
           snapshot,
@@ -59,6 +68,7 @@ class CounterCubit extends _CounterCubitBase {
         );
         _subscribeToRepository();
       },
+      isAlive: () => !isClosed,
       onError: (_) {},
       logContext: 'CounterCubit.loadInitial',
       onErrorWithDetails: (final error, final stackTrace) {
@@ -74,8 +84,9 @@ class CounterCubit extends _CounterCubitBase {
 
   @override
   Future<void> close() async {
+    _initialLoadHandle?.dispose();
+    _initialLoadHandle = null;
     _stopCountdownTicker();
-    await closeAllSubscriptions();
     _repositorySubscription = null;
     await super.close();
   }
@@ -136,6 +147,7 @@ class CounterCubit extends _CounterCubitBase {
           lastChanged: snapshotState.lastChanged,
         ),
       ),
+      isAlive: () => !isClosed,
       onError: (_) {},
       logContext: 'CounterCubit._persistState',
       onErrorWithDetails: (final error, final stackTrace) {

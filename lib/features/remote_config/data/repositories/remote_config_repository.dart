@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/subscription_manager.dart';
 
 class RemoteConfigRepository implements RemoteConfigService {
   RemoteConfigRepository(
@@ -16,9 +17,10 @@ class RemoteConfigRepository implements RemoteConfigService {
   final FirebaseRemoteConfig _remoteConfig;
   final void Function(String message) _logDebug;
 
-  // ignore: cancel_subscriptions - Subscription is properly cancelled in dispose() method
+  // ignore: cancel_subscriptions - Subscription managed by SubscriptionManager
   StreamSubscription<RemoteConfigUpdate>? _configUpdatesSubscription;
   bool _isInitialized = false;
+  final SubscriptionManager _subscriptionManager = SubscriptionManager();
 
   @override
   Future<void> initialize() async {
@@ -85,15 +87,13 @@ class RemoteConfigRepository implements RemoteConfigService {
   double getDouble(final String key) => _remoteConfig.getDouble(key);
 
   Future<void> dispose() async {
-    // Nullify reference before canceling to prevent race conditions
-    final StreamSubscription<RemoteConfigUpdate>? subscription =
-        _configUpdatesSubscription;
     _configUpdatesSubscription = null;
-    await subscription?.cancel();
+    await _subscriptionManager.dispose();
     _isInitialized = false;
   }
 
   void _subscribeToRealtimeUpdates() {
+    if (_subscriptionManager.isDisposed) return;
     _configUpdatesSubscription ??= _remoteConfig.onConfigUpdated.listen(
       (final update) async {
         final bool shouldLogTestValue = update.updatedKeys.contains(
@@ -133,6 +133,7 @@ class RemoteConfigRepository implements RemoteConfigService {
         );
       },
     );
+    _subscriptionManager.register(_configUpdatesSubscription);
   }
 
   void _logTestValue({required final String source}) {
