@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/core/bootstrap/app_version_service.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
@@ -38,6 +39,9 @@ class BootstrapCoordinator {
 
     // Setup dependency injection
     await configureDependencies();
+
+    // Materialize app runtime config at init (single place for feature/endpoint control)
+    getIt<AppRuntimeConfig>();
 
     // Run migration (non-blocking, graceful failure)
     await InitializationGuard.executeSafely(

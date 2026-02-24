@@ -62,9 +62,7 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
           create: () => CounterCubit(
             repository: getIt<CounterRepository>(),
             timerService: getIt<TimerService>(),
-            loadDelay: FlavorManager.I.isDev
-                ? AppConstants.devSkeletonDelay
-                : Duration.zero,
+            loadDelay: getIt<AppRuntimeConfig>().skeletonDelay,
           ),
           init: (final cubit) => cubit.loadInitial(),
           child: CounterPage(

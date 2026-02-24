@@ -3,6 +3,7 @@ library;
 
 // Core exports
 export 'app_config.dart';
+export 'config/app_runtime_config.dart';
 export 'constants/constants.dart';
 export 'di/injector.dart';
 export 'flavor.dart';

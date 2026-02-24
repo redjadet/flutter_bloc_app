@@ -28,10 +28,10 @@ class PlaylearnPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     return BlocProvider(
-      create: (final context) => PlaylearnCubit(
+      create: (final _) => PlaylearnCubit(
         repository: getIt<VocabularyRepository>(),
         audioService: getIt<AudioPlaybackService>(),
-        l10n: context.l10n,
+        l10n: l10n,
       ),
       child: CommonPageLayout(
         title: l10n.playlearnTitle,

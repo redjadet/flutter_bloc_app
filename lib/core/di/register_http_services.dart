@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/payment_calculator.dart';
@@ -41,7 +42,10 @@ void registerHttpServices() {
   );
 
   registerLazySingletonIfAbsent<ChartRepository>(
-    () => DelayedChartRepository(client: getIt<ResilientHttpClient>()),
+    () => DelayedChartRepository(
+      client: getIt<ResilientHttpClient>(),
+      appRuntimeConfig: getIt<AppRuntimeConfig>(),
+    ),
   );
 
   registerLazySingletonIfAbsent<PaymentCalculator>(PaymentCalculator.new);

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_factories.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
@@ -38,6 +39,7 @@ import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 
 Future<void> registerAllDependencies() async {
+  _registerAppRuntimeConfig();
   await _registerStorageServices();
   _registerCounterRepository();
   registerHttpServices();
@@ -55,6 +57,12 @@ Future<void> registerAllDependencies() async {
   registerPlaylearnServices();
   _registerUtilityServices();
   _registerSyncServices();
+}
+
+void _registerAppRuntimeConfig() {
+  registerLazySingletonIfAbsent<AppRuntimeConfig>(
+    AppRuntimeConfig.fromBootstrap,
+  );
 }
 
 Future<void> _registerStorageServices() async {
