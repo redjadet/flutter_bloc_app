@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 
 class GraphqlCacheControlsSection extends StatefulWidget {
   const GraphqlCacheControlsSection({
@@ -63,42 +64,35 @@ class _GraphqlCacheControlsSectionState
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     final double gap = context.responsiveGapS;
-    final double cardPadding = context.responsiveCardPadding;
 
     return SettingsSection(
       title: l10n.settingsGraphqlCacheSectionTitle,
-      child: Card(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: cardPadding,
-            vertical: context.responsiveGapM,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                l10n.settingsGraphqlCacheDescription,
-                style: Theme.of(context).textTheme.bodyMedium,
+      child: CommonCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              l10n.settingsGraphqlCacheDescription,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            SizedBox(height: gap),
+            Align(
+              alignment: Alignment.centerRight,
+              child: PlatformAdaptive.textButton(
+                context: context,
+                onPressed: _isClearing ? null : _handleClear,
+                child: _isClearing
+                    ? SizedBox(
+                        height: context.responsiveGapM,
+                        width: context.responsiveGapM,
+                        child: const CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : Text(l10n.settingsGraphqlCacheClearButton),
               ),
-              SizedBox(height: gap),
-              Align(
-                alignment: Alignment.centerRight,
-                child: PlatformAdaptive.textButton(
-                  context: context,
-                  onPressed: _isClearing ? null : _handleClear,
-                  child: _isClearing
-                      ? SizedBox(
-                          height: context.responsiveGapM,
-                          width: context.responsiveGapM,
-                          child: const CircularProgressIndicator(
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : Text(l10n.settingsGraphqlCacheClearButton),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

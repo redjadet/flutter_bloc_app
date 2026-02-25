@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 
 class ProfileCacheControlsSection extends StatefulWidget {
   const ProfileCacheControlsSection({
@@ -91,59 +92,52 @@ class _ProfileCacheControlsSectionState
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     final double gap = context.responsiveGapS;
-    final double cardPadding = context.responsiveCardPadding;
 
     return SettingsSection(
       title: l10n.settingsProfileCacheSectionTitle,
-      child: Card(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: cardPadding,
-            vertical: context.responsiveGapM,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                l10n.settingsProfileCacheDescription,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              SizedBox(height: gap),
-              if (_loadingMetadata)
-                Padding(
-                  padding: EdgeInsets.only(bottom: gap),
-                  child: SizedBox(
-                    height: context.responsiveGapM,
-                    width: context.responsiveGapM,
-                    child: const CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                )
-              else if (_metadata case final meta?)
-                Padding(
-                  padding: EdgeInsets.only(bottom: gap),
-                  child: Text(
-                    _formatMetadata(context, meta),
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
+      child: CommonCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              l10n.settingsProfileCacheDescription,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            SizedBox(height: gap),
+            if (_loadingMetadata)
+              Padding(
+                padding: EdgeInsets.only(bottom: gap),
+                child: SizedBox(
+                  height: context.responsiveGapM,
+                  width: context.responsiveGapM,
+                  child: const CircularProgressIndicator(strokeWidth: 2),
                 ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: PlatformAdaptive.textButton(
-                  context: context,
-                  onPressed: _isClearing ? null : _handleClearCache,
-                  child: _isClearing
-                      ? SizedBox(
-                          height: context.responsiveGapM,
-                          width: context.responsiveGapM,
-                          child: const CircularProgressIndicator(
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : Text(l10n.settingsProfileCacheClearButton),
+              )
+            else if (_metadata case final meta?)
+              Padding(
+                padding: EdgeInsets.only(bottom: gap),
+                child: Text(
+                  _formatMetadata(context, meta),
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
-            ],
-          ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: PlatformAdaptive.textButton(
+                context: context,
+                onPressed: _isClearing ? null : _handleClearCache,
+                child: _isClearing
+                    ? SizedBox(
+                        height: context.responsiveGapM,
+                        width: context.responsiveGapM,
+                        child: const CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : Text(l10n.settingsProfileCacheClearButton),
+              ),
+            ),
+          ],
         ),
       ),
     );

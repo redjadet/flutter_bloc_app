@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/widgets/graphql_country_card.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'helpers/pump_with_mix_theme.dart';
 
 void main() {
   testWidgets('GraphqlCountryCard renders country details and chips', (
@@ -16,15 +17,12 @@ void main() {
       continent: GraphqlContinent(code: 'EU', name: 'Europe'),
     );
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: GraphqlCountryCard(
-            country: country,
-            capitalLabel: 'Capital',
-            currencyLabel: 'Currency',
-          ),
-        ),
+    await pumpWithMixTheme(
+      tester,
+      child: GraphqlCountryCard(
+        country: country,
+        capitalLabel: 'Capital',
+        currencyLabel: 'Currency',
       ),
     );
 
@@ -47,15 +45,12 @@ void main() {
       continent: GraphqlContinent(code: 'AN', name: 'Antarctica'),
     );
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: GraphqlCountryCard(
-            country: country,
-            capitalLabel: 'Capital',
-            currencyLabel: 'Currency',
-          ),
-        ),
+    await pumpWithMixTheme(
+      tester,
+      child: GraphqlCountryCard(
+        country: country,
+        capitalLabel: 'Capital',
+        currencyLabel: 'Currency',
       ),
     );
 

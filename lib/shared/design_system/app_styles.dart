@@ -28,13 +28,13 @@ class AppStyles {
     $box.color.ref(AppMaterialColorTokens.surface),
     $box.borderRadius.all.ref(AppMixTokens.radiusM),
     $box.decoration.elevation(1),
-    $on.dark($box.decoration.elevation(0)),
     $box.padding.only(
       top: AppMixTokens.cardPadV(),
       bottom: AppMixTokens.cardPadV(),
       left: AppMixTokens.cardPadH(),
       right: AppMixTokens.cardPadH(),
     ),
+    $on.dark($box.decoration.elevation(0)),
   );
 
   /// Profile-style outlined button: surface fill, thick primary border,

@@ -258,6 +258,12 @@ fi
 echo "✅ Code analysis complete"
 echo ""
 
+echo "  Running mix_lint checks..."
+if ! bash tool/run_mix_lint.sh; then
+  VALIDATION_FAILED=1
+fi
+echo ""
+
 echo "  Running focused regression guard tests..."
 bash tool/check_regression_guards.sh || VALIDATION_FAILED=1
 echo ""
