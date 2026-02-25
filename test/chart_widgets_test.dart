@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_conte
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_line_graph.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_loading_list.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
@@ -70,7 +71,7 @@ void main() {
       const MaterialApp(home: Scaffold(body: ChartLoadingList())),
     );
 
-    expect(find.byType(Container), findsWidgets);
+    expect(find.byType(CommonCard), findsNWidgets(2));
   });
 
   testWidgets('ChartLineGraph builds LineChart with provided points', (

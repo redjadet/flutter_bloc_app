@@ -82,22 +82,26 @@ class _LocationFocusActions extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (isSelected)
-          Container(
-            margin: EdgeInsets.only(right: context.responsiveGapXS),
-            padding: EdgeInsets.symmetric(
-              horizontal: context.responsiveGapS,
-              vertical: context.responsiveGapXS,
-            ),
-            decoration: BoxDecoration(
+          Padding(
+            padding: EdgeInsets.only(right: context.responsiveGapXS),
+            child: CommonCard(
               color: colors.secondaryContainer,
-              borderRadius: BorderRadius.circular(
-                context.responsiveCardRadius / 2,
+              elevation: 0,
+              margin: EdgeInsets.zero,
+              padding: EdgeInsets.symmetric(
+                horizontal: context.responsiveGapS,
+                vertical: context.responsiveGapXS,
               ),
-            ),
-            child: Text(
-              selectedLabel,
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: colors.onSecondaryContainer,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  context.responsiveCardRadius / 2,
+                ),
+              ),
+              child: Text(
+                selectedLabel,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: colors.onSecondaryContainer,
+                ),
               ),
             ),
           ),

@@ -17,9 +17,11 @@ class MarkdownPreview extends StatelessWidget {
     final ColorScheme colors = theme.colorScheme;
 
     final TextStyle? bodyLarge = theme.textTheme.bodyLarge;
-    return Container(
-      padding: context.allGapM,
+    return CommonCard(
       color: colors.surface,
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      padding: context.allGapM,
       child: SingleChildScrollView(
         child: IntrinsicWidth(
           child: _MarkdownRenderObjectWidget(

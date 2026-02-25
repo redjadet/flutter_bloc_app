@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/markdown_editor/markdown_parser.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 
 /// A reusable message bubble widget for chat-like interfaces
 /// Supports markdown rendering for rich text formatting
@@ -76,17 +77,20 @@ class MessageBubble extends StatelessWidget {
 
     return Align(
       alignment: alignment,
-      child: Container(
-        margin: effectiveMargin,
-        padding: effectivePadding,
+      child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: effectiveMaxWidth),
-        decoration: BoxDecoration(
+        child: CommonCard(
+          margin: effectiveMargin,
           color: bubbleColor,
-          borderRadius: BorderRadius.circular(effectiveBorderRadius),
-        ),
-        child: RichText(
-          text: textSpan,
-          textScaler: MediaQuery.textScalerOf(context),
+          elevation: 0,
+          padding: effectivePadding,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(effectiveBorderRadius),
+          ),
+          child: RichText(
+            text: textSpan,
+            textScaler: MediaQuery.textScalerOf(context),
+          ),
         ),
       ),
     );

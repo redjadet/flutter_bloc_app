@@ -95,17 +95,13 @@ class CalculatorSummaryCard extends StatelessWidget {
                       ),
                       SizedBox(height: gapM),
                       if (hasError && errorMessage != null) ...[
-                        Container(
-                          width: double.infinity,
+                        CommonCard(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.error.withValues(alpha: 0.08),
+                          elevation: 0,
+                          margin: EdgeInsets.zero,
                           padding: EdgeInsets.all(gapS),
-                          decoration: BoxDecoration(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.error.withValues(alpha: 0.08),
-                            borderRadius: BorderRadius.circular(
-                              context.responsiveCardRadius,
-                            ),
-                          ),
                           child: Text(
                             '${l10n.calculatorErrorTitle}: $errorMessage',
                             style: Theme.of(context).textTheme.bodyMedium
