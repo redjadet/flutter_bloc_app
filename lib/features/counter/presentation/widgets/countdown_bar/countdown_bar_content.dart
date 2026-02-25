@@ -3,6 +3,7 @@ import 'package:flutter_bloc_app/features/counter/presentation/widgets/countdown
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CountdownBarContent extends StatelessWidget {
@@ -38,51 +39,43 @@ class CountdownBarContent extends StatelessWidget {
           context.responsiveHorizontalGapL,
           context.responsiveGapM,
         ),
-        child: Material(
-          color: colors.surface,
-          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: context.responsiveHorizontalGapL,
-              vertical: context.responsiveGapM,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TweenAnimationBuilder<Color?>(
-                  duration: UI.animMedium,
-                  tween: ColorTween(end: targetColor),
-                  builder: (final context, final animatedColor, _) {
-                    final Color c = animatedColor ?? targetColor;
-                    return CountdownStatus(
-                      active: active,
-                      color: c,
-                      label: active
-                          ? l10n.nextAutoDecrementIn(countdownSeconds)
-                          : l10n.autoDecrementPaused,
-                      animDuration: animFast,
-                    );
-                  },
-                ),
-                SizedBox(height: context.responsiveGapS),
-                TweenAnimationBuilder<Color?>(
-                  duration: UI.animMedium,
-                  tween: ColorTween(end: targetColor),
-                  builder: (final context, final animatedColor, _) {
-                    final Color barColor = animatedColor ?? targetColor;
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(999),
-                      child: LinearProgressIndicator(
-                        value: active ? progress : 0,
-                        minHeight: 6,
-                        backgroundColor: colors.surfaceContainerHighest,
-                        valueColor: AlwaysStoppedAnimation<Color>(barColor),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
+        child: CommonCard(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TweenAnimationBuilder<Color?>(
+                duration: UI.animMedium,
+                tween: ColorTween(end: targetColor),
+                builder: (final context, final animatedColor, _) {
+                  final Color c = animatedColor ?? targetColor;
+                  return CountdownStatus(
+                    active: active,
+                    color: c,
+                    label: active
+                        ? l10n.nextAutoDecrementIn(countdownSeconds)
+                        : l10n.autoDecrementPaused,
+                    animDuration: animFast,
+                  );
+                },
+              ),
+              SizedBox(height: context.responsiveGapS),
+              TweenAnimationBuilder<Color?>(
+                duration: UI.animMedium,
+                tween: ColorTween(end: targetColor),
+                builder: (final context, final animatedColor, _) {
+                  final Color barColor = animatedColor ?? targetColor;
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(999),
+                    child: LinearProgressIndicator(
+                      value: active ? progress : 0,
+                      minHeight: 6,
+                      backgroundColor: colors.surfaceContainerHighest,
+                      valueColor: AlwaysStoppedAnimation<Color>(barColor),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
         ),
       ),

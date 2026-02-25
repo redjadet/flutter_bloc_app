@@ -123,6 +123,7 @@
     "huggingface",
     "loggedout",
     "nonbuilder",
+    "playlearn",
     "preferences",
     "prefs",
     "pubspec",

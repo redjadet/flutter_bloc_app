@@ -4,12 +4,12 @@ import 'package:flutter_bloc_app/shared/widgets/skeletons/skeleton_grid_item.dar
 import 'package:flutter_bloc_app/shared/widgets/skeletons/skeleton_list_tile.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../helpers/pump_with_mix_theme.dart';
+
 void main() {
   group('SkeletonListTile', () {
     testWidgets('renders semantics label and repaint boundary', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: Scaffold(body: SkeletonListTile())),
-      );
+      await pumpWithMixTheme(tester, child: const SkeletonListTile());
 
       expect(find.byType(SkeletonListTile), findsOneWidget);
       expect(find.bySemanticsLabel('Loading content'), findsOneWidget);
@@ -23,10 +23,9 @@ void main() {
     });
 
     testWidgets('omits avatar when disabled', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(body: SkeletonListTile(hasAvatar: false)),
-        ),
+      await pumpWithMixTheme(
+        tester,
+        child: const SkeletonListTile(hasAvatar: false),
       );
 
       final avatarFinder = find.byWidgetPredicate((widget) {

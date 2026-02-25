@@ -33,10 +33,6 @@ class AppMessage extends StatelessWidget {
         padding: context.allGapL,
         child: CommonCard(
           color: backgroundColor,
-          padding: EdgeInsets.symmetric(
-            horizontal: context.responsiveCardPadding,
-            vertical: context.responsiveGapL,
-          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
