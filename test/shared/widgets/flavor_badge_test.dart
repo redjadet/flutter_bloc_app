@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/shared/responsive/responsive_scope.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:flutter_bloc_app/shared/widgets/flavor_badge.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -16,7 +17,7 @@ void main() {
       );
 
       expect(find.byType(FlavorBadge), findsOneWidget);
-      expect(find.byType(Container), findsNothing);
+      expect(find.byType(CommonCard), findsNothing);
     });
 
     testWidgets('renders badge for dev flavor', (final tester) async {
@@ -28,7 +29,7 @@ void main() {
         ),
       );
 
-      expect(find.byType(Container), findsOneWidget);
+      expect(find.byType(CommonCard), findsOneWidget);
       expect(find.text('DEV'), findsOneWidget);
     });
 
@@ -41,7 +42,7 @@ void main() {
         ),
       );
 
-      expect(find.byType(Container), findsOneWidget);
+      expect(find.byType(CommonCard), findsOneWidget);
       expect(find.text('STG'), findsOneWidget);
     });
 
@@ -54,7 +55,7 @@ void main() {
         ),
       );
 
-      expect(find.byType(Container), findsOneWidget);
+      expect(find.byType(CommonCard), findsOneWidget);
       expect(find.text('QA'), findsOneWidget);
     });
 
@@ -67,7 +68,7 @@ void main() {
         ),
       );
 
-      expect(find.byType(Container), findsOneWidget);
+      expect(find.byType(CommonCard), findsOneWidget);
       expect(find.text('BETA'), findsOneWidget);
     });
 
@@ -80,11 +81,15 @@ void main() {
         ),
       );
 
-      final Container container = tester.widget(find.byType(Container));
-      expect(container.decoration, isA<BoxDecoration>());
-      final BoxDecoration decoration = container.decoration as BoxDecoration;
-      expect(decoration.borderRadius, isNotNull);
-      expect(decoration.border, isNotNull);
+      final Finder cardFinder = find.byType(Card);
+      expect(cardFinder, findsOneWidget);
+
+      final Card card = tester.widget<Card>(cardFinder);
+      expect(card.shape, isA<RoundedRectangleBorder>());
+      final RoundedRectangleBorder shape =
+          card.shape! as RoundedRectangleBorder;
+      expect(shape.borderRadius, isNot(BorderRadius.zero));
+      expect(shape.side, isNot(BorderSide.none));
     });
   });
 }

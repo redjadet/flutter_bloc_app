@@ -79,16 +79,13 @@ class _RemoteConfigStatusBadge extends StatelessWidget {
       ),
     };
 
-    final double gap = context.responsiveGapS;
-
-    return Container(
+    return CommonCard(
+      color: palette.background,
+      elevation: 0,
+      margin: EdgeInsets.zero,
       padding: EdgeInsets.symmetric(
         horizontal: context.responsiveGapM,
         vertical: context.responsiveGapS,
-      ),
-      decoration: BoxDecoration(
-        color: palette.background,
-        borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -98,7 +95,7 @@ class _RemoteConfigStatusBadge extends StatelessWidget {
             color: palette.color,
             size: context.responsiveIconSize,
           ),
-          SizedBox(width: gap),
+          SizedBox(width: context.responsiveGapS),
           Flexible(
             child: Text(
               palette.label,

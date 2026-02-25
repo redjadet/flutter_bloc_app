@@ -19,9 +19,11 @@ class MarkdownEditorField extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
 
-    return Container(
-      padding: context.allGapM,
+    return CommonCard(
       color: colors.surface,
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      padding: context.allGapM,
       child: TextField(
         controller: controller,
         scrollController: scrollController,

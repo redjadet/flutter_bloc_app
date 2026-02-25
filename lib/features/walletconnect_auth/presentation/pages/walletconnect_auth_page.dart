@@ -29,14 +29,11 @@ class WalletConnectAuthPage extends StatelessWidget {
 
               // Error message
               if (state.errorMessage case final msg?) ...[
-                Container(
+                CommonCard(
+                  color: colors.errorContainer,
+                  elevation: 0,
+                  margin: EdgeInsets.zero,
                   padding: context.responsiveCardPaddingInsets,
-                  decoration: BoxDecoration(
-                    color: colors.errorContainer,
-                    borderRadius: BorderRadius.circular(
-                      context.responsiveCardRadius,
-                    ),
-                  ),
                   child: Row(
                     children: [
                       Icon(
@@ -73,14 +70,11 @@ class WalletConnectAuthPage extends StatelessWidget {
 
               // Success message
               if (state.isLinked) ...[
-                Container(
+                CommonCard(
+                  color: colors.primaryContainer,
+                  elevation: 0,
+                  margin: EdgeInsets.zero,
                   padding: context.responsiveCardPaddingInsets,
-                  decoration: BoxDecoration(
-                    color: colors.primaryContainer,
-                    borderRadius: BorderRadius.circular(
-                      context.responsiveCardRadius,
-                    ),
-                  ),
                   child: Row(
                     children: [
                       Icon(
@@ -212,12 +206,11 @@ class _WalletProfileSection extends StatelessWidget {
       _ => l10n.lastClaimNever,
     };
 
-    return Container(
+    return CommonCard(
+      color: colors.surfaceContainerHighest,
+      elevation: 0,
+      margin: EdgeInsets.zero,
       padding: context.responsiveCardPaddingInsets,
-      decoration: BoxDecoration(
-        color: colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

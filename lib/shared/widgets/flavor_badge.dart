@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 
 class FlavorBadge extends StatelessWidget {
   const FlavorBadge({super.key});
@@ -19,12 +20,14 @@ class FlavorBadge extends StatelessWidget {
       waitDuration: const Duration(milliseconds: 250),
       child: Semantics(
         label: tooltipMessage,
-        child: Container(
+        child: CommonCard(
+          color: style.color.withValues(alpha: 0.12),
+          elevation: 0,
+          margin: EdgeInsets.zero,
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-          decoration: BoxDecoration(
-            color: style.color.withValues(alpha: 0.12),
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-            border: Border.all(color: style.color.withValues(alpha: 0.6)),
+            side: BorderSide(color: style.color.withValues(alpha: 0.6)),
           ),
           child: Text(
             style.label,

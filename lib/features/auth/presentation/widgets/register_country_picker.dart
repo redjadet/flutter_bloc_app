@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_country_option.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/design_system/app_styles.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:mix/mix.dart';
 
 Future<CountryOption?> showCountryPicker({
   required final BuildContext context,
@@ -45,51 +47,51 @@ Future<CountryOption?> showCountryPicker({
         fontWeight: FontWeight.w600,
       );
       return SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                context.responsiveHorizontalGapL,
-                context.responsiveGapL,
-                context.responsiveHorizontalGapL,
-                context.responsiveGapM,
-              ),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  l10n.registerCountryPickerTitle,
-                  style: titleStyle,
+        child: Box(
+          style: AppStyles.dialogContent,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(bottom: context.responsiveGapM),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    l10n.registerCountryPickerTitle,
+                    style: titleStyle,
+                  ),
                 ),
               ),
-            ),
-            Flexible(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: kSupportedCountries.length,
-                itemBuilder: (final context, final index) {
-                  final country = kSupportedCountries[index];
-                  final bool isSelected = country == selected;
-                  return ListTile(
-                    leading: Text(
-                      country.flagEmoji,
-                      style: const TextStyle(fontSize: 24),
-                    ),
-                    title: Text(country.name),
-                    subtitle: Text(country.dialCode),
-                    trailing: isSelected
-                        ? Icon(
-                            Icons.check,
-                            color: theme.colorScheme.primary,
-                          )
-                        : null,
-                    onTap: () =>
-                        NavigationUtils.maybePop(sheetContext, result: country),
-                  );
-                },
+              Flexible(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: kSupportedCountries.length,
+                  itemBuilder: (final context, final index) {
+                    final country = kSupportedCountries[index];
+                    final bool isSelected = country == selected;
+                    return ListTile(
+                      leading: Text(
+                        country.flagEmoji,
+                        style: const TextStyle(fontSize: 24),
+                      ),
+                      title: Text(country.name),
+                      subtitle: Text(country.dialCode),
+                      trailing: isSelected
+                          ? Icon(
+                              Icons.check,
+                              color: theme.colorScheme.primary,
+                            )
+                          : null,
+                      onTap: () => NavigationUtils.maybePop(
+                        sheetContext,
+                        result: country,
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     },
