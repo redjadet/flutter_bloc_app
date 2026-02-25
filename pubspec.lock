@@ -864,10 +864,10 @@ packages:
     dependency: transitive
     description:
       name: genai_primitives
-      sha256: e35142ecc8059394f7fb4d1b8edc3ee081319c6b007ddd242687182bd6ad4cf8
+      sha256: "2468ecd2984f32232ab199315e384821c61a198e356828e34b9a5bcf0fda863e"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.2"
+    version: "0.2.3"
   genui:
     dependency: "direct main"
     description:
