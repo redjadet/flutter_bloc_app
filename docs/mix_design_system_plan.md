@@ -1,6 +1,14 @@
 # Mix Design System — Implementation Plan
 
-This document is the implementation plan for integrating the [mix](https://pub.dev/packages/mix) package as a utility-first design system layer: single source of truth for styles and variants, consistent tokens, and incremental migration. It sits alongside the existing Theme / AppTypography / UI stack and aligns with AGENTS.md (no hardcoded tokens, theme-aware, responsive).
+This document is the implementation plan for integrating the [mix](https://pub.dev/packages/mix) package as a utility-first design system layer: single source of truth for styles and variants, consistent tokens, and incremental migration. It sits alongside the existing Theme / AppTypography / UI stack and aligns with project standards (no hardcoded tokens, theme-aware, responsive).
+
+## Implementation status
+
+- **Pilot:** Done. Mix dependency, `mix_app_theme.dart`, `MixTheme` in `AppConfig`, `app_styles.dart` (card, profileOutlinedButton, listTile), `CommonCard` and profile button styles using mix tokens, tests updated, and design docs updated.
+- **Test helper:** `test/helpers/pump_with_mix_theme.dart` — `pumpWithMixTheme(tester, child: ...)` for widget tests that need Mix theme; `common_card_test.dart` uses it.
+- **Next steps done:** `AppStyles.inputField`, `AppStyles.appBar`, `AppStyles.chip`, `AppStyles.dialogContent`; dark-mode variant on card (`$on.dark`); breakpoint variant on listTile (`$on.medium` for horizontal padding). **GraphqlDataSourceBadge** migrated to `AppStyles.chip`.
+- **Skipped:** On-device manual checks (deferred; run when validating release).
+- **Remaining:** Optional mix_lint (evaluated — see Action list); further incremental migration when touching screens.
 
 ---
 
@@ -10,21 +18,21 @@ Use this as a checklist for implementation, verification, and follow-up.
 
 ### Implementation (pilot)
 
-- [ ] Add `mix: ^1.7.0` (and `mix_annotations` if required) to `pubspec.yaml`.
-- [ ] Create mix theme module: `lib/core/theme/mix_app_theme.dart` with tokens and `buildAppMixThemeData(context)`.
-- [ ] Wrap app with `MixTheme` in `AppConfig.createMaterialApp` builder.
-- [ ] Create `lib/shared/design_system/app_styles.dart` with card and profile-outlined-button styles (tokens only).
-- [ ] Refactor `CommonCard` to use `AppStyles.card` (e.g. `Box` + style); keep same API.
-- [ ] Refactor profile button styles to use mix tokens / `AppStyles.profileOutlinedButton`.
-- [ ] Update tests that need `MixTheme` (e.g. profile button styles tests).
-- [ ] Update [design_system.md](design_system.md) and optionally [AGENTS.md](../AGENTS.md) with Mix usage.
+- [x] Add `mix: ^1.7.0` (and `mix_annotations` if required) to `pubspec.yaml`.
+- [x] Create mix theme module: `lib/core/theme/mix_app_theme.dart` with tokens and `buildAppMixThemeData(context)`.
+- [x] Wrap app with `MixTheme` in `AppConfig.createMaterialApp` builder.
+- [x] Create `lib/shared/design_system/app_styles.dart` with card and profile-outlined-button styles (tokens only).
+- [x] Refactor `CommonCard` to use mix tokens (padding, radius, color fallbacks from `MixTheme` / `UI`); keep same API.
+- [x] Refactor profile button styles to use mix tokens / `AppStyles.profileOutlinedButton`.
+- [x] Update tests that need `MixTheme` (e.g. profile button styles tests, CommonCard test).
+- [x] Update [design_system.md](design_system.md) with Mix usage.
 
 ### Verification
 
-- [ ] Run `./bin/checklist` (format, analyze, tests).
-- [ ] Run `flutter test` for affected tests (e.g. profile button styles).
+- [x] Run `./bin/checklist` (format, analyze, tests).
+- [x] Run `flutter test` for affected tests (e.g. profile button styles, CommonCard).
 
-### On-device checks
+### On-device checks (manual) — skipped for now
 
 - [ ] Toggle light/dark theme; confirm cards and profile buttons follow theme.
 - [ ] Open screens that use `CommonCard`; confirm padding, radius, and overrides.
@@ -34,10 +42,13 @@ Use this as a checklist for implementation, verification, and follow-up.
 
 ### Next steps (when ready)
 
-- [ ] Add more shared styles (list tile, input, app bar, etc.).
-- [ ] Use breakpoint or dark-mode context variants in styles.
-- [ ] Migrate other screens to mix when touching them.
-- [ ] Add test helper (e.g. `pumpWithMixTheme`) and/or evaluate mix_lint.
+- [x] Add more shared styles: `AppStyles.listTile`, `AppStyles.inputField`, `AppStyles.appBar`, `AppStyles.chip` (tokens only).
+- [x] Add more shared styles (dialogs, etc.) if needed — `AppStyles.dialogContent` added for dialog/sheet content padding.
+- [x] Use dark-mode context variant: card uses `$on.dark($box.decoration.elevation(0))`.
+- [x] Use breakpoint context variants: listTile uses `$on.medium($box.padding.horizontal.ref(gapL))` for larger horizontal padding on tablet/desktop.
+- [x] Migrate other screens to mix when touching them — e.g. **GraphqlDataSourceBadge** now uses `AppStyles.chip` (Box + mix style).
+- [x] Add test helper: `test/helpers/pump_with_mix_theme.dart` — use `pumpWithMixTheme(tester, child: ...)` in widget tests that need Mix theme.
+- [x] Evaluate mix_lint: optional; requires `custom_lint` and `mix_lint` as dev deps; rules include attribute ordering, avoid tokens/variants inside Style. Add when team adopts mix widely (see [mix_lint](https://pub.dev/packages/mix_lint)).
 
 ---
 
@@ -140,9 +151,9 @@ Validate: run the app, toggle dark mode, resize to tablet/desktop, and run `./bi
 - Update [docs/design_system.md](design_system.md):
   - Add a “Mix” section: where `MixThemeData` and shared `Style` definitions live, how to use tokens and variants in new widgets, and how this relates to `Theme`, `AppTypography`, and `UI`.
   - State that **new** styling should prefer mix Style + tokens where possible; legacy `AppTypography`/`UI` remain valid during migration.
-- Optionally add a short “Styling with Mix” note in [AGENTS.md](../AGENTS.md) (or a linked doc): use mix tokens and Style for new UI; no hardcoded colors/spacing in widgets; use context variants for dark and responsive.
+- Optionally add a short “Styling with Mix” note in internal coding docs: use mix tokens and Style for new UI; no hardcoded colors/spacing in widgets; use context variants for dark and responsive.
 
-No need to change AGENTS.md’s “no hardcoded values” or “theme colors” rules — mix tokens satisfy those when used consistently.
+No need to change existing “no hardcoded values” or “theme colors” rules — mix tokens satisfy those when used consistently.
 
 ---
 

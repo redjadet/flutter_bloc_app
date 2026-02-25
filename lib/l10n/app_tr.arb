@@ -556,6 +556,8 @@
   "graphqlSampleInvalidRequestError": "İstek reddedildi. Farklı bir filtre deneyin.",
   "graphqlSampleServerError": "Hizmet şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.",
   "graphqlSampleDataError": "Beklenmedik bir yanıt alındı. Lütfen yeniden deneyin.",
+  "graphqlSampleDataSourceCache": "Önbellek",
+  "graphqlSampleDataSourceRemote": "Uzak",
   "exampleWebsocketButton": "WebSocket demosunu aç",
   "@exampleWebsocketButton": {
     "description": "Button label that navigates to the WebSocket demo page"

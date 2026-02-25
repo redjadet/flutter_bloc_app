@@ -795,6 +795,12 @@ class AppLocalizationsTr extends AppLocalizations {
       'Beklenmedik bir yanıt alındı. Lütfen yeniden deneyin.';
 
   @override
+  String get graphqlSampleDataSourceCache => 'Önbellek';
+
+  @override
+  String get graphqlSampleDataSourceRemote => 'Uzak';
+
+  @override
   String get exampleWebsocketButton => 'WebSocket demosunu aç';
 
   @override

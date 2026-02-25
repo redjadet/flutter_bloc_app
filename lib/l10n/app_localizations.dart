@@ -1532,6 +1532,18 @@ abstract class AppLocalizations {
   /// **'We received an unexpected response. Please try again.'**
   String get graphqlSampleDataError;
 
+  /// Badge label when GraphQL data is from local cache
+  ///
+  /// In en, this message translates to:
+  /// **'Cache'**
+  String get graphqlSampleDataSourceCache;
+
+  /// Badge label when GraphQL data is from remote server
+  ///
+  /// In en, this message translates to:
+  /// **'Remote'**
+  String get graphqlSampleDataSourceRemote;
+
   /// Button label that navigates to the WebSocket demo page
   ///
   /// In en, this message translates to:
