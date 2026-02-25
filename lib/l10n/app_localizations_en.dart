@@ -791,6 +791,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'We received an unexpected response. Please try again.';
 
   @override
+  String get graphqlSampleDataSourceCache => 'Cache';
+
+  @override
+  String get graphqlSampleDataSourceRemote => 'Remote';
+
+  @override
   String get exampleWebsocketButton => 'Open WebSocket demo';
 
   @override

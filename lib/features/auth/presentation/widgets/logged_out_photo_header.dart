@@ -37,16 +37,20 @@ class LoggedOutPhotoHeader extends StatelessWidget {
           ),
         ),
         SizedBox(width: 8 * scale),
-        Text(
-          'photo',
-          style: Theme.of(context).textTheme.displayLarge?.copyWith(
-            fontSize: 48 * scale,
-            fontWeight: FontWeight.w400,
-            color: Theme.of(context).colorScheme.onSurface,
-            letterSpacing: -0.72 * scale,
-            height: 53.52 / 48,
+        Flexible(
+          child: Text(
+            'photo',
+            style: Theme.of(context).textTheme.displayLarge?.copyWith(
+              fontSize: 48 * scale,
+              fontWeight: FontWeight.w400,
+              color: Theme.of(context).colorScheme.onSurface,
+              letterSpacing: -0.72 * scale,
+              height: 53.52 / 48,
+            ),
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
-          textAlign: TextAlign.center,
         ),
       ],
     ),

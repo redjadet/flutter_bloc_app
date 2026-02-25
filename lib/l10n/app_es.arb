@@ -555,6 +555,8 @@
   "graphqlSampleInvalidRequestError": "La solicitud fue rechazada. Prueba con otro filtro.",
   "graphqlSampleServerError": "El servicio no está disponible. Vuelve a intentarlo más tarde.",
   "graphqlSampleDataError": "Se recibió una respuesta inesperada. Intenta de nuevo.",
+  "graphqlSampleDataSourceCache": "Caché",
+  "graphqlSampleDataSourceRemote": "Remoto",
   "exampleWebsocketButton": "Abrir demostración de WebSocket",
   "@exampleWebsocketButton": {
     "description": "Button label that navigates to the WebSocket demo page"

@@ -812,6 +812,12 @@ class AppLocalizationsDe extends AppLocalizations {
       'Unerwartete Antwort empfangen. Bitte versuche es erneut.';
 
   @override
+  String get graphqlSampleDataSourceCache => 'Cache';
+
+  @override
+  String get graphqlSampleDataSourceRemote => 'Remote';
+
+  @override
   String get exampleWebsocketButton => 'WebSocket-Demo öffnen';
 
   @override

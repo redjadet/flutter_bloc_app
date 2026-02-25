@@ -107,10 +107,14 @@ class _CountryChip extends StatelessWidget {
             style: const TextStyle(fontSize: 18),
           ),
           SizedBox(width: context.responsiveHorizontalGapS),
-          Text(
-            country.dialCode,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w600,
+          Flexible(
+            child: Text(
+              country.dialCode,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
           Icon(

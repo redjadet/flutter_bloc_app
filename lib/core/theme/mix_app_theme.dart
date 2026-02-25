@@ -29,9 +29,10 @@ class AppMixTokens {
   static const RadiusToken radiusPill = RadiusToken('app.radius.radiusPill');
 }
 
-/// Material color token names (must match [MaterialTokens] in mix).
+/// Material color token names (must match [MaterialTokens] in mix where applicable).
 ///
 /// Use with [ColorToken] in styles so colors resolve from [Theme.of(context)].
+/// Custom tokens (e.g. surfaceContainerLow) are filled in [buildAppMixThemeData].
 class AppMaterialColorTokens {
   AppMaterialColorTokens._();
 
@@ -39,6 +40,11 @@ class AppMaterialColorTokens {
   static const ColorToken primary = ColorToken('md.color.primary');
   static const ColorToken onPrimary = ColorToken('md.color.on.primary');
   static const ColorToken onSurface = ColorToken('md.color.on.surface');
+
+  /// Chip/filled surface tint; matches Material 3 Chip background.
+  static const ColorToken surfaceContainerLow = ColorToken(
+    'app.color.surfaceContainerLow',
+  );
 }
 
 /// Builds [MixThemeData] from the current [BuildContext].
@@ -47,7 +53,12 @@ class AppMaterialColorTokens {
 /// [UI] / [AppConstants] for spaces, radii, and breakpoints. Call from
 /// inside [MaterialApp] builder so Theme and ScreenUtil are available.
 MixThemeData buildAppMixThemeData(final BuildContext context) {
+  final colorScheme = Theme.of(context).colorScheme;
   return MixThemeData.withMaterial(
+    colors: {
+      AppMaterialColorTokens.surfaceContainerLow:
+          colorScheme.surfaceContainerLow,
+    },
     spaces: {
       AppMixTokens.gapXS: UI.gapXS,
       AppMixTokens.gapS: UI.gapS,

@@ -812,6 +812,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get graphqlSampleDataError => 'Réponse inattendue reçue. Réessayez.';
 
   @override
+  String get graphqlSampleDataSourceCache => 'Cache';
+
+  @override
+  String get graphqlSampleDataSourceRemote => 'Distant';
+
+  @override
   String get exampleWebsocketButton => 'Ouvrir la démo WebSocket';
 
   @override

@@ -1,30 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mix/mix.dart';
+
+import '../../helpers/pump_with_mix_theme.dart';
 
 void main() {
   group('CommonCard', () {
-    Future<void> pumpCommonCard(
-      final WidgetTester tester, {
-      required final CommonCard card,
-      final ThemeData? theme,
-    }) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: theme,
-          home: Builder(
-            builder: (final context) => MixTheme(
-              data: buildAppMixThemeData(context),
-              child: Scaffold(body: card),
-            ),
-          ),
-        ),
-      );
-    }
-
     testWidgets('uses Mix token defaults for style and padding', (
       final tester,
     ) async {
@@ -34,10 +16,10 @@ void main() {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       );
 
-      await pumpCommonCard(
+      await pumpWithMixTheme(
         tester,
         theme: theme,
-        card: const CommonCard(child: SizedBox.shrink(key: childKey)),
+        child: const CommonCard(child: SizedBox.shrink(key: childKey)),
       );
 
       final cardWidget = tester.widget<Card>(find.byType(Card));
@@ -74,9 +56,9 @@ void main() {
       const customPadding = EdgeInsets.symmetric(horizontal: 11, vertical: 9);
       final customColor = Colors.orange;
 
-      await pumpCommonCard(
+      await pumpWithMixTheme(
         tester,
-        card: CommonCard(
+        child: CommonCard(
           color: customColor,
           elevation: 5,
           margin: customMargin,

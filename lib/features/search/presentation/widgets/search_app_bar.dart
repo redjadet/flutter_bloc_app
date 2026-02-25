@@ -46,9 +46,13 @@ class SearchAppBar extends StatelessWidget {
               onPressed: () => NavigationUtils.popOrGoHome(context),
             ),
           SizedBox(width: context.responsiveHorizontalGapS),
-          Text(
-            context.l10n.searchHint.replaceFirst('...', ''),
-            style: effectiveTitleStyle,
+          Flexible(
+            child: Text(
+              context.l10n.searchHint.replaceFirst('...', ''),
+              style: effectiveTitleStyle,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
           ),
         ],
       ),

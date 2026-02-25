@@ -1036,6 +1036,14 @@
   "@graphqlSampleDataError": {
     "description": "Shown when the GraphQL response is malformed or missing data"
   },
+  "graphqlSampleDataSourceCache": "Cache",
+  "@graphqlSampleDataSourceCache": {
+    "description": "Badge label when GraphQL data is from local cache"
+  },
+  "graphqlSampleDataSourceRemote": "Remote",
+  "@graphqlSampleDataSourceRemote": {
+    "description": "Badge label when GraphQL data is from remote server"
+  },
   "exampleWebsocketButton": "Open WebSocket demo",
   "@exampleWebsocketButton": {
     "description": "Button label that navigates to the WebSocket demo page"
