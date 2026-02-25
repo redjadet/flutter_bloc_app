@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/icon_label_row.dart';
 
 /// Large tap-to-hear button (min 48x48 for accessibility).
 class ListenButton extends StatelessWidget {
@@ -35,17 +36,11 @@ class ListenButton extends StatelessWidget {
                   color: theme.colorScheme.onPrimary,
                   size: 28,
                 )
-              : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(
-                      Icons.volume_up,
-                      color: theme.colorScheme.onPrimary,
-                      size: 28,
-                    ),
-                    SizedBox(width: context.responsiveGapS),
-                    Text(l10n.playlearnListen),
-                  ],
+              : IconLabelRow(
+                  icon: Icons.volume_up,
+                  label: l10n.playlearnListen,
+                  iconSize: 28,
+                  iconColor: theme.colorScheme.onPrimary,
                 ),
         ),
       ),

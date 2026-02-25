@@ -137,7 +137,8 @@
     "Türkçe",
     "Uncomplete",
     "walletconnect",
-    "webp"
+    "webp",
+    "xsmall"
   ],
   "files.associations": {
     "*.config": "plaintext"

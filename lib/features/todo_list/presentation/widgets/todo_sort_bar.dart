@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/widgets/icon_label_row.dart';
 
 class TodoSortBar extends StatelessWidget {
   const TodoSortBar({
@@ -34,191 +35,136 @@ class TodoSortBar extends StatelessWidget {
     return PopupMenuButton<TodoSortOrder>(
       tooltip: context.l10n.todoListSortAction,
       onSelected: onSortChanged,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.sort,
-            color: colors.onSurface,
-            size: context.responsiveIconSize,
-          ),
-          SizedBox(width: context.responsiveHorizontalGapS),
-          Text(
-            sortLabel,
-            style: theme.textTheme.labelLarge?.copyWith(
-              fontSize: context.responsiveCaptionSize,
-              color: colors.onSurface,
-            ),
-          ),
-          SizedBox(width: context.responsiveHorizontalGapS / 2),
-          Icon(
-            Icons.arrow_drop_down,
-            color: colors.onSurface,
-            size: context.responsiveIconSize * 0.8,
-          ),
-        ],
+      child: IconLabelRow(
+        icon: Icons.sort,
+        label: sortLabel,
+        iconColor: colors.onSurface,
+        textStyle: theme.textTheme.labelLarge?.copyWith(
+          fontSize: context.responsiveCaptionSize,
+          color: colors.onSurface,
+        ),
+        trailing: Icon(
+          Icons.arrow_drop_down,
+          color: colors.onSurface,
+          size: context.responsiveIconSize * 0.8,
+        ),
       ),
       itemBuilder: (final context) => [
         PopupMenuItem<TodoSortOrder>(
           value: TodoSortOrder.dateDesc,
-          child: Row(
-            children: [
-              Icon(
-                sortOrder == TodoSortOrder.dateDesc
-                    ? Icons.check
-                    : Icons.check_box_outline_blank,
-                size: context.responsiveIconSize * 0.8,
-                color: sortOrder == TodoSortOrder.dateDesc
-                    ? colors.primary
-                    : colors.onSurfaceVariant,
-              ),
-              SizedBox(width: context.responsiveHorizontalGapS),
-              Text(context.l10n.todoListSortDateDesc),
-            ],
+          child: IconLabelRow(
+            icon: sortOrder == TodoSortOrder.dateDesc
+                ? Icons.check
+                : Icons.check_box_outline_blank,
+            label: context.l10n.todoListSortDateDesc,
+            iconSize: context.responsiveIconSize * 0.8,
+            iconColor: sortOrder == TodoSortOrder.dateDesc
+                ? colors.primary
+                : colors.onSurfaceVariant,
           ),
         ),
         PopupMenuItem<TodoSortOrder>(
           value: TodoSortOrder.dateAsc,
-          child: Row(
-            children: [
-              Icon(
-                sortOrder == TodoSortOrder.dateAsc
-                    ? Icons.check
-                    : Icons.check_box_outline_blank,
-                size: context.responsiveIconSize * 0.8,
-                color: sortOrder == TodoSortOrder.dateAsc
-                    ? colors.primary
-                    : colors.onSurfaceVariant,
-              ),
-              SizedBox(width: context.responsiveHorizontalGapS),
-              Text(context.l10n.todoListSortDateAsc),
-            ],
+          child: IconLabelRow(
+            icon: sortOrder == TodoSortOrder.dateAsc
+                ? Icons.check
+                : Icons.check_box_outline_blank,
+            label: context.l10n.todoListSortDateAsc,
+            iconSize: context.responsiveIconSize * 0.8,
+            iconColor: sortOrder == TodoSortOrder.dateAsc
+                ? colors.primary
+                : colors.onSurfaceVariant,
           ),
         ),
         PopupMenuItem<TodoSortOrder>(
           value: TodoSortOrder.titleAsc,
-          child: Row(
-            children: [
-              Icon(
-                sortOrder == TodoSortOrder.titleAsc
-                    ? Icons.check
-                    : Icons.check_box_outline_blank,
-                size: context.responsiveIconSize * 0.8,
-                color: sortOrder == TodoSortOrder.titleAsc
-                    ? colors.primary
-                    : colors.onSurfaceVariant,
-              ),
-              SizedBox(width: context.responsiveHorizontalGapS),
-              Text(context.l10n.todoListSortTitleAsc),
-            ],
+          child: IconLabelRow(
+            icon: sortOrder == TodoSortOrder.titleAsc
+                ? Icons.check
+                : Icons.check_box_outline_blank,
+            label: context.l10n.todoListSortTitleAsc,
+            iconSize: context.responsiveIconSize * 0.8,
+            iconColor: sortOrder == TodoSortOrder.titleAsc
+                ? colors.primary
+                : colors.onSurfaceVariant,
           ),
         ),
         PopupMenuItem<TodoSortOrder>(
           value: TodoSortOrder.titleDesc,
-          child: Row(
-            children: [
-              Icon(
-                sortOrder == TodoSortOrder.titleDesc
-                    ? Icons.check
-                    : Icons.check_box_outline_blank,
-                size: context.responsiveIconSize * 0.8,
-                color: sortOrder == TodoSortOrder.titleDesc
-                    ? colors.primary
-                    : colors.onSurfaceVariant,
-              ),
-              SizedBox(width: context.responsiveHorizontalGapS),
-              Text(context.l10n.todoListSortTitleDesc),
-            ],
+          child: IconLabelRow(
+            icon: sortOrder == TodoSortOrder.titleDesc
+                ? Icons.check
+                : Icons.check_box_outline_blank,
+            label: context.l10n.todoListSortTitleDesc,
+            iconSize: context.responsiveIconSize * 0.8,
+            iconColor: sortOrder == TodoSortOrder.titleDesc
+                ? colors.primary
+                : colors.onSurfaceVariant,
           ),
         ),
         PopupMenuItem<TodoSortOrder>(
           value: TodoSortOrder.priorityDesc,
-          child: Row(
-            children: [
-              Icon(
-                sortOrder == TodoSortOrder.priorityDesc
-                    ? Icons.check
-                    : Icons.check_box_outline_blank,
-                size: context.responsiveIconSize * 0.8,
-                color: sortOrder == TodoSortOrder.priorityDesc
-                    ? colors.primary
-                    : colors.onSurfaceVariant,
-              ),
-              SizedBox(width: context.responsiveHorizontalGapS),
-              Text(context.l10n.todoListSortPriorityDesc),
-            ],
+          child: IconLabelRow(
+            icon: sortOrder == TodoSortOrder.priorityDesc
+                ? Icons.check
+                : Icons.check_box_outline_blank,
+            label: context.l10n.todoListSortPriorityDesc,
+            iconSize: context.responsiveIconSize * 0.8,
+            iconColor: sortOrder == TodoSortOrder.priorityDesc
+                ? colors.primary
+                : colors.onSurfaceVariant,
           ),
         ),
         PopupMenuItem<TodoSortOrder>(
           value: TodoSortOrder.priorityAsc,
-          child: Row(
-            children: [
-              Icon(
-                sortOrder == TodoSortOrder.priorityAsc
-                    ? Icons.check
-                    : Icons.check_box_outline_blank,
-                size: context.responsiveIconSize * 0.8,
-                color: sortOrder == TodoSortOrder.priorityAsc
-                    ? colors.primary
-                    : colors.onSurfaceVariant,
-              ),
-              SizedBox(width: context.responsiveHorizontalGapS),
-              Text(context.l10n.todoListSortPriorityAsc),
-            ],
+          child: IconLabelRow(
+            icon: sortOrder == TodoSortOrder.priorityAsc
+                ? Icons.check
+                : Icons.check_box_outline_blank,
+            label: context.l10n.todoListSortPriorityAsc,
+            iconSize: context.responsiveIconSize * 0.8,
+            iconColor: sortOrder == TodoSortOrder.priorityAsc
+                ? colors.primary
+                : colors.onSurfaceVariant,
           ),
         ),
         PopupMenuItem<TodoSortOrder>(
           value: TodoSortOrder.dueDateAsc,
-          child: Row(
-            children: [
-              Icon(
-                sortOrder == TodoSortOrder.dueDateAsc
-                    ? Icons.check
-                    : Icons.check_box_outline_blank,
-                size: context.responsiveIconSize * 0.8,
-                color: sortOrder == TodoSortOrder.dueDateAsc
-                    ? colors.primary
-                    : colors.onSurfaceVariant,
-              ),
-              SizedBox(width: context.responsiveHorizontalGapS),
-              Text(context.l10n.todoListSortDueDateAsc),
-            ],
+          child: IconLabelRow(
+            icon: sortOrder == TodoSortOrder.dueDateAsc
+                ? Icons.check
+                : Icons.check_box_outline_blank,
+            label: context.l10n.todoListSortDueDateAsc,
+            iconSize: context.responsiveIconSize * 0.8,
+            iconColor: sortOrder == TodoSortOrder.dueDateAsc
+                ? colors.primary
+                : colors.onSurfaceVariant,
           ),
         ),
         PopupMenuItem<TodoSortOrder>(
           value: TodoSortOrder.dueDateDesc,
-          child: Row(
-            children: [
-              Icon(
-                sortOrder == TodoSortOrder.dueDateDesc
-                    ? Icons.check
-                    : Icons.check_box_outline_blank,
-                size: context.responsiveIconSize * 0.8,
-                color: sortOrder == TodoSortOrder.dueDateDesc
-                    ? colors.primary
-                    : colors.onSurfaceVariant,
-              ),
-              SizedBox(width: context.responsiveHorizontalGapS),
-              Text(context.l10n.todoListSortDueDateDesc),
-            ],
+          child: IconLabelRow(
+            icon: sortOrder == TodoSortOrder.dueDateDesc
+                ? Icons.check
+                : Icons.check_box_outline_blank,
+            label: context.l10n.todoListSortDueDateDesc,
+            iconSize: context.responsiveIconSize * 0.8,
+            iconColor: sortOrder == TodoSortOrder.dueDateDesc
+                ? colors.primary
+                : colors.onSurfaceVariant,
           ),
         ),
         PopupMenuItem<TodoSortOrder>(
           value: TodoSortOrder.manual,
-          child: Row(
-            children: [
-              Icon(
-                sortOrder == TodoSortOrder.manual
-                    ? Icons.check
-                    : Icons.check_box_outline_blank,
-                size: context.responsiveIconSize * 0.8,
-                color: sortOrder == TodoSortOrder.manual
-                    ? colors.primary
-                    : colors.onSurfaceVariant,
-              ),
-              SizedBox(width: context.responsiveHorizontalGapS),
-              Text(context.l10n.todoListSortManual),
-            ],
+          child: IconLabelRow(
+            icon: sortOrder == TodoSortOrder.manual
+                ? Icons.check
+                : Icons.check_box_outline_blank,
+            label: context.l10n.todoListSortManual,
+            iconSize: context.responsiveIconSize * 0.8,
+            iconColor: sortOrder == TodoSortOrder.manual
+                ? colors.primary
+                : colors.onSurfaceVariant,
           ),
         ),
       ],

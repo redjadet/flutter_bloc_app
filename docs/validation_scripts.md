@@ -299,6 +299,26 @@ stream.listen((data) {
 
 ---
 
+#### `check_row_text_overflow.sh`
+
+**Purpose**: Detects Row + Icon + Text without Flexible/Expanded/IconLabelRow to avoid RenderFlex overflow on narrow widths.
+
+**What it checks**:
+
+- In `lib/`, any `Row(` block (55-line window) that contains both `Icon(` and `Text(` but does **not** contain `Flexible(`, `Expanded(`, or `IconLabelRow(`
+- Skips `lib/shared/widgets/icon_label_row.dart` (canonical fix)
+
+**Why it matters**:
+
+- Unconstrained `Text` in a horizontal `Row` causes overflow on small screens or large text scale
+- Use `IconLabelRow` (or wrap the label in `Flexible`/`Expanded` with `overflow: TextOverflow.ellipsis`) for icon+label rows
+
+**Regression tests**: `test/shared/widgets/row_overflow_regression_test.dart` (also run via `tool/check_regression_guards.sh`).
+
+**Suppression**: Add `// check-ignore: reason` on the violation line or line above when the Row is intentionally safe (e.g. label is always short and constrained elsewhere).
+
+---
+
 ### Performance Optimization
 
 #### `check_missing_const.sh`

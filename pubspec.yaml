@@ -75,6 +75,7 @@ dependencies:
   logger: ^2.6.2
   markdown: ^7.3.0
   meta: ^1.16.0
+  mix: ^1.7.0
   package_info_plus: ^9.0.0
   path_provider: ^2.1.1
   responsive_framework: ^1.5.1

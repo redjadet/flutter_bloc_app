@@ -65,14 +65,7 @@ class ExamplePageBody extends StatelessWidget {
     key: key,
     context: context,
     onPressed: onPressed,
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: context.responsiveIconSize),
-        SizedBox(width: context.responsiveHorizontalGapS),
-        Text(label),
-      ],
-    ),
+    child: IconLabelRow(icon: icon, label: label),
   );
 
   @override

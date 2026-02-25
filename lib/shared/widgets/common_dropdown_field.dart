@@ -160,9 +160,13 @@ class CommonDropdownField<T> extends StatelessWidget {
         return Row(
           children: [
             if (labelText case final t?) ...[
-              Text(
-                t,
-                style: theme.textTheme.titleMedium,
+              Flexible(
+                child: Text(
+                  t,
+                  style: theme.textTheme.titleMedium,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
               SizedBox(width: context.responsiveHorizontalGapS),
             ],

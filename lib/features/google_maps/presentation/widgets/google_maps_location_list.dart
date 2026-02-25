@@ -104,14 +104,7 @@ class _LocationFocusActions extends StatelessWidget {
         PlatformAdaptive.textButton(
           context: context,
           onPressed: onFocus,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.near_me),
-              SizedBox(width: context.responsiveHorizontalGapS),
-              Text(focusLabel),
-            ],
-          ),
+          child: IconLabelRow(icon: Icons.near_me, label: focusLabel),
         ),
       ],
     );

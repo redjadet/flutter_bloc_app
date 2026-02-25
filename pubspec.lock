@@ -1316,6 +1316,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  mix:
+    dependency: "direct main"
+    description:
+      name: mix
+      sha256: ea2c73c391e9da9d60cad4c5d4ba822df016a38bfd57cf58a08aafa9ac1bc150
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.7.0"
+  mix_annotations:
+    dependency: transitive
+    description:
+      name: mix_annotations
+      sha256: "6ec624a3268973e8ca1b3cbf0f6c661a064313c3a6de46546491703fd5747638"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.7.0"
   mock_exceptions:
     dependency: "direct dev"
     description:
