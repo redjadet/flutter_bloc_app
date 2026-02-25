@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_address.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 
 /// Widget displaying a wallet address in a truncated format.
+/// Uses [CommonCard] for consistent shape and padding with outline border.
 class WalletAddressDisplay extends StatelessWidget {
   const WalletAddressDisplay({
     required this.address,
@@ -18,14 +21,12 @@ class WalletAddressDisplay extends StatelessWidget {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
 
-    return Container(
-      padding: context.responsiveCardPaddingInsets,
-      decoration: BoxDecoration(
-        color: colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(context.responsiveCardRadius),
-        border: Border.all(
-          color: colors.outline,
-        ),
+    return CommonCard(
+      color: colors.surfaceContainerHighest,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(UI.radiusM),
+        side: BorderSide(color: colors.outline),
       ),
       child: Row(
         children: [
