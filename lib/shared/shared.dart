@@ -40,5 +40,6 @@ export 'widgets/common_form_field.dart';
 export 'widgets/common_loading_widget.dart';
 export 'widgets/common_page_layout.dart';
 export 'widgets/flavor_badge.dart';
+export 'widgets/icon_label_row.dart';
 export 'widgets/root_aware_back_button.dart';
 export 'widgets/widgets.dart';

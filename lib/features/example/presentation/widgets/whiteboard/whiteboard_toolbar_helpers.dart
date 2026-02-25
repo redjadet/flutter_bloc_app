@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/icon_label_row.dart';
 
 /// Preset width configuration for whiteboard strokes.
 class WidthPreset {
@@ -113,14 +113,7 @@ class WhiteboardActionButton extends StatelessWidget {
     child: PlatformAdaptive.textButton(
       context: context,
       onPressed: onPressed,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Icon(icon, size: 18),
-          SizedBox(width: context.responsiveHorizontalGapS),
-          Text(label),
-        ],
-      ),
+      child: IconLabelRow(icon: icon, label: label, iconSize: 18),
     ),
   );
 }

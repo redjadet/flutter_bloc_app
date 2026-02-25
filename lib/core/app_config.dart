@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mix/mix.dart';
 
 /// Application configuration and theme setup
 class AppConfig {
@@ -42,6 +43,11 @@ class AppConfig {
     themeMode: themeMode,
     builder: (final context, final appChild) {
       Widget result = appChild ?? const SizedBox.shrink();
+
+      result = MixTheme(
+        data: buildAppMixThemeData(context),
+        child: result,
+      );
 
       // Add performance overlay if enabled (but not during tests)
       // Tests use kDebugMode=true, so we check for test environment

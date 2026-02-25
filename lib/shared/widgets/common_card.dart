@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
+import 'package:flutter_bloc_app/shared/design_system/app_styles.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
+import 'package:mix/mix.dart';
 
 /// A reusable Card widget with standard padding and responsive design.
 ///
-/// This widget eliminates the common pattern of wrapping Card with Padding
-/// and provides consistent card styling across the app.
+/// Defaults are derived from the same Mix tokens used by [AppStyles.card],
+/// keeping padding, radius, and colors consistent and theme-aware. Optional
+/// parameters override the default style when provided.
 class CommonCard extends StatelessWidget {
   const CommonCard({
     required this.child,
@@ -25,14 +29,30 @@ class CommonCard extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final mixTheme = MixTheme.maybeOf(context);
+    final colors = Theme.of(context).colorScheme;
+    final Radius defaultRadius =
+        mixTheme?.radii[AppMixTokens.radiusM] ?? Radius.circular(UI.radiusM);
+
     final EdgeInsetsGeometry effectivePadding =
-        padding ?? context.responsiveCardPaddingInsets;
+        padding ??
+        EdgeInsets.only(
+          top: mixTheme?.spaces[AppMixTokens.cardPadV] ?? UI.cardPadV,
+          bottom: mixTheme?.spaces[AppMixTokens.cardPadV] ?? UI.cardPadV,
+          left: mixTheme?.spaces[AppMixTokens.cardPadH] ?? UI.cardPadH,
+          right: mixTheme?.spaces[AppMixTokens.cardPadH] ?? UI.cardPadH,
+        );
+    final ShapeBorder effectiveShape =
+        shape ??
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(defaultRadius),
+        );
 
     return Card(
-      color: color,
-      elevation: elevation,
+      color: color ?? colors.surface,
+      elevation: elevation ?? 1,
       margin: margin,
-      shape: shape,
+      shape: effectiveShape,
       child: Padding(
         padding: effectivePadding,
         child: child,

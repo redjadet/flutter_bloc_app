@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
+import 'package:flutter_bloc_app/shared/widgets/icon_label_row.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -86,15 +87,9 @@ class ChatHistorySheet extends StatelessWidget {
                               await cubit.resetConversation();
                               onClose();
                             },
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.add),
-                                SizedBox(
-                                  width: context.responsiveHorizontalGapS,
-                                ),
-                                Text(l10n.chatHistoryStartNew),
-                              ],
+                            child: IconLabelRow(
+                              icon: Icons.add,
+                              label: l10n.chatHistoryStartNew,
                             ),
                           ),
                           PlatformAdaptive.textButton(
@@ -108,15 +103,9 @@ class ChatHistorySheet extends StatelessWidget {
                                     onClose();
                                   }
                                 : null,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.delete_outline),
-                                SizedBox(
-                                  width: context.responsiveHorizontalGapS,
-                                ),
-                                Text(l10n.chatHistoryClearAll),
-                              ],
+                            child: IconLabelRow(
+                              icon: Icons.delete_outline,
+                              label: l10n.chatHistoryClearAll,
                             ),
                           ),
                           SizedBox(height: context.responsiveGapS),

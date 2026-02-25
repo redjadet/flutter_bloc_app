@@ -49,6 +49,7 @@ run_parallel_static_checks() {
   local i
   local check_index
   local total_checks="${#CHECK_SCRIPTS[@]}"
+  local static_failed=0
 
   mkfifo "$fifo"
   exec 9<>"$fifo"
@@ -88,9 +89,11 @@ run_parallel_static_checks() {
   for ((i = 0; i < total_checks; i++)); do
     cat "$tmp_dir/check_${i}.log"
     if [ "$(cat "$tmp_dir/check_${i}.status")" -ne 0 ]; then
-      VALIDATION_FAILED=1
+      static_failed=1
     fi
   done
+
+  return "$static_failed"
 }
 
 echo "🚀 Running Delivery Checklist..."
@@ -120,16 +123,6 @@ echo ""
 echo "📝 Step 2/5: Formatting code with 'dart format .'"
 dart format .
 echo "✅ Code formatting complete"
-echo ""
-
-# Step 3: Analyze code
-echo "🔍 Step 3/5: Analyzing code with 'flutter analyze'"
-flutter analyze
-echo "✅ Code analysis complete"
-echo ""
-
-# Step 4: Best practices validation
-echo "🛡️  Step 4/5: Running best practices validation checks..."
 echo ""
 
 # Make sure all validation scripts are executable
@@ -169,6 +162,7 @@ CHECK_MESSAGES=(
   "Checking for compute() usage in lifecycle methods (heuristic)..."
   "Checking for Equatable usage (Freezed preferred)..."
   "Checking for unguarded null assertion (!) usage..."
+  "Checking for Row+Icon+Text overflow risk (use IconLabelRow or Flexible/Expanded)..."
 )
 
 CHECK_SCRIPTS=(
@@ -204,6 +198,7 @@ CHECK_SCRIPTS=(
   "tool/check_compute_lifecycle.sh"
   "tool/check_freezed_preferred.sh"
   "tool/check_unguarded_null_assertion.sh"
+  "tool/check_row_text_overflow.sh"
 )
 
 DEFAULT_CHECKLIST_JOBS="$(detect_cpu_count)"
@@ -220,13 +215,48 @@ if ! [[ "$CHECKLIST_JOBS" =~ ^[0-9]+$ ]] || [ "$CHECKLIST_JOBS" -lt 1 ]; then
   CHECKLIST_JOBS="$DEFAULT_CHECKLIST_JOBS"
 fi
 
-echo "  Running ${#CHECK_SCRIPTS[@]} static checks with $CHECKLIST_JOBS workers"
+echo "🔍 Step 3/5: Analyzing code with 'flutter analyze'"
+echo ""
+echo "🛡️  Step 4/5: Running best practices validation checks..."
+echo ""
+echo "  Running ${#CHECK_SCRIPTS[@]} static checks with $CHECKLIST_JOBS workers (in parallel with analyze)"
 CHECKLIST_TMP_DIR="$(mktemp -d)"
 cleanup_checklist_tmp() {
   rm -rf "$CHECKLIST_TMP_DIR"
 }
 trap cleanup_checklist_tmp EXIT
-run_parallel_static_checks "$CHECKLIST_JOBS" "$CHECKLIST_TMP_DIR"
+
+STATIC_CHECKS_LOG="$CHECKLIST_TMP_DIR/static_checks.log"
+STATIC_CHECKS_EXIT="$CHECKLIST_TMP_DIR/static_checks.exit"
+(
+  if run_parallel_static_checks "$CHECKLIST_JOBS" "$CHECKLIST_TMP_DIR"; then
+    echo 0 > "$STATIC_CHECKS_EXIT"
+  else
+    echo 1 > "$STATIC_CHECKS_EXIT"
+  fi
+) > "$STATIC_CHECKS_LOG" 2>&1 &
+STATIC_CHECKS_PID=$!
+
+ANALYZE_FAILED=0
+if ! flutter analyze --no-pub; then
+  ANALYZE_FAILED=1
+fi
+
+if ! wait "$STATIC_CHECKS_PID"; then
+  :
+fi
+
+cat "$STATIC_CHECKS_LOG"
+if [ -f "$STATIC_CHECKS_EXIT" ] && [ "$(cat "$STATIC_CHECKS_EXIT")" -ne 0 ]; then
+  VALIDATION_FAILED=1
+fi
+
+if [ "$ANALYZE_FAILED" -ne 0 ]; then
+  echo "❌ Step 3 (flutter analyze) failed."
+  exit 1
+fi
+echo "✅ Code analysis complete"
+echo ""
 
 echo "  Running focused regression guard tests..."
 bash tool/check_regression_guards.sh || VALIDATION_FAILED=1
