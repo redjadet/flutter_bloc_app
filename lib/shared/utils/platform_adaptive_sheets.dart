@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/design_system/app_styles.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:mix/mix.dart';
 
 class PlatformAdaptiveSheets {
   const PlatformAdaptiveSheets._();
@@ -59,45 +62,51 @@ class PlatformAdaptiveSheets {
     return showModalBottomSheet<T>(
       context: context,
       builder: (final sheetContext) {
-        final theme = Theme.of(context);
+        final theme = Theme.of(sheetContext);
+        final double titleBottomGap = sheetContext.responsiveGapM;
         return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (title case final resolvedTitle?)
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    resolvedTitle,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
+          child: Box(
+            style: AppStyles.dialogContent,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (title case final resolvedTitle?)
+                  Padding(
+                    padding: EdgeInsets.only(bottom: titleBottomGap),
+                    child: Text(
+                      resolvedTitle,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
+                Flexible(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: items.length,
+                    itemBuilder: (final context, final index) {
+                      final item = items[index];
+                      final isSelected = item == selectedItem;
+                      return ListTile(
+                        title: itemBuilder != null
+                            ? itemBuilder(context, item)
+                            : Text(itemLabel(item)),
+                        trailing: isSelected
+                            ? Icon(
+                                Icons.check,
+                                color: theme.colorScheme.primary,
+                              )
+                            : null,
+                        onTap: () => NavigationUtils.maybePop(
+                          sheetContext,
+                          result: item,
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              Flexible(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: items.length,
-                  itemBuilder: (final context, final index) {
-                    final item = items[index];
-                    final isSelected = item == selectedItem;
-                    return ListTile(
-                      title: itemBuilder != null
-                          ? itemBuilder(context, item)
-                          : Text(itemLabel(item)),
-                      trailing: isSelected
-                          ? Icon(
-                              Icons.check,
-                              color: theme.colorScheme.primary,
-                            )
-                          : null,
-                      onTap: () =>
-                          NavigationUtils.maybePop(sheetContext, result: item),
-                    );
-                  },
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

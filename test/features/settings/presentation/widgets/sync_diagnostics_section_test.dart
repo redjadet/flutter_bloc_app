@@ -1,13 +1,15 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/sync_diagnostics_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mix/mix.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _MockSyncStatusCubit extends MockCubit<SyncStatusState>
@@ -29,9 +31,14 @@ void main() {
         MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: BlocProvider<SyncStatusCubit>.value(
-            value: cubit,
-            child: const Scaffold(body: SyncDiagnosticsSection()),
+          home: Builder(
+            builder: (final context) => MixTheme(
+              data: buildAppMixThemeData(context),
+              child: BlocProvider<SyncStatusCubit>.value(
+                value: cubit,
+                child: const Scaffold(body: SyncDiagnosticsSection()),
+              ),
+            ),
           ),
         ),
       );

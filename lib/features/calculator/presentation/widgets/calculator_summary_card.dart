@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calcul
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:intl/intl.dart';
 
@@ -47,8 +48,9 @@ class CalculatorSummaryCard extends StatelessWidget {
 
       return Padding(
         padding: padding,
-        child: Card(
+        child: CommonCard(
           elevation: context.responsiveCardElevation,
+          padding: EdgeInsets.zero,
           child: LayoutBuilder(
             builder: (final context, final constraints) {
               final BoxConstraints scrollConstraints =

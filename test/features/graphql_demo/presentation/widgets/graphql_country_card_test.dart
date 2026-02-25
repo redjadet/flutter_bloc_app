@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/widgets/graphql_country_card.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mix/mix.dart';
 
 void main() {
   group('GraphqlCountryCard', () {
@@ -17,11 +19,16 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: GraphqlCountryCard(
-              country: country,
-              capitalLabel: 'Capital',
-              currencyLabel: 'Currency',
+          home: Builder(
+            builder: (final context) => MixTheme(
+              data: buildAppMixThemeData(context),
+              child: Scaffold(
+                body: GraphqlCountryCard(
+                  country: country,
+                  capitalLabel: 'Capital',
+                  currencyLabel: 'Currency',
+                ),
+              ),
             ),
           ),
         ),
@@ -48,11 +55,16 @@ void main() {
 
         await tester.pumpWidget(
           MaterialApp(
-            home: Scaffold(
-              body: GraphqlCountryCard(
-                country: country,
-                capitalLabel: 'Capital',
-                currencyLabel: 'Currency',
+            home: Builder(
+              builder: (final context) => MixTheme(
+                data: buildAppMixThemeData(context),
+                child: Scaffold(
+                  body: GraphqlCountryCard(
+                    country: country,
+                    capitalLabel: 'Capital',
+                    currencyLabel: 'Currency',
+                  ),
+                ),
               ),
             ),
           ),

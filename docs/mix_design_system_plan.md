@@ -7,8 +7,9 @@ This document is the implementation plan for integrating the [mix](https://pub.d
 - **Pilot:** Done. Mix dependency, `mix_app_theme.dart`, `MixTheme` in `AppConfig`, `app_styles.dart` (card, profileOutlinedButton, listTile), `CommonCard` and profile button styles using mix tokens, tests updated, and design docs updated.
 - **Test helper:** `test/helpers/pump_with_mix_theme.dart` — `pumpWithMixTheme(tester, child: ...)` for widget tests that need Mix theme; `common_card_test.dart` uses it.
 - **Next steps done:** `AppStyles.inputField`, `AppStyles.appBar`, `AppStyles.chip`, `AppStyles.dialogContent`; dark-mode variant on card (`$on.dark`); breakpoint variant on listTile (`$on.medium` for horizontal padding). **GraphqlDataSourceBadge** migrated to `AppStyles.chip`.
+- **Further migration:** Settings sections use mix/CommonCard: **SyncDiagnosticsSection** (CommonCard + `AppStyles.chip`), **GraphqlCacheControlsSection**, **ProfileCacheControlsSection**, **RemoteConfigDiagnosticsSection** (CommonCard). **SettingsCard** uses CommonCard. **CalculatorSummaryCard**, **WordCard** (playlearn), **GraphqlCountryCard** use CommonCard; **GraphqlCountryCard** `_DetailChip` uses `AppStyles.chip`. **PlatformAdaptiveSheets.showPickerModal** Material sheet content wrapped with `Box(style: AppStyles.dialogContent)`. Sync diagnostics and GraphqlCountryCard tests wrap with `MixTheme`.
 - **Skipped:** On-device manual checks (deferred; run when validating release).
-- **Remaining:** Optional mix_lint (evaluated — see Action list); further incremental migration when touching screens.
+- **Remaining:** mix_lint now runs via local package `custom_lints/mix_lint` (analyzer 8 + custom_lint 0.8 compatible). Use `./tool/run_mix_lint.sh` (or `dart run custom_lint`) to lint Mix usage. Incremental migration continues when touching other screens.
 
 ---
 
@@ -30,6 +31,7 @@ Use this as a checklist for implementation, verification, and follow-up.
 ### Verification
 
 - [x] Run `./bin/checklist` (format, analyze, tests).
+- [x] `./bin/checklist` now also runs `mix_lint` automatically via `tool/run_mix_lint.sh`.
 - [x] Run `flutter test` for affected tests (e.g. profile button styles, CommonCard).
 
 ### On-device checks (manual) — skipped for now
@@ -46,9 +48,9 @@ Use this as a checklist for implementation, verification, and follow-up.
 - [x] Add more shared styles (dialogs, etc.) if needed — `AppStyles.dialogContent` added for dialog/sheet content padding.
 - [x] Use dark-mode context variant: card uses `$on.dark($box.decoration.elevation(0))`.
 - [x] Use breakpoint context variants: listTile uses `$on.medium($box.padding.horizontal.ref(gapL))` for larger horizontal padding on tablet/desktop.
-- [x] Migrate other screens to mix when touching them — e.g. **GraphqlDataSourceBadge** now uses `AppStyles.chip` (Box + mix style).
+- [x] Migrate other screens to mix when touching them — **GraphqlDataSourceBadge**, **GraphqlCountryCard** `_DetailChip`, **SyncDiagnosticsSection** chips use `AppStyles.chip`; **SyncDiagnosticsSection**, **GraphqlCacheControlsSection**, **ProfileCacheControlsSection**, **RemoteConfigDiagnosticsSection**, **SettingsCard**, **CalculatorSummaryCard**, **WordCard**, **GraphqlCountryCard** use CommonCard; **PlatformAdaptiveSheets.showPickerModal** (Material) uses `AppStyles.dialogContent`.
 - [x] Add test helper: `test/helpers/pump_with_mix_theme.dart` — use `pumpWithMixTheme(tester, child: ...)` in widget tests that need Mix theme.
-- [x] Evaluate mix_lint: optional; requires `custom_lint` and `mix_lint` as dev deps; rules include attribute ordering, avoid tokens/variants inside Style. Add when team adopts mix widely (see [mix_lint](https://pub.dev/packages/mix_lint)).
+- [x] Evaluate mix_lint: enabled via local `custom_lints/mix_lint` fork (updated for analyzer 8 / custom_lint 0.8). Run with `./tool/run_mix_lint.sh`. Rules (for reference): attribute ordering, avoid tokens/variants inside Style, max attributes per style.
 
 ---
 

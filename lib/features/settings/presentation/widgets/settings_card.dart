@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 
 class SettingsOption<T> {
   const SettingsOption({required this.label, required this.value});
@@ -21,7 +22,7 @@ class SettingsCard<T> extends StatelessWidget {
   final ValueChanged<T> onSelect;
 
   @override
-  Widget build(final BuildContext context) => Card(
+  Widget build(final BuildContext context) => CommonCard(
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
