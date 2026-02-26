@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/design_system/app_styles.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:mix/mix.dart';
 
 class SearchAppBar extends StatelessWidget {
   const SearchAppBar({super.key});
@@ -9,6 +11,7 @@ class SearchAppBar extends StatelessWidget {
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
+    final bool hasMixTheme = MixTheme.maybeOf(context) != null;
     final bool useCupertino =
         theme.platform == TargetPlatform.iOS ||
         theme.platform == TargetPlatform.macOS;
@@ -22,40 +25,49 @@ class SearchAppBar extends StatelessWidget {
               color: titleColor,
             );
 
-    return Padding(
-      padding: context.pageHorizontalPaddingWithVertical(
-        context.responsiveGapM,
-      ),
-      child: Row(
-        children: [
-          if (useCupertino)
-            CupertinoButton(
-              padding: EdgeInsets.zero,
-              onPressed: () => NavigationUtils.popOrGoHome(context),
-              child: Icon(
-                CupertinoIcons.left_chevron,
-                color: titleColor,
-                size: backIconSize,
-              ),
-            )
-          else
-            IconButton(
-              icon: const Icon(Icons.arrow_back),
+    final Widget content = Row(
+      children: [
+        if (useCupertino)
+          CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: () => NavigationUtils.popOrGoHome(context),
+            child: Icon(
+              CupertinoIcons.left_chevron,
               color: titleColor,
-              iconSize: backIconSize,
-              onPressed: () => NavigationUtils.popOrGoHome(context),
+              size: backIconSize,
             ),
-          SizedBox(width: context.responsiveHorizontalGapS),
-          Flexible(
-            child: Text(
-              context.l10n.searchHint.replaceFirst('...', ''),
-              style: effectiveTitleStyle,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
+          )
+        else
+          IconButton(
+            icon: const Icon(Icons.arrow_back),
+            color: titleColor,
+            iconSize: backIconSize,
+            onPressed: () => NavigationUtils.popOrGoHome(context),
           ),
-        ],
-      ),
+        SizedBox(width: context.responsiveHorizontalGapS),
+        Flexible(
+          child: Text(
+            context.l10n.searchHint.replaceFirst('...', ''),
+            style: effectiveTitleStyle,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ],
+    );
+
+    if (!hasMixTheme) {
+      return Padding(
+        padding: context.pageHorizontalPaddingWithVertical(
+          context.responsiveGapM,
+        ),
+        child: content,
+      );
+    }
+
+    return Box(
+      style: AppStyles.appBar,
+      child: content,
     );
   }
 }

@@ -81,7 +81,10 @@ class _SearchTextFieldState extends State<SearchTextField> {
 
             if (isCupertino) {
               return Container(
-                height: context.responsiveButtonHeight,
+                constraints: BoxConstraints(
+                  minHeight: context.responsiveButtonHeight,
+                ),
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: colors.surface,
                   border: Border.all(
@@ -97,7 +100,10 @@ class _SearchTextFieldState extends State<SearchTextField> {
             }
 
             return Container(
-              height: context.responsiveButtonHeight,
+              constraints: BoxConstraints(
+                minHeight: context.responsiveButtonHeight,
+              ),
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: colors.surface,
                 border: Border.all(

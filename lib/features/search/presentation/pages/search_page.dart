@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
@@ -52,7 +54,10 @@ class _SearchPageContent extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: _SearchPageAppBar(backgroundColor: colorScheme.surface),
+      appBar: _SearchPageAppBar(
+        backgroundColor: colorScheme.surface,
+        preferredHeight: _searchAppBarHeight(context),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -110,6 +115,20 @@ class _SearchPageContent extends StatelessWidget {
       ),
     );
   }
+
+  double _searchAppBarHeight(final BuildContext context) {
+    final double textScale = MediaQuery.textScalerOf(context).scale(1);
+    final double verticalPadding = context.responsiveGapM;
+    final double titleHeight = context.responsiveHeadlineSize * textScale * 1.2;
+    final double rowMinHeight = math.max(
+      48,
+      math.max(titleHeight, context.responsiveIconSize),
+    );
+    return math.max(
+      kToolbarHeight + UI.gapM,
+      rowMinHeight + verticalPadding * 2,
+    );
+  }
 }
 
 @freezed
@@ -123,14 +142,16 @@ abstract class _SearchBodyData with _$SearchBodyData {
 }
 
 class _SearchPageAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _SearchPageAppBar({required this.backgroundColor});
+  const _SearchPageAppBar({
+    required this.backgroundColor,
+    required this.preferredHeight,
+  });
 
   final Color backgroundColor;
+  final double preferredHeight;
 
   @override
-  Size get preferredSize => Size.fromHeight(
-    kToolbarHeight + UI.gapM,
-  );
+  Size get preferredSize => Size.fromHeight(preferredHeight);
 
   @override
   Widget build(final BuildContext context) => Material(
