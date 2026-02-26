@@ -29,6 +29,33 @@ class AppMixTokens {
   static const RadiusToken radiusPill = RadiusToken('app.radius.radiusPill');
 }
 
+/// Text style token names for Mix theme.
+///
+/// Registered in buildAppMixThemeData from the Material text theme so
+/// AppStyles heading/body/caption styles can reference theme text.
+class AppTextStyleTokens {
+  AppTextStyleTokens._();
+
+  static const TextStyleToken titleLarge = TextStyleToken(
+    'app.text.theme.title.large',
+  );
+  static const TextStyleToken titleMedium = TextStyleToken(
+    'app.text.theme.title.medium',
+  );
+  static const TextStyleToken bodyLarge = TextStyleToken(
+    'app.text.theme.body.large',
+  );
+  static const TextStyleToken bodyMedium = TextStyleToken(
+    'app.text.theme.body.medium',
+  );
+  static const TextStyleToken labelMedium = TextStyleToken(
+    'app.text.theme.label.medium',
+  );
+  static const TextStyleToken labelSmall = TextStyleToken(
+    'app.text.theme.label.small',
+  );
+}
+
 /// Material color token names (must match [MaterialTokens] in mix where applicable).
 ///
 /// Use with [ColorToken] in styles so colors resolve from [Theme.of(context)].
@@ -63,7 +90,9 @@ class AppMaterialColorTokens {
 /// [UI] / [AppConstants] for spaces, radii, and breakpoints. Call from
 /// inside [MaterialApp] builder so Theme and ScreenUtil are available.
 MixThemeData buildAppMixThemeData(final BuildContext context) {
-  final colorScheme = Theme.of(context).colorScheme;
+  final theme = Theme.of(context);
+  final colorScheme = theme.colorScheme;
+  final textTheme = theme.textTheme;
   return MixThemeData.withMaterial(
     colors: {
       AppMaterialColorTokens.surfaceContainerLow:
@@ -71,6 +100,16 @@ MixThemeData buildAppMixThemeData(final BuildContext context) {
       AppMaterialColorTokens.surfaceContainerHighest:
           colorScheme.surfaceContainerHighest,
       AppMaterialColorTokens.outlineVariant: colorScheme.outlineVariant,
+    },
+    textStyles: {
+      AppTextStyleTokens.titleLarge: textTheme.titleLarge ?? const TextStyle(),
+      AppTextStyleTokens.titleMedium:
+          textTheme.titleMedium ?? const TextStyle(),
+      AppTextStyleTokens.bodyLarge: textTheme.bodyLarge ?? const TextStyle(),
+      AppTextStyleTokens.bodyMedium: textTheme.bodyMedium ?? const TextStyle(),
+      AppTextStyleTokens.labelMedium:
+          textTheme.labelMedium ?? const TextStyle(),
+      AppTextStyleTokens.labelSmall: textTheme.labelSmall ?? const TextStyle(),
     },
     spaces: {
       AppMixTokens.gapXS: UI.gapXS,

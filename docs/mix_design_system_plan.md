@@ -7,7 +7,7 @@ This document is the implementation plan for integrating the [mix](https://pub.d
 - **Pilot:** Done. Mix dependency, `mix_app_theme.dart`, `MixTheme` in `AppConfig`, `app_styles.dart` (card, profileOutlinedButton, listTile), `CommonCard` and profile button styles using mix tokens, tests updated, and design docs updated.
 - **Test helper:** `test/helpers/pump_with_mix_theme.dart` — `pumpWithMixTheme(tester, child: ...)` for widget tests that need Mix theme; `common_card_test.dart` uses it.
 - **Next steps done:** `AppStyles.inputField`, `AppStyles.appBar`, `AppStyles.chip`, `AppStyles.dialogContent`; dark-mode variant on card (`$on.dark`); breakpoint variant on listTile (`$on.medium` for horizontal padding). **GraphqlDataSourceBadge** migrated to `AppStyles.chip`.
-- **Further migration:** Settings sections use mix/CommonCard: **SyncDiagnosticsSection** (CommonCard + `AppStyles.chip`), **GraphqlCacheControlsSection**, **ProfileCacheControlsSection**, **RemoteConfigDiagnosticsSection** (CommonCard); **RemoteConfig** status badge (`_RemoteConfigStatusBadge`) uses CommonCard. **SettingsCard** uses CommonCard. **CalculatorSummaryCard**, **WordCard** (playlearn), **GraphqlCountryCard** use CommonCard; **GraphqlCountryCard** `_DetailChip` uses `AppStyles.chip`. **PlatformAdaptiveSheets.showPickerModal** Material sheet content wrapped with `Box(style: AppStyles.dialogContent)`. **AccountSection**, **SkeletonCard** use CommonCard. **CountdownBarContent** uses CommonCard. **AppMessage** uses CommonCard with default (token) padding. **SkeletonListTile** uses `Box(style: AppStyles.listTile)` for padding. **TopicCard** (playlearn) uses CommonCard with primaryContainer. **WalletAddressDisplay** uses CommonCard with outline border. **WebsocketConnectionBanner** (error and status bars) uses CommonCard with token padding. **WalletConnectAuthPage**: error/success message blocks and **_WalletProfileSection** use CommonCard. **TodoPriorityBadge**, **FlavorBadge** use CommonCard with border (badge/chip). **ChartLoadingList** skeleton placeholders use CommonCard. **buildTodoSwipeBackground** (todo list swipe action) uses CommonCard. **MarkdownEditorField**, **MarkdownPreview** use CommonCard for surface panels. **CalculatorSummaryCard** error block uses CommonCard. **MessageBubble** uses CommonCard inside ConstrainedBox (margin, padding, shape preserved). **GoogleMapsLocationList** selected-location chip uses CommonCard. **register_country_picker** Material sheet content wrapped with `Box(style: AppStyles.dialogContent)`. List row shells: **SkeletonListTile** is the only custom row using `Box(style: AppStyles.listTile)`; other lists use ListTile or config-driven layout. **Priority B:** Added `AppStyles.banner`, `AppStyles.emptyState`, `AppStyles.filledButton`, `AppStyles.outlinedButton`; extended `AppStyles.inputField` with color and border tokens. **SearchAppBar** uses `Box(style: AppStyles.appBar)`; **TodoSearchField** uses `Box(style: AppStyles.inputField)`; **CommonStatusView** uses `Box(style: AppStyles.emptyState)` when padding is null. Sync diagnostics and GraphqlCountryCard tests wrap with `MixTheme`; skeleton list tile tests use `pumpWithMixTheme`.
+- **Further migration:** Settings sections use mix/CommonCard: **SyncDiagnosticsSection** (CommonCard + `AppStyles.chip`), **GraphqlCacheControlsSection**, **ProfileCacheControlsSection**, **RemoteConfigDiagnosticsSection** (CommonCard); **RemoteConfig** status badge (`_RemoteConfigStatusBadge`) uses CommonCard. **SettingsCard** uses CommonCard. **CalculatorSummaryCard**, **WordCard** (playlearn), **GraphqlCountryCard** use CommonCard; **GraphqlCountryCard** `_DetailChip` uses `AppStyles.chip`. **PlatformAdaptiveSheets.showPickerModal** Material sheet content wrapped with `Box(style: AppStyles.dialogContent)`. **AccountSection**, **SkeletonCard** use CommonCard. **CountdownBarContent** uses CommonCard. **AppMessage** uses CommonCard with default (token) padding. **SkeletonListTile** uses `Box(style: AppStyles.listTile)` for padding. **TopicCard** (playlearn) uses CommonCard with primaryContainer. **WalletAddressDisplay** uses CommonCard with outline border. **WebsocketConnectionBanner** (error and status bars) uses CommonCard with token padding. **WalletConnectAuthPage**: error/success message blocks and **_WalletProfileSection** use CommonCard. **TodoPriorityBadge**, **FlavorBadge** use CommonCard with border (badge/chip). **ChartLoadingList** skeleton placeholders use CommonCard. **buildTodoSwipeBackground** (todo list swipe action) uses CommonCard. **MarkdownEditorField**, **MarkdownPreview** use CommonCard for surface panels. **CalculatorSummaryCard** error block uses CommonCard. **MessageBubble** uses CommonCard inside ConstrainedBox (margin, padding, shape preserved). **GoogleMapsLocationList** selected-location chip uses CommonCard. **register_country_picker** Material sheet content wrapped with `Box(style: AppStyles.dialogContent)`. List row shells: **SkeletonListTile** is the only custom row using `Box(style: AppStyles.listTile)`; other lists use ListTile or config-driven layout. **Priority B:** Added `AppStyles.banner`, `AppStyles.emptyState`, `AppStyles.filledButton`, `AppStyles.outlinedButton`; extended `AppStyles.inputField` with color and border tokens. **SearchAppBar** uses `Box(style: AppStyles.appBar)`; **TodoSearchField** uses `Box(style: AppStyles.inputField)`; **CommonStatusView** uses `Box(style: AppStyles.emptyState)` when padding is null. **Priority C:** App text tokens (AppTextStyleTokens) and textStyles in theme; AppStyles headingStyle, subheadingStyle, bodyStyle, bodyLargeStyle, captionStyle, captionSmallStyle; banner and chip use `$on.medium` for horizontal padding; AppTypography doc notes preference for Mix text/AppStyles in new code. Sync diagnostics and GraphqlCountryCard tests wrap with `MixTheme`; skeleton list tile tests use `pumpWithMixTheme`.
 - **Skipped:** On-device manual checks (deferred; run when validating release).
 - **Remaining:** mix_lint now runs via local package `custom_lints/mix_lint` (analyzer 8 + custom_lint 0.8 compatible). Use `./tool/run_mix_lint.sh` (or `dart run custom_lint`) to lint Mix usage. Incremental migration continues when touching other screens.
 
@@ -54,33 +54,41 @@ Use this as a checklist for implementation, verification, and follow-up.
 
 ### Future possible steps (use more Mix in codebase)
 
-These steps extend the **Further migration** work above. Keep migration incremental and low-risk: prefer visual-only refactors when touching files, and ship in small batches.
+**How to use this section:** When you touch a screen or add new UI, prefer Mix styles and tokens over ad-hoc `Container`/`TextStyle`/padding. Pick one or two items below that fit the change; ship in small batches. Full detail of what’s already migrated is in **Implementation status** above.
 
-#### Priority A: Low-risk replacements while touching files
+**Principle:** Incremental, low-risk migration — visual-only refactors when possible; no big-bang rewrites.
 
-- [x] **Card shells:** Replace ad-hoc `Container`/`Material` + `BoxDecoration` wrappers with `CommonCard` or `Box(style: AppStyles.card)` — *Done for WalletConnectAuthPage, ChartLoadingList, todo swipe background, MarkdownEditorField, MarkdownPreview, CalculatorSummaryCard error block, MessageBubble, GoogleMapsLocationList selected chip. When touching other screens, replace any remaining card-like wrappers the same way.*
-- [x] **Badge/chip wrappers:** Replace status-chip `Container`s with `Box(style: AppStyles.chip)` or CommonCard with border — *Done for TodoPriorityBadge, FlavorBadge. Add a named chip variant in `AppStyles` when a third similar pattern appears.*
-- [x] **List row shells:** Use `Box(style: AppStyles.listTile)` for custom rows where full `ListTile` is unnecessary — *Done: **SkeletonListTile** uses it for skeleton list rows. Other list UIs use `PlatformAdaptive.listTile` or full `ListTile` (e.g. chat history, settings, maps) or config-driven padding (e.g. ChatContactTile); no further migration without refactoring those. Add `dense`/`compact` variants in `AppStyles` when a second custom-row use case appears.*
-- [x] **Dialog/sheet bodies:** Wrap modal and bottom-sheet content with `Box(style: AppStyles.dialogContent)` — *Done for `PlatformAdaptiveSheets.showPickerModal` and **register_country_picker** Material sheet. When touching other Material sheet/dialog builders, wrap the content column with `Box(style: AppStyles.dialogContent)` where layout allows.*
+---
 
-#### Priority B: Expand shared style coverage
+#### Completed priorities (A–C)
 
-- [x] **Form/navigation surfaces:** Adopt `AppStyles.inputField` and `AppStyles.appBar` where layout permits — *Done: **SearchAppBar** uses `AppStyles.appBar`; **TodoSearchField** uses `AppStyles.inputField` (tokens for color, border, padding, radius). Continue when touching other form/app bar screens.*
-- [x] **Banners/empty states/tooltips:** Add named `AppStyles.*` (banner, emptyState) and migrate — *Done: added `AppStyles.banner`, `AppStyles.emptyState`; **CommonStatusView** uses `AppStyles.emptyState` when padding is null. Use `AppStyles.banner` for full-width status bars when touching those screens.*
-- [x] **Buttons:** Introduce reusable `AppStyles` button styles — *Done: added `AppStyles.filledButton` and `AppStyles.outlinedButton` (tokens for primary/surface, border, padding, radius, label text). Use with mix `Button`/`Pressable` or as reference for `ButtonStyle`; migrate ad-hoc builders when touching features.*
+- **Priority A (low-risk replacements):** Card shells → CommonCard / `AppStyles.card`; badge/chip → `AppStyles.chip` or CommonCard with border; list row shells → `Box(style: AppStyles.listTile)` where full `ListTile` isn’t needed; dialog/sheet bodies → `Box(style: AppStyles.dialogContent)`. Done for the widgets listed in Implementation status; continue the same pattern when touching other screens.
+- **Priority B (shared style coverage):** `AppStyles.inputField`, `appBar`, `banner`, `emptyState`, `filledButton`, `outlinedButton` added and adopted in SearchAppBar, TodoSearchField, CommonStatusView; extend to other form/app bar/banner/empty-state/button UIs when touching them.
+- **Priority C (tokens and variants):** App text tokens and `AppStyles` text styles (headingStyle, bodyStyle, captionStyle, etc.); `$on.medium` on banner and chip; AppTypography doc updated to prefer Mix text/AppStyles for new code.
 
-#### Priority C: Tokens and variants maturity
+---
 
-- [ ] **Typography:** Expand Mix text tokens and move repeated heading/body/caption styling to `$text`-based styles.
-- [ ] **Context variants:** Add `$on.dark` and breakpoint variants where current UI needs explicit theme/density differences (card and listTile already have examples).
-- [ ] **Legacy cleanup:** When Mix coverage is high enough, thin `AppTypography` helpers that duplicate Mix tokens.
+#### Ongoing and next steps (when touching code)
+
+- **Scope rule per PR:** Keep migration incremental. In a normal feature/bug PR, migrate only the touched widget(s) and at most 1-2 style patterns.
+- **Text first:** For new or edited text in Mix-enabled widgets, prefer `AppStyles.headingStyle` / `subheadingStyle` / `bodyStyle` / `bodyLargeStyle` / `captionStyle` / `captionSmallStyle` (or `$text.style.ref(AppTextStyleTokens.*)`) instead of introducing new `AppTypography` helpers.
+- **Surface wrappers:** For new/edited panels and cards, prefer `CommonCard` or `Box(style: AppStyles.card)` over ad-hoc `Container` + `BoxDecoration`.
+- **Chips and badges:** Use `Box(style: AppStyles.chip)` for chip-like labels; if a distinct chip pattern appears in 3+ places, add a named `AppStyles` variant.
+- **Custom row shells:** For non-`ListTile` rows, use `Box(style: AppStyles.listTile)`; add `listTileDense` / `listTileCompact` only when there is a real second use case.
+- **Dialogs and sheets:** Wrap Material dialog/sheet body content with `Box(style: AppStyles.dialogContent)` where layout allows.
+- **Status and empty states:** Use `Box(style: AppStyles.banner)` for full-width status bars and `Box(style: AppStyles.emptyState)` for empty-state containers.
+- **Buttons:** Prefer `AppStyles.filledButton` / `outlinedButton` with Mix `Button`/`Pressable`; if using `ButtonStyle`, align values with these tokens.
+- **Do not churn stable code:** If a file is untouched by product work, do not migrate it only for stylistic consistency.
+- **After each migration slice:** Run `./tool/run_mix_lint.sh` and affected tests before finishing the PR.
+
+---
 
 #### Validation for each migration batch
 
 - Run `./tool/run_mix_lint.sh` after style or token changes.
-- Run changed tests; wrap Mix-dependent widgets with `pumpWithMixTheme(tester, child: ...)` if tests rely on Mix theme.
+- Run affected tests; wrap Mix-dependent widgets with `pumpWithMixTheme(tester, child: ...)` when tests rely on Mix theme.
 - Run `./bin/checklist` before merge.
-- Update [design_system.md](design_system.md) and [ui_ux_responsive_review.md](ui_ux_responsive_review.md) when adding new shared styles or migrating a feature.
+- Update [design_system.md](design_system.md) (and [ui_ux_responsive_review.md](ui_ux_responsive_review.md) if relevant) when adding new shared styles or migrating a feature.
 
 ---
 
