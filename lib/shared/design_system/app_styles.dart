@@ -7,6 +7,9 @@ const TextStyleToken _labelLargeToken = TextStyleToken(
   'md3.text.theme.label.large',
 );
 
+// App text tokens (see [AppTextStyleTokens]) are registered in
+// [buildAppMixThemeData] from Theme.textTheme.
+
 /// Shared [Style] definitions using Mix tokens.
 ///
 /// Use these styles for consistent card, button, and text appearance across
@@ -100,11 +103,13 @@ class AppStyles {
   );
 
   /// Banner/full-width bar style: horizontal and vertical padding, no
-  /// elevation. Use with [Box] or `CommonCard` for status/info bars.
+  /// elevation. On medium+ breakpoints horizontal padding increases.
+  /// Use with [Box] or `CommonCard` for status/info bars.
   static Style get banner => Style(
     $box.padding.vertical.ref(AppMixTokens.gapM),
     $box.padding.horizontal.ref(AppMixTokens.cardPadH),
     $box.decoration.elevation(0),
+    $on.medium($box.padding.horizontal.ref(AppMixTokens.gapL)),
   );
 
   /// Empty state container: generous padding for centered icon/message.
@@ -150,12 +155,14 @@ class AppStyles {
   );
 
   /// Chip-style container: surfaceContainerLow background (matches Material 3
-  /// Chip), pill radius, compact padding. Use with [Box] for chip-like labels.
+  /// Chip), pill radius, compact padding. On medium+ breakpoints horizontal
+  /// padding increases. Use with [Box] for chip-like labels.
   static Style get chip => Style(
     $box.color.ref(AppMaterialColorTokens.surfaceContainerLow),
     $box.borderRadius.all.ref(AppMixTokens.radiusPill),
     $box.padding.vertical.ref(AppMixTokens.gapS),
     $box.padding.horizontal.ref(AppMixTokens.gapS),
+    $on.medium($box.padding.horizontal.ref(AppMixTokens.gapM)),
   );
 
   /// Dialog/sheet content padding from tokens.
@@ -167,5 +174,37 @@ class AppStyles {
       left: AppMixTokens.cardPadH(),
       right: AppMixTokens.cardPadH(),
     ),
+  );
+
+  // Text styles (use $text.style.ref(AppTextStyleTokens.*) in Mix).
+
+  /// Heading text: theme title large. Use with [Text] or mix text.
+  static Style get headingStyle => Style(
+    $text.style.ref(AppTextStyleTokens.titleLarge),
+  );
+
+  /// Subheading: theme title medium.
+  static Style get subheadingStyle => Style(
+    $text.style.ref(AppTextStyleTokens.titleMedium),
+  );
+
+  /// Body text: theme body medium.
+  static Style get bodyStyle => Style(
+    $text.style.ref(AppTextStyleTokens.bodyMedium),
+  );
+
+  /// Body large: theme body large.
+  static Style get bodyLargeStyle => Style(
+    $text.style.ref(AppTextStyleTokens.bodyLarge),
+  );
+
+  /// Caption/small label: theme label medium.
+  static Style get captionStyle => Style(
+    $text.style.ref(AppTextStyleTokens.labelMedium),
+  );
+
+  /// Small caption: theme label small.
+  static Style get captionSmallStyle => Style(
+    $text.style.ref(AppTextStyleTokens.labelSmall),
   );
 }
