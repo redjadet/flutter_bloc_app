@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **73.23%** (10668/14567 lines)
+*Total line coverage*: **73.18%** (10678/14591 lines)
 
 Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) are excluded from these totals.
 
@@ -70,7 +70,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/scapes/presentation/widgets/scapes_grid_content.dart` | 4.55% | 2/44 |
 | `lib/features/library_demo/presentation/pages/library_demo_page.dart` | 4.76% | 1/21 |
 | `lib/core/di/register_walletconnect_auth_services.dart` | 9.09% | 3/33 |
-| `lib/shared/design_system/app_styles.dart` | 10.71% | 9/84 |
+| `lib/shared/design_system/app_styles.dart` | 10.20% | 10/98 |
 | `lib/features/genui_demo/presentation/pages/genui_demo_page.dart` | 11.11% | 1/9 |
 | `lib/features/todo_list/presentation/widgets/todo_sort_bar.dart` | 18.18% | 18/99 |
 | `lib/features/todo_list/presentation/helpers/todo_list_delete_dialogs.dart` | 18.39% | 16/87 |
@@ -227,7 +227,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/auth/presentation/widgets/register_password_field.dart` | 89.47% | 34/38 |
 | `lib/features/counter/data/rest_counter_repository.dart` | 89.47% | 17/19 |
 | `lib/shared/widgets/common_loading_widget.dart` | 90.00% | 45/50 |
-| `lib/core/theme/mix_app_theme.dart` | 90.00% | 18/20 |
+| `lib/core/theme/mix_app_theme.dart` | 90.00% | 27/30 |
 | `lib/features/graphql_demo/data/countries_graphql_repository.dart` | 90.00% | 54/60 |
 | `lib/features/auth/presentation/widgets/register_body.dart` | 90.00% | 9/10 |
 | `lib/features/example/presentation/widgets/whiteboard/whiteboard_toolbar_helpers.dart` | 90.48% | 38/42 |
