@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/design_system/app_styles.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:mix/mix.dart';
 
 /// A shared layout for empty/error/status views with optional icon, title,
 /// and action content.
@@ -32,43 +34,46 @@ class CommonStatusView extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
-    final Widget content = Center(
-      child: Padding(
-        padding: padding ?? context.responsiveStatePadding,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon case final iconData?) ...[
-              Icon(
-                iconData,
-                size: iconSize,
-                color: iconColor,
-              ),
-              SizedBox(height: context.responsiveGapL),
-            ],
-            if (title case final t?) ...[
-              Text(
-                t,
-                style: titleStyle ?? theme.textTheme.titleLarge,
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: context.responsiveGapM),
-            ],
-            Text(
-              message,
-              style: messageStyle ?? theme.textTheme.bodyLarge,
-              textAlign: TextAlign.center,
-              softWrap: true,
-              overflow: TextOverflow.visible,
-            ),
-            if (action case final a?) ...[
-              SizedBox(height: context.responsiveGapL * 1.5),
-              a,
-            ],
-          ],
+    final bool hasMixTheme = MixTheme.maybeOf(context) != null;
+    final Widget column = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (icon case final iconData?) ...[
+          Icon(
+            iconData,
+            size: iconSize,
+            color: iconColor,
+          ),
+          SizedBox(height: context.responsiveGapL),
+        ],
+        if (title case final t?) ...[
+          Text(
+            t,
+            style: titleStyle ?? theme.textTheme.titleLarge,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: context.responsiveGapM),
+        ],
+        Text(
+          message,
+          style: messageStyle ?? theme.textTheme.bodyLarge,
+          textAlign: TextAlign.center,
+          softWrap: true,
+          overflow: TextOverflow.visible,
         ),
-      ),
+        if (action case final a?) ...[
+          SizedBox(height: context.responsiveGapL * 1.5),
+          a,
+        ],
+      ],
+    );
+    final EdgeInsetsGeometry? resolvedPadding =
+        padding ?? (hasMixTheme ? null : context.responsiveStatePadding);
+    final Widget content = Center(
+      child: resolvedPadding != null
+          ? Padding(padding: resolvedPadding, child: column)
+          : Box(style: AppStyles.emptyState, child: column),
     );
 
     if (semanticsLabel == null) {

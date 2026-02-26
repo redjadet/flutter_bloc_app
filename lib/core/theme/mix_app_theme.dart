@@ -45,6 +45,16 @@ class AppMaterialColorTokens {
   static const ColorToken surfaceContainerLow = ColorToken(
     'app.color.surfaceContainerLow',
   );
+
+  /// Input/field container background.
+  static const ColorToken surfaceContainerHighest = ColorToken(
+    'app.color.surfaceContainerHighest',
+  );
+
+  /// Input/field border (e.g. outlineVariant).
+  static const ColorToken outlineVariant = ColorToken(
+    'md.color.outline.variant',
+  );
 }
 
 /// Builds [MixThemeData] from the current [BuildContext].
@@ -58,6 +68,9 @@ MixThemeData buildAppMixThemeData(final BuildContext context) {
     colors: {
       AppMaterialColorTokens.surfaceContainerLow:
           colorScheme.surfaceContainerLow,
+      AppMaterialColorTokens.surfaceContainerHighest:
+          colorScheme.surfaceContainerHighest,
+      AppMaterialColorTokens.outlineVariant: colorScheme.outlineVariant,
     },
     spaces: {
       AppMixTokens.gapXS: UI.gapXS,
