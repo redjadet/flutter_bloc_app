@@ -11,6 +11,8 @@ This document is the implementation plan for integrating the [mix](https://pub.d
 - **Skipped:** On-device manual checks (deferred; run when validating release).
 - **Remaining:** mix_lint now runs via local package `custom_lints/mix_lint` (analyzer 8 + custom_lint 0.8 compatible). Use `./tool/run_mix_lint.sh` (or `dart run custom_lint`) to lint Mix usage. Incremental migration continues when touching other screens.
 
+**Uncompleted checklist items:** The only unchecked boxes in this plan are **On-device checks (manual)** above — deferred until release validation. All code-related action items are done. Ongoing work is the **Ongoing and next steps** checklist: when touching a screen or adding UI, apply 1–2 of those bullets (e.g. prefer AppStyles text styles, use banner/emptyState/dialogContent where it fits) and run mix_lint and affected tests.
+
 ---
 
 ## Action list
