@@ -186,6 +186,27 @@ void main() {
       expect(find.byType(TodoListPage), findsOneWidget);
     });
 
+    testWidgets('uses only todo list scrolling when items are present', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        buildSubject(
+          initialItems: [
+            _todoItem(id: '1', title: 'Test Todo 1'),
+            _todoItem(id: '2', title: 'Test Todo 2'),
+          ],
+        ),
+      );
+
+      cubit.loadInitial();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump();
+
+      expect(find.byType(ListView), findsOneWidget);
+      expect(find.byType(SingleChildScrollView), findsNothing);
+    });
+
     testWidgets('initializes cubit on page load', (tester) async {
       await tester.pumpWidget(buildSubject());
 
@@ -196,6 +217,49 @@ void main() {
 
       // Verify cubit is accessible and page is rendered
       expect(find.byType(TodoListPage), findsOneWidget);
+    });
+
+    testWidgets('keeps search field focus when keyboard insets change', (
+      tester,
+    ) async {
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+      tester.view.devicePixelRatio = 3;
+      tester.view.physicalSize = const Size(1083, 1800);
+
+      await tester.pumpWidget(
+        buildSubject(
+          initialItems: <TodoItem>[_todoItem(id: '1', title: 'Focus test')],
+        ),
+      );
+
+      cubit.loadInitial();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump();
+
+      final Finder searchField = find.byType(TextField);
+      expect(searchField, findsOneWidget);
+
+      await tester.tap(searchField);
+      await tester.pump();
+
+      EditableTextState editableState = tester.state<EditableTextState>(
+        find.byType(EditableText),
+      );
+      expect(editableState.widget.focusNode.hasFocus, isTrue);
+
+      addTearDown(tester.view.resetViewInsets);
+      tester.view.viewInsets = const FakeViewPadding(bottom: 320);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+
+      editableState = tester.state<EditableTextState>(
+        find.byType(EditableText),
+      );
+      expect(editableState.widget.focusNode.hasFocus, isTrue);
     });
 
     testWidgets(

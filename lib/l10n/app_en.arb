@@ -1593,6 +1593,42 @@
   "@exampleWalletconnectAuthButton": {
     "description": "Button label for opening the WalletConnect Auth demo from the example page"
   },
+  "exampleCameraGalleryButton": "Camera & Gallery Demo",
+  "@exampleCameraGalleryButton": {
+    "description": "Button label for opening the Camera & Gallery demo from the example page"
+  },
+  "cameraGalleryPageTitle": "Camera & Gallery",
+  "@cameraGalleryPageTitle": {
+    "description": "Title of the Camera & Gallery demo page"
+  },
+  "cameraGalleryTakePhoto": "Take photo",
+  "@cameraGalleryTakePhoto": {
+    "description": "Button label to capture a photo with the camera"
+  },
+  "cameraGalleryPickFromGallery": "Pick from gallery",
+  "@cameraGalleryPickFromGallery": {
+    "description": "Button label to select an image from the photo library"
+  },
+  "cameraGalleryNoImage": "No image selected",
+  "@cameraGalleryNoImage": {
+    "description": "Placeholder text when no image has been picked yet"
+  },
+  "cameraGalleryPermissionDenied": "Camera or photo library access was denied.",
+  "@cameraGalleryPermissionDenied": {
+    "description": "Error message when the user denies camera or gallery permission"
+  },
+  "cameraGalleryCancelled": "Selection was cancelled.",
+  "@cameraGalleryCancelled": {
+    "description": "Message when the user cancels the camera or gallery picker"
+  },
+  "cameraGalleryGenericError": "Something went wrong. Please try again.",
+  "@cameraGalleryGenericError": {
+    "description": "Generic error message for camera or gallery failures"
+  },
+  "cameraGalleryCameraUnavailable": "Camera is not available. Use a real device or pick from gallery.",
+  "@cameraGalleryCameraUnavailable": {
+    "description": "Shown when camera cannot be used (e.g. iOS Simulator has no camera)"
+  },
   "scapesPageTitle": "Library / Scapes",
   "@scapesPageTitle": {
     "description": "Title for the scapes page"

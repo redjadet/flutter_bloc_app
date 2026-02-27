@@ -149,6 +149,7 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenScapes: () => context.pushNamed(AppRoutes.scapes),
         onOpenWalletconnectAuth: () =>
             context.pushNamed(AppRoutes.walletconnectAuth),
+        onOpenCameraGallery: () => context.pushNamed(AppRoutes.cameraGallery),
         onRunIsolates: _isRunningIsolates ? null : _runIsolateSamples,
         isRunningIsolates: _isRunningIsolates,
         isolateError: _isolateError,

@@ -14,6 +14,8 @@ import 'package:flutter_bloc_app/core/di/register_search_services.dart';
 import 'package:flutter_bloc_app/core/di/register_todo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_walletconnect_auth_services.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/data/image_picker_camera_gallery_repository.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/deeplink/data/app_links_deep_link_service.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
@@ -55,6 +57,7 @@ Future<void> registerAllDependencies() async {
   registerGenUiServices();
   registerWalletConnectAuthServices();
   registerPlaylearnServices();
+  _registerCameraGalleryServices();
   _registerUtilityServices();
   _registerSyncServices();
 }
@@ -108,6 +111,12 @@ void _registerWebSocketServices() {
 void _registerMapServices() {
   registerLazySingletonIfAbsent<MapLocationRepository>(
     () => const SampleMapLocationRepository(),
+  );
+}
+
+void _registerCameraGalleryServices() {
+  registerLazySingletonIfAbsent<CameraGalleryRepository>(
+    ImagePickerCameraGalleryRepository.new,
   );
 }
 

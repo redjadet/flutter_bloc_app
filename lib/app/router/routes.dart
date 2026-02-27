@@ -11,6 +11,7 @@ import 'package:flutter_bloc_app/features/auth/presentation/pages/profile_page.d
 import 'package:flutter_bloc_app/features/auth/presentation/pages/register_page.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:flutter_bloc_app/features/calculator/calculator.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/camera_gallery.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
@@ -112,6 +113,16 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
     path: AppRoutes.whiteboardPath,
     name: AppRoutes.whiteboard,
     builder: (final context, final state) => const WhiteboardPage(),
+  ),
+  GoRoute(
+    path: AppRoutes.cameraGalleryPath,
+    name: AppRoutes.cameraGallery,
+    builder: (final context, final state) => BlocProvider<CameraGalleryCubit>(
+      create: (_) => CameraGalleryCubit(
+        repository: getIt<CameraGalleryRepository>(),
+      ),
+      child: const CameraGalleryPage(),
+    ),
   ),
   GoRoute(
     path: AppRoutes.scapesPath,
