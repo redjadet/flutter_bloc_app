@@ -5,8 +5,8 @@ description: Dart implementation of sprintf. Provides simple printf like
 homepage: https://github.com/Naddiseo/dart-sprintf
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: "3.11.1"
 
 dev_dependencies:
-  test: ^1.16.0-nullsafety.13
+  test: 1.30.0
   lints: ^1.0.1
