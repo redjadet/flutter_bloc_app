@@ -13,6 +13,8 @@ Widget buildTodoItemActions({
   required final BuildContext context,
   required final TodoItem item,
   required final bool isCompactLayout,
+  required final bool isCompactHeight,
+  required final bool isPhoneLandscape,
   required final VoidCallback onEdit,
   required final VoidCallback onDelete,
 }) {
@@ -42,7 +44,9 @@ Widget buildTodoItemActions({
       child: Icon(
         Icons.more_vert,
         color: colors.onSurfaceVariant,
-        size: context.responsiveIconSize,
+        size:
+            context.responsiveIconSize *
+            (isPhoneLandscape ? 0.7 : (isCompactHeight ? 0.85 : 1)),
       ),
     );
   }
@@ -66,7 +70,9 @@ Widget buildTodoItemActions({
           child: Icon(
             Icons.edit_outlined,
             color: colors.primary,
-            size: context.responsiveIconSize * 0.9,
+            size:
+                context.responsiveIconSize *
+                (isPhoneLandscape ? 0.65 : (isCompactHeight ? 0.75 : 0.9)),
           ),
         ),
       ),
@@ -83,7 +89,9 @@ Widget buildTodoItemActions({
           child: Icon(
             Icons.delete_outline,
             color: colors.error,
-            size: context.responsiveIconSize * 0.9,
+            size:
+                context.responsiveIconSize *
+                (isPhoneLandscape ? 0.65 : (isCompactHeight ? 0.75 : 0.9)),
           ),
         ),
       ),

@@ -78,12 +78,13 @@ class _TodoListBody extends StatelessWidget {
       return CommonMaxWidth(
         maxWidth: context.contentMaxWidth,
         child: LayoutBuilder(
-          builder: (final context, final _) {
+          builder: (final context, final constraints) {
             // Use window height (not current layout height) so keyboard insets
             // do not flip this branch and steal TextField focus on iOS.
             final bool isSpaceLimited = MediaQuery.sizeOf(context).height < 600;
             final bool isKeyboardVisible =
                 MediaQuery.viewInsetsOf(context).bottom > 0;
+            final double availableHeight = constraints.maxHeight;
             final double gapM = isSpaceLimited
                 ? context.responsiveGapS
                 : context.responsiveGapM;
@@ -91,18 +92,48 @@ class _TodoListBody extends StatelessWidget {
                 ? context.responsiveGapXS
                 : context.responsiveGapS;
             final bool showCompactHeader = isSpaceLimited || isKeyboardVisible;
+            final bool showStats =
+                !showCompactHeader &&
+                !isKeyboardVisible &&
+                availableHeight >= 560;
+            final bool shouldKeepSearchVisible =
+                isKeyboardVisible || data.searchQuery.isNotEmpty;
+            final bool showSearch =
+                data.items.isNotEmpty &&
+                (isSpaceLimited ||
+                    availableHeight >= 120 ||
+                    shouldKeepSearchVisible);
+            final bool showFilterBar =
+                !isKeyboardVisible && availableHeight >= 420;
+            final bool showSecondaryControls =
+                showFilterBar &&
+                data.items.isNotEmpty &&
+                !showCompactHeader &&
+                availableHeight >= 500;
+            final bool showBatchActions =
+                showSecondaryControls && availableHeight >= 560;
+            final bool showAddButton =
+                showBatchActions &&
+                data.filteredItems.isNotEmpty &&
+                availableHeight >= 620;
 
             final List<Widget> headerChildren = [
               // Sync banner hidden per user request
               // const TodoSyncBanner(),
-              if (!showCompactHeader) const TodoStatsWidget(),
-              if (data.items.isNotEmpty) ...[
+              Visibility(
+                visible: showStats,
+                maintainState: true,
+                child: const TodoStatsWidget(),
+              ),
+              if (showSearch) ...[
                 SizedBox(
                   height: showCompactHeader ? gapS : gapM,
                 ),
-                const TodoSearchField(),
+                const TodoSearchField(
+                  key: ValueKey<String>('todo_search_field'),
+                ),
               ],
-              if (!isKeyboardVisible) ...[
+              if (showFilterBar) ...[
                 SizedBox(height: gapM),
                 TodoFilterBar(
                   filter: data.filter,
@@ -112,7 +143,7 @@ class _TodoListBody extends StatelessWidget {
                       ? () => _handleClearCompleted(context, data.items, cubit)
                       : null,
                 ),
-                if (data.items.isNotEmpty) ...[
+                if (showSecondaryControls) ...[
                   SizedBox(height: gapS),
                   Wrap(
                     alignment: WrapAlignment.end,
@@ -143,15 +174,17 @@ class _TodoListBody extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: gapS),
-                  TodoBatchActionsBar(
-                    items: data.items,
-                    filteredItems: data.filteredItems,
-                    selectedItemIds: data.selectedItemIds,
-                    hasSelection: data.hasSelectedItems,
-                    cubit: cubit,
-                  ),
-                  if (data.filteredItems.isNotEmpty) ...[
+                  if (showBatchActions) ...[
+                    SizedBox(height: gapS),
+                    TodoBatchActionsBar(
+                      items: data.items,
+                      filteredItems: data.filteredItems,
+                      selectedItemIds: data.selectedItemIds,
+                      hasSelection: data.hasSelectedItems,
+                      cubit: cubit,
+                    ),
+                  ],
+                  if (showAddButton) ...[
                     SizedBox(height: gapM),
                     PlatformAdaptive.filledButton(
                       context: context,

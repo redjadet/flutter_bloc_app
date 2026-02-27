@@ -22,6 +22,7 @@ void main() {
 
     Widget buildWidget({
       required final TodoItem item,
+      final Size size = const Size(400, 800),
       final VoidCallback? onToggle,
       final VoidCallback? onEdit,
       final VoidCallback? onDelete,
@@ -29,7 +30,7 @@ void main() {
     }) {
       return MaterialApp(
         home: MediaQuery(
-          data: const MediaQueryData(size: Size(400, 800)),
+          data: MediaQueryData(size: size),
           child: Scaffold(
             body: TodoListItem(
               item: item,
@@ -240,6 +241,66 @@ void main() {
       expect(onDeleteWithoutConfirmationCalled, isFalse);
       expect(onDeleteCalled, isFalse);
       expect(deletedItem, isNull);
+    });
+
+    testWidgets('item height is reduced on compact-height screens', (
+      final WidgetTester tester,
+    ) async {
+      final TodoItem item = TodoItem.create(
+        title: 'This is a long todo title that wraps on regular-height screens',
+        description:
+            'Long description text to verify compact-height vertical scaling',
+        dueDate: DateTime.utc(2026, 2, 1),
+        priority: TodoPriority.high,
+      );
+
+      await tester.pumpWidget(
+        buildWidget(item: item, size: const Size(400, 800)),
+      );
+      await tester.pumpAndSettle();
+
+      final Finder itemFinder = find.byType(Dismissible);
+      expect(itemFinder, findsOneWidget);
+      final double regularHeight = tester.getSize(itemFinder).height;
+
+      await tester.pumpWidget(
+        buildWidget(item: item, size: const Size(400, 390)),
+      );
+      await tester.pumpAndSettle();
+
+      expect(itemFinder, findsOneWidget);
+      final double compactHeight = tester.getSize(itemFinder).height;
+      expect(compactHeight, lessThan(regularHeight));
+    });
+
+    testWidgets('item height is reduced in phone landscape orientation', (
+      final WidgetTester tester,
+    ) async {
+      final TodoItem item = TodoItem.create(
+        title: 'Landscape scaling title that would normally take more space',
+        description:
+            'Landscape scaling description to assert reduced row height',
+        dueDate: DateTime.utc(2026, 2, 1),
+        priority: TodoPriority.high,
+      );
+
+      await tester.pumpWidget(
+        buildWidget(item: item, size: const Size(390, 844)),
+      );
+      await tester.pumpAndSettle();
+
+      final Finder itemFinder = find.byType(Dismissible);
+      expect(itemFinder, findsOneWidget);
+      final double portraitHeight = tester.getSize(itemFinder).height;
+
+      await tester.pumpWidget(
+        buildWidget(item: item, size: const Size(844, 390)),
+      );
+      await tester.pumpAndSettle();
+
+      expect(itemFinder, findsOneWidget);
+      final double landscapeHeight = tester.getSize(itemFinder).height;
+      expect(landscapeHeight, lessThan(portraitHeight));
     });
 
     // Note: Swipe-to-complete functionality removed - completion status
