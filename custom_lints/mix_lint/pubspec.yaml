@@ -4,14 +4,14 @@ version: 1.7.0
 repository: https://github.com/btwld/mix/tree/main/packages/mix_lint
 
 environment:
-  sdk: ">=3.6.0 <4.0.0"
+  sdk: "3.11.1"
 
 dependencies:
-  analyzer: ^8.2.0
-  analyzer_plugin: ^0.13.0
+  analyzer: 8.4.1
+  analyzer_plugin: 0.14.5
   custom_lint_builder: ^0.8.1
 
 dev_dependencies:
-  test: ^1.24.0
-  dart_code_metrics_presets: ^2.14.0
+  test: 1.30.0
+  dart_code_metrics_presets: 2.29.0
   flutter_lints: ^4.0.0
