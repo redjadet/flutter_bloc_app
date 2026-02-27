@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_item_density.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item_actions.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item_content.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item_dismissible.dart';
@@ -36,14 +37,17 @@ class TodoListItem extends StatelessWidget {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final bool isMobile = !context.isDesktop;
-    final Size screenSize = MediaQuery.sizeOf(context);
-    final bool isPhoneLandscape =
-        screenSize.width > screenSize.height && screenSize.shortestSide < 600;
-    final bool isCompactHeight = context.isCompactHeight || isPhoneLandscape;
-    final double fontScale = isPhoneLandscape
-        ? 0.82
-        : (isCompactHeight ? 0.92 : 1);
-    final double horizontalScale = isPhoneLandscape ? 0.85 : 1;
+    final TodoItemDensity density = resolveTodoItemDensity(context);
+    final double fontScale = density.resolve(
+      regular: 1,
+      compact: 0.92,
+      phoneLandscape: 0.82,
+    );
+    final double horizontalScale = density.resolve(
+      regular: 1,
+      compact: 1,
+      phoneLandscape: 0.85,
+    );
     final double titleFontSize = context.responsiveBodySize * fontScale;
     final double descriptionFontSize =
         context.responsiveCaptionSize * fontScale;
@@ -51,7 +55,11 @@ class TodoListItem extends StatelessWidget {
         context.responsiveHorizontalGapM * horizontalScale;
     final double cardVerticalPadding =
         context.responsiveGapXS *
-        (isPhoneLandscape ? 0.2 : (isCompactHeight ? 0.5 : 1));
+        density.resolve(
+          regular: 1,
+          compact: 0.5,
+          phoneLandscape: 0.2,
+        );
     final double itemGapS = context.responsiveHorizontalGapS * horizontalScale;
     final TextStyle? titleStyle = theme.textTheme.titleMedium?.copyWith(
       fontSize: titleFontSize,
@@ -82,8 +90,7 @@ class TodoListItem extends StatelessWidget {
             context: context,
             item: item,
             isCompactLayout: isCompactLayout,
-            isCompactHeight: isCompactHeight,
-            isPhoneLandscape: isPhoneLandscape,
+            density: density,
             onEdit: onEdit,
             onDelete: onDelete,
           );
@@ -108,9 +115,11 @@ class TodoListItem extends StatelessWidget {
                   color: colors.onSurfaceVariant,
                   size:
                       context.responsiveIconSize *
-                      (isPhoneLandscape
-                          ? 0.65
-                          : (isCompactHeight ? 0.75 : 0.9)),
+                      density.resolve(
+                        regular: 0.9,
+                        compact: 0.75,
+                        phoneLandscape: 0.65,
+                      ),
                 ),
                 SizedBox(width: itemGapS),
               ],
@@ -119,8 +128,7 @@ class TodoListItem extends StatelessWidget {
                   context: context,
                   item: item,
                   isCompactLayout: isCompactLayout,
-                  isCompactHeight: isCompactHeight,
-                  isPhoneLandscape: isPhoneLandscape,
+                  density: density,
                   titleStyle: titleStyle,
                   descriptionStyle: descriptionStyle,
                   dueDateLocal: dueDateLocal,

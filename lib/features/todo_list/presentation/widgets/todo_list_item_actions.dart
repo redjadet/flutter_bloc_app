@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_item_density.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
@@ -13,8 +14,7 @@ Widget buildTodoItemActions({
   required final BuildContext context,
   required final TodoItem item,
   required final bool isCompactLayout,
-  required final bool isCompactHeight,
-  required final bool isPhoneLandscape,
+  required final TodoItemDensity density,
   required final VoidCallback onEdit,
   required final VoidCallback onDelete,
 }) {
@@ -46,7 +46,7 @@ Widget buildTodoItemActions({
         color: colors.onSurfaceVariant,
         size:
             context.responsiveIconSize *
-            (isPhoneLandscape ? 0.7 : (isCompactHeight ? 0.85 : 1)),
+            density.resolve(regular: 1, compact: 0.85, phoneLandscape: 0.7),
       ),
     );
   }
@@ -72,7 +72,11 @@ Widget buildTodoItemActions({
             color: colors.primary,
             size:
                 context.responsiveIconSize *
-                (isPhoneLandscape ? 0.65 : (isCompactHeight ? 0.75 : 0.9)),
+                density.resolve(
+                  regular: 0.9,
+                  compact: 0.75,
+                  phoneLandscape: 0.65,
+                ),
           ),
         ),
       ),
@@ -91,7 +95,11 @@ Widget buildTodoItemActions({
             color: colors.error,
             size:
                 context.responsiveIconSize *
-                (isPhoneLandscape ? 0.65 : (isCompactHeight ? 0.75 : 0.9)),
+                density.resolve(
+                  regular: 0.9,
+                  compact: 0.75,
+                  phoneLandscape: 0.65,
+                ),
           ),
         ),
       ),

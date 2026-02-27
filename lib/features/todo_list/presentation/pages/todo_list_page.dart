@@ -79,62 +79,30 @@ class _TodoListBody extends StatelessWidget {
         maxWidth: context.contentMaxWidth,
         child: LayoutBuilder(
           builder: (final context, final constraints) {
-            // Use window height (not current layout height) so keyboard insets
-            // do not flip this branch and steal TextField focus on iOS.
-            final bool isSpaceLimited = MediaQuery.sizeOf(context).height < 600;
-            final bool isKeyboardVisible =
-                MediaQuery.viewInsetsOf(context).bottom > 0;
-            final double availableHeight = constraints.maxHeight;
-            final double gapM = isSpaceLimited
-                ? context.responsiveGapS
-                : context.responsiveGapM;
-            final double gapS = isSpaceLimited
-                ? context.responsiveGapXS
-                : context.responsiveGapS;
-            final bool showCompactHeader = isSpaceLimited || isKeyboardVisible;
-            final bool showStats =
-                !showCompactHeader &&
-                !isKeyboardVisible &&
-                availableHeight >= 560;
-            final bool shouldKeepSearchVisible =
-                isKeyboardVisible || data.searchQuery.isNotEmpty;
-            final bool showSearch =
-                data.items.isNotEmpty &&
-                (isSpaceLimited ||
-                    availableHeight >= 120 ||
-                    shouldKeepSearchVisible);
-            final bool showFilterBar =
-                !isKeyboardVisible && availableHeight >= 420;
-            final bool showSecondaryControls =
-                showFilterBar &&
-                data.items.isNotEmpty &&
-                !showCompactHeader &&
-                availableHeight >= 500;
-            final bool showBatchActions =
-                showSecondaryControls && availableHeight >= 560;
-            final bool showAddButton =
-                showBatchActions &&
-                data.filteredItems.isNotEmpty &&
-                availableHeight >= 620;
+            final _TodoHeaderLayout layout = _TodoHeaderLayout.resolve(
+              context: context,
+              data: data,
+              availableHeight: constraints.maxHeight,
+            );
 
             final List<Widget> headerChildren = [
-              // Sync banner hidden per user request
+              // Sync banner hidden on purpose
               // const TodoSyncBanner(),
               Visibility(
-                visible: showStats,
+                visible: layout.showStats,
                 maintainState: true,
                 child: const TodoStatsWidget(),
               ),
-              if (showSearch) ...[
+              if (layout.showSearch) ...[
                 SizedBox(
-                  height: showCompactHeader ? gapS : gapM,
+                  height: layout.showCompactHeader ? layout.gapS : layout.gapM,
                 ),
                 const TodoSearchField(
                   key: ValueKey<String>('todo_search_field'),
                 ),
               ],
-              if (showFilterBar) ...[
-                SizedBox(height: gapM),
+              if (layout.showFilterBar) ...[
+                SizedBox(height: layout.gapM),
                 TodoFilterBar(
                   filter: data.filter,
                   hasCompleted: data.hasCompleted,
@@ -143,8 +111,8 @@ class _TodoListBody extends StatelessWidget {
                       ? () => _handleClearCompleted(context, data.items, cubit)
                       : null,
                 ),
-                if (showSecondaryControls) ...[
-                  SizedBox(height: gapS),
+                if (layout.showSecondaryControls) ...[
+                  SizedBox(height: layout.gapS),
                   Wrap(
                     alignment: WrapAlignment.end,
                     spacing: context.responsiveHorizontalGapS,
@@ -174,8 +142,8 @@ class _TodoListBody extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if (showBatchActions) ...[
-                    SizedBox(height: gapS),
+                  if (layout.showBatchActions) ...[
+                    SizedBox(height: layout.gapS),
                     TodoBatchActionsBar(
                       items: data.items,
                       filteredItems: data.filteredItems,
@@ -184,8 +152,8 @@ class _TodoListBody extends StatelessWidget {
                       cubit: cubit,
                     ),
                   ],
-                  if (showAddButton) ...[
-                    SizedBox(height: gapM),
+                  if (layout.showAddButton) ...[
+                    SizedBox(height: layout.gapM),
                     PlatformAdaptive.filledButton(
                       context: context,
                       onPressed: () => _handleAddTodo(context),
@@ -199,7 +167,7 @@ class _TodoListBody extends StatelessWidget {
             final Widget listContent = Expanded(
               child: Padding(
                 padding: EdgeInsets.only(
-                  top: headerChildren.isNotEmpty ? gapS : 0,
+                  top: headerChildren.isNotEmpty ? layout.gapS : 0,
                 ),
                 child: TodoListContent(
                   filteredItems: data.filteredItems,
@@ -237,4 +205,66 @@ class _TodoListBody extends StatelessWidget {
       );
     },
   );
+}
+
+@immutable
+class _TodoHeaderLayout {
+  const _TodoHeaderLayout({
+    required this.gapM,
+    required this.gapS,
+    required this.showCompactHeader,
+    required this.showStats,
+    required this.showSearch,
+    required this.showFilterBar,
+    required this.showSecondaryControls,
+    required this.showBatchActions,
+    required this.showAddButton,
+  });
+
+  factory _TodoHeaderLayout.resolve({
+    required final BuildContext context,
+    required final TodoListViewData data,
+    required final double availableHeight,
+  }) {
+    // Use window height (not current layout height) so keyboard insets do not
+    // flip this branch and steal TextField focus on iOS.
+    final bool isSpaceLimited = MediaQuery.sizeOf(context).height < 600;
+    final bool isKeyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
+    final double gapM = isSpaceLimited ? context.responsiveGapS : context.responsiveGapM;
+    final double gapS = isSpaceLimited ? context.responsiveGapXS : context.responsiveGapS;
+    final bool showCompactHeader = isSpaceLimited || isKeyboardVisible;
+    final bool showStats = !showCompactHeader && !isKeyboardVisible && availableHeight >= 560;
+    final bool shouldKeepSearchVisible = isKeyboardVisible || data.searchQuery.isNotEmpty;
+    final bool showSearch =
+        data.items.isNotEmpty &&
+        (isSpaceLimited || availableHeight >= 120 || shouldKeepSearchVisible);
+    final bool showFilterBar = !isKeyboardVisible && availableHeight >= 420;
+    final bool showSecondaryControls =
+        showFilterBar && data.items.isNotEmpty && !showCompactHeader && availableHeight >= 500;
+    final bool showBatchActions = showSecondaryControls && availableHeight >= 560;
+    final bool showAddButton =
+        showBatchActions && data.filteredItems.isNotEmpty && availableHeight >= 620;
+
+    return _TodoHeaderLayout(
+      gapM: gapM,
+      gapS: gapS,
+      showCompactHeader: showCompactHeader,
+      showStats: showStats,
+      showSearch: showSearch,
+      showFilterBar: showFilterBar,
+      showSecondaryControls: showSecondaryControls,
+      showBatchActions: showBatchActions,
+      showAddButton: showAddButton,
+    );
+  }
+
+  final double gapM;
+  final double gapS;
+  final bool showCompactHeader;
+  final bool showStats;
+  final bool showSearch;
+  final bool showFilterBar;
+  final bool showSecondaryControls;
+  final bool showBatchActions;
+  final bool showAddButton;
 }
