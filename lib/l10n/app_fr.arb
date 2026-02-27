@@ -1054,6 +1054,15 @@
   "@exampleWalletconnectAuthButton": {
     "description": "Button label for opening the WalletConnect Auth demo from the example page"
   },
+  "exampleCameraGalleryButton": "Démo Appareil photo et galerie",
+  "cameraGalleryPageTitle": "Appareil photo et galerie",
+  "cameraGalleryTakePhoto": "Prendre une photo",
+  "cameraGalleryPickFromGallery": "Choisir dans la galerie",
+  "cameraGalleryNoImage": "Aucune image sélectionnée",
+  "cameraGalleryPermissionDenied": "L'accès à la caméra ou à la galerie a été refusé.",
+  "cameraGalleryCancelled": "La sélection a été annulée.",
+  "cameraGalleryGenericError": "Une erreur s'est produite. Veuillez réessayer.",
+  "cameraGalleryCameraUnavailable": "La caméra n'est pas disponible. Utilisez un appareil réel ou choisissez dans la galerie.",
   "scapesPageTitle": "Library / Scapes",
   "@scapesPageTitle": {
     "description": "Title for the scapes page"

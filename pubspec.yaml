@@ -69,6 +69,7 @@ dependencies:
   hive: ^2.2.0
   hive_flutter: ^1.1.0
   http: ^1.6.0
+  image_picker: ^1.2.1
   intl: ^0.20.2
   json_annotation: ^4.9.0
   local_auth: ^3.0.0

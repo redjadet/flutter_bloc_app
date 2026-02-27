@@ -78,143 +78,125 @@ class _TodoListBody extends StatelessWidget {
       return CommonMaxWidth(
         maxWidth: context.contentMaxWidth,
         child: LayoutBuilder(
-          builder: (final context, final constraints) {
-            // Reduce spacing when vertical space is limited
-            final bool isSpaceLimited = constraints.maxHeight < 500;
+          builder: (final context, final _) {
+            // Use window height (not current layout height) so keyboard insets
+            // do not flip this branch and steal TextField focus on iOS.
+            final bool isSpaceLimited = MediaQuery.sizeOf(context).height < 600;
+            final bool isKeyboardVisible =
+                MediaQuery.viewInsetsOf(context).bottom > 0;
             final double gapM = isSpaceLimited
                 ? context.responsiveGapS
                 : context.responsiveGapM;
             final double gapS = isSpaceLimited
                 ? context.responsiveGapXS
                 : context.responsiveGapS;
+            final bool showCompactHeader = isSpaceLimited || isKeyboardVisible;
 
             final List<Widget> headerChildren = [
               // Sync banner hidden per user request
               // const TodoSyncBanner(),
-              const TodoStatsWidget(),
+              if (!showCompactHeader) const TodoStatsWidget(),
               if (data.items.isNotEmpty) ...[
-                SizedBox(height: gapM),
+                SizedBox(
+                  height: showCompactHeader ? gapS : gapM,
+                ),
                 const TodoSearchField(),
               ],
-              SizedBox(height: gapM),
-              TodoFilterBar(
-                filter: data.filter,
-                hasCompleted: data.hasCompleted,
-                onFilterChanged: cubit.setFilter,
-                onClearCompleted: data.hasCompleted
-                    ? () => _handleClearCompleted(context, data.items, cubit)
-                    : null,
-              ),
-              if (data.items.isNotEmpty) ...[
-                SizedBox(height: gapS),
-                Wrap(
-                  alignment: WrapAlignment.end,
-                  spacing: context.responsiveHorizontalGapS,
-                  runSpacing: context.responsiveGapXS,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    if (data.hasCompleted)
-                      PlatformAdaptive.textButton(
-                        context: context,
-                        onPressed: () => _handleClearCompleted(
-                          context,
-                          data.items,
-                          cubit,
-                        ),
-                        color: colors.error,
-                        child: Text(
-                          context.l10n.todoListClearCompletedAction,
-                          style: theme.textTheme.labelLarge?.copyWith(
-                            fontSize: context.responsiveCaptionSize,
-                            color: colors.error,
+              if (!isKeyboardVisible) ...[
+                SizedBox(height: gapM),
+                TodoFilterBar(
+                  filter: data.filter,
+                  hasCompleted: data.hasCompleted,
+                  onFilterChanged: cubit.setFilter,
+                  onClearCompleted: data.hasCompleted
+                      ? () => _handleClearCompleted(context, data.items, cubit)
+                      : null,
+                ),
+                if (data.items.isNotEmpty) ...[
+                  SizedBox(height: gapS),
+                  Wrap(
+                    alignment: WrapAlignment.end,
+                    spacing: context.responsiveHorizontalGapS,
+                    runSpacing: context.responsiveGapXS,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      if (data.hasCompleted)
+                        PlatformAdaptive.textButton(
+                          context: context,
+                          onPressed: () => _handleClearCompleted(
+                            context,
+                            data.items,
+                            cubit,
+                          ),
+                          color: colors.error,
+                          child: Text(
+                            context.l10n.todoListClearCompletedAction,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              fontSize: context.responsiveCaptionSize,
+                              color: colors.error,
+                            ),
                           ),
                         ),
+                      TodoSortBar(
+                        sortOrder: data.sortOrder,
+                        onSortChanged: cubit.setSortOrder,
                       ),
-                    TodoSortBar(
-                      sortOrder: data.sortOrder,
-                      onSortChanged: cubit.setSortOrder,
+                    ],
+                  ),
+                  SizedBox(height: gapS),
+                  TodoBatchActionsBar(
+                    items: data.items,
+                    filteredItems: data.filteredItems,
+                    selectedItemIds: data.selectedItemIds,
+                    hasSelection: data.hasSelectedItems,
+                    cubit: cubit,
+                  ),
+                  if (data.filteredItems.isNotEmpty) ...[
+                    SizedBox(height: gapM),
+                    PlatformAdaptive.filledButton(
+                      context: context,
+                      onPressed: () => _handleAddTodo(context),
+                      child: Text(context.l10n.todoListAddAction),
                     ),
                   ],
-                ),
-              ],
-              if (data.items.isNotEmpty) ...[
-                SizedBox(height: gapS),
-                TodoBatchActionsBar(
-                  items: data.items,
-                  filteredItems: data.filteredItems,
-                  selectedItemIds: data.selectedItemIds,
-                  hasSelection: data.hasSelectedItems,
-                  cubit: cubit,
-                ),
+                ],
               ],
             ];
 
             final Widget listContent = Expanded(
-              child: TodoListContent(
-                filteredItems: data.filteredItems,
-                sortOrder: data.sortOrder,
-                selectedItemIds: data.selectedItemIds,
-                cubit: cubit,
-                onItemSelectionChanged:
-                    (
-                      final itemId, {
-                      required final selected,
-                    }) {
-                      if (selected != data.selectedItemIds.contains(itemId)) {
-                        cubit.toggleItemSelection(itemId);
-                      }
-                    },
-                onAddTodo: () => _handleAddTodo(context),
-                onEditTodo: (final item) => _handleEditTodo(context, item),
-                onDeleteTodo: (final item) => _handleDeleteTodo(context, item),
-                onDeleteWithUndo: (final item, final cubit) =>
-                    _handleDeleteWithUndo(context, item, cubit),
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: headerChildren.isNotEmpty ? gapS : 0,
+                ),
+                child: TodoListContent(
+                  filteredItems: data.filteredItems,
+                  sortOrder: data.sortOrder,
+                  selectedItemIds: data.selectedItemIds,
+                  cubit: cubit,
+                  onItemSelectionChanged:
+                      (
+                        final itemId, {
+                        required final selected,
+                      }) {
+                        if (selected != data.selectedItemIds.contains(itemId)) {
+                          cubit.toggleItemSelection(itemId);
+                        }
+                      },
+                  onAddTodo: () => _handleAddTodo(context),
+                  onEditTodo: (final item) => _handleEditTodo(context, item),
+                  onDeleteTodo: (final item) =>
+                      _handleDeleteTodo(context, item),
+                  onDeleteWithUndo: (final item, final cubit) =>
+                      _handleDeleteWithUndo(context, item, cubit),
+                ),
               ),
             );
-
-            if (isSpaceLimited) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Flexible(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.only(bottom: gapS),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          ...headerChildren,
-                          if (data.filteredItems.isNotEmpty) ...[
-                            SizedBox(height: gapM),
-                            PlatformAdaptive.filledButton(
-                              context: context,
-                              onPressed: () => _handleAddTodo(context),
-                              child: Text(context.l10n.todoListAddAction),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: gapS),
-                  listContent,
-                ],
-              );
-            }
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ...headerChildren,
-                SizedBox(height: gapM),
                 listContent,
-                if (data.filteredItems.isNotEmpty) ...[
-                  SizedBox(height: gapM),
-                  PlatformAdaptive.filledButton(
-                    context: context,
-                    onPressed: () => _handleAddTodo(context),
-                    child: Text(context.l10n.todoListAddAction),
-                  ),
-                ],
               ],
             );
           },

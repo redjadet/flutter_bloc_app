@@ -66,10 +66,14 @@
 	</array>
 	<key>GMSApiKey</key>
 	<string>GMS_API_KEY</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>Authenticate to open Settings.</string>
-	<key>UIApplicationSceneManifest</key>
-	<dict>
+		<key>NSFaceIDUsageDescription</key>
+		<string>Authenticate to open Settings.</string>
+		<key>NSCameraUsageDescription</key>
+		<string>This app uses the camera to take photos in the Camera and Gallery demo.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>This app accesses your photo library to pick images in the Camera and Gallery demo.</string>
+		<key>UIApplicationSceneManifest</key>
+		<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<false/>
 		<key>UISceneConfigurations</key>

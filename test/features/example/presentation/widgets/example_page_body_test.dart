@@ -37,6 +37,7 @@ void main() {
             onOpenLibraryDemo: () {},
             onOpenScapes: () {},
             onOpenWalletconnectAuth: () {},
+            onOpenCameraGallery: () {},
           ),
         ),
       );

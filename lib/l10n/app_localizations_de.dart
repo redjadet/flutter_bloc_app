@@ -1247,6 +1247,36 @@ class AppLocalizationsDe extends AppLocalizations {
   String get exampleWalletconnectAuthButton => 'WalletConnect Auth (Demo)';
 
   @override
+  String get exampleCameraGalleryButton => 'Kamera & Galerie Demo';
+
+  @override
+  String get cameraGalleryPageTitle => 'Kamera & Galerie';
+
+  @override
+  String get cameraGalleryTakePhoto => 'Foto aufnehmen';
+
+  @override
+  String get cameraGalleryPickFromGallery => 'Aus Galerie wählen';
+
+  @override
+  String get cameraGalleryNoImage => 'Kein Bild ausgewählt';
+
+  @override
+  String get cameraGalleryPermissionDenied =>
+      'Kamera- oder Galeriezugriff wurde verweigert.';
+
+  @override
+  String get cameraGalleryCancelled => 'Auswahl wurde abgebrochen.';
+
+  @override
+  String get cameraGalleryGenericError =>
+      'Etwas ist schiefgelaufen. Bitte erneut versuchen.';
+
+  @override
+  String get cameraGalleryCameraUnavailable =>
+      'Kamera ist nicht verfügbar. Nutzen Sie ein echtes Gerät oder wählen Sie aus der Galerie.';
+
+  @override
   String get scapesPageTitle => 'Library / Scapes';
 
   @override

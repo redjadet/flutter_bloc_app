@@ -2264,6 +2264,60 @@ abstract class AppLocalizations {
   /// **'WalletConnect Auth (Demo)'**
   String get exampleWalletconnectAuthButton;
 
+  /// Button label for opening the Camera & Gallery demo from the example page
+  ///
+  /// In en, this message translates to:
+  /// **'Camera & Gallery Demo'**
+  String get exampleCameraGalleryButton;
+
+  /// Title of the Camera & Gallery demo page
+  ///
+  /// In en, this message translates to:
+  /// **'Camera & Gallery'**
+  String get cameraGalleryPageTitle;
+
+  /// Button label to capture a photo with the camera
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get cameraGalleryTakePhoto;
+
+  /// Button label to select an image from the photo library
+  ///
+  /// In en, this message translates to:
+  /// **'Pick from gallery'**
+  String get cameraGalleryPickFromGallery;
+
+  /// Placeholder text when no image has been picked yet
+  ///
+  /// In en, this message translates to:
+  /// **'No image selected'**
+  String get cameraGalleryNoImage;
+
+  /// Error message when the user denies camera or gallery permission
+  ///
+  /// In en, this message translates to:
+  /// **'Camera or photo library access was denied.'**
+  String get cameraGalleryPermissionDenied;
+
+  /// Message when the user cancels the camera or gallery picker
+  ///
+  /// In en, this message translates to:
+  /// **'Selection was cancelled.'**
+  String get cameraGalleryCancelled;
+
+  /// Generic error message for camera or gallery failures
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get cameraGalleryGenericError;
+
+  /// Shown when camera cannot be used (e.g. iOS Simulator has no camera)
+  ///
+  /// In en, this message translates to:
+  /// **'Camera is not available. Use a real device or pick from gallery.'**
+  String get cameraGalleryCameraUnavailable;
+
   /// Title for the scapes page
   ///
   /// In en, this message translates to:
