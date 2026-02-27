@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_item_density.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_priority_badge.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
@@ -7,24 +8,30 @@ Widget buildTodoItemContent({
   required final BuildContext context,
   required final TodoItem item,
   required final bool isCompactLayout,
-  required final bool isCompactHeight,
-  required final bool isPhoneLandscape,
+  required final TodoItemDensity density,
   required final TextStyle? titleStyle,
   required final TextStyle? descriptionStyle,
   required final DateTime? dueDateLocal,
 }) {
-  final int titleMaxLines = isCompactHeight ? 1 : 2;
-  final int descriptionMaxLines = isCompactHeight ? 1 : 2;
-  final double verticalGap = isPhoneLandscape
-      ? context.responsiveGapXS / 4
-      : (isCompactHeight
-            ? context.responsiveGapXS / 3
-            : context.responsiveGapXS / 2);
-  final double dueDateIconScale = isPhoneLandscape
-      ? 0.5
-      : (isCompactHeight ? 0.6 : 0.7);
-  final bool showDescription = !isPhoneLandscape;
-  final double dueDateFontScale = isPhoneLandscape ? 0.9 : 1;
+  final int titleMaxLines = density.isCompact ? 1 : 2;
+  final int descriptionMaxLines = density.isCompact ? 1 : 2;
+  final double verticalGap =
+      context.responsiveGapXS /
+      density.resolve(
+        regular: 2,
+        compact: 3,
+        phoneLandscape: 4,
+      );
+  final double dueDateIconScale = density.resolve(
+    regular: 0.7,
+    compact: 0.6,
+    phoneLandscape: 0.5,
+  );
+  final double dueDateFontScale = density.resolve(
+    regular: 1,
+    compact: 1,
+    phoneLandscape: 0.9,
+  );
   final double dueDateFontSize =
       (descriptionStyle?.fontSize ?? context.responsiveCaptionSize) *
       dueDateFontScale;
@@ -60,7 +67,7 @@ Widget buildTodoItemContent({
           ],
         ),
       if (item.description case final d?) ...[
-        if (d.isNotEmpty && showDescription) ...[
+        if (d.isNotEmpty && density.showsDescription) ...[
           SizedBox(height: verticalGap),
           Text(
             d,
