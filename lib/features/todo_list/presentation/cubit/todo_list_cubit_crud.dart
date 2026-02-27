@@ -21,11 +21,9 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
     Map<String, int> updatedManualOrder = state.manualOrder;
     if (state.sortOrder == TodoSortOrder.manual && !itemExists) {
       updatedManualOrder = Map<String, int>.from(state.manualOrder);
-      final int maxOrder = updatedManualOrder.values.isEmpty
-          ? -1
-          : updatedManualOrder.values.reduce(
-              (final a, final b) => a > b ? a : b,
-            );
+      final int maxOrder = _TodoListCubitHelpers.maxOrderValue(
+        updatedManualOrder,
+      );
       updatedManualOrder[item.id] = maxOrder + 1;
     }
 

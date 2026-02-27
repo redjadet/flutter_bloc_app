@@ -29,11 +29,31 @@ class TodoListView extends StatelessWidget {
   final void Function(String itemId, {required bool selected})?
   onItemSelectionChanged;
 
-  @override
-  Widget build(final BuildContext context) {
+  Widget _buildListItem(final TodoItem item) {
     final itemSelectionChanged = onItemSelectionChanged;
     final deleteWithoutConfirmation = onDeleteWithoutConfirmation;
+    return RepaintBoundary(
+      key: ValueKey<String>('todo-${item.id}'),
+      child: TodoListItem(
+        item: item,
+        showDragHandle: sortOrder == TodoSortOrder.manual,
+        isSelected: selectedItemIds.contains(item.id),
+        onSelectionChanged: itemSelectionChanged != null
+            ? (final selected) =>
+                  itemSelectionChanged(item.id, selected: selected)
+            : null,
+        onToggle: () => onToggle(item),
+        onEdit: () => onEdit(item),
+        onDelete: () => onDelete(item),
+        onDeleteWithoutConfirmation: deleteWithoutConfirmation != null
+            ? () => deleteWithoutConfirmation(item)
+            : null,
+      ),
+    );
+  }
 
+  @override
+  Widget build(final BuildContext context) {
     if (items.length >= 100) {
       // Use ListView.builder for large lists (better performance)
       return ListView.builder(
@@ -41,62 +61,23 @@ class TodoListView extends StatelessWidget {
         cacheExtent: 500,
         itemCount: items.length * 2 - 1,
         itemBuilder: (final context, final index) {
-          // Even indices are items, odd indices are separators
           if (index.isOdd) {
             return SizedBox(height: context.responsiveGapS);
           }
           final int itemIndex = index ~/ 2;
-          final TodoItem item = items[itemIndex];
-          return RepaintBoundary(
-            key: ValueKey('todo-${item.id}'),
-            child: TodoListItem(
-              item: item,
-              showDragHandle: sortOrder == TodoSortOrder.manual,
-              isSelected: selectedItemIds.contains(item.id),
-              onSelectionChanged: itemSelectionChanged != null
-                  ? (final selected) =>
-                        itemSelectionChanged(item.id, selected: selected)
-                  : null,
-              onToggle: () => onToggle(item),
-              onEdit: () => onEdit(item),
-              onDelete: () => onDelete(item),
-              onDeleteWithoutConfirmation: deleteWithoutConfirmation != null
-                  ? () => deleteWithoutConfirmation(item)
-                  : null,
-            ),
-          );
+          return _buildListItem(items[itemIndex]);
         },
       );
     }
 
-    // Use ListView.separated for smaller lists (simpler code)
     return ListView.separated(
       padding: context.responsiveListPadding,
       cacheExtent: 500,
       itemCount: items.length,
-      separatorBuilder: (final _, final _) =>
+      separatorBuilder: (final separatorContext, final separatorIndex) =>
           SizedBox(height: context.responsiveGapS),
-      itemBuilder: (final context, final index) {
-        final TodoItem item = items[index];
-        return RepaintBoundary(
-          key: ValueKey('todo-${item.id}'),
-          child: TodoListItem(
-            item: item,
-            showDragHandle: sortOrder == TodoSortOrder.manual,
-            isSelected: selectedItemIds.contains(item.id),
-            onSelectionChanged: itemSelectionChanged != null
-                ? (final selected) =>
-                      itemSelectionChanged(item.id, selected: selected)
-                : null,
-            onToggle: () => onToggle(item),
-            onEdit: () => onEdit(item),
-            onDelete: () => onDelete(item),
-            onDeleteWithoutConfirmation: deleteWithoutConfirmation != null
-                ? () => deleteWithoutConfirmation(item)
-                : null,
-          ),
-        );
-      },
+      itemBuilder: (final itemContext, final index) =>
+          _buildListItem(items[index]),
     );
   }
 }

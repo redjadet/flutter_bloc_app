@@ -230,20 +230,37 @@ class _TodoHeaderLayout {
     // flip this branch and steal TextField focus on iOS.
     final bool isSpaceLimited = MediaQuery.sizeOf(context).height < 600;
     final bool isKeyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
-    final double gapM = isSpaceLimited ? context.responsiveGapS : context.responsiveGapM;
-    final double gapS = isSpaceLimited ? context.responsiveGapXS : context.responsiveGapS;
+    final double gapM = isSpaceLimited
+        ? context.responsiveGapS
+        : context.responsiveGapM;
+    final double gapS = isSpaceLimited
+        ? context.responsiveGapXS
+        : context.responsiveGapS;
     final bool showCompactHeader = isSpaceLimited || isKeyboardVisible;
-    final bool showStats = !showCompactHeader && !isKeyboardVisible && availableHeight >= 560;
-    final bool shouldKeepSearchVisible = isKeyboardVisible || data.searchQuery.isNotEmpty;
+    final bool showStats =
+        !showCompactHeader &&
+        !isKeyboardVisible &&
+        availableHeight >= statsMinHeight;
+    final bool shouldKeepSearchVisible =
+        isKeyboardVisible || data.searchQuery.isNotEmpty;
     final bool showSearch =
         data.items.isNotEmpty &&
-        (isSpaceLimited || availableHeight >= 120 || shouldKeepSearchVisible);
-    final bool showFilterBar = !isKeyboardVisible && availableHeight >= 420;
+        (isSpaceLimited ||
+            availableHeight >= searchMinHeight ||
+            shouldKeepSearchVisible);
+    final bool showFilterBar =
+        !isKeyboardVisible && availableHeight >= filterMinHeight;
     final bool showSecondaryControls =
-        showFilterBar && data.items.isNotEmpty && !showCompactHeader && availableHeight >= 500;
-    final bool showBatchActions = showSecondaryControls && availableHeight >= 560;
+        showFilterBar &&
+        data.items.isNotEmpty &&
+        !showCompactHeader &&
+        availableHeight >= secondaryControlsMinHeight;
+    final bool showBatchActions =
+        showSecondaryControls && availableHeight >= batchActionsMinHeight;
     final bool showAddButton =
-        showBatchActions && data.filteredItems.isNotEmpty && availableHeight >= 620;
+        showBatchActions &&
+        data.filteredItems.isNotEmpty &&
+        availableHeight >= addButtonMinHeight;
 
     return _TodoHeaderLayout(
       gapM: gapM,
@@ -267,4 +284,11 @@ class _TodoHeaderLayout {
   final bool showSecondaryControls;
   final bool showBatchActions;
   final bool showAddButton;
+
+  static const double statsMinHeight = 560;
+  static const double searchMinHeight = 120;
+  static const double filterMinHeight = 420;
+  static const double secondaryControlsMinHeight = 500;
+  static const double batchActionsMinHeight = 560;
+  static const double addButtonMinHeight = 620;
 }

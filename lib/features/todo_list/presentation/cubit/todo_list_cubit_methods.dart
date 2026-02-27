@@ -37,12 +37,7 @@ mixin _TodoListCubitMethods
       return const <String, int>{};
     }
 
-    // Calculate max order value for items that have order set
-    final int maxOrder = state.manualOrder.values.isEmpty
-        ? -1
-        : state.manualOrder.values.reduce(
-            (final a, final b) => a > b ? a : b,
-          );
+    final int maxOrder = _TodoListCubitHelpers.maxOrderValue(state.manualOrder);
 
     final Map<String, int> originalIndex = <String, int>{
       for (int i = 0; i < items.length; i++) items[i].id: i,

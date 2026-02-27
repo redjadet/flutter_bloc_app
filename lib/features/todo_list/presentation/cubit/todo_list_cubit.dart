@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
@@ -166,14 +167,8 @@ class TodoListCubit extends Cubit<TodoListState>
     );
   }
 
-  TodoItem? _findItemById(final String id) {
-    for (final TodoItem item in state.items) {
-      if (item.id == id) {
-        return item;
-      }
-    }
-    return null;
-  }
+  TodoItem? _findItemById(final String id) =>
+      state.items.firstWhereOrNull((final item) => item.id == id);
 
   Future<void> _applyToSelectedItems({
     required final bool Function(TodoItem item) shouldProcess,
