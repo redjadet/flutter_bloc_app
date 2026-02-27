@@ -35,14 +35,18 @@ class TodoListContent extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     if (filteredItems.isEmpty) {
-      return RefreshIndicator(
-        onRefresh: () => cubit.refresh(),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: SizedBox(
-            height: context.heightFraction(0.6),
-            child: TodoEmptyState(
-              onAddTodo: onAddTodo,
+      return LayoutBuilder(
+        builder: (final context, final constraints) => RefreshIndicator(
+          onRefresh: () => cubit.refresh(),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Center(
+                child: TodoEmptyState(
+                  onAddTodo: onAddTodo,
+                ),
+              ),
             ),
           ),
         ),

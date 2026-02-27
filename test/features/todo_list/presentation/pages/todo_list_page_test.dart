@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/pages/todo_list_page.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_stats_widget.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -252,14 +253,205 @@ void main() {
       expect(editableState.widget.focusNode.hasFocus, isTrue);
 
       addTearDown(tester.view.resetViewInsets);
-      tester.view.viewInsets = const FakeViewPadding(bottom: 320);
+      // Force compact remaining height while keyboard is visible to ensure
+      // search field does not get removed and drop focus.
+      tester.view.viewInsets = const FakeViewPadding(bottom: 520);
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
+      expect(find.byType(TextField), findsOneWidget);
 
       editableState = tester.state<EditableTextState>(
         find.byType(EditableText),
       );
       expect(editableState.widget.focusNode.hasFocus, isTrue);
+    });
+
+    testWidgets(
+      'keeps search focus when stats section hides after keyboard opens',
+      (tester) async {
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+          tester.view.resetViewInsets();
+        });
+        tester.view.devicePixelRatio = 3;
+        // 390 x 844 logical points (iPhone-like tall screen).
+        tester.view.physicalSize = const Size(1170, 2532);
+
+        await tester.pumpWidget(
+          buildSubject(
+            initialItems: <TodoItem>[
+              _todoItem(id: '1', title: 'Focus test'),
+              _todoItem(id: '2', title: 'Focus test 2'),
+            ],
+          ),
+        );
+
+        cubit.loadInitial();
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pump();
+
+        expect(find.byType(TodoStatsWidget), findsOneWidget);
+
+        final Finder searchField = find.byType(TextField);
+        final Finder searchWidgetByKey = find.byKey(
+          const ValueKey<String>('todo_search_field'),
+        );
+        expect(searchField, findsOneWidget);
+        final State<StatefulWidget> searchStateBefore = tester.state(
+          searchWidgetByKey,
+        );
+        await tester.tap(searchField);
+        await tester.pump();
+
+        EditableTextState editableState = tester.state<EditableTextState>(
+          find.byType(EditableText),
+        );
+        expect(editableState.widget.focusNode.hasFocus, isTrue);
+
+        tester.view.viewInsets = const FakeViewPadding(bottom: 320);
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+        expect(find.byType(TextField), findsOneWidget);
+        final State<StatefulWidget> searchStateAfter = tester.state(
+          searchWidgetByKey,
+        );
+        expect(identical(searchStateBefore, searchStateAfter), isTrue);
+
+        editableState = tester.state<EditableTextState>(
+          find.byType(EditableText),
+        );
+        expect(editableState.widget.focusNode.hasFocus, isTrue);
+      },
+    );
+
+    testWidgets(
+      'keeps search focus in landscape when keyboard insets transiently clear',
+      (tester) async {
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+          tester.view.resetViewInsets();
+        });
+        tester.view.devicePixelRatio = 3;
+        // 844 x 390 logical points (iPhone landscape).
+        tester.view.physicalSize = const Size(2532, 1170);
+
+        await tester.pumpWidget(
+          buildSubject(
+            initialItems: <TodoItem>[
+              _todoItem(id: '1', title: 'Landscape focus test'),
+              _todoItem(id: '2', title: 'Landscape focus test 2'),
+            ],
+          ),
+        );
+
+        cubit.loadInitial();
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pump();
+
+        final Finder searchField = find.byType(TextField);
+        final Finder searchWidgetByKey = find.byKey(
+          const ValueKey<String>('todo_search_field'),
+        );
+        expect(searchField, findsOneWidget);
+
+        await tester.tap(searchField);
+        await tester.pump();
+        await tester.enterText(searchField, 'a');
+        await tester.pump(const Duration(milliseconds: 50));
+
+        EditableTextState editableState = tester.state<EditableTextState>(
+          find.byType(EditableText),
+        );
+        expect(editableState.widget.focusNode.hasFocus, isTrue);
+        final State<StatefulWidget> searchStateBefore = tester.state(
+          searchWidgetByKey,
+        );
+
+        tester.view.viewInsets = const FakeViewPadding(bottom: 260);
+        await tester.pump();
+        tester.view.viewInsets = const FakeViewPadding(bottom: 0);
+        await tester.pump();
+        tester.view.viewInsets = const FakeViewPadding(bottom: 260);
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        expect(find.byType(TextField), findsOneWidget);
+        final State<StatefulWidget> searchStateAfter = tester.state(
+          searchWidgetByKey,
+        );
+        expect(identical(searchStateBefore, searchStateAfter), isTrue);
+
+        editableState = tester.state<EditableTextState>(
+          find.byType(EditableText),
+        );
+        expect(editableState.widget.focusNode.hasFocus, isTrue);
+      },
+    );
+
+    testWidgets(
+      'does not overflow with iPhone-like fractional constraints and keyboard',
+      (tester) async {
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+          tester.view.resetViewInsets();
+        });
+        tester.view.devicePixelRatio = 3;
+        tester.view.physicalSize = const Size(1082.4, 1784.8);
+
+        await tester.pumpWidget(
+          buildSubject(
+            initialItems: <TodoItem>[
+              _todoItem(id: '1', title: 'Overflow test'),
+              _todoItem(id: '2', title: 'Overflow test 2'),
+            ],
+          ),
+        );
+
+        cubit.loadInitial();
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pump();
+
+        tester.view.viewInsets = const FakeViewPadding(bottom: 301.2);
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        expect(find.byType(SingleChildScrollView), findsNothing);
+      },
+    );
+
+    testWidgets('does not overflow on short-height wide layout', (
+      tester,
+    ) async {
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+        tester.view.resetViewInsets();
+      });
+      tester.view.devicePixelRatio = 2;
+      tester.view.physicalSize = const Size(1639.6, 649.6); // 819.8 x 324.8
+
+      await tester.pumpWidget(
+        buildSubject(
+          initialItems: <TodoItem>[
+            _todoItem(id: '1', title: 'Short layout 1'),
+            _todoItem(id: '2', title: 'Short layout 2'),
+          ],
+        ),
+      );
+
+      cubit.loadInitial();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+      expect(find.byType(SingleChildScrollView), findsNothing);
     });
 
     testWidgets(

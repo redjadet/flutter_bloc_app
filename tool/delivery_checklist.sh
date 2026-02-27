@@ -268,6 +268,10 @@ echo "  Running focused regression guard tests..."
 bash tool/check_regression_guards.sh || VALIDATION_FAILED=1
 echo ""
 
+echo "  Running Todo keyboard/layout regression tests..."
+bash tool/check_todo_keyboard_layout.sh || VALIDATION_FAILED=1
+echo ""
+
 if [ "$VALIDATION_FAILED" -eq 1 ]; then
   echo "❌ Best practices validation failed! Please fix the violations above."
   exit 1
