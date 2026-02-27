@@ -1,4 +1,6 @@
+import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
 
 /// Utility class for standardized exception handling in cubits.
 ///
@@ -59,7 +61,14 @@ class CubitExceptionHandler {
   }
 
   /// Extract a user-friendly error message from an exception.
+  ///
+  /// For [HttpRequestFailure], uses [NetworkErrorMapper] so 401 vs 503 etc.
+  /// are differentiated (e.g. "Service temporarily unavailable" vs "Sign in again").
   static String _extractErrorMessage(final Object error) {
+    if (error is HttpRequestFailure) {
+      return NetworkErrorMapper.getErrorMessage(error);
+    }
+
     // Handle TypeError specially - it doesn't have a message property
     if (error is TypeError) {
       return error.toString();

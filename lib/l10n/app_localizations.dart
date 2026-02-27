@@ -1388,6 +1388,18 @@ abstract class AppLocalizations {
   /// **'We couldn\'t complete the request. Please try again.'**
   String get authErrorGeneric;
 
+  /// Firebase auth error when network request fails
+  ///
+  /// In en, this message translates to:
+  /// **'Check your connection and try again.'**
+  String get authErrorNetworkRequestFailed;
+
+  /// Firebase auth rate limit error
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Please wait before trying again.'**
+  String get authErrorTooManyRequests;
+
   /// Warning displayed before deleting a specific conversation
   ///
   /// In en, this message translates to:
@@ -2623,6 +2635,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Too many requests. Please wait before trying again.'**
   String get errorTooManyRequests;
+
+  /// 503 service unavailable error message
+  ///
+  /// In en, this message translates to:
+  /// **'Service temporarily unavailable. Please try again in a minute.'**
+  String get errorServiceUnavailable;
 }
 
 class _AppLocalizationsDelegate

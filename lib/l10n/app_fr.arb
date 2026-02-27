@@ -500,6 +500,8 @@
   "@authErrorGeneric": {
     "description": "Erreur d'authentification générique"
   },
+  "authErrorNetworkRequestFailed": "Vérifiez votre connexion et réessayez.",
+  "authErrorTooManyRequests": "Trop de tentatives. Veuillez patienter avant de réessayer.",
   "chatHistoryDeleteConversationWarning": "Supprimer \"{title}\" ?",
   "@chatHistoryDeleteConversationWarning": {
     "description": "Avertissement affiché avant de supprimer une conversation spécifique",
@@ -1239,5 +1241,6 @@
   "errorGeneric": "Une erreur s'est produite. Veuillez réessayer.",
   "errorClient": "Erreur client. Vérifiez votre requête et réessayez.",
   "errorTooManyRequests": "Trop de requêtes. Veuillez patienter avant de réessayer.",
+  "errorServiceUnavailable": "Service temporairement indisponible. Veuillez réessayer dans une minute.",
   "retryButtonLabel": "Réessayer"
 }

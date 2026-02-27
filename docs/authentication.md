@@ -32,7 +32,7 @@
 
 ## Error Handling & Localization
 
-- Auth errors map `FirebaseAuthException.code` to localized strings for sign-in flows (`lib/features/auth/presentation/helpers/auth_error_message.dart`, `lib/l10n/app_*.arb`).
+- Auth errors map `FirebaseAuthException.code` to localized strings for sign-in flows (`lib/features/auth/presentation/helpers/auth_error_message.dart`, `lib/l10n/app_*.arb`). The mapper **differentiates** network and rate-limit from invalid-credential: `network-request-failed` → `authErrorNetworkRequestFailed` ("Check your connection and try again"), `too-many-requests` → `authErrorTooManyRequests` ("Too many attempts. Please wait before trying again"), so users don't see "invalid credential" when the issue is connectivity or rate limiting.
 - Error toasts/snackbars are cleared before display to avoid stacking (`shared/utils/error_handling.dart` usage inside `SignInPage`).
 
 ## Token Handling (Non-Firebase HTTP)

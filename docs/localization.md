@@ -40,6 +40,15 @@ Text('Hello World')
 Text(context.l10n.helloWorld)
 ```
 
+## Error and auth message keys
+
+Error messages used by [NetworkErrorMapper](lib/shared/utils/network_error_mapper.dart) and [auth_error_message](lib/features/auth/presentation/helpers/auth_error_message.dart) are localized. Notable keys:
+
+- **HTTP / API:** `errorUnknown`, `errorNetwork`, `errorTimeout`, `errorUnauthorized`, `errorForbidden`, `errorNotFound`, `errorServer`, `errorServiceUnavailable` (503), `errorClient`, `errorTooManyRequests` (429), `errorGeneric`
+- **Auth (Firebase):** `authErrorInvalidEmail`, `authErrorWrongPassword`, `authErrorInvalidCredential`, `authErrorNetworkRequestFailed`, `authErrorTooManyRequests`, `authErrorGeneric`, and others (see `app_en.arb`)
+
+Use these via `context.l10n` in the UI layer; repository/cubit code can pass `l10n: null` for English fallbacks.
+
 ## ARB Files
 
 Localization strings are defined in `lib/l10n/app_*.arb` files:

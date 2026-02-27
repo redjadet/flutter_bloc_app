@@ -24,7 +24,7 @@ Validation (checklist, lifecycle scripts, and regression guards) keeps these beh
 
 | Concern | How it’s handled | Where to read more |
 | -------- | ------------------- | -------------------- |
-| **HTTP retries** | [ResilientHttpClient](../lib/shared/http/resilient_http_client.dart): automatic retries for transient errors, 401 token refresh, network check before send, telemetry. Retry delay aligned with [RetryPolicy](../lib/shared/utils/retry_policy.dart) (exponential + jitter). | [SHARED_UTILITIES.md](SHARED_UTILITIES.md) – “Reliability and retries” |
+| **HTTP retries** | [ResilientHttpClient](../lib/shared/http/resilient_http_client.dart): automatic retries for transient errors, 401 token refresh, network check before send, telemetry. [resilient_http_client_extensions](../lib/shared/http/resilient_http_client_extensions.dart) getMapped/postMapped throw [HttpRequestFailure](../lib/shared/utils/http_request_failure.dart) for status ≥ 400 so callers get statusCode. Retry delay aligned with [RetryPolicy](../lib/shared/utils/retry_policy.dart) (exponential + jitter). | [SHARED_UTILITIES.md](SHARED_UTILITIES.md) – “Reliability and retries” |
 | **Non-HTTP retries** | [RetryPolicy](../lib/shared/utils/retry_policy.dart): `executeWithRetry` with backoff, jitter, and [CancelToken](../lib/shared/utils/retry_policy.dart) so cubits cancel in-flight retries in `close()`. Used e.g. in AppInfoCubit. | [SHARED_UTILITIES.md](SHARED_UTILITIES.md) – “Reliability and retries” |
 | **Timeouts** | All HTTP calls use explicit timeouts (e.g. [resilient_http_client_extensions](../lib/shared/http/resilient_http_client_extensions.dart), default 30s; configurable per call). | [SHARED_UTILITIES.md](SHARED_UTILITIES.md) – “Timeouts” |
 | **Circuit breaker** | Optional [CircuitBreaker](../lib/shared/http/circuit_breaker.dart) for failing endpoints: open after N failures in a window, fail-fast until cooldown, then one probe. Enable via feature-flag for enterprise/high-traffic. | [SHARED_UTILITIES.md](SHARED_UTILITIES.md) – “Circuit breaker” |
@@ -35,13 +35,14 @@ Validation (checklist, lifecycle scripts, and regression guards) keeps these beh
 
 ## 2. Error handling
 
-**Overview:** Errors are localized, mapped through a central mapper, handled in cubits via a shared handler, and (optionally) tagged with structured codes for analytics and crash reporting.
+**Overview:** Errors are localized, mapped through a central mapper, and **differentiated by type** (e.g. 401 auth vs 503 service unavailable) so users see accurate messages and the app avoids retry storms. Cubits use a shared handler with an `isAlive` guard; structured error codes support analytics and crash reporting.
 
 | Concern | How it’s handled | Where to read more |
 | -------- | ------------------- | -------------------- |
 | **User-facing messages** | [NetworkErrorMapper](../lib/shared/utils/network_error_mapper.dart) and [ErrorHandling](../lib/shared/utils/error_handling.dart) use [AppLocalizations](../lib/l10n/app_localizations.dart) (e.g. `context.l10n`) for error text and retry button; fallback when l10n not available (e.g. repository layer). | [SHARED_UTILITIES.md](SHARED_UTILITIES.md) – Utils; `lib/l10n/app_*.arb` |
-| **Cubit async errors** | [CubitExceptionHandler](../lib/shared/utils/cubit_async_operations.dart) and [CubitErrorHandler](../lib/shared/utils/cubit_error_handler.dart) with `isAlive: () => !isClosed` so callbacks don’t run after close. | State, Lifecycle, and Async Safety; [phase2_lifecycle_async_audit_2026-02-23.md](audits/phase2_lifecycle_async_audit_2026-02-23.md) |
-| **Structured error codes** | [AppErrorCode](../lib/shared/utils/error_codes.dart) (network, timeout, auth, server, client, rateLimit, unknown) for analytics and crash reporting. Map from exceptions via [NetworkErrorMapper](../lib/shared/utils/network_error_mapper.dart) helpers. | [observability.md](observability.md) |
+| **Error differentiation** | HTTP failures use [HttpRequestFailure](../lib/shared/utils/http_request_failure.dart) (statusCode + optional retryAfter). [resilient_http_client_extensions](../lib/shared/http/resilient_http_client_extensions.dart) getMapped/postMapped throw it for status ≥ 400. Mapper returns distinct messages for 401 (auth), 503 (service unavailable), 429 (rate limit), etc. | [SHARED_UTILITIES.md](SHARED_UTILITIES.md); [observability.md](observability.md) |
+| **Cubit async errors** | [CubitExceptionHandler](../lib/shared/utils/cubit_async_operations.dart) and [CubitErrorHandler](../lib/shared/utils/cubit_error_handler.dart) with `isAlive: () => !isClosed` so callbacks don’t run after close. For [HttpRequestFailure](../lib/shared/utils/http_request_failure.dart), the handler uses NetworkErrorMapper so emitted messages are status-aware. | State, Lifecycle, and Async Safety; [phase2_lifecycle_async_audit_2026-02-23.md](audits/phase2_lifecycle_async_audit_2026-02-23.md) |
+| **Structured error codes** | [AppErrorCode](../lib/shared/utils/error_codes.dart) (network, timeout, auth, server, **serviceUnavailable**, client, rateLimit, unknown). Map from exceptions or status via [NetworkErrorMapper.getErrorCode](../lib/shared/utils/network_error_mapper.dart) / `getErrorCodeForStatusCode`. | [observability.md](observability.md) |
 | **Crash reporting (optional)** | Pattern for uncaught errors (`FlutterError.onError`, `runZonedGuarded`) and no PII in reports; document in [security_and_secrets.md](security_and_secrets.md) when a tool is adopted. | [observability.md](observability.md) |
 
 ---
@@ -74,7 +75,7 @@ Validation (checklist, lifecycle scripts, and regression guards) keeps these beh
 | ------ | -------- |
 | HTTP / retries | [resilient_http_client.dart](../lib/shared/http/resilient_http_client.dart), [resilient_http_client_helpers.dart](../lib/shared/http/resilient_http_client_helpers.dart), [retry_policy.dart](../lib/shared/utils/retry_policy.dart) |
 | Circuit breaker | [circuit_breaker.dart](../lib/shared/http/circuit_breaker.dart) |
-| Errors / UI | [network_error_mapper.dart](../lib/shared/utils/network_error_mapper.dart), [error_handling.dart](../lib/shared/utils/error_handling.dart), [error_codes.dart](../lib/shared/utils/error_codes.dart) |
+| Errors / UI | [http_request_failure.dart](../lib/shared/utils/http_request_failure.dart), [network_error_mapper.dart](../lib/shared/utils/network_error_mapper.dart), [error_handling.dart](../lib/shared/utils/error_handling.dart), [error_codes.dart](../lib/shared/utils/error_codes.dart) |
 | Async / lifecycle | [cubit_async_operations.dart](../lib/shared/utils/cubit_async_operations.dart), [cubit_subscription_mixin.dart](../lib/shared/utils/cubit_subscription_mixin.dart), [subscription_manager.dart](../lib/shared/utils/subscription_manager.dart) |
 | Performance | [isolate_json.dart](../lib/shared/utils/isolate_json.dart), [TimerService](../lib/core/time/timer_service.dart) |
 

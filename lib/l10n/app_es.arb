@@ -500,6 +500,8 @@
   "@authErrorGeneric": {
     "description": "Error genérico de autenticación"
   },
+  "authErrorNetworkRequestFailed": "Compruebe su conexión e inténtelo de nuevo.",
+  "authErrorTooManyRequests": "Demasiados intentos. Espere antes de intentarlo de nuevo.",
   "chatHistoryDeleteConversationWarning": "¿Eliminar \"{title}\"?",
   "@chatHistoryDeleteConversationWarning": {
     "description": "Advertencia mostrada antes de eliminar una conversación específica",
@@ -1239,5 +1241,6 @@
   "errorGeneric": "Algo ha ido mal. Inténtelo de nuevo.",
   "errorClient": "Error del cliente. Compruebe su solicitud e inténtelo de nuevo.",
   "errorTooManyRequests": "Demasiadas solicitudes. Espere antes de intentarlo de nuevo.",
+  "errorServiceUnavailable": "Servicio no disponible temporalmente. Inténtelo de nuevo en un minuto.",
   "retryButtonLabel": "Reintentar"
 }

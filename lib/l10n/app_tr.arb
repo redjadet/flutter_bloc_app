@@ -501,6 +501,8 @@
   "@authErrorGeneric": {
     "description": "Genel kimlik doğrulama hatası"
   },
+  "authErrorNetworkRequestFailed": "Bağlantınızı kontrol edip tekrar deneyin.",
+  "authErrorTooManyRequests": "Çok fazla deneme. Tekrar denemeden önce bekleyin.",
   "chatHistoryDeleteConversationWarning": "\"{title}\" konuşmasını silmek istiyor musun?",
   "@chatHistoryDeleteConversationWarning": {
     "description": "Belirli bir konuşmayı silmeden önce gösterilen uyarı",
@@ -1258,5 +1260,6 @@
   "errorGeneric": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
   "errorClient": "İstemci hatası. İsteğinizi kontrol edip tekrar deneyin.",
   "errorTooManyRequests": "Çok fazla istek. Tekrar denemeden önce bekleyin.",
+  "errorServiceUnavailable": "Hizmet geçici olarak kullanılamıyor. Lütfen bir dakika sonra tekrar deneyin.",
   "retryButtonLabel": "Tekrar dene"
 }
