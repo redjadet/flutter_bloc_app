@@ -78,12 +78,34 @@ abstract class TodoListState with _$TodoListState {
     return _applySorting(result);
   }
 
+  static int _compareByUpdatedAtDesc(final TodoItem a, final TodoItem b) =>
+      b.updatedAt.compareTo(a.updatedAt);
+
+  static int _compareByDueDate(
+    final TodoItem a,
+    final TodoItem b,
+    final bool ascending,
+  ) {
+    final DateTime? aDue = a.dueDate;
+    final DateTime? bDue = b.dueDate;
+    if (aDue == null && bDue == null) {
+      return _compareByUpdatedAtDesc(a, b);
+    }
+    if (aDue == null) return 1;
+    if (bDue == null) return -1;
+    final int dateCompare = ascending
+        ? aDue.compareTo(bDue)
+        : bDue.compareTo(aDue);
+    if (dateCompare != 0) return dateCompare;
+    return _compareByUpdatedAtDesc(a, b);
+  }
+
   List<TodoItem> _applySorting(final List<TodoItem> items) {
     final List<TodoItem> sorted = List<TodoItem>.from(items);
 
     switch (sortOrder) {
       case TodoSortOrder.dateDesc:
-        sorted.sort((final a, final b) => b.updatedAt.compareTo(a.updatedAt));
+        sorted.sort((final a, final b) => _compareByUpdatedAtDesc(a, b));
         break;
       case TodoSortOrder.dateAsc:
         sorted.sort((final a, final b) => a.updatedAt.compareTo(b.updatedAt));
@@ -106,7 +128,7 @@ abstract class TodoListState with _$TodoListState {
             a.priorityValue,
           );
           if (priorityCompare != 0) return priorityCompare;
-          return b.updatedAt.compareTo(a.updatedAt);
+          return _compareByUpdatedAtDesc(a, b);
         });
         break;
       case TodoSortOrder.priorityAsc:
@@ -115,36 +137,14 @@ abstract class TodoListState with _$TodoListState {
             b.priorityValue,
           );
           if (priorityCompare != 0) return priorityCompare;
-          return b.updatedAt.compareTo(a.updatedAt);
+          return _compareByUpdatedAtDesc(a, b);
         });
         break;
       case TodoSortOrder.dueDateAsc:
-        sorted.sort((final a, final b) {
-          final aDue = a.dueDate;
-          final bDue = b.dueDate;
-          if (aDue == null && bDue == null) {
-            return b.updatedAt.compareTo(a.updatedAt);
-          }
-          if (aDue == null) return 1;
-          if (bDue == null) return -1;
-          final int dateCompare = aDue.compareTo(bDue);
-          if (dateCompare != 0) return dateCompare;
-          return b.updatedAt.compareTo(a.updatedAt);
-        });
+        sorted.sort((final a, final b) => _compareByDueDate(a, b, true));
         break;
       case TodoSortOrder.dueDateDesc:
-        sorted.sort((final a, final b) {
-          final aDue = a.dueDate;
-          final bDue = b.dueDate;
-          if (aDue == null && bDue == null) {
-            return b.updatedAt.compareTo(a.updatedAt);
-          }
-          if (aDue == null) return 1;
-          if (bDue == null) return -1;
-          final int dateCompare = bDue.compareTo(aDue);
-          if (dateCompare != 0) return dateCompare;
-          return b.updatedAt.compareTo(a.updatedAt);
-        });
+        sorted.sort((final a, final b) => _compareByDueDate(a, b, false));
         break;
       case TodoSortOrder.manual:
         sorted.sort((final a, final b) {
@@ -153,8 +153,7 @@ abstract class TodoListState with _$TodoListState {
           if (orderA != orderB) {
             return orderA.compareTo(orderB);
           }
-          // Fallback to date desc if order not set
-          return b.updatedAt.compareTo(a.updatedAt);
+          return _compareByUpdatedAtDesc(a, b);
         });
         break;
     }

@@ -13,6 +13,7 @@ Widget buildTodoItemContent({
   required final TextStyle? descriptionStyle,
   required final DateTime? dueDateLocal,
 }) {
+  final ColorScheme colorScheme = Theme.of(context).colorScheme;
   final int titleMaxLines = density.isCompact ? 1 : 2;
   final int descriptionMaxLines = density.isCompact ? 1 : 2;
   final double verticalGap =
@@ -86,8 +87,8 @@ Widget buildTodoItemContent({
               Icons.calendar_today,
               size: context.responsiveIconSize * dueDateIconScale,
               color: item.isOverdue
-                  ? Theme.of(context).colorScheme.error
-                  : Theme.of(context).colorScheme.onSurfaceVariant,
+                  ? colorScheme.error
+                  : colorScheme.onSurfaceVariant,
             ),
             SizedBox(width: context.responsiveHorizontalGapS / 2),
             Flexible(
@@ -96,8 +97,8 @@ Widget buildTodoItemContent({
                 style: descriptionStyle?.copyWith(
                   fontSize: dueDateFontSize,
                   color: item.isOverdue
-                      ? Theme.of(context).colorScheme.error
-                      : Theme.of(context).colorScheme.onSurfaceVariant,
+                      ? colorScheme.error
+                      : colorScheme.onSurfaceVariant,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
