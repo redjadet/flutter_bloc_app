@@ -162,6 +162,7 @@ const kAnimationDuration = Duration(milliseconds: 300);
 - `cubit_helpers.dart` - General Cubit helper functions
 - `cubit_state_emission_mixin.dart` - Mixin for safe state emission in Cubits
 - `error_handling.dart` - Error handling utilities and domain failures
+- `http_request_failure.dart` - HTTP failure exception with statusCode (and optional retryAfter) so callers can differentiate 401 vs 503, etc.
 - `initialization_guard.dart` - Safe initialization wrapper for critical operations
 - `isolate_json.dart` - JSON decoding/encoding with automatic isolate offloading for large payloads (>8KB)
 - `isolate_samples.dart` - Examples of isolate usage for heavy computations
@@ -175,7 +176,7 @@ const kAnimationDuration = Duration(milliseconds: 300);
 
 ### Reliability and retries
 
-- **ResilientHttpClient** (`lib/shared/http/resilient_http_client.dart`): Use for **HTTP** requests. It provides automatic retries for transient failures, 401 token refresh, network check before send, and telemetry. All HTTP entry points should go through this client (or its extensions) with an explicit timeout.
+- **ResilientHttpClient** (`lib/shared/http/resilient_http_client.dart`): Use for **HTTP** requests. It provides automatic retries for transient failures, 401 token refresh, network check before send, and telemetry. All HTTP entry points should go through this client (or its extensions) with an explicit timeout. The **resilient_http_client_extensions** (`getMapped` / `postMapped`) throw [HttpRequestFailure](lib/shared/utils/http_request_failure.dart) for status ≥ 400 so repositories and cubits receive a statusCode and can show accurate messages (e.g. 503 "Service temporarily unavailable" vs 401 "Sign in again"). [NetworkErrorMapper](lib/shared/utils/network_error_mapper.dart) maps status codes and `HttpRequestFailure` to user-facing messages and [AppErrorCode](lib/shared/utils/error_codes.dart) (including `serviceUnavailable` for 503).
 - **RetryPolicy** (`lib/shared/utils/retry_policy.dart`): Use for **non-HTTP** retriable work (e.g. repository load, sync steps, external SDK calls). It supports exponential/linear/fixed backoff, jitter, and `CancelToken` so cubits can cancel in-flight retries in `close()`.
 
 When to use which:

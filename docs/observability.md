@@ -8,11 +8,12 @@ Use [AppErrorCode](lib/shared/utils/error_codes.dart) when emitting error state 
 - **timeout** – request/operation timed out
 - **auth** – 401 or token invalid
 - **server** – 5xx or backend failure
+- **serviceUnavailable** – 503; suggest retry after delay
 - **client** – 4xx or bad request
 - **rateLimit** – 429 or rate limited
 - **unknown** – unclassified
 
-Attach the code to freezed error state or pass to `AppLogger` / crash reporting. Map from exceptions using [NetworkErrorMapper](lib/shared/utils/network_error_mapper.dart) (e.g. `isNetworkError` → `AppErrorCode.network`, `isTimeoutError` → `AppErrorCode.timeout`).
+Attach the code to freezed error state or pass to `AppLogger` / crash reporting. Map from exceptions or HTTP status using [NetworkErrorMapper](lib/shared/utils/network_error_mapper.dart): `getErrorCode(error)` for any error (including [HttpRequestFailure](lib/shared/utils/http_request_failure.dart)), `getErrorCodeForStatusCode(statusCode)` for raw status codes, or the existing `isNetworkError` / `isTimeoutError` helpers.
 
 ## Crash reporting (optional)
 

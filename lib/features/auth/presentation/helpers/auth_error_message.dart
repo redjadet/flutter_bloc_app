@@ -29,6 +29,10 @@ String authErrorMessage(
     case 'invalid-verification-code':
     case 'invalid-verification-id':
       return l10n.authErrorInvalidCredential;
+    case 'network-request-failed':
+      return l10n.authErrorNetworkRequestFailed;
+    case 'too-many-requests':
+      return l10n.authErrorTooManyRequests;
     default:
       return l10n.authErrorGeneric;
   }

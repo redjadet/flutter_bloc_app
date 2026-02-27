@@ -16,6 +16,9 @@ enum AppErrorCode {
   /// Server error (5xx) or backend failure.
   server,
 
+  /// Service temporarily unavailable (503); suggest retry after delay.
+  serviceUnavailable,
+
   /// Client error (4xx) or bad request.
   client,
 

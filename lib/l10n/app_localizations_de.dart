@@ -728,6 +728,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Anfrage konnte nicht abgeschlossen werden. Bitte versuche es erneut.';
 
   @override
+  String get authErrorNetworkRequestFailed =>
+      'Überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.';
+
+  @override
+  String get authErrorTooManyRequests =>
+      'Zu viele Versuche. Bitte warten Sie, bevor Sie es erneut versuchen.';
+
+  @override
   String chatHistoryDeleteConversationWarning(String title) {
     return '\"$title\" löschen?';
   }
@@ -1447,4 +1455,8 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get errorTooManyRequests =>
       'Zu viele Anfragen. Bitte warten Sie, bevor Sie es erneut versuchen.';
+
+  @override
+  String get errorServiceUnavailable =>
+      'Dienst vorübergehend nicht verfügbar. Bitte versuchen Sie es in einer Minute erneut.';
 }

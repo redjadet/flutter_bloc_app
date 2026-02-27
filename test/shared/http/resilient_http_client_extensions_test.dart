@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_bloc_app/shared/http/resilient_http_client.dart';
 import 'package:flutter_bloc_app/shared/http/resilient_http_client_extensions.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 
@@ -37,10 +39,15 @@ class _FakeResilientHttpClient extends ResilientHttpClient {
   }
 }
 
-http.StreamedResponse _response(int statusCode, {String body = ''}) {
+http.StreamedResponse _response(
+  int statusCode, {
+  String body = '',
+  Map<String, String>? headers,
+}) {
   return http.StreamedResponse(
     Stream<List<int>>.value(utf8.encode(body)),
     statusCode,
+    headers: headers ?? const <String, String>{},
   );
 }
 
@@ -59,7 +66,7 @@ void main() {
       expect(response.body, 'ok');
     });
 
-    test('getMapped throws mapped error for status code', () async {
+    test('getMapped throws HttpRequestFailure for status code', () async {
       final _FakeResilientHttpClient client = _FakeResilientHttpClient(
         (final request) async => _response(404, body: 'not found'),
       );
@@ -67,10 +74,66 @@ void main() {
       await expectLater(
         client.getMapped(Uri.parse('https://example.com')),
         throwsA(
-          isA<http.ClientException>().having(
-            (final http.ClientException error) => error.message,
-            'message',
-            'The requested resource was not found.',
+          isA<HttpRequestFailure>()
+              .having(
+                (final HttpRequestFailure e) => e.statusCode,
+                'statusCode',
+                404,
+              )
+              .having(
+                (final HttpRequestFailure e) => e.message,
+                'message',
+                'The requested resource was not found.',
+              ),
+        ),
+      );
+    });
+
+    test(
+      'getMapped captures Retry-After seconds for retryable failures',
+      () async {
+        final _FakeResilientHttpClient client = _FakeResilientHttpClient(
+          (final request) async =>
+              _response(429, headers: <String, String>{'retry-after': '30'}),
+        );
+
+        await expectLater(
+          client.getMapped(Uri.parse('https://example.com')),
+          throwsA(
+            isA<HttpRequestFailure>()
+                .having(
+                  (final HttpRequestFailure e) => e.statusCode,
+                  'statusCode',
+                  429,
+                )
+                .having(
+                  (final HttpRequestFailure e) => e.retryAfterSeconds,
+                  'retryAfterSeconds',
+                  30,
+                ),
+          ),
+        );
+      },
+    );
+
+    test('getMapped parses Retry-After date values', () async {
+      final DateTime retryAt = DateTime.now().toUtc().add(
+        const Duration(seconds: 90),
+      );
+      final _FakeResilientHttpClient client = _FakeResilientHttpClient(
+        (final request) async => _response(
+          503,
+          headers: <String, String>{'retry-after': HttpDate.format(retryAt)},
+        ),
+      );
+
+      await expectLater(
+        client.getMapped(Uri.parse('https://example.com')),
+        throwsA(
+          isA<HttpRequestFailure>().having(
+            (final HttpRequestFailure e) => e.retryAfterSeconds,
+            'retryAfterSeconds',
+            inInclusiveRange(1, 90),
           ),
         ),
       );

@@ -500,6 +500,8 @@
   "@authErrorGeneric": {
     "description": "Allgemeiner Auth-Fehler"
   },
+  "authErrorNetworkRequestFailed": "Überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+  "authErrorTooManyRequests": "Zu viele Versuche. Bitte warten Sie, bevor Sie es erneut versuchen.",
   "chatHistoryDeleteConversationWarning": "\"{title}\" löschen?",
   "@chatHistoryDeleteConversationWarning": {
     "description": "Warnung vor dem Entfernen einer bestimmten Unterhaltung",
@@ -1239,5 +1241,6 @@
   "errorGeneric": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
   "errorClient": "Clientfehler. Bitte überprüfen Sie Ihre Anfrage und versuchen Sie es erneut.",
   "errorTooManyRequests": "Zu viele Anfragen. Bitte warten Sie, bevor Sie es erneut versuchen.",
+  "errorServiceUnavailable": "Dienst vorübergehend nicht verfügbar. Bitte versuchen Sie es in einer Minute erneut.",
   "retryButtonLabel": "Erneut versuchen"
 }

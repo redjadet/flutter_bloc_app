@@ -925,6 +925,14 @@
   "@authErrorGeneric": {
     "description": "Fallback error message for authentication"
   },
+  "authErrorNetworkRequestFailed": "Check your connection and try again.",
+  "@authErrorNetworkRequestFailed": {
+    "description": "Firebase auth error when network request fails"
+  },
+  "authErrorTooManyRequests": "Too many attempts. Please wait before trying again.",
+  "@authErrorTooManyRequests": {
+    "description": "Firebase auth rate limit error"
+  },
   "chatHistoryDeleteConversationWarning": "Delete \"{title}\"?",
   "@chatHistoryDeleteConversationWarning": {
     "description": "Warning displayed before deleting a specific conversation",
@@ -1845,5 +1853,9 @@
   "errorTooManyRequests": "Too many requests. Please wait before trying again.",
   "@errorTooManyRequests": {
     "description": "429 rate limit error message"
+  },
+  "errorServiceUnavailable": "Service temporarily unavailable. Please try again in a minute.",
+  "@errorServiceUnavailable": {
+    "description": "503 service unavailable error message"
   }
 }

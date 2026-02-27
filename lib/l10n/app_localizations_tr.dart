@@ -712,6 +712,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get authErrorGeneric => 'İstek tamamlanamadı. Lütfen tekrar deneyin.';
 
   @override
+  String get authErrorNetworkRequestFailed =>
+      'Bağlantınızı kontrol edip tekrar deneyin.';
+
+  @override
+  String get authErrorTooManyRequests =>
+      'Çok fazla deneme. Tekrar denemeden önce bekleyin.';
+
+  @override
   String chatHistoryDeleteConversationWarning(String title) {
     return '\"$title\" konuşmasını silmek istiyor musun?';
   }
@@ -1422,4 +1430,8 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get errorTooManyRequests =>
       'Çok fazla istek. Tekrar denemeden önce bekleyin.';
+
+  @override
+  String get errorServiceUnavailable =>
+      'Hizmet geçici olarak kullanılamıyor. Lütfen bir dakika sonra tekrar deneyin.';
 }
