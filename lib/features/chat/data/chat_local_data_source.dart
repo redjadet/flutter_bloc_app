@@ -60,7 +60,11 @@ class ChatLocalDataSource extends HiveRepositoryBase
     }
 
     if (raw is Iterable<dynamic>) {
-      return _parseIterable(raw);
+      try {
+        return _parseIterable(raw);
+      } on Object {
+        return const <ChatConversation>[];
+      }
     }
 
     return const <ChatConversation>[];

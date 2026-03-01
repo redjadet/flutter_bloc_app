@@ -75,7 +75,7 @@ abstract class HiveSettingsRepository<T> extends HiveRepositoryBase {
         return parsedValue;
       } on Exception catch (error, stackTrace) {
         AppLogger.error(
-          'Invalid value for $key in Hive: $storedValue',
+          'Invalid value in Hive for key: $key',
           error,
           stackTrace,
         );
