@@ -121,10 +121,6 @@ class WalletUserProfileMapper {
     );
   }
 
-  static double _toDouble(final Object? value, final double fallback) {
-    if (value == null) return fallback;
-    if (value is num) return value.toDouble();
-    if (value is String) return double.tryParse(value) ?? fallback;
-    return fallback;
-  }
+  static double _toDouble(final Object? value, final double fallback) =>
+      doubleFromDynamic(value, fallback);
 }

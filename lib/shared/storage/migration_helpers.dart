@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 
 /// Helper functions for data migration validation and normalization.
 ///
@@ -24,14 +25,9 @@ class MigrationHelpers {
   /// - `3.7` → `3` (floats truncated)
   /// - `'invalid'` → `null`
   static int? normalizeCount(final dynamic value) {
-    if (value is int) {
-      return value >= 0 ? value : 0;
-    }
-    if (value is num) {
-      final int count = value.toInt();
-      return count >= 0 ? count : 0;
-    }
-    return null;
+    final int? raw = intFromDynamic(value);
+    if (raw == null) return null;
+    return raw >= 0 ? raw : 0;
   }
 
   /// Validates and normalizes a timestamp value from SharedPreferences.
@@ -46,9 +42,7 @@ class MigrationHelpers {
   ///
   /// Invalid timestamps are logged as warnings.
   static int? normalizeTimestamp(final dynamic value) {
-    final int? timestamp = value is int
-        ? value
-        : (value is num ? value.toInt() : null);
+    final int? timestamp = intFromDynamic(value);
 
     if (timestamp == null) {
       return null;

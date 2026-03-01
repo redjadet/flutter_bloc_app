@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repos
 import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:http/http.dart' as http;
 
 /// GraphQL-backed repository that talks to https://countries.trevorblades.com.
@@ -33,17 +34,16 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
       _continentsQuery,
       operationName: _opContinents,
     );
-    final List<dynamic> rawContinents =
-        data['continents'] as List<dynamic>? ?? <dynamic>[];
-    if (rawContinents.isEmpty) {
+    final List<dynamic>? rawContinents = listFromDynamic(data['continents']);
+    if (rawContinents == null || rawContinents.isEmpty) {
       return const <GraphqlContinent>[];
     }
     return List<GraphqlContinent>.unmodifiable(
-      rawContinents.map(
-        (final dynamic item) => GraphqlContinent.fromJson(
-          Map<String, dynamic>.from(item as Map<Object?, Object?>),
-        ),
-      ),
+      rawContinents
+          .map(mapFromDynamic)
+          .whereType<Map<String, dynamic>>()
+          .map(GraphqlContinent.fromJson)
+          .toList(),
     );
   }
 
@@ -65,22 +65,21 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
       variables: <String, dynamic>{'continent': normalizedCode},
       operationName: _opCountriesByContinent,
     );
-    final Map<String, dynamic>? continent =
-        data['continent'] as Map<String, dynamic>?;
+    final Map<String, dynamic>? continent = mapFromDynamic(data['continent']);
     return _mapCountries(continent?['countries']);
   }
 
   List<GraphqlCountry> _mapCountries(final Object? rawCountries) {
-    final List<dynamic> list = rawCountries as List<dynamic>? ?? <dynamic>[];
-    if (list.isEmpty) {
+    final List<dynamic>? list = listFromDynamic(rawCountries);
+    if (list == null || list.isEmpty) {
       return const <GraphqlCountry>[];
     }
     return List<GraphqlCountry>.unmodifiable(
-      list.map(
-        (final dynamic item) => GraphqlCountry.fromJson(
-          Map<String, dynamic>.from(item as Map<Object?, Object?>),
-        ),
-      ),
+      list
+          .map(mapFromDynamic)
+          .whereType<Map<String, dynamic>>()
+          .map(GraphqlCountry.fromJson)
+          .toList(),
     );
   }
 
@@ -172,7 +171,7 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
       );
     }
 
-    final Map<String, dynamic>? data = decoded['data'] as Map<String, dynamic>?;
+    final Map<String, dynamic>? data = mapFromDynamic(decoded['data']);
     if (data == null) {
       throw GraphqlDemoException(
         'Missing data field in GraphQL response',
