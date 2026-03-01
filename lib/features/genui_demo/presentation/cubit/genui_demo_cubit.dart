@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_events.da
 import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_demo_state.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class GenUiDemoCubit extends Cubit<GenUiDemoState>
     with CubitSubscriptionMixin<GenUiDemoState> {
@@ -53,8 +54,26 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
     if (isClosed) return;
 
     // Subscribe to streams
-    _surfaceSubscription = _agent.surfaceEvents.listen(_onSurfaceEvent);
-    _errorSubscription = _agent.errors.listen(_onError);
+    _surfaceSubscription = _agent.surfaceEvents.listen(
+      _onSurfaceEvent,
+      onError: (final Object error, final StackTrace stackTrace) {
+        AppLogger.error(
+          'GenUiDemoCubit surface events stream error',
+          error,
+          stackTrace,
+        );
+      },
+    );
+    _errorSubscription = _agent.errors.listen(
+      _onError,
+      onError: (final Object error, final StackTrace stackTrace) {
+        AppLogger.error(
+          'GenUiDemoCubit errors stream error',
+          error,
+          stackTrace,
+        );
+      },
+    );
     registerSubscription(_surfaceSubscription);
     registerSubscription(_errorSubscription);
 
