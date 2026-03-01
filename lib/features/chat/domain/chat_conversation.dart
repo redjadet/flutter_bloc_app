@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'chat_conversation.freezed.dart';
@@ -20,14 +21,17 @@ abstract class ChatConversation with _$ChatConversation {
   const ChatConversation._();
 
   factory ChatConversation.fromJson(final Map<String, dynamic> json) {
-    final List<ChatMessage> messages = _messagesFromJson(
-      json['messages'] as List<dynamic>?,
-    );
+    final dynamic messagesRaw = json['messages'];
+    final List<dynamic>? messagesList = listFromDynamic(messagesRaw);
+    if (messagesRaw != null && messagesList == null) {
+      throw const FormatException('messages must be a list');
+    }
+    final List<ChatMessage> messages = _messagesFromJson(messagesList);
     final List<String> pastInputs = _stringListFromJson(
-      json['pastUserInputs'] as List<dynamic>?,
+      listFromDynamic(json['pastUserInputs']),
     );
     final List<String> generated = _stringListFromJson(
-      json['generatedResponses'] as List<dynamic>?,
+      listFromDynamic(json['generatedResponses']),
     );
     final DateTime createdAt = _parseDate(json['createdAt']);
     final DateTime updatedAt = _parseDate(
@@ -44,7 +48,7 @@ abstract class ChatConversation with _$ChatConversation {
       updatedAt: updatedAt,
       model: _normalizeModel(json['model']),
       lastSyncedAt: _parseOptionalDate(json['lastSyncedAt']),
-      synchronized: json['synchronized'] as bool? ?? true,
+      synchronized: boolFromDynamic(json['synchronized'], fallback: true),
       changeId: _normalizeChangeId(json['changeId']),
     );
   }

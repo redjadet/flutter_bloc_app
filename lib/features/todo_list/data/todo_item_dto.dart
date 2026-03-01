@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 
 class TodoItemDto {
   TodoItemDto({
@@ -33,20 +34,26 @@ class TodoItemDto {
       (final dynamic key, final dynamic value) =>
           MapEntry(key.toString(), value),
     );
-    final String? id = normalized['id'] as String?;
-    final String? title = normalized['title'] as String?;
+    final String? id = stringFromDynamic(normalized['id']);
+    final String? title = stringFromDynamic(normalized['title']);
     if (id == null || id.isEmpty || title == null || title.isEmpty) {
       throw const FormatException('Invalid TodoItem payload');
     }
-    final String? description = normalized['description'] as String?;
-    final bool isCompleted = _coerceBool(normalized['isCompleted']);
+    final String? description = stringFromDynamic(normalized['description']);
+    final bool isCompleted = boolFromDynamic(
+      normalized['isCompleted'],
+      fallback: false,
+    );
     final DateTime? createdAt = _parseDate(normalized['createdAt']);
     final DateTime? updatedAt = _parseDate(normalized['updatedAt']);
     final DateTime? dueDate = _parseDate(normalized['dueDate']);
     final TodoPriority priority = _parsePriority(normalized['priority']);
-    final String? changeId = normalized['changeId'] as String?;
+    final String? changeId = stringFromDynamic(normalized['changeId']);
     final DateTime? lastSyncedAt = _parseDate(normalized['lastSyncedAt']);
-    final bool synchronized = _coerceBool(normalized['synchronized']);
+    final bool synchronized = boolFromDynamic(
+      normalized['synchronized'],
+      fallback: false,
+    );
     if (createdAt == null || updatedAt == null) {
       throw const FormatException('Invalid TodoItem payload');
     }
@@ -104,19 +111,6 @@ class TodoItemDto {
     if (lastSyncedAt != null) 'lastSyncedAt': lastSyncedAt?.toIso8601String(),
     'synchronized': synchronized,
   };
-
-  static bool _coerceBool(final dynamic value) {
-    if (value is bool) {
-      return value;
-    }
-    if (value is num) {
-      return value != 0;
-    }
-    if (value is String) {
-      return value.toLowerCase() == 'true';
-    }
-    return false;
-  }
 
   static DateTime? _parseDate(final dynamic value) {
     if (value is DateTime) {

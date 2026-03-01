@@ -69,5 +69,25 @@ void main() {
       final RemoteConfigSnapshot? loaded = await repository.loadSnapshot();
       expect(loaded, isNull);
     });
+
+    test('ignores malformed metadata field types safely', () async {
+      final Box<dynamic> box = await hiveService.openBox('remote_config_cache');
+      await box.put('snapshot', <String, dynamic>{
+        'values': <String, dynamic>{'f': true},
+        'lastFetchedAt': 123,
+        'templateVersion': 7,
+        'dataSource': false,
+        'lastSyncedAt': <String, dynamic>{'bad': 'shape'},
+      });
+
+      final RemoteConfigSnapshot? loaded = await repository.loadSnapshot();
+
+      expect(loaded, isNotNull);
+      expect(loaded!.values, containsPair('f', true));
+      expect(loaded.lastFetchedAt, isNull);
+      expect(loaded.templateVersion, isNull);
+      expect(loaded.dataSource, isNull);
+      expect(loaded.lastSyncedAt, isNull);
+    });
   });
 }

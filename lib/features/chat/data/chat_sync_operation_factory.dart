@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter_bloc_app/features/chat/data/chat_sync_payload.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 
 class ChatSyncOperationFactory {
   ChatSyncOperationFactory({required final String entityType})
@@ -49,7 +50,7 @@ class ChatSyncOperationFactory {
     final List<String> generatedResponses = _readStringList(
       payload['generatedResponses'],
     );
-    final String? model = payload['model'] as String?;
+    final String? model = stringFromDynamic(payload['model']);
     final String clientMessageId =
         (payload['clientMessageId'] ?? generateChangeId()).toString();
     final DateTime createdAt =

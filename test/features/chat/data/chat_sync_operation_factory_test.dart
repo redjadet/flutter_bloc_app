@@ -49,5 +49,16 @@ void main() {
       expect(payload.generatedResponses, isEmpty);
       expect(payload.prompt, '');
     });
+
+    test('ignores non-string model values safely', () {
+      final SyncOperation op = SyncOperation.create(
+        entityType: entityType,
+        payload: <String, dynamic>{'model': 123},
+        idempotencyKey: 'k2',
+      );
+
+      final payload = factory.readPayload(op);
+      expect(payload.model, isNull);
+    });
   });
 }
