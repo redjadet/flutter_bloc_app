@@ -30,6 +30,7 @@ class _ExamplePageState extends State<ExamplePage> {
 
   Future<void> _loadPlatformInfo() async {
     if (_isFetchingInfo) return;
+    if (!mounted) return;
     setState(() {
       _isFetchingInfo = true;
     });

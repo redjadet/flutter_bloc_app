@@ -63,7 +63,8 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
       final dynamic rawProfile = box.get(_profileKey);
       final bool hasProfile = rawProfile != null;
       final int? sizeBytes = await _estimateSizeBytes(rawProfile);
-      final String? rawDate = box.get(_lastSyncedKey) as String?;
+      final dynamic lastSyncedRaw = box.get(_lastSyncedKey);
+      final String? rawDate = lastSyncedRaw is String ? lastSyncedRaw : null;
       final DateTime? lastSynced = rawDate == null
           ? null
           : DateTime.tryParse(rawDate)?.toUtc();
