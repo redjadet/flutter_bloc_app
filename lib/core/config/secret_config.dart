@@ -108,8 +108,8 @@ class SecretConfig {
         'remain disabled.',
       );
     } on Exception catch (e, s) {
-      AppLogger.warning('SecretConfig.load failed: $e');
-      AppLogger.error('SecretConfig.load stack', e, s);
+      AppLogger.warning('SecretConfig.load failed');
+      AppLogger.error('SecretConfig.load', e, s);
       _loaded = false;
     }
   }
