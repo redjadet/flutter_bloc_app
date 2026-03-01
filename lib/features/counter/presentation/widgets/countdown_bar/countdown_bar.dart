@@ -36,7 +36,9 @@ class _CountdownBarState extends State<CountdownBar> {
         _updateCycleTotalSeconds(data.countdownSeconds);
         final int total =
             _cycleTotalSeconds ?? CounterState.defaultCountdownSeconds;
-        final double progress = (data.countdownSeconds / total).clamp(0.0, 1.0);
+        final double progress = total <= 0
+            ? 0.0
+            : (data.countdownSeconds / total).clamp(0.0, 1.0);
 
         final Color targetColor = data.active
             ? Color.lerp(colors.error, colors.primary, progress) ??
