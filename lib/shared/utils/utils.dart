@@ -20,6 +20,7 @@ export 'performance_profiler_stats.dart';
 export 'performance_profiler_widget.dart';
 export 'repository_watch_helper.dart';
 export 'retry_policy.dart';
+export 'safe_parse_utils.dart';
 export 'storage_guard.dart';
 export 'stream_controller_lifecycle.dart';
 export 'websocket_guard.dart';

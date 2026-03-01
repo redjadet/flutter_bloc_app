@@ -114,16 +114,6 @@ CounterSnapshot _normalizeSnapshot(
   return snapshot;
 }
 
-String? _stringFromJson(final dynamic value) => value is String ? value : null;
-
-int? _intFromJson(final dynamic value) {
-  if (value == null) return null;
-  if (value is int) return value;
-  if (value is num) return value.toInt();
-  if (value is String) return int.tryParse(value.trim());
-  return null;
-}
-
 CounterSnapshot _parseSnapshot(final String body) {
   try {
     // check-ignore: small payload (<8KB) - counter snapshot responses are small
@@ -135,14 +125,13 @@ CounterSnapshot _parseSnapshot(final String body) {
       );
     }
     final Map<String, dynamic> json = decoded;
-    final int count = _intFromJson(json['count']) ?? 0;
-    final int? changedMs = _intFromJson(json['last_changed']);
+    final int count = intFromDynamic(json['count']) ?? 0;
+    final int? changedMs = intFromDynamic(json['last_changed']);
     final DateTime? lastChanged = changedMs != null
         ? DateTime.fromMillisecondsSinceEpoch(changedMs)
         : null;
     final String userId =
-        _stringFromJson(json['userId']) ??
-        _stringFromJson(json['id']) ??
+        stringFromDynamic(json['userId']) ?? stringFromDynamic(json['id']) ??
         'rest';
     return CounterSnapshot(
       userId: userId,

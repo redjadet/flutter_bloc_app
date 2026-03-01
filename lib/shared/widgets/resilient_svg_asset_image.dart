@@ -89,7 +89,12 @@ class ResilientSvgAssetImage extends StatelessWidget {
         fit: fit,
         placeholderBuilder: (_) => fallbackBuilder(),
       );
-    } on Exception catch (_) {
+    } on Exception catch (error, stackTrace) {
+      AppLogger.error(
+        'ResilientSvgAssetImage: SvgPicture.asset failed for $assetPath',
+        error,
+        stackTrace,
+      );
       return fallbackBuilder();
     }
   }
