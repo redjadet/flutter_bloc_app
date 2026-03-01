@@ -159,8 +159,10 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
 
     final List<dynamic>? errors = decoded['errors'] as List<dynamic>?;
     if (errors != null && errors.isNotEmpty) {
-      final Map<String, dynamic>? firstError =
-          errors.first as Map<String, dynamic>?;
+      final dynamic first = errors.first;
+      final Map<String, dynamic>? firstError = first is Map<String, dynamic>
+          ? first
+          : null;
       final String message =
           firstError?['message']?.toString() ?? 'Unknown error';
       throw GraphqlDemoException(

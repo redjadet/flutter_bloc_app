@@ -87,16 +87,16 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
         (final dynamic key, final dynamic value) =>
             MapEntry(key.toString(), value),
       );
-      final List<dynamic>? galleryRaw = map['galleryImages'] as List<dynamic>?;
-      final List<ProfileImage> gallery = galleryRaw == null
-          ? const <ProfileImage>[]
-          : galleryRaw
+      final dynamic galleryRaw = map['galleryImages'];
+      final List<ProfileImage> gallery = galleryRaw is List<dynamic>
+          ? galleryRaw
                 .whereType<Map<dynamic, dynamic>>()
                 .map(_mapToImage)
-                .toList(growable: false);
-      final String? name = map['name'] as String?;
-      final String? location = map['location'] as String?;
-      final String? avatarUrl = map['avatarUrl'] as String?;
+                .toList(growable: false)
+          : const <ProfileImage>[];
+      final String? name = _stringFromDynamic(map['name']);
+      final String? location = _stringFromDynamic(map['location']);
+      final String? avatarUrl = _stringFromDynamic(map['avatarUrl']);
       if (name == null || location == null || avatarUrl == null) {
         return null;
       }
@@ -110,14 +110,17 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
     return null;
   }
 
+  static String? _stringFromDynamic(final dynamic value) =>
+      value is String ? value : null;
+
   ProfileImage _mapToImage(final Map<dynamic, dynamic> raw) {
     final Map<String, dynamic> normalized = raw.map(
       (final dynamic key, final dynamic value) =>
           MapEntry(key.toString(), value),
     );
-    final String url = normalized['url'] as String? ?? '';
-    final double aspectRatio =
-        (normalized['aspectRatio'] as num?)?.toDouble() ?? 1.0;
+    final String url = _stringFromDynamic(normalized['url']) ?? '';
+    final dynamic ar = normalized['aspectRatio'];
+    final double aspectRatio = ar is num ? ar.toDouble() : 1.0;
     return ProfileImage(url: url, aspectRatio: aspectRatio);
   }
 
