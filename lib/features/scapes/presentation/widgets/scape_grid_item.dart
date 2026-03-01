@@ -136,8 +136,9 @@ class ScapeGridItem extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
+                    Wrap(
+                      spacing: EpochSpacing.gapTight,
+                      runSpacing: EpochSpacing.gapTight,
                       children: [
                         _ScapeIconButton(
                           size: iconSize,

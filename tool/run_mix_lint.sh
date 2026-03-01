@@ -7,5 +7,29 @@
 set -e
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+
+resolve_flutter_dart() {
+  local flutter_bin
+  local flutter_root
+  local dart_bin
+
+  flutter_bin="$(command -v flutter || true)"
+  if [ -z "$flutter_bin" ]; then
+    echo "❌ 'flutter' command not found in PATH." >&2
+    exit 1
+  fi
+
+  flutter_root="$(cd "$(dirname "$flutter_bin")/.." && pwd)"
+  dart_bin="$flutter_root/bin/dart"
+
+  if [ ! -x "$dart_bin" ]; then
+    echo "❌ Flutter-managed Dart SDK not found at: $dart_bin" >&2
+    exit 1
+  fi
+
+  echo "$dart_bin"
+}
+
+DART_BIN="$(resolve_flutter_dart)"
 echo "Running custom_lint (includes local mix_lint rules)..."
-dart run custom_lint "$@"
+"$DART_BIN" run custom_lint "$@"

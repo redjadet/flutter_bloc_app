@@ -15,6 +15,11 @@ Use [AppErrorCode](lib/shared/utils/error_codes.dart) when emitting error state 
 
 Attach the code to freezed error state or pass to `AppLogger` / crash reporting. Map from exceptions or HTTP status using [NetworkErrorMapper](lib/shared/utils/network_error_mapper.dart): `getErrorCode(error)` for any error (including [HttpRequestFailure](lib/shared/utils/http_request_failure.dart)), `getErrorCodeForStatusCode(statusCode)` for raw status codes, or the existing `isNetworkError` / `isTimeoutError` helpers.
 
+## Logging
+
+- Use **fixed log messages** for errors; pass the error object as the second parameter to `AppLogger.error(message, error, stackTrace)` so URLs, paths, or PII are not interpolated into the message string.
+- For stream subscriptions (widgets, adapters), provide `onError` when calling `stream.listen(...)` so errors are logged and do not become unhandled zone errors.
+
 ## Crash reporting (optional)
 
 If the project adopts Firebase Crashlytics or similar:
