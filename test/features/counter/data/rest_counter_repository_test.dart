@@ -10,6 +10,48 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
+  group('RestCounterRepository.constructor', () {
+    test('throws ArgumentError for invalid or unsupported baseUrl', () {
+      expect(
+        () => RestCounterRepository(baseUrl: 'not-a-uri'),
+        throwsArgumentError,
+      );
+      expect(
+        () => RestCounterRepository(baseUrl: 'https://'),
+        throwsArgumentError,
+      );
+      expect(
+        () => RestCounterRepository(baseUrl: 'ws://api.example.com'),
+        throwsArgumentError,
+      );
+    });
+
+    test(
+      'normalizes base path without trailing slash before resolve',
+      () async {
+        final _FakeClient client = _FakeClient(
+          getHandler: (final request) {
+            expect(
+              request.url.toString(),
+              'https://api.example.com/v1/counter',
+            );
+            return http.Response(
+              jsonEncode(<String, dynamic>{'id': 'u1', 'count': 1}),
+              200,
+              headers: <String, String>{'content-type': 'application/json'},
+            );
+          },
+        );
+        final RestCounterRepository repository = RestCounterRepository(
+          baseUrl: 'https://api.example.com/v1',
+          client: client,
+        );
+
+        await AppLogger.silenceAsync(repository.load);
+      },
+    );
+  });
+
   group('RestCounterRepository.load', () {
     test('parses successful payloads', () async {
       final DateTime now = DateTime.fromMillisecondsSinceEpoch(1710000000000);

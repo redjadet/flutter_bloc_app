@@ -23,6 +23,7 @@ Full documentation and suppression guidance is provided in the sections below.
 - **`check_flutter_domain_imports.sh`**: Ensures domain layer is Flutter-agnostic (no `package:flutter` imports)
 - **`check_direct_getit.sh`**: Prevents direct `GetIt` access in presentation widgets (should inject via constructors/cubits)
 - **`check_no_hive_openbox.sh`**: Prevents direct `Hive.openBox` usage (should use `HiveService`/`HiveRepositoryBase`)
+- **`check_unvalidated_base_url_parse.sh`**: Prevents `Uri.parse(...)` directly on dynamic `baseUrl`-like values without validation helper
 - **`check_solid_presentation_data_imports.sh`**: Prevents presentation importing data-layer types (DIP)
 - **`check_solid_data_presentation_imports.sh`**: Prevents data layer importing presentation (layering)
 

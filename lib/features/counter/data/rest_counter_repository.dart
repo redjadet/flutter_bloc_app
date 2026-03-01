@@ -31,7 +31,7 @@ class RestCounterRepository implements CounterRepository {
     final http.Client? client,
     final Map<String, String>? defaultHeaders,
     final Duration requestTimeout = const Duration(seconds: 10),
-  }) : _baseUri = Uri.parse(baseUrl),
+  }) : _baseUri = _parseBaseUri(baseUrl),
        _client = client ?? http.Client(),
        _defaultHeaders = {if (defaultHeaders != null) ...defaultHeaders},
        _requestTimeout = requestTimeout,
@@ -75,5 +75,32 @@ class RestCounterRepository implements CounterRepository {
     if (!_watchController.isClosed) {
       await _watchController.close();
     }
+  }
+
+  static Uri _parseBaseUri(final String baseUrl) {
+    final Uri? uri = Uri.tryParse(baseUrl);
+    if (uri == null ||
+        !uri.hasScheme ||
+        !uri.hasAuthority ||
+        uri.host.isEmpty) {
+      throw ArgumentError.value(
+        baseUrl,
+        'baseUrl',
+        'must be an absolute URI with scheme and host',
+      );
+    }
+
+    if (uri.scheme != 'http' && uri.scheme != 'https') {
+      throw ArgumentError.value(
+        baseUrl,
+        'baseUrl',
+        'must use http or https scheme',
+      );
+    }
+
+    final String normalizedPath = uri.path.endsWith('/')
+        ? uri.path
+        : '${uri.path}/';
+    return uri.replace(path: normalizedPath);
   }
 }
