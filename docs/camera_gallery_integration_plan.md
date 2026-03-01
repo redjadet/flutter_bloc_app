@@ -44,7 +44,7 @@ Target platforms: **iOS + Android**.
 
 1. Add dependency with `flutter pub add image_picker`.
 2. Confirm selected `image_picker` version compatibility with this project:
-   - Flutter/Dart constraints (project uses Dart `^3.9.2`).
+   - Flutter/Dart constraints (project: Flutter 3.41.2, Dart 3.11.0; SDK `^3.9.2` in pubspec).
    - Android minimum SDK requirement of that plugin version.
 3. Confirm Android activity launch mode is **not** `singleInstance` (current
    manifest uses `singleTop`, which is compatible).

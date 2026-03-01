@@ -45,20 +45,36 @@ class NativePlatformInfo {
       return const NativePlatformInfo(platform: 'unknown', version: 'unknown');
     }
     return NativePlatformInfo(
-      platform: (map['platform'] as String?)?.trim().isNotEmpty ?? false
-          ? (map['platform'] as String)
-          : 'unknown',
-      version: (map['version'] as String?)?.trim().isNotEmpty ?? false
-          ? (map['version'] as String)
-          : 'unknown',
-      manufacturer: (map['manufacturer'] as String?)?.trim().isNotEmpty ?? false
-          ? (map['manufacturer'] as String)
-          : null,
-      model: (map['model'] as String?)?.trim().isNotEmpty ?? false
-          ? (map['model'] as String)
-          : null,
-      batteryLevel: (map[_keyBatteryLevel] as num?)?.toInt(),
+      platform: _stringFromMap(map, 'platform') ?? 'unknown',
+      version: _stringFromMap(map, 'version') ?? 'unknown',
+      manufacturer: _stringFromMap(map, 'manufacturer'),
+      model: _stringFromMap(map, 'model'),
+      batteryLevel: _batteryLevelFromMap(map),
     );
+  }
+
+  static String? _stringFromMap(
+    final Map<String, dynamic> map,
+    final String key,
+  ) {
+    final value = map[key];
+    if (value is String) {
+      final trimmed = value.trim();
+      return trimmed.isEmpty ? null : trimmed;
+    }
+    return null;
+  }
+
+  static int? _batteryLevelFromMap(final Map<String, dynamic> map) {
+    final value = map[_keyBatteryLevel];
+    if (value is num) {
+      return value.toInt();
+    }
+    if (value is String) {
+      final parsed = num.tryParse(value.trim());
+      return parsed?.toInt();
+    }
+    return null;
   }
 
   final String platform;

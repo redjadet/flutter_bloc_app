@@ -54,4 +54,35 @@ void main() {
       expect(info.model, isNull);
     });
   });
+
+  group('NativePlatformInfo.fromMap', () {
+    test('trims strings and defaults version when blank', () {
+      final NativePlatformInfo info =
+          NativePlatformInfo.fromMap(<String, dynamic>{
+            'platform': '  android  ',
+            'version': '   ',
+            'manufacturer': '  ',
+            'model': 42,
+            'batteryLevel': '88',
+          });
+
+      expect(info.platform, 'android');
+      expect(info.version, 'unknown');
+      expect(info.manufacturer, isNull);
+      expect(info.model, isNull);
+      expect(info.batteryLevel, 88);
+    });
+
+    test('returns null battery for unsupported value types', () {
+      final NativePlatformInfo info = NativePlatformInfo.fromMap(
+        <String, dynamic>{
+          'platform': 'ios',
+          'version': '17',
+          'batteryLevel': {},
+        },
+      );
+
+      expect(info.batteryLevel, isNull);
+    });
+  });
 }

@@ -12,6 +12,28 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
+resolve_flutter_dart() {
+  local flutter_bin
+  local flutter_root
+  local dart_bin
+
+  flutter_bin="$(command -v flutter || true)"
+  if [ -z "$flutter_bin" ]; then
+    echo "❌ 'flutter' command not found in PATH."
+    exit 1
+  fi
+
+  flutter_root="$(cd "$(dirname "$flutter_bin")/.." && pwd)"
+  dart_bin="$flutter_root/bin/dart"
+
+  if [ ! -x "$dart_bin" ]; then
+    echo "❌ Flutter-managed Dart SDK not found at: $dart_bin"
+    exit 1
+  fi
+
+  echo "$dart_bin"
+}
+
 detect_cpu_count() {
   local cpu_count
 
@@ -99,6 +121,8 @@ run_parallel_static_checks() {
 echo "🚀 Running Delivery Checklist..."
 echo ""
 
+DART_BIN="$(resolve_flutter_dart)"
+
 # Step 1: Fetch dependencies (only if needed)
 echo "📦 Step 1/5: Checking dependency state"
 PACKAGE_CONFIG=".dart_tool/package_config.json"
@@ -121,7 +145,7 @@ echo ""
 
 # Step 2: Format code
 echo "📝 Step 2/5: Formatting code with 'dart format .'"
-dart format .
+"$DART_BIN" format .
 echo "✅ Code formatting complete"
 echo ""
 
