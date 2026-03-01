@@ -83,7 +83,9 @@ class CommonDropdownField<T> extends StatelessWidget {
       return selectedValue.toString();
     } else {
       // For null value, try to get label from first item with null value, or use hintText/labelText
-      final nullItem = items.where((final item) => item.value == null).firstOrNull;
+      final nullItem = items
+          .where((final item) => item.value == null)
+          .firstOrNull;
       if (nullItem case final item?) {
         final child = item.child;
         if (child is Text) {
