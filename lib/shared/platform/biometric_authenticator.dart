@@ -47,7 +47,7 @@ class LocalBiometricAuthenticator implements BiometricAuthenticator {
         AppLogger.info('Biometry not enrolled; allowing access to settings.');
         return true;
       }
-      AppLogger.warning('Biometric authentication failed: ${error.message}');
+      AppLogger.warning('Biometric authentication failed');
       AppLogger.debug(stackTrace.toString());
       return false;
     } on Exception catch (error, stackTrace) {
@@ -63,7 +63,7 @@ class LocalBiometricAuthenticator implements BiometricAuthenticator {
         AppLogger.info('Biometry not enrolled (Exception); allowing.');
         return true;
       }
-      AppLogger.warning('Biometric authentication failed: $error');
+      AppLogger.warning('Biometric authentication failed');
       AppLogger.debug(stackTrace.toString());
       return false;
     }

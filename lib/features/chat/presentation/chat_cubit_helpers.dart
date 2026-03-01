@@ -126,7 +126,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
         }
       },
       onError: (final message) {
-        AppLogger.error('Chat history persistence failed: $message');
+        AppLogger.error('Chat history persistence failed', message);
         if (isClosed) {
           return;
         }
