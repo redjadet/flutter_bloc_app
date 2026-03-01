@@ -66,7 +66,11 @@ class ProfileHeader extends StatelessWidget {
               errorBuilder: (final context, final error, final stackTrace) {
                 final theme = Theme.of(context);
                 final colors = theme.colorScheme;
-                AppLogger.error('Image Error: $error', error, stackTrace);
+                AppLogger.error(
+                  'Profile avatar image failed to load',
+                  error,
+                  stackTrace,
+                );
                 return Container(
                   width: avatarSize,
                   height: avatarSize,
