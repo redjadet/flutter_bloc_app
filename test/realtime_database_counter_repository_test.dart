@@ -38,6 +38,20 @@ void main() {
       expect(result.userId, 'user-2');
     });
 
+    test('parses count and last_changed when sent as strings', () {
+      final CounterSnapshot result =
+          RealtimeDatabaseCounterRepository.snapshotFromValue(<String, Object?>{
+            'userId': 'u-s',
+            'count': ' 8 ',
+            'last_changed': ' 1710000000000 ',
+          }, userId: 'fallback');
+
+      expect(result.count, 8);
+      expect(result.userId, 'u-s');
+      expect(result.lastChanged, isNotNull);
+      expect(result.lastChanged!.millisecondsSinceEpoch, 1710000000000);
+    });
+
     test('defaults missing fields to safe values', () {
       final CounterSnapshot result =
           RealtimeDatabaseCounterRepository.snapshotFromValue(<String, Object?>{
