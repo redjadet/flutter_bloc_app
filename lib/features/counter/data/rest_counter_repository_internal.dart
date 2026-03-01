@@ -131,7 +131,8 @@ CounterSnapshot _parseSnapshot(final String body) {
         ? DateTime.fromMillisecondsSinceEpoch(changedMs)
         : null;
     final String userId =
-        stringFromDynamic(json['userId']) ?? stringFromDynamic(json['id']) ??
+        stringFromDynamic(json['userId']) ??
+        stringFromDynamic(json['id']) ??
         'rest';
     return CounterSnapshot(
       userId: userId,

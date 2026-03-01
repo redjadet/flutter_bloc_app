@@ -1,5 +1,6 @@
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 
 typedef JsonMap = Map<String, dynamic>;
 
@@ -11,7 +12,7 @@ class HuggingFaceResponseParser {
 
   ChatResult buildInferenceResult(final JsonMap json) {
     final JsonMap conversation =
-        (json['conversation'] as JsonMap?) ?? const <String, dynamic>{};
+        mapFromDynamic(json['conversation']) ?? const <String, dynamic>{};
     final List<String> updatedPastInputs = _stringsFrom(
       conversation['past_user_inputs'],
     );
@@ -19,7 +20,7 @@ class HuggingFaceResponseParser {
       conversation['generated_responses'],
     );
     final String replyText =
-        (json['generated_text'] as String?) ??
+        stringFromDynamic(json['generated_text']) ??
         _lastOrFallback(updatedResponses);
 
     return ChatResult(
@@ -61,7 +62,7 @@ class HuggingFaceResponseParser {
   }
 
   String _extractAssistantContent(final JsonMap json) {
-    final List<dynamic>? choices = json['choices'] as List<dynamic>?;
+    final List<dynamic>? choices = listFromDynamic(json['choices']);
     if (choices == null || choices.isEmpty) {
       return _fallbackMessage;
     }

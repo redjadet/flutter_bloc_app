@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_addre
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/walletconnect_auth_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 
 /// Implementation of [WalletConnectAuthRepository].
 class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
@@ -141,7 +142,7 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
       }
 
       final data = doc.data();
-      final walletAddressStr = data?[_walletAddressField] as String?;
+      final walletAddressStr = stringFromDynamic(data?[_walletAddressField]);
 
       if (walletAddressStr == null || walletAddressStr.isEmpty) {
         return null;

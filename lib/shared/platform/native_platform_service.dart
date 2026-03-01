@@ -13,9 +13,10 @@ class NativePlatformService {
   final MethodChannel _channel;
 
   Future<NativePlatformInfo> getPlatformInfo() async {
-    final Map<String, dynamic>? result = await _channel.invokeMapMethod<String, dynamic>(
-      _methodGetPlatformInfo,
-    );
+    final Map<String, dynamic>? result = await _channel
+        .invokeMapMethod<String, dynamic>(
+          _methodGetPlatformInfo,
+        );
     return NativePlatformInfo.fromMap(result);
   }
 
@@ -60,17 +61,8 @@ class NativePlatformInfo {
     final String key,
   ) => stringFromDynamicTrimmed(map[key]);
 
-  static int? _batteryLevelFromMap(final Map<String, dynamic> map) {
-    final value = map[_keyBatteryLevel];
-    if (value is num) {
-      return value.toInt();
-    }
-    if (value is String) {
-      final parsed = num.tryParse(value.trim());
-      return parsed?.toInt();
-    }
-    return null;
-  }
+  static int? _batteryLevelFromMap(final Map<String, dynamic> map) =>
+      intFromDynamic(map[_keyBatteryLevel]);
 
   final String platform;
   final String version;
