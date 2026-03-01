@@ -54,6 +54,10 @@ class ErrorHandling {
     final String message, {
     final Duration duration = const Duration(seconds: 3),
   }) {
+    if (!context.mounted) {
+      ContextUtils.logNotMounted('ErrorHandling.showSuccessSnackBar');
+      return null;
+    }
     final ColorScheme colors = Theme.of(context).colorScheme;
     return _showSnackBar(
       context,
@@ -76,6 +80,10 @@ class ErrorHandling {
     final String? customMessage,
     final VoidCallback? onRetry,
   }) {
+    if (!context.mounted) {
+      ContextUtils.logNotMounted('ErrorHandling.handleCubitError');
+      return;
+    }
     final String message =
         customMessage ??
         NetworkErrorMapper.getErrorMessage(error, l10n: context.l10n);
