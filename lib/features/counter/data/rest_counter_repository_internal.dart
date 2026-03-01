@@ -114,6 +114,8 @@ CounterSnapshot _normalizeSnapshot(
   return snapshot;
 }
 
+String? _stringFromJson(final dynamic value) => value is String ? value : null;
+
 CounterSnapshot _parseSnapshot(final String body) {
   try {
     // check-ignore: small payload (<8KB) - counter snapshot responses are small
@@ -131,7 +133,9 @@ CounterSnapshot _parseSnapshot(final String body) {
         ? DateTime.fromMillisecondsSinceEpoch(changedMs)
         : null;
     final String userId =
-        json['userId'] as String? ?? json['id'] as String? ?? 'rest';
+        _stringFromJson(json['userId']) ??
+        _stringFromJson(json['id']) ??
+        'rest';
     return CounterSnapshot(
       userId: userId,
       count: count,
