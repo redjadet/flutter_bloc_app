@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_state.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class WebsocketCubit extends Cubit<WebsocketState>
     with CubitSubscriptionMixin<WebsocketState> {
@@ -15,9 +16,23 @@ class WebsocketCubit extends Cubit<WebsocketState>
       super(WebsocketState.initial(repository.endpoint)) {
     _statusSubscription = _repository.connectionStates.listen(
       _onConnectionState,
+      onError: (final Object error, final StackTrace stackTrace) {
+        AppLogger.error(
+          'WebsocketCubit connection state stream error',
+          error,
+          stackTrace,
+        );
+      },
     );
     _messageSubscription = _repository.incomingMessages.listen(
       _onIncomingMessage,
+      onError: (final Object error, final StackTrace stackTrace) {
+        AppLogger.error(
+          'WebsocketCubit incoming messages stream error',
+          error,
+          stackTrace,
+        );
+      },
     );
     registerSubscription(_statusSubscription);
     registerSubscription(_messageSubscription);

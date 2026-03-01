@@ -55,6 +55,13 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
           _lastChangeId = snapshot.changeId;
         });
       },
+      onError: (final Object error, final StackTrace stackTrace) {
+        AppLogger.error(
+          'CounterSyncBanner counter watch stream error',
+          error,
+          stackTrace,
+        );
+      },
     );
   }
 

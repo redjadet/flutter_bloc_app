@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_state.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 export 'sync_status_state.dart';
 
@@ -29,6 +30,13 @@ class SyncStatusCubit extends Cubit<SyncStatusState>
         if (isClosed) return;
         emit(state.copyWith(networkStatus: status));
       },
+      onError: (final Object error, final StackTrace stackTrace) {
+        AppLogger.error(
+          'SyncStatusCubit network status stream error',
+          error,
+          stackTrace,
+        );
+      },
     );
     registerSubscription(_networkSubscription);
 
@@ -36,6 +44,13 @@ class SyncStatusCubit extends Cubit<SyncStatusState>
       (final status) {
         if (isClosed) return;
         emit(state.copyWith(syncStatus: status));
+      },
+      onError: (final Object error, final StackTrace stackTrace) {
+        AppLogger.error(
+          'SyncStatusCubit sync status stream error',
+          error,
+          stackTrace,
+        );
       },
     );
     registerSubscription(_syncSubscription);
@@ -48,6 +63,13 @@ class SyncStatusCubit extends Cubit<SyncStatusState>
             lastSummary: summary,
             history: _coordinator.history,
           ),
+        );
+      },
+      onError: (final Object error, final StackTrace stackTrace) {
+        AppLogger.error(
+          'SyncStatusCubit summary stream error',
+          error,
+          stackTrace,
         );
       },
     );
