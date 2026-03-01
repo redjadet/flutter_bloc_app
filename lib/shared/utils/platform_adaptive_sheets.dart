@@ -190,9 +190,11 @@ class _CupertinoPickerSheetContentState<T>
                 scrollController: _scrollController,
                 itemExtent: 32,
                 onSelectedItemChanged: (final index) {
-                  setState(() {
-                    _currentSelection = widget.items[index];
-                  });
+                  if (index >= 0 && index < widget.items.length) {
+                    setState(() {
+                      _currentSelection = widget.items[index];
+                    });
+                  }
                 },
                 children: widget.items
                     .map(
