@@ -38,7 +38,9 @@ class _CounterDisplayState extends State<CounterDisplay> {
         _updateCycleTotalSeconds(data);
         final int total =
             _cycleTotalSeconds ?? CounterState.defaultCountdownSeconds;
-        final double progress = (data.countdownSeconds / total).clamp(0.0, 1.0);
+        final double progress = total <= 0
+            ? 0.0
+            : (data.countdownSeconds / total).clamp(0.0, 1.0);
 
         final Color cardColor = data.isActive
             ? Color.lerp(
