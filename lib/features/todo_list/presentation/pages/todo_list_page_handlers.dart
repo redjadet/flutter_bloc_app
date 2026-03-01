@@ -100,11 +100,16 @@ Future<void> _handleDeleteWithUndo(
       ),
     );
     // Keep timeout deterministic even when platforms/a11y prevent action
-    // snackbars from auto-timing out.
+    // snackbars from auto-timing out. Guard with mounted to avoid calling
+    // close() after the route is disposed.
     unawaited(
       Future<void>.delayed(
         const Duration(seconds: 2),
-        snackBarController.close,
+        () {
+          if (context.mounted) {
+            snackBarController.close();
+          }
+        },
       ),
     );
   }
