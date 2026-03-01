@@ -121,7 +121,8 @@ class HuggingFaceApiClient {
       // check-ignore: small payload (error response bodies are typically <1KB)
       final dynamic decoded = jsonDecode(body);
       if (decoded is Map<String, dynamic>) {
-        detail = (decoded['error'] ?? decoded['message']) as String?;
+        final dynamic err = decoded['error'] ?? decoded['message'];
+        detail = err is String ? err : err?.toString();
       }
     } on FormatException {
       if (body.isNotEmpty && body != 'null') {

@@ -122,6 +122,30 @@ void main() {
         throwsA(isA<CounterError>()),
       );
     });
+
+    test('falls back to default userId for non-string id fields', () async {
+      final _FakeClient client = _FakeClient(
+        getHandler: (_) => http.Response(
+          jsonEncode(<String, dynamic>{
+            'userId': 42,
+            'id': <String, dynamic>{'nested': true},
+            'count': 3,
+          }),
+          200,
+          headers: <String, String>{'content-type': 'application/json'},
+        ),
+      );
+      final RestCounterRepository repository = RestCounterRepository(
+        baseUrl: 'https://api.example.com/',
+        client: client,
+      );
+
+      await AppLogger.silenceAsync(() async {
+        final CounterSnapshot snapshot = await repository.load();
+        expect(snapshot.userId, 'rest');
+        expect(snapshot.count, 3);
+      });
+    });
   });
 
   group('RestCounterRepository.save', () {

@@ -205,5 +205,18 @@ void main() {
         'Chat service error (HTTP 500): unparsable',
       );
     });
+
+    test('stringifies non-string error details when present', () {
+      final http.Response response = http.Response(
+        jsonEncode(<String, Object?>{
+          'error': <String, Object?>{'code': 'MODEL_UNAVAILABLE'},
+        }),
+        400,
+      );
+      expect(
+        HuggingFaceApiClient.formatError(response),
+        'Chat service error (HTTP 400): {code: MODEL_UNAVAILABLE}',
+      );
+    });
   });
 }
