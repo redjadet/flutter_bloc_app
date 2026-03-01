@@ -1,7 +1,7 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 typedef JsonMap = Map<String, dynamic>;
 
@@ -94,6 +94,75 @@ void main() {
 
         expect(result.reply.text, 'part1 part2');
         expect(result.generatedResponses.last, 'part1 part2');
+      },
+    );
+
+    test(
+      'buildChatCompletionsResult falls back when first choice is malformed',
+      () {
+        final JsonMap json = <String, dynamic>{
+          'choices': <dynamic>['unexpected-shape'],
+        };
+
+        final ChatResult result = parser.buildChatCompletionsResult(
+          json: json,
+          pastUserInputs: const <String>[],
+          generatedResponses: const <String>[],
+          prompt: 'prompt',
+        );
+
+        expect(result.reply.text, fallback);
+        expect(result.generatedResponses.last, fallback);
+      },
+    );
+
+    test('buildChatCompletionsResult falls back when choices is null', () {
+      final JsonMap json = <String, dynamic>{'choices': null};
+
+      final ChatResult result = parser.buildChatCompletionsResult(
+        json: json,
+        pastUserInputs: const <String>[],
+        generatedResponses: const <String>[],
+        prompt: 'p',
+      );
+
+      expect(result.reply.text, fallback);
+      expect(result.generatedResponses.last, fallback);
+    });
+
+    test('buildChatCompletionsResult falls back when choices is empty', () {
+      final JsonMap json = <String, dynamic>{'choices': <JsonMap>[]};
+
+      final ChatResult result = parser.buildChatCompletionsResult(
+        json: json,
+        pastUserInputs: const <String>[],
+        generatedResponses: const <String>[],
+        prompt: 'p',
+      );
+
+      expect(result.reply.text, fallback);
+      expect(result.generatedResponses.last, fallback);
+    });
+
+    test(
+      'buildChatCompletionsResult falls back when first choice is non-map',
+      () {
+        final JsonMap json = <String, dynamic>{
+          'choices': <dynamic>[
+            42,
+            <String, dynamic>{'message': null},
+          ],
+        };
+
+        final ChatResult result = parser.buildChatCompletionsResult(
+          json: json,
+          pastUserInputs: const <String>[],
+          generatedResponses: const <String>[],
+          prompt: 'p',
+        );
+
+        expect(result.reply.text, fallback);
+        expect(result.generatedResponses.last, fallback);
       },
     );
   });

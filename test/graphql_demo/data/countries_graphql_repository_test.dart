@@ -119,6 +119,33 @@ void main() {
       );
     });
 
+    test(
+      'throws GraphqlDemoException with fallback message when first error is malformed',
+      () async {
+        final repository = CountriesGraphqlRepository(
+          client: MockClient((request) async {
+            return http.Response(
+              jsonEncode(<String, Object?>{
+                'errors': <Object?>['unexpected-shape'],
+              }),
+              200,
+            );
+          }),
+        );
+
+        await expectLater(
+          () => AppLogger.silenceAsync(() => repository.fetchCountries()),
+          throwsA(
+            isA<GraphqlDemoException>().having(
+              (final GraphqlDemoException error) => error.message,
+              'message',
+              'Unknown error',
+            ),
+          ),
+        );
+      },
+    );
+
     test('throws GraphqlDemoException on non-200 responses', () async {
       final repository = CountriesGraphqlRepository(
         client: MockClient((request) async => http.Response('error', 500)),

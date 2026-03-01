@@ -101,5 +101,21 @@ void main() {
       expect(metadata.hasProfile, isFalse);
       expect(metadata.lastSyncedAt, isNull);
     });
+
+    test('loadProfile returns null for malformed cached field types', () async {
+      final Box<dynamic> box = await hiveService.openBox('profile_cache');
+      await box.put('profile', <String, dynamic>{
+        'name': 42,
+        'location': true,
+        'avatarUrl': <String>['bad'],
+        'galleryImages': <dynamic>[
+          <String, dynamic>{'url': 99, 'aspectRatio': 'bad'},
+        ],
+      });
+
+      final ProfileUser? loaded = await repository.loadProfile();
+
+      expect(loaded, isNull);
+    });
   });
 }

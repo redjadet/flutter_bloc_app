@@ -66,7 +66,8 @@ class HuggingFaceResponseParser {
       return _fallbackMessage;
     }
 
-    final JsonMap? firstChoice = choices.first as JsonMap?;
+    final dynamic first = choices.first;
+    final JsonMap? firstChoice = first is JsonMap ? first : null;
     final dynamic message = firstChoice?['message'];
 
     if (message is JsonMap) {
