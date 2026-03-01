@@ -95,8 +95,8 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
 
     if (value is Map) {
       final Map<Object?, Object?> data = Map<Object?, Object?>.from(value);
-      final int count = (data['count'] as num?)?.toInt() ?? 0;
-      final int? lastChangedMs = (data['last_changed'] as num?)?.toInt();
+      final int count = _intFromSnapshotValue(data['count']) ?? 0;
+      final int? lastChangedMs = _intFromSnapshotValue(data['last_changed']);
       final DateTime? lastChanged = lastChangedMs != null
           ? DateTime.fromMillisecondsSinceEpoch(lastChangedMs)
           : null;
@@ -126,6 +126,14 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
     }
     final String trimmed = value.trim();
     return trimmed.isEmpty ? null : trimmed;
+  }
+
+  static int? _intFromSnapshotValue(final Object? value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value is String) return int.tryParse(value.trim());
+    return null;
   }
 
   Future<T> _executeForUser<T>({

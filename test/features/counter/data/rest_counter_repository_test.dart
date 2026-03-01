@@ -87,6 +87,32 @@ void main() {
       });
     });
 
+    test('parses count and last_changed when sent as strings', () async {
+      final _FakeClient client = _FakeClient(
+        getHandler: (_) => http.Response(
+          jsonEncode(<String, dynamic>{
+            'userId': 'u2',
+            'count': ' 12 ',
+            'last_changed': ' 1710000000000 ',
+          }),
+          200,
+          headers: <String, String>{'content-type': 'application/json'},
+        ),
+      );
+      final RestCounterRepository repository = RestCounterRepository(
+        baseUrl: 'https://api.example.com/',
+        client: client,
+      );
+
+      await AppLogger.silenceAsync(() async {
+        final CounterSnapshot snapshot = await repository.load();
+        expect(snapshot.userId, 'u2');
+        expect(snapshot.count, 12);
+        expect(snapshot.lastChanged, isNotNull);
+        expect(snapshot.lastChanged!.millisecondsSinceEpoch, 1710000000000);
+      });
+    });
+
     test('throws CounterError on HTTP failure', () async {
       final _FakeClient client = _FakeClient(
         getHandler: (_) => http.Response('nope', 500),

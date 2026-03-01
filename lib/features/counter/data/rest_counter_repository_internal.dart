@@ -116,6 +116,14 @@ CounterSnapshot _normalizeSnapshot(
 
 String? _stringFromJson(final dynamic value) => value is String ? value : null;
 
+int? _intFromJson(final dynamic value) {
+  if (value == null) return null;
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  if (value is String) return int.tryParse(value.trim());
+  return null;
+}
+
 CounterSnapshot _parseSnapshot(final String body) {
   try {
     // check-ignore: small payload (<8KB) - counter snapshot responses are small
@@ -127,8 +135,8 @@ CounterSnapshot _parseSnapshot(final String body) {
       );
     }
     final Map<String, dynamic> json = decoded;
-    final int count = (json['count'] as num?)?.toInt() ?? 0;
-    final int? changedMs = (json['last_changed'] as num?)?.toInt();
+    final int count = _intFromJson(json['count']) ?? 0;
+    final int? changedMs = _intFromJson(json['last_changed']);
     final DateTime? lastChanged = changedMs != null
         ? DateTime.fromMillisecondsSinceEpoch(changedMs)
         : null;
