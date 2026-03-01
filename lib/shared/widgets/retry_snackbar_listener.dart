@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/services/retry_notification_service.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class RetrySnackBarListener extends StatefulWidget {
   const RetrySnackBarListener({
@@ -26,7 +27,16 @@ class _RetrySnackBarListenerState extends State<RetrySnackBarListener> {
   @override
   void initState() {
     super.initState();
-    _subscription = widget.notifications.listen(_handleNotification);
+    _subscription = widget.notifications.listen(
+      _handleNotification,
+      onError: (final Object error, final StackTrace stackTrace) {
+        AppLogger.error(
+          'RetrySnackBarListener stream error',
+          error,
+          stackTrace,
+        );
+      },
+    );
   }
 
   @override
@@ -34,7 +44,16 @@ class _RetrySnackBarListenerState extends State<RetrySnackBarListener> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.notifications != widget.notifications) {
       unawaited(_subscription?.cancel());
-      _subscription = widget.notifications.listen(_handleNotification);
+      _subscription = widget.notifications.listen(
+        _handleNotification,
+        onError: (final Object error, final StackTrace stackTrace) {
+          AppLogger.error(
+            'RetrySnackBarListener stream error',
+            error,
+            stackTrace,
+          );
+        },
+      );
     }
   }
 

@@ -77,5 +77,20 @@ void main() {
       final List<ChatConversation> loaded = await dataSource.load();
       expect(loaded, isEmpty);
     });
+
+    test(
+      'returns empty list when stored iterable contains malformed item',
+      () async {
+        await dataSource.load();
+        final Box<dynamic> box = await Hive.openBox('chat_history');
+        await box.put('conversations', <Map<String, dynamic>>[
+          <String, dynamic>{'messages': 123},
+        ]);
+        await box.close();
+
+        final List<ChatConversation> loaded = await dataSource.load();
+        expect(loaded, isEmpty);
+      },
+    );
   });
 }
