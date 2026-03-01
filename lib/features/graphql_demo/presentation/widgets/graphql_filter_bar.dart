@@ -20,6 +20,12 @@ class GraphqlFilterBar extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final String? selectedContinentCode =
+        activeContinentCode != null &&
+            continents.any((final c) => c.code == activeContinentCode)
+        ? activeContinentCode
+        : null;
+
     // Create list of items for picker (null for "All", then continents)
     final List<String?> allItems = [
       null,
@@ -27,7 +33,7 @@ class GraphqlFilterBar extends StatelessWidget {
     ];
 
     return CommonDropdownField<String?>(
-      value: activeContinentCode,
+      value: selectedContinentCode,
       items: [
         DropdownMenuItem<String?>(
           child: Text(l10n.graphqlSampleAllContinents),
@@ -55,6 +61,7 @@ class GraphqlFilterBar extends StatelessWidget {
         }
         final continent = continents.firstWhere(
           (final c) => c.code == code,
+          orElse: () => GraphqlContinent(code: code, name: code),
         );
         return '${continent.name} (${continent.code})';
       },
