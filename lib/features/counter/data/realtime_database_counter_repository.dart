@@ -101,7 +101,9 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
           ? DateTime.fromMillisecondsSinceEpoch(lastChangedMs)
           : null;
       final String snapshotId =
-          (data['userId'] as String?) ?? (data['id'] as String?) ?? userId;
+          _stringFromSnapshotValue(data['userId']) ??
+          _stringFromSnapshotValue(data['id']) ??
+          userId;
       return CounterSnapshot(
         userId: snapshotId,
         count: count,
@@ -116,6 +118,14 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
       );
     }
     return CounterSnapshot(userId: userId, count: 0);
+  }
+
+  static String? _stringFromSnapshotValue(final Object? value) {
+    if (value is! String) {
+      return null;
+    }
+    final String trimmed = value.trim();
+    return trimmed.isEmpty ? null : trimmed;
   }
 
   Future<T> _executeForUser<T>({

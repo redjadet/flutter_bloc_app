@@ -204,8 +204,9 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
     if (operation.payload.containsKey('deleted') &&
         operation.payload['deleted'] == true) {
       // Handle delete operation
-      final String? id = operation.payload['id'] as String?;
-      if (id == null) {
+      final dynamic idRaw = operation.payload['id'];
+      final String? id = idRaw is String ? idRaw.trim() : null;
+      if (id == null || id.isEmpty) {
         return;
       }
       if (_remoteRepository != null) {

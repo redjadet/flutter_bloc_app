@@ -271,6 +271,36 @@ void main() {
       expect(local, isEmpty);
     });
 
+    test(
+      'processOperation ignores delete operation with non-string id',
+      () async {
+        final _FakeRemoteRepository remote = _FakeRemoteRepository();
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        final TodoItem item = TodoItem.create(title: 'Should Stay');
+        await localRepository.save(item);
+
+        final SyncOperation operation = SyncOperation.create(
+          entityType: OfflineFirstTodoRepository.todoEntity,
+          payload: <String, dynamic>{'id': 123, 'deleted': true},
+          idempotencyKey: 'delete-op-non-string',
+        );
+
+        await expectLater(repository.processOperation(operation), completes);
+
+        expect(remote.deletedIds, isEmpty);
+        final List<TodoItem> local = await localRepository.fetchAll();
+        expect(local, hasLength(1));
+        expect(local.first.id, item.id);
+      },
+    );
+
     test('processOperation handles delete when no remote repository', () async {
       final OfflineFirstTodoRepository repository = OfflineFirstTodoRepository(
         localRepository: localRepository,
