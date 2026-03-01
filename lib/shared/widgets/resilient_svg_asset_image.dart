@@ -27,8 +27,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 /// ```
 ///
 /// **Performance:** Uses static caching to avoid re-parsing SVG files on every rebuild.
-/// The cache persists for the lifetime of the app, which is acceptable since asset
-/// files don't change at runtime.
+/// The cache is bounded to avoid unbounded memory growth when many distinct paths are used.
 class ResilientSvgAssetImage extends StatelessWidget {
   const ResilientSvgAssetImage({
     required this.assetPath,
@@ -41,6 +40,7 @@ class ResilientSvgAssetImage extends StatelessWidget {
   final BoxFit fit;
   final Widget Function() fallbackBuilder;
 
+  static const int _maxCacheSize = 64;
   static final Map<String, Uint8List?> _cache = {};
   static final Pattern _base64Pattern = RegExp(
     r'data:image/[^;]+;base64,([^"\\)]+)',
@@ -57,6 +57,7 @@ class ResilientSvgAssetImage extends StatelessWidget {
       final String? base64Group = match?.group(1);
       if (base64Group != null && base64Group.isNotEmpty) {
         final bytes = base64Decode(base64Group);
+        _evictIfNeeded();
         _cache[assetPath] = bytes;
         return bytes;
       }
@@ -64,8 +65,15 @@ class ResilientSvgAssetImage extends StatelessWidget {
       // ignore asset read issues; fallbacks below handle them gracefully
     }
 
+    _evictIfNeeded();
     _cache[assetPath] = null;
     return null;
+  }
+
+  static void _evictIfNeeded() {
+    while (_cache.length >= _maxCacheSize && _cache.isNotEmpty) {
+      _cache.remove(_cache.keys.first);
+    }
   }
 
   Widget _buildSvgPicture() {
