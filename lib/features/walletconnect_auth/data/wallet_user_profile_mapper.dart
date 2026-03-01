@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/nft_metadata.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 
 /// Firestore field names for [WalletUserProfile] (stored in same doc as linkage at `users/{uid}`).
 abstract class WalletUserProfileFields {
@@ -96,11 +97,19 @@ class WalletUserProfileMapper {
     };
   }
 
+  static String? _stringFromMap(
+    final Map<String, dynamic> map,
+    final String key,
+  ) => stringFromDynamic(map[key]);
+
   static NftMetadata? _nftFromMap(final Map<String, dynamic>? map) {
     if (map == null) return null;
-    final tokenId = map[NftMetadataFields.tokenId] as String?;
-    final contractAddress = map[NftMetadataFields.contractAddress] as String?;
-    final name = map[NftMetadataFields.name] as String?;
+    final tokenId = _stringFromMap(map, NftMetadataFields.tokenId);
+    final contractAddress = _stringFromMap(
+      map,
+      NftMetadataFields.contractAddress,
+    );
+    final name = _stringFromMap(map, NftMetadataFields.name);
     if (tokenId == null || contractAddress == null || name == null) {
       return null;
     }
@@ -108,7 +117,7 @@ class WalletUserProfileMapper {
       tokenId: tokenId,
       contractAddress: contractAddress,
       name: name,
-      imageUrl: map[NftMetadataFields.imageUrl] as String?,
+      imageUrl: _stringFromMap(map, NftMetadataFields.imageUrl),
     );
   }
 

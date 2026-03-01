@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/shared/firebase/run_with_auth_user.dart';
 import 'package:flutter_bloc_app/shared/firebase/stream_with_auth_user.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 
 /// Firebase Realtime Database backed implementation of [CounterRepository].
 class RealtimeDatabaseCounterRepository implements CounterRepository {
@@ -95,14 +96,14 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
 
     if (value is Map) {
       final Map<Object?, Object?> data = Map<Object?, Object?>.from(value);
-      final int count = _intFromSnapshotValue(data['count']) ?? 0;
-      final int? lastChangedMs = _intFromSnapshotValue(data['last_changed']);
+      final int count = intFromDynamic(data['count']) ?? 0;
+      final int? lastChangedMs = intFromDynamic(data['last_changed']);
       final DateTime? lastChanged = lastChangedMs != null
           ? DateTime.fromMillisecondsSinceEpoch(lastChangedMs)
           : null;
       final String snapshotId =
-          _stringFromSnapshotValue(data['userId']) ??
-          _stringFromSnapshotValue(data['id']) ??
+          stringFromDynamicTrimmed(data['userId']) ??
+          stringFromDynamicTrimmed(data['id']) ??
           userId;
       return CounterSnapshot(
         userId: snapshotId,
@@ -118,22 +119,6 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
       );
     }
     return CounterSnapshot(userId: userId, count: 0);
-  }
-
-  static String? _stringFromSnapshotValue(final Object? value) {
-    if (value is! String) {
-      return null;
-    }
-    final String trimmed = value.trim();
-    return trimmed.isEmpty ? null : trimmed;
-  }
-
-  static int? _intFromSnapshotValue(final Object? value) {
-    if (value == null) return null;
-    if (value is int) return value;
-    if (value is num) return value.toInt();
-    if (value is String) return int.tryParse(value.trim());
-    return null;
   }
 
   Future<T> _executeForUser<T>({

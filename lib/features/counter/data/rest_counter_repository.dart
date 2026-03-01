@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
 import 'package:flutter_bloc_app/shared/utils/repository_initial_load_helper.dart';
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:http/http.dart' as http;
 
 part 'rest_counter_repository_internal.dart';

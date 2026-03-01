@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 
 const String _channelName = 'com.example.flutter_bloc_app/native';
 const String _methodGetPlatformInfo = 'getPlatformInfo';
@@ -12,8 +13,9 @@ class NativePlatformService {
   final MethodChannel _channel;
 
   Future<NativePlatformInfo> getPlatformInfo() async {
-    final Map<String, dynamic>? result = await _channel
-        .invokeMapMethod<String, dynamic>(_methodGetPlatformInfo);
+    final Map<String, dynamic>? result = await _channel.invokeMapMethod<String, dynamic>(
+      _methodGetPlatformInfo,
+    );
     return NativePlatformInfo.fromMap(result);
   }
 
@@ -56,14 +58,7 @@ class NativePlatformInfo {
   static String? _stringFromMap(
     final Map<String, dynamic> map,
     final String key,
-  ) {
-    final value = map[key];
-    if (value is String) {
-      final trimmed = value.trim();
-      return trimmed.isEmpty ? null : trimmed;
-    }
-    return null;
-  }
+  ) => stringFromDynamicTrimmed(map[key]);
 
   static int? _batteryLevelFromMap(final Map<String, dynamic> map) {
     final value = map[_keyBatteryLevel];

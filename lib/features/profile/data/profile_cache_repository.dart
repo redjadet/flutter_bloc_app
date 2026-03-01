@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repositor
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
 import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
 
@@ -94,9 +95,9 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
                 .map(_mapToImage)
                 .toList(growable: false)
           : const <ProfileImage>[];
-      final String? name = _stringFromDynamic(map['name']);
-      final String? location = _stringFromDynamic(map['location']);
-      final String? avatarUrl = _stringFromDynamic(map['avatarUrl']);
+      final String? name = stringFromDynamic(map['name']);
+      final String? location = stringFromDynamic(map['location']);
+      final String? avatarUrl = stringFromDynamic(map['avatarUrl']);
       if (name == null || location == null || avatarUrl == null) {
         return null;
       }
@@ -110,15 +111,12 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
     return null;
   }
 
-  static String? _stringFromDynamic(final dynamic value) =>
-      value is String ? value : null;
-
   ProfileImage _mapToImage(final Map<dynamic, dynamic> raw) {
     final Map<String, dynamic> normalized = raw.map(
       (final dynamic key, final dynamic value) =>
           MapEntry(key.toString(), value),
     );
-    final String url = _stringFromDynamic(normalized['url']) ?? '';
+    final String url = stringFromDynamic(normalized['url']) ?? '';
     final dynamic ar = normalized['aspectRatio'];
     final double aspectRatio = ar is num ? ar.toDouble() : 1.0;
     return ProfileImage(url: url, aspectRatio: aspectRatio);
