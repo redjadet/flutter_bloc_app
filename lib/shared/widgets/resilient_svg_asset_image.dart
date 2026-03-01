@@ -62,8 +62,13 @@ class ResilientSvgAssetImage extends StatelessWidget {
         _cache[assetPath] = bytes;
         return bytes;
       }
-    } on Exception catch (_) {
-      // ignore asset read issues; fallbacks below handle them gracefully
+    } on Exception catch (error, stackTrace) {
+      // Fallbacks below handle display; log so we do not fail silently
+      AppLogger.error(
+        'ResilientSvgAssetImage: asset load/decode failed for $assetPath',
+        error,
+        stackTrace,
+      );
     }
 
     _evictIfNeeded();
