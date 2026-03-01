@@ -21,7 +21,7 @@ class _NavDestination {
   final String route;
 
   bool matches(final String location) {
-    final String path = Uri.parse(location).path;
+    final String path = Uri.tryParse(location)?.path ?? '/';
     return path == route || path.endsWith(route);
   }
 }

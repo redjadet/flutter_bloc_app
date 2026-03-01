@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 /// Displays an SVG asset but falls back to the embedded raster payload when
@@ -110,6 +111,13 @@ class ResilientSvgAssetImage extends StatelessWidget {
           return fallbackBuilder();
         }
 
+        if (snapshot.hasError) {
+          AppLogger.error(
+            'ResilientSvgAssetImage load failed',
+            snapshot.error,
+            snapshot.stackTrace,
+          );
+        }
         return _buildSvgPicture();
       },
     );
