@@ -224,6 +224,27 @@ void main() {
       },
     );
 
+    test('processOperation skips malformed save payload safely', () async {
+      final _FakeRemoteRepository remote = _FakeRemoteRepository();
+      final OfflineFirstTodoRepository repository = OfflineFirstTodoRepository(
+        localRepository: localRepository,
+        remoteRepository: remote,
+        pendingSyncRepository: pendingRepository,
+        registry: registry,
+      );
+
+      final SyncOperation operation = SyncOperation.create(
+        entityType: OfflineFirstTodoRepository.todoEntity,
+        payload: <String, dynamic>{'id': 'malformed-only-id'},
+        idempotencyKey: 'bad-save-op-1',
+      );
+
+      await expectLater(repository.processOperation(operation), completes);
+      final List<TodoItem> local = await localRepository.fetchAll();
+      expect(local, isEmpty);
+      expect(remote.savedItems, isEmpty);
+    });
+
     test('processOperation handles delete operation', () async {
       final _FakeRemoteRepository remote = _FakeRemoteRepository();
       final OfflineFirstTodoRepository repository = OfflineFirstTodoRepository(

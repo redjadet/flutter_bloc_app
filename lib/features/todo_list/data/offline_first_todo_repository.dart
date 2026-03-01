@@ -215,7 +215,18 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
       return;
     }
     // Handle save operation
-    final TodoItem item = TodoItem.fromJson(operation.payload);
+    final TodoItem item;
+    try {
+      item = TodoItem.fromJson(operation.payload);
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'OfflineFirstTodoRepository.processOperation: malformed payload',
+        error,
+        stackTrace,
+      );
+      // Malformed payloads are not recoverable via retries, so skip safely.
+      return;
+    }
     if (_remoteRepository == null) {
       await _localRepository.save(
         item.copyWith(
