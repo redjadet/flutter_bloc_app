@@ -156,7 +156,7 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
       );
     }
 
-    final List<dynamic>? errors = decoded['errors'] as List<dynamic>?;
+    final List<dynamic>? errors = listFromDynamic(decoded['errors']);
     if (errors != null && errors.isNotEmpty) {
       final dynamic first = errors.first;
       final Map<String, dynamic>? firstError = first is Map<String, dynamic>

@@ -1,3 +1,5 @@
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
+
 enum ChatAuthor { user, assistant, system }
 
 class ChatMessage {
@@ -18,14 +20,17 @@ class ChatMessage {
     );
     final String text = (json['text'] ?? '').toString();
     final String? clientMessageId =
-        (json['clientMessageId'] ?? json['client_message_id']) as String?;
-    final String? createdAtString = json['createdAt'] as String?;
+        stringFromDynamic(json['clientMessageId']) ??
+        stringFromDynamic(json['client_message_id']);
+    final String? createdAtString = stringFromDynamic(json['createdAt']);
     final DateTime? createdAt = createdAtString != null
         ? DateTime.tryParse(createdAtString)
         : null;
-    final bool synchronized =
-        (json['synchronized'] as bool?) ?? json['isSynced'] as bool? ?? true;
-    final String? lastSyncedString = json['lastSyncedAt'] as String?;
+    final bool synchronized = boolFromDynamic(
+      json['synchronized'] ?? json['isSynced'],
+      fallback: true,
+    );
+    final String? lastSyncedString = stringFromDynamic(json['lastSyncedAt']);
     final DateTime? lastSyncedAt = lastSyncedString != null
         ? DateTime.tryParse(lastSyncedString)
         : null;

@@ -45,3 +45,29 @@ List<dynamic>? listFromDynamic(final dynamic value) {
   if (value is List) return value;
   return null;
 }
+
+/// Returns [value] as [bool] if possible, or [fallback] when not parseable.
+///
+/// Accepted truthy values: `true`, non-zero numbers, `'true'`, `'1'`.
+/// Accepted falsy values: `false`, zero numbers, `'false'`, `'0'`.
+bool boolFromDynamic(final dynamic value, {required final bool fallback}) {
+  if (value == null) {
+    return fallback;
+  }
+  if (value is bool) {
+    return value;
+  }
+  if (value is num) {
+    return value != 0;
+  }
+  if (value is String) {
+    final String normalized = value.trim().toLowerCase();
+    if (normalized == 'true' || normalized == '1') {
+      return true;
+    }
+    if (normalized == 'false' || normalized == '0') {
+      return false;
+    }
+  }
+  return fallback;
+}

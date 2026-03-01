@@ -1,5 +1,6 @@
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_snapshot.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
 
@@ -27,13 +28,15 @@ class RemoteConfigCacheRepository extends HiveRepositoryBase {
         return null;
       }
       final Map<String, dynamic> values = _mapValues(raw[_valuesKey]);
-      final String? lastFetchedRaw = raw[_lastFetchedKey] as String?;
+      final String? lastFetchedRaw = stringFromDynamic(raw[_lastFetchedKey]);
       final DateTime? lastFetchedAt = lastFetchedRaw == null
           ? null
           : DateTime.tryParse(lastFetchedRaw);
-      final String? templateVersion = raw[_templateVersionKey] as String?;
-      final String? dataSource = raw[_dataSourceKey] as String?;
-      final String? lastSyncedRaw = raw[_lastSyncedKey] as String?;
+      final String? templateVersion = stringFromDynamic(
+        raw[_templateVersionKey],
+      );
+      final String? dataSource = stringFromDynamic(raw[_dataSourceKey]);
+      final String? lastSyncedRaw = stringFromDynamic(raw[_lastSyncedKey]);
       final DateTime? lastSyncedAt = lastSyncedRaw == null
           ? null
           : DateTime.tryParse(lastSyncedRaw);
