@@ -53,6 +53,7 @@ class CommonDropdownField<T> extends StatelessWidget {
   // Extract label text from DropdownMenuItem child widget (for picker items)
   String _getItemLabel(final T itemValue) {
     if (customItemLabel case final fn?) return fn(itemValue);
+    if (items.isEmpty) return itemValue.toString();
 
     final item = items.firstWhere(
       (final item) => item.value == itemValue,
@@ -69,6 +70,7 @@ class CommonDropdownField<T> extends StatelessWidget {
   String _getSelectedLabel() {
     if (value case final selectedValue?) {
       if (customItemLabel case final fn?) return fn(selectedValue);
+      if (items.isEmpty) return selectedValue.toString();
 
       final item = items.firstWhere(
         (final item) => item.value == selectedValue,
@@ -81,9 +83,7 @@ class CommonDropdownField<T> extends StatelessWidget {
       return selectedValue.toString();
     } else {
       // For null value, try to get label from first item with null value, or use hintText/labelText
-      final nullItem = items
-          .where((final item) => item.value == null)
-          .firstOrNull;
+      final nullItem = items.where((final item) => item.value == null).firstOrNull;
       if (nullItem case final item?) {
         final child = item.child;
         if (child is Text) {

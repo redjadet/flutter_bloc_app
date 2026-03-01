@@ -159,6 +159,25 @@ void main() {
       expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
     });
 
+    testWidgets('handles empty items without throwing', (final tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ResponsiveScope(
+            child: Scaffold(
+              body: CommonDropdownField<String>(
+                value: 'any',
+                items: const [],
+                onChanged: (final value) {},
+                hintText: 'Select',
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byType(CommonDropdownField<String>), findsOneWidget);
+    });
+
     testWidgets('calls validator when provided', (final tester) async {
       String? validationResult;
       final formKey = GlobalKey<FormState>();
