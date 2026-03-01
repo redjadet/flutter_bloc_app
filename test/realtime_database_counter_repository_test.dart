@@ -50,6 +50,18 @@ void main() {
       expect(result.userId, 'user-3');
     });
 
+    test('falls back to path userId when payload userId/id are malformed', () {
+      final CounterSnapshot result =
+          RealtimeDatabaseCounterRepository.snapshotFromValue(<String, Object?>{
+            'userId': 42,
+            'id': <String, Object?>{'nested': true},
+            'count': 9,
+          }, userId: 'user-from-path');
+
+      expect(result.count, 9);
+      expect(result.userId, 'user-from-path');
+    });
+
     test('parses numeric payload into snapshot', () {
       final CounterSnapshot result =
           RealtimeDatabaseCounterRepository.snapshotFromValue(
