@@ -17,7 +17,7 @@ Attach the code to freezed error state or pass to `AppLogger` / crash reporting.
 
 ## Logging
 
-- Use **fixed log messages** for errors; pass the error object as the second parameter to `AppLogger.error(message, error, stackTrace)` so URLs, paths, or PII are not interpolated into the message string.
+- Use `AppLogger.error(message, error, stackTrace)` for structured error logging.
 - For stream subscriptions (widgets, adapters), provide `onError` when calling `stream.listen(...)` so errors are logged and do not become unhandled zone errors.
 
 ## Crash reporting (optional)
