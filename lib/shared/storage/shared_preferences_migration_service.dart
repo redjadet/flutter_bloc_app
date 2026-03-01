@@ -31,7 +31,8 @@ class SharedPreferencesMigrationService {
         _migrationBoxName,
         encrypted: false,
       );
-      return box.get(_migrationKey, defaultValue: false) as bool;
+      final dynamic value = box.get(_migrationKey, defaultValue: false);
+      return value is bool && value;
     },
     fallback: () => false,
   );
