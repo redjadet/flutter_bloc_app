@@ -48,5 +48,25 @@ void main() {
         await breaker.execute<void>(() async {});
       },
     );
+
+    test('allows probe immediately when cooldown is zero', () async {
+      final CircuitBreaker breaker = CircuitBreaker(
+        key: 'zero-cooldown',
+        failureThreshold: 1,
+        window: const Duration(seconds: 1),
+        cooldown: Duration.zero,
+      );
+
+      await expectLater(
+        () => breaker.execute<void>(() async {
+          throw StateError('fail');
+        }),
+        throwsA(isA<StateError>()),
+      );
+      expect(breaker.state, CircuitState.open);
+
+      await breaker.execute<void>(() async {});
+      expect(breaker.state, CircuitState.closed);
+    });
   });
 }

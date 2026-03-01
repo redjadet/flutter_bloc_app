@@ -60,7 +60,7 @@ class CircuitBreaker {
   Future<T> execute<T>(final Future<T> Function() action) async {
     if (_state == CircuitState.open) {
       if (_openedAt case final DateTime openAt
-          when DateTime.now().difference(openAt) > cooldown) {
+          when DateTime.now().difference(openAt) >= cooldown) {
         _state = CircuitState.halfOpen;
         _halfOpenProbeInFlight = false;
         _openedAt = null;
@@ -103,7 +103,8 @@ class CircuitBreaker {
 
   void _recordFailure() {
     final DateTime now = DateTime.now();
-    if (_windowStart == null || now.difference(_windowStart!) > window) {
+    final DateTime? windowStart = _windowStart;
+    if (windowStart == null || now.difference(windowStart) >= window) {
       _windowStart = now;
       _failures = 0;
     }

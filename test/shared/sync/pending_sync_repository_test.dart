@@ -110,4 +110,34 @@ void main() {
     );
     expect(remaining, isEmpty);
   });
+
+  test('getPendingOperations removes malformed stored operations', () async {
+    final SyncOperation valid = SyncOperation.create(
+      entityType: 'todo',
+      payload: <String, dynamic>{'title': 'valid'},
+      idempotencyKey: 'valid-key',
+    );
+    await repository.enqueue(valid);
+
+    final box = await repository.getBox();
+    await box.put('bad-op', <String, dynamic>{'entityType': 'todo'});
+
+    final List<SyncOperation> pending = await repository.getPendingOperations(
+      now: DateTime.now().toUtc(),
+    );
+
+    expect(pending, hasLength(1));
+    expect(pending.first.id, valid.id);
+    expect(box.get('bad-op'), isNull);
+  });
+
+  test('prune removes malformed stored operations', () async {
+    final box = await repository.getBox();
+    await box.put('bad-op', <String, dynamic>{'entityType': 'todo'});
+
+    final int pruned = await repository.prune();
+
+    expect(pruned, 1);
+    expect(box.get('bad-op'), isNull);
+  });
 }

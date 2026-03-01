@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -42,14 +43,25 @@ class PendingSyncRepository extends HiveRepositoryBase {
     logContext: 'PendingSyncRepository.getPendingOperations',
     action: () async {
       final Box<dynamic> box = await getBox();
-      final List<SyncOperation> operations =
-          box.values
-              .whereType<Map<dynamic, dynamic>>()
-              .map(_operationFromJson)
-              .toList(growable: false)
-            ..sort(
-              (final a, final b) => a.createdAt.compareTo(b.createdAt),
-            );
+      final List<dynamic> malformedKeys = <dynamic>[];
+      final List<SyncOperation> operations = <SyncOperation>[];
+      for (final MapEntry<dynamic, dynamic> entry in box.toMap().entries) {
+        final dynamic value = entry.value;
+        if (value is! Map<dynamic, dynamic>) {
+          malformedKeys.add(entry.key);
+          continue;
+        }
+        final SyncOperation? operation = _operationFromJsonOrNull(value);
+        if (operation == null) {
+          malformedKeys.add(entry.key);
+          continue;
+        }
+        operations.add(operation);
+      }
+      operations.sort((final a, final b) => a.createdAt.compareTo(b.createdAt));
+      for (final dynamic key in malformedKeys) {
+        await box.delete(key);
+      }
 
       final DateTime threshold = (now ?? DateTime.now()).toUtc();
       final Iterable<SyncOperation> ready = operations.where(
@@ -90,10 +102,15 @@ class PendingSyncRepository extends HiveRepositoryBase {
         final Box<dynamic> box = await getBox();
         final dynamic stored = box.get(operationId);
         if (stored is! Map<dynamic, dynamic>) {
+          await box.delete(operationId);
           return;
         }
 
-        final SyncOperation existing = _operationFromJson(stored);
+        final SyncOperation? existing = _operationFromJsonOrNull(stored);
+        if (existing == null) {
+          await box.delete(operationId);
+          return;
+        }
         final SyncOperation updated = existing.copyWith(
           nextRetryAt: nextRetryAt,
           retryCount: retryCount ?? (existing.retryCount + 1),
@@ -129,9 +146,14 @@ class PendingSyncRepository extends HiveRepositoryBase {
       for (final MapEntry<dynamic, dynamic> entry in box.toMap().entries) {
         final dynamic value = entry.value;
         if (value is! Map<dynamic, dynamic>) {
+          keysToDelete.add(entry.key);
           continue;
         }
-        final SyncOperation op = _operationFromJson(value);
+        final SyncOperation? op = _operationFromJsonOrNull(value);
+        if (op == null) {
+          keysToDelete.add(entry.key);
+          continue;
+        }
         final bool tooManyRetries = op.retryCount >= maxRetryCount;
         final bool tooOld = switch (op.nextRetryAt) {
           final nextRetryAt? => nextRetryAt.isBefore(cutoff),
@@ -151,7 +173,8 @@ class PendingSyncRepository extends HiveRepositoryBase {
 
   // When reading from a Hive box with no explicit type, the map keys
   // are dynamic. We need to recursively convert to Map<String, dynamic>.
-  SyncOperation _operationFromJson(final Map<dynamic, dynamic> json) {
+  /// Returns null when the stored map is malformed (log and skip).
+  SyncOperation? _operationFromJsonOrNull(final Map<dynamic, dynamic> json) {
     final Map<String, dynamic> converted = <String, dynamic>{};
     for (final MapEntry<dynamic, dynamic> entry in json.entries) {
       if (entry.key is! String) {
@@ -176,7 +199,16 @@ class PendingSyncRepository extends HiveRepositoryBase {
         converted[key] = value;
       }
     }
-    return SyncOperation.fromJson(converted);
+    try {
+      return SyncOperation.fromJson(converted);
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'PendingSyncRepository: malformed stored operation',
+        error,
+        stackTrace,
+      );
+      return null;
+    }
   }
 
   /// Recursively converts `Map<dynamic, dynamic>` to `Map<String, dynamic>`.

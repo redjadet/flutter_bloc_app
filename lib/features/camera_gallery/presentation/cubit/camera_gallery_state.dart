@@ -17,5 +17,5 @@ abstract class CameraGalleryState with _$CameraGalleryState {
 
   bool get isLoading => status.isLoading;
   bool get hasError => status.isError;
-  bool get hasImage => imagePath != null && imagePath!.isNotEmpty;
+  bool get hasImage => imagePath?.isNotEmpty ?? false;
 }
