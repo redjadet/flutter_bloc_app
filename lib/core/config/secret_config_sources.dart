@@ -25,8 +25,8 @@ Future<Map<String, dynamic>?> _readSecureSecrets(
       'GOOGLE_MAPS_API_KEY': mapsKey,
       'GEMINI_API_KEY': geminiKey,
     };
-  } on Exception catch (e) {
-    AppLogger.warning('SecretConfig secure read failed: $e');
+  } on Exception {
+    AppLogger.warning('SecretConfig secure read failed');
     return null;
   }
 }
@@ -166,10 +166,10 @@ Future<Map<String, dynamic>?> _readAssetSecrets() async {
     AppLogger.warning(
       'SecretConfig: Asset $assetPath does not contain a JSON object.',
     );
-  } on FormatException catch (e) {
-    AppLogger.warning('SecretConfig asset parse failed: $e');
-  } on Exception catch (e) {
-    AppLogger.warning('SecretConfig asset read failed: $e');
+  } on FormatException {
+    AppLogger.warning('SecretConfig asset parse failed');
+  } on Exception {
+    AppLogger.warning('SecretConfig asset read failed');
   }
   return null;
 }
