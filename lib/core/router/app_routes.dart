@@ -88,4 +88,7 @@ class AppRoutes {
   static const igamingDemoPath = '/igaming-demo';
   static const igamingDemoGame = 'igaming-demo-game';
   static const igamingDemoGamePath = '/igaming-demo/game';
+
+  static const fcmDemo = 'fcm-demo';
+  static const fcmDemoPath = '/fcm-demo';
 }

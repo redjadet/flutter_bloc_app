@@ -21,6 +21,9 @@ import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart
 import 'package:flutter_bloc_app/features/counter/counter.dart';
 import 'package:flutter_bloc_app/features/example/presentation/pages/example_page.dart';
 import 'package:flutter_bloc_app/features/example/presentation/pages/whiteboard_page.dart';
+import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.dart';
+import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_cubit.dart';
+import 'package:flutter_bloc_app/features/fcm_demo/presentation/pages/fcm_demo_page.dart';
 import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_agent.dart';
 import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/genui_demo/presentation/pages/genui_demo_page.dart';
@@ -266,6 +269,16 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
         },
       ),
     ],
+  ),
+  GoRoute(
+    path: AppRoutes.fcmDemoPath,
+    name: AppRoutes.fcmDemo,
+    builder: (final context, final state) =>
+        BlocProviderHelpers.withAsyncInit<FcmDemoCubit>(
+          create: () => FcmDemoCubit(messaging: getIt<FcmMessagingService>()),
+          init: (final cubit) => cubit.initialize(),
+          child: const FcmDemoPage(),
+        ),
   ),
   GoRoute(
     path: AppRoutes.igamingDemoPath,

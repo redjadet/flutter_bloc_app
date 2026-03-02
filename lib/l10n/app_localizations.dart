@@ -2827,6 +2827,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'iGaming Demo'**
   String get exampleIgamingDemoButton;
+
+  /// Button label for opening the Firebase Cloud Messaging demo
+  ///
+  /// In en, this message translates to:
+  /// **'FCM Demo'**
+  String get exampleFcmDemoButton;
+
+  /// No description provided for @fcmDemoPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'FCM Demo'**
+  String get fcmDemoPageTitle;
+
+  /// No description provided for @fcmDemoPermissionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission'**
+  String get fcmDemoPermissionLabel;
+
+  /// No description provided for @fcmDemoPermissionNotDetermined.
+  ///
+  /// In en, this message translates to:
+  /// **'Not determined'**
+  String get fcmDemoPermissionNotDetermined;
+
+  /// No description provided for @fcmDemoPermissionAuthorized.
+  ///
+  /// In en, this message translates to:
+  /// **'Granted'**
+  String get fcmDemoPermissionAuthorized;
+
+  /// No description provided for @fcmDemoPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Denied'**
+  String get fcmDemoPermissionDenied;
+
+  /// No description provided for @fcmDemoPermissionProvisional.
+  ///
+  /// In en, this message translates to:
+  /// **'Provisional'**
+  String get fcmDemoPermissionProvisional;
+
+  /// No description provided for @fcmDemoFcmTokenLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'FCM token'**
+  String get fcmDemoFcmTokenLabel;
+
+  /// No description provided for @fcmDemoApnsTokenLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'APNs token'**
+  String get fcmDemoApnsTokenLabel;
+
+  /// No description provided for @fcmDemoTokenNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available'**
+  String get fcmDemoTokenNotAvailable;
+
+  /// No description provided for @fcmDemoCopyToken.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get fcmDemoCopyToken;
+
+  /// No description provided for @fcmDemoCopySuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard'**
+  String get fcmDemoCopySuccess;
+
+  /// No description provided for @fcmDemoCopyFailure.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy failed'**
+  String get fcmDemoCopyFailure;
+
+  /// No description provided for @fcmDemoLastMessageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Last message'**
+  String get fcmDemoLastMessageLabel;
+
+  /// No description provided for @fcmDemoLastMessageNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None yet'**
+  String get fcmDemoLastMessageNone;
+
+  /// No description provided for @fcmDemoLastMessageReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Message received'**
+  String get fcmDemoLastMessageReceived;
+
+  /// No description provided for @fcmDemoScopeNoteIos.
+  ///
+  /// In en, this message translates to:
+  /// **'On iOS, background/terminated delivery requires APNs key in Firebase Console.'**
+  String get fcmDemoScopeNoteIos;
+
+  /// No description provided for @fcmDemoScopeNoteSimulator.
+  ///
+  /// In en, this message translates to:
+  /// **'On iOS Simulator use the .apns file (drag onto simulator or xcrun simctl push).'**
+  String get fcmDemoScopeNoteSimulator;
 }
 
 class _AppLocalizationsDelegate

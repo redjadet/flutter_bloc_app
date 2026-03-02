@@ -36,6 +36,7 @@ void main() {
             onOpenChatList: () {},
             onOpenLibraryDemo: () {},
             onOpenIgamingDemo: () {},
+            onOpenFcmDemo: () {},
             onOpenScapes: () {},
             onOpenWalletconnectAuth: () {},
             onOpenCameraGallery: () {},
@@ -52,6 +53,53 @@ void main() {
       await tester.pump();
 
       expect(registerTapped, isTrue);
+    });
+
+    testWidgets('invokes onOpenFcmDemo when tapping FCM demo button', (
+      final tester,
+    ) async {
+      bool fcmTapped = false;
+      final theme = ThemeData.light();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ExamplePageBody(
+            l10n: AppLocalizationsEn(),
+            theme: theme,
+            colors: theme.colorScheme,
+            onBackPressed: () {},
+            onLoadPlatformInfo: () {},
+            onOpenWebsocket: () {},
+            onOpenSearch: () {},
+            onOpenTodoList: () {},
+            onOpenProfile: () {},
+            onOpenRegister: () {},
+            onOpenLoggedOut: () {},
+            onRunIsolates: () {},
+            isRunningIsolates: false,
+            isolateError: null,
+            fibonacciInput: null,
+            fibonacciResult: null,
+            parallelValues: const <int>[],
+            parallelDuration: Duration.zero,
+            onOpenChatList: () {},
+            onOpenLibraryDemo: () {},
+            onOpenIgamingDemo: () {},
+            onOpenFcmDemo: () {
+              fcmTapped = true;
+            },
+            onOpenScapes: () {},
+            onOpenWalletconnectAuth: () {},
+            onOpenCameraGallery: () {},
+          ),
+        ),
+      );
+
+      final fcmButton = find.text('FCM Demo');
+      await tester.ensureVisible(fcmButton);
+      await tester.tap(fcmButton, warnIfMissed: false);
+      await tester.pump();
+
+      expect(fcmTapped, isTrue);
     });
   });
 }
