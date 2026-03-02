@@ -6,6 +6,7 @@ export 'chat/chat.dart';
 export 'counter/counter.dart';
 export 'deeplink/deeplink.dart';
 export 'example/example.dart';
+export 'fcm_demo/fcm_demo.dart';
 export 'genui_demo/genui_demo.dart';
 export 'google_maps/google_maps.dart';
 export 'graphql_demo/graphql_demo.dart';

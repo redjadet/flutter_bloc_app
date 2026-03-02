@@ -1,0 +1,11 @@
+{
+  "Simulator Target Bundle": "com.example.flutterBlocApp",
+  "aps": {
+    "alert": {
+      "title": "FCM Demo",
+      "body": "Simulated push for iOS Simulator"
+    },
+    "sound": "default"
+  },
+  "gcm.message_id": "fcm-demo-simulator-1"
+}

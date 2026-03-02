@@ -1527,4 +1527,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exampleIgamingDemoButton => 'iGaming Demo';
+
+  @override
+  String get exampleFcmDemoButton => 'FCM Demo';
+
+  @override
+  String get fcmDemoPageTitle => 'FCM Demo';
+
+  @override
+  String get fcmDemoPermissionLabel => 'Permission';
+
+  @override
+  String get fcmDemoPermissionNotDetermined => 'Not determined';
+
+  @override
+  String get fcmDemoPermissionAuthorized => 'Granted';
+
+  @override
+  String get fcmDemoPermissionDenied => 'Denied';
+
+  @override
+  String get fcmDemoPermissionProvisional => 'Provisional';
+
+  @override
+  String get fcmDemoFcmTokenLabel => 'FCM token';
+
+  @override
+  String get fcmDemoApnsTokenLabel => 'APNs token';
+
+  @override
+  String get fcmDemoTokenNotAvailable => 'Not available';
+
+  @override
+  String get fcmDemoCopyToken => 'Copy';
+
+  @override
+  String get fcmDemoCopySuccess => 'Copied to clipboard';
+
+  @override
+  String get fcmDemoCopyFailure => 'Copy failed';
+
+  @override
+  String get fcmDemoLastMessageLabel => 'Last message';
+
+  @override
+  String get fcmDemoLastMessageNone => 'None yet';
+
+  @override
+  String get fcmDemoLastMessageReceived => 'Message received';
+
+  @override
+  String get fcmDemoScopeNoteIos =>
+      'On iOS, background/terminated delivery requires APNs key in Firebase Console.';
+
+  @override
+  String get fcmDemoScopeNoteSimulator =>
+      'On iOS Simulator use the .apns file (drag onto simulator or xcrun simctl push).';
 }
