@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/core/di/register_chat_services.dart';
 import 'package:flutter_bloc_app/core/di/register_genui_services.dart';
 import 'package:flutter_bloc_app/core/di/register_http_services.dart';
+import 'package:flutter_bloc_app/core/di/register_igaming_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_playlearn_services.dart';
 import 'package:flutter_bloc_app/core/di/register_profile_services.dart';
 import 'package:flutter_bloc_app/core/di/register_remote_config_services.dart';
@@ -57,6 +58,7 @@ Future<void> registerAllDependencies() async {
   registerGenUiServices();
   registerWalletConnectAuthServices();
   registerPlaylearnServices();
+  registerIgamingDemoServices();
   _registerCameraGalleryServices();
   _registerUtilityServices();
   _registerSyncServices();

@@ -1419,6 +1419,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get openPlaylearnTooltip => 'Ouvrir Playlearn';
 
   @override
+  String get openIgamingDemoTooltip => 'Démo iGaming';
+
+  @override
   String get whiteboardChoosePenColor => 'Choisir la couleur du stylet';
 
   @override
@@ -1486,4 +1489,68 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get errorServiceUnavailable =>
       'Service temporairement indisponible. Veuillez réessayer dans une minute.';
+
+  @override
+  String get igamingDemoLobbyTitle => 'Démo iGaming';
+
+  @override
+  String get igamingDemoBalanceLabel => 'Solde virtuel';
+
+  @override
+  String get igamingDemoPlayGame => 'Jouer à Lucky Spin';
+
+  @override
+  String get igamingDemoGameTitle => 'Lucky Spin';
+
+  @override
+  String get igamingDemoStakeLabel => 'Mise';
+
+  @override
+  String get igamingDemoPlayButton => 'Tourner';
+
+  @override
+  String get igamingDemoResultWin => 'Vous avez gagné !';
+
+  @override
+  String get igamingDemoResultLoss => 'Pas de gain cette fois.';
+
+  @override
+  String get igamingDemoPlayAgain => 'Rejouer';
+
+  @override
+  String get igamingDemoBackToLobby => 'Retour au lobby';
+
+  @override
+  String get igamingDemoErrorInsufficientBalance => 'Solde insuffisant';
+
+  @override
+  String get igamingDemoErrorLoadBalance => 'Impossible de charger le solde';
+
+  @override
+  String get igamingDemoSymbolLegendTitle => 'Symboles';
+
+  @override
+  String get igamingDemoSymbolWinHint =>
+      'Trois symboles identiques = Gagné. Symboles différents = Pas de gain.';
+
+  @override
+  String get igamingDemoSymbol7 => 'Sept';
+
+  @override
+  String get igamingDemoSymbolStar => 'Étoile';
+
+  @override
+  String get igamingDemoSymbolDiamond => 'Losange';
+
+  @override
+  String get igamingDemoSymbolCircle => 'Cercle';
+
+  @override
+  String get igamingDemoSymbolTriangle => 'Triangle';
+
+  @override
+  String get igamingDemoSymbolGem => 'Pierre';
+
+  @override
+  String get exampleIgamingDemoButton => 'Démo iGaming';
 }

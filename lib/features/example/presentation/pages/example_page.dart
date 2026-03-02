@@ -147,6 +147,7 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenRegister: () => context.pushNamed(AppRoutes.register),
         onOpenLoggedOut: () => context.pushNamed(AppRoutes.loggedOut),
         onOpenLibraryDemo: () => context.pushNamed(AppRoutes.libraryDemo),
+        onOpenIgamingDemo: () => context.pushNamed(AppRoutes.igamingDemo),
         onOpenScapes: () => context.pushNamed(AppRoutes.scapes),
         onOpenWalletconnectAuth: () =>
             context.pushNamed(AppRoutes.walletconnectAuth),

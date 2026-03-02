@@ -1417,6 +1417,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get openPlaylearnTooltip => 'Playlearn öffnen';
 
   @override
+  String get openIgamingDemoTooltip => 'iGaming Demo';
+
+  @override
   String get whiteboardChoosePenColor => 'Stiftfarbe wählen';
 
   @override
@@ -1489,4 +1492,69 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get errorServiceUnavailable =>
       'Dienst vorübergehend nicht verfügbar. Bitte versuchen Sie es in einer Minute erneut.';
+
+  @override
+  String get igamingDemoLobbyTitle => 'iGaming Demo';
+
+  @override
+  String get igamingDemoBalanceLabel => 'Virtuelles Guthaben';
+
+  @override
+  String get igamingDemoPlayGame => 'Lucky Spin spielen';
+
+  @override
+  String get igamingDemoGameTitle => 'Lucky Spin';
+
+  @override
+  String get igamingDemoStakeLabel => 'Einsatz';
+
+  @override
+  String get igamingDemoPlayButton => 'Drehen';
+
+  @override
+  String get igamingDemoResultWin => 'Gewonnen!';
+
+  @override
+  String get igamingDemoResultLoss => 'Diesmal leider kein Gewinn.';
+
+  @override
+  String get igamingDemoPlayAgain => 'Nochmal spielen';
+
+  @override
+  String get igamingDemoBackToLobby => 'Zurück zur Lobby';
+
+  @override
+  String get igamingDemoErrorInsufficientBalance => 'Nicht genug Guthaben';
+
+  @override
+  String get igamingDemoErrorLoadBalance =>
+      'Guthaben konnte nicht geladen werden';
+
+  @override
+  String get igamingDemoSymbolLegendTitle => 'Symbole';
+
+  @override
+  String get igamingDemoSymbolWinHint =>
+      'Drei gleiche Symbole = Gewinn. Unterschiedliche Symbole = Kein Gewinn.';
+
+  @override
+  String get igamingDemoSymbol7 => 'Sieben';
+
+  @override
+  String get igamingDemoSymbolStar => 'Stern';
+
+  @override
+  String get igamingDemoSymbolDiamond => 'Raute';
+
+  @override
+  String get igamingDemoSymbolCircle => 'Kreis';
+
+  @override
+  String get igamingDemoSymbolTriangle => 'Dreieck';
+
+  @override
+  String get igamingDemoSymbolGem => 'Edelstein';
+
+  @override
+  String get exampleIgamingDemoButton => 'iGaming Demo';
 }

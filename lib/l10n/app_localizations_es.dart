@@ -1408,6 +1408,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get openPlaylearnTooltip => 'Abrir Playlearn';
 
   @override
+  String get openIgamingDemoTooltip => 'Demo iGaming';
+
+  @override
   String get whiteboardChoosePenColor => 'Elegir color del lápiz';
 
   @override
@@ -1476,4 +1479,68 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get errorServiceUnavailable =>
       'Servicio no disponible temporalmente. Inténtelo de nuevo en un minuto.';
+
+  @override
+  String get igamingDemoLobbyTitle => 'Demo iGaming';
+
+  @override
+  String get igamingDemoBalanceLabel => 'Saldo virtual';
+
+  @override
+  String get igamingDemoPlayGame => 'Jugar Lucky Spin';
+
+  @override
+  String get igamingDemoGameTitle => 'Lucky Spin';
+
+  @override
+  String get igamingDemoStakeLabel => 'Apuesta';
+
+  @override
+  String get igamingDemoPlayButton => 'Girar';
+
+  @override
+  String get igamingDemoResultWin => '¡Has ganado!';
+
+  @override
+  String get igamingDemoResultLoss => 'Esta vez no ha habido suerte.';
+
+  @override
+  String get igamingDemoPlayAgain => 'Jugar de nuevo';
+
+  @override
+  String get igamingDemoBackToLobby => 'Volver al lobby';
+
+  @override
+  String get igamingDemoErrorInsufficientBalance => 'Saldo insuficiente';
+
+  @override
+  String get igamingDemoErrorLoadBalance => 'No se pudo cargar el saldo';
+
+  @override
+  String get igamingDemoSymbolLegendTitle => 'Símbolos';
+
+  @override
+  String get igamingDemoSymbolWinHint =>
+      'Tres símbolos iguales = Ganas. Símbolos distintos = No ganas.';
+
+  @override
+  String get igamingDemoSymbol7 => 'Siete';
+
+  @override
+  String get igamingDemoSymbolStar => 'Estrella';
+
+  @override
+  String get igamingDemoSymbolDiamond => 'Diamante';
+
+  @override
+  String get igamingDemoSymbolCircle => 'Círculo';
+
+  @override
+  String get igamingDemoSymbolTriangle => 'Triángulo';
+
+  @override
+  String get igamingDemoSymbolGem => 'Gema';
+
+  @override
+  String get exampleIgamingDemoButton => 'Demo iGaming';
 }

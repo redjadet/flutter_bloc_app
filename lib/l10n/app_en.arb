@@ -1810,6 +1810,10 @@
   "@openPlaylearnTooltip": {
     "description": "Tooltip for Playlearn entry in app bar or menu"
   },
+  "openIgamingDemoTooltip": "iGaming Demo",
+  "@openIgamingDemoTooltip": {
+    "description": "Tooltip for iGaming play-for-fun demo in app bar or menu"
+  },
   "whiteboardChoosePenColor": "Choose pen color",
   "@whiteboardChoosePenColor": {
     "description": "Tooltip and dialog title for whiteboard pen color picker"
@@ -1893,5 +1897,71 @@
   "errorServiceUnavailable": "Service temporarily unavailable. Please try again in a minute.",
   "@errorServiceUnavailable": {
     "description": "503 service unavailable error message"
+  },
+  "igamingDemoLobbyTitle": "iGaming Demo",
+  "@igamingDemoLobbyTitle": {
+    "description": "Title for the play-for-fun iGaming demo lobby"
+  },
+  "igamingDemoBalanceLabel": "Virtual balance",
+  "@igamingDemoBalanceLabel": {
+    "description": "Label for the virtual balance display"
+  },
+  "igamingDemoPlayGame": "Play Lucky Spin",
+  "@igamingDemoPlayGame": {
+    "description": "Button to open the demo game"
+  },
+  "igamingDemoGameTitle": "Lucky Spin",
+  "@igamingDemoGameTitle": {
+    "description": "Title of the demo game screen"
+  },
+  "igamingDemoStakeLabel": "Stake",
+  "@igamingDemoStakeLabel": {
+    "description": "Label for stake amount"
+  },
+  "igamingDemoPlayButton": "Spin",
+  "@igamingDemoPlayButton": {
+    "description": "Button to play one round"
+  },
+  "igamingDemoResultWin": "You won!",
+  "@igamingDemoResultWin": {
+    "description": "Message when the player wins a round"
+  },
+  "igamingDemoResultLoss": "No win this time.",
+  "@igamingDemoResultLoss": {
+    "description": "Message when the player loses a round"
+  },
+  "igamingDemoPlayAgain": "Play again",
+  "@igamingDemoPlayAgain": {
+    "description": "Button to play another round"
+  },
+  "igamingDemoBackToLobby": "Back to lobby",
+  "@igamingDemoBackToLobby": {
+    "description": "Button to return to the demo lobby"
+  },
+  "igamingDemoErrorInsufficientBalance": "Insufficient balance",
+  "@igamingDemoErrorInsufficientBalance": {
+    "description": "Error when bet exceeds balance"
+  },
+  "igamingDemoErrorLoadBalance": "Failed to load balance",
+  "@igamingDemoErrorLoadBalance": {
+    "description": "Error when balance cannot be loaded"
+  },
+  "igamingDemoSymbolLegendTitle": "Symbols",
+  "@igamingDemoSymbolLegendTitle": {
+    "description": "Title for the reel symbols legend"
+  },
+  "igamingDemoSymbolWinHint": "Three matching symbols = Win. Different symbols = No win.",
+  "@igamingDemoSymbolWinHint": {
+    "description": "Clear rule: why the player won or lost based on the reels"
+  },
+  "igamingDemoSymbol7": "Seven",
+  "igamingDemoSymbolStar": "Star",
+  "igamingDemoSymbolDiamond": "Diamond",
+  "igamingDemoSymbolCircle": "Circle",
+  "igamingDemoSymbolTriangle": "Triangle",
+  "igamingDemoSymbolGem": "Gem",
+  "exampleIgamingDemoButton": "iGaming Demo",
+  "@exampleIgamingDemoButton": {
+    "description": "Button label for opening the iGaming play-for-fun demo"
   }
 }

@@ -1393,6 +1393,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openPlaylearnTooltip => 'Open Playlearn';
 
   @override
+  String get openIgamingDemoTooltip => 'iGaming Demo';
+
+  @override
   String get whiteboardChoosePenColor => 'Choose pen color';
 
   @override
@@ -1460,4 +1463,68 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorServiceUnavailable =>
       'Service temporarily unavailable. Please try again in a minute.';
+
+  @override
+  String get igamingDemoLobbyTitle => 'iGaming Demo';
+
+  @override
+  String get igamingDemoBalanceLabel => 'Virtual balance';
+
+  @override
+  String get igamingDemoPlayGame => 'Play Lucky Spin';
+
+  @override
+  String get igamingDemoGameTitle => 'Lucky Spin';
+
+  @override
+  String get igamingDemoStakeLabel => 'Stake';
+
+  @override
+  String get igamingDemoPlayButton => 'Spin';
+
+  @override
+  String get igamingDemoResultWin => 'You won!';
+
+  @override
+  String get igamingDemoResultLoss => 'No win this time.';
+
+  @override
+  String get igamingDemoPlayAgain => 'Play again';
+
+  @override
+  String get igamingDemoBackToLobby => 'Back to lobby';
+
+  @override
+  String get igamingDemoErrorInsufficientBalance => 'Insufficient balance';
+
+  @override
+  String get igamingDemoErrorLoadBalance => 'Failed to load balance';
+
+  @override
+  String get igamingDemoSymbolLegendTitle => 'Symbols';
+
+  @override
+  String get igamingDemoSymbolWinHint =>
+      'Three matching symbols = Win. Different symbols = No win.';
+
+  @override
+  String get igamingDemoSymbol7 => 'Seven';
+
+  @override
+  String get igamingDemoSymbolStar => 'Star';
+
+  @override
+  String get igamingDemoSymbolDiamond => 'Diamond';
+
+  @override
+  String get igamingDemoSymbolCircle => 'Circle';
+
+  @override
+  String get igamingDemoSymbolTriangle => 'Triangle';
+
+  @override
+  String get igamingDemoSymbolGem => 'Gem';
+
+  @override
+  String get exampleIgamingDemoButton => 'iGaming Demo';
 }

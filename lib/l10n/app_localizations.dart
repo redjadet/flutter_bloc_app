@@ -2570,6 +2570,12 @@ abstract class AppLocalizations {
   /// **'Open Playlearn'**
   String get openPlaylearnTooltip;
 
+  /// Tooltip for iGaming play-for-fun demo in app bar or menu
+  ///
+  /// In en, this message translates to:
+  /// **'iGaming Demo'**
+  String get openIgamingDemoTooltip;
+
   /// Tooltip and dialog title for whiteboard pen color picker
   ///
   /// In en, this message translates to:
@@ -2695,6 +2701,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Service temporarily unavailable. Please try again in a minute.'**
   String get errorServiceUnavailable;
+
+  /// Title for the play-for-fun iGaming demo lobby
+  ///
+  /// In en, this message translates to:
+  /// **'iGaming Demo'**
+  String get igamingDemoLobbyTitle;
+
+  /// Label for the virtual balance display
+  ///
+  /// In en, this message translates to:
+  /// **'Virtual balance'**
+  String get igamingDemoBalanceLabel;
+
+  /// Button to open the demo game
+  ///
+  /// In en, this message translates to:
+  /// **'Play Lucky Spin'**
+  String get igamingDemoPlayGame;
+
+  /// Title of the demo game screen
+  ///
+  /// In en, this message translates to:
+  /// **'Lucky Spin'**
+  String get igamingDemoGameTitle;
+
+  /// Label for stake amount
+  ///
+  /// In en, this message translates to:
+  /// **'Stake'**
+  String get igamingDemoStakeLabel;
+
+  /// Button to play one round
+  ///
+  /// In en, this message translates to:
+  /// **'Spin'**
+  String get igamingDemoPlayButton;
+
+  /// Message when the player wins a round
+  ///
+  /// In en, this message translates to:
+  /// **'You won!'**
+  String get igamingDemoResultWin;
+
+  /// Message when the player loses a round
+  ///
+  /// In en, this message translates to:
+  /// **'No win this time.'**
+  String get igamingDemoResultLoss;
+
+  /// Button to play another round
+  ///
+  /// In en, this message translates to:
+  /// **'Play again'**
+  String get igamingDemoPlayAgain;
+
+  /// Button to return to the demo lobby
+  ///
+  /// In en, this message translates to:
+  /// **'Back to lobby'**
+  String get igamingDemoBackToLobby;
+
+  /// Error when bet exceeds balance
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient balance'**
+  String get igamingDemoErrorInsufficientBalance;
+
+  /// Error when balance cannot be loaded
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load balance'**
+  String get igamingDemoErrorLoadBalance;
+
+  /// Title for the reel symbols legend
+  ///
+  /// In en, this message translates to:
+  /// **'Symbols'**
+  String get igamingDemoSymbolLegendTitle;
+
+  /// Clear rule: why the player won or lost based on the reels
+  ///
+  /// In en, this message translates to:
+  /// **'Three matching symbols = Win. Different symbols = No win.'**
+  String get igamingDemoSymbolWinHint;
+
+  /// No description provided for @igamingDemoSymbol7.
+  ///
+  /// In en, this message translates to:
+  /// **'Seven'**
+  String get igamingDemoSymbol7;
+
+  /// No description provided for @igamingDemoSymbolStar.
+  ///
+  /// In en, this message translates to:
+  /// **'Star'**
+  String get igamingDemoSymbolStar;
+
+  /// No description provided for @igamingDemoSymbolDiamond.
+  ///
+  /// In en, this message translates to:
+  /// **'Diamond'**
+  String get igamingDemoSymbolDiamond;
+
+  /// No description provided for @igamingDemoSymbolCircle.
+  ///
+  /// In en, this message translates to:
+  /// **'Circle'**
+  String get igamingDemoSymbolCircle;
+
+  /// No description provided for @igamingDemoSymbolTriangle.
+  ///
+  /// In en, this message translates to:
+  /// **'Triangle'**
+  String get igamingDemoSymbolTriangle;
+
+  /// No description provided for @igamingDemoSymbolGem.
+  ///
+  /// In en, this message translates to:
+  /// **'Gem'**
+  String get igamingDemoSymbolGem;
+
+  /// Button label for opening the iGaming play-for-fun demo
+  ///
+  /// In en, this message translates to:
+  /// **'iGaming Demo'**
+  String get exampleIgamingDemoButton;
 }
 
 class _AppLocalizationsDelegate
