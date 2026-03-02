@@ -55,9 +55,9 @@ Future<void> _persistToSecureStorage(final SecretStorage storage) async {
 }
 
 void _applySecrets(final Map<String, dynamic> json) {
-  final String? token = (json['HUGGINGFACE_API_KEY'] as String?)?.trim();
+  final String? token = stringFromDynamic(json['HUGGINGFACE_API_KEY'])?.trim();
   SecretConfig._huggingfaceApiKey = (token?.isEmpty ?? true) ? null : token;
-  final String? model = (json['HUGGINGFACE_MODEL'] as String?)?.trim();
+  final String? model = stringFromDynamic(json['HUGGINGFACE_MODEL'])?.trim();
   SecretConfig._huggingfaceModel = (model?.isEmpty ?? true) ? null : model;
 
   final Object? flag = json['HUGGINGFACE_USE_CHAT_COMPLETIONS'];
@@ -69,11 +69,13 @@ void _applySecrets(final Map<String, dynamic> json) {
     SecretConfig._useChatCompletions = false;
   }
 
-  final String? mapsKey = (json['GOOGLE_MAPS_API_KEY'] as String?)?.trim();
+  final String? mapsKey = stringFromDynamic(
+    json['GOOGLE_MAPS_API_KEY'],
+  )?.trim();
   SecretConfig._googleMapsApiKey = (mapsKey?.isEmpty ?? true) ? null : mapsKey;
 
-  final String? geminiKey = (json['GEMINI_API_KEY'] as String?)?.trim();
-  final String? googleKey = (json['GOOGLE_API_KEY'] as String?)?.trim();
+  final String? geminiKey = stringFromDynamic(json['GEMINI_API_KEY'])?.trim();
+  final String? googleKey = stringFromDynamic(json['GOOGLE_API_KEY'])?.trim();
   final String? resolvedKey = (geminiKey?.isNotEmpty ?? false)
       ? geminiKey
       : googleKey;
@@ -84,12 +86,14 @@ void _applySecrets(final Map<String, dynamic> json) {
 
 bool _hasSecrets(final Map<String, dynamic>? source) {
   if (source == null) return false;
-  final String? token = (source['HUGGINGFACE_API_KEY'] as String?)?.trim();
-  final String? model = (source['HUGGINGFACE_MODEL'] as String?)?.trim();
+  final String? token = stringFromDynamic(
+    source['HUGGINGFACE_API_KEY'],
+  )?.trim();
+  final String? model = stringFromDynamic(source['HUGGINGFACE_MODEL'])?.trim();
   final Object? flag = source['HUGGINGFACE_USE_CHAT_COMPLETIONS'];
-  final String? maps = (source['GOOGLE_MAPS_API_KEY'] as String?)?.trim();
-  final String? gemini = (source['GEMINI_API_KEY'] as String?)?.trim();
-  final String? googleKey = (source['GOOGLE_API_KEY'] as String?)?.trim();
+  final String? maps = stringFromDynamic(source['GOOGLE_MAPS_API_KEY'])?.trim();
+  final String? gemini = stringFromDynamic(source['GEMINI_API_KEY'])?.trim();
+  final String? googleKey = stringFromDynamic(source['GOOGLE_API_KEY'])?.trim();
 
   final bool hasToken = token != null && token.isNotEmpty;
   final bool hasModel = model != null && model.isNotEmpty;
