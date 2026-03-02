@@ -83,4 +83,9 @@ class AppRoutes {
 
   static const cameraGallery = 'camera-gallery';
   static const cameraGalleryPath = '/camera-gallery';
+
+  static const igamingDemo = 'igaming-demo';
+  static const igamingDemoPath = '/igaming-demo';
+  static const igamingDemoGame = 'igaming-demo-game';
+  static const igamingDemoGamePath = '/igaming-demo/game';
 }

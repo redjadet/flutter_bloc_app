@@ -1246,6 +1246,7 @@
     "description": "Back button label for playlearn pages"
   },
   "openPlaylearnTooltip": "Playlearn'i Aç",
+  "openIgamingDemoTooltip": "iGaming Demo",
   "@openPlaylearnTooltip": {
     "description": "Tooltip for Playlearn entry in app bar or menu"
   },
@@ -1270,5 +1271,26 @@
   "errorClient": "İstemci hatası. İsteğinizi kontrol edip tekrar deneyin.",
   "errorTooManyRequests": "Çok fazla istek. Tekrar denemeden önce bekleyin.",
   "errorServiceUnavailable": "Hizmet geçici olarak kullanılamıyor. Lütfen bir dakika sonra tekrar deneyin.",
-  "retryButtonLabel": "Tekrar dene"
+  "retryButtonLabel": "Tekrar dene",
+  "igamingDemoLobbyTitle": "iGaming Demo",
+  "igamingDemoBalanceLabel": "Sanal bakiye",
+  "igamingDemoPlayGame": "Şans Çarkı Oyna",
+  "igamingDemoGameTitle": "Şans Çarkı",
+  "igamingDemoStakeLabel": "Bahis",
+  "igamingDemoPlayButton": "Çevir",
+  "igamingDemoResultWin": "Kazandınız!",
+  "igamingDemoResultLoss": "Bu sefer kazanamadınız.",
+  "igamingDemoPlayAgain": "Tekrar oyna",
+  "igamingDemoBackToLobby": "Lobiye dön",
+  "igamingDemoErrorInsufficientBalance": "Bakiye yetersiz",
+  "igamingDemoErrorLoadBalance": "Bakiye yüklenemedi",
+  "igamingDemoSymbolLegendTitle": "Semboller",
+  "igamingDemoSymbolWinHint": "Üç aynı sembol = Kazanç. Farklı semboller = Kazanç yok.",
+  "igamingDemoSymbol7": "Yedi",
+  "igamingDemoSymbolStar": "Yıldız",
+  "igamingDemoSymbolDiamond": "Elmas",
+  "igamingDemoSymbolCircle": "Daire",
+  "igamingDemoSymbolTriangle": "Üçgen",
+  "igamingDemoSymbolGem": "Taş",
+  "exampleIgamingDemoButton": "iGaming Demo"
 }

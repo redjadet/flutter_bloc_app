@@ -28,6 +28,11 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repo
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/pages/graphql_demo_page.dart';
+import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance_repository.dart';
+import 'package:flutter_bloc_app/features/igaming_demo/presentation/game_cubit.dart';
+import 'package:flutter_bloc_app/features/igaming_demo/presentation/lobby_cubit.dart';
+import 'package:flutter_bloc_app/features/igaming_demo/presentation/pages/game_page.dart';
+import 'package:flutter_bloc_app/features/igaming_demo/presentation/pages/lobby_page.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/pages/library_demo_page.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/playlearn_page.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/vocabulary_list_page.dart';
@@ -258,6 +263,39 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
         builder: (final context, final state) {
           final topicId = state.pathParameters['topicId'] ?? '';
           return VocabularyListPage(topicId: topicId);
+        },
+      ),
+    ],
+  ),
+  GoRoute(
+    path: AppRoutes.igamingDemoPath,
+    name: AppRoutes.igamingDemo,
+    builder: (final context, final state) {
+      final l10n = context.l10n;
+      return BlocProviderHelpers.withAsyncInit<LobbyCubit>(
+        create: () => LobbyCubit(
+          repository: getIt<DemoBalanceRepository>(),
+          l10n: l10n,
+        ),
+        init: (final cubit) => cubit.loadBalance(),
+        child: const LobbyPage(),
+      );
+    },
+    routes: <GoRoute>[
+      GoRoute(
+        path: 'game',
+        name: AppRoutes.igamingDemoGame,
+        builder: (final context, final state) {
+          final l10n = context.l10n;
+          return BlocProviderHelpers.withAsyncInit<GameCubit>(
+            create: () => GameCubit(
+              balanceRepository: getIt<DemoBalanceRepository>(),
+              timerService: getIt<TimerService>(),
+              l10n: l10n,
+            ),
+            init: (final cubit) => cubit.loadBalance(),
+            child: const GamePage(),
+          );
         },
       ),
     ],

@@ -1397,6 +1397,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get openPlaylearnTooltip => 'Playlearn\'i Aç';
 
   @override
+  String get openIgamingDemoTooltip => 'iGaming Demo';
+
+  @override
   String get whiteboardChoosePenColor => 'Kalem rengi seç';
 
   @override
@@ -1464,4 +1467,68 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get errorServiceUnavailable =>
       'Hizmet geçici olarak kullanılamıyor. Lütfen bir dakika sonra tekrar deneyin.';
+
+  @override
+  String get igamingDemoLobbyTitle => 'iGaming Demo';
+
+  @override
+  String get igamingDemoBalanceLabel => 'Sanal bakiye';
+
+  @override
+  String get igamingDemoPlayGame => 'Şans Çarkı Oyna';
+
+  @override
+  String get igamingDemoGameTitle => 'Şans Çarkı';
+
+  @override
+  String get igamingDemoStakeLabel => 'Bahis';
+
+  @override
+  String get igamingDemoPlayButton => 'Çevir';
+
+  @override
+  String get igamingDemoResultWin => 'Kazandınız!';
+
+  @override
+  String get igamingDemoResultLoss => 'Bu sefer kazanamadınız.';
+
+  @override
+  String get igamingDemoPlayAgain => 'Tekrar oyna';
+
+  @override
+  String get igamingDemoBackToLobby => 'Lobiye dön';
+
+  @override
+  String get igamingDemoErrorInsufficientBalance => 'Bakiye yetersiz';
+
+  @override
+  String get igamingDemoErrorLoadBalance => 'Bakiye yüklenemedi';
+
+  @override
+  String get igamingDemoSymbolLegendTitle => 'Semboller';
+
+  @override
+  String get igamingDemoSymbolWinHint =>
+      'Üç aynı sembol = Kazanç. Farklı semboller = Kazanç yok.';
+
+  @override
+  String get igamingDemoSymbol7 => 'Yedi';
+
+  @override
+  String get igamingDemoSymbolStar => 'Yıldız';
+
+  @override
+  String get igamingDemoSymbolDiamond => 'Elmas';
+
+  @override
+  String get igamingDemoSymbolCircle => 'Daire';
+
+  @override
+  String get igamingDemoSymbolTriangle => 'Üçgen';
+
+  @override
+  String get igamingDemoSymbolGem => 'Taş';
+
+  @override
+  String get exampleIgamingDemoButton => 'iGaming Demo';
 }

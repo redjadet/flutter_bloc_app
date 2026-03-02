@@ -20,6 +20,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.onOpenRegister,
     required this.onOpenLoggedOut,
     required this.onOpenLibraryDemo,
+    required this.onOpenIgamingDemo,
     required this.onOpenScapes,
     required this.onOpenWalletconnectAuth,
     required this.onOpenCameraGallery,
@@ -46,6 +47,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onOpenRegister;
   final VoidCallback onOpenLoggedOut;
   final VoidCallback onOpenLibraryDemo;
+  final VoidCallback onOpenIgamingDemo;
   final VoidCallback onOpenScapes;
   final VoidCallback onOpenWalletconnectAuth;
   final VoidCallback onOpenCameraGallery;
@@ -175,6 +177,13 @@ class ExamplePageBody extends StatelessWidget {
             onPressed: onOpenLibraryDemo,
             icon: Icons.auto_stories_outlined,
             label: l10n.exampleLibraryDemoButton,
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenIgamingDemo,
+            icon: Icons.casino_outlined,
+            label: l10n.exampleIgamingDemoButton,
           ),
           SizedBox(height: context.responsiveGapS),
           _buildIconButton(
