@@ -1253,7 +1253,6 @@
   "errorClient": "Clientfehler. Bitte überprüfen Sie Ihre Anfrage und versuchen Sie es erneut.",
   "errorTooManyRequests": "Zu viele Anfragen. Bitte warten Sie, bevor Sie es erneut versuchen.",
   "errorServiceUnavailable": "Dienst vorübergehend nicht verfügbar. Bitte versuchen Sie es in einer Minute erneut.",
-  "retryButtonLabel": "Erneut versuchen",
   "igamingDemoLobbyTitle": "iGaming Demo",
   "igamingDemoBalanceLabel": "Virtuelles Guthaben",
   "igamingDemoPlayGame": "Lucky Spin spielen",

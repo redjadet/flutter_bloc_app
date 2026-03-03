@@ -459,7 +459,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get searchHint => 'Ara...';
 
   @override
-  String get retryButtonLabel => 'Tekrar dene';
+  String get retryButtonLabel => 'TEKRAR DENE';
 
   @override
   String get featureLoadError =>

@@ -1272,7 +1272,6 @@
   "errorClient": "İstemci hatası. İsteğinizi kontrol edip tekrar deneyin.",
   "errorTooManyRequests": "Çok fazla istek. Tekrar denemeden önce bekleyin.",
   "errorServiceUnavailable": "Hizmet geçici olarak kullanılamıyor. Lütfen bir dakika sonra tekrar deneyin.",
-  "retryButtonLabel": "Tekrar dene",
   "igamingDemoLobbyTitle": "iGaming Demo",
   "igamingDemoBalanceLabel": "Sanal bakiye",
   "igamingDemoPlayGame": "Şans Çarkı Oyna",
