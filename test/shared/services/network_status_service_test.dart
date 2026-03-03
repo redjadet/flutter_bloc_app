@@ -64,5 +64,36 @@ void main() {
       final NetworkStatus status = await service.getCurrentStatus();
       expect(status, NetworkStatus.offline);
     });
+
+    test(
+      'getCurrentStatus returns online for mixed connectivity results',
+      () async {
+        when(() => connectivity.checkConnectivity()).thenAnswer(
+          (_) async => <ConnectivityResult>[
+            ConnectivityResult.none,
+            ConnectivityResult.wifi,
+          ],
+        );
+
+        final NetworkStatus status = await service.getCurrentStatus();
+        expect(status, NetworkStatus.online);
+      },
+    );
+
+    test('statusStream treats mixed connectivity list as online', () async {
+      final List<NetworkStatus> events = <NetworkStatus>[];
+      final StreamSubscription<NetworkStatus> subscription = service
+          .statusStream
+          .listen(events.add);
+
+      controller.add(<ConnectivityResult>[
+        ConnectivityResult.none,
+        ConnectivityResult.mobile,
+      ]);
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+
+      expect(events, contains(NetworkStatus.online));
+      await subscription.cancel();
+    });
   });
 }

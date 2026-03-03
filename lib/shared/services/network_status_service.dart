@@ -42,10 +42,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
   @override
   Future<NetworkStatus> getCurrentStatus() async {
     final dynamic raw = await _connectivity.checkConnectivity();
-    final ConnectivityResult result = raw is List<ConnectivityResult>
-        ? (raw.isNotEmpty ? raw.first : ConnectivityResult.none)
-        : raw as ConnectivityResult;
-    final NetworkStatus next = _mapConnectivity(result);
+    final NetworkStatus next = _mapConnectivityRaw(raw);
     _latest = next;
     return next;
   }
@@ -56,10 +53,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
     }
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
       (final results) {
-        final ConnectivityResult result = results.isNotEmpty
-            ? results.first
-            : ConnectivityResult.none;
-        _handleConnectivityResult(result);
+        _handleConnectivityResults(results);
       },
       onError: (final Object error, final StackTrace stackTrace) {
         AppLogger.error(
@@ -88,8 +82,8 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
     _connectivitySubscription = null;
   }
 
-  void _handleConnectivityResult(final ConnectivityResult result) {
-    final NetworkStatus next = _mapConnectivity(result);
+  void _handleConnectivityResults(final List<ConnectivityResult> results) {
+    final NetworkStatus next = _mapConnectivityList(results);
     if (next == _latest) {
       return;
     }
@@ -101,6 +95,47 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
       }
       _controller.add(next);
     });
+  }
+
+  NetworkStatus _mapConnectivityRaw(final dynamic raw) {
+    if (raw is List<ConnectivityResult>) {
+      return _mapConnectivityList(raw);
+    }
+    if (raw is ConnectivityResult) {
+      return _mapConnectivity(raw);
+    }
+    AppLogger.warning(
+      'ConnectivityNetworkStatusService.checkConnectivity returned '
+      'unexpected type: ${raw.runtimeType}',
+    );
+    return NetworkStatus.unknown;
+  }
+
+  NetworkStatus _mapConnectivityList(final List<ConnectivityResult> results) {
+    if (results.isEmpty) {
+      return NetworkStatus.offline;
+    }
+    if (results.any(_isOnlineConnectivity)) {
+      return NetworkStatus.online;
+    }
+    if (results.every((final result) => result == ConnectivityResult.none)) {
+      return NetworkStatus.offline;
+    }
+    return NetworkStatus.unknown;
+  }
+
+  bool _isOnlineConnectivity(final ConnectivityResult result) {
+    switch (result) {
+      case ConnectivityResult.bluetooth:
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.ethernet:
+      case ConnectivityResult.mobile:
+      case ConnectivityResult.vpn:
+        return true;
+      case ConnectivityResult.none:
+      case ConnectivityResult.other:
+        return false;
+    }
   }
 
   NetworkStatus _mapConnectivity(final ConnectivityResult result) {

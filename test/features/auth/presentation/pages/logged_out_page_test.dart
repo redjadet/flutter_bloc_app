@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/logged_out_page.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
@@ -21,7 +22,10 @@ void main() {
       await tester.pumpWidget(buildSubject());
       await tester.pumpAndSettle();
 
-      expect(find.text('Logged Out'), findsOneWidget);
+      expect(
+        find.text(AppLocalizationsEn().exampleLoggedOutButton),
+        findsOneWidget,
+      );
     });
 
     testWidgets('renders LoggedOutPageBody', (tester) async {

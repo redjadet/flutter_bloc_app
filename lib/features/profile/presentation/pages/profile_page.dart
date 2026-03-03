@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_b
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_gallery.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_header.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_sync_banner.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
@@ -27,10 +28,11 @@ class ProfilePage extends StatelessWidget {
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: colors.surface,
       appBar: CommonAppBar(
-        title: 'Profile',
+        title: l10n.profilePageTitle,
         backgroundColor: colors.surface,
         foregroundColor: colors.onSurface,
         cupertinoBackgroundColor: colors.surface,
@@ -54,15 +56,15 @@ class ProfilePage extends StatelessWidget {
           return CommonLoadingWidget(color: colors.onSurface);
         },
         errorBuilder: (final context, final _) => CommonErrorView(
-          message: 'Failed to load profile',
+          message: context.l10n.featureLoadError,
           onRetry: () => context.cubit<ProfileCubit>().loadProfile(),
         ),
         builder: (final context, final bodyData) {
           final colors = Theme.of(context).colorScheme;
           final profile = bodyData.user;
           if (!bodyData.hasUser || profile == null) {
-            return const CommonErrorView(
-              message: 'Failed to load profile',
+            return CommonErrorView(
+              message: context.l10n.featureLoadError,
             ); // Fallback if state is unexpected
           }
           final double sectionSpacing =

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/profile/profile.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
@@ -222,10 +223,10 @@ void main() {
       await _pumpProfilePage(tester, repository: repository);
       await _resolveAsyncWork(tester);
 
-      expect(find.text('Failed to load profile'), findsOneWidget);
-      expect(find.text('TRY AGAIN'), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().featureLoadError), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().retryButtonLabel), findsOneWidget);
 
-      await tester.tap(find.text('TRY AGAIN'));
+      await tester.tap(find.text(AppLocalizationsEn().retryButtonLabel));
       await _resolveAsyncWork(tester);
 
       expect(find.text('Jane'), findsOneWidget);
