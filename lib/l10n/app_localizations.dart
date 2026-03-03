@@ -3074,6 +3074,18 @@ abstract class AppLocalizations {
   /// **'Current value: {value}'**
   String iotDemoCurrentValue(String value);
 
+  /// Shown when user enters a value outside the allowed range
+  ///
+  /// In en, this message translates to:
+  /// **'Value must be between {min} and {max}'**
+  String iotDemoSetValueOutOfRange(String min, String max);
+
+  /// Shown when the value field is not a valid number
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid number'**
+  String get iotDemoSetValueInvalidNumber;
+
   /// Tooltip for navigating to the IoT demo page
   ///
   /// In en, this message translates to:

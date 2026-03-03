@@ -1314,5 +1314,7 @@
   "iotDemoStateOn": "An",
   "iotDemoStateOff": "Aus",
   "iotDemoCurrentValue": "Aktueller Wert: {value}",
+  "iotDemoSetValueOutOfRange": "Wert muss zwischen {min} und {max} liegen",
+  "iotDemoSetValueInvalidNumber": "Geben Sie eine gültige Zahl ein",
   "openIotDemoTooltip": "IoT-Demo öffnen"
 }

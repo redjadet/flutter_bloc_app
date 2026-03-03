@@ -2151,6 +2151,22 @@
       }
     }
   },
+  "iotDemoSetValueOutOfRange": "Value must be between {min} and {max}",
+  "@iotDemoSetValueOutOfRange": {
+    "description": "Shown when user enters a value outside the allowed range",
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "iotDemoSetValueInvalidNumber": "Enter a valid number",
+  "@iotDemoSetValueInvalidNumber": {
+    "description": "Shown when the value field is not a valid number"
+  },
   "openIotDemoTooltip": "Open IoT Demo",
   "@openIotDemoTooltip": {
     "description": "Tooltip for navigating to the IoT demo page"

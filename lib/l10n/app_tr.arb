@@ -1333,5 +1333,7 @@
   "iotDemoStateOn": "Açık",
   "iotDemoStateOff": "Kapalı",
   "iotDemoCurrentValue": "Mevcut değer: {value}",
+  "iotDemoSetValueOutOfRange": "Değer {min} ile {max} arasında olmalıdır",
+  "iotDemoSetValueInvalidNumber": "Geçerli bir sayı girin",
   "openIotDemoTooltip": "IoT demosunu aç"
 }
