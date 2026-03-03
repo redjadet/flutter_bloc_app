@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository_w
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meta/meta.dart';
@@ -84,8 +85,10 @@ class HiveCounterRepository extends HiveRepositoryBase
       final DateTime? lastSynced = HiveCounterRepositoryHelpers.parseTimestamp(
         lastSyncedMs,
       );
-      final bool synchronized =
-          box.get(_keySynchronized, defaultValue: false) as bool? ?? false;
+      final bool synchronized = boolFromDynamic(
+        box.get(_keySynchronized, defaultValue: false),
+        fallback: false,
+      );
 
       final CounterSnapshot snapshot = CounterSnapshot(
         userId: userId ?? _localUserId,

@@ -44,7 +44,7 @@ class _RegisterView extends StatelessWidget {
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: CommonAppBar(
-        title: '',
+        title: l10n.registerTitle,
         homeTooltip: l10n.homeTitle,
         backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
