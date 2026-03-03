@@ -112,29 +112,31 @@ void main() {
       expect(find.text('Something went wrong'), findsOneWidget);
     });
 
-    testWidgets('Set value dialog close does not use controller after dispose',
-        (final tester) async {
-      const devices = [
-        IotDevice(
-          id: 'thermostat-1',
-          name: 'Thermostat',
-          type: IotDeviceType.thermostat,
-          connectionState: IotConnectionState.connected,
-          value: 21,
-        ),
-      ];
-      await _pumpPage(
-        tester,
-        state: IotDemoState.loaded(devices, selectedDeviceId: 'thermostat-1'),
-      );
-      await tester.pump();
-      expect(find.text(l10n.iotDemoSetValue), findsOneWidget);
-      await tester.tap(find.text(l10n.iotDemoSetValue));
-      await tester.pumpAndSettle();
-      expect(find.text(l10n.iotDemoSetValueHint), findsOneWidget);
-      await tester.tap(find.text('OK'));
-      await tester.pumpAndSettle();
-      expect(find.text(l10n.iotDemoSetValueHint), findsNothing);
-    });
+    testWidgets(
+      'Set value dialog close does not use controller after dispose',
+      (final tester) async {
+        const devices = [
+          IotDevice(
+            id: 'thermostat-1',
+            name: 'Thermostat',
+            type: IotDeviceType.thermostat,
+            connectionState: IotConnectionState.connected,
+            value: 21,
+          ),
+        ];
+        await _pumpPage(
+          tester,
+          state: IotDemoState.loaded(devices, selectedDeviceId: 'thermostat-1'),
+        );
+        await tester.pump();
+        expect(find.text(l10n.iotDemoSetValue), findsOneWidget);
+        await tester.tap(find.text(l10n.iotDemoSetValue));
+        await tester.pumpAndSettle();
+        expect(find.text(l10n.iotDemoSetValueHint), findsOneWidget);
+        await tester.tap(find.text('OK'));
+        await tester.pumpAndSettle();
+        expect(find.text(l10n.iotDemoSetValueHint), findsNothing);
+      },
+    );
   });
 }
