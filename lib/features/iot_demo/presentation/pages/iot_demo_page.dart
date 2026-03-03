@@ -197,14 +197,16 @@ class _SelectedDeviceActions extends StatelessWidget {
           children: <Widget>[
             if (device.connectionState != IotConnectionState.connected)
               FilledButton(
-                onPressed: device.connectionState == IotConnectionState.connecting
+                onPressed:
+                    device.connectionState == IotConnectionState.connecting
                     ? null
                     : () => context.cubit<IotDemoCubit>().connect(device.id),
                 child: Text(l10n.iotDemoConnect),
               ),
             if (connected)
               OutlinedButton(
-                onPressed: () => context.cubit<IotDemoCubit>().disconnect(device.id),
+                onPressed: () =>
+                    context.cubit<IotDemoCubit>().disconnect(device.id),
                 child: Text(l10n.iotDemoDisconnect),
               ),
             if (connected)
@@ -273,7 +275,9 @@ class _SetValueDialogBody extends StatefulWidget {
 class _SetValueDialogBodyState extends State<_SetValueDialogBody> {
   late final TextEditingController _controller;
 
-  static const TextInputType _decimalKeyboard = TextInputType.numberWithOptions(decimal: true);
+  static const TextInputType _decimalKeyboard = TextInputType.numberWithOptions(
+    decimal: true,
+  );
 
   @override
   void initState() {
@@ -304,7 +308,9 @@ class _SetValueDialogBodyState extends State<_SetValueDialogBody> {
     final l10n = widget.l10n;
     final cancelLabel = l10n.cancelButtonLabel;
     final okLabel = MaterialLocalizations.of(context).okButtonLabel;
-    final useCupertino = PlatformAdaptive.isCupertinoFromTheme(Theme.of(context));
+    final useCupertino = PlatformAdaptive.isCupertinoFromTheme(
+      Theme.of(context),
+    );
     return useCupertino
         ? _buildCupertinoDialog(context, l10n, cancelLabel, okLabel)
         : _buildMaterialDialog(context, l10n, cancelLabel, okLabel);
