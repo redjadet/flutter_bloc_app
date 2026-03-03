@@ -2,10 +2,10 @@
 
 A reference Flutter application that demonstrates clean architecture, offline-first data access, and production-minded tooling across multiple feature types. This repository is designed to showcase senior Flutter engineering practices in a realistic, testable codebase.
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.41.2-blue.svg)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/Dart-3.11.0-blue.svg)](https://dart.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.41.3-blue.svg)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.11.1-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-72%2E10%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-72%2E11%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
 [![State Management](https://img.shields.io/badge/State%20Management-BLOC%2FCubit-2196F3.svg)](https://pub.dev/packages/flutter_bloc)
@@ -93,8 +93,8 @@ See [Security & Secrets](docs/security_and_secrets.md) for API keys and sample c
 
 ### Prerequisites
 
-- Flutter 3.41.2
-- Dart 3.11.0
+- Flutter 3.41.3
+- Dart 3.11.1
 - iOS 12+ / Android API 21+
 
 ### Installation
@@ -128,7 +128,7 @@ Engineering references:
 
 ## 🛠️ Tech Stack (Short)
 
-- Flutter 3.41.2 / Dart 3.11.0
+- Flutter 3.41.3 / Dart 3.11.1
 - BLoC/Cubit for state management
 - Hive + secure storage for persistence
 - Firebase (Auth, Remote Config)
