@@ -64,7 +64,9 @@ android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 macos/Runner/GoogleService-Info.plist
 firebase.json
-lib/firebase_options.dart
+# Placeholder `lib/firebase_options.dart` is committed so the app runs
+# without Firebase. `flutterfire configure` overwrites it; do not commit
+# real project config.
 third_party/pub/firebase_remote_config/example/lib/firebase_options.dart
 INTERVIEW_QA.md
 

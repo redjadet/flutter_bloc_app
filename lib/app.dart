@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
 import 'package:flutter_bloc_app/app/router/auth_redirect.dart';
@@ -18,8 +19,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late final FirebaseAuth _auth;
-  late final GoRouterRefreshStream _authRefresh;
+  GoRouterRefreshStream? _authRefresh;
   late final GoRouter _router;
 
   @override
@@ -40,20 +40,25 @@ class _MyAppState extends State<MyApp> {
   GoRouter _createRouter() {
     final List<GoRoute> routes = createAppRoutes();
 
-    if (!widget.requireAuth) {
+    // When auth is not required or Firebase is not initialized, run without
+    // auth redirect so the app still runs (Firebase-dependent features disabled).
+    final bool useAuth = widget.requireAuth && Firebase.apps.isNotEmpty;
+
+    if (!useAuth) {
       return GoRouter(initialLocation: AppRoutes.counterPath, routes: routes);
     }
 
-    _auth = FirebaseAuth.instance;
+    final auth = FirebaseAuth.instance;
     // Listen to auth state changes and refresh router when auth state changes
     // This ensures navigation updates when user logs in/out
-    _authRefresh = GoRouterRefreshStream(_auth.authStateChanges());
+    final authRefresh = GoRouterRefreshStream(auth.authStateChanges());
+    _authRefresh = authRefresh;
 
     return GoRouter(
       initialLocation: AppRoutes.counterPath,
       // Refresh router when auth state changes (login/logout)
-      refreshListenable: _authRefresh,
-      redirect: createAuthRedirect(_auth),
+      refreshListenable: authRefresh,
+      redirect: createAuthRedirect(auth),
       routes: routes,
     );
   }
@@ -63,9 +68,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    if (widget.requireAuth) {
-      _authRefresh.dispose();
-    }
+    _authRefresh?.dispose();
     super.dispose();
   }
 }
