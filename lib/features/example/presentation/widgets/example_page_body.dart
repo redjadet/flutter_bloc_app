@@ -21,7 +21,6 @@ class ExamplePageBody extends StatelessWidget {
     required this.onOpenLoggedOut,
     required this.onOpenLibraryDemo,
     required this.onOpenIgamingDemo,
-    required this.onOpenFcmDemo,
     required this.onOpenScapes,
     required this.onOpenWalletconnectAuth,
     required this.onOpenCameraGallery,
@@ -32,6 +31,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.fibonacciResult,
     required this.parallelValues,
     required this.parallelDuration,
+    this.onOpenFcmDemo,
     super.key,
   });
 
@@ -49,7 +49,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onOpenLoggedOut;
   final VoidCallback onOpenLibraryDemo;
   final VoidCallback onOpenIgamingDemo;
-  final VoidCallback onOpenFcmDemo;
+  final VoidCallback? onOpenFcmDemo;
   final VoidCallback onOpenScapes;
   final VoidCallback onOpenWalletconnectAuth;
   final VoidCallback onOpenCameraGallery;
@@ -188,13 +188,15 @@ class ExamplePageBody extends StatelessWidget {
             label: l10n.exampleIgamingDemoButton,
           ),
           SizedBox(height: context.responsiveGapS),
-          _buildIconButton(
-            context: context,
-            onPressed: onOpenFcmDemo,
-            icon: Icons.notifications_outlined,
-            label: l10n.exampleFcmDemoButton,
-          ),
-          SizedBox(height: context.responsiveGapS),
+          if (onOpenFcmDemo != null)
+            _buildIconButton(
+              context: context,
+              onPressed: onOpenFcmDemo,
+              icon: Icons.notifications_outlined,
+              label: l10n.exampleFcmDemoButton,
+            ),
+          if (onOpenFcmDemo != null)
+            SizedBox(height: context.responsiveGapS),
           _buildIconButton(
             context: context,
             onPressed: onOpenScapes,

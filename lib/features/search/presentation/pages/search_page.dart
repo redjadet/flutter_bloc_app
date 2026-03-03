@@ -58,60 +58,63 @@ class _SearchPageContent extends StatelessWidget {
         backgroundColor: colorScheme.surface,
         preferredHeight: _searchAppBarHeight(context),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: context.pageHorizontalPaddingInsets,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: context.responsiveGapL),
-                const SearchTextField(),
-                const SearchSyncBanner(),
-                SizedBox(height: context.responsiveGapL),
-                Text(
-                  'ALL RESULTS',
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: context.responsiveCaptionSize * 0.04,
-                    fontSize: context.responsiveCaptionSize,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: context.pageHorizontalPaddingInsets,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: context.responsiveGapL),
+                  const SearchTextField(),
+                  const SearchSyncBanner(),
+                  SizedBox(height: context.responsiveGapL),
+                  Text(
+                    'ALL RESULTS',
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: context.responsiveCaptionSize * 0.04,
+                      fontSize: context.responsiveCaptionSize,
+                    ),
                   ),
-                ),
-                SizedBox(height: context.responsiveGapL),
-              ],
+                  SizedBox(height: context.responsiveGapL),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child:
-                ViewStatusSwitcher<SearchCubit, SearchState, _SearchBodyData>(
-                  selector: (final state) => _SearchBodyData(
-                    isLoading: state.isLoading,
-                    isError: state.status.isError,
-                    hasResults: state.hasResults,
-                    results: state.results,
-                  ),
-                  isLoading: (final data) => data.isLoading,
-                  isError: (final data) => data.isError,
-                  loadingBuilder: (final _) => const CommonLoadingWidget(),
-                  errorBuilder: (final context, final _) => CommonErrorView(
-                    message: 'Error loading results',
-                    onRetry: () => context.cubit<SearchCubit>().search('dogs'),
-                  ),
-                  builder: (final context, final bodyData) {
-                    if (!bodyData.hasResults) {
-                      return const CommonEmptyState(
-                        message: 'No results found',
-                      );
-                    }
+            Expanded(
+              child:
+                  ViewStatusSwitcher<SearchCubit, SearchState, _SearchBodyData>(
+                    selector: (final state) => _SearchBodyData(
+                      isLoading: state.isLoading,
+                      isError: state.status.isError,
+                      hasResults: state.hasResults,
+                      results: state.results,
+                    ),
+                    isLoading: (final data) => data.isLoading,
+                    isError: (final data) => data.isError,
+                    loadingBuilder: (final _) => const CommonLoadingWidget(),
+                    errorBuilder: (final context, final _) => CommonErrorView(
+                      message: 'Error loading results',
+                      onRetry: () =>
+                          context.cubit<SearchCubit>().search('dogs'),
+                    ),
+                    builder: (final context, final bodyData) {
+                      if (!bodyData.hasResults) {
+                        return const CommonEmptyState(
+                          message: 'No results found',
+                        );
+                      }
 
-                    return RepaintBoundary(
-                      child: SearchResultsGrid(results: bodyData.results),
-                    );
-                  },
-                ),
-          ),
-        ],
+                      return RepaintBoundary(
+                        child: SearchResultsGrid(results: bodyData.results),
+                      );
+                    },
+                  ),
+            ),
+          ],
+        ),
       ),
     );
   }
