@@ -524,6 +524,12 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settingsPageTitle;
 
+  /// Dev-only button label to trigger a test exception for error handling
+  ///
+  /// In en, this message translates to:
+  /// **'Throw Test Exception'**
+  String get settingsThrowTestException;
+
   /// Heading for the account and authentication section
   ///
   /// In en, this message translates to:

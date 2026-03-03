@@ -118,6 +118,7 @@
   "openGraphqlTooltip": "GraphQL-Demo anzeigen",
   "openSettingsTooltip": "Einstellungen öffnen",
   "settingsPageTitle": "Einstellungen",
+  "settingsThrowTestException": "Test-Exception auslösen",
   "accountSectionTitle": "Konto",
   "@accountSectionTitle": {
     "description": "Überschrift für den Konto- und Anmeldebereich"

@@ -238,6 +238,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsPageTitle => 'Paramètres';
 
   @override
+  String get settingsThrowTestException => 'Lancer une exception de test';
+
+  @override
   String get accountSectionTitle => 'Compte';
 
   @override

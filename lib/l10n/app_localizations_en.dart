@@ -231,6 +231,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsPageTitle => 'Settings';
 
   @override
+  String get settingsThrowTestException => 'Throw Test Exception';
+
+  @override
   String get accountSectionTitle => 'Account';
 
   @override

@@ -311,6 +311,10 @@
   "@settingsPageTitle": {
     "description": "Title for the settings screen"
   },
+  "settingsThrowTestException": "Throw Test Exception",
+  "@settingsThrowTestException": {
+    "description": "Dev-only button label to trigger a test exception for error handling"
+  },
   "accountSectionTitle": "Account",
   "@accountSectionTitle": {
     "description": "Heading for the account and authentication section"
@@ -1955,11 +1959,29 @@
     "description": "Clear rule: why the player won or lost based on the reels"
   },
   "igamingDemoSymbol7": "Seven",
+  "@igamingDemoSymbol7": {
+    "description": "Reel symbol name: seven"
+  },
   "igamingDemoSymbolStar": "Star",
+  "@igamingDemoSymbolStar": {
+    "description": "Reel symbol name: star"
+  },
   "igamingDemoSymbolDiamond": "Diamond",
+  "@igamingDemoSymbolDiamond": {
+    "description": "Reel symbol name: diamond"
+  },
   "igamingDemoSymbolCircle": "Circle",
+  "@igamingDemoSymbolCircle": {
+    "description": "Reel symbol name: circle"
+  },
   "igamingDemoSymbolTriangle": "Triangle",
+  "@igamingDemoSymbolTriangle": {
+    "description": "Reel symbol name: triangle"
+  },
   "igamingDemoSymbolGem": "Gem",
+  "@igamingDemoSymbolGem": {
+    "description": "Reel symbol name: gem"
+  },
   "exampleIgamingDemoButton": "iGaming Demo",
   "@exampleIgamingDemoButton": {
     "description": "Button label for opening the iGaming play-for-fun demo"
@@ -1969,20 +1991,71 @@
     "description": "Button label for opening the Firebase Cloud Messaging demo"
   },
   "fcmDemoPageTitle": "FCM Demo",
+  "@fcmDemoPageTitle": {
+    "description": "Title for the Firebase Cloud Messaging demo page"
+  },
   "fcmDemoPermissionLabel": "Permission",
+  "@fcmDemoPermissionLabel": {
+    "description": "Label for the notification permission status"
+  },
   "fcmDemoPermissionNotDetermined": "Not determined",
+  "@fcmDemoPermissionNotDetermined": {
+    "description": "Permission status: not yet requested or determined"
+  },
   "fcmDemoPermissionAuthorized": "Granted",
+  "@fcmDemoPermissionAuthorized": {
+    "description": "Permission status: user granted notifications"
+  },
   "fcmDemoPermissionDenied": "Denied",
+  "@fcmDemoPermissionDenied": {
+    "description": "Permission status: user denied notifications"
+  },
   "fcmDemoPermissionProvisional": "Provisional",
+  "@fcmDemoPermissionProvisional": {
+    "description": "Permission status: provisional (e.g. iOS quiet delivery)"
+  },
   "fcmDemoFcmTokenLabel": "FCM token",
+  "@fcmDemoFcmTokenLabel": {
+    "description": "Label for the FCM device token field"
+  },
   "fcmDemoApnsTokenLabel": "APNs token",
+  "@fcmDemoApnsTokenLabel": {
+    "description": "Label for the APNs device token field (iOS)"
+  },
   "fcmDemoTokenNotAvailable": "Not available",
+  "@fcmDemoTokenNotAvailable": {
+    "description": "Shown when FCM or APNs token is not yet available"
+  },
   "fcmDemoCopyToken": "Copy",
+  "@fcmDemoCopyToken": {
+    "description": "Button to copy token to clipboard"
+  },
   "fcmDemoCopySuccess": "Copied to clipboard",
+  "@fcmDemoCopySuccess": {
+    "description": "Snackbar when token was copied successfully"
+  },
   "fcmDemoCopyFailure": "Copy failed",
+  "@fcmDemoCopyFailure": {
+    "description": "Snackbar when copying token failed"
+  },
   "fcmDemoLastMessageLabel": "Last message",
+  "@fcmDemoLastMessageLabel": {
+    "description": "Label for the last received message section"
+  },
   "fcmDemoLastMessageNone": "None yet",
+  "@fcmDemoLastMessageNone": {
+    "description": "Shown when no message has been received yet"
+  },
   "fcmDemoLastMessageReceived": "Message received",
+  "@fcmDemoLastMessageReceived": {
+    "description": "Header or status when a message was received"
+  },
   "fcmDemoScopeNoteIos": "On iOS, background/terminated delivery requires APNs key in Firebase Console.",
-  "fcmDemoScopeNoteSimulator": "On iOS Simulator use the .apns file (drag onto simulator or xcrun simctl push)."
+  "@fcmDemoScopeNoteIos": {
+    "description": "Note for iOS about APNs configuration for background FCM"
+  },
+  "fcmDemoScopeNoteSimulator": "On iOS Simulator use the .apns file (drag onto simulator or xcrun simctl push).",
+  "@fcmDemoScopeNoteSimulator": {
+    "description": "Note for testing FCM on iOS Simulator with .apns file"
+  }
 }
