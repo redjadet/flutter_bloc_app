@@ -10,7 +10,8 @@ import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Cubit for the FCM demo: permission, token, and last message.
-class FcmDemoCubit extends Cubit<FcmDemoState> with CubitSubscriptionMixin<FcmDemoState> {
+class FcmDemoCubit extends Cubit<FcmDemoState>
+    with CubitSubscriptionMixin<FcmDemoState> {
   FcmDemoCubit({required final FcmMessagingService messaging})
     : _messaging = messaging,
       super(const FcmDemoState());
@@ -103,61 +104,65 @@ class FcmDemoCubit extends Cubit<FcmDemoState> with CubitSubscriptionMixin<FcmDe
     _streamsSubscribed = true;
     AppLogger.debug('FCM demo: subscribed to foreground, opened, tokenRefresh');
 
-    final StreamSubscription<PushMessage> foreground = _messaging.foregroundMessages.listen(
-      (final msg) {
-        if (isClosed) return;
-        AppLogger.debug(
-          'FCM demo: foreground message received id=${msg.messageId}',
+    final StreamSubscription<PushMessage> foreground = _messaging
+        .foregroundMessages
+        .listen(
+          (final msg) {
+            if (isClosed) return;
+            AppLogger.debug(
+              'FCM demo: foreground message received id=${msg.messageId}',
+            );
+            emit(state.copyWith(lastMessage: msg));
+          },
+          onError: (final Object error, final StackTrace stackTrace) {
+            AppLogger.error('FCM foreground stream error', error, stackTrace);
+            if (isClosed) return;
+            emit(
+              state.copyWith(
+                status: FcmDemoStatus.error,
+                errorMessage: error.toString(),
+              ),
+            );
+          },
         );
-        emit(state.copyWith(lastMessage: msg));
-      },
-      onError: (final Object error, final StackTrace stackTrace) {
-        AppLogger.error('FCM foreground stream error', error, stackTrace);
-        if (isClosed) return;
-        emit(
-          state.copyWith(
-            status: FcmDemoStatus.error,
-            errorMessage: error.toString(),
-          ),
-        );
-      },
-    );
     registerSubscription(foreground);
 
-    final StreamSubscription<PushMessage> opened = _messaging.openedMessages.listen(
-      (final msg) {
-        if (isClosed) return;
-        AppLogger.debug(
-          'FCM demo: opened-from-notification id=${msg.messageId}',
+    final StreamSubscription<PushMessage> opened = _messaging.openedMessages
+        .listen(
+          (final msg) {
+            if (isClosed) return;
+            AppLogger.debug(
+              'FCM demo: opened-from-notification id=${msg.messageId}',
+            );
+            emit(state.copyWith(lastMessage: msg));
+          },
+          onError: (final Object error, final StackTrace stackTrace) {
+            AppLogger.error('FCM opened stream error', error, stackTrace);
+            if (isClosed) return;
+            emit(
+              state.copyWith(
+                status: FcmDemoStatus.error,
+                errorMessage: error.toString(),
+              ),
+            );
+          },
         );
-        emit(state.copyWith(lastMessage: msg));
-      },
-      onError: (final Object error, final StackTrace stackTrace) {
-        AppLogger.error('FCM opened stream error', error, stackTrace);
-        if (isClosed) return;
-        emit(
-          state.copyWith(
-            status: FcmDemoStatus.error,
-            errorMessage: error.toString(),
-          ),
-        );
-      },
-    );
     registerSubscription(opened);
 
-    final StreamSubscription<String> tokenRefresh = _messaging.tokenRefreshes.listen(
-      (final newToken) {
-        if (isClosed) return;
-        emit(state.copyWith(fcmToken: newToken));
-      },
-      onError: (final Object error, final StackTrace stackTrace) {
-        AppLogger.error(
-          'FCM token refresh stream error',
-          error,
-          stackTrace,
+    final StreamSubscription<String> tokenRefresh = _messaging.tokenRefreshes
+        .listen(
+          (final newToken) {
+            if (isClosed) return;
+            emit(state.copyWith(fcmToken: newToken));
+          },
+          onError: (final Object error, final StackTrace stackTrace) {
+            AppLogger.error(
+              'FCM token refresh stream error',
+              error,
+              stackTrace,
+            );
+          },
         );
-      },
-    );
     registerSubscription(tokenRefresh);
   }
 

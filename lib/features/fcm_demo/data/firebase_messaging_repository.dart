@@ -38,7 +38,8 @@ PushMessage _toPushMessage(
       message.notification?.title ??
       (dataMap['title']?.isNotEmpty == true ? dataMap['title'] : null);
   final String? body =
-      message.notification?.body ?? (dataMap['body']?.isNotEmpty == true ? dataMap['body'] : null);
+      message.notification?.body ??
+      (dataMap['body']?.isNotEmpty == true ? dataMap['body'] : null);
   return PushMessage(
     messageId: message.messageId ?? '',
     title: title,

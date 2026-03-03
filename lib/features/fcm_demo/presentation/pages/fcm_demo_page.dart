@@ -39,7 +39,8 @@ class FcmDemoPage extends StatelessWidget {
         padding: context.pagePadding,
         child: TypeSafeBlocBuilder<FcmDemoCubit, FcmDemoState>(
           builder: (final context, final state) {
-            if (state.status == FcmDemoStatus.loading || state.status == FcmDemoStatus.initial) {
+            if (state.status == FcmDemoStatus.loading ||
+                state.status == FcmDemoStatus.initial) {
               return Padding(
                 padding: EdgeInsets.all(context.responsiveGapL),
                 child: const Center(child: CircularProgressIndicator()),
@@ -125,7 +126,9 @@ class _TokenSection extends StatelessWidget {
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
     final String? v = value;
-    final String display = (v != null && v.isNotEmpty) ? v : l10n.fcmDemoTokenNotAvailable;
+    final String display = (v != null && v.isNotEmpty)
+        ? v
+        : l10n.fcmDemoTokenNotAvailable;
     return CommonCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,13 +227,17 @@ class _LastMessageSection extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: context.responsiveGapS),
                     child: Text(
-                      msg.data.entries.map((final e) => '${e.key}: ${e.value}').join(', '),
+                      msg.data.entries
+                          .map((final e) => '${e.key}: ${e.value}')
+                          .join(', '),
                       style: theme.textTheme.bodySmall,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 5,
                     ),
                   ),
-                if ((msg.title ?? '').isEmpty && (msg.body ?? '').isEmpty && msg.data.isEmpty)
+                if ((msg.title ?? '').isEmpty &&
+                    (msg.body ?? '').isEmpty &&
+                    msg.data.isEmpty)
                   Text(
                     msg.messageId.isNotEmpty
                         ? '${l10n.fcmDemoLastMessageReceived} (id: ${msg.messageId})'
