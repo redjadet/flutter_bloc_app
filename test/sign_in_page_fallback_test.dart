@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/sign_in_page.dart';
@@ -9,6 +10,46 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {
+  testWidgets('SignInPage guest flow works without Firebase initialization', (
+    WidgetTester tester,
+  ) async {
+    expect(Firebase.apps, isEmpty);
+
+    final GoRouter router = GoRouter(
+      initialLocation: '/sign-in',
+      routes: <GoRoute>[
+        GoRoute(
+          path: '/sign-in',
+          builder: (context, state) => const SignInPage(),
+        ),
+        GoRoute(
+          path: AppRoutes.counterPath,
+          builder: (context, state) => const SizedBox.shrink(),
+        ),
+      ],
+    );
+
+    addTearDown(router.dispose);
+    await tester.pumpWidget(
+      MaterialApp.router(
+        routerConfig: router,
+        locale: const Locale('en'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(signInGuestButtonKey));
+    await tester.pumpAndSettle();
+
+    expect(
+      router.routerDelegate.currentConfiguration.fullPath,
+      AppRoutes.counterPath,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets(
     'SignInPage renders fallback content when Firebase is unavailable',
     (WidgetTester tester) async {

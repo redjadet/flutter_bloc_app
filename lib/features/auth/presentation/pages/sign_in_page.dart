@@ -50,11 +50,15 @@ class SignInPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
-    final FirebaseAuth auth = _auth ?? FirebaseAuth.instance;
-    final bool upgradingAnonymous = auth.currentUser?.isAnonymous ?? false;
+    final FirebaseAuth? auth = switch (_auth) {
+      final FirebaseAuth injectedAuth => injectedAuth,
+      _ when Firebase.apps.isNotEmpty => FirebaseAuth.instance,
+      _ => null,
+    };
+    final bool upgradingAnonymous = auth?.currentUser?.isAnonymous ?? false;
 
     final bool canUseFirebaseUISignIn =
-        providersOverride != null || Firebase.apps.isNotEmpty;
+        auth != null && (providersOverride != null || Firebase.apps.isNotEmpty);
 
     late final List<firebase_ui.AuthProvider> providers;
     if (canUseFirebaseUISignIn) {
@@ -80,6 +84,15 @@ class SignInPage extends StatelessWidget {
     }
 
     Future<void> signInAnonymously() async {
+      if (auth == null) {
+        if (!context.mounted) {
+          ContextUtils.logNotMounted('SignInPage.signInAnonymously.noFirebase');
+          return;
+        }
+        context.go(AppRoutes.counterPath);
+        return;
+      }
+
       try {
         await auth.signInAnonymously();
         if (!context.mounted) {

@@ -1,8 +1,8 @@
 # Firebase Setup (Run the App with Firebase)
 
-Firebase config files are **not** committed to the repo (they are in `.gitignore`). To run this app with Firebase (Auth, Remote Config, Realtime Database, Crashlytics, etc.), you need to add your own configuration.
+The repo includes a **placeholder** `lib/firebase_options.dart` so the project **compiles and runs** even when Firebase is not configured. In that case the app skips Firebase initialization and runs with Firebase-dependent features disabled (no crash, no login required).
 
-The app will still **build and run** without Firebase; Firebase-dependent features (sign-in, Remote Config, todo sync to Realtime Database, WalletConnect Auth, FCM) will be disabled or fall back gracefully.
+To run this app **with** Firebase (Auth, Remote Config, Realtime Database, Crashlytics, etc.), add your own configuration as below. Platform config files (`google-services.json`, `GoogleService-Info.plist`) remain gitignored; `flutterfire configure` overwrites `lib/firebase_options.dart` with your project's options (do not commit that file if it contains real project IDs/keys).
 
 ---
 
@@ -40,7 +40,7 @@ This will:
 - Write the following (all currently gitignored):
 
 | File | Location |
-|------|----------|
+| ------ | ---------- |
 | Android | `android/app/google-services.json` |
 | iOS | `ios/Runner/GoogleService-Info.plist` |
 | macOS | `macos/Runner/GoogleService-Info.plist` |
@@ -117,8 +117,8 @@ Full rules and explanation: [Todo List Firebase Realtime Database Security Rules
 ## Troubleshooting
 
 | Issue | What to do |
-|-------|------------|
-| **Firebase not initializing** | Ensure `lib/firebase_options.dart` exists and has no placeholder values (e.g. `your-project-id`). The app skips Firebase init when it detects placeholders. |
+| ----- | ---------- |
+| **Firebase not initializing** | The app skips Firebase init when it detects placeholder values (e.g. `your-project-id`) in `lib/firebase_options.dart`. To use Firebase, run `flutterfire configure` so the file is replaced with your project's config. |
 | **Missing google-services.json** | Run `flutterfire configure` or place the file at `android/app/google-services.json`. |
 | **Missing GoogleService-Info.plist** | Run `flutterfire configure` or place the file at `ios/Runner/GoogleService-Info.plist`. |
 | **iOS build errors after Firebase changes** | See [Common Troubleshooting](new_developer_guide.md#common-troubleshooting) (“Firebase upgrades break iOS build”) for clean steps (e.g. `flutter clean`, reinstall pods). |
