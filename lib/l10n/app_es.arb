@@ -118,6 +118,7 @@
   "openGraphqlTooltip": "Explorar demo GraphQL",
   "openSettingsTooltip": "Abrir configuración",
   "settingsPageTitle": "Configuración",
+  "settingsThrowTestException": "Lanzar excepción de prueba",
   "accountSectionTitle": "Cuenta",
   "@accountSectionTitle": {
     "description": "Título de la sección de cuenta y autenticación"

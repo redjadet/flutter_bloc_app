@@ -119,6 +119,7 @@
   "openGraphqlTooltip": "GraphQL örneğini aç",
   "openSettingsTooltip": "Ayarları aç",
   "settingsPageTitle": "Ayarlar",
+  "settingsThrowTestException": "Test istisnası fırlat",
   "accountSectionTitle": "Hesap",
   "@accountSectionTitle": {
     "description": "Hesap ve kimlik doğrulama bölümünün başlığı"

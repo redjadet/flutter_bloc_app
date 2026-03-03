@@ -233,6 +233,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsPageTitle => 'Ayarlar';
 
   @override
+  String get settingsThrowTestException => 'Test istisnası fırlat';
+
+  @override
   String get accountSectionTitle => 'Hesap';
 
   @override

@@ -94,7 +94,7 @@ class _SettingsView extends StatelessWidget {
         PlatformAdaptive.textButton(
           context: context,
           onPressed: () => throw Exception('Test exception for error handling'),
-          child: const Text('Throw Test Exception'),
+          child: Text(l10n.settingsThrowTestException),
         ),
       ],
     ];
