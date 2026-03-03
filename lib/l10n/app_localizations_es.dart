@@ -1602,4 +1602,75 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get fcmDemoScopeNoteSimulator =>
       'On iOS Simulator use the .apns file (drag onto simulator or xcrun simctl push).';
+
+  @override
+  String get iotDemoPageTitle => 'Demo IoT';
+
+  @override
+  String get iotDemoDeviceListEmpty => 'No se encontraron dispositivos';
+
+  @override
+  String get iotDemoConnect => 'Conectar';
+
+  @override
+  String get iotDemoDisconnect => 'Desconectar';
+
+  @override
+  String get iotDemoToggle => 'Alternar';
+
+  @override
+  String get iotDemoSetValue => 'Establecer valor';
+
+  @override
+  String get iotDemoSetValueHint => 'Valor';
+
+  @override
+  String get iotDemoStatusDisconnected => 'Desconectado';
+
+  @override
+  String get iotDemoStatusConnecting => 'Conectando';
+
+  @override
+  String get iotDemoStatusConnected => 'Conectado';
+
+  @override
+  String get iotDemoDeviceTypeLight => 'Luz';
+
+  @override
+  String get iotDemoDeviceTypeThermostat => 'Termostato';
+
+  @override
+  String get iotDemoDeviceTypePlug => 'Enchufe';
+
+  @override
+  String get iotDemoDeviceTypeSensor => 'Sensor';
+
+  @override
+  String get iotDemoDeviceTypeSwitch => 'Interruptor';
+
+  @override
+  String get iotDemoErrorLoad => 'Error al cargar dispositivos';
+
+  @override
+  String get iotDemoErrorConnect => 'Error al conectar';
+
+  @override
+  String get iotDemoErrorDisconnect => 'Error al desconectar';
+
+  @override
+  String get iotDemoErrorCommand => 'Error al enviar comando';
+
+  @override
+  String get iotDemoStateOn => 'Encendido';
+
+  @override
+  String get iotDemoStateOff => 'Apagado';
+
+  @override
+  String iotDemoCurrentValue(String value) {
+    return 'Valor actual: $value';
+  }
+
+  @override
+  String get openIotDemoTooltip => 'Abrir demo IoT';
 }

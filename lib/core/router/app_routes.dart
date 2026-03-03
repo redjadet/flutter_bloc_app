@@ -91,4 +91,7 @@ class AppRoutes {
 
   static const fcmDemo = 'fcm-demo';
   static const fcmDemoPath = '/fcm-demo';
+
+  static const iotDemo = 'iot-demo';
+  static const iotDemoPath = '/iot-demo';
 }

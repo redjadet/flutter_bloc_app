@@ -195,8 +195,7 @@ class ExamplePageBody extends StatelessWidget {
               icon: Icons.notifications_outlined,
               label: l10n.exampleFcmDemoButton,
             ),
-          if (onOpenFcmDemo != null)
-            SizedBox(height: context.responsiveGapS),
+          if (onOpenFcmDemo != null) SizedBox(height: context.responsiveGapS),
           _buildIconButton(
             context: context,
             onPressed: onOpenScapes,

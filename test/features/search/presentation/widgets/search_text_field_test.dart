@@ -86,7 +86,22 @@ void main() {
       await tester.pumpWidget(buildSubject());
       await tester.pumpAndSettle();
 
-      expect(find.byType(Container), findsWidgets);
+      final decoratedBoxFinder = find.byWidgetPredicate((final widget) {
+        if (widget is! DecoratedBox) return false;
+        final decoration = widget.decoration;
+        if (decoration is! BoxDecoration) return false;
+        return decoration.border != null;
+      });
+
+      expect(decoratedBoxFinder, findsOneWidget);
+      final decoratedBox = tester.widget<DecoratedBox>(decoratedBoxFinder);
+      final decoration = decoratedBox.decoration as BoxDecoration;
+      final border = decoration.border as Border;
+      expect(border.top.width, equals(2));
+      expect(border.bottom.width, equals(2));
+      expect(border.left.width, equals(2));
+      expect(border.right.width, equals(2));
+
       expect(find.byType(TextField), findsOneWidget);
     });
 

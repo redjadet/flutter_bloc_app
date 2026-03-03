@@ -1612,4 +1612,75 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get fcmDemoScopeNoteSimulator =>
       'On iOS Simulator use the .apns file (drag onto simulator or xcrun simctl push).';
+
+  @override
+  String get iotDemoPageTitle => 'Démo IoT';
+
+  @override
+  String get iotDemoDeviceListEmpty => 'Aucun appareil trouvé';
+
+  @override
+  String get iotDemoConnect => 'Connecter';
+
+  @override
+  String get iotDemoDisconnect => 'Déconnecter';
+
+  @override
+  String get iotDemoToggle => 'Basculer';
+
+  @override
+  String get iotDemoSetValue => 'Définir la valeur';
+
+  @override
+  String get iotDemoSetValueHint => 'Valeur';
+
+  @override
+  String get iotDemoStatusDisconnected => 'Déconnecté';
+
+  @override
+  String get iotDemoStatusConnecting => 'Connexion';
+
+  @override
+  String get iotDemoStatusConnected => 'Connecté';
+
+  @override
+  String get iotDemoDeviceTypeLight => 'Lumière';
+
+  @override
+  String get iotDemoDeviceTypeThermostat => 'Thermostat';
+
+  @override
+  String get iotDemoDeviceTypePlug => 'Prise';
+
+  @override
+  String get iotDemoDeviceTypeSensor => 'Capteur';
+
+  @override
+  String get iotDemoDeviceTypeSwitch => 'Interrupteur';
+
+  @override
+  String get iotDemoErrorLoad => 'Échec du chargement des appareils';
+
+  @override
+  String get iotDemoErrorConnect => 'Échec de la connexion';
+
+  @override
+  String get iotDemoErrorDisconnect => 'Échec de la déconnexion';
+
+  @override
+  String get iotDemoErrorCommand => 'Échec de l\'envoi de la commande';
+
+  @override
+  String get iotDemoStateOn => 'Marche';
+
+  @override
+  String get iotDemoStateOff => 'Arrêt';
+
+  @override
+  String iotDemoCurrentValue(String value) {
+    return 'Valeur actuelle : $value';
+  }
+
+  @override
+  String get openIotDemoTooltip => 'Ouvrir la démo IoT';
 }

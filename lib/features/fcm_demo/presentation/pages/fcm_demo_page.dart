@@ -145,7 +145,7 @@ class _TokenSection extends StatelessWidget {
               if (v != null && v.isNotEmpty)
                 PlatformAdaptive.textButton(
                   context: context,
-                  onPressed: () => unawaited(_copyToken(context, v)),
+                  onPressed: () => _handleCopyPressed(context, v),
                   child: Text(l10n.fcmDemoCopyToken),
                 ),
             ],
@@ -158,6 +158,10 @@ class _TokenSection extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _handleCopyPressed(final BuildContext context, final String text) {
+    unawaited(_copyToken(context, text));
   }
 
   Future<void> _copyToken(final BuildContext context, final String text) async {

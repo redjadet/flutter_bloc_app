@@ -71,6 +71,11 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
       routeName: AppRoutes.igamingDemo,
       labelBuilder: (final l10n) => l10n.openIgamingDemoTooltip,
     ),
+    OverflowItem(
+      action: OverflowAction.iotDemo,
+      routeName: AppRoutes.iotDemo,
+      labelBuilder: (final l10n) => l10n.openIotDemoTooltip,
+    ),
   ];
 
   @override

@@ -10,6 +10,7 @@ export 'fcm_demo/fcm_demo.dart';
 export 'genui_demo/genui_demo.dart';
 export 'google_maps/google_maps.dart';
 export 'graphql_demo/graphql_demo.dart';
+export 'iot_demo/iot_demo.dart';
 export 'playlearn/playlearn.dart';
 export 'profile/profile.dart';
 export 'search/search.dart';

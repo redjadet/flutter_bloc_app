@@ -3,7 +3,8 @@
 // Do not commit if it contains real keys (add to .gitignore if needed).
 
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
-import 'package:flutter/foundation.dart' show TargetPlatform, defaultTargetPlatform, kIsWeb;
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform, kIsWeb;
 
 class DefaultFirebaseOptions {
   DefaultFirebaseOptions._();
@@ -49,7 +50,8 @@ class DefaultFirebaseOptions {
     projectId: 'flutter-bloc-app-697e8',
     storageBucket: 'flutter-bloc-app-697e8.firebasestorage.app',
     iosBundleId: 'com.example.flutterBlocApp',
-    iosClientId: '473097776453-eml27tsnmpj6tj5g1ipl8ec7g0ttd5iu.apps.googleusercontent.com',
+    iosClientId:
+        '473097776453-eml27tsnmpj6tj5g1ipl8ec7g0ttd5iu.apps.googleusercontent.com',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -59,6 +61,7 @@ class DefaultFirebaseOptions {
     projectId: 'flutter-bloc-app-697e8',
     storageBucket: 'flutter-bloc-app-697e8.firebasestorage.app',
     iosBundleId: 'com.example.flutterBlocApp',
-    iosClientId: '473097776453-eml27tsnmpj6tj5g1ipl8ec7g0ttd5iu.apps.googleusercontent.com',
+    iosClientId:
+        '473097776453-eml27tsnmpj6tj5g1ipl8ec7g0ttd5iu.apps.googleusercontent.com',
   );
 }
