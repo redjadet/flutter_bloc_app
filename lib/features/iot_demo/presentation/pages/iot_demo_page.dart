@@ -1,17 +1,15 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_state.dart';
+import 'package:flutter_bloc_app/features/iot_demo/presentation/widgets/iot_demo_set_value_dialog.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/shared/utils/navigation.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
@@ -39,6 +37,13 @@ String _deviceTypeLabel(
 
 bool _deviceHasValue(final IotDeviceType type) =>
     type == IotDeviceType.thermostat || type == IotDeviceType.sensor;
+
+const double _valueSliderMin = 0;
+const double _valueSliderMax = 50;
+
+/// Clamps [value] to the shared IoT value range and rounds to 2 decimal places.
+double _clampAndRoundValue(final double value) =>
+    (value.clamp(_valueSliderMin, _valueSliderMax) * 100).round() / 100;
 
 /// IoT demo page: list devices, connect, disconnect, send commands.
 class IotDemoPage extends StatelessWidget {
@@ -178,15 +183,36 @@ class _SelectedDeviceActions extends StatelessWidget {
         ),
         if (connected) ...[
           SizedBox(height: context.responsiveGapXS),
-          Text(
-            device.toggledOn ? l10n.iotDemoStateOn : l10n.iotDemoStateOff,
-            style: bodyVariantStyle,
+          Row(
+            children: <Widget>[
+              Text(
+                device.toggledOn ? l10n.iotDemoStateOn : l10n.iotDemoStateOff,
+                style: bodyVariantStyle,
+              ),
+              SizedBox(width: context.responsiveHorizontalGapS),
+              Switch.adaptive(
+                value: device.toggledOn,
+                onChanged: (_) => context.cubit<IotDemoCubit>().sendCommand(
+                  device.id,
+                  const IotDeviceCommand.toggle(),
+                ),
+              ),
+            ],
           ),
           if (_deviceHasValue(device.type)) ...[
             SizedBox(height: context.responsiveGapXS),
             Text(
               l10n.iotDemoCurrentValue(device.value.toString()),
               style: bodyVariantStyle,
+            ),
+            SizedBox(height: context.responsiveGapXS),
+            Slider.adaptive(
+              value: device.value.clamp(_valueSliderMin, _valueSliderMax),
+              max: _valueSliderMax,
+              onChanged: (final v) => context.cubit<IotDemoCubit>().sendCommand(
+                device.id,
+                IotDeviceCommand.setValue(_clampAndRoundValue(v)),
+              ),
             ),
           ],
         ],
@@ -208,14 +234,6 @@ class _SelectedDeviceActions extends StatelessWidget {
                 onPressed: () =>
                     context.cubit<IotDemoCubit>().disconnect(device.id),
                 child: Text(l10n.iotDemoDisconnect),
-              ),
-            if (connected)
-              OutlinedButton(
-                onPressed: () => context.cubit<IotDemoCubit>().sendCommand(
-                  device.id,
-                  const IotDeviceCommand.toggle(),
-                ),
-                child: Text(l10n.iotDemoToggle),
               ),
             if (connected && _deviceHasValue(device.type))
               OutlinedButton(
@@ -241,137 +259,23 @@ class _SelectedDeviceActions extends StatelessWidget {
   ) async {
     final double? value = await showAdaptiveDialog<double>(
       context: context,
-      builder: (final ctx) => _SetValueDialogBody(
-        initialValue: device.value,
+      builder: (final ctx) => IotDemoSetValueDialogBody(
+        initialValue: device.value.clamp(_valueSliderMin, _valueSliderMax),
         l10n: l10n,
+        minValue: _valueSliderMin,
+        maxValue: _valueSliderMax,
       ),
     );
     if (value != null && context.mounted) {
+      final double clamped = _clampAndRoundValue(value);
       unawaited(
         context.cubit<IotDemoCubit>().sendCommand(
           device.id,
-          IotDeviceCommand.setValue(value),
+          IotDeviceCommand.setValue(clamped),
         ),
       );
     }
   }
-}
-
-/// Stateful dialog content so [TextEditingController] is disposed in [State.dispose]
-/// after the route is torn down, avoiding "used after being disposed".
-class _SetValueDialogBody extends StatefulWidget {
-  const _SetValueDialogBody({
-    required this.initialValue,
-    required this.l10n,
-  });
-
-  final double initialValue;
-  final AppLocalizations l10n;
-
-  @override
-  State<_SetValueDialogBody> createState() => _SetValueDialogBodyState();
-}
-
-class _SetValueDialogBodyState extends State<_SetValueDialogBody> {
-  late final TextEditingController _controller;
-
-  static const TextInputType _decimalKeyboard = TextInputType.numberWithOptions(
-    decimal: true,
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    final double v = widget.initialValue;
-    _controller = TextEditingController(
-      text: v == v.roundToDouble() ? v.toInt().toString() : v.toString(),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  double? get _parsedValue => double.tryParse(_controller.text);
-
-  void _submitValue(final BuildContext context) {
-    final p = _parsedValue;
-    if (p != null) {
-      NavigationUtils.maybePop(context, result: p);
-    }
-  }
-
-  @override
-  Widget build(final BuildContext context) {
-    final l10n = widget.l10n;
-    final cancelLabel = l10n.cancelButtonLabel;
-    final okLabel = MaterialLocalizations.of(context).okButtonLabel;
-    final useCupertino = PlatformAdaptive.isCupertinoFromTheme(
-      Theme.of(context),
-    );
-    return useCupertino
-        ? _buildCupertinoDialog(context, l10n, cancelLabel, okLabel)
-        : _buildMaterialDialog(context, l10n, cancelLabel, okLabel);
-  }
-
-  Widget _buildMaterialDialog(
-    final BuildContext context,
-    final AppLocalizations l10n,
-    final String cancelLabel,
-    final String okLabel,
-  ) => AlertDialog(
-    title: Text(l10n.iotDemoSetValue),
-    content: TextField(
-      controller: _controller,
-      keyboardType: _decimalKeyboard,
-      decoration: InputDecoration(labelText: l10n.iotDemoSetValueHint),
-      onSubmitted: (_) => _submitValue(context),
-    ),
-    actions: <Widget>[
-      PlatformAdaptive.dialogAction(
-        context: context,
-        onPressed: () => NavigationUtils.maybePop(context),
-        label: cancelLabel,
-      ),
-      PlatformAdaptive.dialogAction(
-        context: context,
-        onPressed: () => _submitValue(context),
-        label: okLabel,
-      ),
-    ],
-  );
-
-  Widget _buildCupertinoDialog(
-    final BuildContext context,
-    final AppLocalizations l10n,
-    final String cancelLabel,
-    final String okLabel,
-  ) => CupertinoAlertDialog(
-    title: Text(l10n.iotDemoSetValue),
-    content: Builder(
-      builder: (final ctx) => Padding(
-        padding: EdgeInsets.only(top: context.responsiveGapM),
-        child: CupertinoTextField(
-          controller: _controller,
-          keyboardType: _decimalKeyboard,
-          placeholder: l10n.iotDemoSetValueHint,
-          onSubmitted: (_) => _submitValue(context),
-        ),
-      ),
-    ),
-    actions: <CupertinoDialogAction>[
-      CupertinoDialogAction(
-        onPressed: () => NavigationUtils.maybePop(context),
-        child: Text(cancelLabel),
-      ),
-      CupertinoDialogAction(
-        onPressed: () => _submitValue(context),
-        child: Text(okLabel),
-      ),
-    ],
-  );
 }
 
 class _DeviceTile extends StatelessWidget {

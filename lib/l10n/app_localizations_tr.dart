@@ -1660,5 +1660,13 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String iotDemoSetValueOutOfRange(String min, String max) {
+    return 'Değer $min ile $max arasında olmalıdır';
+  }
+
+  @override
+  String get iotDemoSetValueInvalidNumber => 'Geçerli bir sayı girin';
+
+  @override
   String get openIotDemoTooltip => 'IoT demosunu aç';
 }
