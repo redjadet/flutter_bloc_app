@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/core/di/register_fcm_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_genui_services.dart';
 import 'package:flutter_bloc_app/core/di/register_http_services.dart';
 import 'package:flutter_bloc_app/core/di/register_igaming_demo_services.dart';
+import 'package:flutter_bloc_app/core/di/register_iot_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_playlearn_services.dart';
 import 'package:flutter_bloc_app/core/di/register_profile_services.dart';
 import 'package:flutter_bloc_app/core/di/register_remote_config_services.dart';
@@ -61,6 +62,7 @@ Future<void> registerAllDependencies() async {
   registerPlaylearnServices();
   registerIgamingDemoServices();
   registerFcmDemoServices();
+  registerIotDemoServices();
   _registerCameraGalleryServices();
   _registerUtilityServices();
   _registerSyncServices();

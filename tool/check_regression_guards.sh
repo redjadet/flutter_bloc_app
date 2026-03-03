@@ -17,6 +17,7 @@ tests=(
   "test/shared/firebase/run_with_auth_user_test.dart"
   "test/shared/inherited_widget_lifecycle_regression_test.dart"
   "test/shared/widgets/row_overflow_regression_test.dart"
+  "test/features/iot_demo/presentation/pages/iot_demo_page_test.dart"
 )
 
 for test_file in "${tests[@]}"; do

@@ -2057,5 +2057,102 @@
   "fcmDemoScopeNoteSimulator": "On iOS Simulator use the .apns file (drag onto simulator or xcrun simctl push).",
   "@fcmDemoScopeNoteSimulator": {
     "description": "Note for testing FCM on iOS Simulator with .apns file"
+  },
+  "iotDemoPageTitle": "IoT Demo",
+  "@iotDemoPageTitle": {
+    "description": "Title for the IoT-connected devices demo page"
+  },
+  "iotDemoDeviceListEmpty": "No devices found",
+  "@iotDemoDeviceListEmpty": {
+    "description": "Shown when the device list is empty"
+  },
+  "iotDemoConnect": "Connect",
+  "@iotDemoConnect": {
+    "description": "Button to connect to a device"
+  },
+  "iotDemoDisconnect": "Disconnect",
+  "@iotDemoDisconnect": {
+    "description": "Button to disconnect from a device"
+  },
+  "iotDemoToggle": "Toggle",
+  "@iotDemoToggle": {
+    "description": "Button to send a toggle command"
+  },
+  "iotDemoSetValue": "Set value",
+  "@iotDemoSetValue": {
+    "description": "Button to set a numeric value"
+  },
+  "iotDemoSetValueHint": "Value",
+  "@iotDemoSetValueHint": {
+    "description": "Hint for the set-value input field"
+  },
+  "iotDemoStatusDisconnected": "Disconnected",
+  "@iotDemoStatusDisconnected": {
+    "description": "Device connection status"
+  },
+  "iotDemoStatusConnecting": "Connecting",
+  "@iotDemoStatusConnecting": {
+    "description": "Device connection status"
+  },
+  "iotDemoStatusConnected": "Connected",
+  "@iotDemoStatusConnected": {
+    "description": "Device connection status"
+  },
+  "iotDemoDeviceTypeLight": "Light",
+  "@iotDemoDeviceTypeLight": {
+    "description": "IoT device type label"
+  },
+  "iotDemoDeviceTypeThermostat": "Thermostat",
+  "@iotDemoDeviceTypeThermostat": {
+    "description": "IoT device type label"
+  },
+  "iotDemoDeviceTypePlug": "Plug",
+  "@iotDemoDeviceTypePlug": {
+    "description": "IoT device type label"
+  },
+  "iotDemoDeviceTypeSensor": "Sensor",
+  "@iotDemoDeviceTypeSensor": {
+    "description": "IoT device type label"
+  },
+  "iotDemoDeviceTypeSwitch": "Switch",
+  "@iotDemoDeviceTypeSwitch": {
+    "description": "IoT device type label"
+  },
+  "iotDemoErrorLoad": "Failed to load devices",
+  "@iotDemoErrorLoad": {
+    "description": "Error when loading the device list fails"
+  },
+  "iotDemoErrorConnect": "Failed to connect",
+  "@iotDemoErrorConnect": {
+    "description": "Error when connecting to a device fails"
+  },
+  "iotDemoErrorDisconnect": "Failed to disconnect",
+  "@iotDemoErrorDisconnect": {
+    "description": "Error when disconnecting fails"
+  },
+  "iotDemoErrorCommand": "Failed to send command",
+  "@iotDemoErrorCommand": {
+    "description": "Error when sending a command fails"
+  },
+  "iotDemoStateOn": "On",
+  "@iotDemoStateOn": {
+    "description": "Toggle state when device is on"
+  },
+  "iotDemoStateOff": "Off",
+  "@iotDemoStateOff": {
+    "description": "Toggle state when device is off"
+  },
+  "iotDemoCurrentValue": "Current value: {value}",
+  "@iotDemoCurrentValue": {
+    "description": "Label for device numeric value (thermostat/sensor)",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "openIotDemoTooltip": "Open IoT Demo",
+  "@openIotDemoTooltip": {
+    "description": "Tooltip for navigating to the IoT demo page"
   }
 }

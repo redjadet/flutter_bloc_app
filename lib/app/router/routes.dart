@@ -38,6 +38,7 @@ import 'package:flutter_bloc_app/features/igaming_demo/presentation/game_cubit.d
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/lobby_cubit.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/pages/game_page.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/pages/lobby_page.dart';
+import 'package:flutter_bloc_app/features/iot_demo/iot_demo.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/pages/library_demo_page.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/playlearn_page.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/vocabulary_list_page.dart';
@@ -319,6 +320,21 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
       ),
     ],
   ),
+  GoRoute(
+    path: AppRoutes.iotDemoPath,
+    name: AppRoutes.iotDemo,
+    builder: (final context, final state) {
+      final l10n = context.l10n;
+      return BlocProviderHelpers.withAsyncInit<IotDemoCubit>(
+        create: () => IotDemoCubit(
+          repository: getIt<IotDemoRepository>(),
+          l10n: l10n,
+        ),
+        init: (final cubit) => cubit.initialize(),
+        child: const IotDemoPage(),
+      );
+    },
+  ),
   ...createAuxiliaryRoutes(),
 ];
 
@@ -328,10 +344,12 @@ class _FcmDemoRedirectWhenUnavailable extends StatefulWidget {
   const _FcmDemoRedirectWhenUnavailable();
 
   @override
-  State<_FcmDemoRedirectWhenUnavailable> createState() => _FcmDemoRedirectWhenUnavailableState();
+  State<_FcmDemoRedirectWhenUnavailable> createState() =>
+      _FcmDemoRedirectWhenUnavailableState();
 }
 
-class _FcmDemoRedirectWhenUnavailableState extends State<_FcmDemoRedirectWhenUnavailable> {
+class _FcmDemoRedirectWhenUnavailableState
+    extends State<_FcmDemoRedirectWhenUnavailable> {
   @override
   void initState() {
     super.initState();

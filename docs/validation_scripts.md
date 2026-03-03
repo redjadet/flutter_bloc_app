@@ -56,6 +56,7 @@ Full documentation and suppression guidance is provided in the sections below.
 ### Widget Lifecycle
 
 - **`check_side_effects_build.sh`**: Heuristic check for side effects in `build()` method (warns but doesn't fail)
+- **`check_dialog_controller_dispose.sh`**: Heuristic check for `TextEditingController` with `showDialog`/`showAdaptiveDialog` and dispose in `finally` (can cause "used after being disposed")
 - **`check_inherited_widget_in_create.sh`**: Prevents `context.l10n`/`Theme.of(context)` inside BlocProvider/Provider `create` (see Context & Async Safety below)
 
 ## New Validation Scripts (Added 2025)
@@ -558,6 +559,26 @@ for (final SyncableRepository repo in syncables) {
 
 ---
 
+#### `check_dialog_controller_dispose.sh`
+
+**Purpose**: Heuristic check for `TextEditingController` used with `showDialog`/`showAdaptiveDialog` and disposed in a `finally` block or immediately after `await`. This pattern can cause "TextEditingController was used after being disposed" when the dialog route is still tearing down.
+
+**What it checks**:
+
+- Files that contain `TextEditingController`, `showDialog` or `showAdaptiveDialog`, a `finally` block, and `.dispose()` in that scope
+
+**Why it matters**:
+
+- Disposing the controller in `finally` (or right after `await showDialog`) runs before the dialog route is fully torn down; the `TextField` may still reference the controller during teardown, causing the exception
+
+**Correct pattern**:
+
+- Use a `StatefulWidget` for the dialog content: create the controller in `initState`, dispose it in `State.dispose()`. The controller is then only disposed when the dialog's widget tree is disposed after the route is removed.
+
+**Suppression**: Add `// check-ignore: reason` on the same line or line above
+
+---
+
 ### Typography
 
 #### `check_raw_google_fonts.sh`
@@ -637,6 +658,7 @@ bash tool/check_concurrent_modification.sh
 # Check memory heuristics
 bash tool/check_memory_unclosed_streams.sh
 bash tool/check_memory_missing_dispose.sh
+bash tool/check_dialog_controller_dispose.sh
 ```
 
 ## Suppressing Violations

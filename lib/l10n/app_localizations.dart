@@ -2941,6 +2941,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'On iOS Simulator use the .apns file (drag onto simulator or xcrun simctl push).'**
   String get fcmDemoScopeNoteSimulator;
+
+  /// Title for the IoT-connected devices demo page
+  ///
+  /// In en, this message translates to:
+  /// **'IoT Demo'**
+  String get iotDemoPageTitle;
+
+  /// Shown when the device list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No devices found'**
+  String get iotDemoDeviceListEmpty;
+
+  /// Button to connect to a device
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get iotDemoConnect;
+
+  /// Button to disconnect from a device
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get iotDemoDisconnect;
+
+  /// Button to send a toggle command
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle'**
+  String get iotDemoToggle;
+
+  /// Button to set a numeric value
+  ///
+  /// In en, this message translates to:
+  /// **'Set value'**
+  String get iotDemoSetValue;
+
+  /// Hint for the set-value input field
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get iotDemoSetValueHint;
+
+  /// Device connection status
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected'**
+  String get iotDemoStatusDisconnected;
+
+  /// Device connection status
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting'**
+  String get iotDemoStatusConnecting;
+
+  /// Device connection status
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get iotDemoStatusConnected;
+
+  /// IoT device type label
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get iotDemoDeviceTypeLight;
+
+  /// IoT device type label
+  ///
+  /// In en, this message translates to:
+  /// **'Thermostat'**
+  String get iotDemoDeviceTypeThermostat;
+
+  /// IoT device type label
+  ///
+  /// In en, this message translates to:
+  /// **'Plug'**
+  String get iotDemoDeviceTypePlug;
+
+  /// IoT device type label
+  ///
+  /// In en, this message translates to:
+  /// **'Sensor'**
+  String get iotDemoDeviceTypeSensor;
+
+  /// IoT device type label
+  ///
+  /// In en, this message translates to:
+  /// **'Switch'**
+  String get iotDemoDeviceTypeSwitch;
+
+  /// Error when loading the device list fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load devices'**
+  String get iotDemoErrorLoad;
+
+  /// Error when connecting to a device fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to connect'**
+  String get iotDemoErrorConnect;
+
+  /// Error when disconnecting fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to disconnect'**
+  String get iotDemoErrorDisconnect;
+
+  /// Error when sending a command fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send command'**
+  String get iotDemoErrorCommand;
+
+  /// Toggle state when device is on
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get iotDemoStateOn;
+
+  /// Toggle state when device is off
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get iotDemoStateOff;
+
+  /// Label for device numeric value (thermostat/sensor)
+  ///
+  /// In en, this message translates to:
+  /// **'Current value: {value}'**
+  String iotDemoCurrentValue(String value);
+
+  /// Tooltip for navigating to the IoT demo page
+  ///
+  /// In en, this message translates to:
+  /// **'Open IoT Demo'**
+  String get openIotDemoTooltip;
 }
 
 class _AppLocalizationsDelegate

@@ -1590,4 +1590,75 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get fcmDemoScopeNoteSimulator =>
       'On iOS Simulator use the .apns file (drag onto simulator or xcrun simctl push).';
+
+  @override
+  String get iotDemoPageTitle => 'IoT Demo';
+
+  @override
+  String get iotDemoDeviceListEmpty => 'Cihaz bulunamadı';
+
+  @override
+  String get iotDemoConnect => 'Bağlan';
+
+  @override
+  String get iotDemoDisconnect => 'Bağlantıyı kes';
+
+  @override
+  String get iotDemoToggle => 'Değiştir';
+
+  @override
+  String get iotDemoSetValue => 'Değer ayarla';
+
+  @override
+  String get iotDemoSetValueHint => 'Değer';
+
+  @override
+  String get iotDemoStatusDisconnected => 'Bağlı değil';
+
+  @override
+  String get iotDemoStatusConnecting => 'Bağlanıyor';
+
+  @override
+  String get iotDemoStatusConnected => 'Bağlı';
+
+  @override
+  String get iotDemoDeviceTypeLight => 'Işık';
+
+  @override
+  String get iotDemoDeviceTypeThermostat => 'Termostat';
+
+  @override
+  String get iotDemoDeviceTypePlug => 'Priz';
+
+  @override
+  String get iotDemoDeviceTypeSensor => 'Sensör';
+
+  @override
+  String get iotDemoDeviceTypeSwitch => 'Anahtar';
+
+  @override
+  String get iotDemoErrorLoad => 'Cihazlar yüklenemedi';
+
+  @override
+  String get iotDemoErrorConnect => 'Bağlantı başarısız';
+
+  @override
+  String get iotDemoErrorDisconnect => 'Bağlantı kesilemedi';
+
+  @override
+  String get iotDemoErrorCommand => 'Komut gönderilemedi';
+
+  @override
+  String get iotDemoStateOn => 'Açık';
+
+  @override
+  String get iotDemoStateOff => 'Kapalı';
+
+  @override
+  String iotDemoCurrentValue(String value) {
+    return 'Mevcut değer: $value';
+  }
+
+  @override
+  String get openIotDemoTooltip => 'IoT demosunu aç';
 }

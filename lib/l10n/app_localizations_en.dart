@@ -1586,4 +1586,75 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fcmDemoScopeNoteSimulator =>
       'On iOS Simulator use the .apns file (drag onto simulator or xcrun simctl push).';
+
+  @override
+  String get iotDemoPageTitle => 'IoT Demo';
+
+  @override
+  String get iotDemoDeviceListEmpty => 'No devices found';
+
+  @override
+  String get iotDemoConnect => 'Connect';
+
+  @override
+  String get iotDemoDisconnect => 'Disconnect';
+
+  @override
+  String get iotDemoToggle => 'Toggle';
+
+  @override
+  String get iotDemoSetValue => 'Set value';
+
+  @override
+  String get iotDemoSetValueHint => 'Value';
+
+  @override
+  String get iotDemoStatusDisconnected => 'Disconnected';
+
+  @override
+  String get iotDemoStatusConnecting => 'Connecting';
+
+  @override
+  String get iotDemoStatusConnected => 'Connected';
+
+  @override
+  String get iotDemoDeviceTypeLight => 'Light';
+
+  @override
+  String get iotDemoDeviceTypeThermostat => 'Thermostat';
+
+  @override
+  String get iotDemoDeviceTypePlug => 'Plug';
+
+  @override
+  String get iotDemoDeviceTypeSensor => 'Sensor';
+
+  @override
+  String get iotDemoDeviceTypeSwitch => 'Switch';
+
+  @override
+  String get iotDemoErrorLoad => 'Failed to load devices';
+
+  @override
+  String get iotDemoErrorConnect => 'Failed to connect';
+
+  @override
+  String get iotDemoErrorDisconnect => 'Failed to disconnect';
+
+  @override
+  String get iotDemoErrorCommand => 'Failed to send command';
+
+  @override
+  String get iotDemoStateOn => 'On';
+
+  @override
+  String get iotDemoStateOff => 'Off';
+
+  @override
+  String iotDemoCurrentValue(String value) {
+    return 'Current value: $value';
+  }
+
+  @override
+  String get openIotDemoTooltip => 'Open IoT Demo';
 }

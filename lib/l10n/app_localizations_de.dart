@@ -1616,4 +1616,75 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get fcmDemoScopeNoteSimulator =>
       'On iOS Simulator use the .apns file (drag onto simulator or xcrun simctl push).';
+
+  @override
+  String get iotDemoPageTitle => 'IoT-Demo';
+
+  @override
+  String get iotDemoDeviceListEmpty => 'Keine Geräte gefunden';
+
+  @override
+  String get iotDemoConnect => 'Verbinden';
+
+  @override
+  String get iotDemoDisconnect => 'Trennen';
+
+  @override
+  String get iotDemoToggle => 'Umschalten';
+
+  @override
+  String get iotDemoSetValue => 'Wert setzen';
+
+  @override
+  String get iotDemoSetValueHint => 'Wert';
+
+  @override
+  String get iotDemoStatusDisconnected => 'Getrennt';
+
+  @override
+  String get iotDemoStatusConnecting => 'Verbinde';
+
+  @override
+  String get iotDemoStatusConnected => 'Verbunden';
+
+  @override
+  String get iotDemoDeviceTypeLight => 'Licht';
+
+  @override
+  String get iotDemoDeviceTypeThermostat => 'Thermostat';
+
+  @override
+  String get iotDemoDeviceTypePlug => 'Steckdose';
+
+  @override
+  String get iotDemoDeviceTypeSensor => 'Sensor';
+
+  @override
+  String get iotDemoDeviceTypeSwitch => 'Schalter';
+
+  @override
+  String get iotDemoErrorLoad => 'Geräte konnten nicht geladen werden';
+
+  @override
+  String get iotDemoErrorConnect => 'Verbindung fehlgeschlagen';
+
+  @override
+  String get iotDemoErrorDisconnect => 'Trennen fehlgeschlagen';
+
+  @override
+  String get iotDemoErrorCommand => 'Befehl konnte nicht gesendet werden';
+
+  @override
+  String get iotDemoStateOn => 'An';
+
+  @override
+  String get iotDemoStateOff => 'Aus';
+
+  @override
+  String iotDemoCurrentValue(String value) {
+    return 'Aktueller Wert: $value';
+  }
+
+  @override
+  String get openIotDemoTooltip => 'IoT-Demo öffnen';
 }
