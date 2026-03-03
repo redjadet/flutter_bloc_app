@@ -466,7 +466,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get searchHint => 'Rechercher...';
 
   @override
-  String get retryButtonLabel => 'Réessayer';
+  String get retryButtonLabel => 'RÉESSAYER';
 
   @override
   String get featureLoadError =>

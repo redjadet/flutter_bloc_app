@@ -461,7 +461,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get searchHint => 'Buscar...';
 
   @override
-  String get retryButtonLabel => 'Reintentar';
+  String get retryButtonLabel => 'REINTENTAR';
 
   @override
   String get featureLoadError =>

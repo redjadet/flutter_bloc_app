@@ -2792,37 +2792,37 @@ abstract class AppLocalizations {
   /// **'Three matching symbols = Win. Different symbols = No win.'**
   String get igamingDemoSymbolWinHint;
 
-  /// No description provided for @igamingDemoSymbol7.
+  /// Reel symbol name: seven
   ///
   /// In en, this message translates to:
   /// **'Seven'**
   String get igamingDemoSymbol7;
 
-  /// No description provided for @igamingDemoSymbolStar.
+  /// Reel symbol name: star
   ///
   /// In en, this message translates to:
   /// **'Star'**
   String get igamingDemoSymbolStar;
 
-  /// No description provided for @igamingDemoSymbolDiamond.
+  /// Reel symbol name: diamond
   ///
   /// In en, this message translates to:
   /// **'Diamond'**
   String get igamingDemoSymbolDiamond;
 
-  /// No description provided for @igamingDemoSymbolCircle.
+  /// Reel symbol name: circle
   ///
   /// In en, this message translates to:
   /// **'Circle'**
   String get igamingDemoSymbolCircle;
 
-  /// No description provided for @igamingDemoSymbolTriangle.
+  /// Reel symbol name: triangle
   ///
   /// In en, this message translates to:
   /// **'Triangle'**
   String get igamingDemoSymbolTriangle;
 
-  /// No description provided for @igamingDemoSymbolGem.
+  /// Reel symbol name: gem
   ///
   /// In en, this message translates to:
   /// **'Gem'**
@@ -2840,103 +2840,103 @@ abstract class AppLocalizations {
   /// **'FCM Demo'**
   String get exampleFcmDemoButton;
 
-  /// No description provided for @fcmDemoPageTitle.
+  /// Title for the Firebase Cloud Messaging demo page
   ///
   /// In en, this message translates to:
   /// **'FCM Demo'**
   String get fcmDemoPageTitle;
 
-  /// No description provided for @fcmDemoPermissionLabel.
+  /// Label for the notification permission status
   ///
   /// In en, this message translates to:
   /// **'Permission'**
   String get fcmDemoPermissionLabel;
 
-  /// No description provided for @fcmDemoPermissionNotDetermined.
+  /// Permission status: not yet requested or determined
   ///
   /// In en, this message translates to:
   /// **'Not determined'**
   String get fcmDemoPermissionNotDetermined;
 
-  /// No description provided for @fcmDemoPermissionAuthorized.
+  /// Permission status: user granted notifications
   ///
   /// In en, this message translates to:
   /// **'Granted'**
   String get fcmDemoPermissionAuthorized;
 
-  /// No description provided for @fcmDemoPermissionDenied.
+  /// Permission status: user denied notifications
   ///
   /// In en, this message translates to:
   /// **'Denied'**
   String get fcmDemoPermissionDenied;
 
-  /// No description provided for @fcmDemoPermissionProvisional.
+  /// Permission status: provisional (e.g. iOS quiet delivery)
   ///
   /// In en, this message translates to:
   /// **'Provisional'**
   String get fcmDemoPermissionProvisional;
 
-  /// No description provided for @fcmDemoFcmTokenLabel.
+  /// Label for the FCM device token field
   ///
   /// In en, this message translates to:
   /// **'FCM token'**
   String get fcmDemoFcmTokenLabel;
 
-  /// No description provided for @fcmDemoApnsTokenLabel.
+  /// Label for the APNs device token field (iOS)
   ///
   /// In en, this message translates to:
   /// **'APNs token'**
   String get fcmDemoApnsTokenLabel;
 
-  /// No description provided for @fcmDemoTokenNotAvailable.
+  /// Shown when FCM or APNs token is not yet available
   ///
   /// In en, this message translates to:
   /// **'Not available'**
   String get fcmDemoTokenNotAvailable;
 
-  /// No description provided for @fcmDemoCopyToken.
+  /// Button to copy token to clipboard
   ///
   /// In en, this message translates to:
   /// **'Copy'**
   String get fcmDemoCopyToken;
 
-  /// No description provided for @fcmDemoCopySuccess.
+  /// Snackbar when token was copied successfully
   ///
   /// In en, this message translates to:
   /// **'Copied to clipboard'**
   String get fcmDemoCopySuccess;
 
-  /// No description provided for @fcmDemoCopyFailure.
+  /// Snackbar when copying token failed
   ///
   /// In en, this message translates to:
   /// **'Copy failed'**
   String get fcmDemoCopyFailure;
 
-  /// No description provided for @fcmDemoLastMessageLabel.
+  /// Label for the last received message section
   ///
   /// In en, this message translates to:
   /// **'Last message'**
   String get fcmDemoLastMessageLabel;
 
-  /// No description provided for @fcmDemoLastMessageNone.
+  /// Shown when no message has been received yet
   ///
   /// In en, this message translates to:
   /// **'None yet'**
   String get fcmDemoLastMessageNone;
 
-  /// No description provided for @fcmDemoLastMessageReceived.
+  /// Header or status when a message was received
   ///
   /// In en, this message translates to:
   /// **'Message received'**
   String get fcmDemoLastMessageReceived;
 
-  /// No description provided for @fcmDemoScopeNoteIos.
+  /// Note for iOS about APNs configuration for background FCM
   ///
   /// In en, this message translates to:
   /// **'On iOS, background/terminated delivery requires APNs key in Firebase Console.'**
   String get fcmDemoScopeNoteIos;
 
-  /// No description provided for @fcmDemoScopeNoteSimulator.
+  /// Note for testing FCM on iOS Simulator with .apns file
   ///
   /// In en, this message translates to:
   /// **'On iOS Simulator use the .apns file (drag onto simulator or xcrun simctl push).'**

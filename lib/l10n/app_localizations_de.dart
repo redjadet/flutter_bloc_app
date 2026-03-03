@@ -463,7 +463,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get searchHint => 'Suchen...';
 
   @override
-  String get retryButtonLabel => 'Erneut versuchen';
+  String get retryButtonLabel => 'ERNEUT VERSUCHEN';
 
   @override
   String get featureLoadError =>
