@@ -48,12 +48,12 @@ For entry points and module details, see [Feature Overview](docs/feature_overvie
 
 Some features require API keys or platform setup to fully enable:
 
-- Firebase (Auth, Remote Config, etc.)
+- **Firebase** (Auth, Remote Config, Realtime Database, etc.) – config files are gitignored. See [Firebase Setup](docs/firebase_setup.md) for how to run the app with Firebase.
 - Google Maps (Android/iOS keys)
 - Hugging Face Inference API
 - Google Gemini API (for GenUI Demo)
 
-See [Security & Secrets](docs/security_and_secrets.md) for setup guidance and sample config files.
+See [Security & Secrets](docs/security_and_secrets.md) for API keys and sample config; see [Firebase Setup](docs/firebase_setup.md) for Firebase configuration.
 
 ## 📱 Screenshots
 
@@ -112,6 +112,7 @@ Start here:
 
 - [Developer Guide](docs/new_developer_guide.md)
 - [Feature Overview](docs/feature_overview.md)
+- [Firebase Setup](docs/firebase_setup.md) – run the app with Firebase (Auth, Remote Config, Realtime Database)
 - [Architecture Details](docs/architecture_details.md)
 - [Testing Overview](docs/testing_overview.md)
 

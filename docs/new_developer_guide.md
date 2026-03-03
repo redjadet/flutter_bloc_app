@@ -35,13 +35,13 @@ Welcome aboard! This document is the fastest path to getting the app running loc
 
 **Android:**
 
-1. Place `google-services.json` in `android/app/` (Firebase config, gitignored)
+1. **Firebase:** Place `google-services.json` in `android/app/`. These files are gitignored. See [Firebase Setup](firebase_setup.md) for how to obtain them (recommended: run `flutterfire configure` from repo root).
 2. Add Google Maps API key to `android/app/src/main/AndroidManifest.xml` if using maps feature
 3. Run `flutter build apk` to verify Android build works
 
 **iOS:**
 
-1. Place `GoogleService-Info.plist` in `ios/Runner/` (Firebase config, gitignored)
+1. **Firebase:** Place `GoogleService-Info.plist` in `ios/Runner/`. These files are gitignored. See [Firebase Setup](firebase_setup.md) for how to obtain them (recommended: run `flutterfire configure` from repo root).
 2. Run `cd ios && pod install && cd ..` after `flutter pub get`
 3. For device deployment with personal Apple ID, use development entitlements:
 

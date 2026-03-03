@@ -32,6 +32,10 @@ flutter run \
 # Or inject via CI/CD secrets
 ```
 
+## Firebase configuration (separate from secrets)
+
+Firebase config files (`google-services.json`, `GoogleService-Info.plist`, `lib/firebase_options.dart`) are **gitignored** and are **not** managed via `secrets.json`. To run the app with Firebase (Auth, Remote Config, Realtime Database, etc.), follow **[Firebase Setup](firebase_setup.md)**. The app runs without them; Firebase-dependent features are then disabled or fall back gracefully.
+
 ## Required API Keys
 
 The following API keys are required for specific features:

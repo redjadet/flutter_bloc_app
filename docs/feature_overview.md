@@ -44,10 +44,10 @@ This document lists feature modules with entry points and notes. It is intended 
 
 Some modules require platform keys or API access:
 
-- Firebase features require `google-services.json` / `GoogleService-Info.plist`.
+- **Firebase** features require `google-services.json`, `GoogleService-Info.plist`, and `lib/firebase_options.dart` (all gitignored). See [Firebase Setup](firebase_setup.md) for full setup; the app runs without them with Firebase features disabled.
 - Chat requires a Hugging Face API key.
 - GenUI Demo requires a Google Gemini API key (`GEMINI_API_KEY`).
 - Maps require Google Maps API keys (Android/iOS).
 - WalletConnect Auth requires a WalletConnect project ID (configured in `WalletConnectService`).
 
-See [Security & Secrets](security_and_secrets.md) for setup details.
+See [Security & Secrets](security_and_secrets.md) for API keys; see [Firebase Setup](firebase_setup.md) for Firebase configuration.
