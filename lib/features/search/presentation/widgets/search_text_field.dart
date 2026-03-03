@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/search/presentation/search_cubit.dart';
 import 'package:flutter_bloc_app/features/search/presentation/search_state.dart';
@@ -53,22 +54,27 @@ class _SearchTextFieldState extends State<SearchTextField> {
             );
 
             final isCupertino = PlatformAdaptive.isCupertino(context);
-            final textField = PlatformAdaptive.textField(
-              context: context,
-              controller: _controller,
-              hintText: l10n.searchHint,
-              onChanged: (final value) =>
-                  context.cubit<SearchCubit>().search(value),
-              style: textStyle,
-              padding: isCupertino
-                  ? EdgeInsets.symmetric(
+            final Widget textField = isCupertino
+                ? CupertinoTextField(
+                    controller: _controller,
+                    placeholder: l10n.searchHint,
+                    onChanged: (final value) =>
+                        context.cubit<SearchCubit>().search(value),
+                    style: textStyle,
+                    padding: EdgeInsets.symmetric(
                       horizontal: context.responsiveHorizontalGapL,
                       vertical: context.responsiveGapM,
-                    )
-                  : null,
-              decoration: isCupertino
-                  ? null
-                  : InputDecoration(
+                    ),
+                    decoration: const BoxDecoration(),
+                  )
+                : PlatformAdaptive.textField(
+                    context: context,
+                    controller: _controller,
+                    hintText: l10n.searchHint,
+                    onChanged: (final value) =>
+                        context.cubit<SearchCubit>().search(value),
+                    style: textStyle,
+                    decoration: InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(
                         horizontal: context.responsiveHorizontalGapL,
@@ -77,44 +83,33 @@ class _SearchTextFieldState extends State<SearchTextField> {
                       hintText: l10n.searchHint,
                       hintStyle: hintStyle,
                     ),
+                  );
+
+            final borderRadius = BorderRadius.circular(
+              context.responsiveBorderRadius,
             );
 
-            if (isCupertino) {
-              return Container(
-                constraints: BoxConstraints(
-                  minHeight: context.responsiveButtonHeight,
-                ),
-                alignment: Alignment.center,
+            return ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: context.responsiveButtonHeight,
+              ),
+              child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: colors.surface,
                   border: Border.all(
                     color: colors.onSurface,
                     width: 2,
                   ),
-                  borderRadius: BorderRadius.circular(
-                    context.responsiveBorderRadius,
+                  borderRadius: borderRadius,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: ClipRRect(
+                    borderRadius: borderRadius,
+                    child: textField,
                   ),
                 ),
-                child: textField,
-              );
-            }
-
-            return Container(
-              constraints: BoxConstraints(
-                minHeight: context.responsiveButtonHeight,
               ),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: colors.surface,
-                border: Border.all(
-                  color: colors.onSurface,
-                  width: 2,
-                ),
-                borderRadius: BorderRadius.circular(
-                  context.responsiveBorderRadius,
-                ),
-              ),
-              child: textField,
             );
           },
         ),

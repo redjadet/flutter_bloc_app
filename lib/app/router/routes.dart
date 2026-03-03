@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/router/deferred_pages/chart_page.dart'
     deferred as chart_page;
 import 'package:flutter_bloc_app/app/router/deferred_pages/markdown_editor_page.dart'
     deferred as markdown_editor_page;
 import 'package:flutter_bloc_app/app/router/route_groups.dart';
+import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/logged_out_page.dart';
@@ -273,12 +275,16 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.fcmDemoPath,
     name: AppRoutes.fcmDemo,
-    builder: (final context, final state) =>
-        BlocProviderHelpers.withAsyncInit<FcmDemoCubit>(
-          create: () => FcmDemoCubit(messaging: getIt<FcmMessagingService>()),
-          init: (final cubit) => cubit.initialize(),
-          child: const FcmDemoPage(),
-        ),
+    builder: (final context, final state) {
+      if (!FirebaseBootstrapService.isFirebaseInitialized) {
+        return const _FcmDemoRedirectWhenUnavailable();
+      }
+      return BlocProviderHelpers.withAsyncInit<FcmDemoCubit>(
+        create: () => FcmDemoCubit(messaging: getIt<FcmMessagingService>()),
+        init: (final cubit) => cubit.initialize(),
+        child: const FcmDemoPage(),
+      );
+    },
   ),
   GoRoute(
     path: AppRoutes.igamingDemoPath,
@@ -315,3 +321,28 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
   ),
   ...createAuxiliaryRoutes(),
 ];
+
+/// Shown when user reaches FCM demo route but Firebase is not initialized;
+/// redirects to counter so the app does not crash.
+class _FcmDemoRedirectWhenUnavailable extends StatefulWidget {
+  const _FcmDemoRedirectWhenUnavailable();
+
+  @override
+  State<_FcmDemoRedirectWhenUnavailable> createState() => _FcmDemoRedirectWhenUnavailableState();
+}
+
+class _FcmDemoRedirectWhenUnavailableState extends State<_FcmDemoRedirectWhenUnavailable> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.go(AppRoutes.counterPath);
+    });
+  }
+
+  @override
+  Widget build(final BuildContext context) => const Scaffold(
+    body: Center(child: CircularProgressIndicator()),
+  );
+}

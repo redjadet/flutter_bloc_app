@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/example/presentation/helpers/example_platform_dialogs.dart';
@@ -148,7 +149,9 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenLoggedOut: () => context.pushNamed(AppRoutes.loggedOut),
         onOpenLibraryDemo: () => context.pushNamed(AppRoutes.libraryDemo),
         onOpenIgamingDemo: () => context.pushNamed(AppRoutes.igamingDemo),
-        onOpenFcmDemo: () => context.pushNamed(AppRoutes.fcmDemo),
+        onOpenFcmDemo: FirebaseBootstrapService.isFirebaseInitialized
+            ? () => context.pushNamed(AppRoutes.fcmDemo)
+            : null,
         onOpenScapes: () => context.pushNamed(AppRoutes.scapes),
         onOpenWalletconnectAuth: () =>
             context.pushNamed(AppRoutes.walletconnectAuth),

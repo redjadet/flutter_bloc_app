@@ -119,10 +119,28 @@ Full rules and explanation: [Todo List Firebase Realtime Database Security Rules
 | Issue | What to do |
 | ----- | ---------- |
 | **Firebase not initializing** | The app skips Firebase init when it detects placeholder values (e.g. `your-project-id`) in `lib/firebase_options.dart`. To use Firebase, run `flutterfire configure` so the file is replaced with your project's config. |
+| **`flutterfire configure` fails** (e.g. "Failed to write Dart configuration file", "UnsupportedError not found in macOS", or **"FormatException: Unexpected character (at character 1)"**) | See [Workaround when FlutterFire CLI fails on macOS](#workaround-when-flutterfire-cli-fails-on-macos) below. The FormatException often means the CLI got non-JSON output from a Firebase command (e.g. login prompt or proxy/network issue). |
 | **Missing google-services.json** | Run `flutterfire configure` or place the file at `android/app/google-services.json`. |
 | **Missing GoogleService-Info.plist** | Run `flutterfire configure` or place the file at `ios/Runner/GoogleService-Info.plist`. |
 | **iOS build errors after Firebase changes** | See [Common Troubleshooting](new_developer_guide.md#common-troubleshooting) (“Firebase upgrades break iOS build”) for clean steps (e.g. `flutter clean`, reinstall pods). |
 | **Todo list / Counter sync permission denied** | Deploy [Realtime Database rules](todo_list_firebase_security_rules.md) and ensure the user is signed in. |
+
+### Workaround when FlutterFire CLI fails on macOS
+
+If `flutterfire configure` fails with **"Failed to write Dart configuration file"** and **"UnsupportedError not found in macOS"** (a known [FlutterFire CLI issue](https://github.com/invertase/flutterfire_cli/issues)):
+
+1. **Try installing the Ruby `xcodeproj` gem** (required by the CLI on macOS), then re-run:
+
+   ```bash
+   gem install xcodeproj
+   flutterfire configure
+   ```
+
+   If you get permission errors, use `sudo gem install xcodeproj`.
+
+2. **If it still fails**, generate `lib/firebase_options.dart` manually from your existing platform config:
+   - Copy `lib/firebase_options.dart.sample` to `lib/firebase_options.dart`.
+   - Replace the placeholders with values from your Firebase project: open `android/app/google-services.json` for `project_id`, `project_number`, Android `api_key` and `mobilesdk_app_id`; open `ios/Runner/GoogleService-Info.plist` (or run `plutil -p ios/Runner/GoogleService-Info.plist`) for `API_KEY`, `GOOGLE_APP_ID`, `GCM_SENDER_ID`, `STORAGE_BUCKET`, `BUNDLE_ID`, `CLIENT_ID`. Use the same structure as the sample (android / ios / macos `FirebaseOptions` and `currentPlatform` getter).
 
 ---
 

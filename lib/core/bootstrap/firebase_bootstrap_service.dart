@@ -13,6 +13,10 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class FirebaseBootstrapService {
   static Future<bool>? _firebaseInitialization;
 
+  /// Whether the default Firebase app has been created (e.g. for route guards
+  /// and conditional UI such as the FCM demo entry).
+  static bool get isFirebaseInitialized => Firebase.apps.isNotEmpty;
+
   /// Initialize Firebase with platform-specific configuration
   static Future<bool> initializeFirebase() => _firebaseInitialization ??=
       _initializeFirebaseOnce().then((final initialized) {
@@ -36,12 +40,18 @@ class FirebaseBootstrapService {
 
       final options = _resolveFirebaseOptions();
       if (options == null) {
+        AppLogger.info(
+          'Firebase init skipped: platform not supported or web. '
+          'See docs/firebase_setup.md to run with Firebase.',
+        );
         return false;
       }
 
       if (_usesPlaceholderValues(options)) {
-        AppLogger.warning(
-          'Firebase configuration uses placeholder values. Skip initialization.',
+        AppLogger.info(
+          'Firebase init skipped: lib/firebase_options.dart has placeholder '
+          'values. Run `flutterfire configure` to generate real config, or see '
+          'docs/firebase_setup.md.',
         );
         return false;
       }
@@ -111,22 +121,30 @@ class FirebaseBootstrapService {
   }
 
   static bool _usesPlaceholderValues(final FirebaseOptions options) {
-    bool containsPlaceholder(final String? value) {
+    // Match exact placeholder values from firebase_options_fallback.dart so we
+    // do not skip real configs (e.g. project IDs that contain "placeholder").
+    bool isPlaceholder(final String? value) {
       if (value == null || value.isEmpty) return true;
-      const markers = [
+      const exactPlaceholders = [
         'your-project-id',
-        'YOUR_',
-        'placeholder',
+        'YOUR_ANDROID_API_KEY',
+        'YOUR_IOS_API_KEY',
+        'YOUR_MACOS_API_KEY',
+        '1:000000000000:android:placeholder',
+        '1:000000000000:ios:placeholder',
         '000000000000',
       ];
-      return markers.any(value.contains);
+      if (exactPlaceholders.contains(value)) return true;
+      if (value == 'your-project-id.appspot.com') return true;
+      if (value.startsWith('YOUR_') && value.endsWith('_KEY')) return true;
+      return false;
     }
 
-    return containsPlaceholder(options.projectId) ||
-        containsPlaceholder(options.appId) ||
-        containsPlaceholder(options.apiKey) ||
-        containsPlaceholder(options.messagingSenderId) ||
-        containsPlaceholder(options.storageBucket);
+    return isPlaceholder(options.projectId) ||
+        isPlaceholder(options.appId) ||
+        isPlaceholder(options.apiKey) ||
+        isPlaceholder(options.messagingSenderId) ||
+        isPlaceholder(options.storageBucket);
   }
 
   /// Configure Firebase UI Auth providers
