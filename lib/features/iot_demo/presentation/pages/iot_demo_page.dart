@@ -1,8 +1,9 @@
-import 'dart:async';
-
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_type_extension.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_state.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/widgets/iot_demo_set_value_dialog.dart';
@@ -34,16 +35,6 @@ String _deviceTypeLabel(
   IotDeviceType.sensor => l10n.iotDemoDeviceTypeSensor,
   IotDeviceType.switch_ => l10n.iotDemoDeviceTypeSwitch,
 };
-
-bool _deviceHasValue(final IotDeviceType type) =>
-    type == IotDeviceType.thermostat || type == IotDeviceType.sensor;
-
-const double _valueSliderMin = 0;
-const double _valueSliderMax = 50;
-
-/// Clamps [value] to the shared IoT value range and rounds to 2 decimal places.
-double _clampAndRoundValue(final double value) =>
-    (value.clamp(_valueSliderMin, _valueSliderMax) * 100).round() / 100;
 
 /// IoT demo page: list devices, connect, disconnect, send commands.
 class IotDemoPage extends StatelessWidget {
@@ -108,15 +99,9 @@ class _LoadedBody extends StatelessWidget {
         ),
       );
     }
-    IotDevice? selected;
-    if (selectedDeviceId != null) {
-      for (final d in devices) {
-        if (d.id == selectedDeviceId) {
-          selected = d;
-          break;
-        }
-      }
-    }
+    final IotDevice? selected = selectedDeviceId != null
+        ? devices.firstWhereOrNull((final d) => d.id == selectedDeviceId)
+        : null;
     return SingleChildScrollView(
       padding: context.pagePadding,
       child: Column(
@@ -160,6 +145,21 @@ class _SelectedDeviceActions extends StatelessWidget {
 
   final IotDevice device;
 
+  void _onSliderChanged(final BuildContext context, final double value) {
+    final double clamped = iotDemoClampAndRound(
+      value,
+      iotDemoValueMin,
+      iotDemoValueMax,
+    );
+    if (clamped == device.value) return;
+    // Slider callback is synchronous; cubit handles async errors internally.
+    // ignore: discarded_futures
+    context.cubit<IotDemoCubit>().sendCommand(
+      device.id,
+      IotDeviceCommand.setValue(clamped),
+    );
+  }
+
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
@@ -199,7 +199,7 @@ class _SelectedDeviceActions extends StatelessWidget {
               ),
             ],
           ),
-          if (_deviceHasValue(device.type)) ...[
+          if (device.type.hasValue) ...[
             SizedBox(height: context.responsiveGapXS),
             Text(
               l10n.iotDemoCurrentValue(device.value.toString()),
@@ -207,12 +207,9 @@ class _SelectedDeviceActions extends StatelessWidget {
             ),
             SizedBox(height: context.responsiveGapXS),
             Slider.adaptive(
-              value: device.value.clamp(_valueSliderMin, _valueSliderMax),
-              max: _valueSliderMax,
-              onChanged: (final v) => context.cubit<IotDemoCubit>().sendCommand(
-                device.id,
-                IotDeviceCommand.setValue(_clampAndRoundValue(v)),
-              ),
+              value: device.value.clamp(iotDemoValueMin, iotDemoValueMax),
+              max: iotDemoValueMax,
+              onChanged: (final v) => _onSliderChanged(context, v),
             ),
           ],
         ],
@@ -235,7 +232,7 @@ class _SelectedDeviceActions extends StatelessWidget {
                     context.cubit<IotDemoCubit>().disconnect(device.id),
                 child: Text(l10n.iotDemoDisconnect),
               ),
-            if (connected && _deviceHasValue(device.type))
+            if (connected && device.type.hasValue)
               OutlinedButton(
                 onPressed: () async {
                   await _SelectedDeviceActions.showSetValueDialog(
@@ -260,19 +257,21 @@ class _SelectedDeviceActions extends StatelessWidget {
     final double? value = await showAdaptiveDialog<double>(
       context: context,
       builder: (final ctx) => IotDemoSetValueDialogBody(
-        initialValue: device.value.clamp(_valueSliderMin, _valueSliderMax),
+        initialValue: device.value.clamp(iotDemoValueMin, iotDemoValueMax),
         l10n: l10n,
-        minValue: _valueSliderMin,
-        maxValue: _valueSliderMax,
+        minValue: iotDemoValueMin,
+        maxValue: iotDemoValueMax,
       ),
     );
     if (value != null && context.mounted) {
-      final double clamped = _clampAndRoundValue(value);
-      unawaited(
-        context.cubit<IotDemoCubit>().sendCommand(
-          device.id,
-          IotDeviceCommand.setValue(clamped),
-        ),
+      final double clamped = iotDemoClampAndRound(
+        value,
+        iotDemoValueMin,
+        iotDemoValueMax,
+      );
+      await context.cubit<IotDemoCubit>().sendCommand(
+        device.id,
+        IotDeviceCommand.setValue(clamped),
       );
     }
   }
