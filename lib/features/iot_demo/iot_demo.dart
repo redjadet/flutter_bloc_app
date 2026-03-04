@@ -2,8 +2,10 @@
 library;
 
 export 'domain/iot_demo_repository.dart';
+export 'domain/iot_demo_value_range.dart';
 export 'domain/iot_device.dart';
 export 'domain/iot_device_command.dart';
+export 'domain/iot_device_type_extension.dart';
 export 'presentation/cubit/iot_demo_cubit.dart';
 export 'presentation/cubit/iot_demo_state.dart';
 export 'presentation/pages/iot_demo_page.dart';

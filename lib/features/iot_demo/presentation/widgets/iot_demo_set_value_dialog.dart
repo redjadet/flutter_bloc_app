@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
@@ -23,7 +24,8 @@ class IotDemoSetValueDialogBody extends StatefulWidget {
   final double maxValue;
 
   @override
-  State<IotDemoSetValueDialogBody> createState() => _IotDemoSetValueDialogBodyState();
+  State<IotDemoSetValueDialogBody> createState() =>
+      _IotDemoSetValueDialogBodyState();
 }
 
 class _IotDemoSetValueDialogBodyState extends State<IotDemoSetValueDialogBody> {
@@ -33,12 +35,6 @@ class _IotDemoSetValueDialogBodyState extends State<IotDemoSetValueDialogBody> {
   static const TextInputType _decimalKeyboard = TextInputType.numberWithOptions(
     decimal: true,
   );
-
-  static double _clampAndRound(
-    final double value,
-    final double min,
-    final double max,
-  ) => (value.clamp(min, max) * 100).round() / 100;
 
   @override
   void initState() {
@@ -55,7 +51,10 @@ class _IotDemoSetValueDialogBodyState extends State<IotDemoSetValueDialogBody> {
     super.dispose();
   }
 
-  double? get _parsedValue => double.tryParse(_controller.text);
+  double? get _parsedValue {
+    final String normalized = _controller.text.trim().replaceAll(',', '.');
+    return double.tryParse(normalized);
+  }
 
   void _clearError() {
     if (_errorMessage != null) {
@@ -78,7 +77,11 @@ class _IotDemoSetValueDialogBodyState extends State<IotDemoSetValueDialogBody> {
       );
       return;
     }
-    final double clamped = _clampAndRound(p, widget.minValue, widget.maxValue);
+    final double clamped = iotDemoClampAndRound(
+      p,
+      widget.minValue,
+      widget.maxValue,
+    );
     NavigationUtils.maybePop(context, result: clamped);
   }
 
@@ -132,52 +135,57 @@ class _IotDemoSetValueDialogBodyState extends State<IotDemoSetValueDialogBody> {
     ],
   );
 
+  List<Widget> _buildErrorSection(final BuildContext context) {
+    if (_errorMessage case final String errorText) {
+      final theme = Theme.of(context);
+      return <Widget>[
+        SizedBox(height: context.responsiveGapS),
+        Text(
+          errorText,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.error,
+          ),
+        ),
+      ];
+    }
+    return const <Widget>[];
+  }
+
   Widget _buildCupertinoDialog(
     final BuildContext context,
     final AppLocalizations l10n,
     final String cancelLabel,
     final String okLabel,
-  ) {
-    final theme = Theme.of(context);
-    return CupertinoAlertDialog(
-      title: Text(l10n.iotDemoSetValue),
-      content: Builder(
-        builder: (final ctx) => Padding(
-          padding: EdgeInsets.only(top: context.responsiveGapM),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              CupertinoTextField(
-                controller: _controller,
-                keyboardType: _decimalKeyboard,
-                placeholder: l10n.iotDemoSetValueHint,
-                onChanged: (_) => _clearError(),
-                onSubmitted: (_) => _submitValue(context),
-              ),
-              if (_errorMessage case final String errorText) ...[
-                SizedBox(height: context.responsiveGapS),
-                Text(
-                  errorText,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.error,
-                  ),
-                ),
-              ],
-            ],
-          ),
+  ) => CupertinoAlertDialog(
+    title: Text(l10n.iotDemoSetValue),
+    content: Builder(
+      builder: (final _) => Padding(
+        padding: EdgeInsets.only(top: context.responsiveGapM),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            CupertinoTextField(
+              controller: _controller,
+              keyboardType: _decimalKeyboard,
+              placeholder: l10n.iotDemoSetValueHint,
+              onChanged: (_) => _clearError(),
+              onSubmitted: (_) => _submitValue(context),
+            ),
+            ..._buildErrorSection(context),
+          ],
         ),
       ),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          onPressed: () => NavigationUtils.maybePop(context),
-          child: Text(cancelLabel),
-        ),
-        CupertinoDialogAction(
-          onPressed: () => _submitValue(context),
-          child: Text(okLabel),
-        ),
-      ],
-    );
-  }
+    ),
+    actions: <CupertinoDialogAction>[
+      CupertinoDialogAction(
+        onPressed: () => NavigationUtils.maybePop(context),
+        child: Text(cancelLabel),
+      ),
+      CupertinoDialogAction(
+        onPressed: () => _submitValue(context),
+        child: Text(okLabel),
+      ),
+    ],
+  );
 }
