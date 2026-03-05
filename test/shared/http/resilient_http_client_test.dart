@@ -214,4 +214,90 @@ void main() {
       verify(() => user.getIdToken(true)).called(1);
     },
   );
+
+  test(
+    'concurrent 401 responses share one refresh and both retries succeed',
+    () async {
+      final _MockFirebaseAuth auth = _MockFirebaseAuth();
+      final _MockUser user = _MockUser();
+      final _MockIdTokenResult staleToken = _MockIdTokenResult();
+      final _MockIdTokenResult freshToken = _MockIdTokenResult();
+      final DateTime expiry = DateTime.now().toUtc().add(
+        const Duration(hours: 1),
+      );
+
+      bool refreshed = false;
+      when(() => auth.currentUser).thenReturn(user);
+      when(() => user.uid).thenReturn('user-id');
+      when(() => staleToken.token).thenReturn('stale-token');
+      when(() => staleToken.expirationTime).thenReturn(expiry);
+      when(() => freshToken.token).thenReturn('fresh-token');
+      when(() => freshToken.expirationTime).thenReturn(expiry);
+      when(() => user.getIdToken(true)).thenAnswer((final invocation) async {
+        refreshed = true;
+        return 'refreshed';
+      });
+      when(() => user.getIdTokenResult()).thenAnswer((final invocation) async {
+        return refreshed ? freshToken : staleToken;
+      });
+
+      final Completer<void> firstWaveBarrier = Completer<void>();
+      int staleRequestCount = 0;
+      final List<String?> authHeaders = <String?>[];
+      final _CountingClient inner = _CountingClient((final request) async {
+        final String? authHeader = request.headers['Authorization'];
+        authHeaders.add(authHeader);
+
+        if (authHeader == 'Bearer stale-token') {
+          staleRequestCount += 1;
+          if (staleRequestCount == 2 && !firstWaveBarrier.isCompleted) {
+            firstWaveBarrier.complete();
+          }
+          await firstWaveBarrier.future;
+          return http.StreamedResponse(
+            Stream<List<int>>.value(utf8.encode('unauthorized')),
+            401,
+            headers: const <String, String>{'content-type': 'text/plain'},
+          );
+        }
+
+        return http.StreamedResponse(
+          Stream<List<int>>.value(utf8.encode('ok')),
+          200,
+          headers: const <String, String>{'content-type': 'text/plain'},
+        );
+      });
+
+      final ResilientHttpClient client = ResilientHttpClient(
+        innerClient: inner,
+        networkStatusService: _FakeNetworkStatusService(NetworkStatus.online),
+        userAgent: 'TestAgent/1.0',
+        firebaseAuth: auth,
+        enableRetry: false,
+      );
+
+      final Future<http.Response> firstResponseFuture = client
+          .send(http.Request('GET', Uri.parse('https://example.com/a')))
+          .then(http.Response.fromStream);
+      final Future<http.Response> secondResponseFuture = client
+          .send(http.Request('GET', Uri.parse('https://example.com/b')))
+          .then(http.Response.fromStream);
+
+      final List<http.Response> responses = await Future.wait(
+        <Future<http.Response>>[firstResponseFuture, secondResponseFuture],
+      );
+
+      expect(responses.map((final response) => response.statusCode), <int>[
+        200,
+        200,
+      ]);
+      expect(staleRequestCount, 2);
+      expect(inner.callCount, 4);
+      expect(
+        authHeaders.where((final header) => header == 'Bearer fresh-token'),
+        hasLength(2),
+      );
+      verify(() => user.getIdToken(true)).called(1);
+    },
+  );
 }
