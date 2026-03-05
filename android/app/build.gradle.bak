@@ -48,7 +48,7 @@ afterEvaluate {
             if (sourceApk.exists()) {
                 def destApk = rootProject.projectDir.toPath().resolve("../build/app/outputs/flutter-apk/app-debug.apk").toFile().canonicalFile
                 destApk.parentFile.mkdirs()
-                java.nio.file.Files.copy(sourceApk.toPath(), destApk.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+                sourceApk.copyTo(destApk, true)
             }
         }
     }

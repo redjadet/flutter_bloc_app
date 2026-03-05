@@ -144,5 +144,8 @@
   ],
   "files.associations": {
     "*.config": "plaintext"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
   }
 }

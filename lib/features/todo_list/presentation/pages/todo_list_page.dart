@@ -26,15 +26,168 @@ import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 part 'todo_list_page_handlers.dart';
 
+enum _BatchMenuAction { complete, uncomplete, delete }
+
+@immutable
+class _TodoAppBarData {
+  const _TodoAppBarData({
+    required this.hasFilteredItems,
+    required this.allFilteredSelected,
+    required this.hasSelection,
+    required this.hasSelectedActive,
+    required this.hasSelectedCompleted,
+    required this.selectedCount,
+  });
+  final bool hasFilteredItems;
+  final bool allFilteredSelected;
+  final bool hasSelection;
+  final bool hasSelectedActive;
+  final bool hasSelectedCompleted;
+  final int selectedCount;
+
+  @override
+  bool operator ==(final Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    return other is _TodoAppBarData &&
+        other.hasFilteredItems == hasFilteredItems &&
+        other.allFilteredSelected == allFilteredSelected &&
+        other.hasSelection == hasSelection &&
+        other.hasSelectedActive == hasSelectedActive &&
+        other.hasSelectedCompleted == hasSelectedCompleted &&
+        other.selectedCount == selectedCount;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    hasFilteredItems,
+    allFilteredSelected,
+    hasSelection,
+    hasSelectedActive,
+    hasSelectedCompleted,
+    selectedCount,
+  );
+}
+
 class TodoListPage extends StatelessWidget {
   const TodoListPage({super.key});
 
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    return CommonPageLayout(
-      title: l10n.todoListTitle,
-      body: const _TodoListBody(),
+    return TypeSafeBlocSelector<TodoListCubit, TodoListState, _TodoAppBarData>(
+      selector: (final state) {
+        final filtered = state.filteredItems;
+        final ids = state.selectedItemIds;
+        final items = state.items;
+        final allSelected =
+            filtered.isNotEmpty &&
+            filtered.every((final i) => ids.contains(i.id));
+        final hasSelectedActive = items.any(
+          (final i) => ids.contains(i.id) && !i.isCompleted,
+        );
+        final hasSelectedCompleted = items.any(
+          (final i) => ids.contains(i.id) && i.isCompleted,
+        );
+        return _TodoAppBarData(
+          hasFilteredItems: filtered.isNotEmpty,
+          allFilteredSelected: allSelected,
+          hasSelection: state.hasSelectedItems,
+          hasSelectedActive: hasSelectedActive,
+          hasSelectedCompleted: hasSelectedCompleted,
+          selectedCount: state.selectedCount,
+        );
+      },
+      builder: (final context, final barData) {
+        final List<Widget> actionWidgets = <Widget>[];
+        if (barData.hasFilteredItems) {
+          actionWidgets.add(
+            IconButton(
+              icon: Icon(
+                barData.allFilteredSelected ? Icons.deselect : Icons.select_all,
+              ),
+              tooltip: barData.allFilteredSelected
+                  ? context.l10n.todoListClearSelection
+                  : context.l10n.todoListSelectAll,
+              onPressed: () {
+                final cubit = context.cubit<TodoListCubit>();
+                if (barData.allFilteredSelected) {
+                  cubit.clearSelection();
+                } else {
+                  cubit.selectAllItems();
+                }
+              },
+            ),
+          );
+        }
+        if (barData.hasSelection) {
+          actionWidgets.add(
+            PopupMenuButton<_BatchMenuAction>(
+              icon: const Icon(Icons.more_vert),
+              tooltip: context.l10n.todoListItemsSelected(
+                barData.selectedCount,
+              ),
+              onSelected: (final action) async {
+                final cubit = context.cubit<TodoListCubit>();
+                switch (action) {
+                  case _BatchMenuAction.complete:
+                    await cubit.batchCompleteSelected();
+                    break;
+                  case _BatchMenuAction.uncomplete:
+                    await cubit.batchUncompleteSelected();
+                    break;
+                  case _BatchMenuAction.delete:
+                    final bool? shouldDelete =
+                        await showTodoBatchDeleteConfirmDialog(
+                          context: context,
+                          count: barData.selectedCount,
+                        );
+                    if ((shouldDelete ?? false) && context.mounted) {
+                      await cubit.batchDeleteSelected();
+                    }
+                    break;
+                }
+              },
+              itemBuilder: (final context) =>
+                  <PopupMenuEntry<_BatchMenuAction>>[
+                    if (barData.hasSelectedActive)
+                      PopupMenuItem<_BatchMenuAction>(
+                        value: _BatchMenuAction.complete,
+                        child: Text(context.l10n.todoListBatchComplete),
+                      ),
+                    if (barData.hasSelectedCompleted)
+                      PopupMenuItem<_BatchMenuAction>(
+                        value: _BatchMenuAction.uncomplete,
+                        child: Text(context.l10n.todoListBatchUncomplete),
+                      ),
+                    PopupMenuItem<_BatchMenuAction>(
+                      value: _BatchMenuAction.delete,
+                      child: Text(
+                        context.l10n.todoListBatchDelete,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ),
+                  ],
+            ),
+          );
+        }
+        final List<Widget>? actions = actionWidgets.isEmpty
+            ? null
+            : actionWidgets;
+        return CommonPageLayout(
+          title: l10n.todoListTitle,
+          actions: actions,
+          body: const _TodoListBody(),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => _handleAddTodo(context),
+            tooltip: l10n.todoListAddAction,
+            child: const Icon(Icons.add),
+          ),
+        );
+      },
     );
   }
 }

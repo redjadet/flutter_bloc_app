@@ -98,7 +98,11 @@ class ErrorHandling {
     showErrorSnackBar(context, message, action: action);
   }
 
-  /// Clear all current snackbars
+  /// Clear all current snackbars.
+  ///
+  /// Catches [StateError] if the snackbar queue is already empty (e.g. snackbar
+  /// was already dismissed) to avoid "Bad state: No element" from
+  /// ScaffoldMessenger internals.
   static void clearSnackBars(final BuildContext context) {
     if (!context.mounted) {
       ContextUtils.logNotMounted('ErrorHandling.clearSnackBars');
@@ -107,7 +111,39 @@ class ErrorHandling {
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
       context,
     );
-    messenger?.clearSnackBars();
+    try {
+      messenger?.clearSnackBars();
+      // ScaffoldMessenger throws StateError when queue is empty; not a programming error.
+    } catch (error) {
+      if (error is! StateError) {
+        rethrow;
+      }
+    }
+  }
+
+  /// Hides the current snackbar with the given [reason].
+  ///
+  /// Catches [StateError] if the snackbar was already removed to avoid "Bad
+  /// state: No element" from ScaffoldMessenger internals.
+  static void hideCurrentSnackBar(
+    final BuildContext context, {
+    final SnackBarClosedReason reason = SnackBarClosedReason.timeout,
+  }) {
+    if (!context.mounted) {
+      ContextUtils.logNotMounted('ErrorHandling.hideCurrentSnackBar');
+      return;
+    }
+    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+      context,
+    );
+    try {
+      messenger?.hideCurrentSnackBar(reason: reason);
+      // ScaffoldMessenger throws StateError when snackbar already removed; not a programming error.
+    } catch (error) {
+      if (error is! StateError) {
+        rethrow;
+      }
+    }
   }
 
   /// Show a loading dialog
