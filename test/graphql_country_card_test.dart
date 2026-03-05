@@ -1,5 +1,6 @@
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/widgets/graphql_country_card.dart';
+import 'package:flutter_bloc_app/shared/widgets/cached_network_image_widget.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'helpers/pump_with_mix_theme.dart';
@@ -26,6 +27,7 @@ void main() {
       ),
     );
 
+    expect(find.byType(CachedNetworkImageWidget), findsOneWidget);
     expect(find.text('🇹🇷'), findsOneWidget);
     expect(find.text('Türkiye'), findsOneWidget);
     expect(find.text('TR - Europe'), findsOneWidget);
@@ -54,6 +56,7 @@ void main() {
       ),
     );
 
+    expect(find.byType(CachedNetworkImageWidget), findsOneWidget);
     expect(find.text('?'), findsOneWidget);
     expect(find.text('Antarctica'), findsOneWidget);
     expect(find.text('AQ - Antarctica'), findsOneWidget);

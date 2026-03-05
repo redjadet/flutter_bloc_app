@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/igaming_demo/presentation/widgets/slot_symbol_text_style.dart';
 
 /// Symbols shown on each reel (slot-machine style). Exposed for legend.
 const List<String> kSlotReelSymbols = <String>['7', '★', '◆', '●', '▲', '♦'];
@@ -117,9 +118,11 @@ class _SlotMachineSpinnerState extends State<SlotMachineSpinner>
           scrollOffset: reelOffset,
           symbolHeight: _symbolHeight,
           reelWidth: _reelWidth,
-          textStyle: textTheme.headlineSmall?.copyWith(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.bold,
+          textStyle: withSlotSymbolFallback(
+            textTheme.headlineSmall?.copyWith(
+              color: colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           borderColor: colorScheme.outline,
         );
@@ -194,10 +197,10 @@ class _ReelColumn extends StatelessWidget {
                   height: symbolHeight,
                   width: reelWidth,
                   child: Center(
-                    child: Text(
+                    child: buildSlotSymbolWidget(
                       s,
-                      style: textStyle,
-                      semanticsLabel: s,
+                      textStyle: textStyle,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 );
