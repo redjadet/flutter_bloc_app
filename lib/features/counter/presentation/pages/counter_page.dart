@@ -215,10 +215,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
         if (!mounted || isClosed) {
           return;
         }
-        final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
-          context,
-        );
-        messenger?.hideCurrentSnackBar(reason: SnackBarClosedReason.timeout);
+        ErrorHandling.hideCurrentSnackBar(context);
       }),
     );
   }

@@ -101,13 +101,24 @@ Future<void> _handleDeleteWithUndo(
     );
     // Keep timeout deterministic even when platforms/a11y prevent action
     // snackbars from auto-timing out. Guard with mounted to avoid calling
-    // close() after the route is disposed.
+    // close() after the route is disposed. Guard close() in try-catch because
+    // the snackbar may already have been removed (auto-dismiss or Undo), in
+    // which case ScaffoldMessenger's queue is empty and close() throws.
     unawaited(
       Future<void>.delayed(
         const Duration(seconds: 2),
         () {
-          if (context.mounted) {
+          if (!context.mounted) {
+            return;
+          }
+          try {
             snackBarController.close();
+            // ScaffoldMessenger throws StateError when queue is empty (snackbar
+            // already removed); not a programming error.
+          } catch (error) {
+            if (error is! StateError) {
+              rethrow;
+            }
           }
         },
       ),
