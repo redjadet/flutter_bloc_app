@@ -27,6 +27,9 @@ This document consolidates code-quality analysis and improvement notes. It is a 
 - Search race condition: request-id guard prevents stale results in `lib/features/search/presentation/search_cubit.dart` (tests added).
 - Multipart retry safety: multipart cloning is blocked and retries are skipped in `lib/shared/http/http_request_extensions.dart` and `lib/shared/http/resilient_http_client.dart`.
 - Auth token cache safety: cache is keyed by user id in `lib/shared/http/auth_token_manager.dart` (tests added).
+- Auth refresh race safety: concurrent 401 refreshes are single-flight in
+  `lib/shared/http/auth_token_manager.dart`, and retry flow avoids double
+  forced-refresh in `lib/shared/http/resilient_http_client.dart` (tests added).
 - Completer type safety: non-nullable completion guard in `lib/shared/utils/completer_helper.dart` (tests added).
 - JSON decode error handling: try/catch and error mapping in `lib/features/chat/data/huggingface_api_client.dart` (tests added).
 

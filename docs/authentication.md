@@ -41,14 +41,20 @@
 - Tokens are retrieved and cached by `AuthTokenManager`, which:
   - Tracks cached token expiration and refresh window (5 minutes before expiry).
   - Caches per user ID to avoid cross-user token reuse.
-  - Clears cached token/user on refresh, errors, or explicit `clearCache()` calls.
+  - Uses a serialized refresh gate so concurrent 401 failures share one refresh.
+  - Hydrates cache from the refreshed token result so waiters reuse one fresh value.
+  - Clears cached token/user on refresh errors or explicit `clearCache()` calls.
   (`lib/shared/http/auth_token_manager.dart`)
+- On 401 responses, `ResilientHttpClient` performs one refresh flow and retries with
+  the refreshed bearer token, avoiding chained forced-refresh calls.
 - If Firebase Auth is not configured, `ResilientHttpClient` will skip token injection and proceed with standard headers only.
 
 ## Auth Cache Safety
 
 - Cache keying by `user.uid` prevents stale tokens being reused after logout/login or account switching.
-- Refresh paths (`refreshToken()` and `refreshTokenAndGet()`) clear cached token and user ID to ensure a fresh token is fetched.
+- Refresh paths (`refreshToken()` and `refreshTokenAndGet()`) are single-flight and
+  cache the refreshed token atomically for all waiters.
+- Refresh failures clear cache state and propagate errors to all refresh waiters.
 
 ## Notable Gaps / Risks
 
@@ -62,7 +68,12 @@
 
 - **Firebase integration**: Yes — Firebase Auth + FirebaseUI drive sign-in, routing guards, and Realtime Database scoping (`lib/app.dart`, `lib/app/router/auth_redirect.dart`, `lib/features/auth/presentation/pages/sign_in_page.dart`, `lib/features/counter/data/realtime_database_counter_repository.dart`).
 - **Email + password auth**: Yes — Always included in provider list via `buildAuthProviders()` to guarantee availability even when FirebaseUI config is minimal (`lib/features/auth/presentation/helpers/provider_builder.dart`).
-- **Token handling**: Partial — Firebase SDK issues and refreshes ID tokens automatically. For non-Firebase HTTP calls, `ResilientHttpClient` injects Firebase ID tokens via `AuthTokenManager`, which caches tokens per user and clears on refresh or auth changes (`lib/shared/http/auth_token_manager.dart`, `lib/shared/http/resilient_http_client.dart`).
+- **Token handling**: Partial — Firebase SDK issues and refreshes ID tokens
+  automatically. For non-Firebase HTTP calls, `ResilientHttpClient` injects
+  Firebase ID tokens via `AuthTokenManager`, which caches per user and applies
+  serialized single-flight refresh for concurrent 401s
+  (`lib/shared/http/auth_token_manager.dart`,
+  `lib/shared/http/resilient_http_client.dart`).
 - **User session persistence**: Yes — Relies on Firebase Auth’s built-in persisted sessions; navigation listens to `authStateChanges()` to react to sign-in/sign-out (`lib/app/router/go_router_refresh_stream.dart`).
 - **Role-based access (e.g., student/teacher)**: No — No role/claims parsing or role-aware route guards; only authenticated vs unauthenticated (with anonymous upgrade exception).
 - **Authentication: OAuth, token management**: OAuth: Yes (Google provider added when available via `helpers/google_provider_helper.dart`); token management: Partial (custom token injection for non-Firebase HTTP clients with per-user caching; lifecycle still relies on Firebase defaults).

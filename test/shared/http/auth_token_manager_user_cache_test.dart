@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/shared/http/auth_token_manager.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _MockFirebaseAuth extends Mock implements FirebaseAuth {}
@@ -99,7 +99,6 @@ void main() {
     });
 
     test('refreshTokenAndGet clears user-specific cache', () async {
-      // Mock getIdTokenResult for user1
       when(
         () => user1.getIdTokenResult(),
       ).thenAnswer((_) async => mockTokenResult);

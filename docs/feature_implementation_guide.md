@@ -2,7 +2,7 @@
 
 This document describes **how each major feature is implemented** in this Flutter BLoC app, or **how to implement it** if it is not yet present. It covers iOS and Android and prefers referencing existing documentation where it exists.
 
-**Last reviewed:** 2026-02-23
+**Last reviewed:** 2026-03-05
 
 ## How to Use This Guide
 
@@ -42,7 +42,11 @@ This document describes **how each major feature is implemented** in this Flutte
 - **HTTP client:** The app uses a shared `ResilientHttpClient` (`lib/shared/http/resilient_http_client.dart`) that wraps `http` and adds:
   - Optional **Firebase ID token injection** for authenticated requests (when Firebase Auth is configured).
   - Retry/backoff and network-awareness via `NetworkStatusService` and `RetryNotificationService`.
-- **Token handling:** `AuthTokenManager` (`lib/shared/http/auth_token_manager.dart`) caches Firebase ID tokens per user, refreshes before expiry, and clears on auth changes so tokens are never reused across users.
+- **Token handling:** `AuthTokenManager`
+  (`lib/shared/http/auth_token_manager.dart`) caches Firebase ID tokens per
+  user, refreshes before expiry, and serializes concurrent refreshes (single
+  flight) so parallel 401s do not trigger refresh storms. Retry requests are
+  sent with refreshed bearer tokens while preserving per-user cache safety.
 - **Registration:** HTTP-related services (client, chart repo, GraphQL repo, etc.) are registered in `lib/core/di/register_http_services.dart`. Use `ResilientHttpClient` for any new REST/API calls so auth and retries are consistent.
 - **Clean architecture:** API calls live in the **data layer** (repositories); domain defines interfaces. Example: `CountriesGraphqlRepository`, `DelayedChartRepository`, `HuggingfaceChatRepository`.
 

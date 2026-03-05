@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/shared/http/resilient_http_client.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/services/retry_notification_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:mocktail/mocktail.dart';
 
 class _FakeNetworkStatusService implements NetworkStatusService {
   _FakeNetworkStatusService(this._status);
@@ -39,6 +41,12 @@ class _CountingClient extends http.BaseClient {
     return _handler(request);
   }
 }
+
+class _MockFirebaseAuth extends Mock implements FirebaseAuth {}
+
+class _MockUser extends Mock implements User {}
+
+class _MockIdTokenResult extends Mock implements IdTokenResult {}
 
 void main() {
   test('retries transient HTTP status codes and emits notification', () {
@@ -144,4 +152,66 @@ void main() {
     await subscription.cancel();
     await retryService.dispose();
   });
+
+  test(
+    '401 retry refreshes once and retries with fresh bearer token',
+    () async {
+      final _MockFirebaseAuth auth = _MockFirebaseAuth();
+      final _MockUser user = _MockUser();
+      final _MockIdTokenResult staleToken = _MockIdTokenResult();
+      final _MockIdTokenResult freshToken = _MockIdTokenResult();
+      final DateTime expiry = DateTime.now().toUtc().add(
+        const Duration(hours: 1),
+      );
+
+      when(() => auth.currentUser).thenReturn(user);
+      when(() => user.uid).thenReturn('user-id');
+      when(
+        () => user.getIdToken(true),
+      ).thenAnswer((final invocation) async => 'refreshed');
+      when(() => staleToken.token).thenReturn('stale-token');
+      when(() => staleToken.expirationTime).thenReturn(expiry);
+      when(() => freshToken.token).thenReturn('fresh-token');
+      when(() => freshToken.expirationTime).thenReturn(expiry);
+
+      int tokenResultCalls = 0;
+      when(() => user.getIdTokenResult()).thenAnswer((final invocation) async {
+        tokenResultCalls += 1;
+        return tokenResultCalls == 1 ? staleToken : freshToken;
+      });
+
+      final List<String?> authHeaders = <String?>[];
+      final _CountingClient inner = _CountingClient((final request) async {
+        authHeaders.add(request.headers['Authorization']);
+        final int statusCode = authHeaders.length == 1 ? 401 : 200;
+        return http.StreamedResponse(
+          Stream<List<int>>.value(utf8.encode('ok')),
+          statusCode,
+          headers: const <String, String>{'content-type': 'text/plain'},
+        );
+      });
+
+      final ResilientHttpClient client = ResilientHttpClient(
+        innerClient: inner,
+        networkStatusService: _FakeNetworkStatusService(NetworkStatus.online),
+        userAgent: 'TestAgent/1.0',
+        firebaseAuth: auth,
+        enableRetry: false,
+      );
+
+      final http.Response response = await http.Response.fromStream(
+        await client.send(
+          http.Request('GET', Uri.parse('https://example.com')),
+        ),
+      );
+
+      expect(response.statusCode, 200);
+      expect(inner.callCount, 2);
+      expect(authHeaders, <String?>[
+        'Bearer stale-token',
+        'Bearer fresh-token',
+      ]);
+      verify(() => user.getIdToken(true)).called(1);
+    },
+  );
 }
