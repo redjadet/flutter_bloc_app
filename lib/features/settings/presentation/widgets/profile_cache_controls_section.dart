@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repositor
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
@@ -49,11 +50,10 @@ class _ProfileCacheControlsSectionState
       if (!mounted) {
         return;
       }
-      messenger
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(content: Text(l10n.settingsProfileCacheClearedMessage)),
-        );
+      ErrorHandling.hideCurrentSnackBar(context);
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.settingsProfileCacheClearedMessage)),
+      );
     } on Object catch (error, stackTrace) {
       AppLogger.error(
         'ProfileCacheControlsSection._handleClearCache failed',
@@ -63,11 +63,10 @@ class _ProfileCacheControlsSectionState
       if (!mounted) {
         return;
       }
-      messenger
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(content: Text(l10n.settingsProfileCacheErrorMessage)),
-        );
+      ErrorHandling.hideCurrentSnackBar(context);
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.settingsProfileCacheErrorMessage)),
+      );
     } finally {
       if (mounted) {
         setState(() => _isClearing = false);

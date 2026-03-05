@@ -6,12 +6,16 @@ import 'package:flutter_test/flutter_test.dart';
 
 class _FakeThemeRepository implements ThemeRepository {
   ThemePreference? stored;
+  bool throwOnSave = false;
 
   @override
   Future<ThemePreference?> load() async => stored;
 
   @override
   Future<void> save(ThemePreference mode) async {
+    if (throwOnSave) {
+      throw StateError('save failed');
+    }
     stored = mode;
   }
 }
@@ -41,5 +45,20 @@ void main() {
 
     await cubit.toggle();
     expect(cubit.state, ThemeMode.light);
+  });
+
+  test('setMode reverts state and rethrows when save throws', () async {
+    final repo = _FakeThemeRepository()..throwOnSave = true;
+    final cubit = ThemeCubit(repository: repo);
+    expect(cubit.state, ThemeMode.system);
+
+    await expectLater(
+      cubit.setMode(ThemeMode.dark),
+      throwsA(
+        isA<StateError>().having((e) => e.message, 'message', 'save failed'),
+      ),
+    );
+    expect(cubit.state, ThemeMode.system);
+    expect(repo.stored, isNull);
   });
 }

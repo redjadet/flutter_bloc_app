@@ -3,6 +3,7 @@ import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_servic
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/playlearn_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class PlaylearnCubit extends Cubit<PlaylearnState> {
   PlaylearnCubit({
@@ -22,24 +23,63 @@ class PlaylearnCubit extends Cubit<PlaylearnState> {
 
   void loadTopics() {
     emit(state.copyWith(isLoading: true, errorMessage: null));
-    final topics = _repository.getTopics();
-    if (isClosed) return;
-    emit(state.copyWith(topics: topics, isLoading: false));
+    try {
+      final topics = _repository.getTopics();
+      if (isClosed) return;
+      emit(state.copyWith(topics: topics, isLoading: false));
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'PlaylearnCubit.loadTopics failed',
+        error,
+        stackTrace,
+      );
+      if (isClosed) return;
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: _l10n?.featureLoadError ?? error.toString(),
+        ),
+      );
+    }
   }
 
   void loadWordsForTopic(final String topicId) {
-    emit(
-      state.copyWith(
-        selectedTopicId: topicId,
-        words: _repository.getWordsByTopic(topicId),
-      ),
-    );
+    if (isClosed) return;
+    try {
+      final words = _repository.getWordsByTopic(topicId);
+      if (isClosed) return;
+      emit(
+        state.copyWith(
+          selectedTopicId: topicId,
+          words: words,
+        ),
+      );
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'PlaylearnCubit.loadWordsForTopic failed',
+        error,
+        stackTrace,
+      );
+      if (isClosed) return;
+      emit(
+        state.copyWith(
+          selectedTopicId: topicId,
+          words: const [],
+          errorMessage: _l10n?.featureLoadError ?? error.toString(),
+        ),
+      );
+    }
   }
 
   Future<void> speakWord(final String text) async {
     try {
       await _audioService.speak(text);
-    } on Object {
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'PlaylearnCubit.speakWord failed',
+        error,
+        stackTrace,
+      );
       if (isClosed) return;
       emit(
         state.copyWith(
