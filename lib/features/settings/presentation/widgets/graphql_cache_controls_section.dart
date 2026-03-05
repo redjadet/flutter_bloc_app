@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repo
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
@@ -36,11 +37,10 @@ class _GraphqlCacheControlsSectionState
     try {
       await repo.clear();
       if (!mounted) return;
-      messenger
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(content: Text(l10n.settingsGraphqlCacheClearedMessage)),
-        );
+      ErrorHandling.hideCurrentSnackBar(context);
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.settingsGraphqlCacheClearedMessage)),
+      );
     } on Object catch (error, stackTrace) {
       AppLogger.error(
         'GraphqlCacheControlsSection._handleClear failed',
@@ -48,11 +48,10 @@ class _GraphqlCacheControlsSectionState
         stackTrace,
       );
       if (!mounted) return;
-      messenger
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(content: Text(l10n.settingsGraphqlCacheErrorMessage)),
-        );
+      ErrorHandling.hideCurrentSnackBar(context);
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.settingsGraphqlCacheErrorMessage)),
+      );
     } finally {
       if (mounted) {
         setState(() => _isClearing = false);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class LocaleCubit extends Cubit<Locale?> {
   LocaleCubit({required final LocaleRepository repository})
@@ -21,8 +22,21 @@ class LocaleCubit extends Cubit<Locale?> {
 
   Future<void> setLocale(final Locale? locale) async {
     if (_isSame(locale, state)) return;
+    final Locale? previous = state;
     emit(locale);
-    await _repository.save(_toAppLocale(locale));
+    try {
+      await _repository.save(_toAppLocale(locale));
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'LocaleCubit.setLocale save failed',
+        error,
+        stackTrace,
+      );
+      if (!isClosed) {
+        emit(previous);
+      }
+      rethrow;
+    }
   }
 
   bool _isSame(final Locale? a, final Locale? b) {

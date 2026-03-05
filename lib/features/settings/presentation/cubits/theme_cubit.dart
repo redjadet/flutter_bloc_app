@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class ThemeCubit extends Cubit<ThemeMode> {
   ThemeCubit({required final ThemeRepository repository})
@@ -18,8 +19,21 @@ class ThemeCubit extends Cubit<ThemeMode> {
 
   Future<void> setMode(final ThemeMode mode) async {
     if (state == mode) return;
+    final ThemeMode previous = state;
     emit(mode);
-    await _repository.save(_toPreference(mode));
+    try {
+      await _repository.save(_toPreference(mode));
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'ThemeCubit.setMode save failed',
+        error,
+        stackTrace,
+      );
+      if (!isClosed) {
+        emit(previous);
+      }
+      rethrow;
+    }
   }
 
   Future<void> toggle() async {
