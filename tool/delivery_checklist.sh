@@ -2,10 +2,10 @@
 # Delivery Checklist Script
 # Runs all delivery checklist steps in order:
 # 1. flutter pub get (only when dependency metadata changed)
-# 2. dart format .
+# 2. dart format (changed Dart files only)
 # 3. flutter analyze
-# 4. Best practices validation (parallel static checks + regression guards)
-# 5. tool/test_coverage.sh
+# 4. Best practices validation (parallel static checks + mix_lint + optional focused tests)
+# 5. tool/test_coverage.sh (optional via CHECKLIST_RUN_COVERAGE=0)
 
 set -euo pipefail
 
@@ -122,6 +122,18 @@ echo "🚀 Running Delivery Checklist..."
 echo ""
 
 DART_BIN="$(resolve_flutter_dart)"
+RUN_COVERAGE="${CHECKLIST_RUN_COVERAGE:-1}"
+RUN_FOCUSED_TESTS="${CHECKLIST_RUN_FOCUSED_TESTS:-auto}"
+
+if ! [[ "$RUN_COVERAGE" =~ ^(0|1)$ ]]; then
+  echo "⚠️  Invalid CHECKLIST_RUN_COVERAGE='$RUN_COVERAGE'; using 1"
+  RUN_COVERAGE=1
+fi
+
+if ! [[ "$RUN_FOCUSED_TESTS" =~ ^(auto|0|1)$ ]]; then
+  echo "⚠️  Invalid CHECKLIST_RUN_FOCUSED_TESTS='$RUN_FOCUSED_TESTS'; using auto"
+  RUN_FOCUSED_TESTS=auto
+fi
 
 # Step 1: Fetch dependencies (only if needed)
 echo "📦 Step 1/5: Checking dependency state"
@@ -144,8 +156,29 @@ echo "✅ Dependencies ready"
 echo ""
 
 # Step 2: Format code
-echo "📝 Step 2/5: Formatting code with 'dart format .'"
-"$DART_BIN" format .
+echo "📝 Step 2/5: Formatting changed Dart files"
+declare -a changed_dart_files=()
+if command -v git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  while IFS= read -r file; do
+    [ -z "$file" ] && continue
+    if [[ "$file" == *.dart ]] && [ -f "$file" ]; then
+      changed_dart_files+=("$file")
+    fi
+  done < <(
+    {
+      git diff --name-only --diff-filter=ACMRTUXB
+      git diff --cached --name-only --diff-filter=ACMRTUXB
+      git ls-files --others --exclude-standard
+    } | sort -u
+  )
+fi
+
+if [ "${#changed_dart_files[@]}" -gt 0 ]; then
+  echo "  Found ${#changed_dart_files[@]} changed Dart file(s)"
+  "$DART_BIN" format "${changed_dart_files[@]}"
+else
+  echo "  No changed Dart files, skipping format"
+fi
 echo "✅ Code formatting complete"
 echo ""
 
@@ -189,6 +222,7 @@ CHECK_MESSAGES=(
   "Checking for Equatable usage (Freezed preferred)..."
   "Checking for unguarded null assertion (!) usage..."
   "Checking for Row+Icon+Text overflow risk (use IconLabelRow or Flexible/Expanded)..."
+  "Checking for lifecycle and error-handling (snackbar/listen/dialog mounted)..."
 )
 
 CHECK_SCRIPTS=(
@@ -227,6 +261,7 @@ CHECK_SCRIPTS=(
   "tool/check_freezed_preferred.sh"
   "tool/check_unguarded_null_assertion.sh"
   "tool/check_row_text_overflow.sh"
+  "tool/check_lifecycle_error_handling.sh"
 )
 
 DEFAULT_CHECKLIST_JOBS="$(detect_cpu_count)"
@@ -292,13 +327,25 @@ if ! bash tool/run_mix_lint.sh; then
 fi
 echo ""
 
-echo "  Running focused regression guard tests..."
-bash tool/check_regression_guards.sh || VALIDATION_FAILED=1
-echo ""
+should_run_focused_tests=1
+if [ "$RUN_FOCUSED_TESTS" = "0" ]; then
+  should_run_focused_tests=0
+elif [ "$RUN_FOCUSED_TESTS" = "auto" ] && [ "$RUN_COVERAGE" = "1" ]; then
+  should_run_focused_tests=0
+fi
 
-echo "  Running Todo keyboard/layout regression tests..."
-bash tool/check_todo_keyboard_layout.sh || VALIDATION_FAILED=1
-echo ""
+if [ "$should_run_focused_tests" -eq 1 ]; then
+  echo "  Running focused regression guard tests..."
+  bash tool/check_regression_guards.sh || VALIDATION_FAILED=1
+  echo ""
+
+  echo "  Running Todo keyboard/layout regression tests..."
+  bash tool/check_todo_keyboard_layout.sh || VALIDATION_FAILED=1
+  echo ""
+else
+  echo "  Skipping focused regression suites (covered by Step 5 full coverage run)"
+  echo ""
+fi
 
 if [ "$VALIDATION_FAILED" -eq 1 ]; then
   echo "❌ Best practices validation failed! Please fix the violations above."
@@ -308,10 +355,15 @@ fi
 echo "✅ All best practices validation checks passed"
 echo ""
 
-# Step 5: Run test coverage
-echo "🧪 Step 5/5: Running test coverage with 'tool/test_coverage.sh'"
-bash tool/test_coverage.sh
-echo "✅ Test coverage complete"
-echo ""
+if [ "$RUN_COVERAGE" = "1" ]; then
+  # Step 5: Run test coverage
+  echo "🧪 Step 5/5: Running test coverage with 'tool/test_coverage.sh'"
+  bash tool/test_coverage.sh
+  echo "✅ Test coverage complete"
+  echo ""
+else
+  echo "🧪 Step 5/5: Skipped coverage (CHECKLIST_RUN_COVERAGE=0)"
+  echo ""
+fi
 
 echo "🎉 Delivery checklist complete! All steps passed."

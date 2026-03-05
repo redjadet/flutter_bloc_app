@@ -24,6 +24,6 @@ for test_file in "${tests[@]}"; do
   echo "  • $test_file"
 done
 
-flutter test "${tests[@]}"
+flutter test --no-pub "${tests[@]}"
 
 echo "✅ Regression guard tests passed"

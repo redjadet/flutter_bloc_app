@@ -158,6 +158,7 @@ The project's automated checks (`./bin/checklist`) cover:
 - **check_context_mounted.sh** – context usage after `await`
 - **check_setstate_mounted.sh** – `setState` after `await`
 - **check_cubit_isclosed.sh** – `emit()` after async in cubits
+- **check_lifecycle_error_handling.sh** – snackbar via ErrorHandling, `stream.listen` onError, `context.mounted` after show*Dialog
 
 These align with the patterns analyzed above. The codebase consistently follows the lifecycle rules.
 

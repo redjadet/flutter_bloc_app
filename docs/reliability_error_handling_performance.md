@@ -65,7 +65,7 @@ Validation (checklist, lifecycle scripts, and regression guards) keeps these beh
 ## 4. Validation and quality
 
 - **Checklist:** [./bin/checklist](../bin/checklist) – format, analyze, tests, and project guards.
-- **Lifecycle scripts:** e.g. `tool/check_cubit_isclosed.sh`, `tool/check_context_mounted.sh` (see [validation_scripts.md](validation_scripts.md)).
+- **Lifecycle scripts:** e.g. `tool/check_cubit_isclosed.sh`, `tool/check_context_mounted.sh`, `tool/check_lifecycle_error_handling.sh` (see [validation_scripts.md](validation_scripts.md)).
 - **Canonical rules:** Architecture, lifecycle, type-safe BLoC access, no hardcoded strings (see project rules).
 
 ---

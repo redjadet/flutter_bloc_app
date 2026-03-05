@@ -42,6 +42,7 @@ class RegisterForm extends StatelessWidget {
               context: context,
               builder: (final dialogContext) => const RegisterTermsDialog(),
             );
+            if (!context.mounted) return;
             cubit
               ..markTermsViewed()
               ..termsAcceptanceChanged(accepted: accepted ?? false);

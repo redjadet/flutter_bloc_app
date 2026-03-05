@@ -57,7 +57,7 @@ Audit identified leaks of raw strings and non-responsive measurements into the p
 
 1. **Continuous Verification**:
     - Run `./bin/checklist` (All steps must pass).
-    - Execute lifecycle-specific checkers: `./tool/check_cubit_isclosed.sh` and `./tool/check_context_mounted.sh`.
+    - Execute lifecycle-specific checkers: `./tool/check_cubit_isclosed.sh`, `./tool/check_context_mounted.sh`, and `./tool/check_lifecycle_error_handling.sh`.
 2. **Documentation Update**:
     - Run `dart run tool/update_coverage_summary.dart` to reflect the impact of the infrastructure fixes.
 

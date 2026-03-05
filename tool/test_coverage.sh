@@ -19,6 +19,36 @@
 
 set -e
 
+detect_cpu_count() {
+  local cpu_count
+
+  if command -v getconf >/dev/null 2>&1; then
+    cpu_count="$(getconf _NPROCESSORS_ONLN 2>/dev/null || true)"
+    if [[ "$cpu_count" =~ ^[0-9]+$ ]] && [ "$cpu_count" -gt 0 ]; then
+      echo "$cpu_count"
+      return
+    fi
+  fi
+
+  if command -v sysctl >/dev/null 2>&1; then
+    cpu_count="$(sysctl -n hw.ncpu 2>/dev/null || true)"
+    if [[ "$cpu_count" =~ ^[0-9]+$ ]] && [ "$cpu_count" -gt 0 ]; then
+      echo "$cpu_count"
+      return
+    fi
+  fi
+
+  if command -v nproc >/dev/null 2>&1; then
+    cpu_count="$(nproc 2>/dev/null || true)"
+    if [[ "$cpu_count" =~ ^[0-9]+$ ]] && [ "$cpu_count" -gt 0 ]; then
+      echo "$cpu_count"
+      return
+    fi
+  fi
+
+  echo 4
+}
+
 resolve_flutter_dart() {
   local flutter_bin
   local flutter_root
@@ -42,12 +72,25 @@ resolve_flutter_dart() {
 }
 
 DART_BIN="$(resolve_flutter_dart)"
+DEFAULT_COVERAGE_JOBS="$(detect_cpu_count)"
+if [ "$DEFAULT_COVERAGE_JOBS" -gt 8 ]; then
+  DEFAULT_COVERAGE_JOBS=8
+fi
+if [ "$DEFAULT_COVERAGE_JOBS" -lt 2 ]; then
+  DEFAULT_COVERAGE_JOBS=2
+fi
 
-echo "Running flutter test with coverage..."
+COVERAGE_JOBS="${COVERAGE_JOBS:-$DEFAULT_COVERAGE_JOBS}"
+if ! [[ "$COVERAGE_JOBS" =~ ^[0-9]+$ ]] || [ "$COVERAGE_JOBS" -lt 1 ]; then
+  echo "⚠️  Invalid COVERAGE_JOBS='$COVERAGE_JOBS'; using $DEFAULT_COVERAGE_JOBS"
+  COVERAGE_JOBS="$DEFAULT_COVERAGE_JOBS"
+fi
+
+echo "Running flutter test with coverage (concurrency=$COVERAGE_JOBS)..."
 if [ "$#" -eq 0 ]; then
-  flutter test --coverage --exclude-tags skip-checklist
+  flutter test --no-pub --coverage --concurrency="$COVERAGE_JOBS" --exclude-tags skip-checklist
 else
-  flutter test --coverage "$@"
+  flutter test --no-pub --coverage --concurrency="$COVERAGE_JOBS" "$@"
 fi
 
 echo ""
