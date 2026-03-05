@@ -118,12 +118,65 @@ run_parallel_static_checks() {
   return "$static_failed"
 }
 
+collect_changed_files() {
+  if [ "$HAS_GIT_REPO" -ne 1 ]; then
+    return
+  fi
+
+  while IFS= read -r file; do
+    [ -z "$file" ] && continue
+    changed_files+=("$file")
+  done < <(
+    {
+      git diff --name-only --diff-filter=ACMRTUXB
+      git diff --cached --name-only --diff-filter=ACMRTUXB
+      git ls-files --others --exclude-standard
+    } | sort -u | sed '/^$/d'
+  )
+
+  for file in "${changed_files[@]}"; do
+    if [[ "$file" == *.dart ]] && [ -f "$file" ]; then
+      changed_dart_files+=("$file")
+    fi
+  done
+}
+
+should_run_mix_lint_auto() {
+  if [ "$HAS_GIT_REPO" -ne 1 ]; then
+    return 0
+  fi
+
+  # In clean working trees (e.g. CI), keep running mix_lint.
+  if [ "${#changed_files[@]}" -eq 0 ]; then
+    return 0
+  fi
+
+  for file in "${changed_files[@]}"; do
+    case "$file" in
+      lib/shared/design_system/app_styles.dart|\
+      lib/core/theme/mix_app_theme.dart|\
+      custom_lints/*|\
+      analysis_options.yaml|\
+      pubspec.yaml|\
+      pubspec.lock)
+        return 0
+        ;;
+    esac
+  done
+
+  return 1
+}
+
 echo "🚀 Running Delivery Checklist..."
 echo ""
 
 DART_BIN="$(resolve_flutter_dart)"
 RUN_COVERAGE="${CHECKLIST_RUN_COVERAGE:-1}"
 RUN_FOCUSED_TESTS="${CHECKLIST_RUN_FOCUSED_TESTS:-auto}"
+RUN_MIX_LINT="${CHECKLIST_RUN_MIX_LINT:-auto}"
+HAS_GIT_REPO=0
+declare -a changed_files=()
+declare -a changed_dart_files=()
 
 if ! [[ "$RUN_COVERAGE" =~ ^(0|1)$ ]]; then
   echo "⚠️  Invalid CHECKLIST_RUN_COVERAGE='$RUN_COVERAGE'; using 1"
@@ -134,6 +187,17 @@ if ! [[ "$RUN_FOCUSED_TESTS" =~ ^(auto|0|1)$ ]]; then
   echo "⚠️  Invalid CHECKLIST_RUN_FOCUSED_TESTS='$RUN_FOCUSED_TESTS'; using auto"
   RUN_FOCUSED_TESTS=auto
 fi
+
+if ! [[ "$RUN_MIX_LINT" =~ ^(auto|0|1)$ ]]; then
+  echo "⚠️  Invalid CHECKLIST_RUN_MIX_LINT='$RUN_MIX_LINT'; using auto"
+  RUN_MIX_LINT=auto
+fi
+
+if command -v git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  HAS_GIT_REPO=1
+fi
+
+collect_changed_files
 
 # Step 1: Fetch dependencies (only if needed)
 echo "📦 Step 1/5: Checking dependency state"
@@ -157,22 +221,6 @@ echo ""
 
 # Step 2: Format code
 echo "📝 Step 2/5: Formatting changed Dart files"
-declare -a changed_dart_files=()
-if command -v git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  while IFS= read -r file; do
-    [ -z "$file" ] && continue
-    if [[ "$file" == *.dart ]] && [ -f "$file" ]; then
-      changed_dart_files+=("$file")
-    fi
-  done < <(
-    {
-      git diff --name-only --diff-filter=ACMRTUXB
-      git diff --cached --name-only --diff-filter=ACMRTUXB
-      git ls-files --others --exclude-standard
-    } | sort -u
-  )
-fi
-
 if [ "${#changed_dart_files[@]}" -gt 0 ]; then
   echo "  Found ${#changed_dart_files[@]} changed Dart file(s)"
   "$DART_BIN" format "${changed_dart_files[@]}"
@@ -217,6 +265,7 @@ CHECK_MESSAGES=(
   "Checking for potential concurrent modification issues..."
   "Checking for raw jsonDecode/jsonEncode usage (isolate optimization)..."
   "Checking for unvalidated dynamic baseUrl parsing..."
+  "Checking auth refresh single-flight retry safety..."
   "Checking for compute() usage in domain layer (architecture)..."
   "Checking for compute() usage in lifecycle methods (heuristic)..."
   "Checking for Equatable usage (Freezed preferred)..."
@@ -256,6 +305,7 @@ CHECK_SCRIPTS=(
   "tool/check_concurrent_modification.sh"
   "tool/check_raw_json_decode.sh"
   "tool/check_unvalidated_base_url_parse.sh"
+  "tool/check_auth_refresh_single_flight.sh"
   "tool/check_compute_domain_layer.sh"
   "tool/check_compute_lifecycle.sh"
   "tool/check_freezed_preferred.sh"
@@ -321,9 +371,22 @@ fi
 echo "✅ Code analysis complete"
 echo ""
 
-echo "  Running mix_lint checks..."
-if ! bash tool/run_mix_lint.sh; then
-  VALIDATION_FAILED=1
+should_run_mix_lint=1
+if [ "$RUN_MIX_LINT" = "0" ]; then
+  should_run_mix_lint=0
+elif [ "$RUN_MIX_LINT" = "auto" ]; then
+  if ! should_run_mix_lint_auto; then
+    should_run_mix_lint=0
+  fi
+fi
+
+if [ "$should_run_mix_lint" -eq 1 ]; then
+  echo "  Running mix_lint checks..."
+  if ! bash tool/run_mix_lint.sh; then
+    VALIDATION_FAILED=1
+  fi
+else
+  echo "  Skipping mix_lint (no Mix-related changes; override with CHECKLIST_RUN_MIX_LINT=1)"
 fi
 echo ""
 
