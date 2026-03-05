@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/igaming_demo/domain/game_round_result.
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/game_cubit.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/game_state.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/widgets/slot_machine_spinner.dart';
+import 'package:flutter_bloc_app/features/igaming_demo/presentation/widgets/slot_symbol_text_style.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
@@ -220,13 +221,13 @@ class _GameBody extends StatelessWidget {
               return Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(
+                  buildSlotSymbolWidget(
                     symbol,
-                    style: theme.textTheme.titleSmall?.copyWith(
+                    textStyle: theme.textTheme.titleSmall?.copyWith(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.bold,
                     ),
-                    semanticsLabel: _symbolLegendLabel(l10n, symbol),
+                    color: theme.colorScheme.primary,
                   ),
                   SizedBox(width: context.responsiveGapS),
                   Text(

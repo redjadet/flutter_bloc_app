@@ -2,8 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/shared/design_system/app_styles.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/widgets/cached_network_image_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:mix/mix.dart';
+
+String? _flagImageUrl(final String countryCode) {
+  // Most Countries API codes are ISO 3166-1 alpha-2 (e.g. "TR").
+  // Use a deterministic CDN URL so flags render even when emoji glyphs are missing.
+  if (countryCode.length != 2) {
+    return null;
+  }
+  return 'https://flagcdn.com/w80/${countryCode.toLowerCase()}.png';
+}
 
 class GraphqlCountryCard extends StatelessWidget {
   const GraphqlCountryCard({
@@ -33,7 +43,11 @@ class GraphqlCountryCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(country.emoji ?? '?', style: textTheme.headlineMedium),
+              _CountryFlag(
+                countryName: country.name,
+                countryCode: country.code,
+                emojiFallback: country.emoji,
+              ),
               SizedBox(width: context.responsiveHorizontalGapM),
               Expanded(
                 child: Column(
@@ -63,6 +77,72 @@ class GraphqlCountryCard extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _CountryFlag extends StatelessWidget {
+  const _CountryFlag({
+    required this.countryName,
+    required this.countryCode,
+    required this.emojiFallback,
+  });
+
+  final String countryName;
+  final String countryCode;
+  final String? emojiFallback;
+
+  @override
+  Widget build(final BuildContext context) {
+    final String fallbackText = emojiFallback ?? '?';
+    // Use an existing responsive token that scales for phone/tablet/desktop.
+    // This keeps flags visually prominent in the list.
+    final double size = context.responsiveErrorIconSize;
+
+    final String? url = _flagImageUrl(countryCode);
+    if (url == null) {
+      return Semantics(
+        label: 'Flag of $countryName',
+        child: Text(
+          fallbackText,
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+      );
+    }
+
+    return Semantics(
+      image: true,
+      label: 'Flag of $countryName',
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(context.responsiveBorderRadius),
+        child: CachedNetworkImageWidget(
+          imageUrl: url,
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+          memCacheWidth: 80,
+          memCacheHeight: 80,
+          // In widget tests / offline, show emoji fallback instead of a spinner.
+          placeholder: (final context, final url) => ColoredBox(
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            child: Center(
+              child: Text(
+                fallbackText,
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            ),
+          ),
+          errorWidget: (final context, final url, final error) => ColoredBox(
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            child: Center(
+              child: Text(
+                fallbackText,
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
