@@ -47,10 +47,20 @@ void main() {
     test('refreshToken refreshes token and clears cache', () async {
       final _MockFirebaseAuth auth = _MockFirebaseAuth();
       final _MockUser user = _MockUser();
+      final _MockIdTokenResult tokenResult = _MockIdTokenResult();
+      final DateTime expiry = DateTime.now().toUtc().add(
+        const Duration(hours: 1),
+      );
       when(() => auth.currentUser).thenReturn(user);
+      when(() => user.uid).thenReturn('user-id');
       when(
         () => user.getIdToken(true),
       ).thenAnswer((final invocation) async => 'token');
+      when(() => tokenResult.token).thenReturn('token');
+      when(() => tokenResult.expirationTime).thenReturn(expiry);
+      when(
+        () => user.getIdTokenResult(),
+      ).thenAnswer((final invocation) async => tokenResult);
 
       final AuthTokenManager manager = AuthTokenManager(firebaseAuth: auth);
       final bool result = await manager.refreshToken();
@@ -80,6 +90,64 @@ void main() {
       final String? token = await manager.refreshTokenAndGet(user);
 
       expect(token, 'token');
+      verify(() => user.getIdToken(true)).called(1);
+      verify(() => user.getIdTokenResult()).called(1);
+    });
+
+    test('concurrent refreshToken calls run only one refresh', () async {
+      final _MockFirebaseAuth auth = _MockFirebaseAuth();
+      final _MockUser user = _MockUser();
+      final _MockIdTokenResult tokenResult = _MockIdTokenResult();
+      final DateTime expiry = DateTime.now().toUtc().add(
+        const Duration(hours: 1),
+      );
+      when(() => auth.currentUser).thenReturn(user);
+      when(() => user.uid).thenReturn('user-id');
+      when(
+        () => user.getIdToken(true),
+      ).thenAnswer((final invocation) async => 'token');
+      when(() => tokenResult.token).thenReturn('token');
+      when(() => tokenResult.expirationTime).thenReturn(expiry);
+      when(
+        () => user.getIdTokenResult(),
+      ).thenAnswer((final invocation) async => tokenResult);
+
+      final AuthTokenManager manager = AuthTokenManager(firebaseAuth: auth);
+      final List<Future<bool>> results = List<Future<bool>>.generate(
+        5,
+        (_) => manager.refreshToken(),
+      );
+      final List<bool> values = await Future.wait(results);
+
+      expect(values, everyElement(isTrue));
+      verify(() => user.getIdToken(true)).called(1);
+    });
+
+    test('concurrent refreshTokenAndGet calls run only one refresh', () async {
+      final _MockUser user = _MockUser();
+      final _MockIdTokenResult tokenResult = _MockIdTokenResult();
+      final DateTime expiry = DateTime.now().toUtc().add(
+        const Duration(hours: 1),
+      );
+
+      when(() => user.uid).thenReturn('user-id');
+      when(
+        () => user.getIdToken(true),
+      ).thenAnswer((final invocation) async => 'token');
+      when(() => tokenResult.token).thenReturn('token');
+      when(() => tokenResult.expirationTime).thenReturn(expiry);
+      when(
+        () => user.getIdTokenResult(),
+      ).thenAnswer((final invocation) async => tokenResult);
+
+      final AuthTokenManager manager = AuthTokenManager();
+      final List<Future<String?>> results = List<Future<String?>>.generate(
+        5,
+        (_) => manager.refreshTokenAndGet(user),
+      );
+      final List<String?> values = await Future.wait(results);
+
+      expect(values, everyElement('token'));
       verify(() => user.getIdToken(true)).called(1);
       verify(() => user.getIdTokenResult()).called(1);
     });

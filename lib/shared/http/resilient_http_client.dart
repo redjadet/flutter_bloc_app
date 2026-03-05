@@ -116,7 +116,7 @@ class ResilientHttpClient extends http.BaseClient {
           if (tokenRefreshed) {
             final http.BaseRequest retryRequest = requestTemplate.clone();
             _injectStandardHeaders(retryRequest);
-            await _injectAuthToken(retryRequest, forceRefresh: true);
+            await _injectAuthToken(retryRequest);
             final http.StreamedResponse refreshedResponse = await _innerClient
                 .send(retryRequest);
             if (enableTelemetry && stopwatch != null) {

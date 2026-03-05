@@ -176,7 +176,21 @@ const kAnimationDuration = Duration(milliseconds: 300);
 
 ### Reliability and retries
 
-- **ResilientHttpClient** (`lib/shared/http/resilient_http_client.dart`): Use for **HTTP** requests. It provides automatic retries for transient failures, 401 token refresh, network check before send, and telemetry. All HTTP entry points should go through this client (or its extensions) with an explicit timeout. The **resilient_http_client_extensions** (`getMapped` / `postMapped`) throw [HttpRequestFailure](lib/shared/utils/http_request_failure.dart) for status ≥ 400 so repositories and cubits receive a statusCode and can show accurate messages (e.g. 503 "Service temporarily unavailable" vs 401 "Sign in again"). [NetworkErrorMapper](lib/shared/utils/network_error_mapper.dart) maps status codes and `HttpRequestFailure` to user-facing messages and [AppErrorCode](lib/shared/utils/error_codes.dart) (including `serviceUnavailable` for 503).
+- **ResilientHttpClient** (`lib/shared/http/resilient_http_client.dart`): Use for
+  **HTTP** requests. It provides automatic retries for transient failures, 401
+  token refresh, network check before send, and telemetry. 401 refreshes are
+  coordinated via `AuthTokenManager` single-flight gating so concurrent 401s
+  await one refresh operation and then retry with a refreshed bearer token
+  (without a second forced refresh in the retry path). All HTTP entry points
+  should go through this client (or its extensions) with an explicit timeout.
+  The **resilient_http_client_extensions** (`getMapped` / `postMapped`) throw
+  [HttpRequestFailure](lib/shared/utils/http_request_failure.dart) for status ≥
+  400 so repositories and cubits receive a statusCode and can show accurate
+  messages (e.g. 503 "Service temporarily unavailable" vs 401 "Sign in again").
+  [NetworkErrorMapper](lib/shared/utils/network_error_mapper.dart) maps status
+  codes and `HttpRequestFailure` to user-facing messages and
+  [AppErrorCode](lib/shared/utils/error_codes.dart) (including
+  `serviceUnavailable` for 503).
 - **RetryPolicy** (`lib/shared/utils/retry_policy.dart`): Use for **non-HTTP** retriable work (e.g. repository load, sync steps, external SDK calls). It supports exponential/linear/fixed backoff, jitter, and `CancelToken` so cubits can cancel in-flight retries in `close()`.
 
 When to use which:

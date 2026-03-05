@@ -1,6 +1,13 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 /// Manages Firebase authentication tokens with caching and refresh capabilities.
+///
+/// Token refresh is serialized with a Completer so that when multiple requests
+/// receive 401 concurrently, only one refresh runs and the rest wait for it
+/// (avoids race where each 401 triggers its own refresh and invalidates prior
+/// tokens).
 class AuthTokenManager {
   AuthTokenManager({
     final FirebaseAuth? firebaseAuth,
@@ -16,6 +23,9 @@ class AuthTokenManager {
 
   /// User ID associated with the cached token
   String? _cachedUserId;
+
+  /// Serializes token refresh so concurrent 401s share a single refresh.
+  Completer<bool>? _refreshCompleter;
 
   /// Get a valid auth token, refreshing if necessary
   Future<String?> getValidAuthToken(final User user) async {
@@ -45,30 +55,51 @@ class AuthTokenManager {
     }
   }
 
-  /// Refresh the authentication token
-  Future<bool> refreshToken() async {
+  /// Runs a single token refresh; concurrent callers await the same future.
+  Future<bool> _runRefreshSerialized({final User? userOverride}) async {
+    final Completer<bool>? existingCompleter = _refreshCompleter;
+    if (existingCompleter != null) {
+      return existingCompleter.future;
+    }
+    final Completer<bool> completer = Completer<bool>();
+    _refreshCompleter = completer;
+    final Future<bool> future = completer.future;
     try {
-      final User? user = _firebaseAuth?.currentUser;
-      if (user == null) return false;
-
+      final User? user = userOverride ?? _firebaseAuth?.currentUser;
+      if (user == null) {
+        completer.complete(false);
+        return future;
+      }
       await user.getIdToken(true); // Force refresh
-      _cachedAuthToken = null; // Clear cache to force re-fetch
-      _tokenExpiry = null;
-      return true;
+      final IdTokenResult tokenResult = await user.getIdTokenResult();
+      _cachedAuthToken = tokenResult.token;
+      _tokenExpiry = tokenResult.expirationTime?.toUtc();
+      _cachedUserId = user.uid;
+      completer.complete(_cachedAuthToken != null);
     } catch (error, stackTrace) {
       _cachedAuthToken = null;
       _tokenExpiry = null;
       _cachedUserId = null;
-      Error.throwWithStackTrace(error, stackTrace);
+      completer.completeError(error, stackTrace);
+    } finally {
+      _refreshCompleter = null;
     }
+    return future;
+  }
+
+  /// Refresh the authentication token.
+  /// When multiple callers hit 401 at once, only one refresh runs; others wait.
+  Future<bool> refreshToken() async {
+    return _runRefreshSerialized();
   }
 
   /// Force-refresh the authentication token and return the updated token value.
+  /// Participates in the same serialized refresh as [refreshToken].
   Future<String?> refreshTokenAndGet(final User user) async {
-    await user.getIdToken(true);
-    _cachedAuthToken = null;
-    _tokenExpiry = null;
-    _cachedUserId = null;
+    final bool refreshed = await _runRefreshSerialized(userOverride: user);
+    if (!refreshed) {
+      return null;
+    }
     return getValidAuthToken(user);
   }
 
