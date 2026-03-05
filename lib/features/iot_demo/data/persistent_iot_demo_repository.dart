@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
@@ -195,7 +196,16 @@ class PersistentIotDemoRepository extends HiveRepositoryBase
         if (command is IotDeviceCommandToggle) {
           updated = d.copyWith(toggledOn: !d.toggledOn);
         } else if (command is IotDeviceCommandSetValue) {
-          updated = d.copyWith(value: command.value.toDouble());
+          final double nextValue = iotDemoClampAndRound(
+            command.value.toDouble(),
+            iotDemoValueMin,
+            iotDemoValueMax,
+          );
+          // Avoid unnecessary storage writes (e.g. slider jitter sending same value).
+          if (nextValue == d.value) {
+            return;
+          }
+          updated = d.copyWith(value: nextValue);
         } else {
           updated = d;
         }

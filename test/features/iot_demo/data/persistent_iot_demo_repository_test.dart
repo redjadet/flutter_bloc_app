@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_bloc_app/features/iot_demo/data/persistent_iot_demo_repository.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
@@ -54,6 +55,20 @@ void main() {
         expect(thermostat.value, 23.5);
       },
     );
+
+    test('sendCommand setValue clamps out-of-range values', () async {
+      await repository.connect('thermostat-1');
+      await repository.sendCommand(
+        'thermostat-1',
+        IotDeviceCommand.setValue(iotDemoValueMax + 100),
+      );
+
+      final List<IotDevice> devices = await repository.watchDevices().first;
+      final IotDevice thermostat = devices.firstWhere(
+        (final d) => d.id == 'thermostat-1',
+      );
+      expect(thermostat.value, iotDemoValueMax);
+    });
 
     test('sendCommand toggle persists and is visible on next watch', () async {
       await repository.connect('light-1');
