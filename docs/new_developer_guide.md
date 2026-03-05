@@ -770,6 +770,9 @@ Scripts and intent:
   `.close()` (heuristic).
 - `tool/check_memory_missing_dispose.sh` — Flags controllers without
   `dispose()` in State classes (heuristic).
+- `tool/check_lifecycle_error_handling.sh` — Enforces ErrorHandling for
+  snackbars, `onError` in `stream.listen()`, and `context.mounted` after
+  `await show*Dialog` before using cubit/onClose.
 
 Allowlisting exceptions:
 

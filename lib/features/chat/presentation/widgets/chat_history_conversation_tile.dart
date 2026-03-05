@@ -72,6 +72,7 @@ class ChatHistoryConversationTile extends StatelessWidget {
             title,
           );
           if (!confirmed) return;
+          if (!context.mounted) return;
           await cubit.deleteConversation(conversation.id);
         },
       ),

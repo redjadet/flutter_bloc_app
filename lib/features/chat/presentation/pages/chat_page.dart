@@ -108,7 +108,7 @@ class _ChatPageState extends State<ChatPage> {
     if (!confirmed) {
       return;
     }
-
+    if (!context.mounted) return;
     await cubit.clearHistory();
   }
 

@@ -1,4 +1,5 @@
 # Miscellaneous
+*.bak
 *.class
 *.log
 firepit-log.txt

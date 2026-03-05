@@ -161,7 +161,7 @@ tool/test_coverage.sh
 3. **Android:** No extra capability; ensure `google-services.json` is present. For channels (Android 8+), create a notification channel in code.
 4. **Flutter:** Request permission (`requestPermission()`), get token (`getToken()`), subscribe to `onMessage`, `onMessageOpenedApp`, and `getInitialMessage()` for cold start. Store token on your backend if you send targeted messages.
 5. **Architecture:** Prefer a small service or repository in the data layer that exposes stream of messages and token; cubits listen and update UI or trigger sync. Keep handling of notification payloads (e.g. sync triggers) in one place and document payload contracts as in the offline-first plan.
-6. **Lifecycle:** After any `await` before `emit()` or navigation, check `isClosed` / `context.mounted`. Validate with `tool/check_cubit_isclosed.sh`, `tool/check_context_mounted.sh`, and `tool/check_setstate_mounted.sh` (run via `./bin/checklist`).
+6. **Lifecycle:** After any `await` before `emit()` or navigation, check `isClosed` / `context.mounted`. Validate with `tool/check_cubit_isclosed.sh`, `tool/check_context_mounted.sh`, `tool/check_setstate_mounted.sh`, and `tool/check_lifecycle_error_handling.sh` (run via `./bin/checklist`).
 
 **Reference:** [Offline-first plan](offline_first/offline_first_plan.md) — push-triggered sync and payload contracts.
 

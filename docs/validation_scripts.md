@@ -58,6 +58,7 @@ Full documentation and suppression guidance is provided in the sections below.
 - **`check_side_effects_build.sh`**: Heuristic check for side effects in `build()` method (warns but doesn't fail)
 - **`check_dialog_controller_dispose.sh`**: Heuristic check for `TextEditingController` with `showDialog`/`showAdaptiveDialog` and dispose in `finally` (can cause "used after being disposed")
 - **`check_inherited_widget_in_create.sh`**: Prevents `context.l10n`/`Theme.of(context)` inside BlocProvider/Provider `create` (see Context & Async Safety below)
+- **`check_lifecycle_error_handling.sh`**: Snackbar via ErrorHandling, `stream.listen` onError, `context.mounted` after show\*Dialog (see Context & Async Safety below)
 
 ## New Validation Scripts (Added 2025)
 
@@ -318,6 +319,32 @@ stream.listen((data) {
 **Regression tests**: `test/shared/widgets/row_overflow_regression_test.dart` (also run via `tool/check_regression_guards.sh`).
 
 **Suppression**: Add `// check-ignore: reason` on the violation line or line above when the Row is intentionally safe (e.g. label is always short and constrained elsewhere).
+
+---
+
+#### `check_lifecycle_error_handling.sh`
+
+**Purpose**: Catches lifecycle and error-handling patterns that can cause crashes or unhandled errors.
+
+**What it checks**:
+
+1. **Snackbar / ScaffoldMessenger**: Direct use of `.hideCurrentSnackBar()` or `.clearSnackBars()` instead of `ErrorHandling.hideCurrentSnackBar(context)` / `ErrorHandling.clearSnackBars(context)`. (Excludes `lib/shared/utils/error_handling.dart`, which implements these.)
+2. **stream.listen() without onError**: Any `.listen(` invocation that does not include `onError:` in the same call block (heuristic: next 25 lines). Ensures stream subscriptions handle errors and avoid unhandled zone errors. (Excludes doc-only examples in `cubit_subscription_mixin.dart` and `subscription_manager.dart`.)
+3. **After await show\*Dialog**: Use of `cubit.`, `context.cubit`, or `onClose()` after `await show*Dialog` / `await showAdaptiveDialog` without a prior `context.mounted` check in the same block.
+
+**Why it matters**:
+
+- Direct `messenger.hideCurrentSnackBar()` can throw `StateError` when the snackbar was already dismissed; `ErrorHandling` catches this.
+- `stream.listen()` without `onError` leaves errors unhandled and can break reactivity or crash.
+- Using context or cubit after an async dialog without `context.mounted` can trigger "setState() after dispose" or use of a disposed context.
+
+**Correct patterns**:
+
+- Use `ErrorHandling.hideCurrentSnackBar(context)` and `ErrorHandling.clearSnackBars(context)` before showing snackbars.
+- Always pass `onError: (Object error, StackTrace stackTrace) { ... }` (and log with `AppLogger.error`) in `stream.listen()`.
+- After `await show*Dialog`, add `if (!context.mounted) return;` before using `context`, `cubit`, or `onClose()`.
+
+**Suppression**: Add `// check-ignore: reason` on the violation line or line above.
 
 ---
 
@@ -638,6 +665,9 @@ bash tool/check_hardcoded_strings.sh
 
 # Check for missing isClosed checks
 bash tool/check_cubit_isclosed.sh
+
+# Check lifecycle and error-handling (snackbar, stream.listen onError, dialog mounted)
+bash tool/check_lifecycle_error_handling.sh
 
 # Check for missing const constructors (heuristic)
 bash tool/check_missing_const.sh

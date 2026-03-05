@@ -20,7 +20,7 @@ test_names=(
 
 for test_name in "${test_names[@]}"; do
   echo "  • $test_name"
-  flutter test "$TEST_FILE" --plain-name "$test_name"
+  flutter test --no-pub "$TEST_FILE" --plain-name "$test_name"
 done
 
 echo "✅ Todo List keyboard/layout regressions passed"

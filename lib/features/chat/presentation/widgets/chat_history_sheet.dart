@@ -99,6 +99,7 @@ class ChatHistorySheet extends StatelessWidget {
                                     final bool confirmed =
                                         await showClearHistoryDialog(context);
                                     if (!confirmed) return;
+                                    if (!context.mounted) return;
                                     await cubit.clearHistory();
                                     onClose();
                                   }
