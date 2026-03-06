@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 
 class DelayedChartRepository extends HttpChartRepository {
   DelayedChartRepository({
-    super.client,
+    required super.api,
     super.now,
     final AppRuntimeConfig? appRuntimeConfig,
   }) : _config = appRuntimeConfig ?? AppRuntimeConfig.fromBootstrap();

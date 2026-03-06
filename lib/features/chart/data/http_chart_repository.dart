@@ -1,31 +1,29 @@
-import 'dart:io';
-
+import 'package:flutter_bloc_app/features/chart/data/api/coingecko_api.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 
 class HttpChartRepository extends ChartRepository {
   HttpChartRepository({
-    final http.Client? client,
+    required final CoingeckoApi api,
     final DateTime Function()? now,
-  }) : _client = client ?? http.Client(),
+  }) : _api = api,
        _now = now ?? DateTime.now;
 
-  final http.Client _client;
-  final DateTime Function() _now;
-  static final Uri _endpoint = Uri.parse(
-    'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart'
-    '?vs_currency=usd&days=7&interval=daily',
-  );
-  static const Map<String, String> _headers = {
-    HttpHeaders.acceptHeader: 'application/json',
+  static const Map<String, String> _marketChartQuery = <String, String>{
+    'vs_currency': 'usd',
+    'days': '7',
+    'interval': 'daily',
   };
+  static const String _acceptHeader = 'application/json';
   static const Duration _cacheDuration = Duration(minutes: 3);
   static List<ChartPoint>? _cached;
   static DateTime? _lastFetched;
+
+  final CoingeckoApi _api;
+  final DateTime Function() _now;
 
   @visibleForTesting
   static void clearCache() {
@@ -44,19 +42,16 @@ class HttpChartRepository extends ChartRepository {
       return cached;
     }
     try {
-      final http.Response response = await _client.get(
-        _endpoint,
-        headers: _headers,
+      final String body = await _api.getBitcoinMarketChart(
+        _marketChartQuery,
+        _acceptHeader,
       );
-      if (response.statusCode == HttpStatus.ok) {
-        final parsed = await _parseBody(response.body);
-        return _cache(parsed, now);
+      if (body.isEmpty) {
+        throw const FormatException('Empty response body');
       }
-      AppLogger.warning(
-        'HttpChartRepository.fetchTrendingCounts fallback due to status '
-        '${response.statusCode}',
-      );
-      return _cached ?? _cache(_fallbackData(now), now);
+      final Map<String, dynamic> decoded = await decodeJsonMap(body);
+      final List<ChartPoint> data = _parseFromMap(decoded);
+      return _cache(data, now);
     } on FormatException catch (error) {
       AppLogger.warning(
         'HttpChartRepository.fetchTrendingCounts invalid payload: '
@@ -64,7 +59,9 @@ class HttpChartRepository extends ChartRepository {
       );
       return _cached ?? _cache(_fallbackData(now), now);
     } on Exception catch (error, stackTrace) {
-      AppLogger.warning('HttpChartRepository.fetchTrendingCounts falling back');
+      AppLogger.warning(
+        'HttpChartRepository.fetchTrendingCounts fallback due to error',
+      );
       AppLogger.error('HttpChartRepository failure', error, stackTrace);
       return _cached ?? _cache(_fallbackData(now), now);
     }
@@ -83,8 +80,9 @@ class HttpChartRepository extends ChartRepository {
   @override
   List<ChartPoint>? getCachedTrendingCounts() => _cached;
 
-  Future<List<ChartPoint>> _parseBody(final String body) async {
-    final Map<String, dynamic> decoded = await decodeJsonMap(body);
+  /// Parses the market_chart response map into chart points.
+  /// Keeps validation and fallback semantics in the repository.
+  List<ChartPoint> _parseFromMap(final Map<String, dynamic> decoded) {
     final dynamic prices = decoded['prices'];
     if (prices is! List) {
       throw const FormatException('Invalid chart payload content');

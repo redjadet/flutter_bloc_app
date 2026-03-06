@@ -1,6 +1,4 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
-import 'package:flutter_bloc_app/features/scapes/data/mock_scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scape.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_cubit.dart';
@@ -173,14 +171,11 @@ void main() {
     });
 
     test('reload resets loading state and loads scapes', () async {
-      // Use real timer so async repository load completes after delay
-      final cubit = ScapesCubit(
-        repository: MockScapesRepository(),
-        timerService: DefaultTimerService(),
-      );
+      final cubit = buildCubit();
       addTearDown(cubit.close);
 
-      await Future<void>.delayed(const Duration(milliseconds: 350));
+      timerService.elapse(const Duration(milliseconds: 350));
+      await Future<void>.delayed(Duration.zero);
 
       expect(cubit.state.scapes.length, 6);
       expect(cubit.state.isLoading, isFalse);
@@ -191,7 +186,8 @@ void main() {
       expect(cubit.state.isLoading, isTrue);
       expect(cubit.state.errorMessage, isNull);
 
-      await Future<void>.delayed(const Duration(milliseconds: 400));
+      timerService.elapse(const Duration(milliseconds: 350));
+      await Future<void>.delayed(Duration.zero);
 
       expect(cubit.state.isLoading, isFalse);
       expect(cubit.state.scapes.length, 6);

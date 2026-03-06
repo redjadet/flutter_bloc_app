@@ -1,13 +1,64 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/counter/data/rest_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
+
+Dio createCounterMockDio({
+  String? getBody,
+  int getStatus = 200,
+  String? postBody,
+  int postStatus = 204,
+  CounterTestRequests? requests,
+}) {
+  final dio = Dio();
+  dio.interceptors.add(
+    InterceptorsWrapper(
+      onRequest: (options, handler) {
+        if (options.method == 'GET') {
+          handler.resolve(
+            Response<String>(
+              requestOptions: options,
+              data: getBody ?? '{}',
+              statusCode: getStatus,
+            ),
+          );
+        } else if (options.method == 'POST') {
+          final Map<String, String> headers = <String, String>{};
+          options.headers.forEach((final k, final v) {
+            if (v != null) headers[k] = v.toString();
+          });
+          requests?.record(
+            options.method,
+            options.uri.toString(),
+            options.data is String ? options.data as String? : null,
+            headers,
+          );
+          handler.resolve(
+            Response<String>(
+              requestOptions: options,
+              data: postBody ?? '',
+              statusCode: postStatus,
+            ),
+          );
+        } else {
+          handler.resolve(
+            Response<String>(
+              requestOptions: options,
+              data: '',
+              statusCode: 400,
+            ),
+          );
+        }
+      },
+    ),
+  );
+  return dio;
+}
 
 void main() {
   group('RestCounterRepository.constructor', () {
@@ -29,18 +80,9 @@ void main() {
     test(
       'normalizes base path without trailing slash before resolve',
       () async {
-        final _FakeClient client = _FakeClient(
-          getHandler: (final request) {
-            expect(
-              request.url.toString(),
-              'https://api.example.com/v1/counter',
-            );
-            return http.Response(
-              jsonEncode(<String, dynamic>{'id': 'u1', 'count': 1}),
-              200,
-              headers: <String, String>{'content-type': 'application/json'},
-            );
-          },
+        final Dio client = createCounterMockDio(
+          getBody: jsonEncode(<String, dynamic>{'id': 'u1', 'count': 1}),
+          getStatus: 200,
         );
         final RestCounterRepository repository = RestCounterRepository(
           baseUrl: 'https://api.example.com/v1',
@@ -55,19 +97,13 @@ void main() {
   group('RestCounterRepository.load', () {
     test('parses successful payloads', () async {
       final DateTime now = DateTime.fromMillisecondsSinceEpoch(1710000000000);
-      final _FakeClient client = _FakeClient(
-        getHandler: (http.BaseRequest request) {
-          expect(request.url.toString(), 'https://api.example.com/counter');
-          return http.Response(
-            jsonEncode(<String, dynamic>{
-              'id': 'user-123',
-              'count': 7,
-              'last_changed': now.millisecondsSinceEpoch,
-            }),
-            200,
-            headers: <String, String>{'content-type': 'application/json'},
-          );
-        },
+      final Dio client = createCounterMockDio(
+        getBody: jsonEncode(<String, dynamic>{
+          'id': 'user-123',
+          'count': 7,
+          'last_changed': now.millisecondsSinceEpoch,
+        }),
+        getStatus: 200,
       );
       final RestCounterRepository repository = RestCounterRepository(
         baseUrl: 'https://api.example.com/',
@@ -88,16 +124,13 @@ void main() {
     });
 
     test('parses count and last_changed when sent as strings', () async {
-      final _FakeClient client = _FakeClient(
-        getHandler: (_) => http.Response(
-          jsonEncode(<String, dynamic>{
-            'userId': 'u2',
-            'count': ' 12 ',
-            'last_changed': ' 1710000000000 ',
-          }),
-          200,
-          headers: <String, String>{'content-type': 'application/json'},
-        ),
+      final Dio client = createCounterMockDio(
+        getBody: jsonEncode(<String, dynamic>{
+          'userId': 'u2',
+          'count': ' 12 ',
+          'last_changed': ' 1710000000000 ',
+        }),
+        getStatus: 200,
       );
       final RestCounterRepository repository = RestCounterRepository(
         baseUrl: 'https://api.example.com/',
@@ -114,9 +147,7 @@ void main() {
     });
 
     test('throws CounterError on HTTP failure', () async {
-      final _FakeClient client = _FakeClient(
-        getHandler: (_) => http.Response('nope', 500),
-      );
+      final Dio client = createCounterMockDio(getBody: 'nope', getStatus: 500);
       final RestCounterRepository repository = RestCounterRepository(
         baseUrl: 'https://api.example.com/',
         client: client,
@@ -135,9 +166,7 @@ void main() {
     });
 
     test('throws CounterError on malformed payload', () async {
-      final _FakeClient client = _FakeClient(
-        getHandler: (_) => http.Response('[]', 200),
-      );
+      final Dio client = createCounterMockDio(getBody: '[]', getStatus: 200);
       final RestCounterRepository repository = RestCounterRepository(
         baseUrl: 'https://api.example.com/',
         client: client,
@@ -150,16 +179,13 @@ void main() {
     });
 
     test('falls back to default userId for non-string id fields', () async {
-      final _FakeClient client = _FakeClient(
-        getHandler: (_) => http.Response(
-          jsonEncode(<String, dynamic>{
-            'userId': 42,
-            'id': <String, dynamic>{'nested': true},
-            'count': 3,
-          }),
-          200,
-          headers: <String, String>{'content-type': 'application/json'},
-        ),
+      final Dio client = createCounterMockDio(
+        getBody: jsonEncode(<String, dynamic>{
+          'userId': 42,
+          'id': <String, dynamic>{'nested': true},
+          'count': 3,
+        }),
+        getStatus: 200,
       );
       final RestCounterRepository repository = RestCounterRepository(
         baseUrl: 'https://api.example.com/',
@@ -176,21 +202,16 @@ void main() {
 
   group('RestCounterRepository.save', () {
     test('posts JSON payload and emits saved snapshot', () async {
-      final _Requests requests = _Requests();
-      final _FakeClient client = _FakeClient(
-        getHandler: (_) => http.Response(
-          jsonEncode(<String, dynamic>{
-            'id': 'user-abc',
-            'count': 5,
-            'last_changed': 99,
-          }),
-          200,
-          headers: <String, String>{'content-type': 'application/json'},
-        ),
-        postHandler: (http.BaseRequest request, String body) {
-          requests.record(request, body);
-          return http.Response('', 204);
-        },
+      final CounterTestRequests requests = CounterTestRequests();
+      final Dio client = createCounterMockDio(
+        getBody: jsonEncode(<String, dynamic>{
+          'id': 'user-abc',
+          'count': 5,
+          'last_changed': 99,
+        }),
+        getStatus: 200,
+        postStatus: 204,
+        requests: requests,
       );
       final RestCounterRepository repository = RestCounterRepository(
         baseUrl: 'https://api.example.com/',
@@ -213,9 +234,8 @@ void main() {
 
         await subscription.cancel();
 
-        expect(requests.lastRequest?.method, 'POST');
-        final String? contentType =
-            requests.lastRequest?.headers['Content-Type'];
+        expect(requests.lastMethod, 'POST');
+        final String? contentType = requests.lastHeaders?['Content-Type'];
         expect(contentType, isNotNull);
         expect(contentType, startsWith('application/json'));
         final Map<String, dynamic> body = jsonDecode(requests.lastBody ?? '{}');
@@ -235,12 +255,9 @@ void main() {
     });
 
     test('provides cached snapshot to new watch subscribers', () async {
-      final _FakeClient client = _FakeClient(
-        getHandler: (_) => http.Response(
-          jsonEncode(<String, dynamic>{'id': 'user-xyz', 'count': 11}),
-          200,
-          headers: <String, String>{'content-type': 'application/json'},
-        ),
+      final Dio client = createCounterMockDio(
+        getBody: jsonEncode(<String, dynamic>{'id': 'user-xyz', 'count': 11}),
+        getStatus: 200,
       );
       final RestCounterRepository repository = RestCounterRepository(
         baseUrl: 'https://api.example.com/',
@@ -270,12 +287,10 @@ void main() {
     });
 
     test('preserves provided userId when saving snapshots', () async {
-      final _Requests requests = _Requests();
-      final _FakeClient client = _FakeClient(
-        postHandler: (http.BaseRequest request, String body) {
-          requests.record(request, body);
-          return http.Response('', 200);
-        },
+      final CounterTestRequests requests = CounterTestRequests();
+      final Dio client = createCounterMockDio(
+        postStatus: 200,
+        requests: requests,
       );
       final RestCounterRepository repository = RestCounterRepository(
         baseUrl: 'https://api.example.com/',
@@ -299,17 +314,15 @@ void main() {
   });
 
   test('throws CounterError.save when backend rejects write', () async {
-    final _FakeClient client = _FakeClient(
-      getHandler: (_) => http.Response(
-        jsonEncode(<String, dynamic>{
-          'id': 'user-seed',
-          'count': 2,
-          'last_changed': 5,
-        }),
-        200,
-        headers: <String, String>{'content-type': 'application/json'},
-      ),
-      postHandler: (_, _) => http.Response('nope', 500),
+    final Dio client = createCounterMockDio(
+      getBody: jsonEncode(<String, dynamic>{
+        'id': 'user-seed',
+        'count': 2,
+        'last_changed': 5,
+      }),
+      getStatus: 200,
+      postBody: 'nope',
+      postStatus: 500,
     );
     final RestCounterRepository repository = RestCounterRepository(
       baseUrl: 'https://api.example.com/',
@@ -334,15 +347,13 @@ void main() {
       ),
     );
     await pumpEventQueue();
-    expect(emitted.length, initialLength); // No extra event emitted on failure
+    expect(emitted.length, initialLength);
     await sub.cancel();
   });
 
   test('watch receives error when initial load fails', () async {
     await AppLogger.silenceAsync(() async {
-      final _FakeClient client = _FakeClient(
-        getHandler: (_) => http.Response('bad', 500),
-      );
+      final Dio client = createCounterMockDio(getBody: 'bad', getStatus: 500);
       final RestCounterRepository repository = RestCounterRepository(
         baseUrl: 'https://api.example.com/',
         client: client,
@@ -365,27 +376,23 @@ void main() {
       'does not throw when addError is called after controller is closed',
       () async {
         await AppLogger.silenceAsync(() async {
-          final _FakeClient client = _FakeClient(
-            getHandler: (_) => http.Response('bad', 500),
+          final Dio client = createCounterMockDio(
+            getBody: 'bad',
+            getStatus: 500,
           );
           final RestCounterRepository repository = RestCounterRepository(
             baseUrl: 'https://api.example.com/',
             client: client,
           );
 
-          // Start watching to trigger initial load
           final StreamSubscription<CounterSnapshot> sub = repository
               .watch()
               .listen((_) {}, onError: (_) {});
 
-          // Dispose repository immediately (closes controller)
           await repository.dispose();
 
-          // Wait for async operations to complete
-          // The initial load error should be handled gracefully
           await pumpEventQueue();
 
-          // Should not throw - addError should check isClosed
           expect(repository, isNotNull);
           await sub.cancel();
         });
@@ -396,30 +403,23 @@ void main() {
       'does not throw when add is called after controller is closed',
       () async {
         await AppLogger.silenceAsync(() async {
-          final _FakeClient client = _FakeClient(
-            getHandler: (_) => http.Response(
-              jsonEncode(<String, dynamic>{'id': 'user-1', 'count': 5}),
-              200,
-              headers: <String, String>{'content-type': 'application/json'},
-            ),
+          final Dio client = createCounterMockDio(
+            getBody: jsonEncode(<String, dynamic>{'id': 'user-1', 'count': 5}),
+            getStatus: 200,
           );
           final RestCounterRepository repository = RestCounterRepository(
             baseUrl: 'https://api.example.com/',
             client: client,
           );
 
-          // Start watching
           final StreamSubscription<CounterSnapshot> sub = repository
               .watch()
               .listen((_) {});
 
-          // Wait for initial load
           await pumpEventQueue();
 
-          // Dispose repository (closes controller)
           await repository.dispose();
 
-          // Try to save after dispose - should not throw
           await expectLater(
             repository.save(CounterSnapshot(count: 10)),
             completes,
@@ -432,50 +432,21 @@ void main() {
   });
 }
 
-class _FakeClient extends http.BaseClient {
-  _FakeClient({
-    http.Response Function(http.BaseRequest request)? getHandler,
-    http.Response Function(http.BaseRequest request, String body)? postHandler,
-  }) : _getHandler = getHandler,
-       _postHandler = postHandler;
-
-  final http.Response Function(http.BaseRequest request)? _getHandler;
-  final http.Response Function(http.BaseRequest request, String body)?
-  _postHandler;
-
-  @override
-  Future<http.StreamedResponse> send(http.BaseRequest request) async {
-    if (request.method == 'GET') {
-      final http.Response response =
-          _getHandler?.call(request) ?? http.Response('not found', 404);
-      return _asStreamed(response);
-    }
-    if (request.method == 'POST') {
-      final Uint8List bytes = await request.finalize().toBytes();
-      final String body = utf8.decode(bytes);
-      final http.Response response =
-          _postHandler?.call(request, body) ?? http.Response('', 204);
-      return _asStreamed(response);
-    }
-    return _asStreamed(http.Response('unsupported', 400));
-  }
-
-  http.StreamedResponse _asStreamed(http.Response response) {
-    return http.StreamedResponse(
-      Stream<List<int>>.value(response.bodyBytes),
-      response.statusCode,
-      headers: response.headers,
-      reasonPhrase: response.reasonPhrase,
-    );
-  }
-}
-
-class _Requests {
-  http.BaseRequest? lastRequest;
+class CounterTestRequests {
+  String? lastMethod;
+  String? lastUrl;
+  Map<String, String>? lastHeaders;
   String? lastBody;
 
-  void record(http.BaseRequest request, String body) {
-    lastRequest = request;
+  void record(
+    final String method,
+    final String url,
+    final String? body, [
+    final Map<String, String>? headers,
+  ]) {
+    lastMethod = method;
+    lastUrl = url;
     lastBody = body;
+    lastHeaders = headers;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/utils/error_codes.dart';
 import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
@@ -25,6 +26,35 @@ class NetworkErrorMapper {
   }) {
     if (error == null) {
       return l10n?.errorUnknown ?? 'An unknown error occurred';
+    }
+
+    if (error is DioException) {
+      final int? statusCode = error.response?.statusCode;
+      if (statusCode != null) {
+        final String? statusMessage = getMessageForStatusCode(
+          statusCode,
+          l10n: l10n,
+        );
+        if (statusMessage != null) {
+          return statusMessage;
+        }
+      }
+      switch (error.type) {
+        case DioExceptionType.connectionTimeout:
+        case DioExceptionType.sendTimeout:
+        case DioExceptionType.receiveTimeout:
+          return l10n?.errorTimeout ?? 'Request timed out. Please try again.';
+        case DioExceptionType.connectionError:
+          return l10n?.errorNetwork ??
+              'Network connection error. Please check your internet connection.';
+        default:
+          break;
+      }
+      final String? msg = error.message;
+      if (msg != null && msg.trim().isNotEmpty) {
+        return msg;
+      }
+      return l10n?.errorGeneric ?? 'Something went wrong.';
     }
 
     if (error is HttpRequestFailure) {
@@ -137,10 +167,26 @@ class NetworkErrorMapper {
     }
   }
 
-  /// Get [AppErrorCode] from an error (e.g. [HttpRequestFailure] or generic).
+  /// Get [AppErrorCode] from an error (e.g. [HttpRequestFailure], [DioException] or generic).
   static AppErrorCode getErrorCode(final dynamic error) {
     if (error is HttpRequestFailure) {
       return getErrorCodeForStatusCode(error.statusCode);
+    }
+    if (error is DioException) {
+      final int? statusCode = error.response?.statusCode;
+      if (statusCode != null) {
+        return getErrorCodeForStatusCode(statusCode);
+      }
+      switch (error.type) {
+        case DioExceptionType.connectionTimeout:
+        case DioExceptionType.sendTimeout:
+        case DioExceptionType.receiveTimeout:
+          return AppErrorCode.timeout;
+        case DioExceptionType.connectionError:
+          return AppErrorCode.network;
+        default:
+          break;
+      }
     }
     if (error == null) {
       return AppErrorCode.unknown;
@@ -250,6 +296,10 @@ class NetworkErrorMapper {
   /// Check if an error indicates a network connectivity issue.
   static bool isNetworkError(final dynamic error) {
     if (error == null) return false;
+    if (error is DioException &&
+        error.type == DioExceptionType.connectionError) {
+      return true;
+    }
     final String errorString = error.toString().toLowerCase();
     return errorString.contains('network') ||
         errorString.contains('connection') ||
@@ -260,6 +310,16 @@ class NetworkErrorMapper {
   /// Check if an error indicates a timeout.
   static bool isTimeoutError(final dynamic error) {
     if (error == null) return false;
+    if (error is DioException) {
+      switch (error.type) {
+        case DioExceptionType.connectionTimeout:
+        case DioExceptionType.sendTimeout:
+        case DioExceptionType.receiveTimeout:
+          return true;
+        default:
+          break;
+      }
+    }
     final String errorString = error.toString().toLowerCase();
     return errorString.contains('timeout') || errorString.contains('timed out');
   }

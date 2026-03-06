@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
@@ -13,7 +14,6 @@ import 'package:flutter_bloc_app/features/chat/data/offline_first_chat_repositor
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/shared/http/resilient_http_client.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
@@ -22,7 +22,7 @@ import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 void registerChatServices() {
   registerLazySingletonIfAbsent<HuggingFaceApiClient>(
     () => HuggingFaceApiClient(
-      httpClient: getIt<ResilientHttpClient>(),
+      dio: getIt<Dio>(),
       apiKey: SecretConfig.huggingfaceApiKey,
     ),
     dispose: (final client) => client.dispose(),

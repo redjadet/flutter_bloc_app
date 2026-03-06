@@ -3,19 +3,20 @@ part of 'rest_counter_repository.dart';
 Future<CounterSnapshot> _restCounterRepositoryLoad(
   final RestCounterRepository repository,
 ) async {
-  final http.Response response = await _restCounterRepositorySendRequest(
+  final Response<String> response = await _restCounterRepositorySendRequest(
     repository: repository,
     operation: 'load',
-    request: () => repository._client.get(
-      repository._counterUri,
-      headers: _headers(repository),
+    request: () => repository._client.get<String>(
+      repository._counterUri.toString(),
+      options: Options(headers: _headers(repository)),
     ),
     errorFactory: CounterError.load,
     onHttpFailure: (final res) => CounterError.load(
       message: 'REST load failed (HTTP ${res.statusCode}).',
     ),
   );
-  final CounterSnapshot snapshot = _parseSnapshot(response.body);
+  final String? body = response.data;
+  final CounterSnapshot snapshot = _parseSnapshot(body ?? '');
   return _storeSnapshot(repository, snapshot);
 }
 
@@ -27,24 +28,25 @@ Future<void> _restCounterRepositorySave(
   await _restCounterRepositorySendRequest(
     repository: repository,
     operation: 'save',
-    request: () => repository._client.post(
-      repository._counterUri,
-      headers: _headers(
-        repository,
-        overrides: const {'Content-Type': 'application/json'},
-      ),
+    request: () => repository._client.post<String>(
+      repository._counterUri.toString(),
       // check-ignore: small payload (<8KB) - request body is small
-      body: jsonEncode(<String, dynamic>{
+      data: jsonEncode(<String, dynamic>{
         'userId': normalized.userId,
         'count': normalized.count,
         'last_changed': normalized.lastChanged?.millisecondsSinceEpoch,
       }),
+      options: Options(
+        headers: _headers(
+          repository,
+          overrides: const {'Content-Type': 'application/json'},
+        ),
+      ),
     ),
     errorFactory: CounterError.save,
     onHttpFailure: (final res) => CounterError.save(
-      originalError: http.ClientException(
+      originalError: Exception(
         'Counter save failed (HTTP ${res.statusCode})',
-        repository._counterUri,
       ),
       message: 'Save failed with status ${res.statusCode}',
     ),
@@ -52,17 +54,17 @@ Future<void> _restCounterRepositorySave(
   _emitSnapshot(repository, normalized);
 }
 
-Future<http.Response> _restCounterRepositorySendRequest({
+Future<Response<String>> _restCounterRepositorySendRequest({
   required final RestCounterRepository repository,
   required final String operation,
-  required final Future<http.Response> Function() request,
+  required final Future<Response<String>> Function() request,
   required final CounterError Function({
     Object? originalError,
     String? message,
   })
   errorFactory,
-  final CounterError Function(http.Response response)? onHttpFailure,
-}) => NetworkGuard.execute<CounterError>(
+  final CounterError Function(Response<String> response)? onHttpFailure,
+}) => NetworkGuard.executeDio<String, CounterError>(
   request: request,
   timeout: repository._requestTimeout,
   isSuccess: _isSuccess,
@@ -70,9 +72,8 @@ Future<http.Response> _restCounterRepositorySendRequest({
   onHttpFailure: (final response) =>
       onHttpFailure?.call(response) ??
       errorFactory(
-        originalError: http.ClientException(
+        originalError: Exception(
           'REST $operation failed (HTTP ${response.statusCode})',
-          response.request?.url ?? repository._counterUri,
         ),
         message: 'REST $operation failed (HTTP ${response.statusCode}).',
       ),
@@ -149,7 +150,10 @@ CounterSnapshot _parseSnapshot(final String body) {
   }
 }
 
-void _logHttpError(final String operation, final http.Response response) {
+void _logHttpError(
+  final String operation,
+  final Response<String> response,
+) {
   AppLogger.error(
     'RestCounterRepository.$operation non-success: ${response.statusCode}',
     'Response body omitted for privacy',
