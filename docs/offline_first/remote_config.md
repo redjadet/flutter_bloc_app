@@ -22,6 +22,9 @@
     - Checks `NetworkStatusService` – if offline, serves cached values
     - Otherwise calls remote `forceFetch()`, reads tracked keys (`awesome_feature_enabled`, `test_value_1`), persists a new snapshot, and registers itself with `SyncableRepositoryRegistry`
   - Implements `SyncableRepository` so `BackgroundSyncCoordinator` can call `pullRemote()` for background refreshes
+  - Coalesces concurrent refresh triggers (`forceFetch` and `pullRemote`) behind
+    one in-flight `Future<void>` to prevent overlapping Firebase Remote Config
+    fetches
   - Gracefully swallows transient fetch errors when cached data already exists, but rethrows when no cache is available
   - Supports `clearCache()` to wipe the Hive snapshot and reset in-memory state before a fresh fetch (used by Settings diagnostics)
 
@@ -39,7 +42,8 @@
 
 - Cache serialization: `test/features/remote_config/data/remote_config_cache_repository_test.dart`
 - Offline-first behavior: `test/features/remote_config/data/offline_first_remote_config_repository_test.dart`
-  - Covers cache hydration, offline skips, sync registry registration, and fallback-on-error flows
+  - Covers cache hydration, offline skips, sync registry registration,
+    concurrent `forceFetch()` coalescing, and fallback-on-error flows
 - UI regression: `test/features/settings/presentation/widgets/remote_config_diagnostics_section_test.dart`
   - Coverage for sync status banner + clear-cache action and metadata display to keep localized copy aligned
 - Cubit regression: `test/features/remote_config/presentation/cubit/remote_config_cubit_test.dart` verifies cache clear + refetch flow

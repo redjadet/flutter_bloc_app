@@ -32,6 +32,12 @@ This document defines how the search feature adopts the shared offline-first sta
   - `pullRemote`: Refreshes cached results for the top 10 most recent queries when online
   - Register in `SyncableRepositoryRegistry`
 - `search`: Always checks cache first. If cache hit and online, returns cached immediately and refreshes in background. If cache hit and offline, returns cached. If cache miss and online, fetches and caches. If cache miss and offline, returns empty.
+- In-flight refresh coalescing:
+  - Repository keeps a per-query in-flight map (`Map<String, Future<void>>`).
+  - If multiple callers request the same cached query while online, they reuse
+    one background refresh instead of issuing duplicate remote calls.
+  - In-flight entries are cleared on completion/error with an identity guard so
+    a newer refresh is never cleared by an older callback.
 
 ## Conflict Resolution
 
@@ -54,6 +60,8 @@ This document defines how the search feature adopts the shared offline-first sta
   - `search` fetches and caches when cache miss and online.
   - `search` returns empty when cache miss and offline.
   - `search` falls back to cache when remote fails.
+  - Concurrent cached `search('same-query')` calls trigger exactly one remote
+    refresh for that query.
   - `pullRemote` refreshes recent queries (top 10).
   - Registry registration.
 - ✅ **Bloc/widget tests**: `test/features/search/presentation/widgets/search_sync_banner_test.dart` covers banner visibility, offline/syncing states, and status change updates. `test/features/search/presentation/pages/search_page_test.dart` covers `SearchSyncBanner` integration in the search page.

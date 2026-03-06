@@ -150,14 +150,18 @@ Apple's internal metrics collection system.
 ```
 
 **Root Cause**:
-Concurrent fetch requests are being issued, causing one to cancel (likely from forceFetch and pullRemote overlap).
+Concurrent fetch requests were being issued, causing one to cancel (forceFetch
+and pullRemote overlap before in-flight coalescing was added).
 
 **Impact**:
 Transient fetch failure; subsequent pull succeeds in logs.
 
 **Action**:
 
-- Consider debouncing Remote Config fetch requests to avoid overlapping calls.
+- Fixed in app code by coalescing concurrent `forceFetch`/`pullRemote` calls
+  behind a shared in-flight `Future` in
+  `OfflineFirstRemoteConfigRepository`.
+- Keep monitoring logs to confirm no recurring overlap warnings.
 
 ### 9. ⚠️ INFORMATIONAL: Remote Config Cache Rebuild
 
@@ -252,7 +256,7 @@ flutter: RemoteConfigTelemetry[remote_config_fetch_succeeded] {reason: pullRemot
 ### Monitor
 
 1. Gesture timeout - monitor for UI responsiveness issues
-2. Remote Config fetch overlap - consider debouncing
+2. Remote Config fetch overlap - verify coalescing fix in fresh device logs
 
 ## Verification
 

@@ -286,6 +286,35 @@ void main() {
       expect(remoteRepository.calledQueries.length, 10);
     });
 
+    test(
+      'concurrent cached searches for same query run only one background refresh',
+      () async {
+        networkService.isOnline = true;
+        const List<SearchResult> cachedResults = [
+          SearchResult(
+            id: 'cached_1',
+            imageUrl: 'https://example.com/cached.jpg',
+          ),
+        ];
+        await cacheRepository.saveCachedResults('dogs', cachedResults);
+        final OfflineFirstSearchRepository repository = buildRepository();
+
+        final List<Future<List<SearchResult>>> calls =
+            <Future<List<SearchResult>>>[
+              repository.search('dogs'),
+              repository.search('dogs'),
+              repository.search('dogs'),
+            ];
+        await Future.wait(calls);
+
+        await Future<void>.delayed(const Duration(milliseconds: 150));
+        expect(
+          remoteRepository.calledQueries.where((q) => q == 'dogs').length,
+          1,
+        );
+      },
+    );
+
     test('entityType returns search', () {
       final OfflineFirstSearchRepository repository = buildRepository();
       expect(repository.entityType, 'search');

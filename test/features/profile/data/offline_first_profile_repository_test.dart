@@ -191,6 +191,38 @@ void main() {
       expect(cached!.name, remoteUser.name);
     });
 
+    test(
+      'concurrent getProfile with cache run only one background refresh',
+      () async {
+        await cacheRepository.saveProfile(cachedUser);
+        int getProfileCalls = 0;
+        final _StubProfileRepository remote = _StubProfileRepository(
+          onGetProfile: () async {
+            getProfileCalls++;
+            return remoteUser;
+          },
+        );
+
+        final OfflineFirstProfileRepository repository =
+            OfflineFirstProfileRepository(
+              remoteRepository: remote,
+              cacheRepository: cacheRepository,
+              networkStatusService: networkStatus,
+              registry: registry,
+            );
+
+        final List<Future<ProfileUser>> calls = <Future<ProfileUser>>[
+          repository.getProfile(),
+          repository.getProfile(),
+          repository.getProfile(),
+        ];
+        await Future.wait(calls);
+
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+        expect(getProfileCalls, 1);
+      },
+    );
+
     test('throws when offline with no cache', () async {
       networkStatus.setStatus(NetworkStatus.offline);
       final OfflineFirstProfileRepository repository =

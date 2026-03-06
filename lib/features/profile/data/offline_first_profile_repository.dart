@@ -34,6 +34,9 @@ class OfflineFirstProfileRepository
   final NetworkStatusService _networkStatusService;
   final SyncableRepositoryRegistry _registry;
 
+  /// In-flight refresh so multiple getProfile/pullRemote callers share one refresh.
+  Future<void>? _refreshInFlight;
+
   @override
   String get entityType => profileEntity;
 
@@ -48,7 +51,8 @@ class OfflineFirstProfileRepository
       if (!isOnline) {
         return cached;
       }
-      // Return cached immediately and refresh in the background when online
+      // Return cached immediately and refresh in the background when online.
+      // In-flight coalescing: concurrent callers share one refresh.
       unawaited(_refreshAndCache());
       return cached;
     }
@@ -87,7 +91,32 @@ class OfflineFirstProfileRepository
     await _refreshAndCache();
   }
 
+  /// Refreshes profile from remote and saves to cache.
+  /// Concurrent callers await the same in-flight future.
   Future<void> _refreshAndCache() async {
+    final Future<void>? inFlight = _refreshInFlight;
+    if (inFlight != null) {
+      return inFlight;
+    }
+    final Future<void> f = _doRefreshAndCache();
+    _refreshInFlight = f;
+    unawaited(
+      f.then<void>(
+        (_) => _clearRefreshInFlight(f),
+        onError: (final Object _, final StackTrace _) =>
+            _clearRefreshInFlight(f),
+      ),
+    );
+    return f;
+  }
+
+  void _clearRefreshInFlight(final Future<void> future) {
+    if (identical(_refreshInFlight, future)) {
+      _refreshInFlight = null;
+    }
+  }
+
+  Future<void> _doRefreshAndCache() async {
     try {
       final ProfileUser profile = await _remoteRepository.getProfile();
       await _saveProfileToCache(profile);

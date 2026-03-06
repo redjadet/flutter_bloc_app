@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc_app/features/remote_config/data/remote_config_cache_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
@@ -46,6 +48,9 @@ class OfflineFirstRemoteConfigRepository
   final void Function(String event, Map<String, Object?> payload) _telemetry;
 
   RemoteConfigSnapshot _snapshot = RemoteConfigSnapshot.empty;
+
+  /// In-flight fetch so forceFetch/pullRemote callers share one remote fetch.
+  Future<void>? _fetchInFlight;
 
   @override
   String get entityType => remoteConfigEntity;
@@ -114,13 +119,6 @@ class OfflineFirstRemoteConfigRepository
   @override
   Future<void> pullRemote() => _refreshFromRemote(reason: 'pullRemote');
 
-  Future<void> _hydrateFromCache() async {
-    final RemoteConfigSnapshot? cached = await _cacheRepository.loadSnapshot();
-    if (cached != null) {
-      _snapshot = cached;
-    }
-  }
-
   Future<void> _refreshFromRemote({
     required final String reason,
     final bool skipNetworkCheck = false,
@@ -142,6 +140,30 @@ class OfflineFirstRemoteConfigRepository
         return;
       }
     }
+
+    final Future<void>? inFlight = _fetchInFlight;
+    if (inFlight != null) {
+      await inFlight;
+      return;
+    }
+    final Future<void> f = _doRefreshFromRemote(reason);
+    _fetchInFlight = f;
+    unawaited(
+      f.then<void>(
+        (_) => _clearFetchInFlight(f),
+        onError: (final Object _, final StackTrace _) => _clearFetchInFlight(f),
+      ),
+    );
+    await f;
+  }
+
+  void _clearFetchInFlight(final Future<void> future) {
+    if (identical(_fetchInFlight, future)) {
+      _fetchInFlight = null;
+    }
+  }
+
+  Future<void> _doRefreshFromRemote(final String reason) async {
     final Stopwatch stopwatch = Stopwatch()..start();
     try {
       await _remoteRepository.forceFetch();
@@ -189,6 +211,13 @@ class OfflineFirstRemoteConfigRepository
         'hasValues': nextSnapshot.hasValues,
       },
     );
+  }
+
+  Future<void> _hydrateFromCache() async {
+    final RemoteConfigSnapshot? cached = await _cacheRepository.loadSnapshot();
+    if (cached != null) {
+      _snapshot = cached;
+    }
   }
 
   Map<String, dynamic> _readTrackedValues() {
