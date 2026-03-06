@@ -8,7 +8,7 @@
 | Phase 1: Chart Pilot | Done | `CoingeckoApi`, `HttpChartRepository`, `DelayedChartRepository`, DI, tests |
 | Phase 2: Error-Handling Strategy | Done | Keep `NetworkGuard` for manual `Dio` flows; do not force Retrofit through it; shared `Dio` uses `validateStatus: (_) => true` so repositories can keep status-based mapping |
 | Phase 3.1: Counter | Done | `CounterApi` Retrofit interface, `RestCounterRepository` uses it + NetworkGuard; tests updated |
-| Phase 3.2: GraphQL | Remaining | Optional; keep manual Dio + NetworkGuard unless Retrofit clearly reduces boilerplate |
+| Phase 3.2: GraphQL | Done | `CountriesGraphqlApi` Retrofit interface, `CountriesGraphqlRepository` uses it + NetworkGuard; operation-specific methods preserved |
 | Phase 3.3: Hugging Face | Remaining | Optional; keep as-is per plan recommendation |
 
 ---

@@ -6,11 +6,11 @@ import 'package:flutter_bloc_app/features/counter/data/api/counter_api.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
+import 'package:flutter_bloc_app/shared/http/retrofit_response_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
 import 'package:flutter_bloc_app/shared/utils/repository_initial_load_helper.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
-import 'package:retrofit/retrofit.dart';
 
 part 'rest_counter_repository_internal.dart';
 part 'rest_counter_repository_watch.dart';
