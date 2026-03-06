@@ -3,18 +3,18 @@ part of 'rest_counter_repository.dart';
 Future<CounterSnapshot> _restCounterRepositoryLoad(
   final RestCounterRepository repository,
 ) async {
-  final Response<String> response = await _restCounterRepositorySendRequest(
-    repository: repository,
-    operation: 'load',
-    request: () => repository._client.get<String>(
-      repository._counterUri.toString(),
-      options: Options(headers: _headers(repository)),
-    ),
-    errorFactory: CounterError.load,
-    onHttpFailure: (final res) => CounterError.load(
-      message: 'REST load failed (HTTP ${res.statusCode}).',
-    ),
-  );
+  final Response<String> response =
+      await _restCounterRepositorySendRequest<String>(
+        repository: repository,
+        operation: 'load',
+        request: () => repository._api
+            .getCounter(Options(headers: _headers(repository)))
+            .then(_stringResponseFromHttpResponse),
+        errorFactory: CounterError.load,
+        onHttpFailure: (final res) => CounterError.load(
+          message: 'REST load failed (HTTP ${res.statusCode}).',
+        ),
+      );
   final String? body = response.data;
   final CounterSnapshot snapshot = _parseSnapshot(body ?? '');
   return _storeSnapshot(repository, snapshot);
@@ -25,24 +25,24 @@ Future<void> _restCounterRepositorySave(
   final CounterSnapshot snapshot,
 ) async {
   final CounterSnapshot normalized = _normalizeSnapshot(repository, snapshot);
-  await _restCounterRepositorySendRequest(
+  // check-ignore: small payload (<8KB) - request body is small
+  final Map<String, dynamic> body = <String, dynamic>{
+    'userId': normalized.userId,
+    'count': normalized.count,
+    'last_changed': normalized.lastChanged?.millisecondsSinceEpoch,
+  };
+  await _restCounterRepositorySendRequest<void>(
     repository: repository,
     operation: 'save',
-    request: () => repository._client.post<String>(
-      repository._counterUri.toString(),
-      // check-ignore: small payload (<8KB) - request body is small
-      data: jsonEncode(<String, dynamic>{
-        'userId': normalized.userId,
-        'count': normalized.count,
-        'last_changed': normalized.lastChanged?.millisecondsSinceEpoch,
-      }),
-      options: Options(
-        headers: _headers(
-          repository,
-          overrides: const {'Content-Type': 'application/json'},
-        ),
-      ),
-    ),
+    request: () => repository._api
+        .saveCounter(
+          body,
+          Options(
+            headers: _headers(repository),
+            contentType: 'application/json',
+          ),
+        )
+        .then((final hr) => hr.response),
     errorFactory: CounterError.save,
     onHttpFailure: (final res) => CounterError.save(
       originalError: Exception(
@@ -54,17 +54,17 @@ Future<void> _restCounterRepositorySave(
   _emitSnapshot(repository, normalized);
 }
 
-Future<Response<String>> _restCounterRepositorySendRequest({
+Future<Response<T>> _restCounterRepositorySendRequest<T>({
   required final RestCounterRepository repository,
   required final String operation,
-  required final Future<Response<String>> Function() request,
+  required final Future<Response<T>> Function() request,
   required final CounterError Function({
     Object? originalError,
     String? message,
   })
   errorFactory,
-  final CounterError Function(Response<String> response)? onHttpFailure,
-}) => NetworkGuard.executeDio<String, CounterError>(
+  final CounterError Function(Response<T> response)? onHttpFailure,
+}) => NetworkGuard.executeDio<T, CounterError>(
   request: request,
   timeout: repository._requestTimeout,
   isSuccess: _isSuccess,
@@ -80,6 +80,22 @@ Future<Response<String>> _restCounterRepositorySendRequest({
   onException: (final error) => errorFactory(originalError: error),
   onFailureLog: (final response) => _logHttpError(operation, response),
 );
+
+Response<String> _stringResponseFromHttpResponse(
+  final HttpResponse<String> httpResponse,
+) {
+  final Response<dynamic> response = httpResponse.response;
+  return Response<String>(
+    data: response.data is String ? response.data as String : null,
+    requestOptions: response.requestOptions,
+    statusCode: response.statusCode,
+    statusMessage: response.statusMessage,
+    isRedirect: response.isRedirect,
+    redirects: response.redirects,
+    extra: response.extra,
+    headers: response.headers,
+  );
+}
 
 Map<String, String> _headers(
   final RestCounterRepository repository, {
@@ -150,9 +166,9 @@ CounterSnapshot _parseSnapshot(final String body) {
   }
 }
 
-void _logHttpError(
+void _logHttpError<T>(
   final String operation,
-  final Response<String> response,
+  final Response<T> response,
 ) {
   AppLogger.error(
     'RestCounterRepository.$operation non-success: ${response.statusCode}',

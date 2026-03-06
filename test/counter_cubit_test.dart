@@ -31,12 +31,16 @@ void main() {
       TimerService? timerService,
       bool startTicker = true,
       Duration loadDelay = Duration.zero,
+      Duration manualThrottle = Duration.zero,
+      DateTime Function()? now,
     }) {
       final CounterCubit cubit = CounterCubit(
         repository: repository ?? MockCounterRepository(),
         timerService: timerService,
         startTicker: startTicker,
         loadDelay: loadDelay,
+        manualThrottle: manualThrottle,
+        now: now,
       );
       addTearDown(cubit.close);
       return cubit;
@@ -241,6 +245,49 @@ void main() {
       expect(snap.count, 1);
       expect(snap.lastChanged, isA<DateTime>());
     });
+
+    test('manual throttle ignores rapid consecutive increments', () async {
+      DateTime current = DateTime(2024, 1, 1, 12, 0, 0);
+      final CounterCubit cubit = createCubit(
+        startTicker: false,
+        manualThrottle: const Duration(milliseconds: 500),
+        now: () => current,
+      );
+
+      await cubit.increment();
+      expect(cubit.state.count, 1);
+
+      current = current.add(const Duration(milliseconds: 300));
+      await cubit.increment();
+      expect(cubit.state.count, 1);
+
+      current = current.add(const Duration(milliseconds: 250));
+      await cubit.increment();
+      expect(cubit.state.count, 2);
+    });
+
+    test(
+      'manual throttle applies across increment and decrement taps',
+      () async {
+        DateTime current = DateTime(2024, 1, 1, 12, 0, 0);
+        final CounterCubit cubit = createCubit(
+          startTicker: false,
+          manualThrottle: const Duration(milliseconds: 500),
+          now: () => current,
+        );
+
+        await cubit.increment();
+        expect(cubit.state.count, 1);
+
+        current = current.add(const Duration(milliseconds: 300));
+        await cubit.decrement();
+        expect(cubit.state.count, 1);
+
+        current = current.add(const Duration(milliseconds: 250));
+        await cubit.decrement();
+        expect(cubit.state.count, 0);
+      },
+    );
 
     test(
       'persist failure emits save error without losing latest count',

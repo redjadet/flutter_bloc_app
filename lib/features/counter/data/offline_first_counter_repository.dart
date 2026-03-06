@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
@@ -53,7 +54,49 @@ class OfflineFirstCounterRepository
   }
 
   @override
-  Stream<CounterSnapshot> watch() => _localRepository.watch();
+  Stream<CounterSnapshot> watch() {
+    if (_remoteRepository == null) {
+      return _localRepository.watch();
+    }
+    late StreamSubscription<CounterSnapshot> localSub;
+    late StreamSubscription<CounterSnapshot> remoteSub;
+    late StreamController<CounterSnapshot> controller;
+    controller = StreamController<CounterSnapshot>.broadcast(
+      onListen: () {
+        localSub = _localRepository.watch().listen(
+          controller.add,
+          onError: controller.addError,
+          onDone: () => controller.close(),
+        );
+        remoteSub = _remoteRepository.watch().listen(
+          (final remote) async {
+            final CounterSnapshot local = await _localRepository.load();
+            if (_shouldApplyRemote(local, remote)) {
+              await _localRepository.save(
+                remote.copyWith(
+                  changeId: remote.changeId ?? _generateChangeId(),
+                  lastSyncedAt: DateTime.now().toUtc(),
+                  synchronized: true,
+                ),
+              );
+            }
+          },
+          onError: (final Object e, final StackTrace st) {
+            AppLogger.error(
+              'OfflineFirstCounterRepository remote watch failed',
+              e,
+              st,
+            );
+          },
+        );
+      },
+      onCancel: () async {
+        await localSub.cancel();
+        await remoteSub.cancel();
+      },
+    );
+    return controller.stream;
+  }
 
   @override
   Future<void> processOperation(final SyncOperation operation) async {
@@ -125,9 +168,11 @@ class OfflineFirstCounterRepository
     final CounterSnapshot localSnapshot,
     final CounterSnapshot remoteSnapshot,
   ) {
+    // Apply when count differs (e.g. user edited only count in Firebase console)
+    if (remoteSnapshot.count != localSnapshot.count) return true;
     final DateTime? remote = remoteSnapshot.lastChanged;
     final DateTime? local = localSnapshot.lastChanged;
-    if (remote == null) return false;
+    if (remote == null) return true;
     if (local == null) return true;
     return remote.isAfter(local);
   }

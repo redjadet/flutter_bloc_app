@@ -240,9 +240,11 @@ void main() {
         networkController.add(NetworkStatus.online);
         await Future<void>.delayed(const Duration(milliseconds: 20));
 
-        verify(() => syncableRepo.processOperation(successOp)).called(1);
-        verify(() => pendingRepository.markCompleted(successOp.id)).called(1);
+        // Counter ops are coalesced: only the one with max count (failOp) is
+        // processed; successOp is marked completed without processing
         verify(() => syncableRepo.processOperation(failOp)).called(1);
+        verify(() => pendingRepository.markCompleted(successOp.id)).called(1);
+        verifyNever(() => pendingRepository.markCompleted(failOp.id));
         verify(
           () => pendingRepository.markFailed(
             operationId: failOp.id,
