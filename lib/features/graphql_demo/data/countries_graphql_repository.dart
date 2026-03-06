@@ -1,10 +1,10 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/data/api/countries_graphql_api.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
+import 'package:flutter_bloc_app/shared/http/retrofit_response_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
@@ -12,21 +12,25 @@ import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 
 /// GraphQL-backed repository that talks to https://countries.trevorblades.com.
 ///
+/// Uses [CountriesGraphqlApi] (Retrofit) for operation-specific POST calls.
 /// [Dio] instances are injected via `get_it` so DI can dispose them
-/// when the app shuts down. Avoid constructing new clients directly in
-/// repositories to keep connection pooling and teardown consistent.
+/// when the app shuts down.
 class CountriesGraphqlRepository implements GraphqlDemoRepository {
-  CountriesGraphqlRepository({final Dio? client}) : _client = client ?? Dio();
+  CountriesGraphqlRepository({final Dio? client})
+    : this._fromClient(client ?? Dio());
+
+  CountriesGraphqlRepository._fromClient(final Dio client)
+    : _api = CountriesGraphqlApi(client);
 
   static const String _opContinents = 'Continents';
   static const String _opAllCountries = 'AllCountries';
   static const String _opCountriesByContinent = 'CountriesByContinent';
-  static const String _endpoint = 'https://countries.trevorblades.com/';
-  static const Map<String, String> _headers = <String, String>{
-    'Content-Type': 'application/json',
-  };
+  final CountriesGraphqlApi _api;
 
-  final Dio _client;
+  static Options _options() => Options(
+    contentType: 'application/json',
+    headers: const <String, String>{'Content-Type': 'application/json'},
+  );
 
   @override
   GraphqlDataSource get lastSource => GraphqlDataSource.remote;
@@ -113,18 +117,16 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
     }
 
     const Duration timeout = Duration(seconds: 10);
-    // check-ignore: small payload (<8KB) - GraphQL request body is small
-    final String body = jsonEncode(payload);
     final Response<String>
     response = await NetworkGuard.executeDio<String, GraphqlDemoException>(
-      request: () => _client.post<String>(
-        _endpoint,
-        data: body,
-        options: Options(headers: _headers),
-      ),
+      request: () => _api
+          .postQuery(payload, _options())
+          .then(stringResponseFromHttpResponse),
       timeout: timeout,
       isSuccess: (final statusCode) => statusCode == 200,
-      logContext: 'CountriesGraphqlRepository._postQuery',
+      logContext:
+          'CountriesGraphqlRepository._postQuery'
+          '${operationName != null ? '.$operationName' : ''}',
       onHttpFailure: (final res) {
         final int? statusCode = res.statusCode;
         final bool isServerError = (statusCode ?? 0) >= 500;

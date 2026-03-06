@@ -9,7 +9,7 @@ Future<CounterSnapshot> _restCounterRepositoryLoad(
         operation: 'load',
         request: () => repository._api
             .getCounter(Options(headers: _headers(repository)))
-            .then(_stringResponseFromHttpResponse),
+            .then(stringResponseFromHttpResponse),
         errorFactory: CounterError.load,
         onHttpFailure: (final res) => CounterError.load(
           message: 'REST load failed (HTTP ${res.statusCode}).',
@@ -80,22 +80,6 @@ Future<Response<T>> _restCounterRepositorySendRequest<T>({
   onException: (final error) => errorFactory(originalError: error),
   onFailureLog: (final response) => _logHttpError(operation, response),
 );
-
-Response<String> _stringResponseFromHttpResponse(
-  final HttpResponse<String> httpResponse,
-) {
-  final Response<dynamic> response = httpResponse.response;
-  return Response<String>(
-    data: response.data is String ? response.data as String : null,
-    requestOptions: response.requestOptions,
-    statusCode: response.statusCode,
-    statusMessage: response.statusMessage,
-    isRedirect: response.isRedirect,
-    redirects: response.redirects,
-    extra: response.extra,
-    headers: response.headers,
-  );
-}
 
 Map<String, String> _headers(
   final RestCounterRepository repository, {
