@@ -25,7 +25,7 @@ final GetIt getIt = GetIt.instance;
 ///
 /// **Singletons (current approach):**
 /// - ✅ **Stateful services** that maintain internal state (e.g., `HiveService`, `WebsocketRepository`)
-/// - ✅ **Expensive to create** resources (e.g., `http.Client`, database connections)
+/// - ✅ **Expensive to create** resources (e.g., `Dio`, database connections)
 /// - ✅ **Shared resources** used across multiple features (e.g., repositories, services)
 /// - ✅ **Configuration objects** that don't change (e.g., `PaymentCalculator`, `DeepLinkParser`)
 ///
@@ -38,7 +38,7 @@ final GetIt getIt = GetIt.instance;
 ///
 /// Some dependencies require cleanup when the app shuts down or during testing.
 /// These are registered with a `dispose` callback:
-/// - `http.Client` - closes HTTP connections
+/// - `Dio` - closes HTTP connections
 /// - `HuggingFaceApiClient` - disposes internal resources
 /// - `WebsocketRepository` - closes WebSocket connections and cancels subscriptions
 /// - `RemoteConfigRepository` - cancels config update subscriptions

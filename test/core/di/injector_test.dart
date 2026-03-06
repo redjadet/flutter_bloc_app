@@ -14,9 +14,9 @@ import 'package:flutter_bloc_app/features/settings/data/hive_locale_repository.d
 import 'package:flutter_bloc_app/features/settings/data/hive_theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart' as http;
 import '../../test_helpers.dart' as test_helpers;
 
 void main() {
@@ -36,8 +36,8 @@ void main() {
     final CounterRepository counterRepository = injector<CounterRepository>();
     expect(counterRepository, isA<OfflineFirstCounterRepository>());
 
-    final http.Client client = injector<http.Client>();
-    expect(client, isA<http.Client>());
+    final Dio dio = injector<Dio>();
+    expect(dio, isA<Dio>());
 
     final GraphqlDemoRepository graphqlRepository =
         injector<GraphqlDemoRepository>();

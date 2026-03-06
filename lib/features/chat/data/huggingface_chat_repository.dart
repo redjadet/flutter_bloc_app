@@ -1,12 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:http/http.dart' as http;
 
 class HuggingfaceChatRepository implements ChatRepository {
   HuggingfaceChatRepository({
-    final http.Client? client,
+    final Dio? client,
     final String? apiKey,
     final String? model,
     final bool useChatCompletions = false,
@@ -15,7 +15,7 @@ class HuggingfaceChatRepository implements ChatRepository {
     final HuggingFaceResponseParser? responseParser,
   }) : _apiClient =
            apiClient ??
-           HuggingFaceApiClient(httpClient: client, apiKey: _normalize(apiKey)),
+           HuggingFaceApiClient(dio: client, apiKey: _normalize(apiKey)),
        _payloadBuilder = payloadBuilder ?? const HuggingFacePayloadBuilder(),
        _responseParser =
            responseParser ??

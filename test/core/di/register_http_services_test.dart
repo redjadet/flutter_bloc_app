@@ -1,12 +1,9 @@
-import 'dart:async';
-
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/register_http_services.dart';
 import 'package:flutter_bloc_app/main_bootstrap.dart';
-import 'package:flutter_bloc_app/shared/http/resilient_http_client.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
 
 class _TestNetworkStatusService implements NetworkStatusService {
   _TestNetworkStatusService(this._status);
@@ -29,22 +26,6 @@ class _TestNetworkStatusService implements NetworkStatusService {
   Future<void> dispose() async {}
 }
 
-class _RecordingHttpClient extends http.BaseClient {
-  _RecordingHttpClient(this._handler);
-
-  final Future<http.StreamedResponse> Function(http.BaseRequest request)
-  _handler;
-  http.BaseRequest? lastRequest;
-  int sendCount = 0;
-
-  @override
-  Future<http.StreamedResponse> send(final http.BaseRequest request) {
-    sendCount += 1;
-    lastRequest = request;
-    return _handler(request);
-  }
-}
-
 void main() {
   setUp(() async {
     await getIt.reset(dispose: true);
@@ -55,68 +36,53 @@ void main() {
   });
 
   group('registerHttpServices', () {
-    test('builds ResilientHttpClient that blocks offline requests', () async {
+    test('builds Dio that blocks offline requests', () async {
       final _TestNetworkStatusService networkStatusService =
           _TestNetworkStatusService(NetworkStatus.offline);
       getIt.registerSingleton<NetworkStatusService>(networkStatusService);
 
-      final _RecordingHttpClient innerClient = _RecordingHttpClient(
-        (final _) async =>
-            http.StreamedResponse(Stream.value(const <int>[]), 200),
-      );
-      getIt.registerSingleton<http.Client>(innerClient);
-
       registerHttpServices();
 
-      final ResilientHttpClient client = getIt<ResilientHttpClient>();
-      final http.BaseRequest request = http.Request(
-        'GET',
-        Uri.parse('https://example.com'),
-      );
+      final Dio dio = getIt<Dio>();
 
       await expectLater(
-        client.send(request),
-        throwsA(isA<http.ClientException>()),
+        dio.get<String>('https://example.com/'),
+        throwsA(isA<DioException>()),
       );
 
       expect(networkStatusService.statusChecks, 1);
-      expect(innerClient.sendCount, 0);
     });
 
-    test('injects standard headers when online', () async {
+    test('registers Dio with standard headers', () async {
       final _TestNetworkStatusService networkStatusService =
           _TestNetworkStatusService(NetworkStatus.online);
       getIt.registerSingleton<NetworkStatusService>(networkStatusService);
 
-      final Completer<void> responseCompleted = Completer<void>();
-      final _RecordingHttpClient innerClient = _RecordingHttpClient((
-        final _,
-      ) async {
-        responseCompleted.complete();
-        return http.StreamedResponse(Stream.value(const <int>[]), 200);
-      });
-      getIt.registerSingleton<http.Client>(innerClient);
+      registerHttpServices();
+
+      final Dio dio = getIt<Dio>();
+
+      expect(
+        dio.options.headers['User-Agent'],
+        'FlutterBlocApp/${getAppVersion()}',
+      );
+      expect(dio.options.headers['Accept'], 'application/json, */*');
+      expect(dio.options.headers['Accept-Encoding'], 'gzip');
+    });
+
+    test('allows repositories to handle non-success HTTP statuses', () async {
+      final _TestNetworkStatusService networkStatusService =
+          _TestNetworkStatusService(NetworkStatus.online);
+      getIt.registerSingleton<NetworkStatusService>(networkStatusService);
 
       registerHttpServices();
 
-      final ResilientHttpClient client = getIt<ResilientHttpClient>();
-      final http.BaseRequest request = http.Request(
-        'GET',
-        Uri.parse('https://example.com'),
-      );
+      final Dio dio = getIt<Dio>();
+      final bool Function(int?) validateStatus = dio.options.validateStatus;
 
-      await client.send(request);
-      await responseCompleted.future;
-
-      final http.BaseRequest recorded = innerClient.lastRequest!;
-      expect(
-        recorded.headers['User-Agent'],
-        'FlutterBlocApp/${getAppVersion()}',
-      );
-      expect(recorded.headers['Accept'], 'application/json, */*');
-      expect(recorded.headers['Accept-Encoding'], 'gzip');
-      expect(networkStatusService.statusChecks, 1);
-      expect(innerClient.sendCount, 1);
+      expect(validateStatus(200), isTrue);
+      expect(validateStatus(404), isTrue);
+      expect(validateStatus(500), isTrue);
     });
   });
 }

@@ -1,34 +1,38 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:http/http.dart' as http;
 
 /// Helper for wrapping HTTP requests with consistent logging and error mapping.
 class NetworkGuard {
   NetworkGuard._();
 
-  /// Executes [request] and validates the response using [isSuccess].
+  /// Executes [request] and validates using [isSuccess].
   ///
-  /// On HTTP failure, [onHttpFailure] is invoked to produce the domain error.
-  /// On any other exception, [onException] builds the error.
-  static Future<http.Response> execute<E extends Exception>({
-    required final Future<http.Response> Function() request,
+  /// On HTTP failure, [onHttpFailure] is invoked with the Dio [Response].
+  /// On [DioException] or other errors, [onException] builds the domain error.
+  static Future<Response<T>> executeDio<T, E extends Exception>({
+    required final Future<Response<T>> Function() request,
     required final Duration timeout,
     required final bool Function(int statusCode) isSuccess,
     required final String logContext,
-    required final E Function(http.Response response) onHttpFailure,
+    required final E Function(Response<T> response) onHttpFailure,
     required final E Function(Object error) onException,
-    final void Function(http.Response response)? onFailureLog,
+    final void Function(Response<T> response)? onFailureLog,
   }) async {
     try {
-      final http.Response response = await request().timeout(timeout);
-      if (isSuccess(response.statusCode)) {
+      final Response<T> response = await request().timeout(timeout);
+      final int? statusCode = response.statusCode;
+      if (statusCode != null && isSuccess(statusCode)) {
         return response;
       }
       onFailureLog?.call(response);
       throw onHttpFailure(response);
     } on E {
       rethrow;
+    } on DioException catch (error, stackTrace) {
+      AppLogger.error('$logContext failed', error, stackTrace);
+      throw onException(error);
     } on TimeoutException catch (error, stackTrace) {
       AppLogger.error('$logContext timeout', error, stackTrace);
       throw onException(error);

@@ -1,55 +1,49 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
-import 'package:mocktail/mocktail.dart';
 
-class _MockHttpClient extends Mock implements http.Client {}
+Dio createMockDio(
+  final String body,
+  final int statusCode, {
+  final String contentType = 'application/json',
+}) {
+  final dio = Dio();
+  dio.interceptors.add(
+    InterceptorsWrapper(
+      onRequest: (options, handler) {
+        handler.resolve(
+          Response<String>(
+            requestOptions: options,
+            data: body,
+            statusCode: statusCode,
+            headers: Headers.fromMap({
+              'content-type': [contentType],
+            }),
+          ),
+        );
+      },
+    ),
+  );
+  return dio;
+}
 
 void main() {
-  setUpAll(() {
-    registerFallbackValue(Uri.parse('https://example.com'));
-    registerFallbackValue(<String, String>{});
-    registerFallbackValue('');
-  });
-
   group('HuggingFaceApiClient', () {
     late HuggingFaceApiClient apiClient;
-    late _MockHttpClient mockHttpClient;
-
-    setUp(() {
-      mockHttpClient = _MockHttpClient();
-      apiClient = HuggingFaceApiClient(
-        httpClient: mockHttpClient,
-        apiKey: 'test-key',
-      );
-    });
 
     tearDown(() {
       apiClient.dispose();
     });
 
     test('handles malformed JSON responses gracefully', () async {
-      // Mock response with invalid JSON
-      final mockResponse = http.Response(
-        '{invalid json',
-        200,
-        headers: {'content-type': 'application/json'},
-      );
+      final Dio mockDio = createMockDio('{invalid json', 200);
+      apiClient = HuggingFaceApiClient(dio: mockDio, apiKey: 'test-key');
 
-      when(
-        () => mockHttpClient.post(
-          any(),
-          headers: any(named: 'headers'),
-          body: any(named: 'body'),
-        ),
-      ).thenAnswer((_) async => mockResponse);
-
-      // Should throw ChatException instead of FormatException
       expect(
         () => apiClient.postJson(
           uri: Uri.parse('https://api.example.com/test'),
-          payload: {'test': 'data'},
+          payload: <String, dynamic>{'test': 'data'},
           context: 'test',
         ),
         throwsA(
@@ -63,24 +57,15 @@ void main() {
     });
 
     test('handles valid JSON responses correctly', () async {
-      // Mock response with valid JSON
-      final mockResponse = http.Response(
+      final Dio mockDio = createMockDio(
         '{"result": "success", "data": [1, 2, 3]}',
         200,
-        headers: {'content-type': 'application/json'},
       );
-
-      when(
-        () => mockHttpClient.post(
-          any(),
-          headers: any(named: 'headers'),
-          body: any(named: 'body'),
-        ),
-      ).thenAnswer((_) async => mockResponse);
+      apiClient = HuggingFaceApiClient(dio: mockDio, apiKey: 'test-key');
 
       final result = await apiClient.postJson(
         uri: Uri.parse('https://api.example.com/test'),
-        payload: {'test': 'data'},
+        payload: <String, dynamic>{'test': 'data'},
         context: 'test',
       );
 
@@ -90,25 +75,17 @@ void main() {
     });
 
     test('handles non-JSON content type', () async {
-      // Mock response with non-JSON content type
-      final mockResponse = http.Response(
+      final Dio mockDio = createMockDio(
         'plain text response',
         200,
-        headers: {'content-type': 'text/plain'},
+        contentType: 'text/plain',
       );
-
-      when(
-        () => mockHttpClient.post(
-          any(),
-          headers: any(named: 'headers'),
-          body: any(named: 'body'),
-        ),
-      ).thenAnswer((_) async => mockResponse);
+      apiClient = HuggingFaceApiClient(dio: mockDio, apiKey: 'test-key');
 
       expect(
         () => apiClient.postJson(
           uri: Uri.parse('https://api.example.com/test'),
-          payload: {'test': 'data'},
+          payload: <String, dynamic>{'test': 'data'},
           context: 'test',
         ),
         throwsA(
@@ -122,25 +99,13 @@ void main() {
     });
 
     test('handles non-map JSON responses', () async {
-      // Mock response with JSON that's not a map
-      final mockResponse = http.Response(
-        '[1, 2, 3]',
-        200,
-        headers: {'content-type': 'application/json'},
-      );
-
-      when(
-        () => mockHttpClient.post(
-          any(),
-          headers: any(named: 'headers'),
-          body: any(named: 'body'),
-        ),
-      ).thenAnswer((_) async => mockResponse);
+      final Dio mockDio = createMockDio('[1, 2, 3]', 200);
+      apiClient = HuggingFaceApiClient(dio: mockDio, apiKey: 'test-key');
 
       expect(
         () => apiClient.postJson(
           uri: Uri.parse('https://api.example.com/test'),
-          payload: {'test': 'data'},
+          payload: <String, dynamic>{'test': 'data'},
           context: 'test',
         ),
         throwsA(

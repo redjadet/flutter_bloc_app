@@ -1,26 +1,26 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
-import 'package:http/http.dart' as http;
 
 typedef JsonMap = Map<String, dynamic>;
 
-/// Thin wrapper around [http.Client] that centralizes Hugging Face specific
+/// Thin wrapper around [Dio] that centralizes Hugging Face specific
 /// headers, error handling and JSON parsing.
 class HuggingFaceApiClient {
   HuggingFaceApiClient({
-    final http.Client? httpClient,
+    final Dio? dio,
     final String? apiKey,
     final Duration requestTimeout = const Duration(seconds: 30),
-  }) : _client = httpClient ?? http.Client(),
+  }) : _dio = dio ?? Dio(),
        _apiKey = _clean(apiKey),
        _requestTimeout = requestTimeout,
-       _ownsClient = httpClient == null;
+       _ownsClient = dio == null;
 
-  final http.Client _client;
+  final Dio _dio;
   final String? _apiKey;
   final Duration _requestTimeout;
   final bool _ownsClient;
@@ -37,12 +37,16 @@ class HuggingFaceApiClient {
     required final JsonMap payload,
     required final String context,
   }) async {
-    final http.Response response = await NetworkGuard.execute<ChatException>(
-      request: () => _client.post(
-        uri,
-        headers: _headers(),
+    final Response<String>
+    response = await NetworkGuard.executeDio<String, ChatException>(
+      request: () => _dio.post<String>(
+        uri.toString(),
         // check-ignore: small payload (<8KB) - request body is small
-        body: jsonEncode(payload),
+        data: jsonEncode(payload),
+        options: Options(
+          headers: _headers(),
+          responseType: ResponseType.plain,
+        ),
       ),
       timeout: _requestTimeout,
       isSuccess: (final statusCode) => statusCode < 400,
@@ -56,7 +60,7 @@ class HuggingFaceApiClient {
         final String message = formatError(res);
         return ChatException(message);
       },
-      onException: (final error) =>
+      onException: (final _) =>
           const ChatException('Failed to contact chat service.'),
       onFailureLog: (final res) {
         AppLogger.error(
@@ -67,8 +71,10 @@ class HuggingFaceApiClient {
       },
     );
 
-    final String contentType =
-        response.headers['content-type']?.toLowerCase() ?? '';
+    final String? contentTypeHeader = response.headers
+        .value('content-type')
+        ?.toLowerCase();
+    final String contentType = contentTypeHeader ?? '';
     if (!contentType.contains('application/json')) {
       AppLogger.error(
         'HuggingFaceApiClient.$context failed',
@@ -78,8 +84,18 @@ class HuggingFaceApiClient {
       throw const ChatException('Chat service returned unsupported content.');
     }
 
+    final String? body = response.data;
+    if (body == null || body.isEmpty) {
+      AppLogger.error(
+        'HuggingFaceApiClient.$context failed',
+        'Empty response body',
+        StackTrace.current,
+      );
+      throw const ChatException('Chat service returned invalid response.');
+    }
+
     try {
-      return await decodeJsonMap(response.body);
+      return await decodeJsonMap(body);
     } on FormatException catch (e, stackTrace) {
       if (e.message == 'Expected a JSON object') {
         AppLogger.error(
@@ -102,7 +118,7 @@ class HuggingFaceApiClient {
 
   void dispose() {
     if (_ownsClient) {
-      _client.close();
+      _dio.close();
     }
   }
 
@@ -112,9 +128,17 @@ class HuggingFaceApiClient {
     return trimmed.isEmpty ? null : trimmed;
   }
 
-  static String formatError(final http.Response response) {
-    final int code = response.statusCode;
-    final String body = response.body;
+  /// Formats an error message from a Dio [Response].
+  static String formatError(final Response<String> response) {
+    final int code = response.statusCode ?? 0;
+    final String body = response.data ?? '';
+    return _formatErrorFromStatusAndBody(code, body);
+  }
+
+  static String _formatErrorFromStatusAndBody(
+    final int code,
+    final String body,
+  ) {
     String? detail;
 
     try {

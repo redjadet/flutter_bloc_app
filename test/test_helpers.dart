@@ -33,7 +33,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Generic in-memory repository used by tests to reduce bespoke mock classes.
@@ -137,7 +137,7 @@ Future<void> loadAppFontsForTests() async {
 /// [runWithHuggingFaceHttpClientOverride] to keep overrides scoped.
 @Deprecated('Prefer runWithHuggingFaceHttpClientOverride for scoped overrides.')
 void overrideHuggingFaceHttpClient(
-  http.Client client, {
+  Dio dio, {
   required String apiKey,
   required String model,
   required bool useChatCompletions,
@@ -148,12 +148,9 @@ void overrideHuggingFaceHttpClient(
   if (getIt.isRegistered<HuggingFaceApiClient>()) {
     getIt.unregister<HuggingFaceApiClient>();
   }
-  if (getIt.isRegistered<http.Client>()) {
-    getIt.unregister<http.Client>();
-  }
 
   _registerHuggingFaceDependencies(
-    client,
+    dio,
     apiKey: apiKey,
     model: model,
     useChatCompletions: useChatCompletions,
@@ -161,9 +158,9 @@ void overrideHuggingFaceHttpClient(
 }
 
 /// Runs [action] within a GetIt scope that overrides Hugging Face dependencies.
-/// The provided [client] is automatically disposed if [closeClient] is true.
+/// The provided [dio] is automatically closed if [closeClient] is true.
 Future<T> runWithHuggingFaceHttpClientOverride<T>({
-  required http.Client client,
+  required Dio dio,
   required String apiKey,
   required String model,
   required bool useChatCompletions,
@@ -172,7 +169,7 @@ Future<T> runWithHuggingFaceHttpClientOverride<T>({
 }) async {
   getIt.pushNewScope(scopeName: 'huggingface-test-override');
   _registerHuggingFaceDependencies(
-    client,
+    dio,
     apiKey: apiKey,
     model: model,
     useChatCompletions: useChatCompletions,
@@ -181,22 +178,20 @@ Future<T> runWithHuggingFaceHttpClientOverride<T>({
     return await action();
   } finally {
     if (closeClient) {
-      client.close();
+      dio.close();
     }
     await getIt.popScope();
   }
 }
 
 void _registerHuggingFaceDependencies(
-  http.Client client, {
+  Dio dio, {
   required String apiKey,
   required String model,
   required bool useChatCompletions,
 }) {
-  getIt.registerSingleton<http.Client>(client);
   getIt.registerLazySingleton<HuggingFaceApiClient>(
-    () =>
-        HuggingFaceApiClient(httpClient: getIt<http.Client>(), apiKey: apiKey),
+    () => HuggingFaceApiClient(dio: dio, apiKey: apiKey),
   );
   getIt.registerLazySingleton<HuggingFacePayloadBuilder>(
     () => const HuggingFacePayloadBuilder(),

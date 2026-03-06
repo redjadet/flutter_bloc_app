@@ -1,11 +1,35 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
+
+Dio createMockDio(
+  final String body,
+  final int statusCode, {
+  final String contentType = 'application/json',
+}) {
+  final dio = Dio();
+  dio.interceptors.add(
+    InterceptorsWrapper(
+      onRequest: (options, handler) {
+        handler.resolve(
+          Response<String>(
+            requestOptions: options,
+            data: body,
+            statusCode: statusCode,
+            headers: Headers.fromMap({
+              'content-type': [contentType],
+            }),
+          ),
+        );
+      },
+    ),
+  );
+  return dio;
+}
 
 void main() {
   group('HuggingFaceApiClient', () {
@@ -15,17 +39,8 @@ void main() {
     });
 
     test('throws when response content-type is not JSON', () async {
-      final mockClient = MockClient((request) async {
-        return http.Response(
-          'binary',
-          200,
-          headers: {'content-type': 'text/plain'},
-        );
-      });
-      final apiClient = HuggingFaceApiClient(
-        httpClient: mockClient,
-        apiKey: 'token',
-      );
+      final mockDio = createMockDio('binary', 200, contentType: 'text/plain');
+      final apiClient = HuggingFaceApiClient(dio: mockDio, apiKey: 'token');
 
       await AppLogger.silenceAsync(() async {
         await expectLater(
@@ -40,17 +55,8 @@ void main() {
     });
 
     test('throws when response body is not a JSON map', () async {
-      final mockClient = MockClient((request) async {
-        return http.Response(
-          jsonEncode(<int>[1, 2, 3]),
-          200,
-          headers: {'content-type': 'application/json'},
-        );
-      });
-      final apiClient = HuggingFaceApiClient(
-        httpClient: mockClient,
-        apiKey: 'token',
-      );
+      final mockDio = createMockDio(jsonEncode(<int>[1, 2, 3]), 200);
+      final apiClient = HuggingFaceApiClient(dio: mockDio, apiKey: 'token');
 
       await AppLogger.silenceAsync(() async {
         await expectLater(
@@ -67,17 +73,27 @@ void main() {
     test(
       'includes authorization header and returns JSON map on success',
       () async {
-        late http.Request capturedRequest;
-        final mockClient = MockClient((request) async {
-          capturedRequest = request;
-          return http.Response(
-            jsonEncode(<String, dynamic>{'ok': true}),
-            200,
-            headers: {'content-type': 'application/json; charset=utf-8'},
-          );
-        });
+        RequestOptions? capturedOptions;
+        final dio = Dio();
+        dio.interceptors.add(
+          InterceptorsWrapper(
+            onRequest: (options, handler) {
+              capturedOptions = options;
+              handler.resolve(
+                Response<String>(
+                  requestOptions: options,
+                  data: jsonEncode(<String, dynamic>{'ok': true}),
+                  statusCode: 200,
+                  headers: Headers.fromMap({
+                    'content-type': ['application/json; charset=utf-8'],
+                  }),
+                ),
+              );
+            },
+          ),
+        );
         final apiClient = HuggingFaceApiClient(
-          httpClient: mockClient,
+          dio: dio,
           apiKey: ' secret-token ',
         );
 
@@ -90,20 +106,17 @@ void main() {
         });
 
         expect(result['ok'], isTrue);
-        expect(capturedRequest.headers['Authorization'], 'Bearer secret-token');
-        expect(capturedRequest.body, contains('"prompt":"hello"'));
+        expect(
+          capturedOptions?.headers['Authorization'],
+          'Bearer secret-token',
+        );
+        expect(capturedOptions?.data, contains('"prompt":"hello"'));
       },
     );
 
     test('throws friendly message when rate limited', () async {
-      final mockClient = MockClient((request) async {
-        return http.Response(
-          '{}',
-          429,
-          headers: {'content-type': 'application/json'},
-        );
-      });
-      final apiClient = HuggingFaceApiClient(httpClient: mockClient);
+      final mockDio = createMockDio('{}', 429);
+      final apiClient = HuggingFaceApiClient(dio: mockDio);
 
       await AppLogger.silenceAsync(() async {
         await expectLater(
@@ -124,14 +137,11 @@ void main() {
     });
 
     test('wraps HTTP errors with formatted message', () async {
-      final mockClient = MockClient((request) async {
-        return http.Response(
-          jsonEncode(<String, String>{'error': 'bad request'}),
-          400,
-          headers: {'content-type': 'application/json'},
-        );
-      });
-      final apiClient = HuggingFaceApiClient(httpClient: mockClient);
+      final mockDio = createMockDio(
+        jsonEncode(<String, String>{'error': 'bad request'}),
+        400,
+      );
+      final apiClient = HuggingFaceApiClient(dio: mockDio);
 
       await AppLogger.silenceAsync(() async {
         await expectLater(
@@ -152,10 +162,20 @@ void main() {
     });
 
     test('wraps unexpected exceptions in generic ChatException', () async {
-      final mockClient = MockClient((request) async {
-        throw http.ClientException('no network');
-      });
-      final apiClient = HuggingFaceApiClient(httpClient: mockClient);
+      final dio = Dio();
+      dio.interceptors.add(
+        InterceptorsWrapper(
+          onRequest: (_, handler) {
+            handler.reject(
+              DioException(
+                requestOptions: RequestOptions(path: 'https://example.com'),
+                error: Exception('no network'),
+              ),
+            );
+          },
+        ),
+      );
+      final apiClient = HuggingFaceApiClient(dio: dio);
 
       await AppLogger.silenceAsync(() async {
         await expectLater(
@@ -177,44 +197,50 @@ void main() {
   });
 
   group('HuggingFaceApiClient.formatError', () {
+    Response<String> response(int statusCode, String data) => Response<String>(
+      requestOptions: RequestOptions(path: '/'),
+      data: data,
+      statusCode: statusCode,
+    );
+
     test('returns authentication hint for 401 without detail', () {
-      final http.Response response = http.Response('{"error":null}', 401);
       expect(
-        HuggingFaceApiClient.formatError(response),
+        HuggingFaceApiClient.formatError(response(401, '{"error":null}')),
         'Chat service authentication failed (HTTP 401). '
         'Check your Hugging Face token or model.',
       );
     });
 
     test('includes detail message when present', () {
-      final http.Response response = http.Response(
-        jsonEncode(<String, String>{'message': 'model missing'}),
-        403,
-      );
       expect(
-        HuggingFaceApiClient.formatError(response),
+        HuggingFaceApiClient.formatError(
+          response(
+            403,
+            jsonEncode(<String, String>{'message': 'model missing'}),
+          ),
+        ),
         'Chat service authentication failed (HTTP 403): model missing. '
         'Verify your Hugging Face token/model access.',
       );
     });
 
     test('falls back to generic message when parsing fails', () {
-      final http.Response response = http.Response('unparsable', 500);
       expect(
-        HuggingFaceApiClient.formatError(response),
+        HuggingFaceApiClient.formatError(response(500, 'unparsable')),
         'Chat service error (HTTP 500): unparsable',
       );
     });
 
     test('stringifies non-string error details when present', () {
-      final http.Response response = http.Response(
-        jsonEncode(<String, Object?>{
-          'error': <String, Object?>{'code': 'MODEL_UNAVAILABLE'},
-        }),
-        400,
-      );
       expect(
-        HuggingFaceApiClient.formatError(response),
+        HuggingFaceApiClient.formatError(
+          response(
+            400,
+            jsonEncode(<String, Object?>{
+              'error': <String, Object?>{'code': 'MODEL_UNAVAILABLE'},
+            }),
+          ),
+        ),
         'Chat service error (HTTP 400): {code: MODEL_UNAVAILABLE}',
       );
     });

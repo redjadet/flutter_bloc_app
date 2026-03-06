@@ -1,11 +1,11 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
+import 'package:flutter_bloc_app/features/chart/data/api/coingecko_api.dart';
 import 'package:flutter_bloc_app/features/chart/data/http_chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 
 void main() {
   const List<List<num>> prices = <List<num>>[
@@ -15,18 +15,47 @@ void main() {
   ];
   const Map<String, Object> pricesPayload = <String, Object>{'prices': prices};
 
+  Dio createMockDio(String Function() body, int statusCode) {
+    final dio = Dio();
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          handler.resolve(
+            Response<String>(
+              requestOptions: options,
+              data: body(),
+              statusCode: statusCode,
+            ),
+          );
+        },
+      ),
+    );
+    return dio;
+  }
+
   setUp(() {
     HttpChartRepository.clearCache();
   });
 
   test('fetchTrendingCounts parses payload and caches results', () async {
     int requestCount = 0;
-    final repository = HttpChartRepository(
-      client: MockClient((request) async {
-        requestCount++;
-        return http.Response(jsonEncode(pricesPayload), 200);
-      }),
+    final dio = Dio();
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          requestCount++;
+          handler.resolve(
+            Response<String>(
+              requestOptions: options,
+              data: jsonEncode(pricesPayload),
+              statusCode: 200,
+            ),
+          );
+        },
+      ),
     );
+    final api = CoingeckoApi(dio);
+    final repository = HttpChartRepository(api: api);
 
     final first = await AppLogger.silenceAsync(
       () => repository.fetchTrendingCounts(),
@@ -47,20 +76,34 @@ void main() {
 
   test('fetchTrendingCounts returns cached data when request fails', () async {
     int requestCount = 0;
-    final responses = <http.Response>[
-      http.Response(jsonEncode(pricesPayload), 200),
-      http.Response('server error', 500),
-    ];
-
     DateTime current = DateTime(2024, 1, 1, 12);
-
-    final repository = HttpChartRepository(
-      client: MockClient((request) async {
-        requestCount++;
-        return responses[requestCount - 1];
-      }),
-      now: () => current,
+    final dio = Dio();
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          requestCount++;
+          if (requestCount == 1) {
+            handler.resolve(
+              Response<String>(
+                requestOptions: options,
+                data: jsonEncode(pricesPayload),
+                statusCode: 200,
+              ),
+            );
+          } else {
+            handler.resolve(
+              Response<String>(
+                requestOptions: options,
+                data: 'server error',
+                statusCode: 500,
+              ),
+            );
+          }
+        },
+      ),
     );
+    final api = CoingeckoApi(dio);
+    final repository = HttpChartRepository(api: api, now: () => current);
 
     final first = await AppLogger.silenceAsync(
       () => repository.fetchTrendingCounts(),
@@ -77,12 +120,11 @@ void main() {
   test(
     'fetchTrendingCounts falls back to defaults when request fails without cache',
     () async {
-      DateTime current = DateTime(2024, 1, 1, 12);
+      final dio = createMockDio(() => 'server error', 500);
+      final api = CoingeckoApi(dio);
       final repository = HttpChartRepository(
-        client: MockClient((request) async {
-          return http.Response('server error', 500);
-        }),
-        now: () => current,
+        api: api,
+        now: () => DateTime(2024, 1, 1, 12),
       );
 
       final result = await AppLogger.silenceAsync(
@@ -97,12 +139,11 @@ void main() {
   test(
     'fetchTrendingCounts falls back to defaults when payload is invalid',
     () async {
-      DateTime current = DateTime(2024, 1, 1, 12);
+      final dio = createMockDio(() => '{"prices": "not-a-list"}', 200);
+      final api = CoingeckoApi(dio);
       final repository = HttpChartRepository(
-        client: MockClient((request) async {
-          return http.Response('{"prices": "not-a-list"}', 200);
-        }),
-        now: () => current,
+        api: api,
+        now: () => DateTime(2024, 1, 1, 12),
       );
 
       final result = await AppLogger.silenceAsync(

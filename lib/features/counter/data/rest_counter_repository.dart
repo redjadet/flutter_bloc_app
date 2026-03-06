@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
 import 'package:flutter_bloc_app/shared/utils/repository_initial_load_helper.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
-import 'package:http/http.dart' as http;
 
 part 'rest_counter_repository_internal.dart';
 part 'rest_counter_repository_watch.dart';
@@ -29,11 +29,11 @@ part 'rest_counter_repository_watch.dart';
 class RestCounterRepository implements CounterRepository {
   RestCounterRepository({
     required final String baseUrl,
-    final http.Client? client,
+    final Dio? client,
     final Map<String, String>? defaultHeaders,
     final Duration requestTimeout = const Duration(seconds: 10),
   }) : _baseUri = _parseBaseUri(baseUrl),
-       _client = client ?? http.Client(),
+       _client = client ?? Dio(),
        _defaultHeaders = {if (defaultHeaders != null) ...defaultHeaders},
        _requestTimeout = requestTimeout,
        _ownsClient = client == null {
@@ -44,7 +44,7 @@ class RestCounterRepository implements CounterRepository {
   }
 
   final Uri _baseUri;
-  final http.Client _client;
+  final Dio _client;
   final Map<String, String> _defaultHeaders;
   final Duration _requestTimeout;
   final bool _ownsClient;

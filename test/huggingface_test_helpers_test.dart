@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
@@ -7,8 +8,6 @@ import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.
 import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
 
 import 'test_helpers.dart';
 
@@ -21,21 +20,28 @@ void main() {
     test(
       'runWithHuggingFaceHttpClientOverride sets and restores scope',
       () async {
-        final baselineClient = MockClient((request) async {
-          return http.Response(
-            jsonEncode(<String, dynamic>{'status': 'baseline'}),
-            200,
-            headers: {'content-type': 'application/json'},
-          );
-        });
+        final baselineDio = Dio();
+        baselineDio.interceptors.add(
+          InterceptorsWrapper(
+            onRequest: (options, handler) {
+              handler.resolve(
+                Response<String>(
+                  requestOptions: options,
+                  data: jsonEncode(<String, dynamic>{'status': 'baseline'}),
+                  statusCode: 200,
+                  headers: Headers.fromMap({
+                    'content-type': ['application/json'],
+                  }),
+                ),
+              );
+            },
+          ),
+        );
 
         getIt.pushNewScope(scopeName: 'baseline');
-        getIt.registerSingleton<http.Client>(baselineClient);
+        getIt.registerSingleton<Dio>(baselineDio);
         getIt.registerLazySingleton<HuggingFaceApiClient>(
-          () => HuggingFaceApiClient(
-            httpClient: getIt<http.Client>(),
-            apiKey: 'baseline',
-          ),
+          () => HuggingFaceApiClient(dio: getIt<Dio>(), apiKey: 'baseline'),
         );
         getIt.registerLazySingleton<ChatRepository>(
           () => HuggingfaceChatRepository(
@@ -49,22 +55,32 @@ void main() {
           ),
         );
 
-        final mockClient = MockClient((request) async {
-          return http.Response(
-            jsonEncode(<String, dynamic>{
-              'conversation': <String, dynamic>{
-                'past_user_inputs': const <String>[],
-                'generated_responses': const <String>[],
-              },
-              'generated_text': 'override',
-            }),
-            200,
-            headers: {'content-type': 'application/json'},
-          );
-        });
+        final mockDio = Dio();
+        mockDio.interceptors.add(
+          InterceptorsWrapper(
+            onRequest: (options, handler) {
+              handler.resolve(
+                Response<String>(
+                  requestOptions: options,
+                  data: jsonEncode(<String, dynamic>{
+                    'conversation': <String, dynamic>{
+                      'past_user_inputs': const <String>[],
+                      'generated_responses': const <String>[],
+                    },
+                    'generated_text': 'override',
+                  }),
+                  statusCode: 200,
+                  headers: Headers.fromMap({
+                    'content-type': ['application/json'],
+                  }),
+                ),
+              );
+            },
+          ),
+        );
 
         final result = await runWithHuggingFaceHttpClientOverride(
-          client: mockClient,
+          dio: mockDio,
           apiKey: 'override',
           model: 'override-model',
           useChatCompletions: false,
@@ -79,8 +95,7 @@ void main() {
         );
 
         expect(result.reply.text, 'override');
-        // After scope pop, baseline client should still be registered.
-        expect(getIt<http.Client>(), same(baselineClient));
+        expect(getIt<Dio>(), same(baselineDio));
 
         await getIt.popScope();
       },

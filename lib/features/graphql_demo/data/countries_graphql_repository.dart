@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
@@ -8,16 +9,14 @@ import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
-import 'package:http/http.dart' as http;
 
 /// GraphQL-backed repository that talks to https://countries.trevorblades.com.
 ///
-/// [http.Client] instances are injected via `get_it` so DI can dispose them
+/// [Dio] instances are injected via `get_it` so DI can dispose them
 /// when the app shuts down. Avoid constructing new clients directly in
 /// repositories to keep connection pooling and teardown consistent.
 class CountriesGraphqlRepository implements GraphqlDemoRepository {
-  CountriesGraphqlRepository({final http.Client? client})
-    : _client = client ?? http.Client();
+  CountriesGraphqlRepository({final Dio? client}) : _client = client ?? Dio();
 
   static const String _opContinents = 'Continents';
   static const String _opAllCountries = 'AllCountries';
@@ -27,7 +26,7 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
     'Content-Type': 'application/json',
   };
 
-  final http.Client _client;
+  final Dio _client;
 
   @override
   GraphqlDataSource get lastSource => GraphqlDataSource.remote;
@@ -103,7 +102,6 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
     final Map<String, dynamic>? variables,
     final String? operationName,
   }) async {
-    final Uri uri = Uri.parse(_endpoint);
     final Map<String, dynamic> payload = <String, dynamic>{
       'query': query.trim(),
     };
@@ -115,22 +113,25 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
     }
 
     const Duration timeout = Duration(seconds: 10);
-    final http.Response
-    response = await NetworkGuard.execute<GraphqlDemoException>(
-      request: () => _client.post(
-        uri,
-        headers: _headers,
-        // check-ignore: small payload (<8KB) - GraphQL request body is small
-        body: jsonEncode(payload),
+    // check-ignore: small payload (<8KB) - GraphQL request body is small
+    final String body = jsonEncode(payload);
+    final Response<String>
+    response = await NetworkGuard.executeDio<String, GraphqlDemoException>(
+      request: () => _client.post<String>(
+        _endpoint,
+        data: body,
+        options: Options(headers: _headers),
       ),
       timeout: timeout,
       isSuccess: (final statusCode) => statusCode == 200,
       logContext: 'CountriesGraphqlRepository._postQuery',
       onHttpFailure: (final res) {
-        final bool isServerError = res.statusCode >= 500;
+        final int? statusCode = res.statusCode;
+        final bool isServerError = (statusCode ?? 0) >= 500;
+        final String? bodyData = res.data;
         return GraphqlDemoException(
-          'Unexpected status code: ${res.statusCode}',
-          cause: res.body.isNotEmpty ? res.body : null,
+          'Unexpected status code: $statusCode',
+          cause: bodyData != null && bodyData.isNotEmpty ? bodyData : null,
           type: isServerError
               ? GraphqlDemoErrorType.server
               : GraphqlDemoErrorType.invalidRequest,
@@ -150,9 +151,17 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
       },
     );
 
+    final String? responseBody = response.data;
+    if (responseBody == null || responseBody.isEmpty) {
+      throw GraphqlDemoException(
+        'Empty GraphQL response',
+        type: GraphqlDemoErrorType.data,
+      );
+    }
+
     final Map<String, dynamic> decoded;
     try {
-      decoded = await decodeJsonMap(response.body);
+      decoded = await decodeJsonMap(responseBody);
     } on FormatException {
       throw GraphqlDemoException(
         'Malformed GraphQL response',

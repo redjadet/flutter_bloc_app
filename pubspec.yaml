@@ -37,6 +37,7 @@ dependencies:
   confetti: ^0.8.0
   connectivity_plus: ^7.0.0
   cupertino_icons: ^1.0.8
+  dio: ^5.8.0
   equatable: ^2.0.5
   fancy_shimmer_image: ^2.0.3
   firebase_analytics: ^12.0.4
@@ -69,7 +70,6 @@ dependencies:
   google_maps_flutter: ^2.14.0
   hive: ^2.2.0
   hive_flutter: ^1.1.0
-  http: ^1.6.0
   image_picker: ^1.2.1
   intl: ^0.20.2
   json_annotation: ^4.9.0
@@ -81,6 +81,7 @@ dependencies:
   package_info_plus: ^9.0.0
   path_provider: ^2.1.1
   responsive_framework: ^1.5.1
+  retrofit: ^4.9.0
   shared_preferences: ^2.5.3
   skeletonizer: ^2.1.0+1
   wallet_connect_v2: ^1.0.0
@@ -110,6 +111,7 @@ dev_dependencies:
     path: custom_lints/mix_lint
   mock_exceptions: ^0.8.2
   mocktail: ^1.0.4
+  retrofit_generator: ^10.0.0
   very_good_analysis: ^10.2.0
 
 dependency_overrides:

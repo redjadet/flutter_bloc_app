@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';
@@ -5,7 +6,6 @@ import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
 
 void main() {
   group('HuggingfaceChatRepository', () {
@@ -127,7 +127,7 @@ class _StubApiClient extends HuggingFaceApiClient {
     responder,
   }) : _hasApiKey = hasApiKey,
        _responder = responder,
-       super(httpClient: http.Client(), apiKey: 'token');
+       super(dio: Dio(), apiKey: 'token');
 
   final bool _hasApiKey;
   final Future<Map<String, dynamic>> Function(RequestSnapshot request)
