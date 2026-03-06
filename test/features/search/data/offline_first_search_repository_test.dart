@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter_bloc_app/features/search/data/hive_search_cache_repository.dart';
 import 'package:flutter_bloc_app/features/search/data/offline_first_search_repository.dart';
-import 'package:flutter_bloc_app/features/search/data/search_cache_repository.dart';
+import 'package:flutter_bloc_app/features/search/domain/search_cache_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
@@ -80,7 +81,7 @@ void main() {
         keyManager: HiveKeyManager(storage: InMemorySecretStorage()),
       );
       await hiveService.initialize();
-      cacheRepository = SearchCacheRepository(hiveService: hiveService);
+      cacheRepository = HiveSearchCacheRepository(hiveService: hiveService);
       pendingRepository = PendingSyncRepository(hiveService: hiveService);
       registry = SyncableRepositoryRegistry();
       remoteRepository = _FakeRemoteRepository();

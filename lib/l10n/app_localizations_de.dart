@@ -1695,4 +1695,37 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get openIotDemoTooltip => 'IoT-Demo öffnen';
+
+  @override
+  String get searchAllResultsSectionTitle => 'ALLE ERGEBNISSE';
+
+  @override
+  String get searchErrorLoadingResults => 'Fehler beim Laden der Ergebnisse';
+
+  @override
+  String get searchNoResultsFound => 'Keine Ergebnisse gefunden';
+
+  @override
+  String get profileSeeMore => 'MEHR ANZEIGEN';
+
+  @override
+  String get moreTooltip => 'Mehr';
+
+  @override
+  String get whiteboardPageTitle => 'Whiteboard';
+
+  @override
+  String get playlearnNoWords => 'Keine Wörter';
+
+  @override
+  String get playlearnNoTopics => 'Keine Themen';
+
+  @override
+  String get commonEmptyStateTryAgain => 'Erneut versuchen';
+
+  @override
+  String get profileNoCachedProfile => 'Kein zwischengespeichertes Profil';
+
+  @override
+  String get loggedOutPhotoLabel => 'Foto';
 }

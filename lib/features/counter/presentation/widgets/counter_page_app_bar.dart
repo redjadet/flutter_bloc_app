@@ -19,7 +19,6 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   final String title;
   final VoidCallback onOpenSettings;
-  static const String _moreTooltip = 'More';
   static final List<OverflowItem> _overflowItems = <OverflowItem>[
     OverflowItem(
       action: OverflowAction.charts,
@@ -120,7 +119,7 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: const Icon(Icons.settings),
       ),
       PopupMenuButton<OverflowAction>(
-        tooltip: _moreTooltip,
+        tooltip: l10n.moreTooltip,
         onSelected: (final action) => _handleOverflowSelection(
           context,
           action,
@@ -179,7 +178,7 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
           CupertinoIconButton(
             icon: CupertinoIcons.ellipsis_vertical,
             onPressed: () => _showOverflowSheet(context, l10n),
-            tooltip: _moreTooltip,
+            tooltip: l10n.moreTooltip,
           ),
         ],
       ),
@@ -194,7 +193,7 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
     await showCupertinoModalPopup<void>(
       context: parentContext,
       builder: (final sheetContext) => CupertinoActionSheet(
-        title: const Text(_moreTooltip),
+        title: Text(l10n.moreTooltip),
         actions: _overflowItems
             .map(
               (final item) => CupertinoActionSheetAction(

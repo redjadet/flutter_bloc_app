@@ -1691,4 +1691,38 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get openIotDemoTooltip => 'Ouvrir la démo IoT';
+
+  @override
+  String get searchAllResultsSectionTitle => 'TOUS LES RÉSULTATS';
+
+  @override
+  String get searchErrorLoadingResults =>
+      'Erreur lors du chargement des résultats';
+
+  @override
+  String get searchNoResultsFound => 'Aucun résultat trouvé';
+
+  @override
+  String get profileSeeMore => 'VOIR PLUS';
+
+  @override
+  String get moreTooltip => 'Plus';
+
+  @override
+  String get whiteboardPageTitle => 'Tableau blanc';
+
+  @override
+  String get playlearnNoWords => 'Aucun mot';
+
+  @override
+  String get playlearnNoTopics => 'Aucun thème';
+
+  @override
+  String get commonEmptyStateTryAgain => 'Réessayer';
+
+  @override
+  String get profileNoCachedProfile => 'Aucun profil en cache';
+
+  @override
+  String get loggedOutPhotoLabel => 'photo';
 }

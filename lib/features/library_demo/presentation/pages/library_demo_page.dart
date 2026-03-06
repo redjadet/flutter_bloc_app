@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_body.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_theme.dart';
+import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 
 class LibraryDemoPage extends StatefulWidget {
-  const LibraryDemoPage({super.key});
+  const LibraryDemoPage({
+    required this.scapesRepository,
+    required this.timerService,
+    super.key,
+  });
+
+  final ScapesRepository scapesRepository;
+  final TimerService timerService;
 
   @override
   State<LibraryDemoPage> createState() => _LibraryDemoPageState();
@@ -27,8 +36,17 @@ class _LibraryDemoPageState extends State<LibraryDemoPage> {
 
   @override
   Widget build(final BuildContext context) {
+    final ScapesRepository scapesRepository = widget.scapesRepository;
+    final TimerService timerService = widget.timerService;
     final ThemeData theme = Theme.of(context);
     final ThemeData pageTheme = theme.copyWith(
+      extensions: () {
+        final List<ThemeExtension<dynamic>> list = [
+          EpochThemeExtension.defaults,
+          ...theme.extensions.values,
+        ];
+        return list;
+      }(),
       scaffoldBackgroundColor: EpochColors.warmGrey,
       appBarTheme: theme.appBarTheme.copyWith(
         backgroundColor: EpochColors.warmGrey,
@@ -49,6 +67,8 @@ class _LibraryDemoPageState extends State<LibraryDemoPage> {
             isGridView: _isGridView,
             onGridPressed: _toggleToGridView,
             onListPressed: _toggleToListView,
+            scapesRepository: scapesRepository,
+            timerService: timerService,
           ),
         ),
       ),

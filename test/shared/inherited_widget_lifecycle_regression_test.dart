@@ -30,7 +30,13 @@ void main() {
     testWidgets(
       'PlaylearnPage builds without reading context.l10n in BlocProvider create',
       (WidgetTester tester) async {
-        await _pumpLocalizedPage(tester, const PlaylearnPage());
+        await _pumpLocalizedPage(
+          tester,
+          PlaylearnPage(
+            repository: getIt<VocabularyRepository>(),
+            audioService: getIt<AudioPlaybackService>(),
+          ),
+        );
         expect(tester.takeException(), isNull);
         expect(find.byType(PlaylearnPage), findsOneWidget);
       },
@@ -41,7 +47,11 @@ void main() {
       (WidgetTester tester) async {
         await _pumpLocalizedPage(
           tester,
-          const VocabularyListPage(topicId: 'animals'),
+          VocabularyListPage(
+            topicId: 'animals',
+            repository: getIt<VocabularyRepository>(),
+            audioService: getIt<AudioPlaybackService>(),
+          ),
         );
         expect(tester.takeException(), isNull);
         expect(find.byType(VocabularyListPage), findsOneWidget);

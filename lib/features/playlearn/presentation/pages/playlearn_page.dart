@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_service.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/playlearn_cubit.dart';
@@ -12,7 +12,14 @@ import 'package:go_router/go_router.dart';
 
 /// Topic selection page for playlearn (kids vocabulary).
 class PlaylearnPage extends StatelessWidget {
-  const PlaylearnPage({super.key});
+  const PlaylearnPage({
+    required this.repository,
+    required this.audioService,
+    super.key,
+  });
+
+  final VocabularyRepository repository;
+  final AudioPlaybackService audioService;
 
   static String _topicDisplayName(
     final String nameL10nKey,
@@ -29,8 +36,8 @@ class PlaylearnPage extends StatelessWidget {
     final l10n = context.l10n;
     return BlocProvider(
       create: (final _) => PlaylearnCubit(
-        repository: getIt<VocabularyRepository>(),
-        audioService: getIt<AudioPlaybackService>(),
+        repository: repository,
+        audioService: audioService,
         l10n: l10n,
       ),
       child: CommonPageLayout(
@@ -47,7 +54,7 @@ class PlaylearnPage extends StatelessWidget {
               );
             }
             if (state.topics.isEmpty) {
-              return const CommonEmptyState(message: 'No topics');
+              return CommonEmptyState(message: l10n.playlearnNoTopics);
             }
             return ListView.separated(
               padding: context.pagePadding,

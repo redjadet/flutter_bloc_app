@@ -1,11 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:go_router/go_router.dart';
 
 /// Creates an authentication redirect function for GoRouter.
 ///
 /// **Authentication Redirect Logic:**
-/// 1. Checks if user is logged in via `FirebaseAuth.currentUser`
+/// 1. Checks if user is logged in via [AuthRepository.currentUser]
 /// 2. Allows deep link navigation to proceed without redirect (for universal links)
 /// 3. Redirects unauthenticated users to `/auth` (except when already on auth page)
 /// 4. Redirects authenticated users away from `/auth` to `/counter` (unless upgrading anonymous account)
@@ -18,7 +18,7 @@ import 'package:go_router/go_router.dart';
 /// **Anonymous Account Upgrading:**
 /// When an anonymous user is on the auth page, they're allowed to stay there
 /// to upgrade their account. Once authenticated, they're redirected to `/counter`.
-GoRouterRedirect createAuthRedirect(final FirebaseAuth auth) =>
+GoRouterRedirect createAuthRedirect(final AuthRepository auth) =>
     (final context, final state) {
       final bool loggedIn = auth.currentUser != null;
       final bool loggingIn = state.matchedLocation == AppRoutes.authPath;

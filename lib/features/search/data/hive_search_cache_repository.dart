@@ -1,15 +1,17 @@
+import 'package:flutter_bloc_app/features/search/domain/search_cache_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
 import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
 
-/// Hive-backed cache for search results.
+/// Hive-backed implementation of [SearchCacheRepository].
 ///
 /// Persists recent search queries and their results locally so the search UI
 /// can hydrate instantly and work offline.
-class SearchCacheRepository extends HiveRepositoryBase {
-  SearchCacheRepository({required super.hiveService});
+class HiveSearchCacheRepository extends HiveRepositoryBase
+    implements SearchCacheRepository {
+  HiveSearchCacheRepository({required super.hiveService});
 
   static const String _boxName = 'search_cache';
   static const String _keyPrefix = 'query_';
@@ -19,10 +21,10 @@ class SearchCacheRepository extends HiveRepositoryBase {
   @override
   String get boxName => _boxName;
 
-  /// Loads cached results for a query, or null if not cached.
+  @override
   Future<List<SearchResult>?> loadCachedResults(final String query) async =>
       StorageGuard.run<List<SearchResult>?>(
-        logContext: 'SearchCacheRepository.loadCachedResults',
+        logContext: 'HiveSearchCacheRepository.loadCachedResults',
         action: () async {
           if (query.isEmpty) {
             return null;
@@ -35,12 +37,12 @@ class SearchCacheRepository extends HiveRepositoryBase {
         fallback: () => null,
       );
 
-  /// Saves search results for a query.
+  @override
   Future<void> saveCachedResults(
     final String query,
     final List<SearchResult> results,
   ) async => StorageGuard.run<void>(
-    logContext: 'SearchCacheRepository.saveCachedResults',
+    logContext: 'HiveSearchCacheRepository.saveCachedResults',
     action: () async {
       if (query.isEmpty) {
         return;
@@ -54,15 +56,14 @@ class SearchCacheRepository extends HiveRepositoryBase {
           .toList(growable: false);
       await box.put(key, serialized);
 
-      // Update recent queries list
       await _addToRecentQueries(box, normalizedQuery);
     },
   );
 
-  /// Loads recent search queries (most recent first).
+  @override
   Future<List<String>> loadRecentQueries() async =>
       StorageGuard.run<List<String>>(
-        logContext: 'SearchCacheRepository.loadRecentQueries',
+        logContext: 'HiveSearchCacheRepository.loadRecentQueries',
         action: () async {
           final Box<dynamic> box = await getBox();
           final dynamic raw = box.get(_keyRecentQueries);
@@ -77,9 +78,9 @@ class SearchCacheRepository extends HiveRepositoryBase {
         fallback: () => const <String>[],
       );
 
-  /// Clears all cached search results.
+  @override
   Future<void> clearCache() async => StorageGuard.run<void>(
-    logContext: 'SearchCacheRepository.clearCache',
+    logContext: 'HiveSearchCacheRepository.clearCache',
     action: () async {
       final Box<dynamic> box = await getBox();
       final List<String> keys = box.keys
@@ -102,11 +103,8 @@ class SearchCacheRepository extends HiveRepositoryBase {
         raw is List<dynamic>
               ? raw.whereType<String>().toList(growable: true)
               : <String>[]
-          // Remove if already exists to avoid duplicates
           ..remove(query)
-          // Add to front
           ..insert(0, query);
-    // Keep only the most recent
     final List<String> trimmed = recent
         .take(_maxRecentQueries)
         .toList(growable: false);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_status_view.dart';
@@ -56,7 +57,9 @@ class CommonEmptyState extends StatelessWidget {
           : PlatformAdaptive.filledButton(
               context: context,
               onPressed: primaryAction,
-              child: Text(primaryActionLabel ?? 'Try Again'),
+              child: Text(
+                primaryActionLabel ?? context.l10n.commonEmptyStateTryAgain,
+              ),
             ),
       semanticsLabel: 'Empty state: $message',
     );

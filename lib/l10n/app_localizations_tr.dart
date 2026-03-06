@@ -1669,4 +1669,37 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get openIotDemoTooltip => 'IoT demosunu aç';
+
+  @override
+  String get searchAllResultsSectionTitle => 'TÜM SONUÇLAR';
+
+  @override
+  String get searchErrorLoadingResults => 'Sonuçlar yüklenirken hata oluştu';
+
+  @override
+  String get searchNoResultsFound => 'Sonuç bulunamadı';
+
+  @override
+  String get profileSeeMore => 'DAHA FAZLA';
+
+  @override
+  String get moreTooltip => 'Daha fazla';
+
+  @override
+  String get whiteboardPageTitle => 'Beyaz tahta';
+
+  @override
+  String get playlearnNoWords => 'Kelime yok';
+
+  @override
+  String get playlearnNoTopics => 'Konu yok';
+
+  @override
+  String get commonEmptyStateTryAgain => 'Tekrar dene';
+
+  @override
+  String get profileNoCachedProfile => 'Önbelleğe alınmış profil yok';
+
+  @override
+  String get loggedOutPhotoLabel => 'fotoğraf';
 }

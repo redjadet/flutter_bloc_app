@@ -1,14 +1,23 @@
 // check-ignore: nonbuilder_lists - ScapesGridView is a custom widget, not GridView constructor
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_theme.dart';
+import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_cubit.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_state.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_view.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 
 class ScapesPage extends StatelessWidget {
-  const ScapesPage({super.key});
+  const ScapesPage({
+    required this.repository,
+    required this.timerService,
+    super.key,
+  });
+
+  final ScapesRepository repository;
+  final TimerService timerService;
 
   @override
   Widget build(final BuildContext context) {
@@ -16,7 +25,10 @@ class ScapesPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return BlocProvider(
-      create: (_) => ScapesCubit(),
+      create: (_) => ScapesCubit(
+        repository: repository,
+        timerService: timerService,
+      ),
       child: Scaffold(
         backgroundColor: EpochColors.darkGrey,
         appBar: AppBar(

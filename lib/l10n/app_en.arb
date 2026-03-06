@@ -2170,5 +2170,49 @@
   "openIotDemoTooltip": "Open IoT Demo",
   "@openIotDemoTooltip": {
     "description": "Tooltip for navigating to the IoT demo page"
+  },
+  "searchAllResultsSectionTitle": "ALL RESULTS",
+  "@searchAllResultsSectionTitle": {
+    "description": "Section title for all search results"
+  },
+  "searchErrorLoadingResults": "Error loading results",
+  "@searchErrorLoadingResults": {
+    "description": "Error message when search results fail to load"
+  },
+  "searchNoResultsFound": "No results found",
+  "@searchNoResultsFound": {
+    "description": "Message when search returns no results"
+  },
+  "profileSeeMore": "SEE MORE",
+  "@profileSeeMore": {
+    "description": "Button label to see more profile content"
+  },
+  "moreTooltip": "More",
+  "@moreTooltip": {
+    "description": "Tooltip for more options"
+  },
+  "whiteboardPageTitle": "Whiteboard",
+  "@whiteboardPageTitle": {
+    "description": "Title of the whiteboard page"
+  },
+  "playlearnNoWords": "No words",
+  "@playlearnNoWords": {
+    "description": "Empty state when a topic has no vocabulary words"
+  },
+  "playlearnNoTopics": "No topics",
+  "@playlearnNoTopics": {
+    "description": "Empty state when there are no playlearn topics"
+  },
+  "commonEmptyStateTryAgain": "Try Again",
+  "@commonEmptyStateTryAgain": {
+    "description": "Default label for retry button in empty state"
+  },
+  "profileNoCachedProfile": "No cached profile",
+  "@profileNoCachedProfile": {
+    "description": "Shown when there is no cached profile data"
+  },
+  "loggedOutPhotoLabel": "photo",
+  "@loggedOutPhotoLabel": {
+    "description": "Label for photo in logged-out header"
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter_bloc_app/features/search/data/search_cache_repository.dart';
+import 'package:flutter_bloc_app/features/search/data/hive_search_cache_repository.dart';
+import 'package:flutter_bloc_app/features/search/domain/search_cache_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
@@ -21,7 +22,7 @@ void main() {
         keyManager: HiveKeyManager(storage: InMemorySecretStorage()),
       );
       await hiveService.initialize();
-      repository = SearchCacheRepository(hiveService: hiveService);
+      repository = HiveSearchCacheRepository(hiveService: hiveService);
     });
 
     tearDown(() async {

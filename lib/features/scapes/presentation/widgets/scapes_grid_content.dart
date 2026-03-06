@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scape.dart';
+import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_cubit.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_state.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_view.dart';
@@ -9,11 +11,21 @@ import 'package:flutter_bloc_app/shared/shared.dart';
 /// Reusable scapes grid content that can be embedded in other pages.
 /// Provides its own BlocProvider for the ScapesCubit.
 class ScapesGridContent extends StatelessWidget {
-  const ScapesGridContent({super.key});
+  const ScapesGridContent({
+    required this.repository,
+    required this.timerService,
+    super.key,
+  });
+
+  final ScapesRepository repository;
+  final TimerService timerService;
 
   @override
   Widget build(final BuildContext context) => BlocProvider(
-    create: (_) => ScapesCubit(),
+    create: (_) => ScapesCubit(
+      repository: repository,
+      timerService: timerService,
+    ),
     child: const _ScapesGridContentBody(),
   );
 }

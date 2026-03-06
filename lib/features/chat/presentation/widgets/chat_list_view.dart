@@ -197,9 +197,9 @@ class _ChatDivider extends StatelessWidget {
   const _ChatDivider();
 
   @override
-  Widget build(final BuildContext context) => const Divider(
+  Widget build(final BuildContext context) => Divider(
     height: 0.5,
     thickness: 0.5,
-    color: Color(0x4D000000),
+    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
   );
 }

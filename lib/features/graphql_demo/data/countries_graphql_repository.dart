@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
@@ -27,6 +28,9 @@ class CountriesGraphqlRepository implements GraphqlDemoRepository {
   };
 
   final http.Client _client;
+
+  @override
+  GraphqlDataSource get lastSource => GraphqlDataSource.remote;
 
   @override
   Future<List<GraphqlContinent>> fetchContinents() async {

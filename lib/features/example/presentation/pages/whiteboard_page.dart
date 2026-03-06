@@ -7,8 +7,8 @@ class WhiteboardPage extends StatelessWidget {
   const WhiteboardPage({super.key});
 
   @override
-  Widget build(final BuildContext context) => const CommonPageLayout(
-    title: 'Whiteboard',
-    body: WhiteboardWidget(),
+  Widget build(final BuildContext context) => CommonPageLayout(
+    title: context.l10n.whiteboardPageTitle,
+    body: const WhiteboardWidget(),
   );
 }

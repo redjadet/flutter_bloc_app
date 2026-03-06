@@ -159,7 +159,7 @@ class _ProfileCacheControlsSectionState
       parts.add('Cache size: ${kb}KB');
     }
     if (parts.isEmpty) {
-      return 'No cached profile';
+      return context.l10n.profileNoCachedProfile;
     }
     return parts.join(' · ');
   }

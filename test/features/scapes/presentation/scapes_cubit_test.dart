@@ -1,18 +1,64 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:flutter_bloc_app/features/scapes/data/mock_scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scape.dart';
+import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_cubit.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../test_helpers.dart' show FakeTimerService;
+
+/// Stub that returns completed future so .then() runs in same turn when used in
+/// timer callback.
+class _StubScapesRepository implements ScapesRepository {
+  _StubScapesRepository(this.scapes);
+
+  final List<Scape> scapes;
+
+  @override
+  Future<List<Scape>> loadScapes() => Future.value(List<Scape>.from(scapes));
+}
+
+class _SyncThrowScapesRepository implements ScapesRepository {
+  @override
+  Future<List<Scape>> loadScapes() {
+    throw StateError('sync load failure');
+  }
+}
+
+List<Scape> _defaultScapes() => List.generate(
+  6,
+  (final i) => Scape(
+    id: 'scape_$i',
+    name: 'Scape ${i + 1}',
+    imageUrl: 'https://example.com/$i.jpg',
+    duration: Duration(seconds: 60 + i),
+    assetCount: 10 + i,
+  ),
+);
+
 void main() {
+  late _StubScapesRepository repository;
+  late FakeTimerService timerService;
+
+  setUp(() {
+    repository = _StubScapesRepository(_defaultScapes());
+    timerService = FakeTimerService();
+  });
+
+  ScapesCubit buildCubit() =>
+      ScapesCubit(repository: repository, timerService: timerService);
+
   group('ScapesCubit', () {
     blocTest<ScapesCubit, ScapesState>(
       'initial state emits loading then loads scapes',
-      build: ScapesCubit.new,
+      build: buildCubit,
+      act: (final cubit) =>
+          timerService.elapse(const Duration(milliseconds: 350)),
       // The constructor calls _loadScapes() which emits loading immediately,
       // but bloc_test doesn't capture states emitted synchronously during build phase.
       // We wait for the delayed completion state only.
-      wait: const Duration(milliseconds: 350),
       expect: () => [
         isA<ScapesState>()
             .having((final s) => s.isLoading, 'isLoading', false)
@@ -22,7 +68,7 @@ void main() {
 
     blocTest<ScapesCubit, ScapesState>(
       'toggleViewMode switches between grid and list',
-      build: ScapesCubit.new,
+      build: buildCubit,
       seed: () => const ScapesState(viewMode: ScapesViewMode.grid),
       act: (final cubit) => cubit.toggleViewMode(),
       expect: () => [const ScapesState(viewMode: ScapesViewMode.list)],
@@ -30,7 +76,7 @@ void main() {
 
     blocTest<ScapesCubit, ScapesState>(
       'toggleViewMode switches from list to grid',
-      build: ScapesCubit.new,
+      build: buildCubit,
       seed: () => const ScapesState(viewMode: ScapesViewMode.list),
       act: (final cubit) => cubit.toggleViewMode(),
       expect: () => [const ScapesState(viewMode: ScapesViewMode.grid)],
@@ -38,7 +84,7 @@ void main() {
 
     blocTest<ScapesCubit, ScapesState>(
       'toggleFavorite toggles favorite status for specific scape',
-      build: ScapesCubit.new,
+      build: buildCubit,
       seed: () => ScapesState(
         scapes: [
           Scape(
@@ -75,7 +121,7 @@ void main() {
 
     blocTest<ScapesCubit, ScapesState>(
       'toggleFavorite toggles favorite from true to false',
-      build: ScapesCubit.new,
+      build: buildCubit,
       seed: () => ScapesState(
         scapes: [
           Scape(
@@ -99,11 +145,10 @@ void main() {
     );
 
     test('toggleFavorite does nothing for non-existent scape id', () async {
-      final cubit = ScapesCubit();
+      final cubit = buildCubit();
       addTearDown(cubit.close);
 
-      // Wait for initial load
-      await Future<void>.delayed(const Duration(milliseconds: 350));
+      timerService.elapse(const Duration(milliseconds: 350));
 
       // Set up test state with known scape
       final initialState = cubit.state;
@@ -128,30 +173,44 @@ void main() {
     });
 
     test('reload resets loading state and loads scapes', () async {
-      final cubit = ScapesCubit();
+      // Use real timer so async repository load completes after delay
+      final cubit = ScapesCubit(
+        repository: MockScapesRepository(),
+        timerService: DefaultTimerService(),
+      );
       addTearDown(cubit.close);
 
-      // Wait for initial load to complete
       await Future<void>.delayed(const Duration(milliseconds: 350));
 
-      // Verify initial load completed
       expect(cubit.state.scapes.length, 6);
       expect(cubit.state.isLoading, isFalse);
 
-      // Clear scapes manually and call reload
       cubit.emit(cubit.state.copyWith(scapes: [], isLoading: false));
       cubit.reload();
 
-      // Check loading state is set immediately
       expect(cubit.state.isLoading, isTrue);
       expect(cubit.state.errorMessage, isNull);
 
-      // Wait for reload to complete
-      await Future<void>.delayed(const Duration(milliseconds: 350));
+      await Future<void>.delayed(const Duration(milliseconds: 400));
 
-      // Check loaded state
       expect(cubit.state.isLoading, isFalse);
       expect(cubit.state.scapes.length, 6);
     });
+
+    test(
+      'load emits error state when repository throws synchronously',
+      () async {
+        final cubit = ScapesCubit(
+          repository: _SyncThrowScapesRepository(),
+          timerService: timerService,
+        );
+        addTearDown(cubit.close);
+
+        timerService.elapse(const Duration(milliseconds: 350));
+
+        expect(cubit.state.isLoading, isFalse);
+        expect(cubit.state.errorMessage, contains('sync load failure'));
+      },
+    );
   });
 }

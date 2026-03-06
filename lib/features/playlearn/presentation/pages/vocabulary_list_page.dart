@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_service.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/playlearn_cubit.dart';
@@ -12,18 +11,22 @@ import 'package:flutter_bloc_app/shared/shared.dart';
 class VocabularyListPage extends StatelessWidget {
   const VocabularyListPage({
     required this.topicId,
+    required this.repository,
+    required this.audioService,
     super.key,
   });
 
   final String topicId;
+  final VocabularyRepository repository;
+  final AudioPlaybackService audioService;
 
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     return BlocProvider(
       create: (final _) => PlaylearnCubit(
-        repository: getIt<VocabularyRepository>(),
-        audioService: getIt<AudioPlaybackService>(),
+        repository: repository,
+        audioService: audioService,
         l10n: l10n,
       )..loadWordsForTopic(topicId),
       child: CommonPageLayout(
@@ -31,7 +34,7 @@ class VocabularyListPage extends StatelessWidget {
         body: TypeSafeBlocBuilder<PlaylearnCubit, PlaylearnState>(
           builder: (final context, final state) {
             if (state.words.isEmpty && !state.isLoading) {
-              return const CommonEmptyState(message: 'No words');
+              return CommonEmptyState(message: l10n.playlearnNoWords);
             }
             return ListView.builder(
               itemCount: state.words.length,
