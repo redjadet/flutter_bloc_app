@@ -38,7 +38,7 @@ Implement a `dispose()` method if your repository:
    - **Why:** Prevents memory leaks from active subscriptions
 
 2. **Maintains Network Connections**
-   - Example: `EchoWebsocketRepository` (WebSocket), `http.Client` (HTTP connections)
+   - Example: `EchoWebsocketRepository` (WebSocket), shared `Dio` instance (HTTP)
    - **Why:** Ensures connections are properly closed
 
 3. **Holds StreamControllers**

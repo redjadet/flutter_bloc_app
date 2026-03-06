@@ -69,55 +69,11 @@ class SkeletonListTile extends StatelessWidget {
 }
 ```
 
-### 2. HTTP Client Extensions Consolidation
+### 2. HTTP Client Consolidation (historical; current: Dio + interceptors)
 
-**Problem**: `getMapped()` and `postMapped()` methods in `ResilientHttpClientExtensions` duplicated:
+**Historical context**: The app previously used `ResilientHttpClientExtensions` with `getMapped()` / `postMapped()`; common logic was extracted into `_sendMappedRequest()` to avoid duplication across HTTP methods.
 
-- Request creation and header setting
-- Response streaming and conversion
-- Error status code mapping
-- Timeout exception handling
-
-**Solution**: Extracted common logic into `_sendMappedRequest()` private method.
-
-**Location**: `lib/shared/http/resilient_http_client_extensions.dart`
-
-**Impact**:
-
-- ~40 lines of duplicate code removed
-- Consistent error handling across HTTP methods
-- Easier to add new HTTP methods (PUT, DELETE, etc.)
-- Single point of change for request/response handling
-
-**Usage Example**:
-
-```dart
-// Before: Duplicated logic in each method
-Future<http.Response> getMapped(Uri url, {...}) async {
-  try {
-    final request = http.Request('GET', url);
-    // ... 30+ lines of request/response/error handling
-  } on TimeoutException {
-    throw http.ClientException('Request timed out', url);
-  }
-}
-
-Future<http.Response> postMapped(Uri url, {...}) async {
-  try {
-    final request = http.Request('POST', url);
-    // ... 30+ lines of nearly identical code
-  } on TimeoutException {
-    throw http.ClientException('Request timed out', url);
-  }
-}
-
-// After: Shared implementation
-Future<http.Response> getMapped(Uri url, {...}) =>
-  _sendMappedRequest(method: 'GET', url: url, ...);
-
-Future<http.Response> postMapped(Uri url, {...}) =>
-  _sendMappedRequest(method: 'POST', url: url, body: body, ...);
-```
+**Current approach**: The HTTP layer uses a shared **Dio** instance (`lib/shared/http/app_dio.dart`) with interceptors for network check, auth token, telemetry, and retries. Error mapping and timeouts are centralized in `NetworkGuard.executeDio` and `NetworkErrorMapper`. For type-safe REST APIs, Retrofit clients (e.g. `CoingeckoApi` in chart) are built from the same Dio instance. This preserves a single point of change for request/response handling and consistent error behavior without duplicating per-method logic.
 
 ### 3. Settings Repository Consolidation
 
@@ -738,7 +694,7 @@ For cross-cutting concerns that can be applied to multiple classes:
 
 For utility methods on existing types:
 
-- **`ResilientHttpClientExtensions`**: HTTP request methods with error mapping
+- **Dio + interceptors / `NetworkGuard`**: Shared HTTP client with centralized error mapping and timeouts
 - **`CubitContextHelpers`**: Convenient cubit access from `BuildContext`
 - **Responsive extensions**: Spacing, typography, and layout utilities
 

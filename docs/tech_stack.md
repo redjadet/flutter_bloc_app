@@ -23,7 +23,8 @@ This document lists all the technologies, packages, and tools used in this Flutt
 
 ## Networking & APIs
 
-- `http` ^1.6.0 - REST API client
+- `dio` - HTTP client with interceptors (auth, retry, network check, telemetry); shared app instance via `createAppDio()`
+- `retrofit` / `retrofit_generator` - Type-safe REST API clients (e.g. chart `CoingeckoApi`); built from shared Dio
 - `web_socket_channel` ^3.0.3 - WebSocket support
 - `cached_network_image` ^3.4.1 - Image caching
 

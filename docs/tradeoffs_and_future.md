@@ -20,6 +20,6 @@ This document captures known trade-offs and future improvements for the codebase
 ## Future Improvements
 
 - Add role/claims-based auth and per-route authorization guards.
-- Expand token injection beyond `ResilientHttpClient` where needed.
+- Expand token injection beyond the shared Dio client (e.g. third-party SDKs) where needed.
 - Tighten biometric access policy for sensitive flows.
 - Add deeper route-level auth checks for non-root deep links.
