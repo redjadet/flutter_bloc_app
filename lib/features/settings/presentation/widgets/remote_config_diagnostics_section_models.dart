@@ -21,11 +21,15 @@ class _RemoteConfigSyncStatusBanner extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) =>
-      TypeSafeBlocBuilder<SyncStatusCubit, SyncStatusState>(
-        builder: (final context, final syncState) {
-          final bool isOffline =
-              syncState.networkStatus == NetworkStatus.offline;
-          final bool isSyncing = syncState.syncStatus == SyncStatus.syncing;
+      TypeSafeBlocSelector<
+        SyncStatusCubit,
+        SyncStatusState,
+        (NetworkStatus, SyncStatus)
+      >(
+        selector: (final s) => (s.networkStatus, s.syncStatus),
+        builder: (final context, final pair) {
+          final bool isOffline = pair.$1 == NetworkStatus.offline;
+          final bool isSyncing = pair.$2 == SyncStatus.syncing;
           if (!isOffline && !isSyncing) {
             return const SizedBox.shrink();
           }

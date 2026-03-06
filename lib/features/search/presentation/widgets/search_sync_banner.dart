@@ -28,34 +28,40 @@ class _SearchSyncBannerState extends State<SearchSyncBanner> {
   @override
   Widget build(
     final BuildContext context,
-  ) => TypeSafeBlocBuilder<SyncStatusCubit, SyncStatusState>(
-    builder: (final context, final syncState) {
-      final bool isOffline = syncState.networkStatus == NetworkStatus.offline;
-      final bool isSyncing = syncState.syncStatus == SyncStatus.syncing;
-      final bool showBanner = isOffline || isSyncing;
-      if (!showBanner) {
-        return const SizedBox.shrink();
-      }
-      final AppLocalizations l10n = context.l10n;
-      final bool isError = isOffline;
-      final (String title, String message) = syncBannerTitleAndMessage(
-        l10n,
-        isOffline: isOffline,
-        isSyncing: isSyncing,
-        pendingCount: 0,
-      );
+  ) =>
+      TypeSafeBlocSelector<
+        SyncStatusCubit,
+        SyncStatusState,
+        (NetworkStatus, SyncStatus)
+      >(
+        selector: (final s) => (s.networkStatus, s.syncStatus),
+        builder: (final context, final pair) {
+          final bool isOffline = pair.$1 == NetworkStatus.offline;
+          final bool isSyncing = pair.$2 == SyncStatus.syncing;
+          final bool showBanner = isOffline || isSyncing;
+          if (!showBanner) {
+            return const SizedBox.shrink();
+          }
+          final AppLocalizations l10n = context.l10n;
+          final bool isError = isOffline;
+          final (String title, String message) = syncBannerTitleAndMessage(
+            l10n,
+            isOffline: isOffline,
+            isSyncing: isSyncing,
+            pendingCount: 0,
+          );
 
-      return Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: context.responsiveHorizontalGapL,
-          vertical: context.responsiveGapS,
-        ),
-        child: AppMessage(
-          title: title,
-          message: message,
-          isError: isError,
-        ),
+          return Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: context.responsiveHorizontalGapL,
+              vertical: context.responsiveGapS,
+            ),
+            child: AppMessage(
+              title: title,
+              message: message,
+              isError: isError,
+            ),
+          );
+        },
       );
-    },
-  );
 }
