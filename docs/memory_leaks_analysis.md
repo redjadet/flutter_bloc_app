@@ -123,7 +123,7 @@ Services with explicit `dispose` in GetIt:
 - `RetryNotificationService` (via registerHttpServices)
 - `RemoteConfigRepository`
 - `WalletConnectService`
-- `ResilientHttpClient`
+- Shared `Dio` (app HTTP client)
 
 Singletons without `dispose` (typically live for app lifetime):
 

@@ -39,16 +39,16 @@ This document describes **how each major feature is implemented** in this Flutte
 
 **How it was implemented:**
 
-- **HTTP client:** The app uses a shared `ResilientHttpClient` (`lib/shared/http/resilient_http_client.dart`) that wraps `http` and adds:
-  - Optional **Firebase ID token injection** for authenticated requests (when Firebase Auth is configured).
-  - Retry/backoff and network-awareness via `NetworkStatusService` and `RetryNotificationService`.
+- **HTTP client:** The app uses a shared **Dio** instance created by `createAppDio()` (`lib/shared/http/app_dio.dart`) with interceptors for:
+  - Optional **Firebase ID token injection** (`AuthTokenInterceptor`) when Firebase Auth is configured.
+  - Network check, telemetry, and retries via `NetworkCheckInterceptor`, `TelemetryInterceptor`, `RetryInterceptor`, and `RetryNotificationService`.
 - **Token handling:** `AuthTokenManager`
   (`lib/shared/http/auth_token_manager.dart`) caches Firebase ID tokens per
   user, refreshes before expiry, and serializes concurrent refreshes (single
   flight) so parallel 401s do not trigger refresh storms. Retry requests are
   sent with refreshed bearer tokens while preserving per-user cache safety.
-- **Registration:** HTTP-related services (client, chart repo, GraphQL repo, etc.) are registered in `lib/core/di/register_http_services.dart`. Use `ResilientHttpClient` for any new REST/API calls so auth and retries are consistent.
-- **Clean architecture:** API calls live in the **data layer** (repositories); domain defines interfaces. Example: `CountriesGraphqlRepository`, `DelayedChartRepository`, `HuggingfaceChatRepository`.
+- **Registration:** HTTP-related services (Dio, chart repo, GraphQL repo, etc.) are registered in `lib/core/di/register_http_services.dart` and feature `register_*_services.dart`. Use the shared `Dio` (or a Retrofit client built from it) for new REST/API calls so auth and retries are consistent.
+- **Clean architecture:** API calls live in the **data layer** (repositories); domain defines interfaces. Example: `CountriesGraphqlRepository`, `DelayedChartRepository`, `HuggingfaceChatRepository`. Chart uses Retrofit (`CoingeckoApi`) for the CoinGecko endpoint.
 
 **References:**
 
@@ -57,7 +57,7 @@ This document describes **how each major feature is implemented** in this Flutte
 - [New developer guide](new_developer_guide.md) — DI and feature layout
 - [Security & secrets](security_and_secrets.md) — API keys and `SecretConfig`
 
-**Adding a new API:** Create a domain repository interface, implement it in `lib/features/<feature>/data/` using `ResilientHttpClient`, register in `injector_registrations.dart` (or a dedicated `register_*_services.dart`).
+**Adding a new API:** Create a domain repository interface, implement it in `lib/features/<feature>/data/` using the shared `Dio` (or a Retrofit interface under `data/api/` for type-safe clients), register in the feature's `register_*_services.dart` or `injector_registrations.dart`.
 
 ---
 
@@ -180,12 +180,12 @@ tool/test_coverage.sh
 - **Feature:** `lib/features/graphql_demo/`. Remote: `CountriesGraphqlRepository` calls `https://countries.trevorblades.com/`. Cache: `GraphqlDemoCacheRepository` (Hive, encrypted) for continents and countries by filter.
 - **Offline-first:** `OfflineFirstGraphqlDemoRepository` implements cache-first: on success write-through to cache; on failure return cached data when available. Staleness: cache entries expire after 24h.
 - **UI:** GraphQL demo page shows countries/continents and a “Cache/Remote” badge. Settings includes “Clear GraphQL cache” for dev/QA.
-- **DI:** `GraphqlDemoRepository` → `OfflineFirstGraphqlDemoRepository` in `injector_registrations.dart`; remote uses `ResilientHttpClient`.
+- **DI:** `GraphqlDemoRepository` → `OfflineFirstGraphqlDemoRepository` in `injector_registrations.dart`; remote uses shared `Dio`.
 
 **References:**
 
 - [Offline-first GraphQL demo](offline_first/graphql_demo.md) — architecture, behavior, testing, status
-- [Tech stack](tech_stack.md) — `http` and networking
+- [Tech stack](tech_stack.md) — Dio and networking
 - Route and registration: see `lib/app/router/route_groups.dart` and feature `lib/features/graphql_demo/`.
 
 **iOS/Android:** No platform-specific GraphQL config; only HTTP and Hive (already set up).

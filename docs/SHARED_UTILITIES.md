@@ -176,32 +176,28 @@ const kAnimationDuration = Duration(milliseconds: 300);
 
 ### Reliability and retries
 
-- **ResilientHttpClient** (`lib/shared/http/resilient_http_client.dart`): Use for
-  **HTTP** requests. It provides automatic retries for transient failures, 401
-  token refresh, network check before send, and telemetry. 401 refreshes are
-  coordinated via `AuthTokenManager` single-flight gating so concurrent 401s
-  await one refresh operation and then retry with a refreshed bearer token
-  (without a second forced refresh in the retry path). All HTTP entry points
-  should go through this client (or its extensions) with an explicit timeout.
-  The **resilient_http_client_extensions** (`getMapped` / `postMapped`) throw
-  [HttpRequestFailure](lib/shared/utils/http_request_failure.dart) for status ≥
-  400 so repositories and cubits receive a statusCode and can show accurate
-  messages (e.g. 503 "Service temporarily unavailable" vs 401 "Sign in again").
-  [NetworkErrorMapper](lib/shared/utils/network_error_mapper.dart) maps status
-  codes and `HttpRequestFailure` to user-facing messages and
-  [AppErrorCode](lib/shared/utils/error_codes.dart) (including
-  `serviceUnavailable` for 503).
+- **Dio** (shared app instance from `createAppDio()` in `lib/shared/http/app_dio.dart`): Use for
+  **HTTP** requests. It is configured with interceptors for network check, auth token injection,
+  telemetry, and retries. 401 refreshes are coordinated via `AuthTokenManager` and
+  `AuthTokenInterceptor` (single-flight) so concurrent 401s await one refresh and retry with
+  a refreshed bearer token. Repositories use `getIt<Dio>()` or typed Retrofit clients built from it.
+  Use [NetworkGuard.executeDio](lib/shared/utils/network_guard.dart) where you need centralized
+  timeout, status checks, and error mapping; [NetworkErrorMapper](lib/shared/utils/network_error_mapper.dart)
+  maps status codes and `DioException` to user-facing messages and
+  [AppErrorCode](lib/shared/utils/error_codes.dart) (e.g. `serviceUnavailable` for 503).
+- **Retrofit** (optional): For stable REST APIs, define interfaces under `lib/features/<feature>/data/api/`
+  and use generated clients; see `docs/plans/dio_retrofit_integration_plan.md`. Chart uses `CoingeckoApi`.
 - **RetryPolicy** (`lib/shared/utils/retry_policy.dart`): Use for **non-HTTP** retriable work (e.g. repository load, sync steps, external SDK calls). It supports exponential/linear/fixed backoff, jitter, and `CancelToken` so cubits can cancel in-flight retries in `close()`.
 
 When to use which:
 
 | Use case | Use |
 | ---------- | ----- |
-| HTTP GET/POST (API, REST) | ResilientHttpClient + timeout extension |
+| HTTP GET/POST (API, REST) | Dio (or Retrofit client built from Dio) + NetworkGuard where needed |
 | Single async repository call that may fail transiently | RetryPolicy.executeWithRetry with CancelToken from cubit |
 | Stream or watch | No RetryPolicy; handle errors in listener and optionally restart |
 
-**Timeouts:** Use explicit timeouts for all HTTP calls. The resilient client extensions accept a `timeout` parameter (default 30s). Recommended: 15–30s for typical API calls, longer for uploads or slow endpoints. Configure per call site; for enterprise tuning, consider a shared config (e.g. `HttpClientOptions`) injected via DI.
+**Timeouts:** Use explicit timeouts for all HTTP calls. Dio is created with 30s connect/receive timeouts in `createAppDio()`; use `NetworkGuard.executeDio` with a `timeout` parameter where you wrap requests. Recommended: 15–30s for typical API calls, longer for uploads or slow endpoints.
 
 **Circuit breaker (optional):** For high-traffic or enterprise builds, use [CircuitBreaker](lib/shared/http/circuit_breaker.dart) to fail fast when an endpoint is repeatedly failing. Wrap repository or HTTP calls with `CircuitBreaker(key: 'endpoint-name').execute(() => ...)`. Enable via feature-flag or build config. Use when protecting the backend from thundering herd is important.
 
