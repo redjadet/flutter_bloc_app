@@ -21,7 +21,6 @@ class CalculatorSummaryCard extends StatelessWidget {
   Widget build(
     final BuildContext context,
   ) => TypeSafeBlocBuilder<CalculatorCubit, CalculatorState>(
-    buildWhen: (final previous, final current) => previous != current,
     builder: (final context, final state) {
       final l10n = context.l10n;
       final CalculatorCubit cubit = context.cubit<CalculatorCubit>();

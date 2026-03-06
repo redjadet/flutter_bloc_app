@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,8 +12,10 @@ import 'package:flutter_bloc_app/l10n/app_localizations_es.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_fr.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_tr.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -183,6 +187,104 @@ void main() {
         findsOneWidget,
       );
     });
+
+    testWidgets(
+      'sync status selector rebuilds only when network or sync changes',
+      (final WidgetTester tester) async {
+        const RemoteConfigState remoteConfigState = RemoteConfigState.loaded(
+          isAwesomeFeatureEnabled: true,
+          testValue: 'cached',
+        );
+        when(() => cubit.state).thenReturn(remoteConfigState);
+        whenListen(
+          cubit,
+          const Stream<RemoteConfigState>.empty(),
+          initialState: remoteConfigState,
+        );
+
+        final SyncCycleSummary summary = SyncCycleSummary(
+          recordedAt: DateTime.utc(2026, 3, 6),
+          durationMs: 100,
+          pullRemoteCount: 0,
+          pullRemoteFailures: 0,
+          pendingAtStart: 0,
+          operationsProcessed: 0,
+          operationsFailed: 0,
+          pendingByEntity: const <String, int>{},
+        );
+        final SyncStatusState initialSyncState = SyncStatusState(
+          networkStatus: NetworkStatus.online,
+          syncStatus: SyncStatus.idle,
+          history: <SyncCycleSummary>[summary],
+          lastSummary: summary,
+        );
+        final StreamController<SyncStatusState> syncStreamController =
+            StreamController<SyncStatusState>.broadcast();
+        addTearDown(syncStreamController.close);
+
+        whenListen(
+          syncStatusCubit,
+          syncStreamController.stream,
+          initialState: initialSyncState,
+        );
+        when(() => syncStatusCubit.state).thenReturn(initialSyncState);
+
+        await pumpWidget(tester, includeSyncCubit: true);
+        await tester.pump();
+        expect(
+          find.byType(
+            TypeSafeBlocSelector<
+              SyncStatusCubit,
+              SyncStatusState,
+              (NetworkStatus, SyncStatus)
+            >,
+          ),
+          findsOneWidget,
+        );
+
+        int buildCount = 0;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: BlocProvider<SyncStatusCubit>.value(
+              value: syncStatusCubit,
+              child:
+                  TypeSafeBlocSelector<
+                    SyncStatusCubit,
+                    SyncStatusState,
+                    (NetworkStatus, SyncStatus)
+                  >(
+                    selector: (final s) => (s.networkStatus, s.syncStatus),
+                    builder: (final context, final pair) {
+                      buildCount++;
+                      return Text(
+                        '${pair.$1}-${pair.$2}',
+                        textDirection: TextDirection.ltr,
+                      );
+                    },
+                  ),
+            ),
+          ),
+        );
+        await tester.pump();
+        expect(buildCount, 1);
+
+        final SyncCycleSummary newerSummary = summary.copyWith(durationMs: 120);
+        syncStreamController.add(
+          initialSyncState.copyWith(
+            history: <SyncCycleSummary>[summary, newerSummary],
+            lastSummary: newerSummary,
+          ),
+        );
+        await tester.pump();
+        expect(buildCount, 1);
+
+        syncStreamController.add(
+          initialSyncState.copyWith(networkStatus: NetworkStatus.offline),
+        );
+        await tester.pump();
+        expect(buildCount, 2);
+      },
+    );
 
     group('localization regression', () {
       test('all remote config diagnostic strings exist in all supported locales', () {

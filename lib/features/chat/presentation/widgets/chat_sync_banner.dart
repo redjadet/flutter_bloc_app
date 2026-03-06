@@ -88,62 +88,68 @@ class _ChatSyncBannerState extends State<ChatSyncBanner> {
       // check-ignore: listener callback is event-driven, not a build side effect
       unawaited(_refreshPendingCount());
     },
-    child: TypeSafeBlocBuilder<SyncStatusCubit, SyncStatusState>(
-      builder: (final context, final syncState) {
-        final bool isOffline = syncState.networkStatus == NetworkStatus.offline;
-        final bool isSyncing = syncState.syncStatus == SyncStatus.syncing;
-        final bool showBanner = isOffline || isSyncing || _pendingCount > 0;
-        if (!showBanner) {
-          return const SizedBox.shrink();
-        }
-        final AppLocalizations l10n = context.l10n;
-        final bool isError = isOffline;
-        final (String title, String message) = syncBannerTitleAndMessage(
-          l10n,
-          isOffline: isOffline,
-          isSyncing: isSyncing,
-          pendingCount: _pendingCount,
-        );
-        final bool canManualSync =
-            !isOffline && _pendingCount > 0 && !isSyncing;
-        final bool showSyncAction = _pendingCount > 0;
+    child:
+        TypeSafeBlocSelector<
+          SyncStatusCubit,
+          SyncStatusState,
+          (NetworkStatus, SyncStatus)
+        >(
+          selector: (final s) => (s.networkStatus, s.syncStatus),
+          builder: (final context, final pair) {
+            final bool isOffline = pair.$1 == NetworkStatus.offline;
+            final bool isSyncing = pair.$2 == SyncStatus.syncing;
+            final bool showBanner = isOffline || isSyncing || _pendingCount > 0;
+            if (!showBanner) {
+              return const SizedBox.shrink();
+            }
+            final AppLocalizations l10n = context.l10n;
+            final bool isError = isOffline;
+            final (String title, String message) = syncBannerTitleAndMessage(
+              l10n,
+              isOffline: isOffline,
+              isSyncing: isSyncing,
+              pendingCount: _pendingCount,
+            );
+            final bool canManualSync =
+                !isOffline && _pendingCount > 0 && !isSyncing;
+            final bool showSyncAction = _pendingCount > 0;
 
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: context.responsiveHorizontalGapL,
-            vertical: context.responsiveGapS,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              AppMessage(
-                title: title,
-                message: message,
-                isError: isError,
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: context.responsiveHorizontalGapL,
+                vertical: context.responsiveGapS,
               ),
-              if (showSyncAction)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: PlatformAdaptive.textButton(
-                    context: context,
-                    onPressed: canManualSync && !_isManualSyncing
-                        ? _handleSyncNow
-                        : null,
-                    child: _isManualSyncing
-                        ? SizedBox(
-                            height: context.responsiveGapM,
-                            width: context.responsiveGapM,
-                            child: const CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
-                          )
-                        : Text(l10n.syncStatusSyncNowButton),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  AppMessage(
+                    title: title,
+                    message: message,
+                    isError: isError,
                   ),
-                ),
-            ],
-          ),
-        );
-      },
-    ),
+                  if (showSyncAction)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: PlatformAdaptive.textButton(
+                        context: context,
+                        onPressed: canManualSync && !_isManualSyncing
+                            ? _handleSyncNow
+                            : null,
+                        child: _isManualSyncing
+                            ? SizedBox(
+                                height: context.responsiveGapM,
+                                width: context.responsiveGapM,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text(l10n.syncStatusSyncNowButton),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
   );
 }

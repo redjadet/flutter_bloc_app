@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_sync_banner.dart';
@@ -8,7 +9,9 @@ import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
 class _FakeNetworkStatusService implements NetworkStatusService {
   _FakeNetworkStatusService();
@@ -40,6 +43,10 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   SyncStatus status = SyncStatus.idle;
   final StreamController<SyncStatus> _controller =
       StreamController<SyncStatus>.broadcast();
+  final StreamController<SyncCycleSummary> _summaryController =
+      StreamController<SyncCycleSummary>.broadcast();
+  final List<SyncCycleSummary> _history = <SyncCycleSummary>[];
+  SyncCycleSummary? _latestSummary;
 
   @override
   Stream<SyncStatus> get statusStream => _controller.stream;
@@ -48,14 +55,14 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   SyncStatus get currentStatus => status;
 
   @override
-  List<SyncCycleSummary> get history => const <SyncCycleSummary>[];
+  List<SyncCycleSummary> get history =>
+      List<SyncCycleSummary>.unmodifiable(_history);
 
   @override
-  Stream<SyncCycleSummary> get summaryStream =>
-      const Stream<SyncCycleSummary>.empty();
+  Stream<SyncCycleSummary> get summaryStream => _summaryController.stream;
 
   @override
-  SyncCycleSummary? get latestSummary => null;
+  SyncCycleSummary? get latestSummary => _latestSummary;
 
   @override
   Future<void> start() async {}
@@ -69,6 +76,7 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   @override
   Future<void> dispose() async {
     await _controller.close();
+    await _summaryController.close();
   }
 
   @override
@@ -78,7 +86,16 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
     status = newStatus;
     _controller.add(newStatus);
   }
+
+  void emitSummary(final SyncCycleSummary summary) {
+    _latestSummary = summary;
+    _history.add(summary);
+    _summaryController.add(summary);
+  }
 }
+
+class _MockSyncStatusCubit extends MockCubit<SyncStatusState>
+    implements SyncStatusCubit {}
 
 void main() {
   group('SearchSyncBanner', () {
@@ -251,6 +268,103 @@ void main() {
 
       // Should hide again
       expect(find.text(l10n2.syncStatusSyncingTitle), findsNothing);
+    });
+
+    testWidgets('selector rebuilds only when network or sync status changes', (
+      tester,
+    ) async {
+      final _MockSyncStatusCubit cubit = _MockSyncStatusCubit();
+      addTearDown(cubit.close);
+
+      final SyncCycleSummary summary = SyncCycleSummary(
+        recordedAt: DateTime.utc(2026, 3, 6),
+        durationMs: 100,
+        pullRemoteCount: 0,
+        pullRemoteFailures: 0,
+        pendingAtStart: 0,
+        operationsProcessed: 0,
+        operationsFailed: 0,
+        pendingByEntity: const <String, int>{},
+      );
+      final SyncStatusState initial = SyncStatusState(
+        networkStatus: NetworkStatus.online,
+        syncStatus: SyncStatus.idle,
+        history: <SyncCycleSummary>[summary],
+        lastSummary: summary,
+      );
+      final StreamController<SyncStatusState> controller =
+          StreamController<SyncStatusState>.broadcast();
+      addTearDown(controller.close);
+
+      whenListen(cubit, controller.stream, initialState: initial);
+      when(() => cubit.state).thenReturn(initial);
+
+      int buildCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: BlocProvider<SyncStatusCubit>.value(
+            value: cubit,
+            child: Scaffold(
+              body:
+                  TypeSafeBlocSelector<
+                    SyncStatusCubit,
+                    SyncStatusState,
+                    (NetworkStatus, SyncStatus)
+                  >(
+                    selector: (final s) => (s.networkStatus, s.syncStatus),
+                    builder: (final context, final pair) {
+                      buildCount++;
+                      return Text(
+                        '${pair.$1}-${pair.$2}',
+                        textDirection: TextDirection.ltr,
+                      );
+                    },
+                  ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(buildCount, 1);
+
+      controller.add(
+        initial.copyWith(
+          lastSummary: summary.copyWith(durationMs: 200),
+          history: <SyncCycleSummary>[
+            summary,
+            summary.copyWith(durationMs: 200),
+          ],
+        ),
+      );
+      await tester.pump();
+      expect(buildCount, 1);
+
+      controller.add(initial.copyWith(networkStatus: NetworkStatus.offline));
+      await tester.pump();
+      expect(buildCount, 2);
+    });
+
+    testWidgets('uses network/sync tuple selector in widget tree', (
+      tester,
+    ) async {
+      networkService.status = NetworkStatus.online;
+      coordinator.status = SyncStatus.idle;
+
+      await tester.pumpWidget(buildSubject());
+      await tester.pump();
+
+      expect(
+        find.byType(
+          TypeSafeBlocSelector<
+            SyncStatusCubit,
+            SyncStatusState,
+            (NetworkStatus, SyncStatus)
+          >,
+        ),
+        findsOneWidget,
+      );
     });
   });
 }

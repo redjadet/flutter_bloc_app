@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/scapes/domain/scape.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_cubit.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_state.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_view.dart';
@@ -23,27 +24,33 @@ class _ScapesGridContentBody extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    return TypeSafeBlocBuilder<ScapesCubit, ScapesState>(
-      builder: (final context, final state) {
-        if (state.isLoading) {
+    return TypeSafeBlocSelector<
+      ScapesCubit,
+      ScapesState,
+      (bool, bool, String?, List<Scape>)
+    >(
+      selector: (final s) =>
+          (s.isLoading, s.hasError, s.errorMessage, s.scapes),
+      builder: (final context, final data) {
+        if (data.$1) {
           return const CommonLoadingWidget();
         }
 
-        if (state.hasError) {
+        if (data.$2) {
           return CommonErrorView(
-            message: state.errorMessage ?? l10n.scapesErrorOccurred,
+            message: data.$3 ?? l10n.scapesErrorOccurred,
             onRetry: () => context.cubit<ScapesCubit>().reload(),
           );
         }
 
-        if (state.scapes.isEmpty) {
+        if (data.$4.isEmpty) {
           return CommonEmptyState(
             message: l10n.noScapesAvailable,
           );
         }
 
         return ScapesGridView(
-          scapes: state.scapes,
+          scapes: data.$4,
           shrinkWrap: true,
           onFavoritePressed: (final id) =>
               context.cubit<ScapesCubit>().toggleFavorite(id),
@@ -64,24 +71,30 @@ class ScapesGridSliverContent extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    return TypeSafeBlocBuilder<ScapesCubit, ScapesState>(
-      builder: (final context, final state) {
-        if (state.isLoading) {
+    return TypeSafeBlocSelector<
+      ScapesCubit,
+      ScapesState,
+      (bool, bool, String?, List<Scape>)
+    >(
+      selector: (final s) =>
+          (s.isLoading, s.hasError, s.errorMessage, s.scapes),
+      builder: (final context, final data) {
+        if (data.$1) {
           return const SliverToBoxAdapter(
             child: CommonLoadingWidget(),
           );
         }
 
-        if (state.hasError) {
+        if (data.$2) {
           return SliverToBoxAdapter(
             child: CommonErrorView(
-              message: state.errorMessage ?? l10n.scapesErrorOccurred,
+              message: data.$3 ?? l10n.scapesErrorOccurred,
               onRetry: () => context.cubit<ScapesCubit>().reload(),
             ),
           );
         }
 
-        if (state.scapes.isEmpty) {
+        if (data.$4.isEmpty) {
           return SliverToBoxAdapter(
             child: CommonEmptyState(
               message: l10n.noScapesAvailable,
@@ -90,7 +103,7 @@ class ScapesGridSliverContent extends StatelessWidget {
         }
 
         return ScapesGridSliver(
-          scapes: state.scapes,
+          scapes: data.$4,
           onFavoritePressed: (final id) =>
               context.cubit<ScapesCubit>().toggleFavorite(id),
           onMorePressed: (final id) {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
+import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix/mix.dart';
 import 'package:mocktail/mocktail.dart';
@@ -125,6 +128,83 @@ void main() {
       await pump(tester);
 
       expect(find.textContaining('Pruned'), findsNothing);
+    });
+
+    testWidgets('selector rebuilds only when history changes', (tester) async {
+      final SyncCycleSummary summary = SyncCycleSummary(
+        recordedAt: DateTime.utc(2026, 3, 6),
+        durationMs: 50,
+        pullRemoteCount: 0,
+        pullRemoteFailures: 0,
+        pendingAtStart: 0,
+        operationsProcessed: 0,
+        operationsFailed: 0,
+        pendingByEntity: const <String, int>{},
+      );
+      final SyncStatusState initial = SyncStatusState(
+        networkStatus: NetworkStatus.online,
+        syncStatus: SyncStatus.idle,
+        history: <SyncCycleSummary>[summary],
+        lastSummary: summary,
+      );
+      final StreamController<SyncStatusState> controller =
+          StreamController<SyncStatusState>.broadcast();
+      addTearDown(controller.close);
+
+      whenListen(cubit, controller.stream, initialState: initial);
+      when(() => cubit.state).thenReturn(initial);
+
+      await pump(tester);
+      expect(
+        find.byType(
+          TypeSafeBlocSelector<
+            SyncStatusCubit,
+            SyncStatusState,
+            List<SyncCycleSummary>
+          >,
+        ),
+        findsOneWidget,
+      );
+
+      int buildCount = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<SyncStatusCubit>.value(
+            value: cubit,
+            child:
+                TypeSafeBlocSelector<
+                  SyncStatusCubit,
+                  SyncStatusState,
+                  List<SyncCycleSummary>
+                >(
+                  selector: (final state) => state.history,
+                  builder: (final context, final history) {
+                    buildCount++;
+                    return Text(
+                      'history=${history.length}',
+                      textDirection: TextDirection.ltr,
+                    );
+                  },
+                ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(buildCount, 1);
+
+      controller.add(initial.copyWith(networkStatus: NetworkStatus.offline));
+      await tester.pump();
+      expect(buildCount, 1);
+
+      final SyncCycleSummary newer = summary.copyWith(durationMs: 75);
+      controller.add(
+        initial.copyWith(
+          history: <SyncCycleSummary>[summary, newer],
+          lastSummary: newer,
+        ),
+      );
+      await tester.pump();
+      expect(buildCount, 2);
     });
   });
 }

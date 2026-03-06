@@ -32,10 +32,10 @@ class _SyncStatusBannerState extends State<SyncStatusBanner> {
   @override
   Widget build(
     final BuildContext context,
-  ) => TypeSafeBlocBuilder<SyncStatusCubit, SyncStatusState>(
-    builder: (final context, final state) {
-      final bool isDegraded = state.syncStatus == SyncStatus.degraded;
-      if (!isDegraded) {
+  ) => TypeSafeBlocSelector<SyncStatusCubit, SyncStatusState, SyncStatus>(
+    selector: (final state) => state.syncStatus,
+    builder: (final context, final syncStatus) {
+      if (syncStatus != SyncStatus.degraded) {
         return const SizedBox.shrink();
       }
 
