@@ -93,7 +93,36 @@ Future<SyncCycleSummary> runSyncCycle({
   final Map<String, List<int>> retryCountsByEntity = <String, List<int>>{};
   final Map<String, String> lastErrorByEntity = <String, String>{};
 
+  // Coalesce counter operations: for rapid taps we push only the latest count
+  const String counterEntity = 'counter';
+  final List<SyncOperation> pendingToProcess = <SyncOperation>[];
+  final List<String> counterOpIdsToMarkCompleted = <String>[];
+  final List<SyncOperation> counterOps = pending
+      .where((final op) => op.entityType == counterEntity)
+      .toList();
+  if (counterOps.length > 1) {
+    final SyncOperation latestCounterOp = counterOps.reduce(
+      (final a, final b) {
+        final int countA = _counterCountFromPayload(a.payload);
+        final int countB = _counterCountFromPayload(b.payload);
+        return countB > countA ? b : a;
+      },
+    );
+    pendingToProcess.add(latestCounterOp);
+    for (final SyncOperation op in counterOps) {
+      if (op.id != latestCounterOp.id) {
+        counterOpIdsToMarkCompleted.add(op.id);
+      }
+    }
+  } else if (counterOps.length == 1) {
+    pendingToProcess.add(counterOps.single);
+  }
   for (final SyncOperation operation in pending) {
+    if (operation.entityType == counterEntity) continue;
+    pendingToProcess.add(operation);
+  }
+
+  for (final SyncOperation operation in pendingToProcess) {
     final SyncableRepository? repository = registry.resolve(
       operation.entityType,
     );
@@ -110,7 +139,6 @@ Future<SyncCycleSummary> runSyncCycle({
       '(id=${operation.id}, retry=${operation.retryCount})',
     );
 
-    // Track retry count for this entity
     retryCountsByEntity
         .putIfAbsent(operation.entityType, () => <int>[])
         .add(operation.retryCount);
@@ -120,7 +148,6 @@ Future<SyncCycleSummary> runSyncCycle({
       await repository.processOperation(operation);
       await pendingRepository.markCompleted(operation.id);
 
-      // If this operation had retries and succeeded, count it
       if (operation.retryCount > 0) {
         successfulAfterRetry++;
       }
@@ -147,6 +174,10 @@ Future<SyncCycleSummary> runSyncCycle({
       );
       emitStatus(SyncStatus.degraded);
     }
+  }
+
+  for (final String id in counterOpIdsToMarkCompleted) {
+    await pendingRepository.markCompleted(id);
   }
 
   // Calculate average retry attempts by entity
@@ -200,4 +231,11 @@ Future<SyncCycleSummary> runSyncCycle({
     },
   );
   return summary;
+}
+
+int _counterCountFromPayload(final Map<String, dynamic> payload) {
+  final dynamic count = payload['count'];
+  if (count is int) return count;
+  if (count is num) return count.toInt();
+  return 0;
 }

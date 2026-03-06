@@ -32,16 +32,24 @@ Dio createCounterMockDio({
           options.headers.forEach((final k, final v) {
             if (v != null) headers[k] = v.toString();
           });
+          if (options.contentType != null) {
+            headers['Content-Type'] = options.contentType.toString();
+          }
+          final String? bodyString = options.data is String
+              ? options.data as String?
+              : options.data is Map
+              ? jsonEncode(options.data as Map<String, dynamic>)
+              : null;
           requests?.record(
             options.method,
             options.uri.toString(),
-            options.data is String ? options.data as String? : null,
+            bodyString,
             headers,
           );
           handler.resolve(
             Response<String>(
               requestOptions: options,
-              data: postBody ?? '',
+              data: postBody,
               statusCode: postStatus,
             ),
           );
@@ -251,6 +259,27 @@ void main() {
         final CounterSnapshot saved = emitted.last;
         expect(saved.count, 3);
         expect(saved.userId, 'rest');
+      });
+    });
+
+    test('succeeds when backend returns 204 with no response body', () async {
+      final CounterTestRequests requests = CounterTestRequests();
+      final Dio client = createCounterMockDio(
+        postBody: null,
+        postStatus: 204,
+        requests: requests,
+      );
+      final RestCounterRepository repository = RestCounterRepository(
+        baseUrl: 'https://api.example.com/',
+        client: client,
+      );
+
+      await AppLogger.silenceAsync(() async {
+        await repository.save(const CounterSnapshot(count: 4));
+
+        expect(requests.lastMethod, 'POST');
+        final Map<String, dynamic> body = jsonDecode(requests.lastBody ?? '{}');
+        expect(body['count'], 4);
       });
     });
 

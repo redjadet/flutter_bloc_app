@@ -23,7 +23,9 @@ class CounterCubit extends _CounterCubitBase {
     final bool startTicker = true,
     final Duration loadDelay = Duration.zero,
     final DateTime Function()? now,
-  }) : super(
+    final Duration? manualThrottle,
+  }) : _manualThrottleDuration = manualThrottle ?? _manualThrottle,
+       super(
          timerService: timerService ?? DefaultTimerService(),
          now: now ?? DateTime.now,
          initialLoadDelay: loadDelay,
@@ -34,6 +36,11 @@ class CounterCubit extends _CounterCubitBase {
   }
 
   TimerDisposable? _initialLoadHandle;
+
+  /// Throttle for manual +/− button taps only (not auto-decrement or restore).
+  static const Duration _manualThrottle = Duration(milliseconds: 500);
+  final Duration _manualThrottleDuration;
+  DateTime? _lastManualChangeAt;
 
   Future<void> loadInitial() async {
     emit(state.copyWith(status: ViewStatus.loading));
@@ -92,6 +99,9 @@ class CounterCubit extends _CounterCubitBase {
   }
 
   Future<void> increment() async {
+    if (!_beginManualChange()) {
+      return;
+    }
     final CounterState next = _emitCountUpdate(count: state.count + 1);
     await _persistState(next);
   }
@@ -109,9 +119,24 @@ class CounterCubit extends _CounterCubitBase {
       emit(state.copyWith(error: const CounterError.cannotGoBelowZero()));
       return;
     }
+    if (!_beginManualChange()) {
+      return;
+    }
     final int newCount = current.count - 1;
     final CounterState next = _emitCountUpdate(count: newCount);
     await _persistState(next);
+  }
+
+  bool _beginManualChange() {
+    final DateTime now = _now();
+    final DateTime? lastChange = _lastManualChangeAt;
+    if (_manualThrottleDuration > Duration.zero &&
+        lastChange != null &&
+        now.difference(lastChange) < _manualThrottleDuration) {
+      return false;
+    }
+    _lastManualChangeAt = now;
+    return true;
   }
 
   void clearError() {
