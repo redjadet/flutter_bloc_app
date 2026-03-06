@@ -125,6 +125,24 @@ void main() {
       verifyNever(() => remoteRepository.forceFetch());
     });
 
+    test('concurrent forceFetch calls run only one remote fetch', () async {
+      await repository.initialize();
+      int forceFetchCalls = 0;
+      when(() => remoteRepository.forceFetch()).thenAnswer((_) async {
+        forceFetchCalls++;
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+      });
+
+      final List<Future<void>> calls = <Future<void>>[
+        repository.forceFetch(),
+        repository.forceFetch(),
+        repository.forceFetch(),
+      ];
+      await Future.wait(calls);
+
+      expect(forceFetchCalls, 1);
+    });
+
     test('uses cache when remote fetch fails but cache exists', () async {
       final RemoteConfigSnapshot snapshot = RemoteConfigSnapshot(
         values: <String, dynamic>{

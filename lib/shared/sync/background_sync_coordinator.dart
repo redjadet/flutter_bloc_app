@@ -51,6 +51,7 @@ class BackgroundSyncCoordinator {
   StreamSubscription<NetworkStatus>? _networkSubscription;
   TimerDisposable? _periodicTimer;
   Future<void>? _currentSync;
+  bool _syncRequestedAfterCurrent = false;
   bool _isRunning = false;
   SyncStatus _currentStatus = SyncStatus.idle;
 
@@ -105,6 +106,7 @@ class BackgroundSyncCoordinator {
       return;
     }
     _isRunning = false;
+    _syncRequestedAfterCurrent = false;
     final Future<void>? inFlight = _currentSync;
     _periodicTimer?.dispose();
     _periodicTimer = null;
@@ -128,50 +130,113 @@ class BackgroundSyncCoordinator {
 
   Future<void> flush() => _triggerSync(immediate: true);
 
-  Future<void> _triggerSync({required final bool immediate}) async {
-    final bool startedTemporarily = !_isRunning && immediate;
+  Future<void> _triggerSync({required final bool immediate}) {
+    final Future<void>? inFlight = _currentSync;
+    if (inFlight != null) {
+      if (immediate) {
+        _syncRequestedAfterCurrent = true;
+      }
+      return inFlight;
+    }
+
     if (!immediate && !_isRunning) {
-      return;
+      return Future<void>.value();
     }
 
-    // Check network status before attempting sync (per Flutter's guidance)
-    final NetworkStatus networkStatus = await _networkStatusService
-        .getCurrentStatus();
-    if (networkStatus != NetworkStatus.online) {
-      AppLogger.debug(
-        'BackgroundSyncCoordinator._triggerSync skipped: network offline',
-      );
-      if (startedTemporarily) {
-        _isRunning = false;
-      }
-      return;
-    }
+    final Completer<void> completer = Completer<void>();
+    final Future<void> future = completer.future;
+    _currentSync = future;
 
-    if (startedTemporarily) {
-      _isRunning = true;
-    }
-    final Future<void> syncFuture = _processPendingOperations();
-    _currentSync = syncFuture;
-    try {
-      await syncFuture;
-      if (!immediate) {
-        _emit(SyncStatus.idle);
-      } else if (startedTemporarily) {
-        _emit(SyncStatus.idle);
+    unawaited(
+      Future<void>(() async {
+        try {
+          await _runCoalescedSync(immediate: immediate);
+        } on Object catch (error, stackTrace) {
+          AppLogger.error(
+            'BackgroundSyncCoordinator._triggerSync unexpected failure',
+            error,
+            stackTrace,
+          );
+          _emit(SyncStatus.degraded);
+        } finally {
+          if (!completer.isCompleted) {
+            completer.complete();
+          }
+          if (identical(_currentSync, future)) {
+            _currentSync = null;
+          }
+        }
+      }),
+    );
+
+    return future;
+  }
+
+  Future<void> _runCoalescedSync({required final bool immediate}) async {
+    // Coalesce multiple immediate triggers that happen while a sync is running
+    // into a single follow-up sync. If another immediate trigger arrives during
+    // this sync, the loop will run one more time.
+    while (true) {
+      if (!immediate && !_isRunning) {
+        return;
       }
-    } on Exception catch (error, stackTrace) {
-      AppLogger.error(
-        'BackgroundSyncCoordinator._triggerSync failed',
-        error,
-        stackTrace,
-      );
-      _emit(SyncStatus.degraded);
-    } finally {
-      if (identical(_currentSync, syncFuture)) {
-        _currentSync = null;
+
+      final bool startedTemporarily = !_isRunning && immediate;
+      _syncRequestedAfterCurrent = false;
+
+      // Check network status before attempting sync (per Flutter's guidance)
+      NetworkStatus networkStatus;
+      try {
+        networkStatus = await _networkStatusService.getCurrentStatus();
+      } on Object catch (error, stackTrace) {
+        AppLogger.error(
+          'BackgroundSyncCoordinator._triggerSync network status failed',
+          error,
+          stackTrace,
+        );
+        _emit(SyncStatus.degraded);
+        if (startedTemporarily) {
+          _isRunning = false;
+        }
+        return;
       }
+      if (networkStatus != NetworkStatus.online) {
+        AppLogger.debug(
+          'BackgroundSyncCoordinator._triggerSync skipped: network offline',
+        );
+        if (startedTemporarily) {
+          _isRunning = false;
+        }
+        return;
+      }
+
       if (startedTemporarily) {
-        _isRunning = false;
+        _isRunning = true;
+      }
+      try {
+        await _processPendingOperations();
+        if (!immediate) {
+          _emit(SyncStatus.idle);
+        } else if (startedTemporarily) {
+          _emit(SyncStatus.idle);
+        }
+      } on Object catch (error, stackTrace) {
+        AppLogger.error(
+          'BackgroundSyncCoordinator._triggerSync failed',
+          error,
+          stackTrace,
+        );
+        _emit(SyncStatus.degraded);
+      } finally {
+        if (startedTemporarily) {
+          _isRunning = false;
+        }
+      }
+
+      if (!immediate ||
+          !_syncRequestedAfterCurrent ||
+          (!_isRunning && !startedTemporarily)) {
+        return;
       }
     }
   }

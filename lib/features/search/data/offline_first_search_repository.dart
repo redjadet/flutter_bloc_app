@@ -34,6 +34,10 @@ class OfflineFirstSearchRepository
   final NetworkStatusService _networkStatusService;
   final SyncableRepositoryRegistry _registry;
 
+  /// In-flight refresh per query so repeated cached searches share one refresh.
+  final Map<String, Future<void>> _refreshInFlightByQuery =
+      <String, Future<void>>{};
+
   @override
   String get entityType => searchEntity;
 
@@ -60,8 +64,8 @@ class OfflineFirstSearchRepository
         return cached;
       }
 
-      // If online, fetch fresh results in background but return cached immediately
-      // This provides instant UI while refreshing data
+      // If online, fetch fresh results in background but return cached immediately.
+      // In-flight coalescing: repeated calls for same query share one refresh.
       unawaited(_refreshAndCache(query));
       return cached;
     }
@@ -97,7 +101,31 @@ class OfflineFirstSearchRepository
   Future<List<SearchResult>> call(final String query) => search(query);
 
   /// Refreshes cached results for a query in the background.
+  /// Concurrent calls for the same query await the same in-flight future.
   Future<void> _refreshAndCache(final String query) async {
+    final Future<void>? inFlight = _refreshInFlightByQuery[query];
+    if (inFlight != null) {
+      return inFlight;
+    }
+    final Future<void> f = _doRefreshAndCache(query);
+    _refreshInFlightByQuery[query] = f;
+    unawaited(
+      f.then<void>(
+        (_) => _clearRefreshInFlight(query, f),
+        onError: (final Object _, final StackTrace _) =>
+            _clearRefreshInFlight(query, f),
+      ),
+    );
+    return f;
+  }
+
+  void _clearRefreshInFlight(final String query, final Future<void> future) {
+    if (identical(_refreshInFlightByQuery[query], future)) {
+      unawaited(_refreshInFlightByQuery.remove(query));
+    }
+  }
+
+  Future<void> _doRefreshAndCache(final String query) async {
     try {
       final List<SearchResult> results = await _remoteRepository.search(query);
       await _cacheRepository.saveCachedResults(query, results);

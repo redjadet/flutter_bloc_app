@@ -28,6 +28,8 @@ This document captures the offline-first plan for the Profile feature so enginee
 - Behavior:
   - Returns cached profile immediately if available.
   - If online, refreshes cache in the background and returns cached data for instant UI.
+  - Concurrent refresh triggers (`getProfile`/`pullRemote`) are coalesced behind
+    one in-flight `Future<void>` so duplicate remote profile calls are avoided.
   - If no cache and online, fetches remote → caches → returns.
   - If offline and no cache, throws an error so the UI can show an error state.
   - `processOperation`: no-op (read-only).
@@ -46,6 +48,8 @@ This document captures the offline-first plan for the Profile feature so enginee
 - ✅ **Repository tests**: `test/features/profile/data/offline_first_profile_repository_test.dart` covers:
   - Serving cached profile when offline.
   - Returning cached immediately and refreshing when online.
+  - Coalescing concurrent cached `getProfile()` calls into one background
+    refresh.
   - Fetching and caching when no cache + online.
   - Throwing when offline with no cache.
 - ✅ **Widget/page tests**: `test/features/profile/presentation/widgets/profile_sync_banner_test.dart` covers offline/syncing visibility + status changes. `test/features/profile/presentation/profile_page_test.dart` asserts the banner renders when offline.
