@@ -1335,5 +1335,49 @@
   "iotDemoCurrentValue": "Mevcut değer: {value}",
   "iotDemoSetValueOutOfRange": "Değer {min} ile {max} arasında olmalıdır",
   "iotDemoSetValueInvalidNumber": "Geçerli bir sayı girin",
-  "openIotDemoTooltip": "IoT demosunu aç"
+  "openIotDemoTooltip": "IoT demosunu aç",
+  "searchAllResultsSectionTitle": "TÜM SONUÇLAR",
+  "@searchAllResultsSectionTitle": {
+    "description": "Section title for all search results"
+  },
+  "searchErrorLoadingResults": "Sonuçlar yüklenirken hata oluştu",
+  "@searchErrorLoadingResults": {
+    "description": "Error message when search results fail to load"
+  },
+  "searchNoResultsFound": "Sonuç bulunamadı",
+  "@searchNoResultsFound": {
+    "description": "Message when search returns no results"
+  },
+  "profileSeeMore": "DAHA FAZLA",
+  "@profileSeeMore": {
+    "description": "Button label to see more profile content"
+  },
+  "moreTooltip": "Daha fazla",
+  "@moreTooltip": {
+    "description": "Tooltip for more options"
+  },
+  "whiteboardPageTitle": "Beyaz tahta",
+  "@whiteboardPageTitle": {
+    "description": "Title of the whiteboard page"
+  },
+  "playlearnNoWords": "Kelime yok",
+  "@playlearnNoWords": {
+    "description": "Empty state when a topic has no vocabulary words"
+  },
+  "playlearnNoTopics": "Konu yok",
+  "@playlearnNoTopics": {
+    "description": "Empty state when there are no playlearn topics"
+  },
+  "commonEmptyStateTryAgain": "Tekrar dene",
+  "@commonEmptyStateTryAgain": {
+    "description": "Default label for retry button in empty state"
+  },
+  "profileNoCachedProfile": "Önbelleğe alınmış profil yok",
+  "@profileNoCachedProfile": {
+    "description": "Shown when there is no cached profile data"
+  },
+  "loggedOutPhotoLabel": "fotoğraf",
+  "@loggedOutPhotoLabel": {
+    "description": "Label for photo in logged-out header"
+  }
 }

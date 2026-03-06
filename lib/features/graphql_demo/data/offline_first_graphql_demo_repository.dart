@@ -12,6 +12,7 @@ class OfflineFirstGraphqlDemoRepository implements GraphqlDemoRepository {
     required this.cacheRepository,
   });
   static const Duration _maxCacheAge = Duration(hours: 24);
+  @override
   GraphqlDataSource lastSource = GraphqlDataSource.unknown;
 
   final CountriesGraphqlRepository remoteRepository;

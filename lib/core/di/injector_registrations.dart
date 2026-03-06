@@ -4,9 +4,13 @@ import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_factories.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
+import 'package:flutter_bloc_app/core/di/register_auth_services.dart';
+import 'package:flutter_bloc_app/core/di/register_calculator_services.dart';
+import 'package:flutter_bloc_app/core/di/register_chart_services.dart';
 import 'package:flutter_bloc_app/core/di/register_chat_services.dart';
 import 'package:flutter_bloc_app/core/di/register_fcm_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_genui_services.dart';
+import 'package:flutter_bloc_app/core/di/register_graphql_services.dart';
 import 'package:flutter_bloc_app/core/di/register_http_services.dart';
 import 'package:flutter_bloc_app/core/di/register_igaming_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_iot_demo_services.dart';
@@ -25,6 +29,8 @@ import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart'
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
 import 'package:flutter_bloc_app/features/google_maps/data/sample_map_location_repository.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
+import 'package:flutter_bloc_app/features/scapes/data/mock_scapes_repository.dart';
+import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/hive_locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/hive_theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/package_info_app_info_repository.dart';
@@ -47,7 +53,11 @@ Future<void> registerAllDependencies() async {
   _registerAppRuntimeConfig();
   await _registerStorageServices();
   _registerCounterRepository();
+  registerAuthServices();
   registerHttpServices();
+  registerChartServices();
+  registerCalculatorServices();
+  registerGraphqlServices();
   registerChatServices();
   _registerSettingsServices();
   _registerDeepLinkServices();
@@ -64,6 +74,7 @@ Future<void> registerAllDependencies() async {
   registerFcmDemoServices();
   registerIotDemoServices();
   _registerCameraGalleryServices();
+  _registerScapesServices();
   _registerUtilityServices();
   _registerSyncServices();
 }
@@ -124,6 +135,10 @@ void _registerCameraGalleryServices() {
   registerLazySingletonIfAbsent<CameraGalleryRepository>(
     ImagePickerCameraGalleryRepository.new,
   );
+}
+
+void _registerScapesServices() {
+  registerLazySingletonIfAbsent<ScapesRepository>(MockScapesRepository.new);
 }
 
 void _registerUtilityServices() {

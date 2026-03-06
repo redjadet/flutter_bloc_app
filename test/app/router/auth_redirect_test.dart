@@ -1,33 +1,24 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/router/auth_redirect.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
+import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockFirebaseAuth extends Mock implements FirebaseAuth {}
-
-class MockUser extends Mock implements User {
-  @override
-  bool get isAnonymous => false;
-}
-
-class MockAnonymousUser extends Mock implements User {
-  @override
-  bool get isAnonymous => true;
-}
+class MockAuthRepository extends Mock implements AuthRepository {}
 
 class MockGoRouterState extends Mock implements GoRouterState {}
 
 void main() {
   group('createAuthRedirect', () {
-    late MockFirebaseAuth mockAuth;
+    late MockAuthRepository mockAuth;
     late MockGoRouterState mockState;
     late BuildContext testContext;
 
     setUp(() {
-      mockAuth = MockFirebaseAuth();
+      mockAuth = MockAuthRepository();
       mockState = MockGoRouterState();
       testContext = MockBuildContext();
     });
@@ -63,7 +54,7 @@ void main() {
     });
 
     test('redirects authenticated user away from auth page', () {
-      final user = MockUser();
+      const user = AuthUser(id: '1', isAnonymous: false);
       when(() => mockAuth.currentUser).thenReturn(user);
       when(() => mockState.matchedLocation).thenReturn(AppRoutes.authPath);
 
@@ -74,7 +65,7 @@ void main() {
     });
 
     test('allows anonymous user to stay on auth page to upgrade', () {
-      final anonymousUser = MockAnonymousUser();
+      const anonymousUser = AuthUser(id: '1', isAnonymous: true);
       when(() => mockAuth.currentUser).thenReturn(anonymousUser);
       when(() => mockState.matchedLocation).thenReturn(AppRoutes.authPath);
 
@@ -85,7 +76,7 @@ void main() {
     });
 
     test('allows authenticated user to navigate to counter', () {
-      final user = MockUser();
+      const user = AuthUser(id: '1', isAnonymous: false);
       when(() => mockAuth.currentUser).thenReturn(user);
       when(() => mockState.matchedLocation).thenReturn(AppRoutes.counterPath);
 
@@ -96,7 +87,7 @@ void main() {
     });
 
     test('allows authenticated user to navigate to deep links', () {
-      final user = MockUser();
+      const user = AuthUser(id: '1', isAnonymous: false);
       when(() => mockAuth.currentUser).thenReturn(user);
       when(() => mockState.matchedLocation).thenReturn('/chat');
 
@@ -107,7 +98,7 @@ void main() {
     });
 
     test('allows navigation to root path for authenticated users', () {
-      final user = MockUser();
+      const user = AuthUser(id: '1', isAnonymous: false);
       when(() => mockAuth.currentUser).thenReturn(user);
       when(() => mockState.matchedLocation).thenReturn('/');
 

@@ -3091,6 +3091,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open IoT Demo'**
   String get openIotDemoTooltip;
+
+  /// Section title for all search results
+  ///
+  /// In en, this message translates to:
+  /// **'ALL RESULTS'**
+  String get searchAllResultsSectionTitle;
+
+  /// Error message when search results fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading results'**
+  String get searchErrorLoadingResults;
+
+  /// Message when search returns no results
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get searchNoResultsFound;
+
+  /// Button label to see more profile content
+  ///
+  /// In en, this message translates to:
+  /// **'SEE MORE'**
+  String get profileSeeMore;
+
+  /// Tooltip for more options
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get moreTooltip;
+
+  /// Title of the whiteboard page
+  ///
+  /// In en, this message translates to:
+  /// **'Whiteboard'**
+  String get whiteboardPageTitle;
+
+  /// Empty state when a topic has no vocabulary words
+  ///
+  /// In en, this message translates to:
+  /// **'No words'**
+  String get playlearnNoWords;
+
+  /// Empty state when there are no playlearn topics
+  ///
+  /// In en, this message translates to:
+  /// **'No topics'**
+  String get playlearnNoTopics;
+
+  /// Default label for retry button in empty state
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get commonEmptyStateTryAgain;
+
+  /// Shown when there is no cached profile data
+  ///
+  /// In en, this message translates to:
+  /// **'No cached profile'**
+  String get profileNoCachedProfile;
+
+  /// Label for photo in logged-out header
+  ///
+  /// In en, this message translates to:
+  /// **'photo'**
+  String get loggedOutPhotoLabel;
 }
 
 class _AppLocalizationsDelegate

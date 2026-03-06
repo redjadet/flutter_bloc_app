@@ -30,7 +30,7 @@ class _BackgroundImage extends StatelessWidget {
     fit: BoxFit.fill,
     errorBuilder: (final context, final error, final stackTrace) => Container(
       height: height,
-      color: const Color(0xFF0B0C0D),
+      color: Theme.of(context).colorScheme.surface,
     ),
   );
 }

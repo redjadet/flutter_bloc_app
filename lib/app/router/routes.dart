@@ -40,12 +40,15 @@ import 'package:flutter_bloc_app/features/igaming_demo/presentation/pages/game_p
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/pages/lobby_page.dart';
 import 'package:flutter_bloc_app/features/iot_demo/iot_demo.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/pages/library_demo_page.dart';
+import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_service.dart';
+import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/playlearn_page.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/vocabulary_list_page.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/pages/profile_page.dart';
+import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/scapes.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
@@ -138,7 +141,10 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.scapesPath,
     name: AppRoutes.scapes,
-    builder: (final context, final state) => const ScapesPage(),
+    builder: (final context, final state) => ScapesPage(
+      repository: getIt<ScapesRepository>(),
+      timerService: getIt<TimerService>(),
+    ),
   ),
   GoRoute(
     path: AppRoutes.markdownEditorPath,
@@ -208,7 +214,10 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.libraryDemoPath,
     name: AppRoutes.libraryDemo,
-    builder: (final context, final state) => const LibraryDemoPage(),
+    builder: (final context, final state) => LibraryDemoPage(
+      scapesRepository: getIt<ScapesRepository>(),
+      timerService: getIt<TimerService>(),
+    ),
   ),
   GoRoute(
     path: AppRoutes.chatPath,
@@ -261,14 +270,21 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.playlearnPath,
     name: AppRoutes.playlearn,
-    builder: (final context, final state) => const PlaylearnPage(),
+    builder: (final context, final state) => PlaylearnPage(
+      repository: getIt<VocabularyRepository>(),
+      audioService: getIt<AudioPlaybackService>(),
+    ),
     routes: <GoRoute>[
       GoRoute(
         path: 'vocabulary/:topicId',
         name: AppRoutes.playlearnVocabulary,
         builder: (final context, final state) {
           final topicId = state.pathParameters['topicId'] ?? '';
-          return VocabularyListPage(topicId: topicId);
+          return VocabularyListPage(
+            topicId: topicId,
+            repository: getIt<VocabularyRepository>(),
+            audioService: getIt<AudioPlaybackService>(),
+          );
         },
       ),
     ],

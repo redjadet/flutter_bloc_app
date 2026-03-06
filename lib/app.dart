@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
@@ -6,6 +5,7 @@ import 'package:flutter_bloc_app/app/router/auth_redirect.dart';
 import 'package:flutter_bloc_app/app/router/go_router_refresh_stream.dart';
 import 'package:flutter_bloc_app/app/router/routes.dart';
 import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:go_router/go_router.dart';
 
 /// Main application widget
@@ -48,17 +48,17 @@ class _MyAppState extends State<MyApp> {
       return GoRouter(initialLocation: AppRoutes.counterPath, routes: routes);
     }
 
-    final auth = FirebaseAuth.instance;
+    final authRepository = getIt<AuthRepository>();
     // Listen to auth state changes and refresh router when auth state changes
     // This ensures navigation updates when user logs in/out
-    final authRefresh = GoRouterRefreshStream(auth.authStateChanges());
+    final authRefresh = GoRouterRefreshStream(authRepository.authStateChanges);
     _authRefresh = authRefresh;
 
     return GoRouter(
       initialLocation: AppRoutes.counterPath,
       // Refresh router when auth state changes (login/logout)
       refreshListenable: authRefresh,
-      redirect: createAuthRedirect(auth),
+      redirect: createAuthRedirect(authRepository),
       routes: routes,
     );
   }

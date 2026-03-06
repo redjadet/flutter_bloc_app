@@ -121,7 +121,7 @@ class ProfilePage extends StatelessWidget {
                                   backgroundColor: colors.surface,
                                 ),
                                 child: Text(
-                                  'SEE MORE',
+                                  context.l10n.profileSeeMore,
                                   style: profileButtonTextStyle(
                                     context,
                                     color: colors.onSurface,

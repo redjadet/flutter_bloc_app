@@ -1,17 +1,21 @@
-import 'dart:math';
+import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
-import 'package:flutter_bloc_app/features/scapes/domain/scape.dart';
+import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_state.dart';
 
 class ScapesCubit extends Cubit<ScapesState> {
-  ScapesCubit({final TimerService? timerService})
-    : _timerService = timerService ?? DefaultTimerService(),
-      super(const ScapesState()) {
+  ScapesCubit({
+    required final ScapesRepository repository,
+    required final TimerService timerService,
+  }) : _repository = repository,
+       _timerService = timerService,
+       super(const ScapesState()) {
     _loadScapes();
   }
 
+  final ScapesRepository _repository;
   final TimerService _timerService;
   TimerDisposable? _loadDelayHandle;
 
@@ -22,40 +26,30 @@ class ScapesCubit extends Cubit<ScapesState> {
     _loadDelayHandle = _timerService.runOnce(
       const Duration(milliseconds: 300),
       () {
-        if (isClosed) return;
-        final scapes = _generateMockScapes();
-        if (isClosed) return;
-        emit(
-          state.copyWith(
-            scapes: scapes,
-            isLoading: false,
-          ),
-        );
+        unawaited(_loadScapesFromRepository());
       },
     );
   }
 
-  List<Scape> _generateMockScapes() {
-    final random = Random(42);
-    final colors = [
-      'pink',
-      'orange',
-      'green',
-      'yellow',
-      'purple',
-      'blue',
-    ];
-
-    return List.generate(6, (final index) {
-      final color = colors[index % colors.length];
-      return Scape(
-        id: 'scape_$index',
-        name: 'Scape Name ${index + 1}',
-        imageUrl: 'https://picsum.photos/seed/$color$index/400/400',
-        duration: Duration(seconds: random.nextInt(3600)),
-        assetCount: random.nextInt(100),
+  Future<void> _loadScapesFromRepository() async {
+    try {
+      final scapes = await _repository.loadScapes();
+      if (isClosed) return;
+      emit(
+        state.copyWith(
+          scapes: scapes,
+          isLoading: false,
+        ),
       );
-    });
+    } on Object catch (e) {
+      if (isClosed) return;
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
   }
 
   void toggleViewMode() {

@@ -11,6 +11,7 @@ import 'package:flutter_bloc_app/features/search/presentation/widgets/search_app
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_results_grid.dart';
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_sync_banner.dart';
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_text_field.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
@@ -72,7 +73,7 @@ class _SearchPageContent extends StatelessWidget {
                   const SearchSyncBanner(),
                   SizedBox(height: context.responsiveGapL),
                   Text(
-                    'ALL RESULTS',
+                    context.l10n.searchAllResultsSectionTitle,
                     style: theme.textTheme.labelMedium?.copyWith(
                       fontWeight: FontWeight.w900,
                       letterSpacing: context.responsiveCaptionSize * 0.04,
@@ -96,14 +97,14 @@ class _SearchPageContent extends StatelessWidget {
                     isError: (final data) => data.isError,
                     loadingBuilder: (final _) => const CommonLoadingWidget(),
                     errorBuilder: (final context, final _) => CommonErrorView(
-                      message: 'Error loading results',
+                      message: context.l10n.searchErrorLoadingResults,
                       onRetry: () =>
                           context.cubit<SearchCubit>().search('dogs'),
                     ),
                     builder: (final context, final bodyData) {
                       if (!bodyData.hasResults) {
-                        return const CommonEmptyState(
-                          message: 'No results found',
+                        return CommonEmptyState(
+                          message: context.l10n.searchNoResultsFound,
                         );
                       }
 

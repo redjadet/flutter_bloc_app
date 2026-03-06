@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_asset_tile.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_assets_header.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_category_list.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/libr
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_theme.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_top_nav.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_wordmark.dart';
+import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_cubit.dart';
 import 'package:flutter_bloc_app/features/scapes/scapes.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -20,12 +22,16 @@ class LibraryDemoBody extends StatelessWidget {
     required this.isGridView,
     required this.onGridPressed,
     required this.onListPressed,
+    required this.scapesRepository,
+    required this.timerService,
     super.key,
   });
 
   final bool isGridView;
   final VoidCallback onGridPressed;
   final VoidCallback onListPressed;
+  final ScapesRepository scapesRepository;
+  final TimerService timerService;
 
   @override
   Widget build(final BuildContext context) {
@@ -63,7 +69,10 @@ class LibraryDemoBody extends StatelessWidget {
 
         if (isGridView) {
           return BlocProvider<ScapesCubit>(
-            create: (_) => ScapesCubit(),
+            create: (_) => ScapesCubit(
+              repository: scapesRepository,
+              timerService: timerService,
+            ),
             child: ColoredBox(
               color: EpochColors.darkGrey,
               child: CustomScrollView(

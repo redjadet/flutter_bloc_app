@@ -1316,5 +1316,49 @@
   "iotDemoCurrentValue": "Aktueller Wert: {value}",
   "iotDemoSetValueOutOfRange": "Wert muss zwischen {min} und {max} liegen",
   "iotDemoSetValueInvalidNumber": "Geben Sie eine gültige Zahl ein",
-  "openIotDemoTooltip": "IoT-Demo öffnen"
+  "openIotDemoTooltip": "IoT-Demo öffnen",
+  "searchAllResultsSectionTitle": "ALLE ERGEBNISSE",
+  "@searchAllResultsSectionTitle": {
+    "description": "Section title for all search results"
+  },
+  "searchErrorLoadingResults": "Fehler beim Laden der Ergebnisse",
+  "@searchErrorLoadingResults": {
+    "description": "Error message when search results fail to load"
+  },
+  "searchNoResultsFound": "Keine Ergebnisse gefunden",
+  "@searchNoResultsFound": {
+    "description": "Message when search returns no results"
+  },
+  "profileSeeMore": "MEHR ANZEIGEN",
+  "@profileSeeMore": {
+    "description": "Button label to see more profile content"
+  },
+  "moreTooltip": "Mehr",
+  "@moreTooltip": {
+    "description": "Tooltip for more options"
+  },
+  "whiteboardPageTitle": "Whiteboard",
+  "@whiteboardPageTitle": {
+    "description": "Title of the whiteboard page"
+  },
+  "playlearnNoWords": "Keine Wörter",
+  "@playlearnNoWords": {
+    "description": "Empty state when a topic has no vocabulary words"
+  },
+  "playlearnNoTopics": "Keine Themen",
+  "@playlearnNoTopics": {
+    "description": "Empty state when there are no playlearn topics"
+  },
+  "commonEmptyStateTryAgain": "Erneut versuchen",
+  "@commonEmptyStateTryAgain": {
+    "description": "Default label for retry button in empty state"
+  },
+  "profileNoCachedProfile": "Kein zwischengespeichertes Profil",
+  "@profileNoCachedProfile": {
+    "description": "Shown when there is no cached profile data"
+  },
+  "loggedOutPhotoLabel": "Foto",
+  "@loggedOutPhotoLabel": {
+    "description": "Label for photo in logged-out header"
+  }
 }

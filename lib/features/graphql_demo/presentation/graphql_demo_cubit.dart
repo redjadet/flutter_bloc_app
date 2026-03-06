@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/data/offline_first_graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
@@ -15,13 +14,6 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
 
   final GraphqlDemoRepository _repository;
   int _loadRequestId = 0;
-
-  GraphqlDataSource get _repositorySource {
-    if (_repository is OfflineFirstGraphqlDemoRepository) {
-      return _repository.lastSource;
-    }
-    return GraphqlDataSource.unknown;
-  }
 
   Future<void> loadInitial() async {
     if (isClosed) return;
@@ -41,7 +33,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         _emitSuccess(
           continents: result.continents,
           countries: result.countries,
-          source: _repositorySource,
+          source: _repository.lastSource,
         );
       },
       onError: (final message) {
@@ -91,7 +83,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
           countries: countries,
           activeContinentCode: continentCode,
           shouldUpdateActiveContinent: true,
-          source: _repositorySource,
+          source: _repository.lastSource,
         );
       },
       onError: (final message) {

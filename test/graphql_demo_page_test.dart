@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_cubit.dart';
@@ -210,6 +211,9 @@ class _StubGraphqlDemoCubit extends GraphqlDemoCubit {
 }
 
 class _StubGraphqlRepository implements GraphqlDemoRepository {
+  @override
+  GraphqlDataSource get lastSource => GraphqlDataSource.unknown;
+
   @override
   Future<List<GraphqlContinent>> fetchContinents() async =>
       const <GraphqlContinent>[];

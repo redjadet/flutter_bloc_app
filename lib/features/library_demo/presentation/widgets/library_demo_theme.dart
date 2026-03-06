@@ -2,7 +2,88 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
-/// EPOCH Library Design System Colors
+/// Theme extension for EPOCH Library design tokens (colors).
+@immutable
+class EpochThemeExtension extends ThemeExtension<EpochThemeExtension> {
+  const EpochThemeExtension({
+    required this.warmGreyLightest,
+    required this.warmGrey,
+    required this.ash,
+    required this.ashDarker,
+    required this.darkGrey,
+    required this.pink,
+    required this.purple,
+  });
+
+  final Color warmGreyLightest;
+  final Color warmGrey;
+  final Color ash;
+  final Color ashDarker;
+  final Color darkGrey;
+  final Color pink;
+  final Color purple;
+
+  static const EpochThemeExtension _default = EpochThemeExtension(
+    warmGreyLightest: Color(0xFFE8E7DD),
+    warmGrey: Color(0xFF9D9C93),
+    ash: Color(0xFF877A7A),
+    ashDarker: Color(0xFF736868),
+    darkGrey: Color(0xFF231F20),
+    pink: Color(0xFFFFC9C1),
+    purple: Color(0xFFC4BAFF),
+  );
+
+  /// Default EPOCH palette for use in theme.
+  static EpochThemeExtension get defaults => _default;
+
+  @override
+  EpochThemeExtension copyWith({
+    final Color? warmGreyLightest,
+    final Color? warmGrey,
+    final Color? ash,
+    final Color? ashDarker,
+    final Color? darkGrey,
+    final Color? pink,
+    final Color? purple,
+  }) => EpochThemeExtension(
+    warmGreyLightest: warmGreyLightest ?? this.warmGreyLightest,
+    warmGrey: warmGrey ?? this.warmGrey,
+    ash: ash ?? this.ash,
+    ashDarker: ashDarker ?? this.ashDarker,
+    darkGrey: darkGrey ?? this.darkGrey,
+    pink: pink ?? this.pink,
+    purple: purple ?? this.purple,
+  );
+
+  @override
+  EpochThemeExtension lerp(
+    final ThemeExtension<EpochThemeExtension>? other,
+    final double t,
+  ) {
+    if (other is! EpochThemeExtension) return this;
+    return EpochThemeExtension(
+      warmGreyLightest: _lerpColor(
+        warmGreyLightest,
+        other.warmGreyLightest,
+        t,
+      ),
+      warmGrey: _lerpColor(warmGrey, other.warmGrey, t),
+      ash: _lerpColor(ash, other.ash, t),
+      ashDarker: _lerpColor(ashDarker, other.ashDarker, t),
+      darkGrey: _lerpColor(darkGrey, other.darkGrey, t),
+      pink: _lerpColor(pink, other.pink, t),
+      purple: _lerpColor(purple, other.purple, t),
+    );
+  }
+
+  static Color _lerpColor(final Color from, final Color to, final double t) =>
+      Color.lerp(from, to, t) ?? (t < 0.5 ? from : to);
+}
+
+/// EPOCH Library Design System Colors.
+///
+/// Values are also available via [EpochThemeExtension] when the extension
+/// is provided in the theme (e.g. library demo page).
 class EpochColors {
   const EpochColors._();
 
