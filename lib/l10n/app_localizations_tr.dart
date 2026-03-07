@@ -1702,4 +1702,63 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get loggedOutPhotoLabel => 'fotoğraf';
+
+  @override
+  String get supabaseAuthTitle => 'Supabase Kimlik Doğrulama';
+
+  @override
+  String get supabaseAuthSignIn => 'Giriş yap';
+
+  @override
+  String get supabaseAuthSignUp => 'Kayıt ol';
+
+  @override
+  String get supabaseAuthSignOut => 'Çıkış yap';
+
+  @override
+  String get supabaseAuthEmailLabel => 'E-posta';
+
+  @override
+  String get supabaseAuthPasswordLabel => 'Parola';
+
+  @override
+  String get supabaseAuthPasswordMinLength => 'En az 6 karakter';
+
+  @override
+  String get supabaseAuthDisplayNameLabel => 'Görünen ad (isteğe bağlı)';
+
+  @override
+  String get supabaseAuthNotConfigured =>
+      'Supabase yapılandırılmamış. SUPABASE_URL ve SUPABASE_ANON_KEY değerlerini gizlilere veya ortam değişkenine ekleyin.';
+
+  @override
+  String get supabaseAuthErrorInvalidCredentials =>
+      'Geçersiz e-posta veya parola';
+
+  @override
+  String get supabaseAuthErrorInvalidEmail =>
+      'Lütfen geçerli bir e-posta adresi girin.';
+
+  @override
+  String get supabaseAuthErrorNetwork =>
+      'Ağ hatası. Bağlantınızı kontrol edin.';
+
+  @override
+  String get supabaseAuthErrorWeakPassword =>
+      'Parola en az 6 karakter olmalıdır.';
+
+  @override
+  String get supabaseAuthErrorUserAlreadyExists =>
+      'Bu e-posta ile zaten bir hesap var. Giriş yapmayı deneyin.';
+
+  @override
+  String supabaseAuthSignedInAs(String email) {
+    return '$email olarak giriş yapıldı';
+  }
+
+  @override
+  String get settingsIntegrationsSection => 'Entegrasyonlar';
+
+  @override
+  String get settingsSupabaseAuth => 'Supabase Kimlik Doğrulama';
 }

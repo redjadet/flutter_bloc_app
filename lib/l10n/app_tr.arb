@@ -1379,5 +1379,22 @@
   "loggedOutPhotoLabel": "fotoğraf",
   "@loggedOutPhotoLabel": {
     "description": "Label for photo in logged-out header"
-  }
+  },
+  "supabaseAuthTitle": "Supabase Kimlik Doğrulama",
+  "supabaseAuthSignIn": "Giriş yap",
+  "supabaseAuthSignUp": "Kayıt ol",
+  "supabaseAuthSignOut": "Çıkış yap",
+  "supabaseAuthEmailLabel": "E-posta",
+  "supabaseAuthPasswordLabel": "Parola",
+  "supabaseAuthPasswordMinLength": "En az 6 karakter",
+  "supabaseAuthDisplayNameLabel": "Görünen ad (isteğe bağlı)",
+  "supabaseAuthNotConfigured": "Supabase yapılandırılmamış. SUPABASE_URL ve SUPABASE_ANON_KEY değerlerini gizlilere veya ortam değişkenine ekleyin.",
+  "supabaseAuthErrorInvalidCredentials": "Geçersiz e-posta veya parola",
+  "supabaseAuthErrorInvalidEmail": "Lütfen geçerli bir e-posta adresi girin.",
+  "supabaseAuthErrorNetwork": "Ağ hatası. Bağlantınızı kontrol edin.",
+  "supabaseAuthErrorWeakPassword": "Parola en az 6 karakter olmalıdır.",
+  "supabaseAuthErrorUserAlreadyExists": "Bu e-posta ile zaten bir hesap var. Giriş yapmayı deneyin.",
+  "supabaseAuthSignedInAs": "{email} olarak giriş yapıldı",
+  "settingsIntegrationsSection": "Entegrasyonlar",
+  "settingsSupabaseAuth": "Supabase Kimlik Doğrulama"
 }

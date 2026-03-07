@@ -85,6 +85,7 @@ dependencies:
   retrofit: ^4.9.0
   shared_preferences: ^2.5.3
   skeletonizer: ^2.1.0+1
+  supabase_flutter: ^2.8.0
   wallet_connect_v2: ^1.0.0
   web_socket_channel: ^3.0.3
   window_manager: ^0.5.1

@@ -75,6 +75,9 @@ class AppRoutes {
   static const walletconnectAuth = 'walletconnect-auth';
   static const walletconnectAuthPath = '/walletconnect-auth';
 
+  static const supabaseAuth = 'supabase-auth';
+  static const supabaseAuthPath = '/supabase-auth';
+
   static const playlearn = 'playlearn';
   static const playlearnPath = '/playlearn';
 

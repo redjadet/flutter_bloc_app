@@ -3157,6 +3157,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'photo'**
   String get loggedOutPhotoLabel;
+
+  /// Title for the Supabase authentication page
+  ///
+  /// In en, this message translates to:
+  /// **'Supabase Auth'**
+  String get supabaseAuthTitle;
+
+  /// Sign in button on Supabase auth page
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get supabaseAuthSignIn;
+
+  /// Sign up button on Supabase auth page
+  ///
+  /// In en, this message translates to:
+  /// **'Sign up'**
+  String get supabaseAuthSignUp;
+
+  /// Sign out button on Supabase auth page
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get supabaseAuthSignOut;
+
+  /// Email field label on Supabase auth page
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get supabaseAuthEmailLabel;
+
+  /// Password field label on Supabase auth page
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get supabaseAuthPasswordLabel;
+
+  /// Hint for minimum password length on Supabase auth page
+  ///
+  /// In en, this message translates to:
+  /// **'At least 6 characters'**
+  String get supabaseAuthPasswordMinLength;
+
+  /// Display name field label on Supabase sign up form
+  ///
+  /// In en, this message translates to:
+  /// **'Display name (optional)'**
+  String get supabaseAuthDisplayNameLabel;
+
+  /// Message when Supabase URL or anon key is missing
+  ///
+  /// In en, this message translates to:
+  /// **'Supabase is not configured. Add SUPABASE_URL and SUPABASE_ANON_KEY to secrets or environment.'**
+  String get supabaseAuthNotConfigured;
+
+  /// Error when sign in fails due to invalid credentials
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password'**
+  String get supabaseAuthErrorInvalidCredentials;
+
+  /// Error when email format is invalid (e.g. sign up validation)
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address.'**
+  String get supabaseAuthErrorInvalidEmail;
+
+  /// Error when a network failure occurs during auth
+  ///
+  /// In en, this message translates to:
+  /// **'Network error. Check your connection.'**
+  String get supabaseAuthErrorNetwork;
+
+  /// Error when sign up fails due to password too short
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters.'**
+  String get supabaseAuthErrorWeakPassword;
+
+  /// Error when sign up fails because email is already registered
+  ///
+  /// In en, this message translates to:
+  /// **'An account with this email already exists. Try signing in.'**
+  String get supabaseAuthErrorUserAlreadyExists;
+
+  /// Shown when user is signed in with Supabase
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as {email}'**
+  String supabaseAuthSignedInAs(String email);
+
+  /// Settings section title for integrations (e.g. Supabase)
+  ///
+  /// In en, this message translates to:
+  /// **'Integrations'**
+  String get settingsIntegrationsSection;
+
+  /// Settings link label to open Supabase auth page
+  ///
+  /// In en, this message translates to:
+  /// **'Supabase Auth'**
+  String get settingsSupabaseAuth;
 }
 
 class _AppLocalizationsDelegate

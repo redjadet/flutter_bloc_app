@@ -1728,4 +1728,62 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get loggedOutPhotoLabel => 'Foto';
+
+  @override
+  String get supabaseAuthTitle => 'Supabase-Auth';
+
+  @override
+  String get supabaseAuthSignIn => 'Anmelden';
+
+  @override
+  String get supabaseAuthSignUp => 'Registrieren';
+
+  @override
+  String get supabaseAuthSignOut => 'Abmelden';
+
+  @override
+  String get supabaseAuthEmailLabel => 'E-Mail';
+
+  @override
+  String get supabaseAuthPasswordLabel => 'Passwort';
+
+  @override
+  String get supabaseAuthPasswordMinLength => 'Mindestens 6 Zeichen';
+
+  @override
+  String get supabaseAuthDisplayNameLabel => 'Anzeigename (optional)';
+
+  @override
+  String get supabaseAuthNotConfigured =>
+      'Supabase ist nicht konfiguriert. SUPABASE_URL und SUPABASE_ANON_KEY in den Einstellungen oder der Umgebung hinzufügen.';
+
+  @override
+  String get supabaseAuthErrorInvalidCredentials =>
+      'Ungültige E-Mail oder Passwort';
+
+  @override
+  String get supabaseAuthErrorInvalidEmail =>
+      'Bitte geben Sie eine gültige E-Mail-Adresse ein.';
+
+  @override
+  String get supabaseAuthErrorNetwork => 'Netzwerkfehler. Verbindung prüfen.';
+
+  @override
+  String get supabaseAuthErrorWeakPassword =>
+      'Das Passwort muss mindestens 6 Zeichen haben.';
+
+  @override
+  String get supabaseAuthErrorUserAlreadyExists =>
+      'Ein Konto mit dieser E-Mail existiert bereits. Melden Sie sich an.';
+
+  @override
+  String supabaseAuthSignedInAs(String email) {
+    return 'Angemeldet als $email';
+  }
+
+  @override
+  String get settingsIntegrationsSection => 'Integrationen';
+
+  @override
+  String get settingsSupabaseAuth => 'Supabase Auth';
 }

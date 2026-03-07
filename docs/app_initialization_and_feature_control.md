@@ -70,6 +70,6 @@ This gives a clear, high-level “yes” to: **Have you implemented app initiali
 
 ## This project
 
-- **Bootstrap:** [lib/core/bootstrap/bootstrap_coordinator.dart](../lib/core/bootstrap/bootstrap_coordinator.dart) sets flavor, runs platform init, secrets, Firebase, DI, migrations, and materializes [AppRuntimeConfig](../lib/core/config/app_runtime_config.dart) before `runApp`.
+- **Bootstrap:** [lib/core/bootstrap/bootstrap_coordinator.dart](../lib/core/bootstrap/bootstrap_coordinator.dart) sets flavor, runs platform init, secrets, Firebase, Supabase (when `SUPABASE_URL` and `SUPABASE_ANON_KEY` are present), DI, migrations, and materializes [AppRuntimeConfig](../lib/core/config/app_runtime_config.dart) before `runApp`.
 - **Runtime config:** [AppRuntimeConfig](../lib/core/config/app_runtime_config.dart) holds flavor, optional `apiBaseUrl` (from `--dart-define=API_BASE_URL`), and `skeletonDelay`; built via `AppRuntimeConfig.fromBootstrap()` and registered in DI. Features and repositories (e.g. counter route, [DelayedChartRepository](../lib/features/chart/data/delayed_chart_repository.dart)) read from it for init-controlled behavior.
 - **Remote config:** Firebase Remote Config remains on-demand (`RemoteConfigCubit.ensureInitialized()` when a feature needs it); see [lazy_loading_review.md](lazy_loading_review.md).

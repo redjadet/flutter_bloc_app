@@ -20,6 +20,8 @@ void main() {
         'huggingface_model': 'awesome-model',
         'huggingface_use_chat_completions': 'true',
         'google_maps_api_key': 'maps-secure',
+        'supabase_url': 'https://example.supabase.co',
+        'supabase_anon_key': 'anon-secure',
       },
     );
 
@@ -31,6 +33,8 @@ void main() {
     expect(SecretConfig.huggingfaceModel, 'awesome-model');
     expect(SecretConfig.useChatCompletions, isTrue);
     expect(SecretConfig.googleMapsApiKey, 'maps-secure');
+    expect(SecretConfig.supabaseUrl, 'https://example.supabase.co');
+    expect(SecretConfig.supabaseAnonKey, 'anon-secure');
     expect(storage.writeCalls, isEmpty);
   });
 
@@ -82,6 +86,8 @@ void main() {
       'HUGGINGFACE_MODEL': 'env-model',
       'HUGGINGFACE_USE_CHAT_COMPLETIONS': true,
       'GOOGLE_MAPS_API_KEY': 'maps-env',
+      'SUPABASE_URL': 'https://env.supabase.co',
+      'SUPABASE_ANON_KEY': 'anon-env',
     };
 
     await SecretConfig.load();
@@ -90,6 +96,8 @@ void main() {
     expect(SecretConfig.huggingfaceModel, 'env-model');
     expect(SecretConfig.useChatCompletions, isTrue);
     expect(SecretConfig.googleMapsApiKey, 'maps-env');
+    expect(SecretConfig.supabaseUrl, 'https://env.supabase.co');
+    expect(SecretConfig.supabaseAnonKey, 'anon-env');
     expect(
       storage.writeCalls,
       containsPair(_FakeSecretStorage.hfTokenKey, 'env-key'),
@@ -105,6 +113,17 @@ void main() {
     expect(
       storage.writeCalls,
       containsPair(_FakeSecretStorage.googleMapsKey, 'maps-env'),
+    );
+    expect(
+      storage.writeCalls,
+      containsPair(
+        _FakeSecretStorage.supabaseUrlKey,
+        'https://env.supabase.co',
+      ),
+    );
+    expect(
+      storage.writeCalls,
+      containsPair(_FakeSecretStorage.supabaseAnonKey, 'anon-env'),
     );
   });
 
@@ -165,6 +184,8 @@ class _FakeSecretStorage implements SecretStorage {
   static const String hfTokenKey = 'huggingface_api_key';
   static const String hfModelKey = 'huggingface_model';
   static const String googleMapsKey = 'google_maps_api_key';
+  static const String supabaseUrlKey = 'supabase_url';
+  static const String supabaseAnonKey = 'supabase_anon_key';
   final Map<String, String> _values;
   final Map<String, String> writeCalls = <String, String>{};
 

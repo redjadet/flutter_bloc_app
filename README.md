@@ -5,11 +5,12 @@ A reference Flutter application that demonstrates clean architecture, offline-fi
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.4-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.1-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-74%2E88%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-74%2E30%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
 [![State Management](https://img.shields.io/badge/State%20Management-BLOC%2FCubit-2196F3.svg)](https://pub.dev/packages/flutter_bloc)
 [![Backend](https://img.shields.io/badge/Backend-Firebase-FFCA28.svg)](https://firebase.google.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Auth-3ECF8E.svg)](https://supabase.com/)
 [![Architecture Pattern](https://img.shields.io/badge/Architecture-Offline--First-4CAF50.svg)](docs/offline_first/adoption_guide.md)
 [![Design System](https://img.shields.io/badge/Design%20System-Material%203-6200EE.svg)](https://m3.material.io/)
 [![iOS Design](https://img.shields.io/badge/iOS%20Design-Cupertino-007AFF.svg)](https://api.flutter.dev/flutter/cupertino/cupertino-library.html)
@@ -39,6 +40,7 @@ This codebase focuses on maintainability, correctness, and performance:
 - Search, profile, and todo list features
 - Charts, markdown editor, and whiteboard samples
 - WalletConnect Auth demo (Example page): connect wallet, link to Firebase; see [WalletConnect Auth Status](docs/walletconnect_auth_status.md)
+- Optional Supabase Auth (Settings → Integrations): email/password sign-in/sign-up on a dedicated page when `SUPABASE_URL` and `SUPABASE_ANON_KEY` are configured; see [Authentication](docs/authentication.md#supabase-auth-optional-separate-page)
 
 For entry points and module details, see [Feature Overview](docs/feature_overview.md).
 
@@ -49,6 +51,7 @@ For entry points and module details, see [Feature Overview](docs/feature_overvie
 Some features require API keys or platform setup to fully enable:
 
 - **Firebase** (Auth, Remote Config, Realtime Database, etc.) – config files are gitignored. See [Firebase Setup](docs/firebase_setup.md) for how to run the app with Firebase.
+- **Supabase** (optional Auth page) – `SUPABASE_URL` and `SUPABASE_ANON_KEY` in secrets; see [Security & Secrets](docs/security_and_secrets.md) and [Authentication](docs/authentication.md#supabase-auth-optional-separate-page).
 - Google Maps (Android/iOS keys)
 - Hugging Face Inference API
 - Google Gemini API (for GenUI Demo)

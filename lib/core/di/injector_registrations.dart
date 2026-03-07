@@ -18,6 +18,7 @@ import 'package:flutter_bloc_app/core/di/register_playlearn_services.dart';
 import 'package:flutter_bloc_app/core/di/register_profile_services.dart';
 import 'package:flutter_bloc_app/core/di/register_remote_config_services.dart';
 import 'package:flutter_bloc_app/core/di/register_search_services.dart';
+import 'package:flutter_bloc_app/core/di/register_supabase_services.dart';
 import 'package:flutter_bloc_app/core/di/register_todo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_walletconnect_auth_services.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
@@ -69,6 +70,7 @@ Future<void> registerAllDependencies() async {
   registerTodoServices();
   registerGenUiServices();
   registerWalletConnectAuthServices();
+  registerSupabaseServices();
   registerPlaylearnServices();
   registerIgamingDemoServices();
   registerFcmDemoServices();

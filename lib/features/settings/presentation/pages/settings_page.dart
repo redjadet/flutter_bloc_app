@@ -70,6 +70,8 @@ class _SettingsView extends StatelessWidget {
       SizedBox(height: context.responsiveGapL),
       const ThemeSection(),
       SizedBox(height: context.responsiveGapL),
+      const IntegrationsSection(),
+      SizedBox(height: context.responsiveGapL),
       const LanguageSection(),
       SizedBox(height: context.responsiveGapL),
       const AppInfoSection(),

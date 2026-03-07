@@ -1698,4 +1698,62 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loggedOutPhotoLabel => 'photo';
+
+  @override
+  String get supabaseAuthTitle => 'Supabase Auth';
+
+  @override
+  String get supabaseAuthSignIn => 'Sign in';
+
+  @override
+  String get supabaseAuthSignUp => 'Sign up';
+
+  @override
+  String get supabaseAuthSignOut => 'Sign out';
+
+  @override
+  String get supabaseAuthEmailLabel => 'Email';
+
+  @override
+  String get supabaseAuthPasswordLabel => 'Password';
+
+  @override
+  String get supabaseAuthPasswordMinLength => 'At least 6 characters';
+
+  @override
+  String get supabaseAuthDisplayNameLabel => 'Display name (optional)';
+
+  @override
+  String get supabaseAuthNotConfigured =>
+      'Supabase is not configured. Add SUPABASE_URL and SUPABASE_ANON_KEY to secrets or environment.';
+
+  @override
+  String get supabaseAuthErrorInvalidCredentials => 'Invalid email or password';
+
+  @override
+  String get supabaseAuthErrorInvalidEmail =>
+      'Please enter a valid email address.';
+
+  @override
+  String get supabaseAuthErrorNetwork =>
+      'Network error. Check your connection.';
+
+  @override
+  String get supabaseAuthErrorWeakPassword =>
+      'Password must be at least 6 characters.';
+
+  @override
+  String get supabaseAuthErrorUserAlreadyExists =>
+      'An account with this email already exists. Try signing in.';
+
+  @override
+  String supabaseAuthSignedInAs(String email) {
+    return 'Signed in as $email';
+  }
+
+  @override
+  String get settingsIntegrationsSection => 'Integrations';
+
+  @override
+  String get settingsSupabaseAuth => 'Supabase Auth';
 }

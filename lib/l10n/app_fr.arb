@@ -1360,5 +1360,22 @@
   "loggedOutPhotoLabel": "photo",
   "@loggedOutPhotoLabel": {
     "description": "Label for photo in logged-out header"
-  }
+  },
+  "supabaseAuthTitle": "Auth Supabase",
+  "supabaseAuthSignIn": "Connexion",
+  "supabaseAuthSignUp": "Inscription",
+  "supabaseAuthSignOut": "Déconnexion",
+  "supabaseAuthEmailLabel": "E-mail",
+  "supabaseAuthPasswordLabel": "Mot de passe",
+  "supabaseAuthPasswordMinLength": "Au moins 6 caractères",
+  "supabaseAuthDisplayNameLabel": "Nom d'affichage (optionnel)",
+  "supabaseAuthNotConfigured": "Supabase n'est pas configuré. Ajoutez SUPABASE_URL et SUPABASE_ANON_KEY aux secrets ou à l'environnement.",
+  "supabaseAuthErrorInvalidCredentials": "E-mail ou mot de passe invalide",
+  "supabaseAuthErrorInvalidEmail": "Veuillez entrer une adresse e-mail valide.",
+  "supabaseAuthErrorNetwork": "Erreur réseau. Vérifiez la connexion.",
+  "supabaseAuthErrorWeakPassword": "Le mot de passe doit contenir au moins 6 caractères.",
+  "supabaseAuthErrorUserAlreadyExists": "Un compte existe déjà avec cette adresse e-mail. Connectez-vous.",
+  "supabaseAuthSignedInAs": "Connecté en tant que {email}",
+  "settingsIntegrationsSection": "Intégrations",
+  "settingsSupabaseAuth": "Auth Supabase"
 }
