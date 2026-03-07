@@ -80,6 +80,7 @@ dependencies:
   mix: ^1.7.0
   package_info_plus: ^9.0.0
   path_provider: ^2.1.1
+  provider: ^6.1.5
   responsive_framework: ^1.5.1
   retrofit: ^4.9.0
   shared_preferences: ^2.5.3

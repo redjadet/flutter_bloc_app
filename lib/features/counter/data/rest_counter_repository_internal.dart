@@ -12,7 +12,7 @@ Future<CounterSnapshot> _restCounterRepositoryLoad(
             .then(stringResponseFromHttpResponse),
         errorFactory: CounterError.load,
         onHttpFailure: (final res) => CounterError.load(
-          message: 'REST load failed (HTTP ${res.statusCode}).',
+          message: 'REST load failed (HTTP ${_statusCodeLabel(res)}).',
         ),
       );
   final String? body = response.data;
@@ -46,9 +46,9 @@ Future<void> _restCounterRepositorySave(
     errorFactory: CounterError.save,
     onHttpFailure: (final res) => CounterError.save(
       originalError: Exception(
-        'Counter save failed (HTTP ${res.statusCode})',
+        'Counter save failed (HTTP ${_statusCodeLabel(res)})',
       ),
-      message: 'Save failed with status ${res.statusCode}',
+      message: 'Save failed with status ${_statusCodeLabel(res)}',
     ),
   );
   _emitSnapshot(repository, normalized);
@@ -73,12 +73,12 @@ Future<Response<T>> _restCounterRepositorySendRequest<T>({
       onHttpFailure?.call(response) ??
       errorFactory(
         originalError: Exception(
-          'REST $operation failed (HTTP ${response.statusCode})',
+          'REST $operation failed (HTTP ${_statusCodeLabel(response)})',
         ),
-        message: 'REST $operation failed (HTTP ${response.statusCode}).',
+        message: 'REST $operation failed (HTTP ${_statusCodeLabel(response)}).',
       ),
   onException: (final error) => errorFactory(originalError: error),
-  onFailureLog: (final response) => _logHttpError(operation, response),
+  onFailureLog: (final response) => _logHttpError<T>(operation, response),
 );
 
 Map<String, String> _headers(
@@ -90,6 +90,9 @@ Map<String, String> _headers(
 };
 
 bool _isSuccess(final int statusCode) => statusCode >= 200 && statusCode < 300;
+
+String _statusCodeLabel<T>(final Response<T> response) =>
+    response.statusCode?.toString() ?? 'unknown';
 
 CounterSnapshot _storeSnapshot(
   final RestCounterRepository repository,
@@ -155,7 +158,7 @@ void _logHttpError<T>(
   final Response<T> response,
 ) {
   AppLogger.error(
-    'RestCounterRepository.$operation non-success: ${response.statusCode}',
+    'RestCounterRepository.$operation non-success: ${_statusCodeLabel(response)}',
     'Response body omitted for privacy',
     StackTrace.current,
   );

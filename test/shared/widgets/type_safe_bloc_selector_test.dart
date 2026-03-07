@@ -66,6 +66,25 @@ void main() {
       await tester.pump();
       expect(find.text('Value: 1'), findsOneWidget);
     });
+
+    testWidgets('supports an explicit bloc instance', (final tester) async {
+      final TestCubit cubit = TestCubit();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: TypeSafeBlocSelector<TestCubit, TestState, int>(
+            bloc: cubit,
+            selector: (final state) => state.value,
+            builder: (final context, final value) => Text('Value: $value'),
+          ),
+        ),
+      );
+
+      expect(find.text('Value: 0'), findsOneWidget);
+
+      cubit.emit(const TestState(value: 5, label: 'Explicit'));
+      await tester.pump();
+      expect(find.text('Value: 5'), findsOneWidget);
+    });
   });
 
   group('TypeSafeBlocBuilder', () {
@@ -155,6 +174,26 @@ void main() {
       bloc.add(const TestIncremented());
       await tester.pump();
       expect(find.text('1: Bloc'), findsOneWidget);
+    });
+
+    testWidgets('supports an explicit bloc instance', (final tester) async {
+      final TestCubit cubit = TestCubit();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: TypeSafeBlocBuilder<TestCubit, TestState>(
+            bloc: cubit,
+            builder: (final context, final state) =>
+                Text('${state.value}: ${state.label}'),
+          ),
+        ),
+      );
+
+      expect(find.text('0: Initial'), findsOneWidget);
+
+      cubit.emit(const TestState(value: 3, label: 'Explicit'));
+      await tester.pump();
+      expect(find.text('3: Explicit'), findsOneWidget);
     });
   });
 
@@ -407,6 +446,32 @@ void main() {
       bloc.add(const TestIncremented());
       await tester.pump();
       expect(find.text('1: Bloc'), findsOneWidget);
+      expect(listenerCount, 1);
+    });
+
+    testWidgets('supports an explicit bloc instance', (final tester) async {
+      final TestCubit cubit = TestCubit();
+      int listenerCount = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: TypeSafeBlocConsumer<TestCubit, TestState>(
+            bloc: cubit,
+            listener: (final context, final state) {
+              listenerCount++;
+            },
+            builder: (final context, final state) =>
+                Text('${state.value}: ${state.label}'),
+          ),
+        ),
+      );
+
+      expect(find.text('0: Initial'), findsOneWidget);
+      expect(listenerCount, 0);
+
+      cubit.emit(const TestState(value: 9, label: 'Explicit'));
+      await tester.pump();
+      expect(find.text('9: Explicit'), findsOneWidget);
       expect(listenerCount, 1);
     });
   });
