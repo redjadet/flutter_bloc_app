@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/core/bootstrap/app_version_service.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -36,6 +37,9 @@ class BootstrapCoordinator {
       FirebaseBootstrapService.configureFirebaseUI();
       FirebaseBootstrapService.registerCrashlyticsHandlers();
     }
+
+    // Initialize Supabase if URL and anon key are configured
+    await SupabaseBootstrapService.initializeSupabase();
 
     // Setup dependency injection
     await configureDependencies();

@@ -11,11 +11,19 @@ Future<Map<String, dynamic>?> _readSecureSecrets(
     );
     final String? mapsKey = await storage.read(SecretConfig._keyGoogleMaps);
     final String? geminiKey = await storage.read(SecretConfig._keyGeminiApiKey);
+    final String? supabaseUrl = await storage.read(
+      SecretConfig._keySupabaseUrl,
+    );
+    final String? supabaseAnon = await storage.read(
+      SecretConfig._keySupabaseAnonKey,
+    );
     if ((token == null || token.isEmpty) &&
         (model == null || model.isEmpty) &&
         (flag == null || flag.isEmpty) &&
         (mapsKey == null || mapsKey.isEmpty) &&
-        (geminiKey == null || geminiKey.isEmpty)) {
+        (geminiKey == null || geminiKey.isEmpty) &&
+        (supabaseUrl == null || supabaseUrl.isEmpty) &&
+        (supabaseAnon == null || supabaseAnon.isEmpty)) {
       return null;
     }
     return <String, dynamic>{
@@ -24,6 +32,8 @@ Future<Map<String, dynamic>?> _readSecureSecrets(
       'HUGGINGFACE_USE_CHAT_COMPLETIONS': flag == 'true',
       'GOOGLE_MAPS_API_KEY': mapsKey,
       'GEMINI_API_KEY': geminiKey,
+      'SUPABASE_URL': supabaseUrl,
+      'SUPABASE_ANON_KEY': supabaseAnon,
     };
   } on Exception {
     AppLogger.warning('SecretConfig secure read failed');
@@ -51,6 +61,14 @@ Future<void> _persistToSecureStorage(final SecretStorage storage) async {
   final String? geminiKey = SecretConfig._geminiApiKey;
   if (geminiKey case final value?) {
     await storage.write(SecretConfig._keyGeminiApiKey, value);
+  }
+  final String? supabaseUrl = SecretConfig._supabaseUrl;
+  if (supabaseUrl case final value?) {
+    await storage.write(SecretConfig._keySupabaseUrl, value);
+  }
+  final String? supabaseAnon = SecretConfig._supabaseAnonKey;
+  if (supabaseAnon case final value?) {
+    await storage.write(SecretConfig._keySupabaseAnonKey, value);
   }
 }
 
@@ -82,6 +100,17 @@ void _applySecrets(final Map<String, dynamic> json) {
   SecretConfig._geminiApiKey = (resolvedKey?.isEmpty ?? true)
       ? null
       : resolvedKey;
+
+  final String? supabaseUrl = stringFromDynamic(json['SUPABASE_URL'])?.trim();
+  SecretConfig._supabaseUrl = (supabaseUrl?.isEmpty ?? true)
+      ? null
+      : supabaseUrl;
+  final String? supabaseAnon = stringFromDynamic(
+    json['SUPABASE_ANON_KEY'],
+  )?.trim();
+  SecretConfig._supabaseAnonKey = (supabaseAnon?.isEmpty ?? true)
+      ? null
+      : supabaseAnon;
 }
 
 bool _hasSecrets(final Map<String, dynamic>? source) {
@@ -94,6 +123,10 @@ bool _hasSecrets(final Map<String, dynamic>? source) {
   final String? maps = stringFromDynamic(source['GOOGLE_MAPS_API_KEY'])?.trim();
   final String? gemini = stringFromDynamic(source['GEMINI_API_KEY'])?.trim();
   final String? googleKey = stringFromDynamic(source['GOOGLE_API_KEY'])?.trim();
+  final String? supabaseUrl = stringFromDynamic(source['SUPABASE_URL'])?.trim();
+  final String? supabaseAnon = stringFromDynamic(
+    source['SUPABASE_ANON_KEY'],
+  )?.trim();
 
   final bool hasToken = token != null && token.isNotEmpty;
   final bool hasModel = model != null && model.isNotEmpty;
@@ -102,13 +135,17 @@ bool _hasSecrets(final Map<String, dynamic>? source) {
   final bool hasMaps = maps != null && maps.isNotEmpty;
   final bool hasGemini = gemini != null && gemini.isNotEmpty;
   final bool hasGoogleKey = googleKey != null && googleKey.isNotEmpty;
+  final bool hasSupabase =
+      (supabaseUrl != null && supabaseUrl.isNotEmpty) &&
+      (supabaseAnon != null && supabaseAnon.isNotEmpty);
 
   return hasToken ||
       hasModel ||
       hasFlag ||
       hasMaps ||
       hasGemini ||
-      hasGoogleKey;
+      hasGoogleKey ||
+      hasSupabase;
 }
 
 Map<String, dynamic>? _readEnvironmentSecrets() {
@@ -121,6 +158,8 @@ Map<String, dynamic>? _readEnvironmentSecrets() {
   const String geminiKey = String.fromEnvironment('GEMINI_API_KEY');
   const String googleKey = String.fromEnvironment('GOOGLE_API_KEY');
   final String resolvedKey = geminiKey.isNotEmpty ? geminiKey : googleKey;
+  const String supabaseUrl = String.fromEnvironment('SUPABASE_URL');
+  const String supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
 
   final Map<String, dynamic> result = <String, dynamic>{};
   if (token.isNotEmpty) {
@@ -137,6 +176,12 @@ Map<String, dynamic>? _readEnvironmentSecrets() {
   }
   if (resolvedKey.isNotEmpty) {
     result['GEMINI_API_KEY'] = resolvedKey;
+  }
+  if (supabaseUrl.isNotEmpty) {
+    result['SUPABASE_URL'] = supabaseUrl;
+  }
+  if (supabaseAnonKey.isNotEmpty) {
+    result['SUPABASE_ANON_KEY'] = supabaseAnonKey;
   }
 
   if (SecretConfig.debugEnvironment case final env?) {

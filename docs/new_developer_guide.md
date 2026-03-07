@@ -89,7 +89,7 @@ dart run build_runner build --delete-conflicting-outputs
 
 ## 1. Mental Model
 
-- **Purpose**: Showcase a feature-rich Flutter app built around Cubits, clean architecture, and real-world integrations (Firebase Auth/Remote Config, WebSockets, GraphQL, Google Maps, Hugging Face, GenUI AI-generated UI, Whiteboard with CustomPainter, Markdown Editor with RenderObject, etc.).
+- **Purpose**: Showcase a feature-rich Flutter app built around Cubits, clean architecture, and real-world integrations (Firebase Auth/Remote Config, optional Supabase Auth, WebSockets, GraphQL, Google Maps, Hugging Face, GenUI AI-generated UI, Whiteboard with CustomPainter, Markdown Editor with RenderObject, etc.).
 - **Layers**: Domain → Data → Presentation. Domain stays Flutter-agnostic, Data fulfills contracts, Presentation wires Cubits/Widgets via `get_it`.
 - **State Management**: Cubits with immutable (Freezed/Equatable) states. Widgets read via `BlocBuilder`/`BlocSelector` and stay focused on layout/theming/navigation. **Type-safe extensions** (`context.cubit<T>()`, `TypeSafeBlocSelector`, etc.) provide compile-time safety. See [Compile-Time Safety Guide](compile_time_safety.md).
 - **DI & Startup**: `lib/core/di/injector.dart` registers everything into `getIt`. `main_*.dart` files choose the env, call `configureDependencies()`, then bootstrap `MyApp`. The DI code is organized into multiple files:
@@ -254,7 +254,7 @@ Tips:
 ## 8. Tooling & Productivity
 
 - **Figma pipeline**: When asked to implement a `Frame_Node`, configure `figma-sync/.env`, run `npm install`, then `npm run fetch`. Place outputs under `assets/figma/<Frame>_<Node>/` and update `pubspec.yaml`. Follow `layout_manifest.json` stacking order and use `ResilientSvgAssetImage` for rasterized SVGs.
-- **Secrets**: Use `SecretConfig` to load secure config. Never check real secrets into source; rely on `--dart-define` or secure storage.
+- **Secrets**: Use `SecretConfig` to load secure config. Never check real secrets into source; rely on `--dart-define` or secure storage. Optional features (e.g. Supabase Auth) use `SUPABASE_URL` and `SUPABASE_ANON_KEY` from the same config; see [Security & Secrets](security_and_secrets.md) and [Authentication](authentication.md#supabase-auth-optional-separate-page).
 - **Logging**: Use `AppLogger` (registered in DI) instead of `print`.
 - **Lint rationale**: `prefer_final_parameters` keeps method inputs immutable, improving readability, reducing accidental reassignment during refactors, and making data flow easier to audit. Performance gains are modest, but immutable parameters can enable clearer intent and reduce defensive copies in hot paths.
 - **Linting philosophy**: We lean on Very Good Analysis for baseline safety and keep project rules focused on clarity and maintainability. `type_annotate_public_apis` makes public surfaces explicit for reviewers and tooling. The file-length lint (250 LOC) encourages smaller units that are easier to test and can reduce rebuild scope in large widgets.
@@ -536,6 +536,7 @@ This section answers the question from two angles: **this project’s workflow**
 - **GraphQL/WebSocket issues**: Check the environment constants in `lib/core/config` and confirm the emulator/network allows outbound connections.
 - **Maps API keys**: For Android, add to `android/app/src/main/AndroidManifest.xml`; for iOS, configure `ios/Runner/AppDelegate.swift` + `Info.plist`. The app gracefully falls back to Apple Maps when Google keys are missing.
 - **GenUI Demo API key**: Requires `GEMINI_API_KEY` via `--dart-define=GEMINI_API_KEY=...` (recommended) or a local, git-ignored secrets mechanism used by `SecretConfig` (see the feature’s README/docs if present). Get your key from [Google AI Studio](https://makersuite.google.com/app/apikey). The app should show a user-facing error if the key is missing.
+- **Supabase Auth page shows "not configured"**: Add `SUPABASE_URL` and `SUPABASE_ANON_KEY` to `assets/config/secrets.json` (copy from `secrets.sample.json`) or pass via `--dart-define`, and run with asset secrets enabled. See [Security & Secrets](security_and_secrets.md) and [Authentication](authentication.md#supabase-auth-optional-separate-page).
 - **Coverage script fails**: Ensure `lcov` file exists (run tests with `--coverage`) and that `dart run tool/update_coverage_summary.dart` runs from repo root.
 - **Firebase upgrades break iOS build**: After bumping Firebase packages, run the clean sweep Firebase recommends so the simulator doesn't load stale pods:
 

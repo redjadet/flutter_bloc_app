@@ -35,6 +35,17 @@
 - Auth errors map `FirebaseAuthException.code` to localized strings for sign-in flows (`lib/features/auth/presentation/helpers/auth_error_message.dart`, `lib/l10n/app_*.arb`). The mapper **differentiates** network and rate-limit from invalid-credential: `network-request-failed` → `authErrorNetworkRequestFailed` ("Check your connection and try again"), `too-many-requests` → `authErrorTooManyRequests` ("Too many attempts. Please wait before trying again"), so users don't see "invalid credential" when the issue is connectivity or rate limiting.
 - Error toasts/snackbars are cleared before display to avoid stacking (`shared/utils/error_handling.dart` usage inside `SignInPage`).
 
+## Supabase Auth (Optional, Separate Page)
+
+- **Supabase authentication** is an optional flow on a dedicated page, separate from the main Firebase-based app auth. It does not replace Firebase for app-wide redirect or routing.
+- **Route:** `/supabase-auth` (see `AppRoutes.supabaseAuthPath`). Entry point: Settings → Integrations → Supabase Auth.
+- **Configuration:** Supabase is initialized at bootstrap when `SUPABASE_URL` and `SUPABASE_ANON_KEY` are present in `SecretConfig` (from `--dart-define`, secure storage, or dev-only `assets/config/secrets.json`). See [Security & Secrets](security_and_secrets.md). Key paths: `lib/core/config/secret_config.dart`, `lib/core/bootstrap/supabase_bootstrap_service.dart`, `lib/core/bootstrap/bootstrap_coordinator.dart`.
+- **Behavior:** When Supabase URL and anon key are configured (e.g. in secrets or environment), the page allows sign-in, sign-up, and sign-out via email/password. When not configured, the page shows a “not configured” message and no forms.
+- **Implementation:** `lib/features/supabase_auth/` (domain `SupabaseAuthRepository`, data `SupabaseAuthRepositoryImpl`, presentation `SupabaseAuthCubit` and `SupabaseAuthPage`). Reuses the app’s `AuthUser` domain model for the current Supabase user. Supabase is initialized at bootstrap when credentials are present (`SupabaseBootstrapService`). DI: `lib/core/di/register_supabase_services.dart`; route: `lib/app/router/route_groups.dart`.
+- **Error handling:** Auth failures are mapped to `SupabaseAuthErrorCode` (invalidCredentials, invalidEmail, network, userAlreadyExists, weakPassword) and shown via localized strings (`app_*.arb`). Expected user errors (e.g. wrong password, weak password, invalid email, user already exists) are logged at debug to reduce console noise.
+- **Accessing the signed-in Supabase user from other code:** `SupabaseAuthRepository` is registered as a singleton in DI. Resolve it via the app injector (e.g. `getIt<SupabaseAuthRepository>()`) and use **`currentUser`** (`AuthUser?`) for one-off checks or **`authStateChanges`** (`Stream<AuthUser?>`) to react to sign-in/sign-out. The same instance is used app-wide, so the signed-in user is visible from any feature that resolves the repository.
+- **Testing:** Unit and widget tests in `test/features/supabase_auth/`; repository access from other code is covered by `test/features/supabase_auth/data/supabase_auth_repository_access_test.dart`.
+
 ## Token Handling (Non-Firebase HTTP)
 
 - The shared **Dio** client injects Firebase ID tokens via `AuthTokenInterceptor` when a `FirebaseAuth` instance is provided (`lib/shared/http/interceptors/auth_token_interceptor.dart`).

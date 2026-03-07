@@ -68,6 +68,10 @@ This document lists all the technologies, packages, and tools used in this Flutt
 
 - `local_auth` ^3.0.0 - Biometric authentication
 
+## Supabase
+
+- `supabase_flutter` - Optional Supabase client; used for the optional Supabase Auth page (email/password sign-in/sign-up on a dedicated route). Initialized at bootstrap when `SUPABASE_URL` and `SUPABASE_ANON_KEY` are configured. Does not replace Firebase for app-wide auth. See [Authentication](authentication.md#supabase-auth-optional-separate-page).
+
 ## Dependency Injection
 
 - `get_it` ^9.0.5 - Service locator

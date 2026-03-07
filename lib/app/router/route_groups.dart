@@ -5,6 +5,9 @@ import 'package:flutter_bloc_app/app/router/deferred_pages/websocket_page.dart'
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/presentation/pages/search_page.dart';
+import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
+import 'package:flutter_bloc_app/features/supabase_auth/presentation/cubit/supabase_auth_cubit.dart';
+import 'package:flutter_bloc_app/features/supabase_auth/presentation/pages/supabase_auth_page.dart';
 import 'package:flutter_bloc_app/features/todo_list/todo_list.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/walletconnect_auth_repository.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/cubit/walletconnect_auth_cubit.dart';
@@ -64,6 +67,21 @@ List<GoRoute> createAuxiliaryRoutes() => <GoRoute>[
         ),
         init: (final cubit) => cubit.loadLinkedWallet(),
         child: const WalletConnectAuthPage(),
+      );
+    },
+  ),
+  GoRoute(
+    path: AppRoutes.supabaseAuthPath,
+    name: AppRoutes.supabaseAuth,
+    builder: (final context, final state) {
+      final l10n = context.l10n;
+      return BlocProviderHelpers.withAsyncInit<SupabaseAuthCubit>(
+        create: () => SupabaseAuthCubit(
+          repository: getIt<SupabaseAuthRepository>(),
+          l10n: l10n,
+        ),
+        init: (final cubit) => cubit.loadSession(),
+        child: const SupabaseAuthPage(),
       );
     },
   ),

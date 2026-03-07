@@ -19,6 +19,8 @@ class SecretConfig {
       'huggingface_use_chat_completions';
   static const String _keyGoogleMaps = 'google_maps_api_key';
   static const String _keyGeminiApiKey = 'gemini_api_key';
+  static const String _keySupabaseUrl = 'supabase_url';
+  static const String _keySupabaseAnonKey = 'supabase_anon_key';
 
   static bool _loaded = false;
   static String? _huggingfaceApiKey;
@@ -26,6 +28,8 @@ class SecretConfig {
   static bool _useChatCompletions = false;
   static String? _googleMapsApiKey;
   static String? _geminiApiKey;
+  static String? _supabaseUrl;
+  static String? _supabaseAnonKey;
   static SecretStorage? _configuredStorage;
   @visibleForTesting
   static AssetBundle? debugAssetBundle;
@@ -37,6 +41,8 @@ class SecretConfig {
   static bool get useChatCompletions => _useChatCompletions;
   static String? get googleMapsApiKey => _googleMapsApiKey;
   static String? get geminiApiKey => _geminiApiKey;
+  static String? get supabaseUrl => _supabaseUrl;
+  static String? get supabaseAnonKey => _supabaseAnonKey;
 
   static SecretStorage? get storage => _configuredStorage;
   static set storage(final SecretStorage storage) {
@@ -54,6 +60,8 @@ class SecretConfig {
     _useChatCompletions = false;
     _googleMapsApiKey = null;
     _geminiApiKey = null;
+    _supabaseUrl = null;
+    _supabaseAnonKey = null;
   }
 
   static const bool _envAllowsAssetFallback = bool.fromEnvironment(
@@ -105,8 +113,8 @@ class SecretConfig {
 
       AppLogger.warning(
         'SecretConfig: No credentials found in secure storage or '
-        'environment. Features requiring remote access (Hugging Face, Gemini) '
-        'remain disabled.',
+        'environment. Features requiring remote access (Hugging Face, Gemini, '
+        'Supabase) remain disabled.',
       );
     } on Exception catch (e, s) {
       AppLogger.warning('SecretConfig.load failed');

@@ -11,6 +11,9 @@
     },
     "cursor-team-kit": {
       "enabled": true
+    },
+    "supabase": {
+      "enabled": true
     }
   }
 }

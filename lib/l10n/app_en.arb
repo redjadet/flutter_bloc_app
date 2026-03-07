@@ -2214,5 +2214,78 @@
   "loggedOutPhotoLabel": "photo",
   "@loggedOutPhotoLabel": {
     "description": "Label for photo in logged-out header"
+  },
+  "supabaseAuthTitle": "Supabase Auth",
+  "@supabaseAuthTitle": {
+    "description": "Title for the Supabase authentication page"
+  },
+  "supabaseAuthSignIn": "Sign in",
+  "@supabaseAuthSignIn": {
+    "description": "Sign in button on Supabase auth page"
+  },
+  "supabaseAuthSignUp": "Sign up",
+  "@supabaseAuthSignUp": {
+    "description": "Sign up button on Supabase auth page"
+  },
+  "supabaseAuthSignOut": "Sign out",
+  "@supabaseAuthSignOut": {
+    "description": "Sign out button on Supabase auth page"
+  },
+  "supabaseAuthEmailLabel": "Email",
+  "@supabaseAuthEmailLabel": {
+    "description": "Email field label on Supabase auth page"
+  },
+  "supabaseAuthPasswordLabel": "Password",
+  "@supabaseAuthPasswordLabel": {
+    "description": "Password field label on Supabase auth page"
+  },
+  "supabaseAuthPasswordMinLength": "At least 6 characters",
+  "@supabaseAuthPasswordMinLength": {
+    "description": "Hint for minimum password length on Supabase auth page"
+  },
+  "supabaseAuthDisplayNameLabel": "Display name (optional)",
+  "@supabaseAuthDisplayNameLabel": {
+    "description": "Display name field label on Supabase sign up form"
+  },
+  "supabaseAuthNotConfigured": "Supabase is not configured. Add SUPABASE_URL and SUPABASE_ANON_KEY to secrets or environment.",
+  "@supabaseAuthNotConfigured": {
+    "description": "Message when Supabase URL or anon key is missing"
+  },
+  "supabaseAuthErrorInvalidCredentials": "Invalid email or password",
+  "@supabaseAuthErrorInvalidCredentials": {
+    "description": "Error when sign in fails due to invalid credentials"
+  },
+  "supabaseAuthErrorInvalidEmail": "Please enter a valid email address.",
+  "@supabaseAuthErrorInvalidEmail": {
+    "description": "Error when email format is invalid (e.g. sign up validation)"
+  },
+  "supabaseAuthErrorNetwork": "Network error. Check your connection.",
+  "@supabaseAuthErrorNetwork": {
+    "description": "Error when a network failure occurs during auth"
+  },
+  "supabaseAuthErrorWeakPassword": "Password must be at least 6 characters.",
+  "@supabaseAuthErrorWeakPassword": {
+    "description": "Error when sign up fails due to password too short"
+  },
+  "supabaseAuthErrorUserAlreadyExists": "An account with this email already exists. Try signing in.",
+  "@supabaseAuthErrorUserAlreadyExists": {
+    "description": "Error when sign up fails because email is already registered"
+  },
+  "supabaseAuthSignedInAs": "Signed in as {email}",
+  "@supabaseAuthSignedInAs": {
+    "description": "Shown when user is signed in with Supabase",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsIntegrationsSection": "Integrations",
+  "@settingsIntegrationsSection": {
+    "description": "Settings section title for integrations (e.g. Supabase)"
+  },
+  "settingsSupabaseAuth": "Supabase Auth",
+  "@settingsSupabaseAuth": {
+    "description": "Settings link label to open Supabase auth page"
   }
 }
