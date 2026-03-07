@@ -1,7 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// provider is transitive via flutter_bloc; SingleChildStatelessWidget required for MultiBlocListener
-// ignore: depend_on_referenced_packages
 import 'package:provider/single_child_widget.dart';
 
 /// A type-safe wrapper around `BlocSelector` that provides compile-time safety.
@@ -28,6 +26,7 @@ class TypeSafeBlocSelector<C extends StateStreamableSource<S>, S, T>
   const TypeSafeBlocSelector({
     required this.selector,
     required this.builder,
+    this.bloc,
     super.key,
   });
 
@@ -37,6 +36,9 @@ class TypeSafeBlocSelector<C extends StateStreamableSource<S>, S, T>
   /// The widget will only rebuild when the returned value changes.
   final T Function(S state) selector;
 
+  /// Optional bloc instance. If omitted, looks up via [BlocProvider].
+  final C? bloc;
+
   /// Builder function that receives the selected value.
   ///
   /// This function is called whenever the selected value changes.
@@ -44,6 +46,7 @@ class TypeSafeBlocSelector<C extends StateStreamableSource<S>, S, T>
 
   @override
   Widget build(final BuildContext context) => BlocSelector<C, S, T>(
+    bloc: bloc,
     selector: selector,
     builder: builder,
   );
@@ -68,14 +71,19 @@ class TypeSafeBlocBuilder<C extends StateStreamableSource<S>, S>
   /// The [builder] function is called whenever the state changes.
   const TypeSafeBlocBuilder({
     required this.builder,
+    this.bloc,
     this.buildWhen,
     super.key,
   });
 
   /// Builder function that receives the current state.
   ///
-  /// This function is called whenever the state changes (unless [buildWhen] returns false).
+  /// This function is called whenever the state changes unless
+  /// [buildWhen] returns false.
   final Widget Function(BuildContext context, S state) builder;
+
+  /// Optional bloc instance. If omitted, looks up via [BlocProvider].
+  final C? bloc;
 
   /// Optional function to determine whether to rebuild.
   ///
@@ -84,6 +92,7 @@ class TypeSafeBlocBuilder<C extends StateStreamableSource<S>, S>
 
   @override
   Widget build(final BuildContext context) => BlocBuilder<C, S>(
+    bloc: bloc,
     buildWhen: buildWhen,
     builder: builder,
   );
@@ -183,6 +192,7 @@ class TypeSafeBlocConsumer<C extends StateStreamableSource<S>, S>
   /// The [builder] function builds the widget tree.
   const TypeSafeBlocConsumer({
     required this.builder,
+    this.bloc,
     this.listener,
     this.listenWhen,
     this.buildWhen,
@@ -191,6 +201,9 @@ class TypeSafeBlocConsumer<C extends StateStreamableSource<S>, S>
 
   /// Builder function that receives the current state.
   final Widget Function(BuildContext context, S state) builder;
+
+  /// Optional bloc instance. If omitted, looks up via [BlocProvider].
+  final C? bloc;
 
   /// Optional listener function for side effects.
   ///
@@ -205,6 +218,7 @@ class TypeSafeBlocConsumer<C extends StateStreamableSource<S>, S>
 
   @override
   Widget build(final BuildContext context) => BlocConsumer<C, S>(
+    bloc: bloc,
     listener: listener ?? (_, final _) {},
     listenWhen: listenWhen,
     buildWhen: buildWhen,

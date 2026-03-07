@@ -10,9 +10,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 Dio createCounterMockDio({
   String? getBody,
-  int getStatus = 200,
+  int? getStatus = 200,
   String? postBody,
-  int postStatus = 204,
+  int? postStatus = 204,
   CounterTestRequests? requests,
 }) {
   final dio = Dio();
@@ -172,6 +172,37 @@ void main() {
         ),
       );
     });
+
+    test(
+      'surfaces unknown HTTP status when load failure has no status code',
+      () async {
+        final Dio client = createCounterMockDio(
+          getBody: 'nope',
+          getStatus: null,
+        );
+        final RestCounterRepository repository = RestCounterRepository(
+          baseUrl: 'https://api.example.com/',
+          client: client,
+        );
+
+        await expectLater(
+          AppLogger.silenceAsync(repository.load),
+          throwsA(
+            isA<CounterError>()
+                .having(
+                  (final CounterError error) => error.type,
+                  'type',
+                  CounterErrorType.loadError,
+                )
+                .having(
+                  (final CounterError error) => error.message,
+                  'message',
+                  'REST load failed (HTTP unknown).',
+                ),
+          ),
+        );
+      },
+    );
 
     test('throws CounterError on malformed payload', () async {
       final Dio client = createCounterMockDio(getBody: '[]', getStatus: 200);
@@ -379,6 +410,39 @@ void main() {
     expect(emitted.length, initialLength);
     await sub.cancel();
   });
+
+  test(
+    'surfaces unknown HTTP status when save failure has no status code',
+    () async {
+      final Dio client = createCounterMockDio(
+        postBody: 'nope',
+        postStatus: null,
+      );
+      final RestCounterRepository repository = RestCounterRepository(
+        baseUrl: 'https://api.example.com/',
+        client: client,
+      );
+
+      await expectLater(
+        AppLogger.silenceAsync(
+          () => repository.save(CounterSnapshot(count: 1)),
+        ),
+        throwsA(
+          isA<CounterError>()
+              .having(
+                (final CounterError error) => error.type,
+                'type',
+                CounterErrorType.saveError,
+              )
+              .having(
+                (final CounterError error) => error.message,
+                'message',
+                'Save failed with status unknown',
+              ),
+        ),
+      );
+    },
+  );
 
   test('watch receives error when initial load fails', () async {
     await AppLogger.silenceAsync(() async {
