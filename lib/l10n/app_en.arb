@@ -2167,6 +2167,48 @@
   "@iotDemoSetValueInvalidNumber": {
     "description": "Shown when the value field is not a valid number"
   },
+  "iotDemoAddDevice": "Add device",
+  "@iotDemoAddDevice": {
+    "description": "Title for the add device dialog"
+  },
+  "iotDemoAddDeviceNameHint": "Device name",
+  "@iotDemoAddDeviceNameHint": {
+    "description": "Hint for the device name field"
+  },
+  "iotDemoAddDeviceNameRequired": "Name is required",
+  "@iotDemoAddDeviceNameRequired": {
+    "description": "Error when name is empty"
+  },
+  "iotDemoAddDeviceNameTooLong": "Name must be at most {max} characters",
+  "@iotDemoAddDeviceNameTooLong": {
+    "description": "Error when name exceeds max length",
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "iotDemoAddDeviceTypeHint": "Device type",
+  "@iotDemoAddDeviceTypeHint": {
+    "description": "Hint for the device type dropdown"
+  },
+  "iotDemoAddDeviceInitialValue": "Initial value: {value}",
+  "@iotDemoAddDeviceInitialValue": {
+    "description": "Label for thermostat/sensor initial value",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "iotDemoAddDeviceTooltip": "Add device",
+  "@iotDemoAddDeviceTooltip": {
+    "description": "Tooltip for the add device button"
+  },
+  "iotDemoErrorAdd": "Failed to add device",
+  "@iotDemoErrorAdd": {
+    "description": "Error when adding a device fails"
+  },
   "openIotDemoTooltip": "Open IoT Demo",
   "@openIotDemoTooltip": {
     "description": "Tooltip for navigating to the IoT demo page"

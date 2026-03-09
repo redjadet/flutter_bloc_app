@@ -18,12 +18,14 @@ class _StubIotDemoRepository implements IotDemoRepository {
     this.throwOnConnect = false,
     this.throwOnDisconnect = false,
     this.throwOnSendCommand = false,
+    this.throwArgumentErrorOnAddDevice = false,
   }) : devices = devices ?? _fakeDevices;
 
   final List<IotDevice> devices;
   final bool throwOnConnect;
   final bool throwOnDisconnect;
   final bool throwOnSendCommand;
+  final bool throwArgumentErrorOnAddDevice;
 
   @override
   Stream<List<IotDevice>> watchDevices() =>
@@ -45,6 +47,13 @@ class _StubIotDemoRepository implements IotDemoRepository {
     final IotDeviceCommand command,
   ) async {
     if (throwOnSendCommand) throw Exception('command failed');
+  }
+
+  @override
+  Future<void> addDevice(final IotDevice device) async {
+    if (throwArgumentErrorOnAddDevice) {
+      throw ArgumentError('device name must not exceed 255 characters');
+    }
   }
 }
 
@@ -76,6 +85,9 @@ class _StreamingIotDemoRepository implements IotDemoRepository {
     final String deviceId,
     final IotDeviceCommand command,
   ) async {}
+
+  @override
+  Future<void> addDevice(final IotDevice device) async {}
 }
 
 void main() {
@@ -163,6 +175,21 @@ void main() {
         const IotDemoState.loading(),
         IotDemoState.loaded(_fakeDevices, selectedDeviceId: null),
         IotDemoState.error('Exception: disconnect failed'),
+      ],
+    );
+
+    blocTest<IotDemoCubit, IotDemoState>(
+      'emits validation message when addDevice throws ArgumentError',
+      build: () =>
+          IotDemoCubit(repository: _StubIotDemoRepository(throwArgumentErrorOnAddDevice: true)),
+      act: (cubit) async {
+        await cubit.initialize();
+        await cubit.addDevice(IotDevice(id: 'new-1', name: 'x' * 300, type: IotDeviceType.light));
+      },
+      expect: () => <IotDemoState>[
+        const IotDemoState.loading(),
+        IotDemoState.loaded(_fakeDevices, selectedDeviceId: null),
+        IotDemoState.error('device name must not exceed 255 characters'),
       ],
     );
 

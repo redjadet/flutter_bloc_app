@@ -17,4 +17,8 @@ abstract class IotDemoRepository {
     final String deviceId,
     final IotDeviceCommand command,
   );
+
+  /// Adds a new device. Writes to local storage and remote (Supabase) when
+  /// available.
+  Future<void> addDevice(final IotDevice device);
 }

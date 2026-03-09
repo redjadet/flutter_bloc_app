@@ -110,6 +110,16 @@ class MockIotDemoRepository implements IotDemoRepository {
   }
 
   @override
+  Future<void> addDevice(final IotDevice device) async {
+    if (device.id.trim().isEmpty || device.name.trim().isEmpty) {
+      throw ArgumentError('device id and name must not be empty');
+    }
+    if (_indexOf(device.id) >= 0) return;
+    _devices.add(device);
+    _emitDevices();
+  }
+
+  @override
   Future<void> sendCommand(
     final String deviceId,
     final IotDeviceCommand command,

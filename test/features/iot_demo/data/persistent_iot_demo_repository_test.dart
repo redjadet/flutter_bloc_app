@@ -56,6 +56,61 @@ void main() {
       expect(devices, isEmpty);
     });
 
+    test('addDevice ignores duplicate id', () async {
+      const device = IotDevice(
+        id: 'dup-1',
+        name: 'First',
+        type: IotDeviceType.light,
+      );
+      await repository.addDevice(device);
+      await repository.addDevice(device);
+
+      final List<IotDevice> devices = await repository.watchDevices().first;
+      expect(devices.length, 1);
+    });
+
+    test('addDevice throws for empty id', () async {
+      const device = IotDevice(
+        id: '',
+        name: 'Valid Name',
+        type: IotDeviceType.light,
+      );
+      expect(() => repository.addDevice(device), throwsArgumentError);
+    });
+
+    test('addDevice throws for empty name', () async {
+      const device = IotDevice(
+        id: 'valid-id',
+        name: '',
+        type: IotDeviceType.light,
+      );
+      expect(() => repository.addDevice(device), throwsArgumentError);
+    });
+
+    test('addDevice throws for name exceeding max length', () async {
+      final device = IotDevice(
+        id: 'valid-id',
+        name: 'x' * (iotDemoDeviceNameMaxLength + 1),
+        type: IotDeviceType.light,
+      );
+      expect(() => repository.addDevice(device), throwsArgumentError);
+    });
+
+    test('addDevice appends device and it appears in watchDevices', () async {
+      const device = IotDevice(
+        id: 'new-dev-1',
+        name: 'New Light',
+        type: IotDeviceType.light,
+      );
+      await repository.addDevice(device);
+
+      final List<IotDevice> devices = await repository.watchDevices().first;
+      expect(devices.length, 1);
+      expect(devices.first.id, 'new-dev-1');
+      expect(devices.first.name, 'New Light');
+      expect(devices.first.type, IotDeviceType.light);
+    });
+
     test(
       'sendCommand setValue persists and is visible on next watch',
       () async {

@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/offline_first_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/persistent_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/supabase_iot_demo_repository.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
@@ -151,6 +152,127 @@ void main() {
       );
       await repo.processOperation(op);
       expect(remoteRepository.connectCalls, isEmpty);
+    });
+
+    test('addDevice enqueues operation when remote is set', () async {
+      final OfflineFirstIotDemoRepository repo = buildRepository(
+        remote: remoteRepository,
+      );
+      const device = IotDevice(
+        id: 'new-light-1',
+        name: 'New Light',
+        type: IotDeviceType.light,
+      );
+      await repo.addDevice(device);
+      final List<SyncOperation> pending = await pendingRepository
+          .getPendingOperations(now: DateTime.now().toUtc());
+      expect(
+        pending.any(
+          (final op) =>
+              op.entityType == 'iot_demo' &&
+              op.payload['action'] == 'add' &&
+              op.payload['deviceId'] == 'new-light-1' &&
+              op.payload['name'] == 'New Light' &&
+              op.payload['supabaseUserId'] == _testSupabaseUserId,
+        ),
+        isTrue,
+      );
+      final List<IotDevice> local = await repo.watchDevices().first;
+      expect(local, hasLength(1));
+      expect(local.first.id, 'new-light-1');
+    });
+
+    test('addDevice throws for name exceeding max length', () async {
+      final OfflineFirstIotDemoRepository repo = buildRepository(
+        remote: remoteRepository,
+      );
+      final IotDevice device = IotDevice(
+        id: 'new-light-1',
+        name: 'x' * (iotDemoDeviceNameMaxLength + 1),
+        type: IotDeviceType.light,
+      );
+
+      expect(() => repo.addDevice(device), throwsArgumentError);
+
+      final List<IotDevice> local = await repo.watchDevices().first;
+      expect(local, isEmpty);
+
+      final List<SyncOperation> pending = await pendingRepository
+          .getPendingOperations(now: DateTime.now().toUtc());
+      expect(pending.any((final op) => op.payload['action'] == 'add'), isFalse);
+    });
+
+    test('addDevice does nothing when no user', () async {
+      final OfflineFirstIotDemoRepository repo = OfflineFirstIotDemoRepository(
+        getCurrentSupabaseUserId: () => null,
+        getPersistentRepository: (final String id) =>
+            PersistentIotDemoRepository(
+              hiveService: hiveService,
+              supabaseUserId: id,
+            ),
+        pendingSyncRepository: pendingRepository,
+        registry: registry,
+        timerService: FakeTimerService(),
+        remoteRepository: remoteRepository,
+      );
+      const device = IotDevice(
+        id: 'new-light-1',
+        name: 'New Light',
+        type: IotDeviceType.light,
+      );
+      await repo.addDevice(device);
+      final List<IotDevice> local = await repo.watchDevices().first;
+      expect(local, isEmpty);
+      final List<SyncOperation> pending = await pendingRepository
+          .getPendingOperations(now: DateTime.now().toUtc());
+      expect(pending.any((final op) => op.payload['action'] == 'add'), isFalse);
+    });
+
+    test('processOperation add calls remote addDevice', () async {
+      final OfflineFirstIotDemoRepository repo = buildRepository(
+        remote: remoteRepository,
+      );
+      final SyncOperation op = SyncOperation.create(
+        entityType: 'iot_demo',
+        payload: <String, dynamic>{
+          'deviceId': 'new-sensor-1',
+          'action': 'add',
+          'name': 'Temp Sensor',
+          'type': 'sensor',
+          'toggledOn': false,
+          'value': 22.5,
+          'supabaseUserId': _testSupabaseUserId,
+        },
+        idempotencyKey: 'test_add_1',
+      );
+      await repo.processOperation(op);
+      expect(remoteRepository.addDeviceCalls, hasLength(1));
+      final IotDevice added = remoteRepository.addDeviceCalls.single;
+      expect(added.id, 'new-sensor-1');
+      expect(added.name, 'Temp Sensor');
+      expect(added.type, IotDeviceType.sensor);
+      expect(added.value, 22.5);
+    });
+
+    test('processOperation add skips when name exceeds max length', () async {
+      final OfflineFirstIotDemoRepository repo = buildRepository(
+        remote: remoteRepository,
+      );
+      final SyncOperation op = SyncOperation.create(
+        entityType: 'iot_demo',
+        payload: <String, dynamic>{
+          'deviceId': 'new-dev-1',
+          'action': 'add',
+          'name': 'x' * (iotDemoDeviceNameMaxLength + 1),
+          'type': 'light',
+          'toggledOn': false,
+          'value': 0,
+          'supabaseUserId': _testSupabaseUserId,
+        },
+        idempotencyKey: 'test_add_long_name',
+      );
+      await repo.processOperation(op);
+      expect(remoteRepository.addDeviceCalls, isEmpty);
     });
 
     test('processOperation skips op for different user', () async {
@@ -365,6 +487,7 @@ class _FakeSupabaseRemote extends SupabaseIotDemoRepository {
 
   final List<String> connectCalls = <String>[];
   final List<String> disconnectCalls = <String>[];
+  final List<IotDevice> addDeviceCalls = <IotDevice>[];
   List<IotDevice> devices = <IotDevice>[
     const IotDevice(
       id: 'light-1',
@@ -392,6 +515,12 @@ class _FakeSupabaseRemote extends SupabaseIotDemoRepository {
     final String deviceId,
     final IotDeviceCommand command,
   ) async {}
+
+  @override
+  Future<void> addDevice(final IotDevice device) async {
+    addDeviceCalls.add(device);
+    devices = List<IotDevice>.from(devices)..add(device);
+  }
 }
 
 class _ControllableSupabaseRemote extends SupabaseIotDemoRepository {
@@ -417,4 +546,7 @@ class _ControllableSupabaseRemote extends SupabaseIotDemoRepository {
     final String deviceId,
     final IotDeviceCommand command,
   ) async {}
+
+  @override
+  Future<void> addDevice(final IotDevice device) async {}
 }
