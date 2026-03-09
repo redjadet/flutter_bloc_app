@@ -6,7 +6,6 @@ import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/features/search/presentation/pages/search_page.dart';
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_results_grid.dart';
-import 'package:flutter_bloc_app/features/search/presentation/widgets/search_sync_banner.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
@@ -14,14 +13,15 @@ import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+
 import '../../../../test_helpers.dart';
 
 class MockSearchRepository extends Mock implements SearchRepository {}
 
 class _FakeNetworkStatusService implements NetworkStatusService {
-  _FakeNetworkStatusService({this.status = NetworkStatus.online});
+  _FakeNetworkStatusService();
 
-  NetworkStatus status;
+  NetworkStatus status = NetworkStatus.online;
   final StreamController<NetworkStatus> _controller =
       StreamController<NetworkStatus>.broadcast();
 
@@ -43,9 +43,9 @@ class _FakeNetworkStatusService implements NetworkStatusService {
 }
 
 class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
-  _FakeBackgroundSyncCoordinator({this.status = SyncStatus.idle});
+  _FakeBackgroundSyncCoordinator();
 
-  SyncStatus status;
+  SyncStatus status = SyncStatus.idle;
   final StreamController<SyncStatus> _controller =
       StreamController<SyncStatus>.broadcast();
 
@@ -249,72 +249,6 @@ void main() {
 
       // Now verify the repository was called
       verify(() => mockRepository.search('dogs')).called(1);
-    });
-
-    testWidgets('displays SearchSyncBanner when offline', (tester) async {
-      final _FakeNetworkStatusService networkService =
-          _FakeNetworkStatusService(status: NetworkStatus.offline);
-      final _FakeBackgroundSyncCoordinator coordinator =
-          _FakeBackgroundSyncCoordinator();
-      final SyncStatusCubit syncCubit = SyncStatusCubit(
-        networkStatusService: networkService,
-        coordinator: coordinator,
-      );
-      networkService.emit(NetworkStatus.offline);
-
-      await tester.pumpWidget(
-        MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: BlocProvider<SyncStatusCubit>.value(
-            value: syncCubit,
-            child: SearchPage(
-              repository: mockRepository,
-              timerService: fakeTimerService,
-            ),
-          ),
-        ),
-      );
-      await tester.pump();
-
-      final AppLocalizations l10n = AppLocalizations.of(
-        tester.element(find.byType(SearchPage)),
-      );
-      expect(find.byType(SearchSyncBanner), findsOneWidget);
-      expect(find.text(l10n.syncStatusOfflineTitle), findsOneWidget);
-    });
-
-    testWidgets('displays SearchSyncBanner when syncing', (tester) async {
-      final _FakeNetworkStatusService networkService =
-          _FakeNetworkStatusService(status: NetworkStatus.online);
-      final _FakeBackgroundSyncCoordinator coordinator =
-          _FakeBackgroundSyncCoordinator(status: SyncStatus.syncing);
-      final SyncStatusCubit syncCubit = SyncStatusCubit(
-        networkStatusService: networkService,
-        coordinator: coordinator,
-      );
-      coordinator.emit(SyncStatus.syncing);
-
-      await tester.pumpWidget(
-        MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: BlocProvider<SyncStatusCubit>.value(
-            value: syncCubit,
-            child: SearchPage(
-              repository: mockRepository,
-              timerService: fakeTimerService,
-            ),
-          ),
-        ),
-      );
-      await tester.pump();
-
-      final AppLocalizations l10n = AppLocalizations.of(
-        tester.element(find.byType(SearchPage)),
-      );
-      expect(find.byType(SearchSyncBanner), findsOneWidget);
-      expect(find.text(l10n.syncStatusSyncingTitle), findsOneWidget);
     });
   });
 }

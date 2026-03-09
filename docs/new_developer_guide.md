@@ -204,7 +204,7 @@ For Android apps distributed via Play Store, you can use **Deferred Components**
   - **Pending Queue**: `PendingSyncRepository` stores operations that failed while offline; coordinator processes them when online
   - **Repository Pattern**: Features implement `SyncableRepository` interface with `pullRemote()` and `processOperation()` methods
   - **Sync Metadata**: Domain models include `synchronized`, `lastSyncedAt`, and `changeId` fields for conflict resolution
-  - **UI Indicators**: Sync banners (`CounterSyncBanner`, `ChatSyncBanner`, etc.) show offline/syncing/pending states
+  - **Sync Observability**: Sync status is logged; Sync Diagnostics in Settings (dev/qa only) shows cycle history
   - **Adoption Guide**: See `docs/offline_first/adoption_guide.md` for step-by-step instructions on adding offline-first to new features
 
 ## 6. Development Workflow
@@ -474,7 +474,7 @@ For the *approach* (understand first, add in the right place, validate, lifecycl
    - Create local cache repository (Hive-backed)
    - Implement `OfflineFirst<Feature>Repository` with `SyncableRepository` interface
    - Register in `SyncableRepositoryRegistry` (auto-registers on construction)
-   - Add sync status UI (banner widget) using `SyncStatusCubit`
+   - Sync status is logged; Sync Diagnostics in Settings (dev/qa) for observability
 5. Build Cubit + state (immutable), add widgets/pages.
 6. **UI/UX requirements**:
    - Use `CommonPageLayout` for consistent page structure

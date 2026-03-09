@@ -10,41 +10,25 @@ import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Runs a single sync cycle and returns a summary for diagnostics.
+///
+/// When [supabaseUserIdForUserScopedSync] is set, only pending operations
+/// for that user (e.g. iot_demo with matching payload) are processed.
 Future<SyncCycleSummary> runSyncCycle({
   required final SyncableRepositoryRegistry registry,
   required final PendingSyncRepository pendingRepository,
   required final void Function(SyncStatus status) emitStatus,
   required final void Function(String event, Map<String, Object?> payload)
   telemetry,
+  final String? supabaseUserIdForUserScopedSync,
 }) async {
-  // Create a snapshot copy to avoid concurrent modification during iteration
-  // even if the registry is modified concurrently
-  final List<SyncableRepository> syncables = List<SyncableRepository>.from(
-    registry.repositories,
-  );
   final Stopwatch stopwatch = Stopwatch()..start();
   int pullCount = 0;
   int pullFailures = 0;
-  if (syncables.isNotEmpty) {
-    for (final SyncableRepository repo in syncables) {
-      try {
-        pullCount++;
-        await repo.pullRemote();
-      } on Exception catch (error, stackTrace) {
-        AppLogger.error(
-          'BackgroundSyncCoordinator.pullRemote failed for ${repo.entityType}',
-          error,
-          stackTrace,
-        );
-        pullFailures++;
-        emitStatus(SyncStatus.degraded);
-      }
-    }
-  }
 
   final List<SyncOperation> pending = await pendingRepository
       .getPendingOperations(
         now: DateTime.now().toUtc(),
+        supabaseUserIdFilter: supabaseUserIdForUserScopedSync,
       );
   final Map<String, int> pendingByEntity = <String, int>{};
   for (final SyncOperation operation in pending) {
@@ -55,6 +39,25 @@ Future<SyncCycleSummary> runSyncCycle({
     );
   }
   if (pending.isEmpty) {
+    final List<SyncableRepository> syncables = List<SyncableRepository>.from(
+      registry.repositories,
+    );
+    if (syncables.isNotEmpty) {
+      for (final SyncableRepository repo in syncables) {
+        try {
+          pullCount++;
+          await repo.pullRemote();
+        } on Exception catch (error, stackTrace) {
+          AppLogger.error(
+            'BackgroundSyncCoordinator.pullRemote failed for ${repo.entityType}',
+            error,
+            stackTrace,
+          );
+          pullFailures++;
+          emitStatus(SyncStatus.degraded);
+        }
+      }
+    }
     stopwatch.stop();
     final SyncCycleSummary summary = SyncCycleSummary(
       recordedAt: DateTime.now().toUtc(),
@@ -85,6 +88,16 @@ Future<SyncCycleSummary> runSyncCycle({
     emitStatus(SyncStatus.idle);
     return summary;
   }
+
+  // Create a snapshot copy to avoid concurrent modification during iteration
+  // even if the registry is modified concurrently.
+  //
+  // Pull happens after processing pending operations so we don't overwrite
+  // optimistic local state with stale remote data (e.g. a toggle that hasn't
+  // been pushed yet).
+  final List<SyncableRepository> syncables = List<SyncableRepository>.from(
+    registry.repositories,
+  );
 
   emitStatus(SyncStatus.syncing);
   int processed = 0;
@@ -173,6 +186,23 @@ Future<SyncCycleSummary> runSyncCycle({
         retryCount: operation.retryCount + 1,
       );
       emitStatus(SyncStatus.degraded);
+    }
+  }
+
+  if (syncables.isNotEmpty) {
+    for (final SyncableRepository repo in syncables) {
+      try {
+        pullCount++;
+        await repo.pullRemote();
+      } on Exception catch (error, stackTrace) {
+        AppLogger.error(
+          'BackgroundSyncCoordinator.pullRemote failed for ${repo.entityType}',
+          error,
+          stackTrace,
+        );
+        pullFailures++;
+        emitStatus(SyncStatus.degraded);
+      }
     }
   }
 

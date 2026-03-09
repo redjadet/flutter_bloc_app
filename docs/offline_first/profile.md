@@ -7,7 +7,7 @@ This document captures the offline-first plan for the Profile feature so enginee
 - Serve the profile page instantly from local cache.
 - Allow the profile page to render when offline, falling back to the last cached snapshot.
 - Refresh the cache in the background when online.
-- Surface sync status via shared banners (no pending operations for now).
+- Sync status is logged; Sync Diagnostics in Settings (dev/qa only) for observability.
 
 ## Storage Plan
 
@@ -37,9 +37,7 @@ This document captures the offline-first plan for the Profile feature so enginee
 
 ## UI Integration
 
-- Profile page now shows `ProfileSyncBanner` using `SyncStatusCubit` (offline/syncing states; no pending queue).
-- Manual “Sync now” action is available in the banner and calls `SyncStatusCubit.flush()` to trigger a refresh.
-- Since profile is read-only, no pending queue is surfaced; banners show offline/syncing only.
+- No sync banner on the profile page; sync status is logged. For sync observability, use Settings → Sync Diagnostics (dev/qa only).
 - Settings (dev/QA flavors) expose a `ProfileCacheControlsSection` that lets engineers view cache size/last synced and clear the cached `ProfileUser` snapshot; the widget lives under `lib/features/settings/presentation/widgets/profile_cache_controls_section.dart` with dedicated tests.
 
 ## Testing Checklist
@@ -52,7 +50,7 @@ This document captures the offline-first plan for the Profile feature so enginee
     refresh.
   - Fetching and caching when no cache + online.
   - Throwing when offline with no cache.
-- ✅ **Widget/page tests**: `test/features/profile/presentation/widgets/profile_sync_banner_test.dart` covers offline/syncing visibility + status changes. `test/features/profile/presentation/profile_page_test.dart` asserts the banner renders when offline.
+- ✅ **Widget tests**: `test/features/profile/presentation/widgets/profile_sync_banner_test.dart` covers the banner widget in isolation (banner not displayed on profile page).
 
 ## Next Actions
 

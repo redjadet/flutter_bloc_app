@@ -30,12 +30,7 @@
 
 ## Presentation
 
-- `RemoteConfigDiagnosticsSection` now renders `_RemoteConfigSyncStatusBanner`
-  - Listens to `SyncStatusCubit` + `NetworkStatusService`
-  - Shows offline/syncing `AppMessage` copy using shared localization strings
-  - Keeps existing status badge + retry button for manual fetches
-  - Adds a clear-cache text button for dev/QA to wipe local config and refetch
-  - Shows metadata row when `dataSource`/`lastSyncedAt` are available so engineers can see the source of the current values
+- `RemoteConfigDiagnosticsSection` shows status badge + retry button for manual fetches, clear-cache text button for dev/QA, and metadata row when `dataSource`/`lastSyncedAt` are available. No sync status banner.
 - Settings page automatically benefits because `RemoteConfigCubit` is bootstrapped from `AppScope`
 
 ## Testing
@@ -45,7 +40,7 @@
   - Covers cache hydration, offline skips, sync registry registration,
     concurrent `forceFetch()` coalescing, and fallback-on-error flows
 - UI regression: `test/features/settings/presentation/widgets/remote_config_diagnostics_section_test.dart`
-  - Coverage for sync status banner + clear-cache action and metadata display to keep localized copy aligned
+  - Coverage for clear-cache action and metadata display
 - Cubit regression: `test/features/remote_config/presentation/cubit/remote_config_cubit_test.dart` verifies cache clear + refetch flow
 - Telemetry: `OfflineFirstRemoteConfigRepository` emits debug telemetry events (`remote_config_fetch_*`) with duration/source metadata; hook into coordinator analytics as needed.
 - Versioning: Current payloads/tracked keys are minimal, so no differential sync/version pinning is required. Revisit if config payloads grow or staged rollouts demand etag/template pinning.

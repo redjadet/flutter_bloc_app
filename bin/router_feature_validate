@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Run after router or feature extraction changes (auth gates, route builders).
+# Usage: ./bin/router_feature_validate
+
+set -e
+cd "$(dirname "$0")/.."
+
+echo "1/3 Formatting..."
+dart format lib/app/router/ lib/features/
+
+echo "2/3 Analyzing..."
+dart analyze lib/app/router/ lib/features/
+
+echo "3/3 Running router + feature tests..."
+flutter test test/app/router/ test/features/iot_demo/ test/core/router/app_routes_test.dart
+
+echo "Router/feature validation passed."

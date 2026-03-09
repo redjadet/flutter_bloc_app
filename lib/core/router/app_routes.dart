@@ -97,4 +97,13 @@ class AppRoutes {
 
   static const iotDemo = 'iot-demo';
   static const iotDemoPath = '/iot-demo';
+
+  /// Returns true if [path] is safe for post-login redirect (local path only).
+  /// Rejects null, empty, protocol-relative (//), and external URLs.
+  static bool isSafeRedirectPath(final String? path) {
+    if (path == null || path.isEmpty) return false;
+    if (!path.startsWith('/')) return false;
+    if (path.startsWith('//')) return false;
+    return true;
+  }
 }

@@ -7,13 +7,9 @@ import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
-import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
-import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
@@ -51,11 +47,6 @@ class _RemoteConfigDiagnosticsSectionState
 
     final ThemeData theme = Theme.of(context);
     final double gap = context.responsiveGapS;
-    final bool hasSyncStatusCubit =
-        CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
-          context,
-        );
-
     return SettingsSection(
       title: context.l10n.settingsRemoteConfigSectionTitle,
       child: CommonCard(
@@ -69,8 +60,6 @@ class _RemoteConfigDiagnosticsSectionState
               builder: (final context, final data) => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  if (hasSyncStatusCubit)
-                    _RemoteConfigSyncStatusBanner(gap: gap),
                   _RemoteConfigStatusBadge(
                     status: data.status,
                     theme: theme,

@@ -155,7 +155,7 @@ void main() {
       verify(() => cubit.clearCache()).called(1);
     });
 
-    testWidgets('shows sync status banner when offline', (
+    testWidgets('ensures sync starts when sync cubit is available', (
       final WidgetTester tester,
     ) async {
       const RemoteConfigState state = RemoteConfigState.loaded(
@@ -182,14 +182,11 @@ void main() {
 
       await pumpWidget(tester, includeSyncCubit: true);
 
-      expect(
-        find.text(AppLocalizationsEn().syncStatusOfflineTitle),
-        findsOneWidget,
-      );
+      verify(() => syncStatusCubit.ensureStarted()).called(1);
     });
 
     testWidgets(
-      'sync status selector rebuilds only when network or sync changes',
+      'does not render a sync status selector inside remote config diagnostics',
       (final WidgetTester tester) async {
         const RemoteConfigState remoteConfigState = RemoteConfigState.loaded(
           isAwesomeFeatureEnabled: true,
@@ -231,6 +228,7 @@ void main() {
 
         await pumpWidget(tester, includeSyncCubit: true);
         await tester.pump();
+
         expect(
           find.byType(
             TypeSafeBlocSelector<
@@ -239,50 +237,12 @@ void main() {
               (NetworkStatus, SyncStatus)
             >,
           ),
+          findsNothing,
+        );
+        expect(
+          find.text(AppLocalizationsEn().settingsRemoteConfigStatusLoaded),
           findsOneWidget,
         );
-
-        int buildCount = 0;
-        await tester.pumpWidget(
-          MaterialApp(
-            home: BlocProvider<SyncStatusCubit>.value(
-              value: syncStatusCubit,
-              child:
-                  TypeSafeBlocSelector<
-                    SyncStatusCubit,
-                    SyncStatusState,
-                    (NetworkStatus, SyncStatus)
-                  >(
-                    selector: (final s) => (s.networkStatus, s.syncStatus),
-                    builder: (final context, final pair) {
-                      buildCount++;
-                      return Text(
-                        '${pair.$1}-${pair.$2}',
-                        textDirection: TextDirection.ltr,
-                      );
-                    },
-                  ),
-            ),
-          ),
-        );
-        await tester.pump();
-        expect(buildCount, 1);
-
-        final SyncCycleSummary newerSummary = summary.copyWith(durationMs: 120);
-        syncStreamController.add(
-          initialSyncState.copyWith(
-            history: <SyncCycleSummary>[summary, newerSummary],
-            lastSummary: newerSummary,
-          ),
-        );
-        await tester.pump();
-        expect(buildCount, 1);
-
-        syncStreamController.add(
-          initialSyncState.copyWith(networkStatus: NetworkStatus.offline),
-        );
-        await tester.pump();
-        expect(buildCount, 2);
       },
     );
 

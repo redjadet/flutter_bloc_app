@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/app/router/deferred_pages/markdown_editor_page.
     deferred as markdown_editor_page;
 import 'package:flutter_bloc_app/app/router/route_groups.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/logged_out_page.dart';
@@ -39,6 +40,7 @@ import 'package:flutter_bloc_app/features/igaming_demo/presentation/lobby_cubit.
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/pages/game_page.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/pages/lobby_page.dart';
 import 'package:flutter_bloc_app/features/iot_demo/iot_demo.dart';
+import 'package:flutter_bloc_app/features/iot_demo/presentation/widgets/iot_demo_auth_gate.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/pages/library_demo_page.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_service.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository.dart';
@@ -52,6 +54,7 @@ import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/scapes.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
+import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
@@ -341,13 +344,21 @@ List<GoRoute> createAppRoutes() => <GoRoute>[
     name: AppRoutes.iotDemo,
     builder: (final context, final state) {
       final l10n = context.l10n;
-      return BlocProviderHelpers.withAsyncInit<IotDemoCubit>(
-        create: () => IotDemoCubit(
-          repository: getIt<IotDemoRepository>(),
-          l10n: l10n,
+      return IotDemoAuthGate(
+        isSupabaseInitialized: SupabaseBootstrapService.isSupabaseInitialized,
+        getCurrentUser: () => getIt<SupabaseAuthRepository>().currentUser,
+        authStateChanges: getIt<SupabaseAuthRepository>().authStateChanges,
+        counterPath: AppRoutes.counterPath,
+        supabaseAuthPath: AppRoutes.supabaseAuthPath,
+        redirectReturnPath: AppRoutes.iotDemoPath,
+        child: BlocProviderHelpers.withAsyncInit<IotDemoCubit>(
+          create: () => IotDemoCubit(
+            repository: getIt<IotDemoRepository>(),
+            l10n: l10n,
+          ),
+          init: (final cubit) => cubit.initialize(),
+          child: const IotDemoPage(),
         ),
-        init: (final cubit) => cubit.initialize(),
-        child: const IotDemoPage(),
       );
     },
   ),

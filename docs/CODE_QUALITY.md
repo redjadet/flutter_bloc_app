@@ -36,7 +36,7 @@ This document consolidates code-quality analysis and improvement notes. It is a 
 ## Notable Structural Improvements
 
 - Bootstrap refactor: `main_bootstrap.dart` split into focused services under `lib/core/bootstrap/` for clearer responsibilities and better testability.
-- Runtime resilience: resilient HTTP client, centralized error mapping, offline sync banners, and consistent loading/skeleton widgets.
+- Runtime resilience: resilient HTTP client, centralized error mapping, sync diagnostics in Settings (dev/qa), and consistent loading/skeleton widgets.
 
 ## Quality Metrics and Gates
 

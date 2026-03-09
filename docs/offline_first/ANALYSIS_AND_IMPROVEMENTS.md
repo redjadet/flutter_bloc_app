@@ -25,7 +25,7 @@ This document analyzes the offline-first implementation against [Flutter's offic
 3. **Background Sync Coordinator**: `BackgroundSyncCoordinator` handles periodic sync (60s interval) and network-aware sync
 4. **Pending Operations Queue**: `PendingSyncRepository` stores operations that failed while offline
 5. **Stream Pattern**: `watch()` methods return local streams, which emit when remote data is merged into local storage
-6. **Sync Status UI**: Sync banners across all features show offline/syncing/pending states
+6. **Sync Observability**: Sync status is logged; Sync Diagnostics in Settings (dev/qa only) shows cycle history
 
 ### 🔧 Improvements Made
 

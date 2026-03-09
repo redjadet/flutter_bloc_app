@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
@@ -20,6 +22,7 @@ void main() {
 
   tearDown(() async {
     await repository.clear();
+    await repository.dispose();
     await test_helpers.cleanupHiveBoxes(['pending_sync_operations']);
   });
 
@@ -38,6 +41,45 @@ void main() {
 
     expect(pending, hasLength(1));
     expect(pending.first.id, equals(operation.id));
+  });
+
+  test('onOperationEnqueued emits after each successful enqueue', () async {
+    final List<void> emissions = <void>[];
+    final subscription = repository.onOperationEnqueued.listen(emissions.add);
+
+    final SyncOperation op1 = SyncOperation.create(
+      entityType: 'iot_demo',
+      payload: <String, dynamic>{'deviceId': 'd1', 'action': 'connect'},
+      idempotencyKey: 'k1',
+    );
+    final SyncOperation op2 = SyncOperation.create(
+      entityType: 'iot_demo',
+      payload: <String, dynamic>{'deviceId': 'd2', 'action': 'disconnect'},
+      idempotencyKey: 'k2',
+    );
+
+    await repository.enqueue(op1);
+    await Future<void>.delayed(Duration.zero);
+    expect(emissions, hasLength(1));
+
+    await repository.enqueue(op2);
+    await Future<void>.delayed(Duration.zero);
+    expect(emissions, hasLength(2));
+
+    await subscription.cancel();
+  });
+
+  test('dispose closes onOperationEnqueued stream', () async {
+    final Completer<void> done = Completer<void>();
+    final subscription = repository.onOperationEnqueued.listen(
+      (_) {},
+      onDone: () => done.complete(),
+    );
+
+    await repository.dispose();
+
+    await expectLater(done.future, completes);
+    await subscription.cancel();
   });
 
   test('markCompleted removes operation', () async {
@@ -140,4 +182,70 @@ void main() {
     expect(pruned, 1);
     expect(box.get('bad-op'), isNull);
   });
+
+  test(
+    'getPendingOperations with supabaseUserIdFilter returns only iot_demo ops for that user',
+    () async {
+      final SyncOperation counterOp = SyncOperation.create(
+        entityType: 'counter',
+        payload: <String, dynamic>{'count': 1},
+        idempotencyKey: 'counter-1',
+      );
+      final SyncOperation iotUserA = SyncOperation.create(
+        entityType: 'iot_demo',
+        payload: <String, dynamic>{
+          'deviceId': 'light-1',
+          'action': 'connect',
+          PendingSyncRepository.payloadKeySupabaseUserId: 'user-a',
+        },
+        idempotencyKey: 'iot-a-1',
+      );
+      final SyncOperation iotUserB = SyncOperation.create(
+        entityType: 'iot_demo',
+        payload: <String, dynamic>{
+          'deviceId': 'light-1',
+          'action': 'connect',
+          PendingSyncRepository.payloadKeySupabaseUserId: 'user-b',
+        },
+        idempotencyKey: 'iot-b-1',
+      );
+      await repository.enqueue(counterOp);
+      await repository.enqueue(iotUserA);
+      await repository.enqueue(iotUserB);
+
+      final List<SyncOperation> forUserA = await repository
+          .getPendingOperations(
+            now: DateTime.now().toUtc(),
+            supabaseUserIdFilter: 'user-a',
+          );
+      expect(forUserA, hasLength(2));
+      expect(
+        forUserA.map((final o) => o.entityType).toSet(),
+        containsAll(<String>['counter', 'iot_demo']),
+      );
+      expect(
+        forUserA
+            .where((final o) => o.entityType == 'iot_demo')
+            .every(
+              (final o) =>
+                  o.payload[PendingSyncRepository.payloadKeySupabaseUserId] ==
+                  'user-a',
+            ),
+        isTrue,
+      );
+
+      final List<SyncOperation> forUserB = await repository
+          .getPendingOperations(
+            now: DateTime.now().toUtc(),
+            supabaseUserIdFilter: 'user-b',
+          );
+      expect(
+        forUserB
+            .where((final o) => o.entityType == 'iot_demo')
+            .single
+            .payload[PendingSyncRepository.payloadKeySupabaseUserId],
+        equals('user-b'),
+      );
+    },
+  );
 }

@@ -10,50 +10,37 @@ import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-/// Default device list used when storage is empty or invalid.
-List<IotDevice> _defaultDevices() => List<IotDevice>.unmodifiable(<IotDevice>[
-  const IotDevice(
-    id: 'light-1',
-    name: 'Living Room Light',
-    type: IotDeviceType.light,
-  ),
-  const IotDevice(
-    id: 'thermostat-1',
-    name: 'Thermostat',
-    type: IotDeviceType.thermostat,
-    value: 21,
-  ),
-  const IotDevice(
-    id: 'plug-1',
-    name: 'Smart Plug',
-    type: IotDeviceType.plug,
-  ),
-  const IotDevice(
-    id: 'sensor-1',
-    name: 'Temperature Sensor',
-    type: IotDeviceType.sensor,
-    value: 22.5,
-  ),
-  const IotDevice(
-    id: 'switch-1',
-    name: 'Hall Switch',
-    type: IotDeviceType.switch_,
-  ),
-]);
+/// Sanitizes [supabaseUserId] for use in a Hive box name (alphanumeric, underscore, hyphen).
+String _sanitizeBoxSuffix(final String supabaseUserId) {
+  return supabaseUserId.replaceAll(RegExp('[^a-zA-Z0-9_-]'), '_');
+}
 
 /// Hive-backed implementation of [IotDemoRepository].
-/// Persists device list (connection state, toggledOn, value) so values
-/// survive app restarts.
+/// Persists device list per Supabase user; each user has a separate box.
+/// Empty storage returns an empty list (no shared defaults).
 class PersistentIotDemoRepository extends HiveRepositoryBase
     implements IotDemoRepository {
-  PersistentIotDemoRepository({required super.hiveService});
+  PersistentIotDemoRepository({
+    required super.hiveService,
+    required final String supabaseUserId,
+  }) : _boxNameSuffix = _sanitizeBoxSuffix(
+         PersistentIotDemoRepository._validateUserId(supabaseUserId),
+       );
 
-  static const String _boxName = 'iot_demo_devices';
+  static String _validateUserId(final String supabaseUserId) {
+    final String trimmed = supabaseUserId.trim();
+    if (trimmed.isEmpty) {
+      throw ArgumentError('supabaseUserId must not be empty or whitespace');
+    }
+    return trimmed;
+  }
+
+  final String _boxNameSuffix;
   static const String _keyDevices = 'devices';
   static const Duration _connectDelay = Duration(milliseconds: 400);
 
   @override
-  String get boxName => _boxName;
+  String get boxName => 'iot_demo_devices_$_boxNameSuffix';
 
   @override
   Stream<List<IotDevice>> watchDevices() => _watchDevicesStream();
@@ -77,9 +64,7 @@ class PersistentIotDemoRepository extends HiveRepositoryBase
           final dynamic raw = box.get(_keyDevices);
           final List<dynamic>? list = listFromDynamic(raw);
           if (list == null || list.isEmpty) {
-            final List<IotDevice> defaultList = _defaultDevices();
-            await _saveDevices(box, defaultList);
-            return defaultList;
+            return List<IotDevice>.unmodifiable(<IotDevice>[]);
           }
           try {
             final List<IotDevice> result = <IotDevice>[];
@@ -89,11 +74,6 @@ class PersistentIotDemoRepository extends HiveRepositoryBase
                 result.add(IotDevice.fromJson(map));
               }
             }
-            if (result.isEmpty) {
-              final List<IotDevice> defaultList = _defaultDevices();
-              await _saveDevices(box, defaultList);
-              return defaultList;
-            }
             return List<IotDevice>.unmodifiable(result);
           } on Object catch (error, stackTrace) {
             AppLogger.error(
@@ -101,12 +81,10 @@ class PersistentIotDemoRepository extends HiveRepositoryBase
               error,
               stackTrace,
             );
-            final List<IotDevice> defaultList = _defaultDevices();
-            await _saveDevices(box, defaultList);
-            return defaultList;
+            return List<IotDevice>.unmodifiable(<IotDevice>[]);
           }
         },
-        fallback: () => _defaultDevices(),
+        fallback: () => List<IotDevice>.unmodifiable(<IotDevice>[]),
       );
 
   Future<void> _saveDevices(
@@ -122,6 +100,22 @@ class PersistentIotDemoRepository extends HiveRepositoryBase
     },
     fallback: () {},
   );
+
+  /// Replaces the stored device list with [devices].
+  /// Used by offline-first pullRemote to write merged data from Supabase.
+  Future<void> replaceDevices(final List<IotDevice> devices) async {
+    await StorageGuard.run<void>(
+      logContext: 'PersistentIotDemoRepository.replaceDevices',
+      action: () async {
+        final Box<dynamic> box = await getBox();
+        await _saveDevices(
+          box,
+          List<IotDevice>.unmodifiable(devices),
+        );
+      },
+      fallback: () {},
+    );
+  }
 
   int _indexOf(final List<IotDevice> devices, final String deviceId) =>
       devices.indexWhere((final d) => d.id == deviceId);

@@ -7,7 +7,7 @@ This document defines how the search feature adopts the shared offline-first sta
 - Cache search results locally so the search UI can hydrate instantly without network.
 - Serve cached results when offline, providing a seamless search experience.
 - Refresh cached results in the background when online to keep data current.
-- Surface sync state to the UI (offline/syncing indicators) while keeping logic in repositories.
+- Sync logic in repositories; sync status is logged. Sync diagnostics visible in Settings when dev/qa mode is active.
 
 ## Storage Plan
 
@@ -48,7 +48,7 @@ This document defines how the search feature adopts the shared offline-first sta
 ## UI Integration
 
 - Search page shows cached results instantly when available.
-- `SearchSyncBanner` widget displays offline/syncing status (no pending operations since search doesn't queue).
+- No sync banner on the search page; sync status is logged. For sync observability, use Settings → Sync Diagnostics (dev/qa only).
 - `SearchCubit` works transparently with the offline-first repository - no changes needed to cubit logic.
 
 ## Testing Checklist
@@ -80,7 +80,7 @@ This document defines how the search feature adopts the shared offline-first sta
 
 - `SearchCacheRepository` with Hive-backed caching (`lib/features/search/data/search_cache_repository.dart`)
 - `OfflineFirstSearchRepository` implementing `SyncableRepository` (`lib/features/search/data/offline_first_search_repository.dart`)
-- `SearchSyncBanner` widget integrated into `SearchPage` (`lib/features/search/presentation/widgets/search_sync_banner.dart`)
+- `SearchSyncBanner` widget exists but is not displayed; sync diagnostics in Settings (dev/qa only)
 - Full DI wiring in `lib/core/di/injector_registrations.dart` and registry registration
 - Comprehensive test coverage:
   - Unit tests: `test/features/search/data/search_cache_repository_test.dart`

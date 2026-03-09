@@ -63,6 +63,7 @@ void main() {
         () => pending.getPendingOperations(
           now: any(named: 'now'),
           limit: any(named: 'limit'),
+          supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
         ),
       ).thenAnswer((_) async => <SyncOperation>[]);
 
@@ -102,6 +103,7 @@ void main() {
         () => pending.getPendingOperations(
           now: any(named: 'now'),
           limit: any(named: 'limit'),
+          supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
         ),
       ).thenAnswer((_) async => <SyncOperation>[op]);
       when(() => pending.markCompleted(op.id)).thenAnswer((_) async {});
@@ -143,6 +145,7 @@ void main() {
         () => pending.getPendingOperations(
           now: any(named: 'now'),
           limit: any(named: 'limit'),
+          supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
         ),
       ).thenAnswer((_) async => <SyncOperation>[op]);
       when(
@@ -178,5 +181,43 @@ void main() {
         containsPair('test', greaterThanOrEqualTo(1)),
       );
     });
+
+    test(
+      'processes operations before pullRemote (prevents toggle flicker)',
+      () async {
+        final SyncOperation op = SyncOperation(
+          id: 'op-3',
+          entityType: 'test',
+          payload: const <String, dynamic>{'k': 'v'},
+          createdAt: DateTime.utc(2024, 1, 1),
+          idempotencyKey: 'key-3',
+        );
+        final _MockSyncableRepository repo = _MockSyncableRepository();
+        when(() => repo.entityType).thenReturn('test');
+        when(() => repo.processOperation(any())).thenAnswer((_) async {});
+        when(() => repo.pullRemote()).thenAnswer((_) async {});
+        registry.register(repo);
+        when(
+          () => pending.getPendingOperations(
+            now: any(named: 'now'),
+            limit: any(named: 'limit'),
+            supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
+          ),
+        ).thenAnswer((_) async => <SyncOperation>[op]);
+        when(() => pending.markCompleted(op.id)).thenAnswer((_) async {});
+
+        await runSyncCycle(
+          registry: registry,
+          pendingRepository: pending,
+          emitStatus: emittedStatuses.add,
+          telemetry: (final _, final _) {},
+        );
+
+        verifyInOrder(<void Function()>[
+          () => repo.processOperation(any()),
+          () => repo.pullRemote(),
+        ]);
+      },
+    );
   });
 }
