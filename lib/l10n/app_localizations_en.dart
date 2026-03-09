@@ -1692,6 +1692,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get iotDemoErrorAdd => 'Failed to add device';
 
   @override
+  String get iotDemoFilterAll => 'All';
+
+  @override
+  String get iotDemoFilterOnOnly => 'On only';
+
+  @override
+  String get iotDemoFilterOffOnly => 'Off only';
+
+  @override
   String get openIotDemoTooltip => 'Open IoT Demo';
 
   @override

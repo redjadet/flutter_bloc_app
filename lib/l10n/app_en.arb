@@ -2209,6 +2209,18 @@
   "@iotDemoErrorAdd": {
     "description": "Error when adding a device fails"
   },
+  "iotDemoFilterAll": "All",
+  "@iotDemoFilterAll": {
+    "description": "Filter option to show all devices"
+  },
+  "iotDemoFilterOnOnly": "On only",
+  "@iotDemoFilterOnOnly": {
+    "description": "Filter option to show only devices with toggle on"
+  },
+  "iotDemoFilterOffOnly": "Off only",
+  "@iotDemoFilterOffOnly": {
+    "description": "Filter option to show only devices with toggle off"
+  },
   "openIotDemoTooltip": "Open IoT Demo",
   "@openIotDemoTooltip": {
     "description": "Tooltip for navigating to the IoT demo page"

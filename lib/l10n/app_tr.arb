@@ -1343,6 +1343,9 @@
   "iotDemoAddDeviceInitialValue": "Başlangıç değeri: {value}",
   "iotDemoAddDeviceTooltip": "Cihaz ekle",
   "iotDemoErrorAdd": "Cihaz eklenemedi",
+  "iotDemoFilterAll": "Tümü",
+  "iotDemoFilterOnOnly": "Sadece açık",
+  "iotDemoFilterOffOnly": "Sadece kapalı",
   "openIotDemoTooltip": "IoT demosunu aç",
   "searchAllResultsSectionTitle": "TÜM SONUÇLAR",
   "@searchAllResultsSectionTitle": {

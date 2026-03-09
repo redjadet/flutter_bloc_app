@@ -1718,6 +1718,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get iotDemoErrorAdd => 'Échec de l\'ajout de l\'appareil';
 
   @override
+  String get iotDemoFilterAll => 'Tous';
+
+  @override
+  String get iotDemoFilterOnOnly => 'Marche uniquement';
+
+  @override
+  String get iotDemoFilterOffOnly => 'Arrêt uniquement';
+
+  @override
   String get openIotDemoTooltip => 'Ouvrir la démo IoT';
 
   @override

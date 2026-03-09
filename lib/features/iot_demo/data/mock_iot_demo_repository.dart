@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
@@ -51,23 +52,41 @@ class MockIotDemoRepository implements IotDemoRepository {
     }
   }
 
+  List<IotDevice> _applyFilter(
+    final List<IotDevice> list,
+    final IotDemoDeviceFilter filter,
+  ) {
+    if (filter == IotDemoDeviceFilter.toggledOnOnly) {
+      return list.where((final d) => d.toggledOn).toList();
+    }
+    if (filter == IotDemoDeviceFilter.toggledOffOnly) {
+      return list.where((final d) => !d.toggledOn).toList();
+    }
+    return list;
+  }
+
   int _indexOf(final String deviceId) {
     return _devices.indexWhere((final d) => d.id == deviceId);
   }
 
   @override
-  Stream<List<IotDevice>> watchDevices() {
+  Stream<List<IotDevice>> watchDevices([
+    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+  ]) {
     final StreamController<List<IotDevice>>? controller = _controller;
+    final List<IotDevice> filtered = _applyFilter(_devices, filter);
     if (controller == null || controller.isClosed) {
       return Stream<List<IotDevice>>.value(
-        List<IotDevice>.unmodifiable(_devices),
+        List<IotDevice>.unmodifiable(filtered),
       );
     }
     return Stream<List<IotDevice>>.multi((final multi) {
-      multi.add(List<IotDevice>.unmodifiable(_devices));
+      multi.add(List<IotDevice>.unmodifiable(filtered));
       final StreamSubscription<List<IotDevice>> subscription = controller.stream
           .listen(
-            multi.add,
+            (final list) => multi.add(
+              List<IotDevice>.unmodifiable(_applyFilter(list, filter)),
+            ),
             onError: multi.addError,
             onDone: multi.close,
           );

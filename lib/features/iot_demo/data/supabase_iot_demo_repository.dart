@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
@@ -17,24 +18,43 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SupabaseIotDemoRepository implements IotDemoRepository {
   static const String _table = 'iot_devices';
 
+  static const String _selectColumns = 'id,name,type,last_seen,connection_state,toggled_on,value';
+
   @override
-  Stream<List<IotDevice>> watchDevices() {
+  Stream<List<IotDevice>> watchDevices([
+    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+  ]) {
     if (!SupabaseBootstrapService.isSupabaseInitialized) {
       return Stream<List<IotDevice>>.value(const <IotDevice>[]);
     }
-    return Stream<List<IotDevice>>.fromFuture(fetchDevices());
+    return Stream<List<IotDevice>>.fromFuture(fetchDevices(filter));
   }
 
-  /// Fetches all devices from Supabase. Used by offline-first pullRemote.
-  Future<List<IotDevice>> fetchDevices() async {
+  /// Fetches devices from Supabase. Used by offline-first pullRemote (filter=all)
+  /// and by watchDevices when filter is toggledOnOnly.
+  Future<List<IotDevice>> fetchDevices([
+    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+  ]) async {
     if (!SupabaseBootstrapService.isSupabaseInitialized) {
       return const <IotDevice>[];
     }
     try {
-      final dynamic raw = await Supabase.instance.client
-          .from(_table)
-          .select()
-          .order('id');
+      final dynamic raw;
+      if (filter == IotDemoDeviceFilter.toggledOnOnly) {
+        raw = await Supabase.instance.client
+            .from(_table)
+            .select(_selectColumns)
+            .eq('toggled_on', true)
+            .order('id');
+      } else if (filter == IotDemoDeviceFilter.toggledOffOnly) {
+        raw = await Supabase.instance.client
+            .from(_table)
+            .select(_selectColumns)
+            .eq('toggled_on', false)
+            .order('id');
+      } else {
+        raw = await Supabase.instance.client.from(_table).select(_selectColumns).order('id');
+      }
       final List<dynamic>? list = listFromDynamic(raw);
       final List<IotDevice> result = <IotDevice>[];
       if (list != null) {

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
@@ -10,6 +11,21 @@ import 'package:flutter_test/flutter_test.dart';
 
 const List<IotDevice> _fakeDevices = [
   IotDevice(id: 'dev-1', name: 'Test Device', type: IotDeviceType.light),
+];
+
+const List<IotDevice> _devicesWithToggle = [
+  IotDevice(
+    id: 'on-1',
+    name: 'On Device',
+    type: IotDeviceType.light,
+    toggledOn: true,
+  ),
+  IotDevice(
+    id: 'off-1',
+    name: 'Off Device',
+    type: IotDeviceType.plug,
+    toggledOn: false,
+  ),
 ];
 
 class _StubIotDemoRepository implements IotDemoRepository {
@@ -26,10 +42,17 @@ class _StubIotDemoRepository implements IotDemoRepository {
   final bool throwOnDisconnect;
   final bool throwOnSendCommand;
   final bool throwArgumentErrorOnAddDevice;
+  final List<IotDemoDeviceFilter> watchFilters = <IotDemoDeviceFilter>[];
+  int watchCallCount = 0;
 
   @override
-  Stream<List<IotDevice>> watchDevices() =>
-      Stream<List<IotDevice>>.fromIterable([devices]);
+  Stream<List<IotDevice>> watchDevices([
+    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+  ]) {
+    watchCallCount++;
+    watchFilters.add(filter);
+    return Stream<List<IotDevice>>.value(devices);
+  }
 
   @override
   Future<void> connect(final String deviceId) async {
@@ -64,7 +87,9 @@ class _StreamingIotDemoRepository implements IotDemoRepository {
       StreamController<List<IotDevice>>.broadcast();
 
   @override
-  Stream<List<IotDevice>> watchDevices() => _controller.stream;
+  Stream<List<IotDevice>> watchDevices([
+    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+  ]) => _controller.stream;
 
   void emit(final List<IotDevice> devices) {
     _controller.add(devices);
@@ -72,6 +97,34 @@ class _StreamingIotDemoRepository implements IotDemoRepository {
 
   Future<void> dispose() async {
     await _controller.close();
+  }
+
+  @override
+  Future<void> connect(final String deviceId) async {}
+
+  @override
+  Future<void> disconnect(final String deviceId) async {}
+
+  @override
+  Future<void> sendCommand(
+    final String deviceId,
+    final IotDeviceCommand command,
+  ) async {}
+
+  @override
+  Future<void> addDevice(final IotDevice device) async {}
+}
+
+class _DelayedFilterRepository implements IotDemoRepository {
+  _DelayedFilterRepository(this.devices);
+
+  final List<IotDevice> devices;
+
+  @override
+  Stream<List<IotDevice>> watchDevices([
+    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+  ]) async* {
+    yield devices;
   }
 
   @override
@@ -180,11 +233,14 @@ void main() {
 
     blocTest<IotDemoCubit, IotDemoState>(
       'emits validation message when addDevice throws ArgumentError',
-      build: () =>
-          IotDemoCubit(repository: _StubIotDemoRepository(throwArgumentErrorOnAddDevice: true)),
+      build: () => IotDemoCubit(
+        repository: _StubIotDemoRepository(throwArgumentErrorOnAddDevice: true),
+      ),
       act: (cubit) async {
         await cubit.initialize();
-        await cubit.addDevice(IotDevice(id: 'new-1', name: 'x' * 300, type: IotDeviceType.light));
+        await cubit.addDevice(
+          IotDevice(id: 'new-1', name: 'x' * 300, type: IotDeviceType.light),
+        );
       },
       expect: () => <IotDemoState>[
         const IotDemoState.loading(),
@@ -195,6 +251,163 @@ void main() {
 
     final _StreamingIotDemoRepository streamingRepository =
         _StreamingIotDemoRepository();
+    blocTest<IotDemoCubit, IotDemoState>(
+      'setFilter resubscribes with filtered local data without loading',
+      build: () => IotDemoCubit(
+        repository: _StubIotDemoRepository(devices: _devicesWithToggle),
+      ),
+      act: (cubit) async {
+        await cubit.initialize();
+        await Future<void>.delayed(Duration.zero);
+        cubit.setFilter(IotDemoDeviceFilter.toggledOnOnly);
+        await Future<void>.delayed(Duration.zero);
+      },
+      expect: () => <IotDemoState>[
+        const IotDemoState.loading(),
+        IotDemoState.loaded(
+          _devicesWithToggle,
+          selectedDeviceId: null,
+          filter: IotDemoDeviceFilter.all,
+        ),
+        IotDemoState.loaded(
+          _devicesWithToggle.where((d) => d.toggledOn).toList(),
+          selectedDeviceId: null,
+          filter: IotDemoDeviceFilter.toggledOnOnly,
+        ),
+      ],
+    );
+
+    blocTest<IotDemoCubit, IotDemoState>(
+      'setFilter switches from onOnly to all without loading',
+      build: () => IotDemoCubit(
+        repository: _StubIotDemoRepository(devices: _devicesWithToggle),
+      ),
+      act: (cubit) async {
+        await cubit.initialize();
+        await Future<void>.delayed(Duration.zero);
+        cubit.setFilter(IotDemoDeviceFilter.toggledOnOnly);
+        await Future<void>.delayed(Duration.zero);
+        cubit.setFilter(IotDemoDeviceFilter.all);
+      },
+      expect: () => <IotDemoState>[
+        const IotDemoState.loading(),
+        IotDemoState.loaded(
+          _devicesWithToggle,
+          selectedDeviceId: null,
+          filter: IotDemoDeviceFilter.all,
+        ),
+        IotDemoState.loaded(
+          _devicesWithToggle.where((d) => d.toggledOn).toList(),
+          selectedDeviceId: null,
+          filter: IotDemoDeviceFilter.toggledOnOnly,
+        ),
+        IotDemoState.loaded(
+          _devicesWithToggle,
+          selectedDeviceId: null,
+          filter: IotDemoDeviceFilter.all,
+        ),
+      ],
+    );
+
+    test('setFilter does not resubscribe repository', () async {
+      final _StubIotDemoRepository repository = _StubIotDemoRepository(
+        devices: _devicesWithToggle,
+      );
+      final IotDemoCubit cubit = IotDemoCubit(repository: repository);
+      addTearDown(cubit.close);
+
+      await cubit.initialize();
+      await Future<void>.delayed(Duration.zero);
+      cubit.setFilter(IotDemoDeviceFilter.toggledOffOnly);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(repository.watchFilters, <IotDemoDeviceFilter>[
+        IotDemoDeviceFilter.all,
+      ]);
+      expect(repository.watchCallCount, 1);
+    });
+
+    blocTest<IotDemoCubit, IotDemoState>(
+      'setFilter updates selected filter immediately before delayed data arrives',
+      build: () => IotDemoCubit(
+        repository: _DelayedFilterRepository(_devicesWithToggle),
+      ),
+      act: (cubit) async {
+        await cubit.initialize();
+        await Future<void>.delayed(Duration.zero);
+        cubit.setFilter(IotDemoDeviceFilter.toggledOnOnly);
+        await Future<void>.delayed(Duration.zero);
+      },
+      expect: () => <IotDemoState>[
+        const IotDemoState.loading(),
+        IotDemoState.loaded(
+          _devicesWithToggle,
+          selectedDeviceId: null,
+          filter: IotDemoDeviceFilter.all,
+        ),
+        IotDemoState.loaded(
+          _devicesWithToggle.where((d) => d.toggledOn).toList(),
+          selectedDeviceId: null,
+          filter: IotDemoDeviceFilter.toggledOnOnly,
+        ),
+      ],
+    );
+
+    blocTest<IotDemoCubit, IotDemoState>(
+      'stream updates keep the selected filter after remote-style refresh',
+      build: () => IotDemoCubit(repository: streamingRepository),
+      act: (final cubit) async {
+        await cubit.initialize();
+        streamingRepository.emit(_devicesWithToggle);
+        await Future<void>.delayed(Duration.zero);
+        cubit.setFilter(IotDemoDeviceFilter.toggledOnOnly);
+        await Future<void>.delayed(Duration.zero);
+        streamingRepository.emit(<IotDevice>[
+          _devicesWithToggle.first,
+          _devicesWithToggle[1],
+          const IotDevice(
+            id: 'on-2',
+            name: 'Another On Device',
+            type: IotDeviceType.sensor,
+            toggledOn: true,
+          ),
+          const IotDevice(
+            id: 'off-2',
+            name: 'Another Off Device',
+            type: IotDeviceType.sensor,
+            toggledOn: false,
+          ),
+        ]);
+        await Future<void>.delayed(Duration.zero);
+      },
+      expect: () => <IotDemoState>[
+        const IotDemoState.loading(),
+        IotDemoState.loaded(
+          _devicesWithToggle,
+          selectedDeviceId: null,
+          filter: IotDemoDeviceFilter.all,
+        ),
+        IotDemoState.loaded(
+          _devicesWithToggle.where((d) => d.toggledOn).toList(),
+          selectedDeviceId: null,
+          filter: IotDemoDeviceFilter.toggledOnOnly,
+        ),
+        IotDemoState.loaded(
+          <IotDevice>[
+            _devicesWithToggle.first,
+            const IotDevice(
+              id: 'on-2',
+              name: 'Another On Device',
+              type: IotDeviceType.sensor,
+              toggledOn: true,
+            ),
+          ],
+          selectedDeviceId: null,
+          filter: IotDemoDeviceFilter.toggledOnOnly,
+        ),
+      ],
+    );
+
     blocTest<IotDemoCubit, IotDemoState>(
       'reinitialize does not duplicate stream emissions',
       build: () => IotDemoCubit(repository: streamingRepository),

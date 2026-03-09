@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/offline_first_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/persistent_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/supabase_iot_demo_repository.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
@@ -68,6 +69,76 @@ void main() {
       final List<IotDevice> first = await repo.watchDevices().first;
       expect(first, isEmpty);
     });
+
+    test(
+      'watchDevices stays local and does not fetch remote on subscribe',
+      () async {
+        final _FakeSupabaseRemote remote = _FakeSupabaseRemote();
+        final OfflineFirstIotDemoRepository repo = buildRepository(
+          remote: remote,
+        );
+        const IotDevice localDevice = IotDevice(
+          id: 'local-1',
+          name: 'Local Device',
+          type: IotDeviceType.light,
+          toggledOn: true,
+        );
+
+        await repo.addDevice(localDevice);
+
+        final List<IotDevice> first = await repo
+            .watchDevices(IotDemoDeviceFilter.toggledOnOnly)
+            .first;
+
+        expect(first, <IotDevice>[localDevice]);
+        expect(remote.fetchCallCount, 0);
+      },
+    );
+
+    test(
+      'watchDevices applies filter changes from local updates immediately',
+      () async {
+        final _FakeSupabaseRemote remote = _FakeSupabaseRemote();
+        remote.devices = <IotDevice>[
+          const IotDevice(
+            id: 'd1',
+            name: 'D1',
+            type: IotDeviceType.light,
+            toggledOn: false,
+          ),
+        ];
+        final OfflineFirstIotDemoRepository repo = buildRepository(
+          remote: remote,
+        );
+        await repo.pullRemote();
+        final List<List<IotDevice>> emissions = <List<IotDevice>>[];
+        final Completer<void> secondEmission = Completer<void>();
+        final StreamSubscription<List<IotDevice>> sub = repo
+            .watchDevices(IotDemoDeviceFilter.toggledOffOnly)
+            .listen((final list) {
+              emissions.add(List<IotDevice>.from(list));
+              if (emissions.length == 1) {
+                Future<void>.delayed(
+                  const Duration(milliseconds: 50),
+                  () async {
+                    await repo.sendCommand(
+                      'd1',
+                      const IotDeviceCommand.toggle(),
+                    );
+                  },
+                );
+              } else if (emissions.length >= 2 && !secondEmission.isCompleted) {
+                secondEmission.complete();
+              }
+            });
+        await secondEmission.future.timeout(const Duration(seconds: 5));
+        await sub.cancel();
+        expect(emissions.length, greaterThanOrEqualTo(2));
+        expect(emissions.first.single.id, 'd1');
+        expect(emissions.first.single.toggledOn, isFalse);
+        expect(emissions[1], isEmpty);
+      },
+    );
 
     test('connect enqueues operation when remote is set', () async {
       final OfflineFirstIotDemoRepository repo = buildRepository(
@@ -488,6 +559,7 @@ class _FakeSupabaseRemote extends SupabaseIotDemoRepository {
   final List<String> connectCalls = <String>[];
   final List<String> disconnectCalls = <String>[];
   final List<IotDevice> addDeviceCalls = <IotDevice>[];
+  int fetchCallCount = 0;
   List<IotDevice> devices = <IotDevice>[
     const IotDevice(
       id: 'light-1',
@@ -497,8 +569,12 @@ class _FakeSupabaseRemote extends SupabaseIotDemoRepository {
   ];
 
   @override
-  Future<List<IotDevice>> fetchDevices() async =>
-      List<IotDevice>.unmodifiable(devices);
+  Future<List<IotDevice>> fetchDevices([
+    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+  ]) async {
+    fetchCallCount++;
+    return List<IotDevice>.unmodifiable(devices);
+  }
 
   @override
   Future<void> connect(final String deviceId) async {
@@ -530,7 +606,9 @@ class _ControllableSupabaseRemote extends SupabaseIotDemoRepository {
   int fetchCallCount = 0;
 
   @override
-  Future<List<IotDevice>> fetchDevices() async {
+  Future<List<IotDevice>> fetchDevices([
+    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+  ]) async {
     fetchCallCount++;
     return fetchHandler();
   }

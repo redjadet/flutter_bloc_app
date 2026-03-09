@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
@@ -52,8 +54,23 @@ String _connectionStateLabel(
 };
 
 /// IoT demo page: list devices, connect, disconnect, send commands.
-class IotDemoPage extends StatelessWidget {
+class IotDemoPage extends StatefulWidget {
   const IotDemoPage({super.key});
+
+  @override
+  State<IotDemoPage> createState() => _IotDemoPageState();
+}
+
+class _IotDemoPageState extends State<IotDemoPage> {
+  bool _didStartSync = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didStartSync) return;
+    _didStartSync = true;
+    context.cubit<SyncStatusCubit>().ensureStarted();
+  }
 
   @override
   Widget build(final BuildContext context) {
@@ -73,17 +90,51 @@ class IotDemoPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          TypeSafeBlocBuilder<IotDemoCubit, IotDemoState>(
+            builder: (final context, final state) {
+              return state.mapOrNull(
+                    loaded: (final s) => Padding(
+                      padding: context.pagePadding.copyWith(bottom: 0),
+                      child: SegmentedButton<IotDemoDeviceFilter>(
+                        segments: <ButtonSegment<IotDemoDeviceFilter>>[
+                          ButtonSegment<IotDemoDeviceFilter>(
+                            value: IotDemoDeviceFilter.all,
+                            label: Text(l10n.iotDemoFilterAll),
+                          ),
+                          ButtonSegment<IotDemoDeviceFilter>(
+                            value: IotDemoDeviceFilter.toggledOnOnly,
+                            label: Text(l10n.iotDemoFilterOnOnly),
+                          ),
+                          ButtonSegment<IotDemoDeviceFilter>(
+                            value: IotDemoDeviceFilter.toggledOffOnly,
+                            label: Text(l10n.iotDemoFilterOffOnly),
+                          ),
+                        ],
+                        selected: <IotDemoDeviceFilter>{s.filter},
+                        onSelectionChanged: (final selected) {
+                          final IotDemoDeviceFilter? f = selected.firstOrNull;
+                          if (f != null && f != s.filter) {
+                            context.cubit<IotDemoCubit>().setFilter(f);
+                          }
+                        },
+                      ),
+                    ),
+                  ) ??
+                  const SizedBox.shrink();
+            },
+          ),
           Expanded(
             child: TypeSafeBlocBuilder<IotDemoCubit, IotDemoState>(
               builder: (final context, final state) {
                 return state.when(
                   initial: () => const _LoadingBody(),
                   loading: () => const _LoadingBody(),
-                  loaded: (final devices, final selectedDeviceId) =>
-                      _LoadedBody(
-                        devices: devices,
-                        selectedDeviceId: selectedDeviceId,
-                      ),
+                  loaded:
+                      (final devices, final selectedDeviceId, final filter) =>
+                          _LoadedBody(
+                            devices: devices,
+                            selectedDeviceId: selectedDeviceId,
+                          ),
                   error: (final message) => CommonErrorView(
                     message: message,
                     onRetry: () => context.cubit<IotDemoCubit>().initialize(),

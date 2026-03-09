@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
@@ -24,31 +25,75 @@ class IotDemoCubit extends Cubit<IotDemoState>
   final AppLocalizations? _l10n;
   // ignore: cancel_subscriptions - Subscription is managed by CubitSubscriptionMixin.
   StreamSubscription<List<IotDevice>>? _devicesSubscription;
+  int _devicesWatchRequestId = 0;
+  List<IotDevice> _allDevices = const <IotDevice>[];
 
   /// Subscribe to device stream and emit initial/loading then loaded states.
-  Future<void> initialize() async {
+  /// Uses [filterOverride] when provided, else filter from loaded state, else all.
+  Future<void> initialize({final IotDemoDeviceFilter? filterOverride}) async {
     if (isClosed) return;
     final String? previousSelectedDeviceId = state.mapOrNull(
       loaded: (final s) => s.selectedDeviceId,
     );
-    emit(const IotDemoState.loading());
-    await cancelAllSubscriptions();
-    if (isClosed) return;
+    final IotDemoDeviceFilter filter =
+        filterOverride ??
+        state.mapOrNull(loaded: (final s) => s.filter) ??
+        IotDemoDeviceFilter.all;
+    await _restartDevicesSubscription(
+      filter: filter,
+      previousSelectedDeviceId: previousSelectedDeviceId,
+      emitLoadingState: true,
+    );
+  }
 
+  void setFilter(final IotDemoDeviceFilter filter) {
+    if (isClosed) return;
+    state.mapOrNull(
+      loaded: (final s) {
+        if (s.filter == filter) return;
+        emit(
+          _buildLoadedState(
+            devices: _allDevices,
+            filter: filter,
+            selectedDeviceId: s.selectedDeviceId,
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _restartDevicesSubscription({
+    required final IotDemoDeviceFilter filter,
+    final String? previousSelectedDeviceId,
+    final bool emitLoadingState = false,
+  }) async {
+    final int requestId = ++_devicesWatchRequestId;
+    if (emitLoadingState) {
+      emit(const IotDemoState.loading());
+    }
+    await cancelAllSubscriptions();
+    if (isClosed || requestId != _devicesWatchRequestId) return;
+    _subscribeToDevices(filter, previousSelectedDeviceId, requestId);
+  }
+
+  void _subscribeToDevices(
+    final IotDemoDeviceFilter filter,
+    final String? previousSelectedDeviceId,
+    final int requestId,
+  ) {
     _devicesSubscription = _repository.watchDevices().listen(
       (final list) {
-        if (isClosed) return;
-        final String? selected =
-            state.mapOrNull(loaded: (final s) => s.selectedDeviceId) ??
-            previousSelectedDeviceId;
-        final String? resolvedSelection =
-            selected != null && list.any((final d) => d.id == selected)
-            ? selected
-            : null;
+        if (isClosed || requestId != _devicesWatchRequestId) return;
+        _allDevices = List<IotDevice>.unmodifiable(list);
+        final IotDemoDeviceFilter activeFilter =
+            state.mapOrNull(loaded: (final s) => s.filter) ?? filter;
         emit(
-          IotDemoState.loaded(
-            list,
-            selectedDeviceId: resolvedSelection,
+          _buildLoadedState(
+            devices: list,
+            filter: activeFilter,
+            selectedDeviceId:
+                state.mapOrNull(loaded: (final s) => s.selectedDeviceId) ??
+                previousSelectedDeviceId,
           ),
         );
       },
@@ -58,12 +103,46 @@ class IotDemoCubit extends Cubit<IotDemoState>
           error,
           stackTrace,
         );
-        if (isClosed) return;
-        emit(IotDemoState.error(_l10n?.iotDemoErrorLoad ?? error.toString()));
+        if (isClosed || requestId != _devicesWatchRequestId) return;
+        emit(
+          IotDemoState.error(_l10n?.iotDemoErrorLoad ?? error.toString()),
+        );
       },
       cancelOnError: true,
     );
     registerSubscription(_devicesSubscription);
+  }
+
+  IotDemoState _buildLoadedState({
+    required final List<IotDevice> devices,
+    required final IotDemoDeviceFilter filter,
+    required final String? selectedDeviceId,
+  }) {
+    final List<IotDevice> filteredDevices = _applyFilter(devices, filter);
+    final String? resolvedSelection =
+        selectedDeviceId != null &&
+            filteredDevices.any((final d) => d.id == selectedDeviceId)
+        ? selectedDeviceId
+        : null;
+    return IotDemoState.loaded(
+      filteredDevices,
+      selectedDeviceId: resolvedSelection,
+      filter: filter,
+    );
+  }
+
+  List<IotDevice> _applyFilter(
+    final List<IotDevice> devices,
+    final IotDemoDeviceFilter filter,
+  ) {
+    switch (filter) {
+      case IotDemoDeviceFilter.all:
+        return devices;
+      case IotDemoDeviceFilter.toggledOnOnly:
+        return devices.where((final d) => d.toggledOn).toList();
+      case IotDemoDeviceFilter.toggledOffOnly:
+        return devices.where((final d) => !d.toggledOn).toList();
+    }
   }
 
   void selectDevice(final String? deviceId) {
@@ -140,10 +219,13 @@ class IotDemoCubit extends Cubit<IotDemoState>
       specificExceptionHandlers: <Type, void Function(Object, StackTrace?)>{
         ArgumentError: (final error, final _) {
           if (isClosed) return;
-          final String msg = ((error as ArgumentError).message as String?) ?? error.toString();
+          final String msg =
+              ((error as ArgumentError).message as String?) ?? error.toString();
           emit(
             IotDemoState.error(
-              msg.isNotEmpty ? msg : (_l10n?.iotDemoErrorAdd ?? error.toString()),
+              msg.isNotEmpty
+                  ? msg
+                  : (_l10n?.iotDemoErrorAdd ?? error.toString()),
             ),
           );
         },

@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_sync_operation_applier.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/persistent_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/supabase_iot_demo_repository.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
@@ -79,12 +81,14 @@ class OfflineFirstIotDemoRepository
   String get entityType => iotDemoEntity;
 
   @override
-  Stream<List<IotDevice>> watchDevices() {
+  Stream<List<IotDevice>> watchDevices([
+    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+  ]) {
     final PersistentIotDemoRepository? local = _getLocalRepository();
     if (local == null) {
       return Stream<List<IotDevice>>.value(const <IotDevice>[]);
     }
-    return local.watchDevices();
+    return local.watchDevices(filter);
   }
 
   Map<String, dynamic> _basePayload(
@@ -293,125 +297,9 @@ class OfflineFirstIotDemoRepository
         opUserId != currentUserId) {
       return;
     }
-    final String? deviceId = stringFromDynamicTrimmed(payload['deviceId']);
-    final String? action = stringFromDynamicTrimmed(payload['action']);
-    if (deviceId == null || deviceId.isEmpty || action == null) {
-      AppLogger.warning(
-        'OfflineFirstIotDemoRepository.processOperation: missing deviceId or action',
-      );
-      return;
-    }
-    if (_remoteRepository == null) {
-      return;
-    }
-    try {
-      final remote = _remoteRepository;
-      switch (action) {
-        case 'add':
-          final String? name = stringFromDynamicTrimmed(payload['name']);
-          final String? typeStr = stringFromDynamicTrimmed(payload['type']);
-          if (name == null || name.isEmpty || typeStr == null) {
-            AppLogger.warning(
-              'OfflineFirstIotDemoRepository.processOperation add: '
-              'missing name or type',
-            );
-            return;
-          }
-          if (name.length > iotDemoDeviceNameMaxLength) {
-            AppLogger.warning(
-              'OfflineFirstIotDemoRepository.processOperation add: '
-              'name exceeds $iotDemoDeviceNameMaxLength characters',
-            );
-            return;
-          }
-          final IotDeviceType? type = _parseDeviceTypeFromName(typeStr);
-          if (type == null) {
-            AppLogger.warning(
-              'OfflineFirstIotDemoRepository.processOperation add: '
-              'invalid type $typeStr',
-            );
-            return;
-          }
-          final bool toggledOn = boolFromDynamic(
-            payload['toggledOn'],
-            fallback: false,
-          );
-          final double value = doubleFromDynamic(
-            payload['value'],
-            iotDemoValueMin,
-          );
-          final IotDevice toAdd = IotDevice(
-            id: deviceId,
-            name: name,
-            type: type,
-            toggledOn: toggledOn,
-            value: iotDemoClampAndRound(
-              value,
-              iotDemoValueMin,
-              iotDemoValueMax,
-            ),
-          );
-          await remote.addDevice(toAdd);
-          break;
-        case 'connect':
-          await remote.connect(deviceId);
-          break;
-        case 'disconnect':
-          await remote.disconnect(deviceId);
-          break;
-        case 'command':
-          final IotDeviceCommand? cmd = _payloadToCommand(payload);
-          if (cmd != null) {
-            await remote.sendCommand(deviceId, cmd);
-          }
-          break;
-        default:
-          AppLogger.warning(
-            'OfflineFirstIotDemoRepository.processOperation: unknown action $action',
-          );
-      }
-    } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'OfflineFirstIotDemoRepository.processOperation',
-        error,
-        stackTrace,
-      );
-      rethrow;
-    }
-  }
-
-  static IotDeviceType? _parseDeviceTypeFromName(final String value) {
-    switch (value) {
-      case 'light':
-        return IotDeviceType.light;
-      case 'thermostat':
-        return IotDeviceType.thermostat;
-      case 'plug':
-        return IotDeviceType.plug;
-      case 'sensor':
-        return IotDeviceType.sensor;
-      case 'switch_':
-        return IotDeviceType.switch_;
-      default:
-        return null;
-    }
-  }
-
-  IotDeviceCommand? _payloadToCommand(final Map<String, dynamic> payload) {
-    final String? kind = stringFromDynamicTrimmed(payload['kind']);
-    if (kind == 'toggle') {
-      return const IotDeviceCommand.toggle();
-    }
-    if (kind == 'setValue') {
-      final double v = doubleFromDynamic(
-        payload['value'],
-        iotDemoValueMin,
-      );
-      return IotDeviceCommand.setValue(
-        iotDemoClampAndRound(v, iotDemoValueMin, iotDemoValueMax),
-      );
-    }
-    return null;
+    final SupabaseIotDemoRepository? remote = _remoteRepository;
+    if (remote == null) return;
+    await applyIotDemoSyncOperation(remote, payload);
   }
 
   @override
