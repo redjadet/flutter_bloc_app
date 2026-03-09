@@ -1708,6 +1708,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get iotDemoErrorAdd => 'Error al añadir el dispositivo';
 
   @override
+  String get iotDemoFilterAll => 'Todos';
+
+  @override
+  String get iotDemoFilterOnOnly => 'Solo encendidos';
+
+  @override
+  String get iotDemoFilterOffOnly => 'Solo apagados';
+
+  @override
   String get openIotDemoTooltip => 'Abrir demo IoT';
 
   @override

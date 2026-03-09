@@ -1324,6 +1324,9 @@
   "iotDemoAddDeviceInitialValue": "Anfangswert: {value}",
   "iotDemoAddDeviceTooltip": "Gerät hinzufügen",
   "iotDemoErrorAdd": "Gerät konnte nicht hinzugefügt werden",
+  "iotDemoFilterAll": "Alle",
+  "iotDemoFilterOnOnly": "Nur eingeschaltet",
+  "iotDemoFilterOffOnly": "Nur ausgeschaltet",
   "openIotDemoTooltip": "IoT-Demo öffnen",
   "searchAllResultsSectionTitle": "ALLE ERGEBNISSE",
   "@searchAllResultsSectionTitle": {

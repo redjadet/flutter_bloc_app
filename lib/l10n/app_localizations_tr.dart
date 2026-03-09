@@ -1696,6 +1696,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get iotDemoErrorAdd => 'Cihaz eklenemedi';
 
   @override
+  String get iotDemoFilterAll => 'Tümü';
+
+  @override
+  String get iotDemoFilterOnOnly => 'Sadece açık';
+
+  @override
+  String get iotDemoFilterOffOnly => 'Sadece kapalı';
+
+  @override
   String get openIotDemoTooltip => 'IoT demosunu aç';
 
   @override

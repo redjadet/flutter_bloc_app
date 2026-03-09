@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_bloc_app/features/iot_demo/data/persistent_iot_demo_repository.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
@@ -210,6 +211,30 @@ void main() {
       final IotDevice plug = devices.firstWhere((final d) => d.id == 'plug-1');
       expect(plug.toggledOn, isTrue);
       expect(plug.connectionState, IotConnectionState.connected);
+    });
+
+    test('watchDevices with toggledOnOnly filter returns only toggled devices', () async {
+      await repository.replaceDevices(<IotDevice>[
+        const IotDevice(
+          id: 'light-1',
+          name: 'Light On',
+          type: IotDeviceType.light,
+          toggledOn: true,
+        ),
+        const IotDevice(id: 'plug-1', name: 'Plug Off', type: IotDeviceType.plug, toggledOn: false),
+      ]);
+      final List<IotDevice> all = await repository.watchDevices(IotDemoDeviceFilter.all).first;
+      expect(all.length, 2);
+      final List<IotDevice> onOnly = await repository
+          .watchDevices(IotDemoDeviceFilter.toggledOnOnly)
+          .first;
+      expect(onOnly.length, 1);
+      expect(onOnly.first.id, 'light-1');
+      final List<IotDevice> offOnly = await repository
+          .watchDevices(IotDemoDeviceFilter.toggledOffOnly)
+          .first;
+      expect(offOnly.length, 1);
+      expect(offOnly.first.id, 'plug-1');
     });
 
     test(

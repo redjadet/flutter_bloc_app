@@ -64,9 +64,11 @@ All core offline-first features have been successfully implemented, tested, and 
 
 - **Repository**: `OfflineFirstIotDemoRepository`
 - **Storage**: Per-user Hive box `iot_demo_devices_<supabaseUserId>` (key `devices`); remote Supabase table `iot_devices` with `user_id` and RLS
+- **Device filters**: All, On only, Off only (`IotDemoDeviceFilter`). Filtering is applied in the IoT cubit on top of the local device stream, so filter selection is preserved during optimistic updates and Supabase refreshes.
+- **Sync applier**: `iot_demo_sync_operation_applier.dart` applies add/connect/disconnect/command payloads to remote
 - **Auth**: Route requires Supabase sign-in; redirect to `/supabase-auth` with return path `/iot-demo`; post sign-in navigates back
 - **Strategy**: Write-first with pending operation queue (payload includes `supabaseUserId`); pullRemote replaces current user's local from Supabase; sync cycle filters pending ops by user
-- **UI**: Sync status logged; Sync Diagnostics in Settings (dev/qa only); sync triggered on page open
+- **UI**: Sync status logged; Sync Diagnostics in Settings (dev/qa only); sync triggered on page open via `SyncStatusCubit.ensureStarted()`
 - **Tests**: Unit/repository (including legacy-op skip, different-user skip) and widget tests
 - **Documentation**: `docs/offline_first/iot_demo.md`, `docs/offline_first/iot_demo_supabase_auth_plan.md`, `docs/offline_first/supabase_iot_demo_user_id_migration.sql`
 

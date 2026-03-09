@@ -128,12 +128,12 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<IotDevice> devices,  String? selectedDeviceId)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<IotDevice> devices,  String? selectedDeviceId,  IotDemoDeviceFilter filter)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IotDemoInitial() when initial != null:
 return initial();case _IotDemoLoading() when loading != null:
 return loading();case _IotDemoLoaded() when loaded != null:
-return loaded(_that.devices,_that.selectedDeviceId);case _IotDemoError() when error != null:
+return loaded(_that.devices,_that.selectedDeviceId,_that.filter);case _IotDemoError() when error != null:
 return error(_that.message);case _:
   return orElse();
 
@@ -152,12 +152,12 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<IotDevice> devices,  String? selectedDeviceId)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<IotDevice> devices,  String? selectedDeviceId,  IotDemoDeviceFilter filter)  loaded,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case _IotDemoInitial():
 return initial();case _IotDemoLoading():
 return loading();case _IotDemoLoaded():
-return loaded(_that.devices,_that.selectedDeviceId);case _IotDemoError():
+return loaded(_that.devices,_that.selectedDeviceId,_that.filter);case _IotDemoError():
 return error(_that.message);case _:
   throw StateError('Unexpected subclass');
 
@@ -175,12 +175,12 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<IotDevice> devices,  String? selectedDeviceId)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<IotDevice> devices,  String? selectedDeviceId,  IotDemoDeviceFilter filter)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case _IotDemoInitial() when initial != null:
 return initial();case _IotDemoLoading() when loading != null:
 return loading();case _IotDemoLoaded() when loaded != null:
-return loaded(_that.devices,_that.selectedDeviceId);case _IotDemoError() when error != null:
+return loaded(_that.devices,_that.selectedDeviceId,_that.filter);case _IotDemoError() when error != null:
 return error(_that.message);case _:
   return null;
 
@@ -257,7 +257,7 @@ String toString() {
 
 
 class _IotDemoLoaded implements IotDemoState {
-  const _IotDemoLoaded(final  List<IotDevice> devices, {this.selectedDeviceId}): _devices = devices;
+  const _IotDemoLoaded(final  List<IotDevice> devices, {this.selectedDeviceId, this.filter = IotDemoDeviceFilter.all}): _devices = devices;
   
 
  final  List<IotDevice> _devices;
@@ -268,6 +268,7 @@ class _IotDemoLoaded implements IotDemoState {
 }
 
  final  String? selectedDeviceId;
+@JsonKey() final  IotDemoDeviceFilter filter;
 
 /// Create a copy of IotDemoState
 /// with the given fields replaced by the non-null parameter values.
@@ -279,16 +280,16 @@ _$IotDemoLoadedCopyWith<_IotDemoLoaded> get copyWith => __$IotDemoLoadedCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IotDemoLoaded&&const DeepCollectionEquality().equals(other._devices, _devices)&&(identical(other.selectedDeviceId, selectedDeviceId) || other.selectedDeviceId == selectedDeviceId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IotDemoLoaded&&const DeepCollectionEquality().equals(other._devices, _devices)&&(identical(other.selectedDeviceId, selectedDeviceId) || other.selectedDeviceId == selectedDeviceId)&&(identical(other.filter, filter) || other.filter == filter));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_devices),selectedDeviceId);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_devices),selectedDeviceId,filter);
 
 @override
 String toString() {
-  return 'IotDemoState.loaded(devices: $devices, selectedDeviceId: $selectedDeviceId)';
+  return 'IotDemoState.loaded(devices: $devices, selectedDeviceId: $selectedDeviceId, filter: $filter)';
 }
 
 
@@ -299,7 +300,7 @@ abstract mixin class _$IotDemoLoadedCopyWith<$Res> implements $IotDemoStateCopyW
   factory _$IotDemoLoadedCopyWith(_IotDemoLoaded value, $Res Function(_IotDemoLoaded) _then) = __$IotDemoLoadedCopyWithImpl;
 @useResult
 $Res call({
- List<IotDevice> devices, String? selectedDeviceId
+ List<IotDevice> devices, String? selectedDeviceId, IotDemoDeviceFilter filter
 });
 
 
@@ -316,11 +317,12 @@ class __$IotDemoLoadedCopyWithImpl<$Res>
 
 /// Create a copy of IotDemoState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? devices = null,Object? selectedDeviceId = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? devices = null,Object? selectedDeviceId = freezed,Object? filter = null,}) {
   return _then(_IotDemoLoaded(
 null == devices ? _self._devices : devices // ignore: cast_nullable_to_non_nullable
 as List<IotDevice>,selectedDeviceId: freezed == selectedDeviceId ? _self.selectedDeviceId : selectedDeviceId // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,filter: null == filter ? _self.filter : filter // ignore: cast_nullable_to_non_nullable
+as IotDemoDeviceFilter,
   ));
 }
 

@@ -24,9 +24,9 @@ This document defines how the IoT demo feature adopts the shared offline-first s
 - **OfflineFirstIotDemoRepository**: Implements `IotDemoRepository` and `SyncableRepository`.
   - Takes `getCurrentSupabaseUserId` and `getPersistentRepository(supabaseUserId)`; caches persistent repo per user.
   - `entityType`: `iot_demo`
-  - `watchDevices()`: streams from current user's local repo (empty stream when no user).
+  - `watchDevices(filter)`: streams from the current user's local repo with filter applied locally. Empty stream when no user. Remote changes are pulled into local storage by background sync/realtime, so the UI still updates from the local stream.
   - `connect`/`disconnect`/`sendCommand`/`addDevice`: call local first, then enqueue `SyncOperation`; for add: payload includes full device (name, type, value); for command: kind/value.
-  - `processOperation`: processes only when payload `supabaseUserId` equals current user; legacy ops without `supabaseUserId` are skipped.
+  - `processOperation`: validates user match, then delegates to `applyIotDemoSyncOperation` in `iot_demo_sync_operation_applier.dart` for add/connect/disconnect/command. Legacy ops without `supabaseUserId` are skipped.
   - `pullRemote`: calls remote `fetchDevices()`, then current user's `local.replaceDevices(remoteDevices)`; in-flight coalesced.
 - DI: `OfflineFirstIotDemoRepository` built with `getCurrentSupabaseUserId` from `SupabaseAuthRepository` and factory `(id) => PersistentIotDemoRepository(hiveService, supabaseUserId: id)`; `IotDemoRepository` resolves to it. `BackgroundSyncCoordinator` receives `getSyncSupabaseUserId` and passes current user to `runSyncCycle` for user-scoped pending op filter.
 
@@ -38,7 +38,8 @@ This document defines how the IoT demo feature adopts the shared offline-first s
 ## UI Integration
 
 - FAB (+): opens add-device dialog (name, type, initial value for thermostat/sensor). On OK, device is added to local and Supabase (via sync). New device is auto-selected.
-- Sync runs in background when page opens via `ensureSyncStartedIfAvailable()`. Sync status is logged; no sync banner on the IoT demo page.
+- Filter: `SegmentedButton` for All / On only / Off only (`IotDemoDeviceFilter`). The cubit keeps one unfiltered local stream and applies the selected filter in memory so the selected filter is preserved across local and remote updates.
+- Sync runs in background when the page opens via `SyncStatusCubit.ensureStarted()`. Sync status is logged; no sync banner on the IoT demo page.
 - For sync observability, use the Sync Diagnostics section in Settings (visible when dev/qa mode is active).
 - Device list is always from local; updates after connect/disconnect/sendCommand are immediate (local), then synced in background.
 
@@ -62,3 +63,4 @@ This document defines how the IoT demo feature adopts the shared offline-first s
 - Supabase: migration SQL in `docs/offline_first/supabase_iot_demo_user_id_migration.sql` (user_id, RLS, index).
 - DI and sync registry wiring in `register_iot_demo_services.dart` and `injector_registrations.dart`.
 - Sync runs in background; no sync banner on page. Sync diagnostics in Settings (dev/qa only).
+- Device filters: All, On only, Off only (`lib/features/iot_demo/domain/iot_demo_device_filter.dart`). Filtering is applied in `IotDemoCubit` on top of the local stream so Supabase-triggered refreshes keep the current filter. Sync operation applier: `lib/features/iot_demo/data/iot_demo_sync_operation_applier.dart`.

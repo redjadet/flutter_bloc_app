@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
@@ -43,18 +44,35 @@ class PersistentIotDemoRepository extends HiveRepositoryBase
   String get boxName => 'iot_demo_devices_$_boxNameSuffix';
 
   @override
-  Stream<List<IotDevice>> watchDevices() => _watchDevicesStream();
+  Stream<List<IotDevice>> watchDevices([
+    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+  ]) => _watchDevicesStream(filter);
 
-  Stream<List<IotDevice>> _watchDevicesStream() async* {
+  Stream<List<IotDevice>> _watchDevicesStream(
+    final IotDemoDeviceFilter filter,
+  ) async* {
     final Box<dynamic> box = await getBox();
     List<IotDevice> devices = await _loadDevices(box);
-    yield List<IotDevice>.unmodifiable(devices);
+    yield List<IotDevice>.unmodifiable(_applyFilter(devices, filter));
     await for (final BoxEvent event in box.watch()) {
       if (event.key == _keyDevices) {
         devices = await _loadDevices(box);
-        yield devices;
+        yield List<IotDevice>.unmodifiable(_applyFilter(devices, filter));
       }
     }
+  }
+
+  List<IotDevice> _applyFilter(
+    final List<IotDevice> devices,
+    final IotDemoDeviceFilter filter,
+  ) {
+    if (filter == IotDemoDeviceFilter.toggledOnOnly) {
+      return devices.where((final d) => d.toggledOn).toList();
+    }
+    if (filter == IotDemoDeviceFilter.toggledOffOnly) {
+      return devices.where((final d) => !d.toggledOn).toList();
+    }
+    return devices;
   }
 
   Future<List<IotDevice>> _loadDevices(final Box<dynamic> box) async =>

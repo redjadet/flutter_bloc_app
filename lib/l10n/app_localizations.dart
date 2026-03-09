@@ -3134,6 +3134,24 @@ abstract class AppLocalizations {
   /// **'Failed to add device'**
   String get iotDemoErrorAdd;
 
+  /// Filter option to show all devices
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get iotDemoFilterAll;
+
+  /// Filter option to show only devices with toggle on
+  ///
+  /// In en, this message translates to:
+  /// **'On only'**
+  String get iotDemoFilterOnOnly;
+
+  /// Filter option to show only devices with toggle off
+  ///
+  /// In en, this message translates to:
+  /// **'Off only'**
+  String get iotDemoFilterOffOnly;
+
   /// Tooltip for navigating to the IoT demo page
   ///
   /// In en, this message translates to:

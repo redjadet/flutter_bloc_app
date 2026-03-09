@@ -1722,6 +1722,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get iotDemoErrorAdd => 'Gerät konnte nicht hinzugefügt werden';
 
   @override
+  String get iotDemoFilterAll => 'Alle';
+
+  @override
+  String get iotDemoFilterOnOnly => 'Nur eingeschaltet';
+
+  @override
+  String get iotDemoFilterOffOnly => 'Nur ausgeschaltet';
+
+  @override
   String get openIotDemoTooltip => 'IoT-Demo öffnen';
 
   @override
