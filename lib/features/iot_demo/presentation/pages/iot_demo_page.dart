@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
@@ -55,11 +54,10 @@ class IotDemoPage extends StatelessWidget {
                 return state.when(
                   initial: () => const _LoadingBody(),
                   loading: () => const _LoadingBody(),
-                  loaded: (final devices, final selectedDeviceId) =>
-                      _LoadedBody(
-                        devices: devices,
-                        selectedDeviceId: selectedDeviceId,
-                      ),
+                  loaded: (final devices, final selectedDeviceId) => _LoadedBody(
+                    devices: devices,
+                    selectedDeviceId: selectedDeviceId,
+                  ),
                   error: (final message) => CommonErrorView(
                     message: message,
                     onRetry: () => context.cubit<IotDemoCubit>().initialize(),
@@ -108,17 +106,14 @@ class _LoadedBody extends StatelessWidget {
         ),
       );
     }
-    final IotDevice? selected = selectedDeviceId != null
-        ? devices.firstWhereOrNull((final d) => d.id == selectedDeviceId)
-        : null;
     return SingleChildScrollView(
       padding: context.pagePadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           SizedBox(height: context.responsiveGapM),
-          ...devices.map(
-            (final d) => Padding(
+          for (final d in devices) ...[
+            Padding(
               padding: EdgeInsets.only(bottom: context.responsiveGapS),
               child: _DeviceTile(
                 device: d,
@@ -133,14 +128,14 @@ class _LoadedBody extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          if (selected != null) ...[
-            SizedBox(height: context.responsiveGapL),
-            CommonCard(
-              child: _SelectedDeviceActions(
-                device: selected,
+            if (d.id == selectedDeviceId) ...[
+              Padding(
+                padding: EdgeInsets.only(bottom: context.responsiveGapS),
+                child: CommonCard(
+                  child: _SelectedDeviceActions(device: d),
+                ),
               ),
-            ),
+            ],
           ],
           SizedBox(height: context.responsiveGapL),
         ],
@@ -229,16 +224,14 @@ class _SelectedDeviceActions extends StatelessWidget {
           children: <Widget>[
             if (device.connectionState != IotConnectionState.connected)
               FilledButton(
-                onPressed:
-                    device.connectionState == IotConnectionState.connecting
+                onPressed: device.connectionState == IotConnectionState.connecting
                     ? null
                     : () => context.cubit<IotDemoCubit>().connect(device.id),
                 child: Text(l10n.iotDemoConnect),
               ),
             if (connected)
               OutlinedButton(
-                onPressed: () =>
-                    context.cubit<IotDemoCubit>().disconnect(device.id),
+                onPressed: () => context.cubit<IotDemoCubit>().disconnect(device.id),
                 child: Text(l10n.iotDemoDisconnect),
               ),
             if (connected && device.type.hasValue)
