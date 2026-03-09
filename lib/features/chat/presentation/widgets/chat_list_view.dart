@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +19,9 @@ import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
+
+const ListEquality<ChatContact> _chatContactListEquality =
+    ListEquality<ChatContact>();
 
 class ChatListView extends StatelessWidget {
   const ChatListView({
@@ -223,11 +227,18 @@ class _ChatListSelectorData {
       identical(this, other) ||
       other is _ChatListSelectorData &&
           isLoading == other.isLoading &&
-          identical(contacts, other.contacts) &&
+          _chatContactListEquality.equals(contacts, other.contacts) &&
           errorMessage == other.errorMessage;
 
   @override
-  int get hashCode => Object.hash(isLoading, contacts, errorMessage);
+  int get hashCode => Object.hash(
+    isLoading,
+    switch (contacts) {
+      final contacts? => _chatContactListEquality.hash(contacts),
+      null => null,
+    },
+    errorMessage,
+  );
 }
 
 class _ChatDivider extends StatelessWidget {
