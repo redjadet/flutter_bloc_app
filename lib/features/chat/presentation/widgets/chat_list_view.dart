@@ -35,15 +35,23 @@ class ChatListView extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) =>
-      TypeSafeBlocBuilder<ChatListCubit, ChatListState>(
-        builder: (final context, final state) => switch (state) {
-          ChatListInitial() => const SizedBox.shrink(),
-          ChatListLoading() => const CommonLoadingWidget(),
-          ChatListLoaded(:final contacts) => _buildLoadedList(
-            context,
-            contacts,
-          ),
-          ChatListError(:final message) => _buildErrorState(context, message),
+      TypeSafeBlocSelector<ChatListCubit, ChatListState, _ChatListSelectorData>(
+        selector: (final state) => _ChatListSelectorData(
+          isLoading: state is ChatListLoading,
+          contacts: state is ChatListLoaded ? state.contacts : null,
+          errorMessage: state is ChatListError ? state.message : null,
+        ),
+        builder: (final context, final data) {
+          if (data.isLoading) {
+            return const CommonLoadingWidget();
+          }
+          if (data.errorMessage case final errorMessage?) {
+            return _buildErrorState(context, errorMessage);
+          }
+          if (data.contacts case final contacts?) {
+            return _buildLoadedList(context, contacts);
+          }
+          return const SizedBox.shrink();
         },
       );
 
@@ -68,6 +76,7 @@ class ChatListView extends StatelessWidget {
       child: CommonMaxWidth(
         child: ListView.separated(
           padding: safeListPadding,
+          cacheExtent: 500,
           itemCount: contacts.length,
           separatorBuilder: (final context, final index) =>
               const _ChatDivider(),
@@ -76,17 +85,20 @@ class ChatListView extends StatelessWidget {
             final isFirst = index == 0;
             final isLast = index == contacts.length - 1;
 
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (isFirst) const _ChatDivider(),
-                ChatContactTile(
-                  contact: contact,
-                  onTap: () => _navigateToChat(context, contact),
-                  onLongPress: () => _showDeleteDialog(context, contact),
-                ),
-                if (isLast) const _ChatDivider(),
-              ],
+            return RepaintBoundary(
+              key: ValueKey<String>('chat-contact-${contact.id}'),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (isFirst) const _ChatDivider(),
+                  ChatContactTile(
+                    contact: contact,
+                    onTap: () => _navigateToChat(context, contact),
+                    onLongPress: () => _showDeleteDialog(context, contact),
+                  ),
+                  if (isLast) const _ChatDivider(),
+                ],
+              ),
             );
           },
         ),
@@ -191,6 +203,31 @@ class ChatListView extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Narrow selector data to reduce rebuilds when only unrelated state changes.
+@immutable
+class _ChatListSelectorData {
+  const _ChatListSelectorData({
+    required this.isLoading,
+    this.contacts,
+    this.errorMessage,
+  });
+
+  final bool isLoading;
+  final List<ChatContact>? contacts;
+  final String? errorMessage;
+
+  @override
+  bool operator ==(final Object other) =>
+      identical(this, other) ||
+      other is _ChatListSelectorData &&
+          isLoading == other.isLoading &&
+          identical(contacts, other.contacts) &&
+          errorMessage == other.errorMessage;
+
+  @override
+  int get hashCode => Object.hash(isLoading, contacts, errorMessage);
 }
 
 class _ChatDivider extends StatelessWidget {

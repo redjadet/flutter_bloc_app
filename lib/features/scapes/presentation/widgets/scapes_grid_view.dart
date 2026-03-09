@@ -112,14 +112,18 @@ class ScapesGridView extends StatelessWidget {
             physics: shrinkWrap
                 ? const NeverScrollableScrollPhysics()
                 : const AlwaysScrollableScrollPhysics(),
+            cacheExtent: shrinkWrap ? 0 : 500,
             gridDelegate: metrics.delegate,
             itemCount: scapes.length,
             itemBuilder: (final context, final index) {
               final scape = scapes[index];
-              return ScapeGridItem(
-                scape: scape,
-                onFavoritePressed: () => onFavoritePressed(scape.id),
-                onMorePressed: () => onMorePressed(scape.id),
+              return RepaintBoundary(
+                key: ValueKey<String>('scape-${scape.id}'),
+                child: ScapeGridItem(
+                  scape: scape,
+                  onFavoritePressed: () => onFavoritePressed(scape.id),
+                  onMorePressed: () => onMorePressed(scape.id),
+                ),
               );
             },
           ),
@@ -157,10 +161,13 @@ class ScapesGridSliver extends StatelessWidget {
         delegate: SliverChildBuilderDelegate(
           (final context, final index) {
             final scape = scapes[index];
-            return ScapeGridItem(
-              scape: scape,
-              onFavoritePressed: () => onFavoritePressed(scape.id),
-              onMorePressed: () => onMorePressed(scape.id),
+            return RepaintBoundary(
+              key: ValueKey<String>('scape-${scape.id}'),
+              child: ScapeGridItem(
+                scape: scape,
+                onFavoritePressed: () => onFavoritePressed(scape.id),
+                onMorePressed: () => onMorePressed(scape.id),
+              ),
             );
           },
           childCount: scapes.length,

@@ -20,6 +20,7 @@ class SearchResultsGrid extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: gridLayout.horizontalPadding),
       child: GridView.builder(
+        cacheExtent: 500,
         gridDelegate: context.createResponsiveGridDelegate(
           mobileColumns: 2,
           tabletColumns: 3,
@@ -28,27 +29,29 @@ class SearchResultsGrid extends StatelessWidget {
         itemCount: results.length,
         itemBuilder: (final context, final index) {
           final result = results[index];
-          return ClipRect(
-            key: ValueKey('search-result-${result.id}'),
-            child: SizedBox(
-              width: gridLayout.itemWidth,
-              height: gridLayout.itemWidth,
-              child: FancyShimmerImage(
-                imageUrl: result.imageUrl,
-                boxFit: BoxFit.cover,
-                shimmerBaseColor: theme.colorScheme.surfaceContainerHighest,
-                shimmerHighlightColor: theme.colorScheme.surface,
-                errorWidget: Builder(
-                  builder: (final context) {
-                    final colors = Theme.of(context).colorScheme;
-                    return ColoredBox(
-                      color: colors.surfaceContainerHighest,
-                      child: Icon(
-                        Icons.error_outline,
-                        color: colors.onSurfaceVariant,
-                      ),
-                    );
-                  },
+          return RepaintBoundary(
+            key: ValueKey<String>('search-result-${result.id}'),
+            child: ClipRect(
+              child: SizedBox(
+                width: gridLayout.itemWidth,
+                height: gridLayout.itemWidth,
+                child: FancyShimmerImage(
+                  imageUrl: result.imageUrl,
+                  boxFit: BoxFit.cover,
+                  shimmerBaseColor: theme.colorScheme.surfaceContainerHighest,
+                  shimmerHighlightColor: theme.colorScheme.surface,
+                  errorWidget: Builder(
+                    builder: (final context) {
+                      final colors = Theme.of(context).colorScheme;
+                      return ColoredBox(
+                        color: colors.surfaceContainerHighest,
+                        child: Icon(
+                          Icons.error_outline,
+                          color: colors.onSurfaceVariant,
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

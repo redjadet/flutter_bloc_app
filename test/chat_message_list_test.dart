@@ -147,6 +147,60 @@ void main() {
     expect(replyRichText.text.toPlainText(), contains('Reply'));
     // Pending sync text is no longer displayed in the UI
   });
+
+  testWidgets('ChatMessageList uses identity-based repaint keys', (
+    WidgetTester tester,
+  ) async {
+    final DateTime replyTimestamp = DateTime.utc(2024, 1, 1, 12);
+    final ChatMessage fallbackMessage = ChatMessage(
+      author: ChatAuthor.system,
+      text: 'System notice',
+    );
+    final _StubChatCubit cubit = _StubChatCubit(
+      ChatState(
+        messages: <ChatMessage>[
+          ChatMessage(
+            author: ChatAuthor.user,
+            text: 'hi',
+            clientMessageId: 'user-1',
+            createdAt: DateTime.utc(2024, 1, 1, 11),
+          ),
+          ChatMessage(
+            author: ChatAuthor.assistant,
+            text: 'hello',
+            createdAt: replyTimestamp,
+          ),
+          fallbackMessage,
+        ],
+      ),
+    );
+    addTearDown(cubit.close);
+
+    await tester.pumpWidget(
+      _wrapWithApp(
+        cubit,
+        ChatMessageList(
+          controller: ScrollController(),
+          errorNotificationService: SnackbarErrorNotificationService(),
+        ),
+      ),
+    );
+
+    expect(
+      find.byKey(const ValueKey<String>('chat-message-user-1')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(
+        ValueKey<String>(
+          'chat-message-assistant-'
+          '${replyTimestamp.microsecondsSinceEpoch}',
+        ),
+      ),
+      findsOneWidget,
+    );
+    expect(find.byKey(ObjectKey(fallbackMessage)), findsOneWidget);
+  });
 }
 
 Widget _wrapWithApp(ChatCubit cubit, Widget child) {

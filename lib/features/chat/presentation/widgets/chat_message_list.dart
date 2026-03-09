@@ -84,29 +84,30 @@ class ChatMessageList extends StatelessWidget {
                 child: ListView.builder(
                   controller: controller,
                   padding: context.allGapM,
+                  cacheExtent: 500,
                   itemCount: data.messages.length,
                   itemBuilder: (final context, final index) {
                     final ChatMessage message = data.messages[index];
                     final bool isUser = message.author == ChatAuthor.user;
 
-                    return Column(
-                      crossAxisAlignment: isUser
-                          ? CrossAxisAlignment.end
-                          : CrossAxisAlignment.start,
-                      children: <Widget>[
-                        MessageBubble(
-                          key: ValueKey(
-                            'chat-message-$index-${message.text.hashCode}',
+                    return RepaintBoundary(
+                      key: _chatMessageKey(message),
+                      child: Column(
+                        crossAxisAlignment: isUser
+                            ? CrossAxisAlignment.end
+                            : CrossAxisAlignment.start,
+                        children: <Widget>[
+                          MessageBubble(
+                            message: message.text,
+                            isOutgoing: isUser,
+                            outgoingColor: theme.colorScheme.primary,
+                            incomingColor:
+                                theme.colorScheme.surfaceContainerHighest,
+                            outgoingTextColor: theme.colorScheme.onPrimary,
+                            incomingTextColor: theme.colorScheme.onSurface,
                           ),
-                          message: message.text,
-                          isOutgoing: isUser,
-                          outgoingColor: theme.colorScheme.primary,
-                          incomingColor:
-                              theme.colorScheme.surfaceContainerHighest,
-                          outgoingTextColor: theme.colorScheme.onPrimary,
-                          incomingTextColor: theme.colorScheme.onSurface,
-                        ),
-                      ],
+                        ],
+                      ),
                     );
                   },
                 ),
@@ -115,6 +116,18 @@ class ChatMessageList extends StatelessWidget {
           ),
     );
   }
+}
+
+Key _chatMessageKey(final ChatMessage message) {
+  if (message.clientMessageId case final messageId?) {
+    return ValueKey<String>('chat-message-$messageId');
+  }
+  if (message.createdAt case final createdAt?) {
+    return ValueKey<String>(
+      'chat-message-${message.author.name}-${createdAt.microsecondsSinceEpoch}',
+    );
+  }
+  return ObjectKey(message);
 }
 
 @freezed
