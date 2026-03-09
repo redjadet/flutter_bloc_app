@@ -25,19 +25,23 @@ class WebsocketMessageList extends StatelessWidget {
           horizontal: context.responsiveHorizontalGapL,
           vertical: context.responsiveGapS,
         ),
+        cacheExtent: 500,
         reverse: true,
         itemCount: messages.length,
         itemBuilder: (final context, final index) {
           final WebsocketMessage message =
               messages[messages.length - 1 - index];
-          return MessageBubble(
-            key: ValueKey('websocket-message-$index-${message.text.hashCode}'),
-            message: message.text,
-            isOutgoing: message.direction == WebsocketMessageDirection.outgoing,
-            margin: EdgeInsets.symmetric(vertical: context.responsiveGapXS),
-            padding: EdgeInsets.symmetric(
-              horizontal: context.responsiveGapS,
-              vertical: context.responsiveGapXS,
+          return RepaintBoundary(
+            key: ObjectKey(message),
+            child: MessageBubble(
+              message: message.text,
+              isOutgoing:
+                  message.direction == WebsocketMessageDirection.outgoing,
+              margin: EdgeInsets.symmetric(vertical: context.responsiveGapXS),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.responsiveGapS,
+                vertical: context.responsiveGapXS,
+              ),
             ),
           );
         },
