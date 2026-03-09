@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
@@ -5,6 +7,8 @@ import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dar
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_type_extension.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_state.dart';
+import 'package:flutter_bloc_app/features/iot_demo/presentation/utils/iot_demo_device_type_label.dart';
+import 'package:flutter_bloc_app/features/iot_demo/presentation/widgets/iot_demo_add_device_dialog.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/widgets/iot_demo_set_value_dialog.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
@@ -15,6 +19,29 @@ import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
+Future<void> _showAddDeviceDialog(final BuildContext context) async {
+  final l10n = context.l10n;
+  final result = await showAdaptiveDialog<IotDemoAddDeviceResult>(
+    context: context,
+    builder: (final ctx) => IotDemoAddDeviceDialogBody(l10n: l10n),
+  );
+  if (result != null && context.mounted) {
+    final int suffix = Random().nextInt(0xFFFFFF);
+    final deviceId =
+        '${result.type.name}-${DateTime.now().microsecondsSinceEpoch}-${suffix.toRadixString(16)}';
+    final device = IotDevice(
+      id: deviceId,
+      name: result.name,
+      type: result.type,
+      value: result.initialValue,
+    );
+    await context.cubit<IotDemoCubit>().addDevice(device);
+    if (context.mounted) {
+      context.cubit<IotDemoCubit>().selectDevice(deviceId);
+    }
+  }
+}
+
 String _connectionStateLabel(
   final IotConnectionState state,
   final AppLocalizations l10n,
@@ -22,17 +49,6 @@ String _connectionStateLabel(
   IotConnectionState.disconnected => l10n.iotDemoStatusDisconnected,
   IotConnectionState.connecting => l10n.iotDemoStatusConnecting,
   IotConnectionState.connected => l10n.iotDemoStatusConnected,
-};
-
-String _deviceTypeLabel(
-  final IotDeviceType type,
-  final AppLocalizations l10n,
-) => switch (type) {
-  IotDeviceType.light => l10n.iotDemoDeviceTypeLight,
-  IotDeviceType.thermostat => l10n.iotDemoDeviceTypeThermostat,
-  IotDeviceType.plug => l10n.iotDemoDeviceTypePlug,
-  IotDeviceType.sensor => l10n.iotDemoDeviceTypeSensor,
-  IotDeviceType.switch_ => l10n.iotDemoDeviceTypeSwitch,
 };
 
 /// IoT demo page: list devices, connect, disconnect, send commands.
@@ -44,6 +60,15 @@ class IotDemoPage extends StatelessWidget {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.iotDemoPageTitle,
+      floatingActionButton: Semantics(
+        button: true,
+        label: l10n.iotDemoAddDeviceTooltip,
+        child: FloatingActionButton(
+          onPressed: () => _showAddDeviceDialog(context),
+          tooltip: l10n.iotDemoAddDeviceTooltip,
+          child: const Icon(Icons.add),
+        ),
+      ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -54,10 +79,11 @@ class IotDemoPage extends StatelessWidget {
                 return state.when(
                   initial: () => const _LoadingBody(),
                   loading: () => const _LoadingBody(),
-                  loaded: (final devices, final selectedDeviceId) => _LoadedBody(
-                    devices: devices,
-                    selectedDeviceId: selectedDeviceId,
-                  ),
+                  loaded: (final devices, final selectedDeviceId) =>
+                      _LoadedBody(
+                        devices: devices,
+                        selectedDeviceId: selectedDeviceId,
+                      ),
                   error: (final message) => CommonErrorView(
                     message: message,
                     onRetry: () => context.cubit<IotDemoCubit>().initialize(),
@@ -122,7 +148,7 @@ class _LoadedBody extends StatelessWidget {
                   d.connectionState,
                   l10n,
                 ),
-                typeLabel: _deviceTypeLabel(d.type, l10n),
+                typeLabel: iotDemoDeviceTypeLabel(d.type, l10n),
                 onTap: () => context.cubit<IotDemoCubit>().selectDevice(
                   selectedDeviceId == d.id ? null : d.id,
                 ),
@@ -224,14 +250,16 @@ class _SelectedDeviceActions extends StatelessWidget {
           children: <Widget>[
             if (device.connectionState != IotConnectionState.connected)
               FilledButton(
-                onPressed: device.connectionState == IotConnectionState.connecting
+                onPressed:
+                    device.connectionState == IotConnectionState.connecting
                     ? null
                     : () => context.cubit<IotDemoCubit>().connect(device.id),
                 child: Text(l10n.iotDemoConnect),
               ),
             if (connected)
               OutlinedButton(
-                onPressed: () => context.cubit<IotDemoCubit>().disconnect(device.id),
+                onPressed: () =>
+                    context.cubit<IotDemoCubit>().disconnect(device.id),
                 child: Text(l10n.iotDemoDisconnect),
               ),
             if (connected && device.type.hasValue)

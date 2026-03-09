@@ -124,6 +124,33 @@ class IotDemoCubit extends Cubit<IotDemoState>
     );
   }
 
+  Future<void> addDevice(final IotDevice device) async {
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: () => _repository.addDevice(device),
+      isAlive: () => !isClosed,
+      onError: (final message) {
+        if (isClosed) return;
+        emit(
+          IotDemoState.error(
+            _l10n?.iotDemoErrorAdd ?? message,
+          ),
+        );
+      },
+      logContext: 'IotDemoCubit.addDevice',
+      specificExceptionHandlers: <Type, void Function(Object, StackTrace?)>{
+        ArgumentError: (final error, final _) {
+          if (isClosed) return;
+          final String msg = ((error as ArgumentError).message as String?) ?? error.toString();
+          emit(
+            IotDemoState.error(
+              msg.isNotEmpty ? msg : (_l10n?.iotDemoErrorAdd ?? error.toString()),
+            ),
+          );
+        },
+      },
+    );
+  }
+
   @override
   Future<void> close() {
     _devicesSubscription = null;

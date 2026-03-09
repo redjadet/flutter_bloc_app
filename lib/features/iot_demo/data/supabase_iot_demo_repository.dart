@@ -102,6 +102,58 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
   }
 
   @override
+  Future<void> addDevice(final IotDevice device) async {
+    if (device.id.trim().isEmpty || device.name.trim().isEmpty) {
+      throw ArgumentError('device id and name must not be empty');
+    }
+    if (device.name.length > iotDemoDeviceNameMaxLength) {
+      throw ArgumentError(
+        'device name must not exceed $iotDemoDeviceNameMaxLength characters',
+      );
+    }
+    if (!SupabaseBootstrapService.isSupabaseInitialized) {
+      throw StateError(
+        'Supabase is not configured (missing URL or anon key).',
+      );
+    }
+    final String? userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null || userId.isEmpty) {
+      throw StateError('Must be signed in to add a device.');
+    }
+    final String typeStr = _deviceTypeToDb(device.type);
+    final String now = DateTime.now().toUtc().toIso8601String();
+    await Supabase.instance.client.from(_table).insert(<String, dynamic>{
+      'id': device.id,
+      'name': device.name,
+      'type': typeStr,
+      'user_id': userId,
+      'connection_state': 'disconnected',
+      'toggled_on': device.toggledOn,
+      'value': iotDemoClampAndRound(
+        device.value,
+        iotDemoValueMin,
+        iotDemoValueMax,
+      ),
+      'updated_at': now,
+    });
+  }
+
+  static String _deviceTypeToDb(final IotDeviceType type) {
+    switch (type) {
+      case IotDeviceType.light:
+        return 'light';
+      case IotDeviceType.thermostat:
+        return 'thermostat';
+      case IotDeviceType.plug:
+        return 'plug';
+      case IotDeviceType.sensor:
+        return 'sensor';
+      case IotDeviceType.switch_:
+        return 'switch_';
+    }
+  }
+
+  @override
   Future<void> sendCommand(
     final String deviceId,
     final IotDeviceCommand command,

@@ -97,6 +97,41 @@ class OfflineFirstIotDemoRepository
   );
 
   @override
+  Future<void> addDevice(final IotDevice device) async {
+    if (device.id.trim().isEmpty || device.name.trim().isEmpty) {
+      throw ArgumentError('device id and name must not be empty');
+    }
+    if (device.name.length > iotDemoDeviceNameMaxLength) {
+      throw ArgumentError(
+        'device name must not exceed $iotDemoDeviceNameMaxLength characters',
+      );
+    }
+    final PersistentIotDemoRepository? local = _getLocalRepository();
+    if (local == null) return;
+    final String? userId = _currentSupabaseUserId();
+    if (userId == null) return;
+    await local.addDevice(device);
+    if (_remoteRepository == null) return;
+    final String idempotencyKey =
+        '${iotDemoEntity}_add_${device.id}_${DateTime.now().microsecondsSinceEpoch}';
+    await _pendingSyncRepository.enqueue(
+      SyncOperation.create(
+        entityType: entityType,
+        payload: <String, dynamic>{
+          'deviceId': device.id,
+          'action': 'add',
+          'name': device.name,
+          'type': device.type.name,
+          'toggledOn': device.toggledOn,
+          'value': device.value,
+          _payloadKeySupabaseUserId: userId,
+        },
+        idempotencyKey: idempotencyKey,
+      ),
+    );
+  }
+
+  @override
   Future<void> connect(final String deviceId) async {
     final PersistentIotDemoRepository? local = _getLocalRepository();
     if (local == null) return;
@@ -272,6 +307,52 @@ class OfflineFirstIotDemoRepository
     try {
       final remote = _remoteRepository;
       switch (action) {
+        case 'add':
+          final String? name = stringFromDynamicTrimmed(payload['name']);
+          final String? typeStr = stringFromDynamicTrimmed(payload['type']);
+          if (name == null || name.isEmpty || typeStr == null) {
+            AppLogger.warning(
+              'OfflineFirstIotDemoRepository.processOperation add: '
+              'missing name or type',
+            );
+            return;
+          }
+          if (name.length > iotDemoDeviceNameMaxLength) {
+            AppLogger.warning(
+              'OfflineFirstIotDemoRepository.processOperation add: '
+              'name exceeds $iotDemoDeviceNameMaxLength characters',
+            );
+            return;
+          }
+          final IotDeviceType? type = _parseDeviceTypeFromName(typeStr);
+          if (type == null) {
+            AppLogger.warning(
+              'OfflineFirstIotDemoRepository.processOperation add: '
+              'invalid type $typeStr',
+            );
+            return;
+          }
+          final bool toggledOn = boolFromDynamic(
+            payload['toggledOn'],
+            fallback: false,
+          );
+          final double value = doubleFromDynamic(
+            payload['value'],
+            iotDemoValueMin,
+          );
+          final IotDevice toAdd = IotDevice(
+            id: deviceId,
+            name: name,
+            type: type,
+            toggledOn: toggledOn,
+            value: iotDemoClampAndRound(
+              value,
+              iotDemoValueMin,
+              iotDemoValueMax,
+            ),
+          );
+          await remote.addDevice(toAdd);
+          break;
         case 'connect':
           await remote.connect(deviceId);
           break;
@@ -296,6 +377,23 @@ class OfflineFirstIotDemoRepository
         stackTrace,
       );
       rethrow;
+    }
+  }
+
+  static IotDeviceType? _parseDeviceTypeFromName(final String value) {
+    switch (value) {
+      case 'light':
+        return IotDeviceType.light;
+      case 'thermostat':
+        return IotDeviceType.thermostat;
+      case 'plug':
+        return IotDeviceType.plug;
+      case 'sensor':
+        return IotDeviceType.sensor;
+      case 'switch_':
+        return IotDeviceType.switch_;
+      default:
+        return null;
     }
   }
 

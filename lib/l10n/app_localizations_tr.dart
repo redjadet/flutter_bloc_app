@@ -1668,6 +1668,34 @@ class AppLocalizationsTr extends AppLocalizations {
   String get iotDemoSetValueInvalidNumber => 'Geçerli bir sayı girin';
 
   @override
+  String get iotDemoAddDevice => 'Cihaz ekle';
+
+  @override
+  String get iotDemoAddDeviceNameHint => 'Cihaz adı';
+
+  @override
+  String get iotDemoAddDeviceNameRequired => 'Ad zorunludur';
+
+  @override
+  String iotDemoAddDeviceNameTooLong(String max) {
+    return 'Ad en fazla $max karakter olabilir';
+  }
+
+  @override
+  String get iotDemoAddDeviceTypeHint => 'Cihaz türü';
+
+  @override
+  String iotDemoAddDeviceInitialValue(String value) {
+    return 'Başlangıç değeri: $value';
+  }
+
+  @override
+  String get iotDemoAddDeviceTooltip => 'Cihaz ekle';
+
+  @override
+  String get iotDemoErrorAdd => 'Cihaz eklenemedi';
+
+  @override
   String get openIotDemoTooltip => 'IoT demosunu aç';
 
   @override

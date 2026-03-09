@@ -3086,6 +3086,54 @@ abstract class AppLocalizations {
   /// **'Enter a valid number'**
   String get iotDemoSetValueInvalidNumber;
 
+  /// Title for the add device dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Add device'**
+  String get iotDemoAddDevice;
+
+  /// Hint for the device name field
+  ///
+  /// In en, this message translates to:
+  /// **'Device name'**
+  String get iotDemoAddDeviceNameHint;
+
+  /// Error when name is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get iotDemoAddDeviceNameRequired;
+
+  /// Error when name exceeds max length
+  ///
+  /// In en, this message translates to:
+  /// **'Name must be at most {max} characters'**
+  String iotDemoAddDeviceNameTooLong(String max);
+
+  /// Hint for the device type dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Device type'**
+  String get iotDemoAddDeviceTypeHint;
+
+  /// Label for thermostat/sensor initial value
+  ///
+  /// In en, this message translates to:
+  /// **'Initial value: {value}'**
+  String iotDemoAddDeviceInitialValue(String value);
+
+  /// Tooltip for the add device button
+  ///
+  /// In en, this message translates to:
+  /// **'Add device'**
+  String get iotDemoAddDeviceTooltip;
+
+  /// Error when adding a device fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add device'**
+  String get iotDemoErrorAdd;
+
   /// Tooltip for navigating to the IoT demo page
   ///
   /// In en, this message translates to:

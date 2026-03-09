@@ -33,6 +33,9 @@ class _StubIotDemoRepository implements IotDemoRepository {
     final String deviceId,
     final IotDeviceCommand command,
   ) async {}
+
+  @override
+  Future<void> addDevice(final IotDevice device) async {}
 }
 
 class _TestIotDemoCubit extends IotDemoCubit {

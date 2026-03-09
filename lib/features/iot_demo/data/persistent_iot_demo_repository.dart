@@ -101,6 +101,31 @@ class PersistentIotDemoRepository extends HiveRepositoryBase
     fallback: () {},
   );
 
+  /// Appends [device] to the stored list and saves.
+  @override
+  Future<void> addDevice(final IotDevice device) async {
+    if (device.id.trim().isEmpty || device.name.trim().isEmpty) {
+      throw ArgumentError('device id and name must not be empty');
+    }
+    if (device.name.length > iotDemoDeviceNameMaxLength) {
+      throw ArgumentError(
+        'device name must not exceed $iotDemoDeviceNameMaxLength characters',
+      );
+    }
+    await StorageGuard.run<void>(
+      logContext: 'PersistentIotDemoRepository.addDevice',
+      action: () async {
+        final Box<dynamic> box = await getBox();
+        final List<IotDevice> devices = await _loadDevices(box);
+        if (devices.any((final d) => d.id == device.id)) return;
+        final List<IotDevice> updated = List<IotDevice>.from(devices)
+          ..add(device);
+        await _saveDevices(box, updated);
+      },
+      fallback: () {},
+    );
+  }
+
   /// Replaces the stored device list with [devices].
   /// Used by offline-first pullRemote to write merged data from Supabase.
   Future<void> replaceDevices(final List<IotDevice> devices) async {

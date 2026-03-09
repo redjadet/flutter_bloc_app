@@ -45,7 +45,7 @@ The following API keys are required for specific features:
   - Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
   - Can also be provided via `GOOGLE_API_KEY` as a fallback
 - **Google Maps API Keys**: Required for Maps feature (Android/iOS platform-specific)
-- **Supabase** (optional): `SUPABASE_URL` and `SUPABASE_ANON_KEY` for the optional Supabase Auth page (Settings → Integrations → Supabase Auth). When set, the app initializes the Supabase client at bootstrap and the auth page allows email/password sign-in/sign-up. When missing, the page shows "not configured." See `secrets.sample.json` for keys; [Authentication](authentication.md#supabase-auth-optional-separate-page) for behavior.
+- **Supabase**: `SUPABASE_URL` and `SUPABASE_ANON_KEY` for Supabase-backed features (IoT demo backend) and the optional Supabase Auth page (Settings → Integrations → Supabase Auth). When set, the app initializes the Supabase client at bootstrap. When missing, the auth page shows "not configured" and Supabase-backed features are disabled. See `secrets.sample.json` for keys; [Supabase migrations](../supabase/README.md) for schema setup; [Authentication](authentication.md#supabase-auth-optional-separate-page) for auth behavior.
 
 **Important**: Never commit `assets/config/secrets.json`. The repo includes only `secrets.sample.json`.
 

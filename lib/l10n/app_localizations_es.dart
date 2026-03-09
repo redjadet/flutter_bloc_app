@@ -1680,6 +1680,34 @@ class AppLocalizationsEs extends AppLocalizations {
   String get iotDemoSetValueInvalidNumber => 'Introduzca un número válido';
 
   @override
+  String get iotDemoAddDevice => 'Añadir dispositivo';
+
+  @override
+  String get iotDemoAddDeviceNameHint => 'Nombre del dispositivo';
+
+  @override
+  String get iotDemoAddDeviceNameRequired => 'El nombre es obligatorio';
+
+  @override
+  String iotDemoAddDeviceNameTooLong(String max) {
+    return 'El nombre debe tener como máximo $max caracteres';
+  }
+
+  @override
+  String get iotDemoAddDeviceTypeHint => 'Tipo de dispositivo';
+
+  @override
+  String iotDemoAddDeviceInitialValue(String value) {
+    return 'Valor inicial: $value';
+  }
+
+  @override
+  String get iotDemoAddDeviceTooltip => 'Añadir dispositivo';
+
+  @override
+  String get iotDemoErrorAdd => 'Error al añadir el dispositivo';
+
+  @override
   String get openIotDemoTooltip => 'Abrir demo IoT';
 
   @override
