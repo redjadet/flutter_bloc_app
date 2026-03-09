@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.da
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_list_cubit.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_list_view.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
@@ -22,6 +23,12 @@ class MockChatHistoryRepository extends Mock implements ChatHistoryRepository {}
 class MockErrorNotificationService extends Mock
     implements ErrorNotificationService {}
 
+class TestChatListCubit extends ChatListCubit {
+  TestChatListCubit({required super.repository});
+
+  void emitStateForTest(final ChatListState state) => emit(state);
+}
+
 void main() {
   group('ChatListView', () {
     late MockChatListRepository mockRepository;
@@ -35,6 +42,23 @@ void main() {
       historyRepository = MockChatHistoryRepository();
       errorNotificationService = MockErrorNotificationService();
     });
+
+    ChatContact buildContact({
+      required final String id,
+      required final String name,
+      required final String lastMessage,
+      required final DateTime lastMessageTime,
+      final bool isOnline = false,
+      final int unreadCount = 0,
+    }) => ChatContact(
+      id: id,
+      name: name,
+      lastMessage: lastMessage,
+      profileImageUrl: 'https://example.com/$id.jpg',
+      lastMessageTime: lastMessageTime,
+      isOnline: isOnline,
+      unreadCount: unreadCount,
+    );
 
     Widget createWidgetUnderTest({required ChatListState initialState}) {
       return MaterialApp(
@@ -120,6 +144,99 @@ void main() {
 
       expect(find.text('Network error'), findsOneWidget);
       expect(find.text('TRY AGAIN'), findsOneWidget);
+    });
+
+    testWidgets('does not rebuild loaded list for equal contact contents', (
+      tester,
+    ) async {
+      final TestChatListCubit cubit = TestChatListCubit(
+        repository: mockRepository,
+      );
+      addTearDown(cubit.close);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<ChatListCubit>.value(
+            value: cubit,
+            child: Scaffold(
+              body: ChatListView(
+                chatRepository: chatRepository,
+                historyRepository: historyRepository,
+                errorNotificationService: errorNotificationService,
+                pendingSyncRepository: _FakePendingSyncRepository(),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      cubit.emitStateForTest(
+        ChatListState.loaded(
+          contacts: <ChatContact>[
+            buildContact(
+              id: '1',
+              name: 'John Doe',
+              lastMessage: 'Hello there!',
+              lastMessageTime: DateTime(2024, 1, 1, 12),
+              isOnline: true,
+              unreadCount: 2,
+            ),
+          ],
+        ),
+      );
+      await tester.pump();
+
+      final ChatContactTile initialTile = tester.widget<ChatContactTile>(
+        find.byType(ChatContactTile),
+      );
+
+      cubit.emitStateForTest(
+        ChatListState.loaded(
+          contacts: <ChatContact>[
+            buildContact(
+              id: '1',
+              name: 'John Doe',
+              lastMessage: 'Hello there!',
+              lastMessageTime: DateTime(2024, 1, 1, 12),
+              isOnline: true,
+              unreadCount: 2,
+            ),
+          ],
+        ),
+      );
+      await tester.pump();
+
+      expect(
+        identical(
+          tester.widget<ChatContactTile>(find.byType(ChatContactTile)),
+          initialTile,
+        ),
+        isTrue,
+      );
+
+      cubit.emitStateForTest(
+        ChatListState.loaded(
+          contacts: <ChatContact>[
+            buildContact(
+              id: '1',
+              name: 'John Doe',
+              lastMessage: 'Updated message',
+              lastMessageTime: DateTime(2024, 1, 1, 12, 1),
+              isOnline: true,
+              unreadCount: 1,
+            ),
+          ],
+        ),
+      );
+      await tester.pump();
+
+      expect(
+        identical(
+          tester.widget<ChatContactTile>(find.byType(ChatContactTile)),
+          initialTile,
+        ),
+        isFalse,
+      );
     });
 
     testWidgets('should call loadChatContacts when retry button is tapped', (
