@@ -30,6 +30,7 @@ import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart'
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
 import 'package:flutter_bloc_app/features/google_maps/data/sample_map_location_repository.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
+import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_realtime_subscription.dart';
 import 'package:flutter_bloc_app/features/scapes/data/mock_scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/hive_locale_repository.dart';
@@ -38,6 +39,7 @@ import 'package:flutter_bloc_app/features/settings/data/package_info_app_info_re
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
+import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/data/echo_websocket_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
@@ -165,14 +167,24 @@ void _registerSyncServices() {
   );
   registerLazySingletonIfAbsent<PendingSyncRepository>(
     () => PendingSyncRepository(hiveService: getIt<HiveService>()),
+    dispose: (final repository) => repository.dispose(),
   );
   registerLazySingletonIfAbsent<BackgroundSyncCoordinator>(
-    () => BackgroundSyncCoordinator(
-      repository: getIt<PendingSyncRepository>(),
-      networkStatusService: getIt<NetworkStatusService>(),
-      timerService: getIt<TimerService>(),
-      registry: getIt<SyncableRepositoryRegistry>(),
-    ),
+    () {
+      final IotDemoRealtimeSubscription realtime =
+          getIt<IotDemoRealtimeSubscription>();
+      return BackgroundSyncCoordinator(
+        repository: getIt<PendingSyncRepository>(),
+        networkStatusService: getIt<NetworkStatusService>(),
+        timerService: getIt<TimerService>(),
+        registry: getIt<SyncableRepositoryRegistry>(),
+        getSyncSupabaseUserId: () =>
+            getIt<SupabaseAuthRepository>().currentUser?.id,
+        startIotDemoRealtimeSubscription: (final onSyncRequested) =>
+            realtime.start(onSyncRequested),
+        stopIotDemoRealtimeSubscription: () => unawaited(realtime.stop()),
+      );
+    },
     dispose: (final coordinator) => coordinator.dispose(),
   );
 }

@@ -75,13 +75,16 @@ List<GoRoute> createAuxiliaryRoutes() => <GoRoute>[
     name: AppRoutes.supabaseAuth,
     builder: (final context, final state) {
       final l10n = context.l10n;
+      final redirectAfterLogin = state.uri.queryParameters['redirect'];
       return BlocProviderHelpers.withAsyncInit<SupabaseAuthCubit>(
         create: () => SupabaseAuthCubit(
           repository: getIt<SupabaseAuthRepository>(),
           l10n: l10n,
         ),
         init: (final cubit) => cubit.loadSession(),
-        child: const SupabaseAuthPage(),
+        child: SupabaseAuthPage(
+          redirectAfterLogin: redirectAfterLogin,
+        ),
       );
     },
   ),

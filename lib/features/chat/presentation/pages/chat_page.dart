@@ -134,9 +134,6 @@ class _ChatPageState extends State<ChatPage> {
       ],
       body: Column(
         children: <Widget>[
-          ChatSyncBanner(
-            pendingRepository: widget.pendingSyncRepository,
-          ),
           Padding(
             padding: EdgeInsets.fromLTRB(
               context.responsiveHorizontalGapL,

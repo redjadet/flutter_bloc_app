@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
@@ -10,6 +11,11 @@ import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_s
 import 'package:flutter_bloc_app/features/iot_demo/presentation/pages/iot_demo_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mix/mix.dart';
 
 class _StubIotDemoRepository implements IotDemoRepository {
@@ -35,12 +41,70 @@ class _TestIotDemoCubit extends IotDemoCubit {
   void setTestState(final IotDemoState value) => emit(value);
 }
 
+class _FakeNetworkStatusService implements NetworkStatusService {
+  _FakeNetworkStatusService() : status = NetworkStatus.online;
+
+  NetworkStatus status;
+  final StreamController<NetworkStatus> _controller =
+      StreamController<NetworkStatus>.broadcast();
+
+  @override
+  Stream<NetworkStatus> get statusStream => _controller.stream;
+
+  @override
+  Future<NetworkStatus> getCurrentStatus() async => status;
+
+  @override
+  Future<void> dispose() async {
+    await _controller.close();
+  }
+}
+
+class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
+  @override
+  Stream<SyncStatus> get statusStream => const Stream<SyncStatus>.empty();
+
+  @override
+  SyncStatus get currentStatus => SyncStatus.idle;
+
+  @override
+  List<SyncCycleSummary> get history => const <SyncCycleSummary>[];
+
+  @override
+  Stream<SyncCycleSummary> get summaryStream =>
+      const Stream<SyncCycleSummary>.empty();
+
+  @override
+  SyncCycleSummary? get latestSummary => null;
+
+  @override
+  Future<void> start() async {}
+
+  @override
+  Future<void> ensureStarted() async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> dispose() async {}
+
+  @override
+  Future<void> flush() async {}
+}
+
 Future<void> _pumpPage(
   final WidgetTester tester, {
   required final IotDemoState state,
 }) async {
   final cubit = _TestIotDemoCubit()..setTestState(state);
   addTearDown(cubit.close);
+
+  final SyncStatusCubit syncCubit = SyncStatusCubit(
+    networkStatusService: _FakeNetworkStatusService(),
+    coordinator: _FakeBackgroundSyncCoordinator(),
+  );
+  addTearDown(syncCubit.close);
 
   await tester.pumpWidget(
     MaterialApp(
@@ -50,9 +114,12 @@ Future<void> _pumpPage(
       home: Builder(
         builder: (final context) => MixTheme(
           data: buildAppMixThemeData(context),
-          child: BlocProvider<IotDemoCubit>.value(
-            value: cubit,
-            child: const IotDemoPage(),
+          child: BlocProvider<SyncStatusCubit>.value(
+            value: syncCubit,
+            child: BlocProvider<IotDemoCubit>.value(
+              value: cubit,
+              child: const IotDemoPage(),
+            ),
           ),
         ),
       ),

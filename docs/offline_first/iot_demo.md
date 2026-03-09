@@ -1,0 +1,63 @@
+# IoT Demo Offline-First Contract
+
+This document defines how the IoT demo feature adopts the shared offline-first stack with Supabase as the remote source of truth.
+
+## Goals
+
+- **Auth gate**: User must sign in with Supabase before accessing the IoT demo page; unauthenticated users are redirected to `/supabase-auth` with return path `/iot-demo`.
+- All device data comes from Supabase `iot_devices` table (per user via RLS); local Hive is the per-user cache and first read.
+- Connect, disconnect, and send-command actions write to local first, then enqueue sync operations with `supabaseUserId`; when online, operations for the current user are applied to Supabase.
+- UI always reads from local (instant); sync status is logged only. Sync diagnostics visible in Settings when dev/qa mode is active.
+- First open triggers sync so devices are pulled from Supabase when online and local is populated for the signed-in user.
+
+## Storage Plan
+
+- **Local**: Per-user Hive box `iot_demo_devices_<sanitized(supabaseUserId)>`, key `devices` (list of `IotDevice` JSON). Empty storage returns an empty list (no shared defaults).
+- **Remote**: Supabase table `public.iot_devices` with `user_id` (uuid, RLS); columns id, name, type, last_seen, connection_state (enum: disconnected | connecting | connected), toggled_on, value, updated_at. Apply migration in `docs/offline_first/supabase_iot_demo_user_id_migration.sql`.
+- Encryption: use `HiveService`/`HiveRepositoryBase`; never open Hive boxes directly.
+- Merge: last-write-wins by remote; `pullRemote` replaces the current user's local device list with fetched list from Supabase.
+
+## Repository Wiring
+
+- **PersistentIotDemoRepository**: Hive-backed local store per user; constructor takes `supabaseUserId`; box name `iot_demo_devices_<sanitized(supabaseUserId)>`; exposes `watchDevices`, `connect`, `disconnect`, `sendCommand`, and `replaceDevices`.
+- **SupabaseIotDemoRepository**: Remote implementation; RLS restricts to `auth.uid()`; no app-side user filter.
+- **OfflineFirstIotDemoRepository**: Implements `IotDemoRepository` and `SyncableRepository`.
+  - Takes `getCurrentSupabaseUserId` and `getPersistentRepository(supabaseUserId)`; caches persistent repo per user.
+  - `entityType`: `iot_demo`
+  - `watchDevices()`: streams from current user's local repo (empty stream when no user).
+  - `connect`/`disconnect`/`sendCommand`: call local first, then enqueue `SyncOperation` with payload `deviceId`, `action`, `supabaseUserId`, and for command: kind/value.
+  - `processOperation`: processes only when payload `supabaseUserId` equals current user; legacy ops without `supabaseUserId` are skipped.
+  - `pullRemote`: calls remote `fetchDevices()`, then current user's `local.replaceDevices(remoteDevices)`; in-flight coalesced.
+- DI: `OfflineFirstIotDemoRepository` built with `getCurrentSupabaseUserId` from `SupabaseAuthRepository` and factory `(id) => PersistentIotDemoRepository(hiveService, supabaseUserId: id)`; `IotDemoRepository` resolves to it. `BackgroundSyncCoordinator` receives `getSyncSupabaseUserId` and passes current user to `runSyncCycle` for user-scoped pending op filter.
+
+## Conflict Resolution
+
+- Single source of truth: Supabase. On `pullRemote`, local list is replaced with the fetched list (no per-device `updated_at` merge in app; Supabase has `updated_at` for future use).
+- Pending operations are applied in order; idempotency keys include deviceId, action, and timestamp.
+
+## UI Integration
+
+- Sync runs in background when page opens via `ensureSyncStartedIfAvailable()`. Sync status is logged; no sync banner on the IoT demo page.
+- For sync observability, use the Sync Diagnostics section in Settings (visible when dev/qa mode is active).
+- Device list is always from local; updates after connect/disconnect/sendCommand are immediate (local), then synced in background.
+
+## Data Retention
+
+- Local device list persists until overwritten by `pullRemote` or user actions (connect/disconnect/sendCommand).
+- No automatic eviction; Supabase table is the source of truth.
+
+## Testing
+
+- Unit/repository: `SupabaseIotDemoRepository` (with mocked Supabase or when not configured); `OfflineFirstIotDemoRepository` with fake local, fake remote, fake `PendingSyncRepository` and registry.
+- Repository: watchDevices returns local stream; connect enqueues op; processOperation applies to remote; pullRemote fetches and merges.
+- Widget: IoT demo page shows device list; sync runs in background with status in logs.
+
+## Implementation Status
+
+- Auth gate: IoT demo route redirects to counter if Supabase not initialized, to `/supabase-auth?redirect=%2Fiot-demo` when not signed in; `SupabaseAuthPage` supports `redirectAfterLogin` and navigates after sign-in.
+- `PersistentIotDemoRepository`: per-user box, `supabaseUserId` required; empty storage returns empty list (no shared defaults).
+- `OfflineFirstIotDemoRepository`: getCurrentSupabaseUserId + getPersistentRepository factory; payload includes `supabaseUserId`; processOperation skips legacy/different-user ops.
+- Sync: `getPendingOperations(supabaseUserIdFilter)`, `runSyncCycle(supabaseUserIdForUserScopedSync)`; coordinator passes current Supabase user.
+- Supabase: migration SQL in `docs/offline_first/supabase_iot_demo_user_id_migration.sql` (user_id, RLS, index).
+- DI and sync registry wiring in `register_iot_demo_services.dart` and `injector_registrations.dart`.
+- Sync runs in background; no sync banner on page. Sync diagnostics in Settings (dev/qa only).

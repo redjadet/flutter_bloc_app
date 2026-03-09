@@ -23,7 +23,10 @@ void main() {
         keyManager: HiveKeyManager(storage: InMemorySecretStorage()),
       );
       await hiveService.initialize();
-      repository = PersistentIotDemoRepository(hiveService: hiveService);
+      repository = PersistentIotDemoRepository(
+        hiveService: hiveService,
+        supabaseUserId: 'test-user-id',
+      );
     });
 
     tearDown(() async {
@@ -31,17 +34,39 @@ void main() {
       tempDir.deleteSync(recursive: true);
     });
 
-    test('watchDevices emits default devices when storage is empty', () async {
-      final List<IotDevice> devices = await repository.watchDevices().first;
+    test('constructor throws for empty or whitespace supabaseUserId', () {
+      expect(
+        () => PersistentIotDemoRepository(
+          hiveService: hiveService,
+          supabaseUserId: '',
+        ),
+        throwsArgumentError,
+      );
+      expect(
+        () => PersistentIotDemoRepository(
+          hiveService: hiveService,
+          supabaseUserId: '   ',
+        ),
+        throwsArgumentError,
+      );
+    });
 
-      expect(devices.length, 5);
-      expect(devices.any((final d) => d.id == 'thermostat-1'), isTrue);
-      expect(devices.firstWhere((final d) => d.id == 'thermostat-1').value, 21);
+    test('watchDevices emits empty list when storage is empty', () async {
+      final List<IotDevice> devices = await repository.watchDevices().first;
+      expect(devices, isEmpty);
     });
 
     test(
       'sendCommand setValue persists and is visible on next watch',
       () async {
+        await repository.replaceDevices(<IotDevice>[
+          const IotDevice(
+            id: 'thermostat-1',
+            name: 'Thermostat',
+            type: IotDeviceType.thermostat,
+            value: 21,
+          ),
+        ]);
         await repository.connect('thermostat-1');
         await repository.sendCommand(
           'thermostat-1',
@@ -57,6 +82,14 @@ void main() {
     );
 
     test('sendCommand setValue clamps out-of-range values', () async {
+      await repository.replaceDevices(<IotDevice>[
+        const IotDevice(
+          id: 'thermostat-1',
+          name: 'Thermostat',
+          type: IotDeviceType.thermostat,
+          value: 21,
+        ),
+      ]);
       await repository.connect('thermostat-1');
       await repository.sendCommand(
         'thermostat-1',
@@ -71,6 +104,13 @@ void main() {
     });
 
     test('sendCommand toggle persists and is visible on next watch', () async {
+      await repository.replaceDevices(<IotDevice>[
+        const IotDevice(
+          id: 'light-1',
+          name: 'Living Room Light',
+          type: IotDeviceType.light,
+        ),
+      ]);
       await repository.connect('light-1');
       await repository.sendCommand('light-1', const IotDeviceCommand.toggle());
 
@@ -82,6 +122,20 @@ void main() {
     });
 
     test('values persist across repository instances (app restart)', () async {
+      const String userId = 'test-user-id';
+      await repository.replaceDevices(<IotDevice>[
+        const IotDevice(
+          id: 'sensor-1',
+          name: 'Temperature Sensor',
+          type: IotDeviceType.sensor,
+          value: 22.5,
+        ),
+        const IotDevice(
+          id: 'plug-1',
+          name: 'Smart Plug',
+          type: IotDeviceType.plug,
+        ),
+      ]);
       await repository.connect('sensor-1');
       await repository.sendCommand('sensor-1', IotDeviceCommand.setValue(19.0));
       await repository.connect('plug-1');
@@ -89,6 +143,7 @@ void main() {
 
       final PersistentIotDemoRepository repo2 = PersistentIotDemoRepository(
         hiveService: hiveService,
+        supabaseUserId: userId,
       );
       final List<IotDevice> devices = await repo2.watchDevices().first;
 
@@ -105,6 +160,13 @@ void main() {
     test(
       'disconnect during pending connect keeps device disconnected',
       () async {
+        await repository.replaceDevices(<IotDevice>[
+          const IotDevice(
+            id: 'light-1',
+            name: 'Living Room Light',
+            type: IotDeviceType.light,
+          ),
+        ]);
         final Future<void> connectFuture = repository.connect('light-1');
         await Future<void>.delayed(const Duration(milliseconds: 50));
         await repository.disconnect('light-1');

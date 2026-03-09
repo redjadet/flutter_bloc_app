@@ -213,7 +213,7 @@ void main() {
     expect(cubit.selectedModels, contains('custom-model'));
   });
 
-  testWidgets('ChatPage banner clears after manual sync flush', (
+  testWidgets('ChatPage does not render a page-level sync banner', (
     WidgetTester tester,
   ) async {
     final _PendingStateChatCubit cubit = _PendingStateChatCubit();
@@ -275,16 +275,9 @@ void main() {
     final AppLocalizations l10n = AppLocalizations.of(
       tester.element(find.byType(ChatPage)),
     );
-    expect(find.text(l10n.syncStatusPendingTitle), findsOneWidget);
-    expect(find.text(l10n.syncStatusSyncNowButton), findsOneWidget);
-    // Individual message pending sync text is no longer displayed in the UI
-
-    await tester.tap(find.text(l10n.syncStatusSyncNowButton));
-    await tester.pump();
-
-    // Individual message pending sync text is no longer displayed in the UI
     expect(find.text(l10n.syncStatusPendingTitle), findsNothing);
-    expect(find.byType(MessageBubble), findsNWidgets(2));
+    expect(find.text(l10n.syncStatusSyncNowButton), findsNothing);
+    expect(find.byType(MessageBubble), findsOneWidget);
   });
 }
 
@@ -436,6 +429,9 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
   String get boxName => 'fake-pending-sync';
 
   @override
+  Stream<void> get onOperationEnqueued => Stream<void>.empty();
+
+  @override
   Future<SyncOperation> enqueue(final SyncOperation operation) async =>
       operation;
 
@@ -449,6 +445,7 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
   Future<List<SyncOperation>> getPendingOperations({
     DateTime? now,
     int? limit,
+    String? supabaseUserIdFilter,
   }) async => const <SyncOperation>[];
 
   @override
@@ -463,6 +460,9 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
 
   @override
   Future<void> clear() async {}
+
+  @override
+  Future<void> dispose() async {}
 
   @override
   Future<Box<dynamic>> getBox() =>

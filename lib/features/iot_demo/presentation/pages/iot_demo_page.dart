@@ -45,21 +45,30 @@ class IotDemoPage extends StatelessWidget {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.iotDemoPageTitle,
-      body: TypeSafeBlocBuilder<IotDemoCubit, IotDemoState>(
-        builder: (final context, final state) {
-          return state.when(
-            initial: () => const _LoadingBody(),
-            loading: () => const _LoadingBody(),
-            loaded: (final devices, final selectedDeviceId) => _LoadedBody(
-              devices: devices,
-              selectedDeviceId: selectedDeviceId,
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Expanded(
+            child: TypeSafeBlocBuilder<IotDemoCubit, IotDemoState>(
+              builder: (final context, final state) {
+                return state.when(
+                  initial: () => const _LoadingBody(),
+                  loading: () => const _LoadingBody(),
+                  loaded: (final devices, final selectedDeviceId) =>
+                      _LoadedBody(
+                        devices: devices,
+                        selectedDeviceId: selectedDeviceId,
+                      ),
+                  error: (final message) => CommonErrorView(
+                    message: message,
+                    onRetry: () => context.cubit<IotDemoCubit>().initialize(),
+                  ),
+                );
+              },
             ),
-            error: (final message) => CommonErrorView(
-              message: message,
-              onRetry: () => context.cubit<IotDemoCubit>().initialize(),
-            ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }

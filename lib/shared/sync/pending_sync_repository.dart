@@ -15,8 +15,22 @@ class PendingSyncRepository extends HiveRepositoryBase {
 
   static const String _boxName = 'pending_sync_operations';
 
+  final StreamController<void> _enqueuedController =
+      StreamController<void>.broadcast();
+
   @override
   String get boxName => _boxName;
+
+  /// Fires once after each successful [enqueue]. Used to trigger immediate
+  /// sync so IoT demo (and other) changes reach Supabase as soon as possible.
+  Stream<void> get onOperationEnqueued => _enqueuedController.stream;
+
+  Future<void> dispose() async {
+    if (_enqueuedController.isClosed) {
+      return;
+    }
+    await _enqueuedController.close();
+  }
 
   /// Adds a [SyncOperation] to the pending queue.
   Future<SyncOperation> enqueue(final SyncOperation operation) async {
@@ -25,10 +39,17 @@ class PendingSyncRepository extends HiveRepositoryBase {
       action: () async {
         final Box<dynamic> box = await getBox();
         await box.put(operation.id, operation.toJson());
+        if (!_enqueuedController.isClosed) {
+          _enqueuedController.add(null);
+        }
       },
     );
     return operation;
   }
+
+  /// Key in payload for user-scoped sync (e.g. IoT demo); ops without this
+  /// for the iot_demo entity type are legacy and are excluded when filter is set.
+  static const String payloadKeySupabaseUserId = 'supabaseUserId';
 
   /// Retrieves a list of pending [SyncOperation]s that are ready to be retried.
   ///
@@ -36,9 +57,12 @@ class PendingSyncRepository extends HiveRepositoryBase {
   /// The [now] parameter can be used to deterministically filter operations
   /// based on their `nextRetryAt` timestamp, which is useful for testing.
   /// The [limit] parameter can be used to control the batch size.
+  /// When [supabaseUserIdFilter] is set, only iot_demo ops whose
+  /// payload supabaseUserId equals this value are included.
   Future<List<SyncOperation>> getPendingOperations({
     final DateTime? now,
     final int? limit,
+    final String? supabaseUserIdFilter,
   }) async => StorageGuard.run<List<SyncOperation>>(
     logContext: 'PendingSyncRepository.getPendingOperations',
     action: () async {
@@ -64,12 +88,19 @@ class PendingSyncRepository extends HiveRepositoryBase {
       }
 
       final DateTime threshold = (now ?? DateTime.now()).toUtc();
-      final Iterable<SyncOperation> ready = operations.where(
+      Iterable<SyncOperation> ready = operations.where(
         (final op) => switch (op.nextRetryAt) {
           final nextRetryAt? => !nextRetryAt.isAfter(threshold),
           _ => true,
         },
       );
+      if (supabaseUserIdFilter != null) {
+        ready = ready.where((final op) {
+          if (op.entityType != 'iot_demo') return true;
+          final dynamic uid = op.payload[payloadKeySupabaseUserId];
+          return uid == supabaseUserIdFilter;
+        });
+      }
 
       final List<SyncOperation> pending = limit != null
           ? ready.take(limit).toList(growable: false)

@@ -17,22 +17,30 @@ class BackgroundSyncCoordinator {
     required final NetworkStatusService networkStatusService,
     required final TimerService timerService,
     required final SyncableRepositoryRegistry registry,
+    final String? Function()? getSyncSupabaseUserId,
     final Duration syncInterval = const Duration(seconds: 60),
     final void Function(String event, Map<String, Object?> payload)? telemetry,
     final int maxHistory = 5,
     final int maxRetryCount = 10,
     final Duration maxOperationAge = const Duration(days: 30),
+    final void Function(void Function() onSyncRequested)?
+    startIotDemoRealtimeSubscription,
+    final void Function()? stopIotDemoRealtimeSubscription,
   }) : _repository = repository,
        _networkStatusService = networkStatusService,
        _timerService = timerService,
        _registry = registry,
+       _getSyncSupabaseUserId = getSyncSupabaseUserId,
        _syncInterval = syncInterval,
        _telemetry = telemetry ?? _defaultTelemetry,
        _maxHistory = maxHistory,
        _maxRetryCount = maxRetryCount,
-       _maxOperationAge = maxOperationAge;
+       _maxOperationAge = maxOperationAge,
+       _startIotDemoRealtimeSubscription = startIotDemoRealtimeSubscription,
+       _stopIotDemoRealtimeSubscription = stopIotDemoRealtimeSubscription;
 
   final PendingSyncRepository _repository;
+  final String? Function()? _getSyncSupabaseUserId;
   final NetworkStatusService _networkStatusService;
   final TimerService _timerService;
   final SyncableRepositoryRegistry _registry;
@@ -41,6 +49,9 @@ class BackgroundSyncCoordinator {
   final int _maxHistory;
   final int _maxRetryCount;
   final Duration _maxOperationAge;
+  final void Function(void Function() onSyncRequested)?
+  _startIotDemoRealtimeSubscription;
+  final void Function()? _stopIotDemoRealtimeSubscription;
 
   final StreamController<SyncStatus> _statusController =
       StreamController<SyncStatus>.broadcast();
@@ -49,6 +60,7 @@ class BackgroundSyncCoordinator {
   SyncCycleSummary? _latestSummary;
   final List<SyncCycleSummary> _history = <SyncCycleSummary>[];
   StreamSubscription<NetworkStatus>? _networkSubscription;
+  StreamSubscription<void>? _enqueueSubscription;
   TimerDisposable? _periodicTimer;
   Future<void>? _currentSync;
   bool _syncRequestedAfterCurrent = false;
@@ -98,6 +110,22 @@ class BackgroundSyncCoordinator {
       _syncInterval,
       () => unawaited(_triggerSync(immediate: false)),
     );
+    await _enqueueSubscription?.cancel();
+    _enqueueSubscription = _repository.onOperationEnqueued.listen(
+      (_) => unawaited(_triggerSync(immediate: true)),
+      onError: (final Object error, final StackTrace stackTrace) {
+        AppLogger.error(
+          'BackgroundSyncCoordinator.enqueueSubscription failed',
+          error,
+          stackTrace,
+        );
+        _emit(SyncStatus.degraded);
+      },
+      cancelOnError: false,
+    );
+    _startIotDemoRealtimeSubscription?.call(
+      () => unawaited(_triggerSync(immediate: true)),
+    );
     await _triggerSync(immediate: true);
   }
 
@@ -110,6 +138,9 @@ class BackgroundSyncCoordinator {
     final Future<void>? inFlight = _currentSync;
     _periodicTimer?.dispose();
     _periodicTimer = null;
+    await _enqueueSubscription?.cancel();
+    _enqueueSubscription = null;
+    _stopIotDemoRealtimeSubscription?.call();
     await _networkSubscription?.cancel();
     _networkSubscription = null;
     if (inFlight != null) {
@@ -247,6 +278,7 @@ class BackgroundSyncCoordinator {
       pendingRepository: _repository,
       emitStatus: _emit,
       telemetry: _telemetry,
+      supabaseUserIdForUserScopedSync: _getSyncSupabaseUserId?.call(),
     );
     final int pruned = await _repository.prune(
       maxRetryCount: _maxRetryCount,

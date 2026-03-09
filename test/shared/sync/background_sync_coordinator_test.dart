@@ -49,6 +49,7 @@ void main() {
     late TimerService timerService;
     late SyncableRepositoryRegistry registry;
     late StreamController<NetworkStatus> networkController;
+    late StreamController<void> enqueueController;
 
     setUpAll(() {
       registerFallbackValue(
@@ -67,6 +68,7 @@ void main() {
       timerService = _ControllableTimerService();
       registry = SyncableRepositoryRegistry();
       networkController = StreamController<NetworkStatus>.broadcast();
+      enqueueController = StreamController<void>.broadcast();
       when(
         () => networkService.statusStream,
       ).thenAnswer((_) => networkController.stream);
@@ -77,6 +79,9 @@ void main() {
         () => pendingRepository.getPendingOperations(now: any(named: 'now')),
       ).thenAnswer((_) async => <SyncOperation>[]);
       when(
+        () => pendingRepository.onOperationEnqueued,
+      ).thenAnswer((_) => enqueueController.stream);
+      when(
         () => pendingRepository.prune(
           maxRetryCount: any(named: 'maxRetryCount'),
           maxAge: any(named: 'maxAge'),
@@ -85,6 +90,7 @@ void main() {
     });
 
     tearDown(() async {
+      await enqueueController.close();
       await networkController.close();
     });
 
@@ -555,6 +561,30 @@ void main() {
         coordinator.statusStream.listen(emitted.add);
 
         await coordinator.flush();
+
+        expect(coordinator.currentStatus, SyncStatus.degraded);
+        expect(emitted.contains(SyncStatus.degraded), isTrue);
+
+        await coordinator.stop();
+      },
+    );
+
+    test(
+      'degrades gracefully when enqueue subscription emits an error',
+      () async {
+        final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
+          repository: pendingRepository,
+          networkStatusService: networkService,
+          timerService: timerService,
+          registry: registry,
+          syncInterval: const Duration(milliseconds: 10),
+        );
+        final List<SyncStatus> emitted = <SyncStatus>[];
+        coordinator.statusStream.listen(emitted.add);
+
+        await coordinator.start();
+        enqueueController.addError(Exception('enqueue stream failed'));
+        await Future<void>.delayed(const Duration(milliseconds: 10));
 
         expect(coordinator.currentStatus, SyncStatus.degraded);
         expect(emitted.contains(SyncStatus.degraded), isTrue);

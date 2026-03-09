@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -33,7 +34,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Generic in-memory repository used by tests to reduce bespoke mock classes.
@@ -547,6 +547,9 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
   String get boxName => 'fake-pending-sync-box';
 
   @override
+  Stream<void> get onOperationEnqueued => Stream<void>.empty();
+
+  @override
   Future<SyncOperation> enqueue(final SyncOperation operation) async {
     _operations.add(operation);
     return operation;
@@ -562,7 +565,19 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
   Future<List<SyncOperation>> getPendingOperations({
     DateTime? now,
     int? limit,
-  }) async => _operations.toList(growable: false);
+    String? supabaseUserIdFilter,
+  }) async {
+    Iterable<SyncOperation> out = _operations;
+    if (supabaseUserIdFilter != null) {
+      out = out.where((final op) {
+        if (op.entityType != 'iot_demo') return true;
+        final dynamic uid =
+            op.payload[PendingSyncRepository.payloadKeySupabaseUserId];
+        return uid == supabaseUserIdFilter;
+      });
+    }
+    return out.toList(growable: false);
+  }
 
   @override
   Future<void> markCompleted(final String operationId) async {}
@@ -576,6 +591,9 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
 
   @override
   Future<void> clear() async => _operations.clear();
+
+  @override
+  Future<void> dispose() async {}
 
   @override
   Future<Box<dynamic>> getBox() =>

@@ -342,6 +342,9 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
   String get boxName => 'fake-pending-sync';
 
   @override
+  Stream<void> get onOperationEnqueued => Stream<void>.empty();
+
+  @override
   Future<SyncOperation> enqueue(final SyncOperation operation) async =>
       operation;
 
@@ -353,8 +356,9 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
 
   @override
   Future<List<SyncOperation>> getPendingOperations({
-    DateTime? now,
-    int? limit,
+    final DateTime? now,
+    final int? limit,
+    final String? supabaseUserIdFilter,
   }) async => const <SyncOperation>[];
 
   @override
@@ -369,6 +373,9 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
 
   @override
   Future<void> clear() async {}
+
+  @override
+  Future<void> dispose() async {}
 
   @override
   Future<Box<dynamic>> getBox() =>

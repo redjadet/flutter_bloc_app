@@ -183,28 +183,6 @@ void main() {
       expect(find.text('SEE MORE'), findsOneWidget);
     });
 
-    testWidgets('shows sync banner when offline', (final tester) async {
-      final _FakeNetworkStatusService networkService =
-          _FakeNetworkStatusService()..status = NetworkStatus.offline;
-      final _FakeBackgroundSyncCoordinator coordinator =
-          _FakeBackgroundSyncCoordinator();
-      networkService.emit(NetworkStatus.offline);
-      final SyncStatusCubit syncCubit = SyncStatusCubit(
-        networkStatusService: networkService,
-        coordinator: coordinator,
-      );
-
-      await _pumpProfilePage(
-        tester,
-        repository: const _SuccessProfileRepository(),
-        syncStatusCubit: syncCubit,
-      );
-
-      await _resolveAsyncWork(tester);
-
-      expect(find.byType(ProfileSyncBanner), findsOneWidget);
-    });
-
     testWidgets('displays profile sections', (final tester) async {
       await _pumpProfilePage(
         tester,

@@ -21,7 +21,7 @@ This document lists feature modules with entry points and notes. It is intended 
 | GenUI Demo | `lib/features/genui_demo/` | AI-generated dynamic UI using GenUI SDK with Google Gemini. |
 | Search | `lib/features/search/` | Cache-first repository with background refresh. |
 | Settings | `lib/features/settings/` | Theme, locale, app info, diagnostics. |
-| Profile | `lib/features/profile/` | Offline-first profile cache with sync banner. |
+| Profile | `lib/features/profile/` | Offline-first profile cache. |
 | Todo List | `lib/features/todo_list/` | Realtime database + offline-first implementation. |
 | Charts | `lib/features/chart/` | Data visualization with isolated rebuilds. |
 | WebSocket | `lib/features/websocket/` | Reconnect logic and message streaming. |

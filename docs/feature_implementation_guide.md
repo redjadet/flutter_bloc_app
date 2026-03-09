@@ -293,7 +293,7 @@ tool/test_coverage.sh
 
 - **AI backend:** Hugging Face Inference API for chat completions; model and API key from `SecretConfig` (`lib/features/chat/data/huggingface_chat_repository.dart`, `huggingface_api_client.dart`).
 - **Offline-first:** `OfflineFirstChatRepository` with local Hive storage (encrypted), `PendingSyncRepository` for queued sends when offline, and `BackgroundSyncCoordinator` for replay. User messages are persisted locally before the remote call. See [Offline-first chat contract](offline_first/chat.md).
-- **UI:** Chat list and conversation UI; sync banner (`ChatSyncBanner`), pending indicators, manual flush. Cubit: `ChatCubit`, `ChatListCubit`.
+- **UI:** Chat list and conversation UI; sync status logged; Sync Diagnostics in Settings (dev/qa). Cubit: `ChatCubit`, `ChatListCubit`.
 - **Security:** Chat history in Hive with secure key management; no raw Hive boxes in feature code.
 
 **References:**

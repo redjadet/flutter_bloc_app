@@ -11,7 +11,7 @@ All core offline-first features have been successfully implemented, tested, and 
 - **Repository**: `OfflineFirstCounterRepository`
 - **Storage**: Hive box `counter` with sync metadata (`changeId`, `lastSyncedAt`, `synchronized`)
 - **Strategy**: Write-first with pending operation queue
-- **UI**: `CounterSyncBanner` with offline/syncing/pending states and metadata display
+- **UI**: Sync status logged; Sync Diagnostics in Settings (dev/qa only)
 - **Tests**: Complete coverage (unit, repository, bloc, widget, page)
 - **Documentation**: `docs/offline_first/counter.md`
 
@@ -20,7 +20,7 @@ All core offline-first features have been successfully implemented, tested, and 
 - **Repository**: `OfflineFirstChatRepository`
 - **Storage**: Hive boxes `chat_conversations`, `chat_messages` with sync metadata
 - **Strategy**: Write-first with pending send queue and conflict resolution
-- **UI**: `ChatSyncBanner` with pending message indicators and manual sync
+- **UI**: Sync status logged; Sync Diagnostics in Settings (dev/qa only)
 - **Tests**: Complete coverage (unit, repository, bloc, widget, page)
 - **Documentation**: `docs/offline_first/chat.md`
 
@@ -29,7 +29,7 @@ All core offline-first features have been successfully implemented, tested, and 
 - **Repository**: `OfflineFirstSearchRepository`
 - **Storage**: Hive box `search_cache` with query results and recent queries
 - **Strategy**: Cache-first (read-only) with background refresh
-- **UI**: `SearchSyncBanner` with offline/syncing status
+- **UI**: Sync status logged; Sync Diagnostics in Settings (dev/qa only)
 - **Tests**: Complete coverage (unit, repository, widget, page)
 - **Documentation**: `docs/offline_first/search.md`
 
@@ -38,7 +38,7 @@ All core offline-first features have been successfully implemented, tested, and 
 - **Repository**: `OfflineFirstProfileRepository`
 - **Storage**: Hive box `profile_cache` with `ProfileUser` snapshot
 - **Strategy**: Cache-first (read-only) with background refresh
-- **UI**: `ProfileSyncBanner` with manual sync CTA and dev cache controls
+- **UI**: Sync status logged; Sync Diagnostics in Settings (dev/qa only); Profile cache controls in dev
 - **Tests**: Complete coverage (unit, repository, widget, page)
 - **Documentation**: `docs/offline_first/profile.md`
 
@@ -47,7 +47,7 @@ All core offline-first features have been successfully implemented, tested, and 
 - **Repository**: `OfflineFirstRemoteConfigRepository`
 - **Storage**: Hive box `remote_config_cache` with config values and metadata
 - **Strategy**: Cache-first with background refresh and version tracking
-- **UI**: Sync status in `RemoteConfigDiagnosticsSection` with cache clear control
+- **UI**: RemoteConfig diagnostics with cache clear (no sync banner)
 - **Tests**: Complete coverage (unit, repository, widget, cubit)
 - **Documentation**: `docs/offline_first/remote_config.md`
 
@@ -59,6 +59,16 @@ All core offline-first features have been successfully implemented, tested, and 
 - **UI**: Data source badge (cache/remote) and dev cache clear control
 - **Tests**: Complete coverage (unit, repository)
 - **Documentation**: `docs/offline_first/graphql_demo.md`
+
+### 7. IoT Demo ✅
+
+- **Repository**: `OfflineFirstIotDemoRepository`
+- **Storage**: Per-user Hive box `iot_demo_devices_<supabaseUserId>` (key `devices`); remote Supabase table `iot_devices` with `user_id` and RLS
+- **Auth**: Route requires Supabase sign-in; redirect to `/supabase-auth` with return path `/iot-demo`; post sign-in navigates back
+- **Strategy**: Write-first with pending operation queue (payload includes `supabaseUserId`); pullRemote replaces current user's local from Supabase; sync cycle filters pending ops by user
+- **UI**: Sync status logged; Sync Diagnostics in Settings (dev/qa only); sync triggered on page open
+- **Tests**: Unit/repository (including legacy-op skip, different-user skip) and widget tests
+- **Documentation**: `docs/offline_first/iot_demo.md`, `docs/offline_first/iot_demo_supabase_auth_plan.md`, `docs/offline_first/supabase_iot_demo_user_id_migration.sql`
 
 ## Core Infrastructure
 
@@ -76,7 +86,7 @@ All core offline-first features have been successfully implemented, tested, and 
 
 - **Cubit**: `SyncStatusCubit` tracks network status and sync state
 - **Service**: `NetworkStatusService` monitors connectivity
-- **UI**: Sync banners across all features with consistent messaging
+- **UI**: Sync Diagnostics section in Settings (dev/qa only); sync status logged
 
 ### Pending Operations Queue ✅
 
@@ -120,6 +130,7 @@ All core offline-first features have been successfully implemented, tested, and 
 - `docs/offline_first/profile.md` - Profile offline-first contract
 - `docs/offline_first/remote_config.md` - Remote Config offline-first contract
 - `docs/offline_first/graphql_demo.md` - GraphQL Demo offline-first contract
+- `docs/offline_first/iot_demo.md` - IoT Demo offline-first contract (Supabase)
 
 ### Guides ✅
 
@@ -133,7 +144,7 @@ All offline-first features have comprehensive test coverage:
 - ✅ Unit tests for local storage and serialization
 - ✅ Repository tests for offline-first behavior
 - ✅ Bloc tests for sync state management
-- ✅ Widget tests for sync banners and UI integration
+- ✅ Widget tests for sync banner widgets (in isolation) and Sync Diagnostics
 - ✅ Page tests for end-to-end flows
 - ✅ Integration tests for coordinator-driven sync
 
@@ -165,7 +176,7 @@ The following enhancements are documented but not required for core functionalit
 - ✅ All core features have offline-first repositories
 - ✅ All repositories implement `SyncableRepository`
 - ✅ All repositories are registered in DI and sync registry
-- ✅ All features have sync status UI (banners)
+- ✅ Sync Diagnostics in Settings (dev/qa only); sync status in logs
 - ✅ All features have comprehensive test coverage
 - ✅ All features have documentation
 - ✅ Background sync coordinator is running

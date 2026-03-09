@@ -24,16 +24,14 @@ This guide describes how to onboard a feature into the shared offline-first stac
    - On `pullRemote`, merge remote snapshots when newer.
 3. **Register in DI + registry**
    - Wire the offline repo via `create<Feature>Repository` and register it in `SyncableRepositoryRegistry` within `lib/core/di/injector_registrations.dart`.
-4. **Expose status to UI**
-   - Consume `SyncStatusCubit` + `NetworkStatusService` to show offline/syncing/pending indicators and queued counts; add a dev-only inspector if helpful.
-   - Use existing reference widgets such as `CounterSyncBanner`, `ChatSyncBanner`, and `SearchSyncBanner` as patterns—they display offline/pending copy and expose manual "Sync now" actions wired to `SyncStatusCubit.flush()` (where applicable).
-   - For global observability, surface the latest `SyncCycleSummary` via the Sync Diagnostics section (see Settings dev-only UI) so engineering/QA can validate sync health per build.
-   - `SyncStatusCubit` seeds its initial status via `NetworkStatusService.getCurrentStatus()`. Stub this in tests and wait for stream emissions (use `tester.runAsync` when needed) so widgets see updates that occur after build.
-   - Even for read-only/cache-first flows (search/profile), consider exposing a manual refresh CTA that calls `SyncStatusCubit.flush()` so users can pull latest data after reconnecting.
+4. **Expose status (logs + Settings)**
+   - Sync status is logged via `BackgroundSyncCoordinator` telemetry. Feature pages do not show sync banners.
+   - For observability, the Sync Diagnostics section in Settings (dev/qa mode only) surfaces `SyncCycleSummary` history so engineering/QA can validate sync health.
+   - `SyncStatusCubit` seeds its initial status via `NetworkStatusService.getCurrentStatus()`. Stub this in tests when testing sync-related flows.
 5. **Tests**
    - Unit tests for local store serialization + migrations.
    - Repository tests for `save` queueing (if applicable) and `processOperation`/`pullRemote` paths.
-   - Bloc/widget tests verifying UI reacts to `SyncStatusCubit` and queue counts.
+   - Bloc/widget tests for sync flows; Sync Diagnostics (Settings, dev/qa) for manual inspection.
    - **Reference patterns**:
      - **Write-heavy features (Counter/Chat)**: See `test/chat_cubit_test.dart`, `test/chat_page_test.dart`, and `test/features/counter/presentation/pages/counter_page_sync_metadata_test.dart`.
      - **Read-only/cache-first features (Search)**: See `test/features/search/data/search_cache_repository_test.dart`, `test/features/search/data/offline_first_search_repository_test.dart`, and `test/features/search/presentation/widgets/search_sync_banner_test.dart`.
@@ -49,7 +47,7 @@ Once a feature is onboarded, consider these enhancements:
 
 1. **User-facing improvements**
    - Add cache management UI (clear cache, view cache size) for data-heavy features.
-   - Surface sync status in feature-specific UI (e.g., conversation list, profile header).
+   - Sync status is in logs; Sync Diagnostics in Settings (dev/qa) for observability.
    - Add manual sync triggers beyond the global "Sync now" button.
 
 2. **Observability**
