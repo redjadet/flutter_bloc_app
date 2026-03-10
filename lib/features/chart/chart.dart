@@ -1,4 +1,7 @@
+export 'domain/chart_cache_repository.dart';
+export 'domain/chart_data_source.dart';
 export 'domain/chart_point.dart';
+export 'domain/chart_remote_repository.dart';
 export 'domain/chart_repository.dart';
 export 'presentation/cubit/chart_cubit.dart';
 export 'presentation/pages/chart_page.dart';

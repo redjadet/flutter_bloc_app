@@ -779,6 +779,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get chartZoomToggleLabel => 'Activer le zoom par pincement';
 
   @override
+  String get chartDataSourceCache => 'Cache';
+
+  @override
+  String get chartDataSourceSupabaseEdge => 'Supabase (Edge)';
+
+  @override
+  String get chartDataSourceSupabaseTables => 'Supabase (Tables)';
+
+  @override
+  String get chartDataSourceRemote => 'Distant';
+
+  @override
   String get graphqlSampleTitle => 'Pays GraphQL';
 
   @override

@@ -73,6 +73,11 @@ This document summarizes test coverage, test types, testing patterns, and common
 - Record `set()` / `get()` arguments to assert document IDs and payloads (e.g. auth linkage doc vs wallet profile doc).
 - Example: `test/features/walletconnect_auth/data/walletconnect_auth_repository_impl_test.dart`.
 
+### Offline-first / Supabase-backed feature tests
+
+- **GraphQL demo:** cache (`graphql_demo_cache_repository_test.dart`), offline-first coordinator (`offline_first_graphql_demo_repository_test.dart`), auth-aware remote (`auth_aware_graphql_remote_repository_test.dart`), data source badge (`graphql_data_source_badge_test.dart`).
+- **Chart demo:** cache (`chart_demo_cache_repository_test.dart`), offline-first coordinator (`offline_first_chart_repository_test.dart`), auth-aware remote (`auth_aware_chart_remote_repository_test.dart`), data source badge (`chart_data_source_badge_test.dart`).
+
 ## Common Commands
 
 ```bash

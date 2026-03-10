@@ -779,6 +779,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get chartZoomToggleLabel => 'Pinch-Zoom aktivieren';
 
   @override
+  String get chartDataSourceCache => 'Cache';
+
+  @override
+  String get chartDataSourceSupabaseEdge => 'Supabase (Edge)';
+
+  @override
+  String get chartDataSourceSupabaseTables => 'Supabase (Tabellen)';
+
+  @override
+  String get chartDataSourceRemote => 'Remote';
+
+  @override
   String get graphqlSampleTitle => 'GraphQL-Länder';
 
   @override
