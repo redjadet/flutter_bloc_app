@@ -1,13 +1,13 @@
-import 'package:flutter_bloc_app/features/graphql_demo/data/countries_graphql_repository.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/offline_first_graphql_demo_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_remote_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class _MockRemoteRepository extends Mock
-    implements CountriesGraphqlRepository {}
+class _MockRemoteRepository extends Mock implements GraphqlRemoteRepository {}
 
 class _MockCacheRepository extends Mock implements GraphqlCacheRepository {}
 
@@ -46,6 +46,7 @@ void main() {
       when(() => remote.fetchContinents()).thenThrow(
         GraphqlDemoException('network', type: GraphqlDemoErrorType.network),
       );
+      when(() => remote.lastSource).thenReturn(GraphqlDataSource.remote);
 
       final List<GraphqlContinent> result = await repository.fetchContinents();
 
@@ -70,6 +71,7 @@ void main() {
       when(
         () => remote.fetchCountries(continentCode: any(named: 'continentCode')),
       ).thenAnswer((_) async => remoteCountries);
+      when(() => remote.lastSource).thenReturn(GraphqlDataSource.remote);
       when(
         () => cache.writeCountries(
           countries: remoteCountries,
@@ -109,6 +111,7 @@ void main() {
       ).thenThrow(
         GraphqlDemoException('network', type: GraphqlDemoErrorType.network),
       );
+      when(() => remote.lastSource).thenReturn(GraphqlDataSource.remote);
 
       final List<GraphqlCountry> result = await repository.fetchCountries(
         continentCode: 'EU',

@@ -18,7 +18,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SupabaseIotDemoRepository implements IotDemoRepository {
   static const String _table = 'iot_devices';
 
-  static const String _selectColumns = 'id,name,type,last_seen,connection_state,toggled_on,value';
+  static const String _selectColumns =
+      'id,name,type,last_seen,connection_state,toggled_on,value';
 
   @override
   Stream<List<IotDevice>> watchDevices([
@@ -53,7 +54,10 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
             .eq('toggled_on', false)
             .order('id');
       } else {
-        raw = await Supabase.instance.client.from(_table).select(_selectColumns).order('id');
+        raw = await Supabase.instance.client
+            .from(_table)
+            .select(_selectColumns)
+            .order('id');
       }
       final List<dynamic>? list = listFromDynamic(raw);
       final List<IotDevice> result = <IotDevice>[];

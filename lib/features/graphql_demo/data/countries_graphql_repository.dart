@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.da
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_remote_repository.dart';
 import 'package:flutter_bloc_app/shared/http/retrofit_response_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -15,7 +16,8 @@ import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 /// Uses [CountriesGraphqlApi] (Retrofit) for operation-specific POST calls.
 /// [Dio] instances are injected via `get_it` so DI can dispose them
 /// when the app shuts down.
-class CountriesGraphqlRepository implements GraphqlDemoRepository {
+class CountriesGraphqlRepository
+    implements GraphqlDemoRepository, GraphqlRemoteRepository {
   CountriesGraphqlRepository({final Dio? client})
     : this._fromClient(client ?? Dio());
 

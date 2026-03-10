@@ -7,13 +7,26 @@
 
 ## Architecture
 
-- **Remote:** `CountriesGraphqlRepository` still owns GraphQL calls to `https://countries.trevorblades.com/`.
+- **Remote (auth-aware):** `AuthAwareGraphqlRemoteRepository` chooses a remote per request:
+  - When **signed in to Supabase**: `SupabaseGraphqlDemoRepository` calls the Edge Function `sync-graphql-countries` first; if that fails or returns empty, it reads from Supabase tables (`public.graphql_continents`, `public.graphql_countries`).
+  - When **not signed in** (or Supabase not configured): `CountriesGraphqlRepository` calls `https://countries.trevorblades.com/` directly.
 - **Cache:** `GraphqlDemoCacheRepository` (Hive, encrypted) stores:
   - Continents under `continents`
   - Countries per filter under `countries:<continentCode|all>`
 - **Coordinator:** `OfflineFirstGraphqlDemoRepository` wraps the remote + cache and implements `GraphqlDemoRepository`.
   - On success: write-through to cache, return remote data.
   - On failure: return cached data when available, otherwise rethrow the original error.
+  - On success, `lastSource` reflects the active source (`remote`, `supabaseEdge`, or `supabaseTables`).
+
+### Supabase backend sync
+
+Supabase tables are **synced from the public GraphQL API** via an Edge Function
+(`sync-graphql-countries`). The app **calls this Edge Function first** (with
+`type: 'continents'` or `type: 'countries'`); if the function fails or returns
+empty, the app falls back to reading from the tables. The function is deployed
+with **verify_jwt: false** so the app can call it with the anon key (or no
+user JWT); access control is enforced by RLS on the tables (authenticated
+users only). Source: `supabase/functions/sync-graphql-countries/`.
 
 ## Behavior
 
@@ -24,7 +37,11 @@
 - **Storage format:** Plain JSON maps (no Hive adapters) to keep tests light; nested continent fields are serialized explicitly.
 - **Dev controls:** Settings (dev/QA builds) include a “Clear GraphQL cache” control to force-refresh from the network on next load.
 - **Telemetry:** Repository logs source (`remote` vs `cache`) and active continent for quick debugging.
-- **UI badge:** GraphQL demo header shows a small “Cache/Remote” chip reflecting the last data source.
+- **UI badge:** GraphQL demo header shows a small chip reflecting the last data source:
+  - Cache
+  - Supabase (Edge) — data from the Edge Function
+  - Supabase (Tables) — data from table fallback when Edge fails or returns empty
+  - Remote (direct) — when not signed in to Supabase
 
 ## Testing
 
@@ -39,7 +56,7 @@
 - `OfflineFirstGraphqlDemoRepository` implementing cache-first strategy (`lib/features/graphql_demo/data/offline_first_graphql_demo_repository.dart`)
 - Staleness metadata (24h expiry) to avoid serving stale cache
 - Dev/QA cache clear control in Settings (`GraphqlCacheControlsSection`)
-- UI badge showing data source (cache/remote) in GraphQL demo page
+- UI badge showing data source (Cache / Supabase Edge / Supabase Tables / Remote) in GraphQL demo page
 - Full DI wiring in `lib/core/di/injector_registrations.dart`
 - Comprehensive test coverage:
   - Cache tests: `test/features/graphql_demo/data/graphql_demo_cache_repository_test.dart`

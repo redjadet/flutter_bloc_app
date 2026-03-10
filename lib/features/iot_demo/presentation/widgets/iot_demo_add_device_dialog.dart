@@ -228,74 +228,75 @@ class _IotDemoAddDeviceDialogBodyState
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               CupertinoTextField(
-              controller: _nameController,
-              placeholder: l10n.iotDemoAddDeviceNameHint,
-              maxLength: iotDemoDeviceNameMaxLength,
-              onChanged: (_) => _clearNameError(),
-              onSubmitted: (_) => _submit(context),
-            ),
-            if (_nameError case final String err?) ...[
-              SizedBox(height: context.responsiveGapXS),
-              Text(
-                err,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.error,
+                controller: _nameController,
+                placeholder: l10n.iotDemoAddDeviceNameHint,
+                maxLength: iotDemoDeviceNameMaxLength,
+                onChanged: (_) => _clearNameError(),
+                onSubmitted: (_) => _submit(context),
+              ),
+              if (_nameError case final String err?) ...[
+                SizedBox(height: context.responsiveGapXS),
+                Text(
+                  err,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
                 ),
-              ),
-            ],
-            SizedBox(height: context.responsiveGapM),
-            DropdownButtonFormField<IotDeviceType>(
-              // ignore: deprecated_member_use - DropdownButtonFormField still uses value
-              value: _selectedType,
-              decoration: InputDecoration(
-                labelText: l10n.iotDemoAddDeviceTypeHint,
-              ),
-              items: _types
-                  .map(
-                    (final t) => DropdownMenuItem<IotDeviceType>(
-                      value: t,
-                      child: Text(iotDemoDeviceTypeLabel(t, widget.l10n)),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (final t) {
-                if (t != null) setState(() => _selectedType = t);
-              },
-            ),
-            if (hasValue) ...[
+              ],
               SizedBox(height: context.responsiveGapM),
-              Semantics(
-                label: l10n.iotDemoAddDeviceInitialValue(
-                  _initialValue.toString(),
+              DropdownButtonFormField<IotDeviceType>(
+                // ignore: deprecated_member_use - DropdownButtonFormField still uses value
+                value: _selectedType,
+                decoration: InputDecoration(
+                  labelText: l10n.iotDemoAddDeviceTypeHint,
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Slider.adaptive(
-                      value: _initialValue.clamp(
-                        iotDemoValueMin,
-                        iotDemoValueMax,
+                items: _types
+                    .map(
+                      (final t) => DropdownMenuItem<IotDeviceType>(
+                        value: t,
+                        child: Text(iotDemoDeviceTypeLabel(t, widget.l10n)),
                       ),
-                      max: iotDemoValueMax,
-                      onChanged: (final v) => setState(() => _initialValue = v),
-                    ),
-                    ExcludeSemantics(
-                      child: Text(
-                        l10n.iotDemoAddDeviceInitialValue(
-                          _initialValue.toString(),
-                        ),
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ),
-                  ],
-                ),
+                    )
+                    .toList(),
+                onChanged: (final t) {
+                  if (t != null) setState(() => _selectedType = t);
+                },
               ),
+              if (hasValue) ...[
+                SizedBox(height: context.responsiveGapM),
+                Semantics(
+                  label: l10n.iotDemoAddDeviceInitialValue(
+                    _initialValue.toString(),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Slider.adaptive(
+                        value: _initialValue.clamp(
+                          iotDemoValueMin,
+                          iotDemoValueMax,
+                        ),
+                        max: iotDemoValueMax,
+                        onChanged: (final v) =>
+                            setState(() => _initialValue = v),
+                      ),
+                      ExcludeSemantics(
+                        child: Text(
+                          l10n.iotDemoAddDeviceInitialValue(
+                            _initialValue.toString(),
+                          ),
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
-    ),
     ),
     actions: <CupertinoDialogAction>[
       CupertinoDialogAction(

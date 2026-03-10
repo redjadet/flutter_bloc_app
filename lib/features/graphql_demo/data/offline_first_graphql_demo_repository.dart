@@ -1,9 +1,9 @@
-import 'package:flutter_bloc_app/features/graphql_demo/data/countries_graphql_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_remote_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class OfflineFirstGraphqlDemoRepository implements GraphqlDemoRepository {
@@ -12,71 +12,76 @@ class OfflineFirstGraphqlDemoRepository implements GraphqlDemoRepository {
     required this.cacheRepository,
   });
   static const Duration _maxCacheAge = Duration(hours: 24);
+  static const String _logContextFetchContinents =
+      'OfflineFirstGraphqlDemoRepository.fetchContinents';
+  static const String _logContextFetchCountries =
+      'OfflineFirstGraphqlDemoRepository.fetchCountries';
+
   @override
   GraphqlDataSource lastSource = GraphqlDataSource.unknown;
 
-  final CountriesGraphqlRepository remoteRepository;
+  final GraphqlRemoteRepository remoteRepository;
   final GraphqlCacheRepository cacheRepository;
 
   @override
   Future<List<GraphqlContinent>> fetchContinents() async {
-    final List<GraphqlContinent> cached = await cacheRepository.readContinents(
-      maxAge: _maxCacheAge,
+    return _fetchWithCache<GraphqlContinent>(
+      logContext: _logContextFetchContinents,
+      readCache: () => cacheRepository.readContinents(maxAge: _maxCacheAge),
+      fetchRemote: remoteRepository.fetchContinents,
+      writeCache: cacheRepository.writeContinents,
+      continentCodeForTelemetry: null,
     );
-    try {
-      final List<GraphqlContinent> remote = await remoteRepository
-          .fetchContinents();
-      await cacheRepository.writeContinents(remote);
-      lastSource = GraphqlDataSource.remote;
-      _telemetry('remote');
-      return remote;
-    } on GraphqlDemoException {
-      if (cached.isNotEmpty) {
-        lastSource = GraphqlDataSource.cache;
-        _telemetry('cache');
-        return cached;
-      }
-      rethrow;
-    } on Exception {
-      if (cached.isNotEmpty) {
-        lastSource = GraphqlDataSource.cache;
-        _telemetry('cache');
-        return cached;
-      }
-      rethrow;
-    }
   }
 
   @override
   Future<List<GraphqlCountry>> fetchCountries({
     final String? continentCode,
   }) async {
-    final List<GraphqlCountry> cached = await cacheRepository.readCountries(
-      continentCode: continentCode,
-      maxAge: _maxCacheAge,
+    return _fetchWithCache<GraphqlCountry>(
+      logContext: _logContextFetchCountries,
+      readCache: () => cacheRepository.readCountries(
+        continentCode: continentCode,
+        maxAge: _maxCacheAge,
+      ),
+      fetchRemote: () => remoteRepository.fetchCountries(
+        continentCode: continentCode,
+      ),
+      writeCache: (final countries) => cacheRepository.writeCountries(
+        countries: countries,
+        continentCode: continentCode,
+      ),
+      continentCodeForTelemetry: continentCode,
     );
+  }
+
+  Future<List<T>> _fetchWithCache<T>({
+    required final String logContext,
+    required final Future<List<T>> Function() readCache,
+    required final Future<List<T>> Function() fetchRemote,
+    required final Future<void> Function(List<T> items) writeCache,
+    required final String? continentCodeForTelemetry,
+  }) async {
+    final List<T> cached = await readCache();
     try {
-      final List<GraphqlCountry> remote = await remoteRepository.fetchCountries(
-        continentCode: continentCode,
-      );
-      await cacheRepository.writeCountries(
-        countries: remote,
-        continentCode: continentCode,
-      );
-      lastSource = GraphqlDataSource.remote;
-      _telemetry('remote', continentCode: continentCode);
+      final List<T> remote = await fetchRemote();
+      await writeCache(remote);
+      lastSource = remoteRepository.lastSource;
+      _telemetry('remote', continentCode: continentCodeForTelemetry);
       return remote;
-    } on GraphqlDemoException {
+    } on GraphqlDemoException catch (e, s) {
+      AppLogger.error(logContext, e, s);
       if (cached.isNotEmpty) {
         lastSource = GraphqlDataSource.cache;
-        _telemetry('cache', continentCode: continentCode);
+        _telemetry('cache', continentCode: continentCodeForTelemetry);
         return cached;
       }
       rethrow;
-    } on Exception {
+    } on Exception catch (e, s) {
+      AppLogger.error(logContext, e, s);
       if (cached.isNotEmpty) {
         lastSource = GraphqlDataSource.cache;
-        _telemetry('cache', continentCode: continentCode);
+        _telemetry('cache', continentCode: continentCodeForTelemetry);
         return cached;
       }
       rethrow;

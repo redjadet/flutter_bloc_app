@@ -213,29 +213,39 @@ void main() {
       expect(plug.connectionState, IotConnectionState.connected);
     });
 
-    test('watchDevices with toggledOnOnly filter returns only toggled devices', () async {
-      await repository.replaceDevices(<IotDevice>[
-        const IotDevice(
-          id: 'light-1',
-          name: 'Light On',
-          type: IotDeviceType.light,
-          toggledOn: true,
-        ),
-        const IotDevice(id: 'plug-1', name: 'Plug Off', type: IotDeviceType.plug, toggledOn: false),
-      ]);
-      final List<IotDevice> all = await repository.watchDevices(IotDemoDeviceFilter.all).first;
-      expect(all.length, 2);
-      final List<IotDevice> onOnly = await repository
-          .watchDevices(IotDemoDeviceFilter.toggledOnOnly)
-          .first;
-      expect(onOnly.length, 1);
-      expect(onOnly.first.id, 'light-1');
-      final List<IotDevice> offOnly = await repository
-          .watchDevices(IotDemoDeviceFilter.toggledOffOnly)
-          .first;
-      expect(offOnly.length, 1);
-      expect(offOnly.first.id, 'plug-1');
-    });
+    test(
+      'watchDevices with toggledOnOnly filter returns only toggled devices',
+      () async {
+        await repository.replaceDevices(<IotDevice>[
+          const IotDevice(
+            id: 'light-1',
+            name: 'Light On',
+            type: IotDeviceType.light,
+            toggledOn: true,
+          ),
+          const IotDevice(
+            id: 'plug-1',
+            name: 'Plug Off',
+            type: IotDeviceType.plug,
+            toggledOn: false,
+          ),
+        ]);
+        final List<IotDevice> all = await repository
+            .watchDevices(IotDemoDeviceFilter.all)
+            .first;
+        expect(all.length, 2);
+        final List<IotDevice> onOnly = await repository
+            .watchDevices(IotDemoDeviceFilter.toggledOnOnly)
+            .first;
+        expect(onOnly.length, 1);
+        expect(onOnly.first.id, 'light-1');
+        final List<IotDevice> offOnly = await repository
+            .watchDevices(IotDemoDeviceFilter.toggledOffOnly)
+            .first;
+        expect(offOnly.length, 1);
+        expect(offOnly.first.id, 'plug-1');
+      },
+    );
 
     test(
       'disconnect during pending connect keeps device disconnected',

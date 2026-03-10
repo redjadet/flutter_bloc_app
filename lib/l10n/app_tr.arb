@@ -560,6 +560,8 @@
   "graphqlSampleServerError": "Hizmet şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.",
   "graphqlSampleDataError": "Beklenmedik bir yanıt alındı. Lütfen yeniden deneyin.",
   "graphqlSampleDataSourceCache": "Önbellek",
+  "graphqlSampleDataSourceSupabaseEdge": "Supabase (Edge)",
+  "graphqlSampleDataSourceSupabaseTables": "Supabase (Tablolar)",
   "graphqlSampleDataSourceRemote": "Uzak",
   "exampleWebsocketButton": "WebSocket demosunu aç",
   "@exampleWebsocketButton": {

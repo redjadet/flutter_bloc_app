@@ -559,6 +559,8 @@
   "graphqlSampleServerError": "Der Dienst ist derzeit nicht verfügbar. Versuche es später erneut.",
   "graphqlSampleDataError": "Unerwartete Antwort empfangen. Bitte versuche es erneut.",
   "graphqlSampleDataSourceCache": "Cache",
+  "graphqlSampleDataSourceSupabaseEdge": "Supabase (Edge)",
+  "graphqlSampleDataSourceSupabaseTables": "Supabase (Tabellen)",
   "graphqlSampleDataSourceRemote": "Remote",
   "exampleWebsocketButton": "WebSocket-Demo öffnen",
   "@exampleWebsocketButton": {
