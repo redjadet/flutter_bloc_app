@@ -559,6 +559,8 @@
   "graphqlSampleServerError": "El servicio no está disponible. Vuelve a intentarlo más tarde.",
   "graphqlSampleDataError": "Se recibió una respuesta inesperada. Intenta de nuevo.",
   "graphqlSampleDataSourceCache": "Caché",
+  "graphqlSampleDataSourceSupabaseEdge": "Supabase (Edge)",
+  "graphqlSampleDataSourceSupabaseTables": "Supabase (Tablas)",
   "graphqlSampleDataSourceRemote": "Remoto",
   "exampleWebsocketButton": "Abrir demostración de WebSocket",
   "@exampleWebsocketButton": {

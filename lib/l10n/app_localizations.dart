@@ -1556,6 +1556,18 @@ abstract class AppLocalizations {
   /// **'Cache'**
   String get graphqlSampleDataSourceCache;
 
+  /// Badge label when GraphQL data is returned by Supabase Edge Function
+  ///
+  /// In en, this message translates to:
+  /// **'Supabase (Edge)'**
+  String get graphqlSampleDataSourceSupabaseEdge;
+
+  /// Badge label when GraphQL data is read from Supabase tables
+  ///
+  /// In en, this message translates to:
+  /// **'Supabase (Tables)'**
+  String get graphqlSampleDataSourceSupabaseTables;
+
   /// Badge label when GraphQL data is from remote server
   ///
   /// In en, this message translates to:

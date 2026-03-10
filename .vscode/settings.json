@@ -16,7 +16,9 @@
   "dart.flutterShowStructuredErrors": true,
   "dart.flutterCreateOrganization": "com.example",
   "dart.flutterOpenDevTools": "flutter",
-  "editor.rulers": [100],
+  "editor.rulers": [
+    100
+  ],
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "files.trimTrailingWhitespace": true,
@@ -100,7 +102,9 @@
       "source.fixAll": "explicit",
       "source.organizeImports": "explicit"
     },
-    "editor.rulers": [100],
+    "editor.rulers": [
+      100
+    ],
     "editor.formatOnSaveMode": "modificationsIfAvailable",
     "editor.inlayHints.enabled": "on"
   },
@@ -147,5 +151,14 @@
   },
   "[markdown]": {
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
-  }
+  },
+  "typescript.tsserver.exclude": [
+    "supabase/functions/**"
+  ],
+  "javascript.tsserver.exclude": [
+    "supabase/functions/**"
+  ],
+  "deno.enablePaths": [
+    "supabase/functions"
+  ]
 }

@@ -40,6 +40,20 @@ void main() {
       expect(find.byType(Box), findsOneWidget);
     });
 
+    testWidgets('shows localized supabase edge label', (final tester) async {
+      await pumpBadge(tester, source: GraphqlDataSource.supabaseEdge);
+
+      expect(find.text('Supabase (Edge)'), findsOneWidget);
+      expect(find.byType(Box), findsOneWidget);
+    });
+
+    testWidgets('shows localized supabase tables label', (final tester) async {
+      await pumpBadge(tester, source: GraphqlDataSource.supabaseTables);
+
+      expect(find.text('Supabase (Tables)'), findsOneWidget);
+      expect(find.byType(Box), findsOneWidget);
+    });
+
     testWidgets('renders nothing for unknown source', (final tester) async {
       await pumpBadge(tester, source: GraphqlDataSource.unknown);
 

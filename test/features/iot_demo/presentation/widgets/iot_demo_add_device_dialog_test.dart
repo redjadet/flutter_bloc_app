@@ -19,7 +19,10 @@ Future<void> _pumpDialog(
       home: Builder(
         builder: (final context) => Scaffold(
           body: Center(
-            child: TextButton(onPressed: () async => open(context), child: const Text('Open')),
+            child: TextButton(
+              onPressed: () async => open(context),
+              child: const Text('Open'),
+            ),
           ),
         ),
       ),
@@ -31,7 +34,9 @@ void main() {
   group('IotDemoAddDeviceDialogBody', () {
     final AppLocalizationsEn l10n = AppLocalizationsEn();
 
-    testWidgets('empty name shows error and does not close', (final tester) async {
+    testWidgets('empty name shows error and does not close', (
+      final tester,
+    ) async {
       IotDemoAddDeviceResult? result;
       await _pumpDialog(
         tester,
@@ -82,24 +87,30 @@ void main() {
     // Regression: Cupertino path must wrap content in Material so that
     // DropdownButtonFormField (and Slider) have a Material ancestor.
     // Without the wrapper, "No Material widget found" is thrown on iOS.
-    testWidgets('builds without error in Cupertino context (Material ancestor for '
-        'dropdown)', (final tester) async {
-      await _pumpDialog(
-        tester,
-        theme: ThemeData(platform: TargetPlatform.iOS),
-        open: (final ctx) async {
-          await showAdaptiveDialog<IotDemoAddDeviceResult>(
-            context: ctx,
-            builder: (_) => IotDemoAddDeviceDialogBody(l10n: l10n),
-          );
-        },
-      );
+    testWidgets(
+      'builds without error in Cupertino context (Material ancestor for '
+      'dropdown)',
+      (final tester) async {
+        await _pumpDialog(
+          tester,
+          theme: ThemeData(platform: TargetPlatform.iOS),
+          open: (final ctx) async {
+            await showAdaptiveDialog<IotDemoAddDeviceResult>(
+              context: ctx,
+              builder: (_) => IotDemoAddDeviceDialogBody(l10n: l10n),
+            );
+          },
+        );
 
-      await tester.tap(find.text('Open'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Open'));
+        await tester.pumpAndSettle();
 
-      expect(find.text(l10n.iotDemoAddDevice), findsOneWidget);
-      expect(find.byType(DropdownButtonFormField<IotDeviceType>), findsOneWidget);
-    });
+        expect(find.text(l10n.iotDemoAddDevice), findsOneWidget);
+        expect(
+          find.byType(DropdownButtonFormField<IotDeviceType>),
+          findsOneWidget,
+        );
+      },
+    );
   });
 }

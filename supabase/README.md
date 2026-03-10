@@ -1,4 +1,10 @@
-# Supabase migrations
+# Supabase (migrations and Edge Functions)
+
+## Edge Functions
+
+- **sync-graphql-countries** — Syncs continents/countries from the public GraphQL API into `graphql_continents` and `graphql_countries`. Source: `supabase/functions/sync-graphql-countries/`. Deployed with **verify_jwt: false** (RLS on tables enforces access). App flow: [GraphQL demo](../docs/offline_first/graphql_demo.md). Redeploy: MCP `user-supabase` → `deploy_edge_function` with `name: "sync-graphql-countries"`, `files` from `index.ts`, and `verify_jwt: false`; or CLI: `supabase functions deploy sync-graphql-countries --no-verify-jwt`.
+
+## Migrations
 
 Apply IoT demo migrations to your Supabase project in one of these ways.
 

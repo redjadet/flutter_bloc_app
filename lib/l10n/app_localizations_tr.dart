@@ -809,6 +809,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get graphqlSampleDataSourceCache => 'Önbellek';
 
   @override
+  String get graphqlSampleDataSourceSupabaseEdge => 'Supabase (Edge)';
+
+  @override
+  String get graphqlSampleDataSourceSupabaseTables => 'Supabase (Tablolar)';
+
+  @override
   String get graphqlSampleDataSourceRemote => 'Uzak';
 
   @override

@@ -816,6 +816,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get graphqlSampleDataSourceCache => 'Caché';
 
   @override
+  String get graphqlSampleDataSourceSupabaseEdge => 'Supabase (Edge)';
+
+  @override
+  String get graphqlSampleDataSourceSupabaseTables => 'Supabase (Tablas)';
+
+  @override
   String get graphqlSampleDataSourceRemote => 'Remoto';
 
   @override

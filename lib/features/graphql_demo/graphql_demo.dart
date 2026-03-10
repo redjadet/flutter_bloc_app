@@ -2,12 +2,15 @@
 library;
 
 // Data exports
+export 'data/auth_aware_graphql_remote_repository.dart';
 export 'data/countries_graphql_repository.dart';
+export 'data/supabase_graphql_demo_repository.dart';
 // Domain exports
 export 'domain/graphql_country.dart';
 export 'domain/graphql_data_source.dart';
 export 'domain/graphql_demo_exception.dart';
 export 'domain/graphql_demo_repository.dart';
+export 'domain/graphql_remote_repository.dart';
 // Presentation exports
 export 'presentation/graphql_demo_cubit.dart';
 export 'presentation/graphql_demo_state.dart';

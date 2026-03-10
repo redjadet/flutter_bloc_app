@@ -52,6 +52,9 @@ assets/figma/
 # Fonts (binary files)
 assets/fonts/
 
+# Supabase Edge Functions (Deno/TypeScript; exclude from Dart/TS analysis)
+supabase/functions/
+
 # Third-Party Code
 # External dependencies shouldn't be indexed
 third_party/
@@ -81,7 +84,6 @@ macos/Runner/GoogleService-Info.plist
 lib/firebase_options.dart
 
 # Documentation that's git-ignored (internal notes)
-# Note: AGENTS.md is kept for AI context as it contains project rules and patterns
 GEMINI.md
 INTERVIEW_QA.md
 

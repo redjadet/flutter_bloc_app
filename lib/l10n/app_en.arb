@@ -1052,6 +1052,14 @@
   "@graphqlSampleDataSourceCache": {
     "description": "Badge label when GraphQL data is from local cache"
   },
+  "graphqlSampleDataSourceSupabaseEdge": "Supabase (Edge)",
+  "@graphqlSampleDataSourceSupabaseEdge": {
+    "description": "Badge label when GraphQL data is returned by Supabase Edge Function"
+  },
+  "graphqlSampleDataSourceSupabaseTables": "Supabase (Tables)",
+  "@graphqlSampleDataSourceSupabaseTables": {
+    "description": "Badge label when GraphQL data is read from Supabase tables"
+  },
   "graphqlSampleDataSourceRemote": "Remote",
   "@graphqlSampleDataSourceRemote": {
     "description": "Badge label when GraphQL data is from remote server"

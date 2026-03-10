@@ -5,7 +5,7 @@ A reference Flutter application that demonstrates clean architecture, offline-fi
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.4-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.1-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-73%2E52%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-73%2E09%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
 [![State Management](https://img.shields.io/badge/State%20Management-BLOC%2FCubit-2196F3.svg)](https://pub.dev/packages/flutter_bloc)
@@ -35,7 +35,7 @@ This codebase focuses on maintainability, correctness, and performance:
 - Offline-first chat (Hugging Face inference) with local queueing
 - GenUI Demo (AI-generated dynamic UI with Google Gemini)
 - Maps (Google Maps with Apple Maps fallback)
-- GraphQL countries browser
+- GraphQL countries browser (offline-first; [Supabase Edge/tables when signed in](docs/offline_first/graphql_demo.md))
 - WebSocket demo with reconnect logic
 - Search, profile, and todo list features
 - Charts, markdown editor, and whiteboard samples
@@ -52,7 +52,7 @@ For entry points and module details, see [Feature Overview](docs/feature_overvie
 Some features require API keys or platform setup to fully enable:
 
 - **Firebase** (Auth, Remote Config, Realtime Database, etc.) – config files are gitignored. See [Firebase Setup](docs/firebase_setup.md) for how to run the app with Firebase.
-- **Supabase** (IoT demo backend + optional Auth page) – `SUPABASE_URL` and `SUPABASE_ANON_KEY` in secrets; see [Security & Secrets](docs/security_and_secrets.md), [Supabase migrations](supabase/README.md), and [Authentication](docs/authentication.md#supabase-auth-optional-separate-page).
+- **Supabase** (IoT demo, GraphQL demo Edge/tables, optional Auth) – `SUPABASE_URL` and `SUPABASE_ANON_KEY` in secrets; see [Security & Secrets](docs/security_and_secrets.md), [Supabase README](supabase/README.md) (migrations + Edge Functions), and [Authentication](docs/authentication.md#supabase-auth-optional-separate-page).
 - Google Maps (Android/iOS keys)
 - Hugging Face Inference API
 - Google Gemini API (for GenUI Demo)
