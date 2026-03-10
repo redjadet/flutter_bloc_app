@@ -4,7 +4,7 @@ This document defines how the IoT demo feature adopts the shared offline-first s
 
 ## Goals
 
-- **Auth gate**: User must sign in with Supabase before accessing the IoT demo page; unauthenticated users are redirected to `/supabase-auth` with return path `/iot-demo`.
+- **Auth gate**: When Supabase is configured, the user must sign in before accessing the IoT demo page (unauthenticated users are redirected to `/supabase-auth` with return path `/iot-demo`). When Supabase is not configured, the IoT demo page is shown in local-only mode (no remote sync or auth required).
 - All device data comes from Supabase `iot_devices` table (per user via RLS); local Hive is the per-user cache and first read.
 - Connect, disconnect, send-command, and add-device actions write to local first, then enqueue sync operations with `supabaseUserId`; when online, operations for the current user are applied to Supabase.
 - UI always reads from local (instant); sync status is logged only. Sync diagnostics visible in Settings when dev/qa mode is active.
@@ -56,7 +56,7 @@ This document defines how the IoT demo feature adopts the shared offline-first s
 
 ## Implementation Status
 
-- Auth gate: IoT demo route redirects to counter if Supabase not initialized, to `/supabase-auth?redirect=%2Fiot-demo` when not signed in; `SupabaseAuthPage` supports `redirectAfterLogin` and navigates after sign-in.
+- Auth gate: When Supabase is not configured, the IoT demo page is shown (local-only mode). When Supabase is configured but the user is not signed in, redirect to `/supabase-auth?redirect=%2Fiot-demo`; `SupabaseAuthPage` supports `redirectAfterLogin` and navigates after sign-in.
 - `PersistentIotDemoRepository`: per-user box, `supabaseUserId` required; empty storage returns empty list (no shared defaults).
 - `OfflineFirstIotDemoRepository`: getCurrentSupabaseUserId + getPersistentRepository factory; payload includes `supabaseUserId`; processOperation skips legacy/different-user ops.
 - Sync: `getPendingOperations(supabaseUserIdFilter)`, `runSyncCycle(supabaseUserIdForUserScopedSync)`; coordinator passes current Supabase user.
