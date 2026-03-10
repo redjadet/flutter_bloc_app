@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ChartState {
 
- ViewStatus get status; List<ChartPoint> get points; String? get errorMessage; bool get zoomEnabled;
+ ViewStatus get status; List<ChartPoint> get points; String? get errorMessage; bool get zoomEnabled; ChartDataSource get dataSource;
 /// Create a copy of ChartState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ChartStateCopyWith<ChartState> get copyWith => _$ChartStateCopyWithImpl<ChartSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChartState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.points, points)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.zoomEnabled, zoomEnabled) || other.zoomEnabled == zoomEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChartState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.points, points)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.zoomEnabled, zoomEnabled) || other.zoomEnabled == zoomEnabled)&&(identical(other.dataSource, dataSource) || other.dataSource == dataSource));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(points),errorMessage,zoomEnabled);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(points),errorMessage,zoomEnabled,dataSource);
 
 @override
 String toString() {
-  return 'ChartState(status: $status, points: $points, errorMessage: $errorMessage, zoomEnabled: $zoomEnabled)';
+  return 'ChartState(status: $status, points: $points, errorMessage: $errorMessage, zoomEnabled: $zoomEnabled, dataSource: $dataSource)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ChartStateCopyWith<$Res>  {
   factory $ChartStateCopyWith(ChartState value, $Res Function(ChartState) _then) = _$ChartStateCopyWithImpl;
 @useResult
 $Res call({
- ViewStatus status, List<ChartPoint> points, String? errorMessage, bool zoomEnabled
+ ViewStatus status, List<ChartPoint> points, String? errorMessage, bool zoomEnabled, ChartDataSource dataSource
 });
 
 
@@ -62,13 +62,14 @@ class _$ChartStateCopyWithImpl<$Res>
 
 /// Create a copy of ChartState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? points = null,Object? errorMessage = freezed,Object? zoomEnabled = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? points = null,Object? errorMessage = freezed,Object? zoomEnabled = null,Object? dataSource = null,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ViewStatus,points: null == points ? _self.points : points // ignore: cast_nullable_to_non_nullable
 as List<ChartPoint>,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,zoomEnabled: null == zoomEnabled ? _self.zoomEnabled : zoomEnabled // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,dataSource: null == dataSource ? _self.dataSource : dataSource // ignore: cast_nullable_to_non_nullable
+as ChartDataSource,
   ));
 }
 
@@ -153,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ViewStatus status,  List<ChartPoint> points,  String? errorMessage,  bool zoomEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ViewStatus status,  List<ChartPoint> points,  String? errorMessage,  bool zoomEnabled,  ChartDataSource dataSource)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ChartState() when $default != null:
-return $default(_that.status,_that.points,_that.errorMessage,_that.zoomEnabled);case _:
+return $default(_that.status,_that.points,_that.errorMessage,_that.zoomEnabled,_that.dataSource);case _:
   return orElse();
 
 }
@@ -174,10 +175,10 @@ return $default(_that.status,_that.points,_that.errorMessage,_that.zoomEnabled);
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ViewStatus status,  List<ChartPoint> points,  String? errorMessage,  bool zoomEnabled)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ViewStatus status,  List<ChartPoint> points,  String? errorMessage,  bool zoomEnabled,  ChartDataSource dataSource)  $default,) {final _that = this;
 switch (_that) {
 case _ChartState():
-return $default(_that.status,_that.points,_that.errorMessage,_that.zoomEnabled);case _:
+return $default(_that.status,_that.points,_that.errorMessage,_that.zoomEnabled,_that.dataSource);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +195,10 @@ return $default(_that.status,_that.points,_that.errorMessage,_that.zoomEnabled);
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ViewStatus status,  List<ChartPoint> points,  String? errorMessage,  bool zoomEnabled)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ViewStatus status,  List<ChartPoint> points,  String? errorMessage,  bool zoomEnabled,  ChartDataSource dataSource)?  $default,) {final _that = this;
 switch (_that) {
 case _ChartState() when $default != null:
-return $default(_that.status,_that.points,_that.errorMessage,_that.zoomEnabled);case _:
+return $default(_that.status,_that.points,_that.errorMessage,_that.zoomEnabled,_that.dataSource);case _:
   return null;
 
 }
@@ -209,7 +210,7 @@ return $default(_that.status,_that.points,_that.errorMessage,_that.zoomEnabled);
 
 
 class _ChartState extends ChartState {
-  const _ChartState({this.status = ViewStatus.initial, final  List<ChartPoint> points = const <ChartPoint>[], this.errorMessage, this.zoomEnabled = false}): _points = points,super._();
+  const _ChartState({this.status = ViewStatus.initial, final  List<ChartPoint> points = const <ChartPoint>[], this.errorMessage, this.zoomEnabled = false, this.dataSource = ChartDataSource.unknown}): _points = points,super._();
   
 
 @override@JsonKey() final  ViewStatus status;
@@ -222,6 +223,7 @@ class _ChartState extends ChartState {
 
 @override final  String? errorMessage;
 @override@JsonKey() final  bool zoomEnabled;
+@override@JsonKey() final  ChartDataSource dataSource;
 
 /// Create a copy of ChartState
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +235,16 @@ _$ChartStateCopyWith<_ChartState> get copyWith => __$ChartStateCopyWithImpl<_Cha
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChartState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._points, _points)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.zoomEnabled, zoomEnabled) || other.zoomEnabled == zoomEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChartState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._points, _points)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.zoomEnabled, zoomEnabled) || other.zoomEnabled == zoomEnabled)&&(identical(other.dataSource, dataSource) || other.dataSource == dataSource));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_points),errorMessage,zoomEnabled);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_points),errorMessage,zoomEnabled,dataSource);
 
 @override
 String toString() {
-  return 'ChartState(status: $status, points: $points, errorMessage: $errorMessage, zoomEnabled: $zoomEnabled)';
+  return 'ChartState(status: $status, points: $points, errorMessage: $errorMessage, zoomEnabled: $zoomEnabled, dataSource: $dataSource)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$ChartStateCopyWith<$Res> implements $ChartStateCopyWith<$
   factory _$ChartStateCopyWith(_ChartState value, $Res Function(_ChartState) _then) = __$ChartStateCopyWithImpl;
 @override @useResult
 $Res call({
- ViewStatus status, List<ChartPoint> points, String? errorMessage, bool zoomEnabled
+ ViewStatus status, List<ChartPoint> points, String? errorMessage, bool zoomEnabled, ChartDataSource dataSource
 });
 
 
@@ -270,13 +272,14 @@ class __$ChartStateCopyWithImpl<$Res>
 
 /// Create a copy of ChartState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? points = null,Object? errorMessage = freezed,Object? zoomEnabled = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? points = null,Object? errorMessage = freezed,Object? zoomEnabled = null,Object? dataSource = null,}) {
   return _then(_ChartState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ViewStatus,points: null == points ? _self._points : points // ignore: cast_nullable_to_non_nullable
 as List<ChartPoint>,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,zoomEnabled: null == zoomEnabled ? _self.zoomEnabled : zoomEnabled // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,dataSource: null == dataSource ? _self.dataSource : dataSource // ignore: cast_nullable_to_non_nullable
+as ChartDataSource,
   ));
 }
 

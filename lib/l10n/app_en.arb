@@ -996,6 +996,22 @@
   "@chartZoomToggleLabel": {
     "description": "Toggle label for enabling pinch-to-zoom on the chart"
   },
+  "chartDataSourceCache": "Cache",
+  "@chartDataSourceCache": {
+    "description": "Chart data source badge when data is from local cache"
+  },
+  "chartDataSourceSupabaseEdge": "Supabase (Edge)",
+  "@chartDataSourceSupabaseEdge": {
+    "description": "Chart data source badge when data is from Supabase Edge Function"
+  },
+  "chartDataSourceSupabaseTables": "Supabase (Tables)",
+  "@chartDataSourceSupabaseTables": {
+    "description": "Chart data source badge when data is from Supabase table fallback"
+  },
+  "chartDataSourceRemote": "Remote",
+  "@chartDataSourceRemote": {
+    "description": "Chart data source badge when data is from direct remote API"
+  },
   "graphqlSampleTitle": "GraphQL Countries",
   "@graphqlSampleTitle": {
     "description": "App bar title for the GraphQL demo page"

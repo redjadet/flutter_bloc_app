@@ -763,6 +763,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get chartZoomToggleLabel => 'Yakınlaştırmayı etkinleştir';
 
   @override
+  String get chartDataSourceCache => 'Önbellek';
+
+  @override
+  String get chartDataSourceSupabaseEdge => 'Supabase (Edge)';
+
+  @override
+  String get chartDataSourceSupabaseTables => 'Supabase (Tablolar)';
+
+  @override
+  String get chartDataSourceRemote => 'Uzak';
+
+  @override
   String get graphqlSampleTitle => 'GraphQL Ülkeleri';
 
   @override

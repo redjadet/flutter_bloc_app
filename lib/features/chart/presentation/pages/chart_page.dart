@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/cubit/chart_cubit.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_content_list.dart';
+import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_data_source_badge.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_loading_list.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -67,44 +69,65 @@ class _ChartView extends StatelessWidget {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.chartPageTitle,
-      body: RefreshIndicator(
-        onRefresh: () => context.cubit<ChartCubit>().refresh(),
-        child: ViewStatusSwitcher<ChartCubit, ChartState, _ChartViewData>(
-          selector: (final state) => _ChartViewData(
-            showLoading:
-                (state.status.isInitial || state.status.isLoading) &&
-                state.points.isEmpty,
-            showError: state.status.isError,
-            showEmpty: state.points.isEmpty,
-            points: state.points,
-            zoomEnabled: state.zoomEnabled,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          TypeSafeBlocSelector<ChartCubit, ChartState, ChartDataSource>(
+            selector: (final state) => state.dataSource,
+            builder: (final context, final source) => Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  right: context.pageHorizontalPadding,
+                  bottom: context.responsiveGapS,
+                ),
+                child: ChartDataSourceBadge(source: source),
+              ),
+            ),
           ),
-          isLoading: (final data) => data.showLoading,
-          isError: (final data) => data.showError,
-          loadingBuilder: (final _) => const ChartLoadingList(),
-          errorBuilder: (final context, final _) => CommonEmptyState(
-            message: l10n.chartPageError,
-            icon: Icons.error_outline,
-          ),
-          builder: (final context, final data) {
-            if (data.showEmpty) {
-              return CommonEmptyState(
-                message: l10n.chartPageEmpty,
-              );
-            }
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () => context.cubit<ChartCubit>().refresh(),
+              child: ViewStatusSwitcher<ChartCubit, ChartState, _ChartViewData>(
+                selector: (final state) => _ChartViewData(
+                  showLoading:
+                      (state.status.isInitial || state.status.isLoading) &&
+                      state.points.isEmpty,
+                  showError: state.status.isError,
+                  showEmpty: state.points.isEmpty,
+                  points: state.points,
+                  zoomEnabled: state.zoomEnabled,
+                ),
+                isLoading: (final data) => data.showLoading,
+                isError: (final data) => data.showError,
+                loadingBuilder: (final _) => const ChartLoadingList(),
+                errorBuilder: (final context, final _) => CommonEmptyState(
+                  message: l10n.chartPageError,
+                  icon: Icons.error_outline,
+                ),
+                builder: (final context, final data) {
+                  if (data.showEmpty) {
+                    return CommonEmptyState(
+                      message: l10n.chartPageEmpty,
+                    );
+                  }
 
-            final locale = Localizations.localeOf(context).toString();
-            final dateFormat = DateFormat.Md(locale);
-            return ChartContentList(
-              l10n: l10n,
-              points: data.points,
-              dateFormat: dateFormat,
-              zoomEnabled: data.zoomEnabled,
-              onZoomChanged: (final value) =>
-                  context.cubit<ChartCubit>().setZoomEnabled(isEnabled: value),
-            );
-          },
-        ),
+                  final locale = Localizations.localeOf(context).toString();
+                  final dateFormat = DateFormat.Md(locale);
+                  return ChartContentList(
+                    l10n: l10n,
+                    points: data.points,
+                    dateFormat: dateFormat,
+                    zoomEnabled: data.zoomEnabled,
+                    onZoomChanged: (final value) => context
+                        .cubit<ChartCubit>()
+                        .setZoomEnabled(isEnabled: value),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

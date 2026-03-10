@@ -7,6 +7,7 @@ abstract class ChartState with _$ChartState {
     @Default(<ChartPoint>[]) final List<ChartPoint> points,
     final String? errorMessage,
     @Default(false) final bool zoomEnabled,
+    @Default(ChartDataSource.unknown) final ChartDataSource dataSource,
   }) = _ChartState;
 
   const ChartState._();

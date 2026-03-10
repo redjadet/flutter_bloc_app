@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
@@ -29,6 +30,7 @@ class ChartCubit extends Cubit<ChartState> {
         state.copyWith(
           status: ViewStatus.success,
           points: cached,
+          dataSource: ChartDataSource.cache,
         ),
       );
     }
@@ -67,7 +69,9 @@ class ChartCubit extends Cubit<ChartState> {
     );
 
     await CubitExceptionHandler.executeAsync(
-      operation: _repository.fetchTrendingCounts,
+      operation: resetExistingData
+          ? _repository.fetchTrendingCounts
+          : _repository.refreshTrendingCounts,
       isAlive: () => !isClosed,
       onSuccess: (final points) {
         if (isClosed || requestId != _fetchRequestId) return;
@@ -75,6 +79,7 @@ class ChartCubit extends Cubit<ChartState> {
           state.copyWith(
             status: ViewStatus.success,
             points: points.isEmpty ? const <ChartPoint>[] : points,
+            dataSource: _repository.lastSource,
           ),
         );
       },
@@ -85,6 +90,7 @@ class ChartCubit extends Cubit<ChartState> {
             status: ViewStatus.error,
             errorMessage: errorMessage,
             points: state.points,
+            dataSource: ChartDataSource.unknown,
           ),
         );
       },

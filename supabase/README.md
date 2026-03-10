@@ -3,10 +3,15 @@
 ## Edge Functions
 
 - **sync-graphql-countries** — Syncs continents/countries from the public GraphQL API into `graphql_continents` and `graphql_countries`. Source: `supabase/functions/sync-graphql-countries/`. Deployed with **verify_jwt: false** (RLS on tables enforces access). App flow: [GraphQL demo](../docs/offline_first/graphql_demo.md). Redeploy: MCP `user-supabase` → `deploy_edge_function` with `name: "sync-graphql-countries"`, `files` from `index.ts`, and `verify_jwt: false`; or CLI: `supabase functions deploy sync-graphql-countries --no-verify-jwt`.
+- **sync-chart-trending** — Syncs Bitcoin 7-day market chart from CoinGecko into `chart_trending_points`. Source: `supabase/functions/sync-chart-trending/`. Deployed with **verify_jwt: false**. App flow: [Chart demo](../docs/offline_first/chart_demo.md). Redeploy: MCP `user-supabase` → `deploy_edge_function` with `name: "sync-chart-trending"`, `files` including **both** `index.ts` and `chart_trending_sync.ts` (index imports the helper), and `verify_jwt: false`; or CLI: `supabase functions deploy sync-chart-trending --no-verify-jwt` (CLI bundles the whole folder).
+
+**Prime tables (one-off sync):** From repo root, run `./script/prime_supabase_tables.sh`. Requires `SUPABASE_URL` and `SUPABASE_ANON_KEY` in the environment or in `assets/config/secrets.json`. Invokes both functions once so the app can read from tables on first load.
 
 ## Migrations
 
-Apply IoT demo migrations to your Supabase project in one of these ways.
+Migrations in `supabase/migrations/` cover the **IoT demo** (e.g. `iot_devices`), **GraphQL demo** (`graphql_continents`, `graphql_countries`), and **Chart demo** (`chart_trending_points`). For the full list and MCP names, see [Supabase migrations log](../docs/offline_first/supabase_migrations.md).
+
+Apply migrations in one of these ways.
 
 ## Option A: Supabase CLI (recommended)
 
@@ -28,18 +33,17 @@ Apply IoT demo migrations to your Supabase project in one of these ways.
    npx supabase db push
    ```
 
-The migration is idempotent (safe to run multiple times).
+Migrations are idempotent (safe to run multiple times).
 
-## Option B: Dashboard SQL editor
+## Option B: Dashboard SQL editor or MCP
 
-1. Open [Supabase Dashboard](https://app.supabase.com) → your project → **SQL Editor**.
-2. Copy the contents of `docs/offline_first/supabase_iot_demo_user_id_migration.sql` (or the file in `migrations/`).
-3. Run the script. The migration is idempotent (safe to run multiple times).
+- **Dashboard:** Open [Supabase Dashboard](https://app.supabase.com) → your project → **SQL Editor**. Copy the contents of the desired file from `supabase/migrations/` and run the script.
+- **MCP:** Use `user-supabase` → `apply_migration` with the migration name and full SQL (see [supabase_migrations.md](../docs/offline_first/supabase_migrations.md)). Call `list_migrations` first to avoid applying the same migration twice.
 
 ## Prerequisites
 
-- The `public.iot_devices` table must already exist (create it in Dashboard or via an earlier migration if needed).
-- If you have existing shared rows without `user_id`, run `DELETE FROM public.iot_devices WHERE user_id IS NULL;` and optionally set the column NOT NULL before or after applying this migration.
+- For IoT demo migrations: the `public.iot_devices` table must already exist (create it in Dashboard or via an earlier migration if needed).
+- If you have existing `iot_devices` rows without `user_id`, run `DELETE FROM public.iot_devices WHERE user_id IS NULL;` and optionally set the column NOT NULL before or after applying the user_id migration.
 
 ## Advisors
 

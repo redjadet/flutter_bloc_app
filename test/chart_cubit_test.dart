@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/cubit/chart_cubit.dart';
@@ -62,7 +63,7 @@ void main() {
   );
 
   blocTest<ChartCubit, ChartState>(
-    'emits failure when repository throws',
+    'emits failure and dataSource unknown when repository throws',
     build: () => ChartCubit(
       repository: _StubChartRepository(() async => throw StateError('boom')),
     ),
@@ -75,7 +76,12 @@ void main() {
       ),
       isA<ChartState>()
           .having((final state) => state.status, 'status', ViewStatus.error)
-          .having((final state) => state.points, 'points', equals(const [])),
+          .having((final state) => state.points, 'points', equals(const []))
+          .having(
+            (final state) => state.dataSource,
+            'dataSource',
+            ChartDataSource.unknown,
+          ),
     ],
   );
 
@@ -217,6 +223,9 @@ class _QueueChartRepository extends ChartRepository {
     }
     return _responses.removeFirst();
   }
+
+  @override
+  Future<List<ChartPoint>> refreshTrendingCounts() => fetchTrendingCounts();
 }
 
 class _RaceChartRepository extends ChartRepository {
@@ -233,6 +242,9 @@ class _RaceChartRepository extends ChartRepository {
     }
     return _second.future;
   }
+
+  @override
+  Future<List<ChartPoint>> refreshTrendingCounts() => fetchTrendingCounts();
 
   void completeFirst(final List<ChartPoint> points) {
     if (!_first.isCompleted) {

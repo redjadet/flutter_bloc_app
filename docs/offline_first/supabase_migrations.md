@@ -14,6 +14,7 @@ All Supabase schema changes are documented here. Apply migrations via MCP
 | `supabase/migrations/20260309200000_iot_devices_toggled_on_index.sql` | `iot_devices_toggled_on_index` | Partial index on `(user_id, toggled_on)` WHERE `toggled_on = true` for On-only queries. | Table `public.iot_devices`. |
 | `supabase/migrations/20260309210000_iot_devices_user_id_toggled_on_full_index.sql` | `iot_devices_user_id_toggled_on_full_index` | Composite index on `(user_id, toggled_on)` for All/On-only/Off-only filtered list queries used by the app. | Table `public.iot_devices`. |
 | `supabase/migrations/20260310120000_graphql_countries_tables.sql` | `graphql_countries_tables` | Add `public.graphql_continents` / `public.graphql_countries` for the GraphQL demo. Synced from `countries.trevorblades.com` via Edge Function `sync-graphql-countries` (source: `supabase/functions/sync-graphql-countries/`, deployed with `verify_jwt: false`). App calls Edge first when signed in, then table fallback; see [GraphQL demo](graphql_demo.md). | None. |
+| `supabase/migrations/20260310180000_chart_trending_tables.sql` | `chart_trending_tables` | Add `public.chart_trending_points` (date_utc PK, value, updated_at) for the chart demo. Synced from CoinGecko via Edge Function `sync-chart-trending` (source: `supabase/functions/sync-chart-trending/`, deployed with `verify_jwt: false`). App calls Edge first when signed in, then table fallback; see [Chart demo](chart_demo.md). | None. |
 
 - Doc copy (first migration): `docs/offline_first/supabase_iot_demo_user_id_migration.sql`.
 - Idempotent: safe to re-run (IF NOT EXISTS, DROP IF EXISTS, conditional publication add).
@@ -37,4 +38,7 @@ versioned in this repo as separate files.
 
 When adding a new migration: add a row to "Migrations in this repo" and, if
 applied via MCP with a distinct name, add that name to the table so agents
-can avoid duplicate application.
+can avoid duplicate application. Before applying via MCP, call
+`list_migrations` to see which names are already applied (e.g.
+`graphql_countries_tables`, `chart_trending_tables`) and skip or reuse as
+appropriate.

@@ -1472,6 +1472,30 @@ abstract class AppLocalizations {
   /// **'Enable pinch zoom'**
   String get chartZoomToggleLabel;
 
+  /// Chart data source badge when data is from local cache
+  ///
+  /// In en, this message translates to:
+  /// **'Cache'**
+  String get chartDataSourceCache;
+
+  /// Chart data source badge when data is from Supabase Edge Function
+  ///
+  /// In en, this message translates to:
+  /// **'Supabase (Edge)'**
+  String get chartDataSourceSupabaseEdge;
+
+  /// Chart data source badge when data is from Supabase table fallback
+  ///
+  /// In en, this message translates to:
+  /// **'Supabase (Tables)'**
+  String get chartDataSourceSupabaseTables;
+
+  /// Chart data source badge when data is from direct remote API
+  ///
+  /// In en, this message translates to:
+  /// **'Remote'**
+  String get chartDataSourceRemote;
+
   /// App bar title for the GraphQL demo page
   ///
   /// In en, this message translates to:

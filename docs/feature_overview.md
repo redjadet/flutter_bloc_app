@@ -23,7 +23,7 @@ This document lists feature modules with entry points and notes. It is intended 
 | Settings | `lib/features/settings/` | Theme, locale, app info, diagnostics. |
 | Profile | `lib/features/profile/` | Offline-first profile cache. |
 | Todo List | `lib/features/todo_list/` | Realtime database + offline-first implementation. |
-| Charts | `lib/features/chart/` | Data visualization with isolated rebuilds. |
+| Charts | `lib/features/chart/` | Offline-first Bitcoin 7-day chart. When Supabase is configured and user is signed in: Edge Function then table fallback; otherwise direct CoinGecko. See [Chart demo](offline_first/chart_demo.md). |
 | WebSocket | `lib/features/websocket/` | Reconnect logic and message streaming. |
 | Maps | `lib/features/google_maps/` | Google Maps with Apple Maps fallback. |
 | Calculator | `lib/features/calculator/` | Custom keypad and summary flow. |
@@ -47,7 +47,7 @@ This document lists feature modules with entry points and notes. It is intended 
 Some modules require platform keys or API access:
 
 - **Firebase** features require `google-services.json`, `GoogleService-Info.plist`, and `lib/firebase_options.dart` (all gitignored). See [Firebase Setup](firebase_setup.md) for full setup; the app runs without them with Firebase features disabled.
-- **Supabase** (IoT demo backend + optional Auth page) requires `SUPABASE_URL` and `SUPABASE_ANON_KEY` in secrets (e.g. `assets/config/secrets.json` or `--dart-define`). When missing, the Supabase auth page shows "not configured"; the IoT demo remains accessible in local-only mode (no remote sync).
+- **Supabase** (IoT demo, GraphQL demo, Chart demo backends + optional Auth page) requires `SUPABASE_URL` and `SUPABASE_ANON_KEY` in secrets (e.g. `assets/config/secrets.json` or `--dart-define`). When missing, the Supabase auth page shows "not configured"; the IoT demo remains accessible in local-only mode (no remote sync); Chart and GraphQL demos use direct remote APIs.
 - Chat requires a Hugging Face API key.
 - GenUI Demo requires a Google Gemini API key (`GEMINI_API_KEY`).
 - Maps require Google Maps API keys (Android/iOS).

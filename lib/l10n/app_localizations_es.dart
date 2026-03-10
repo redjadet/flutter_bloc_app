@@ -768,6 +768,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get chartZoomToggleLabel => 'Activar zoom con gestos';
 
   @override
+  String get chartDataSourceCache => 'Caché';
+
+  @override
+  String get chartDataSourceSupabaseEdge => 'Supabase (Edge)';
+
+  @override
+  String get chartDataSourceSupabaseTables => 'Supabase (Tablas)';
+
+  @override
+  String get chartDataSourceRemote => 'Remoto';
+
+  @override
   String get graphqlSampleTitle => 'Países GraphQL';
 
   @override
