@@ -70,7 +70,7 @@ This document lists all the technologies, packages, and tools used in this Flutt
 
 ## Supabase
 
-- `supabase_flutter` - Supabase client; used as the backend for the IoT demo (per-user device data with RLS + migrations) and for the optional Supabase Auth page (email/password sign-in/sign-up on a dedicated route). Initialized at bootstrap when `SUPABASE_URL` and `SUPABASE_ANON_KEY` are configured. Does not replace Firebase for app-wide auth. See [Supabase migrations](../supabase/README.md) and [Authentication](authentication.md#supabase-auth-optional-separate-page).
+- `supabase_flutter` - Supabase client; used as the backend for the IoT demo (per-user device data with RLS + migrations) and for the optional Supabase Auth page (email/password sign-in/sign-up on a dedicated route). Initialized at bootstrap when `SUPABASE_URL` and `SUPABASE_ANON_KEY` are configured. When Supabase is not configured, the IoT demo runs in local-only mode. Does not replace Firebase for app-wide auth. See [Supabase migrations](../supabase/README.md) and [Authentication](authentication.md#supabase-auth-optional-separate-page).
 
 ## Dependency Injection
 

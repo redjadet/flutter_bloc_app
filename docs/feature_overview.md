@@ -30,7 +30,7 @@ This document lists feature modules with entry points and notes. It is intended 
 | Library Demo | `lib/features/library_demo/` | Figma-inspired UI showcase. |
 | Markdown Editor | `lib/app/router/deferred_pages/markdown_editor_page.dart` | Deferred feature with preview/rendering. |
 | Whiteboard | `lib/features/example/` | CustomPainter drawing demo. |
-| IoT Demo | `lib/features/iot_demo/` | Offline-first IoT device list + commands. Uses Supabase as a backend (RLS + migrations) for per-user device data. |
+| IoT Demo | `lib/features/iot_demo/` | Offline-first IoT device list + commands. When Supabase is configured, uses it as backend (RLS + migrations) for per-user device data; when not configured, runs in local-only mode. |
 | Supabase Auth | Settings → Integrations → Supabase Auth; route `/supabase-auth`. Code: `lib/features/supabase_auth/` | Optional email/password auth on a separate page. Does not replace Firebase for app-wide auth. Requires `SUPABASE_URL` and `SUPABASE_ANON_KEY` in secrets. See [Authentication](authentication.md#supabase-auth-optional-separate-page). |
 | WalletConnect Auth | **Example page** → “WalletConnect Auth (Demo)” button; route `/walletconnect-auth`. Code: `lib/features/walletconnect_auth/` | Demo: connect wallet (mock), link to Firebase Auth. Firestore: one doc per user at `users/{uid}` (linkage + profile). See [WalletConnect Auth Status](walletconnect_auth_status.md) for Firebase setup. |
 
@@ -47,7 +47,7 @@ This document lists feature modules with entry points and notes. It is intended 
 Some modules require platform keys or API access:
 
 - **Firebase** features require `google-services.json`, `GoogleService-Info.plist`, and `lib/firebase_options.dart` (all gitignored). See [Firebase Setup](firebase_setup.md) for full setup; the app runs without them with Firebase features disabled.
-- **Supabase** (IoT demo backend + optional Auth page) requires `SUPABASE_URL` and `SUPABASE_ANON_KEY` in secrets (e.g. `assets/config/secrets.json` or `--dart-define`). When missing, the Supabase auth page shows "not configured" and Supabase-backed features are disabled.
+- **Supabase** (IoT demo backend + optional Auth page) requires `SUPABASE_URL` and `SUPABASE_ANON_KEY` in secrets (e.g. `assets/config/secrets.json` or `--dart-define`). When missing, the Supabase auth page shows "not configured"; the IoT demo remains accessible in local-only mode (no remote sync).
 - Chat requires a Hugging Face API key.
 - GenUI Demo requires a Google Gemini API key (`GEMINI_API_KEY`).
 - Maps require Google Maps API keys (Android/iOS).

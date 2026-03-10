@@ -5,8 +5,9 @@ import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:go_router/go_router.dart';
 
-/// Gate that shows [child] only when Supabase is initialized and
-/// [getCurrentUser] returns a non-null user; otherwise redirects.
+/// Gate that shows [child] when either Supabase is not configured (local-only
+/// mode) or Supabase is initialized and [getCurrentUser] returns a non-null
+/// user; otherwise redirects to auth.
 ///
 /// Dependencies are injected so the feature stays free of DI (SoC).
 /// Route layer supplies paths and getCurrentUser from SupabaseAuthRepository.
@@ -72,7 +73,7 @@ class _IotDemoAuthGateState extends State<IotDemoAuthGate> {
     if (!mounted) return;
     try {
       if (!widget.isSupabaseInitialized) {
-        context.go(widget.counterPath);
+        if (mounted && !_allowed) setState(() => _allowed = true);
         return;
       }
       if (widget.getCurrentUser() == null) {

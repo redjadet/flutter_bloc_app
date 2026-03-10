@@ -55,5 +55,48 @@ void main() {
 
       expect(find.text('supabase auth'), findsOneWidget);
     });
+
+    testWidgets('shows child when Supabase is not configured', (
+      final tester,
+    ) async {
+      final StreamController<AuthUser?> authController =
+          StreamController<AuthUser?>.broadcast();
+      addTearDown(authController.close);
+      final GoRouter router = GoRouter(
+        initialLocation: '/',
+        routes: <GoRoute>[
+          GoRoute(
+            path: '/',
+            builder: (final context, final state) => IotDemoAuthGate(
+              isSupabaseInitialized: false,
+              getCurrentUser: () => null,
+              authStateChanges: authController.stream,
+              counterPath: '/counter',
+              supabaseAuthPath: '/supabase-auth',
+              redirectReturnPath: '/iot-demo',
+              child: const Scaffold(body: Text('iot child')),
+            ),
+          ),
+          GoRoute(
+            path: '/counter',
+            builder: (final context, final state) =>
+                const Scaffold(body: Text('counter')),
+          ),
+          GoRoute(
+            path: '/supabase-auth',
+            builder: (final context, final state) =>
+                const Scaffold(body: Text('supabase auth')),
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      await tester.pumpAndSettle();
+
+      expect(find.text('iot child'), findsOneWidget);
+      expect(find.text('counter'), findsNothing);
+      expect(find.text('supabase auth'), findsNothing);
+    });
   });
 }
