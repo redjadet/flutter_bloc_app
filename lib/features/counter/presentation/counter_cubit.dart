@@ -36,6 +36,8 @@ class CounterCubit extends _CounterCubitBase {
   }
 
   TimerDisposable? _initialLoadHandle;
+  int _initialLoadRequestId = 0;
+  int _localMutationRevision = 0;
 
   /// Throttle for manual +/− button taps only (not auto-decrement or restore).
   static const Duration _manualThrottle = Duration(milliseconds: 500);
@@ -43,25 +45,44 @@ class CounterCubit extends _CounterCubitBase {
   DateTime? _lastManualChangeAt;
 
   Future<void> loadInitial() async {
+    final int requestId = ++_initialLoadRequestId;
+    final int startingRevision = _localMutationRevision;
     emit(state.copyWith(status: ViewStatus.loading));
 
     if (_initialLoadDelay > Duration.zero) {
       _initialLoadHandle?.dispose();
       _initialLoadHandle = _timerService.runOnce(_initialLoadDelay, () {
         if (isClosed) return;
-        unawaited(_runLoadInitialAfterDelay());
+        unawaited(
+          _runLoadInitialAfterDelay(
+            requestId: requestId,
+            startingRevision: startingRevision,
+          ),
+        );
       });
       return;
     }
 
-    await _runLoadInitialAfterDelay();
+    await _runLoadInitialAfterDelay(
+      requestId: requestId,
+      startingRevision: startingRevision,
+    );
   }
 
-  Future<void> _runLoadInitialAfterDelay() async {
+  Future<void> _runLoadInitialAfterDelay({
+    required final int requestId,
+    required final int startingRevision,
+  }) async {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () async {
         final CounterSnapshot snapshot = await _repository.load();
-        if (isClosed) return;
+        if (isClosed || requestId != _initialLoadRequestId) {
+          return;
+        }
+        if (_localMutationRevision != startingRevision) {
+          _subscribeToRepository();
+          return;
+        }
         final RestorationResult restoration = restoreStateFromSnapshot(
           snapshot,
         );
@@ -102,6 +123,7 @@ class CounterCubit extends _CounterCubitBase {
     if (!_beginManualChange()) {
       return;
     }
+    _markLocalMutation();
     final CounterState next = _emitCountUpdate(count: state.count + 1);
     await _persistState(next);
   }
@@ -109,6 +131,7 @@ class CounterCubit extends _CounterCubitBase {
   Future<void> decrement() async {
     final CounterState current = state;
     if (current.count == 0) {
+      _markLocalMutation();
       if (isClosed) return;
       // Clear error first when already set so listener sees a transition and
       // shows the snackbar again on every decrement attempt at zero.
@@ -122,6 +145,7 @@ class CounterCubit extends _CounterCubitBase {
     if (!_beginManualChange()) {
       return;
     }
+    _markLocalMutation();
     final int newCount = current.count - 1;
     final CounterState next = _emitCountUpdate(count: newCount);
     await _persistState(next);
@@ -137,6 +161,10 @@ class CounterCubit extends _CounterCubitBase {
     }
     _lastManualChangeAt = now;
     return true;
+  }
+
+  void _markLocalMutation() {
+    _localMutationRevision++;
   }
 
   void clearError() {

@@ -60,6 +60,7 @@ Full documentation and suppression guidance is provided in the sections below.
 - **`check_dialog_controller_dispose.sh`**: Heuristic check for `TextEditingController` with `showDialog`/`showAdaptiveDialog` and dispose in `finally` (can cause "used after being disposed")
 - **`check_inherited_widget_in_create.sh`**: Prevents `context.l10n`/`Theme.of(context)` inside BlocProvider/Provider `create` (see Context & Async Safety below)
 - **`check_lifecycle_error_handling.sh`**: Snackbar via ErrorHandling, `stream.listen` onError, `context.mounted` after show\*Dialog (see Context & Async Safety below)
+- **`check_offline_first_remote_merge.sh`**: Regression tests ensuring offline-first repos do not overwrite newer unsynced local state with older remote (see Offline-first remote merge below)
 
 ## New Validation Scripts (Added 2025)
 
@@ -346,6 +347,26 @@ stream.listen((data) {
 - After `await show*Dialog`, add `if (!context.mounted) return;` before using `context`, `cubit`, or `onClose()`.
 
 **Suppression**: Add `// check-ignore: reason` on the violation line or line above.
+
+---
+
+#### `check_offline_first_remote_merge.sh`
+
+**Purpose**: Regression guard to catch bugs where offline-first repositories overwrite newer unsynced local state with an older remote snapshot (e.g. from a remote watch stream). That can cause UI flicker (e.g. counter up then down then up).
+
+**What it checks**:
+
+- Runs focused tests that assert: when local has unsynced changes, applying a remote snapshot with an older timestamp must not overwrite local. Tests live in `test/features/counter/data/offline_first_counter_repository_test.dart` (e.g. `remote watch does not overwrite newer unsynced local count`).
+
+**Why it matters**:
+
+- Offline-first repos merge remote watch into local state. If they apply remote whenever `remote.count != local.count` (or similar) without checking `synchronized` and `lastChanged`, a stale remote event can overwrite newer user changes.
+
+**Correct pattern**:
+
+- Before applying remote over local, use a `_shouldApplyRemote`-style check: when local is not synchronized, apply remote only if remote is strictly newer (e.g. `remote.lastChanged.isAfter(local.lastChanged)`). See `OfflineFirstCounterRepository._shouldApplyRemote` and AGENTS.md §5 Offline-first repositories.
+
+**Adding tests**: When adding a new offline-first repository that merges remote watch into local, add a regression test that emits an older remote snapshot and asserts local is unchanged; then add that test file to the `tests` array in `tool/check_offline_first_remote_merge.sh`.
 
 ---
 
@@ -677,6 +698,9 @@ bash tool/check_cubit_isclosed.sh
 
 # Check lifecycle and error-handling (snackbar, stream.listen onError, dialog mounted)
 bash tool/check_lifecycle_error_handling.sh
+
+# Check offline-first remote-merge regression (don't overwrite newer local with older remote)
+bash tool/check_offline_first_remote_merge.sh
 
 # Check for missing const constructors (heuristic)
 bash tool/check_missing_const.sh

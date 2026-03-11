@@ -25,6 +25,10 @@ bool shouldIgnoreRemoteSnapshot(
   final CounterState current,
   final CounterSnapshot snapshot,
 ) {
+  if (_isOlderThanCurrentState(current, snapshot)) {
+    return true;
+  }
+
   final bool countsEqual = snapshot.count == current.count;
   final bool timestampsEqual = () {
     final DateTime? a = snapshot.lastChanged;
@@ -33,5 +37,25 @@ bool shouldIgnoreRemoteSnapshot(
     if (a == null || b == null) return false;
     return a.millisecondsSinceEpoch == b.millisecondsSinceEpoch;
   }();
-  return countsEqual && timestampsEqual;
+  final bool syncMetadataEqual =
+      snapshot.lastSyncedAt == current.lastSyncedAt &&
+      snapshot.changeId == current.changeId;
+  return countsEqual && timestampsEqual && syncMetadataEqual;
+}
+
+bool _isOlderThanCurrentState(
+  final CounterState current,
+  final CounterSnapshot snapshot,
+) {
+  final DateTime? currentChanged = current.lastChanged;
+  if (currentChanged == null) {
+    return false;
+  }
+
+  final DateTime? snapshotChanged = snapshot.lastChanged;
+  if (snapshotChanged == null) {
+    return true;
+  }
+
+  return snapshotChanged.isBefore(currentChanged);
 }

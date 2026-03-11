@@ -168,7 +168,18 @@ class OfflineFirstCounterRepository
     final CounterSnapshot localSnapshot,
     final CounterSnapshot remoteSnapshot,
   ) {
-    // Apply when count differs (e.g. user edited only count in Firebase console)
+    // When we have local unsynced changes, never overwrite them with a remote
+    // snapshot unless the remote is clearly newer.
+    if (!localSnapshot.synchronized) {
+      final DateTime? remote = remoteSnapshot.lastChanged;
+      final DateTime? local = localSnapshot.lastChanged;
+      if (local == null) return true;
+      if (remote == null) return false;
+      return remote.isAfter(local);
+    }
+
+    // When local is synchronized, allow applying count-only edits (e.g. manual
+    // console edit) even if remote timestamp isn't newer.
     if (remoteSnapshot.count != localSnapshot.count) return true;
     final DateTime? remote = remoteSnapshot.lastChanged;
     final DateTime? local = localSnapshot.lastChanged;
