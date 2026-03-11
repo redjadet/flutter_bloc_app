@@ -16,10 +16,36 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 /// and commands via updates. When Supabase is not configured, throws or
 /// returns empty; used by the offline-first repository for pull and sync.
 class SupabaseIotDemoRepository implements IotDemoRepository {
+  SupabaseIotDemoRepository({
+    final Future<Object?> Function(IotDemoDeviceFilter filter)? fetchRows,
+    final Future<void> Function(
+      String deviceId,
+      Map<String, dynamic> updates,
+    )?
+    updateDevice,
+    final Future<void> Function(Map<String, dynamic> payload)? insertDevice,
+    final Future<Object?> Function(String deviceId)? fetchToggleState,
+    final String? Function()? readCurrentUserId,
+  }) : _fetchRows = fetchRows ?? _defaultFetchRows,
+       _updateDevice = updateDevice ?? _defaultUpdateDevice,
+       _insertDevice = insertDevice ?? _defaultInsertDevice,
+       _fetchToggleState = fetchToggleState ?? _defaultFetchToggleState,
+       _readCurrentUserId = readCurrentUserId ?? _defaultReadCurrentUserId;
+
   static const String _table = 'iot_devices';
 
   static const String _selectColumns =
       'id,name,type,last_seen,connection_state,toggled_on,value';
+
+  final Future<Object?> Function(IotDemoDeviceFilter filter) _fetchRows;
+  final Future<void> Function(
+    String deviceId,
+    Map<String, dynamic> updates,
+  )
+  _updateDevice;
+  final Future<void> Function(Map<String, dynamic> payload) _insertDevice;
+  final Future<Object?> Function(String deviceId) _fetchToggleState;
+  final String? Function() _readCurrentUserId;
 
   @override
   Stream<List<IotDevice>> watchDevices([
@@ -40,25 +66,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
       return const <IotDevice>[];
     }
     try {
-      final dynamic raw;
-      if (filter == IotDemoDeviceFilter.toggledOnOnly) {
-        raw = await Supabase.instance.client
-            .from(_table)
-            .select(_selectColumns)
-            .eq('toggled_on', true)
-            .order('id');
-      } else if (filter == IotDemoDeviceFilter.toggledOffOnly) {
-        raw = await Supabase.instance.client
-            .from(_table)
-            .select(_selectColumns)
-            .eq('toggled_on', false)
-            .order('id');
-      } else {
-        raw = await Supabase.instance.client
-            .from(_table)
-            .select(_selectColumns)
-            .order('id');
-      }
+      final Object? raw = await _fetchRows(filter);
       final List<dynamic>? list = listFromDynamic(raw);
       final List<IotDevice> result = <IotDevice>[];
       if (list != null) {
@@ -98,14 +106,11 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
       );
     }
     final String now = DateTime.now().toUtc().toIso8601String();
-    await Supabase.instance.client
-        .from(_table)
-        .update(<String, dynamic>{
-          'connection_state': 'connected',
-          'last_seen': now,
-          'updated_at': now,
-        })
-        .eq('id', deviceId);
+    await _updateDevice(deviceId, <String, dynamic>{
+      'connection_state': 'connected',
+      'last_seen': now,
+      'updated_at': now,
+    });
   }
 
   @override
@@ -116,13 +121,10 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
       );
     }
     final String now = DateTime.now().toUtc().toIso8601String();
-    await Supabase.instance.client
-        .from(_table)
-        .update(<String, dynamic>{
-          'connection_state': 'disconnected',
-          'updated_at': now,
-        })
-        .eq('id', deviceId);
+    await _updateDevice(deviceId, <String, dynamic>{
+      'connection_state': 'disconnected',
+      'updated_at': now,
+    });
   }
 
   @override
@@ -140,13 +142,13 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
         'Supabase is not configured (missing URL or anon key).',
       );
     }
-    final String? userId = Supabase.instance.client.auth.currentUser?.id;
+    final String? userId = _readCurrentUserId();
     if (userId == null || userId.isEmpty) {
       throw StateError('Must be signed in to add a device.');
     }
     final String typeStr = _deviceTypeToDb(device.type);
     final String now = DateTime.now().toUtc().toIso8601String();
-    await Supabase.instance.client.from(_table).insert(<String, dynamic>{
+    await _insertDevice(<String, dynamic>{
       'id': device.id,
       'name': device.name,
       'type': typeStr,
@@ -193,10 +195,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
       'updated_at': now,
     };
     if (command is IotDeviceCommandToggle) {
-      final dynamic raw = await Supabase.instance.client
-          .from(_table)
-          .select('toggled_on')
-          .eq('id', deviceId);
+      final Object? raw = await _fetchToggleState(deviceId);
       final List<dynamic>? list = listFromDynamic(raw);
       final Map<String, dynamic>? firstRow = list != null && list.isNotEmpty
           ? mapFromDynamic(list.first)
@@ -214,10 +213,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
       );
       updates['value'] = v;
     }
-    await Supabase.instance.client
-        .from(_table)
-        .update(updates)
-        .eq('id', deviceId);
+    await _updateDevice(deviceId, updates);
   }
 
   static IotDevice? _rowToDevice(final Map<String, dynamic> row) {
@@ -283,4 +279,53 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
     if (value is String) return DateTime.tryParse(value);
     return null;
   }
+
+  static Future<Object?> _defaultFetchRows(
+    final IotDemoDeviceFilter filter,
+  ) async {
+    if (filter == IotDemoDeviceFilter.toggledOnOnly) {
+      return Supabase.instance.client
+          .from(_table)
+          .select(_selectColumns)
+          .eq('toggled_on', true)
+          .order('id');
+    }
+    if (filter == IotDemoDeviceFilter.toggledOffOnly) {
+      return Supabase.instance.client
+          .from(_table)
+          .select(_selectColumns)
+          .eq('toggled_on', false)
+          .order('id');
+    }
+    return Supabase.instance.client
+        .from(_table)
+        .select(_selectColumns)
+        .order(
+          'id',
+        );
+  }
+
+  static Future<void> _defaultUpdateDevice(
+    final String deviceId,
+    final Map<String, dynamic> updates,
+  ) {
+    return Supabase.instance.client
+        .from(_table)
+        .update(updates)
+        .eq('id', deviceId);
+  }
+
+  static Future<void> _defaultInsertDevice(final Map<String, dynamic> payload) {
+    return Supabase.instance.client.from(_table).insert(payload);
+  }
+
+  static Future<Object?> _defaultFetchToggleState(final String deviceId) {
+    return Supabase.instance.client
+        .from(_table)
+        .select('toggled_on')
+        .eq('id', deviceId);
+  }
+
+  static String? _defaultReadCurrentUserId() =>
+      Supabase.instance.client.auth.currentUser?.id;
 }

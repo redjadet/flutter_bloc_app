@@ -13,10 +13,38 @@ import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
+  SupabaseGraphqlDemoRepository({
+    final String? Function()? readAccessToken,
+    final String? Function()? readCurrentUserId,
+    final Future<FunctionResponse> Function({
+      required String functionName,
+      required String accessToken,
+      required Map<String, dynamic> body,
+    })?
+    invokeEdgeFunction,
+    final Future<Object?> Function()? fetchContinentRows,
+    final Future<Object?> Function(String? code)? fetchCountryRows,
+  }) : _readAccessToken = readAccessToken ?? _defaultReadAccessToken,
+       _readCurrentUserId = readCurrentUserId ?? _defaultReadCurrentUserId,
+       _invokeEdgeFunction = invokeEdgeFunction ?? _defaultInvokeEdgeFunction,
+       _fetchContinentRows = fetchContinentRows ?? _defaultFetchContinentRows,
+       _fetchCountryRows = fetchCountryRows ?? _defaultFetchCountryRows;
+
   static const String _continentsTable = 'graphql_continents';
   static const String _countriesTable = 'graphql_countries';
   static const String _syncFunction = 'sync-graphql-countries';
   static const String _authorizationHeader = 'Authorization';
+
+  final String? Function() _readAccessToken;
+  final String? Function() _readCurrentUserId;
+  final Future<FunctionResponse> Function({
+    required String functionName,
+    required String accessToken,
+    required Map<String, dynamic> body,
+  })
+  _invokeEdgeFunction;
+  final Future<Object?> Function() _fetchContinentRows;
+  final Future<Object?> Function(String? code) _fetchCountryRows;
 
   @override
   GraphqlDataSource get lastSource => _lastSource;
@@ -76,19 +104,15 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
       // We explicitly pass the access token. In some configurations the
       // Functions client can end up using the anon key as `Authorization`,
       // which triggers `Invalid JWT` when `verify_jwt: true`.
-      final String? accessToken =
-          Supabase.instance.client.auth.currentSession?.accessToken;
+      final String? accessToken = _readAccessToken();
       if (accessToken == null || accessToken.isEmpty) {
         return const <GraphqlContinent>[];
       }
-      final FunctionResponse response = await Supabase.instance.client.functions
-          .invoke(
-            _syncFunction,
-            headers: <String, String>{
-              _authorizationHeader: 'Bearer $accessToken',
-            },
-            body: const <String, dynamic>{'type': 'continents'},
-          );
+      final FunctionResponse response = await _invokeEdgeFunction(
+        functionName: _syncFunction,
+        accessToken: accessToken,
+        body: const <String, dynamic>{'type': 'continents'},
+      );
       final Map<String, dynamic>? json = mapFromDynamic(response.data);
       final List<dynamic>? raw = listFromDynamic(json?['continents']);
       if (raw == null) {
@@ -102,7 +126,7 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
       );
       _logJwtMismatchDiagnostics(
         error: e,
-        accessToken: Supabase.instance.client.auth.currentSession?.accessToken,
+        accessToken: _readAccessToken(),
       );
       AppLogger.error(
         'SupabaseGraphqlDemoRepository._tryFetchContinentsFromEdge',
@@ -117,8 +141,7 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
     required final String? continentCode,
   }) async {
     try {
-      final String? accessToken =
-          Supabase.instance.client.auth.currentSession?.accessToken;
+      final String? accessToken = _readAccessToken();
       if (accessToken == null || accessToken.isEmpty) {
         return const <GraphqlCountry>[];
       }
@@ -126,14 +149,11 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
       if (continentCode != null) {
         body['continentCode'] = continentCode;
       }
-      final FunctionResponse response = await Supabase.instance.client.functions
-          .invoke(
-            _syncFunction,
-            headers: <String, String>{
-              _authorizationHeader: 'Bearer $accessToken',
-            },
-            body: body,
-          );
+      final FunctionResponse response = await _invokeEdgeFunction(
+        functionName: _syncFunction,
+        accessToken: accessToken,
+        body: body,
+      );
       final Map<String, dynamic>? json = mapFromDynamic(response.data);
       final List<dynamic>? raw = listFromDynamic(json?['countries']);
       if (raw == null) {
@@ -147,7 +167,7 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
       );
       _logJwtMismatchDiagnostics(
         error: e,
-        accessToken: Supabase.instance.client.auth.currentSession?.accessToken,
+        accessToken: _readAccessToken(),
       );
       AppLogger.error(
         'SupabaseGraphqlDemoRepository._tryFetchCountriesFromEdge',
@@ -166,7 +186,7 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
     if (error.status != 401) return;
 
     final String? iss = _tryReadJwtIssuer(accessToken);
-    final String? userId = Supabase.instance.client.auth.currentUser?.id;
+    final String? userId = _readCurrentUserId();
     final int tokenLength = accessToken?.length ?? 0;
     final String? configuredUrl = SecretConfig.supabaseUrl;
     AppLogger.warning(
@@ -203,26 +223,14 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
   }
 
   Future<List<GraphqlContinent>> _fetchContinentsFromTables() async {
-    final dynamic raw = await Supabase.instance.client
-        .from(_continentsTable)
-        .select('code, name')
-        .order('name');
+    final Object? raw = await _fetchContinentRows();
     return _mapContinents(raw);
   }
 
   Future<List<GraphqlCountry>> _fetchCountriesFromTables({
     required final String? continentCode,
   }) async {
-    PostgrestFilterBuilder<dynamic> query = Supabase.instance.client
-        .from(_countriesTable)
-        .select(
-          'code, name, capital, currency, emoji, '
-          'continent:graphql_continents!continent_code(code, name)',
-        );
-    if (continentCode != null) {
-      query = query.eq('continent_code', continentCode);
-    }
-    final dynamic raw = await query.order('name');
+    final Object? raw = await _fetchCountryRows(continentCode);
     return _mapCountries(raw);
   }
 
@@ -243,7 +251,7 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
       if (map == null) continue;
       try {
         out.add(GraphqlContinent.fromJson(map));
-      } on Exception catch (e, s) {
+      } on Object catch (e, s) {
         AppLogger.warning(
           'SupabaseGraphqlDemoRepository skip invalid continent row',
         );
@@ -265,7 +273,7 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
       if (map == null) continue;
       try {
         out.add(GraphqlCountry.fromJson(map));
-      } on Exception catch (e, s) {
+      } on Object catch (e, s) {
         AppLogger.warning(
           'SupabaseGraphqlDemoRepository skip invalid country row',
         );
@@ -300,5 +308,45 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
     final String trimmed = code.trim();
     if (trimmed.isEmpty) return null;
     return trimmed.toUpperCase();
+  }
+
+  static String? _defaultReadAccessToken() =>
+      Supabase.instance.client.auth.currentSession?.accessToken;
+
+  static String? _defaultReadCurrentUserId() =>
+      Supabase.instance.client.auth.currentUser?.id;
+
+  static Future<FunctionResponse> _defaultInvokeEdgeFunction({
+    required final String functionName,
+    required final String accessToken,
+    required final Map<String, dynamic> body,
+  }) {
+    return Supabase.instance.client.functions.invoke(
+      functionName,
+      headers: <String, String>{
+        _authorizationHeader: 'Bearer $accessToken',
+      },
+      body: body,
+    );
+  }
+
+  static Future<Object?> _defaultFetchContinentRows() {
+    return Supabase.instance.client
+        .from(_continentsTable)
+        .select('code, name')
+        .order('name');
+  }
+
+  static Future<Object?> _defaultFetchCountryRows(final String? continentCode) {
+    PostgrestFilterBuilder<dynamic> query = Supabase.instance.client
+        .from(_countriesTable)
+        .select(
+          'code, name, capital, currency, emoji, '
+          'continent:graphql_continents!continent_code(code, name)',
+        );
+    if (continentCode != null) {
+      query = query.eq('continent_code', continentCode);
+    }
+    return query.order('name');
   }
 }
