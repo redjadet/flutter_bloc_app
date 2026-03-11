@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/settings/settings.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
+/// App settings screen: theme, locale, cache clear, and optional app info.
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
     required this.appInfoRepository,

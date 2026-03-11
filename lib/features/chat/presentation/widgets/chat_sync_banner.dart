@@ -13,6 +13,7 @@ import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
+/// Banner showing pending chat sync count and optional manual sync action.
 class ChatSyncBanner extends StatefulWidget {
   const ChatSyncBanner({
     required this.pendingRepository,

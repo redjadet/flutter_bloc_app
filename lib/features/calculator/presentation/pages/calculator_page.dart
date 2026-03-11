@@ -13,6 +13,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'calculator_page.freezed.dart';
 
+/// Calculator screen with keypad, display, and optional tax/tip.
 class CalculatorPage extends StatelessWidget {
   const CalculatorPage({super.key});
 

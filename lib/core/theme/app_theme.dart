@@ -3,14 +3,21 @@ import 'package:flutter_bloc_app/core/constants/constants.dart';
 import 'package:flutter_bloc_app/core/theme/theme_extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+/// Named decorative colors for confetti/particle effects; not UI theme colors.
+const Color _confettiGreen = Color(0xFF4CAF50);
+const Color _confettiBlue = Color(0xFF2196F3);
+const Color _confettiPink = Color(0xFFE91E63);
+const Color _confettiOrange = Color(0xFFFF9800);
+const Color _confettiPurple = Color(0xFF9C27B0);
+
 /// Default decorative particle colors (confetti, etc.); not UI theme colors.
 /// Use for [ConfettiTheme.particleColors] and as fallback when extension is null.
 const List<Color> defaultConfettiParticleColors = [
-  Colors.green,
-  Colors.blue,
-  Colors.pink,
-  Colors.orange,
-  Colors.purple,
+  _confettiGreen,
+  _confettiBlue,
+  _confettiPink,
+  _confettiOrange,
+  _confettiPurple,
 ];
 
 /// Application theme factory.

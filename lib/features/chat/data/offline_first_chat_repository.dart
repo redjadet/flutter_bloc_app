@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
+/// Chat repository that prefers local/cache and syncs with remote when online.
 class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
   OfflineFirstChatRepository({
     required final ChatRepository remoteRepository,

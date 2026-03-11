@@ -13,7 +13,6 @@ import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_li
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_search_field.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_sort_bar.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_stats_widget.dart';
-// import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_sync_banner.dart'; // Hidden per user request
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
@@ -24,6 +23,7 @@ import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
+part 'todo_list_page_app_bar.dart';
 part 'todo_list_page_handlers.dart';
 
 enum _BatchMenuAction { complete, uncomplete, delete }
@@ -100,86 +100,9 @@ class TodoListPage extends StatelessWidget {
         );
       },
       builder: (final context, final barData) {
-        final List<Widget> actionWidgets = <Widget>[];
-        if (barData.hasFilteredItems) {
-          actionWidgets.add(
-            IconButton(
-              icon: Icon(
-                barData.allFilteredSelected ? Icons.deselect : Icons.select_all,
-              ),
-              tooltip: barData.allFilteredSelected
-                  ? context.l10n.todoListClearSelection
-                  : context.l10n.todoListSelectAll,
-              onPressed: () {
-                final cubit = context.cubit<TodoListCubit>();
-                if (barData.allFilteredSelected) {
-                  cubit.clearSelection();
-                } else {
-                  cubit.selectAllItems();
-                }
-              },
-            ),
-          );
-        }
-        if (barData.hasSelection) {
-          actionWidgets.add(
-            PopupMenuButton<_BatchMenuAction>(
-              icon: const Icon(Icons.more_vert),
-              tooltip: context.l10n.todoListItemsSelected(
-                barData.selectedCount,
-              ),
-              onSelected: (final action) async {
-                final cubit = context.cubit<TodoListCubit>();
-                switch (action) {
-                  case _BatchMenuAction.complete:
-                    await cubit.batchCompleteSelected();
-                    break;
-                  case _BatchMenuAction.uncomplete:
-                    await cubit.batchUncompleteSelected();
-                    break;
-                  case _BatchMenuAction.delete:
-                    final bool? shouldDelete =
-                        await showTodoBatchDeleteConfirmDialog(
-                          context: context,
-                          count: barData.selectedCount,
-                        );
-                    if ((shouldDelete ?? false) && context.mounted) {
-                      await cubit.batchDeleteSelected();
-                    }
-                    break;
-                }
-              },
-              itemBuilder: (final context) =>
-                  <PopupMenuEntry<_BatchMenuAction>>[
-                    if (barData.hasSelectedActive)
-                      PopupMenuItem<_BatchMenuAction>(
-                        value: _BatchMenuAction.complete,
-                        child: Text(context.l10n.todoListBatchComplete),
-                      ),
-                    if (barData.hasSelectedCompleted)
-                      PopupMenuItem<_BatchMenuAction>(
-                        value: _BatchMenuAction.uncomplete,
-                        child: Text(context.l10n.todoListBatchUncomplete),
-                      ),
-                    PopupMenuItem<_BatchMenuAction>(
-                      value: _BatchMenuAction.delete,
-                      child: Text(
-                        context.l10n.todoListBatchDelete,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      ),
-                    ),
-                  ],
-            ),
-          );
-        }
-        final List<Widget>? actions = actionWidgets.isEmpty
-            ? null
-            : actionWidgets;
         return CommonPageLayout(
           title: l10n.todoListTitle,
-          actions: actions,
+          actions: _buildTodoListAppBarActions(context, barData),
           body: const _TodoListBody(),
           floatingActionButton: FloatingActionButton(
             onPressed: () => _handleAddTodo(context),
@@ -239,9 +162,7 @@ class _TodoListBody extends StatelessWidget {
             );
 
             final List<Widget> headerChildren = [
-              // Sync banner hidden on purpose. When re-enabling, pass
-              // pendingRepository: (from route/parent DI).
-              // const TodoSyncBanner(pendingRepository: ...),
+              // Sync banner disabled per product decision.
               Visibility(
                 visible: layout.showStats,
                 maintainState: true,

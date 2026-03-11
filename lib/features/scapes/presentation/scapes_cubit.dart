@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_state.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
+/// Cubit for scapes list: load, grid/list toggle, and favorite toggle.
 class ScapesCubit extends Cubit<ScapesState> {
   ScapesCubit({
     required final ScapesRepository repository,
@@ -41,7 +43,12 @@ class ScapesCubit extends Cubit<ScapesState> {
           isLoading: false,
         ),
       );
-    } on Object catch (e) {
+    } on Object catch (e, stackTrace) {
+      AppLogger.error(
+        'ScapesCubit._loadScapesFromRepository failed',
+        e,
+        stackTrace,
+      );
       if (isClosed) return;
       emit(
         state.copyWith(
