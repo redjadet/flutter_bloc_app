@@ -8,7 +8,7 @@
 ## Architecture
 
 - **Remote (auth-aware):** `AuthAwareChartRemoteRepository` chooses a remote per request:
-  - When **signed in to Supabase**: `SupabaseChartRepository` calls the Edge Function `sync-chart-trending` first; if that fails or returns empty, it reads from the Supabase table `public.chart_trending_points`.
+  - When **signed in to Supabase**: `SupabaseChartRepository` uses the shared `runSupabaseEdgeThenTables()` helper (Edge first, then table fallback). It passes a repository-specific `genericFailureMessage` (“Failed to load chart data from Supabase”) so UI and tests see chart-specific error text.
   - When **not signed in** (or Supabase not configured): `DirectChartRemoteRepository` calls the CoinGecko API directly (`coins/bitcoin/market_chart`, 7 days, daily).
 - **Cache:** `ChartDemoCacheRepository` (Hive) stores trending points under key `trending_points` with `updatedAt` and `items` for staleness.
 - **Coordinator:** `OfflineFirstChartRepository` wraps the remote + cache and implements `ChartRepository`.

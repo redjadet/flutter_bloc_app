@@ -1,4 +1,5 @@
 export 'domain/chart_cache_repository.dart';
+export 'domain/chart_data_exception.dart';
 export 'domain/chart_data_source.dart';
 export 'domain/chart_point.dart';
 export 'domain/chart_remote_repository.dart';

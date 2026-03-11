@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
@@ -13,7 +12,12 @@ import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 
 class TodoSyncBanner extends StatefulWidget {
-  const TodoSyncBanner({super.key});
+  const TodoSyncBanner({
+    required this.pendingRepository,
+    super.key,
+  });
+
+  final PendingSyncRepository pendingRepository;
 
   @override
   State<TodoSyncBanner> createState() => _TodoSyncBannerState();
@@ -22,19 +26,26 @@ class TodoSyncBanner extends StatefulWidget {
 class _TodoSyncBannerState extends State<TodoSyncBanner> {
   int _pendingCount = 0;
   static const String _todoEntityType = 'todo';
+  bool _didEnsureSyncStarted = false;
 
   @override
   void initState() {
     super.initState();
-    context.ensureSyncStartedIfAvailable();
     unawaited(_refreshPendingCount());
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didEnsureSyncStarted) {
+      return;
+    }
+    _didEnsureSyncStarted = true;
+    context.ensureSyncStartedIfAvailable();
+  }
+
   Future<void> _refreshPendingCount() async {
-    // check-ignore: direct_getit - sync status UI is debug/tooling
-    final PendingSyncRepository pendingRepository =
-        getIt<PendingSyncRepository>();
-    final List<SyncOperation> pending = await pendingRepository
+    final List<SyncOperation> pending = await widget.pendingRepository
         .getPendingOperations(now: DateTime.now().toUtc());
     final int count = pending
         .where((final op) => op.entityType == _todoEntityType)
@@ -61,24 +72,25 @@ class _TodoSyncBannerState extends State<TodoSyncBanner> {
       builder: (final context, final state) {
         final bool isOffline = state.networkStatus == NetworkStatus.offline;
         final bool isSyncing = state.syncStatus == SyncStatus.syncing;
-        final bool shouldHide = !isOffline && !isSyncing && _pendingCount == 0;
-        if (shouldHide) {
+        if (!shouldShowSyncBanner(
+          isOffline: isOffline,
+          isSyncing: isSyncing,
+          pendingCount: _pendingCount,
+        )) {
           return const SizedBox.shrink();
         }
-        final bool isError = isOffline;
         final (String title, String message) = syncBannerTitleAndMessage(
           l10n,
           isOffline: isOffline,
           isSyncing: isSyncing,
           pendingCount: _pendingCount,
         );
-
         return Padding(
           padding: EdgeInsets.only(bottom: context.responsiveGapS),
-          child: AppMessage(
+          child: SyncBannerContent(
             title: title,
             message: message,
-            isError: isError,
+            isError: isOffline,
           ),
         );
       },

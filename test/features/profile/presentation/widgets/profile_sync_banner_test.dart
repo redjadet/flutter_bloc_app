@@ -130,6 +130,21 @@ void main() {
       expect(find.text(l10n.syncStatusSyncingTitle), findsNothing);
     });
 
+    testWidgets('renders safely without SyncStatusCubit', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const Scaffold(body: ProfileSyncBanner()),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.byType(ProfileSyncBanner), findsOneWidget);
+      expect(find.byType(SizedBox), findsWidgets);
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('shows offline banner', (tester) async {
       networkService.status = NetworkStatus.offline;
       coordinator.status = SyncStatus.idle;

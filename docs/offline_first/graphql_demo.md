@@ -8,7 +8,7 @@
 ## Architecture
 
 - **Remote (auth-aware):** `AuthAwareGraphqlRemoteRepository` chooses a remote per request:
-  - When **signed in to Supabase**: `SupabaseGraphqlDemoRepository` calls the Edge Function `sync-graphql-countries` first; if that fails or returns empty, it reads from Supabase tables (`public.graphql_continents`, `public.graphql_countries`).
+  - When **signed in to Supabase**: `SupabaseGraphqlDemoRepository` uses the shared `runSupabaseEdgeThenTables()` helper (Edge first, then table fallback). It passes repository-specific `genericFailureMessage` values (“Failed to load continents from Supabase” / “Failed to load countries from Supabase”) so UI and tests see feature-specific error text.
   - When **not signed in** (or Supabase not configured): `CountriesGraphqlRepository` calls `https://countries.trevorblades.com/` directly.
 - **Cache:** `GraphqlDemoCacheRepository` (Hive, encrypted) stores:
   - Continents under `continents`

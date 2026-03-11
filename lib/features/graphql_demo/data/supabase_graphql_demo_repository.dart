@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
+import 'package:flutter_bloc_app/core/supabase/edge_then_tables.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_demo_exception_mapper.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
@@ -24,32 +26,22 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
   @override
   Future<List<GraphqlContinent>> fetchContinents() async {
     _ensureConfigured();
-    try {
-      final List<GraphqlContinent> fromEdge =
-          await _tryFetchContinentsFromEdge();
-      if (fromEdge.isNotEmpty) {
-        _lastSource = GraphqlDataSource.supabaseEdge;
-        return fromEdge;
-      }
-
-      final List<GraphqlContinent> fromTables =
-          await _fetchContinentsFromTables();
-      _lastSource = GraphqlDataSource.supabaseTables;
-      return fromTables;
-    } on PostgrestException catch (e, s) {
-      AppLogger.error('SupabaseGraphqlDemoRepository.fetchContinents', e, s);
-      throw GraphqlDemoException(
-        e.message,
-        cause: e,
-        type: _mapErrorType(e),
-      );
-    } on Object catch (e, s) {
-      AppLogger.error('SupabaseGraphqlDemoRepository.fetchContinents', e, s);
-      throw GraphqlDemoException(
-        'Failed to load continents from Supabase',
-        cause: e,
-      );
-    }
+    final SupabaseEdgeThenTablesResult<GraphqlContinent> result =
+        await runSupabaseEdgeThenTables<GraphqlContinent>(
+          tryEdge: _tryFetchContinentsFromEdge,
+          fetchTables: _fetchContinentsFromTables,
+          onPostgrestException: graphqlDemoExceptionFromPostgrest,
+          onGenericException: (final msg, final cause) => GraphqlDemoException(
+            msg,
+            cause: cause,
+          ),
+          logContext: 'SupabaseGraphqlDemoRepository.fetchContinents',
+          genericFailureMessage: 'Failed to load continents from Supabase',
+        );
+    _lastSource = result.fromEdge
+        ? GraphqlDataSource.supabaseEdge
+        : GraphqlDataSource.supabaseTables;
+    return result.result;
   }
 
   @override
@@ -58,34 +50,23 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
   }) async {
     _ensureConfigured();
     final String? normalized = _normalizedContinentCode(continentCode);
-    try {
-      final List<GraphqlCountry> fromEdge = await _tryFetchCountriesFromEdge(
-        continentCode: normalized,
-      );
-      if (fromEdge.isNotEmpty) {
-        _lastSource = GraphqlDataSource.supabaseEdge;
-        return fromEdge;
-      }
-
-      final List<GraphqlCountry> fromTables = await _fetchCountriesFromTables(
-        continentCode: normalized,
-      );
-      _lastSource = GraphqlDataSource.supabaseTables;
-      return fromTables;
-    } on PostgrestException catch (e, s) {
-      AppLogger.error('SupabaseGraphqlDemoRepository.fetchCountries', e, s);
-      throw GraphqlDemoException(
-        e.message,
-        cause: e,
-        type: _mapErrorType(e),
-      );
-    } on Object catch (e, s) {
-      AppLogger.error('SupabaseGraphqlDemoRepository.fetchCountries', e, s);
-      throw GraphqlDemoException(
-        'Failed to load countries from Supabase',
-        cause: e,
-      );
-    }
+    final SupabaseEdgeThenTablesResult<GraphqlCountry> result =
+        await runSupabaseEdgeThenTables<GraphqlCountry>(
+          tryEdge: () => _tryFetchCountriesFromEdge(continentCode: normalized),
+          fetchTables: () =>
+              _fetchCountriesFromTables(continentCode: normalized),
+          onPostgrestException: graphqlDemoExceptionFromPostgrest,
+          onGenericException: (final msg, final cause) => GraphqlDemoException(
+            msg,
+            cause: cause,
+          ),
+          logContext: 'SupabaseGraphqlDemoRepository.fetchCountries',
+          genericFailureMessage: 'Failed to load countries from Supabase',
+        );
+    _lastSource = result.fromEdge
+        ? GraphqlDataSource.supabaseEdge
+        : GraphqlDataSource.supabaseTables;
+    return result.result;
   }
 
   Future<List<GraphqlContinent>> _tryFetchContinentsFromEdge() async {
@@ -319,16 +300,5 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
     final String trimmed = code.trim();
     if (trimmed.isEmpty) return null;
     return trimmed.toUpperCase();
-  }
-
-  GraphqlDemoErrorType _mapErrorType(final PostgrestException e) {
-    final int? status = e.code == null ? null : int.tryParse(e.code!);
-    if (status == 401 || status == 403) {
-      return GraphqlDemoErrorType.invalidRequest;
-    }
-    if (status != null && status >= 500) {
-      return GraphqlDemoErrorType.server;
-    }
-    return GraphqlDemoErrorType.network;
   }
 }

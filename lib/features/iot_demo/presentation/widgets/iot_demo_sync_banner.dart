@@ -47,28 +47,29 @@ class _IotDemoSyncBannerState extends State<IotDemoSyncBanner> {
         final bool isOffline = triple.$1 == NetworkStatus.offline;
         final bool isSyncing = triple.$2 == SyncStatus.syncing;
         final int pendingCount = triple.$3;
-        final bool showBanner = isOffline || isSyncing || pendingCount > 0;
-        if (!showBanner) {
+        if (!shouldShowSyncBanner(
+          isOffline: isOffline,
+          isSyncing: isSyncing,
+          pendingCount: pendingCount,
+        )) {
           return const SizedBox.shrink();
         }
         final AppLocalizations l10n = context.l10n;
-        final bool isError = isOffline;
         final (String title, String message) = syncBannerTitleAndMessage(
           l10n,
           isOffline: isOffline,
           isSyncing: isSyncing,
           pendingCount: pendingCount,
         );
-
         return Padding(
           padding: EdgeInsets.symmetric(
             horizontal: context.responsiveHorizontalGapL,
             vertical: context.responsiveGapS,
           ),
-          child: AppMessage(
+          child: SyncBannerContent(
             title: title,
             message: message,
-            isError: isError,
+            isError: isOffline,
           ),
         );
       },

@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
+import 'package:flutter_bloc_app/shared/firebase/realtime_database_guard.dart';
 import 'package:flutter_bloc_app/shared/firebase/run_with_auth_user.dart';
 import 'package:flutter_bloc_app/shared/firebase/stream_with_auth_user.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -136,28 +137,11 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
     required final String userId,
     required final Map<String, Object?> data,
   }) async {
-    try {
-      await _counterRef.child(userId).set(data);
-    } catch (error, stackTrace) {
-      if (error is TypeError) {
-        final String errorMessage = error.toString();
-        final bool isFlutterFireDetailsCastIssue = errorMessage.contains(
-          "'String' is not a subtype of type 'Map",
-        );
-        if (isFlutterFireDetailsCastIssue) {
-          Error.throwWithStackTrace(
-            FirebaseException(
-              plugin: 'firebase_database',
-              code: 'database-platform-error-details',
-              message:
-                  'Realtime Database write failed while saving counter. '
-                  'Check database rules and auth state.',
-            ),
-            stackTrace,
-          );
-        }
-      }
-      rethrow;
-    }
+    await guardRealtimeDatabaseWrite(
+      () => _counterRef.child(userId).set(data),
+      message:
+          'Realtime Database write failed while saving counter. '
+          'Check database rules and auth state.',
+    );
   }
 }

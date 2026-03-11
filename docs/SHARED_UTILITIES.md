@@ -170,9 +170,12 @@ const kAnimationDuration = Duration(milliseconds: 300);
 - `navigation.dart` - Navigation helper functions
 - `network_guard.dart` - Network connectivity checking utilities
 - `platform_adaptive.dart` - Platform-adaptive widget utilities
+- `safe_parse_utils.dart` - Safe parsing from dynamic/JSON-like values (`mapFromDynamic`, `listFromDynamic`, `parseMapOfMaps` for map-of-maps with per-item callback and log-on-failure; used by Realtime DB and Supabase repos)
 - `storage_guard.dart` - Storage availability checking utilities
 - `websocket_guard.dart` - WebSocket connectivity checking utilities
 - `retry_policy.dart` - Standardized retry with backoff and cancellation for non-HTTP async work
+
+**Sync banner helpers** (`lib/shared/sync/sync_banner_helpers.dart`): `shouldShowSyncBanner()`, `syncBannerTitleAndMessage()`, and `SyncBannerContent` widget for consistent offline/syncing/pending sync status UI across features (Todo, Chat, Search, Profile, IoT). Use these so banner visibility and copy stay in one place.
 
 ### Reliability and retries
 
