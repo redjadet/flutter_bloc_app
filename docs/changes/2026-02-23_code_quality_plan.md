@@ -1,97 +1,106 @@
-# Code Quality Improvement Plan — 2026-03-11 (v2)
+# Code Quality Improvement Plan — 2026-03-11
 
-## Executive Summary
+## Summary
 
-This plan outlines a coordinated effort to bring the codebase into 100% compliance with established project rules. It targets infrastructure deadlocks, async safety, architectural leaks, and transport-contract inconsistencies found during repeated shared-layer reviews.
+This roadmap reflects the current repo state after the recent shared HTTP
+hardening, checklist optimization, and regression-guard expansion work. The
+remaining goal is not broad cleanup; it is to remove the last inconsistency
+signals that keep the codebase from reading as uniformly senior.
 
-**Implementation status:** Phases 2 and 3 (code changes) are done. Phase 1 (environment) and Phase 4 (validation) remain for local/CI execution. Shared HTTP contract hardening and its regression coverage were completed on 2026-03-11.
+Current baseline:
 
----
+- Shared HTTP transport contracts are hardened and covered.
+- Checklist behavior is now change-aware and avoids unnecessary work.
+- Coverage is improving, but several architecture-critical Supabase/data
+  boundaries still need direct tests.
+- The remaining quality gaps are mostly stale documentation, under-tested
+  repository boundaries, and baseline verification debt.
 
-## 🏗️ Phase 1: Infrastructure Recovery — *Pending (environment)*
+## Track 1: Infrastructure Baseline
 
-The current failure of `build_runner` masks hundreds of potential type-safety issues and prevents proper equality checks in BLoC states.
+### Status
 
-1. **Resolve SDK Permission Conflict**:
-    - Run `sudo chown -R $(whoami) /Users/ilkersevim/Flutter_SDK/bin/cache` to unlock `engine.stamp`.
-2. **Restore Code Generation**:
-    - Execute `dart run build_runner build --delete-conflicting-outputs`.
-    - Verification: Ensure files like `chat_message_list.freezed.dart` are generated and error-free.
-3. **Establish Analysis Baseline**:
-    - Run `./tool/analyze.sh` once generated code is present to catch hidden type-mismatch bugs.
+- `build_runner` baseline: verified with a real local run on 2026-03-11.
+- Shared infrastructure rules: active and already enforced through validation
+  scripts and focused regression tests.
 
----
+### Coverage outcome
 
-## 🏎️ Phase 2: Lifecycle & Async Security — ✅ Done
+- Generated-code workflow is confirmed healthy and documented as a working
+  baseline.
+- Shared bootstrap, transport, parsing, and validation contracts stay directly
+  testable.
 
-Audit found several instances where lifecycle guards are manual or missing in edge cases.
+### Next actions
 
-1. **Automated Async Guards** — ✅ Done
-    - `CubitExceptionHandler.executeAsync` and `executeAsyncVoid` in `lib/shared/utils/cubit_async_operations.dart` now accept an optional `isAlive` parameter (e.g. `() => !isClosed`). When provided, `onSuccess` and `onError` are only invoked if `isAlive()` returns true.
-2. **Subscription Standardization** — ✅ Done
-    - `SyncStatusCubit` uses `CubitSubscriptionMixin`; all three stream subscriptions are registered and cancelled via `closeAllSubscriptions()` in `close()`.
-3. **Timer Safety Audit** — ✅ Done
-    - `ScapesCubit` injects optional `TimerService` (defaults to `DefaultTimerService`), uses `TimerService.runOnce` for the load delay, and disposes the handle in `close()`.
+1. Keep `build_runner` in the regular quality narrative only if it continues to
+   run cleanly.
+2. Maintain test seams only where they improve verification of shared/core
+   contracts.
+3. Prefer contract tests over implicit coverage from higher layers.
 
----
+## Track 2: Critical Coverage and Regression Hardening
 
-## 🎨 Phase 3: Architectural & UI Hygiene — ✅ Done
+### Priority wave
 
-Audit identified leaks of raw strings and non-responsive measurements into the presentation layer.
+Focus on files that are both low-coverage and architecturally meaningful:
 
-1. **Responsive Layer Enforcement** — ✅ Done
-    - In `lib/features/todo_list/presentation/widgets/todo_list_content.dart`, replaced `MediaQuery.of(context).size.height * 0.6` with `context.heightFraction(0.6)` from responsive extensions.
-2. **L10n Coverage Gaps** — ✅ Done
-    - Added keys to `app_en.arb` (and es/fr/de/tr): `noWalletConnected`, `noWalletLinked`, `couldNotPlayAudio`, `scapesErrorOccurred`, `noScapesAvailable`.
-    - `WalletConnectAuthCubit` accepts optional `l10n` and uses it for the two error messages (route passes `context.l10n`).
-    - `PlaylearnCubit` accepts optional `l10n` and uses it in `speakWord`; pages pass `context.l10n`.
-    - Scapes pages and `ScapesGridContent` use `context.l10n.scapesErrorOccurred` and `context.l10n.noScapesAvailable`.
-3. **Performance Optimization** — ✅ Audited
-    - shrinkWrap/Slivers audit completed; see `docs/audits/shrinkwrap_slivers_audit.md`. High-priority recommendation: refactor Library demo + Scapes grid to `CustomScrollView` + SliverGrid when embedding the grid.
-4. **Decorative Color Extraction** — ✅ Done
-    - Created `ConfettiTheme` in `lib/core/theme/theme_extensions.dart`; registered in `AppTheme` light/dark with default particle colors. `CounterPage` uses `Theme.of(context).extension<ConfettiTheme>()?.particleColors` (with fallback).
+- `lib/features/graphql_demo/data/supabase_graphql_demo_repository.dart`
+- `lib/features/chart/data/supabase_chart_repository.dart`
+- `lib/features/iot_demo/data/supabase_iot_demo_repository.dart`
+- `lib/features/graphql_demo/data/graphql_demo_exception_mapper.dart`
+- `lib/shared/utils/http_request_failure.dart`
+- `lib/core/bootstrap/bootstrap_coordinator.dart`
 
----
+### Required outcome
 
-## ✅ Phase 4: Validation Workflow — *Pending*
+- No critical shared/data file remains at `0.00%` simply because it is small or
+  sits behind a framework boundary.
+- New tests protect real parsing, fallback, exception-mapping, or bootstrap
+  contracts.
+- Bootstrap behavior is verified through meaningful sequencing tests, not only
+  signature smoke tests.
 
-1. **Continuous Verification**:
-    - Run `./bin/checklist` (All steps must pass).
-    - Execute lifecycle-specific checkers: `./tool/check_cubit_isclosed.sh`, `./tool/check_context_mounted.sh`, and `./tool/check_lifecycle_error_handling.sh`.
-2. **Documentation Update**:
-    - Run `dart run tool/update_coverage_summary.dart` to reflect the impact of the infrastructure fixes.
+### Regression policy
 
----
+- Register fixes in `tool/check_regression_guards.sh` when they protect
+  bootstrap, lifecycle, transport, sync, or error-mapping behavior.
+- Keep regression guards focused and fast; broad repository suites should stay
+  outside that script unless they protect a known recurring failure mode.
 
-## 🌐 Phase 5: Shared HTTP Contract Hardening — ✅ Done
+## Track 3: Codebase Signal Cleanup
 
-This phase closed the last high-leverage consistency gap in shared transport infrastructure.
+### Goal
 
-1. **Auth Retry Transport Parity** — ✅ Done
-   - 401 retry no longer uses an isolated bare `Dio`; internal auth retries now preserve network checks, transient retry behavior, and telemetry while explicitly skipping nested auth handling.
-2. **Transient Status Retry Coverage** — ✅ Done
-   - `RetryInterceptor` now handles transient HTTP responses under `validateStatus: (_) => true`, not only thrown transport errors.
-3. **Regression Guard Expansion** — ✅ Done
-   - Added focused tests for `AuthTokenInterceptor`, `RetryInterceptor`, `TelemetryInterceptor`, and `edge_then_tables`, and registered them in `tool/check_regression_guards.sh`.
-4. **Shared-Layer Cleanup** — ✅ Done
-   - Removed low-signal mechanical async patterns in touched shared infrastructure so the implementation quality better matches the repo’s stated bar.
+Make the repo read as intentionally engineered rather than incrementally patched.
 
----
+### Ongoing expectations
 
-## 📝 Concrete Tasks for AI Agent
+- Remove stale “pending” language once work is complete or intentionally
+  deferred.
+- Prefer pattern matching and explicit guards over workaround-style nullable
+  handling when it improves clarity.
+- Keep comments aligned with current behavior; delete historical bug notes once
+  tests and code already encode the contract.
+- Avoid “quality debt by exception”: outdated docs, redundant guards, and stale
+  baseline warnings weaken reviewer trust.
 
-| Target File | Required Improvement | Status |
-| --- | --- | --- |
-| `lib/shared/utils/cubit_async_operations.dart` | Integrate `isClosed` guarding directly into `executeAsync`. | ✅ Done (`isAlive` param) |
-| `lib/shared/sync/presentation/sync_status_cubit.dart` | Refactor to use `CubitSubscriptionMixin`. | ✅ Done |
-| `lib/features/scapes/presentation/scapes_cubit.dart` | Inject and use `TimerService` instead of raw `Future`. | ✅ Done |
-| `lib/features/todo_list/presentation/widgets/todo_list_content.dart` | Adopt responsive extensions for height calculation. | ✅ Done (`heightFraction(0.6)`) |
-| `lib/l10n/app_en.arb` (+ usage in cubits/pages) | Add keys for WalletConnect, Playlearn, and Scapes error/empty states. | ✅ Done |
-| `lib/core/theme/theme_extensions.dart` | Create `ConfettiTheme` for non-functional UI elements. | ✅ Done |
+## Validation Standard
 
----
+For high-leverage quality work:
 
-## 🚩 Known Risks
+1. Run targeted unit/repository tests for each touched contract.
+2. Run focused analyzer scope for touched files.
+3. Run relevant validation scripts or regression guards.
+4. Refresh `coverage/coverage_summary.md` when tests land.
+5. Update documentation in the same change if the repo story changed.
 
-- **build_runner performance**: A full build may take 2-5 minutes; use `--build-filter` for rapid iteration if only specific files are needed.
-- **L10n Sync**: Changes to `.arb` require a re-run of code generation to update `AppLocalizations`.
+## Completed Baseline Work
+
+- Shared HTTP auth retry now preserves network, retry, and telemetry behavior.
+- Retry handling now works for transient status responses under
+  `validateStatus: (_) => true`.
+- Shared sync/status lifecycle rules are enforced more consistently.
+- Checklist avoids redundant work for docs-only and unrelated change sets.
+- Edge-then-tables fallback helper and shared transport layers now have direct
+  focused tests.

@@ -8,9 +8,31 @@ import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseChartRepository implements ChartRemoteRepository {
+  SupabaseChartRepository({
+    final String? Function()? readAccessToken,
+    final Future<FunctionResponse> Function({
+      required String functionName,
+      required String accessToken,
+      required Map<String, dynamic> body,
+    })?
+    invokeEdgeFunction,
+    final Future<Object?> Function()? fetchTableRows,
+  }) : _readAccessToken = readAccessToken ?? _defaultReadAccessToken,
+       _invokeEdgeFunction = invokeEdgeFunction ?? _defaultInvokeEdgeFunction,
+       _fetchTableRows = fetchTableRows ?? _defaultFetchTableRows;
+
   static const String _tableName = 'chart_trending_points';
   static const String _syncFunction = 'sync-chart-trending';
   static const String _authorizationHeader = 'Authorization';
+
+  final String? Function() _readAccessToken;
+  final Future<FunctionResponse> Function({
+    required String functionName,
+    required String accessToken,
+    required Map<String, dynamic> body,
+  })
+  _invokeEdgeFunction;
+  final Future<Object?> Function() _fetchTableRows;
 
   @override
   ChartDataSource get lastSource => _lastSource;
@@ -38,19 +60,15 @@ class SupabaseChartRepository implements ChartRemoteRepository {
 
   Future<List<ChartPoint>> _tryFetchFromEdge() async {
     try {
-      final String? accessToken =
-          Supabase.instance.client.auth.currentSession?.accessToken;
+      final String? accessToken = _readAccessToken();
       if (accessToken == null || accessToken.isEmpty) {
         return const <ChartPoint>[];
       }
-      final FunctionResponse response = await Supabase.instance.client.functions
-          .invoke(
-            _syncFunction,
-            headers: <String, String>{
-              _authorizationHeader: 'Bearer $accessToken',
-            },
-            body: <String, dynamic>{},
-          );
+      final FunctionResponse response = await _invokeEdgeFunction(
+        functionName: _syncFunction,
+        accessToken: accessToken,
+        body: <String, dynamic>{},
+      );
       if (response.status < 200 || response.status >= 300) {
         AppLogger.warning(
           'SupabaseChartRepository edge returned status ${response.status}',
@@ -77,10 +95,7 @@ class SupabaseChartRepository implements ChartRemoteRepository {
   }
 
   Future<List<ChartPoint>> _fetchFromTables() async {
-    final dynamic raw = await Supabase.instance.client
-        .from(_tableName)
-        .select('date_utc, value')
-        .order('date_utc');
+    final Object? raw = await _fetchTableRows();
     return _mapPoints(raw);
   }
 
@@ -120,5 +135,29 @@ class SupabaseChartRepository implements ChartRemoteRepository {
       return const <ChartPoint>[];
     }
     return _parsePointsResilient(list);
+  }
+
+  static String? _defaultReadAccessToken() =>
+      Supabase.instance.client.auth.currentSession?.accessToken;
+
+  static Future<FunctionResponse> _defaultInvokeEdgeFunction({
+    required final String functionName,
+    required final String accessToken,
+    required final Map<String, dynamic> body,
+  }) {
+    return Supabase.instance.client.functions.invoke(
+      functionName,
+      headers: <String, String>{
+        _authorizationHeader: 'Bearer $accessToken',
+      },
+      body: body,
+    );
+  }
+
+  static Future<Object?> _defaultFetchTableRows() {
+    return Supabase.instance.client
+        .from(_tableName)
+        .select('date_utc, value')
+        .order('date_utc');
   }
 }
