@@ -26,9 +26,15 @@ class RemoteConfigDiagnosticsSection extends StatefulWidget {
 
 class _RemoteConfigDiagnosticsSectionState
     extends State<RemoteConfigDiagnosticsSection> {
+  bool _didInitializeInheritedState = false;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didInitializeInheritedState) {
+      return;
+    }
+    _didInitializeInheritedState = true;
     if (CubitHelpers.isCubitAvailable<RemoteConfigCubit, RemoteConfigState>(
       context,
     )) {

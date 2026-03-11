@@ -1243,6 +1243,14 @@
       }
     }
   },
+  "syncStatusDegradedTitle": "Sync issues detected",
+  "@syncStatusDegradedTitle": {
+    "description": "Title shown when background sync enters a degraded state"
+  },
+  "syncStatusDegradedMessage": "Some data may not be synced. Tap retry to attempt synchronization.",
+  "@syncStatusDegradedMessage": {
+    "description": "Message shown when background sync is degraded and the user can retry"
+  },
   "syncStatusSyncNowButton": "Sync now",
   "@syncStatusSyncNowButton": {
     "description": "Button label to trigger manual syncing of pending changes."

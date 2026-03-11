@@ -20,6 +20,7 @@ class AuthTokenInterceptor extends QueuedInterceptor {
   final FirebaseAuth? _firebaseAuth;
 
   static const String _keyAuthRetried = 'auth_401_retried';
+  static const String _keyManagedAuthUser = 'managed_auth_user';
 
   @override
   void onRequest(
@@ -51,7 +52,27 @@ class AuthTokenInterceptor extends QueuedInterceptor {
     final String? token = await _authTokenManager.getValidAuthToken(user);
     if (token != null) {
       options.headers['Authorization'] = 'Bearer $token';
+      options.extra[_keyManagedAuthUser] = user;
     }
+  }
+
+  @override
+  Future<void> onResponse(
+    final Response<dynamic> response,
+    final ResponseInterceptorHandler handler,
+  ) async {
+    final _RetryUnauthorizedResult result = await _retryUnauthorizedResponse(
+      response,
+    );
+    if (result.response case final Response<dynamic> retried) {
+      handler.resolve(retried);
+      return;
+    }
+    if (result.error case final DioException error) {
+      handler.reject(error);
+      return;
+    }
+    handler.next(response);
   }
 
   @override
@@ -59,35 +80,116 @@ class AuthTokenInterceptor extends QueuedInterceptor {
     final DioException err,
     final ErrorInterceptorHandler handler,
   ) async {
-    final response = err.response;
-    if (response?.statusCode != 401) {
+    final Response<dynamic>? response = err.response;
+    if (response == null) {
       handler.next(err);
       return;
     }
-    if (err.requestOptions.extra[_keyAuthRetried] == true) {
-      handler.next(err);
+    final _RetryUnauthorizedResult result = await _retryUnauthorizedResponse(
+      response,
+    );
+    if (result.response case final Response<dynamic> retried) {
+      handler.resolve(retried);
       return;
     }
-    final bool refreshed = await _authTokenManager.refreshToken();
-    if (!refreshed) {
-      handler.next(err);
+    if (result.error case final DioException error) {
+      handler.next(error);
       return;
     }
-    err.requestOptions.extra[_keyAuthRetried] = true;
-    await _injectToken(err.requestOptions);
+    handler.next(err);
+  }
+
+  Future<_RetryUnauthorizedResult> _retryUnauthorizedResponse(
+    final Response<dynamic> response,
+  ) async {
+    if (response.statusCode != 401) {
+      return const _RetryUnauthorizedResult.noRetry();
+    }
+    final RequestOptions requestOptions = response.requestOptions;
+    if (requestOptions.extra[_keyAuthRetried] == true) {
+      return const _RetryUnauthorizedResult.noRetry();
+    }
+    final User? user = _managedUserFrom(requestOptions);
+    if (user == null) {
+      return const _RetryUnauthorizedResult.noRetry();
+    }
+    final String? refreshedToken = await _refreshManagedUserToken(user);
+    if (refreshedToken == null) {
+      return const _RetryUnauthorizedResult.noRetry();
+    }
+    final RequestOptions retryOptions = requestOptions.copyWith(
+      headers: Map<String, dynamic>.from(requestOptions.headers),
+      extra: Map<String, dynamic>.from(requestOptions.extra),
+    );
+    retryOptions.extra[_keyAuthRetried] = true;
+    retryOptions.headers['Authorization'] = 'Bearer $refreshedToken';
+    retryOptions.extra[_keyManagedAuthUser] = user;
     try {
-      final response = await _dio.fetch<dynamic>(err.requestOptions);
-      handler.resolve(response);
-    } on DioException catch (e) {
-      handler.next(e);
-    } on Object catch (e, st) {
-      handler.next(
+      return _RetryUnauthorizedResult.response(
+        await _buildRetryDio().fetch<dynamic>(retryOptions),
+      );
+    } on DioException catch (error, stackTrace) {
+      AppLogger.error(
+        'AuthTokenInterceptor retry request failed',
+        error,
+        stackTrace,
+      );
+      return _RetryUnauthorizedResult.error(error);
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'AuthTokenInterceptor retry failed',
+        error,
+        stackTrace,
+      );
+      return _RetryUnauthorizedResult.error(
         DioException(
-          requestOptions: err.requestOptions,
-          error: e,
-          stackTrace: st,
+          requestOptions: retryOptions,
+          error: error,
+          stackTrace: stackTrace,
         ),
       );
     }
   }
+
+  User? _managedUserFrom(final RequestOptions options) {
+    final Object? value = options.extra[_keyManagedAuthUser];
+    return value is User ? value : null;
+  }
+
+  Future<String?> _refreshManagedUserToken(final User user) async {
+    try {
+      return await _authTokenManager.refreshTokenAndGet(user);
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'AuthTokenInterceptor failed to refresh token',
+        error,
+        stackTrace,
+      );
+      return null;
+    }
+  }
+
+  Dio _buildRetryDio() {
+    return Dio(_dio.options)
+      ..httpClientAdapter = _dio.httpClientAdapter
+      ..transformer = _dio.transformer;
+  }
+}
+
+class _RetryUnauthorizedResult {
+  const _RetryUnauthorizedResult._({
+    this.response,
+    this.error,
+  });
+
+  const _RetryUnauthorizedResult.noRetry() : this._();
+
+  const _RetryUnauthorizedResult.response(final Response<dynamic> response)
+    : this._(response: response);
+
+  const _RetryUnauthorizedResult.error(final DioException error)
+    : this._(error: error);
+
+  final Response<dynamic>? response;
+  final DioException? error;
 }

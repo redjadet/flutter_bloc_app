@@ -975,6 +975,14 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get syncStatusDegradedTitle =>
+      'Se detectaron problemas de sincronización';
+
+  @override
+  String get syncStatusDegradedMessage =>
+      'Es posible que algunos datos no estén sincronizados. Toca Reintentar para volver a iniciar la sincronización.';
+
+  @override
   String get syncStatusSyncNowButton => 'Sincronizar ahora';
 
   @override

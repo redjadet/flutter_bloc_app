@@ -15,9 +15,11 @@ tests=(
   "test/features/todo_list/data/realtime_database_todo_repository_test.dart"
   "test/features/todo_list/presentation/pages/todo_list_page_test.dart"
   "test/shared/firebase/run_with_auth_user_test.dart"
+  "test/shared/http/auth_token_interceptor_test.dart"
   "test/shared/http/auth_token_manager_test.dart"
-  "test/shared/http/resilient_http_client_test.dart"
+  "test/core/di/register_http_services_test.dart"
   "test/shared/inherited_widget_lifecycle_regression_test.dart"
+  "test/shared/widgets/sync_status_banner_test.dart"
   "test/shared/widgets/row_overflow_regression_test.dart"
   "test/features/iot_demo/presentation/pages/iot_demo_page_test.dart"
 )

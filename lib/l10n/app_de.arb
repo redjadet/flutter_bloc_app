@@ -687,6 +687,8 @@
   "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Aktualisiere letzte Änderungen.} one {Synchronisiere # Änderung…} other {Synchronisiere # Änderungen…}}",
   "syncStatusPendingTitle": "Änderungen in Warteschlange",
   "syncStatusPendingMessage": "{pendingCount, plural, one {# Änderung wartet auf Synchronisierung.} other {# Änderungen warten auf Synchronisierung.}}",
+  "syncStatusDegradedTitle": "Synchronisationsprobleme erkannt",
+  "syncStatusDegradedMessage": "Einige Daten wurden möglicherweise noch nicht synchronisiert. Tippe auf „Erneut versuchen“, um die Synchronisierung erneut zu starten.",
   "syncStatusSyncNowButton": "Jetzt synchronisieren",
   "@syncStatusSyncNowButton": {
     "description": "Schaltfläche zum manuellen Synchronisieren ausstehender Änderungen."

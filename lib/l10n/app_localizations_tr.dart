@@ -966,6 +966,13 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get syncStatusDegradedTitle => 'Senkronizasyon sorunları algılandı';
+
+  @override
+  String get syncStatusDegradedMessage =>
+      'Bazı veriler senkronize edilmemiş olabilir. Senkronizasyonu yeniden denemek için tekrar dene.';
+
+  @override
   String get syncStatusSyncNowButton => 'Şimdi senkronize et';
 
   @override

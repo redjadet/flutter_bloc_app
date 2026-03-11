@@ -30,6 +30,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   late final ConfettiController _confettiController;
   DateTime? _lastFlushTime;
   bool _isCannotGoBelowZeroSnackBarVisible = false;
+  bool _didEnsureSyncStarted = false;
   static const Duration _flushThrottleDuration = Duration(milliseconds: 500);
   static const Duration _cannotGoBelowZeroSnackBarDuration = Duration(
     seconds: 2,
@@ -60,12 +61,21 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    context.ensureSyncStartedIfAvailable();
     _showFlavorBadge = FlavorManager.I.flavor != Flavor.prod;
     _confettiController = ConfettiController(
       duration: const Duration(milliseconds: 800),
     );
     WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didEnsureSyncStarted) {
+      return;
+    }
+    _didEnsureSyncStarted = true;
+    context.ensureSyncStartedIfAvailable();
   }
 
   @override

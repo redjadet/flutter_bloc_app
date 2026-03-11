@@ -18,9 +18,15 @@ class SyncDiagnosticsSection extends StatefulWidget {
 }
 
 class _SyncDiagnosticsSectionState extends State<SyncDiagnosticsSection> {
+  bool _didEnsureSyncStarted = false;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didEnsureSyncStarted) {
+      return;
+    }
+    _didEnsureSyncStarted = true;
     context.ensureSyncStartedIfAvailable();
   }
 
