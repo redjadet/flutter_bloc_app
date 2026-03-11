@@ -650,6 +650,14 @@ All validation scripts are automatically run by the delivery checklist:
 
 This runs all validation scripts in sequence and fails if any critical violations are found.
 
+The checklist is also change-aware:
+
+- skips `flutter pub get` when dependency metadata is unchanged
+- formats only changed Dart files
+- exits early for docs-only change sets instead of running code validation
+- skips Mix lint unless Mix-related files changed
+- when coverage is disabled, runs focused regression guards and only runs the Todo keyboard/layout subset when the current change set touches Todo/layout-relevant files
+
 ### Manual Execution
 
 You can run individual scripts manually:

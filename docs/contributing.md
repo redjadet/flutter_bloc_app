@@ -51,11 +51,17 @@ Contributions are welcome! Please follow these guidelines to ensure consistency 
 
 The `./bin/checklist` command automatically validates:
 
-- Code formatting
-- Static analysis
+- Code formatting for changed Dart files
+- Static analysis and validation scripts for code-relevant changes
 - Architecture violations
 - UI/UX best practices
 - Test coverage
+
+The checklist also avoids unnecessary work:
+
+- `flutter pub get` runs only when dependency metadata changed
+- docs-only change sets exit early instead of running code validation
+- Mix lint and focused Todo layout regressions are skipped automatically when unrelated to the current change set
 
 All checks must pass before merging.
 

@@ -167,6 +167,61 @@ should_run_mix_lint_auto() {
   return 1
 }
 
+is_docs_only_change_set() {
+  if [ "$HAS_GIT_REPO" -ne 1 ] || [ "${#changed_files[@]}" -eq 0 ]; then
+    return 1
+  fi
+
+  local file
+  for file in "${changed_files[@]}"; do
+    case "$file" in
+      *.md|*.mdx|*.txt|*.rst|*.adoc|\
+      docs/*|\
+      README|README.*|\
+      CHANGELOG|CHANGELOG.*|\
+      LICENSE|LICENSE.*|\
+      .gitignore|\
+      .cursor/*)
+        ;;
+      *)
+        return 1
+        ;;
+    esac
+  done
+
+  return 0
+}
+
+should_run_todo_layout_tests_auto() {
+  if [ "$HAS_GIT_REPO" -ne 1 ]; then
+    return 0
+  fi
+
+  if [ "${#changed_files[@]}" -eq 0 ]; then
+    return 0
+  fi
+
+  local file
+  for file in "${changed_files[@]}"; do
+    case "$file" in
+      lib/features/todo_list/*|\
+      test/features/todo_list/*|\
+      lib/shared/extensions/responsive.dart|\
+      lib/shared/widgets/*|\
+      lib/shared/ui/*|\
+      lib/shared/design_system/*|\
+      lib/core/theme/*|\
+      lib/shared/utils/platform_adaptive*|\
+      lib/shared/extensions/build_context_l10n.dart|\
+      lib/shared/extensions/type_safe_bloc_access.dart)
+        return 0
+        ;;
+    esac
+  done
+
+  return 1
+}
+
 echo "🚀 Running Delivery Checklist..."
 echo ""
 
@@ -174,6 +229,7 @@ DART_BIN="$(resolve_flutter_dart)"
 RUN_COVERAGE="${CHECKLIST_RUN_COVERAGE:-1}"
 RUN_FOCUSED_TESTS="${CHECKLIST_RUN_FOCUSED_TESTS:-auto}"
 RUN_MIX_LINT="${CHECKLIST_RUN_MIX_LINT:-auto}"
+RUN_TODO_LAYOUT_TESTS="${CHECKLIST_RUN_TODO_LAYOUT_TESTS:-auto}"
 HAS_GIT_REPO=0
 declare -a changed_files=()
 declare -a changed_dart_files=()
@@ -193,11 +249,24 @@ if ! [[ "$RUN_MIX_LINT" =~ ^(auto|0|1)$ ]]; then
   RUN_MIX_LINT=auto
 fi
 
+if ! [[ "$RUN_TODO_LAYOUT_TESTS" =~ ^(auto|0|1)$ ]]; then
+  echo "⚠️  Invalid CHECKLIST_RUN_TODO_LAYOUT_TESTS='$RUN_TODO_LAYOUT_TESTS'; using auto"
+  RUN_TODO_LAYOUT_TESTS=auto
+fi
+
 if command -v git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   HAS_GIT_REPO=1
 fi
 
 collect_changed_files
+
+if is_docs_only_change_set; then
+  echo "📝 Docs-only change set detected"
+  echo "✅ Skipping dependency, analyze, validation, and coverage steps"
+  echo ""
+  echo "🎉 Delivery checklist complete! No code-relevant work detected."
+  exit 0
+fi
 
 # Step 1: Fetch dependencies (only if needed)
 echo "📦 Step 1/5: Checking dependency state"
@@ -404,9 +473,23 @@ if [ "$should_run_focused_tests" -eq 1 ]; then
   bash tool/check_regression_guards.sh || VALIDATION_FAILED=1
   echo ""
 
-  echo "  Running Todo keyboard/layout regression tests..."
-  bash tool/check_todo_keyboard_layout.sh || VALIDATION_FAILED=1
-  echo ""
+  should_run_todo_layout_tests=1
+  if [ "$RUN_TODO_LAYOUT_TESTS" = "0" ]; then
+    should_run_todo_layout_tests=0
+  elif [ "$RUN_TODO_LAYOUT_TESTS" = "auto" ]; then
+    if ! should_run_todo_layout_tests_auto; then
+      should_run_todo_layout_tests=0
+    fi
+  fi
+
+  if [ "$should_run_todo_layout_tests" -eq 1 ]; then
+    echo "  Running Todo keyboard/layout regression tests..."
+    bash tool/check_todo_keyboard_layout.sh || VALIDATION_FAILED=1
+    echo ""
+  else
+    echo "  Skipping Todo keyboard/layout regression tests (no relevant Todo/layout changes; override with CHECKLIST_RUN_TODO_LAYOUT_TESTS=1)"
+    echo ""
+  fi
 else
   echo "  Skipping focused regression suites (covered by Step 5 full coverage run)"
   echo ""

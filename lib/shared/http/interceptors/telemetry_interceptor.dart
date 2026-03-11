@@ -2,9 +2,21 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 const String _keyStopwatch = '_sw';
+typedef TelemetryEventSink =
+    void Function(
+      RequestOptions options,
+      int? statusCode,
+      String? error,
+      int elapsedMilliseconds,
+    );
 
 /// Logs request/response duration and status.
 class TelemetryInterceptor extends Interceptor {
+  TelemetryInterceptor({final TelemetryEventSink? eventSink})
+    : _eventSink = eventSink;
+
+  final TelemetryEventSink? _eventSink;
+
   @override
   void onRequest(
     final RequestOptions options,
@@ -45,6 +57,7 @@ class TelemetryInterceptor extends Interceptor {
     if (sw == null) return;
     sw.stop();
     final int ms = sw.elapsedMilliseconds;
+    _eventSink?.call(options, statusCode, error, ms);
     if (error != null) {
       AppLogger.debug(
         'HTTP ${options.method} ${options.uri} failed after ${ms}ms: $error',

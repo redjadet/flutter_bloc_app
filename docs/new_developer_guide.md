@@ -214,7 +214,12 @@ Follow the delivery checklist before merging or publishing builds:
 1. `flutter pub get`
 2. Codegen when needed (`dart run build_runner build --delete-conflicting-outputs`)
 3. **Run delivery checklist:** `./bin/checklist` (or `tool/delivery_checklist.sh`)
-   - This runs steps 3-5 automatically: `dart format .` → `flutter analyze` → `tool/test_coverage.sh`
+   - This runs the full validation pipeline for code changes, but skips unnecessary work when possible:
+     - `flutter pub get` only when dependency metadata changed
+     - `dart format` only for changed Dart files
+     - docs-only change sets exit early instead of running code validation
+     - Mix lint runs only when Mix-related files changed
+     - when coverage is disabled, Todo keyboard/layout regressions run only for relevant Todo/layout changes
    - **Optional:** To use just `checklist` without `./bin/`, add the `bin` directory to your PATH
 4. `flutter build ios --simulator` (only when iOS build risk exists)
 
@@ -222,10 +227,12 @@ Follow the delivery checklist before merging or publishing builds:
 
 The delivery checklist script (`./bin/checklist`) automatically runs:
 
-- `flutter pub get` - Ensures dependencies (and analyzer config) resolve correctly
-- `dart format .` - Code formatting
+- `flutter pub get` - Only when dependency metadata changed
+- `dart format` - Only for changed Dart files
 - `flutter analyze` - Static analysis (includes native Dart 3.10 analyzer plugins like `file_length_lint`)
 - `tool/test_coverage.sh` - Runs tests with coverage and automatically updates coverage reports
+
+For docs-only change sets, the checklist exits early instead of running code validation. When coverage is disabled, it still runs focused regression suites, but skips the Todo keyboard/layout subset unless the change set is relevant to Todo/layout behavior.
 
 **Run the full checklist before commits:**
 
