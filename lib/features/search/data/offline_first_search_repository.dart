@@ -121,7 +121,12 @@ class OfflineFirstSearchRepository
 
   void _clearRefreshInFlight(final String query, final Future<void> future) {
     if (identical(_refreshInFlightByQuery[query], future)) {
-      unawaited(_refreshInFlightByQuery.remove(query));
+      final Future<void>? discardedInFlight = _refreshInFlightByQuery.remove(
+        query,
+      );
+      if (discardedInFlight == null) {
+        return;
+      }
     }
   }
 

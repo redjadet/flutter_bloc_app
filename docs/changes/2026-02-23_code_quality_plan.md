@@ -1,10 +1,10 @@
-# Code Quality Improvement Plan — 2026-02-23 (v2)
+# Code Quality Improvement Plan — 2026-03-11 (v2)
 
 ## Executive Summary
 
-This plan outlines a coordinated effort to bring the codebase into 100% compliance with established project rules. It targets infrastructure deadlocks, async safety, and architectural leaks found during a deep-dive audit.
+This plan outlines a coordinated effort to bring the codebase into 100% compliance with established project rules. It targets infrastructure deadlocks, async safety, architectural leaks, and transport-contract inconsistencies found during repeated shared-layer reviews.
 
-**Implementation status:** Phases 2 and 3 (code changes) are done. Phase 1 (environment) and Phase 4 (validation) remain for local/CI execution.
+**Implementation status:** Phases 2 and 3 (code changes) are done. Phase 1 (environment) and Phase 4 (validation) remain for local/CI execution. Shared HTTP contract hardening and its regression coverage were completed on 2026-03-11.
 
 ---
 
@@ -60,6 +60,21 @@ Audit identified leaks of raw strings and non-responsive measurements into the p
     - Execute lifecycle-specific checkers: `./tool/check_cubit_isclosed.sh`, `./tool/check_context_mounted.sh`, and `./tool/check_lifecycle_error_handling.sh`.
 2. **Documentation Update**:
     - Run `dart run tool/update_coverage_summary.dart` to reflect the impact of the infrastructure fixes.
+
+---
+
+## 🌐 Phase 5: Shared HTTP Contract Hardening — ✅ Done
+
+This phase closed the last high-leverage consistency gap in shared transport infrastructure.
+
+1. **Auth Retry Transport Parity** — ✅ Done
+   - 401 retry no longer uses an isolated bare `Dio`; internal auth retries now preserve network checks, transient retry behavior, and telemetry while explicitly skipping nested auth handling.
+2. **Transient Status Retry Coverage** — ✅ Done
+   - `RetryInterceptor` now handles transient HTTP responses under `validateStatus: (_) => true`, not only thrown transport errors.
+3. **Regression Guard Expansion** — ✅ Done
+   - Added focused tests for `AuthTokenInterceptor`, `RetryInterceptor`, `TelemetryInterceptor`, and `edge_then_tables`, and registered them in `tool/check_regression_guards.sh`.
+4. **Shared-Layer Cleanup** — ✅ Done
+   - Removed low-signal mechanical async patterns in touched shared infrastructure so the implementation quality better matches the repo’s stated bar.
 
 ---
 

@@ -9,18 +9,19 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class AuthTokenInterceptor extends QueuedInterceptor {
   AuthTokenInterceptor({
     required final AuthTokenManager authTokenManager,
-    required final Dio dio,
+    required final Dio Function() createRetryDio,
     final FirebaseAuth? firebaseAuth,
   }) : _authTokenManager = authTokenManager,
-       _dio = dio,
+       _createRetryDio = createRetryDio,
        _firebaseAuth = firebaseAuth;
 
   final AuthTokenManager _authTokenManager;
-  final Dio _dio;
+  final Dio Function() _createRetryDio;
   final FirebaseAuth? _firebaseAuth;
 
-  static const String _keyAuthRetried = 'auth_401_retried';
-  static const String _keyManagedAuthUser = 'managed_auth_user';
+  static const String requestExtraAuthRetried = 'auth_401_retried';
+  static const String requestExtraManagedAuthUser = 'managed_auth_user';
+  static const String requestExtraSkipAuthHandling = 'skip_auth_handling';
 
   @override
   void onRequest(
@@ -42,6 +43,9 @@ class AuthTokenInterceptor extends QueuedInterceptor {
   }
 
   Future<void> _injectToken(final RequestOptions options) async {
+    if (options.extra[requestExtraSkipAuthHandling] == true) {
+      return;
+    }
     if (options.headers.containsKey('Authorization')) {
       return;
     }
@@ -52,7 +56,7 @@ class AuthTokenInterceptor extends QueuedInterceptor {
     final String? token = await _authTokenManager.getValidAuthToken(user);
     if (token != null) {
       options.headers['Authorization'] = 'Bearer $token';
-      options.extra[_keyManagedAuthUser] = user;
+      options.extra[requestExtraManagedAuthUser] = user;
     }
   }
 
@@ -106,7 +110,8 @@ class AuthTokenInterceptor extends QueuedInterceptor {
       return const _RetryUnauthorizedResult.noRetry();
     }
     final RequestOptions requestOptions = response.requestOptions;
-    if (requestOptions.extra[_keyAuthRetried] == true) {
+    if (requestOptions.extra[requestExtraSkipAuthHandling] == true ||
+        requestOptions.extra[requestExtraAuthRetried] == true) {
       return const _RetryUnauthorizedResult.noRetry();
     }
     final User? user = _managedUserFrom(requestOptions);
@@ -121,12 +126,13 @@ class AuthTokenInterceptor extends QueuedInterceptor {
       headers: Map<String, dynamic>.from(requestOptions.headers),
       extra: Map<String, dynamic>.from(requestOptions.extra),
     );
-    retryOptions.extra[_keyAuthRetried] = true;
+    retryOptions.extra[requestExtraAuthRetried] = true;
+    retryOptions.extra[requestExtraSkipAuthHandling] = true;
     retryOptions.headers['Authorization'] = 'Bearer $refreshedToken';
-    retryOptions.extra[_keyManagedAuthUser] = user;
+    retryOptions.extra[requestExtraManagedAuthUser] = user;
     try {
       return _RetryUnauthorizedResult.response(
-        await _buildRetryDio().fetch<dynamic>(retryOptions),
+        await _createRetryDio().fetch<dynamic>(retryOptions),
       );
     } on DioException catch (error, stackTrace) {
       AppLogger.error(
@@ -152,7 +158,7 @@ class AuthTokenInterceptor extends QueuedInterceptor {
   }
 
   User? _managedUserFrom(final RequestOptions options) {
-    final Object? value = options.extra[_keyManagedAuthUser];
+    final Object? value = options.extra[requestExtraManagedAuthUser];
     return value is User ? value : null;
   }
 
@@ -167,12 +173,6 @@ class AuthTokenInterceptor extends QueuedInterceptor {
       );
       return null;
     }
-  }
-
-  Dio _buildRetryDio() {
-    return Dio(_dio.options)
-      ..httpClientAdapter = _dio.httpClientAdapter
-      ..transformer = _dio.transformer;
   }
 }
 

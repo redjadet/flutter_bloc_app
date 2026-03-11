@@ -20,7 +20,19 @@ test_names=(
 
 for test_name in "${test_names[@]}"; do
   echo "  • $test_name"
-  flutter test --no-pub "$TEST_FILE" --plain-name "$test_name"
 done
+
+escape_regex() {
+  printf '%s' "$1" | sed -E 's/[][(){}.^$*+?|\\]/\\&/g'
+}
+
+regex_parts=()
+for test_name in "${test_names[@]}"; do
+  regex_parts+=("$(escape_regex "$test_name")")
+done
+
+test_name_regex="$(IFS='|'; echo "${regex_parts[*]}")"
+
+flutter test --no-pub "$TEST_FILE" --name "$test_name_regex"
 
 echo "✅ Todo List keyboard/layout regressions passed"
