@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
@@ -31,6 +32,22 @@ class _FakeRemoteRepository implements CounterRepository {
   Stream<CounterSnapshot> watch() async* {
     yield _snapshot ?? const CounterSnapshot(count: 0);
   }
+}
+
+class _StreamRemoteRepository implements CounterRepository {
+  _StreamRemoteRepository();
+
+  final StreamController<CounterSnapshot> controller =
+      StreamController<CounterSnapshot>.broadcast();
+
+  @override
+  Future<CounterSnapshot> load() async => const CounterSnapshot(count: 0);
+
+  @override
+  Future<void> save(final CounterSnapshot snapshot) async {}
+
+  @override
+  Stream<CounterSnapshot> watch() => controller.stream;
 }
 
 void main() {
@@ -152,6 +169,41 @@ void main() {
         final int lastSyncedMs = lastSynced.millisecondsSinceEpoch;
         expect(lastSyncedMs >= before.millisecondsSinceEpoch, isTrue);
         expect(lastSyncedMs <= after.millisecondsSinceEpoch, isTrue);
+      },
+    );
+
+    test(
+      'remote watch does not overwrite newer unsynced local count',
+      () async {
+        final _StreamRemoteRepository remote = _StreamRemoteRepository();
+        addTearDown(remote.controller.close);
+
+        final OfflineFirstCounterRepository repository =
+            OfflineFirstCounterRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        final DateTime localChanged = DateTime(2024, 1, 2, 12);
+        await repository.save(
+          CounterSnapshot(count: 5, lastChanged: localChanged),
+        );
+
+        final StreamSubscription sub = repository.watch().listen((_) {});
+        addTearDown(sub.cancel);
+
+        // Emit a stale remote snapshot (older timestamp, different count).
+        remote.controller.add(
+          CounterSnapshot(count: 4, lastChanged: DateTime(2024, 1, 1, 12)),
+        );
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+
+        final CounterSnapshot local = await localRepository.load();
+        expect(local.count, 5);
+
+        await sub.cancel();
       },
     );
   });

@@ -342,6 +342,7 @@ CHECK_MESSAGES=(
   "Checking for unguarded null assertion (!) usage..."
   "Checking for Row+Icon+Text overflow risk (use IconLabelRow or Flexible/Expanded)..."
   "Checking for lifecycle and error-handling (snackbar/listen/dialog mounted)..."
+  "Checking offline-first remote-merge (do not overwrite newer local with older remote)..."
 )
 
 CHECK_SCRIPTS=(
@@ -383,6 +384,7 @@ CHECK_SCRIPTS=(
   "tool/check_unguarded_null_assertion.sh"
   "tool/check_row_text_overflow.sh"
   "tool/check_lifecycle_error_handling.sh"
+  "tool/check_offline_first_remote_merge.sh"
 )
 
 DEFAULT_CHECKLIST_JOBS="$(detect_cpu_count)"

@@ -185,6 +185,37 @@ void main() {
       expect(cubit.state.countdownSeconds, 5);
     });
 
+    test(
+      'loadInitial does not overwrite a newer manual increment when load completes late',
+      () async {
+        final Completer<CounterSnapshot> completer =
+            Completer<CounterSnapshot>();
+        final _DelayedLoadCounterRepository repository =
+            _DelayedLoadCounterRepository(
+              completer: completer,
+              initialWatchSnapshot: const CounterSnapshot(count: 0),
+            );
+        final CounterCubit cubit = createCubit(
+          repository: repository,
+          startTicker: false,
+        );
+
+        unawaited(cubit.loadInitial());
+        await pumpEventQueue();
+        expect(cubit.state.status, ViewStatus.loading);
+
+        await cubit.increment();
+        expect(cubit.state.count, 1);
+
+        completer.complete(const CounterSnapshot(count: 0));
+        await pumpEventQueue();
+        await pumpEventQueue();
+
+        expect(cubit.state.count, 1);
+        expect(cubit.state.status, ViewStatus.success);
+      },
+    );
+
     test('updates state when repository emits flushed snapshot', () async {
       final _RecordingCounterRepository recordingRepo =
           _RecordingCounterRepository(const CounterSnapshot(count: 1));
@@ -529,6 +560,33 @@ class _RecordingCounterRepository implements CounterRepository {
   @override
   Stream<CounterSnapshot> watch() async* {
     yield _initial;
+    yield* _controller.stream;
+  }
+}
+
+class _DelayedLoadCounterRepository implements CounterRepository {
+  _DelayedLoadCounterRepository({
+    required this.completer,
+    required CounterSnapshot initialWatchSnapshot,
+  }) : _latest = initialWatchSnapshot,
+       _controller = StreamController<CounterSnapshot>.broadcast();
+
+  final Completer<CounterSnapshot> completer;
+  CounterSnapshot _latest;
+  final StreamController<CounterSnapshot> _controller;
+
+  @override
+  Future<CounterSnapshot> load() => completer.future;
+
+  @override
+  Future<void> save(final CounterSnapshot snapshot) async {
+    _latest = snapshot;
+    _controller.add(snapshot);
+  }
+
+  @override
+  Stream<CounterSnapshot> watch() async* {
+    yield _latest;
     yield* _controller.stream;
   }
 }
