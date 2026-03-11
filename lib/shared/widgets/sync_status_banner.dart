@@ -23,45 +23,54 @@ class SyncStatusBanner extends StatefulWidget {
 }
 
 class _SyncStatusBannerState extends State<SyncStatusBanner> {
+  bool _didEnsureSyncStarted = false;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didEnsureSyncStarted) {
+      return;
+    }
+    _didEnsureSyncStarted = true;
     context.ensureSyncStartedIfAvailable();
   }
 
   @override
-  Widget build(
-    final BuildContext context,
-  ) => TypeSafeBlocSelector<SyncStatusCubit, SyncStatusState, SyncStatus>(
-    selector: (final state) => state.syncStatus,
-    builder: (final context, final syncStatus) {
-      if (syncStatus != SyncStatus.degraded) {
-        return const SizedBox.shrink();
-      }
+  Widget build(final BuildContext context) {
+    if (context.tryCubit<SyncStatusCubit>() == null) {
+      return const SizedBox.shrink();
+    }
+    return TypeSafeBlocSelector<SyncStatusCubit, SyncStatusState, SyncStatus>(
+      selector: (final state) => state.syncStatus,
+      builder: (final context, final syncStatus) {
+        if (syncStatus != SyncStatus.degraded) {
+          return const SizedBox.shrink();
+        }
 
-      return Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: context.responsiveHorizontalGapL,
-          vertical: context.responsiveGapS,
-        ),
-        child: AppMessage(
-          title: 'Sync Issues Detected',
-          message:
-              'Some data may not be synced. Tap retry to attempt synchronization.',
-          isError: true,
-          actions: <Widget>[
-            PlatformAdaptive.textButton(
-              context: context,
-              onPressed: () {
-                final SyncStatusCubit cubit = context.cubit<SyncStatusCubit>();
-                // check-ignore: user action triggers async flush
-                unawaited(cubit.flush());
-              },
-              child: Text(context.l10n.appInfoRetryButtonLabel),
-            ),
-          ],
-        ),
-      );
-    },
-  );
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: context.responsiveHorizontalGapL,
+            vertical: context.responsiveGapS,
+          ),
+          child: AppMessage(
+            title: context.l10n.syncStatusDegradedTitle,
+            message: context.l10n.syncStatusDegradedMessage,
+            isError: true,
+            actions: <Widget>[
+              PlatformAdaptive.textButton(
+                context: context,
+                onPressed: () {
+                  final SyncStatusCubit cubit = context
+                      .cubit<SyncStatusCubit>();
+                  // check-ignore: user action triggers async flush
+                  unawaited(cubit.flush());
+                },
+                child: Text(context.l10n.appInfoRetryButtonLabel),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }

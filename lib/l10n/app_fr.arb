@@ -687,6 +687,8 @@
   "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Finalisation des dernières mises à jour.} one {Synchronisation de # changement…} other {Synchronisation de # changements…}}",
   "syncStatusPendingTitle": "Changements en attente",
   "syncStatusPendingMessage": "{pendingCount, plural, one {# changement en attente de synchronisation.} other {# changements en attente de synchronisation.}}",
+  "syncStatusDegradedTitle": "Problèmes de synchronisation détectés",
+  "syncStatusDegradedMessage": "Certaines données ne sont peut-être pas synchronisées. Appuyez sur Réessayer pour relancer la synchronisation.",
   "syncStatusSyncNowButton": "Synchroniser maintenant",
   "@syncStatusSyncNowButton": {
     "description": "Bouton pour lancer manuellement la synchronisation des changements en attente."

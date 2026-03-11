@@ -25,12 +25,22 @@ class CounterSyncQueueInspectorButton extends StatefulWidget {
 class _CounterSyncQueueInspectorButtonState
     extends State<CounterSyncQueueInspectorButton> {
   int _pendingCount = 0;
+  bool _didEnsureSyncStarted = false;
 
   @override
   void initState() {
     super.initState();
-    context.ensureSyncStartedIfAvailable();
     unawaited(_refreshPendingCount());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didEnsureSyncStarted) {
+      return;
+    }
+    _didEnsureSyncStarted = true;
+    context.ensureSyncStartedIfAvailable();
   }
 
   Future<void> _refreshPendingCount() async {

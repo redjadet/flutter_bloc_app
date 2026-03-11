@@ -687,6 +687,8 @@
   "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Terminando tus últimas actualizaciones.} one {Sincronizando # cambio…} other {Sincronizando # cambios…}}",
   "syncStatusPendingTitle": "Cambios en cola",
   "syncStatusPendingMessage": "{pendingCount, plural, one {# cambio esperando sincronización.} other {# cambios esperando sincronización.}}",
+  "syncStatusDegradedTitle": "Se detectaron problemas de sincronización",
+  "syncStatusDegradedMessage": "Es posible que algunos datos no estén sincronizados. Toca Reintentar para volver a iniciar la sincronización.",
   "syncStatusSyncNowButton": "Sincronizar ahora",
   "@syncStatusSyncNowButton": {
     "description": "Botón para forzar la sincronización manual de los cambios pendientes."

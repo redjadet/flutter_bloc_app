@@ -688,6 +688,8 @@
   "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Son güncellemeler tamamlanıyor.} one {# değişiklik senkronize ediliyor…} other {# değişiklik senkronize ediliyor…}}",
   "syncStatusPendingTitle": "Bekleyen değişiklikler",
   "syncStatusPendingMessage": "{pendingCount, plural, one {Senkronizasyon bekleyen # değişiklik.} other {Senkronizasyon bekleyen # değişiklik.}}",
+  "syncStatusDegradedTitle": "Senkronizasyon sorunları algılandı",
+  "syncStatusDegradedMessage": "Bazı veriler senkronize edilmemiş olabilir. Senkronizasyonu yeniden denemek için tekrar dene.",
   "syncStatusSyncNowButton": "Şimdi senkronize et",
   "@syncStatusSyncNowButton": {
     "description": "Bekleyen değişiklikleri elle senkronize etmeyi başlatan düğme."

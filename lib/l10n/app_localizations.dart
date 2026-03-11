@@ -1790,6 +1790,18 @@ abstract class AppLocalizations {
   /// **'{pendingCount, plural, one {# change waiting to sync.} other {# changes waiting to sync.}}'**
   String syncStatusPendingMessage(int pendingCount);
 
+  /// Title shown when background sync enters a degraded state
+  ///
+  /// In en, this message translates to:
+  /// **'Sync issues detected'**
+  String get syncStatusDegradedTitle;
+
+  /// Message shown when background sync is degraded and the user can retry
+  ///
+  /// In en, this message translates to:
+  /// **'Some data may not be synced. Tap retry to attempt synchronization.'**
+  String get syncStatusDegradedMessage;
+
   /// Button label to trigger manual syncing of pending changes.
   ///
   /// In en, this message translates to:

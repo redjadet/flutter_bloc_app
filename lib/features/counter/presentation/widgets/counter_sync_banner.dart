@@ -33,18 +33,11 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
   DateTime? _lastSyncedAt;
   String? _lastChangeId;
   StreamSubscription<CounterSnapshot>? _counterSubscription;
+  bool _didInitializeInheritedState = false;
 
   @override
   void initState() {
     super.initState();
-    context.ensureSyncStartedIfAvailable();
-    try {
-      final CounterCubit cubit = context.cubit<CounterCubit>();
-      _lastSyncedAt = cubit.state.lastSyncedAt;
-      _lastChangeId = cubit.state.changeId;
-    } on Object {
-      // CounterCubit not available; rely on repository stream below.
-    }
     unawaited(_refreshPendingCount());
     // Listen to counter snapshot changes for real-time lastSyncedAt/changeId updates
     _counterSubscription = widget.counterRepository.watch().listen(
@@ -63,6 +56,23 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
         );
       },
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didInitializeInheritedState) {
+      return;
+    }
+    _didInitializeInheritedState = true;
+    context.ensureSyncStartedIfAvailable();
+    try {
+      final CounterCubit cubit = context.cubit<CounterCubit>();
+      _lastSyncedAt = cubit.state.lastSyncedAt;
+      _lastChangeId = cubit.state.changeId;
+    } on Object {
+      // CounterCubit not available; rely on repository stream below.
+    }
   }
 
   @override

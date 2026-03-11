@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
@@ -38,8 +39,8 @@ class ViewStatusSwitcher<C extends StateStreamableSource<S>, S, T>
 
     if (isError(data)) {
       return errorBuilder?.call(context, data) ??
-          const CommonErrorView(
-            message: 'Something went wrong',
+          CommonErrorView(
+            message: context.l10n.errorGeneric,
           );
     }
 
