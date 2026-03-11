@@ -239,8 +239,9 @@ class _TodoListBody extends StatelessWidget {
             );
 
             final List<Widget> headerChildren = [
-              // Sync banner hidden on purpose
-              // const TodoSyncBanner(),
+              // Sync banner hidden on purpose. When re-enabling, pass
+              // pendingRepository: (from route/parent DI).
+              // const TodoSyncBanner(pendingRepository: ...),
               Visibility(
                 visible: layout.showStats,
                 maintainState: true,

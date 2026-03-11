@@ -5,6 +5,8 @@
 /// misuse of data.
 library;
 
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
+
 /// Returns [value] as [String] if it is a [String], otherwise null.
 String? stringFromDynamic(final dynamic value) =>
     value is String ? value : null;
@@ -70,4 +72,45 @@ bool boolFromDynamic(final dynamic value, {required final bool fallback}) {
     }
   }
   return fallback;
+}
+
+/// Parses a map-of-maps (e.g. Realtime DB snapshot) into a list of [T] by
+/// calling [parseItem] for each map value. Skips non-map values and entries
+/// that throw or return null; logs parse failures with [logContext].
+List<T> parseMapOfMaps<T>(
+  final Object? value, {
+  required final T? Function(Object? key, Map<dynamic, dynamic> map) parseItem,
+  required final String logContext,
+}) {
+  if (value == null) {
+    return <T>[];
+  }
+  if (value is! Map) {
+    AppLogger.warning(
+      '$logContext unexpected payload type: ${value.runtimeType}',
+    );
+    return <T>[];
+  }
+  final Map<Object?, Object?> data = Map<Object?, Object?>.from(value);
+  final List<T> out = <T>[];
+  for (final MapEntry<Object?, Object?> entry in data.entries) {
+    final Object? v = entry.value;
+    if (v is! Map) {
+      continue;
+    }
+    try {
+      final Map<dynamic, dynamic> itemMap = Map<dynamic, dynamic>.from(v);
+      final T? item = parseItem(entry.key, itemMap);
+      if (item != null) {
+        out.add(item);
+      }
+    } on Object catch (e, s) {
+      AppLogger.error(
+        '$logContext failed to parse item: ${entry.key}',
+        e,
+        s,
+      );
+    }
+  }
+  return out;
 }

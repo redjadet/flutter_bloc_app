@@ -5,9 +5,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/todo_item_dto.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
+import 'package:flutter_bloc_app/shared/firebase/realtime_database_guard.dart';
 import 'package:flutter_bloc_app/shared/firebase/run_with_auth_user.dart';
 import 'package:flutter_bloc_app/shared/firebase/stream_with_auth_user.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 
 /// Firebase Realtime Database backed implementation of [TodoRepository].
 class RealtimeDatabaseTodoRepository implements TodoRepository {
@@ -134,40 +136,18 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
     final Object? value, {
     required final String userId,
   }) {
-    if (value == null) {
-      return const <TodoItem>[];
-    }
-    if (value is! Map) {
-      AppLogger.warning(
-        'RealtimeDatabaseTodoRepository._itemsFromValue unexpected payload type: '
-        '${value.runtimeType}',
-      );
-      return const <TodoItem>[];
-    }
-    final Map<Object?, Object?> data = Map<Object?, Object?>.from(value);
-    final List<TodoItem> items = <TodoItem>[];
-    for (final MapEntry<Object?, Object?> entry in data.entries) {
-      final value = entry.value;
-      if (value is! Map) {
-        continue;
-      }
-      try {
-        final Map<dynamic, dynamic> itemMap = Map<dynamic, dynamic>.from(value);
-        final Object? rawId = itemMap['id'];
+    final List<TodoItem> items = parseMapOfMaps<TodoItem>(
+      value,
+      logContext: 'RealtimeDatabaseTodoRepository._itemsFromValue',
+      parseItem: (final key, final map) {
+        final Object? rawId = map['id'];
         if (rawId == null || (rawId is String && rawId.trim().isEmpty)) {
-          itemMap['id'] = entry.key?.toString();
+          map['id'] = key?.toString();
         }
-        final TodoItemDto dto = TodoItemDto.fromMap(itemMap);
-        items.add(dto.toDomain());
-      } on Exception catch (error, stackTrace) {
-        AppLogger.error(
-          'RealtimeDatabaseTodoRepository._itemsFromValue failed to parse item: '
-          '${entry.key}',
-          error,
-          stackTrace,
-        );
-      }
-    }
+        final TodoItemDto dto = TodoItemDto.fromMap(map);
+        return dto.toDomain();
+      },
+    );
     return _sortItems(items);
   }
 
@@ -193,28 +173,11 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
     required final String todoId,
     required final Map<String, Object?> data,
   }) async {
-    try {
-      await _todoRef.child(userId).child(todoId).set(data);
-    } catch (error, stackTrace) {
-      if (error is TypeError) {
-        final String errorMessage = error.toString();
-        final bool isFlutterFireDetailsCastIssue = errorMessage.contains(
-          "'String' is not a subtype of type 'Map",
-        );
-        if (isFlutterFireDetailsCastIssue) {
-          Error.throwWithStackTrace(
-            FirebaseException(
-              plugin: 'firebase_database',
-              code: 'database-platform-error-details',
-              message:
-                  'Realtime Database write failed while saving todo. '
-                  'Check database rules and path keys.',
-            ),
-            stackTrace,
-          );
-        }
-      }
-      rethrow;
-    }
+    await guardRealtimeDatabaseWrite(
+      () => _todoRef.child(userId).child(todoId).set(data),
+      message:
+          'Realtime Database write failed while saving todo. '
+          'Check database rules and path keys.',
+    );
   }
 }

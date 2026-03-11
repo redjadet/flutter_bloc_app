@@ -116,6 +116,7 @@ Theme, constants, and shared UI are organized as follows:
 - **`lib/core/theme/`** – ThemeData, light/dark ColorScheme, and TextTheme (e.g. `AppTheme.lightTheme()`). Used by `AppConfig` when building `MaterialApp`.
 - **`lib/core/constants/`** – App-wide constants (colors, breakpoints, window sizes, durations). Use `AppConstants` from the barrel.
 - **`lib/core/extensions/`** – Core-level extensions (e.g. BuildContext helpers for theme/router/config). Responsive, bloc, and l10n extensions remain in `lib/shared/extensions/`.
+- **`lib/core/supabase/edge_then_tables.dart`** – Shared “try Edge function then fall back to tables” helper: `runSupabaseEdgeThenTables()` and `ensureSupabaseConfigured()`. Repositories pass `genericFailureMessage` so UI/tests see repository-specific error text (e.g. “Failed to load chart data from Supabase”).
 - **`lib/shared/components/`** – Design system primitives (buttons, form fields, chips, icons). Add new reusable design building blocks here.
 - **`lib/shared/widgets/`** – App-level composite widgets (e.g. `CommonPageLayout`, `CommonStatusView`, `CommonLoadingWidget`, skeletons). Use for composed screens and status UI.
 

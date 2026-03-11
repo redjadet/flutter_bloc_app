@@ -1,4 +1,5 @@
-import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/core/supabase/edge_then_tables.dart';
+import 'package:flutter_bloc_app/features/chart/domain/chart_data_exception.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_remote_repository.dart';
@@ -18,24 +19,21 @@ class SupabaseChartRepository implements ChartRemoteRepository {
 
   @override
   Future<List<ChartPoint>> fetchTrendingCounts() async {
-    _ensureConfigured();
-    try {
-      final List<ChartPoint> fromEdge = await _tryFetchFromEdge();
-      if (fromEdge.isNotEmpty) {
-        _lastSource = ChartDataSource.supabaseEdge;
-        return fromEdge;
-      }
-
-      final List<ChartPoint> fromTables = await _fetchFromTables();
-      _lastSource = ChartDataSource.supabaseTables;
-      return fromTables;
-    } on PostgrestException catch (e, s) {
-      AppLogger.error('SupabaseChartRepository.fetchTrendingCounts', e, s);
-      throw Exception(e.message);
-    } on Object catch (e, s) {
-      AppLogger.error('SupabaseChartRepository.fetchTrendingCounts', e, s);
-      throw Exception('Failed to load chart data from Supabase');
-    }
+    final SupabaseEdgeThenTablesResult<ChartPoint> result =
+        await runSupabaseEdgeThenTables<ChartPoint>(
+          tryEdge: _tryFetchFromEdge,
+          fetchTables: _fetchFromTables,
+          onPostgrestException: (final e) =>
+              ChartDataException(e.message, cause: e),
+          onGenericException: (final msg, final cause) =>
+              ChartDataException(msg, cause: cause),
+          logContext: 'SupabaseChartRepository.fetchTrendingCounts',
+          genericFailureMessage: 'Failed to load chart data from Supabase',
+        );
+    _lastSource = result.fromEdge
+        ? ChartDataSource.supabaseEdge
+        : ChartDataSource.supabaseTables;
+    return result.result;
   }
 
   Future<List<ChartPoint>> _tryFetchFromEdge() async {
@@ -84,12 +82,6 @@ class SupabaseChartRepository implements ChartRemoteRepository {
         .select('date_utc, value')
         .order('date_utc');
     return _mapPoints(raw);
-  }
-
-  void _ensureConfigured() {
-    if (!SupabaseBootstrapService.isSupabaseInitialized) {
-      throw StateError('Supabase is not configured');
-    }
   }
 
   List<ChartPoint> _parsePointsResilient(final List<dynamic> raw) {
