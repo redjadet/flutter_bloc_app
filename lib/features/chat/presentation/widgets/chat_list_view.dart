@@ -23,6 +23,7 @@ import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 const ListEquality<ChatContact> _chatContactListEquality =
     ListEquality<ChatContact>();
 
+/// Chat list UI: contact list, selection, and navigation to conversation.
 class ChatListView extends StatelessWidget {
   const ChatListView({
     required this.chatRepository,

@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:genui/genui.dart' as genui;
 import 'package:genui_google_generative_ai/genui_google_generative_ai.dart';
 
+/// GenUI demo agent implementation using Google Generative AI for content.
 class GenUiDemoAgentImpl implements GenUiDemoAgent {
   GenUiDemoAgentImpl();
 

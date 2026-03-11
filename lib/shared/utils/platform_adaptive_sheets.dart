@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:mix/mix.dart';
 
+/// Platform-adaptive bottom sheets and action dialogs (Cupertino vs Material).
 class PlatformAdaptiveSheets {
   const PlatformAdaptiveSheets._();
 

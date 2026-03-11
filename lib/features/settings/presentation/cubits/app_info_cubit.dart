@@ -9,6 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'app_info_cubit.freezed.dart';
 
+/// Cubit that loads and holds app info (version, build, etc.) from [AppInfoRepository].
 class AppInfoCubit extends Cubit<AppInfoState> {
   AppInfoCubit({required final AppInfoRepository repository})
     : _repository = repository,
