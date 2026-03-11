@@ -5,12 +5,31 @@ import 'package:flutter_bloc_app/core/bootstrap/bootstrap_coordinator.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/data/fcm_background_handler.dart';
 
+void Function() ensureBootstrapBindingInitialized =
+    WidgetsFlutterBinding.ensureInitialized;
+
+void Function(BackgroundMessageHandler handler) registerFcmBackgroundHandler =
+    FirebaseMessaging.onBackgroundMessage;
+
+Future<void> Function(Flavor flavor) bootstrapFlavorApp =
+    BootstrapCoordinator.bootstrapApp;
+
+String Function() readAppVersion = AppVersionService.getAppVersion;
+
 /// Bootstrap the app with the given flavor
 Future<void> runAppWithFlavor(final Flavor flavor) async {
-  WidgetsFlutterBinding.ensureInitialized();
-  FirebaseMessaging.onBackgroundMessage(fcmBackgroundHandler);
-  await BootstrapCoordinator.bootstrapApp(flavor);
+  ensureBootstrapBindingInitialized();
+  registerFcmBackgroundHandler(fcmBackgroundHandler);
+  await bootstrapFlavorApp(flavor);
 }
 
 /// Get the app version synchronously, with fallback to default
-String getAppVersion() => AppVersionService.getAppVersion();
+String getAppVersion() => readAppVersion();
+
+@visibleForTesting
+void resetMainBootstrapHooksForTest() {
+  ensureBootstrapBindingInitialized = WidgetsFlutterBinding.ensureInitialized;
+  registerFcmBackgroundHandler = FirebaseMessaging.onBackgroundMessage;
+  bootstrapFlavorApp = BootstrapCoordinator.bootstrapApp;
+  readAppVersion = AppVersionService.getAppVersion;
+}
