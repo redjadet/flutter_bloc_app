@@ -14,6 +14,7 @@ tests=(
   "test/features/counter/presentation/pages/counter_page_snackbar_timeout_test.dart"
   "test/features/graphql_demo/data/graphql_demo_exception_mapper_test.dart"
   "test/features/graphql_demo/data/supabase_graphql_demo_repository_test.dart"
+  "test/features/todo_list/presentation/widgets/todo_sync_banner_test.dart"
   "test/features/todo_list/data/offline_first_todo_repository_test.dart"
   "test/features/todo_list/data/realtime_database_todo_repository_test.dart"
   "test/features/todo_list/presentation/pages/todo_list_page_test.dart"

@@ -12,7 +12,23 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 /// Requires the table to be in the `supabase_realtime` publication:
 /// `alter publication supabase_realtime add table iot_devices;`
 class IotDemoRealtimeSubscription {
-  IotDemoRealtimeSubscription();
+  IotDemoRealtimeSubscription({
+    final bool Function()? isConfiguredOverride,
+    final RealtimeChannel Function(
+      void Function(PostgresChangePayload payload) onPayload,
+    )?
+    createChannel,
+    final Future<void> Function(RealtimeChannel channel)? removeChannel,
+  }) : _isConfiguredOverride = isConfiguredOverride,
+       _createChannel = createChannel ?? _defaultCreateChannel,
+       _removeChannel = removeChannel ?? _defaultRemoveChannel;
+
+  final bool Function()? _isConfiguredOverride;
+  final RealtimeChannel Function(
+    void Function(PostgresChangePayload payload) onPayload,
+  )
+  _createChannel;
+  final Future<void> Function(RealtimeChannel channel) _removeChannel;
 
   RealtimeChannel? _channel;
   void Function()? _onTableChange;
@@ -20,7 +36,10 @@ class IotDemoRealtimeSubscription {
   /// Starts listening to `iot_devices`. The callback is called on any
   /// change. No-op if Supabase is not initialized or already started.
   void start(final void Function() onTableChange) {
-    if (!SupabaseBootstrapService.isSupabaseInitialized) {
+    final bool isConfigured =
+        _isConfiguredOverride?.call() ??
+        SupabaseBootstrapService.isSupabaseInitialized;
+    if (!isConfigured) {
       return;
     }
     if (_channel != null) {
@@ -28,14 +47,7 @@ class IotDemoRealtimeSubscription {
     }
     _onTableChange = onTableChange;
     try {
-      final RealtimeChannel channel = Supabase.instance.client
-          .channel('iot_demo_devices')
-          .onPostgresChanges(
-            event: PostgresChangeEvent.all,
-            schema: 'public',
-            table: 'iot_devices',
-            callback: _onPayload,
-          );
+      final RealtimeChannel channel = _createChannel(_onPayload);
       _channel = channel;
       channel.subscribe();
     } on Object catch (error, stackTrace) {
@@ -70,7 +82,7 @@ class IotDemoRealtimeSubscription {
     _onTableChange = null;
     if (channel != null) {
       try {
-        await Supabase.instance.client.removeChannel(channel);
+        await _removeChannel(channel);
       } on Object catch (error, stackTrace) {
         AppLogger.error(
           'IotDemoRealtimeSubscription.stop removeChannel failed',
@@ -80,4 +92,20 @@ class IotDemoRealtimeSubscription {
       }
     }
   }
+
+  static RealtimeChannel _defaultCreateChannel(
+    final void Function(PostgresChangePayload payload) onPayload,
+  ) {
+    return Supabase.instance.client
+        .channel('iot_demo_devices')
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: 'iot_devices',
+          callback: onPayload,
+        );
+  }
+
+  static Future<void> _defaultRemoveChannel(final RealtimeChannel channel) =>
+      Supabase.instance.client.removeChannel(channel);
 }
