@@ -7,6 +7,7 @@ This app follows a strict Domain → Data → Presentation pipeline backed by `g
 > - [Architecture Details](architecture_details.md) - High-level architecture diagrams, principles, and state management flow
 > - [SOLID Principles](solid_principles.md) - How SOLID principles are applied throughout this architecture
 > - [DRY Principles](dry_principles.md) - DRY consolidations and patterns
+> - [Separation of Concerns](separation_of_concerns.md) - Responsibility boundaries across layers, DI, and shared services
 > - [Code Quality](CODE_QUALITY.md) - Architecture compliance verification and code quality metrics
 > - [Flutter Best Practices Review](flutter_best_practices_review.md) - Architecture review and best practices checklist
 

@@ -39,6 +39,7 @@ This document summarizes test coverage, test types, testing patterns, and common
 - End-to-end app flow verification under `integration_test/`
 - Runs on a supported non-web device via `./bin/integration_tests` or `tool/run_integration_tests.sh`
 - Use `CHECKLIST_INTEGRATION_DEVICE=<deviceId>` when multiple devices are attached
+- **Files**: `app_test.dart` (launch and counter), `counter_persistence_test.dart` (persisted count after restart), `settings_flow_test.dart` (settings, theme, locale), `navigation_flow_test.dart` (counter to example to library demo), `calculator_flow_test.dart` (calculator from home), `graphql_demo_flow_test.dart` (GraphQL demo from overflow menu), `todo_list_flow_test.dart` (todo list add and list)
 
 ### Common Bugs Prevention Tests
 
