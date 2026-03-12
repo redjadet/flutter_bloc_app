@@ -319,365 +319,40 @@ Enhance compile-time safety through:
 - Analyzer plugins for state/event validation
 - Type-safe extensions for context access
 
-## Detailed Action Checklist: Adding Compile-Time Safety
-
-If you want to enhance compile-time safety in BLoC/Cubit to match Riverpod's level, follow this comprehensive checklist:
-
-### Phase 1: Foundation (Already Partially Complete) ✅
-
-- [x] **Use Freezed for all States**
-  - [x] Convert existing states to use `@freezed` annotation
-  - [x] Generate `.freezed.dart` files with `build_runner`
-  - [x] Use union types for state variants where appropriate
-  - [x] **Action**: Audit remaining states and convert any using `Equatable` to `freezed`
-    - ✅ **Completed**: `SearchState` converted to Freezed
-    - ⏳ **Remaining**: `WebsocketState`, `ProfileState`, `ChartState`, `MapSampleState`, `AppInfoState`
-
-- [x] **Use Sealed Classes for State Hierarchies**
-  - [x] Implement sealed classes for state variants (e.g., `DeepLinkState`)
-  - [ ] **Action**: Convert remaining state hierarchies to sealed classes
-  - [ ] **Action**: Use sealed classes for all event types in BLoCs
-
-- [x] **Enable Strict Null Safety**
-  - [x] Ensure all code uses null safety
-  - [x] Use `required` keywords for non-nullable parameters
-  - [ ] **Action**: Review and add null-safety annotations where needed
-
-### Phase 2: Type-Safe Access Patterns ✅ (Implemented)
-
-- [x] **Create Type-Safe Cubit Access Extensions**
-
-  ✅ **Implemented**: `lib/shared/extensions/type_safe_bloc_access.dart`
-
-  Provides compile-time type-safe access to cubits and states:
-  - `context.cubit<T>()` - Type-safe cubit access
-  - `context.state<C, S>()` - Type-safe state access
-  - `context.watchCubit<T>()` - Type-safe cubit watching
-  - `context.watchState<C, S>()` - Type-safe state watching
-  - `context.selectState<C, S, T>()` - Type-safe state selection
-
-- [x] **Create Type-Safe State Selectors**
-
-  ✅ **Implemented**: `lib/shared/widgets/type_safe_bloc_selector.dart`
-
-  Provides compile-time type-safe BLoC widgets:
-  - `TypeSafeBlocSelector<C, S, T>` - Type-safe state selector
-  - `TypeSafeBlocBuilder<C, S>` - Type-safe state builder
-  - `TypeSafeBlocConsumer<C, S>` - Type-safe state consumer with listener
-
-- [x] **Add Compile-Time State Transition Validation**
-
-  ✅ **Implemented**: `lib/shared/utils/state_transition_validator.dart`
-
-  Provides runtime state transition validation with type safety:
-  - `StateTransitionValidator<S>` - Abstract base for validators
-  - `FunctionStateTransitionValidator<S>` - Validator from function
-  - `StateTransitionValidation<S>` mixin - Mixin for cubits
-  - `validateAndEmit()` - Validates before emitting state
-
-  **Note:** For compile-time validation, use code generation (see [Code Generation Guide](code_generation_guide.md))
-
-### Phase 3: Code Generation Enhancements (To Implement)
-
-- [ ] **Create Custom Code Generator for BLoC Patterns**
-
-  ```yaml
-  # Add to pubspec.yaml
-  dev_dependencies:
-    build_runner: ^2.4.0
-    source_gen: ^1.5.0
-    bloc_codegen: ^1.0.0  # Custom generator
-  ```
-
-- [ ] **Generate Type-Safe Cubit Factories**
-
-  ```dart
-  // Generated code
-  @blocFactory
-  class CounterCubitFactory {
-    static CounterCubit create({
-      required CounterRepository repository,
-      required TimerService timerService,
-    }) => CounterCubit(
-      repository: repository,
-      timerService: timerService,
-    );
-  }
-  ```
-
-- [x] **Generate Exhaustive Switch Statements**
-
-  ✅ **Implemented**: `lib/shared/utils/sealed_state_helpers.dart`
-
-  Provides runtime helpers for sealed state classes:
-  - `SealedStateHelpers` extension - Pattern matching helpers
-  - `SealedStateMatcher<S, R>` - Builder pattern for state matching
-  - Documentation for using Dart 3.0+ pattern matching (recommended)
-
-  **Note:** For true compile-time exhaustiveness, use Dart 3.0+ `switch` expressions.
-  See [Code Generation Guide](code_generation_guide.md) for generating `when()` methods.
-
-- [x] **Generate State Transition Validators**
-
-  ✅ **Implemented**: `lib/shared/utils/state_transition_validator.dart`
-
-  Provides runtime state transition validation:
-  - `StateTransitionValidator<S>` - Base class for validators
-  - `FunctionStateTransitionValidator<S>` - Validator from function
-  - `StateTransitionValidation<S>` mixin - For cubits
-
-  **Note:** For compile-time validation, use code generation (see [Code Generation Guide](code_generation_guide.md))
-
-### Phase 4: Static Analysis & Linting (To Implement)
-
-- [x] **Create Custom Lint Rules Guide**
-
-  ✅ **Implemented**: `docs/custom_lint_rules_guide.md`
-
-  Comprehensive guide covering:
-  - How to create custom analyzer plugins
-  - Example lint rule implementations
-  - Integration with existing validation scripts
-  - Best practices and limitations
-
-  **Note:** Creating actual analyzer plugins requires significant development effort.
-  The guide provides the foundation; runtime validation (via `StateTransitionValidator`)
-  is more practical for most use cases.
-
-- [x] **Add Analyzer Plugin Documentation**
-
-  ✅ **Documented**: Runtime validation helpers in `lib/shared/utils/bloc_lint_helpers.dart`
-
-  Provides runtime validation utilities:
-  - `BlocLintHelpers` - Validation helper class
-  - `validateLifecycleGuards()` - Lifecycle validation
-  - `validateStateExhaustiveness()` - State variant checking
-  - `validateEventHandlers()` - Event handler validation
-
-  **Note:** For compile-time validation, use custom analyzer plugins (see [Custom Lint Rules Guide](custom_lint_rules_guide.md))
-
-- [x] **Create Type-Safe BlocProvider Helpers**
-
-  ✅ **Implemented**: Enhanced `lib/shared/utils/bloc_provider_helpers.dart`
-
-  Added type-safe methods:
-  - `BlocProviderHelpers.withCubit<C, S>()` - Type-safe provider creation
-  - `BlocProviderHelpers.withCubitAsyncInit<C, S>()` - Type-safe provider with async init
-
-### Phase 5: Testing & Validation (To Implement)
-
-- [x] **Add Compile-Time Test Generation**
-
-  ✅ **Implemented**: `test/shared/utils/state_transition_validator_test.dart`
-
-  Provides test utilities and examples for:
-  - Testing state transition validators
-  - Validating allowed transitions
-  - Catching invalid transitions in tests
-
-  **Note:** For generating tests automatically, use code generation (see [Code Generation Guide](code_generation_guide.md))
-
-- [x] **Create State Transition Tests**
-
-  ✅ **Implemented**: `test/shared/utils/state_transition_validator_test.dart`
-
-  Provides test utilities for state transition validation:
-  - Example validator implementation
-  - Tests for valid/invalid transitions
-  - Tests for validation error handling
-
-  **Usage:** See test file for examples of how to test state transitions.
-
-- [x] **Add Exhaustiveness Checking in Tests**
-
-  ✅ **Documented**: Use Dart 3.0+ pattern matching in tests
-
-  **Best Practice:** Use `switch` expressions in tests to ensure exhaustiveness:
-
-  ```dart
-  test('handles all state variants', () {
-    final states = [
-      DeepLinkIdle(),
-      DeepLinkLoading(),
-      DeepLinkNavigate(target, origin),
-      DeepLinkError('test'),
-    ];
-
-    for (final state in states) {
-      final result = switch (state) {
-        DeepLinkIdle() => 'idle',
-        DeepLinkLoading() => 'loading',
-        DeepLinkNavigate() => 'navigate',
-        DeepLinkError() => 'error',
-      };
-      expect(result, isNotNull);
-    }
-  });
-  ```
-
-### Phase 6: Documentation & Tooling (To Implement)
-
-- [x] **Create Code Generation Documentation**
-
-  ✅ **Implemented**: `docs/code_generation_guide.md`
-
-  Comprehensive guide covering:
-  - Setting up code generation
-  - Creating custom generators
-  - Generating exhaustive switch statements
-  - Generating state transition validators
-  - Integration with existing code
-  - Best practices
-
-- [ ] **Add IDE Support**
-  - [ ] Create IDE plugins for BLoC code generation
-  - [ ] Add code snippets for type-safe patterns
-  - [ ] Provide quick fixes for common issues
-
-- [x] **Create Migration Guide**
-
-  ✅ **Implemented**: `docs/migration_to_type_safe_bloc.md`
-
-  Comprehensive migration guide covering:
-  - Step-by-step migration instructions
-  - Before/after code examples
-  - Migration checklist
-  - Testing after migration
-  - Common patterns and troubleshooting
-
-### Phase 7: Advanced Features (Optional)
-
-- [ ] **State Machine Code Generation**
-
-  ```dart
-  // Generate state machines from definitions
-  @stateMachine
-  class CounterStateMachine {
-    @initial
-    CounterInitial initial;
-
-    @transition(from: CounterInitial, to: CounterLoading)
-    CounterLoading loading;
-
-    @transition(from: CounterLoading, to: CounterSuccess)
-    CounterSuccess success;
-  }
-  ```
-
-- [ ] **Event Handler Validation**
-
-  ```dart
-  // Ensure all events have handlers
-  @bloc
-  class CounterBloc extends Bloc<CounterEvent, CounterState> {
-    @eventHandler
-    void onIncrement(IncrementEvent event) { ... }
-
-    // Compile error if IncrementEvent doesn't have handler
-  }
-  ```
-
-- [ ] **Dependency Injection Type Safety**
-
-  ```dart
-  // Type-safe DI registration
-  @injectable
-  class CounterCubit extends Cubit<CounterState> {
-    CounterCubit({
-      @inject required CounterRepository repository,
-      @inject required TimerService timerService,
-    }) : super(CounterInitial());
-  }
-  ```
-
-## Implementation Priority
-
-**High Priority (Immediate Benefits):**
-
-1. ✅ Complete Freezed migration for all states
-2. ✅ Convert state hierarchies to sealed classes
-3. ✅ Create type-safe cubit access extensions
-4. ⏳ Add custom lint rules for BLoC patterns (Next step)
-
-**Medium Priority (Enhanced Safety):**
-5. Create custom code generator for BLoC patterns
-6. Generate exhaustive switch statements
-7. Add state transition validators
-
-**Low Priority (Nice to Have):**
-8. State machine code generation
-9. Event handler validation
-10. Advanced IDE support
-
-## Comparison: BLoC with Compile-Time Safety vs Riverpod
-
-After implementing the checklist above, BLoC/Cubit will have:
-
-|Feature|Riverpod|BLoC/Cubit (After Implementation)|
-|---|---|---|
-|Compile-time type safety|✅ Built-in|✅ Via Freezed + Sealed Classes|
-|Exhaustive pattern matching|✅ Built-in|✅ Via Sealed Classes|
-|Code generation|✅ Built-in|✅ Via Custom Generators|
-|State transition validation|⚠️ Runtime|✅ Runtime validators ✅ + Code gen ⏳|
-|Exhaustive pattern matching|✅ Built-in|✅ Sealed classes + Helpers ✅|
-|Type-safe access|✅ Built-in|✅ Via Extensions ✅|
-|Null safety|✅ Built-in|✅ Built-in (Dart) ✅|
-
-## Compile-Time Safety Summary
-
-**Yes, compile-time safety similar to Riverpod is achievable in BLoC/Cubit!** The codebase already implements several safety measures (Freezed, sealed classes). By following the detailed checklist above, you can achieve compile-time safety that matches or exceeds Riverpod's capabilities while maintaining BLoC/Cubit's architectural benefits.
-
-### Implementation Status
-
-**✅ Completed (Phase 1 & 2):**
-
-- Freezed migration for all states
-- Sealed classes for state hierarchies
-- Type-safe cubit access extensions (`context.cubit<T>()`, `context.state<C, S>()`)
-- Type-safe BLoC widgets (`TypeSafeBlocSelector`, `TypeSafeBlocBuilder`, `TypeSafeBlocConsumer`)
-- Type-safe BlocProvider helpers (`BlocProviderHelpers.withCubit<C, S>()`)
-
-**📖 Documentation:**
-
-- [Compile-Time Safety Guide](compile_time_safety.md) - Complete guide with usage examples, quick reference, and migration patterns
-
-**✅ Completed (Phase 3, 4, 5 & 6):**
-
-- State transition validators (`lib/shared/utils/state_transition_validator.dart`)
-- Sealed state helpers (`lib/shared/utils/sealed_state_helpers.dart`)
-- State transition tests (`test/shared/utils/state_transition_validator_test.dart`)
-- Code generation guide (`docs/code_generation_guide.md`)
-- Custom lint rules guide (`docs/custom_lint_rules_guide.md`)
-- Runtime validation helpers (`lib/shared/utils/bloc_lint_helpers.dart`)
-- Migration guide (`docs/migration_to_type_safe_bloc.md`)
-
-**✅ Completed (Phase 4 & 6):**
-
-- Custom lint rules guide (`docs/custom_lint_rules_guide.md`)
-- Runtime validation helpers (`lib/shared/utils/bloc_lint_helpers.dart`)
-- Migration guide (`docs/migration_to_type_safe_bloc.md`)
-
-**✅ Completed (Phase 3 & 6):**
-
-- Custom code generators (script-based) - `tool/generate_sealed_switch.dart`
-- Build runner package structure - `tool/bloc_codegen/`
-- IDE plugins (VS Code snippets) - `.vscode/flutter_bloc_snippets.code-snippets`
-- Complete implementation guides - See [Code Generation Guide](code_generation_guide.md) and [IDE Plugins Guide](ide_plugins_guide.md)
-
-**⏳ Optional/Advanced (Future Work):**
-
-- Full analyzer plugin implementation (see [Custom Lint Rules Guide](custom_lint_rules_guide.md) for setup)
-- Enhanced type extraction in generated code
-- State machine code generation (advanced feature)
-
-The key is to:
-
-1. ✅ Leverage existing tools (Freezed, sealed classes) - **Done**
-2. ✅ Generate type-safe helpers and validators - **Done**
-3. ⏳ Create custom code generators for advanced patterns - **Next**
-4. ⏳ Add static analysis and lint rules - **Next**
-
-This approach gives you the best of both worlds: Riverpod's compile-time safety with BLoC/Cubit's architectural patterns and testing advantages.
+## Compile-Time Safety: What's Implemented
+
+The codebase already closes the main type-safety gap between BLoC/Cubit and
+Riverpod. The table below summarizes what is in place and what remains optional.
+
+<!-- markdownlint-disable MD013 -->
+| Technique | Status | Key files |
+| --------- | ------ | --------- |
+| Freezed for immutable states | Done | States use `@freezed`; run `build_runner` to regenerate |
+| Sealed classes for state hierarchies | Done | `DeepLinkState` and others use `sealed class` |
+| Type-safe cubit access extensions | Done | `lib/shared/extensions/type_safe_bloc_access.dart` |
+| Type-safe BLoC widgets | Done | `lib/shared/widgets/type_safe_bloc_selector.dart` |
+| Type-safe BlocProvider helpers | Done | `lib/shared/utils/bloc_provider_helpers.dart` |
+| State transition validators | Done | `lib/shared/utils/state_transition_validator.dart` |
+| Sealed-state helpers | Done | `lib/shared/utils/sealed_state_helpers.dart` |
+| Runtime BLoC lint helpers | Done | `lib/shared/utils/bloc_lint_helpers.dart` |
+| Migration guide | Done | [migration_to_type_safe_bloc.md](migration_to_type_safe_bloc.md) |
+| Code generation guide | Done | [code_generation_guide.md](code_generation_guide.md) |
+| Custom lint rules guide | Done | [custom_lint_rules_guide.md](custom_lint_rules_guide.md) |
+| Full analyzer plugin | Optional | See custom lint rules guide |
+| State machine code generation | Optional | Advanced; not yet needed |
+<!-- markdownlint-enable MD013 -->
+
+### Comparison After Implementation
+
+<!-- markdownlint-disable MD013 -->
+| Capability | Riverpod | BLoC/Cubit (this repo) |
+| ---------- | -------- | ---------------------- |
+| Compile-time type safety | Built-in | Freezed + Sealed Classes |
+| Exhaustive pattern matching | Built-in | Sealed classes (Dart 3.0+) |
+| Type-safe access | Built-in | Extensions (`context.cubit<T>()`) |
+| State transition validation | Runtime | Runtime validators + optional codegen |
+| Null safety | Built-in (Dart) | Built-in (Dart) |
+<!-- markdownlint-enable MD013 -->
 
 ## Real-World Implementation in This App
 
@@ -808,14 +483,17 @@ BLoC/Cubit was chosen for this application because it:
 6. ✅ Provides **lifecycle safety** and error handling patterns
 7. ✅ Has a **clear mental model** that scales well
 
-While Riverpod is an excellent state management solution, BLoC/Cubit better fits the architectural goals, testing requirements, and team expertise for this production-grade Flutter application.
+While Riverpod is an excellent state management solution, BLoC/Cubit
+better fits the architectural goals, testing requirements, and team
+expertise for this production-grade Flutter application.
 
-## Related Documentation
+## See Also
 
-- [Compile-Time Safety Guide](compile_time_safety.md) - Complete guide on how to use the type-safe BLoC/Cubit features
-- [Code Generation Guide](code_generation_guide.md) - Setting up custom code generators
-- [Compile-Time Safety Guide](compile_time_safety.md) - Complete implementation status and verification
-- [Architecture Details](architecture_details.md) - Overall architecture and state management rationale
-- [Clean Architecture](clean_architecture.md) - Architecture principles
-- [Testing Overview](testing_overview.md) - Testing strategies with BLoC/Cubit
-- [SOLID Principles](solid_principles.md) - How BLoC/Cubit supports SOLID principles
+- [Compile-Time Safety Guide](compile_time_safety.md) — usage
+  examples and migration patterns
+- [Code Generation Guide](code_generation_guide.md) — custom
+  code generators
+- [Architecture Details](architecture_details.md) — high-level
+  architecture diagrams
+- [Testing Overview](testing_overview.md) — testing strategies
+  with BLoC/Cubit
