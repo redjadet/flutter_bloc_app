@@ -4,6 +4,11 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
+/// Size and radius for the stroke-width preview box in the toolbar.
+const double _widthPreviewWidth = 40;
+const double _widthPreviewHeight = 20;
+const double _widthPreviewRadius = 4;
+
 /// Toolbar for the whiteboard with color picker, width presets, and labeled actions.
 class WhiteboardToolbar extends StatelessWidget {
   const WhiteboardToolbar({
@@ -136,19 +141,25 @@ class WhiteboardToolbar extends StatelessWidget {
             SizedBox(width: context.responsiveHorizontalGapS),
             // Visual preview of stroke width
             Container(
-              width: 40,
-              height: 20,
+              width: _widthPreviewWidth,
+              height: _widthPreviewHeight,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: colors.surface,
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(_widthPreviewRadius),
                 border: Border.all(
                   color: colors.outline.withValues(alpha: 0.3),
                 ),
               ),
               child: Container(
-                width: currentWidth.clamp(2, 20),
-                height: currentWidth.clamp(2, 20),
+                width: currentWidth.clamp(
+                  kStrokeWidthThin,
+                  _widthPreviewWidth / 2,
+                ),
+                height: currentWidth.clamp(
+                  kStrokeWidthThin,
+                  _widthPreviewHeight,
+                ),
                 decoration: BoxDecoration(
                   color: currentColor,
                   shape: BoxShape.circle,
@@ -157,7 +168,7 @@ class WhiteboardToolbar extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              '${currentWidth.toStringAsFixed(0)}px',
+              currentWidth.toStringAsFixed(0),
               style: theme.textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w600,
               ),

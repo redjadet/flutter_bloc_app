@@ -42,14 +42,14 @@ class ChartDemoCacheRepository extends HiveRepositoryBase
         final Map<String, dynamic> typed = _convertMapToTyped(item);
         try {
           result.add(ChartPoint.fromJson(typed));
-        } on Object catch (e, s) {
+        } on Object catch (error, stackTrace) {
           AppLogger.warning(
             'ChartDemoCacheRepository skipped invalid cached chart point',
           );
           AppLogger.error(
             'ChartDemoCacheRepository.readTrendingCounts',
-            e,
-            s,
+            error,
+            stackTrace,
           );
           continue;
         }

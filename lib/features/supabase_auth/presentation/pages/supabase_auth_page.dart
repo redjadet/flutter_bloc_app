@@ -17,6 +17,8 @@ import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:go_router/go_router.dart';
 
+part 'supabase_auth_page_sections.dart';
+
 /// Page for Supabase authentication (sign in, sign up, sign out).
 ///
 /// Shown when Supabase is not configured: a message and no forms.
@@ -97,6 +99,7 @@ class _SupabaseAuthPageState extends State<SupabaseAuthPage> {
   ) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
+    final cubit = context.cubit<SupabaseAuthCubit>();
 
     return state.when(
       initial: () => const SizedBox.shrink(),
@@ -106,243 +109,63 @@ class _SupabaseAuthPageState extends State<SupabaseAuthPage> {
           child: const CommonLoadingWidget(),
         ),
       ),
-      authenticated: (final user) => _buildAuthenticated(
-        context,
-        user,
-        theme,
-        colors,
-        l10n,
+      authenticated: (final user) => SupabaseAuthAuthenticatedSection(
+        user: user,
+        theme: theme,
+        colors: colors,
+        l10n: l10n,
+        onSignOut: () => unawaited(cubit.signOut()),
       ),
-      unauthenticated: () => _buildUnauthenticated(
-        context,
-        theme,
-        colors,
-        l10n,
-      ),
-      error: (final message) => _buildError(
-        context,
-        message,
-        theme,
-        colors,
-        l10n,
-      ),
-      notConfigured: () => _buildNotConfigured(context, theme, colors, l10n),
-    );
-  }
-
-  Widget _buildNotConfigured(
-    final BuildContext context,
-    final ThemeData theme,
-    final ColorScheme colors,
-    final AppLocalizations l10n,
-  ) {
-    return CommonCard(
-      color: colors.surfaceContainerHighest,
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      padding: context.responsiveCardPaddingInsets,
-      child: Text(
-        l10n.supabaseAuthNotConfigured,
-        style: theme.textTheme.bodyMedium?.copyWith(
-          color: colors.onSurfaceVariant,
+      unauthenticated: () => SupabaseAuthSignInForm(
+        emailController: _emailController,
+        passwordController: _passwordController,
+        displayNameController: _displayNameController,
+        canSubmit: _canSubmitCredentials,
+        onFieldsChanged: () => setState(() {}),
+        onSignIn: (final email, final password) =>
+            unawaited(cubit.signIn(email: email, password: password)),
+        onSignUp: (final email, final password, final displayName) => unawaited(
+          cubit.signUp(
+            email: email,
+            password: password,
+            displayName: displayName,
+          ),
         ),
+        theme: theme,
+        colors: colors,
+        l10n: l10n,
       ),
-    );
-  }
-
-  Widget _buildError(
-    final BuildContext context,
-    final String message,
-    final ThemeData theme,
-    final ColorScheme colors,
-    final AppLocalizations l10n,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        CommonCard(
-          color: colors.errorContainer,
-          elevation: 0,
-          margin: EdgeInsets.zero,
-          padding: context.responsiveCardPaddingInsets,
-          child: Row(
-            children: [
-              Icon(
-                Icons.error_outline,
-                color: colors.onErrorContainer,
-                size: context.responsiveIconSize,
-              ),
-              SizedBox(width: context.responsiveHorizontalGapM),
-              Expanded(
-                child: Text(
-                  message,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: colors.onErrorContainer,
-                  ),
-                  maxLines: 5,
-                  overflow: TextOverflow.ellipsis,
+      error: (final message) => SupabaseAuthErrorSection(
+        message: message,
+        theme: theme,
+        colors: colors,
+        onDismiss: cubit.clearError,
+        child: SupabaseAuthSignInForm(
+          emailController: _emailController,
+          passwordController: _passwordController,
+          displayNameController: _displayNameController,
+          canSubmit: _canSubmitCredentials,
+          onFieldsChanged: () => setState(() {}),
+          onSignIn: (final email, final password) =>
+              unawaited(cubit.signIn(email: email, password: password)),
+          onSignUp: (final email, final password, final displayName) =>
+              unawaited(
+                cubit.signUp(
+                  email: email,
+                  password: password,
+                  displayName: displayName,
                 ),
               ),
-              IconButton(
-                icon: Icon(
-                  Icons.close,
-                  color: colors.onErrorContainer,
-                  size: context.responsiveIconSize,
-                ),
-                onPressed: () =>
-                    context.cubit<SupabaseAuthCubit>().clearError(),
-              ),
-            ],
-          ),
+          theme: theme,
+          colors: colors,
+          l10n: l10n,
         ),
-        SizedBox(height: context.responsiveGapM),
-        _buildUnauthenticated(context, theme, colors, l10n),
-      ],
-    );
-  }
-
-  Widget _buildAuthenticated(
-    final BuildContext context,
-    final AuthUser user,
-    final ThemeData theme,
-    final ColorScheme colors,
-    final AppLocalizations l10n,
-  ) {
-    final displayEmail = user.email ?? user.id;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        CommonCard(
-          color: colors.primaryContainer,
-          elevation: 0,
-          margin: EdgeInsets.zero,
-          padding: context.responsiveCardPaddingInsets,
-          child: Row(
-            children: [
-              Icon(
-                Icons.check_circle_outline,
-                color: colors.onPrimaryContainer,
-                size: context.responsiveIconSize,
-              ),
-              SizedBox(width: context.responsiveHorizontalGapM),
-              Expanded(
-                child: Text(
-                  l10n.supabaseAuthSignedInAs(displayEmail),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: colors.onPrimaryContainer,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: context.responsiveGapL),
-        PlatformAdaptive.filledButton(
-          context: context,
-          onPressed: () =>
-              unawaited(context.cubit<SupabaseAuthCubit>().signOut()),
-          child: Text(l10n.supabaseAuthSignOut),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildUnauthenticated(
-    final BuildContext context,
-    final ThemeData theme,
-    final ColorScheme colors,
-    final AppLocalizations l10n,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          l10n.supabaseAuthSignIn,
-          style: theme.textTheme.titleMedium?.copyWith(
-            color: colors.onSurface,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        SizedBox(height: context.responsiveGapM),
-        CommonFormField(
-          controller: _emailController,
-          labelText: l10n.supabaseAuthEmailLabel,
-          keyboardType: TextInputType.emailAddress,
-          textInputAction: TextInputAction.next,
-          onChanged: (_) => setState(() {}),
-        ),
-        SizedBox(height: context.responsiveGapM),
-        CommonFormField(
-          controller: _passwordController,
-          labelText: l10n.supabaseAuthPasswordLabel,
-          helperText: l10n.supabaseAuthPasswordMinLength,
-          obscureText: true,
-          textInputAction: TextInputAction.done,
-          onChanged: (_) => setState(() {}),
-        ),
-        SizedBox(height: context.responsiveGapL),
-        Row(
-          children: [
-            Expanded(
-              child: PlatformAdaptive.filledButton(
-                context: context,
-                onPressed: _canSubmitCredentials
-                    ? () {
-                        final email = _emailController.text.trim();
-                        final password = _passwordController.text;
-                        unawaited(
-                          context.cubit<SupabaseAuthCubit>().signIn(
-                            email: email,
-                            password: password,
-                          ),
-                        );
-                      }
-                    : null,
-                child: Text(l10n.supabaseAuthSignIn),
-              ),
-            ),
-            SizedBox(width: context.responsiveHorizontalGapM),
-            Expanded(
-              child: PlatformAdaptive.outlinedButton(
-                context: context,
-                onPressed: _canSubmitCredentials
-                    ? () {
-                        final email = _emailController.text.trim();
-                        final password = _passwordController.text;
-                        final displayName =
-                            _displayNameController.text.trim().isEmpty
-                            ? null
-                            : _displayNameController.text.trim();
-                        unawaited(
-                          context.cubit<SupabaseAuthCubit>().signUp(
-                            email: email,
-                            password: password,
-                            displayName: displayName,
-                          ),
-                        );
-                      }
-                    : null,
-                child: Text(l10n.supabaseAuthSignUp),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: context.responsiveGapL),
-        Text(
-          l10n.supabaseAuthDisplayNameLabel,
-          style: theme.textTheme.titleSmall?.copyWith(
-            color: colors.onSurfaceVariant,
-          ),
-        ),
-        SizedBox(height: context.responsiveGapS),
-        CommonFormField(
-          controller: _displayNameController,
-          labelText: l10n.supabaseAuthDisplayNameLabel,
-          textInputAction: TextInputAction.done,
-        ),
-      ],
+      ),
+      notConfigured: () => SupabaseAuthNotConfiguredCard(
+        theme: theme,
+        colors: colors,
+        l10n: l10n,
+      ),
     );
   }
 }

@@ -16,6 +16,7 @@ migrate_working_dir/
 figma-sync/
 AGENTS.md
 GEMINI.md
+.cursor/plans/
 .cursor/skills/
 .cursor/rules/
 

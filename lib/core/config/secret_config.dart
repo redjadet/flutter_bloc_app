@@ -116,9 +116,9 @@ class SecretConfig {
         'environment. Features requiring remote access (Hugging Face, Gemini, '
         'Supabase) remain disabled.',
       );
-    } on Exception catch (e, s) {
+    } on Exception catch (error, stackTrace) {
       AppLogger.warning('SecretConfig.load failed');
-      AppLogger.error('SecretConfig.load', e, s);
+      AppLogger.error('SecretConfig.load', error, stackTrace);
       _loaded = false;
     }
   }
