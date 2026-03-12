@@ -17,22 +17,34 @@ const List<String> _generatedPrefixes = <String>['lib/l10n/app_localizations_'];
 const List<String> _excludedDirectories = <String>[
   'lib/l10n/',
   'lib/generated/',
+  'lib/app/router/deferred_pages/',
 ];
 
 const List<String> _excludedPatterns = <String>[
   // Mock repositories (test utilities)
   'mock_',
   '_mock',
+  // Null-object adapters used to keep optional features bootable
+  'no_op_',
   // Performance profiler (debug utilities)
   'performance_profiler',
-  // Platform-specific widgets that are hard to test
-  'map_sample_map_view.dart',
   // Part files (tested via parent file)
   '_sections.dart',
 ];
 
 const List<String> _generatedExact = <String>[
   'lib/generated_plugin_registrant.dart',
+];
+
+const List<String> _excludedExact = <String>[
+  // Generated Firebase platform config
+  'lib/firebase_options.dart',
+  // Native background isolate entrypoint
+  'lib/features/fcm_demo/data/fcm_background_handler.dart',
+  // Native platform map views are verified primarily through device-backed flows
+  'lib/features/google_maps/presentation/widgets/google_maps_view.dart',
+  'lib/features/google_maps/presentation/widgets/apple_maps_view.dart',
+  'lib/features/google_maps/presentation/widgets/map_sample_map_view.dart',
 ];
 
 // Documentation files that should be updated with coverage percentages
@@ -169,6 +181,12 @@ class _Coverage {
       )
       ..writeln()
       ..writeln(
+        'This total is computed from `coverage/lcov.info`, which can include '
+        'merged unit, widget, bloc, and integration coverage when the '
+        'integration suite is run after baseline coverage is generated.',
+      )
+      ..writeln()
+      ..writeln(
         'Generated and localization files (e.g. `.g.dart`, `.freezed.dart`, `lib/l10n/*`) '
         'are excluded from these totals.',
       )
@@ -187,7 +205,13 @@ class _Coverage {
         '- Configuration files (files with only constants)',
       )
       ..writeln(
+        '- Deferred route wrappers and generated platform bootstrap files',
+      )
+      ..writeln(
         '- Debug utilities (performance profiler files)',
+      )
+      ..writeln(
+        '- Background isolate entrypoints and no-op adapters',
       )
       ..writeln(
         '- Platform-specific widgets (map widgets requiring native testing)',
@@ -232,6 +256,9 @@ class _Coverage {
 
   static bool _shouldInclude(final String path) {
     if (!path.startsWith('lib/')) {
+      return false;
+    }
+    if (_excludedExact.contains(path)) {
       return false;
     }
     if (_generatedExact.contains(path)) {

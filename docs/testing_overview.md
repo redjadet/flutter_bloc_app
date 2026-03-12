@@ -39,7 +39,8 @@ This document summarizes test coverage, test types, testing patterns, and common
 - End-to-end app flow verification under `integration_test/`
 - Runs on a supported non-web device via `./bin/integration_tests` or `tool/run_integration_tests.sh`
 - Use `CHECKLIST_INTEGRATION_DEVICE=<deviceId>` when multiple devices are attached
-- **Files**: `app_test.dart` (launch and counter), `counter_persistence_test.dart` (persisted count after restart), `settings_flow_test.dart` (settings, theme, locale), `navigation_flow_test.dart` (counter to example to library demo), `calculator_flow_test.dart` (calculator from home), `graphql_demo_flow_test.dart` (GraphQL demo from overflow menu), `todo_list_flow_test.dart` (todo list add and list)
+- Running the full suite via `./bin/integration_tests` also refreshes `coverage/coverage_summary.md`; when `coverage/lcov.base.info` exists, integration coverage is merged into that baseline first
+- **Files**: `app_test.dart` (launch and counter), `counter_persistence_test.dart` (persisted count after restart), `settings_flow_test.dart` (settings, theme, locale), `navigation_flow_test.dart` (counter to example to library demo), `calculator_flow_test.dart` (calculator from home), `graphql_demo_flow_test.dart` (GraphQL demo from overflow menu), `todo_list_flow_test.dart` (todo list add and list), `chat_list_flow_test.dart` (chat list from example), `search_flow_test.dart` (search from example), `websocket_flow_test.dart` (WebSocket from example), `iot_demo_flow_test.dart` (IoT demo from overflow), `charts_flow_test.dart` (charts from overflow)
 
 ### Common Bugs Prevention Tests
 
@@ -100,10 +101,10 @@ flutter test --coverage
 # Run integration tests directly
 tool/run_integration_tests.sh
 
-# Update coverage summary
+# Update coverage summary manually
 dart run tool/update_coverage_summary.dart
 
-# Use automated coverage script
+# Use automated unit/widget/bloc coverage script
 tool/test_coverage.sh
 
 # Regenerate golden files (after Flutter upgrades)

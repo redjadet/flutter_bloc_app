@@ -10,6 +10,7 @@
 #    - When called without arguments (e.g., from ./bin/checklist), runs ALL tests including:
 #      - Unit tests, bloc tests, widget tests, golden tests
 #      - Common bugs prevention tests (test/shared/common_bugs_prevention_test.dart)
+#    - A full run also saves reusable baseline coverage to `coverage/lcov.base.info`
 # 2. Automatically runs `dart run tool/update_coverage_summary.dart` to update coverage reports
 # 3. Updates coverage/coverage_summary.md and ALL documentation files with latest coverage percentage:
 #    - README.md (badge URL and text mentions)
@@ -86,11 +87,25 @@ if ! [[ "$COVERAGE_JOBS" =~ ^[0-9]+$ ]] || [ "$COVERAGE_JOBS" -lt 1 ]; then
   COVERAGE_JOBS="$DEFAULT_COVERAGE_JOBS"
 fi
 
+BASE_COVERAGE_PATH="coverage/lcov.base.info"
+FINAL_COVERAGE_PATH="coverage/lcov.info"
+
 echo "Running flutter test with coverage (concurrency=$COVERAGE_JOBS)..."
 if [ "$#" -eq 0 ]; then
-  flutter test --no-pub --coverage --concurrency="$COVERAGE_JOBS" --exclude-tags skip-checklist
+  flutter test \
+    --no-pub \
+    --coverage \
+    --coverage-path="$BASE_COVERAGE_PATH" \
+    --concurrency="$COVERAGE_JOBS" \
+    --exclude-tags skip-checklist
+  cp "$BASE_COVERAGE_PATH" "$FINAL_COVERAGE_PATH"
 else
-  flutter test --no-pub --coverage --concurrency="$COVERAGE_JOBS" "$@"
+  flutter test \
+    --no-pub \
+    --coverage \
+    --coverage-path="$FINAL_COVERAGE_PATH" \
+    --concurrency="$COVERAGE_JOBS" \
+    "$@"
 fi
 
 echo ""
