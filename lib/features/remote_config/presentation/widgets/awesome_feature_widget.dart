@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
@@ -23,9 +24,13 @@ class AwesomeFeatureWidget extends StatefulWidget {
 }
 
 class _AwesomeFeatureWidgetState extends State<AwesomeFeatureWidget> {
+  bool _didRequestInitialization = false;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didRequestInitialization) return;
+    _didRequestInitialization = true;
     if (CubitHelpers.isCubitAvailable<RemoteConfigCubit, RemoteConfigState>(
       context,
     )) {
@@ -52,7 +57,7 @@ class _AwesomeFeatureWidgetState extends State<AwesomeFeatureWidget> {
       ),
       builder: (final context, final data) {
         if (data.isEnabled) {
-          return const Text('Awesome feature is enabled');
+          return Text(context.l10n.remoteConfigAwesomeFeatureEnabled);
         }
         return const SizedBox.shrink();
       },

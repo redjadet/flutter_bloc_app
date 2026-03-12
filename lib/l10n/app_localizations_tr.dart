@@ -318,6 +318,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsRemoteConfigErrorLabel => 'Son hata';
 
   @override
+  String get remoteConfigAwesomeFeatureEnabled => 'Awesome özelliği etkin';
+
+  @override
   String get settingsRemoteConfigFlagLabel => 'Awesome özelliği bayrağı';
 
   @override
@@ -1456,6 +1459,18 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get whiteboardStrokeWidth => 'Çizgi kalınlığı';
+
+  @override
+  String get whiteboardStrokeWidthThin => 'İnce';
+
+  @override
+  String get whiteboardStrokeWidthMedium => 'Orta';
+
+  @override
+  String get whiteboardStrokeWidthThick => 'Kalın';
+
+  @override
+  String get whiteboardStrokeWidthExtra => 'Ekstra';
 
   @override
   String get errorUnknown => 'Bilinmeyen bir hata oluştu';

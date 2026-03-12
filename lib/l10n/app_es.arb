@@ -195,6 +195,10 @@
   "@settingsRemoteConfigErrorLabel": {
     "description": "Etiqueta que precede al mensaje de error más reciente de Remote Config"
   },
+  "remoteConfigAwesomeFeatureEnabled": "La función Awesome está activada",
+  "@remoteConfigAwesomeFeatureEnabled": {
+    "description": "Mensaje que se muestra cuando el indicador de la función Awesome está activado"
+  },
   "settingsRemoteConfigFlagLabel": "Indicador de la función Awesome",
   "@settingsRemoteConfigFlagLabel": {
     "description": "Etiqueta para el valor actual del indicador de la función Awesome"
@@ -1250,6 +1254,10 @@
   "whiteboardClearAllStrokes": "Borrar todos los trazos",
   "whiteboardPenColor": "Color del lápiz",
   "whiteboardStrokeWidth": "Grosor del trazo",
+  "whiteboardStrokeWidthThin": "Fino",
+  "whiteboardStrokeWidthMedium": "Medio",
+  "whiteboardStrokeWidthThick": "Grueso",
+  "whiteboardStrokeWidthExtra": "Extra",
   "errorUnknown": "Ha ocurrido un error desconocido",
   "errorNetwork": "Error de conexión de red. Compruebe su conexión a internet.",
   "errorTimeout": "La solicitud ha tardado demasiado. Inténtelo de nuevo.",

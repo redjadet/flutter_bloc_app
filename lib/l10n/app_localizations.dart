@@ -686,6 +686,12 @@ abstract class AppLocalizations {
   /// **'Last error'**
   String get settingsRemoteConfigErrorLabel;
 
+  /// Message shown when the awesome feature flag is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Awesome feature is enabled'**
+  String get remoteConfigAwesomeFeatureEnabled;
+
   /// Label that displays the current awesome feature flag value
   ///
   /// In en, this message translates to:
@@ -2689,6 +2695,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stroke width'**
   String get whiteboardStrokeWidth;
+
+  /// Whiteboard stroke width preset label
+  ///
+  /// In en, this message translates to:
+  /// **'Thin'**
+  String get whiteboardStrokeWidthThin;
+
+  /// Whiteboard stroke width preset label
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get whiteboardStrokeWidthMedium;
+
+  /// Whiteboard stroke width preset label
+  ///
+  /// In en, this message translates to:
+  /// **'Thick'**
+  String get whiteboardStrokeWidthThick;
+
+  /// Whiteboard stroke width preset label
+  ///
+  /// In en, this message translates to:
+  /// **'Extra'**
+  String get whiteboardStrokeWidthExtra;
 
   /// Generic unknown error message
   ///

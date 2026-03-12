@@ -23,18 +23,22 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.35.5"
+          flutter-version: "3.41.4"
           channel: stable
 
       - name: Flutter pub get
         run: flutter pub get
 
+      - name: Run delivery checklist
+        if: ${{ github.event.inputs.run_analyze != 'false' && github.event.inputs.run_tests != 'false' }}
+        run: ./bin/checklist
+
       - name: Flutter analyze
-        if: ${{ github.event.inputs.run_analyze != 'false' }}
+        if: ${{ github.event.inputs.run_analyze != 'false' && github.event.inputs.run_tests == 'false' }}
         run: flutter analyze
 
       - name: Flutter tests (with coverage)
-        if: ${{ github.event.inputs.run_tests != 'false' }}
+        if: ${{ github.event.inputs.run_tests != 'false' && github.event.inputs.run_analyze == 'false' }}
         run: tool/test_coverage.sh
 
       - name: Enforce coverage threshold

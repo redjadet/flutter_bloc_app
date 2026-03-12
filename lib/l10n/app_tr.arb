@@ -196,6 +196,10 @@
   "@settingsRemoteConfigErrorLabel": {
     "description": "En son uzak yapılandırma hata mesajını başlatan etiket"
   },
+  "remoteConfigAwesomeFeatureEnabled": "Awesome özelliği etkin",
+  "@remoteConfigAwesomeFeatureEnabled": {
+    "description": "Awesome özelliği bayrağı etkin olduğunda gösterilen mesaj"
+  },
   "settingsRemoteConfigFlagLabel": "Awesome özelliği bayrağı",
   "@settingsRemoteConfigFlagLabel": {
     "description": "Şu anki awesome feature bayrağını gösteren etiket"
@@ -1269,6 +1273,10 @@
   "whiteboardClearAllStrokes": "Tüm çizgileri temizle",
   "whiteboardPenColor": "Kalem rengi",
   "whiteboardStrokeWidth": "Çizgi kalınlığı",
+  "whiteboardStrokeWidthThin": "İnce",
+  "whiteboardStrokeWidthMedium": "Orta",
+  "whiteboardStrokeWidthThick": "Kalın",
+  "whiteboardStrokeWidthExtra": "Ekstra",
   "errorUnknown": "Bilinmeyen bir hata oluştu",
   "errorNetwork": "Ağ bağlantı hatası. İnternet bağlantınızı kontrol edin.",
   "errorTimeout": "İstek zaman aşımına uğradı. Lütfen tekrar deneyin.",

@@ -195,6 +195,10 @@
   "@settingsRemoteConfigErrorLabel": {
     "description": "Label vor der letzten Remote-Config-Fehlermeldung"
   },
+  "remoteConfigAwesomeFeatureEnabled": "Awesome-Funktion ist aktiviert",
+  "@remoteConfigAwesomeFeatureEnabled": {
+    "description": "Nachricht, die angezeigt wird, wenn das Awesome-Feature-Flag aktiviert ist"
+  },
   "settingsRemoteConfigFlagLabel": "Awesome-Feature-Flag",
   "@settingsRemoteConfigFlagLabel": {
     "description": "Label für den aktuellen Wert des Awesome-Feature-Flags"
@@ -1250,6 +1254,10 @@
   "whiteboardClearAllStrokes": "Alle Striche löschen",
   "whiteboardPenColor": "Stiftfarbe",
   "whiteboardStrokeWidth": "Strichstärke",
+  "whiteboardStrokeWidthThin": "Dünn",
+  "whiteboardStrokeWidthMedium": "Mittel",
+  "whiteboardStrokeWidthThick": "Dick",
+  "whiteboardStrokeWidthExtra": "Extra",
   "errorUnknown": "Ein unbekannter Fehler ist aufgetreten",
   "errorNetwork": "Netzwerkverbindungsfehler. Bitte überprüfen Sie Ihre Internetverbindung.",
   "errorTimeout": "Zeitüberschreitung der Anfrage. Bitte versuchen Sie es erneut.",

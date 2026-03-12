@@ -47,12 +47,12 @@ void main() {
       expect(find.byType(TextField), findsOneWidget);
     });
 
-    testWidgets('has initial value "dogs"', (tester) async {
+    testWidgets('starts with an empty query', (tester) async {
       await tester.pumpWidget(buildSubject());
       await tester.pumpAndSettle();
 
       final textField = tester.widget<TextField>(find.byType(TextField));
-      expect(textField.controller?.text, equals('dogs'));
+      expect(textField.controller?.text, isEmpty);
     });
 
     testWidgets('calls cubit search on text change', (tester) async {

@@ -21,7 +21,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: 'dogs');
+    _controller = TextEditingController();
   }
 
   @override

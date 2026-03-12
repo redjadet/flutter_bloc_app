@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/icon_label_row.dart';
 
@@ -15,13 +16,30 @@ class WidthPreset {
   final IconData icon;
 }
 
-/// Default width presets for the whiteboard toolbar.
-const List<WidthPreset> defaultWidthPresets = <WidthPreset>[
-  WidthPreset(label: 'Thin', value: 2, icon: Icons.remove),
-  WidthPreset(label: 'Medium', value: 5, icon: Icons.horizontal_rule),
-  WidthPreset(label: 'Thick', value: 10, icon: Icons.drag_handle),
-  WidthPreset(label: 'Extra', value: 15, icon: Icons.format_bold),
-];
+/// Returns width presets with localized labels for the whiteboard toolbar.
+List<WidthPreset> defaultWidthPresetsFor(final AppLocalizations l10n) =>
+    <WidthPreset>[
+      WidthPreset(
+        label: l10n.whiteboardStrokeWidthThin,
+        value: 2,
+        icon: Icons.remove,
+      ),
+      WidthPreset(
+        label: l10n.whiteboardStrokeWidthMedium,
+        value: 5,
+        icon: Icons.horizontal_rule,
+      ),
+      WidthPreset(
+        label: l10n.whiteboardStrokeWidthThick,
+        value: 10,
+        icon: Icons.drag_handle,
+      ),
+      WidthPreset(
+        label: l10n.whiteboardStrokeWidthExtra,
+        value: 15,
+        icon: Icons.format_bold,
+      ),
+    ];
 
 /// A button widget for selecting a preset stroke width.
 class WidthPresetButton extends StatelessWidget {

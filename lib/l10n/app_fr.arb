@@ -195,6 +195,10 @@
   "@settingsRemoteConfigErrorLabel": {
     "description": "Libellé précédant le dernier message d'erreur Remote Config"
   },
+  "remoteConfigAwesomeFeatureEnabled": "La fonctionnalité Awesome est activée",
+  "@remoteConfigAwesomeFeatureEnabled": {
+    "description": "Message affiché lorsque le drapeau de la fonctionnalité Awesome est activé"
+  },
   "settingsRemoteConfigFlagLabel": "Indicateur de fonctionnalité Awesome",
   "@settingsRemoteConfigFlagLabel": {
     "description": "Libellé pour la valeur actuelle du drapeau Awesome"
@@ -1250,6 +1254,10 @@
   "whiteboardClearAllStrokes": "Effacer tous les traits",
   "whiteboardPenColor": "Couleur du stylet",
   "whiteboardStrokeWidth": "Épaisseur du trait",
+  "whiteboardStrokeWidthThin": "Fin",
+  "whiteboardStrokeWidthMedium": "Moyen",
+  "whiteboardStrokeWidthThick": "Épais",
+  "whiteboardStrokeWidthExtra": "Extra",
   "errorUnknown": "Une erreur inconnue s'est produite",
   "errorNetwork": "Erreur de connexion réseau. Vérifiez votre connexion internet.",
   "errorTimeout": "Délai d'attente dépassé. Veuillez réessayer.",

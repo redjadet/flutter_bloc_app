@@ -55,6 +55,7 @@ List<GoRoute> createCoreRoutes() => <GoRoute>[
             title: context.l10n.homeTitle,
             errorNotificationService: getIt<ErrorNotificationService>(),
             biometricAuthenticator: getIt<BiometricAuthenticator>(),
+            timerService: getIt<TimerService>(),
           ),
         ),
   ),
