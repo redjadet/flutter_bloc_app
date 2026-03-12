@@ -28,7 +28,7 @@ This codebase focuses on maintainability, correctness, and performance:
 - Responsive and platform-adaptive UI (Material 3 + Cupertino)
 - Lifecycle safety for async flows and UI state updates
 - Automated validation scripts and broad test coverage
-- Run tests: `./bin/checklist` or `tool/test_coverage.sh`; see [Developer Guide §7](docs/new_developer_guide.md#7-testing-strategy)
+- Run tests: `./bin/checklist`, `./bin/integration_tests`, `tool/test_coverage.sh`, or `tool/run_integration_tests.sh`; see [Developer Guide §7](docs/new_developer_guide.md#7-testing-strategy)
 - Architecture diagram and layer flow: [Architecture Details](docs/architecture_details.md)
 
 ## ✨ Product Features

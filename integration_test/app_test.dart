@@ -1,26 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/main.dart' as app;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-/// Integration test scaffolding for critical app flows.
-///
-/// Run with: `flutter test integration_test/`
-/// Or on device: `flutter test integration_test/app_test.dart`
-///
-/// Add further tests for:
-/// - Auth: sign-in/sign-out flow (may require Firebase emulator or test auth)
-/// - Counter persistence: increment, restart app, verify count restored
-/// - Offline-first sync: trigger sync, verify UI updates
+import 'test_harness.dart';
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('App launch', () {
-    testWidgets('app starts and renders', (final tester) async {
-      await app.main();
-      await tester.pumpAndSettle(const Duration(seconds: 30));
+  setUpAll(initializeIntegrationTestHarness);
 
+  setUp(() async {
+    await configureIntegrationTestDependencies();
+  });
+
+  tearDown(() async {
+    await tearDownIntegrationTestDependencies();
+  });
+
+  group('App launch', () {
+    testWidgets('launches to the counter page and updates the count', (
+      final tester,
+    ) async {
+      await launchTestApp(tester);
+
+      expect(find.text('Home Page'), findsOneWidget);
       expect(find.byType(MaterialApp), findsOneWidget);
+      expect(find.text('0'), findsWidgets);
+
+      await tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.add));
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(find.text('1'), findsWidgets);
+
+      await tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.remove));
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(find.text('0'), findsWidgets);
     });
   });
 }
