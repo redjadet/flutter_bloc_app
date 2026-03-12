@@ -2,6 +2,12 @@
 
 This document describes the Firebase Cloud Messaging (FCM) demo feature: setup, scope, and how to test it on Android, iOS device, and iOS Simulator.
 
+## Scope and implementation
+
+- **Goal:** Demo flow to request permission, show FCM token, show last message payload (foreground), and handle open-from-notification (`getInitialMessage`, `onMessageOpenedApp`). Implementation follows clean architecture, Cubit lifecycle guards, and type-safe BLoC access.
+- **Non-goals:** No production notification backend; no APNs key upload in Firebase Console for this demo; no guaranteed iOS background/terminated delivery without APNs; no foreground system banner on Android unless local notifications are added.
+- **Feature module:** `lib/features/fcm_demo/` (domain/data/presentation). Background handler is registered in `main_bootstrap.dart`; route constants in `lib/core/router/app_routes.dart` (`fcmDemo`, `fcmDemoPath`). Entry: Example page → FCM Demo.
+
 ## Execution checklist (before finish)
 
 Before considering the FCM demo integration complete, ensure:

@@ -29,7 +29,12 @@ This document lists feature modules with entry points and notes. It is intended 
 | Calculator | `lib/features/calculator/` | Custom keypad and summary flow. |
 | Library Demo | `lib/features/library_demo/` | Figma-inspired UI showcase. |
 | Markdown Editor | `lib/app/router/deferred_pages/markdown_editor_page.dart` | Deferred feature with preview/rendering. |
-| Whiteboard | `lib/features/example/` | CustomPainter drawing demo. |
+| Whiteboard | `lib/features/example/` (e.g. `whiteboard_page.dart`) | CustomPainter drawing demo; route `/whiteboard`. |
+| FCM Demo | `lib/features/fcm_demo/`; route `/fcm-demo`. Example page → FCM Demo. | Firebase Cloud Messaging demo: permission, token, last message, open-from-notification. See [FCM Demo Integration](fcm_demo_integration.md). |
+| Camera Gallery | `lib/features/camera_gallery/`; route `/camera-gallery`. | Camera and gallery picker demo. |
+| iGaming Demo | `lib/features/igaming_demo/`; route `/igaming-demo`. | Demo lobby and game flow. |
+| Playlearn | `lib/features/playlearn/`; route `/playlearn`, `/playlearn/vocabulary/:topicId`. | Vocabulary/learning demo. |
+| Scapes | `lib/features/scapes/`; route `/scapes`. | Scapes feature. |
 | IoT Demo | `lib/features/iot_demo/` | Offline-first IoT device list + commands. When Supabase is configured, uses it as backend (RLS + migrations) for per-user device data; when not configured, runs in local-only mode. |
 | Supabase Auth | Settings → Integrations → Supabase Auth; route `/supabase-auth`. Code: `lib/features/supabase_auth/` | Optional email/password auth on a separate page. Does not replace Firebase for app-wide auth. Requires `SUPABASE_URL` and `SUPABASE_ANON_KEY` in secrets. See [Authentication](authentication.md#supabase-auth-optional-separate-page). |
 | WalletConnect Auth | **Example page** → “WalletConnect Auth (Demo)” button; route `/walletconnect-auth`. Code: `lib/features/walletconnect_auth/` | Demo: connect wallet (mock), link to Firebase Auth. Firestore: one doc per user at `users/{uid}` (linkage + profile). See [WalletConnect Auth Status](walletconnect_auth_status.md) for Firebase setup. |
@@ -65,3 +70,4 @@ See [Security & Secrets](security_and_secrets.md) for API keys; see [Firebase Se
 - [AI Integration](ai_integration.md) — chat flow, remote inference, and offline behavior
 - [GenUI Demo User Guide](genui_demo_user_guide.md) — feature-specific usage notes for the GenUI demo
 - [Google Maps Integration](google_maps_integration.md) — map behavior, keys, and platform differences
+- [FCM Demo Integration](fcm_demo_integration.md) — Firebase Cloud Messaging setup and iOS Simulator testing

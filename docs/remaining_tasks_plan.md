@@ -1,6 +1,6 @@
-# Compile-Time Safety Migration (Archive)
+# Remaining Tasks Plan (Archive)
 
-This document is kept for historical context. The detailed task list was removed to keep documentation focused on current practices.
+This document is **archived**. It described the remaining tasks for the compile-time safety migration; that work is complete. Kept for historical context only. The detailed task list was removed to keep documentation focused on current practices.
 
 ## Summary of Outcomes
 

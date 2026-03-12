@@ -37,6 +37,7 @@ All checks must pass before merging.
 
 - [New Developer Guide](new_developer_guide.md) - Comprehensive getting started guide for new developers
 - [Feature Overview](feature_overview.md) - Catalog of features and capabilities
+- [Feature Implementation Guide](feature_implementation_guide.md) - How to implement common features (push, GraphQL, etc.)
 
 ### Architecture & Design
 
