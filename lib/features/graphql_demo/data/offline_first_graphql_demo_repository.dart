@@ -69,16 +69,16 @@ class OfflineFirstGraphqlDemoRepository implements GraphqlDemoRepository {
       lastSource = remoteRepository.lastSource;
       _telemetry('remote', continentCode: continentCodeForTelemetry);
       return remote;
-    } on GraphqlDemoException catch (e, s) {
-      AppLogger.error(logContext, e, s);
+    } on GraphqlDemoException catch (error, stackTrace) {
+      AppLogger.error(logContext, error, stackTrace);
       if (cached.isNotEmpty) {
         lastSource = GraphqlDataSource.cache;
         _telemetry('cache', continentCode: continentCodeForTelemetry);
         return cached;
       }
       rethrow;
-    } on Exception catch (e, s) {
-      AppLogger.error(logContext, e, s);
+    } on Exception catch (error, stackTrace) {
+      AppLogger.error(logContext, error, stackTrace);
       if (cached.isNotEmpty) {
         lastSource = GraphqlDataSource.cache;
         _telemetry('cache', continentCode: continentCodeForTelemetry);

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/widgets/slot_symbol_text_style.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 /// Symbols shown on each reel (slot-machine style). Exposed for legend.
 const List<String> kSlotReelSymbols = <String>['7', '★', '◆', '●', '▲', '♦'];
@@ -180,7 +181,7 @@ class _ReelColumn extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
         border: Border.all(color: borderColor, width: 2),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(UI.radiusS),
       ),
       clipBehavior: Clip.antiAlias,
       child: Stack(

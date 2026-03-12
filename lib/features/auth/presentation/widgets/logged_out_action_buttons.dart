@@ -4,6 +4,9 @@ import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:go_router/go_router.dart';
 
+/// Border radius for auth action buttons (scaled by layout).
+double _authButtonRadius(final double scale) => UI.radiusS * scale * 0.75;
+
 class LoggedOutActionButtons extends StatelessWidget {
   const LoggedOutActionButtons({
     required this.scale,
@@ -76,13 +79,13 @@ class _LoggedOutActionButton extends StatelessWidget {
             backgroundColor: backgroundColor,
             foregroundColor: foregroundColor,
             side: border,
-            borderRadius: BorderRadius.circular(6 * scale),
+            borderRadius: BorderRadius.circular(_authButtonRadius(scale)),
             materialStyle: OutlinedButton.styleFrom(
               backgroundColor: backgroundColor,
               foregroundColor: foregroundColor,
               side: border,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6 * scale),
+                borderRadius: BorderRadius.circular(_authButtonRadius(scale)),
               ),
               padding: EdgeInsets.zero,
             ),
@@ -104,7 +107,7 @@ class _LoggedOutActionButton extends StatelessWidget {
               backgroundColor: backgroundColor,
               foregroundColor: foregroundColor,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6 * scale),
+                borderRadius: BorderRadius.circular(_authButtonRadius(scale)),
               ),
               elevation: 0,
               padding: EdgeInsets.zero,

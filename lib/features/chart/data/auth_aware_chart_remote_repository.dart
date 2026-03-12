@@ -21,15 +21,15 @@ class AuthAwareChartRemoteRepository implements ChartRemoteRepository {
   ChartRemoteRepository get _active {
     try {
       return _isSupabaseSignedIn() ? _supabaseRemote : _directRemote;
-    } on Object catch (e, s) {
+    } on Object catch (error, stackTrace) {
       AppLogger.warning(
         'AuthAwareChartRemoteRepository isSupabaseSignedIn failed, '
         'using direct remote',
       );
       AppLogger.error(
         'AuthAwareChartRemoteRepository._active',
-        e,
-        s,
+        error,
+        stackTrace,
       );
       return _directRemote;
     }

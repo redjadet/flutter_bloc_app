@@ -45,11 +45,11 @@ Future<SupabaseEdgeThenTablesResult<T>> runSupabaseEdgeThenTables<T>({
     }
     final fromTables = await fetchTables();
     return SupabaseEdgeThenTablesResult(fromTables, fromEdge: false);
-  } on PostgrestException catch (e, s) {
-    AppLogger.error(logContext, e, s);
-    throw onPostgrestException(e);
-  } on Object catch (e, s) {
-    AppLogger.error(logContext, e, s);
-    throw onGenericException(genericFailureMessage, e);
+  } on PostgrestException catch (error, stackTrace) {
+    AppLogger.error(logContext, error, stackTrace);
+    throw onPostgrestException(error);
+  } on Object catch (error, stackTrace) {
+    AppLogger.error(logContext, error, stackTrace);
+    throw onGenericException(genericFailureMessage, error);
   }
 }

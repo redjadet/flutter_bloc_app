@@ -54,14 +54,14 @@ class DirectChartRemoteRepository implements ChartRemoteRepository {
       if (item is! List<dynamic> || item.length < 2) continue;
       try {
         out.add(ChartPoint.fromApi(item));
-      } on Object catch (e, s) {
+      } on Object catch (error, stackTrace) {
         AppLogger.warning(
           'DirectChartRemoteRepository skip invalid price entry',
         );
         AppLogger.error(
           'DirectChartRemoteRepository._parsePricesResilient',
-          e,
-          s,
+          error,
+          stackTrace,
         );
       }
     }

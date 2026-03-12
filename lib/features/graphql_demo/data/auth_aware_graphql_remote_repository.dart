@@ -20,15 +20,15 @@ class AuthAwareGraphqlRemoteRepository implements GraphqlRemoteRepository {
   GraphqlRemoteRepository get _active {
     try {
       return _isSupabaseSignedIn() ? _supabaseRemote : _directRemote;
-    } on Object catch (e, s) {
+    } on Object catch (error, stackTrace) {
       AppLogger.warning(
         'AuthAwareGraphqlRemoteRepository isSupabaseSignedIn failed, '
         'using direct remote',
       );
       AppLogger.error(
         'AuthAwareGraphqlRemoteRepository._active',
-        e,
-        s,
+        error,
+        stackTrace,
       );
       return _directRemote;
     }

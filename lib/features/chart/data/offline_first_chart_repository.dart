@@ -79,19 +79,19 @@ class OfflineFirstChartRepository extends ChartRepository {
           .fetchTrendingCounts();
       try {
         await _cacheRepository.writeTrendingCounts(remote);
-      } on Object catch (e, s) {
+      } on Object catch (error, stackTrace) {
         AppLogger.error(
           'OfflineFirstChartRepository write cache failed',
-          e,
-          s,
+          error,
+          stackTrace,
         );
       }
       _lastCached = remote;
       _lastSource = _remoteRepository.lastSource;
       AppLogger.info('Chart fetch source=${_lastSource.name}');
       return remote;
-    } on Exception catch (e, s) {
-      AppLogger.error(_logContext, e, s);
+    } on Exception catch (error, stackTrace) {
+      AppLogger.error(_logContext, error, stackTrace);
       if (allowCacheFallback && cachedFallback.isNotEmpty) {
         _lastSource = ChartDataSource.cache;
         AppLogger.info('Chart fetch source=cache (fallback)');
@@ -99,8 +99,8 @@ class OfflineFirstChartRepository extends ChartRepository {
       }
       _lastSource = ChartDataSource.unknown;
       rethrow;
-    } on Object catch (e, s) {
-      AppLogger.error(_logContext, e, s);
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(_logContext, error, stackTrace);
       if (allowCacheFallback && cachedFallback.isNotEmpty) {
         _lastSource = ChartDataSource.cache;
         AppLogger.info('Chart fetch source=cache (fallback)');

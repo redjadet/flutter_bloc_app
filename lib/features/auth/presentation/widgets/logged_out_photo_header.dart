@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 class LoggedOutPhotoHeader extends StatelessWidget {
   const LoggedOutPhotoHeader({
@@ -23,7 +24,7 @@ class LoggedOutPhotoHeader extends StatelessWidget {
             width: 38 * scale,
             height: 38 * scale,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4 * scale),
+              borderRadius: BorderRadius.circular(UI.radiusS * scale * 0.5),
               gradient: LinearGradient(
                 begin: const Alignment(0.296, -0.064),
                 end: const Alignment(0.704, 1.064),

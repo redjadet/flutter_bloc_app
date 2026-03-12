@@ -88,8 +88,8 @@ class CameraGalleryCubit extends Cubit<CameraGalleryState> {
       final CameraGalleryResult result = await _repository.pickFromCamera();
       if (isClosed || requestId != _pickRequestId) return;
       _applyPickResult(result);
-    } on Object catch (e, st) {
-      AppLogger.error('CameraGalleryCubit.pickFromCamera', e, st);
+    } on Object catch (error, stackTrace) {
+      AppLogger.error('CameraGalleryCubit.pickFromCamera', error, stackTrace);
       if (isClosed || requestId != _pickRequestId) return;
       emit(
         state.copyWith(
@@ -108,8 +108,8 @@ class CameraGalleryCubit extends Cubit<CameraGalleryState> {
       final CameraGalleryResult result = await _repository.pickFromGallery();
       if (isClosed || requestId != _pickRequestId) return;
       _applyPickResult(result);
-    } on Object catch (e, st) {
-      AppLogger.error('CameraGalleryCubit.pickFromGallery', e, st);
+    } on Object catch (error, stackTrace) {
+      AppLogger.error('CameraGalleryCubit.pickFromGallery', error, stackTrace);
       if (isClosed || requestId != _pickRequestId) return;
       emit(
         state.copyWith(

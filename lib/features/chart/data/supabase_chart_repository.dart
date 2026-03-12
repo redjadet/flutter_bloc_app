@@ -81,14 +81,14 @@ class SupabaseChartRepository implements ChartRemoteRepository {
         return const <ChartPoint>[];
       }
       return _parsePointsResilient(raw);
-    } on Object catch (e, s) {
+    } on Object catch (error, stackTrace) {
       AppLogger.warning(
-        'SupabaseChartRepository edge failed (${e.runtimeType})',
+        'SupabaseChartRepository edge failed (${error.runtimeType})',
       );
       AppLogger.error(
         'SupabaseChartRepository._tryFetchFromEdge',
-        e,
-        s,
+        error,
+        stackTrace,
       );
       return const <ChartPoint>[];
     }
@@ -115,14 +115,14 @@ class SupabaseChartRepository implements ChartRemoteRepository {
       if (value == null) continue;
       try {
         out.add(ChartPoint(date: date.toUtc(), value: value));
-      } on Object catch (e, s) {
+      } on Object catch (error, stackTrace) {
         AppLogger.warning(
           'SupabaseChartRepository skip invalid point row',
         );
         AppLogger.error(
           'SupabaseChartRepository._parsePointsResilient',
-          e,
-          s,
+          error,
+          stackTrace,
         );
       }
     }

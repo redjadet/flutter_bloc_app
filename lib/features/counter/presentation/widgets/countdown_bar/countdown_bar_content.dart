@@ -65,10 +65,10 @@ class CountdownBarContent extends StatelessWidget {
                 builder: (final context, final animatedColor, _) {
                   final Color barColor = animatedColor ?? targetColor;
                   return ClipRRect(
-                    borderRadius: BorderRadius.circular(999),
+                    borderRadius: BorderRadius.circular(UI.radiusPill),
                     child: LinearProgressIndicator(
                       value: active ? progress : 0,
-                      minHeight: 6,
+                      minHeight: UI.progressHeight,
                       backgroundColor: colors.surfaceContainerHighest,
                       valueColor: AlwaysStoppedAnimation<Color>(barColor),
                     ),

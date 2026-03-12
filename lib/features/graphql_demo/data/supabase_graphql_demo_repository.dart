@@ -119,19 +119,19 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
         return const <GraphqlContinent>[];
       }
       return _parseContinentsResilient(raw);
-    } on Object catch (e, s) {
+    } on Object catch (error, stackTrace) {
       AppLogger.warning(
         'SupabaseGraphqlDemoRepository edge continents failed '
-        '(${e.runtimeType})',
+        '(${error.runtimeType})',
       );
       _logJwtMismatchDiagnostics(
-        error: e,
+        error: error,
         accessToken: _readAccessToken(),
       );
       AppLogger.error(
         'SupabaseGraphqlDemoRepository._tryFetchContinentsFromEdge',
-        e,
-        s,
+        error,
+        stackTrace,
       );
       return const <GraphqlContinent>[];
     }
@@ -160,19 +160,19 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
         return const <GraphqlCountry>[];
       }
       return _parseCountriesResilient(raw);
-    } on Object catch (e, s) {
+    } on Object catch (error, stackTrace) {
       AppLogger.warning(
         'SupabaseGraphqlDemoRepository edge countries failed '
-        '(${e.runtimeType})',
+        '(${error.runtimeType})',
       );
       _logJwtMismatchDiagnostics(
-        error: e,
+        error: error,
         accessToken: _readAccessToken(),
       );
       AppLogger.error(
         'SupabaseGraphqlDemoRepository._tryFetchCountriesFromEdge',
-        e,
-        s,
+        error,
+        stackTrace,
       );
       return const <GraphqlCountry>[];
     }
@@ -251,14 +251,14 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
       if (map == null) continue;
       try {
         out.add(GraphqlContinent.fromJson(map));
-      } on Object catch (e, s) {
+      } on Object catch (error, stackTrace) {
         AppLogger.warning(
           'SupabaseGraphqlDemoRepository skip invalid continent row',
         );
         AppLogger.error(
           'SupabaseGraphqlDemoRepository._parseContinentsResilient',
-          e,
-          s,
+          error,
+          stackTrace,
         );
       }
     }
@@ -273,14 +273,14 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
       if (map == null) continue;
       try {
         out.add(GraphqlCountry.fromJson(map));
-      } on Object catch (e, s) {
+      } on Object catch (error, stackTrace) {
         AppLogger.warning(
           'SupabaseGraphqlDemoRepository skip invalid country row',
         );
         AppLogger.error(
           'SupabaseGraphqlDemoRepository._parseCountriesResilient',
-          e,
-          s,
+          error,
+          stackTrace,
         );
       }
     }
