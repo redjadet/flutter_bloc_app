@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart'
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/supabase/edge_then_tables.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_demo_exception_mapper.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/data/supabase_graphql_demo_parsers.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
@@ -118,7 +119,7 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
       if (raw == null) {
         return const <GraphqlContinent>[];
       }
-      return _parseContinentsResilient(raw);
+      return parseGraphqlContinentsFromRaw(raw);
     } on Object catch (error, stackTrace) {
       AppLogger.warning(
         'SupabaseGraphqlDemoRepository edge continents failed '
@@ -159,7 +160,7 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
       if (raw == null) {
         return const <GraphqlCountry>[];
       }
-      return _parseCountriesResilient(raw);
+      return parseGraphqlCountriesFromRaw(raw);
     } on Object catch (error, stackTrace) {
       AppLogger.warning(
         'SupabaseGraphqlDemoRepository edge countries failed '
@@ -224,14 +225,14 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
 
   Future<List<GraphqlContinent>> _fetchContinentsFromTables() async {
     final Object? raw = await _fetchContinentRows();
-    return _mapContinents(raw);
+    return parseGraphqlContinentsFromRaw(raw);
   }
 
   Future<List<GraphqlCountry>> _fetchCountriesFromTables({
     required final String? continentCode,
   }) async {
     final Object? raw = await _fetchCountryRows(continentCode);
-    return _mapCountries(raw);
+    return parseGraphqlCountriesFromRaw(raw);
   }
 
   void _ensureConfigured() {
@@ -241,66 +242,6 @@ class SupabaseGraphqlDemoRepository implements GraphqlRemoteRepository {
         type: GraphqlDemoErrorType.network,
       );
     }
-  }
-
-  /// Parses a list of continent-like maps; skips invalid items and logs.
-  List<GraphqlContinent> _parseContinentsResilient(final List<dynamic> raw) {
-    final List<GraphqlContinent> out = <GraphqlContinent>[];
-    for (final dynamic item in raw) {
-      final Map<String, dynamic>? map = mapFromDynamic(item);
-      if (map == null) continue;
-      try {
-        out.add(GraphqlContinent.fromJson(map));
-      } on Object catch (error, stackTrace) {
-        AppLogger.warning(
-          'SupabaseGraphqlDemoRepository skip invalid continent row',
-        );
-        AppLogger.error(
-          'SupabaseGraphqlDemoRepository._parseContinentsResilient',
-          error,
-          stackTrace,
-        );
-      }
-    }
-    return List<GraphqlContinent>.unmodifiable(out);
-  }
-
-  /// Parses a list of country-like maps; skips invalid items and logs.
-  List<GraphqlCountry> _parseCountriesResilient(final List<dynamic> raw) {
-    final List<GraphqlCountry> out = <GraphqlCountry>[];
-    for (final dynamic item in raw) {
-      final Map<String, dynamic>? map = mapFromDynamic(item);
-      if (map == null) continue;
-      try {
-        out.add(GraphqlCountry.fromJson(map));
-      } on Object catch (error, stackTrace) {
-        AppLogger.warning(
-          'SupabaseGraphqlDemoRepository skip invalid country row',
-        );
-        AppLogger.error(
-          'SupabaseGraphqlDemoRepository._parseCountriesResilient',
-          error,
-          stackTrace,
-        );
-      }
-    }
-    return List<GraphqlCountry>.unmodifiable(out);
-  }
-
-  List<GraphqlContinent> _mapContinents(final Object? raw) {
-    final List<dynamic>? list = listFromDynamic(raw);
-    if (list == null || list.isEmpty) {
-      return const <GraphqlContinent>[];
-    }
-    return _parseContinentsResilient(list);
-  }
-
-  List<GraphqlCountry> _mapCountries(final Object? raw) {
-    final List<dynamic>? list = listFromDynamic(raw);
-    if (list == null || list.isEmpty) {
-      return const <GraphqlCountry>[];
-    }
-    return _parseCountriesResilient(list);
   }
 
   String? _normalizedContinentCode(final String? code) {

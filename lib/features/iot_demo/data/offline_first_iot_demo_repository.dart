@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_pending_set_value.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_sync_operation_applier.dart';
+import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_sync_payloads.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/persistent_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/supabase_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
@@ -45,7 +47,6 @@ class OfflineFirstIotDemoRepository
   static const Duration setValueSyncDebounce = Duration(milliseconds: 400);
 
   static const String iotDemoEntity = 'iot_demo';
-  static const String _payloadKeySupabaseUserId = 'supabaseUserId';
 
   final String? Function() _getCurrentSupabaseUserId;
   final PersistentIotDemoRepository Function(String) _getPersistentRepository;
@@ -61,8 +62,8 @@ class OfflineFirstIotDemoRepository
   final Map<String, Future<void>> _pullRemoteInFlightByUser =
       <String, Future<void>>{};
 
-  final Map<String, _PendingSetValue> _pendingSetValueByDevice =
-      <String, _PendingSetValue>{};
+  final Map<String, IotDemoPendingSetValue> _pendingSetValueByDevice =
+      <String, IotDemoPendingSetValue>{};
 
   PersistentIotDemoRepository? _getLocalRepository() {
     final String? userId = _getCurrentSupabaseUserId();
@@ -94,7 +95,7 @@ class OfflineFirstIotDemoRepository
   Map<String, dynamic> _basePayload(
     final String deviceId,
     final String action,
-  ) => _basePayloadForUser(
+  ) => iotDemoBasePayloadForUser(
     deviceId,
     action,
     supabaseUserId: _currentSupabaseUserId(),
@@ -128,7 +129,7 @@ class OfflineFirstIotDemoRepository
           'type': device.type.name,
           'toggledOn': device.toggledOn,
           'value': device.value,
-          _payloadKeySupabaseUserId: userId,
+          iotDemoSyncPayloadKeySupabaseUserId: userId,
         },
         idempotencyKey: idempotencyKey,
       ),
@@ -188,7 +189,7 @@ class OfflineFirstIotDemoRepository
       );
       return;
     }
-    await _enqueueCommand(deviceId, _commandToPayload(command));
+    await _enqueueCommand(deviceId, iotDemoCommandToPayload(command));
   }
 
   String? _currentSupabaseUserId() {
@@ -213,7 +214,8 @@ class OfflineFirstIotDemoRepository
       userId: userId,
       deviceId: deviceId,
     );
-    final _PendingSetValue? existing = _pendingSetValueByDevice[pendingKey];
+    final IotDemoPendingSetValue? existing =
+        _pendingSetValueByDevice[pendingKey];
     existing?.timer.dispose();
     final TimerDisposable timer = _timerService.runOnce(
       setValueSyncDebounce,
@@ -228,7 +230,7 @@ class OfflineFirstIotDemoRepository
         );
       },
     );
-    _pendingSetValueByDevice[pendingKey] = _PendingSetValue(
+    _pendingSetValueByDevice[pendingKey] = IotDemoPendingSetValue(
       timer: timer,
     );
   }
@@ -260,7 +262,7 @@ class OfflineFirstIotDemoRepository
       SyncOperation.create(
         entityType: entityType,
         payload: <String, dynamic>{
-          ..._basePayloadForUser(
+          ...iotDemoBasePayloadForUser(
             deviceId,
             'command',
             supabaseUserId: effectiveUserId,
@@ -272,24 +274,11 @@ class OfflineFirstIotDemoRepository
     );
   }
 
-  Map<String, dynamic> _commandToPayload(final IotDeviceCommand command) {
-    if (command is IotDeviceCommandToggle) {
-      return <String, dynamic>{'kind': 'toggle'};
-    }
-    if (command is IotDeviceCommandSetValue) {
-      return <String, dynamic>{
-        'kind': 'setValue',
-        'value': command.value.toDouble(),
-      };
-    }
-    return <String, dynamic>{};
-  }
-
   @override
   Future<void> processOperation(final SyncOperation operation) async {
     final Map<String, dynamic> payload = operation.payload;
     final String? opUserId = stringFromDynamicTrimmed(
-      payload[_payloadKeySupabaseUserId],
+      payload[iotDemoSyncPayloadKeySupabaseUserId],
     );
     final String? currentUserId = _getCurrentSupabaseUserId();
     if (opUserId == null ||
@@ -334,21 +323,6 @@ class OfflineFirstIotDemoRepository
     return future;
   }
 
-  Map<String, dynamic> _basePayloadForUser(
-    final String deviceId,
-    final String action, {
-    required final String? supabaseUserId,
-  }) {
-    final Map<String, dynamic> payload = <String, dynamic>{
-      'deviceId': deviceId,
-      'action': action,
-    };
-    if (supabaseUserId case final String userId) {
-      payload[_payloadKeySupabaseUserId] = userId;
-    }
-    return payload;
-  }
-
   Future<void> _doPullRemote({
     required final SupabaseIotDemoRepository remote,
     required final PersistentIotDemoRepository local,
@@ -371,9 +345,4 @@ class OfflineFirstIotDemoRepository
       );
     }
   }
-}
-
-class _PendingSetValue {
-  _PendingSetValue({required this.timer});
-  final TimerDisposable timer;
 }
