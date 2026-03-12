@@ -424,6 +424,10 @@
   "@settingsRemoteConfigErrorLabel": {
     "description": "Label that prefixes the most recent remote config error message"
   },
+  "remoteConfigAwesomeFeatureEnabled": "Awesome feature is enabled",
+  "@remoteConfigAwesomeFeatureEnabled": {
+    "description": "Message shown when the awesome feature flag is enabled"
+  },
   "settingsRemoteConfigFlagLabel": "Awesome feature flag",
   "@settingsRemoteConfigFlagLabel": {
     "description": "Label that displays the current awesome feature flag value"
@@ -1889,6 +1893,22 @@
   "whiteboardStrokeWidth": "Stroke width",
   "@whiteboardStrokeWidth": {
     "description": "Label for stroke width control"
+  },
+  "whiteboardStrokeWidthThin": "Thin",
+  "@whiteboardStrokeWidthThin": {
+    "description": "Whiteboard stroke width preset label"
+  },
+  "whiteboardStrokeWidthMedium": "Medium",
+  "@whiteboardStrokeWidthMedium": {
+    "description": "Whiteboard stroke width preset label"
+  },
+  "whiteboardStrokeWidthThick": "Thick",
+  "@whiteboardStrokeWidthThick": {
+    "description": "Whiteboard stroke width preset label"
+  },
+  "whiteboardStrokeWidthExtra": "Extra",
+  "@whiteboardStrokeWidthExtra": {
+    "description": "Whiteboard stroke width preset label"
   },
   "errorUnknown": "An unknown error occurred",
   "@errorUnknown": {

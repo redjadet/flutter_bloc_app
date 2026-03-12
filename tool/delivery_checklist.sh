@@ -405,6 +405,10 @@ echo "🔍 Step 3/5: Analyzing code with 'flutter analyze'"
 echo ""
 echo "🛡️  Step 4/5: Running best practices validation checks..."
 echo ""
+if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
+  echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
+  exit 1
+fi
 echo "  Running ${#CHECK_SCRIPTS[@]} static checks with $CHECKLIST_JOBS workers (in parallel with analyze)"
 CHECKLIST_TMP_DIR="$(mktemp -d)"
 cleanup_checklist_tmp() {

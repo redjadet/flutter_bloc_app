@@ -315,6 +315,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsRemoteConfigErrorLabel => 'Last error';
 
   @override
+  String get remoteConfigAwesomeFeatureEnabled => 'Awesome feature is enabled';
+
+  @override
   String get settingsRemoteConfigFlagLabel => 'Awesome feature flag';
 
   @override
@@ -1452,6 +1455,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get whiteboardStrokeWidth => 'Stroke width';
+
+  @override
+  String get whiteboardStrokeWidthThin => 'Thin';
+
+  @override
+  String get whiteboardStrokeWidthMedium => 'Medium';
+
+  @override
+  String get whiteboardStrokeWidthThick => 'Thick';
+
+  @override
+  String get whiteboardStrokeWidthExtra => 'Extra';
 
   @override
   String get errorUnknown => 'An unknown error occurred';

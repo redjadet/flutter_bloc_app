@@ -109,7 +109,7 @@ dart run build_runner build --delete-conflicting-outputs
 | `lib/shared/` | Cross-cutting helpers: services, widgets, **components** (design primitives), responsive/layout utils, platform adapters. |
 | `lib/core/` | App-wide config: DI, theme (`core/theme/`), constants (`core/constants/`), extensions (`core/extensions/`), routing, error handling. |
 | `assets/` & `l10n/` | Images/fonts plus localization ARB files. |
-| `test/` | Mirrors `lib/` with unit, bloc, widget, golden suites (see `temp_disabled_tests/` for flaky cases). |
+| `test/` | Mirrors `lib/` with unit, bloc, widget, golden suites. Flaky or temporarily disabled tests use `@Skip('reason')` in place (see Testing section). |
 | `tool/` | Utilities like `update_coverage_summary.dart`. |
 | `figma-sync/` | Pulls assets/layout manifests from Figma when implementing provided designs. |
 
@@ -256,7 +256,7 @@ Tips:
 - **Timer-dependent tests**: Inject `FakeTimerService` and advance time with `tick(n)` instead of waiting on real timers.
 - **Network image tests**: When testing widgets that use `CachedNetworkImageWidget`, use `pump()` instead of `pumpAndSettle()` to avoid timeouts. Network requests never complete in test environments, so `pumpAndSettle()` will wait indefinitely. Use `await tester.pump()` followed by `await tester.pump(const Duration(milliseconds: 100))` if needed for async operations.
 - **Auth & Platform fakes**: `MockFirebaseAuth`, mock `NativePlatformService`, `FakeTimerService`, and other utilities live in `test/mocks/` or feature-specific folders.
-- **Skips**: Temporary skips sit in `temp_disabled_tests/`; remove them once flakes are resolved.
+- **Skips**: For flaky or temporarily disabled tests, use `@Skip('reason')` on the test or group in the same file; document the reason and remove the skip once the flake is fixed. Regression guards are listed in `tool/check_regression_guards.sh`.
 
 ## 8. Tooling & Productivity
 

@@ -15,11 +15,15 @@ class CounterPage extends StatefulWidget {
     required this.title,
     required this.errorNotificationService,
     required this.biometricAuthenticator,
+    this.timerService,
     super.key,
   });
   final String title;
   final ErrorNotificationService errorNotificationService;
   final BiometricAuthenticator biometricAuthenticator;
+
+  /// Used for snackbar hide delay; when null, [DefaultTimerService] is used.
+  final TimerService? timerService;
 
   @override
   State<CounterPage> createState() => _CounterPageState();
@@ -31,6 +35,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   DateTime? _lastFlushTime;
   bool _isCannotGoBelowZeroSnackBarVisible = false;
   bool _didEnsureSyncStarted = false;
+  TimerDisposable? _snackBarHideTimerHandle;
   static const Duration _flushThrottleDuration = Duration(milliseconds: 500);
   static const Duration _cannotGoBelowZeroSnackBarDuration = Duration(
     seconds: 2,
@@ -80,6 +85,8 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    _snackBarHideTimerHandle?.dispose();
+    _snackBarHideTimerHandle = null;
     WidgetsBinding.instance.removeObserver(this);
     _confettiController.dispose();
     super.dispose();
@@ -201,6 +208,9 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   }
 
   void _showCannotGoBelowZeroSnackBar(final String message) {
+    _snackBarHideTimerHandle?.dispose();
+    _snackBarHideTimerHandle = null;
+
     final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
     controller = ErrorHandling.showErrorSnackBar(
       context,
@@ -211,21 +221,26 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
       return;
     }
     _isCannotGoBelowZeroSnackBarVisible = true;
-    bool isClosed = false;
+
+    final TimerService timerService =
+        widget.timerService ?? DefaultTimerService();
+    _snackBarHideTimerHandle = timerService.runOnce(
+      _cannotGoBelowZeroSnackBarDuration,
+      () {
+        if (!mounted) return;
+        _snackBarHideTimerHandle?.dispose();
+        _snackBarHideTimerHandle = null;
+        ErrorHandling.hideCurrentSnackBar(context);
+      },
+    );
+
     unawaited(
       controller.closed.whenComplete(() {
+        _snackBarHideTimerHandle?.dispose();
+        _snackBarHideTimerHandle = null;
         if (mounted) {
-          _isCannotGoBelowZeroSnackBarVisible = false;
+          setState(() => _isCannotGoBelowZeroSnackBarVisible = false);
         }
-        isClosed = true;
-      }),
-    );
-    unawaited(
-      Future<void>.delayed(_cannotGoBelowZeroSnackBarDuration, () {
-        if (!mounted || isClosed) {
-          return;
-        }
-        ErrorHandling.hideCurrentSnackBar(context);
       }),
     );
   }

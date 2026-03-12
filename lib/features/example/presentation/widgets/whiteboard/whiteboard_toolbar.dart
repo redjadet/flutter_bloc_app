@@ -169,7 +169,7 @@ class WhiteboardToolbar extends StatelessWidget {
         Wrap(
           spacing: context.responsiveHorizontalGapS,
           runSpacing: context.responsiveGapXS,
-          children: defaultWidthPresets
+          children: defaultWidthPresetsFor(context.l10n)
               .map<Widget>(
                 (final preset) => WidthPresetButton(
                   preset: preset,

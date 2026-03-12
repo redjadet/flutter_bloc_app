@@ -59,6 +59,7 @@ Full documentation and suppression guidance is provided in the sections below.
 - **`check_side_effects_build.sh`**: Heuristic check for side effects in `build()` method (warns but doesn't fail)
 - **`check_dialog_controller_dispose.sh`**: Heuristic check for `TextEditingController` with `showDialog`/`showAdaptiveDialog` and dispose in `finally` (can cause "used after being disposed")
 - **`check_inherited_widget_in_create.sh`**: Prevents `context.l10n`/`Theme.of(context)` inside BlocProvider/Provider `create` (see Context & Async Safety below)
+- **`check_inherited_widget_in_initstate.sh`**: Prevents InheritedWidget reads (e.g. `context.l10n`, `Theme.of(context)`) in `initState()`; read in `build()` or `didChangeDependencies()` instead.
 - **`check_lifecycle_error_handling.sh`**: Snackbar via ErrorHandling, `stream.listen` onError, `context.mounted` after show\*Dialog (see Context & Async Safety below)
 - **`check_offline_first_remote_merge.sh`**: Regression tests ensuring offline-first repos do not overwrite newer unsynced local state with older remote (see Offline-first remote merge below)
 
@@ -203,6 +204,8 @@ Text('Hello', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)) 
 
 ### Localization
 
+- **`check_missing_localizations.sh`**: Ensures localization keys referenced in code exist in ARB files; run after adding new `context.l10n.*` usages.
+
 #### `check_hardcoded_strings.sh`
 
 **Purpose**: Prevents hard-coded strings in `Text` widgets.
@@ -236,6 +239,8 @@ Text(context.l10n.searchHint) // ✅ Localized
 ---
 
 ### State Management
+
+- **`check_freezed_preferred.sh`**: Prefers Freezed for new state/domain models over Equatable; encourages consistent code generation.
 
 #### `check_cubit_isclosed.sh`
 
@@ -658,6 +663,10 @@ Text('Title', style: Theme.of(context).textTheme.titleLarge) // ✅ Theme-based
 **Suppression**: Add `// check-ignore: reason` on the same line or line above
 
 ---
+
+## Keeping This Doc in Sync
+
+`tool/validate_validation_docs.sh` checks that every script in `CHECK_SCRIPTS` (in `tool/delivery_checklist.sh`) is mentioned in this document. It runs automatically as part of `./bin/checklist`. If you add or remove a script from `CHECK_SCRIPTS`, add or remove a corresponding entry here and run `bash tool/validate_validation_docs.sh` to verify.
 
 ## Running Validation Scripts
 

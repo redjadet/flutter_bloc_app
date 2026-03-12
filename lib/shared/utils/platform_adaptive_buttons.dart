@@ -17,12 +17,14 @@ class PlatformAdaptiveButtons {
     final BorderRadius? borderRadius,
     final ButtonStyle? materialStyle,
   }) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
     if (PlatformAdaptive.isCupertino(context)) {
       return CupertinoButton(
         onPressed: onPressed,
         padding: padding,
-        color: color ?? CupertinoColors.activeBlue,
-        disabledColor: disabledColor ?? CupertinoColors.quaternaryLabel,
+        color: color ?? scheme.primary,
+        disabledColor:
+            disabledColor ?? scheme.onSurface.withValues(alpha: 0.38),
         minimumSize: minSize != null ? Size(minSize, minSize) : null,
         pressedOpacity: pressedOpacity,
         borderRadius: borderRadius ?? BorderRadius.circular(8),
@@ -52,17 +54,20 @@ class PlatformAdaptiveButtons {
     final Color? disabledColor,
     final ButtonStyle? materialStyle,
   }) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
     if (PlatformAdaptive.isCupertino(context)) {
+      final Color effectiveDisabled =
+          disabledColor ?? scheme.onSurface.withValues(alpha: 0.38);
       return CupertinoButton(
         onPressed: onPressed,
         padding: padding,
         color: Colors.transparent,
-        disabledColor: disabledColor ?? CupertinoColors.quaternaryLabel,
+        disabledColor: effectiveDisabled,
         child: DefaultTextStyle(
           style: TextStyle(
             color: onPressed == null
-                ? (disabledColor ?? CupertinoColors.quaternaryLabel)
-                : (color ?? CupertinoColors.activeBlue),
+                ? effectiveDisabled
+                : (color ?? scheme.primary),
           ),
           child: child,
         ),

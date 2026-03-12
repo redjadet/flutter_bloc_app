@@ -321,6 +321,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsRemoteConfigErrorLabel => 'Último error';
 
   @override
+  String get remoteConfigAwesomeFeatureEnabled =>
+      'La función Awesome está activada';
+
+  @override
   String get settingsRemoteConfigFlagLabel => 'Indicador de la función Awesome';
 
   @override
@@ -1468,6 +1472,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get whiteboardStrokeWidth => 'Grosor del trazo';
+
+  @override
+  String get whiteboardStrokeWidthThin => 'Fino';
+
+  @override
+  String get whiteboardStrokeWidthMedium => 'Medio';
+
+  @override
+  String get whiteboardStrokeWidthThick => 'Grueso';
+
+  @override
+  String get whiteboardStrokeWidthExtra => 'Extra';
 
   @override
   String get errorUnknown => 'Ha ocurrido un error desconocido';
