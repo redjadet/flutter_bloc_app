@@ -97,7 +97,7 @@ dart run build_runner build --delete-conflicting-outputs
   - `injector_registrations.dart` - All dependency registrations organized by category
   - `injector_factories.dart` - Factory functions for creating repositories
   - `injector_helpers.dart` - Helper functions for registration
-- **Navigation**: `go_router` defined in `lib/app.dart` (`AppRoutes` in `lib/core/navigation/app_routes.dart`).
+- **Navigation**: `go_router` defined in `lib/app.dart`; route constants in `lib/core/router/app_routes.dart`, wiring in `lib/app/router/`.
 
 ## 2. Repository Layout Highlights
 
@@ -822,6 +822,7 @@ reviewable.
 - **`equatable_to_freezed_conversion.md`**: Step-by-step conversion from Equatable to Freezed
 - **`flutter_best_practices_review.md`**: Best practices audit with action checklist
 - **`validation_scripts.md`**: Automated validation scripts and their purposes
+- **`migration_to_type_safe_bloc.md`**, **`sealed_classes_migration.md`**, **`cupertino_widget_migration.md`**: Migration guides for type-safe BLoC, sealed classes, and Cupertino widgets
 
 ### Platform-Specific
 

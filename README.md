@@ -73,6 +73,7 @@ Engineering references:
 - [Validation Scripts](docs/validation_scripts.md)
 - [Tech Stack](docs/tech_stack.md)
 - [Architecture Decisions](docs/adr/)
+- Feature and integration guides: [Feature Overview](docs/feature_overview.md) (catalog and deep-dive links; see also FCM, Todo List, Google Maps, GenUI in `docs/`)
 
 ## Quality Signals
 

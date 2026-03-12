@@ -1,5 +1,7 @@
 # Offline-First Implementation Plan
 
+**Current status:** See [IMPLEMENTATION_COMPLETE.md](IMPLEMENTATION_COMPLETE.md) for completion summary and verification checklist. This file is retained for progress history and optional future work.
+
 This document revalidates the offline-first requirements after another pass over the codebase and folds in the existing guardrails (Hive everywhere, DI through `getIt`, responsive widgets, and checklist-driven delivery). It is intentionally implementation-oriented so each workstream can be executed without re-triaging requirements.
 
 ## Progress Update (2025-11-24)

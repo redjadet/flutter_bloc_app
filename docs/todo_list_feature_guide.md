@@ -2,6 +2,8 @@
 
 This document provides a comprehensive guide for implementing a Todo List feature that demonstrates clean architecture, compile-time safety, and responsive/adaptive UI patterns used throughout this codebase.
 
+**Related documentation:** [Firebase Realtime Database plan](todo_list_firebase_realtime_database_plan.md), [Firebase security rules](todo_list_firebase_security_rules.md), [Offline-first considerations](todo_list_offline_first_considerations.md), [Manual order improvements](todo_manual_order_improvements.md).
+
 ## Goals and Scope
 
 **Primary goal:** Provide a lightweight, offline-first Todo List feature that demonstrates:

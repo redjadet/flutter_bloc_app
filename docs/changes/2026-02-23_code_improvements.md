@@ -29,5 +29,6 @@ than the old environment notes that previously appeared in this file.
 - Use `dart run build_runner build --delete-conflicting-outputs` when touching
   Freezed, Retrofit, or JSON-serializable code.
 - Prefer the current validation workflow in `docs/new_developer_guide.md`.
+- For current quality expectations and gates, see [CODE_QUALITY.md](../CODE_QUALITY.md).
 - Do not rely on this file for active rollback, environment, or codegen
   troubleshooting guidance.

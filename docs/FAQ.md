@@ -18,6 +18,7 @@ This is a reference Flutter application that demonstrates clean architecture, of
 - Localization workflow: `docs/localization.md`, `docs/new_developer_guide.md`
 - Offline-first patterns: `docs/offline_first/adoption_guide.md`
 - Validation scripts: `docs/validation_scripts.md`
+- Migrations (type-safe BLoC, Freezed, sealed, Cupertino): `docs/migration_to_type_safe_bloc.md`, `docs/equatable_to_freezed_conversion.md`, `docs/sealed_classes_migration.md`, `docs/cupertino_widget_migration.md`
 
 ## 🔍 What should I review first?
 

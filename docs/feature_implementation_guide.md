@@ -154,9 +154,7 @@ tool/test_coverage.sh
 
 ## 6. Push Notifications
 
-**Status:** Not implemented; mentioned as future in offline-first docs.
-
-**Current state:** No `firebase_messaging` (FCM) or other push SDK in the project. [Offline-first plan](offline_first/offline_first_plan.md) and [ANALYSIS_AND_IMPROVEMENTS](offline_first/ANALYSIS_AND_IMPROVEMENTS.md) mention using FCM to trigger background sync.
+**Status:** FCM demo implemented. See [FCM Demo Integration](fcm_demo_integration.md) for setup, scope, and iOS Simulator testing. The [offline-first plan](offline_first/offline_first_plan.md) and [ANALYSIS_AND_IMPROVEMENTS](offline_first/ANALYSIS_AND_IMPROVEMENTS.md) mention using FCM to trigger background sync as optional future work.
 
 **How to implement (iOS + Android):**
 

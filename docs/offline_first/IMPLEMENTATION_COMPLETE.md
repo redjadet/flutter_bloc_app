@@ -202,6 +202,6 @@ The implementation provides:
 
 ---
 
-**Last Updated**: 2025-11-27
+**Last Updated**: 2026-03-13
 **Status**: ✅ Complete
-**Coverage**: 86.05%
+**Coverage**: See `coverage/coverage_summary.md` (run `dart run tool/update_coverage_summary.dart` to refresh).
