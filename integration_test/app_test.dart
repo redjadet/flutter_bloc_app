@@ -28,11 +28,19 @@ void main() {
       await pumpUntilFound(tester, find.text('0'));
       expect(find.text('0'), findsWidgets);
 
-      await tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.add));
+      final Finder incrementButton = find
+          .widgetWithIcon(FloatingActionButton, Icons.add)
+          .first;
+      await tester.ensureVisible(incrementButton);
+      await tester.tap(incrementButton);
       await pumpUntilFound(tester, find.text('1'));
       expect(find.text('1'), findsWidgets);
 
-      await tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.remove));
+      final Finder decrementButton = find
+          .widgetWithIcon(FloatingActionButton, Icons.remove)
+          .first;
+      await tester.ensureVisible(decrementButton);
+      await tester.tap(decrementButton);
       await pumpUntilFound(tester, find.text('0'));
       expect(find.text('0'), findsWidgets);
     });

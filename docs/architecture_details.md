@@ -7,6 +7,7 @@ This document captures the architecture diagram, key principles, state managemen
 > - [Clean Architecture](clean_architecture.md) - Practical guide with layer responsibilities, examples, and review checklist
 > - [SOLID Principles](solid_principles.md) - Detailed SOLID principles analysis with codebase examples
 > - [DRY Principles](dry_principles.md) - DRY consolidations and patterns implemented
+> - [Separation of Concerns](separation_of_concerns.md) - How responsibilities are split across layers and shared infrastructure
 > - [Code Quality](CODE_QUALITY.md) - Comprehensive code quality analysis including architecture compliance
 > - [Flutter Best Practices Review](flutter_best_practices_review.md) - Best practices audit with action checklist
 

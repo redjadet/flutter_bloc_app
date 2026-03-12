@@ -3,6 +3,8 @@ import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
+import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
+import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -27,6 +29,7 @@ Future<void> configureIntegrationTestDependencies({
   final bool overrideCounterRepository = true,
   final bool setFlavorToProd = true,
   final bool biometricSuccess = true,
+  final AppLocale? locale = const AppLocale(languageCode: 'en'),
 }) async {
   PackageInfo.setMockInitialValues(
     appName: 'Flutter Demo',
@@ -45,6 +48,7 @@ Future<void> configureIntegrationTestDependencies({
 
   await _overrideBiometricAuthenticator(biometricSuccess);
   await _overrideAppInfoRepository();
+  await _overrideLocaleRepository(locale);
 }
 
 Future<void> tearDownIntegrationTestDependencies() =>
@@ -102,6 +106,15 @@ Future<void> _overrideAppInfoRepository() async {
   getIt.registerSingleton<AppInfoRepository>(_FakeAppInfoRepository());
 }
 
+Future<void> _overrideLocaleRepository(final AppLocale? locale) async {
+  if (getIt.isRegistered<LocaleRepository>()) {
+    await getIt.unregister<LocaleRepository>();
+  }
+  getIt.registerSingleton<LocaleRepository>(
+    _FixedLocaleRepository(initialLocale: locale),
+  );
+}
+
 class _FakeBiometricAuthenticator implements BiometricAuthenticator {
   _FakeBiometricAuthenticator({required final bool result}) : _result = result;
 
@@ -115,4 +128,19 @@ class _FakeAppInfoRepository implements AppInfoRepository {
   @override
   Future<AppInfo> load() async =>
       const AppInfo(version: '1.2.3', buildNumber: '42');
+}
+
+class _FixedLocaleRepository implements LocaleRepository {
+  _FixedLocaleRepository({required final AppLocale? initialLocale})
+    : _locale = initialLocale;
+
+  AppLocale? _locale;
+
+  @override
+  Future<AppLocale?> load() async => _locale;
+
+  @override
+  Future<void> save(final AppLocale? locale) async {
+    _locale = locale;
+  }
 }

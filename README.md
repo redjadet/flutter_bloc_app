@@ -1,6 +1,8 @@
 # Flutter BLoC App
 
-A reference Flutter application that demonstrates clean architecture, offline-first data access, and production-minded tooling across multiple feature types. This repository is designed to showcase senior Flutter engineering practices in a realistic, testable codebase.
+A reference Flutter application built to demonstrate disciplined product
+engineering: clear architecture, robust state management, strong validation, and
+production-minded development workflow.
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.4-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.1-blue.svg)](https://dart.dev)
@@ -14,53 +16,72 @@ A reference Flutter application that demonstrates clean architecture, offline-fi
 [![Architecture Pattern](https://img.shields.io/badge/Architecture-Offline--First-4CAF50.svg)](docs/offline_first/adoption_guide.md)
 [![Design System](https://img.shields.io/badge/Design%20System-Material%203-6200EE.svg)](https://m3.material.io/)
 [![iOS Design](https://img.shields.io/badge/iOS%20Design-Cupertino-007AFF.svg)](https://api.flutter.dev/flutter/cupertino/cupertino-library.html)
+[![Type Safety](https://img.shields.io/badge/Type%20Safety-Compile--Time-0F9D58.svg)](docs/compile_time_safety.md)
 [![DRY Principles](https://img.shields.io/badge/DRY-Principles-2B7A78.svg)](docs/dry_principles.md)
+[![Separation of Concerns](https://img.shields.io/badge/Separation%20of%20Concerns-Applied-00796B.svg)](docs/separation_of_concerns.md)
 [![SOLID](https://img.shields.io/badge/SOLID-Principles-6C5CE7.svg)](docs/solid_principles.md)
 
----
+## Overview
 
-## 🎯 Overview
+This repository is intended as a serious engineering sample rather than a
+single-purpose demo. It brings together multiple product surfaces in one codebase
+and uses that breadth to show how architecture, testing, and developer workflow
+can stay coherent as scope grows.
 
-This codebase focuses on maintainability, correctness, and performance:
+The emphasis is on maintainability, correctness, and clarity. For implementation
+details, feature-level behavior, and internal standards, use the documentation
+linked below rather than this README.
 
-- Clean architecture with strict Domain -> Data -> Presentation boundaries
-- Offline-first repositories with background sync queues
-- Responsive and platform-adaptive UI (Material 3 + Cupertino)
-- Lifecycle safety for async flows and UI state updates
-- Automated validation scripts and broad test coverage
-- Run tests: `./bin/checklist`, `./bin/integration_tests`, `tool/test_coverage.sh`, or `tool/run_integration_tests.sh`; see [Developer Guide §7](docs/new_developer_guide.md#7-testing-strategy)
-- Architecture diagram and layer flow: [Architecture Details](docs/architecture_details.md)
+## Quick Start
 
-## ✨ Product Features
+### Prerequisites
 
-- Authentication and settings flows with secure storage
-- Offline-first chat (Hugging Face inference) with local queueing
-- GenUI Demo (AI-generated dynamic UI with Google Gemini)
-- Maps (Google Maps with Apple Maps fallback)
-- GraphQL countries browser (offline-first; [Supabase Edge/tables when signed in](docs/offline_first/graphql_demo.md))
-- Charts (offline-first; [Supabase Edge/tables when signed in](docs/offline_first/chart_demo.md); direct CoinGecko when not)
-- WebSocket demo with reconnect logic
-- Search, profile, and todo list features
-- Markdown editor and whiteboard samples
-- IoT Demo (offline-first device list backed by Supabase; connect/disconnect, set value, add devices)
-- WalletConnect Auth demo (Example page): connect wallet, link to Firebase; see [WalletConnect Auth Status](docs/walletconnect_auth_status.md)
-- Optional Supabase Auth (Settings → Integrations): email/password sign-in/sign-up on a dedicated page when `SUPABASE_URL` and `SUPABASE_ANON_KEY` are configured; see [Authentication](docs/authentication.md#supabase-auth-optional-separate-page)
+- Flutter 3.41.4
+- Dart 3.11.1
+- iOS 12+ / Android API 21+
 
-For entry points and module details, see [Feature Overview](docs/feature_overview.md). GenUI Demo: [User Guide](docs/genui_demo_user_guide.md).
+```bash
+flutter pub get
+flutter run -t lib/main_dev.dart
+./bin/checklist
+```
 
-## ⚙️ Configuration
+Run the integration suite separately when needed:
 
-Some features require API keys or platform setup to fully enable:
+```bash
+./bin/integration_tests
+```
 
-- **Firebase** (Auth, Remote Config, Realtime Database, etc.) – config files are gitignored. See [Firebase Setup](docs/firebase_setup.md) for how to run the app with Firebase.
-- **Supabase** (IoT demo, GraphQL demo, Chart demo Edge/tables, optional Auth) – `SUPABASE_URL` and `SUPABASE_ANON_KEY` in secrets; see [Security & Secrets](docs/security_and_secrets.md), [Supabase README](supabase/README.md) (migrations + Edge Functions), and [Authentication](docs/authentication.md#supabase-auth-optional-separate-page).
-- Google Maps (Android/iOS keys)
-- Hugging Face Inference API
-- Google Gemini API (for GenUI Demo)
+## Documentation
 
-See [Security & Secrets](docs/security_and_secrets.md) for API keys and sample config; see [Firebase Setup](docs/firebase_setup.md) for Firebase configuration.
+Start here:
 
-## 📱 Screenshots
+- [Developer Guide](docs/new_developer_guide.md)
+- [Feature Overview](docs/feature_overview.md)
+- [Architecture Details](docs/architecture_details.md)
+- [Testing Overview](docs/testing_overview.md)
+
+Setup and operations:
+
+- [Firebase Setup](docs/firebase_setup.md)
+- [Security and Secrets](docs/security_and_secrets.md)
+- [Deployment](docs/deployment.md)
+
+Engineering references:
+
+- [Clean Architecture](docs/clean_architecture.md)
+- [Validation Scripts](docs/validation_scripts.md)
+- [Tech Stack](docs/tech_stack.md)
+- [Architecture Decisions](docs/adr/)
+
+## Quality Signals
+
+- Validation workflow: `./bin/checklist`
+- Integration test suite: `./bin/integration_tests`
+- Coverage tracking: [coverage/coverage_summary.md](coverage/coverage_summary.md)
+- Additional validation guidance: [docs/testing_overview.md](docs/testing_overview.md)
+
+## Screenshots
 
 | Counter Home | Auto Countdown | Settings |
 | --- | --- | --- |
@@ -72,7 +93,8 @@ See [Security & Secrets](docs/security_and_secrets.md) for API keys and sample c
 
 | GenUI Demo |
 | --- |
-| ![GenUI Demo - AI-generated dynamic UI](assets/screenshots/gen_ui.png) |
+<!-- markdownlint-disable-next-line MD033 -->
+| <img src="assets/screenshots/gen_ui.png" alt="GenUI Demo - AI-generated dynamic UI" width="240" /> |
 
 | Apple Maps Demo | Google Maps Demo | Search |
 | --- | --- | --- |
@@ -94,74 +116,8 @@ See [Security & Secrets](docs/security_and_secrets.md) for API keys and sample c
 | --- | --- |
 | ![Library Demo screen](assets/screenshots/library_demo.png) | ![Library Demo 2 screen](assets/screenshots/library_demo2.png) |
 
-## 🚀 Quick Start
+## License
 
-### Prerequisites
-
-- Flutter 3.41.4
-- Dart 3.11.1
-- iOS 12+ / Android API 21+
-
-### Installation
-
-```bash
-flutter pub get
-flutter run
-```
-
-Detailed setup: [Developer Guide](docs/new_developer_guide.md)
-
-## 📚 Documentation
-
-Start here:
-
-- [Developer Guide](docs/new_developer_guide.md)
-- [Feature Overview](docs/feature_overview.md)
-- [Firebase Setup](docs/firebase_setup.md) – run the app with Firebase (Auth, Remote Config, Realtime Database)
-- [Architecture Details](docs/architecture_details.md)
-- [Testing Overview](docs/testing_overview.md)
-
-Engineering references:
-
-- [Clean Architecture](docs/clean_architecture.md)
-- [Deployment](docs/deployment.md) – App Store, TestFlight, Google Play, Fastlane (Ad Hoc, TestFlight, App Store)
-- [Offline-First Guide](docs/offline_first/adoption_guide.md)
-- [Type-Safe BLoC](docs/compile_time_safety.md)
-- [Performance](docs/performance_bottlenecks.md)
-- [Validation Scripts](docs/validation_scripts.md)
-- [Known Workarounds](docs/workarounds.md) – temporary fixes (e.g. iOS simulator); prefer upstream fixes when available
-
-## 🛠️ Tech Stack (Short)
-
-- Flutter 3.41.4 / Dart 3.11.1
-- BLoC/Cubit for state management
-- Hive + secure storage for persistence
-- Firebase (Auth, Remote Config)
-- GraphQL + WebSocket networking
-- Material 3 + Cupertino for adaptive UI
-
-Full details: [Tech Stack Documentation](docs/tech_stack.md)
-
-## 🧭 Design Decisions
-
-- [ADR 0001 - Architecture and Layering](docs/adr/0001-architecture-and-layering.md)
-- [ADR 0002 - Offline-First Data Access](docs/adr/0002-offline-first-data.md)
-- [ADR 0003 - Deferred Feature Loading](docs/adr/0003-deferred-feature-loading.md)
-- [ADR 0004 - Type-Safe Cubit Access](docs/adr/0004-type-safe-cubit-access.md)
-
-## ✅ Quality Signals
-
-- Validation scripts: `./bin/checklist`
-- Coverage tracking: `coverage/coverage_summary.md`
-- Custom lint rules and codegen utilities
-- Golden and widget tests for UI regressions
-
-## 🙏 Acknowledgments
-
-- Flutter and Dart teams
-- BLoC and package maintainers
-- Open-source community contributors
-
-## 📄 License
-
-This project is available for free use in public, non-commercial repositories under the terms described in [LICENSE](LICENSE). Any commercial or closed-source usage requires prior written permission from the copyright holder.
+This project is available for free use in public, non-commercial repositories
+under the terms described in [LICENSE](LICENSE). Commercial or closed-source use
+requires prior written permission from the copyright holder.

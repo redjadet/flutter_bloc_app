@@ -54,3 +54,14 @@ Some modules require platform keys or API access:
 - WalletConnect Auth requires a WalletConnect project ID (configured in `WalletConnectService`).
 
 See [Security & Secrets](security_and_secrets.md) for API keys; see [Firebase Setup](firebase_setup.md) for Firebase configuration.
+
+## Deep-Dive References
+
+- [Authentication](authentication.md) — Firebase auth flow, token handling, and optional Supabase auth
+- [Offline-First Guide](offline_first/adoption_guide.md) — repository pattern, sync model, and adoption guidance
+- [Compile-Time Safety](compile_time_safety.md) — type-safe BLoC access and related patterns
+- [Performance Bottlenecks](performance_bottlenecks.md) — known hot paths and performance guidance
+- [Known Workarounds](workarounds.md) — temporary platform or tooling-specific mitigations
+- [AI Integration](ai_integration.md) — chat flow, remote inference, and offline behavior
+- [GenUI Demo User Guide](genui_demo_user_guide.md) — feature-specific usage notes for the GenUI demo
+- [Google Maps Integration](google_maps_integration.md) — map behavior, keys, and platform differences

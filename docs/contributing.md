@@ -44,6 +44,7 @@ All checks must pass before merging.
 - [Architecture Details](architecture_details.md) - Architecture diagrams and principles
 - [SOLID Principles](solid_principles.md) - Detailed SOLID principles with codebase examples
 - [DRY Principles](dry_principles.md) - DRY consolidations and patterns
+- [Separation of Concerns](separation_of_concerns.md) - Responsibility boundaries across layers and shared services
 - [Code Quality](CODE_QUALITY.md) - Comprehensive code quality analysis including architecture compliance
 
 ### Development Guidelines

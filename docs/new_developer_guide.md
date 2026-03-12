@@ -813,6 +813,7 @@ reviewable.
 - **`clean_architecture.md`**: Practical guide with layer responsibilities, examples, and review checklist
 - **`solid_principles.md`**: Detailed SOLID principles with codebase examples
 - **`dry_principles.md`**: DRY consolidations and patterns
+- **`separation_of_concerns.md`**: Responsibility boundaries across layers, DI, and shared infrastructure
 
 ### Development Guides
 

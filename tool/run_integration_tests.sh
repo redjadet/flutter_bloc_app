@@ -35,6 +35,40 @@ host_desktop_device_id() {
   esac
 }
 
+cleanup_project_xcodebuilds() {
+  local pattern
+  local patterns=(
+    "$PROJECT_ROOT/build/ios"
+    "$PROJECT_ROOT/ios/Runner.xcworkspace"
+    "$PROJECT_ROOT/ios/Pods"
+  )
+  local deadline=$((SECONDS + 30))
+
+  for pattern in "${patterns[@]}"; do
+    pkill -TERM -f "$pattern" 2>/dev/null || true
+  done
+
+  while true; do
+    local still_running=0
+    for pattern in "${patterns[@]}"; do
+      if pgrep -f "$pattern" >/dev/null 2>&1; then
+        still_running=1
+        break
+      fi
+    done
+    if [ "$still_running" -eq 0 ]; then
+      return
+    fi
+    if [ "$SECONDS" -ge "$deadline" ]; then
+      for pattern in "${patterns[@]}"; do
+        pkill -KILL -f "$pattern" 2>/dev/null || true
+      done
+      return
+    fi
+    sleep 1
+  done
+}
+
 list_supported_devices() {
   flutter devices | while IFS= read -r line; do
     [[ "$line" == *"•"* ]] || continue
@@ -120,11 +154,25 @@ select_device_id() {
   exit 1
 }
 
+run_integration_test_file() {
+  local test_file="$1"
+
+  cleanup_project_xcodebuilds
+  echo ""
+  echo "==> Running $test_file"
+  flutter test --no-pub -d "$DEVICE_ID" "$test_file"
+  cleanup_project_xcodebuilds
+}
+
 DEVICE_ID="$(select_device_id)"
 
 echo "Running integration tests on device: $DEVICE_ID"
 if [ "$#" -eq 0 ]; then
-  flutter test --no-pub integration_test -d "$DEVICE_ID"
+  cleanup_project_xcodebuilds
+  flutter test --no-pub -d "$DEVICE_ID" integration_test/
+  exit_code=$?
+  cleanup_project_xcodebuilds
+  exit ${exit_code}
 else
   flutter test --no-pub -d "$DEVICE_ID" "$@"
 fi

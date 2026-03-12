@@ -5,7 +5,7 @@ This document consolidates code-quality analysis and improvement notes. It is a 
 ## Scope and Inputs
 
 - Static review of `lib/` and supporting tooling.
-- Architecture guidelines in `docs/clean_architecture.md`, `docs/solid_principles.md`, and `docs/dry_principles.md`.
+- Architecture guidelines in `docs/clean_architecture.md`, `docs/solid_principles.md`, `docs/dry_principles.md`, and `docs/separation_of_concerns.md`.
 - Quality gates via `./bin/checklist` (format, analyze, coverage).
 - Coverage source: `coverage/coverage_summary.md`.
 
@@ -77,6 +77,7 @@ See `docs/testing_overview.md` for the full testing playbook.
 - [Clean Architecture](clean_architecture.md)
 - [SOLID Principles](solid_principles.md)
 - [DRY Principles](dry_principles.md)
+- [Separation of Concerns](separation_of_concerns.md)
 - [Architecture Details](architecture_details.md)
 - [Flutter Best Practices Review](flutter_best_practices_review.md)
 - [Performance Bottlenecks](performance_bottlenecks.md)
