@@ -17,654 +17,48 @@ DRY principles are applied throughout the codebase to:
 - Make it easier to extend and modify shared behavior
 - Improve code quality and readability
 
-## Implemented Consolidations
-
-### 1. Skeleton Widgets Consolidation
-
-**Problem**: Multiple skeleton widgets (`SkeletonListTile`, `SkeletonCard`, `SkeletonGridItem`) duplicated common patterns:
-
-- `RepaintBoundary` wrapper for performance
-- `Semantics` widget for accessibility
-- `Skeletonizer` with `ShimmerEffect` configuration
-- Theme-based color scheme setup
-
-**Solution**: Created `SkeletonBase` widget that encapsulates all common skeleton behavior.
-
-**Location**: `lib/shared/widgets/skeletons/skeleton_base.dart`
-
-**Impact**:
-
-- ~60 lines of duplicate code removed across 3 files
-- Consistent shimmer effects and accessibility labels
-- Easier to maintain and extend skeleton widgets
-- Single point of change for skeleton styling
-
-**Usage Example**:
-
-```dart
-// Before: Each skeleton widget duplicated the same setup
-class SkeletonListTile extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return RepaintBoundary(
-      child: Semantics(
-        label: 'Loading content',
-        child: Skeletonizer(
-          effect: ShimmerEffect(/* ... */),
-          child: Container(/* ... */),
-        ),
-      ),
-    );
-  }
-}
-
-// After: Use SkeletonBase
-class SkeletonListTile extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SkeletonBase(
-      child: Container(/* specific list tile content */),
-    );
-  }
-}
-```
-
-### 2. HTTP Client Consolidation (historical; current: Dio + interceptors)
-
-**Historical context**: The app previously used `ResilientHttpClientExtensions` with `getMapped()` / `postMapped()`; common logic was extracted into `_sendMappedRequest()` to avoid duplication across HTTP methods.
-
-**Current approach**: The HTTP layer uses a shared **Dio** instance (`lib/shared/http/app_dio.dart`) with interceptors for network check, auth token, telemetry, and retries. Error mapping and timeouts are centralized in `NetworkGuard.executeDio` and `NetworkErrorMapper`. For type-safe REST APIs, Retrofit clients (e.g. `CoingeckoApi` in chart) are built from the same Dio instance. This preserves a single point of change for request/response handling and consistent error behavior without duplicating per-method logic.
-
-### 3. Settings Repository Consolidation
-
-**Problem**: `HiveLocaleRepository` and `HiveThemeRepository` duplicated patterns for:
-
-- Loading values from Hive with validation
-- Saving values to Hive with error handling
-- Type conversion (string ↔ domain type)
-- Invalid data cleanup
-- `StorageGuard.run` usage
-
-**Solution**: Created generic `HiveSettingsRepository<T>` base class that handles all common operations.
-
-**Location**: `lib/shared/storage/hive_settings_repository.dart`
-
-**Impact**:
-
-- ~120 lines of duplicate code removed across 2 files
-- Consistent error handling and validation
-- Type-safe generic implementation
-- Easy to add new settings repositories (just extend and provide converters)
-
-**Usage Example**:
-
-```dart
-// Before: Duplicated load/save/validation logic
-class HiveLocaleRepository extends HiveRepositoryBase {
-  Future<AppLocale?> load() async => StorageGuard.run<AppLocale?>(
-    logContext: 'HiveLocaleRepository.load',
-    action: () async {
-      final box = await getBox();
-      final value = box.get(_keyLocale);
-      if (value is! String || value.isEmpty) return null;
-      try {
-        return AppLocale.fromTag(value);
-      } catch (error, stackTrace) {
-        AppLogger.error('Invalid locale tag', error, stackTrace);
-        await safeDeleteKey(box, _keyLocale);
-        return null;
-      }
-    },
-    fallback: () => null,
-  );
-  // Similar pattern repeated in save()
-}
-
-// After: Extend base class with converters
-class HiveLocaleRepository extends HiveSettingsRepository<AppLocale>
-    implements LocaleRepository {
-  HiveLocaleRepository({required super.hiveService})
-    : super(
-        key: 'preferred_locale_code',
-        fromString: AppLocale.fromTag,
-        toStringValue: (locale) => locale.tag,
-      );
-}
-```
-
-### 4. Status View Layout Consolidation
-
-**Problem**: `CommonErrorView` and `CommonEmptyState` duplicated the same layout:
-
-- Centered column structure
-- Responsive padding/spacing
-- Optional icon/title/action sections
-
-**Solution**: Introduced `CommonStatusView` as a shared layout widget.
-
-**Location**: `lib/shared/widgets/common_status_view.dart`
-
-**Impact**:
-
-- Reduced duplicated layout code across empty/error views
-- Keeps styling differences in the callers while reusing structure
-- Single place to adjust spacing and layout behavior
-
-**Usage Example**:
-
-```dart
-// After: Shared status layout with per-view styling
-return CommonStatusView(
-  message: message,
-  icon: Icons.error_outline,
-  messageStyle: TextStyle(
-    fontSize: context.responsiveTitleSize,
-    fontWeight: FontWeight.w600,
-  ),
-  action: CommonRetryButton(onPressed: onRetry),
-);
-```
-
-### 5. Form Input Decoration Consolidation
-
-**Problem**: `CommonFormField` and `CommonDropdownField` duplicated:
-
-- Border radius and border styles
-- Focused/disabled styling
-- Responsive content padding
-
-**Solution**: Extracted shared input decoration builders.
-
-**Location**: `lib/shared/widgets/common_input_decoration_helpers.dart`
-
-**Functions**:
-
-- `buildCommonInputDecoration()` - For outline input decorations (used by `CommonFormField` and `CommonDropdownField`)
-- `buildFilledInputDecoration()` - For filled input decorations (used by registration forms)
-
-**Impact**:
-
-- Reduced duplicate decoration code across shared form widgets
-- Keeps visual consistency for form fields
-- Makes future styling tweaks a single change
-- Separated file structure: form widgets in `common_form_field.dart`, dropdown in `common_dropdown_field.dart`, helpers in `common_input_decoration_helpers.dart`
-
-### 6. Max-Width Layout Consolidation
-
-**Problem**: Multiple pages repeated the same pattern:
-
-- `Center`/`Align` wrapper
-- `ConstrainedBox` with `contentMaxWidth`
-- Optional padding around the constrained content
-
-**Solution**: Added `CommonMaxWidth` to encapsulate the shared layout.
-
-**Location**: `lib/shared/widgets/common_max_width.dart`
-
-**Impact**:
-
-- Removed repeated max-width boilerplate across pages
-- Keeps layout intent consistent and easy to tweak
-- Makes further reuse straightforward in new screens
-
-**Usage Example**:
-
-```dart
-// After: Shared max-width wrapper
-CommonMaxWidth(
-  child: Column(
-    children: [
-      // page content
-    ],
-  ),
-);
-```
-
-### 7. Centered Message Layout Consolidation
-
-**Problem**: Multiple widgets used the same centered message layout with
-padding and text styling.
-
-**Solution**: Reused `CommonStatusView` for centered text-only empty states,
-adding optional padding support for variants.
-
-**Locations**:
-
-- `lib/shared/widgets/common_status_view.dart`
-- `lib/features/chat/presentation/widgets/chat_message_list.dart`
-- `lib/features/chat/presentation/widgets/chat_history_empty_state.dart`
-
-**Impact**:
-
-- Reduced repeated `Center` + `Padding` + `Text` blocks
-- Keeps empty-state layout consistent while allowing custom padding
-
-### 8. Profile Button Style Consolidation
-
-**Problem**: Profile screens duplicated `OutlinedButton` styling and Roboto
-label text configuration.
-
-**Solution**: Centralized the style and text helpers in a shared profile
-widget utility.
-
-**Location**: `lib/features/profile/presentation/widgets/profile_button_styles.dart`
-
-**Impact**:
-
-- Keeps profile button styling consistent across screens
-- Reduces repeated `OutlinedButton.styleFrom` and font configuration
-
-### 9. Profile Page Layout Value Consolidation
-
-**Problem**: The profile page repeated complex spacing and width calculations
-for multiple sections and buttons.
-
-**Solution**: Extracted shared layout values into local variables within the
-page build method.
-
-**Location**: `lib/features/profile/presentation/pages/profile_page.dart`
-
-**Impact**:
-
-- Reduces repeated calculations and improves readability
-- Makes layout tuning easier by updating a single value
-
-### 10. Horizontal Page Padding Consolidation
-
-**Problem**: Many widgets repeated `EdgeInsets.symmetric(horizontal:
-context.pageHorizontalPadding)` for consistent horizontal layout spacing.
-
-**Solution**: Added `pageHorizontalPaddingInsets` to the responsive layout
-extensions and reused it across widgets.
-
-**Location**: `lib/shared/extensions/responsive/responsive_layout.dart`
-
-**Impact**:
-
-- Reduced repeated `EdgeInsets.symmetric` boilerplate
-- Centralized horizontal page padding usage for consistency
-
-### 11. Horizontal + Vertical Page Padding Consolidation
-
-**Problem**: Widgets often combined `pageHorizontalPadding` with a vertical gap
-using `EdgeInsets.symmetric(...)`.
-
-**Solution**: Added `pageHorizontalPaddingWithVertical()` helper to build the
-combined padding consistently.
-
-**Location**: `lib/shared/extensions/responsive/responsive_layout.dart`
-
-**Impact**:
-
-- Reduced repeated `EdgeInsets.symmetric` usage with horizontal + vertical
-  padding
-- Keeps horizontal padding aligned with page layout defaults
-- Applied in layout-heavy screens like the calculator page
-
-### 12. Filled Input Decoration Consolidation
-
-**Problem**: `registerInputDecoration` function and `RegisterPasswordField` duplicated
-the same filled input decoration pattern:
-
-- Filled background color calculation (alpha blending)
-- Border radius and border styles
-- Focused/enabled border styling
-- Content padding
-
-**Solution**: Created `buildFilledInputDecoration` helper function to centralize the
-filled input decoration pattern.
-
-**Location**: `lib/shared/widgets/common_input_decoration_helpers.dart`
-
-**Impact**:
-
-- ~50 lines of duplicate code removed across 2 files
-- Consistent filled input styling across registration forms
-- Single point of change for filled input decoration updates
-- Easier to maintain and extend registration form fields
-
-**Usage Example**:
-
-```dart
-// Before: Duplicated filled decoration logic
-InputDecoration registerInputDecoration(...) {
-  final double overlayAlpha = theme.brightness == Brightness.dark ? 0.16 : 0.04;
-  final Color fillColor = Color.alphaBlend(...);
-  return InputDecoration(
-    filled: true,
-    fillColor: fillColor,
-    // ... 30+ lines of border/padding configuration
-  );
-}
-
-// After: Use shared helper
-InputDecoration registerInputDecoration(...) {
-  return buildFilledInputDecoration(
-    context,
-    hintText: hint,
-    errorText: errorText,
-    hintStyle: customHintStyle,
-  );
-}
-```
-
-### 13. ViewStatus Branching Consolidation (Profile Page)
-
-**Problem**: `ProfilePage` manually branched on loading/error states with repetitive
-if-else logic.
-
-**Solution**: Refactored to use `ViewStatusSwitcher` for consistent status handling.
-
-**Location**: `lib/features/profile/presentation/pages/profile_page.dart`
-
-**Impact**:
-
-- Reduced repetitive status checking code
-- Consistent status handling pattern across pages
-- Easier to maintain status transitions
-
-**Usage Example**:
-
-```dart
-// Before: Manual branching
-if (bodyData.isLoading && !bodyData.hasUser) {
-  return const CommonLoadingWidget(); // Uses theme-aware color by default
-}
-if (bodyData.hasError && !bodyData.hasUser) {
-  return CommonErrorView(...);
-}
-
-// After: Use ViewStatusSwitcher
-ViewStatusSwitcher<ProfileCubit, ProfileState, _ProfileBodyData>(
-  isLoading: (data) => data.isLoading && !data.hasUser,
-  isError: (data) => data.hasError && !data.hasUser,
-  loadingBuilder: (context) => CommonLoadingWidget(
-    // Uses theme.colorScheme.secondary by default, or pass custom color
-    color: Theme.of(context).colorScheme.secondary,
-  ),
-  errorBuilder: (context, _) => CommonErrorView(...),
-  builder: (context, bodyData) => /* success content */,
-)
-```
-
-### 14. ViewStatus Branching Consolidation (Chart Page)
-
-**Problem**: `ChartPage` manually branched on loading/error/empty states with
-repetitive if-else logic.
-
-**Solution**: Refactored to use `ViewStatusSwitcher` for consistent status handling.
-
-**Location**: `lib/features/chart/presentation/pages/chart_page.dart`
-
-**Impact**:
-
-- Reduced repetitive status checking code
-- Consistent status handling pattern matching other pages
-- Easier to maintain status transitions
-
-### 15. Dependency Injection Organization Consolidation
-
-**Problem**: `injector_registrations.dart` contained all dependency registrations in a single file (239 lines), making it harder to maintain as features grow.
-
-**Solution**: Split into feature-specific registration files:
-
-- `register_chat_services.dart` - Chat-related services and repositories
-- `register_profile_services.dart` - Profile-related services and repositories
-- `register_search_services.dart` - Search-related services and repositories
-- `register_todo_services.dart` - Todo list-related services and repositories
-- Core services (storage, sync, utility) remain in main `injector_registrations.dart`
-
-**Location**: `lib/core/di/register_*_services.dart`
-
-**Impact**:
-
-- Better separation of concerns (SRP)
-- Easier to locate feature-specific DI setup
-- Reduced main file size below 250-line limit
-- Each feature registration file is self-contained
-
-**Usage Example**:
-
-```dart
-// Before: All registrations in one file
-Future<void> registerAllDependencies() async {
-  await _registerStorageServices();
-  _registerChatServices();
-  _registerProfileServices();
-  // ... many more
-}
-
-// After: Feature-specific files
-Future<void> registerAllDependencies() async {
-  await _registerStorageServices();
-  registerChatServices();  // From register_chat_services.dart
-  registerProfileServices();  // From register_profile_services.dart
-  // ... more feature registrations
-}
-```
-
-### 16. Repository Factory Pattern Consolidation
-
-**Problem**: `createCounterRepository()` and `createTodoRepository()` in `injector_factories.dart` duplicated error handling and null-checking logic for remote repository creation.
-
-**Solution**: Created generic `createRemoteRepositoryOrNull<T>()` helper that handles:
-
-- Firebase availability checking
-- Error handling (FirebaseException and generic Exception)
-- Consistent error logging
-- Null return on failure
-
-**Location**: `lib/core/di/injector_helpers.dart`
-
-**Impact**:
-
-- ~50 lines of duplicate code removed
-- Consistent error handling across repository factories
-- Easier to add new offline-first repositories
-- Single point of change for remote repository creation logic
-
-**Usage Example**:
-
-```dart
-// Before: Duplicated error handling
-CounterRepository? _createRemoteCounterRepositoryOrNull() {
-  if (Firebase.apps.isEmpty) return null;
-  try {
-    final app = Firebase.app();
-    final database = FirebaseDatabase.instanceFor(app: app);
-    final auth = FirebaseAuth.instanceFor(app: app);
-    return RealtimeDatabaseCounterRepository(database: database, auth: auth);
-  } on FirebaseException catch (error, stackTrace) {
-    AppLogger.error('Creating remote counter repository failed', error, stackTrace);
-    return null;
-  } on Exception catch (error, stackTrace) {
-    AppLogger.error('Creating remote counter repository failed', error, stackTrace);
-    return null;
-  }
-}
-
-// After: Use shared helper
-CounterRepository? _createRemoteCounterRepositoryOrNull() {
-  return createRemoteRepositoryOrNull<CounterRepository>(
-    context: 'counter repository',
-    factory: () {
-      final app = Firebase.app();
-      final database = FirebaseDatabase.instanceFor(app: app);
-      final auth = FirebaseAuth.instanceFor(app: app);
-      return RealtimeDatabaseCounterRepository(database: database, auth: auth);
-    },
-  );
-}
-```
-
-### 17. Typography Consolidation
-
-**Problem**: Typography customization appeared in multiple widgets, which could lead to drift and inconsistency.
-
-**Solution**: Created `AppTypography` helper class in `lib/shared/ui/typography.dart` that provides common text style helpers using the theme as single source of truth.
-
-**Location**: `lib/shared/ui/typography.dart`
-
-**Impact**:
-
-- Consistent typography across the app
-- Easier theme updates (single source of truth)
-- Reduced duplication of text style definitions
-- Theme-aware text styles by default
-
-**Usage Example**:
-
-```dart
-// Before: Direct theme access with manual styling
-TextStyle profileButtonTextStyle(BuildContext context, {...}) =>
-    Theme.of(context).textTheme.labelLarge?.copyWith(
-      fontSize: fontSize,
-      fontWeight: FontWeight.w900,
-      // ... more properties
-    ) ?? TextStyle(...);
-
-// After: Use typography helper
-TextStyle profileButtonTextStyle(BuildContext context, {...}) =>
-    AppTypography.buttonText(
-      context,
-      fontWeight: FontWeight.w900,
-      fontSize: fontSize,
-      // ... more properties
-    );
-```
-
-### 18. Input Decoration Consolidation (Additional Widgets)
-
-**Problem**: Some feature widgets still had custom `InputDecoration` that could use shared helpers.
-
-**Solution**: Refactored remaining widgets to use `buildCommonInputDecoration` helper:
-
-- `lib/features/chat/presentation/widgets/chat_input_bar.dart` - Now uses `buildCommonInputDecoration`
-
-**Location**: Feature widgets updated to use `lib/shared/widgets/common_input_decoration_helpers.dart`
-
-**Impact**:
-
-- Consistent input styling across more widgets
-- Reduced duplication
-- Easier maintenance
-
-### 19. ViewStatus Branching Consolidation (Additional Pages)
-
-**Problem**: Some pages still manually branched on loading/error states instead of using `ViewStatusSwitcher`.
-
-**Solution**: Refactored additional pages to use `ViewStatusSwitcher`:
-
-- `lib/features/scapes/presentation/pages/scapes_page.dart` - Now uses `ViewStatusSwitcher`
-
-**Location**: Updated pages use `lib/shared/widgets/view_status_switcher.dart`
-
-**Impact**:
-
-- Consistent status handling pattern
-- Reduced boilerplate
-- Easier to maintain status transitions
-
-### 20. EdgeInsets.all Consolidation
-
-**Problem**: Multiple widgets repeated `EdgeInsets.all(context.responsiveGapL)`,
-`EdgeInsets.all(context.responsiveGapM)`, `EdgeInsets.all(context.responsiveGapS)`,
-and `EdgeInsets.all(context.responsiveCardPadding)` patterns throughout the codebase.
-
-**Solution**: Added helper getters (`allGapXS`, `allGapS`, `allGapM`, `allGapL`,
-`allCardPadding`) to the responsive layout extensions.
-
-**Location**: `lib/shared/extensions/responsive/responsive_layout.dart`
-
-**Impact**:
-
-- ~15 instances of `EdgeInsets.all(context.responsiveGapX)` replaced with concise helpers
-- Reduced boilerplate and improved readability
-- Centralized EdgeInsets.all patterns for consistency
-- Easier to maintain and update padding values
-
-**Usage Example**:
-
-```dart
-// Before: Verbose EdgeInsets.all pattern
-Padding(
-  padding: EdgeInsets.all(context.responsiveGapL),
-  child: content,
-)
-
-// After: Concise helper
-Padding(
-  padding: context.allGapL,
-  child: content,
-)
-```
-
-**Files Refactored**:
-
-- `lib/features/google_maps/presentation/widgets/google_maps_layout.dart`
-- `lib/shared/widgets/app_message.dart`
-- `lib/features/chat/presentation/widgets/chat_message_list.dart`
-- `lib/features/websocket/presentation/pages/websocket_demo_page.dart`
-- `lib/features/chart/presentation/widgets/chart_line_graph.dart`
-- `lib/features/chart/presentation/widgets/chart_scrollable.dart`
-- `lib/features/example/presentation/widgets/markdown_editor/markdown_preview.dart`
-- `lib/features/example/presentation/widgets/markdown_editor/markdown_editor_field.dart`
-- `lib/features/example/presentation/widgets/markdown_editor/markdown_toolbar.dart`
-- `lib/features/example/presentation/widgets/whiteboard/whiteboard_toolbar.dart`
-- `lib/features/websocket/presentation/widgets/websocket_connection_banner.dart`
-- `lib/shared/widgets/skeletons/skeleton_card.dart`
-- `lib/features/graphql_demo/presentation/widgets/graphql_country_card.dart`
-
-## Further DRY Opportunities
-
-These are candidate areas for consolidation; implement incrementally as patterns
-repeat across 2-3+ locations.
-
-### Input Decorations in Feature Widgets
-
-**Pattern**: Custom `InputDecoration` may still appear in some feature widgets that
-don't use the filled pattern.
-
-**Examples**:
-
-- `lib/features/search/presentation/widgets/search_text_field.dart`
-- `lib/features/chat/presentation/widgets/chat_input_bar.dart`
-- `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart`
-
-**Opportunity**:
-
-- Reuse `CommonFormField`/`CommonDropdownField` where possible.
-- For custom layouts requiring raw `TextField`, consider if existing helpers
-  (`buildFilledInputDecoration` or `buildCommonInputDecoration`) can be extended.
-
-### Repeated ViewStatus Branching
-
-**Pattern**: Some pages may still manually branch on loading/error/empty states.
-
-**Examples**:
-
-- `lib/features/chat/presentation/widgets/chat_list_view.dart` (uses switch expressions, which is acceptable)
-
-**Opportunity**:
-
-- Prefer `ViewStatusSwitcher` + `CommonStatusView` for consistent status
-  handling with shared builders where manual branching becomes repetitive.
-
-### Repeated Max-Width Layout Wrappers
-
-**Pattern**: `Center` + `ConstrainedBox` + `Padding` sequences are repeated for
-content width constraints.
-
-**Examples**:
-
-- `lib/features/profile/presentation/pages/profile_page.dart`
-- `lib/features/chat/presentation/widgets/chat_message_list.dart`
-- `lib/features/chart/presentation/pages/chart_page.dart`
-
-**Opportunity**:
-
-- Introduce a small shared wrapper (or expand `CommonPageLayout` usage) to
-  unify max-width layout patterns and responsive padding.
+## Consolidations Implemented
+
+The table below summarizes every DRY consolidation applied so far. For each
+entry, the **Pattern** column names the base class, helper, or widget that
+replaced the duplicated code.
+
+<!-- markdownlint-disable MD013 -->
+| # | Area | Pattern / Location | Lines saved | Key benefit |
+| --- | ------ | -------------------- | ----------- | ----------- |
+| 1 | Skeleton widgets | `SkeletonBase` (`shared/widgets/skeletons/skeleton_base.dart`) | ~60 | Single shimmer + a11y + repaint boundary |
+| 2 | HTTP client | Shared Dio + interceptors (`shared/http/app_dio.dart`, `NetworkGuard`) | — | One auth/retry/telemetry pipeline |
+| 3 | Settings repos | `HiveSettingsRepository<T>` (`shared/storage/hive_settings_repository.dart`) | ~120 | Generic load/save/validate with converters |
+| 4 | Status views | `CommonStatusView` (`shared/widgets/common_status_view.dart`) | — | Shared error/empty layout structure |
+| 5 | Input decoration | `buildCommonInputDecoration` / `buildFilledInputDecoration` (`shared/widgets/common_input_decoration_helpers.dart`) | ~50 | Consistent form field styling |
+| 6 | Max-width layout | `CommonMaxWidth` (`shared/widgets/common_max_width.dart`) | — | Single constrained-width wrapper |
+| 7 | Centered messages | Reuse of `CommonStatusView` with optional padding | — | Consistent empty states |
+| 8 | Profile buttons | `profile_button_styles.dart` | — | Shared outlined-button styling |
+| 9 | Profile layout | Local layout variables in `profile_page.dart` | — | No repeated spacing calculations |
+| 10 | Page padding | `pageHorizontalPaddingInsets` extension | — | Eliminates `EdgeInsets.symmetric` boilerplate |
+| 11 | H+V padding | `pageHorizontalPaddingWithVertical()` extension | — | Combined horizontal + vertical padding |
+| 12 | Filled inputs | `buildFilledInputDecoration` | ~50 | Consistent registration-form styling |
+| 13 | Status branching | `ViewStatusSwitcher` (Profile page) | — | Declarative loading/error/success |
+| 14 | Status branching | `ViewStatusSwitcher` (Chart page) | — | Same pattern, additional page |
+| 15 | DI organization | Feature-specific `register_*_services.dart` files | — | SRP per feature, smaller files |
+| 16 | Repo factories | `createRemoteRepositoryOrNull<T>()` (`core/di/injector_helpers.dart`) | ~50 | Shared Firebase null-check + error log |
+| 17 | Typography | `AppTypography` (`shared/ui/typography.dart`) | — | Theme-aware text style helpers |
+| 18 | Feature inputs | Chat input → `buildCommonInputDecoration` | — | More widgets using shared helpers |
+| 19 | Status branching | `ViewStatusSwitcher` (Scapes page) | — | Additional page consolidated |
+| 20 | EdgeInsets.all | `allGapS/M/L/allCardPadding` extensions | ~15 instances | Concise padding getters |
+<!-- markdownlint-enable MD013 -->
+
+## Open Consolidation Opportunities
+
+Implement incrementally when a pattern repeats across 3+ locations.
+
+<!-- markdownlint-disable MD013 -->
+| Pattern | Where to look | Suggested action |
+| ------- | ------------- | ---------------- |
+| Custom `InputDecoration` | `search_text_field.dart`, `graphql_filter_bar.dart` | Reuse `buildCommonInputDecoration` or `CommonFormField` |
+| Manual loading/error branching | Any new page that doesn't use `ViewStatusSwitcher` | Prefer `ViewStatusSwitcher` + `CommonStatusView` |
+| Max-width layout wrappers | `profile_page.dart`, `chat_message_list.dart`, `chart_page.dart` | Expand `CommonMaxWidth` / `CommonPageLayout` usage |
+<!-- markdownlint-enable MD013 -->
 
 ## DRY Patterns Used
 
@@ -675,10 +69,13 @@ The codebase uses several patterns to achieve DRY:
 For repositories, widgets, or services with shared lifecycle:
 
 - **`HiveRepositoryBase`**: Common Hive box management and safe key deletion
-- **`HiveSettingsRepository<T>`**: Generic settings repository with validation and error handling
-- **`SkeletonBase`**: Common skeleton widget behavior (shimmer, accessibility, repaint boundary)
+- **`HiveSettingsRepository<T>`**: Generic settings repository with
+  validation and error handling
+- **`SkeletonBase`**: Common skeleton widget behavior (shimmer,
+  accessibility, repaint boundary)
 
-**When to use**: When multiple classes share >50% of their implementation and have similar lifecycle.
+**When to use**: When multiple classes share >50% of their
+implementation and have similar lifecycle.
 
 ### Mixins
 
@@ -688,17 +85,20 @@ For cross-cutting concerns that can be applied to multiple classes:
 - **`CubitSubscriptionMixin`**: Subscription lifecycle management
 - **`StateRestorationMixin`**: State restoration from snapshots
 
-**When to use**: When functionality needs to be shared across unrelated classes that can't use inheritance.
+**When to use**: When functionality needs to be shared across
+unrelated classes that can't use inheritance.
 
 ### Extensions
 
 For utility methods on existing types:
 
-- **Dio + interceptors / `NetworkGuard`**: Shared HTTP client with centralized error mapping and timeouts
+- **Dio + interceptors / `NetworkGuard`**: Shared HTTP client with
+  centralized error mapping and timeouts
 - **`CubitContextHelpers`**: Convenient cubit access from `BuildContext`
 - **Responsive extensions**: Spacing, typography, and layout utilities
 
-**When to use**: When adding convenience methods to existing types without modifying their source.
+**When to use**: When adding convenience methods to existing types
+without modifying their source.
 
 ### Helper Classes
 
@@ -708,16 +108,20 @@ For stateless utilities that don't fit into a class hierarchy:
 - **`ErrorHandling`**: UI error handling (snackbars, dialogs)
 - **`CubitExceptionHandler`**: Async operation exception handling
 
-**When to use**: When functionality is stateless and doesn't belong to a specific class hierarchy.
+**When to use**: When functionality is stateless and doesn't belong to
+a specific class hierarchy.
 
 ### Helper Functions
 
 For stateless utility functions that provide shared behavior:
 
-- **`buildFilledInputDecoration`**: Filled input decoration styling for registration forms
-- **`buildCommonInputDecoration`**: Common input decoration styling for form fields
+- **`buildFilledInputDecoration`**: Filled input decoration styling for
+  registration forms
+- **`buildCommonInputDecoration`**: Common input decoration styling for
+  form fields
 
-**When to use**: When functionality is a simple function that doesn't require class state or complex behavior.
+**When to use**: When functionality is a simple function that doesn't
+require class state or complex behavior.
 
 ## When to Apply DRY
 
@@ -725,27 +129,36 @@ For stateless utility functions that provide shared behavior:
 
 - **Repeated patterns**: Extract when the same logic appears **3+ times**
 - **Similar implementations**: Consolidate when **>50% of code is shared**
-- **Common error handling**: Use shared utilities instead of duplicating try-catch blocks
+- **Common error handling**: Use shared utilities instead of
+  duplicating try-catch blocks
 - **Shared UI patterns**: Extract common widget structures
 
 ### Before Creating New Code
 
-1. **Search existing codebase**: Check `lib/shared/` for existing utilities before implementing new logic
-2. **Identify patterns**: Look for similar code in the same feature or across features
-3. **Extract incrementally**: Refactor duplication after identifying 2-3 instances, not on first occurrence
-4. **Maintain contracts**: Ensure consolidated code maintains existing interfaces and behavior
+1. **Search existing codebase**: Check `lib/shared/` for existing
+   utilities before implementing new logic
+2. **Identify patterns**: Look for similar code in the same feature or
+   across features
+3. **Extract incrementally**: Refactor duplication after identifying
+   2-3 instances, not on first occurrence
+4. **Maintain contracts**: Ensure consolidated code maintains existing
+   interfaces and behavior
 
 ### Good vs. Bad Examples
 
 ✅ **Good Practices**:
 
-- `HiveLocaleRepository` and `HiveThemeRepository` extend `HiveSettingsRepository<T>`
+- `HiveLocaleRepository` and `HiveThemeRepository` extend
+  `HiveSettingsRepository<T>`
 - All skeleton widgets use `SkeletonBase` for common shimmer/accessibility logic
 - HTTP extensions use `_sendMappedRequest` for shared request/response handling
 - Cubits use `CubitExceptionHandler` instead of duplicating try-catch blocks
-- Registration forms use `buildFilledInputDecoration` for consistent filled input styling
-- Pages use `ViewStatusSwitcher` for consistent loading/error/success state handling
-- Widgets use `context.allGapL` instead of `EdgeInsets.all(context.responsiveGapL)`
+- Registration forms use `buildFilledInputDecoration` for consistent
+  filled input styling
+- Pages use `ViewStatusSwitcher` for consistent loading/error/success
+  state handling
+- Widgets use `context.allGapL` instead of
+  `EdgeInsets.all(context.responsiveGapL)`
 
 ❌ **Bad Practices**:
 
@@ -753,7 +166,8 @@ For stateless utility functions that provide shared behavior:
 - Copy-pasting repository load/save patterns without base class
 - Creating new skeleton widgets without using `SkeletonBase`
 - Reimplementing HTTP request logic instead of using extensions
-- Duplicating input decoration styling across form fields
+- Duplicating input decoration styling across form fields; use
+  `buildCommonInputDecoration` or `buildFilledInputDecoration` instead
 - Manual status branching when `ViewStatusSwitcher` can be used
 
 ## Storage DRY Rule (Hive)
@@ -776,19 +190,24 @@ All DRY consolidations must be validated through:
 2. **Code quality checks**: `./bin/checklist` - Format, analyze, and coverage
 3. **Lint analysis**: `flutter analyze` - No new warnings or errors
 4. **No breaking changes**: All existing functionality preserved
-5. **Check for unused code**: Remove old duplicated implementations after consolidation
+5. **Check for unused code**: Remove old duplicated implementations
+   after consolidation
 
 ## Future Opportunities
 
 Areas where DRY could be further applied:
 
-- **Error handling in repositories**: If more repositories follow similar error handling patterns
-- **State management patterns**: If cubits start duplicating similar state transition logic
-- **Widget composition**: If similar widget structures appear across features
-- **API client patterns**: If more API clients need similar request/response handling
+- **Error handling in repositories**: If more repositories follow
+  similar error handling patterns
+- **State management patterns**: If cubits start duplicating similar
+  state transition logic
+- **Widget composition**: If similar widget structures appear across
+  features
+- **API client patterns**: If more API clients need similar
+  request/response handling
 
-## Related Documentation
+## See Also
 
-- [`README.md`](../README.md) - Quick overview of DRY principles applied
-- [`solid_principles.md`](solid_principles.md) - SOLID principles in the codebase
-- [`SHARED_UTILITIES.md`](SHARED_UTILITIES.md) - Shared utilities documentation
+- [SOLID Principles](solid_principles.md) — related design principles
+- [Shared Utilities](SHARED_UTILITIES.md) — full catalog of shared
+  code

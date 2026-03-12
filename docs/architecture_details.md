@@ -1,15 +1,24 @@
 # Architecture Details
 
-This document captures the architecture diagram, key principles, state management rationale, and dependency flow patterns used throughout the app.
+High-level architecture diagram, key principles, state management rationale,
+and dependency flow patterns for this Flutter BLoC app.
 
-> **Related Documentation:**
->
-> - [Clean Architecture](clean_architecture.md) - Practical guide with layer responsibilities, examples, and review checklist
-> - [SOLID Principles](solid_principles.md) - Detailed SOLID principles analysis with codebase examples
-> - [DRY Principles](dry_principles.md) - DRY consolidations and patterns implemented
-> - [Separation of Concerns](separation_of_concerns.md) - How responsibilities are split across layers and shared infrastructure
-> - [Code Quality](CODE_QUALITY.md) - Comprehensive code quality analysis including architecture compliance
-> - [Flutter Best Practices Review](flutter_best_practices_review.md) - Best practices audit with action checklist
+## Document Map
+
+Start here for the big picture; drill into the linked docs for specifics.
+
+| Question | Document |
+| -------- | -------- |
+| How are layers structured? | [Clean Architecture](clean_architecture.md) |
+| How do I add a new feature? | [Feature Implementation Guide](feature_implementation_guide.md) |
+| How is SOLID applied? | [SOLID Principles](solid_principles.md) |
+| Where is duplication eliminated? | [DRY Principles](dry_principles.md) |
+| How are responsibilities split? | [Separation of Concerns](separation_of_concerns.md) |
+| Why BLoC over Riverpod? | [State Management Choice](state_management_choice.md) |
+| What trade-offs exist? | [Trade-offs & Future](tradeoffs_and_future.md) |
+| What are the architecture decisions? | [ADRs](adr/) |
+| Code quality gates? | [Code Quality](CODE_QUALITY.md) |
+| Best practices checklist? | [Flutter Best Practices Review](flutter_best_practices_review.md) |
 
 ## Architecture Diagram
 

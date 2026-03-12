@@ -1,25 +1,104 @@
 # Trade-offs & Future Improvements
 
-This document captures known trade-offs and future improvements for the codebase.
+Known trade-offs accepted in the current architecture and improvements that
+would raise the bar further.
 
-> **Related Documentation:**
->
-> - [Code Quality](CODE_QUALITY.md) - Code quality analysis and recommendations
-> - [Flutter Best Practices Review](flutter_best_practices_review.md) - Best practices audit with action checklist
-> - [Architecture Details](architecture_details.md) - Architecture patterns and principles
+> **Related:**
+> [Architecture Details](architecture_details.md) |
+> [Clean Architecture](clean_architecture.md) |
+> [Code Quality](CODE_QUALITY.md) |
+> [Flutter Best Practices Review](flutter_best_practices_review.md)
 
-## Current Trade-offs
+## Accepted Trade-offs
 
-- Deep links to non-root routes can bypass auth redirects; page-level guards may
-  be needed for stricter access control.
-- No role/claims-based authorization yet (authenticated vs anonymous only).
-- Non-Firebase HTTP clients do not attach auth headers automatically.
-- Biometric authenticator allows access when sensors are unavailable or not
-  enrolled; tighten policy if stricter gating is required.
+### Architecture & boilerplate
+
+- **Feature-based Clean Architecture adds boilerplate.** Every feature requires
+  domain/data/presentation folders, a DI registration file, and a route entry.
+  The cost is extra files; the benefit is testability, substitutability, and
+  clear ownership. See [ADR 0001](adr/0001-architecture-and-layering.md).
+- **get_it (service locator) vs compile-time DI.** `get_it` provides runtime
+  resolution, which means missing registrations are caught at test-time rather
+  than at compile-time. A compile-time DI solution (e.g. `injectable` +
+  `inject`) would catch wiring errors earlier but adds code-generation overhead.
+
+### Auth & security
+
+- **Deep links to non-root routes can bypass auth redirects.** `GoRouter`
+  `redirect` runs at the router level; deep links that land on nested routes
+  may skip it. Page-level guards are needed for stricter access control.
+- **No role/claims-based authorization.** Auth distinguishes authenticated vs
+  anonymous only. Role or claims-based guards are deferred until multi-role
+  requirements emerge.
+- **Non-Firebase HTTP clients do not attach auth headers automatically.** Only
+  the shared Dio instance injects Firebase ID tokens via
+  `AuthTokenInterceptor`. Third-party SDKs or direct `http` calls must handle
+  tokens separately.
+- **Biometric gate is permissive.** `BiometricAuthenticator` allows access when
+  sensors are unavailable or not enrolled. This keeps the app usable on
+  emulators and older devices but is too permissive for high-security flows.
+
+### Storage & offline-first
+
+- **Hive as primary local store.** Hive is lightweight and fast but lacks
+  relational queries and automatic migrations. Schema changes require manual
+  migration logic. Isar was evaluated (see
+  [Isar vs Hive comparison](migration/isar_vs_hive_comparison.md)) but not
+  adopted because Hive satisfies current requirements with less overhead.
+- **Offline-first repositories can become complex.** Coordinating cache, remote,
+  sync queue, and conflict resolution in a single repository risks becoming a
+  "god object." The mitigation is to extract collaborators early (e.g.
+  `ChatSyncOperationFactory`, `ChatLocalConversationUpdater`).
+- **Sync is eventually consistent.** Background sync uses periodic timers, not
+  real-time push. Conflicts are resolved with a last-write-wins strategy.
+  Applications requiring strict ordering or CRDTs would need a different sync
+  layer.
+
+### Performance & bundle size
+
+- **Deferred loading trades cold-navigation latency for smaller initial
+  bundle.** Heavy features (Maps, Charts, Markdown, WebSocket) load on first
+  navigation, causing a brief loading screen. This saves an estimated 9–17 MB
+  in the initial bundle.
+- **Route-level cubit creation means cubits are re-created on navigation.**
+  Feature cubits created at route scope are disposed when the user navigates
+  away. This lowers memory use for unused features but means state is not
+  preserved across navigations unless persisted through the repository layer.
+
+### Testing
+
+- **Golden tests are fragile across Flutter upgrades.** Pixel-perfect goldens
+  must be regenerated (`flutter test --update-goldens`) after Flutter version
+  bumps. This is a known Flutter ecosystem trade-off, not a project-specific
+  issue.
 
 ## Future Improvements
 
-- Add role/claims-based auth and per-route authorization guards.
-- Expand token injection beyond the shared Dio client (e.g. third-party SDKs) where needed.
-- Tighten biometric access policy for sensitive flows.
-- Add deeper route-level auth checks for non-root deep links.
+### High priority
+
+- **Role/claims-based auth and per-route authorization guards** — required
+  before multi-role features ship.
+- **Route-level auth checks for deep links** — prevent authenticated-only
+  screens from being reachable via direct links without auth.
+- **Expand token injection** beyond the shared Dio client so third-party SDKs
+  also receive valid tokens when needed.
+
+### Medium priority
+
+- **Push-triggered sync** — use FCM to trigger `BackgroundSyncCoordinator`
+  instead of relying only on periodic timers. Reduces sync latency and
+  unnecessary timer wakeups.
+- **Compile-time DI** — evaluate `injectable` or a similar code-gen DI solution
+  to catch wiring errors at build time.
+- **Structured error taxonomy** — replace ad-hoc error strings with a sealed
+  error hierarchy (e.g. `NetworkError`, `StorageError`, `AuthError`) that
+  cubits can pattern-match on for better UX.
+
+### Low priority / nice-to-have
+
+- **Tighten biometric policy** for sensitive flows (require enrollment, deny
+  access if sensor unavailable).
+- **Full analyzer plugin** for BLoC-specific lint rules (lifecycle guards,
+  state exhaustiveness) — currently documented but not implemented as a plugin.
+- **State machine code generation** for complex multi-step flows where explicit
+  transition validation would prevent invalid states.

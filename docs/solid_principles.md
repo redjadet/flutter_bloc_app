@@ -46,48 +46,36 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 - DI registrations are organized by feature (`register_chat_services.dart`, `register_profile_services.dart`, etc.) to improve SRP and maintainability.
 - UI layers receive dependencies via constructors (e.g., `ProfileCacheControlsSection`, page providers) or DI factory functions, keeping Flutter widgets free of new allocations of data sources.
 
-## Current Findings (Codebase Review)
+## How SOLID Shows Up in Practice
 
 ### Strengths
 
-- **SRP:** Core orchestration components isolate concerns behind services. Example: `BackgroundSyncCoordinator` delegates scheduling to `TimerService`, connectivity checks to `NetworkStatusService`, and persistence to `PendingSyncRepository` (`lib/shared/sync/background_sync_coordinator.dart`). DI registrations are split into feature-specific files (`register_chat_services.dart`, `register_profile_services.dart`, etc.) to maintain single responsibility per file.
-- **OCP:** Reusable base repositories allow adding settings or cache types without editing existing consumers. Example: `HiveSettingsRepository<T>` and `HiveRepositoryBase` (`lib/shared/storage/hive_settings_repository.dart`, `lib/shared/storage/hive_repository_base.dart`). Generic factory helpers (`createRemoteRepositoryOrNull`) enable adding new offline-first repositories without duplicating error handling logic.
-- **LSP:** Production services are substitutable with fakes in tests (e.g., `FakeTimerService` used across cubit/widget tests) without behavior changes (`test/test_helpers.dart`).
-- **ISP:** Feature interfaces remain small and focused (e.g., `ChatRepository` only exposes `sendMessage`, `ChatHistoryRepository` only load/save) (`lib/features/chat/domain/chat_repository.dart`, `lib/features/chat/domain/chat_history_repository.dart`).
-- **DIP:** Most cubits and pages receive interfaces via constructors and `getIt`, keeping widget layers decoupled from concrete implementations (`lib/app/app_scope.dart`, `lib/app/router/routes.dart`).
+- **SRP:** Core orchestration components isolate concerns behind services.
+  `BackgroundSyncCoordinator` delegates scheduling to `TimerService`, connectivity
+  to `NetworkStatusService`, and persistence to `PendingSyncRepository`. DI
+  registrations are split into feature-specific files
+  (`register_chat_services.dart`, `register_profile_services.dart`, etc.).
+- **OCP:** Reusable base repositories (`HiveSettingsRepository<T>`,
+  `HiveRepositoryBase`) and generic factory helpers (`createRemoteRepositoryOrNull`)
+  let new storage backends and offline-first repositories plug in without editing
+  existing consumers.
+- **LSP:** Production services are substitutable with fakes in tests
+  (`FakeTimerService`, mock repositories) without behavior changes.
+- **ISP:** Feature interfaces remain small and focused — e.g. `ChatRepository`
+  only exposes `sendMessage`; `ChatHistoryRepository` only load/save.
+- **DIP:** Most cubits and pages receive interfaces via constructors and `getIt`.
+  Settings presentation depends on cache interfaces, not concrete Hive classes.
+  `OfflineFirstChatRepository` delegates sync payloads to
+  `ChatSyncOperationFactory` and local persistence to
+  `ChatLocalConversationUpdater`.
 
-### Opportunities
+### Areas to Watch
 
-- **DIP (presentation depending on data-layer types):** Addressed for settings cache widgets by introducing cache interfaces and injecting them from DI. Continue to watch for new data-layer imports in presentation (`lib/features/settings/presentation/pages/settings_page.dart`, `lib/features/settings/presentation/widgets/graphql_cache_controls_section.dart`, `lib/features/settings/presentation/widgets/profile_cache_controls_section.dart`).
-- **SRP (offline-first repositories doing multiple jobs):** Addressed for chat by extracting sync payload creation and local persistence into dedicated collaborators (`lib/features/chat/data/chat_sync_operation_factory.dart`, `lib/features/chat/data/chat_local_conversation_updater.dart`), keeping `OfflineFirstChatRepository` focused on orchestration.
-
-## Action Checklist (SOLID Improvements)
-
-- **Critical:** Introduce small cache interfaces in domain/shared and use them in presentation.
-- **Critical Instructions:** Define lean interfaces (e.g., `GraphqlCacheRepository`, `ProfileCacheRepository`) with only the methods needed by UI widgets; place them in a domain/shared module (not in data), and update `lib/features/settings/presentation/pages/settings_page.dart`, `lib/features/settings/presentation/widgets/graphql_cache_controls_section.dart`, and `lib/features/settings/presentation/widgets/profile_cache_controls_section.dart` to depend on interfaces only.
-- **Critical Acceptance Criteria:** Presentation files no longer import from `lib/features/**/data`, interface types are the only repository types used by cache widgets, and analysis passes.
-- **Critical Verification Commands:** `rg \"features/.*/data\" lib/features -g\"*presentation*.dart\"`, `rg \"GraphqlDemoCacheRepository|HiveProfileCacheRepository\" lib/features -g\"*presentation*.dart\"`, and `flutter analyze`.
-- **Critical Status:** Implemented (cache interfaces added; settings presentation now depends on interfaces; DI routes resolve interfaces).
-- **High:** Bind new interfaces in DI and resolve them at composition boundaries.
-- **High Instructions:** Register interface-to-implementation mappings in `lib/core/di/injector_registrations.dart` (or `lib/core/di/register_http_services.dart` if applicable), and update `lib/app/router/routes.dart` to request interfaces from `getIt` rather than concrete cache repository classes. Keep interface registrations near similar service registrations for discoverability.
-- **High Acceptance Criteria:** DI resolves interface types successfully; route builders and page constructors do not reference concrete cache repository classes.
-- **High Verification Commands:** `rg \"GraphqlDemoCacheRepository|ProfileCacheRepository\" lib/app/router/routes.dart`, `rg \"register.*<GraphqlCacheRepository>|register.*<ProfileCacheRepository\" lib/core/di -g\"*.dart\"`, and `flutter test test/core/di/injector_test.dart`.
-- **High Status:** Implemented (GraphqlCacheRepository registered in `register_http_services.dart`, ProfileCacheRepository registered in `injector_registrations.dart`, routes.dart uses interface types from getIt).
-- **High:** Extract offline-first responsibilities to tighten SRP in chat data layer.
-- **High Instructions:** Split `lib/features/chat/data/offline_first_chat_repository.dart` into smaller collaborators (e.g., `ChatSyncOperationFactory` for sync payloads, `ChatLocalConversationUpdater` for local persistence and merge logic). Inject collaborators so `OfflineFirstChatRepository` focuses on orchestration and delegates persistence/mapping.
-- **High Acceptance Criteria:** `OfflineFirstChatRepository` delegates sync payload creation and local persistence; new collaborators have focused unit tests; method bodies are shorter and more readable.
-- **High Verification Commands:** `rg \"ChatSyncOperationFactory|ChatLocalConversationUpdater\" lib/features/chat -g\"*.dart\"` and `rg \"OfflineFirstChatRepository\" -n lib/features/chat/data/offline_first_chat_repository.dart`.
-- **High Status:** Implemented (chat sync payload factory + local updater extracted, injected, and covered by focused tests).
-- **Medium:** Audit presentation entrypoints for concrete data-layer types.
-- **Medium Instructions:** Search `lib/features/**/presentation` for imports from `lib/features/**/data` and replace dependencies with domain/shared interfaces; update DI bindings where needed. Allow exceptions only for tooling/debug widgets.
-- **Medium Acceptance Criteria:** No presentation modules import data-layer classes unless explicitly exempted; interface usage is consistent across feature pages and widgets.
-- **Medium Verification Commands:** `rg \"features/.*/data\" lib/features -g\"*presentation*.dart\"` and `rg \"// check-ignore\" lib/features -g\"*presentation*.dart\"`.
-- **Medium Status:** Verified (no presentation modules import data-layer classes).
-- **Low:** Add SOLID review items to dev checklists/templates.
-- **Low Instructions:** Update `docs/flutter_best_practices_review.md` or `docs/new_developer_guide.md` with a brief checklist item that calls out interface-driven boundaries and disallows presentation-level data-layer imports.
-- **Low Acceptance Criteria:** Documentation includes a clear, one-line SOLID verification step and references the interface-first rule.
-- **Low Verification Commands:** `rg \"SOLID\" docs/flutter_best_practices_review.md docs/new_developer_guide.md` and `rg \"interface\" docs/flutter_best_practices_review.md docs/new_developer_guide.md`.
-- **Low Status:** Implemented (SOLID interface-first checklist added to `docs/flutter_best_practices_review.md`).
+- **Presentation → data-layer imports:** Periodically verify no new data-layer
+  imports creep into presentation code:
+  `rg "features/.*/data" lib/features -g"*presentation*.dart"`
+- **Offline-first repository growth:** When a new offline-first repository gains
+  multiple responsibilities, extract collaborators early (same pattern as Chat).
 
 ## Practical patterns to keep
 
