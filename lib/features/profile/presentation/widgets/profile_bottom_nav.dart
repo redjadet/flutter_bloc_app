@@ -50,16 +50,16 @@ class _NavItem {
   final IconData? _cupertinoIconOverride;
 
   String get label => switch ((destination?.label, _labelOverride)) {
-    (final l?, _) => l,
-    (_, final o?) => o,
+    (final destLabel?, _) => destLabel,
+    (_, final labelOverride?) => labelOverride,
     _ => throw StateError('_NavItem: destination or label override required'),
   };
   IconData get materialIcon => switch ((
     destination?.materialIcon,
     _materialIconOverride,
   )) {
-    (final i?, _) => i,
-    (_, final o?) => o,
+    (final destIcon?, _) => destIcon,
+    (_, final iconOverride?) => iconOverride,
     _ => throw StateError(
       '_NavItem: destination or materialIcon override required',
     ),
@@ -68,8 +68,8 @@ class _NavItem {
     destination?.cupertinoIcon,
     _cupertinoIconOverride,
   )) {
-    (final i?, _) => i,
-    (_, final o?) => o,
+    (final destIcon?, _) => destIcon,
+    (_, final iconOverride?) => iconOverride,
     _ => throw StateError(
       '_NavItem: destination or cupertinoIcon override required',
     ),

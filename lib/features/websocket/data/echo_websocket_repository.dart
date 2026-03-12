@@ -20,7 +20,6 @@ class EchoWebsocketRepository implements WebsocketRepository {
     _stateController.add(_state);
   }
 
-  // static const String _kDefaultEndpoint = 'wss://echo.websocket.events';
   static const String _kDefaultEndpoint = 'wss://ws.postman-echo.com/raw';
 
   @override
@@ -139,6 +138,9 @@ class EchoWebsocketRepository implements WebsocketRepository {
     _updateState(const WebsocketConnectionState.disconnected());
   }
 
+  /// Cancels the channel subscription and clears references.
+  /// Does not complete [_connectionCompleter]; that is handled in [connect()]
+  /// to avoid double completion when cleanup runs from error handlers.
   Future<void> _cleanupChannel() async {
     final StreamSubscription<dynamic>? subscription = _channelSubscription;
     _channelSubscription = null;
@@ -146,8 +148,6 @@ class EchoWebsocketRepository implements WebsocketRepository {
       await current.cancel();
     }
     _channel = null;
-    // Note: Don't complete _connectionCompleter here - it's handled in connect() method
-    // This prevents double completion when cleanup is called from error handlers
   }
 
   void _updateState(final WebsocketConnectionState state) {

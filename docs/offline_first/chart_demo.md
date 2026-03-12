@@ -22,7 +22,7 @@ The table `public.chart_trending_points` is **synced from CoinGecko** via the Ed
 
 ## Behavior
 
-- **Trending counts:** `fetchTrendingCounts()` returns cached points when available and within max age (24h); otherwise fetches from the active remote and refreshes cache.
+- **Trending counts:** On first open, the page loads cached points when available and within max age (24h), then immediately refreshes from the active remote so the badge and data can upgrade from cache to `Supabase (Edge)` / `Supabase (Tables)` / `Remote` without requiring a second visit. If no cache is available, it fetches remote directly.
 - **Staleness:** Cached entries expire after 24h; stale entries are skipped so stale data doesn’t hide fresh remote results.
 - **When Supabase not configured:** The app uses the direct remote only (CoinGecko), matching previous behavior.
 - **DI:** `ChartRepository` resolves to `OfflineFirstChartRepository` via `register_chart_services.dart`.

@@ -41,7 +41,7 @@ This document consolidates code-quality analysis and improvement notes. It is a 
 ## Quality Metrics and Gates
 
 - File size policy: keep files under 250 LOC; extract widgets/helpers as needed.
-- Coverage target: 85.34 percent (team standard). Current coverage: see `coverage/coverage_summary.md`.
+- Coverage target: 85% (team standard). Current value: see `coverage/coverage_summary.md`.
 - Static analysis and formatting: run `./bin/checklist`.
 - Guardrails: see `docs/validation_scripts.md` for the full automated checks list.
 

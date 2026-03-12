@@ -81,18 +81,18 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
         }
       }
       return List<IotDevice>.unmodifiable(result);
-    } on PostgrestException catch (e, s) {
+    } on PostgrestException catch (error, stackTrace) {
       AppLogger.error(
         'SupabaseIotDemoRepository.fetchDevices',
-        e,
-        s,
+        error,
+        stackTrace,
       );
       rethrow;
-    } on Object catch (e, s) {
+    } on Object catch (error, stackTrace) {
       AppLogger.error(
         'SupabaseIotDemoRepository.fetchDevices',
-        e,
-        s,
+        error,
+        stackTrace,
       );
       rethrow;
     }

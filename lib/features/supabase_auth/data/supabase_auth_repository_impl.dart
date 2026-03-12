@@ -60,11 +60,11 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
     try {
       final user = _readCurrentUser();
       return user == null ? null : _toAuthUser(user);
-    } on Object catch (e, s) {
+    } on Object catch (error, stackTrace) {
       AppLogger.error(
         'SupabaseAuthRepositoryImpl.currentUser',
-        e,
-        s,
+        error,
+        stackTrace,
       );
       return null;
     }
@@ -104,9 +104,13 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
         code: _mapErrorCode(e),
         cause: e,
       );
-    } on Object catch (e, s) {
-      AppLogger.error('SupabaseAuthRepositoryImpl.signInWithPassword', e, s);
-      throw SupabaseAuthException(e.toString(), cause: e);
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'SupabaseAuthRepositoryImpl.signInWithPassword',
+        error,
+        stackTrace,
+      );
+      throw SupabaseAuthException(error.toString(), cause: error);
     }
   }
 
@@ -135,9 +139,9 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
         code: _mapErrorCode(e),
         cause: e,
       );
-    } on Object catch (e, s) {
-      AppLogger.error('SupabaseAuthRepositoryImpl.signUp', e, s);
-      throw SupabaseAuthException(e.toString(), cause: e);
+    } on Object catch (error, stackTrace) {
+      AppLogger.error('SupabaseAuthRepositoryImpl.signUp', error, stackTrace);
+      throw SupabaseAuthException(error.toString(), cause: error);
     }
   }
 
@@ -146,8 +150,8 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
     if (!isConfigured) return;
     try {
       await _signOutImpl();
-    } on Object catch (e, s) {
-      AppLogger.error('SupabaseAuthRepositoryImpl.signOut', e, s);
+    } on Object catch (error, stackTrace) {
+      AppLogger.error('SupabaseAuthRepositoryImpl.signOut', error, stackTrace);
       rethrow;
     }
   }

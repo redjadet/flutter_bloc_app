@@ -28,6 +28,8 @@ This codebase focuses on maintainability, correctness, and performance:
 - Responsive and platform-adaptive UI (Material 3 + Cupertino)
 - Lifecycle safety for async flows and UI state updates
 - Automated validation scripts and broad test coverage
+- Run tests: `./bin/checklist` or `tool/test_coverage.sh`; see [Developer Guide §7](docs/new_developer_guide.md#7-testing-strategy)
+- Architecture diagram and layer flow: [Architecture Details](docs/architecture_details.md)
 
 ## ✨ Product Features
 
@@ -44,9 +46,7 @@ This codebase focuses on maintainability, correctness, and performance:
 - WalletConnect Auth demo (Example page): connect wallet, link to Firebase; see [WalletConnect Auth Status](docs/walletconnect_auth_status.md)
 - Optional Supabase Auth (Settings → Integrations): email/password sign-in/sign-up on a dedicated page when `SUPABASE_URL` and `SUPABASE_ANON_KEY` are configured; see [Authentication](docs/authentication.md#supabase-auth-optional-separate-page)
 
-For entry points and module details, see [Feature Overview](docs/feature_overview.md).
-
-**New Feature**: [GenUI Demo User Guide](docs/genui_demo_user_guide.md) - AI-generated dynamic UI with Google Gemini.
+For entry points and module details, see [Feature Overview](docs/feature_overview.md). GenUI Demo: [User Guide](docs/genui_demo_user_guide.md).
 
 ## ⚙️ Configuration
 

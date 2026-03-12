@@ -54,7 +54,7 @@ class _CalculatorButton extends StatelessWidget {
           ),
           child: CupertinoButton(
             padding: EdgeInsets.zero,
-            borderRadius: BorderRadius.circular(999),
+            borderRadius: BorderRadius.circular(UI.radiusPill),
             onPressed: handleTap,
             child: label,
           ),

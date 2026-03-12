@@ -104,11 +104,11 @@ List<T> parseMapOfMaps<T>(
       if (item != null) {
         out.add(item);
       }
-    } on Object catch (e, s) {
+    } on Object catch (error, stackTrace) {
       AppLogger.error(
         '$logContext failed to parse item: ${entry.key}',
-        e,
-        s,
+        error,
+        stackTrace,
       );
     }
   }

@@ -109,7 +109,7 @@ flowchart LR
 - Lifecycle safety via `CubitExceptionHandler`, `CubitSubscriptionMixin`,
   `CubitStateEmissionMixin`, and mounted checks
 
-## Design system
+## Design System
 
 Theme, constants, and shared UI are organized as follows:
 
@@ -134,7 +134,7 @@ Typography helpers live in `lib/shared/ui/typography.dart`; layout/spacing token
 
 ## Lazy Loading Patterns
 
-This codebase implements comprehensive lazy loading strategies to optimize startup time and bundle size:
+This codebase implements comprehensive lazy loading strategies to optimize startup time and bundle size. See also [New Developer Guide §3 Application flow](new_developer_guide.md#3-application-flow) for deferred feature loading from an onboarding perspective.
 
 ### Deferred Routes
 

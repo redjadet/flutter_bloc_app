@@ -125,9 +125,9 @@ class _TokenSection extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
-    final String? v = value;
-    final String display = (v != null && v.isNotEmpty)
-        ? v
+    final String? tokenValue = value;
+    final String display = (tokenValue != null && tokenValue.isNotEmpty)
+        ? tokenValue
         : l10n.fcmDemoTokenNotAvailable;
     return CommonCard(
       child: Column(
@@ -142,10 +142,10 @@ class _TokenSection extends StatelessWidget {
                   style: theme.textTheme.titleSmall,
                 ),
               ),
-              if (v != null && v.isNotEmpty)
+              if (tokenValue != null && tokenValue.isNotEmpty)
                 PlatformAdaptive.textButton(
                   context: context,
-                  onPressed: () => _handleCopyPressed(context, v),
+                  onPressed: () => _handleCopyPressed(context, tokenValue),
                   child: Text(l10n.fcmDemoCopyToken),
                 ),
             ],
@@ -197,6 +197,13 @@ class _LastMessageSection extends StatelessWidget {
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
     final PushMessage? msg = message;
+    final String titleText = msg?.title ?? '';
+    final String bodyText = msg?.body ?? '';
+    final bool hasTitle = titleText.isNotEmpty;
+    final bool hasBody = bodyText.isNotEmpty;
+    final bool hasData = msg?.data.isNotEmpty ?? false;
+    final bool isEmpty = !hasTitle && !hasBody && !hasData;
+
     return CommonCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,17 +224,17 @@ class _LastMessageSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                if ((msg.title ?? '').isNotEmpty)
+                if (hasTitle)
                   Text(
-                    msg.title ?? '',
+                    titleText,
                     style: theme.textTheme.titleSmall,
                   ),
-                if ((msg.body ?? '').isNotEmpty)
+                if (hasBody)
                   Text(
-                    msg.body ?? '',
+                    bodyText,
                     style: theme.textTheme.bodyMedium,
                   ),
-                if (msg.data.isNotEmpty)
+                if (hasData)
                   Padding(
                     padding: EdgeInsets.only(top: context.responsiveGapS),
                     child: Text(
@@ -239,9 +246,7 @@ class _LastMessageSection extends StatelessWidget {
                       maxLines: 5,
                     ),
                   ),
-                if ((msg.title ?? '').isEmpty &&
-                    (msg.body ?? '').isEmpty &&
-                    msg.data.isEmpty)
+                if (isEmpty)
                   Text(
                     msg.messageId.isNotEmpty
                         ? '${l10n.fcmDemoLastMessageReceived} (id: ${msg.messageId})'

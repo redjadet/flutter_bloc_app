@@ -44,6 +44,18 @@ class OfflineFirstChartRepository extends ChartRepository {
   }
 
   @override
+  Future<List<ChartPoint>> loadCachedTrendingCounts() async {
+    final List<ChartPoint> cached = await _cacheRepository.readTrendingCounts(
+      maxAge: _maxCacheAge,
+    );
+    if (cached.isNotEmpty) {
+      _lastCached = cached;
+      _lastSource = ChartDataSource.cache;
+    }
+    return cached;
+  }
+
+  @override
   Future<List<ChartPoint>> refreshTrendingCounts() async {
     final List<ChartPoint> cached = await _cacheRepository.readTrendingCounts(
       maxAge: _maxCacheAge,

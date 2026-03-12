@@ -12,6 +12,8 @@ import 'package:flutter_bloc_app/shared/sync/sync_banner_helpers.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 
+/// Sync status banner for the counter feature. Uses shared logic from
+/// sync_banner_helpers (shouldShowSyncBanner, syncBannerTitleAndMessage).
 class CounterSyncBanner extends StatefulWidget {
   const CounterSyncBanner({
     required this.l10n,

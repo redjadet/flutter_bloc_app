@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class LoggedOutBottomIndicator extends StatelessWidget {
@@ -42,7 +43,7 @@ class _ShapeIndicator extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.onSurface,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(UI.radiusSM),
       ),
     ),
   );
