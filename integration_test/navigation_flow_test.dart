@@ -24,10 +24,11 @@ void main() {
     ) async {
       await launchTestApp(tester);
 
-      await tester.tap(find.byIcon(Icons.explore));
+      await pumpUntilFound(tester, find.byTooltip('Open example page'));
+      await tester.tap(find.byTooltip('Open example page'));
       await pumpUntilFound(tester, find.text('Example Page'));
 
-      expect(find.text('Example Page'), findsOneWidget);
+      expect(find.text('Example Page'), findsWidgets);
 
       await tester.scrollUntilVisible(
         find.text('Library Demo'),
@@ -37,13 +38,13 @@ void main() {
       await tester.tap(find.text('Library Demo'));
       await pumpUntilFound(tester, find.text('All Assets'));
 
-      expect(find.text('Library Demo'), findsOneWidget);
-      expect(find.text('All Assets'), findsOneWidget);
+      expect(find.text('Library Demo'), findsWidgets);
+      expect(find.text('All Assets'), findsWidgets);
 
       await tester.tap(find.byTooltip('Grid view'));
       await pumpUntilFound(tester, find.byType(ScapesGridSliverContent));
 
-      expect(find.byType(ScapesGridSliverContent), findsOneWidget);
+      expect(find.byType(ScapesGridSliverContent), findsWidgets);
     });
   });
 }

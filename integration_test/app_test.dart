@@ -25,14 +25,15 @@ void main() {
 
       expect(find.text('Home Page'), findsOneWidget);
       expect(find.byType(MaterialApp), findsOneWidget);
+      await pumpUntilFound(tester, find.text('0'));
       expect(find.text('0'), findsWidgets);
 
       await tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.add));
-      await tester.pump(const Duration(milliseconds: 200));
+      await pumpUntilFound(tester, find.text('1'));
       expect(find.text('1'), findsWidgets);
 
       await tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.remove));
-      await tester.pump(const Duration(milliseconds: 200));
+      await pumpUntilFound(tester, find.text('0'));
       expect(find.text('0'), findsWidgets);
     });
   });
