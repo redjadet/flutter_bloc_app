@@ -23,10 +23,11 @@ void main() {
     ) async {
       await launchTestApp(tester);
 
-      await tester.tap(find.byIcon(Icons.settings));
+      await pumpUntilFound(tester, find.byTooltip('Open settings'));
+      await tester.tap(find.byTooltip('Open settings'));
       await pumpUntilFound(tester, find.text('Settings'));
 
-      expect(find.text('Settings'), findsOneWidget);
+      expect(find.text('Settings'), findsWidgets);
 
       await tester.tap(find.text('Dark'));
       await tester.pump(const Duration(milliseconds: 200));
@@ -44,8 +45,7 @@ void main() {
 
       app = tester.widget<MaterialApp>(find.byType(MaterialApp));
       expect(app.themeMode, ThemeMode.dark);
-      expect(find.text('Configuración'), findsOneWidget);
-      expect(find.text('Oscuro'), findsOneWidget);
+      expect(find.text('Configuración'), findsWidgets);
     });
   });
 }

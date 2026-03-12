@@ -3,7 +3,7 @@
 #
 # Usage:
 #   tool/run_integration_tests.sh
-#   CHECKLIST_INTEGRATION_DEVICE=macos tool/run_integration_tests.sh
+#   CHECKLIST_INTEGRATION_DEVICE=<deviceId> tool/run_integration_tests.sh
 #   tool/run_integration_tests.sh integration_test/app_test.dart
 
 set -euo pipefail

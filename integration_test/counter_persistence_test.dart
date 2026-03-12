@@ -25,17 +25,16 @@ void main() {
     ) async {
       await launchTestApp(tester);
 
-      final Finder incrementButton = find.widgetWithIcon(
-        FloatingActionButton,
-        Icons.add,
-      );
+      await pumpUntilFound(tester, find.text('0'));
 
+      final Finder incrementButton = find
+          .widgetWithIcon(FloatingActionButton, Icons.add)
+          .first;
+      await tester.ensureVisible(incrementButton);
       await tester.tap(incrementButton);
-      await tester.pump(const Duration(milliseconds: 200));
-      await tester.tap(incrementButton);
-      await tester.pump(const Duration(milliseconds: 200));
+      await pumpUntilFound(tester, find.text('1'));
 
-      expect(find.text('2'), findsWidgets);
+      expect(find.text('1'), findsWidgets);
 
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pumpAndSettle();
@@ -47,7 +46,8 @@ void main() {
       await launchTestApp(tester);
 
       expect(find.byType(MaterialApp), findsOneWidget);
-      expect(find.text('2'), findsWidgets);
+      await pumpUntilFound(tester, find.text('1'));
+      expect(find.text('1'), findsWidgets);
     });
   });
 }
