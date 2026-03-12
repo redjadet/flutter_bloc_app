@@ -24,8 +24,15 @@ class ChartCubit extends Cubit<ChartState> {
     if (state.status.isLoading) {
       return;
     }
-    final List<ChartPoint>? cached = _repository.getCachedTrendingCounts();
-    if (cached != null && cached.isNotEmpty && !isClosed) {
+    List<ChartPoint> cached =
+        _repository.getCachedTrendingCounts() ?? const <ChartPoint>[];
+    if (cached.isEmpty) {
+      cached = await _repository.loadCachedTrendingCounts();
+      if (isClosed) {
+        return;
+      }
+    }
+    if (cached.isNotEmpty && !isClosed) {
       emit(
         state.copyWith(
           status: ViewStatus.success,
@@ -34,7 +41,7 @@ class ChartCubit extends Cubit<ChartState> {
         ),
       );
     }
-    await _fetch(resetExistingData: cached == null || cached.isEmpty);
+    await _fetch(resetExistingData: cached.isEmpty);
   }
 
   Future<void> refresh() async {

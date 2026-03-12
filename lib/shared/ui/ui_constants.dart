@@ -50,6 +50,8 @@ class UI {
   static double get cardPadV => scaleHeight(16);
 
   // Radii
+  static double get radiusS => scaleRadius(8);
+  static double get radiusSM => scaleRadius(10);
   static double get radiusM => scaleRadius(16);
   static double get radiusPill => scaleRadius(999);
 

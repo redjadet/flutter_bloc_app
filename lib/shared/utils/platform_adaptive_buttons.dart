@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class PlatformAdaptiveButtons {
@@ -27,7 +28,7 @@ class PlatformAdaptiveButtons {
             disabledColor ?? scheme.onSurface.withValues(alpha: 0.38),
         minimumSize: minSize != null ? Size(minSize, minSize) : null,
         pressedOpacity: pressedOpacity,
-        borderRadius: borderRadius ?? BorderRadius.circular(8),
+        borderRadius: borderRadius ?? BorderRadius.circular(UI.radiusS),
         child: child,
       );
     }
@@ -146,7 +147,7 @@ class PlatformAdaptiveButtons {
           ? (disabledColor ?? CupertinoColors.quaternaryLabel)
           : (foregroundColor ?? CupertinoColors.activeBlue);
       final BorderRadius resolvedRadius =
-          borderRadius ?? BorderRadius.circular(8);
+          borderRadius ?? BorderRadius.circular(UI.radiusS);
       return DecoratedBox(
         decoration: BoxDecoration(
           color: backgroundColor ?? Colors.transparent,
@@ -177,7 +178,7 @@ class PlatformAdaptiveButtons {
             disabledForegroundColor: disabledColor,
             side: side,
             shape: RoundedRectangleBorder(
-              borderRadius: borderRadius ?? BorderRadius.circular(8),
+              borderRadius: borderRadius ?? BorderRadius.circular(UI.radiusS),
             ),
           ),
       child: child,

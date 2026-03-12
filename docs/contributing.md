@@ -2,50 +2,14 @@
 
 Contributions are welcome! Please follow these guidelines to ensure consistency and quality.
 
+**For setup, development workflow, and validation details**, see [new_developer_guide](new_developer_guide.md) and [validation_scripts](validation_scripts.md).
+
 ## Before Submitting
 
 1. **Run the checklist** before submitting PRs: `./bin/checklist`
 2. **Write tests** for new features
 3. **Update documentation** as needed
-4. **Follow Clean Architecture** principles
-
-## Code Standards
-
-### Architecture
-
-- **Follow Clean Architecture**: Domain → Data → Presentation
-- **Use dependency injection**: Inject dependencies via constructors, not `getIt` in widgets
-- **Respect layer boundaries**: Domain never imports Flutter, Data never imports Presentation
-
-### UI/UX
-
-- **Use responsive extensions** for UI components (`context.responsive*`)
-- **Use platform-adaptive components** (`PlatformAdaptive.*` helpers, never raw Material buttons)
-- **Use theme-aware colors** (`Theme.of(context).colorScheme`, never hard-coded colors)
-- **Use localization** (`context.l10n.*`, never hard-coded strings)
-- **Handle safe areas and keyboard** (use `CommonPageLayout` or handle manually)
-- **Test text scaling** (1.3+ scale) and accessibility
-
-### Code Quality
-
-- **Keep files under 250 lines** (enforced by linter)
-- **Use `const` constructors** where possible
-- **Follow SOLID principles**: See `docs/solid_principles.md`
-- **Apply DRY principles**: See `docs/dry_principles.md`
-
-## Testing Requirements
-
-- Write unit tests for business logic
-- Write bloc tests for state management
-- Write widget tests for UI components
-- Add golden tests for visual regression
-- Ensure tests pass: `flutter test`
-
-## Documentation
-
-- Update relevant documentation files in `docs/`
-- Add code comments for complex logic
-- Update README if adding major features
+4. **Follow Clean Architecture** principles (see [clean_architecture.md](clean_architecture.md))
 
 ## Validation
 

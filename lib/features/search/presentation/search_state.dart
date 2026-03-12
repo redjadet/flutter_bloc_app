@@ -15,7 +15,7 @@ abstract class SearchState with _$SearchState {
 
   const SearchState._();
 
-  // Custom getters (preserved from original)
+  /// Convenience getters for status and results.
   bool get isLoading => status.isLoading;
   bool get hasResults => results.isNotEmpty;
 }

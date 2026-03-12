@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/icon_label_row.dart';
+
+/// Stroke width presets (logical pixels) for whiteboard toolbar.
+const double kStrokeWidthThin = 2;
+const double kStrokeWidthMedium = 5;
+const double kStrokeWidthThick = 10;
+const double kStrokeWidthExtra = 15;
 
 /// Preset width configuration for whiteboard strokes.
 class WidthPreset {
@@ -21,22 +28,22 @@ List<WidthPreset> defaultWidthPresetsFor(final AppLocalizations l10n) =>
     <WidthPreset>[
       WidthPreset(
         label: l10n.whiteboardStrokeWidthThin,
-        value: 2,
+        value: kStrokeWidthThin,
         icon: Icons.remove,
       ),
       WidthPreset(
         label: l10n.whiteboardStrokeWidthMedium,
-        value: 5,
+        value: kStrokeWidthMedium,
         icon: Icons.horizontal_rule,
       ),
       WidthPreset(
         label: l10n.whiteboardStrokeWidthThick,
-        value: 10,
+        value: kStrokeWidthThick,
         icon: Icons.drag_handle,
       ),
       WidthPreset(
         label: l10n.whiteboardStrokeWidthExtra,
-        value: 15,
+        value: kStrokeWidthExtra,
         icon: Icons.format_bold,
       ),
     ];
@@ -62,19 +69,22 @@ class WidthPresetButton extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => Tooltip(
-    message: '${preset.label} (${preset.value.toStringAsFixed(0)}px)',
+    message: preset.label,
     child: Material(
       color: isSelected
           ? colors.primaryContainer
           : colors.surfaceContainerHighest,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(UI.radiusS),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(UI.radiusS),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: EdgeInsets.symmetric(
+            horizontal: UI.horizontalGapM,
+            vertical: UI.gapS,
+          ),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(UI.radiusS),
             border: Border.all(
               color: isSelected
                   ? colors.primary
@@ -87,7 +97,7 @@ class WidthPresetButton extends StatelessWidget {
             children: <Widget>[
               Icon(
                 preset.icon,
-                size: 16,
+                size: UI.iconS,
                 color: isSelected
                     ? colors.onPrimaryContainer
                     : colors.onSurface,
@@ -131,7 +141,7 @@ class WhiteboardActionButton extends StatelessWidget {
     child: PlatformAdaptive.textButton(
       context: context,
       onPressed: onPressed,
-      child: IconLabelRow(icon: icon, label: label, iconSize: 18),
+      child: IconLabelRow(icon: icon, label: label, iconSize: UI.iconS),
     ),
   );
 }

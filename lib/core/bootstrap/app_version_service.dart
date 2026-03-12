@@ -1,20 +1,25 @@
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-/// Service for loading and caching app version information
+/// Default version string when package info is unavailable.
+const String kDefaultAppVersion = '1.0.0';
+
+/// Service for loading and caching app version information.
 class AppVersionService {
+  AppVersionService._();
+
   static String? _appVersion;
 
-  /// Get the app version synchronously, with fallback to default
-  static String getAppVersion() => _appVersion ?? '1.0.0';
+  /// Get the app version synchronously, with fallback to default.
+  static String getAppVersion() => _appVersion ?? kDefaultAppVersion;
 
-  /// Load app version from platform package info
+  /// Load app version from platform package info.
   static Future<void> loadAppVersion() async {
     try {
       final info = await PackageInfo.fromPlatform();
       _appVersion = info.version.trim().isNotEmpty
           ? info.version.trim()
-          : '1.0.0';
+          : kDefaultAppVersion;
       AppLogger.debug('App version loaded: $_appVersion');
     } on Object catch (error, stackTrace) {
       AppLogger.error(
@@ -22,7 +27,7 @@ class AppVersionService {
         error,
         stackTrace,
       );
-      _appVersion = '1.0.0';
+      _appVersion = kDefaultAppVersion;
     }
   }
 }

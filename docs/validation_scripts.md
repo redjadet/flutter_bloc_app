@@ -63,7 +63,7 @@ Full documentation and suppression guidance is provided in the sections below.
 - **`check_lifecycle_error_handling.sh`**: Snackbar via ErrorHandling, `stream.listen` onError, `context.mounted` after show\*Dialog (see Context & Async Safety below)
 - **`check_offline_first_remote_merge.sh`**: Regression tests ensuring offline-first repos do not overwrite newer unsynced local state with older remote (see Offline-first remote merge below)
 
-## New Validation Scripts (Added 2025)
+## New Validation Scripts (Context & Async Safety)
 
 ### Context & Async Safety
 

@@ -7,6 +7,13 @@ abstract class ChartRepository {
 
   Future<List<ChartPoint>> fetchTrendingCounts();
 
+  /// Loads cached points from persistent storage when available.
+  ///
+  /// This is used by the presentation layer to render cached data immediately
+  /// before triggering a refresh on first open.
+  Future<List<ChartPoint>> loadCachedTrendingCounts() async =>
+      getCachedTrendingCounts() ?? const <ChartPoint>[];
+
   /// Forces a refresh from the active remote when supported.
   ///
   /// Default implementations delegate to [fetchTrendingCounts].

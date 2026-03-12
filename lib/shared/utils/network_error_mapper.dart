@@ -12,7 +12,8 @@ import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
 /// is down).
 ///
 /// When l10n is provided (e.g. from UI), returns localized messages.
-/// When l10n is null (e.g. repository layer), returns English fallbacks.
+/// When l10n is null (e.g. repository layer), returns non-localized
+/// English fallbacks intended for logging or repository-layer use.
 class NetworkErrorMapper {
   NetworkErrorMapper._();
 

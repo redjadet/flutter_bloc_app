@@ -15,7 +15,7 @@ export 'package:flutter_bloc_app/features/counter/presentation/counter_state.dar
 
 part 'counter_cubit_base.dart';
 
-/// Presenter (Cubit) orchestrating counter state, persistence and timers.
+/// Cubit that orchestrates counter state, persistence, and timers.
 class CounterCubit extends _CounterCubitBase {
   CounterCubit({
     required super.repository,

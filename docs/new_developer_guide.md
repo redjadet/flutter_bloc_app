@@ -1,6 +1,6 @@
 # Flutter BLoC App — New Developer Guide
 
-Welcome aboard! This document is the fastest path to getting the app running locally, understanding the architecture, and shipping changes safely.
+This guide is the fastest path to running the app locally, understanding the architecture, and shipping changes safely.
 
 ## Contents
 
@@ -267,6 +267,7 @@ Tips:
 - **Linting philosophy**: We lean on Very Good Analysis for baseline safety and keep project rules focused on clarity and maintainability. `type_annotate_public_apis` makes public surfaces explicit for reviewers and tooling. The file-length lint (250 LOC) encourages smaller units that are easier to test and can reduce rebuild scope in large widgets.
 - **Performance-oriented linting**: VGV enforces `prefer_const_constructors`, `prefer_const_literals_to_create_immutables`, `avoid_unnecessary_containers`, `use_colored_box`, and `no_logic_in_create_state`. These reduce widget tree depth, keep builds lightweight, and make rebuild costs more predictable.
 - **Error handling**: Route recoverable errors through domain failures or `ErrorHandling` helpers; surface user-facing errors via localized messages.
+- **Code conventions**: Use consistent naming for data access: `fetch*` for remote calls, `load*` for cache/initial/stream, `get*` for synchronous single-item access. In catch blocks use `(error, stackTrace)` for clarity.
 - **Localization**: Update ARB files in `lib/l10n/app_*.arb` (en, tr, de, fr, es), run `flutter gen-l10n`, and access strings through `context.l10n`. Never hard-code user-facing strings; always use localization keys.
 - **Image caching**: Use `CachedNetworkImageWidget` from `lib/shared/widgets/` for remote images. It provides automatic caching, loading placeholders, error handling, and memory optimization. `FancyShimmerImage` (used in search/profile/example pages) already includes caching via `cached_network_image` under the hood.
 
@@ -494,7 +495,7 @@ For the *approach* (understand first, add in the right place, validate, lifecycl
 7. Register DI bindings (repository, cubit factories if needed).
 8. Add tests: repository unit tests, cubit bloc tests, widget/golden coverage, and text scaling tests.
 9. Wire navigation via `AppRoutes` + `GoRouter` in `lib/app.dart`.
-10. Update docs/README if the feature is user-facing.
+10. Update [Feature Overview](feature_overview.md) and the root [README](../README.md) if the feature is user-facing.
 11. **For offline-first**: Document in `docs/offline_first/<feature>.md` following existing patterns.
 
 ## 9.5. How do you approach adding new logic to production?
@@ -799,7 +800,7 @@ reviewable.
 
 ### Essential Reading
 
-- **`README.md`**: Feature tour + architecture diagram
+- **`README.md`**: Feature list and quick links; [Architecture Details](architecture_details.md): diagram and layer flow
 - **`CODE_QUALITY.md`**: Comprehensive code quality analysis, architecture findings, and quality/resilience notes
 - **`ui_ux_responsive_review.md`**: Comprehensive UI/UX guidelines, responsive design patterns, platform-adaptive components, accessibility best practices
 - **`feature_overview.md`**: Complete catalog of features and capabilities
@@ -825,4 +826,4 @@ reviewable.
 - **`figma/`**: Figma integration guides
 - **`offline_first/`**: Offline-first architecture patterns
 
-Stay disciplined with the guardrails, keep tests deterministic, and reach for shared services before adding new singletons. Welcome to the team!
+Stay disciplined with the guardrails, keep tests deterministic, and reach for shared services before adding new singletons.
