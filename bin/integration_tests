@@ -1,0 +1,9 @@
+#!/bin/bash
+# Shortcut command for running all integration tests.
+# Usage: integration_tests
+# This runs tool/run_integration_tests.sh
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+exec "$PROJECT_ROOT/tool/run_integration_tests.sh" "$@"

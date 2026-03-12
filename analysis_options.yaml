@@ -94,8 +94,8 @@ linter:
 
 # Custom lint configuration
 file_length_lint:
-  # Default maximum number of lines allowed per file. Update as needed.
-  max_lines: 500
+  # Maximum number of lines allowed per code file (warn when exceeded).
+  max_lines: 350
   # Additional glob patterns to exclude beyond the built-in defaults.
   # Paths are matched against the absolute file path.
   excludes:

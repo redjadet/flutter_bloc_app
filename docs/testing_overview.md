@@ -34,6 +34,12 @@ This document summarizes test coverage, test types, testing patterns, and common
 - Deterministic layout verification
 - Use `golden_toolkit` for consistent results
 
+### Integration Tests
+
+- End-to-end app flow verification under `integration_test/`
+- Runs on a supported non-web device via `./bin/integration_tests` or `tool/run_integration_tests.sh`
+- Use `CHECKLIST_INTEGRATION_DEVICE=<deviceId>` when multiple devices are attached
+
 ### Common Bugs Prevention Tests
 
 - Regression tests for common pitfalls
@@ -86,6 +92,12 @@ flutter test
 
 # Run with coverage
 flutter test --coverage
+
+# Run integration tests
+./bin/integration_tests
+
+# Run integration tests directly
+tool/run_integration_tests.sh
 
 # Update coverage summary
 dart run tool/update_coverage_summary.dart

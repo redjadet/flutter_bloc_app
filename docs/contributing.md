@@ -27,6 +27,8 @@ The checklist also avoids unnecessary work:
 - docs-only change sets exit early instead of running code validation
 - Mix lint and focused Todo layout regressions are skipped automatically when unrelated to the current change set
 
+Run integration tests separately with `./bin/integration_tests`. If multiple devices are available, set `CHECKLIST_INTEGRATION_DEVICE=<deviceId>` first.
+
 All checks must pass before merging.
 
 ## Related Documentation

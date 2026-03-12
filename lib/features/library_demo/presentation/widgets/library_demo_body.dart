@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_asset_tile.dart';
-import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_assets_header.dart';
-import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_category_list.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_models.dart';
-import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_search_row.dart';
+import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_panel.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_theme.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_top_nav.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_wordmark.dart';
@@ -104,42 +102,16 @@ class LibraryDemoBody extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: EpochColors.darkGrey,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                EpochSpacing.borderRadiusLarge,
-                              ),
-                            ),
-                          ),
-                          padding: EdgeInsets.fromLTRB(
-                            EpochSpacing.panelPadding,
-                            panelTopPadding,
-                            EpochSpacing.panelPadding,
-                            panelBottomPadding,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                l10n.libraryDemoPanelTitle,
-                                style: EpochTextStyles.heading(context),
-                              ),
-                              SizedBox(height: EpochSpacing.gapMedium),
-                              LibrarySearchRow(l10n: l10n),
-                              SizedBox(height: categoryGap),
-                              LibraryCategoryList(l10n: l10n),
-                              SizedBox(height: sectionGap),
-                              LibraryAssetsHeader(
-                                l10n: l10n,
-                                isGridView: isGridView,
-                                onGridPressed: onGridPressed,
-                                onListPressed: onListPressed,
-                              ),
-                              SizedBox(height: sectionGap),
-                            ],
-                          ),
+                        LibraryDemoPanel(
+                          l10n: l10n,
+                          panelTopPadding: panelTopPadding,
+                          panelBottomPadding: panelBottomPadding,
+                          sectionGap: sectionGap,
+                          categoryGap: categoryGap,
+                          isGridView: isGridView,
+                          onGridPressed: onGridPressed,
+                          onListPressed: onListPressed,
+                          trailing: [SizedBox(height: sectionGap)],
                         ),
                       ],
                     ),
@@ -169,45 +141,21 @@ class LibraryDemoBody extends StatelessWidget {
                 height: wordmarkHeight,
               ),
               SizedBox(height: wordmarkGap),
-              Container(
-                decoration: BoxDecoration(
-                  color: EpochColors.darkGrey,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(EpochSpacing.borderRadiusLarge),
+              LibraryDemoPanel(
+                l10n: l10n,
+                panelTopPadding: panelTopPadding,
+                panelBottomPadding: panelBottomPadding,
+                sectionGap: sectionGap,
+                categoryGap: categoryGap,
+                isGridView: isGridView,
+                onGridPressed: onGridPressed,
+                onListPressed: onListPressed,
+                trailing: [
+                  SizedBox(height: sectionGap),
+                  ...assets.map(
+                    (final asset) => LibraryAssetTile(asset: asset),
                   ),
-                ),
-                padding: EdgeInsets.fromLTRB(
-                  EpochSpacing.panelPadding,
-                  panelTopPadding,
-                  EpochSpacing.panelPadding,
-                  panelBottomPadding,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.libraryDemoPanelTitle,
-                      style: EpochTextStyles.heading(context),
-                    ),
-                    SizedBox(height: EpochSpacing.gapMedium),
-                    LibrarySearchRow(l10n: l10n),
-                    SizedBox(height: categoryGap),
-                    LibraryCategoryList(l10n: l10n),
-                    SizedBox(height: sectionGap),
-                    LibraryAssetsHeader(
-                      l10n: l10n,
-                      isGridView: isGridView,
-                      onGridPressed: onGridPressed,
-                      onListPressed: onListPressed,
-                    ),
-                    SizedBox(height: sectionGap),
-                    ...assets.map(
-                      (final asset) => LibraryAssetTile(
-                        asset: asset,
-                      ),
-                    ),
-                  ],
-                ),
+                ],
               ),
             ],
           ),
