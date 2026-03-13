@@ -1,48 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
-
+import 'flow_scenarios.dart';
 import 'test_harness.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
-  setUpAll(initializeIntegrationTestHarness);
-
-  setUp(() async {
-    await configureIntegrationTestDependencies();
-  });
-
-  tearDown(() async {
-    await tearDownIntegrationTestDependencies();
-  });
-
-  group('App launch', () {
-    testWidgets('launches to the counter page and updates the count', (
-      final tester,
-    ) async {
-      await launchTestApp(tester);
-
-      expect(find.text('Home Page'), findsOneWidget);
-      expect(find.byType(MaterialApp), findsOneWidget);
-      await pumpUntilFound(tester, find.text('0'));
-      expect(find.text('0'), findsWidgets);
-
-      final Finder incrementButton = find
-          .widgetWithIcon(FloatingActionButton, Icons.add)
-          .first;
-      await tester.ensureVisible(incrementButton);
-      await tester.tap(incrementButton);
-      await pumpUntilFound(tester, find.text('1'));
-      expect(find.text('1'), findsWidgets);
-
-      final Finder decrementButton = find
-          .widgetWithIcon(FloatingActionButton, Icons.remove)
-          .first;
-      await tester.ensureVisible(decrementButton);
-      await tester.tap(decrementButton);
-      await pumpUntilFound(tester, find.text('0'));
-      expect(find.text('0'), findsWidgets);
-    });
-  });
+  registerIntegrationHarness();
+  registerAppLaunchIntegrationFlow();
 }

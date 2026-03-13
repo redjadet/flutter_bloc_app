@@ -4,6 +4,9 @@ import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
@@ -18,6 +21,56 @@ import '../test/test_helpers.dart' show waitForCounterCubitsToLoad;
 
 bool _hiveInitialized = false;
 
+class IntegrationDependencyOptions {
+  const IntegrationDependencyOptions({
+    this.overrideCounterRepository = true,
+    this.overrideChartRepository = true,
+    this.overrideGraphqlRepository = true,
+    this.setFlavorToProd = true,
+    this.biometricSuccess = true,
+    this.locale = const AppLocale(languageCode: 'en'),
+  });
+
+  final bool overrideCounterRepository;
+  final bool overrideChartRepository;
+  final bool overrideGraphqlRepository;
+  final bool setFlavorToProd;
+  final bool biometricSuccess;
+  final AppLocale? locale;
+}
+
+void registerIntegrationHarness() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(initializeIntegrationTestHarness);
+}
+
+void registerIntegrationFlow({
+  required final String groupName,
+  required final String testName,
+  required final WidgetTesterCallback body,
+  final IntegrationDependencyOptions options =
+      const IntegrationDependencyOptions(),
+}) {
+  group(groupName, () {
+    setUp(() async {
+      await configureIntegrationTestDependencies(
+        overrideCounterRepository: options.overrideCounterRepository,
+        overrideChartRepository: options.overrideChartRepository,
+        overrideGraphqlRepository: options.overrideGraphqlRepository,
+        setFlavorToProd: options.setFlavorToProd,
+        biometricSuccess: options.biometricSuccess,
+        locale: options.locale,
+      );
+    });
+
+    tearDown(() async {
+      await tearDownIntegrationTestDependencies();
+    });
+
+    testWidgets(testName, body);
+  });
+}
+
 Future<void> initializeIntegrationTestHarness() async {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   if (_hiveInitialized) {
@@ -31,6 +84,7 @@ Future<void> initializeIntegrationTestHarness() async {
 Future<void> configureIntegrationTestDependencies({
   final bool overrideCounterRepository = true,
   final bool overrideChartRepository = true,
+  final bool overrideGraphqlRepository = true,
   final bool setFlavorToProd = true,
   final bool biometricSuccess = true,
   final AppLocale? locale = const AppLocale(languageCode: 'en'),
@@ -55,6 +109,9 @@ Future<void> configureIntegrationTestDependencies({
   await _overrideLocaleRepository(locale);
   if (overrideChartRepository) {
     await _overrideChartRepository();
+  }
+  if (overrideGraphqlRepository) {
+    await _overrideGraphqlRepository();
   }
 }
 
@@ -95,6 +152,16 @@ Future<void> pumpUntilFound(
   }
 
   throw TestFailure('Did not find $finder within ${timeout.inSeconds}s');
+}
+
+Future<void> tapAndPump(
+  final WidgetTester tester,
+  final Finder finder, {
+  final Duration settle = const Duration(milliseconds: 100),
+}) async {
+  await tester.ensureVisible(finder);
+  await tester.tap(finder);
+  await tester.pump(settle);
 }
 
 Future<void> _overrideBiometricAuthenticator(final bool success) async {
@@ -176,4 +243,59 @@ Future<void> _overrideChartRepository() async {
     await getIt.unregister<ChartRepository>();
   }
   getIt.registerSingleton<ChartRepository>(const _FakeChartRepository());
+}
+
+class _FakeGraphqlDemoRepository implements GraphqlDemoRepository {
+  const _FakeGraphqlDemoRepository();
+
+  static const List<GraphqlContinent> _continents = <GraphqlContinent>[
+    GraphqlContinent(code: 'EU', name: 'Europe'),
+    GraphqlContinent(code: 'NA', name: 'North America'),
+  ];
+
+  static const List<GraphqlCountry> _countries = <GraphqlCountry>[
+    GraphqlCountry(
+      code: 'DE',
+      name: 'Germany',
+      continent: GraphqlContinent(code: 'EU', name: 'Europe'),
+      capital: 'Berlin',
+      currency: 'EUR',
+      emoji: '🇩🇪',
+    ),
+    GraphqlCountry(
+      code: 'US',
+      name: 'United States',
+      continent: GraphqlContinent(code: 'NA', name: 'North America'),
+      capital: 'Washington, D.C.',
+      currency: 'USD',
+      emoji: '🇺🇸',
+    ),
+  ];
+
+  @override
+  GraphqlDataSource get lastSource => GraphqlDataSource.cache;
+
+  @override
+  Future<List<GraphqlContinent>> fetchContinents() async => _continents;
+
+  @override
+  Future<List<GraphqlCountry>> fetchCountries({
+    final String? continentCode,
+  }) async {
+    if (continentCode == null) {
+      return _countries;
+    }
+    return _countries
+        .where((final country) => country.continent.code == continentCode)
+        .toList(growable: false);
+  }
+}
+
+Future<void> _overrideGraphqlRepository() async {
+  if (getIt.isRegistered<GraphqlDemoRepository>()) {
+    await getIt.unregister<GraphqlDemoRepository>();
+  }
+  getIt.registerSingleton<GraphqlDemoRepository>(
+    const _FakeGraphqlDemoRepository(),
+  );
 }

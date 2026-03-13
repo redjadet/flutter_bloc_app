@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/shared/utils/initialization_guard.dart';
 import 'package:get_it/get_it.dart';
 
 final GetIt getIt = GetIt.instance;
+Future<void>? _configureDependenciesInFlight;
 
 /// Configures all application dependencies using GetIt dependency injection.
 ///
@@ -46,9 +47,18 @@ final GetIt getIt = GetIt.instance;
 /// The dispose callbacks are automatically called when `getIt.reset()` is invoked
 /// (typically during tests or app shutdown).
 Future<void> configureDependencies() async {
-  // Initialize Hive - handle initialization failures gracefully
-  // This must be done before registering other dependencies that depend on Hive
-  await InitializationGuard.executeSafely(
+  if (_hasConfiguredDependencies()) {
+    return;
+  }
+
+  final Future<void>? inFlight = _configureDependenciesInFlight;
+  if (inFlight != null) {
+    return inFlight;
+  }
+
+  // Coalesce concurrent bootstrap calls so repeated app pumps do not re-run
+  // the full DI and Hive setup while the first configuration is still active.
+  final Future<void> configuration = InitializationGuard.executeSafely(
     () async {
       await registerAllDependencies();
       await getIt<HiveService>().initialize();
@@ -58,6 +68,15 @@ Future<void> configureDependencies() async {
         'Failed to initialize Hive during dependency configuration. '
         'App may not function correctly without storage.',
   );
+  _configureDependenciesInFlight = configuration;
+
+  try {
+    await configuration;
+  } finally {
+    if (identical(_configureDependenciesInFlight, configuration)) {
+      _configureDependenciesInFlight = null;
+    }
+  }
 }
 
 /// Ensures DI is configured (fire-and-forget). Use when pumping [AppScope] or
@@ -65,5 +84,11 @@ Future<void> configureDependencies() async {
 /// Note: [getIt] may be used immediately after; in production, bootstrap
 /// awaits [configureDependencies] before runApp, so there is no race.
 void ensureConfigured() {
+  if (_hasConfiguredDependencies()) {
+    return;
+  }
   unawaited(configureDependencies());
 }
+
+bool _hasConfiguredDependencies() =>
+    getIt.isRegistered<HiveService>() && getIt<HiveService>().isInitialized;
