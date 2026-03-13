@@ -107,7 +107,8 @@ class MockIotDemoRepository implements IotDemoRepository {
     );
     _emitDevices();
     await Future<void>.delayed(_connectDelay);
-    if (_controller == null || _controller!.isClosed) return;
+    final StreamController<List<IotDevice>>? controller = _controller;
+    if (controller == null || controller.isClosed) return;
     final idx = _indexOf(deviceId);
     if (idx >= 0) {
       _devices[idx] = _devices[idx].copyWith(

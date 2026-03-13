@@ -58,7 +58,7 @@ class HttpChartRepository extends ChartRepository {
         '${error.message}',
       );
       return _cached ?? _cache(_fallbackData(now), now);
-    } on Exception catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       AppLogger.warning(
         'HttpChartRepository.fetchTrendingCounts fallback due to error',
       );

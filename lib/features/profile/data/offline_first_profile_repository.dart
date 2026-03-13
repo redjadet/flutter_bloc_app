@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
+import 'package:flutter_bloc_app/shared/utils/in_flight_coalescer.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Offline-first implementation of [ProfileRepository].
@@ -34,8 +35,7 @@ class OfflineFirstProfileRepository
   final NetworkStatusService _networkStatusService;
   final SyncableRepositoryRegistry _registry;
 
-  /// In-flight refresh so multiple getProfile/pullRemote callers share one refresh.
-  Future<void>? _refreshInFlight;
+  final InFlightCoalescer _refreshCoalescer = InFlightCoalescer();
 
   @override
   String get entityType => profileEntity;
@@ -93,28 +93,8 @@ class OfflineFirstProfileRepository
 
   /// Refreshes profile from remote and saves to cache.
   /// Concurrent callers await the same in-flight future.
-  Future<void> _refreshAndCache() async {
-    final Future<void>? inFlight = _refreshInFlight;
-    if (inFlight != null) {
-      return inFlight;
-    }
-    final Future<void> f = _doRefreshAndCache();
-    _refreshInFlight = f;
-    unawaited(
-      f.then<void>(
-        (_) => _clearRefreshInFlight(f),
-        onError: (final Object _, final StackTrace _) =>
-            _clearRefreshInFlight(f),
-      ),
-    );
-    return f;
-  }
-
-  void _clearRefreshInFlight(final Future<void> future) {
-    if (identical(_refreshInFlight, future)) {
-      _refreshInFlight = null;
-    }
-  }
+  Future<void> _refreshAndCache() =>
+      _refreshCoalescer.run(() => _doRefreshAndCache());
 
   Future<void> _doRefreshAndCache() async {
     try {

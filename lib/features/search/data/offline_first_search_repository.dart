@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
+import 'package:flutter_bloc_app/shared/utils/in_flight_coalescer.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Offline-first implementation of [SearchRepository].
@@ -34,9 +35,8 @@ class OfflineFirstSearchRepository
   final NetworkStatusService _networkStatusService;
   final SyncableRepositoryRegistry _registry;
 
-  /// In-flight refresh per query so repeated cached searches share one refresh.
-  final Map<String, Future<void>> _refreshInFlightByQuery =
-      <String, Future<void>>{};
+  final KeyedInFlightCoalescer<String> _refreshCoalescer =
+      KeyedInFlightCoalescer<String>();
 
   @override
   String get entityType => searchEntity;
@@ -102,33 +102,8 @@ class OfflineFirstSearchRepository
 
   /// Refreshes cached results for a query in the background.
   /// Concurrent calls for the same query await the same in-flight future.
-  Future<void> _refreshAndCache(final String query) async {
-    final Future<void>? inFlight = _refreshInFlightByQuery[query];
-    if (inFlight != null) {
-      return inFlight;
-    }
-    final Future<void> f = _doRefreshAndCache(query);
-    _refreshInFlightByQuery[query] = f;
-    unawaited(
-      f.then<void>(
-        (_) => _clearRefreshInFlight(query, f),
-        onError: (final Object _, final StackTrace _) =>
-            _clearRefreshInFlight(query, f),
-      ),
-    );
-    return f;
-  }
-
-  void _clearRefreshInFlight(final String query, final Future<void> future) {
-    if (identical(_refreshInFlightByQuery[query], future)) {
-      final Future<void>? discardedInFlight = _refreshInFlightByQuery.remove(
-        query,
-      );
-      if (discardedInFlight == null) {
-        return;
-      }
-    }
-  }
+  Future<void> _refreshAndCache(final String query) =>
+      _refreshCoalescer.run(query, () => _doRefreshAndCache(query));
 
   Future<void> _doRefreshAndCache(final String query) async {
     try {

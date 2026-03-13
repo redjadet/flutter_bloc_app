@@ -1,10 +1,51 @@
 import 'dart:async';
 
+/// Safe emission and lifecycle for `StreamController`.
+///
+/// **When to use:**
+/// - **Mixin `StreamControllerLifecycle`:** Use when a class owns a single
+///   stream controller and manages its lifecycle (create/dispose). Call
+///   `safeEmit`/`safeEmitError` and `disposeController` in close/dispose.
+/// - **Static `StreamControllerSafeEmit`:** Use when you have a controller
+///   reference that may be closed elsewhere (e.g. multiple controllers, or
+///   controller passed in). Call `StreamControllerSafeEmit.safeAdd` or
+///   `StreamControllerSafeEmit.safeAddError` before adding to the stream.
+///
+/// Both patterns avoid calling `add` or `addError` on a closed controller,
+/// which would throw [StateError].
+abstract final class StreamControllerSafeEmit {
+  StreamControllerSafeEmit._();
+
+  /// Adds [value] to [controller] only if it is not null and not closed.
+  static void safeAdd<T>(
+    final StreamController<T>? controller,
+    final T value,
+  ) {
+    if (controller != null && !controller.isClosed) {
+      controller.add(value);
+    }
+  }
+
+  /// Adds [error] to [controller] only if it is not null and not closed.
+  static void safeAddError(
+    final StreamController<dynamic>? controller,
+    final Object error, [
+    final StackTrace? stackTrace,
+  ]) {
+    if (controller != null && !controller.isClosed) {
+      controller.addError(error, stackTrace);
+    }
+  }
+}
+
 /// Mixin for managing StreamController lifecycle safely.
 ///
 /// This mixin provides standardized methods for safely managing StreamController
 /// instances, including safe value emission and cleanup. It reduces code
 /// duplication across classes that manage streams.
+///
+/// For one-off emission when you hold a controller reference (and do not use
+/// this mixin), use `StreamControllerSafeEmit.safeAdd` / `safeAddError`.
 ///
 /// Example:
 /// ```dart

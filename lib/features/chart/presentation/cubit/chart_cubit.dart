@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
+import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'chart_cubit.freezed.dart';
@@ -17,7 +18,7 @@ class ChartCubit extends Cubit<ChartState> {
       super(const ChartState());
 
   final ChartRepository _repository;
-  int _fetchRequestId = 0;
+  final RequestIdGuard _fetchGuard = RequestIdGuard();
 
   Future<void> load() async {
     if (isClosed) {
@@ -67,7 +68,7 @@ class ChartCubit extends Cubit<ChartState> {
     if (isClosed) {
       return;
     }
-    final int requestId = ++_fetchRequestId;
+    final int requestId = _fetchGuard.next();
 
     emit(
       state.copyWith(
@@ -85,7 +86,7 @@ class ChartCubit extends Cubit<ChartState> {
           : _repository.refreshTrendingCounts,
       isAlive: () => !isClosed,
       onSuccess: (final points) {
-        if (isClosed || requestId != _fetchRequestId) return;
+        if (isClosed || !_fetchGuard.isCurrent(requestId)) return;
         emit(
           state.copyWith(
             status: ViewStatus.success,
@@ -95,11 +96,11 @@ class ChartCubit extends Cubit<ChartState> {
         );
       },
       onAppError: (final appError) {
-        if (isClosed || requestId != _fetchRequestId) return;
+        if (isClosed || !_fetchGuard.isCurrent(requestId)) return;
         latestError = appError;
       },
       onError: (final errorMessage) {
-        if (isClosed || requestId != _fetchRequestId) return;
+        if (isClosed || !_fetchGuard.isCurrent(requestId)) return;
         emit(
           state.copyWith(
             status: ViewStatus.error,

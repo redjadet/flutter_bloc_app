@@ -13,6 +13,7 @@ echo "🔍 Running offline-first remote-merge regression tests (don't overwrite 
 
 tests=(
   "test/features/counter/data/offline_first_counter_repository_test.dart"
+  "test/features/iot_demo/data/offline_first_iot_demo_repository_test.dart"
 )
 
 for test_file in "${tests[@]}"; do

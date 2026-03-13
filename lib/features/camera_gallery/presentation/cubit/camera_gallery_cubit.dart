@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/came
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 
 /// Cubit for the Camera & Gallery demo: pick from camera/gallery and show preview.
 class CameraGalleryCubit extends Cubit<CameraGalleryState> {
@@ -14,7 +15,7 @@ class CameraGalleryCubit extends Cubit<CameraGalleryState> {
       super(const CameraGalleryState());
 
   final CameraGalleryRepository _repository;
-  int _pickRequestId = 0;
+  final RequestIdGuard _pickGuard = RequestIdGuard();
 
   /// Call once when the page opens to recover lost picker data on Android.
   Future<void> initialize() async {
@@ -82,15 +83,15 @@ class CameraGalleryCubit extends Cubit<CameraGalleryState> {
 
   Future<void> pickFromCamera() async {
     if (isClosed) return;
-    final int requestId = ++_pickRequestId;
+    final int requestId = _pickGuard.next();
     _emitLoading();
     try {
       final CameraGalleryResult result = await _repository.pickFromCamera();
-      if (isClosed || requestId != _pickRequestId) return;
+      if (isClosed || !_pickGuard.isCurrent(requestId)) return;
       _applyPickResult(result);
     } on Object catch (error, stackTrace) {
       AppLogger.error('CameraGalleryCubit.pickFromCamera', error, stackTrace);
-      if (isClosed || requestId != _pickRequestId) return;
+      if (isClosed || !_pickGuard.isCurrent(requestId)) return;
       emit(
         state.copyWith(
           status: ViewStatus.error,
@@ -102,15 +103,15 @@ class CameraGalleryCubit extends Cubit<CameraGalleryState> {
 
   Future<void> pickFromGallery() async {
     if (isClosed) return;
-    final int requestId = ++_pickRequestId;
+    final int requestId = _pickGuard.next();
     _emitLoading();
     try {
       final CameraGalleryResult result = await _repository.pickFromGallery();
-      if (isClosed || requestId != _pickRequestId) return;
+      if (isClosed || !_pickGuard.isCurrent(requestId)) return;
       _applyPickResult(result);
     } on Object catch (error, stackTrace) {
       AppLogger.error('CameraGalleryCubit.pickFromGallery', error, stackTrace);
-      if (isClosed || requestId != _pickRequestId) return;
+      if (isClosed || !_pickGuard.isCurrent(requestId)) return;
       emit(
         state.copyWith(
           status: ViewStatus.error,

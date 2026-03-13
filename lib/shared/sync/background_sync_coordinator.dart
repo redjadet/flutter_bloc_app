@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/shared/sync/sync_cycle_summary.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/stream_controller_lifecycle.dart';
 
 export 'sync_cycle_summary.dart';
 
@@ -331,10 +332,7 @@ class BackgroundSyncCoordinator {
       return;
     }
     _currentStatus = status;
-    if (_statusController.isClosed) {
-      return;
-    }
-    _statusController.add(status);
+    StreamControllerSafeEmit.safeAdd(_statusController, status);
   }
 
   static void _defaultTelemetry(
@@ -350,9 +348,6 @@ class BackgroundSyncCoordinator {
     if (_history.length > _maxHistory) {
       _history.removeAt(0);
     }
-    if (_summaryController.isClosed) {
-      return;
-    }
-    _summaryController.add(summary);
+    StreamControllerSafeEmit.safeAdd(_summaryController, summary);
   }
 }

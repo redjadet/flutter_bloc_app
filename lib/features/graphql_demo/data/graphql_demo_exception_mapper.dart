@@ -5,7 +5,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 GraphqlDemoErrorType graphqlDemoErrorTypeFromPostgrest(
   final PostgrestException e,
 ) {
-  final int? status = e.code == null ? null : int.tryParse(e.code!);
+  final String? code = e.code;
+  final int? status = code != null ? int.tryParse(code) : null;
   if (status == 401 || status == 403) {
     return GraphqlDemoErrorType.invalidRequest;
   }
