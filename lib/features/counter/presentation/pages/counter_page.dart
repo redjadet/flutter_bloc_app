@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/counter/counter.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:go_router/go_router.dart';
 
 class CounterPage extends StatefulWidget {
@@ -132,7 +133,10 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
               }
               ErrorHandling.handleCubitError(
                 context,
-                currentError,
+                UnknownError(
+                  message: localizedMessage,
+                  cause: currentError,
+                ),
                 customMessage: localizedMessage,
                 onRetry: () =>
                     CubitHelpers.safeExecute<CounterCubit, CounterState>(

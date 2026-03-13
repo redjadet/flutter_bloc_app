@@ -11,6 +11,8 @@ import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_s
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/pages/fcm_demo_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix/mix.dart';
 
@@ -38,8 +40,48 @@ class _NoopMessagingService implements FcmMessagingService {
       FcmPermissionState.notDetermined;
 }
 
+class _NoopBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
+  @override
+  Stream<SyncStatus> get statusStream => const Stream<SyncStatus>.empty();
+
+  @override
+  SyncStatus get currentStatus => SyncStatus.idle;
+
+  @override
+  List<SyncCycleSummary> get history => const <SyncCycleSummary>[];
+
+  @override
+  Stream<SyncCycleSummary> get summaryStream =>
+      const Stream<SyncCycleSummary>.empty();
+
+  @override
+  SyncCycleSummary? get latestSummary => null;
+
+  @override
+  Future<void> start() async {}
+
+  @override
+  Future<void> ensureStarted() async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> dispose() async {}
+
+  @override
+  Future<void> flush() async {}
+
+  @override
+  Future<void> triggerFromFcm({final String? hint}) async {}
+}
+
 class _TestFcmDemoCubit extends FcmDemoCubit {
-  _TestFcmDemoCubit() : super(messaging: _NoopMessagingService());
+  _TestFcmDemoCubit()
+    : super(
+        messaging: _NoopMessagingService(),
+        coordinator: _NoopBackgroundSyncCoordinator(),
+      );
 
   void setTestState(final FcmDemoState value) => emit(value);
 }

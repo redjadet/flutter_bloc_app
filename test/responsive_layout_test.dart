@@ -223,6 +223,9 @@ class _StubBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 
   @override
   Future<void> stop() async {}
+
+  @override
+  Future<void> triggerFromFcm({final String? hint}) async {}
 }
 
 SyncStatusCubit _buildSyncStatusCubit() => SyncStatusCubit(

@@ -48,6 +48,9 @@ class _CountingBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 
   @override
   Future<void> flush() async {}
+
+  @override
+  Future<void> triggerFromFcm({final String? hint}) async {}
 }
 
 void main() {

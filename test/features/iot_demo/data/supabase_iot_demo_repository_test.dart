@@ -63,6 +63,23 @@ void main() {
       },
     );
 
+    test(
+      'watchDevices returns empty list stream when Supabase is not configured',
+      () async {
+        resetSupabaseTestState();
+        final SupabaseIotDemoRepository repository = SupabaseIotDemoRepository(
+          fetchRows: (final _) async =>
+              throw StateError('fetchRows should not be called'),
+        );
+
+        final List<IotDevice> emitted = await repository
+            .watchDevices(IotDemoDeviceFilter.all)
+            .first;
+
+        expect(emitted, isEmpty);
+      },
+    );
+
     test('fetchDevices rethrows PostgrestException', () async {
       const PostgrestException failure = PostgrestException(
         message: 'table failed',
@@ -170,6 +187,43 @@ void main() {
       );
 
       expect(updatedPayload?['value'], 12.35);
+    });
+
+    test('watchDevices emits devices when Supabase is configured', () async {
+      late IotDemoDeviceFilter requestedFilter;
+      final SupabaseIotDemoRepository repository = SupabaseIotDemoRepository(
+        fetchRows: (final filter) async {
+          requestedFilter = filter;
+          return <Map<String, Object?>>[
+            <String, Object?>{
+              'id': 'plug-1',
+              'name': 'Desk Plug',
+              'type': 'plug',
+              'last_seen': '2025-03-12T09:30:00Z',
+              'connection_state': 'disconnected',
+              'toggled_on': false,
+              'value': 0,
+            },
+          ];
+        },
+      );
+
+      final List<IotDevice> devices = await repository
+          .watchDevices(IotDemoDeviceFilter.all)
+          .first;
+
+      expect(requestedFilter, IotDemoDeviceFilter.all);
+      expect(devices, <IotDevice>[
+        IotDevice(
+          id: 'plug-1',
+          name: 'Desk Plug',
+          type: IotDeviceType.plug,
+          lastSeen: DateTime.parse('2025-03-12T09:30:00Z'),
+          connectionState: IotConnectionState.disconnected,
+          toggledOn: false,
+          value: 0,
+        ),
+      ]);
     });
   });
 }

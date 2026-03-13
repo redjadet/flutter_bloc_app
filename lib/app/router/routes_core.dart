@@ -1,9 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
 import 'package:flutter_bloc_app/app/router/deferred_pages/chart_page.dart'
     deferred as chart_page;
 import 'package:flutter_bloc_app/app/router/deferred_pages/markdown_editor_page.dart'
     deferred as markdown_editor_page;
+import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
 import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/logged_out_page.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/profile_page.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/register_page.dart';
@@ -38,7 +41,9 @@ List<GoRoute> createCoreRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.authPath,
     name: AppRoutes.auth,
-    builder: (final context, final state) => const SignInPage(),
+    builder: (final context, final state) => SignInPage(
+      redirectAfterLogin: state.uri.queryParameters['redirect'],
+    ),
   ),
   GoRoute(
     path: AppRoutes.counterPath,
@@ -164,14 +169,19 @@ List<GoRoute> createCoreRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.profilePath,
     name: AppRoutes.profile,
-    builder: (final context, final state) =>
-        BlocProviderHelpers.withAsyncInit<ProfileCubit>(
-          create: () => ProfileCubit(
-            repository: getIt<ProfileRepository>(),
-          ),
-          init: (final cubit) => cubit.loadProfile(),
-          child: const ProfilePage(),
+    builder: (final context, final state) => AppRouteAuthGate(
+      policy: AppRoutePolicies.profile,
+      getCurrentUser: () => getIt<AuthRepository>().currentUser,
+      authStateChanges: getIt<AuthRepository>().authStateChanges,
+      authPath: AppRoutes.authPath,
+      child: BlocProviderHelpers.withAsyncInit<ProfileCubit>(
+        create: () => ProfileCubit(
+          repository: getIt<ProfileRepository>(),
         ),
+        init: (final cubit) => cubit.loadProfile(),
+        child: const ProfilePage(),
+      ),
+    ),
   ),
   GoRoute(
     path: AppRoutes.registerPath,

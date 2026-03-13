@@ -7,7 +7,8 @@ would raise the bar further.
 > [Architecture Details](architecture_details.md) |
 > [Clean Architecture](clean_architecture.md) |
 > [Code Quality](CODE_QUALITY.md) |
-> [Flutter Best Practices Review](flutter_best_practices_review.md)
+> [Flutter Best Practices Review](flutter_best_practices_review.md) |
+> [Future Architecture & Code Quality Improvement Plan](plans/future_architecture_code_quality_improvement_plan.md)
 
 ## Accepted Trade-offs
 
@@ -85,9 +86,11 @@ would raise the bar further.
 
 ### Medium priority
 
-- **Push-triggered sync** — use FCM to trigger `BackgroundSyncCoordinator`
-  instead of relying only on periodic timers. Reduces sync latency and
-  unnecessary timer wakeups.
+- **Push-triggered sync (in progress)** — FCM can now request an immediate sync
+  via `BackgroundSyncCoordinator.triggerFromFcm(...)`, with duplicate triggers
+  coalesced safely. The FCM demo wires foreground/opened/initial message
+  delivery to this trigger and supports optional payload hint keys:
+  `sync_feature`, `sync_resource_type`, `sync_resource_id`.
 - **Compile-time DI** — evaluate `injectable` or a similar code-gen DI solution
   to catch wiring errors at build time.
 - **Structured error taxonomy** — replace ad-hoc error strings with a sealed

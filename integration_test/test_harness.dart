@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
+import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
+import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
@@ -27,6 +30,7 @@ Future<void> initializeIntegrationTestHarness() async {
 
 Future<void> configureIntegrationTestDependencies({
   final bool overrideCounterRepository = true,
+  final bool overrideChartRepository = true,
   final bool setFlavorToProd = true,
   final bool biometricSuccess = true,
   final AppLocale? locale = const AppLocale(languageCode: 'en'),
@@ -49,6 +53,9 @@ Future<void> configureIntegrationTestDependencies({
   await _overrideBiometricAuthenticator(biometricSuccess);
   await _overrideAppInfoRepository();
   await _overrideLocaleRepository(locale);
+  if (overrideChartRepository) {
+    await _overrideChartRepository();
+  }
 }
 
 Future<void> tearDownIntegrationTestDependencies() =>
@@ -143,4 +150,31 @@ class _FixedLocaleRepository implements LocaleRepository {
   Future<void> save(final AppLocale? locale) async {
     _locale = locale;
   }
+}
+
+class _FakeChartRepository extends ChartRepository {
+  const _FakeChartRepository();
+
+  static final List<ChartPoint> _points = <ChartPoint>[
+    // ignore: avoid_redundant_argument_values
+    ChartPoint(date: DateTime.utc(2026), value: 42000),
+    ChartPoint(date: DateTime.utc(2026, 1, 2), value: 42100),
+    ChartPoint(date: DateTime.utc(2026, 1, 3), value: 41950),
+  ];
+
+  @override
+  Future<List<ChartPoint>> fetchTrendingCounts() async => _points;
+
+  @override
+  List<ChartPoint>? getCachedTrendingCounts() => _points;
+
+  @override
+  ChartDataSource get lastSource => ChartDataSource.cache;
+}
+
+Future<void> _overrideChartRepository() async {
+  if (getIt.isRegistered<ChartRepository>()) {
+    await getIt.unregister<ChartRepository>();
+  }
+  getIt.registerSingleton<ChartRepository>(const _FakeChartRepository());
 }

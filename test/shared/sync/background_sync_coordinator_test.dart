@@ -543,6 +543,76 @@ void main() {
       },
     );
 
+    test('coalesces duplicate FCM triggers into a single run', () async {
+      final SyncOperation op = SyncOperation.create(
+        entityType: 'counter',
+        payload: const <String, dynamic>{'count': 11},
+        idempotencyKey: 'fcm-coalesce',
+      );
+
+      final Completer<void> operationCompleter = Completer<void>();
+      final Completer<void> operationStarted = Completer<void>();
+      int pendingCalls = 0;
+      when(
+        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+      ).thenAnswer((_) async {
+        pendingCalls++;
+        // start() performs an initial sync; keep it fast/empty.
+        if (pendingCalls == 1) {
+          return <SyncOperation>[];
+        }
+        // The first FCM trigger returns a real operation and blocks.
+        if (pendingCalls == 2) {
+          return <SyncOperation>[op];
+        }
+        // Any follow-up should happen only after the first completes.
+        if (!operationCompleter.isCompleted) {
+          throw StateError('Overlapping sync cycle detected');
+        }
+        return <SyncOperation>[];
+      });
+
+      final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
+      when(() => syncableRepo.entityType).thenReturn('counter');
+      when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
+      when(() => syncableRepo.processOperation(op)).thenAnswer((_) async {
+        if (!operationStarted.isCompleted) {
+          operationStarted.complete();
+        }
+        return operationCompleter.future;
+      });
+      registry.register(syncableRepo);
+      when(
+        () => pendingRepository.markCompleted(op.id),
+      ).thenAnswer((_) async {});
+
+      final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
+        repository: pendingRepository,
+        networkStatusService: networkService,
+        timerService: timerService,
+        registry: registry,
+        syncInterval: const Duration(milliseconds: 10),
+      );
+
+      await coordinator.start();
+
+      final Future<void> first = coordinator.triggerFromFcm(hint: 'sync-now');
+      await operationStarted.future;
+
+      // Duplicate push event while in-flight should coalesce, not overlap.
+      final Future<void> second = coordinator.triggerFromFcm(hint: 'sync-now');
+
+      operationCompleter.complete();
+      await Future.wait<void>(<Future<void>>[first, second]);
+      await Future<void>.delayed(const Duration(milliseconds: 5));
+
+      verify(() => syncableRepo.processOperation(op)).called(1);
+      verify(() => pendingRepository.markCompleted(op.id)).called(1);
+      expect(pendingCalls, greaterThanOrEqualTo(3));
+
+      await coordinator.stop();
+    });
+
     test(
       'flush degrades gracefully when network status lookup fails',
       () async {

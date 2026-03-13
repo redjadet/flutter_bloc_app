@@ -8,6 +8,7 @@ abstract class ChartState with _$ChartState {
     final String? errorMessage,
     @Default(false) final bool zoomEnabled,
     @Default(ChartDataSource.unknown) final ChartDataSource dataSource,
+    final AppError? lastError,
   }) = _ChartState;
 
   const ChartState._();

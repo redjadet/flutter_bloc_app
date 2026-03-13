@@ -207,7 +207,9 @@ This document revalidates the offline-first requirements after another pass over
 ### Future Enhancements
 
 - **Background execution**: For long-running sync (esp. iOS/Android), consider integrating platform-specific background fetch/WorkManager after the initial in-app coordinator lands, honoring platform battery constraints.
-- **Push notification contracts**: If we rely on Firebase Cloud Messaging to trigger sync, define payload schemas, authentication requirements, and fallbacks when push delivery fails. Document these contracts under `docs/`.
+- **Push notification contracts**: If we rely on Firebase Cloud Messaging to trigger sync, define payload schemas, authentication requirements, and fallbacks when push delivery fails.
+  - Canonical payload contract keys (FCM `data`): `sync_feature`, `sync_resource_type`, `sync_resource_id`
+  - Contract helper: `lib/shared/sync/fcm_sync_trigger_contract.dart`
 - **Differential sync**: Implement differential sync for large datasets (e.g., only sync changed fields, use etags/version numbers) to reduce network overhead and improve sync speed.
 - **Conflict resolution UI**: Add user-facing conflict resolution dialogs for features that support concurrent edits (e.g., "Server has newer version, keep local or server?").
 - **Sync scheduling**: Implement intelligent sync scheduling based on user behavior patterns (e.g., sync more frequently during active hours, less during idle periods).

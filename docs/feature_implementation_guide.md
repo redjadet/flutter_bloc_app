@@ -154,7 +154,7 @@ tool/test_coverage.sh
 
 ## 6. Push Notifications
 
-**Status:** FCM demo implemented. See [FCM Demo Integration](fcm_demo_integration.md) for setup, scope, and iOS Simulator testing. The [offline-first plan](offline_first/offline_first_plan.md) and [ANALYSIS_AND_IMPROVEMENTS](offline_first/ANALYSIS_AND_IMPROVEMENTS.md) mention using FCM to trigger background sync as optional future work.
+**Status:** FCM demo implemented. See [FCM Demo Integration](fcm_demo_integration.md) for setup, scope, iOS Simulator testing, and the sync-trigger payload contract. Phase 2 work also wires FCM demo delivery to `BackgroundSyncCoordinator.triggerFromFcm(hint: ...)` (duplicate triggers coalesce safely); the hint contract keys are `sync_feature`, `sync_resource_type`, `sync_resource_id`.
 
 **How to implement (iOS + Android):**
 

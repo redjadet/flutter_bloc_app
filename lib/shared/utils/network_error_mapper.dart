@@ -1,7 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_bloc_app/shared/utils/error_codes.dart';
 import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
+
+part 'network_error_mapper_app_error.dart';
+part 'network_error_mapper_classification.dart';
 
 /// Centralized error mapper for consistent error message handling
 /// across both UI layer and repository layer.
@@ -17,241 +21,21 @@ import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
 class NetworkErrorMapper {
   NetworkErrorMapper._();
 
-  /// Get user-friendly error message from various error types.
-  ///
-  /// For [HttpRequestFailure], uses [getMessageForStatusCode] so 401 vs 503
-  /// are differentiated. Pass [l10n] from UI for localized messages.
+  /// Get user-friendly typed error from various error inputs.
+  static AppError getAppError(final dynamic error) => _getAppError(error);
+
+  /// Get user-friendly error message from various error inputs.
   static String getErrorMessage(
     final dynamic error, {
     final AppLocalizations? l10n,
-  }) {
-    if (error == null) {
-      return l10n?.errorUnknown ?? 'An unknown error occurred';
-    }
-
-    if (error is DioException) {
-      final int? statusCode = error.response?.statusCode;
-      if (statusCode != null) {
-        final String? statusMessage = getMessageForStatusCode(
-          statusCode,
-          l10n: l10n,
-        );
-        if (statusMessage != null) {
-          return statusMessage;
-        }
-      }
-      switch (error.type) {
-        case DioExceptionType.connectionTimeout:
-        case DioExceptionType.sendTimeout:
-        case DioExceptionType.receiveTimeout:
-          return l10n?.errorTimeout ?? 'Request timed out. Please try again.';
-        case DioExceptionType.connectionError:
-          return l10n?.errorNetwork ??
-              'Network connection error. Please check your internet connection.';
-        default:
-          break;
-      }
-      final String? msg = error.message;
-      if (msg != null && msg.trim().isNotEmpty) {
-        return msg;
-      }
-      return l10n?.errorGeneric ?? 'Something went wrong.';
-    }
-
-    if (error is HttpRequestFailure) {
-      if (_hasExplicitStatusMessage(error.statusCode)) {
-        final String? statusMessage = getMessageForStatusCode(
-          error.statusCode,
-          l10n: l10n,
-        );
-        if (statusMessage != null) {
-          return statusMessage;
-        }
-      }
-
-      if (error.message.trim().isNotEmpty) {
-        return error.message;
-      }
-
-      final String? statusMessage = getMessageForStatusCode(
-        error.statusCode,
-        l10n: l10n,
-      );
-      if (statusMessage != null) {
-        return statusMessage;
-      }
-
-      return l10n?.errorGeneric ?? 'Something went wrong.';
-    }
-
-    final String errorString = error.toString().toLowerCase();
-
-    if (errorString.contains('network') || errorString.contains('connection')) {
-      return l10n?.errorNetwork ??
-          'Network connection error. Please check your internet connection.';
-    }
-
-    if (errorString.contains('timeout')) {
-      return l10n?.errorTimeout ?? 'Request timed out. Please try again.';
-    }
-
-    if (errorString.contains('unauthorized') || errorString.contains('401')) {
-      return l10n?.errorUnauthorized ??
-          'Authentication required. Please sign in again.';
-    }
-
-    if (errorString.contains('forbidden') || errorString.contains('403')) {
-      return l10n?.errorForbidden ??
-          "Access denied. You don't have permission for this action.";
-    }
-
-    if (errorString.contains('not found') || errorString.contains('404')) {
-      return l10n?.errorNotFound ?? 'The requested resource was not found.';
-    }
-
-    if (errorString.contains('too many requests') ||
-        errorString.contains('429')) {
-      return l10n?.errorTooManyRequests ??
-          'Too many requests. Please wait before trying again.';
-    }
-
-    if (errorString.contains('service unavailable') ||
-        errorString.contains('503')) {
-      return l10n?.errorServiceUnavailable ??
-          'Service temporarily unavailable. Please try again in a minute.';
-    }
-
-    final int? extractedStatusCode = _extractHttpStatusCode(errorString);
-    if (extractedStatusCode case final int statusCode) {
-      final String? statusMessage = getMessageForStatusCode(
-        statusCode,
-        l10n: l10n,
-      );
-      if (statusMessage != null) {
-        return statusMessage;
-      }
-    }
-
-    if (errorString.contains('server')) {
-      return l10n?.errorServer ?? 'Server error. Please try again later.';
-    }
-
-    return l10n?.errorGeneric ?? 'Something went wrong. Please try again.';
-  }
+  }) => _getErrorMessage(error, l10n: l10n);
 
   /// Map HTTP status code to [AppErrorCode] for branching and analytics.
-  static AppErrorCode getErrorCodeForStatusCode(final int statusCode) {
-    switch (statusCode) {
-      case 401:
-        return AppErrorCode.auth;
-      case 403:
-      case 404:
-        return AppErrorCode.client;
-      case 408:
-        return AppErrorCode.timeout;
-      case 429:
-        return AppErrorCode.rateLimit;
-      case 503:
-        return AppErrorCode.serviceUnavailable;
-      case 500:
-      case 502:
-      case 504:
-        return AppErrorCode.server;
-      default:
-        if (statusCode >= 400 && statusCode < 500) {
-          return AppErrorCode.client;
-        }
-        if (statusCode >= 500) {
-          return AppErrorCode.server;
-        }
-        return AppErrorCode.unknown;
-    }
-  }
+  static AppErrorCode getErrorCodeForStatusCode(final int statusCode) =>
+      _getErrorCodeForStatusCode(statusCode);
 
   /// Get [AppErrorCode] from an error (e.g. [HttpRequestFailure], [DioException] or generic).
-  static AppErrorCode getErrorCode(final dynamic error) {
-    if (error is HttpRequestFailure) {
-      return getErrorCodeForStatusCode(error.statusCode);
-    }
-    if (error is DioException) {
-      final int? statusCode = error.response?.statusCode;
-      if (statusCode != null) {
-        return getErrorCodeForStatusCode(statusCode);
-      }
-      switch (error.type) {
-        case DioExceptionType.connectionTimeout:
-        case DioExceptionType.sendTimeout:
-        case DioExceptionType.receiveTimeout:
-          return AppErrorCode.timeout;
-        case DioExceptionType.connectionError:
-          return AppErrorCode.network;
-        default:
-          break;
-      }
-    }
-    if (error == null) {
-      return AppErrorCode.unknown;
-    }
-    final String s = error.toString().toLowerCase();
-
-    if (s.contains('network') || s.contains('connection')) {
-      return AppErrorCode.network;
-    }
-    if (s.contains('timeout')) {
-      return AppErrorCode.timeout;
-    }
-    final int? extractedStatusCode = _extractHttpStatusCode(s);
-    if (extractedStatusCode case final int statusCode) {
-      return getErrorCodeForStatusCode(statusCode);
-    }
-    if (s.contains('401') || s.contains('unauthorized')) {
-      return AppErrorCode.auth;
-    }
-    if (s.contains('403') || s.contains('404') || s.contains('forbidden')) {
-      return AppErrorCode.client;
-    }
-    if (s.contains('503') || s.contains('service unavailable')) {
-      return AppErrorCode.serviceUnavailable;
-    }
-    if (s.contains('429') || s.contains('too many requests')) {
-      return AppErrorCode.rateLimit;
-    }
-    if (s.contains('500') ||
-        s.contains('502') ||
-        s.contains('504') ||
-        s.contains('server')) {
-      return AppErrorCode.server;
-    }
-    if (s.contains('client') || s.contains('bad request')) {
-      return AppErrorCode.client;
-    }
-    return AppErrorCode.unknown;
-  }
-
-  static int? _extractHttpStatusCode(final String value) {
-    final RegExpMatch? match = RegExp(r'\b([1-5]\d{2})\b').firstMatch(value);
-    if (match == null) {
-      return null;
-    }
-    return int.tryParse(match.group(1) ?? '');
-  }
-
-  static bool _hasExplicitStatusMessage(final int statusCode) {
-    switch (statusCode) {
-      case 401:
-      case 403:
-      case 404:
-      case 408:
-      case 429:
-      case 500:
-      case 502:
-      case 503:
-      case 504:
-        return true;
-      default:
-        return false;
-    }
-  }
+  static AppErrorCode getErrorCode(final dynamic error) => _getErrorCode(error);
 
   /// Map HTTP status code to user-friendly error message.
   ///
@@ -260,77 +44,15 @@ class NetworkErrorMapper {
   static String? getMessageForStatusCode(
     final int statusCode, {
     final AppLocalizations? l10n,
-  }) {
-    switch (statusCode) {
-      case 401:
-        return l10n?.errorUnauthorized ??
-            'Authentication required. Please sign in again.';
-      case 403:
-        return l10n?.errorForbidden ??
-            "Access denied. You don't have permission for this action.";
-      case 404:
-        return l10n?.errorNotFound ?? 'The requested resource was not found.';
-      case 408:
-        return l10n?.errorTimeout ?? 'Request timed out. Please try again.';
-      case 429:
-        return l10n?.errorTooManyRequests ??
-            'Too many requests. Please wait before trying again.';
-      case 503:
-        return l10n?.errorServiceUnavailable ??
-            'Service temporarily unavailable. Please try again in a minute.';
-      case 500:
-      case 502:
-      case 504:
-        return l10n?.errorServer ?? 'Server error. Please try again later.';
-      default:
-        if (statusCode >= 400 && statusCode < 500) {
-          return l10n?.errorClient ??
-              'Client error. Please check your request and try again.';
-        }
-        if (statusCode >= 500) {
-          return l10n?.errorServer ?? 'Server error. Please try again later.';
-        }
-        return null;
-    }
-  }
+  }) => _getMessageForStatusCode(statusCode, l10n: l10n);
 
   /// Check if an error indicates a network connectivity issue.
-  static bool isNetworkError(final dynamic error) {
-    if (error == null) return false;
-    if (error is DioException &&
-        error.type == DioExceptionType.connectionError) {
-      return true;
-    }
-    final String errorString = error.toString().toLowerCase();
-    return errorString.contains('network') ||
-        errorString.contains('connection') ||
-        errorString.contains('socket') ||
-        errorString.contains('dns');
-  }
+  static bool isNetworkError(final dynamic error) => _isNetworkError(error);
 
   /// Check if an error indicates a timeout.
-  static bool isTimeoutError(final dynamic error) {
-    if (error == null) return false;
-    if (error is DioException) {
-      switch (error.type) {
-        case DioExceptionType.connectionTimeout:
-        case DioExceptionType.sendTimeout:
-        case DioExceptionType.receiveTimeout:
-          return true;
-        default:
-          break;
-      }
-    }
-    final String errorString = error.toString().toLowerCase();
-    return errorString.contains('timeout') || errorString.contains('timed out');
-  }
+  static bool isTimeoutError(final dynamic error) => _isTimeoutError(error);
 
   /// Check if an HTTP status code indicates a transient error (should retry).
   static bool isTransientError(final int statusCode) =>
-      statusCode == 408 || // Request Timeout
-      statusCode == 429 || // Too Many Requests
-      statusCode == 500 || // Internal Server Error
-      statusCode == 502 || // Bad Gateway
-      statusCode == 503 || // Service Unavailable
-      statusCode == 504; // Gateway Timeout
+      _isTransientError(statusCode);
 }

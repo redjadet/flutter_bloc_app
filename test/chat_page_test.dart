@@ -319,6 +319,9 @@ class FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> stop() async {}
 
   @override
+  Future<void> triggerFromFcm({final String? hint}) async {}
+
+  @override
   Future<void> dispose() async {}
 
   @override
@@ -623,6 +626,9 @@ class _ManualFlushCoordinator implements BackgroundSyncCoordinator {
   Future<void> dispose() async {
     await _controller.close();
   }
+
+  @override
+  Future<void> triggerFromFcm({final String? hint}) async {}
 }
 
 class _MockPendingSyncRepository extends Mock

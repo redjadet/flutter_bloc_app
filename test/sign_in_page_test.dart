@@ -58,6 +58,48 @@ void main() {
       expect(mockAuth.currentUser!.isAnonymous, isTrue);
     });
 
+    testWidgets('navigates to redirect path after anonymous sign-in', (
+      tester,
+    ) async {
+      final mockAuth = MockFirebaseAuth();
+      final router = GoRouter(
+        initialLocation: '${AppRoutes.authPath}?redirect=%2Fprofile',
+        routes: [
+          GoRoute(
+            path: AppRoutes.authPath,
+            builder: (context, state) => SignInPage(
+              auth: mockAuth,
+              redirectAfterLogin: state.uri.queryParameters['redirect'],
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.counterPath,
+            builder: (context, state) => const Scaffold(body: Text('Home')),
+          ),
+          GoRoute(
+            path: AppRoutes.profilePath,
+            builder: (context, state) => const Scaffold(body: Text('Profile')),
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(
+        MaterialApp.router(
+          routerConfig: router,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+        ),
+      );
+      await tester.pump();
+
+      await tester.tap(find.byKey(signInGuestButtonKey));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Profile'), findsOneWidget);
+      expect(mockAuth.currentUser, isNotNull);
+    });
+
     testWidgets('shows friendly message when anonymous sign-in fails', (
       tester,
     ) async {

@@ -30,19 +30,45 @@ void main() {
 
       expect(find.text('Example Page'), findsWidgets);
 
+      final Finder libraryDemo = find.text('Library Demo');
       await tester.scrollUntilVisible(
-        find.text('Library Demo'),
+        libraryDemo,
         300,
         scrollable: find.byType(Scrollable).first,
       );
-      await tester.tap(find.text('Library Demo'));
-      await pumpUntilFound(tester, find.text('All Assets'));
+      await tester.ensureVisible(libraryDemo);
+      await tester.pumpAndSettle();
+      await tester.tap(libraryDemo);
+      await tester.pumpAndSettle();
+      await pumpUntilFound(
+        tester,
+        find.text('All Assets'),
+        timeout: const Duration(seconds: 15),
+      );
 
       expect(find.text('Library Demo'), findsWidgets);
       expect(find.text('All Assets'), findsWidgets);
 
-      await tester.tap(find.byTooltip('Grid view'));
-      await pumpUntilFound(tester, find.byType(ScapesGridSliverContent));
+      final Finder gridToggle = find.byTooltip('Grid view');
+      await pumpUntilFound(tester, gridToggle);
+      await tester.ensureVisible(gridToggle);
+      await tester.pumpAndSettle();
+      await tester.tap(gridToggle);
+      await tester.pumpAndSettle();
+
+      // The scapes grid is below the header; slivers are built lazily, so we
+      // need to scroll a bit before asserting on the sliver content.
+      final Finder scrollView = find.byType(CustomScrollView);
+      await pumpUntilFound(tester, scrollView);
+      for (var i = 0; i < 6 && !tester.any(find.byType(ScapesGridSliverContent)); i++) {
+        await tester.fling(scrollView, const Offset(0, -800), 1200);
+        await tester.pumpAndSettle();
+      }
+      await pumpUntilFound(
+        tester,
+        find.byType(ScapesGridSliverContent),
+        timeout: const Duration(seconds: 20),
+      );
 
       expect(find.byType(ScapesGridSliverContent), findsWidgets);
     });

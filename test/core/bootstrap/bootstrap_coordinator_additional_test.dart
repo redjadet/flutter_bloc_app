@@ -118,5 +118,34 @@ void main() {
         expect(FlavorManager.current, Flavor.staging);
       },
     );
+
+    test(
+      'bootstrapApp does not allow asset secrets fallback for non-dev flavors',
+      () async {
+        final List<String> calls = <String>[];
+
+        BootstrapCoordinator.ensureBindingInitialized = () {};
+        BootstrapCoordinator.initializePlatform = () async {};
+        BootstrapCoordinator.loadSecrets =
+            ({required final bool allowAssetFallback}) async {
+              calls.add('secrets:$allowAssetFallback');
+            };
+        BootstrapCoordinator.loadAppVersion = () async {};
+        BootstrapCoordinator.initializeFirebase = () async => false;
+        BootstrapCoordinator.configureFirebaseUi = () {};
+        BootstrapCoordinator.registerCrashlyticsHandlers = () {};
+        BootstrapCoordinator.initializeSupabase = () async {};
+        BootstrapCoordinator.setupDependencies = () async {};
+        BootstrapCoordinator.readRuntimeConfig = () =>
+            AppRuntimeConfig(flavor: Flavor.prod, skeletonDelay: Duration.zero);
+        BootstrapCoordinator.runMigration = () async {};
+        BootstrapCoordinator.startApp = (final _) {};
+
+        await BootstrapCoordinator.bootstrapApp(Flavor.prod);
+
+        expect(calls, <String>['secrets:false']);
+        expect(FlavorManager.current, Flavor.prod);
+      },
+    );
   });
 }

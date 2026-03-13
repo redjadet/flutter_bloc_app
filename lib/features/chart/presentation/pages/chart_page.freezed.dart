@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ChartViewData {
 
- bool get showLoading; bool get showError; bool get showEmpty; List<ChartPoint> get points; bool get zoomEnabled;
+ bool get showLoading; bool get showError; bool get showEmpty; List<ChartPoint> get points; bool get zoomEnabled; AppError? get lastError;
 /// Create a copy of _ChartViewData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ _$ChartViewDataCopyWith<_ChartViewData> get copyWith => __$ChartViewDataCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChartViewData&&(identical(other.showLoading, showLoading) || other.showLoading == showLoading)&&(identical(other.showError, showError) || other.showError == showError)&&(identical(other.showEmpty, showEmpty) || other.showEmpty == showEmpty)&&const DeepCollectionEquality().equals(other.points, points)&&(identical(other.zoomEnabled, zoomEnabled) || other.zoomEnabled == zoomEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChartViewData&&(identical(other.showLoading, showLoading) || other.showLoading == showLoading)&&(identical(other.showError, showError) || other.showError == showError)&&(identical(other.showEmpty, showEmpty) || other.showEmpty == showEmpty)&&const DeepCollectionEquality().equals(other.points, points)&&(identical(other.zoomEnabled, zoomEnabled) || other.zoomEnabled == zoomEnabled)&&(identical(other.lastError, lastError) || other.lastError == lastError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,showLoading,showError,showEmpty,const DeepCollectionEquality().hash(points),zoomEnabled);
+int get hashCode => Object.hash(runtimeType,showLoading,showError,showEmpty,const DeepCollectionEquality().hash(points),zoomEnabled,lastError);
 
 @override
 String toString() {
-  return '_ChartViewData(showLoading: $showLoading, showError: $showError, showEmpty: $showEmpty, points: $points, zoomEnabled: $zoomEnabled)';
+  return '_ChartViewData(showLoading: $showLoading, showError: $showError, showEmpty: $showEmpty, points: $points, zoomEnabled: $zoomEnabled, lastError: $lastError)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class _$ChartViewDataCopyWith<$Res>  {
   factory _$ChartViewDataCopyWith(_ChartViewData value, $Res Function(_ChartViewData) _then) = __$ChartViewDataCopyWithImpl;
 @useResult
 $Res call({
- bool showLoading, bool showError, bool showEmpty, List<ChartPoint> points, bool zoomEnabled
+ bool showLoading, bool showError, bool showEmpty, List<ChartPoint> points, bool zoomEnabled, AppError? lastError
 });
 
 
@@ -62,14 +62,15 @@ class __$ChartViewDataCopyWithImpl<$Res>
 
 /// Create a copy of _ChartViewData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? showLoading = null,Object? showError = null,Object? showEmpty = null,Object? points = null,Object? zoomEnabled = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? showLoading = null,Object? showError = null,Object? showEmpty = null,Object? points = null,Object? zoomEnabled = null,Object? lastError = freezed,}) {
   return _then(_self.copyWith(
 showLoading: null == showLoading ? _self.showLoading : showLoading // ignore: cast_nullable_to_non_nullable
 as bool,showError: null == showError ? _self.showError : showError // ignore: cast_nullable_to_non_nullable
 as bool,showEmpty: null == showEmpty ? _self.showEmpty : showEmpty // ignore: cast_nullable_to_non_nullable
 as bool,points: null == points ? _self.points : points // ignore: cast_nullable_to_non_nullable
 as List<ChartPoint>,zoomEnabled: null == zoomEnabled ? _self.zoomEnabled : zoomEnabled // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
+as AppError?,
   ));
 }
 
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool showLoading,  bool showError,  bool showEmpty,  List<ChartPoint> points,  bool zoomEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool showLoading,  bool showError,  bool showEmpty,  List<ChartPoint> points,  bool zoomEnabled,  AppError? lastError)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case __ChartViewData() when $default != null:
-return $default(_that.showLoading,_that.showError,_that.showEmpty,_that.points,_that.zoomEnabled);case _:
+return $default(_that.showLoading,_that.showError,_that.showEmpty,_that.points,_that.zoomEnabled,_that.lastError);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.showLoading,_that.showError,_that.showEmpty,_that.points,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool showLoading,  bool showError,  bool showEmpty,  List<ChartPoint> points,  bool zoomEnabled)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool showLoading,  bool showError,  bool showEmpty,  List<ChartPoint> points,  bool zoomEnabled,  AppError? lastError)  $default,) {final _that = this;
 switch (_that) {
 case __ChartViewData():
-return $default(_that.showLoading,_that.showError,_that.showEmpty,_that.points,_that.zoomEnabled);case _:
+return $default(_that.showLoading,_that.showError,_that.showEmpty,_that.points,_that.zoomEnabled,_that.lastError);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.showLoading,_that.showError,_that.showEmpty,_that.points,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool showLoading,  bool showError,  bool showEmpty,  List<ChartPoint> points,  bool zoomEnabled)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool showLoading,  bool showError,  bool showEmpty,  List<ChartPoint> points,  bool zoomEnabled,  AppError? lastError)?  $default,) {final _that = this;
 switch (_that) {
 case __ChartViewData() when $default != null:
-return $default(_that.showLoading,_that.showError,_that.showEmpty,_that.points,_that.zoomEnabled);case _:
+return $default(_that.showLoading,_that.showError,_that.showEmpty,_that.points,_that.zoomEnabled,_that.lastError);case _:
   return null;
 
 }
@@ -210,7 +211,7 @@ return $default(_that.showLoading,_that.showError,_that.showEmpty,_that.points,_
 
 
 class __ChartViewData implements _ChartViewData {
-  const __ChartViewData({required this.showLoading, required this.showError, required this.showEmpty, required final  List<ChartPoint> points, required this.zoomEnabled}): _points = points;
+  const __ChartViewData({required this.showLoading, required this.showError, required this.showEmpty, required final  List<ChartPoint> points, required this.zoomEnabled, required this.lastError}): _points = points;
   
 
 @override final  bool showLoading;
@@ -224,6 +225,7 @@ class __ChartViewData implements _ChartViewData {
 }
 
 @override final  bool zoomEnabled;
+@override final  AppError? lastError;
 
 /// Create a copy of _ChartViewData
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +237,16 @@ _$_ChartViewDataCopyWith<__ChartViewData> get copyWith => __$_ChartViewDataCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is __ChartViewData&&(identical(other.showLoading, showLoading) || other.showLoading == showLoading)&&(identical(other.showError, showError) || other.showError == showError)&&(identical(other.showEmpty, showEmpty) || other.showEmpty == showEmpty)&&const DeepCollectionEquality().equals(other._points, _points)&&(identical(other.zoomEnabled, zoomEnabled) || other.zoomEnabled == zoomEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is __ChartViewData&&(identical(other.showLoading, showLoading) || other.showLoading == showLoading)&&(identical(other.showError, showError) || other.showError == showError)&&(identical(other.showEmpty, showEmpty) || other.showEmpty == showEmpty)&&const DeepCollectionEquality().equals(other._points, _points)&&(identical(other.zoomEnabled, zoomEnabled) || other.zoomEnabled == zoomEnabled)&&(identical(other.lastError, lastError) || other.lastError == lastError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,showLoading,showError,showEmpty,const DeepCollectionEquality().hash(_points),zoomEnabled);
+int get hashCode => Object.hash(runtimeType,showLoading,showError,showEmpty,const DeepCollectionEquality().hash(_points),zoomEnabled,lastError);
 
 @override
 String toString() {
-  return '_ChartViewData(showLoading: $showLoading, showError: $showError, showEmpty: $showEmpty, points: $points, zoomEnabled: $zoomEnabled)';
+  return '_ChartViewData(showLoading: $showLoading, showError: $showError, showEmpty: $showEmpty, points: $points, zoomEnabled: $zoomEnabled, lastError: $lastError)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$_ChartViewDataCopyWith<$Res> implements _$ChartViewDataCo
   factory _$_ChartViewDataCopyWith(__ChartViewData value, $Res Function(__ChartViewData) _then) = __$_ChartViewDataCopyWithImpl;
 @override @useResult
 $Res call({
- bool showLoading, bool showError, bool showEmpty, List<ChartPoint> points, bool zoomEnabled
+ bool showLoading, bool showError, bool showEmpty, List<ChartPoint> points, bool zoomEnabled, AppError? lastError
 });
 
 
@@ -272,14 +274,15 @@ class __$_ChartViewDataCopyWithImpl<$Res>
 
 /// Create a copy of _ChartViewData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? showLoading = null,Object? showError = null,Object? showEmpty = null,Object? points = null,Object? zoomEnabled = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? showLoading = null,Object? showError = null,Object? showEmpty = null,Object? points = null,Object? zoomEnabled = null,Object? lastError = freezed,}) {
   return _then(__ChartViewData(
 showLoading: null == showLoading ? _self.showLoading : showLoading // ignore: cast_nullable_to_non_nullable
 as bool,showError: null == showError ? _self.showError : showError // ignore: cast_nullable_to_non_nullable
 as bool,showEmpty: null == showEmpty ? _self.showEmpty : showEmpty // ignore: cast_nullable_to_non_nullable
 as bool,points: null == points ? _self._points : points // ignore: cast_nullable_to_non_nullable
 as List<ChartPoint>,zoomEnabled: null == zoomEnabled ? _self.zoomEnabled : zoomEnabled // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
+as AppError?,
   ));
 }
 
