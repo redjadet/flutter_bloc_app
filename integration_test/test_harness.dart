@@ -156,7 +156,6 @@ class _FakeChartRepository extends ChartRepository {
   const _FakeChartRepository();
 
   static final List<ChartPoint> _points = <ChartPoint>[
-    // ignore: avoid_redundant_argument_values
     ChartPoint(date: DateTime.utc(2026), value: 42000),
     ChartPoint(date: DateTime.utc(2026, 1, 2), value: 42100),
     ChartPoint(date: DateTime.utc(2026, 1, 3), value: 41950),

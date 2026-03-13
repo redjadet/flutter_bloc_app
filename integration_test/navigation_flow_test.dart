@@ -60,7 +60,11 @@ void main() {
       // need to scroll a bit before asserting on the sliver content.
       final Finder scrollView = find.byType(CustomScrollView);
       await pumpUntilFound(tester, scrollView);
-      for (var i = 0; i < 6 && !tester.any(find.byType(ScapesGridSliverContent)); i++) {
+      for (
+        var i = 0;
+        i < 6 && !tester.any(find.byType(ScapesGridSliverContent));
+        i++
+      ) {
         await tester.fling(scrollView, const Offset(0, -800), 1200);
         await tester.pumpAndSettle();
       }

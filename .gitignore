@@ -74,3 +74,4 @@ INTERVIEW_QA.md
 .config/
 .agents/rules/rules.md
 .agents/rules/gemin-rules.md
+coverage/lcov.base.info
