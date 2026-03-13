@@ -2,10 +2,10 @@ import 'dart:math' as math;
 
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_theme.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scape.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scape_favorite_icon.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scape_grid_item_helpers.dart';
+import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/widgets/resilient_svg_asset_image.dart';

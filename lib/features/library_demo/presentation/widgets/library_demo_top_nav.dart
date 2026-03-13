@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_icon_button.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_menu_icon.dart';
-import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_theme.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
 
 class LibraryTopNav extends StatelessWidget {
   const LibraryTopNav({

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_body.dart';
-import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_theme.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
+import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 
 class LibraryDemoPage extends StatefulWidget {

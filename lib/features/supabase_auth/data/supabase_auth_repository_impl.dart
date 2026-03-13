@@ -1,6 +1,5 @@
+import 'package:flutter_bloc_app/core/auth/auth_user.dart' as app_auth;
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart'
-    as app_auth;
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';

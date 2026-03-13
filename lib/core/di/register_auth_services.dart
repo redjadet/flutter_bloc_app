@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/auth/data/firebase_auth_repository.dart';
@@ -13,5 +14,8 @@ void registerAuthServices() {
   registerLazySingletonIfAbsent<FirebaseAuth>(() => FirebaseAuth.instance);
   registerLazySingletonIfAbsent<AuthRepository>(
     () => FirebaseAuthRepository(firebaseAuth: getIt<FirebaseAuth>()),
+  );
+  registerLazySingletonIfAbsent<core_auth.AuthRepository>(
+    () => getIt<AuthRepository>(),
   );
 }

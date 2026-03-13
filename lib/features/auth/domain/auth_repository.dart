@@ -1,16 +1,10 @@
-import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
+import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core;
 
-/// Abstraction over authentication state and operations.
+/// Abstraction over authentication state and operations (extends core contract).
 ///
 /// Implementations may wrap Firebase Auth or other providers.
 /// Enables testing and decouples presentation from a specific auth SDK.
-abstract class AuthRepository {
-  /// Current user, or null if not signed in.
-  AuthUser? get currentUser;
-
-  /// Stream of auth state changes (emits current user or null on sign out).
-  Stream<AuthUser?> get authStateChanges;
-
+abstract class AuthRepository extends core.AuthRepository {
   /// Signs in anonymously. Throws on failure.
   Future<void> signInAnonymously();
 

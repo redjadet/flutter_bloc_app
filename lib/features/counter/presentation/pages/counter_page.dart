@@ -18,6 +18,7 @@ class CounterPage extends StatefulWidget {
     required this.biometricAuthenticator,
     this.timerService,
     super.key,
+    this.optionalBanner,
   });
   final String title;
   final ErrorNotificationService errorNotificationService;
@@ -25,6 +26,9 @@ class CounterPage extends StatefulWidget {
 
   /// Used for snackbar hide delay; when null, [DefaultTimerService] is used.
   final TimerService? timerService;
+
+  /// Optional banner slot; composed by the app/router (e.g. remote_config widget).
+  final Widget? optionalBanner;
 
   @override
   State<CounterPage> createState() => _CounterPageState();
@@ -185,6 +189,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
                     theme: theme,
                     l10n: l10n,
                     showFlavorBadge: _showFlavorBadge,
+                    optionalBanner: widget.optionalBanner,
                   ),
                 ),
               ),

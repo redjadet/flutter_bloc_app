@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_theme.dart';
+import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
 import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/widgets/resilient_svg_asset_image.dart';
 

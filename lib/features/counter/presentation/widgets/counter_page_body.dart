@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/counter/counter.dart';
-import 'package:flutter_bloc_app/features/remote_config/presentation/widgets/awesome_feature_widget.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -11,11 +10,15 @@ class CounterPageBody extends StatelessWidget {
     required this.l10n,
     required this.showFlavorBadge,
     super.key,
+    this.optionalBanner,
   });
 
   final ThemeData theme;
   final AppLocalizations l10n;
   final bool showFlavorBadge;
+
+  /// Optional banner slot; composed by the app/router (e.g. remote_config widget).
+  final Widget? optionalBanner;
 
   @override
   Widget build(final BuildContext context) =>
@@ -31,6 +34,7 @@ class CounterPageBody extends StatelessWidget {
             theme: theme,
             l10n: l10n,
             showFlavorBadge: showFlavorBadge,
+            optionalBanner: optionalBanner,
           ),
         ),
       );
@@ -41,37 +45,47 @@ class _CounterContent extends StatelessWidget {
     required this.theme,
     required this.l10n,
     required this.showFlavorBadge,
+    this.optionalBanner,
   });
 
   final ThemeData theme;
   final AppLocalizations l10n;
   final bool showFlavorBadge;
+  final Widget? optionalBanner;
 
   @override
-  Widget build(final BuildContext context) => Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    mainAxisSize: MainAxisSize.min,
-    children: <Widget>[
-      if (showFlavorBadge) ...[
-        const Padding(
-          padding: EdgeInsets.all(1),
-          child: Align(alignment: Alignment.centerRight, child: FlavorBadge()),
+  Widget build(final BuildContext context) {
+    final Widget? banner = optionalBanner;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        if (showFlavorBadge) ...[
+          const Padding(
+            padding: EdgeInsets.all(1),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: FlavorBadge(),
+            ),
+          ),
+          SizedBox(height: context.responsiveGapS),
+        ],
+        Text(
+          l10n.pushCountLabel,
+          style: theme.textTheme.bodyMedium,
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
         SizedBox(height: context.responsiveGapS),
+        const CounterDisplay(),
+        if (banner != null) ...[
+          SizedBox(height: context.responsiveGapM),
+          banner,
+          SizedBox(height: context.responsiveGapM),
+        ],
+        const CounterHint(),
       ],
-      Text(
-        l10n.pushCountLabel,
-        style: theme.textTheme.bodyMedium,
-        textAlign: TextAlign.center,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      SizedBox(height: context.responsiveGapS),
-      const CounterDisplay(),
-      SizedBox(height: context.responsiveGapM),
-      const AwesomeFeatureWidget(),
-      SizedBox(height: context.responsiveGapM),
-      const CounterHint(),
-    ],
-  );
+    );
+  }
 }

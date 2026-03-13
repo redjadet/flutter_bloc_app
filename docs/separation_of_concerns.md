@@ -10,6 +10,7 @@ independently.
 > - [Clean Architecture](clean_architecture.md) - Layer responsibilities and dependency flow
 > - [Architecture Details](architecture_details.md) - High-level architecture and shared infrastructure
 > - [SOLID Principles](solid_principles.md) - Interface-first design and dependency inversion
+> - [Modularity](modularity.md) - Dependency direction and core/shared contracts
 > - [Compile-Time Safety](compile_time_safety.md) - Type-safe BLoC/Cubit access patterns
 > - [Code Quality](CODE_QUALITY.md) - Validation expectations and quality gates
 

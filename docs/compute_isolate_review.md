@@ -196,7 +196,7 @@ Future<int?> _estimateSizeBytes(final dynamic raw) async {
 
 **Location:**
 
-- `lib/features/example/presentation/widgets/markdown_editor/markdown_parser.dart`
+- `lib/shared/utils/markdown_parser.dart`
 - `lib/features/example/presentation/widgets/markdown_editor/markdown_render_object.dart`
 
 **Current Implementation:**

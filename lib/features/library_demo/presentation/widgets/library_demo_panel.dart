@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_assets_header.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_category_list.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_search_row.dart';
-import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_theme.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
 
 /// Shared dark rounded panel: title, search, categories, assets header, and
 /// optional trailing content (e.g. gap only for grid, or gap + tiles for list).

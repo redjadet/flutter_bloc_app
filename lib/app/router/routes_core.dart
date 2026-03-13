@@ -5,8 +5,8 @@ import 'package:flutter_bloc_app/app/router/deferred_pages/chart_page.dart'
 import 'package:flutter_bloc_app/app/router/deferred_pages/markdown_editor_page.dart'
     deferred as markdown_editor_page;
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
+import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/core.dart';
-import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/logged_out_page.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/profile_page.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/register_page.dart';
@@ -25,6 +25,7 @@ import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repositor
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/pages/profile_page.dart';
+import 'package:flutter_bloc_app/features/remote_config/presentation/widgets/awesome_feature_widget.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/scapes.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
@@ -61,6 +62,7 @@ List<GoRoute> createCoreRoutes() => <GoRoute>[
             errorNotificationService: getIt<ErrorNotificationService>(),
             biometricAuthenticator: getIt<BiometricAuthenticator>(),
             timerService: getIt<TimerService>(),
+            optionalBanner: const AwesomeFeatureWidget(),
           ),
         ),
   ),

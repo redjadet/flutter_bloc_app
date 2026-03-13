@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/features/example/presentation/widgets/markdown_editor/markdown_parser.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/markdown_parser.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 
 /// A reusable message bubble widget for chat-like interfaces
