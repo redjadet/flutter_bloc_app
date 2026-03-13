@@ -11,6 +11,8 @@ class HiveService {
   final HiveKeyManager _keyManager;
   bool _initialized = false;
 
+  bool get isInitialized => _initialized;
+
   /// Initializes Hive with encryption.
   ///
   /// This method is safe to call multiple times - it will only initialize once.

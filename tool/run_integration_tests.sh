@@ -7,8 +7,8 @@
 #   tool/run_integration_tests.sh integration_test/app_test.dart
 #
 # Behavior:
-#   - Running without arguments executes the full integration suite, collects
-#     coverage, and updates coverage/coverage_summary.md automatically.
+#   - Running without arguments executes the aggregated full integration suite,
+#     collects coverage, and updates coverage/coverage_summary.md automatically.
 #   - If coverage/lcov.base.info exists from tool/test_coverage.sh, the
 #     integration coverage run merges into that baseline before the summary is
 #     refreshed.
@@ -99,53 +99,39 @@ cleanup_project_xcodebuilds() {
 }
 
 list_supported_devices() {
-  flutter devices | while IFS= read -r line; do
+  while IFS= read -r line; do
     [[ "$line" == *"•"* ]] || continue
     [[ "$line" == *"web-javascript"* ]] && continue
 
     IFS='•' read -r _ id _ <<< "$line"
     id="$(trim "$id")"
     [ -n "$id" ] && printf '%s\t%s\n' "$id" "$line"
-  done
-}
-
-preferred_ios_simulator_device_id() {
-  local entry
-  local device_id
-  local device_line
-
-  while IFS= read -r entry; do
-    [ -z "$entry" ] && continue
-    device_id="${entry%%$'\t'*}"
-    device_line="${entry#*$'\t'}"
-
-    if [[ "$device_line" == *"ios"* ]] && [[ "$device_line" == *"simulator"* ]]; then
-      echo "$device_id"
-      return
-    fi
-  done
+  done < <(flutter devices)
 }
 
 select_device_id() {
   local requested_device="${CHECKLIST_INTEGRATION_DEVICE:-${INTEGRATION_TEST_DEVICE:-}}"
-  local ios_simulator_device
   local preferred_device
   local device_id
-  local -a supported_devices=()
+  local device_line
+  local index
+  local -a supported_device_ids=()
+  local -a supported_device_lines=()
 
-  while IFS=$'\t' read -r device_id _; do
+  while IFS=$'\t' read -r device_id device_line; do
     [ -z "$device_id" ] && continue
-    supported_devices+=("$device_id")
+    supported_device_ids+=("$device_id")
+    supported_device_lines+=("$device_line")
   done < <(list_supported_devices)
 
-  if [ "${#supported_devices[@]}" -eq 0 ]; then
+  if [ "${#supported_device_ids[@]}" -eq 0 ]; then
     echo "❌ No supported non-web device found for integration tests."
     echo "   Connect a device or set CHECKLIST_INTEGRATION_DEVICE to a valid id."
     exit 1
   fi
 
   if [ -n "$requested_device" ]; then
-    for device_id in "${supported_devices[@]}"; do
+    for device_id in "${supported_device_ids[@]}"; do
       if [ "$device_id" = "$requested_device" ]; then
         echo "$device_id"
         return
@@ -153,19 +139,21 @@ select_device_id() {
     done
 
     echo "❌ CHECKLIST_INTEGRATION_DEVICE='$requested_device' is not available."
-    echo "   Available device ids: ${supported_devices[*]}"
+    echo "   Available device ids: ${supported_device_ids[*]}"
     exit 1
   fi
 
-  ios_simulator_device="$(list_supported_devices | preferred_ios_simulator_device_id || true)"
-  if [ -n "$ios_simulator_device" ]; then
-    echo "$ios_simulator_device"
-    return
-  fi
+  for index in "${!supported_device_ids[@]}"; do
+    device_line="${supported_device_lines[$index]}"
+    if [[ "$device_line" == *"ios"* ]] && [[ "$device_line" == *"simulator"* ]]; then
+      echo "${supported_device_ids[$index]}"
+      return
+    fi
+  done
 
   preferred_device="$(host_desktop_device_id)"
   if [ -n "$preferred_device" ]; then
-    for device_id in "${supported_devices[@]}"; do
+    for device_id in "${supported_device_ids[@]}"; do
       if [ "$device_id" = "$preferred_device" ]; then
         echo "$device_id"
         return
@@ -173,12 +161,12 @@ select_device_id() {
     done
   fi
 
-  if [ "${#supported_devices[@]}" -eq 1 ]; then
-    echo "${supported_devices[0]}"
+  if [ "${#supported_device_ids[@]}" -eq 1 ]; then
+    echo "${supported_device_ids[0]}"
     return
   fi
 
-  echo "❌ Multiple supported devices detected: ${supported_devices[*]}"
+  echo "❌ Multiple supported devices detected: ${supported_device_ids[*]}"
   echo "   Set CHECKLIST_INTEGRATION_DEVICE=<deviceId> to choose one."
   exit 1
 }
@@ -197,35 +185,43 @@ DEVICE_ID="$(select_device_id)"
 DART_BIN="$(resolve_flutter_dart)"
 BASE_COVERAGE_PATH="coverage/lcov.base.info"
 FINAL_COVERAGE_PATH="coverage/lcov.info"
+FULL_SUITE_TARGET="integration_test/all_flows_test.dart"
+HAS_LCOV=0
+
+if command -v lcov >/dev/null 2>&1; then
+  HAS_LCOV=1
+fi
 
 echo "Running integration tests on device: $DEVICE_ID"
 if [ "$#" -eq 0 ]; then
   cleanup_project_xcodebuilds
-  echo "Collecting integration coverage..."
+  echo "Running aggregated integration suite..."
   set +e
-  if [ -s "$BASE_COVERAGE_PATH" ]; then
-    if ! command -v lcov >/dev/null 2>&1; then
-      echo "❌ 'lcov' is required to merge integration coverage with $BASE_COVERAGE_PATH."
-      echo "   Install lcov or remove the baseline coverage file before rerunning."
-      cleanup_project_xcodebuilds
-      exit 1
-    fi
-    echo "Merging integration coverage with $BASE_COVERAGE_PATH"
+  if [ -s "$BASE_COVERAGE_PATH" ] && [ "$HAS_LCOV" -eq 1 ]; then
+    echo "Collecting and merging integration coverage with $BASE_COVERAGE_PATH"
     flutter test \
       --no-pub \
       -d "$DEVICE_ID" \
       --coverage \
       --merge-coverage \
       --coverage-path="$FINAL_COVERAGE_PATH" \
-      integration_test/
+      "$FULL_SUITE_TARGET"
+  elif [ -s "$BASE_COVERAGE_PATH" ]; then
+    echo "⚠️  'lcov' is not installed, so baseline merge is unavailable."
+    echo "   Running integration tests without coverage update."
+    flutter test \
+      --no-pub \
+      -d "$DEVICE_ID" \
+      "$FULL_SUITE_TARGET"
   else
+    echo "Collecting integration-only coverage."
     echo "No baseline coverage found at $BASE_COVERAGE_PATH; writing integration-only coverage."
     flutter test \
       --no-pub \
       -d "$DEVICE_ID" \
       --coverage \
       --coverage-path="$FINAL_COVERAGE_PATH" \
-      integration_test/
+      "$FULL_SUITE_TARGET"
   fi
   exit_code=$?
   if [ "$exit_code" -ne 0 ]; then
@@ -233,30 +229,39 @@ if [ "$#" -eq 0 ]; then
     echo "Integration tests failed (exit $exit_code). Retrying once after cleanup..."
     cleanup_project_xcodebuilds
     sleep 5
-    if [ -s "$BASE_COVERAGE_PATH" ]; then
+    if [ -s "$BASE_COVERAGE_PATH" ] && [ "$HAS_LCOV" -eq 1 ]; then
+      echo "Merging integration coverage with $BASE_COVERAGE_PATH"
       flutter test \
         --no-pub \
         -d "$DEVICE_ID" \
         --coverage \
         --merge-coverage \
         --coverage-path="$FINAL_COVERAGE_PATH" \
-        integration_test/
+        "$FULL_SUITE_TARGET"
+    elif [ -s "$BASE_COVERAGE_PATH" ]; then
+      flutter test \
+        --no-pub \
+        -d "$DEVICE_ID" \
+        "$FULL_SUITE_TARGET"
     else
       flutter test \
         --no-pub \
         -d "$DEVICE_ID" \
         --coverage \
         --coverage-path="$FINAL_COVERAGE_PATH" \
-        integration_test/
+        "$FULL_SUITE_TARGET"
     fi
     exit_code=$?
   fi
   set -e
   cleanup_project_xcodebuilds
-  if [ "$exit_code" -eq 0 ]; then
+  if [ "$exit_code" -eq 0 ] && { [ ! -s "$BASE_COVERAGE_PATH" ] || [ "$HAS_LCOV" -eq 1 ]; }; then
     echo ""
     echo "Updating coverage summary..."
     "$DART_BIN" run tool/update_coverage_summary.dart
+  elif [ "$exit_code" -eq 0 ]; then
+    echo ""
+    echo "Skipping coverage summary update because baseline merge requires 'lcov'."
   fi
   exit ${exit_code}
 else
