@@ -329,6 +329,15 @@ class OfflineFirstIotDemoRepository
     required final String userIdBefore,
   }) async {
     try {
+      // Don't overwrite local with remote when there are unsynced IoT ops
+      // (same rule as Counter/Todo: stale remote must not overwrite newer local).
+      final List<SyncOperation> pending = await _pendingSyncRepository
+          .getPendingOperations(
+            supabaseUserIdFilter: userIdBefore,
+          );
+      if (pending.any((final op) => op.entityType == iotDemoEntity)) {
+        return;
+      }
       final List<IotDevice> remoteDevices = await remote.fetchDevices();
       final String? userIdAfter = _currentSupabaseUserId();
       if (userIdAfter != userIdBefore) return;

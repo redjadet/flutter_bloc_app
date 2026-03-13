@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
+import 'package:flutter_bloc_app/shared/utils/in_flight_coalescer.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Offline-first adapter that wraps the Firebase Remote Config repository.
@@ -48,9 +49,7 @@ class OfflineFirstRemoteConfigRepository
   final void Function(String event, Map<String, Object?> payload) _telemetry;
 
   RemoteConfigSnapshot _snapshot = RemoteConfigSnapshot.empty;
-
-  /// In-flight fetch so forceFetch/pullRemote callers share one remote fetch.
-  Future<void>? _fetchInFlight;
+  final InFlightCoalescer _fetchCoalescer = InFlightCoalescer();
 
   @override
   String get entityType => remoteConfigEntity;
@@ -141,26 +140,7 @@ class OfflineFirstRemoteConfigRepository
       }
     }
 
-    final Future<void>? inFlight = _fetchInFlight;
-    if (inFlight != null) {
-      await inFlight;
-      return;
-    }
-    final Future<void> f = _doRefreshFromRemote(reason);
-    _fetchInFlight = f;
-    unawaited(
-      f.then<void>(
-        (_) => _clearFetchInFlight(f),
-        onError: (final Object _, final StackTrace _) => _clearFetchInFlight(f),
-      ),
-    );
-    await f;
-  }
-
-  void _clearFetchInFlight(final Future<void> future) {
-    if (identical(_fetchInFlight, future)) {
-      _fetchInFlight = null;
-    }
+    await _fetchCoalescer.run(() => _doRefreshFromRemote(reason));
   }
 
   Future<void> _doRefreshFromRemote(final String reason) async {

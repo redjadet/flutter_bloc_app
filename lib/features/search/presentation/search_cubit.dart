@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/features/search/presentation/search_state.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 
 class SearchCubit extends Cubit<SearchState> {
   SearchCubit({
@@ -21,11 +22,11 @@ class SearchCubit extends Cubit<SearchState> {
   final TimerService _timerService;
   final Duration debounceDuration;
   TimerDisposable? _debounceHandle;
-  int _searchRequestId = 0;
+  final RequestIdGuard _requestIdGuard = RequestIdGuard();
 
   void search(final String query) {
     _cancelDebounce();
-    final int requestId = _nextSearchRequestId();
+    final int requestId = _requestIdGuard.next();
 
     emit(state.copyWith(query: query, error: null));
 
@@ -42,7 +43,7 @@ class SearchCubit extends Cubit<SearchState> {
 
   void clearSearch() {
     _cancelDebounce();
-    _nextSearchRequestId(); // Invalidate any pending search requests
+    _requestIdGuard.invalidate();
     emit(const SearchState());
   }
 
@@ -50,9 +51,7 @@ class SearchCubit extends Cubit<SearchState> {
     final String query,
     final int requestId,
   ) async {
-    if (!_isRequestActive(requestId, query)) {
-      return;
-    }
+    if (!_isRequestActive(requestId, query)) return;
     emit(
       state.copyWith(
         status: ViewStatus.loading,
@@ -94,10 +93,8 @@ class SearchCubit extends Cubit<SearchState> {
     _debounceHandle = null;
   }
 
-  int _nextSearchRequestId() => ++_searchRequestId;
-
   bool _isRequestActive(final int requestId, final String query) =>
-      !isClosed && requestId == _searchRequestId && state.query == query;
+      !isClosed && _requestIdGuard.isCurrent(requestId) && state.query == query;
 
   @override
   Future<void> close() {

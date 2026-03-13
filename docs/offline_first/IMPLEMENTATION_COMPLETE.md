@@ -138,6 +138,7 @@ All core offline-first features have been successfully implemented, tested, and 
 
 - `docs/offline_first/offline_first_plan.md` - Implementation plan and progress
 - `docs/offline_first/adoption_guide.md` - Step-by-step adoption guide
+- `docs/offline_first/dont_overwrite_guide.md` - Don’t overwrite newer local with older remote (for this repo and others)
 
 ## Test Coverage
 

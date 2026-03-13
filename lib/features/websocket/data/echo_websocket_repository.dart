@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/features/websocket/domain/websocket_connection_
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/completer_helper.dart';
+import 'package:flutter_bloc_app/shared/utils/stream_controller_lifecycle.dart';
 import 'package:flutter_bloc_app/shared/utils/websocket_guard.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -17,7 +18,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
   }) : endpoint = endpoint ?? Uri.parse(_kDefaultEndpoint),
        _connector = connector ?? _defaultConnector,
        _connectionTimeout = connectionTimeout ?? const Duration(seconds: 10) {
-    _stateController.add(_state);
+    StreamControllerSafeEmit.safeAdd(_stateController, _state);
   }
 
   static const String _kDefaultEndpoint = 'wss://ws.postman-echo.com/raw';

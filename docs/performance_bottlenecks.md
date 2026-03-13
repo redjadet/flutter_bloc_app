@@ -46,8 +46,8 @@
 ## High-frequency events (rate limiting / debouncing)
 
 - **Pattern:** For actions that trigger network or heavy work at high frequency (search-as-you-type, scroll-driven load, rapid taps), use **debounce or throttle** and, where order matters, **in-flight/request-id guards** so the app does not flood the backend or UI.
-- **Existing patterns:** Counter page uses a 500 ms throttle for sync flush; SearchCubit uses debounce + request-id; TodoListCubit uses debounce for search query. Prefer `TimerService.runOnce` for cancellable delays and the SearchCubit-style request-id check before emit for async loads.
-- **When adding new triggers:** Apply debounce/throttle and optional request-id in the cubit; document in this file if it becomes a shared pattern.
+- **Existing patterns:** Counter page uses a 500 ms throttle for sync flush; SearchCubit uses debounce + [RequestIdGuard](../lib/shared/utils/request_id_guard.dart); TodoListCubit uses debounce for search query. Prefer `TimerService.runOnce` for cancellable delays and [RequestIdGuard](../lib/shared/utils/request_id_guard.dart) (or `isCurrent(id)` before emit) for async loads. Repositories use [InFlightCoalescer](../lib/shared/utils/in_flight_coalescer.dart) / [KeyedInFlightCoalescer](../lib/shared/utils/in_flight_coalescer.dart) for single-flight refresh.
+- **When adding new triggers:** Apply debounce/throttle and optional [RequestIdGuard](../lib/shared/utils/request_id_guard.dart) in the cubit; use [InFlightCoalescer](../lib/shared/utils/in_flight_coalescer.dart) in repos for coalesced refresh.
 
 ## Follow-up Ideas
 

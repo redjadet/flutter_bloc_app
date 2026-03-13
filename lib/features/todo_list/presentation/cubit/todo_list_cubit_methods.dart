@@ -15,6 +15,7 @@ mixin _TodoListCubitMethods
   TodoItem? get lastDeletedItem;
   set lastDeletedItem(final TodoItem? value);
   bool Function() get stopLoadingIfClosed;
+  RequestIdGuard get loadRequestIdGuard;
   int get loadRequestId;
   set loadRequestId(final int value);
 
@@ -137,14 +138,15 @@ mixin _TodoListCubitMethods
     if (isClosed || isLoading) return;
     isLoading = true;
     if (stopLoadingIfClosed()) return;
-    loadRequestId++;
-    final int requestId = loadRequestId;
+    final int requestId = loadRequestIdGuard.next();
     emit(state.copyWith(status: ViewStatus.loading, errorMessage: null));
     await CubitExceptionHandler.executeAsync<List<TodoItem>>(
       operation: repository.fetchAll,
       isAlive: () => !isClosed,
       onSuccess: (final items) async {
-        if (stopLoadingIfClosed() || requestId != loadRequestId) return;
+        if (stopLoadingIfClosed() || !loadRequestIdGuard.isCurrent(requestId)) {
+          return;
+        }
         emit(
           state.copyWith(
             status: ViewStatus.success,
@@ -159,7 +161,9 @@ mixin _TodoListCubitMethods
         }
       },
       onError: (final errorMessage) {
-        if (stopLoadingIfClosed() || requestId != loadRequestId) return;
+        if (stopLoadingIfClosed() || !loadRequestIdGuard.isCurrent(requestId)) {
+          return;
+        }
         emit(
           state.copyWith(
             status: ViewStatus.error,

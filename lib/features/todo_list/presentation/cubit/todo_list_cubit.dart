@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 
 part 'todo_list_cubit_crud.dart';
 part 'todo_list_cubit_helpers.dart';
@@ -51,15 +52,17 @@ class TodoListCubit extends Cubit<TodoListState>
   @override
   bool Function() get stopLoadingIfClosed => _stopLoadingIfClosed;
   @override
-  int get loadRequestId => _loadRequestId;
+  RequestIdGuard get loadRequestIdGuard => _loadRequestIdGuard;
   @override
-  set loadRequestId(final int value) => _loadRequestId = value;
+  int get loadRequestId => _loadRequestIdGuard.currentId;
+  @override
+  set loadRequestId(final int value) => _loadRequestIdGuard.currentId = value;
 
   final TimerService _timerService;
   final Duration _searchDebounceDuration;
   TimerDisposable? _searchDebounceHandle;
   TodoItem? _lastDeletedItem;
-  int _loadRequestId = 0;
+  final RequestIdGuard _loadRequestIdGuard = RequestIdGuard();
 
   bool _stopLoadingIfClosed() {
     if (isClosed) {

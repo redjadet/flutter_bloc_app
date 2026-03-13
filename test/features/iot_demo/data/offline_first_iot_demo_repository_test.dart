@@ -392,6 +392,39 @@ void main() {
     });
 
     test(
+      'pullRemote does not overwrite local when there are pending iot_demo ops',
+      () async {
+        const IotDevice localDevice = IotDevice(
+          id: 'local-1',
+          name: 'Local Device',
+          type: IotDeviceType.light,
+          toggledOn: true,
+        );
+        remoteRepository.devices = <IotDevice>[
+          const IotDevice(
+            id: 'remote-1',
+            name: 'Stale Remote Device',
+            type: IotDeviceType.plug,
+          ),
+        ];
+        final OfflineFirstIotDemoRepository repo = buildRepository(
+          remote: remoteRepository,
+        );
+        await repo.addDevice(localDevice);
+        final List<IotDevice> beforePull = await repo.watchDevices().first;
+        expect(beforePull, hasLength(1));
+        expect(beforePull.first.id, 'local-1');
+
+        await repo.pullRemote();
+
+        final List<IotDevice> afterPull = await repo.watchDevices().first;
+        expect(afterPull, hasLength(1));
+        expect(afterPull.first.id, 'local-1');
+        expect(afterPull.first.name, 'Local Device');
+      },
+    );
+
+    test(
       'setValue debounces: only one sync op after delay without change',
       () async {
         final FakeTimerService fakeTimer = FakeTimerService();
@@ -483,6 +516,7 @@ void main() {
     );
 
     test('pullRemote coalesces per user instead of globally', () async {
+      await pendingRepository.clear();
       String currentUserId = _testSupabaseUserId;
       final Completer<List<IotDevice>> firstFetchCompleter =
           Completer<List<IotDevice>>();
@@ -516,6 +550,7 @@ void main() {
       currentUserId = 'other-user-id';
       final Future<void> secondPull = repo.pullRemote();
 
+      await Future<void>.delayed(Duration.zero);
       expect(controllableRemote.fetchCallCount, 2);
 
       firstFetchCompleter.complete(<IotDevice>[

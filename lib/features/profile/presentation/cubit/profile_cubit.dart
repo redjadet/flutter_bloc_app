@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart
 import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_state.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit({required final ProfileRepository repository})
@@ -12,13 +13,11 @@ class ProfileCubit extends Cubit<ProfileState> {
       super(const ProfileState());
 
   final ProfileRepository _repository;
-  int _loadRequestId = 0;
+  final RequestIdGuard _loadGuard = RequestIdGuard();
 
   Future<void> loadProfile() async {
-    if (isClosed) {
-      return;
-    }
-    final int requestId = ++_loadRequestId;
+    if (isClosed) return;
+    final int requestId = _loadGuard.next();
 
     emit(
       state.copyWith(
@@ -31,7 +30,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       operation: _repository.getProfile,
       isAlive: () => !isClosed,
       onSuccess: (final user) {
-        if (isClosed || requestId != _loadRequestId) return;
+        if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         emit(
           state.copyWith(
             status: ViewStatus.success,
@@ -41,7 +40,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         );
       },
       onError: (final errorMessage) {
-        if (isClosed || requestId != _loadRequestId) return;
+        if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         emit(
           ProfileState(
             status: ViewStatus.error,

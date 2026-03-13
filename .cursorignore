@@ -62,7 +62,6 @@ third_party/
 
 # Tooling & Scripts
 # Build tools and scripts are less relevant for AI code generation
-tool/
 bin/checklist
 custom_lints/
 

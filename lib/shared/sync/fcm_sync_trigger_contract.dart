@@ -41,9 +41,9 @@ class FcmSyncTriggerPayload {
   final String? resourceId;
 
   bool get isEmpty =>
-      (feature == null || feature!.isEmpty) &&
-      (resourceType == null || resourceType!.isEmpty) &&
-      (resourceId == null || resourceId!.isEmpty);
+      (feature?.isEmpty ?? true) &&
+      (resourceType?.isEmpty ?? true) &&
+      (resourceId?.isEmpty ?? true);
 
   static String? _normalized(final String? value) {
     final String? v = value?.trim();
