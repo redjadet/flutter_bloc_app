@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/features/example/presentation/widgets/markdown_editor/markdown_table_renderer.dart';
+import 'package:flutter_bloc_app/shared/utils/markdown_table_renderer.dart';
 import 'package:markdown/markdown.dart' as md;
 
 /// Markdown parser that leverages the `markdown` package for accurate AST parsing

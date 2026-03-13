@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_favorite_icon.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_models.dart';
-import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_theme.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_three_dot_icon.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_waveform.dart';
+import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
 import 'package:flutter_bloc_app/shared/widgets/resilient_svg_asset_image.dart';
 
 class LibraryAssetTile extends StatelessWidget {

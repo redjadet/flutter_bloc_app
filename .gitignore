@@ -17,6 +17,7 @@ figma-sync/
 AGENTS.md
 GEMINI.md
 .cursor/
+.cursorignore
 
 # IntelliJ related
 *.iml

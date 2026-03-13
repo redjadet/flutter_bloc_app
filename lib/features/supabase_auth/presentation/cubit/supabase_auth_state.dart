@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
+import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'supabase_auth_state.freezed.dart';

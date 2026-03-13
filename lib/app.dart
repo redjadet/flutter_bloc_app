@@ -4,8 +4,8 @@ import 'package:flutter_bloc_app/app/app_scope.dart';
 import 'package:flutter_bloc_app/app/router/auth_redirect.dart';
 import 'package:flutter_bloc_app/app/router/go_router_refresh_stream.dart';
 import 'package:flutter_bloc_app/app/router/routes.dart';
+import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/core.dart';
-import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:go_router/go_router.dart';
 
 /// Main application widget

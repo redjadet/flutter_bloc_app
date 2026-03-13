@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
-import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_theme.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_cubit.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_state.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_view.dart';
+import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 
 class ScapesPage extends StatelessWidget {

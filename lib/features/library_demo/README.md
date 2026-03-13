@@ -16,7 +16,8 @@ This feature demonstrates a library management interface with:
 
 ### Colors
 
-The EPOCH design system uses a custom color palette defined in `library_demo_theme.dart`:
+The EPOCH design system uses a shared palette defined in `lib/shared/design_system/epoch_theme_extension.dart`.
+`presentation/widgets/library_demo_theme.dart` remains as a compatibility re-export for older imports.
 
 | Color Name | Hex | Usage |
 | ---------- | --- | ----- |
@@ -75,13 +76,16 @@ lib/features/library_demo/
 │       ├── library_demo_menu_icon.dart     # Custom hamburger menu
 │       ├── library_demo_models.dart        # Data models
 │       ├── library_demo_search_row.dart    # Search bar with filter button
-│       ├── library_demo_theme.dart         # Design system (colors, typography, spacing)
+│       ├── library_demo_theme.dart         # Compatibility re-export to shared design tokens
 │       ├── library_demo_three_dot_icon.dart # Custom menu icon
 │       ├── library_demo_top_nav.dart       # Top navigation bar
 │       ├── library_demo_view_icons.dart    # Grid/List view icons
 │       ├── library_demo_waveform.dart      # Audio waveform visualization
 │       └── library_demo_wordmark.dart      # EPOCH wordmark/logo
 └── README.md                               # This file
+
+lib/shared/design_system/
+└── epoch_theme_extension.dart              # EPOCH colors, typography, spacing, theme extension
 ```
 
 ## Components
@@ -176,18 +180,14 @@ class LibraryCategory {
 
 ## Usage
 
-The library demo is accessible from the main examples page:
+The library demo is composed from the app router and requires `ScapesRepository`
+and `TimerService`. In production code, navigate to the route rather than
+instantiating the page directly:
 
 ```dart
-import 'package:flutter_bloc_app/features/library_demo/presentation/pages/library_demo_page.dart';
+import 'package:flutter_bloc_app/core/router/app_routes.dart';
 
-// Navigate to library demo
-Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => const LibraryDemoPage(),
-  ),
-);
+context.go(AppRoutes.libraryDemoPath);
 ```
 
 ## Localization

@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
-import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/presentation/cubit/supabase_auth_cubit.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/presentation/cubit/supabase_auth_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';

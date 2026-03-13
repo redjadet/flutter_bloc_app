@@ -165,6 +165,10 @@ lib/features/library_demo/
 └── README.md
 ```
 
+Note: the EPOCH design tokens are now owned by
+`lib/shared/design_system/epoch_theme_extension.dart`. `library_demo_theme.dart`
+is kept as a compatibility re-export.
+
 ### Implementation Details
 
 #### Components Implemented

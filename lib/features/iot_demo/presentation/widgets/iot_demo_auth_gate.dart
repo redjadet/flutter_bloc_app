@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
+import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:go_router/go_router.dart';
 

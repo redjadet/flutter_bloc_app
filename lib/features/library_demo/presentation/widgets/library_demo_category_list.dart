@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_models.dart';
-import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_theme.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
 
 class LibraryCategoryList extends StatelessWidget {
   const LibraryCategoryList({required this.l10n, super.key});
