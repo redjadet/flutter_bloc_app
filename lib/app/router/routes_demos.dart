@@ -29,6 +29,7 @@ import 'package:flutter_bloc_app/features/playlearn/presentation/pages/vocabular
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
@@ -115,7 +116,10 @@ List<GoRoute> createDemoRoutes() => <GoRoute>[
         return const _FcmDemoRedirectWhenUnavailable();
       }
       return BlocProviderHelpers.withAsyncInit<FcmDemoCubit>(
-        create: () => FcmDemoCubit(messaging: getIt<FcmMessagingService>()),
+        create: () => FcmDemoCubit(
+          messaging: getIt<FcmMessagingService>(),
+          coordinator: getIt<BackgroundSyncCoordinator>(),
+        ),
         init: (final cubit) => cubit.initialize(),
         child: const FcmDemoPage(),
       );

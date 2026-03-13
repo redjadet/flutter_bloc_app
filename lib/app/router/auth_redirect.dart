@@ -13,7 +13,8 @@ import 'package:go_router/go_router.dart';
 /// **Deep Link Handling:**
 /// Deep links (any route other than `/` or `/counter` or `/auth`) are allowed
 /// to proceed even when the user is not authenticated. This enables universal links
-/// and custom scheme deep links to work seamlessly.
+/// and custom scheme deep links to work seamlessly. Routes that need stronger
+/// protection should enforce it with a route-level auth gate.
 ///
 /// **Anonymous Account Upgrading:**
 /// When an anonymous user is on the auth page, they're allowed to stay there
@@ -35,8 +36,8 @@ GoRouterRedirect createAuthRedirect(final AuthRepository auth) =>
 
       // Unauthenticated user flow
       if (!loggedIn) {
-        // Allow deep links to proceed (e.g., /profile, /chat, /graphql)
-        // This enables universal links to work without requiring login first
+        // Allow deep links to proceed (e.g., /chat, /graphql).
+        // Some deep links may still be protected by a route-level auth gate.
         if (isDeepLinkNavigation) {
           return null; // Allow navigation to proceed
         }

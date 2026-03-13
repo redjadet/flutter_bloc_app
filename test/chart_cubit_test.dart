@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/cubit/chart_cubit.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -81,8 +82,14 @@ void main() {
             (final state) => state.dataSource,
             'dataSource',
             ChartDataSource.unknown,
-          ),
+          )
+          .having((final state) => state.lastError, 'lastError', isNotNull),
     ],
+    verify: (final cubit) {
+      final AppError? err = cubit.state.lastError;
+      expect(err, isNotNull);
+      expect(err, isA<UnknownError>());
+    },
   );
 
   blocTest<ChartCubit, ChartState>(

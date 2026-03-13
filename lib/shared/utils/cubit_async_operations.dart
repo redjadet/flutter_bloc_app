@@ -1,3 +1,4 @@
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
@@ -30,6 +31,7 @@ class CubitExceptionHandler {
     final StackTrace? stackTrace,
     final String logContext, {
     required final void Function(String errorMessage) onError,
+    final void Function(AppError appError)? onAppError,
     final Map<Type, void Function(Object error, StackTrace? stackTrace)>?
     specificExceptionHandlers,
     final void Function(Object error, StackTrace? stackTrace)?
@@ -55,6 +57,14 @@ class CubitExceptionHandler {
 
     // Convert to error message
     final String errorMessage = _extractErrorMessage(error);
+
+    // Map to structured AppError for consumers that opt in.
+    if (onAppError != null) {
+      final AppError appError = error is HttpRequestFailure
+          ? error.toAppError()
+          : NetworkErrorMapper.getAppError(error);
+      onAppError(appError);
+    }
 
     // Call the error handler
     onError(errorMessage);
@@ -120,6 +130,7 @@ class CubitExceptionHandler {
     specificExceptionHandlers,
     final void Function(Object error, StackTrace? stackTrace)?
     onErrorWithDetails,
+    final void Function(AppError appError)? onAppError,
   }) async {
     try {
       final T result = await operation();
@@ -133,6 +144,7 @@ class CubitExceptionHandler {
         logContext,
         onError: onError,
         specificExceptionHandlers: specificExceptionHandlers,
+        onAppError: onAppError,
         onErrorWithDetails: onErrorWithDetails,
       );
     }
@@ -163,6 +175,7 @@ class CubitExceptionHandler {
     specificExceptionHandlers,
     final void Function(Object error, StackTrace? stackTrace)?
     onErrorWithDetails,
+    final void Function(AppError appError)? onAppError,
   }) async {
     await executeAsync(
       operation: operation,
@@ -172,6 +185,7 @@ class CubitExceptionHandler {
       isAlive: isAlive,
       specificExceptionHandlers: specificExceptionHandlers,
       onErrorWithDetails: onErrorWithDetails,
+      onAppError: onAppError,
     );
   }
 }

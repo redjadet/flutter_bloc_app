@@ -7,6 +7,7 @@ This document describes the Firebase Cloud Messaging (FCM) demo feature: setup, 
 - **Goal:** Demo flow to request permission, show FCM token, show last message payload (foreground), and handle open-from-notification (`getInitialMessage`, `onMessageOpenedApp`). Implementation follows clean architecture, Cubit lifecycle guards, and type-safe BLoC access.
 - **Non-goals:** No production notification backend; no APNs key upload in Firebase Console for this demo; no guaranteed iOS background/terminated delivery without APNs; no foreground system banner on Android unless local notifications are added.
 - **Feature module:** `lib/features/fcm_demo/` (domain/data/presentation). Background handler is registered in `main_bootstrap.dart`; route constants in `lib/core/router/app_routes.dart` (`fcmDemo`, `fcmDemoPath`). Entry: Example page → FCM Demo.
+- **Sync trigger wiring:** When the FCM demo receives a message (initial/opened/foreground), it requests an immediate background sync via `BackgroundSyncCoordinator.triggerFromFcm(hint: ...)`. Duplicate triggers are coalesced by the coordinator.
 
 ## Execution checklist (before finish)
 
@@ -84,3 +85,26 @@ Real FCM is not used on the iOS Simulator. You can still simulate a remote notif
 - **App not installed:** Run the app on the simulator once so the app is installed; simulated push targets the app by bundle ID.
 - **Where to look:** Check Notification Center (swipe down from top) and lock screen; simulated push does not always show a banner if the app is in the foreground.
 - **Command line instead of drag-and-drop:** Use `xcrun simctl push booted <BUNDLE_ID> <path/to/file.apns>` so the bundle ID is explicit and the file does not need to contain it.
+
+## Optional: Simulate a sync-trigger hint payload
+
+The coordinator trigger supports optional hint keys in the FCM `data` payload:
+
+- `sync_feature`
+- `sync_resource_type`
+- `sync_resource_id`
+
+These are parsed by `lib/shared/sync/fcm_sync_trigger_contract.dart` and passed as a compact JSON string into `triggerFromFcm(hint: ...)` for telemetry and future routing. Today, the coordinator still performs a generic “sync now”.
+
+To test this on iOS Simulator, add these keys under the `.apns` file `aps` sibling `data` section (the demo `.apns` files already include a `data` object you can extend). For example:
+
+```json
+{
+  "aps": { "...": "..." },
+  "data": {
+    "sync_feature": "iot_demo",
+    "sync_resource_type": "device",
+    "sync_resource_id": "abc123"
+  }
+}
+```

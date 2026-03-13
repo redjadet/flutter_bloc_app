@@ -79,6 +79,9 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
     emit(SyncStatus.idle);
   }
 
+  @override
+  Future<void> triggerFromFcm({final String? hint}) async {}
+
   void emit(final SyncStatus newStatus) {
     status = newStatus;
     _controller.add(newStatus);

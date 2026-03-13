@@ -174,6 +174,9 @@ class _TestBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 
   @override
   Future<void> stop() async {}
+
+  @override
+  Future<void> triggerFromFcm({final String? hint}) async {}
 }
 
 class _TestNetworkStatusService implements NetworkStatusService {

@@ -68,6 +68,9 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
     flushCount += 1;
   }
 
+  @override
+  Future<void> triggerFromFcm({final String? hint}) async {}
+
   void emit(final SyncStatus next) {
     status = next;
     _controller.add(next);

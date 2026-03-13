@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart' show AppError;
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
@@ -74,6 +75,9 @@ class ErrorHandling {
   /// Handle common Cubit errors with user-friendly messages.
   ///
   /// Uses BuildContext l10n for localized error message and retry button label.
+  /// When [error] is an [AppError], it is passed through
+  /// [NetworkErrorMapper.getErrorMessage]; when it is a string/exception,
+  /// existing string-based mapping is preserved.
   static void handleCubitError(
     final BuildContext context,
     final dynamic error, {

@@ -166,7 +166,11 @@ The following enhancements are documented but not required for core functionalit
    - Conversation-level sync metadata
    - Automatic cache eviction policies
    - Differential sync for large datasets
-   - Push notification-triggered sync
+   - Push notification-triggered sync (FCM)
+     - Implemented coordinator trigger API: `BackgroundSyncCoordinator.triggerFromFcm()`
+     - Duplicate triggers are coalesced into a single run
+     - Payload contract keys supported for hints: `sync_feature`, `sync_resource_type`, `sync_resource_id`
+     - FCM demo now calls `triggerFromFcm(hint: ...)` on received messages (foreground/opened/initial)
 
 3. **Observability** (Low Priority)
    - Analytics integration for sync metrics

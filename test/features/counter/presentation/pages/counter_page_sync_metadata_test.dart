@@ -98,6 +98,9 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 
   @override
   Future<void> flush() async {}
+
+  @override
+  Future<void> triggerFromFcm({final String? hint}) async {}
 }
 
 class _FakeBiometricAuthenticator implements BiometricAuthenticator {

@@ -5,6 +5,8 @@ import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.
 import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_permission_state.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_state.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/fcm_sync_trigger_contract.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -12,12 +14,24 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 /// Cubit for the FCM demo: permission, token, and last message.
 class FcmDemoCubit extends Cubit<FcmDemoState>
     with CubitSubscriptionMixin<FcmDemoState> {
-  FcmDemoCubit({required final FcmMessagingService messaging})
-    : _messaging = messaging,
-      super(const FcmDemoState());
+  FcmDemoCubit({
+    required final FcmMessagingService messaging,
+    required final BackgroundSyncCoordinator coordinator,
+  }) : _messaging = messaging,
+       _coordinator = coordinator,
+       super(const FcmDemoState());
 
   final FcmMessagingService _messaging;
+  final BackgroundSyncCoordinator _coordinator;
   bool _streamsSubscribed = false;
+
+  Future<void> _triggerSyncFromMessage(final PushMessage msg) async {
+    final FcmSyncTriggerPayload payload = FcmSyncTriggerPayload.fromData(
+      msg.data,
+    );
+    final String hint = payload.isEmpty ? '' : payload.toHintString();
+    await _coordinator.triggerFromFcm(hint: hint.isEmpty ? null : hint);
+  }
 
   /// Initialize FCM demo: request permission, load token and initial message,
   /// subscribe to foreground/opened/token streams.
@@ -84,6 +98,9 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
             lastMessage: data.initialMessage ?? state.lastMessage,
           ),
         );
+        if (initialMsg != null) {
+          unawaited(_triggerSyncFromMessage(initialMsg));
+        }
         _subscribeToStreams();
       },
       onError: (final message) {
@@ -113,6 +130,7 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
               'FCM demo: foreground message received id=${msg.messageId}',
             );
             emit(state.copyWith(lastMessage: msg));
+            unawaited(_triggerSyncFromMessage(msg));
           },
           onError: (final Object error, final StackTrace stackTrace) {
             AppLogger.error('FCM foreground stream error', error, stackTrace);
@@ -135,6 +153,7 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
               'FCM demo: opened-from-notification id=${msg.messageId}',
             );
             emit(state.copyWith(lastMessage: msg));
+            unawaited(_triggerSyncFromMessage(msg));
           },
           onError: (final Object error, final StackTrace stackTrace) {
             AppLogger.error('FCM opened stream error', error, stackTrace);

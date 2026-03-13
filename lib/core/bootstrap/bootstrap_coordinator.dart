@@ -121,8 +121,8 @@ class BootstrapCoordinator {
       );
     }
 
-    final allowAssets =
-        enableAssetSecrets && (FlavorManager.I.isDev || kDebugMode);
+    final bool allowAssets =
+        enableAssetSecrets && FlavorManager.I.isDev && kDebugMode;
     await loadSecrets(allowAssetFallback: allowAssets);
   }
 

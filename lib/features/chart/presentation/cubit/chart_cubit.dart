@@ -3,7 +3,9 @@ import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'chart_cubit.freezed.dart';
@@ -75,6 +77,8 @@ class ChartCubit extends Cubit<ChartState> {
       ),
     );
 
+    AppError? latestError;
+
     await CubitExceptionHandler.executeAsync(
       operation: resetExistingData
           ? _repository.fetchTrendingCounts
@@ -90,6 +94,10 @@ class ChartCubit extends Cubit<ChartState> {
           ),
         );
       },
+      onAppError: (final appError) {
+        if (isClosed || requestId != _fetchRequestId) return;
+        latestError = appError;
+      },
       onError: (final errorMessage) {
         if (isClosed || requestId != _fetchRequestId) return;
         emit(
@@ -98,6 +106,8 @@ class ChartCubit extends Cubit<ChartState> {
             errorMessage: errorMessage,
             points: state.points,
             dataSource: ChartDataSource.unknown,
+            lastError:
+                latestError ?? NetworkErrorMapper.getAppError(errorMessage),
           ),
         );
       },

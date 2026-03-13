@@ -23,6 +23,7 @@ class SignInPage extends StatelessWidget {
   const SignInPage({
     super.key,
     final FirebaseAuth? auth,
+    this.redirectAfterLogin,
     this.providersOverride,
     final firebase_ui_google.GoogleProvider? Function()? googleProviderFactory,
   }) : _auth = auth,
@@ -30,6 +31,7 @@ class SignInPage extends StatelessWidget {
            googleProviderFactory ?? maybeCreateGoogleProvider;
 
   final FirebaseAuth? _auth;
+  final String? redirectAfterLogin;
   @visibleForTesting
   final List<firebase_ui.AuthProvider>? providersOverride;
   final firebase_ui_google.GoogleProvider? Function() _googleProviderFactory;
@@ -83,13 +85,22 @@ class SignInPage extends StatelessWidget {
       }
     }
 
+    String postAuthPath() {
+      final String? redirectPath = redirectAfterLogin;
+      if (redirectPath case final String nonNullPath
+          when AppRoutes.isSafeRedirectPath(nonNullPath)) {
+        return nonNullPath;
+      }
+      return AppRoutes.counterPath;
+    }
+
     Future<void> signInAnonymously() async {
       if (auth == null) {
         if (!context.mounted) {
           ContextUtils.logNotMounted('SignInPage.signInAnonymously.noFirebase');
           return;
         }
-        context.go(AppRoutes.counterPath);
+        context.go(postAuthPath());
         return;
       }
 
@@ -99,7 +110,7 @@ class SignInPage extends StatelessWidget {
           ContextUtils.logNotMounted('SignInPage.signInAnonymously');
           return;
         }
-        context.go(AppRoutes.counterPath);
+        context.go(postAuthPath());
       } on FirebaseAuthException catch (error) {
         showAuthError(error);
       } on Exception {
@@ -175,19 +186,19 @@ class SignInPage extends StatelessWidget {
           final context,
           final state,
         ) {
-          context.go(AppRoutes.counterPath);
+          context.go(postAuthPath());
         }),
         firebase_ui.AuthStateChangeAction<firebase_ui.UserCreated>((
           final context,
           final state,
         ) {
-          context.go(AppRoutes.counterPath);
+          context.go(postAuthPath());
         }),
         firebase_ui.AuthStateChangeAction<firebase_ui.CredentialLinked>((
           final context,
           final state,
         ) {
-          context.go(AppRoutes.counterPath);
+          context.go(postAuthPath());
         }),
         firebase_ui.AuthStateChangeAction<firebase_ui.AuthFailed>((
           final context,

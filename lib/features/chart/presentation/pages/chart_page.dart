@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_conte
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_data_source_badge.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_loading_list.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 
@@ -58,6 +59,7 @@ abstract class _ChartViewData with _$ChartViewData {
     required final bool showEmpty,
     required final List<ChartPoint> points,
     required final bool zoomEnabled,
+    required final AppError? lastError,
   }) = __ChartViewData;
 }
 
@@ -97,13 +99,17 @@ class _ChartView extends StatelessWidget {
                   showEmpty: state.points.isEmpty,
                   points: state.points,
                   zoomEnabled: state.zoomEnabled,
+                  lastError: state.lastError,
                 ),
                 isLoading: (final data) => data.showLoading,
                 isError: (final data) => data.showError,
                 loadingBuilder: (final _) => const ChartLoadingList(),
-                errorBuilder: (final context, final _) => CommonEmptyState(
+                errorBuilder: (final context, final data) => CommonEmptyState(
                   message: l10n.chartPageError,
                   icon: Icons.error_outline,
+                  primaryAction: data.lastError?.isRetryable == true
+                      ? () => context.cubit<ChartCubit>().refresh()
+                      : null,
                 ),
                 builder: (final context, final data) {
                   if (data.showEmpty) {

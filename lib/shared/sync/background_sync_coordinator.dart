@@ -11,6 +11,23 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 export 'sync_cycle_summary.dart';
 
+enum BackgroundSyncTriggerSource {
+  /// Explicit push notification request (FCM).
+  fcm,
+}
+
+class BackgroundSyncTrigger {
+  const BackgroundSyncTrigger({
+    required this.source,
+    this.hint,
+  });
+
+  final BackgroundSyncTriggerSource source;
+
+  /// Optional hint for future feature/resource targeting.
+  final String? hint;
+}
+
 class BackgroundSyncCoordinator {
   BackgroundSyncCoordinator({
     required final PendingSyncRepository repository,
@@ -160,6 +177,19 @@ class BackgroundSyncCoordinator {
   }
 
   Future<void> flush() => _triggerSync(immediate: true);
+
+  /// Trigger a sync run explicitly from an FCM event.
+  ///
+  /// This is intentionally generic for the first slice: it requests "sync now"
+  /// without assuming feature-level payload hints. Callers may provide an
+  /// optional [hint] (e.g. feature name or resource key) for telemetry and
+  /// future routing.
+  Future<void> triggerFromFcm({final String? hint}) {
+    _telemetry('sync_trigger_fcm', <String, Object?>{
+      'hint': hint,
+    });
+    return _triggerSync(immediate: true);
+  }
 
   Future<void> _triggerSync({required final bool immediate}) {
     final Future<void>? inFlight = _currentSync;

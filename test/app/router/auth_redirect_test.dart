@@ -45,7 +45,7 @@ void main() {
 
     test('allows deep link navigation for unauthenticated users', () {
       when(() => mockAuth.currentUser).thenReturn(null);
-      when(() => mockState.matchedLocation).thenReturn('/profile');
+      when(() => mockState.matchedLocation).thenReturn('/chat');
 
       final redirect = createAuthRedirect(mockAuth);
       final result = redirect(testContext, mockState);

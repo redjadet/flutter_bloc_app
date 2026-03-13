@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/shared/utils/error_codes.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
 import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -119,6 +120,19 @@ void main() {
         );
       },
     );
+
+    test('getAppError returns AppError inputs unchanged', () {
+      const AppError error = NetworkError(
+        message: 'Request timed out. Please try again.',
+        kind: NetworkErrorKind.timeout,
+      );
+
+      expect(identical(NetworkErrorMapper.getAppError(error), error), isTrue);
+      expect(
+        NetworkErrorMapper.getErrorMessage(error),
+        'Request timed out. Please try again.',
+      );
+    });
 
     test('getErrorCodeForStatusCode returns correct AppErrorCode', () {
       expect(

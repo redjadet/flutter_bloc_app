@@ -6,6 +6,8 @@ import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_permission_state.d
 import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_state.dart';
+import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _FakeFcmMessagingService implements FcmMessagingService {
@@ -68,6 +70,48 @@ class _FakeFcmMessagingService implements FcmMessagingService {
   }
 }
 
+class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
+  int triggerFromFcmCallCount = 0;
+  String? lastHint;
+
+  @override
+  Stream<SyncStatus> get statusStream => const Stream<SyncStatus>.empty();
+
+  @override
+  SyncStatus get currentStatus => SyncStatus.idle;
+
+  @override
+  List<SyncCycleSummary> get history => const <SyncCycleSummary>[];
+
+  @override
+  Stream<SyncCycleSummary> get summaryStream =>
+      const Stream<SyncCycleSummary>.empty();
+
+  @override
+  SyncCycleSummary? get latestSummary => null;
+
+  @override
+  Future<void> start() async {}
+
+  @override
+  Future<void> ensureStarted() async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> dispose() async {}
+
+  @override
+  Future<void> flush() async {}
+
+  @override
+  Future<void> triggerFromFcm({final String? hint}) async {
+    triggerFromFcmCallCount += 1;
+    lastHint = hint;
+  }
+}
+
 PushMessage _message({
   required final String id,
   final PushMessageSource source = PushMessageSource.foreground,
@@ -83,9 +127,11 @@ PushMessage _message({
 void main() {
   group('FcmDemoCubit', () {
     late _FakeFcmMessagingService service;
+    late _FakeBackgroundSyncCoordinator coordinator;
 
     setUp(() {
       service = _FakeFcmMessagingService();
+      coordinator = _FakeBackgroundSyncCoordinator();
     });
 
     tearDown(() async {
@@ -103,7 +149,7 @@ void main() {
             source: PushMessageSource.initial,
           ),
         );
-        return FcmDemoCubit(messaging: service);
+        return FcmDemoCubit(messaging: service, coordinator: coordinator);
       },
       act: (final cubit) async {
         await cubit.initialize();
@@ -137,7 +183,7 @@ void main() {
       'initialize emits error and does not load token when permission fails',
       build: () {
         service = _FakeFcmMessagingService(throwPermissionError: true);
-        return FcmDemoCubit(messaging: service);
+        return FcmDemoCubit(messaging: service, coordinator: coordinator);
       },
       act: (final cubit) async {
         await cubit.initialize();
@@ -163,7 +209,7 @@ void main() {
       'token refresh stream updates token after initialize',
       build: () {
         service = _FakeFcmMessagingService(token: 'initial-token');
-        return FcmDemoCubit(messaging: service);
+        return FcmDemoCubit(messaging: service, coordinator: coordinator);
       },
       act: (final cubit) async {
         await cubit.initialize();
@@ -196,7 +242,10 @@ void main() {
 
     test('ignores stream events after close', () async {
       service = _FakeFcmMessagingService();
-      final FcmDemoCubit cubit = FcmDemoCubit(messaging: service);
+      final FcmDemoCubit cubit = FcmDemoCubit(
+        messaging: service,
+        coordinator: coordinator,
+      );
 
       await cubit.initialize();
       await cubit.close();
