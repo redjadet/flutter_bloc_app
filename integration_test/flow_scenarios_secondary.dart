@@ -154,23 +154,24 @@ void registerTodoListIntegrationFlow() {
       await launchTestApp(tester);
 
       await _openExampleDestination(tester, 'Todo List Demo');
-      await pumpUntilFound(tester, find.byTooltip('Add todo'));
+      final Finder addTodoButton = _findAdaptiveButtonByText('Add todo');
+      await pumpUntilFound(tester, addTodoButton);
 
       expect(find.text('Todo List'), findsWidgets);
 
-      final Finder addTodoButton = find.byTooltip('Add todo');
       await tapAndPump(tester, addTodoButton);
-      await pumpUntilFound(tester, find.text('Save'));
+      final Finder saveButton = _findDialogButtonByText('Save');
+      await pumpUntilFound(tester, saveButton);
 
-      final Finder titleField = find
-          .byWidgetPredicate(
-            (final w) => w is TextField || w is CupertinoTextField,
-          )
-          .first;
+      final Finder titleField = _findDialogTextField();
       await tester.ensureVisible(titleField);
       await tester.enterText(titleField, 'Integration test todo');
       await tester.pump(const Duration(milliseconds: 100));
-      await tapAndPump(tester, find.text('Save'));
+      await tapAndPump(tester, _findDialogCheckbox());
+      await tapAndPump(tester, _findDialogCheckbox());
+      await tapAndPump(tester, saveButton);
+      await tester.pumpAndSettle();
+      expect(_findDialog(), findsNothing);
       await pumpUntilFound(tester, find.text('Integration test todo'));
 
       expect(find.text('Integration test todo'), findsWidgets);
@@ -217,51 +218,84 @@ void registerTodoListFilterIntegrationFlow() {
 
       await _openExampleDestination(tester, 'Todo List Demo');
       await pumpUntilFound(tester, find.text('Todo List'));
+      final Finder addTodoButton = _findAdaptiveButtonByText('Add todo');
 
       // Add first todo
-      await tapAndPump(tester, find.byTooltip('Add todo'));
-      await pumpUntilFound(tester, find.text('Save'));
-      final Finder titleField = find
-          .byWidgetPredicate(
-            (final w) => w is TextField || w is CupertinoTextField,
-          )
-          .first;
+      await tapAndPump(tester, addTodoButton);
+      final Finder saveButton = _findDialogButtonByText('Save');
+      await pumpUntilFound(tester, saveButton);
+      final Finder titleField = _findDialogTextField();
       await tester.enterText(titleField, 'Active todo');
       await tester.pump(const Duration(milliseconds: 100));
-      await tapAndPump(tester, find.text('Save'));
+      await tapAndPump(tester, _findDialogCheckbox());
+      await tapAndPump(tester, _findDialogCheckbox());
+      await tapAndPump(tester, saveButton);
+      await tester.pumpAndSettle();
+      expect(_findDialog(), findsNothing);
       await pumpUntilFound(tester, find.text('Active todo'));
 
       // Add second todo
-      await tapAndPump(tester, find.byTooltip('Add todo'));
-      await pumpUntilFound(tester, find.text('Save'));
-      final Finder secondTitleField = find
-          .byWidgetPredicate(
-            (final w) => w is TextField || w is CupertinoTextField,
-          )
-          .first;
+      await pumpUntilFound(tester, addTodoButton);
+      await tapAndPump(tester, addTodoButton);
+      final Finder secondSaveButton = _findDialogButtonByText('Save');
+      await pumpUntilFound(tester, secondSaveButton);
+      final Finder secondTitleField = _findDialogTextField();
       await tester.enterText(secondTitleField, 'Completed todo');
       await tester.pump(const Duration(milliseconds: 100));
-      await tapAndPump(tester, find.text('Save'));
+      await tapAndPump(tester, _findDialogCheckbox());
+      await tapAndPump(tester, _findDialogCheckbox());
+      await tapAndPump(tester, secondSaveButton);
+      await tester.pumpAndSettle();
+      expect(_findDialog(), findsNothing);
       await pumpUntilFound(tester, find.text('Completed todo'));
 
-      // Complete one todo by tapping its list tile text
-      await tapAndPump(tester, find.text('Completed todo'));
+      final Finder completedTodoCard = find.ancestor(
+        of: find.text('Completed todo'),
+        matching: find.byType(CommonCard),
+      );
+      final Finder completedTodoCheckbox =
+          tester.any(
+            find.descendant(
+              of: completedTodoCard,
+              matching: find.byType(CupertinoCheckbox),
+            ),
+          )
+          ? find
+                .descendant(
+                  of: completedTodoCard,
+                  matching: find.byType(CupertinoCheckbox),
+                )
+                .first
+          : find
+                .descendant(
+                  of: completedTodoCard,
+                  matching: find.byType(Checkbox),
+                )
+                .first;
+      await tapAndPump(tester, completedTodoCheckbox);
+      final Finder completeSelectedButton = _findAdaptiveButtonByText(
+        'Complete selected',
+      );
+      await pumpUntilFound(tester, completeSelectedButton);
+      await tapAndPump(tester, completeSelectedButton);
+      await tester.pumpAndSettle();
 
       // Filter: show only active
-      await pumpUntilFound(tester, find.text('Active'));
-      await tapAndPump(tester, find.text('Active'));
+      final Finder activeFilterButton = _findAdaptiveButtonByText('Active');
+      await pumpUntilFound(tester, activeFilterButton);
+      await tapAndPump(tester, activeFilterButton);
       await tester.pumpAndSettle();
-      if (tester.any(find.text('Active todo'))) {
-        expect(find.text('Active todo'), findsWidgets);
-        expect(find.text('Completed todo'), findsNothing);
-      }
+      expect(find.text('Active todo'), findsWidgets);
+      expect(find.text('Completed todo'), findsNothing);
 
       // Filter: show only completed
-      await tapAndPump(tester, find.text('Completed'));
+      final Finder completedFilterButton = _findAdaptiveButtonByText(
+        'Completed',
+      );
+      await tapAndPump(tester, completedFilterButton);
       await tester.pumpAndSettle();
-      if (tester.any(find.text('Completed todo'))) {
-        expect(find.text('Completed todo'), findsWidgets);
-      }
+      expect(find.text('Completed todo'), findsWidgets);
+      expect(find.text('Active todo'), findsNothing);
     },
   );
 }
