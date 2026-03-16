@@ -60,6 +60,26 @@ void registerChartsIntegrationFlow() {
   );
 }
 
+void registerChartsRefreshIntegrationFlow() {
+  registerIntegrationFlow(
+    groupName: 'Charts flow',
+    testName: 'refreshes chart data via pull-to-refresh',
+    body: (final tester) async {
+      await launchTestApp(tester);
+
+      await _openOverflowDestination(tester, 'Open charts');
+      await pumpUntilFound(tester, find.text('Bitcoin Price (USD)'));
+
+      final Finder list = find.byType(ListView);
+      await tester.fling(list, const Offset(0, 300), 1000);
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Bitcoin Price (USD)'), findsWidgets);
+    },
+  );
+}
+
 void registerChatListIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Chat list flow',
