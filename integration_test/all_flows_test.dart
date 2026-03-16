@@ -6,6 +6,7 @@ void main() {
   registerAppLaunchIntegrationFlow();
   registerCalculatorIntegrationFlow();
   registerChartsIntegrationFlow();
+  registerChartsRefreshIntegrationFlow();
   registerChatListIntegrationFlow();
   registerCounterPersistenceIntegrationFlow();
   registerGenUiDemoIntegrationFlow();
@@ -15,9 +16,13 @@ void main() {
   registerMarkdownEditorIntegrationFlow();
   registerNavigationIntegrationFlow();
   registerPlaylearnIntegrationFlow();
+  registerPlaylearnEmptyTopicsIntegrationFlow();
   registerSearchIntegrationFlow();
+  registerSearchEmptyResultsIntegrationFlow();
   registerSettingsIntegrationFlow();
+  registerSettingsThemePersistenceIntegrationFlow();
   registerTodoListIntegrationFlow();
+  registerTodoListFilterIntegrationFlow();
   registerWebsocketIntegrationFlow();
   registerWhiteboardIntegrationFlow();
 }
