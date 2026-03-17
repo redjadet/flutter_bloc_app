@@ -31,7 +31,7 @@
 - Widget tests: _TBD_
 - Integration tests:
   - `integration_test/settings_flow_test.dart` (opens settings, changes theme + locale)
-  - `registerSettingsIntegrationFlow` and `registerSettingsThemePersistenceIntegrationFlow` in `integration_test/flow_scenarios_secondary.dart`
+  - `registerSettingsIntegrationFlow` in `integration_test/flow_scenarios_secondary.dart`, `registerSettingsThemePersistenceIntegrationFlow` in `integration_test/flow_scenarios_tertiary.dart`
 - Standard scripts: `./bin/checklist` (if present), `dart analyze`, `flutter test`
 
 ---
@@ -61,5 +61,5 @@
 - Widget tests: _TBD_ (main list page/state rendering)
 - Integration tests:
   - `integration_test/todo_list_flow_test.dart` (opens todo list, adds todo and verifies it appears)
-  - `registerTodoListIntegrationFlow` and `registerTodoListFilterIntegrationFlow` in `integration_test/flow_scenarios_secondary.dart`
+  - `registerTodoListIntegrationFlow` in `integration_test/flow_scenarios_secondary.dart`, `registerTodoListFilterIntegrationFlow` in `integration_test/flow_scenarios_tertiary.dart`
 - Standard scripts: `./bin/checklist` (if present), `dart analyze`, `flutter test`

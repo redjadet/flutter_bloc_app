@@ -8,4 +8,5 @@ import 'test_harness.dart';
 
 part 'flow_scenarios_primary.dart';
 part 'flow_scenarios_secondary.dart';
+part 'flow_scenarios_tertiary.dart';
 part 'flow_scenarios_helpers.dart';
