@@ -13,6 +13,8 @@ import 'package:flutter_bloc_app/shared/utils/stream_controller_lifecycle.dart';
 
 export 'sync_cycle_summary.dart';
 
+part 'background_sync_coordinator_loop.dart';
+
 enum BackgroundSyncTriggerSource {
   /// Explicit push notification request (FCM).
   fcm,
@@ -202,119 +204,8 @@ class BackgroundSyncCoordinator {
     return _triggerSync(immediate: true);
   }
 
-  Future<void> _triggerSync({required final bool immediate}) {
-    final Future<void>? inFlight = _currentSync;
-    if (inFlight != null) {
-      if (immediate) {
-        _syncRequestedAfterCurrent = true;
-      }
-      return inFlight;
-    }
-
-    if (!immediate && !_isRunning) {
-      return Future<void>.value();
-    }
-
-    final Completer<void> completer = Completer<void>();
-    final Future<void> future = completer.future;
-    _currentSync = future;
-
-    unawaited(
-      Future<void>(() async {
-        try {
-          await _runCoalescedSync(immediate: immediate);
-        } on Object catch (error, stackTrace) {
-          AppLogger.error(
-            'BackgroundSyncCoordinator._triggerSync unexpected failure',
-            error,
-            stackTrace,
-          );
-          _emit(SyncStatus.degraded);
-        } finally {
-          if (!completer.isCompleted) {
-            completer.complete();
-          }
-          if (identical(_currentSync, future)) {
-            _currentSync = null;
-          }
-        }
-      }),
-    );
-
-    return future;
-  }
-
-  Future<void> _runCoalescedSync({required final bool immediate}) async {
-    // Coalesce multiple immediate triggers that happen while a sync is running
-    // into a single follow-up sync. If another immediate trigger arrives during
-    // this sync, the loop will run one more time.
-    while (true) {
-      if (!immediate && !_isRunning) {
-        return;
-      }
-
-      final bool startedTemporarily = !_isRunning && immediate;
-      _syncRequestedAfterCurrent = false;
-
-      NetworkStatus networkStatus;
-      try {
-        networkStatus = await _networkStatusService.getCurrentStatus();
-      } on Object catch (error, stackTrace) {
-        AppLogger.error(
-          'BackgroundSyncCoordinator._triggerSync network status failed',
-          error,
-          stackTrace,
-        );
-        _emit(SyncStatus.degraded);
-        if (startedTemporarily) {
-          _isRunning = false;
-        }
-        return;
-      }
-      if (!_syncSchedulePolicy.shouldRunCycle(
-        networkStatus,
-        immediate: immediate,
-        isRunning: _isRunning,
-      )) {
-        AppLogger.debug(
-          'BackgroundSyncCoordinator._triggerSync skipped: network offline',
-        );
-        if (startedTemporarily) {
-          _isRunning = false;
-        }
-        return;
-      }
-
-      if (startedTemporarily) {
-        _isRunning = true;
-      }
-      try {
-        await _processPendingOperations();
-        if (!immediate) {
-          _emit(SyncStatus.idle);
-        } else if (startedTemporarily) {
-          _emit(SyncStatus.idle);
-        }
-      } on Object catch (error, stackTrace) {
-        AppLogger.error(
-          'BackgroundSyncCoordinator._triggerSync failed',
-          error,
-          stackTrace,
-        );
-        _emit(SyncStatus.degraded);
-      } finally {
-        if (startedTemporarily) {
-          _isRunning = false;
-        }
-      }
-
-      if (!immediate ||
-          !_syncRequestedAfterCurrent ||
-          (!_isRunning && !startedTemporarily)) {
-        return;
-      }
-    }
-  }
+  Future<void> _triggerSync({required final bool immediate}) =>
+      _triggerSyncImpl(this, immediate: immediate);
 
   Future<void> _processPendingOperations() async {
     final SyncCycleSummary summary = await _syncJobRunner.run(
