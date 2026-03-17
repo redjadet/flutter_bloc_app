@@ -95,6 +95,9 @@ class AppRoutes {
   static const fcmDemo = 'fcm-demo';
   static const fcmDemoPath = '/fcm-demo';
 
+  static const firebaseFunctionsTest = 'firebase-functions-test';
+  static const firebaseFunctionsTestPath = '/firebase-functions-test';
+
   static const iotDemo = 'iot-demo';
   static const iotDemoPath = '/iot-demo';
 

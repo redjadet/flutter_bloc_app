@@ -32,6 +32,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.parallelValues,
     required this.parallelDuration,
     this.onOpenFcmDemo,
+    this.onOpenFirebaseFunctionsTest,
     super.key,
   });
 
@@ -50,6 +51,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onOpenLibraryDemo;
   final VoidCallback onOpenIgamingDemo;
   final VoidCallback? onOpenFcmDemo;
+  final VoidCallback? onOpenFirebaseFunctionsTest;
   final VoidCallback onOpenScapes;
   final VoidCallback onOpenWalletconnectAuth;
   final VoidCallback onOpenCameraGallery;
@@ -196,6 +198,15 @@ class ExamplePageBody extends StatelessWidget {
               label: l10n.exampleFcmDemoButton,
             ),
           if (onOpenFcmDemo != null) SizedBox(height: context.responsiveGapS),
+          if (onOpenFirebaseFunctionsTest != null)
+            _buildIconButton(
+              context: context,
+              onPressed: onOpenFirebaseFunctionsTest,
+              icon: Icons.cloud_outlined,
+              label: l10n.exampleFirebaseFunctionsButton,
+            ),
+          if (onOpenFirebaseFunctionsTest != null)
+            SizedBox(height: context.responsiveGapS),
           _buildIconButton(
             context: context,
             onPressed: onOpenScapes,

@@ -14,6 +14,7 @@ This section provides a step-by-step guide to deploy this Flutter app to the App
 | **Xcode** | Latest stable version (macOS only) |
 | **Flutter** | Flutter 3.41.4+ with iOS support |
 | **Firebase** | `GoogleService-Info.plist` in `ios/Runner/` (generate via `flutterfire configure`) |
+| **Firebase Functions (optional)** | If you use Firebase-backed demos (e.g. chart fallback), deploy Functions from `functions/` and ensure callable Gen2 IAM is configured (see `docs/firebase_setup.md`). |
 | **Signing identity** | Distribution certificate and App Store provisioning profile |
 
 ### Step 1: App Store Connect Setup

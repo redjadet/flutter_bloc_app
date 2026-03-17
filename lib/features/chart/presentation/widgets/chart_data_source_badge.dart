@@ -25,6 +25,9 @@ class ChartDataSourceBadge extends StatelessWidget {
       ChartDataSource.cache => l10n.chartDataSourceCache,
       ChartDataSource.supabaseEdge => l10n.chartDataSourceSupabaseEdge,
       ChartDataSource.supabaseTables => l10n.chartDataSourceSupabaseTables,
+      ChartDataSource.firebaseCloud => l10n.chartDataSourceFirebaseCloud,
+      ChartDataSource.firebaseFirestore =>
+        l10n.chartDataSourceFirebaseFirestore,
       ChartDataSource.remote => l10n.chartDataSourceRemote,
       ChartDataSource.unknown => '',
     };

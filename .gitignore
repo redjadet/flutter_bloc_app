@@ -19,6 +19,9 @@ GEMINI.md
 .cursor/
 .cursorignore
 
+# Node lockfile at repo root (functions/ has its own)
+/package-lock.json
+
 # IntelliJ related
 *.iml
 *.ipr

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/core/supabase/edge_then_tables.dart';
+import 'package:flutter_bloc_app/features/chart/data/chart_points_parser.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_exception.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
@@ -80,7 +81,7 @@ class SupabaseChartRepository implements ChartRemoteRepository {
       if (raw == null) {
         return const <ChartPoint>[];
       }
-      return _parsePointsResilient(raw);
+      return parseChartPointsResilient(raw);
     } on Object catch (error, stackTrace) {
       AppLogger.warning(
         'SupabaseChartRepository edge failed (${error.runtimeType})',
@@ -99,42 +100,12 @@ class SupabaseChartRepository implements ChartRemoteRepository {
     return _mapPoints(raw);
   }
 
-  List<ChartPoint> _parsePointsResilient(final List<dynamic> raw) {
-    final List<ChartPoint> out = <ChartPoint>[];
-    for (final dynamic item in raw) {
-      final Map<String, dynamic>? map = mapFromDynamic(item);
-      if (map == null) continue;
-      final String? dateUtc = map['date_utc'] as String?;
-      final Object? valueObj = map['value'];
-      if (dateUtc == null || dateUtc.isEmpty) continue;
-      final DateTime? date = DateTime.tryParse(dateUtc);
-      if (date == null) continue;
-      final double? value = valueObj is num
-          ? valueObj.toDouble()
-          : double.tryParse(valueObj?.toString() ?? '');
-      if (value == null) continue;
-      try {
-        out.add(ChartPoint(date: date.toUtc(), value: value));
-      } on Object catch (error, stackTrace) {
-        AppLogger.warning(
-          'SupabaseChartRepository skip invalid point row',
-        );
-        AppLogger.error(
-          'SupabaseChartRepository._parsePointsResilient',
-          error,
-          stackTrace,
-        );
-      }
-    }
-    return List<ChartPoint>.unmodifiable(out);
-  }
-
   List<ChartPoint> _mapPoints(final Object? raw) {
     final List<dynamic>? list = listFromDynamic(raw);
     if (list == null || list.isEmpty) {
       return const <ChartPoint>[];
     }
-    return _parsePointsResilient(list);
+    return parseChartPointsResilient(list);
   }
 
   static String? _defaultReadAccessToken() =>

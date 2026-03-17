@@ -152,6 +152,10 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenFcmDemo: FirebaseBootstrapService.isFirebaseInitialized
             ? () => context.pushNamed(AppRoutes.fcmDemo)
             : null,
+        onOpenFirebaseFunctionsTest:
+            FirebaseBootstrapService.isFirebaseInitialized
+            ? () => context.pushNamed(AppRoutes.firebaseFunctionsTest)
+            : null,
         onOpenScapes: () => context.pushNamed(AppRoutes.scapes),
         onOpenWalletconnectAuth: () =>
             context.pushNamed(AppRoutes.walletconnectAuth),
