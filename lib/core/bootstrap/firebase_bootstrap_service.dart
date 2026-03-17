@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -59,6 +61,8 @@ class FirebaseBootstrapService {
       await Firebase.initializeApp(options: options);
       AppLogger.info('Firebase initialized for project: ${options.projectId}');
 
+      await _activateAppCheck();
+
       // Enable persistence immediately after initialization, before any database usage
       _enableDatabasePersistence();
 
@@ -117,6 +121,79 @@ class FirebaseBootstrapService {
         'Failed to enable Firebase Database persistence: $error',
       );
       AppLogger.debug('Persistence setup stack trace\n$stackTrace');
+    }
+  }
+
+  static Future<void> _activateAppCheck() async {
+    if (kIsWeb) return;
+
+    try {
+      const debugTokenEnv = String.fromEnvironment(
+        'FIREBASE_APPCHECK_DEBUG_TOKEN',
+      );
+      // On Apple simulators, attestation providers are unsupported; ensure debug
+      // provider always has a token so it doesn't fall back to DeviceCheck/AppAttest.
+      final debugToken = debugTokenEnv.isEmpty
+          ? 'flutter_bloc_app_debug'
+          : debugTokenEnv;
+
+      switch (defaultTargetPlatform) {
+        case TargetPlatform.android:
+          await FirebaseAppCheck.instance.activate(
+            providerAndroid: kDebugMode
+                ? AndroidDebugProvider(
+                    debugToken: debugToken,
+                  )
+                : const AndroidPlayIntegrityProvider(),
+          );
+          break;
+        case TargetPlatform.iOS:
+          if (kDebugMode) {
+            final info = await DeviceInfoPlugin().iosInfo;
+            if (!info.isPhysicalDevice) {
+              AppLogger.info(
+                'iOS simulator detected; using Firebase App Check debug provider.',
+              );
+            }
+          }
+          await FirebaseAppCheck.instance.activate(
+            providerApple: kDebugMode
+                ? AppleDebugProvider(
+                    debugToken: debugToken,
+                  )
+                : const AppleAppAttestWithDeviceCheckFallbackProvider(),
+          );
+          break;
+        case TargetPlatform.macOS:
+          await FirebaseAppCheck.instance.activate(
+            providerApple: kDebugMode
+                ? AppleDebugProvider(
+                    debugToken: debugToken,
+                  )
+                : const AppleAppAttestWithDeviceCheckFallbackProvider(),
+          );
+          break;
+        default:
+          return;
+      }
+
+      AppLogger.info(
+        'Firebase App Check activated (${kDebugMode ? 'debug' : 'release'} mode)',
+      );
+      await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true);
+      if (kDebugMode) {
+        AppLogger.info('Firebase App Check debug token: $debugToken');
+        if (debugTokenEnv.isEmpty) {
+          AppLogger.warning(
+            'Using default App Check debug token. For a unique token, run with '
+            '--dart-define=FIREBASE_APPCHECK_DEBUG_TOKEN=<token> and add it in '
+            'Firebase Console → App Check → Manage debug tokens.',
+          );
+        }
+      }
+    } on Exception catch (error, stackTrace) {
+      AppLogger.warning('Firebase App Check activation failed: $error');
+      AppLogger.debug('App Check activation stack trace\n$stackTrace');
     }
   }
 

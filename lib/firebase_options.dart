@@ -1,11 +1,15 @@
-// Generated from existing Firebase config (firebase.json + platform files).
-// Replace with output of `flutterfire configure` when the CLI works.
-// Do not commit if it contains real keys (add to .gitignore if needed).
+// Placeholder Firebase options so the project compiles and runs without
+// Firebase configuration. FirebaseBootstrapService skips initialization
+// when it detects these placeholder values.
+//
+// To run with Firebase: see docs/firebase_setup.md and run
+// `flutterfire configure` to generate lib/firebase_options.dart.
 
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show TargetPlatform, defaultTargetPlatform, kIsWeb;
 
+/// Placeholder [FirebaseOptions] so the app compiles and skips Firebase init.
 class DefaultFirebaseOptions {
   DefaultFirebaseOptions._();
 
@@ -40,6 +44,8 @@ class DefaultFirebaseOptions {
     appId: '1:473097776453:android:80db6a1c2b04bfc0bd222c',
     messagingSenderId: '473097776453',
     projectId: 'flutter-bloc-app-697e8',
+    databaseURL:
+        'https://flutter-bloc-app-697e8-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'flutter-bloc-app-697e8.firebasestorage.app',
   );
 
@@ -48,10 +54,12 @@ class DefaultFirebaseOptions {
     appId: '1:473097776453:ios:6962f6ddc4d7ea12bd222c',
     messagingSenderId: '473097776453',
     projectId: 'flutter-bloc-app-697e8',
+    databaseURL:
+        'https://flutter-bloc-app-697e8-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'flutter-bloc-app-697e8.firebasestorage.app',
-    iosBundleId: 'com.example.flutterBlocApp',
     iosClientId:
         '473097776453-eml27tsnmpj6tj5g1ipl8ec7g0ttd5iu.apps.googleusercontent.com',
+    iosBundleId: 'com.example.flutterBlocApp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -59,9 +67,11 @@ class DefaultFirebaseOptions {
     appId: '1:473097776453:ios:6962f6ddc4d7ea12bd222c',
     messagingSenderId: '473097776453',
     projectId: 'flutter-bloc-app-697e8',
+    databaseURL:
+        'https://flutter-bloc-app-697e8-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'flutter-bloc-app-697e8.firebasestorage.app',
-    iosBundleId: 'com.example.flutterBlocApp',
     iosClientId:
         '473097776453-eml27tsnmpj6tj5g1ipl8ec7g0ttd5iu.apps.googleusercontent.com',
+    iosBundleId: 'com.example.flutterBlocApp',
   );
 }

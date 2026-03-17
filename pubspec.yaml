@@ -37,10 +37,12 @@ dependencies:
   confetti: ^0.8.0
   connectivity_plus: ^7.0.0
   cupertino_icons: ^1.0.8
+  device_info_plus: ^12.3.0
   dio: ^5.8.0
   equatable: ^2.0.5
   fancy_shimmer_image: ^2.0.3
   firebase_analytics: ^12.0.4
+  firebase_app_check: ^0.4.1+5
   firebase_auth: ^6.1.2
   firebase_core: ^4.2.1
   firebase_crashlytics: ^5.0.5

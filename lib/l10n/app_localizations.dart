@@ -1496,6 +1496,18 @@ abstract class AppLocalizations {
   /// **'Supabase (Tables)'**
   String get chartDataSourceSupabaseTables;
 
+  /// Chart data source badge when data is from Firebase Cloud Function
+  ///
+  /// In en, this message translates to:
+  /// **'Firebase (Cloud)'**
+  String get chartDataSourceFirebaseCloud;
+
+  /// Chart data source badge when data is from Firebase Firestore fallback
+  ///
+  /// In en, this message translates to:
+  /// **'Firebase (Firestore)'**
+  String get chartDataSourceFirebaseFirestore;
+
   /// Chart data source badge when data is from direct remote API
   ///
   /// In en, this message translates to:
@@ -2917,6 +2929,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'FCM Demo'**
   String get exampleFcmDemoButton;
+
+  /// Button label for opening the Firebase Functions test page
+  ///
+  /// In en, this message translates to:
+  /// **'Firebase Functions Test'**
+  String get exampleFirebaseFunctionsButton;
+
+  /// Title for the Firebase Functions test page
+  ///
+  /// In en, this message translates to:
+  /// **'Firebase Functions'**
+  String get firebaseFunctionsTestTitle;
+
+  /// Button label that calls the helloWorld callable Cloud Function
+  ///
+  /// In en, this message translates to:
+  /// **'Call helloWorld'**
+  String get firebaseFunctionsCallButton;
+
+  /// Label for the result section on the Firebase Functions test page
+  ///
+  /// In en, this message translates to:
+  /// **'Result'**
+  String get firebaseFunctionsResultLabel;
+
+  /// Shown when Firebase features are unavailable because initialization is incomplete
+  ///
+  /// In en, this message translates to:
+  /// **'Firebase is not initialized.'**
+  String get firebaseUnavailableMessage;
 
   /// Title for the Firebase Cloud Messaging demo page
   ///

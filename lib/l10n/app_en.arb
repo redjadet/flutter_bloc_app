@@ -1012,6 +1012,14 @@
   "@chartDataSourceSupabaseTables": {
     "description": "Chart data source badge when data is from Supabase table fallback"
   },
+  "chartDataSourceFirebaseCloud": "Firebase (Cloud)",
+  "@chartDataSourceFirebaseCloud": {
+    "description": "Chart data source badge when data is from Firebase Cloud Function"
+  },
+  "chartDataSourceFirebaseFirestore": "Firebase (Firestore)",
+  "@chartDataSourceFirebaseFirestore": {
+    "description": "Chart data source badge when data is from Firebase Firestore fallback"
+  },
   "chartDataSourceRemote": "Remote",
   "@chartDataSourceRemote": {
     "description": "Chart data source badge when data is from direct remote API"
@@ -2041,6 +2049,26 @@
   "exampleFcmDemoButton": "FCM Demo",
   "@exampleFcmDemoButton": {
     "description": "Button label for opening the Firebase Cloud Messaging demo"
+  },
+  "exampleFirebaseFunctionsButton": "Firebase Functions Test",
+  "@exampleFirebaseFunctionsButton": {
+    "description": "Button label for opening the Firebase Functions test page"
+  },
+  "firebaseFunctionsTestTitle": "Firebase Functions",
+  "@firebaseFunctionsTestTitle": {
+    "description": "Title for the Firebase Functions test page"
+  },
+  "firebaseFunctionsCallButton": "Call helloWorld",
+  "@firebaseFunctionsCallButton": {
+    "description": "Button label that calls the helloWorld callable Cloud Function"
+  },
+  "firebaseFunctionsResultLabel": "Result",
+  "@firebaseFunctionsResultLabel": {
+    "description": "Label for the result section on the Firebase Functions test page"
+  },
+  "firebaseUnavailableMessage": "Firebase is not initialized.",
+  "@firebaseUnavailableMessage": {
+    "description": "Shown when Firebase features are unavailable because initialization is incomplete"
   },
   "fcmDemoPageTitle": "FCM Demo",
   "@fcmDemoPageTitle": {

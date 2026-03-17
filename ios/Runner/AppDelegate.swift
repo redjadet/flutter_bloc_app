@@ -2,6 +2,7 @@ import Flutter
 import GoogleMaps
 import UIKit
 import Firebase
+import FirebaseAppCheck
 
 @main
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
@@ -94,7 +95,13 @@ import Firebase
       return
     }
     if FirebaseApp.app() == nil {
-      FirebaseApp.configure()
+#if DEBUG
+        // iOS Simulator doesn't support DeviceCheck/AppAttest. Use the App Check
+        // Debug provider so Firebase requests (e.g. Cloud Functions) can succeed
+        // when App Check is enforced.
+        AppCheck.setAppCheckProviderFactory(AppCheckDebugProviderFactory())
+      #endif
+            FirebaseApp.configure()
     }
     hasConfiguredFirebase = true
   }

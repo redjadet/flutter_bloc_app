@@ -781,6 +781,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get chartDataSourceSupabaseTables => 'Supabase (Tablas)';
 
   @override
+  String get chartDataSourceFirebaseCloud => 'Firebase (Cloud)';
+
+  @override
+  String get chartDataSourceFirebaseFirestore => 'Firebase (Firestore)';
+
+  @override
   String get chartDataSourceRemote => 'Remoto';
 
   @override
@@ -1591,6 +1597,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get exampleFcmDemoButton => 'FCM Demo';
+
+  @override
+  String get exampleFirebaseFunctionsButton => 'Probar Firebase Functions';
+
+  @override
+  String get firebaseFunctionsTestTitle => 'Firebase Functions';
+
+  @override
+  String get firebaseFunctionsCallButton => 'Llamar a helloWorld';
+
+  @override
+  String get firebaseFunctionsResultLabel => 'Resultado';
+
+  @override
+  String get firebaseUnavailableMessage => 'Firebase no está inicializado.';
 
   @override
   String get fcmDemoPageTitle => 'FCM Demo';

@@ -3,6 +3,8 @@ enum ChartDataSource {
   remote,
   supabaseEdge,
   supabaseTables,
+  firebaseCloud,
+  firebaseFirestore,
   cache,
   unknown,
 }

@@ -15,6 +15,7 @@ import 'package:flutter_bloc_app/features/calculator/calculator.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/camera_gallery.dart';
 import 'package:flutter_bloc_app/features/counter/counter.dart';
 import 'package:flutter_bloc_app/features/example/presentation/pages/example_page.dart';
+import 'package:flutter_bloc_app/features/example/presentation/pages/firebase_functions_test_page.dart';
 import 'package:flutter_bloc_app/features/example/presentation/pages/whiteboard_page.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
@@ -101,6 +102,11 @@ List<GoRoute> createCoreRoutes() => <GoRoute>[
     path: AppRoutes.examplePath,
     name: AppRoutes.example,
     builder: (final context, final state) => const ExamplePage(),
+  ),
+  GoRoute(
+    path: AppRoutes.firebaseFunctionsTestPath,
+    name: AppRoutes.firebaseFunctionsTest,
+    builder: (final context, final state) => const FirebaseFunctionsTestPage(),
   ),
   GoRoute(
     path: AppRoutes.whiteboardPath,

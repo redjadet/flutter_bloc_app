@@ -96,6 +96,35 @@ Once config is in place:
 - **Firebase Crashlytics** – Crash reporting
 - **WalletConnect Auth demo** – Links wallet to Firebase Auth and stores profile in Firestore
 - **FCM** – Push notifications (FCM demo feature)
+- **Charts (Firebase fallback)** – When Supabase is not usable but Firebase Auth is signed in, charts fetch via a callable Cloud Function with Firestore fallback (see below).
+
+---
+
+## Cloud Functions (TypeScript) – Charts fallback
+
+This repo includes Firebase Cloud Functions under `functions/` (TypeScript, Node 22).
+
+### Callable used by the chart demo
+
+- **Function:** `syncChartTrending` (callable), region `us-central1`
+- **Auth:** required (call rejects when unauthenticated)
+- **Firestore doc:** `chart_trending/bitcoin_7d`
+- **Freshness gate:** returns Firestore points when `updatedAt` is newer than ~15 minutes; otherwise fetches CoinGecko and refreshes Firestore.
+
+### Gen2 (Node 22) IAM note (important)
+
+For Gen2 callable functions, Cloud Functions runs on Cloud Run. The callable client can fail with a misleading `UNAUTHENTICATED` when the underlying service is blocked by Cloud Run IAM (401 “not authorized to invoke this service”).
+
+If you see that symptom, allow invocation of the Cloud Run service:
+
+```bash
+gcloud run services add-iam-policy-binding synccharttrending \
+  --region us-central1 \
+  --member="allUsers" \
+  --role="roles/run.invoker"
+```
+
+Security is still enforced by the callable auth check inside the function (`request.auth` must be present).
 
 ---
 
@@ -124,6 +153,8 @@ Full rules and explanation: [Todo List Firebase Realtime Database Security Rules
 | **Missing GoogleService-Info.plist** | Run `flutterfire configure` or place the file at `ios/Runner/GoogleService-Info.plist`. |
 | **iOS build errors after Firebase changes** | See [Common Troubleshooting](new_developer_guide.md#common-troubleshooting) (“Firebase upgrades break iOS build”) for clean steps (e.g. `flutter clean`, reinstall pods). |
 | **Todo list / Counter sync permission denied** | Deploy [Realtime Database rules](todo_list_firebase_security_rules.md) and ensure the user is signed in. |
+| **Charts show `UNAUTHENTICATED` but a Firebase user exists** | Check Cloud Run IAM for the Gen2 callable (see “Gen2 (Node 22) IAM note” above). |
+| **App Check errors on iOS simulator** | This repo skips App Check activation on iOS simulators in debug (“monitoring-only demo”). In production, use App Attest / DeviceCheck and enforce App Check as needed. |
 
 ### Workaround when FlutterFire CLI fails on macOS
 

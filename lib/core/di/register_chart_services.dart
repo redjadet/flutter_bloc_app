@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/chart/data/api/coingecko_api.dart';
 import 'package:flutter_bloc_app/features/chart/data/auth_aware_chart_remote_repository.dart';
 import 'package:flutter_bloc_app/features/chart/data/chart_demo_cache_repository.dart';
 import 'package:flutter_bloc_app/features/chart/data/direct_chart_remote_repository.dart';
+import 'package:flutter_bloc_app/features/chart/data/firebase_chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/data/offline_first_chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/data/supabase_chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_cache_repository.dart';
@@ -24,6 +25,9 @@ void registerChartServices() {
   registerLazySingletonIfAbsent<SupabaseChartRepository>(
     SupabaseChartRepository.new,
   );
+  registerLazySingletonIfAbsent<FirebaseChartRepository>(
+    FirebaseChartRepository.new,
+  );
   if (!getIt.isRegistered<ChartRemoteRepository>(
     instanceName: 'directChartRemote',
   )) {
@@ -35,12 +39,15 @@ void registerChartServices() {
   registerLazySingletonIfAbsent<ChartRemoteRepository>(
     () => AuthAwareChartRemoteRepository(
       supabaseRemote: getIt<SupabaseChartRepository>(),
+      firebaseRemote: getIt<FirebaseChartRepository>(),
       directRemote: getIt<ChartRemoteRepository>(
         instanceName: 'directChartRemote',
       ),
       isSupabaseSignedIn: () =>
           SupabaseBootstrapService.isSupabaseInitialized &&
           getIt<SupabaseAuthRepository>().currentUser != null,
+      isFirebaseSignedIn: () =>
+          getIt<FirebaseChartRepository>().hasSignedInUser,
     ),
   );
   registerLazySingletonIfAbsent<ChartRepository>(
