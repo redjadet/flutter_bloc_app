@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
+
 /// Retry strategy types for different backoff patterns.
 enum RetryStrategy {
   /// Exponential backoff: delay = baseDelay * 2^attempt
@@ -17,6 +19,9 @@ enum RetryStrategy {
 ///
 /// Provides helper methods for cubits to standardize retry behavior
 /// (search, chat, charts, etc.) with cancellation support.
+///
+/// When a [TimerService] is passed to [executeWithRetry], backoff delays use it (testable time);
+/// when null, uses [Future.delayed] (allow-listed in validation script).
 class RetryPolicy {
   /// Creates a retry policy with the specified configuration.
   const RetryPolicy({
@@ -48,10 +53,12 @@ class RetryPolicy {
   /// after all retries are exhausted.
   ///
   /// If [cancelToken] is provided and cancelled, throws [CancellationException].
+  /// When [timerService] is provided, backoff delays use it (enables test time control).
   Future<T> executeWithRetry<T>({
     required final Future<T> Function() action,
     final CancelToken? cancelToken,
     final bool Function(Object error)? shouldRetry,
+    final TimerService? timerService,
   }) async {
     Object? lastError;
     StackTrace? lastStackTrace;
@@ -74,7 +81,7 @@ class RetryPolicy {
 
         if (attempt < maxAttempts - 1) {
           final Duration delay = _calculateDelay(attempt);
-          await _waitBeforeRetry(delay, cancelToken);
+          await _waitBeforeRetry(delay, cancelToken, timerService);
         }
       }
     }
@@ -152,25 +159,45 @@ class RetryPolicy {
   Future<void> _waitBeforeRetry(
     final Duration delay,
     final CancelToken? cancelToken,
+    final TimerService? timerService,
   ) async {
-    if (cancelToken == null) {
+    if (cancelToken == null && timerService == null) {
       await Future<void>.delayed(delay);
       return;
     }
 
     const Duration checkInterval = Duration(milliseconds: 50);
-    final Stopwatch stopwatch = Stopwatch()..start();
+    Duration elapsed = Duration.zero;
 
-    while (stopwatch.elapsed < delay) {
+    while (elapsed < delay) {
       _throwIfCancelled(cancelToken, duringDelay: true);
-      final Duration remaining = delay - stopwatch.elapsed;
+      final Duration remaining = delay - elapsed;
       final Duration waitDuration = remaining < checkInterval
           ? remaining
           : checkInterval;
-      await Future<void>.delayed(waitDuration);
+
+      if (timerService != null) {
+        await _delayViaTimerService(timerService, waitDuration);
+      } else {
+        await Future<void>.delayed(waitDuration);
+      }
+      elapsed += waitDuration;
     }
 
     _throwIfCancelled(cancelToken, duringDelay: true);
+  }
+
+  static Future<void> _delayViaTimerService(
+    final TimerService service,
+    final Duration duration,
+  ) {
+    final Completer<void> completer = Completer<void>();
+    final TimerDisposable handle = service.runOnce(duration, () {
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
+    });
+    return completer.future.whenComplete(handle.dispose);
   }
 
   /// Create a default retry policy for transient errors (5xx, timeouts).

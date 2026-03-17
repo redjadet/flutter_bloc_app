@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
-import 'package:flutter_bloc_app/shared/sync/background_sync_runner.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_cycle_summary.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_job_runner.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_schedule_policy.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -44,10 +45,11 @@ class BackgroundSyncCoordinator {
     final void Function(void Function() onSyncRequested)?
     startIotDemoRealtimeSubscription,
     final void Function()? stopIotDemoRealtimeSubscription,
+    final SyncJobRunner? syncJobRunner,
+    final SyncSchedulePolicy? syncSchedulePolicy,
   }) : _repository = repository,
        _networkStatusService = networkStatusService,
        _timerService = timerService,
-       _registry = registry,
        _getSyncSupabaseUserId = getSyncSupabaseUserId,
        _syncInterval = syncInterval,
        _telemetry = telemetry ?? _defaultTelemetry,
@@ -55,13 +57,21 @@ class BackgroundSyncCoordinator {
        _maxRetryCount = maxRetryCount,
        _maxOperationAge = maxOperationAge,
        _startIotDemoRealtimeSubscription = startIotDemoRealtimeSubscription,
-       _stopIotDemoRealtimeSubscription = stopIotDemoRealtimeSubscription;
+       _stopIotDemoRealtimeSubscription = stopIotDemoRealtimeSubscription,
+       _syncJobRunner =
+           syncJobRunner ??
+           SyncJobRunner(
+             registry: registry,
+             pendingRepository: repository,
+           ),
+       _syncSchedulePolicy = syncSchedulePolicy ?? const SyncSchedulePolicy();
 
   final PendingSyncRepository _repository;
+  final SyncJobRunner _syncJobRunner;
+  final SyncSchedulePolicy _syncSchedulePolicy;
   final String? Function()? _getSyncSupabaseUserId;
   final NetworkStatusService _networkStatusService;
   final TimerService _timerService;
-  final SyncableRepositoryRegistry _registry;
   final Duration _syncInterval;
   final void Function(String event, Map<String, Object?> payload) _telemetry;
   final int _maxHistory;
@@ -246,7 +256,6 @@ class BackgroundSyncCoordinator {
       final bool startedTemporarily = !_isRunning && immediate;
       _syncRequestedAfterCurrent = false;
 
-      // Check network status before attempting sync (per Flutter's guidance)
       NetworkStatus networkStatus;
       try {
         networkStatus = await _networkStatusService.getCurrentStatus();
@@ -262,7 +271,11 @@ class BackgroundSyncCoordinator {
         }
         return;
       }
-      if (networkStatus != NetworkStatus.online) {
+      if (!_syncSchedulePolicy.shouldRunCycle(
+        networkStatus,
+        immediate: immediate,
+        isRunning: _isRunning,
+      )) {
         AppLogger.debug(
           'BackgroundSyncCoordinator._triggerSync skipped: network offline',
         );
@@ -304,9 +317,7 @@ class BackgroundSyncCoordinator {
   }
 
   Future<void> _processPendingOperations() async {
-    final SyncCycleSummary summary = await runSyncCycle(
-      registry: _registry,
-      pendingRepository: _repository,
+    final SyncCycleSummary summary = await _syncJobRunner.run(
       emitStatus: _emit,
       telemetry: _telemetry,
       supabaseUserIdForUserScopedSync: _getSyncSupabaseUserId?.call(),

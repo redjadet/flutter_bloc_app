@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/realtime_database_counter_repository.dart';
@@ -65,6 +66,7 @@ TodoRepository createTodoRepository() {
     remoteRepository: remoteRepository,
     pendingSyncRepository: getIt<PendingSyncRepository>(),
     registry: getIt<SyncableRepositoryRegistry>(),
+    timerService: getIt<TimerService>(),
   );
 }
 

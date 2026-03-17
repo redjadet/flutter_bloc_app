@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter_bloc_app/shared/utils/retry_policy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../test_helpers.dart' show FakeTimerService;
+
 void main() {
   group('RetryPolicy', () {
     test('executeWithRetry succeeds on first attempt', () async {
@@ -121,6 +123,65 @@ void main() {
         throwsA(isA<CancellationException>()),
       );
 
+      expect(callCount, 1);
+    });
+
+    test('executeWithRetry uses timerService-backed delays', () async {
+      const policy = RetryPolicy(
+        maxAttempts: 3,
+        baseDelay: Duration(milliseconds: 50),
+        jitter: false,
+      );
+      final FakeTimerService fakeTimer = FakeTimerService();
+      int callCount = 0;
+
+      final Future<int> future = policy.executeWithRetry<int>(
+        action: () async {
+          callCount++;
+          if (callCount == 1) {
+            throw Exception('Temporary error');
+          }
+          return 42;
+        },
+        timerService: fakeTimer,
+      );
+
+      await Future<void>.delayed(Duration.zero);
+      expect(callCount, 1);
+
+      fakeTimer.elapse(const Duration(milliseconds: 50));
+      await Future<void>.delayed(Duration.zero);
+
+      expect(await future, 42);
+      expect(callCount, 2);
+    });
+
+    test('executeWithRetry cancels during timerService-backed delay', () async {
+      const policy = RetryPolicy(
+        maxAttempts: 3,
+        baseDelay: Duration(milliseconds: 50),
+        jitter: false,
+      );
+      final CancelToken cancelToken = CancelToken();
+      final FakeTimerService fakeTimer = FakeTimerService();
+      int callCount = 0;
+
+      final Future<int> future = policy.executeWithRetry<int>(
+        action: () async {
+          callCount++;
+          throw Exception('Error');
+        },
+        cancelToken: cancelToken,
+        timerService: fakeTimer,
+      );
+
+      await Future<void>.delayed(Duration.zero);
+      expect(callCount, 1);
+
+      cancelToken.cancel();
+      fakeTimer.elapse(const Duration(milliseconds: 50));
+
+      await expectLater(future, throwsA(isA<CancellationException>()));
       expect(callCount, 1);
     });
 

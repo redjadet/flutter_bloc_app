@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
@@ -24,9 +25,11 @@ class PersistentIotDemoRepository extends HiveRepositoryBase
   PersistentIotDemoRepository({
     required super.hiveService,
     required final String supabaseUserId,
+    required final TimerService timerService,
   }) : _boxNameSuffix = _sanitizeBoxSuffix(
          PersistentIotDemoRepository._validateUserId(supabaseUserId),
-       );
+       ),
+       _timerService = timerService;
 
   static String _validateUserId(final String supabaseUserId) {
     final String trimmed = supabaseUserId.trim();
@@ -37,8 +40,18 @@ class PersistentIotDemoRepository extends HiveRepositoryBase
   }
 
   final String _boxNameSuffix;
+  final TimerService _timerService;
   static const String _keyDevices = 'devices';
   static const Duration _connectDelay = Duration(milliseconds: 400);
+
+  Future<void> _delay(final Duration duration) {
+    if (duration <= Duration.zero) {
+      return Future<void>.value();
+    }
+    final Completer<void> completer = Completer<void>();
+    _timerService.runOnce(duration, completer.complete);
+    return completer.future;
+  }
 
   @override
   String get boxName => 'iot_demo_devices_$_boxNameSuffix';
@@ -178,7 +191,7 @@ class PersistentIotDemoRepository extends HiveRepositoryBase
           lastSeen: DateTime.now(),
         );
         await _saveDevices(box, devices);
-        await Future<void>.delayed(_connectDelay);
+        await _delay(_connectDelay);
         devices = await _loadDevices(box);
         final int idx = _indexOf(devices, deviceId);
         if (idx >= 0) {
