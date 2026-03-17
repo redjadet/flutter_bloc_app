@@ -53,6 +53,7 @@ Full documentation and suppression guidance is provided in the sections below.
 ### Timing & Services
 
 - **`check_raw_timer.sh`**: Prevents raw `Timer` usage - should use `TimerService` for testability
+- **`check_raw_future_delayed.sh`**: Flags `Future.delayed` in production `lib/` - prefer `TimerService.runOnce` where cancellation or test control matters (see `docs/engineering/delayed_work_guide.md`)
 
 ### Widget Lifecycle
 

@@ -57,6 +57,7 @@ void main() {
       getPersistentRepository: (final String id) => PersistentIotDemoRepository(
         hiveService: hiveService,
         supabaseUserId: id,
+        timerService: timerService ?? FakeTimerService(),
       ),
       pendingSyncRepository: pendingRepository,
       registry: registry,
@@ -280,6 +281,7 @@ void main() {
             PersistentIotDemoRepository(
               hiveService: hiveService,
               supabaseUserId: id,
+              timerService: FakeTimerService(),
             ),
         pendingSyncRepository: pendingRepository,
         registry: registry,
@@ -491,6 +493,7 @@ void main() {
                   PersistentIotDemoRepository(
                     hiveService: hiveService,
                     supabaseUserId: id,
+                    timerService: fakeTimer,
                   ),
               pendingSyncRepository: pendingRepository,
               registry: registry,
@@ -539,6 +542,7 @@ void main() {
             PersistentIotDemoRepository(
               hiveService: hiveService,
               supabaseUserId: id,
+              timerService: FakeTimerService(),
             ),
         pendingSyncRepository: pendingRepository,
         registry: registry,

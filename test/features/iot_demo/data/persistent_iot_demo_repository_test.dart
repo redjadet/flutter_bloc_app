@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/persistent_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
@@ -27,6 +28,7 @@ void main() {
       repository = PersistentIotDemoRepository(
         hiveService: hiveService,
         supabaseUserId: 'test-user-id',
+        timerService: DefaultTimerService(),
       );
     });
 
@@ -40,6 +42,7 @@ void main() {
         () => PersistentIotDemoRepository(
           hiveService: hiveService,
           supabaseUserId: '',
+          timerService: DefaultTimerService(),
         ),
         throwsArgumentError,
       );
@@ -47,6 +50,7 @@ void main() {
         () => PersistentIotDemoRepository(
           hiveService: hiveService,
           supabaseUserId: '   ',
+          timerService: DefaultTimerService(),
         ),
         throwsArgumentError,
       );
@@ -200,6 +204,7 @@ void main() {
       final PersistentIotDemoRepository repo2 = PersistentIotDemoRepository(
         hiveService: hiveService,
         supabaseUserId: userId,
+        timerService: DefaultTimerService(),
       );
       final List<IotDevice> devices = await repo2.watchDevices().first;
 

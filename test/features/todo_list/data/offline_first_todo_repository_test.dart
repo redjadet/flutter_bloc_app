@@ -13,6 +13,8 @@ import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 
+import '../../../test_helpers.dart' show FakeTimerService;
+
 /// Fake remote that tracks [watchAll] calls and exposes a stream that can be
 /// closed to trigger onDone. Used to assert no restart-after-dispose (no second
 /// watchAll call after dispose).
@@ -198,6 +200,7 @@ void main() {
               remoteRepository: remote,
               pendingSyncRepository: pendingRepository,
               registry: registry,
+              timerService: FakeTimerService(),
             );
 
         final TodoItem item = TodoItem.create(
@@ -231,6 +234,7 @@ void main() {
         remoteRepository: remote,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        timerService: FakeTimerService(),
       );
 
       final SyncOperation operation = SyncOperation.create(
@@ -252,6 +256,7 @@ void main() {
         remoteRepository: remote,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        timerService: FakeTimerService(),
       );
 
       final TodoItem item = TodoItem.create(title: 'To Delete');
@@ -281,6 +286,7 @@ void main() {
               remoteRepository: remote,
               pendingSyncRepository: pendingRepository,
               registry: registry,
+              timerService: FakeTimerService(),
             );
 
         final TodoItem item = TodoItem.create(title: 'Should Stay');
@@ -306,6 +312,7 @@ void main() {
         localRepository: localRepository,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        timerService: FakeTimerService(),
       );
 
       final TodoItem item = TodoItem.create(title: 'To Delete');
@@ -341,6 +348,7 @@ void main() {
         remoteRepository: remote,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        timerService: FakeTimerService(),
       );
 
       await repository.pullRemote();
@@ -382,6 +390,7 @@ void main() {
         remoteRepository: remote,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        timerService: FakeTimerService(),
       );
 
       await localRepository.save(localItem);
@@ -425,6 +434,7 @@ void main() {
         remoteRepository: remote,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        timerService: FakeTimerService(),
       );
 
       await localRepository.save(localItem);
@@ -442,6 +452,7 @@ void main() {
         remoteRepository: remote,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        timerService: FakeTimerService(),
       );
 
       final TodoItem item = TodoItem.create(title: 'Test Todo');
@@ -473,6 +484,7 @@ void main() {
               localRepository: localRepository,
               pendingSyncRepository: pendingRepository,
               registry: registry,
+              timerService: FakeTimerService(),
             );
 
         final DateTime before = DateTime.now().toUtc();
@@ -498,6 +510,7 @@ void main() {
         remoteRepository: remote,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        timerService: FakeTimerService(),
       );
 
       final TodoItem item = TodoItem.create(title: 'To Delete');
@@ -520,6 +533,76 @@ void main() {
       expect(pending.length, 0);
     });
 
+    test('delete with empty id is a no-op and does not enqueue', () async {
+      final _FakeRemoteRepository remote = _FakeRemoteRepository();
+      final OfflineFirstTodoRepository repository = OfflineFirstTodoRepository(
+        localRepository: localRepository,
+        remoteRepository: remote,
+        pendingSyncRepository: pendingRepository,
+        registry: registry,
+        timerService: FakeTimerService(),
+      );
+      final TodoItem item = TodoItem.create(title: 'Keep');
+      await localRepository.save(item);
+
+      await repository.delete('');
+      await repository.delete('   ');
+
+      final List<TodoItem> local = await localRepository.fetchAll();
+      expect(local.length, 1);
+      expect(remote.deletedIds, isEmpty);
+      final List<SyncOperation> pending = await pendingRepository
+          .getPendingOperations(now: DateTime.now().toUtc());
+      expect(pending, isEmpty);
+    });
+
+    test('delete trims whitespace before deleting local and remote', () async {
+      final _FakeRemoteRepository remote = _FakeRemoteRepository();
+      final OfflineFirstTodoRepository repository = OfflineFirstTodoRepository(
+        localRepository: localRepository,
+        remoteRepository: remote,
+        pendingSyncRepository: pendingRepository,
+        registry: registry,
+        timerService: FakeTimerService(),
+      );
+      final TodoItem item = TodoItem.create(title: 'Trim Me');
+      await localRepository.save(item);
+
+      await repository.delete('  ${item.id}  ');
+
+      final List<TodoItem> local = await localRepository.fetchAll();
+      expect(local, isEmpty);
+      expect(remote.deletedIds, <String>[item.id]);
+    });
+
+    test(
+      'delete queues trimmed id when remote delete fails with padded input',
+      () async {
+        final _FakeRemoteRepository remote = _FakeRemoteRepository(
+          shouldThrowOnDelete: true,
+        );
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: FakeTimerService(),
+            );
+        final TodoItem item = TodoItem.create(title: 'Queue Trimmed Delete');
+        await localRepository.save(item);
+
+        await repository.delete('  ${item.id}  ');
+
+        final List<TodoItem> local = await localRepository.fetchAll();
+        expect(local, isEmpty);
+        final List<SyncOperation> pending = await pendingRepository
+            .getPendingOperations(now: DateTime.now().toUtc());
+        expect(pending, hasLength(1));
+        expect(pending.first.payload['id'], item.id);
+      },
+    );
+
     test('save queues operation when remote save fails', () async {
       final _FakeRemoteRepository remote = _FakeRemoteRepository(
         shouldThrowOnSave: true,
@@ -529,6 +612,7 @@ void main() {
         remoteRepository: remote,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        timerService: FakeTimerService(),
       );
 
       final TodoItem item = TodoItem.create(title: 'Test Todo');
@@ -556,6 +640,7 @@ void main() {
         remoteRepository: remote,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        timerService: FakeTimerService(),
       );
 
       final TodoItem item = TodoItem.create(title: 'Test Todo');
@@ -583,6 +668,7 @@ void main() {
         remoteRepository: remote,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        timerService: FakeTimerService(),
       );
 
       final TodoItem item1 = TodoItem.create(
@@ -623,6 +709,7 @@ void main() {
         localRepository: localRepository,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        timerService: FakeTimerService(),
       );
 
       final TodoItem item1 = TodoItem.create(title: 'Item 1');
@@ -639,6 +726,7 @@ void main() {
         localRepository: localRepository,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        timerService: FakeTimerService(),
       );
 
       final TodoItem item = TodoItem.create(title: 'Item');
@@ -654,6 +742,7 @@ void main() {
         localRepository: localRepository,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        timerService: FakeTimerService(),
       );
 
       expect(
@@ -674,12 +763,14 @@ void main() {
               localRepository: localRepository,
               pendingSyncRepository: pendingRepository,
               registry: registry,
+              timerService: FakeTimerService(),
             );
         final OfflineFirstTodoRepository secondRepository =
             OfflineFirstTodoRepository(
               localRepository: localRepository,
               pendingSyncRepository: pendingRepository,
               registry: registry,
+              timerService: FakeTimerService(),
             );
 
         expect(
@@ -703,11 +794,13 @@ void main() {
         '(regression: restart-after-dispose subscription leak)', () async {
       final _FakeRemoteRepositoryWithWatchTracking remote =
           _FakeRemoteRepositoryWithWatchTracking();
+      final FakeTimerService fakeTimer = FakeTimerService();
       final OfflineFirstTodoRepository repository = OfflineFirstTodoRepository(
         localRepository: localRepository,
         remoteRepository: remote,
         pendingSyncRepository: pendingRepository,
         registry: registry,
+        timerService: fakeTimer,
       );
 
       expect(remote.watchAllCallCount, 1, reason: 'watch started in ctor');
@@ -718,8 +811,9 @@ void main() {
       // Dispose before the restart delay fires.
       await repository.dispose();
 
-      // Wait longer than the restart delay (2s in implementation).
-      await Future<void>.delayed(const Duration(milliseconds: 2500));
+      // Advance fake time beyond the restart delay (2s in implementation).
+      fakeTimer.elapse(const Duration(milliseconds: 2500));
+      await Future<void>.delayed(Duration.zero);
 
       // Without a _disposed guard, _restartRemoteWatch would call _startRemoteWatch
       // and watchAll() would be invoked again. With the fix, it must stay 1.
@@ -735,12 +829,14 @@ void main() {
       () async {
         final _FakeRemoteRepositoryWithErrorTracking remote =
             _FakeRemoteRepositoryWithErrorTracking();
+        final FakeTimerService fakeTimer = FakeTimerService();
         final OfflineFirstTodoRepository repository =
             OfflineFirstTodoRepository(
               localRepository: localRepository,
               remoteRepository: remote,
               pendingSyncRepository: pendingRepository,
               registry: registry,
+              timerService: fakeTimer,
             );
 
         expect(remote.watchAllCallCount, 1, reason: 'watch started in ctor');
@@ -756,7 +852,8 @@ void main() {
         );
 
         // Restart runs after repository delay (2s).
-        await Future<void>.delayed(const Duration(milliseconds: 2500));
+        fakeTimer.elapse(const Duration(milliseconds: 2500));
+        await Future<void>.delayed(Duration.zero);
         expect(remote.watchAllCallCount, 2);
         expect(remote.activeWatchListeners, 1);
 

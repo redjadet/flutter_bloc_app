@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/hive_todo_repository.dart';
+import 'package:flutter_bloc_app/features/todo_list/data/todo_merge_policy.dart';
+import 'package:flutter_bloc_app/features/todo_list/data/todo_payload_builder.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
@@ -18,11 +21,17 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
     required final HiveTodoRepository localRepository,
     required final PendingSyncRepository pendingSyncRepository,
     required final SyncableRepositoryRegistry registry,
+    required final TimerService timerService,
     final TodoRepository? remoteRepository,
+    final TodoMergePolicy? mergePolicy,
+    final TodoPayloadBuilder? payloadBuilder,
   }) : _localRepository = localRepository,
        _remoteRepository = remoteRepository,
        _pendingSyncRepository = pendingSyncRepository,
-       _registry = registry {
+       _registry = registry,
+       _timerService = timerService,
+       _mergePolicy = mergePolicy ?? const TodoMergePolicy(),
+       _payloadBuilder = payloadBuilder ?? const TodoPayloadBuilder() {
     _registry.register(this);
     if (_remoteRepository != null) {
       _startRemoteWatch();
@@ -35,9 +44,13 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   final TodoRepository? _remoteRepository;
   final PendingSyncRepository _pendingSyncRepository;
   final SyncableRepositoryRegistry _registry;
+  final TimerService _timerService;
+  final TodoMergePolicy _mergePolicy;
+  final TodoPayloadBuilder _payloadBuilder;
 
   final SubscriptionManager _subscriptionManager = SubscriptionManager();
   bool _remoteRestartScheduled = false;
+  TimerDisposable? _remoteRestartHandle;
 
   @override
   String get entityType => todoEntity;
@@ -76,7 +89,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
             _localRepository,
             remoteItems,
             _generateChangeId,
-            _shouldApplyRemote,
+            _mergePolicy.shouldApplyRemote,
           ),
         );
       },
@@ -109,16 +122,17 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
       return;
     }
     _remoteRestartScheduled = true;
-    unawaited(_restartRemoteWatch());
-  }
-
-  Future<void> _restartRemoteWatch() async {
-    await Future<void>.delayed(const Duration(seconds: 2));
-    _remoteRestartScheduled = false;
-    if (_subscriptionManager.isDisposed) {
-      return;
-    }
-    _startRemoteWatch();
+    _remoteRestartHandle?.dispose();
+    _remoteRestartHandle = _timerService.runOnce(
+      const Duration(seconds: 2),
+      () {
+        _remoteRestartScheduled = false;
+        if (_subscriptionManager.isDisposed) {
+          return;
+        }
+        _startRemoteWatch();
+      },
+    );
   }
 
   @override
@@ -150,10 +164,10 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
         error,
         stackTrace,
       );
-      final SyncOperation operation = SyncOperation.create(
-        entityType: entityType,
-        payload: normalized.toJson(),
-        idempotencyKey: changeId,
+      final SyncOperation operation = _payloadBuilder.buildSaveOperation(
+        normalized,
+        entityType,
+        changeId,
       );
       await _pendingSyncRepository.enqueue(operation);
     }
@@ -161,13 +175,17 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
 
   @override
   Future<void> delete(final String id) async {
-    await _localRepository.delete(id);
+    final String normalizedId = id.trim();
+    if (normalizedId.isEmpty) {
+      return;
+    }
+    await _localRepository.delete(normalizedId);
     if (_remoteRepository == null) {
       return;
     }
     // Try to delete from remote immediately
     try {
-      await _remoteRepository.delete(id);
+      await _remoteRepository.delete(normalizedId);
     } on Exception catch (error, stackTrace) {
       // If immediate sync fails, queue for later retry
       AppLogger.error(
@@ -176,13 +194,10 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
         stackTrace,
       );
       final String changeId = _generateChangeId();
-      final SyncOperation operation = SyncOperation.create(
-        entityType: entityType,
-        payload: <String, dynamic>{
-          'id': id,
-          'deleted': true,
-        },
-        idempotencyKey: '$id-$changeId',
+      final SyncOperation operation = _payloadBuilder.buildDeleteOperation(
+        normalizedId,
+        entityType,
+        '$normalizedId-$changeId',
       );
       await _pendingSyncRepository.enqueue(operation);
     }
@@ -257,7 +272,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
         _localRepository,
         remoteItems,
         _generateChangeId,
-        _shouldApplyRemote,
+        _mergePolicy.shouldApplyRemote,
       );
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
@@ -274,6 +289,8 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   Future<void> dispose() async {
     _remoteWatchSubscription = null;
     _remoteRestartScheduled = false;
+    _remoteRestartHandle?.dispose();
+    _remoteRestartHandle = null;
     await _subscriptionManager.dispose();
     final SyncableRepository? registeredRepository = _registry.resolve(
       entityType,

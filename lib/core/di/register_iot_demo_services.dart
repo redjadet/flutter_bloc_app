@@ -28,6 +28,7 @@ void registerIotDemoServices() {
           PersistentIotDemoRepository(
             hiveService: getIt<HiveService>(),
             supabaseUserId: supabaseUserId,
+            timerService: getIt<TimerService>(),
           ),
       pendingSyncRepository: getIt<PendingSyncRepository>(),
       registry: getIt<SyncableRepositoryRegistry>(),

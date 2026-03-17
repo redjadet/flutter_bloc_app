@@ -70,31 +70,6 @@ TodoItem _normalizeItem(
   );
 }
 
-bool _shouldApplyRemote(
-  final TodoItem? localItem,
-  final TodoItem remoteItem,
-) {
-  if (localItem == null) {
-    return true;
-  }
-  if (localItem.updatedAt.isAfter(remoteItem.updatedAt)) {
-    return false;
-  }
-  // If local item is synchronized (already synced with Firebase),
-  // accept remote changes if timestamp is equal or newer
-  // (Firebase console edits don't always update updatedAt, so we accept equal timestamps)
-  if (localItem.synchronized) {
-    // Accept if remote is equal to or newer than local
-    // Use difference to handle equal timestamps (Firebase console edits)
-    final Duration difference = remoteItem.updatedAt.difference(
-      localItem.updatedAt,
-    );
-    return !difference.isNegative; // >= 0 means equal or newer
-  }
-  // If local item has unsynchronized changes, only accept remote if it's definitely newer
-  return remoteItem.updatedAt.isAfter(localItem.updatedAt);
-}
-
 String _generateChangeId() =>
     DateTime.now().microsecondsSinceEpoch.toRadixString(16) +
     Random().nextInt(0xFFFFFF).toRadixString(16).padLeft(6, '0');
