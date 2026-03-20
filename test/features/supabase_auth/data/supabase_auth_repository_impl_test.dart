@@ -195,6 +195,32 @@ void main() {
       );
     });
 
+    test(
+      'signUp omits user data when display name is blank after trimming',
+      () async {
+        final SupabaseAuthRepositoryImpl repository =
+            SupabaseAuthRepositoryImpl(
+              isConfiguredOverride: () => true,
+              signUpImpl:
+                  ({
+                    required final String email,
+                    required final String password,
+                    final Map<String, dynamic>? data,
+                  }) async {
+                    expect(email, 'user@example.com');
+                    expect(password, 'secret');
+                    expect(data, isNull);
+                  },
+            );
+
+        await repository.signUp(
+          email: ' user@example.com ',
+          password: 'secret',
+          displayName: '   ',
+        );
+      },
+    );
+
     test('wraps unexpected sign in failures consistently', () async {
       final StateError failure = StateError('boom');
       final SupabaseAuthRepositoryImpl repository = SupabaseAuthRepositoryImpl(

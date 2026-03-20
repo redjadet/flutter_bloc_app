@@ -29,23 +29,31 @@ class _CameraGalleryPageState extends State<CameraGalleryPage> {
 
   @override
   Widget build(final BuildContext context) {
-    final l10n = context.l10n;
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
     return CommonPageLayout(
-      title: l10n.cameraGalleryPageTitle,
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: context.responsiveGapL),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _PreviewSection(theme: theme, colors: colors),
-            SizedBox(height: context.responsiveGapL),
-            _ActionButtons(l10n: l10n),
-            SizedBox(height: context.responsiveGapS),
-            _ErrorSection(l10n: l10n, colors: colors),
-          ],
-        ),
+      title: context.l10n.cameraGalleryPageTitle,
+      body: const _CameraGalleryPageBody(),
+    );
+  }
+}
+
+class _CameraGalleryPageBody extends StatelessWidget {
+  const _CameraGalleryPageBody();
+
+  @override
+  Widget build(final BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colors = theme.colorScheme;
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(vertical: context.responsiveGapL),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _PreviewSection(theme: theme, colors: colors),
+          SizedBox(height: context.responsiveGapL),
+          const _ActionButtons(),
+          SizedBox(height: context.responsiveGapS),
+          _ErrorSection(l10n: context.l10n, colors: colors),
+        ],
       ),
     );
   }
@@ -85,69 +93,114 @@ class _PreviewSection extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return TypeSafeBlocBuilder<CameraGalleryCubit, CameraGalleryState>(
-      buildWhen: (final prev, final next) =>
-          prev.imagePath != next.imagePath || prev.status != next.status,
-      builder: (final context, final state) {
-        final bool loading = state.isLoading;
-        final String? path = state.imagePath;
-        return Semantics(
-          container: true,
-          child: Container(
-            height: 240,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: colors.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(context.responsiveCardRadius),
+    return TypeSafeBlocSelector<
+      CameraGalleryCubit,
+      CameraGalleryState,
+      _PreviewViewData
+    >(
+      selector: (final state) => _PreviewViewData(
+        isLoading: state.isLoading,
+        imagePath: state.imagePath,
+      ),
+      builder: (final context, final preview) {
+        return _PreviewContainer(
+          colors: colors,
+          child: switch (preview) {
+            _PreviewViewData(isLoading: true) => _PreviewLoadingState(
+              colors: colors,
             ),
-            clipBehavior: Clip.antiAlias,
-            child: loading
-                ? Center(
-                    child: SizedBox(
-                      width: context.responsiveIconSize * 2,
-                      height: context.responsiveIconSize * 2,
-                      child: CircularProgressIndicator(
-                        color: colors.primary,
-                      ),
-                    ),
-                  )
-                : path != null && path.isNotEmpty
-                ? Image.file(
-                    File(path),
-                    fit: BoxFit.contain,
-                    errorBuilder:
-                        (
-                          final _,
-                          final error,
-                          final stackTrace,
-                        ) {
-                          AppLogger.error(
-                            'CameraGalleryPage.imagePreviewLoad',
-                            error,
-                            stackTrace,
-                          );
-                          return _buildEmptyPreview(context);
-                        },
-                  )
-                : _buildEmptyPreview(context),
-          ),
+            _PreviewViewData(imagePath: final path?) when path.isNotEmpty =>
+              _PreviewImage(
+                path: path,
+                emptyPreviewBuilder: () => _buildEmptyPreview(context),
+              ),
+            _ => _buildEmptyPreview(context),
+          },
         );
       },
     );
   }
 }
 
-class _ActionButtons extends StatelessWidget {
-  const _ActionButtons({required this.l10n});
+class _PreviewContainer extends StatelessWidget {
+  const _PreviewContainer({
+    required this.colors,
+    required this.child,
+  });
 
-  final AppLocalizations l10n;
+  final ColorScheme colors;
+  final Widget child;
 
   @override
   Widget build(final BuildContext context) {
-    return TypeSafeBlocBuilder<CameraGalleryCubit, CameraGalleryState>(
-      buildWhen: (final prev, final next) => prev.status != next.status,
-      builder: (final context, final state) {
-        final bool loading = state.isLoading;
+    return Semantics(
+      container: true,
+      child: Container(
+        height: 240,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: colors.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(context.responsiveCardRadius),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: child,
+      ),
+    );
+  }
+}
+
+class _PreviewLoadingState extends StatelessWidget {
+  const _PreviewLoadingState({required this.colors});
+
+  final ColorScheme colors;
+
+  @override
+  Widget build(final BuildContext context) {
+    return Center(
+      child: SizedBox(
+        width: context.responsiveIconSize * 2,
+        height: context.responsiveIconSize * 2,
+        child: CircularProgressIndicator(color: colors.primary),
+      ),
+    );
+  }
+}
+
+class _PreviewImage extends StatelessWidget {
+  const _PreviewImage({
+    required this.path,
+    required this.emptyPreviewBuilder,
+  });
+
+  final String path;
+  final Widget Function() emptyPreviewBuilder;
+
+  @override
+  Widget build(final BuildContext context) {
+    return Image.file(
+      File(path),
+      fit: BoxFit.contain,
+      errorBuilder: (final _, final error, final stackTrace) {
+        AppLogger.error(
+          'CameraGalleryPage.imagePreviewLoad',
+          error,
+          stackTrace,
+        );
+        return emptyPreviewBuilder();
+      },
+    );
+  }
+}
+
+class _ActionButtons extends StatelessWidget {
+  const _ActionButtons();
+
+  @override
+  Widget build(final BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+    return TypeSafeBlocSelector<CameraGalleryCubit, CameraGalleryState, bool>(
+      selector: (final state) => state.isLoading,
+      builder: (final context, final loading) {
         return Column(
           children: [
             PlatformAdaptive.filledButton(
@@ -176,6 +229,16 @@ class _ActionButtons extends StatelessWidget {
       },
     );
   }
+}
+
+class _PreviewViewData {
+  const _PreviewViewData({
+    required this.isLoading,
+    required this.imagePath,
+  });
+
+  final bool isLoading;
+  final String? imagePath;
 }
 
 class _ErrorSection extends StatelessWidget {

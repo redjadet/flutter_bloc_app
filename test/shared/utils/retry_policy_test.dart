@@ -185,33 +185,52 @@ void main() {
       expect(callCount, 1);
     });
 
-    test('_calculateDelay uses exponential strategy', () {
-      const policy = RetryPolicy(
+    test('calculateDelay uses exponential strategy', () {
+      final Duration delay = RetryPolicy.calculateDelay(
+        attempt: 2,
+        baseDelay: const Duration(milliseconds: 100),
+        maxDelay: const Duration(seconds: 10),
         strategy: RetryStrategy.exponential,
-        baseDelay: Duration(milliseconds: 100),
+        jitter: false,
       );
 
-      // Access private method via reflection would be needed, but we can test via executeWithRetry
-      // For now, just verify the policy is created correctly
-      expect(policy.strategy, RetryStrategy.exponential);
+      expect(delay, const Duration(milliseconds: 400));
     });
 
-    test('_calculateDelay uses linear strategy', () {
-      const policy = RetryPolicy(
+    test('calculateDelay uses linear strategy', () {
+      final Duration delay = RetryPolicy.calculateDelay(
+        attempt: 2,
+        baseDelay: const Duration(milliseconds: 100),
+        maxDelay: const Duration(seconds: 10),
         strategy: RetryStrategy.linear,
-        baseDelay: Duration(milliseconds: 100),
+        jitter: false,
       );
 
-      expect(policy.strategy, RetryStrategy.linear);
+      expect(delay, const Duration(milliseconds: 300));
     });
 
-    test('_calculateDelay uses fixed strategy', () {
-      const policy = RetryPolicy(
+    test('calculateDelay uses fixed strategy', () {
+      final Duration delay = RetryPolicy.calculateDelay(
+        attempt: 5,
+        baseDelay: const Duration(milliseconds: 100),
+        maxDelay: const Duration(seconds: 10),
         strategy: RetryStrategy.fixed,
-        baseDelay: Duration(milliseconds: 100),
+        jitter: false,
       );
 
-      expect(policy.strategy, RetryStrategy.fixed);
+      expect(delay, const Duration(milliseconds: 100));
+    });
+
+    test('calculateDelay caps delay at maxDelay when jitter is disabled', () {
+      final Duration delay = RetryPolicy.calculateDelay(
+        attempt: 8,
+        baseDelay: const Duration(milliseconds: 100),
+        maxDelay: const Duration(milliseconds: 500),
+        strategy: RetryStrategy.exponential,
+        jitter: false,
+      );
+
+      expect(delay, const Duration(milliseconds: 500));
     });
 
     test('calculateDelay does not exceed maxDelay when jitter is enabled', () {

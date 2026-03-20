@@ -1,40 +1,68 @@
 part of 'secret_config.dart';
 
+final List<_SecretStorageField> _secureStorageFields = <_SecretStorageField>[
+  _SecretStorageField(
+    storageKey: SecretConfig._keyHfToken,
+    envKey: 'HUGGINGFACE_API_KEY',
+    readValue: () => SecretConfig._huggingfaceApiKey,
+    applyValue: (final value) => SecretConfig._huggingfaceApiKey = value,
+  ),
+  _SecretStorageField(
+    storageKey: SecretConfig._keyHfModel,
+    envKey: 'HUGGINGFACE_MODEL',
+    readValue: () => SecretConfig._huggingfaceModel,
+    applyValue: (final value) => SecretConfig._huggingfaceModel = value,
+  ),
+  _SecretStorageField(
+    storageKey: SecretConfig._keyGoogleMaps,
+    envKey: 'GOOGLE_MAPS_API_KEY',
+    readValue: () => SecretConfig._googleMapsApiKey,
+    applyValue: (final value) => SecretConfig._googleMapsApiKey = value,
+  ),
+  _SecretStorageField(
+    storageKey: SecretConfig._keyGeminiApiKey,
+    envKey: 'GEMINI_API_KEY',
+    readValue: () => SecretConfig._geminiApiKey,
+    applyValue: (final value) => SecretConfig._geminiApiKey = value,
+  ),
+  _SecretStorageField(
+    storageKey: SecretConfig._keySupabaseUrl,
+    envKey: 'SUPABASE_URL',
+    readValue: () => SecretConfig._supabaseUrl,
+    applyValue: (final value) => SecretConfig._supabaseUrl = value,
+  ),
+  _SecretStorageField(
+    storageKey: SecretConfig._keySupabaseAnonKey,
+    envKey: 'SUPABASE_ANON_KEY',
+    readValue: () => SecretConfig._supabaseAnonKey,
+    applyValue: (final value) => SecretConfig._supabaseAnonKey = value,
+  ),
+];
+
 Future<Map<String, dynamic>?> _readSecureSecrets(
   final SecretStorage storage,
 ) async {
   try {
-    final String? token = await storage.read(SecretConfig._keyHfToken);
-    final String? model = await storage.read(SecretConfig._keyHfModel);
+    final Map<String, dynamic> secrets = <String, dynamic>{};
+    for (final _SecretStorageField field in _secureStorageFields) {
+      final String? value = await storage.read(field.storageKey);
+      if (value == null || value.isEmpty) {
+        continue;
+      }
+      secrets[field.envKey] = value;
+    }
+
     final String? flag = await storage.read(
       SecretConfig._keyHfUseChatCompletions,
     );
-    final String? mapsKey = await storage.read(SecretConfig._keyGoogleMaps);
-    final String? geminiKey = await storage.read(SecretConfig._keyGeminiApiKey);
-    final String? supabaseUrl = await storage.read(
-      SecretConfig._keySupabaseUrl,
-    );
-    final String? supabaseAnon = await storage.read(
-      SecretConfig._keySupabaseAnonKey,
-    );
-    if ((token == null || token.isEmpty) &&
-        (model == null || model.isEmpty) &&
-        (flag == null || flag.isEmpty) &&
-        (mapsKey == null || mapsKey.isEmpty) &&
-        (geminiKey == null || geminiKey.isEmpty) &&
-        (supabaseUrl == null || supabaseUrl.isEmpty) &&
-        (supabaseAnon == null || supabaseAnon.isEmpty)) {
+    if (flag != null && flag.isNotEmpty) {
+      secrets['HUGGINGFACE_USE_CHAT_COMPLETIONS'] = flag == 'true';
+    }
+
+    if (secrets.isEmpty) {
       return null;
     }
-    return <String, dynamic>{
-      'HUGGINGFACE_API_KEY': token,
-      'HUGGINGFACE_MODEL': model,
-      'HUGGINGFACE_USE_CHAT_COMPLETIONS': flag == 'true',
-      'GOOGLE_MAPS_API_KEY': mapsKey,
-      'GEMINI_API_KEY': geminiKey,
-      'SUPABASE_URL': supabaseUrl,
-      'SUPABASE_ANON_KEY': supabaseAnon,
-    };
+    return secrets;
   } on Exception {
     AppLogger.warning('SecretConfig secure read failed');
     return null;
@@ -42,41 +70,19 @@ Future<Map<String, dynamic>?> _readSecureSecrets(
 }
 
 Future<void> _persistToSecureStorage(final SecretStorage storage) async {
-  final String? token = SecretConfig._huggingfaceApiKey;
-  final String? model = SecretConfig._huggingfaceModel;
-  if (token case final value?) {
-    await storage.write(SecretConfig._keyHfToken, value);
-  }
-  if (model case final value?) {
-    await storage.write(SecretConfig._keyHfModel, value);
+  for (final _SecretStorageField field in _secureStorageFields) {
+    await field.persist(storage);
   }
   await storage.write(
     SecretConfig._keyHfUseChatCompletions,
     SecretConfig._useChatCompletions.toString(),
   );
-  final String? mapsKey = SecretConfig._googleMapsApiKey;
-  if (mapsKey case final value?) {
-    await storage.write(SecretConfig._keyGoogleMaps, value);
-  }
-  final String? geminiKey = SecretConfig._geminiApiKey;
-  if (geminiKey case final value?) {
-    await storage.write(SecretConfig._keyGeminiApiKey, value);
-  }
-  final String? supabaseUrl = SecretConfig._supabaseUrl;
-  if (supabaseUrl case final value?) {
-    await storage.write(SecretConfig._keySupabaseUrl, value);
-  }
-  final String? supabaseAnon = SecretConfig._supabaseAnonKey;
-  if (supabaseAnon case final value?) {
-    await storage.write(SecretConfig._keySupabaseAnonKey, value);
-  }
 }
 
 void _applySecrets(final Map<String, dynamic> json) {
-  final String? token = stringFromDynamic(json['HUGGINGFACE_API_KEY'])?.trim();
-  SecretConfig._huggingfaceApiKey = (token?.isEmpty ?? true) ? null : token;
-  final String? model = stringFromDynamic(json['HUGGINGFACE_MODEL'])?.trim();
-  SecretConfig._huggingfaceModel = (model?.isEmpty ?? true) ? null : model;
+  for (final _SecretStorageField field in _secureStorageFields) {
+    field.applyNormalized(json[field.envKey]);
+  }
 
   final Object? flag = json['HUGGINGFACE_USE_CHAT_COMPLETIONS'];
   if (flag is bool) {
@@ -86,66 +92,28 @@ void _applySecrets(final Map<String, dynamic> json) {
   } else {
     SecretConfig._useChatCompletions = false;
   }
-
-  final String? mapsKey = stringFromDynamic(
-    json['GOOGLE_MAPS_API_KEY'],
-  )?.trim();
-  SecretConfig._googleMapsApiKey = (mapsKey?.isEmpty ?? true) ? null : mapsKey;
-
-  final String? geminiKey = stringFromDynamic(json['GEMINI_API_KEY'])?.trim();
   final String? googleKey = stringFromDynamic(json['GOOGLE_API_KEY'])?.trim();
+  final String? geminiKey = SecretConfig._geminiApiKey;
   final String? resolvedKey = (geminiKey?.isNotEmpty ?? false)
       ? geminiKey
       : googleKey;
   SecretConfig._geminiApiKey = (resolvedKey?.isEmpty ?? true)
       ? null
       : resolvedKey;
-
-  final String? supabaseUrl = stringFromDynamic(json['SUPABASE_URL'])?.trim();
-  SecretConfig._supabaseUrl = (supabaseUrl?.isEmpty ?? true)
-      ? null
-      : supabaseUrl;
-  final String? supabaseAnon = stringFromDynamic(
-    json['SUPABASE_ANON_KEY'],
-  )?.trim();
-  SecretConfig._supabaseAnonKey = (supabaseAnon?.isEmpty ?? true)
-      ? null
-      : supabaseAnon;
 }
 
 bool _hasSecrets(final Map<String, dynamic>? source) {
   if (source == null) return false;
-  final String? token = stringFromDynamic(
-    source['HUGGINGFACE_API_KEY'],
-  )?.trim();
-  final String? model = stringFromDynamic(source['HUGGINGFACE_MODEL'])?.trim();
   final Object? flag = source['HUGGINGFACE_USE_CHAT_COMPLETIONS'];
-  final String? maps = stringFromDynamic(source['GOOGLE_MAPS_API_KEY'])?.trim();
-  final String? gemini = stringFromDynamic(source['GEMINI_API_KEY'])?.trim();
   final String? googleKey = stringFromDynamic(source['GOOGLE_API_KEY'])?.trim();
-  final String? supabaseUrl = stringFromDynamic(source['SUPABASE_URL'])?.trim();
-  final String? supabaseAnon = stringFromDynamic(
-    source['SUPABASE_ANON_KEY'],
-  )?.trim();
-
-  final bool hasToken = token != null && token.isNotEmpty;
-  final bool hasModel = model != null && model.isNotEmpty;
+  final bool hasConfiguredField = _secureStorageFields.any(
+    (final field) => field.normalizedFrom(source[field.envKey]) != null,
+  );
   final bool hasFlag =
       flag is bool || (flag is String && flag.trim().isNotEmpty);
-  final bool hasMaps = maps != null && maps.isNotEmpty;
-  final bool hasGemini = gemini != null && gemini.isNotEmpty;
   final bool hasGoogleKey = googleKey != null && googleKey.isNotEmpty;
-  final bool hasSupabase =
-      (supabaseUrl != null && supabaseUrl.isNotEmpty) &&
-      (supabaseAnon != null && supabaseAnon.isNotEmpty);
 
-  return hasToken ||
-      hasModel ||
-      hasFlag ||
-      hasMaps ||
-      hasGemini ||
-      hasGoogleKey ||
-      hasSupabase;
+  return hasConfiguredField || hasFlag || hasGoogleKey;
 }
 
 Map<String, dynamic>? _readEnvironmentSecrets() {
@@ -224,10 +192,11 @@ Future<Map<String, dynamic>?> _readAssetSecrets() async {
 }
 
 Future<void> _persistGoogleMapsKey(final SecretStorage storage) async {
-  final String? mapsKey = SecretConfig._googleMapsApiKey;
-  if (mapsKey case final value?) {
-    await storage.write(SecretConfig._keyGoogleMaps, value);
-  }
+  await _secureStorageFields
+      .firstWhere(
+        (final field) => field.storageKey == SecretConfig._keyGoogleMaps,
+      )
+      .persist(storage);
 }
 
 Future<bool> _loadFromSource(
@@ -242,4 +211,37 @@ Future<bool> _loadFromSource(
     return true;
   }
   return false;
+}
+
+final class _SecretStorageField {
+  const _SecretStorageField({
+    required this.storageKey,
+    required this.envKey,
+    required this.readValue,
+    required this.applyValue,
+  });
+
+  final String storageKey;
+  final String envKey;
+  final String? Function() readValue;
+  final void Function(String? value) applyValue;
+
+  String? normalizedFrom(final Object? sourceValue) {
+    final String? value = stringFromDynamic(sourceValue)?.trim();
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+    return value;
+  }
+
+  void applyNormalized(final Object? sourceValue) {
+    applyValue(normalizedFrom(sourceValue));
+  }
+
+  Future<void> persist(final SecretStorage storage) async {
+    final String? value = readValue();
+    if (value case final persistedValue?) {
+      await storage.write(storageKey, persistedValue);
+    }
+  }
 }

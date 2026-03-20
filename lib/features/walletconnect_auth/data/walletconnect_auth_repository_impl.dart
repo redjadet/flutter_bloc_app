@@ -50,38 +50,21 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
   @override
   Future<void> linkWalletToFirebaseUser(final String walletAddress) async {
     try {
-      // Ensure user is authenticated (create anonymous if needed)
-      User user = _firebaseAuth.currentUser ?? await _createAnonymousUser();
+      User user = await _requireAuthenticatedUser();
+      final WalletAddress address = _requireValidWalletAddress(walletAddress);
 
-      // Validate wallet address
-      final address = WalletAddress(walletAddress);
-      if (!address.isValid) {
-        throw WalletConnectException(
-          'Invalid wallet address format: $walletAddress',
-        );
-      }
-
-      // Store linkage + profile in a single document at users/{uid} (one doc per user)
-      final normalizedWallet = _normalizeWalletDocId(walletAddress);
       final Map<String, Object?> userData = {
-        _walletAddressField: walletAddress,
-        _walletAddressNormalizedField: normalizedWallet,
+        _walletAddressField: address.value,
+        _walletAddressNormalizedField: _normalizeWalletDocId(address.value),
         _connectedAtField: FieldValue.serverTimestamp(),
         ...WalletUserProfileMapper.defaultFirestoreMap(),
       };
       userData[WalletUserProfileFields.updatedAt] =
           FieldValue.serverTimestamp();
-      await _firestore
-          .collection(_usersCollection)
-          .doc(user.uid)
-          .set(
-            userData,
-            SetOptions(merge: true),
-          );
+      await _userDocument(user.uid).set(userData, SetOptions(merge: true));
 
-      // Optionally update user display name with wallet address
       try {
-        await user.updateDisplayName(walletAddress);
+        await user.updateDisplayName(address.value);
         await user.reload();
         final User? updated = _firebaseAuth.currentUser;
         if (updated case final latestUser?) user = latestUser;
@@ -132,10 +115,7 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
         return null;
       }
 
-      final doc = await _firestore
-          .collection(_usersCollection)
-          .doc(user.uid)
-          .get();
+      final doc = await _userDocument(user.uid).get();
 
       if (!doc.exists) {
         return null;
@@ -148,15 +128,7 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
         return null;
       }
 
-      final address = WalletAddress(walletAddressStr);
-      if (!address.isValid) {
-        AppLogger.warning(
-          'Invalid wallet address format in Firestore: $walletAddressStr',
-        );
-        return null;
-      }
-
-      return address;
+      return _parseLinkedWalletAddress(walletAddressStr);
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'WalletConnectAuthRepository: getLinkedWalletAddress failed',
@@ -188,32 +160,17 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
     final WalletUserProfile? profile,
   }) async {
     try {
-      final user = _firebaseAuth.currentUser;
-      if (user == null) {
-        throw const WalletConnectException(
-          'Not authenticated. Sign in before upserting profile.',
-        );
-      }
-      final linked = await getLinkedWalletAddress();
-      final normalized = _normalizeWalletDocId(walletAddress);
-      if (linked == null || _normalizeWalletDocId(linked.value) != normalized) {
-        throw WalletConnectException(
-          'Wallet $walletAddress is not linked to the current user.',
-        );
-      }
+      final User user = _requireCurrentUserForProfileWrite();
+      final WalletAddress linkedWallet = await _requireLinkedWalletAddress(
+        walletAddress,
+      );
       final Map<String, Object?> data = profile != null
           ? WalletUserProfileMapper.toFirestore(profile)
           : WalletUserProfileMapper.defaultFirestoreMap();
       data[WalletUserProfileFields.updatedAt] = FieldValue.serverTimestamp();
-      await _firestore
-          .collection(_usersCollection)
-          .doc(user.uid)
-          .set(
-            data,
-            SetOptions(merge: true),
-          );
+      await _userDocument(user.uid).set(data, SetOptions(merge: true));
       AppLogger.debug(
-        'WalletConnectAuthRepository: Upserted profile for ${WalletAddress(walletAddress).truncated}',
+        'WalletConnectAuthRepository: Upserted profile for ${linkedWallet.truncated}',
       );
     } on WalletConnectException {
       rethrow;
@@ -238,15 +195,14 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
     try {
       final user = _firebaseAuth.currentUser;
       if (user == null) return null;
-      final linked = await getLinkedWalletAddress();
-      final normalized = _normalizeWalletDocId(walletAddress);
-      if (linked == null || _normalizeWalletDocId(linked.value) != normalized) {
+      final WalletAddress? linkedWallet =
+          await _linkedWalletAddressForCurrentUser(
+            walletAddress,
+          );
+      if (linkedWallet == null) {
         return null;
       }
-      final doc = await _firestore
-          .collection(_usersCollection)
-          .doc(user.uid)
-          .get();
+      final doc = await _userDocument(user.uid).get();
       if (!doc.exists) return null;
       final data = doc.data();
       return WalletUserProfileMapper.fromFirestore(
@@ -265,6 +221,70 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
   /// Normalizes wallet address for use as Firestore document ID (e.g. lowercase).
   static String _normalizeWalletDocId(final String walletAddress) =>
       walletAddress.toLowerCase();
+
+  DocumentReference<Map<String, dynamic>> _userDocument(final String uid) =>
+      _firestore.collection(_usersCollection).doc(uid);
+
+  Future<User> _requireAuthenticatedUser() async =>
+      _firebaseAuth.currentUser ?? await _createAnonymousUser();
+
+  User _requireCurrentUserForProfileWrite() {
+    final User? user = _firebaseAuth.currentUser;
+    if (user == null) {
+      throw const WalletConnectException(
+        'Not authenticated. Sign in before upserting profile.',
+      );
+    }
+    return user;
+  }
+
+  WalletAddress _requireValidWalletAddress(final String walletAddress) {
+    final WalletAddress address = WalletAddress(walletAddress);
+    if (!address.isValid) {
+      throw WalletConnectException(
+        'Invalid wallet address format: $walletAddress',
+      );
+    }
+    return address;
+  }
+
+  WalletAddress? _parseLinkedWalletAddress(final String walletAddress) {
+    final WalletAddress address = WalletAddress(walletAddress);
+    if (address.isValid) {
+      return address;
+    }
+    AppLogger.warning(
+      'Invalid wallet address format in Firestore: $walletAddress',
+    );
+    return null;
+  }
+
+  Future<WalletAddress?> _linkedWalletAddressForCurrentUser(
+    final String walletAddress,
+  ) async {
+    final WalletAddress? linked = await getLinkedWalletAddress();
+    if (linked == null) {
+      return null;
+    }
+    return _normalizeWalletDocId(linked.value) ==
+            _normalizeWalletDocId(walletAddress)
+        ? linked
+        : null;
+  }
+
+  Future<WalletAddress> _requireLinkedWalletAddress(
+    final String walletAddress,
+  ) async {
+    final WalletAddress? linked = await _linkedWalletAddressForCurrentUser(
+      walletAddress,
+    );
+    if (linked != null) {
+      return linked;
+    }
+    throw WalletConnectException(
+      'Wallet $walletAddress is not linked to the current user.',
+    );
+  }
 
   /// Creates an anonymous Firebase Auth user if no user is authenticated.
   Future<User> _createAnonymousUser() async {

@@ -11,6 +11,8 @@ import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:go_router/go_router.dart';
 
+part 'counter_page_content.dart';
+
 class CounterPage extends StatefulWidget {
   const CounterPage({
     required this.title,
@@ -20,6 +22,7 @@ class CounterPage extends StatefulWidget {
     super.key,
     this.optionalBanner,
   });
+
   final String title;
   final ErrorNotificationService errorNotificationService;
   final BiometricAuthenticator biometricAuthenticator;
@@ -41,32 +44,11 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   bool _isCannotGoBelowZeroSnackBarVisible = false;
   bool _didEnsureSyncStarted = false;
   TimerDisposable? _snackBarHideTimerHandle;
+
   static const Duration _flushThrottleDuration = Duration(milliseconds: 500);
   static const Duration _cannotGoBelowZeroSnackBarDuration = Duration(
     seconds: 2,
   );
-
-  Future<void> _flushSyncIfPossible(final BuildContext context) async {
-    try {
-      final SyncStatusCubit syncCubit = context.cubit<SyncStatusCubit>();
-      if (!syncCubit.state.isOnline) {
-        return;
-      }
-
-      // Throttle flushes to prevent concurrent calls
-      final DateTime now = DateTime.now();
-      final DateTime? lastFlush = _lastFlushTime;
-      if (lastFlush != null &&
-          now.difference(lastFlush) < _flushThrottleDuration) {
-        return;
-      }
-      _lastFlushTime = now;
-
-      unawaited(syncCubit.flush());
-    } on Object {
-      // SyncStatusCubit not available in this subtree (e.g., tests/minimal shells).
-    }
-  }
 
   @override
   void initState() {
@@ -90,8 +72,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    _snackBarHideTimerHandle?.dispose();
-    _snackBarHideTimerHandle = null;
+    _disposeCannotGoBelowZeroSnackBarDelayHandle();
     WidgetsBinding.instance.removeObserver(this);
     _confettiController.dispose();
     super.dispose();
@@ -99,7 +80,10 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(final AppLifecycleState state) {
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
+
     final CounterCubit cubit = context.cubit<CounterCubit>();
     switch (state) {
       case AppLifecycleState.paused:
@@ -116,109 +100,147 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
 
   @override
   Widget build(final BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final l10n = context.l10n;
     return MultiBlocListener(
-      listeners: [
-        TypeSafeBlocListener<CounterCubit, CounterState>(
-          listenWhen: (final prev, final curr) => prev.error != curr.error,
-          listener: (final context, final state) {
-            final error = state.error;
-            if (error case final currentError?) {
-              final String localizedMessage = counterErrorMessage(
-                l10n,
-                currentError,
-              );
-              if (currentError.type == CounterErrorType.cannotGoBelowZero) {
-                if (!_isCannotGoBelowZeroSnackBarVisible) {
-                  _showCannotGoBelowZeroSnackBar(localizedMessage);
-                }
-                return;
-              }
-              ErrorHandling.handleCubitError(
-                context,
-                UnknownError(
-                  message: localizedMessage,
-                  cause: currentError,
-                ),
-                customMessage: localizedMessage,
-                onRetry: () =>
-                    CubitHelpers.safeExecute<CounterCubit, CounterState>(
-                      context,
-                      (final cubit) => cubit.clearError(),
-                    ),
-              );
-            }
-          },
-        ),
-        TypeSafeBlocListener<CounterCubit, CounterState>(
-          listenWhen: (final prev, final curr) => curr.count > prev.count,
-          listener: (final context, final state) {
-            _confettiController.play();
-          },
-        ),
-        TypeSafeBlocListener<CounterCubit, CounterState>(
-          listenWhen: (final prev, final curr) =>
-              prev.count == 0 && curr.count > 0,
-          listener: (final context, final state) {
-            _isCannotGoBelowZeroSnackBarVisible = false;
-            ErrorHandling.clearSnackBars(context);
-          },
-        ),
-        TypeSafeBlocListener<CounterCubit, CounterState>(
-          listenWhen: (final prev, final curr) => prev.count != curr.count,
-          listener: (final context, final state) async {
-            // Kick off a sync flush immediately when counter changes, but only if SyncStatusCubit is available.
-            // check-ignore: listener callback is event-driven, not a build side effect
-            unawaited(_flushSyncIfPossible(context));
-          },
-        ),
-      ],
-      child: Stack(
-        children: [
-          Scaffold(
-            appBar: CounterPageAppBar(
-              title: widget.title,
-              onOpenSettings: () => _handleOpenSettings(context),
-            ),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: context.pagePadding,
-                child: CommonMaxWidth(
-                  child: CounterPageBody(
-                    theme: theme,
-                    l10n: l10n,
-                    showFlavorBadge: _showFlavorBadge,
-                    optionalBanner: widget.optionalBanner,
-                  ),
-                ),
-              ),
-            ),
-            bottomNavigationBar: const CountdownBar(),
-            floatingActionButton: const CounterActions(),
-          ),
-          IgnorePointer(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: ConfettiWidget(
-                confettiController: _confettiController,
-                blastDirectionality: BlastDirectionality.explosive,
-                colors:
-                    Theme.of(
-                      context,
-                    ).extension<ConfettiTheme>()?.particleColors ??
-                    defaultConfettiParticleColors,
-              ),
-            ),
-          ),
-        ],
+      listeners: _buildListeners(),
+      child: _CounterPageContent(
+        title: widget.title,
+        showFlavorBadge: _showFlavorBadge,
+        optionalBanner: widget.optionalBanner,
+        confettiController: _confettiController,
+        onOpenSettings: () => _handleOpenSettings(context),
       ),
     );
   }
 
-  void _showCannotGoBelowZeroSnackBar(final String message) {
+  List<TypeSafeBlocListener<CounterCubit, CounterState>> _buildListeners() {
+    return <TypeSafeBlocListener<CounterCubit, CounterState>>[
+      TypeSafeBlocListener<CounterCubit, CounterState>(
+        listenWhen: (final prev, final curr) => prev.error != curr.error,
+        listener: _handleCounterErrorStateChanged,
+      ),
+      TypeSafeBlocListener<CounterCubit, CounterState>(
+        listenWhen: (final prev, final curr) => curr.count > prev.count,
+        listener: _handleCounterIncremented,
+      ),
+      TypeSafeBlocListener<CounterCubit, CounterState>(
+        listenWhen: (final prev, final curr) =>
+            prev.count == 0 && curr.count > 0,
+        listener: _handleCounterRecoveredFromZero,
+      ),
+      TypeSafeBlocListener<CounterCubit, CounterState>(
+        listenWhen: (final prev, final curr) => prev.count != curr.count,
+        listener: _handleCounterCountChanged,
+      ),
+    ];
+  }
+
+  Future<void> _flushSyncIfPossible(final BuildContext context) async {
+    try {
+      final SyncStatusCubit syncCubit = context.cubit<SyncStatusCubit>();
+      if (!syncCubit.state.isOnline) {
+        return;
+      }
+
+      final DateTime now = DateTime.now();
+      final DateTime? lastFlush = _lastFlushTime;
+      if (lastFlush != null &&
+          now.difference(lastFlush) < _flushThrottleDuration) {
+        return;
+      }
+      _lastFlushTime = now;
+
+      unawaited(syncCubit.flush());
+    } on Object {
+      // SyncStatusCubit not available in this subtree (e.g., tests/minimal shells).
+    }
+  }
+
+  void _handleCounterErrorStateChanged(
+    final BuildContext context,
+    final CounterState state,
+  ) {
+    final CounterError? error = state.error;
+    if (error == null) {
+      return;
+    }
+
+    final String localizedMessage = counterErrorMessage(
+      context.l10n,
+      error,
+    );
+    if (error.type == CounterErrorType.cannotGoBelowZero) {
+      if (!_isCannotGoBelowZeroSnackBarVisible) {
+        _showCannotGoBelowZeroSnackBar(localizedMessage);
+      }
+      return;
+    }
+
+    ErrorHandling.handleCubitError(
+      context,
+      UnknownError(
+        message: localizedMessage,
+        cause: error,
+      ),
+      customMessage: localizedMessage,
+      onRetry: () => CubitHelpers.safeExecute<CounterCubit, CounterState>(
+        context,
+        (final cubit) => cubit.clearError(),
+      ),
+    );
+  }
+
+  void _handleCounterIncremented(
+    final BuildContext context,
+    final CounterState state,
+  ) {
+    _confettiController.play();
+  }
+
+  void _handleCounterRecoveredFromZero(
+    final BuildContext context,
+    final CounterState state,
+  ) {
+    _isCannotGoBelowZeroSnackBarVisible = false;
+    ErrorHandling.clearSnackBars(context);
+  }
+
+  void _handleCounterCountChanged(
+    final BuildContext context,
+    final CounterState state,
+  ) {
+    // check-ignore: listener callback is event-driven, not a build side effect
+    unawaited(_flushSyncIfPossible(context));
+  }
+
+  void _disposeCannotGoBelowZeroSnackBarDelayHandle() {
     _snackBarHideTimerHandle?.dispose();
     _snackBarHideTimerHandle = null;
+  }
+
+  void _hideCannotGoBelowZeroSnackBar() {
+    if (!mounted) {
+      return;
+    }
+    _disposeCannotGoBelowZeroSnackBarDelayHandle();
+    ErrorHandling.hideCurrentSnackBar(context);
+  }
+
+  void _handleCannotGoBelowZeroSnackBarClosed() {
+    _disposeCannotGoBelowZeroSnackBarDelayHandle();
+    if (mounted) {
+      setState(() => _isCannotGoBelowZeroSnackBarVisible = false);
+    }
+  }
+
+  void _scheduleCannotGoBelowZeroSnackBarHide(final TimerService timerService) {
+    _snackBarHideTimerHandle = timerService.runOnce(
+      _cannotGoBelowZeroSnackBarDuration,
+      _hideCannotGoBelowZeroSnackBar,
+    );
+  }
+
+  void _showCannotGoBelowZeroSnackBar(final String message) {
+    _disposeCannotGoBelowZeroSnackBarDelayHandle();
 
     final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
     controller = ErrorHandling.showErrorSnackBar(
@@ -233,24 +255,10 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
 
     final TimerService timerService =
         widget.timerService ?? DefaultTimerService();
-    _snackBarHideTimerHandle = timerService.runOnce(
-      _cannotGoBelowZeroSnackBarDuration,
-      () {
-        if (!mounted) return;
-        _snackBarHideTimerHandle?.dispose();
-        _snackBarHideTimerHandle = null;
-        ErrorHandling.hideCurrentSnackBar(context);
-      },
-    );
+    _scheduleCannotGoBelowZeroSnackBarHide(timerService);
 
     unawaited(
-      controller.closed.whenComplete(() {
-        _snackBarHideTimerHandle?.dispose();
-        _snackBarHideTimerHandle = null;
-        if (mounted) {
-          setState(() => _isCannotGoBelowZeroSnackBarVisible = false);
-        }
-      }),
+      controller.closed.whenComplete(_handleCannotGoBelowZeroSnackBarClosed),
     );
   }
 

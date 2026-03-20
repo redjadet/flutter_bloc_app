@@ -4,6 +4,23 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
+enum AppLogLevel { debug, info, warning, error }
+
+@immutable
+class AppLogEntry {
+  const AppLogEntry({
+    required this.level,
+    required this.message,
+    this.error,
+    this.stackTrace,
+  });
+
+  final AppLogLevel level;
+  final String message;
+  final Object? error;
+  final StackTrace? stackTrace;
+}
+
 /// Simple logging utility for the app
 class AppLogger {
   static final Logger _logger = Logger(
@@ -20,24 +37,42 @@ class AppLogger {
 
   static int _silenceDepth = 0;
   static bool _globalSilence = false;
+  static void Function(AppLogEntry entry)? _observer;
 
   static void error(
     final String message, [
     final Object? error,
     final StackTrace? stackTrace,
   ]) {
+    _notifyObserver(
+      AppLogEntry(
+        level: AppLogLevel.error,
+        message: message,
+        error: error,
+        stackTrace: stackTrace,
+      ),
+    );
     _logger.e(message, error: error, stackTrace: stackTrace);
   }
 
   static void warning(final String message) {
+    _notifyObserver(
+      AppLogEntry(level: AppLogLevel.warning, message: message),
+    );
     _logger.w(message);
   }
 
   static void info(final String message) {
+    _notifyObserver(
+      AppLogEntry(level: AppLogLevel.info, message: message),
+    );
     _logger.i(message);
   }
 
   static void debug(final String message) {
+    _notifyObserver(
+      AppLogEntry(level: AppLogLevel.debug, message: message),
+    );
     _logger.d(message);
   }
 
@@ -75,12 +110,24 @@ class AppLogger {
 
   static bool get isSilenced => _silenceDepth > 0;
 
+  @visibleForTesting
+  static void Function(AppLogEntry entry)? get observer => _observer;
+
+  @visibleForTesting
+  static set observer(final void Function(AppLogEntry entry)? observer) {
+    _observer = observer;
+  }
+
   static void silenceGlobally() {
     _globalSilence = true;
   }
 
   static void restoreGlobalLogging() {
     _globalSilence = false;
+  }
+
+  static void _notifyObserver(final AppLogEntry entry) {
+    _observer?.call(entry);
   }
 }
 

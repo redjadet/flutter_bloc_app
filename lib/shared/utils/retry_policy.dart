@@ -71,17 +71,17 @@ class RetryPolicy {
         lastError = error;
         lastStackTrace = stackTrace;
 
-        if (error is CancellationException) {
+        if (!_shouldRetryError(error, shouldRetry)) {
           rethrow;
         }
 
-        if (shouldRetry != null && !shouldRetry(error)) {
-          rethrow;
-        }
-
-        if (attempt < maxAttempts - 1) {
-          final Duration delay = _calculateDelay(attempt);
-          await _waitBeforeRetry(delay, cancelToken, timerService);
+        final bool hasRemainingAttempts = attempt < maxAttempts - 1;
+        if (hasRemainingAttempts) {
+          await _waitBeforeRetry(
+            _calculateDelay(attempt),
+            cancelToken,
+            timerService,
+          );
         }
       }
     }
@@ -95,6 +95,16 @@ class RetryPolicy {
     }
 
     throw Exception(lastError.toString());
+  }
+
+  bool _shouldRetryError(
+    final Object error,
+    final bool Function(Object error)? shouldRetry,
+  ) {
+    if (error is CancellationException) {
+      return false;
+    }
+    return shouldRetry?.call(error) ?? true;
   }
 
   /// Calculate delay for the given attempt number (0-indexed).
@@ -116,7 +126,28 @@ class RetryPolicy {
     final RetryStrategy strategy = RetryStrategy.exponential,
     final bool jitter = true,
   }) {
-    final Duration calculatedDelay = switch (strategy) {
+    final Duration cappedDelay = _capDelay(
+      _calculateBaseDelay(
+        attempt: attempt,
+        baseDelay: baseDelay,
+        strategy: strategy,
+      ),
+      maxDelay,
+    );
+
+    if (jitter && cappedDelay > Duration.zero) {
+      return _applyJitter(cappedDelay, maxDelay, Random());
+    }
+
+    return cappedDelay;
+  }
+
+  static Duration _calculateBaseDelay({
+    required final int attempt,
+    required final Duration baseDelay,
+    required final RetryStrategy strategy,
+  }) {
+    return switch (strategy) {
       RetryStrategy.exponential => Duration(
         milliseconds: (baseDelay.inMilliseconds * pow(2, attempt)).toInt(),
       ),
@@ -125,24 +156,28 @@ class RetryPolicy {
       ),
       RetryStrategy.fixed => baseDelay,
     };
+  }
 
-    final Duration cappedDelay = calculatedDelay > maxDelay
-        ? maxDelay
-        : calculatedDelay;
+  static Duration _capDelay(
+    final Duration calculatedDelay,
+    final Duration maxDelay,
+  ) {
+    return calculatedDelay > maxDelay ? maxDelay : calculatedDelay;
+  }
 
-    if (jitter && cappedDelay > Duration.zero) {
-      final Random random = Random();
-      final int cappedMs = cappedDelay.inMilliseconds;
-      final int maxMs = maxDelay.inMilliseconds;
-      final int jitterRange = (cappedMs * 0.25).toInt();
-      final int jitterOffset =
-          random.nextInt((jitterRange * 2) + 1) - jitterRange;
-      final int jitteredMs = cappedMs + jitterOffset;
-      final int clampedMs = jitteredMs.clamp(0, maxMs);
-      return Duration(milliseconds: clampedMs);
-    }
-
-    return cappedDelay;
+  static Duration _applyJitter(
+    final Duration cappedDelay,
+    final Duration maxDelay,
+    final Random random,
+  ) {
+    final int cappedMs = cappedDelay.inMilliseconds;
+    final int maxMs = maxDelay.inMilliseconds;
+    final int jitterRange = (cappedMs * 0.25).toInt();
+    final int jitterOffset =
+        random.nextInt((jitterRange * 2) + 1) - jitterRange;
+    final int jitteredMs = cappedMs + jitterOffset;
+    final int clampedMs = jitteredMs.clamp(0, maxMs);
+    return Duration(milliseconds: clampedMs);
   }
 
   void _throwIfCancelled(
@@ -171,20 +206,32 @@ class RetryPolicy {
 
     while (elapsed < delay) {
       _throwIfCancelled(cancelToken, duringDelay: true);
-      final Duration remaining = delay - elapsed;
-      final Duration waitDuration = remaining < checkInterval
-          ? remaining
-          : checkInterval;
-
-      if (timerService != null) {
-        await _delayViaTimerService(timerService, waitDuration);
-      } else {
-        await Future<void>.delayed(waitDuration);
-      }
+      final Duration waitDuration = _nextDelayChunk(
+        remaining: delay - elapsed,
+        checkInterval: checkInterval,
+      );
+      await _delay(waitDuration, timerService);
       elapsed += waitDuration;
     }
 
     _throwIfCancelled(cancelToken, duringDelay: true);
+  }
+
+  static Duration _nextDelayChunk({
+    required final Duration remaining,
+    required final Duration checkInterval,
+  }) {
+    return remaining < checkInterval ? remaining : checkInterval;
+  }
+
+  static Future<void> _delay(
+    final Duration duration,
+    final TimerService? timerService,
+  ) {
+    if (timerService != null) {
+      return _delayViaTimerService(timerService, duration);
+    }
+    return Future<void>.delayed(duration);
   }
 
   static Future<void> _delayViaTimerService(

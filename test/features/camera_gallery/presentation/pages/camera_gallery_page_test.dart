@@ -106,5 +106,32 @@ void main() {
         findsOneWidget,
       );
     });
+
+    testWidgets('shows cancelled message when picker is cancelled', (
+      final tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
+          home: BlocProvider<CameraGalleryCubit>(
+            create: (_) => CameraGalleryCubit(
+              repository: _StubRepository(
+                galleryResult: const CameraGalleryResult.failure(
+                  errorKey: CameraGalleryErrorKeys.cancelled,
+                ),
+              ),
+            ),
+            child: const CameraGalleryPage(),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Pick from gallery'));
+      await tester.pump();
+
+      expect(find.text('Selection was cancelled.'), findsOneWidget);
+    });
   });
 }
