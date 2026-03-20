@@ -613,6 +613,61 @@ void main() {
       await coordinator.stop();
     });
 
+    test('realtime subscription callback triggers an immediate sync', () async {
+      void Function()? onSyncRequested;
+      final SyncOperation op = SyncOperation.create(
+        entityType: 'counter',
+        payload: const <String, dynamic>{'count': 12},
+        idempotencyKey: 'realtime-sync',
+      );
+
+      int pendingCalls = 0;
+      when(
+        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+      ).thenAnswer((_) async {
+        pendingCalls++;
+        if (pendingCalls == 1) {
+          return <SyncOperation>[];
+        }
+        if (pendingCalls == 2) {
+          return <SyncOperation>[op];
+        }
+        return <SyncOperation>[];
+      });
+
+      final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
+      when(() => syncableRepo.entityType).thenReturn('counter');
+      when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
+      when(() => syncableRepo.processOperation(op)).thenAnswer((_) async {});
+      registry.register(syncableRepo);
+      when(
+        () => pendingRepository.markCompleted(op.id),
+      ).thenAnswer((_) async {});
+
+      final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
+        repository: pendingRepository,
+        networkStatusService: networkService,
+        timerService: timerService,
+        registry: registry,
+        syncInterval: const Duration(milliseconds: 10),
+        startIotDemoRealtimeSubscription: (final callback) {
+          onSyncRequested = callback;
+        },
+      );
+
+      await coordinator.start();
+      expect(onSyncRequested, isNotNull);
+
+      onSyncRequested!.call();
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+
+      verify(() => syncableRepo.processOperation(op)).called(1);
+      verify(() => pendingRepository.markCompleted(op.id)).called(1);
+      expect(pendingCalls, greaterThanOrEqualTo(2));
+
+      await coordinator.stop();
+    });
+
     test(
       'flush degrades gracefully when network status lookup fails',
       () async {

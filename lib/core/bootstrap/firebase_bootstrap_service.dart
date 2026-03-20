@@ -11,6 +11,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/firebase_options.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
+part 'firebase_bootstrap_service_helpers.dart';
+
 /// Service responsible for Firebase initialization and configuration
 class FirebaseBootstrapService {
   static Future<bool>? _firebaseInitialization;
@@ -31,13 +33,7 @@ class FirebaseBootstrapService {
   static Future<bool> _initializeFirebaseOnce() async {
     try {
       if (Firebase.apps.isNotEmpty) {
-        AppLogger.debug(
-          'Firebase already initialized: '
-          '${Firebase.apps.map((final app) => app.name).join(', ')}',
-        );
-        // Enable persistence even if Firebase was already initialized
-        _enableDatabasePersistence();
-        return true;
+        return _reuseExistingFirebaseApp();
       }
 
       final options = _resolveFirebaseOptions();
@@ -58,54 +54,16 @@ class FirebaseBootstrapService {
         return false;
       }
 
-      await Firebase.initializeApp(options: options);
-      AppLogger.info('Firebase initialized for project: ${options.projectId}');
-
-      await _activateAppCheck();
-
-      // Enable persistence immediately after initialization, before any database usage
-      _enableDatabasePersistence();
-
-      return true;
+      return _initializeConfiguredFirebase(options);
     } on FirebaseException catch (error, stackTrace) {
       if (error.code == 'duplicate-app') {
-        AppLogger.warning(
-          'Firebase already initialized natively. Reusing existing instance.',
-        );
-        Firebase.app();
-        // Enable persistence even if Firebase was already initialized natively
-        _enableDatabasePersistence();
-        return true;
+        return _reuseNativeFirebaseApp();
       }
-      AppLogger.error('Firebase initialization failed', error, stackTrace);
+      _logFirebaseInitializationFailure(error, stackTrace);
     } on Exception catch (error, stackTrace) {
-      AppLogger.error('Firebase initialization failed', error, stackTrace);
+      _logFirebaseInitializationFailure(error, stackTrace);
     }
     return false;
-  }
-
-  static FirebaseOptions? _resolveFirebaseOptions() {
-    if (kIsWeb) {
-      AppLogger.warning(
-        'Firebase configuration has not been generated for web. Skip initialization.',
-      );
-      return null;
-    }
-
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-        return DefaultFirebaseOptions.android;
-      case TargetPlatform.iOS:
-        return DefaultFirebaseOptions.ios;
-      case TargetPlatform.macOS:
-        return DefaultFirebaseOptions.macos;
-      default:
-        AppLogger.warning(
-          'Firebase configuration not available for platform $defaultTargetPlatform. '
-          'Skip initialization.',
-        );
-        return null;
-    }
   }
 
   /// Enable Firebase Database persistence.
@@ -124,106 +82,6 @@ class FirebaseBootstrapService {
     }
   }
 
-  static Future<void> _activateAppCheck() async {
-    if (kIsWeb) return;
-
-    try {
-      const debugTokenEnv = String.fromEnvironment(
-        'FIREBASE_APPCHECK_DEBUG_TOKEN',
-      );
-      // On Apple simulators, attestation providers are unsupported; ensure debug
-      // provider always has a token so it doesn't fall back to DeviceCheck/AppAttest.
-      final debugToken = debugTokenEnv.isEmpty
-          ? 'flutter_bloc_app_debug'
-          : debugTokenEnv;
-
-      switch (defaultTargetPlatform) {
-        case TargetPlatform.android:
-          await FirebaseAppCheck.instance.activate(
-            providerAndroid: kDebugMode
-                ? AndroidDebugProvider(
-                    debugToken: debugToken,
-                  )
-                : const AndroidPlayIntegrityProvider(),
-          );
-          break;
-        case TargetPlatform.iOS:
-          if (kDebugMode) {
-            final info = await DeviceInfoPlugin().iosInfo;
-            if (!info.isPhysicalDevice) {
-              AppLogger.info(
-                'iOS simulator detected; using Firebase App Check debug provider.',
-              );
-            }
-          }
-          await FirebaseAppCheck.instance.activate(
-            providerApple: kDebugMode
-                ? AppleDebugProvider(
-                    debugToken: debugToken,
-                  )
-                : const AppleAppAttestWithDeviceCheckFallbackProvider(),
-          );
-          break;
-        case TargetPlatform.macOS:
-          await FirebaseAppCheck.instance.activate(
-            providerApple: kDebugMode
-                ? AppleDebugProvider(
-                    debugToken: debugToken,
-                  )
-                : const AppleAppAttestWithDeviceCheckFallbackProvider(),
-          );
-          break;
-        default:
-          return;
-      }
-
-      AppLogger.info(
-        'Firebase App Check activated (${kDebugMode ? 'debug' : 'release'} mode)',
-      );
-      await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true);
-      if (kDebugMode) {
-        AppLogger.info('Firebase App Check debug token: $debugToken');
-        if (debugTokenEnv.isEmpty) {
-          AppLogger.warning(
-            'Using default App Check debug token. For a unique token, run with '
-            '--dart-define=FIREBASE_APPCHECK_DEBUG_TOKEN=<token> and add it in '
-            'Firebase Console → App Check → Manage debug tokens.',
-          );
-        }
-      }
-    } on Exception catch (error, stackTrace) {
-      AppLogger.warning('Firebase App Check activation failed: $error');
-      AppLogger.debug('App Check activation stack trace\n$stackTrace');
-    }
-  }
-
-  static bool _usesPlaceholderValues(final FirebaseOptions options) {
-    // Match exact placeholder values from firebase_options_fallback.dart so we
-    // do not skip real configs (e.g. project IDs that contain "placeholder").
-    bool isPlaceholder(final String? value) {
-      if (value == null || value.isEmpty) return true;
-      const exactPlaceholders = [
-        'your-project-id',
-        'YOUR_ANDROID_API_KEY',
-        'YOUR_IOS_API_KEY',
-        'YOUR_MACOS_API_KEY',
-        '1:000000000000:android:placeholder',
-        '1:000000000000:ios:placeholder',
-        '000000000000',
-      ];
-      if (exactPlaceholders.contains(value)) return true;
-      if (value == 'your-project-id.appspot.com') return true;
-      if (value.startsWith('YOUR_') && value.endsWith('_KEY')) return true;
-      return false;
-    }
-
-    return isPlaceholder(options.projectId) ||
-        isPlaceholder(options.appId) ||
-        isPlaceholder(options.apiKey) ||
-        isPlaceholder(options.messagingSenderId) ||
-        isPlaceholder(options.storageBucket);
-  }
-
   /// Configure Firebase UI Auth providers
   static void configureFirebaseUI() {
     final providers = <AuthProvider>[EmailAuthProvider()];
@@ -234,45 +92,6 @@ class FirebaseBootstrapService {
     }
 
     FirebaseUIAuth.configureProviders(providers);
-  }
-
-  static GoogleProvider? _createGoogleProvider() {
-    if (kIsWeb) return null;
-
-    try {
-      final platform = defaultTargetPlatform;
-      if (platform != TargetPlatform.android &&
-          platform != TargetPlatform.iOS) {
-        return null;
-      }
-
-      final options = Firebase.app().options;
-      final isIOS = platform == TargetPlatform.iOS;
-      final platformClientId = isIOS
-          ? options.iosClientId
-          : options.androidClientId;
-      final preferPlist = isIOS && (platformClientId?.isEmpty ?? true);
-
-      final resolvedClientId = switch (platformClientId) {
-        final id? when id.trim().isNotEmpty => id.trim(),
-        _ => options.appId,
-      };
-
-      return GoogleProvider(
-        clientId: resolvedClientId,
-        iOSPreferPlist: preferPlist,
-      );
-    } on FirebaseException catch (error, stackTrace) {
-      AppLogger.warning(
-        'Skipping Google sign-in configuration: ${error.message}',
-      );
-      AppLogger.debug('Google provider configuration stack trace\n$stackTrace');
-      return null;
-    } on Exception catch (error, stackTrace) {
-      AppLogger.warning('Skipping Google sign-in configuration: $error');
-      AppLogger.debug('Google provider configuration stack trace\n$stackTrace');
-      return null;
-    }
   }
 
   /// Register global crash reporting handlers
@@ -294,5 +113,40 @@ class FirebaseBootstrapService {
       );
       return previousPlatformHandler?.call(error, stackTrace) ?? true;
     };
+  }
+
+  static Future<bool> _initializeConfiguredFirebase(
+    final FirebaseOptions options,
+  ) async {
+    await Firebase.initializeApp(options: options);
+    AppLogger.info('Firebase initialized for project: ${options.projectId}');
+    await _activateAppCheck();
+    _enableDatabasePersistence();
+    return true;
+  }
+
+  static bool _reuseExistingFirebaseApp() {
+    AppLogger.debug(
+      'Firebase already initialized: '
+      '${Firebase.apps.map((final app) => app.name).join(', ')}',
+    );
+    _enableDatabasePersistence();
+    return true;
+  }
+
+  static bool _reuseNativeFirebaseApp() {
+    AppLogger.warning(
+      'Firebase already initialized natively. Reusing existing instance.',
+    );
+    Firebase.app();
+    _enableDatabasePersistence();
+    return true;
+  }
+
+  static void _logFirebaseInitializationFailure(
+    final Object error,
+    final StackTrace stackTrace,
+  ) {
+    AppLogger.error('Firebase initialization failed', error, stackTrace);
   }
 }

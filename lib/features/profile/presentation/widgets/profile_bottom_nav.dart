@@ -28,8 +28,7 @@ class _NavDestination {
 
 class _NavItem {
   const _NavItem.destination(this.destination)
-    : isAction = false,
-      _labelOverride = null,
+    : _labelOverride = null,
       _materialIconOverride = null,
       _cupertinoIconOverride = null;
 
@@ -38,16 +37,17 @@ class _NavItem {
     required final IconData materialIcon,
     required final IconData cupertinoIcon,
   }) : destination = null,
-       isAction = true,
        _labelOverride = label,
        _materialIconOverride = materialIcon,
        _cupertinoIconOverride = cupertinoIcon;
 
   final _NavDestination? destination;
-  final bool isAction;
   final String? _labelOverride;
   final IconData? _materialIconOverride;
   final IconData? _cupertinoIconOverride;
+
+  bool matches(final String location) =>
+      destination?.matches(location) ?? false;
 
   String get label => switch ((destination?.label, _labelOverride)) {
     (final destLabel?, _) => destLabel,
@@ -78,7 +78,7 @@ class _NavItem {
 
 const int _profileTabIndex = 0;
 
-List<_NavItem> _buildNavItems() => const <_NavItem>[
+const List<_NavItem> _navItems = <_NavItem>[
   _NavItem.destination(
     _NavDestination(
       materialIcon: Icons.person_outline,
@@ -118,6 +118,13 @@ List<_NavItem> _buildNavItems() => const <_NavItem>[
   ),
 ];
 
+int _resolveSelectedIndex(final String currentLocation) {
+  final int selectedIndex = _navItems.indexWhere(
+    (final item) => item.matches(currentLocation),
+  );
+  return selectedIndex >= 0 ? selectedIndex : _profileTabIndex;
+}
+
 class ProfileBottomNav extends StatelessWidget {
   const ProfileBottomNav({super.key});
 
@@ -126,23 +133,15 @@ class ProfileBottomNav extends StatelessWidget {
     final double bottomPadding = context.safeAreaInsets.bottom;
     final ThemeData theme = Theme.of(context);
     final bool useCupertino = PlatformAdaptive.isCupertinoFromTheme(theme);
-    final GoRouter router = GoRouter.of(context);
-    final String currentLocation = router
-        .routerDelegate
-        .currentConfiguration
-        .uri
-        .toString();
-    final List<_NavItem> items = _buildNavItems();
-    const int selectedIndex = 0;
-    const int effectiveIndex = selectedIndex >= 0
-        ? selectedIndex
-        : _profileTabIndex;
+    final String currentLocation = GoRouter.of(
+      context,
+    ).routerDelegate.currentConfiguration.uri.toString();
 
     return Padding(
       padding: EdgeInsets.only(bottom: bottomPadding),
       child: _AdaptiveBottomNavBar(
-        items: items,
-        selectedIndex: effectiveIndex,
+        items: _navItems,
+        selectedIndex: _resolveSelectedIndex(currentLocation),
         currentLocation: currentLocation,
         useCupertino: useCupertino,
       ),
@@ -163,7 +162,7 @@ class _AdaptiveBottomNavBar extends StatelessWidget {
   final String currentLocation;
   final bool useCupertino;
 
-  List<BottomNavigationBarItem> get _navItems => items
+  List<BottomNavigationBarItem> get _navigationBarItems => items
       .map(
         (final item) => BottomNavigationBarItem(
           icon: Icon(useCupertino ? item.cupertinoIcon : item.materialIcon),
@@ -172,28 +171,23 @@ class _AdaptiveBottomNavBar extends StatelessWidget {
       )
       .toList();
 
+  Future<void> _onTap(final BuildContext context, final int index) =>
+      _handleTap(context, items[index], currentLocation);
+
   @override
   Widget build(final BuildContext context) {
     if (useCupertino) {
       return CupertinoTabBar(
         currentIndex: selectedIndex,
-        items: _navItems,
-        onTap: (final index) => _handleTap(
-          context,
-          items[index],
-          currentLocation,
-        ),
+        items: _navigationBarItems,
+        onTap: (final index) => _onTap(context, index),
       );
     }
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: selectedIndex,
-      onTap: (final index) => _handleTap(
-        context,
-        items[index],
-        currentLocation,
-      ),
-      items: _navItems,
+      onTap: (final index) => _onTap(context, index),
+      items: _navigationBarItems,
     );
   }
 }
@@ -205,32 +199,58 @@ Future<void> _handleTap(
 ) async {
   final _NavDestination? destination = item.destination;
   if (destination == null) {
-    if (!context.mounted) {
-      ContextUtils.logNotMounted('ProfileBottomNav._handleTap.action');
-      return;
-    }
-    await context.push(AppRoutes.registerPath);
+    await _pushRoute(
+      context,
+      AppRoutes.registerPath,
+      logContext: 'ProfileBottomNav._handleTap.action',
+    );
     return;
   }
+
   if (destination.route == AppRoutes.profilePath) {
     return;
   }
+
   if (destination.matches(currentLocation)) {
     return;
   }
+
   if (destination.route == AppRoutes.examplePath) {
-    if (!context.mounted) {
-      ContextUtils.logNotMounted('ProfileBottomNav._handleTap.example');
-      return;
-    }
-    if (!NavigationUtils.maybePop(context)) {
-      context.go(AppRoutes.examplePath);
-    }
+    _goToExample(context);
     return;
   }
-  if (!context.mounted) {
-    ContextUtils.logNotMounted('ProfileBottomNav._handleTap.navigate');
+
+  await _pushRoute(
+    context,
+    destination.route,
+    logContext: 'ProfileBottomNav._handleTap.navigate',
+  );
+}
+
+void _goToExample(final BuildContext context) {
+  if (!_ensureMounted(context, 'ProfileBottomNav._handleTap.example')) {
     return;
   }
-  await context.push(destination.route);
+  if (!NavigationUtils.maybePop(context)) {
+    context.go(AppRoutes.examplePath);
+  }
+}
+
+Future<void> _pushRoute(
+  final BuildContext context,
+  final String route, {
+  required final String logContext,
+}) async {
+  if (!_ensureMounted(context, logContext)) {
+    return;
+  }
+  await context.push(route);
+}
+
+bool _ensureMounted(final BuildContext context, final String logContext) {
+  if (context.mounted) {
+    return true;
+  }
+  ContextUtils.logNotMounted(logContext);
+  return false;
 }

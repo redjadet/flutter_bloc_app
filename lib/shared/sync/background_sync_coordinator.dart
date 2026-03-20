@@ -13,6 +13,7 @@ import 'package:flutter_bloc_app/shared/utils/stream_controller_lifecycle.dart';
 
 export 'sync_cycle_summary.dart';
 
+part 'background_sync_coordinator_lifecycle.dart';
 part 'background_sync_coordinator_loop.dart';
 
 enum BackgroundSyncTriggerSource {
@@ -89,9 +90,11 @@ class BackgroundSyncCoordinator {
       StreamController<SyncCycleSummary>.broadcast();
   SyncCycleSummary? _latestSummary;
   final List<SyncCycleSummary> _history = <SyncCycleSummary>[];
+  // ignore: cancel_subscriptions - Managed explicitly via stop()/dispose() lifecycle helpers.
   StreamSubscription<NetworkStatus>? _networkSubscription;
+  // ignore: cancel_subscriptions - Managed explicitly via stop()/dispose() lifecycle helpers.
   StreamSubscription<void>? _enqueueSubscription;
-  TimerDisposable? _periodicTimer;
+  TimerDisposable? _syncIntervalHandle;
   Future<void>? _currentSync;
   bool _syncRequestedAfterCurrent = false;
   bool _isRunning = false;
@@ -120,42 +123,7 @@ class BackgroundSyncCoordinator {
     _telemetry('sync_start', <String, Object?>{
       'intervalSeconds': _syncInterval.inSeconds,
     });
-    await _networkSubscription?.cancel();
-    _networkSubscription = _networkStatusService.statusStream.listen(
-      (final status) {
-        if (status == NetworkStatus.online) {
-          unawaited(_triggerSync(immediate: true));
-        }
-      },
-      onError: (final Object error, final StackTrace stackTrace) {
-        AppLogger.error(
-          'BackgroundSyncCoordinator.networkSubscription failed',
-          error,
-          stackTrace,
-        );
-        _emit(SyncStatus.degraded);
-      },
-    );
-    _periodicTimer = _timerService.periodic(
-      _syncInterval,
-      () => unawaited(_triggerSync(immediate: false)),
-    );
-    await _enqueueSubscription?.cancel();
-    _enqueueSubscription = _repository.onOperationEnqueued.listen(
-      (_) => unawaited(_triggerSync(immediate: true)),
-      onError: (final Object error, final StackTrace stackTrace) {
-        AppLogger.error(
-          'BackgroundSyncCoordinator.enqueueSubscription failed',
-          error,
-          stackTrace,
-        );
-        _emit(SyncStatus.degraded);
-      },
-      cancelOnError: false,
-    );
-    _startIotDemoRealtimeSubscription?.call(
-      () => unawaited(_triggerSync(immediate: true)),
-    );
+    await _bindSyncListeners();
     await _triggerSync(immediate: true);
   }
 
@@ -166,20 +134,8 @@ class BackgroundSyncCoordinator {
     _isRunning = false;
     _syncRequestedAfterCurrent = false;
     final Future<void>? inFlight = _currentSync;
-    _periodicTimer?.dispose();
-    _periodicTimer = null;
-    await _enqueueSubscription?.cancel();
-    _enqueueSubscription = null;
-    _stopIotDemoRealtimeSubscription?.call();
-    await _networkSubscription?.cancel();
-    _networkSubscription = null;
-    if (inFlight != null) {
-      try {
-        await inFlight;
-      } on Exception {
-        // Ignore errors from in-flight sync during shutdown
-      }
-    }
+    await _unbindSyncListeners();
+    await _awaitInFlightSync(inFlight);
     _emit(SyncStatus.idle);
   }
 

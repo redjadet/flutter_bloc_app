@@ -307,6 +307,37 @@ void main() {
       },
     );
 
+    test(
+      'processOperation ignores delete operation with whitespace-only id',
+      () async {
+        final _FakeRemoteRepository remote = _FakeRemoteRepository();
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: FakeTimerService(),
+            );
+
+        final TodoItem item = TodoItem.create(title: 'Should Stay');
+        await localRepository.save(item);
+
+        final SyncOperation operation = SyncOperation.create(
+          entityType: OfflineFirstTodoRepository.todoEntity,
+          payload: <String, dynamic>{'id': '   ', 'deleted': true},
+          idempotencyKey: 'delete-op-whitespace',
+        );
+
+        await expectLater(repository.processOperation(operation), completes);
+
+        expect(remote.deletedIds, isEmpty);
+        final List<TodoItem> local = await localRepository.fetchAll();
+        expect(local, hasLength(1));
+        expect(local.first.id, item.id);
+      },
+    );
+
     test('processOperation handles delete when no remote repository', () async {
       final OfflineFirstTodoRepository repository = OfflineFirstTodoRepository(
         localRepository: localRepository,

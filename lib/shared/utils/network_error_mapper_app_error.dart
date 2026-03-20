@@ -39,15 +39,12 @@ AppError _getAppErrorFromDio(final DioException error) {
     case DioExceptionType.connectionTimeout:
     case DioExceptionType.sendTimeout:
     case DioExceptionType.receiveTimeout:
-      return NetworkError(
-        message: 'Request timed out. Please try again.',
+      return _networkError(
         kind: NetworkErrorKind.timeout,
         cause: error,
       );
     case DioExceptionType.connectionError:
-      return NetworkError(
-        message:
-            'Network connection error. Please check your internet connection.',
+      return _networkError(
         kind: NetworkErrorKind.offline,
         cause: error,
       );
@@ -67,57 +64,50 @@ AppError _getAppErrorFromStringHeuristics(
   final String errorString,
 ) {
   if (_containsNetworkHint(errorString)) {
-    return NetworkError(
-      message:
-          'Network connection error. Please check your internet connection.',
+    return _networkError(
       kind: NetworkErrorKind.offline,
       cause: error,
     );
   }
 
   if (_containsTimeoutHint(errorString)) {
-    return NetworkError(
-      message: 'Request timed out. Please try again.',
+    return _networkError(
       kind: NetworkErrorKind.timeout,
       cause: error,
     );
   }
 
   if (_containsUnauthorizedHint(errorString)) {
-    return AuthError(
-      message: 'Authentication required. Please sign in again.',
+    return _authError(
       kind: AuthErrorKind.unauthorized,
       cause: error,
     );
   }
 
   if (_containsForbiddenHint(errorString)) {
-    return AuthError(
-      message: "Access denied. You don't have permission for this action.",
+    return _authError(
       kind: AuthErrorKind.forbidden,
       cause: error,
     );
   }
 
   if (_containsNotFoundHint(errorString)) {
-    return NetworkError(
-      message: 'The requested resource was not found.',
+    return _networkError(
       kind: NetworkErrorKind.client,
       cause: error,
+      message: _notFoundMessage(),
     );
   }
 
   if (_containsRateLimitHint(errorString)) {
-    return NetworkError(
-      message: 'Too many requests. Please wait before trying again.',
+    return _networkError(
       kind: NetworkErrorKind.rateLimited,
       cause: error,
     );
   }
 
   if (_containsServiceUnavailableHint(errorString)) {
-    return NetworkError(
-      message: 'Service temporarily unavailable. Please try again in a minute.',
+    return _networkError(
       kind: NetworkErrorKind.serviceUnavailable,
       cause: error,
     );
@@ -135,8 +125,7 @@ AppError _getAppErrorFromStringHeuristics(
   }
 
   if (errorString.contains('server')) {
-    return NetworkError(
-      message: 'Server error. Please try again later.',
+    return _networkError(
       kind: NetworkErrorKind.server,
       cause: error,
     );
@@ -211,129 +200,25 @@ String _getHttpRequestFailureMessage(
   return l10n?.errorGeneric ?? 'Something went wrong.';
 }
 
-String? _getTypedErrorMessage(
-  final AppError appError, {
-  required final dynamic originalError,
-  required final AppLocalizations? l10n,
+NetworkError _networkError({
+  required final NetworkErrorKind kind,
+  required final Object? cause,
+  final String? message,
 }) {
-  if (appError case final NetworkError networkError) {
-    switch (networkError.kind) {
-      case NetworkErrorKind.timeout:
-        return l10n?.errorTimeout ?? 'Request timed out. Please try again.';
-      case NetworkErrorKind.offline:
-        return l10n?.errorNetwork ??
-            'Network connection error. Please check your internet connection.';
-      case NetworkErrorKind.serviceUnavailable:
-        return l10n?.errorServiceUnavailable ??
-            'Service temporarily unavailable. Please try again in a minute.';
-      case NetworkErrorKind.rateLimited:
-        return l10n?.errorTooManyRequests ??
-            'Too many requests. Please wait before trying again.';
-      case NetworkErrorKind.server:
-        return l10n?.errorServer ?? 'Server error. Please try again later.';
-      case NetworkErrorKind.client:
-        if (originalError.toString().contains('404')) {
-          return l10n?.errorNotFound ?? 'The requested resource was not found.';
-        }
-        return l10n?.errorClient ??
-            'Client error. Please check your request and try again.';
-      case NetworkErrorKind.unknown:
-        return null;
-    }
-  }
-
-  if (appError case final AuthError authError) {
-    switch (authError.kind) {
-      case AuthErrorKind.unauthorized:
-      case AuthErrorKind.tokenExpired:
-        return l10n?.errorUnauthorized ??
-            'Authentication required. Please sign in again.';
-      case AuthErrorKind.forbidden:
-        return l10n?.errorForbidden ??
-            "Access denied. You don't have permission for this action.";
-    }
-  }
-
-  return null;
+  return NetworkError(
+    message: message ?? (_networkMessage(kind) ?? 'Something went wrong.'),
+    kind: kind,
+    cause: cause,
+  );
 }
 
-String? _getHeuristicMessage(
-  final String errorString, {
-  required final AppLocalizations? l10n,
+AuthError _authError({
+  required final AuthErrorKind kind,
+  required final Object? cause,
 }) {
-  if (_containsNetworkHint(errorString)) {
-    return l10n?.errorNetwork ??
-        'Network connection error. Please check your internet connection.';
-  }
-
-  if (_containsTimeoutHint(errorString)) {
-    return l10n?.errorTimeout ?? 'Request timed out. Please try again.';
-  }
-
-  if (_containsUnauthorizedHint(errorString)) {
-    return l10n?.errorUnauthorized ??
-        'Authentication required. Please sign in again.';
-  }
-
-  if (_containsForbiddenHint(errorString)) {
-    return l10n?.errorForbidden ??
-        "Access denied. You don't have permission for this action.";
-  }
-
-  if (_containsNotFoundHint(errorString)) {
-    return l10n?.errorNotFound ?? 'The requested resource was not found.';
-  }
-
-  if (_containsRateLimitHint(errorString)) {
-    return l10n?.errorTooManyRequests ??
-        'Too many requests. Please wait before trying again.';
-  }
-
-  if (_containsServiceUnavailableHint(errorString)) {
-    return l10n?.errorServiceUnavailable ??
-        'Service temporarily unavailable. Please try again in a minute.';
-  }
-
-  if (errorString.contains('server')) {
-    return l10n?.errorServer ?? 'Server error. Please try again later.';
-  }
-
-  return null;
-}
-
-String? _getMessageForStatusCode(
-  final int statusCode, {
-  final AppLocalizations? l10n,
-}) {
-  switch (statusCode) {
-    case 401:
-      return l10n?.errorUnauthorized ??
-          'Authentication required. Please sign in again.';
-    case 403:
-      return l10n?.errorForbidden ??
-          "Access denied. You don't have permission for this action.";
-    case 404:
-      return l10n?.errorNotFound ?? 'The requested resource was not found.';
-    case 408:
-      return l10n?.errorTimeout ?? 'Request timed out. Please try again.';
-    case 429:
-      return l10n?.errorTooManyRequests ??
-          'Too many requests. Please wait before trying again.';
-    case 503:
-      return l10n?.errorServiceUnavailable ??
-          'Service temporarily unavailable. Please try again in a minute.';
-    case 500:
-    case 502:
-    case 504:
-      return l10n?.errorServer ?? 'Server error. Please try again later.';
-    default:
-      if (statusCode >= 400 && statusCode < 500) {
-        return l10n?.errorClient ??
-            'Client error. Please check your request and try again.';
-      }
-      if (statusCode >= 500) {
-        return l10n?.errorServer ?? 'Server error. Please try again later.';
-      }
-      return null;
-  }
+  return AuthError(
+    message: _authMessage(kind),
+    kind: kind,
+    cause: cause,
+  );
 }

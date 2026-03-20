@@ -4,7 +4,10 @@ import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
+import 'package:flutter_bloc_app/shared/utils/stream_controller_lifecycle.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
+part 'pending_sync_repository_codec.dart';
 
 /// A repository for managing a queue of [SyncOperation]s that need to be
 /// processed and synchronized with a remote backend.
@@ -39,9 +42,7 @@ class PendingSyncRepository extends HiveRepositoryBase {
       action: () async {
         final Box<dynamic> box = await getBox();
         await box.put(operation.id, operation.toJson());
-        if (!_enqueuedController.isClosed) {
-          _enqueuedController.add(null);
-        }
+        StreamControllerSafeEmit.safeAdd(_enqueuedController, null);
       },
     );
     return operation;
@@ -67,39 +68,22 @@ class PendingSyncRepository extends HiveRepositoryBase {
     logContext: 'PendingSyncRepository.getPendingOperations',
     action: () async {
       final Box<dynamic> box = await getBox();
-      final List<dynamic> malformedKeys = <dynamic>[];
-      final List<SyncOperation> operations = <SyncOperation>[];
-      for (final MapEntry<dynamic, dynamic> entry in box.toMap().entries) {
-        final dynamic value = entry.value;
-        if (value is! Map<dynamic, dynamic>) {
-          malformedKeys.add(entry.key);
-          continue;
-        }
-        final SyncOperation? operation = _operationFromJsonOrNull(value);
-        if (operation == null) {
-          malformedKeys.add(entry.key);
-          continue;
-        }
-        operations.add(operation);
-      }
-      operations.sort((final a, final b) => a.createdAt.compareTo(b.createdAt));
-      for (final dynamic key in malformedKeys) {
-        await box.delete(key);
-      }
+      final _PendingOperationsReadResult readResult = _readOperations(
+        box.toMap(),
+      );
+      final List<SyncOperation> operations =
+          readResult.operations.map((final entry) => entry.operation).toList()
+            ..sort((final a, final b) => a.createdAt.compareTo(b.createdAt));
+      await _deleteKeys(box, readResult.malformedKeys);
 
       final DateTime threshold = (now ?? DateTime.now()).toUtc();
       Iterable<SyncOperation> ready = operations.where(
-        (final op) => switch (op.nextRetryAt) {
-          final nextRetryAt? => !nextRetryAt.isAfter(threshold),
-          _ => true,
-        },
+        (final op) => _isReadyForRetry(op, threshold),
       );
       if (supabaseUserIdFilter != null) {
-        ready = ready.where((final op) {
-          if (op.entityType != 'iot_demo') return true;
-          final dynamic uid = op.payload[payloadKeySupabaseUserId];
-          return uid == supabaseUserIdFilter;
-        });
+        ready = ready.where(
+          (final op) => _matchesSupabaseUserIdFilter(op, supabaseUserIdFilter),
+        );
       }
 
       final List<SyncOperation> pending = limit != null
@@ -173,102 +157,22 @@ class PendingSyncRepository extends HiveRepositoryBase {
     action: () async {
       final Box<dynamic> box = await getBox();
       final DateTime cutoff = DateTime.now().toUtc().subtract(maxAge);
-      final List<dynamic> keysToDelete = <dynamic>[];
-      for (final MapEntry<dynamic, dynamic> entry in box.toMap().entries) {
-        final dynamic value = entry.value;
-        if (value is! Map<dynamic, dynamic>) {
-          keysToDelete.add(entry.key);
-          continue;
-        }
-        final SyncOperation? op = _operationFromJsonOrNull(value);
-        if (op == null) {
-          keysToDelete.add(entry.key);
-          continue;
-        }
-        final bool tooManyRetries = op.retryCount >= maxRetryCount;
-        final bool tooOld = switch (op.nextRetryAt) {
-          final nextRetryAt? => nextRetryAt.isBefore(cutoff),
-          _ => false,
-        };
-        if (tooManyRetries || tooOld) {
-          keysToDelete.add(entry.key);
-        }
-      }
-      for (final dynamic key in keysToDelete) {
-        await box.delete(key);
-      }
+      final _PendingOperationsReadResult readResult = _readOperations(
+        box.toMap(),
+      );
+      final List<dynamic> keysToDelete = <dynamic>[
+        ...readResult.malformedKeys,
+        ...readResult.operations
+            .where(
+              (final entry) =>
+                  entry.operation.retryCount >= maxRetryCount ||
+                  _isOlderThanCutoff(entry.operation, cutoff),
+            )
+            .map((final entry) => entry.key),
+      ];
+      await _deleteKeys(box, keysToDelete);
       return keysToDelete.length;
     },
     fallback: () => 0,
   );
-
-  // When reading from a Hive box with no explicit type, the map keys
-  // are dynamic. We need to recursively convert to Map<String, dynamic>.
-  /// Returns null when the stored map is malformed (log and skip).
-  SyncOperation? _operationFromJsonOrNull(final Map<dynamic, dynamic> json) {
-    final Map<String, dynamic> converted = <String, dynamic>{};
-    for (final MapEntry<dynamic, dynamic> entry in json.entries) {
-      if (entry.key is! String) {
-        continue;
-      }
-      final String key = entry.key as String;
-      final dynamic value = entry.value;
-
-      if (value is Map<dynamic, dynamic>) {
-        // Recursively convert nested maps (e.g., payload field)
-        converted[key] = _convertMapToTyped(value);
-      } else if (value is List<dynamic>) {
-        // Convert lists that may contain maps
-        converted[key] = value.map((final dynamic item) {
-          if (item is Map<dynamic, dynamic>) {
-            return _convertMapToTyped(item);
-          }
-          return item;
-        }).toList();
-      } else {
-        // Primitive values can be copied directly
-        converted[key] = value;
-      }
-    }
-    try {
-      return SyncOperation.fromJson(converted);
-    } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'PendingSyncRepository: malformed stored operation',
-        error,
-        stackTrace,
-      );
-      return null;
-    }
-  }
-
-  /// Recursively converts `Map<dynamic, dynamic>` to `Map<String, dynamic>`.
-  /// Handles nested maps and lists that may contain maps.
-  Map<String, dynamic> _convertMapToTyped(final Map<dynamic, dynamic> source) {
-    final Map<String, dynamic> result = <String, dynamic>{};
-    for (final MapEntry<dynamic, dynamic> entry in source.entries) {
-      if (entry.key is! String) {
-        continue;
-      }
-      final String key = entry.key as String;
-      final dynamic value = entry.value;
-
-      if (value is Map<dynamic, dynamic>) {
-        // Recursively convert nested maps
-        result[key] = _convertMapToTyped(value);
-      } else if (value is List<dynamic>) {
-        // Convert lists that may contain maps
-        result[key] = value.map((final dynamic item) {
-          if (item is Map<dynamic, dynamic>) {
-            return _convertMapToTyped(item);
-          }
-          return item;
-        }).toList();
-      } else {
-        // Primitive values can be copied directly
-        result[key] = value;
-      }
-    }
-    return result;
-  }
 }

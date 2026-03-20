@@ -76,6 +76,48 @@ void main() {
         expect(signUpButton().onPressed, isNotNull);
       },
     );
+
+    testWidgets('dismisses error state back to sign-in form', (
+      final WidgetTester tester,
+    ) async {
+      final cubit = SupabaseAuthCubit(repository: _FakeRepo(isConfigured: true))
+        ..emit(const SupabaseAuthState.error('Bad credentials'));
+      addTearDown(cubit.close);
+
+      await tester.pumpWidget(_buildTestApp(cubit: cubit));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Bad credentials'), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Bad credentials'), findsNothing);
+      expect(find.widgetWithText(FilledButton, 'Sign in'), findsOneWidget);
+      expect(find.widgetWithText(OutlinedButton, 'Sign up'), findsOneWidget);
+    });
+
+    testWidgets('signs out from authenticated state', (
+      final WidgetTester tester,
+    ) async {
+      final _FakeRepo repository = _FakeRepo(isConfigured: true);
+      final cubit = SupabaseAuthCubit(repository: repository)
+        ..emit(
+          const SupabaseAuthState.authenticated(
+            AuthUser(id: 'u1', isAnonymous: false),
+          ),
+        );
+      addTearDown(cubit.close);
+
+      await tester.pumpWidget(_buildTestApp(cubit: cubit));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(FilledButton, 'Sign out'));
+      await tester.pumpAndSettle();
+
+      expect(repository.signOutCalls, 1);
+      expect(find.widgetWithText(FilledButton, 'Sign in'), findsOneWidget);
+    });
   });
 }
 
@@ -95,6 +137,8 @@ class _FakeRepo implements SupabaseAuthRepository {
 
   @override
   final bool isConfigured;
+
+  int signOutCalls = 0;
 
   @override
   AuthUser? get currentUser => null;
@@ -116,5 +160,7 @@ class _FakeRepo implements SupabaseAuthRepository {
   }) async {}
 
   @override
-  Future<void> signOut() async {}
+  Future<void> signOut() async {
+    signOutCalls++;
+  }
 }
