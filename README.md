@@ -4,8 +4,8 @@ A reference Flutter application built to demonstrate disciplined product
 engineering: clear architecture, robust state management, strong validation, and
 production-minded development workflow.
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.41.4-blue.svg)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/Dart-3.11.1-blue.svg)](https://dart.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.41.5-blue.svg)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.11.3-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
 [![Coverage](https://img.shields.io/badge/Coverage-78%2E95%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
@@ -36,8 +36,8 @@ linked below rather than this README.
 
 ### Prerequisites
 
-- Flutter 3.41.4
-- Dart 3.11.1
+- Flutter 3.41.5
+- Dart 3.11.3
 - iOS 12+ / Android API 21+
 
 ```bash
