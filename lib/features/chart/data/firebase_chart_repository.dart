@@ -99,34 +99,57 @@ class FirebaseChartRepository implements ChartRemoteRepository {
       return const <ChartPoint>[];
     }
 
-    final List<ChartPoint> fromCloud = await _tryFetchFromCloud();
-    if (fromCloud.isNotEmpty) {
+    final _FirebaseChartFetchAttempt cloudAttempt = await _tryFetchFromCloud();
+    if (cloudAttempt.points.isNotEmpty) {
       _lastSource = ChartDataSource.firebaseCloud;
-      return fromCloud;
+      return cloudAttempt.points;
     }
 
-    final List<ChartPoint> fromFirestore = await _tryFetchFromFirestore();
-    if (fromFirestore.isNotEmpty) {
+    final _FirebaseChartFetchAttempt firestoreAttempt =
+        await _tryFetchFromFirestore();
+    if (firestoreAttempt.points.isNotEmpty) {
+      if (cloudAttempt.failure case final failure?) {
+        AppLogger.debug(
+          'FirebaseChartRepository cloud fallback to firestore '
+          '(${failure.label})',
+        );
+      }
       _lastSource = ChartDataSource.firebaseFirestore;
-      return fromFirestore;
+      return firestoreAttempt.points;
     }
 
+    _logAttemptFailure(
+      context: 'FirebaseChartRepository cloud',
+      failure: cloudAttempt.failure,
+    );
+    _logAttemptFailure(
+      context: 'FirebaseChartRepository firestore',
+      failure: firestoreAttempt.failure,
+    );
     throw ChartDataException('Failed to load chart data from Firebase');
   }
 
-  Future<List<ChartPoint>> _tryFetchFromCloud() async {
+  Future<_FirebaseChartFetchAttempt> _tryFetchFromCloud() async {
     try {
       final functions = _safeFunctions;
-      if (functions == null) return const <ChartPoint>[];
+      if (functions == null) {
+        return const _FirebaseChartFetchAttempt(
+          failure: _FirebaseChartFetchFailure(
+            label: 'functions unavailable',
+          ),
+        );
+      }
       final callable = functions.httpsCallable(_callableName);
       final HttpsCallableResult<dynamic> result = await callable.call(
         <String, dynamic>{},
       );
       final Map<String, dynamic>? json = mapFromDynamic(result.data);
       final List<dynamic>? raw = listFromDynamic(json?['points']);
-      if (raw == null || raw.isEmpty) return const <ChartPoint>[];
-      return parseChartPointsResilient(raw);
-    } on FirebaseFunctionsException catch (e, stackTrace) {
+      if (raw == null || raw.isEmpty) {
+        return const _FirebaseChartFetchAttempt();
+      }
+      return _FirebaseChartFetchAttempt(points: parseChartPointsResilient(raw));
+    } on FirebaseFunctionsException catch (e, _) {
       if (e.code == 'unauthenticated') {
         final auth = _safeAuth;
         final uid = auth?.currentUser?.uid;
@@ -145,59 +168,102 @@ class FirebaseChartRepository implements ChartRemoteRepository {
           'uid=${uid ?? '(none)'}, '
           'idToken=${tokenPreview ?? '(unavailable)'}',
         );
-        return const <ChartPoint>[];
+        return const _FirebaseChartFetchAttempt();
       }
-      AppLogger.warning('FirebaseChartRepository cloud failed (${e.code})');
-      AppLogger.error(
-        'FirebaseChartRepository._tryFetchFromCloud',
-        e,
-        stackTrace,
+      return _FirebaseChartFetchAttempt(
+        failure: _FirebaseChartFetchFailure(
+          label: e.code,
+          error: e,
+          logStackTrace: false,
+        ),
       );
-      return const <ChartPoint>[];
-    } on Object catch (error, stackTrace) {
-      AppLogger.warning(
-        'FirebaseChartRepository cloud failed (${error.runtimeType})',
+    } on Object catch (error, _) {
+      return _FirebaseChartFetchAttempt(
+        failure: _FirebaseChartFetchFailure(
+          label: error.runtimeType.toString(),
+          error: error,
+          logStackTrace: false,
+        ),
       );
-      AppLogger.error(
-        'FirebaseChartRepository._tryFetchFromCloud',
-        error,
-        stackTrace,
-      );
-      return const <ChartPoint>[];
     }
   }
 
-  Future<List<ChartPoint>> _tryFetchFromFirestore() async {
+  Future<_FirebaseChartFetchAttempt> _tryFetchFromFirestore() async {
     try {
       final firestore = _safeFirestore;
-      if (firestore == null) return const <ChartPoint>[];
+      if (firestore == null) {
+        return const _FirebaseChartFetchAttempt(
+          failure: _FirebaseChartFetchFailure(
+            label: 'firestore unavailable',
+          ),
+        );
+      }
       final DocumentSnapshot<Map<String, dynamic>> snap = await firestore
           .doc(_firestoreDocPath)
           .get();
       final data = snap.data();
       final List<dynamic>? raw = listFromDynamic(data?['points']);
-      if (raw == null || raw.isEmpty) return const <ChartPoint>[];
-      return parseChartPointsResilient(raw);
+      if (raw == null || raw.isEmpty) {
+        return const _FirebaseChartFetchAttempt();
+      }
+      return _FirebaseChartFetchAttempt(points: parseChartPointsResilient(raw));
     } on FirebaseException catch (e, stackTrace) {
-      AppLogger.warning(
-        'FirebaseChartRepository firestore failed (${e.code})',
+      return _FirebaseChartFetchAttempt(
+        failure: _FirebaseChartFetchFailure(
+          label: e.code,
+          error: e,
+          stackTrace: stackTrace,
+        ),
       );
-      AppLogger.error(
-        'FirebaseChartRepository._tryFetchFromFirestore',
-        e,
-        stackTrace,
-      );
-      return const <ChartPoint>[];
     } on Object catch (error, stackTrace) {
-      AppLogger.warning(
-        'FirebaseChartRepository firestore failed (${error.runtimeType})',
+      return _FirebaseChartFetchAttempt(
+        failure: _FirebaseChartFetchFailure(
+          label: error.runtimeType.toString(),
+          error: error,
+          stackTrace: stackTrace,
+        ),
       );
-      AppLogger.error(
-        'FirebaseChartRepository._tryFetchFromFirestore',
-        error,
-        stackTrace,
-      );
-      return const <ChartPoint>[];
     }
   }
+
+  void _logAttemptFailure({
+    required final String context,
+    required final _FirebaseChartFetchFailure? failure,
+  }) {
+    if (failure == null) {
+      return;
+    }
+    AppLogger.warning('$context failed (${failure.label})');
+    if (failure.error != null) {
+      AppLogger.error(
+        context,
+        failure.error,
+        failure.logStackTrace ? failure.stackTrace : null,
+      );
+    }
+  }
+}
+
+final class _FirebaseChartFetchAttempt {
+  const _FirebaseChartFetchAttempt({
+    this.points = const <ChartPoint>[],
+    this.failure,
+  });
+
+  final List<ChartPoint> points;
+  final _FirebaseChartFetchFailure? failure;
+}
+
+final class _FirebaseChartFetchFailure {
+  const _FirebaseChartFetchFailure({
+    required this.label,
+    this.error,
+    this.stackTrace,
+    this.logStackTrace = true,
+  });
+
+  final String label;
+  final Object? error;
+  final StackTrace? stackTrace;
+  final bool logStackTrace;
 }

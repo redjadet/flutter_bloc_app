@@ -55,10 +55,9 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
 
   @override
   app_auth.AuthUser? get currentUser {
-    if (!isConfigured) return null;
+    if (!_canAccessSupabase) return null;
     try {
-      final user = _readCurrentUser();
-      return user == null ? null : _toAuthUser(user);
+      return _mapUser(_readCurrentUser());
     } on Object catch (error, stackTrace) {
       AppLogger.error(
         'SupabaseAuthRepositoryImpl.currentUser',
@@ -71,15 +70,12 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
 
   @override
   Stream<app_auth.AuthUser?> get authStateChanges {
-    if (!isConfigured) {
+    if (!_canAccessSupabase) {
       return Stream<app_auth.AuthUser?>.value(null);
     }
-    return _authStateChangesStream().map((
-      final data,
-    ) {
-      final user = data.session?.user;
-      return user == null ? null : _toAuthUser(user);
-    });
+    return _authStateChangesStream().map(
+      (final data) => _mapUser(data.session?.user),
+    );
   }
 
   @override
@@ -87,29 +83,21 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
     required final String email,
     required final String password,
   }) async {
-    if (!isConfigured) {
-      throw const SupabaseAuthException(
-        'Supabase is not configured (missing URL or anon key).',
-      );
-    }
+    _requireConfigured();
     try {
       await _signInWithPasswordImpl(
         email: email.trim(),
         password: password,
       );
     } on AuthException catch (e) {
-      throw SupabaseAuthException(
-        e.message,
-        code: _mapErrorCode(e),
-        cause: e,
-      );
+      throw _authExceptionFromSupabase(e);
     } on Object catch (error, stackTrace) {
       AppLogger.error(
         'SupabaseAuthRepositoryImpl.signInWithPassword',
         error,
         stackTrace,
       );
-      throw SupabaseAuthException(error.toString(), cause: error);
+      throw _unexpectedAuthException(error);
     }
   }
 
@@ -119,34 +107,24 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
     required final String password,
     final String? displayName,
   }) async {
-    if (!isConfigured) {
-      throw const SupabaseAuthException(
-        'Supabase is not configured (missing URL or anon key).',
-      );
-    }
+    _requireConfigured();
     try {
       await _signUpImpl(
         email: email.trim(),
         password: password,
-        data: displayName != null && displayName.trim().isNotEmpty
-            ? <String, dynamic>{'full_name': displayName.trim()}
-            : null,
+        data: _signUpUserData(displayName),
       );
     } on AuthException catch (e) {
-      throw SupabaseAuthException(
-        e.message,
-        code: _mapErrorCode(e),
-        cause: e,
-      );
+      throw _authExceptionFromSupabase(e);
     } on Object catch (error, stackTrace) {
       AppLogger.error('SupabaseAuthRepositoryImpl.signUp', error, stackTrace);
-      throw SupabaseAuthException(error.toString(), cause: error);
+      throw _unexpectedAuthException(error);
     }
   }
 
   @override
   Future<void> signOut() async {
-    if (!isConfigured) return;
+    if (!_canAccessSupabase) return;
     try {
       await _signOutImpl();
     } on Object catch (error, stackTrace) {
@@ -154,6 +132,44 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
       rethrow;
     }
   }
+
+  bool get _canAccessSupabase => isConfigured;
+
+  void _requireConfigured() {
+    if (_canAccessSupabase) {
+      return;
+    }
+    throw const SupabaseAuthException(
+      'Supabase is not configured (missing URL or anon key).',
+    );
+  }
+
+  static app_auth.AuthUser? _mapUser(final User? user) =>
+      user == null ? null : _toAuthUser(user);
+
+  static Map<String, dynamic>? _signUpUserData(final String? displayName) {
+    if (displayName == null) {
+      return null;
+    }
+    final String trimmedDisplayName = displayName.trim();
+    if (trimmedDisplayName.isEmpty) {
+      return null;
+    }
+    return <String, dynamic>{'full_name': trimmedDisplayName};
+  }
+
+  static SupabaseAuthException _authExceptionFromSupabase(
+    final AuthException error,
+  ) {
+    return SupabaseAuthException(
+      error.message,
+      code: _mapErrorCode(error),
+      cause: error,
+    );
+  }
+
+  static SupabaseAuthException _unexpectedAuthException(final Object error) =>
+      SupabaseAuthException(error.toString(), cause: error);
 
   static app_auth.AuthUser _toAuthUser(final User user) {
     final meta = user.userMetadata;

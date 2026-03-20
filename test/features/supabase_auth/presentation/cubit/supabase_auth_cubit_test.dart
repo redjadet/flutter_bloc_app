@@ -97,6 +97,36 @@ void main() {
       );
       expect(authenticatedStates, hasLength(1));
     });
+
+    test('emits mapped error when auth state stream fails', () async {
+      final controller = StreamController<AuthUser?>.broadcast();
+      addTearDown(controller.close);
+
+      when(() => mockRepository.isConfigured).thenReturn(true);
+      when(() => mockRepository.currentUser).thenReturn(null);
+      when(
+        () => mockRepository.authStateChanges,
+      ).thenAnswer((_) => controller.stream);
+
+      final states = <SupabaseAuthState>[];
+      final subscription = cubit.stream.listen(states.add);
+      addTearDown(subscription.cancel);
+
+      await cubit.loadSession();
+      controller.addError(
+        const SupabaseAuthException(
+          'Network unavailable',
+          code: SupabaseAuthErrorCode.network,
+        ),
+        StackTrace.current,
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      expect(
+        states.last,
+        SupabaseAuthState.error(l10n.supabaseAuthErrorNetwork),
+      );
+    });
   });
 
   group('signIn', () {

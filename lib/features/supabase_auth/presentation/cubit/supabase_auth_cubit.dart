@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/presentation/cubit/supabase_auth_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -36,31 +37,12 @@ class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
 
     if (isClosed) return;
     emit(const SupabaseAuthState.loading());
-    if (isClosed) return;
-
-    final user = _repository.currentUser;
-    if (isClosed) return;
-    if (user != null) {
-      emit(SupabaseAuthState.authenticated(user));
-    } else {
-      emit(const SupabaseAuthState.unauthenticated());
-    }
+    _emitCurrentAuthState();
 
     await _disposeAuthStateSubscription();
     _authStateSubscription = _repository.authStateChanges.listen(
-      (final u) {
-        if (isClosed) return;
-        if (u != null) {
-          emit(SupabaseAuthState.authenticated(u));
-        } else {
-          emit(const SupabaseAuthState.unauthenticated());
-        }
-      },
-      onError: (final Object e, final StackTrace st) {
-        AppLogger.error('SupabaseAuthCubit.authStateChanges', e, st);
-        if (isClosed) return;
-        emit(SupabaseAuthState.error(_mapErrorMessage(e)));
-      },
+      _handleAuthStateChanged,
+      onError: _handleAuthStateError,
       cancelOnError: true,
     );
     registerSubscription(_authStateSubscription);
@@ -71,34 +53,12 @@ class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
     required final String email,
     required final String password,
   }) async {
-    await CubitExceptionHandler.executeAsyncVoid(
-      operation: () async {
-        if (isClosed) return;
-        emit(const SupabaseAuthState.loading());
-
-        await _repository.signInWithPassword(
-          email: email,
-          password: password,
-        );
-        if (isClosed) return;
-
-        final user = _repository.currentUser;
-        if (user != null) {
-          emit(SupabaseAuthState.authenticated(user));
-        } else {
-          emit(const SupabaseAuthState.unauthenticated());
-        }
-      },
+    await _runAuthAction(
       logContext: 'SupabaseAuthCubit.signIn',
-      isAlive: () => !isClosed,
-      onError: (_) {},
-      onErrorWithDetails: (final error, final stackTrace) {
-        _emitActionError(
-          context: 'SupabaseAuthCubit.signIn',
-          error: error,
-          stackTrace: stackTrace,
-        );
-      },
+      operation: () => _repository.signInWithPassword(
+        email: email,
+        password: password,
+      ),
     );
   }
 
@@ -108,59 +68,24 @@ class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
     required final String password,
     final String? displayName,
   }) async {
-    await CubitExceptionHandler.executeAsyncVoid(
-      operation: () async {
-        if (isClosed) return;
-        emit(const SupabaseAuthState.loading());
-
-        await _repository.signUp(
-          email: email,
-          password: password,
-          displayName: displayName,
-        );
-        if (isClosed) return;
-
-        final user = _repository.currentUser;
-        if (user != null) {
-          emit(SupabaseAuthState.authenticated(user));
-        } else {
-          emit(const SupabaseAuthState.unauthenticated());
-        }
-      },
+    await _runAuthAction(
       logContext: 'SupabaseAuthCubit.signUp',
-      isAlive: () => !isClosed,
-      onError: (_) {},
-      onErrorWithDetails: (final error, final stackTrace) {
-        _emitActionError(
-          context: 'SupabaseAuthCubit.signUp',
-          error: error,
-          stackTrace: stackTrace,
-        );
-      },
+      operation: () => _repository.signUp(
+        email: email,
+        password: password,
+        displayName: displayName,
+      ),
     );
   }
 
   /// Signs out the current user.
   Future<void> signOut() async {
-    await CubitExceptionHandler.executeAsyncVoid(
-      operation: () async {
-        if (isClosed) return;
-        emit(const SupabaseAuthState.loading());
-
-        await _repository.signOut();
-        if (isClosed) return;
-
-        emit(const SupabaseAuthState.unauthenticated());
-      },
+    await _runAuthAction(
       logContext: 'SupabaseAuthCubit.signOut',
-      isAlive: () => !isClosed,
-      onError: (_) {},
-      onErrorWithDetails: (final error, final stackTrace) {
-        _emitActionError(
-          context: 'SupabaseAuthCubit.signOut',
-          error: error,
-          stackTrace: stackTrace,
-        );
+      operation: _repository.signOut,
+      onSuccess: () {
+        if (isClosed) return;
+        emit(const SupabaseAuthState.unauthenticated());
       },
     );
   }
@@ -174,6 +99,51 @@ class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
       return;
     }
 
+    _emitCurrentAuthState();
+  }
+
+  @override
+  Future<void> close() {
+    _authStateSubscription = null;
+    return super.close();
+  }
+
+  Future<void> _runAuthAction({
+    required final String logContext,
+    required final Future<void> Function() operation,
+    final void Function()? onSuccess,
+  }) async {
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: () async {
+        if (isClosed) return;
+        emit(const SupabaseAuthState.loading());
+
+        await operation();
+        if (isClosed) return;
+
+        if (onSuccess case final runOnSuccess?) {
+          runOnSuccess();
+          return;
+        }
+
+        _emitCurrentAuthState();
+      },
+      logContext: logContext,
+      isAlive: () => !isClosed,
+      onError: (_) {},
+      onErrorWithDetails: (final error, final stackTrace) {
+        _emitActionError(
+          context: logContext,
+          error: error,
+          stackTrace: stackTrace,
+        );
+      },
+    );
+  }
+
+  void _emitCurrentAuthState() {
+    if (isClosed) return;
+
     final user = _repository.currentUser;
     if (user != null) {
       emit(SupabaseAuthState.authenticated(user));
@@ -183,10 +153,21 @@ class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
     emit(const SupabaseAuthState.unauthenticated());
   }
 
-  @override
-  Future<void> close() {
-    _authStateSubscription = null;
-    return super.close();
+  void _handleAuthStateChanged(final AuthUser? user) {
+    if (isClosed) return;
+
+    if (user != null) {
+      emit(SupabaseAuthState.authenticated(user));
+      return;
+    }
+
+    emit(const SupabaseAuthState.unauthenticated());
+  }
+
+  void _handleAuthStateError(final Object error, final StackTrace stackTrace) {
+    AppLogger.error('SupabaseAuthCubit.authStateChanges', error, stackTrace);
+    if (isClosed) return;
+    emit(SupabaseAuthState.error(_mapErrorMessage(error)));
   }
 
   void _emitActionError({

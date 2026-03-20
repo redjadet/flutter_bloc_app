@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_address.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/walletconnect_auth_repository.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/cubit/walletconnect_auth_state.dart';
@@ -22,72 +23,32 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
 
   /// Loads the linked wallet address if available.
   Future<void> loadLinkedWallet() async {
-    await CubitExceptionHandler.executeAsyncVoid(
-      operation: () async {
-        if (isClosed) return;
-        emit(state.copyWith(status: ViewStatus.loading));
-
-        final linkedAddress = await _repository.getLinkedWalletAddress();
-        if (isClosed) return;
-
-        WalletUserProfile? profile;
-        if (linkedAddress != null) {
-          profile = await _repository.getWalletUserProfile(linkedAddress.value);
-          if (isClosed) return;
-        }
-
-        emit(
-          state.copyWith(
-            status: ViewStatus.success,
-            linkedWalletAddress: linkedAddress,
-            userProfile: profile,
-          ),
-        );
-      },
-      isAlive: () => !isClosed,
-      onError: (final message) {
-        if (isClosed) return;
-        emit(
-          state.copyWith(
-            status: ViewStatus.error,
-            errorMessage: message,
-          ),
-        );
-      },
+    await _runLoadingAction(
       logContext: 'WalletConnectAuthCubit.loadLinkedWallet',
+      clearError: false,
+      operation: _refreshLinkedWalletState,
     );
   }
 
   /// Connects to a wallet via WalletConnect.
   Future<void> connectWallet() async {
-    await CubitExceptionHandler.executeAsyncVoid(
+    await _runLoadingAction(
+      logContext: 'WalletConnectAuthCubit.connectWallet',
       operation: () async {
-        if (isClosed) return;
-        emit(state.copyWith(status: ViewStatus.loading, errorMessage: null));
-
         final address = await _repository.connectWallet();
-        if (isClosed) return;
-
-        emit(
+        _emitSuccess(
           state.copyWith(
-            status: ViewStatus.success,
             walletAddress: address,
             errorMessage: null,
           ),
         );
       },
-      isAlive: () => !isClosed,
       onError: (final message) {
-        if (isClosed) return;
-        emit(
-          state.copyWith(
-            status: ViewStatus.error,
-            errorMessage: message,
-            walletAddress: null,
-          ),
+        _emitError(
+          message,
+          nextState: state.copyWith(walletAddress: null),
         );
       },
-      logContext: 'WalletConnectAuthCubit.connectWallet',
     );
   }
 
@@ -107,53 +68,20 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
       return;
     }
 
-    await CubitExceptionHandler.executeAsyncVoid(
-      operation: () async {
-        if (isClosed) return;
-        emit(state.copyWith(status: ViewStatus.loading, errorMessage: null));
-
-        await _repository.linkWalletToFirebaseUser(currentAddress.value);
-        if (isClosed) return;
-
-        final linkedAddress = await _repository.getLinkedWalletAddress();
-        if (isClosed) return;
-
-        WalletUserProfile? profile;
-        if (linkedAddress != null) {
-          profile = await _repository.getWalletUserProfile(linkedAddress.value);
-          if (isClosed) return;
-        }
-
-        emit(
-          state.copyWith(
-            status: ViewStatus.success,
-            linkedWalletAddress: linkedAddress,
-            userProfile: profile,
-            errorMessage: null,
-          ),
-        );
-      },
-      isAlive: () => !isClosed,
-      onError: (final message) {
-        if (isClosed) return;
-        emit(
-          state.copyWith(
-            status: ViewStatus.error,
-            errorMessage: message,
-          ),
-        );
-      },
+    await _runLoadingAction(
       logContext: 'WalletConnectAuthCubit.linkWalletToUser',
+      operation: () async {
+        await _repository.linkWalletToFirebaseUser(currentAddress.value);
+        await _refreshLinkedWalletState();
+      },
     );
   }
 
   /// Disconnects the wallet.
   Future<void> disconnectWallet() async {
-    await CubitExceptionHandler.executeAsyncVoid(
+    await _runLoadingAction(
+      logContext: 'WalletConnectAuthCubit.disconnectWallet',
       operation: () async {
-        if (isClosed) return;
-        emit(state.copyWith(status: ViewStatus.loading, errorMessage: null));
-
         await _repository.disconnectWallet();
         if (isClosed) return;
 
@@ -165,17 +93,6 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
           ),
         );
       },
-      isAlive: () => !isClosed,
-      onError: (final message) {
-        if (isClosed) return;
-        emit(
-          state.copyWith(
-            status: ViewStatus.error,
-            errorMessage: message,
-          ),
-        );
-      },
-      logContext: 'WalletConnectAuthCubit.disconnectWallet',
     );
   }
 
@@ -195,43 +112,12 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
       return;
     }
 
-    await CubitExceptionHandler.executeAsyncVoid(
-      operation: () async {
-        if (isClosed) return;
-        emit(state.copyWith(status: ViewStatus.loading, errorMessage: null));
-
-        await _repository.linkWalletToFirebaseUser(linkedAddress.value);
-        if (isClosed) return;
-
-        final updated = await _repository.getLinkedWalletAddress();
-        if (isClosed) return;
-
-        WalletUserProfile? profile;
-        if (updated != null) {
-          profile = await _repository.getWalletUserProfile(updated.value);
-          if (isClosed) return;
-        }
-
-        emit(
-          state.copyWith(
-            status: ViewStatus.success,
-            linkedWalletAddress: updated,
-            userProfile: profile,
-            errorMessage: null,
-          ),
-        );
-      },
-      isAlive: () => !isClosed,
-      onError: (final message) {
-        if (isClosed) return;
-        emit(
-          state.copyWith(
-            status: ViewStatus.error,
-            errorMessage: message,
-          ),
-        );
-      },
+    await _runLoadingAction(
       logContext: 'WalletConnectAuthCubit.relinkWalletToUser',
+      operation: () async {
+        await _repository.linkWalletToFirebaseUser(linkedAddress.value);
+        await _refreshLinkedWalletState();
+      },
     );
   }
 
@@ -246,6 +132,72 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
         status: state.walletAddress != null
             ? ViewStatus.success
             : ViewStatus.initial,
+      ),
+    );
+  }
+
+  Future<void> _runLoadingAction({
+    required final String logContext,
+    required final Future<void> Function() operation,
+    final void Function(String message)? onError,
+    final bool clearError = true,
+  }) async {
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: () async {
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            status: ViewStatus.loading,
+            errorMessage: clearError ? null : state.errorMessage,
+          ),
+        );
+        await operation();
+      },
+      isAlive: () => !isClosed,
+      onError: onError ?? _emitError,
+      logContext: logContext,
+    );
+  }
+
+  Future<void> _refreshLinkedWalletState() async {
+    final linkedAddress = await _repository.getLinkedWalletAddress();
+    if (isClosed) return;
+
+    final WalletUserProfile? profile = await _loadUserProfile(linkedAddress);
+    if (isClosed) return;
+
+    _emitSuccess(
+      state.copyWith(
+        linkedWalletAddress: linkedAddress,
+        userProfile: profile,
+        errorMessage: null,
+      ),
+    );
+  }
+
+  Future<WalletUserProfile?> _loadUserProfile(
+    final WalletAddress? linkedAddress,
+  ) async {
+    if (linkedAddress == null) {
+      return null;
+    }
+    return _repository.getWalletUserProfile(linkedAddress.value);
+  }
+
+  void _emitSuccess(final WalletConnectAuthState nextState) {
+    if (isClosed) return;
+    emit(nextState.copyWith(status: ViewStatus.success));
+  }
+
+  void _emitError(
+    final String message, {
+    final WalletConnectAuthState? nextState,
+  }) {
+    if (isClosed) return;
+    emit(
+      (nextState ?? state).copyWith(
+        status: ViewStatus.error,
+        errorMessage: message,
       ),
     );
   }

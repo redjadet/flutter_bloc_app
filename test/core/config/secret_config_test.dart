@@ -127,6 +127,23 @@ void main() {
     );
   });
 
+  test('uses GOOGLE_API_KEY as Gemini fallback after trimming', () async {
+    final _FakeSecretStorage storage = _FakeSecretStorage();
+    SecretConfig.storage = storage;
+    SecretConfig.debugAssetBundle = _FakeAssetBundle.throwing();
+    SecretConfig.debugEnvironment = <String, dynamic>{
+      'GOOGLE_API_KEY': '  gemini-via-google-key  ',
+    };
+
+    await SecretConfig.load();
+
+    expect(SecretConfig.geminiApiKey, 'gemini-via-google-key');
+    expect(
+      storage.writeCalls,
+      containsPair('gemini_api_key', 'gemini-via-google-key'),
+    );
+  });
+
   test('skips secure storage persistence when disabled', () async {
     final _FakeSecretStorage storage = _FakeSecretStorage();
     SecretConfig.storage = storage;

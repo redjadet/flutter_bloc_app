@@ -219,5 +219,86 @@ void main() {
         ]);
       },
     );
+
+    test(
+      'coalesces counter operations to latest count and prunes older ones',
+      () async {
+        final SyncOperation olderCounterOp = SyncOperation(
+          id: 'counter-1',
+          entityType: 'counter',
+          payload: const <String, dynamic>{'count': 2},
+          createdAt: DateTime.utc(2024, 1, 1),
+          idempotencyKey: 'counter-key-1',
+        );
+        final SyncOperation newerCounterOp = SyncOperation(
+          id: 'counter-2',
+          entityType: 'counter',
+          payload: const <String, dynamic>{'count': 5},
+          createdAt: DateTime.utc(2024, 1, 1),
+          idempotencyKey: 'counter-key-2',
+        );
+        final _MockSyncableRepository repo = _MockSyncableRepository();
+        when(() => repo.entityType).thenReturn('counter');
+        when(() => repo.processOperation(any())).thenAnswer((_) async {});
+        when(() => repo.pullRemote()).thenAnswer((_) async {});
+        registry.register(repo);
+        when(
+          () => pending.getPendingOperations(
+            now: any(named: 'now'),
+            limit: any(named: 'limit'),
+            supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
+          ),
+        ).thenAnswer(
+          (_) async => <SyncOperation>[olderCounterOp, newerCounterOp],
+        );
+        when(() => pending.markCompleted(any())).thenAnswer((_) async {});
+
+        await runSyncCycle(
+          registry: registry,
+          pendingRepository: pending,
+          emitStatus: emittedStatuses.add,
+          telemetry: (final _, final _) {},
+        );
+
+        verify(() => repo.processOperation(newerCounterOp)).called(1);
+        verifyNever(() => repo.processOperation(olderCounterOp));
+        verify(() => pending.markCompleted(newerCounterOp.id)).called(1);
+        verify(() => pending.markCompleted(olderCounterOp.id)).called(1);
+      },
+    );
+
+    test('discards operations without a registered repository', () async {
+      final SyncOperation op = SyncOperation(
+        id: 'orphan-op',
+        entityType: 'missing',
+        payload: const <String, dynamic>{'k': 'v'},
+        createdAt: DateTime.utc(2024, 1, 1),
+        idempotencyKey: 'missing-key',
+      );
+      when(
+        () => pending.getPendingOperations(
+          now: any(named: 'now'),
+          limit: any(named: 'limit'),
+          supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
+        ),
+      ).thenAnswer((_) async => <SyncOperation>[op]);
+      when(() => pending.markCompleted(op.id)).thenAnswer((_) async {});
+
+      final SyncCycleSummary summary = await runSyncCycle(
+        registry: registry,
+        pendingRepository: pending,
+        emitStatus: emittedStatuses.add,
+        telemetry: (final String event, final Map<String, Object?> payload) {
+          telemetryEvent = event;
+          telemetryPayload = payload;
+        },
+      );
+
+      expect(summary.pendingAtStart, 1);
+      expect(summary.operationsProcessed, 0);
+      expect(summary.operationsFailed, 0);
+      verify(() => pending.markCompleted(op.id)).called(1);
+      expect(telemetryPayload?['pendingByEntity'], containsPair('missing', 1));
+    });
   });
 }

@@ -12,6 +12,7 @@ import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.da
 import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -20,6 +21,7 @@ import '../test/test_helpers.dart' as test_helpers;
 import '../test/test_helpers.dart' show waitForCounterCubitsToLoad;
 
 bool _hiveInitialized = false;
+final List<AppLogEntry> _unexpectedIntegrationLogs = <AppLogEntry>[];
 
 class IntegrationDependencyOptions {
   const IntegrationDependencyOptions({
@@ -53,6 +55,7 @@ void registerIntegrationFlow({
 }) {
   group(groupName, () {
     setUp(() async {
+      _beginIntegrationLogCapture();
       await configureIntegrationTestDependencies(
         overrideCounterRepository: options.overrideCounterRepository,
         overrideChartRepository: options.overrideChartRepository,
@@ -64,6 +67,8 @@ void registerIntegrationFlow({
     });
 
     tearDown(() async {
+      _assertNoUnexpectedIntegrationLogs();
+      _endIntegrationLogCapture();
       await tearDownIntegrationTestDependencies();
     });
 
@@ -79,6 +84,46 @@ Future<void> initializeIntegrationTestHarness() async {
 
   await test_helpers.setupHiveForTesting();
   _hiveInitialized = true;
+}
+
+void _beginIntegrationLogCapture() {
+  _unexpectedIntegrationLogs.clear();
+  AppLogger.observer = (final entry) {
+    if (_isUnexpectedIntegrationLog(entry)) {
+      _unexpectedIntegrationLogs.add(entry);
+    }
+  };
+}
+
+void _endIntegrationLogCapture() {
+  AppLogger.observer = null;
+  _unexpectedIntegrationLogs.clear();
+}
+
+bool _isUnexpectedIntegrationLog(final AppLogEntry entry) {
+  return entry.level == AppLogLevel.warning || entry.level == AppLogLevel.error;
+}
+
+void _assertNoUnexpectedIntegrationLogs() {
+  if (_unexpectedIntegrationLogs.isEmpty) {
+    return;
+  }
+
+  final String details = _unexpectedIntegrationLogs
+      .map((final entry) {
+        final StringBuffer buffer = StringBuffer()
+          ..write(entry.level.name)
+          ..write(': ')
+          ..write(entry.message);
+        if (entry.error != null) {
+          buffer
+            ..write(' | error=')
+            ..write(entry.error);
+        }
+        return buffer.toString();
+      })
+      .join('\n');
+  fail('Unexpected warning/error logs during integration test:\n$details');
 }
 
 Future<void> configureIntegrationTestDependencies({
