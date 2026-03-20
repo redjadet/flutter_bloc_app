@@ -12,7 +12,7 @@ This section provides a step-by-step guide to deploy this Flutter app to the App
 | ----------- | ------- |
 | **Apple Developer Program** | Paid membership ($99/year) required for App Store distribution |
 | **Xcode** | Latest stable version (macOS only) |
-| **Flutter** | Flutter 3.41.4+ with iOS support |
+| **Flutter** | Flutter 3.41.5+ with iOS support |
 | **Firebase** | `GoogleService-Info.plist` in `ios/Runner/` (generate via `flutterfire configure`) |
 | **Firebase Functions (optional)** | If you use Firebase-backed demos (e.g. chart fallback), deploy Functions from `functions/` and ensure callable Gen2 IAM is configured (see `docs/firebase_setup.md`). |
 | **Signing identity** | Distribution certificate and App Store provisioning profile |
@@ -175,7 +175,7 @@ This section provides a step-by-step guide to deploy this Flutter app to the Goo
 | Requirement | Details |
 | ----------- | ------- |
 | **Google Play Developer account** | One-time registration fee ($25); [Play Console](https://play.google.com/console/signup) |
-| **Flutter** | Flutter 3.41.4+ with Android support |
+| **Flutter** | Flutter 3.41.5+ with Android support |
 | **Firebase** | `android/app/google-services.json` (generate via `flutterfire configure`) |
 | **Signing** | Release keystore (`.jks` or `.keystore`); store credentials securely |
 
