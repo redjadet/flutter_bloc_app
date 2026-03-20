@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive_sheets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mix/mix.dart';
 
 void main() {
   group('PlatformAdaptiveSheets', () {
@@ -117,5 +119,65 @@ void main() {
       // Should not throw
       expect(tester.takeException(), isNull);
     });
+
+    testWidgets('showPickerModal renders title and selected item state', (
+      final WidgetTester tester,
+    ) async {
+      await _pumpMaterialAppWithMixTheme(tester);
+
+      unawaited(
+        PlatformAdaptiveSheets.showPickerModal<String>(
+          context: tester.element(find.byType(Scaffold)),
+          items: const <String>['Alpha', 'Beta'],
+          selectedItem: 'Alpha',
+          title: 'Pick One',
+          itemLabel: (final item) => item,
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.text('Pick One'), findsOneWidget);
+      expect(find.text('Alpha'), findsOneWidget);
+      expect(find.text('Beta'), findsOneWidget);
+      expect(find.byIcon(Icons.check), findsOneWidget);
+    });
+
+    testWidgets('showPickerModal returns tapped material item', (
+      final WidgetTester tester,
+    ) async {
+      await _pumpMaterialAppWithMixTheme(tester);
+
+      String? selectedValue;
+      unawaited(
+        PlatformAdaptiveSheets.showPickerModal<String>(
+          context: tester.element(find.byType(Scaffold)),
+          items: const <String>['Alpha', 'Beta'],
+          selectedItem: 'Alpha',
+          itemLabel: (final item) => item,
+        ).then((final value) => selectedValue = value),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      await tester.tap(find.text('Beta'));
+      await tester.pumpAndSettle();
+
+      expect(selectedValue, 'Beta');
+    });
   });
+}
+
+Future<void> _pumpMaterialAppWithMixTheme(final WidgetTester tester) {
+  return tester.pumpWidget(
+    MaterialApp(
+      builder: (final context, final child) => MixTheme(
+        data: buildAppMixThemeData(context),
+        child: child ?? const SizedBox.shrink(),
+      ),
+      home: const Scaffold(body: SizedBox()),
+    ),
+  );
 }

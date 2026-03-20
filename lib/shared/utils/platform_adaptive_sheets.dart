@@ -62,55 +62,106 @@ class PlatformAdaptiveSheets {
 
     return showModalBottomSheet<T>(
       context: context,
-      builder: (final sheetContext) {
-        final theme = Theme.of(sheetContext);
-        final double titleBottomGap = sheetContext.responsiveGapM;
-        return SafeArea(
-          child: Box(
-            style: AppStyles.dialogContent,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (title case final resolvedTitle?)
-                  Padding(
-                    padding: EdgeInsets.only(bottom: titleBottomGap),
-                    child: Text(
-                      resolvedTitle,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                Flexible(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: items.length,
-                    itemBuilder: (final context, final index) {
-                      final item = items[index];
-                      final isSelected = item == selectedItem;
-                      return ListTile(
-                        title: itemBuilder != null
-                            ? itemBuilder(context, item)
-                            : Text(itemLabel(item)),
-                        trailing: isSelected
-                            ? Icon(
-                                Icons.check,
-                                color: theme.colorScheme.primary,
-                              )
-                            : null,
-                        onTap: () => NavigationUtils.maybePop(
-                          sheetContext,
-                          result: item,
-                        ),
-                      );
-                    },
+      builder: (final sheetContext) => _MaterialPickerSheetContent<T>(
+        items: items,
+        selectedItem: selectedItem,
+        itemLabel: itemLabel,
+        title: title,
+        itemBuilder: itemBuilder,
+      ),
+    );
+  }
+}
+
+class _MaterialPickerSheetContent<T> extends StatelessWidget {
+  const _MaterialPickerSheetContent({
+    required this.items,
+    required this.selectedItem,
+    required this.itemLabel,
+    this.title,
+    this.itemBuilder,
+  });
+
+  final List<T> items;
+  final T selectedItem;
+  final String Function(T) itemLabel;
+  final String? title;
+  final Widget Function(BuildContext, T)? itemBuilder;
+
+  @override
+  Widget build(final BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
+    return SafeArea(
+      child: Box(
+        style: AppStyles.dialogContent,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            if (title case final resolvedTitle?)
+              Padding(
+                padding: EdgeInsets.only(bottom: context.responsiveGapM),
+                child: Text(
+                  resolvedTitle,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              ],
+              ),
+            Flexible(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: items.length,
+                itemBuilder: (final itemContext, final index) {
+                  final T item = items[index];
+                  return _MaterialPickerItemTile<T>(
+                    item: item,
+                    isSelected: item == selectedItem,
+                    itemLabel: itemLabel,
+                    itemBuilder: itemBuilder,
+                  );
+                },
+              ),
             ),
-          ),
-        );
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MaterialPickerItemTile<T> extends StatelessWidget {
+  const _MaterialPickerItemTile({
+    required this.item,
+    required this.isSelected,
+    required this.itemLabel,
+    this.itemBuilder,
+  });
+
+  final T item;
+  final bool isSelected;
+  final String Function(T) itemLabel;
+  final Widget Function(BuildContext, T)? itemBuilder;
+
+  @override
+  Widget build(final BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
+    return ListTile(
+      title: switch (itemBuilder) {
+        final Widget Function(BuildContext, T) builder => builder(
+          context,
+          item,
+        ),
+        _ => Text(itemLabel(item)),
       },
+      trailing: isSelected
+          ? Icon(
+              Icons.check,
+              color: theme.colorScheme.primary,
+            )
+          : null,
+      onTap: () => NavigationUtils.maybePop(context, result: item),
     );
   }
 }

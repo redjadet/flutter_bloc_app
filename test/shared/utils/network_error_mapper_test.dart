@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/shared/utils/error_codes.dart';
 import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
@@ -154,6 +155,26 @@ void main() {
       expect(
         NetworkErrorMapper.getErrorCode('Request failed with status 502'),
         AppErrorCode.server,
+      );
+    });
+
+    test('maps Dio connection errors to offline network errors', () {
+      final DioException error = DioException.connectionError(
+        requestOptions: RequestOptions(path: '/wallet'),
+        reason: 'socket closed',
+      );
+
+      expect(
+        NetworkErrorMapper.getErrorMessage(error),
+        'Network connection error. Please check your internet connection.',
+      );
+      expect(
+        NetworkErrorMapper.getAppError(error),
+        isA<NetworkError>().having(
+          (final NetworkError value) => value.kind,
+          'kind',
+          NetworkErrorKind.offline,
+        ),
       );
     });
   });

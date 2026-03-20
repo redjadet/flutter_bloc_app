@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_list_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_list_view.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
@@ -62,6 +63,8 @@ void main() {
 
     Widget createWidgetUnderTest({required ChatListState initialState}) {
       return MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: BlocProvider<ChatListCubit>(
           create: (context) =>
               ChatListCubit(repository: mockRepository)..emit(initialState),
@@ -133,6 +136,20 @@ void main() {
       expect(find.text('Jane Smith'), findsOneWidget);
       expect(find.text('Hello there!'), findsOneWidget);
       expect(find.text('How are you?'), findsOneWidget);
+    });
+
+    testWidgets('should show empty state when loaded contacts list is empty', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        createWidgetUnderTest(
+          initialState: const ChatListState.loaded(contacts: <ChatContact>[]),
+        ),
+      );
+
+      expect(find.byType(ListView), findsNothing);
+      expect(find.byType(ChatContactTile), findsNothing);
+      expect(find.text('No past conversations yet.'), findsOneWidget);
     });
 
     testWidgets('should show error state when state is error', (tester) async {

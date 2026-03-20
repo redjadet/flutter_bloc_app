@@ -183,6 +183,25 @@ void main() {
     expect(box.get('bad-op'), isNull);
   });
 
+  test('prune deletes over-retried entries by stored key', () async {
+    final SyncOperation operation = SyncOperation.create(
+      entityType: 'counter',
+      payload: <String, dynamic>{'count': 9},
+      idempotencyKey: 'mismatch-key',
+    ).copyWith(retryCount: 12);
+
+    final box = await repository.getBox();
+    await box.put('custom-storage-key', operation.toJson());
+
+    final int pruned = await repository.prune(
+      maxRetryCount: 10,
+      maxAge: const Duration(days: 30),
+    );
+
+    expect(pruned, 1);
+    expect(box.get('custom-storage-key'), isNull);
+  });
+
   test(
     'getPendingOperations with supabaseUserIdFilter returns only iot_demo ops for that user',
     () async {
@@ -246,6 +265,40 @@ void main() {
             .payload[PendingSyncRepository.payloadKeySupabaseUserId],
         equals('user-b'),
       );
+    },
+  );
+
+  test(
+    'getPendingOperations with supabaseUserIdFilter excludes legacy iot_demo ops without user id',
+    () async {
+      final SyncOperation legacyIotOp = SyncOperation.create(
+        entityType: 'iot_demo',
+        payload: <String, dynamic>{
+          'deviceId': 'legacy-device',
+          'action': 'connect',
+        },
+        idempotencyKey: 'legacy-iot',
+      );
+      final SyncOperation scopedIotOp = SyncOperation.create(
+        entityType: 'iot_demo',
+        payload: <String, dynamic>{
+          'deviceId': 'scoped-device',
+          'action': 'connect',
+          PendingSyncRepository.payloadKeySupabaseUserId: 'user-a',
+        },
+        idempotencyKey: 'scoped-iot',
+      );
+      await repository.enqueue(legacyIotOp);
+      await repository.enqueue(scopedIotOp);
+
+      final List<SyncOperation> filtered = await repository
+          .getPendingOperations(
+            now: DateTime.now().toUtc(),
+            supabaseUserIdFilter: 'user-a',
+          );
+
+      expect(filtered, hasLength(1));
+      expect(filtered.single.id, scopedIotOp.id);
     },
   );
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_address.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/cubit/walletconnect_auth_cubit.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/cubit/walletconnect_auth_state.dart';
@@ -13,176 +14,210 @@ class WalletConnectAuthPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final l10n = context.l10n;
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
-
     return CommonPageLayout(
-      title: l10n.walletconnectAuthTitle,
+      title: context.l10n.walletconnectAuthTitle,
       body: TypeSafeBlocBuilder<WalletConnectAuthCubit, WalletConnectAuthState>(
-        builder: (final context, final state) => SingleChildScrollView(
-          padding: context.pagePadding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: context.responsiveGapL),
+        builder: (final context, final state) =>
+            _WalletConnectAuthContent(state: state),
+      ),
+    );
+  }
+}
 
-              // Error message
-              if (state.errorMessage case final msg?) ...[
-                CommonCard(
-                  color: colors.errorContainer,
-                  elevation: 0,
-                  margin: EdgeInsets.zero,
-                  padding: context.responsiveCardPaddingInsets,
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        color: colors.onErrorContainer,
-                        size: context.responsiveIconSize,
-                      ),
-                      SizedBox(width: context.responsiveHorizontalGapM),
-                      Expanded(
-                        child: Text(
-                          msg,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: colors.onErrorContainer,
-                          ),
-                          maxLines: 5,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.close,
-                          color: colors.onErrorContainer,
-                          size: context.responsiveIconSize,
-                        ),
-                        onPressed: () => context
-                            .cubit<WalletConnectAuthCubit>()
-                            .clearError(),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: context.responsiveGapM),
-              ],
+class _WalletConnectAuthContent extends StatelessWidget {
+  const _WalletConnectAuthContent({required this.state});
 
-              // Success message
-              if (state.isLinked) ...[
-                CommonCard(
-                  color: colors.primaryContainer,
-                  elevation: 0,
-                  margin: EdgeInsets.zero,
-                  padding: context.responsiveCardPaddingInsets,
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.check_circle_outline,
-                        color: colors.onPrimaryContainer,
-                        size: context.responsiveIconSize,
-                      ),
-                      SizedBox(width: context.responsiveHorizontalGapM),
-                      Expanded(
-                        child: Text(
-                          l10n.walletLinked,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: colors.onPrimaryContainer,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: context.responsiveGapM),
-              ],
+  final WalletConnectAuthState state;
 
-              // Linked wallet address display
-              if (state.linkedWalletAddress case final addr?) ...[
-                WalletAddressDisplay(address: addr),
-                SizedBox(height: context.responsiveGapM),
-                // Re-link to account (refresh Firestore profile, etc.)
-                if (state.status != ViewStatus.loading)
-                  PlatformAdaptive.outlinedButton(
-                    context: context,
-                    onPressed: () => context
-                        .cubit<WalletConnectAuthCubit>()
-                        .relinkWalletToUser(),
-                    child: Text(l10n.relinkToAccount),
-                  ),
-                SizedBox(height: context.responsiveGapL),
-              ],
+  @override
+  Widget build(final BuildContext context) {
+    final WalletConnectAuthCubit cubit = context
+        .cubit<WalletConnectAuthCubit>();
 
-              // User profile (balance, rewards, NFTs) when linked
-              if ((state.isLinked, state.userProfile) case (
-                true,
-                final profile?,
-              )) ...[
-                _WalletProfileSection(profile: profile),
-                SizedBox(height: context.responsiveGapL),
-              ],
+    return SingleChildScrollView(
+      padding: context.pagePadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          SizedBox(height: context.responsiveGapL),
+          if (state.errorMessage case final msg?) ...<Widget>[
+            _StatusBannerCard.error(
+              message: msg,
+              onDismiss: cubit.clearError,
+            ),
+            SizedBox(height: context.responsiveGapM),
+          ],
+          if (state.isLinked) ...<Widget>[
+            _StatusBannerCard.success(
+              message: context.l10n.walletLinked,
+            ),
+            SizedBox(height: context.responsiveGapM),
+          ],
+          if (state.linkedWalletAddress case final addr?) ...<Widget>[
+            _LinkedWalletSection(
+              address: addr,
+              showRelinkButton: !state.isLoadingLinkedWallet,
+              onRelink: cubit.relinkWalletToUser,
+            ),
+            SizedBox(height: context.responsiveGapL),
+          ],
+          if (state.linkedProfile case final profile?) ...<Widget>[
+            _WalletProfileSection(profile: profile),
+            SizedBox(height: context.responsiveGapL),
+          ],
+          if (state.unlinkedWalletAddress case final addr?) ...<Widget>[
+            WalletAddressDisplay(address: addr),
+            SizedBox(height: context.responsiveGapM),
+          ],
+          if (state.showConnectButton)
+            ConnectWalletButton(onPressed: cubit.connectWallet),
+          if (state.showLinkButton) ...<Widget>[
+            PlatformAdaptive.outlinedButton(
+              context: context,
+              onPressed: cubit.linkWalletToUser,
+              child: Text(context.l10n.linkToFirebase),
+            ),
+            SizedBox(height: context.responsiveGapM),
+          ],
+          if (state.showLoadingIndicator) const _LoadingSection(),
+          if (state.isConnected) ...<Widget>[
+            SizedBox(height: context.responsiveGapM),
+            PlatformAdaptive.textButton(
+              context: context,
+              onPressed: state.isBusy ? null : cubit.disconnectWallet,
+              child: Text(context.l10n.disconnectWallet),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
 
-              // Connected wallet address display
-              if ((state.isLinked, state.walletAddress) case (
-                false,
-                final addr?,
-              )) ...[
-                WalletAddressDisplay(address: addr),
-                SizedBox(height: context.responsiveGapM),
-              ],
+class _StatusBannerCard extends StatelessWidget {
+  const _StatusBannerCard._({
+    required this.message,
+    required this.iconData,
+    required this.backgroundColor,
+    required this.foregroundColor,
+    this.onDismiss,
+  });
 
-              // Connect Wallet button (hidden when already connected or linked)
-              if (!state.isConnected &&
-                  !state.isConnecting &&
-                  !state.isLinked) ...[
-                ConnectWalletButton(
-                  onPressed: () =>
-                      context.cubit<WalletConnectAuthCubit>().connectWallet(),
-                ),
-              ],
+  const _StatusBannerCard.error({
+    required final String message,
+    required final VoidCallback onDismiss,
+  }) : this._(
+         message: message,
+         iconData: Icons.error_outline,
+         backgroundColor: null,
+         foregroundColor: null,
+         onDismiss: onDismiss,
+       );
 
-              // Link to Firebase button
-              if (state.isConnected && !state.isLinked && !state.isLinking) ...[
-                PlatformAdaptive.outlinedButton(
-                  context: context,
-                  onPressed: () => context
-                      .cubit<WalletConnectAuthCubit>()
-                      .linkWalletToUser(),
-                  child: Text(l10n.linkToFirebase),
-                ),
-                SizedBox(height: context.responsiveGapM),
-              ],
+  const _StatusBannerCard.success({
+    required final String message,
+  }) : this._(
+         message: message,
+         iconData: Icons.check_circle_outline,
+         backgroundColor: null,
+         foregroundColor: null,
+       );
 
-              // Loading indicator (connecting, linking, or re-linking)
-              if (state.isConnecting ||
-                  state.isLinking ||
-                  (state.isLinked && state.status == ViewStatus.loading)) ...[
-                Center(
-                  child: Padding(
-                    padding: context.responsiveCardPaddingInsets,
-                    child: const CommonLoadingWidget(),
-                  ),
-                ),
-              ],
+  final String message;
+  final IconData iconData;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final VoidCallback? onDismiss;
 
-              // Disconnect button
-              if (state.isConnected) ...[
-                SizedBox(height: context.responsiveGapM),
-                PlatformAdaptive.textButton(
-                  context: context,
-                  onPressed: state.isConnecting || state.isLinking
-                      ? null
-                      : () => context
-                            .cubit<WalletConnectAuthCubit>()
-                            .disconnectWallet(),
-                  child: Text(l10n.disconnectWallet),
-                ),
-              ],
-            ],
+  @override
+  Widget build(final BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colors = theme.colorScheme;
+    final bool isDismissible = onDismiss != null;
+    final bool isErrorBanner = iconData == Icons.error_outline;
+    final Color resolvedBackgroundColor =
+        backgroundColor ??
+        (isErrorBanner ? colors.errorContainer : colors.primaryContainer);
+    final Color resolvedForegroundColor =
+        foregroundColor ??
+        (isErrorBanner ? colors.onErrorContainer : colors.onPrimaryContainer);
+
+    return CommonCard(
+      color: resolvedBackgroundColor,
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      padding: context.responsiveCardPaddingInsets,
+      child: Row(
+        children: <Widget>[
+          Icon(
+            iconData,
+            color: resolvedForegroundColor,
+            size: context.responsiveIconSize,
           ),
-        ),
+          SizedBox(width: context.responsiveHorizontalGapM),
+          Expanded(
+            child: Text(
+              message,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: resolvedForegroundColor,
+              ),
+              maxLines: isDismissible ? 5 : 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          if (onDismiss case final dismiss?)
+            IconButton(
+              icon: Icon(
+                Icons.close,
+                color: resolvedForegroundColor,
+                size: context.responsiveIconSize,
+              ),
+              onPressed: dismiss,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LinkedWalletSection extends StatelessWidget {
+  const _LinkedWalletSection({
+    required this.address,
+    required this.showRelinkButton,
+    required this.onRelink,
+  });
+
+  final WalletAddress address;
+  final bool showRelinkButton;
+  final VoidCallback onRelink;
+
+  @override
+  Widget build(final BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        WalletAddressDisplay(address: address),
+        SizedBox(height: context.responsiveGapM),
+        if (showRelinkButton)
+          PlatformAdaptive.outlinedButton(
+            context: context,
+            onPressed: onRelink,
+            child: Text(context.l10n.relinkToAccount),
+          ),
+      ],
+    );
+  }
+}
+
+class _LoadingSection extends StatelessWidget {
+  const _LoadingSection();
+
+  @override
+  Widget build(final BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: context.responsiveCardPaddingInsets,
+        child: const CommonLoadingWidget(),
       ),
     );
   }
@@ -225,36 +260,26 @@ class _WalletProfileSection extends StatelessWidget {
           _ProfileRow(
             label: l10n.balanceOffChain,
             value: profile.balanceOffChain.toStringAsFixed(2),
-            theme: theme,
-            colors: colors,
           ),
           SizedBox(height: context.responsiveGapS),
           _ProfileRow(
             label: l10n.balanceOnChain,
             value: profile.balanceOnChain.toStringAsFixed(2),
-            theme: theme,
-            colors: colors,
           ),
           SizedBox(height: context.responsiveGapS),
           _ProfileRow(
             label: l10n.rewards,
             value: profile.rewards.toStringAsFixed(2),
-            theme: theme,
-            colors: colors,
           ),
           SizedBox(height: context.responsiveGapS),
           _ProfileRow(
             label: l10n.lastClaim,
             value: dateText,
-            theme: theme,
-            colors: colors,
           ),
           SizedBox(height: context.responsiveGapS),
           _ProfileRow(
             label: l10n.nfts,
             value: l10n.nftsCount(profile.nfts.length),
-            theme: theme,
-            colors: colors,
           ),
         ],
       ),
@@ -266,20 +291,19 @@ class _ProfileRow extends StatelessWidget {
   const _ProfileRow({
     required this.label,
     required this.value,
-    required this.theme,
-    required this.colors,
   });
 
   final String label;
   final String value;
-  final ThemeData theme;
-  final ColorScheme colors;
 
   @override
   Widget build(final BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colors = theme.colorScheme;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
+      children: <Widget>[
         Expanded(
           child: Text(
             label,
@@ -299,4 +323,21 @@ class _ProfileRow extends StatelessWidget {
       ],
     );
   }
+}
+
+extension on WalletConnectAuthState {
+  WalletAddress? get unlinkedWalletAddress => isLinked ? null : walletAddress;
+
+  WalletUserProfile? get linkedProfile => isLinked ? userProfile : null;
+
+  bool get showConnectButton => !isConnected && !isConnecting && !isLinked;
+
+  bool get showLinkButton => isConnected && !isLinked && !isLinking;
+
+  bool get isLoadingLinkedWallet => isLinked && status == ViewStatus.loading;
+
+  bool get showLoadingIndicator =>
+      isConnecting || isLinking || isLoadingLinkedWallet;
+
+  bool get isBusy => isConnecting || isLinking;
 }

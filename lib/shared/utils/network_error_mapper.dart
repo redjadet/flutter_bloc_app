@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
 
 part 'network_error_mapper_app_error.dart';
 part 'network_error_mapper_classification.dart';
+part 'network_error_mapper_messages.dart';
 
 /// Centralized error mapper for consistent error message handling
 /// across both UI layer and repository layer.

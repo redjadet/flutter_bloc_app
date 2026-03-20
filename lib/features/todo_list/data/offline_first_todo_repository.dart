@@ -143,34 +143,10 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
       _generateChangeId,
     );
     await _localRepository.save(normalized);
-    if (_remoteRepository == null) {
+    if (!_hasRemoteRepository) {
       return;
     }
-    final String changeId = normalized.changeId ?? _generateChangeId();
-    // Try to save to remote immediately
-    try {
-      await _remoteRepository.save(normalized);
-      // Update local with sync status after successful remote save
-      await _localRepository.save(
-        normalized.copyWith(
-          synchronized: true,
-          lastSyncedAt: DateTime.now().toUtc(),
-        ),
-      );
-    } on Exception catch (error, stackTrace) {
-      // If immediate sync fails, queue for later retry
-      AppLogger.error(
-        'OfflineFirstTodoRepository.save immediate sync failed, queuing for retry',
-        error,
-        stackTrace,
-      );
-      final SyncOperation operation = _payloadBuilder.buildSaveOperation(
-        normalized,
-        entityType,
-        changeId,
-      );
-      await _pendingSyncRepository.enqueue(operation);
-    }
+    await _syncSaveToRemote(normalized);
   }
 
   @override
@@ -180,27 +156,10 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
       return;
     }
     await _localRepository.delete(normalizedId);
-    if (_remoteRepository == null) {
+    if (!_hasRemoteRepository) {
       return;
     }
-    // Try to delete from remote immediately
-    try {
-      await _remoteRepository.delete(normalizedId);
-    } on Exception catch (error, stackTrace) {
-      // If immediate sync fails, queue for later retry
-      AppLogger.error(
-        'OfflineFirstTodoRepository.delete immediate sync failed, queuing for retry',
-        error,
-        stackTrace,
-      );
-      final String changeId = _generateChangeId();
-      final SyncOperation operation = _payloadBuilder.buildDeleteOperation(
-        normalizedId,
-        entityType,
-        '$normalizedId-$changeId',
-      );
-      await _pendingSyncRepository.enqueue(operation);
-    }
+    await _syncDeleteToRemote(normalizedId);
   }
 
   @override
@@ -216,49 +175,15 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
 
   @override
   Future<void> processOperation(final SyncOperation operation) async {
-    if (operation.payload.containsKey('deleted') &&
-        operation.payload['deleted'] == true) {
-      // Handle delete operation
-      final dynamic idRaw = operation.payload['id'];
-      final String? id = idRaw is String ? idRaw.trim() : null;
-      if (id == null || id.isEmpty) {
-        return;
-      }
-      if (_remoteRepository != null) {
-        await _remoteRepository.delete(id);
-      }
-      await _localRepository.delete(id);
+    if (_isDeleteOperation(operation)) {
+      await _processDeleteOperation(operation);
       return;
     }
-    // Handle save operation
-    final TodoItem item;
-    try {
-      item = TodoItem.fromJson(operation.payload);
-    } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'OfflineFirstTodoRepository.processOperation: malformed payload',
-        error,
-        stackTrace,
-      );
-      // Malformed payloads are not recoverable via retries, so skip safely.
+    final TodoItem? item = _parseOperationItem(operation);
+    if (item == null) {
       return;
     }
-    if (_remoteRepository == null) {
-      await _localRepository.save(
-        item.copyWith(
-          synchronized: true,
-          lastSyncedAt: DateTime.now().toUtc(),
-        ),
-      );
-      return;
-    }
-    await _remoteRepository.save(item);
-    await _localRepository.save(
-      item.copyWith(
-        synchronized: true,
-        lastSyncedAt: DateTime.now().toUtc(),
-      ),
-    );
+    await _processSaveOperation(item);
   }
 
   @override
@@ -281,6 +206,113 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
         stackTrace,
       );
     }
+  }
+
+  bool get _hasRemoteRepository => _remoteRepository != null;
+
+  bool _isDeleteOperation(final SyncOperation operation) =>
+      operation.payload.containsKey('deleted') &&
+      operation.payload['deleted'] == true;
+
+  Future<void> _syncSaveToRemote(final TodoItem normalized) async {
+    final TodoRepository? remoteRepository = _remoteRepository;
+    if (remoteRepository == null) {
+      return;
+    }
+    final String changeId = normalized.changeId ?? _generateChangeId();
+
+    try {
+      await remoteRepository.save(normalized);
+      await _markLocalItemSynchronized(normalized);
+    } on Exception catch (error, stackTrace) {
+      AppLogger.error(
+        'OfflineFirstTodoRepository.save immediate sync failed, queuing for retry',
+        error,
+        stackTrace,
+      );
+      final SyncOperation operation = _payloadBuilder.buildSaveOperation(
+        normalized,
+        entityType,
+        changeId,
+      );
+      await _pendingSyncRepository.enqueue(operation);
+    }
+  }
+
+  Future<void> _syncDeleteToRemote(final String normalizedId) async {
+    final TodoRepository? remoteRepository = _remoteRepository;
+    if (remoteRepository == null) {
+      return;
+    }
+
+    try {
+      await remoteRepository.delete(normalizedId);
+    } on Exception catch (error, stackTrace) {
+      AppLogger.error(
+        'OfflineFirstTodoRepository.delete immediate sync failed, queuing for retry',
+        error,
+        stackTrace,
+      );
+      final String changeId = _generateChangeId();
+      final SyncOperation operation = _payloadBuilder.buildDeleteOperation(
+        normalizedId,
+        entityType,
+        '$normalizedId-$changeId',
+      );
+      await _pendingSyncRepository.enqueue(operation);
+    }
+  }
+
+  Future<void> _processDeleteOperation(final SyncOperation operation) async {
+    final String? deleteId = _extractDeleteId(operation);
+    if (deleteId == null) {
+      return;
+    }
+
+    final TodoRepository? remoteRepository = _remoteRepository;
+    if (remoteRepository != null) {
+      await remoteRepository.delete(deleteId);
+    }
+    await _localRepository.delete(deleteId);
+  }
+
+  Future<void> _processSaveOperation(final TodoItem item) async {
+    if (_remoteRepository case final TodoRepository remoteRepository?) {
+      await remoteRepository.save(item);
+    }
+    await _markLocalItemSynchronized(item);
+  }
+
+  String? _extractDeleteId(final SyncOperation operation) {
+    final dynamic idRaw = operation.payload['id'];
+    if (idRaw is! String) {
+      return null;
+    }
+    final String normalizedId = idRaw.trim();
+    return normalizedId.isEmpty ? null : normalizedId;
+  }
+
+  TodoItem? _parseOperationItem(final SyncOperation operation) {
+    try {
+      return TodoItem.fromJson(operation.payload);
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'OfflineFirstTodoRepository.processOperation: malformed payload',
+        error,
+        stackTrace,
+      );
+      // Malformed payloads are not recoverable via retries, so skip safely.
+      return null;
+    }
+  }
+
+  Future<void> _markLocalItemSynchronized(final TodoItem item) {
+    return _localRepository.save(
+      item.copyWith(
+        synchronized: true,
+        lastSyncedAt: DateTime.now().toUtc(),
+      ),
+    );
   }
 
   /// Cancels the remote watch subscription.
