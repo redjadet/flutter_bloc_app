@@ -556,6 +556,36 @@
   "@settingsProfileCacheErrorMessage": {
     "description": "Error snackbar message displayed if clearing the profile cache fails"
   },
+  "settingsDiagnosticsLastSyncedAt": "Last synced: {formattedDate} {formattedTime}",
+  "@settingsDiagnosticsLastSyncedAt": {
+    "description": "Diagnostics line showing when data was last synced; date and time are preformatted for the locale",
+    "placeholders": {
+      "formattedDate": {
+        "type": "String"
+      },
+      "formattedTime": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDiagnosticsCacheSizeKb": "Cache size: {kilobytes} KB",
+  "@settingsDiagnosticsCacheSizeKb": {
+    "description": "Diagnostics line for approximate local cache size in kilobytes",
+    "placeholders": {
+      "kilobytes": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDiagnosticsDataSource": "Source: {name}",
+  "@settingsDiagnosticsDataSource": {
+    "description": "Diagnostics line naming the configuration data source",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "networkRetryingSnackBarMessage": "Retrying…",
   "@networkRetryingSnackBarMessage": {
     "description": "Short snackbar message shown while the app is automatically retrying a network request"
@@ -2344,6 +2374,10 @@
   "profileNoCachedProfile": "No cached profile",
   "@profileNoCachedProfile": {
     "description": "Shown when there is no cached profile data"
+  },
+  "profileCachedProfileDetailsUnavailable": "Cached profile (details unavailable)",
+  "@profileCachedProfileDetailsUnavailable": {
+    "description": "Profile is cached but sync time and size cannot be shown (missing or invalid metadata)"
   },
   "loggedOutPhotoLabel": "photo",
   "@loggedOutPhotoLabel": {

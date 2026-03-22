@@ -1,5 +1,6 @@
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
+import 'package:flutter_bloc_app/core/diagnostics/profile_cache_controls_port.dart';
 import 'package:flutter_bloc_app/features/profile/data/mock_profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/data/offline_first_profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/data/profile_cache_repository.dart';
@@ -13,6 +14,9 @@ import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 void registerProfileServices() {
   registerLazySingletonIfAbsent<ProfileCacheRepository>(
     () => HiveProfileCacheRepository(hiveService: getIt<HiveService>()),
+  );
+  registerLazySingletonIfAbsent<ProfileCacheControlsPort>(
+    () => getIt<ProfileCacheRepository>(),
   );
   registerLazySingletonIfAbsent<ProfileRepository>(
     () => OfflineFirstProfileRepository(

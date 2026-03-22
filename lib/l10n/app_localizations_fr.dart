@@ -420,6 +420,24 @@ class AppLocalizationsFr extends AppLocalizations {
       'Impossible de vider le cache du profil';
 
   @override
+  String settingsDiagnosticsLastSyncedAt(
+    String formattedDate,
+    String formattedTime,
+  ) {
+    return 'Dernière synchro : $formattedDate $formattedTime';
+  }
+
+  @override
+  String settingsDiagnosticsCacheSizeKb(int kilobytes) {
+    return 'Taille du cache : $kilobytes Ko';
+  }
+
+  @override
+  String settingsDiagnosticsDataSource(String name) {
+    return 'Source : $name';
+  }
+
+  @override
   String get networkRetryingSnackBarMessage => 'Nouvelle tentative…';
 
   @override
@@ -1821,6 +1839,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get profileNoCachedProfile => 'Aucun profil en cache';
+
+  @override
+  String get profileCachedProfileDetailsUnavailable =>
+      'Profil mis en cache (détails indisponibles)';
 
   @override
   String get loggedOutPhotoLabel => 'photo';

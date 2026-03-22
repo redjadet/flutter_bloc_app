@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_bloc_app/core/diagnostics/diagnostics_sync_timestamp.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
@@ -66,9 +67,12 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
       final int? sizeBytes = await _estimateSizeBytes(rawProfile);
       final dynamic lastSyncedRaw = box.get(_lastSyncedKey);
       final String? rawDate = lastSyncedRaw is String ? lastSyncedRaw : null;
-      final DateTime? lastSynced = rawDate == null
+      DateTime? lastSynced = rawDate == null
           ? null
           : DateTime.tryParse(rawDate)?.toUtc();
+      if (lastSynced != null && !isPlausibleDiagnosticsSyncTime(lastSynced)) {
+        lastSynced = null;
+      }
       return ProfileCacheMetadata(
         hasProfile: hasProfile,
         lastSyncedAt: lastSynced,

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
 import 'package:flutter_bloc_app/app/router/deferred_pages/chart_page.dart'
@@ -7,6 +8,8 @@ import 'package:flutter_bloc_app/app/router/deferred_pages/markdown_editor_page.
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/core/diagnostics/graphql_cache_clear_port.dart';
+import 'package:flutter_bloc_app/core/diagnostics/profile_cache_controls_port.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/logged_out_page.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/profile_page.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/register_page.dart';
@@ -17,25 +20,30 @@ import 'package:flutter_bloc_app/features/counter/counter.dart';
 import 'package:flutter_bloc_app/features/example/presentation/pages/example_page.dart';
 import 'package:flutter_bloc_app/features/example/presentation/pages/firebase_functions_test_page.dart';
 import 'package:flutter_bloc_app/features/example/presentation/pages/whiteboard_page.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/pages/graphql_demo_page.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/pages/library_demo_page.dart';
-import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/widgets/awesome_feature_widget.dart';
+import 'package:flutter_bloc_app/features/remote_config/presentation/widgets/remote_config_diagnostics_section.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
-import 'package:flutter_bloc_app/features/scapes/scapes.dart';
+import 'package:flutter_bloc_app/features/scapes/presentation/pages/scapes_page.dart';
+import 'package:flutter_bloc_app/features/scapes/presentation/scapes_cubit.dart';
+import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_content.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
+import 'package:flutter_bloc_app/features/settings/presentation/widgets/sync_diagnostics_section.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/shared/widgets/deferred_page.dart';
+import 'package:flutter_bloc_app/shared/widgets/diagnostics/graphql_cache_controls_section.dart';
+import 'package:flutter_bloc_app/shared/widgets/diagnostics/profile_cache_controls_section.dart';
 import 'package:go_router/go_router.dart';
 
 /// Core app routes: auth, counter, calculator, example, settings, profile, etc.
@@ -165,8 +173,19 @@ List<GoRoute> createCoreRoutes() => <GoRoute>[
     name: AppRoutes.settings,
     builder: (final context, final state) => SettingsPage(
       appInfoRepository: getIt<AppInfoRepository>(),
-      graphqlCacheRepository: getIt<GraphqlCacheRepository>(),
-      profileCacheRepository: getIt<ProfileCacheRepository>(),
+      buildQaExtras: (final ctx) => <Widget>[
+        GraphqlCacheControlsSection(
+          cacheRepository: getIt<GraphqlCacheClearPort>(),
+        ),
+        SizedBox(height: ctx.responsiveGapL),
+        ProfileCacheControlsSection(
+          profileCacheRepository: getIt<ProfileCacheControlsPort>(),
+        ),
+        SizedBox(height: ctx.responsiveGapL),
+        const RemoteConfigDiagnosticsSection(),
+        SizedBox(height: ctx.responsiveGapL),
+        const SyncDiagnosticsSection(),
+      ],
     ),
   ),
   GoRoute(
@@ -204,9 +223,15 @@ List<GoRoute> createCoreRoutes() => <GoRoute>[
   GoRoute(
     path: AppRoutes.libraryDemoPath,
     name: AppRoutes.libraryDemo,
-    builder: (final context, final state) => LibraryDemoPage(
-      scapesRepository: getIt<ScapesRepository>(),
-      timerService: getIt<TimerService>(),
+    builder: (final context, final state) => BlocProvider<ScapesCubit>(
+      create: (_) => ScapesCubit(
+        repository: getIt<ScapesRepository>(),
+        timerService: getIt<TimerService>(),
+      ),
+      child: LibraryDemoPage(
+        timerService: getIt<TimerService>(),
+        gridTrailingSlivers: const [ScapesGridSliverContent()],
+      ),
     ),
   ),
 ];

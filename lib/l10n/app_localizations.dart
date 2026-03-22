@@ -842,6 +842,27 @@ abstract class AppLocalizations {
   /// **'Couldn\'t clear profile cache'**
   String get settingsProfileCacheErrorMessage;
 
+  /// Diagnostics line showing when data was last synced; date and time are preformatted for the locale
+  ///
+  /// In en, this message translates to:
+  /// **'Last synced: {formattedDate} {formattedTime}'**
+  String settingsDiagnosticsLastSyncedAt(
+    String formattedDate,
+    String formattedTime,
+  );
+
+  /// Diagnostics line for approximate local cache size in kilobytes
+  ///
+  /// In en, this message translates to:
+  /// **'Cache size: {kilobytes} KB'**
+  String settingsDiagnosticsCacheSizeKb(int kilobytes);
+
+  /// Diagnostics line naming the configuration data source
+  ///
+  /// In en, this message translates to:
+  /// **'Source: {name}'**
+  String settingsDiagnosticsDataSource(String name);
+
   /// Short snackbar message shown while the app is automatically retrying a network request
   ///
   /// In en, this message translates to:
@@ -3337,6 +3358,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No cached profile'**
   String get profileNoCachedProfile;
+
+  /// Profile is cached but sync time and size cannot be shown (missing or invalid metadata)
+  ///
+  /// In en, this message translates to:
+  /// **'Cached profile (details unavailable)'**
+  String get profileCachedProfileDetailsUnavailable;
 
   /// Label for photo in logged-out header
   ///

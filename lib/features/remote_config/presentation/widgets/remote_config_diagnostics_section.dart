@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/core/diagnostics/diagnostics_sync_timestamp.dart';
+import 'package:flutter_bloc_app/core/diagnostics/remote_config_diagnostics_view_data.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
-import 'package:flutter_bloc_app/features/settings/presentation/widgets/remote_config_view_data.dart';
-import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
+import 'package:flutter_bloc_app/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
+import 'package:flutter_bloc_app/shared/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 part 'remote_config_diagnostics_section_components.dart';
@@ -60,9 +62,9 @@ class _RemoteConfigDiagnosticsSectionState
             TypeSafeBlocSelector<
               RemoteConfigCubit,
               RemoteConfigState,
-              RemoteConfigViewData
+              RemoteConfigDiagnosticsViewData
             >(
-              selector: RemoteConfigViewData.fromState,
+              selector: mapRemoteConfigStateToDiagnosticsViewData,
               builder: (final context, final data) => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[

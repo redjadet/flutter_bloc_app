@@ -414,6 +414,24 @@ class AppLocalizationsTr extends AppLocalizations {
       'Profil önbelleği temizlenemedi';
 
   @override
+  String settingsDiagnosticsLastSyncedAt(
+    String formattedDate,
+    String formattedTime,
+  ) {
+    return 'Son eşitleme: $formattedDate $formattedTime';
+  }
+
+  @override
+  String settingsDiagnosticsCacheSizeKb(int kilobytes) {
+    return 'Önbellek boyutu: $kilobytes KB';
+  }
+
+  @override
+  String settingsDiagnosticsDataSource(String name) {
+    return 'Kaynak: $name';
+  }
+
+  @override
   String get networkRetryingSnackBarMessage => 'Yeniden deneniyor…';
 
   @override
@@ -1797,6 +1815,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get profileNoCachedProfile => 'Önbelleğe alınmış profil yok';
+
+  @override
+  String get profileCachedProfileDetailsUnavailable =>
+      'Profil önbellekte (ayrıntılar kullanılamıyor)';
 
   @override
   String get loggedOutPhotoLabel => 'fotoğraf';

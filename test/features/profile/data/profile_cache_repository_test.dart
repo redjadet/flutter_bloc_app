@@ -102,6 +102,28 @@ void main() {
       expect(metadata.lastSyncedAt, isNull);
     });
 
+    test(
+      'loadMetadata drops implausible lastSyncedAt from raw storage',
+      () async {
+        final Box<dynamic> box = await hiveService.openBox('profile_cache');
+        await box.put(
+          'profile_last_synced_at',
+          DateTime.utc(3000, 1, 1).toUtc().toIso8601String(),
+        );
+        await box.put('profile', <String, dynamic>{
+          'name': 'Jane',
+          'location': 'SF',
+          'avatarUrl': 'https://example.com/a.png',
+          'galleryImages': <dynamic>[],
+        });
+
+        final ProfileCacheMetadata metadata = await repository.loadMetadata();
+
+        expect(metadata.hasProfile, isTrue);
+        expect(metadata.lastSyncedAt, isNull);
+      },
+    );
+
     test('loadProfile returns null for malformed cached field types', () async {
       final Box<dynamic> box = await hiveService.openBox('profile_cache');
       await box.put('profile', <String, dynamic>{

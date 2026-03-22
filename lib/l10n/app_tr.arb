@@ -328,6 +328,36 @@
   "@settingsProfileCacheErrorMessage": {
     "description": "Profil önbelleği temizleme işlemi başarısız olursa gösterilen hata mesajı"
   },
+  "settingsDiagnosticsLastSyncedAt": "Son eşitleme: {formattedDate} {formattedTime}",
+  "@settingsDiagnosticsLastSyncedAt": {
+    "description": "Diagnostics line showing when data was last synced; date and time are preformatted for the locale",
+    "placeholders": {
+      "formattedDate": {
+        "type": "String"
+      },
+      "formattedTime": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDiagnosticsCacheSizeKb": "Önbellek boyutu: {kilobytes} KB",
+  "@settingsDiagnosticsCacheSizeKb": {
+    "description": "Diagnostics line for approximate local cache size in kilobytes",
+    "placeholders": {
+      "kilobytes": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDiagnosticsDataSource": "Kaynak: {name}",
+  "@settingsDiagnosticsDataSource": {
+    "description": "Diagnostics line naming the configuration data source",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "networkRetryingSnackBarMessage": "Yeniden deneniyor…",
   "@networkRetryingSnackBarMessage": {
     "description": "Ağ isteği otomatik olarak yeniden denenirken gösterilen kısa snackbar mesajı"
@@ -1409,6 +1439,10 @@
   "profileNoCachedProfile": "Önbelleğe alınmış profil yok",
   "@profileNoCachedProfile": {
     "description": "Shown when there is no cached profile data"
+  },
+  "profileCachedProfileDetailsUnavailable": "Profil önbellekte (ayrıntılar kullanılamıyor)",
+  "@profileCachedProfileDetailsUnavailable": {
+    "description": "Profile is cached but sync time and size cannot be shown (missing or invalid metadata)"
   },
   "loggedOutPhotoLabel": "fotoğraf",
   "@loggedOutPhotoLabel": {

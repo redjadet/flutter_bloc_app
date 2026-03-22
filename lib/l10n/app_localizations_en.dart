@@ -407,6 +407,24 @@ class AppLocalizationsEn extends AppLocalizations {
       'Couldn\'t clear profile cache';
 
   @override
+  String settingsDiagnosticsLastSyncedAt(
+    String formattedDate,
+    String formattedTime,
+  ) {
+    return 'Last synced: $formattedDate $formattedTime';
+  }
+
+  @override
+  String settingsDiagnosticsCacheSizeKb(int kilobytes) {
+    return 'Cache size: $kilobytes KB';
+  }
+
+  @override
+  String settingsDiagnosticsDataSource(String name) {
+    return 'Source: $name';
+  }
+
+  @override
   String get networkRetryingSnackBarMessage => 'Retrying…';
 
   @override
@@ -1793,6 +1811,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileNoCachedProfile => 'No cached profile';
+
+  @override
+  String get profileCachedProfileDetailsUnavailable =>
+      'Cached profile (details unavailable)';
 
   @override
   String get loggedOutPhotoLabel => 'photo';
