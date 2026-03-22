@@ -33,11 +33,14 @@ class MarkdownToolbar extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          Text(
-            'Markdown Editor',
-            style: theme.textTheme.titleMedium,
+          Expanded(
+            child: Text(
+              'Markdown Editor',
+              style: theme.textTheme.titleMedium,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-          const Spacer(),
           // Toggle preview
           IconButton(
             onPressed: onTogglePreview,

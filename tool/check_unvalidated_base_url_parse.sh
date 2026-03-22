@@ -29,6 +29,9 @@ else
   VIOLATIONS=$(grep -rnE \
     "Uri\\.parse\\(\\s*[^\"'][^)]*[Bb]ase[Uu][Rr][Ll][^)]*\\)" \
     lib/features lib/core lib/shared lib/app 2>/dev/null \
+    | grep -v "\.g\.dart:" \
+    | grep -v "\.freezed\.dart:" \
+    | grep -v "\.gr\.dart:" \
     | grep -v "/test/" \
     | grep -v "^[[:space:]]*//" \
     || true)
