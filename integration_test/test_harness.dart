@@ -19,6 +19,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../test/test_helpers.dart' as test_helpers;
 import '../test/test_helpers.dart' show waitForCounterCubitsToLoad;
+import 'widget_tester_pumps.dart';
+
+export 'widget_tester_pumps.dart';
 
 bool _hiveInitialized = false;
 final List<AppLogEntry> _unexpectedIntegrationLogs = <AppLogEntry>[];
@@ -170,7 +173,7 @@ Future<void> launchTestApp(
   await tester.pumpWidget(MyApp(requireAuth: requireAuth));
   await tester.pump();
   await waitForCounterCubitsToLoad(tester);
-  await tester.pump(const Duration(milliseconds: 100));
+  await tester.pump(const Duration(milliseconds: 50));
 }
 
 Future<void> restartTestApp(
@@ -178,35 +181,11 @@ Future<void> restartTestApp(
   final bool requireAuth = false,
 }) async {
   await tester.pumpWidget(const SizedBox.shrink());
-  await tester.pumpAndSettle();
+  await pumpSettleWithin(
+    tester,
+    timeout: const Duration(seconds: 4),
+  );
   await launchTestApp(tester, requireAuth: requireAuth);
-}
-
-Future<void> pumpUntilFound(
-  final WidgetTester tester,
-  final Finder finder, {
-  final Duration timeout = const Duration(seconds: 5),
-  final Duration step = const Duration(milliseconds: 100),
-}) async {
-  final Stopwatch stopwatch = Stopwatch()..start();
-  while (stopwatch.elapsed < timeout) {
-    await tester.pump(step);
-    if (tester.any(finder)) {
-      return;
-    }
-  }
-
-  throw TestFailure('Did not find $finder within ${timeout.inSeconds}s');
-}
-
-Future<void> tapAndPump(
-  final WidgetTester tester,
-  final Finder finder, {
-  final Duration settle = const Duration(milliseconds: 100),
-}) async {
-  await tester.ensureVisible(finder);
-  await tester.tap(finder);
-  await tester.pump(settle);
 }
 
 Future<void> _overrideBiometricAuthenticator(final bool success) async {

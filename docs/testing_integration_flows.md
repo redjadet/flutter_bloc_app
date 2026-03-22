@@ -6,13 +6,16 @@ This document explains how integration flows are structured and how to add new o
 
 - Entrypoints:
   - `integration_test/all_flows_test.dart` registers every flow.
-  - `integration_test/smoke_flows_test.dart` registers the PR smoke suite.
+  - `integration_test/pr_smoke_flows_test.dart` registers the smaller PR CI smoke suite.
+  - `integration_test/smoke_flows_test.dart` registers the broader local smoke suite.
   - `integration_test/extended_flows_test.dart` registers heavier persistence, refresh, and filter scenarios.
 - Flow registration and helpers:
   - `integration_test/flow_scenarios.dart`
   - `integration_test/flow_scenarios_primary.dart`
   - `integration_test/flow_scenarios_secondary.dart`
   - `integration_test/flow_scenarios_helpers.dart`
+- Pump helpers (re-exported from `test_harness.dart` for flow code):
+  - `integration_test/widget_tester_pumps.dart` — `pumpUntilFound`, `pumpUntilAbsent`, bounded `pumpSettleWithin` (prefer over unbounded `pumpAndSettle()`), `tapAndPump`, and after a `WidgetTester.fling` use `pumpAfterScrollFling` / `pumpUntilScrollIdle` so the next gesture does not stack on in-flight scroll physics.
 
 Each flow is registered via:
 
@@ -49,14 +52,14 @@ Use these flows as templates when adding new feature flows.
 
    - Create a new `registerXIntegrationFlow()` function that:
      - Calls `launchTestApp(tester)` to start the app.
-     - Uses helpers from `flow_scenarios_helpers.dart` (for example `_openExampleDestination`, `_openOverflowDestination`, `tapAndPump`, `pumpUntilFound`) to navigate.
+     - Uses helpers from `flow_scenarios_helpers.dart` (for example `_openExampleDestination`, `_openOverflowDestination`) plus `tapAndPump` / `pumpUntilFound` / `pumpUntilAbsent` / `pumpSettleWithin` from `widget_tester_pumps.dart` (via `test_harness.dart`) to navigate and wait without unbounded settles.
      - Performs a small number of interactions (1–2 key actions).
      - Asserts on visible text/widgets using `find.text`, `find.byTooltip`, or stable keys/types.
 
 3. **Wire it into the entrypoint**
 
    - Ensure `all_flows_test.dart` (via `flow_scenarios.dart`) calls your new `registerXIntegrationFlow()` so it runs as part of the full suite.
-   - Decide whether it belongs in the PR smoke suite, the extended suite, or both.
+   - Decide whether it belongs in the PR smoke suite, the broader local smoke suite, the extended suite, or multiple entrypoints.
 
 4. **Run tests locally**
 
@@ -71,4 +74,6 @@ Use these flows as templates when adding new feature flows.
 ## Runtime and CI notes
 
 - Integration tests should remain short and focused; prefer multiple small flows over one very long scenario.
-- Keep PR smoke coverage in `smoke_flows_test.dart`; move heavier persistence, refresh, filter, or multi-navigation scenarios to `extended_flows_test.dart`.
+- Keep the smallest high-signal PR checks in `pr_smoke_flows_test.dart`.
+- Keep the broader local smoke suite in `smoke_flows_test.dart`.
+- Move heavier persistence, refresh, filter, or multi-navigation scenarios to `extended_flows_test.dart`.

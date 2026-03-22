@@ -35,6 +35,60 @@ env:
   INTEGRATION_TESTS_TIMEOUT_SECONDS: '1800'
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      run_integration: ${{ steps.scope.outputs.run_integration }}
+      run_goldens: ${{ steps.scope.outputs.run_goldens }}
+      integration_target: ${{ steps.scope.outputs.integration_target }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine PR CI scope
+        id: scope
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "run_integration=true" >> "$GITHUB_OUTPUT"
+            echo "run_goldens=true" >> "$GITHUB_OUTPUT"
+            echo "integration_target=integration_test/smoke_flows_test.dart" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          BASE_REF="${{ github.base_ref }}"
+          git fetch --no-tags --depth=1 origin "$BASE_REF"
+          CHANGED_FILES="$(git diff --name-only "origin/$BASE_REF...HEAD")"
+
+          echo "Changed files:"
+          if [ -n "$CHANGED_FILES" ]; then
+            printf '%s\n' "$CHANGED_FILES"
+          else
+            echo "(none)"
+          fi
+
+          run_integration=false
+          run_goldens=false
+
+          if printf '%s\n' "$CHANGED_FILES" | grep -E -q \
+            '^(assets/|integration_test/|ios/|lib/|pubspec\.yaml$|pubspec\.lock$|tool/run_integration_tests\.sh$|\.github/workflows/ci\.yml$)'; then
+            run_integration=true
+          fi
+
+          if printf '%s\n' "$CHANGED_FILES" | grep -E -q \
+            '^(assets/|lib/|pubspec\.yaml$|pubspec\.lock$|test/)'; then
+            run_goldens=true
+          fi
+
+          echo "run_integration=$run_integration" >> "$GITHUB_OUTPUT"
+          echo "run_goldens=$run_goldens" >> "$GITHUB_OUTPUT"
+          echo "integration_target=integration_test/pr_smoke_flows_test.dart" >> "$GITHUB_OUTPUT"
+
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -98,11 +152,14 @@ jobs:
           path: coverage/lcov.info
 
   integration:
+    needs: changes
     runs-on: macos-latest
     timeout-minutes: 45
     if: >-
-      github.event_name != 'workflow_dispatch' ||
-      github.event.inputs.run_integration != 'false'
+      (github.event_name != 'workflow_dispatch' ||
+       github.event.inputs.run_integration != 'false') &&
+      (github.event_name != 'pull_request' ||
+       needs.changes.outputs.run_integration == 'true')
 
     steps:
       - name: Checkout repository
@@ -119,6 +176,9 @@ jobs:
         run: flutter pub get
 
       - name: Golden widget tests
+        if: >-
+          github.event_name != 'pull_request' ||
+          needs.changes.outputs.run_goldens == 'true'
         run: flutter test --no-pub --tags golden
 
       - name: Ensure iOS Simulator is booted
@@ -199,4 +259,4 @@ jobs:
           INTEGRATION_TESTS_RUN_COVERAGE: '0'
           INTEGRATION_TESTS_RETRY_ON_FAILURE: '0'
           INTEGRATION_TESTS_TIMEOUT_SECONDS: ${{ env.INTEGRATION_TESTS_TIMEOUT_SECONDS }}
-        run: ./bin/integration_tests integration_test/smoke_flows_test.dart
+        run: ./bin/integration_tests ${{ needs.changes.outputs.integration_target }}
