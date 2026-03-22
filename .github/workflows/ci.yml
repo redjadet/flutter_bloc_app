@@ -167,6 +167,13 @@ jobs:
       - name: Flutter pub get
         run: flutter pub get
 
+      - name: Install Firebase iOS/macOS config for CI
+        run: |
+          set -euo pipefail
+          # Real files stay gitignored under Runner/; Xcode still references them for builds.
+          cp ios/ci/GoogleService-Info.plist ios/Runner/GoogleService-Info.plist
+          cp macos/ci/GoogleService-Info.plist macos/Runner/GoogleService-Info.plist
+
       - name: Ensure iOS Simulator is booted
         id: simulator
         run: |
