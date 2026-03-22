@@ -115,6 +115,9 @@ jobs:
       - name: Flutter pub get
         run: flutter pub get
 
+      - name: Golden widget tests
+        run: flutter test --no-pub --tags golden
+
       - name: Ensure iOS Simulator is booted
         run: |
           set -euo pipefail
