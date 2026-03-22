@@ -100,8 +100,9 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
       final int? sizeBytes = await _estimateSizeBytes(rawProfile);
       final dynamic lastSyncedRaw = box.get(_lastSyncedKey);
       final String? rawDate = lastSyncedRaw is String ? lastSyncedRaw : null;
-      DateTime? lastSynced =
-          rawDate == null ? null : _parseLastSyncedAtUtc(rawDate);
+      DateTime? lastSynced = rawDate == null
+          ? null
+          : _parseLastSyncedAtUtc(rawDate);
       if (lastSynced != null && !isPlausibleDiagnosticsSyncTime(lastSynced)) {
         lastSynced = null;
       }

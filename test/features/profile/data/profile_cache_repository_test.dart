@@ -82,27 +82,30 @@ void main() {
       expect(metadata.sizeBytes! > 0, isTrue);
     });
 
-    test('saveProfile stores lastSyncedAt with explicit UTC timezone', () async {
-      const ProfileUser user = ProfileUser(
-        name: 'Jane',
-        location: 'SF',
-        avatarUrl: 'https://example.com/avatar.png',
-        galleryImages: <ProfileImage>[
-          ProfileImage(url: 'https://example.com/1.png', aspectRatio: 1.5),
-        ],
-      );
+    test(
+      'saveProfile stores lastSyncedAt with explicit UTC timezone',
+      () async {
+        const ProfileUser user = ProfileUser(
+          name: 'Jane',
+          location: 'SF',
+          avatarUrl: 'https://example.com/avatar.png',
+          galleryImages: <ProfileImage>[
+            ProfileImage(url: 'https://example.com/1.png', aspectRatio: 1.5),
+          ],
+        );
 
-      await repository.saveProfile(user);
+        await repository.saveProfile(user);
 
-      final Box<dynamic> box = await hiveService.openBox('profile_cache');
-      final dynamic raw = box.get('profile_last_synced_at');
-      expect(raw, isA<String>());
-      final String stored = raw as String;
-      final DateTime parsed = DateTime.parse(stored);
+        final Box<dynamic> box = await hiveService.openBox('profile_cache');
+        final dynamic raw = box.get('profile_last_synced_at');
+        expect(raw, isA<String>());
+        final String stored = raw as String;
+        final DateTime parsed = DateTime.parse(stored);
 
-      expect(stored.endsWith('Z'), isTrue);
-      expect(parsed.isUtc, isTrue);
-    });
+        expect(stored.endsWith('Z'), isTrue);
+        expect(parsed.isUtc, isTrue);
+      },
+    );
 
     test('clearProfile removes cached profile', () async {
       const ProfileUser user = ProfileUser(
@@ -128,10 +131,7 @@ void main() {
       'loadMetadata treats lastSyncedAt without timezone as UTC instant',
       () async {
         final Box<dynamic> box = await hiveService.openBox('profile_cache');
-        await box.put(
-          'profile_last_synced_at',
-          '2020-06-15T14:30:00.000',
-        );
+        await box.put('profile_last_synced_at', '2020-06-15T14:30:00.000');
         await box.put('profile', <String, dynamic>{
           'name': 'Jane',
           'location': 'SF',
@@ -142,10 +142,7 @@ void main() {
         final ProfileCacheMetadata metadata = await repository.loadMetadata();
 
         expect(metadata.hasProfile, isTrue);
-        expect(
-          metadata.lastSyncedAt,
-          DateTime.utc(2020, 6, 15, 14, 30),
-        );
+        expect(metadata.lastSyncedAt, DateTime.utc(2020, 6, 15, 14, 30));
       },
     );
 
