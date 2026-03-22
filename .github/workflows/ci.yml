@@ -4,6 +4,7 @@ on:
   push:
     branches: [main, master]
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
     inputs:
       run_analyze:
@@ -21,6 +22,7 @@ on:
 
 permissions:
   contents: read
+  actions: write
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -28,13 +30,12 @@ concurrency:
 
 env:
   FLUTTER_VERSION: '3.41.5'
+  COVERAGE_THRESHOLD: '60'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      actions: write
+    timeout-minutes: 45
 
     steps:
       - name: Checkout repository
@@ -45,6 +46,7 @@ jobs:
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
+          cache: true
 
       - name: Flutter pub get
         run: flutter pub get
@@ -79,7 +81,7 @@ jobs:
           github.event.inputs.run_tests != 'false'
         run: |
           COVERAGE_FILE=coverage/lcov.info
-          TARGET=60
+          TARGET="${{ env.COVERAGE_THRESHOLD }}"
           ACTUAL=$(lcov --summary "$COVERAGE_FILE" | awk '/lines/ {print $2}' | sed 's/%//')
           echo "Coverage: $ACTUAL%"
           awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { exit (actual + 0 >= target + 0 ? 0 : 1) }'
@@ -96,8 +98,6 @@ jobs:
   integration:
     runs-on: macos-latest
     timeout-minutes: 45
-    permissions:
-      contents: read
     if: >-
       github.event_name != 'workflow_dispatch' ||
       github.event.inputs.run_integration != 'false'
@@ -111,6 +111,7 @@ jobs:
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
+          cache: true
 
       - name: Flutter pub get
         run: flutter pub get
@@ -145,6 +146,9 @@ jobs:
             esac
           fi
           xcrun simctl bootstatus "$UDID" -b
+          echo "CHECKLIST_INTEGRATION_DEVICE=$UDID" >> "$GITHUB_ENV"
 
       - name: Run integration tests
+        env:
+          INTEGRATION_TESTS_RUN_COVERAGE: '0'
         run: ./bin/integration_tests
