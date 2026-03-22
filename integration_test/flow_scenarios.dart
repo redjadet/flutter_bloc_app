@@ -10,3 +10,36 @@ part 'flow_scenarios_primary.dart';
 part 'flow_scenarios_secondary.dart';
 part 'flow_scenarios_tertiary.dart';
 part 'flow_scenarios_helpers.dart';
+
+void registerSmokeIntegrationFlows() {
+  registerAppLaunchIntegrationFlow();
+  registerCalculatorIntegrationFlow();
+  registerChartsIntegrationFlow();
+  registerChatListIntegrationFlow();
+  registerGenUiDemoIntegrationFlow();
+  registerGraphqlDemoIntegrationFlow();
+  registerIgamingDemoIntegrationFlow();
+  registerIotDemoIntegrationFlow();
+  registerMarkdownEditorIntegrationFlow();
+  registerPlaylearnIntegrationFlow();
+  registerSearchIntegrationFlow();
+  registerSettingsIntegrationFlow();
+  registerTodoListIntegrationFlow();
+  registerWebsocketIntegrationFlow();
+  registerWhiteboardIntegrationFlow();
+}
+
+void registerExtendedIntegrationFlows() {
+  registerChartsRefreshIntegrationFlow();
+  registerCounterPersistenceIntegrationFlow();
+  registerNavigationIntegrationFlow();
+  registerPlaylearnEmptyTopicsIntegrationFlow();
+  registerSearchEmptyResultsIntegrationFlow();
+  registerSettingsThemePersistenceIntegrationFlow();
+  registerTodoListFilterIntegrationFlow();
+}
+
+void registerAllIntegrationFlows() {
+  registerSmokeIntegrationFlows();
+  registerExtendedIntegrationFlows();
+}

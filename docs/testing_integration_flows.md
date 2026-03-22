@@ -4,8 +4,10 @@ This document explains how integration flows are structured and how to add new o
 
 ## Files and harness
 
-- Entrypoint: `integration_test/all_flows_test.dart`
-  - Registers the integration harness and calls `register*IntegrationFlow()` functions.
+- Entrypoints:
+  - `integration_test/all_flows_test.dart` registers every flow.
+  - `integration_test/smoke_flows_test.dart` registers the PR smoke suite.
+  - `integration_test/extended_flows_test.dart` registers heavier persistence, refresh, and filter scenarios.
 - Flow registration and helpers:
   - `integration_test/flow_scenarios.dart`
   - `integration_test/flow_scenarios_primary.dart`
@@ -54,6 +56,7 @@ Use these flows as templates when adding new feature flows.
 3. **Wire it into the entrypoint**
 
    - Ensure `all_flows_test.dart` (via `flow_scenarios.dart`) calls your new `registerXIntegrationFlow()` so it runs as part of the full suite.
+   - Decide whether it belongs in the PR smoke suite, the extended suite, or both.
 
 4. **Run tests locally**
 
@@ -68,4 +71,4 @@ Use these flows as templates when adding new feature flows.
 ## Runtime and CI notes
 
 - Integration tests should remain short and focused; prefer multiple small flows over one very long scenario.
-- If runtime grows too much, consider grouping heavy flows into a separate suite and running it less frequently in CI.
+- Keep PR smoke coverage in `smoke_flows_test.dart`; move heavier persistence, refresh, filter, or multi-navigation scenarios to `extended_flows_test.dart`.

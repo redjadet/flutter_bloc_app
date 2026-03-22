@@ -21,7 +21,9 @@ Full documentation and suppression guidance is provided in the sections below.
 On pushes and pull requests, [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs:
 
 - **`./bin/checklist`** on `ubuntu-latest` (same delivery pipeline as local pre-merge validation).
-- **`./bin/integration_tests`** on `macos-latest` after booting an available iPhone simulator (aggregated suite in `integration_test/all_flows_test.dart`).
+- **`./bin/integration_tests integration_test/smoke_flows_test.dart`** on `macos-latest` after booting an available iPhone simulator.
+
+For broader local or pre-ship validation, `./bin/integration_tests` still runs the aggregated suite in `integration_test/all_flows_test.dart`.
 
 Manual runs via **Actions → CI → Run workflow** can skip integration tests with `run_integration: false`.
 
