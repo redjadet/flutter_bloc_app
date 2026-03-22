@@ -49,6 +49,9 @@ jobs:
       - name: Flutter pub get
         run: flutter pub get
 
+      - name: Install ripgrep
+        run: sudo apt-get update && sudo apt-get install -y ripgrep
+
       - name: Run delivery checklist
         if: >-
           github.event_name != 'workflow_dispatch' ||

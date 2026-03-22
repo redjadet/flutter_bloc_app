@@ -22,12 +22,16 @@ Widget buildTodoSwipeBackground({
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: foregroundColor,
-            fontSize: context.responsiveBodySize,
-            fontWeight: FontWeight.w600,
+        Flexible(
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: foregroundColor,
+              fontSize: context.responsiveBodySize,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         SizedBox(width: context.responsiveHorizontalGapS),
