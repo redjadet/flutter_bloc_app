@@ -21,8 +21,7 @@ void registerTodoListFilterIntegrationFlow() {
       await tapAndPump(tester, _findDialogCheckbox());
       await tapAndPump(tester, _findDialogCheckbox());
       await tapAndPump(tester, saveButton);
-      await tester.pumpAndSettle();
-      expect(_findDialog(), findsNothing);
+      await pumpUntilAbsent(tester, _findDialog());
       await pumpUntilFound(tester, find.text('Active todo'));
 
       // Add second todo
@@ -36,8 +35,7 @@ void registerTodoListFilterIntegrationFlow() {
       await tapAndPump(tester, _findDialogCheckbox());
       await tapAndPump(tester, _findDialogCheckbox());
       await tapAndPump(tester, secondSaveButton);
-      await tester.pumpAndSettle();
-      expect(_findDialog(), findsNothing);
+      await pumpUntilAbsent(tester, _findDialog());
       await pumpUntilFound(tester, find.text('Completed todo'));
 
       final Finder completedTodoCard = find.ancestor(
@@ -69,13 +67,13 @@ void registerTodoListFilterIntegrationFlow() {
       );
       await pumpUntilFound(tester, completeSelectedButton);
       await tapAndPump(tester, completeSelectedButton);
-      await tester.pumpAndSettle();
+      await pumpSettleWithin(tester);
 
       // Filter: show only active
       final Finder activeFilterButton = _findAdaptiveButtonByText('Active');
       await pumpUntilFound(tester, activeFilterButton);
       await tapAndPump(tester, activeFilterButton);
-      await tester.pumpAndSettle();
+      await pumpSettleWithin(tester);
       expect(find.text('Active todo'), findsWidgets);
       expect(find.text('Completed todo'), findsNothing);
 
@@ -84,7 +82,7 @@ void registerTodoListFilterIntegrationFlow() {
         'Completed',
       );
       await tapAndPump(tester, completedFilterButton);
-      await tester.pumpAndSettle();
+      await pumpSettleWithin(tester);
       expect(find.text('Completed todo'), findsWidgets);
       expect(find.text('Active todo'), findsNothing);
     },
@@ -108,7 +106,10 @@ void registerSearchEmptyResultsIntegrationFlow() {
           )
           .first;
       await tester.enterText(searchField, 'zzzz-not-found-query');
-      await tester.pumpAndSettle();
+      await pumpSettleWithin(
+        tester,
+        timeout: const Duration(seconds: 5),
+      );
 
       if (tester.any(find.text('No results found'))) {
         await pumpUntilFound(

@@ -29,6 +29,14 @@ void registerSmokeIntegrationFlows() {
   registerWhiteboardIntegrationFlow();
 }
 
+void registerPrSmokeIntegrationFlows() {
+  registerAppLaunchIntegrationFlow();
+  registerChartsIntegrationFlow();
+  registerSearchIntegrationFlow();
+  registerSettingsIntegrationFlow();
+  registerTodoListIntegrationFlow();
+}
+
 void registerExtendedIntegrationFlows() {
   registerChartsRefreshIntegrationFlow();
   registerCounterPersistenceIntegrationFlow();

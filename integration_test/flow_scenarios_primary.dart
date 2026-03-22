@@ -72,8 +72,11 @@ void registerChartsRefreshIntegrationFlow() {
 
       final Finder list = find.byType(ListView);
       await tester.fling(list, const Offset(0, 300), 1000);
-      await tester.pump(const Duration(milliseconds: 500));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 400));
+      await pumpSettleWithin(
+        tester,
+        timeout: const Duration(seconds: 4),
+      );
 
       expect(find.text('Bitcoin Price (USD)'), findsWidgets);
     },
@@ -116,7 +119,10 @@ void registerCounterPersistenceIntegrationFlow() {
       expect(find.text('1'), findsWidgets);
 
       await tester.pumpWidget(const SizedBox.shrink());
-      await tester.pumpAndSettle();
+      await pumpSettleWithin(
+        tester,
+        timeout: const Duration(seconds: 5),
+      );
 
       await tearDownIntegrationTestDependencies();
       await configureIntegrationTestDependencies(

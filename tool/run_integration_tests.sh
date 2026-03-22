@@ -13,6 +13,8 @@
 #   INTEGRATION_TESTS_TIMEOUT_SECONDS (default 1800)
 #   DEVICE_DISCOVERY_TIMEOUT_SECONDS (default 60)
 #   PROGRESS_HEARTBEAT_SECONDS (default 60)
+#   IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS (default 180)
+#   XCODE_SIMULATOR_BUILD_RECOVERY_RETRY (0|1, default 1)
 #
 # Behavior:
 #   - No arguments: aggregated suite (integration_test/all_flows_test.dart),
@@ -74,6 +76,141 @@ host_desktop_device_id() {
       echo ""
       ;;
   esac
+}
+
+is_ios_simulator_device() {
+  local device_id="$1"
+
+  [ "$(uname -s)" = "Darwin" ] || return 1
+  command -v xcrun >/dev/null 2>&1 || return 1
+
+  xcrun simctl list devices available -j 2>/dev/null | /usr/bin/python3 -c '
+import json
+import sys
+
+device_id = sys.argv[1]
+data = json.load(sys.stdin)
+
+for runtime_name, devices in data.get("devices", {}).items():
+    if "iOS" not in runtime_name:
+        continue
+    for device in devices:
+        if device.get("udid") == device_id and device.get("isAvailable", True):
+            raise SystemExit(0)
+
+raise SystemExit(1)
+' "$device_id"
+}
+
+wait_for_simulator_boot() {
+  local device_id="$1"
+  local timeout_seconds="$2"
+
+  /usr/bin/python3 - "$device_id" "$timeout_seconds" <<'PY'
+import json
+import subprocess
+import sys
+import time
+
+udid = sys.argv[1]
+timeout_seconds = int(sys.argv[2])
+deadline = time.time() + timeout_seconds
+
+while time.time() < deadline:
+    result = subprocess.run(
+        ["xcrun", "simctl", "list", "devices", "--json"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    data = json.loads(result.stdout)
+    state = None
+    for runtime_devices in data.get("devices", {}).values():
+        for device in runtime_devices:
+            if device.get("udid") == udid:
+                state = device.get("state")
+                break
+        if state is not None:
+            break
+    if state == "Booted":
+        raise SystemExit(0)
+    time.sleep(5)
+
+raise SystemExit(1)
+PY
+}
+
+run_logged_command() {
+  local log_path="$1"
+  shift
+
+  "$@" 2>&1 | tee "$log_path"
+}
+
+is_known_xcode_simulator_build_failure() {
+  local log_path="$1"
+
+  [ -s "$log_path" ] || return 1
+
+  grep -Eq \
+    'incompatible with DVTBuildVersion|Could not build the application for the simulator\.' \
+    "$log_path"
+}
+
+recover_ios_simulator_after_build_failure() {
+  local device_id="$1"
+
+  log "Restarting iOS simulator $device_id after Xcode build infrastructure failure."
+  xcrun simctl shutdown "$device_id" 2>/dev/null || true
+  sleep 2
+  if ! xcrun simctl boot "$device_id" 2>/dev/null; then
+    log "Simulator $device_id was already booted or boot request returned non-zero; continuing with boot wait."
+  fi
+  if ! wait_for_simulator_boot "$device_id" "$IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS"; then
+    log "Timed out waiting for simulator $device_id to boot after recovery."
+    return 1
+  fi
+}
+
+run_integration_command() {
+  local label="$1"
+  shift
+
+  local log_path
+  local exit_code=0
+
+  log_path="$(mktemp "${TMPDIR:-/tmp}/integration-tests.XXXXXX.log")"
+  run_with_timeout \
+    "$label" \
+    "$INTEGRATION_TESTS_TIMEOUT_SECONDS" \
+    run_logged_command \
+    "$log_path" \
+    "$@"
+  exit_code=$?
+
+  if [ "$exit_code" -ne 0 ] &&
+    [ "$XCODE_SIMULATOR_BUILD_RECOVERY_RETRY" -eq 1 ] &&
+    is_ios_simulator_device "$DEVICE_ID" &&
+    is_known_xcode_simulator_build_failure "$log_path"; then
+    log "Detected intermittent Xcode simulator build failure for $label. Retrying once after simulator recovery..."
+    cleanup_project_xcodebuilds
+    if recover_ios_simulator_after_build_failure "$DEVICE_ID"; then
+      rm -f "$log_path"
+      log_path="$(mktemp "${TMPDIR:-/tmp}/integration-tests.XXXXXX.log")"
+      run_with_timeout \
+        "$label simulator recovery retry" \
+        "$INTEGRATION_TESTS_TIMEOUT_SECONDS" \
+        run_logged_command \
+        "$log_path" \
+        "$@"
+      exit_code=$?
+    else
+      exit_code=1
+    fi
+  fi
+
+  rm -f "$log_path"
+  return "$exit_code"
 }
 
 cleanup_project_xcodebuilds() {
@@ -312,6 +449,8 @@ RETRY_ON_FAILURE="${INTEGRATION_TESTS_RETRY_ON_FAILURE:-1}"
 INTEGRATION_TESTS_TIMEOUT_SECONDS="${INTEGRATION_TESTS_TIMEOUT_SECONDS:-1800}"
 DEVICE_DISCOVERY_TIMEOUT_SECONDS="${DEVICE_DISCOVERY_TIMEOUT_SECONDS:-60}"
 PROGRESS_HEARTBEAT_SECONDS="${PROGRESS_HEARTBEAT_SECONDS:-60}"
+IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS="${IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS:-180}"
+XCODE_SIMULATOR_BUILD_RECOVERY_RETRY="${XCODE_SIMULATOR_BUILD_RECOVERY_RETRY:-1}"
 
 if ! [[ "$RUN_COVERAGE" =~ ^(0|1)$ ]]; then
   log "⚠️ Invalid INTEGRATION_TESTS_RUN_COVERAGE='$RUN_COVERAGE'; using 1."
@@ -338,6 +477,16 @@ if ! [[ "$PROGRESS_HEARTBEAT_SECONDS" =~ ^[0-9]+$ ]] || [ "$PROGRESS_HEARTBEAT_S
   PROGRESS_HEARTBEAT_SECONDS=60
 fi
 
+if ! [[ "$IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS" =~ ^[0-9]+$ ]] || [ "$IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS" -le 0 ]; then
+  log "⚠️ Invalid IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS='$IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS'; using 180."
+  IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS=180
+fi
+
+if ! [[ "$XCODE_SIMULATOR_BUILD_RECOVERY_RETRY" =~ ^(0|1)$ ]]; then
+  log "⚠️ Invalid XCODE_SIMULATOR_BUILD_RECOVERY_RETRY='$XCODE_SIMULATOR_BUILD_RECOVERY_RETRY'; using 1."
+  XCODE_SIMULATOR_BUILD_RECOVERY_RETRY=1
+fi
+
 DEVICE_ID="$(select_device_id)"
 DART_BIN="$(resolve_flutter_dart)"
 BASE_COVERAGE_PATH="coverage/lcov.base.info"
@@ -357,18 +506,16 @@ if [ "$#" -eq 0 ]; then
   set +e
   if [ "$RUN_COVERAGE" -eq 0 ]; then
     log 'Coverage disabled via INTEGRATION_TESTS_RUN_COVERAGE=0.'
-    run_with_timeout \
+    run_integration_command \
       "$FULL_SUITE_TARGET" \
-      "$INTEGRATION_TESTS_TIMEOUT_SECONDS" \
       flutter test \
       --no-pub \
       -d "$DEVICE_ID" \
       "$FULL_SUITE_TARGET"
   elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$HAS_LCOV" -eq 1 ]; then
     log "Collecting and merging integration coverage with $BASE_COVERAGE_PATH."
-    run_with_timeout \
+    run_integration_command \
       "$FULL_SUITE_TARGET" \
-      "$INTEGRATION_TESTS_TIMEOUT_SECONDS" \
       flutter test \
       --no-pub \
       -d "$DEVICE_ID" \
@@ -379,9 +526,8 @@ if [ "$#" -eq 0 ]; then
   elif [ -s "$BASE_COVERAGE_PATH" ]; then
     log "⚠️ 'lcov' is not installed, so baseline merge is unavailable."
     log 'Running integration tests without coverage update.'
-    run_with_timeout \
+    run_integration_command \
       "$FULL_SUITE_TARGET" \
-      "$INTEGRATION_TESTS_TIMEOUT_SECONDS" \
       flutter test \
       --no-pub \
       -d "$DEVICE_ID" \
@@ -389,9 +535,8 @@ if [ "$#" -eq 0 ]; then
   else
     log 'Collecting integration-only coverage.'
     log "No baseline coverage found at $BASE_COVERAGE_PATH; writing integration-only coverage."
-    run_with_timeout \
+    run_integration_command \
       "$FULL_SUITE_TARGET" \
-      "$INTEGRATION_TESTS_TIMEOUT_SECONDS" \
       flutter test \
       --no-pub \
       -d "$DEVICE_ID" \
@@ -405,18 +550,16 @@ if [ "$#" -eq 0 ]; then
     cleanup_project_xcodebuilds
     sleep 5
     if [ "$RUN_COVERAGE" -eq 0 ]; then
-      run_with_timeout \
+      run_integration_command \
         "$FULL_SUITE_TARGET retry" \
-        "$INTEGRATION_TESTS_TIMEOUT_SECONDS" \
         flutter test \
         --no-pub \
         -d "$DEVICE_ID" \
         "$FULL_SUITE_TARGET"
     elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$HAS_LCOV" -eq 1 ]; then
       log "Retrying with merged integration coverage against $BASE_COVERAGE_PATH."
-      run_with_timeout \
+      run_integration_command \
         "$FULL_SUITE_TARGET retry" \
-        "$INTEGRATION_TESTS_TIMEOUT_SECONDS" \
         flutter test \
         --no-pub \
         -d "$DEVICE_ID" \
@@ -425,17 +568,15 @@ if [ "$#" -eq 0 ]; then
         --coverage-path="$FINAL_COVERAGE_PATH" \
         "$FULL_SUITE_TARGET"
     elif [ -s "$BASE_COVERAGE_PATH" ]; then
-      run_with_timeout \
+      run_integration_command \
         "$FULL_SUITE_TARGET retry" \
-        "$INTEGRATION_TESTS_TIMEOUT_SECONDS" \
         flutter test \
         --no-pub \
         -d "$DEVICE_ID" \
         "$FULL_SUITE_TARGET"
     else
-      run_with_timeout \
+      run_integration_command \
         "$FULL_SUITE_TARGET retry" \
-        "$INTEGRATION_TESTS_TIMEOUT_SECONDS" \
         flutter test \
         --no-pub \
         -d "$DEVICE_ID" \
@@ -459,9 +600,8 @@ if [ "$#" -eq 0 ]; then
 else
   cleanup_project_xcodebuilds
   set +e
-  run_with_timeout \
+  run_integration_command \
     "integration test selection" \
-    "$INTEGRATION_TESTS_TIMEOUT_SECONDS" \
     flutter test --no-pub -d "$DEVICE_ID" "$@"
   exit_code=$?
   set -e

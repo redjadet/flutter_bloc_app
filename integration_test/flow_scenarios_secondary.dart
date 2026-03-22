@@ -40,7 +40,7 @@ void registerNavigationIntegrationFlow() {
         i++
       ) {
         await tester.fling(scrollView, const Offset(0, -800), 1200);
-        await tester.pumpAndSettle();
+        await pumpAfterScrollFling(tester, scrollView);
       }
       await pumpUntilFound(
         tester,
@@ -170,8 +170,7 @@ void registerTodoListIntegrationFlow() {
       await tapAndPump(tester, _findDialogCheckbox());
       await tapAndPump(tester, _findDialogCheckbox());
       await tapAndPump(tester, saveButton);
-      await tester.pumpAndSettle();
-      expect(_findDialog(), findsNothing);
+      await pumpUntilAbsent(tester, _findDialog());
       await pumpUntilFound(tester, find.text('Integration test todo'));
 
       expect(find.text('Integration test todo'), findsWidgets);
