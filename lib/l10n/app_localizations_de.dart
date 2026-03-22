@@ -418,6 +418,24 @@ class AppLocalizationsDe extends AppLocalizations {
       'Profil-Cache konnte nicht gelöscht werden';
 
   @override
+  String settingsDiagnosticsLastSyncedAt(
+    String formattedDate,
+    String formattedTime,
+  ) {
+    return 'Zuletzt synchronisiert: $formattedDate $formattedTime';
+  }
+
+  @override
+  String settingsDiagnosticsCacheSizeKb(int kilobytes) {
+    return 'Cache-Größe: $kilobytes KB';
+  }
+
+  @override
+  String settingsDiagnosticsDataSource(String name) {
+    return 'Quelle: $name';
+  }
+
+  @override
   String get networkRetryingSnackBarMessage => 'Wird erneut versucht…';
 
   @override
@@ -1824,6 +1842,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get profileNoCachedProfile => 'Kein zwischengespeichertes Profil';
+
+  @override
+  String get profileCachedProfileDetailsUnavailable =>
+      'Profil zwischengespeichert (Details nicht verfügbar)';
 
   @override
   String get loggedOutPhotoLabel => 'Foto';

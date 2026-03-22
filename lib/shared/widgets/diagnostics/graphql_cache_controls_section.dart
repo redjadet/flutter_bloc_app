@@ -1,14 +1,12 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
-import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
+import 'package:flutter_bloc_app/core/diagnostics/graphql_cache_clear_port.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
+import 'package:flutter_bloc_app/shared/widgets/diagnostics/settings_diagnostics_widgets.dart';
+import 'package:flutter_bloc_app/shared/widgets/settings_section.dart';
 
 class GraphqlCacheControlsSection extends StatefulWidget {
   const GraphqlCacheControlsSection({
@@ -17,7 +15,7 @@ class GraphqlCacheControlsSection extends StatefulWidget {
   });
 
   @visibleForTesting
-  final GraphqlCacheRepository cacheRepository;
+  final GraphqlCacheClearPort cacheRepository;
 
   @override
   State<GraphqlCacheControlsSection> createState() =>
@@ -29,7 +27,7 @@ class _GraphqlCacheControlsSectionState
   bool _isClearing = false;
 
   Future<void> _handleClear() async {
-    final GraphqlCacheRepository repo = widget.cacheRepository;
+    final GraphqlCacheClearPort repo = widget.cacheRepository;
     if (_isClearing) return;
     setState(() => _isClearing = true);
     final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
@@ -75,21 +73,10 @@ class _GraphqlCacheControlsSectionState
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             SizedBox(height: gap),
-            Align(
-              alignment: Alignment.centerRight,
-              child: PlatformAdaptive.textButton(
-                context: context,
-                onPressed: _isClearing ? null : _handleClear,
-                child: _isClearing
-                    ? SizedBox(
-                        height: context.responsiveGapM,
-                        width: context.responsiveGapM,
-                        child: const CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ),
-                      )
-                    : Text(l10n.settingsGraphqlCacheClearButton),
-              ),
+            SettingsDiagnosticsClearButton(
+              label: l10n.settingsGraphqlCacheClearButton,
+              isBusy: _isClearing,
+              onPressed: _isClearing ? null : _handleClear,
             ),
           ],
         ),

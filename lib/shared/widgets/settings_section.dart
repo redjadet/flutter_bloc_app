@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
+/// Section header + body layout used on the settings screen and related
+/// diagnostics (e.g. remote config) without coupling features to each other.
 class SettingsSection extends StatelessWidget {
   const SettingsSection({
     required this.title,
@@ -20,7 +22,10 @@ class SettingsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: theme.textTheme.titleMedium),
+        Semantics(
+          header: true,
+          child: Text(title, style: theme.textTheme.titleMedium),
+        ),
         SizedBox(height: gap),
         child,
       ],

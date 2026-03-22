@@ -3,24 +3,25 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
-import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+
+/// Optional QA/dev-only sections (cache diagnostics, remote config, etc.).
+/// Built in [lib/app/router/routes_core.dart] so settings stays decoupled from
+/// other features' packages.
+typedef SettingsQaExtrasBuilder = List<Widget> Function(BuildContext context);
 
 /// App settings screen: theme, locale, cache clear, and optional app info.
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
     required this.appInfoRepository,
-    this.graphqlCacheRepository,
-    this.profileCacheRepository,
+    this.buildQaExtras,
     super.key,
   });
 
   final AppInfoRepository appInfoRepository;
-  final GraphqlCacheRepository? graphqlCacheRepository;
-  final ProfileCacheRepository? profileCacheRepository;
+  final SettingsQaExtrasBuilder? buildQaExtras;
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -45,27 +46,18 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(final BuildContext context) => BlocProvider.value(
     value: _cubit,
-    child: _SettingsView(
-      graphqlCacheRepository: widget.graphqlCacheRepository,
-      profileCacheRepository: widget.profileCacheRepository,
-    ),
+    child: _SettingsView(buildQaExtras: widget.buildQaExtras),
   );
 }
 
 class _SettingsView extends StatelessWidget {
-  const _SettingsView({
-    this.graphqlCacheRepository,
-    this.profileCacheRepository,
-  });
+  const _SettingsView({this.buildQaExtras});
 
-  final GraphqlCacheRepository? graphqlCacheRepository;
-  final ProfileCacheRepository? profileCacheRepository;
+  final SettingsQaExtrasBuilder? buildQaExtras;
 
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final GraphqlCacheRepository? graphqlRepo = graphqlCacheRepository;
-    final ProfileCacheRepository? cacheRepo = profileCacheRepository;
     final List<Widget> sections = <Widget>[
       const AccountSection(),
       SizedBox(height: context.responsiveGapL),
@@ -78,19 +70,7 @@ class _SettingsView extends StatelessWidget {
       const AppInfoSection(),
       if (FlavorManager.I.isDev || FlavorManager.I.isQa) ...[
         SizedBox(height: context.responsiveGapL),
-        if (graphqlRepo != null)
-          GraphqlCacheControlsSection(
-            cacheRepository: graphqlRepo,
-          ),
-        SizedBox(height: context.responsiveGapL),
-        if (cacheRepo != null)
-          ProfileCacheControlsSection(
-            profileCacheRepository: cacheRepo,
-          ),
-        SizedBox(height: context.responsiveGapL),
-        const RemoteConfigDiagnosticsSection(),
-        SizedBox(height: context.responsiveGapL),
-        const SyncDiagnosticsSection(),
+        ...(buildQaExtras?.call(context) ?? const <Widget>[]),
       ],
       if (!const bool.fromEnvironment('dart.vm.product')) ...[
         SizedBox(height: context.responsiveGapL),

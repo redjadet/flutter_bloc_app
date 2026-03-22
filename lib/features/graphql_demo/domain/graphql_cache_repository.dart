@@ -1,6 +1,7 @@
+import 'package:flutter_bloc_app/core/diagnostics/graphql_cache_clear_port.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 
-abstract class GraphqlCacheRepository {
+abstract class GraphqlCacheRepository implements GraphqlCacheClearPort {
   Future<List<GraphqlContinent>> readContinents({
     final Duration? maxAge,
   });
@@ -19,5 +20,6 @@ abstract class GraphqlCacheRepository {
     final String? continentCode,
   });
 
+  @override
   Future<void> clear();
 }

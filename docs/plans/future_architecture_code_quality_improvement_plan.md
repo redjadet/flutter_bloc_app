@@ -25,6 +25,7 @@ Primary source documents:
 - [Code Quality Improvement Plan — 2026-03-11](../changes/2026-02-23_code_quality_plan.md)
 - [Code Quality Analysis — 2026-02-24](../audits/code_quality_analysis_2026-02-23.md)
 - [Structured Error Taxonomy — Design](2026-03-13-structured-error-taxonomy-design.md)
+- [Settings diagnostics decouple plan](settings_diagnostics_decouple_plan.md) — **complete** (settings vs `graphql_demo` / `profile` / `remote_config`)
 
 ## Goals
 

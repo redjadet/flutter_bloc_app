@@ -416,6 +416,24 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudo borrar el caché de perfil';
 
   @override
+  String settingsDiagnosticsLastSyncedAt(
+    String formattedDate,
+    String formattedTime,
+  ) {
+    return 'Última sincronización: $formattedDate $formattedTime';
+  }
+
+  @override
+  String settingsDiagnosticsCacheSizeKb(int kilobytes) {
+    return 'Tamaño de caché: $kilobytes KB';
+  }
+
+  @override
+  String settingsDiagnosticsDataSource(String name) {
+    return 'Origen: $name';
+  }
+
+  @override
   String get networkRetryingSnackBarMessage => 'Reintentando…';
 
   @override
@@ -1811,6 +1829,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get profileNoCachedProfile => 'Sin perfil en caché';
+
+  @override
+  String get profileCachedProfileDetailsUnavailable =>
+      'Perfil en caché (detalles no disponibles)';
 
   @override
   String get loggedOutPhotoLabel => 'foto';
