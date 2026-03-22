@@ -31,6 +31,8 @@ concurrency:
 env:
   FLUTTER_VERSION: '3.41.5'
   COVERAGE_THRESHOLD: '60'
+  IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS: '300'
+  INTEGRATION_TESTS_TIMEOUT_SECONDS: '1800'
 
 jobs:
   build:
@@ -122,6 +124,9 @@ jobs:
       - name: Ensure iOS Simulator is booted
         run: |
           set -euo pipefail
+          log() {
+            printf '[%s] %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*"
+          }
           UDID="$(xcrun simctl list devices available -j | /usr/bin/python3 -c "
           import json, sys
           data = json.load(sys.stdin)
@@ -145,10 +150,53 @@ jobs:
                 ;;
             esac
           fi
-          xcrun simctl bootstatus "$UDID" -b
+          log "Waiting for simulator boot: $UDID"
+          /usr/bin/python3 - "$UDID" "${IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS}" <<'PY'
+          import json
+          import subprocess
+          import sys
+          import time
+
+          udid = sys.argv[1]
+          timeout_seconds = int(sys.argv[2])
+          deadline = time.time() + timeout_seconds
+          attempt = 0
+
+          def log(message: str) -> None:
+              timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+              print(f"[{timestamp}] {message}", flush=True)
+
+          while time.time() < deadline:
+              attempt += 1
+              result = subprocess.run(
+                  ["xcrun", "simctl", "list", "devices", "--json"],
+                  check=True,
+                  capture_output=True,
+                  text=True,
+              )
+              data = json.loads(result.stdout)
+              state = None
+              for runtime_devices in data.get("devices", {}).values():
+                  for device in runtime_devices:
+                      if device.get("udid") == udid:
+                          state = device.get("state")
+                          break
+                  if state is not None:
+                      break
+              if state == "Booted":
+                  log(f"Simulator is booted: {udid}")
+                  sys.exit(0)
+              log(f"Simulator boot pending for {udid}; current state={state or 'unknown'} (attempt {attempt})")
+              time.sleep(5)
+
+          log(f"Timed out waiting for simulator to boot: {udid}")
+          sys.exit(1)
+          PY
           echo "CHECKLIST_INTEGRATION_DEVICE=$UDID" >> "$GITHUB_ENV"
 
       - name: Run integration tests
         env:
           INTEGRATION_TESTS_RUN_COVERAGE: '0'
-        run: ./bin/integration_tests
+          INTEGRATION_TESTS_RETRY_ON_FAILURE: '0'
+          INTEGRATION_TESTS_TIMEOUT_SECONDS: ${{ env.INTEGRATION_TESTS_TIMEOUT_SECONDS }}
+        run: ./bin/integration_tests integration_test/smoke_flows_test.dart

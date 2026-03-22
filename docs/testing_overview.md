@@ -39,7 +39,8 @@ This document summarizes test coverage, test types, testing patterns, and common
 - End-to-end app flow verification under `integration_test/`
 - Runs on a supported non-web device via `./bin/integration_tests` or `tool/run_integration_tests.sh`
 - Use `CHECKLIST_INTEGRATION_DEVICE=<deviceId>` when multiple devices are attached
-- Running the full suite via `./bin/integration_tests` also refreshes `coverage/coverage_summary.md`; when `coverage/lcov.base.info` exists, integration coverage is merged into that baseline first
+- `integration_test/smoke_flows_test.dart` covers the PR smoke suite; `integration_test/extended_flows_test.dart` keeps heavier persistence, refresh, and filter scenarios available without blocking every PR run
+- Running the full suite via `./bin/integration_tests` still targets `integration_test/all_flows_test.dart` and refreshes `coverage/coverage_summary.md`; when `coverage/lcov.base.info` exists, integration coverage is merged into that baseline first
 - Use `INTEGRATION_TESTS_RUN_COVERAGE=0` to skip integration coverage collection and summary refresh when you only need flow validation (for example, CI simulator jobs)
 - **Files**: `app_test.dart` (launch and counter), `counter_persistence_test.dart` (persisted count after restart), `settings_flow_test.dart` (settings, theme, locale), `navigation_flow_test.dart` (counter to example to library demo), `calculator_flow_test.dart` (calculator from home), `graphql_demo_flow_test.dart` (GraphQL demo from overflow menu), `todo_list_flow_test.dart` (todo list add and list), `chat_list_flow_test.dart` (chat list from example), `search_flow_test.dart` (search from example), `websocket_flow_test.dart` (WebSocket from example), `iot_demo_flow_test.dart` (IoT demo from overflow), `charts_flow_test.dart` (charts from overflow), `whiteboard_flow_test.dart` (whiteboard from overflow), `markdown_editor_flow_test.dart` (markdown editor from overflow), `genui_demo_flow_test.dart` (GenUI demo from overflow), `playlearn_flow_test.dart` (playlearn from overflow), `igaming_demo_flow_test.dart` (iGaming demo from overflow)
 
@@ -98,6 +99,12 @@ flutter test --coverage
 
 # Run integration tests
 ./bin/integration_tests
+
+# Run PR smoke flows only
+./bin/integration_tests integration_test/smoke_flows_test.dart
+
+# Run extended/heavier flows only
+./bin/integration_tests integration_test/extended_flows_test.dart
 
 # Run integration tests directly
 tool/run_integration_tests.sh
