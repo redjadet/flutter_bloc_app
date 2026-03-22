@@ -122,6 +122,7 @@ run_parallel_static_checks() {
   return "$static_failed"
 }
 
+# Bash 3.2 (macOS /bin/bash) + set -u: "${arr[@]}" in for-loops errors on empty arrays; use ${arr[@]+"${arr[@]}"} instead.
 collect_changed_files() {
   changed_files=()
   changed_dart_files=()
@@ -140,7 +141,7 @@ collect_changed_files() {
     } | sort -u | sed '/^$/d'
   )
 
-  for file in "${changed_files[@]}"; do
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     if [[ "$file" == *.dart ]] && [ -f "$file" ]; then
       changed_dart_files+=("$file")
     fi
@@ -157,7 +158,7 @@ should_run_mix_lint_auto() {
     return 0
   fi
 
-  for file in "${changed_files[@]}"; do
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
       lib/shared/design_system/app_styles.dart|\
       lib/core/theme/mix_app_theme.dart|\
@@ -179,7 +180,7 @@ is_docs_only_change_set() {
   fi
 
   local file
-  for file in "${changed_files[@]}"; do
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
       *.md|*.mdx|*.txt|*.rst|*.adoc|\
       docs/*|\
@@ -208,7 +209,7 @@ should_run_todo_layout_tests_auto() {
   fi
 
   local file
-  for file in "${changed_files[@]}"; do
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
       lib/features/todo_list/*|\
       test/features/todo_list/*|\
