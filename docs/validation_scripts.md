@@ -22,8 +22,8 @@ On pushes and pull requests, [`.github/workflows/ci.yml`](../.github/workflows/c
 
 - **`./bin/checklist`** on `ubuntu-latest` (same delivery pipeline as local pre-merge validation).
 - A lightweight `changes` precheck on `ubuntu-latest` to determine whether a PR needs the macOS integration job at all.
-- **`./bin/integration_tests integration_test/pr_smoke_flows_test.dart`** on `macos-latest` for PRs that touch runtime/integration-relevant files, after booting an available iPhone simulator.
-- **`flutter test --no-pub --tags golden`** on `macos-latest` only when PR changes touch UI/golden-relevant files. Pushes and manual runs still execute the broader macOS path.
+- **`./bin/integration_tests integration_test/pr_smoke_flows_test.dart`** on `macos-latest` for PRs that touch runtime/integration-relevant files, after booting a preferred available iPhone simulator and falling back to any available iPhone simulator. If there is no suitable simulator, boot fails, or boot times out, the integration step is skipped instead of failing CI.
+- Golden widget tests are skipped in GitHub Actions CI.
 
 For broader local or pre-ship validation, `./bin/integration_tests` still runs the aggregated suite in `integration_test/all_flows_test.dart`.
 
