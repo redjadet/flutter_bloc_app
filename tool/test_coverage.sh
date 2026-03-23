@@ -20,6 +20,14 @@
 
 set -e
 
+# Pixel goldens are stable on macOS (where baselines are updated) but diverge on
+# Linux CI due to font/Skia differences. Exclude them on Linux; the workflow
+# runs `flutter test --tags golden` on macOS.
+golden_exclude_for_linux=""
+if [[ "$(uname -s)" == "Linux" ]]; then
+  golden_exclude_for_linux=",golden"
+fi
+
 detect_cpu_count() {
   local cpu_count
 
@@ -97,7 +105,7 @@ if [ "$#" -eq 0 ]; then
     --coverage \
     --coverage-path="$BASE_COVERAGE_PATH" \
     --concurrency="$COVERAGE_JOBS" \
-    --exclude-tags skip-checklist
+    --exclude-tags "skip-checklist${golden_exclude_for_linux}"
   cp "$BASE_COVERAGE_PATH" "$FINAL_COVERAGE_PATH"
 else
   flutter test \

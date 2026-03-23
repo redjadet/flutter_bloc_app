@@ -152,7 +152,13 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
                           children: [
                             const Icon(Icons.send),
                             SizedBox(width: context.responsiveGapXS),
-                            Text(l10n.websocketSendButton),
+                            Flexible(
+                              child: Text(
+                                l10n.websocketSendButton,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ],
                         ),
                       ),

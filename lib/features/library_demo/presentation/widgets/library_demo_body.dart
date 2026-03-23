@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_asset_tile.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_models.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_panel.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_top_nav.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_wordmark.dart';
-import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
-import 'package:flutter_bloc_app/features/scapes/presentation/scapes_cubit.dart';
-import 'package:flutter_bloc_app/features/scapes/scapes.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
@@ -20,7 +16,7 @@ class LibraryDemoBody extends StatelessWidget {
     required this.isGridView,
     required this.onGridPressed,
     required this.onListPressed,
-    required this.scapesRepository,
+    required this.gridTrailingSlivers,
     required this.timerService,
     super.key,
   });
@@ -28,7 +24,10 @@ class LibraryDemoBody extends StatelessWidget {
   final bool isGridView;
   final VoidCallback onGridPressed;
   final VoidCallback onListPressed;
-  final ScapesRepository scapesRepository;
+
+  /// Trailing slivers for grid mode (e.g. scapes grid). Provided by app/router
+  /// composition so this feature does not depend on other features.
+  final List<Widget> gridTrailingSlivers;
   final TimerService timerService;
 
   @override
@@ -66,59 +65,53 @@ class LibraryDemoBody extends StatelessWidget {
             : context.pageHorizontalPadding;
 
         if (isGridView) {
-          return BlocProvider<ScapesCubit>(
-            create: (_) => ScapesCubit(
-              repository: scapesRepository,
-              timerService: timerService,
-            ),
-            child: ColoredBox(
-              color: EpochColors.darkGrey,
-              child: CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ColoredBox(
-                          color: EpochColors.warmGrey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              LibraryTopNav(
-                                l10n: l10n,
-                                onBack: () =>
-                                    NavigationUtils.popOrGoHome(context),
-                                padding: EdgeInsets.only(
-                                  top: navTopPadding,
-                                  left: horizontalPadding,
-                                ),
+          return ColoredBox(
+            color: EpochColors.darkGrey,
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ColoredBox(
+                        color: EpochColors.warmGrey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            LibraryTopNav(
+                              l10n: l10n,
+                              onBack: () =>
+                                  NavigationUtils.popOrGoHome(context),
+                              padding: EdgeInsets.only(
+                                top: navTopPadding,
+                                left: horizontalPadding,
                               ),
-                              SizedBox(height: wordmarkGap),
-                              LibraryWordmark(
-                                title: l10n.libraryDemoBrandName,
-                                height: wordmarkHeight,
-                              ),
-                              SizedBox(height: wordmarkGap),
-                            ],
-                          ),
+                            ),
+                            SizedBox(height: wordmarkGap),
+                            LibraryWordmark(
+                              title: l10n.libraryDemoBrandName,
+                              height: wordmarkHeight,
+                            ),
+                            SizedBox(height: wordmarkGap),
+                          ],
                         ),
-                        LibraryDemoPanel(
-                          l10n: l10n,
-                          panelTopPadding: panelTopPadding,
-                          panelBottomPadding: panelBottomPadding,
-                          sectionGap: sectionGap,
-                          categoryGap: categoryGap,
-                          isGridView: isGridView,
-                          onGridPressed: onGridPressed,
-                          onListPressed: onListPressed,
-                          trailing: [SizedBox(height: sectionGap)],
-                        ),
-                      ],
-                    ),
+                      ),
+                      LibraryDemoPanel(
+                        l10n: l10n,
+                        panelTopPadding: panelTopPadding,
+                        panelBottomPadding: panelBottomPadding,
+                        sectionGap: sectionGap,
+                        categoryGap: categoryGap,
+                        isGridView: isGridView,
+                        onGridPressed: onGridPressed,
+                        onListPressed: onListPressed,
+                        trailing: [SizedBox(height: sectionGap)],
+                      ),
+                    ],
                   ),
-                  const ScapesGridSliverContent(),
-                ],
-              ),
+                ),
+                ...gridTrailingSlivers,
+              ],
             ),
           );
         }

@@ -126,7 +126,7 @@ These are **private or feature-local** Equatable classes used for BlocSelector/v
 | `lib/features/google_maps/presentation/pages/google_maps_sample_sections.dart` | ~~`_ControlsViewModel`, `_LocationListViewModel`~~ | **Done.** Freezed (in main page file). |
 | `lib/features/graphql_demo/presentation/graphql_demo_view_models.dart` | ~~`GraphqlFilterBarData`, `GraphqlBodyData`~~ | **Done.** Freezed. |
 | `lib/features/remote_config/presentation/widgets/awesome_feature_widget.dart` | ~~`_FeatureEnabledData`~~ | **Done.** Freezed. |
-| `lib/features/settings/presentation/widgets/remote_config_view_data.dart` | ~~`_RemoteConfigViewData`~~ | **Done.** Freezed; `RemoteConfigViewData` + `RemoteConfigViewStatus` in standalone file; `fromState` and getters preserved. |
+| `lib/core/diagnostics/remote_config_diagnostics_view_data.dart` | `_RemoteConfigDiagnosticsViewData` | **Done.** Freezed DTO in core; `mapRemoteConfigStateToDiagnosticsViewData` in `lib/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart` maps cubit state. |
 | `lib/features/settings/presentation/widgets/app_info_section.dart` | ~~`_AppInfoViewData`~~ | **Done.** Freezed. |
 | `lib/features/chat/presentation/widgets/chat_input_bar.dart` | ~~`_SendButtonData`~~ | **Done.** Freezed. |
 | `lib/features/chat/presentation/widgets/chat_history_sheet.dart` | ~~`_HistorySheetData`~~ | **Done.** Freezed. |

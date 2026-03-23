@@ -38,7 +38,7 @@ This document captures the offline-first plan for the Profile feature so enginee
 ## UI Integration
 
 - No sync banner on the profile page; sync status is logged. For sync observability, use Settings → Sync Diagnostics (dev/qa only).
-- Settings (dev/QA flavors) expose a `ProfileCacheControlsSection` that lets engineers view cache size/last synced and clear the cached `ProfileUser` snapshot; the widget lives under `lib/features/settings/presentation/widgets/profile_cache_controls_section.dart` with dedicated tests.
+- Settings (dev/QA flavors) expose a `ProfileCacheControlsSection` that lets engineers view cache size/last synced and clear the cached `ProfileUser` snapshot; the widget lives under `lib/shared/widgets/diagnostics/profile_cache_controls_section.dart` (wired from `lib/app/router/routes_core.dart` via `ProfileCacheControlsPort`) with dedicated tests.
 
 ## Testing Checklist
 

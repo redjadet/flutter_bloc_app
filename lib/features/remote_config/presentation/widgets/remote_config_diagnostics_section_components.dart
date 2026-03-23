@@ -46,32 +46,32 @@ class _RemoteConfigStatusBadge extends StatelessWidget {
     required this.theme,
   });
 
-  final RemoteConfigViewStatus status;
+  final RemoteConfigDiagnosticsStatus status;
   final ThemeData theme;
 
   @override
   Widget build(final BuildContext context) {
     final ColorScheme scheme = theme.colorScheme;
     final _StatusPalette palette = switch (status) {
-      RemoteConfigViewStatus.loading => _StatusPalette(
+      RemoteConfigDiagnosticsStatus.loading => _StatusPalette(
         background: scheme.surfaceContainerHigh,
         color: scheme.onSurface,
         icon: Icons.sync,
         label: context.l10n.settingsRemoteConfigStatusLoading,
       ),
-      RemoteConfigViewStatus.loaded => _StatusPalette(
+      RemoteConfigDiagnosticsStatus.loaded => _StatusPalette(
         background: scheme.surfaceContainerHighest,
         color: scheme.primary,
         icon: Icons.check_circle,
         label: context.l10n.settingsRemoteConfigStatusLoaded,
       ),
-      RemoteConfigViewStatus.error => _StatusPalette(
+      RemoteConfigDiagnosticsStatus.error => _StatusPalette(
         background: scheme.errorContainer,
         color: scheme.onErrorContainer,
         icon: Icons.error_outline,
         label: context.l10n.settingsRemoteConfigStatusError,
       ),
-      RemoteConfigViewStatus.idle => _StatusPalette(
+      RemoteConfigDiagnosticsStatus.idle => _StatusPalette(
         background: scheme.surfaceContainerLow,
         color: scheme.onSurfaceVariant,
         icon: Icons.hourglass_empty,

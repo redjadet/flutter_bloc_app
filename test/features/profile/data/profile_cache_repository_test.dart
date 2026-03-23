@@ -82,6 +82,31 @@ void main() {
       expect(metadata.sizeBytes! > 0, isTrue);
     });
 
+    test(
+      'saveProfile stores lastSyncedAt with explicit UTC timezone',
+      () async {
+        const ProfileUser user = ProfileUser(
+          name: 'Jane',
+          location: 'SF',
+          avatarUrl: 'https://example.com/avatar.png',
+          galleryImages: <ProfileImage>[
+            ProfileImage(url: 'https://example.com/1.png', aspectRatio: 1.5),
+          ],
+        );
+
+        await repository.saveProfile(user);
+
+        final Box<dynamic> box = await hiveService.openBox('profile_cache');
+        final dynamic raw = box.get('profile_last_synced_at');
+        expect(raw, isA<String>());
+        final String stored = raw as String;
+        final DateTime parsed = DateTime.parse(stored);
+
+        expect(stored.endsWith('Z'), isTrue);
+        expect(parsed.isUtc, isTrue);
+      },
+    );
+
     test('clearProfile removes cached profile', () async {
       const ProfileUser user = ProfileUser(
         name: 'Jane',
@@ -101,6 +126,47 @@ void main() {
       expect(metadata.hasProfile, isFalse);
       expect(metadata.lastSyncedAt, isNull);
     });
+
+    test(
+      'loadMetadata treats lastSyncedAt without timezone as UTC instant',
+      () async {
+        final Box<dynamic> box = await hiveService.openBox('profile_cache');
+        await box.put('profile_last_synced_at', '2020-06-15T14:30:00.000');
+        await box.put('profile', <String, dynamic>{
+          'name': 'Jane',
+          'location': 'SF',
+          'avatarUrl': 'https://example.com/a.png',
+          'galleryImages': <dynamic>[],
+        });
+
+        final ProfileCacheMetadata metadata = await repository.loadMetadata();
+
+        expect(metadata.hasProfile, isTrue);
+        expect(metadata.lastSyncedAt, DateTime.utc(2020, 6, 15, 14, 30));
+      },
+    );
+
+    test(
+      'loadMetadata drops implausible lastSyncedAt from raw storage',
+      () async {
+        final Box<dynamic> box = await hiveService.openBox('profile_cache');
+        await box.put(
+          'profile_last_synced_at',
+          DateTime.utc(3000, 1, 1).toUtc().toIso8601String(),
+        );
+        await box.put('profile', <String, dynamic>{
+          'name': 'Jane',
+          'location': 'SF',
+          'avatarUrl': 'https://example.com/a.png',
+          'galleryImages': <dynamic>[],
+        });
+
+        final ProfileCacheMetadata metadata = await repository.loadMetadata();
+
+        expect(metadata.hasProfile, isTrue);
+        expect(metadata.lastSyncedAt, isNull);
+      },
+    );
 
     test('loadProfile returns null for malformed cached field types', () async {
       final Box<dynamic> box = await hiveService.openBox('profile_cache');

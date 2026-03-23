@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/app_info_cubit.dart';
-import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

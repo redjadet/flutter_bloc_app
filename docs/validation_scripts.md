@@ -16,6 +16,19 @@ The checklist includes automated guards for:
 
 Full documentation and suppression guidance is provided in the sections below.
 
+## CI (GitHub Actions)
+
+On pushes and pull requests, [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs:
+
+- **`./bin/checklist`** on `ubuntu-latest` (same delivery pipeline as local pre-merge validation).
+- A lightweight `changes` precheck on `ubuntu-latest` to determine whether a PR needs the macOS integration job at all.
+- **`./bin/integration_tests integration_test/pr_smoke_flows_test.dart`** on `macos-latest` for PRs that touch runtime/integration-relevant files, after booting a preferred available iPhone simulator and falling back to any available iPhone simulator. If there is no suitable simulator, boot fails, or boot times out, the integration step is skipped instead of failing CI.
+- Golden widget tests are skipped in GitHub Actions CI.
+
+For broader local or pre-ship validation, `./bin/integration_tests` still runs the aggregated suite in `integration_test/all_flows_test.dart`.
+
+Manual runs via **Actions → CI → Run workflow** can skip integration tests with `run_integration: false`.
+
 ## Existing Validation Scripts
 
 ### Architecture & Dependency Injection
@@ -27,6 +40,7 @@ Full documentation and suppression guidance is provided in the sections below.
 - **`check_auth_refresh_single_flight.sh`**: Detects auth retry anti-patterns that can cause 401 refresh races (e.g. `refreshToken()` followed by retry `forceRefresh: true`) and ensures serialized refresh gate exists in `AuthTokenManager`
 - **`check_solid_presentation_data_imports.sh`**: Prevents presentation importing data-layer types (DIP)
 - **`check_solid_data_presentation_imports.sh`**: Prevents data layer importing presentation (layering)
+- **`check_feature_modularity_leaks.sh`**: Fails on known cross-feature `package:` imports: `library_demo` must not import `scapes`; `settings` must not import `graphql_demo`, `profile`, or `remote_config`; **`remote_config` must not import `settings`** (use `shared` widgets such as `SettingsSection` instead). Extend the script when new boundary rules land in [modularity.md](modularity.md). Invoked automatically by `./bin/checklist`.
 
 ### UI/UX Best Practices
 

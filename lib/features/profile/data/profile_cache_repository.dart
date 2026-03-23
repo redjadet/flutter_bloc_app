@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_bloc_app/core/diagnostics/diagnostics_sync_timestamp.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
@@ -12,6 +13,39 @@ import 'package:hive/hive.dart';
 class HiveProfileCacheRepository extends HiveRepositoryBase
     implements ProfileCacheRepository {
   HiveProfileCacheRepository({required super.hiveService});
+
+  /// Writes a UTC instant with an explicit `Z` suffix so [DateTime.tryParse] never
+  /// treats the value as local wall time (zone-less ISO is local in Dart).
+  static String _lastSyncedAtToStorageString(final DateTime value) {
+    final DateTime utc = value.toUtc();
+    String s = utc.toIso8601String();
+    if (!s.endsWith('Z')) {
+      s = '${s}Z';
+    }
+    return s;
+  }
+
+  /// Parses a stored last-sync string as a UTC instant; legacy values without a
+  /// timezone are treated as UTC (same convention as `_lastSyncedAtToStorageString`).
+  static DateTime? _parseLastSyncedAtUtc(final String raw) {
+    final String trimmed = raw.trim();
+    if (trimmed.isEmpty) {
+      return null;
+    }
+    String s = trimmed;
+    if (!_iso8601HasExplicitTimeZone(s)) {
+      s = '${s}Z';
+    }
+    return DateTime.tryParse(s)?.toUtc();
+  }
+
+  static bool _iso8601HasExplicitTimeZone(final String s) {
+    if (s.endsWith('Z') || s.endsWith('z')) {
+      return true;
+    }
+    return RegExp(r'[+-]\d{2}:\d{2}$').hasMatch(s) ||
+        RegExp(r'[+-]\d{4}$').hasMatch(s);
+  }
 
   static const String _boxName = 'profile_cache';
   static const String _profileKey = 'profile';
@@ -41,7 +75,7 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
           await box.put(_profileKey, payload);
           await box.put(
             _lastSyncedKey,
-            DateTime.now().toUtc().toIso8601String(),
+            _lastSyncedAtToStorageString(DateTime.now()),
           );
         },
       );
@@ -66,9 +100,12 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
       final int? sizeBytes = await _estimateSizeBytes(rawProfile);
       final dynamic lastSyncedRaw = box.get(_lastSyncedKey);
       final String? rawDate = lastSyncedRaw is String ? lastSyncedRaw : null;
-      final DateTime? lastSynced = rawDate == null
+      DateTime? lastSynced = rawDate == null
           ? null
-          : DateTime.tryParse(rawDate)?.toUtc();
+          : _parseLastSyncedAtUtc(rawDate);
+      if (lastSynced != null && !isPlausibleDiagnosticsSyncTime(lastSynced)) {
+        lastSynced = null;
+      }
       return ProfileCacheMetadata(
         hasProfile: hasProfile,
         lastSyncedAt: lastSynced,

@@ -1,6 +1,10 @@
 name: CI
 
 on:
+  push:
+    branches: [main, master]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
     inputs:
       run_analyze:
@@ -11,10 +15,75 @@ on:
         description: 'Run flutter test --coverage'
         required: false
         default: 'true'
+      run_integration:
+        description: 'Run integration tests (macOS job)'
+        required: false
+        default: 'true'
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: '3.41.5'
+  COVERAGE_THRESHOLD: '60'
+  IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS: '300'
+  IOS_SIMULATOR_PREFERRED_NAMES: 'iPhone 17e,iPhone 17 Pro,iPhone 17,iPhone 16e,iPhone 16 Pro,iPhone 16'
+  INTEGRATION_TESTS_TIMEOUT_SECONDS: '1800'
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      run_integration: ${{ steps.scope.outputs.run_integration }}
+      integration_target: ${{ steps.scope.outputs.integration_target }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine PR CI scope
+        id: scope
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "run_integration=true" >> "$GITHUB_OUTPUT"
+            echo "integration_target=integration_test/smoke_flows_test.dart" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          BASE_REF="${{ github.base_ref }}"
+          git fetch --no-tags --depth=1 origin "$BASE_REF"
+          CHANGED_FILES="$(git diff --name-only "origin/$BASE_REF...HEAD")"
+
+          echo "Changed files:"
+          if [ -n "$CHANGED_FILES" ]; then
+            printf '%s\n' "$CHANGED_FILES"
+          else
+            echo "(none)"
+          fi
+
+          run_integration=false
+
+          if printf '%s\n' "$CHANGED_FILES" | grep -E -q \
+            '^(assets/|integration_test/|ios/|lib/|pubspec\.yaml$|pubspec\.lock$|tool/run_integration_tests\.sh$|\.github/workflows/ci\.yml$)'; then
+            run_integration=true
+          fi
+
+          echo "run_integration=$run_integration" >> "$GITHUB_OUTPUT"
+          echo "integration_target=integration_test/pr_smoke_flows_test.dart" >> "$GITHUB_OUTPUT"
+
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
 
     steps:
       - name: Checkout repository
@@ -23,36 +92,195 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.41.4"
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
+          cache: true
 
       - name: Flutter pub get
         run: flutter pub get
 
+      - name: Install ripgrep and lcov
+        run: sudo apt-get update && sudo apt-get install -y ripgrep lcov
+
       - name: Run delivery checklist
-        if: ${{ github.event.inputs.run_analyze != 'false' && github.event.inputs.run_tests != 'false' }}
+        if: >-
+          github.event_name != 'workflow_dispatch' ||
+          (github.event.inputs.run_analyze != 'false' &&
+           github.event.inputs.run_tests != 'false')
         run: ./bin/checklist
 
       - name: Flutter analyze
-        if: ${{ github.event.inputs.run_analyze != 'false' && github.event.inputs.run_tests == 'false' }}
+        if: >-
+          github.event_name == 'workflow_dispatch' &&
+          github.event.inputs.run_analyze != 'false' &&
+          github.event.inputs.run_tests == 'false'
         run: flutter analyze
 
       - name: Flutter tests (with coverage)
-        if: ${{ github.event.inputs.run_tests != 'false' && github.event.inputs.run_analyze == 'false' }}
+        if: >-
+          github.event_name == 'workflow_dispatch' &&
+          github.event.inputs.run_tests != 'false' &&
+          github.event.inputs.run_analyze == 'false'
         run: tool/test_coverage.sh
 
       - name: Enforce coverage threshold
-        if: ${{ github.event.inputs.run_tests != 'false' }}
+        if: >-
+          github.event_name != 'workflow_dispatch' ||
+          github.event.inputs.run_tests != 'false'
         run: |
           COVERAGE_FILE=coverage/lcov.info
-          TARGET=60
+          TARGET="${{ env.COVERAGE_THRESHOLD }}"
           ACTUAL=$(lcov --summary "$COVERAGE_FILE" | awk '/lines/ {print $2}' | sed 's/%//')
           echo "Coverage: $ACTUAL%"
           awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { exit (actual + 0 >= target + 0 ? 0 : 1) }'
 
       - name: Upload coverage report
-        if: ${{ github.event.inputs.run_tests != 'false' }}
+        if: >-
+          github.event_name != 'workflow_dispatch' ||
+          github.event.inputs.run_tests != 'false'
         uses: actions/upload-artifact@v4
         with:
           name: coverage-lcov
           path: coverage/lcov.info
+
+  integration:
+    needs: changes
+    runs-on: macos-latest
+    timeout-minutes: 45
+    if: >-
+      (github.event_name != 'workflow_dispatch' ||
+       github.event.inputs.run_integration != 'false') &&
+      (github.event_name != 'pull_request' ||
+       needs.changes.outputs.run_integration == 'true')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Install Firebase iOS/macOS config for CI
+        run: |
+          set -euo pipefail
+          # Real files stay gitignored under Runner/; Xcode still references them for builds.
+          cp ios/ci/GoogleService-Info.plist ios/Runner/GoogleService-Info.plist
+          cp macos/ci/GoogleService-Info.plist macos/Runner/GoogleService-Info.plist
+
+      - name: Ensure iOS Simulator is booted
+        id: simulator
+        run: |
+          set -euo pipefail
+          log() {
+            printf '[%s] %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*"
+          }
+          skip_integration() {
+            log "$1"
+            echo "simulator_ready=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          }
+          SIMULATOR_SELECTION="$(xcrun simctl list devices available -j | /usr/bin/python3 -c "
+          import json, os, sys
+          data = json.load(sys.stdin)
+          preferred_names = [
+              name.strip()
+              for name in os.environ.get('IOS_SIMULATOR_PREFERRED_NAMES', '').split(',')
+              if name.strip()
+          ]
+          available_iphones = []
+          for runtime, devs in data.get('devices', {}).items():
+              if 'iOS' not in runtime:
+                  continue
+              for d in devs:
+                  if d.get('isAvailable', True) and 'iPhone' in d.get('name', ''):
+                      available_iphones.append(d)
+          for preferred_name in preferred_names:
+              for device in available_iphones:
+                  if device.get('name') == preferred_name:
+                      print(f\"{device['udid']}\\t{device['name']}\")
+                      raise SystemExit(0)
+          if available_iphones:
+              print(f\"{available_iphones[0]['udid']}\\t{available_iphones[0]['name']}\")
+              raise SystemExit(0)
+          print('No available iPhone simulator found', file=sys.stderr)
+          raise SystemExit(1)
+          ")" || true
+          if [ -z "$SIMULATOR_SELECTION" ]; then
+            skip_integration "Skipping integration tests because no reachable iPhone simulator is available on this runner."
+          fi
+          IFS=$'\t' read -r UDID SIMULATOR_NAME <<< "$SIMULATOR_SELECTION"
+          if [ -z "${UDID:-}" ]; then
+            skip_integration "Skipping integration tests because simulator selection returned no UDID."
+          fi
+          log "Selected iPhone simulator: ${SIMULATOR_NAME:-unknown} ($UDID)"
+          if ! xcrun simctl boot "$UDID" 2>/dev/null; then
+            if ! xcrun simctl list devices booted 2>/dev/null | grep -Fq "$UDID"; then
+              skip_integration "Skipping integration tests because the selected simulator could not be booted: $UDID"
+            fi
+          fi
+          log "Waiting for simulator boot: $UDID"
+          if ! /usr/bin/python3 - "$UDID" "${IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS}" <<'PY'
+          import json
+          import subprocess
+          import sys
+          import time
+
+          udid = sys.argv[1]
+          timeout_seconds = int(sys.argv[2])
+          deadline = time.time() + timeout_seconds
+          attempt = 0
+
+          def log(message: str) -> None:
+              timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+              print(f"[{timestamp}] {message}", flush=True)
+
+          while time.time() < deadline:
+              attempt += 1
+              result = subprocess.run(
+                  ["xcrun", "simctl", "list", "devices", "--json"],
+                  check=True,
+                  capture_output=True,
+                  text=True,
+              )
+              data = json.loads(result.stdout)
+              state = None
+              for runtime_devices in data.get("devices", {}).values():
+                  for device in runtime_devices:
+                      if device.get("udid") == udid:
+                          state = device.get("state")
+                          break
+                  if state is not None:
+                      break
+              if state == "Booted":
+                  log(f"Simulator is booted: {udid}")
+                  sys.exit(0)
+              log(f"Simulator boot pending for {udid}; current state={state or 'unknown'} (attempt {attempt})")
+              time.sleep(5)
+
+          log(f"Timed out waiting for simulator to boot: {udid}")
+          sys.exit(1)
+          PY
+          then
+            skip_integration "Skipping integration tests because the simulator did not become reachable before timeout: $UDID"
+          fi
+          echo "CHECKLIST_INTEGRATION_DEVICE=$UDID" >> "$GITHUB_ENV"
+          echo "simulator_ready=true" >> "$GITHUB_OUTPUT"
+
+      - name: Run integration tests
+        if: steps.simulator.outputs.simulator_ready == 'true'
+        env:
+          INTEGRATION_TESTS_RUN_COVERAGE: '0'
+          INTEGRATION_TESTS_RETRY_ON_FAILURE: '0'
+          INTEGRATION_TESTS_TIMEOUT_SECONDS: ${{ env.INTEGRATION_TESTS_TIMEOUT_SECONDS }}
+        run: ./bin/integration_tests ${{ needs.changes.outputs.integration_target }}
+
+      - name: Report skipped integration tests
+        if: steps.simulator.outputs.simulator_ready != 'true'
+        run: echo 'Integration tests were skipped (no suitable iPhone simulator, boot failed, or boot timed out). See the Ensure iOS Simulator is booted step logs.'

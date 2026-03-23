@@ -1,20 +1,10 @@
+import 'package:flutter_bloc_app/core/diagnostics/profile_cache_controls_port.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 
-class ProfileCacheMetadata {
-  const ProfileCacheMetadata({
-    required this.hasProfile,
-    required this.lastSyncedAt,
-    required this.sizeBytes,
-  });
+export 'package:flutter_bloc_app/core/diagnostics/profile_cache_controls_port.dart'
+    show ProfileCacheMetadata;
 
-  final bool hasProfile;
-  final DateTime? lastSyncedAt;
-  final int? sizeBytes;
-}
-
-abstract class ProfileCacheRepository {
+abstract class ProfileCacheRepository implements ProfileCacheControlsPort {
   Future<ProfileUser?> loadProfile();
   Future<void> saveProfile(final ProfileUser user);
-  Future<void> clearProfile();
-  Future<ProfileCacheMetadata> loadMetadata();
 }
