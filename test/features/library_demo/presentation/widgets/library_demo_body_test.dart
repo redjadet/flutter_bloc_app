@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_body.dart';
 import 'package:flutter_bloc_app/features/scapes/data/mock_scapes_repository.dart';
+import 'package:flutter_bloc_app/features/scapes/presentation/scapes_cubit.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_content.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,15 +25,19 @@ void main() {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
-          body: SizedBox(
-            width: 400,
-            height: 2000,
-            child: LibraryDemoBody(
-              isGridView: isGridView,
-              onGridPressed: () {},
-              onListPressed: () {},
-              scapesRepository: repository,
-              timerService: timerService,
+          body: BlocProvider<ScapesCubit>(
+            create: (_) =>
+                ScapesCubit(repository: repository, timerService: timerService),
+            child: SizedBox(
+              width: 400,
+              height: 2000,
+              child: LibraryDemoBody(
+                isGridView: isGridView,
+                onGridPressed: () {},
+                onListPressed: () {},
+                gridTrailingSlivers: const [ScapesGridSliverContent()],
+                timerService: timerService,
+              ),
             ),
           ),
         ),

@@ -95,6 +95,10 @@ For high-leverage quality work:
 4. Refresh `coverage/coverage_summary.md` when tests land.
 5. Update documentation in the same change if the repo story changed.
 
+## Track: Settings / diagnostics modularity — **complete**
+
+- [x] Decouple settings from `graphql_demo`, `profile`, and `remote_config` (shared cache widgets, core ports, remote config DTO + mapper, app/router wiring). Details: [settings_diagnostics_decouple_plan.md](../plans/settings_diagnostics_decouple_plan.md).
+
 ## Completed Baseline Work
 
 - Shared HTTP auth retry now preserves network, retry, and telemetry behavior.

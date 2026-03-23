@@ -47,7 +47,13 @@ class GoogleMapsControlsCard extends StatelessWidget {
               children: [
                 const Icon(Icons.layers),
                 SizedBox(width: context.responsiveHorizontalGapS),
-                Text(mapTypeLabel),
+                Flexible(
+                  child: Text(
+                    mapTypeLabel,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ),
           ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_card.dart';
-import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/shared/widgets/settings_section.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 class ThemeSection extends StatelessWidget {

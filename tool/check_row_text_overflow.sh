@@ -55,7 +55,9 @@ while IFS= read -r file; do
           has_icon_label = 0
         }
         if (in_block && NR <= block_end) {
-          if (line ~ /Icon\s*\(/) has_icon = 1
+          # Match Flutter Icon( only, not *Icon( e.g. LibraryFavoriteIcon(
+          if (line ~ /(^|[^A-Za-z0-9_])Icon[[:space:]]*\(/)
+            has_icon = 1
           if (line ~ /Text\s*\(/) has_text = 1
           if (line ~ /Flexible\s*\(/) has_flex = 1
           if (line ~ /Expanded\s*\(/) has_expanded = 1

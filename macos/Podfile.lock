@@ -1220,8 +1220,13 @@ PODS:
     - FlutterMacOS
   - desktop_webview_auth (0.0.1):
     - FlutterMacOS
+  - device_info_plus (0.0.1):
+    - FlutterMacOS
   - file_selector_macos (0.0.1):
     - FlutterMacOS
+  - Firebase/AppCheck (12.9.0):
+    - Firebase/CoreOnly
+    - FirebaseAppCheck (~> 12.9.0)
   - Firebase/Auth (12.9.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 12.9.0)
@@ -1248,6 +1253,11 @@ PODS:
   - firebase_analytics (12.1.3):
     - firebase_core
     - FirebaseAnalytics (= 12.9.0)
+    - FlutterMacOS
+  - firebase_app_check (0.4.1-5):
+    - Firebase/AppCheck (~> 12.9.0)
+    - Firebase/CoreOnly (~> 12.9.0)
+    - firebase_core
     - FlutterMacOS
   - firebase_auth (6.2.0):
     - Firebase/Auth (~> 12.9.0)
@@ -1297,6 +1307,12 @@ PODS:
     - GoogleUtilities/Network (~> 8.1)
     - "GoogleUtilities/NSData+zlib (~> 8.1)"
     - nanopb (~> 3.30910.0)
+  - FirebaseAppCheck (12.9.0):
+    - AppCheckCore (~> 11.0)
+    - FirebaseAppCheckInterop (~> 12.9.0)
+    - FirebaseCore (~> 12.9.0)
+    - GoogleUtilities/Environment (~> 8.1)
+    - GoogleUtilities/UserDefaults (~> 8.1)
   - FirebaseAppCheckInterop (12.9.0)
   - FirebaseAuth (12.9.0):
     - FirebaseAppCheckInterop (~> 12.9.0)
@@ -1595,8 +1611,10 @@ DEPENDENCIES:
   - cloud_functions (from `Flutter/ephemeral/.symlinks/plugins/cloud_functions/macos`)
   - connectivity_plus (from `Flutter/ephemeral/.symlinks/plugins/connectivity_plus/macos`)
   - desktop_webview_auth (from `Flutter/ephemeral/.symlinks/plugins/desktop_webview_auth/macos`)
+  - device_info_plus (from `Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos`)
   - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
   - firebase_analytics (from `Flutter/ephemeral/.symlinks/plugins/firebase_analytics/macos`)
+  - firebase_app_check (from `Flutter/ephemeral/.symlinks/plugins/firebase_app_check/macos`)
   - firebase_auth (from `Flutter/ephemeral/.symlinks/plugins/firebase_auth/macos`)
   - firebase_core (from `Flutter/ephemeral/.symlinks/plugins/firebase_core/macos`)
   - firebase_crashlytics (from `Flutter/ephemeral/.symlinks/plugins/firebase_crashlytics/macos`)
@@ -1622,6 +1640,7 @@ SPEC REPOS:
     - Firebase
     - FirebaseABTesting
     - FirebaseAnalytics
+    - FirebaseAppCheck
     - FirebaseAppCheckInterop
     - FirebaseAuth
     - FirebaseAuthInterop
@@ -1667,10 +1686,14 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/connectivity_plus/macos
   desktop_webview_auth:
     :path: Flutter/ephemeral/.symlinks/plugins/desktop_webview_auth/macos
+  device_info_plus:
+    :path: Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos
   file_selector_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos
   firebase_analytics:
     :path: Flutter/ephemeral/.symlinks/plugins/firebase_analytics/macos
+  firebase_app_check:
+    :path: Flutter/ephemeral/.symlinks/plugins/firebase_app_check/macos
   firebase_auth:
     :path: Flutter/ephemeral/.symlinks/plugins/firebase_auth/macos
   firebase_core:
@@ -1716,9 +1739,11 @@ SPEC CHECKSUMS:
   cloud_functions: fde9a5ab81f1a84b0ace89bcf5fd5c3e7edc49fe
   connectivity_plus: 4adf20a405e25b42b9c9f87feff8f4b6fde18a4e
   desktop_webview_auth: d7fba72ef3ee2292cf66d464eede3c1a4690da83
+  device_info_plus: 4fb280989f669696856f8b129e4a5e3cd6c48f76
   file_selector_macos: 9e9e068e90ebee155097d00e89ae91edb2374db7
   Firebase: 065f2bb395062046623036d8e6dc857bc2521d56
   firebase_analytics: 7b6cfdcfc2866ddb8d8e77320f33aae2d068986e
+  firebase_app_check: 1ea404b52b0910bf632b1ea2e00ceb8d1730cb44
   firebase_auth: def738277a306ec5676724b44ce49b37edd3bc91
   firebase_core: c74b220e9288decea6bed17399c249734a7e76d2
   firebase_crashlytics: 0254867f8b44faa3fb6978724f2533d740c7d250
@@ -1727,6 +1752,7 @@ SPEC CHECKSUMS:
   firebase_remote_config: 04c1c324760b5c506e6b1f2b04d67f4db136d619
   FirebaseABTesting: a399ffe546392a39b19a5c2fb28bd8ea178a6f47
   FirebaseAnalytics: cd7d01d352f3c237c9a0e31552c257cd0b0c0352
+  FirebaseAppCheck: 94dae4d9bb682bdef85a778b0c1024a4613f1e89
   FirebaseAppCheckInterop: 4bade10286cc977e516f75d2d8312cbdfa534789
   FirebaseAuth: 3a39f6436c21ebfd7919b698228b4f89ff94c23b
   FirebaseAuthInterop: f8f6ff72dc24621906497fbe5cf3c42ee815e59c

@@ -12,6 +12,10 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
+# Initialized before any function references them (set -u safe).
+declare -a changed_files=()
+declare -a changed_dart_files=()
+
 resolve_flutter_dart() {
   local flutter_bin
   local flutter_root
@@ -118,7 +122,10 @@ run_parallel_static_checks() {
   return "$static_failed"
 }
 
+# Bash 3.2 (macOS /bin/bash) + set -u: "${arr[@]}" in for-loops errors on empty arrays; use ${arr[@]+"${arr[@]}"} instead.
 collect_changed_files() {
+  changed_files=()
+  changed_dart_files=()
   if [ "$HAS_GIT_REPO" -ne 1 ]; then
     return
   fi
@@ -134,7 +141,7 @@ collect_changed_files() {
     } | sort -u | sed '/^$/d'
   )
 
-  for file in "${changed_files[@]}"; do
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     if [[ "$file" == *.dart ]] && [ -f "$file" ]; then
       changed_dart_files+=("$file")
     fi
@@ -151,7 +158,7 @@ should_run_mix_lint_auto() {
     return 0
   fi
 
-  for file in "${changed_files[@]}"; do
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
       lib/shared/design_system/app_styles.dart|\
       lib/core/theme/mix_app_theme.dart|\
@@ -173,7 +180,7 @@ is_docs_only_change_set() {
   fi
 
   local file
-  for file in "${changed_files[@]}"; do
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
       *.md|*.mdx|*.txt|*.rst|*.adoc|\
       docs/*|\
@@ -202,7 +209,7 @@ should_run_todo_layout_tests_auto() {
   fi
 
   local file
-  for file in "${changed_files[@]}"; do
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
       lib/features/todo_list/*|\
       test/features/todo_list/*|\
@@ -231,8 +238,6 @@ RUN_FOCUSED_TESTS="${CHECKLIST_RUN_FOCUSED_TESTS:-auto}"
 RUN_MIX_LINT="${CHECKLIST_RUN_MIX_LINT:-auto}"
 RUN_TODO_LAYOUT_TESTS="${CHECKLIST_RUN_TODO_LAYOUT_TESTS:-auto}"
 HAS_GIT_REPO=0
-declare -a changed_files=()
-declare -a changed_dart_files=()
 
 if ! [[ "$RUN_COVERAGE" =~ ^(0|1)$ ]]; then
   echo "⚠️  Invalid CHECKLIST_RUN_COVERAGE='$RUN_COVERAGE'; using 1"
@@ -344,6 +349,7 @@ CHECK_MESSAGES=(
   "Checking for Row+Icon+Text overflow risk (use IconLabelRow or Flexible/Expanded)..."
   "Checking for lifecycle and error-handling (snackbar/listen/dialog mounted)..."
   "Checking offline-first remote-merge (do not overwrite newer local with older remote)..."
+  "Checking feature modularity (library_demo / settings cross-imports)..."
 )
 
 CHECK_SCRIPTS=(
@@ -387,6 +393,7 @@ CHECK_SCRIPTS=(
   "tool/check_row_text_overflow.sh"
   "tool/check_lifecycle_error_handling.sh"
   "tool/check_offline_first_remote_merge.sh"
+  "tool/check_feature_modularity_leaks.sh"
 )
 
 DEFAULT_CHECKLIST_JOBS="$(detect_cpu_count)"

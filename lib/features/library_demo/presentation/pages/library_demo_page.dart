@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_body.dart';
-import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 
 class LibraryDemoPage extends StatefulWidget {
   const LibraryDemoPage({
-    required this.scapesRepository,
+    required this.gridTrailingSlivers,
     required this.timerService,
     super.key,
   });
 
-  final ScapesRepository scapesRepository;
+  /// Trailing slivers after the library header when grid mode is on; composed
+  /// in app/router (e.g. scapes grid) so library_demo stays feature-isolated.
+  final List<Widget> gridTrailingSlivers;
   final TimerService timerService;
 
   @override
@@ -36,7 +37,6 @@ class _LibraryDemoPageState extends State<LibraryDemoPage> {
 
   @override
   Widget build(final BuildContext context) {
-    final ScapesRepository scapesRepository = widget.scapesRepository;
     final TimerService timerService = widget.timerService;
     final ThemeData theme = Theme.of(context);
     final ThemeData pageTheme = theme.copyWith(
@@ -67,7 +67,7 @@ class _LibraryDemoPageState extends State<LibraryDemoPage> {
             isGridView: _isGridView,
             onGridPressed: _toggleToGridView,
             onListPressed: _toggleToListView,
-            scapesRepository: scapesRepository,
+            gridTrailingSlivers: widget.gridTrailingSlivers,
             timerService: timerService,
           ),
         ),
