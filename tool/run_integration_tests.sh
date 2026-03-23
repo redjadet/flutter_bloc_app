@@ -16,6 +16,8 @@
 #   DEVICE_DISCOVERY_TIMEOUT_SECONDS (default 60)
 #   PROGRESS_HEARTBEAT_SECONDS (default 60)
 #   IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS (default 180)
+#   IOS_SIMULATOR_PREFERRED_NAMES (comma-separated preferred iPhone simulators)
+#   ALLOW_DESKTOP_INTEGRATION_DEVICE (0|1, default 0)
 #   XCODE_SIMULATOR_BUILD_RECOVERY_RETRY (0|1, default 1)
 #
 # Behavior:
@@ -33,6 +35,16 @@ cd "$PROJECT_ROOT"
 log() {
   printf '[%s] %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*" >&2
 }
+
+# When running in GitHub Actions, we only want integration tests to execute on
+# manual runs (`workflow_dispatch`). For push/pull_request we exit successfully
+# so the workflow job doesn't fail and doesn't waste time.
+if [ "${GITHUB_ACTIONS:-}" = "true" ]; then
+  if [ "${GITHUB_EVENT_NAME:-}" != "workflow_dispatch" ]; then
+    log "Skipping integration tests: requires workflow_dispatch (got GITHUB_EVENT_NAME='${GITHUB_EVENT_NAME:-unset}')."
+    exit 0
+  fi
+fi
 
 resolve_flutter_dart() {
   local flutter_bin
@@ -78,6 +90,43 @@ host_desktop_device_id() {
       echo ""
       ;;
   esac
+}
+
+preferred_ios_simulator_selection() {
+  [ "$(uname -s)" = "Darwin" ] || return 1
+  command -v xcrun >/dev/null 2>&1 || return 1
+
+  xcrun simctl list devices available -j 2>/dev/null | /usr/bin/python3 -c '
+import json
+import sys
+
+preferred_names = [
+    name.strip()
+    for name in sys.argv[1].split(",")
+    if name.strip()
+]
+data = json.load(sys.stdin)
+available_iphones = []
+
+for runtime_name, devices in data.get("devices", {}).items():
+    if "iOS" not in runtime_name:
+        continue
+    for device in devices:
+        if device.get("isAvailable", True) and "iPhone" in device.get("name", ""):
+            available_iphones.append(device)
+
+for preferred_name in preferred_names:
+    for device in available_iphones:
+        if device.get("name") == preferred_name:
+            print(f"{device['udid']}\t{device['name']}")
+            raise SystemExit(0)
+
+if available_iphones:
+    print(f"{available_iphones[0]['udid']}\t{available_iphones[0]['name']}")
+    raise SystemExit(0)
+
+raise SystemExit(1)
+' "$IOS_SIMULATOR_PREFERRED_NAMES"
 }
 
 is_ios_simulator_device() {
@@ -142,6 +191,30 @@ raise SystemExit(1)
 PY
 }
 
+boot_preferred_ios_simulator() {
+  local simulator_selection
+  local simulator_udid
+  local simulator_name
+
+  simulator_selection="$(preferred_ios_simulator_selection 2>/dev/null || true)"
+  [ -n "$simulator_selection" ] || return 1
+
+  IFS=$'\t' read -r simulator_udid simulator_name <<< "$simulator_selection"
+  [ -n "${simulator_udid:-}" ] || return 1
+
+  log "Booting preferred iPhone simulator: ${simulator_name:-unknown} ($simulator_udid)"
+  if ! xcrun simctl boot "$simulator_udid" 2>/dev/null; then
+    log "Simulator $simulator_udid was already booted or boot request returned non-zero; continuing with boot wait."
+  fi
+
+  if ! wait_for_simulator_boot "$simulator_udid" "$IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS"; then
+    log "Timed out waiting for simulator $simulator_udid to boot."
+    return 1
+  fi
+
+  return 0
+}
+
 run_logged_command() {
   local log_path="$1"
   shift
@@ -179,9 +252,12 @@ run_integration_command() {
   shift
 
   local log_path
+  local temp_dir
   local exit_code=0
 
-  log_path="$(mktemp "${TMPDIR:-/tmp}/integration-tests.XXXXXX.log")"
+  temp_dir="${TMPDIR:-/tmp}"
+  temp_dir="${temp_dir%/}"
+  log_path="$(mktemp "$temp_dir/integration-tests.XXXXXX")"
   run_with_timeout \
     "$label" \
     "$INTEGRATION_TESTS_TIMEOUT_SECONDS" \
@@ -198,7 +274,7 @@ run_integration_command() {
     cleanup_project_xcodebuilds
     if recover_ios_simulator_after_build_failure "$DEVICE_ID"; then
       rm -f "$log_path"
-      log_path="$(mktemp "${TMPDIR:-/tmp}/integration-tests.XXXXXX.log")"
+      log_path="$(mktemp "$temp_dir/integration-tests.XXXXXX")"
       run_with_timeout \
         "$label simulator recovery retry" \
         "$INTEGRATION_TESTS_TIMEOUT_SECONDS" \
@@ -309,6 +385,22 @@ select_device_id() {
       supported_device_lines+=("$device_line")
     done < <(list_supported_devices)
 
+    if [ -z "$requested_device" ] && [ "$(uname -s)" = "Darwin" ]; then
+      local has_ios_simulator=0
+      for index in "${!supported_device_ids[@]}"; do
+        device_line="${supported_device_lines[$index]}"
+        if [[ "$device_line" == *"ios"* ]] && [[ "$device_line" == *"simulator"* ]]; then
+          has_ios_simulator=1
+          break
+        fi
+      done
+
+      if [ "$has_ios_simulator" -eq 0 ] && boot_preferred_ios_simulator; then
+        sleep 5
+        continue
+      fi
+    fi
+
     if [ "${#supported_device_ids[@]}" -gt 0 ]; then
       if [ -n "$requested_device" ]; then
         for device_id in "${supported_device_ids[@]}"; do
@@ -355,8 +447,16 @@ select_device_id() {
     fi
   done
 
+  for index in "${!supported_device_ids[@]}"; do
+    device_line="${supported_device_lines[$index]}"
+    if [[ "$device_line" == *"ios"* ]]; then
+      echo "${supported_device_ids[$index]}"
+      return
+    fi
+  done
+
   preferred_device="$(host_desktop_device_id)"
-  if [ -n "$preferred_device" ]; then
+  if [ "$ALLOW_DESKTOP_INTEGRATION_DEVICE" -eq 1 ] && [ -n "$preferred_device" ]; then
     for device_id in "${supported_device_ids[@]}"; do
       if [ "$device_id" = "$preferred_device" ]; then
         echo "$device_id"
@@ -365,13 +465,15 @@ select_device_id() {
     done
   fi
 
-  if [ "${#supported_device_ids[@]}" -eq 1 ]; then
+  if [ "${#supported_device_ids[@]}" -eq 1 ] && [ "$ALLOW_DESKTOP_INTEGRATION_DEVICE" -eq 1 ]; then
     echo "${supported_device_ids[0]}"
     return
   fi
 
-  log "❌ Multiple supported devices detected: ${supported_device_ids[*]}"
-  log 'Set CHECKLIST_INTEGRATION_DEVICE=<deviceId> to choose one.'
+  log '❌ No iPhone simulator or iPhone device was selected for integration tests.'
+  log "Available supported device ids: ${supported_device_ids[*]}"
+  log 'Boot an iPhone simulator, connect an iPhone, or set CHECKLIST_INTEGRATION_DEVICE=<deviceId>.'
+  log 'If you intentionally want the desktop target, rerun with ALLOW_DESKTOP_INTEGRATION_DEVICE=1.'
   exit 1
 }
 
@@ -452,6 +554,8 @@ INTEGRATION_TESTS_TIMEOUT_SECONDS="${INTEGRATION_TESTS_TIMEOUT_SECONDS:-1800}"
 DEVICE_DISCOVERY_TIMEOUT_SECONDS="${DEVICE_DISCOVERY_TIMEOUT_SECONDS:-60}"
 PROGRESS_HEARTBEAT_SECONDS="${PROGRESS_HEARTBEAT_SECONDS:-60}"
 IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS="${IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS:-180}"
+IOS_SIMULATOR_PREFERRED_NAMES="${IOS_SIMULATOR_PREFERRED_NAMES:-iPhone 17e,iPhone 17 Pro,iPhone 17,iPhone 16e,iPhone 16 Pro,iPhone 16}"
+ALLOW_DESKTOP_INTEGRATION_DEVICE="${ALLOW_DESKTOP_INTEGRATION_DEVICE:-0}"
 XCODE_SIMULATOR_BUILD_RECOVERY_RETRY="${XCODE_SIMULATOR_BUILD_RECOVERY_RETRY:-1}"
 
 normalized_run_coverage="$(trim "$RUN_COVERAGE")"
@@ -493,6 +597,11 @@ fi
 if ! [[ "$IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS" =~ ^[0-9]+$ ]] || [ "$IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS" -le 0 ]; then
   log "⚠️ Invalid IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS='$IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS'; using 180."
   IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS=180
+fi
+
+if ! [[ "$ALLOW_DESKTOP_INTEGRATION_DEVICE" =~ ^(0|1)$ ]]; then
+  log "⚠️ Invalid ALLOW_DESKTOP_INTEGRATION_DEVICE='$ALLOW_DESKTOP_INTEGRATION_DEVICE'; using 0."
+  ALLOW_DESKTOP_INTEGRATION_DEVICE=0
 fi
 
 if ! [[ "$XCODE_SIMULATOR_BUILD_RECOVERY_RETRY" =~ ^(0|1)$ ]]; then
