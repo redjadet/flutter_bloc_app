@@ -247,13 +247,13 @@ Tips:
 - Keep files <250 LOC; extract helpers into `shared/` or dedicated widgets when approaching the limit.
 - Run `flutter analyze` to catch repository-specific analyzer plugins (e.g., file length, forbidden imports).
 - `tool/test_coverage.sh` writes the reusable baseline report to `coverage/lcov.base.info` during a full run and refreshes `coverage/lcov.info` + the summary.
-- Run integration tests separately with `./bin/integration_tests`; it prefers an iPhone simulator when available, can be overridden with `CHECKLIST_INTEGRATION_DEVICE=<deviceId>`, and refreshes the coverage summary automatically when the full suite runs.
+- Run integration tests separately with `./bin/integration_tests`; it prefers an iPhone simulator when available, can be overridden with `CHECKLIST_INTEGRATION_DEVICE=<deviceId>`, refreshes the coverage summary automatically when the full suite runs, and accepts `INTEGRATION_TESTS_RUN_COVERAGE=0|false` when you only want flow validation.
 
 ## 7. Testing Strategy
 
 - **Unit & Bloc tests**: Use `bloc_test` + fake repositories/services. Counter, GraphQL, WebSocket, Remote Config cubits all have samples to copy.
 - **Widget/Golden tests**: Live under `test/features/.../presentation`. Use `golden_toolkit` for deterministic layout tests and seed localization/theme providers as needed.
-- **Integration tests**: Live under `integration_test/`. Run them with `./bin/integration_tests` or `tool/run_integration_tests.sh`; they require a supported non-web device. A full-suite run also updates `coverage/coverage_summary.md`, merging into `coverage/lcov.base.info` first when that baseline exists.
+- **Integration tests**: Live under `integration_test/`. Run them with `./bin/integration_tests` or `tool/run_integration_tests.sh`; they require a supported non-web device. A full-suite run also updates `coverage/coverage_summary.md`, merging into `coverage/lcov.base.info` first when that baseline exists. Use `INTEGRATION_TESTS_RUN_COVERAGE=0|false` to skip coverage collection when you only need flow validation.
 - **Common Bugs Prevention tests**: Located in `test/shared/common_bugs_prevention_test.dart`, these regression tests verify defensive patterns (context lifecycle checks, cubit disposal guards, stream cleanup, etc.). Automatically included when running `./bin/checklist` or `tool/test_coverage.sh`.
 - **Timer-dependent tests**: Inject `FakeTimerService` and advance time with `tick(n)` instead of waiting on real timers.
 - **Network image tests**: When testing widgets that use `CachedNetworkImageWidget`, use `pump()` instead of `pumpAndSettle()` to avoid timeouts. Network requests never complete in test environments, so `pumpAndSettle()` will wait indefinitely. Use `await tester.pump()` followed by `await tester.pump(const Duration(milliseconds: 100))` if needed for async operations.
