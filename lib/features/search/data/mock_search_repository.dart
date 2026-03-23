@@ -17,6 +17,10 @@ class MockSearchRepository implements SearchRepository {
   Future<List<SearchResult>> search(final String query) async {
     await Future<void>.delayed(const Duration(milliseconds: 500));
 
+    if (query.toLowerCase().contains('not-found')) {
+      return const <SearchResult>[];
+    }
+
     return List.generate(
       12,
       (final index) => SearchResult(

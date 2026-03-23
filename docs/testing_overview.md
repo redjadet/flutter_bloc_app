@@ -39,6 +39,7 @@ This document summarizes test coverage, test types, testing patterns, and common
 - End-to-end app flow verification under `integration_test/`
 - Runs on a supported non-web device via `./bin/integration_tests` or `tool/run_integration_tests.sh`
 - Use `CHECKLIST_INTEGRATION_DEVICE=<deviceId>` when multiple devices are attached
+- On macOS, the script now prefers an iPhone simulator, attempts to boot a preferred iPhone simulator if Flutter has not listed one yet, and refuses to fall back to the `macos` desktop target unless `ALLOW_DESKTOP_INTEGRATION_DEVICE=1` is set explicitly
 - `integration_test/pr_smoke_flows_test.dart` covers the smaller GitHub PR smoke suite; `integration_test/smoke_flows_test.dart` keeps a broader local smoke pass available without requiring the full suite
 - `integration_test/extended_flows_test.dart` keeps heavier persistence, refresh, and filter scenarios available without blocking every PR run
 - Running the full suite via `./bin/integration_tests` still targets `integration_test/all_flows_test.dart` and refreshes `coverage/coverage_summary.md`; when `coverage/lcov.base.info` exists, integration coverage is merged into that baseline first
