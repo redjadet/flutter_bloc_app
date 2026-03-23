@@ -5,6 +5,8 @@
 #   tool/run_integration_tests.sh
 #   CHECKLIST_INTEGRATION_DEVICE=<deviceId> tool/run_integration_tests.sh
 #   INTEGRATION_TESTS_RUN_COVERAGE=0 tool/run_integration_tests.sh
+#   INTEGRATION_TESTS_RUN_COVERAGE=true tool/run_integration_tests.sh
+#   INTEGRATION_TESTS_RUN_COVERAGE=false tool/run_integration_tests.sh
 #   tool/run_integration_tests.sh integration_test/smoke_flows_test.dart
 #   tool/run_integration_tests.sh integration_test/app_test.dart
 #
@@ -452,6 +454,17 @@ PROGRESS_HEARTBEAT_SECONDS="${PROGRESS_HEARTBEAT_SECONDS:-60}"
 IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS="${IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS:-180}"
 XCODE_SIMULATOR_BUILD_RECOVERY_RETRY="${XCODE_SIMULATOR_BUILD_RECOVERY_RETRY:-1}"
 
+normalized_run_coverage="$(trim "$RUN_COVERAGE")"
+normalized_run_coverage="$(printf '%s' "$normalized_run_coverage" | tr '[:upper:]' '[:lower:]')"
+case "$normalized_run_coverage" in
+  true)
+    RUN_COVERAGE=1
+    ;;
+  false)
+    RUN_COVERAGE=0
+    ;;
+esac
+
 if ! [[ "$RUN_COVERAGE" =~ ^(0|1)$ ]]; then
   log "⚠️ Invalid INTEGRATION_TESTS_RUN_COVERAGE='$RUN_COVERAGE'; using 1."
   RUN_COVERAGE=1
@@ -505,7 +518,7 @@ if [ "$#" -eq 0 ]; then
   log "Running aggregated integration suite: $FULL_SUITE_TARGET"
   set +e
   if [ "$RUN_COVERAGE" -eq 0 ]; then
-    log 'Coverage disabled via INTEGRATION_TESTS_RUN_COVERAGE=0.'
+    log 'Coverage disabled via INTEGRATION_TESTS_RUN_COVERAGE=0|false.'
     run_integration_command \
       "$FULL_SUITE_TARGET" \
       flutter test \
