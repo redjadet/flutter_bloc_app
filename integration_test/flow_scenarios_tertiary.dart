@@ -106,18 +106,12 @@ void registerSearchEmptyResultsIntegrationFlow() {
           )
           .first;
       await tester.enterText(searchField, 'zzzz-not-found-query');
-      await pumpSettleWithin(
+      await pumpUntilFound(
         tester,
-        timeout: const Duration(seconds: 5),
+        find.text('No results found'),
+        timeout: const Duration(seconds: 8),
       );
-
-      if (tester.any(find.text('No results found'))) {
-        await pumpUntilFound(
-          tester,
-          find.text('No results found'),
-        );
-        expect(find.text('No results found'), findsWidgets);
-      }
+      expect(find.text('No results found'), findsWidgets);
     },
   );
 }
