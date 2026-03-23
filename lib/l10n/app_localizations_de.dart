@@ -464,6 +464,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get openGoogleMapsTooltip => 'Google-Maps-Demo öffnen';
 
   @override
+  String get openMapboxTooltip => 'Open Mapbox demo';
+
+  @override
   String get openWhiteboardTooltip => 'Whiteboard öffnen';
 
   @override
@@ -966,6 +969,20 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get googleMapsPageUnsupportedDescription =>
       'Die Google-Maps-Demo ist nur auf Android- und iOS-Builds verfügbar.';
+
+  @override
+  String get mapboxPageTitle => 'Mapbox demo';
+
+  @override
+  String get mapboxPageMissingTokenTitle => 'Add a Mapbox access token';
+
+  @override
+  String get mapboxPageMissingTokenDescription =>
+      'Set MAPBOX_ACCESS_TOKEN to enable the Mapbox demo.';
+
+  @override
+  String get mapboxPageUnsupportedDescription =>
+      'The Mapbox demo is only available on Android and iOS builds.';
 
   @override
   String get syncStatusOfflineTitle => 'Du bist offline';

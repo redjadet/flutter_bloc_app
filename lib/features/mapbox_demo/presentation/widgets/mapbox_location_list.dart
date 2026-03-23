@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+
+class MapboxLocationList extends StatelessWidget {
+  const MapboxLocationList({
+    required this.locations,
+    required this.selectedLocationId,
+    required this.emptyLabel,
+    required this.heading,
+    required this.focusLabel,
+    required this.selectedBadgeLabel,
+    required this.onFocus,
+    super.key,
+  });
+
+  final List<MapLocation> locations;
+  final String? selectedLocationId;
+  final String emptyLabel;
+  final String heading;
+  final String focusLabel;
+  final String selectedBadgeLabel;
+  final ValueChanged<MapLocation> onFocus;
+
+  @override
+  Widget build(final BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
+    if (locations.isEmpty) {
+      return CommonEmptyState(message: emptyLabel);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(heading, style: theme.textTheme.titleMedium),
+        SizedBox(height: context.responsiveGapS),
+        for (final MapLocation location in locations)
+          Padding(
+            key: ValueKey('mapbox-location-${location.id}'),
+            padding: EdgeInsets.only(bottom: context.responsiveGapS),
+            child: CommonCard(
+              padding: EdgeInsets.zero,
+              child: PlatformAdaptive.listTile(
+                context: context,
+                title: Text(location.title),
+                subtitle: Text(location.description),
+                trailing: _LocationFocusActions(
+                  isSelected: selectedLocationId == location.id,
+                  focusLabel: focusLabel,
+                  selectedLabel: selectedBadgeLabel,
+                  onFocus: () => onFocus(location),
+                ),
+                onTap: () => onFocus(location),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _LocationFocusActions extends StatelessWidget {
+  const _LocationFocusActions({
+    required this.isSelected,
+    required this.focusLabel,
+    required this.selectedLabel,
+    required this.onFocus,
+  });
+
+  final bool isSelected;
+  final String focusLabel;
+  final String selectedLabel;
+  final VoidCallback onFocus;
+
+  @override
+  Widget build(final BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colors = theme.colorScheme;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (isSelected)
+          Padding(
+            padding: EdgeInsets.only(right: context.responsiveGapXS),
+            child: CommonCard(
+              color: colors.secondaryContainer,
+              elevation: 0,
+              margin: EdgeInsets.zero,
+              padding: EdgeInsets.symmetric(
+                horizontal: context.responsiveGapS,
+                vertical: context.responsiveGapXS,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  context.responsiveCardRadius / 2,
+                ),
+              ),
+              child: Text(
+                selectedLabel,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: colors.onSecondaryContainer,
+                ),
+              ),
+            ),
+          ),
+        PlatformAdaptive.textButton(
+          context: context,
+          onPressed: onFocus,
+          child: IconLabelRow(
+            icon: Icons.near_me,
+            label: focusLabel,
+          ),
+        ),
+      ],
+    );
+  }
+}
