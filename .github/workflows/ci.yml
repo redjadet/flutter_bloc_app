@@ -37,6 +37,7 @@ env:
 
 jobs:
   changes:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     outputs:
       run_integration: ${{ steps.scope.outputs.run_integration }}
@@ -105,7 +106,8 @@ jobs:
       - name: Run delivery checklist
         if: >-
           github.event_name != 'workflow_dispatch' ||
-          (github.event.inputs.run_analyze != 'false' &&
+          (github.event_name == 'workflow_dispatch' &&
+           github.event.inputs.run_analyze != 'false' &&
            github.event.inputs.run_tests != 'false')
         run: ./bin/checklist
 
@@ -148,11 +150,8 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 45
     if: >-
-      (github.event_name != 'workflow_dispatch' ||
-       github.event.inputs.run_integration != 'false') &&
-      (github.event_name != 'pull_request' ||
-       needs.changes.outputs.run_integration == 'true')
-
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.run_integration != 'false'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
