@@ -33,6 +33,9 @@ class AppRoutes {
   static const googleMaps = 'google-maps';
   static const googleMapsPath = '/google-maps';
 
+  static const mapboxMaps = 'mapbox-maps';
+  static const mapboxMapsPath = '/mapbox-maps';
+
   static const graphql = 'graphql-demo';
   static const graphqlPath = '/graphql-demo';
 

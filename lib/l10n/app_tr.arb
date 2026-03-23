@@ -1484,5 +1484,25 @@
   "iapDemoSubscriptionsTitle": "Subscriptions",
   "iapDemoLastResultLabel": "Last result",
   "iapDemoBuyButton": "Buy",
-  "iapDemoNoProductsFound": "No products found."
+  "iapDemoNoProductsFound": "No products found.",
+  "openMapboxTooltip": "Open Mapbox demo",
+  "@openMapboxTooltip": {
+    "description": "Tooltip for navigating to the Mapbox demo feature"
+  },
+  "mapboxPageTitle": "Mapbox demo",
+  "@mapboxPageTitle": {
+    "description": "Title for the Mapbox sample page"
+  },
+  "mapboxPageMissingTokenTitle": "Add a Mapbox access token",
+  "@mapboxPageMissingTokenTitle": {
+    "description": "Headline shown when MAPBOX_ACCESS_TOKEN is not configured"
+  },
+  "mapboxPageMissingTokenDescription": "Set MAPBOX_ACCESS_TOKEN to enable the Mapbox demo.",
+  "@mapboxPageMissingTokenDescription": {
+    "description": "Helper text prompting developers to configure a Mapbox access token"
+  },
+  "mapboxPageUnsupportedDescription": "The Mapbox demo is only available on Android and iOS builds.",
+  "@mapboxPageUnsupportedDescription": {
+    "description": "Message shown when the Mapbox demo is opened on an unsupported platform"
+  }
 }

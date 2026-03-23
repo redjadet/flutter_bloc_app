@@ -20,6 +20,12 @@ final List<_SecretStorageField> _secureStorageFields = <_SecretStorageField>[
     applyValue: (final value) => SecretConfig._googleMapsApiKey = value,
   ),
   _SecretStorageField(
+    storageKey: SecretConfig._keyMapbox,
+    envKey: 'MAPBOX_ACCESS_TOKEN',
+    readValue: () => SecretConfig._mapboxAccessToken,
+    applyValue: (final value) => SecretConfig._mapboxAccessToken = value,
+  ),
+  _SecretStorageField(
     storageKey: SecretConfig._keyGeminiApiKey,
     envKey: 'GEMINI_API_KEY',
     readValue: () => SecretConfig._geminiApiKey,
@@ -147,6 +153,7 @@ Map<String, dynamic>? _readEnvironmentSecrets() {
     'HUGGINGFACE_USE_CHAT_COMPLETIONS',
   );
   const String mapsKey = String.fromEnvironment('GOOGLE_MAPS_API_KEY');
+  const String mapboxToken = String.fromEnvironment('MAPBOX_ACCESS_TOKEN');
   const String geminiKey = String.fromEnvironment('GEMINI_API_KEY');
   const String googleKey = String.fromEnvironment('GOOGLE_API_KEY');
   final String resolvedKey = geminiKey.isNotEmpty ? geminiKey : googleKey;
@@ -165,6 +172,9 @@ Map<String, dynamic>? _readEnvironmentSecrets() {
   }
   if (mapsKey.isNotEmpty) {
     result['GOOGLE_MAPS_API_KEY'] = mapsKey;
+  }
+  if (mapboxToken.isNotEmpty) {
+    result['MAPBOX_ACCESS_TOKEN'] = mapboxToken;
   }
   if (resolvedKey.isNotEmpty) {
     result['GEMINI_API_KEY'] = resolvedKey;
@@ -219,6 +229,14 @@ Future<void> _persistGoogleMapsKey(final SecretStorage storage) async {
   await _secureStorageFields
       .firstWhere(
         (final field) => field.storageKey == SecretConfig._keyGoogleMaps,
+      )
+      .persist(storage);
+}
+
+Future<void> _persistMapboxKey(final SecretStorage storage) async {
+  await _secureStorageFields
+      .firstWhere(
+        (final field) => field.storageKey == SecretConfig._keyMapbox,
       )
       .persist(storage);
 }

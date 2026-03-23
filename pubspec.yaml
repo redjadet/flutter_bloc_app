@@ -77,6 +77,7 @@ dependencies:
   json_annotation: ^4.9.0
   local_auth: ^3.0.0
   logger: ^2.6.2
+  mapbox_maps_flutter: ^2.20.0
   markdown: ^7.3.0
   meta: ^1.16.0
   mix: ^1.7.0
