@@ -57,6 +57,8 @@ Future<void> registerAllDependencies() async {
   await _registerStorageServices();
   _registerCounterRepository();
   registerAuthServices();
+  registerSupabaseServices();
+  _registerTimerAndNetworkStatus();
   registerHttpServices();
   registerChartServices();
   registerCalculatorServices();
@@ -72,7 +74,6 @@ Future<void> registerAllDependencies() async {
   registerTodoServices();
   registerGenUiServices();
   registerWalletConnectAuthServices();
-  registerSupabaseServices();
   registerPlaylearnServices();
   registerIgamingDemoServices();
   registerFcmDemoServices();
@@ -103,6 +104,18 @@ Future<void> _registerStorageServices() async {
 
 void _registerCounterRepository() {
   registerLazySingletonIfAbsent<CounterRepository>(createCounterRepository);
+}
+
+/// `registerHttpServices` builds `Dio` with `NetworkStatusService`; chart setup
+/// can eagerly resolve HTTP clients, so network status must exist first.
+void _registerTimerAndNetworkStatus() {
+  registerLazySingletonIfAbsent<TimerService>(DefaultTimerService.new);
+  registerLazySingletonIfAbsent<NetworkStatusService>(
+    () => ConnectivityNetworkStatusService(
+      timerService: getIt<TimerService>(),
+    ),
+    dispose: (final service) => service.dispose(),
+  );
 }
 
 void _registerSettingsServices() {
@@ -146,7 +159,6 @@ void _registerScapesServices() {
 }
 
 void _registerUtilityServices() {
-  registerLazySingletonIfAbsent<TimerService>(DefaultTimerService.new);
   registerLazySingletonIfAbsent<BiometricAuthenticator>(
     LocalBiometricAuthenticator.new,
   );
@@ -156,12 +168,6 @@ void _registerUtilityServices() {
 }
 
 void _registerSyncServices() {
-  registerLazySingletonIfAbsent<NetworkStatusService>(
-    () => ConnectivityNetworkStatusService(
-      timerService: getIt<TimerService>(),
-    ),
-    dispose: (final service) => service.dispose(),
-  );
   registerLazySingletonIfAbsent<SyncableRepositoryRegistry>(
     SyncableRepositoryRegistry.new,
   );

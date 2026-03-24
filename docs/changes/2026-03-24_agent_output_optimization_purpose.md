@@ -31,6 +31,7 @@ speed for low/medium-risk work without weakening quality gates.
   - profile controls (`fast`, `balanced`)
   - model override/cache behavior
   - contract checks (`tool/check_delegate_wrapper_contracts.sh`)
+  - repo-native Codex feedback helper (`tool/request_codex_feedback.sh`)
 - Trigger benchmark and precision check:
   - `analysis/agent_scorecard/router_trigger_benchmark_v1.json`
   - `tool/check_router_trigger_precision.sh`
@@ -55,6 +56,7 @@ speed for low/medium-risk work without weakening quality gates.
 
 ```bash
 ./tool/check_delegate_wrapper_contracts.sh
+./tool/request_codex_feedback.sh --base main
 ./tool/check_router_trigger_precision.sh
 ./tool/build_agent_scorecard_summary.sh
 ./tool/agent_scorecard_weekly_compare.sh
