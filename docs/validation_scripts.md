@@ -679,6 +679,55 @@ Text('Title', style: Theme.of(context).textTheme.titleLarge) // ✅ Theme-based
 
 ---
 
+<!-- AUTO-GENERATED-CHECK_SCRIPTS:START -->
+## Checklist Script Index (Auto-generated)
+
+The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
+
+- `check_flutter_domain_imports.sh`
+- `check_material_buttons.sh`
+- `check_no_hive_openbox.sh`
+- `check_raw_timer.sh`
+- `check_raw_future_delayed.sh`
+- `check_direct_getit.sh`
+- `check_raw_dialogs.sh`
+- `check_raw_network_images.sh`
+- `check_raw_print.sh`
+- `check_raw_google_fonts.sh`
+- `check_side_effects_build.sh`
+- `check_context_mounted.sh`
+- `check_inherited_widget_in_create.sh`
+- `check_inherited_widget_in_initstate.sh`
+- `check_setstate_mounted.sh`
+- `check_hardcoded_colors.sh`
+- `check_hardcoded_strings.sh`
+- `check_missing_localizations.sh`
+- `check_cubit_isclosed.sh`
+- `check_missing_const.sh`
+- `check_solid_presentation_data_imports.sh`
+- `check_solid_data_presentation_imports.sh`
+- `check_perf_shrinkwrap_lists.sh`
+- `check_perf_nonbuilder_lists.sh`
+- `check_perf_missing_repaint_boundary.sh`
+- `check_perf_unnecessary_rebuilds.sh`
+- `check_memory_unclosed_streams.sh`
+- `check_memory_missing_dispose.sh`
+- `check_dialog_controller_dispose.sh`
+- `check_concurrent_modification.sh`
+- `check_raw_json_decode.sh`
+- `check_unvalidated_base_url_parse.sh`
+- `check_auth_refresh_single_flight.sh`
+- `check_compute_domain_layer.sh`
+- `check_compute_lifecycle.sh`
+- `check_freezed_preferred.sh`
+- `check_unguarded_null_assertion.sh`
+- `check_row_text_overflow.sh`
+- `check_lifecycle_error_handling.sh`
+- `check_offline_first_remote_merge.sh`
+- `check_feature_modularity_leaks.sh`
+
+<!-- AUTO-GENERATED-CHECK_SCRIPTS:END -->
+
 ## Keeping This Doc in Sync
 
 `tool/validate_validation_docs.sh` checks that every script in `CHECK_SCRIPTS` (in `tool/delivery_checklist.sh`) is mentioned in this document. It runs automatically as part of `./bin/checklist`. If you add or remove a script from `CHECK_SCRIPTS`, add or remove a corresponding entry here and run `bash tool/validate_validation_docs.sh` to verify.
