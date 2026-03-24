@@ -6,10 +6,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'test_harness.dart';
 
+part 'flow_scenarios_helpers.dart';
 part 'flow_scenarios_primary.dart';
 part 'flow_scenarios_secondary.dart';
 part 'flow_scenarios_tertiary.dart';
-part 'flow_scenarios_helpers.dart';
 
 void registerSmokeIntegrationFlows() {
   registerAppLaunchIntegrationFlow();
@@ -47,7 +47,15 @@ void registerExtendedIntegrationFlows() {
   registerTodoListFilterIntegrationFlow();
 }
 
-void registerAllIntegrationFlows() {
+/// Standard CI tier: full smoke journeys plus extended flows (persistence,
+/// navigation, filter/empty/error paths). Strictly broader than
+/// [registerSmokeIntegrationFlows] and matches journey coverage for J1–J4 in
+/// `docs/engineering/integration_journey_map.md`.
+void registerStandardIntegrationFlows() {
   registerSmokeIntegrationFlows();
   registerExtendedIntegrationFlows();
+}
+
+void registerAllIntegrationFlows() {
+  registerStandardIntegrationFlows();
 }
