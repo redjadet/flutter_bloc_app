@@ -40,7 +40,9 @@ tier expectations.
 
 - `smoke` -> `integration_test/smoke_flows_test.dart`
 - `standard` -> `integration_test/standard_flows_test.dart`
+  (`registerStandardIntegrationFlows`: smoke + extended; see `flow_scenarios.dart`)
 - `exhaustive` -> `integration_test/all_flows_test.dart`
+  (currently same flow set as standard; reserve for future exhaustive-only cases)
 
 ## Notes
 

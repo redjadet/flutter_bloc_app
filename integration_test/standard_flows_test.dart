@@ -3,5 +3,5 @@ import 'test_harness.dart';
 
 void main() {
   registerIntegrationHarness();
-  registerPrSmokeIntegrationFlows();
+  registerStandardIntegrationFlows();
 }
