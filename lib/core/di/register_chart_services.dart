@@ -22,12 +22,6 @@ void registerChartServices() {
   registerLazySingletonIfAbsent<ChartCacheRepository>(
     () => ChartDemoCacheRepository(hiveService: getIt<HiveService>()),
   );
-  registerLazySingletonIfAbsent<SupabaseChartRepository>(
-    SupabaseChartRepository.new,
-  );
-  registerLazySingletonIfAbsent<FirebaseChartRepository>(
-    FirebaseChartRepository.new,
-  );
   if (!getIt.isRegistered<ChartRemoteRepository>(
     instanceName: 'directChartRemote',
   )) {
@@ -36,6 +30,15 @@ void registerChartServices() {
       instanceName: 'directChartRemote',
     );
   }
+  final ChartRemoteRepository directChartRemote = getIt<ChartRemoteRepository>(
+    instanceName: 'directChartRemote',
+  );
+  registerLazySingletonIfAbsent<SupabaseChartRepository>(
+    () => SupabaseChartRepository(liveDirectFallback: directChartRemote),
+  );
+  registerLazySingletonIfAbsent<FirebaseChartRepository>(
+    () => FirebaseChartRepository(liveDirectFallback: directChartRemote),
+  );
   registerLazySingletonIfAbsent<ChartRemoteRepository>(
     () => AuthAwareChartRemoteRepository(
       supabaseRemote: getIt<SupabaseChartRepository>(),

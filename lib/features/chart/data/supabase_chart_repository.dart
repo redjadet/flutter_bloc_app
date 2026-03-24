@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/core/supabase/edge_then_tables.dart';
+import 'package:flutter_bloc_app/features/chart/data/chart_live_direct_fallback.dart';
 import 'package:flutter_bloc_app/features/chart/data/chart_points_parser.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_exception.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
@@ -18,9 +19,11 @@ class SupabaseChartRepository implements ChartRemoteRepository {
     })?
     invokeEdgeFunction,
     final Future<Object?> Function()? fetchTableRows,
+    final ChartRemoteRepository? liveDirectFallback,
   }) : _readAccessToken = readAccessToken ?? _defaultReadAccessToken,
        _invokeEdgeFunction = invokeEdgeFunction ?? _defaultInvokeEdgeFunction,
-       _fetchTableRows = fetchTableRows ?? _defaultFetchTableRows;
+       _fetchTableRows = fetchTableRows ?? _defaultFetchTableRows,
+       _liveDirectFallback = liveDirectFallback;
 
   static const String _tableName = 'chart_trending_points';
   static const String _syncFunction = 'sync-chart-trending';
@@ -34,29 +37,88 @@ class SupabaseChartRepository implements ChartRemoteRepository {
   })
   _invokeEdgeFunction;
   final Future<Object?> Function() _fetchTableRows;
+  final ChartRemoteRepository? _liveDirectFallback;
+
+  Future<List<ChartPoint>>? _inFlightFetch;
 
   @override
   ChartDataSource get lastSource => _lastSource;
 
-  ChartDataSource _lastSource = ChartDataSource.supabaseTables;
+  ChartDataSource _lastSource = ChartDataSource.unknown;
+
+  /// Thrown when edge, direct fallback, and tables all yield no points, so
+  /// offline-first layers do not persist an empty list as a successful refresh.
+  static const String noChartPointsMessage =
+      'Failed to load chart data from Supabase (no points available)';
 
   @override
   Future<List<ChartPoint>> fetchTrendingCounts() async {
-    final SupabaseEdgeThenTablesResult<ChartPoint> result =
-        await runSupabaseEdgeThenTables<ChartPoint>(
-          tryEdge: _tryFetchFromEdge,
-          fetchTables: _fetchFromTables,
-          onPostgrestException: (final e) =>
-              ChartDataException(e.message, cause: e),
-          onGenericException: (final msg, final cause) =>
-              ChartDataException(msg, cause: cause),
-          logContext: 'SupabaseChartRepository.fetchTrendingCounts',
-          genericFailureMessage: 'Failed to load chart data from Supabase',
-        );
-    _lastSource = result.fromEdge
-        ? ChartDataSource.supabaseEdge
-        : ChartDataSource.supabaseTables;
-    return result.result;
+    final existing = _inFlightFetch;
+    if (existing != null) {
+      return existing;
+    }
+    final future = _fetchTrendingCountsInternal();
+    _inFlightFetch = future;
+    try {
+      return await future;
+    } finally {
+      if (identical(_inFlightFetch, future)) {
+        _inFlightFetch = null;
+      }
+    }
+  }
+
+  Future<List<ChartPoint>> _fetchTrendingCountsInternal() async {
+    ensureSupabaseConfigured();
+    try {
+      final List<ChartPoint> fromEdge = await _tryFetchFromEdge();
+      if (fromEdge.isNotEmpty) {
+        _lastSource = ChartDataSource.supabaseEdge;
+        return fromEdge;
+      }
+      final List<ChartPoint>? liveDirect = await tryLiveDirectChartPoints(
+        fallback: _liveDirectFallback,
+        guardAgainstIdenticalTo: this,
+        loggerTag: 'SupabaseChartRepository',
+        successDebugDetail:
+            'using direct CoinGecko after Supabase edge miss or empty payload',
+      );
+      if (liveDirect != null) {
+        _lastSource = ChartDataSource.remote;
+        return liveDirect;
+      }
+      final List<ChartPoint> fromTables = await _fetchFromTables();
+      if (fromTables.isEmpty) {
+        _lastSource = ChartDataSource.unknown;
+        throw ChartDataException(noChartPointsMessage);
+      }
+      _lastSource = ChartDataSource.supabaseTables;
+      return fromTables;
+    } on PostgrestException catch (error, stackTrace) {
+      _rethrowAsChartFailure(error.message, error, stackTrace);
+    } on ChartDataException {
+      rethrow;
+    } on Object catch (error, stackTrace) {
+      _rethrowAsChartFailure(
+        'Failed to load chart data from Supabase',
+        error,
+        stackTrace,
+      );
+    }
+  }
+
+  Never _rethrowAsChartFailure(
+    final String message,
+    final Object cause,
+    final StackTrace stackTrace,
+  ) {
+    _lastSource = ChartDataSource.unknown;
+    AppLogger.error(
+      'SupabaseChartRepository.fetchTrendingCounts',
+      cause,
+      stackTrace,
+    );
+    throw ChartDataException(message, cause: cause);
   }
 
   Future<List<ChartPoint>> _tryFetchFromEdge() async {

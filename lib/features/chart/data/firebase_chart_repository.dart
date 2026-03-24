@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc_app/features/chart/data/chart_live_direct_fallback.dart';
 import 'package:flutter_bloc_app/features/chart/data/chart_points_parser.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_exception.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
@@ -9,15 +10,25 @@ import 'package:flutter_bloc_app/features/chart/domain/chart_remote_repository.d
 import 'package:flutter_bloc_app/shared/firebase/auth_helpers.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
+import 'package:meta/meta.dart';
 
 class FirebaseChartRepository implements ChartRemoteRepository {
   FirebaseChartRepository({
     final FirebaseAuth? auth,
     final FirebaseFunctions? functions,
     final FirebaseFirestore? firestore,
+    final ChartRemoteRepository? liveDirectFallback,
+
+    /// When non-null, skips real [FirebaseFirestore] reads (for tests only).
+    /// Do not inject this from production DI.
+    @visibleForTesting
+    final Future<Map<String, dynamic>?> Function(String docPath)?
+    firestoreDocDataLoader,
   }) : _auth = auth,
        _functions = functions,
-       _firestore = firestore;
+       _firestore = firestore,
+       _liveDirectFallback = liveDirectFallback,
+       _firestoreDocDataLoader = firestoreDocDataLoader;
 
   static const String _region = 'us-central1';
   static const String _callableName = 'syncChartTrending';
@@ -26,6 +37,9 @@ class FirebaseChartRepository implements ChartRemoteRepository {
   final FirebaseAuth? _auth;
   final FirebaseFunctions? _functions;
   final FirebaseFirestore? _firestore;
+  final ChartRemoteRepository? _liveDirectFallback;
+  final Future<Map<String, dynamic>?> Function(String docPath)?
+  _firestoreDocDataLoader;
 
   Future<List<ChartPoint>>? _inFlightFetch;
 
@@ -61,7 +75,7 @@ class FirebaseChartRepository implements ChartRemoteRepository {
   @override
   ChartDataSource get lastSource => _lastSource;
 
-  ChartDataSource _lastSource = ChartDataSource.firebaseFirestore;
+  ChartDataSource _lastSource = ChartDataSource.unknown;
 
   @override
   Future<List<ChartPoint>> fetchTrendingCounts() async {
@@ -70,6 +84,7 @@ class FirebaseChartRepository implements ChartRemoteRepository {
 
     final auth = _safeAuth;
     if (auth == null) {
+      _lastSource = ChartDataSource.unknown;
       throw ChartDataException('Firebase user must be signed in');
     }
 
@@ -89,29 +104,55 @@ class FirebaseChartRepository implements ChartRemoteRepository {
   ) async {
     // Ensure FirebaseAuth had a chance to hydrate the current user before we
     // call the authenticated Cloud Function.
+    late final _FirebaseChartFetchAttempt cloudAttempt;
     try {
       final user = await waitForAuthUser(auth);
       // Ensure Functions gets a fresh ID token attached to the request.
       await user.getIdToken(true);
-    } on FirebaseAuthException {
-      // If auth isn't ready, we treat Firebase as unavailable and allow the
-      // overall 3-way routing to fall through (via empty result here).
-      return const <ChartPoint>[];
+      cloudAttempt = await _tryFetchFromCloud();
+    } on FirebaseAuthException catch (e, _) {
+      // Do not return [] here: that looks like success to auth-aware callers.
+      // Skip cloud and still try direct HTTP + Firestore (same as empty cloud).
+      AppLogger.info(
+        'FirebaseChartRepository auth/token failed (${e.code}); '
+        'skipping cloud, trying direct and Firestore',
+      );
+      _lastSource = ChartDataSource.unknown;
+      cloudAttempt = const _FirebaseChartFetchAttempt(
+        failure: _FirebaseChartFetchFailure(
+          label: 'firebase_auth_not_ready',
+          logStackTrace: false,
+        ),
+      );
     }
-
-    final _FirebaseChartFetchAttempt cloudAttempt = await _tryFetchFromCloud();
     if (cloudAttempt.points.isNotEmpty) {
       _lastSource = ChartDataSource.firebaseCloud;
       return cloudAttempt.points;
     }
 
+    final List<ChartPoint>? liveDirect = await tryLiveDirectChartPoints(
+      fallback: _liveDirectFallback,
+      guardAgainstIdenticalTo: this,
+      loggerTag: 'FirebaseChartRepository',
+      successDebugDetail: _directFallbackDebugMessage(cloudAttempt),
+    );
+    if (liveDirect != null) {
+      _lastSource = ChartDataSource.remote;
+      return liveDirect;
+    }
+
     final _FirebaseChartFetchAttempt firestoreAttempt =
         await _tryFetchFromFirestore();
     if (firestoreAttempt.points.isNotEmpty) {
-      if (cloudAttempt.failure case final failure?) {
+      final _FirebaseChartFetchFailure? cloudFailure = cloudAttempt.failure;
+      if (cloudFailure != null) {
         AppLogger.debug(
-          'FirebaseChartRepository cloud fallback to firestore '
-          '(${failure.label})',
+          'FirebaseChartRepository firestore after cloud failure '
+          '(${cloudFailure.label})',
+        );
+      } else if (_liveDirectFallback != null) {
+        AppLogger.debug(
+          'FirebaseChartRepository firestore after empty cloud/direct',
         );
       }
       _lastSource = ChartDataSource.firebaseFirestore;
@@ -126,7 +167,17 @@ class FirebaseChartRepository implements ChartRemoteRepository {
       context: 'FirebaseChartRepository firestore',
       failure: firestoreAttempt.failure,
     );
+    _lastSource = ChartDataSource.unknown;
     throw ChartDataException('Failed to load chart data from Firebase');
+  }
+
+  static String _directFallbackDebugMessage(
+    final _FirebaseChartFetchAttempt cloud,
+  ) {
+    final _FirebaseChartFetchFailure? failure = cloud.failure;
+    return failure != null
+        ? 'using direct CoinGecko after cloud failure (${failure.label})'
+        : 'using direct CoinGecko after empty cloud response';
   }
 
   Future<_FirebaseChartFetchAttempt> _tryFetchFromCloud() async {
@@ -153,20 +204,9 @@ class FirebaseChartRepository implements ChartRemoteRepository {
       if (e.code == 'unauthenticated') {
         final auth = _safeAuth;
         final uid = auth?.currentUser?.uid;
-        String? tokenPreview;
-        try {
-          final token = await auth?.currentUser?.getIdToken();
-          if (token != null && token.isNotEmpty) {
-            final n = token.length < 10 ? token.length : 10;
-            tokenPreview = '${token.substring(0, n)}…';
-          }
-        } on Object catch (_) {
-          tokenPreview = null;
-        }
         AppLogger.info(
           'FirebaseChartRepository cloud skipped (unauthenticated): '
-          'uid=${uid ?? '(none)'}, '
-          'idToken=${tokenPreview ?? '(unavailable)'}',
+          'uid=${uid ?? '(none)'}',
         );
         return const _FirebaseChartFetchAttempt();
       }
@@ -190,18 +230,24 @@ class FirebaseChartRepository implements ChartRemoteRepository {
 
   Future<_FirebaseChartFetchAttempt> _tryFetchFromFirestore() async {
     try {
-      final firestore = _safeFirestore;
-      if (firestore == null) {
-        return const _FirebaseChartFetchAttempt(
-          failure: _FirebaseChartFetchFailure(
-            label: 'firestore unavailable',
-          ),
-        );
+      final Map<String, dynamic>? data;
+      final loader = _firestoreDocDataLoader;
+      if (loader != null) {
+        data = await loader(_firestoreDocPath);
+      } else {
+        final firestore = _safeFirestore;
+        if (firestore == null) {
+          return const _FirebaseChartFetchAttempt(
+            failure: _FirebaseChartFetchFailure(
+              label: 'firestore unavailable',
+            ),
+          );
+        }
+        final DocumentSnapshot<Map<String, dynamic>> snap = await firestore
+            .doc(_firestoreDocPath)
+            .get();
+        data = snap.data();
       }
-      final DocumentSnapshot<Map<String, dynamic>> snap = await firestore
-          .doc(_firestoreDocPath)
-          .get();
-      final data = snap.data();
       final List<dynamic>? raw = listFromDynamic(data?['points']);
       if (raw == null || raw.isEmpty) {
         return const _FirebaseChartFetchAttempt();
