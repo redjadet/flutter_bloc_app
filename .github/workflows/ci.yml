@@ -19,6 +19,14 @@ on:
         description: 'Run integration tests (macOS job)'
         required: false
         default: 'true'
+      integration_phase:
+        description: 'Integration rollout phase: observe | non_blocking | enforced'
+        required: false
+        default: 'observe'
+      integration_tier:
+        description: 'Integration suite tier: smoke | standard | exhaustive'
+        required: false
+        default: 'standard'
 
 permissions:
   contents: read
@@ -42,6 +50,9 @@ jobs:
     outputs:
       run_integration: ${{ steps.scope.outputs.run_integration }}
       integration_target: ${{ steps.scope.outputs.integration_target }}
+      integration_tier: ${{ steps.scope.outputs.integration_tier }}
+      integration_phase: ${{ steps.scope.outputs.integration_phase }}
+      integration_non_blocking: ${{ steps.scope.outputs.integration_non_blocking }}
 
     steps:
       - name: Checkout repository
@@ -49,38 +60,50 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Determine PR CI scope
+      - name: Determine integration rollout scope
         id: scope
         shell: bash
         run: |
           set -euo pipefail
 
-          if [ "${{ github.event_name }}" != "pull_request" ]; then
-            echo "run_integration=true" >> "$GITHUB_OUTPUT"
-            echo "integration_target=integration_test/smoke_flows_test.dart" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
+          run_integration="${{ github.event.inputs.run_integration || 'true' }}"
+          integration_phase="${{ github.event.inputs.integration_phase || 'observe' }}"
+          integration_tier="${{ github.event.inputs.integration_tier || 'standard' }}"
 
-          BASE_REF="${{ github.base_ref }}"
-          git fetch --no-tags --depth=1 origin "$BASE_REF"
-          CHANGED_FILES="$(git diff --name-only "origin/$BASE_REF...HEAD")"
+          case "$integration_phase" in
+            observe|non_blocking)
+              integration_non_blocking=true
+              ;;
+            enforced)
+              integration_non_blocking=false
+              ;;
+            *)
+              echo "Unsupported integration_phase: $integration_phase" >&2
+              exit 1
+              ;;
+          esac
 
-          echo "Changed files:"
-          if [ -n "$CHANGED_FILES" ]; then
-            printf '%s\n' "$CHANGED_FILES"
-          else
-            echo "(none)"
-          fi
-
-          run_integration=false
-
-          if printf '%s\n' "$CHANGED_FILES" | grep -E -q \
-            '^(assets/|integration_test/|ios/|lib/|pubspec\.yaml$|pubspec\.lock$|tool/run_integration_tests\.sh$|\.github/workflows/ci\.yml$)'; then
-            run_integration=true
-          fi
+          case "$integration_tier" in
+            smoke)
+              integration_target="integration_test/smoke_flows_test.dart"
+              ;;
+            standard)
+              integration_target="integration_test/standard_flows_test.dart"
+              ;;
+            exhaustive)
+              integration_target="integration_test/all_flows_test.dart"
+              ;;
+            *)
+              echo "Unsupported integration_tier: $integration_tier" >&2
+              exit 1
+              ;;
+          esac
 
           echo "run_integration=$run_integration" >> "$GITHUB_OUTPUT"
-          echo "integration_target=integration_test/pr_smoke_flows_test.dart" >> "$GITHUB_OUTPUT"
+          echo "integration_phase=$integration_phase" >> "$GITHUB_OUTPUT"
+          echo "integration_tier=$integration_tier" >> "$GITHUB_OUTPUT"
+          echo "integration_non_blocking=$integration_non_blocking" >> "$GITHUB_OUTPUT"
+          echo "integration_target=$integration_target" >> "$GITHUB_OUTPUT"
 
   build:
     runs-on: ubuntu-latest
@@ -149,9 +172,11 @@ jobs:
     needs: changes
     runs-on: macos-latest
     timeout-minutes: 45
+    continue-on-error: ${{ needs.changes.outputs.integration_non_blocking == 'true' }}
     if: >-
       github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.run_integration != 'false'
+      github.event.inputs.run_integration != 'false' &&
+      needs.changes.outputs.run_integration == 'true'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -277,9 +302,22 @@ jobs:
         env:
           INTEGRATION_TESTS_RUN_COVERAGE: '0'
           INTEGRATION_TESTS_RETRY_ON_FAILURE: '0'
+          INTEGRATION_TESTS_TIER: ${{ needs.changes.outputs.integration_tier }}
           INTEGRATION_TESTS_TIMEOUT_SECONDS: ${{ env.INTEGRATION_TESTS_TIMEOUT_SECONDS }}
-        run: ./bin/integration_tests ${{ needs.changes.outputs.integration_target }}
+        run: ./bin/integration_tests
 
       - name: Report skipped integration tests
         if: steps.simulator.outputs.simulator_ready != 'true'
         run: echo 'Integration tests were skipped (no suitable iPhone simulator, boot failed, or boot timed out). See the Ensure iOS Simulator is booted step logs.'
+
+      - name: Publish integration rollout summary
+        if: always()
+        run: |
+          {
+            echo "## Integration rollout wiring"
+            echo ""
+            echo "- phase: \`${{ needs.changes.outputs.integration_phase }}\`"
+            echo "- tier: \`${{ needs.changes.outputs.integration_tier }}\`"
+            echo "- non_blocking: \`${{ needs.changes.outputs.integration_non_blocking }}\`"
+            echo "- target_hint: \`${{ needs.changes.outputs.integration_target }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
