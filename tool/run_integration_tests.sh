@@ -32,6 +32,49 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
+INTEGRATION_STARTED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+INTEGRATION_START_EPOCH_MS="$(python3 - <<'PY'
+import time
+print(int(time.time() * 1000))
+PY
+)"
+
+emit_integration_scorecard_event() {
+  local exit_code="$1"
+  local event_status="failed"
+  local integration_pass="0"
+  local ended_at
+  local duration_ms
+
+  ended_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  duration_ms="$(python3 - "$INTEGRATION_START_EPOCH_MS" <<'PY'
+import sys
+import time
+start_ms = int(sys.argv[1])
+print(max(0, int(time.time() * 1000) - start_ms))
+PY
+)"
+
+  if [ "$exit_code" -eq 0 ]; then
+    event_status="ok"
+    integration_pass="1"
+  fi
+
+  "$PROJECT_ROOT/tool/emit_agent_scorecard_event.sh" \
+    --command integration_tests \
+    --status "$event_status" \
+    --started-at "$INTEGRATION_STARTED_AT" \
+    --ended-at "$ended_at" \
+    --duration-ms "$duration_ms" \
+    --risk-class high \
+    --checklist-pass null \
+    --router-pass null \
+    --integration-pass "$integration_pass" \
+    --attempt "${ATTEMPT:-1}" >/dev/null 2>&1 || true
+}
+
+trap 'integration_exit_code=$?; emit_integration_scorecard_event "$integration_exit_code"' EXIT
+
 log() {
   printf '[%s] %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*" >&2
 }

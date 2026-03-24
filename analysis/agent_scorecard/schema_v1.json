@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AgentScorecardEventV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "task_id", "run_id", "command", "started_at", "ended_at", "duration_ms", "status", "attempt", "branch", "risk_class", "delegate_used", "dedupe_key"],
+  "properties": {
+    "schema_version": { "const": "v1" },
+    "task_id": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "command": { "type": "string", "minLength": 1 },
+    "started_at": { "type": "string", "format": "date-time" },
+    "ended_at": { "type": "string", "format": "date-time" },
+    "duration_ms": { "type": "integer", "minimum": 0 },
+    "status": { "type": "string", "enum": ["ok", "failed", "cancelled", "aborted", "invalid"] },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "branch": { "type": "string", "minLength": 1 },
+    "risk_class": { "type": "string", "enum": ["low", "medium", "high", "unknown"] },
+    "delegate_used": { "type": "boolean" },
+    "delegate_mode": { "type": ["string", "null"] },
+    "delegate_fail_reason": { "type": ["string", "null"] },
+    "checklist_pass": { "type": ["boolean", "null"] },
+    "router_validate_pass": { "type": ["boolean", "null"] },
+    "integration_pass": { "type": ["boolean", "null"] },
+    "invalid_partial": { "type": "boolean" },
+    "dedupe_key": { "type": "string", "minLength": 1 }
+  }
+}

@@ -1,0 +1,12 @@
+[
+  { "path": "lib/app/router/routes.dart", "should_trigger": true },
+  { "path": "lib/core/router/app_routes.dart", "should_trigger": true },
+  { "path": "lib/features/auth/presentation/pages/sign_in_page.dart", "should_trigger": true },
+  { "path": "lib/features/auth/presentation/widgets/login_gate.dart", "should_trigger": true },
+  { "path": "lib/features/profile/presentation/pages/register_page.dart", "should_trigger": true },
+  { "path": "lib/features/profile/presentation/widgets/user_auth_chip.dart", "should_trigger": true },
+  { "path": "lib/features/todo_list/presentation/pages/todo_list_page.dart", "should_trigger": false },
+  { "path": "lib/features/todo_list/presentation/widgets/todo_item_tile.dart", "should_trigger": false },
+  { "path": "lib/core/di/injector.dart", "should_trigger": false },
+  { "path": "README.md", "should_trigger": false }
+]

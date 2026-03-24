@@ -1,0 +1,8 @@
+#!/bin/bash
+# Shortcut command to auto-fix validation docs sync.
+# Usage: fix_validation_docs
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+exec "$PROJECT_ROOT/tool/fix_validation_docs.sh" "$@"
