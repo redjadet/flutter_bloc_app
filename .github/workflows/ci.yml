@@ -22,11 +22,21 @@ on:
       integration_phase:
         description: 'Integration rollout phase: observe | non_blocking | enforced'
         required: false
+        type: choice
         default: 'observe'
+        options:
+          - observe
+          - non_blocking
+          - enforced
       integration_tier:
         description: 'Integration suite tier: smoke | standard | exhaustive'
         required: false
+        type: choice
         default: 'standard'
+        options:
+          - smoke
+          - standard
+          - exhaustive
 
 permissions:
   contents: read
@@ -55,11 +65,6 @@ jobs:
       integration_non_blocking: ${{ steps.scope.outputs.integration_non_blocking }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - name: Determine integration rollout scope
         id: scope
         shell: bash
