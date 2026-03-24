@@ -14,9 +14,8 @@ firepit-log.txt
 .swiftpm/
 migrate_working_dir/
 figma-sync/
-AGENTS.md
 GEMINI.md
-.cursor/
+.cursor/*
 .cursorignore
 
 # Node lockfile at repo root (functions/ has its own)
@@ -79,3 +78,6 @@ INTERVIEW_QA.md
 .agents/rules/rules.md
 .agents/rules/gemin-rules.md
 coverage/lcov.base.info
+.agents/skills/gstack
+AGENTS.md
+docs/gstack_integration.md
