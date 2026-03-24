@@ -304,6 +304,11 @@ jobs:
           echo "CHECKLIST_INTEGRATION_DEVICE=$UDID" >> "$GITHUB_ENV"
           echo "simulator_ready=true" >> "$GITHUB_OUTPUT"
 
+      - name: Verify integration rollout thresholds (enforced phase)
+        if: >-
+          steps.simulator.outputs.simulator_ready == 'true' &&
+          needs.changes.outputs.integration_phase == 'enforced'
+        run: bash tool/check_integration_rollout_threshold.sh
 
       - name: Run integration tests
         if: steps.simulator.outputs.simulator_ready == 'true'
