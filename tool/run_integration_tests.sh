@@ -76,6 +76,7 @@ write_integration_artifact() {
   /usr/bin/python3 - "$INTEGRATION_ARTIFACT_DIR" "$exit_code" "$INTEGRATION_FAILURE_CATEGORY" "$device_id" "$selected_targets" "$INTEGRATION_RETRIED" "$INTEGRATION_RETRY_REASON" "$INTEGRATION_STARTED_AT" <<'PY'
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone
 
@@ -83,7 +84,7 @@ out_dir = sys.argv[1]
 exit_code = int(sys.argv[2])
 failure_category = sys.argv[3]
 device_id = sys.argv[4]
-targets = [t for t in sys.argv[5].split(",") if t]
+targets = [t for t in re.split(r"\s*,\s*|\s+", sys.argv[5].strip()) if t]
 retried = sys.argv[6] == "1"
 retry_reason = sys.argv[7]
 started_at = sys.argv[8]
@@ -818,7 +819,7 @@ if [ "$#" -eq 0 ]; then
       --no-pub \
       -d "$DEVICE_ID" \
       "$SELECTED_TARGET"
-  else
+  elif [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
     log 'Collecting integration-only coverage.'
     log "No baseline coverage found at $BASE_COVERAGE_PATH; writing integration-only coverage."
     run_integration_command \
@@ -828,6 +829,14 @@ if [ "$#" -eq 0 ]; then
       -d "$DEVICE_ID" \
       --coverage \
       --coverage-path="$FINAL_COVERAGE_PATH" \
+      "$SELECTED_TARGET"
+  else
+    log 'Skipping --coverage for tiered integration run (coverage collection and summary are full-suite only).'
+    run_integration_command \
+      "$SELECTED_TARGET" \
+      flutter test \
+      --no-pub \
+      -d "$DEVICE_ID" \
       "$SELECTED_TARGET"
   fi
   exit_code=$?
@@ -863,7 +872,7 @@ if [ "$#" -eq 0 ]; then
         --no-pub \
         -d "$DEVICE_ID" \
         "$SELECTED_TARGET"
-    else
+    elif [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
       run_integration_command \
         "$SELECTED_TARGET retry" \
         flutter test \
@@ -871,6 +880,13 @@ if [ "$#" -eq 0 ]; then
         -d "$DEVICE_ID" \
         --coverage \
         --coverage-path="$FINAL_COVERAGE_PATH" \
+        "$SELECTED_TARGET"
+    else
+      run_integration_command \
+        "$SELECTED_TARGET retry" \
+        flutter test \
+        --no-pub \
+        -d "$DEVICE_ID" \
         "$SELECTED_TARGET"
     fi
     exit_code=$?
@@ -887,7 +903,7 @@ if [ "$#" -eq 0 ]; then
   fi
   exit "$exit_code"
 else
-  INTEGRATION_SELECTED_TARGETS="$*"
+  INTEGRATION_SELECTED_TARGETS="$(printf '%s,' "$@" | sed 's/,$//')"
   cleanup_project_xcodebuilds
   set +e
   run_integration_command \

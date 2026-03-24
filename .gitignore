@@ -42,6 +42,9 @@ GEMINI.md
 /build/
 /coverage/lcov.info
 
+# Integration test runner output (per-run summaries)
+artifacts/integration/
+
 # Golden test failure artifacts
 test/failures/
 
