@@ -1,0 +1,35 @@
+{
+  "commands": {
+    "integration_tests": {
+      "count": 1,
+      "failed": 0,
+      "ok": 1,
+      "p50_duration_ms": 131489,
+      "success_rate": 1.0
+    },
+    "smoke": {
+      "count": 1,
+      "failed": 0,
+      "ok": 1,
+      "p50_duration_ms": 1,
+      "success_rate": 1.0
+    }
+  },
+  "delegate_usage_rate": 0.0,
+  "line_stats": {
+    "invalid_json_lines": 0,
+    "parsed_json_lines": 2,
+    "total_non_empty_lines": 2
+  },
+  "p50_duration_ms": 65745.0,
+  "p95_duration_ms": 131489,
+  "risk_counts": {
+    "high": 1,
+    "unknown": 1
+  },
+  "scorecard_parse_success": 1.0,
+  "status_counts": {
+    "ok": 2
+  },
+  "total_events": 2
+}

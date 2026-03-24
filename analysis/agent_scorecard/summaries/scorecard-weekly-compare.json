@@ -1,0 +1,20 @@
+{
+  "current_window": {
+    "delegate_rate": 0.0,
+    "p50_duration_ms": 65745.0,
+    "success_rate": 1.0,
+    "total": 2
+  },
+  "delta": {
+    "delegate_rate": 0.0,
+    "p50_duration_ms": 65745.0,
+    "success_rate": 1.0,
+    "total": 2
+  },
+  "previous_window": {
+    "delegate_rate": 0.0,
+    "p50_duration_ms": 0,
+    "success_rate": 0.0,
+    "total": 0
+  }
+}

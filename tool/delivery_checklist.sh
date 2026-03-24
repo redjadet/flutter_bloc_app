@@ -12,6 +12,49 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
+CHECKLIST_STARTED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+CHECKLIST_START_EPOCH_MS="$(python3 - <<'PY'
+import time
+print(int(time.time() * 1000))
+PY
+)"
+
+emit_checklist_scorecard_event() {
+  local exit_code="$1"
+  local checklist_status="failed"
+  local checklist_pass="0"
+  local ended_at
+  local duration_ms
+
+  ended_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  duration_ms="$(python3 - "$CHECKLIST_START_EPOCH_MS" <<'PY'
+import sys
+import time
+start_ms = int(sys.argv[1])
+print(max(0, int(time.time() * 1000) - start_ms))
+PY
+)"
+
+  if [ "$exit_code" -eq 0 ]; then
+    checklist_status="ok"
+    checklist_pass="1"
+  fi
+
+  "$PROJECT_ROOT/tool/emit_agent_scorecard_event.sh" \
+    --command checklist \
+    --status "$checklist_status" \
+    --started-at "$CHECKLIST_STARTED_AT" \
+    --ended-at "$ended_at" \
+    --duration-ms "$duration_ms" \
+    --risk-class medium \
+    --checklist-pass "$checklist_pass" \
+    --router-pass null \
+    --integration-pass null \
+    --attempt "${ATTEMPT:-1}" >/dev/null 2>&1 || true
+}
+
+trap 'checklist_exit_code=$?; emit_checklist_scorecard_event "$checklist_exit_code"' EXIT
+
 # Initialized before any function references them (set -u safe).
 declare -a changed_files=()
 declare -a changed_dart_files=()
