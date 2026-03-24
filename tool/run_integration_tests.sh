@@ -11,7 +11,7 @@
 #   tool/run_integration_tests.sh integration_test/app_test.dart
 #
 # Optional env:
-#   INTEGRATION_TESTS_RETRY_ON_FAILURE (0|1, default 1) — full suite only
+#   INTEGRATION_TESTS_RETRY_ON_FAILURE (0|1, default 0) — full suite only
 #   INTEGRATION_TESTS_TIMEOUT_SECONDS (default 1800)
 #   DEVICE_DISCOVERY_TIMEOUT_SECONDS (default 60)
 #   PROGRESS_HEARTBEAT_SECONDS (default 60)
@@ -38,6 +38,73 @@ import time
 print(int(time.time() * 1000))
 PY
 )"
+INTEGRATION_FAILURE_CATEGORY="none"
+INTEGRATION_SELECTED_TARGETS=""
+INTEGRATION_RETRIED="0"
+INTEGRATION_RETRY_REASON=""
+INTEGRATION_ARTIFACT_DIR=""
+
+classify_exit_category() {
+  local exit_code="$1"
+  if [ "$exit_code" -eq 0 ]; then
+    echo "ok"
+    return
+  fi
+  case "$exit_code" in
+    124)
+      echo "timeout"
+      ;;
+    130|137|143)
+      echo "cancelled_or_terminated"
+      ;;
+    *)
+      if [ "$INTEGRATION_RETRIED" = "1" ] && [ -n "$INTEGRATION_RETRY_REASON" ]; then
+        echo "$INTEGRATION_RETRY_REASON"
+      else
+        echo "test_assertion_or_app_failure"
+      fi
+      ;;
+  esac
+}
+
+write_integration_artifact() {
+  local exit_code="$1"
+  local device_id="${2:-unknown}"
+  local selected_targets="${3:-}"
+  [ -n "${INTEGRATION_ARTIFACT_DIR:-}" ] || return 0
+  mkdir -p "$INTEGRATION_ARTIFACT_DIR"
+  /usr/bin/python3 - "$INTEGRATION_ARTIFACT_DIR" "$exit_code" "$INTEGRATION_FAILURE_CATEGORY" "$device_id" "$selected_targets" "$INTEGRATION_RETRIED" "$INTEGRATION_RETRY_REASON" "$INTEGRATION_STARTED_AT" <<'PY'
+import json
+import os
+import sys
+from datetime import datetime, timezone
+
+out_dir = sys.argv[1]
+exit_code = int(sys.argv[2])
+failure_category = sys.argv[3]
+device_id = sys.argv[4]
+targets = [t for t in sys.argv[5].split(",") if t]
+retried = sys.argv[6] == "1"
+retry_reason = sys.argv[7]
+started_at = sys.argv[8]
+ended_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+summary = {
+    "started_at": started_at,
+    "ended_at": ended_at,
+    "exit_code": exit_code,
+    "status": "ok" if exit_code == 0 else "failed",
+    "failure_category": failure_category,
+    "device_id": device_id,
+    "targets": targets,
+    "retried": retried,
+    "retry_reason": retry_reason or None,
+}
+with open(os.path.join(out_dir, "summary.json"), "w", encoding="utf-8") as f:
+    json.dump(summary, f, indent=2, sort_keys=True)
+    f.write("\n")
+PY
+}
 
 emit_integration_scorecard_event() {
   local exit_code="$1"
@@ -76,7 +143,7 @@ PY
     --attempt "${ATTEMPT:-1}" >/dev/null 2>&1 || true
 }
 
-trap 'integration_exit_code=$?; emit_integration_scorecard_event "$integration_exit_code"' EXIT
+trap 'integration_exit_code=$?; INTEGRATION_FAILURE_CATEGORY="$(classify_exit_category "$integration_exit_code")"; write_integration_artifact "$integration_exit_code" "${DEVICE_ID:-unknown}" "${INTEGRATION_SELECTED_TARGETS:-}"; emit_integration_scorecard_event "$integration_exit_code"' EXIT
 
 log() {
   printf '[%s] %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*" >&2
@@ -596,7 +663,7 @@ should_retry_integration_run() {
 }
 
 RUN_COVERAGE="${INTEGRATION_TESTS_RUN_COVERAGE:-1}"
-RETRY_ON_FAILURE="${INTEGRATION_TESTS_RETRY_ON_FAILURE:-1}"
+RETRY_ON_FAILURE="${INTEGRATION_TESTS_RETRY_ON_FAILURE:-0}"
 INTEGRATION_TESTS_TIMEOUT_SECONDS="${INTEGRATION_TESTS_TIMEOUT_SECONDS:-1800}"
 DEVICE_DISCOVERY_TIMEOUT_SECONDS="${DEVICE_DISCOVERY_TIMEOUT_SECONDS:-60}"
 PROGRESS_HEARTBEAT_SECONDS="${PROGRESS_HEARTBEAT_SECONDS:-60}"
@@ -604,6 +671,11 @@ IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS="${IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS:-180}"
 IOS_SIMULATOR_PREFERRED_NAMES="${IOS_SIMULATOR_PREFERRED_NAMES:-iPhone 17e,iPhone 17 Pro,iPhone 17,iPhone 16e,iPhone 16 Pro,iPhone 16}"
 ALLOW_DESKTOP_INTEGRATION_DEVICE="${ALLOW_DESKTOP_INTEGRATION_DEVICE:-0}"
 XCODE_SIMULATOR_BUILD_RECOVERY_RETRY="${XCODE_SIMULATOR_BUILD_RECOVERY_RETRY:-1}"
+INTEGRATION_TESTS_TIER="${INTEGRATION_TESTS_TIER:-exhaustive}"
+INTEGRATION_TESTS_TARGET_SET="${INTEGRATION_TESTS_TARGET_SET:-}"
+INTEGRATION_TESTS_ARTIFACTS_ROOT="${INTEGRATION_TESTS_ARTIFACTS_ROOT:-artifacts/integration}"
+INTEGRATION_TESTS_CHANGED_FILES="${INTEGRATION_TESTS_CHANGED_FILES:-}"
+INTEGRATION_TESTS_ENABLE_SELECTIVE="${INTEGRATION_TESTS_ENABLE_SELECTIVE:-0}"
 
 normalized_run_coverage="$(trim "$RUN_COVERAGE")"
 normalized_run_coverage="$(printf '%s' "$normalized_run_coverage" | tr '[:upper:]' '[:lower:]')"
@@ -622,8 +694,8 @@ if ! [[ "$RUN_COVERAGE" =~ ^(0|1)$ ]]; then
 fi
 
 if ! [[ "$RETRY_ON_FAILURE" =~ ^(0|1)$ ]]; then
-  log "⚠️ Invalid INTEGRATION_TESTS_RETRY_ON_FAILURE='$RETRY_ON_FAILURE'; using 1."
-  RETRY_ON_FAILURE=1
+  log "⚠️ Invalid INTEGRATION_TESTS_RETRY_ON_FAILURE='$RETRY_ON_FAILURE'; using 0."
+  RETRY_ON_FAILURE=0
 fi
 
 if ! [[ "$INTEGRATION_TESTS_TIMEOUT_SECONDS" =~ ^[0-9]+$ ]] || [ "$INTEGRATION_TESTS_TIMEOUT_SECONDS" -le 0 ]; then
@@ -656,11 +728,28 @@ if ! [[ "$XCODE_SIMULATOR_BUILD_RECOVERY_RETRY" =~ ^(0|1)$ ]]; then
   XCODE_SIMULATOR_BUILD_RECOVERY_RETRY=1
 fi
 
+INTEGRATION_TESTS_TIER="$(printf '%s' "$INTEGRATION_TESTS_TIER" | tr '[:upper:]' '[:lower:]')"
+case "$INTEGRATION_TESTS_TIER" in
+  smoke|standard|exhaustive)
+    ;;
+  *)
+    log "⚠️ Invalid INTEGRATION_TESTS_TIER='$INTEGRATION_TESTS_TIER'; using exhaustive."
+    INTEGRATION_TESTS_TIER="exhaustive"
+    ;;
+esac
+
+if ! [[ "$INTEGRATION_TESTS_ENABLE_SELECTIVE" =~ ^(0|1)$ ]]; then
+  log "⚠️ Invalid INTEGRATION_TESTS_ENABLE_SELECTIVE='$INTEGRATION_TESTS_ENABLE_SELECTIVE'; using 0."
+  INTEGRATION_TESTS_ENABLE_SELECTIVE=0
+fi
+
 DEVICE_ID="$(select_device_id)"
 DART_BIN="$(resolve_flutter_dart)"
 BASE_COVERAGE_PATH="coverage/lcov.base.info"
 FINAL_COVERAGE_PATH="coverage/lcov.info"
 FULL_SUITE_TARGET="integration_test/all_flows_test.dart"
+SMOKE_SUITE_TARGET="integration_test/smoke_flows_test.dart"
+STANDARD_SUITE_TARGET="integration_test/standard_flows_test.dart"
 HAS_LCOV=0
 
 if command -v lcov >/dev/null 2>&1; then
@@ -668,90 +757,121 @@ if command -v lcov >/dev/null 2>&1; then
 fi
 
 log "Running integration tests on device: $DEVICE_ID"
-log "Coverage mode: $RUN_COVERAGE | Retry on failure: $RETRY_ON_FAILURE | Test timeout: ${INTEGRATION_TESTS_TIMEOUT_SECONDS}s"
+INTEGRATION_ARTIFACT_DIR="$INTEGRATION_TESTS_ARTIFACTS_ROOT/$(date -u +%Y%m%d-%H%M%S)"
+log "Coverage mode: $RUN_COVERAGE | Retry on failure: $RETRY_ON_FAILURE | Tier: $INTEGRATION_TESTS_TIER | Test timeout: ${INTEGRATION_TESTS_TIMEOUT_SECONDS}s"
 if [ "$#" -eq 0 ]; then
+  SELECTED_TARGET="$FULL_SUITE_TARGET"
+  if [ "$INTEGRATION_TESTS_TIER" = "smoke" ]; then
+    SELECTED_TARGET="$SMOKE_SUITE_TARGET"
+  elif [ "$INTEGRATION_TESTS_TIER" = "standard" ]; then
+    SELECTED_TARGET="$STANDARD_SUITE_TARGET"
+  fi
+  if [ -n "$INTEGRATION_TESTS_TARGET_SET" ]; then
+    case "$INTEGRATION_TESTS_TARGET_SET" in
+      smoke) SELECTED_TARGET="$SMOKE_SUITE_TARGET" ;;
+      standard) SELECTED_TARGET="$STANDARD_SUITE_TARGET" ;;
+      exhaustive|full) SELECTED_TARGET="$FULL_SUITE_TARGET" ;;
+      *)
+        log "Unknown INTEGRATION_TESTS_TARGET_SET='$INTEGRATION_TESTS_TARGET_SET'; falling back to full suite."
+        SELECTED_TARGET="$FULL_SUITE_TARGET"
+        ;;
+    esac
+  fi
+  if [ "$INTEGRATION_TESTS_ENABLE_SELECTIVE" -eq 1 ] && [ -n "$INTEGRATION_TESTS_CHANGED_FILES" ]; then
+    # Conservative selective mapping: ambiguous or broad changes always fall back to full suite.
+    if [[ "$INTEGRATION_TESTS_CHANGED_FILES" == *"tool/run_integration_tests.sh"* ]] ||
+      [[ "$INTEGRATION_TESTS_CHANGED_FILES" == *"integration_test/test_harness.dart"* ]] ||
+      [[ "$INTEGRATION_TESTS_CHANGED_FILES" == *"integration_test/flow_scenarios.dart"* ]]; then
+      SELECTED_TARGET="$FULL_SUITE_TARGET"
+      log "Selective mapping fallback: runner/shared integration helper changes detected; forcing full suite."
+    fi
+  fi
+  INTEGRATION_SELECTED_TARGETS="$SELECTED_TARGET"
   cleanup_project_xcodebuilds
-  log "Running aggregated integration suite: $FULL_SUITE_TARGET"
+  log "Running integration suite target: $SELECTED_TARGET"
   set +e
   if [ "$RUN_COVERAGE" -eq 0 ]; then
     log 'Coverage disabled via INTEGRATION_TESTS_RUN_COVERAGE=0|false.'
     run_integration_command \
-      "$FULL_SUITE_TARGET" \
+      "$SELECTED_TARGET" \
       flutter test \
       --no-pub \
       -d "$DEVICE_ID" \
-      "$FULL_SUITE_TARGET"
-  elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$HAS_LCOV" -eq 1 ]; then
+      "$SELECTED_TARGET"
+  elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$HAS_LCOV" -eq 1 ] && [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
     log "Collecting and merging integration coverage with $BASE_COVERAGE_PATH."
     run_integration_command \
-      "$FULL_SUITE_TARGET" \
+      "$SELECTED_TARGET" \
       flutter test \
       --no-pub \
       -d "$DEVICE_ID" \
       --coverage \
       --merge-coverage \
       --coverage-path="$FINAL_COVERAGE_PATH" \
-      "$FULL_SUITE_TARGET"
-  elif [ -s "$BASE_COVERAGE_PATH" ]; then
+      "$SELECTED_TARGET"
+  elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
     log "⚠️ 'lcov' is not installed, so baseline merge is unavailable."
     log 'Running integration tests without coverage update.'
     run_integration_command \
-      "$FULL_SUITE_TARGET" \
+      "$SELECTED_TARGET" \
       flutter test \
       --no-pub \
       -d "$DEVICE_ID" \
-      "$FULL_SUITE_TARGET"
+      "$SELECTED_TARGET"
   else
     log 'Collecting integration-only coverage.'
     log "No baseline coverage found at $BASE_COVERAGE_PATH; writing integration-only coverage."
     run_integration_command \
-      "$FULL_SUITE_TARGET" \
+      "$SELECTED_TARGET" \
       flutter test \
       --no-pub \
       -d "$DEVICE_ID" \
       --coverage \
       --coverage-path="$FINAL_COVERAGE_PATH" \
-      "$FULL_SUITE_TARGET"
+      "$SELECTED_TARGET"
   fi
   exit_code=$?
   if [ "$exit_code" -ne 0 ] && should_retry_integration_run "$exit_code"; then
+    INTEGRATION_RETRIED="1"
+    # Generic retry path is opt-in; do not label as infra-specific.
+    INTEGRATION_RETRY_REASON="retry_on_failure_enabled"
     log "Integration tests failed with exit $exit_code. Retrying once after cleanup..."
     cleanup_project_xcodebuilds
     sleep 5
     if [ "$RUN_COVERAGE" -eq 0 ]; then
       run_integration_command \
-        "$FULL_SUITE_TARGET retry" \
+        "$SELECTED_TARGET retry" \
         flutter test \
         --no-pub \
         -d "$DEVICE_ID" \
-        "$FULL_SUITE_TARGET"
-    elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$HAS_LCOV" -eq 1 ]; then
+        "$SELECTED_TARGET"
+    elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$HAS_LCOV" -eq 1 ] && [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
       log "Retrying with merged integration coverage against $BASE_COVERAGE_PATH."
       run_integration_command \
-        "$FULL_SUITE_TARGET retry" \
+        "$SELECTED_TARGET retry" \
         flutter test \
         --no-pub \
         -d "$DEVICE_ID" \
         --coverage \
         --merge-coverage \
         --coverage-path="$FINAL_COVERAGE_PATH" \
-        "$FULL_SUITE_TARGET"
-    elif [ -s "$BASE_COVERAGE_PATH" ]; then
+        "$SELECTED_TARGET"
+    elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
       run_integration_command \
-        "$FULL_SUITE_TARGET retry" \
+        "$SELECTED_TARGET retry" \
         flutter test \
         --no-pub \
         -d "$DEVICE_ID" \
-        "$FULL_SUITE_TARGET"
+        "$SELECTED_TARGET"
     else
       run_integration_command \
-        "$FULL_SUITE_TARGET retry" \
+        "$SELECTED_TARGET retry" \
         flutter test \
         --no-pub \
         -d "$DEVICE_ID" \
         --coverage \
         --coverage-path="$FINAL_COVERAGE_PATH" \
-        "$FULL_SUITE_TARGET"
+        "$SELECTED_TARGET"
     fi
     exit_code=$?
   fi
@@ -759,7 +879,7 @@ if [ "$#" -eq 0 ]; then
   cleanup_project_xcodebuilds
   if [ "$exit_code" -eq 0 ] && [ "$RUN_COVERAGE" -eq 0 ]; then
     log 'Skipping coverage summary update because integration coverage is disabled.'
-  elif [ "$exit_code" -eq 0 ] && { [ ! -s "$BASE_COVERAGE_PATH" ] || [ "$HAS_LCOV" -eq 1 ]; }; then
+  elif [ "$exit_code" -eq 0 ] && { [ ! -s "$BASE_COVERAGE_PATH" ] || [ "$HAS_LCOV" -eq 1 ]; } && [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
     log 'Updating coverage summary...'
     "$DART_BIN" run tool/update_coverage_summary.dart
   elif [ "$exit_code" -eq 0 ]; then
@@ -767,6 +887,7 @@ if [ "$#" -eq 0 ]; then
   fi
   exit "$exit_code"
 else
+  INTEGRATION_SELECTED_TARGETS="$*"
   cleanup_project_xcodebuilds
   set +e
   run_integration_command \
