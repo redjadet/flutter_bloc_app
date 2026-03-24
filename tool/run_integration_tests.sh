@@ -55,7 +55,10 @@ print(max(0, int(time.time() * 1000) - start_ms))
 PY
 )"
 
-  if [ "$exit_code" -eq 0 ]; then
+  if [ "${INTEGRATION_SCORECARD_SKIPPED:-0}" = "1" ]; then
+    event_status="cancelled"
+    integration_pass="null"
+  elif [ "$exit_code" -eq 0 ]; then
     event_status="ok"
     integration_pass="1"
   fi
@@ -85,6 +88,7 @@ log() {
 if [ "${GITHUB_ACTIONS:-}" = "true" ]; then
   if [ "${GITHUB_EVENT_NAME:-}" != "workflow_dispatch" ]; then
     log "Skipping integration tests: requires workflow_dispatch (got GITHUB_EVENT_NAME='${GITHUB_EVENT_NAME:-unset}')."
+    INTEGRATION_SCORECARD_SKIPPED=1
     exit 0
   fi
 fi
