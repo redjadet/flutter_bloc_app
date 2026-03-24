@@ -1,0 +1,8 @@
+#!/bin/bash
+# Shortcut command for full upgrade + validation workflow.
+# Usage: upgrade_validate_all
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+exec "$PROJECT_ROOT/tool/upgrade_validate_all.sh" "$@"

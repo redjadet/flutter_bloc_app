@@ -7,7 +7,7 @@ production-minded development workflow.
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.5-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.3-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-80%2E77%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-79%2E95%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
 [![State Management](https://img.shields.io/badge/State%20Management-BLOC%2FCubit-2196F3.svg)](https://pub.dev/packages/flutter_bloc)
@@ -52,6 +52,13 @@ Run the integration suite separately when needed:
 ./bin/integration_tests
 ```
 
+Run the full maintenance flow (Flutter + package upgrades, checklist,
+integration tests, and coverage/doc refresh):
+
+```bash
+./bin/upgrade_validate_all
+```
+
 ## Documentation
 
 Start here:
@@ -80,6 +87,7 @@ Engineering references:
 
 - Validation workflow: `./bin/checklist`
 - Integration test suite: `./bin/integration_tests`
+- Full upgrade + validation flow: `./bin/upgrade_validate_all`
 - Coverage tracking: [coverage/coverage_summary.md](coverage/coverage_summary.md)
 - Additional validation guidance: [docs/testing_overview.md](docs/testing_overview.md)
 
