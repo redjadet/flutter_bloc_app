@@ -11,7 +11,9 @@
 #   tool/run_integration_tests.sh integration_test/app_test.dart
 #
 # Optional env:
-#   INTEGRATION_TESTS_RETRY_ON_FAILURE (0|1, default 0) — full suite only
+#   INTEGRATION_TESTS_ENABLE_SELECTIVE (0|1) — narrow target via map + changed paths
+#   INTEGRATION_TESTS_CHANGED_FILES — comma/newline-separated paths for selective resolver
+#   INTEGRATION_TESTS_RETRY_ON_FAILURE (0|1, default 0) — skips retry when logs look like assertion failures
 #   INTEGRATION_TESTS_TIMEOUT_SECONDS (default 1800)
 #   DEVICE_DISCOVERY_TIMEOUT_SECONDS (default 60)
 #   PROGRESS_HEARTBEAT_SECONDS (default 60)
@@ -43,6 +45,9 @@ INTEGRATION_SELECTED_TARGETS=""
 INTEGRATION_RETRIED="0"
 INTEGRATION_RETRY_REASON=""
 INTEGRATION_ARTIFACT_DIR=""
+INTEGRATION_INFERRED_FAILURE_CATEGORY=""
+INTEGRATION_SELECTIVE_REASON="off"
+INTEGRATION_DURATION_MS=""
 
 classify_exit_category() {
   local exit_code="$1"
@@ -58,6 +63,10 @@ classify_exit_category() {
       echo "cancelled_or_terminated"
       ;;
     *)
+      if [ -n "${INTEGRATION_INFERRED_FAILURE_CATEGORY:-}" ]; then
+        echo "$INTEGRATION_INFERRED_FAILURE_CATEGORY"
+        return
+      fi
       if [ "$INTEGRATION_RETRIED" = "1" ] && [ -n "$INTEGRATION_RETRY_REASON" ]; then
         echo "$INTEGRATION_RETRY_REASON"
       else
@@ -90,6 +99,10 @@ retry_reason = sys.argv[7]
 started_at = sys.argv[8]
 ended_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
+duration_raw = os.environ.get("INTEGRATION_DURATION_MS", "").strip()
+tier = os.environ.get("INTEGRATION_TESTS_TIER", "").strip()
+selective_reason = os.environ.get("INTEGRATION_SELECTIVE_REASON", "").strip()
+
 summary = {
     "started_at": started_at,
     "ended_at": ended_at,
@@ -101,10 +114,19 @@ summary = {
     "retried": retried,
     "retry_reason": retry_reason or None,
 }
+if duration_raw.isdigit():
+    summary["duration_ms"] = int(duration_raw)
+if tier:
+    summary["tier"] = tier
+if selective_reason and selective_reason not in ("unset", "off"):
+    summary["selective_resolution_reason"] = selective_reason
 with open(os.path.join(out_dir, "summary.json"), "w", encoding="utf-8") as f:
     json.dump(summary, f, indent=2, sort_keys=True)
     f.write("\n")
 PY
+  local _art_root="${INTEGRATION_TESTS_ARTIFACTS_ROOT:-artifacts/integration}"
+  mkdir -p "$_art_root"
+  printf '%s\n' "$INTEGRATION_ARTIFACT_DIR" > "${_art_root%/}/.last-run-dir"
 }
 
 emit_integration_scorecard_event() {
@@ -144,7 +166,21 @@ PY
     --attempt "${ATTEMPT:-1}" >/dev/null 2>&1 || true
 }
 
-trap 'integration_exit_code=$?; INTEGRATION_FAILURE_CATEGORY="$(classify_exit_category "$integration_exit_code")"; write_integration_artifact "$integration_exit_code" "${DEVICE_ID:-unknown}" "${INTEGRATION_SELECTED_TARGETS:-}"; emit_integration_scorecard_event "$integration_exit_code"' EXIT
+record_integration_exit() {
+  local integration_exit_code=$?
+  INTEGRATION_DURATION_MS="$(/usr/bin/python3 - "$INTEGRATION_START_EPOCH_MS" <<'PY'
+import sys
+import time
+print(max(0, int(time.time() * 1000) - int(sys.argv[1])))
+PY
+)"
+  export INTEGRATION_DURATION_MS
+  INTEGRATION_FAILURE_CATEGORY="$(classify_exit_category "$integration_exit_code")"
+  write_integration_artifact "$integration_exit_code" "${DEVICE_ID:-unknown}" "${INTEGRATION_SELECTED_TARGETS:-}"
+  emit_integration_scorecard_event "$integration_exit_code"
+}
+
+trap 'record_integration_exit' EXIT
 
 log() {
   printf '[%s] %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*" >&2
@@ -362,6 +398,66 @@ recover_ios_simulator_after_build_failure() {
   fi
 }
 
+validate_integration_selective_target_path() {
+  local candidate="$1"
+
+  case "$candidate" in
+    *..*) return 1 ;;
+  esac
+  if [[ ! "$candidate" =~ ^integration_test/[a-zA-Z0-9_]+\.dart$ ]]; then
+    return 1
+  fi
+  [ -f "$PROJECT_ROOT/$candidate" ]
+}
+
+infer_flutter_failure_category_from_log() {
+  local log_path="$1"
+
+  [ -s "$log_path" ] || {
+    printf '%s\n' ""
+    return
+  }
+  /usr/bin/python3 - "$log_path" <<'PY'
+import sys
+
+path = sys.argv[1]
+try:
+    text = open(path, "r", encoding="utf-8", errors="replace").read()
+except OSError:
+    print("")
+    raise SystemExit(0)
+tail = text[-200000:] if len(text) > 200000 else text
+low = tail.lower()
+# Deterministic test assertion failures (do not auto-retry).
+if "testfailure" in low or "flutter test framework" in low:
+    print("test_assertion_or_app_failure")
+elif "══╡" in tail and "exception" in low:
+    print("test_assertion_or_app_failure")
+elif "expected:" in low and "actual:" in low:
+    print("test_assertion_or_app_failure")
+elif "some tests failed" in low:
+    print("test_assertion_or_app_failure")
+elif "could not build the application" in low:
+    print("simulator_build_infra")
+elif "xcodebuild" in low and " error " in low:
+    print("simulator_build_infra")
+elif "failed to load asset" in low:
+    print("test_assertion_or_app_failure")
+elif "socketexception" in low or "connection reset" in low or "connection refused" in low:
+    print("infra_device_or_tooling")
+elif (
+    "failed to connect to the vm service" in low
+    or "failed to connect to vm service" in low
+    or "unable to connect to vm service" in low
+    or "vm service disappeared" in low
+    or "lost connection to device" in low
+):
+    print("infra_device_or_tooling")
+else:
+    print("unknown_transient_or_infra")
+PY
+}
+
 run_integration_command() {
   local label="$1"
   shift
@@ -400,6 +496,18 @@ run_integration_command() {
     else
       exit_code=1
     fi
+  fi
+
+  if [ "$exit_code" -eq 0 ]; then
+    INTEGRATION_INFERRED_FAILURE_CATEGORY=""
+  else
+    INTEGRATION_INFERRED_FAILURE_CATEGORY="$(infer_flutter_failure_category_from_log "$log_path")"
+    log "Inferred failure category from flutter output: ${INTEGRATION_INFERRED_FAILURE_CATEGORY:-unknown}"
+  fi
+
+  if [ -n "${INTEGRATION_ARTIFACT_DIR:-}" ] && [ -s "$log_path" ]; then
+    safe_label="$(printf '%s' "$label" | tr -cs '[:alnum:]._-' '_')"
+    cp "$log_path" "$INTEGRATION_ARTIFACT_DIR/flutter_test_${safe_label}.log" 2>/dev/null || true
   fi
 
   rm -f "$log_path"
@@ -660,6 +768,17 @@ should_retry_integration_run() {
       ;;
   esac
 
+  case "${INTEGRATION_INFERRED_FAILURE_CATEGORY:-}" in
+    test_assertion_or_app_failure)
+      log 'Not retrying: flutter log classified as test/assertion failure (category-based retry).'
+      return 1
+      ;;
+  esac
+
+  if [ -n "${INTEGRATION_INFERRED_FAILURE_CATEGORY:-}" ]; then
+    log "Retry allowed for failure category: ${INTEGRATION_INFERRED_FAILURE_CATEGORY}"
+  fi
+
   return 0
 }
 
@@ -738,6 +857,7 @@ case "$INTEGRATION_TESTS_TIER" in
     INTEGRATION_TESTS_TIER="exhaustive"
     ;;
 esac
+export INTEGRATION_TESTS_TIER
 
 if ! [[ "$INTEGRATION_TESTS_ENABLE_SELECTIVE" =~ ^(0|1)$ ]]; then
   log "⚠️ Invalid INTEGRATION_TESTS_ENABLE_SELECTIVE='$INTEGRATION_TESTS_ENABLE_SELECTIVE'; using 0."
@@ -778,14 +898,48 @@ if [ "$#" -eq 0 ]; then
         ;;
     esac
   fi
-  if [ "$INTEGRATION_TESTS_ENABLE_SELECTIVE" -eq 1 ] && [ -n "$INTEGRATION_TESTS_CHANGED_FILES" ]; then
-    # Conservative selective mapping: ambiguous or broad changes always fall back to full suite.
-    if [[ "$INTEGRATION_TESTS_CHANGED_FILES" == *"tool/run_integration_tests.sh"* ]] ||
-      [[ "$INTEGRATION_TESTS_CHANGED_FILES" == *"integration_test/test_harness.dart"* ]] ||
-      [[ "$INTEGRATION_TESTS_CHANGED_FILES" == *"integration_test/flow_scenarios.dart"* ]]; then
-      SELECTED_TARGET="$FULL_SUITE_TARGET"
-      log "Selective mapping fallback: runner/shared integration helper changes detected; forcing full suite."
+  INTEGRATION_SELECTIVE_REASON="off"
+  export INTEGRATION_SELECTIVE_REASON
+  if [ "$INTEGRATION_TESTS_ENABLE_SELECTIVE" -eq 1 ] &&
+    [ -n "$INTEGRATION_TESTS_CHANGED_FILES" ] &&
+    [ "$INTEGRATION_TESTS_TIER" != "exhaustive" ]; then
+    set +e
+    _sel_out="$(
+      printf '%s\n' "$INTEGRATION_TESTS_CHANGED_FILES" | tr ',' '\n' |
+        /usr/bin/python3 "$PROJECT_ROOT/tool/integration_selective_resolve.py" --lines
+    )"
+    _sel_rc=$?
+    set -e
+    _sel_target="$(printf '%s\n' "$_sel_out" | sed -n '1p')"
+    _sel_reason="$(printf '%s\n' "$_sel_out" | sed -n '2p')"
+    if [ "$_sel_rc" -ne 0 ] || [ -z "$_sel_target" ] || [ -z "$_sel_reason" ]; then
+      log "⚠️ Selective resolver failed (rc=${_sel_rc:-?}); using full suite."
+      _sel_target="FULL_SUITE"
+      _sel_reason="resolver_error"
     fi
+    INTEGRATION_SELECTIVE_REASON="$_sel_reason"
+    export INTEGRATION_SELECTIVE_REASON
+    if [ "$_sel_target" != "FULL_SUITE" ] &&
+      ! validate_integration_selective_target_path "$_sel_target"; then
+      log "⚠️ Selective map target is missing or not allowed: $_sel_target; using full suite."
+      _sel_target="FULL_SUITE"
+      _sel_reason="invalid_selective_target"
+      INTEGRATION_SELECTIVE_REASON="$_sel_reason"
+      export INTEGRATION_SELECTIVE_REASON
+    fi
+    if [ "$_sel_target" != "FULL_SUITE" ]; then
+      SELECTED_TARGET="$_sel_target"
+      log "Selective map resolved target=$_sel_target (reason=$_sel_reason)"
+    else
+      SELECTED_TARGET="$FULL_SUITE_TARGET"
+      log "Selective map fallthrough to full suite (reason=$_sel_reason)"
+    fi
+  elif [ "$INTEGRATION_TESTS_ENABLE_SELECTIVE" -eq 1 ] &&
+    [ -n "$INTEGRATION_TESTS_CHANGED_FILES" ] &&
+    [ "$INTEGRATION_TESTS_TIER" = "exhaustive" ]; then
+    INTEGRATION_SELECTIVE_REASON="skipped_for_exhaustive_tier"
+    export INTEGRATION_SELECTIVE_REASON
+    log "Selective map skipped for exhaustive tier (running full aggregate target)."
   fi
   INTEGRATION_SELECTED_TARGETS="$SELECTED_TARGET"
   cleanup_project_xcodebuilds

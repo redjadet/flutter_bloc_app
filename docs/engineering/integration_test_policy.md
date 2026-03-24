@@ -40,6 +40,7 @@ Collect and review:
 Suggested baseline command:
 
 - `bash tool/build_integration_baseline.sh 14`
+- Track manual metrics in `docs/engineering/integration_metrics_baseline.md`.
 
 Escalate if flake rerun rate or uncategorized failures trend upward for two
 consecutive windows.

@@ -19,6 +19,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../test/test_helpers.dart' as test_helpers;
 import '../test/test_helpers.dart' show waitForCounterCubitsToLoad;
+import 'graphql_fail_once_repository.dart';
 import 'widget_tester_pumps.dart';
 
 export 'widget_tester_pumps.dart';
@@ -31,6 +32,7 @@ class IntegrationDependencyOptions {
     this.overrideCounterRepository = true,
     this.overrideChartRepository = true,
     this.overrideGraphqlRepository = true,
+    this.graphqlFailOnceThenSuccess = false,
     this.setFlavorToProd = true,
     this.biometricSuccess = true,
     this.locale = const AppLocale(languageCode: 'en'),
@@ -39,6 +41,9 @@ class IntegrationDependencyOptions {
   final bool overrideCounterRepository;
   final bool overrideChartRepository;
   final bool overrideGraphqlRepository;
+
+  /// See [GraphqlFailOnceNetworkRepository].
+  final bool graphqlFailOnceThenSuccess;
   final bool setFlavorToProd;
   final bool biometricSuccess;
   final AppLocale? locale;
@@ -63,6 +68,7 @@ void registerIntegrationFlow({
         overrideCounterRepository: options.overrideCounterRepository,
         overrideChartRepository: options.overrideChartRepository,
         overrideGraphqlRepository: options.overrideGraphqlRepository,
+        graphqlFailOnceThenSuccess: options.graphqlFailOnceThenSuccess,
         setFlavorToProd: options.setFlavorToProd,
         biometricSuccess: options.biometricSuccess,
         locale: options.locale,
@@ -133,6 +139,7 @@ Future<void> configureIntegrationTestDependencies({
   final bool overrideCounterRepository = true,
   final bool overrideChartRepository = true,
   final bool overrideGraphqlRepository = true,
+  final bool graphqlFailOnceThenSuccess = false,
   final bool setFlavorToProd = true,
   final bool biometricSuccess = true,
   final AppLocale? locale = const AppLocale(languageCode: 'en'),
@@ -159,7 +166,9 @@ Future<void> configureIntegrationTestDependencies({
     await _overrideChartRepository();
   }
   if (overrideGraphqlRepository) {
-    await _overrideGraphqlRepository();
+    await _overrideGraphqlRepository(
+      failOnceThenSuccess: graphqlFailOnceThenSuccess,
+    );
   }
 }
 
@@ -315,11 +324,14 @@ class _FakeGraphqlDemoRepository implements GraphqlDemoRepository {
   }
 }
 
-Future<void> _overrideGraphqlRepository() async {
+Future<void> _overrideGraphqlRepository({
+  final bool failOnceThenSuccess = false,
+}) async {
   if (getIt.isRegistered<GraphqlDemoRepository>()) {
     await getIt.unregister<GraphqlDemoRepository>();
   }
-  getIt.registerSingleton<GraphqlDemoRepository>(
-    const _FakeGraphqlDemoRepository(),
-  );
+  final GraphqlDemoRepository repo = failOnceThenSuccess
+      ? GraphqlFailOnceNetworkRepository()
+      : const _FakeGraphqlDemoRepository();
+  getIt.registerSingleton<GraphqlDemoRepository>(repo);
 }

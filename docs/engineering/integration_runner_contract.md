@@ -23,6 +23,14 @@ Each run writes a structured summary under:
 
 - `artifacts/integration/<timestamp>/summary.json`
 
+The latest artifact directory path is also written to:
+
+- `artifacts/integration/.last-run-dir` (single line; used by CI summaries)
+
+Optional companion logs:
+
+- `flutter_test_<label>.log` inside the artifact directory when the run fails
+
 Schema fields include:
 
 - `started_at`
@@ -34,25 +42,49 @@ Schema fields include:
 - `targets`
 - `retried`
 - `retry_reason`
+- `duration_ms` (wall-clock duration when available)
+- `tier` (`smoke` | `standard` | `exhaustive`)
+- `selective_resolution_reason` (when selective mode runs)
 
 ## Failure categories
 
-Runner emits one final category per run:
+Runner emits one final category per run (exit-code classification plus, when
+available, inference from captured `flutter test` output):
 
 - `ok`
 - `timeout`
 - `cancelled_or_terminated`
-- `retry_on_failure_enabled`
+- `retry_on_failure_enabled` (after an opt-in generic retry)
 - `test_assertion_or_app_failure`
+- `simulator_build_infra`
+- `infra_device_or_tooling`
+- `unknown_transient_or_infra`
+
+With `INTEGRATION_TESTS_RETRY_ON_FAILURE=1`, **retries are skipped** when the
+inferred category is `test_assertion_or_app_failure` (fail-fast on deterministic
+test failures).
+
+## Selective mapping
+
+Source of truth:
+
+- `tool/integration_selective_map.json` — path prefixes → `integration_test/` targets
+- `tool/integration_selective_resolve.py` — resolver (ambiguous or unmapped → `FULL_SUITE`)
+
+Enable with:
+
+- `INTEGRATION_TESTS_ENABLE_SELECTIVE=1`
+- `INTEGRATION_TESTS_CHANGED_FILES` — newline- or comma-separated repo-relative paths
+
+**Exhaustive tier** skips selective narrowing (always uses the tier aggregate target).
+
+Legacy hard-coded fallbacks were replaced by `force_full_suite_prefixes` in the JSON map.
 
 ## Selective mapping fallback rules
 
 When selective mode is enabled, runner falls back to full suite for ambiguous
-or broad changes, including:
-
-- `tool/run_integration_tests.sh` edits
-- `integration_test/test_harness.dart` edits
-- `integration_test/flow_scenarios.dart` edits
+or broad changes; see `force_full_suite_prefixes` in `tool/integration_selective_map.json`,
+including runner, harness, flow scenario, and map files.
 
 ## Coverage summary behavior
 
