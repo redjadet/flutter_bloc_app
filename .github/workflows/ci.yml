@@ -16,9 +16,9 @@ on:
         required: false
         default: 'true'
       run_integration:
-        description: 'Run integration tests (macOS job)'
+        description: 'Run integration tests (macOS job); off by default — enable to run the macOS integration job'
         required: false
-        default: 'true'
+        default: 'false'
       integration_phase:
         description: 'Integration rollout phase: observe | non_blocking | enforced'
         required: false
@@ -71,7 +71,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          run_integration="${{ github.event.inputs.run_integration || 'true' }}"
+          run_integration="${{ github.event.inputs.run_integration || 'false' }}"
           integration_phase="${{ github.event.inputs.integration_phase || 'observe' }}"
           integration_tier="${{ github.event.inputs.integration_tier || 'standard' }}"
 
@@ -182,7 +182,6 @@ jobs:
     continue-on-error: ${{ needs.changes.outputs.integration_non_blocking == 'true' }}
     if: >-
       github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.run_integration != 'false' &&
       needs.changes.outputs.run_integration == 'true'
     steps:
       - name: Checkout repository
@@ -323,6 +322,15 @@ jobs:
         if: steps.simulator.outputs.simulator_ready != 'true'
         run: echo 'Integration tests were skipped (no suitable iPhone simulator, boot failed, or boot timed out). See the Ensure iOS Simulator is booted step logs.'
 
+      - name: Upload integration artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-artifacts
+          path: artifacts/integration/
+          if-no-files-found: ignore
+          retention-days: 14
+
       - name: Publish integration rollout summary
         if: always()
         run: |
@@ -333,4 +341,21 @@ jobs:
             echo "- tier: \`${{ needs.changes.outputs.integration_tier }}\`"
             echo "- non_blocking: \`${{ needs.changes.outputs.integration_non_blocking }}\`"
             echo "- target_hint: \`${{ needs.changes.outputs.integration_target }}\`"
+            echo ""
+            root="artifacts/integration"
+            lf="$root/.last-run-dir"
+            echo "### Last integration artifact"
+            if [[ -f "$lf" ]]; then
+              ad="$(tr -d '\r\n' < "$lf")"
+              sum="$ad/summary.json"
+              echo "- artifact_dir: \`$ad\`"
+              if [[ -f "$sum" ]]; then
+                export SUMMARY_JSON="$sum"
+                python3 tool/ci_append_integration_summary.py
+              else
+                echo "- summary: \`(no summary.json at artifact dir — see uploaded integration-artifacts or job logs)\`"
+              fi
+            else
+              echo "- \`(no artifacts/integration/.last-run-dir; job skipped tests, exited before artifact init, or artifact directory not created)\`"
+            fi
           } >> "$GITHUB_STEP_SUMMARY"

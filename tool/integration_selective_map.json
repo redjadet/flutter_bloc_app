@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "description": "Path prefix -> integration_test target. Ambiguous or unknown changes force full suite via resolver.",
+  "force_full_suite_prefixes": [
+    "bin/integration_tests",
+    "tool/run_integration_tests.sh",
+    "tool/integration_selective_map.json",
+    "tool/integration_selective_resolve.py",
+    "tool/ci_append_integration_summary.py",
+    "integration_test/graphql_fail_once_repository.dart",
+    "integration_test/test_harness.dart",
+    "integration_test/flow_scenarios.dart",
+    "integration_test/flow_scenarios_primary.dart",
+    "integration_test/flow_scenarios_secondary.dart",
+    "integration_test/flow_scenarios_tertiary.dart",
+    "integration_test/flow_scenarios_helpers.dart",
+    "integration_test/widget_tester_pumps.dart"
+  ],
+  "rules": [
+    {
+      "id": "graphql_demo",
+      "path_prefixes": ["lib/features/graphql_demo/"],
+      "target": "integration_test/graphql_demo_flow_test.dart"
+    },
+    {
+      "id": "search",
+      "path_prefixes": ["lib/features/search/"],
+      "target": "integration_test/search_flow_test.dart"
+    },
+    {
+      "id": "todo_list",
+      "path_prefixes": ["lib/features/todo_list/"],
+      "target": "integration_test/todo_list_flow_test.dart"
+    },
+    {
+      "id": "counter",
+      "path_prefixes": ["lib/features/counter/"],
+      "target": "integration_test/counter_persistence_test.dart"
+    },
+    {
+      "id": "chart",
+      "path_prefixes": ["lib/features/chart/"],
+      "target": "integration_test/charts_flow_test.dart"
+    },
+    {
+      "id": "calculator",
+      "path_prefixes": ["lib/features/calculator/"],
+      "target": "integration_test/calculator_flow_test.dart"
+    },
+    {
+      "id": "settings",
+      "path_prefixes": ["lib/features/settings/"],
+      "target": "integration_test/settings_flow_test.dart"
+    },
+    {
+      "id": "websocket",
+      "path_prefixes": ["lib/features/websocket/"],
+      "target": "integration_test/websocket_flow_test.dart"
+    },
+    {
+      "id": "auth_session",
+      "path_prefixes": ["lib/features/auth/", "lib/features/supabase_auth/"],
+      "target": "integration_test/standard_flows_test.dart"
+    }
+  ]
+}
