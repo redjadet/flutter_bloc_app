@@ -104,11 +104,13 @@ jobs:
               ;;
           esac
 
-          echo "run_integration=$run_integration" >> "$GITHUB_OUTPUT"
-          echo "integration_phase=$integration_phase" >> "$GITHUB_OUTPUT"
-          echo "integration_tier=$integration_tier" >> "$GITHUB_OUTPUT"
-          echo "integration_non_blocking=$integration_non_blocking" >> "$GITHUB_OUTPUT"
-          echo "integration_target=$integration_target" >> "$GITHUB_OUTPUT"
+          {
+            echo "run_integration=$run_integration"
+            echo "integration_phase=$integration_phase"
+            echo "integration_tier=$integration_tier"
+            echo "integration_non_blocking=$integration_non_blocking"
+            echo "integration_target=$integration_target"
+          } >> "$GITHUB_OUTPUT"
 
   build:
     runs-on: ubuntu-latest
