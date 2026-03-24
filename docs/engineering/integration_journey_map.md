@@ -42,7 +42,13 @@ tier expectations.
 - `standard` -> `integration_test/standard_flows_test.dart`
   (`registerStandardIntegrationFlows`: smoke + extended; see `flow_scenarios.dart`)
 - `exhaustive` -> `integration_test/all_flows_test.dart`
-  (currently same flow set as standard; reserve for future exhaustive-only cases)
+  (`registerAllIntegrationFlows`: standard plus `registerExhaustiveOnlyIntegrationFlows`,
+  including deterministic GraphQL network error + **Try again** recovery)
+
+## CI workflow shape
+
+Integration jobs run only from **Actions → CI → Run workflow** (not on push/PR).
+See `docs/validation_scripts.md` for the current GitHub Actions contract.
 
 ## Notes
 

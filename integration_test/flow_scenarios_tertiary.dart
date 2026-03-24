@@ -158,3 +158,34 @@ void registerSettingsThemePersistenceIntegrationFlow() {
     },
   );
 }
+
+/// Exhaustive-tier only: deterministic GraphQL network error via fake repo,
+/// then recovery through the same Try again path as production UI.
+void registerGraphqlNetworkRetryIntegrationFlow() {
+  registerIntegrationFlow(
+    groupName: 'GraphQL demo flow',
+    testName: 'shows network error then loads data after Try again',
+    options: const IntegrationDependencyOptions(
+      graphqlFailOnceThenSuccess: true,
+    ),
+    body: (final tester) async {
+      await launchTestApp(tester);
+
+      await _openOverflowDestination(tester, 'Explore GraphQL sample');
+      await pumpUntilFound(
+        tester,
+        find.text('Try again'),
+        timeout: const Duration(seconds: 15),
+      );
+      expect(find.text('Something went wrong'), findsWidgets);
+
+      await tapAndPump(tester, find.text('Try again'));
+      await pumpUntilFound(
+        tester,
+        find.text('GraphQL Countries'),
+        timeout: const Duration(seconds: 15),
+      );
+      expect(find.text('Germany'), findsWidgets);
+    },
+  );
+}

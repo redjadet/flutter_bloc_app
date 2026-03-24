@@ -141,7 +141,7 @@ flutter test --update-goldens test/counter_page_golden_test.dart
 
 **Note**: Always review the generated golden images to ensure they match expected visual changes before committing.
 
-On pull requests, GitHub Actions skips the macOS integration job entirely when no relevant runtime files changed. Golden widget tests are skipped in GitHub Actions CI. If the macOS job runs but no suitable iPhone simulator is available, boot fails, or boot times out, the integration step is skipped instead of failing CI.
+GitHub Actions does not run the macOS integration job on push or pull request; start **Actions → CI → Run workflow** and enable **`run_integration`** when you want that job (it defaults to off). Golden widget tests are skipped in GitHub Actions CI. If the macOS job runs but no suitable iPhone simulator is available, boot fails, or boot times out, the integration step is skipped instead of failing CI.
 
 ## Related Documentation
 
