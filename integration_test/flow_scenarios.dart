@@ -56,6 +56,13 @@ void registerStandardIntegrationFlows() {
   registerExtendedIntegrationFlows();
 }
 
+/// Runs after [registerStandardIntegrationFlows]. Keep long-tail or
+/// extra-cost scenarios here so `standard` / smoke tiers stay faster.
+void registerExhaustiveOnlyIntegrationFlows() {
+  registerGraphqlNetworkRetryIntegrationFlow();
+}
+
 void registerAllIntegrationFlows() {
   registerStandardIntegrationFlows();
+  registerExhaustiveOnlyIntegrationFlows();
 }

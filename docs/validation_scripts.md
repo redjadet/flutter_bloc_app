@@ -18,16 +18,11 @@ Full documentation and suppression guidance is provided in the sections below.
 
 ## CI (GitHub Actions)
 
-On pushes and pull requests, [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs:
+On pushes and pull requests, [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs **`./bin/checklist`** on `ubuntu-latest` (same delivery pipeline as local pre-merge validation). Golden widget tests are skipped in GitHub Actions CI.
 
-- **`./bin/checklist`** on `ubuntu-latest` (same delivery pipeline as local pre-merge validation).
-- A lightweight `changes` precheck on `ubuntu-latest` to determine whether a PR needs the macOS integration job at all.
-- **`./bin/integration_tests integration_test/pr_smoke_flows_test.dart`** on `macos-latest` for PRs that touch runtime/integration-relevant files, after booting a preferred available iPhone simulator and falling back to any available iPhone simulator. If there is no suitable simulator, boot fails, or boot times out, the integration step is skipped instead of failing CI.
-- Golden widget tests are skipped in GitHub Actions CI.
+**Integration tests are not run on push or PR.** They run only when you manually start the workflow (**Actions → CI → Run workflow**) and set **`run_integration`** to run (it defaults to off). The macOS job boots a preferred iPhone simulator when possible and falls back; if no suitable simulator is available, boot fails, or boot times out, the integration step is skipped instead of failing the job.
 
 For broader local or pre-ship validation, `./bin/integration_tests` still runs the aggregated suite in `integration_test/all_flows_test.dart`.
-
-Manual runs via **Actions → CI → Run workflow** can skip integration tests with `run_integration: false`.
 
 ## Existing Validation Scripts
 
