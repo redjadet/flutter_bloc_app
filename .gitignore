@@ -43,6 +43,7 @@ GEMINI.md
 /coverage/lcov.info
 
 # Integration test runner output (per-run summaries)
+/artifacts/
 artifacts/integration/
 # Perf trace artifacts (traceAction report data)
 artifacts/perf/
