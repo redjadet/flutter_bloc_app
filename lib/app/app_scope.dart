@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/core.dart';
@@ -23,8 +25,10 @@ class AppScope extends StatefulWidget {
   State<AppScope> createState() => _AppScopeState();
 }
 
-class _AppScopeState extends State<AppScope> {
+class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
   late final BackgroundSyncCoordinator _syncCoordinator;
+  late final TimerService _timerService;
+  TimerDisposable? _resumeDebounceHandle;
 
   @override
   void initState() {
@@ -32,6 +36,27 @@ class _AppScopeState extends State<AppScope> {
     // Ensure DI is configured when running tests that directly pump MyApp.
     ensureConfigured();
     _syncCoordinator = getIt<BackgroundSyncCoordinator>();
+    _timerService = getIt<TimerService>();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(final AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _resumeDebounceHandle?.dispose();
+      _resumeDebounceHandle = _timerService.runOnce(
+        const Duration(milliseconds: 500),
+        () => unawaited(_syncCoordinator.flush()),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _resumeDebounceHandle?.dispose();
+    _resumeDebounceHandle = null;
+    super.dispose();
   }
 
   @override

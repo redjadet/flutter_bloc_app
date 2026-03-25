@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/shared/http/auth_token_manager.dart';
+import 'package:flutter_bloc_app/shared/http/interceptors/retry_interceptor.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Injects Firebase auth token and retries once on 401 after refresh.
@@ -22,6 +23,8 @@ class AuthTokenInterceptor extends QueuedInterceptor {
   static const String requestExtraAuthRetried = 'auth_401_retried';
   static const String requestExtraManagedAuthUser = 'managed_auth_user';
   static const String requestExtraSkipAuthHandling = 'skip_auth_handling';
+  static const String requestExtraAllowAuthRetryNonIdempotent =
+      'allow_auth_retry_non_idempotent';
 
   @override
   void onRequest(
@@ -114,6 +117,17 @@ class AuthTokenInterceptor extends QueuedInterceptor {
         requestOptions.extra[requestExtraAuthRetried] == true) {
       return const _RetryUnauthorizedResult.noRetry();
     }
+
+    final String method = requestOptions.method.toUpperCase();
+    if (!_isIdempotentMethod(method) &&
+        requestOptions.extra[requestExtraAllowAuthRetryNonIdempotent] != true) {
+      AppLogger.debug(
+        'AuthTokenInterceptor: skip auth retry (non-idempotent): '
+        '$method ${requestOptions.uri}',
+      );
+      return const _RetryUnauthorizedResult.noRetry();
+    }
+
     final User? user = _managedUserFrom(requestOptions);
     if (user == null) {
       return const _RetryUnauthorizedResult.noRetry();
@@ -130,6 +144,9 @@ class AuthTokenInterceptor extends QueuedInterceptor {
     retryOptions.extra[requestExtraSkipAuthHandling] = true;
     retryOptions.headers['Authorization'] = 'Bearer $refreshedToken';
     retryOptions.extra[requestExtraManagedAuthUser] = user;
+    // Option A (strict): auth 401 replay must not multiply attempts by also
+    // entering RetryInterceptor. The auth replay is already "one extra try".
+    retryOptions.extra[RetryInterceptor.extraSkipRetry] = true;
     try {
       return _RetryUnauthorizedResult.response(
         await _createRetryDio().fetch<dynamic>(retryOptions),
@@ -173,6 +190,19 @@ class AuthTokenInterceptor extends QueuedInterceptor {
       );
       return null;
     }
+  }
+
+  bool _isIdempotentMethod(final String method) {
+    switch (method.toUpperCase()) {
+      case 'GET':
+      case 'HEAD':
+      case 'PUT':
+      case 'DELETE':
+      case 'OPTIONS':
+      case 'TRACE':
+        return true;
+    }
+    return false;
   }
 }
 

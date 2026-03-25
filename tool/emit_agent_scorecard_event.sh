@@ -30,6 +30,7 @@ Optional:
   --delegate-used <0|1>        Whether delegate was used (default: 0)
   --delegate-mode <name>       Delegate mode (ask/plan/review/etc)
   --delegate-fail-reason <s>   Delegate failure reason
+  --workspace-fingerprint <s>  Fingerprint of the validated worktree state
   --checklist-pass <0|1|null>  Validation status
   --router-pass <0|1|null>     Validation status
   --integration-pass <0|1|null> Validation status
@@ -50,6 +51,7 @@ risk_class="${RISK_CLASS:-unknown}"
 delegate_used="0"
 delegate_mode=""
 delegate_fail_reason=""
+workspace_fingerprint=""
 checklist_pass="null"
 router_pass="null"
 integration_pass="null"
@@ -70,6 +72,7 @@ while [[ $# -gt 0 ]]; do
     --delegate-used) delegate_used="${2:-}"; shift 2 ;;
     --delegate-mode) delegate_mode="${2:-}"; shift 2 ;;
     --delegate-fail-reason) delegate_fail_reason="${2:-}"; shift 2 ;;
+    --workspace-fingerprint) workspace_fingerprint="${2:-}"; shift 2 ;;
     --checklist-pass) checklist_pass="${2:-}"; shift 2 ;;
     --router-pass) router_pass="${2:-}"; shift 2 ;;
     --integration-pass) integration_pass="${2:-}"; shift 2 ;;
@@ -162,7 +165,7 @@ fi
 python3 - "$SCORECARD_FILE" \
   "$SCHEMA_VERSION" "$task_id" "$run_id" "$command_name" "$started_at" "$ended_at" "$duration_ms" "$status" "$attempt" \
   "$branch" "$risk_class" "$delegate_used" "$delegate_mode" "$delegate_fail_reason" \
-  "$checklist_pass" "$router_pass" "$integration_pass" "$invalid_partial" <<'PY'
+  "$workspace_fingerprint" "$checklist_pass" "$router_pass" "$integration_pass" "$invalid_partial" <<'PY'
 import json
 import sys
 from pathlib import Path
@@ -183,6 +186,7 @@ from pathlib import Path
     delegate_used,
     delegate_mode,
     delegate_fail_reason,
+    workspace_fingerprint,
     checklist_pass,
     router_pass,
     integration_pass,
@@ -212,6 +216,7 @@ event = {
     "delegate_used": delegate_used in ("1", "true", "True"),
     "delegate_mode": delegate_mode or None,
     "delegate_fail_reason": delegate_fail_reason or None,
+    "workspace_fingerprint": workspace_fingerprint or None,
     "checklist_pass": parse_bool_or_null(checklist_pass),
     "router_validate_pass": parse_bool_or_null(router_pass),
     "integration_pass": parse_bool_or_null(integration_pass),

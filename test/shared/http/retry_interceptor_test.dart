@@ -52,7 +52,9 @@ void main() {
         final cancelFuture,
       ) async {
         if (cancelFuture != null) {}
-        seenRetryCounts.add((options.extra['retry_count'] as int?) ?? 0);
+        seenRetryCounts.add(
+          (options.extra[RetryInterceptor.extraRetryCount] as int?) ?? 0,
+        );
         requestCount += 1;
         if (requestCount < 3) {
           return ResponseBody.fromString(
@@ -105,6 +107,121 @@ void main() {
       );
 
       expect(response.statusCode, 429);
+      expect(requestCount, 2);
+    });
+
+    test('does not retry non-idempotent methods by default', () async {
+      int requestCount = 0;
+      dio = buildDio(maxRetries: 2);
+      dio.httpClientAdapter = _SequenceAdapter((
+        final options,
+        final _,
+        final cancelFuture,
+      ) async {
+        if (cancelFuture != null) {}
+        requestCount += 1;
+        if (requestCount == 1) {
+          return ResponseBody.fromString(
+            jsonEncode(<String, Object?>{'error': 'temporary'}),
+            503,
+            headers: <String, List<String>>{
+              Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+            },
+          );
+        }
+        return ResponseBody.fromString(
+          jsonEncode(<String, Object?>{'ok': true}),
+          200,
+          headers: <String, List<String>>{
+            Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+          },
+        );
+      });
+
+      final Response<dynamic> response = await dio.post<dynamic>(
+        'https://example.com/mutate',
+        data: <String, Object?>{'x': 1},
+      );
+
+      expect(response.statusCode, 503);
+      expect(requestCount, 1);
+    });
+
+    test('retries idempotent delete methods by default', () async {
+      int requestCount = 0;
+      dio = buildDio(maxRetries: 2);
+      dio.httpClientAdapter = _SequenceAdapter((
+        final options,
+        final _,
+        final cancelFuture,
+      ) async {
+        if (cancelFuture != null) {}
+        requestCount += 1;
+        if (requestCount == 1) {
+          return ResponseBody.fromString(
+            jsonEncode(<String, Object?>{'error': 'temporary'}),
+            503,
+            headers: <String, List<String>>{
+              Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+            },
+          );
+        }
+        return ResponseBody.fromString(
+          jsonEncode(<String, Object?>{'ok': true}),
+          200,
+          headers: <String, List<String>>{
+            Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+          },
+        );
+      });
+
+      final Response<dynamic> response = await dio.delete<dynamic>(
+        'https://example.com/mutate',
+      );
+
+      expect(response.statusCode, 200);
+      expect(requestCount, 2);
+    });
+
+    test('can retry non-idempotent methods when explicitly opted in', () async {
+      int requestCount = 0;
+      dio = buildDio(maxRetries: 2);
+      dio.httpClientAdapter = _SequenceAdapter((
+        final options,
+        final _,
+        final cancelFuture,
+      ) async {
+        if (cancelFuture != null) {}
+        requestCount += 1;
+        if (requestCount == 1) {
+          return ResponseBody.fromString(
+            jsonEncode(<String, Object?>{'error': 'temporary'}),
+            503,
+            headers: <String, List<String>>{
+              Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+            },
+          );
+        }
+        return ResponseBody.fromString(
+          jsonEncode(<String, Object?>{'ok': true}),
+          200,
+          headers: <String, List<String>>{
+            Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+          },
+        );
+      });
+
+      final Response<dynamic> response = await dio.post<dynamic>(
+        'https://example.com/mutate',
+        data: <String, Object?>{'x': 1},
+        options: Options(
+          extra: <String, Object?>{
+            RetryInterceptor.extraAllowRetryNonIdempotent: true,
+          },
+        ),
+      );
+
+      expect(response.statusCode, 200);
       expect(requestCount, 2);
     });
 

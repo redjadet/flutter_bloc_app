@@ -9,6 +9,7 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
       return;
     }
 
+    invalidateRequests();
     final ChatConversation conversation = _createEmptyConversation(
       model: normalized,
     );
@@ -30,6 +31,7 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
         state.messages.isNotEmpty) {
       return;
     }
+    final int requestId = nextRequestId();
 
     List<ChatConversation> targetHistory = state.history;
 
@@ -38,6 +40,9 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
       conversationId,
       existingHistory: targetHistory,
     );
+    if (isClosed || !isRequestCurrent(requestId)) {
+      return;
+    }
     if (loaded != null) {
       conversation = loaded.conversation;
       targetHistory = loaded.history;
@@ -55,6 +60,9 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
     // This ensures we load the full conversation data from persistent storage.
     if (conversation.messages.isEmpty && conversation.hasContent) {
       final List<ChatConversation> refreshed = await _historyRepository.load();
+      if (isClosed || !isRequestCurrent(requestId)) {
+        return;
+      }
       final ChatConversation? hydrated = _conversationById(
         refreshed,
         conversationId,
@@ -70,6 +78,9 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
     } else if (conversation.messages.isEmpty) {
       // Even if hasContent is false, try to re-hydrate in case storage has the data
       final List<ChatConversation> refreshed = await _historyRepository.load();
+      if (isClosed || !isRequestCurrent(requestId)) {
+        return;
+      }
       final ChatConversation? hydrated = _conversationById(
         refreshed,
         conversationId,
