@@ -43,7 +43,10 @@ GEMINI.md
 /coverage/lcov.info
 
 # Integration test runner output (per-run summaries)
+/artifacts/
 artifacts/integration/
+# Perf trace artifacts (traceAction report data)
+artifacts/perf/
 
 # Golden test failure artifacts
 test/failures/
@@ -81,6 +84,10 @@ INTERVIEW_QA.md
 .agents/rules/rules.md
 .agents/rules/gemin-rules.md
 coverage/lcov.base.info
+
+# Agent scorecard one-off exports (keep the rolling log tracked)
+analysis/agent_scorecard/scorecard-events-*.jsonl
 .agents/skills/gstack
 AGENTS.md
 docs/gstack_integration.md
+tmp_test_write.md

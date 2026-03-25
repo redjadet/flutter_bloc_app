@@ -32,6 +32,10 @@ speed for low/medium-risk work without weakening quality gates.
   - model override/cache behavior
   - contract checks (`tool/check_delegate_wrapper_contracts.sh`)
   - repo-native Codex feedback helper (`tool/request_codex_feedback.sh`)
+  - non-raw stderr heartbeat/status output so host agents do not misread quiet
+    delegate runs as hangs
+  - delegate-only Firebase MCP disable path (`--skip-firebase-mcp` /
+    `DELEGATE_SKIP_FIREBASE_MCP=1`) instead of relying on global Codex config
 - Trigger benchmark and precision check:
   - `analysis/agent_scorecard/router_trigger_benchmark_v1.json`
   - `tool/check_router_trigger_precision.sh`
