@@ -43,6 +43,58 @@ void main() {
     expect(pending.first.id, equals(operation.id));
   });
 
+  test(
+    'enqueue dedupes by entityType + idempotencyKey (+ user scope when present)',
+    () async {
+      final SyncOperation op1 = SyncOperation.create(
+        entityType: 'counter',
+        payload: <String, dynamic>{'count': 1},
+        idempotencyKey: 'same-key',
+      );
+      final SyncOperation op2 = SyncOperation.create(
+        entityType: 'counter',
+        payload: <String, dynamic>{'count': 2},
+        idempotencyKey: 'same-key',
+      );
+
+      await repository.enqueue(op1);
+      await repository.enqueue(op2);
+
+      final List<SyncOperation> pending = await repository.getPendingOperations(
+        now: DateTime.now().toUtc(),
+      );
+
+      expect(pending, hasLength(1));
+      expect(pending.single.payload['count'], equals(2));
+    },
+  );
+
+  test('enqueue does not dedupe across different entityType', () async {
+    final SyncOperation op1 = SyncOperation.create(
+      entityType: 'counter',
+      payload: <String, dynamic>{'count': 1},
+      idempotencyKey: 'same-key',
+    );
+    final SyncOperation op2 = SyncOperation.create(
+      entityType: 'chat',
+      payload: <String, dynamic>{'message': 'hello'},
+      idempotencyKey: 'same-key',
+    );
+
+    await repository.enqueue(op1);
+    await repository.enqueue(op2);
+
+    final List<SyncOperation> pending = await repository.getPendingOperations(
+      now: DateTime.now().toUtc(),
+    );
+
+    expect(pending, hasLength(2));
+    expect(pending.map((final op) => op.entityType).toSet(), {
+      'counter',
+      'chat',
+    });
+  });
+
   test('onOperationEnqueued emits after each successful enqueue', () async {
     final List<void> emissions = <void>[];
     final subscription = repository.onOperationEnqueued.listen(emissions.add);

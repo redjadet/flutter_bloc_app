@@ -231,6 +231,84 @@ void main() {
       },
     );
 
+    test('does not auth-retry non-idempotent methods by default', () async {
+      when(() => auth.currentUser).thenReturn(user1);
+      when(
+        () => user1.getIdTokenResult(),
+      ).thenAnswer((_) async => user1InitialResult);
+      when(() => user1.getIdToken(true)).thenAnswer((_) async => 'forced-1');
+
+      int requestCount = 0;
+      dio = buildDio();
+      dio.httpClientAdapter = _SequenceAdapter((
+        final options,
+        final _,
+        final cancelFuture,
+      ) async {
+        if (cancelFuture != null) {}
+        requestCount += 1;
+        return ResponseBody.fromString(
+          jsonEncode(<String, Object?>{'error': 'unauthorized'}),
+          401,
+          headers: <String, List<String>>{
+            Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+          },
+        );
+      });
+
+      final Response<dynamic> response = await dio.post<dynamic>(
+        'https://example.com/protected',
+        data: <String, Object?>{'x': 1},
+      );
+
+      expect(response.statusCode, 401);
+      expect(requestCount, 1);
+      verifyNever(() => user1.getIdToken(true));
+    });
+
+    test('auth-retries idempotent delete methods by default', () async {
+      when(() => auth.currentUser).thenReturn(user1);
+      when(
+        () => user1.getIdTokenResult(),
+      ).thenAnswer((_) async => user1InitialResult);
+      when(() => user1.getIdToken(true)).thenAnswer((_) async => 'forced-1');
+
+      int requestCount = 0;
+      dio = buildDio();
+      dio.httpClientAdapter = _SequenceAdapter((
+        final options,
+        final _,
+        final cancelFuture,
+      ) async {
+        if (cancelFuture != null) {}
+        requestCount += 1;
+        if (requestCount == 1) {
+          return ResponseBody.fromString(
+            jsonEncode(<String, Object?>{'error': 'unauthorized'}),
+            401,
+            headers: <String, List<String>>{
+              Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+            },
+          );
+        }
+        return ResponseBody.fromString(
+          jsonEncode(<String, Object?>{'ok': true}),
+          200,
+          headers: <String, List<String>>{
+            Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+          },
+        );
+      });
+
+      final Response<dynamic> response = await dio.delete<dynamic>(
+        'https://example.com/protected',
+      );
+
+      expect(response.statusCode, 200);
+      expect(requestCount, 2);
+      verify(() => user1.getIdToken(true)).called(1);
+    });
+
     test(
       'propagates retry DioException instead of returning the original 401 response',
       () async {
@@ -334,18 +412,9 @@ void main() {
               },
             );
           }
-          if (requestCount == 2) {
-            return ResponseBody.fromString(
-              jsonEncode(<String, Object?>{'error': 'temporary'}),
-              503,
-              headers: <String, List<String>>{
-                Headers.contentTypeHeader: <String>[Headers.jsonContentType],
-              },
-            );
-          }
           return ResponseBody.fromString(
-            jsonEncode(<String, Object?>{'ok': true}),
-            200,
+            jsonEncode(<String, Object?>{'error': 'temporary'}),
+            503,
             headers: <String, List<String>>{
               Headers.contentTypeHeader: <String>[Headers.jsonContentType],
             },
@@ -356,13 +425,14 @@ void main() {
           'https://example.com/protected',
         );
 
-        expect(response.statusCode, 200);
-        expect(requestCount, 3);
-        expect(networkStatusService.statusChecks, 3);
+        // Auth replay is allowed once, but must not multiply attempts by also
+        // entering RetryInterceptor.
+        expect(response.statusCode, 503);
+        expect(requestCount, 2);
+        expect(networkStatusService.statusChecks, 2);
         expect(telemetryEventCount, greaterThanOrEqualTo(1));
         expect(seenAuthorizationHeaders, <String?>[
           'Bearer token-user-1-initial',
-          'Bearer token-user-1-refreshed',
           'Bearer token-user-1-refreshed',
         ]);
         verify(() => user1.getIdToken(true)).called(1);

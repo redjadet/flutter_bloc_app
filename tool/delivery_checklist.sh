@@ -18,6 +18,7 @@ import time
 print(int(time.time() * 1000))
 PY
 )"
+CHECKLIST_TMP_DIR=""
 
 emit_checklist_scorecard_event() {
   local exit_code="$1"
@@ -25,6 +26,7 @@ emit_checklist_scorecard_event() {
   local checklist_pass="0"
   local ended_at
   local duration_ms
+  local workspace_fingerprint
 
   ended_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
   duration_ms="$(python3 - "$CHECKLIST_START_EPOCH_MS" <<'PY'
@@ -34,6 +36,7 @@ start_ms = int(sys.argv[1])
 print(max(0, int(time.time() * 1000) - start_ms))
 PY
 )"
+  workspace_fingerprint="$(python3 "$PROJECT_ROOT/tool/validation_reuse.py" fingerprint 2>/dev/null || true)"
 
   if [ "$exit_code" -eq 0 ]; then
     checklist_status="ok"
@@ -47,13 +50,27 @@ PY
     --ended-at "$ended_at" \
     --duration-ms "$duration_ms" \
     --risk-class medium \
+    --workspace-fingerprint "$workspace_fingerprint" \
     --checklist-pass "$checklist_pass" \
     --router-pass null \
     --integration-pass null \
     --attempt "${ATTEMPT:-1}" >/dev/null 2>&1 || true
 }
 
-trap 'checklist_exit_code=$?; emit_checklist_scorecard_event "$checklist_exit_code"' EXIT
+cleanup_checklist_tmp() {
+  if [ -n "${CHECKLIST_TMP_DIR:-}" ] && [ -d "$CHECKLIST_TMP_DIR" ]; then
+    rm -rf "$CHECKLIST_TMP_DIR"
+  fi
+}
+
+checklist_on_exit() {
+  local checklist_exit_code=$?
+  cleanup_checklist_tmp
+  emit_checklist_scorecard_event "$checklist_exit_code"
+  exit "$checklist_exit_code"
+}
+
+trap checklist_on_exit EXIT
 
 # Initialized before any function references them (set -u safe).
 declare -a changed_files=()
@@ -463,10 +480,6 @@ if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
 fi
 echo "  Running ${#CHECK_SCRIPTS[@]} static checks with $CHECKLIST_JOBS workers (in parallel with analyze)"
 CHECKLIST_TMP_DIR="$(mktemp -d)"
-cleanup_checklist_tmp() {
-  rm -rf "$CHECKLIST_TMP_DIR"
-}
-trap cleanup_checklist_tmp EXIT
 
 STATIC_CHECKS_LOG="$CHECKLIST_TMP_DIR/static_checks.log"
 STATIC_CHECKS_EXIT="$CHECKLIST_TMP_DIR/static_checks.exit"

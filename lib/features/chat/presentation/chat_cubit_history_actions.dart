@@ -2,7 +2,11 @@ part of 'chat_cubit.dart';
 
 mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
   Future<void> loadHistory() async {
+    final int requestId = nextRequestId();
     final List<ChatConversation> stored = await _historyRepository.load();
+    if (isClosed || !isRequestCurrent(requestId)) {
+      return;
+    }
     final List<ChatConversation> filtered = stored
         .where((final c) => c.hasContent)
         .toList();
@@ -30,6 +34,9 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
 
     if (needsPersist) {
       await _persistHistory(history);
+      if (isClosed || !isRequestCurrent(requestId)) {
+        return;
+      }
     }
 
     _emitConversationSnapshot(
@@ -40,6 +47,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
   }
 
   Future<void> clearHistory() async {
+    invalidateRequests();
     if (state.history.isEmpty) {
       final ChatConversation fresh = _createEmptyConversation(
         model: _currentModel,
@@ -54,6 +62,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
     }
 
     await _historyRepository.save(const <ChatConversation>[]);
+    if (isClosed) return;
     final ChatConversation fresh = _createEmptyConversation(
       model: _currentModel,
     );
@@ -66,6 +75,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
   }
 
   Future<void> deleteConversation(final String conversationId) async {
+    final int requestId = nextRequestId();
     final List<ChatConversation> history = List<ChatConversation>.from(
       state.history,
     );
@@ -78,6 +88,9 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
 
     history.removeAt(index);
     await _historyRepository.save(history);
+    if (isClosed || !isRequestCurrent(requestId)) {
+      return;
+    }
 
     if (history.isEmpty) {
       final ChatConversation fresh = _createEmptyConversation(
@@ -107,6 +120,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
   }
 
   Future<void> resetConversation() async {
+    invalidateRequests();
     final ChatConversation conversation = _createEmptyConversation(
       model: _currentModel,
     );

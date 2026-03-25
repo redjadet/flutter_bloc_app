@@ -41,6 +41,31 @@ class PendingSyncRepository extends HiveRepositoryBase {
       logContext: 'PendingSyncRepository.enqueue',
       action: () async {
         final Box<dynamic> box = await getBox();
+        final _PendingOperationsReadResult readResult = _readOperations(
+          box.toMap(),
+        );
+        await _deleteKeys(box, readResult.malformedKeys);
+
+        final String? userScope = _userScopeForDedupe(operation);
+        final List<dynamic> duplicateKeys = readResult.operations
+            .where(
+              (final entry) =>
+                  entry.operation.entityType == operation.entityType &&
+                  entry.operation.idempotencyKey == operation.idempotencyKey &&
+                  _userScopeForDedupe(entry.operation) == userScope,
+            )
+            .map((final entry) => entry.key)
+            .toList(growable: false);
+        final int duplicateCount = duplicateKeys.length;
+        if (duplicateCount > 0) {
+          AppLogger.debug(
+            'PendingSyncRepository.enqueue deduped $duplicateCount operation(s): '
+            'entityType=${operation.entityType} '
+            'idempotencyKey=${operation.idempotencyKey} '
+            'userScope=${userScope ?? 'none'}',
+          );
+        }
+        await _deleteKeys(box, duplicateKeys);
         await box.put(operation.id, operation.toJson());
         StreamControllerSafeEmit.safeAdd(_enqueuedController, null);
       },
@@ -51,6 +76,13 @@ class PendingSyncRepository extends HiveRepositoryBase {
   /// Key in payload for user-scoped sync (e.g. IoT demo); ops without this
   /// for the iot_demo entity type are legacy and are excluded when filter is set.
   static const String payloadKeySupabaseUserId = 'supabaseUserId';
+
+  // Best-effort user scope for dedupe. Not all operations are user-scoped yet;
+  // return null when the payload doesn't have a stable user identifier.
+  String? _userScopeForDedupe(final SyncOperation operation) {
+    final dynamic uid = operation.payload[payloadKeySupabaseUserId];
+    return uid is String && uid.isNotEmpty ? uid : null;
+  }
 
   /// Retrieves a list of pending [SyncOperation]s that are ready to be retried.
   ///
