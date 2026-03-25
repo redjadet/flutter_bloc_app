@@ -135,6 +135,7 @@ emit_integration_scorecard_event() {
   local integration_pass="0"
   local ended_at
   local duration_ms
+  local workspace_fingerprint
 
   ended_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
   duration_ms="$(python3 - "$INTEGRATION_START_EPOCH_MS" <<'PY'
@@ -144,6 +145,7 @@ start_ms = int(sys.argv[1])
 print(max(0, int(time.time() * 1000) - start_ms))
 PY
 )"
+  workspace_fingerprint="$(python3 "$PROJECT_ROOT/tool/validation_reuse.py" fingerprint 2>/dev/null || true)"
 
   if [ "${INTEGRATION_SCORECARD_SKIPPED:-0}" = "1" ]; then
     event_status="cancelled"
@@ -160,6 +162,7 @@ PY
     --ended-at "$ended_at" \
     --duration-ms "$duration_ms" \
     --risk-class high \
+    --workspace-fingerprint "$workspace_fingerprint" \
     --checklist-pass null \
     --router-pass null \
     --integration-pass "$integration_pass" \

@@ -9,6 +9,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
     if (trimmed.isEmpty) {
       return;
     }
+    final int requestId = nextRequestId();
 
     final ChatConversation baseConversation = _ensureActiveConversation();
     final DateTime now = DateTime.now();
@@ -43,6 +44,9 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
     );
 
     await _persistHistory(historyAfterUser);
+    if (isClosed || !isRequestCurrent(requestId)) {
+      return;
+    }
 
     await CubitExceptionHandler.executeAsync(
       operation: () => _repository.sendMessage(
@@ -55,6 +59,9 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
       ),
       isAlive: () => !isClosed,
       onSuccess: (final result) {
+        if (isClosed || !isRequestCurrent(requestId)) {
+          return;
+        }
         final DateTime replyTimestamp = DateTime.now();
         final ChatMessage replyWithMetadata = ChatMessage(
           author: result.reply.author,
@@ -82,6 +89,9 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
         unawaited(_persistHistory(finalHistory));
       },
       onError: (final errorMessage) {
+        if (isClosed || !isRequestCurrent(requestId)) {
+          return;
+        }
         _emitConversationSnapshot(
           active: withUser,
           history: historyAfterUser,
@@ -94,6 +104,9 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
       specificExceptionHandlers: {
         ChatException: (final error, final stackTrace) {
           final ChatException exception = error as ChatException;
+          if (isClosed || !isRequestCurrent(requestId)) {
+            return;
+          }
           _emitConversationSnapshot(
             active: withUser,
             history: historyAfterUser,
@@ -104,6 +117,9 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
         },
         ChatOfflineEnqueuedException: (final error, final stackTrace) {
           AppLogger.info('Chat message queued for offline sync');
+          if (isClosed || !isRequestCurrent(requestId)) {
+            return;
+          }
           _emitConversationSnapshot(
             active: withUser,
             history: historyAfterUser,

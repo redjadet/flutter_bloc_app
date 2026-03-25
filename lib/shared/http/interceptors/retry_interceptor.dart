@@ -20,7 +20,10 @@ class RetryInterceptor extends Interceptor {
   final RetryNotificationService? _retryNotificationService;
   final Future<void> Function(Duration delay) _waitForDelay;
 
-  static const String _keyRetryCount = 'retry_count';
+  static const String extraRetryCount = 'retry_count';
+  static const String extraAllowRetryNonIdempotent =
+      'allow_retry_non_idempotent';
+  static const String extraSkipRetry = 'skip_retry';
 
   @override
   Future<void> onResponse(
@@ -28,6 +31,14 @@ class RetryInterceptor extends Interceptor {
     final ResponseInterceptorHandler handler,
   ) async {
     if (!_isTransientStatusCode(response.statusCode ?? 0)) {
+      handler.next(response);
+      return;
+    }
+    if (!_shouldConsiderRetry(response.requestOptions)) {
+      AppLogger.debug(
+        'RetryInterceptor: skip retry (not allowed): '
+        '${response.requestOptions.method} ${response.requestOptions.uri}',
+      );
       handler.next(response);
       return;
     }
@@ -49,6 +60,14 @@ class RetryInterceptor extends Interceptor {
       handler.next(err);
       return;
     }
+    if (!_shouldConsiderRetry(err.requestOptions)) {
+      AppLogger.debug(
+        'RetryInterceptor: skip retry (not allowed): '
+        '${err.requestOptions.method} ${err.requestOptions.uri}',
+      );
+      handler.next(err);
+      return;
+    }
     final _RetryResult result = await _retryError(err);
     if (result.response case final Response<dynamic> response) {
       handler.resolve(response);
@@ -59,6 +78,32 @@ class RetryInterceptor extends Interceptor {
       return;
     }
     handler.next(err);
+  }
+
+  bool _shouldConsiderRetry(final RequestOptions options) {
+    if (options.extra[extraSkipRetry] == true) {
+      return false;
+    }
+    if (_isMultipart(options)) {
+      return true; // multipart is handled explicitly (skip) in retry paths
+    }
+    if (_isIdempotentMethod(options.method)) {
+      return true;
+    }
+    return options.extra[extraAllowRetryNonIdempotent] == true;
+  }
+
+  bool _isIdempotentMethod(final String method) {
+    switch (method.toUpperCase()) {
+      case 'GET':
+      case 'HEAD':
+      case 'PUT':
+      case 'DELETE':
+      case 'OPTIONS':
+      case 'TRACE':
+        return true;
+    }
+    return false;
   }
 
   bool _canRetry(final DioException err) {
@@ -171,12 +216,12 @@ class RetryInterceptor extends Interceptor {
     );
 
     await _waitForDelay(delay);
-    requestOptions.extra[_keyRetryCount] = attempt + 1;
+    requestOptions.extra[extraRetryCount] = attempt + 1;
     return _dio.fetch<dynamic>(requestOptions);
   }
 
   int _retryCountFrom(final RequestOptions requestOptions) =>
-      (requestOptions.extra[_keyRetryCount] as int?) ?? 0;
+      (requestOptions.extra[extraRetryCount] as int?) ?? 0;
 }
 
 class _RetryResult {

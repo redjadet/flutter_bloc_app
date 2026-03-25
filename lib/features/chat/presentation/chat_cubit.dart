@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 import 'package:meta/meta.dart';
 
 part 'chat_cubit_history_actions.dart';
@@ -50,6 +51,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
   final ChatRepository _repository;
   final ChatHistoryRepository _historyRepository;
   final List<String> _models;
+  final RequestIdGuard _requestIdGuard = RequestIdGuard();
 
   List<String> get models => _models;
   String get _currentModel {
@@ -67,6 +69,17 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
   void emitState(final ChatState newState) {
     if (isClosed) return;
     emit(newState);
+  }
+
+  @protected
+  int nextRequestId() => _requestIdGuard.next();
+
+  @protected
+  bool isRequestCurrent(final int id) => _requestIdGuard.isCurrent(id);
+
+  @protected
+  void invalidateRequests() {
+    _requestIdGuard.invalidate();
   }
 
   void clearError() {

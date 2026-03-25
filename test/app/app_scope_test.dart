@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/responsive/responsive.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
@@ -13,6 +14,7 @@ import '../test_helpers.dart' as test_helpers;
 
 class _CountingBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   int startCount = 0;
+  int flushCount = 0;
 
   @override
   Stream<SyncStatus> get statusStream => const Stream<SyncStatus>.empty();
@@ -47,7 +49,9 @@ class _CountingBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> dispose() async {}
 
   @override
-  Future<void> flush() async {}
+  Future<void> flush() async {
+    flushCount += 1;
+  }
 
   @override
   Future<void> triggerFromFcm({final String? hint}) async {}
@@ -109,5 +113,47 @@ void main() {
     await tester.pump();
 
     expect(coordinator.startCount, 1);
+  });
+
+  testWidgets('debounces a single flush after app resumes', (
+    WidgetTester tester,
+  ) async {
+    final coordinator = _CountingBackgroundSyncCoordinator();
+    final test_helpers.FakeTimerService timerService =
+        test_helpers.FakeTimerService();
+    if (getIt.isRegistered<BackgroundSyncCoordinator>()) {
+      getIt.unregister<BackgroundSyncCoordinator>();
+    }
+    if (getIt.isRegistered<TimerService>()) {
+      getIt.unregister<TimerService>();
+    }
+    getIt.registerSingleton<BackgroundSyncCoordinator>(coordinator);
+    getIt.registerSingleton<TimerService>(timerService);
+
+    final GoRouter router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (final context, final state) => const SizedBox.shrink(),
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(AppScope(router: router));
+    await tester.pump();
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+
+    expect(coordinator.flushCount, 0);
+
+    timerService.elapse(const Duration(milliseconds: 499));
+    await tester.pump();
+    expect(coordinator.flushCount, 0);
+
+    timerService.elapse(const Duration(milliseconds: 1));
+    await tester.pump();
+    expect(coordinator.flushCount, 1);
   });
 }

@@ -19,6 +19,7 @@
     "delegate_used": { "type": "boolean" },
     "delegate_mode": { "type": ["string", "null"] },
     "delegate_fail_reason": { "type": ["string", "null"] },
+    "workspace_fingerprint": { "type": ["string", "null"], "minLength": 1 },
     "checklist_pass": { "type": ["boolean", "null"] },
     "router_validate_pass": { "type": ["boolean", "null"] },
     "integration_pass": { "type": ["boolean", "null"] },
