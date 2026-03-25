@@ -182,13 +182,7 @@ if [[ -n "${focus//[[:space:]]/}" ]]; then
   focus_block="Additional focus: $focus"
 fi
 
-prompt_file="$(mktemp)"
-cleanup() {
-  rm -f "$prompt_file"
-}
-trap cleanup EXIT
-
-cat >"$prompt_file" <<EOF
+prompt_text="$(cat <<EOF
 Review the current git diff from this Flutter/Dart repository.
 
 Return findings only, ordered by severity.
@@ -209,10 +203,16 @@ $stat_output
 Diff:
 $diff_output
 EOF
+)"
 
-cmd=("$wrapper" "--workspace" "$workspace" "--profile" "$profile")
+cmd=(
+  "$wrapper"
+  "--workspace" "$workspace"
+  "--profile" "$profile"
+  "--skip-firebase-mcp"
+)
 if [[ "$raw_response" == "true" ]]; then
   cmd+=("--raw-response")
 fi
 
-cat "$prompt_file" | "${cmd[@]}"
+printf '%s\n' "$prompt_text" | "${cmd[@]}"
