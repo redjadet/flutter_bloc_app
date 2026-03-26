@@ -20,6 +20,10 @@ import 'package:flutter_bloc_app/features/igaming_demo/presentation/game_cubit.d
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/lobby_cubit.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/pages/game_page.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/pages/lobby_page.dart';
+import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/fake_in_app_purchase_repository.dart';
+import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/flutter_in_app_purchase_repository.dart';
+import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_cubit.dart';
+import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/pages/in_app_purchase_demo_page.dart';
 import 'package:flutter_bloc_app/features/iot_demo/iot_demo.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/widgets/iot_demo_auth_gate.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_service.dart';
@@ -180,6 +184,19 @@ List<GoRoute> createDemoRoutes() => <GoRoute>[
         ),
       );
     },
+  ),
+  GoRoute(
+    path: AppRoutes.iapDemoPath,
+    name: AppRoutes.iapDemo,
+    builder: (final context, final state) =>
+        BlocProviderHelpers.withAsyncInit<InAppPurchaseDemoCubit>(
+          create: () => InAppPurchaseDemoCubit(
+            fakeRepository: getIt<FakeInAppPurchaseRepository>(),
+            realRepository: getIt<FlutterInAppPurchaseRepository>(),
+          ),
+          init: (final cubit) => cubit.initialize(),
+          child: const InAppPurchaseDemoPage(),
+        ),
   ),
 ];
 
