@@ -1905,4 +1905,65 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsSupabaseAuth => 'Auth Supabase';
+
+  @override
+  String get commonYes => 'Yes';
+
+  @override
+  String get commonNo => 'No';
+
+  @override
+  String get exampleIapDemoButton => 'In-app purchases (IAP) demo';
+
+  @override
+  String get iapDemoPageTitle => 'In-App Purchases';
+
+  @override
+  String get iapDemoDisclaimer =>
+      'Store IAP demo. Real purchases require App Store / Play sandbox testing. For emulator/simulator, use the simulated flow.';
+
+  @override
+  String get iapDemoUseFakeRepoLabel => 'Use simulated purchases';
+
+  @override
+  String get iapDemoForceOutcomeLabel => 'Force outcome';
+
+  @override
+  String get iapDemoEntitlementsTitle => 'Entitlements';
+
+  @override
+  String get iapDemoCreditsLabel => 'Credits';
+
+  @override
+  String get iapDemoPremiumLabel => 'Premium owned';
+
+  @override
+  String get iapDemoSubscriptionLabel => 'Subscription active';
+
+  @override
+  String get iapDemoSubscriptionExpiryLabel => 'Subscription expiry';
+
+  @override
+  String get iapDemoRestoreButton => 'Restore purchases';
+
+  @override
+  String get iapDemoProductsTitle => 'Products';
+
+  @override
+  String get iapDemoConsumablesTitle => 'Consumables';
+
+  @override
+  String get iapDemoNonConsumablesTitle => 'Non-consumables';
+
+  @override
+  String get iapDemoSubscriptionsTitle => 'Subscriptions';
+
+  @override
+  String get iapDemoLastResultLabel => 'Last result';
+
+  @override
+  String get iapDemoBuyButton => 'Buy';
+
+  @override
+  String get iapDemoNoProductsFound => 'No products found.';
 }

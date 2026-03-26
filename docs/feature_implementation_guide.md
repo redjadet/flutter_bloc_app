@@ -234,7 +234,7 @@ tool/test_coverage.sh
 
 ## 10. In-App Purchases
 
-**Status:** Not implemented.
+**Status:** Partially implemented (demo).
 
 **How to implement (iOS + Android):**
 
@@ -245,6 +245,8 @@ tool/test_coverage.sh
 - **Testing:** Use sandbox (iOS) and test tracks (Android); mock the repository in bloc/widget tests. Respect lifecycle guards after async (e.g. `isClosed`, `context.mounted`).
 
 **Reference:** Flutter docs and platform docs (App Store Connect, Play Console) for product setup and compliance.
+
+**Repo docs:** `docs/features/in_app_purchase_demo.md`
 
 ---
 

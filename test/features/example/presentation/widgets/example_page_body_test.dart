@@ -40,6 +40,7 @@ void main() {
             onOpenScapes: () {},
             onOpenWalletconnectAuth: () {},
             onOpenCameraGallery: () {},
+            onOpenIapDemo: () {},
           ),
         ),
       );
@@ -90,6 +91,7 @@ void main() {
             onOpenScapes: () {},
             onOpenWalletconnectAuth: () {},
             onOpenCameraGallery: () {},
+            onOpenIapDemo: () {},
           ),
         ),
       );
