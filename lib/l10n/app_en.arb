@@ -2455,5 +2455,85 @@
   "settingsSupabaseAuth": "Supabase Auth",
   "@settingsSupabaseAuth": {
     "description": "Settings link label to open Supabase auth page"
+  },
+  "commonYes": "Yes",
+  "@commonYes": {
+    "description": "Common affirmative label"
+  },
+  "commonNo": "No",
+  "@commonNo": {
+    "description": "Common negative label"
+  },
+  "exampleIapDemoButton": "In-app purchases (IAP) demo",
+  "@exampleIapDemoButton": {
+    "description": "Button label on Example page to open the IAP demo"
+  },
+  "iapDemoPageTitle": "In-App Purchases",
+  "@iapDemoPageTitle": {
+    "description": "Title for the IAP demo page"
+  },
+  "iapDemoDisclaimer": "Store IAP demo. Real purchases require App Store / Play sandbox testing. For emulator/simulator, use the simulated flow.",
+  "@iapDemoDisclaimer": {
+    "description": "Disclaimer text shown on the IAP demo page"
+  },
+  "iapDemoUseFakeRepoLabel": "Use simulated purchases",
+  "@iapDemoUseFakeRepoLabel": {
+    "description": "Label for toggling between fake and real store repositories"
+  },
+  "iapDemoForceOutcomeLabel": "Force outcome",
+  "@iapDemoForceOutcomeLabel": {
+    "description": "Label for the forced outcome demo control"
+  },
+  "iapDemoEntitlementsTitle": "Entitlements",
+  "@iapDemoEntitlementsTitle": {
+    "description": "Section title for entitlements summary"
+  },
+  "iapDemoCreditsLabel": "Credits",
+  "@iapDemoCreditsLabel": {
+    "description": "Label for consumable credits balance"
+  },
+  "iapDemoPremiumLabel": "Premium owned",
+  "@iapDemoPremiumLabel": {
+    "description": "Label for non-consumable entitlement"
+  },
+  "iapDemoSubscriptionLabel": "Subscription active",
+  "@iapDemoSubscriptionLabel": {
+    "description": "Label for subscription entitlement"
+  },
+  "iapDemoSubscriptionExpiryLabel": "Subscription expiry",
+  "@iapDemoSubscriptionExpiryLabel": {
+    "description": "Label for subscription expiry value"
+  },
+  "iapDemoRestoreButton": "Restore purchases",
+  "@iapDemoRestoreButton": {
+    "description": "Button label to restore purchases"
+  },
+  "iapDemoProductsTitle": "Products",
+  "@iapDemoProductsTitle": {
+    "description": "Section title for the product list"
+  },
+  "iapDemoConsumablesTitle": "Consumables",
+  "@iapDemoConsumablesTitle": {
+    "description": "Title for consumable products section"
+  },
+  "iapDemoNonConsumablesTitle": "Non-consumables",
+  "@iapDemoNonConsumablesTitle": {
+    "description": "Title for non-consumable products section"
+  },
+  "iapDemoSubscriptionsTitle": "Subscriptions",
+  "@iapDemoSubscriptionsTitle": {
+    "description": "Title for subscription products section"
+  },
+  "iapDemoLastResultLabel": "Last result",
+  "@iapDemoLastResultLabel": {
+    "description": "Label for displaying the last purchase result"
+  },
+  "iapDemoBuyButton": "Buy",
+  "@iapDemoBuyButton": {
+    "description": "Buy button label prefix"
+  },
+  "iapDemoNoProductsFound": "No products found.",
+  "@iapDemoNoProductsFound": {
+    "description": "Shown when no products are available"
   }
 }
