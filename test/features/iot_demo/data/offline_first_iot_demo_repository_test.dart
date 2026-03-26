@@ -108,36 +108,28 @@ void main() {
             toggledOn: false,
           ),
         ];
-        final OfflineFirstIotDemoRepository repo = buildRepository(
+        final OfflineFirstIotDemoRepository seedRepo = buildRepository(
           remote: remote,
         );
-        await repo.pullRemote();
-        final List<List<IotDevice>> emissions = <List<IotDevice>>[];
-        final Completer<void> secondEmission = Completer<void>();
-        final StreamSubscription<List<IotDevice>> sub = repo
+        await seedRepo.pullRemote();
+
+        // For this test we only care about local update propagation.
+        // Use a repo with `remote: null` to avoid enqueue side-effects.
+        final OfflineFirstIotDemoRepository repo = buildRepository();
+        final List<IotDevice> before = await repo
             .watchDevices(IotDemoDeviceFilter.toggledOffOnly)
-            .listen((final list) {
-              emissions.add(List<IotDevice>.from(list));
-              if (emissions.length == 1) {
-                Future<void>.delayed(
-                  const Duration(milliseconds: 50),
-                  () async {
-                    await repo.sendCommand(
-                      'd1',
-                      const IotDeviceCommand.toggle(),
-                    );
-                  },
-                );
-              } else if (emissions.length >= 2 && !secondEmission.isCompleted) {
-                secondEmission.complete();
-              }
-            });
-        await secondEmission.future.timeout(const Duration(seconds: 5));
-        await sub.cancel();
-        expect(emissions.length, greaterThanOrEqualTo(2));
-        expect(emissions.first.single.id, 'd1');
-        expect(emissions.first.single.toggledOn, isFalse);
-        expect(emissions[1], isEmpty);
+            .first
+            .timeout(const Duration(seconds: 5));
+        expect(before.single.id, 'd1');
+        expect(before.single.toggledOn, isFalse);
+
+        await repo.sendCommand('d1', const IotDeviceCommand.toggle());
+
+        final List<IotDevice> after = await repo
+            .watchDevices(IotDemoDeviceFilter.toggledOffOnly)
+            .firstWhere((final list) => list.isEmpty)
+            .timeout(const Duration(seconds: 5));
+        expect(after, isEmpty);
       },
     );
 

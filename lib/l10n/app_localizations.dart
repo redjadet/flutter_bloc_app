@@ -3472,6 +3472,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Supabase Auth'**
   String get settingsSupabaseAuth;
+
+  /// Common affirmative label
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get commonYes;
+
+  /// Common negative label
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get commonNo;
+
+  /// Button label on Example page to open the IAP demo
+  ///
+  /// In en, this message translates to:
+  /// **'In-app purchases (IAP) demo'**
+  String get exampleIapDemoButton;
+
+  /// Title for the IAP demo page
+  ///
+  /// In en, this message translates to:
+  /// **'In-App Purchases'**
+  String get iapDemoPageTitle;
+
+  /// Disclaimer text shown on the IAP demo page
+  ///
+  /// In en, this message translates to:
+  /// **'Store IAP demo. Real purchases require App Store / Play sandbox testing. For emulator/simulator, use the simulated flow.'**
+  String get iapDemoDisclaimer;
+
+  /// Label for toggling between fake and real store repositories
+  ///
+  /// In en, this message translates to:
+  /// **'Use simulated purchases'**
+  String get iapDemoUseFakeRepoLabel;
+
+  /// Label for the forced outcome demo control
+  ///
+  /// In en, this message translates to:
+  /// **'Force outcome'**
+  String get iapDemoForceOutcomeLabel;
+
+  /// Section title for entitlements summary
+  ///
+  /// In en, this message translates to:
+  /// **'Entitlements'**
+  String get iapDemoEntitlementsTitle;
+
+  /// Label for consumable credits balance
+  ///
+  /// In en, this message translates to:
+  /// **'Credits'**
+  String get iapDemoCreditsLabel;
+
+  /// Label for non-consumable entitlement
+  ///
+  /// In en, this message translates to:
+  /// **'Premium owned'**
+  String get iapDemoPremiumLabel;
+
+  /// Label for subscription entitlement
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription active'**
+  String get iapDemoSubscriptionLabel;
+
+  /// Label for subscription expiry value
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription expiry'**
+  String get iapDemoSubscriptionExpiryLabel;
+
+  /// Button label to restore purchases
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchases'**
+  String get iapDemoRestoreButton;
+
+  /// Section title for the product list
+  ///
+  /// In en, this message translates to:
+  /// **'Products'**
+  String get iapDemoProductsTitle;
+
+  /// Title for consumable products section
+  ///
+  /// In en, this message translates to:
+  /// **'Consumables'**
+  String get iapDemoConsumablesTitle;
+
+  /// Title for non-consumable products section
+  ///
+  /// In en, this message translates to:
+  /// **'Non-consumables'**
+  String get iapDemoNonConsumablesTitle;
+
+  /// Title for subscription products section
+  ///
+  /// In en, this message translates to:
+  /// **'Subscriptions'**
+  String get iapDemoSubscriptionsTitle;
+
+  /// Label for displaying the last purchase result
+  ///
+  /// In en, this message translates to:
+  /// **'Last result'**
+  String get iapDemoLastResultLabel;
+
+  /// Buy button label prefix
+  ///
+  /// In en, this message translates to:
+  /// **'Buy'**
+  String get iapDemoBuyButton;
+
+  /// Shown when no products are available
+  ///
+  /// In en, this message translates to:
+  /// **'No products found.'**
+  String get iapDemoNoProductsFound;
 }
 
 class _AppLocalizationsDelegate

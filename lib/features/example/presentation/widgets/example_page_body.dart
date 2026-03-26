@@ -24,6 +24,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.onOpenScapes,
     required this.onOpenWalletconnectAuth,
     required this.onOpenCameraGallery,
+    required this.onOpenIapDemo,
     required this.onRunIsolates,
     required this.isRunningIsolates,
     required this.isolateError,
@@ -55,6 +56,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onOpenScapes;
   final VoidCallback onOpenWalletconnectAuth;
   final VoidCallback onOpenCameraGallery;
+  final VoidCallback onOpenIapDemo;
   final VoidCallback? onRunIsolates;
   final bool isRunningIsolates;
   final String? isolateError;
@@ -226,6 +228,13 @@ class ExamplePageBody extends StatelessWidget {
             onPressed: onOpenCameraGallery,
             icon: Icons.camera_alt_outlined,
             label: l10n.exampleCameraGalleryButton,
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenIapDemo,
+            icon: Icons.shopping_cart_checkout_outlined,
+            label: l10n.exampleIapDemoButton,
           ),
           SizedBox(height: context.responsiveGapL),
           _buildIconButton(
