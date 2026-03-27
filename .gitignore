@@ -97,3 +97,6 @@ fastlane/report.xml
 
 # Local direnv config (do not commit)
 .envrc
+
+# Local agent scorecard log (do not commit)
+analysis/agent_scorecard/scorecard-events.jsonl

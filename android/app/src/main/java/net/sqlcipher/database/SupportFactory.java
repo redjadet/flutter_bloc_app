@@ -5,6 +5,14 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper;
 /**
  * Bridge the legacy SQLCipher package used by WalletConnect to the maintained
  * sqlcipher-android artifact, which ships 16 KB-compatible native libraries.
+ *
+ * This compatibility class is required because WalletConnect still references
+ * the legacy package name in compiled bytecode:
+ * - com.walletconnect:android-core:1.24.0 (android-core-1.24.0.aar)
+ * - classes:
+ *   - com.walletconnect.android.di.CoreStorageModuleKt
+ *   - com.walletconnect.android.di.CoreStorageModuleKt$coreStorageModule$1$1
+ *   - com.walletconnect.android.di.CoreStorageModuleKt$sdkBaseStorageModule$1$1
  */
 public final class SupportFactory implements SupportSQLiteOpenHelper.Factory {
     private final net.zetetic.database.sqlcipher.SupportOpenHelperFactory delegate;
