@@ -65,12 +65,13 @@ Android map key is provided through a manifest placeholder:
 - Placeholder setup: `android/app/build.gradle`
 - Manifest meta-data: `android/app/src/main/AndroidManifest.xml`
 
-`build.gradle` uses:
+`build.gradle` resolves the placeholder from Gradle properties or environment:
 
 ```gradle
-manifestPlaceholders["GOOGLE_MAPS_API_KEY"] =
-    project.findProperty("GOOGLE_MAPS_ANDROID_API_KEY")
-    ?: "YOUR_ANDROID_GOOGLE_MAPS_API_KEY"
+def mapsKey = (project.findProperty("GOOGLE_MAPS_ANDROID_API_KEY")
+        ?: System.getenv("GOOGLE_MAPS_ANDROID_API_KEY")
+        ?: System.getenv("GOOGLE_MAPS_API_KEY"))
+manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = mapsKey ?: "YOUR_ANDROID_GOOGLE_MAPS_API_KEY"
 ```
 
 `AndroidManifest.xml` consumes it:
@@ -91,6 +92,26 @@ GOOGLE_MAPS_ANDROID_API_KEY=your_android_maps_key
 ```
 
 You can also pass it from CI with `-PGOOGLE_MAPS_ANDROID_API_KEY=...`.
+
+### Alternative local setup (environment variable)
+
+For local development (for example when running `flutter run` from your shell),
+you can export an environment variable instead of touching Gradle files:
+
+```bash
+export GOOGLE_MAPS_ANDROID_API_KEY="your_android_maps_key"
+# then run flutter as usual
+flutter run -d emulator-5554
+```
+
+### Release builds
+
+Release builds for Play Store should source keys from `.env.android.release` and
+use the release wrapper script:
+
+```bash
+./tool/release_android_play.sh build_release
+```
 
 ## iOS Setup
 
@@ -113,7 +134,7 @@ The map page checks key availability at runtime for non-iOS-map mode:
 
 - Dart service: `lib/shared/platform/native_platform_service.dart`
 - Android channel check:
-  `android/app/src/main/kotlin/com/example/flutter_bloc_app/MainActivity.kt`
+  `android/app/src/main/kotlin/com/ilkersevim/blocflutter/MainActivity.kt`
 - iOS channel check: `ios/Runner/AppDelegate.swift`
 
 If key is missing/placeholder, UI shows a dedicated missing-key message instead

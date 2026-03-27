@@ -30,6 +30,7 @@ Information is used only to:
 Depending on enabled features, the App may interact with third-party services such as:
 
 - **Google Maps Platform** (map display)
+- **Firebase** (analytics/crash reporting/auth, if enabled)
 - **Supabase** (backend / authentication)
 - **Hugging Face** (AI/chat demo)
 - **Google Gemini / Google APIs** (AI demo, if configured)
@@ -52,5 +53,4 @@ We may update this policy from time to time. The "Last updated" date will reflec
 
 If you have questions about this Privacy Policy, contact:
 
-- Email: `privacy@example.com`
-
+- Open an issue in the repository or contact the maintainer via the repository’s primary contact channel.

@@ -1,0 +1,242 @@
+fastlane_version '2.221.0'
+
+default_platform(:android)
+
+def project_root
+  File.expand_path('..', __dir__)
+end
+
+def metadata_path
+  File.expand_path(File.join(__dir__, 'metadata', 'android'))
+end
+
+def release_notes_for(locale, build_number)
+  explicit_path = File.join(metadata_path, locale, 'changelogs', "#{build_number}.txt")
+  default_path = File.join(metadata_path, locale, 'changelogs', 'default.txt')
+
+  return File.read(explicit_path).strip if File.exist?(explicit_path)
+  return File.read(default_path).strip if File.exist?(default_path)
+
+  "Release build #{build_number}"
+end
+
+def bump_pubspec_build_number!
+  pubspec_path = File.join(project_root, 'pubspec.yaml')
+  UI.user_error!("pubspec.yaml not found at #{pubspec_path}") unless File.exist?(pubspec_path)
+
+  content = File.read(pubspec_path)
+  match = content.match(/^version:\s*(\d+\.\d+\.\d+)\+(\d+)/)
+  UI.user_error!('Could not locate version line in pubspec.yaml') unless match
+
+  semantic_version = match[1]
+  build_number = match[2].to_i + 1
+  updated_line = "version: #{semantic_version}+#{build_number}"
+
+  File.write(pubspec_path, content.sub(match[0], updated_line))
+  UI.message("Updated pubspec.yaml build number to #{build_number}")
+
+  { version: semantic_version, build_number: build_number }
+end
+
+def current_pubspec_version
+  pubspec_path = File.join(project_root, 'pubspec.yaml')
+  content = File.read(pubspec_path)
+  match = content.match(/^version:\s*(\d+\.\d+\.\d+)\+(\d+)/)
+  UI.user_error!('Could not locate version line in pubspec.yaml') unless match
+  { version: match[1], build_number: match[2].to_i }
+end
+
+def ensure_release_inputs!
+  UI.user_error!(
+    'Set ANDROID_PACKAGE_NAME before Play upload.',
+  ) if ENV['ANDROID_PACKAGE_NAME'].to_s.strip.empty?
+
+  UI.user_error!(
+    'Set ANDROID_JSON_KEY to a local service account JSON path for Play upload.',
+  ) if ENV['ANDROID_JSON_KEY'].to_s.strip.empty?
+
+  UI.user_error!(
+    "Service account key not found at #{ENV['ANDROID_JSON_KEY']}",
+  ) unless File.exist?(ENV['ANDROID_JSON_KEY'])
+
+  UI.user_error!(
+    'Set SUPABASE_URL before release builds.',
+  ) if ENV['SUPABASE_URL'].to_s.strip.empty?
+
+  UI.user_error!(
+    'Set SUPABASE_ANON_KEY before release builds.',
+  ) if ENV['SUPABASE_ANON_KEY'].to_s.strip.empty?
+
+  UI.user_error!(
+    'Set HUGGINGFACE_API_KEY before release builds.',
+  ) if ENV['HUGGINGFACE_API_KEY'].to_s.strip.empty?
+
+  begin
+    require 'json'
+    data = JSON.parse(File.read(ENV['ANDROID_JSON_KEY']))
+    required_keys = %w[client_email private_key project_id token_uri]
+    missing = required_keys.reject { |k| data.key?(k) && !data[k].to_s.strip.empty? }
+    UI.user_error!(
+      "ANDROID_JSON_KEY is missing required fields: #{missing.join(', ')}",
+    ) unless missing.empty?
+  rescue JSON::ParserError => e
+    UI.user_error!(
+      "ANDROID_JSON_KEY is not valid JSON: #{e.message}",
+    )
+  end
+end
+
+def aab_path_for(flavor)
+  cleaned_flavor = flavor.to_s.strip
+  if !cleaned_flavor.empty?
+    "build/app/outputs/bundle/#{cleaned_flavor}Release/app-#{cleaned_flavor}-release.aab"
+  else
+    'build/app/outputs/bundle/release/app-release.aab'
+  end
+end
+
+def resolve_aab_path(flavor)
+  relative = aab_path_for(flavor)
+  absolute = File.expand_path(relative, project_root)
+  return absolute if File.exist?(absolute)
+
+  fallback = Dir.glob(File.join(project_root, '**', 'app-*-release.aab'))
+                .find { |p| p.include?('/outputs/bundle/') }
+  return fallback if fallback && File.exist?(fallback)
+
+  nil
+end
+
+platform :android do
+  desc 'Run preflight checks for Android Play deploy lanes'
+  lane :preflight do
+    ensure_release_inputs!
+    UI.message("Using package #{ENV['ANDROID_PACKAGE_NAME']}")
+    UI.message("Using key file #{ENV['ANDROID_JSON_KEY']}")
+  end
+
+  desc 'Build a release appbundle via Flutter'
+  lane :build_release do |options|
+    flavor = (options[:flavor] || ENV['ANDROID_BUILD_FLAVOR']).to_s.strip
+    flavor = nil if flavor.empty?
+    bundle_dir = 'build/app/outputs/bundle'
+    bump_build = options.key?(:bump_build) ? options[:bump_build] : true
+
+    build_info = bump_build ? bump_pubspec_build_number! : current_pubspec_version
+    UI.message("Preparing release build for #{build_info[:version]}+#{build_info[:build_number]}")
+
+    Dir.chdir(project_root) do
+      sh('flutter', 'pub', 'get')
+      sh('dart', 'run', 'tool/prepare_release.dart')
+
+      args = %w[flutter build appbundle --release]
+      args << '--no-tree-shake-icons' if ENV['ANDROID_NO_TREE_SHAKE_ICONS'] != 'false'
+      args << '--flavor' << flavor if flavor
+      dart_defines = {
+        'HUGGINGFACE_API_KEY' => ENV['HUGGINGFACE_API_KEY'],
+        'HUGGINGFACE_MODEL' => ENV['HUGGINGFACE_MODEL'],
+        'HUGGINGFACE_USE_CHAT_COMPLETIONS' => ENV['HUGGINGFACE_USE_CHAT_COMPLETIONS'],
+        'SUPABASE_URL' => ENV['SUPABASE_URL'],
+        'SUPABASE_ANON_KEY' => ENV['SUPABASE_ANON_KEY'],
+        'GEMINI_API_KEY' => ENV['GEMINI_API_KEY'],
+        # Keep compatibility with existing code that falls back Google->Gemini.
+        'GOOGLE_API_KEY' => ENV['GOOGLE_API_KEY'],
+      }
+
+      dart_defines.each do |key, value|
+        next if value.to_s.strip.empty?
+        args << "--dart-define=#{key}=#{value.to_s.strip}"
+      end
+
+      redacted = dart_defines
+                  .select { |_k, v| !v.to_s.strip.empty? }
+                  .transform_values { |_v| '<redacted>' }
+      UI.message("Building appbundle with dart-defines: #{redacted.keys.join(', ')}")
+      sh(*args, log: false)
+
+      sh('ls', '-R', bundle_dir) if ENV['FL_FASTLANE_DEBUG'] == 'true'
+    end
+
+    build_info
+  end
+
+  desc 'Sync listing metadata/screenshots from fastlane/metadata/android to Play'
+  lane :metadata_sync do |options|
+    track = options[:track] || ENV['ANDROID_PLAY_TRACK'] || 'internal'
+    locale = options[:locale] || ENV['ANDROID_METADATA_LOCALE'] || 'en-US'
+
+    preflight
+    UI.user_error!(
+      "Metadata directory missing at #{metadata_path}",
+    ) unless Dir.exist?(metadata_path)
+
+    upload_to_play_store(
+      track: track,
+      skip_upload_aab: true,
+      skip_upload_apk: true,
+      skip_upload_changelogs: false,
+      metadata_path: metadata_path,
+      skip_upload_images: false,
+      skip_upload_metadata: false,
+      skip_upload_screenshots: false,
+      json_key: ENV['ANDROID_JSON_KEY'],
+      package_name: ENV['ANDROID_PACKAGE_NAME'],
+    )
+  end
+
+  desc 'Build + upload AAB to Internal testing'
+  lane :upload_internal do |options|
+    upload_track(options.merge(track: 'internal'))
+  end
+
+  desc 'Build + upload AAB to requested Play track'
+  lane :upload_track do |options|
+    track = options[:track] || ENV['ANDROID_PLAY_TRACK'] || 'internal'
+    flavor = (options[:flavor] || ENV['ANDROID_BUILD_FLAVOR']).to_s.strip
+    flavor = nil if flavor.empty?
+    locale = options[:locale] || ENV['ANDROID_METADATA_LOCALE'] || 'en-US'
+    bump_build = options.key?(:bump_build) ? options[:bump_build] : true
+
+    preflight
+    build_info = build_release(flavor: flavor, bump_build: bump_build)
+    UI.message("Preparing Play upload for #{build_info[:version]}+#{build_info[:build_number]}")
+
+    aab = resolve_aab_path(flavor)
+    UI.user_error!(
+      "Could not find AAB. Expected #{aab_path_for(flavor)} (from project root)",
+    ) unless aab
+
+    upload_to_play_store(
+      track: track,
+      aab: aab,
+      release_status: options[:release_status] || 'draft',
+      skip_upload_changelogs: false,
+      skip_upload_apk: true,
+      skip_upload_images: ENV['ANDROID_UPLOAD_IMAGES'] != 'true',
+      skip_upload_metadata: ENV['ANDROID_UPLOAD_METADATA'] != 'true',
+      skip_upload_screenshots: ENV['ANDROID_UPLOAD_SCREENSHOTS'] != 'true',
+      metadata_path: metadata_path,
+      json_key: ENV['ANDROID_JSON_KEY'],
+      package_name: ENV['ANDROID_PACKAGE_NAME'],
+    )
+  end
+
+  desc 'Promote release from one Play track to another'
+  lane :promote_track do |options|
+    from_track = options[:from] || ENV['ANDROID_PROMOTE_FROM'] || 'internal'
+    to_track = options[:to] || ENV['ANDROID_PROMOTE_TO'] || 'production'
+    release_status = options[:release_status] || ENV['ANDROID_RELEASE_STATUS'] || 'draft'
+    rollout = options[:rollout] || ENV['ANDROID_ROLLOUT_FRACTION']
+
+    preflight
+
+    promote_track(
+      track: from_track,
+      to_track: to_track,
+      release_status: release_status,
+      rollout: rollout,
+      json_key: ENV['ANDROID_JSON_KEY'],
+      package_name: ENV['ANDROID_PACKAGE_NAME'],
+    )
+  end
+end

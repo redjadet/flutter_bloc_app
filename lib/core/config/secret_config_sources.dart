@@ -81,25 +81,49 @@ Future<void> _persistToSecureStorage(final SecretStorage storage) async {
 
 void _applySecrets(final Map<String, dynamic> json) {
   for (final _SecretStorageField field in _secureStorageFields) {
+    if (!json.containsKey(field.envKey)) {
+      continue;
+    }
+    // Never overwrite an already loaded value (secure storage has precedence).
+    final String? current = field.readValue()?.trim();
+    if (current != null && current.isNotEmpty) {
+      continue;
+    }
     field.applyNormalized(json[field.envKey]);
   }
 
-  final Object? flag = json['HUGGINGFACE_USE_CHAT_COMPLETIONS'];
-  if (flag is bool) {
-    SecretConfig._useChatCompletions = flag;
-  } else if (flag is String) {
-    SecretConfig._useChatCompletions = flag.toLowerCase() == 'true';
-  } else {
-    SecretConfig._useChatCompletions = false;
+  if (json.containsKey('HUGGINGFACE_USE_CHAT_COMPLETIONS')) {
+    if (SecretConfig._useChatCompletions) {
+      // Keep previously loaded 'true' (secure storage has precedence).
+    } else {
+      final Object? flag = json['HUGGINGFACE_USE_CHAT_COMPLETIONS'];
+      if (flag is bool) {
+        SecretConfig._useChatCompletions = flag;
+      } else if (flag is String) {
+        SecretConfig._useChatCompletions = flag.toLowerCase() == 'true';
+      } else {
+        SecretConfig._useChatCompletions = false;
+      }
+    }
   }
-  final String? googleKey = stringFromDynamic(json['GOOGLE_API_KEY'])?.trim();
-  final String? geminiKey = SecretConfig._geminiApiKey;
-  final String? resolvedKey = (geminiKey?.isNotEmpty ?? false)
-      ? geminiKey
-      : googleKey;
-  SecretConfig._geminiApiKey = (resolvedKey?.isEmpty ?? true)
-      ? null
-      : resolvedKey;
+  if (json.containsKey('GOOGLE_API_KEY') ||
+      json.containsKey('GEMINI_API_KEY')) {
+    final String? current = SecretConfig._geminiApiKey?.trim();
+    if (current != null && current.isNotEmpty) {
+      // secure storage has precedence; do not overwrite
+    } else {
+      final String? googleKey = stringFromDynamic(
+        json['GOOGLE_API_KEY'],
+      )?.trim();
+      final String? geminiKey = SecretConfig._geminiApiKey;
+      final String? resolvedKey = (geminiKey?.isNotEmpty ?? false)
+          ? geminiKey
+          : googleKey;
+      SecretConfig._geminiApiKey = (resolvedKey?.isEmpty ?? true)
+          ? null
+          : resolvedKey;
+    }
+  }
 }
 
 bool _hasSecrets(final Map<String, dynamic>? source) {

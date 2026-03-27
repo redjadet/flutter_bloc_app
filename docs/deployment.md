@@ -179,6 +179,10 @@ This section provides a step-by-step guide to deploy this Flutter app to the Goo
 | **Firebase** | `android/app/google-services.json` (generate via `flutterfire configure`) |
 | **Signing** | Release keystore (`.jks` or `.keystore`); store credentials securely |
 
+For the repo’s current, script-first workflow, follow:
+
+- [Android Play Store Release SOP](android_play_store_release_sop.md)
+
 ### Google Play – Step 1: Play Console Setup
 
 1. **Create the app** (if not already created):
@@ -206,14 +210,12 @@ Ensure `android/app/key.properties` (or your chosen path) is **not** committed. 
 ### Google Play – Step 3: Prepare Release Build
 
 ```bash
-# Scrub secrets before packaging
-dart run tool/prepare_release.dart
-
-# Build release App Bundle (required for Play Store)
-flutter build appbundle --release
+# Run the release wrapper (sources .env.android.release)
+./tool/release_android_play.sh preflight
+./tool/release_android_play.sh build_release
 ```
 
-Output: `build/app/outputs/bundle/release/app-release.aab`
+Output AAB: `build/app/outputs/bundle/release/app-release.aab`
 
 ### Google Play – Step 4: Upload to Play Console
 

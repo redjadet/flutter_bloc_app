@@ -16,8 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
-
+version: 1.0.0+20
 environment:
   sdk: ^3.9.2
 
@@ -102,6 +101,7 @@ dev_dependencies:
     path: custom_lints/file_length_lint
   firebase_auth_mocks: ^0.15.0
   firebase_core_platform_interface: ^6.0.2
+  flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
@@ -141,7 +141,9 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/config/
+    - assets/config/realtime_database_seed.json
+    - assets/config/secrets.sample.json
+    - assets/icons/
     - assets/images/
     - assets/playlearn/files/
     - assets/figma/
@@ -193,3 +195,15 @@ flutter:
     - family: Comfortaa
       fonts:
         - asset: assets/fonts/Comfortaa-Regular.ttf
+    - family: SocialIcons
+      fonts:
+        - asset: packages/firebase_ui_auth/fonts/SocialIcons.ttf
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/icons/app_icon_google_style.png
+  remove_alpha_ios: true
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: assets/icons/app_icon_foreground.png
+  adaptive_icon_foreground_inset: 8

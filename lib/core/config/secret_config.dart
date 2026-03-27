@@ -76,16 +76,27 @@ class SecretConfig {
 
     final SecretStorage storage =
         _configuredStorage ?? FlutterSecureSecretStorage();
+    // In debug, allow local asset secrets by default so `flutter run` works
+    // without repeated dart-define flags. Release remains disabled.
     final bool assetFallbackAllowed =
-        (_envAllowsAssetFallback || allowAssetFallback) && !kReleaseMode;
+        (_envAllowsAssetFallback || allowAssetFallback || kDebugMode) &&
+        !kReleaseMode;
 
     try {
       final bool loadedFromSecure = await _loadFromSource(
         () => _readSecureSecrets(storage),
       );
       if (loadedFromSecure) {
-        _loaded = true;
-        return;
+        _logHuggingFaceTokenDiagnostics(source: 'secure_storage');
+        if (_needsRemoteFallback) {
+          AppLogger.warning(
+            'SecretConfig: secure storage is partial; continuing fallback to '
+            'asset/env sources for missing credentials.',
+          );
+        } else {
+          _loaded = true;
+          return;
+        }
       }
 
       if (assetFallbackAllowed) {
@@ -94,8 +105,11 @@ class SecretConfig {
           afterApply: () => _persistGoogleMapsKey(storage),
         );
         if (loadedFromAssets) {
-          _loaded = true;
-          return;
+          _logHuggingFaceTokenDiagnostics(source: 'asset_secrets');
+          if (!_needsRemoteFallback) {
+            _loaded = true;
+            return;
+          }
         }
       }
 
@@ -107,6 +121,7 @@ class SecretConfig {
             : null,
       );
       if (loadedFromEnvironment) {
+        _logHuggingFaceTokenDiagnostics(source: 'dart_define_env');
         _loaded = true;
         return;
       }
@@ -116,10 +131,49 @@ class SecretConfig {
         'environment. Features requiring remote access (Hugging Face, Gemini, '
         'Supabase) remain disabled.',
       );
+      _logHuggingFaceTokenDiagnostics(source: 'none');
     } on Exception catch (error, stackTrace) {
       AppLogger.warning('SecretConfig.load failed');
       AppLogger.error('SecretConfig.load', error, stackTrace);
       _loaded = false;
     }
+  }
+
+  static void _logHuggingFaceTokenDiagnostics({required final String source}) {
+    if (kReleaseMode) {
+      // Never log any token material in release builds (even masked).
+      return;
+    }
+    final String? token = _huggingfaceApiKey;
+    final String? model = _huggingfaceModel;
+    if (token == null || token.isEmpty) {
+      AppLogger.warning(
+        'SecretConfig: Hugging Face token not loaded (source=$source).',
+      );
+      return;
+    }
+
+    final String suffix = token.length > 4
+        ? token.substring(token.length - 4)
+        : token;
+    final String selectedModel = model ?? 'HuggingFaceH4/zephyr-7b-beta';
+    AppLogger.info(
+      'SecretConfig: Hugging Face token loaded '
+      '(source=$source, len=${token.length}, suffix=***$suffix, model=$selectedModel)',
+    );
+  }
+
+  static bool get _hasHuggingFaceToken {
+    final String? token = _huggingfaceApiKey;
+    return token != null && token.isNotEmpty;
+  }
+
+  static bool get _needsRemoteFallback {
+    final bool hfMissing = !_hasHuggingFaceToken;
+    final bool supabaseMissing =
+        (_supabaseUrl == null || _supabaseUrl!.trim().isEmpty) ||
+        (_supabaseAnonKey == null || _supabaseAnonKey!.trim().isEmpty);
+    // Maps/Gemini are optional; focus on features that hard-fail or log noisy skips.
+    return hfMissing || supabaseMissing;
   }
 }

@@ -121,8 +121,8 @@ tool/test_coverage.sh
 **How it was implemented:**
 
 - **iOS (App Store):** Prerequisites (Apple Developer Program, Xcode, Firebase config, distribution signing). Steps: App Store Connect setup → switch to distribution entitlements (`./tool/ios_entitlements.sh distribution`) → `dart run tool/prepare_release.dart` → `flutter build ios --release` → archive in Xcode or `bundle exec fastlane ios appstore` / `ios testflight`. TestFlight: same build, assign to internal/external testers in App Store Connect.
-- **Android (Play Store):** Play Console setup, App Signing by Google Play or upload key, `dart run tool/prepare_release.dart` → `flutter build appbundle --release` → upload AAB via Play Console or `bundle exec fastlane android deploy track:production` (or internal/alpha/beta).
-- **Fastlane:** iOS: `adhoc`, `testflight`, `appstore`; Android: `deploy` with track. Both support Firebase App Distribution lanes (`firebase_distribute`).
+- **Android (Play Store):** Script-first pipeline via `./tool/release_android_play.sh` which sources `.env.android.release`, validates required inputs, bumps the `pubspec.yaml` build number (`x.y.z+N`), builds an AAB, and can upload/promote via Fastlane.
+- **Fastlane:** Android lanes live in `fastlane/Fastfile` (`preflight`, `build_release`, `metadata_sync`, `upload_internal`, `upload_track`, `promote_track`). iOS lanes are separate.
 
 **References:**
 

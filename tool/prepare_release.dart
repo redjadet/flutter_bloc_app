@@ -5,11 +5,25 @@ import 'dart:io';
 /// Usage:
 ///   dart run tool/prepare_release.dart
 ///
-/// The script replaces `assets/config/secrets.json` with the sanitized contents
-/// of `assets/config/secrets.sample.json`, or a minimal placeholder if the
-/// sample is unavailable. Run this right before `flutter build` for release
-/// flavors to guarantee that no live credentials are bundled.
+/// By default, this script does **not** modify any files.
+///
+/// Opt-in scrubbing:
+///   SCRUB_ASSET_SECRETS=true dart run tool/prepare_release.dart
+///
+/// When enabled, the script replaces `assets/config/secrets.json` with the
+/// sanitized contents of `assets/config/secrets.sample.json`, or a minimal
+/// placeholder if the sample is unavailable.
 void main(final List<String> args) {
+  final bool scrubEnabled =
+      Platform.environment['SCRUB_ASSET_SECRETS']?.toLowerCase().trim() ==
+      'true';
+  if (!scrubEnabled) {
+    stdout.writeln(
+      'prepare_release: SCRUB_ASSET_SECRETS not enabled; leaving secrets.json untouched.',
+    );
+    return;
+  }
+
   final File secretsFile = File('assets/config/secrets.json');
   final File sampleFile = File('assets/config/secrets.sample.json');
 

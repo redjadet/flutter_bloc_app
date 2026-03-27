@@ -1,3 +1,28 @@
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+    }
+}
+
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+
+subprojects { subproject ->
+    configurations.configureEach {
+        // The legacy SQLCipher artifact ships 4 KB-aligned 64-bit .so files,
+        // which fails Play's 16 KB page-size compatibility checks.
+        exclude group: "net.zetetic", module: "android-database-sqlcipher"
+    }
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
+
 // Fix "Namespace not specified" and manifest package attribute for plugin modules (e.g. wallet_connect_v2) when using AGP 8+.
 // See docs/firebase_app_distribution.md § Namespace not specified (Android).
 subprojects { subproject ->
@@ -10,6 +35,10 @@ subprojects { subproject ->
                 // wallet_connect_v2: AGP 8+ rejects package in AndroidManifest; set namespace in build.gradle to match.
                 if (subproject.name == "wallet_connect_v2") {
                     namespace = "com.avacus.wallet_connect_v2"
+                    // wallet_connect_v2 is pinned to compileSdk 31; force 36 to satisfy transitive AndroidX requirements.
+                    if (hasProperty("compileSdkVersion")) {
+                        compileSdkVersion 36
+                    }
                 }
             }
         }
