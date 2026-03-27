@@ -1,0 +1,9 @@
+flutter_bloc_app demonstrates clean architecture with Flutter, Cubit/BLoC state management, and modular feature flows. It includes demo screens for counters, charts, chat, settings, and additional integrations while keeping maintainable boundaries between domain, data, and presentation layers.
+
+Key highlights:
+- Clean Architecture (Domain -> Data -> Presentation)
+- Cubit/BLoC-based state management
+- Dependency injection with get_it
+- Integration and validation tooling for release safety
+
+This app is actively validated through automated checklist and integration test gates before release.

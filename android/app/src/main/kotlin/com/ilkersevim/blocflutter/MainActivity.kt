@@ -1,4 +1,4 @@
-package com.example.flutter_bloc_app
+package com.ilkersevim.blocflutter
 
 import android.content.Intent
 import android.content.IntentFilter

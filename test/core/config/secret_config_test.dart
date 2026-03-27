@@ -62,7 +62,7 @@ void main() {
     );
   });
 
-  test('ignores asset secrets when fallback disabled', () async {
+  test('uses asset secrets by default in debug builds', () async {
     final _FakeSecretStorage storage = _FakeSecretStorage();
     SecretConfig.storage = storage;
 
@@ -73,7 +73,7 @@ void main() {
 
     await SecretConfig.load(allowAssetFallback: false);
 
-    expect(SecretConfig.huggingfaceApiKey, isNull);
+    expect(SecretConfig.huggingfaceApiKey, 'asset-key');
     expect(storage.writeCalls, isEmpty);
   });
 
@@ -190,6 +190,50 @@ void main() {
       expect(SecretConfig.huggingfaceApiKey, 'stored-token');
       expect(SecretConfig.huggingfaceModel, 'stored-model');
       expect(SecretConfig.googleMapsApiKey, 'stored-maps');
+    },
+  );
+
+  test(
+    'falls back when secure storage is partial for Hugging Face token',
+    () async {
+      final _FakeSecretStorage storage = _FakeSecretStorage(
+        initialValues: <String, String>{
+          _FakeSecretStorage.googleMapsKey: 'maps-secure',
+        },
+      );
+      SecretConfig.storage = storage;
+      SecretConfig.debugAssetBundle = _FakeAssetBundle(
+        jsonEncode(<String, dynamic>{'HUGGINGFACE_API_KEY': 'asset-hf-token'}),
+      );
+
+      await SecretConfig.load();
+
+      expect(SecretConfig.googleMapsApiKey, 'maps-secure');
+      expect(SecretConfig.huggingfaceApiKey, 'asset-hf-token');
+    },
+  );
+
+  test(
+    'falls back when secure storage is partial for Supabase credentials',
+    () async {
+      final _FakeSecretStorage storage = _FakeSecretStorage(
+        initialValues: <String, String>{
+          _FakeSecretStorage.hfTokenKey: 'secure-hf-token',
+        },
+      );
+      SecretConfig.storage = storage;
+      SecretConfig.debugAssetBundle = _FakeAssetBundle(
+        jsonEncode(<String, dynamic>{
+          'SUPABASE_URL': 'https://asset.supabase.co',
+          'SUPABASE_ANON_KEY': 'asset-anon',
+        }),
+      );
+
+      await SecretConfig.load();
+
+      expect(SecretConfig.huggingfaceApiKey, 'secure-hf-token');
+      expect(SecretConfig.supabaseUrl, 'https://asset.supabase.co');
+      expect(SecretConfig.supabaseAnonKey, 'asset-anon');
     },
   );
 }

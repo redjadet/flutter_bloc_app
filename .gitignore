@@ -91,3 +91,8 @@ analysis/agent_scorecard/scorecard-events-*.jsonl
 AGENTS.md
 docs/gstack_integration.md
 tmp_test_write.md
+.env.android.release
+fastlane/keys/*.json
+
+# Local direnv config (do not commit)
+.envrc

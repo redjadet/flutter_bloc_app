@@ -1,13 +1,20 @@
 plugins {
     id "com.android.application"
-    id "com.google.gms.google-services"
-    id "com.google.firebase.crashlytics"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
+    id "com.google.firebase.crashlytics"
+}
+
+
+def keystorePropertiesFile = rootProject.file("key.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 android {
-    namespace = "com.example.flutter_bloc_app"
+    namespace = "com.ilkersevim.blocflutter"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,24 +28,48 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.flutter_bloc_app"
+        applicationId = "com.ilkersevim.blocflutter"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        def googleMapsAndroidApiKey =
+            project.findProperty("GOOGLE_MAPS_ANDROID_API_KEY") ?:
+            System.getenv("GOOGLE_MAPS_ANDROID_API_KEY") ?:
+            System.getenv("GOOGLE_MAPS_API_KEY")
         manifestPlaceholders["GOOGLE_MAPS_API_KEY"] =
-            project.findProperty("GOOGLE_MAPS_ANDROID_API_KEY") ?: "YOUR_ANDROID_GOOGLE_MAPS_API_KEY"
+            googleMapsAndroidApiKey ?: "YOUR_ANDROID_GOOGLE_MAPS_API_KEY"
+    }
+
+    signingConfigs {
+        release {
+            if (keystorePropertiesFile.exists()) {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
+        }
     }
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("debug")
+            if (keystorePropertiesFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            } else {
+                throw new GradleException("Release signing requires android/key.properties and a valid keystore.")
+            }
         }
     }
 }
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation "androidx.sqlite:sqlite:2.3.1"
+    implementation "net.zetetic:sqlcipher-android:4.14.0"
 }
 
 afterEvaluate {

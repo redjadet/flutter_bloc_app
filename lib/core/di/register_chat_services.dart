@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
@@ -17,9 +18,20 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Registers all chat-related services and repositories.
 void registerChatServices() {
+  final String? hfKey = SecretConfig.huggingfaceApiKey;
+  final bool hfConfigured = hfKey != null && hfKey.trim().isNotEmpty;
+  if (!kReleaseMode) {
+    AppLogger.info(
+      'Chat: Hugging Face configured=$hfConfigured '
+      '(model=${SecretConfig.huggingfaceModel ?? 'HuggingFaceH4/zephyr-7b-beta'}, '
+      'chatCompletions=${SecretConfig.useChatCompletions})',
+    );
+  }
+
   registerLazySingletonIfAbsent<HuggingFaceApiClient>(
     () => HuggingFaceApiClient(
       dio: getIt<Dio>(),
