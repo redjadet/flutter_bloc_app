@@ -93,6 +93,7 @@ docs/gstack_integration.md
 tmp_test_write.md
 .env.android.release
 fastlane/keys/*.json
+fastlane/report.xml
 
 # Local direnv config (do not commit)
 .envrc
