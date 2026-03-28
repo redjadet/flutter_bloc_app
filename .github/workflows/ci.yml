@@ -47,7 +47,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  FLUTTER_VERSION: '3.41.5'
+  FLUTTER_VERSION: '3.41.6'
   COVERAGE_THRESHOLD: '60'
   IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS: '300'
   IOS_SIMULATOR_PREFERRED_NAMES: 'iPhone 17e,iPhone 17 Pro,iPhone 17,iPhone 16e,iPhone 16 Pro,iPhone 16'

@@ -5,7 +5,7 @@ engineering: clear architecture, robust state management, strong validation, and
 production-minded development workflow.
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.6-blue.svg)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/Dart-3.11.3-blue.svg)](https://dart.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.11.4-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
 [![Coverage](https://img.shields.io/badge/Coverage-77%2E77%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
@@ -37,7 +37,7 @@ linked below rather than this README.
 ### Prerequisites
 
 - Flutter 3.41.6
-- Dart 3.11.3
+- Dart 3.11.4
 - iOS 12+ / Android API 21+
 
 ```bash
