@@ -1,151 +1,122 @@
 # Testing Overview
 
-This document summarizes test coverage, test types, testing patterns, and common commands.
+This document describes the repo's testing layers, validation commands, and the
+current integration suite layout. It complements the shell validators described
+in [Validation Scripts](validation_scripts.md).
+
+## Source of truth
+
+- Coverage report: [`coverage/coverage_summary.md`](../coverage/coverage_summary.md)
+- Integration flow structure: [Integration Flow Guide](testing_integration_flows.md)
+- Validation scripts: [Validation Scripts](validation_scripts.md)
+- CI workflow: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
+
+## Quality gates
+
+| Command | Purpose |
+| --- | --- |
+| `./bin/checklist` | Primary local gate for formatting, analysis, validator scripts, tests, and coverage workflow. |
+| `./bin/integration_tests` | Runs integration flows on a supported non-web device. |
+| `tool/test_coverage.sh` | Runs unit, bloc, widget, and other coverage-producing tests. |
+| `dart run tool/update_coverage_summary.dart` | Refreshes `coverage/coverage_summary.md`. |
+
+CI runs `./bin/checklist` on push and pull request. The macOS integration job is
+manual-only through GitHub Actions workflow dispatch and supports the
+`smoke`, `standard`, and `exhaustive` rollout tiers defined in
+`.github/workflows/ci.yml`.
 
 ## Coverage
 
-- **Current Coverage**: Tracked in `coverage/coverage_summary.md`
-- **Target**: 85%+ baseline
-- **Exclusions**: Mocks, simple data classes, configs, debug utils, platform widgets, and part files
+- Coverage is tracked in [`coverage/coverage_summary.md`](../coverage/coverage_summary.md).
+- CI enforces a line-coverage threshold using `coverage/lcov.info`.
+- Generated files, localization output, simple data classes, and other
+  low-signal artifacts are excluded from totals.
 
-## Test Types
+## Test layers
 
-### Unit Tests
+| Layer | Scope | Typical location |
+| --- | --- | --- |
+| Unit tests | Pure Dart logic, repositories, services, helpers | `test/**` |
+| Bloc tests | Cubit/BLoC state transitions and side-effect boundaries | `test/**` |
+| Widget tests | Screen and widget behavior, interaction, and layout | `test/**` |
+| Golden tests | Visual regressions for deterministic UIs | `test/**` |
+| Integration tests | End-to-end flows, navigation, persistence, and cross-feature behavior | `integration_test/**` |
+| Performance traces | Focused integration/perf harnesses and traces | `integration_test/perf/**` |
 
-- Isolated function and class testing
-- Pure logic, repositories, utilities
-- No Flutter dependencies
+## Integration suite layout
 
-### Bloc Tests
+### Main entrypoints
 
-- State flow testing with `bloc_test` package
-- State machine behavior verification
-- Fast execution without widget pumps
+| File | Purpose |
+| --- | --- |
+| `integration_test/pr_smoke_flows_test.dart` | Smallest high-signal smoke suite intended for PR-level confidence. |
+| `integration_test/smoke_flows_test.dart` | Broader local smoke coverage. |
+| `integration_test/standard_flows_test.dart` | Standard integration tier aligned with CI workflow dispatch. |
+| `integration_test/extended_flows_test.dart` | Heavier persistence, refresh, and filter scenarios. |
+| `integration_test/all_flows_test.dart` | Aggregates the full flow suite. |
+| `integration_test/perf/perf_smoke_flows_test.dart` | Performance-oriented smoke harness. |
 
-### Widget Tests
+### Harness and helpers
 
-- UI component and interaction testing
-- Rendering and user interaction verification
-- Platform-adaptive component testing
+- `integration_test/test_harness.dart`
+- `integration_test/test_harness_fakes.dart`
+- `integration_test/flow_scenarios*.dart`
+- `integration_test/widget_tester_pumps.dart`
 
-### Golden Tests
+Use the helper methods in the harness instead of unbounded `pumpAndSettle()`
+for integration flows.
 
-- Visual regression testing
-- Deterministic layout verification
-- Use `golden_toolkit` for consistent results
-
-### Integration Tests
-
-- End-to-end app flow verification under `integration_test/`
-- Runs on a supported non-web device via `./bin/integration_tests` or `tool/run_integration_tests.sh`
-- Use `CHECKLIST_INTEGRATION_DEVICE=<deviceId>` when multiple devices are attached
-- On macOS, the script now prefers an iPhone simulator, attempts to boot a preferred iPhone simulator if Flutter has not listed one yet, and refuses to fall back to the `macos` desktop target unless `ALLOW_DESKTOP_INTEGRATION_DEVICE=1` is set explicitly
-- `integration_test/pr_smoke_flows_test.dart` covers the smaller GitHub PR smoke suite; `integration_test/smoke_flows_test.dart` keeps a broader local smoke pass available without requiring the full suite
-- `integration_test/extended_flows_test.dart` keeps heavier persistence, refresh, and filter scenarios available without blocking every PR run
-- Running the full suite via `./bin/integration_tests` still targets `integration_test/all_flows_test.dart` and refreshes `coverage/coverage_summary.md`; when `coverage/lcov.base.info` exists, integration coverage is merged into that baseline first
-- Use `INTEGRATION_TESTS_RUN_COVERAGE=0` or `INTEGRATION_TESTS_RUN_COVERAGE=false` to skip integration coverage collection and summary refresh when you only need flow validation (for example, CI simulator jobs)
-- **Files**: `app_test.dart` (launch and counter), `counter_persistence_test.dart` (persisted count after restart), `settings_flow_test.dart` (settings, theme, locale), `navigation_flow_test.dart` (counter to example to library demo), `calculator_flow_test.dart` (calculator from home), `graphql_demo_flow_test.dart` (GraphQL demo from overflow menu), `todo_list_flow_test.dart` (todo list add and list), `chat_list_flow_test.dart` (chat list from example), `search_flow_test.dart` (search from example), `websocket_flow_test.dart` (WebSocket from example), `iot_demo_flow_test.dart` (IoT demo from overflow), `charts_flow_test.dart` (charts from overflow), `whiteboard_flow_test.dart` (whiteboard from overflow), `markdown_editor_flow_test.dart` (markdown editor from overflow), `genui_demo_flow_test.dart` (GenUI demo from overflow), `playlearn_flow_test.dart` (playlearn from overflow), `igaming_demo_flow_test.dart` (iGaming demo from overflow)
-
-### Common Bugs Prevention Tests
-
-- Regression tests for common pitfalls
-- Located in `test/shared/common_bugs_prevention_test.dart`
-- Covers context lifecycle, cubit disposal, stream cleanup, completer safety
-- Automatically included in `./bin/checklist` test runs
-
-## Testing Patterns
-
-### Timer-Dependent Tests
-
-- Inject `FakeTimerService` instead of using real timers
-- Advance time with `tick(n)` for deterministic testing
-- Example: Counter auto-decrement timer tests
-
-### Network Image Tests
-
-- Use `pump()` instead of `pumpAndSettle()` with `CachedNetworkImageWidget`
-- Network requests never complete in test environments
-- Use `await tester.pump()` followed by `await tester.pump(const Duration(milliseconds: 100))` if needed
-
-### Hive Repository Tests
-
-- Use temp directory in `setUpAll`
-- Initialize `HiveService` with `HiveKeyManager` and `InMemorySecretStorage`
-- Run `SharedPreferencesMigrationService.migrateIfNeeded()` before tests
-
-### Mock/Fake Services
-
-- `MockFirebaseAuth` + `mock_exceptions` for authentication flows
-- `FakeTimerService().tick(n)` for time-dependent tests
-- `FakeNetworkStatusService` for connectivity testing
-
-### Firestore-Backed Repository Tests
-
-- Mock `FirebaseFirestore`, `CollectionReference`, and `DocumentReference` (or use fakes) to verify writes and reads without hitting Firestore.
-- Record `set()` / `get()` arguments to assert document IDs and payloads (e.g. auth linkage doc vs wallet profile doc).
-- Example: `test/features/walletconnect_auth/data/walletconnect_auth_repository_impl_test.dart`.
-
-### Offline-first / Supabase-backed feature tests
-
-- **GraphQL demo:** cache (`graphql_demo_cache_repository_test.dart`), offline-first coordinator (`offline_first_graphql_demo_repository_test.dart`), auth-aware remote (`auth_aware_graphql_remote_repository_test.dart`), data source badge (`graphql_data_source_badge_test.dart`).
-- **Chart demo:** cache (`chart_demo_cache_repository_test.dart`), offline-first coordinator (`offline_first_chart_repository_test.dart`), auth-aware remote (`auth_aware_chart_remote_repository_test.dart`), data source badge (`chart_data_source_badge_test.dart`).
-
-## Common Commands
+## Common commands
 
 ```bash
-# Run all tests
-flutter test
+# Run the standard local gate
+./bin/checklist
 
-# Run with coverage
-flutter test --coverage
-
-# Run integration tests
-./bin/integration_tests
-
-# Run PR smoke flows only
-./bin/integration_tests integration_test/pr_smoke_flows_test.dart
-
-# Run broader local smoke flows
-./bin/integration_tests integration_test/smoke_flows_test.dart
-
-# Run extended/heavier flows only
-./bin/integration_tests integration_test/extended_flows_test.dart
-
-# Run integration tests directly
-tool/run_integration_tests.sh
-
-# Update coverage summary manually
-dart run tool/update_coverage_summary.dart
-
-# Use automated unit/widget/bloc coverage script
+# Run all non-integration tests with coverage
 tool/test_coverage.sh
 
-# Regenerate golden files (after Flutter upgrades)
-flutter test --update-goldens
+# Run the full integration suite
+./bin/integration_tests
 
-# Run specific test file
+# Run a specific integration entrypoint
+./bin/integration_tests integration_test/pr_smoke_flows_test.dart
+
+# Run a single test file
 flutter test test/features/counter/presentation/counter_cubit_test.dart
+
+# Regenerate golden files
+flutter test --update-goldens
 ```
 
-## Golden Test Regeneration
-
-After Flutter version updates, golden tests may fail due to minor rendering changes. Regenerate golden files:
+If multiple devices are attached, set:
 
 ```bash
-# Regenerate all golden files
-flutter test --update-goldens
-
-# Regenerate specific golden test file
-flutter test --update-goldens test/counter_page_golden_test.dart
+CHECKLIST_INTEGRATION_DEVICE=<deviceId>
 ```
 
-**Note**: Always review the generated golden images to ensure they match expected visual changes before committing.
+If you want integration flow validation without refreshing coverage output:
 
-GitHub Actions does not run the macOS integration job on push or pull request; start **Actions → CI → Run workflow** and enable **`run_integration`** when you want that job (it defaults to off). Golden widget tests are skipped in GitHub Actions CI. If the macOS job runs but no suitable iPhone simulator is available, boot fails, or boot times out, the integration step is skipped instead of failing CI.
+```bash
+INTEGRATION_TESTS_RUN_COVERAGE=false ./bin/integration_tests
+```
 
-## Related Documentation
+## Repo testing conventions
 
-- Test utilities and helpers: `test/test_helpers.dart`
-- Common bugs prevention: `test/shared/common_bugs_prevention_test.dart`
-- Coverage report: `coverage/coverage_summary.md`
-- Developer guide: `docs/new_developer_guide.md`
+- Use `FakeTimerService` for time-dependent behavior.
+- Prefer route-scoped cubit testing over widget-driven state setup when the
+  behavior is business logic, not rendering.
+- Use temporary directories and initialized Hive services for local persistence
+  tests.
+- Prefer `pump()` and bounded helpers for network-image and async-heavy widget
+  tests.
+- Update goldens when rendering changes are intentional and review the image
+  diff before committing.
+- Extend an existing regression guard when fixing a bug instead of creating a
+  parallel duplicate test.
+
+## Related docs
+
+- [Integration Flow Guide](testing_integration_flows.md)
+- [Validation Scripts](validation_scripts.md)
+- [New Developer Guide](new_developer_guide.md)
+- [Code Generation Guide](code_generation_guide.md)

@@ -2,9 +2,16 @@
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+USER_SKILLS="${HOME}/.cursor/skills"
 CODEX_WRAPPER="$PROJECT_ROOT/.cursor/skills/cursor-codex-delegate/scripts/delegate_to_codex.sh"
+if [[ ! -x "$CODEX_WRAPPER" ]]; then
+  CODEX_WRAPPER="$USER_SKILLS/cursor-codex-delegate/scripts/delegate_to_codex.sh"
+fi
 GSTACK_CODEX_SKILL="$PROJECT_ROOT/.agents/skills/gstack/.agents/skills/gstack-codex/SKILL.md"
 CURSOR_WRAPPER="$PROJECT_ROOT/.cursor/skills/codex-cursor-agent-delegate/scripts/delegate_to_cursor_agent.sh"
+if [[ ! -x "$CURSOR_WRAPPER" ]]; then
+  CURSOR_WRAPPER="$USER_SKILLS/codex-cursor-agent-delegate/scripts/delegate_to_cursor_agent.sh"
+fi
 
 tmp_dir="$(mktemp -d)"
 cleanup() {

@@ -10,7 +10,7 @@ Start here for the big picture; drill into the linked docs for specifics.
 | Question | Document |
 | -------- | -------- |
 | How are layers structured? | [Clean Architecture](clean_architecture.md) |
-| How do I add a new feature? | [Feature Implementation Guide](feature_implementation_guide.md) |
+| How do I add a new feature? | [Feature Delivery Guide](feature_implementation_guide.md) |
 | How is SOLID applied? | [SOLID Principles](solid_principles.md) |
 | Where is duplication eliminated? | [DRY Principles](dry_principles.md) |
 | How are responsibilities split? | [Separation of Concerns](separation_of_concerns.md) |

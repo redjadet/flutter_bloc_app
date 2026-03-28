@@ -1,56 +1,52 @@
 # Contributing
 
-Contributions are welcome! Please follow these guidelines to ensure consistency and quality.
+Contributions are welcome. The repo favors small, validated changes that keep
+architecture boundaries, tests, and documentation aligned with behavior.
 
-**For setup, development workflow, and validation details**, see [new_developer_guide](new_developer_guide.md) and [validation_scripts](validation_scripts.md).
+## Before opening a PR
 
-## Before Submitting
+1. Run the right validation scope for your change.
+2. Add or extend tests when behavior changes.
+3. Update the owning docs when setup, workflow, or feature behavior changes.
+4. Keep changes inside the established `Domain -> Data -> Presentation`
+   structure.
 
-1. **Run the checklist** before submitting PRs: `./bin/checklist`
-2. **Write tests** for new features
-3. **Update documentation** as needed
-4. **Follow Clean Architecture** principles (see [clean_architecture.md](clean_architecture.md))
+## Validation commands
 
-## Validation
+| Command | When to use it |
+| --- | --- |
+| `./bin/checklist` | Default local quality gate before opening a PR. |
+| `./bin/integration_tests` | When integration-covered flows changed or you need device-level confidence. |
+| `dart run build_runner build --delete-conflicting-outputs` | When touching generated models, APIs, or annotations. |
 
-The `./bin/checklist` command automatically validates:
+For validator coverage and script behavior, see
+[Validation Scripts](validation_scripts.md). For testing structure and suite
+layout, see [Testing Overview](testing_overview.md).
 
-- Code formatting for changed Dart files
-- Static analysis and validation scripts for code-relevant changes
-- Architecture violations
-- UI/UX best practices
-- Test coverage
+## Documentation expectations
 
-The checklist also avoids unnecessary work:
+Update docs in the same change when you modify:
 
-- `flutter pub get` runs only when dependency metadata changed
-- docs-only change sets exit early instead of running code validation
-- Mix lint and focused Todo layout regressions are skipped automatically when unrelated to the current change set
+- Feature behavior or visible routes
+- Setup or secrets requirements
+- Validation or testing workflow
+- Release or deployment steps
+- Architecture or layering rules
 
-Run integration tests separately with `./bin/integration_tests`. If multiple devices are available, set `CHECKLIST_INTEGRATION_DEVICE=<deviceId>` first. Use `INTEGRATION_TESTS_RUN_COVERAGE=0|false` when you want flow validation without refreshing integration coverage output.
+Prefer updating one source-of-truth doc instead of copying the same explanation
+into several files.
 
-All checks must pass before merging.
+## Where to start
 
-## Related Documentation
+- [New Developer Guide](new_developer_guide.md)
+- [Feature Overview](feature_overview.md)
+- [Feature Delivery Guide](feature_implementation_guide.md)
+- [Clean Architecture](clean_architecture.md)
+- [Tech Stack](tech_stack.md)
 
-### Getting Started
+## Pull request quality bar
 
-- [New Developer Guide](new_developer_guide.md) - Comprehensive getting started guide for new developers
-- [Feature Overview](feature_overview.md) - Catalog of features and capabilities
-- [Feature Implementation Guide](feature_implementation_guide.md) - How to implement common features (push, GraphQL, etc.)
-
-### Architecture & Design
-
-- [Clean Architecture](clean_architecture.md) - Layer responsibilities, examples, and review checklist
-- [Architecture Details](architecture_details.md) - Architecture diagrams and principles
-- [SOLID Principles](solid_principles.md) - Detailed SOLID principles with codebase examples
-- [DRY Principles](dry_principles.md) - DRY consolidations and patterns
-- [Separation of Concerns](separation_of_concerns.md) - Responsibility boundaries across layers and shared services
-- [Code Quality](CODE_QUALITY.md) - Comprehensive code quality analysis including architecture compliance
-
-### Development Guidelines
-
-- [UI/UX Guidelines](ui_ux_responsive_review.md) - Responsive design and platform adaptation
-- [Flutter Best Practices Review](flutter_best_practices_review.md) - Best practices audit with action checklist
-- [Testing Overview](testing_overview.md) - Testing strategy and patterns
-- [Validation Scripts](validation_scripts.md) - Automated validation scripts and their purposes
+- The diff should be understandable without hidden context.
+- New abstractions should earn their keep; reuse existing shared code first.
+- User-facing or cross-cutting changes should include doc updates.
+- Validation should be run before requesting review.

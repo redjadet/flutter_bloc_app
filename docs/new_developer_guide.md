@@ -1,833 +1,177 @@
 # Flutter BLoC App — New Developer Guide
 
-This guide is the fastest path to running the app locally, understanding the architecture, and shipping changes safely.
-
-## Contents
-
-- [Quickstart (first 30 minutes)](#quickstart-first-30-minutes)
-- [Mental model](#1-mental-model)
-- [Repo layout highlights](#2-repository-layout-highlights)
-- [Application flow](#3-application-flow)
-- [Feature module playbook](#4-feature-module-playbook)
-- [Key building blocks](#5-key-building-blocks)
-- [Development workflow](#6-development-workflow)
-- [Testing strategy](#7-testing-strategy)
-- [Tooling & productivity](#8-tooling--productivity)
-- [Responsive & adaptive UI guidelines](#85-responsive--adaptive-ui-guidelines)
-- [Adding a new feature (cheat sheet)](#9-adding-a-new-feature-cheat-sheet)
-- [How do you approach adding new logic to production?](#95-how-do-you-approach-adding-new-logic-to-production)
-- [Common troubleshooting](#10-common-troubleshooting)
-- [DI reference example](#11-di-reference-example)
-- [Best-practice validation scripts](#12-bestpractice-validation-scripts)
-- [What to read next](#13-what-to-read-next)
+This guide is the fastest path to running the app locally, understanding the
+repo shape, and shipping changes safely. It is intentionally onboarding-focused.
+Deeper architecture, testing, deployment, and feature detail live in the
+linked source-of-truth documents.
 
 ## Quickstart (first 30 minutes)
 
-### Prerequisites
+### Toolchain
 
-- **Flutter SDK**: **Flutter 3.41.6** with **Dart 3.11.4** (see [README](../README.md) prerequisites and `.github/workflows/ci.yml` `FLUTTER_VERSION`).
-- **Platform toolchains**:
-  - iOS: Xcode + CocoaPods
-  - Android: Android Studio + SDKs
-  - Optional: Chrome (web), a desktop target (macOS/windows/linux) if you intend to run there
+- Flutter `3.41.6`
+- Dart `3.11.4`
+- Xcode + CocoaPods for iOS work
+- Android Studio + Android SDK for Android work
 
-### Platform-Specific Setup
+The pinned Flutter version comes from [README](../README.md) and
+[`.github/workflows/ci.yml`](../.github/workflows/ci.yml).
 
-**Android:**
+### Environment setup
 
-1. **Firebase:** Place `google-services.json` in `android/app/`. These files are gitignored. See [Firebase Setup](firebase_setup.md) for how to obtain them (recommended: run `flutterfire configure` from repo root).
-2. Add Google Maps API key to `android/app/src/main/AndroidManifest.xml` if using maps feature
-3. Run `flutter build apk` to verify Android build works
+Before running the app, review:
 
-**iOS:**
+- [Firebase Setup](firebase_setup.md)
+- [Security and Secrets](security_and_secrets.md)
+- [Tech Stack](tech_stack.md)
 
-1. **Firebase:** Place `GoogleService-Info.plist` in `ios/Runner/`. These files are gitignored. See [Firebase Setup](firebase_setup.md) for how to obtain them (recommended: run `flutterfire configure` from repo root).
-2. Run `cd ios && pod install && cd ..` after `flutter pub get`
-3. For device deployment with personal Apple ID, use development entitlements:
-
-   ```bash
-   ./tool/ios_entitlements.sh development
-   ```
-
-4. For Ad Hoc/App Store builds (requires paid Apple Developer account):
-
-   ```bash
-   ./tool/ios_entitlements.sh distribution
-   ```
-
-   For automated builds, use [Fastlane](deployment.md#fastlane-ios-lanes-ad-hoc-testflight-app-store): `bundle exec fastlane ios adhoc` (Ad Hoc IPA), `ios testflight` (upload to TestFlight), or `ios appstore` (upload to App Store Connect).
-
-> **Note:** Some packages are platform-specific. See [tech_stack.md](tech_stack.md#platform-specific-dependencies) for details on `apple_maps_flutter` (iOS-only), `window_manager` (desktop-only), etc.
-
-### Get dependencies
+### Install dependencies and run
 
 ```bash
 flutter pub get
-```
-
-### Run the app (pick a flavor)
-
-This repo supports multiple entrypoints (for example `main_dev.dart`, `main_prod.dart`). Run the one you need:
-
-```bash
 flutter run -t lib/main_dev.dart
 ```
 
-### Run the project’s quality gates locally
+Other entrypoints:
 
-This is the “one command” check that formats, analyzes, runs validation scripts, and runs tests/coverage:
+- `lib/main_staging.dart`
+- `lib/main_prod.dart`
+
+### Run the local quality gate
 
 ```bash
 ./bin/checklist
 ```
 
-### Common codegen (when you touch Freezed/JSON/etc.)
+### Run code generation when needed
 
 ```bash
 dart run build_runner build --delete-conflicting-outputs
 ```
 
-## 1. Mental Model
+## 1. Mental model
 
-- **Purpose**: Showcase a feature-rich Flutter app built around Cubits, clean architecture, and real-world integrations (Firebase Auth/Remote Config, Supabase backend for IoT demo when configured—otherwise local-only—and optional Supabase Auth, WebSockets, GraphQL, Google Maps, Hugging Face, GenUI AI-generated UI, Whiteboard with CustomPainter, Markdown Editor with RenderObject, etc.).
-- **Layers**: Domain → Data → Presentation. Domain stays Flutter-agnostic, Data fulfills contracts, Presentation wires Cubits/Widgets via `get_it`.
-- **State Management**: Cubits with immutable (Freezed/Equatable) states. Widgets read via `BlocBuilder`/`BlocSelector` and stay focused on layout/theming/navigation. **Type-safe extensions** (`context.cubit<T>()`, `TypeSafeBlocSelector`, etc.) provide compile-time safety. See [Compile-Time Safety Guide](compile_time_safety.md).
-- **DI & Startup**: `lib/core/di/injector.dart` registers everything into `getIt`. `main_*.dart` files choose the env, call `configureDependencies()`, then bootstrap `MyApp`. The DI code is organized into multiple files:
-  - `injector.dart` - Main file with `configureDependencies()` and public API
-  - `injector_registrations.dart` - All dependency registrations organized by category
-  - `injector_factories.dart` - Factory functions for creating repositories
-  - `injector_helpers.dart` - Helper functions for registration
-- **Navigation**: `go_router` defined in `lib/app.dart`; route constants in `lib/core/router/app_routes.dart`, wiring in `lib/app/router/`.
+- The repo is organized around `Domain -> Data -> Presentation`.
+- Features live under `lib/features/<feature>/`.
+- App-wide composition lives in `lib/app/`, `lib/core/`, and `lib/shared/`.
+- `flutter_bloc` drives state transitions.
+- `get_it` is the composition root and dependency container.
+- Firebase powers core app integrations; Supabase is used where a feature is
+  explicitly configured for it.
+- Offline-first behavior is implemented through cache-first repositories,
+  pending sync storage, and background reconciliation.
 
-## 2. Repository Layout Highlights
+For deeper rationale, see:
 
-| Path | What lives here |
+- [Clean Architecture](clean_architecture.md)
+- [Architecture Details](architecture_details.md)
+- [State Management Choice](state_management_choice.md)
+- [Offline-First Adoption Guide](offline_first/adoption_guide.md)
+
+## 2. Repository layout highlights
+
+| Path | Purpose |
 | --- | --- |
-| `lib/features/<feature>/domain` | Contracts, models, value objects (Flutter-free). |
-| `lib/features/<feature>/data` | Repositories, DTOs, remote/local sources. |
-| `lib/features/<feature>/presentation` | Cubits, pages, widgets, view models. |
-| `lib/shared/` | Cross-cutting helpers: services, widgets, **components** (design primitives), responsive/layout utils, platform adapters. |
-| `lib/core/` | App-wide config: DI, theme (`core/theme/`), constants (`core/constants/`), extensions (`core/extensions/`), routing, error handling. |
-| `assets/` & `l10n/` | Images/fonts plus localization ARB files. |
-| `test/` | Mirrors `lib/` with unit, bloc, widget, golden suites. Flaky or temporarily disabled tests use `@Skip('reason')` in place (see Testing section). |
-| `tool/` | Utilities like `update_coverage_summary.dart`. |
-| `figma-sync/` | Pulls assets/layout manifests from Figma when implementing provided designs. |
-
-## 3. Application Flow
-
-1. Entry (`main_dev.dart`, `main_prod.dart`, etc.) sets flavor configs and calls `bootstrap(const MyApp())`.
-2. `configureDependencies()` registers shared services (timer, platform, logging), repositories, and cubits’ dependencies.
-3. `MyApp` builds `AppScope` and a `MultiBlocProvider`. Most feature cubits (including Counter) are now created at the route level and call `loadInitial()` when deterministic startup work is needed. See DI Reference section below for example.
-4. `GoRouter` resolves screens. Feature pages assemble their cubit(s) + widgets and delegate work to the injected repositories.
-
-### Deferred Feature Loading
-
-This codebase uses **deferred imports** to reduce initial app bundle size and improve startup time. Heavy features are loaded on-demand when users navigate to them.
-
-**Note:** This differs from **Deferred Components** (an Android-specific feature for Play Store dynamic feature modules). This app uses deferred imports, which work across all platforms without requiring Android-specific setup.
-
-**Currently deferred features:**
-
-- Google Maps (heavy native SDK dependencies)
-- Markdown Editor (custom RenderObject implementation)
-- Charts (data visualization libraries)
-- WebSocket (real-time communication libraries)
-
-**Note:** GenUI Demo is not deferred because it uses lightweight SDK dependencies and is intended for quick access during development.
-
-**Add new deferred routes like this:**
-
-```dart
-import 'package:flutter_bloc_app/app/router/deferred_pages/your_feature_page.dart'
-    deferred as your_feature_page;
-
-GoRoute(
-  path: AppRoutes.yourFeaturePath,
-  name: AppRoutes.yourFeature,
-  builder: (context, state) => DeferredPage(
-    loadLibrary: your_feature_page.loadLibrary,
-    builder: (context) => your_feature_page.buildYourFeaturePage(context, state),
-  ),
-),
-```
-
-**Key requirements:**
-
-1. Create a library file in `lib/app/router/deferred_pages/your_feature_page.dart` with a `library;` declaration
-2. Export a builder function (e.g., `buildYourFeaturePage()`) that returns the page widget
-3. Use `deferred as` import syntax in `routes.dart`
-4. Wrap the route builder with `DeferredPage` widget
-
-**How it works:**
-
-- Deferred imports split code into separate chunks that load on-demand
-- When a user navigates to a deferred route, the library is loaded asynchronously
-- `DeferredPage` widget shows a loading indicator during library load
-- Once loaded, the feature code is available for the remainder of the app session
-- Reduces initial bundle size (estimated 9-17 MB saved) and speeds up cold start
-
-**Advanced: Deferred Components (Android-only)**
-For Android apps distributed via Play Store, you can use **Deferred Components** for even more advanced code splitting:
-
-- Features downloaded as dynamic feature modules from Play Store
-- Requires configuration in `pubspec.yaml` under `flutter.deferred-components`
-- Uses `DeferredComponent` utility class instead of `loadLibrary()`
-- See [Flutter Deferred Components documentation](https://docs.flutter.dev/perf/deferred-components) for details
-
-> **See also:** [Lazy Loading Review](lazy_loading_review.md) for a deeper dive into deferred imports and best practices.
-
-## 4. Feature Module Playbook
-
-1. **Domain**: Define contracts (e.g., `CounterRepository`), models, and failures using Freezed/Equatable. Keep imports Dart-only.
-2. **Data**: Implement the contracts (REST, Firebase, shared_preferences, etc.). Translate DTOs ↔ domain models inside this layer.
-3. **Presentation**: Build Cubits and UI. Use `getIt` to inject dependencies via constructors; add view-specific helpers under `presentation/widgets/`.
-4. **Registration**: Wire the concrete repository/service inside `configureDependencies()` so cubits receive it through DI.
-5. **Timer Workflows**: Use `TimerService` (or `FakeTimerService` in tests) for periodic behavior—never create raw `Timer` instances in widgets or cubits.
-6. **Platform Data**: Reach for `NativePlatformService` (MethodChannel-backed) instead of touching platform channels directly in features.
-
-## 5. Key Building Blocks
-
-- **Counter experience**: Lives under `lib/features/counter/`. Auto-decrement logic is driven by `TimerService`, and the state exposes derived values for countdown UI.
-- **Settings**: `lib/features/settings/` owns theme/locale, exposing value objects (`AppLocale`, `ThemePreference`) so domain remains UI-free.
-- **Whiteboard**: Located in `lib/features/example/presentation/widgets/whiteboard/`. Demonstrates low-level Flutter rendering using `CustomPainter` for canvas drawing. Features include stroke management, color selection, width presets, and undo/redo functionality. Accessible via the app bar overflow menu.
-- **Markdown Editor**: Located in `lib/features/example/presentation/widgets/markdown_editor/`. Demonstrates custom `RenderObject` subclass (`MarkdownRenderObject`) for efficient text layout. Uses `markdown` package for parsing and supports GitHub Flavored Markdown. Accessible via the app bar overflow menu.
-- **Networking**: GraphQL, WebSocket, REST integrations sit in their respective feature/data folders. Samples include `CountriesGraphqlRepository`, `EchoWebsocketRepository`, `HuggingfaceChatRepository`, `GenUiDemoAgentImpl`.
-- **Authentication**: `lib/features/auth/` wraps Firebase Auth + FirebaseUI for sign-in/sign-up flows.
-- **Remote Config & Feature Flags**: `RemoteConfigCubit` consumes `RemoteConfigService` to toggle runtime features and initializes lazily via `ensureInitialized()` when a feature needs values.
-  Recent updates expose `RemoteConfigLoading`/`RemoteConfigError` states and wrap calls in `CubitExceptionHandler`, so transient failures log nicely and expose retryable errors instead of crashing the cubit.
-- **Deep Links**: `DeepLinkCubit` cooperates with `AppLinksDeepLinkService` to translate universal/custom links into router locations.
-  The cubit also emits `DeepLinkLoading`/`DeepLinkError`, guards against overlapping `initialize()` calls, and exposes `retryInitialize()` so stream errors tear down safely and restart deterministically.
-- **Cross-cutting Services**: `lib/shared/services/` hosts timer, logging, biometric auth, native platform adapters, etc. Prefer extending these instead of introducing ad-hoc singletons.
-- **Offline-First Architecture**: The app implements a complete offline-first pattern across all core features. See `docs/offline_first/` for detailed documentation.
-  - **Background Sync**: `BackgroundSyncCoordinator` syncs pending operations when online (60s interval) and starts on demand via `SyncStatusCubit.ensureStarted()`
-  - **Sync Status**: `SyncStatusCubit` tracks network status and sync state; widgets consume via `BlocSelector`
-  - **Pending Queue**: `PendingSyncRepository` stores operations that failed while offline; coordinator processes them when online
-  - **Repository Pattern**: Features implement `SyncableRepository` interface with `pullRemote()` and `processOperation()` methods
-  - **Sync Metadata**: Domain models include `synchronized`, `lastSyncedAt`, and `changeId` fields for conflict resolution
-  - **Sync Observability**: Sync status is logged; Sync Diagnostics in Settings (dev/qa only) shows cycle history
-  - **Adoption Guide**: See `docs/offline_first/adoption_guide.md` for step-by-step instructions on adding offline-first to new features
-
-## 6. Development Workflow
-
-Follow the delivery checklist before merging or publishing builds:
-
-1. `flutter pub get`
-2. Codegen when needed (`dart run build_runner build --delete-conflicting-outputs`)
-3. **Run delivery checklist:** `./bin/checklist` (or `tool/delivery_checklist.sh`)
-   - This runs the full validation pipeline for code changes, but skips unnecessary work when possible:
-     - `flutter pub get` only when dependency metadata changed
-     - `dart format` only for changed Dart files
-     - docs-only change sets exit early instead of running code validation
-     - Mix lint runs only when Mix-related files changed
-     - when coverage is disabled, Todo keyboard/layout regressions run only for relevant Todo/layout changes
-   - **Optional:** To use just `checklist` without `./bin/`, add the `bin` directory to your PATH
-4. `flutter build ios --simulator` (only when iOS build risk exists)
-
-### Quality Gates
-
-The delivery checklist script (`./bin/checklist`) automatically runs:
-
-- `flutter pub get` - Only when dependency metadata changed
-- `dart format` - Only for changed Dart files
-- `flutter analyze` - Static analysis (includes native Dart 3.10 analyzer plugins like `file_length_lint`)
-- `tool/test_coverage.sh` - Runs tests with coverage and automatically updates coverage reports
-
-For docs-only change sets, the checklist exits early instead of running code validation. When coverage is disabled, it still runs focused regression suites, but skips the Todo keyboard/layout subset unless the change set is relevant to Todo/layout behavior.
-
-**Run the full checklist before commits:**
-
-```bash
-./bin/checklist
-```
-
-This runs formatting, analysis, validation scripts, and coverage. The validation scripts provide automated guards for architecture, UI/UX, async safety, performance, and memory hygiene. See [Validation Scripts Documentation](validation_scripts.md) for what each script checks and how to suppress false positives when necessary.
-
-Tips:
-
-- Keep files <250 LOC; extract helpers into `shared/` or dedicated widgets when approaching the limit.
-- Run `flutter analyze` to catch repository-specific analyzer plugins (e.g., file length, forbidden imports).
-- `tool/test_coverage.sh` writes the reusable baseline report to `coverage/lcov.base.info` during a full run and refreshes `coverage/lcov.info` + the summary.
-- Run integration tests separately with `./bin/integration_tests`; it prefers an iPhone simulator when available, can be overridden with `CHECKLIST_INTEGRATION_DEVICE=<deviceId>`, refreshes the coverage summary automatically when the full suite runs, and accepts `INTEGRATION_TESTS_RUN_COVERAGE=0|false` when you only want flow validation.
-
-## 7. Testing Strategy
-
-- **Unit & Bloc tests**: Use `bloc_test` + fake repositories/services. Counter, GraphQL, WebSocket, Remote Config cubits all have samples to copy.
-- **Widget/Golden tests**: Live under `test/features/.../presentation`. Use `golden_toolkit` for deterministic layout tests and seed localization/theme providers as needed.
-- **Integration tests**: Live under `integration_test/`. Run them with `./bin/integration_tests` or `tool/run_integration_tests.sh`; they require a supported non-web device. A full-suite run also updates `coverage/coverage_summary.md`, merging into `coverage/lcov.base.info` first when that baseline exists. Use `INTEGRATION_TESTS_RUN_COVERAGE=0|false` to skip coverage collection when you only need flow validation.
-- **Common Bugs Prevention tests**: Located in `test/shared/common_bugs_prevention_test.dart`, these regression tests verify defensive patterns (context lifecycle checks, cubit disposal guards, stream cleanup, etc.). Automatically included when running `./bin/checklist` or `tool/test_coverage.sh`.
-- **Timer-dependent tests**: Inject `FakeTimerService` and advance time with `tick(n)` instead of waiting on real timers.
-- **Network image tests**: When testing widgets that use `CachedNetworkImageWidget`, use `pump()` instead of `pumpAndSettle()` to avoid timeouts. Network requests never complete in test environments, so `pumpAndSettle()` will wait indefinitely. Use `await tester.pump()` followed by `await tester.pump(const Duration(milliseconds: 100))` if needed for async operations.
-- **Auth & Platform fakes**: `MockFirebaseAuth`, mock `NativePlatformService`, `FakeTimerService`, and other utilities live in `test/mocks/` or feature-specific folders.
-- **Skips**: For flaky or temporarily disabled tests, use `@Skip('reason')` on the test or group in the same file; document the reason and remove the skip once the flake is fixed. Regression guards are listed in `tool/check_regression_guards.sh`.
-
-## 8. Tooling & Productivity
-
-- **Figma pipeline**: When asked to implement a `Frame_Node`, configure `figma-sync/.env`, run `npm install`, then `npm run fetch`. Place outputs under `assets/figma/<Frame>_<Node>/` and update `pubspec.yaml`. Follow `layout_manifest.json` stacking order and use `ResilientSvgAssetImage` for rasterized SVGs.
-- **Secrets**: Use `SecretConfig` to load secure config. Never check real secrets into source; rely on `--dart-define` or secure storage. Supabase-backed features (IoT demo backend when configured; otherwise IoT demo runs local-only) and the optional Supabase Auth page use `SUPABASE_URL` and `SUPABASE_ANON_KEY` from the same config; see [Security & Secrets](security_and_secrets.md), [Supabase migrations](../supabase/README.md), and [Authentication](authentication.md#supabase-auth-optional-separate-page).
-- **Logging**: Use `AppLogger` (registered in DI) instead of `print`.
-- **Lint rationale**: `prefer_final_parameters` keeps method inputs immutable, improving readability, reducing accidental reassignment during refactors, and making data flow easier to audit. Performance gains are modest, but immutable parameters can enable clearer intent and reduce defensive copies in hot paths.
-- **Linting philosophy**: We lean on Very Good Analysis for baseline safety and keep project rules focused on clarity and maintainability. `type_annotate_public_apis` makes public surfaces explicit for reviewers and tooling. The file-length lint (250 LOC) encourages smaller units that are easier to test and can reduce rebuild scope in large widgets.
-- **Performance-oriented linting**: VGV enforces `prefer_const_constructors`, `prefer_const_literals_to_create_immutables`, `avoid_unnecessary_containers`, `use_colored_box`, and `no_logic_in_create_state`. These reduce widget tree depth, keep builds lightweight, and make rebuild costs more predictable.
-- **Error handling**: Route recoverable errors through domain failures or `ErrorHandling` helpers; surface user-facing errors via localized messages.
-- **Code conventions**: Use consistent naming for data access: `fetch*` for remote calls, `load*` for cache/initial/stream, `get*` for synchronous single-item access. In catch blocks use `(error, stackTrace)` for clarity.
-- **Localization**: Update ARB files in `lib/l10n/app_*.arb` (en, tr, de, fr, es), run `flutter gen-l10n`, and access strings through `context.l10n`. Never hard-code user-facing strings; always use localization keys.
-- **Image caching**: Use `CachedNetworkImageWidget` from `lib/shared/widgets/` for remote images. It provides automatic caching, loading placeholders, error handling, and memory optimization. `FancyShimmerImage` (used in search/profile/example pages) already includes caching via `cached_network_image` under the hood.
-
-## 8.5. Responsive & Adaptive UI Guidelines
-
-The app follows mobile-first responsive design principles with platform-adaptive components. See `docs/ui_ux_responsive_review.md` for comprehensive UI/UX guidelines.
-
-### Responsive System
-
-Import `package:flutter_bloc_app/shared/extensions/responsive.dart` to access responsive helpers:
-
-**Spacing:**
-
-- `context.responsiveGapXS/S/M/L` - Vertical gaps (scaled by device)
-- `context.responsiveHorizontalGapS/M/L` - Horizontal gaps
-- `context.pageHorizontalPadding` / `context.pageVerticalPadding` - Page-level padding
-- `context.pagePadding` - Full page padding (includes safe-area and keyboard insets)
-- `context.responsiveCardPadding` / `context.responsiveCardMargin` - Card spacing
-
-**Layout:**
-
-- `context.contentMaxWidth` - Maximum content width (560/720/840 for mobile/tablet/desktop)
-- `context.responsiveBorderRadius` / `context.responsiveCardRadius` - Border radii
-- `context.responsiveElevation` / `context.responsiveCardElevation` - Material elevation
-- `context.calculateGridLayout()` - Responsive grid calculations
-- `context.createResponsiveGridDelegate()` - SliverGrid delegate
-
-**Typography:**
-
-- `context.responsiveFontSize` - Base font size (14/16/16)
-- `context.responsiveHeadlineSize` - Headlines (24/32/32)
-- `context.responsiveTitleSize` - Titles (20/24/24)
-- `context.responsiveBodySize` - Body text (14/16/16)
-- `context.responsiveCaptionSize` - Captions (12/14/14)
-- `context.responsiveIconSize` - Icon sizes (20/24/24)
-
-**Example:**
-
-```dart
-Padding(
-  padding: context.pageHorizontalPaddingInsets,
-  child: Column(
-    children: [
-      Text('Title', style: TextStyle(fontSize: context.responsiveTitleSize)),
-      SizedBox(height: context.responsiveGapM),
-      Text('Body', style: TextStyle(fontSize: context.responsiveBodySize)),
-    ],
-  ),
-)
-```
-
-### Platform-Adaptive Components
-
-Always use platform-adaptive helpers instead of raw Material widgets:
-
-**Buttons:**
-
-- `PlatformAdaptive.filledButton()` - Filled button (CupertinoButton.filled on iOS, FilledButton on Android)
-- `PlatformAdaptive.outlinedButton()` - Outlined button (CupertinoButton on iOS, OutlinedButton on Android)
-- `PlatformAdaptive.textButton()` - Text button (CupertinoButton on iOS, TextButton on Android)
-- `PlatformAdaptive.button()` - Generic button (CupertinoButton on iOS, ElevatedButton on Android)
-
-**Dialogs:**
-
-- `PlatformAdaptive.dialogAction()` - Dialog action button
-- Always use `showAdaptiveDialog()` instead of `showDialog()`
-
-**Loading Indicators:**
-
-- `CommonLoadingWidget` - Platform-adaptive (CupertinoActivityIndicator on iOS, CircularProgressIndicator on Android)
-- `CommonLoadingButton` - Button with platform-adaptive loading indicator
-
-**Example:**
-
-```dart
-PlatformAdaptive.filledButton(
-  context: context,
-  onPressed: () {},
-  child: Text(l10n.submitButton),
-)
-```
-
-### Theme-Aware Colors
-
-**Never use hard-coded colors.** Always use `Theme.of(context).colorScheme`:
-
-- **Text:** `colorScheme.onSurface`, `colorScheme.onSurfaceVariant`
-- **Backgrounds:** `colorScheme.surface`, `colorScheme.surfaceContainerHighest`
-- **Borders:** `colorScheme.outline`, `colorScheme.outlineVariant`
-- **Primary:** `colorScheme.primary`, `colorScheme.onPrimary`
-- **Errors:** `colorScheme.error`, `colorScheme.onError`, `colorScheme.errorContainer`
-
-**Example:**
-
-```dart
-final theme = Theme.of(context);
-final colors = theme.colorScheme;
-Container(
-  color: colors.surface,
-  child: Text(
-    'Hello',
-    style: TextStyle(color: colors.onSurface),
-  ),
-)
-```
-
-### Safe Area & Keyboard Handling
-
-**CommonPageLayout** automatically handles safe-area and keyboard insets. For custom layouts:
-
-- Use `context.pagePadding` which includes safe-area and keyboard insets
-- Or wrap with `SafeArea` and add `MediaQuery.viewInsetsOf(context).bottom` for keyboard
-- Use `AnimatedPadding` for smooth keyboard transitions
-
-**Example:**
-
-```dart
-// Good: CommonPageLayout handles this automatically
-CommonPageLayout(
-  title: 'My Page',
-  body: MyContent(),
-)
-
-// Custom layout with safe area
-SafeArea(
-  child: Padding(
-    padding: EdgeInsets.only(
-      bottom: MediaQuery.viewInsetsOf(context).bottom,
-    ),
-    child: MyContent(),
-  ),
-)
-```
-
-### Text Scaling & Accessibility
-
-- Flutter automatically scales text via `MediaQuery.textScalerOf(context)`
-- Use flexible layouts (Column, CustomScrollView) that adapt to text size
-- Avoid fixed heights on text containers; use `minHeight` or flexible constraints
-- Test with text scale 1.3+ (iOS Dynamic Type Largest, Android Font Size Largest)
-- Minimum tap targets: 44x44 (iOS), 48x48 (Android)
-
-**Example:**
-
-```dart
-// Good: Flexible layout
-Column(
-  children: [
-    Text('Title', style: theme.textTheme.headlineSmall),
-    Text('Body', style: theme.textTheme.bodyMedium),
-  ],
-)
-
-// Avoid: Fixed heights that break with large text
-Container(
-  height: 50, // ❌ Breaks with large text
-  child: Text('Content'),
-)
-```
-
-### Shared Layout Components
-
-- **CommonPageLayout**: Consistent page shell with safe-area-aware padding, app bar, and responsive constraints
-- **CommonAppBar**: Platform-adaptive app bar with consistent navigation
-- **CommonErrorView**: Error display with platform-adaptive retry button
-- **CommonLoadingWidget**: Platform-adaptive loading indicator
-- **CommonStatusView**: Status messages (loading, error, empty states)
-
-**Example:**
-
-```dart
-CommonPageLayout(
-  title: l10n.myPageTitle,
-  body: Column(
-    children: [
-      // Your content here
-    ],
-  ),
-)
-```
-
-### Testing Responsive/Adaptive UI
-
-- **Text scaling tests**: Use `MediaQueryData(textScaler: TextScaler.linear(1.3))` in widget tests
-- **Platform tests**: Test both Material and Cupertino themes
-- **Safe area tests**: Test with different safe-area insets
-- **Device coverage**: Test on compact (iPhone SE), standard (iPhone 14 Pro), and tablet (iPad Pro) sizes
-
-**Example:**
-
-```dart
-testWidgets('scales text at 1.3x', (tester) async {
-  await tester.pumpWidget(
-    MediaQuery(
-      data: const MediaQueryData(textScaler: TextScaler.linear(1.3)),
-      child: MaterialApp(home: MyWidget()),
-    ),
-  );
-  // Assertions...
-});
-```
-
-## 9. Adding a New Feature (Cheat Sheet)
-
-For the *approach* (understand first, add in the right place, validate, lifecycle, ship), see [§9.5](#95-how-do-you-approach-adding-new-logic-to-production). Below are the mechanical steps.
-
-1. Create `lib/features/<feature>/domain|data|presentation` folders.
-2. Define domain contracts/models (Freezed classes go in `domain/models`).
-3. Implement data sources (REST, Firebase, etc.), map DTOs to domain entities.
-4. **For offline-first features**: Follow `docs/offline_first/adoption_guide.md`:
-   - Add sync metadata to domain models (`synchronized`, `lastSyncedAt`, `changeId`)
-   - Create local cache repository (Hive-backed)
-   - Implement `OfflineFirst<Feature>Repository` with `SyncableRepository` interface
-   - Register in `SyncableRepositoryRegistry` (auto-registers on construction)
-   - Sync status is logged; Sync Diagnostics in Settings (dev/qa) for observability
-5. Build Cubit + state (immutable), add widgets/pages.
-6. **UI/UX requirements**:
-   - Use `CommonPageLayout` for consistent page structure
-   - Use `PlatformAdaptive` helpers for buttons/dialogs (never raw Material buttons)
-   - Use `context.responsive*` helpers for spacing/sizing (no hard-coded values)
-   - Use `Theme.of(context).colorScheme` for colors (never `Colors.black/white/grey`)
-   - Use `context.l10n.*` for all user-facing strings (never hard-coded English)
-   - Ensure safe-area and keyboard handling (use `CommonPageLayout` or handle manually)
-   - Test with text scale 1.3+ and verify no overflow
-7. Register DI bindings (repository, cubit factories if needed).
-8. Add tests: repository unit tests, cubit bloc tests, widget/golden coverage, and text scaling tests.
-9. Wire navigation via `AppRoutes` + `GoRouter` in `lib/app.dart`.
-10. Update [Feature Overview](feature_overview.md) and the root [README](../README.md) if the feature is user-facing.
-11. **For offline-first**: Document in `docs/offline_first/<feature>.md` following existing patterns.
-
-## 9.5. How do you approach adding new logic to production?
-
-This section answers the question from two angles: **this project’s workflow** and **general best practices** for any production codebase.
-
-### In this project
-
-1. **Understand before changing** — Locate the right layer and read existing code and tests. See [Feature module playbook](#4-feature-module-playbook) and [Repository layout](#2-repository-layout-highlights). Check `docs/architecture_details.md` and `docs/clean_architecture.md` for boundaries.
-
-2. **Add logic in the right place** — Domain (contracts, models; Dart-only), Data (repositories, DTOs; use shared services), or Presentation (cubits, widgets; lifecycle-safe). Follow patterns already used in that feature.
-
-3. **Wire and validate** — Register in [DI](#11-di-reference-example), add or extend [tests](#7-testing-strategy), run [**`./bin/checklist`**](#6-development-workflow). For user-facing or risky changes, run the affected flows manually. Mechanical steps: [Adding a new feature](#9-adding-a-new-feature-cheat-sheet).
-
-4. **Lifecycle and safety** — Apply the guards in [Common Bugs to Avoid](#common-bugs-to-avoid) (context after `await`, `isClosed` before `emit()`, no inherited context in `create`/`initState`, subscription/timer cleanup).
-
-5. **Document and ship** — Update feature or offline docs if behavior changes. Review the diff; keep changes small and focused.
-
-### General best practices (any production app)
-
-1. **Understand first**
-   - Read the code you’re changing and its tests. Identify dependencies and side effects.
-   - Follow existing patterns and conventions instead of introducing new styles or layers unless there’s a documented reason.
-
-2. **Minimize risk**
-   - Prefer small, reviewable changes. Break large work into incremental PRs.
-   - Add or update tests for new behavior (and for bug fixes, add a regression test).
-   - Use feature flags or configuration where appropriate so new logic can be toggled or rolled back without a full release.
-
-3. **Respect boundaries**
-   - Keep architecture layers clear: business logic out of UI, data access behind abstractions, no bypassing of dependency injection or shared services where they’re the standard.
-
-4. **Validate before merge**
-   - Run the project’s full quality pipeline (lint, analyze, tests, any automated guards). Fix failures; don’t merge on “it works on my machine” alone.
-   - Do a quick manual check of affected flows when the change is user-facing or touches critical paths.
-
-5. **Make changes reversible**
-   - Avoid one-way data migrations or destructive changes without a rollback plan. Prefer backward-compatible APIs and feature flags so you can disable or revert new logic if needed.
-
-**Summary:** In this app, “adding new logic” means placing it in the correct layer, following existing patterns and lifecycle rules, wiring it through DI, testing it, and running `./bin/checklist` before merge. In general, it means understanding the codebase, making small and testable changes, respecting architecture, running full validation, and keeping the option to roll back.
-
-## 10. Common Troubleshooting
-
-- **Stuck timers or async flows**: Ensure the cubit is disposed or the `TimerService` subscription is canceled in `close()`.
-- **Remote Config not updating**: Confirm Firebase project settings match the current flavor (`main_dev.dart`, etc.) and that `RemoteConfigCubit`'s `refreshInterval` isn't throttling updates.
-- **GraphQL/WebSocket issues**: Check the environment constants in `lib/core/config` and confirm the emulator/network allows outbound connections.
-- **Maps API keys**: For Android, add to `android/app/src/main/AndroidManifest.xml`; for iOS, configure `ios/Runner/AppDelegate.swift` + `Info.plist`. The app gracefully falls back to Apple Maps when Google keys are missing.
-- **GenUI Demo API key**: Requires `GEMINI_API_KEY` via `--dart-define=GEMINI_API_KEY=...` (recommended) or a local, git-ignored secrets mechanism used by `SecretConfig` (see the feature’s README/docs if present). Get your key from [Google AI Studio](https://makersuite.google.com/app/apikey). The app should show a user-facing error if the key is missing.
-- **Supabase Auth page shows "not configured"**: Add `SUPABASE_URL` and `SUPABASE_ANON_KEY` to `assets/config/secrets.json` (copy from `secrets.sample.json`) or pass via `--dart-define`, and run with asset secrets enabled. See [Security & Secrets](security_and_secrets.md) and [Authentication](authentication.md#supabase-auth-optional-separate-page).
-- **Coverage script fails**: Ensure `lcov` file exists (run tests with `--coverage`) and that `dart run tool/update_coverage_summary.dart` runs from repo root.
-- **Firebase upgrades break iOS build**: After bumping Firebase packages, run the clean sweep Firebase recommends so the simulator doesn't load stale pods:
-
-  ```bash
-  flutter clean
-  cd ios
-  rm -rf Pods Podfile.lock
-  pod repo update
-  pod install
-  cd ..
-  flutter pub get
-  rm -rf ~/Library/Developer/Xcode/DerivedData # optional but fixes module cache issues
-  flutter run
-  ```
-
-  This clears cached frameworks so duplicate symbol/module errors like `FLTFirebaseDatabasePlugin has different definitions` disappear.
-
-### Common Bugs to Avoid
-
-Before finishing any task, verify these common bug patterns:
-
-#### Context & Widget Lifecycle
-
-- ✅ **Async operations with context**: Check `context.mounted` after `await` before using `context` (navigation, reading cubits, showing dialogs)
-
-  ```dart
-  await someAsyncOperation();
-  if (!context.mounted) return;
-  Navigator.of(context).pop();
-  ```
-
-- ✅ **addPostFrameCallback**: Check `context.mounted` or `mounted` before using context/controllers
-
-  ```dart
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
-    if (!context.mounted || !controller.hasClients) return;
-    await controller.animateTo(...);
-  });
-  ```
-
-- ✅ **Future.delayed callbacks**: Check `context.mounted` or `isClosed` before using context/emitting state
-
-  ```dart
-  Future.delayed(duration, () {
-    if (!context.mounted) return;
-    // Use context
-  });
-  ```
-
-- ✅ **Unawaited navigation**: Check `context.mounted` before `unawaited` navigation calls
-
-  ```dart
-  void _navigateToRoute(BuildContext context) {
-    if (!context.mounted) return;
-    unawaited(context.pushNamed(route));
-  }
-  ```
-
-#### Cubit/Bloc State Management
-
-- ✅ **Emit after close**: Check `isClosed` before all `emit()` calls, especially in:
-  - Stream subscription callbacks (`listen`, `onData`, `onError`)
-  - Timer callbacks (`Timer`, `TimerService.periodic`)
-  - Async operation callbacks (`onSuccess`, `onError` in `CubitExceptionHandler`)
-  - `Future.delayed` callbacks
-
-  ```dart
-  void _onIncomingMessage(final Message message) {
-    if (isClosed) return;
-    emit(state.appendMessage(message));
-  }
-  ```
-
-- ✅ **Multiple emit calls**: Check `isClosed` between consecutive `emit()` calls
-
-  ```dart
-  void _handleUri(final Uri uri) {
-    if (isClosed) return;
-    emit(DeepLinkNavigate(target, origin));
-    if (isClosed) return;
-    emit(const DeepLinkIdle());
-  }
-  ```
-
-- ✅ **Stream subscriptions**: Ensure subscriptions are properly cancelled in `close()` method
-
-  ```dart
-  @override
-  Future<void> close() async {
-    await _subscription?.cancel();
-    await super.close();
-  }
-  ```
-
-- ✅ **Race conditions**: Nullify subscription reference before cancelling to prevent race conditions
-
-  ```dart
-  final StreamSubscription? oldSubscription = _subscription;
-  _subscription = null;
-  unawaited(oldSubscription?.cancel());
-  ```
-
-#### Switch Statements
-
-- ✅ **Missing breaks**: Ensure switch cases have proper `break` statements to prevent fall-through (unless intentional)
-
-  ```dart
-  switch (state) {
-    case StateA:
-      doSomething();
-      break; // Required unless fall-through is intentional
-    case StateB:
-      doSomethingElse();
-  }
-  ```
-
-#### Completers & Futures
-
-- ✅ **Multiple completions**: Check `isCompleted` before completing a `Completer` to prevent errors
-
-  ```dart
-  if (!completer.isCompleted) {
-    completer.complete(value);
-  }
-  ```
-
-- ✅ **Completer cleanup**: Complete or cancel completers in `dispose()`/`close()` methods
-
-  ```dart
-  _completer?.completeError(StateError('Cancelled'));
-  _completer = null;
-  ```
-
-#### Navigation
-
-- ✅ **Navigation after async**: Check `context.mounted` before navigation operations after `await`
-
-  ```dart
-  await someOperation();
-  if (!context.mounted) return;
-  await context.push(route);
-  ```
-
-#### Platform-Specific Dialogs
-
-- ✅ **iOS dialog buttons**: Use `showAdaptiveDialog` with explicit `CupertinoAlertDialog` on iOS, not just `AlertDialog.adaptive`
-
-  ```dart
-  final bool isCupertino = PlatformAdaptive.isCupertino(context);
-  await showAdaptiveDialog(
-    context: context,
-    builder: (dialogContext) {
-      if (isCupertino) {
-        return CupertinoAlertDialog(
-          actions: [
-            CupertinoDialogAction(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text('OK'),
-            ),
-          ],
-        );
-      }
-      return AlertDialog(...);
-    },
-  );
-  ```
-
-#### Resource Cleanup
-
-- ✅ **StreamControllers**: Ensure `StreamController` is closed in `dispose()`/`close()` methods
-- ✅ **Timers**: Ensure timers are cancelled/disposed in `close()` methods
-- ✅ **Listeners**: Remove listeners in `dispose()` methods
-
-#### UI/UX Best Practices
-
-- ✅ **Hard-coded colors**: Never use `Colors.black`, `Colors.white`, `Colors.grey`; always use `Theme.of(context).colorScheme`
-- ✅ **Hard-coded strings**: Never hard-code user-facing text; always use `context.l10n.*` from ARB files
-- ✅ **Raw Material buttons**: Never use `ElevatedButton`, `OutlinedButton`, `TextButton` directly; use `PlatformAdaptive.*` helpers
-- ✅ **Fixed spacing/sizing**: Never use hard-coded pixel values; use `context.responsive*` helpers
-- ✅ **Safe area**: Always handle safe-area insets (use `CommonPageLayout` or `SafeArea` + keyboard insets)
-- ✅ **Text scaling**: Test layouts with text scale 1.3+; use flexible constraints, avoid fixed heights
-- ✅ **Platform adaptation**: Use `PlatformAdaptive` helpers for buttons, dialogs, loading indicators
-
-**Quick verification**: Run `./bin/checklist` before committing to catch formatting, analysis, and test issues.
-
-## 11. DI Reference Example
-
-```dart
-MultiBlocProvider(providers: [
-  BlocProvider(create: (_) => CounterCubit(repository: getIt<CounterRepository>(), timerService: getIt<TimerService>())..loadInitial()),
-  BlocProvider(create: (_) => ThemeCubit(repository: getIt<ThemeRepository>())..loadInitial()),
-], child: ...)
-```
-
-**Pattern:** Lazy singletons via `registerLazySingletonIfAbsent` (single instance, on-demand init, thread-safe). See `lib/core/di/injector.dart` for the main entry point.
-
-## 12. Best‑Practice Validation Scripts
-
-The delivery checklist runs automated checks to prevent common architecture and
-Flutter hygiene regressions. Each script targets a high‑impact class of issues
-that is easy to miss during review but costly to fix later.
-
-Scripts and intent:
-
-- `tool/check_flutter_domain_imports.sh` — Keeps Domain Dart‑only (no Flutter UI
-  imports) to preserve clean architecture boundaries.
-- `tool/check_material_buttons.sh` — Enforces platform‑adaptive buttons in
-  presentation instead of raw Material buttons.
-- `tool/check_no_hive_openbox.sh` — Blocks direct `Hive.openBox` usage so
-  encryption/migration stay centralized via `HiveService`.
-- `tool/check_raw_timer.sh` — Requires `TimerService` for testable, deterministic
-  timing.
-- `tool/check_direct_getit.sh` — Prevents direct `GetIt` access in presentation
-  widgets; dependencies should be injected.
-- `tool/check_raw_dialogs.sh` — Enforces `showAdaptiveDialog` over raw dialog APIs.
-- `tool/check_raw_network_images.sh` — Enforces `CachedNetworkImageWidget` for
-  remote images.
-- `tool/check_raw_print.sh` — Blocks raw `print()` usage; use `AppLogger`.
-- `tool/check_side_effects_build.sh` — Heuristic scan for side effects in
-  `build()` (does not fail the checklist on its own).
-- `tool/check_solid_presentation_data_imports.sh` — Blocks presentation imports
-  of data-layer types.
-- `tool/check_solid_data_presentation_imports.sh` — Blocks data-layer imports of
-  presentation.
-- `tool/check_perf_shrinkwrap_lists.sh` — Flags `shrinkWrap: true` in
-  presentation lists.
-- `tool/check_perf_nonbuilder_lists.sh` — Flags non-builder lists/grids in
-  presentation.
-- `tool/check_perf_missing_repaint_boundary.sh` — Flags heavy widgets missing
-  `RepaintBoundary` (heuristic).
-- `tool/check_memory_unclosed_streams.sh` — Flags `StreamController` without
-  `.close()` (heuristic).
-- `tool/check_memory_missing_dispose.sh` — Flags controllers without
-  `dispose()` in State classes (heuristic).
-- `tool/check_lifecycle_error_handling.sh` — Enforces ErrorHandling for
-  snackbars, `onError` in `stream.listen()`, and `context.mounted` after
-  `await show*Dialog` before using cubit/onClose.
-
-Allowlisting exceptions:
-
-If a specific line must violate a check (e.g., user‑initiated async callback),
-add an inline comment on the same line or the line above:
-
-```dart
-// check-ignore: user action triggers async work
-unawaited(cubit.flush());
-```
-
-Ignored entries are reported with the reason so exceptions remain explicit and
-reviewable.
-
-## 13. What to Read Next
-
-### Essential Reading
-
-- **`README.md`**: Feature list and quick links; [Architecture Details](architecture_details.md): diagram and layer flow
-- **`CODE_QUALITY.md`**: Comprehensive code quality analysis, architecture findings, and quality/resilience notes
-- **`ui_ux_responsive_review.md`**: Comprehensive UI/UX guidelines, responsive design patterns, platform-adaptive components, accessibility best practices
-- **`feature_overview.md`**: Complete catalog of features and capabilities
-
-### Architecture & Design
-
-- **`architecture_details.md`**: High-level architecture diagrams, principles, and state management flow
-- **`clean_architecture.md`**: Practical guide with layer responsibilities, examples, and review checklist
-- **`solid_principles.md`**: Detailed SOLID principles with codebase examples
-- **`dry_principles.md`**: DRY consolidations and patterns
-- **`separation_of_concerns.md`**: Responsibility boundaries across layers, DI, and shared infrastructure
-
-### Development Guides
-
-- **`compile_time_safety.md`**: Complete guide to type-safe BLoC/Cubit patterns
-- **`freezed_usage_analysis.md`**: Where Freezed is used and **why use Freezed with BLoC** (immutability, equality, sealed unions, copyWith)
-- **`equatable_to_freezed_conversion.md`**: Step-by-step conversion from Equatable to Freezed
-- **`flutter_best_practices_review.md`**: Best practices audit with action checklist
-- **`validation_scripts.md`**: Automated validation scripts and their purposes
-- **`migration_to_type_safe_bloc.md`**, **`sealed_classes_migration.md`**, **`cupertino_widget_migration.md`**: Migration guides for type-safe BLoC, sealed classes, and Cupertino widgets
-
-### Platform-Specific
-
-- **`universal_links/`**: Universal links setup
-- **`figma/`**: Figma integration guides
-- **`offline_first/`**: Offline-first architecture patterns
-
-Stay disciplined with the guardrails, keep tests deterministic, and reach for shared services before adding new singletons.
+| `lib/app.dart` | Top-level app widget and router creation. |
+| `lib/main_*.dart` | Flavor-specific entrypoints. |
+| `lib/main_bootstrap.dart` | Shared flavor bootstrap path. |
+| `lib/app/` | App shell, router composition, and app scope. |
+| `lib/core/` | DI, bootstrap, config, theme, routing constants, and core services. |
+| `lib/features/<feature>/` | Feature modules with domain, data, and presentation layers. |
+| `lib/shared/` | Cross-cutting widgets, services, sync, HTTP, storage, and utilities. |
+| `lib/l10n/` | Localization ARB files and generated localizations. |
+| `test/` | Unit, bloc, widget, and golden tests. |
+| `integration_test/` | End-to-end and flow-based integration coverage. |
+| `tool/` and `bin/` | Repo automation, validation, release, and maintenance scripts. |
+
+For feature-by-feature entry points, see [Feature Overview](feature_overview.md).
+
+## 3. Application flow
+
+1. `lib/main_dev.dart`, `lib/main_staging.dart`, or `lib/main_prod.dart`
+   selects a `Flavor` and calls `runAppWithFlavor()`.
+2. `lib/main_bootstrap.dart` initializes Flutter bindings, registers the FCM
+   background handler, and delegates startup to `BootstrapCoordinator`.
+3. `lib/app.dart` creates `MyApp`, configures `GoRouter`, and attaches auth
+   refresh behavior through `GoRouterRefreshStream` when Firebase Auth is
+   available.
+4. `lib/app/app_scope.dart` wires app-wide cubits and listeners such as locale,
+   theme, deep links, retry notifications, and sync status.
+5. `lib/core/app_config.dart` builds `MaterialApp.router`, theme, localization,
+   and app overlays.
+6. Route files under `lib/app/router/` compose the app route tree:
+   `routes_core.dart`, `routes_demos.dart`, and `route_groups.dart`.
+7. Most feature cubits are created at route scope, and heavy screens such as
+   charts, maps, markdown editor, and WebSocket are deferred-loaded.
+
+## 4. Change workflow
+
+When adding or changing a feature:
+
+1. Reuse existing patterns in `lib/shared/`, `lib/core/`, and adjacent
+   features before creating new abstractions.
+2. Keep logic in the proper layer:
+   domain contracts and models in `domain/`, implementations in `data/`,
+   cubits/pages/widgets in `presentation/`.
+3. Register dependencies under `lib/core/di/`.
+4. Wire navigation through `lib/core/router/app_routes.dart` and
+   `lib/app/router/`.
+5. Update localization, code generation, docs, and tests when the change
+   affects them.
+
+Use these docs while implementing:
+
+- [Feature Delivery Guide](feature_implementation_guide.md)
+- [Validation Scripts](validation_scripts.md)
+- [Testing Overview](testing_overview.md)
+- [Code Generation Guide](code_generation_guide.md)
+
+## 5. Development workflow
+
+Use repo commands instead of ad-hoc validation:
+
+| Command | Purpose |
+| --- | --- |
+| `flutter pub get` | Refresh dependencies. |
+| `dart run build_runner build --delete-conflicting-outputs` | Regenerate code after model/API annotation changes. |
+| `./bin/checklist` | Primary local quality gate. |
+| `./bin/integration_tests` | Run integration flows on a supported device. |
+| `./bin/upgrade_validate_all` | Full maintenance and upgrade validation flow. |
+
+Docs-only changes can stay lightweight, but feature, routing, DI, and behavior
+changes should always go through the correct validation scope.
+
+## 6. Testing strategy
+
+The repo uses layered validation:
+
+- Unit and bloc tests for logic and state transitions
+- Widget and golden tests for UI behavior and regressions
+- Integration flows for cross-feature journeys and persistence
+- Shell validators for architecture, lifecycle, async safety, and UI guardrails
+
+Testing detail lives in:
+
+- [Testing Overview](testing_overview.md)
+- [Integration Flow Guide](testing_integration_flows.md)
+- [Validation Scripts](validation_scripts.md)
+
+## Common Troubleshooting
+
+| Problem | What to check |
+| --- | --- |
+| Firebase features are disabled | Confirm `flutterfire configure` was run and platform config files are present. See [Firebase Setup](firebase_setup.md). |
+| Supabase-backed flows show "not configured" | Confirm `SUPABASE_URL` and `SUPABASE_ANON_KEY` are available through the configured secrets path. See [Security and Secrets](security_and_secrets.md). |
+| Generated code is stale | Run `dart run build_runner build --delete-conflicting-outputs`. |
+| iOS build fails after dependency or Firebase changes | Run `flutter clean`, `flutter pub get`, `cd ios && pod install && cd ..`, then retry. |
+| Integration tests choose the wrong device | Set `CHECKLIST_INTEGRATION_DEVICE=<deviceId>` before running `./bin/integration_tests`. |
+| Routes or auth behavior changed unexpectedly | Verify `lib/app.dart`, `lib/app/router/auth_redirect.dart`, and the route groups under `lib/app/router/`. |
+
+## What to read next
+
+- [Feature Overview](feature_overview.md)
+- [Architecture Details](architecture_details.md)
+- [Tech Stack](tech_stack.md)
+- [Testing Overview](testing_overview.md)
+- [Deployment](deployment.md)
+- [Contributing](contributing.md)
