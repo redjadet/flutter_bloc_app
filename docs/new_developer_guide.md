@@ -25,7 +25,7 @@ This guide is the fastest path to running the app locally, understanding the arc
 
 ### Prerequisites
 
-- **Flutter SDK**: Use the version pinned by the repo/tooling (for example, in internal project documentation or CI configuration).
+- **Flutter SDK**: **Flutter 3.41.6** with **Dart 3.11.4** (see [README](../README.md) prerequisites and `.github/workflows/ci.yml` `FLUTTER_VERSION`).
 - **Platform toolchains**:
   - iOS: Xcode + CocoaPods
   - Android: Android Studio + SDKs

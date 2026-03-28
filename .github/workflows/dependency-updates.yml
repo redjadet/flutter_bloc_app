@@ -15,7 +15,7 @@ permissions:
   actions: write
 
 env:
-  FLUTTER_VERSION: '3.41.5'
+  FLUTTER_VERSION: '3.41.6'
   COVERAGE_THRESHOLD: '60'
 
 concurrency:
