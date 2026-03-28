@@ -98,7 +98,13 @@ fi
 
 wrapper="$workspace/.cursor/skills/cursor-codex-delegate/scripts/delegate_to_codex.sh"
 if [[ ! -x "$wrapper" ]]; then
-  echo "Cursor->Codex delegate wrapper not found: $wrapper" >&2
+  wrapper="${HOME}/.cursor/skills/cursor-codex-delegate/scripts/delegate_to_codex.sh"
+fi
+if [[ ! -x "$wrapper" ]]; then
+  echo "Cursor->Codex delegate wrapper not found. Install skills under the repo" >&2
+  echo "  $workspace/.cursor/skills/cursor-codex-delegate/..." >&2
+  echo "or globally:" >&2
+  echo "  ${HOME}/.cursor/skills/cursor-codex-delegate/..." >&2
   exit 1
 fi
 

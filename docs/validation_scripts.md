@@ -825,7 +825,7 @@ Each script provides:
 
 ## Related Documentation
 
-- **Common Bugs Checklist**: `docs/new_developer_guide.md` (Common Bugs to Avoid section)
+- **Developer onboarding**: `docs/new_developer_guide.md`
 - **UI/UX Guidelines**: `docs/ui_ux_responsive_review.md`
-- **Testing Best Practices**: `docs/new_developer_guide.md` (Testing section)
+- **Testing Best Practices**: `docs/testing_overview.md`
 - **Common Bugs Prevention Tests**: `test/shared/common_bugs_prevention_test.dart`

@@ -1,73 +1,98 @@
 # Feature Overview
 
-This document lists feature modules with entry points and notes. It is intended for reviewers who want quick navigation into real code, not a marketing overview.
+This document is the catalog of user-facing capabilities in the repo. It is not
+an implementation deep dive. Use it to find the owning feature module, route,
+and the next document to read.
 
-## Quick Links
+## Source of truth
 
-- [Architecture Details](architecture_details.md)
+- Route names and paths: `lib/core/router/app_routes.dart`
+- Route composition: `lib/app/router/routes_core.dart`,
+  `lib/app/router/routes_demos.dart`, `lib/app/router/route_groups.dart`
+- Feature modules: `lib/features/<feature>/`
+
+## Foundation and core flows
+
+| Feature | Route or entry | Code | Notes |
+| --- | --- | --- | --- |
+| Counter | `/` | `lib/features/counter/` | Primary home flow with persisted state and timer-driven behavior. |
+| Example hub | `/example` | `lib/features/example/` | Entry point to many demo surfaces. |
+| Settings | `/settings` | `lib/features/settings/` | Theme, locale, app info, diagnostics, and integration entry points. |
+| Authentication | `/auth`, `/manage-account`, `/register`, `/logged-out` | `lib/features/auth/` | Firebase Auth + FirebaseUI for primary sign-in and profile management. See [Authentication](authentication.md). |
+| Profile | `/profile` | `lib/features/profile/` | Offline-first profile cache and profile screen. |
+| Search | `/search` | `lib/features/search/` | Cache-first search with background refresh. |
+| Todo List | `/todo-list` | `lib/features/todo_list/` | Realtime Database plus offline-first queueing. |
+
+## Data, sync, and backend-backed demos
+
+| Feature | Route or entry | Code | Notes |
+| --- | --- | --- | --- |
+| Chat | `/chat`, `/chat-list` | `lib/features/chat/` | Offline-first chat flows with Hugging Face-backed inference. |
+| Charts | `/charts` | `lib/features/chart/` | Deferred-loaded chart experience with offline-first behavior. |
+| GraphQL Demo | `/graphql-demo` | `lib/features/graphql_demo/` | Cache-first countries browser with diagnostics support. |
+| Remote Config surfaces | Counter and Settings diagnostics | `lib/features/remote_config/` | Runtime feature flags, diagnostics, and cache behavior. |
+| IoT Demo | `/iot-demo` | `lib/features/iot_demo/` | Offline-first device list and commands; uses Supabase when configured. |
+| Supabase Auth | `/supabase-auth` | `lib/features/supabase_auth/` | Separate optional auth flow for Supabase-backed demos. |
+| WalletConnect Auth | `/walletconnect-auth` | `lib/features/walletconnect_auth/` | Demo wallet-link flow layered on top of Firebase identity. |
+| FCM Demo | `/fcm-demo` | `lib/features/fcm_demo/` | Permission, token, message, and sync-trigger demo. |
+
+## Platform, media, and UI demos
+
+| Feature | Route or entry | Code | Notes |
+| --- | --- | --- | --- |
+| Google / Apple Maps | `/google-maps` | `lib/features/google_maps/` | Deferred-loaded map experience with platform-specific map providers. |
+| WebSocket Demo | `/websocket` | `lib/features/websocket/` | Deferred-loaded reconnecting WebSocket flow. |
+| Camera Gallery | `/camera-gallery` | `lib/features/camera_gallery/` | Camera and gallery picker demo. |
+| Calculator | `/calculator`, `/calculator/payment` | `lib/features/calculator/` | Calculator and payment summary flow. |
+| Whiteboard | `/whiteboard` | `lib/features/example/presentation/pages/whiteboard_page.dart` | `CustomPainter`-based drawing experience. |
+| Markdown Editor | `/markdown-editor` | `lib/features/example/presentation/pages/markdown_editor_page.dart` | Deferred-loaded markdown editor using custom rendering. |
+| Library Demo | `/library-demo` | `lib/features/library_demo/` | Figma-inspired UI showcase built on shared design patterns. |
+| Scapes | `/scapes` | `lib/features/scapes/` | Visual grid and content demo used by the library showcase. |
+| GenUI Demo | `/genui-demo` | `lib/features/genui_demo/` | AI-generated UI demo powered by GenUI and Gemini. |
+| Playlearn | `/playlearn`, `/playlearn/vocabulary/:topicId` | `lib/features/playlearn/` | Vocabulary and audio-learning demo. |
+| iGaming Demo | `/igaming-demo`, `/igaming-demo/game` | `lib/features/igaming_demo/` | Demo lobby and game flow. |
+| In-App Purchase Demo | `/iap-demo` | `lib/features/in_app_purchase_demo/` | Demo purchase flow and repository switching. |
+| Firebase Functions Test | `/firebase-functions-test` | `lib/features/example/presentation/pages/firebase_functions_test_page.dart` | Utility/debug route for callable function work. |
+
+## Deferred-loaded features
+
+The following routes are intentionally loaded on demand to keep the initial app
+bundle smaller:
+
+- `/charts`
+- `/google-maps`
+- `/markdown-editor`
+- `/websocket`
+
+See [Architecture Details](architecture_details.md) and
+[Lazy Loading Review](lazy_loading_review.md) for the rationale.
+
+## Cross-cutting modules
+
+- Dependency injection: `lib/core/di/`
+- Routing: `lib/app/router/`
+- Shared sync infrastructure: `lib/shared/sync/`
+- Shared HTTP and auth retry behavior: `lib/shared/http/`
+- Shared widgets and design primitives: `lib/shared/widgets/`,
+  `lib/shared/components/`, `lib/shared/design_system/`
+
+## Configuration notes
+
+- Firebase-dependent features require platform Firebase configuration. See
+  [Firebase Setup](firebase_setup.md).
+- Supabase-backed flows require `SUPABASE_URL` and `SUPABASE_ANON_KEY`. See
+  [Authentication](authentication.md) and [Security and Secrets](security_and_secrets.md).
+- Maps require Google Maps platform keys where applicable. See
+  [Google Maps Integration](google_maps_integration.md).
+- AI demos require API keys. See [AI Integration](ai_integration.md) and
+  [Security and Secrets](security_and_secrets.md).
+
+## Deep-dive references
+
+- [Authentication](authentication.md)
+- [Offline-First Adoption Guide](offline_first/adoption_guide.md)
 - [Testing Overview](testing_overview.md)
-- [UI/UX Guidelines](ui_ux_responsive_review.md)
-- [Developer Guide](new_developer_guide.md)
-- [Code Quality](CODE_QUALITY.md)
-- [WalletConnect Auth Status](walletconnect_auth_status.md) – Demo feature status and Firebase setup
-- [Firebase UI Auth overflow fix](firebase_ui_auth_overflow_fix.md) – Profile screen display name overflow (e.g. after linking wallet)
-
-## Feature Catalog
-
-| Feature | Entry points | Notes |
-| --- | --- | --- |
-| Counter | `lib/features/counter/` | Core demo feature with offline storage and timer service. |
-| Chat | `lib/features/chat/` | Offline-first chat with Hugging Face inference and sync queue. |
-| GenUI Demo | `lib/features/genui_demo/` | AI-generated dynamic UI using GenUI SDK with Google Gemini. |
-| Search | `lib/features/search/` | Cache-first repository with background refresh. |
-| Settings | `lib/features/settings/` | Theme, locale, app info, diagnostics. |
-| Profile | `lib/features/profile/` | Offline-first profile cache. |
-| Todo List | `lib/features/todo_list/` | Realtime database + offline-first implementation. |
-| Charts | `lib/features/chart/` | Offline-first Bitcoin 7-day chart. When Supabase is configured and user is signed in: Edge Function then table fallback; otherwise direct CoinGecko. See [Chart demo](offline_first/chart_demo.md). |
-| WebSocket | `lib/features/websocket/` | Reconnect logic and message streaming. |
-| Maps | `lib/features/google_maps/` | Google Maps with Apple Maps fallback. |
-| Calculator | `lib/features/calculator/` | Custom keypad and summary flow. |
-| Library Demo | `lib/features/library_demo/` | Figma-inspired UI showcase. |
-| Markdown Editor | `lib/app/router/deferred_pages/markdown_editor_page.dart` | Deferred feature with preview/rendering. |
-| Whiteboard | `lib/features/example/` (e.g. `whiteboard_page.dart`) | CustomPainter drawing demo; route `/whiteboard`. |
-| FCM Demo | `lib/features/fcm_demo/`; route `/fcm-demo`. Example page → FCM Demo. | Firebase Cloud Messaging demo: permission, token, last message, open-from-notification. See [FCM Demo Integration](fcm_demo_integration.md). |
-| Camera Gallery | `lib/features/camera_gallery/`; route `/camera-gallery`. | Camera and gallery picker demo. |
-| iGaming Demo | `lib/features/igaming_demo/`; route `/igaming-demo`. | Demo lobby and game flow. |
-| Playlearn | `lib/features/playlearn/`; route `/playlearn`, `/playlearn/vocabulary/:topicId`. | Vocabulary/learning demo. |
-| Scapes | `lib/features/scapes/`; route `/scapes`. | Scapes feature. |
-| IoT Demo | `lib/features/iot_demo/` | Offline-first IoT device list + commands. When Supabase is configured, uses it as backend (RLS + migrations) for per-user device data; when not configured, runs in local-only mode. |
-| Supabase Auth | Settings → Integrations → Supabase Auth; route `/supabase-auth`. Code: `lib/features/supabase_auth/` | Optional email/password auth on a separate page. Does not replace Firebase for app-wide auth. Requires `SUPABASE_URL` and `SUPABASE_ANON_KEY` in secrets. See [Authentication](authentication.md#supabase-auth-optional-separate-page). |
-| WalletConnect Auth | **Example page** → “WalletConnect Auth (Demo)” button; route `/walletconnect-auth`. Code: `lib/features/walletconnect_auth/` | Demo: connect wallet (mock), link to Firebase Auth. Firestore: one doc per user at `users/{uid}` (linkage + profile). See [WalletConnect Auth Status](walletconnect_auth_status.md) for Firebase setup. |
-
-## Cross-Cutting Modules
-
-- **Dependency injection**: `lib/core/di/`
-- **Routing**: `lib/app/router/`
-- **Responsive utilities**: `lib/shared/extensions/responsive.dart`
-- **Platform-adaptive UI**: `lib/shared/utils/platform_adaptive.dart`
-- **Offline-first helpers**: `lib/shared/sync/`
-
-## Configuration Notes
-
-Some modules require platform keys or API access:
-
-- **Firebase** features require `google-services.json`, `GoogleService-Info.plist`, and `lib/firebase_options.dart` (all gitignored). See [Firebase Setup](firebase_setup.md) for full setup; the app runs without them with Firebase features disabled.
-- **Supabase** (IoT demo, GraphQL demo, Chart demo backends + optional Auth page) requires `SUPABASE_URL` and `SUPABASE_ANON_KEY` in secrets (e.g. `assets/config/secrets.json` or `--dart-define`). When missing, the Supabase auth page shows "not configured"; the IoT demo remains accessible in local-only mode (no remote sync); Chart and GraphQL demos use direct remote APIs.
-- Chat requires a Hugging Face API key.
-- GenUI Demo requires a Google Gemini API key (`GEMINI_API_KEY`).
-- Maps require Google Maps API keys (Android/iOS).
-- WalletConnect Auth requires a WalletConnect project ID (configured in `WalletConnectService`).
-
-See [Security & Secrets](security_and_secrets.md) for API keys; see [Firebase Setup](firebase_setup.md) for Firebase configuration.
-
-## Deep-Dive References
-
-- [Authentication](authentication.md) — Firebase auth flow, token handling, and optional Supabase auth
-- [Offline-First Guide](offline_first/adoption_guide.md) — repository pattern, sync model, and adoption guidance
-- [Compile-Time Safety](compile_time_safety.md) — type-safe BLoC access and related patterns
-- [Performance Bottlenecks](performance_bottlenecks.md) — known hot paths and performance guidance
-- [Known Workarounds](workarounds.md) — temporary platform or tooling-specific mitigations
-- [AI Integration](ai_integration.md) — chat flow, remote inference, and offline behavior
-- [GenUI Demo User Guide](genui_demo_user_guide.md) — feature-specific usage notes for the GenUI demo
-- [Google Maps Integration](google_maps_integration.md) — map behavior, keys, and platform differences
-- [FCM Demo Integration](fcm_demo_integration.md) — Firebase Cloud Messaging setup and iOS Simulator testing
+- [Tech Stack](tech_stack.md)
+- [FCM Demo Integration](fcm_demo_integration.md)
+- [GenUI Demo User Guide](genui_demo_user_guide.md)
+- [Google Maps Integration](google_maps_integration.md)

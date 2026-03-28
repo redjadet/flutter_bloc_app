@@ -1,142 +1,108 @@
 # Tech Stack
 
-This document lists all the technologies, packages, and tools used in this Flutter application.
+This document summarizes the current stack used by the app. It is an overview,
+not a replacement for `pubspec.yaml`.
 
-## Core Framework
+## Source of truth
 
-- **Flutter** 3.41.6 (Dart 3.11.4)
-- **Material 3** with `ColorScheme.fromSeed`
-- **Cupertino** widgets for iOS-native feel
+- Dependency constraints: [`pubspec.yaml`](../pubspec.yaml)
+- Pinned Flutter toolchain: [README](../README.md) and
+  [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
 
-## State Management
+## Toolchain and app shell
 
-- `flutter_bloc` ^9.1.1 - BLoC/Cubit pattern
-- `equatable` ^2.0.5 - Value equality
-- `freezed` ^3.2.3 - Immutable data classes
+| Area | Current state |
+| --- | --- |
+| Flutter | `3.41.6` |
+| Dart | `3.11.4` |
+| App entrypoints | `lib/main_dev.dart`, `lib/main_staging.dart`, `lib/main_prod.dart` |
+| Shared bootstrap | `lib/main_bootstrap.dart` |
+| App shell | `lib/app.dart`, `lib/app/app_scope.dart`, `lib/core/app_config.dart` |
 
-## Storage & Persistence
+## Core architecture
 
-- `hive` ^2.2.0 - Encrypted local database
-- `hive_flutter` ^1.1.0 - Flutter integration
-- `flutter_secure_storage` ^10.0.0 - Keychain/Keystore access
-- `shared_preferences` ^2.5.3 - Legacy migration support
+| Concern | Libraries or approach |
+| --- | --- |
+| State management | `flutter_bloc` `^9.1.1`, `equatable` `^2.0.5`, `freezed` `^3.2.3`, `freezed_annotation` `^3.1.0` |
+| Dependency injection | `get_it` `^9.0.5` |
+| Routing | `go_router` `^17.0.0` |
+| Localization | `intl` `^0.20.2`, `flutter_localizations` |
+| Architecture style | Clean Architecture with `Domain -> Data -> Presentation` layering |
 
-## Networking & APIs
+## Persistence and offline-first support
 
-- `dio` - HTTP client with interceptors (auth, retry, network check, telemetry); shared app instance via `createAppDio()`
-- `retrofit` / `retrofit_generator` - Type-safe REST API clients (e.g. chart `CoingeckoApi`); built from shared Dio
-- `web_socket_channel` ^3.0.3 - WebSocket support
-- `cached_network_image` ^3.4.1 - Image caching
+| Concern | Libraries or approach |
+| --- | --- |
+| Local persistence | `hive` `^2.2.0`, `hive_flutter` `^1.1.0` |
+| Secure storage | `flutter_secure_storage` `^10.0.0` |
+| Legacy migration support | `shared_preferences` `^2.5.3` |
+| Sync infrastructure | Pending sync queue and background sync under `lib/shared/sync/` |
+| Offline-first docs | [Offline-First Adoption Guide](offline_first/adoption_guide.md) |
 
-## Firebase
+## Networking and backend integrations
 
-- `firebase_core` ^4.2.1
-- `firebase_auth` ^6.1.2
-- `firebase_analytics` ^12.0.4
-- `firebase_crashlytics` ^5.0.5
-- `firebase_remote_config` ^6.1.2
-- `firebase_database` ^12.1.0
-- `firebase_ui_auth` ^3.0.0
-- `firebase_ui_localizations` ^2.0.0
-- `firebase_ui_oauth_google` ^2.0.0
+| Concern | Libraries or approach |
+| --- | --- |
+| REST client | `dio` `^5.8.0` |
+| Typed REST APIs | `retrofit` `^4.9.0`, `retrofit_generator` `^10.0.0` |
+| WebSocket | `web_socket_channel` `^3.0.3` |
+| Firebase | `firebase_core`, `firebase_auth`, `firebase_analytics`, `firebase_crashlytics`, `firebase_database`, `firebase_messaging`, `firebase_remote_config`, `cloud_firestore`, `cloud_functions` |
+| Firebase UI | `firebase_ui_auth` `^3.0.1`, `firebase_ui_localizations` `^2.0.0`, `firebase_ui_oauth_google` `^2.0.0` |
+| Supabase | `supabase_flutter` `^2.8.0` |
+| Deep links | `app_links` `^6.4.1` |
+| Backend auth retry and token injection | Shared Dio interceptors under `lib/shared/http/` |
 
-## UI & Design
+## UI, design, and feature packages
 
-- `flutter_screenutil` ^5.9.3 - Responsive sizing
-- `responsive_framework` ^1.5.1 - Layout breakpoints
-- `fancy_shimmer_image` ^2.0.3 - Loading effects
-- `skeletonizer` ^2.1.0+1 - Skeleton screens
-- `google_fonts` ^6.2.1 - Typography
-- `flutter_svg` ^2.2.2 - SVG rendering
-- `fl_chart` ^1.1.1 - Charts and graphs
-- `flex_color_picker` ^3.3.0 - Color picker for whiteboard
-- `markdown` ^7.3.0 - Markdown parsing for editor
+| Concern | Libraries or approach |
+| --- | --- |
+| Design system and theming | Material 3, Cupertino, `mix` `^1.7.0` |
+| Responsive layout | `flutter_screenutil` `^5.9.3`, `responsive_framework` `^1.5.1` |
+| Typography | `google_fonts` `^8.0.0` plus bundled font assets |
+| Images and SVG | `cached_network_image` `^3.4.1`, `fancy_shimmer_image` `^2.0.3`, `flutter_svg` `^2.2.2`, `skeletonizer` `^2.1.0+1` |
+| Charts and visualization | `fl_chart` `^1.1.1` |
+| Media and device features | `image_picker` `^1.2.1`, `local_auth` `^3.0.0`, `device_info_plus` `^12.3.0`, `package_info_plus` `^9.0.0` |
+| Maps | `google_maps_flutter` `^2.14.0`, `apple_maps_flutter` `^1.4.0` |
+| AI demos | `genui` `^0.7.0`, `genui_google_generative_ai` `^0.7.0` |
+| Other feature packages | `in_app_purchase` `^3.2.3`, `wallet_connect_v2` `^1.0.0`, `flutter_tts` `^4.2.0`, `markdown` `^7.3.0`, `flex_color_picker` `^3.3.0` |
 
-## Navigation & Routing
+## Testing and developer tooling
 
-- `go_router` ^17.0.0 - Declarative routing
-- `app_links` ^6.4.1 - Deep linking
-
-## Maps
-
-- `google_maps_flutter` ^2.14.0 - Google Maps (Android, iOS, Web)
-- `apple_maps_flutter` ^1.4.0 - Apple Maps (**iOS-only**)
-
-> **Note:** The app automatically uses Apple Maps on iOS and Google Maps on Android/Web. See [Platform-Specific Dependencies](#platform-specific-dependencies) below.
-
-## Authentication
-
-- `local_auth` ^3.0.0 - Biometric authentication
-
-## Supabase
-
-- `supabase_flutter` - Supabase client; used as the backend for the IoT demo (per-user device data with RLS + migrations) and for the optional Supabase Auth page (email/password sign-in/sign-up on a dedicated route). Initialized at bootstrap when `SUPABASE_URL` and `SUPABASE_ANON_KEY` are configured. When Supabase is not configured, the IoT demo runs in local-only mode. Does not replace Firebase for app-wide auth. See [Supabase migrations](../supabase/README.md) and [Authentication](authentication.md#supabase-auth-optional-separate-page).
-
-## Dependency Injection
-
-- `get_it` ^9.0.5 - Service locator
-
-## Internationalization
-
-- `intl` ^0.20.2 - Internationalization
-- `flutter_localizations` - Flutter i18n support
-
-## Development Tools
-
-- `build_runner` ^2.10.4 - Code generation
-- `bloc_test` ^10.0.0 - BLoC testing
-- `golden_toolkit` ^0.15.0 - Golden tests
-- `mocktail` ^1.0.4 - Mocking framework
-- `file_length_lint` - Custom analyzer plugin
-
-## Package Management
-
-See `pubspec.yaml` for the complete list with exact version constraints.
+| Concern | Libraries or approach |
+| --- | --- |
+| Unit and bloc testing | `flutter_test`, `bloc_test` `^10.0.0`, `mocktail` `^1.0.4`, `fake_async` `^1.3.3` |
+| Golden tests | `golden_toolkit` `^0.15.0` |
+| Integration tests | `integration_test` plus repo scripts under `bin/` and `tool/` |
+| Code generation | `build_runner`, `json_serializable`, `freezed`, `retrofit_generator` |
+| Static analysis | `very_good_analysis` `^10.2.0`, `flutter_lints` `^6.0.0`, custom lint packages in `custom_lints/` |
 
 ## Platform-Specific Dependencies
 
-Some packages have platform-specific behavior or requirements:
+| Package or concern | Notes |
+| --- | --- |
+| `apple_maps_flutter` | iOS-only map provider used on Apple platforms. |
+| `google_maps_flutter` | Requires platform API key configuration where Google Maps is used. |
+| `window_manager` | Desktop-only window management support. |
+| `local_auth` | Uses platform biometric APIs on iOS and Android. |
+| Firebase config files | `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, and `macos/Runner/GoogleService-Info.plist` when applicable. |
 
-- **`apple_maps_flutter`** – iOS-only; app uses `google_maps_flutter` on Android
-- **`google_maps_flutter`** – Android ✅, iOS ✅; requires API key in `AndroidManifest.xml`
-- **`window_manager`** – Desktop-only (Windows/macOS/Linux); no-op on mobile
-- **`local_auth`** – Android (fingerprint) ✅, iOS (Face ID/Touch ID) ✅
-- **`flutter_secure_storage`** – Android (EncryptedSharedPrefs) ✅, iOS (Keychain) ✅
-- **`wallet_connect_v2`** – Android ✅, iOS ✅; currently uses mock implementation
+Platform-specific setup details belong in:
 
-### Android Requirements
+- [Firebase Setup](firebase_setup.md)
+- [Deployment](deployment.md)
+- [Google Maps Integration](google_maps_integration.md)
 
-1. **Google Maps API Key** - Add to `android/app/src/main/AndroidManifest.xml`:
+## Notes on maintenance
 
-   ```xml
-   <meta-data
-       android:name="com.google.android.geo.API_KEY"
-       android:value="YOUR_API_KEY"/>
-   ```
+- Keep this document focused on major stack choices and package groups.
+- Update `pubspec.yaml` first; then refresh this summary when the stack has
+  materially changed.
+- Do not duplicate secrets, Firebase setup, or release steps here. Reference
+  the dedicated docs instead.
 
-2. **Firebase Configuration** - Place `google-services.json` in `android/app/`
+## Related docs
 
-3. **Biometrics** - `local_auth` uses Android BiometricPrompt (fingerprint, face unlock)
-
-### iOS Requirements
-
-1. **Apple Maps** - No API key needed; uses native MapKit
-2. **Firebase Configuration** - Place `GoogleService-Info.plist` in `ios/Runner/`
-3. **Biometrics** - `local_auth` uses Face ID/Touch ID (add `NSFaceIDUsageDescription` to `Info.plist`)
-4. **Associated Domains** - Requires paid Apple Developer account; see [deployment.md](deployment.md#ios-entitlements-development-vs-distribution)
-
-### Platform Detection in Code
-
-The app handles platform-specific features automatically:
-
-```dart
-// Maps (from google_maps_sample_page.dart)
-_useAppleMaps = !kIsWeb && _platform == TargetPlatform.iOS;
-// iOS → Apple Maps, Android/Web → Google Maps
-```
-
-## Related Documentation
-
-- Dependency updates: `docs/DEPENDENCY_UPDATES.md`
-- Architecture: `docs/architecture_details.md`
-- Testing: `docs/testing_overview.md`
+- [Architecture Details](architecture_details.md)
+- [Feature Overview](feature_overview.md)
+- [Testing Overview](testing_overview.md)
+- [Security and Secrets](security_and_secrets.md)
