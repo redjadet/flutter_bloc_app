@@ -15,11 +15,36 @@ from pathlib import Path
 rule_text = Path(sys.argv[1]).read_text(encoding="utf-8")
 benchmark = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
 
-match = re.search(r"^globs:\s*(.+)$", rule_text, flags=re.MULTILINE)
-if not match:
+
+def extract_globs_from_frontmatter(text: str) -> list[str]:
+    """Support `globs: a, b` and YAML list form under `globs:`."""
+    lines = text.splitlines()
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        if not stripped.startswith("globs:"):
+            continue
+        rest = stripped[len("globs:") :].strip()
+        if rest:
+            return [g.strip() for g in rest.split(",") if g.strip()]
+        globs: list[str] = []
+        j = i + 1
+        while j < len(lines):
+            item = lines[j].strip()
+            if not item:
+                j += 1
+                continue
+            if item.startswith("- "):
+                globs.append(item[2:].strip())
+                j += 1
+                continue
+            break
+        if globs:
+            return globs
+        raise SystemExit("Empty globs list in router-feature-validation.mdc")
     raise SystemExit("Could not parse globs from router-feature-validation.mdc")
 
-globs = [g.strip() for g in match.group(1).split(",") if g.strip()]
+
+globs = extract_globs_from_frontmatter(rule_text)
 
 tp = fp = tn = fn = 0
 
