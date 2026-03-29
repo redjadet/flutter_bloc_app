@@ -22,5 +22,6 @@ export SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
 # export GOOGLE_MAPS_ANDROID_API_KEY="..."
 
 # Optional: make `flutter run` auto-append --dart-define from env (zsh/bash).
+# The wrapper injects defines after the subcommand (e.g. `flutter run --dart-define=...`).
 export PATH="$(pwd)/tool/direnv/bin:${PATH}"
 ```

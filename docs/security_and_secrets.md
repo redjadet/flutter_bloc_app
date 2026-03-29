@@ -53,7 +53,7 @@ direnv allow
 
 Copy **[`docs/envrc.example`](envrc.example)** to the repo root as `.envrc`, fill in placeholders, then `direnv allow`.
 
-The example includes an optional `flutter()` shell function that prepends `--dart-define=...` for any keys you exported, so plain `flutter run -t lib/main_dev.dart` (including **iOS simulator**) picks up the same secrets as Android-oriented workflows.
+The example prepends `tool/direnv/bin` to `PATH`, which provides a lightweight `flutter` wrapper that injects `--dart-define=...` **after the Flutter subcommand** (e.g. `flutter run --dart-define=...`). This is required because `--dart-define` is not a global Flutter flag.
 
 If you prefer not to wrap `flutter`, use:
 
