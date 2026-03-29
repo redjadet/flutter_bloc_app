@@ -144,7 +144,6 @@ flutter:
 
   assets:
     - assets/config/realtime_database_seed.json
-    - assets/config/secrets.json
     - assets/config/secrets.sample.json
     - assets/icons/
     - assets/images/
