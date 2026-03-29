@@ -13,6 +13,8 @@ import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 
 /// Registers IoT demo services (offline-first, per-Supabase-user local storage).
+const String _iotDemoLocalOnlyStorageScope = 'local_only';
+
 void registerIotDemoServices() {
   registerLazySingletonIfAbsent<IotDemoRealtimeSubscription>(
     IotDemoRealtimeSubscription.new,
@@ -22,8 +24,12 @@ void registerIotDemoServices() {
   );
   registerLazySingletonIfAbsent<IotDemoRepository>(
     () => OfflineFirstIotDemoRepository(
-      getCurrentSupabaseUserId: () =>
-          getIt<SupabaseAuthRepository>().currentUser?.id,
+      getCurrentSupabaseUserId: () {
+        if (!SupabaseBootstrapService.isSupabaseInitialized) {
+          return _iotDemoLocalOnlyStorageScope;
+        }
+        return getIt<SupabaseAuthRepository>().currentUser?.id;
+      },
       getPersistentRepository: (final supabaseUserId) =>
           PersistentIotDemoRepository(
             hiveService: getIt<HiveService>(),

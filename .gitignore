@@ -100,3 +100,4 @@ fastlane/report.xml
 
 # Local agent scorecard log (do not commit)
 analysis/agent_scorecard/scorecard-events.jsonl
+docs/agents_quick_reference.md

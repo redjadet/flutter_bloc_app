@@ -227,11 +227,15 @@ Future<void> _doPullRemoteImpl({
         .getPendingOperations(
           supabaseUserIdFilter: userIdBefore,
         );
-    if (pending.any(
+    final bool hasPendingIotOps = pending.any(
       (final op) =>
           op.entityType == OfflineFirstIotDemoRepository.iotDemoEntity,
-    )) {
-      return;
+    );
+    if (hasPendingIotOps) {
+      final List<IotDevice> localDevices = await local.watchDevices().first;
+      if (localDevices.isNotEmpty) {
+        return;
+      }
     }
     final List<IotDevice> remoteDevices = await remote.fetchDevices();
     final String? userIdAfter = r._currentSupabaseUserId();

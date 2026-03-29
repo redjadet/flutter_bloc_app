@@ -6,9 +6,20 @@ This document lists **temporary workarounds** used in this project when upstream
 
 ---
 
-## 1. [Resolved 2026-02] path_provider_foundation on iOS 26.2 Simulator (objective_c FFI crash)
+## 1. [Updated 2026-03] path_provider_foundation on iOS 26.x Simulator (`objective_c` FFI crash)
 
-**Long-term solution applied:** Override to **path_provider_foundation 2.6.0** (not 2.5.1). Version 2.6.0 re-landed the FFI implementation with fixes for iOS 26 simulator compatibility (Flutter 3.38.4+, objective_c 9.2.1, Flutter issue #178915). The project uses Flutter 3.41.6, so the fix is valid. We keep a `dependency_overrides: path_provider_foundation: 2.6.0` until `path_provider` updates its dependency range to include 2.6.0; then the override can be removed.
+**Symptom:** App startup crashes on iOS 26.4 simulator while resolving
+documents/support directories through `path_provider_foundation`, with
+`Couldn't resolve native function 'DOBJC_initializeApi'` and
+`Failed to load dynamic library 'objective_c.framework/objective_c'`.
+
+**Root cause:** `path_provider_foundation 2.6.0` uses the `objective_c` FFI
+path. On current iOS 26.4 simulator runtimes in this workspace, that native
+asset load can fail during `Hive.initFlutter()`.
+
+**Current workaround:** Pin `path_provider_foundation` to **2.5.1**, which uses
+the non-FFI implementation and avoids the simulator startup crash. Revisit when
+upstream packages ship a stable FFI fix for current iOS 26 simulator runtimes.
 
 ---
 

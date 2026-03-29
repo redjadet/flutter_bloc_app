@@ -8,7 +8,7 @@ and production-minded delivery workflows in a single codebase.
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.6-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.4-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-77%2E77%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-77%2E84%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
 [![State Management](https://img.shields.io/badge/State%20Management-BLOC%2FCubit-2196F3.svg)](https://pub.dev/packages/flutter_bloc)
@@ -157,38 +157,59 @@ For module entry points and capability notes, see [Feature Overview](docs/featur
 
 ## Screenshots
 
-| Counter Home | Auto Countdown | Settings |
-| --- | --- | --- |
-| ![Counter home screen](assets/screenshots/small/counter_home.png) | ![Counter screen with countdown](assets/screenshots/small/counter_home2.png) | ![Settings screen](assets/screenshots/small/settings.png) |
+<!-- markdownlint-disable MD033 -->
 
-| Charts | GraphQL | AI Chat |
-| --- | --- | --- |
-| ![Charts page](assets/screenshots/small/chart.png) | ![GraphQL countries browser](assets/screenshots/small/graphQL_countries.png) | ![AI chat conversation](assets/screenshots/small/ai_chat.png) |
+### Core app
 
-| GenUI Demo |
+| Counter | Countdown | Settings |
+| --- | --- | --- |
+| <img src="assets/screenshots/small/counter_home.png" alt="Counter home screen" width="240" /> | <img src="assets/screenshots/small/counter_home2.png" alt="Counter screen with countdown" width="240" /> | <img src="assets/screenshots/small/settings.png" alt="Settings screen" width="240" /> |
+
+### Data, sync, and feature flows
+
+| Profile | Profile 2 | IoT demo |
+| --- | --- | --- |
+| <img src="assets/screenshots/profile.png" alt="Profile screen" width="240" /> | <img src="assets/screenshots/profile2.png" alt="Profile screen (2)" width="240" /> | <img src="assets/screenshots/IoT.png" alt="IoT demo" width="240" /> |
+
+| IoT demo 2 | Todo list | Swipe actions |
+| --- | --- | --- |
+| <img src="assets/screenshots/IoT2.png" alt="IoT demo 2" width="240" /> | <img src="assets/screenshots/todolist.png" alt="Todo List screen" width="240" /> | <img src="assets/screenshots/todolistSwipe.png" alt="Todo List swipe action" width="240" /> |
+
+| Search | Charts | GraphQL |
+| --- | --- | --- |
+| <img src="assets/screenshots/search.png" alt="Search demo" width="240" /> | <img src="assets/screenshots/small/chart.png" alt="Charts page" width="240" /> | <img src="assets/screenshots/small/graphQL_countries.png" alt="GraphQL countries browser" width="240" /> |
+
+### Integrations and demos
+
+| AI chat | Apple Maps | Google Maps |
+| --- | --- | --- |
+| <img src="assets/screenshots/small/ai_chat.png" alt="AI chat conversation" width="240" /> | <img src="assets/screenshots/apple_maps.png" alt="Apple Maps demo" width="240" /> | <img src="assets/screenshots/google_maps.png" alt="Google Maps demo" width="240" /> |
+
+| GenUI | Calculator | Summary |
+| --- | --- | --- |
+| <img src="assets/screenshots/gen_ui.png" alt="GenUI Demo - AI-generated dynamic UI" width="240" /> | <img src="assets/screenshots/calculator.png" alt="Payment calculator screen" width="240" /> | <img src="assets/screenshots/paymentSummary.png" alt="Payment summary screen" width="240" /> |
+
+| Register | In-app purchase | Whiteboard colors |
+| --- | --- | --- |
+| <img src="assets/screenshots/register.png" alt="Register screen" width="240" /> | <img src="assets/screenshots/in_app_purchase.png" alt="In-app purchase screen" width="240" /> | <img src="assets/screenshots/whiteboard_color_pick.png" alt="Whiteboard color picker" width="240" /> |
+
+| Whiteboard | Markdown | Camera & gallery |
+| --- | --- | --- |
+| <img src="assets/screenshots/whiteboard.png" alt="Whiteboard" width="240" /> | <img src="assets/screenshots/markdown_editor.png" alt="Markdown Editor" width="240" /> | <img src="assets/screenshots/camera_gallery.png" alt="Camera and gallery picker" width="240" /> |
+
+| Example | Library demo | Library demo 2 |
+| --- | --- | --- |
+| <img src="assets/screenshots/example.png" alt="Example screen" width="240" /> | <img src="assets/screenshots/library_demo.png" alt="Library Demo screen" width="240" /> | <img src="assets/screenshots/library_demo2.png" alt="Library Demo 2 screen" width="240" /> |
+
+| Learn | Chat list | iGaming |
+| --- | --- | --- |
+| <img src="assets/screenshots/learn.png" alt="Learn" width="240" /> | <img src="assets/screenshots/chat_list.png" alt="Chat list screen" width="240" /> | <img src="assets/screenshots/igaming.png" alt="iGaming" width="240" /> |
+
+| Scapes |
 | --- |
-<!-- markdownlint-disable-next-line MD033 -->
-| <img src="assets/screenshots/gen_ui.png" alt="GenUI Demo - AI-generated dynamic UI" width="240" /> |
+| <img src="assets/screenshots/scapes.png" alt="Scapes screen" width="240" /> |
 
-| Apple Maps Demo | Google Maps Demo | Search |
-| --- | --- | --- |
-| ![Apple Maps demo](assets/screenshots/apple_maps.png) | ![Google Maps demo](assets/screenshots/google_maps.png) | ![Search demo](assets/screenshots/search.png) |
-
-| Payment Calculator | Payment Summary | Register |
-| --- | --- | --- |
-| ![Payment calculator screen](assets/screenshots/calculator.png) | ![Payment summary screen](assets/screenshots/paymentSummary.png) | ![Register screen](assets/screenshots/register.png) |
-
-| Color Picker | Whiteboard | Markdown Editor |
-| --- | --- | --- |
-| ![Whiteboard color picker](assets/screenshots/whiteboard_color_pick.png) | ![Whiteboard](assets/screenshots/whiteboard.png) | ![Markdown Editor](assets/screenshots/markdown_editor.png) |
-
-| Todo List | Todo List Swipe Action |
-| --- | --- |
-| ![Todo List screen](assets/screenshots/todolist.png) | ![Todo List swipe action](assets/screenshots/todolistSwipe.png) |
-
-| Library Demo | Library Demo 2 |
-| --- | --- |
-| ![Library Demo screen](assets/screenshots/library_demo.png) | ![Library Demo 2 screen](assets/screenshots/library_demo2.png) |
+<!-- markdownlint-enable MD033 -->
 
 ## License
 
