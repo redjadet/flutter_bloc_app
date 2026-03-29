@@ -7,6 +7,7 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 > - [Clean Architecture](clean_architecture.md) - Overall architecture overview and layer responsibilities
 > - [Code Quality](CODE_QUALITY.md) - Comprehensive SOLID principles analysis with verification results
 > - [Architecture Details](architecture_details.md) - Architecture diagrams and dependency flow
+> - [Offline-First Architecture Case Study](engineering/offline_first_flutter_architecture_with_conflict_resolution.md) - Example of repository-level composition without leaking sync logic upward
 > - [Flutter Best Practices Review](flutter_best_practices_review.md) - SOLID principles review section
 
 ## Single Responsibility
@@ -45,6 +46,9 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 - All services are wired through `getIt` (feature-specific registration files in `lib/core/di/`), depending on interfaces (e.g., `NetworkStatusService`, `TimerService`, repositories) rather than concrete classes.
 - DI registrations are organized by feature (`register_chat_services.dart`, `register_profile_services.dart`, etc.) to improve SRP and maintainability.
 - UI layers receive dependencies via constructors (e.g., `ProfileCacheControlsSection`, page providers) or DI factory functions, keeping Flutter widgets free of new allocations of data sources.
+- App-shell composition points (`BootstrapCoordinator`, router, `AppScope`) can
+  resolve and wire implementations, but lower-level feature code should still
+  depend on abstractions.
 
 ## How SOLID Shows Up in Practice
 
@@ -62,7 +66,7 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 - **LSP:** Production services are substitutable with fakes in tests
   (`FakeTimerService`, mock repositories) without behavior changes.
 - **ISP:** Feature interfaces remain small and focused — e.g. `ChatRepository`
-  only exposes `sendMessage`; `ChatHistoryRepository` only load/save.
+  only exposes `sendMessage`; `ChatHistoryRepository` only exposes load/save.
 - **DIP:** Most cubits and pages receive interfaces via constructors and `getIt`.
   Settings presentation depends on cache interfaces, not concrete Hive classes.
   `OfflineFirstChatRepository` delegates sync payloads to
@@ -74,6 +78,9 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 - **Presentation → data-layer imports:** Periodically verify no new data-layer
   imports creep into presentation code:
   `rg "features/.*/data" lib/features -g"*presentation*.dart"`
+- **App shell overreach:** Keep `lib/app/` and bootstrap code focused on
+  composition. If route files or `AppScope` start accumulating feature business
+  rules, SOLID boundaries are slipping.
 - **Offline-first repository growth:** When a new offline-first repository gains
   multiple responsibilities, extract collaborators early (same pattern as Chat).
 

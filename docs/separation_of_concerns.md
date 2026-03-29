@@ -18,6 +18,7 @@ independently.
 
 In this repository, Separation of Concerns means:
 
+- App shell owns startup, routing, and app-scope composition
 - Domain types stay Flutter-agnostic
 - Data layer owns persistence, networking, and SDK integration
 - Presentation owns user flows, rendering, and UI state transitions
@@ -42,7 +43,17 @@ likely to accumulate hidden coupling.
 This is enforced both by convention and by validation scripts such as
 `tool/check_flutter_domain_imports.sh`.
 
-### 2. Orchestration vs Infrastructure
+### 2. App Shell vs Feature Modules
+
+- `BootstrapCoordinator`, `MyApp`, `AppScope`, and the router compose the app
+  from above. They decide which providers, listeners, and feature pages are in
+  play, but they should not absorb feature business rules.
+- Feature modules own their own contracts, repositories, cubits, and widgets
+  under `lib/features/<feature>/`.
+- This distinction matters because app-shell code is allowed to know about many
+  features at once, while feature code should remain scoped and replaceable.
+
+### 3. Orchestration vs Infrastructure
 
 - `BackgroundSyncCoordinator` in `lib/shared/sync/background_sync_coordinator.dart`
   coordinates sync cycles, but delegates timing to `TimerService`,
@@ -52,7 +63,7 @@ This is enforced both by convention and by validation scripts such as
 - This keeps the coordinator focused on sync flow rather than absorbing
   storage, scheduling, and transport responsibilities into one class.
 
-### 3. Repository Delegation
+### 4. Repository Delegation
 
 - `OfflineFirstChatRepository` in
   `lib/features/chat/data/offline_first_chat_repository.dart` handles
@@ -63,7 +74,7 @@ This is enforced both by convention and by validation scripts such as
   accidental "god objects" unless sync payload mapping, local writes, and
   remote execution are separated deliberately.
 
-### 4. DI as a Composition Boundary
+### 5. DI as a Composition Boundary
 
 - Feature registrations are split into focused files such as
   `lib/core/di/register_chat_services.dart` instead of one monolithic
@@ -73,7 +84,7 @@ This is enforced both by convention and by validation scripts such as
 - This keeps feature code explicit about dependencies while avoiding container
   lookups throughout lower-level logic.
 
-### 5. UI Access Patterns
+### 6. UI Access Patterns
 
 - `lib/shared/extensions/type_safe_bloc_access.dart` centralizes typed cubit and
   state access, keeping widget code focused on rendering instead of provider
@@ -95,6 +106,8 @@ Separation of Concerns is reinforced by automated checks:
 ## Practical Rules
 
 - Put business rules in cubits and domain contracts, not widgets
+- Put routing/bootstrap/app-scope composition in the app shell, not inside
+  feature repositories or widgets
 - Put SDK, storage, and transport code in repositories/services, not cubits
 - Keep shared services narrow and focused; do not turn `shared/` into a dump
 - Use DI registration files as composition points, not as hidden service
@@ -105,6 +118,7 @@ Separation of Concerns is reinforced by automated checks:
 ## Review Checklist
 
 - Domain files remain free of Flutter imports
+- App shell code remains composition-focused rather than feature-rule-heavy
 - Presentation depends on interfaces or cubits, not data-layer implementations
 - Data layer does not import presentation code
 - Large orchestration classes delegate mapping, persistence, or transport work

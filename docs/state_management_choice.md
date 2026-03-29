@@ -4,7 +4,9 @@ This document explains why **BLoC/Cubit** was selected as the state management s
 
 ## Executive Summary
 
-This application uses **BLoC/Cubit** pattern via the `flutter_bloc` package for state management. The decision was based on several factors including predictability, testability, performance, architectural alignment, and team familiarity.
+This application uses **BLoC/Cubit** via `flutter_bloc` for feature and
+app-scope state. The decision was based on predictability, testability,
+performance, architectural alignment, and team familiarity.
 
 ## Why BLoC/Cubit?
 
@@ -78,8 +80,8 @@ BLoC/Cubit fits perfectly with Clean Architecture principles:
 **Architecture Example:**
 
 ```text
-Widget → Cubit → Repository Interface → Repository Implementation
-(Presentation) → (Business Logic) → (Domain) → (Data)
+App shell / Route → Widget → Cubit → Domain contract ← Repository implementation
+      (composition)      (presentation)   (presentation)      (data)
 ```
 
 ### 5. Mature Ecosystem & Tooling
@@ -185,7 +187,7 @@ Riverpod is a reactive state management solution that:
 **BLoC/Cubit:**
 
 - Naturally fits Clean Architecture
-- Clear separation: Widget → Cubit → Repository
+- Clear separation: App shell / Widget → Cubit → Domain contract ← Repository
 - Business logic isolated from UI
 - Works well with dependency injection (get_it)
 
@@ -398,15 +400,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
 ### Integration with Clean Architecture
 
-BLoC/Cubit integrates seamlessly with our Clean Architecture:
+BLoC/Cubit integrates with clean architecture by sitting in the presentation
+layer while the app shell composes routes and providers from above:
 
 ```text
+lib/app/
+├── app.dart / app_scope.dart / router/ (app shell + composition)
 lib/features/counter/
 ├── domain/
 │   ├── counter_repository.dart (interface)
 │   └── counter.dart (domain model)
 ├── data/
-│   └── hive_counter_repository.dart (implementation)
+│   └── offline_first_counter_repository.dart (implementation)
 └── presentation/
     ├── counter_cubit.dart (business logic)
     └── widgets/

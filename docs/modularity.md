@@ -7,12 +7,28 @@ This document describes how the codebase stays modular: dependency direction, sh
 > - [Clean Architecture](clean_architecture.md) - Layer responsibilities and dependency flow
 > - [Architecture Details](architecture_details.md) - High-level architecture and diagrams
 > - [Separation of Concerns](separation_of_concerns.md) - Responsibility boundaries
+> - [Offline-First Architecture Case Study](engineering/offline_first_flutter_architecture_with_conflict_resolution.md) - Shared sync infrastructure and data-layer composition
+
+## Allowed dependency shape
+
+Use this as the shorthand:
+
+- `lib/app/` may compose features, core, and shared code
+- `lib/features/*/presentation/` may depend on its own feature `domain/` plus
+  shared/core UI helpers
+- `lib/features/*/data/` may depend on its own feature `domain/`, shared/core
+  infrastructure, and external SDKs
+- `lib/features/*/domain/` should remain pure Dart and feature-scoped
+- `lib/shared/` must not depend on `lib/features/`
 
 ## Dependency direction
 
 - **`lib/shared/` must never import `lib/features/`.** Shared code is used by many features; it cannot depend on any single feature. If a helper (e.g. markdown parsing, design tokens) is needed by both shared and a feature, it lives in `lib/shared/` and the feature imports from there.
 - **Feature-to-feature imports are avoided.** Features do not depend on other features’ domain or presentation. When one screen needs another feature’s widget or data, composition is done in the **app layer** (router, app scope, or a page that receives dependencies via parameters).
 - **`lib/core/`** holds app-wide infrastructure. It may depend on feature types only at composition points (e.g. router building a feature page). Prefer interfaces in `core/` or `shared/` when multiple features or the app need a contract (e.g. auth, theme).
+- **`lib/app/` is the explicit composition layer.** It is allowed to import
+  multiple features because that is where routes, auth redirects, app-scope
+  providers, and screen composition are assembled.
 
 ## Core and shared contracts
 
@@ -51,6 +67,9 @@ Canonical checklist with `[x]` markers: [settings_diagnostics_decouple_plan.md](
 
 ## Composition in the app layer
 
+- **App shell** – `lib/main_bootstrap.dart`, `lib/core/bootstrap/`, `lib/app.dart`,
+  and `lib/app/app_scope.dart` own startup, DI bootstrapping, router creation,
+  and app-scope providers/listeners.
 - **Counter + Remote Config** – The counter feature does not import remote_config. The counter page exposes an optional **banner slot** (`Widget? optionalBanner`). The **router** (`lib/app/router/routes_core.dart`) builds `CounterPage` and passes `AwesomeFeatureWidget()` as the banner. Counter stays agnostic; composition is in the app.
 - **Auth gates** – `AppRouteAuthGate` and feature-level gates (e.g. `IotDemoAuthGate`) take `getCurrentUser` and `authStateChanges` (or an auth repository) as parameters. The router supplies these from DI. Gates depend on the core `AuthUser` type only.
 
