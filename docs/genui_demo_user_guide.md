@@ -35,7 +35,7 @@ Before using the GenUI Demo, you need to configure a Google Gemini API key:
 
    **Option A: Recommended local dev (`direnv`)**
 
-   Copy [`docs/envrc.example`](envrc.example) to `.envrc`, set `GEMINI_API_KEY`, run `direnv allow`, then use the optional `flutter()` wrapper documented in [Security & Secrets](security_and_secrets.md) so plain `flutter run` passes `--dart-define` automatically (works for iOS simulator and Android).
+   Copy [`docs/envrc.example`](envrc.example) to `.envrc`, set `GEMINI_API_KEY`, run `direnv allow`, then use plain `flutter run` (the PATH-based wrapper injects `--dart-define` automatically; works for iOS simulator and Android).
 
    **Option B: Explicit `--dart-define`**
 
