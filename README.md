@@ -47,6 +47,12 @@ throughout this page.
 
 ## Quick Start
 
+### Android (Google Play)
+
+You can install the published Android build from the Google Play Store:
+
+[flutter_bloc_app on Google Play](https://play.google.com/store/apps/details?id=com.ilkersevim.blocflutter)
+
 ### Prerequisites
 
 - Flutter `3.41.6`
