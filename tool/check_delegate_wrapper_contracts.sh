@@ -7,7 +7,18 @@ CODEX_WRAPPER="$PROJECT_ROOT/.cursor/skills/cursor-codex-delegate/scripts/delega
 if [[ ! -x "$CODEX_WRAPPER" ]]; then
   CODEX_WRAPPER="$USER_SKILLS/cursor-codex-delegate/scripts/delegate_to_codex.sh"
 fi
-GSTACK_CODEX_SKILL="$PROJECT_ROOT/.agents/skills/gstack/.agents/skills/gstack-codex/SKILL.md"
+# Optional: local vendored gstack under ignored `.agents/`, or a global Codex skill install.
+GSTACK_CODEX_SKILL=""
+for _gstack_candidate in \
+  "$PROJECT_ROOT/.agents/skills/gstack/.agents/skills/gstack-codex/SKILL.md" \
+  "$HOME/.codex/skills/gstack-codex/SKILL.md"
+do
+  if [[ -f "$_gstack_candidate" ]]; then
+    GSTACK_CODEX_SKILL="$_gstack_candidate"
+    break
+  fi
+done
+unset _gstack_candidate
 CURSOR_WRAPPER="$PROJECT_ROOT/.cursor/skills/codex-cursor-agent-delegate/scripts/delegate_to_cursor_agent.sh"
 if [[ ! -x "$CURSOR_WRAPPER" ]]; then
   CURSOR_WRAPPER="$USER_SKILLS/codex-cursor-agent-delegate/scripts/delegate_to_cursor_agent.sh"
@@ -28,8 +39,17 @@ set -euo pipefail
 mode="${MOCK_CODEX_MODE:-success}"
 json_mode="false"
 capture_args_file="${MOCK_CODEX_CAPTURE_ARGS_FILE:-}"
+capture_stdin_file="${MOCK_CODEX_CAPTURE_STDIN_FILE:-}"
+output_file=""
+stdin_payload=""
+if [[ ! -t 0 ]]; then
+  stdin_payload="$(cat)"
+fi
 if [[ -n "$capture_args_file" ]]; then
   printf '%s\n' "$*" >"$capture_args_file"
+fi
+if [[ -n "$capture_stdin_file" ]]; then
+  printf '%s' "$stdin_payload" >"$capture_stdin_file"
 fi
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -38,6 +58,7 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     -o)
+      output_file="$2"
       shift 2
       ;;
     *)
@@ -45,7 +66,13 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+emit_output_file() {
+  if [[ -n "$output_file" ]]; then
+    printf '%s\n' '{"final":"OK_FROM_MOCK_CODEX"}' >"$output_file"
+  fi
+}
 if [[ "$mode" == "success" ]]; then
+  emit_output_file
   if [[ "$json_mode" == "true" ]]; then
     printf '%s\n' '{"type":"thread.started","thread_id":"mock-thread"}'
     printf '%s\n' '{"type":"turn.started"}'
@@ -57,6 +84,7 @@ if [[ "$mode" == "success" ]]; then
 fi
 if [[ "$mode" == "delayed_success" ]]; then
   sleep "${MOCK_CODEX_DELAY_SECONDS:-0.3}"
+  emit_output_file
   if [[ "$json_mode" == "true" ]]; then
     printf '%s\n' '{"type":"thread.started","thread_id":"mock-thread"}'
     printf '%s\n' '{"type":"turn.started"}'
@@ -67,6 +95,7 @@ if [[ "$mode" == "delayed_success" ]]; then
   exit 0
 fi
 if [[ "$mode" == "success_nonzero" ]]; then
+  emit_output_file
   if [[ "$json_mode" == "true" ]]; then
     printf '%s\n' '{"type":"thread.started","thread_id":"mock-thread"}'
     printf '%s\n' '{"type":"turn.started"}'
@@ -114,9 +143,10 @@ run_codex_contract() {
   fi
 
   if [[ ! -f "$GSTACK_CODEX_SKILL" ]]; then
-    echo "Missing Codex delegate entrypoint. Checked:" >&2
+    echo "Missing Codex delegate entrypoint. Install the repo Cursor->Codex delegate skill, or add a local gstack-codex skill at one of:" >&2
     echo "  $CODEX_WRAPPER" >&2
-    echo "  $GSTACK_CODEX_SKILL" >&2
+    echo "  $PROJECT_ROOT/.agents/skills/gstack/.agents/skills/gstack-codex/SKILL.md" >&2
+    echo "  $HOME/.codex/skills/gstack-codex/SKILL.md" >&2
     exit 1
   fi
 
@@ -258,6 +288,81 @@ fi
 
 echo "== cursor wrapper: marker contract success =="
 MOCK_AGENT_MODE=with_markers "$CURSOR_WRAPPER" --prompt "ping" --workspace "$PROJECT_ROOT" >/dev/null
+
+echo "== request_codex_feedback: direct codex backend success =="
+request_repo="$tmp_dir/request-feedback-repo"
+mkdir -p "$request_repo"
+git -C "$request_repo" init -q
+git -C "$request_repo" config user.email "mock@example.com"
+git -C "$request_repo" config user.name "Mock User"
+printf '%s\n' 'alpha' >"$request_repo/sample.txt"
+git -C "$request_repo" add sample.txt
+git -C "$request_repo" commit -q -m "init"
+printf '%s\n' 'beta' >"$request_repo/sample.txt"
+printf '%s\n' 'untracked' >"$request_repo/new_untracked.md"
+direct_args_capture_file="$tmp_dir/request-helper-codex-args.txt"
+direct_stdin_capture_file="$tmp_dir/request-helper-codex-stdin.txt"
+direct_output="$(
+  MOCK_CODEX_CAPTURE_ARGS_FILE="$direct_args_capture_file" \
+  MOCK_CODEX_CAPTURE_STDIN_FILE="$direct_stdin_capture_file" \
+    "$PROJECT_ROOT/tool/request_codex_feedback.sh" --backend codex-cli --workspace "$request_repo" --focus "contract test"
+)"
+if [[ "$direct_output" != *'OK_FROM_MOCK_CODEX'* ]]; then
+  echo "Expected direct codex backend review helper to return the mock Codex payload." >&2
+  exit 1
+fi
+if ! grep -Fq -- '--sandbox read-only' "$direct_args_capture_file"; then
+  echo "Expected direct codex backend to force read-only sandbox mode." >&2
+  cat "$direct_args_capture_file" >&2
+  exit 1
+fi
+if ! grep -Fq -- 'model_reasoning_effort="medium"' "$direct_args_capture_file"; then
+  echo "Expected direct codex backend to force a supported reasoning effort override." >&2
+  cat "$direct_args_capture_file" >&2
+  exit 1
+fi
+if ! grep -Fq -- 'mcp_servers.firebase.enabled=false' "$direct_args_capture_file"; then
+  echo "Expected direct codex backend to disable Firebase MCP like the wrapper path." >&2
+  cat "$direct_args_capture_file" >&2
+  exit 1
+fi
+if grep -Fq -- '-a' "$direct_args_capture_file"; then
+  echo "Direct codex backend should not pass unsupported approval flags to codex exec." >&2
+  cat "$direct_args_capture_file" >&2
+  exit 1
+fi
+if ! grep -Fq -- 'new_untracked.md' "$direct_stdin_capture_file"; then
+  echo "Expected direct codex backend prompt to include untracked files in the review diff." >&2
+  cat "$direct_stdin_capture_file" >&2
+  exit 1
+fi
+
+echo "== request_codex_feedback: untracked-only repo success =="
+untracked_only_repo="$tmp_dir/request-feedback-untracked-only-repo"
+mkdir -p "$untracked_only_repo"
+git -C "$untracked_only_repo" init -q
+git -C "$untracked_only_repo" config user.email "mock@example.com"
+git -C "$untracked_only_repo" config user.name "Mock User"
+printf '%s\n' 'seed' >"$untracked_only_repo/base.txt"
+git -C "$untracked_only_repo" add base.txt
+git -C "$untracked_only_repo" commit -q -m "init"
+rm "$untracked_only_repo/base.txt"
+git -C "$untracked_only_repo" checkout -- base.txt
+printf '%s\n' 'only-untracked' >"$untracked_only_repo/only_untracked.md"
+untracked_only_stdin_capture_file="$tmp_dir/request-helper-untracked-only-stdin.txt"
+untracked_only_output="$(
+  MOCK_CODEX_CAPTURE_STDIN_FILE="$untracked_only_stdin_capture_file" \
+    "$PROJECT_ROOT/tool/request_codex_feedback.sh" --backend codex-cli --workspace "$untracked_only_repo" --focus "untracked-only contract test"
+)"
+if [[ "$untracked_only_output" != *'OK_FROM_MOCK_CODEX'* ]]; then
+  echo "Expected untracked-only review helper run to return the mock Codex payload." >&2
+  exit 1
+fi
+if ! grep -Fq -- 'only_untracked.md' "$untracked_only_stdin_capture_file"; then
+  echo "Expected untracked-only review helper run to include the untracked file in the prompt." >&2
+  cat "$untracked_only_stdin_capture_file" >&2
+  exit 1
+fi
 
 echo "== cursor wrapper: missing marker fails =="
 set +e

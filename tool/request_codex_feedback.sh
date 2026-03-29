@@ -5,20 +5,28 @@ usage() {
   cat <<'EOF'
 Usage: request_codex_feedback.sh [options]
 
-Ask the repo's Cursor->Codex delegate wrapper to review the current git diff.
-By default this reviews staged changes first, then falls back to unstaged
-changes.
+Review the current git diff with the repo-managed cross-host review flow.
+Default behavior:
+  - prefers the Cursor->Codex delegate wrapper when available
+  - falls back to direct `codex exec` otherwise
+  - reviews staged diff first, then unstaged/untracked diff
 
 Options:
-  --focus TEXT        Extra review focus to append to the Codex prompt.
-  --base BRANCH       Review committed branch diff against BRANCH via
-                      git diff BRANCH...HEAD.
-  --staged            Review only staged changes.
-  --unstaged          Review only unstaged changes.
-  --profile NAME      Delegation profile: fast or balanced. Default: balanced.
-  --raw-response      Print raw Codex output instead of extracted final payload.
+  --focus TEXT        Extra review focus.
+  --base BRANCH       Review BRANCH...HEAD instead of local changes.
+  --staged            Review staged changes only.
+  --unstaged          Review unstaged and untracked changes only.
+  --profile NAME      fast or balanced. Default: balanced.
+  --backend NAME      auto, cursor-wrapper, or codex-cli. Default: auto.
+  --raw-response      Print backend output without final extraction.
   --workspace PATH    Repo/workspace root. Default: current repository root.
   -h, --help          Show this help.
+
+Examples:
+  ./tool/request_codex_feedback.sh
+  ./tool/request_codex_feedback.sh --focus "routing and auth regressions"
+  ./tool/request_codex_feedback.sh --base main
+  ./tool/request_codex_feedback.sh --backend codex-cli
 EOF
 }
 
@@ -28,6 +36,7 @@ diff_mode="auto"
 base_branch=""
 profile="balanced"
 raw_response="false"
+backend="auto"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -63,6 +72,14 @@ while [[ $# -gt 0 ]]; do
       profile="$2"
       shift 2
       ;;
+    --backend)
+      [[ $# -ge 2 ]] || {
+        echo "Missing value for --backend" >&2
+        exit 2
+      }
+      backend="$2"
+      shift 2
+      ;;
     --raw-response)
       raw_response="true"
       shift
@@ -96,18 +113,6 @@ if [[ ! -d "$workspace" ]]; then
   exit 2
 fi
 
-wrapper="$workspace/.cursor/skills/cursor-codex-delegate/scripts/delegate_to_codex.sh"
-if [[ ! -x "$wrapper" ]]; then
-  wrapper="${HOME}/.cursor/skills/cursor-codex-delegate/scripts/delegate_to_codex.sh"
-fi
-if [[ ! -x "$wrapper" ]]; then
-  echo "Cursor->Codex delegate wrapper not found. Install skills under the repo" >&2
-  echo "  $workspace/.cursor/skills/cursor-codex-delegate/..." >&2
-  echo "or globally:" >&2
-  echo "  ${HOME}/.cursor/skills/cursor-codex-delegate/..." >&2
-  exit 1
-fi
-
 if ! git -C "$workspace" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   echo "Workspace is not a git repository: $workspace" >&2
   exit 2
@@ -117,6 +122,14 @@ case "$profile" in
   fast|balanced) ;;
   *)
     echo "Unsupported --profile: $profile (expected fast or balanced)" >&2
+    exit 2
+    ;;
+esac
+
+case "$backend" in
+  auto|cursor-wrapper|codex-cli) ;;
+  *)
+    echo "Unsupported --backend: $backend" >&2
     exit 2
     ;;
 esac
@@ -142,7 +155,28 @@ select_diff_mode() {
     return 0
   fi
 
+  if [[ -n "$(git -C "$workspace" ls-files --others --exclude-standard)" ]]; then
+    printf '%s\n' "unstaged"
+    return 0
+  fi
+
   return 1
+}
+
+build_untracked_diff() {
+  local rel_path untracked_output file_diff
+
+  while IFS= read -r rel_path; do
+    [[ -n "$rel_path" ]] || continue
+    if [[ -e "$workspace/$rel_path" || -L "$workspace/$rel_path" ]]; then
+      file_diff="$(git -C "$workspace" diff --no-index -- /dev/null "$workspace/$rel_path" || true)"
+      if [[ -n "${file_diff//[[:space:]]/}" ]]; then
+        untracked_output+="${file_diff}"$'\n'
+      fi
+    fi
+  done < <(git -C "$workspace" ls-files --others --exclude-standard)
+
+  printf '%s' "$untracked_output"
 }
 
 if [[ -n "$base_branch" ]]; then
@@ -173,6 +207,11 @@ else
     mode_description="unstaged changes"
     stat_output="$(git -C "$workspace" diff --stat)"
     diff_output="$(git -C "$workspace" diff)"
+    untracked_diff="$(build_untracked_diff)"
+    if [[ -n "${untracked_diff//[[:space:]]/}" ]]; then
+      diff_output+=$'\n'"$untracked_diff"
+      stat_output+=$'\n'"(includes untracked files from git ls-files --others --exclude-standard)"
+    fi
   fi
 fi
 
@@ -193,6 +232,8 @@ Review the current git diff from this Flutter/Dart repository.
 
 Return findings only, ordered by severity.
 - Focus on correctness, regressions, edge cases, failure handling, and missing validation.
+- Apply the AI review gate mindset: draft-first, problem-fit, simplification,
+  security, performance, edge cases, dependency skepticism, and tests.
 - Call out shell/script robustness issues when relevant.
 - Do not praise the code or restate the diff.
 - If you find no material issues, respond with exactly: No material findings.
@@ -211,14 +252,148 @@ $diff_output
 EOF
 )"
 
-cmd=(
-  "$wrapper"
-  "--workspace" "$workspace"
-  "--profile" "$profile"
-  "--skip-firebase-mcp"
-)
-if [[ "$raw_response" == "true" ]]; then
-  cmd+=("--raw-response")
-fi
+resolve_wrapper() {
+  local candidate
+  for candidate in \
+    "$workspace/.cursor/skills/cursor-codex-delegate/scripts/delegate_to_codex.sh" \
+    "$HOME/.cursor/skills/cursor-codex-delegate/scripts/delegate_to_codex.sh"
+  do
+    if [[ -x "$candidate" ]]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
 
-printf '%s\n' "$prompt_text" | "${cmd[@]}"
+resolve_backend() {
+  if [[ "$backend" == "cursor-wrapper" ]]; then
+    resolve_wrapper >/dev/null || {
+      echo "Requested --backend cursor-wrapper but no wrapper was found." >&2
+      exit 1
+    }
+    printf '%s\n' "cursor-wrapper"
+    return 0
+  fi
+
+  if [[ "$backend" == "codex-cli" ]]; then
+    command -v codex >/dev/null 2>&1 || {
+      echo "Requested --backend codex-cli but codex is not installed." >&2
+      exit 127
+    }
+    printf '%s\n' "codex-cli"
+    return 0
+  fi
+
+  if resolve_wrapper >/dev/null 2>&1; then
+    printf '%s\n' "cursor-wrapper"
+    return 0
+  fi
+
+  command -v codex >/dev/null 2>&1 || {
+    echo "No Cursor delegate wrapper found and codex is not installed." >&2
+    exit 127
+  }
+  printf '%s\n' "codex-cli"
+}
+
+run_cursor_wrapper() {
+  local wrapper
+  wrapper="$(resolve_wrapper)"
+  cmd=(
+    "$wrapper"
+    "--workspace" "$workspace"
+    "--profile" "$profile"
+    "--skip-firebase-mcp"
+  )
+  if [[ "$raw_response" == "true" ]]; then
+    cmd+=("--raw-response")
+  fi
+  printf '%s\n' "$prompt_text" | "${cmd[@]}"
+}
+
+run_direct_codex() {
+  local schema_file output_file raw_file reasoning_effort
+  command -v python3 >/dev/null 2>&1 || {
+    echo "Direct codex backend requires python3." >&2
+    return 127
+  }
+  command -v mktemp >/dev/null 2>&1 || {
+    echo "Direct codex backend requires mktemp." >&2
+    return 127
+  }
+  # Direct Codex CLI fallback uses file-backed schema/output paths. Callers can
+  # steer placement via TMPDIR when the environment is constrained.
+  schema_file="$(mktemp)"
+  output_file="$(mktemp)"
+  raw_file="$(mktemp)"
+  trap 'rm -f "$schema_file" "$output_file" "$raw_file"' RETURN
+
+  cat >"$schema_file" <<'EOF'
+{
+  "type": "object",
+  "properties": {
+    "final": { "type": "string" }
+  },
+  "required": ["final"],
+  "additionalProperties": false
+}
+EOF
+
+  reasoning_effort="medium"
+  if [[ "$profile" == "fast" ]]; then
+    reasoning_effort="low"
+  fi
+
+  cmd=(
+    codex exec
+    -C "$workspace"
+    --sandbox read-only
+    -c "model_reasoning_effort=\"$reasoning_effort\""
+    -c 'model_reasoning_summary="auto"'
+    -c 'mcp_servers.firebase.enabled=false'
+    --output-schema "$schema_file"
+    -o "$output_file"
+  )
+
+  if [[ "$raw_response" == "true" ]]; then
+    cmd+=(--json)
+    if ! printf '%s\n' "$prompt_text" | "${cmd[@]}" >"$raw_file"; then
+      cat "$raw_file"
+      return 1
+    fi
+    cat "$raw_file"
+    return 0
+  fi
+
+  if ! printf '%s\n' "$prompt_text" | "${cmd[@]}" >"$raw_file"; then
+    cat "$raw_file" >&2 || true
+    return 1
+  fi
+
+  python3 - "$output_file" <<'PY'
+import json
+import sys
+path = sys.argv[1]
+text = open(path, encoding="utf-8").read().strip()
+if not text:
+    raise SystemExit("Codex returned an empty final message.")
+try:
+    payload = json.loads(text)
+except json.JSONDecodeError:
+    print(text)
+    raise SystemExit(0)
+final = payload.get("final")
+if not isinstance(final, str) or not final.strip():
+    raise SystemExit("Codex final payload did not contain a non-empty 'final' string.")
+print(final)
+PY
+}
+
+selected_backend="$(resolve_backend)"
+
+if [[ "$selected_backend" == "cursor-wrapper" ]]; then
+  run_cursor_wrapper
+else
+  run_direct_codex
+fi
