@@ -177,7 +177,7 @@ If `flutterfire configure` fails with **"Failed to write Dart configuration file
 
 ## Related docs
 
-- [Security & Secrets](security_and_secrets.md) – API keys (Hugging Face, Gemini, Maps); Firebase config is separate and not in `secrets.json`.
+- [Security & Secrets](security_and_secrets.md) – API keys (Hugging Face, Gemini, Maps) via `SecretConfig`; Firebase platform files are separate and not part of that secrets flow.
 - [Deployment](deployment.md) – Store/CI and Firebase config file locations.
 - [WalletConnect Auth Status](walletconnect_auth_status.md) – Demo Firebase setup for WalletConnect.
 - [Developer Guide](new_developer_guide.md) – Quickstart and platform setup.

@@ -33,25 +33,20 @@ Before using the GenUI Demo, you need to configure a Google Gemini API key:
 
 2. **Configure the API Key**:
 
-   **Option A: Development (using secrets.json)**
+   **Option A: Recommended local dev (`direnv`)**
 
-   ```bash
-   # Copy the sample file
-   cp assets/config/secrets.sample.json assets/config/secrets.json
+   Copy [`docs/envrc.example`](envrc.example) to `.envrc`, set `GEMINI_API_KEY`, run `direnv allow`, then use the optional `flutter()` wrapper documented in [Security & Secrets](security_and_secrets.md) so plain `flutter run` passes `--dart-define` automatically (works for iOS simulator and Android).
 
-   # Edit secrets.json and add your key
-   {
-     "GEMINI_API_KEY": "your-actual-api-key-here"
-   }
-
-   # Run with asset secrets enabled
-   flutter run --dart-define=ENABLE_ASSET_SECRETS=true
-   ```
-
-   **Option B: Production (using environment variables)**
+   **Option B: Explicit `--dart-define`**
 
    ```bash
    flutter run --dart-define=GEMINI_API_KEY=your-actual-api-key-here
+   ```
+
+   Or:
+
+   ```bash
+   flutter run $(./tool/flutter_dart_defines_from_env.sh)
    ```
 
    **Option C: Secure Storage (persisted)**

@@ -4,7 +4,6 @@ A feature-rich Flutter reference application that demonstrates clean
 architecture, disciplined BLoC/Cubit state management, offline-first patterns,
 and production-minded delivery workflows in a single codebase.
 
-[![CI](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml)
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.6-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.4-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
@@ -72,6 +71,8 @@ flutter pub get
 flutter run -t lib/main_dev.dart
 ```
 
+Secrets for optional backends (Supabase, Hugging Face, Gemini, etc.) are supplied via `--dart-define` or persisted secure storage; see [Security and Secrets](docs/security_and_secrets.md). For day-to-day terminal use, **`direnv`** plus a repo-local `.envrc` (see [`docs/envrc.example`](docs/envrc.example)) can inject those defines automatically so you do not have to paste flags on every `flutter run`.
+
 Available app entrypoints:
 
 - `lib/main_dev.dart`
@@ -123,6 +124,7 @@ Validation behavior, CI coverage, and script-level guards are documented here:
 - [Firebase Setup](docs/firebase_setup.md)
 - [Authentication](docs/authentication.md)
 - [Security and Secrets](docs/security_and_secrets.md)
+- [direnv template (`docs/envrc.example`)](docs/envrc.example)
 - [Deployment](docs/deployment.md)
 - [Firebase App Distribution](docs/firebase_app_distribution.md)
 - [Android Play Store Release SOP](docs/android_play_store_release_sop.md)

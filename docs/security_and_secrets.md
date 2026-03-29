@@ -8,16 +8,23 @@ The app uses a secure, layered approach to secrets:
 
 1. **Secure Storage** (Primary) - Keychain/Keystore via `flutter_secure_storage`
 2. **Environment Variables** - `--dart-define` flags (persisted to secure storage)
-3. **Asset Fallback** (Dev Only) - `assets/config/secrets.json` (opt-in, never in release)
+
+**Note:** `assets/config/secrets.json` is **not bundled** into the app by default (to keep CI and releases from depending on a local dev-only file). Prefer `--dart-define`, secure storage, or `direnv`-backed build scripts.
 
 ## Setup for Development
 
 ```bash
-# Copy sample secrets file
-cp assets/config/secrets.sample.json assets/config/secrets.json
+# Option A: One-off (explicit dart-defines)
+flutter run \
+  --dart-define=SUPABASE_URL=... \
+  --dart-define=SUPABASE_ANON_KEY=... \
+  --dart-define=HUGGINGFACE_API_KEY=...
 
-# Fill in your credentials, then run with asset fallback enabled
-flutter run --dart-define=ENABLE_ASSET_SECRETS=true
+# Option B: Recommended local dev (direnv)
+direnv allow
+
+# shellcheck disable=SC2046
+flutter run $(./tool/flutter_dart_defines_from_env.sh)
 ```
 
 ## Production Setup
@@ -30,6 +37,28 @@ flutter run \
   --dart-define=GEMINI_API_KEY=your_gemini_key
 
 # Or inject via CI/CD secrets
+```
+
+## iOS builds with `direnv` (automatic secrets injection)
+
+If you keep local secrets in `.envrc` (gitignored) and use `direnv`, you can build iOS with the same values without manually copying/pasting `--dart-define` flags:
+
+```bash
+direnv allow
+
+./tool/build_ios_with_direnv.sh
+```
+
+## Optional: `flutter run` / `flutter build` without typing flags
+
+Copy **[`docs/envrc.example`](envrc.example)** to the repo root as `.envrc`, fill in placeholders, then `direnv allow`.
+
+The example includes an optional `flutter()` shell function that prepends `--dart-define=...` for any keys you exported, so plain `flutter run -t lib/main_dev.dart` (including **iOS simulator**) picks up the same secrets as Android-oriented workflows.
+
+If you prefer not to wrap `flutter`, use:
+
+```bash
+flutter run $(./tool/flutter_dart_defines_from_env.sh) -t lib/main_dev.dart
 ```
 
 ## Firebase configuration (separate from secrets)
@@ -47,7 +76,7 @@ The following API keys are required for specific features:
 - **Google Maps API Keys**: Required for Maps feature (Android/iOS platform-specific)
 - **Supabase**: `SUPABASE_URL` and `SUPABASE_ANON_KEY` for Supabase-backed features (IoT demo backend) and the optional Supabase Auth page (Settings → Integrations → Supabase Auth). When set, the app initializes the Supabase client at bootstrap. When missing, the auth page shows "not configured"; the IoT demo runs in local-only mode (no remote sync). See `secrets.sample.json` for keys; [Supabase migrations](../supabase/README.md) for schema setup; [Authentication](authentication.md#supabase-auth-optional-separate-page) for auth behavior.
 
-**Important**: Never commit `assets/config/secrets.json`. The repo includes only `secrets.sample.json`.
+**Important**: Never commit `.envrc` or any secret file. The repo includes only `assets/config/secrets.sample.json`.
 
 ## Encryption
 

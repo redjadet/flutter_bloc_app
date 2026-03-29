@@ -79,8 +79,7 @@ have frequent updates.
 
 - `lib/core/config/secret_config.dart`
 - `lib/core/config/secret_config_sources.dart`
-- `assets/config/secrets.sample.json`
-- `assets/config/secrets.json` (local only, git-ignored)
+- `assets/config/secrets.sample.json` (reference keys only; not bundled as a runtime secrets file)
 
 **Changes**:
 
@@ -138,9 +137,8 @@ have frequent updates.
 
 **Local dev setup**:
 
-- Enable assets: `ENABLE_ASSET_SECRETS=true` and fill
-  `assets/config/secrets.json`
-- Or use: `--dart-define=GEMINI_API_KEY=...`
+- Use `--dart-define=GEMINI_API_KEY=...`, **`direnv`** with `.envrc` (see [`envrc.example`](envrc.example)), or `./tool/flutter_dart_defines_from_env.sh`.
+- Optional: keep a **local-only** `assets/config/secrets.json` for your own tooling; it is **not** listed in `pubspec.yaml` as a bundled asset—runtime loading uses `--dart-define` / secure storage first.
 
 ### 3) Domain and Data Adapter
 
@@ -820,7 +818,7 @@ Add strings:
   "genuiDemoHintText": "Enter a message to generate UI...",
   "genuiDemoSendButton": "Send",
   "genuiDemoErrorTitle": "Error",
-  "genuiDemoNoApiKey": "GEMINI_API_KEY not configured. Please add it to secrets.json or use --dart-define=GEMINI_API_KEY=..."
+  "genuiDemoNoApiKey": "GEMINI_API_KEY not configured. Use --dart-define=GEMINI_API_KEY=..., direnv/.envrc, or secure storage (see security_and_secrets.md)."
 }
 ```
 

@@ -25,6 +25,8 @@ Before running the app, review:
 - [Security and Secrets](security_and_secrets.md)
 - [Tech Stack](tech_stack.md)
 
+**Optional — automatic secret injection in the terminal:** install [direnv](https://direnv.net/), copy [`docs/envrc.example`](envrc.example) to `.envrc` in the repo root, add your keys, run `direnv allow`, then use the documented `flutter()` wrapper (or `flutter run $(./tool/flutter_dart_defines_from_env.sh)`). Plain `flutter run` then passes the same `--dart-define` values to iOS and Android.
+
 ### Install dependencies and run
 
 ```bash

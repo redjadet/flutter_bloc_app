@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# direnv-friendly flutter wrapper.
+#
+# When this script is placed earlier in PATH (via `.envrc`), plain `flutter run`
+# automatically receives `--dart-define=...` values derived from environment
+# variables (which direnv loads from `.envrc`).
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+
+WRAPPER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+strip_path_entry() {
+  # Remove the wrapper directory from PATH so we can find the real flutter.
+  local path_in="${1:-}"
+  local out=""
+  local IFS=":"
+  for entry in $path_in; do
+    if [ "$entry" = "$WRAPPER_DIR" ]; then
+      continue
+    fi
+    if [ -z "$out" ]; then
+      out="$entry"
+    else
+      out="$out:$entry"
+    fi
+  done
+  printf '%s' "$out"
+}
+
+REAL_PATH="$(strip_path_entry "${PATH:-}")"
+REAL_FLUTTER="$(PATH="$REAL_PATH" command -v flutter || true)"
+if [ -z "${REAL_FLUTTER// /}" ]; then
+  echo "Could not locate real flutter binary (PATH stripping failed)." >&2
+  exit 1
+fi
+
+# shellcheck disable=SC2207
+DART_DEFINES=( $("$ROOT_DIR/tool/flutter_dart_defines_from_env.sh") )
+
+exec "$REAL_FLUTTER" "${DART_DEFINES[@]}" "$@"
+
