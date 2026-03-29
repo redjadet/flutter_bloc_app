@@ -39,6 +39,7 @@ This document defines how the IoT demo feature adopts the shared offline-first s
 
 - FAB (+): opens add-device dialog (name, type, initial value for thermostat/sensor). On OK, device is added to local and Supabase (via sync). New device is auto-selected.
 - Filter: `SegmentedButton` for All / On only / Off only (`IotDemoDeviceFilter`). The cubit keeps one unfiltered local stream and applies the selected filter in memory so the selected filter is preserved across local and remote updates.
+- On first open, the cubit prewarms syncable IoT repositories: if the first local snapshot is empty, it runs a one-shot `pullRemote()` before subscribing so Supabase devices appear on the initial visit instead of only after a later reopen.
 - Sync runs in background when the page opens via `SyncStatusCubit.ensureStarted()`. Sync status is logged; no sync banner on the IoT demo page.
 - For sync observability, use the Sync Diagnostics section in Settings (visible when dev/qa mode is active).
 - Device list is always from local; updates after connect/disconnect/sendCommand are immediate (local), then synced in background.

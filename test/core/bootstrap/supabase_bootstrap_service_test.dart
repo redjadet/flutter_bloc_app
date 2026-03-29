@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
@@ -11,6 +14,7 @@ void main() {
   setUp(() {
     SecretConfig.resetForTest();
     SecretConfig.storage = _MemorySecretStorage();
+    SecretConfig.debugAssetBundle = _FakeAssetBundle.throwing();
     SupabaseBootstrapService.resetForTest();
   });
 
@@ -110,4 +114,29 @@ class _MemorySecretStorage implements SecretStorage {
 
   @override
   Future<T> withoutLogsAsync<T>(final Future<T> Function() action) => action();
+}
+
+class _FakeAssetBundle extends CachingAssetBundle {
+  _FakeAssetBundle(this._response);
+
+  _FakeAssetBundle.throwing() : _response = null;
+
+  final String? _response;
+
+  @override
+  Future<ByteData> load(final String key) async {
+    if (_response == null) {
+      throw FlutterError('Asset $key missing');
+    }
+    final List<int> bytes = utf8.encode(_response);
+    return ByteData.view(Uint8List.fromList(bytes).buffer);
+  }
+
+  @override
+  Future<String> loadString(final String key, {final bool cache = true}) async {
+    if (_response == null) {
+      throw FlutterError('Asset $key missing');
+    }
+    return _response;
+  }
 }

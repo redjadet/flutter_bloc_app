@@ -419,6 +419,41 @@ void main() {
     );
 
     test(
+      'pullRemote seeds remote devices when local is empty despite pending iot_demo ops',
+      () async {
+        remoteRepository.devices = <IotDevice>[
+          const IotDevice(
+            id: 'remote-1',
+            name: 'Remote Device',
+            type: IotDeviceType.light,
+          ),
+        ];
+        final OfflineFirstIotDemoRepository repo = buildRepository(
+          remote: remoteRepository,
+        );
+
+        await pendingRepository.enqueue(
+          SyncOperation.create(
+            entityType: 'iot_demo',
+            payload: <String, dynamic>{
+              'deviceId': 'ghost-1',
+              'action': 'connect',
+              'supabaseUserId': _testSupabaseUserId,
+            },
+            idempotencyKey: 'pending_connect_1',
+          ),
+        );
+
+        await repo.pullRemote();
+
+        final List<IotDevice> list = await repo.watchDevices().first;
+        expect(list, hasLength(1));
+        expect(list.first.id, 'remote-1');
+        expect(list.first.name, 'Remote Device');
+      },
+    );
+
+    test(
       'setValue debounces: only one sync op after delay without change',
       () async {
         final FakeTimerService fakeTimer = FakeTimerService();

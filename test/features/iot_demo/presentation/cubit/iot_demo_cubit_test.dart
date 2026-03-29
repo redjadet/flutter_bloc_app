@@ -7,6 +7,8 @@ import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_state.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
+import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const List<IotDevice> _fakeDevices = [
@@ -143,6 +145,53 @@ class _DelayedFilterRepository implements IotDemoRepository {
   Future<void> addDevice(final IotDevice device) async {}
 }
 
+class _PrewarmingSyncableRepository
+    implements IotDemoRepository, SyncableRepository {
+  _PrewarmingSyncableRepository({
+    required List<IotDevice> initialDevices,
+    required List<IotDevice> remoteDevices,
+  }) : _devices = List<IotDevice>.from(initialDevices),
+       _remoteDevices = List<IotDevice>.from(remoteDevices);
+
+  List<IotDevice> _devices;
+  final List<IotDevice> _remoteDevices;
+  int pullRemoteCallCount = 0;
+
+  @override
+  Stream<List<IotDevice>> watchDevices([
+    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+  ]) {
+    return Stream<List<IotDevice>>.value(List<IotDevice>.from(_devices));
+  }
+
+  @override
+  Future<void> pullRemote() async {
+    pullRemoteCallCount++;
+    _devices = List<IotDevice>.from(_remoteDevices);
+  }
+
+  @override
+  String get entityType => 'iot_demo';
+
+  @override
+  Future<void> processOperation(final SyncOperation operation) async {}
+
+  @override
+  Future<void> connect(final String deviceId) async {}
+
+  @override
+  Future<void> disconnect(final String deviceId) async {}
+
+  @override
+  Future<void> sendCommand(
+    final String deviceId,
+    final IotDeviceCommand command,
+  ) async {}
+
+  @override
+  Future<void> addDevice(final IotDevice device) async {}
+}
+
 void main() {
   group('IotDemoCubit', () {
     blocTest<IotDemoCubit, IotDemoState>(
@@ -153,6 +202,33 @@ void main() {
         const IotDemoState.loading(),
         IotDemoState.loaded(_fakeDevices, selectedDeviceId: null),
       ],
+    );
+
+    test(
+      'initialize prewarms syncable repositories when the first local snapshot is empty',
+      () async {
+        final _PrewarmingSyncableRepository repository =
+            _PrewarmingSyncableRepository(
+              initialDevices: const <IotDevice>[],
+              remoteDevices: _fakeDevices,
+            );
+        final IotDemoCubit cubit = IotDemoCubit(repository: repository);
+        addTearDown(cubit.close);
+
+        final List<IotDemoState> emittedStates = <IotDemoState>[];
+        final StreamSubscription<IotDemoState> subscription = cubit.stream
+            .listen(emittedStates.add);
+        addTearDown(subscription.cancel);
+
+        await cubit.initialize();
+        await Future<void>.delayed(Duration.zero);
+
+        expect(repository.pullRemoteCallCount, 1);
+        expect(emittedStates, <IotDemoState>[
+          const IotDemoState.loading(),
+          IotDemoState.loaded(_fakeDevices, selectedDeviceId: null),
+        ]);
+      },
     );
 
     blocTest<IotDemoCubit, IotDemoState>(

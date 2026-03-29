@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -39,11 +40,39 @@ class IotDemoCubit extends Cubit<IotDemoState>
         filterOverride ??
         state.mapOrNull(loaded: (final s) => s.filter) ??
         IotDemoDeviceFilter.all;
+    await _prewarmRemoteDevicesIfNeeded();
+    if (isClosed) return;
     await _restartDevicesSubscription(
       filter: filter,
       previousSelectedDeviceId: previousSelectedDeviceId,
       emitLoadingState: true,
     );
+  }
+
+  Future<void> _prewarmRemoteDevicesIfNeeded() async {
+    final SyncableRepository? syncable = switch (_repository) {
+      final SyncableRepository value => value,
+      _ => null,
+    };
+    if (syncable == null) {
+      return;
+    }
+
+    try {
+      final List<IotDevice> initialDevices = await _repository
+          .watchDevices()
+          .first;
+      if (isClosed || initialDevices.isNotEmpty) {
+        return;
+      }
+      await syncable.pullRemote();
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'IotDemoCubit._prewarmRemoteDevicesIfNeeded',
+        error,
+        stackTrace,
+      );
+    }
   }
 
   void setFilter(final IotDemoDeviceFilter filter) {
