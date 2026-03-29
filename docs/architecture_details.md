@@ -15,6 +15,7 @@ Start here for the big picture; drill into the linked docs for specifics.
 | Where is duplication eliminated? | [DRY Principles](dry_principles.md) |
 | How are responsibilities split? | [Separation of Concerns](separation_of_concerns.md) |
 | How is modularity enforced? | [Modularity](modularity.md) |
+| How does offline-first fit the architecture? | [Offline-First Architecture Case Study](engineering/offline_first_flutter_architecture_with_conflict_resolution.md) |
 | Why BLoC over Riverpod? | [State Management Choice](state_management_choice.md) |
 | What trade-offs exist? | [Trade-offs & Future](tradeoffs_and_future.md) |
 | What are the architecture decisions? | [ADRs](adr/) |

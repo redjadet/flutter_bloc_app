@@ -18,6 +18,10 @@ would raise the bar further.
   domain/data/presentation folders, a DI registration file, and a route entry.
   The cost is extra files; the benefit is testability, substitutability, and
   clear ownership. See [ADR 0001](adr/0001-architecture-and-layering.md).
+- **App shell composition is centralized.** `BootstrapCoordinator`, `MyApp`,
+  `AppScope`, and the router keep startup and composition explicit, but they
+  also become places where too many cross-feature decisions can accumulate if
+  not reviewed carefully.
 - **get_it (service locator) vs compile-time DI.** `get_it` provides runtime
   resolution, which means missing registrations are caught at test-time rather
   than at compile-time. A compile-time DI solution (e.g. `injectable` +
@@ -51,9 +55,9 @@ would raise the bar further.
   "god object." The mitigation is to extract collaborators early (e.g.
   `ChatSyncOperationFactory`, `ChatLocalConversationUpdater`).
 - **Sync is eventually consistent.** Background sync uses periodic timers, not
-  real-time push. Conflicts are resolved with a last-write-wins strategy.
-  Applications requiring strict ordering or CRDTs would need a different sync
-  layer.
+  real-time push. Current mitigation relies on queue dedupe, idempotency keys,
+  replay-before-pull ordering, and feature-specific merge policies. Applications
+  requiring strict ordering or CRDTs would need a different sync layer.
 
 ### Performance & bundle size
 
