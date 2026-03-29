@@ -39,5 +39,18 @@ fi
 # shellcheck disable=SC2207
 DART_DEFINES=( $("$ROOT_DIR/tool/flutter_dart_defines_from_env.sh") )
 
-exec "$REAL_FLUTTER" "${DART_DEFINES[@]}" "$@"
+subcommand="${1:-}"
+
+# `--dart-define` is not a global flutter flag; it must come after the subcommand
+# (e.g. `flutter run --dart-define=...`). Only inject for subcommands that
+# accept dart-defines.
+case "$subcommand" in
+  run|build|test|drive|attach)
+    shift || true
+    exec "$REAL_FLUTTER" "$subcommand" "${DART_DEFINES[@]}" "$@"
+    ;;
+  *)
+    exec "$REAL_FLUTTER" "$@"
+    ;;
+esac
 
