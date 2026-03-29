@@ -1,0 +1,26 @@
+# `.envrc` example (direnv)
+
+Copy the following into **repo root** as `.envrc`, fill in values, then run:
+
+```bash
+direnv allow
+```
+
+Then you can run `flutter run` without typing `--dart-define` flags manually.
+
+```sh
+# Local direnv config (copy to repo root as `.envrc`)
+# `.envrc` is gitignored; never commit real secrets.
+
+export HUGGINGFACE_API_KEY="YOUR_HUGGINGFACE_TOKEN"
+export SUPABASE_URL="https://YOUR_PROJECT.supabase.co"
+export SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
+
+# Optional
+# export GEMINI_API_KEY="..."
+# export GOOGLE_MAPS_API_KEY="..."
+# export GOOGLE_MAPS_ANDROID_API_KEY="..."
+
+# Optional: make `flutter run` auto-append --dart-define from env (zsh/bash).
+export PATH="$(pwd)/tool/direnv/bin:${PATH}"
+```

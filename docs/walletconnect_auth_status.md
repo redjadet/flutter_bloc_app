@@ -347,7 +347,7 @@ For a dApp demo with QR + connect + address display, the most direct path is `re
 
 1. **WalletConnect Project ID**
    - Get project ID from [WalletConnect Cloud](https://cloud.walletconnect.com/)
-   - Store in `assets/config/secrets.json` or via `--dart-define`
+   - Provide via `--dart-define`, secure storage, or a **`direnv`**-backed `.envrc` (see [Security & Secrets](security_and_secrets.md) and [`docs/envrc.example`](envrc.example))
    - Update `WalletConnectService._defaultProjectId`
 
 2. **App Metadata**

@@ -17,7 +17,7 @@ Nothing is required inside **Strapi** (this integration uses **Stripe** for paym
 
 - **Create or use a Stripe account** at [stripe.com](https://stripe.com). For the demo, use **Test mode** (toggle in the top-right of the Dashboard) so no real money is involved.
 - **Get API keys** (Developers → API keys):
-  - **Publishable key** (starts with `pk_test_...`): used by the Flutter app only. You will provide this to the app via `SecretConfig` / `--dart-define=STRIPE_PUBLISHABLE_KEY=pk_test_...` or `assets/config/secrets.json` (dev-only).
+  - **Publishable key** (starts with `pk_test_...`): used by the Flutter app only. You will provide this to the app via `SecretConfig` / `--dart-define=STRIPE_PUBLISHABLE_KEY=pk_test_...` or the same values exported in `.envrc` when using **`direnv`** (see [Security & Secrets](security_and_secrets.md)).
   - **Secret key** (starts with `sk_test_...`): used **only by your backend** (e.g. Firebase Callable Function). Never put this in the app or in git.
 - **No extra Stripe setup** is required for a "save card" (SetupIntent) demo: no Products, Prices, or Checkout Sessions needed. Default payment method types are fine.
 
@@ -99,9 +99,8 @@ Make the Stripe demo **easily accessible from the central demo (Example) page** 
 
 - **App (publishable key)**: add a `SecretConfig` entry for Stripe publishable key (test key) and load it in bootstrap (pattern already exists in `SecretConfig`).
 - **Backend (secret key)**: store Stripe secret key only in backend environment; never in app.
-- Add a snippet to [security_and_secrets.md](security_and_secrets.md) describing:
-  - required `--dart-define=STRIPE_PUBLISHABLE_KEY=...` for demo
-  - local dev fallback via `assets/config/secrets.json` only if the repo's dev-only gate is enabled.
+- Document in [security_and_secrets.md](security_and_secrets.md):
+  - required `--dart-define=STRIPE_PUBLISHABLE_KEY=...` (or equivalent env export + `direnv` / `tool/flutter_dart_defines_from_env.sh`) for the demo app build.
 
 ## iOS/Android native setup (minimum)
 

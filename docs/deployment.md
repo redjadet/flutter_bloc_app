@@ -48,9 +48,18 @@ Before building for App Store, use distribution entitlements (includes Associate
 # Scrub secrets and prepare release artifacts
 dart run tool/prepare_release.dart
 
-# Build release iOS (no archive yet)
+# Build release iOS (no archive yet). Ensure SecretConfig inputs
+# (e.g. SUPABASE_*, HUGGINGFACE_*) reach the build via --dart-define or CI secrets.
 flutter build ios --release
 ```
+
+**Local convenience (direnv):** With `.envrc` allowed, secrets in the environment can be applied without manual flags:
+
+```bash
+./tool/build_ios_with_direnv.sh
+```
+
+See [Security & Secrets](security_and_secrets.md) and [`docs/envrc.example`](envrc.example).
 
 ### Step 4: Archive and Upload
 
