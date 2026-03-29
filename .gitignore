@@ -81,13 +81,14 @@ third_party/pub/firebase_remote_config/example/lib/firebase_options.dart
 INTERVIEW_QA.md
 
 .config/
-.agents/rules/rules.md
-.agents/rules/gemin-rules.md
+# Local agent overlays (skills, symlinks, host-only policy); not part of the app build
+.agents/
+# Local-only host adapter templates; not required for fresh clones
+tool/agent_host_templates/
 coverage/lcov.base.info
 
 # Agent scorecard one-off exports (keep the rolling log tracked)
 analysis/agent_scorecard/scorecard-events-*.jsonl
-.agents/skills/gstack
 AGENTS.md
 docs/gstack_integration.md
 tmp_test_write.md
