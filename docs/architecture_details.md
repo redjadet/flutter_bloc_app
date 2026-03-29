@@ -23,98 +23,93 @@ Start here for the big picture; drill into the linked docs for specifics.
 
 ## Architecture Diagram
 
+This diagram separates the **app shell** from **feature-layer flow** so the
+boot path, route creation, and offline-first composition are easier to read at
+a glance.
+
 ```mermaid
 flowchart LR
-  AppScope["AppScope<br/>(MultiBlocProvider + DeepLinkListener + Lazy sync bootstrap)"]
-
-  subgraph Presentation
-    Widgets["Widgets & Pages<br/>(ResponsiveScope, PlatformAdaptive, BlocSelector)"]
-    FeatureCubits["Feature Cubits<br/>(Counter, Chat, Search, Profile, GraphQL, WebSocket, Calculator)"]
-    InfraCubits["Infra Cubits<br/>(Theme, Locale, RemoteConfig, DeepLink, SyncStatus)"]
-    Router["GoRouter / Navigation"]
+  subgraph Boot["Bootstrap & App Shell"]
+    Entry["main_dev / main_staging / main_prod"]
+    Bootstrap["BootstrapCoordinator"]
+    DI["GetIt injector<br/>registerAllDependencies()<br/>+ HiveService.initialize()"]
+    MyApp["MyApp"]
+    AppScope["AppScope<br/>MultiBlocProvider + ResponsiveScope<br/>+ DeepLinkListener<br/>+ debounced resume flush"]
+    Entry --> Bootstrap --> DI --> MyApp --> AppScope
   end
 
-  subgraph Domain
-    Contracts["Domain Contracts + Models<br/>(Repository interfaces, value objects)"]
+  subgraph Presentation["Presentation"]
+    Router["GoRouter<br/>route groups + auth redirect"]
+    AppState["App-scope presentation state<br/>Locale, Theme, RemoteConfig, SyncStatus"]
+    FeatureUI["Pages / Widgets<br/>shared widgets + platform-adaptive UI"]
+    FeatureLogic["Route-scoped feature Cubits / BLoCs"]
+    SharedUI["Shared presentation helpers<br/>responsive, navigation, bloc helpers, error handling"]
   end
 
-  subgraph Data
-    OfflineRepos["OfflineFirst* Repositories<br/>(Counter, Chat, Search, Profile, RemoteConfig, GraphQL)"]
-    CacheRepos["Hive Cache Repositories<br/>(Locale, Theme, Search, Profile, Remote Config)"]
-    RemoteRepos["Remote APIs<br/>(HTTP/REST, GraphQL, HuggingFace, Firebase, Supabase, Maps)"]
+  subgraph Domain["Domain"]
+    Contracts["Repository / service contracts<br/>models + value objects<br/>pure Dart only"]
   end
 
-  subgraph Sync
-    PendingSync["PendingSyncRepository (Hive)"]
-    Registry["SyncableRepositoryRegistry"]
-    Coordinator["BackgroundSyncCoordinator"]
-    NetworkStatus["NetworkStatusService"]
+  subgraph Data["Data"]
+    OfflineRepos["Offline-first repositories<br/>compose local cache + remote source + sync queue"]
+    LocalData["Local repositories / caches<br/>Hive-backed settings and feature stores"]
+    RemoteData["Remote repositories / SDK adapters<br/>REST, GraphQL, Firebase, Supabase, platform APIs"]
   end
 
-  subgraph Services
-    HiveService
-    TimerService
-    BiometricAuthenticator
-    DeepLinkService
-    RemoteConfigService
-    NativePlatformService
-    ErrorNotificationService
+  subgraph Infra["Shared Infrastructure"]
+    Sync["PendingSyncRepository<br/>SyncableRepositoryRegistry<br/>BackgroundSyncCoordinator"]
+    Services["HiveService, TimerService,<br/>NetworkStatusService, ErrorNotificationService,<br/>BiometricAuthenticator"]
   end
 
-  subgraph Shared
-    ResponsiveExt["Responsive Extensions<br/>(spacing, typography, grids)"]
-    ContextUtilsNode["Context/Navigation Utils<br/>(mounted guards, pop helpers)"]
-    ErrorHandlingNode["ErrorHandling<br/>(snackbars, dialogs, loaders)"]
-    BlocProviderHelpers["BlocProviderHelpers<br/>(async init safeguards)"]
+  subgraph External["External Systems"]
+    APIs["Firebase, Supabase, HTTP APIs,<br/>GraphQL endpoints, WebSocket servers,<br/>device/platform services"]
   end
 
-  Injector["Dependency Injection<br/>(get_it + injector_*.dart)"]
-
-  AppScope --> Widgets
-  AppScope --> FeatureCubits
-  AppScope --> InfraCubits
-  Widgets --> FeatureCubits
-  Widgets --> InfraCubits
-  Widgets --> ResponsiveExt
-  Widgets --> Router
-  FeatureCubits --> Contracts
-  InfraCubits --> Contracts
-  Contracts --> OfflineRepos
-  Contracts --> CacheRepos
-  Contracts --> RemoteRepos
-  OfflineRepos --> PendingSync
-  OfflineRepos --> CacheRepos
-  OfflineRepos --> RemoteRepos
-  CacheRepos --> HiveService
-  OfflineRepos --> HiveService
-  FeatureCubits --> TimerService
-  InfraCubits --> ErrorNotificationService
-  RemoteRepos --> RemoteConfigService
-  RemoteRepos --> DeepLinkService
-  RemoteRepos --> NativePlatformService
-  PendingSync --> Coordinator
-  Registry --> Coordinator
-  NetworkStatus --> Coordinator
-  Coordinator --> PendingSync
-  Coordinator --> InfraCubits
-  Injector --> AppScope
-  Injector --> Services
-  Injector --> OfflineRepos
-  Injector --> CacheRepos
-  Injector --> RemoteRepos
-  ResponsiveExt -.-> Widgets
-  ContextUtilsNode -.-> Widgets
-  ErrorHandlingNode -.-> Widgets
-  BlocProviderHelpers -.-> AppScope
+  AppScope --> Router
+  AppScope --> AppState
+  Router --> FeatureUI
+  FeatureUI --> FeatureLogic
+  FeatureUI --> AppState
+  SharedUI -.-> FeatureUI
+  FeatureLogic -->|"calls contracts"| Contracts
+  OfflineRepos -.->|"implements contracts"| Contracts
+  OfflineRepos --> LocalData
+  OfflineRepos --> RemoteData
+  OfflineRepos --> Sync
+  LocalData --> Services
+  Sync --> Services
+  RemoteData --> APIs
+  DI -.-> OfflineRepos
+  DI -.-> LocalData
+  DI -.-> RemoteData
+  DI -.-> Sync
+  DI -.-> Services
 ```
+
+How to read the diagram:
+
+- Solid arrows show the main runtime path from app shell to feature execution.
+- Dashed arrows show registration or implementation relationships rather than
+  direct widget-time calls.
+- Offline-first is a **data-layer composition pattern** here, not a separate
+  layer between presentation and domain.
+- Route-scoped cubits/blocs keep feature work lazy; app-scope state is limited
+  to cross-cutting concerns such as theme, locale, remote config, and sync
+  status.
 
 ## Key Principles
 
-- Clean boundaries: widgets depend on cubits, cubits depend on domain contracts
-- Feature cubits (Counter, Chat, Search, Profile, Supabase Auth, etc.) are created at route scope to minimize startup work
+- Clean boundaries: widgets depend on cubits/blocs, and cubits/blocs call
+  domain contracts rather than concrete repositories
+- App shell concerns (`BootstrapCoordinator`, `MyApp`, `AppScope`, routing) are
+  separated from feature modules to keep startup and feature flow distinct
+- Feature cubits (Counter, Chat, Search, Profile, Supabase Auth, etc.) are
+  created at route scope to minimize startup work
 - Presentation uses responsive helpers and `PlatformAdaptive.*` components
-- DI and bootstrap centralized in `injector*.dart` and `AppScope`
-- Offline-first repositories coordinate cache, remote, and sync queues
+- DI and bootstrap are centralized in `injector*.dart`,
+  `BootstrapCoordinator`, and `AppScope`
+- Offline-first repositories coordinate local cache, remote adapters, and sync
+  queues entirely inside the data layer
 - Deferred route loading keeps heavy features out of the initial bundle
 - Lazy startup: background sync and remote config initialize on first use
 - Lifecycle safety via `CubitExceptionHandler`, `CubitSubscriptionMixin`,
@@ -183,36 +178,74 @@ Most feature-specific cubits (Chat, Maps, GraphQL, Profile, WebSocket) are creat
 
 ## State Management Flow
 
+This sequence uses the same mental model as the architecture diagram above:
+bootstrap and app-shell setup happen first, then feature execution flows through
+presentation into domain contracts and data-layer composition, with background
+sync running as a separate reconciliation path.
+
 ```mermaid
 sequenceDiagram
-  participant AppScope
+  participant Bootstrap as BootstrapCoordinator
   participant DI
+  participant AppScope
+  participant Router as GoRouter / AppScope
   participant User
-  participant View
-  participant SharedUtils
-  participant Cubit
-  participant Repository
-  participant Cache
-  participant Remote
-  participant SyncLayer
-  participant Services
+  participant View as Page / Widget
+  participant Helpers as Shared UI helpers
+  participant Logic as Route-scoped Cubit / BLoC
+  participant Contract as Domain contract
+  participant OfflineRepo as OfflineFirst repository
+  participant Local as Hive local repository
+  participant Queue as PendingSyncRepository
+  participant Coordinator as BackgroundSyncCoordinator
+  participant Remote as Remote repository / SDK
 
-  AppScope->>DI: ensureConfigured() + registerAllDependencies()
-  AppScope->>SyncLayer: seed SyncStatusCubit (starts background sync on demand)
-  AppScope->>Cubit: create via BlocProviderHelpers.withAsyncInit()
-  AppScope->>View: wrap with ResponsiveScope + DeepLinkListener + GoRouter
-  User->>View: Trigger interaction (tap, navigation, lifecycle)
-  View->>SharedUtils: Apply responsive spacing + mounted/nav guards
-  SharedUtils-->>View: Guarded callbacks (ContextUtils, NavigationUtils)
-  View->>Cubit: Invoke feature action (load, fetch, increment)
-  Cubit->>Repository: Call domain contract via DI
-  Repository->>Cache: Read/write via HiveService + cache repos
-  Repository->>Remote: HTTP/GraphQL/HuggingFace/Firebase/RemoteConfig/DeepLink
-  Repository->>SyncLayer: Queue offline ops in PendingSyncRepository
-  SyncLayer-->>Repository: Flush queued writes when online (TimerService-driven)
-  Remote-->>Repository: Data/errors (normalized via CubitExceptionHandler)
-  Repository-->>Cubit: Domain models or failures
-  Cubit-->>View: Emit new Equatable/freezed state
-  View->>SharedUtils: Surface errors/toasts via ErrorHandling/NavigationUtils
-  SharedUtils-->>User: UI updates, dialogs, snackbars
+  Bootstrap->>DI: configureDependencies()
+  DI-->>Bootstrap: GetIt ready + Hive initialized
+  Bootstrap->>AppScope: run app shell
+  AppScope->>Router: create app-scope providers + router shell
+  AppScope->>Coordinator: provide SyncStatusCubit access
+
+  User->>Router: open route / resume app / trigger navigation
+  Router->>View: build feature page
+  View->>Helpers: responsive layout + mounted/navigation guards
+  View->>Logic: invoke feature action
+  Logic->>Contract: call use-case boundary
+  Contract->>OfflineRepo: resolve via DI
+
+  OfflineRepo->>Local: load cached state
+  Local-->>OfflineRepo: local snapshot
+  OfflineRepo-->>Logic: immediate local/domain result
+  Logic-->>View: emit state
+  View-->>User: render optimistic / cached UI
+
+  opt user mutation or online refresh
+    Logic->>Contract: save / refresh
+    Contract->>OfflineRepo: delegate data work
+    OfflineRepo->>Local: write normalized local state
+    OfflineRepo->>Queue: enqueue SyncOperation when remote sync is needed
+    OfflineRepo->>Remote: fetch or push when safe/available
+    Remote-->>OfflineRepo: remote data or failure
+    OfflineRepo-->>Logic: updated domain result
+    Logic-->>View: emit new state
+  end
+
+  par background reconciliation
+    Coordinator->>Queue: read pending operations
+    Queue-->>Coordinator: ready batch
+    Coordinator->>OfflineRepo: processOperation()
+    OfflineRepo->>Remote: replay queued write
+    Remote-->>OfflineRepo: success / failure
+    OfflineRepo->>Local: mark synchronized on success
+  and remote refresh after replay
+    Coordinator->>OfflineRepo: pullRemote()
+    OfflineRepo->>Remote: fetch latest remote snapshot
+    Remote-->>OfflineRepo: latest remote state
+    OfflineRepo->>Local: merge only when remote should win
+  end
+
+  Local-->>Logic: watched local updates
+  Logic-->>View: emit reconciled state
+  View->>Helpers: error handling / banners / dialogs
+  Helpers-->>User: final UI feedback
 ```
