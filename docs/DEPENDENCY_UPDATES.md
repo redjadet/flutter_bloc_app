@@ -121,6 +121,24 @@ To temporarily disable updates for a specific package, add a comment to `renovat
 2. Verify `renovate.json` syntax is valid
 3. Check the Renovate dashboard issue for errors
 
+### Dependency update workflow fails to comment on the PR (403)
+
+If the **Dependency Updates** workflow fails with:
+
+- `Resource not accessible by integration` (HTTP 403) when calling `issues.createComment`
+
+It usually means the workflow run does not have the required token permissions to
+write issue/PR comments (common on `pull_request` workflows depending on repo/org
+policy).
+
+Fix options:
+
+- Ensure `.github/workflows/dependency-updates.yml` includes appropriate
+  `permissions:` (at least `issues: write`).
+- Make the “comment results” step best-effort (for example with
+  `continue-on-error: true`) so tests still report pass/fail even if the comment
+  cannot be posted.
+
 ### Tests failing on dependency updates
 
 1. Review the test output in the PR
