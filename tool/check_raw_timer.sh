@@ -12,10 +12,12 @@ IGNORED=""
 
 source "$PROJECT_ROOT/tool/check_helpers.sh"
 
-# Use ripgrep if available, otherwise grep
-# Match "Timer(" but exclude "TimerService", test files, and the TimerService implementation itself
+# Use ripgrep if available, otherwise grep.
+# Match raw `Timer(` (word boundary) but exclude "TimerService", test files, and
+# the TimerService implementation itself. We intentionally avoid matching helper
+# names like `registerTimer(`.
 if command -v rg &> /dev/null; then
-  VIOLATIONS=$(rg -n "Timer\(" lib/features lib/core lib/shared lib/app 2>/dev/null \
+  VIOLATIONS=$(rg -n "\bTimer\(" lib/features lib/core lib/shared lib/app 2>/dev/null \
     --glob "!**/*.g.dart" \
     --glob "!**/*.freezed.dart" \
     --glob "!**/*.gr.dart" \
@@ -25,7 +27,9 @@ if command -v rg &> /dev/null; then
     | rg -v "^[[:space:]]*//" \
     || true)
 else
-  VIOLATIONS=$(grep -rn "Timer(" lib/features lib/core lib/shared lib/app 2>/dev/null \
+  # grep does not support \b; emulate a word boundary by requiring a non-word
+  # character (or start-of-line) before Timer(.
+  VIOLATIONS=$(grep -rnE "(^|[^[:alnum:]_])Timer\\(" lib/features lib/core lib/shared lib/app 2>/dev/null \
     | grep -v "TimerService" \
     | grep -v "lib/core/time/timer_service.dart" \
     | grep -v "/test/" \
