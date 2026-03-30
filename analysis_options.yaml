@@ -82,7 +82,6 @@ linter:
     prefer_expression_function_bodies: false
     type_annotate_public_apis: true
     avoid_final_parameters: false
-    prefer_final_parameters: true
     public_member_api_docs: false
     omit_local_variable_types: false
     lines_longer_than_80_chars: false
