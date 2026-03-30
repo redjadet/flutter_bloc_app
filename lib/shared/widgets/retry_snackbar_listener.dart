@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/services/retry_notification_service.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
+import 'package:flutter_bloc_app/shared/utils/disposable_bag.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Listens to [RetryNotification] stream and shows a SnackBar with retry action.
@@ -22,30 +23,33 @@ class RetrySnackBarListener extends StatefulWidget {
 }
 
 class _RetrySnackBarListenerState extends State<RetrySnackBarListener> {
+  final DisposableBag _disposables = DisposableBag();
+  // ignore: cancel_subscriptions - Lifecycle is centralized via DisposableBag.
   StreamSubscription<RetryNotification>? _subscription;
   DateTime? _lastShownAt;
 
   @override
   void initState() {
     super.initState();
-    _subscription = widget.notifications.listen(
-      _handleNotification,
-      onError: (final Object error, final StackTrace stackTrace) {
-        AppLogger.error(
-          'RetrySnackBarListener stream error',
-          error,
-          stackTrace,
-        );
-      },
-    );
+    _subscribeToNotifications();
   }
 
   @override
   void didUpdateWidget(final RetrySnackBarListener oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.notifications != widget.notifications) {
-      unawaited(_subscription?.cancel());
-      _subscription = widget.notifications.listen(
+      final StreamSubscription<RetryNotification>? previousSubscription =
+          _subscription;
+      _subscription = null;
+      _disposables.untrackSubscription(previousSubscription);
+      unawaited(previousSubscription?.cancel());
+      _subscribeToNotifications();
+    }
+  }
+
+  void _subscribeToNotifications() {
+    _subscription = _disposables.trackSubscription(
+      widget.notifications.listen(
         _handleNotification,
         onError: (final Object error, final StackTrace stackTrace) {
           AppLogger.error(
@@ -54,8 +58,8 @@ class _RetrySnackBarListenerState extends State<RetrySnackBarListener> {
             stackTrace,
           );
         },
-      );
-    }
+      ),
+    );
   }
 
   void _handleNotification(final RetryNotification notification) {
@@ -89,7 +93,8 @@ class _RetrySnackBarListenerState extends State<RetrySnackBarListener> {
 
   @override
   void dispose() {
-    unawaited(_subscription?.cancel());
+    _subscription = null;
+    unawaited(_disposables.dispose());
     super.dispose();
   }
 

@@ -40,12 +40,13 @@ class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
     _emitCurrentAuthState();
 
     await _disposeAuthStateSubscription();
-    _authStateSubscription = _repository.authStateChanges.listen(
-      _handleAuthStateChanged,
-      onError: _handleAuthStateError,
-      cancelOnError: true,
+    _authStateSubscription = registerSubscription(
+      _repository.authStateChanges.listen(
+        _handleAuthStateChanged,
+        onError: _handleAuthStateError,
+        cancelOnError: true,
+      ),
     );
-    registerSubscription(_authStateSubscription);
   }
 
   /// Signs in with email and password.
@@ -220,6 +221,6 @@ class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
   Future<void> _disposeAuthStateSubscription() async {
     final StreamSubscription<Object?>? subscription = _authStateSubscription;
     _authStateSubscription = null;
-    await subscription?.cancel();
+    await cancelRegisteredSubscription(subscription);
   }
 }

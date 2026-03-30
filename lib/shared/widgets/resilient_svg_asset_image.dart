@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc_app/shared/services/app_memory_trim_level.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -80,6 +82,33 @@ class ResilientSvgAssetImage extends StatelessWidget {
     while (_cache.length >= _maxCacheSize && _cache.isNotEmpty) {
       _cache.remove(_cache.keys.first);
     }
+  }
+
+  @visibleForTesting
+  static int get debugCacheSize => _cache.length;
+
+  @visibleForTesting
+  static void debugStoreCacheEntry(final String key, final Uint8List? value) {
+    _evictIfNeeded();
+    _cache[key] = value;
+  }
+
+  static Future<void> trimCache({
+    required final AppMemoryTrimLevel level,
+  }) async {
+    if (_cache.isEmpty) {
+      return;
+    }
+
+    if (level == AppMemoryTrimLevel.background) {
+      final int targetSize = _cache.length <= 1 ? 1 : _cache.length ~/ 2;
+      while (_cache.length > targetSize && _cache.isNotEmpty) {
+        _cache.remove(_cache.keys.first);
+      }
+      return;
+    }
+
+    _cache.clear();
   }
 
   Widget _buildSvgPicture() {

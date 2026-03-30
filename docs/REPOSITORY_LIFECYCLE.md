@@ -49,9 +49,35 @@ Implement a `dispose()` method if your repository:
    - Example: Repositories with background polling or periodic updates
    - **Why:** Stops timers to prevent unnecessary work
 
+### Shared lifecycle helpers
+
+Prefer the repo’s shared lifecycle helpers instead of ad hoc sets/lists of
+subscriptions or timers:
+
+- `DisposableBag`: the underlying shared primitive for cancellable/closable
+  resources.
+- `SubscriptionManager`: thin repository/service facade for tracked
+  `StreamSubscription`s.
+- `TimerHandleManager`: thin repository/service facade for tracked
+  `TimerDisposable` handles.
+- `CubitSubscriptionMixin`: cubit-facing facade for tracked subscriptions and
+  timers on `close()`.
+
+`SubscriptionManager` and `TimerHandleManager` intentionally preserve their
+type-specific APIs, but their cleanup behavior is centralized through
+`DisposableBag`. Prefer these helpers over custom lifecycle bookkeeping unless a
+class has a very specific ownership model that they do not fit.
+
 ### Memory pressure and cache trim (enterprise / high-traffic)
 
 For high-traffic or memory-constrained environments, consider reacting to **memory pressure** (e.g. Flutter or platform callbacks when the system is under pressure) by trimming in-memory caches. Caches that are good candidates for trim-on-pressure include: search cache, profile cache, image cache (e.g. `CachedNetworkImage` provider), and any repository that holds large in-memory lists. Prefer a single entry point (e.g. a service or bootstrap callback) that calls `trim()` or equivalent on cache abstractions; document eviction policy and trim behavior here or in a short memory doc. This is optional and not required for normal usage.
+
+This repo now routes automatic memory trimming through `AppScope` and a shared
+memory service. Use that centralized path for app-wide memory pressure and
+background trimming rather than adding per-feature `didHaveMemoryPressure()`
+handlers. Runtime trimming should prefer in-memory caches and bounded image
+caches; persistent offline-first data remains under explicit feature cache
+policies.
 
 ### ❌ Repositories That Don't Need Dispose
 
@@ -100,9 +126,8 @@ class RemoteConfigRepository implements RemoteConfigRepository {
   StreamSubscription<RemoteConfigUpdate>? _configUpdatesSubscription;
 
   Future<void> dispose() async {
-    await _configUpdatesSubscription?.cancel();
     _configUpdatesSubscription = null;
-    _isInitialized = false;
+    await _subscriptionManager.dispose();
   }
 }
 ```

@@ -76,24 +76,25 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
     }
 
     await _disposeSubscription();
-    _subscription = _service.linkStream().listen(
-      (final uri) {
-        AppLogger.info('Received deep link from stream: $uri');
-        _handleUri(uri, DeepLinkOrigin.resumed);
-      },
-      onError: (final Object error, final StackTrace stackTrace) {
-        _consecutiveFailureCount++;
-        AppLogger.error('Deep link stream error', error, stackTrace);
-        _logFailureTelemetry(error);
-        unawaited(_disposeSubscription());
-        _initialized = false;
-        if (isClosed) {
-          return;
-        }
-        emit(DeepLinkState.error(error.toString()));
-      },
+    _subscription = registerSubscription(
+      _service.linkStream().listen(
+        (final uri) {
+          AppLogger.info('Received deep link from stream: $uri');
+          _handleUri(uri, DeepLinkOrigin.resumed);
+        },
+        onError: (final Object error, final StackTrace stackTrace) {
+          _consecutiveFailureCount++;
+          AppLogger.error('Deep link stream error', error, stackTrace);
+          _logFailureTelemetry(error);
+          unawaited(_disposeSubscription());
+          _initialized = false;
+          if (isClosed) {
+            return;
+          }
+          emit(DeepLinkState.error(error.toString()));
+        },
+      ),
     );
-    registerSubscription(_subscription);
   }
 
   void _handleUri(final Uri uri, final DeepLinkOrigin origin) {
@@ -117,13 +118,9 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
   }
 
   Future<void> _disposeSubscription() async {
-    // Nullify reference before canceling to prevent race conditions.
     final StreamSubscription<Uri>? subscription = _subscription;
     _subscription = null;
-    await subscription?.cancel();
-
-    // Keep the centralized subscription holder bounded for restartable watches.
-    await cancelAllSubscriptions();
+    await cancelRegisteredSubscription(subscription);
   }
 
   void _handleInitializeError(

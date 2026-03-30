@@ -42,13 +42,18 @@ The codebase handles most resource lifecycle correctly. Previously identified is
 
 **Status:** Fixed. `onCancelHandler` now closes the controller after cancelling the upstream subscription. For broadcast streams, `onCancel` runs when the last listener unsubscribes.
 
-### 2.3 RetrySnackBarListener – unawaited cancel in dispose
+### 2.3 RetrySnackBarListener – centralized widget-owned subscription cleanup ✓
 
 **Location:** `lib/shared/widgets/retry_snackbar_listener.dart`
 
-**Issue:** `dispose()` uses `unawaited(_subscription?.cancel())`. The subscription is cancelled asynchronously; a late event could still fire before cancellation completes. The callback already checks `mounted`, so impact is minimal.
+**Status:** Improved. Widget-owned subscriptions such as `RetrySnackBarListener`,
+`IotDemoAuthGate`, `AppRouteAuthGate`, and `CounterSyncBanner` now centralize
+their subscription cleanup through `DisposableBag` rather than bespoke
+cancel-on-dispose code.
 
-**Impact:** Very low. The `mounted` check prevents use-after-dispose. Consider `await` in dispose if the widget’s disposal path allows it, to avoid any theoretical late callbacks.
+**Impact:** Low risk and simpler maintenance. Disposal remains best-effort and
+callbacks still guard `mounted`, but subscription ownership is now explicit and
+consistent across similar widgets.
 
 ---
 
@@ -77,11 +82,13 @@ The codebase handles most resource lifecycle correctly. Previously identified is
 | GenUiDemoCubit | surface, errors | `close()` via CubitSubscriptionMixin |
 | CounterCubit / CounterCubitBase | repository watch | CubitSubscriptionMixin + close |
 | TodoListCubit | repository watch | CubitSubscriptionMixin + close |
+| InAppPurchaseDemoCubit | purchase results | CubitSubscriptionMixin + registered cancel/untrack |
 | RemoteConfigRepository | onConfigUpdated | `dispose()` cancels; DI calls dispose |
 | EchoWebsocketRepository | channel stream | `dispose()` cancels |
 | WalletConnectService | session stream | `dispose()` cancels; DI calls dispose |
-| CounterSyncBanner | counter repository | `dispose()` cancels |
-| RetrySnackBarListener | notifications | `dispose()` cancels |
+| CounterSyncBanner | counter repository | `DisposableBag` owns widget subscription |
+| RetrySnackBarListener | notifications | `DisposableBag` owns widget subscription |
+| AppRouteAuthGate / IotDemoAuthGate | auth stream | `DisposableBag` owns widget subscription |
 | GoRouterRefreshStream | auth stream | `dispose()` cancels |
 
 ### 3.3 Timer Lifecycle
@@ -92,10 +99,10 @@ The codebase handles most resource lifecycle correctly. Previously identified is
 | SearchCubit | `_debounceHandle` | `registerTimer(...)` + `_cancelDebounce()` (unregisters when cancelled) |
 | TodoListCubit | search debounce | `registerTimer(...)` + `_cancelSearchDebounce()` (unregisters when cancelled) |
 | GameCubit | `_spinHandle` | `registerTimer(...)` + `close()` cancels |
-| BackgroundSyncCoordinator | `_syncIntervalHandle` | `TimerHandleManager` keeps handle bounded; disposed on coordinator `dispose()` |
-| NetworkStatusService | `_debounceTimer` | `TimerHandleManager` keeps handle bounded; disposed on service `dispose()` |
-| OfflineFirstTodoRepository | `_remoteRestartHandle` | `TimerHandleManager` keeps handle bounded; disposed on repo `dispose()` |
-| OfflineFirstIotDemoRepository | pending setValue debounce timers | all pending timers disposed in repo `dispose()`; timers are tracked/untracked to keep the manager bounded |
+| BackgroundSyncCoordinator | `_syncIntervalHandle` | `TimerHandleManager` facade over centralized `DisposableBag`; disposed on coordinator `dispose()` |
+| NetworkStatusService | `_debounceTimer` | `TimerHandleManager` facade over centralized `DisposableBag`; disposed on service `dispose()` |
+| OfflineFirstTodoRepository | `_remoteRestartHandle` | `TimerHandleManager` facade over centralized `DisposableBag`; disposed on repo `dispose()` |
+| OfflineFirstIotDemoRepository | pending setValue debounce timers | all pending timers disposed in repo `dispose()`; timers stay bounded through `TimerHandleManager` |
 
 ### 3.4 TextEditingController / ScrollController (Widget-Owned)
 
@@ -112,6 +119,17 @@ The codebase handles most resource lifecycle correctly. Previously identified is
 | TodoListDialogs | `_titleController`, `_descriptionController` | `dispose()` |
 
 Controllers passed in via constructor (e.g. ChatMessageList, ChatInputBar, MarkdownEditorField) are owned by the parent; no disposal in the child.
+
+### 3.5 Centralized lifecycle helpers
+
+Current lifecycle ownership is intentionally centralized:
+
+- `DisposableBag` is the shared primitive for cancellable/closable resources.
+- `CubitSubscriptionMixin` owns cubit subscription and timer cleanup.
+- `SubscriptionManager` and `TimerHandleManager` are thin repository/service
+  facades over the same primitive.
+- App-wide memory-pressure handling is centralized through the app shell rather
+  than per-feature lifecycle observers.
 
 ---
 

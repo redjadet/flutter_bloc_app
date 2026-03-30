@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:flutter_bloc_app/shared/utils/disposable_bag.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:go_router/go_router.dart';
 
@@ -36,7 +37,9 @@ class IotDemoAuthGate extends StatefulWidget {
 }
 
 class _IotDemoAuthGateState extends State<IotDemoAuthGate> {
+  final DisposableBag _disposables = DisposableBag();
   bool _allowed = false;
+  // ignore: cancel_subscriptions - Lifecycle is centralized via DisposableBag.
   StreamSubscription<AuthUser?>? _authStateSubscription;
 
   @override
@@ -50,22 +53,28 @@ class _IotDemoAuthGateState extends State<IotDemoAuthGate> {
   void didUpdateWidget(covariant final IotDemoAuthGate oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.authStateChanges != widget.authStateChanges) {
-      unawaited(_authStateSubscription?.cancel());
+      final StreamSubscription<AuthUser?>? previousSubscription =
+          _authStateSubscription;
+      _authStateSubscription = null;
+      _disposables.untrackSubscription(previousSubscription);
+      unawaited(previousSubscription?.cancel());
       _subscribeToAuthStateChanges();
     }
   }
 
   void _subscribeToAuthStateChanges() {
-    _authStateSubscription = widget.authStateChanges.listen(
-      (final _) => _checkAndRedirect(null),
-      onError: (final Object error, final StackTrace stackTrace) {
-        AppLogger.error(
-          'IotDemoAuthGate: auth state listener failed',
-          error,
-          stackTrace,
-        );
-      },
-      cancelOnError: false,
+    _authStateSubscription = _disposables.trackSubscription(
+      widget.authStateChanges.listen(
+        (final _) => _checkAndRedirect(null),
+        onError: (final Object error, final StackTrace stackTrace) {
+          AppLogger.error(
+            'IotDemoAuthGate: auth state listener failed',
+            error,
+            stackTrace,
+          );
+        },
+        cancelOnError: false,
+      ),
     );
   }
 
@@ -106,7 +115,8 @@ class _IotDemoAuthGateState extends State<IotDemoAuthGate> {
 
   @override
   void dispose() {
-    unawaited(_authStateSubscription?.cancel());
+    _authStateSubscription = null;
+    unawaited(_disposables.dispose());
     super.dispose();
   }
 }

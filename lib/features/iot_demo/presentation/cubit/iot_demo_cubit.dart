@@ -100,7 +100,10 @@ class IotDemoCubit extends Cubit<IotDemoState>
     if (emitLoadingState) {
       emit(const IotDemoState.loading());
     }
-    await cancelAllSubscriptions();
+    final StreamSubscription<List<IotDevice>>? previousSubscription =
+        _devicesSubscription;
+    _devicesSubscription = null;
+    await cancelRegisteredSubscription(previousSubscription);
     if (isClosed || requestId != _devicesWatchRequestId) return;
     _subscribeToDevices(filter, previousSelectedDeviceId, requestId);
   }
@@ -110,36 +113,37 @@ class IotDemoCubit extends Cubit<IotDemoState>
     final String? previousSelectedDeviceId,
     final int requestId,
   ) {
-    _devicesSubscription = _repository.watchDevices().listen(
-      (final list) {
-        if (isClosed || requestId != _devicesWatchRequestId) return;
-        _allDevices = List<IotDevice>.unmodifiable(list);
-        final IotDemoDeviceFilter activeFilter =
-            state.mapOrNull(loaded: (final s) => s.filter) ?? filter;
-        emit(
-          _buildLoadedState(
-            devices: list,
-            filter: activeFilter,
-            selectedDeviceId:
-                state.mapOrNull(loaded: (final s) => s.selectedDeviceId) ??
-                previousSelectedDeviceId,
-          ),
-        );
-      },
-      onError: (final Object error, final StackTrace stackTrace) {
-        AppLogger.error(
-          'IotDemoCubit watchDevices error',
-          error,
-          stackTrace,
-        );
-        if (isClosed || requestId != _devicesWatchRequestId) return;
-        emit(
-          IotDemoState.error(_l10n?.iotDemoErrorLoad ?? error.toString()),
-        );
-      },
-      cancelOnError: true,
+    _devicesSubscription = registerSubscription(
+      _repository.watchDevices().listen(
+        (final list) {
+          if (isClosed || requestId != _devicesWatchRequestId) return;
+          _allDevices = List<IotDevice>.unmodifiable(list);
+          final IotDemoDeviceFilter activeFilter =
+              state.mapOrNull(loaded: (final s) => s.filter) ?? filter;
+          emit(
+            _buildLoadedState(
+              devices: list,
+              filter: activeFilter,
+              selectedDeviceId:
+                  state.mapOrNull(loaded: (final s) => s.selectedDeviceId) ??
+                  previousSelectedDeviceId,
+            ),
+          );
+        },
+        onError: (final Object error, final StackTrace stackTrace) {
+          AppLogger.error(
+            'IotDemoCubit watchDevices error',
+            error,
+            stackTrace,
+          );
+          if (isClosed || requestId != _devicesWatchRequestId) return;
+          emit(
+            IotDemoState.error(_l10n?.iotDemoErrorLoad ?? error.toString()),
+          );
+        },
+        cancelOnError: true,
+      ),
     );
-    registerSubscription(_devicesSubscription);
   }
 
   IotDemoState _buildLoadedState({

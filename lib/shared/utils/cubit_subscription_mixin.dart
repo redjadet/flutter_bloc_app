@@ -16,12 +16,13 @@ import 'package:flutter_bloc_app/shared/utils/timer_handle_manager.dart';
 ///
 /// Example:
 /// ```dart
-/// class MyCubit extends Cubit<MyState> with CubitSubscriptionMixin {
+/// class MyCubit extends Cubit<MyState> with CubitSubscriptionMixin<MyState> {
 ///   MyCubit({required MyRepository repository})
 ///     : _repository = repository,
 ///       super(MyState.initial()) {
-///     _subscription = _repository.stream.listen(_onData);
-///     registerSubscription(_subscription);
+///     _subscription = registerSubscription(
+///       _repository.stream.listen(_onData),
+///     );
 ///   }
 ///
 ///   final MyRepository _repository;
@@ -46,17 +47,29 @@ mixin CubitSubscriptionMixin<S> on Cubit<S> {
   /// Registers a subscription to be automatically cancelled when the cubit closes.
   ///
   /// Subscriptions should be registered immediately after creation.
-  void registerSubscription(final StreamSubscription<dynamic>? subscription) {
-    if (subscription == null) return;
+  T registerSubscription<T extends StreamSubscription<dynamic>?>(
+    final T subscription,
+  ) {
+    if (subscription == null) return subscription;
 
     // If a late async callback creates a subscription after the cubit has already
     // closed, cancel immediately to avoid leaks.
     if (isClosed) {
       unawaited(subscription.cancel());
-      return;
+      return subscription;
     }
 
     _subscriptions.trackSubscription(subscription);
+    return subscription;
+  }
+
+  /// Cancels a registered subscription and removes it from the tracked set.
+  Future<void> cancelRegisteredSubscription(
+    final StreamSubscription<dynamic>? subscription,
+  ) async {
+    if (subscription == null) return;
+    _subscriptions.untrackSubscription(subscription);
+    await subscription.cancel();
   }
 
   /// Registers a timer handle to be disposed when the cubit closes.

@@ -7,6 +7,8 @@ import 'package:flutter_bloc_app/features/deeplink/deeplink.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
 import 'package:flutter_bloc_app/shared/responsive/responsive.dart';
+import 'package:flutter_bloc_app/shared/services/app_memory_service.dart';
+import 'package:flutter_bloc_app/shared/services/app_memory_trim_level.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/services/retry_notification_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
@@ -27,8 +29,10 @@ class AppScope extends StatefulWidget {
 
 class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
   late final BackgroundSyncCoordinator _syncCoordinator;
+  late final AppMemoryService _memoryService;
   late final TimerService _timerService;
   TimerDisposable? _resumeDebounceHandle;
+  TimerDisposable? _backgroundTrimHandle;
 
   @override
   void initState() {
@@ -36,6 +40,7 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
     // Ensure DI is configured when running tests that directly pump MyApp.
     ensureConfigured();
     _syncCoordinator = getIt<BackgroundSyncCoordinator>();
+    _memoryService = getIt<AppMemoryService>();
     _timerService = getIt<TimerService>();
     WidgetsBinding.instance.addObserver(this);
   }
@@ -43,12 +48,33 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(final AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      _backgroundTrimHandle?.dispose();
+      _backgroundTrimHandle = null;
       _resumeDebounceHandle?.dispose();
       _resumeDebounceHandle = _timerService.runOnce(
         const Duration(milliseconds: 500),
         () => unawaited(_syncCoordinator.flush()),
       );
+      return;
     }
+
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
+      _backgroundTrimHandle?.dispose();
+      _backgroundTrimHandle = _timerService.runOnce(
+        const Duration(milliseconds: 750),
+        () => unawaited(
+          _memoryService.trim(AppMemoryTrimLevel.background),
+        ),
+      );
+    }
+  }
+
+  @override
+  void didHaveMemoryPressure() {
+    _backgroundTrimHandle?.dispose();
+    _backgroundTrimHandle = null;
+    unawaited(_memoryService.trim(AppMemoryTrimLevel.pressure));
   }
 
   @override
@@ -56,6 +82,8 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     _resumeDebounceHandle?.dispose();
     _resumeDebounceHandle = null;
+    _backgroundTrimHandle?.dispose();
+    _backgroundTrimHandle = null;
     super.dispose();
   }
 

@@ -283,6 +283,33 @@ raise SystemExit(1)
 ' "$IOS_SIMULATOR_PREFERRED_NAMES"
 }
 
+booted_ios_simulator_selection() {
+  [ "$(uname -s)" = "Darwin" ] || return 1
+  command -v xcrun >/dev/null 2>&1 || return 1
+
+  xcrun simctl list devices booted -j 2>/dev/null | /usr/bin/python3 -c '
+import json
+import sys
+
+data = json.load(sys.stdin)
+booted_iphones = []
+
+for runtime_name, devices in data.get("devices", {}).items():
+    if "iOS" not in runtime_name:
+        continue
+    for device in devices:
+        if device.get("isAvailable", True) and "iPhone" in device.get("name", ""):
+            booted_iphones.append(device)
+
+if booted_iphones:
+    device = booted_iphones[0]
+    print(f"{device.get('udid','')}\t{device.get('name','')}")
+    raise SystemExit(0)
+
+raise SystemExit(1)
+'
+}
+
 is_ios_simulator_device() {
   local device_id="$1"
 
@@ -612,6 +639,23 @@ select_device_id() {
     done < <(list_supported_devices)
 
     if [ -z "$requested_device" ] && [ "$(uname -s)" = "Darwin" ]; then
+      local booted_simulator_selection=""
+      local booted_simulator_udid=""
+      local booted_simulator_name=""
+
+      booted_simulator_selection="$(booted_ios_simulator_selection 2>/dev/null || true)"
+      if [ -n "$booted_simulator_selection" ]; then
+        IFS=$'\t' read -r booted_simulator_udid booted_simulator_name <<< "$booted_simulator_selection"
+        if [ -n "${booted_simulator_udid:-}" ]; then
+          for index in "${!supported_device_ids[@]}"; do
+            if [ "${supported_device_ids[$index]}" = "$booted_simulator_udid" ]; then
+              echo "$booted_simulator_udid"
+              return
+            fi
+          done
+        fi
+      fi
+
       local has_ios_simulator=0
       for index in "${!supported_device_ids[@]}"; do
         device_line="${supported_device_lines[$index]}"

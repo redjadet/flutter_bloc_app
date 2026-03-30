@@ -113,7 +113,9 @@ How to read the diagram:
   queues entirely inside the data layer
 - Deferred route loading keeps heavy features out of the initial bundle
 - Lazy startup: background sync and remote config initialize on first use
-- Lifecycle safety via `CubitExceptionHandler`, `CubitSubscriptionMixin`,
+- Lifecycle safety via `CubitExceptionHandler`,
+  `DisposableBag`-backed lifecycle helpers (`CubitSubscriptionMixin`,
+  `SubscriptionManager`, `TimerHandleManager`),
   `CubitStateEmissionMixin`, and mounted checks
 
 ## Design System

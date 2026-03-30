@@ -114,24 +114,22 @@ mixin _TodoListCubitMethods
     if (isClosed) return;
     final StreamSubscription<List<TodoItem>>? oldSubscription = subscription;
     subscription = null;
-    unawaited(oldSubscription?.cancel());
+    unawaited(cancelRegisteredSubscription(oldSubscription));
     if (isClosed) return;
-    final StreamSubscription<List<TodoItem>> newSubscription = repository
-        .watchAll()
-        .listen(
-          onItemsUpdated,
-          onError: (final Object error, final StackTrace stackTrace) {
-            if (isClosed) return;
-            emit(
-              state.copyWith(
-                status: ViewStatus.error,
-                errorMessage: _todoWatchErrorMessage(error, stackTrace),
-              ),
-            );
-          },
-        );
-    registerSubscription(newSubscription);
-    subscription = newSubscription;
+    subscription = registerSubscription(
+      repository.watchAll().listen(
+        onItemsUpdated,
+        onError: (final Object error, final StackTrace stackTrace) {
+          if (isClosed) return;
+          emit(
+            state.copyWith(
+              status: ViewStatus.error,
+              errorMessage: _todoWatchErrorMessage(error, stackTrace),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   Future<void> loadInitial() async {

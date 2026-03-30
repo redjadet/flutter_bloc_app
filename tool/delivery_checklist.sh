@@ -410,6 +410,7 @@ CHECK_MESSAGES=(
   "Checking for lifecycle and error-handling (snackbar/listen/dialog mounted)..."
   "Checking offline-first remote-merge (do not overwrite newer local with older remote)..."
   "Checking feature modularity (library_demo / settings cross-imports)..."
+  "Checking centralized memory-pressure handling..."
 )
 
 CHECK_SCRIPTS=(
@@ -454,6 +455,7 @@ CHECK_SCRIPTS=(
   "tool/check_lifecycle_error_handling.sh"
   "tool/check_offline_first_remote_merge.sh"
   "tool/check_feature_modularity_leaks.sh"
+  "tool/check_memory_pressure_centralized.sh"
 )
 
 DEFAULT_CHECKLIST_JOBS="$(detect_cpu_count)"

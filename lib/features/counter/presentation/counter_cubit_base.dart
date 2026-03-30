@@ -179,36 +179,33 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
   }
 
   void _subscribeToRepository() {
-    // Store old subscription and nullify reference to prevent race conditions
     final StreamSubscription<CounterSnapshot>? oldSubscription =
         _repositorySubscription;
     _repositorySubscription = null;
-    // Cancel old subscription asynchronously (don't await to avoid blocking)
-    unawaited(oldSubscription?.cancel());
-    // Set up new subscription immediately
-    _repositorySubscription = _repository.watch().listen(
-      (final snapshot) {
-        // Check if cubit is closed before emitting to prevent errors
-        if (isClosed) return;
-        if (shouldIgnoreRemoteSnapshot(state, snapshot)) return;
+    unawaited(cancelRegisteredSubscription(oldSubscription));
+    _repositorySubscription = registerSubscription(
+      _repository.watch().listen(
+        (final snapshot) {
+          if (isClosed) return;
+          if (shouldIgnoreRemoteSnapshot(state, snapshot)) return;
 
-        final RestorationResult restoration = restoreStateFromSnapshot(
-          snapshot,
-        );
-        unawaited(
-          applyRestorationOutcome(
-            restoration,
-            onHoldChanged: ({required final holdSideEffects}) =>
-                _pauseCountdownForOneTick = holdSideEffects,
-            onAfterEmit: _syncTickerForState,
-            logContext: 'CounterCubit._subscribeToRepository',
-          ),
-        );
-      },
-      onError: (final Object error, final StackTrace stackTrace) {
-        AppLogger.error('CounterCubit.watch failed', error, stackTrace);
-      },
+          final RestorationResult restoration = restoreStateFromSnapshot(
+            snapshot,
+          );
+          unawaited(
+            applyRestorationOutcome(
+              restoration,
+              onHoldChanged: ({required final holdSideEffects}) =>
+                  _pauseCountdownForOneTick = holdSideEffects,
+              onAfterEmit: _syncTickerForState,
+              logContext: 'CounterCubit._subscribeToRepository',
+            ),
+          );
+        },
+        onError: (final Object error, final StackTrace stackTrace) {
+          AppLogger.error('CounterCubit.watch failed', error, stackTrace);
+        },
+      ),
     );
-    registerSubscription(_repositorySubscription);
   }
 }
