@@ -8,25 +8,10 @@ on:
       - 'custom_lints/**/pubspec.yaml'
     types: [opened, synchronize, reopened]
 
-permissions:
-  contents: read
-  issues: write
-  pull-requests: write
-  actions: write
-
-env:
-  FLUTTER_VERSION: '3.41.6'
-  COVERAGE_THRESHOLD: '60'
-
-concurrency:
-  group: dependency-updates-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
 jobs:
   test-dependency-updates:
     name: Test Dependency Updates
     runs-on: ubuntu-latest
-    timeout-minutes: 45
     if: |
       github.event.pull_request.user.login == 'renovate[bot]' ||
       github.event.pull_request.user.login == 'dependabot[bot]'
@@ -38,15 +23,11 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+          flutter-version: "3.35.5"
           channel: stable
-          cache: true
 
       - name: Flutter pub get
         run: flutter pub get
-
-      - name: Install lcov
-        run: sudo apt-get update && sudo apt-get install -y lcov
 
       - name: Flutter analyze
         run: flutter analyze
@@ -57,7 +38,7 @@ jobs:
       - name: Enforce coverage threshold
         run: |
           COVERAGE_FILE=coverage/lcov.info
-          TARGET="${{ env.COVERAGE_THRESHOLD }}"
+          TARGET=60
           ACTUAL=$(lcov --summary "$COVERAGE_FILE" | awk '/lines/ {print $2}' | sed 's/%//')
           echo "Coverage: $ACTUAL%"
           awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { exit (actual + 0 >= target + 0 ? 0 : 1) }'
@@ -70,7 +51,6 @@ jobs:
 
       - name: Comment PR with test results
         if: always()
-        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
@@ -84,3 +64,4 @@ jobs:
               repo: context.repo.repo,
               body: message
             });
+
