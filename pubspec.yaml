@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: 3.11.4
+  sdk: ">=3.11.3 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -74,7 +74,7 @@ dependencies:
   hive_flutter: ^1.1.0
   image_picker: ^1.2.1
   intl: ^0.20.2
-  json_annotation: 4.11.0
+  json_annotation: 4.9.0
   local_auth: 3.0.1
   logger: 2.7.0
   markdown: 7.3.1
@@ -104,18 +104,18 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
-  freezed: 3.2.5
+  freezed: 3.2.3
   golden_toolkit: ^0.15.0
   google_maps_flutter_platform_interface: 2.15.0
-  google_sign_in_mocks: 0.4.1
+  google_sign_in_mocks: 0.3.0
   integration_test:
     sdk: flutter
-  json_serializable: 6.13.0
+  json_serializable: 6.11.2
   mix_lint:
     path: custom_lints/mix_lint
   mock_exceptions: ^0.8.2
   mocktail: ^1.0.4
-  retrofit_generator: 10.2.3
+  retrofit_generator: 10.2.1
   very_good_analysis: ^10.2.0
 
 dependency_overrides:
