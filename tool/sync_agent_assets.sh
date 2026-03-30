@@ -86,6 +86,11 @@ for mapping in "${managed_cursor_files[@]}" "${managed_codex_files[@]}"; do
   report_and_maybe_apply "$src_rel" "$dst"
 done
 
+while IFS= read -r worktree_agent; do
+  [[ -n "$worktree_agent" ]] || continue
+  report_and_maybe_apply "codex/AGENTS.md" "$worktree_agent"
+done < <(list_optional_codex_worktree_agent_targets)
+
 rules_status="$(check_codex_rules_block)" || true
 echo "$rules_status"
 if [[ "$mode" == "apply" && "${rules_status%%|*}" != "ok" ]]; then

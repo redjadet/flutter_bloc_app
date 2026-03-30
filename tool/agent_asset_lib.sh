@@ -14,6 +14,8 @@ managed_cursor_files=(
   "cursor/skills/agents-quick-reference/SKILL.md|$HOME/.cursor/skills/agents-quick-reference/SKILL.md"
   "cursor/skills/agents-delivery-workflow/SKILL.md|$HOME/.cursor/skills/agents-delivery-workflow/SKILL.md"
   "cursor/skills/agents-completion-gate/SKILL.md|$HOME/.cursor/skills/agents-completion-gate/SKILL.md"
+  "cursor/skills/agents-subagent-policy/SKILL.md|$HOME/.cursor/skills/agents-subagent-policy/SKILL.md"
+  "cursor/skills/agents-meta-behavior/SKILL.md|$HOME/.cursor/skills/agents-meta-behavior/SKILL.md"
   "cursor/skills/agents-workflow-commands/SKILL.md|$HOME/.cursor/skills/agents-workflow-commands/SKILL.md"
   "cursor/skills/agents-cursor-integration/SKILL.md|$HOME/.cursor/skills/agents-cursor-integration/SKILL.md"
   "cursor/commands/codex-feedback.md|$HOME/.cursor/commands/codex-feedback.md"
@@ -26,6 +28,7 @@ managed_codex_files=(
   "codex/skills/flutter-bloc-app-quick-reference/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-quick-reference/SKILL.md"
   "codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md"
   "codex/skills/flutter-bloc-app-cross-host-review/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-cross-host-review/SKILL.md"
+  "codex/skills/flutter-bloc-app-subagent-policy/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-subagent-policy/SKILL.md"
 )
 
 managed_codex_rules_template="codex/rules/flutter_bloc_app_default.rules"
@@ -40,6 +43,17 @@ optional_local_policy_targets=(
   "AGENTS.md"
   "docs/agents_quick_reference.md"
 )
+
+list_optional_codex_worktree_agent_targets() {
+  local repo_name
+  local target
+  repo_name="$(basename "$repo_root")"
+  shopt -s nullglob
+  for target in "$HOME"/.codex/worktrees/*/"$repo_name"/AGENTS.md; do
+    printf '%s\n' "$target"
+  done
+  shopt -u nullglob
+}
 
 require_agent_asset_runtime() {
   local missing=0
@@ -79,7 +93,7 @@ copy_file_if_needed() {
 apply_copy_file() {
   local src_rel="$1"
   local dst="$2"
-  local src="$repo_root/$src_rel"
+  local src="$agent_templates_root/$src_rel"
   mkdir -p "$(dirname "$dst")"
   cp "$src" "$dst"
 }

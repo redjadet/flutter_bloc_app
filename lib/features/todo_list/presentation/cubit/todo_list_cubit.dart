@@ -94,17 +94,21 @@ class TodoListCubit extends Cubit<TodoListState>
     }
 
     // Debounce the search query update
-    _searchDebounceHandle = _timerService.runOnce(
-      _searchDebounceDuration,
-      () {
-        if (isClosed) return;
-        emit(state.copyWith(searchQuery: trimmedQuery));
-      },
-    );
+    late final TimerDisposable handle;
+    handle = _timerService.runOnce(_searchDebounceDuration, () {
+      unregisterTimer(handle);
+      if (identical(_searchDebounceHandle, handle)) {
+        _searchDebounceHandle = null;
+      }
+      if (isClosed) return;
+      emit(state.copyWith(searchQuery: trimmedQuery));
+    });
+    _searchDebounceHandle = registerTimer(handle);
   }
 
   void _cancelSearchDebounce() {
     _searchDebounceHandle?.dispose();
+    unregisterTimer(_searchDebounceHandle);
     _searchDebounceHandle = null;
   }
 

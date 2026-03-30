@@ -13,6 +13,7 @@ import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/subscription_manager.dart';
+import 'package:flutter_bloc_app/shared/utils/timer_handle_manager.dart';
 
 part 'offline_first_todo_repository_helpers.dart';
 
@@ -49,6 +50,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   final TodoPayloadBuilder _payloadBuilder;
 
   final SubscriptionManager _subscriptionManager = SubscriptionManager();
+  final TimerHandleManager _timerHandles = TimerHandleManager();
   bool _remoteRestartScheduled = false;
   TimerDisposable? _remoteRestartHandle;
 
@@ -123,16 +125,21 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
     }
     _remoteRestartScheduled = true;
     _remoteRestartHandle?.dispose();
-    _remoteRestartHandle = _timerService.runOnce(
-      const Duration(seconds: 2),
-      () {
-        _remoteRestartScheduled = false;
-        if (_subscriptionManager.isDisposed) {
-          return;
-        }
-        _startRemoteWatch();
-      },
-    );
+    _timerHandles.unregister(_remoteRestartHandle);
+    late final TimerDisposable handle;
+    handle = _timerService.runOnce(const Duration(seconds: 2), () {
+      _timerHandles.unregister(handle);
+      if (identical(_remoteRestartHandle, handle)) {
+        _remoteRestartHandle = null;
+      }
+      _remoteRestartScheduled = false;
+      if (_subscriptionManager.isDisposed) {
+        return;
+      }
+      _startRemoteWatch();
+    });
+    _remoteRestartHandle = handle;
+    _timerHandles.register(handle);
   }
 
   @override
@@ -322,7 +329,9 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
     _remoteWatchSubscription = null;
     _remoteRestartScheduled = false;
     _remoteRestartHandle?.dispose();
+    _timerHandles.unregister(_remoteRestartHandle);
     _remoteRestartHandle = null;
+    await _timerHandles.dispose();
     await _subscriptionManager.dispose();
     final SyncableRepository? registeredRepository = _registry.resolve(
       entityType,

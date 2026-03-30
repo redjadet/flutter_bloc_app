@@ -18,12 +18,14 @@ class _MockNetworkStatusService extends Mock implements NetworkStatusService {}
 
 class _ControllableTimerService extends Fake implements TimerService {
   void Function()? _lastOnTick;
+  int periodicCalls = 0;
 
   @override
   TimerDisposable periodic(
     final Duration interval,
     final void Function() onTick,
   ) {
+    periodicCalls += 1;
     _lastOnTick = onTick;
     return _ControllableTimerDisposable(onTick);
   }
@@ -130,6 +132,58 @@ void main() {
       verify(() => syncableRepo.processOperation(operation)).called(1);
       expect(emitted.contains(SyncStatus.syncing), isTrue);
       await coordinator.stop();
+    });
+
+    test(
+      'start/stop are idempotent and do not double-schedule periodic ticks',
+      () async {
+        final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
+          repository: pendingRepository,
+          networkStatusService: networkService,
+          timerService: timerService,
+          registry: registry,
+          syncInterval: const Duration(milliseconds: 10),
+        );
+
+        await coordinator.start();
+        await coordinator.start();
+
+        expect(
+          (timerService as _ControllableTimerService).periodicCalls,
+          1,
+          reason: 'start() should not register multiple periodic timers.',
+        );
+
+        await coordinator.stop();
+        await coordinator.stop();
+
+        expect(coordinator.currentStatus, SyncStatus.idle);
+      },
+    );
+
+    test('dispose is safe without start and after stop', () async {
+      final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
+        repository: pendingRepository,
+        networkStatusService: networkService,
+        timerService: timerService,
+        registry: registry,
+        syncInterval: const Duration(milliseconds: 10),
+      );
+
+      await coordinator.dispose();
+
+      final BackgroundSyncCoordinator started = BackgroundSyncCoordinator(
+        repository: pendingRepository,
+        networkStatusService: networkService,
+        timerService: timerService,
+        registry: registry,
+        syncInterval: const Duration(milliseconds: 10),
+      );
+      await started.start();
+      await started.stop();
+      await started.dispose();
+
+      expect(started.currentStatus, SyncStatus.idle);
     });
 
     test('retries failed operations with exponential backoff', () async {

@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
@@ -15,6 +16,44 @@ class _StubSearchRepository extends SearchRepository {
 
   @override
   Future<List<SearchResult>> search(final String query) => onSearch(query);
+}
+
+class _CountingOneShotTimerService implements TimerService {
+  _CountingOneShotTimerService();
+
+  _CountingTimerHandle? lastHandle;
+
+  @override
+  TimerDisposable periodic(Duration interval, void Function() onTick) {
+    throw UnimplementedError('periodic is not used by SearchCubit tests');
+  }
+
+  @override
+  TimerDisposable runOnce(Duration delay, void Function() onComplete) {
+    final _CountingTimerHandle handle = _CountingTimerHandle(onComplete);
+    lastHandle = handle;
+    return handle;
+  }
+}
+
+class _CountingTimerHandle implements TimerDisposable {
+  _CountingTimerHandle(this._onComplete);
+
+  final void Function() _onComplete;
+  int disposeCount = 0;
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    disposeCount++;
+    _disposed = true;
+  }
+
+  void fire() {
+    if (_disposed) return;
+    _disposed = true;
+    _onComplete();
+  }
 }
 
 void main() {
@@ -144,6 +183,41 @@ void main() {
             ),
       ],
       verify: (_) => expect(capturedQueries, equals(<String>['third'])),
+    );
+
+    test(
+      'does not dispose an already-fired debounce handle again during close',
+      () async {
+        final _CountingOneShotTimerService timerService =
+            _CountingOneShotTimerService();
+        final SearchCubit cubit = SearchCubit(
+          repository: _StubSearchRepository(
+            onSearch: (final query) async => <SearchResult>[
+              SearchResult(
+                id: query,
+                imageUrl: 'https://example.com/$query.png',
+              ),
+            ],
+          ),
+          timerService: timerService,
+          debounceDuration: const Duration(milliseconds: 300),
+        );
+
+        cubit.search('dog');
+        final _CountingTimerHandle handle = timerService.lastHandle!;
+
+        handle.fire();
+        await Future<void>.delayed(Duration.zero);
+        await cubit.close();
+
+        expect(
+          handle.disposeCount,
+          0,
+          reason:
+              'The debounce handle should unregister itself after firing so '
+              'close() does not dispose a dead one-shot timer again.',
+        );
+      },
     );
   });
 }

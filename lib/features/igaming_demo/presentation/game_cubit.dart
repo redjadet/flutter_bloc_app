@@ -9,12 +9,14 @@ import 'package:flutter_bloc_app/features/igaming_demo/domain/game_round_result.
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/game_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 
 /// Duration of the spin animation before the round result is resolved.
 const Duration kSpinAnimationDuration = Duration(milliseconds: 2500);
 
 /// Cubit for one play-for-fun game round: stake, play, result, balance update.
-class GameCubit extends Cubit<GameState> {
+class GameCubit extends Cubit<GameState>
+    with CubitSubscriptionMixin<GameState> {
   GameCubit({
     required final DemoBalanceRepository balanceRepository,
     required final TimerService timerService,
@@ -110,19 +112,25 @@ class GameCubit extends Cubit<GameState> {
     }
     if (isClosed) return;
     _spinHandle?.dispose();
+    unregisterTimer(_spinHandle);
     final Random rng =
         _testRandom ?? Random(DateTime.now().microsecondsSinceEpoch);
     final List<int> target = _pickTargetReelSymbolIndices(rng);
+    if (isClosed) return;
     emit(GameState.spinning(balance, bet, target));
-    _spinHandle = _timerService.runOnce(
-      kSpinAnimationDuration,
-      _resolveRoundAfterSpin,
-    );
+    late final TimerDisposable handle;
+    handle = _timerService.runOnce(kSpinAnimationDuration, () {
+      unregisterTimer(handle);
+      if (identical(_spinHandle, handle)) {
+        _spinHandle = null;
+      }
+      _resolveRoundAfterSpin();
+    });
+    _spinHandle = registerTimer(handle);
   }
 
   void _resolveRoundAfterSpin() {
     if (isClosed) return;
-    _spinHandle = null;
     final (int, List<int>)? spinData = state.mapOrNull(
       spinning: (final s) => (s.bet, s.targetReelSymbolIndices),
     );
@@ -172,6 +180,7 @@ class GameCubit extends Cubit<GameState> {
   @override
   Future<void> close() {
     _spinHandle?.dispose();
+    unregisterTimer(_spinHandle);
     _spinHandle = null;
     return super.close();
   }

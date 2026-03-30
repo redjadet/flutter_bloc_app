@@ -69,6 +69,7 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
 
   Future<void> _startListening() async {
     final Uri? initialUri = await _service.getInitialLink();
+    if (isClosed) return;
     if (initialUri != null) {
       AppLogger.info('Found initial URI: $initialUri');
       _handleUri(initialUri, DeepLinkOrigin.initial);
@@ -111,15 +112,18 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
 
   @override
   Future<void> close() async {
-    _subscription = null;
+    await _disposeSubscription();
     return super.close();
   }
 
   Future<void> _disposeSubscription() async {
-    // Nullify reference before canceling to prevent race conditions
+    // Nullify reference before canceling to prevent race conditions.
     final StreamSubscription<Uri>? subscription = _subscription;
     _subscription = null;
     await subscription?.cancel();
+
+    // Keep the centralized subscription holder bounded for restartable watches.
+    await cancelAllSubscriptions();
   }
 
   void _handleInitializeError(

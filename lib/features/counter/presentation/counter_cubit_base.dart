@@ -62,10 +62,12 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
         _resetCountdownAndHold();
       }
     });
+    registerTimer(_countdownTicker);
   }
 
   void _stopCountdownTicker() {
     _countdownTicker?.dispose();
+    unregisterTimer(_countdownTicker);
     _countdownTicker = null;
   }
 
