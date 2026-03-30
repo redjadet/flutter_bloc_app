@@ -54,7 +54,7 @@ request is served from Hive, remote APIs, or both.
 flowchart LR
   UI["Widgets / Pages"] --> Cubit["Cubit / BLoC"]
   Cubit --> Contract["Domain contract"]
-  Contract <-.implements.- OfflineRepo["OfflineFirst repository"]
+  OfflineRepo["OfflineFirst repository"] -->|implements| Contract
   OfflineRepo --> Local["Hive local repository"]
   OfflineRepo --> Queue["PendingSyncRepository"]
   OfflineRepo --> Remote["Remote repository / SDK adapter"]
