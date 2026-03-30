@@ -4,10 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_state.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Cubit for scapes list: load, grid/list toggle, and favorite toggle.
-class ScapesCubit extends Cubit<ScapesState> {
+class ScapesCubit extends Cubit<ScapesState>
+    with CubitSubscriptionMixin<ScapesState> {
   ScapesCubit({
     required final ScapesRepository repository,
     required final TimerService timerService,
@@ -25,12 +27,16 @@ class ScapesCubit extends Cubit<ScapesState> {
     emit(state.copyWith(isLoading: true, errorMessage: null));
 
     _loadDelayHandle?.dispose();
-    _loadDelayHandle = _timerService.runOnce(
-      const Duration(milliseconds: 300),
-      () {
-        unawaited(_loadScapesFromRepository());
-      },
-    );
+    unregisterTimer(_loadDelayHandle);
+    late final TimerDisposable handle;
+    handle = _timerService.runOnce(const Duration(milliseconds: 300), () {
+      unregisterTimer(handle);
+      if (identical(_loadDelayHandle, handle)) {
+        _loadDelayHandle = null;
+      }
+      unawaited(_loadScapesFromRepository());
+    });
+    _loadDelayHandle = registerTimer(handle);
   }
 
   Future<void> _loadScapesFromRepository() async {
@@ -84,6 +90,7 @@ class ScapesCubit extends Cubit<ScapesState> {
   @override
   Future<void> close() {
     _loadDelayHandle?.dispose();
+    unregisterTimer(_loadDelayHandle);
     _loadDelayHandle = null;
     return super.close();
   }

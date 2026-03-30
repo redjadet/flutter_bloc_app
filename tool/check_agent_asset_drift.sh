@@ -56,6 +56,11 @@ for mapping in "${managed_cursor_files[@]}" "${managed_codex_files[@]}"; do
   check_mapping "${mapping%%|*}" "${mapping##*|}"
 done
 
+while IFS= read -r worktree_agent; do
+  [[ -n "$worktree_agent" ]] || continue
+  check_mapping "codex/AGENTS.md" "$worktree_agent"
+done < <(list_optional_codex_worktree_agent_targets)
+
 rules_status="$(check_codex_rules_block)" || true
 echo "$rules_status"
 if [[ "${rules_status%%|*}" != "ok" ]]; then

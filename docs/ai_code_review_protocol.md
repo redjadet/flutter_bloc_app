@@ -88,10 +88,26 @@ If no new test is added, record why existing coverage is already enough.
 ### Before accepting AI-written code
 
 1. Apply the eight checks.
-1. Review the diff manually.
-1. Run the smallest matching repo validation command.
-1. For medium/high-risk work, prefer a bounded pass via
-   `./tool/request_codex_feedback.sh`.
+2. For non-trivial tasks, confirm `tasks/todo.md` captures the implementation
+   plan and verification steps.
+3. If subagents or sidecars were used, review their output as draft input and
+   validate the integrated result yourself.
+4. Review the diff manually.
+5. Run the smallest matching repo validation command.
+6. For medium/high-risk work, prefer one extra review pass before finalizing.
+   From Cursor or other non-Codex hosts, that can be a bounded pass via
+   `./tool/request_codex_feedback.sh`. From Codex itself, do not invoke that
+   helper unless the user explicitly asks for a second opinion or cross-host
+   review.
+
+### Before marking the task done
+
+1. Prove behavior with scope-matched evidence such as tests, logs, or behavior
+   diffs.
+2. Record the verification outcome and short review notes in `tasks/todo.md`
+   when the task used plan-first workflow.
+3. If the user corrected a mistake during the task, add a prevention lesson to
+   `tasks/lessons.md`.
 
 ### Dependency changes
 
@@ -106,9 +122,9 @@ When `pubspec.yaml` or `pubspec.lock` changes:
 Prefer this sequence:
 
 1. reproduce or reason clearly about the failure
-1. add a focused guard
-1. implement the fix
-1. validate the narrowed scope
+2. add a focused guard
+3. implement the fix
+4. validate the narrowed scope
 
 ## Relationship to repo validation
 

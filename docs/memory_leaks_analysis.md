@@ -88,11 +88,14 @@ The codebase handles most resource lifecycle correctly. Previously identified is
 
 | Component | Timers | Disposal |
 | ----------- | ------ | -------- |
-| CounterCubitBase | `_countdownTicker` | `_stopCountdownTicker()`; sync with state |
-| SearchCubit | `_debounceHandle` | `close()` cancels |
-| TodoListCubit | search debounce | `_cancelSearchDebounce()`; close cancels |
-| BackgroundSyncCoordinator | `_periodicTimer` | `stop()` disposes |
-| NetworkStatusService | `_debounceTimer` | `dispose()` disposes |
+| CounterCubitBase | `_countdownTicker` | `registerTimer(...)` + `_stopCountdownTicker()` (unregisters when disposed/replaced) |
+| SearchCubit | `_debounceHandle` | `registerTimer(...)` + `_cancelDebounce()` (unregisters when cancelled) |
+| TodoListCubit | search debounce | `registerTimer(...)` + `_cancelSearchDebounce()` (unregisters when cancelled) |
+| GameCubit | `_spinHandle` | `registerTimer(...)` + `close()` cancels |
+| BackgroundSyncCoordinator | `_syncIntervalHandle` | `TimerHandleManager` keeps handle bounded; disposed on coordinator `dispose()` |
+| NetworkStatusService | `_debounceTimer` | `TimerHandleManager` keeps handle bounded; disposed on service `dispose()` |
+| OfflineFirstTodoRepository | `_remoteRestartHandle` | `TimerHandleManager` keeps handle bounded; disposed on repo `dispose()` |
+| OfflineFirstIotDemoRepository | pending setValue debounce timers | all pending timers disposed in repo `dispose()`; timers are tracked/untracked to keep the manager bounded |
 
 ### 3.4 TextEditingController / ScrollController (Widget-Owned)
 

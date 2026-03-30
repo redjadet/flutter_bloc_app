@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:flutter_bloc_app/shared/utils/disposable_bag.dart';
+import 'package:flutter_bloc_app/shared/utils/timer_handle_manager.dart';
 
 /// Mixin for managing stream subscriptions in cubits.
 ///
@@ -37,31 +40,54 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// }
 /// ```
 mixin CubitSubscriptionMixin<S> on Cubit<S> {
-  final List<StreamSubscription<dynamic>?> _subscriptions = [];
+  final DisposableBag _subscriptions = DisposableBag();
+  final TimerHandleManager _timers = TimerHandleManager();
 
   /// Registers a subscription to be automatically cancelled when the cubit closes.
   ///
   /// Subscriptions should be registered immediately after creation.
   void registerSubscription(final StreamSubscription<dynamic>? subscription) {
-    if (subscription != null) {
-      _subscriptions.add(subscription);
+    if (subscription == null) return;
+
+    // If a late async callback creates a subscription after the cubit has already
+    // closed, cancel immediately to avoid leaks.
+    if (isClosed) {
+      unawaited(subscription.cancel());
+      return;
     }
+
+    _subscriptions.trackSubscription(subscription);
+  }
+
+  /// Registers a timer handle to be disposed when the cubit closes.
+  ///
+  /// If a late async callback creates a timer after the cubit has already
+  /// closed, the handle is disposed immediately to avoid leaks.
+  T registerTimer<T extends TimerDisposable?>(final T handle) {
+    final TimerDisposable? value = handle;
+    if (value == null) return handle;
+    if (isClosed) {
+      value.dispose();
+      return handle;
+    }
+    _timers.register(value);
+    return handle;
+  }
+
+  /// Unregisters a timer handle that has been disposed independently.
+  void unregisterTimer(final TimerDisposable? handle) {
+    _timers.unregister(handle);
   }
 
   /// Cancels all registered subscriptions.
   ///
   /// Called automatically from [close]; can be called manually if needed.
   Future<void> cancelAllSubscriptions() async {
-    final List<StreamSubscription<dynamic>?> subscriptions = List.from(
-      _subscriptions,
-    );
-    _subscriptions.clear();
+    await _subscriptions.clear();
+  }
 
-    for (final subscription in subscriptions) {
-      if (subscription != null) {
-        await subscription.cancel();
-      }
-    }
+  Future<void> disposeAllTimers() async {
+    await _timers.dispose();
   }
 
   /// Cancels all registered subscriptions. Invoked automatically by [close].
@@ -71,6 +97,7 @@ mixin CubitSubscriptionMixin<S> on Cubit<S> {
 
   @override
   Future<void> close() async {
+    await disposeAllTimers();
     await closeAllSubscriptions();
     return super.close();
   }

@@ -43,5 +43,10 @@ void registerIotDemoServices() {
           ? getIt<SupabaseIotDemoRepository>()
           : null,
     ),
+    dispose: (final repo) async {
+      if (repo is OfflineFirstIotDemoRepository) {
+        await repo.dispose();
+      }
+    },
   );
 }

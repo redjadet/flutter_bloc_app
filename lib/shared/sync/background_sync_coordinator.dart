@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/stream_controller_lifecycle.dart';
+import 'package:flutter_bloc_app/shared/utils/timer_handle_manager.dart';
 
 export 'sync_cycle_summary.dart';
 
@@ -83,6 +84,7 @@ class BackgroundSyncCoordinator {
   final void Function(void Function() onSyncRequested)?
   _startIotDemoRealtimeSubscription;
   final void Function()? _stopIotDemoRealtimeSubscription;
+  final TimerHandleManager _timerHandles = TimerHandleManager();
 
   final StreamController<SyncStatus> _statusController =
       StreamController<SyncStatus>.broadcast();
@@ -141,6 +143,7 @@ class BackgroundSyncCoordinator {
 
   Future<void> dispose() async {
     await stop();
+    await _timerHandles.dispose();
     await _statusController.close();
     await _summaryController.close();
   }

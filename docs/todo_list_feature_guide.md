@@ -648,6 +648,7 @@ DI updates:
 - Store previous state before mutations for rollback on persistence failure
 - Subscribe to repository stream after initial load
 - Use `CubitSubscriptionMixin` for automatic subscription cleanup
+- When using `TimerService` in a cubit, register `TimerDisposable` handles via `CubitSubscriptionMixin.registerTimer(...)` and unregister when cancelling/replacing via `unregisterTimer(...)` so timers are cleaned up automatically on `close()`.
 - Split large methods into helper files to keep main file under 250 lines
 
 **Provider Setup:**

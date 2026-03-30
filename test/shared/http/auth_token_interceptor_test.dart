@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/shared/http/app_dio.dart';
+import 'package:flutter_bloc_app/shared/http/interceptors/retry_interceptor.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -380,6 +381,7 @@ void main() {
 
         int telemetryEventCount = 0;
         final List<String?> seenAuthorizationHeaders = <String?>[];
+        final List<Map<String, Object?>> seenExtra = <Map<String, Object?>>[];
         int requestCount = 0;
         dio = buildDio(
           telemetryEventSink:
@@ -403,6 +405,7 @@ void main() {
           seenAuthorizationHeaders.add(
             options.headers['Authorization'] as String?,
           );
+          seenExtra.add(Map<String, Object?>.from(options.extra));
           if (requestCount == 1) {
             return ResponseBody.fromString(
               jsonEncode(<String, Object?>{'error': 'unauthorized'}),
@@ -435,6 +438,23 @@ void main() {
           'Bearer token-user-1-initial',
           'Bearer token-user-1-refreshed',
         ]);
+        expect(
+          seenExtra.length,
+          2,
+          reason: 'Should record extras for both initial request and replay.',
+        );
+        expect(
+          seenExtra[1][RetryInterceptor.extraSkipRetry],
+          true,
+          reason:
+              '401 replay must set extraSkipRetry so the replay does not also '
+              'enter RetryInterceptor and multiply attempts.',
+        );
+        expect(
+          seenExtra[1]['auth_401_retried'],
+          true,
+          reason: 'Replay must mark the request as already retried.',
+        );
         verify(() => user1.getIdToken(true)).called(1);
       },
     );

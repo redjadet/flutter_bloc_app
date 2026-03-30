@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/timer_handle_manager.dart';
 
 /// Represents simplified connectivity states for offline-first coordination.
 enum NetworkStatus { unknown, online, offline }
@@ -30,6 +31,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
   final Connectivity _connectivity;
   final Duration _debounce;
   final TimerService _timerService;
+  final TimerHandleManager _timerHandles = TimerHandleManager();
   late final StreamController<NetworkStatus> _controller;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   TimerDisposable? _debounceTimer;
@@ -77,6 +79,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
       return;
     }
     _debounceTimer?.dispose();
+    _timerHandles.unregister(_debounceTimer);
     _debounceTimer = null;
     unawaited(_connectivitySubscription?.cancel());
     _connectivitySubscription = null;
@@ -89,12 +92,20 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
     }
     _latest = next;
     _debounceTimer?.dispose();
-    _debounceTimer = _timerService.runOnce(_debounce, () {
+    _timerHandles.unregister(_debounceTimer);
+    late final TimerDisposable handle;
+    handle = _timerService.runOnce(_debounce, () {
+      _timerHandles.unregister(handle);
+      if (identical(_debounceTimer, handle)) {
+        _debounceTimer = null;
+      }
       if (_controller.isClosed) {
         return;
       }
       _controller.add(next);
     });
+    _debounceTimer = handle;
+    _timerHandles.register(handle);
   }
 
   NetworkStatus _mapConnectivityRaw(final dynamic raw) {
@@ -160,7 +171,9 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
     }
     _disposed = true;
     _debounceTimer?.dispose();
+    _timerHandles.unregister(_debounceTimer);
     _debounceTimer = null;
+    await _timerHandles.dispose();
     await _connectivitySubscription?.cancel();
     _connectivitySubscription = null;
     await _controller.close();

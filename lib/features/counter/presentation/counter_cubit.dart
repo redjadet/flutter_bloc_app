@@ -51,7 +51,13 @@ class CounterCubit extends _CounterCubitBase {
 
     if (_initialLoadDelay > Duration.zero) {
       _initialLoadHandle?.dispose();
-      _initialLoadHandle = _timerService.runOnce(_initialLoadDelay, () {
+      unregisterTimer(_initialLoadHandle);
+      late final TimerDisposable handle;
+      handle = _timerService.runOnce(_initialLoadDelay, () {
+        unregisterTimer(handle);
+        if (identical(_initialLoadHandle, handle)) {
+          _initialLoadHandle = null;
+        }
         if (isClosed) return;
         unawaited(
           _runLoadInitialAfterDelay(
@@ -60,6 +66,7 @@ class CounterCubit extends _CounterCubitBase {
           ),
         );
       });
+      _initialLoadHandle = registerTimer(handle);
       return;
     }
 
@@ -113,6 +120,7 @@ class CounterCubit extends _CounterCubitBase {
   @override
   Future<void> close() async {
     _initialLoadHandle?.dispose();
+    unregisterTimer(_initialLoadHandle);
     _initialLoadHandle = null;
     _stopCountdownTicker();
     _repositorySubscription = null;
