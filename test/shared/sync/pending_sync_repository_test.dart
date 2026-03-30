@@ -69,6 +69,88 @@ void main() {
     },
   );
 
+  test(
+    'enqueue does not dedupe iot_demo operations across different supabase user scopes',
+    () async {
+      final SyncOperation userA = SyncOperation.create(
+        entityType: 'iot_demo',
+        payload: <String, dynamic>{
+          'deviceId': 'light-1',
+          'action': 'connect',
+          PendingSyncRepository.payloadKeySupabaseUserId: 'user-a',
+        },
+        idempotencyKey: 'same-key',
+      );
+      final SyncOperation userB = SyncOperation.create(
+        entityType: 'iot_demo',
+        payload: <String, dynamic>{
+          'deviceId': 'light-1',
+          'action': 'connect',
+          PendingSyncRepository.payloadKeySupabaseUserId: 'user-b',
+        },
+        idempotencyKey: 'same-key',
+      );
+
+      await repository.enqueue(userA);
+      await repository.enqueue(userB);
+
+      final List<SyncOperation> pending = await repository.getPendingOperations(
+        now: DateTime.now().toUtc(),
+      );
+
+      expect(pending, hasLength(2));
+      expect(
+        pending
+            .map(
+              (final op) =>
+                  op.payload[PendingSyncRepository.payloadKeySupabaseUserId],
+            )
+            .toSet(),
+        containsAll(<String>['user-a', 'user-b']),
+      );
+    },
+  );
+
+  test(
+    'enqueue dedupes iot_demo operations within the same supabase user scope',
+    () async {
+      final SyncOperation first = SyncOperation.create(
+        entityType: 'iot_demo',
+        payload: <String, dynamic>{
+          'deviceId': 'light-1',
+          'action': 'connect',
+          PendingSyncRepository.payloadKeySupabaseUserId: 'user-a',
+          'value': 1,
+        },
+        idempotencyKey: 'same-key',
+      );
+      final SyncOperation second = SyncOperation.create(
+        entityType: 'iot_demo',
+        payload: <String, dynamic>{
+          'deviceId': 'light-1',
+          'action': 'connect',
+          PendingSyncRepository.payloadKeySupabaseUserId: 'user-a',
+          'value': 2,
+        },
+        idempotencyKey: 'same-key',
+      );
+
+      await repository.enqueue(first);
+      await repository.enqueue(second);
+
+      final List<SyncOperation> pending = await repository.getPendingOperations(
+        now: DateTime.now().toUtc(),
+      );
+
+      expect(pending, hasLength(1));
+      expect(
+        pending.single.payload[PendingSyncRepository.payloadKeySupabaseUserId],
+        equals('user-a'),
+      );
+      expect(pending.single.payload['value'], equals(2));
+    },
+  );
+
   test('enqueue does not dedupe across different entityType', () async {
     final SyncOperation op1 = SyncOperation.create(
       entityType: 'counter',

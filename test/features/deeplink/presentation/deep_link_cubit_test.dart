@@ -40,6 +40,25 @@ void main() {
     });
 
     blocTest<DeepLinkCubit, DeepLinkState>(
+      'close cancels the active deep link subscription',
+      build: () {
+        when(service.getInitialLink).thenAnswer((_) async => null);
+        return DeepLinkCubit(service: service, parser: parser);
+      },
+      act: (cubit) async {
+        await cubit.initialize();
+        await cubit.close();
+      },
+      expect: () => const <DeepLinkState>[
+        DeepLinkState.loading(),
+        DeepLinkState.idle(),
+      ],
+      verify: (_) {
+        expect(streamController.hasListener, isFalse);
+      },
+    );
+
+    blocTest<DeepLinkCubit, DeepLinkState>(
       'emits loading then idle when initialization succeeds with no initial link',
       build: () {
         when(service.getInitialLink).thenAnswer((_) async => null);

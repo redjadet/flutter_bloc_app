@@ -18,6 +18,7 @@ extension on BackgroundSyncCoordinator {
       _syncInterval,
       () => unawaited(_triggerSync(immediate: false)),
     );
+    _timerHandles.register(_syncIntervalHandle);
 
     await _cancelEnqueueSubscription();
     _enqueueSubscription = _repository.onOperationEnqueued.listen(
@@ -63,6 +64,7 @@ extension on BackgroundSyncCoordinator {
 
   void _disposeSyncIntervalHandle() {
     _syncIntervalHandle?.dispose();
+    _timerHandles.unregister(_syncIntervalHandle);
     _syncIntervalHandle = null;
   }
 

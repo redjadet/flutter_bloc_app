@@ -7,9 +7,11 @@ import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/features/search/presentation/search_state.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 
-class SearchCubit extends Cubit<SearchState> {
+class SearchCubit extends Cubit<SearchState>
+    with CubitSubscriptionMixin<SearchState> {
   SearchCubit({
     required final SearchRepository repository,
     required final TimerService timerService,
@@ -35,10 +37,15 @@ class SearchCubit extends Cubit<SearchState> {
       return;
     }
 
-    _debounceHandle = _timerService.runOnce(
-      debounceDuration,
-      () => unawaited(_executeSearch(query, requestId)),
-    );
+    late final TimerDisposable handle;
+    handle = _timerService.runOnce(debounceDuration, () {
+      unregisterTimer(handle);
+      if (identical(_debounceHandle, handle)) {
+        _debounceHandle = null;
+      }
+      unawaited(_executeSearch(query, requestId));
+    });
+    _debounceHandle = registerTimer(handle);
   }
 
   void clearSearch() {
@@ -90,6 +97,7 @@ class SearchCubit extends Cubit<SearchState> {
 
   void _cancelDebounce() {
     _debounceHandle?.dispose();
+    unregisterTimer(_debounceHandle);
     _debounceHandle = null;
   }
 

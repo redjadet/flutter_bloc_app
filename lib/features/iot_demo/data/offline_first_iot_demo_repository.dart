@@ -17,6 +17,7 @@ import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
+import 'package:flutter_bloc_app/shared/utils/timer_handle_manager.dart';
 
 part 'offline_first_iot_demo_repository_sync.dart';
 
@@ -56,6 +57,7 @@ class OfflineFirstIotDemoRepository
   final PendingSyncRepository _pendingSyncRepository;
   final SyncableRepositoryRegistry _registry;
   final TimerService _timerService;
+  final TimerHandleManager _timerHandles = TimerHandleManager();
 
   final Map<String, PersistentIotDemoRepository> _localCache =
       <String, PersistentIotDemoRepository>{};
@@ -66,6 +68,23 @@ class OfflineFirstIotDemoRepository
 
   final Map<String, IotDemoPendingSetValue> _pendingSetValueByDevice =
       <String, IotDemoPendingSetValue>{};
+
+  Future<void> dispose() async {
+    for (final IotDemoPendingSetValue pending
+        in _pendingSetValueByDevice.values) {
+      _timerHandles.unregister(pending.timer);
+      pending.timer.dispose();
+    }
+    _pendingSetValueByDevice.clear();
+    await _timerHandles.dispose();
+
+    final SyncableRepository? registeredRepository = _registry.resolve(
+      entityType,
+    );
+    if (identical(registeredRepository, this)) {
+      _registry.unregister(entityType);
+    }
+  }
 
   PersistentIotDemoRepository? _getLocalRepository() {
     final String? userId = _getCurrentSupabaseUserId();

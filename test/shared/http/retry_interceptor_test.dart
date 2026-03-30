@@ -289,5 +289,102 @@ void main() {
 
       expect(requestCount, 1);
     });
+
+    test(
+      'skips retries when extraSkipRetry is set (transient response)',
+      () async {
+        int requestCount = 0;
+        dio = buildDio(maxRetries: 3);
+        dio.httpClientAdapter = _SequenceAdapter((
+          final options,
+          final _,
+          final cancelFuture,
+        ) async {
+          if (cancelFuture != null) {}
+          requestCount += 1;
+          return ResponseBody.fromString(
+            jsonEncode(<String, Object?>{'error': 'temporary'}),
+            503,
+            headers: <String, List<String>>{
+              Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+            },
+          );
+        });
+
+        final Response<dynamic> response = await dio.get<dynamic>(
+          'https://example.com/retry',
+          options: Options(
+            extra: <String, Object?>{RetryInterceptor.extraSkipRetry: true},
+          ),
+        );
+
+        expect(response.statusCode, 503);
+        expect(requestCount, 1);
+      },
+    );
+
+    test(
+      'skips retries when extraSkipRetry is set (transient error)',
+      () async {
+        int requestCount = 0;
+        dio = buildDio(maxRetries: 3);
+        dio.httpClientAdapter = _SequenceAdapter((
+          final options,
+          final _,
+          final cancelFuture,
+        ) async {
+          if (cancelFuture != null) {}
+          requestCount += 1;
+          throw DioException(
+            requestOptions: options,
+            type: DioExceptionType.connectionError,
+            message: 'temporary network issue',
+          );
+        });
+
+        await expectLater(
+          dio.get<dynamic>(
+            'https://example.com/retry',
+            options: Options(
+              extra: <String, Object?>{RetryInterceptor.extraSkipRetry: true},
+            ),
+          ),
+          throwsA(isA<DioException>()),
+        );
+
+        expect(requestCount, 1);
+      },
+    );
+
+    test(
+      'skips multipart retries on transient response status codes',
+      () async {
+        int requestCount = 0;
+        dio = buildDio(maxRetries: 2);
+        dio.httpClientAdapter = _SequenceAdapter((
+          final options,
+          final _,
+          final cancelFuture,
+        ) async {
+          if (cancelFuture != null) {}
+          requestCount += 1;
+          return ResponseBody.fromString(
+            jsonEncode(<String, Object?>{'error': 'temporary'}),
+            503,
+            headers: <String, List<String>>{
+              Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+            },
+          );
+        });
+
+        final Response<dynamic> response = await dio.post<dynamic>(
+          'https://example.com/upload',
+          data: FormData.fromMap(<String, Object>{'file': 'blob'}),
+        );
+
+        expect(response.statusCode, 503);
+        expect(requestCount, 1);
+      },
+    );
   });
 }

@@ -80,6 +80,60 @@ void main() {
       expect(find.text('profile'), findsOneWidget);
       expect(find.text('auth'), findsNothing);
     });
+
+    testWidgets('does not crash when authStateChanges emits an error', (
+      final tester,
+    ) async {
+      final StreamController<AuthUser?> authController =
+          StreamController<AuthUser?>.broadcast();
+      addTearDown(authController.close);
+
+      AuthUser? currentUser;
+      final GoRouter router = _createRouter(
+        initialLocation: AppRoutes.profilePath,
+        authStateChanges: authController.stream,
+        getCurrentUser: () => currentUser,
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      await tester.pumpAndSettle();
+
+      authController.addError(StateError('auth stream failed'));
+      await tester.pump();
+
+      // The gate should handle onError and remain stable.
+      expect(find.text('auth:/profile'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('does not navigate after dispose when auth stream emits', (
+      final tester,
+    ) async {
+      final StreamController<AuthUser?> authController =
+          StreamController<AuthUser?>.broadcast();
+      addTearDown(authController.close);
+
+      AuthUser? currentUser;
+      final GoRouter router = _createRouter(
+        initialLocation: AppRoutes.profilePath,
+        authStateChanges: authController.stream,
+        getCurrentUser: () => currentUser,
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      await tester.pumpAndSettle();
+
+      // Dispose the widget tree.
+      await tester.pumpWidget(const SizedBox.shrink());
+
+      // Emitting after dispose should not throw.
+      authController.add(null);
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+    });
   });
 
   group('AppRoutePolicies', () {

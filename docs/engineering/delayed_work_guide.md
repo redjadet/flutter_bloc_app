@@ -39,6 +39,11 @@ class MyRepository {
 }
 ```
 
+### Centralize timer disposal
+
+- **Cubits**: If a cubit already uses `CubitSubscriptionMixin`, register timer handles with `registerTimer(...)` and unregister when replaced (`unregisterTimer(...)`). This prevents late-async timer leaks and keeps timer cleanup consistent with subscription cleanup.
+- **Repositories/services**: Prefer `TimerHandleManager` (`lib/shared/utils/timer_handle_manager.dart`) to keep timer handles bounded and to ensure delayed restarts don’t outlive `dispose()`.
+
 ### Tests
 
 Use `FakeTimerService()` from `test/test_helpers.dart` so tests can advance time without real waits:

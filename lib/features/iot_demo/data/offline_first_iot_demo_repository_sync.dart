@@ -111,15 +111,19 @@ void _scheduleSetValueSyncImpl(
   final IotDemoPendingSetValue? existing =
       r._pendingSetValueByDevice[pendingKey];
   existing?.timer.dispose();
-  final TimerDisposable timer = r._timerService.runOnce(
+  r._timerHandles.unregister(existing?.timer);
+  late final TimerDisposable timer;
+  timer = r._timerService.runOnce(
     OfflineFirstIotDemoRepository.setValueSyncDebounce,
     () {
       r._pendingSetValueByDevice.remove(pendingKey);
+      r._timerHandles.unregister(timer);
       unawaited(
         _enqueueSetValueCommandImpl(r, deviceId, value, supabaseUserId: userId),
       );
     },
   );
+  r._timerHandles.register(timer);
   r._pendingSetValueByDevice[pendingKey] = IotDemoPendingSetValue(
     timer: timer,
   );
