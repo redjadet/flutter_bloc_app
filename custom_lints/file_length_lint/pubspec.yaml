@@ -3,7 +3,7 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: '3.11.3'
+  sdk: '3.11.4'
 
 dependencies:
   analysis_server_plugin: 0.3.13
