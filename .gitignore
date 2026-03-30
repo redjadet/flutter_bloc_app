@@ -104,3 +104,4 @@ analysis/agent_scorecard/scorecard-events.jsonl
 docs/agents_quick_reference.md
 tmp/*
 tasks/*
+CLAUDE.md

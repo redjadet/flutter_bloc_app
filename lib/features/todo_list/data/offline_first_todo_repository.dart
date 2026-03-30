@@ -104,14 +104,14 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
         final StreamSubscription<List<TodoItem>>? currentSubscription =
             _remoteWatchSubscription;
         _remoteWatchSubscription = null;
-        _subscriptionManager.unregister(currentSubscription);
+        unawaited(_subscriptionManager.cancelRegistered(currentSubscription));
         _scheduleRemoteRestart();
       },
       onDone: () {
         final StreamSubscription<List<TodoItem>>? currentSubscription =
             _remoteWatchSubscription;
         _remoteWatchSubscription = null;
-        _subscriptionManager.unregister(currentSubscription);
+        unawaited(_subscriptionManager.cancelRegistered(currentSubscription));
         _scheduleRemoteRestart();
       },
       cancelOnError: true,

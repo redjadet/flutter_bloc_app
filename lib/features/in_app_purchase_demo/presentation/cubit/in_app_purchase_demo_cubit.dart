@@ -8,23 +8,28 @@ import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_produc
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_purchase_result.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/in_app_purchase_repository.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_state.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 
-class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState> {
+class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
+    with CubitSubscriptionMixin<InAppPurchaseDemoState> {
   InAppPurchaseDemoCubit({
     required final InAppPurchaseRepository fakeRepository,
     required final InAppPurchaseRepository realRepository,
   }) : _fakeRepository = fakeRepository,
        _realRepository = realRepository,
        super(const InAppPurchaseDemoState()) {
-    _sub = _activeRepository.watchPurchaseResults().listen(
-      _onPurchaseResult,
-      onError: (final Object error, final StackTrace stackTrace) {},
+    _sub = registerSubscription(
+      _activeRepository.watchPurchaseResults().listen(
+        _onPurchaseResult,
+        onError: (final Object error, final StackTrace stackTrace) {},
+      ),
     );
   }
 
   final InAppPurchaseRepository _fakeRepository;
   final InAppPurchaseRepository _realRepository;
 
+  // ignore: cancel_subscriptions - Lifecycle is centralized via CubitSubscriptionMixin.
   StreamSubscription<IapPurchaseResult>? _sub;
   int _attempt = 0;
 
@@ -85,10 +90,14 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState> {
       ),
     );
 
-    await _sub?.cancel();
-    _sub = _activeRepository.watchPurchaseResults().listen(
-      _onPurchaseResult,
-      onError: (final Object error, final StackTrace stackTrace) {},
+    final StreamSubscription<IapPurchaseResult>? previousSubscription = _sub;
+    _sub = null;
+    await cancelRegisteredSubscription(previousSubscription);
+    _sub = registerSubscription(
+      _activeRepository.watchPurchaseResults().listen(
+        _onPurchaseResult,
+        onError: (final Object error, final StackTrace stackTrace) {},
+      ),
     );
 
     await initialize();
@@ -204,7 +213,9 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState> {
 
   @override
   Future<void> close() async {
-    await _sub?.cancel();
+    final StreamSubscription<IapPurchaseResult>? subscription = _sub;
+    _sub = null;
+    await cancelRegisteredSubscription(subscription);
     await super.close();
   }
 }

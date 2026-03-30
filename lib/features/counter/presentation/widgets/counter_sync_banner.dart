@@ -11,6 +11,7 @@ import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart
 import 'package:flutter_bloc_app/shared/sync/sync_banner_helpers.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
+import 'package:flutter_bloc_app/shared/utils/disposable_bag.dart';
 
 /// Sync status banner for the counter feature. Uses shared logic from
 /// sync_banner_helpers (shouldShowSyncBanner, syncBannerTitleAndMessage).
@@ -31,10 +32,10 @@ class CounterSyncBanner extends StatefulWidget {
 }
 
 class _CounterSyncBannerState extends State<CounterSyncBanner> {
+  final DisposableBag _disposables = DisposableBag();
   int _pendingCount = 0;
   DateTime? _lastSyncedAt;
   String? _lastChangeId;
-  StreamSubscription<CounterSnapshot>? _counterSubscription;
   bool _didInitializeInheritedState = false;
 
   @override
@@ -42,21 +43,23 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
     super.initState();
     unawaited(_refreshPendingCount());
     // Listen to counter snapshot changes for real-time lastSyncedAt/changeId updates
-    _counterSubscription = widget.counterRepository.watch().listen(
-      (final snapshot) {
-        if (!mounted) return;
-        setState(() {
-          _lastSyncedAt = snapshot.lastSyncedAt;
-          _lastChangeId = snapshot.changeId;
-        });
-      },
-      onError: (final Object error, final StackTrace stackTrace) {
-        AppLogger.error(
-          'CounterSyncBanner counter watch stream error',
-          error,
-          stackTrace,
-        );
-      },
+    _disposables.trackSubscription(
+      widget.counterRepository.watch().listen(
+        (final snapshot) {
+          if (!mounted) return;
+          setState(() {
+            _lastSyncedAt = snapshot.lastSyncedAt;
+            _lastChangeId = snapshot.changeId;
+          });
+        },
+        onError: (final Object error, final StackTrace stackTrace) {
+          AppLogger.error(
+            'CounterSyncBanner counter watch stream error',
+            error,
+            stackTrace,
+          );
+        },
+      ),
     );
   }
 
@@ -79,7 +82,7 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
 
   @override
   void dispose() {
-    unawaited(_counterSubscription?.cancel());
+    unawaited(_disposables.dispose());
     super.dispose();
   }
 

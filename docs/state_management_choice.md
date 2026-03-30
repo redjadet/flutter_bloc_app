@@ -122,7 +122,7 @@ BLoC/Cubit provides built-in lifecycle management:
 
 - `isClosed` checks prevent state emissions after disposal
 - `CubitExceptionHandler` for centralized error handling
-- `CubitSubscriptionMixin` for automatic subscription cleanup
+- `CubitSubscriptionMixin` for automatic subscription and timer cleanup
 - Prevents common lifecycle bugs (setState after dispose, memory leaks)
 
 ## Comparison with Riverpod

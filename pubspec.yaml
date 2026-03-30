@@ -56,6 +56,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  flutter_cache_manager: ^3.4.1
   flutter_localizations:
     sdk: flutter
   flutter_screenutil: ^5.9.3
@@ -112,6 +113,8 @@ dev_dependencies:
   integration_test:
     sdk: flutter
   json_serializable: ^6.9.5
+  leak_tracker: ^11.0.2
+  leak_tracker_flutter_testing: ^3.0.10
   mix_lint:
     path: custom_lints/mix_lint
   mock_exceptions: ^0.8.2

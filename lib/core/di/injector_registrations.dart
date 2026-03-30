@@ -44,6 +44,8 @@ import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_rep
 import 'package:flutter_bloc_app/features/websocket/data/echo_websocket_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
+import 'package:flutter_bloc_app/shared/services/app_image_cache_manager.dart';
+import 'package:flutter_bloc_app/shared/services/app_memory_service.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
@@ -52,6 +54,8 @@ import 'package:flutter_bloc_app/shared/storage/shared_preferences_migration_ser
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
+
+const bool _isFlutterTestProcess = bool.fromEnvironment('FLUTTER_TEST');
 
 Future<void> registerAllDependencies() async {
   _registerAppRuntimeConfig();
@@ -80,6 +84,7 @@ Future<void> registerAllDependencies() async {
   registerFcmDemoServices();
   registerIotDemoServices();
   registerInAppPurchaseDemoServices();
+  _registerMemoryServices();
   _registerCameraGalleryServices();
   _registerScapesServices();
   _registerUtilityServices();
@@ -147,6 +152,24 @@ void _registerWebSocketServices() {
 void _registerMapServices() {
   registerLazySingletonIfAbsent<MapLocationRepository>(
     () => const SampleMapLocationRepository(),
+  );
+}
+
+void _registerMemoryServices() {
+  if (!_isFlutterTestProcess) {
+    registerLazySingletonIfAbsent<AppImageCacheManager>(
+      AppImageCacheManager.new,
+      dispose: (final manager) => manager.dispose(),
+    );
+  }
+  registerLazySingletonIfAbsent<AppMemoryService>(
+    () => _isFlutterTestProcess
+        ? AppMemoryService(
+            onImageCacheTrim: (final level) async {},
+          )
+        : AppMemoryService(
+            imageCacheManager: getIt<AppImageCacheManager>(),
+          ),
   );
 }
 

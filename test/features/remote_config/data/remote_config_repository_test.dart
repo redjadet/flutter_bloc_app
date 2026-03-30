@@ -170,5 +170,32 @@ void main() {
         contains('RemoteConfig[fetch] awesome_feature_enabled=true'),
       );
     });
+
+    test(
+      'dispose keeps the repository terminal and does not re-subscribe',
+      () async {
+        final StreamController<RemoteConfigUpdate> controller =
+            StreamController<RemoteConfigUpdate>();
+
+        addTearDown(controller.close);
+
+        when(
+          () => remoteConfig.onConfigUpdated,
+        ).thenAnswer((_) => controller.stream);
+
+        final repository = RemoteConfigRepository(
+          remoteConfig,
+          debugLogger: debugMessages.add,
+        );
+
+        await repository.initialize();
+        await repository.dispose();
+        await repository.initialize();
+
+        verify(() => remoteConfig.setConfigSettings(any())).called(1);
+        verify(() => remoteConfig.setDefaults(any())).called(1);
+        verify(() => remoteConfig.onConfigUpdated).called(1);
+      },
+    );
   });
 }

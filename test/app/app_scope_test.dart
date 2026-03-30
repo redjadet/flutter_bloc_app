@@ -4,6 +4,9 @@ import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/responsive/responsive.dart';
+import 'package:flutter_bloc_app/shared/services/app_image_cache_manager.dart';
+import 'package:flutter_bloc_app/shared/services/app_memory_service.dart';
+import 'package:flutter_bloc_app/shared/services/app_memory_trim_level.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
@@ -57,6 +60,25 @@ class _CountingBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> triggerFromFcm({final String? hint}) async {}
 }
 
+class _NoopAppImageCacheManager extends AppImageCacheManager {
+  _NoopAppImageCacheManager() : super();
+
+  @override
+  Future<void> onTrim(final AppMemoryTrimLevel level) async {}
+}
+
+class _RecordingAppMemoryService extends AppMemoryService {
+  _RecordingAppMemoryService()
+    : super(imageCacheManager: _NoopAppImageCacheManager());
+
+  final List<AppMemoryTrimLevel> trimCalls = <AppMemoryTrimLevel>[];
+
+  @override
+  Future<void> trim(final AppMemoryTrimLevel level) async {
+    trimCalls.add(level);
+  }
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -90,6 +112,7 @@ void main() {
         ),
       ],
     );
+    addTearDown(router.dispose);
 
     await tester.pumpWidget(
       StatefulBuilder(
@@ -138,6 +161,7 @@ void main() {
         ),
       ],
     );
+    addTearDown(router.dispose);
 
     await tester.pumpWidget(AppScope(router: router));
     await tester.pump();
@@ -156,4 +180,143 @@ void main() {
     await tester.pump();
     expect(coordinator.flushCount, 1);
   });
+
+  testWidgets('debounces a background memory trim when app pauses', (
+    WidgetTester tester,
+  ) async {
+    final coordinator = _CountingBackgroundSyncCoordinator();
+    final _RecordingAppMemoryService memoryService =
+        _RecordingAppMemoryService();
+    final test_helpers.FakeTimerService timerService =
+        test_helpers.FakeTimerService();
+    if (getIt.isRegistered<BackgroundSyncCoordinator>()) {
+      getIt.unregister<BackgroundSyncCoordinator>();
+    }
+    if (getIt.isRegistered<TimerService>()) {
+      getIt.unregister<TimerService>();
+    }
+    if (getIt.isRegistered<AppMemoryService>()) {
+      getIt.unregister<AppMemoryService>();
+    }
+    getIt.registerSingleton<BackgroundSyncCoordinator>(coordinator);
+    getIt.registerSingleton<TimerService>(timerService);
+    getIt.registerSingleton<AppMemoryService>(memoryService);
+
+    final GoRouter router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (final context, final state) => const SizedBox.shrink(),
+        ),
+      ],
+    );
+    addTearDown(router.dispose);
+
+    await tester.pumpWidget(AppScope(router: router));
+    await tester.pump();
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pump();
+
+    expect(memoryService.trimCalls, isEmpty);
+
+    timerService.elapse(const Duration(milliseconds: 749));
+    await tester.pump();
+    expect(memoryService.trimCalls, isEmpty);
+
+    timerService.elapse(const Duration(milliseconds: 1));
+    await tester.pump();
+    expect(memoryService.trimCalls, <AppMemoryTrimLevel>[
+      AppMemoryTrimLevel.background,
+    ]);
+  });
+
+  testWidgets('trims aggressively when the OS reports memory pressure', (
+    WidgetTester tester,
+  ) async {
+    final coordinator = _CountingBackgroundSyncCoordinator();
+    final _RecordingAppMemoryService memoryService =
+        _RecordingAppMemoryService();
+    if (getIt.isRegistered<BackgroundSyncCoordinator>()) {
+      getIt.unregister<BackgroundSyncCoordinator>();
+    }
+    if (getIt.isRegistered<AppMemoryService>()) {
+      getIt.unregister<AppMemoryService>();
+    }
+    getIt.registerSingleton<BackgroundSyncCoordinator>(coordinator);
+    getIt.registerSingleton<AppMemoryService>(memoryService);
+
+    final GoRouter router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (final context, final state) => const SizedBox.shrink(),
+        ),
+      ],
+    );
+    addTearDown(router.dispose);
+
+    await tester.pumpWidget(AppScope(router: router));
+    await tester.pump();
+
+    tester.binding.handleMemoryPressure();
+    await tester.pump();
+
+    expect(memoryService.trimCalls, <AppMemoryTrimLevel>[
+      AppMemoryTrimLevel.pressure,
+    ]);
+  });
+
+  testWidgets(
+    'memory pressure cancels a pending background trim and runs pressure trim',
+    (WidgetTester tester) async {
+      final coordinator = _CountingBackgroundSyncCoordinator();
+      final _RecordingAppMemoryService memoryService =
+          _RecordingAppMemoryService();
+      final test_helpers.FakeTimerService timerService =
+          test_helpers.FakeTimerService();
+      if (getIt.isRegistered<BackgroundSyncCoordinator>()) {
+        getIt.unregister<BackgroundSyncCoordinator>();
+      }
+      if (getIt.isRegistered<TimerService>()) {
+        getIt.unregister<TimerService>();
+      }
+      if (getIt.isRegistered<AppMemoryService>()) {
+        getIt.unregister<AppMemoryService>();
+      }
+      getIt.registerSingleton<BackgroundSyncCoordinator>(coordinator);
+      getIt.registerSingleton<TimerService>(timerService);
+      getIt.registerSingleton<AppMemoryService>(memoryService);
+
+      final GoRouter router = GoRouter(
+        routes: [
+          GoRoute(
+            path: '/',
+            builder: (final context, final state) => const SizedBox.shrink(),
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(AppScope(router: router));
+      await tester.pump();
+
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      await tester.pump();
+
+      tester.binding.handleMemoryPressure();
+      await tester.pump();
+
+      expect(memoryService.trimCalls, <AppMemoryTrimLevel>[
+        AppMemoryTrimLevel.pressure,
+      ]);
+
+      timerService.elapse(const Duration(milliseconds: 750));
+      await tester.pump();
+      expect(memoryService.trimCalls, <AppMemoryTrimLevel>[
+        AppMemoryTrimLevel.pressure,
+      ]);
+    },
+  );
 }

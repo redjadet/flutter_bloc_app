@@ -1,6 +1,7 @@
 import 'package:flutter_bloc_app/features/chart/data/api/coingecko_api.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
+import 'package:flutter_bloc_app/shared/services/app_memory_trim_level.dart';
 import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:meta/meta.dart';
@@ -29,6 +30,15 @@ class HttpChartRepository extends ChartRepository {
   static void clearCache() {
     _cached = null;
     _lastFetched = null;
+  }
+
+  @visibleForTesting
+  static int get debugCacheSize => _cached?.length ?? 0;
+
+  static void trimMemory(final AppMemoryTrimLevel level) {
+    if (level == AppMemoryTrimLevel.pressure) {
+      clearCache();
+    }
   }
 
   @override

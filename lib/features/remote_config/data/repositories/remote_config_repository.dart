@@ -89,7 +89,6 @@ class RemoteConfigRepository implements RemoteConfigService {
   Future<void> dispose() async {
     _configUpdatesSubscription = null;
     await _subscriptionManager.dispose();
-    _isInitialized = false;
   }
 
   void _subscribeToRealtimeUpdates() {

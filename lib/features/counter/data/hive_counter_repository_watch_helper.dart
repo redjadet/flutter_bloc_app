@@ -75,8 +75,7 @@ class HiveCounterRepositoryWatchHelper {
   Future<void> handleOnCancel() async {
     final StreamSubscription<BoxEvent>? subscription = _boxSubscription;
     _boxSubscription = null;
-    _subscriptionManager.unregister(subscription);
-    await subscription?.cancel();
+    await _subscriptionManager.cancelRegistered(subscription);
     await _watchState.closeIfNoListeners();
   }
 
@@ -119,8 +118,7 @@ class HiveCounterRepositoryWatchHelper {
           // Use unawaited since we're in an error handler
           final StreamSubscription<BoxEvent>? subscription = _boxSubscription;
           _boxSubscription = null;
-          _subscriptionManager.unregister(subscription);
-          unawaited(subscription?.cancel());
+          unawaited(_subscriptionManager.cancelRegistered(subscription));
         },
         cancelOnError: false, // We handle errors manually
       );

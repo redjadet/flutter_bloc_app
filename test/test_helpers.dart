@@ -20,6 +20,8 @@ import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart'
 import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
+import 'package:flutter_bloc_app/shared/services/app_image_cache_manager.dart';
+import 'package:flutter_bloc_app/shared/services/app_memory_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
@@ -451,6 +453,7 @@ Future<void> setupTestDependencies([
   await getIt.reset(dispose: true);
   await configureDependencies();
   await overrideNetworkAndSync();
+  overrideMemoryServicesForTests();
   if (options.overrideCounterRepository) {
     overrideCounterRepository();
   }
@@ -493,6 +496,19 @@ Future<void> overrideNetworkAndSync() async {
   );
   getIt.registerLazySingleton<PendingSyncRepository>(
     _FakePendingSyncRepository.new,
+  );
+}
+
+void overrideMemoryServicesForTests() {
+  if (getIt.isRegistered<AppMemoryService>()) {
+    getIt.unregister<AppMemoryService>();
+  }
+  if (getIt.isRegistered<AppImageCacheManager>()) {
+    getIt.unregister<AppImageCacheManager>();
+  }
+
+  getIt.registerLazySingleton<AppMemoryService>(
+    () => AppMemoryService(onImageCacheTrim: (final level) async {}),
   );
 }
 

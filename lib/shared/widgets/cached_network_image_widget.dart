@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 /// A reusable widget for displaying cached network images with proper error handling.
 ///
@@ -21,6 +22,10 @@ import 'package:flutter/material.dart';
 ///   errorWidget: (context, url, error) => Icon(Icons.error),
 /// )
 /// ```
+const bool _isCachedNetworkImageWidgetFlutterTest = bool.fromEnvironment(
+  'FLUTTER_TEST',
+);
+
 class CachedNetworkImageWidget extends StatelessWidget {
   const CachedNetworkImageWidget({
     required this.imageUrl,
@@ -33,6 +38,7 @@ class CachedNetworkImageWidget extends StatelessWidget {
     this.fadeOutDuration,
     this.memCacheWidth,
     this.memCacheHeight,
+    this.cacheManager,
     super.key,
   });
 
@@ -71,35 +77,66 @@ class CachedNetworkImageWidget extends StatelessWidget {
   /// Maximum height for the image in memory cache (for memory optimization).
   final int? memCacheHeight;
 
+  /// Optional cache manager override.
+  final BaseCacheManager? cacheManager;
+
   @override
-  Widget build(final BuildContext context) => CachedNetworkImage(
-    imageUrl: imageUrl,
-    fit: fit,
-    width: width,
-    height: height,
-    placeholder:
-        placeholder ??
-        (final context, final url) => ColoredBox(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          child: Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+  Widget build(final BuildContext context) {
+    if (_isCachedNetworkImageWidgetFlutterTest && cacheManager == null) {
+      return Image.network(
+        imageUrl,
+        fit: fit,
+        width: width,
+        height: height,
+        errorBuilder: (final context, final error, final stackTrace) =>
+            _buildErrorWidget(context, imageUrl, error),
+        loadingBuilder: (final context, final child, final loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          }
+          return _buildPlaceholder(context, imageUrl);
+        },
+      );
+    }
+
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      fit: fit,
+      width: width,
+      height: height,
+      placeholder: _buildPlaceholder,
+      errorWidget: _buildErrorWidget,
+      fadeInDuration: fadeInDuration ?? const Duration(milliseconds: 300),
+      fadeOutDuration: fadeOutDuration ?? const Duration(milliseconds: 100),
+      memCacheWidth: memCacheWidth,
+      memCacheHeight: memCacheHeight,
+      cacheManager: cacheManager,
+    );
+  }
+
+  Widget _buildPlaceholder(final BuildContext context, final String url) =>
+      placeholder?.call(context, url) ??
+      ColoredBox(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        child: Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
-    errorWidget:
-        errorWidget ??
-        (final context, final url, final error) => ColoredBox(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          child: Icon(
-            Icons.error_outline,
-            color: Theme.of(context).colorScheme.error,
-          ),
+      );
+
+  Widget _buildErrorWidget(
+    final BuildContext context,
+    final String url,
+    final Object error,
+  ) =>
+      errorWidget?.call(context, url, error) ??
+      ColoredBox(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        child: Icon(
+          Icons.error_outline,
+          color: Theme.of(context).colorScheme.error,
         ),
-    fadeInDuration: fadeInDuration ?? const Duration(milliseconds: 300),
-    fadeOutDuration: fadeOutDuration ?? const Duration(milliseconds: 100),
-    memCacheWidth: memCacheWidth,
-    memCacheHeight: memCacheHeight,
-  );
+      );
 }
