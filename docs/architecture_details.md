@@ -72,8 +72,8 @@ flowchart LR
   FeatureUI --> FeatureLogic
   FeatureUI --> AppState
   SharedUI -.-> FeatureUI
-  FeatureLogic -->|"calls contracts"| Contracts
-  OfflineRepos -.->|"implements contracts"| Contracts
+  FeatureLogic -->|calls contracts| Contracts
+  OfflineRepos -.->|implements contracts| Contracts
   OfflineRepos --> LocalData
   OfflineRepos --> RemoteData
   OfflineRepos --> Sync
