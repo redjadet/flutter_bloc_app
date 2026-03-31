@@ -17,7 +17,6 @@ import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mix/mix.dart';
 
 class _StubIotDemoRepository implements IotDemoRepository {
   _StubIotDemoRepository({this.devices = const <IotDevice>[]});
@@ -129,8 +128,8 @@ Future<void> _pumpPage(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
-        builder: (final context) => MixTheme(
-          data: buildAppMixThemeData(context),
+        builder: (final context) => buildAppMixScope(
+          context,
           child: BlocProvider<SyncStatusCubit>.value(
             value: syncCubit,
             child: BlocProvider<IotDemoCubit>.value(
@@ -167,8 +166,8 @@ Future<void> _pumpInteractivePage(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
-        builder: (final context) => MixTheme(
-          data: buildAppMixThemeData(context),
+        builder: (final context) => buildAppMixScope(
+          context,
           child: BlocProvider<SyncStatusCubit>.value(
             value: syncCubit,
             child: BlocProvider<IotDemoCubit>.value(

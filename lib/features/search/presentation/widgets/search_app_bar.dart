@@ -11,7 +11,7 @@ class SearchAppBar extends StatelessWidget {
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
-    final bool hasMixTheme = MixTheme.maybeOf(context) != null;
+    final bool hasMixTheme = MixScope.maybeOf(context) != null;
     final bool useCupertino =
         theme.platform == TargetPlatform.iOS ||
         theme.platform == TargetPlatform.macOS;

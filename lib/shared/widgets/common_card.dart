@@ -29,18 +29,27 @@ class CommonCard extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final mixTheme = MixTheme.maybeOf(context);
     final colors = Theme.of(context).colorScheme;
+    final Map<MixToken<dynamic>, Object>? tokens = MixScope.maybeOf(
+      context,
+      'tokens',
+    )?.tokens;
+
+    T? tokenOrNull<T>(final MixToken<T> token) {
+      final Object? value = tokens?[token];
+      return value is T ? value : null;
+    }
+
     final Radius defaultRadius =
-        mixTheme?.radii[AppMixTokens.radiusM] ?? Radius.circular(UI.radiusM);
+        tokenOrNull(AppMixTokens.radiusM) ?? Radius.circular(UI.radiusM);
 
     final EdgeInsetsGeometry effectivePadding =
         padding ??
         EdgeInsets.only(
-          top: mixTheme?.spaces[AppMixTokens.cardPadV] ?? UI.cardPadV,
-          bottom: mixTheme?.spaces[AppMixTokens.cardPadV] ?? UI.cardPadV,
-          left: mixTheme?.spaces[AppMixTokens.cardPadH] ?? UI.cardPadH,
-          right: mixTheme?.spaces[AppMixTokens.cardPadH] ?? UI.cardPadH,
+          top: tokenOrNull(AppMixTokens.cardPadV) ?? UI.cardPadV,
+          bottom: tokenOrNull(AppMixTokens.cardPadV) ?? UI.cardPadV,
+          left: tokenOrNull(AppMixTokens.cardPadH) ?? UI.cardPadH,
+          right: tokenOrNull(AppMixTokens.cardPadH) ?? UI.cardPadH,
         );
     final ShapeBorder effectiveShape =
         shape ??
