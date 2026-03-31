@@ -3,7 +3,6 @@ import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_button_styles.dart';
 import 'package:flutter_bloc_app/shared/responsive/responsive_scope.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mix/mix.dart';
 
 void main() {
   group('ProfileButtonStyles', () {
@@ -13,8 +12,8 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
-            builder: (final context) => MixTheme(
-              data: buildAppMixThemeData(context),
+            builder: (final context) => buildAppMixScope(
+              context,
               child: ResponsiveScope(
                 child: Scaffold(
                   body: Builder(
@@ -43,8 +42,8 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
-            builder: (final context) => MixTheme(
-              data: buildAppMixThemeData(context),
+            builder: (final context) => buildAppMixScope(
+              context,
               child: ResponsiveScope(
                 child: Scaffold(
                   body: Builder(
@@ -77,8 +76,8 @@ void main() {
           MaterialApp(
             theme: ThemeData(textTheme: const TextTheme()),
             home: Builder(
-              builder: (final context) => MixTheme(
-                data: buildAppMixThemeData(context),
+              builder: (final context) => buildAppMixScope(
+                context,
                 child: ResponsiveScope(
                   child: Scaffold(
                     body: Builder(

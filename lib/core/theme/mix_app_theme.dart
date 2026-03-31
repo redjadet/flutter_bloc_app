@@ -5,8 +5,8 @@ import 'package:mix/mix.dart';
 
 /// Application design tokens for the Mix theme.
 ///
-/// Token names are used as keys in [MixThemeData]. Use these tokens in
-/// [Style] definitions so values stay consistent and theme-aware.
+/// Token names are used as keys in [MixScope]. Use these tokens in Mix stylers
+/// (e.g. [BoxStyler], [TextStyler]) so values stay consistent and theme-aware.
 class AppMixTokens {
   AppMixTokens._();
 
@@ -59,7 +59,7 @@ class AppTextStyleTokens {
 /// Material color token names (must match [MaterialTokens] in mix where applicable).
 ///
 /// Use with [ColorToken] in styles so colors resolve from [Theme.of(context)].
-/// Custom tokens (e.g. surfaceContainerLow) are filled in [buildAppMixThemeData].
+/// Custom tokens (e.g. surfaceContainerLow) are filled in [buildAppMixScope].
 class AppMaterialColorTokens {
   AppMaterialColorTokens._();
 
@@ -84,16 +84,14 @@ class AppMaterialColorTokens {
   );
 }
 
-/// Builds [MixThemeData] from the current [BuildContext].
+/// Wraps [child] with a [MixScope] configured for this app.
 ///
-/// Uses Theme and Material resolvers via [MixThemeData.withMaterial], and
-/// [UI] / [AppConstants] for spaces, radii, and breakpoints. Call from
-/// inside [MaterialApp] builder so Theme and ScreenUtil are available.
-MixThemeData buildAppMixThemeData(final BuildContext context) {
+/// Call from inside `MaterialApp.builder` so [Theme] and [UI] are available.
+Widget buildAppMixScope(final BuildContext context, {required Widget child}) {
   final theme = Theme.of(context);
   final colorScheme = theme.colorScheme;
   final textTheme = theme.textTheme;
-  return MixThemeData.withMaterial(
+  return MixScope.withMaterial(
     colors: {
       AppMaterialColorTokens.surfaceContainerLow:
           colorScheme.surfaceContainerLow,
@@ -124,19 +122,17 @@ MixThemeData buildAppMixThemeData(final BuildContext context) {
       AppMixTokens.radiusPill: Radius.circular(UI.radiusPill),
     },
     breakpoints: {
-      BreakpointToken.xsmall: const Breakpoint(
+      BreakpointToken.mobile: const Breakpoint(
         maxWidth: AppConstants.mobileBreakpoint - 1,
       ),
-      BreakpointToken.small: const Breakpoint(
+      BreakpointToken.tablet: const Breakpoint(
         minWidth: AppConstants.mobileBreakpoint,
         maxWidth: AppConstants.tabletBreakpoint - 1,
       ),
-      BreakpointToken.medium: const Breakpoint(
-        minWidth: AppConstants.tabletBreakpoint,
-      ),
-      BreakpointToken.large: const Breakpoint(
+      BreakpointToken.desktop: const Breakpoint(
         minWidth: AppConstants.tabletBreakpoint,
       ),
     },
+    child: child,
   );
 }

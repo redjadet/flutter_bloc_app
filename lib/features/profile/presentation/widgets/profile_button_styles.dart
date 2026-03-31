@@ -12,12 +12,18 @@ ButtonStyle profileOutlinedButtonStyle(
   final BuildContext context, {
   required final Color backgroundColor,
 }) {
-  final mixTheme = MixTheme.maybeOf(context);
-  final radius = mixTheme?.radii[AppMixTokens.radiusPill];
+  final bool hasMixScope = MixScope.maybeOf(context, 'tokens') != null;
+  final Radius? radius = hasMixScope
+      ? MixScope.tokenOf(AppMixTokens.radiusPill, context)
+      : null;
   final radiusValue = radius?.x ?? UI.radiusPill;
   final colors = Theme.of(context).colorScheme;
-  final horizontalPadding = mixTheme?.spaces[AppMixTokens.gapM] ?? UI.gapM;
-  final verticalPadding = mixTheme?.spaces[AppMixTokens.gapS] ?? UI.gapS;
+  final horizontalPadding = hasMixScope
+      ? MixScope.tokenOf(AppMixTokens.gapM, context)
+      : UI.gapM;
+  final verticalPadding = hasMixScope
+      ? MixScope.tokenOf(AppMixTokens.gapS, context)
+      : UI.gapS;
 
   return OutlinedButton.styleFrom(
     backgroundColor: backgroundColor,
