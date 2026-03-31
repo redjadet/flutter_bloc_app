@@ -6,6 +6,10 @@ def project_root
   File.expand_path('..', __dir__)
 end
 
+def tool_path(script_name)
+  File.expand_path(File.join(project_root, 'tool', script_name))
+end
+
 def metadata_path
   File.expand_path(File.join(__dir__, 'metadata', 'android'))
 end
@@ -86,6 +90,15 @@ def ensure_release_inputs!
   end
 end
 
+def flutter_dart_defines
+  defines = []
+  Dir.chdir(project_root) do
+    output = sh(tool_path('flutter_dart_defines_from_env.sh'), log: false).to_s
+    defines = output.split(/\s+/).map(&:strip).reject(&:empty?)
+  end
+  defines
+end
+
 def aab_path_for(flavor)
   cleaned_flavor = flavor.to_s.strip
   if !cleaned_flavor.empty?
@@ -109,14 +122,19 @@ end
 
 platform :android do
   desc 'Run preflight checks for Android Play deploy lanes'
-  lane :preflight do
+  lane :play_preflight do
     ensure_release_inputs!
     UI.message("Using package #{ENV['ANDROID_PACKAGE_NAME']}")
     UI.message("Using key file #{ENV['ANDROID_JSON_KEY']}")
   end
 
+  desc 'Alias for play_preflight (backward compatibility)'
+  lane :preflight do
+    play_preflight
+  end
+
   desc 'Build a release appbundle via Flutter'
-  lane :build_release do |options|
+  lane :play_build_release do |options|
     flavor = (options[:flavor] || ENV['ANDROID_BUILD_FLAVOR']).to_s.strip
     flavor = nil if flavor.empty?
     bundle_dir = 'build/app/outputs/bundle'
@@ -132,26 +150,10 @@ platform :android do
       args = %w[flutter build appbundle --release]
       args << '--no-tree-shake-icons' if ENV['ANDROID_NO_TREE_SHAKE_ICONS'] != 'false'
       args << '--flavor' << flavor if flavor
-      dart_defines = {
-        'HUGGINGFACE_API_KEY' => ENV['HUGGINGFACE_API_KEY'],
-        'HUGGINGFACE_MODEL' => ENV['HUGGINGFACE_MODEL'],
-        'HUGGINGFACE_USE_CHAT_COMPLETIONS' => ENV['HUGGINGFACE_USE_CHAT_COMPLETIONS'],
-        'SUPABASE_URL' => ENV['SUPABASE_URL'],
-        'SUPABASE_ANON_KEY' => ENV['SUPABASE_ANON_KEY'],
-        'GEMINI_API_KEY' => ENV['GEMINI_API_KEY'],
-        # Keep compatibility with existing code that falls back Google->Gemini.
-        'GOOGLE_API_KEY' => ENV['GOOGLE_API_KEY'],
-      }
-
-      dart_defines.each do |key, value|
-        next if value.to_s.strip.empty?
-        args << "--dart-define=#{key}=#{value.to_s.strip}"
-      end
-
-      redacted = dart_defines
-                  .select { |_k, v| !v.to_s.strip.empty? }
-                  .transform_values { |_v| '<redacted>' }
-      UI.message("Building appbundle with dart-defines: #{redacted.keys.join(', ')}")
+      defines = flutter_dart_defines
+      args.concat(defines)
+      define_keys = defines.map { |d| d.split('=', 2).first.to_s.sub('--dart-define=', '') }.uniq
+      UI.message("Building appbundle with dart-defines: #{define_keys.join(', ')}")
       sh(*args, log: false)
 
       sh('ls', '-R', bundle_dir) if ENV['FL_FASTLANE_DEBUG'] == 'true'
@@ -160,12 +162,17 @@ platform :android do
     build_info
   end
 
+  desc 'Alias for play_build_release (backward compatibility)'
+  lane :build_release do |options|
+    play_build_release(options)
+  end
+
   desc 'Sync listing metadata/screenshots from fastlane/metadata/android to Play'
-  lane :metadata_sync do |options|
+  lane :play_metadata_sync do |options|
     track = options[:track] || ENV['ANDROID_PLAY_TRACK'] || 'internal'
     locale = options[:locale] || ENV['ANDROID_METADATA_LOCALE'] || 'en-US'
 
-    preflight
+    play_preflight
     UI.user_error!(
       "Metadata directory missing at #{metadata_path}",
     ) unless Dir.exist?(metadata_path)
@@ -184,21 +191,31 @@ platform :android do
     )
   end
 
+  desc 'Alias for play_metadata_sync (backward compatibility)'
+  lane :metadata_sync do |options|
+    play_metadata_sync(options)
+  end
+
   desc 'Build + upload AAB to Internal testing'
+  lane :play_upload_internal do |options|
+    play_upload_track(options.merge(track: 'internal'))
+  end
+
+  desc 'Alias for play_upload_internal (backward compatibility)'
   lane :upload_internal do |options|
-    upload_track(options.merge(track: 'internal'))
+    play_upload_internal(options)
   end
 
   desc 'Build + upload AAB to requested Play track'
-  lane :upload_track do |options|
+  lane :play_upload_track do |options|
     track = options[:track] || ENV['ANDROID_PLAY_TRACK'] || 'internal'
     flavor = (options[:flavor] || ENV['ANDROID_BUILD_FLAVOR']).to_s.strip
     flavor = nil if flavor.empty?
     locale = options[:locale] || ENV['ANDROID_METADATA_LOCALE'] || 'en-US'
     bump_build = options.key?(:bump_build) ? options[:bump_build] : true
 
-    preflight
-    build_info = build_release(flavor: flavor, bump_build: bump_build)
+    play_preflight
+    build_info = play_build_release(flavor: flavor, bump_build: bump_build)
     UI.message("Preparing Play upload for #{build_info[:version]}+#{build_info[:build_number]}")
 
     aab = resolve_aab_path(flavor)
@@ -221,14 +238,19 @@ platform :android do
     )
   end
 
+  desc 'Alias for play_upload_track (backward compatibility)'
+  lane :upload_track do |options|
+    play_upload_track(options)
+  end
+
   desc 'Promote release from one Play track to another'
-  lane :promote_track do |options|
+  lane :play_promote_track do |options|
     from_track = options[:from] || ENV['ANDROID_PROMOTE_FROM'] || 'internal'
     to_track = options[:to] || ENV['ANDROID_PROMOTE_TO'] || 'production'
     release_status = options[:release_status] || ENV['ANDROID_RELEASE_STATUS'] || 'draft'
     rollout = options[:rollout] || ENV['ANDROID_ROLLOUT_FRACTION']
 
-    preflight
+    play_preflight
 
     promote_track(
       track: from_track,
@@ -238,5 +260,101 @@ platform :android do
       json_key: ENV['ANDROID_JSON_KEY'],
       package_name: ENV['ANDROID_PACKAGE_NAME'],
     )
+  end
+
+  desc 'Alias for play_promote_track (backward compatibility)'
+  lane :promote_track do |options|
+    play_promote_track(options)
+  end
+end
+
+platform :ios do
+  desc 'Run preflight checks for iOS distribution lanes'
+  lane :preflight do
+    UI.user_error!(
+      'Set FASTLANE_APP_IDENTIFIER (or configure it in an iOS Appfile) before iOS lanes.',
+    ) if ENV['FASTLANE_APP_IDENTIFIER'].to_s.strip.empty?
+
+    UI.user_error!(
+      'Set FASTLANE_APPLE_ID before TestFlight/App Store lanes.',
+    ) if ENV['FASTLANE_APPLE_ID'].to_s.strip.empty? && (ENV['FL_IOS_REQUIRE_APPLE_ID'] == 'true')
+  end
+
+  def resolve_ipa_path
+    candidates = Dir.glob(File.join(project_root, 'build', 'ios', '**', '*.ipa'))
+    candidates.first
+  end
+
+  desc 'Build and export an Ad Hoc IPA (no upload)'
+  lane :adhoc do |options|
+    skip_build = options[:skip_build] || ENV['IOS_SKIP_BUILD'] == 'true'
+    entrypoint = options[:entrypoint] || ENV['IOS_ENTRYPOINT'] || 'lib/main_prod.dart'
+    flavor = options[:flavor] || ENV['IOS_BUILD_FLAVOR']
+    build_mode = options[:build_mode] || ENV['IOS_BUILD_MODE'] || 'release'
+
+    preflight
+
+    Dir.chdir(project_root) do
+      sh(tool_path('ios_entitlements.sh'), 'distribution') if options.fetch(:distribution_entitlements, true)
+      sh('dart', 'run', 'tool/prepare_release.dart') unless options[:skip_prepare_release]
+
+      unless skip_build
+        env = {
+          'ENTRYPOINT' => entrypoint,
+          'FLAVOR' => flavor.to_s,
+          'BUILD_MODE' => build_mode.to_s,
+        }.compact
+        sh(env, tool_path('build_ios_with_direnv.sh'))
+      end
+    end
+
+    ipa = options[:ipa] || resolve_ipa_path
+    UI.user_error!('No IPA found under build/ios/**/*.ipa') unless ipa && File.exist?(ipa)
+    UI.message("Built IPA at #{ipa}")
+    ipa
+  end
+
+  desc 'Build + upload to TestFlight (App Store Connect)'
+  lane :upload_testflight do |options|
+    ENV['FL_IOS_REQUIRE_APPLE_ID'] = 'true'
+    preflight
+
+    ipa = adhoc(options)
+    upload_to_testflight(
+      ipa: ipa,
+      username: ENV['FASTLANE_APPLE_ID'],
+      team_id: ENV['FASTLANE_TEAM_ID'],
+      skip_waiting_for_build_processing: options.fetch(:skip_waiting_for_build_processing, true),
+    )
+  end
+
+  desc 'Build + upload to App Store Connect (same binary as TestFlight)'
+  lane :upload_appstore do |options|
+    upload_testflight(options)
+  end
+
+  desc 'Alias for upload_testflight (backward compatibility)'
+  lane :deploy do |options|
+    upload_testflight(options)
+  end
+
+  desc 'Upload an iOS IPA to Firebase App Distribution'
+  lane :firebase_distribute do |options|
+    release_notes = options[:release_notes] || ENV['FIREBASE_RELEASE_NOTES'] || "Release uploaded #{Time.now.strftime('%Y-%m-%d')}"
+    groups = options[:groups] || ENV['FIREBASE_GROUPS'].to_s
+    testers = options[:testers] || ENV['FIREBASE_TESTERS'].to_s
+    skip_build = options[:skip_build] || ENV['FIREBASE_SKIP_BUILD'] == 'true'
+
+    ipa = skip_build ? (options[:ipa] || resolve_ipa_path) : adhoc(options)
+    UI.user_error!('No IPA found under build/ios/**/*.ipa') unless ipa && File.exist?(ipa)
+
+    recipient = groups.to_s.strip.empty? ? testers.to_s.strip : groups.to_s.strip
+    UI.user_error!(
+      'Set FIREBASE_GROUPS or FIREBASE_TESTERS (or pass groups:/testers:) for Firebase distribution.',
+    ) if recipient.empty?
+
+    Dir.chdir(project_root) do
+      sh(tool_path('upload_ios_to_firebase_app_distribution.sh'), ipa, release_notes, recipient)
+    end
   end
 end
