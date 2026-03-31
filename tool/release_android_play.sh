@@ -4,8 +4,8 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
-if ! command -v fastlane >/dev/null 2>&1; then
-  echo "fastlane is not installed. Install with: gem install fastlane"
+if [ ! -x "./tool/fastlane.sh" ]; then
+  echo "Missing ./tool/fastlane.sh (repo fastlane wrapper)."
   exit 1
 fi
 
@@ -47,28 +47,19 @@ fi
 ACTION="${1:-upload_internal}"
 shift || true
 
+LANE=""
 case "$ACTION" in
-  preflight)
-    fastlane android preflight "$@"
-    ;;
-  build_release)
-    fastlane android build_release "$@"
-    ;;
-  metadata_sync)
-    fastlane android metadata_sync "$@"
-    ;;
-  upload_internal)
-    fastlane android upload_internal "$@"
-    ;;
-  upload_track)
-    fastlane android upload_track "$@"
-    ;;
-  promote_track)
-    fastlane android promote_track "$@"
-    ;;
+  preflight) LANE="preflight" ;;
+  build_release) LANE="build_release" ;;
+  metadata_sync) LANE="metadata_sync" ;;
+  upload_internal) LANE="upload_internal" ;;
+  upload_track) LANE="upload_track" ;;
+  promote_track) LANE="promote_track" ;;
   *)
     echo "Unknown action: $ACTION"
     echo "Valid actions: preflight | build_release | metadata_sync | upload_internal | upload_track | promote_track"
     exit 1
     ;;
 esac
+
+./tool/fastlane.sh android "$LANE" "$@"
