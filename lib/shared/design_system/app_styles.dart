@@ -8,7 +8,7 @@ const TextStyleToken _labelLargeToken = TextStyleToken(
 );
 
 // App text tokens (see [AppTextStyleTokens]) are registered in
-// [buildAppMixThemeData] from Theme.textTheme.
+// [buildAppMixScope] from Theme.textTheme.
 
 /// Shared Mix stylers using app tokens.
 ///
@@ -55,6 +55,36 @@ class AppStyles {
       .style(_labelLargeToken.mix())
       .color(AppMaterialColorTokens.onSurface())
       .fontWeight(FontWeight.w900);
+
+  static BoxStyler get filledButton => BoxStyler()
+      .color(AppMaterialColorTokens.primary())
+      .borderRadiusAll(AppMixTokens.radiusPill())
+      .paddingY(AppMixTokens.gapS())
+      .paddingX(AppMixTokens.gapM());
+
+  static TextStyler get filledButtonText => TextStyler()
+      .style(_labelLargeToken.mix())
+      .color(AppMaterialColorTokens.onPrimary())
+      .fontWeight(FontWeight.w600);
+
+  static BoxStyler get outlinedButton => BoxStyler()
+      .color(AppMaterialColorTokens.surface())
+      .border(
+        BorderMix.all(
+          BorderSideMix(
+            color: AppMaterialColorTokens.primary(),
+            width: 1.5,
+          ),
+        ),
+      )
+      .borderRadiusAll(AppMixTokens.radiusPill())
+      .paddingY(AppMixTokens.gapS())
+      .paddingX(AppMixTokens.gapM());
+
+  static TextStyler get outlinedButtonText => TextStyler()
+      .style(_labelLargeToken.mix())
+      .color(AppMaterialColorTokens.onSurface())
+      .fontWeight(FontWeight.w600);
 
   /// List-tile row style: horizontal and vertical padding from tokens.
   /// On tablet/desktop breakpoints, horizontal padding increases.
