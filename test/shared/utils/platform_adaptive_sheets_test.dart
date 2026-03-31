@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive_sheets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mix/mix.dart';
 
 void main() {
   group('PlatformAdaptiveSheets', () {
@@ -173,10 +172,8 @@ void main() {
 Future<void> _pumpMaterialAppWithMixTheme(final WidgetTester tester) {
   return tester.pumpWidget(
     MaterialApp(
-      builder: (final context, final child) => MixTheme(
-        data: buildAppMixThemeData(context),
-        child: child ?? const SizedBox.shrink(),
-      ),
+      builder: (final context, final child) =>
+          buildAppMixScope(context, child: child ?? const SizedBox.shrink()),
       home: const Scaffold(body: SizedBox()),
     ),
   );

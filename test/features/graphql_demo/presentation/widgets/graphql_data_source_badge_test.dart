@@ -17,8 +17,8 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
-            builder: (final context) => MixTheme(
-              data: buildAppMixThemeData(context),
+            builder: (final context) => buildAppMixScope(
+              context,
               child: Scaffold(body: GraphqlDataSourceBadge(source: source)),
             ),
           ),

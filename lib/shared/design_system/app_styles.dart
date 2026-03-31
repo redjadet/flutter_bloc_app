@@ -10,165 +10,149 @@ const TextStyleToken _labelLargeToken = TextStyleToken(
 // App text tokens (see [AppTextStyleTokens]) are registered in
 // [buildAppMixThemeData] from Theme.textTheme.
 
-/// Shared [Style] definitions using Mix tokens.
+/// Shared Mix stylers using app tokens.
 ///
 /// Use these styles for consistent card, button, and text appearance across
-/// the app. All values come from [MixThemeData] (colors, spaces, radii) so
+/// the app. All values come from [MixScope] tokens (colors, spaces, radii) so
 /// they stay theme-aware and responsive.
 class AppStyles {
   AppStyles._();
 
   /// Named variant for outlined button style (border, transparent fill).
-  static const Variant outlined = Variant('outlined');
+  static const NamedVariant outlined = NamedVariant('outlined');
 
-  /// Card style: surface background, rounded corners, standard padding,
-  /// default elevation 1. Dark mode uses slightly lower elevation.
-  ///
-  /// Uses [AppMixTokens] for padding and radius, [AppMaterialColorTokens]
-  /// for background. Adapts to light/dark via Material theme resolvers and
-  /// `$on.dark` context variant.
-  static Style get card => Style(
-    $box.color.ref(AppMaterialColorTokens.surface),
-    $box.borderRadius.all.ref(AppMixTokens.radiusM),
-    $box.decoration.elevation(1),
-    $box.padding.only(
-      top: AppMixTokens.cardPadV(),
-      bottom: AppMixTokens.cardPadV(),
-      left: AppMixTokens.cardPadH(),
-      right: AppMixTokens.cardPadH(),
-    ),
-    $on.dark($box.decoration.elevation(0)),
-  );
+  static BoxStyler get card => BoxStyler()
+      .color(AppMaterialColorTokens.surface())
+      .borderRadiusAll(AppMixTokens.radiusM())
+      .elevation(ElevationShadow.one)
+      .padding(
+        EdgeInsetsGeometryMix.only(
+          top: AppMixTokens.cardPadV(),
+          bottom: AppMixTokens.cardPadV(),
+          left: AppMixTokens.cardPadH(),
+          right: AppMixTokens.cardPadH(),
+        ),
+      )
+      .onDark(BoxStyler().shadows(const []));
 
   /// Profile-style outlined button: surface fill, thick primary border,
   /// pill radius, bold label text.
-  static Style get profileOutlinedButton => Style(
-    $box.color.ref(AppMaterialColorTokens.surface),
-    $box.decoration(
-      border: Border.all(
-        color: AppMaterialColorTokens.primary(),
-        width: 2,
-      ),
-    ),
-    $box.borderRadius.all.ref(AppMixTokens.radiusPill),
-    $box.padding.vertical.ref(AppMixTokens.gapS),
-    $box.padding.horizontal.ref(AppMixTokens.gapM),
-    $text.style.ref(_labelLargeToken),
-    $text.style.color.ref(AppMaterialColorTokens.onSurface),
-    $text.style.fontWeight.w900(),
-  );
+  static BoxStyler get profileOutlinedButton => BoxStyler()
+      .color(AppMaterialColorTokens.surface())
+      .border(
+        BorderMix.all(
+          BorderSideMix(
+            color: AppMaterialColorTokens.primary(),
+            width: 2,
+          ),
+        ),
+      )
+      .borderRadiusAll(AppMixTokens.radiusPill())
+      .paddingY(AppMixTokens.gapS())
+      .paddingX(AppMixTokens.gapM());
+
+  static TextStyler get profileOutlinedButtonText => TextStyler()
+      .style(_labelLargeToken.mix())
+      .color(AppMaterialColorTokens.onSurface())
+      .fontWeight(FontWeight.w900);
 
   /// List-tile row style: horizontal and vertical padding from tokens.
-  /// On medium/large breakpoints, horizontal padding increases via `$on.medium`.
-  static Style get listTile => Style(
-    $box.padding.vertical.ref(AppMixTokens.gapS),
-    $box.padding.horizontal.ref(AppMixTokens.gapM),
-    $on.medium($box.padding.horizontal.ref(AppMixTokens.gapL)),
-  );
+  /// On tablet/desktop breakpoints, horizontal padding increases.
+  static BoxStyler get listTile => BoxStyler()
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(
+          vertical: AppMixTokens.gapS(),
+          horizontal: AppMixTokens.gapM(),
+        ),
+      )
+      .onTablet(BoxStyler().paddingX(AppMixTokens.gapL()))
+      .onDesktop(BoxStyler().paddingX(AppMixTokens.gapL()));
 
   /// Input field container style: padding, radius, surface-container
   /// background, and light border. Use with [Box] to wrap [TextField] or
   /// custom input content.
-  static Style get inputField => Style(
-    $box.color.ref(AppMaterialColorTokens.surfaceContainerHighest),
-    $box.decoration(
-      border: Border.all(
-        color: AppMaterialColorTokens.outlineVariant(),
-      ),
-    ),
-    $box.padding.vertical.ref(AppMixTokens.gapM),
-    $box.padding.horizontal.ref(AppMixTokens.gapL),
-    $box.borderRadius.all.ref(AppMixTokens.radiusM),
-  );
+  static BoxStyler get inputField => BoxStyler()
+      .color(AppMaterialColorTokens.surfaceContainerHighest())
+      .border(
+        BorderMix.all(
+          BorderSideMix(color: AppMaterialColorTokens.outlineVariant()),
+        ),
+      )
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(
+          vertical: AppMixTokens.gapM(),
+          horizontal: AppMixTokens.gapL(),
+        ),
+      )
+      .borderRadiusAll(AppMixTokens.radiusM());
 
   /// Input field shell: same as [inputField] but no padding. Use when
   /// [TextField] (or child) supplies its own contentPadding so height
   /// matches single-line fields.
-  static Style get inputFieldShell => Style(
-    $box.color.ref(AppMaterialColorTokens.surfaceContainerHighest),
-    $box.decoration(
-      border: Border.all(
-        color: AppMaterialColorTokens.outlineVariant(),
-      ),
-    ),
-    $box.borderRadius.all.ref(AppMixTokens.radiusM),
-  );
+  static BoxStyler get inputFieldShell => BoxStyler()
+      .color(AppMaterialColorTokens.surfaceContainerHighest())
+      .border(
+        BorderMix.all(
+          BorderSideMix(color: AppMaterialColorTokens.outlineVariant()),
+        ),
+      )
+      .borderRadiusAll(AppMixTokens.radiusM());
 
   /// App bar area style: token-based horizontal/vertical padding, no elevation.
   /// Use with [Box] for custom app bar content.
-  static Style get appBar => Style(
-    $box.padding.vertical.ref(AppMixTokens.gapM),
-    $box.padding.horizontal.ref(AppMixTokens.cardPadH),
-    $box.decoration.elevation(0),
-  );
+  static BoxStyler get appBar => BoxStyler()
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(
+          vertical: AppMixTokens.gapM(),
+          horizontal: AppMixTokens.cardPadH(),
+        ),
+      )
+      .shadows(const []);
 
   /// Banner/full-width bar style: horizontal and vertical padding, no
   /// elevation. On medium+ breakpoints horizontal padding increases.
   /// Use with [Box] or `CommonCard` for status/info bars.
-  static Style get banner => Style(
-    $box.padding.vertical.ref(AppMixTokens.gapM),
-    $box.padding.horizontal.ref(AppMixTokens.cardPadH),
-    $box.decoration.elevation(0),
-    $on.medium($box.padding.horizontal.ref(AppMixTokens.gapL)),
-  );
+  static BoxStyler get banner => BoxStyler()
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(
+          vertical: AppMixTokens.gapM(),
+          horizontal: AppMixTokens.cardPadH(),
+        ),
+      )
+      .shadows(const [])
+      .onTablet(BoxStyler().paddingX(AppMixTokens.gapL()))
+      .onDesktop(BoxStyler().paddingX(AppMixTokens.gapL()));
 
   /// Empty state container: generous padding for centered icon/message.
   /// Use with [Box] wrapping empty-state content.
-  static Style get emptyState => Style(
-    $box.padding.only(
+  static BoxStyler get emptyState => BoxStyler().padding(
+    EdgeInsetsGeometryMix.only(
       top: AppMixTokens.gapL(),
       bottom: AppMixTokens.gapL(),
       left: AppMixTokens.cardPadH(),
       right: AppMixTokens.cardPadH(),
     ),
-  );
-
-  /// Filled (primary) button style: primary background, onPrimary text,
-  /// pill radius, token padding. Use with mix Button/Pressable or as reference.
-  static Style get filledButton => Style(
-    $box.color.ref(AppMaterialColorTokens.primary),
-    $box.borderRadius.all.ref(AppMixTokens.radiusPill),
-    $box.padding.vertical.ref(AppMixTokens.gapS),
-    $box.padding.horizontal.ref(AppMixTokens.gapM),
-    $text.style.ref(_labelLargeToken),
-    $text.style.color.ref(AppMaterialColorTokens.onPrimary),
-    $text.style.fontWeight.w600(),
-  );
-
-  /// Outlined button style: transparent fill, primary border, pill radius.
-  /// Use with mix Button/Pressable or as reference. For profile-style bold
-  /// label, use [AppStyles.profileOutlinedButton].
-  static Style get outlinedButton => Style(
-    $box.color.ref(AppMaterialColorTokens.surface),
-    $box.decoration(
-      border: Border.all(
-        color: AppMaterialColorTokens.primary(),
-        width: 1.5,
-      ),
-    ),
-    $box.borderRadius.all.ref(AppMixTokens.radiusPill),
-    $box.padding.vertical.ref(AppMixTokens.gapS),
-    $box.padding.horizontal.ref(AppMixTokens.gapM),
-    $text.style.ref(_labelLargeToken),
-    $text.style.color.ref(AppMaterialColorTokens.onSurface),
-    $text.style.fontWeight.w600(),
   );
 
   /// Chip-style container: surfaceContainerLow background (matches Material 3
   /// Chip), pill radius, compact padding. On medium+ breakpoints horizontal
   /// padding increases. Use with [Box] for chip-like labels.
-  static Style get chip => Style(
-    $box.color.ref(AppMaterialColorTokens.surfaceContainerLow),
-    $box.borderRadius.all.ref(AppMixTokens.radiusPill),
-    $box.padding.vertical.ref(AppMixTokens.gapS),
-    $box.padding.horizontal.ref(AppMixTokens.gapS),
-    $on.medium($box.padding.horizontal.ref(AppMixTokens.gapM)),
-  );
+  static BoxStyler get chip => BoxStyler()
+      .color(AppMaterialColorTokens.surfaceContainerLow())
+      .borderRadiusAll(AppMixTokens.radiusPill())
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(
+          vertical: AppMixTokens.gapS(),
+          horizontal: AppMixTokens.gapS(),
+        ),
+      )
+      .onTablet(BoxStyler().paddingX(AppMixTokens.gapM()))
+      .onDesktop(BoxStyler().paddingX(AppMixTokens.gapM()));
 
   /// Dialog/sheet content padding from tokens.
   /// Use with [Box] to wrap dialog or bottom sheet body content.
-  static Style get dialogContent => Style(
-    $box.padding.only(
+  static BoxStyler get dialogContent => BoxStyler().padding(
+    EdgeInsetsGeometryMix.only(
       top: AppMixTokens.gapL(),
       bottom: AppMixTokens.gapL(),
       left: AppMixTokens.cardPadH(),
@@ -176,35 +160,21 @@ class AppStyles {
     ),
   );
 
-  // Text styles (use $text.style.ref(AppTextStyleTokens.*) in Mix).
+  static TextStyler get headingStyle =>
+      TextStyler().style(AppTextStyleTokens.titleLarge.mix());
 
-  /// Heading text: theme title large. Use with [Text] or mix text.
-  static Style get headingStyle => Style(
-    $text.style.ref(AppTextStyleTokens.titleLarge),
-  );
+  static TextStyler get subheadingStyle =>
+      TextStyler().style(AppTextStyleTokens.titleMedium.mix());
 
-  /// Subheading: theme title medium.
-  static Style get subheadingStyle => Style(
-    $text.style.ref(AppTextStyleTokens.titleMedium),
-  );
+  static TextStyler get bodyStyle =>
+      TextStyler().style(AppTextStyleTokens.bodyMedium.mix());
 
-  /// Body text: theme body medium.
-  static Style get bodyStyle => Style(
-    $text.style.ref(AppTextStyleTokens.bodyMedium),
-  );
+  static TextStyler get bodyLargeStyle =>
+      TextStyler().style(AppTextStyleTokens.bodyLarge.mix());
 
-  /// Body large: theme body large.
-  static Style get bodyLargeStyle => Style(
-    $text.style.ref(AppTextStyleTokens.bodyLarge),
-  );
+  static TextStyler get captionStyle =>
+      TextStyler().style(AppTextStyleTokens.labelMedium.mix());
 
-  /// Caption/small label: theme label medium.
-  static Style get captionStyle => Style(
-    $text.style.ref(AppTextStyleTokens.labelMedium),
-  );
-
-  /// Small caption: theme label small.
-  static Style get captionSmallStyle => Style(
-    $text.style.ref(AppTextStyleTokens.labelSmall),
-  );
+  static TextStyler get captionSmallStyle =>
+      TextStyler().style(AppTextStyleTokens.labelSmall.mix());
 }

@@ -7,7 +7,6 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_empty_state.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mix/mix.dart';
 
 void main() {
   testWidgets('ChartPage shows loading then renders chart content', (
@@ -106,8 +105,8 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
-            builder: (final context) => MixTheme(
-              data: buildAppMixThemeData(context),
+            builder: (final context) => buildAppMixScope(
+              context,
               child: ChartPage(repository: repository),
             ),
           ),

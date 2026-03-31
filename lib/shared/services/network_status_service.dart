@@ -142,6 +142,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
       case ConnectivityResult.ethernet:
       case ConnectivityResult.mobile:
       case ConnectivityResult.vpn:
+      case ConnectivityResult.satellite:
         return true;
       case ConnectivityResult.none:
       case ConnectivityResult.other:
@@ -156,6 +157,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
       case ConnectivityResult.ethernet:
       case ConnectivityResult.mobile:
       case ConnectivityResult.vpn:
+      case ConnectivityResult.satellite:
         return NetworkStatus.online;
       case ConnectivityResult.none:
         return NetworkStatus.offline;
