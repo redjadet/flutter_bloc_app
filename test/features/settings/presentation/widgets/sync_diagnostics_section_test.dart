@@ -12,7 +12,6 @@ import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mix/mix.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _MockSyncStatusCubit extends MockCubit<SyncStatusState>
@@ -35,8 +34,8 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
-            builder: (final context) => MixTheme(
-              data: buildAppMixThemeData(context),
+            builder: (final context) => buildAppMixScope(
+              context,
               child: BlocProvider<SyncStatusCubit>.value(
                 value: cubit,
                 child: const Scaffold(body: SyncDiagnosticsSection()),

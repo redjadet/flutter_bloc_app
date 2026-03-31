@@ -34,7 +34,7 @@ class CommonStatusView extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
-    final bool hasMixTheme = MixTheme.maybeOf(context) != null;
+    final bool hasMixTheme = MixScope.maybeOf(context) != null;
     final Widget column = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,

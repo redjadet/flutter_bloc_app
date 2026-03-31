@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mix/mix.dart';
 
-/// Pumps [child] inside [MaterialApp] with [MixTheme] so mix tokens and
+/// Pumps [child] inside [MaterialApp] with [MixScope] so mix tokens and
 /// [AppStyles] resolve. Use for widget tests that depend on mix theme
 /// (e.g. CommonCard, profile button styles).
 ///
@@ -19,8 +18,8 @@ Future<void> pumpWithMixTheme(
     MaterialApp(
       theme: theme,
       home: Builder(
-        builder: (final context) => MixTheme(
-          data: buildAppMixThemeData(context),
+        builder: (final context) => buildAppMixScope(
+          context,
           child: wrapWithScaffold ? Scaffold(body: child) : child,
         ),
       ),

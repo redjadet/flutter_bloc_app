@@ -33,7 +33,7 @@ class _TodoSearchFieldState extends State<TodoSearchField> {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
-    final bool hasMixTheme = MixTheme.maybeOf(context) != null;
+    final bool hasMixTheme = MixScope.maybeOf(context) != null;
     final textStyle = theme.textTheme.bodyMedium?.copyWith(
       color: colors.onSurface,
       fontSize: context.responsiveBodySize,
