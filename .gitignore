@@ -96,6 +96,11 @@ tmp_test_write.md
 fastlane/keys/*.json
 fastlane/report.xml
 
+# Ruby / Bundler (keep installs local, never commit)
+.bundle/
+vendor/bundle/
+vendor/cache/
+
 # Local direnv config (do not commit)
 .envrc
 

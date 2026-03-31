@@ -85,12 +85,10 @@ From the **project root**:
 
 ```bash
 bundle install
-# Upload to TestFlight (same as deploy)
-bundle exec fastlane ios testflight
-# Or use the deploy alias
-bundle exec fastlane ios deploy
-# To upload for App Store (build appears in TestFlight and App Store build list)
-bundle exec fastlane ios appstore
+
+# Canonical Fastlane entrypoint (recommended for humans + AI agents)
+./tool/fastlane.sh ios upload_testflight   # or: ./tool/fastlane.sh ios deploy
+./tool/fastlane.sh ios upload_appstore
 ```
 
 This automates distribution entitlements, archive, and upload to App Store Connect. See [Fastlane iOS lanes (Ad Hoc, TestFlight, App Store)](#fastlane-ios-lanes-ad-hoc-testflight-app-store) for all lanes.
@@ -123,7 +121,7 @@ TestFlight is Apple’s beta distribution channel. The same build you upload to 
    Testers install the [TestFlight app](https://apps.apple.com/app/testflight/id899247664) from the App Store, accept the invite or use the public link, then install your build.
 
 **Fastlane (TestFlight):**
-Run `bundle exec fastlane ios testflight` (or `ios deploy`) from the project root to build and upload; then use App Store Connect → TestFlight to assign the build to internal/external groups.
+Run `./tool/fastlane.sh ios upload_testflight` (or `./tool/fastlane.sh ios deploy`) from the project root to build and upload; then use App Store Connect → TestFlight to assign the build to internal/external groups.
 
 **TestFlight troubleshooting:**
 
@@ -239,8 +237,10 @@ Output AAB: `build/app/outputs/bundle/release/app-release.aab`
 
 ```bash
 bundle install
-bundle exec fastlane android deploy track:internal
+./tool/fastlane.sh android play_upload_track track:internal
 ```
+
+**Note:** Android lanes are normalized under the `play_*` prefix (e.g. `play_upload_track`, `play_promote_track`). The older lane names (`upload_track`, `promote_track`, etc.) are kept as aliases for backward compatibility with scripts and older docs.
 
 Use `track:internal`, `track:alpha`, `track:beta`, or `track:production` as needed. This automates build (if configured), upload, and optional rollout.
 
@@ -304,10 +304,10 @@ This project includes Fastlane configurations for automated deployments. Run all
 
 | Lane | Purpose |
 | ---- | ------- |
-| `bundle exec fastlane ios adhoc` | Build and export an **Ad Hoc** IPA. Use for direct install to registered devices (e.g. Firebase App Distribution). Does not upload. Requires Ad Hoc provisioning profile. |
-| `bundle exec fastlane ios testflight` | Build and **upload to TestFlight**. Uses App Store provisioning. Add testers in App Store Connect → TestFlight. |
-| `bundle exec fastlane ios appstore` | Build and upload to **App Store Connect** (same binary as TestFlight). Select the build for a version and submit for review in App Store Connect. |
-| `bundle exec fastlane ios deploy` | Alias for `testflight` (backward compatibility). |
+| `./tool/fastlane.sh ios adhoc` | Build and export an **Ad Hoc** IPA. Use for direct install to registered devices (e.g. Firebase App Distribution). Does not upload. Requires Ad Hoc provisioning profile. |
+| `./tool/fastlane.sh ios upload_testflight` | Build and **upload to TestFlight**. Uses App Store provisioning. Add testers in App Store Connect → TestFlight. |
+| `./tool/fastlane.sh ios upload_appstore` | Build and upload to **App Store Connect** (same binary as TestFlight). Select the build for a version and submit for review in App Store Connect. |
+| `./tool/fastlane.sh ios deploy` | Alias for `upload_testflight` (backward compatibility). |
 
 **Configuration:** Set `FASTLANE_APP_IDENTIFIER`, `FASTLANE_APPLE_ID`, and optionally `FASTLANE_TEAM_ID` (or edit `ios/fastlane/Appfile`). The scripts run `./tool/ios_entitlements.sh distribution` before building for TestFlight and App Store.
 
@@ -315,11 +315,11 @@ This project includes Fastlane configurations for automated deployments. Run all
 
 ```bash
 # Deploy to Google Play Store
-bundle exec fastlane android deploy track:internal
+./tool/fastlane.sh android play_upload_track track:internal
 
 # Distribute to Firebase App Distribution (pre-release testers)
-bundle exec fastlane android firebase_distribute   # Android APK
-bundle exec fastlane ios firebase_distribute      # iOS IPA (requires paid Apple account for build)
+./tool/fastlane.sh android firebase_distribute   # Android APK
+./tool/fastlane.sh ios firebase_distribute      # iOS IPA (requires paid Apple account for build)
 ```
 
 See [Firebase App Distribution](firebase_app_distribution.md#fastlane-lanes-firebase_distribute) for lane options (release notes, groups, testers, skip_build).
