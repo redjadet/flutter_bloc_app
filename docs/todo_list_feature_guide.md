@@ -985,8 +985,8 @@ test/features/todo_list/
 
 ## Related References
 
-- `docs/clean_architecture.md`
-- `docs/compile_time_safety.md`
-- `docs/ui_ux_responsive_review.md`
-- `docs/testing_overview.md`
-- `docs/validation_scripts.md`
+- [`clean_architecture.md`](clean_architecture.md)
+- [`compile_time_safety.md`](compile_time_safety.md)
+- [`ui_ux_responsive_review.md`](ui_ux_responsive_review.md)
+- [`testing_overview.md`](testing_overview.md)
+- [`validation_scripts.md`](validation_scripts.md)

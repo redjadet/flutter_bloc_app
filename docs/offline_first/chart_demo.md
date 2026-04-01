@@ -82,7 +82,7 @@ This section compares the two “backend-accelerated” chart paths as implement
 - **Firebase**
   - **Primary**: callable Cloud Function; if it fails, Firestore fallback can still succeed.
   - **Common failures**:
-    - **Gen2 callable IAM**: if Cloud Run invoker is blocked, the client can see misleading `UNAUTHENTICATED`. (See `docs/firebase_setup.md` for the required `gcloud run services add-iam-policy-binding ... allUsers` fix.)
+    - **Gen2 callable IAM**: if Cloud Run invoker is blocked, the client can see misleading `UNAUTHENTICATED`. (See [`firebase_setup.md`](firebase_setup.md) for the required `gcloud run services add-iam-policy-binding ... allUsers` fix.)
     - **App Check**: can be INVALID on iOS simulator; if enforcement is disabled, calls still succeed (auth remains required).
     - Missing Firestore doc (fresh install) → fallback is empty until the cloud function succeeds at least once.
 

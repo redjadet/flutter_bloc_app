@@ -7,9 +7,9 @@ Follow-up analysis of cubits, subscriptions, and delayed work for lifecycle safe
 This is a **historical snapshot** of lifecycle/async hardening work.
 Prefer current repo invariants and validation scripts for day-to-day guidance:
 
-- `docs/reliability_error_handling_performance.md`
-- `docs/REPOSITORY_LIFECYCLE.md`
-- `docs/validation_scripts.md`
+- [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
+- [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md)
+- [`validation_scripts.md`](validation_scripts.md)
 
 ---
 

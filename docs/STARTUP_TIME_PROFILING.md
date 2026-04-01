@@ -161,7 +161,7 @@ Before making optimizations, establish a baseline:
 - [ ] Measure bundle size (see `tool/check_bundle_size.sh`)
 - [ ] Document device/OS version
 - [ ] Document Flutter version
-- [ ] Record measurements in `analysis/startup_metrics.md`
+- [ ] Record measurements in [`analysis/startup_metrics.md`](analysis/startup_metrics.md)
 
 ### Target Metrics
 
@@ -178,7 +178,7 @@ After implementing lazy loading optimizations:
 
 1. **Re-measure** using the same method
 2. **Compare** to baseline
-3. **Document** improvements in `analysis/startup_metrics.md`
+3. **Document** improvements in [`analysis/startup_metrics.md`](analysis/startup_metrics.md)
 4. **Track** over time to prevent regressions
 
 ## CI/CD Integration

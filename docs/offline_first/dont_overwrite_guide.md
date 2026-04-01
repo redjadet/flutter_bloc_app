@@ -115,7 +115,7 @@ Run this test (and any other “don’t overwrite” tests) in CI. In this repo,
 - **Todo (list-entity):** `lib/features/todo_list/data/offline_first_todo_repository_helpers.dart` — `_shouldApplyRemote`, `_mergeRemoteIntoLocal`.
 - **Regression test:** `test/features/counter/data/offline_first_counter_repository_test.dart` — `remote watch does not overwrite newer unsynced local count`.
 - **Validation script:** `tool/check_offline_first_remote_merge.sh` (run via `./bin/checklist` or directly).
-- **Docs:** `docs/validation_scripts.md` § “check_offline_first_remote_merge.sh”.
+- **Docs:** [`validation_scripts.md`](validation_scripts.md) § “check_offline_first_remote_merge.sh”.
 
 ## Checklist for other repos
 
@@ -134,7 +134,7 @@ Use these steps to adopt the don't-overwrite rule in a different codebase.
 
 ### 1. Copy or adapt the guide
 
-- Copy this file into the other repo, e.g. `docs/offline_first/dont_overwrite_guide.md` or `docs/sync/dont_overwrite_guide.md`.
+- Copy this file into the other repo, e.g. [`offline_first/dont_overwrite_guide.md`](offline_first/dont_overwrite_guide.md) or [`sync/dont_overwrite_guide.md`](sync/dont_overwrite_guide.md).
 - Adjust "References in this repo" to point to that repo's equivalent paths (or remove that section and keep the pattern + checklist).
 
 ### 2. Implement `_shouldApplyRemote` when merging remote watch into local

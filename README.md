@@ -108,12 +108,15 @@ Validation behavior, CI coverage, and script-level guards are documented here:
 The canonical docs index lives in [`docs/README.md`](docs/README.md). The links
 below are the most common entry points.
 
-- **Onboarding**: `docs/new_developer_guide.md`
-- **Architecture**: `docs/feature_overview.md`, `docs/clean_architecture.md`,
-  `docs/architecture_details.md`
-- **Quality gates**: `docs/validation_scripts.md`, `docs/testing_overview.md`
-- **Security**: `docs/SECURITY.md`, `docs/security_and_secrets.md`
-- **Deployment**: `docs/deployment.md`
+- **Onboarding**: [New developer guide](docs/new_developer_guide.md)
+- **Architecture**: [Feature overview](docs/feature_overview.md),
+  [Clean architecture](docs/clean_architecture.md),
+  [Architecture details](docs/architecture_details.md)
+- **Quality gates**: [Validation scripts](docs/validation_scripts.md),
+  [Testing overview](docs/testing_overview.md)
+- **Security**: [Security policy](docs/SECURITY.md),
+  [Security and secrets](docs/security_and_secrets.md)
+- **Deployment**: [Deployment and release](docs/deployment.md)
 
 ## Representative Feature Areas
 

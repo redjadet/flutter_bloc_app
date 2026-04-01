@@ -13,7 +13,7 @@ All core offline-first features have been successfully implemented, tested, and 
 - **Strategy**: Write-first with pending operation queue
 - **UI**: Sync status logged; Sync Diagnostics in Settings (dev/qa only)
 - **Tests**: Complete coverage (unit, repository, bloc, widget, page)
-- **Documentation**: `docs/offline_first/counter.md`
+- **Documentation**: [`offline_first/counter.md`](offline_first/counter.md)
 
 ### 2. Chat ✅
 
@@ -22,7 +22,7 @@ All core offline-first features have been successfully implemented, tested, and 
 - **Strategy**: Write-first with pending send queue and conflict resolution
 - **UI**: Sync status logged; Sync Diagnostics in Settings (dev/qa only)
 - **Tests**: Complete coverage (unit, repository, bloc, widget, page)
-- **Documentation**: `docs/offline_first/chat.md`
+- **Documentation**: [`offline_first/chat.md`](offline_first/chat.md)
 
 ### 3. Search ✅
 
@@ -31,7 +31,7 @@ All core offline-first features have been successfully implemented, tested, and 
 - **Strategy**: Cache-first (read-only) with background refresh
 - **UI**: Sync status logged; Sync Diagnostics in Settings (dev/qa only)
 - **Tests**: Complete coverage (unit, repository, widget, page)
-- **Documentation**: `docs/offline_first/search.md`
+- **Documentation**: [`offline_first/search.md`](offline_first/search.md)
 
 ### 4. Profile ✅
 
@@ -40,7 +40,7 @@ All core offline-first features have been successfully implemented, tested, and 
 - **Strategy**: Cache-first (read-only) with background refresh
 - **UI**: Sync status logged; Sync Diagnostics in Settings (dev/qa only); Profile cache controls in dev
 - **Tests**: Complete coverage (unit, repository, widget, page)
-- **Documentation**: `docs/offline_first/profile.md`
+- **Documentation**: [`offline_first/profile.md`](offline_first/profile.md)
 
 ### 5. Remote Config ✅
 
@@ -49,7 +49,7 @@ All core offline-first features have been successfully implemented, tested, and 
 - **Strategy**: Cache-first with background refresh and version tracking
 - **UI**: RemoteConfig diagnostics with cache clear (no sync banner)
 - **Tests**: Complete coverage (unit, repository, widget, cubit)
-- **Documentation**: `docs/offline_first/remote_config.md`
+- **Documentation**: [`offline_first/remote_config.md`](offline_first/remote_config.md)
 
 ### 6. GraphQL Demo ✅
 
@@ -58,7 +58,7 @@ All core offline-first features have been successfully implemented, tested, and 
 - **Strategy**: Cache-first with 24h staleness expiry
 - **UI**: Data source badge (cache/remote) and dev cache clear control
 - **Tests**: Complete coverage (unit, repository)
-- **Documentation**: `docs/offline_first/graphql_demo.md`
+- **Documentation**: [`offline_first/graphql_demo.md`](offline_first/graphql_demo.md)
 
 ### 7. IoT Demo ✅
 
@@ -70,7 +70,7 @@ All core offline-first features have been successfully implemented, tested, and 
 - **Strategy**: Write-first with pending operation queue (payload includes `supabaseUserId`); pullRemote replaces current user's local from Supabase; sync cycle filters pending ops by user
 - **UI**: Sync status logged; Sync Diagnostics in Settings (dev/qa only); sync triggered on page open via `SyncStatusCubit.ensureStarted()`
 - **Tests**: Unit/repository (including legacy-op skip, different-user skip) and widget tests
-- **Documentation**: `docs/offline_first/iot_demo.md`, `docs/offline_first/iot_demo_supabase_auth_plan.md`, `docs/offline_first/supabase_iot_demo_user_id_migration.sql`
+- **Documentation**: [`offline_first/iot_demo.md`](offline_first/iot_demo.md), [`offline_first/iot_demo_supabase_auth_plan.md`](offline_first/iot_demo_supabase_auth_plan.md), `docs/offline_first/supabase_iot_demo_user_id_migration.sql`
 
 ## Core Infrastructure
 
@@ -126,19 +126,19 @@ All core offline-first features have been successfully implemented, tested, and 
 
 ### Feature Documentation ✅
 
-- `docs/offline_first/counter.md` - Counter offline-first contract
-- `docs/offline_first/chat.md` - Chat offline-first contract
-- `docs/offline_first/search.md` - Search offline-first contract
-- `docs/offline_first/profile.md` - Profile offline-first contract
-- `docs/offline_first/remote_config.md` - Remote Config offline-first contract
-- `docs/offline_first/graphql_demo.md` - GraphQL Demo offline-first contract
-- `docs/offline_first/iot_demo.md` - IoT Demo offline-first contract (Supabase)
+- [`offline_first/counter.md`](offline_first/counter.md) - Counter offline-first contract
+- [`offline_first/chat.md`](offline_first/chat.md) - Chat offline-first contract
+- [`offline_first/search.md`](offline_first/search.md) - Search offline-first contract
+- [`offline_first/profile.md`](offline_first/profile.md) - Profile offline-first contract
+- [`offline_first/remote_config.md`](offline_first/remote_config.md) - Remote Config offline-first contract
+- [`offline_first/graphql_demo.md`](offline_first/graphql_demo.md) - GraphQL Demo offline-first contract
+- [`offline_first/iot_demo.md`](offline_first/iot_demo.md) - IoT Demo offline-first contract (Supabase)
 
 ### Guides ✅
 
-- `docs/offline_first/offline_first_plan.md` - Implementation plan and progress
-- `docs/offline_first/adoption_guide.md` - Step-by-step adoption guide
-- `docs/offline_first/dont_overwrite_guide.md` - Don’t overwrite newer local with older remote (for this repo and others)
+- [`offline_first/offline_first_plan.md`](offline_first/offline_first_plan.md) - Implementation plan and progress
+- [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md) - Step-by-step adoption guide
+- [`offline_first/dont_overwrite_guide.md`](offline_first/dont_overwrite_guide.md) - Don’t overwrite newer local with older remote (for this repo and others)
 
 ## Test Coverage
 
@@ -209,4 +209,4 @@ The implementation provides:
 
 **Last Updated**: 2026-03-13
 **Status**: ✅ Complete
-**Coverage**: See `coverage/coverage_summary.md` (run `dart run tool/update_coverage_summary.dart` to refresh).
+**Coverage**: See [`coverage/coverage_summary.md`](coverage/coverage_summary.md) (run `dart run tool/update_coverage_summary.dart` to refresh).

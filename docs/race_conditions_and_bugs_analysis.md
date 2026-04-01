@@ -1,6 +1,6 @@
 # Race Conditions and Bugs Analysis
 
-This document records a deep analysis of the codebase for potential race conditions, bugs, and lifecycle issues. It complements `docs/validation_scripts.md` (automated checks) and `docs/CODE_QUALITY.md` (quality standards).
+This document records a deep analysis of the codebase for potential race conditions, bugs, and lifecycle issues. It complements [`validation_scripts.md`](validation_scripts.md) (automated checks) and [`CODE_QUALITY.md`](CODE_QUALITY.md) (quality standards).
 
 **Analysis Date:** 2025-02
 **Scope:** `lib/`, `test/shared/common_bugs_prevention_test.dart`, lifecycle rules

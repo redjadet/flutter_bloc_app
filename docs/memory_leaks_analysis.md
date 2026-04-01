@@ -1,6 +1,6 @@
 # Memory Leaks Analysis
 
-This document records a deep analysis of the codebase for potential memory leaks. It complements `docs/race_conditions_and_bugs_analysis.md` and `docs/CODE_QUALITY.md`.
+This document records a deep analysis of the codebase for potential memory leaks. It complements [`race_conditions_and_bugs_analysis.md`](race_conditions_and_bugs_analysis.md) and [`CODE_QUALITY.md`](CODE_QUALITY.md).
 
 **Analysis Date:** 2025-02
 **Scope:** `lib/` — StreamController, StreamSubscription, Timer, Controllers (TextEditingController, ScrollController), lifecycle patterns
