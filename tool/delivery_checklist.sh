@@ -361,7 +361,9 @@ normalize_doc_links() {
 
 if is_docs_only_change_set; then
   echo "📝 Docs-only change set detected"
-  normalize_doc_links
+  if ! normalize_doc_links; then
+    exit 1
+  fi
   if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
     echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
     exit 1
@@ -516,7 +518,9 @@ echo "🔍 Step 3/5: Analyzing code with 'flutter analyze'"
 echo ""
 echo "🛡️  Step 4/5: Running best practices validation checks..."
 echo ""
-normalize_doc_links
+if ! normalize_doc_links; then
+  exit 1
+fi
 if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
   echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
   exit 1
