@@ -6,7 +6,7 @@ opaque background sync behavior.
 
 The implementation is not a generic sync framework layered on top of the app.
 It is a repository-level pattern integrated into the existing
-`Domain -> Data -> Presentation` architecture, BLoC/Cubit state management, and
+`Presentation -> Domain <- Data` architecture, BLoC/Cubit state management, and
 `get_it` dependency injection.
 
 ## Problem
@@ -30,7 +30,7 @@ reconciliation are all active at once.
 This repository uses:
 
 - Flutter + Dart
-- Clean Architecture with `Domain -> Data -> Presentation`
+- Clean Architecture with `Presentation -> Domain <- Data`
 - BLoC/Cubit for presentation state
 - `get_it` for DI
 - Hive for encrypted local persistence

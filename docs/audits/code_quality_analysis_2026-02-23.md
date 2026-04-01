@@ -2,6 +2,16 @@
 
 Follow-up audit after Phase 2 & 3. Findings and suggested improvements.
 
+## Status
+
+This is a **historical snapshot** of quality findings at the time of the audit.
+Prefer current repo validation scripts and the consolidated quality doc for
+today’s guidance:
+
+- `docs/validation_scripts.md`
+- `docs/testing_overview.md`
+- `docs/CODE_QUALITY.md`
+
 ---
 
 ## Summary

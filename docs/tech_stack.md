@@ -27,7 +27,7 @@ not a replacement for `pubspec.yaml`.
 | Dependency injection | `get_it` `^9.0.5` |
 | Routing | `go_router` `^17.0.0` |
 | Localization | `intl` `^0.20.2`, `flutter_localizations` |
-| Architecture style | Clean Architecture with `Domain -> Data -> Presentation` layering |
+| Architecture style | Clean Architecture with `Presentation -> Domain <- Data` layering |
 
 ## Persistence and offline-first support
 

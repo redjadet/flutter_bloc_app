@@ -36,7 +36,7 @@ throughout this page.
 
 ## What This Codebase Covers
 
-- Clean Architecture with a `Domain -> Data -> Presentation` feature structure
+- Clean Architecture with a `Presentation -> Domain <- Data` feature structure
 - BLoC/Cubit state management with `flutter_bloc`
 - Dependency injection via `get_it`
 - `GoRouter`-based navigation and multiple app entrypoints
@@ -62,6 +62,7 @@ Before local setup, review the environment and secrets guides:
 
 - [New Developer Guide](docs/new_developer_guide.md)
 - [Firebase Setup](docs/firebase_setup.md)
+- [Security Policy](docs/SECURITY.md)
 - [Security and Secrets](docs/security_and_secrets.md)
 
 ### Run Locally
@@ -104,38 +105,15 @@ Validation behavior, CI coverage, and script-level guards are documented here:
 
 ## Documentation Map
 
-### Start Here
+The canonical docs index lives in [`docs/README.md`](docs/README.md). The links
+below are the most common entry points.
 
-- [New Developer Guide](docs/new_developer_guide.md)
-- [Feature Overview](docs/feature_overview.md)
-- [Tech Stack](docs/tech_stack.md)
-- [FAQ](docs/FAQ.md)
-
-### Architecture and Design
-
-- [Clean Architecture](docs/clean_architecture.md)
-- [Architecture Details](docs/architecture_details.md)
-- [Modularity](docs/modularity.md)
-- [Design System](docs/design_system.md)
-- [Architecture Decision Records](docs/adr/)
-
-### Setup and Operations
-
-- [Firebase Setup](docs/firebase_setup.md)
-- [Authentication](docs/authentication.md)
-- [Security and Secrets](docs/security_and_secrets.md)
-- [direnv template (`docs/envrc.example`)](docs/envrc.example)
-- [Deployment](docs/deployment.md)
-- [Firebase App Distribution](docs/firebase_app_distribution.md)
-- [Android Play Store Release SOP](docs/android_play_store_release_sop.md)
-
-### Quality and Engineering References
-
-- [Testing Overview](docs/testing_overview.md)
-- [Validation Scripts](docs/validation_scripts.md)
-- [Code Generation Guide](docs/code_generation_guide.md)
-- [Compile-Time Safety](docs/compile_time_safety.md)
-- [Offline-First Adoption Guide](docs/offline_first/adoption_guide.md)
+- **Onboarding**: `docs/new_developer_guide.md`
+- **Architecture**: `docs/feature_overview.md`, `docs/clean_architecture.md`,
+  `docs/architecture_details.md`
+- **Quality gates**: `docs/validation_scripts.md`, `docs/testing_overview.md`
+- **Security**: `docs/SECURITY.md`, `docs/security_and_secrets.md`
+- **Deployment**: `docs/deployment.md`
 
 ## Representative Feature Areas
 

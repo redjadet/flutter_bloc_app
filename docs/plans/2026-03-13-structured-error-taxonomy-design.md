@@ -3,6 +3,13 @@
 - Bucket: `structured-error-taxonomy`
 - Related phases: Phase 4 (primary), Phase 5 (validation alignment)
 
+## Status
+
+This is a **design note / working plan**. If adopted, the repository-wide
+contract should be captured in an ADR under `docs/adr/` and/or reflected in the
+owning core docs (for example `docs/reliability_error_handling_performance.md`
+and `docs/CODE_QUALITY.md`).
+
 ## 1. Goals & Non‑Goals
 
 ### Goals

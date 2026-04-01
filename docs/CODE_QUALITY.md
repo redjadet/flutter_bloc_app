@@ -1,6 +1,17 @@
 # Code Quality Review
 
-This document consolidates code-quality analysis and improvement notes. It is a snapshot of expectations and known fixes, not a substitute for running the validation scripts.
+This document consolidates code-quality analysis and improvement notes.
+
+## Status
+
+This file is a **human-readable quality overview**. It is not the enforcement
+layer.
+
+Source of truth for gates and guardrails:
+
+- `./bin/checklist`
+- `docs/validation_scripts.md`
+- `docs/testing_overview.md`
 
 ## Scope and Inputs
 

@@ -1,5 +1,13 @@
 # Future Architecture & Code Quality Improvement Plan
 
+## Status
+
+This is a **working plan**. Prefer implemented behavior and the core docs under
+`docs/` as the source of truth. When this plan changes repository-wide policy,
+capture the decision in an ADR under `docs/adr/` and/or update the owning core
+doc (for example `docs/architecture_details.md`, `docs/CODE_QUALITY.md`,
+`docs/reliability_error_handling_performance.md`).
+
 ## Roadmap Status
 
 | Phase | Status | Priority | Primary output |
@@ -72,7 +80,7 @@ Primary source documents:
 
 ## Delivery Principles
 
-- Keep `Domain -> Data -> Presentation` boundaries intact throughout the work.
+- Keep `Presentation -> Domain <- Data` boundaries intact throughout the work.
 - Prefer small vertical slices per phase instead of broad repo-wide rewrites.
 - Land code, tests, and documentation together when a contract changes.
 - Add regression guards only for historically fragile or high-impact behavior.
@@ -111,7 +119,7 @@ cleanup.
 
 ## AI Agent Guardrails
 
-- Preserve `Domain -> Data -> Presentation` dependencies. Do not solve shared
+- Preserve `Presentation -> Domain <- Data` dependencies. Do not solve shared
   problems by letting presentation import data-layer internals.
 - Keep direct `GetIt` access out of presentation code.
 - Keep route and bootstrap policy centralized; do not scatter auth or startup

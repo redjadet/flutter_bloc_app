@@ -2,6 +2,8 @@
 
 This document describes all validation scripts in the `tool/` directory that are automatically run by `./bin/checklist` to catch bugs and enforce best practices early.
 
+For the complete docs index, see `docs/README.md`.
+
 ## Overview
 
 The validation scripts provide automated guards for architecture, UI/UX, async safety, performance, and memory hygiene. These scripts are automatically executed when you run `./bin/checklist` before commits, ensuring code quality and consistency across the codebase.

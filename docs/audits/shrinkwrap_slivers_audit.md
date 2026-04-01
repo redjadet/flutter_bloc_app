@@ -3,6 +3,13 @@
 **Date:** 2026-02-23
 **Scope:** All `shrinkWrap: true` usages and Sliver/CustomScrollView patterns in `lib/`.
 
+## Status
+
+This is a **historical snapshot**. The repo’s current enforcement is via the
+performance validation scripts (see `docs/validation_scripts.md`). Treat this
+document as context for why a change might be recommended, not a required
+workflow.
+
 ---
 
 ## Summary

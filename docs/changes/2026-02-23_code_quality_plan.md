@@ -7,6 +7,15 @@ hardening, checklist optimization, and regression-guard expansion work. The
 remaining goal is not broad cleanup; it is to remove the last inconsistency
 signals that keep the codebase from reading as uniformly senior.
 
+## Status
+
+This document is a **historical plan**. Prefer the current “core” docs and repo
+scripts as the source of truth:
+
+- `docs/CODE_QUALITY.md`
+- `docs/validation_scripts.md`
+- `docs/testing_overview.md`
+
 Current baseline:
 
 - Shared HTTP transport contracts are hardened and covered.
@@ -18,7 +27,7 @@ Current baseline:
 
 ## Track 1: Infrastructure Baseline
 
-### Status
+### Current state
 
 - `build_runner` baseline: verified with a real local run on 2026-03-11.
 - Shared infrastructure rules: active and already enforced through validation

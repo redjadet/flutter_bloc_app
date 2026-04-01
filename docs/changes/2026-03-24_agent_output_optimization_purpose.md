@@ -1,5 +1,12 @@
 # Agent Output Optimization: Change Purpose
 
+## Status
+
+This is a **historical change-note** explaining intent and constraints for a
+specific iteration. Prefer current repo workflow docs and scripts for active
+guidance (for example `docs/validation_scripts.md`, `docs/testing_overview.md`,
+and the repo `bin/` scripts).
+
 ## Why these changes were made
 
 These changes establish a measurable, safer, and more predictable workflow for

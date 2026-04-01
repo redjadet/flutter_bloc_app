@@ -3,6 +3,15 @@
 Known trade-offs accepted in the current architecture and improvements that
 would raise the bar further.
 
+## How to use this document
+
+- **Trade-offs** explain intentional decisions and constraints in the current
+  codebase.
+- **Future improvements** are ideas, not commitments. If an item becomes active
+  work, prefer moving it into `docs/plans/` and tracking progress there.
+- If an item changes repository-wide policy, capture the decision in an ADR
+  under `docs/adr/` and/or update the owning core doc.
+
 > **Related:**
 > [Architecture Details](architecture_details.md) |
 > [Clean Architecture](clean_architecture.md) |
