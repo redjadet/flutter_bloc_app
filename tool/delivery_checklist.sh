@@ -75,6 +75,7 @@ trap checklist_on_exit EXIT
 # Initialized before any function references them (set -u safe).
 declare -a changed_files=()
 declare -a changed_dart_files=()
+CHECKLIST_ALLOW_REUSE="${CHECKLIST_ALLOW_REUSE:-auto}"
 
 resolve_flutter_dart() {
   local flutter_bin
@@ -182,6 +183,117 @@ run_parallel_static_checks() {
   return "$static_failed"
 }
 
+should_attempt_checklist_reuse() {
+  if [ "$HAS_GIT_REPO" -ne 1 ]; then
+    return 1
+  fi
+
+  if [ ! -f "$PROJECT_ROOT/tool/validation_reuse.py" ]; then
+    return 1
+  fi
+
+  case "$CHECKLIST_ALLOW_REUSE" in
+    1)
+      return 0
+      ;;
+    0)
+      return 1
+      ;;
+    auto)
+      return 0
+      ;;
+    *)
+      echo "⚠️  Invalid CHECKLIST_ALLOW_REUSE='$CHECKLIST_ALLOW_REUSE'; using auto"
+      CHECKLIST_ALLOW_REUSE=auto
+      return 0
+      ;;
+  esac
+}
+
+reuse_checklist_if_available() {
+  if ! should_attempt_checklist_reuse; then
+    return 1
+  fi
+
+  if python3 "$PROJECT_ROOT/tool/validation_reuse.py" find --command checklist >/dev/null 2>&1; then
+    echo "♻️  Reusing previous successful checklist run for the exact current worktree fingerprint"
+    echo "    Set CHECKLIST_ALLOW_REUSE=0 to force a full rerun."
+    echo ""
+    echo "✅ Delivery checklist complete (reused prior passing run)."
+    return 0
+  fi
+
+  return 1
+}
+
+validate_checklist_configuration() {
+  local failed=0
+  local script
+  local syntax_exit=0
+  local total_messages="${#CHECK_MESSAGES[@]}"
+  local total_scripts="${#CHECK_SCRIPTS[@]}"
+  local extra_scripts=(
+    "tool/run_mix_lint.sh"
+    "tool/test_coverage.sh"
+    "tool/check_regression_guards.sh"
+    "tool/check_todo_keyboard_layout.sh"
+    "tool/validate_validation_docs.sh"
+    "tool/check_agent_asset_drift.sh"
+  )
+
+  if [ "$total_messages" -ne "$total_scripts" ]; then
+    echo "❌ CHECK_MESSAGES/CHECK_SCRIPTS length mismatch: $total_messages messages vs $total_scripts scripts"
+    return 1
+  fi
+
+  for script in "${CHECK_SCRIPTS[@]}" "${extra_scripts[@]}"; do
+    if [ ! -f "$PROJECT_ROOT/$script" ]; then
+      echo "❌ Missing checklist dependency: $script"
+      failed=1
+    fi
+  done
+
+  if [ "$failed" -ne 0 ]; then
+    return 1
+  fi
+
+  for script in "${CHECK_SCRIPTS[@]}" "${extra_scripts[@]}"; do
+    if ! bash -n "$PROJECT_ROOT/$script"; then
+      syntax_exit=1
+    fi
+  done
+
+  if [ "$syntax_exit" -ne 0 ]; then
+    echo "❌ Checklist script syntax validation failed"
+    return 1
+  fi
+}
+
+validate_docs_only_dependencies() {
+  local failed=0
+  local script
+  local docs_only_scripts=(
+    "tool/validate_validation_docs.sh"
+    "tool/check_agent_asset_drift.sh"
+  )
+
+  for script in "${docs_only_scripts[@]}"; do
+    if [ ! -f "$PROJECT_ROOT/$script" ]; then
+      echo "❌ Missing docs-only checklist dependency: $script"
+      failed=1
+      continue
+    fi
+    if ! bash -n "$PROJECT_ROOT/$script"; then
+      failed=1
+    fi
+  done
+
+  if [ "$failed" -ne 0 ]; then
+    echo "❌ Docs-only checklist dependency validation failed"
+    return 1
+  fi
+}
+
 # Bash 3.2 (macOS /bin/bash) + set -u: "${arr[@]}" in for-loops errors on empty arrays; use ${arr[@]+"${arr[@]}"} instead.
 collect_changed_files() {
   changed_files=()
@@ -243,7 +355,10 @@ is_docs_only_change_set() {
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
       *.md|*.mdx|*.txt|*.rst|*.adoc|\
+      AGENTS.md|\
       docs/*|\
+      tasks/*.md|\
+      tool/agent_host_templates/*|\
       README|README.*|\
       CHANGELOG|CHANGELOG.*|\
       LICENSE|LICENSE.*|\
@@ -289,10 +404,29 @@ should_run_todo_layout_tests_auto() {
   return 1
 }
 
+should_run_agent_asset_drift_check() {
+  if [ "$HAS_GIT_REPO" -ne 1 ] || [ "${#changed_files[@]}" -eq 0 ]; then
+    return 1
+  fi
+
+  local file
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    case "$file" in
+      AGENTS.md|\
+      docs/agents_quick_reference.md|\
+      docs/ai_code_review_protocol.md|\
+      tool/agent_host_templates/*)
+        return 0
+        ;;
+    esac
+  done
+
+  return 1
+}
+
 echo "🚀 Running Delivery Checklist..."
 echo ""
 
-DART_BIN="$(resolve_flutter_dart)"
 RUN_COVERAGE="${CHECKLIST_RUN_COVERAGE:-1}"
 RUN_FOCUSED_TESTS="${CHECKLIST_RUN_FOCUSED_TESTS:-auto}"
 RUN_MIX_LINT="${CHECKLIST_RUN_MIX_LINT:-auto}"
@@ -323,7 +457,16 @@ if command -v git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/n
   HAS_GIT_REPO=1
 fi
 
+if ! [[ "$CHECKLIST_ALLOW_REUSE" =~ ^(auto|0|1)$ ]]; then
+  echo "⚠️  Invalid CHECKLIST_ALLOW_REUSE='$CHECKLIST_ALLOW_REUSE'; using auto"
+  CHECKLIST_ALLOW_REUSE=auto
+fi
+
 collect_changed_files
+
+if reuse_checklist_if_available; then
+  exit 0
+fi
 
 normalize_doc_links() {
   local script="$PROJECT_ROOT/tool/normalize_doc_links.py"
@@ -336,7 +479,7 @@ normalize_doc_links() {
 
   if [ "${#changed_files[@]}" -gt 0 ]; then
     for file in "${changed_files[@]+"${changed_files[@]}"}"; do
-      if [[ "$file" == "README.md" || "$file" == "SECURITY.md" || ( "$file" == docs/* && "$file" == *.md ) ]]; then
+      if [[ "$file" == "README.md" || "$file" == "SECURITY.md" || "$file" == "AGENTS.md" || ( "$file" == docs/* && "$file" == *.md ) || ( "$file" == tool/agent_host_templates/* && "$file" == *.md ) ]]; then
         if [ -f "$file" ]; then
           doc_files+=("$file")
         fi
@@ -359,6 +502,9 @@ normalize_doc_links() {
 
 if is_docs_only_change_set; then
   echo "📝 Docs-only change set detected"
+  if ! validate_docs_only_dependencies; then
+    exit 1
+  fi
   if ! normalize_doc_links; then
     exit 1
   fi
@@ -366,12 +512,21 @@ if is_docs_only_change_set; then
     echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
     exit 1
   fi
+  if should_run_agent_asset_drift_check; then
+    echo "🤖 Verifying managed AI agent asset drift for policy/template docs..."
+    if ! bash "$PROJECT_ROOT/tool/check_agent_asset_drift.sh"; then
+      echo "❌ Managed AI agent assets are out of sync; run ./tool/sync_agent_assets.sh --dry-run and reconcile the drift."
+      exit 1
+    fi
+  fi
 
   echo "✅ Skipping dependency, analyze, validation, and coverage steps"
   echo ""
   echo "🎉 Delivery checklist complete! No code-relevant work detected."
   exit 0
 fi
+
+DART_BIN="$(resolve_flutter_dart)"
 
 # Step 1: Fetch dependencies (only if needed)
 echo "📦 Step 1/5: Checking dependency state"
@@ -403,9 +558,6 @@ else
 fi
 echo "✅ Code formatting complete"
 echo ""
-
-# Make sure all validation scripts are executable
-chmod +x tool/check_*.sh 2>/dev/null || true
 
 VALIDATION_FAILED=0
 CHECK_MESSAGES=(
@@ -510,6 +662,10 @@ CHECKLIST_JOBS="${CHECKLIST_JOBS:-$DEFAULT_CHECKLIST_JOBS}"
 if ! [[ "$CHECKLIST_JOBS" =~ ^[0-9]+$ ]] || [ "$CHECKLIST_JOBS" -lt 1 ]; then
   echo "⚠️  Invalid CHECKLIST_JOBS='$CHECKLIST_JOBS'; using $DEFAULT_CHECKLIST_JOBS"
   CHECKLIST_JOBS="$DEFAULT_CHECKLIST_JOBS"
+fi
+
+if ! validate_checklist_configuration; then
+  exit 1
 fi
 
 echo "🔍 Step 3/5: Analyzing code with 'flutter analyze'"

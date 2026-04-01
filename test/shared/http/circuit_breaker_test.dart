@@ -12,7 +12,10 @@ void main() {
           key: 'test',
           failureThreshold: 1,
           window: const Duration(seconds: 1),
-          cooldown: const Duration(milliseconds: 20),
+          // Keep this comfortably above any incidental delay between awaits in
+          // the full suite to avoid flakes where the circuit transitions to
+          // halfOpen earlier than intended.
+          cooldown: const Duration(milliseconds: 200),
         );
 
         await expectLater(
@@ -28,7 +31,7 @@ void main() {
           throwsA(isA<CircuitOpenException>()),
         );
 
-        await Future<void>.delayed(const Duration(milliseconds: 25));
+        await Future<void>.delayed(const Duration(milliseconds: 250));
 
         final Completer<void> probeCompleter = Completer<void>();
         final Future<void> probeFuture = breaker.execute<void>(() async {
