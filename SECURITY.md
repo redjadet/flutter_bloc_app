@@ -1,21 +1,6 @@
-# Security Policy
+# Security policy
 
-## Supported Versions
+The canonical security policy lives in `docs/SECURITY.md`.
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
-
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
-
-## Reporting a Vulnerability
-
-Use this section to tell people how to report a vulnerability.
-
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+This file is intentionally a thin pointer so the policy sits alongside the rest
+of the repository documentation under `docs/`.

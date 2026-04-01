@@ -2,6 +2,15 @@
 
 Baseline for the codebase improvement plan from `codebase_analysis_2026-03-17.md`.
 
+## Status
+
+This is a **point-in-time baseline snapshot** used to measure follow-up work.
+Prefer current validation and workflow docs for day-to-day guidance:
+
+- `docs/validation_scripts.md`
+- `docs/testing_overview.md`
+- `docs/CODE_QUALITY.md`
+
 ## Checks run
 
 - **flutter analyze**: run; no issues found.

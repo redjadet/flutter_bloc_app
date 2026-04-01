@@ -2,13 +2,19 @@
 
 Repository-level architecture and maintainability review.
 
+## Status
+
+This is a **point-in-time snapshot**. Prefer current repo scripts and “core”
+docs (onboarding, validation/testing, security, deployment, architecture) for
+today’s instructions, and use this document for historical context.
+
 ---
 
 ## Summary
 
 | Area | Status | Notes |
 | ------ | ------ | ------ |
-| Overall architecture | ✅ Strong | Clean `Domain -> Data -> Presentation` structure is consistently applied across most features |
+| Overall architecture | ✅ Strong | Clean `Presentation -> Domain <- Data` structure is consistently applied across most features |
 | BLoC access discipline | ✅ Strong | No `context.read<T>()` or `BlocProvider.of<T>()` found in `lib/` or `test/` |
 | Domain purity | ✅ Strong | No Flutter imports found under `lib/features/*/domain/` |
 | DI and bootstrap | ✅ Strong | Bootstrap, DI registration, and app-scope wiring are explicit and testable |

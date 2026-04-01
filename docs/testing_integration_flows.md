@@ -71,6 +71,15 @@ Use these flows as templates when adding new feature flows.
 
    - Or run a single flow’s test file (for example `integration_test/todo_list_flow_test.dart`) as described in `docs/testing_overview.md`.
 
+## Policy constraints (don’t skip)
+
+- New integration scenarios should map to a named journey in
+  [`docs/engineering/integration_journey_map.md`](engineering/integration_journey_map.md).
+- New flows should declare an intended tier (`smoke`, `standard`, `exhaustive`).
+  See [`docs/engineering/integration_test_policy.md`](engineering/integration_test_policy.md).
+- Runner behavior, tiers, and artifacts are defined in
+  [`docs/engineering/integration_runner_contract.md`](engineering/integration_runner_contract.md).
+
 ## Runtime and CI notes
 
 - Integration tests should remain short and focused; prefer multiple small flows over one very long scenario.

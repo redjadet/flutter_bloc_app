@@ -8,7 +8,7 @@ architecture boundaries, tests, and documentation aligned with behavior.
 1. Run the right validation scope for your change.
 2. Add or extend tests when behavior changes.
 3. Update the owning docs when setup, workflow, or feature behavior changes.
-4. Keep changes inside the established `Domain -> Data -> Presentation`
+4. Keep changes inside the established `Presentation -> Domain <- Data`
    structure.
 
 ## Validation commands

@@ -5,6 +5,8 @@ repo shape, and shipping changes safely. It is intentionally onboarding-focused.
 Deeper architecture, testing, deployment, and feature detail live in the
 linked source-of-truth documents.
 
+For the complete docs index, see `docs/README.md`.
+
 ## Quickstart (first 30 minutes)
 
 ### Toolchain
@@ -53,7 +55,7 @@ dart run build_runner build --delete-conflicting-outputs
 
 ## 1. Mental model
 
-- The repo is organized around `Domain -> Data -> Presentation`.
+- The repo follows `Presentation -> Domain <- Data` (Clean Architecture).
 - Features live under `lib/features/<feature>/`.
 - App-wide composition lives in `lib/app/`, `lib/core/`, and `lib/shared/`.
 - `flutter_bloc` drives state transitions.

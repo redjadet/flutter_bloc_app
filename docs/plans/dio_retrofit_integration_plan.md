@@ -11,6 +11,10 @@
 | Phase 3.2: GraphQL | Done | `CountriesGraphqlApi` Retrofit interface, `CountriesGraphqlRepository` uses it + NetworkGuard; operation-specific methods preserved |
 | Phase 3.3: Hugging Face | Remaining | Optional; keep as-is per plan recommendation |
 
+This is a **working plan / design note**. Prefer implemented code + the core
+docs (`docs/tech_stack.md`, `docs/architecture_details.md`,
+`docs/reliability_error_handling_performance.md`) for current behavior.
+
 ---
 
 ## Objective

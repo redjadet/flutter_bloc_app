@@ -23,7 +23,7 @@ A new or materially changed feature should usually include:
 | Step | What to do |
 | --- | --- |
 | Reuse first | Check `lib/shared/`, `lib/core/`, and adjacent features before adding new abstractions. |
-| Keep boundaries clean | Stay within `Domain -> Data -> Presentation`. |
+| Keep boundaries clean | Stay within `Presentation -> Domain <- Data`. |
 | Register dependencies | Use the feature-specific `register_*_services.dart` files or `injector_registrations.dart`. |
 | Wire routes intentionally | Add route constants first, then update the route group that owns the flow. |
 | Update generated code | Run `build_runner` when touching Freezed, JSON, Retrofit, or related annotations. |

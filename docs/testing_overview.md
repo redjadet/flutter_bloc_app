@@ -4,12 +4,23 @@ This document describes the repo's testing layers, validation commands, and the
 current integration suite layout. It complements the shell validators described
 in [Validation Scripts](validation_scripts.md).
 
+For the complete docs index, see `docs/README.md`.
+
 ## Source of truth
 
 - Coverage report: [`coverage/coverage_summary.md`](../coverage/coverage_summary.md)
 - Integration flow structure: [Integration Flow Guide](testing_integration_flows.md)
 - Validation scripts: [Validation Scripts](validation_scripts.md)
 - CI workflow: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
+
+## Integration docs (policy and contracts)
+
+If you are adding or changing integration coverage, these documents define the
+expected structure and “ownership” contract:
+
+- [Integration test policy](engineering/integration_test_policy.md)
+- [Integration journey map](engineering/integration_journey_map.md)
+- [Integration runner contract](engineering/integration_runner_contract.md)
 
 ## Quality gates
 

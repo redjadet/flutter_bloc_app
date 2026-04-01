@@ -226,14 +226,15 @@ Testers receive an email with a link. On iOS they may need to **trust the develo
 
 ---
 
-## Flutter project specifics
+## Flutter project notes (what’s specific to this repo)
+
+This doc stays focused on **Firebase App Distribution**. Shared build concepts
+(entry points, entitlements, and release preparation) are centralized in
+[Deployment](deployment.md).
 
 | Item | Notes |
 | ------ | ------ |
-| **Entry points** | Use `-t lib/main_dev.dart`, `lib/main_staging.dart`, or `lib/main_prod.dart` to match the environment ([deployment](deployment.md)). |
-| **Release preparation** | Run `dart run tool/prepare_release.dart` before packaging if your workflow scrubs secrets ([deployment](deployment.md)). |
-| **iOS entitlements** | Before Ad Hoc or App Store build, run `./tool/ios_entitlements.sh distribution`. Use `development` for local runs with a personal Apple ID. See [deployment](deployment.md#ios-entitlements-development-vs-distribution). |
-| **Firebase config** | `google-services.json` (Android) and `GoogleService-Info.plist` (iOS) are already configured via [firebase.json](../firebase.json). No extra step for App Distribution. |
+| **Firebase config** | `google-services.json` (Android) and `GoogleService-Info.plist` (iOS) are gitignored and generated via `flutterfire configure`. See [Firebase setup](firebase_setup.md). |
 | **Build output paths** | Android: `build/app/outputs/flutter-apk/app-release.apk` or `build/app/outputs/bundle/release/app-release.aab`. iOS: use the path printed by `flutter build ipa` or your Xcode export. |
 
 ---
@@ -394,8 +395,8 @@ Then run `flutter build apk --release` again. If the plugin’s `AndroidManifest
 
 ## Related documentation
 
-- [Deployment](deployment.md) – App Store, TestFlight, Google Play, Fastlane iOS lanes (Ad Hoc, TestFlight, App Store).
-- [Security and secrets](security_and_secrets.md) – Handling secrets when building.
+- [Deployment](deployment.md) – Canonical build/entitlements notes and repo-first release commands.
+- [Security and secrets](security_and_secrets.md) – How secrets are injected for builds (and what not to commit).
 - [Firebase (WalletConnect Auth)](walletconnect_auth_status.md) – Firebase setup for this project.
 - [Firebase App Distribution – Android CLI](https://firebase.google.com/docs/app-distribution/android/distribute-cli)
 - [Firebase App Distribution – iOS CLI](https://firebase.google.com/docs/app-distribution/ios/distribute-cli)

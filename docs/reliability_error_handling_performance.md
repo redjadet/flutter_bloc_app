@@ -1,14 +1,27 @@
 # Reliability, Error Handling, and Performance (High-Volume / Enterprise)
 
-This document summarizes how the project handles reliability, error handling, and performance for high-volume, enterprise, and high-traffic mobile usage. Details live in the linked docs and code; this file is an index and short overview.
+This document summarizes how the project handles reliability, error handling,
+and performance for high-volume, enterprise, and high-traffic mobile usage.
+Details live in the linked docs and code; this file is an index and short
+overview.
 
 ---
 
-## High-level: A Flutter app built for high-volume usage
+## How to use this document
 
-**Describe a Flutter app you’ve maintained that handled high-volume usage.**
+- **Use this as an index**: it points to the canonical implementation files and
+  the deeper docs per topic.
+- **Prefer repo scripts for validation**: this document describes the intended
+  patterns; `./bin/checklist` and the validator scripts enforce them.
+- **When adding new cross-cutting behavior**, update the owning utility doc
+  (typically `docs/SHARED_UTILITIES.md`) and add/extend a validator or
+  regression test when the pattern is important enough to enforce.
 
-This codebase is a Flutter app (Clean Architecture, BLoC/Cubit) designed and maintained for **high-volume, enterprise, and high-traffic** scenarios. At a high level:
+## High-level overview
+
+This codebase is a Flutter app (Clean Architecture, BLoC/Cubit) designed and
+maintained for **high-volume, enterprise, and high-traffic** scenarios. At a
+high level:
 
 - **Reliability:** All network calls go through a resilient HTTP client with automatic retries, token refresh, and explicit timeouts. Non-HTTP work uses a shared retry policy with backoff and cancellation so cubits don’t leak. Optional circuit breaker and request-id/in-flight guards prevent duplicate or stale results under rapid navigation or refresh. Subscriptions and stream listeners are lifecycle-bound so they are cancelled on dispose.
 - **Error handling:** User-facing errors are localized and surfaced through a central mapper and handler. Cubit async errors use a shared handler with an `isAlive` guard so callbacks never run after close. Structured error codes support analytics and optional crash reporting without PII.
