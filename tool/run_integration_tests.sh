@@ -189,6 +189,77 @@ log() {
   printf '[%s] %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*" >&2
 }
 
+validate_integration_target_path() {
+  local candidate="$1"
+
+  case "$candidate" in
+    *..*) return 1 ;;
+  esac
+  if [[ ! "$candidate" =~ ^integration_test/[a-zA-Z0-9_./-]+\.dart$ ]]; then
+    return 1
+  fi
+  [ -f "$PROJECT_ROOT/$candidate" ]
+}
+
+validate_integration_runner_configuration() {
+  local full_target="$1"
+  local smoke_target="$2"
+  local standard_target="$3"
+  local failed=0
+  local target
+
+  for target in "$full_target" "$smoke_target" "$standard_target"; do
+    if ! validate_integration_target_path "$target"; then
+      log "❌ Missing or invalid integration target: $target"
+      failed=1
+    fi
+  done
+
+  if ! /usr/bin/python3 - "$PROJECT_ROOT/tool/integration_selective_map.json" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+map_path = Path(sys.argv[1])
+repo_root = map_path.parent.parent
+raw = json.loads(map_path.read_text(encoding="utf-8"))
+rules = raw.get("rules", [])
+if not isinstance(rules, list):
+    raise SystemExit("rules must be a list")
+
+seen_ids = set()
+seen_targets = set()
+for index, rule in enumerate(rules):
+    if not isinstance(rule, dict):
+        raise SystemExit(f"rules[{index}] must be an object")
+    rule_id = rule.get("id")
+    target = rule.get("target")
+    prefixes = rule.get("path_prefixes")
+    if not isinstance(rule_id, str) or not rule_id:
+        raise SystemExit(f"rules[{index}].id must be a non-empty string")
+    if rule_id in seen_ids:
+        raise SystemExit(f"duplicate rule id: {rule_id}")
+    seen_ids.add(rule_id)
+    if not isinstance(target, str) or not target.startswith("integration_test/"):
+        raise SystemExit(f"rules[{index}].target must be an integration_test/*.dart path")
+    if not (repo_root / target).is_file():
+        raise SystemExit(f"missing target file for rule {rule_id}: {target}")
+    seen_targets.add(target)
+    if not isinstance(prefixes, list) or not prefixes or not all(isinstance(p, str) and p for p in prefixes):
+        raise SystemExit(f"rules[{index}].path_prefixes must be a non-empty list of strings")
+
+force_prefixes = raw.get("force_full_suite_prefixes", [])
+if not isinstance(force_prefixes, list) or not all(isinstance(p, str) and p for p in force_prefixes):
+    raise SystemExit("force_full_suite_prefixes must be a list of non-empty strings")
+PY
+  then
+    log "❌ integration_selective_map.json validation failed"
+    failed=1
+  fi
+
+  return "$failed"
+}
+
 # When running in GitHub Actions, we only want integration tests to execute on
 # manual runs (`workflow_dispatch`). For push/pull_request we exit successfully
 # so the workflow job doesn't fail and doesn't waste time.
@@ -545,6 +616,10 @@ run_integration_command() {
 }
 
 cleanup_project_xcodebuilds() {
+  if [ -z "${DEVICE_ID:-}" ] || ! is_ios_simulator_device "$DEVICE_ID"; then
+    return 0
+  fi
+
   local pattern
   local patterns=(
     "$PROJECT_ROOT/build/ios"
@@ -911,14 +986,28 @@ if ! [[ "$INTEGRATION_TESTS_ENABLE_SELECTIVE" =~ ^(0|1)$ ]]; then
   INTEGRATION_TESTS_ENABLE_SELECTIVE=0
 fi
 
-DEVICE_ID="$(select_device_id)"
-DART_BIN="$(resolve_flutter_dart)"
 BASE_COVERAGE_PATH="coverage/lcov.base.info"
 FINAL_COVERAGE_PATH="coverage/lcov.info"
 FULL_SUITE_TARGET="integration_test/all_flows_test.dart"
 SMOKE_SUITE_TARGET="integration_test/smoke_flows_test.dart"
 STANDARD_SUITE_TARGET="integration_test/standard_flows_test.dart"
 HAS_LCOV=0
+
+if ! validate_integration_runner_configuration "$FULL_SUITE_TARGET" "$SMOKE_SUITE_TARGET" "$STANDARD_SUITE_TARGET"; then
+  exit 1
+fi
+
+if [ "$#" -gt 0 ]; then
+  for explicit_target in "$@"; do
+    if ! validate_integration_target_path "$explicit_target"; then
+      log "❌ Invalid explicit integration target: $explicit_target"
+      exit 1
+    fi
+  done
+fi
+
+DEVICE_ID="$(select_device_id)"
+DART_BIN="$(resolve_flutter_dart)"
 
 if command -v lcov >/dev/null 2>&1; then
   HAS_LCOV=1
