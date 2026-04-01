@@ -18,6 +18,8 @@ managed_cursor_files=(
   "cursor/skills/agents-meta-behavior/SKILL.md|$HOME/.cursor/skills/agents-meta-behavior/SKILL.md"
   "cursor/skills/agents-workflow-commands/SKILL.md|$HOME/.cursor/skills/agents-workflow-commands/SKILL.md"
   "cursor/skills/agents-cursor-integration/SKILL.md|$HOME/.cursor/skills/agents-cursor-integration/SKILL.md"
+  "cursor/commands/commit-push-pr.md|$HOME/.cursor/commands/commit-push-pr.md"
+  "cursor/commands/upgrade-validate-all.md|$HOME/.cursor/commands/upgrade-validate-all.md"
   "cursor/commands/codex-feedback.md|$HOME/.cursor/commands/codex-feedback.md"
   "cursor/rules/agents-global.mdc|$HOME/.cursor/rules/agents-global.mdc"
 )
@@ -36,12 +38,15 @@ managed_codex_rules_target="$HOME/.codex/rules/default.rules"
 
 required_toolchain_targets=(
   "README.md"
+  "docs/new_developer_guide.md"
   "docs/ai_code_review_protocol.md"
 )
 
 optional_local_policy_targets=(
   "AGENTS.md"
   "docs/agents_quick_reference.md"
+  "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md"
+  "tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md"
 )
 
 list_optional_codex_worktree_agent_targets() {

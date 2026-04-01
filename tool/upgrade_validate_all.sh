@@ -3,7 +3,7 @@
 # - Updates Flutter SDK
 # - Upgrades package graph
 # - Runs checklist + integration tests
-# - Refreshes and verifies documentation artifacts
+# - Refreshes and verifies documentation + AI agent toolchain artifacts
 
 set -euo pipefail
 
@@ -24,9 +24,14 @@ echo "==> Step 3/5: Run delivery checklist"
 echo "==> Step 4/5: Run integration tests"
 "$PROJECT_ROOT/bin/integration_tests"
 
-echo "==> Step 5/5: Refresh and auto-fix documentation artifacts"
+echo "==> Step 5/6: Refresh documentation and AI agent toolchain artifacts"
+python3 "$PROJECT_ROOT/tool/update_agent_toolchain_versions.py"
 dart run tool/update_coverage_summary.dart
 bash "$PROJECT_ROOT/tool/fix_validation_docs.sh"
 bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"
+
+echo "==> Step 6/6: Sync and verify managed AI agent assets"
+bash "$PROJECT_ROOT/tool/sync_agent_assets.sh" --apply
+bash "$PROJECT_ROOT/tool/check_agent_asset_drift.sh"
 
 echo "✅ upgrade_validate_all completed successfully."
