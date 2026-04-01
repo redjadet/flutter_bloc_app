@@ -55,6 +55,16 @@ def _normalize_token(token: str, file_path: Path) -> str:
     return token
 
 
+def _is_placeholder_token(token: str) -> bool:
+    """
+    Heuristic: skip template placeholders like `docs/offline_first/<feature>.md`.
+
+    We treat angle-bracket and brace placeholders as non-files, even if they end
+    with ".md", because they can’t resolve to a concrete path.
+    """
+    return any(ch in token for ch in ("<", ">", "{", "}", "$"))
+
+
 def _is_under_repo_docs(file_path: Path, repo_root: Path) -> bool:
     try:
         rel = file_path.relative_to(repo_root)
@@ -68,6 +78,9 @@ def _resolve_token_to_existing_path(token: str, *, file_path: Path, repo_root: P
     Resolve a markdown token to a real file on disk, so we can compute a correct
     relative link target from the current file’s directory.
     """
+    if _is_placeholder_token(token):
+        return None
+
     if token.startswith("docs/"):
         candidate = repo_root / token
         return candidate if candidate.is_file() else None
@@ -85,6 +98,8 @@ def _resolve_token_to_existing_path(token: str, *, file_path: Path, repo_root: P
 
 
 def _link_target_for_token(token: str, *, file_path: Path, repo_root: Path) -> str | None:
+    if _is_placeholder_token(token):
+        return None
     resolved = _resolve_token_to_existing_path(token, file_path=file_path, repo_root=repo_root)
     if resolved is None:
         return None
@@ -113,6 +128,10 @@ def normalize_file(path: Path, repo_root: Path) -> Change | None:
             out_parts.append(m.group(0))
             continue
 
+        if _is_placeholder_token(token):
+            out_parts.append(m.group(0))
+            continue
+
         target = _link_target_for_token(token, file_path=path, repo_root=repo_root)
         if target is None:
             out_parts.append(m.group(0))
@@ -130,6 +149,11 @@ def normalize_file(path: Path, repo_root: Path) -> Change | None:
 
         label = m.group("label").strip()
         target = m.group("target").strip()
+
+        # Template placeholders (e.g. `<feature>`) should not be clickable links.
+        if _is_placeholder_token(label):
+            replacements += 1
+            return f"`{label}`"
 
         # Skip external links and anchors.
         if "://" in target or target.startswith("#"):
