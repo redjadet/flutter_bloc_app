@@ -348,7 +348,10 @@ normalize_doc_links() {
 
   echo "🔗 Normalizing documentation links..."
   if [ "${#doc_files[@]}" -gt 0 ]; then
-    python3 "$script" "${doc_files[@]}"
+    if ! python3 "$script" "${doc_files[@]}"; then
+      echo "❌ Documentation link normalization failed"
+      return 1
+    fi
   else
     echo "normalize_doc_links: no matching files"
   fi
