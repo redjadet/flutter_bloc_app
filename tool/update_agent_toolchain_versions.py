@@ -12,13 +12,48 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 README_PATH = PROJECT_ROOT / "README.md"
 
 
+def _find_toolchain_section(text: str) -> str:
+    section_match = re.search(
+        r"^### (?:Prerequisites|Toolchain)\s*$\n(?P<body>.*?)(?:^\s*###\s|^\s*##\s|\Z)",
+        text,
+        flags=re.MULTILINE | re.DOTALL,
+    )
+    if section_match is not None:
+        return section_match.group("body")
+    return text
+
+
+def _extract_version(text: str, label: str) -> str | None:
+    patterns = (
+        rf"^- {label} `([^`]+)`$",
+        rf"{label}\s+`([^`]+)`",
+        rf"{label}\s+([0-9]+\.[0-9]+\.[0-9]+)",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, text, flags=re.MULTILINE)
+        if match is not None:
+            return match.group(1)
+    return None
+
+
 def extract_versions() -> tuple[str, str]:
     text = README_PATH.read_text(encoding="utf-8")
-    flutter_match = re.search(r"Flutter `([^`]+)`", text)
-    dart_match = re.search(r"Dart `([^`]+)`", text)
-    if flutter_match is None or dart_match is None:
-        raise SystemExit("Could not extract Flutter/Dart versions from README.md")
-    return flutter_match.group(1), dart_match.group(1)
+    toolchain_text = _find_toolchain_section(text)
+    flutter_version = _extract_version(toolchain_text, "Flutter") or _extract_version(
+        text,
+        "Flutter",
+    )
+    dart_version = _extract_version(toolchain_text, "Dart") or _extract_version(
+        text,
+        "Dart",
+    )
+    if flutter_version is None or dart_version is None:
+        raise SystemExit(
+            "Could not extract Flutter/Dart versions from README.md. "
+            "The toolchain marker format likely changed; update "
+            "tool/update_agent_toolchain_versions.py extraction rules."
+        )
+    return flutter_version, dart_version
 
 
 def replace_required(
@@ -29,9 +64,19 @@ def replace_required(
     count: int = 1,
 ) -> bool:
     text = path.read_text(encoding="utf-8")
-    updated, replacements = re.subn(pattern, replacement, text, count=count, flags=re.MULTILINE)
+    updated, replacements = re.subn(
+        pattern,
+        replacement,
+        text,
+        count=count,
+        flags=re.MULTILINE,
+    )
     if replacements == 0:
-        raise SystemExit(f"Expected pattern not found in {path}")
+        raise SystemExit(
+            f"Expected toolchain marker pattern not found in {path}: {pattern}\n"
+            "Hint: the toolchain marker format likely changed; update "
+            "tool/update_agent_toolchain_versions.py replacement patterns."
+        )
     if updated == text:
         return False
     path.write_text(updated, encoding="utf-8")
