@@ -10,7 +10,7 @@ quality in this repository.
 - Archived events: `analysis/agent_scorecard/archive/scorecard-events-YYYY-MM-DD.jsonl.gz`
 - Derived summaries:
   - `analysis/agent_scorecard/summaries/scorecard-summary.json`
-  - [`analysis/agent_scorecard/summaries/scorecard-summary.md`](analysis/agent_scorecard/summaries/scorecard-summary.md)
+  - [`analysis/agent_scorecard/summaries/scorecard-summary.md`](../../analysis/agent_scorecard/summaries/scorecard-summary.md)
 
 ## Writer/Rotation Contract
 

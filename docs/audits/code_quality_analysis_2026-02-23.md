@@ -8,9 +8,9 @@ This is a **historical snapshot** of quality findings at the time of the audit.
 Prefer current repo validation scripts and the consolidated quality doc for
 today’s guidance:
 
-- [`validation_scripts.md`](validation_scripts.md)
-- [`testing_overview.md`](testing_overview.md)
-- [`CODE_QUALITY.md`](CODE_QUALITY.md)
+- [`validation_scripts.md`](../validation_scripts.md)
+- [`testing_overview.md`](../testing_overview.md)
+- [`CODE_QUALITY.md`](../CODE_QUALITY.md)
 
 ---
 
@@ -37,7 +37,7 @@ today’s guidance:
 
 ## 2. ShrinkWrap (remaining)
 
-Per [`audits/shrinkwrap_slivers_audit.md`](audits/shrinkwrap_slivers_audit.md):
+Per [`audits/shrinkwrap_slivers_audit.md`](shrinkwrap_slivers_audit.md):
 
 - **Calculator keypad:** Low priority; optional CustomScrollView + SliverGrid for scrollable branch.
 - **Register country picker, counter sync queue inspector, platform_adaptive_sheets:** Optional CustomScrollView + SliverList in sheets.

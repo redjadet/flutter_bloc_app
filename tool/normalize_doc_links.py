@@ -28,6 +28,26 @@ from pathlib import Path
 
 MD_TOKEN_RE = re.compile(r"`(?P<token>[^`\n]+?\.md)`")
 MD_LINK_RE = re.compile(r"\[`(?P<label>[^`\n]+?\.md)`]\((?P<target>[^)\n]+)\)")
+REPO_ROOT_PREFERRED_PREFIXES = (
+    ".github/",
+    ".cursor/",
+    ".agents/",
+    "analysis/",
+    "assets/",
+    "coverage/",
+    "fastlane/",
+    "integration_test/",
+    "lib/",
+    "tasks/",
+    "test/",
+    "tool/",
+)
+REPO_ROOT_PREFERRED_FILENAMES = {
+    "AGENTS.md",
+    "CHANGELOG.md",
+    "README.md",
+    "SECURITY.md",
+}
 
 
 @dataclass(frozen=True)
@@ -85,16 +105,37 @@ def _resolve_token_to_existing_path(token: str, *, file_path: Path, repo_root: P
         candidate = repo_root / token
         return candidate if candidate.is_file() else None
 
-    # If we are in docs/** and token looks like a path (contains /), it’s usually
-    # intended to be relative to docs/ (e.g. `offline_first/chat.md`).
-    if _is_under_repo_docs(file_path, repo_root) and "/" in token and not token.startswith(("./", "../")):
-        candidate = repo_root / "docs" / token
+    if token.startswith(("./", "../")):
+        candidate = (file_path.parent / token).resolve()
+        return candidate if candidate.is_file() else None
+
+    def add_candidate(items: list[Path], seen: set[Path], candidate: Path) -> None:
+        candidate = candidate.resolve()
+        if candidate not in seen:
+            seen.add(candidate)
+            items.append(candidate)
+
+    candidates: list[Path] = []
+    seen: set[Path] = set()
+    add_candidate(candidates, seen, file_path.parent / token)
+
+    if _is_under_repo_docs(file_path, repo_root):
+        prefers_repo_root = token.startswith(REPO_ROOT_PREFERRED_PREFIXES) or token in REPO_ROOT_PREFERRED_FILENAMES
+        docs_candidate = repo_root / "docs" / token
+        repo_candidate = repo_root / token
+
+        if prefers_repo_root:
+            add_candidate(candidates, seen, repo_candidate)
+            add_candidate(candidates, seen, docs_candidate)
+        else:
+            add_candidate(candidates, seen, docs_candidate)
+            add_candidate(candidates, seen, repo_candidate)
+
+    for candidate in candidates:
         if candidate.is_file():
             return candidate
 
-    # Otherwise treat as path relative to the current document.
-    candidate = file_path.parent / token
-    return candidate if candidate.is_file() else None
+    return None
 
 
 def _link_target_for_token(token: str, *, file_path: Path, repo_root: Path) -> str | None:
@@ -103,7 +144,7 @@ def _link_target_for_token(token: str, *, file_path: Path, repo_root: Path) -> s
     resolved = _resolve_token_to_existing_path(token, file_path=file_path, repo_root=repo_root)
     if resolved is None:
         return None
-    return os.path.relpath(resolved, start=file_path.parent)
+    return os.path.relpath(resolved, start=file_path.parent.resolve())
 
 
 def normalize_file(path: Path, repo_root: Path) -> Change | None:
@@ -159,12 +200,18 @@ def normalize_file(path: Path, repo_root: Path) -> Change | None:
         if "://" in target or target.startswith("#"):
             return m.group(0)
 
-        desired = _link_target_for_token(label, file_path=path, repo_root=repo_root)
-        if desired is None or desired == target:
+        resolved_target = (path.parent / target).resolve()
+        if resolved_target.is_file():
             return m.group(0)
 
+        desired = _link_target_for_token(label, file_path=path, repo_root=repo_root)
+        if desired is None:
+            replacements += 1
+            return f"`{label}`"
+
         replacements += 1
-        return f"[`{label}`]({desired})"
+        normalized_label = _normalize_token(label, path)
+        return f"[`{normalized_label}`]({desired})"
 
     updated = MD_LINK_RE.sub(_fix_existing_md_link, updated)
 
@@ -268,4 +315,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -13,7 +13,7 @@
 - [x] **App wiring** — `lib/app/router/routes_core.dart` composes `SettingsPage.buildQaExtras` with `getIt` ports + shared cache widgets + `RemoteConfigDiagnosticsSection`.
 - [x] **Settings barrel** — Removed cache section exports from `lib/features/settings/settings.dart`.
 - [x] **Validation** — `tool/check_feature_modularity_leaks.sh`; tests (cache widgets, remote config diagnostics, mapper, DI ports); `./bin/router_feature_validate`.
-- [x] **Docs** — [`modularity.md`](modularity.md) (detailed contracts); [`offline_first/offline_first_plan.md`](offline_first/offline_first_plan.md) (profile cache controls path).
+- [x] **Docs** — [`modularity.md`](../modularity.md) (detailed contracts); [`offline_first/offline_first_plan.md`](../offline_first/offline_first_plan.md) (profile cache controls path).
 
 ## Verification
 

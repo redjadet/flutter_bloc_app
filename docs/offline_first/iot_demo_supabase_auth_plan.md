@@ -213,5 +213,5 @@ Why Option B fits this repo better:
 
 ## 9. Documentation Updates
 
-- Update [`offline_first/iot_demo.md`](offline_first/iot_demo.md): document auth requirement, per-user storage (box name pattern), and per-user RLS. Update “Implementation Status” when done.
+- Update [`offline_first/iot_demo.md`](iot_demo.md): document auth requirement, per-user storage (box name pattern), and per-user RLS. Update “Implementation Status” when done.
 - Optionally add a short “Supabase auth and IoT demo” section to the main offline-first or architecture docs.
