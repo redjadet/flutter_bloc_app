@@ -18,7 +18,7 @@ Source of truth for gates and guardrails:
 - Static review of `lib/` and supporting tooling.
 - Architecture guidelines in [`clean_architecture.md`](clean_architecture.md), [`solid_principles.md`](solid_principles.md), [`dry_principles.md`](dry_principles.md), and [`separation_of_concerns.md`](separation_of_concerns.md).
 - Quality gates via `./bin/checklist` (format, analyze, coverage).
-- Coverage source: [`coverage/coverage_summary.md`](coverage/coverage_summary.md).
+- Coverage source: [`coverage/coverage_summary.md`](../coverage/coverage_summary.md).
 
 ## Architecture Alignment
 
@@ -52,7 +52,7 @@ Source of truth for gates and guardrails:
 ## Quality Metrics and Gates
 
 - File size policy: keep files under 250 LOC; extract widgets/helpers as needed.
-- Coverage target: 85% (team standard). Current value: see [`coverage/coverage_summary.md`](coverage/coverage_summary.md).
+- Coverage target: 85% (team standard). Current value: see [`coverage/coverage_summary.md`](../coverage/coverage_summary.md).
 - Static analysis and formatting: run `./bin/checklist`.
 - Guardrails: see [`validation_scripts.md`](validation_scripts.md) for the full automated checks list.
 

@@ -12,9 +12,9 @@ signals that keep the codebase from reading as uniformly senior.
 This document is a **historical plan**. Prefer the current “core” docs and repo
 scripts as the source of truth:
 
-- [`CODE_QUALITY.md`](CODE_QUALITY.md)
-- [`validation_scripts.md`](validation_scripts.md)
-- [`testing_overview.md`](testing_overview.md)
+- [`CODE_QUALITY.md`](../CODE_QUALITY.md)
+- [`validation_scripts.md`](../validation_scripts.md)
+- [`testing_overview.md`](../testing_overview.md)
 
 Current baseline:
 
@@ -101,7 +101,7 @@ For high-leverage quality work:
 1. Run targeted unit/repository tests for each touched contract.
 2. Run focused analyzer scope for touched files.
 3. Run relevant validation scripts or regression guards.
-4. Refresh [`coverage/coverage_summary.md`](coverage/coverage_summary.md) when tests land.
+4. Refresh [`coverage/coverage_summary.md`](../../coverage/coverage_summary.md) when tests land.
 5. Update documentation in the same change if the repo story changed.
 
 ## Track: Settings / diagnostics modularity — **complete**
