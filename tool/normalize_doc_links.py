@@ -27,6 +27,7 @@ from pathlib import Path
 
 
 MD_TOKEN_RE = re.compile(r"`(?P<token>[^`\n]+?\.md)`")
+MD_LINK_RE = re.compile(r"\[`(?P<label>[^`\n]+?\.md)`]\((?P<target>[^)\n]+)\)")
 
 
 @dataclass(frozen=True)
@@ -45,14 +46,52 @@ def _looks_like_link_context(text: str, start_idx: int, end_idx: int) -> bool:
 
 
 def _normalize_token(token: str, file_path: Path) -> str:
-    # If we are already under docs/, "docs/..." references should become relative.
-    parts = file_path.parts
-    if "docs" in parts and token.startswith("docs/"):
+    # Display label normalization only (not link target computation).
+    #
+    # If we are already under docs/, we prefer showing "docs/..." links without the
+    # "docs/" prefix, since they’re already within that folder.
+    if "docs" in file_path.parts and token.startswith("docs/"):
         return token[len("docs/") :]
     return token
 
 
-def normalize_file(path: Path) -> Change | None:
+def _is_under_repo_docs(file_path: Path, repo_root: Path) -> bool:
+    try:
+        rel = file_path.relative_to(repo_root)
+    except ValueError:
+        return False
+    return len(rel.parts) > 0 and rel.parts[0] == "docs"
+
+
+def _resolve_token_to_existing_path(token: str, *, file_path: Path, repo_root: Path) -> Path | None:
+    """
+    Resolve a markdown token to a real file on disk, so we can compute a correct
+    relative link target from the current file’s directory.
+    """
+    if token.startswith("docs/"):
+        candidate = repo_root / token
+        return candidate if candidate.is_file() else None
+
+    # If we are in docs/** and token looks like a path (contains /), it’s usually
+    # intended to be relative to docs/ (e.g. `offline_first/chat.md`).
+    if _is_under_repo_docs(file_path, repo_root) and "/" in token and not token.startswith(("./", "../")):
+        candidate = repo_root / "docs" / token
+        if candidate.is_file():
+            return candidate
+
+    # Otherwise treat as path relative to the current document.
+    candidate = file_path.parent / token
+    return candidate if candidate.is_file() else None
+
+
+def _link_target_for_token(token: str, *, file_path: Path, repo_root: Path) -> str | None:
+    resolved = _resolve_token_to_existing_path(token, file_path=file_path, repo_root=repo_root)
+    if resolved is None:
+        return None
+    return os.path.relpath(resolved, start=file_path.parent)
+
+
+def normalize_file(path: Path, repo_root: Path) -> Change | None:
     original = path.read_text(encoding="utf-8")
 
     replacements = 0
@@ -70,18 +109,40 @@ def normalize_file(path: Path) -> Change | None:
             out_parts.append(m.group(0))
             continue
 
-        normalized = _normalize_token(token, path)
-
-        # Don't create a self-evidently broken link.
-        if not normalized.endswith(".md"):
+        if not token.endswith(".md"):
             out_parts.append(m.group(0))
             continue
 
-        out_parts.append(f"[`{normalized}`]({normalized})")
+        target = _link_target_for_token(token, file_path=path, repo_root=repo_root)
+        if target is None:
+            out_parts.append(m.group(0))
+            continue
+
+        label = _normalize_token(token, path)
+        out_parts.append(f"[`{label}`]({target})")
         replacements += 1
 
     out_parts.append(original[last_idx:])
     updated = "".join(out_parts)
+
+    def _fix_existing_md_link(m: re.Match[str]) -> str:
+        nonlocal replacements
+
+        label = m.group("label").strip()
+        target = m.group("target").strip()
+
+        # Skip external links and anchors.
+        if "://" in target or target.startswith("#"):
+            return m.group(0)
+
+        desired = _link_target_for_token(label, file_path=path, repo_root=repo_root)
+        if desired is None or desired == target:
+            return m.group(0)
+
+        replacements += 1
+        return f"[`{label}`]({desired})"
+
+    updated = MD_LINK_RE.sub(_fix_existing_md_link, updated)
 
     if updated == original:
         return None
@@ -159,7 +220,7 @@ def main() -> int:
     changes: list[Change] = []
     for f in files:
         try:
-            change = normalize_file(f)
+            change = normalize_file(f, repo_root=repo_root)
         except UnicodeDecodeError:
             # Skip non-utf8 markdown files (unexpected).
             continue
