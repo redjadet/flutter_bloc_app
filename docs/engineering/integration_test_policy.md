@@ -16,7 +16,7 @@ integration regression scenario.
 ## Required quality bars
 
 - New integration scenarios must map to a named journey in
-  `docs/engineering/integration_journey_map.md`.
+  [`engineering/integration_journey_map.md`](integration_journey_map.md).
 - New flow should declare the intended tier (`smoke`, `standard`, `exhaustive`).
 - Keep assertions explicit; avoid tests that only verify “does not crash.”
 
@@ -40,7 +40,7 @@ Collect and review:
 Suggested baseline command:
 
 - `bash tool/build_integration_baseline.sh 14`
-- Track manual metrics in `docs/engineering/integration_metrics_baseline.md`.
+- Track manual metrics in [`engineering/integration_metrics_baseline.md`](integration_metrics_baseline.md).
 
 Escalate if flake rerun rate or uncategorized failures trend upward for two
 consecutive windows.

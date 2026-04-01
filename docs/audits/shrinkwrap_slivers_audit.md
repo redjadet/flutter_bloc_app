@@ -6,7 +6,7 @@
 ## Status
 
 This is a **historical snapshot**. The repo’s current enforcement is via the
-performance validation scripts (see `docs/validation_scripts.md`). Treat this
+performance validation scripts (see [`validation_scripts.md`](../validation_scripts.md)). Treat this
 document as context for why a change might be recommended, not a required
 workflow.
 

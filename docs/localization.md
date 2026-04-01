@@ -61,5 +61,5 @@ Localization strings are defined in `lib/l10n/app_*.arb` files:
 
 ## Related Documentation
 
-- UI/UX guidelines: `docs/ui_ux_responsive_review.md`
-- Validation scripts: `docs/validation_scripts.md` (includes hardcoded string checks)
+- UI/UX guidelines: [`ui_ux_responsive_review.md`](ui_ux_responsive_review.md)
+- Validation scripts: [`validation_scripts.md`](validation_scripts.md) (includes hardcoded string checks)

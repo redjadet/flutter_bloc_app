@@ -325,8 +325,48 @@ fi
 
 collect_changed_files
 
+normalize_doc_links() {
+  local script="$PROJECT_ROOT/tool/normalize_doc_links.py"
+  local -a doc_files=()
+  local file
+
+  if [ ! -f "$script" ]; then
+    return 0
+  fi
+
+  if [ "${#changed_files[@]}" -gt 0 ]; then
+    for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+      if [[ "$file" == "README.md" || "$file" == "SECURITY.md" || ( "$file" == docs/* && "$file" == *.md ) ]]; then
+        if [ -f "$file" ]; then
+          doc_files+=("$file")
+        fi
+      fi
+    done
+  fi
+
+  echo "🔗 Normalizing documentation links..."
+  if [ "${#doc_files[@]}" -gt 0 ]; then
+    if ! python3 "$script" "${doc_files[@]}"; then
+      echo "❌ Documentation link normalization failed"
+      return 1
+    fi
+  else
+    echo "normalize_doc_links: no matching files"
+  fi
+  echo "✅ Documentation links normalized"
+  echo ""
+}
+
 if is_docs_only_change_set; then
   echo "📝 Docs-only change set detected"
+  if ! normalize_doc_links; then
+    exit 1
+  fi
+  if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
+    echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
+    exit 1
+  fi
+
   echo "✅ Skipping dependency, analyze, validation, and coverage steps"
   echo ""
   echo "🎉 Delivery checklist complete! No code-relevant work detected."
@@ -476,6 +516,9 @@ echo "🔍 Step 3/5: Analyzing code with 'flutter analyze'"
 echo ""
 echo "🛡️  Step 4/5: Running best practices validation checks..."
 echo ""
+if ! normalize_doc_links; then
+  exit 1
+fi
 if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
   echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
   exit 1

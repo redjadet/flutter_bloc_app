@@ -7,9 +7,9 @@ that.
 
 ## Index
 
-- `2026-03-24_agent_output_optimization_purpose.md`: motivation/constraints for
+- [`2026-03-24_agent_output_optimization_purpose.md`](2026-03-24_agent_output_optimization_purpose.md): motivation/constraints for
   agent-output optimization work.
-- `2026-02-23_code_quality_plan.md`: historical plan document (superseded by
+- [`2026-02-23_code_quality_plan.md`](2026-02-23_code_quality_plan.md): historical plan document (superseded by
   current docs + implemented changes).
-- `2026-02-23_code_improvements.md`: summary of improvements landed in that
+- [`2026-02-23_code_improvements.md`](2026-02-23_code_improvements.md): summary of improvements landed in that
   timeframe.

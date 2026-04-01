@@ -8,9 +8,9 @@ This is a **historical snapshot** of quality findings at the time of the audit.
 Prefer current repo validation scripts and the consolidated quality doc for
 today’s guidance:
 
-- `docs/validation_scripts.md`
-- `docs/testing_overview.md`
-- `docs/CODE_QUALITY.md`
+- [`validation_scripts.md`](../validation_scripts.md)
+- [`testing_overview.md`](../testing_overview.md)
+- [`CODE_QUALITY.md`](../CODE_QUALITY.md)
 
 ---
 
@@ -21,7 +21,7 @@ today’s guidance:
 | Type-safe BLoC | ✅ | No `context.read`/`BlocProvider.of`; TypeSafe* used throughout |
 | Lifecycle (emit after async) | ✅ | Cubits guard with `isClosed` before `emit()` in async paths |
 | Hive / GetIt | ✅ | `Hive.openBox` only in `HiveService`; no direct GetIt in presentation |
-| ShrinkWrap | 📋 | See `shrinkwrap_slivers_audit.md` — library demo done; rest low/optional |
+| ShrinkWrap | 📋 | See [`shrinkwrap_slivers_audit.md`](shrinkwrap_slivers_audit.md) — library demo done; rest low/optional |
 | Example feature (whiteboard) | ✅ | Default pen color from theme; L10n for all whiteboard strings (en/de/es/fr/tr) |
 | Decorative colors | ✅ | `app_theme.dart` uses `Colors.*` only for `defaultConfettiParticleColors` (documented) |
 
@@ -37,7 +37,7 @@ today’s guidance:
 
 ## 2. ShrinkWrap (remaining)
 
-Per `docs/audits/shrinkwrap_slivers_audit.md`:
+Per [`audits/shrinkwrap_slivers_audit.md`](shrinkwrap_slivers_audit.md):
 
 - **Calculator keypad:** Low priority; optional CustomScrollView + SliverGrid for scrollable branch.
 - **Register country picker, counter sync queue inspector, platform_adaptive_sheets:** Optional CustomScrollView + SliverList in sheets.

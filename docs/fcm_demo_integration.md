@@ -15,7 +15,7 @@ Before considering the FCM demo integration complete, ensure:
 
 - [ ] **Analyze:** `flutter analyze` (or `./tool/analyze.sh`) passes with no issues.
 - [ ] **Checklist:** `./bin/checklist` passes (format, analyze, tests, and project guards).
-- [ ] **Coverage:** Run `dart run tool/update_coverage_summary.dart` and commit updated `coverage/coverage_summary.md` if coverage changed.
+- [ ] **Coverage:** Run `dart run tool/update_coverage_summary.dart` and commit updated [`coverage/coverage_summary.md`](../coverage/coverage_summary.md) if coverage changed.
 - [ ] **iOS (manual):** In Xcode, Runner target has **Push Notifications** and **Background Modes** (Background fetch, Remote notifications) enabled.
 - [ ] **Optional:** Add or run unit/cubit/widget tests for the FCM demo; add regression tests for lifecycle/stream guards if you changed subscription or dispose behavior.
 

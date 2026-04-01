@@ -4,49 +4,49 @@ This folder contains the source-of-truth documentation for the Flutter BLoC app.
 
 ## Start here
 
-- **Onboarding / first run**: `new_developer_guide.md`
-- **Validation + testing**: `validation_scripts.md`, `testing_overview.md`
-- **Architecture**: `feature_overview.md`, `clean_architecture.md`,
-  `architecture_details.md`
-- **Security**: `SECURITY.md`, `security_and_secrets.md`
-- **Deployment**: `deployment.md`
+- **Onboarding / first run**: [`new_developer_guide.md`](new_developer_guide.md)
+- **Validation + testing**: [`validation_scripts.md`](validation_scripts.md), [`testing_overview.md`](testing_overview.md)
+- **Architecture**: [`feature_overview.md`](feature_overview.md), [`clean_architecture.md`](clean_architecture.md),
+  [`architecture_details.md`](architecture_details.md)
+- **Security**: [`SECURITY.md`](SECURITY.md), [`security_and_secrets.md`](security_and_secrets.md)
+- **Deployment**: [`deployment.md`](deployment.md)
 
 ## Core docs (by concern)
 
 ### Architecture and design
 
-- `clean_architecture.md`
-- `architecture_details.md`
-- `feature_overview.md`
-- `modularity.md`
-- `design_system.md`
+- [`clean_architecture.md`](clean_architecture.md)
+- [`architecture_details.md`](architecture_details.md)
+- [`feature_overview.md`](feature_overview.md)
+- [`modularity.md`](modularity.md)
+- [`design_system.md`](design_system.md)
 - `adr/` (architecture decision records)
 
 ### Workflow and quality
 
-- `new_developer_guide.md`
-- `validation_scripts.md`
-- `testing_overview.md`
-- `CODE_QUALITY.md`
-- `feature_implementation_guide.md`
-- `reliability_error_handling_performance.md`
+- [`new_developer_guide.md`](new_developer_guide.md)
+- [`validation_scripts.md`](validation_scripts.md)
+- [`testing_overview.md`](testing_overview.md)
+- [`CODE_QUALITY.md`](CODE_QUALITY.md)
+- [`feature_implementation_guide.md`](feature_implementation_guide.md)
+- [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
 
 ### Setup, secrets, and integrations
 
-- `firebase_setup.md`
-- `authentication.md`
-- `SECURITY.md`
-- `security_and_secrets.md`
-- `localization.md`
+- [`firebase_setup.md`](firebase_setup.md)
+- [`authentication.md`](authentication.md)
+- [`SECURITY.md`](SECURITY.md)
+- [`security_and_secrets.md`](security_and_secrets.md)
+- [`localization.md`](localization.md)
 
 ### Release and distribution
 
-- `deployment.md`
-- `firebase_app_distribution.md`
-- `android_play_store_release_sop.md`
+- [`deployment.md`](deployment.md)
+- [`firebase_app_distribution.md`](firebase_app_distribution.md)
+- [`android_play_store_release_sop.md`](android_play_store_release_sop.md)
 
 ## Historical context (not source of truth)
 
-- `plans/README.md`
-- `audits/README.md`
-- `changes/README.md`
+- [`plans/README.md`](plans/README.md)
+- [`audits/README.md`](audits/README.md)
+- [`changes/README.md`](changes/README.md)

@@ -1126,5 +1126,5 @@ available catalog widgets, as per GenUI documentation.
   - `lib/features/websocket/` - Stream-based domain interface pattern
   - `lib/features/chat/` - Complex state management with async operations
   - `lib/features/counter/` - Cubit with subscription mixin
-- [Clean Architecture Guide](docs/clean_architecture.md)
-- [Testing Overview](docs/testing_overview.md)
+- [Clean architecture](clean_architecture.md)
+- [Testing overview](testing_overview.md)

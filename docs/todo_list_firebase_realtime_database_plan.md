@@ -416,7 +416,7 @@ Add to Firebase Console:
 ### Checklist: Phase 2 - Integration ✅ COMPLETE
 
 - [x] Unit tests written (12 tests, all passing)
-- [x] Document Firebase security rules (`docs/todo_list_firebase_security_rules.md`)
+- [x] Document Firebase security rules ([`todo_list_firebase_security_rules.md`](todo_list_firebase_security_rules.md))
 - [x] Verify existing widget/cubit tests work (all 40+ tests pass)
 - [x] Test error scenarios (auth failures, network failures)
 - [ ] Test with actual Firebase project (requires Firebase setup - manual step)
@@ -446,8 +446,8 @@ Add to Firebase Console:
 1. ✅ `lib/features/todo_list/data/realtime_database_todo_repository.dart`
 2. ✅ `test/features/todo_list/data/realtime_database_todo_repository_test.dart`
 3. ✅ `lib/shared/firebase/auth_helpers.dart` (shared utilities extracted)
-4. ✅ `docs/todo_list_firebase_security_rules.md` (security rules documentation)
-5. ✅ `docs/todo_list_offline_first_considerations.md` (Phase 3 guide)
+4. ✅ [`todo_list_firebase_security_rules.md`](todo_list_firebase_security_rules.md) (security rules documentation)
+5. ✅ [`todo_list_offline_first_considerations.md`](todo_list_offline_first_considerations.md) (Phase 3 guide)
 6. ✅ `lib/features/todo_list/data/offline_first_todo_repository.dart` (Phase 3 implementation)
 7. ✅ `test/features/todo_list/data/offline_first_todo_repository_test.dart` (Phase 3 unit tests - 13 tests, all passing)
 8. ✅ `lib/features/todo_list/presentation/widgets/todo_sync_banner.dart` (sync status UI)
@@ -515,6 +515,6 @@ Add to Firebase Console:
 
 ## Next Steps
 
-1. **Configure Firebase Security Rules**: Copy the rules from `docs/todo_list_firebase_security_rules.md` to Firebase Console
+1. **Configure Firebase Security Rules**: Copy the rules from [`todo_list_firebase_security_rules.md`](todo_list_firebase_security_rules.md) to Firebase Console
 2. **Test with Firebase Project**: Set up a Firebase project and verify the repository works with actual Firebase
-3. **Optional - Phase 3**: When offline-first functionality is needed, follow the guide in `docs/todo_list_offline_first_considerations.md`
+3. **Optional - Phase 3**: When offline-first functionality is needed, follow the guide in [`todo_list_offline_first_considerations.md`](todo_list_offline_first_considerations.md)
