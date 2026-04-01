@@ -337,7 +337,7 @@ normalize_doc_links() {
   if [ "${#changed_files[@]}" -gt 0 ]; then
     for file in "${changed_files[@]+"${changed_files[@]}"}"; do
       case "$file" in
-        README.md|SECURITY.md|docs/*.md|docs/**/*.md)
+        README.md|SECURITY.md|docs/*.md)
           if [ -f "$file" ]; then
             doc_files+=("$file")
           fi
