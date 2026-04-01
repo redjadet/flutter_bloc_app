@@ -7,8 +7,8 @@
 
 This is a **design note / working plan**. If adopted, the repository-wide
 contract should be captured in an ADR under `docs/adr/` and/or reflected in the
-owning core docs (for example `docs/reliability_error_handling_performance.md`
-and `docs/CODE_QUALITY.md`).
+owning core docs (for example [`reliability_error_handling_performance.md`](../reliability_error_handling_performance.md)
+and [`CODE_QUALITY.md`](../CODE_QUALITY.md)).
 
 ## 1. Goals & Non‑Goals
 

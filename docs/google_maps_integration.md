@@ -239,8 +239,8 @@ Run full quality checks:
 
 ## Related Docs
 
-- `docs/tech_stack.md`
-- `docs/new_developer_guide.md`
-- `docs/security_and_secrets.md`
-- `docs/architecture_details.md`
-- `docs/adr/0003-deferred-feature-loading.md`
+- [`tech_stack.md`](tech_stack.md)
+- [`new_developer_guide.md`](new_developer_guide.md)
+- [`security_and_secrets.md`](security_and_secrets.md)
+- [`architecture_details.md`](architecture_details.md)
+- [`adr/0003-deferred-feature-loading.md`](adr/0003-deferred-feature-loading.md)

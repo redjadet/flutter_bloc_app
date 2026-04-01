@@ -1,21 +1,21 @@
 # Baseline inventory (2026-03-17) — Codebase improvement plan
 
-Baseline for the codebase improvement plan from `codebase_analysis_2026-03-17.md`.
+Baseline for the codebase improvement plan from [`codebase_analysis_2026-03-17.md`](codebase_analysis_2026-03-17.md).
 
 ## Status
 
 This is a **point-in-time baseline snapshot** used to measure follow-up work.
 Prefer current validation and workflow docs for day-to-day guidance:
 
-- `docs/validation_scripts.md`
-- `docs/testing_overview.md`
-- `docs/CODE_QUALITY.md`
+- [`validation_scripts.md`](../validation_scripts.md)
+- [`testing_overview.md`](../testing_overview.md)
+- [`CODE_QUALITY.md`](../CODE_QUALITY.md)
 
 ## Checks run
 
 - **flutter analyze**: run; no issues found.
 - **Unit/widget tests**: suites touching audit-listed and refactored files (sync coordinator, offline_first_todo_repository, walletconnect_service, todo_list_dialogs) are run as part of full test suite / delivery checklist.
-- **Coverage**: snapshot in `coverage/coverage_summary.md` (reference point for measuring impact of plan).
+- **Coverage**: snapshot in [`coverage/coverage_summary.md`](../../coverage/coverage_summary.md) (reference point for measuring impact of plan).
 
 ## Future.delayed classification (audit-listed and lib/ usage)
 

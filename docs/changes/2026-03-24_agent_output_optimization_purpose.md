@@ -4,7 +4,7 @@
 
 This is a **historical change-note** explaining intent and constraints for a
 specific iteration. Prefer current repo workflow docs and scripts for active
-guidance (for example `docs/validation_scripts.md`, `docs/testing_overview.md`,
+guidance (for example [`validation_scripts.md`](../validation_scripts.md), [`testing_overview.md`](../testing_overview.md),
 and the repo `bin/` scripts).
 
 ## Why these changes were made
@@ -47,8 +47,8 @@ speed for low/medium-risk work without weakening quality gates.
   - `analysis/agent_scorecard/router_trigger_benchmark_v1.json`
   - `tool/check_router_trigger_precision.sh`
 - Supporting docs and workflow guidance:
-  - `docs/engineering/agent_output_scorecard_v1.md`
-  - `docs/engineering/validation_routing_fast_vs_full.md`
+  - [`engineering/agent_output_scorecard_v1.md`](../engineering/agent_output_scorecard_v1.md)
+  - [`engineering/validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md)
 
 ## Expected operational impact
 

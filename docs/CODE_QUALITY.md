@@ -10,15 +10,15 @@ layer.
 Source of truth for gates and guardrails:
 
 - `./bin/checklist`
-- `docs/validation_scripts.md`
-- `docs/testing_overview.md`
+- [`validation_scripts.md`](validation_scripts.md)
+- [`testing_overview.md`](testing_overview.md)
 
 ## Scope and Inputs
 
 - Static review of `lib/` and supporting tooling.
-- Architecture guidelines in `docs/clean_architecture.md`, `docs/solid_principles.md`, `docs/dry_principles.md`, and `docs/separation_of_concerns.md`.
+- Architecture guidelines in [`clean_architecture.md`](clean_architecture.md), [`solid_principles.md`](solid_principles.md), [`dry_principles.md`](dry_principles.md), and [`separation_of_concerns.md`](separation_of_concerns.md).
 - Quality gates via `./bin/checklist` (format, analyze, coverage).
-- Coverage source: `coverage/coverage_summary.md`.
+- Coverage source: [`coverage/coverage_summary.md`](../coverage/coverage_summary.md).
 
 ## Architecture Alignment
 
@@ -31,7 +31,7 @@ Source of truth for gates and guardrails:
 
 - SRP: Services and cubits are scoped to a single responsibility.
 - OCP/LSP/ISP/DIP: Interface-first design and DI allow swapping implementations and fakes.
-- DRY: Shared widgets/utilities and base repositories avoid duplication. See `docs/dry_principles.md` for the current consolidation list.
+- DRY: Shared widgets/utilities and base repositories avoid duplication. See [`dry_principles.md`](dry_principles.md) for the current consolidation list.
 
 ## Resolved Quality Issues (Historical)
 
@@ -52,9 +52,9 @@ Source of truth for gates and guardrails:
 ## Quality Metrics and Gates
 
 - File size policy: keep files under 250 LOC; extract widgets/helpers as needed.
-- Coverage target: 85% (team standard). Current value: see `coverage/coverage_summary.md`.
+- Coverage target: 85% (team standard). Current value: see [`coverage/coverage_summary.md`](../coverage/coverage_summary.md).
 - Static analysis and formatting: run `./bin/checklist`.
-- Guardrails: see `docs/validation_scripts.md` for the full automated checks list.
+- Guardrails: see [`validation_scripts.md`](validation_scripts.md) for the full automated checks list.
 
 ## Best-Practice Expectations (Summary)
 
@@ -65,7 +65,7 @@ Source of truth for gates and guardrails:
 - Prefer Dart optional-to-non-null pattern matching (`if (x case final value?)`, `switch` null patterns) over force unwrapping (`!`) and repeated nullable branching.
 - Avoid null assertion where possible; pattern matching gives a compile-time non-null local and lowers runtime crash risk.
 
-For full guidance, see `docs/flutter_best_practices_review.md`.
+For full guidance, see [`flutter_best_practices_review.md`](flutter_best_practices_review.md).
 
 ## Testing Standards
 
@@ -73,7 +73,7 @@ For full guidance, see `docs/flutter_best_practices_review.md`.
 - Run `./bin/checklist` before merging.
 - Update goldens after Flutter upgrades (`flutter test --update-goldens`).
 
-See `docs/testing_overview.md` for the full testing playbook.
+See [`testing_overview.md`](testing_overview.md) for the full testing playbook.
 
 ## Ongoing Maintenance
 

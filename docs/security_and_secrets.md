@@ -3,9 +3,9 @@
 This document explains how the app receives secrets in development and CI, and
 how local persistence is protected (encrypted Hive + platform secure storage).
 
-For the complete docs index, see `docs/README.md`.
+For the complete docs index, see [`README.md`](README.md).
 
-If you are reporting a vulnerability, use `SECURITY.md` (GitHub security
+If you are reporting a vulnerability, use [`SECURITY.md`](SECURITY.md) (GitHub security
 advisories / responsible disclosure). This file is about **configuration and
 secret injection**, not vulnerability triage.
 

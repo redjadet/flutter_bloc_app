@@ -3,7 +3,7 @@
 This repo is a reference Flutter application and not a versioned, packaged
 library. Security reporting is still welcome and handled via the process below.
 
-For the complete docs index, see `docs/README.md`.
+For the complete docs index, see [`README.md`](README.md).
 
 ## Reporting a vulnerability
 
@@ -21,4 +21,4 @@ Please do not include real API keys, tokens, or credentials in reports or PRs.
 This repository’s secrets strategy (local development, CI safety, and how
 feature integrations are enabled/disabled) is documented in:
 
-- `docs/security_and_secrets.md`
+- [`security_and_secrets.md`](security_and_secrets.md)

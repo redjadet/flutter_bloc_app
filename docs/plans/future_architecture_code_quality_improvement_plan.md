@@ -5,8 +5,8 @@
 This is a **working plan**. Prefer implemented behavior and the core docs under
 `docs/` as the source of truth. When this plan changes repository-wide policy,
 capture the decision in an ADR under `docs/adr/` and/or update the owning core
-doc (for example `docs/architecture_details.md`, `docs/CODE_QUALITY.md`,
-`docs/reliability_error_handling_performance.md`).
+doc (for example [`architecture_details.md`](../architecture_details.md), [`CODE_QUALITY.md`](../CODE_QUALITY.md),
+[`reliability_error_handling_performance.md`](../reliability_error_handling_performance.md)).
 
 ## Roadmap Status
 
@@ -138,12 +138,12 @@ They are anchors, not a complete file list.
 
 | Phase | Primary paths to inspect first |
 | ----- | ------------------------------ |
-| Phase 1 | `lib/app/router/`, `lib/core/di/`, `lib/shared/http/`, `docs/authentication.md`, `docs/security_and_secrets.md` |
-| Phase 2 | `lib/shared/sync/`, `docs/offline_first/`, `docs/fcm_demo_integration.md`, representative offline-first repositories |
-| Phase 3 | `lib/core/di/`, `docs/code_generation_guide.md`, `docs/compile_time_safety.md`, one isolated feature registration path |
-| Phase 4 | `lib/shared/utils/`, key cubits/services consuming request failures, `docs/reliability_error_handling_performance.md` |
-| Phase 5 | target files listed in this plan, related tests under `test/`, `tool/check_regression_guards.sh`, `coverage/coverage_summary.md` |
-| Phase 6 | `tool/` validation scripts, `docs/custom_lint_rules_guide.md`, `lib/shared/utils/bloc_lint_helpers.dart`, `lib/shared/utils/state_transition_validator.dart` |
+| Phase 1 | `lib/app/router/`, `lib/core/di/`, `lib/shared/http/`, [`authentication.md`](../authentication.md), [`security_and_secrets.md`](../security_and_secrets.md) |
+| Phase 2 | `lib/shared/sync/`, `docs/offline_first/`, [`fcm_demo_integration.md`](../fcm_demo_integration.md), representative offline-first repositories |
+| Phase 3 | `lib/core/di/`, [`code_generation_guide.md`](../code_generation_guide.md), [`compile_time_safety.md`](../compile_time_safety.md), one isolated feature registration path |
+| Phase 4 | `lib/shared/utils/`, key cubits/services consuming request failures, [`reliability_error_handling_performance.md`](../reliability_error_handling_performance.md) |
+| Phase 5 | target files listed in this plan, related tests under `test/`, `tool/check_regression_guards.sh`, [`coverage/coverage_summary.md`](../../coverage/coverage_summary.md) |
+| Phase 6 | `tool/` validation scripts, [`custom_lint_rules_guide.md`](../custom_lint_rules_guide.md), `lib/shared/utils/bloc_lint_helpers.dart`, `lib/shared/utils/state_transition_validator.dart` |
 
 ## Phase Dependencies & Decision Gates
 
@@ -280,8 +280,8 @@ and documentation.
    - accept explicit triggers from FCM events
    - coalesce near-simultaneous triggers into a single sync run
 3. Document the current eventual-consistency and last-write-wins model in:
-   - `docs/offline_first/*.md`
-   - `docs/tradeoffs_and_future.md`
+   - `offline_first/*.md`
+   - [`tradeoffs_and_future.md`](../tradeoffs_and_future.md)
 4. Add or extend representative conflict tests for counter, chat, and profile
    style repositories.
 
@@ -477,7 +477,7 @@ Implication:
    parsing across the target Supabase repositories and mappers.
 2. Add bootstrap sequencing and failure-path tests for
    `BootstrapCoordinator`.
-3. Refresh `coverage/coverage_summary.md` after meaningful test additions land.
+3. Refresh [`coverage/coverage_summary.md`](../../coverage/coverage_summary.md) after meaningful test additions land.
 4. Register regression guards in `tool/check_regression_guards.sh` for newly
    discovered or historically recurring failures in these areas.
 5. Remove or rewrite stale comments and docs in touched files when tests make
@@ -487,7 +487,7 @@ Implication:
 
 - Verify whether any Phase 5 fixes should add or extend a regression guard in
   `tool/check_regression_guards.sh`.
-- Keep `coverage/coverage_summary.md` aligned when later work materially
+- Keep [`coverage/coverage_summary.md`](../../coverage/coverage_summary.md) aligned when later work materially
   changes the tested surface.
 - Re-enter this phase only for newly discovered high-impact gaps, not as
   generic test backfill.

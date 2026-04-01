@@ -14,7 +14,7 @@ overview.
 - **Prefer repo scripts for validation**: this document describes the intended
   patterns; `./bin/checklist` and the validator scripts enforce them.
 - **When adding new cross-cutting behavior**, update the owning utility doc
-  (typically `docs/SHARED_UTILITIES.md`) and add/extend a validator or
+  (typically [`SHARED_UTILITIES.md`](SHARED_UTILITIES.md)) and add/extend a validator or
   regression test when the pattern is important enough to enforce.
 
 ## High-level overview
