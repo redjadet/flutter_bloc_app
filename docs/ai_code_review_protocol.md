@@ -88,8 +88,10 @@ If no new test is added, record why existing coverage is already enough.
 ### Before accepting AI-written code
 
 1. Apply the eight checks.
-2. For non-trivial tasks, confirm [`tasks/todo.md`](../tasks/todo.md) captures the implementation
-   plan and verification steps.
+2. For non-trivial tasks, confirm the host-specific task tracker captures the
+   implementation plan and verification steps:
+   [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) for Cursor,
+   [`tasks/codex/todo.md`](../tasks/codex/todo.md) for Codex.
 3. If subagents or sidecars were used, review their output as draft input and
    validate the integrated result yourself.
 4. Review the diff manually.
@@ -104,8 +106,10 @@ If no new test is added, record why existing coverage is already enough.
 
 1. Prove behavior with scope-matched evidence such as tests, logs, or behavior
    diffs.
-2. Record the verification outcome and short review notes in [`tasks/todo.md`](../tasks/todo.md)
-   when the task used plan-first workflow.
+2. Record the verification outcome and short review notes in the host-specific
+   task tracker when the task used plan-first workflow:
+   [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) for Cursor,
+   [`tasks/codex/todo.md`](../tasks/codex/todo.md) for Codex.
 3. If the user corrected a mistake during the task, add a prevention lesson to
    [`tasks/lessons.md`](../tasks/lessons.md).
 
