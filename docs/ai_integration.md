@@ -69,7 +69,7 @@ OfflineFirstChatRepository
 
 ## Related Documentation
 
-- Offline-first chat contract: `docs/offline_first/chat.md`
-- Error handling patterns: `docs/CODE_QUALITY.md`
-- Clean architecture: `docs/clean_architecture.md`
-- Security and secrets: `README.md` (Security & Secrets section)
+- Offline-first chat contract: [`offline_first/chat.md`](offline_first/chat.md)
+- Error handling patterns: [`CODE_QUALITY.md`](CODE_QUALITY.md)
+- Clean architecture: [`clean_architecture.md`](clean_architecture.md)
+- Security and secrets: [`README.md`](README.md) (Security & Secrets section)

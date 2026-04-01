@@ -69,7 +69,7 @@ Use these flows as templates when adding new feature flows.
      flutter test -d <deviceId> integration_test/all_flows_test.dart
      ```
 
-   - Or run a single flow’s test file (for example `integration_test/todo_list_flow_test.dart`) as described in `docs/testing_overview.md`.
+   - Or run a single flow’s test file (for example `integration_test/todo_list_flow_test.dart`) as described in [`testing_overview.md`](testing_overview.md).
 
 ## Policy constraints (don’t skip)
 

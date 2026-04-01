@@ -5,7 +5,7 @@ repo shape, and shipping changes safely. It is intentionally onboarding-focused.
 Deeper architecture, testing, deployment, and feature detail live in the
 linked source-of-truth documents.
 
-For the complete docs index, see `docs/README.md`.
+For the complete docs index, see [`README.md`](README.md).
 
 ## Quickstart (first 30 minutes)
 

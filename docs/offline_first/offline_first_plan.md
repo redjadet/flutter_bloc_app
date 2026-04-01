@@ -20,7 +20,7 @@ This document revalidates the offline-first requirements after another pass over
 - ✅ **Coordinator retry tests:** Added failure/backoff coverage in `test/shared/sync/background_sync_coordinator_test.dart`.
 - ✅ **Coordinator test coverage:** Added unit tests for `ConnectivityNetworkStatusService` and `BackgroundSyncCoordinator` to lock down status emissions (`test/shared/services/network_status_service_test.dart`, `test/shared/sync/background_sync_coordinator_test.dart`).
 - ✅ **Docs centralized:** Offline-first plan + adoption guide now live under `docs/offline_first/` for a single source of truth.
-- ✅ **Chat adoption contract drafted:** Added `docs/offline_first/chat.md` outlining store/repo/queue/UI/testing steps for chat onboarding.
+- ✅ **Chat adoption contract drafted:** Added [`offline_first/chat.md`](offline_first/chat.md) outlining store/repo/queue/UI/testing steps for chat onboarding.
 - ✅ **Chat local store wired:** Added Hive-backed `ChatLocalDataSource` with round-trip persistence tests and DI swap away from secure storage as the first step of chat onboarding.
 - ✅ **Coordinator edge cases covered:** Added partial-batch failure, retry, and offline-event handling coverage in `test/shared/sync/background_sync_coordinator_test.dart`.
 - ✅ **Chat metadata added:** `ChatConversation`/`ChatMessage` now carry sync fields (`changeId`, `lastSyncedAt`, `synchronized`, `clientMessageId`) to support pending-send queues.
@@ -43,16 +43,16 @@ This document revalidates the offline-first requirements after another pass over
   coalesces concurrent immediate triggers, prevents overlapping sync cycles,
   and runs one follow-up cycle when another immediate trigger arrives
   mid-flight.
-- ✅ **Search offline-first implementation:** Added `SearchCacheRepository` (Hive) for caching search results, `OfflineFirstSearchRepository` implementing `SyncableRepository`, `SearchSyncBanner` widget, and full DI wiring. Search now serves cached results when offline and refreshes in background when online. Documented in `docs/offline_first/search.md`.
+- ✅ **Search offline-first implementation:** Added `SearchCacheRepository` (Hive) for caching search results, `OfflineFirstSearchRepository` implementing `SyncableRepository`, `SearchSyncBanner` widget, and full DI wiring. Search now serves cached results when offline and refreshes in background when online. Documented in [`offline_first/search.md`](offline_first/search.md).
 - ✅ **Search test coverage complete:** Added comprehensive unit tests for `SearchCacheRepository` (`test/features/search/data/search_cache_repository_test.dart`), repository tests for `OfflineFirstSearchRepository` (`test/features/search/data/offline_first_search_repository_test.dart`), and widget tests for `SearchSyncBanner` and search page integration (`test/features/search/presentation/widgets/search_sync_banner_test.dart`, `test/features/search/presentation/pages/search_page_test.dart`). All tests passing.
 - ✅ **Read-only refresh single-flight guards:** Search/Profile/Remote Config
   offline-first repositories now coalesce concurrent background refreshes via
   shared in-flight `Future` gates to avoid duplicate remote calls.
 - ✅ **Sync status seeding hardened:** `SyncStatusCubit` now seeds its initial network status via `getCurrentStatus()` and guards emits after close, ensuring stream events are consumed even when emitted post-build. Re-enabled `SearchSyncBanner` widget tests that cover status changes after widget build.
-- ✅ **Profile offline-first foundation:** Added `ProfileCacheRepository` (Hive) and `OfflineFirstProfileRepository` (Syncable, read-only) with DI wiring through `getIt`, leveraging `NetworkStatusService` to serve cached data offline and refresh when online. Documented in `docs/offline_first/profile.md` with cache + repository tests.
+- ✅ **Profile offline-first foundation:** Added `ProfileCacheRepository` (Hive) and `OfflineFirstProfileRepository` (Syncable, read-only) with DI wiring through `getIt`, leveraging `NetworkStatusService` to serve cached data offline and refresh when online. Documented in [`offline_first/profile.md`](offline_first/profile.md) with cache + repository tests.
 - ✅ **Profile sync surface:** Added `ProfileSyncBanner` widget and integrated it into `ProfilePage` so offline/syncing states surface via `SyncStatusCubit`. Added widget and page tests to cover banner visibility in offline/online flows.
 - ✅ **Profile manual refresh:** `ProfileSyncBanner` now exposes a “Sync now” action wired to `SyncStatusCubit.flush()`, enabling manual refresh even when coming back from offline.
-- ✅ **Remote Config offline-first adoption:** Added `RemoteConfigCacheRepository` + `OfflineFirstRemoteConfigRepository`, wired DI to serve cached config values when offline, surfaced `SyncStatusCubit` inside `RemoteConfigDiagnosticsSection`, and documented contracts/tests under `docs/offline_first/remote_config.md`.
+- ✅ **Remote Config offline-first adoption:** Added `RemoteConfigCacheRepository` + `OfflineFirstRemoteConfigRepository`, wired DI to serve cached config values when offline, surfaced `SyncStatusCubit` inside `RemoteConfigDiagnosticsSection`, and documented contracts/tests under [`offline_first/remote_config.md`](offline_first/remote_config.md).
 - ✅ **Remote Config metadata surfaced:** `RemoteConfigSnapshot` now tracks `dataSource` and `lastSyncedAt`, persisted via the cache repository; diagnostics display the source when loaded.
 - ✅ **Profile cache controls:** Dev/QA `ProfileCacheControlsSection` is composed from the router into Settings; the widget lives under `lib/shared/widgets/diagnostics/` and uses `ProfileCacheControlsPort` from core (see [Modularity](../modularity.md)). Tests: `test/features/settings/presentation/widgets/profile_cache_controls_section_test.dart`.
 - ✅ **Remote Config cache reset:** Settings → Remote Config diagnostics now include a clear-cache control that wipes the Hive snapshot and refetches values via the offline-first repository; covered by widget + cubit tests.
@@ -62,9 +62,9 @@ This document revalidates the offline-first requirements after another pass over
 - ✅ **Prune visibility:** Sync diagnostics now surface `prunedCount` per cycle so queue maintenance is transparent during QA.
 - ✅ **Runner resilience tests:** Added unit tests for `runSyncCycle` covering empty queues, successful processing, and failure/backoff telemetry to lock down coordinator behavior.
 - ✅ **Telemetry completeness:** Sync runner tests now assert telemetry includes pruned counts and per-entity pending metadata so diagnostics stay reliable.
-- ✅ **GraphQL demo cache-first:** Added Hive cache + offline-first wrapper so countries/continents load offline and refresh cache on success; documented in `docs/offline_first/graphql_demo.md`.
+- ✅ **GraphQL demo cache-first:** Added Hive cache + offline-first wrapper so countries/continents load offline and refresh cache on success; documented in [`offline_first/graphql_demo.md`](offline_first/graphql_demo.md).
 - ✅ **GraphQL demo polish:** Staleness metadata (24h expiry) and cache clear control (`GraphqlCacheControlsSection` in Settings) are complete.
-- ✅ **Counter documentation:** Added `docs/offline_first/counter.md` documenting offline-first counter implementation, storage plan, conflict resolution, UI integration, and testing coverage.
+- ✅ **Counter documentation:** Added [`offline_first/counter.md`](offline_first/counter.md) documenting offline-first counter implementation, storage plan, conflict resolution, UI integration, and testing coverage.
 
 ## Immediate Next Steps
 
@@ -87,7 +87,7 @@ This document revalidates the offline-first requirements after another pass over
 4. **GraphQL demo offline-first** (Priority: Done)
    - ✅ Cache countries/continents data locally for offline access.
    - ✅ Follow Search pattern for read-only cache-first approach.
-   - ✅ Document contracts under `docs/offline_first/graphql_demo.md`.
+   - ✅ Document contracts under [`offline_first/graphql_demo.md`](offline_first/graphql_demo.md).
    - ✅ Add staleness metadata (24h expiry) to avoid serving stale cache.
    - ✅ Add dev/QA cache clear control in Settings (`GraphqlCacheControlsSection`).
 
@@ -178,7 +178,7 @@ This document revalidates the offline-first requirements after another pass over
    - Implement `BackgroundSyncCoordinator` using `TimerService` and expose it via GetIt; start it from `AppScope` after `configureDependencies()` completes.
 2. **Domain metadata updates**
    - Update Freezed models (`CounterSnapshot`, `ChatConversation`, `ChatMessage`, etc.) with sync fields + migrations.
-   - Adjust JSON serialization + ensure `flutter pub run build_runner build --delete-conflicting-outputs` stays in sync; update `coverage/coverage_summary.md` after running `./bin/checklist`.
+   - Adjust JSON serialization + ensure `flutter pub run build_runner build --delete-conflicting-outputs` stays in sync; update [`coverage/coverage_summary.md`](coverage/coverage_summary.md) after running `./bin/checklist`.
 3. **Repository layering per feature**
    - Counter: Wrap remote + Hive repos into an `OfflineFirstCounterRepository` that always writes to Hive, mirrors to remote when online, and enqueues operations when offline.
    - Chat: Introduce `ChatLocalDataSource` (Hive) to replace `SecureChatHistoryRepository`, persist conversations/messages/pending sends, and reroute `ChatCubit` to hydrate from disk first.
@@ -194,7 +194,7 @@ This document revalidates the offline-first requirements after another pass over
    - Add `BlocSelector`s for sync banners to avoid unnecessary rebuilds and ensure responsive spacing when banners appear.
 7. **Testing + checklist**
    - Expand unit/bloc/widget coverage for new flows.
-   - Update `./bin/checklist` expectations if new scripts/configs are needed, and document the offline-first architecture in `docs/` (e.g., `docs/offline_first.md`).
+   - Update `./bin/checklist` expectations if new scripts/configs are needed, and document the offline-first architecture in `docs/` (e.g., [`offline_first.md`](offline_first.md)).
 
 ## 5. Open Considerations & Future Enhancements
 
@@ -219,7 +219,7 @@ This document revalidates the offline-first requirements after another pass over
 ## 6. Reference Implementation Guides
 
 - Flutter’s official offline-first guidance on synchronization flags and push-triggered sync informs the metadata and background task design: <https://docs.flutter.dev/app-architecture/design-patterns/offline-first>
-- `README.md`, `docs/new_developer_guide.md`, and other repo docs stay canonical for guardrails (Hive usage, DI lifecycle, responsive UI expectations, checklist workflow).
+- [`README.md`](README.md), [`new_developer_guide.md`](new_developer_guide.md), and other repo docs stay canonical for guardrails (Hive usage, DI lifecycle, responsive UI expectations, checklist workflow).
 
 ## 7. Feature Adoption Matrix
 
@@ -232,4 +232,4 @@ This document revalidates the offline-first requirements after another pass over
 | Remote Config & Settings | `remote_config_cache` storing config values + version/checksum + metadata (`dataSource`, `lastSyncedAt`) | Cache-first strategy via `OfflineFirstRemoteConfigRepository`; serves cache offline, refreshes via sync registry when online, and coalesces concurrent `forceFetch`/`pullRemote` calls to one remote fetch. | `SettingsPage` diagnostics include sync banner + retry, and show data source/last synced when available. | ✅ Cache + repo tests (`test/features/remote_config/data/remote_config_cache_repository_test.dart`, `test/features/remote_config/data/offline_first_remote_config_repository_test.dart`); widget regression in `remote_config_diagnostics_section_test.dart` |
 | Maps / Websocket demos | Cache map samples + recent locations per feature; queue pin updates | Use simple “last write wins” with timestamp; for WebSocket, persist inbound events for offline replay | Display offline overlay and disable streaming-only UI until sync catches up | Add fake repositories for widget tests, ensure `EchoWebsocketRepository` flushes persistent backlog |
 
-Document per-feature decisions (box names, DTO contracts, sync strategies) under `docs/offline_first/<feature>.md` so future contributors follow the same conventions.
+Document per-feature decisions (box names, DTO contracts, sync strategies) under [`offline_first/<feature>.md`](offline_first/<feature>.md) so future contributors follow the same conventions.

@@ -2,7 +2,7 @@
 
 This document describes all validation scripts in the `tool/` directory that are automatically run by `./bin/checklist` to catch bugs and enforce best practices early.
 
-For the complete docs index, see `docs/README.md`.
+For the complete docs index, see [`README.md`](README.md).
 
 ## Overview
 
@@ -64,7 +64,7 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs t
 ### Timing & Services
 
 - **`check_raw_timer.sh`**: Prevents raw `Timer` usage - should use `TimerService` for testability
-- **`check_raw_future_delayed.sh`**: Flags `Future.delayed` in production `lib/` - prefer `TimerService.runOnce` where cancellation or test control matters (see `docs/engineering/delayed_work_guide.md`)
+- **`check_raw_future_delayed.sh`**: Flags `Future.delayed` in production `lib/` - prefer `TimerService.runOnce` where cancellation or test control matters (see [`engineering/delayed_work_guide.md`](engineering/delayed_work_guide.md))
 
 ### Widget Lifecycle
 
@@ -829,7 +829,7 @@ Each script provides:
 
 ## Related Documentation
 
-- **Developer onboarding**: `docs/new_developer_guide.md`
-- **UI/UX Guidelines**: `docs/ui_ux_responsive_review.md`
-- **Testing Best Practices**: `docs/testing_overview.md`
+- **Developer onboarding**: [`new_developer_guide.md`](new_developer_guide.md)
+- **UI/UX Guidelines**: [`ui_ux_responsive_review.md`](ui_ux_responsive_review.md)
+- **Testing Best Practices**: [`testing_overview.md`](testing_overview.md)
 - **Common Bugs Prevention Tests**: `test/shared/common_bugs_prevention_test.dart`

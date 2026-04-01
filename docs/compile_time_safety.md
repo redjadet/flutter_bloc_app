@@ -137,7 +137,7 @@ Key files that provide the compile-time safety layer:
 - Replace `context.read<T>()` and `BlocProvider.of<T>()` with `context.cubit<T>()`.
 - Use `TypeSafeBlocSelector` for selective rebuilds.
 
-See `docs/migration_to_type_safe_bloc.md` for step-by-step migration guidance.
+See [`migration_to_type_safe_bloc.md`](migration_to_type_safe_bloc.md) for step-by-step migration guidance.
 
 ## Verification Checklist
 

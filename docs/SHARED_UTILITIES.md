@@ -189,7 +189,7 @@ const kAnimationDuration = Duration(milliseconds: 300);
   maps status codes and `DioException` to user-facing messages and
   [AppErrorCode](lib/shared/utils/error_codes.dart) (e.g. `serviceUnavailable` for 503).
 - **Retrofit** (optional): For stable REST APIs, define interfaces under `lib/features/<feature>/data/api/`
-  and use generated clients; see `docs/plans/dio_retrofit_integration_plan.md`. Chart uses `CoingeckoApi`.
+  and use generated clients; see [`plans/dio_retrofit_integration_plan.md`](plans/dio_retrofit_integration_plan.md). Chart uses `CoingeckoApi`.
 - **RetryPolicy** (`lib/shared/utils/retry_policy.dart`): Use for **non-HTTP** retriable work (e.g. repository load, sync steps, external SDK calls). It supports exponential/linear/fixed backoff, jitter, and `CancelToken` so cubits can cancel in-flight retries in `close()`.
 
 When to use which:

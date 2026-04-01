@@ -37,10 +37,10 @@ This guide describes how to onboard a feature into the shared offline-first stac
      - **Write-heavy features (Counter/Chat)**: See `test/chat_cubit_test.dart`, `test/chat_page_test.dart`, and `test/features/counter/presentation/pages/counter_page_sync_metadata_test.dart`.
      - **Read-only/cache-first features (Search)**: See `test/features/search/data/search_cache_repository_test.dart`, `test/features/search/data/offline_first_search_repository_test.dart`, and `test/features/search/presentation/widgets/search_sync_banner_test.dart`.
 6. **Docs + runbook**
-   - Document box names/keys under `docs/offline_first/<feature>.md`.
-   - Examples: `docs/offline_first/chat.md`, `docs/offline_first/search.md`, `docs/offline_first/profile.md`, and the new `docs/offline_first/remote_config.md`.
+   - Document box names/keys under [`offline_first/<feature>.md`](offline_first/<feature>.md).
+   - Examples: [`offline_first/chat.md`](offline_first/chat.md), [`offline_first/search.md`](offline_first/search.md), [`offline_first/profile.md`](offline_first/profile.md), and the new [`offline_first/remote_config.md`](offline_first/remote_config.md).
    - Define and document the data retention policy for the feature's local cache (e.g., "prune synced items older than 90 days"). This is critical for managing storage.
-   - Update `docs/offline_first/offline_first_plan.md` progress and run `./bin/checklist` before committing. Keep the feature row in the adoption matrix current (cache strategy, UI status surfaces, tests).
+   - Update [`offline_first/offline_first_plan.md`](offline_first/offline_first_plan.md) progress and run `./bin/checklist` before committing. Keep the feature row in the adoption matrix current (cache strategy, UI status surfaces, tests).
 
 ## Next Steps After Adoption
 

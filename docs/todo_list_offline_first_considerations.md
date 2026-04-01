@@ -584,7 +584,7 @@ The counter feature provides a complete reference implementation:
 - **Domain Model**: `lib/features/counter/domain/counter_snapshot.dart`
 - **Offline-First Repository**: `lib/features/counter/data/offline_first_counter_repository.dart`
 - **Sync Status UI**: `lib/features/counter/presentation/widgets/counter_sync_banner.dart`
-- **Documentation**: `docs/offline_first/counter.md`
+- **Documentation**: [`offline_first/counter.md`](offline_first/counter.md)
 
 ## When to Implement
 

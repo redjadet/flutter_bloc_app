@@ -12,8 +12,8 @@
 | Phase 3.3: Hugging Face | Remaining | Optional; keep as-is per plan recommendation |
 
 This is a **working plan / design note**. Prefer implemented code + the core
-docs (`docs/tech_stack.md`, `docs/architecture_details.md`,
-`docs/reliability_error_handling_performance.md`) for current behavior.
+docs ([`tech_stack.md`](tech_stack.md), [`architecture_details.md`](architecture_details.md),
+[`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)) for current behavior.
 
 ---
 

@@ -207,7 +207,7 @@ the remote version is clearly newer. This protects against stale watch events,
 eventual-consistency lag, and slow retries.
 
 The rule is documented in
-`docs/offline_first/dont_overwrite_guide.md` and implemented concretely in:
+[`offline_first/dont_overwrite_guide.md`](offline_first/dont_overwrite_guide.md) and implemented concretely in:
 
 - `lib/features/counter/data/offline_first_counter_repository.dart`
 - `lib/features/todo_list/data/offline_first_todo_repository_helpers.dart`
@@ -396,9 +396,9 @@ For this app, that is the right trade.
 
 ## References
 
-- `docs/offline_first/adoption_guide.md`
-- `docs/offline_first/dont_overwrite_guide.md`
-- `docs/offline_first/counter.md`
+- [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md)
+- [`offline_first/dont_overwrite_guide.md`](offline_first/dont_overwrite_guide.md)
+- [`offline_first/counter.md`](offline_first/counter.md)
 - `lib/shared/sync/pending_sync_repository.dart`
 - `lib/shared/sync/background_sync_coordinator.dart`
 - `lib/shared/sync/background_sync_runner.dart`
