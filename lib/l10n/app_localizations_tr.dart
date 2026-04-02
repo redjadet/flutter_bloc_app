@@ -53,6 +53,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get openExampleTooltip => 'Örnek sayfayı aç';
 
   @override
+  String get openCaseStudyDemoTooltip => 'Diş hekimi vaka çalışması demoyu aç';
+
+  @override
   String get openCalculatorTooltip => 'Ödeme hesaplayıcısını aç';
 
   @override
@@ -1942,4 +1945,139 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get iapDemoNoProductsFound => 'No products found.';
+
+  @override
+  String get exampleCaseStudyDemoButton => 'Vaka çalışması demosu (diş hekimi)';
+
+  @override
+  String get caseStudyDemoTitle => 'Vaka çalışması demosu';
+
+  @override
+  String get caseStudyDemoNewCase => 'Yeni vaka';
+
+  @override
+  String get caseStudyDemoHistory => 'Geçmiş';
+
+  @override
+  String get caseStudyDemoSettings => 'Ayarlar';
+
+  @override
+  String get caseStudyDemoMetadataTitle => 'Vaka ayrıntıları';
+
+  @override
+  String get caseStudyDoctorNameLabel => 'Hekim adı';
+
+  @override
+  String get caseStudyCaseTypeLabel => 'Vaka tipi';
+
+  @override
+  String get caseStudyNotesLabel => 'Notlar (isteğe bağlı)';
+
+  @override
+  String get caseStudyContinue => 'Devam';
+
+  @override
+  String get caseStudyCaseTypeImplant => 'İmplant';
+
+  @override
+  String get caseStudyCaseTypeOrtho => 'Ortodonti';
+
+  @override
+  String get caseStudyCaseTypeCosmetic => 'Estetik';
+
+  @override
+  String get caseStudyCaseTypeGeneral => 'Genel';
+
+  @override
+  String get caseStudyRecordTitle => 'Yanıtları kaydet';
+
+  @override
+  String caseStudyQuestionProgress(int current, int total) {
+    return 'Soru $current / $total';
+  }
+
+  @override
+  String get caseStudyPickVideoCamera => 'Video kaydet';
+
+  @override
+  String get caseStudyPickVideoGallery => 'Galeriden seç';
+
+  @override
+  String get caseStudyNext => 'İleri';
+
+  @override
+  String get caseStudyGoToReview => 'İncelemeye geç';
+
+  @override
+  String get caseStudyBack => 'Geri';
+
+  @override
+  String get caseStudyReviewTitle => 'İncele ve gönder';
+
+  @override
+  String get caseStudySubmit => 'Gönder (sahte yükleme)';
+
+  @override
+  String get caseStudyAbandon => 'Vakayı bırak';
+
+  @override
+  String get caseStudyAbandonConfirmBody =>
+      'Bu vaka kaydı silinsin ve çekilen tüm klipler silinsin mi?';
+
+  @override
+  String get caseStudyUploading => 'Yükleniyor…';
+
+  @override
+  String get caseStudyDataModeLocalOnly => 'Sadece yerel';
+
+  @override
+  String get caseStudyDataModeSupabase => 'Supabase';
+
+  @override
+  String get caseStudyHistoryTitle => 'Gönderilen vakalar';
+
+  @override
+  String get caseStudyHistoryEmpty => 'Henüz gönderilmiş vaka yok.';
+
+  @override
+  String get caseStudyHistoryDetailTitle => 'Vaka detayı';
+
+  @override
+  String get caseStudySubmittedAt => 'Gönderildi';
+
+  @override
+  String get caseStudyVideoMissing => 'Video dosyası bulunamadı';
+
+  @override
+  String get caseStudyErrorGeneric => 'Bir sorun oluştu. Yeniden deneyin.';
+
+  @override
+  String get caseStudyQuestion1 => 'Hastayı ve baş şikâyeti tanıtın.';
+
+  @override
+  String get caseStudyQuestion2 => 'İlgili tıbbi öyküyü anlatın.';
+
+  @override
+  String get caseStudyQuestion3 => 'Ekstraoral muayene bulgularını gösterin.';
+
+  @override
+  String get caseStudyQuestion4 => 'İntraoral muayene bulgularını gösterin.';
+
+  @override
+  String get caseStudyQuestion5 => 'Radyografik bulguları açıklayın.';
+
+  @override
+  String get caseStudyQuestion6 => 'Tanı ve sorun listesini özetleyin.';
+
+  @override
+  String get caseStudyQuestion7 => 'Görüşülen tedavi seçeneklerini anlatın.';
+
+  @override
+  String get caseStudyQuestion8 => 'Seçilen tedavi planını detaylandırın.';
+
+  @override
+  String get caseStudyQuestion9 => 'Acil postoperatif durumu gösterin.';
+
+  @override
+  String get caseStudyQuestion10 => 'Takip ve prognozu özetleyin.';
 }

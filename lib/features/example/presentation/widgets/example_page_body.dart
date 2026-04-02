@@ -24,6 +24,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.onOpenScapes,
     required this.onOpenWalletconnectAuth,
     required this.onOpenCameraGallery,
+    required this.onOpenCaseStudyDemo,
     required this.onOpenIapDemo,
     required this.onRunIsolates,
     required this.isRunningIsolates,
@@ -56,6 +57,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onOpenScapes;
   final VoidCallback onOpenWalletconnectAuth;
   final VoidCallback onOpenCameraGallery;
+  final VoidCallback onOpenCaseStudyDemo;
   final VoidCallback onOpenIapDemo;
   final VoidCallback? onRunIsolates;
   final bool isRunningIsolates;
@@ -119,6 +121,14 @@ class ExamplePageBody extends StatelessWidget {
             context: context,
             onPressed: onBackPressed,
             child: Text(l10n.exampleBackButtonLabel),
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenCaseStudyDemo,
+            icon: Icons.ondemand_video_outlined,
+            label: l10n.exampleCaseStudyDemoButton,
+            key: const ValueKey('example-case-study-demo-button'),
           ),
           SizedBox(height: context.responsiveGapL),
           _buildIconButton(

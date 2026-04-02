@@ -22,6 +22,7 @@
   "startAutoHint": "Sayı 0 iken otomatik azalma için +'ya dokunun",
   "cannotGoBelowZero": "Sayı 0'ın altına inemez",
   "openExampleTooltip": "Örnek sayfayı aç",
+  "openCaseStudyDemoTooltip": "Diş hekimi vaka çalışması demoyu aç",
   "openCalculatorTooltip": "Ödeme hesaplayıcısını aç",
   "examplePageTitle": "Örnek Sayfa",
   "examplePageDescription": "Bu sayfa GoRouter ile yönlendirmeyi gösterir.",
@@ -1484,5 +1485,59 @@
   "iapDemoSubscriptionsTitle": "Subscriptions",
   "iapDemoLastResultLabel": "Last result",
   "iapDemoBuyButton": "Buy",
-  "iapDemoNoProductsFound": "No products found."
+  "iapDemoNoProductsFound": "No products found.",
+  "exampleCaseStudyDemoButton": "Vaka çalışması demosu (diş hekimi)",
+  "caseStudyDemoTitle": "Vaka çalışması demosu",
+  "caseStudyDemoNewCase": "Yeni vaka",
+  "caseStudyDemoHistory": "Geçmiş",
+  "caseStudyDemoSettings": "Ayarlar",
+  "caseStudyDemoMetadataTitle": "Vaka ayrıntıları",
+  "caseStudyDoctorNameLabel": "Hekim adı",
+  "caseStudyCaseTypeLabel": "Vaka tipi",
+  "caseStudyNotesLabel": "Notlar (isteğe bağlı)",
+  "caseStudyContinue": "Devam",
+  "caseStudyCaseTypeImplant": "İmplant",
+  "caseStudyCaseTypeOrtho": "Ortodonti",
+  "caseStudyCaseTypeCosmetic": "Estetik",
+  "caseStudyCaseTypeGeneral": "Genel",
+  "caseStudyRecordTitle": "Yanıtları kaydet",
+  "caseStudyQuestionProgress": "Soru {current} / {total}",
+  "@caseStudyQuestionProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "caseStudyPickVideoCamera": "Video kaydet",
+  "caseStudyPickVideoGallery": "Galeriden seç",
+  "caseStudyNext": "İleri",
+  "caseStudyGoToReview": "İncelemeye geç",
+  "caseStudyBack": "Geri",
+  "caseStudyReviewTitle": "İncele ve gönder",
+  "caseStudySubmit": "Gönder (sahte yükleme)",
+  "caseStudyAbandon": "Vakayı bırak",
+  "caseStudyAbandonConfirmBody": "Bu vaka kaydı silinsin ve çekilen tüm klipler silinsin mi?",
+  "caseStudyUploading": "Yükleniyor…",
+  "caseStudyDataModeLocalOnly": "Sadece yerel",
+  "caseStudyDataModeSupabase": "Supabase",
+  "caseStudyHistoryTitle": "Gönderilen vakalar",
+  "caseStudyHistoryEmpty": "Henüz gönderilmiş vaka yok.",
+  "caseStudyHistoryDetailTitle": "Vaka detayı",
+  "caseStudySubmittedAt": "Gönderildi",
+  "caseStudyVideoMissing": "Video dosyası bulunamadı",
+  "caseStudyErrorGeneric": "Bir sorun oluştu. Yeniden deneyin.",
+  "caseStudyQuestion1": "Hastayı ve baş şikâyeti tanıtın.",
+  "caseStudyQuestion2": "İlgili tıbbi öyküyü anlatın.",
+  "caseStudyQuestion3": "Ekstraoral muayene bulgularını gösterin.",
+  "caseStudyQuestion4": "İntraoral muayene bulgularını gösterin.",
+  "caseStudyQuestion5": "Radyografik bulguları açıklayın.",
+  "caseStudyQuestion6": "Tanı ve sorun listesini özetleyin.",
+  "caseStudyQuestion7": "Görüşülen tedavi seçeneklerini anlatın.",
+  "caseStudyQuestion8": "Seçilen tedavi planını detaylandırın.",
+  "caseStudyQuestion9": "Acil postoperatif durumu gösterin.",
+  "caseStudyQuestion10": "Takip ve prognozu özetleyin."
 }

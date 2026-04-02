@@ -15,6 +15,16 @@ void main() {
     expect(AppRoutes.profilePath, '/profile');
     expect(AppRoutes.manageAccount, 'manage-account');
     expect(AppRoutes.manageAccountPath, '/manage-account');
+    expect(AppRoutes.caseStudyDemo, 'case-study-demo');
+    expect(AppRoutes.caseStudyDemoPath, '/case-study-demo');
+    expect(AppRoutes.caseStudyDemoNewPath, '/case-study-demo/new');
+    expect(AppRoutes.caseStudyDemoRecordPath, '/case-study-demo/record');
+    expect(AppRoutes.caseStudyDemoReviewPath, '/case-study-demo/review');
+    expect(AppRoutes.caseStudyDemoHistoryPath, '/case-study-demo/history');
+    expect(
+      AppRoutes.caseStudyDemoHistoryDetailPath,
+      '/case-study-demo/history/:id',
+    );
   });
 
   group('AppRoutes.isSafeRedirectPath', () {

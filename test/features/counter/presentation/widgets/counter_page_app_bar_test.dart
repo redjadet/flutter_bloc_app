@@ -46,6 +46,12 @@ void main() {
                   const Scaffold(body: Text('Example Page')),
             ),
             GoRoute(
+              path: AppRoutes.caseStudyDemoPath,
+              name: AppRoutes.caseStudyDemo,
+              builder: (context, state) =>
+                  const Scaffold(body: Text('Case Study Demo Page')),
+            ),
+            GoRoute(
               path: AppRoutes.chartsPath,
               name: AppRoutes.charts,
               builder: (context, state) =>
@@ -138,6 +144,16 @@ void main() {
         ),
       );
       expect(exampleButton.onPressed, isNotNull);
+    });
+
+    testWidgets('case study demo button navigates when tapped', (tester) async {
+      await tester.pumpWidget(buildSubject());
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.ondemand_video_outlined));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Case Study Demo Page'), findsOneWidget);
     });
 
     testWidgets('shows overflow menu', (tester) async {
@@ -233,6 +249,7 @@ void main() {
 
       expect(find.byIcon(Icons.payments_outlined), findsOneWidget);
       expect(find.byIcon(Icons.explore), findsOneWidget);
+      expect(find.byIcon(Icons.ondemand_video_outlined), findsOneWidget);
       expect(find.byIcon(Icons.settings), findsOneWidget);
 
       // Verify overflow menu exists in AppBar actions

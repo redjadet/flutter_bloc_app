@@ -21,6 +21,7 @@
   "startAutoHint": "Quand le compteur est 0, appuyez sur + pour démarrer",
   "cannotGoBelowZero": "Le compteur ne peut pas être inférieur à 0",
   "openExampleTooltip": "Ouvrir la page d'exemple",
+  "openCaseStudyDemoTooltip": "Ouvrir la démo d'étude de cas dentiste",
   "openCalculatorTooltip": "Ouvrir la calculatrice de paiement",
   "examplePageTitle": "Page d'exemple",
   "examplePageDescription": "Cette page montre la navigation avec GoRouter.",
@@ -1465,5 +1466,59 @@
   "iapDemoSubscriptionsTitle": "Subscriptions",
   "iapDemoLastResultLabel": "Last result",
   "iapDemoBuyButton": "Buy",
-  "iapDemoNoProductsFound": "No products found."
+  "iapDemoNoProductsFound": "No products found.",
+  "exampleCaseStudyDemoButton": "Démo étude de cas (dentiste)",
+  "caseStudyDemoTitle": "Démo étude de cas",
+  "caseStudyDemoNewCase": "Nouveau cas",
+  "caseStudyDemoHistory": "Historique",
+  "caseStudyDemoSettings": "Réglages",
+  "caseStudyDemoMetadataTitle": "Détails du cas",
+  "caseStudyDoctorNameLabel": "Nom du praticien",
+  "caseStudyCaseTypeLabel": "Type de cas",
+  "caseStudyNotesLabel": "Notes (facultatif)",
+  "caseStudyContinue": "Continuer",
+  "caseStudyCaseTypeImplant": "Implantologie",
+  "caseStudyCaseTypeOrtho": "Orthodontie",
+  "caseStudyCaseTypeCosmetic": "Esthétique",
+  "caseStudyCaseTypeGeneral": "Général",
+  "caseStudyRecordTitle": "Enregistrer les réponses",
+  "caseStudyQuestionProgress": "Question {current} sur {total}",
+  "@caseStudyQuestionProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "caseStudyPickVideoCamera": "Enregistrer une vidéo",
+  "caseStudyPickVideoGallery": "Choisir dans la galerie",
+  "caseStudyNext": "Suivant",
+  "caseStudyGoToReview": "Aller à la relecture",
+  "caseStudyBack": "Retour",
+  "caseStudyReviewTitle": "Relire et envoyer",
+  "caseStudySubmit": "Envoyer (téléchargement fictif)",
+  "caseStudyAbandon": "Abandonner le cas",
+  "caseStudyAbandonConfirmBody": "Abandonner ce cas et supprimer les enregistrements associés ?",
+  "caseStudyUploading": "Téléversement…",
+  "caseStudyDataModeLocalOnly": "Local uniquement",
+  "caseStudyDataModeSupabase": "Supabase",
+  "caseStudyHistoryTitle": "Cas envoyés",
+  "caseStudyHistoryEmpty": "Aucun cas envoyé pour l'instant.",
+  "caseStudyHistoryDetailTitle": "Détail du cas",
+  "caseStudySubmittedAt": "Envoyé",
+  "caseStudyVideoMissing": "Fichier vidéo introuvable",
+  "caseStudyErrorGeneric": "Une erreur s'est produite. Réessayez.",
+  "caseStudyQuestion1": "Présentez le patient et le motif principal de consultation.",
+  "caseStudyQuestion2": "Décrivez les antécédents médicaux pertinents.",
+  "caseStudyQuestion3": "Montrez les résultats de l'examen extra-buccal.",
+  "caseStudyQuestion4": "Montrez les résultats de l'examen intra-buccal.",
+  "caseStudyQuestion5": "Expliquez les résultats d'imagerie.",
+  "caseStudyQuestion6": "Exposez le diagnostic et la liste des problèmes.",
+  "caseStudyQuestion7": "Décrivez les options de traitement discutées.",
+  "caseStudyQuestion8": "Précisez le plan de traitement retenu.",
+  "caseStudyQuestion9": "Montrez le statut post-opératoire immédiat.",
+  "caseStudyQuestion10": "Résumez le suivi et le pronostic."
 }

@@ -50,11 +50,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>This app uses the camera to take photos in the Camera and Gallery demo.</string>
+	<string>This app uses the camera for photos and videos in the Camera and Gallery and case study demos.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app may use the microphone when recording videos in the case study demo.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Authenticate to open Settings.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app accesses your photo library to pick images in the Camera and Gallery demo.</string>
+	<string>This app accesses your photo library to pick images and videos in the Camera and Gallery and case study demos.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

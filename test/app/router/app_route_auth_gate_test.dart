@@ -141,6 +141,11 @@ void main() {
       expect(AppRoutePolicies.profile.path, AppRoutes.profilePath);
       expect(AppRoutePolicies.profile.requiresAuthentication, isTrue);
     });
+
+    test('case study demo subtree is marked authenticated', () {
+      expect(AppRoutePolicies.caseStudyDemo.path, AppRoutes.caseStudyDemoPath);
+      expect(AppRoutePolicies.caseStudyDemo.requiresAuthentication, isTrue);
+    });
   });
 }
 

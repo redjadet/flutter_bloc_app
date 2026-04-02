@@ -4,28 +4,28 @@ import 'package:go_router/go_router.dart';
 
 void main() {
   group('createAuxiliaryRoutes', () {
-    test('returns list of GoRoute instances', () {
-      final routes = createAuxiliaryRoutes();
-      expect(routes, isA<List<GoRoute>>());
+    test('returns non-empty list of RouteBase', () {
+      final List<RouteBase> routes = createAuxiliaryRoutes();
       expect(routes, isNotEmpty);
+      expect(routes.every((final RouteBase r) => r is GoRoute), isTrue);
     });
 
     test('routes have correct path and name properties', () {
-      final routes = createAuxiliaryRoutes();
+      final List<RouteBase> routes = createAuxiliaryRoutes();
 
-      // Check that routes have paths and names set
-      for (final route in routes) {
-        expect(route.path, isNotEmpty);
-        expect(route.name, isNotNull);
+      for (final RouteBase route in routes) {
+        final GoRoute go = route as GoRoute;
+        expect(go.path, isNotEmpty);
+        expect(go.name, isNotNull);
       }
     });
 
     test('routes have builder functions', () {
-      final routes = createAuxiliaryRoutes();
+      final List<RouteBase> routes = createAuxiliaryRoutes();
 
-      // Check that all routes have builders
-      for (final route in routes) {
-        expect(route.builder, isNotNull);
+      for (final RouteBase route in routes) {
+        final GoRoute go = route as GoRoute;
+        expect(go.builder, isNotNull);
       }
     });
   });

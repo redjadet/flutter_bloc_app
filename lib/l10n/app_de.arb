@@ -21,6 +21,7 @@
   "startAutoHint": "Bei Zähler 0: Tippen Sie auf + für Auto-Verringerung",
   "cannotGoBelowZero": "Der Zähler kann nicht unter 0 gehen",
   "openExampleTooltip": "Beispielseite öffnen",
+  "openCaseStudyDemoTooltip": "Zahnarzt-Fallstudien-Demo öffnen",
   "openCalculatorTooltip": "Zahlungsrechner öffnen",
   "examplePageTitle": "Beispielseite",
   "examplePageDescription": "Diese Seite demonstriert die Navigation mit GoRouter.",
@@ -1465,5 +1466,59 @@
   "iapDemoSubscriptionsTitle": "Subscriptions",
   "iapDemoLastResultLabel": "Last result",
   "iapDemoBuyButton": "Buy",
-  "iapDemoNoProductsFound": "No products found."
+  "iapDemoNoProductsFound": "No products found.",
+  "exampleCaseStudyDemoButton": "Fallstudie-Demo (Zahnarzt)",
+  "caseStudyDemoTitle": "Fallstudien-Demo",
+  "caseStudyDemoNewCase": "Neuer Fall",
+  "caseStudyDemoHistory": "Verlauf",
+  "caseStudyDemoSettings": "Einstellungen",
+  "caseStudyDemoMetadataTitle": "Falldaten",
+  "caseStudyDoctorNameLabel": "Name der Ärztin / des Arztes",
+  "caseStudyCaseTypeLabel": "Falltyp",
+  "caseStudyNotesLabel": "Notizen (optional)",
+  "caseStudyContinue": "Weiter",
+  "caseStudyCaseTypeImplant": "Implantat",
+  "caseStudyCaseTypeOrtho": "Kieferorthopädie",
+  "caseStudyCaseTypeCosmetic": "Ästhetik",
+  "caseStudyCaseTypeGeneral": "Allgemein",
+  "caseStudyRecordTitle": "Antworten aufnehmen",
+  "caseStudyQuestionProgress": "Frage {current} von {total}",
+  "@caseStudyQuestionProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "caseStudyPickVideoCamera": "Video aufnehmen",
+  "caseStudyPickVideoGallery": "Aus Mediathek wählen",
+  "caseStudyNext": "Weiter",
+  "caseStudyGoToReview": "Zur Überprüfung",
+  "caseStudyBack": "Zurück",
+  "caseStudyReviewTitle": "Überprüfen & senden",
+  "caseStudySubmit": "Senden (Mock-Upload)",
+  "caseStudyAbandon": "Fall verwerfen",
+  "caseStudyAbandonConfirmBody": "Diesen Fall verwerfen und alle Aufnahmen dazu löschen?",
+  "caseStudyUploading": "Wird hochgeladen…",
+  "caseStudyDataModeLocalOnly": "Nur lokal",
+  "caseStudyDataModeSupabase": "Supabase",
+  "caseStudyHistoryTitle": "Eingereichte Fälle",
+  "caseStudyHistoryEmpty": "Noch keine eingereichten Fälle.",
+  "caseStudyHistoryDetailTitle": "Falldetails",
+  "caseStudySubmittedAt": "Eingereicht",
+  "caseStudyVideoMissing": "Videodatei fehlt",
+  "caseStudyErrorGeneric": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+  "caseStudyQuestion1": "Stellen Sie Patient:in und Hauptbeschwerde vor.",
+  "caseStudyQuestion2": "Beschreiben Sie die relevante Anamnese.",
+  "caseStudyQuestion3": "Zeigen Sie Befunde der extraoralen Untersuchung.",
+  "caseStudyQuestion4": "Zeigen Sie Befunde der intraoralen Untersuchung.",
+  "caseStudyQuestion5": "Erläutern Sie die bildgebenden Befunde.",
+  "caseStudyQuestion6": "Gehen Sie Diagnose und Problemliste durch.",
+  "caseStudyQuestion7": "Beschreiben Sie besprochene Behandlungsoptionen.",
+  "caseStudyQuestion8": "Detailieren Sie den gewählten Behandlungsplan.",
+  "caseStudyQuestion9": "Zeigen Sie den unmittelbaren postoperativen Status.",
+  "caseStudyQuestion10": "Fassen Sie Nachsorge und Prognose zusammen."
 }

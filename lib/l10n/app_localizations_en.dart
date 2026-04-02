@@ -53,6 +53,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openExampleTooltip => 'Open example page';
 
   @override
+  String get openCaseStudyDemoTooltip => 'Open dentist case study demo';
+
+  @override
   String get openCalculatorTooltip => 'Open payment calculator';
 
   @override
@@ -1937,4 +1940,139 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get iapDemoNoProductsFound => 'No products found.';
+
+  @override
+  String get exampleCaseStudyDemoButton => 'Case study demo (dentist)';
+
+  @override
+  String get caseStudyDemoTitle => 'Case study demo';
+
+  @override
+  String get caseStudyDemoNewCase => 'New case';
+
+  @override
+  String get caseStudyDemoHistory => 'History';
+
+  @override
+  String get caseStudyDemoSettings => 'Settings';
+
+  @override
+  String get caseStudyDemoMetadataTitle => 'Case details';
+
+  @override
+  String get caseStudyDoctorNameLabel => 'Doctor name';
+
+  @override
+  String get caseStudyCaseTypeLabel => 'Case type';
+
+  @override
+  String get caseStudyNotesLabel => 'Notes (optional)';
+
+  @override
+  String get caseStudyContinue => 'Continue';
+
+  @override
+  String get caseStudyCaseTypeImplant => 'Implant';
+
+  @override
+  String get caseStudyCaseTypeOrtho => 'Orthodontics';
+
+  @override
+  String get caseStudyCaseTypeCosmetic => 'Cosmetic';
+
+  @override
+  String get caseStudyCaseTypeGeneral => 'General';
+
+  @override
+  String get caseStudyRecordTitle => 'Record responses';
+
+  @override
+  String caseStudyQuestionProgress(int current, int total) {
+    return 'Question $current of $total';
+  }
+
+  @override
+  String get caseStudyPickVideoCamera => 'Record video';
+
+  @override
+  String get caseStudyPickVideoGallery => 'Choose from gallery';
+
+  @override
+  String get caseStudyNext => 'Next';
+
+  @override
+  String get caseStudyGoToReview => 'Continue to review';
+
+  @override
+  String get caseStudyBack => 'Back';
+
+  @override
+  String get caseStudyReviewTitle => 'Review & submit';
+
+  @override
+  String get caseStudySubmit => 'Submit (mock upload)';
+
+  @override
+  String get caseStudyAbandon => 'Abandon case';
+
+  @override
+  String get caseStudyAbandonConfirmBody =>
+      'Discard this case and delete any recorded clips for it?';
+
+  @override
+  String get caseStudyUploading => 'Uploading…';
+
+  @override
+  String get caseStudyDataModeLocalOnly => 'Local only';
+
+  @override
+  String get caseStudyDataModeSupabase => 'Supabase';
+
+  @override
+  String get caseStudyHistoryTitle => 'Submitted cases';
+
+  @override
+  String get caseStudyHistoryEmpty => 'No submitted cases yet.';
+
+  @override
+  String get caseStudyHistoryDetailTitle => 'Case detail';
+
+  @override
+  String get caseStudySubmittedAt => 'Submitted';
+
+  @override
+  String get caseStudyVideoMissing => 'Video file missing';
+
+  @override
+  String get caseStudyErrorGeneric => 'Something went wrong. Try again.';
+
+  @override
+  String get caseStudyQuestion1 => 'Introduce the patient and chief complaint.';
+
+  @override
+  String get caseStudyQuestion2 => 'Describe relevant medical history.';
+
+  @override
+  String get caseStudyQuestion3 => 'Show extra-oral examination findings.';
+
+  @override
+  String get caseStudyQuestion4 => 'Show intra-oral examination findings.';
+
+  @override
+  String get caseStudyQuestion5 => 'Explain radiographic findings.';
+
+  @override
+  String get caseStudyQuestion6 => 'Walk through diagnosis and problem list.';
+
+  @override
+  String get caseStudyQuestion7 => 'Describe treatment options discussed.';
+
+  @override
+  String get caseStudyQuestion8 => 'Detail the chosen treatment plan.';
+
+  @override
+  String get caseStudyQuestion9 => 'Show immediate post-operative status.';
+
+  @override
+  String get caseStudyQuestion10 => 'Summarize follow-up and prognosis.';
 }
