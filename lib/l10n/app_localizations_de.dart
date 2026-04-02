@@ -2079,6 +2079,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Etwas ist schiefgelaufen. Bitte erneut versuchen.';
 
   @override
+  String get caseStudyHistoryDetailNotFound =>
+      'Dieser Fall wurde nicht gefunden. Er wurde möglicherweise entfernt oder Sie haben keinen Zugriff.';
+
+  @override
+  String get caseStudyHistoryDetailUnavailable =>
+      'Dieser Fall konnte nicht geladen werden. Prüfen Sie die Verbindung und versuchen Sie es erneut.';
+
+  @override
   String get caseStudySubmitLocalHistoryFailed =>
       'Der Fall wurde in der Cloud gespeichert, aber der lokale Verlauf auf diesem Gerät konnte nicht aktualisiert werden. Nutzen Sie unten „Erneut lokal speichern“ oder öffnen Sie den Verlauf für Cloud-Einträge.';
 

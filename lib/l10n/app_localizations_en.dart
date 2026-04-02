@@ -2047,6 +2047,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get caseStudyErrorGeneric => 'Something went wrong. Try again.';
 
   @override
+  String get caseStudyHistoryDetailNotFound =>
+      'This case was not found. It may have been removed or you may not have access.';
+
+  @override
+  String get caseStudyHistoryDetailUnavailable =>
+      'Could not load this case. Check your connection and try again.';
+
+  @override
   String get caseStudySubmitLocalHistoryFailed =>
       'Your case was saved in the cloud, but this device could not update local history. Use “Retry saving on this device” below, or open History to see cloud submissions.';
 

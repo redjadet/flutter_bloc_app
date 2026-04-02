@@ -1511,6 +1511,8 @@
   "caseStudySubmittedAt": "Enviado",
   "caseStudyVideoMissing": "Falta el archivo de vídeo",
   "caseStudyErrorGeneric": "Algo salió mal. Inténtelo de nuevo.",
+  "caseStudyHistoryDetailNotFound": "No se encontró este caso. Puede haberse eliminado o no tener acceso.",
+  "caseStudyHistoryDetailUnavailable": "No se pudo cargar este caso. Compruebe la conexión e inténtelo de nuevo.",
   "caseStudySubmitLocalHistoryFailed": "El caso se guardó en la nube, pero no se pudo actualizar el historial local en este dispositivo. Use «Reintentar guardar en este dispositivo» abajo o abra Historial para ver los envíos en la nube.",
   "caseStudyRetryLocalSave": "Reintentar guardar en este dispositivo",
   "caseStudyRefreshDetailTooltip": "Actualizar",

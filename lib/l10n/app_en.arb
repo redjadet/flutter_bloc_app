@@ -2587,6 +2587,8 @@
   "caseStudySubmittedAt": "Submitted",
   "caseStudyVideoMissing": "Video file missing",
   "caseStudyErrorGeneric": "Something went wrong. Try again.",
+  "caseStudyHistoryDetailNotFound": "This case was not found. It may have been removed or you may not have access.",
+  "caseStudyHistoryDetailUnavailable": "Could not load this case. Check your connection and try again.",
   "caseStudySubmitLocalHistoryFailed": "Your case was saved in the cloud, but this device could not update local history. Use “Retry saving on this device” below, or open History to see cloud submissions.",
   "caseStudyRetryLocalSave": "Retry saving on this device",
   "caseStudyRefreshDetailTooltip": "Refresh",
