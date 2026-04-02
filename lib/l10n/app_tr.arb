@@ -1530,6 +1530,8 @@
   "caseStudySubmittedAt": "Gönderildi",
   "caseStudyVideoMissing": "Video dosyası bulunamadı",
   "caseStudyErrorGeneric": "Bir sorun oluştu. Yeniden deneyin.",
+  "caseStudyHistoryDetailNotFound": "Bu vaka bulunamadı. Kaldırılmış olabilir veya erişiminiz olmayabilir.",
+  "caseStudyHistoryDetailUnavailable": "Bu vaka yüklenemedi. Bağlantınızı kontrol edip yeniden deneyin.",
   "caseStudySubmitLocalHistoryFailed": "Vaka bulutta kaydedildi ancak bu cihazdaki yerel geçmiş güncellenemedi. Aşağıdan «Bu cihazda yeniden kaydet»i kullanın veya buluttaki gönderiler için Geçmiş’e bakın.",
   "caseStudyRetryLocalSave": "Bu cihazda yeniden kaydet",
   "caseStudyRefreshDetailTooltip": "Yenile",

@@ -2077,6 +2077,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get caseStudyErrorGeneric => 'Une erreur s\'est produite. Réessayez.';
 
   @override
+  String get caseStudyHistoryDetailNotFound =>
+      'Ce dossier est introuvable. Il a peut-être été supprimé ou vous n\'y avez pas accès.';
+
+  @override
+  String get caseStudyHistoryDetailUnavailable =>
+      'Impossible de charger ce dossier. Vérifiez votre connexion et réessayez.';
+
+  @override
   String get caseStudySubmitLocalHistoryFailed =>
       'Le cas a été enregistré dans le cloud, mais l\'historique local n\'a pas pu être mis à jour sur cet appareil. Utilisez « Réessayer l\'enregistrement local » ci-dessous ou ouvrez l\'historique pour les envois cloud.';
 

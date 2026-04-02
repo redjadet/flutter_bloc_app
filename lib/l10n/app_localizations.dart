@@ -3803,6 +3803,18 @@ abstract class AppLocalizations {
   /// **'Something went wrong. Try again.'**
   String get caseStudyErrorGeneric;
 
+  /// No description provided for @caseStudyHistoryDetailNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This case was not found. It may have been removed or you may not have access.'**
+  String get caseStudyHistoryDetailNotFound;
+
+  /// No description provided for @caseStudyHistoryDetailUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load this case. Check your connection and try again.'**
+  String get caseStudyHistoryDetailUnavailable;
+
   /// No description provided for @caseStudySubmitLocalHistoryFailed.
   ///
   /// In en, this message translates to:

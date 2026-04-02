@@ -2052,6 +2052,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get caseStudyErrorGeneric => 'Bir sorun oluştu. Yeniden deneyin.';
 
   @override
+  String get caseStudyHistoryDetailNotFound =>
+      'Bu vaka bulunamadı. Kaldırılmış olabilir veya erişiminiz olmayabilir.';
+
+  @override
+  String get caseStudyHistoryDetailUnavailable =>
+      'Bu vaka yüklenemedi. Bağlantınızı kontrol edip yeniden deneyin.';
+
+  @override
   String get caseStudySubmitLocalHistoryFailed =>
       'Vaka bulutta kaydedildi ancak bu cihazdaki yerel geçmiş güncellenemedi. Aşağıdan «Bu cihazda yeniden kaydet»i kullanın veya buluttaki gönderiler için Geçmiş’e bakın.';
 

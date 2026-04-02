@@ -1511,6 +1511,8 @@
   "caseStudySubmittedAt": "Envoyé",
   "caseStudyVideoMissing": "Fichier vidéo introuvable",
   "caseStudyErrorGeneric": "Une erreur s'est produite. Réessayez.",
+  "caseStudyHistoryDetailNotFound": "Ce dossier est introuvable. Il a peut-être été supprimé ou vous n'y avez pas accès.",
+  "caseStudyHistoryDetailUnavailable": "Impossible de charger ce dossier. Vérifiez votre connexion et réessayez.",
   "caseStudySubmitLocalHistoryFailed": "Le cas a été enregistré dans le cloud, mais l'historique local n'a pas pu être mis à jour sur cet appareil. Utilisez « Réessayer l'enregistrement local » ci-dessous ou ouvrez l'historique pour les envois cloud.",
   "caseStudyRetryLocalSave": "Réessayer l'enregistrement local",
   "caseStudyRefreshDetailTooltip": "Actualiser",

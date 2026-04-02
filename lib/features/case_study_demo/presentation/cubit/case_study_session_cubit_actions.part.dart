@@ -82,6 +82,7 @@ mixin _CaseStudySessionCubitActions on _CaseStudySessionCubitBase {
     final CaseStudyDraft updated = state.draft.copyWith(
       phase: CaseStudyDraftPhase.reviewing,
     );
+    // Intentionally unawaited: keep navigation responsive; draft is already in memory.
     unawaited(_local.saveDraft(userId, updated));
     emit(state.copyWith(draft: updated));
   }
@@ -321,8 +322,25 @@ mixin _CaseStudySessionCubitActions on _CaseStudySessionCubitBase {
       ),
     );
     try {
-      final DateTime submittedAtUtc =
+      DateTime submittedAtUtc =
           _pendingSubmitSubmittedAtUtc ?? DateTime.now().toUtc();
+      if (_supaAuth.isConfigured && _supaAuth.currentUser != null) {
+        try {
+          final RemoteCaseStudyDetail? detail = await _remote.getSubmittedCase(
+            caseId: state.draft.caseId,
+          );
+          if (detail != null) {
+            submittedAtUtc = detail.submittedAtUtc;
+          }
+        } on Object catch (error, stackTrace) {
+          AppLogger.error(
+            'CaseStudySessionCubit.retryPersistLocalHistoryAfterRemote:'
+            ' getSubmittedCase',
+            error,
+            stackTrace,
+          );
+        }
+      }
       final CaseStudyDraft fresh = await _persistSubmissionToLocalHistory(
         userId: userId,
         caseId: state.draft.caseId,

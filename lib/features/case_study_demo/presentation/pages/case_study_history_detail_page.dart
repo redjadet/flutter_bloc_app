@@ -27,6 +27,54 @@ class _HistoryDetailLoad {
   final bool usesExpiringCloudPlaybackUrls;
 }
 
+enum _HistoryDetailFailureKind { notFound, unavailable }
+
+class _HistoryDetailSnapshot {
+  const _HistoryDetailSnapshot.ok(final _HistoryDetailLoad value)
+    : load = value,
+      failure = null;
+
+  const _HistoryDetailSnapshot.fail(this.failure) : load = null;
+
+  final _HistoryDetailLoad? load;
+  final _HistoryDetailFailureKind? failure;
+
+  bool get isSuccess => load != null;
+}
+
+/// Signs clip URLs in small parallel batches to reduce wall-clock latency.
+Future<Map<String, String>> _signPlaybackUrlsInBatches({
+  required final CaseStudyRemoteRepository remote,
+  required final Map<String, String> keysByQuestion,
+  required final Duration ttl,
+  final int batchSize = 4,
+}) async {
+  final List<MapEntry<String, String>> entries = keysByQuestion.entries
+      .where((final e) => e.value.isNotEmpty)
+      .toList();
+  final Map<String, String> out = <String, String>{};
+  for (int i = 0; i < entries.length; i += batchSize) {
+    final int end = i + batchSize > entries.length
+        ? entries.length
+        : i + batchSize;
+    final List<MapEntry<String, String>> chunk = entries.sublist(i, end);
+    final List<MapEntry<String, String>> signed =
+        await Future.wait<MapEntry<String, String>>(
+          chunk.map((e) async {
+            final String url = await remote.createSignedPlaybackUrl(
+              objectKey: e.value,
+              ttl: ttl,
+            );
+            return MapEntry<String, String>(e.key, url);
+          }),
+        );
+    for (final MapEntry<String, String> e in signed) {
+      out[e.key] = e.value;
+    }
+  }
+  return out;
+}
+
 class CaseStudyHistoryDetailPage extends StatefulWidget {
   const CaseStudyHistoryDetailPage({required this.recordId, super.key});
 
@@ -39,7 +87,7 @@ class CaseStudyHistoryDetailPage extends StatefulWidget {
 
 class _CaseStudyHistoryDetailPageState
     extends State<CaseStudyHistoryDetailPage> {
-  Future<_HistoryDetailLoad?>? _future;
+  Future<_HistoryDetailSnapshot>? _future;
 
   @override
   void initState() {
@@ -47,61 +95,85 @@ class _CaseStudyHistoryDetailPageState
     _future = _loadDetail();
   }
 
-  Future<_HistoryDetailLoad?> _loadDetail() async {
+  Future<_HistoryDetailSnapshot> _loadDetail() async {
     final AuthRepository auth = getIt<AuthRepository>();
     final String? userId = auth.currentUser?.id;
-    if (userId == null || userId.isEmpty) return null;
+    if (userId == null || userId.isEmpty) {
+      return const _HistoryDetailSnapshot.fail(
+        _HistoryDetailFailureKind.unavailable,
+      );
+    }
 
     final SupabaseAuthRepository supaAuth = getIt<SupabaseAuthRepository>();
     if (supaAuth.isConfigured && supaAuth.currentUser != null) {
       final CaseStudyRemoteRepository remote =
           getIt<CaseStudyRemoteRepository>();
-      final RemoteCaseStudyDetail? detail = await remote.getSubmittedCase(
-        caseId: widget.recordId,
-      );
-      if (detail == null) return null;
+      try {
+        final RemoteCaseStudyDetail? detail = await remote.getSubmittedCase(
+          caseId: widget.recordId,
+        );
+        if (detail == null) {
+          return const _HistoryDetailSnapshot.fail(
+            _HistoryDetailFailureKind.notFound,
+          );
+        }
 
-      final Map<String, String> signedUrls = <String, String>{};
-      for (final MapEntry<String, String> e
-          in detail.remoteObjectKeysByQuestion.entries) {
-        final String url = await remote.createSignedPlaybackUrl(
-          objectKey: e.value,
+        final Map<String, String> signedUrls = await _signPlaybackUrlsInBatches(
+          remote: remote,
+          keysByQuestion: detail.remoteObjectKeysByQuestion,
           ttl: kCaseStudySignedPlaybackUrlTtl,
         );
-        signedUrls[e.key] = url;
-      }
 
-      return _HistoryDetailLoad(
-        record: CaseStudyRecord(
-          id: detail.caseId,
-          submittedAt: detail.submittedAtUtc,
-          doctorName: detail.doctorName,
-          caseType: detail.caseType,
-          notes: detail.notes,
-          answers: signedUrls,
-        ),
-        usesExpiringCloudPlaybackUrls: true,
-      );
+        return _HistoryDetailSnapshot.ok(
+          _HistoryDetailLoad(
+            record: CaseStudyRecord(
+              id: detail.caseId,
+              submittedAt: detail.submittedAtUtc,
+              doctorName: detail.doctorName,
+              caseType: detail.caseType,
+              notes: detail.notes,
+              answers: signedUrls,
+            ),
+            usesExpiringCloudPlaybackUrls: true,
+          ),
+        );
+      } on Object {
+        return const _HistoryDetailSnapshot.fail(
+          _HistoryDetailFailureKind.unavailable,
+        );
+      }
     }
 
-    final CaseStudyLocalRepository local = getIt<CaseStudyLocalRepository>();
-    await local.ensureReady();
-    final CaseStudyRecord? record = await local.getRecord(
-      userId,
-      widget.recordId,
-    );
-    if (record == null) return null;
-    return _HistoryDetailLoad(
-      record: record,
-      usesExpiringCloudPlaybackUrls: false,
-    );
+    try {
+      final CaseStudyLocalRepository local = getIt<CaseStudyLocalRepository>();
+      await local.ensureReady();
+      final CaseStudyRecord? record = await local.getRecord(
+        userId,
+        widget.recordId,
+      );
+      if (record == null) {
+        return const _HistoryDetailSnapshot.fail(
+          _HistoryDetailFailureKind.notFound,
+        );
+      }
+      return _HistoryDetailSnapshot.ok(
+        _HistoryDetailLoad(
+          record: record,
+          usesExpiringCloudPlaybackUrls: false,
+        ),
+      );
+    } on Object {
+      return const _HistoryDetailSnapshot.fail(
+        _HistoryDetailFailureKind.unavailable,
+      );
+    }
   }
 
   /// Reloads detail without swapping to a pending [Future] first (avoids blanking the screen).
   Future<void> _reload() async {
-    final _HistoryDetailLoad? next = await _loadDetail();
+    final _HistoryDetailSnapshot next = await _loadDetail();
     if (!mounted) return;
-    setState(() => _future = Future<_HistoryDetailLoad?>.value(next));
+    setState(() => _future = Future<_HistoryDetailSnapshot>.value(next));
   }
 
   @override
@@ -118,15 +190,27 @@ class _CaseStudyHistoryDetailPageState
           },
         ),
       ],
-      body: FutureBuilder<_HistoryDetailLoad?>(
+      body: FutureBuilder<_HistoryDetailSnapshot>(
         future: _future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-          final _HistoryDetailLoad? load = snapshot.data;
+          final _HistoryDetailSnapshot? data = snapshot.data;
+          if (data == null || !data.isSuccess) {
+            final _HistoryDetailFailureKind kind =
+                data?.failure ?? _HistoryDetailFailureKind.unavailable;
+            final String message = switch (kind) {
+              _HistoryDetailFailureKind.notFound =>
+                l10n.caseStudyHistoryDetailNotFound,
+              _HistoryDetailFailureKind.unavailable =>
+                l10n.caseStudyHistoryDetailUnavailable,
+            };
+            return Center(child: Text(message));
+          }
+          final _HistoryDetailLoad? load = data.load;
           if (load == null) {
-            return Center(child: Text(l10n.caseStudyErrorGeneric));
+            return Center(child: Text(l10n.caseStudyHistoryDetailUnavailable));
           }
           final CaseStudyRecord r = load.record;
           final DateFormat fmt = DateFormat.yMMMd().add_jm();
