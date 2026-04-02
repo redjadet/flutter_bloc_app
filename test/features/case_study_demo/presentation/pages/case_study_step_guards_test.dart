@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
@@ -179,6 +180,7 @@ class _TestCaseStudySessionCubit extends CaseStudySessionCubit {
         remoteDeleteRepository: _StubRemoteDeleteRepository(),
         supabaseAuthRepository: _StubSupabaseAuthRepository(),
         remoteRepository: _StubRemoteRepository(),
+        timerService: DefaultTimerService(),
       );
 
   void emitState(final CaseStudySessionState state) => emit(state);

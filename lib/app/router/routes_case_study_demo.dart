@@ -104,6 +104,7 @@ ShellRoute createCaseStudyDemoShellRoute() => ShellRoute(
                     getIt<CaseStudyRemoteDeleteRepository>(),
                 supabaseAuthRepository: supaAuth,
                 remoteRepository: getIt<CaseStudyRemoteRepository>(),
+                timerService: getIt<TimerService>(),
               ),
               init: (cubit) => cubit.hydrate(),
               child: child,

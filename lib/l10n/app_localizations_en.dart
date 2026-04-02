@@ -2047,6 +2047,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get caseStudyErrorGeneric => 'Something went wrong. Try again.';
 
   @override
+  String get caseStudySubmitLocalHistoryFailed =>
+      'Your case was saved in the cloud, but this device could not update local history. Use “Retry saving on this device” below, or open History to see cloud submissions.';
+
+  @override
+  String get caseStudyRetryLocalSave => 'Retry saving on this device';
+
+  @override
+  String get caseStudyRefreshDetailTooltip => 'Refresh';
+
+  @override
+  String get caseStudySignedUrlsRefreshHint =>
+      'Clip playback uses temporary links (about 24 hours). Pull down or tap refresh if a video stops working.';
+
+  @override
   String get caseStudyQuestion1 => 'Introduce the patient and chief complaint.';
 
   @override

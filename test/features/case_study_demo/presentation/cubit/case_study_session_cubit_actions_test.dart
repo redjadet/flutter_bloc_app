@@ -13,6 +13,7 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remo
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_upload_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_video_repository.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_session_cubit.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -34,13 +35,13 @@ class _StubAuthRepository implements AuthRepository {
 }
 
 class _MemoryLocalRepository implements CaseStudyLocalRepository {
-  final Map<String, CaseStudyDraft?> _drafts = <String, CaseStudyDraft?>{};
-  final Map<String, List<CaseStudyRecord>> _records =
+  final Map<String, CaseStudyDraft?> drafts = <String, CaseStudyDraft?>{};
+  final Map<String, List<CaseStudyRecord>> records =
       <String, List<CaseStudyRecord>>{};
 
   @override
   Future<void> clearDraft(final String userId) async {
-    _drafts.remove(userId);
+    drafts.remove(userId);
   }
 
   @override
@@ -54,26 +55,56 @@ class _MemoryLocalRepository implements CaseStudyLocalRepository {
 
   @override
   Future<CaseStudyDraft?> loadDraft(final String userId) async =>
-      _drafts[userId];
+      drafts[userId];
 
   @override
   Future<List<CaseStudyRecord>> loadRecords(final String userId) async =>
-      _records[userId] ?? <CaseStudyRecord>[];
+      records[userId] ?? <CaseStudyRecord>[];
 
   @override
   Future<void> saveDraft(
     final String userId,
     final CaseStudyDraft draft,
   ) async {
-    _drafts[userId] = draft;
+    drafts[userId] = draft;
   }
 
   @override
   Future<void> saveRecords(
     final String userId,
-    final List<CaseStudyRecord> records,
+    final List<CaseStudyRecord> next,
   ) async {
-    _records[userId] = records;
+    records[userId] = next;
+  }
+}
+
+/// Fails [saveRecords] while saveFailuresEmitted &lt; failuresBeforeSuccess, then delegates.
+class _FlakySaveRecordsLocalRepository extends _MemoryLocalRepository {
+  _FlakySaveRecordsLocalRepository({required this.failuresBeforeSuccess});
+
+  int failuresBeforeSuccess;
+  int saveFailuresEmitted = 0;
+
+  @override
+  Future<void> saveRecords(
+    final String userId,
+    final List<CaseStudyRecord> next,
+  ) async {
+    if (saveFailuresEmitted < failuresBeforeSuccess) {
+      saveFailuresEmitted += 1;
+      throw StateError('saveRecords flaky');
+    }
+    await super.saveRecords(userId, next);
+  }
+}
+
+class _AlwaysFailingSaveRecordsLocalRepository extends _MemoryLocalRepository {
+  @override
+  Future<void> saveRecords(
+    final String userId,
+    final List<CaseStudyRecord> next,
+  ) async {
+    throw StateError('saveRecords always fails');
   }
 }
 
@@ -316,6 +347,7 @@ void main() {
         remoteDeleteRepository: _NoopRemoteDeleteRepository(),
         supabaseAuthRepository: _StubSupabaseAuthRepository(),
         remoteRepository: _StubRemoteRepository(),
+        timerService: DefaultTimerService(),
       );
 
       final CaseStudyDraft draft = CaseStudyDraft.fresh(caseId: 'case-1');
@@ -347,6 +379,7 @@ void main() {
         remoteDeleteRepository: _ThrowingRemoteDeleteRepository(),
         supabaseAuthRepository: _StubSupabaseAuthRepository(),
         remoteRepository: _StubRemoteRepository(),
+        timerService: DefaultTimerService(),
       );
 
       final CaseStudyDraft draft = CaseStudyDraft.fresh(caseId: 'case-1');
@@ -386,6 +419,7 @@ void main() {
             user: const AuthUser(id: 'supa-1', isAnonymous: false),
           ),
           remoteRepository: remote,
+          timerService: DefaultTimerService(),
         );
 
         final CaseStudyDraft draft = CaseStudyDraft(
@@ -442,6 +476,7 @@ void main() {
             user: const AuthUser(id: 'supa-1', isAnonymous: false),
           ),
           remoteRepository: remote,
+          timerService: DefaultTimerService(),
         );
 
         final Map<String, String> preUploaded = <String, String>{
@@ -470,6 +505,174 @@ void main() {
         expect(remoteDelete.lastCaseId, 'case-fail-upsert');
         expect(cubit.state.submitError, isTrue);
         expect(await local.loadRecords('user-1'), isEmpty);
+
+        await cubit.close();
+        await auth.dispose();
+      },
+    );
+
+    test(
+      'retries local history persist; succeeds when saveRecords fails twice then works',
+      () async {
+        final _StubAuthRepository auth = _StubAuthRepository(
+          const AuthUser(id: 'user-1', isAnonymous: false),
+        );
+        final _FlakySaveRecordsLocalRepository local =
+            _FlakySaveRecordsLocalRepository(failuresBeforeSuccess: 2);
+        final _SpyRemoteRepository remote = _SpyRemoteRepository();
+
+        final CaseStudySessionCubit cubit = CaseStudySessionCubit(
+          authRepository: auth,
+          localRepository: local,
+          videoRepository: _StubVideoRepository(),
+          uploadRepository: _StubUploadRepository(),
+          clipStore: _NoopClipFileStore(),
+          remoteDeleteRepository: _NoopRemoteDeleteRepository(),
+          supabaseAuthRepository: _StubSupabaseAuthRepository(
+            configured: true,
+            user: const AuthUser(id: 'supa-1', isAnonymous: false),
+          ),
+          remoteRepository: remote,
+          timerService: DefaultTimerService(),
+        );
+
+        final CaseStudyDraft draft = CaseStudyDraft(
+          caseId: 'case-flaky-local',
+          doctorName: 'Dr. Ada',
+          caseType: CaseStudyCaseType.implant,
+          notes: 'notes',
+          answers: <String, String>{
+            for (final CaseStudyQuestionId id in CaseStudyQuestions.orderedIds)
+              id: '/tmp/$id.mp4',
+          },
+          phase: CaseStudyDraftPhase.reviewing,
+          currentQuestionIndex: 0,
+          remoteObjectKeysByQuestion: const <String, String>{},
+        );
+        await local.saveDraft('user-1', draft);
+        await cubit.hydrate();
+
+        await cubit.submitMockUpload();
+
+        expect(cubit.state.submitError, isFalse);
+        expect(cubit.state.submitLocalHistoryFailed, isFalse);
+        expect(remote.finalizeCount, 1);
+        final List<CaseStudyRecord> records = await local.loadRecords('user-1');
+        expect(records, hasLength(1));
+        expect(records.first.id, 'case-flaky-local');
+
+        await cubit.close();
+        await auth.dispose();
+      },
+    );
+
+    test('when remote finalize succeeds but local persist never succeeds, '
+        'sets submitLocalHistoryFailed and does not delete remote', () async {
+      final _StubAuthRepository auth = _StubAuthRepository(
+        const AuthUser(id: 'user-1', isAnonymous: false),
+      );
+      final _AlwaysFailingSaveRecordsLocalRepository local =
+          _AlwaysFailingSaveRecordsLocalRepository();
+      final _SpyRemoteDeleteRepository remoteDelete =
+          _SpyRemoteDeleteRepository();
+      final _SpyRemoteRepository remote = _SpyRemoteRepository();
+
+      final CaseStudySessionCubit cubit = CaseStudySessionCubit(
+        authRepository: auth,
+        localRepository: local,
+        videoRepository: _StubVideoRepository(),
+        uploadRepository: _StubUploadRepository(),
+        clipStore: _NoopClipFileStore(),
+        remoteDeleteRepository: remoteDelete,
+        supabaseAuthRepository: _StubSupabaseAuthRepository(
+          configured: true,
+          user: const AuthUser(id: 'supa-1', isAnonymous: false),
+        ),
+        remoteRepository: remote,
+        timerService: DefaultTimerService(),
+      );
+
+      final CaseStudyDraft draft = CaseStudyDraft(
+        caseId: 'case-local-dead',
+        doctorName: 'Dr. Ada',
+        caseType: CaseStudyCaseType.implant,
+        notes: 'notes',
+        answers: <String, String>{
+          for (final CaseStudyQuestionId id in CaseStudyQuestions.orderedIds)
+            id: '/tmp/$id.mp4',
+        },
+        phase: CaseStudyDraftPhase.reviewing,
+        currentQuestionIndex: 0,
+        remoteObjectKeysByQuestion: const <String, String>{},
+      );
+      await local.saveDraft('user-1', draft);
+      await cubit.hydrate();
+
+      await cubit.submitMockUpload();
+
+      expect(remote.finalizeCount, 1);
+      expect(remoteDelete.deleteCount, 0);
+      expect(cubit.state.submitError, isTrue);
+      expect(cubit.state.submitLocalHistoryFailed, isTrue);
+      expect(await local.loadRecords('user-1'), isEmpty);
+
+      await cubit.close();
+      await auth.dispose();
+    });
+
+    test(
+      'retryPersistLocalHistoryAfterRemote completes local history',
+      () async {
+        final _StubAuthRepository auth = _StubAuthRepository(
+          const AuthUser(id: 'user-1', isAnonymous: false),
+        );
+        final _FlakySaveRecordsLocalRepository local =
+            _FlakySaveRecordsLocalRepository(failuresBeforeSuccess: 10);
+        final _SpyRemoteRepository remote = _SpyRemoteRepository();
+
+        final CaseStudySessionCubit cubit = CaseStudySessionCubit(
+          authRepository: auth,
+          localRepository: local,
+          videoRepository: _StubVideoRepository(),
+          uploadRepository: _StubUploadRepository(),
+          clipStore: _NoopClipFileStore(),
+          remoteDeleteRepository: _NoopRemoteDeleteRepository(),
+          supabaseAuthRepository: _StubSupabaseAuthRepository(
+            configured: true,
+            user: const AuthUser(id: 'supa-1', isAnonymous: false),
+          ),
+          remoteRepository: remote,
+          timerService: DefaultTimerService(),
+        );
+
+        final CaseStudyDraft draft = CaseStudyDraft(
+          caseId: 'case-retry-local',
+          doctorName: 'Dr. Ada',
+          caseType: CaseStudyCaseType.implant,
+          notes: 'notes',
+          answers: <String, String>{
+            for (final CaseStudyQuestionId id in CaseStudyQuestions.orderedIds)
+              id: '/tmp/$id.mp4',
+          },
+          phase: CaseStudyDraftPhase.reviewing,
+          currentQuestionIndex: 0,
+          remoteObjectKeysByQuestion: const <String, String>{},
+        );
+        await local.saveDraft('user-1', draft);
+        await cubit.hydrate();
+
+        await cubit.submitMockUpload();
+
+        expect(cubit.state.submitLocalHistoryFailed, isTrue);
+        expect(local.saveFailuresEmitted, 3);
+
+        local.failuresBeforeSuccess = 0;
+
+        await cubit.retryPersistLocalHistoryAfterRemote();
+
+        expect(cubit.state.submitError, isFalse);
+        expect(cubit.state.submitLocalHistoryFailed, isFalse);
+        expect(await local.loadRecords('user-1'), hasLength(1));
 
         await cubit.close();
         await auth.dispose();

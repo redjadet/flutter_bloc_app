@@ -45,6 +45,9 @@ abstract class CaseStudyRemoteRepository {
   });
 }
 
+/// Maximum TTL for signed clip playback URLs (long sessions should refresh).
+const Duration kCaseStudySignedPlaybackUrlTtl = Duration(hours: 24);
+
 class RemoteCaseStudySummary {
   const RemoteCaseStudySummary({
     required this.caseId,

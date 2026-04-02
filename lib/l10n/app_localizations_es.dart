@@ -2065,6 +2065,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get caseStudyErrorGeneric => 'Algo salió mal. Inténtelo de nuevo.';
 
   @override
+  String get caseStudySubmitLocalHistoryFailed =>
+      'El caso se guardó en la nube, pero no se pudo actualizar el historial local en este dispositivo. Use «Reintentar guardar en este dispositivo» abajo o abra Historial para ver los envíos en la nube.';
+
+  @override
+  String get caseStudyRetryLocalSave =>
+      'Reintentar guardar en este dispositivo';
+
+  @override
+  String get caseStudyRefreshDetailTooltip => 'Actualizar';
+
+  @override
+  String get caseStudySignedUrlsRefreshHint =>
+      'La reproducción usa enlaces temporales (unas 24 horas). Desliza hacia abajo o pulsa actualizar si un vídeo deja de funcionar.';
+
+  @override
   String get caseStudyQuestion1 =>
       'Presente al paciente y el motivo de consulta.';
 

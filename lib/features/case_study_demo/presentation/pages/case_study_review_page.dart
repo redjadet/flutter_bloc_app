@@ -26,6 +26,7 @@ class CaseStudyReviewPage extends StatelessWidget {
             p.isSubmitting &&
             !c.isSubmitting &&
             !c.submitError &&
+            !c.submitLocalHistoryFailed &&
             c.draft.phase == CaseStudyDraftPhase.metadata &&
             c.draft.answers.isEmpty,
         listener: (context, state) {
@@ -88,12 +89,28 @@ class CaseStudyReviewPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    l10n.caseStudyErrorGeneric,
+                    state.submitLocalHistoryFailed
+                        ? l10n.caseStudySubmitLocalHistoryFailed
+                        : l10n.caseStudyErrorGeneric,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.error,
                     ),
                   ),
                 ),
+              if (state.submitLocalHistoryFailed) ...[
+                const SizedBox(height: 8),
+                FilledButton.tonal(
+                  onPressed: state.isSubmitting
+                      ? null
+                      : () async {
+                          await context
+                              .cubit<CaseStudySessionCubit>()
+                              .retryPersistLocalHistoryAfterRemote();
+                        },
+                  child: Text(l10n.caseStudyRetryLocalSave),
+                ),
+                const SizedBox(height: 8),
+              ],
               if (state.isSubmitting)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
@@ -118,7 +135,7 @@ class CaseStudyReviewPage extends StatelessWidget {
                   ),
                 ),
               FilledButton(
-                onPressed: state.isSubmitting
+                onPressed: state.isSubmitting || state.submitLocalHistoryFailed
                     ? null
                     : () async {
                         await context
