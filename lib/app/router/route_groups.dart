@@ -17,7 +17,7 @@ import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/shared/widgets/deferred_page.dart';
 import 'package:go_router/go_router.dart';
 
-List<GoRoute> createAuxiliaryRoutes() => <GoRoute>[
+List<RouteBase> createAuxiliaryRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.websocketPath,
     name: AppRoutes.websocket,

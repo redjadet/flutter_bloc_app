@@ -61,6 +61,10 @@
   "@openExampleTooltip": {
     "description": "Tooltip for navigating to the example feature page"
   },
+  "openCaseStudyDemoTooltip": "Open dentist case study demo",
+  "@openCaseStudyDemoTooltip": {
+    "description": "Tooltip for opening the case study demo flow from the home screen"
+  },
   "openCalculatorTooltip": "Open payment calculator",
   "@openCalculatorTooltip": {
     "description": "Tooltip for navigating to the payment calculator page"
@@ -2535,5 +2539,62 @@
   "iapDemoNoProductsFound": "No products found.",
   "@iapDemoNoProductsFound": {
     "description": "Shown when no products are available"
-  }
+  },
+  "exampleCaseStudyDemoButton": "Case study demo (dentist)",
+  "@exampleCaseStudyDemoButton": {
+    "description": "Example page entry to the dentist case study demo"
+  },
+  "caseStudyDemoTitle": "Case study demo",
+  "caseStudyDemoNewCase": "New case",
+  "caseStudyDemoHistory": "History",
+  "caseStudyDemoSettings": "Settings",
+  "caseStudyDemoMetadataTitle": "Case details",
+  "caseStudyDoctorNameLabel": "Doctor name",
+  "caseStudyCaseTypeLabel": "Case type",
+  "caseStudyNotesLabel": "Notes (optional)",
+  "caseStudyContinue": "Continue",
+  "caseStudyCaseTypeImplant": "Implant",
+  "caseStudyCaseTypeOrtho": "Orthodontics",
+  "caseStudyCaseTypeCosmetic": "Cosmetic",
+  "caseStudyCaseTypeGeneral": "General",
+  "caseStudyRecordTitle": "Record responses",
+  "caseStudyQuestionProgress": "Question {current} of {total}",
+  "@caseStudyQuestionProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "caseStudyPickVideoCamera": "Record video",
+  "caseStudyPickVideoGallery": "Choose from gallery",
+  "caseStudyNext": "Next",
+  "caseStudyGoToReview": "Continue to review",
+  "caseStudyBack": "Back",
+  "caseStudyReviewTitle": "Review & submit",
+  "caseStudySubmit": "Submit (mock upload)",
+  "caseStudyAbandon": "Abandon case",
+  "caseStudyAbandonConfirmBody": "Discard this case and delete any recorded clips for it?",
+  "caseStudyUploading": "Uploading…",
+  "caseStudyDataModeLocalOnly": "Local only",
+  "caseStudyDataModeSupabase": "Supabase",
+  "caseStudyHistoryTitle": "Submitted cases",
+  "caseStudyHistoryEmpty": "No submitted cases yet.",
+  "caseStudyHistoryDetailTitle": "Case detail",
+  "caseStudySubmittedAt": "Submitted",
+  "caseStudyVideoMissing": "Video file missing",
+  "caseStudyErrorGeneric": "Something went wrong. Try again.",
+  "caseStudyQuestion1": "Introduce the patient and chief complaint.",
+  "caseStudyQuestion2": "Describe relevant medical history.",
+  "caseStudyQuestion3": "Show extra-oral examination findings.",
+  "caseStudyQuestion4": "Show intra-oral examination findings.",
+  "caseStudyQuestion5": "Explain radiographic findings.",
+  "caseStudyQuestion6": "Walk through diagnosis and problem list.",
+  "caseStudyQuestion7": "Describe treatment options discussed.",
+  "caseStudyQuestion8": "Detail the chosen treatment plan.",
+  "caseStudyQuestion9": "Show immediate post-operative status.",
+  "caseStudyQuestion10": "Summarize follow-up and prognosis."
 }

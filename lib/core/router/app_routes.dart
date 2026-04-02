@@ -104,6 +104,24 @@ class AppRoutes {
   static const iapDemo = 'iap-demo';
   static const iapDemoPath = '/iap-demo';
 
+  static const caseStudyDemo = 'case-study-demo';
+  static const caseStudyDemoPath = '/case-study-demo';
+
+  static const caseStudyDemoNew = 'case-study-demo-new';
+  static const caseStudyDemoNewPath = '/case-study-demo/new';
+
+  static const caseStudyDemoRecord = 'case-study-demo-record';
+  static const caseStudyDemoRecordPath = '/case-study-demo/record';
+
+  static const caseStudyDemoReview = 'case-study-demo-review';
+  static const caseStudyDemoReviewPath = '/case-study-demo/review';
+
+  static const caseStudyDemoHistory = 'case-study-demo-history';
+  static const caseStudyDemoHistoryPath = '/case-study-demo/history';
+
+  static const caseStudyDemoHistoryDetail = 'case-study-demo-history-detail';
+  static const caseStudyDemoHistoryDetailPath = '/case-study-demo/history/:id';
+
   /// Returns true if [path] is safe for post-login redirect (local path only).
   /// Rejects null, empty, protocol-relative (//), and external URLs.
   static bool isSafeRedirectPath(final String? path) {

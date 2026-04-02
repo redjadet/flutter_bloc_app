@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/core/di/injector_factories.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/core/di/register_auth_services.dart';
 import 'package:flutter_bloc_app/core/di/register_calculator_services.dart';
+import 'package:flutter_bloc_app/core/di/register_case_study_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_chart_services.dart';
 import 'package:flutter_bloc_app/core/di/register_chat_services.dart';
 import 'package:flutter_bloc_app/core/di/register_fcm_demo_services.dart';
@@ -69,6 +70,7 @@ Future<void> registerAllDependencies() async {
   registerCalculatorServices();
   registerGraphqlServices();
   registerChatServices();
+  registerCaseStudyDemoServices();
   _registerSettingsServices();
   _registerDeepLinkServices();
   _registerWebSocketServices();

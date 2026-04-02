@@ -55,6 +55,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get openExampleTooltip => 'Ouvrir la page d\'exemple';
 
   @override
+  String get openCaseStudyDemoTooltip =>
+      'Ouvrir la démo d\'étude de cas dentiste';
+
+  @override
   String get openCalculatorTooltip => 'Ouvrir la calculatrice de paiement';
 
   @override
@@ -1966,4 +1970,146 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get iapDemoNoProductsFound => 'No products found.';
+
+  @override
+  String get exampleCaseStudyDemoButton => 'Démo étude de cas (dentiste)';
+
+  @override
+  String get caseStudyDemoTitle => 'Démo étude de cas';
+
+  @override
+  String get caseStudyDemoNewCase => 'Nouveau cas';
+
+  @override
+  String get caseStudyDemoHistory => 'Historique';
+
+  @override
+  String get caseStudyDemoSettings => 'Réglages';
+
+  @override
+  String get caseStudyDemoMetadataTitle => 'Détails du cas';
+
+  @override
+  String get caseStudyDoctorNameLabel => 'Nom du praticien';
+
+  @override
+  String get caseStudyCaseTypeLabel => 'Type de cas';
+
+  @override
+  String get caseStudyNotesLabel => 'Notes (facultatif)';
+
+  @override
+  String get caseStudyContinue => 'Continuer';
+
+  @override
+  String get caseStudyCaseTypeImplant => 'Implantologie';
+
+  @override
+  String get caseStudyCaseTypeOrtho => 'Orthodontie';
+
+  @override
+  String get caseStudyCaseTypeCosmetic => 'Esthétique';
+
+  @override
+  String get caseStudyCaseTypeGeneral => 'Général';
+
+  @override
+  String get caseStudyRecordTitle => 'Enregistrer les réponses';
+
+  @override
+  String caseStudyQuestionProgress(int current, int total) {
+    return 'Question $current sur $total';
+  }
+
+  @override
+  String get caseStudyPickVideoCamera => 'Enregistrer une vidéo';
+
+  @override
+  String get caseStudyPickVideoGallery => 'Choisir dans la galerie';
+
+  @override
+  String get caseStudyNext => 'Suivant';
+
+  @override
+  String get caseStudyGoToReview => 'Aller à la relecture';
+
+  @override
+  String get caseStudyBack => 'Retour';
+
+  @override
+  String get caseStudyReviewTitle => 'Relire et envoyer';
+
+  @override
+  String get caseStudySubmit => 'Envoyer (téléchargement fictif)';
+
+  @override
+  String get caseStudyAbandon => 'Abandonner le cas';
+
+  @override
+  String get caseStudyAbandonConfirmBody =>
+      'Abandonner ce cas et supprimer les enregistrements associés ?';
+
+  @override
+  String get caseStudyUploading => 'Téléversement…';
+
+  @override
+  String get caseStudyDataModeLocalOnly => 'Local uniquement';
+
+  @override
+  String get caseStudyDataModeSupabase => 'Supabase';
+
+  @override
+  String get caseStudyHistoryTitle => 'Cas envoyés';
+
+  @override
+  String get caseStudyHistoryEmpty => 'Aucun cas envoyé pour l\'instant.';
+
+  @override
+  String get caseStudyHistoryDetailTitle => 'Détail du cas';
+
+  @override
+  String get caseStudySubmittedAt => 'Envoyé';
+
+  @override
+  String get caseStudyVideoMissing => 'Fichier vidéo introuvable';
+
+  @override
+  String get caseStudyErrorGeneric => 'Une erreur s\'est produite. Réessayez.';
+
+  @override
+  String get caseStudyQuestion1 =>
+      'Présentez le patient et le motif principal de consultation.';
+
+  @override
+  String get caseStudyQuestion2 =>
+      'Décrivez les antécédents médicaux pertinents.';
+
+  @override
+  String get caseStudyQuestion3 =>
+      'Montrez les résultats de l\'examen extra-buccal.';
+
+  @override
+  String get caseStudyQuestion4 =>
+      'Montrez les résultats de l\'examen intra-buccal.';
+
+  @override
+  String get caseStudyQuestion5 => 'Expliquez les résultats d\'imagerie.';
+
+  @override
+  String get caseStudyQuestion6 =>
+      'Exposez le diagnostic et la liste des problèmes.';
+
+  @override
+  String get caseStudyQuestion7 =>
+      'Décrivez les options de traitement discutées.';
+
+  @override
+  String get caseStudyQuestion8 => 'Précisez le plan de traitement retenu.';
+
+  @override
+  String get caseStudyQuestion9 =>
+      'Montrez le statut post-opératoire immédiat.';
+
+  @override
+  String get caseStudyQuestion10 => 'Résumez le suivi et le pronostic.';
 }

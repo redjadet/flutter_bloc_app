@@ -7,6 +7,10 @@ that.
 
 ## Index
 
+- [`2026-04-02_case_study_supabase_private_storage_plan.md`](2026-04-02_case_study_supabase_private_storage_plan.md): optional Supabase private
+  storage, RLS, and submit flow for the dentist **Case Study Demo** feature.
+- [`2026-04-01_dentist_case_study_demo_plan.md`](2026-04-01_dentist_case_study_demo_plan.md): **Case Study Demo** feature scope, routes, auth,
+  Hive persistence, and tests (implements [`docs/case_studies/dentists.md`](../case_studies/dentists.md)).
 - [`2026-03-24_agent_output_optimization_purpose.md`](2026-03-24_agent_output_optimization_purpose.md): motivation/constraints for
   agent-output optimization work.
 - [`2026-02-23_code_quality_plan.md`](2026-02-23_code_quality_plan.md): historical plan document (superseded by

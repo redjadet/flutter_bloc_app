@@ -41,7 +41,7 @@ import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:go_router/go_router.dart';
 
 /// Demo and feature routes: chat, genui, playlearn, FCM, igaming, IoT.
-List<GoRoute> createDemoRoutes() => <GoRoute>[
+List<RouteBase> createDemoRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.chatPath,
     name: AppRoutes.chat,
@@ -97,7 +97,7 @@ List<GoRoute> createDemoRoutes() => <GoRoute>[
       repository: getIt<VocabularyRepository>(),
       audioService: getIt<AudioPlaybackService>(),
     ),
-    routes: <GoRoute>[
+    routes: <RouteBase>[
       GoRoute(
         path: 'vocabulary/:topicId',
         name: AppRoutes.playlearnVocabulary,
@@ -143,7 +143,7 @@ List<GoRoute> createDemoRoutes() => <GoRoute>[
         child: const LobbyPage(),
       );
     },
-    routes: <GoRoute>[
+    routes: <RouteBase>[
       GoRoute(
         path: 'game',
         name: AppRoutes.igamingDemoGame,
