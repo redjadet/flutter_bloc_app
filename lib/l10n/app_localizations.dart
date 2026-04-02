@@ -917,6 +917,12 @@ abstract class AppLocalizations {
   /// **'Open Google/Apple Maps demo'**
   String get openGoogleMapsTooltip;
 
+  /// Tooltip for navigating to the Mapbox demo feature
+  ///
+  /// In en, this message translates to:
+  /// **'Open Mapbox demo'**
+  String get openMapboxTooltip;
+
   /// Tooltip for navigating to the Whiteboard feature
   ///
   /// In en, this message translates to:
@@ -1792,6 +1798,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The Google Maps demo is only available on Android and iOS builds.'**
   String get googleMapsPageUnsupportedDescription;
+
+  /// Title for the Mapbox sample page
+  ///
+  /// In en, this message translates to:
+  /// **'Mapbox demo'**
+  String get mapboxPageTitle;
+
+  /// Headline shown when MAPBOX_ACCESS_TOKEN is not configured
+  ///
+  /// In en, this message translates to:
+  /// **'Add a Mapbox access token'**
+  String get mapboxPageMissingTokenTitle;
+
+  /// Helper text prompting developers to configure a Mapbox access token
+  ///
+  /// In en, this message translates to:
+  /// **'Set MAPBOX_ACCESS_TOKEN to enable the Mapbox demo.'**
+  String get mapboxPageMissingTokenDescription;
+
+  /// Message shown when the Mapbox demo is opened on an unsupported platform
+  ///
+  /// In en, this message translates to:
+  /// **'The Mapbox demo is only available on Android and iOS builds.'**
+  String get mapboxPageUnsupportedDescription;
 
   /// Title displayed when device is offline
   ///

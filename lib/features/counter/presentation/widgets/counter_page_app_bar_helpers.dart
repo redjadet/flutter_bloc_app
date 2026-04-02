@@ -9,6 +9,7 @@ enum OverflowAction {
   chat,
   genuiDemo,
   googleMaps,
+  mapbox,
   whiteboard,
   markdownEditor,
   todo,

@@ -1,5 +1,7 @@
 import 'package:flutter_bloc_app/app/router/deferred_pages/google_maps_page.dart'
     deferred as google_maps_page;
+import 'package:flutter_bloc_app/app/router/deferred_pages/mapbox_page.dart'
+    deferred as mapbox_page;
 import 'package:flutter_bloc_app/app/router/deferred_pages/websocket_page.dart'
     deferred as websocket_page;
 import 'package:flutter_bloc_app/core/core.dart';
@@ -32,6 +34,14 @@ List<GoRoute> createAuxiliaryRoutes() => <GoRoute>[
     builder: (final context, final state) => DeferredPage(
       loadLibrary: google_maps_page.loadLibrary,
       builder: (final context) => google_maps_page.buildGoogleMapsPage(),
+    ),
+  ),
+  GoRoute(
+    path: AppRoutes.mapboxMapsPath,
+    name: AppRoutes.mapboxMaps,
+    builder: (final context, final state) => DeferredPage(
+      loadLibrary: mapbox_page.loadLibrary,
+      builder: (final context) => mapbox_page.buildMapboxPage(),
     ),
   ),
   GoRoute(

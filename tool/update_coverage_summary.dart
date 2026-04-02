@@ -45,6 +45,7 @@ const List<String> _excludedExact = <String>[
   'lib/features/google_maps/presentation/widgets/google_maps_view.dart',
   'lib/features/google_maps/presentation/widgets/apple_maps_view.dart',
   'lib/features/google_maps/presentation/widgets/map_sample_map_view.dart',
+  'lib/features/mapbox_demo/presentation/widgets/mapbox_sample_map_view.dart',
 ];
 
 // Documentation files that should be updated with coverage percentages

@@ -18,6 +18,7 @@ class SecretConfig {
   static const String _keyHfUseChatCompletions =
       'huggingface_use_chat_completions';
   static const String _keyGoogleMaps = 'google_maps_api_key';
+  static const String _keyMapbox = 'mapbox_access_token';
   static const String _keyGeminiApiKey = 'gemini_api_key';
   static const String _keySupabaseUrl = 'supabase_url';
   static const String _keySupabaseAnonKey = 'supabase_anon_key';
@@ -27,6 +28,7 @@ class SecretConfig {
   static String? _huggingfaceModel;
   static bool _useChatCompletions = false;
   static String? _googleMapsApiKey;
+  static String? _mapboxAccessToken;
   static String? _geminiApiKey;
   static String? _supabaseUrl;
   static String? _supabaseAnonKey;
@@ -40,6 +42,7 @@ class SecretConfig {
   static String? get huggingfaceModel => _huggingfaceModel;
   static bool get useChatCompletions => _useChatCompletions;
   static String? get googleMapsApiKey => _googleMapsApiKey;
+  static String? get mapboxAccessToken => _mapboxAccessToken;
   static String? get geminiApiKey => _geminiApiKey;
   static String? get supabaseUrl => _supabaseUrl;
   static String? get supabaseAnonKey => _supabaseAnonKey;
@@ -59,6 +62,7 @@ class SecretConfig {
     _huggingfaceModel = null;
     _useChatCompletions = false;
     _googleMapsApiKey = null;
+    _mapboxAccessToken = null;
     _geminiApiKey = null;
     _supabaseUrl = null;
     _supabaseAnonKey = null;
@@ -102,7 +106,10 @@ class SecretConfig {
       if (assetFallbackAllowed) {
         final bool loadedFromAssets = await _loadFromSource(
           _readAssetSecrets,
-          afterApply: () => _persistGoogleMapsKey(storage),
+          afterApply: () async {
+            await _persistGoogleMapsKey(storage);
+            await _persistMapboxKey(storage);
+          },
         );
         if (loadedFromAssets) {
           _logHuggingFaceTokenDiagnostics(source: 'asset_secrets');
