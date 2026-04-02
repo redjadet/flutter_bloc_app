@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_clip_file_store.dart';
@@ -18,11 +19,18 @@ import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/cas
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
+import 'package:flutter_bloc_app/shared/utils/retry_policy.dart';
 
 part 'case_study_session_cubit_actions.part.dart';
 part 'case_study_session_cubit_video.part.dart';
 
 String _newCaseId() => 'cs_${DateTime.now().microsecondsSinceEpoch}';
+
+const RetryPolicy _caseStudyLocalPersistRetryPolicy = RetryPolicy(
+  baseDelay: Duration(milliseconds: 50),
+  maxDelay: Duration(milliseconds: 200),
+  jitter: false,
+);
 
 /// Session + wizard state for the dentist case-study demo.
 class CaseStudySessionCubit extends _CaseStudySessionCubitBase
@@ -36,6 +44,7 @@ class CaseStudySessionCubit extends _CaseStudySessionCubitBase
     required super.remoteDeleteRepository,
     required super.supabaseAuthRepository,
     required super.remoteRepository,
+    required super.timerService,
   });
 }
 
@@ -49,6 +58,7 @@ abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
     required final CaseStudyRemoteDeleteRepository remoteDeleteRepository,
     required final SupabaseAuthRepository supabaseAuthRepository,
     required final CaseStudyRemoteRepository remoteRepository,
+    required final TimerService timerService,
   }) : _authRepository = authRepository,
        _local = localRepository,
        _video = videoRepository,
@@ -57,6 +67,7 @@ abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
        _remoteDelete = remoteDeleteRepository,
        _supaAuth = supabaseAuthRepository,
        _remote = remoteRepository,
+       _timerService = timerService,
        super(
          CaseStudySessionState(
            hydration: CaseStudyHydrationStatus.initial,
@@ -89,10 +100,14 @@ abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
   final CaseStudyRemoteDeleteRepository _remoteDelete;
   final SupabaseAuthRepository _supaAuth;
   final CaseStudyRemoteRepository _remote;
+  final TimerService _timerService;
   final RequestIdGuard _pickGuard = RequestIdGuard();
   final RequestIdGuard _commitGuard = RequestIdGuard();
   StreamSubscription<dynamic>? _authSub;
   String? _authUserId;
+
+  /// Timestamp for the local history row while submit is in flight; kept if local persist fails after remote OK.
+  DateTime? _pendingSubmitSubmittedAtUtc;
   Future<void> hydrate() async {
     emit(
       state.copyWith(

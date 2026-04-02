@@ -2052,6 +2052,20 @@ class AppLocalizationsTr extends AppLocalizations {
   String get caseStudyErrorGeneric => 'Bir sorun oluştu. Yeniden deneyin.';
 
   @override
+  String get caseStudySubmitLocalHistoryFailed =>
+      'Vaka bulutta kaydedildi ancak bu cihazdaki yerel geçmiş güncellenemedi. Aşağıdan «Bu cihazda yeniden kaydet»i kullanın veya buluttaki gönderiler için Geçmiş’e bakın.';
+
+  @override
+  String get caseStudyRetryLocalSave => 'Bu cihazda yeniden kaydet';
+
+  @override
+  String get caseStudyRefreshDetailTooltip => 'Yenile';
+
+  @override
+  String get caseStudySignedUrlsRefreshHint =>
+      'Oynatma geçici bağlantılar kullanır (yaklaşık 24 saat). Bir video çalışmazsa aşağı çekin veya yenileye dokunun.';
+
+  @override
   String get caseStudyQuestion1 => 'Hastayı ve baş şikâyeti tanıtın.';
 
   @override

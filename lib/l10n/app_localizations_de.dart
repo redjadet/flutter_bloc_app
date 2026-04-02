@@ -2079,6 +2079,20 @@ class AppLocalizationsDe extends AppLocalizations {
       'Etwas ist schiefgelaufen. Bitte erneut versuchen.';
 
   @override
+  String get caseStudySubmitLocalHistoryFailed =>
+      'Der Fall wurde in der Cloud gespeichert, aber der lokale Verlauf auf diesem Gerät konnte nicht aktualisiert werden. Nutzen Sie unten „Erneut lokal speichern“ oder öffnen Sie den Verlauf für Cloud-Einträge.';
+
+  @override
+  String get caseStudyRetryLocalSave => 'Erneut lokal speichern';
+
+  @override
+  String get caseStudyRefreshDetailTooltip => 'Aktualisieren';
+
+  @override
+  String get caseStudySignedUrlsRefreshHint =>
+      'Die Wiedergabe nutzt temporäre Links (ca. 24 Stunden). Zum Aktualisieren nach unten ziehen oder Aktualisieren tippen, falls ein Video nicht läuft.';
+
+  @override
   String get caseStudyQuestion1 =>
       'Stellen Sie Patient:in und Hauptbeschwerde vor.';
 

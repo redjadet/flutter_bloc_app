@@ -10,7 +10,7 @@ class SupabaseCaseStudyRemoteRepository implements CaseStudyRemoteRepository {
   const SupabaseCaseStudyRemoteRepository();
 
   static const String _bucket = 'case_study_videos';
-  static const Duration _maxTtl = Duration(hours: 24);
+  static const Duration _maxTtl = kCaseStudySignedPlaybackUrlTtl;
 
   @override
   Future<String> uploadClip({

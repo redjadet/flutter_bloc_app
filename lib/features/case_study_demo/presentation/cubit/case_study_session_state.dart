@@ -11,6 +11,7 @@ class CaseStudySessionState extends Equatable {
     this.pickErrorKey,
     this.isSubmitting = false,
     this.submitError = false,
+    this.submitLocalHistoryFailed = false,
     this.submitProgress = 0,
     this.submitProgressDeterminate = true,
   });
@@ -20,6 +21,10 @@ class CaseStudySessionState extends Equatable {
   final String? pickErrorKey;
   final bool isSubmitting;
   final bool submitError;
+
+  /// Remote submission finished but persisting local history/draft failed.
+  /// When true, submitError is also true; use for clearer UX and retry.
+  final bool submitLocalHistoryFailed;
   final double submitProgress;
 
   /// When false (local-only mock submit), UI shows an indeterminate bar.
@@ -32,16 +37,26 @@ class CaseStudySessionState extends Equatable {
     final bool clearPickError = false,
     final bool? isSubmitting,
     final bool? submitError,
+    final bool? submitLocalHistoryFailed,
+    final bool clearSubmitLocalHistoryFailed = false,
     final double? submitProgress,
     final bool clearSubmitProgress = false,
     final bool? submitProgressDeterminate,
   }) {
+    final bool nextSubmitLocalHistoryFailed;
+    if (clearSubmitLocalHistoryFailed) {
+      nextSubmitLocalHistoryFailed = false;
+    } else {
+      nextSubmitLocalHistoryFailed =
+          submitLocalHistoryFailed ?? this.submitLocalHistoryFailed;
+    }
     return CaseStudySessionState(
       hydration: hydration ?? this.hydration,
       draft: draft ?? this.draft,
       pickErrorKey: clearPickError ? null : (pickErrorKey ?? this.pickErrorKey),
       isSubmitting: isSubmitting ?? this.isSubmitting,
       submitError: submitError ?? this.submitError,
+      submitLocalHistoryFailed: nextSubmitLocalHistoryFailed,
       submitProgress: clearSubmitProgress
           ? 0
           : (submitProgress ?? this.submitProgress),
@@ -58,6 +73,7 @@ class CaseStudySessionState extends Equatable {
     pickErrorKey,
     isSubmitting,
     submitError,
+    submitLocalHistoryFailed,
     submitProgress,
     submitProgressDeterminate,
   ];

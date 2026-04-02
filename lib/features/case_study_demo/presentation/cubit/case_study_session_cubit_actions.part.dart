@@ -1,6 +1,50 @@
 part of 'case_study_session_cubit.dart';
 
 mixin _CaseStudySessionCubitActions on _CaseStudySessionCubitBase {
+  Future<CaseStudyDraft> _persistSubmissionToLocalHistory({
+    required final String userId,
+    required final String caseId,
+    required final DateTime submittedAtUtc,
+    required final CaseStudyCaseType caseType,
+  }) async {
+    return _caseStudyLocalPersistRetryPolicy.executeWithRetry<CaseStudyDraft>(
+      timerService: _timerService,
+      action: () async {
+        try {
+          final List<CaseStudyRecord> records = await _local.loadRecords(
+            userId,
+          );
+          final CaseStudyRecord record = CaseStudyRecord(
+            id: caseId,
+            submittedAt: submittedAtUtc,
+            doctorName: state.draft.doctorName,
+            caseType: caseType,
+            notes: state.draft.notes,
+            answers: Map<String, String>.from(state.draft.answers),
+          );
+          final List<CaseStudyRecord> nextRecords = <CaseStudyRecord>[
+            record,
+            ...records,
+          ];
+          await _local.saveRecords(userId, nextRecords);
+          await _local.clearDraft(userId);
+          final CaseStudyDraft fresh = CaseStudyDraft.fresh(
+            caseId: _newCaseId(),
+          );
+          await _local.saveDraft(userId, fresh);
+          return fresh;
+        } on Object catch (error, stackTrace) {
+          AppLogger.error(
+            'CaseStudySessionCubit._persistSubmissionToLocalHistory',
+            error,
+            stackTrace,
+          );
+          rethrow;
+        }
+      },
+    );
+  }
+
   Future<void> startNewCase() async {
     final String? userId = _requireUserId();
     if (userId == null) return;
@@ -111,10 +155,12 @@ mixin _CaseStudySessionCubitActions on _CaseStudySessionCubitBase {
     var remoteSubmitFinished = false;
     String? caseIdForSubmit;
 
+    _pendingSubmitSubmittedAtUtc = null;
     emit(
       state.copyWith(
         isSubmitting: true,
         submitError: false,
+        clearSubmitLocalHistoryFailed: true,
         submitProgress: 0,
         submitProgressDeterminate: remoteSubmit,
       ),
@@ -128,6 +174,7 @@ mixin _CaseStudySessionCubitActions on _CaseStudySessionCubitBase {
           state.copyWith(
             isSubmitting: false,
             submitError: true,
+            clearSubmitLocalHistoryFailed: true,
             clearSubmitProgress: true,
           ),
         );
@@ -137,6 +184,7 @@ mixin _CaseStudySessionCubitActions on _CaseStudySessionCubitBase {
       caseIdForSubmit = state.draft.caseId;
       final DateTime submittedAtUtc = DateTime.now().toUtc();
       final String caseId = caseIdForSubmit;
+      _pendingSubmitSubmittedAtUtc = submittedAtUtc;
 
       if (_supaAuth.isConfigured && _supaAuth.currentUser != null) {
         beganRemoteCaseStudyUpload = true;
@@ -201,29 +249,20 @@ mixin _CaseStudySessionCubitActions on _CaseStudySessionCubitBase {
         remoteSubmitFinished = true;
       }
 
-      final List<CaseStudyRecord> records = await _local.loadRecords(userId);
-      final CaseStudyRecord record = CaseStudyRecord(
-        id: caseId,
-        submittedAt: submittedAtUtc,
-        doctorName: state.draft.doctorName,
+      final CaseStudyDraft fresh = await _persistSubmissionToLocalHistory(
+        userId: userId,
+        caseId: caseId,
+        submittedAtUtc: submittedAtUtc,
         caseType: caseType,
-        notes: state.draft.notes,
-        answers: Map<String, String>.from(state.draft.answers),
       );
-      final List<CaseStudyRecord> nextRecords = <CaseStudyRecord>[
-        record,
-        ...records,
-      ];
-      await _local.saveRecords(userId, nextRecords);
-      await _local.clearDraft(userId);
-      final CaseStudyDraft fresh = CaseStudyDraft.fresh(caseId: _newCaseId());
-      await _local.saveDraft(userId, fresh);
+      _pendingSubmitSubmittedAtUtc = null;
       if (isClosed) return;
       emit(
         state.copyWith(
           isSubmitting: false,
           draft: fresh,
           submitError: false,
+          clearSubmitLocalHistoryFailed: true,
           clearSubmitProgress: true,
         ),
       );
@@ -253,6 +292,66 @@ mixin _CaseStudySessionCubitActions on _CaseStudySessionCubitBase {
         state.copyWith(
           isSubmitting: false,
           submitError: true,
+          submitLocalHistoryFailed: remoteSubmitFinished,
+          clearSubmitProgress: true,
+        ),
+      );
+    }
+  }
+
+  /// Retries local history + fresh draft only when submitLocalHistoryFailed (no remote calls).
+  Future<void> retryPersistLocalHistoryAfterRemote() async {
+    final String? userId = _requireUserId();
+    if (userId == null ||
+        !state.submitLocalHistoryFailed ||
+        !state.draft.isComplete ||
+        state.isSubmitting) {
+      return;
+    }
+    final CaseStudyCaseType? caseType = state.draft.caseType;
+    if (caseType == null) return;
+
+    emit(
+      state.copyWith(
+        isSubmitting: true,
+        submitError: false,
+        clearSubmitLocalHistoryFailed: true,
+        submitProgress: 0,
+        submitProgressDeterminate: false,
+      ),
+    );
+    try {
+      final DateTime submittedAtUtc =
+          _pendingSubmitSubmittedAtUtc ?? DateTime.now().toUtc();
+      final CaseStudyDraft fresh = await _persistSubmissionToLocalHistory(
+        userId: userId,
+        caseId: state.draft.caseId,
+        submittedAtUtc: submittedAtUtc,
+        caseType: caseType,
+      );
+      _pendingSubmitSubmittedAtUtc = null;
+      if (isClosed) return;
+      emit(
+        state.copyWith(
+          isSubmitting: false,
+          draft: fresh,
+          submitError: false,
+          clearSubmitLocalHistoryFailed: true,
+          clearSubmitProgress: true,
+        ),
+      );
+    } on Object catch (error, stackTrace) {
+      AppLogger.error(
+        'CaseStudySessionCubit.retryPersistLocalHistoryAfterRemote',
+        error,
+        stackTrace,
+      );
+      if (isClosed) return;
+      emit(
+        state.copyWith(
+          isSubmitting: false,
+          submitError: true,
+          submitLocalHistoryFailed: true,
           clearSubmitProgress: true,
         ),
       );

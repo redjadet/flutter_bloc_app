@@ -3803,6 +3803,30 @@ abstract class AppLocalizations {
   /// **'Something went wrong. Try again.'**
   String get caseStudyErrorGeneric;
 
+  /// No description provided for @caseStudySubmitLocalHistoryFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your case was saved in the cloud, but this device could not update local history. Use “Retry saving on this device” below, or open History to see cloud submissions.'**
+  String get caseStudySubmitLocalHistoryFailed;
+
+  /// No description provided for @caseStudyRetryLocalSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry saving on this device'**
+  String get caseStudyRetryLocalSave;
+
+  /// No description provided for @caseStudyRefreshDetailTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get caseStudyRefreshDetailTooltip;
+
+  /// No description provided for @caseStudySignedUrlsRefreshHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Clip playback uses temporary links (about 24 hours). Pull down or tap refresh if a video stops working.'**
+  String get caseStudySignedUrlsRefreshHint;
+
   /// No description provided for @caseStudyQuestion1.
   ///
   /// In en, this message translates to:

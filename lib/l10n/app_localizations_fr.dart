@@ -2077,6 +2077,20 @@ class AppLocalizationsFr extends AppLocalizations {
   String get caseStudyErrorGeneric => 'Une erreur s\'est produite. Réessayez.';
 
   @override
+  String get caseStudySubmitLocalHistoryFailed =>
+      'Le cas a été enregistré dans le cloud, mais l\'historique local n\'a pas pu être mis à jour sur cet appareil. Utilisez « Réessayer l\'enregistrement local » ci-dessous ou ouvrez l\'historique pour les envois cloud.';
+
+  @override
+  String get caseStudyRetryLocalSave => 'Réessayer l\'enregistrement local';
+
+  @override
+  String get caseStudyRefreshDetailTooltip => 'Actualiser';
+
+  @override
+  String get caseStudySignedUrlsRefreshHint =>
+      'La lecture utilise des liens temporaires (environ 24 h). Tirez vers le bas ou appuyez sur actualiser si une vidéo ne fonctionne plus.';
+
+  @override
   String get caseStudyQuestion1 =>
       'Présentez le patient et le motif principal de consultation.';
 
