@@ -109,6 +109,62 @@ void main() {
       expect(responseParser.chatCompletionsCalls, 1);
       expect(result.reply.text, 'reply');
     });
+
+    test(
+      'falls back to chat completions when inference endpoint is deprecated',
+      () async {
+        final List<RequestSnapshot> requests = <RequestSnapshot>[];
+        final _StubApiClient apiClient = _StubApiClient(
+          hasApiKey: true,
+          responder: (RequestSnapshot request) async {
+            requests.add(request);
+            if (request.context == 'inference') {
+              throw const ChatException(
+                'Chat service error (HTTP 410): '
+                'https://api-inference.huggingface.co is no longer supported. '
+                'Please use https://router.huggingface.co instead.',
+              );
+            }
+            return <String, dynamic>{'choices': <Map<String, Object>>[]};
+          },
+        );
+        final _RecordingPayloadBuilder payloadBuilder =
+            _RecordingPayloadBuilder();
+        final _RecordingResponseParser responseParser =
+            _RecordingResponseParser(result: _chatResult('router reply'));
+
+        final HuggingfaceChatRepository repository = HuggingfaceChatRepository(
+          apiClient: apiClient,
+          payloadBuilder: payloadBuilder,
+          responseParser: responseParser,
+          model: 'openai/gpt-oss-20b',
+          useChatCompletions: false,
+        );
+
+        final ChatResult result = await repository.sendMessage(
+          pastUserInputs: const <String>['user'],
+          generatedResponses: const <String>['assistant'],
+          prompt: 'retry me',
+        );
+
+        expect(requests, hasLength(2));
+        expect(requests.first.context, 'inference');
+        expect(
+          requests.first.uri.toString(),
+          'https://api-inference.huggingface.co/models/openai/gpt-oss-20b',
+        );
+        expect(requests.last.context, 'chat-completions');
+        expect(
+          requests.last.uri.toString(),
+          'https://router.huggingface.co/v1/chat/completions',
+        );
+        expect(payloadBuilder.inferenceCalls, 1);
+        expect(payloadBuilder.chatCompletionsCalls, 1);
+        expect(responseParser.inferenceCalls, 0);
+        expect(responseParser.chatCompletionsCalls, 1);
+        expect(result.reply.text, 'router reply');
+      },
+    );
   });
 }
 
