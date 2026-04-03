@@ -47,7 +47,8 @@ class CaseStudySessionState extends Equatable {
     if (clearSubmitLocalHistoryFailed) {
       nextSubmitLocalHistoryFailed = false;
     } else {
-      nextSubmitLocalHistoryFailed = submitLocalHistoryFailed ?? this.submitLocalHistoryFailed;
+      nextSubmitLocalHistoryFailed =
+          submitLocalHistoryFailed ?? this.submitLocalHistoryFailed;
     }
     return CaseStudySessionState(
       hydration: hydration ?? this.hydration,
@@ -56,8 +57,11 @@ class CaseStudySessionState extends Equatable {
       isSubmitting: isSubmitting ?? this.isSubmitting,
       submitError: submitError ?? this.submitError,
       submitLocalHistoryFailed: nextSubmitLocalHistoryFailed,
-      submitProgress: clearSubmitProgress ? 0 : (submitProgress ?? this.submitProgress),
-      submitProgressDeterminate: submitProgressDeterminate ?? this.submitProgressDeterminate,
+      submitProgress: clearSubmitProgress
+          ? 0
+          : (submitProgress ?? this.submitProgress),
+      submitProgressDeterminate:
+          submitProgressDeterminate ?? this.submitProgressDeterminate,
     );
   }
 

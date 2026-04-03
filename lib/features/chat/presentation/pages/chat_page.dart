@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
+import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class ChatPage extends StatefulWidget {
@@ -141,7 +142,35 @@ class _ChatPageState extends State<ChatPage> {
               context.responsiveHorizontalGapL,
               context.responsiveGapS,
             ),
-            child: const ChatModelSelector(),
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: context.responsiveGapS,
+              runSpacing: context.responsiveGapS,
+              children: <Widget>[
+                const ChatModelSelector(),
+                TypeSafeBlocSelector<SyncStatusCubit, SyncStatusState, bool>(
+                  selector: (final s) => !s.isOnline,
+                  builder: (context, offline) {
+                    if (offline) {
+                      return const ChatOfflineBadge();
+                    }
+                    return TypeSafeBlocSelector<
+                      ChatCubit,
+                      ChatState,
+                      ChatInferenceTransport?
+                    >(
+                      selector: (final s) => s.transportForBadge,
+                      builder: (context, transport) {
+                        if (transport == null) {
+                          return const SizedBox.shrink();
+                        }
+                        return ChatTransportBadge(transport: transport);
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
           Expanded(
             child: ChatMessageList(

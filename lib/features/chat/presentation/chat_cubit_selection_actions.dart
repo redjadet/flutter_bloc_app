@@ -21,6 +21,7 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
       currentModel: normalized,
       isLoading: false,
       clearError: true,
+      clearLastCompletionTransport: true,
     );
 
     unawaited(_persistHistory(history));
@@ -111,6 +112,7 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
       currentModel: resolvedModel,
       clearError: true,
       isLoading: false,
+      clearLastCompletionTransport: true,
     );
   }
 

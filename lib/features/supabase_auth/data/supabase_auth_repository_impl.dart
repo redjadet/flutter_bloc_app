@@ -78,7 +78,9 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
       if (kDebugMode) {
         final String token = data.session?.accessToken ?? '';
         if (token.isNotEmpty) {
-          AppLogger.debug('Supabase access token (debug only): $token');
+          AppLogger.debug(
+            'Supabase auth state changed (session present, token len=${token.length})',
+          );
         }
       }
       return _mapUser(data.session?.user);
@@ -100,7 +102,9 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
         final String token =
             Supabase.instance.client.auth.currentSession?.accessToken ?? '';
         if (token.isNotEmpty) {
-          AppLogger.debug('Supabase access token (debug only): $token');
+          AppLogger.debug(
+            'Supabase sign-in complete (token len=${token.length})',
+          );
         }
       }
     } on AuthException catch (e) {

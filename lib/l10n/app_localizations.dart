@@ -953,6 +953,42 @@ abstract class AppLocalizations {
   /// **'AI Chat'**
   String get chatPageTitle;
 
+  /// Chip label when chat completions use the Supabase Edge proxy
+  ///
+  /// In en, this message translates to:
+  /// **'Supabase'**
+  String get chatTransportSupabase;
+
+  /// Chip label when chat calls Hugging Face from the app (direct)
+  ///
+  /// In en, this message translates to:
+  /// **'Direct'**
+  String get chatTransportDirect;
+
+  /// Screen reader and tooltip for the chat transport chip when using the Edge proxy
+  ///
+  /// In en, this message translates to:
+  /// **'Supabase. Chat replies use the Supabase Edge proxy; Hugging Face runs on the server.'**
+  String get chatTransportSupabaseSemanticsLabel;
+
+  /// Screen reader and tooltip for the chat transport chip when using direct Hugging Face
+  ///
+  /// In en, this message translates to:
+  /// **'Direct. This app calls Hugging Face directly for chat replies.'**
+  String get chatTransportDirectSemanticsLabel;
+
+  /// Chip label when the device has no network route (chat transport chip hidden)
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get chatOfflineBadgeLabel;
+
+  /// Screen reader and tooltip text for the chat offline connectivity chip
+  ///
+  /// In en, this message translates to:
+  /// **'Offline. Messages will sync when you\'re back online.'**
+  String get chatOfflineBadgeSemanticsLabel;
+
   /// Placeholder text shown in the chat input field
   ///
   /// In en, this message translates to:

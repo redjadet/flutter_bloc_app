@@ -89,6 +89,9 @@ class _StubChatCubit extends ChatCubit {
 
 class _StubChatRepository implements ChatRepository {
   @override
+  ChatInferenceTransport? get chatRemoteTransportHint => null;
+
+  @override
   Future<ChatResult> sendMessage({
     required List<String> pastUserInputs,
     required List<String> generatedResponses,
