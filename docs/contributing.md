@@ -41,6 +41,7 @@ into several files.
 - [New Developer Guide](new_developer_guide.md)
 - [Security and Secrets](security_and_secrets.md) (and [`envrc.example`](envrc.example) for local `direnv` setup)
 - [Feature Overview](feature_overview.md)
+- [Case studies](case_studies/README.md) (product briefs; **Case Study Demo** feature)
 - [Feature Delivery Guide](feature_implementation_guide.md)
 - [Clean Architecture](clean_architecture.md)
 - [Tech Stack](tech_stack.md)

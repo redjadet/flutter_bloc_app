@@ -90,6 +90,8 @@ For deeper rationale, see:
 
 For feature-by-feature entry points, see [Feature Overview](feature_overview.md).
 
+**Case studies:** product briefs live under [Case studies](case_studies/README.md); the **Case Study Demo** (`/case-study-demo`) implements the [dentists brief](case_studies/dentists.md) and is reachable from the Example hub.
+
 ## 3. Application flow
 
 1. `lib/main_dev.dart`, `lib/main_staging.dart`, or `lib/main_prod.dart`
@@ -173,6 +175,7 @@ Testing detail lives in:
 
 ## What to read next
 
+- [Case studies](case_studies/README.md)
 - [Feature Overview](feature_overview.md)
 - [Architecture Details](architecture_details.md)
 - [Tech Stack](tech_stack.md)

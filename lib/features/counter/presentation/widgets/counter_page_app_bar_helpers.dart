@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 /// Helper classes for CounterPageAppBar overflow menu items.
 enum OverflowAction {
+  caseStudyDemo,
   charts,
   graphql,
   chat,

@@ -47,7 +47,7 @@ import 'package:flutter_bloc_app/shared/widgets/diagnostics/profile_cache_contro
 import 'package:go_router/go_router.dart';
 
 /// Core app routes: auth, counter, calculator, example, settings, profile, etc.
-List<GoRoute> createCoreRoutes() => <GoRoute>[
+List<RouteBase> createCoreRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.authPath,
     name: AppRoutes.auth,

@@ -55,6 +55,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get openExampleTooltip => 'Beispielseite öffnen';
 
   @override
+  String get openCaseStudyDemoTooltip => 'Zahnarzt-Fallstudien-Demo öffnen';
+
+  @override
   String get openCalculatorTooltip => 'Zahlungsrechner öffnen';
 
   @override
@@ -1968,4 +1971,176 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get iapDemoNoProductsFound => 'No products found.';
+
+  @override
+  String get exampleCaseStudyDemoButton => 'Fallstudie-Demo (Zahnarzt)';
+
+  @override
+  String get caseStudyDemoTitle => 'Fallstudien-Demo';
+
+  @override
+  String get caseStudyDemoNewCase => 'Neuer Fall';
+
+  @override
+  String get caseStudyDemoHistory => 'Verlauf';
+
+  @override
+  String get caseStudyDemoSettings => 'Einstellungen';
+
+  @override
+  String get caseStudyDemoMetadataTitle => 'Falldaten';
+
+  @override
+  String get caseStudyDoctorNameLabel => 'Name der Ärztin / des Arztes';
+
+  @override
+  String get caseStudyCaseTypeLabel => 'Falltyp';
+
+  @override
+  String get caseStudyNotesLabel => 'Notizen (optional)';
+
+  @override
+  String get caseStudyContinue => 'Weiter';
+
+  @override
+  String get caseStudyCaseTypeImplant => 'Implantat';
+
+  @override
+  String get caseStudyCaseTypeOrtho => 'Kieferorthopädie';
+
+  @override
+  String get caseStudyCaseTypeCosmetic => 'Ästhetik';
+
+  @override
+  String get caseStudyCaseTypeGeneral => 'Allgemein';
+
+  @override
+  String get caseStudyRecordTitle => 'Antworten aufnehmen';
+
+  @override
+  String caseStudyQuestionProgress(int current, int total) {
+    return 'Frage $current von $total';
+  }
+
+  @override
+  String get caseStudyPickVideoCamera => 'Video aufnehmen';
+
+  @override
+  String get caseStudyPickVideoGallery => 'Aus Mediathek wählen';
+
+  @override
+  String get caseStudyNext => 'Weiter';
+
+  @override
+  String get caseStudyGoToReview => 'Zur Überprüfung';
+
+  @override
+  String get caseStudyBack => 'Zurück';
+
+  @override
+  String get caseStudyReviewTitle => 'Überprüfen & senden';
+
+  @override
+  String get caseStudySubmit => 'Senden';
+
+  @override
+  String get caseStudyAbandon => 'Fall verwerfen';
+
+  @override
+  String get caseStudyAbandonConfirmBody =>
+      'Diesen Fall verwerfen und alle Aufnahmen dazu löschen?';
+
+  @override
+  String get caseStudyDeleteDialogTitle => 'Fall löschen?';
+
+  @override
+  String get caseStudyDeleteDialogBody =>
+      'Diesen Fall dauerhaft löschen? Das kann nicht rückgängig gemacht werden.';
+
+  @override
+  String get caseStudyUploading => 'Wird hochgeladen…';
+
+  @override
+  String get caseStudyDataModeLocalOnly => 'Nur lokal';
+
+  @override
+  String get caseStudyDataModeSupabase => 'Supabase';
+
+  @override
+  String get caseStudyHistoryTitle => 'Eingereichte Fälle';
+
+  @override
+  String get caseStudyHistoryEmpty => 'Noch keine eingereichten Fälle.';
+
+  @override
+  String get caseStudyHistoryDetailTitle => 'Falldetails';
+
+  @override
+  String get caseStudySubmittedAt => 'Eingereicht';
+
+  @override
+  String get caseStudyVideoMissing => 'Videodatei fehlt';
+
+  @override
+  String get caseStudyErrorGeneric =>
+      'Etwas ist schiefgelaufen. Bitte erneut versuchen.';
+
+  @override
+  String get caseStudyHistoryDetailNotFound =>
+      'Dieser Fall wurde nicht gefunden. Er wurde möglicherweise entfernt oder Sie haben keinen Zugriff.';
+
+  @override
+  String get caseStudyHistoryDetailUnavailable =>
+      'Dieser Fall konnte nicht geladen werden. Prüfen Sie die Verbindung und versuchen Sie es erneut.';
+
+  @override
+  String get caseStudySubmitLocalHistoryFailed =>
+      'Der Fall wurde in der Cloud gespeichert, aber der lokale Verlauf auf diesem Gerät konnte nicht aktualisiert werden. Nutzen Sie unten „Erneut lokal speichern“ oder öffnen Sie den Verlauf für Cloud-Einträge.';
+
+  @override
+  String get caseStudyRetryLocalSave => 'Erneut lokal speichern';
+
+  @override
+  String get caseStudyRefreshDetailTooltip => 'Aktualisieren';
+
+  @override
+  String get caseStudySignedUrlsRefreshHint =>
+      'Die Wiedergabe nutzt temporäre Links (ca. 24 Stunden). Zum Aktualisieren nach unten ziehen oder Aktualisieren tippen, falls ein Video nicht läuft.';
+
+  @override
+  String get caseStudyQuestion1 =>
+      'Stellen Sie Patient:in und Hauptbeschwerde vor.';
+
+  @override
+  String get caseStudyQuestion2 => 'Beschreiben Sie die relevante Anamnese.';
+
+  @override
+  String get caseStudyQuestion3 =>
+      'Zeigen Sie Befunde der extraoralen Untersuchung.';
+
+  @override
+  String get caseStudyQuestion4 =>
+      'Zeigen Sie Befunde der intraoralen Untersuchung.';
+
+  @override
+  String get caseStudyQuestion5 => 'Erläutern Sie die bildgebenden Befunde.';
+
+  @override
+  String get caseStudyQuestion6 => 'Gehen Sie Diagnose und Problemliste durch.';
+
+  @override
+  String get caseStudyQuestion7 =>
+      'Beschreiben Sie besprochene Behandlungsoptionen.';
+
+  @override
+  String get caseStudyQuestion8 =>
+      'Detailieren Sie den gewählten Behandlungsplan.';
+
+  @override
+  String get caseStudyQuestion9 =>
+      'Zeigen Sie den unmittelbaren postoperativen Status.';
+
+  @override
+  String get caseStudyQuestion10 =>
+      'Fassen Sie Nachsorge und Prognose zusammen.';
 }

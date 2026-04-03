@@ -26,13 +26,15 @@ expected structure and “ownership” contract:
 
 | Command | Purpose |
 | --- | --- |
-| `./bin/checklist` | Primary local gate for formatting, analysis, validator scripts, tests, and coverage workflow. |
+| `./bin/checklist` | Full local sweep for formatting, analysis, validator scripts, tests, and coverage workflow. |
 | `./bin/integration_tests` | Runs integration flows on a supported non-web device. |
 | `tool/test_coverage.sh` | Runs unit, bloc, widget, and other coverage-producing tests. |
 | `dart run tool/update_coverage_summary.dart` | Refreshes [`coverage/coverage_summary.md`](../coverage/coverage_summary.md). |
 
-CI runs `./bin/checklist` on push and pull request. The macOS integration job is
-manual-only through GitHub Actions workflow dispatch and supports the
+CI runs `./bin/checklist` on push and pull request. For local work, prefer
+targeted validation first and reserve `./bin/checklist` for broad or pre-ship
+sweeps. The macOS integration job is manual-only through GitHub Actions
+workflow dispatch and supports the
 `smoke`, `standard`, and `exhaustive` rollout tiers defined in
 `.github/workflows/ci.yml`.
 

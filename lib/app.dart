@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/app/router/go_router_refresh_stream.dart';
 import 'package:flutter_bloc_app/app/router/routes.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/core.dart';
-import 'package:go_router/go_router.dart';
+import 'package:go_router/go_router.dart' show GoRouter, RouteBase;
 
 /// Main application widget
 class MyApp extends StatefulWidget {
@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
   /// See [createAppRoutes] for route definitions and [createAuthRedirect] for
   /// authentication redirect logic documentation.
   GoRouter _createRouter() {
-    final List<GoRoute> routes = createAppRoutes();
+    final List<RouteBase> routes = createAppRoutes();
 
     // When auth is not required or Firebase is not initialized, run without
     // auth redirect so the app still runs (Firebase-dependent features disabled).

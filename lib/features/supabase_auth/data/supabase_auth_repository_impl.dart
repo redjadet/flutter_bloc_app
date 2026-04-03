@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/auth/auth_user.dart' as app_auth;
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
@@ -73,9 +74,15 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
     if (!_canAccessSupabase) {
       return Stream<app_auth.AuthUser?>.value(null);
     }
-    return _authStateChangesStream().map(
-      (final data) => _mapUser(data.session?.user),
-    );
+    return _authStateChangesStream().map((final data) {
+      if (kDebugMode) {
+        final String token = data.session?.accessToken ?? '';
+        if (token.isNotEmpty) {
+          AppLogger.debug('Supabase access token (debug only): $token');
+        }
+      }
+      return _mapUser(data.session?.user);
+    });
   }
 
   @override
@@ -89,6 +96,13 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
         email: email.trim(),
         password: password,
       );
+      if (kDebugMode) {
+        final String token =
+            Supabase.instance.client.auth.currentSession?.accessToken ?? '';
+        if (token.isNotEmpty) {
+          AppLogger.debug('Supabase access token (debug only): $token');
+        }
+      }
     } on AuthException catch (e) {
       throw _authExceptionFromSupabase(e);
     } on Object catch (error, stackTrace) {

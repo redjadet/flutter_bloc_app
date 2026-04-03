@@ -7,7 +7,7 @@ and production-minded delivery workflows in a single codebase.
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.6-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.4-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-77%2E76%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-75%2E57%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
 [![State Management](https://img.shields.io/badge/State%20Management-BLOC%2FCubit-2196F3.svg)](https://pub.dev/packages/flutter_bloc)
@@ -128,8 +128,24 @@ for implementation detail and setup notes.
 - Integrations: Firebase Auth, Remote Config, Realtime Database, FCM, Supabase-backed demos, maps, GraphQL, and WebSocket flows
 - AI demos: Hugging Face chat and GenUI-generated UI experiences
 - UI/system demos: whiteboard, markdown editor, calculator, library demo, in-app purchase, and platform-adaptive examples
+- **Case studies:** product briefs under [`docs/case_studies/`](docs/case_studies/README.md) with matching in-app demos (see below)
 
 For module entry points and capability notes, see [Feature Overview](docs/feature_overview.md).
+
+## Case studies
+
+The repo includes **product-style case study briefs** and a **Case Study Demo**
+feature that implements them for architecture and integration reference.
+
+| Brief | Description | Docs |
+| --- | --- | --- |
+| **Dentists** | Dentists record separate video answers to **ten** predefined questions, with case metadata (doctor name, case type, notes) and history. | [Brief](docs/case_studies/dentists.md) · [Demo plan](docs/changes/2026-04-01_dentist_case_study_demo_plan.md) · [Supabase storage plan](docs/changes/2026-04-02_case_study_supabase_private_storage_plan.md) |
+
+- **In-app:** open the **Example** hub (`/example`), then launch **Case Study Demo** — routes are under `/case-study-demo` (requires primary app auth per route policy).
+- **Code:** `lib/features/case_study_demo/` (Clean Architecture: domain, data, presentation).
+- **Storage:** local-first with Hive; optional **Supabase** private bucket and signed URLs when `SUPABASE_URL` / `SUPABASE_ANON_KEY` are configured (see [Security and secrets](docs/security_and_secrets.md)).
+
+Full index: [`docs/case_studies/README.md`](docs/case_studies/README.md).
 
 ## Quality Signals
 
