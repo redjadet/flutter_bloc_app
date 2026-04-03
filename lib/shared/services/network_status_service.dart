@@ -36,6 +36,10 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   TimerDisposable? _debounceTimer;
   NetworkStatus _latest = NetworkStatus.unknown;
+  /// When true, the connectivity stream has applied an update; a late initial
+  /// `checkConnectivity` completion must not overwrite latest status or emit a
+  /// stale value.
+  bool _hasStreamConnectivityUpdate = false;
   bool _disposed = false;
 
   @override
@@ -53,6 +57,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
     if (_connectivitySubscription != null) {
       return;
     }
+    _hasStreamConnectivityUpdate = false;
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
       (final results) {
         _handleConnectivityResults(results);
@@ -66,7 +71,12 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
       },
     );
     unawaited(
-      getCurrentStatus().then((final status) {
+      _connectivity.checkConnectivity().then((final dynamic raw) {
+        if (_hasStreamConnectivityUpdate) {
+          return;
+        }
+        final NetworkStatus status = _mapConnectivityRaw(raw);
+        _latest = status;
         if (_controller.hasListener && !_controller.isClosed) {
           _controller.add(status);
         }
@@ -86,6 +96,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
   }
 
   void _handleConnectivityResults(final List<ConnectivityResult> results) {
+    _hasStreamConnectivityUpdate = true;
     final NetworkStatus next = _mapConnectivityList(results);
     if (next == _latest) {
       return;
