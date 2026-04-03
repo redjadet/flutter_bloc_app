@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **74.92%** (15947/21284 lines)
+*Total line coverage*: **74.94%** (15948/21282 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -47,7 +47,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/google_maps/presentation/widgets/map_sample_map_controller.dart` | 0.00% | 0/6 |
 | `lib/features/case_study_demo/presentation/widgets/case_study_data_mode_badge.dart` | 0.00% | 0/16 |
 | `lib/features/igaming_demo/presentation/pages/game_page.dart` | 0.62% | 1/161 |
-| `lib/features/case_study_demo/presentation/pages/case_study_history_detail_page.dart` | 0.81% | 1/124 |
+| `lib/features/case_study_demo/presentation/pages/case_study_history_detail_page.dart` | 0.82% | 1/122 |
 | `lib/features/example/presentation/pages/firebase_functions_test_page.dart` | 1.37% | 1/73 |
 | `lib/features/case_study_demo/presentation/pages/case_study_history_page.dart` | 1.67% | 1/60 |
 | `lib/features/case_study_demo/presentation/pages/case_study_demo_home_page.dart` | 3.57% | 1/28 |
@@ -238,14 +238,14 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/widgets/view_status_switcher.dart` | 84.62% | 11/13 |
 | `lib/shared/sync/background_sync_coordinator.dart` | 84.62% | 55/65 |
 | `lib/shared/http/interceptors/retry_interceptor.dart` | 84.69% | 83/98 |
-| `lib/features/counter/presentation/pages/counter_page.dart` | 84.82% | 95/112 |
 | `lib/features/graphql_demo/data/offline_first_graphql_demo_repository.dart` | 84.85% | 28/33 |
 | `lib/shared/storage/shared_preferences_migration_service.dart` | 84.91% | 45/53 |
 | `lib/features/deeplink/data/app_links_deep_link_service.dart` | 85.00% | 34/40 |
 | `lib/features/graphql_demo/data/countries_graphql_repository.dart` | 85.14% | 63/74 |
 | `lib/features/camera_gallery/presentation/cubit/camera_gallery_cubit.dart` | 85.45% | 47/55 |
-| `lib/shared/widgets/deferred_page.dart` | 85.71% | 18/21 |
+| `lib/features/counter/presentation/pages/counter_page.dart` | 85.71% | 96/112 |
 | `lib/shared/utils/context_utils.dart` | 85.71% | 6/7 |
+| `lib/shared/widgets/deferred_page.dart` | 85.71% | 18/21 |
 | `lib/shared/platform/native_platform_service.dart` | 85.71% | 30/35 |
 | `lib/features/calculator/domain/payment_calculator.dart` | 85.71% | 12/14 |
 | `lib/features/counter/presentation/widgets/counter_sync_queue_inspector_button.dart` | 85.71% | 54/63 |
@@ -253,8 +253,8 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/auth/presentation/pages/register_page.dart` | 86.00% | 43/50 |
 | `lib/core/config/secret_config.dart` | 86.36% | 38/44 |
 | `lib/shared/widgets/diagnostics/graphql_cache_controls_section.dart` | 86.49% | 32/37 |
-| `lib/features/chat/presentation/widgets/chat_model_selector.dart` | 86.67% | 26/30 |
 | `lib/features/todo_list/presentation/widgets/todo_list_item_content.dart` | 86.67% | 39/45 |
+| `lib/features/chat/presentation/widgets/chat_model_selector.dart` | 86.67% | 26/30 |
 | `lib/features/library_demo/presentation/widgets/library_demo_asset_tile.dart` | 86.76% | 59/68 |
 | `lib/features/calculator/presentation/cubit/calculator_cubit.dart` | 86.90% | 73/84 |
 | `lib/features/iot_demo/presentation/pages/iot_demo_page_body.dart` | 87.02% | 114/131 |

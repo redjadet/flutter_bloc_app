@@ -197,7 +197,8 @@ class _CaseStudyHistoryDetailPageState
             return const Center(child: CircularProgressIndicator());
           }
           final _HistoryDetailSnapshot? data = snapshot.data;
-          if (data == null || !data.isSuccess) {
+          final _HistoryDetailLoad? load = data?.load;
+          if (data == null || load == null) {
             final _HistoryDetailFailureKind kind =
                 data?.failure ?? _HistoryDetailFailureKind.unavailable;
             final String message = switch (kind) {
@@ -207,10 +208,6 @@ class _CaseStudyHistoryDetailPageState
                 l10n.caseStudyHistoryDetailUnavailable,
             };
             return Center(child: Text(message));
-          }
-          final _HistoryDetailLoad? load = data.load;
-          if (load == null) {
-            return Center(child: Text(l10n.caseStudyHistoryDetailUnavailable));
           }
           final CaseStudyRecord r = load.record;
           final DateFormat fmt = DateFormat.yMMMd().add_jm();

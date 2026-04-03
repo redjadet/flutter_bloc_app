@@ -300,7 +300,10 @@ mixin _CaseStudySessionCubitActions on _CaseStudySessionCubitBase {
     }
   }
 
-  /// Retries local history + fresh draft only when submitLocalHistoryFailed (no remote calls).
+  /// Retries local history + fresh draft when submitLocalHistoryFailed is set.
+  ///
+  /// When Supabase is active, this also reads the remote row to align
+  /// `submittedAtUtc` with the server (read-only).
   Future<void> retryPersistLocalHistoryAfterRemote() async {
     final String? userId = _requireUserId();
     if (userId == null ||
