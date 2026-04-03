@@ -20,7 +20,7 @@ This document revalidates the offline-first requirements after another pass over
 - ✅ **Coordinator retry tests:** Added failure/backoff coverage in `test/shared/sync/background_sync_coordinator_test.dart`.
 - ✅ **Coordinator test coverage:** Added unit tests for `ConnectivityNetworkStatusService` and `BackgroundSyncCoordinator` to lock down status emissions (`test/shared/services/network_status_service_test.dart`, `test/shared/sync/background_sync_coordinator_test.dart`).
 - ✅ **Docs centralized:** Offline-first plan + adoption guide now live under `docs/offline_first/` for a single source of truth.
-- ✅ **Chat adoption contract drafted:** Added [`offline_first/chat.md`](chat.md) outlining store/repo/queue/UI/testing steps for chat onboarding.
+- ✅ **Chat adoption contract drafted:** [`offline_first/chat.md`](chat.md) (Supabase proxy action plan: [`plans/supabase_proxy_huggingface_chat_plan.md`](../plans/supabase_proxy_huggingface_chat_plan.md)).
 - ✅ **Chat local store wired:** Added Hive-backed `ChatLocalDataSource` with round-trip persistence tests and DI swap away from secure storage as the first step of chat onboarding.
 - ✅ **Coordinator edge cases covered:** Added partial-batch failure, retry, and offline-event handling coverage in `test/shared/sync/background_sync_coordinator_test.dart`.
 - ✅ **Chat metadata added:** `ChatConversation`/`ChatMessage` now carry sync fields (`changeId`, `lastSyncedAt`, `synchronized`, `clientMessageId`) to support pending-send queues.

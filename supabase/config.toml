@@ -1,0 +1,6 @@
+# Supabase CLI config fragment for this repo.
+# Link the full project with `npx supabase link --project-ref <ref>` when using DB/migrations locally.
+# GraphQL and chart sync functions are deployed with CLI `--no-verify-jwt`; chat-complete uses JWT.
+
+[functions.chat-complete]
+verify_jwt = true

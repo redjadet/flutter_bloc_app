@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
@@ -20,6 +21,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _FakeChatRepository implements ChatRepository {
+  @override
+  ChatInferenceTransport? get chatRemoteTransportHint => null;
+
   @override
   Future<ChatResult> sendMessage({
     required List<String> pastUserInputs,
@@ -114,6 +118,8 @@ void main() {
     Widget buildSubject(ChatCubit cubit) => MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      builder: (final BuildContext context, final Widget? child) =>
+          buildAppMixScope(context, child: child ?? const SizedBox.shrink()),
       home: MultiBlocProvider(
         providers: <BlocProvider<dynamic>>[
           BlocProvider<ChatCubit>.value(value: cubit),

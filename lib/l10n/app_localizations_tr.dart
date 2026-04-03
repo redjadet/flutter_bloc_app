@@ -477,6 +477,27 @@ class AppLocalizationsTr extends AppLocalizations {
   String get chatPageTitle => 'Yapay Zekâ Sohbeti';
 
   @override
+  String get chatTransportSupabase => 'Supabase';
+
+  @override
+  String get chatTransportDirect => 'Doğrudan';
+
+  @override
+  String get chatTransportSupabaseSemanticsLabel =>
+      'Supabase. Yanıtlar Supabase Edge proxy üzerinden gider; Hugging Face sunucuda çalışır.';
+
+  @override
+  String get chatTransportDirectSemanticsLabel =>
+      'Doğrudan. Uygulama Hugging Face\'i doğrudan çağırır.';
+
+  @override
+  String get chatOfflineBadgeLabel => 'Çevrimdışı';
+
+  @override
+  String get chatOfflineBadgeSemanticsLabel =>
+      'Çevrimdışı. Tekrar çevrimiçi olduğunuzda mesajlar senkronize edilir.';
+
+  @override
   String get chatInputHint => 'Asistana bir şey sor...';
 
   @override

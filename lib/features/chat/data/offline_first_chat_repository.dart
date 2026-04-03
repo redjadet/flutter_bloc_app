@@ -37,6 +37,10 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
   String get entityType => chatEntity;
 
   @override
+  ChatInferenceTransport? get chatRemoteTransportHint =>
+      _remoteRepository.chatRemoteTransportHint;
+
+  @override
   Future<ChatResult> sendMessage({
     required final List<String> pastUserInputs,
     required final List<String> generatedResponses,
@@ -59,13 +63,11 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
         conversationId: convoId,
         clientMessageId: changeId,
       );
-    } on Exception catch (error, stackTrace) {
-      AppLogger.error(
-        'OfflineFirstChatRepository.sendMessage failed, queuing operation',
-        error,
-        stackTrace,
-      );
-      final SyncOperation operation = _syncOperationFactory.createOperation(
+    } on ChatRemoteFailureException catch (e) {
+      if (!e.retryable) {
+        rethrow;
+      }
+      await _enqueueFailedSend(
         pastUserInputs: pastUserInputs,
         generatedResponses: generatedResponses,
         prompt: prompt,
@@ -73,10 +75,51 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
         conversationId: convoId,
         clientMessageId: changeId,
         createdAt: createdAt,
+        error: e,
       );
-      await _pendingSyncRepository.enqueue(operation);
+      throw const ChatOfflineEnqueuedException();
+    } on Exception catch (error, stackTrace) {
+      await _enqueueFailedSend(
+        pastUserInputs: pastUserInputs,
+        generatedResponses: generatedResponses,
+        prompt: prompt,
+        model: model,
+        conversationId: convoId,
+        clientMessageId: changeId,
+        createdAt: createdAt,
+        error: error,
+        stackTrace: stackTrace,
+      );
       throw const ChatOfflineEnqueuedException();
     }
+  }
+
+  Future<void> _enqueueFailedSend({
+    required final List<String> pastUserInputs,
+    required final List<String> generatedResponses,
+    required final String prompt,
+    required final String conversationId,
+    required final String clientMessageId,
+    required final DateTime createdAt,
+    required final Object error,
+    final String? model,
+    final StackTrace? stackTrace,
+  }) async {
+    AppLogger.error(
+      'OfflineFirstChatRepository.sendMessage failed, queuing operation',
+      error,
+      stackTrace,
+    );
+    final SyncOperation operation = _syncOperationFactory.createOperation(
+      pastUserInputs: pastUserInputs,
+      generatedResponses: generatedResponses,
+      prompt: prompt,
+      model: model,
+      conversationId: conversationId,
+      clientMessageId: clientMessageId,
+      createdAt: createdAt,
+    );
+    await _pendingSyncRepository.enqueue(operation);
   }
 
   @override
@@ -87,20 +130,34 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
     final ChatLocalConversationState localState =
         await _localConversationUpdater.ensureUserMessagePersisted(payload);
 
-    final ChatResult result = await _remoteRepository.sendMessage(
-      pastUserInputs: payload.pastUserInputs,
-      generatedResponses: payload.generatedResponses,
-      prompt: payload.prompt,
-      model: payload.model,
-      conversationId: payload.conversationId,
-      clientMessageId: payload.clientMessageId,
-    );
+    try {
+      final ChatResult result = await _remoteRepository.sendMessage(
+        pastUserInputs: payload.pastUserInputs,
+        generatedResponses: payload.generatedResponses,
+        prompt: payload.prompt,
+        model: payload.model,
+        conversationId: payload.conversationId,
+        clientMessageId: payload.clientMessageId,
+      );
 
-    await _localConversationUpdater.applyRemoteResult(
-      state: localState,
-      payload: payload,
-      result: result,
-    );
+      await _localConversationUpdater.applyRemoteResult(
+        state: localState,
+        payload: payload,
+        result: result,
+      );
+    } on ChatRemoteFailureException catch (e, st) {
+      if (!e.retryable) {
+        AppLogger.error(
+          'OfflineFirstChatRepository.processOperation dropped non-retryable '
+          'remote failure: ${e.code}',
+          e,
+          st,
+        );
+        await _pendingSyncRepository.markCompleted(operation.id);
+        return;
+      }
+      rethrow;
+    }
   }
 
   @override

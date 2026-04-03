@@ -1,6 +1,8 @@
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/features/chat/data/composite_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
+import 'package:flutter_bloc_app/features/chat/data/supabase_chat_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../test_helpers.dart' as test_helpers;
@@ -35,4 +37,14 @@ void main() {
 
     expect(repository.usesChatCompletions, isTrue);
   });
+
+  test(
+    'configureDependencies registers Supabase and composite chat repos',
+    () async {
+      await configureDependencies();
+
+      expect(getIt<SupabaseChatRepository>(), isNotNull);
+      expect(getIt<CompositeChatRepository>(), isNotNull);
+    },
+  );
 }

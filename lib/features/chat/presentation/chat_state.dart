@@ -1,5 +1,6 @@
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -17,6 +18,8 @@ abstract class ChatState with _$ChatState {
     @Default(<ChatConversation>[]) final List<ChatConversation> history,
     final String? activeConversationId,
     @Default(ViewStatus.initial) final ViewStatus status,
+    final ChatInferenceTransport? runnableTransportHint,
+    final ChatInferenceTransport? lastCompletionTransport,
   }) = _ChatState;
 
   const ChatState._();
@@ -30,4 +33,8 @@ abstract class ChatState with _$ChatState {
   bool get canSend => !isLoading;
   bool get hasContent =>
       hasMessages || pastUserInputs.isNotEmpty || generatedResponses.isNotEmpty;
+
+  /// Transport shown in the online chip: last successful completion, else repo hint.
+  ChatInferenceTransport? get transportForBadge =>
+      lastCompletionTransport ?? runnableTransportHint;
 }

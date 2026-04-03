@@ -1,24 +1,29 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_local_conversation_updater.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_local_data_source.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_sync_operation_factory.dart';
+import 'package:flutter_bloc_app/features/chat/data/composite_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.dart';
 import 'package:flutter_bloc_app/features/chat/data/mock_chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/offline_first_chat_repository.dart';
+import 'package:flutter_bloc_app/features/chat/data/supabase_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Registers all chat-related services and repositories.
 void registerChatServices() {
@@ -56,6 +61,27 @@ void registerChatServices() {
       model: SecretConfig.huggingfaceModel,
     ),
   );
+  registerLazySingletonIfAbsent<SupabaseChatRepository>(
+    () => SupabaseChatRepository(
+      payloadBuilder: getIt<HuggingFacePayloadBuilder>(),
+    ),
+  );
+  registerLazySingletonIfAbsent<CompositeChatRepository>(
+    () => CompositeChatRepository(
+      supabaseRepository: getIt<SupabaseChatRepository>(),
+      directRepository: getIt<HuggingfaceChatRepository>(),
+      networkStatusService: getIt<NetworkStatusService>(),
+      isSupabaseProxyRunnable: () {
+        if (!SupabaseBootstrapService.isSupabaseInitialized) {
+          return false;
+        }
+        final String? token =
+            Supabase.instance.client.auth.currentSession?.accessToken;
+        return token != null && token.isNotEmpty;
+      },
+      isDirectPolicyAllowed: () => hfConfigured,
+    ),
+  );
   registerLazySingletonIfAbsent<ChatHistoryRepository>(
     () => ChatLocalDataSource(hiveService: getIt<HiveService>()),
   );
@@ -71,7 +97,7 @@ void registerChatServices() {
   );
   registerLazySingletonIfAbsent<ChatRepository>(
     () => OfflineFirstChatRepository(
-      remoteRepository: getIt<HuggingfaceChatRepository>(),
+      remoteRepository: getIt<CompositeChatRepository>(),
       pendingSyncRepository: getIt<PendingSyncRepository>(),
       registry: getIt<SyncableRepositoryRegistry>(),
       syncOperationFactory: getIt<ChatSyncOperationFactory>(),

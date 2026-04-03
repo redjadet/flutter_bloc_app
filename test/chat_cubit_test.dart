@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter_bloc_app/features/chat/data/chat_local_data_source.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_local_conversation_updater.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_local_data_source.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_sync_operation_factory.dart';
 import 'package:flutter_bloc_app/features/chat/data/offline_first_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
@@ -195,6 +195,53 @@ void main() {
         'older',
       ]);
     });
+
+    test(
+      'after direct completion, new cubit plus loadHistory uses hint not sticky direct',
+      () async {
+        final _ConfigurableTransportChatRepository repo =
+            _ConfigurableTransportChatRepository(
+              hint: ChatInferenceTransport.supabase,
+              successTransport: ChatInferenceTransport.direct,
+            );
+        final FakeChatHistoryRepository history = FakeChatHistoryRepository();
+
+        final ChatCubit first = ChatCubit(
+          repository: repo,
+          historyRepository: history,
+          initialModel: 'openai/gpt-oss-20b',
+        );
+        addTearDown(first.close);
+
+        await first.sendMessage('Hi');
+        expect(
+          first.state.lastCompletionTransport,
+          ChatInferenceTransport.direct,
+        );
+        expect(first.state.transportForBadge, ChatInferenceTransport.direct);
+
+        await first.close();
+
+        final ChatCubit restarted = ChatCubit(
+          repository: repo,
+          historyRepository: history,
+          initialModel: 'openai/gpt-oss-20b',
+        );
+        addTearDown(restarted.close);
+
+        await restarted.loadHistory();
+
+        expect(restarted.state.lastCompletionTransport, isNull);
+        expect(
+          restarted.state.runnableTransportHint,
+          ChatInferenceTransport.supabase,
+        );
+        expect(
+          restarted.state.transportForBadge,
+          ChatInferenceTransport.supabase,
+        );
+      },
+    );
 
     test('sendMessage persists conversation to history', () async {
       final FakeChatRepository repo = FakeChatRepository();
@@ -670,6 +717,51 @@ void main() {
           expect(queued, isEmpty);
         },
       );
+
+      test(
+        'after queued flush and loadHistory, transport badge follows hint not replay transportUsed',
+        () async {
+          remoteRepository.shouldFail = true;
+          remoteRepository.hint = ChatInferenceTransport.supabase;
+          remoteRepository.successTransport = ChatInferenceTransport.direct;
+          final ChatCubit cubit = ChatCubit(
+            repository: offlineRepository,
+            historyRepository: localDataSource,
+            initialModel: 'offline-demo',
+          );
+          addTearDown(cubit.close);
+
+          await cubit.sendMessage('Flush transport');
+
+          List<SyncOperation> queued = await pendingRepository
+              .getPendingOperations(now: DateTime.now().toUtc());
+          expect(queued, hasLength(1));
+
+          remoteRepository.shouldFail = false;
+          await _drainPendingOperations(
+            repository: offlineRepository,
+            pendingRepository: pendingRepository,
+          );
+
+          await cubit.loadHistory();
+
+          expect(cubit.state.messages.length, 2);
+          expect(cubit.state.lastCompletionTransport, isNull);
+          expect(
+            cubit.state.runnableTransportHint,
+            ChatInferenceTransport.supabase,
+          );
+          expect(
+            cubit.state.transportForBadge,
+            ChatInferenceTransport.supabase,
+          );
+
+          queued = await pendingRepository.getPendingOperations(
+            now: DateTime.now().toUtc(),
+          );
+          expect(queued, isEmpty);
+        },
+      );
     });
   });
 }
@@ -691,6 +783,11 @@ class _FlakyRemoteChatRepository implements ChatRepository {
 
   bool shouldFail = false;
   String replyText = 'Synced';
+  ChatInferenceTransport? hint;
+  ChatInferenceTransport? successTransport;
+
+  @override
+  ChatInferenceTransport? get chatRemoteTransportHint => hint;
 
   @override
   Future<ChatResult> sendMessage({
@@ -708,11 +805,46 @@ class _FlakyRemoteChatRepository implements ChatRepository {
       reply: ChatMessage(author: ChatAuthor.assistant, text: replyText),
       pastUserInputs: <String>[...pastUserInputs, prompt],
       generatedResponses: <String>[...generatedResponses, replyText],
+      transportUsed: successTransport,
+    );
+  }
+}
+
+/// Remote that reports a stable [hint] and tags successful replies with [successTransport].
+class _ConfigurableTransportChatRepository implements ChatRepository {
+  _ConfigurableTransportChatRepository({
+    required this.hint,
+    required this.successTransport,
+  });
+
+  final ChatInferenceTransport hint;
+  final ChatInferenceTransport successTransport;
+
+  @override
+  ChatInferenceTransport? get chatRemoteTransportHint => hint;
+
+  @override
+  Future<ChatResult> sendMessage({
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
+  }) async {
+    return ChatResult(
+      reply: const ChatMessage(author: ChatAuthor.assistant, text: 'ok'),
+      pastUserInputs: <String>[...pastUserInputs, prompt],
+      generatedResponses: <String>[...generatedResponses, 'ok'],
+      transportUsed: successTransport,
     );
   }
 }
 
 class FakeChatRepository implements ChatRepository {
+  @override
+  ChatInferenceTransport? get chatRemoteTransportHint => null;
+
   @override
   Future<ChatResult> sendMessage({
     required List<String> pastUserInputs,
@@ -735,6 +867,9 @@ class _DelayedChatRepository implements ChatRepository {
 
   final Duration delay;
   int callCount = 0;
+
+  @override
+  ChatInferenceTransport? get chatRemoteTransportHint => null;
 
   @override
   Future<ChatResult> sendMessage({
@@ -825,6 +960,9 @@ class _HydratingHistoryRepository implements ChatHistoryRepository {
 
 class _ErrorChatRepository implements ChatRepository {
   @override
+  ChatInferenceTransport? get chatRemoteTransportHint => null;
+
+  @override
   Future<ChatResult> sendMessage({
     required List<String> pastUserInputs,
     required List<String> generatedResponses,
@@ -838,6 +976,9 @@ class _ErrorChatRepository implements ChatRepository {
 }
 
 class _OfflineQueueingChatRepository implements ChatRepository {
+  @override
+  ChatInferenceTransport? get chatRemoteTransportHint => null;
+
   @override
   Future<ChatResult> sendMessage({
     required List<String> pastUserInputs,

@@ -482,6 +482,27 @@ class AppLocalizationsDe extends AppLocalizations {
   String get chatPageTitle => 'KI-Chat';
 
   @override
+  String get chatTransportSupabase => 'Supabase';
+
+  @override
+  String get chatTransportDirect => 'Direkt';
+
+  @override
+  String get chatTransportSupabaseSemanticsLabel =>
+      'Supabase. Antworten laufen über den Supabase-Edge-Proxy; Hugging Face läuft auf dem Server.';
+
+  @override
+  String get chatTransportDirectSemanticsLabel =>
+      'Direkt. Diese App ruft Hugging Face direkt auf.';
+
+  @override
+  String get chatOfflineBadgeLabel => 'Offline';
+
+  @override
+  String get chatOfflineBadgeSemanticsLabel =>
+      'Offline. Nachrichten werden synchronisiert, sobald du wieder online bist.';
+
+  @override
   String get chatInputHint => 'Frag den Assistenten etwas...';
 
   @override
