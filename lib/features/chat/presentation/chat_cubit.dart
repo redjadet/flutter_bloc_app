@@ -99,9 +99,18 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
       return;
     }
     _supabaseAuthSubscription = Supabase.instance.client.auth.onAuthStateChange
-        .listen((_) {
-          _refreshRunnableTransportHintOnly();
-        });
+        .listen(
+          (_) {
+            _refreshRunnableTransportHintOnly();
+          },
+          onError: (Object error, StackTrace stackTrace) {
+            AppLogger.error(
+              'ChatCubit.onAuthStateChange',
+              error,
+              stackTrace,
+            );
+          },
+        );
   }
 
   void _refreshRunnableTransportHintOnly() {

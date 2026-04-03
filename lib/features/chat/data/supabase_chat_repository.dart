@@ -83,11 +83,12 @@ class SupabaseChatRepository implements ChatRepository {
     }
 
     final String? requestedModel = model?.trim();
+    final String? hfModelConfig = SecretConfig.huggingfaceModel?.trim();
     final String buildPayloadModel =
         (requestedModel != null && requestedModel.isNotEmpty)
         ? requestedModel
-        : ((SecretConfig.huggingfaceModel?.trim().isNotEmpty ?? false)
-              ? SecretConfig.huggingfaceModel!.trim()
+        : ((hfModelConfig != null && hfModelConfig.isNotEmpty)
+              ? hfModelConfig
               : 'openai/gpt-oss-20b');
 
     final Map<String, dynamic> hfPayload = _payloadBuilder
