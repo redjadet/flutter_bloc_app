@@ -86,7 +86,7 @@ gracefully.
 
 | Key | Used by | Notes |
 | --- | --- | --- |
-| `HUGGINGFACE_API_KEY` | Chat | Required for the Hugging Face backed chat flow. |
+| `HUGGINGFACE_API_KEY` | Chat (optional in proxy-first setups) | **Direct path:** `HuggingfaceChatRepository` calls Hugging Face from the app when this key is set and the composite allows direct inference. **Proxy path:** completions run on Supabase Edge `chat-complete`, which holds the server-side HF secret (`HUGGINGFACE_API_KEY` / router access for the function); the app sends the user JWT + anon key only. A client key is still useful for **online fallback** when Edge returns retryable transport errors and for **offline-only** sends when there is no session. Proxy-only product builds may omit the client key; see [`docs/plans/supabase_proxy_huggingface_chat_plan.md`](plans/supabase_proxy_huggingface_chat_plan.md). |
 | `GEMINI_API_KEY` (or `GOOGLE_API_KEY`) | GenUI demo | Key creation: [Google AI Studio](https://makersuite.google.com/app/apikey). |
 | `SUPABASE_URL`, `SUPABASE_ANON_KEY` | Supabase-backed demos | Enables Supabase client bootstrap; some demos fall back to local-only mode when missing. See [Supabase README](../supabase/README.md). |
 | Google Maps keys | Maps demos | Platform-specific; keep in each platform’s secure configuration. |

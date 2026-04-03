@@ -486,6 +486,27 @@ class AppLocalizationsFr extends AppLocalizations {
   String get chatPageTitle => 'Discussion IA';
 
   @override
+  String get chatTransportSupabase => 'Supabase';
+
+  @override
+  String get chatTransportDirect => 'Direct';
+
+  @override
+  String get chatTransportSupabaseSemanticsLabel =>
+      'Supabase. Les réponses passent par le proxy Supabase Edge ; Hugging Face s\'exécute côté serveur.';
+
+  @override
+  String get chatTransportDirectSemanticsLabel =>
+      'Direct. L\'application appelle Hugging Face directement.';
+
+  @override
+  String get chatOfflineBadgeLabel => 'Hors ligne';
+
+  @override
+  String get chatOfflineBadgeSemanticsLabel =>
+      'Hors ligne. Les messages se synchroniseront lorsque vous serez de nouveau en ligne.';
+
+  @override
   String get chatInputHint => 'Posez votre question à l\'assistant...';
 
   @override

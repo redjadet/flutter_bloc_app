@@ -49,6 +49,7 @@ Fastlane:
 - Validation: [`validation_scripts.md`](validation_scripts.md), [`testing_overview.md`](testing_overview.md)
 - Lifecycle: [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md), [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
 - Offline-first: [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md), [`engineering/delayed_work_guide.md`](engineering/delayed_work_guide.md)
+- Supabase Edge / chat proxy: [`../supabase/README.md`](../supabase/README.md)
 - gstack: [`gstack_integration.md`](gstack_integration.md)
 
 ## High-Signal Reminders
@@ -67,3 +68,6 @@ Fastlane:
 - For bug fixes, prefer a focused regression guard.
 - Prefer targeted validation first; reserve `./bin/checklist` for broad or
   pre-ship sweeps, or when explicitly requested.
+- For `supabase/functions/chat-complete`, keep `verify_jwt = true` and verify
+  Dashboard `Verify JWT with legacy secret` stays disabled unless the project
+  intentionally uses legacy JWT secrets.

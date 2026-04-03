@@ -38,6 +38,12 @@ class HuggingfaceChatRepository implements ChatRepository {
 
   bool get usesChatCompletions => _useChatCompletions;
 
+  bool get hasApiKey => _apiClient.hasApiKey;
+
+  @override
+  ChatInferenceTransport? get chatRemoteTransportHint =>
+      _apiClient.hasApiKey ? ChatInferenceTransport.direct : null;
+
   @override
   Future<ChatResult> sendMessage({
     required final List<String> pastUserInputs,
@@ -99,7 +105,13 @@ class HuggingfaceChatRepository implements ChatRepository {
       context: 'inference',
     );
 
-    return _responseParser.buildInferenceResult(json);
+    final ChatResult parsed = _responseParser.buildInferenceResult(json);
+    return ChatResult(
+      reply: parsed.reply,
+      pastUserInputs: parsed.pastUserInputs,
+      generatedResponses: parsed.generatedResponses,
+      transportUsed: ChatInferenceTransport.direct,
+    );
   }
 
   Future<ChatResult> _sendViaChatCompletions({
@@ -122,11 +134,17 @@ class HuggingfaceChatRepository implements ChatRepository {
       context: 'chat-completions',
     );
 
-    return _responseParser.buildChatCompletionsResult(
+    final ChatResult parsed = _responseParser.buildChatCompletionsResult(
       json: json,
       pastUserInputs: pastUserInputs,
       generatedResponses: generatedResponses,
       prompt: prompt,
+    );
+    return ChatResult(
+      reply: parsed.reply,
+      pastUserInputs: parsed.pastUserInputs,
+      generatedResponses: parsed.generatedResponses,
+      transportUsed: ChatInferenceTransport.direct,
     );
   }
 

@@ -164,7 +164,7 @@ select_diff_mode() {
 }
 
 build_untracked_diff() {
-  local rel_path untracked_output file_diff
+  local rel_path untracked_output="" file_diff
 
   while IFS= read -r rel_path; do
     [[ -n "$rel_path" ]] || continue

@@ -7,7 +7,7 @@ and production-minded delivery workflows in a single codebase.
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.6-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.4-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-78%2E17%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-75%2E49%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
 [![State Management](https://img.shields.io/badge/State%20Management-BLOC%2FCubit-2196F3.svg)](https://pub.dev/packages/flutter_bloc)
@@ -126,7 +126,7 @@ for implementation detail and setup notes.
 - Core app foundation: counter, settings, localization, adaptive theming, and diagnostics
 - Data and sync: todo list, profile, search, chat, charts, and IoT flows with offline-first behavior
 - Integrations: Firebase Auth, Remote Config, Realtime Database, FCM, Supabase-backed demos, maps, GraphQL, and WebSocket flows
-- AI demos: Hugging Face chat and GenUI-generated UI experiences
+- AI demos: Hugging Face chat (optional Supabase Edge proxy path; policy and setup in [AI integration](docs/ai_integration.md)) and GenUI-generated UI experiences
 - UI/system demos: whiteboard, markdown editor, calculator, library demo, in-app purchase, and platform-adaptive examples
 - **Case studies:** product briefs under [`docs/case_studies/`](docs/case_studies/README.md) with matching in-app demos (see below)
 

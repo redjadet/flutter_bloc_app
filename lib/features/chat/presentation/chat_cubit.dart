@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
@@ -12,9 +13,10 @@ import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 import 'package:meta/meta.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-part 'chat_cubit_history_actions.dart';
 part 'chat_cubit_helpers.dart';
+part 'chat_cubit_history_actions.dart';
 part 'chat_cubit_message_actions.dart';
 part 'chat_cubit_models.dart';
 part 'chat_cubit_selection_actions.dart';
@@ -46,12 +48,15 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
          ChatState.initial(
            currentModel: _resolveInitialModel(initialModel, supportedModels),
          ),
-       );
+       ) {
+    _listenSupabaseAuthForTransportHint();
+  }
 
   final ChatRepository _repository;
   final ChatHistoryRepository _historyRepository;
   final List<String> _models;
   final RequestIdGuard _requestIdGuard = RequestIdGuard();
+  StreamSubscription<AuthState>? _supabaseAuthSubscription;
 
   List<String> get models => _models;
   String get _currentModel {
@@ -87,5 +92,42 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
     if (state.hasError) {
       emit(state.copyWith(error: null, status: ViewStatus.initial));
     }
+  }
+
+  void _listenSupabaseAuthForTransportHint() {
+    if (!SupabaseBootstrapService.isSupabaseInitialized) {
+      return;
+    }
+    _supabaseAuthSubscription = Supabase.instance.client.auth.onAuthStateChange
+        .listen(
+          (_) {
+            _refreshRunnableTransportHintOnly();
+          },
+          onError: (Object error, StackTrace stackTrace) {
+            AppLogger.error(
+              'ChatCubit.onAuthStateChange',
+              error,
+              stackTrace,
+            );
+          },
+        );
+  }
+
+  void _refreshRunnableTransportHintOnly() {
+    if (isClosed) {
+      return;
+    }
+    final hint = _repository.chatRemoteTransportHint;
+    if (hint == state.runnableTransportHint) {
+      return;
+    }
+    emitState(state.copyWith(runnableTransportHint: hint));
+  }
+
+  @override
+  Future<void> close() async {
+    await _supabaseAuthSubscription?.cancel();
+    _supabaseAuthSubscription = null;
+    return super.close();
   }
 }

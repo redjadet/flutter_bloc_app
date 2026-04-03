@@ -22,7 +22,7 @@ All core offline-first features have been successfully implemented, tested, and 
 - **Strategy**: Write-first with pending send queue and conflict resolution
 - **UI**: Sync status logged; Sync Diagnostics in Settings (dev/qa only)
 - **Tests**: Complete coverage (unit, repository, bloc, widget, page)
-- **Documentation**: [`offline_first/chat.md`](chat.md)
+- **Documentation**: [`offline_first/chat.md`](chat.md); Supabase proxy plan [`plans/supabase_proxy_huggingface_chat_plan.md`](../plans/supabase_proxy_huggingface_chat_plan.md)
 
 ### 3. Search ✅
 
@@ -128,6 +128,7 @@ All core offline-first features have been successfully implemented, tested, and 
 
 - [`offline_first/counter.md`](counter.md) - Counter offline-first contract
 - [`offline_first/chat.md`](chat.md) - Chat offline-first contract
+- [`plans/supabase_proxy_huggingface_chat_plan.md`](../plans/supabase_proxy_huggingface_chat_plan.md) - Supabase Edge proxy for HF chat (action plan)
 - [`offline_first/search.md`](search.md) - Search offline-first contract
 - [`offline_first/profile.md`](profile.md) - Profile offline-first contract
 - [`offline_first/remote_config.md`](remote_config.md) - Remote Config offline-first contract
