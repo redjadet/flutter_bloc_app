@@ -36,6 +36,10 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   TimerDisposable? _debounceTimer;
   NetworkStatus _latest = NetworkStatus.unknown;
+  /// Increments when a new connectivity listen cycle starts (after all prior
+  /// `statusStream` listeners cancelled) and when `dispose` runs, so in-flight
+  /// initial `checkConnectivity` work can ignore stale completions.
+  int _listenSession = 0;
   /// When true, the connectivity stream has applied an update; a late initial
   /// `checkConnectivity` completion must not overwrite latest status or emit a
   /// stale value.
@@ -47,16 +51,22 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
 
   @override
   Future<NetworkStatus> getCurrentStatus() async {
-    final dynamic raw = await _connectivity.checkConnectivity();
-    final NetworkStatus next = _mapConnectivityRaw(raw);
+    final NetworkStatus next = await _statusFromPluginCheck();
     _latest = next;
     return next;
+  }
+
+  Future<NetworkStatus> _statusFromPluginCheck() async {
+    final dynamic raw = await _connectivity.checkConnectivity();
+    return _mapConnectivityRaw(raw);
   }
 
   void _onListen() {
     if (_connectivitySubscription != null) {
       return;
     }
+    _listenSession++;
+    final int session = _listenSession;
     _hasStreamConnectivityUpdate = false;
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
       (final results) {
@@ -71,16 +81,29 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
       },
     );
     unawaited(
-      _connectivity.checkConnectivity().then((final dynamic raw) {
-        if (_hasStreamConnectivityUpdate) {
-          return;
-        }
-        final NetworkStatus status = _mapConnectivityRaw(raw);
-        _latest = status;
-        if (_controller.hasListener && !_controller.isClosed) {
-          _controller.add(status);
-        }
-      }),
+      _statusFromPluginCheck()
+          .then((status) {
+            if (session != _listenSession) {
+              return;
+            }
+            if (_hasStreamConnectivityUpdate) {
+              return;
+            }
+            _latest = status;
+            if (_controller.hasListener && !_controller.isClosed) {
+              _controller.add(status);
+            }
+          })
+          .catchError((final Object error, final StackTrace stackTrace) {
+            if (session != _listenSession) {
+              return;
+            }
+            AppLogger.error(
+              'ConnectivityNetworkStatusService initial checkConnectivity failed',
+              error,
+              stackTrace,
+            );
+          }),
     );
   }
 
@@ -183,6 +206,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
       return;
     }
     _disposed = true;
+    _listenSession++;
     _debounceTimer?.dispose();
     _timerHandles.unregister(_debounceTimer);
     _debounceTimer = null;
