@@ -28,7 +28,8 @@ void registerChatServices() {
     AppLogger.info(
       'Chat: Hugging Face configured=$hfConfigured '
       '(model=${SecretConfig.huggingfaceModel ?? 'HuggingFaceH4/zephyr-7b-beta'}, '
-      'chatCompletions=${SecretConfig.useChatCompletions})',
+      'secretChatCompletions=${SecretConfig.useChatCompletions}, '
+      'repositoryChatCompletions=true)',
     );
   }
 
@@ -53,7 +54,6 @@ void registerChatServices() {
       payloadBuilder: getIt<HuggingFacePayloadBuilder>(),
       responseParser: getIt<HuggingFaceResponseParser>(),
       model: SecretConfig.huggingfaceModel,
-      useChatCompletions: SecretConfig.useChatCompletions,
     ),
   );
   registerLazySingletonIfAbsent<ChatHistoryRepository>(
