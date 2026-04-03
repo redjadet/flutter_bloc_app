@@ -74,6 +74,7 @@ void main() {
     await SecretConfig.load(allowAssetFallback: false);
 
     expect(SecretConfig.huggingfaceApiKey, 'asset-key');
+    expect(SecretConfig.useChatCompletions, isTrue);
     expect(storage.writeCalls, isEmpty);
   });
 

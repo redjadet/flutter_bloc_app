@@ -75,7 +75,7 @@ Future<void> _persistToSecureStorage(final SecretStorage storage) async {
   }
   await storage.write(
     SecretConfig._keyHfUseChatCompletions,
-    SecretConfig._useChatCompletions.toString(),
+    SecretConfig.useChatCompletions.toString(),
   );
 }
 
@@ -93,9 +93,7 @@ void _applySecrets(final Map<String, dynamic> json) {
   }
 
   if (json.containsKey('HUGGINGFACE_USE_CHAT_COMPLETIONS')) {
-    if (SecretConfig._useChatCompletions) {
-      // Keep previously loaded 'true' (secure storage has precedence).
-    } else {
+    if (SecretConfig._useChatCompletions == null) {
       final Object? flag = json['HUGGINGFACE_USE_CHAT_COMPLETIONS'];
       if (flag is bool) {
         SecretConfig._useChatCompletions = flag;

@@ -9,7 +9,7 @@ class HuggingfaceChatRepository implements ChatRepository {
     final Dio? client,
     final String? apiKey,
     final String? model,
-    final bool useChatCompletions = false,
+    final bool useChatCompletions = true,
     final HuggingFaceApiClient? apiClient,
     final HuggingFacePayloadBuilder? payloadBuilder,
     final HuggingFaceResponseParser? responseParser,
@@ -36,6 +36,8 @@ class HuggingfaceChatRepository implements ChatRepository {
   final String _model;
   final bool _useChatCompletions;
 
+  bool get usesChatCompletions => _useChatCompletions;
+
   @override
   Future<ChatResult> sendMessage({
     required final List<String> pastUserInputs,
@@ -50,19 +52,33 @@ class HuggingfaceChatRepository implements ChatRepository {
     }
 
     final String targetModel = _resolveModel(model);
-    return _useChatCompletions
-        ? _sendViaChatCompletions(
-            pastUserInputs: pastUserInputs,
-            generatedResponses: generatedResponses,
-            prompt: prompt,
-            model: targetModel,
-          )
-        : _sendViaInference(
-            pastUserInputs: pastUserInputs,
-            generatedResponses: generatedResponses,
-            prompt: prompt,
-            model: targetModel,
-          );
+    if (_useChatCompletions) {
+      return _sendViaChatCompletions(
+        pastUserInputs: pastUserInputs,
+        generatedResponses: generatedResponses,
+        prompt: prompt,
+        model: targetModel,
+      );
+    }
+
+    try {
+      return await _sendViaInference(
+        pastUserInputs: pastUserInputs,
+        generatedResponses: generatedResponses,
+        prompt: prompt,
+        model: targetModel,
+      );
+    } on ChatException catch (error) {
+      if (!_shouldFallbackToChatCompletions(error)) {
+        rethrow;
+      }
+      return _sendViaChatCompletions(
+        pastUserInputs: pastUserInputs,
+        generatedResponses: generatedResponses,
+        prompt: prompt,
+        model: targetModel,
+      );
+    }
   }
 
   Future<ChatResult> _sendViaInference({
@@ -120,6 +136,13 @@ class HuggingfaceChatRepository implements ChatRepository {
     if (value == null) return null;
     final String trimmed = value.trim();
     return trimmed.isEmpty ? null : trimmed;
+  }
+
+  static bool _shouldFallbackToChatCompletions(final ChatException error) {
+    final String message = error.message.toLowerCase();
+    return message.contains('http 410') &&
+        message.contains('api-inference.huggingface.co') &&
+        message.contains('router.huggingface.co');
   }
 
   static const String fallbackMessage = "I'm not sure how to respond yet.";
