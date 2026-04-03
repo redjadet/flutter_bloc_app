@@ -25,7 +25,7 @@ class SecretConfig {
   static bool _loaded = false;
   static String? _huggingfaceApiKey;
   static String? _huggingfaceModel;
-  static bool _useChatCompletions = false;
+  static bool? _useChatCompletions;
   static String? _googleMapsApiKey;
   static String? _geminiApiKey;
   static String? _supabaseUrl;
@@ -38,7 +38,7 @@ class SecretConfig {
 
   static String? get huggingfaceApiKey => _huggingfaceApiKey;
   static String? get huggingfaceModel => _huggingfaceModel;
-  static bool get useChatCompletions => _useChatCompletions;
+  static bool get useChatCompletions => _useChatCompletions ?? true;
   static String? get googleMapsApiKey => _googleMapsApiKey;
   static String? get geminiApiKey => _geminiApiKey;
   static String? get supabaseUrl => _supabaseUrl;
@@ -57,7 +57,7 @@ class SecretConfig {
     _loaded = false;
     _huggingfaceApiKey = null;
     _huggingfaceModel = null;
-    _useChatCompletions = false;
+    _useChatCompletions = null;
     _googleMapsApiKey = null;
     _geminiApiKey = null;
     _supabaseUrl = null;
