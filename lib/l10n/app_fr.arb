@@ -1499,7 +1499,7 @@
   "caseStudyGoToReview": "Aller à la relecture",
   "caseStudyBack": "Retour",
   "caseStudyReviewTitle": "Relire et envoyer",
-  "caseStudySubmit": "Envoyer (téléchargement fictif)",
+  "caseStudySubmit": "Envoyer",
   "caseStudyAbandon": "Abandonner le cas",
   "caseStudyAbandonConfirmBody": "Abandonner ce cas et supprimer les enregistrements associés ?",
   "caseStudyUploading": "Téléversement…",

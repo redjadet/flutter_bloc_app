@@ -2015,7 +2015,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get caseStudyReviewTitle => 'İncele ve gönder';
 
   @override
-  String get caseStudySubmit => 'Gönder (sahte yükleme)';
+  String get caseStudySubmit => 'Gönder';
 
   @override
   String get caseStudyAbandon => 'Vakayı bırak';

@@ -3734,7 +3734,7 @@ abstract class AppLocalizations {
   /// No description provided for @caseStudySubmit.
   ///
   /// In en, this message translates to:
-  /// **'Submit (mock upload)'**
+  /// **'Sent'**
   String get caseStudySubmit;
 
   /// No description provided for @caseStudyAbandon.

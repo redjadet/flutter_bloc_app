@@ -2028,7 +2028,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get caseStudyReviewTitle => 'Revisar y enviar';
 
   @override
-  String get caseStudySubmit => 'Enviar (carga simulada)';
+  String get caseStudySubmit => 'Enviar';
 
   @override
   String get caseStudyAbandon => 'Descartar caso';

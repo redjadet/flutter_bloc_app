@@ -81,7 +81,11 @@ class _CaseStudyHistoryPageState extends State<CaseStudyHistoryPage> {
           return RefreshIndicator(
             onRefresh: () async {
               final Future<List<CaseStudyRecord>> next = _load();
-              setState(() => _future = next);
+              if (mounted) {
+                setState(() {
+                  _future = next;
+                });
+              }
               await next;
             },
             child: ListView.separated(
