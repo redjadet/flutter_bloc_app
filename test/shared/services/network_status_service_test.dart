@@ -101,6 +101,41 @@ void main() {
         await subscription.cancel();
       });
 
+      test('ignores stale initial check after listen session churn', () async {
+        final Completer<void> stallFirstCheck = Completer<void>();
+        int beforeCheckInvocations = 0;
+        connectivity.beforeCheck = () async {
+          beforeCheckInvocations++;
+          if (beforeCheckInvocations == 1) {
+            await stallFirstCheck.future;
+          }
+        };
+        connectivity.checkFn = () async {
+          if (!stallFirstCheck.isCompleted) {
+            return <ConnectivityResult>[ConnectivityResult.none];
+          }
+          return <ConnectivityResult>[ConnectivityResult.wifi];
+        };
+
+        final List<NetworkStatus> events = <NetworkStatus>[];
+        final StreamSubscription<NetworkStatus> first = service.statusStream
+            .listen(events.add);
+        await Future<void>.delayed(Duration.zero);
+
+        await first.cancel();
+        await Future<void>.delayed(Duration.zero);
+
+        final StreamSubscription<NetworkStatus> second = service.statusStream
+            .listen(events.add);
+        await Future<void>.delayed(Duration.zero);
+
+        stallFirstCheck.complete();
+        await Future<void>.delayed(Duration.zero);
+
+        expect(events, orderedEquals(<NetworkStatus>[NetworkStatus.offline]));
+        await second.cancel();
+      });
+
       test('statusStream treats mixed connectivity list as online', () async {
         final List<NetworkStatus> events = <NetworkStatus>[];
         final StreamSubscription<NetworkStatus> subscription = service
