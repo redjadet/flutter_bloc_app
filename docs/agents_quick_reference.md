@@ -3,6 +3,10 @@
 Compact cheat sheet for all hosts. **[`AGENTS.md`](../AGENTS.md) is
 authoritative** when this page drifts or omits detail.
 
+## Repo snapshot
+
+- Flutter 3.41.6 / Dart 3.11.4
+
 ## Read First
 
 1. [`AGENTS.md`](../AGENTS.md)
