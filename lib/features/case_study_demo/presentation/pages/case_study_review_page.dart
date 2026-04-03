@@ -143,7 +143,9 @@ class CaseStudyReviewPage extends StatelessWidget {
                             .submitMockUpload();
                       },
                 child: state.isSubmitting
-                    ? Text(l10n.caseStudyUploading)
+                    ? (state.submitProgressDeterminate
+                          ? Text(l10n.caseStudySubmit)
+                          : Text(l10n.caseStudyUploading))
                     : Text(l10n.caseStudySubmit),
               ),
               const SizedBox(height: 12),
