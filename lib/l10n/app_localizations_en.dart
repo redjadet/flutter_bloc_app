@@ -2010,7 +2010,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get caseStudyReviewTitle => 'Review & submit';
 
   @override
-  String get caseStudySubmit => 'Submit (mock upload)';
+  String get caseStudySubmit => 'Sent';
 
   @override
   String get caseStudyAbandon => 'Abandon case';

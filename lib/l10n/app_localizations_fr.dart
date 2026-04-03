@@ -2040,7 +2040,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get caseStudyReviewTitle => 'Relire et envoyer';
 
   @override
-  String get caseStudySubmit => 'Envoyer (téléchargement fictif)';
+  String get caseStudySubmit => 'Envoyer';
 
   @override
   String get caseStudyAbandon => 'Abandonner le cas';

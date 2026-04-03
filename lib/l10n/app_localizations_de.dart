@@ -2041,7 +2041,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get caseStudyReviewTitle => 'Überprüfen & senden';
 
   @override
-  String get caseStudySubmit => 'Senden (Mock-Upload)';
+  String get caseStudySubmit => 'Senden';
 
   @override
   String get caseStudyAbandon => 'Fall verwerfen';
