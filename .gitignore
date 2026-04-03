@@ -89,8 +89,6 @@ coverage/lcov.base.info
 
 # Agent scorecard one-off exports (keep the rolling log tracked)
 analysis/agent_scorecard/scorecard-events-*.jsonl
-AGENTS.md
-docs/gstack_integration.md
 tmp_test_write.md
 .env.android.release
 fastlane/keys/*.json
@@ -106,7 +104,8 @@ vendor/cache/
 
 # Local agent scorecard log (do not commit)
 analysis/agent_scorecard/scorecard-events.jsonl
-docs/agents_quick_reference.md
 tmp/*
 tasks/*
 CLAUDE.md
+docs/gstack_integration.md
+AGENTS.md

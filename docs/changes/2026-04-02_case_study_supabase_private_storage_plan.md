@@ -40,6 +40,11 @@ Verification:
 
 - `./bin/router_feature_validate` ✅
 - `./bin/checklist` ✅
+- Deployed Supabase policy verification (read-only SQL via MCP) ✅
+  - `public.case_studies` RLS: owner-only CRUD via `user_id = auth.uid()`
+  - `storage.objects` policies for `case_study_videos`: `bucket_id = 'case_study_videos'`
+    and `name LIKE 'user/' || auth.uid() || '/%'` for SELECT/INSERT/DELETE
+  - bucket `case_study_videos` is private (`public = false`)
 
 This plan extends the existing dentist case-study demo so it can use Supabase
 private storage and per-user records while preserving the current local-only
