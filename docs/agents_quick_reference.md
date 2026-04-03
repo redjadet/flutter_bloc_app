@@ -71,3 +71,7 @@ Fastlane:
 - For `supabase/functions/chat-complete`, keep `verify_jwt = true` and verify
   Dashboard `Verify JWT with legacy secret` stays disabled unless the project
   intentionally uses legacy JWT secrets.
+- For chat transport changes, preserve direct-vs-Edge error-code alignment:
+  `401 auth_required`, `403 forbidden`, `429 rate_limited`, timeout
+  `upstream_timeout`, generic transport/5xx `upstream_unavailable`, and
+  model/request `4xx` such as `404` -> `invalid_request`.

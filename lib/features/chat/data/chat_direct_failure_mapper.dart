@@ -21,10 +21,24 @@ ChatRemoteFailureException mapDirectChatException(final ChatException error) {
     return _directRemoteFailure(error, code: 'rate_limited', retryable: false);
   }
 
-  if (lower.contains('http 401') ||
-      lower.contains('http 403') ||
-      lower.contains('authentication failed')) {
+  if (lower.contains('http 401') || lower.contains('authentication failed')) {
+    return _directRemoteFailure(
+      error,
+      code: 'auth_required',
+      retryable: false,
+    );
+  }
+
+  if (lower.contains('http 403')) {
     return _directRemoteFailure(error, code: 'forbidden', retryable: false);
+  }
+
+  if (lower.contains('timed out') || lower.contains('timeout')) {
+    return _directRemoteFailure(
+      error,
+      code: 'upstream_timeout',
+      retryable: true,
+    );
   }
 
   if (lower.contains('failed to contact') ||
@@ -48,7 +62,14 @@ ChatRemoteFailureException mapDirectChatException(final ChatException error) {
         retryable: false,
       );
     }
-    if (code == 401 || code == 403) {
+    if (code == 401) {
+      return _directRemoteFailure(
+        error,
+        code: 'auth_required',
+        retryable: false,
+      );
+    }
+    if (code == 403) {
       return _directRemoteFailure(error, code: 'forbidden', retryable: false);
     }
     if (code >= 500) {
