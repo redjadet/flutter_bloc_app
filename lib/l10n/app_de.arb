@@ -1502,6 +1502,8 @@
   "caseStudySubmit": "Senden",
   "caseStudyAbandon": "Fall verwerfen",
   "caseStudyAbandonConfirmBody": "Diesen Fall verwerfen und alle Aufnahmen dazu löschen?",
+  "caseStudyDeleteDialogTitle": "Fall löschen?",
+  "caseStudyDeleteDialogBody": "Diesen Fall dauerhaft löschen? Das kann nicht rückgängig gemacht werden.",
   "caseStudyUploading": "Wird hochgeladen…",
   "caseStudyDataModeLocalOnly": "Nur lokal",
   "caseStudyDataModeSupabase": "Supabase",

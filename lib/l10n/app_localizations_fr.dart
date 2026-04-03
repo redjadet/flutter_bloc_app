@@ -2050,6 +2050,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'Abandonner ce cas et supprimer les enregistrements associés ?';
 
   @override
+  String get caseStudyDeleteDialogTitle => 'Supprimer le cas ?';
+
+  @override
+  String get caseStudyDeleteDialogBody =>
+      'Supprimer ce cas définitivement ? Cette action est irréversible.';
+
+  @override
   String get caseStudyUploading => 'Téléversement…';
 
   @override

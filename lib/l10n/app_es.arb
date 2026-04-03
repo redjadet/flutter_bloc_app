@@ -1502,6 +1502,8 @@
   "caseStudySubmit": "Enviar",
   "caseStudyAbandon": "Descartar caso",
   "caseStudyAbandonConfirmBody": "¿Descartar este caso y eliminar los vídeos grabados?",
+  "caseStudyDeleteDialogTitle": "¿Eliminar caso?",
+  "caseStudyDeleteDialogBody": "¿Eliminar este caso de forma permanente? Esta acción no se puede deshacer.",
   "caseStudyUploading": "Subiendo…",
   "caseStudyDataModeLocalOnly": "Solo local",
   "caseStudyDataModeSupabase": "Supabase",

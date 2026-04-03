@@ -2051,6 +2051,13 @@ class AppLocalizationsDe extends AppLocalizations {
       'Diesen Fall verwerfen und alle Aufnahmen dazu löschen?';
 
   @override
+  String get caseStudyDeleteDialogTitle => 'Fall löschen?';
+
+  @override
+  String get caseStudyDeleteDialogBody =>
+      'Diesen Fall dauerhaft löschen? Das kann nicht rückgängig gemacht werden.';
+
+  @override
   String get caseStudyUploading => 'Wird hochgeladen…';
 
   @override

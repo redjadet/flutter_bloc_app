@@ -2025,6 +2025,13 @@ class AppLocalizationsTr extends AppLocalizations {
       'Bu vaka kaydı silinsin ve çekilen tüm klipler silinsin mi?';
 
   @override
+  String get caseStudyDeleteDialogTitle => 'Vaka silinsin mi?';
+
+  @override
+  String get caseStudyDeleteDialogBody =>
+      'Bu vaka kalıcı olarak silinsin mi? Bu işlem geri alınamaz.';
+
+  @override
   String get caseStudyUploading => 'Yükleniyor…';
 
   @override

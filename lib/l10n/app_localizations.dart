@@ -3749,6 +3749,18 @@ abstract class AppLocalizations {
   /// **'Discard this case and delete any recorded clips for it?'**
   String get caseStudyAbandonConfirmBody;
 
+  /// No description provided for @caseStudyDeleteDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete case?'**
+  String get caseStudyDeleteDialogTitle;
+
+  /// No description provided for @caseStudyDeleteDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this case permanently? This cannot be undone.'**
+  String get caseStudyDeleteDialogBody;
+
   /// No description provided for @caseStudyUploading.
   ///
   /// In en, this message translates to:
