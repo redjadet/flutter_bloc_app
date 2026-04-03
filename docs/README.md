@@ -10,8 +10,15 @@ This folder contains the source-of-truth documentation for the Flutter BLoC app.
   [`architecture_details.md`](architecture_details.md)
 - **Security**: [`SECURITY.md`](SECURITY.md), [`security_and_secrets.md`](security_and_secrets.md)
 - **Deployment**: [`deployment.md`](deployment.md)
+- **Case studies (product briefs + demo feature)**: [`case_studies/README.md`](case_studies/README.md)
 
 ## Core docs (by concern)
+
+### Case studies
+
+- [`case_studies/README.md`](case_studies/README.md) — index of product briefs
+- [`case_studies/dentists.md`](case_studies/dentists.md) — dentist video case-study requirements
+- Implementation and Supabase extension plans live under [`changes/`](changes/README.md) (see index there)
 
 ### Architecture and design
 

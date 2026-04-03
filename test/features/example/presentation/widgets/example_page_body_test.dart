@@ -40,6 +40,7 @@ void main() {
             onOpenScapes: () {},
             onOpenWalletconnectAuth: () {},
             onOpenCameraGallery: () {},
+            onOpenCaseStudyDemo: () {},
             onOpenIapDemo: () {},
           ),
         ),
@@ -91,6 +92,7 @@ void main() {
             onOpenScapes: () {},
             onOpenWalletconnectAuth: () {},
             onOpenCameraGallery: () {},
+            onOpenCaseStudyDemo: () {},
             onOpenIapDemo: () {},
           ),
         ),
@@ -102,6 +104,55 @@ void main() {
       await tester.pump();
 
       expect(fcmTapped, isTrue);
+    });
+
+    testWidgets('invokes onOpenCaseStudyDemo when tapping case study button', (
+      final tester,
+    ) async {
+      bool caseStudyTapped = false;
+      final theme = ThemeData.light();
+      final l10n = AppLocalizationsEn();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ExamplePageBody(
+            l10n: l10n,
+            theme: theme,
+            colors: theme.colorScheme,
+            onBackPressed: () {},
+            onLoadPlatformInfo: () {},
+            onOpenWebsocket: () {},
+            onOpenSearch: () {},
+            onOpenTodoList: () {},
+            onOpenProfile: () {},
+            onOpenRegister: () {},
+            onOpenLoggedOut: () {},
+            onRunIsolates: () {},
+            isRunningIsolates: false,
+            isolateError: null,
+            fibonacciInput: null,
+            fibonacciResult: null,
+            parallelValues: const <int>[],
+            parallelDuration: Duration.zero,
+            onOpenChatList: () {},
+            onOpenLibraryDemo: () {},
+            onOpenIgamingDemo: () {},
+            onOpenScapes: () {},
+            onOpenWalletconnectAuth: () {},
+            onOpenCameraGallery: () {},
+            onOpenCaseStudyDemo: () {
+              caseStudyTapped = true;
+            },
+            onOpenIapDemo: () {},
+          ),
+        ),
+      );
+
+      await tester.tap(
+        find.byKey(const ValueKey('example-case-study-demo-button')),
+      );
+      await tester.pump();
+
+      expect(caseStudyTapped, isTrue);
     });
   });
 }

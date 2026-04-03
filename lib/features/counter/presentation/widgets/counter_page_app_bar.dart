@@ -21,6 +21,11 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onOpenSettings;
   static final List<OverflowItem> _overflowItems = <OverflowItem>[
     OverflowItem(
+      action: OverflowAction.caseStudyDemo,
+      routeName: AppRoutes.caseStudyDemo,
+      labelBuilder: (final l10n) => l10n.openCaseStudyDemoTooltip,
+    ),
+    OverflowItem(
       action: OverflowAction.charts,
       routeName: AppRoutes.charts,
       labelBuilder: (final l10n) => l10n.openChartsTooltip,
@@ -114,6 +119,11 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: const Icon(Icons.explore),
       ),
       IconButton(
+        tooltip: l10n.openCaseStudyDemoTooltip,
+        onPressed: () => context.pushNamed(AppRoutes.caseStudyDemo),
+        icon: const Icon(Icons.ondemand_video_outlined),
+      ),
+      IconButton(
         tooltip: l10n.openSettingsTooltip,
         onPressed: onOpenSettings,
         icon: const Icon(Icons.settings),
@@ -169,6 +179,11 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
             icon: CupertinoIcons.compass,
             onPressed: () => context.pushNamed(AppRoutes.example),
             tooltip: l10n.openExampleTooltip,
+          ),
+          CupertinoIconButton(
+            icon: CupertinoIcons.videocam,
+            onPressed: () => context.pushNamed(AppRoutes.caseStudyDemo),
+            tooltip: l10n.openCaseStudyDemoTooltip,
           ),
           CupertinoIconButton(
             icon: CupertinoIcons.settings,

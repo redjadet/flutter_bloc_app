@@ -1,136 +1,93 @@
 # AI Code Review Protocol
 
-This repository treats AI-generated code as draft output that must pass an
-explicit review gate before it is accepted.
+Treat AI-generated code as draft output that must pass a review gate before it
+is trusted.
 
 Pinned repo toolchain: Flutter 3.41.6 / Dart 3.11.4.
 
-This protocol adapts Vinod Pal’s March 8, 2026 checklist into repo policy:
+Adapted from Vinod Pal’s March 8, 2026 checklist:
 <https://medium.com/%40vndpal/my-practical-approach-for-reviewing-ai-generated-code-268db27f3af8>
 
-The review gate comes before normal repo validation. It complements automated
+This review gate comes before normal repo validation. It complements automated
 checks; it does not replace them.
 
-## The eight checks
+## The Eight Checks
 
-### 1. Treat the first output as a draft
+1. **Draft first**
+   Treat the first output as a draft. Do not confuse plausible code, comments,
+   or naming with correctness.
+2. **Problem fit**
+   Check production behavior, not just the local function body. Include auth,
+   retries, cancellation, lifecycle, offline behavior, and failure handling.
+   Reject happy-path-only widget changes that move shared state into callback
+   chains or place side effects in `build()`.
+3. **Simplify**
+   Prefer the smallest change that solves the task. Remove speculative
+   abstractions, redundant helpers, and avoidable nesting.
+4. **Security**
+   Review auth/session handling, request replay, retries, background sync, file
+   access, logging, secrets, and `--dart-define` usage explicitly.
+5. **Performance**
+   Check for repeated I/O, wide rebuilds, large synchronous parsing on the UI
+   isolate, unnecessary listeners/timers/polling, avoidable allocations, and
+   static subtrees that should stay `const`.
+6. **Edge cases**
+   Deliberately reason about empty values, malformed payloads, large inputs,
+   repeated taps, concurrent calls, resumed app state, interrupted flows, and
+   offline recovery.
+7. **Dependencies**
+   Before accepting a new dependency, ask whether the repo already has a
+   suitable utility, whether the dependency materially improves the solution,
+   and what upgrade/security cost it adds.
+8. **Focused tests**
+   Expect targeted test updates, regression guards when practical,
+   scope-matched validation, and for async flows either coverage or explicit
+   reasoning for loading, empty, and error states.
 
-- Assume the first answer may miss business logic or hidden constraints.
-- Do not confuse plausible naming, comments, or formatting with correctness.
-- Review generated code with the same skepticism you would apply to a weak
-  human draft.
-
-### 2. Confirm it solves the real problem
-
-- Check production behavior, not only the immediate function body.
-- Include retries, auth, cancellation, lifecycle, offline behavior, and failure
-  handling in the review.
-- Reject changes that only solve an idealized or narrowed version of the task.
-
-### 3. Simplify aggressively
-
-- Prefer the smallest change that satisfies the requirement.
-- Remove speculative abstractions, redundant helpers, and avoidable nesting.
-- If the code cannot be explained quickly, simplify it before accepting it.
-
-### 4. Review security-sensitive paths explicitly
-
-Focus extra attention on:
-
-- auth, token refresh, and session handling
-- request replay, retries, and background sync
-- file access, uploads, and storage
-- logging, crash reporting, and secret handling
-- `--dart-define`, environment, and credential usage
-
-### 5. Look for hidden performance costs
-
-Check for:
-
-- repeated network or database work
-- wide widget rebuilds
-- large synchronous parsing on the UI isolate
-- unnecessary listeners, timers, polling, or async churn
-- avoidable allocations and list copies
-
-### 6. Break the change with edge cases
-
-Deliberately test or reason about:
-
-- empty values and nulls
-- malformed or partial payloads
-- large inputs
-- repeated taps and concurrent calls
-- resumed app state, interrupted flows, and offline recovery
-
-### 7. Question every dependency
-
-Before accepting a new dependency, ask:
-
-- do we already have a repo utility or package that covers this
-- does the dependency materially improve the solution
-- what maintenance, upgrade, and security cost does it add
-
-If the answer is weak, do not add it.
-
-### 8. Require focused tests or an explicit reason not to add them
-
-Expected by default:
-
-- targeted test updates for behavior changes
-- regression guards for bug fixes when practical
-- scope-matched repo validation commands
-
-If no new test is added, record why existing coverage is already enough.
-
-## Repo-specific defaults
-
-### Before accepting AI-written code
+## Before Accepting AI-Written Code
 
 1. Apply the eight checks.
-2. For non-trivial tasks, confirm the host-specific task tracker captures the
-   implementation plan and verification steps:
-   [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) for Cursor,
-   [`tasks/codex/todo.md`](../tasks/codex/todo.md) for Codex.
-3. If subagents or sidecars were used, review their output as draft input and
+2. For non-trivial tasks, confirm the active plan and verification are recorded
+   in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) or
+   [`tasks/codex/todo.md`](../tasks/codex/todo.md).
+3. For presentation-layer changes, confirm styling uses shared theme/design
+   tokens unless the file is intentionally defining tokens.
+4. If subagents or sidecars were used, review their output as draft input and
    validate the integrated result yourself.
-4. Review the diff manually.
-5. Run the smallest matching repo validation command.
-6. For medium/high-risk work, prefer one extra review pass before finalizing.
-   From Cursor or other non-Codex hosts, that can be a bounded pass via
-   `./tool/request_codex_feedback.sh`. From Codex itself, do not invoke that
-   helper unless the user explicitly asks for a second opinion or cross-host
-   review.
+5. Review the diff manually.
+6. Run the smallest matching repo validation command.
+7. For medium/high-risk work, prefer one extra review pass before finalizing.
+   From non-Codex hosts, that can include
+   `./tool/request_codex_feedback.sh`. From Codex itself, use that helper only
+   when the user explicitly asks for a second opinion or cross-host review.
+   Use `./bin/checklist` only for broad or pre-ship sweeps, or when the user
+   explicitly asks for the full validation pass.
 
-### Before marking the task done
+## Before Marking The Task Done
 
-1. Prove behavior with scope-matched evidence such as tests, logs, or behavior
-   diffs.
-2. Record the verification outcome and short review notes in the host-specific
-   task tracker when the task used plan-first workflow:
-   [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) for Cursor,
-   [`tasks/codex/todo.md`](../tasks/codex/todo.md) for Codex.
-3. If the user corrected a mistake during the task, add a prevention lesson to
+1. Prove behavior with scope-matched evidence such as tests, logs, screenshots,
+   or behavior diffs.
+2. When plan-first workflow was used, record verification outcome and short
+   review notes in the host-specific task tracker.
+3. If the user corrected a mistake during the task, add a prevention note to
    [`tasks/lessons.md`](../tasks/lessons.md).
 
-### Dependency changes
+## Special Cases
 
-When `pubspec.yaml` or `pubspec.lock` changes:
+Dependency changes:
 
-- justify the new package or upgrade
-- verify whether an existing repo dependency already solves the problem
-- run scope-matched validation instead of relying only on `flutter pub get`
+- Justify the new package or upgrade.
+- Check whether an existing repo dependency already covers the need.
+- Do not rely on `flutter pub get` as validation.
 
-### Bug-fix expectation
-
-Prefer this sequence:
+Bug-fix path:
 
 1. reproduce or reason clearly about the failure
 2. add a focused guard
 3. implement the fix
 4. validate the narrowed scope
 
-## Relationship to repo validation
+## Relationship To Validation
 
 This protocol complements, but does not replace:
 
@@ -138,7 +95,3 @@ This protocol complements, but does not replace:
 - `./bin/checklist`
 - `./bin/integration_tests`
 - targeted format, analyze, and test runs
-
-The review gate answers, "Should we trust this change enough to validate it?"
-The validation scripts answer, "Does the implementation satisfy the repo’s
-delivery checks?"

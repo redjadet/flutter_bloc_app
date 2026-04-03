@@ -38,7 +38,11 @@ void main() {
       ),
     );
 
-    await tester.tap(find.text(AppLocalizationsEn().exampleNativeInfoButton));
+    final Finder nativeInfoButtonText = find.text(
+      AppLocalizationsEn().exampleNativeInfoButton,
+    );
+    await tester.scrollUntilVisible(nativeInfoButtonText, 200);
+    await tester.tap(nativeInfoButtonText);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 200));
 
@@ -91,7 +95,11 @@ void main() {
       ),
     );
 
-    await tester.tap(find.text(AppLocalizationsEn().exampleNativeInfoButton));
+    final Finder nativeInfoButtonText = find.text(
+      AppLocalizationsEn().exampleNativeInfoButton,
+    );
+    await tester.scrollUntilVisible(nativeInfoButtonText, 200);
+    await tester.tap(nativeInfoButtonText);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
@@ -118,7 +126,11 @@ void main() {
       ),
     );
 
-    await tester.tap(find.text(AppLocalizationsEn().exampleNativeInfoButton));
+    final Finder nativeInfoButtonText = find.text(
+      AppLocalizationsEn().exampleNativeInfoButton,
+    );
+    await tester.scrollUntilVisible(nativeInfoButtonText, 200);
+    await tester.tap(nativeInfoButtonText);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
@@ -145,7 +157,11 @@ void main() {
       ),
     );
 
-    await tester.tap(find.text(AppLocalizationsEn().exampleNativeInfoButton));
+    final Finder nativeInfoButtonText = find.text(
+      AppLocalizationsEn().exampleNativeInfoButton,
+    );
+    await tester.scrollUntilVisible(nativeInfoButtonText, 200);
+    await tester.tap(nativeInfoButtonText);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 

@@ -25,4 +25,9 @@ class AppRoutePolicies {
     path: AppRoutes.profilePath,
     requirement: RouteAuthRequirement.authenticated,
   );
+
+  static const AppRoutePolicy caseStudyDemo = AppRoutePolicy(
+    path: AppRoutes.caseStudyDemoPath,
+    requirement: RouteAuthRequirement.authenticated,
+  );
 }

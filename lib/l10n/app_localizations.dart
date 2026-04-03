@@ -188,6 +188,12 @@ abstract class AppLocalizations {
   /// **'Open example page'**
   String get openExampleTooltip;
 
+  /// Tooltip for opening the case study demo flow from the home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Open dentist case study demo'**
+  String get openCaseStudyDemoTooltip;
+
   /// Tooltip for navigating to the payment calculator page
   ///
   /// In en, this message translates to:
@@ -3592,6 +3598,318 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No products found.'**
   String get iapDemoNoProductsFound;
+
+  /// Example page entry to the dentist case study demo
+  ///
+  /// In en, this message translates to:
+  /// **'Case study demo (dentist)'**
+  String get exampleCaseStudyDemoButton;
+
+  /// No description provided for @caseStudyDemoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Case study demo'**
+  String get caseStudyDemoTitle;
+
+  /// No description provided for @caseStudyDemoNewCase.
+  ///
+  /// In en, this message translates to:
+  /// **'New case'**
+  String get caseStudyDemoNewCase;
+
+  /// No description provided for @caseStudyDemoHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get caseStudyDemoHistory;
+
+  /// No description provided for @caseStudyDemoSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get caseStudyDemoSettings;
+
+  /// No description provided for @caseStudyDemoMetadataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Case details'**
+  String get caseStudyDemoMetadataTitle;
+
+  /// No description provided for @caseStudyDoctorNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor name'**
+  String get caseStudyDoctorNameLabel;
+
+  /// No description provided for @caseStudyCaseTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Case type'**
+  String get caseStudyCaseTypeLabel;
+
+  /// No description provided for @caseStudyNotesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get caseStudyNotesLabel;
+
+  /// No description provided for @caseStudyContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get caseStudyContinue;
+
+  /// No description provided for @caseStudyCaseTypeImplant.
+  ///
+  /// In en, this message translates to:
+  /// **'Implant'**
+  String get caseStudyCaseTypeImplant;
+
+  /// No description provided for @caseStudyCaseTypeOrtho.
+  ///
+  /// In en, this message translates to:
+  /// **'Orthodontics'**
+  String get caseStudyCaseTypeOrtho;
+
+  /// No description provided for @caseStudyCaseTypeCosmetic.
+  ///
+  /// In en, this message translates to:
+  /// **'Cosmetic'**
+  String get caseStudyCaseTypeCosmetic;
+
+  /// No description provided for @caseStudyCaseTypeGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get caseStudyCaseTypeGeneral;
+
+  /// No description provided for @caseStudyRecordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Record responses'**
+  String get caseStudyRecordTitle;
+
+  /// No description provided for @caseStudyQuestionProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Question {current} of {total}'**
+  String caseStudyQuestionProgress(int current, int total);
+
+  /// No description provided for @caseStudyPickVideoCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Record video'**
+  String get caseStudyPickVideoCamera;
+
+  /// No description provided for @caseStudyPickVideoGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get caseStudyPickVideoGallery;
+
+  /// No description provided for @caseStudyNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get caseStudyNext;
+
+  /// No description provided for @caseStudyGoToReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to review'**
+  String get caseStudyGoToReview;
+
+  /// No description provided for @caseStudyBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get caseStudyBack;
+
+  /// No description provided for @caseStudyReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review & submit'**
+  String get caseStudyReviewTitle;
+
+  /// No description provided for @caseStudySubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get caseStudySubmit;
+
+  /// No description provided for @caseStudyAbandon.
+  ///
+  /// In en, this message translates to:
+  /// **'Abandon case'**
+  String get caseStudyAbandon;
+
+  /// No description provided for @caseStudyAbandonConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard this case and delete any recorded clips for it?'**
+  String get caseStudyAbandonConfirmBody;
+
+  /// No description provided for @caseStudyDeleteDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete case?'**
+  String get caseStudyDeleteDialogTitle;
+
+  /// No description provided for @caseStudyDeleteDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this case permanently? This cannot be undone.'**
+  String get caseStudyDeleteDialogBody;
+
+  /// No description provided for @caseStudyUploading.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading…'**
+  String get caseStudyUploading;
+
+  /// No description provided for @caseStudyDataModeLocalOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Local only'**
+  String get caseStudyDataModeLocalOnly;
+
+  /// No description provided for @caseStudyDataModeSupabase.
+  ///
+  /// In en, this message translates to:
+  /// **'Supabase'**
+  String get caseStudyDataModeSupabase;
+
+  /// No description provided for @caseStudyHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted cases'**
+  String get caseStudyHistoryTitle;
+
+  /// No description provided for @caseStudyHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No submitted cases yet.'**
+  String get caseStudyHistoryEmpty;
+
+  /// No description provided for @caseStudyHistoryDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Case detail'**
+  String get caseStudyHistoryDetailTitle;
+
+  /// No description provided for @caseStudySubmittedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted'**
+  String get caseStudySubmittedAt;
+
+  /// No description provided for @caseStudyVideoMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Video file missing'**
+  String get caseStudyVideoMissing;
+
+  /// No description provided for @caseStudyErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Try again.'**
+  String get caseStudyErrorGeneric;
+
+  /// No description provided for @caseStudyHistoryDetailNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This case was not found. It may have been removed or you may not have access.'**
+  String get caseStudyHistoryDetailNotFound;
+
+  /// No description provided for @caseStudyHistoryDetailUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load this case. Check your connection and try again.'**
+  String get caseStudyHistoryDetailUnavailable;
+
+  /// No description provided for @caseStudySubmitLocalHistoryFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your case was saved in the cloud, but this device could not update local history. Use “Retry saving on this device” below, or open History to see cloud submissions.'**
+  String get caseStudySubmitLocalHistoryFailed;
+
+  /// No description provided for @caseStudyRetryLocalSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry saving on this device'**
+  String get caseStudyRetryLocalSave;
+
+  /// No description provided for @caseStudyRefreshDetailTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get caseStudyRefreshDetailTooltip;
+
+  /// No description provided for @caseStudySignedUrlsRefreshHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Clip playback uses temporary links (about 24 hours). Pull down or tap refresh if a video stops working.'**
+  String get caseStudySignedUrlsRefreshHint;
+
+  /// No description provided for @caseStudyQuestion1.
+  ///
+  /// In en, this message translates to:
+  /// **'Introduce the patient and chief complaint.'**
+  String get caseStudyQuestion1;
+
+  /// No description provided for @caseStudyQuestion2.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe relevant medical history.'**
+  String get caseStudyQuestion2;
+
+  /// No description provided for @caseStudyQuestion3.
+  ///
+  /// In en, this message translates to:
+  /// **'Show extra-oral examination findings.'**
+  String get caseStudyQuestion3;
+
+  /// No description provided for @caseStudyQuestion4.
+  ///
+  /// In en, this message translates to:
+  /// **'Show intra-oral examination findings.'**
+  String get caseStudyQuestion4;
+
+  /// No description provided for @caseStudyQuestion5.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain radiographic findings.'**
+  String get caseStudyQuestion5;
+
+  /// No description provided for @caseStudyQuestion6.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk through diagnosis and problem list.'**
+  String get caseStudyQuestion6;
+
+  /// No description provided for @caseStudyQuestion7.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe treatment options discussed.'**
+  String get caseStudyQuestion7;
+
+  /// No description provided for @caseStudyQuestion8.
+  ///
+  /// In en, this message translates to:
+  /// **'Detail the chosen treatment plan.'**
+  String get caseStudyQuestion8;
+
+  /// No description provided for @caseStudyQuestion9.
+  ///
+  /// In en, this message translates to:
+  /// **'Show immediate post-operative status.'**
+  String get caseStudyQuestion9;
+
+  /// No description provided for @caseStudyQuestion10.
+  ///
+  /// In en, this message translates to:
+  /// **'Summarize follow-up and prognosis.'**
+  String get caseStudyQuestion10;
 }
 
 class _AppLocalizationsDelegate
