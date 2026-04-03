@@ -1502,6 +1502,8 @@
   "caseStudySubmit": "Envoyer",
   "caseStudyAbandon": "Abandonner le cas",
   "caseStudyAbandonConfirmBody": "Abandonner ce cas et supprimer les enregistrements associés ?",
+  "caseStudyDeleteDialogTitle": "Supprimer le cas ?",
+  "caseStudyDeleteDialogBody": "Supprimer ce cas définitivement ? Cette action est irréversible.",
   "caseStudyUploading": "Téléversement…",
   "caseStudyDataModeLocalOnly": "Local uniquement",
   "caseStudyDataModeSupabase": "Supabase",

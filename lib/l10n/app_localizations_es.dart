@@ -2038,6 +2038,13 @@ class AppLocalizationsEs extends AppLocalizations {
       '¿Descartar este caso y eliminar los vídeos grabados?';
 
   @override
+  String get caseStudyDeleteDialogTitle => '¿Eliminar caso?';
+
+  @override
+  String get caseStudyDeleteDialogBody =>
+      '¿Eliminar este caso de forma permanente? Esta acción no se puede deshacer.';
+
+  @override
   String get caseStudyUploading => 'Subiendo…';
 
   @override

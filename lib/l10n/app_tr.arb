@@ -1488,19 +1488,61 @@
   "iapDemoNoProductsFound": "No products found.",
   "exampleCaseStudyDemoButton": "Vaka çalışması demosu (diş hekimi)",
   "caseStudyDemoTitle": "Vaka çalışması demosu",
+  "@caseStudyDemoTitle": {
+    "description": "Diş hekimi vaka çalışması demosu sayfası başlığı"
+  },
   "caseStudyDemoNewCase": "Yeni vaka",
+  "@caseStudyDemoNewCase": {
+    "description": "Yeni vaka başlatma sekmesi/aksiyonu etiketi"
+  },
   "caseStudyDemoHistory": "Geçmiş",
+  "@caseStudyDemoHistory": {
+    "description": "Vaka geçmişi sekmesi/aksiyonu etiketi"
+  },
   "caseStudyDemoSettings": "Ayarlar",
+  "@caseStudyDemoSettings": {
+    "description": "Vaka demosu ayarları sekmesi/aksiyonu etiketi"
+  },
   "caseStudyDemoMetadataTitle": "Vaka ayrıntıları",
+  "@caseStudyDemoMetadataTitle": {
+    "description": "Vaka meta bilgiler bölüm başlığı"
+  },
   "caseStudyDoctorNameLabel": "Hekim adı",
+  "@caseStudyDoctorNameLabel": {
+    "description": "Hekim adı alanı etiketi"
+  },
   "caseStudyCaseTypeLabel": "Vaka tipi",
+  "@caseStudyCaseTypeLabel": {
+    "description": "Vaka tipi alanı etiketi"
+  },
   "caseStudyNotesLabel": "Notlar (isteğe bağlı)",
+  "@caseStudyNotesLabel": {
+    "description": "Notlar alanı etiketi"
+  },
   "caseStudyContinue": "Devam",
+  "@caseStudyContinue": {
+    "description": "Bir sonraki adıma ilerleme butonu etiketi"
+  },
   "caseStudyCaseTypeImplant": "İmplant",
+  "@caseStudyCaseTypeImplant": {
+    "description": "Vaka tipi seçeneği: implant"
+  },
   "caseStudyCaseTypeOrtho": "Ortodonti",
+  "@caseStudyCaseTypeOrtho": {
+    "description": "Vaka tipi seçeneği: ortodonti"
+  },
   "caseStudyCaseTypeCosmetic": "Estetik",
+  "@caseStudyCaseTypeCosmetic": {
+    "description": "Vaka tipi seçeneği: estetik"
+  },
   "caseStudyCaseTypeGeneral": "Genel",
+  "@caseStudyCaseTypeGeneral": {
+    "description": "Vaka tipi seçeneği: genel"
+  },
   "caseStudyRecordTitle": "Yanıtları kaydet",
+  "@caseStudyRecordTitle": {
+    "description": "Soru yanıtlarını video olarak kaydetme ekranı başlığı"
+  },
   "caseStudyQuestionProgress": "Soru {current} / {total}",
   "@caseStudyQuestionProgress": {
     "placeholders": {
@@ -1513,37 +1555,147 @@
     }
   },
   "caseStudyPickVideoCamera": "Video kaydet",
+  "@caseStudyPickVideoCamera": {
+    "description": "Kamera ile video kaydetme seçeneği etiketi"
+  },
   "caseStudyPickVideoGallery": "Galeriden seç",
+  "@caseStudyPickVideoGallery": {
+    "description": "Galeriden video seçme seçeneği etiketi"
+  },
   "caseStudyNext": "İleri",
+  "@caseStudyNext": {
+    "description": "Bir sonraki adıma geçme butonu etiketi"
+  },
   "caseStudyGoToReview": "İncelemeye geç",
+  "@caseStudyGoToReview": {
+    "description": "İnceleme adımına geçiş butonu etiketi"
+  },
   "caseStudyBack": "Geri",
+  "@caseStudyBack": {
+    "description": "Geri gitme butonu etiketi"
+  },
   "caseStudyReviewTitle": "İncele ve gönder",
+  "@caseStudyReviewTitle": {
+    "description": "Vaka inceleme ve gönderme ekranı başlığı"
+  },
   "caseStudySubmit": "Gönder",
+  "@caseStudySubmit": {
+    "description": "Vakayı gönderme butonu etiketi"
+  },
   "caseStudyAbandon": "Vakayı bırak",
+  "@caseStudyAbandon": {
+    "description": "Vaka oluşturma akışını bırakma butonu etiketi"
+  },
   "caseStudyAbandonConfirmBody": "Bu vaka kaydı silinsin ve çekilen tüm klipler silinsin mi?",
+  "@caseStudyAbandonConfirmBody": {
+    "description": "Vakayı bırakmayı onaylama ileti metni"
+  },
+  "caseStudyDeleteDialogTitle": "Vaka silinsin mi?",
+  "@caseStudyDeleteDialogTitle": {
+    "description": "Vaka silme onay ileti başlığı"
+  },
+  "caseStudyDeleteDialogBody": "Bu vaka kalıcı olarak silinsin mi? Bu işlem geri alınamaz.",
+  "@caseStudyDeleteDialogBody": {
+    "description": "Vaka silme onay ileti metni"
+  },
   "caseStudyUploading": "Yükleniyor…",
+  "@caseStudyUploading": {
+    "description": "Video yükleme sırasında gösterilen durum metni"
+  },
   "caseStudyDataModeLocalOnly": "Sadece yerel",
+  "@caseStudyDataModeLocalOnly": {
+    "description": "Vaka veri modu seçeneği: sadece yerel"
+  },
   "caseStudyDataModeSupabase": "Supabase",
+  "@caseStudyDataModeSupabase": {
+    "description": "Vaka veri modu seçeneği: Supabase"
+  },
   "caseStudyHistoryTitle": "Gönderilen vakalar",
+  "@caseStudyHistoryTitle": {
+    "description": "Gönderilen vakalar (geçmiş) ekranı başlığı"
+  },
   "caseStudyHistoryEmpty": "Henüz gönderilmiş vaka yok.",
+  "@caseStudyHistoryEmpty": {
+    "description": "Geçmiş listesi boşken gösterilen metin"
+  },
   "caseStudyHistoryDetailTitle": "Vaka detayı",
+  "@caseStudyHistoryDetailTitle": {
+    "description": "Vaka detay ekranı başlığı"
+  },
   "caseStudySubmittedAt": "Gönderildi",
+  "@caseStudySubmittedAt": {
+    "description": "Vakanın gönderilme tarih/saat etiketi"
+  },
   "caseStudyVideoMissing": "Video dosyası bulunamadı",
+  "@caseStudyVideoMissing": {
+    "description": "Video dosyası eksik olduğunda gösterilen hata mesajı"
+  },
   "caseStudyErrorGeneric": "Bir sorun oluştu. Yeniden deneyin.",
+  "@caseStudyErrorGeneric": {
+    "description": "Vaka akışında genel hata mesajı"
+  },
   "caseStudyHistoryDetailNotFound": "Bu vaka bulunamadı. Kaldırılmış olabilir veya erişiminiz olmayabilir.",
+  "@caseStudyHistoryDetailNotFound": {
+    "description": "Vaka detayı bulunamadığında gösterilen hata mesajı"
+  },
   "caseStudyHistoryDetailUnavailable": "Bu vaka yüklenemedi. Bağlantınızı kontrol edip yeniden deneyin.",
+  "@caseStudyHistoryDetailUnavailable": {
+    "description": "Vaka detayı yüklenemediğinde gösterilen hata mesajı"
+  },
   "caseStudySubmitLocalHistoryFailed": "Vaka bulutta kaydedildi ancak bu cihazdaki yerel geçmiş güncellenemedi. Aşağıdan «Bu cihazda yeniden kaydet»i kullanın veya buluttaki gönderiler için Geçmiş’e bakın.",
+  "@caseStudySubmitLocalHistoryFailed": {
+    "description": "Buluta kayıt başarılı ama cihaz yerel geçmişi güncelleyemediğinde gösterilen mesaj"
+  },
   "caseStudyRetryLocalSave": "Bu cihazda yeniden kaydet",
+  "@caseStudyRetryLocalSave": {
+    "description": "Yerel geçmişe yeniden kaydetmeyi deneme butonu etiketi"
+  },
   "caseStudyRefreshDetailTooltip": "Yenile",
+  "@caseStudyRefreshDetailTooltip": {
+    "description": "Vaka detayı yenileme butonu için tooltip/metin"
+  },
   "caseStudySignedUrlsRefreshHint": "Oynatma geçici bağlantılar kullanır (yaklaşık 24 saat). Bir video çalışmazsa aşağı çekin veya yenileye dokunun.",
+  "@caseStudySignedUrlsRefreshHint": {
+    "description": "Geçici imzalı bağlantılarla oynatma hakkında bilgilendirme metni"
+  },
   "caseStudyQuestion1": "Hastayı ve baş şikâyeti tanıtın.",
+  "@caseStudyQuestion1": {
+    "description": "Vaka çalışması soru 1 metni"
+  },
   "caseStudyQuestion2": "İlgili tıbbi öyküyü anlatın.",
+  "@caseStudyQuestion2": {
+    "description": "Vaka çalışması soru 2 metni"
+  },
   "caseStudyQuestion3": "Ekstraoral muayene bulgularını gösterin.",
+  "@caseStudyQuestion3": {
+    "description": "Vaka çalışması soru 3 metni"
+  },
   "caseStudyQuestion4": "İntraoral muayene bulgularını gösterin.",
+  "@caseStudyQuestion4": {
+    "description": "Vaka çalışması soru 4 metni"
+  },
   "caseStudyQuestion5": "Radyografik bulguları açıklayın.",
+  "@caseStudyQuestion5": {
+    "description": "Vaka çalışması soru 5 metni"
+  },
   "caseStudyQuestion6": "Tanı ve sorun listesini özetleyin.",
+  "@caseStudyQuestion6": {
+    "description": "Vaka çalışması soru 6 metni"
+  },
   "caseStudyQuestion7": "Görüşülen tedavi seçeneklerini anlatın.",
+  "@caseStudyQuestion7": {
+    "description": "Vaka çalışması soru 7 metni"
+  },
   "caseStudyQuestion8": "Seçilen tedavi planını detaylandırın.",
+  "@caseStudyQuestion8": {
+    "description": "Vaka çalışması soru 8 metni"
+  },
   "caseStudyQuestion9": "Acil postoperatif durumu gösterin.",
-  "caseStudyQuestion10": "Takip ve prognozu özetleyin."
+  "@caseStudyQuestion9": {
+    "description": "Vaka çalışması soru 9 metni"
+  },
+  "caseStudyQuestion10": "Takip ve prognozu özetleyin.",
+  "@caseStudyQuestion10": {
+    "description": "Vaka çalışması soru 10 metni"
+  }
 }

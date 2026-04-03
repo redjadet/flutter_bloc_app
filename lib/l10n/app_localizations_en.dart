@@ -2020,6 +2020,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Discard this case and delete any recorded clips for it?';
 
   @override
+  String get caseStudyDeleteDialogTitle => 'Delete case?';
+
+  @override
+  String get caseStudyDeleteDialogBody =>
+      'Delete this case permanently? This cannot be undone.';
+
+  @override
   String get caseStudyUploading => 'Uploading…';
 
   @override

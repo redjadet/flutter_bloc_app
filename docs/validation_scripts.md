@@ -1,12 +1,16 @@
 # Validation Scripts Documentation
 
-This document describes all validation scripts in the `tool/` directory that are automatically run by `./bin/checklist` to catch bugs and enforce best practices early.
+This document describes all validation scripts in the `tool/` directory that
+can be run directly or as part of `./bin/checklist` when you want the full
+repo sweep.
 
 For the complete docs index, see [`README.md`](README.md).
 
 ## Overview
 
-The validation scripts provide automated guards for architecture, UI/UX, async safety, performance, and memory hygiene. These scripts are automatically executed when you run `./bin/checklist` before commits, ensuring code quality and consistency across the codebase.
+The validation scripts provide automated guards for architecture, UI/UX, async
+safety, performance, and memory hygiene. Prefer targeted scripts for local
+changes; use `./bin/checklist` for broad or pre-ship validation.
 
 The checklist includes automated guards for:
 
@@ -37,7 +41,7 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs t
 - **`check_auth_refresh_single_flight.sh`**: Detects auth retry anti-patterns that can cause 401 refresh races (e.g. `refreshToken()` followed by retry `forceRefresh: true`) and ensures serialized refresh gate exists in `AuthTokenManager`
 - **`check_solid_presentation_data_imports.sh`**: Prevents presentation importing data-layer types (DIP)
 - **`check_solid_data_presentation_imports.sh`**: Prevents data layer importing presentation (layering)
-- **`check_feature_modularity_leaks.sh`**: Fails on known cross-feature `package:` imports: `library_demo` must not import `scapes`; `settings` must not import `graphql_demo`, `profile`, or `remote_config`; **`remote_config` must not import `settings`** (use `shared` widgets such as `SettingsSection` instead). Extend the script when new boundary rules land in [modularity.md](modularity.md). Invoked automatically by `./bin/checklist`.
+- **`check_feature_modularity_leaks.sh`**: Fails on known cross-feature `package:` imports: `library_demo` must not import `scapes`; `settings` must not import `graphql_demo`, `profile`, or `remote_config`; **`remote_config` must not import `settings`** (use `shared` widgets such as `SettingsSection` instead). Extend the script when new boundary rules land in [modularity.md](modularity.md). Included in `./bin/checklist`.
 
 ### UI/UX Best Practices
 
@@ -139,6 +143,37 @@ setState(() => _value = 1); // ❌ Missing mounted check
 await repository.load();
 if (!mounted) return; // ✅ Check mounted first
 setState(() => _value = 1);
+```
+
+**Suppression**: Add `// check-ignore: reason` on the same line or line above
+
+---
+
+#### `check_setstate_async.sh`
+
+**Purpose**: Prevents `setState(() async { ... })` (async `setState` callbacks).
+
+**Why it matters**:
+
+- Flutter expects the `setState` callback to be synchronous (return `void`).
+- Async callbacks return a `Future` and trigger runtime warnings / Crashlytics noise, and are easy to miss until manual device testing.
+
+**Example violation**:
+
+```dart
+setState(() async {
+  await repo.refresh(); // ❌ setState callback must not be async
+});
+```
+
+**Correct pattern**:
+
+```dart
+await repo.refresh();
+if (!mounted) return;
+setState(() {
+  // ✅ synchronous UI update only
+});
 ```
 
 **Suppression**: Add `// check-ignore: reason` on the same line or line above
@@ -698,6 +733,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_inherited_widget_in_create.sh`
 - `check_inherited_widget_in_initstate.sh`
 - `check_setstate_mounted.sh`
+- `check_setstate_async.sh`
 - `check_hardcoded_colors.sh`
 - `check_hardcoded_strings.sh`
 - `check_missing_localizations.sh`
@@ -718,6 +754,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_auth_refresh_single_flight.sh`
 - `check_compute_domain_layer.sh`
 - `check_compute_lifecycle.sh`
+- `check_no_isolate_run_in_presentation.sh`
 - `check_freezed_preferred.sh`
 - `check_unguarded_null_assertion.sh`
 - `check_row_text_overflow.sh`
@@ -730,13 +767,18 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 
 ## Keeping This Doc in Sync
 
-`tool/validate_validation_docs.sh` checks that every script in `CHECK_SCRIPTS` (in `tool/delivery_checklist.sh`) is mentioned in this document. It runs automatically as part of `./bin/checklist`. If you add or remove a script from `CHECK_SCRIPTS`, add or remove a corresponding entry here and run `bash tool/validate_validation_docs.sh` to verify.
+`tool/validate_validation_docs.sh` checks that every script in `CHECK_SCRIPTS`
+(in `tool/delivery_checklist.sh`) is mentioned in this document. It runs as
+part of `./bin/checklist` when you choose the full sweep. If you add or remove
+a script from `CHECK_SCRIPTS`, add or remove a corresponding entry here and
+run `bash tool/validate_validation_docs.sh` to verify.
 
 ## Running Validation Scripts
 
-### Automatic Execution
+### Full Sweep
 
-All validation scripts are automatically run by the delivery checklist:
+All validation scripts are run by the delivery checklist when you want the full
+repo sweep:
 
 ```bash
 ./bin/checklist
@@ -822,7 +864,8 @@ Each script provides:
 
 ## Best Practices
 
-1. **Run checklist before committing**: `./bin/checklist` catches issues early
+1. **Run checklist for broad or pre-ship validation**: `./bin/checklist`
+   catches issues early when you need the full sweep
 2. **Fix violations immediately**: Don't accumulate technical debt
 3. **Use check-ignore sparingly**: Only when there's a legitimate reason
 4. **Review heuristic warnings**: Scripts like `check_missing_const.sh` and `check_side_effects_build.sh` are heuristics - review manually

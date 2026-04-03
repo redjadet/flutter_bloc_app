@@ -2,9 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_local_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_question.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_record.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_delete_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_repository.dart'
     show
         CaseStudyRemoteRepository,
@@ -12,9 +14,11 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remo
         kCaseStudySignedPlaybackUrlTtl;
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/case_study_l10n_helpers.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/case_study_question_prompt.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_history_detail_signing.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/widgets/case_study_video_tile.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
 import 'package:intl/intl.dart';
 
 class _HistoryDetailLoad {
@@ -40,39 +44,6 @@ class _HistoryDetailSnapshot {
   final _HistoryDetailFailureKind? failure;
 
   bool get isSuccess => load != null;
-}
-
-/// Signs clip URLs in small parallel batches to reduce wall-clock latency.
-Future<Map<String, String>> _signPlaybackUrlsInBatches({
-  required final CaseStudyRemoteRepository remote,
-  required final Map<String, String> keysByQuestion,
-  required final Duration ttl,
-  final int batchSize = 4,
-}) async {
-  final List<MapEntry<String, String>> entries = keysByQuestion.entries
-      .where((final e) => e.value.isNotEmpty)
-      .toList();
-  final Map<String, String> out = <String, String>{};
-  for (int i = 0; i < entries.length; i += batchSize) {
-    final int end = i + batchSize > entries.length
-        ? entries.length
-        : i + batchSize;
-    final List<MapEntry<String, String>> chunk = entries.sublist(i, end);
-    final List<MapEntry<String, String>> signed =
-        await Future.wait<MapEntry<String, String>>(
-          chunk.map((e) async {
-            final String url = await remote.createSignedPlaybackUrl(
-              objectKey: e.value,
-              ttl: ttl,
-            );
-            return MapEntry<String, String>(e.key, url);
-          }),
-        );
-    for (final MapEntry<String, String> e in signed) {
-      out[e.key] = e.value;
-    }
-  }
-  return out;
 }
 
 class CaseStudyHistoryDetailPage extends StatefulWidget {
@@ -118,11 +89,12 @@ class _CaseStudyHistoryDetailPageState
           );
         }
 
-        final Map<String, String> signedUrls = await _signPlaybackUrlsInBatches(
-          remote: remote,
-          keysByQuestion: detail.remoteObjectKeysByQuestion,
-          ttl: kCaseStudySignedPlaybackUrlTtl,
-        );
+        final Map<String, String> signedUrls =
+            await signCaseStudyPlaybackUrlsInBatches(
+              remote: remote,
+              keysByQuestion: detail.remoteObjectKeysByQuestion,
+              ttl: kCaseStudySignedPlaybackUrlTtl,
+            );
 
         return _HistoryDetailSnapshot.ok(
           _HistoryDetailLoad(
@@ -173,7 +145,71 @@ class _CaseStudyHistoryDetailPageState
   Future<void> _reload() async {
     final _HistoryDetailSnapshot next = await _loadDetail();
     if (!mounted) return;
-    setState(() => _future = Future<_HistoryDetailSnapshot>.value(next));
+    setState(() {
+      _future = Future<_HistoryDetailSnapshot>.value(next);
+    });
+  }
+
+  Future<bool> _confirmDelete(final BuildContext context) async {
+    final l10n = context.l10n;
+    final bool? confirmed = await showAdaptiveDialog<bool>(
+      context: context,
+      builder: (final dialogContext) => AlertDialog.adaptive(
+        title: Text(l10n.caseStudyDeleteDialogTitle),
+        content: Text(l10n.caseStudyDeleteDialogBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.cancelButtonLabel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.deleteButtonLabel),
+          ),
+        ],
+      ),
+    );
+    return confirmed ?? false;
+  }
+
+  Future<void> _deleteCaseStudy() async {
+    final AuthRepository auth = getIt<AuthRepository>();
+    final String? userId = auth.currentUser?.id;
+    if (userId == null || userId.isEmpty) return;
+
+    final SupabaseAuthRepository supaAuth = getIt<SupabaseAuthRepository>();
+    final bool isRemote = supaAuth.isConfigured && supaAuth.currentUser != null;
+
+    try {
+      if (isRemote) {
+        final CaseStudyRemoteDeleteRepository remoteDelete =
+            getIt<CaseStudyRemoteDeleteRepository>();
+        await remoteDelete.deleteCaseStudyRemote(caseId: widget.recordId);
+      } else {
+        final CaseStudyLocalRepository local =
+            getIt<CaseStudyLocalRepository>();
+        await local.ensureReady();
+        final List<CaseStudyRecord> records = await local.loadRecords(userId);
+        final List<CaseStudyRecord> next = records
+            .where((final r) => r.id != widget.recordId)
+            .toList();
+        await local.saveRecords(userId, next);
+        await getIt<CaseStudyClipFileStore>().deleteCaseFolder(widget.recordId);
+      }
+
+      if (!mounted) return;
+      await Navigator.of(context).maybePop();
+    } on Object catch (error) {
+      if (error is HttpRequestFailure && error.statusCode == 401) {
+        try {
+          await getIt<SupabaseAuthRepository>().signOut();
+        } on Object {
+          // Best-effort only; still show the error message.
+        }
+      }
+      if (!mounted) return;
+      ErrorHandling.handleCubitError(context, error);
+    }
   }
 
   @override
@@ -182,6 +218,15 @@ class _CaseStudyHistoryDetailPageState
     return CommonPageLayout(
       title: l10n.caseStudyHistoryDetailTitle,
       actions: <Widget>[
+        IconButton(
+          icon: const Icon(Icons.delete_outline),
+          tooltip: l10n.deleteButtonLabel,
+          onPressed: () async {
+            final bool shouldDelete = await _confirmDelete(context);
+            if (!shouldDelete || !context.mounted) return;
+            await _deleteCaseStudy();
+          },
+        ),
         IconButton(
           icon: const Icon(Icons.refresh),
           tooltip: l10n.caseStudyRefreshDetailTooltip,

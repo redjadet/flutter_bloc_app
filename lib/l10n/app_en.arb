@@ -2578,6 +2578,8 @@
   "caseStudySubmit": "Sent",
   "caseStudyAbandon": "Abandon case",
   "caseStudyAbandonConfirmBody": "Discard this case and delete any recorded clips for it?",
+  "caseStudyDeleteDialogTitle": "Delete case?",
+  "caseStudyDeleteDialogBody": "Delete this case permanently? This cannot be undone.",
   "caseStudyUploading": "Uploading…",
   "caseStudyDataModeLocalOnly": "Local only",
   "caseStudyDataModeSupabase": "Supabase",
