@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
@@ -194,6 +195,44 @@ void main() {
         );
       });
     });
+
+    test(
+      'wraps timeout exceptions with timeout-specific ChatException',
+      () async {
+        final dio = Dio();
+        dio.interceptors.add(
+          InterceptorsWrapper(
+            onRequest: (_, handler) {
+              handler.reject(
+                DioException(
+                  requestOptions: RequestOptions(path: 'https://example.com'),
+                  type: DioExceptionType.connectionTimeout,
+                  error: TimeoutException('timed out'),
+                ),
+              );
+            },
+          ),
+        );
+        final apiClient = HuggingFaceApiClient(dio: dio);
+
+        await AppLogger.silenceAsync(() async {
+          await expectLater(
+            () => apiClient.postJson(
+              uri: Uri.parse('https://example.com'),
+              payload: const <String, dynamic>{},
+              context: 'timeout',
+            ),
+            throwsA(
+              isA<ChatException>().having(
+                (ChatException error) => error.message,
+                'message',
+                'Chat service timed out.',
+              ),
+            ),
+          );
+        });
+      },
+    );
   });
 
   group('HuggingFaceApiClient.formatError', () {
@@ -221,6 +260,18 @@ void main() {
         ),
         'Chat service authentication failed (HTTP 403): model missing. '
         'Verify your Hugging Face token/model access.',
+      );
+    });
+
+    test('treats 404 as generic service error, not auth failure', () {
+      expect(
+        HuggingFaceApiClient.formatError(
+          response(
+            404,
+            jsonEncode(<String, String>{'message': 'model missing'}),
+          ),
+        ),
+        'Chat service error (HTTP 404): model missing',
       );
     });
 

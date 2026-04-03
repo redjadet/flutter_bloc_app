@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -60,8 +61,12 @@ class HuggingFaceApiClient {
         final String message = formatError(res);
         return ChatException(message);
       },
-      onException: (final _) =>
-          const ChatException('Failed to contact chat service.'),
+      onException: (final error) {
+        if (_looksLikeTimeout(error)) {
+          return const ChatException('Chat service timed out.');
+        }
+        return const ChatException('Failed to contact chat service.');
+      },
       onFailureLog: (final res) {
         AppLogger.error(
           'HuggingFaceApiClient.$context non-success (HTTP ${res.statusCode})',
@@ -154,7 +159,7 @@ class HuggingFaceApiClient {
       }
     }
 
-    if (code == 401 || code == 403 || code == 404) {
+    if (code == 401 || code == 403) {
       if (detail == null) {
         return 'Chat service authentication failed (HTTP $code). '
             'Check your Hugging Face token or model.';
@@ -167,5 +172,17 @@ class HuggingFaceApiClient {
       return 'Chat service error (HTTP $code).';
     }
     return 'Chat service error (HTTP $code): $detail';
+  }
+
+  static bool _looksLikeTimeout(final Object error) {
+    if (error is TimeoutException) {
+      return true;
+    }
+    if (error is DioException) {
+      return error.type == DioExceptionType.connectionTimeout ||
+          error.type == DioExceptionType.sendTimeout ||
+          error.type == DioExceptionType.receiveTimeout;
+    }
+    return false;
   }
 }
