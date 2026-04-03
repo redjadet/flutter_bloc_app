@@ -1,6 +1,6 @@
 # Chat Offline-First Contract
 
-This document defines how the chat feature will adopt the shared offline-first stack so engineers can implement and test it without re-triaging requirements.
+This document defines how the chat feature uses the shared offline-first stack. **Remote inference** is selected by a **`CompositeChatRepository`** (Supabase Edge `chat-complete` when initialized + valid session, otherwise direct **`HuggingfaceChatRepository`** when a client key is allowed). See [`plans/supabase_proxy_huggingface_chat_plan.md`](../plans/supabase_proxy_huggingface_chat_plan.md) for transport rules, fallback (**online** only, eligible Edge codes), and badge semantics. The offline-first shell and local persistence below are unchanged.
 
 ## Goals
 
@@ -8,7 +8,7 @@ This document defines how the chat feature will adopt the shared offline-first s
 - Allow composing/sending while offline by queueing pending sends and reconciling when connectivity returns.
 - Surface sync state to the UI (pending sends, offline banner, retry) while keeping logic in cubits/repos.
 
-## Storage Plan
+## Storage plan
 
 - Boxes: `chat_conversations`, `chat_messages`, `chat_pending_messages`.
 - Data shapes:
@@ -17,14 +17,14 @@ This document defines how the chat feature will adopt the shared offline-first s
   - Pending: reuse `ChatMessageDto` plus `idempotencyKey` to match `SyncOperation.payload`.
 - Encryption: use `HiveService`/`HiveRepositoryBase`; never open Hive boxes directly.
 
-## Repository Wiring
+## Repository wiring
 
-- Add `ChatLocalDataSource` (Hive-backed) handling read/write/watch for conversations/messages/pending sends.
-- Add `OfflineFirstChatRepository` composing:
-  - `ChatRemoteRepository` (HuggingFace) for actual inference calls.
-  - `ChatLocalDataSource` for persistence.
+- `ChatLocalDataSource` (Hive-backed) handles read/write/watch for conversations/messages/pending sends.
+- `OfflineFirstChatRepository` composes:
+  - A **`ChatRepository`** implementation for remote inference (the composite: Edge-first, optional direct HF fallback when online and policy allows).
+  - `ChatLocalDataSource` / `ChatHistoryRepository` for persistence.
   - `PendingSyncRepository` for enqueueing outgoing messages as `SyncOperation`s.
-- DI: register `ChatLocalDataSource` as the `ChatHistoryRepository` implementation (GetIt), and wire the offline-first repository into the sync registry once built.
+- DI: register local history and wire the offline-first repository into the sync registry (`lib/core/di/register_chat_services.dart`).
   - Sync payload: include `conversationId`, `prompt`, `pastUserInputs`, `generatedResponses`, `model`, `clientMessageId`, `createdAt`. Processing should call remote, then persist reply + update conversation metadata (`lastSyncedAt`, `synchronized`, `changeId`).
 - Implement `SyncableRepository`:
   - `entityType`: `chat_message`.
@@ -34,9 +34,11 @@ This document defines how the chat feature will adopt the shared offline-first s
     - If user message doesn't exist locally yet, create conversation and add user message first, then attempt remote call.
   - `pullRemote`: refresh conversations/messages list and merge into local when remote is newer.
   - Register in `SyncableRepositoryRegistry`.
-- `sendMessage`: persist the user bubble immediately, attempt the remote call, and when a failure occurs enqueue the `SyncOperation` and throw `ChatOfflineEnqueuedException`. The cubit treats this as a success state so pending messages stay visible without error banners.
+- `sendMessage`: persist the user bubble immediately, attempt the remote call. On **retryable** remote failures, enqueue the `SyncOperation` and throw `ChatOfflineEnqueuedException`. On **`ChatRemoteFailureException` with `retryable == false`** (auth, rate limit, invalid payload, missing config), **do not enqueue**—rethrow so the cubit can show the right copy. The cubit treats offline enqueue as a non-error pending state.
 
-## Conflict Resolution
+**Supabase Edge proxy (when enabled):** flush replays via the same composite (refreshed JWT). **`processOperation`** drops the pending op (marks completed, no assistant reply) on **non-retryable** `ChatRemoteFailureException` so the background runner does not spin on 401/403 forever; user-visible recovery is sign-in / policy, not unbounded retries.
+
+## Conflict resolution
 
 - Client generates `clientMessageId` and `idempotencyKey` per send to dedupe retries.
 - On remote response:
@@ -44,14 +46,15 @@ This document defines how the chat feature will adopt the shared offline-first s
   - If server returns a message for a deleted conversation, mark conversation `resurrected` flag to prompt the user.
 - Ordering: sort by `createdAt`; if ties, prefer server `messageId`.
 
-## UI Integration
+## UI integration
 
+- GoRouter entries **`/chat`** and **`/chat-list`** wrap the chat UI in the same Supabase session gate as other Supabase-backed demos: if Supabase is configured (`SupabaseAuthRepository.isConfigured`) and there is no Supabase user, the app sends the user to **`/supabase-auth`** first with a safe redirect back to the requested path after sign-in. If Supabase is not configured, chat routes behave as before (no Supabase session required at the route layer).
 - Hydrate chat cubit from local store first, then trigger `pullRemote`.
 - Show pending-send indicator per message (`synchronized == false`) and an offline/sync banner driven by `SyncStatusCubit`.
-- The reusable `ChatSyncBanner` widget (added under `lib/features/chat/presentation/widgets/`) displays the offline/sync/pending copy, shows queued counts, and wires the `syncStatusSyncNowButton` CTA to `SyncStatusCubit.flush()` so users can manually retry when back online.
+- The reusable `ChatSyncBanner` widget (`lib/features/chat/presentation/widgets/`) displays offline/sync/pending copy, queued counts, and wires `syncStatusSyncNowButton` to `SyncStatusCubit.flush()` for manual retry.
 - `ChatCubit` must clear any previous errors when it catches `ChatOfflineEnqueuedException`, leave the conversation in a pending state, and allow the coordinator/manual flush to flip messages to synced later on.
 
-## Testing Checklist
+## Testing checklist
 
 - Unit tests: local data source serialization, migrations, and pending queue enqueuing.
 - Repository tests:
@@ -59,23 +62,12 @@ This document defines how the chat feature will adopt the shared offline-first s
   - `processOperation` persists user message before remote call (even when conversation doesn't exist yet).
   - `processOperation` marks messages synced after successful remote response.
   - `pullRemote` merges newer remote data.
-- Bloc/widget tests: chat page renders cached history, shows pending pill, and updates when a flush delivers synced messages. `test/chat_cubit_test.dart` now covers the full coordinator-driven flush pipeline, while `test/chat_page_test.dart` exercises `ChatSyncBanner` + pending labels during manual sync. Use these as reference patterns.
-- Widget tests: `test/chat_sync_banner_test.dart` covers offline messaging, disabled CTA state, and the manual flush path.
-- Use `FakeTimerService` + mock connectivity to cover retry/backoff paths.
+- Bloc/widget: `test/chat_cubit_test.dart`, `test/chat_page_test.dart`, `test/chat_sync_banner_test.dart`; use `FakeTimerService` + mock connectivity for retry/backoff.
 
-## Next Actions
+## Next actions (backlog)
 
-1. **Per-message retry UX** (Priority: Medium)
-   - Explore a per-message "retry now" affordance (swipe/long-press) that replays a single pending send without waiting for the full coordinator batch.
-   - Add visual feedback when individual message retry is triggered.
-   - Ensure retry operations are idempotent and don't create duplicate messages.
+1. **Per-message retry UX** (medium): replay a single pending send; idempotent.
+2. **Conversation metadata** (medium): last synced, pending chips in list.
+3. **Observability** (low): queue metrics, structured logging with correlation IDs.
 
-2. **Conversation metadata** (Priority: Medium)
-   - Surface conversation-level metadata (e.g., "Last synced …", pending count chips) in the history list so users know which threads are current.
-   - Add conversation title and last message preview updates on sync.
-   - Show sync status indicators in conversation list items.
-
-3. **Observability & telemetry** (Priority: Low)
-   - Feed sync metrics/telemetry (queue depth, flush duration, success/failure rates) into `ErrorNotificationService`/analytics so we can monitor chat reliability in the wild.
-   - Add debug menu to inspect pending operations and sync queue state.
-   - Implement structured logging for sync operations with correlation IDs.
+For shared offline-first patterns, see [`offline_first_plan.md`](offline_first_plan.md) and [`adoption_guide.md`](adoption_guide.md).

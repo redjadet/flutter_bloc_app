@@ -43,7 +43,9 @@ class SupabaseCaseStudyRemoteDeleteRepository
       final DateTime nowUtc = DateTime.now().toUtc();
       final String? token = session?.accessToken;
       if (token != null && token.isNotEmpty) {
-        AppLogger.debug('Supabase access token (debug only): $token');
+        AppLogger.debug(
+          'Supabase delete-case-study: session token present (len=${token.length})',
+        );
       }
       final String? tokenIssuer = token == null || token.isEmpty
           ? null

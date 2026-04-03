@@ -43,6 +43,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
       active: active,
       history: history,
       currentModel: resolvedModel,
+      clearLastCompletionTransport: true,
     );
   }
 
@@ -57,6 +58,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
         history: const <ChatConversation>[],
         isLoading: false,
         clearError: true,
+        clearLastCompletionTransport: true,
       );
       return;
     }
@@ -71,6 +73,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
       history: const <ChatConversation>[],
       isLoading: false,
       clearError: true,
+      clearLastCompletionTransport: true,
     );
   }
 
@@ -100,6 +103,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
         active: fresh,
         history: const <ChatConversation>[],
         currentModel: _currentModel,
+        clearLastCompletionTransport: true,
       );
       return;
     }
@@ -116,6 +120,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
       active: desiredActive,
       history: history,
       currentModel: resolvedModel,
+      clearLastCompletionTransport: true,
     );
   }
 
@@ -131,6 +136,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
       history: history,
       isLoading: false,
       clearError: true,
+      clearLastCompletionTransport: true,
     );
 
     await _persistHistory(history);

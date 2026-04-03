@@ -84,6 +84,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
           active: withAssistant,
           history: finalHistory,
           isLoading: false,
+          lastCompletionTransport: result.transportUsed,
         );
 
         unawaited(_persistHistory(finalHistory));
@@ -102,6 +103,20 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
       },
       logContext: 'ChatCubit.sendMessage',
       specificExceptionHandlers: {
+        ChatRemoteFailureException: (final error, final stackTrace) {
+          final ChatRemoteFailureException exception =
+              error as ChatRemoteFailureException;
+          if (isClosed || !isRequestCurrent(requestId)) {
+            return;
+          }
+          _emitConversationSnapshot(
+            active: withUser,
+            history: historyAfterUser,
+            isLoading: false,
+            error: exception.message,
+            status: ViewStatus.error,
+          );
+        },
         ChatException: (final error, final stackTrace) {
           final ChatException exception = error as ChatException;
           if (isClosed || !isRequestCurrent(requestId)) {

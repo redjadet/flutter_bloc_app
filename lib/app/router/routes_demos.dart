@@ -45,29 +45,34 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.chatPath,
     name: AppRoutes.chat,
-    builder: (final context, final state) =>
-        BlocProviderHelpers.withAsyncInit<ChatCubit>(
-          create: () => ChatCubit(
-            repository: getIt<ChatRepository>(),
-            historyRepository: getIt<ChatHistoryRepository>(),
-            initialModel: SecretConfig.huggingfaceModel,
-          ),
-          init: (final cubit) => cubit.loadHistory(),
-          child: ChatPage(
-            errorNotificationService: getIt<ErrorNotificationService>(),
-            pendingSyncRepository: getIt<PendingSyncRepository>(),
-          ),
+    builder: (final context, final state) => _withChatSupabaseSessionGate(
+      state: state,
+      child: BlocProviderHelpers.withAsyncInit<ChatCubit>(
+        create: () => ChatCubit(
+          repository: getIt<ChatRepository>(),
+          historyRepository: getIt<ChatHistoryRepository>(),
+          initialModel: SecretConfig.huggingfaceModel,
         ),
+        init: (final cubit) => cubit.loadHistory(),
+        child: ChatPage(
+          errorNotificationService: getIt<ErrorNotificationService>(),
+          pendingSyncRepository: getIt<PendingSyncRepository>(),
+        ),
+      ),
+    ),
   ),
   GoRoute(
     path: AppRoutes.chatListPath,
     name: AppRoutes.chatList,
-    builder: (final context, final state) => ChatListPage(
-      repository: getIt<ChatListRepository>(),
-      chatRepository: getIt<ChatRepository>(),
-      historyRepository: getIt<ChatHistoryRepository>(),
-      errorNotificationService: getIt<ErrorNotificationService>(),
-      pendingSyncRepository: getIt<PendingSyncRepository>(),
+    builder: (final context, final state) => _withChatSupabaseSessionGate(
+      state: state,
+      child: ChatListPage(
+        repository: getIt<ChatListRepository>(),
+        chatRepository: getIt<ChatRepository>(),
+        historyRepository: getIt<ChatHistoryRepository>(),
+        errorNotificationService: getIt<ErrorNotificationService>(),
+        pendingSyncRepository: getIt<PendingSyncRepository>(),
+      ),
     ),
   ),
   GoRoute(
@@ -199,6 +204,25 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
         ),
   ),
 ];
+
+/// When Supabase is configured ([SupabaseAuthRepository.isConfigured]), requires
+/// a Supabase session before showing chat; otherwise redirects to
+/// [AppRoutes.supabaseAuthPath] with return [GoRouterState.matchedLocation].
+Widget _withChatSupabaseSessionGate({
+  required final GoRouterState state,
+  required final Widget child,
+}) {
+  final SupabaseAuthRepository supa = getIt<SupabaseAuthRepository>();
+  return IotDemoAuthGate(
+    isSupabaseInitialized: supa.isConfigured,
+    getCurrentUser: () => supa.currentUser,
+    authStateChanges: supa.authStateChanges,
+    counterPath: AppRoutes.counterPath,
+    supabaseAuthPath: AppRoutes.supabaseAuthPath,
+    redirectReturnPath: state.matchedLocation,
+    child: child,
+  );
+}
 
 /// Shown when user reaches FCM demo route but Firebase is not initialized;
 /// redirects to counter so the app does not crash.

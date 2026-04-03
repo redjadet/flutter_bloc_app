@@ -37,6 +37,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     _emitConversationSnapshot(
       active: conversation,
       history: history,
+      clearLastCompletionTransport: true,
     );
     if (conversation.hasContent) {
       unawaited(_persistHistory(history));
@@ -155,10 +156,15 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     final bool clearError = false,
     final String? error,
     final String? currentModel,
+    final ChatInferenceTransport? lastCompletionTransport,
+    final bool clearLastCompletionTransport = false,
   }) {
     // Check if cubit is closed before emitting to prevent errors
     if (isClosed) return;
     final ChatState current = _state;
+    final ChatInferenceTransport? nextCompletion = clearLastCompletionTransport
+        ? null
+        : (lastCompletionTransport ?? current.lastCompletionTransport);
     emitState(
       current.copyWith(
         history: history,
@@ -170,6 +176,8 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
         isLoading: isLoading ?? current.isLoading,
         error: clearError ? null : error ?? current.error,
         currentModel: currentModel ?? current.currentModel,
+        runnableTransportHint: _repository.chatRemoteTransportHint,
+        lastCompletionTransport: nextCompletion,
       ),
     );
   }

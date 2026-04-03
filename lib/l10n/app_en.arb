@@ -646,6 +646,30 @@
   "@chatPageTitle": {
     "description": "Title for the AI chat page"
   },
+  "chatTransportSupabase": "Supabase",
+  "@chatTransportSupabase": {
+    "description": "Chip label when chat completions use the Supabase Edge proxy"
+  },
+  "chatTransportDirect": "Direct",
+  "@chatTransportDirect": {
+    "description": "Chip label when chat calls Hugging Face from the app (direct)"
+  },
+  "chatTransportSupabaseSemanticsLabel": "Supabase. Chat replies use the Supabase Edge proxy; Hugging Face runs on the server.",
+  "@chatTransportSupabaseSemanticsLabel": {
+    "description": "Screen reader and tooltip for the chat transport chip when using the Edge proxy"
+  },
+  "chatTransportDirectSemanticsLabel": "Direct. This app calls Hugging Face directly for chat replies.",
+  "@chatTransportDirectSemanticsLabel": {
+    "description": "Screen reader and tooltip for the chat transport chip when using direct Hugging Face"
+  },
+  "chatOfflineBadgeLabel": "Offline",
+  "@chatOfflineBadgeLabel": {
+    "description": "Chip label when the device has no network route (chat transport chip hidden)"
+  },
+  "chatOfflineBadgeSemanticsLabel": "Offline. Messages will sync when you're back online.",
+  "@chatOfflineBadgeSemanticsLabel": {
+    "description": "Screen reader and tooltip text for the chat offline connectivity chip"
+  },
   "chatInputHint": "Ask the assistant anything...",
   "@chatInputHint": {
     "description": "Placeholder text shown in the chat input field"

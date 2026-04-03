@@ -480,6 +480,27 @@ class AppLocalizationsEs extends AppLocalizations {
   String get chatPageTitle => 'Chat con IA';
 
   @override
+  String get chatTransportSupabase => 'Supabase';
+
+  @override
+  String get chatTransportDirect => 'Directo';
+
+  @override
+  String get chatTransportSupabaseSemanticsLabel =>
+      'Supabase. Las respuestas usan el proxy de Supabase Edge; Hugging Face se ejecuta en el servidor.';
+
+  @override
+  String get chatTransportDirectSemanticsLabel =>
+      'Directo. La aplicación llama a Hugging Face directamente.';
+
+  @override
+  String get chatOfflineBadgeLabel => 'Sin conexión';
+
+  @override
+  String get chatOfflineBadgeSemanticsLabel =>
+      'Sin conexión. Los mensajes se sincronizarán cuando vuelvas a estar en línea.';
+
+  @override
   String get chatInputHint => 'Pregunta lo que quieras al asistente...';
 
   @override
