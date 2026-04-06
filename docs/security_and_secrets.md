@@ -27,6 +27,23 @@ The app supports layered secret loading:
    into secure storage by the app’s secret bootstrap).
 3. **Local-only asset file (optional)**: `assets/config/secrets.json`.
 
+## Supabase config via Firebase Remote Config
+
+This repo supports obtaining Supabase client configuration from **Firebase Remote Config**
+after **Firebase Auth sign-in**, then persisting it into secure storage.
+
+- **Remote Config keys**:
+  - `SUPABASE_URL` (string)
+  - `SUPABASE_ANON_KEY` (string)
+  - `SUPABASE_CONFIG_VERSION` (number, default `1`)
+  - `SUPABASE_CONFIG_ENABLED` (bool, default `true`)
+- **Important**: Remote Config is **not** a secret store. Treat these as client
+  configuration; security must come from Supabase RLS and server-side trust boundaries.
+- **Local overrides**: If you inject `SUPABASE_URL` / `SUPABASE_ANON_KEY` via
+  `--dart-define`/`.envrc`, Supabase may initialize from those values before the
+  Remote Config refresh runs. Disable local injection when validating the Remote
+  Config path.
+
 `assets/config/secrets.json` is **gitignored** and is intentionally **not
 bundled by default**. It exists as a local escape hatch for development and for
 scripts that you may want to run without exporting env vars. The repo only ships

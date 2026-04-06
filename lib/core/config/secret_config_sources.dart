@@ -37,6 +37,18 @@ final List<_SecretStorageField> _secureStorageFields = <_SecretStorageField>[
     readValue: () => SecretConfig._supabaseAnonKey,
     applyValue: (final value) => SecretConfig._supabaseAnonKey = value,
   ),
+  _SecretStorageField(
+    storageKey: SecretConfig._keySupabaseConfigVersion,
+    envKey: 'SUPABASE_CONFIG_VERSION',
+    readValue: () => SecretConfig._supabaseConfigVersion,
+    applyValue: (final value) => SecretConfig._supabaseConfigVersion = value,
+  ),
+  _SecretStorageField(
+    storageKey: SecretConfig._keySupabaseFirebaseProjectId,
+    envKey: 'SUPABASE_FIREBASE_PROJECT_ID',
+    readValue: () => SecretConfig._supabaseFirebaseProjectId,
+    applyValue: (final value) => SecretConfig._supabaseFirebaseProjectId = value,
+  ),
 ];
 
 Future<Map<String, dynamic>?> _readSecureSecrets(
@@ -150,6 +162,12 @@ Map<String, dynamic>? _readEnvironmentSecrets() {
   final String resolvedKey = geminiKey.isNotEmpty ? geminiKey : googleKey;
   const String supabaseUrl = String.fromEnvironment('SUPABASE_URL');
   const String supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+  const String supabaseConfigVersion = String.fromEnvironment(
+    'SUPABASE_CONFIG_VERSION',
+  );
+  const String supabaseFirebaseProjectId = String.fromEnvironment(
+    'SUPABASE_FIREBASE_PROJECT_ID',
+  );
 
   final Map<String, dynamic> result = <String, dynamic>{};
   if (token.isNotEmpty) {
@@ -172,6 +190,12 @@ Map<String, dynamic>? _readEnvironmentSecrets() {
   }
   if (supabaseAnonKey.isNotEmpty) {
     result['SUPABASE_ANON_KEY'] = supabaseAnonKey;
+  }
+  if (supabaseConfigVersion.isNotEmpty) {
+    result['SUPABASE_CONFIG_VERSION'] = supabaseConfigVersion;
+  }
+  if (supabaseFirebaseProjectId.isNotEmpty) {
+    result['SUPABASE_FIREBASE_PROJECT_ID'] = supabaseFirebaseProjectId;
   }
 
   if (SecretConfig.debugEnvironment case final env?) {

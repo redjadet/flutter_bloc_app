@@ -13,8 +13,11 @@ Then you can run `flutter run` without typing `--dart-define` flags manually.
 # `.envrc` is gitignored; never commit real secrets.
 
 export HUGGINGFACE_API_KEY="YOUR_HUGGINGFACE_TOKEN"
-export SUPABASE_URL="https://YOUR_PROJECT.supabase.co"
-export SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
+# Optional: if you want Supabase to initialize from local injection.
+# Note: when validating the Firebase Remote Config Supabase flow, keep these
+# unset so you can prove the app is sourcing config from Remote Config.
+# export SUPABASE_URL="https://YOUR_PROJECT.supabase.co"
+# export SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
 
 # Optional
 # export GEMINI_API_KEY="..."
