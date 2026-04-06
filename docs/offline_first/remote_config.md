@@ -20,7 +20,11 @@
   - Hydrates `_snapshot` from Hive on `initialize()`
   - On `forceFetch()`:
     - Checks `NetworkStatusService` – if offline, serves cached values
-    - Otherwise calls remote `forceFetch()`, reads tracked keys (`awesome_feature_enabled`, `test_value_1`), persists a new snapshot, and registers itself with `SyncableRepositoryRegistry`
+    - Otherwise calls remote `forceFetch()`, reads tracked keys, persists a new snapshot, and registers itself with `SyncableRepositoryRegistry`
+    - Tracked keys currently include:
+      - bool: `awesome_feature_enabled`, `SUPABASE_CONFIG_ENABLED`
+      - string: `test_value_1`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`
+      - int: `SUPABASE_CONFIG_VERSION`
   - Implements `SyncableRepository` so `BackgroundSyncCoordinator` can call `pullRemote()` for background refreshes
   - Coalesces concurrent refresh triggers (`forceFetch` and `pullRemote`) behind
     one in-flight `Future<void>` to prevent overlapping Firebase Remote Config

@@ -14,6 +14,15 @@ class RemoteConfigRepository implements RemoteConfigService {
   static const String awesomeFeatureKey = 'awesome_feature_enabled';
   static const String testValueKey = 'test_value_1';
 
+  // Supabase config (Remote Config)
+  static const String supabaseUrlKey = 'SUPABASE_URL';
+  static const String supabaseAnonKeyKey = 'SUPABASE_ANON_KEY';
+  static const String supabaseConfigVersionKey = 'SUPABASE_CONFIG_VERSION';
+  static const String supabaseConfigEnabledKey = 'SUPABASE_CONFIG_ENABLED';
+  static const Duration _fetchTimeout = Duration(minutes: 1);
+  static const Duration _minimumFetchInterval = Duration(hours: 1);
+  static const Duration _bypassFetchInterval = Duration.zero;
+
   final FirebaseRemoteConfig _remoteConfig;
   final void Function(String message) _logDebug;
 
@@ -32,14 +41,20 @@ class RemoteConfigRepository implements RemoteConfigService {
 
     await _remoteConfig.setConfigSettings(
       RemoteConfigSettings(
-        fetchTimeout: const Duration(minutes: 1),
-        minimumFetchInterval: const Duration(hours: 1),
+        fetchTimeout: _fetchTimeout,
+        minimumFetchInterval: _minimumFetchInterval,
       ),
     );
     await _remoteConfig.setDefaults(
       const <String, dynamic>{
         awesomeFeatureKey: false,
         testValueKey: '',
+        supabaseUrlKey: '',
+        supabaseAnonKeyKey: '',
+        supabaseConfigVersionKey: 1,
+        // Default to enabled so missing console wiring doesn't brick config.
+        // Remote disable is still supported by setting the key to false.
+        supabaseConfigEnabledKey: true,
       },
     );
 
@@ -48,7 +63,22 @@ class RemoteConfigRepository implements RemoteConfigService {
 
   @override
   Future<void> forceFetch() async {
-    await _remoteConfig.fetchAndActivate();
+    await _remoteConfig.setConfigSettings(
+      RemoteConfigSettings(
+        fetchTimeout: _fetchTimeout,
+        minimumFetchInterval: _bypassFetchInterval,
+      ),
+    );
+    try {
+      await _remoteConfig.fetchAndActivate();
+    } finally {
+      await _remoteConfig.setConfigSettings(
+        RemoteConfigSettings(
+          fetchTimeout: _fetchTimeout,
+          minimumFetchInterval: _minimumFetchInterval,
+        ),
+      );
+    }
     _logTestValue(source: 'fetch');
     _logAwesomeFeatureFlag(source: 'fetch');
   }
