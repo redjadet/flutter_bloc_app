@@ -126,7 +126,7 @@ void _registerSupabaseConfigServices() {
   );
   registerLazySingletonIfAbsent<SupabaseConfigCoordinator>(
     () => SupabaseConfigCoordinator(
-      auth: FirebaseAuth.instance,
+      auth: getIt<FirebaseAuth>(),
       provider: getIt<SupabaseConfigProvider>(),
     ),
     dispose: (final coordinator) => coordinator.dispose(),

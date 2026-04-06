@@ -2,6 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -37,6 +41,80 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+Future<void> ensureFirebaseInitializedForTests() async {
+  // Some widget/golden tests pump app widgets that resolve Firebase singletons
+  // via DI. When tests don't explicitly initialize Firebase, FlutterFire throws
+  // [core/no-app]. We keep this helper conservative and only install a mock
+  // platform if the default method-channel implementation is still in place.
+  final String platformType = FirebasePlatform.instance.runtimeType.toString();
+  if (platformType.contains('MethodChannelFirebase')) {
+    FirebasePlatform.instance = _MockFirebasePlatform();
+  }
+
+  try {
+    Firebase.app();
+    return;
+  } on FirebaseException catch (e) {
+    if (e.code != 'no-app') {
+      rethrow;
+    }
+  }
+
+  await Firebase.initializeApp();
+}
+
+class _MockFirebasePlatform extends FirebasePlatform {
+  FirebaseOptions? _options;
+
+  @override
+  Future<FirebaseAppPlatform> initializeApp({
+    String? name,
+    FirebaseOptions? options,
+  }) async {
+    _options = options;
+    return _MockFirebaseApp(
+      name ?? '[DEFAULT]',
+      options ??
+          const FirebaseOptions(
+            apiKey: 'fake-api-key',
+            appId: 'fake-app-id',
+            messagingSenderId: 'fake-sender-id',
+            projectId: 'fake-project-id',
+          ),
+    );
+  }
+
+  @override
+  List<FirebaseAppPlatform> get apps => [
+        _MockFirebaseApp(
+          '[DEFAULT]',
+          _options ??
+              const FirebaseOptions(
+                apiKey: 'fake-api-key',
+                appId: 'fake-app-id',
+                messagingSenderId: 'fake-sender-id',
+                projectId: 'fake-project-id',
+              ),
+        ),
+      ];
+
+  @override
+  FirebaseAppPlatform app([String name = '[DEFAULT]']) => _MockFirebaseApp(
+        name,
+        _options ??
+            const FirebaseOptions(
+              apiKey: 'fake-api-key',
+              appId: 'fake-app-id',
+              messagingSenderId: 'fake-sender-id',
+              projectId: 'fake-project-id',
+            ),
+      );
+}
+
+class _MockFirebaseApp extends FirebaseAppPlatform {
+  _MockFirebaseApp(super.name, super.options);
+}
 
 /// Generic in-memory repository used by tests to reduce bespoke mock classes.
 class InMemoryRepository<T> {
@@ -447,11 +525,19 @@ Future<void> setupTestDependencies([
   SharedPreferences.setMockInitialValues(
     options.initialSharedPreferencesValues ?? <String, Object>{},
   );
+  await ensureFirebaseInitializedForTests();
   if (options.setFlavorToProd) {
     FlavorManager.current = Flavor.prod;
   }
   await getIt.reset(dispose: true);
   await configureDependencies();
+
+  // Prevent MethodChannel FirebaseAuth usage in widget tests.
+  if (getIt.isRegistered<FirebaseAuth>()) {
+    getIt.unregister<FirebaseAuth>();
+  }
+  getIt.registerSingleton<FirebaseAuth>(MockFirebaseAuth(signedIn: false));
+
   await overrideNetworkAndSync();
   overrideMemoryServicesForTests();
   if (options.overrideCounterRepository) {
