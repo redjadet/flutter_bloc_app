@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -38,6 +40,12 @@ class SupabaseBootstrapService {
     });
   }
 
+  /// Late-init safe alias for runtime initialization.
+  ///
+  /// Call this after `SecretConfig.applySupabaseConfig(...)` (and secure-storage
+  /// persistence) when config arrives after app startup.
+  static Future<void> initializeIfNeeded() => initializeSupabase();
+
   static Future<void> _initializeSupabaseOnce() async {
     final String? url = SecretConfig.supabaseUrl?.trim();
     final String? anonKey = SecretConfig.supabaseAnonKey?.trim();
@@ -45,6 +53,13 @@ class SupabaseBootstrapService {
     if (url == null || url.isEmpty || anonKey == null || anonKey.isEmpty) {
       AppLogger.debug(
         'Supabase init skipped: SUPABASE_URL or SUPABASE_ANON_KEY not set.',
+      );
+      return;
+    }
+
+    if (_hasCachedConfigProjectMismatch()) {
+      AppLogger.warning(
+        'Supabase init skipped: cached config belongs to a different Firebase project.',
       );
       return;
     }
@@ -74,4 +89,21 @@ class SupabaseBootstrapService {
     required final String url,
     required final String anonKey,
   }) => Supabase.initialize(url: url, anonKey: anonKey);
+
+  static bool _hasCachedConfigProjectMismatch() {
+    final String? cachedProjectId = SecretConfig.supabaseFirebaseProjectId?.trim();
+    if (cachedProjectId == null || cachedProjectId.isEmpty) {
+      return false;
+    }
+    if (!FirebaseBootstrapService.isFirebaseInitialized) {
+      return false;
+    }
+    try {
+      final FirebaseApp app = Firebase.app();
+      final String activeProjectId = app.options.projectId.trim();
+      return activeProjectId.isNotEmpty && activeProjectId != cachedProjectId;
+    } on Object {
+      return false;
+    }
+  }
 }

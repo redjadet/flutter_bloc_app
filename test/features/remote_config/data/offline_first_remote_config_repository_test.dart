@@ -66,6 +66,16 @@ void main() {
         () =>
             remoteRepository.getBool(RemoteConfigRepository.awesomeFeatureKey),
       ).thenReturn(true);
+      when(
+        () => remoteRepository.getBool(RemoteConfigRepository.supabaseConfigEnabledKey),
+      ).thenReturn(true);
+      when(() => remoteRepository.getString(RemoteConfigRepository.supabaseUrlKey)).thenReturn('');
+      when(
+        () => remoteRepository.getString(RemoteConfigRepository.supabaseAnonKeyKey),
+      ).thenReturn('');
+      when(
+        () => remoteRepository.getInt(RemoteConfigRepository.supabaseConfigVersionKey),
+      ).thenReturn(1);
 
       repository = OfflineFirstRemoteConfigRepository(
         remoteRepository: remoteRepository,
