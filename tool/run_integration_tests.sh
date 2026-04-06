@@ -48,6 +48,8 @@ INTEGRATION_ARTIFACT_DIR=""
 INTEGRATION_INFERRED_FAILURE_CATEGORY=""
 INTEGRATION_SELECTIVE_REASON="off"
 INTEGRATION_DURATION_MS=""
+INTEGRATION_PUBLISH_PORT_REQUIRED="0"
+INTEGRATION_USED_PUBLISH_PORT="0"
 
 classify_exit_category() {
   local exit_code="$1"
@@ -554,6 +556,8 @@ elif (
     or "lost connection to device" in low
 ):
     print("infra_device_or_tooling")
+elif "cannot start app on wirelessly tethered ios device" in low:
+    print("wireless_publish_port_required")
 else:
     print("unknown_transient_or_infra")
 PY
@@ -604,6 +608,9 @@ run_integration_command() {
   else
     INTEGRATION_INFERRED_FAILURE_CATEGORY="$(infer_flutter_failure_category_from_log "$log_path")"
     log "Inferred failure category from flutter output: ${INTEGRATION_INFERRED_FAILURE_CATEGORY:-unknown}"
+    if [ "${INTEGRATION_INFERRED_FAILURE_CATEGORY:-}" = "wireless_publish_port_required" ]; then
+      INTEGRATION_PUBLISH_PORT_REQUIRED="1"
+    fi
   fi
 
   if [ -n "${INTEGRATION_ARTIFACT_DIR:-}" ] && [ -s "$log_path" ]; then
@@ -1130,6 +1137,65 @@ if [ "$#" -eq 0 ]; then
       "$SELECTED_TARGET"
   fi
   exit_code=$?
+  if [ "$exit_code" -ne 0 ] &&
+    [ "$INTEGRATION_PUBLISH_PORT_REQUIRED" = "1" ] &&
+    [ "$INTEGRATION_USED_PUBLISH_PORT" = "0" ]; then
+    INTEGRATION_RETRIED="1"
+    INTEGRATION_RETRY_REASON="wireless_publish_port_required"
+    INTEGRATION_USED_PUBLISH_PORT="1"
+    log "Detected wirelessly tethered iOS device. Retrying once with --publish-port..."
+    cleanup_project_xcodebuilds
+    sleep 2
+    set +e
+    if [ "$RUN_COVERAGE" -eq 0 ]; then
+      run_integration_command \
+        "$SELECTED_TARGET publish-port retry" \
+        flutter test \
+        --no-pub \
+        --publish-port \
+        -d "$DEVICE_ID" \
+        "$SELECTED_TARGET"
+    elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$HAS_LCOV" -eq 1 ] && [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
+      run_integration_command \
+        "$SELECTED_TARGET publish-port retry" \
+        flutter test \
+        --no-pub \
+        --publish-port \
+        -d "$DEVICE_ID" \
+        --coverage \
+        --merge-coverage \
+        --coverage-path="$FINAL_COVERAGE_PATH" \
+        "$SELECTED_TARGET"
+    elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
+      run_integration_command \
+        "$SELECTED_TARGET publish-port retry" \
+        flutter test \
+        --no-pub \
+        --publish-port \
+        -d "$DEVICE_ID" \
+        "$SELECTED_TARGET"
+    elif [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
+      run_integration_command \
+        "$SELECTED_TARGET publish-port retry" \
+        flutter test \
+        --no-pub \
+        --publish-port \
+        -d "$DEVICE_ID" \
+        --coverage \
+        --coverage-path="$FINAL_COVERAGE_PATH" \
+        "$SELECTED_TARGET"
+    else
+      run_integration_command \
+        "$SELECTED_TARGET publish-port retry" \
+        flutter test \
+        --no-pub \
+        --publish-port \
+        -d "$DEVICE_ID" \
+        "$SELECTED_TARGET"
+    fi
+    exit_code=$?
+    set -e
+  fi
   if [ "$exit_code" -ne 0 ] && should_retry_integration_run "$exit_code"; then
     INTEGRATION_RETRIED="1"
     # Generic retry path is opt-in; do not label as infra-specific.
