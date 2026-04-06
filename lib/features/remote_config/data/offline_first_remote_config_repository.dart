@@ -35,9 +35,15 @@ class OfflineFirstRemoteConfigRepository
   static const String remoteConfigEntity = 'remote_config';
   static const List<String> _trackedBoolKeys = <String>[
     RemoteConfigRepository.awesomeFeatureKey,
+    RemoteConfigRepository.supabaseConfigEnabledKey,
   ];
   static const List<String> _trackedStringKeys = <String>[
     RemoteConfigRepository.testValueKey,
+    RemoteConfigRepository.supabaseUrlKey,
+    RemoteConfigRepository.supabaseAnonKeyKey,
+  ];
+  static const List<String> _trackedIntKeys = <String>[
+    RemoteConfigRepository.supabaseConfigVersionKey,
   ];
   static const String _lastSyncedKey = 'last_synced_at';
   static const String _lastDataSourceKey = 'last_data_source';
@@ -207,6 +213,9 @@ class OfflineFirstRemoteConfigRepository
     }
     for (final String key in _trackedStringKeys) {
       values[key] = _remoteRepository.getString(key);
+    }
+    for (final String key in _trackedIntKeys) {
+      values[key] = _remoteRepository.getInt(key);
     }
     return values;
   }

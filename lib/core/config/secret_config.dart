@@ -21,6 +21,8 @@ class SecretConfig {
   static const String _keyGeminiApiKey = 'gemini_api_key';
   static const String _keySupabaseUrl = 'supabase_url';
   static const String _keySupabaseAnonKey = 'supabase_anon_key';
+  static const String _keySupabaseConfigVersion = 'supabase_config_version';
+  static const String _keySupabaseFirebaseProjectId = 'supabase_firebase_project_id';
 
   static bool _loaded = false;
   static String? _huggingfaceApiKey;
@@ -30,6 +32,8 @@ class SecretConfig {
   static String? _geminiApiKey;
   static String? _supabaseUrl;
   static String? _supabaseAnonKey;
+  static String? _supabaseConfigVersion;
+  static String? _supabaseFirebaseProjectId;
   static SecretStorage? _configuredStorage;
   @visibleForTesting
   static AssetBundle? debugAssetBundle;
@@ -43,6 +47,8 @@ class SecretConfig {
   static String? get geminiApiKey => _geminiApiKey;
   static String? get supabaseUrl => _supabaseUrl;
   static String? get supabaseAnonKey => _supabaseAnonKey;
+  static String? get supabaseConfigVersion => _supabaseConfigVersion;
+  static String? get supabaseFirebaseProjectId => _supabaseFirebaseProjectId;
 
   static SecretStorage? get storage => _configuredStorage;
   static set storage(final SecretStorage storage) {
@@ -62,6 +68,71 @@ class SecretConfig {
     _geminiApiKey = null;
     _supabaseUrl = null;
     _supabaseAnonKey = null;
+    _supabaseConfigVersion = null;
+    _supabaseFirebaseProjectId = null;
+  }
+
+  /// Applies Supabase config at runtime (for example, after a callable returns).
+  ///
+  /// This intentionally overwrites existing in-memory values when non-empty
+  /// values are provided, to support rotation via `version`.
+  static void applySupabaseConfig({
+    required final String supabaseUrl,
+    required final String supabaseAnonKey,
+    required final String version,
+    final String? firebaseProjectId,
+  }) {
+    final String url = supabaseUrl.trim();
+    final String key = supabaseAnonKey.trim();
+    final String ver = version.trim();
+    if (url.isEmpty || key.isEmpty || ver.isEmpty) {
+      AppLogger.warning(
+        'SecretConfig.applySupabaseConfig ignored: blank values provided.',
+      );
+      return;
+    }
+
+    _supabaseUrl = url;
+    _supabaseAnonKey = key;
+    _supabaseConfigVersion = ver;
+    final String? projectId = firebaseProjectId?.trim();
+    _supabaseFirebaseProjectId = (projectId == null || projectId.isEmpty) ? null : projectId;
+  }
+
+  static Future<void> persistSupabaseConfig(
+    final SecretStorage storage, {
+    required final String supabaseUrl,
+    required final String supabaseAnonKey,
+    required final String version,
+    final String? firebaseProjectId,
+  }) async {
+    final String url = supabaseUrl.trim();
+    final String key = supabaseAnonKey.trim();
+    final String ver = version.trim();
+    if (url.isEmpty || key.isEmpty || ver.isEmpty) {
+      throw StateError('Supabase config persistence received blank values.');
+    }
+
+    await storage.withoutLogsAsync(() async {
+      await storage.write(_keySupabaseUrl, url);
+      await storage.write(_keySupabaseAnonKey, key);
+      await storage.write(_keySupabaseConfigVersion, ver);
+      final String? projectId = firebaseProjectId?.trim();
+      if (projectId != null && projectId.isNotEmpty) {
+        await storage.write(_keySupabaseFirebaseProjectId, projectId);
+      } else {
+        await storage.delete(_keySupabaseFirebaseProjectId);
+      }
+    });
+  }
+
+  static Future<void> clearSupabaseConfig(final SecretStorage storage) async {
+    await storage.withoutLogsAsync(() async {
+      await storage.delete(_keySupabaseUrl);
+      await storage.delete(_keySupabaseAnonKey);
+      await storage.delete(_keySupabaseConfigVersion);
+      await storage.delete(_keySupabaseFirebaseProjectId);
+    });
   }
 
   static const bool _envAllowsAssetFallback = bool.fromEnvironment(

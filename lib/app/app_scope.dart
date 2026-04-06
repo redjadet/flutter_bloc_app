@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/config/supabase_config_coordinator.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/deeplink/deeplink.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
@@ -29,6 +30,7 @@ class AppScope extends StatefulWidget {
 
 class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
   late final BackgroundSyncCoordinator _syncCoordinator;
+  late final SupabaseConfigCoordinator _supabaseConfigCoordinator;
   late final AppMemoryService _memoryService;
   late final TimerService _timerService;
   TimerDisposable? _resumeDebounceHandle;
@@ -40,9 +42,11 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
     // Ensure DI is configured when running tests that directly pump MyApp.
     ensureConfigured();
     _syncCoordinator = getIt<BackgroundSyncCoordinator>();
+    _supabaseConfigCoordinator = getIt<SupabaseConfigCoordinator>();
     _memoryService = getIt<AppMemoryService>();
     _timerService = getIt<TimerService>();
     WidgetsBinding.instance.addObserver(this);
+    unawaited(_supabaseConfigCoordinator.start());
   }
 
   @override

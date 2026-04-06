@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
+import 'package:flutter_bloc_app/core/config/supabase_config_coordinator.dart';
+import 'package:flutter_bloc_app/core/config/supabase_config_provider.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_factories.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
@@ -33,6 +36,7 @@ import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart
 import 'package:flutter_bloc_app/features/google_maps/data/sample_map_location_repository.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_realtime_subscription.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/features/scapes/data/mock_scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/settings/data/hive_locale_repository.dart';
@@ -63,6 +67,8 @@ Future<void> registerAllDependencies() async {
   await _registerStorageServices();
   _registerCounterRepository();
   registerAuthServices();
+  registerRemoteConfigServices();
+  _registerSupabaseConfigServices();
   registerSupabaseServices();
   _registerTimerAndNetworkStatus();
   registerHttpServices();
@@ -76,7 +82,6 @@ Future<void> registerAllDependencies() async {
   _registerWebSocketServices();
   _registerMapServices();
   registerProfileServices();
-  registerRemoteConfigServices();
   registerSearchServices();
   registerTodoServices();
   registerGenUiServices();
@@ -113,6 +118,19 @@ Future<void> _registerStorageServices() async {
 
 void _registerCounterRepository() {
   registerLazySingletonIfAbsent<CounterRepository>(createCounterRepository);
+}
+
+void _registerSupabaseConfigServices() {
+  registerLazySingletonIfAbsent<SupabaseConfigProvider>(
+    () => SupabaseConfigProvider(remoteConfig: getIt<RemoteConfigService>()),
+  );
+  registerLazySingletonIfAbsent<SupabaseConfigCoordinator>(
+    () => SupabaseConfigCoordinator(
+      auth: getIt<FirebaseAuth>(),
+      provider: getIt<SupabaseConfigProvider>(),
+    ),
+    dispose: (final coordinator) => coordinator.dispose(),
+  );
 }
 
 /// `registerHttpServices` builds `Dio` with `NetworkStatusService`; chart setup

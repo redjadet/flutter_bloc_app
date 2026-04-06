@@ -169,6 +169,14 @@ void main() {
         debugMessages,
         contains('RemoteConfig[fetch] awesome_feature_enabled=true'),
       );
+      final captured = verify(
+        () => remoteConfig.setConfigSettings(captureAny()),
+      ).captured.cast<RemoteConfigSettings>();
+      expect(captured, hasLength(2));
+      expect(captured.first.fetchTimeout, const Duration(minutes: 1));
+      expect(captured.first.minimumFetchInterval, Duration.zero);
+      expect(captured.last.fetchTimeout, const Duration(minutes: 1));
+      expect(captured.last.minimumFetchInterval, const Duration(hours: 1));
     });
 
     test(
