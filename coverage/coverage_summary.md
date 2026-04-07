@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **78.18%** (17130/21912 lines)
+*Total line coverage*: **78.17%** (17129/21912 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -185,6 +185,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/services/network_status_service.dart` | 80.41% | 78/97 |
 | `lib/features/graphql_demo/presentation/graphql_demo_cubit.dart` | 80.60% | 54/67 |
 | `lib/features/calculator/presentation/widgets/calculator_summary_card.dart` | 80.73% | 88/109 |
+| `lib/features/counter/data/hive_counter_repository_watch_state.dart` | 80.85% | 38/47 |
 | `lib/core/di/injector_registrations.dart` | 80.91% | 89/110 |
 | `lib/features/graphql_demo/data/auth_aware_graphql_remote_repository.dart` | 81.25% | 13/16 |
 | `lib/shared/utils/network_error_mapper_app_error.dart` | 81.43% | 57/70 |
@@ -202,12 +203,11 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/counter/presentation/counter_cubit.dart` | 82.65% | 81/98 |
 | `lib/features/genui_demo/presentation/widgets/genui_demo_content.dart` | 82.72% | 67/81 |
 | `lib/shared/platform/secure_secret_storage.dart` | 82.86% | 29/35 |
-| `lib/features/counter/data/hive_counter_repository_watch_state.dart` | 82.98% | 39/47 |
-| `lib/features/chart/presentation/widgets/chart_message_list.dart` | 83.33% | 5/6 |
 | `lib/features/remote_config/presentation/widgets/remote_config_diagnostics_section_components.dart` | 83.33% | 45/54 |
 | `lib/shared/http/interceptors/network_check_interceptor.dart` | 83.33% | 10/12 |
 | `lib/shared/utils/storage_guard.dart` | 83.33% | 5/6 |
 | `lib/shared/utils/initialization_guard.dart` | 83.33% | 5/6 |
+| `lib/features/chart/presentation/widgets/chart_message_list.dart` | 83.33% | 5/6 |
 | `lib/features/fcm_demo/data/firebase_messaging_repository.dart` | 83.64% | 46/55 |
 | `lib/features/todo_list/data/offline_first_todo_repository_helpers.dart` | 83.87% | 26/31 |
 | `lib/features/counter/data/offline_first_counter_repository.dart` | 84.15% | 69/82 |
