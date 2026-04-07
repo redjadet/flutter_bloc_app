@@ -118,7 +118,41 @@ void _endIntegrationLogCapture() {
 }
 
 bool _isUnexpectedIntegrationLog(final AppLogEntry entry) {
-  return entry.level == AppLogLevel.warning || entry.level == AppLogLevel.error;
+  final bool isWarnOrError = entry.level == AppLogLevel.warning || entry.level == AppLogLevel.error;
+  if (!isWarnOrError) {
+    return false;
+  }
+  return !_isIgnoredIntegrationLog(entry);
+}
+
+bool _isIgnoredIntegrationLog(final AppLogEntry entry) {
+  // iOS integration runs occasionally surface transient Remote Config
+  // cancellation from the plugin while the app is tearing down / relaunching
+  // between flows. Treat this specific case as noise so it doesn't fail the
+  // whole suite.
+  if (entry.message == 'OfflineFirstRemoteConfigRepository.forceFetch failed') {
+    final Object? error = entry.error;
+    if (error != null &&
+        error.toString().contains(
+          '[firebase_remote_config/unknown] cancelled',
+        )) {
+      return true;
+    }
+  }
+
+  // Some integration flows intentionally run without a Firebase user session.
+  // When a feature tries to sync immediately, the repo logs an error and
+  // queues the operation for retry. This is expected and shouldn't fail the
+  // entire integration suite.
+  if (entry.message == 'OfflineFirstTodoRepository.save immediate sync failed, queuing for retry') {
+    final Object? error = entry.error;
+    if (error != null &&
+        error.toString().contains('[firebase_auth/no-current-user]') &&
+        error.toString().contains('did not supply a user within')) {
+      return true;
+    }
+  }
+  return false;
 }
 
 void _assertNoUnexpectedIntegrationLogs() {
