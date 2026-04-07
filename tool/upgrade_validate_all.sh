@@ -41,16 +41,16 @@ run_agent_asset_sync_step() {
   esac
 }
 
-echo "==> Step 1/5: Upgrade Flutter SDK"
+echo "==> Step 1/6: Upgrade Flutter SDK"
 flutter upgrade
 
-echo "==> Step 2/5: Upgrade packages (major versions when possible)"
+echo "==> Step 2/6: Upgrade packages (major versions when possible)"
 flutter pub upgrade --major-versions
 
-echo "==> Step 3/5: Run delivery checklist"
+echo "==> Step 3/6: Run delivery checklist"
 "$PROJECT_ROOT/bin/checklist"
 
-echo "==> Step 4/5: Run integration tests"
+echo "==> Step 4/6: Run integration tests"
 "$PROJECT_ROOT/bin/integration_tests"
 
 echo "==> Step 5/6: Refresh documentation and AI agent toolchain artifacts"
