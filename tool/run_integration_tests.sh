@@ -553,6 +553,8 @@ elif (
     or "failed to connect to vm service" in low
     or "unable to connect to vm service" in low
     or "vm service disappeared" in low
+    or "dart vm service was not discovered" in low
+    or "unable to start the app on the device" in low
     or "lost connection to device" in low
 ):
     print("infra_device_or_tooling")
@@ -561,6 +563,25 @@ elif "cannot start app on wirelessly tethered ios device" in low:
 else:
     print("unknown_transient_or_infra")
 PY
+}
+
+emit_actionable_hint_from_log() {
+  local log_path="$1"
+
+  [ -s "$log_path" ] || return 0
+
+  # Keep this lightweight and tail-focused; we only want to surface hints for
+  # the most common, non-code failures that waste time during upgrades.
+  if grep -Eqi 'Dart VM Service was not discovered|Unable to start the app on the device' "$log_path"; then
+    log "⚠️ Flutter couldn't discover the Dart VM Service / couldn't start the app."
+    if [ "$(uname -s)" = "Darwin" ]; then
+      log "   If this is iOS, check macOS Automation permissions:"
+      log "   Settings → Privacy & Security → Automation (allow Xcode/Flutter control)."
+      log "   Then retry: ./bin/integration_tests (or set CHECKLIST_INTEGRATION_DEVICE=<deviceId>)."
+    else
+      log "   Check device connectivity and developer tooling permissions, then retry."
+    fi
+  fi
 }
 
 run_integration_command() {
@@ -608,6 +629,7 @@ run_integration_command() {
   else
     INTEGRATION_INFERRED_FAILURE_CATEGORY="$(infer_flutter_failure_category_from_log "$log_path")"
     log "Inferred failure category from flutter output: ${INTEGRATION_INFERRED_FAILURE_CATEGORY:-unknown}"
+    emit_actionable_hint_from_log "$log_path"
     if [ "${INTEGRATION_INFERRED_FAILURE_CATEGORY:-}" = "wireless_publish_port_required" ]; then
       INTEGRATION_PUBLISH_PORT_REQUIRED="1"
     fi
