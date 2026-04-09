@@ -1,0 +1,20 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Demo content: PDFs/videos uploaded by managers/admins via console.
+    // For v1 demo simplicity, allow signed-in reads.
+    match /staff-app-demo/content/{allPaths=**} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+
+    // Proof uploads are scoped to the authenticated user.
+    match /staff-app-demo/proofs/{uid}/{allPaths=**} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
+    }
+  }
+}

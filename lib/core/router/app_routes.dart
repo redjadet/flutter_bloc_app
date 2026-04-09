@@ -122,6 +122,30 @@ class AppRoutes {
   static const caseStudyDemoHistoryDetail = 'case-study-demo-history-detail';
   static const caseStudyDemoHistoryDetailPath = '/case-study-demo/history/:id';
 
+  static const staffAppDemo = 'staff-app-demo';
+  static const staffAppDemoPath = '/staff-app-demo';
+
+  static const staffAppDemoDashboard = 'staff-app-demo-dashboard';
+  static const staffAppDemoDashboardPath = '/staff-app-demo/dashboard';
+
+  static const staffAppDemoTimeclock = 'staff-app-demo-timeclock';
+  static const staffAppDemoTimeclockPath = '/staff-app-demo/timeclock';
+
+  static const staffAppDemoMessages = 'staff-app-demo-messages';
+  static const staffAppDemoMessagesPath = '/staff-app-demo/messages';
+
+  static const staffAppDemoContent = 'staff-app-demo-content';
+  static const staffAppDemoContentPath = '/staff-app-demo/content';
+
+  static const staffAppDemoForms = 'staff-app-demo-forms';
+  static const staffAppDemoFormsPath = '/staff-app-demo/forms';
+
+  static const staffAppDemoProof = 'staff-app-demo-proof';
+  static const staffAppDemoProofPath = '/staff-app-demo/proof';
+
+  static const staffAppDemoAdmin = 'staff-app-demo-admin';
+  static const staffAppDemoAdminPath = '/staff-app-demo/admin';
+
   /// Returns true if [path] is safe for post-login redirect (local path only).
   /// Rejects null, empty, protocol-relative (//), and external URLs.
   static bool isSafeRedirectPath(final String? path) {
