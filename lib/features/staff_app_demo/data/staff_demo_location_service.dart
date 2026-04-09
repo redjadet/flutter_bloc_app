@@ -1,0 +1,46 @@
+import 'package:geolocator/geolocator.dart';
+
+class StaffDemoCapturedLocation {
+  const StaffDemoCapturedLocation({
+    required this.lat,
+    required this.lng,
+    required this.accuracyMeters,
+    required this.capturedAtUtc,
+  });
+
+  final double lat;
+  final double lng;
+  final double? accuracyMeters;
+  final DateTime capturedAtUtc;
+}
+
+class StaffDemoLocationService {
+  Future<StaffDemoCapturedLocation?> captureCurrentLocation() async {
+    final enabled = await Geolocator.isLocationServiceEnabled();
+    if (!enabled) {
+      return null;
+    }
+
+    var permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      return null;
+    }
+
+    final Position pos = await Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(
+        timeLimit: Duration(seconds: 10),
+      ),
+    );
+
+    return StaffDemoCapturedLocation(
+      lat: pos.latitude,
+      lng: pos.longitude,
+      accuracyMeters: pos.accuracy.isFinite ? pos.accuracy : null,
+      capturedAtUtc: DateTime.now().toUtc(),
+    );
+  }
+}
