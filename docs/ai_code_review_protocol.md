@@ -11,6 +11,10 @@ Adapted from Vinod Pal’s March 8, 2026 checklist:
 This review gate comes before normal repo validation. It complements automated
 checks; it does not replace them.
 
+If [`AGENTS.md`](../AGENTS.md) is unavailable in the current host context, combine this
+document with [`agents_quick_reference.md`](agents_quick_reference.md) as the
+repo-visible fallback.
+
 ## The Eight Checks
 
 1. **Draft first**
@@ -50,6 +54,8 @@ checks; it does not replace them.
 2. For non-trivial tasks, confirm the active plan and verification are recorded
    in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) or
    [`tasks/codex/todo.md`](../tasks/codex/todo.md).
+   Use the tracker that matches the active host. Delegates and cross-host
+   helpers should support that tracker instead of creating a second plan.
 3. For presentation-layer changes, confirm styling uses shared theme/design
    tokens unless the file is intentionally defining tokens.
 4. If subagents or sidecars were used, review their output as draft input and
@@ -63,13 +69,28 @@ checks; it does not replace them.
    Use `./bin/checklist` only for broad or pre-ship sweeps, or when the user
    explicitly asks for the full validation pass.
 
+## Fast Path By Change Shape
+
+- Small/local change:
+  apply the eight checks, review the diff, run targeted validation, and prove
+  the changed behavior.
+- Docs-only or agent-guidance change:
+  review for clarity and policy drift, validate the touched docs/links, and if
+  host templates changed also run the host-asset drift checks.
+- Non-trivial multi-file or architecture change:
+  require an active host-specific tracker entry, explicit risks/edge cases, and
+  scope-matched proof before completion.
+
 ## Before Marking The Task Done
 
 1. Prove behavior with scope-matched evidence such as tests, logs, screenshots,
    or behavior diffs.
 2. When plan-first workflow was used, record verification outcome and short
    review notes in the host-specific task tracker.
-3. If the user corrected a mistake during the task, add a prevention note to
+3. For docs-only or agent-guidance changes, still validate the touched docs,
+   links, and any affected host-template drift path instead of treating the
+   change as proof-free.
+4. If the user corrected a mistake during the task, add a prevention note to
    [`tasks/lessons.md`](../tasks/lessons.md).
 
 ## Special Cases
