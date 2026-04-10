@@ -48,6 +48,7 @@ dependencies:
   firebase_database: ^12.1.0
   firebase_messaging: ^16.1.1
   firebase_remote_config: ^6.1.2
+  firebase_storage: ^13.2.0
   firebase_ui_auth: ^3.0.1
   firebase_ui_localizations: ^2.0.0
   firebase_ui_oauth_google: ^2.0.0
@@ -85,10 +86,12 @@ dependencies:
   package_info_plus: ^9.0.0
   path: ^1.9.1
   path_provider: ^2.1.1
+  pdfrx: ^2.2.24
   provider: ^6.1.5
   responsive_framework: ^1.5.1
   retrofit: ^4.9.0
   shared_preferences: ^2.5.3
+  signature: ^6.3.0
   skeletonizer: ^2.1.0+1
   supabase_flutter: ^2.8.0
   video_player: ^2.10.0
@@ -124,6 +127,7 @@ dev_dependencies:
   mocktail: ^1.0.4
   retrofit_generator: ^10.0.0
   very_good_analysis: ^10.2.0
+  video_player_platform_interface: ^6.6.0
 
 dependency_overrides:
   # Resolve email_validator conflict: genui requires ^3.0.0, firebase_ui_auth 3.0.1 requires ^2.1.17

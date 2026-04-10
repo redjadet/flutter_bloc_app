@@ -11,4 +11,12 @@ class MockStaffDemoProfileRepository implements StaffDemoProfileRepository {
   @override
   Future<StaffDemoProfile?> loadProfile({required final String userId}) async =>
       _profiles[userId];
+
+  @override
+  Future<List<StaffDemoProfile>> listAssignableStaff() async {
+    final profiles = _profiles.values.where((p) => p.isActive);
+    final list = profiles.toList()
+      ..sort((a, b) => a.displayName.compareTo(b.displayName));
+    return list;
+  }
 }

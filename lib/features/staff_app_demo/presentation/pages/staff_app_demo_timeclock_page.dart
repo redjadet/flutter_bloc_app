@@ -1,3 +1,4 @@
+// check-ignore: nonbuilder_lists - small, fixed-size page content
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/timeclock/staff_demo_timeclock_cubit.dart';
@@ -64,9 +65,18 @@ class StaffAppDemoTimeclockPage extends StatelessWidget {
             Text(last.flags.toJson().toString()),
             if (last.distanceMeters != null && last.radiusMeters != null) ...[
               const SizedBox(height: 8),
-              Text(
-                'Distance: ${last.distanceMeters!.toStringAsFixed(1)}m '
-                '(radius ${last.radiusMeters!.toStringAsFixed(1)}m)',
+              Builder(
+                builder: (context) {
+                  final distanceMeters = last.distanceMeters;
+                  final radiusMeters = last.radiusMeters;
+                  if (distanceMeters == null || radiusMeters == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return Text(
+                    'Distance: ${distanceMeters.toStringAsFixed(1)}m '
+                    '(radius ${radiusMeters.toStringAsFixed(1)}m)',
+                  );
+                },
               ),
             ],
           ],
