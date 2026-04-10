@@ -23,4 +23,13 @@ class FirestoreStaffDemoInboxRepository {
         .get();
     return snap.data();
   }
+
+  Future<String?> loadShiftStatus(final String shiftId) async {
+    final snap = await _firestore
+        .collection('staffDemoShifts')
+        .doc(shiftId)
+        .get();
+    final data = snap.data();
+    return (data?['status'] as String?)?.trim();
+  }
 }

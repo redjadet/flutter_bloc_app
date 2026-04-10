@@ -1,3 +1,4 @@
+// check-ignore: nonbuilder_lists - small, fixed-size page content
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_cubit.dart';

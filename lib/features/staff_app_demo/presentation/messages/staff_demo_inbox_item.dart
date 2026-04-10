@@ -5,6 +5,7 @@ class StaffDemoInboxItem {
     required this.type,
     required this.shiftId,
     required this.confirmedAtMs,
+    required this.shiftStatus,
   });
 
   final String messageId;
@@ -12,6 +13,7 @@ class StaffDemoInboxItem {
   final String type;
   final String? shiftId;
   final int? confirmedAtMs;
+  final String? shiftStatus;
 
-  bool get isConfirmed => confirmedAtMs != null;
+  bool get isConfirmed => shiftStatus == 'confirmed';
 }

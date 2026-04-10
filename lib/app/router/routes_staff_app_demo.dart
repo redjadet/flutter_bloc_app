@@ -8,7 +8,9 @@ import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_de
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_timeclock_local_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/admin/staff_demo_admin_cubit.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/content/staff_demo_content_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_cubit.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/forms/staff_demo_forms_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/messages/staff_demo_messages_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_admin_page.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_content_page.dart';
@@ -18,6 +20,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staf
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_proof_page.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_shell_page.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_timeclock_page.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/timeclock/staff_demo_timeclock_cubit.dart';
 import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:go_router/go_router.dart';
@@ -85,17 +88,39 @@ ShellRoute createStaffAppDemoShellRoute() => ShellRoute(
     GoRoute(
       path: AppRoutes.staffAppDemoContentPath,
       name: AppRoutes.staffAppDemoContent,
-      builder: (context, state) => const StaffAppDemoContentPage(),
+      builder: (context, state) =>
+          BlocProviderHelpers.withAsyncInit<StaffDemoContentCubit>(
+            create: () => StaffDemoContentCubit(repository: getIt()),
+            init: (cubit) => cubit.load(),
+            child: const StaffAppDemoContentPage(),
+          ),
     ),
     GoRoute(
       path: AppRoutes.staffAppDemoFormsPath,
       name: AppRoutes.staffAppDemoForms,
-      builder: (context, state) => const StaffAppDemoFormsPage(),
+      builder: (context, state) =>
+          BlocProviderHelpers.withAsyncInit<StaffDemoFormsCubit>(
+            create: () => StaffDemoFormsCubit(
+              authRepository: getIt<AuthRepository>(),
+              repository: getIt(),
+            ),
+            init: (_) async {},
+            child: const StaffAppDemoFormsPage(),
+          ),
     ),
     GoRoute(
       path: AppRoutes.staffAppDemoProofPath,
       name: AppRoutes.staffAppDemoProof,
-      builder: (context, state) => const StaffAppDemoProofPage(),
+      builder: (context, state) =>
+          BlocProviderHelpers.withAsyncInit<StaffDemoProofCubit>(
+            create: () => StaffDemoProofCubit(
+              authRepository: getIt<AuthRepository>(),
+              repository: getIt(),
+              fileStore: getIt(),
+            ),
+            init: (_) async {},
+            child: const StaffAppDemoProofPage(),
+          ),
     ),
     GoRoute(
       path: AppRoutes.staffAppDemoAdminPath,

@@ -38,6 +38,7 @@ class IntegrationDependencyOptions {
     this.setFlavorToProd = true,
     this.biometricSuccess = true,
     this.locale = const AppLocale(languageCode: 'en'),
+    this.authMode = IntegrationAuthMode.mockFirebaseAuth,
   });
 
   final bool overrideCounterRepository;
@@ -49,6 +50,15 @@ class IntegrationDependencyOptions {
   final bool setFlavorToProd;
   final bool biometricSuccess;
   final AppLocale? locale;
+  final IntegrationAuthMode authMode;
+}
+
+enum IntegrationAuthMode {
+  /// Uses `firebase_auth_mocks` (default for most tests).
+  mockFirebaseAuth,
+
+  /// Uses real plugin-backed Firebase Auth (email/password) for dev projects.
+  realFirebaseAuth,
 }
 
 void registerIntegrationHarness() {
@@ -74,6 +84,7 @@ void registerIntegrationFlow({
         setFlavorToProd: options.setFlavorToProd,
         biometricSuccess: options.biometricSuccess,
         locale: options.locale,
+        authMode: options.authMode,
       );
     });
 
@@ -118,7 +129,8 @@ void _endIntegrationLogCapture() {
 }
 
 bool _isUnexpectedIntegrationLog(final AppLogEntry entry) {
-  final bool isWarnOrError = entry.level == AppLogLevel.warning || entry.level == AppLogLevel.error;
+  final bool isWarnOrError =
+      entry.level == AppLogLevel.warning || entry.level == AppLogLevel.error;
   if (!isWarnOrError) {
     return false;
   }
@@ -144,13 +156,35 @@ bool _isIgnoredIntegrationLog(final AppLogEntry entry) {
   // When a feature tries to sync immediately, the repo logs an error and
   // queues the operation for retry. This is expected and shouldn't fail the
   // entire integration suite.
-  if (entry.message == 'OfflineFirstTodoRepository.save immediate sync failed, queuing for retry') {
+  if (entry.message ==
+      'OfflineFirstTodoRepository.save immediate sync failed, queuing for retry') {
     final Object? error = entry.error;
     if (error != null &&
         error.toString().contains('[firebase_auth/no-current-user]') &&
         error.toString().contains('did not supply a user within')) {
       return true;
     }
+  }
+
+  // Staff demo push token registration can log an APNs token warning on iOS
+  // simulators (or before APNs registration completes). This should not fail
+  // the integration suite.
+  if (entry.message ==
+      'FirestoreStaffDemoPushTokenRepository.registerTokens APNs token not available yet') {
+    return true;
+  }
+  if (entry.message ==
+      'FirestoreStaffDemoPushTokenRepository.registerTokens failed') {
+    final Object? error = entry.error;
+    if (error != null &&
+        error.toString().contains('[firebase_messaging/apns-token-not-set]')) {
+      return true;
+    }
+  }
+
+  // App Check debug token guidance is expected on simulators during dev runs.
+  if (entry.message.startsWith('Using default App Check debug token.')) {
+    return true;
   }
   return false;
 }
@@ -185,6 +219,7 @@ Future<void> configureIntegrationTestDependencies({
   final bool setFlavorToProd = true,
   final bool biometricSuccess = true,
   final AppLocale? locale = const AppLocale(languageCode: 'en'),
+  final IntegrationAuthMode authMode = IntegrationAuthMode.mockFirebaseAuth,
 }) async {
   PackageInfo.setMockInitialValues(
     appName: 'Flutter Demo',
@@ -198,6 +233,8 @@ Future<void> configureIntegrationTestDependencies({
     test_helpers.TestSetupOptions(
       overrideCounterRepository: overrideCounterRepository,
       setFlavorToProd: setFlavorToProd,
+      useMockFirebasePlatform: authMode == IntegrationAuthMode.mockFirebaseAuth,
+      useMockFirebaseAuth: authMode == IntegrationAuthMode.mockFirebaseAuth,
     ),
   );
 

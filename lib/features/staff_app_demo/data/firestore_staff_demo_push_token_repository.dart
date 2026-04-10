@@ -21,9 +21,34 @@ class FirestoreStaffDemoPushTokenRepository
       if (settings.authorizationStatus == AuthorizationStatus.denied) {
         return;
       }
-      final token = await _messaging.getToken();
-      final apnsToken = await _messaging.getAPNSToken();
+      String? token;
+      try {
+        token = await _messaging.getToken();
+      } on Exception catch (error) {
+        // On iOS simulators it is common to see:
+        // [firebase_messaging/apns-token-not-set]
+        // before APNs registration completes. Treat as expected noise.
+        if (error.toString().contains(
+          '[firebase_messaging/apns-token-not-set]',
+        )) {
+          AppLogger.info(
+            'FirestoreStaffDemoPushTokenRepository.registerTokens APNs token not set yet; skipping token registration',
+          );
+          return;
+        }
+        rethrow;
+      }
       if (token == null || token.isEmpty) return;
+
+      String? apnsToken;
+      try {
+        apnsToken = await _messaging.getAPNSToken();
+      } on Exception catch (_) {
+        // Expected on simulators or before APNs registration completes.
+        AppLogger.info(
+          'FirestoreStaffDemoPushTokenRepository.registerTokens APNs token not available yet',
+        );
+      }
 
       await _firestore.collection('staffDemoProfiles').doc(userId).set(
         <String, dynamic>{

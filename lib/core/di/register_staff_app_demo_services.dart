@@ -1,18 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_shift_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_content_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_forms_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_inbox_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_messaging_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_profile_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_push_token_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_shift_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_site_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_time_entries_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_push_token_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/data/offline_first_staff_demo_timeclock_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_messaging_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_inbox_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/mock_staff_demo_profile_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/offline_first_staff_demo_event_proof_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/offline_first_staff_demo_timeclock_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_event_proof_sync_operation_factory.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_proof_file_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_timeclock_local_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_item.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_forms_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift.dart';
@@ -23,7 +34,6 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timec
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 
 void registerStaffAppDemoServices() {
   registerLazySingletonIfAbsent<StaffDemoLocationService>(
@@ -43,7 +53,8 @@ void registerStaffAppDemoServices() {
 
   registerLazySingletonIfAbsent<StaffDemoPushTokenRepository>(
     () => _withFirestoreOrFallback<StaffDemoPushTokenRepository>(
-      (firestore) => FirestoreStaffDemoPushTokenRepository(firestore: firestore),
+      (firestore) =>
+          FirestoreStaffDemoPushTokenRepository(firestore: firestore),
       fallback: () => _NoOpStaffDemoPushTokenRepository(),
     ),
   );
@@ -80,7 +91,8 @@ void registerStaffAppDemoServices() {
 
   registerLazySingletonIfAbsent<FirestoreStaffDemoTimeEntriesRepository>(
     () => _withFirestoreOrFallback<FirestoreStaffDemoTimeEntriesRepository>(
-      (firestore) => FirestoreStaffDemoTimeEntriesRepository(firestore: firestore),
+      (firestore) =>
+          FirestoreStaffDemoTimeEntriesRepository(firestore: firestore),
       fallback: () => throw StateError('Firebase unavailable'),
     ),
   );
@@ -101,6 +113,53 @@ void registerStaffAppDemoServices() {
       fallback: () => throw StateError('Firebase unavailable'),
     ),
   );
+
+  registerLazySingletonIfAbsent<StaffDemoContentRepository>(
+    () => _withFirestoreOrFallback<StaffDemoContentRepository>(
+      (firestore) {
+        FirebaseStorage? storage;
+        try {
+          final app = Firebase.app();
+          storage = FirebaseStorage.instanceFor(app: app);
+        } on Exception {
+          storage = null;
+        }
+        return FirestoreStaffDemoContentRepository(
+          firestore: firestore,
+          storage: storage,
+        );
+      },
+      fallback: () => _NoOpStaffDemoContentRepository(),
+    ),
+  );
+
+  registerLazySingletonIfAbsent<StaffDemoFormsRepository>(
+    () => _withFirestoreOrFallback<StaffDemoFormsRepository>(
+      (firestore) => FirestoreStaffDemoFormsRepository(firestore: firestore),
+      fallback: () => throw StateError('Firebase unavailable'),
+    ),
+  );
+
+  registerLazySingletonIfAbsent<StaffDemoEventProofSyncOperationFactory>(
+    StaffDemoEventProofSyncOperationFactory.new,
+  );
+
+  registerLazySingletonIfAbsent<StaffDemoProofFileStore>(
+    StaffDemoProofFileStore.new,
+  );
+
+  registerLazySingletonIfAbsent<StaffDemoEventProofRepository>(
+    () => _withFirestoreAndStorageOrFallback<StaffDemoEventProofRepository>(
+      (firestore, storage) => OfflineFirstStaffDemoEventProofRepository(
+        firestore: firestore,
+        storage: storage,
+        pendingSyncRepository: getIt<PendingSyncRepository>(),
+        registry: getIt<SyncableRepositoryRegistry>(),
+        operationFactory: getIt<StaffDemoEventProofSyncOperationFactory>(),
+      ),
+      fallback: () => _NoOpStaffDemoEventProofRepository(),
+    ),
+  );
 }
 
 T _withFirestoreOrFallback<T>(
@@ -111,6 +170,21 @@ T _withFirestoreOrFallback<T>(
     final app = Firebase.app();
     final firestore = FirebaseFirestore.instanceFor(app: app);
     return builder(firestore);
+  } on Exception {
+    return fallback();
+  }
+}
+
+T _withFirestoreAndStorageOrFallback<T>(
+  final T Function(FirebaseFirestore firestore, FirebaseStorage storage)
+  builder, {
+  required final T Function() fallback,
+}) {
+  try {
+    final app = Firebase.app();
+    final firestore = FirebaseFirestore.instanceFor(app: app);
+    final storage = FirebaseStorage.instanceFor(app: app);
+    return builder(firestore, storage);
   } on Exception {
     return fallback();
   }
@@ -129,7 +203,8 @@ class _NoOpStaffDemoSiteRepository implements StaffDemoSiteRepository {
   Future<StaffDemoSite?> loadSite({required String siteId}) async => null;
 }
 
-class _NoOpStaffDemoTimeclockRepository implements StaffDemoTimeclockRepository {
+class _NoOpStaffDemoTimeclockRepository
+    implements StaffDemoTimeclockRepository {
   @override
   Future<StaffDemoClockResult> clockIn() async =>
       throw StateError('Firebase unavailable');
@@ -139,7 +214,30 @@ class _NoOpStaffDemoTimeclockRepository implements StaffDemoTimeclockRepository 
       throw StateError('Firebase unavailable');
 }
 
-class _NoOpStaffDemoPushTokenRepository implements StaffDemoPushTokenRepository {
+class _NoOpStaffDemoPushTokenRepository
+    implements StaffDemoPushTokenRepository {
   @override
   Future<void> registerTokens({required String userId}) async {}
+}
+
+class _NoOpStaffDemoContentRepository implements StaffDemoContentRepository {
+  @override
+  Future<List<StaffDemoContentItem>> listPublished() async =>
+      const <StaffDemoContentItem>[];
+
+  @override
+  Future<Uri> getDownloadUrl({required String storagePath}) async =>
+      throw StateError('Firebase unavailable');
+}
+
+class _NoOpStaffDemoEventProofRepository
+    implements StaffDemoEventProofRepository {
+  @override
+  Future<String> submitProof({
+    required String userId,
+    required String siteId,
+    required String? shiftId,
+    required List<String> photoFilePaths,
+    required String signaturePngFilePath,
+  }) async => throw StateError('Firebase unavailable');
 }

@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/presentation/messages/s
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/messages/staff_demo_messages_state.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class StaffDemoMessagesCubit extends Cubit<StaffDemoMessagesState>
     with CubitSubscriptionMixin<StaffDemoMessagesState> {
@@ -44,7 +45,42 @@ class StaffDemoMessagesCubit extends Cubit<StaffDemoMessagesState>
 
     _subscription = _inboxRepository
         .watchRecipients(userId: userId)
-        .listen((snapshot) => unawaited(_hydrateFromRecipients(snapshot.docs)));
+        .listen(
+          (snapshot) => unawaited(_hydrateFromRecipients(snapshot.docs)),
+          onError: (Object error, StackTrace stackTrace) {
+            if (error is FirebaseException &&
+                error.code == 'permission-denied') {
+              AppLogger.info(
+                'StaffDemoMessagesCubit recipients stream permission denied',
+              );
+              // Some roles/environments may not be allowed to read inbox updates.
+              // Keep the screen usable (e.g. manager compose) rather than forcing
+              // a hard error state.
+              if (isClosed) return;
+              emit(
+                state.copyWith(
+                  status: StaffDemoMessagesStatus.ready,
+                  items: const <StaffDemoInboxItem>[],
+                  errorMessage: null,
+                ),
+              );
+              return;
+            } else {
+              AppLogger.error(
+                'StaffDemoMessagesCubit recipients stream error',
+                error,
+                stackTrace,
+              );
+            }
+            if (isClosed) return;
+            emit(
+              state.copyWith(
+                status: StaffDemoMessagesStatus.error,
+                errorMessage: 'Failed to load inbox updates.',
+              ),
+            );
+          },
+        );
     registerSubscription(_subscription);
   }
 
@@ -65,13 +101,19 @@ class StaffDemoMessagesCubit extends Cubit<StaffDemoMessagesState>
       final msg = await _inboxRepository.loadMessage(messageId);
       if (msg == null) continue;
 
+      final shiftId = msg['shiftId'] as String?;
+      final String? shiftStatus = (shiftId == null || shiftId.isEmpty)
+          ? null
+          : await _inboxRepository.loadShiftStatus(shiftId);
+
       items.add(
         StaffDemoInboxItem(
           messageId: messageId,
           body: (msg['body'] as String?) ?? '',
           type: (msg['type'] as String?) ?? '',
-          shiftId: msg['shiftId'] as String?,
+          shiftId: shiftId,
           confirmedAtMs: confirmedAtMs,
+          shiftStatus: shiftStatus,
         ),
       );
     }
@@ -95,7 +137,27 @@ class StaffDemoMessagesCubit extends Cubit<StaffDemoMessagesState>
         shiftId: shiftId,
       ),
       isAlive: () => !isClosed,
-      onSuccess: (_) {},
+      onSuccess: (_) {
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            items: state.items
+                .map(
+                  (i) => i.messageId == item.messageId
+                      ? StaffDemoInboxItem(
+                          messageId: i.messageId,
+                          body: i.body,
+                          type: i.type,
+                          shiftId: i.shiftId,
+                          confirmedAtMs: i.confirmedAtMs,
+                          shiftStatus: 'confirmed',
+                        )
+                      : i,
+                )
+                .toList(),
+          ),
+        );
+      },
       onError: (final message) {
         if (isClosed) return;
         emit(

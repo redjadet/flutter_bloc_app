@@ -149,6 +149,7 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenLoggedOut: () => context.pushNamed(AppRoutes.loggedOut),
         onOpenLibraryDemo: () => context.pushNamed(AppRoutes.libraryDemo),
         onOpenIgamingDemo: () => context.pushNamed(AppRoutes.igamingDemo),
+        onOpenStaffAppDemo: () => context.pushNamed(AppRoutes.staffAppDemo),
         onOpenFcmDemo: FirebaseBootstrapService.isFirebaseInitialized
             ? () => context.pushNamed(AppRoutes.fcmDemo)
             : null,
