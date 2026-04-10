@@ -200,6 +200,9 @@ class _NoOpStaffDemoShiftRepository implements StaffDemoShiftRepository {
 
 class _NoOpStaffDemoSiteRepository implements StaffDemoSiteRepository {
   @override
+  Future<List<StaffDemoSite>> listSites() async => const <StaffDemoSite>[];
+
+  @override
   Future<StaffDemoSite?> loadSite({required String siteId}) async => null;
 }
 

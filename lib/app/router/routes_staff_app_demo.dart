@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_de
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_messaging_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_time_entries_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_timeclock_local_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/admin/staff_demo_admin_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/content/staff_demo_content_cubit.dart';
@@ -21,6 +22,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staf
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_shell_page.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_timeclock_page.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_cubit.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/sites/staff_demo_sites_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/timeclock/staff_demo_timeclock_cubit.dart';
 import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:go_router/go_router.dart';
@@ -41,7 +43,12 @@ ShellRoute createStaffAppDemoShellRoute() => ShellRoute(
           pushTokenRepository: getIt(),
         ),
         init: (cubit) => cubit.hydrate(),
-        child: StaffAppDemoShellPage(child: child),
+        child: BlocProviderHelpers.withAsyncInit<StaffDemoSitesCubit>(
+          create: () =>
+              StaffDemoSitesCubit(repository: getIt<StaffDemoSiteRepository>()),
+          init: (cubit) => cubit.load(),
+          child: StaffAppDemoShellPage(child: child),
+        ),
       ),
     );
   },
