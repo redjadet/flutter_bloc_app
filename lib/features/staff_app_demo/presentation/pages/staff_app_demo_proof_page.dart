@@ -101,7 +101,9 @@ class _PhotoSection extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            Row(
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
               children: <Widget>[
                 FilledButton.icon(
                   onPressed: () async {
@@ -118,7 +120,6 @@ class _PhotoSection extends StatelessWidget {
                   icon: const Icon(Icons.camera_alt),
                   label: const Text('Take photo'),
                 ),
-                const SizedBox(width: 12),
                 OutlinedButton.icon(
                   onPressed: () async {
                     final picker = ImagePicker();
