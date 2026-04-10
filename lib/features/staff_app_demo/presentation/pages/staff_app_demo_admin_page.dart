@@ -16,45 +16,63 @@ class StaffAppDemoAdminPage extends StatelessWidget {
 
     return CommonPageLayout(
       title: 'Admin',
-      body: switch (state.status) {
-        StaffDemoAdminStatus.initial ||
-        StaffDemoAdminStatus.loading => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        StaffDemoAdminStatus.error => CommonErrorView(
-          message: state.errorMessage ?? 'Unknown error.',
-        ),
-        StaffDemoAdminStatus.ready => ListView(
-          padding: const EdgeInsets.all(16),
-          children: <Widget>[
-            Text(
-              'Recent time entries (${state.recentEntries.length})',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Flagged (${flagged.length})',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            const SizedBox(height: 8),
-            if (flagged.isEmpty) const Text('No flagged entries found.'),
-            for (final entry in flagged)
-              ListTile(
-                dense: true,
-                title: Text(entry.entryId),
-                subtitle: Text(
-                  'user=${entry.userId} state=${entry.entryState} '
-                  'flags=${entry.flags.toJson()}',
+      body: RefreshIndicator(
+        onRefresh: context.read<StaffDemoAdminCubit>().load,
+        child: switch (state.status) {
+          StaffDemoAdminStatus.initial ||
+          StaffDemoAdminStatus.loading => ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: const [
+              SizedBox(
+                height: 240,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            ],
+          ),
+          StaffDemoAdminStatus.error => ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              SizedBox(
+                height: 240,
+                child: CommonErrorView(
+                  message: state.errorMessage ?? 'Unknown error.',
                 ),
               ),
-            const SizedBox(height: 16),
-            const Text(
-              'Seeding reminders: create staffDemoProfiles/{uid}, staffDemoSites/{siteId}, '
-              'and staffDemoShifts/{shiftId} in Firestore for full demo coverage.',
-            ),
-          ],
-        ),
-      },
+            ],
+          ),
+          StaffDemoAdminStatus.ready => ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16),
+            children: <Widget>[
+              Text(
+                'Recent time entries (${state.recentEntries.length})',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Flagged (${flagged.length})',
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              const SizedBox(height: 8),
+              if (flagged.isEmpty) const Text('No flagged entries found.'),
+              for (final entry in flagged)
+                ListTile(
+                  dense: true,
+                  title: Text(entry.entryId),
+                  subtitle: Text(
+                    'user=${entry.userId} state=${entry.entryState} '
+                    'flags=${entry.flags.toJson()}',
+                  ),
+                ),
+              const SizedBox(height: 16),
+              const Text(
+                'Seeding reminders: create staffDemoProfiles/{uid}, staffDemoSites/{siteId}, '
+                'and staffDemoShifts/{shiftId} in Firestore for full demo coverage.',
+              ),
+            ],
+          ),
+        },
+      ),
     );
   }
 }

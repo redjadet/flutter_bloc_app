@@ -20,25 +20,51 @@ class StaffAppDemoContentPage extends StatelessWidget {
 
     return CommonPageLayout(
       title: 'Content',
-      body: switch (state.status) {
-        StaffDemoContentStatus.initial ||
-        StaffDemoContentStatus.loading => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        StaffDemoContentStatus.error => Center(
-          child: Text(state.errorMessage ?? 'Failed to load content.'),
-        ),
-        StaffDemoContentStatus.ready =>
-          state.items.isEmpty
-              ? const Center(child: Text('No content yet.'))
-              : ListView.separated(
-                  itemCount: state.items.length,
-                  separatorBuilder: (_, _) => const Divider(height: 1),
-                  itemBuilder: (context, index) => _ContentTile(
-                    item: state.items[index],
-                  ),
+      body: RefreshIndicator(
+        onRefresh: context.read<StaffDemoContentCubit>().load,
+        child: switch (state.status) {
+          StaffDemoContentStatus.initial ||
+          StaffDemoContentStatus.loading => ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: const [
+              SizedBox(
+                height: 240,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            ],
+          ),
+          StaffDemoContentStatus.error => ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              SizedBox(
+                height: 240,
+                child: Center(
+                  child: Text(state.errorMessage ?? 'Failed to load content.'),
                 ),
-      },
+              ),
+            ],
+          ),
+          StaffDemoContentStatus.ready =>
+            state.items.isEmpty
+                ? ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: const [
+                      SizedBox(
+                        height: 240,
+                        child: Center(child: Text('No content yet.')),
+                      ),
+                    ],
+                  )
+                : ListView.separated(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemCount: state.items.length,
+                    separatorBuilder: (_, _) => const Divider(height: 1),
+                    itemBuilder: (context, index) => _ContentTile(
+                      item: state.items[index],
+                    ),
+                  ),
+        },
+      ),
     );
   }
 }
@@ -165,12 +191,19 @@ class _VideoViewerPageState extends State<_VideoViewerPage> {
     ),
     floatingActionButton: FloatingActionButton(
       onPressed: _controller.value.isInitialized
-          ? () {
-              final playOrPauseFuture = _controller.value.isPlaying
-                  ? _controller.pause()
-                  : _controller.play();
+          ? () async {
+              try {
+                if (_controller.value.isPlaying) {
+                  await _controller.pause();
+                } else {
+                  await _controller.play();
+                }
+              } on Exception {
+                // Ignore play/pause errors; the UI will remain responsive.
+              }
+
+              if (!mounted) return;
               setState(() {});
-              unawaited(playOrPauseFuture);
             }
           : null,
       child: Icon(_controller.value.isPlaying ? Icons.pause : Icons.play_arrow),

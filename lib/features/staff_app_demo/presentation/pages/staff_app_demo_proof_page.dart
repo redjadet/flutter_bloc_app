@@ -1,8 +1,10 @@
 // check-ignore: nonbuilder_lists - small, fixed-size page content
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_state.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/sites/staff_demo_sites_cubit.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
@@ -260,12 +262,11 @@ class _SubmitSection extends StatefulWidget {
 }
 
 class _SubmitSectionState extends State<_SubmitSection> {
-  final _siteIdController = TextEditingController(text: 'site1');
   final _shiftIdController = TextEditingController();
+  String? _selectedSiteId;
 
   @override
   void dispose() {
-    _siteIdController.dispose();
     _shiftIdController.dispose();
     super.dispose();
   }
@@ -274,6 +275,10 @@ class _SubmitSectionState extends State<_SubmitSection> {
   Widget build(final BuildContext context) {
     final state = context.watch<StaffDemoProofCubit>().state;
     final bool busy = state.status == StaffDemoProofStatus.submitting;
+    final sitesState = context.watch<StaffDemoSitesCubit>().state;
+    final List<StaffDemoSite> sites = sitesState.sites;
+    final effectiveSelectedSiteId =
+        _selectedSiteId ?? (sites.isEmpty ? null : sites.first.siteId);
 
     return Card(
       child: Padding(
@@ -286,9 +291,32 @@ class _SubmitSectionState extends State<_SubmitSection> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
-            TextField(
-              controller: _siteIdController,
-              decoration: const InputDecoration(labelText: 'Site ID'),
+            DropdownButtonFormField<String>(
+              key: ValueKey<String>(
+                'staffDemo.proof.sitePicker.$effectiveSelectedSiteId',
+              ),
+              initialValue: effectiveSelectedSiteId,
+              items: sites
+                  .map(
+                    (s) => DropdownMenuItem<String>(
+                      value: s.siteId,
+                      child: Text('${s.name} (${s.siteId})'),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (busy || sites.isEmpty)
+                  ? null
+                  : (value) => setState(() => _selectedSiteId = value),
+              decoration: InputDecoration(
+                labelText: 'Site',
+                helperText: sitesState.status == StaffDemoSitesStatus.loading
+                    ? 'Loading sites...'
+                    : sitesState.status == StaffDemoSitesStatus.error
+                    ? (sitesState.errorMessage ?? 'Failed to load sites.')
+                    : sites.isEmpty
+                    ? 'No sites found in staffDemoSites.'
+                    : null,
+              ),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -301,13 +329,12 @@ class _SubmitSectionState extends State<_SubmitSection> {
             Align(
               alignment: Alignment.centerRight,
               child: FilledButton(
-                onPressed: busy
+                onPressed: busy || effectiveSelectedSiteId == null
                     ? null
                     : () async {
-                        final siteId = _siteIdController.text.trim();
                         final shiftId = _shiftIdController.text.trim();
                         await context.cubit<StaffDemoProofCubit>().submit(
-                          siteId: siteId,
+                          siteId: effectiveSelectedSiteId,
                           shiftId: shiftId,
                         );
                       },

@@ -1,8 +1,10 @@
 // check-ignore: nonbuilder_lists - small, fixed-size page content
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/forms/staff_demo_forms_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/forms/staff_demo_forms_state.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/sites/staff_demo_sites_cubit.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
@@ -145,12 +147,11 @@ class _ManagerReportCard extends StatefulWidget {
 }
 
 class _ManagerReportCardState extends State<_ManagerReportCard> {
-  final _siteIdController = TextEditingController(text: 'site1');
   final _notesController = TextEditingController();
+  String? _selectedSiteId;
 
   @override
   void dispose() {
-    _siteIdController.dispose();
     _notesController.dispose();
     super.dispose();
   }
@@ -167,9 +168,42 @@ class _ManagerReportCardState extends State<_ManagerReportCard> {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8),
-          TextField(
-            controller: _siteIdController,
-            decoration: const InputDecoration(labelText: 'Site ID'),
+          Builder(
+            builder: (context) {
+              final sitesState = context.watch<StaffDemoSitesCubit>().state;
+              final List<StaffDemoSite> sites = sitesState.sites;
+              final effectiveSelectedSiteId =
+                  _selectedSiteId ??
+                  (sites.isEmpty ? null : sites.first.siteId);
+
+              return DropdownButtonFormField<String>(
+                key: ValueKey<String>(
+                  'staffDemo.forms.managerReport.sitePicker.$effectiveSelectedSiteId',
+                ),
+                initialValue: effectiveSelectedSiteId,
+                items: sites
+                    .map(
+                      (s) => DropdownMenuItem<String>(
+                        value: s.siteId,
+                        child: Text('${s.name} (${s.siteId})'),
+                      ),
+                    )
+                    .toList(),
+                onChanged: sites.isEmpty
+                    ? null
+                    : (value) => setState(() => _selectedSiteId = value),
+                decoration: InputDecoration(
+                  labelText: 'Site',
+                  helperText: sitesState.status == StaffDemoSitesStatus.loading
+                      ? 'Loading sites...'
+                      : sitesState.status == StaffDemoSitesStatus.error
+                      ? (sitesState.errorMessage ?? 'Failed to load sites.')
+                      : sites.isEmpty
+                      ? 'No sites found in staffDemoSites.'
+                      : null,
+                ),
+              );
+            },
           ),
           const SizedBox(height: 8),
           TextField(
@@ -183,8 +217,15 @@ class _ManagerReportCardState extends State<_ManagerReportCard> {
             alignment: Alignment.centerRight,
             child: FilledButton(
               onPressed: () async {
+                final sitesState = context.cubit<StaffDemoSitesCubit>().state;
+                final List<StaffDemoSite> sites = sitesState.sites;
+                final siteId =
+                    _selectedSiteId ??
+                    (sites.isEmpty ? null : sites.first.siteId);
+                if (siteId == null || siteId.trim().isEmpty) return;
+
                 await context.cubit<StaffDemoFormsCubit>().submitManagerReport(
-                  siteId: _siteIdController.text,
+                  siteId: siteId,
                   notes: _notesController.text,
                 );
                 if (!context.mounted) return;

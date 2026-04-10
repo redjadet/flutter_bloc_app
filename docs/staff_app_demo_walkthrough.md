@@ -209,6 +209,7 @@ Verify:
 
 - `Send shift assignment` button is visible for manager/accountant
 - it is not visible for employee
+- pull down to refresh and verify the inbox reloads
 
 Send a shift assignment with:
 
@@ -314,6 +315,7 @@ Verify:
 
 - the list is not empty after seed
 - at least one published item exists
+- pull down to refresh and verify the list reloads
 
 Tap a PDF item.
 
@@ -441,6 +443,7 @@ Verify:
   - `userId`
   - `entryState`
   - `flags`
+- pull down to refresh and verify the admin list reloads
 
 If you want a deterministic flagged case:
 

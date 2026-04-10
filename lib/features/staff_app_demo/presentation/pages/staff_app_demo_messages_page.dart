@@ -4,10 +4,12 @@ import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_role.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/messages/staff_demo_inbox_item.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/messages/staff_demo_messages_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/messages/staff_demo_messages_state.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/sites/staff_demo_sites_cubit.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
@@ -27,51 +29,74 @@ class StaffAppDemoMessagesPage extends StatelessWidget {
 
     return CommonPageLayout(
       title: 'Messages',
-      body: switch (state.status) {
-        StaffDemoMessagesStatus.initial ||
-        StaffDemoMessagesStatus.loading => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        StaffDemoMessagesStatus.error => CommonErrorView(
-          message: state.errorMessage ?? 'Unknown error.',
-        ),
-        StaffDemoMessagesStatus.ready => Column(
-          children: <Widget>[
-            if (canCompose)
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: FilledButton.icon(
-                  onPressed: () => _showComposeDialog(context),
-                  icon: const Icon(Icons.send),
-                  label: const Text('Send shift assignment'),
+      body: RefreshIndicator(
+        onRefresh: context.read<StaffDemoMessagesCubit>().initialize,
+        child: switch (state.status) {
+          StaffDemoMessagesStatus.initial ||
+          StaffDemoMessagesStatus.loading => ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: const [
+              SizedBox(
+                height: 240,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            ],
+          ),
+          StaffDemoMessagesStatus.error => ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              SizedBox(
+                height: 240,
+                child: CommonErrorView(
+                  message: state.errorMessage ?? 'Unknown error.',
                 ),
               ),
-            Expanded(
-              child: state.items.isEmpty
-                  ? const Center(child: Text('No messages yet.'))
-                  : ListView.separated(
-                      itemCount: state.items.length,
-                      separatorBuilder: (_, _) => const Divider(height: 1),
-                      itemBuilder: (context, index) =>
-                          _InboxTile(item: state.items[index]),
-                    ),
-            ),
-          ],
-        ),
-      },
+            ],
+          ),
+          StaffDemoMessagesStatus.ready => ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: <Widget>[
+              if (canCompose)
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: FilledButton.icon(
+                    onPressed: () => _showComposeDialog(context),
+                    icon: const Icon(Icons.send),
+                    label: const Text('Send shift assignment'),
+                  ),
+                ),
+              if (state.items.isEmpty)
+                const SizedBox(
+                  height: 240,
+                  child: Center(child: Text('No messages yet.')),
+                )
+              else
+                ...List<Widget>.generate(state.items.length * 2 - 1, (index) {
+                  if (index.isOdd) {
+                    return const Divider(height: 1);
+                  }
+                  final messageIndex = index ~/ 2;
+                  return _InboxTile(item: state.items[messageIndex]);
+                }),
+            ],
+          ),
+        },
+      ),
     );
   }
 
   Future<void> _showComposeDialog(final BuildContext context) async {
     final recipientController = TextEditingController();
-    final siteController = TextEditingController(text: 'site1');
     final bodyController = TextEditingController(
       text: 'Your shift starts at 10:00. Please meet at the warehouse.',
     );
 
-    final now = DateTime.now().toUtc();
-    final start = now.add(const Duration(minutes: 30));
-    final end = start.add(const Duration(hours: 4));
+    final DateTime defaultStartUtc = DateTime.now().toUtc().add(
+      const Duration(minutes: 30),
+    );
+    final DateTime defaultEndUtc = defaultStartUtc.add(
+      const Duration(hours: 4),
+    );
 
     final StaffDemoProfileRepository profileRepository =
         getIt<StaffDemoProfileRepository>();
@@ -79,147 +104,208 @@ class StaffAppDemoMessagesPage extends StatelessWidget {
         .listAssignableStaff();
 
     String? selectedUserId;
+    String? selectedSiteId;
+    final StaffDemoSitesCubit sitesCubit = context.cubit<StaffDemoSitesCubit>();
     final result = await showDialog<String?>(
       context: context,
-      builder: (context) => FutureBuilder<List<StaffDemoProfile>>(
-        future: staffFuture,
-        builder: (context, snapshot) {
-          final staff = snapshot.data ?? const <StaffDemoProfile>[];
-          final isLoading = snapshot.connectionState == ConnectionState.waiting;
-          final hasError = snapshot.hasError;
-          final errorText = snapshot.error?.toString();
+      builder: (dialogContext) => BlocProvider.value(
+        value: sitesCubit,
+        child: FutureBuilder<List<StaffDemoProfile>>(
+          future: staffFuture,
+          builder: (context, snapshot) {
+            final staff = snapshot.data ?? const <StaffDemoProfile>[];
+            final isLoading = snapshot.connectionState == ConnectionState.waiting;
+            final hasError = snapshot.hasError;
+            final errorText = snapshot.error?.toString();
 
-          return StatefulBuilder(
-            builder: (context, setState) {
-              final bool canSelectFromList =
-                  !isLoading && !hasError && staff.isNotEmpty;
-              final String manualUserId = recipientController.text.trim();
-              final String? selectedTrimmed = selectedUserId?.trim();
-              final String? effectiveUserId =
-                  (selectedTrimmed != null && selectedTrimmed.isNotEmpty)
-                  ? selectedTrimmed
-                  : (manualUserId.isNotEmpty ? manualUserId : null);
+            return StatefulBuilder(
+              builder: (context, setState) {
+                final bool canSelectFromList = !isLoading && !hasError && staff.isNotEmpty;
+                final bool showManualUserId = !isLoading && staff.isEmpty;
+                final String manualUserId = recipientController.text.trim();
+                final String? selectedTrimmed = selectedUserId?.trim();
+                final String? effectiveUserId =
+                    (selectedTrimmed != null && selectedTrimmed.isNotEmpty)
+                    ? selectedTrimmed
+                    : (manualUserId.isNotEmpty ? manualUserId : null);
 
-              return AlertDialog(
-                title: const Text('Send shift assignment'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    if (isLoading)
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        child: LinearProgressIndicator(),
-                      ),
-                    if (hasError)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Text(
-                          errorText == null
-                              ? 'Failed to load staff list.'
-                              : 'Failed to load staff list.\n$errorText',
+                final sitesState = context.watch<StaffDemoSitesCubit>().state;
+                final String? selectedSiteTrimmed = selectedSiteId?.trim();
+                final String? effectiveSiteId =
+                    (selectedSiteTrimmed != null && selectedSiteTrimmed.isNotEmpty)
+                    ? selectedSiteTrimmed
+                    : (sitesState.sites.isEmpty ? null : sitesState.sites.first.siteId);
+
+                return AlertDialog(
+                  title: const Text('Send shift assignment'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      if (isLoading)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: LinearProgressIndicator(),
                         ),
-                      ),
-                    if (canSelectFromList)
-                      DropdownButtonFormField<String>(
-                        initialValue: selectedUserId,
-                        isExpanded: true,
-                        items: staff
-                            .map(
-                              (p) => DropdownMenuItem<String>(
-                                value: p.userId,
-                                child: Text(
-                                  p.email.trim().isEmpty
-                                      ? p.displayName
-                                      : '${p.displayName} (${p.email})',
-                                  overflow: TextOverflow.ellipsis,
+                      if (hasError)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Text(
+                            errorText == null
+                                ? 'Failed to load staff list.'
+                                : 'Failed to load staff list.\n$errorText',
+                          ),
+                        ),
+                      if (canSelectFromList)
+                        DropdownButtonFormField<String>(
+                          initialValue: selectedUserId,
+                          isExpanded: true,
+                          items: staff
+                              .map(
+                                (p) => DropdownMenuItem<String>(
+                                  value: p.userId,
+                                  child: Text(
+                                    p.email.trim().isEmpty
+                                        ? p.displayName
+                                        : '${p.displayName} (${p.email})',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                            )
-                            .toList(),
-                        selectedItemBuilder: (context) => staff
-                            .map(
-                              (p) => Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  p.email.trim().isEmpty
-                                      ? p.displayName
-                                      : '${p.displayName} (${p.email})',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                              )
+                              .toList(),
+                          selectedItemBuilder: (context) => staff
+                              .map(
+                                (p) => Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    p.email.trim().isEmpty
+                                        ? p.displayName
+                                        : '${p.displayName} (${p.email})',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                            )
-                            .toList(),
+                              )
+                              .toList(),
+                          onChanged: (value) => setState(() {
+                            selectedUserId = value?.trim();
+                            recipientController.text = '';
+                          }),
+                          decoration: const InputDecoration(
+                            labelText: 'Assign to staff',
+                          ),
+                        ),
+                      if (canSelectFromList) const SizedBox(height: 12),
+                      if (showManualUserId) ...[
+                        TextField(
+                          key: const Key(
+                            'staffDemo.shiftAssignment.recipientUserId',
+                          ),
+                          controller: recipientController,
+                          onChanged: (_) => setState(() {}),
+                          decoration: const InputDecoration(
+                            labelText: 'Recipient userId',
+                            helperText: 'Enter a Firebase Auth uid.',
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                      _SiteDropdown(
+                        selectedSiteId: selectedSiteId,
                         onChanged: (value) => setState(() {
-                          selectedUserId = value?.trim();
-                          recipientController.text = '';
+                          selectedSiteId = value;
                         }),
+                      ),
+                      TextField(
+                        key: const Key('staffDemo.shiftAssignment.body'),
+                        controller: bodyController,
                         decoration: const InputDecoration(
-                          labelText: 'Assign to staff',
+                          labelText: 'Message body',
                         ),
+                        maxLines: 3,
                       ),
-                    if (canSelectFromList) const SizedBox(height: 12),
-                    TextField(
-                      key: const Key(
-                        'staffDemo.shiftAssignment.recipientUserId',
-                      ),
-                      controller: recipientController,
-                      enabled: !canSelectFromList,
-                      onChanged: (_) => setState(() {}),
-                      decoration: InputDecoration(
-                        labelText: canSelectFromList
-                            ? 'Recipient userId (manual)'
-                            : 'Recipient userId',
-                        helperText: canSelectFromList
-                            ? 'Optional; pick from the list above.'
-                            : 'Enter a Firebase Auth uid.',
-                      ),
+                    ],
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('Cancel'),
                     ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      key: const Key('staffDemo.shiftAssignment.siteId'),
-                      controller: siteController,
-                      decoration: const InputDecoration(labelText: 'Site ID'),
-                    ),
-                    TextField(
-                      key: const Key('staffDemo.shiftAssignment.body'),
-                      controller: bodyController,
-                      decoration: const InputDecoration(
-                        labelText: 'Message body',
-                      ),
-                      maxLines: 3,
+                    FilledButton(
+                      onPressed: effectiveUserId == null || effectiveSiteId == null
+                          ? null
+                          : () => Navigator.of(context).pop(effectiveUserId),
+                      child: const Text('Send'),
                     ),
                   ],
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Cancel'),
-                  ),
-                  FilledButton(
-                    onPressed: effectiveUserId == null
-                        ? null
-                        : () => Navigator.of(context).pop(effectiveUserId),
-                    child: const Text('Send'),
-                  ),
-                ],
-              );
-            },
-          );
-        },
+                );
+              },
+            );
+          },
+        ),
       ),
     );
 
     if (!context.mounted) return;
     final toUserId = result?.trim();
     if (toUserId == null || toUserId.isEmpty) return;
+    final sitesState = context.cubit<StaffDemoSitesCubit>().state;
+    final String? selectedSiteTrimmedAfterDialog = selectedSiteId?.trim();
+    final String? siteId =
+        (selectedSiteTrimmedAfterDialog != null && selectedSiteTrimmedAfterDialog.isNotEmpty)
+        ? selectedSiteTrimmedAfterDialog
+        : (sitesState.sites.isEmpty ? null : sitesState.sites.first.siteId);
+    if (siteId == null || siteId.isEmpty) return;
 
     await context.cubit<StaffDemoMessagesCubit>().sendShiftAssignment(
       toUserId: toUserId,
       body: bodyController.text.trim(),
-      siteId: siteController.text.trim(),
-      startAtUtc: start,
-      endAtUtc: end,
+      siteId: siteId,
+      startAtUtc: defaultStartUtc,
+      endAtUtc: defaultEndUtc,
+    );
+  }
+}
+
+class _SiteDropdown extends StatelessWidget {
+  const _SiteDropdown({
+    required this.selectedSiteId,
+    required this.onChanged,
+  });
+
+  final String? selectedSiteId;
+  final ValueChanged<String?> onChanged;
+
+  @override
+  Widget build(final BuildContext context) {
+    final sitesState = context.watch<StaffDemoSitesCubit>().state;
+    final List<StaffDemoSite> sites = sitesState.sites;
+
+    final effectiveSelectedSiteId = selectedSiteId ?? (sites.isEmpty ? null : sites.first.siteId);
+
+    return DropdownButtonFormField<String>(
+      key: ValueKey<String>(
+        'staffDemo.shiftAssignment.sitePicker.$effectiveSelectedSiteId',
+      ),
+      initialValue: effectiveSelectedSiteId,
+      items: sites
+          .map(
+            (s) => DropdownMenuItem<String>(
+              value: s.siteId,
+              child: Text('${s.name} (${s.siteId})'),
+            ),
+          )
+          .toList(),
+      onChanged: sites.isEmpty ? null : onChanged,
+      decoration: InputDecoration(
+        labelText: 'Site',
+        helperText: sitesState.status == StaffDemoSitesStatus.loading
+            ? 'Loading sites...'
+            : sitesState.status == StaffDemoSitesStatus.error
+            ? (sitesState.errorMessage ?? 'Failed to load sites.')
+            : sites.isEmpty
+            ? 'No sites found in staffDemoSites.'
+            : null,
+      ),
     );
   }
 }
