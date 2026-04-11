@@ -1,5 +1,11 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-var-requires */
+//
+// Firestore document shapes here must stay aligned with Dart mappers + tests:
+// - lib/features/staff_app_demo/data/staff_demo_*_firestore_map.dart
+// - test/features/staff_app_demo/data/staff_demo_seed_document_fixtures.dart (canonical payloads)
+// - test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart
+//
 
 const fs = require("fs");
 const path = require("path");
@@ -180,13 +186,19 @@ async function main() {
   }
 
   const siteId = "site1";
+  const centerLat = 43.6532;
+  const centerLng = -79.3832;
+  const radiusMeters = 250;
   await firestore.collection("staffDemoSites").doc(siteId).set(
     {
       name: "Demo Warehouse",
       // Downtown Toronto-ish defaults; update for your real geofence.
-      centerLat: 43.6532,
-      centerLng: -79.3832,
-      radiusMeters: 250,
+      // Flat fields (historical) + nested geofence (matches app parser docs).
+      centerLat,
+      centerLng,
+      radiusMeters,
+      geofenceCenter: { lat: centerLat, lng: centerLng },
+      geofenceRadiusMeters: radiusMeters,
       seededAt: admin.firestore.FieldValue.serverTimestamp(),
     },
     { merge: true }
