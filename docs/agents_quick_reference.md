@@ -89,6 +89,8 @@ Fastlane:
 - Offline-first: [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md), [`engineering/delayed_work_guide.md`](engineering/delayed_work_guide.md)
 - Supabase Edge / chat proxy: [`../supabase/README.md`](../supabase/README.md)
 - gstack: [`gstack_integration.md`](gstack_integration.md)
+- Staff app demo (routes, Firestore, walkthrough):
+  [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md)
 
 ## High-Signal Reminders
 
@@ -103,6 +105,9 @@ Fastlane:
 - Keep `build()` pure and keep expensive transforms off the UI isolate.
 - In `lib/**/presentation/**`, do not use `Isolate.run(() => ...)`; use
   `compute` with a top-level/static callback.
+- Dialogs/overlays: inherited providers may not reach `showDialog` builders;
+  use `BlocProvider.value` (or explicit parameters) when the dialog needs a
+  cubit from the route shell.
 - Update DI, routes, l10n, and codegen when touched.
 - For async flows, verify loading, empty, and error states or record why
   existing coverage already covers them.

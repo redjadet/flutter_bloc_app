@@ -36,6 +36,7 @@ void main() {
             onOpenChatList: () {},
             onOpenLibraryDemo: () {},
             onOpenIgamingDemo: () {},
+            onOpenStaffAppDemo: () {},
             onOpenFcmDemo: () {},
             onOpenScapes: () {},
             onOpenWalletconnectAuth: () {},
@@ -86,6 +87,7 @@ void main() {
             onOpenChatList: () {},
             onOpenLibraryDemo: () {},
             onOpenIgamingDemo: () {},
+            onOpenStaffAppDemo: () {},
             onOpenFcmDemo: () {
               fcmTapped = true;
             },
@@ -136,6 +138,7 @@ void main() {
             onOpenChatList: () {},
             onOpenLibraryDemo: () {},
             onOpenIgamingDemo: () {},
+            onOpenStaffAppDemo: () {},
             onOpenScapes: () {},
             onOpenWalletconnectAuth: () {},
             onOpenCameraGallery: () {},

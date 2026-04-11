@@ -4,3 +4,10 @@ third_party/
 # Exclude internal automation documentation from markdownlint checks.
 AGENTS.md
 GEMINI.md
+
+# Exclude todo trackers from markdownlint checks.
+**/todo.md
+todo.md
+tasks/**/todo.md
+tasks/cursor/todo.md
+tasks/codex/todo.md
