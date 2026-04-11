@@ -216,6 +216,12 @@ return BlocProvider(
 
 **Regression tests**: `test/shared/inherited_widget_lifecycle_regression_test.dart` (also run via `tool/check_regression_guards.sh`).
 
+### Staff demo Firestore seed vs parser contract
+
+- **Canonical payloads (Dart)**: `test/features/staff_app_demo/data/staff_demo_seed_document_fixtures.dart` must stay aligned with `functions/tool/seed_staff_demo.js` field names and literals.
+- **Contract test**: `test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart` asserts those payloads parse through the shared mappers under `lib/features/staff_app_demo/data/staff_demo_*_firestore_map.dart`.
+- **When to update**: Any change to seed payloads or mapper logic must update fixtures + seed + mappers in the same PR; CI catches drift via `tool/check_regression_guards.sh` (included in `./bin/checklist` when focused regression guards run).
+
 ---
 
 ### Theme & Colors

@@ -40,6 +40,7 @@ Vertical demos driven by product briefs in [`docs/case_studies/`](case_studies/R
 | GraphQL Demo | `/graphql-demo` | `lib/features/graphql_demo/` | Cache-first countries browser with diagnostics support. |
 | Remote Config surfaces | Counter and Settings diagnostics | `lib/features/remote_config/` | Runtime feature flags, diagnostics, and cache behavior. |
 | IoT Demo | `/iot-demo` | `lib/features/iot_demo/` | Offline-first device list and commands; uses Supabase when configured. |
+| Staff App Demo | `/staff-app-demo` and nested paths (dashboard, timeclock, messages, content, forms, proof, admin) | `lib/features/staff_app_demo/` | Firestore-backed staff ops demo; shared site list via `StaffDemoSitesCubit` / `staffDemoSites`. Walkthrough: [Staff app demo](staff_app_demo_walkthrough.md). |
 | Supabase Auth | `/supabase-auth` | `lib/features/supabase_auth/` | Separate optional auth flow for Supabase-backed demos. |
 | WalletConnect Auth | `/walletconnect-auth` | `lib/features/walletconnect_auth/` | Demo wallet-link flow layered on top of Firebase identity. |
 | FCM Demo | `/fcm-demo` | `lib/features/fcm_demo/` | Permission, token, message, and sync-trigger demo. |

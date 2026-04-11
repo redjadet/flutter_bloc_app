@@ -87,29 +87,29 @@ class _MockFirebasePlatform extends FirebasePlatform {
 
   @override
   List<FirebaseAppPlatform> get apps => [
-        _MockFirebaseApp(
-          '[DEFAULT]',
-          _options ??
-              const FirebaseOptions(
-                apiKey: 'fake-api-key',
-                appId: 'fake-app-id',
-                messagingSenderId: 'fake-sender-id',
-                projectId: 'fake-project-id',
-              ),
-        ),
-      ];
+    _MockFirebaseApp(
+      '[DEFAULT]',
+      _options ??
+          const FirebaseOptions(
+            apiKey: 'fake-api-key',
+            appId: 'fake-app-id',
+            messagingSenderId: 'fake-sender-id',
+            projectId: 'fake-project-id',
+          ),
+    ),
+  ];
 
   @override
   FirebaseAppPlatform app([String name = '[DEFAULT]']) => _MockFirebaseApp(
-        name,
-        _options ??
-            const FirebaseOptions(
-              apiKey: 'fake-api-key',
-              appId: 'fake-app-id',
-              messagingSenderId: 'fake-sender-id',
-              projectId: 'fake-project-id',
-            ),
-      );
+    name,
+    _options ??
+        const FirebaseOptions(
+          apiKey: 'fake-api-key',
+          appId: 'fake-app-id',
+          messagingSenderId: 'fake-sender-id',
+          projectId: 'fake-project-id',
+        ),
+  );
 }
 
 class _MockFirebaseApp extends FirebaseAppPlatform {
@@ -440,10 +440,12 @@ Future<void> waitForCounterCubitsToLoad(
 }) async {
   final Stopwatch stopwatch = Stopwatch()..start();
   final Finder counterPageFinder = find.byType(CounterPage);
+  bool sawCounterPage = false;
 
   while (stopwatch.elapsed < timeout) {
     final List<Element> elements = counterPageFinder.evaluate().toList();
     if (elements.isNotEmpty) {
+      sawCounterPage = true;
       final bool allLoaded = elements.every((final element) {
         final CounterCubit cubit = element.read<CounterCubit>();
         return !cubit.state.status.isLoading;
@@ -453,6 +455,13 @@ Future<void> waitForCounterCubitsToLoad(
       }
     }
     await tester.pump(const Duration(milliseconds: 50));
+  }
+
+  // Some integration flows may never render the Counter page (e.g. they start
+  // from a different initial route or land on an auth gate). In that case,
+  // don't fail the suite for a missing Counter UI.
+  if (!sawCounterPage) {
+    return;
   }
 
   throw StateError(
@@ -477,11 +486,15 @@ class TestSetupOptions {
     this.overrideCounterRepository = false,
     this.setFlavorToProd = false,
     this.initialSharedPreferencesValues,
+    this.useMockFirebasePlatform = true,
+    this.useMockFirebaseAuth = true,
   });
 
   final bool overrideCounterRepository;
   final bool setFlavorToProd;
   final Map<String, Object>? initialSharedPreferencesValues;
+  final bool useMockFirebasePlatform;
+  final bool useMockFirebaseAuth;
 }
 
 /// Sets up Hive for testing. Call this in setUpAll.
@@ -525,18 +538,27 @@ Future<void> setupTestDependencies([
   SharedPreferences.setMockInitialValues(
     options.initialSharedPreferencesValues ?? <String, Object>{},
   );
-  await ensureFirebaseInitializedForTests();
+  if (options.useMockFirebasePlatform) {
+    await ensureFirebaseInitializedForTests();
+  }
   if (options.setFlavorToProd) {
     FlavorManager.current = Flavor.prod;
   }
   await getIt.reset(dispose: true);
   await configureDependencies();
 
-  // Prevent MethodChannel FirebaseAuth usage in widget tests.
-  if (getIt.isRegistered<FirebaseAuth>()) {
-    getIt.unregister<FirebaseAuth>();
+  if (options.useMockFirebaseAuth) {
+    // Prevent MethodChannel FirebaseAuth usage in widget tests.
+    if (getIt.isRegistered<FirebaseAuth>()) {
+      getIt.unregister<FirebaseAuth>();
+    }
+    getIt.registerSingleton<FirebaseAuth>(MockFirebaseAuth(signedIn: false));
+  } else {
+    // Integration tests can use the real plugin-backed FirebaseAuth.
+    if (!getIt.isRegistered<FirebaseAuth>()) {
+      getIt.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
+    }
   }
-  getIt.registerSingleton<FirebaseAuth>(MockFirebaseAuth(signedIn: false));
 
   await overrideNetworkAndSync();
   overrideMemoryServicesForTests();

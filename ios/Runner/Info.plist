@@ -51,6 +51,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>This app uses the camera for photos and videos in the Camera and Gallery and case study demos.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app uses your location to record clock-in/clock-out geotags for the staff demo timeclock.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app may use the microphone when recording videos in the case study demo.</string>
 	<key>NSFaceIDUsageDescription</key>

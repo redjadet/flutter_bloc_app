@@ -1,6 +1,117 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function staffDemoProfile() {
+      return get(/databases/$(database)/documents/staffDemoProfiles/$(request.auth.uid));
+    }
+
+    function staffDemoRole() {
+      return staffDemoProfile().data.role;
+    }
+
+    function isStaffDemoManagerOrAccountant() {
+      return isSignedIn() &&
+        (staffDemoRole() == "manager" || staffDemoRole() == "accountant");
+    }
+
+    // Staff app demo (namespaced collections)
+    match /staffDemoProfiles/{userId} {
+      // Managers/accountants need to list staff to assign shifts.
+      // Employees can still read their own profile.
+      allow read: if isStaffDemoManagerOrAccountant() ||
+        (isSignedIn() && request.auth.uid == userId);
+      allow create: if false; // seeded/admin-managed for demo
+      allow update: if isSignedIn() &&
+        request.auth.uid == userId &&
+        request.resource.data.diff(resource.data).changedKeys().hasOnly([
+          "fcmToken",
+          "apnsToken",
+          "tokenUpdatedAt"
+        ]);
+      allow delete: if false;
+    }
+
+    match /staffDemoSites/{siteId} {
+      allow read: if isSignedIn();
+      allow write: if isStaffDemoManagerOrAccountant();
+    }
+
+    match /staffDemoShifts/{shiftId} {
+      allow read: if isStaffDemoManagerOrAccountant() ||
+        (isSignedIn() && resource.data.userId == request.auth.uid);
+      // Managers/accountants assign shifts; employees can confirm their own shift.
+      allow create, delete: if isStaffDemoManagerOrAccountant();
+      allow update: if isStaffDemoManagerOrAccountant() ||
+        (isSignedIn() &&
+          resource.data.userId == request.auth.uid &&
+          request.resource.data.diff(resource.data).changedKeys().hasOnly([
+            "status",
+            "confirmationAt"
+          ]) &&
+          request.resource.data.status == "confirmed");
+    }
+
+    match /staffDemoTimeEntries/{entryId} {
+      allow read: if isStaffDemoManagerOrAccountant() ||
+        (isSignedIn() && resource.data.userId == request.auth.uid);
+      // Create must be scoped to the signed-in user. Updates may be merge writes,
+      // so ownership must be checked against the existing resource.
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow delete: if false;
+    }
+
+    match /staffDemoMessages/{messageId} {
+      allow read: if isSignedIn();
+      allow write: if isStaffDemoManagerOrAccountant();
+    }
+
+    match /staffDemoMessageRecipients/{docId} {
+      allow read: if isStaffDemoManagerOrAccountant() ||
+        (isSignedIn() && resource.data.userId == request.auth.uid);
+      // Employees confirm by setting `confirmedAt` on their own recipient doc.
+      // Use `resource.data.userId` because merge updates may not send `userId`.
+      allow update: if isSignedIn() &&
+        resource.data.userId == request.auth.uid &&
+        request.resource.data.diff(resource.data).changedKeys().hasOnly([
+          "confirmedAt"
+        ]);
+      allow create, delete: if isStaffDemoManagerOrAccountant();
+    }
+
+    match /staffDemoContent/{contentId} {
+      allow read: if isSignedIn() && resource.data.isPublished == true;
+      allow write: if isStaffDemoManagerOrAccountant();
+    }
+
+    match /staffDemoAvailability/{submissionId} {
+      allow read: if isStaffDemoManagerOrAccountant() ||
+        (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow delete: if false;
+    }
+
+    match /staffDemoManagerReports/{reportId} {
+      allow read: if isStaffDemoManagerOrAccountant() ||
+        (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow delete: if false;
+    }
+
+    match /staffDemoEventProofs/{proofId} {
+      allow read: if isStaffDemoManagerOrAccountant() ||
+        (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow delete: if false;
+    }
+
     // WalletConnect Auth: one document per user at users/{userId} (linkage + profile)
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
