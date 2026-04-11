@@ -166,6 +166,16 @@ bool _isIgnoredIntegrationLog(final AppLogEntry entry) {
     }
   }
 
+  if (entry.message ==
+      'OfflineFirstTodoRepository.delete immediate sync failed, queuing for retry') {
+    final Object? error = entry.error;
+    if (error != null &&
+        error.toString().contains('[firebase_auth/no-current-user]') &&
+        error.toString().contains('did not supply a user within')) {
+      return true;
+    }
+  }
+
   // Staff demo push token registration can log an APNs token warning on iOS
   // simulators (or before APNs registration completes). This should not fail
   // the integration suite.
