@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_content_firestore_map.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_item.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_repository.dart';
 
@@ -24,38 +25,15 @@ class FirestoreStaffDemoContentRepository
         .get();
 
     return snap.docs
-        .map((d) => _mapItem(d.id, d.data()))
+        .map(
+          (d) => staffDemoContentItemFromFirestoreMap(
+            contentId: d.id,
+            data: d.data(),
+          ),
+        )
         .where((e) => e != null)
         .cast<StaffDemoContentItem>()
         .toList(growable: false);
-  }
-
-  StaffDemoContentItem? _mapItem(
-    final String contentId,
-    final Map<String, dynamic> data,
-  ) {
-    final title = data['title'] as String?;
-    final typeRaw = data['type'] as String?;
-    final storagePath = data['storagePath'] as String?;
-    final isPublished = data['isPublished'] as bool? ?? false;
-
-    if (title == null || title.trim().isEmpty) return null;
-    if (storagePath == null || storagePath.trim().isEmpty) return null;
-
-    final StaffDemoContentType? type = switch (typeRaw) {
-      'pdf' => StaffDemoContentType.pdf,
-      'video' => StaffDemoContentType.video,
-      _ => null,
-    };
-    if (type == null) return null;
-
-    return StaffDemoContentItem(
-      contentId: contentId,
-      title: title.trim(),
-      type: type,
-      storagePath: storagePath.trim(),
-      isPublished: isPublished,
-    );
   }
 
   @override

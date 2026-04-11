@@ -1127,7 +1127,7 @@ packages:
     source: hosted
     version: "0.2.4"
   geolocator_platform_interface:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: geolocator_platform_interface
       sha256: "30cb64f0b9adcc0fb36f628b4ebf4f731a2961a0ebd849f4b56200205056fe67"

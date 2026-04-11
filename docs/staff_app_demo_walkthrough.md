@@ -74,11 +74,22 @@ The seed script is here:
 
 - [functions/tool/seed_staff_demo.js](/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/functions/tool/seed_staff_demo.js)
 
+Keep Firestore field names in sync with the Dart mappers; the repo includes a
+**contract test** that fails early if the seed and parsers drift. Canonical
+payload literals live in one Dart file (update together with the seed script):
+
+- [test/features/staff_app_demo/data/staff_demo_seed_document_fixtures.dart](/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/test/features/staff_app_demo/data/staff_demo_seed_document_fixtures.dart)
+- [test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart](/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart)
+
+```bash
+flutter test test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart
+```
+
 It seeds:
 
 - demo users
 - `staffDemoProfiles/*`
-- `staffDemoSites/site1`
+- `staffDemoSites/site1` (seed writes flat coords, nested `geofenceCenter` / `geofenceRadiusMeters`, and the app also accepts `geofenceCenter` as a Firestore `GeoPoint`)
 - `staffDemoShifts/*`
 - `staffDemoContent/*`
 - sample Storage objects for published content
@@ -100,6 +111,10 @@ Staff demo queries that require composite indexes:
 - `staffDemoShifts`: `where(userId == ...)` + `where(startAt <= now)` + `orderBy(startAt desc)`
 - `staffDemoMessageRecipients`: `where(userId == ...)` + `orderBy(createdAt desc)`
 - `staffDemoContent`: `where(isPublished == true)` + `orderBy(title asc)`
+
+`staffDemoSites` uses `orderBy(name)` only (no composite index). The app must
+parse every doc shape you use (flat coords, nested `geofenceCenter`, or
+`GeoPoint` on `geofenceCenter`); see `staff_demo_site_firestore_map.dart`.
 
 There is also a smoke test for these exact queries:
 

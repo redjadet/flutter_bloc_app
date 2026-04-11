@@ -5,14 +5,16 @@ import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart'
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_content_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_inbox_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_shift_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_site_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-/// Smoke test that executes the Staff Demo Firestore queries that require
-/// composite indexes.
+/// Smoke test that executes Staff Demo Firestore reads used in the app,
+/// including queries that require composite indexes.
 ///
 /// Purpose: fail fast in CI / on-device runs when a new query is added without
-/// updating `firestore.indexes.json` + deploying `firestore:indexes`.
+/// updating `firestore.indexes.json` + deploying `firestore:indexes`, or when
+/// site listing / parsing regresses against seeded documents.
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -68,5 +70,20 @@ void main() {
       storage: FirebaseStorage.instance,
     );
     await contentRepo.listPublished().timeout(const Duration(seconds: 15));
+
+    // 4) staffDemoSites: orderBy(name) + client parse (seed vs nested vs GeoPoint)
+    final sitesRepo = FirestoreStaffDemoSiteRepository(firestore: firestore);
+    final sites = await sitesRepo.listSites().timeout(const Duration(seconds: 15));
+    expect(
+      sites,
+      isNotEmpty,
+      reason:
+          'staffDemoSites must be seeded (run seed:staff-demo); empty list means query worked but parser/seed drift.',
+    );
+    expect(
+      sites.any((final s) => s.siteId == 'site1'),
+      isTrue,
+      reason: 'Expected seeded site1 to parse and appear in listSites().',
+    );
   });
 }
