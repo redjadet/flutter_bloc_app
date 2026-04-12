@@ -75,6 +75,7 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs t
 
 - **`check_side_effects_build.sh`**: Heuristic check for side effects in `build()` method (warns but doesn't fail)
 - **`check_dialog_controller_dispose.sh`**: Heuristic check for `TextEditingController` with `showDialog`/`showAdaptiveDialog` and dispose in `finally` (can cause "used after being disposed")
+- **`check_dialog_text_controller_lifecycle.sh`**: Flags `final`/`var` locals assigned `TextEditingController(` inside `async` blocks when the same file uses dialog APIs (prefer Stateful dialog + `initState`/`dispose`)
 - **`check_memory_pressure_centralized.sh`**: Ensures `didHaveMemoryPressure()` handling stays centralized in `lib/app/app_scope.dart` so automatic memory trimming is coordinated through the app shell
 - **`check_inherited_widget_in_create.sh`**: Prevents `context.l10n`/`Theme.of(context)` inside BlocProvider/Provider `create` (see Context & Async Safety below)
 - **`check_inherited_widget_in_initstate.sh`**: Prevents InheritedWidget reads (e.g. `context.l10n`, `Theme.of(context)`) in `initState()`; read in `build()` or `didChangeDependencies()` instead.
@@ -688,6 +689,27 @@ for (final SyncableRepository repo in syncables) {
 
 ---
 
+#### `check_dialog_text_controller_lifecycle.sh`
+
+**Purpose**: Catch `final foo = TextEditingController(` / `var foo = TextEditingController(` declared inside `async` functions (including top-level helpers) in files that call `showDialog` or `showAdaptiveDialog`. That pattern often pairs with disposing the controller when the helper returns, which can still race dialog route teardown.
+
+**What it checks**:
+
+- Same-file presence of dialog APIs plus local (untyped) `final`/`var` controller declarations whose enclosing block opens with an `async` signature tail
+- Skips assignments inside `void initState()` bodies and `State` subclass **fields** (`extends State` class body)
+
+**Why it matters**:
+
+- Controllers should typically live in dialog `State` so `State.dispose()` runs after the overlay subtree is done with them
+
+**Correct pattern**:
+
+- Same as `check_dialog_controller_dispose.sh`: Stateful dialog content, controllers in `initState`, `dispose` in `State.dispose()`
+
+**Suppression**: Add `// check-ignore: reason` on the same line or line above
+
+---
+
 ### Typography
 
 #### `check_raw_google_fonts.sh`
@@ -754,6 +776,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_memory_unclosed_streams.sh`
 - `check_memory_missing_dispose.sh`
 - `check_dialog_controller_dispose.sh`
+- `check_dialog_text_controller_lifecycle.sh`
 - `check_concurrent_modification.sh`
 - `check_raw_json_decode.sh`
 - `check_unvalidated_base_url_parse.sh`
@@ -843,6 +866,7 @@ bash tool/check_concurrent_modification.sh
 bash tool/check_memory_unclosed_streams.sh
 bash tool/check_memory_missing_dispose.sh
 bash tool/check_dialog_controller_dispose.sh
+bash tool/check_dialog_text_controller_lifecycle.sh
 ```
 
 ## Suppressing Violations

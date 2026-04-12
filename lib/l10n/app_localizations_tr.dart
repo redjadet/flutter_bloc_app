@@ -2130,4 +2130,266 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get caseStudyQuestion10 => 'Takip ve prognozu özetleyin.';
+
+  @override
+  String staffDemoAdminFlagged(int count) {
+    return 'Flagged ($count)';
+  }
+
+  @override
+  String get staffDemoAdminNoFlagged => 'No flagged entries found.';
+
+  @override
+  String staffDemoAdminRecentEntries(int count) {
+    return 'Recent time entries ($count)';
+  }
+
+  @override
+  String get staffDemoAdminSeedingReminder =>
+      'Seeding reminders: create staffDemoProfiles (user uid), staffDemoSites (site id), and staffDemoShifts (shift id) documents in Firestore for full demo coverage.';
+
+  @override
+  String get staffDemoAdminTitle => 'Admin';
+
+  @override
+  String get staffDemoAssignToStaffLabel => 'Assign to staff';
+
+  @override
+  String get staffDemoComposeDefaultShiftBody =>
+      'Your shift starts at 10:00. Please meet at the warehouse.';
+
+  @override
+  String get staffDemoComposeRecipientUserId => 'Recipient userId';
+
+  @override
+  String get staffDemoComposeSendShiftAssignment => 'Send shift assignment';
+
+  @override
+  String get staffDemoComposeStaffListFailed => 'Failed to load staff list.';
+
+  @override
+  String staffDemoComposeStaffListFailedWithDetails(String details) {
+    return 'Failed to load staff list.\n$details';
+  }
+
+  @override
+  String get staffDemoComposeTitle => 'Send shift assignment';
+
+  @override
+  String get staffDemoContentCouldNotLoadUrl => 'Could not load file URL.';
+
+  @override
+  String get staffDemoContentEmpty => 'No content yet.';
+
+  @override
+  String get staffDemoContentFailedToOpenItem => 'Failed to load content.';
+
+  @override
+  String get staffDemoContentTitle => 'Content';
+
+  @override
+  String staffDemoDashboardHello(String name) {
+    return 'Hello, $name';
+  }
+
+  @override
+  String get staffDemoDashboardInactiveProfile =>
+      'This staff demo profile is inactive.';
+
+  @override
+  String get staffDemoDashboardIntro =>
+      'Use the bottom tabs to navigate the demo. Accounting flow starts with Timeclock.';
+
+  @override
+  String get staffDemoDashboardLoading => 'Loading…';
+
+  @override
+  String get staffDemoDashboardNoProfile =>
+      'No staff demo profile found for this user. Seed a staffDemoProfiles document keyed by this user\'s Firebase Auth uid in Firestore.';
+
+  @override
+  String get staffDemoDashboardTitle => 'Staff demo';
+
+  @override
+  String get staffDemoFormsErrorSiteRequired => 'Site ID is required.';
+
+  @override
+  String get staffDemoFormsManagerReport => 'Manager report';
+
+  @override
+  String get staffDemoFormsNotesLabel => 'Notes';
+
+  @override
+  String get staffDemoFormsSubmitAvailability => 'Submit availability';
+
+  @override
+  String get staffDemoFormsSubmitReport => 'Submit report';
+
+  @override
+  String get staffDemoFormsSubmitted => 'Submitted.';
+
+  @override
+  String get staffDemoFormsSuccessAvailability => 'Availability submitted';
+
+  @override
+  String get staffDemoFormsSuccessManagerReport => 'Manager report submitted';
+
+  @override
+  String get staffDemoFormsTitle => 'Forms';
+
+  @override
+  String get staffDemoFormsWeeklyAvailability => 'Weekly availability';
+
+  @override
+  String get staffDemoMessagesEmpty => 'No messages yet.';
+
+  @override
+  String get staffDemoMessagesErrorInboxLoadFailed =>
+      'Failed to load inbox updates.';
+
+  @override
+  String get staffDemoMessagesTitle => 'Messages';
+
+  @override
+  String get staffDemoNavAdmin => 'Admin';
+
+  @override
+  String get staffDemoNavContent => 'Content';
+
+  @override
+  String get staffDemoNavForms => 'Forms';
+
+  @override
+  String get staffDemoNavHome => 'Home';
+
+  @override
+  String get staffDemoNavMsgs => 'Msgs';
+
+  @override
+  String get staffDemoNavProof => 'Proof';
+
+  @override
+  String get staffDemoNavTime => 'Time';
+
+  @override
+  String get staffDemoNotSignedIn => 'Not signed in.';
+
+  @override
+  String get staffDemoProofFailed => 'Failed.';
+
+  @override
+  String get staffDemoProofOfflineQueued =>
+      'Offline: queued for sync when online.';
+
+  @override
+  String get staffDemoProofPhotos => 'Photos';
+
+  @override
+  String get staffDemoProofPickPhoto => 'Pick';
+
+  @override
+  String get staffDemoProofShiftIdOptional => 'Shift ID (optional)';
+
+  @override
+  String get staffDemoProofSignatureClear => 'Clear';
+
+  @override
+  String get staffDemoProofSignatureLabel => 'Signature';
+
+  @override
+  String get staffDemoProofSignatureNotSaved => 'Not saved';
+
+  @override
+  String get staffDemoProofSignatureSave => 'Save signature';
+
+  @override
+  String get staffDemoProofSignatureSaved => 'Saved';
+
+  @override
+  String get staffDemoProofSignatureSaveBefore => 'Please sign before saving.';
+
+  @override
+  String get staffDemoProofSignatureSaveSuccess => 'Signature saved.';
+
+  @override
+  String get staffDemoProofSubmit => 'Submit';
+
+  @override
+  String get staffDemoProofSubmitProof => 'Submit proof';
+
+  @override
+  String get staffDemoProofSubmittedEmpty => 'Submitted proof';
+
+  @override
+  String staffDemoProofSubmittedWithId(String proofId) {
+    return 'Submitted proof $proofId';
+  }
+
+  @override
+  String get staffDemoProofTakePhoto => 'Take photo';
+
+  @override
+  String get staffDemoProofTitle => 'Proof';
+
+  @override
+  String get staffDemoSitePickerEmpty => 'No sites found in staffDemoSites.';
+
+  @override
+  String get staffDemoSitePickerFailed => 'Failed to load sites.';
+
+  @override
+  String get staffDemoSitePickerLoading => 'Loading sites...';
+
+  @override
+  String get staffDemoSitePickerLabel => 'Site';
+
+  @override
+  String get staffDemoSubmitting => 'Submitting…';
+
+  @override
+  String get staffDemoTimeclockClockIn => 'Clock in';
+
+  @override
+  String get staffDemoTimeclockClockOut => 'Clock out';
+
+  @override
+  String staffDemoTimeclockClockedInStatus(String entryId) {
+    return 'Status: clocked in ($entryId)';
+  }
+
+  @override
+  String get staffDemoTimeclockClockedOutStatus => 'Status: clocked out';
+
+  @override
+  String staffDemoTimeclockDistanceMeters(String distanceM, String radiusM) {
+    return 'Distance: ${distanceM}m (radius ${radiusM}m)';
+  }
+
+  @override
+  String get staffDemoTimeclockLastResultFlags => 'Last result flags:';
+
+  @override
+  String get staffDemoTimeclockTitle => 'Timeclock';
+
+  @override
+  String get staffDemoVideoPlayerError => 'Could not load this video.';
+
+  @override
+  String get staffDemoActionSend => 'Send';
+
+  @override
+  String get staffDemoComposeMessageBodyLabel => 'Message body';
+
+  @override
+  String get staffDemoComposeRecipientUserIdHelper =>
+      'Enter a Firebase Auth uid.';
+
+  @override
+  String get staffDemoInboxMessageFallback => 'Message';
+
+  @override
+  String get staffDemoShiftConfirmAction => 'Confirm';
+
+  @override
+  String get staffDemoShiftConfirmed => 'Confirmed';
 }

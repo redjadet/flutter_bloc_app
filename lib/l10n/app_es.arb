@@ -1534,5 +1534,363 @@
   "caseStudyQuestion7": "Describa las opciones de tratamiento comentadas.",
   "caseStudyQuestion8": "Detalle el plan de tratamiento elegido.",
   "caseStudyQuestion9": "Muestre el estado postoperatorio inmediato.",
-  "caseStudyQuestion10": "Resuma el seguimiento y el pronóstico."
+  "caseStudyQuestion10": "Resuma el seguimiento y el pronóstico.",
+  "staffDemoAdminFlagged": "Flagged ({count})",
+  "@staffDemoAdminFlagged": {
+    "description": "Staff demo admin section title for flagged entries count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "staffDemoAdminNoFlagged": "No flagged entries found.",
+  "@staffDemoAdminNoFlagged": {
+    "description": "Staff demo admin when no flagged time entries exist"
+  },
+  "staffDemoAdminRecentEntries": "Recent time entries ({count})",
+  "@staffDemoAdminRecentEntries": {
+    "description": "Staff demo admin heading for recent time entries list",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "staffDemoAdminSeedingReminder": "Seeding reminders: create staffDemoProfiles (user uid), staffDemoSites (site id), and staffDemoShifts (shift id) documents in Firestore for full demo coverage.",
+  "@staffDemoAdminSeedingReminder": {
+    "description": "Staff demo admin helper text for Firestore seed documents"
+  },
+  "staffDemoAdminTitle": "Admin",
+  "@staffDemoAdminTitle": {
+    "description": "Title for the staff app demo admin page"
+  },
+  "staffDemoAssignToStaffLabel": "Assign to staff",
+  "@staffDemoAssignToStaffLabel": {
+    "description": "Label for selecting assignable staff in staff demo messaging"
+  },
+  "staffDemoComposeDefaultShiftBody": "Your shift starts at 10:00. Please meet at the warehouse.",
+  "@staffDemoComposeDefaultShiftBody": {
+    "description": "Default body text for composing a shift assignment message in staff demo"
+  },
+  "staffDemoComposeRecipientUserId": "Recipient userId",
+  "@staffDemoComposeRecipientUserId": {
+    "description": "Label for manual recipient user id field in staff demo compose dialog"
+  },
+  "staffDemoComposeSendShiftAssignment": "Send shift assignment",
+  "@staffDemoComposeSendShiftAssignment": {
+    "description": "Primary action to open compose flow for shift assignment in staff demo"
+  },
+  "staffDemoComposeStaffListFailed": "Failed to load staff list.",
+  "@staffDemoComposeStaffListFailed": {
+    "description": "Error when staff assignee list fails to load in staff demo compose dialog"
+  },
+  "staffDemoComposeStaffListFailedWithDetails": "Failed to load staff list.\n{details}",
+  "@staffDemoComposeStaffListFailedWithDetails": {
+    "description": "Error when staff list fails with exception details in staff demo compose dialog",
+    "placeholders": {
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "staffDemoComposeTitle": "Send shift assignment",
+  "@staffDemoComposeTitle": {
+    "description": "Title of the staff demo shift assignment compose dialog"
+  },
+  "staffDemoContentCouldNotLoadUrl": "Could not load file URL.",
+  "@staffDemoContentCouldNotLoadUrl": {
+    "description": "Snack bar when staff demo content download URL cannot be resolved"
+  },
+  "staffDemoContentEmpty": "No content yet.",
+  "@staffDemoContentEmpty": {
+    "description": "Empty state for staff demo published content list"
+  },
+  "staffDemoContentFailedToOpenItem": "Failed to load content.",
+  "@staffDemoContentFailedToOpenItem": {
+    "description": "Error text when staff demo content list fails to load"
+  },
+  "staffDemoContentTitle": "Content",
+  "@staffDemoContentTitle": {
+    "description": "Title for the staff app demo content page"
+  },
+  "staffDemoDashboardHello": "Hello, {name}",
+  "@staffDemoDashboardHello": {
+    "description": "Greeting on staff demo dashboard with display name",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "staffDemoDashboardInactiveProfile": "This staff demo profile is inactive.",
+  "@staffDemoDashboardInactiveProfile": {
+    "description": "Message when staff demo profile exists but is inactive"
+  },
+  "staffDemoDashboardIntro": "Use the bottom tabs to navigate the demo. Accounting flow starts with Timeclock.",
+  "@staffDemoDashboardIntro": {
+    "description": "Intro copy on staff demo home tab"
+  },
+  "staffDemoDashboardLoading": "Loading…",
+  "@staffDemoDashboardLoading": {
+    "description": "Placeholder while staff demo profile is loading"
+  },
+  "staffDemoDashboardNoProfile": "No staff demo profile found for this user. Seed a staffDemoProfiles document keyed by this user's Firebase Auth uid in Firestore.",
+  "@staffDemoDashboardNoProfile": {
+    "description": "Message when no staff demo profile document exists for the signed-in user"
+  },
+  "staffDemoDashboardTitle": "Staff demo",
+  "@staffDemoDashboardTitle": {
+    "description": "Title for the staff app demo dashboard (home) tab"
+  },
+  "staffDemoFormsErrorSiteRequired": "Site ID is required.",
+  "@staffDemoFormsErrorSiteRequired": {
+    "description": "Validation error when site is missing on staff demo manager report form"
+  },
+  "staffDemoFormsManagerReport": "Manager report",
+  "@staffDemoFormsManagerReport": {
+    "description": "Section title for manager report form in staff demo"
+  },
+  "staffDemoFormsNotesLabel": "Notes",
+  "@staffDemoFormsNotesLabel": {
+    "description": "Label for notes field on staff demo manager report form"
+  },
+  "staffDemoFormsSubmitAvailability": "Submit availability",
+  "@staffDemoFormsSubmitAvailability": {
+    "description": "Button to submit weekly availability in staff demo forms"
+  },
+  "staffDemoFormsSubmitReport": "Submit report",
+  "@staffDemoFormsSubmitReport": {
+    "description": "Button to submit manager report in staff demo forms"
+  },
+  "staffDemoFormsSubmitted": "Submitted.",
+  "@staffDemoFormsSubmitted": {
+    "description": "Generic success banner after staff demo form submit when kind is unknown"
+  },
+  "staffDemoFormsSuccessAvailability": "Availability submitted",
+  "@staffDemoFormsSuccessAvailability": {
+    "description": "Success banner after availability submit in staff demo forms"
+  },
+  "staffDemoFormsSuccessManagerReport": "Manager report submitted",
+  "@staffDemoFormsSuccessManagerReport": {
+    "description": "Success banner after manager report submit in staff demo forms"
+  },
+  "staffDemoFormsTitle": "Forms",
+  "@staffDemoFormsTitle": {
+    "description": "Title for the staff app demo forms page"
+  },
+  "staffDemoFormsWeeklyAvailability": "Weekly availability",
+  "@staffDemoFormsWeeklyAvailability": {
+    "description": "Section title for weekly availability in staff demo forms"
+  },
+  "staffDemoMessagesEmpty": "No messages yet.",
+  "@staffDemoMessagesEmpty": {
+    "description": "Empty inbox state in staff demo messages tab"
+  },
+  "staffDemoMessagesErrorInboxLoadFailed": "Failed to load inbox updates.",
+  "@staffDemoMessagesErrorInboxLoadFailed": {
+    "description": "Error when Firestore inbox subscription fails in staff demo messages"
+  },
+  "staffDemoMessagesTitle": "Messages",
+  "@staffDemoMessagesTitle": {
+    "description": "Title for the staff app demo messages page"
+  },
+  "staffDemoNavAdmin": "Admin",
+  "@staffDemoNavAdmin": {
+    "description": "Bottom navigation label for staff demo admin tab"
+  },
+  "staffDemoNavContent": "Content",
+  "@staffDemoNavContent": {
+    "description": "Bottom navigation label for staff demo content tab"
+  },
+  "staffDemoNavForms": "Forms",
+  "@staffDemoNavForms": {
+    "description": "Bottom navigation label for staff demo forms tab"
+  },
+  "staffDemoNavHome": "Home",
+  "@staffDemoNavHome": {
+    "description": "Bottom navigation label for staff demo home tab"
+  },
+  "staffDemoNavMsgs": "Msgs",
+  "@staffDemoNavMsgs": {
+    "description": "Bottom navigation label for staff demo messages tab"
+  },
+  "staffDemoNavProof": "Proof",
+  "@staffDemoNavProof": {
+    "description": "Bottom navigation label for staff demo proof tab"
+  },
+  "staffDemoNavTime": "Time",
+  "@staffDemoNavTime": {
+    "description": "Bottom navigation label for staff demo timeclock tab"
+  },
+  "staffDemoNotSignedIn": "Not signed in.",
+  "@staffDemoNotSignedIn": {
+    "description": "Error when staff demo action requires auth but user id is missing"
+  },
+  "staffDemoProofFailed": "Failed.",
+  "@staffDemoProofFailed": {
+    "description": "Generic failure label in staff demo proof status banner"
+  },
+  "staffDemoProofOfflineQueued": "Offline: queued for sync when online.",
+  "@staffDemoProofOfflineQueued": {
+    "description": "Staff demo proof submitted while offline and queued for sync"
+  },
+  "staffDemoProofPhotos": "Photos",
+  "@staffDemoProofPhotos": {
+    "description": "Section title for photo attachments on staff demo proof page"
+  },
+  "staffDemoProofPickPhoto": "Pick",
+  "@staffDemoProofPickPhoto": {
+    "description": "Button to pick a photo from gallery on staff demo proof page"
+  },
+  "staffDemoProofShiftIdOptional": "Shift ID (optional)",
+  "@staffDemoProofShiftIdOptional": {
+    "description": "Label for optional shift id field on staff demo proof submit card"
+  },
+  "staffDemoProofSignatureClear": "Clear",
+  "@staffDemoProofSignatureClear": {
+    "description": "Button to clear signature pad in staff demo proof flow"
+  },
+  "staffDemoProofSignatureLabel": "Signature",
+  "@staffDemoProofSignatureLabel": {
+    "description": "Heading for signature section in staff demo proof flow"
+  },
+  "staffDemoProofSignatureNotSaved": "Not saved",
+  "@staffDemoProofSignatureNotSaved": {
+    "description": "Label when signature file has not been saved yet"
+  },
+  "staffDemoProofSignatureSave": "Save signature",
+  "@staffDemoProofSignatureSave": {
+    "description": "Button to persist signature PNG in staff demo proof flow"
+  },
+  "staffDemoProofSignatureSaved": "Saved",
+  "@staffDemoProofSignatureSaved": {
+    "description": "Label when signature file path is saved in staff demo proof flow"
+  },
+  "staffDemoProofSignatureSaveBefore": "Please sign before saving.",
+  "@staffDemoProofSignatureSaveBefore": {
+    "description": "Snack bar when user saves signature without drawing"
+  },
+  "staffDemoProofSignatureSaveSuccess": "Signature saved.",
+  "@staffDemoProofSignatureSaveSuccess": {
+    "description": "Snack bar when signature bytes are saved successfully"
+  },
+  "staffDemoProofSubmit": "Submit",
+  "@staffDemoProofSubmit": {
+    "description": "Button to submit proof bundle in staff demo"
+  },
+  "staffDemoProofSubmitProof": "Submit proof",
+  "@staffDemoProofSubmitProof": {
+    "description": "Section title for proof submission card in staff demo"
+  },
+  "staffDemoProofSubmittedEmpty": "Submitted proof",
+  "@staffDemoProofSubmittedEmpty": {
+    "description": "Success banner when proof id is not shown in staff demo"
+  },
+  "staffDemoProofSubmittedWithId": "Submitted proof {proofId}",
+  "@staffDemoProofSubmittedWithId": {
+    "description": "Success banner including proof document id in staff demo",
+    "placeholders": {
+      "proofId": {
+        "type": "String"
+      }
+    }
+  },
+  "staffDemoProofTakePhoto": "Take photo",
+  "@staffDemoProofTakePhoto": {
+    "description": "Button to capture a photo with camera on staff demo proof page"
+  },
+  "staffDemoProofTitle": "Proof",
+  "@staffDemoProofTitle": {
+    "description": "Title for the staff app demo proof page"
+  },
+  "staffDemoSitePickerEmpty": "No sites found in staffDemoSites.",
+  "@staffDemoSitePickerEmpty": {
+    "description": "Helper when staff demo site picker has no Firestore sites"
+  },
+  "staffDemoSitePickerFailed": "Failed to load sites.",
+  "@staffDemoSitePickerFailed": {
+    "description": "Helper when staff demo site list fails to load"
+  },
+  "staffDemoSitePickerLoading": "Loading sites...",
+  "@staffDemoSitePickerLoading": {
+    "description": "Helper while staff demo site list is loading"
+  },
+  "staffDemoSitePickerLabel": "Site",
+  "@staffDemoSitePickerLabel": {
+    "description": "Label for site dropdown in staff demo forms and proof"
+  },
+  "staffDemoSubmitting": "Submitting…",
+  "@staffDemoSubmitting": {
+    "description": "Generic submitting status used in staff demo proof and forms banners"
+  },
+  "staffDemoTimeclockClockIn": "Clock in",
+  "@staffDemoTimeclockClockIn": {
+    "description": "Button to clock in on staff demo timeclock page"
+  },
+  "staffDemoTimeclockClockOut": "Clock out",
+  "@staffDemoTimeclockClockOut": {
+    "description": "Button to clock out on staff demo timeclock page"
+  },
+  "staffDemoTimeclockClockedInStatus": "Status: clocked in ({entryId})",
+  "@staffDemoTimeclockClockedInStatus": {
+    "description": "Status line when user is clocked in with open entry id",
+    "placeholders": {
+      "entryId": {
+        "type": "String"
+      }
+    }
+  },
+  "staffDemoTimeclockClockedOutStatus": "Status: clocked out",
+  "@staffDemoTimeclockClockedOutStatus": {
+    "description": "Status line when user is not clocked in"
+  },
+  "staffDemoTimeclockDistanceMeters": "Distance: {distanceM}m (radius {radiusM}m)",
+  "@staffDemoTimeclockDistanceMeters": {
+    "description": "Geofence distance readout on staff demo timeclock page",
+    "placeholders": {
+      "distanceM": {
+        "type": "String"
+      },
+      "radiusM": {
+        "type": "String"
+      }
+    }
+  },
+  "staffDemoTimeclockLastResultFlags": "Last result flags:",
+  "@staffDemoTimeclockLastResultFlags": {
+    "description": "Label before JSON flags from last clock action in staff demo timeclock"
+  },
+  "staffDemoTimeclockTitle": "Timeclock",
+  "@staffDemoTimeclockTitle": {
+    "description": "Title for the staff app demo timeclock page"
+  },
+  "staffDemoVideoPlayerError": "Could not load this video.",
+  "@staffDemoVideoPlayerError": {
+    "description": "Error body when staff demo content video fails to initialize"
+  },
+  "staffDemoActionSend": "Send",
+  "@staffDemoActionSend": {
+    "description": "Primary send action in staff demo dialogs (e.g. shift assignment)"
+  },
+  "staffDemoComposeMessageBodyLabel": "Message body",
+  "@staffDemoComposeMessageBodyLabel": {
+    "description": "Label for shift assignment message body field in staff demo"
+  },
+  "staffDemoComposeRecipientUserIdHelper": "Enter a Firebase Auth uid.",
+  "@staffDemoComposeRecipientUserIdHelper": {
+    "description": "Helper text for manual recipient user id in staff demo compose dialog"
+  },
+  "staffDemoInboxMessageFallback": "Message",
+  "@staffDemoInboxMessageFallback": {
+    "description": "Inbox list title when message type is empty in staff demo"
+  },
+  "staffDemoShiftConfirmAction": "Confirm",
+  "@staffDemoShiftConfirmAction": {
+    "description": "Button to confirm a shift assignment from inbox in staff demo"
+  },
+  "staffDemoShiftConfirmed": "Confirmed",
+  "@staffDemoShiftConfirmed": {
+    "description": "Label when shift assignment is already confirmed in staff demo inbox"
+  }
 }

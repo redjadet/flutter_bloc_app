@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StaffDemoMessagesState {
 
- StaffDemoMessagesStatus get status; List<StaffDemoInboxItem> get items; String? get errorMessage;
+ StaffDemoMessagesStatus get status; List<StaffDemoInboxItem> get items; StaffDemoMessagesKnownError? get knownError; String? get errorMessage;
 /// Create a copy of StaffDemoMessagesState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $StaffDemoMessagesStateCopyWith<StaffDemoMessagesState> get copyWith => _$StaffD
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StaffDemoMessagesState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StaffDemoMessagesState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.knownError, knownError) || other.knownError == knownError)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(items),errorMessage);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(items),knownError,errorMessage);
 
 @override
 String toString() {
-  return 'StaffDemoMessagesState(status: $status, items: $items, errorMessage: $errorMessage)';
+  return 'StaffDemoMessagesState(status: $status, items: $items, knownError: $knownError, errorMessage: $errorMessage)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $StaffDemoMessagesStateCopyWith<$Res>  {
   factory $StaffDemoMessagesStateCopyWith(StaffDemoMessagesState value, $Res Function(StaffDemoMessagesState) _then) = _$StaffDemoMessagesStateCopyWithImpl;
 @useResult
 $Res call({
- StaffDemoMessagesStatus status, List<StaffDemoInboxItem> items, String? errorMessage
+ StaffDemoMessagesStatus status, List<StaffDemoInboxItem> items, StaffDemoMessagesKnownError? knownError, String? errorMessage
 });
 
 
@@ -62,11 +62,12 @@ class _$StaffDemoMessagesStateCopyWithImpl<$Res>
 
 /// Create a copy of StaffDemoMessagesState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? items = null,Object? errorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? items = null,Object? knownError = freezed,Object? errorMessage = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as StaffDemoMessagesStatus,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
-as List<StaffDemoInboxItem>,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as List<StaffDemoInboxItem>,knownError: freezed == knownError ? _self.knownError : knownError // ignore: cast_nullable_to_non_nullable
+as StaffDemoMessagesKnownError?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -152,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StaffDemoMessagesStatus status,  List<StaffDemoInboxItem> items,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StaffDemoMessagesStatus status,  List<StaffDemoInboxItem> items,  StaffDemoMessagesKnownError? knownError,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StaffDemoMessagesState() when $default != null:
-return $default(_that.status,_that.items,_that.errorMessage);case _:
+return $default(_that.status,_that.items,_that.knownError,_that.errorMessage);case _:
   return orElse();
 
 }
@@ -173,10 +174,10 @@ return $default(_that.status,_that.items,_that.errorMessage);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StaffDemoMessagesStatus status,  List<StaffDemoInboxItem> items,  String? errorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StaffDemoMessagesStatus status,  List<StaffDemoInboxItem> items,  StaffDemoMessagesKnownError? knownError,  String? errorMessage)  $default,) {final _that = this;
 switch (_that) {
 case _StaffDemoMessagesState():
-return $default(_that.status,_that.items,_that.errorMessage);case _:
+return $default(_that.status,_that.items,_that.knownError,_that.errorMessage);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +194,10 @@ return $default(_that.status,_that.items,_that.errorMessage);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StaffDemoMessagesStatus status,  List<StaffDemoInboxItem> items,  String? errorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StaffDemoMessagesStatus status,  List<StaffDemoInboxItem> items,  StaffDemoMessagesKnownError? knownError,  String? errorMessage)?  $default,) {final _that = this;
 switch (_that) {
 case _StaffDemoMessagesState() when $default != null:
-return $default(_that.status,_that.items,_that.errorMessage);case _:
+return $default(_that.status,_that.items,_that.knownError,_that.errorMessage);case _:
   return null;
 
 }
@@ -208,7 +209,7 @@ return $default(_that.status,_that.items,_that.errorMessage);case _:
 
 
 class _StaffDemoMessagesState implements StaffDemoMessagesState {
-  const _StaffDemoMessagesState({this.status = StaffDemoMessagesStatus.initial, final  List<StaffDemoInboxItem> items = const <StaffDemoInboxItem>[], this.errorMessage}): _items = items;
+  const _StaffDemoMessagesState({this.status = StaffDemoMessagesStatus.initial, final  List<StaffDemoInboxItem> items = const <StaffDemoInboxItem>[], this.knownError, this.errorMessage}): _items = items;
   
 
 @override@JsonKey() final  StaffDemoMessagesStatus status;
@@ -219,6 +220,7 @@ class _StaffDemoMessagesState implements StaffDemoMessagesState {
   return EqualUnmodifiableListView(_items);
 }
 
+@override final  StaffDemoMessagesKnownError? knownError;
 @override final  String? errorMessage;
 
 /// Create a copy of StaffDemoMessagesState
@@ -231,16 +233,16 @@ _$StaffDemoMessagesStateCopyWith<_StaffDemoMessagesState> get copyWith => __$Sta
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StaffDemoMessagesState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StaffDemoMessagesState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.knownError, knownError) || other.knownError == knownError)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_items),errorMessage);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_items),knownError,errorMessage);
 
 @override
 String toString() {
-  return 'StaffDemoMessagesState(status: $status, items: $items, errorMessage: $errorMessage)';
+  return 'StaffDemoMessagesState(status: $status, items: $items, knownError: $knownError, errorMessage: $errorMessage)';
 }
 
 
@@ -251,7 +253,7 @@ abstract mixin class _$StaffDemoMessagesStateCopyWith<$Res> implements $StaffDem
   factory _$StaffDemoMessagesStateCopyWith(_StaffDemoMessagesState value, $Res Function(_StaffDemoMessagesState) _then) = __$StaffDemoMessagesStateCopyWithImpl;
 @override @useResult
 $Res call({
- StaffDemoMessagesStatus status, List<StaffDemoInboxItem> items, String? errorMessage
+ StaffDemoMessagesStatus status, List<StaffDemoInboxItem> items, StaffDemoMessagesKnownError? knownError, String? errorMessage
 });
 
 
@@ -268,11 +270,12 @@ class __$StaffDemoMessagesStateCopyWithImpl<$Res>
 
 /// Create a copy of StaffDemoMessagesState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? items = null,Object? errorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? items = null,Object? knownError = freezed,Object? errorMessage = freezed,}) {
   return _then(_StaffDemoMessagesState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as StaffDemoMessagesStatus,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
-as List<StaffDemoInboxItem>,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as List<StaffDemoInboxItem>,knownError: freezed == knownError ? _self.knownError : knownError // ignore: cast_nullable_to_non_nullable
+as StaffDemoMessagesKnownError?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

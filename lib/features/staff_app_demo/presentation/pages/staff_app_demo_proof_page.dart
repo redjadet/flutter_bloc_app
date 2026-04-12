@@ -5,11 +5,12 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_state.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/sites/staff_demo_sites_cubit.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/widgets/staff_demo_proof_signature_section.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:signature/signature.dart';
 
 class StaffAppDemoProofPage extends StatelessWidget {
   const StaffAppDemoProofPage({super.key});
@@ -17,18 +18,30 @@ class StaffAppDemoProofPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final state = context.watch<StaffDemoProofCubit>().state;
+    final l10n = context.l10n;
+    final bool pinBanner = _ProofStatusBanner.messageFor(state, l10n) != null;
     return CommonPageLayout(
-      title: 'Proof',
-      body: ListView(
-        padding: const EdgeInsets.all(16),
+      title: l10n.staffDemoProofTitle,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          _ProofStatusBanner(state: state),
-          const SizedBox(height: 16),
-          const _PhotoSection(),
-          const SizedBox(height: 16),
-          const _SignatureSection(),
-          const SizedBox(height: 16),
-          const _SubmitSection(),
+          if (pinBanner)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: _ProofStatusBanner(state: state),
+            ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+              children: const <Widget>[
+                _PhotoSection(),
+                SizedBox(height: 16),
+                StaffDemoProofSignatureSection(),
+                SizedBox(height: 16),
+                _SubmitSection(),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -40,26 +53,37 @@ class _ProofStatusBanner extends StatelessWidget {
 
   final StaffDemoProofState state;
 
+  /// Shared with [StaffAppDemoProofPage] so the banner can be pinned outside
+  /// the scroll view only when it has content.
+  static String? messageFor(
+    final StaffDemoProofState state,
+    final AppLocalizations l10n,
+  ) => switch (state.status) {
+    StaffDemoProofStatus.initial || StaffDemoProofStatus.editing => null,
+    StaffDemoProofStatus.submitting => l10n.staffDemoSubmitting,
+    StaffDemoProofStatus.success =>
+      (state.lastProofId ?? '').trim().isEmpty
+          ? l10n.staffDemoProofSubmittedEmpty
+          : l10n.staffDemoProofSubmittedWithId(
+              (state.lastProofId ?? '').trim(),
+            ),
+    StaffDemoProofStatus.offlineQueued => l10n.staffDemoProofOfflineQueued,
+    StaffDemoProofStatus.error =>
+      state.errorMessage ?? l10n.staffDemoProofFailed,
+  };
+
   @override
   Widget build(final BuildContext context) {
-    final String? message = switch (state.status) {
-      StaffDemoProofStatus.initial || StaffDemoProofStatus.editing => null,
-      StaffDemoProofStatus.submitting => 'Submitting…',
-      StaffDemoProofStatus.success =>
-        'Submitted proof ${state.lastProofId ?? ''}'.trim(),
-      StaffDemoProofStatus.offlineQueued =>
-        'Offline: queued for sync when online.',
-      StaffDemoProofStatus.error => state.errorMessage ?? 'Failed.',
-    };
+    final l10n = context.l10n;
+    final String? message = messageFor(state, l10n);
     if (message == null) return const SizedBox.shrink();
 
+    final colorScheme = Theme.of(context).colorScheme;
     final Color bg = switch (state.status) {
-      StaffDemoProofStatus.success => Colors.green.withValues(alpha: 0.12),
-      StaffDemoProofStatus.offlineQueued => Colors.orange.withValues(
-        alpha: 0.12,
-      ),
-      StaffDemoProofStatus.error => Colors.red.withValues(alpha: 0.12),
-      _ => Colors.blue.withValues(alpha: 0.10),
+      StaffDemoProofStatus.success => colorScheme.primaryContainer,
+      StaffDemoProofStatus.offlineQueued => colorScheme.tertiaryContainer,
+      StaffDemoProofStatus.error => colorScheme.errorContainer,
+      _ => colorScheme.surfaceContainerHighest,
     };
 
     return Container(
@@ -79,15 +103,16 @@ class _PhotoSection extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final state = context.watch<StaffDemoProofCubit>().state;
+    final l10n = context.l10n;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'Photos',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            Text(
+              l10n.staffDemoProofPhotos,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -120,7 +145,7 @@ class _PhotoSection extends StatelessWidget {
                     );
                   },
                   icon: const Icon(Icons.camera_alt),
-                  label: const Text('Take photo'),
+                  label: Text(l10n.staffDemoProofTakePhoto),
                 ),
                 OutlinedButton.icon(
                   onPressed: () async {
@@ -135,7 +160,7 @@ class _PhotoSection extends StatelessWidget {
                     );
                   },
                   icon: const Icon(Icons.photo_library),
-                  label: const Text('Pick'),
+                  label: Text(l10n.staffDemoProofPickPhoto),
                 ),
               ],
             ),
@@ -159,101 +184,6 @@ class _PhotoChip extends StatelessWidget {
   );
 }
 
-class _SignatureSection extends StatefulWidget {
-  const _SignatureSection();
-
-  @override
-  State<_SignatureSection> createState() => _SignatureSectionState();
-}
-
-class _SignatureSectionState extends State<_SignatureSection> {
-  late final SignatureController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = SignatureController(
-      exportBackgroundColor: Colors.white,
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  Future<void> _saveSignature(BuildContext context) async {
-    final bytes = await _controller.toPngBytes();
-    if (!context.mounted) return;
-    if (bytes == null || bytes.isEmpty) {
-      ErrorHandling.showErrorSnackBar(context, 'Please sign before saving.');
-      return;
-    }
-    await context.cubit<StaffDemoProofCubit>().saveSignaturePngBytes(bytes);
-    if (!context.mounted) return;
-    ErrorHandling.showSuccessSnackBar(context, 'Signature saved.');
-  }
-
-  @override
-  Widget build(final BuildContext context) {
-    final state = context.watch<StaffDemoProofCubit>().state;
-    final sigLabel = state.signaturePath == null ? 'Not saved' : 'Saved';
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                const Expanded(
-                  child: Text(
-                    'Signature',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Text(sigLabel),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Container(
-              height: 180,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.black12),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Signature(
-                controller: _controller,
-                backgroundColor: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: <Widget>[
-                OutlinedButton(
-                  onPressed: () {
-                    _controller.clear();
-                    context.cubit<StaffDemoProofCubit>().setSignaturePath(null);
-                  },
-                  child: const Text('Clear'),
-                ),
-                const SizedBox(width: 12),
-                FilledButton(
-                  onPressed: () => _saveSignature(context),
-                  child: const Text('Save signature'),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _SubmitSection extends StatefulWidget {
   const _SubmitSection();
 
@@ -273,6 +203,7 @@ class _SubmitSectionState extends State<_SubmitSection> {
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     final state = context.watch<StaffDemoProofCubit>().state;
     final bool busy = state.status == StaffDemoProofStatus.submitting;
     final sitesState = context.watch<StaffDemoSitesCubit>().state;
@@ -286,9 +217,9 @@ class _SubmitSectionState extends State<_SubmitSection> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'Submit proof',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            Text(
+              l10n.staffDemoProofSubmitProof,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
@@ -308,21 +239,22 @@ class _SubmitSectionState extends State<_SubmitSection> {
                   ? null
                   : (value) => setState(() => _selectedSiteId = value),
               decoration: InputDecoration(
-                labelText: 'Site',
+                labelText: l10n.staffDemoSitePickerLabel,
                 helperText: sitesState.status == StaffDemoSitesStatus.loading
-                    ? 'Loading sites...'
+                    ? l10n.staffDemoSitePickerLoading
                     : sitesState.status == StaffDemoSitesStatus.error
-                    ? (sitesState.errorMessage ?? 'Failed to load sites.')
+                    ? (sitesState.errorMessage ??
+                          l10n.staffDemoSitePickerFailed)
                     : sites.isEmpty
-                    ? 'No sites found in staffDemoSites.'
+                    ? l10n.staffDemoSitePickerEmpty
                     : null,
               ),
             ),
             const SizedBox(height: 8),
             TextField(
               controller: _shiftIdController,
-              decoration: const InputDecoration(
-                labelText: 'Shift ID (optional)',
+              decoration: InputDecoration(
+                labelText: l10n.staffDemoProofShiftIdOptional,
               ),
             ),
             const SizedBox(height: 12),
@@ -338,7 +270,7 @@ class _SubmitSectionState extends State<_SubmitSection> {
                           shiftId: shiftId,
                         );
                       },
-                child: const Text('Submit'),
+                child: Text(l10n.staffDemoProofSubmit),
               ),
             ),
           ],

@@ -11,16 +11,20 @@ class _TimeoutAfterLimitGeolocatorPlatform extends GeolocatorPlatform {
   LocationSettings? lastLocationSettings;
 
   @override
-  Future<LocationPermission> checkPermission() async => LocationPermission.always;
+  Future<LocationPermission> checkPermission() async =>
+      LocationPermission.always;
 
   @override
-  Future<LocationPermission> requestPermission() async => LocationPermission.always;
+  Future<LocationPermission> requestPermission() async =>
+      LocationPermission.always;
 
   @override
   Future<bool> isLocationServiceEnabled() async => true;
 
   @override
-  Future<Position> getCurrentPosition({LocationSettings? locationSettings}) async {
+  Future<Position> getCurrentPosition({
+    LocationSettings? locationSettings,
+  }) async {
     lastLocationSettings = locationSettings;
     final limit = locationSettings?.timeLimit;
     if (limit == null) {
@@ -43,15 +47,18 @@ void main() {
     GeolocatorPlatform.instance = previousPlatform;
   });
 
-  test('captureCurrentLocation returns null when Geolocator times out', () async {
-    const timeout = Duration(milliseconds: 20);
-    final service = StaffDemoLocationService(locationTimeout: timeout);
+  test(
+    'captureCurrentLocation returns null when Geolocator times out',
+    () async {
+      const timeout = Duration(milliseconds: 20);
+      final service = StaffDemoLocationService(locationTimeout: timeout);
 
-    final result = await service.captureCurrentLocation();
+      final result = await service.captureCurrentLocation();
 
-    expect(result, isNull);
-    expect(fake.lastLocationSettings?.timeLimit, timeout);
-  });
+      expect(result, isNull);
+      expect(fake.lastLocationSettings?.timeLimit, timeout);
+    },
+  );
 
   test('injected fetcher timeout still returns null', () async {
     final previousPlatform = GeolocatorPlatform.instance;
@@ -68,4 +75,26 @@ void main() {
 
     expect(await service.captureCurrentLocation(), isNull);
   });
+
+  test(
+    'captureCurrentLocation returns null when position is non-finite',
+    () async {
+      final service = StaffDemoLocationService(
+        currentPositionFetcher: () async => Position(
+          latitude: double.nan,
+          longitude: 0,
+          timestamp: DateTime.now(),
+          accuracy: 1,
+          altitude: 0,
+          altitudeAccuracy: 0,
+          heading: 0,
+          headingAccuracy: 0,
+          speed: 0,
+          speedAccuracy: 0,
+        ),
+      );
+
+      expect(await service.captureCurrentLocation(), isNull);
+    },
+  );
 }
