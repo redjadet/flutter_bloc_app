@@ -37,13 +37,11 @@ class ChatMessageList extends StatelessWidget {
       listener: (final context, final state) async {
         if (state.error case final err?) {
           final ChatCubit chatCubit = context.cubit<ChatCubit>();
+          final trimmedRemoteCode = state.remoteFailureL10nCode?.trim();
           final String snackText =
-              state.remoteFailureL10nCode != null && state.remoteFailureL10nCode!.isNotEmpty
-              ? terminalSyncFailureMessage(
-                  l10n,
-                  state.remoteFailureL10nCode!,
-                )
-              : err;
+              trimmedRemoteCode != null && trimmedRemoteCode.isNotEmpty
+                  ? terminalSyncFailureMessage(l10n, trimmedRemoteCode)
+                  : err;
           await errorNotificationService
               .showSnackBar(context, snackText)
               .whenComplete(
@@ -97,6 +95,8 @@ class ChatMessageList extends StatelessWidget {
                   itemBuilder: (final context, final index) {
                     final ChatMessage message = data.messages[index];
                     final bool isUser = message.author == ChatAuthor.user;
+                    final trimmedTerminalCode =
+                        message.terminalSyncFailureCode?.trim();
 
                     return RepaintBoundary(
                       key: _chatMessageKey(message),
@@ -115,8 +115,8 @@ class ChatMessageList extends StatelessWidget {
                             incomingTextColor: theme.colorScheme.onSurface,
                           ),
                           if (isUser &&
-                              (message.terminalSyncFailureCode != null &&
-                                  message.terminalSyncFailureCode!.isNotEmpty))
+                              trimmedTerminalCode != null &&
+                              trimmedTerminalCode.isNotEmpty)
                             Padding(
                               padding: EdgeInsets.only(
                                 top: context.responsiveGapXS,
@@ -126,7 +126,7 @@ class ChatMessageList extends StatelessWidget {
                               child: Text(
                                 terminalSyncFailureMessage(
                                   l10n,
-                                  message.terminalSyncFailureCode!,
+                                  trimmedTerminalCode,
                                 ),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.error,
