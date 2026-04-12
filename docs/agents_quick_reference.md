@@ -6,7 +6,9 @@ must stay thinner than the canon.
 
 Fallback only: if [`AGENTS.md`](../AGENTS.md) is unavailable in the current
 host context, combine this page with
-[`ai_code_review_protocol.md`](ai_code_review_protocol.md).
+[`ai_code_review_protocol.md`](ai_code_review_protocol.md) and
+[`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
+for command routing (this page is lookup only, not policy).
 
 Pinned repo toolchain: Flutter 3.41.6 / Dart 3.11.4.
 
@@ -24,7 +26,7 @@ Decision guide:
 | Situation | Command |
 | --- | --- |
 | Router / `AppRoutes` / gates / auth UI | `./bin/router_feature_validate` |
-| Broad / pre-ship / explicit full sweep | `./bin/checklist` |
+| Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` |
 | Integration journey / flow verification | `./bin/integration_tests` |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
 | Repo-managed host-template drift check | `./tool/check_agent_asset_drift.sh` |
@@ -54,7 +56,7 @@ Commands for each lane live in **Validation Routes** above and in
 | Work shape | Default action |
 | --- | --- |
 | Small/local change | Reuse existing seams, run targeted validation, prove the changed behavior. |
-| Shared architecture / sync / routing / reliability | Treat as non-trivial, document tradeoffs, bias `./bin/checklist` when the blast radius is broad. |
+| Shared architecture / sync / routing / reliability | Treat as non-trivial, document tradeoffs, bias `./tool/delivery_checklist.sh` / `./bin/checklist` when the blast radius is broad. |
 | Docs-only repo guidance | Validate touched docs and links; if host templates changed, run drift and dry-run sync (see **Validation Routes**). |
 | Production failure / hotfix | Narrow proof first, then widen gates to match blast radius (see **Production-Failure Path** in validation routing). |
 | Explicit second opinion | Use a different host via `./tool/request_codex_feedback.sh`; do not self-delegate. |

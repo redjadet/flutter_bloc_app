@@ -10,7 +10,7 @@ Use fast path for narrow, low-risk edits where routing/auth/gates are unchanged.
 
 - Local formatting/lints/tests for touched files
 - Optional targeted regression tests
-- **Python only** (`demos/render_chat_api/**`, repo `tool/*.py`): `./tool/check_pyright_python.sh` (Pyright + config guard; bootstraps `demos/render_chat_api/.venv` when missing). For behavior proof, `cd demos/render_chat_api && python -m pytest`. Full gate still includes this script via `./bin/checklist`.
+- **Python only** (`demos/render_chat_api/**`, repo `tool/*.py`): `./tool/check_pyright_python.sh` (Pyright + config guard; bootstraps `demos/render_chat_api/.venv` when missing). For behavior proof, `cd demos/render_chat_api && python -m pytest`. Full gate still includes this script via `./tool/delivery_checklist.sh` / `./bin/checklist`.
 
 ## Scoped Router/Auth Path
 
@@ -37,10 +37,12 @@ Typical triggers:
 - changes that span multiple features or shared infrastructure
 - changes where the smallest honest proof is broader than a single focused test
 
-Command:
+Command (wrapper and canonical script are equivalent):
 
 ```bash
 ./bin/checklist
+# or
+./tool/delivery_checklist.sh
 ```
 
 ## Docs And Agent Guidance Path
@@ -54,7 +56,7 @@ Typical path:
 - `./tool/check_agent_asset_drift.sh` when `tool/agent_host_templates/` changed
 - `./tool/sync_agent_assets.sh --dry-run` when repo-managed host assets changed
 
-Escalate to `./bin/checklist` when the doc change materially changes validation
+Escalate to `./tool/delivery_checklist.sh` / `./bin/checklist` when the doc change materially changes validation
 guidance, delivery policy, or repo-wide operating rules (including [`AGENTS.md`](../../AGENTS.md)).
 
 ## Integration Path
@@ -79,12 +81,12 @@ For hotfixes and reliability defects, validate the narrowed failure first, then
 add the smallest broader gate that honestly covers the blast radius. Aligns with
 the **Bug-fix path** in [`ai_code_review_protocol.md`](../ai_code_review_protocol.md#special-cases)
 (reproduce → guard → fix → validate), extended here with when to escalate to
-`./bin/checklist`.
+`./tool/delivery_checklist.sh` / `./bin/checklist`.
 
 Default order:
 
 1. Reproduce or reason clearly about the failure.
 2. Add the focused guard or regression proof.
 3. Run targeted validation for the changed surface.
-4. Add `./bin/checklist` when the failure touches shared infrastructure,
+4. Add `./tool/delivery_checklist.sh` / `./bin/checklist` when the failure touches shared infrastructure,
    lifecycle, routing, sync, retries, or other broad surfaces.

@@ -95,8 +95,8 @@ Use the repo commands instead of ad-hoc validation:
 
 | Command | Purpose |
 | --- | --- |
-| `./bin/checklist` | Primary local quality gate: formatting, analysis, validation scripts, tests, and coverage workflow. |
-| `./tool/check_pyright_python.sh` | Pyright on `demos/render_chat_api` and `tool/` Python (Render FastAPI demo + shell tooling; included in `./bin/checklist`). |
+| `./tool/delivery_checklist.sh` / `./bin/checklist` | Primary local quality gate: formatting, analysis, validation scripts, tests, and coverage workflow (`delivery_checklist.sh` is canonical; `bin/checklist` is the same gate when that wrapper exists). |
+| `./tool/check_pyright_python.sh` | Pyright on `demos/render_chat_api` and `tool/` Python (Render FastAPI demo + shell tooling; included in the full delivery gate above). |
 | `./bin/integration_tests` | Runs the integration suite for flow-level verification. |
 | `./bin/upgrade_validate_all` | Full maintenance workflow for upgrades, validation, integration tests, and coverage/doc refresh. |
 
