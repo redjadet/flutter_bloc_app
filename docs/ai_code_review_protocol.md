@@ -13,8 +13,10 @@ checks; it does not replace them.
 
 If [`AGENTS.md`](../AGENTS.md) is unavailable in the current host context,
 combine this document with
-[`agents_quick_reference.md`](agents_quick_reference.md) as the repo-visible
-fallback.
+[`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
+to pick validation commands. When present,
+[`agents_quick_reference.md`](agents_quick_reference.md) is a compact command
+lookup only; it does not replace [`AGENTS.md`](../AGENTS.md) once that file is available.
 
 ## The Nine Checks
 
@@ -77,7 +79,7 @@ Work through the following; order matters where noted.
   `./tool/run_codex_plan_review.sh PATH/TO/plan.md` (tracked template + Codex delegate).
   From Codex itself, use that helper only
   when the user explicitly asks for a second opinion or cross-host review.
-  Keep `./bin/checklist` for broad or pre-ship sweeps, or when the user
+  Keep `./tool/delivery_checklist.sh` / `./bin/checklist` for broad or pre-ship sweeps, or when the user
   explicitly asks for the full validation pass.
 - **Goal fit:** Confirm the solution still aligns with the business goal and does not defer
   obvious production-risk ownership to an unspecified later cleanup.
@@ -121,6 +123,6 @@ Bug-fix path:
 This protocol complements, but does not replace:
 
 - `./bin/router_feature_validate`
-- `./bin/checklist`
+- `./tool/delivery_checklist.sh` / `./bin/checklist`
 - `./bin/integration_tests`
 - targeted format, analyze, and test runs
