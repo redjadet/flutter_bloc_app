@@ -977,6 +977,60 @@ abstract class AppLocalizations {
   /// **'Direct. This app calls Hugging Face directly for chat replies.'**
   String get chatTransportDirectSemanticsLabel;
 
+  /// Chip label when chat completions use the Render FastAPI orchestration demo
+  ///
+  /// In en, this message translates to:
+  /// **'Orchestration'**
+  String get chatTransportRenderOrchestration;
+
+  /// Screen reader and tooltip for the Render orchestration transport chip
+  ///
+  /// In en, this message translates to:
+  /// **'Orchestration. Chat replies use your Render FastAPI service, which routes to Hugging Face.'**
+  String get chatTransportRenderOrchestrationSemanticsLabel;
+
+  /// Chat model picker entry that lets the server choose mini vs full model
+  ///
+  /// In en, this message translates to:
+  /// **'Auto'**
+  String get chatModelAuto;
+
+  /// Shown when CHAT_RENDER_DEMO_STRICT prevents falling back to Supabase/direct
+  ///
+  /// In en, this message translates to:
+  /// **'Render demo strict mode is on; fallthrough is disabled.'**
+  String get chatRenderStrictMode;
+
+  /// User-visible copy when caller auth must be refreshed for the Render path
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in again to continue using the Render chat demo.'**
+  String get chatAuthRefreshRequired;
+
+  /// Shown when the signed-in session no longer supports the Render demo path
+  ///
+  /// In en, this message translates to:
+  /// **'Your session ended. Start a new chat after signing in.'**
+  String get chatSessionEnded;
+
+  /// Hint when a different Firebase user is required before sending
+  ///
+  /// In en, this message translates to:
+  /// **'Switch account to refresh credentials for the Render chat demo.'**
+  String get chatSwitchAccount;
+
+  /// Shown when the HF read token is unavailable for the Render path
+  ///
+  /// In en, this message translates to:
+  /// **'Hugging Face token is missing. Check your connection and try again.'**
+  String get chatTokenMissing;
+
+  /// Optional tooltip explaining orchestration when Auto is selected
+  ///
+  /// In en, this message translates to:
+  /// **'Uses server-side routing between models when Auto is selected.'**
+  String get chatOrchestrationTooltip;
+
   /// Chip label when the device has no network route (chat transport chip hidden)
   ///
   /// In en, this message translates to:

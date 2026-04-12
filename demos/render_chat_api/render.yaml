@@ -1,0 +1,17 @@
+# Example Render blueprint (adjust service name / plan for your org).
+services:
+  - type: web
+    name: flutter-bloc-render-chat-api
+    runtime: docker
+    rootDir: demos/render_chat_api
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: CORS_ORIGINS
+        sync: false
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: CALLER_AUTH_MODE
+        value: firebase
+      - key: MAX_CONCURRENT_120B
+        value: "2"

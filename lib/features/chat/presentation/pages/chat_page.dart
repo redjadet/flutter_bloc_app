@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
@@ -11,11 +12,15 @@ class ChatPage extends StatefulWidget {
   const ChatPage({
     required this.errorNotificationService,
     required this.pendingSyncRepository,
+    /// When non-null, overrides [SecretConfig.chatRenderDemoStrict] for the transport chip strict line (widget tests).
+    this.renderTransportDemoStrictOverride,
     super.key,
   });
 
   final ErrorNotificationService errorNotificationService;
   final PendingSyncRepository pendingSyncRepository;
+
+  final bool? renderTransportDemoStrictOverride;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -116,6 +121,8 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
+    final bool renderDemoStrict =
+        widget.renderTransportDemoStrictOverride ?? SecretConfig.chatRenderDemoStrict;
     final bool hasHistory = context.selectState<ChatCubit, ChatState, bool>(
       selector: (final state) => state.hasHistory,
     );
@@ -164,7 +171,10 @@ class _ChatPageState extends State<ChatPage> {
                         if (transport == null) {
                           return const SizedBox.shrink();
                         }
-                        return ChatTransportBadge(transport: transport);
+                        return ChatTransportBadge(
+                          transport: transport,
+                          renderDemoStrict: renderDemoStrict,
+                        );
                       },
                     );
                   },

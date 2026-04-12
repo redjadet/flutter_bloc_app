@@ -88,6 +88,7 @@ class ChatLocalConversationUpdater {
           clientMessageId: message.clientMessageId,
           createdAt: message.createdAt,
           lastSyncedAt: state.now,
+          terminalSyncFailureCode: message.terminalSyncFailureCode,
         );
         break;
       }
@@ -110,6 +111,50 @@ class ChatLocalConversationUpdater {
       lastSyncedAt: state.now,
       synchronized: true,
       changeId: payload.clientMessageId,
+    );
+
+    final List<ChatConversation> merged = _mergeConversationIntoList(
+      state.existing,
+      updated,
+      state.index,
+    );
+
+    await _localDataSource.save(merged);
+  }
+
+  /// Marks the queued user message as terminal failed after a non-retryable
+  /// dequeue error (plan: dead-letter + visible copy).
+  Future<void> applyTerminalSyncFailure({
+    required final ChatLocalConversationState state,
+    required final ChatSyncPayload payload,
+    required final String failureCode,
+  }) async {
+    final List<ChatMessage> messages = List<ChatMessage>.from(state.messages);
+    bool found = false;
+    for (int i = 0; i < messages.length; i++) {
+      final ChatMessage message = messages[i];
+      if (message.clientMessageId == payload.clientMessageId) {
+        messages[i] = ChatMessage(
+          author: message.author,
+          text: message.text,
+          clientMessageId: message.clientMessageId,
+          createdAt: message.createdAt,
+          synchronized: false,
+          lastSyncedAt: message.lastSyncedAt,
+          terminalSyncFailureCode: failureCode,
+        );
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      return;
+    }
+
+    final ChatConversation updated = state.conversation.copyWith(
+      messages: messages,
+      updatedAt: state.now,
+      synchronized: false,
     );
 
     final List<ChatConversation> merged = _mergeConversationIntoList(

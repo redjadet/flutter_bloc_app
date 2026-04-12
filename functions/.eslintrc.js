@@ -21,6 +21,7 @@ module.exports = {
     "/lib/**/*", // Ignore built files.
     "/generated/**/*", // Ignore generated files.
     "/tool/**/*.js", // Ignore node scripts (not in tsconfig).
+    "/test/**/*.js", // Node test harness (not in tsconfig project).
   ],
   plugins: [
     "@typescript-eslint",

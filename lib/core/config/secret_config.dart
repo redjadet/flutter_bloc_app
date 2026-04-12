@@ -12,6 +12,42 @@ part 'secret_config_sources.dart';
 class SecretConfig {
   SecretConfig._();
 
+  /// When true, [chatRenderDemoBaseUrl] is non-empty, HF token + Firebase user
+  /// exist, the app attempts Render orchestration before composite chat.
+  static const bool chatRenderDemoEnabled = bool.fromEnvironment(
+    'CHAT_RENDER_DEMO_ENABLED',
+  );
+
+  /// Never fall through to Supabase/direct after a retryable Render failure.
+  static const bool chatRenderDemoStrict = bool.fromEnvironment(
+    'CHAT_RENDER_DEMO_STRICT',
+  );
+
+  /// HTTPS origin of the Render FastAPI service (no trailing slash), e.g.
+  /// `https://my-service.onrender.com`.
+  static const String chatRenderDemoBaseUrl = String.fromEnvironment(
+    'CHAT_RENDER_DEMO_BASE_URL',
+  );
+
+  /// Optional `X-Render-Demo-Secret` when the service is gated with
+  /// `DEMO_SHARED_SECRET` (non-web / dev smoke only per plan).
+  static const String chatRenderDemoSecret = String.fromEnvironment(
+    'CHAT_RENDER_DEMO_SECRET',
+  );
+
+  /// Optional Cloud Function name (non-dev) that returns a short-lived HF read
+  /// token for Render. Empty disables the Callable path (falls back to
+  /// `huggingface_api_key` from secrets when present).
+  static const String chatRenderHfReadTokenCallable = String.fromEnvironment(
+    'CHAT_RENDER_HF_READ_TOKEN_CALLABLE',
+  );
+
+  /// Firebase Functions region for `chatRenderHfReadTokenCallable`.
+  static const String chatRenderHfReadTokenCallableRegion = String.fromEnvironment(
+    'CHAT_RENDER_HF_READ_TOKEN_CALLABLE_REGION',
+    defaultValue: 'us-central1',
+  );
+
   static const String enableAssetSecretsDefine = 'ENABLE_ASSET_SECRETS';
   static const String _keyHfToken = 'huggingface_api_key';
   static const String _keyHfModel = 'huggingface_model';

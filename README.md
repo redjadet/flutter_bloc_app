@@ -72,7 +72,7 @@ flutter pub get
 flutter run -t lib/main_dev.dart
 ```
 
-Secrets for optional backends (Supabase, Hugging Face, Gemini, etc.) are supplied via `--dart-define` or persisted secure storage; see [Security and Secrets](docs/security_and_secrets.md). For day-to-day terminal use, **`direnv`** plus a repo-local `.envrc` (see [`docs/envrc.example`](docs/envrc.example)) can inject those defines automatically so you do not have to paste flags on every `flutter run`.
+Secrets for optional backends (Supabase, Hugging Face, Gemini, etc.) are supplied via `--dart-define` or persisted secure storage; see [Security and Secrets](docs/security_and_secrets.md). For day-to-day terminal use, **`direnv`** plus a repo-local `.envrc` (see [`docs/envrc.example`](docs/envrc.example)) can inject those defines automatically so you do not have to paste flags on every `flutter run`. Optional **Render + FastAPI chat demo** compile-time keys (`CHAT_RENDER_*`) and related ops are documented in [`docs/integrations/render_fastapi_chat_demo.md`](docs/integrations/render_fastapi_chat_demo.md); they flow through [`tool/flutter_dart_defines_from_env.sh`](tool/flutter_dart_defines_from_env.sh) when set in the environment.
 
 Available app entrypoints:
 

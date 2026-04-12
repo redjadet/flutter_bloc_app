@@ -343,6 +343,13 @@ void main() {
         final List<SyncOperation> pending = await pendingRepository
             .getPendingOperations(now: DateTime.now().toUtc());
         expect(pending, isEmpty);
+
+        final List<ChatConversation> after = await localDataSource.load();
+        expect(after, isNotEmpty);
+        final ChatMessage userMsg = after.first.messages.firstWhere(
+          (final m) => m.clientMessageId == 'm-drop',
+        );
+        expect(userMsg.terminalSyncFailureCode, 'auth_required');
       },
     );
 

@@ -10,6 +10,7 @@ class ChatMessage {
     this.createdAt,
     this.synchronized = true,
     this.lastSyncedAt,
+    this.terminalSyncFailureCode,
   });
 
   factory ChatMessage.fromJson(final Map<String, dynamic> json) {
@@ -34,6 +35,9 @@ class ChatMessage {
     final DateTime? lastSyncedAt = lastSyncedString != null
         ? DateTime.tryParse(lastSyncedString)
         : null;
+    final String? terminalSyncFailureCode =
+        stringFromDynamic(json['terminalSyncFailureCode']) ??
+        stringFromDynamic(json['terminal_sync_failure_code']);
 
     return ChatMessage(
       author: author,
@@ -42,6 +46,7 @@ class ChatMessage {
       createdAt: createdAt,
       synchronized: synchronized,
       lastSyncedAt: lastSyncedAt,
+      terminalSyncFailureCode: terminalSyncFailureCode,
     );
   }
 
@@ -52,6 +57,11 @@ class ChatMessage {
   final bool synchronized;
   final DateTime? lastSyncedAt;
 
+  /// Set when a background sync dequeue fails with a non-retryable remote
+  /// error (dead-letter). Value matches the remote failure `code` field for
+  /// l10n mapping.
+  final String? terminalSyncFailureCode;
+
   Map<String, dynamic> toJson() => <String, dynamic>{
     'author': author.name,
     'text': text,
@@ -61,5 +71,6 @@ class ChatMessage {
     'synchronized': synchronized,
     if (lastSyncedAt case final syncedAt?)
       'lastSyncedAt': syncedAt.toIso8601String(),
+    if (terminalSyncFailureCode != null) 'terminalSyncFailureCode': terminalSyncFailureCode,
   };
 }

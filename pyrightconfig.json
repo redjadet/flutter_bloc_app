@@ -1,0 +1,11 @@
+{
+  "executionEnvironments": [
+    {
+      "root": "demos/render_chat_api",
+      "pythonVersion": "3.9",
+      "venvPath": "demos/render_chat_api",
+      "venv": ".venv"
+    }
+  ],
+  "exclude": ["**/.venv", "**/node_modules", "**/__pycache__"]
+}
