@@ -37,6 +37,10 @@ export HUGGINGFACE_API_KEY="YOUR_HUGGINGFACE_TOKEN"
 # when FUNCTIONS_EMULATOR=true (not a Flutter dart-define; export for the shell that runs `firebase emulators:start`).
 # export RENDER_CHAT_DEMO_HF_READ_TOKEN="hf_..."
 
+# Optional: Render workspace API key (local shell + Cursor MCP `Authorization: Bearer ${RENDER_API_KEY}`).
+# Do NOT put this in Firebase Remote Config — the Flutter app fetches RC to the device; Render keys are admin-scoped.
+# export RENDER_API_KEY="rnd_..."
+
 # Optional: make `flutter run` auto-append --dart-define from env (zsh/bash).
 # The wrapper injects defines after the subcommand (e.g. `flutter run --dart-define=...`).
 export PATH="$(pwd)/tool/direnv/bin:${PATH}"

@@ -3,9 +3,11 @@ import 'dart:collection';
 
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_render_orchestration_diagnostics.dart';
 import 'package:flutter_bloc_app/features/chat/data/render_orchestration_hf_token_provider.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
@@ -17,7 +19,6 @@ import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
-import 'package:meta/meta.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'chat_cubit_helpers.dart';
@@ -56,6 +57,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
        ) {
     _listenSupabaseAuthForTransportHint();
     _listenFirebaseAuthForTransportHint();
+    _refreshRunnableTransportHintOnly();
   }
 
   final ChatRepository _repository;
@@ -154,6 +156,17 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
       return;
     }
     final hint = _repository.chatRemoteTransportHint;
+    if (kDebugMode) {
+      AppLogger.info(
+        'Chat: transport_hint_refresh '
+        'repoHint=$hint cubitStoredHint=${state.runnableTransportHint} '
+        'lastCompletion=${state.lastCompletionTransport} '
+        'transportForBadge=${state.transportForBadge} '
+        '(badge uses lastCompletion first; chip can stay Supabase after a '
+        'Supabase fallback reply even when Render demo is configured)',
+      );
+      logChatRenderOrchestrationIfDebug('cubit_transport_hint');
+    }
     if (hint == state.runnableTransportHint) {
       return;
     }

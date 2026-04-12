@@ -1,6 +1,7 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
@@ -43,6 +44,9 @@ class SecretConfigRenderOrchestrationHfTokenProvider implements RenderOrchestrat
 
 /// Single-flight resolver: Remote Config (dev), Callable (non-dev when configured),
 /// then `SecretConfig.huggingfaceApiKey`.
+///
+/// In **debug** builds only, logs `hf_token_source=…` (no token material) after each
+/// resolution for tracing (`orchestration_cache`, `remote_config`, `callable`, etc.).
 class LayeredRenderOrchestrationHfTokenProvider implements RenderOrchestrationHfTokenProvider {
   LayeredRenderOrchestrationHfTokenProvider({
     required final AppRuntimeConfig runtime,
@@ -97,9 +101,10 @@ class LayeredRenderOrchestrationHfTokenProvider implements RenderOrchestrationHf
   Future<String?> _resolve() async {
     final String? fromSecret = SecretConfig.huggingfaceApiKey?.trim();
 
-    final String? cached = await _readAnyCache();
-    if (cached != null && cached.isNotEmpty) {
-      return cached;
+    final ({String token, String source})? cached = await _readAnyCache();
+    if (cached != null) {
+      _logOrchestrationHfTokenSource(cached.source);
+      return cached.token;
     }
 
     if (_runtime.isDev) {
@@ -119,32 +124,46 @@ class LayeredRenderOrchestrationHfTokenProvider implements RenderOrchestrationHf
       }
       if (fromRc != null && fromRc.isNotEmpty) {
         await _writeCache(fromRc);
+        _logOrchestrationHfTokenSource('remote_config');
         return fromRc;
       }
     } else {
       final String? fromCallable = await _tryCallableToken();
       if (fromCallable != null && fromCallable.isNotEmpty) {
         await _writeCache(fromCallable);
+        _logOrchestrationHfTokenSource('callable');
         return fromCallable;
       }
     }
 
     if (fromSecret != null && fromSecret.isNotEmpty) {
+      _logOrchestrationHfTokenSource('secret_config');
       return fromSecret;
     }
+    _logOrchestrationHfTokenSource('none');
     return null;
   }
 
-  Future<String?> _readAnyCache() async {
+  /// Debug-only: which path supplied the HF read token (never logs token material).
+  void _logOrchestrationHfTokenSource(final String source) {
+    if (kDebugMode) {
+      AppLogger.debug(
+        'LayeredRenderOrchestrationHfTokenProvider: hf_token_source=$source '
+        '(flavor=${_runtime.name})',
+      );
+    }
+  }
+
+  Future<({String token, String source})?> _readAnyCache() async {
     final String? primary = (await _storage.read(cacheKey))?.trim();
     if (primary != null && primary.isNotEmpty) {
-      return primary;
+      return (token: primary, source: 'orchestration_cache');
     }
     final String? legacy = (await _storage.read(legacyRcCacheKey))?.trim();
     if (legacy != null && legacy.isNotEmpty) {
       await _writeCache(legacy);
       await _storage.delete(legacyRcCacheKey);
-      return legacy;
+      return (token: legacy, source: 'orchestration_cache_legacy');
     }
     return null;
   }

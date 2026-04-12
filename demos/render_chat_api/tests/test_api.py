@@ -59,6 +59,7 @@ def test_chat_success_with_mock_hf() -> None:
                     "Authorization": "Bearer test-token",
                     "X-HF-Authorization": "Bearer hf-test",
                     "Idempotency-Key": "k-success-1",
+                    "X-Client-Correlation-Id": "pytest-correlation-1",
                 },
                 json={
                     "model": "openai/gpt-oss-20b",
@@ -66,8 +67,14 @@ def test_chat_success_with_mock_hf() -> None:
                 },
             )
     assert r.status_code == 200, r.text
+    assert r.headers.get("X-Server-Request-Id")
+    assert r.headers.get("X-Client-Correlation-Id") == "pytest-correlation-1"
     data = r.json()
     assert data["choices"][0]["message"]["content"] == "assistant-from-mock"
+    meta = data.get("_render_meta")
+    assert isinstance(meta, dict)
+    assert meta.get("server_request_id") == r.headers.get("X-Server-Request-Id")
+    assert meta.get("client_correlation_id") == "pytest-correlation-1"
 
 
 def test_cache_hit_second_call_no_second_hf() -> None:

@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_local_conversation_updater.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_local_data_source.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_render_orchestration_diagnostics.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_sync_operation_factory.dart';
 import 'package:flutter_bloc_app/features/chat/data/composite_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/demo_first_chat_repository.dart';
@@ -179,4 +180,5 @@ void registerChatServices() {
   registerLazySingletonIfAbsent<ChatListRepository>(
     MockChatListRepository.new,
   );
+  logChatRenderOrchestrationIfDebug('register_chat_services_done');
 }
