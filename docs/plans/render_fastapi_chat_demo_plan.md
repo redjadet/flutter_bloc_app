@@ -46,6 +46,47 @@ The **point of adding FastAPI** to the current AI chat flow is **not** merely to
 - End-to-end **Flutter app → HTTPS on Render → FastAPI orchestration** without a second chat screen.
 - Preserve the **OpenAI-style chat-completions JSON** wire contract so [`HuggingFaceResponseParser.buildChatCompletionsResult`](../../lib/features/chat/data/huggingface_response_parser.dart) stays the single parse path on the client.
 
+## Human checklist (step-by-step)
+
+These steps need a **person** (dashboard access, billing, secrets, browser verification). Coding agents can implement the repo; they cannot complete Render signup, paste production secrets, or approve org policy for you.
+
+### A — Decide and prepare (before first deploy)
+
+1. **Scope:** Confirm v1 orchestration behavior (stub branches vs Hugging Face upstream) and whether `DEMO_SHARED_SECRET` is used at all.
+2. **Web rule:** If using a shared secret, confirm it will **not** ship in **web release** builds (non-web flavors or CI-only defines per [Security and auth](#security-and-auth-contract)).
+3. **Accounts:** Ensure access to **Render** (and **Hugging Face** hub if the server will call HF with `HF_TOKEN`).
+4. **CORS list:** Write down every origin that must call the API (e.g. `http://localhost:7357` for Flutter web dev, staging app URL if any). No `*` if credentials or custom headers are used.
+
+### B — Render (after `demos/render_chat_api/` exists in the connected branch)
+
+1. **Create service:** In Render Dashboard, **New → Web Service**, connect the git repo, pick the **branch** that contains `demos/render_chat_api/`.
+2. **Root / build:** Set **root directory** to `demos/render_chat_api` (or equivalent Docker **context**). Use the repo’s Dockerfile or Render’s Python runtime + documented `pip install` + start command (`uvicorn main:app --host 0.0.0.0 --port $PORT`).
+3. **Health check:** Set health check path to **`/health`** (or match whatever the FastAPI app exposes).
+4. **Environment:** In Render **Environment**, set at least `CORS_ORIGINS` (comma-separated). Optionally set `DEMO_SHARED_SECRET`, `HF_TOKEN`, and any model/env vars the orchestration code expects.
+5. **Deploy:** Trigger first deploy; wait until status is **Live** (expect cold start on free/low tiers).
+6. **Copy URL:** Record the service **HTTPS base URL** (no trailing slash)—this value will go into Flutter config / `dart-define` / secure storage per team practice.
+
+### C — Verify the API (human or scripted; you own the credentials)
+
+1. **Health:** In a browser or `curl`, `GET https://<service>/health` and confirm **200**.
+2. **Chat contract:** `POST https://<service>/v1/chat/completions` with a minimal JSON body matching the Flutter payload shape; confirm **200** and a `choices[0].message.content` string (or the documented error JSON on intentional bad input).
+3. **Auth (if enabled):** Repeat (12) **without** then **with** the secret header; confirm **401** vs **200** as designed.
+4. **CORS (web):** From a Flutter **web** dev session on an allowed origin, send a real chat message; if blocked, adjust `CORS_ORIGINS` on Render and **redeploy**.
+
+### D — Flutter on a developer machine
+
+1. **Inject demo URL:** Set the demo base URL via the mechanism your team uses (`--dart-define`, local secrets JSON, env file—**never** commit secrets). Align with [Flutter implementation notes](#3-flutter-implementation-notes) and [Security and auth](#security-and-auth-contract).
+2. **Kill-switch / strict:** For first smoke test, use defines documented in [Routing decision (locked)](#routing-decision-locked) so you can turn Render on/off without code edits.
+3. **Run app:** `flutter run` (or repo entrypoint) for **dev** / **staging** with defines applied; open the **existing chat** screen.
+4. **Manual chat test:** Send a message; confirm orchestration reply or intentional **fallthrough** to Supabase/HF when Render returns a retryable failure (if testing that path).
+5. **Web-only pass:** If you ship web, repeat on **Chrome** (or target browser) with CORS allowlist confirmed in step 14.
+
+### E — Handoff, ops, and release hygiene
+
+1. **Write `docs/integrations/render_fastapi_chat_demo.md`** (or update it) with the real service URL pattern, env var names, CORS origins you chose, and who to ping for Render access—still **no secrets** in git.
+2. **Rotation:** If `DEMO_SHARED_SECRET` or `HF_TOKEN` rotates, update Render env, redeploy, and notify anyone with local defines.
+3. **Production / store builds:** Confirm with release owner that `CHAT_RENDER_DEMO_ENABLED` (or equivalent) defaults **off** and that no demo secret is baked into **web** release artifacts.
+
 ## External review (Codex)
 
 Latest structured review: `./tool/run_codex_plan_review.sh` (balanced) on this file—feedback merged into **Security and auth**, **Failure mapping**, **Idempotency**, **Dedicated Dio checklist**, **Transport state contract**, **FastAPI/Render hardening**, **Testing split**, and **l10n proof** below.
