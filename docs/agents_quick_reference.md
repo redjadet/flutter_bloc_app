@@ -30,6 +30,7 @@ Decision guide:
 | Repo-managed host-template drift check | `./tool/check_agent_asset_drift.sh` |
 | Host-template preview sync | `./tool/sync_agent_assets.sh --dry-run` |
 | Cross-host diff review, explicit request only | `./tool/request_codex_feedback.sh` |
+| Cross-host **plan** review (markdown plan + Codex) | `./tool/run_codex_plan_review.sh PATH/TO/plan.md` |
 
 Fastlane note: prefer `./tool/fastlane.sh` over raw `fastlane`.
 

@@ -73,7 +73,9 @@ Work through the following; order matters where noted.
   for routing.
 - **Extra review:** For medium/high-risk work, prefer one extra review pass before finalizing.
   From non-Codex hosts, that can include
-  `./tool/request_codex_feedback.sh`. From Codex itself, use that helper only
+  `./tool/request_codex_feedback.sh` (git diff) or
+  `./tool/run_codex_plan_review.sh PATH/TO/plan.md` (tracked template + Codex delegate).
+  From Codex itself, use that helper only
   when the user explicitly asks for a second opinion or cross-host review.
   Keep `./bin/checklist` for broad or pre-ship sweeps, or when the user
   explicitly asks for the full validation pass.
