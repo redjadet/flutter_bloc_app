@@ -111,6 +111,36 @@ class NormalizeDocLinksTest(unittest.TestCase):
             "See [`README.md`](../README.md).\n",
         )
 
+    def test_existing_link_with_fragment_preserved_when_target_resolves(self):
+        path = self.write_file(
+            "docs/engineering/routing.md",
+            "See [`ai_code_review_protocol.md`](../ai_code_review_protocol.md#special-cases).\n",
+        )
+        self.write_file("docs/ai_code_review_protocol.md", "# AI\n\n## Special Cases\n")
+
+        change = self.module.normalize_file(path, self.repo_root)
+
+        self.assertIsNone(change)
+        self.assertEqual(
+            path.read_text(encoding="utf-8"),
+            "See [`ai_code_review_protocol.md`](../ai_code_review_protocol.md#special-cases).\n",
+        )
+
+    def test_existing_link_fragment_preserved_when_rewriting_broken_target(self):
+        path = self.write_file(
+            "docs/engineering/routing.md",
+            "See [`ai_code_review_protocol.md`](../missing.md#special-cases).\n",
+        )
+        self.write_file("docs/ai_code_review_protocol.md", "# AI\n\n## Special Cases\n")
+
+        change = self.module.normalize_file(path, self.repo_root)
+
+        self.assertIsNotNone(change)
+        self.assertEqual(
+            path.read_text(encoding="utf-8"),
+            "See [`ai_code_review_protocol.md`](../ai_code_review_protocol.md#special-cases).\n",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

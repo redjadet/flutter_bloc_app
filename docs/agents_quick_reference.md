@@ -36,12 +36,27 @@ Fastlane note: prefer `./tool/fastlane.sh` over raw `fastlane`.
 ## Common Flow
 
 1. Read the canon.
-2. For non-trivial work, write plan + verification notes in the active host
+2. Understand the business goal and intended user outcome before narrowing to
+   implementation.
+3. For non-trivial work, write plan + verification notes in the active host
    tracker.
-3. Reuse existing repo seams before adding abstractions.
-4. Apply the AI review gate.
-5. Run the smallest matching validation command.
-6. Prove the result with scope-matched evidence.
+4. Reuse existing repo seams before adding abstractions.
+5. Apply the AI review gate.
+6. Run the smallest matching validation command.
+7. Prove the result with scope-matched evidence.
+
+## Work Shapes
+
+Commands for each lane live in **Validation Routes** above and in
+[`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
+
+| Work shape | Default action |
+| --- | --- |
+| Small/local change | Reuse existing seams, run targeted validation, prove the changed behavior. |
+| Shared architecture / sync / routing / reliability | Treat as non-trivial, document tradeoffs, bias `./bin/checklist` when the blast radius is broad. |
+| Docs-only repo guidance | Validate touched docs and links; if host templates changed, run drift and dry-run sync (see **Validation Routes**). |
+| Production failure / hotfix | Narrow proof first, then widen gates to match blast radius (see **Production-Failure Path** in validation routing). |
+| Explicit second opinion | Use a different host via `./tool/request_codex_feedback.sh`; do not self-delegate. |
 
 ## Host Trackers
 
@@ -90,5 +105,10 @@ Repo-managed Cursor slash prompts (synced by `./tool/sync_agent_assets.sh`):
 
 - Repo scripts and repo docs beat host-local wrappers.
 - Host adapters are accelerators only; they do not replace repo policy.
-- For docs-only agent-guidance or host-template changes, still validate docs,
-  links, and host-asset drift.
+- Goals, scale, edge cases, judgment, and ownership live in
+  [`AGENTS.md`](../AGENTS.md) (**Shared Operating Model**); keep this page for
+  commands and routing.
+- Docs-only or host-template edits: validate docs, links, and drift paths (see
+  **Validation Routes** and validation routing doc).
+- Codex: durable plan in the tracker; short, decision-oriented commentary.
+- Cursor: copy-paste-ready repo commands over long canon repeats.

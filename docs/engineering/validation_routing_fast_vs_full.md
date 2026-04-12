@@ -29,11 +29,32 @@ Command:
 
 Use full path for broad, medium/high-risk, or pre-ship changes.
 
+Typical triggers:
+
+- shared architecture or dependency-injection changes
+- offline-first sync, retry, lifecycle, or reliability work
+- changes that span multiple features or shared infrastructure
+- changes where the smallest honest proof is broader than a single focused test
+
 Command:
 
 ```bash
 ./bin/checklist
 ```
+
+## Docs And Agent Guidance Path
+
+Use targeted validation for docs-only repo guidance, workflow docs, and
+agent-facing files.
+
+Typical path:
+
+- Markdown lint or link/doc checks on touched paths
+- `./tool/check_agent_asset_drift.sh` when `tool/agent_host_templates/` changed
+- `./tool/sync_agent_assets.sh --dry-run` when repo-managed host assets changed
+
+Escalate to `./bin/checklist` when the doc change materially changes validation
+guidance, delivery policy, or repo-wide operating rules (including [`AGENTS.md`](../../AGENTS.md)).
 
 ## Integration Path
 
@@ -50,3 +71,19 @@ Optional full upgrade lane:
 ```bash
 ./bin/upgrade_validate_all
 ```
+
+## Production-Failure Path
+
+For hotfixes and reliability defects, validate the narrowed failure first, then
+add the smallest broader gate that honestly covers the blast radius. Aligns with
+the **Bug-fix path** in [`ai_code_review_protocol.md`](../ai_code_review_protocol.md#special-cases)
+(reproduce → guard → fix → validate), extended here with when to escalate to
+`./bin/checklist`.
+
+Default order:
+
+1. Reproduce or reason clearly about the failure.
+2. Add the focused guard or regression proof.
+3. Run targeted validation for the changed surface.
+4. Add `./bin/checklist` when the failure touches shared infrastructure,
+   lifecycle, routing, sync, retries, or other broad surfaces.
