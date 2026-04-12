@@ -99,6 +99,35 @@ void main() {
     expect(cubit.clearErrorCalled, isTrue);
   });
 
+  testWidgets('SnackBar uses ARB when remoteFailureL10nCode is set', (WidgetTester tester) async {
+    final _StubChatCubit cubit = _StubChatCubit(const ChatState());
+    addTearDown(cubit.close);
+    final ErrorNotificationService errorNotificationService = SnackbarErrorNotificationService();
+
+    await tester.pumpWidget(
+      _wrapWithApp(
+        cubit,
+        ChatMessageList(
+          controller: ScrollController(),
+          errorNotificationService: errorNotificationService,
+        ),
+      ),
+    );
+
+    cubit.emit(
+      const ChatState(
+        messages: <ChatMessage>[ChatMessage(author: ChatAuthor.user, text: 'hi')],
+        error: 'opaque-upstream-detail',
+        remoteFailureL10nCode: 'auth_required',
+        status: ViewStatus.error,
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text(AppLocalizationsEn().chatAuthRefreshRequired), findsOneWidget);
+    expect(find.text('opaque-upstream-detail'), findsNothing);
+  });
+
   testWidgets('shows pending sync label for unsent user messages', (
     WidgetTester tester,
   ) async {
@@ -146,6 +175,39 @@ void main() {
     );
     expect(replyRichText.text.toPlainText(), contains('Reply'));
     // Pending sync text is no longer displayed in the UI
+  });
+
+  testWidgets('shows terminal sync failure line for dead-letter user messages', (
+    final WidgetTester tester,
+  ) async {
+    final _StubChatCubit cubit = _StubChatCubit(
+      const ChatState(
+        messages: <ChatMessage>[
+          ChatMessage(
+            author: ChatAuthor.user,
+            text: 'Queued',
+            clientMessageId: 'm-term',
+            synchronized: false,
+            terminalSyncFailureCode: 'auth_required',
+          ),
+        ],
+        pastUserInputs: <String>['Queued'],
+      ),
+    );
+    addTearDown(cubit.close);
+
+    await tester.pumpWidget(
+      _wrapWithApp(
+        cubit,
+        ChatMessageList(
+          controller: ScrollController(),
+          errorNotificationService: SnackbarErrorNotificationService(),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text(AppLocalizationsEn().chatAuthRefreshRequired), findsOneWidget);
   });
 
   testWidgets('ChatMessageList uses identity-based repaint keys', (

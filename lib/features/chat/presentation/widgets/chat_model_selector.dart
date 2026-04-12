@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_model_ids.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -59,6 +60,8 @@ class ChatModelSelector extends StatelessWidget {
 
   String _modelLabel(final AppLocalizations l10n, final String model) {
     switch (model) {
+      case kChatOrchestrationAutoModelId:
+        return l10n.chatModelAuto;
       case 'openai/gpt-oss-20b':
         return l10n.chatModelGptOss20b;
       case 'openai/gpt-oss-120b':

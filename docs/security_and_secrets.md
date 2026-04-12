@@ -71,6 +71,8 @@ direnv allow
 flutter run -t lib/main_dev.dart $(./tool/flutter_dart_defines_from_env.sh)
 ```
 
+When `.envrc` follows [`docs/envrc.example`](envrc.example) and prepends `tool/direnv/bin` to `PATH`, plain `flutter run` / `flutter build` still receive the same flags: the wrapper calls [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh), which emits `--dart-define=...` only for **named** environment variables (for example `HUGGINGFACE_API_KEY`, `SUPABASE_*`, and optional Render demo `CHAT_RENDER_*` keys). **New** compile-time keys must be added to that script or they will not reach the app even if exported in `.envrc`. Render demo wiring is summarized in [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md).
+
 If you want iOS builds to use the same values without re-typing flags:
 
 ```bash

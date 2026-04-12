@@ -14,7 +14,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ChatState {
 
- List<ChatMessage> get messages; bool get isLoading; String? get error; List<String> get pastUserInputs; List<String> get generatedResponses; String? get currentModel; List<ChatConversation> get history; String? get activeConversationId; ViewStatus get status; ChatInferenceTransport? get runnableTransportHint; ChatInferenceTransport? get lastCompletionTransport;
+ List<ChatMessage> get messages; bool get isLoading; String? get error;/// When set with [error], snackbars use ARB copy for this remote failure code.
+ String? get remoteFailureL10nCode; List<String> get pastUserInputs; List<String> get generatedResponses; String? get currentModel; List<ChatConversation> get history; String? get activeConversationId; ViewStatus get status; ChatInferenceTransport? get runnableTransportHint; ChatInferenceTransport? get lastCompletionTransport;
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +26,16 @@ $ChatStateCopyWith<ChatState> get copyWith => _$ChatStateCopyWithImpl<ChatState>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatState&&const DeepCollectionEquality().equals(other.messages, messages)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error)&&const DeepCollectionEquality().equals(other.pastUserInputs, pastUserInputs)&&const DeepCollectionEquality().equals(other.generatedResponses, generatedResponses)&&(identical(other.currentModel, currentModel) || other.currentModel == currentModel)&&const DeepCollectionEquality().equals(other.history, history)&&(identical(other.activeConversationId, activeConversationId) || other.activeConversationId == activeConversationId)&&(identical(other.status, status) || other.status == status)&&(identical(other.runnableTransportHint, runnableTransportHint) || other.runnableTransportHint == runnableTransportHint)&&(identical(other.lastCompletionTransport, lastCompletionTransport) || other.lastCompletionTransport == lastCompletionTransport));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatState&&const DeepCollectionEquality().equals(other.messages, messages)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error)&&(identical(other.remoteFailureL10nCode, remoteFailureL10nCode) || other.remoteFailureL10nCode == remoteFailureL10nCode)&&const DeepCollectionEquality().equals(other.pastUserInputs, pastUserInputs)&&const DeepCollectionEquality().equals(other.generatedResponses, generatedResponses)&&(identical(other.currentModel, currentModel) || other.currentModel == currentModel)&&const DeepCollectionEquality().equals(other.history, history)&&(identical(other.activeConversationId, activeConversationId) || other.activeConversationId == activeConversationId)&&(identical(other.status, status) || other.status == status)&&(identical(other.runnableTransportHint, runnableTransportHint) || other.runnableTransportHint == runnableTransportHint)&&(identical(other.lastCompletionTransport, lastCompletionTransport) || other.lastCompletionTransport == lastCompletionTransport));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(messages),isLoading,error,const DeepCollectionEquality().hash(pastUserInputs),const DeepCollectionEquality().hash(generatedResponses),currentModel,const DeepCollectionEquality().hash(history),activeConversationId,status,runnableTransportHint,lastCompletionTransport);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(messages),isLoading,error,remoteFailureL10nCode,const DeepCollectionEquality().hash(pastUserInputs),const DeepCollectionEquality().hash(generatedResponses),currentModel,const DeepCollectionEquality().hash(history),activeConversationId,status,runnableTransportHint,lastCompletionTransport);
 
 @override
 String toString() {
-  return 'ChatState(messages: $messages, isLoading: $isLoading, error: $error, pastUserInputs: $pastUserInputs, generatedResponses: $generatedResponses, currentModel: $currentModel, history: $history, activeConversationId: $activeConversationId, status: $status, runnableTransportHint: $runnableTransportHint, lastCompletionTransport: $lastCompletionTransport)';
+  return 'ChatState(messages: $messages, isLoading: $isLoading, error: $error, remoteFailureL10nCode: $remoteFailureL10nCode, pastUserInputs: $pastUserInputs, generatedResponses: $generatedResponses, currentModel: $currentModel, history: $history, activeConversationId: $activeConversationId, status: $status, runnableTransportHint: $runnableTransportHint, lastCompletionTransport: $lastCompletionTransport)';
 }
 
 
@@ -45,7 +46,7 @@ abstract mixin class $ChatStateCopyWith<$Res>  {
   factory $ChatStateCopyWith(ChatState value, $Res Function(ChatState) _then) = _$ChatStateCopyWithImpl;
 @useResult
 $Res call({
- List<ChatMessage> messages, bool isLoading, String? error, List<String> pastUserInputs, List<String> generatedResponses, String? currentModel, List<ChatConversation> history, String? activeConversationId, ViewStatus status, ChatInferenceTransport? runnableTransportHint, ChatInferenceTransport? lastCompletionTransport
+ List<ChatMessage> messages, bool isLoading, String? error, String? remoteFailureL10nCode, List<String> pastUserInputs, List<String> generatedResponses, String? currentModel, List<ChatConversation> history, String? activeConversationId, ViewStatus status, ChatInferenceTransport? runnableTransportHint, ChatInferenceTransport? lastCompletionTransport
 });
 
 
@@ -62,11 +63,12 @@ class _$ChatStateCopyWithImpl<$Res>
 
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? messages = null,Object? isLoading = null,Object? error = freezed,Object? pastUserInputs = null,Object? generatedResponses = null,Object? currentModel = freezed,Object? history = null,Object? activeConversationId = freezed,Object? status = null,Object? runnableTransportHint = freezed,Object? lastCompletionTransport = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? messages = null,Object? isLoading = null,Object? error = freezed,Object? remoteFailureL10nCode = freezed,Object? pastUserInputs = null,Object? generatedResponses = null,Object? currentModel = freezed,Object? history = null,Object? activeConversationId = freezed,Object? status = null,Object? runnableTransportHint = freezed,Object? lastCompletionTransport = freezed,}) {
   return _then(_self.copyWith(
 messages: null == messages ? _self.messages : messages // ignore: cast_nullable_to_non_nullable
 as List<ChatMessage>,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String?,remoteFailureL10nCode: freezed == remoteFailureL10nCode ? _self.remoteFailureL10nCode : remoteFailureL10nCode // ignore: cast_nullable_to_non_nullable
 as String?,pastUserInputs: null == pastUserInputs ? _self.pastUserInputs : pastUserInputs // ignore: cast_nullable_to_non_nullable
 as List<String>,generatedResponses: null == generatedResponses ? _self.generatedResponses : generatedResponses // ignore: cast_nullable_to_non_nullable
 as List<String>,currentModel: freezed == currentModel ? _self.currentModel : currentModel // ignore: cast_nullable_to_non_nullable
@@ -160,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ChatMessage> messages,  bool isLoading,  String? error,  List<String> pastUserInputs,  List<String> generatedResponses,  String? currentModel,  List<ChatConversation> history,  String? activeConversationId,  ViewStatus status,  ChatInferenceTransport? runnableTransportHint,  ChatInferenceTransport? lastCompletionTransport)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ChatMessage> messages,  bool isLoading,  String? error,  String? remoteFailureL10nCode,  List<String> pastUserInputs,  List<String> generatedResponses,  String? currentModel,  List<ChatConversation> history,  String? activeConversationId,  ViewStatus status,  ChatInferenceTransport? runnableTransportHint,  ChatInferenceTransport? lastCompletionTransport)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ChatState() when $default != null:
-return $default(_that.messages,_that.isLoading,_that.error,_that.pastUserInputs,_that.generatedResponses,_that.currentModel,_that.history,_that.activeConversationId,_that.status,_that.runnableTransportHint,_that.lastCompletionTransport);case _:
+return $default(_that.messages,_that.isLoading,_that.error,_that.remoteFailureL10nCode,_that.pastUserInputs,_that.generatedResponses,_that.currentModel,_that.history,_that.activeConversationId,_that.status,_that.runnableTransportHint,_that.lastCompletionTransport);case _:
   return orElse();
 
 }
@@ -181,10 +183,10 @@ return $default(_that.messages,_that.isLoading,_that.error,_that.pastUserInputs,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ChatMessage> messages,  bool isLoading,  String? error,  List<String> pastUserInputs,  List<String> generatedResponses,  String? currentModel,  List<ChatConversation> history,  String? activeConversationId,  ViewStatus status,  ChatInferenceTransport? runnableTransportHint,  ChatInferenceTransport? lastCompletionTransport)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ChatMessage> messages,  bool isLoading,  String? error,  String? remoteFailureL10nCode,  List<String> pastUserInputs,  List<String> generatedResponses,  String? currentModel,  List<ChatConversation> history,  String? activeConversationId,  ViewStatus status,  ChatInferenceTransport? runnableTransportHint,  ChatInferenceTransport? lastCompletionTransport)  $default,) {final _that = this;
 switch (_that) {
 case _ChatState():
-return $default(_that.messages,_that.isLoading,_that.error,_that.pastUserInputs,_that.generatedResponses,_that.currentModel,_that.history,_that.activeConversationId,_that.status,_that.runnableTransportHint,_that.lastCompletionTransport);case _:
+return $default(_that.messages,_that.isLoading,_that.error,_that.remoteFailureL10nCode,_that.pastUserInputs,_that.generatedResponses,_that.currentModel,_that.history,_that.activeConversationId,_that.status,_that.runnableTransportHint,_that.lastCompletionTransport);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +203,10 @@ return $default(_that.messages,_that.isLoading,_that.error,_that.pastUserInputs,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ChatMessage> messages,  bool isLoading,  String? error,  List<String> pastUserInputs,  List<String> generatedResponses,  String? currentModel,  List<ChatConversation> history,  String? activeConversationId,  ViewStatus status,  ChatInferenceTransport? runnableTransportHint,  ChatInferenceTransport? lastCompletionTransport)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ChatMessage> messages,  bool isLoading,  String? error,  String? remoteFailureL10nCode,  List<String> pastUserInputs,  List<String> generatedResponses,  String? currentModel,  List<ChatConversation> history,  String? activeConversationId,  ViewStatus status,  ChatInferenceTransport? runnableTransportHint,  ChatInferenceTransport? lastCompletionTransport)?  $default,) {final _that = this;
 switch (_that) {
 case _ChatState() when $default != null:
-return $default(_that.messages,_that.isLoading,_that.error,_that.pastUserInputs,_that.generatedResponses,_that.currentModel,_that.history,_that.activeConversationId,_that.status,_that.runnableTransportHint,_that.lastCompletionTransport);case _:
+return $default(_that.messages,_that.isLoading,_that.error,_that.remoteFailureL10nCode,_that.pastUserInputs,_that.generatedResponses,_that.currentModel,_that.history,_that.activeConversationId,_that.status,_that.runnableTransportHint,_that.lastCompletionTransport);case _:
   return null;
 
 }
@@ -216,7 +218,7 @@ return $default(_that.messages,_that.isLoading,_that.error,_that.pastUserInputs,
 
 
 class _ChatState extends ChatState {
-  const _ChatState({final  List<ChatMessage> messages = const <ChatMessage>[], this.isLoading = false, this.error, final  List<String> pastUserInputs = const <String>[], final  List<String> generatedResponses = const <String>[], this.currentModel, final  List<ChatConversation> history = const <ChatConversation>[], this.activeConversationId, this.status = ViewStatus.initial, this.runnableTransportHint, this.lastCompletionTransport}): _messages = messages,_pastUserInputs = pastUserInputs,_generatedResponses = generatedResponses,_history = history,super._();
+  const _ChatState({final  List<ChatMessage> messages = const <ChatMessage>[], this.isLoading = false, this.error, this.remoteFailureL10nCode, final  List<String> pastUserInputs = const <String>[], final  List<String> generatedResponses = const <String>[], this.currentModel, final  List<ChatConversation> history = const <ChatConversation>[], this.activeConversationId, this.status = ViewStatus.initial, this.runnableTransportHint, this.lastCompletionTransport}): _messages = messages,_pastUserInputs = pastUserInputs,_generatedResponses = generatedResponses,_history = history,super._();
   
 
  final  List<ChatMessage> _messages;
@@ -228,6 +230,8 @@ class _ChatState extends ChatState {
 
 @override@JsonKey() final  bool isLoading;
 @override final  String? error;
+/// When set with [error], snackbars use ARB copy for this remote failure code.
+@override final  String? remoteFailureL10nCode;
  final  List<String> _pastUserInputs;
 @override@JsonKey() List<String> get pastUserInputs {
   if (_pastUserInputs is EqualUnmodifiableListView) return _pastUserInputs;
@@ -265,16 +269,16 @@ _$ChatStateCopyWith<_ChatState> get copyWith => __$ChatStateCopyWithImpl<_ChatSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChatState&&const DeepCollectionEquality().equals(other._messages, _messages)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error)&&const DeepCollectionEquality().equals(other._pastUserInputs, _pastUserInputs)&&const DeepCollectionEquality().equals(other._generatedResponses, _generatedResponses)&&(identical(other.currentModel, currentModel) || other.currentModel == currentModel)&&const DeepCollectionEquality().equals(other._history, _history)&&(identical(other.activeConversationId, activeConversationId) || other.activeConversationId == activeConversationId)&&(identical(other.status, status) || other.status == status)&&(identical(other.runnableTransportHint, runnableTransportHint) || other.runnableTransportHint == runnableTransportHint)&&(identical(other.lastCompletionTransport, lastCompletionTransport) || other.lastCompletionTransport == lastCompletionTransport));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChatState&&const DeepCollectionEquality().equals(other._messages, _messages)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error)&&(identical(other.remoteFailureL10nCode, remoteFailureL10nCode) || other.remoteFailureL10nCode == remoteFailureL10nCode)&&const DeepCollectionEquality().equals(other._pastUserInputs, _pastUserInputs)&&const DeepCollectionEquality().equals(other._generatedResponses, _generatedResponses)&&(identical(other.currentModel, currentModel) || other.currentModel == currentModel)&&const DeepCollectionEquality().equals(other._history, _history)&&(identical(other.activeConversationId, activeConversationId) || other.activeConversationId == activeConversationId)&&(identical(other.status, status) || other.status == status)&&(identical(other.runnableTransportHint, runnableTransportHint) || other.runnableTransportHint == runnableTransportHint)&&(identical(other.lastCompletionTransport, lastCompletionTransport) || other.lastCompletionTransport == lastCompletionTransport));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_messages),isLoading,error,const DeepCollectionEquality().hash(_pastUserInputs),const DeepCollectionEquality().hash(_generatedResponses),currentModel,const DeepCollectionEquality().hash(_history),activeConversationId,status,runnableTransportHint,lastCompletionTransport);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_messages),isLoading,error,remoteFailureL10nCode,const DeepCollectionEquality().hash(_pastUserInputs),const DeepCollectionEquality().hash(_generatedResponses),currentModel,const DeepCollectionEquality().hash(_history),activeConversationId,status,runnableTransportHint,lastCompletionTransport);
 
 @override
 String toString() {
-  return 'ChatState(messages: $messages, isLoading: $isLoading, error: $error, pastUserInputs: $pastUserInputs, generatedResponses: $generatedResponses, currentModel: $currentModel, history: $history, activeConversationId: $activeConversationId, status: $status, runnableTransportHint: $runnableTransportHint, lastCompletionTransport: $lastCompletionTransport)';
+  return 'ChatState(messages: $messages, isLoading: $isLoading, error: $error, remoteFailureL10nCode: $remoteFailureL10nCode, pastUserInputs: $pastUserInputs, generatedResponses: $generatedResponses, currentModel: $currentModel, history: $history, activeConversationId: $activeConversationId, status: $status, runnableTransportHint: $runnableTransportHint, lastCompletionTransport: $lastCompletionTransport)';
 }
 
 
@@ -285,7 +289,7 @@ abstract mixin class _$ChatStateCopyWith<$Res> implements $ChatStateCopyWith<$Re
   factory _$ChatStateCopyWith(_ChatState value, $Res Function(_ChatState) _then) = __$ChatStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<ChatMessage> messages, bool isLoading, String? error, List<String> pastUserInputs, List<String> generatedResponses, String? currentModel, List<ChatConversation> history, String? activeConversationId, ViewStatus status, ChatInferenceTransport? runnableTransportHint, ChatInferenceTransport? lastCompletionTransport
+ List<ChatMessage> messages, bool isLoading, String? error, String? remoteFailureL10nCode, List<String> pastUserInputs, List<String> generatedResponses, String? currentModel, List<ChatConversation> history, String? activeConversationId, ViewStatus status, ChatInferenceTransport? runnableTransportHint, ChatInferenceTransport? lastCompletionTransport
 });
 
 
@@ -302,11 +306,12 @@ class __$ChatStateCopyWithImpl<$Res>
 
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? messages = null,Object? isLoading = null,Object? error = freezed,Object? pastUserInputs = null,Object? generatedResponses = null,Object? currentModel = freezed,Object? history = null,Object? activeConversationId = freezed,Object? status = null,Object? runnableTransportHint = freezed,Object? lastCompletionTransport = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? messages = null,Object? isLoading = null,Object? error = freezed,Object? remoteFailureL10nCode = freezed,Object? pastUserInputs = null,Object? generatedResponses = null,Object? currentModel = freezed,Object? history = null,Object? activeConversationId = freezed,Object? status = null,Object? runnableTransportHint = freezed,Object? lastCompletionTransport = freezed,}) {
   return _then(_ChatState(
 messages: null == messages ? _self._messages : messages // ignore: cast_nullable_to_non_nullable
 as List<ChatMessage>,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String?,remoteFailureL10nCode: freezed == remoteFailureL10nCode ? _self.remoteFailureL10nCode : remoteFailureL10nCode // ignore: cast_nullable_to_non_nullable
 as String?,pastUserInputs: null == pastUserInputs ? _self._pastUserInputs : pastUserInputs // ignore: cast_nullable_to_non_nullable
 as List<String>,generatedResponses: null == generatedResponses ? _self._generatedResponses : generatedResponses // ignore: cast_nullable_to_non_nullable
 as List<String>,currentModel: freezed == currentModel ? _self.currentModel : currentModel // ignore: cast_nullable_to_non_nullable

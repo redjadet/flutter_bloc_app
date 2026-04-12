@@ -24,6 +24,19 @@ export HUGGINGFACE_API_KEY="YOUR_HUGGINGFACE_TOKEN"
 # export GOOGLE_MAPS_API_KEY="..."
 # export GOOGLE_MAPS_ANDROID_API_KEY="..."
 
+# Optional: Render FastAPI chat demo (see docs/integrations/render_fastapi_chat_demo.md).
+# `tool/flutter_dart_defines_from_env.sh` maps these to --dart-define for the direnv flutter wrapper.
+# export CHAT_RENDER_DEMO_ENABLED="true"
+# export CHAT_RENDER_DEMO_BASE_URL="https://your-service.onrender.com"
+# export CHAT_RENDER_DEMO_STRICT="false"
+# export CHAT_RENDER_DEMO_SECRET="..."  # only if the FastAPI service uses DEMO_SHARED_SECRET
+# export CHAT_RENDER_HF_READ_TOKEN_CALLABLE="issueRenderChatDemoHfReadToken"
+# export CHAT_RENDER_HF_READ_TOKEN_CALLABLE_REGION="us-central1"  # omit to use default
+
+# Optional: Firebase Functions emulator — Callable `issueRenderChatDemoHfReadToken` reads this
+# when FUNCTIONS_EMULATOR=true (not a Flutter dart-define; export for the shell that runs `firebase emulators:start`).
+# export RENDER_CHAT_DEMO_HF_READ_TOKEN="hf_..."
+
 # Optional: make `flutter run` auto-append --dart-define from env (zsh/bash).
 # The wrapper injects defines after the subcommand (e.g. `flutter run --dart-define=...`).
 export PATH="$(pwd)/tool/direnv/bin:${PATH}"

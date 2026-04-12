@@ -39,5 +39,14 @@ emit_define "GOOGLE_API_KEY"
 # Android/iOS maps keys are platform-specific; only include the generic key if present.
 emit_define "GOOGLE_MAPS_API_KEY"
 
+# Render FastAPI chat demo (`SecretConfig` compile-time gates; see
+# docs/integrations/render_fastapi_chat_demo.md).
+emit_define "CHAT_RENDER_DEMO_ENABLED"
+emit_define "CHAT_RENDER_DEMO_STRICT"
+emit_define "CHAT_RENDER_DEMO_BASE_URL"
+emit_define "CHAT_RENDER_DEMO_SECRET"
+emit_define "CHAT_RENDER_HF_READ_TOKEN_CALLABLE"
+emit_define "CHAT_RENDER_HF_READ_TOKEN_CALLABLE_REGION"
+
 printf "\n"
 
