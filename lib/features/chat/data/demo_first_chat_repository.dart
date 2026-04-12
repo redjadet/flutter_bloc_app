@@ -1,6 +1,10 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_direct_failure_mapper.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_render_orchestration_diagnostics.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_model_ids.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Tries the Render orchestration repository first, then the composite
 /// repository on retryable Render failures (unless strict). Resolves `auto`
@@ -23,7 +27,7 @@ class DemoFirstChatRepository implements ChatRepository {
 
   @override
   ChatInferenceTransport? get chatRemoteTransportHint {
-    if (_isRenderAttemptedFirst()) {
+    if (SecretConfig.isChatRenderDemoSurface) {
       return ChatInferenceTransport.renderOrchestration;
     }
     return _composite.chatRemoteTransportHint;
@@ -49,6 +53,16 @@ class DemoFirstChatRepository implements ChatRepository {
     final String? conversationId,
     final String? clientMessageId,
   }) async {
+    if (kDebugMode) {
+      final bool first = _isRenderAttemptedFirst();
+      AppLogger.info(
+        'Chat: DemoFirst.sendMessage surface=${SecretConfig.isChatRenderDemoSurface} '
+        'attemptsRenderFirst=$first -> ${first ? "render_then_maybe_composite" : "composite_only"}',
+      );
+      if (!first) {
+        logChatRenderOrchestrationIfDebug('demo_first_skipped_render');
+      }
+    }
     if (!_isRenderAttemptedFirst()) {
       return _composite.sendMessage(
         pastUserInputs: pastUserInputs,

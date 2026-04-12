@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_render_orchestration_diagnostics.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.dart';
 import 'package:flutter_bloc_app/features/chat/data/render_caller_auth_header_provider.dart';
@@ -7,7 +11,16 @@ import 'package:flutter_bloc_app/features/chat/data/render_chat_failure_mapper.d
 import 'package:flutter_bloc_app/features/chat/data/render_orchestration_hf_token_provider.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_model_ids.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
+
+final Random _renderClientCorrelationRandom = Random.secure();
+
+String _newRenderClientCorrelationId() {
+  final int a = _renderClientCorrelationRandom.nextInt(0x7fffffff);
+  final int b = _renderClientCorrelationRandom.nextInt(0x7fffffff);
+  return 'flutter-${DateTime.now().toUtc().microsecondsSinceEpoch}-$a-$b';
+}
 
 /// Remote chat via Render FastAPI orchestration (`POST /v1/chat/completions`).
 class RenderFastApiChatRepository implements ChatRepository {
@@ -46,6 +59,13 @@ class RenderFastApiChatRepository implements ChatRepository {
     final String? clientMessageId,
   }) async {
     if (!_isRunnable()) {
+      if (kDebugMode) {
+        AppLogger.info(
+          'Chat: RenderFastApi.sendMessage blocked at isRunnable gate '
+          '(DemoFirst may fall through to composite).',
+        );
+        logChatRenderOrchestrationIfDebug('render_repo_not_runnable');
+      }
       throw const ChatRemoteFailureException(
         'Render orchestration is not configured.',
         code: 'upstream_unavailable',
@@ -56,6 +76,12 @@ class RenderFastApiChatRepository implements ChatRepository {
 
     final String? idToken = await _callerAuth.bearerIdToken();
     if (idToken == null || idToken.trim().isEmpty) {
+      if (kDebugMode) {
+        AppLogger.info(
+          'Chat: RenderFastApi.sendMessage blocked: caller idToken empty '
+          '(Firebase ID token for Authorization header).',
+        );
+      }
       throw const ChatRemoteFailureException(
         'Sign in required for Render chat demo.',
         code: 'auth_required',
@@ -66,6 +92,12 @@ class RenderFastApiChatRepository implements ChatRepository {
 
     final String? hfToken = await _hfTokenProvider.readHfTokenForUpstream();
     if (hfToken == null || hfToken.isEmpty) {
+      if (kDebugMode) {
+        AppLogger.info(
+          'Chat: RenderFastApi.sendMessage blocked: HF read token missing '
+          '(callable / secure storage / huggingface_api_key).',
+        );
+      }
       throw const ChatRemoteFailureException(
         'Missing Hugging Face read token for orchestration.',
         code: 'token_missing',
@@ -88,14 +120,23 @@ class RenderFastApiChatRepository implements ChatRepository {
 
     final String idempotencyKey = _idempotencyKey(clientMessageId, conversationId);
 
+    final String clientCorrelationId = _newRenderClientCorrelationId();
     final Map<String, String> headers = <String, String>{
       'Authorization': 'Bearer $idToken',
       'X-HF-Authorization': 'Bearer $hfToken',
       'Idempotency-Key': idempotencyKey,
+      'X-Client-Correlation-Id': clientCorrelationId,
     };
     final String demoSecret = SecretConfig.chatRenderDemoSecret.trim();
     if (demoSecret.isNotEmpty) {
       headers['X-Render-Demo-Secret'] = demoSecret;
+    }
+
+    if (kDebugMode) {
+      AppLogger.info(
+        'Chat: RenderFastApi POST /v1/chat/completions '
+        'client_correlation_id=$clientCorrelationId idempotency_key=$idempotencyKey',
+      );
     }
 
     try {
@@ -114,6 +155,42 @@ class RenderFastApiChatRepository implements ChatRepository {
         );
       }
       final Map<String, dynamic>? json = mapFromDynamic(response.data);
+      if (kDebugMode) {
+        final Map<String, dynamic>? meta = mapFromDynamic(json?['_render_meta']);
+        final String? fromBodyServer = stringFromDynamicTrimmed(meta?['server_request_id']);
+        final String? fromBodyEcho = stringFromDynamicTrimmed(meta?['client_correlation_id']);
+        final String? fromHeaderServer = response.headers.value('x-server-request-id');
+        final String? fromHeaderEcho = response.headers.value('x-client-correlation-id');
+        final String? serverRequestId = fromBodyServer ?? fromHeaderServer;
+        final String? echoedCorrelation = fromBodyEcho ?? fromHeaderEcho;
+        final String idSource = fromBodyServer != null
+            ? 'body'
+            : (fromHeaderServer != null ? 'headers' : 'none');
+        final String? rndrId = response.headers.value('rndr-id');
+        AppLogger.info(
+          'Chat: RenderFastApi response '
+          'client_correlation_id=$clientCorrelationId '
+          'x_server_request_id=${serverRequestId ?? "(missing)"} '
+          'echoed_x_client_correlation_id=${echoedCorrelation ?? "(missing)"} '
+          '(server_request_id source=$idSource; rndr_id=${rndrId ?? "(missing)"})',
+        );
+        if (serverRequestId == null) {
+          AppLogger.info(
+            'Chat: RenderFastApi response header keys (diagnostic)='
+            '${response.headers.map.keys.toList()}',
+          );
+          if (json != null) {
+            final bool hasRenderMeta = json.containsKey('_render_meta');
+            final String? completionId = stringFromDynamicTrimmed(json['id']);
+            AppLogger.info(
+              'Chat: RenderFastApi response body (diagnostic) '
+              '_render_meta=$hasRenderMeta completion_id=${completionId ?? "(missing)"}. '
+              'If _render_meta is false, redeploy the FastAPI service from a commit that '
+              'includes `_render_meta` in chat completion JSON (see main.py).',
+            );
+          }
+        }
+      }
       if (json == null) {
         throw const ChatRemoteFailureException(
           'Invalid response body.',

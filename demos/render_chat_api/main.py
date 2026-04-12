@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import uuid
 from contextlib import asynccontextmanager
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 import httpx
 from fastapi import FastAPI, Header, Request
@@ -22,6 +22,30 @@ from schemas import ChatCompletionRequest, ErrorBody
 from settings import FROZEN_ALLOW_HEADERS, get_settings, parse_cors_origins
 
 logger = logging.getLogger(__name__)
+
+
+def _telemetry_headers(
+    *,
+    server_request_id: str,
+    client_correlation_id: str | None,
+) -> dict[str, str]:
+    """Headers so the Flutter client can match logs to server_request_id."""
+    out: dict[str, str] = {"X-Server-Request-Id": server_request_id}
+    if client_correlation_id:
+        out["X-Client-Correlation-Id"] = client_correlation_id
+    return out
+
+
+def _render_meta_payload(
+    *,
+    server_request_id: str,
+    client_correlation_id: str | None,
+) -> dict[str, str]:
+    """JSON alongside chat completion so clients still correlate if proxies strip headers."""
+    meta: dict[str, str] = {"server_request_id": server_request_id}
+    if client_correlation_id:
+        meta["client_correlation_id"] = client_correlation_id
+    return meta
 
 
 @asynccontextmanager
@@ -145,10 +169,15 @@ async def chat_completions(
     x_hf_authorization: Optional[str] = Header(default=None, alias="X-HF-Authorization"),
     x_render_demo_secret: Optional[str] = Header(default=None, alias="X-Render-Demo-Secret"),
     idempotency_key: Optional[str] = Header(default=None, alias="Idempotency-Key"),
-) -> Union[JSONResponse, dict]:
+    x_client_correlation_id: Optional[str] = Header(
+        default=None,
+        alias="X-Client-Correlation-Id",
+    ),
+) -> JSONResponse:
     settings: Any = request.app.state.settings
     request_id = str(uuid.uuid4())
     request.state.request_id = request_id
+    client_correlation_id = (x_client_correlation_id or "").strip() or None
 
     verify_demo_secret(
         settings=settings,
@@ -156,6 +185,12 @@ async def chat_completions(
     )
 
     client_ip = request.client.host if request.client else "unknown"
+    logger.info(
+        "chat_completions_begin server_request_id=%s client_correlation_id=%s client_ip=%s",
+        request_id,
+        client_correlation_id or "",
+        client_ip,
+    )
     if not request.app.state.rate_ip.check(client_ip):
         return JSONResponse(
             status_code=429,
@@ -165,6 +200,10 @@ async def chat_completions(
                 request_id=request_id,
                 retryable=False,
             ).model_dump(),
+            headers=_telemetry_headers(
+                server_request_id=request_id,
+                client_correlation_id=client_correlation_id,
+            ),
         )
 
     uid = verify_caller_uid(settings=settings, authorization=authorization)
@@ -178,6 +217,10 @@ async def chat_completions(
                 request_id=request_id,
                 retryable=False,
             ).model_dump(),
+            headers=_telemetry_headers(
+                server_request_id=request_id,
+                client_correlation_id=client_correlation_id,
+            ),
         )
 
     if not idempotency_key or not idempotency_key.strip():
@@ -189,6 +232,10 @@ async def chat_completions(
                 request_id=request_id,
                 retryable=False,
             ).model_dump(),
+            headers=_telemetry_headers(
+                server_request_id=request_id,
+                client_correlation_id=client_correlation_id,
+            ),
         )
     idem = idempotency_key.strip()
     if len(idem) > settings.max_idempotency_key_len:
@@ -200,6 +247,10 @@ async def chat_completions(
                 request_id=request_id,
                 retryable=False,
             ).model_dump(),
+            headers=_telemetry_headers(
+                server_request_id=request_id,
+                client_correlation_id=client_correlation_id,
+            ),
         )
 
     if not x_hf_authorization or not x_hf_authorization.lower().startswith("bearer "):
@@ -211,6 +262,10 @@ async def chat_completions(
                 request_id=request_id,
                 retryable=False,
             ).model_dump(),
+            headers=_telemetry_headers(
+                server_request_id=request_id,
+                client_correlation_id=client_correlation_id,
+            ),
         )
     hf_token = x_hf_authorization.split(" ", 1)[1].strip()
     if not hf_token:
@@ -222,6 +277,10 @@ async def chat_completions(
                 request_id=request_id,
                 retryable=False,
             ).model_dump(),
+            headers=_telemetry_headers(
+                server_request_id=request_id,
+                client_correlation_id=client_correlation_id,
+            ),
         )
 
     result = await run_pipeline(
@@ -235,4 +294,23 @@ async def chat_completions(
         client=request.app.state.http,
         gate_120b=request.app.state.gate_120b,
     )
-    return result
+    logger.info(
+        "chat_completions_ok server_request_id=%s client_correlation_id=%s uid=%s",
+        request_id,
+        client_correlation_id or "",
+        uid,
+    )
+    enriched = {
+        **result,
+        "_render_meta": _render_meta_payload(
+            server_request_id=request_id,
+            client_correlation_id=client_correlation_id,
+        ),
+    }
+    return JSONResponse(
+        content=enriched,
+        headers=_telemetry_headers(
+            server_request_id=request_id,
+            client_correlation_id=client_correlation_id,
+        ),
+    )

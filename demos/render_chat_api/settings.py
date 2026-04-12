@@ -60,6 +60,7 @@ FROZEN_ALLOW_HEADERS: tuple[str, ...] = (
     "authorization",
     "content-type",
     "idempotency-key",
+    "x-client-correlation-id",
     "x-hf-authorization",
     "x-render-demo-secret",
 )

@@ -35,6 +35,27 @@ class SecretConfig {
     'CHAT_RENDER_DEMO_SECRET',
   );
 
+  /// Render FastAPI demo is configured via compile-time defines (enabled flag,
+  /// non-empty base URL, `https` in release). Used for UI transport hints so the
+  /// chat chip matches the Render path when the demo is wired; actual sends
+  /// still require Firebase + tokens (see `register_chat_services`).
+  static bool get isChatRenderDemoSurface {
+    if (!chatRenderDemoEnabled) {
+      return false;
+    }
+    final String base = chatRenderDemoBaseUrl.trim();
+    if (base.isEmpty) {
+      return false;
+    }
+    if (kReleaseMode) {
+      final Uri? parsed = Uri.tryParse(base);
+      if (parsed == null || parsed.scheme != 'https') {
+        return false;
+      }
+    }
+    return true;
+  }
+
   /// Optional Cloud Function name (non-dev) that returns a short-lived HF read
   /// token for Render. Empty disables the Callable path (falls back to
   /// `huggingface_api_key` from secrets when present).
