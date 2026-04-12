@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_terminal_sync_failure_text.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
@@ -36,8 +37,13 @@ class ChatMessageList extends StatelessWidget {
       listener: (final context, final state) async {
         if (state.error case final err?) {
           final ChatCubit chatCubit = context.cubit<ChatCubit>();
+          final trimmedRemoteCode = state.remoteFailureL10nCode?.trim();
+          final String snackText =
+              trimmedRemoteCode != null && trimmedRemoteCode.isNotEmpty
+                  ? terminalSyncFailureMessage(l10n, trimmedRemoteCode)
+                  : err;
           await errorNotificationService
-              .showSnackBar(context, err)
+              .showSnackBar(context, snackText)
               .whenComplete(
                 () {
                   if (!chatCubit.isClosed) {
@@ -89,6 +95,8 @@ class ChatMessageList extends StatelessWidget {
                   itemBuilder: (final context, final index) {
                     final ChatMessage message = data.messages[index];
                     final bool isUser = message.author == ChatAuthor.user;
+                    final trimmedTerminalCode =
+                        message.terminalSyncFailureCode?.trim();
 
                     return RepaintBoundary(
                       key: _chatMessageKey(message),
@@ -106,6 +114,26 @@ class ChatMessageList extends StatelessWidget {
                             outgoingTextColor: theme.colorScheme.onPrimary,
                             incomingTextColor: theme.colorScheme.onSurface,
                           ),
+                          if (isUser &&
+                              trimmedTerminalCode != null &&
+                              trimmedTerminalCode.isNotEmpty)
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: context.responsiveGapXS,
+                                left: isUser ? context.responsiveGapL : 0,
+                                right: isUser ? 0 : context.responsiveGapL,
+                              ),
+                              child: Text(
+                                terminalSyncFailureMessage(
+                                  l10n,
+                                  trimmedTerminalCode,
+                                ),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.error,
+                                ),
+                                textAlign: isUser ? TextAlign.end : TextAlign.start,
+                              ),
+                            ),
                         ],
                       ),
                     );

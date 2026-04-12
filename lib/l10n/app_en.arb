@@ -662,6 +662,42 @@
   "@chatTransportDirectSemanticsLabel": {
     "description": "Screen reader and tooltip for the chat transport chip when using direct Hugging Face"
   },
+  "chatTransportRenderOrchestration": "Orchestration",
+  "@chatTransportRenderOrchestration": {
+    "description": "Chip label when chat completions use the Render FastAPI orchestration demo"
+  },
+  "chatTransportRenderOrchestrationSemanticsLabel": "Orchestration. Chat replies use your Render FastAPI service, which routes to Hugging Face.",
+  "@chatTransportRenderOrchestrationSemanticsLabel": {
+    "description": "Screen reader and tooltip for the Render orchestration transport chip"
+  },
+  "chatModelAuto": "Auto",
+  "@chatModelAuto": {
+    "description": "Chat model picker entry that lets the server choose mini vs full model"
+  },
+  "chatRenderStrictMode": "Render demo strict mode is on; fallthrough is disabled.",
+  "@chatRenderStrictMode": {
+    "description": "Shown when CHAT_RENDER_DEMO_STRICT prevents falling back to Supabase/direct"
+  },
+  "chatAuthRefreshRequired": "Sign in again to continue using the Render chat demo.",
+  "@chatAuthRefreshRequired": {
+    "description": "User-visible copy when caller auth must be refreshed for the Render path"
+  },
+  "chatSessionEnded": "Your session ended. Start a new chat after signing in.",
+  "@chatSessionEnded": {
+    "description": "Shown when the signed-in session no longer supports the Render demo path"
+  },
+  "chatSwitchAccount": "Switch account to refresh credentials for the Render chat demo.",
+  "@chatSwitchAccount": {
+    "description": "Hint when a different Firebase user is required before sending"
+  },
+  "chatTokenMissing": "Hugging Face token is missing. Check your connection and try again.",
+  "@chatTokenMissing": {
+    "description": "Shown when the HF read token is unavailable for the Render path"
+  },
+  "chatOrchestrationTooltip": "Uses server-side routing between models when Auto is selected.",
+  "@chatOrchestrationTooltip": {
+    "description": "Optional tooltip explaining orchestration when Auto is selected"
+  },
   "chatOfflineBadgeLabel": "Offline",
   "@chatOfflineBadgeLabel": {
     "description": "Chip label when the device has no network route (chat transport chip hidden)"

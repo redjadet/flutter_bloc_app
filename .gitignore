@@ -110,3 +110,6 @@ CLAUDE.md
 docs/gstack_integration.md
 AGENTS.md
 docs/app_for_small_business.txt
+
+# Python demo local virtualenv (e.g. demos/render_chat_api)
+demos/**/.venv/

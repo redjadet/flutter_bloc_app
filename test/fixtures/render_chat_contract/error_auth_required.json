@@ -1,0 +1,6 @@
+{
+  "code": "auth_required",
+  "message": "Caller authentication failed.",
+  "request_id": "fixture-req-id",
+  "retryable": false
+}

@@ -41,6 +41,7 @@ class OfflineFirstRemoteConfigRepository
     RemoteConfigRepository.testValueKey,
     RemoteConfigRepository.supabaseUrlKey,
     RemoteConfigRepository.supabaseAnonKeyKey,
+    RemoteConfigRepository.renderChatDemoHfReadTokenKey,
   ];
   static const List<String> _trackedIntKeys = <String>[
     RemoteConfigRepository.supabaseConfigVersionKey,

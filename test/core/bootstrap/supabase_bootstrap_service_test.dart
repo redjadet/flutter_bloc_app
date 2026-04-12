@@ -13,6 +13,7 @@ void main() {
 
   setUp(() {
     SecretConfig.resetForTest();
+    SecretConfig.debugEnvironment = <String, dynamic>{};
     SecretConfig.storage = _MemorySecretStorage();
     SecretConfig.debugAssetBundle = _FakeAssetBundle.throwing();
     SupabaseBootstrapService.resetForTest();

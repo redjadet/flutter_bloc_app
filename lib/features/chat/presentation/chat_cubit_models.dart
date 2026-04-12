@@ -17,6 +17,7 @@ List<String> _buildModelList(
   if (supportedModels != null) {
     supportedModels.forEach(add);
   }
+  add(kChatOrchestrationAutoModelId);
   add('openai/gpt-oss-20b');
   add('openai/gpt-oss-120b');
 

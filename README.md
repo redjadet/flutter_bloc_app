@@ -7,7 +7,7 @@ and production-minded delivery workflows in a single codebase.
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.6-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.4-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-74%2E25%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-72%2E42%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
 [![State Management](https://img.shields.io/badge/State%20Management-BLOC%2FCubit-2196F3.svg)](https://pub.dev/packages/flutter_bloc)
@@ -16,6 +16,8 @@ and production-minded delivery workflows in a single codebase.
 [![Testing](https://img.shields.io/badge/Testing-Unit%20%7C%20Widget%20%7C%20Golden%20%7C%20Integration-2E7D32.svg)](docs/testing_overview.md)
 [![Backend](https://img.shields.io/badge/Backend-Firebase-FFCA28.svg)](https://firebase.google.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E.svg)](https://supabase.com/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Chat%20demo-009688.svg)](docs/integrations/render_fastapi_chat_demo.md)
+[![Render](https://img.shields.io/badge/Render-Hosting-46E3B7.svg)](https://render.com/)
 [![Architecture Pattern](https://img.shields.io/badge/Architecture-Offline--First-4CAF50.svg)](docs/offline_first/adoption_guide.md)
 [![Design System](https://img.shields.io/badge/Design%20System-Material%203-6200EE.svg)](https://m3.material.io/)
 [![iOS Design](https://img.shields.io/badge/iOS%20Design-Cupertino-007AFF.svg)](https://api.flutter.dev/flutter/cupertino/cupertino-library.html)
@@ -72,7 +74,7 @@ flutter pub get
 flutter run -t lib/main_dev.dart
 ```
 
-Secrets for optional backends (Supabase, Hugging Face, Gemini, etc.) are supplied via `--dart-define` or persisted secure storage; see [Security and Secrets](docs/security_and_secrets.md). For day-to-day terminal use, **`direnv`** plus a repo-local `.envrc` (see [`docs/envrc.example`](docs/envrc.example)) can inject those defines automatically so you do not have to paste flags on every `flutter run`.
+Secrets for optional backends (Supabase, Hugging Face, Gemini, etc.) are supplied via `--dart-define` or persisted secure storage; see [Security and Secrets](docs/security_and_secrets.md). For day-to-day terminal use, **`direnv`** plus a repo-local `.envrc` (see [`docs/envrc.example`](docs/envrc.example)) can inject those defines automatically so you do not have to paste flags on every `flutter run`. Optional **Render + FastAPI chat demo** compile-time keys (`CHAT_RENDER_*`) and related ops are documented in [`docs/integrations/render_fastapi_chat_demo.md`](docs/integrations/render_fastapi_chat_demo.md); they flow through [`tool/flutter_dart_defines_from_env.sh`](tool/flutter_dart_defines_from_env.sh) when set in the environment. **Service deploys** from a developer machine use [`tool/trigger_render_chat_api_deploy.sh`](tool/trigger_render_chat_api_deploy.sh) with **`RENDER_API_KEY`** in the environment (see that doc; not a client secret).
 
 Available app entrypoints:
 
@@ -94,6 +96,7 @@ Use the repo commands instead of ad-hoc validation:
 | Command | Purpose |
 | --- | --- |
 | `./bin/checklist` | Primary local quality gate: formatting, analysis, validation scripts, tests, and coverage workflow. |
+| `./tool/check_pyright_python.sh` | Pyright on `demos/render_chat_api` and `tool/` Python (Render FastAPI demo + shell tooling; included in `./bin/checklist`). |
 | `./bin/integration_tests` | Runs the integration suite for flow-level verification. |
 | `./bin/upgrade_validate_all` | Full maintenance workflow for upgrades, validation, integration tests, and coverage/doc refresh. |
 

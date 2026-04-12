@@ -27,7 +27,7 @@ Before running the app, review:
 - [Security and Secrets](security_and_secrets.md)
 - [Tech Stack](tech_stack.md)
 
-**Optional — automatic secret injection in the terminal:** install [direnv](https://direnv.net/), copy [`docs/envrc.example`](envrc.example) to `.envrc` in the repo root, add your keys, run `direnv allow`, then let the PATH-based `flutter` wrapper inject `--dart-define` values automatically (or use `flutter run $(./tool/flutter_dart_defines_from_env.sh)`). Plain `flutter run` then passes the same `--dart-define` values to iOS and Android.
+**Optional — automatic secret injection in the terminal:** install [direnv](https://direnv.net/), copy [`docs/envrc.example`](envrc.example) to `.envrc` in the repo root, add your keys, run `direnv allow`, then let the PATH-based `flutter` wrapper inject `--dart-define` values automatically (or use `flutter run $(./tool/flutter_dart_defines_from_env.sh)`). Plain `flutter run` then passes the same `--dart-define` values to iOS and Android. Only variables listed in [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh) are forwarded; optional Render demo keys are included there—see [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md).
 
 ### Install dependencies and run
 
@@ -140,6 +140,7 @@ Use repo commands instead of ad-hoc validation:
 | --- | --- |
 | `flutter pub get` | Refresh dependencies. |
 | `dart run build_runner build --delete-conflicting-outputs` | Regenerate code after model/API annotation changes. |
+| `./tool/check_pyright_python.sh` | Pyright on `demos/render_chat_api` and `tool/` Python (run when editing the Render FastAPI demo or repo shell tooling; also runs inside `./bin/checklist`). |
 | `./bin/checklist` | Primary local quality gate. |
 | `./bin/integration_tests` | Run integration flows on a supported device. |
 | `./bin/upgrade_validate_all` | Full maintenance and upgrade validation flow. |

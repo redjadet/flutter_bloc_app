@@ -58,27 +58,9 @@ detect_cpu_count() {
   echo 4
 }
 
-resolve_flutter_dart() {
-  local flutter_bin
-  local flutter_root
-  local dart_bin
-
-  flutter_bin="$(command -v flutter || true)"
-  if [ -z "$flutter_bin" ]; then
-    echo "❌ 'flutter' command not found in PATH."
-    exit 1
-  fi
-
-  flutter_root="$(cd "$(dirname "$flutter_bin")/.." && pwd)"
-  dart_bin="$flutter_root/bin/dart"
-
-  if [ ! -x "$dart_bin" ]; then
-    echo "❌ Flutter-managed Dart SDK not found at: $dart_bin"
-    exit 1
-  fi
-
-  echo "$dart_bin"
-}
+TOOL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$TOOL_DIR/resolve_flutter_dart.sh"
 
 DART_BIN="$(resolve_flutter_dart)"
 DEFAULT_COVERAGE_JOBS="$(detect_cpu_count)"

@@ -494,6 +494,40 @@ class AppLocalizationsEs extends AppLocalizations {
       'Directo. La aplicación llama a Hugging Face directamente.';
 
   @override
+  String get chatTransportRenderOrchestration => 'Orquestación';
+
+  @override
+  String get chatTransportRenderOrchestrationSemanticsLabel =>
+      'Orquestación. Las respuestas usan tu servicio FastAPI en Render, que enruta a Hugging Face.';
+
+  @override
+  String get chatModelAuto => 'Auto';
+
+  @override
+  String get chatRenderStrictMode =>
+      'Demo Render en modo estricto; sin alternativa de respaldo.';
+
+  @override
+  String get chatAuthRefreshRequired =>
+      'Vuelve a iniciar sesión para seguir usando la demo de chat en Render.';
+
+  @override
+  String get chatSessionEnded =>
+      'Tu sesión terminó. Inicia un chat nuevo tras iniciar sesión.';
+
+  @override
+  String get chatSwitchAccount =>
+      'Cambia de cuenta para actualizar las credenciales de la demo de Render.';
+
+  @override
+  String get chatTokenMissing =>
+      'Falta el token de Hugging Face. Comprueba la conexión e inténtalo de nuevo.';
+
+  @override
+  String get chatOrchestrationTooltip =>
+      'Enrutado en el servidor entre modelos cuando se elige Auto.';
+
+  @override
   String get chatOfflineBadgeLabel => 'Sin conexión';
 
   @override

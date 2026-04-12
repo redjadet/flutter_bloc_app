@@ -12,6 +12,64 @@ part 'secret_config_sources.dart';
 class SecretConfig {
   SecretConfig._();
 
+  /// When true, [chatRenderDemoBaseUrl] is non-empty, HF token + Firebase user
+  /// exist, the app attempts Render orchestration before composite chat.
+  static const bool chatRenderDemoEnabled = bool.fromEnvironment(
+    'CHAT_RENDER_DEMO_ENABLED',
+  );
+
+  /// Never fall through to Supabase/direct after a retryable Render failure.
+  static const bool chatRenderDemoStrict = bool.fromEnvironment(
+    'CHAT_RENDER_DEMO_STRICT',
+  );
+
+  /// HTTPS origin of the Render FastAPI service (no trailing slash), e.g.
+  /// `https://my-service.onrender.com`.
+  static const String chatRenderDemoBaseUrl = String.fromEnvironment(
+    'CHAT_RENDER_DEMO_BASE_URL',
+  );
+
+  /// Optional `X-Render-Demo-Secret` when the service is gated with
+  /// `DEMO_SHARED_SECRET` (non-web / dev smoke only per plan).
+  static const String chatRenderDemoSecret = String.fromEnvironment(
+    'CHAT_RENDER_DEMO_SECRET',
+  );
+
+  /// Render FastAPI demo is configured via compile-time defines (enabled flag,
+  /// non-empty base URL, `https` in release). Used for UI transport hints so the
+  /// chat chip matches the Render path when the demo is wired; actual sends
+  /// still require Firebase + tokens (see `register_chat_services`).
+  static bool get isChatRenderDemoSurface {
+    if (!chatRenderDemoEnabled) {
+      return false;
+    }
+    final String base = chatRenderDemoBaseUrl.trim();
+    if (base.isEmpty) {
+      return false;
+    }
+    if (kReleaseMode) {
+      final Uri? parsed = Uri.tryParse(base);
+      if (parsed == null || parsed.scheme != 'https') {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /// Optional Cloud Function name (non-dev) that returns a short-lived HF read
+  /// token for Render. Empty disables the Callable path (falls back to
+  /// `huggingface_api_key` from secrets when present).
+  static const String chatRenderHfReadTokenCallable = String.fromEnvironment(
+    'CHAT_RENDER_HF_READ_TOKEN_CALLABLE',
+  );
+
+  /// Firebase Functions region for `chatRenderHfReadTokenCallable`.
+  static const String chatRenderHfReadTokenCallableRegion =
+      String.fromEnvironment(
+        'CHAT_RENDER_HF_READ_TOKEN_CALLABLE_REGION',
+        defaultValue: 'us-central1',
+      );
+
   static const String enableAssetSecretsDefine = 'ENABLE_ASSET_SECRETS';
   static const String _keyHfToken = 'huggingface_api_key';
   static const String _keyHfModel = 'huggingface_model';
@@ -22,7 +80,8 @@ class SecretConfig {
   static const String _keySupabaseUrl = 'supabase_url';
   static const String _keySupabaseAnonKey = 'supabase_anon_key';
   static const String _keySupabaseConfigVersion = 'supabase_config_version';
-  static const String _keySupabaseFirebaseProjectId = 'supabase_firebase_project_id';
+  static const String _keySupabaseFirebaseProjectId =
+      'supabase_firebase_project_id';
 
   static bool _loaded = false;
   static String? _huggingfaceApiKey;
@@ -96,7 +155,9 @@ class SecretConfig {
     _supabaseAnonKey = key;
     _supabaseConfigVersion = ver;
     final String? projectId = firebaseProjectId?.trim();
-    _supabaseFirebaseProjectId = (projectId == null || projectId.isEmpty) ? null : projectId;
+    _supabaseFirebaseProjectId = (projectId == null || projectId.isEmpty)
+        ? null
+        : projectId;
   }
 
   static Future<void> persistSupabaseConfig(
@@ -154,10 +215,12 @@ class SecretConfig {
         !kReleaseMode;
 
     try {
+      var hadPreEnvSecretsApply = false;
       final bool loadedFromSecure = await _loadFromSource(
         () => _readSecureSecrets(storage),
       );
       if (loadedFromSecure) {
+        hadPreEnvSecretsApply = true;
         _logHuggingFaceTokenDiagnostics(source: 'secure_storage');
         if (_needsRemoteFallback) {
           AppLogger.warning(
@@ -176,6 +239,7 @@ class SecretConfig {
           afterApply: () => _persistGoogleMapsKey(storage),
         );
         if (loadedFromAssets) {
+          hadPreEnvSecretsApply = true;
           _logHuggingFaceTokenDiagnostics(source: 'asset_secrets');
           if (!_needsRemoteFallback) {
             _loaded = true;
@@ -193,6 +257,11 @@ class SecretConfig {
       );
       if (loadedFromEnvironment) {
         _logHuggingFaceTokenDiagnostics(source: 'dart_define_env');
+        _loaded = true;
+        return;
+      }
+
+      if (hadPreEnvSecretsApply) {
         _loaded = true;
         return;
       }

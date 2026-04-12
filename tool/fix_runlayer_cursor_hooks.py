@@ -56,7 +56,8 @@ def ensure_version(path: Path, *, dry_run: bool) -> bool:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    doc = __doc__ or ""
+    parser = argparse.ArgumentParser(description=doc.split("\n\n")[0])
     parser.add_argument(
         "--dry-run",
         action="store_true",

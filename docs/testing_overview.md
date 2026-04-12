@@ -27,6 +27,7 @@ expected structure and “ownership” contract:
 | Command | Purpose |
 | --- | --- |
 | `./bin/checklist` | Full local sweep for formatting, analysis, validator scripts, tests, and coverage workflow. |
+| `./tool/check_pyright_python.sh` | Pyright on `demos/render_chat_api` and `tool/` Python (included in `./bin/checklist`; run alone when iterating on the Render FastAPI demo or shell tooling). |
 | `./bin/integration_tests` | Runs integration flows on a supported non-web device. |
 | `tool/test_coverage.sh` | Runs unit, bloc, widget, and other coverage-producing tests. |
 | `dart run tool/update_coverage_summary.dart` | Refreshes [`coverage/coverage_summary.md`](../coverage/coverage_summary.md). |
