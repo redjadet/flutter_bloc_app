@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_role.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_cubit.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:go_router/go_router.dart';
@@ -57,48 +59,53 @@ class _NavDestination {
   }
 }
 
-const _NavDestination _dashboard = _NavDestination(
-  materialIcon: Icons.home_outlined,
-  cupertinoIcon: CupertinoIcons.home,
-  label: 'Home',
-  route: AppRoutes.staffAppDemoDashboardPath,
-);
-const _NavDestination _timeclock = _NavDestination(
-  materialIcon: Icons.access_time,
-  cupertinoIcon: CupertinoIcons.time,
-  label: 'Time',
-  route: AppRoutes.staffAppDemoTimeclockPath,
-);
-const _NavDestination _messages = _NavDestination(
-  materialIcon: Icons.message_outlined,
-  cupertinoIcon: CupertinoIcons.chat_bubble_2,
-  label: 'Msgs',
-  route: AppRoutes.staffAppDemoMessagesPath,
-);
-const _NavDestination _content = _NavDestination(
-  materialIcon: Icons.video_library_outlined,
-  cupertinoIcon: CupertinoIcons.play_rectangle,
-  label: 'Content',
-  route: AppRoutes.staffAppDemoContentPath,
-);
-const _NavDestination _forms = _NavDestination(
-  materialIcon: Icons.assignment_outlined,
-  cupertinoIcon: CupertinoIcons.square_list,
-  label: 'Forms',
-  route: AppRoutes.staffAppDemoFormsPath,
-);
-const _NavDestination _proof = _NavDestination(
-  materialIcon: Icons.photo_camera_outlined,
-  cupertinoIcon: CupertinoIcons.camera,
-  label: 'Proof',
-  route: AppRoutes.staffAppDemoProofPath,
-);
-const _NavDestination _admin = _NavDestination(
-  materialIcon: Icons.admin_panel_settings_outlined,
-  cupertinoIcon: CupertinoIcons.gear_alt,
-  label: 'Admin',
-  route: AppRoutes.staffAppDemoAdminPath,
-);
+List<_NavDestination> _baseDestinations(final AppLocalizations l10n) =>
+    <_NavDestination>[
+      _NavDestination(
+        materialIcon: Icons.home_outlined,
+        cupertinoIcon: CupertinoIcons.home,
+        label: l10n.staffDemoNavHome,
+        route: AppRoutes.staffAppDemoDashboardPath,
+      ),
+      _NavDestination(
+        materialIcon: Icons.access_time,
+        cupertinoIcon: CupertinoIcons.time,
+        label: l10n.staffDemoNavTime,
+        route: AppRoutes.staffAppDemoTimeclockPath,
+      ),
+      _NavDestination(
+        materialIcon: Icons.message_outlined,
+        cupertinoIcon: CupertinoIcons.chat_bubble_2,
+        label: l10n.staffDemoNavMsgs,
+        route: AppRoutes.staffAppDemoMessagesPath,
+      ),
+      _NavDestination(
+        materialIcon: Icons.video_library_outlined,
+        cupertinoIcon: CupertinoIcons.play_rectangle,
+        label: l10n.staffDemoNavContent,
+        route: AppRoutes.staffAppDemoContentPath,
+      ),
+      _NavDestination(
+        materialIcon: Icons.assignment_outlined,
+        cupertinoIcon: CupertinoIcons.square_list,
+        label: l10n.staffDemoNavForms,
+        route: AppRoutes.staffAppDemoFormsPath,
+      ),
+      _NavDestination(
+        materialIcon: Icons.photo_camera_outlined,
+        cupertinoIcon: CupertinoIcons.camera,
+        label: l10n.staffDemoNavProof,
+        route: AppRoutes.staffAppDemoProofPath,
+      ),
+    ];
+
+_NavDestination _adminDestination(final AppLocalizations l10n) =>
+    _NavDestination(
+      materialIcon: Icons.admin_panel_settings_outlined,
+      cupertinoIcon: CupertinoIcons.gear_alt,
+      label: l10n.staffDemoNavAdmin,
+      route: AppRoutes.staffAppDemoAdminPath,
+    );
 
 int _resolveSelectedIndex(
   final String currentLocation,
@@ -119,27 +126,24 @@ class _StaffDemoBottomNav extends StatelessWidget {
   final String currentLocation;
   final bool useCupertino;
 
-  List<_NavDestination> _destinationsForRole(final StaffDemoRole? role) {
-    final base = <_NavDestination>[
-      _dashboard,
-      _timeclock,
-      _messages,
-      _content,
-      _forms,
-      _proof,
-    ];
+  List<_NavDestination> _destinationsForRole(
+    final AppLocalizations l10n,
+    final StaffDemoRole? role,
+  ) {
+    final base = _baseDestinations(l10n);
     if (role == StaffDemoRole.manager || role == StaffDemoRole.accountant) {
-      return <_NavDestination>[...base, _admin];
+      return <_NavDestination>[...base, _adminDestination(l10n)];
     }
     return base;
   }
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     final role = context.select<StaffDemoSessionCubit, StaffDemoRole?>(
       (final c) => c.state.profile?.role,
     );
-    final destinations = _destinationsForRole(role);
+    final destinations = _destinationsForRole(l10n, role);
     final selectedIndex = _resolveSelectedIndex(currentLocation, destinations);
 
     final items = destinations

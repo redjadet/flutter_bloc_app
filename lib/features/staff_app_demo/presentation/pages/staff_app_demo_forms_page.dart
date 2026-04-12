@@ -5,6 +5,8 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/forms/staff_demo_forms_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/forms/staff_demo_forms_state.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/sites/staff_demo_sites_cubit.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/staff_demo_presentation_l10n.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
@@ -14,17 +16,30 @@ class StaffAppDemoFormsPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final state = context.watch<StaffDemoFormsCubit>().state;
+    final l10n = context.l10n;
+    final bool pinBanner =
+        staffDemoFormsStatusBannerMessage(l10n, state) != null;
 
     return CommonPageLayout(
-      title: 'Forms',
-      body: ListView(
-        padding: const EdgeInsets.all(16),
+      title: l10n.staffDemoFormsTitle,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          _StatusBanner(state: state),
-          const SizedBox(height: 16),
-          const _AvailabilityCard(),
-          const SizedBox(height: 16),
-          const _ManagerReportCard(),
+          if (pinBanner)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: _StatusBanner(state: state),
+            ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+              children: const <Widget>[
+                _AvailabilityCard(),
+                SizedBox(height: 16),
+                _ManagerReportCard(),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -38,18 +53,15 @@ class _StatusBanner extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final String? message = switch (state.status) {
-      StaffDemoFormsStatus.initial => null,
-      StaffDemoFormsStatus.submitting => 'Submitting…',
-      StaffDemoFormsStatus.success => state.lastSubmitLabel ?? 'Submitted.',
-      StaffDemoFormsStatus.error => state.errorMessage ?? 'Failed.',
-    };
+    final l10n = context.l10n;
+    final String? message = staffDemoFormsStatusBannerMessage(l10n, state);
     if (message == null) return const SizedBox.shrink();
 
+    final colorScheme = Theme.of(context).colorScheme;
     final Color bg = switch (state.status) {
-      StaffDemoFormsStatus.success => Colors.green.withValues(alpha: 0.12),
-      StaffDemoFormsStatus.error => Colors.red.withValues(alpha: 0.12),
-      _ => Colors.blue.withValues(alpha: 0.10),
+      StaffDemoFormsStatus.success => colorScheme.primaryContainer,
+      StaffDemoFormsStatus.error => colorScheme.errorContainer,
+      _ => colorScheme.surfaceContainerHighest,
     };
 
     return Container(
@@ -93,6 +105,7 @@ class _AvailabilityCardState extends State<_AvailabilityCard> {
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     final start = _weekStartUtc();
     final days = _weekDaysUtc(start);
 
@@ -102,9 +115,9 @@ class _AvailabilityCardState extends State<_AvailabilityCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'Weekly availability',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            Text(
+              l10n.staffDemoFormsWeeklyAvailability,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             ...days.map((d) {
@@ -129,7 +142,7 @@ class _AvailabilityCardState extends State<_AvailabilityCard> {
                     ),
                   );
                 },
-                child: const Text('Submit availability'),
+                child: Text(l10n.staffDemoFormsSubmitAvailability),
               ),
             ),
           ],
@@ -157,85 +170,99 @@ class _ManagerReportCardState extends State<_ManagerReportCard> {
   }
 
   @override
-  Widget build(final BuildContext context) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const Text(
-            'Manager report',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8),
-          Builder(
-            builder: (context) {
-              final sitesState = context.watch<StaffDemoSitesCubit>().state;
-              final List<StaffDemoSite> sites = sitesState.sites;
-              final effectiveSelectedSiteId =
-                  _selectedSiteId ??
-                  (sites.isEmpty ? null : sites.first.siteId);
-
-              return DropdownButtonFormField<String>(
-                key: ValueKey<String>(
-                  'staffDemo.forms.managerReport.sitePicker.$effectiveSelectedSiteId',
-                ),
-                initialValue: effectiveSelectedSiteId,
-                items: sites
-                    .map(
-                      (s) => DropdownMenuItem<String>(
-                        value: s.siteId,
-                        child: Text('${s.name} (${s.siteId})'),
-                      ),
-                    )
-                    .toList(),
-                onChanged: sites.isEmpty
-                    ? null
-                    : (value) => setState(() => _selectedSiteId = value),
-                decoration: InputDecoration(
-                  labelText: 'Site',
-                  helperText: sitesState.status == StaffDemoSitesStatus.loading
-                      ? 'Loading sites...'
-                      : sitesState.status == StaffDemoSitesStatus.error
-                      ? (sitesState.errorMessage ?? 'Failed to load sites.')
-                      : sites.isEmpty
-                      ? 'No sites found in staffDemoSites.'
-                      : null,
-                ),
-              );
-            },
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: _notesController,
-            decoration: const InputDecoration(labelText: 'Notes'),
-            minLines: 3,
-            maxLines: 8,
-          ),
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.centerRight,
-            child: FilledButton(
-              onPressed: () async {
-                final sitesState = context.cubit<StaffDemoSitesCubit>().state;
+  Widget build(final BuildContext context) {
+    final l10n = context.l10n;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              l10n.staffDemoFormsManagerReport,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 8),
+            Builder(
+              builder: (context) {
+                final sitesState = context.watch<StaffDemoSitesCubit>().state;
                 final List<StaffDemoSite> sites = sitesState.sites;
-                final siteId =
+                final effectiveSelectedSiteId =
                     _selectedSiteId ??
                     (sites.isEmpty ? null : sites.first.siteId);
-                if (siteId == null || siteId.trim().isEmpty) return;
 
-                await context.cubit<StaffDemoFormsCubit>().submitManagerReport(
-                  siteId: siteId,
-                  notes: _notesController.text,
+                return DropdownButtonFormField<String>(
+                  key: ValueKey<String>(
+                    'staffDemo.forms.managerReport.sitePicker.$effectiveSelectedSiteId',
+                  ),
+                  initialValue: effectiveSelectedSiteId,
+                  items: sites
+                      .map(
+                        (s) => DropdownMenuItem<String>(
+                          value: s.siteId,
+                          child: Text('${s.name} (${s.siteId})'),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: sites.isEmpty
+                      ? null
+                      : (value) => setState(() => _selectedSiteId = value),
+                  decoration: InputDecoration(
+                    labelText: l10n.staffDemoSitePickerLabel,
+                    helperText:
+                        sitesState.status == StaffDemoSitesStatus.loading
+                        ? l10n.staffDemoSitePickerLoading
+                        : sitesState.status == StaffDemoSitesStatus.error
+                        ? (sitesState.errorMessage ??
+                              l10n.staffDemoSitePickerFailed)
+                        : sites.isEmpty
+                        ? l10n.staffDemoSitePickerEmpty
+                        : null,
+                  ),
                 );
-                if (!context.mounted) return;
-                _notesController.clear();
               },
-              child: const Text('Submit report'),
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+            TextField(
+              controller: _notesController,
+              decoration: InputDecoration(
+                labelText: l10n.staffDemoFormsNotesLabel,
+              ),
+              minLines: 3,
+              maxLines: 8,
+            ),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerRight,
+              child: FilledButton(
+                onPressed: () async {
+                  final sitesState = context.cubit<StaffDemoSitesCubit>().state;
+                  final List<StaffDemoSite> sites = sitesState.sites;
+                  final siteId =
+                      _selectedSiteId ??
+                      (sites.isEmpty ? null : sites.first.siteId);
+                  if (siteId == null || siteId.trim().isEmpty) return;
+
+                  await context
+                      .cubit<StaffDemoFormsCubit>()
+                      .submitManagerReport(
+                        siteId: siteId,
+                        notes: _notesController.text,
+                      );
+                  if (!context.mounted) return;
+                  final formsState = context.cubit<StaffDemoFormsCubit>().state;
+                  if (formsState.status == StaffDemoFormsStatus.success &&
+                      formsState.lastSuccessKind ==
+                          StaffDemoFormsSuccessKind.managerReportSubmitted) {
+                    _notesController.clear();
+                  }
+                },
+                child: Text(l10n.staffDemoFormsSubmitReport),
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
