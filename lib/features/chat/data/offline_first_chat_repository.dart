@@ -153,6 +153,11 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
           e,
           st,
         );
+        await _localConversationUpdater.applyTerminalSyncFailure(
+          state: localState,
+          payload: payload,
+          failureCode: e.code,
+        );
         await _pendingSyncRepository.markCompleted(operation.id);
         return;
       }

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 
 /// Active remote inference path for chrome / diagnostics (Supabase Edge vs direct HF).
-enum ChatInferenceTransport { supabase, direct }
+enum ChatInferenceTransport { supabase, direct, renderOrchestration }
 
 mixin ChatRepository {
   Future<ChatResult> sendMessage({

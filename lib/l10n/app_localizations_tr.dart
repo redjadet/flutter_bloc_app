@@ -491,6 +491,39 @@ class AppLocalizationsTr extends AppLocalizations {
       'Doğrudan. Uygulama Hugging Face\'i doğrudan çağırır.';
 
   @override
+  String get chatTransportRenderOrchestration => 'Orkestrasyon';
+
+  @override
+  String get chatTransportRenderOrchestrationSemanticsLabel =>
+      'Orkestrasyon. Yanıtlar Hugging Face\'e yönlendiren Render FastAPI hizmetinizi kullanır.';
+
+  @override
+  String get chatModelAuto => 'Otomatik';
+
+  @override
+  String get chatRenderStrictMode => 'Render demosu katı modda; yedek yol yok.';
+
+  @override
+  String get chatAuthRefreshRequired =>
+      'Render sohbet demosuna devam etmek için yeniden oturum aç.';
+
+  @override
+  String get chatSessionEnded =>
+      'Oturumun sona erdi. Oturum açtıktan sonra yeni bir sohbet başlat.';
+
+  @override
+  String get chatSwitchAccount =>
+      'Render demo kimlik bilgilerini yenilemek için hesap değiştir.';
+
+  @override
+  String get chatTokenMissing =>
+      'Hugging Face jetonu eksik. Bağlantıyı kontrol edip tekrar dene.';
+
+  @override
+  String get chatOrchestrationTooltip =>
+      'Otomatik seçildiğinde sunucu tarafında model yönlendirmesi.';
+
+  @override
   String get chatOfflineBadgeLabel => 'Çevrimdışı';
 
   @override

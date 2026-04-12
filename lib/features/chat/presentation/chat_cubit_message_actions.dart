@@ -114,6 +114,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
             history: historyAfterUser,
             isLoading: false,
             error: exception.message,
+            remoteFailureL10nCode: exception.code,
             status: ViewStatus.error,
           );
         },

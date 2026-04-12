@@ -34,6 +34,9 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
+# shellcheck disable=SC1091
+source "$PROJECT_ROOT/tool/resolve_flutter_dart.sh"
+
 INTEGRATION_STARTED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 INTEGRATION_START_EPOCH_MS="$(python3 - <<'PY'
 import time
@@ -272,28 +275,6 @@ if [ "${GITHUB_ACTIONS:-}" = "true" ]; then
     exit 0
   fi
 fi
-
-resolve_flutter_dart() {
-  local flutter_bin
-  local flutter_root
-  local dart_bin
-
-  flutter_bin="$(command -v flutter || true)"
-  if [ -z "$flutter_bin" ]; then
-    echo "❌ 'flutter' command not found in PATH."
-    exit 1
-  fi
-
-  flutter_root="$(cd "$(dirname "$flutter_bin")/.." && pwd)"
-  dart_bin="$flutter_root/bin/dart"
-
-  if [ ! -x "$dart_bin" ]; then
-    echo "❌ Flutter-managed Dart SDK not found at: $dart_bin"
-    exit 1
-  fi
-
-  echo "$dart_bin"
-}
 
 trim() {
   local value="$1"

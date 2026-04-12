@@ -1,18 +1,24 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_render_orchestration_diagnostics.dart';
+import 'package:flutter_bloc_app/features/chat/data/render_orchestration_hf_token_provider.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_model_ids.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
-import 'package:meta/meta.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'chat_cubit_helpers.dart';
@@ -50,6 +56,8 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
          ),
        ) {
     _listenSupabaseAuthForTransportHint();
+    _listenFirebaseAuthForTransportHint();
+    _refreshRunnableTransportHintOnly();
   }
 
   final ChatRepository _repository;
@@ -57,6 +65,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
   final List<String> _models;
   final RequestIdGuard _requestIdGuard = RequestIdGuard();
   StreamSubscription<AuthState>? _supabaseAuthSubscription;
+  StreamSubscription<firebase_auth.User?>? _firebaseAuthSubscription;
 
   List<String> get models => _models;
   String get _currentModel {
@@ -90,8 +99,37 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
   void clearError() {
     if (isClosed) return;
     if (state.hasError) {
-      emit(state.copyWith(error: null, status: ViewStatus.initial));
+      emit(
+        state.copyWith(
+          error: null,
+          remoteFailureL10nCode: null,
+          status: ViewStatus.initial,
+        ),
+      );
     }
+  }
+
+  void _listenFirebaseAuthForTransportHint() {
+    if (Firebase.apps.isEmpty) {
+      return;
+    }
+    _firebaseAuthSubscription = firebase_auth.FirebaseAuth.instance.authStateChanges().listen(
+      (user) {
+        if (user == null && getIt.isRegistered<RenderOrchestrationHfTokenProvider>()) {
+          unawaited(
+            getIt<RenderOrchestrationHfTokenProvider>().clearRenderOrchestrationTokenCache(),
+          );
+        }
+        _refreshRunnableTransportHintOnly();
+      },
+      onError: (final Object error, final StackTrace stackTrace) {
+        AppLogger.error(
+          'ChatCubit.onFirebaseAuthStateChange',
+          error,
+          stackTrace,
+        );
+      },
+    );
   }
 
   void _listenSupabaseAuthForTransportHint() {
@@ -118,6 +156,17 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
       return;
     }
     final hint = _repository.chatRemoteTransportHint;
+    if (kDebugMode) {
+      AppLogger.info(
+        'Chat: transport_hint_refresh '
+        'repoHint=$hint cubitStoredHint=${state.runnableTransportHint} '
+        'lastCompletion=${state.lastCompletionTransport} '
+        'transportForBadge=${state.transportForBadge} '
+        '(badge uses lastCompletion first; chip can stay Supabase after a '
+        'Supabase fallback reply even when Render demo is configured)',
+      );
+      logChatRenderOrchestrationIfDebug('cubit_transport_hint');
+    }
     if (hint == state.runnableTransportHint) {
       return;
     }
@@ -128,6 +177,8 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
   Future<void> close() async {
     await _supabaseAuthSubscription?.cancel();
     _supabaseAuthSubscription = null;
+    await _firebaseAuthSubscription?.cancel();
+    _firebaseAuthSubscription = null;
     return super.close();
   }
 }

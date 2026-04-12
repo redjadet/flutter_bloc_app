@@ -1,25 +1,25 @@
 ---
 name: Render FastAPI chat demo
-overview: Build-ready plan for Cursor agents: orchestration pipeline; STOP gate (caller auth, headers, auto, overload=503 vs 429, fixtures dir, single uvicorn worker); Firebase JWT verification rules; idempotency key lifecycle; logout/user-switch hygiene; HF token Firebase→SecretStorage→header; shared fixtures at test/fixtures/render_chat_contract/.
+overview: Build-ready plan for Cursor agents — v1 **shipped** in-repo (see Implementation snapshot). STOP gate (caller auth, headers, auto, overload=503 vs 429, fixtures dir, single uvicorn worker); Firebase JWT verification rules; idempotency key lifecycle; logout/user-switch hygiene; HF token Firebase→SecretStorage→header; shared fixtures at test/fixtures/render_chat_contract/. Deferred unless reopened — streaming, Redis cache, multi-worker.
 todos:
   - id: fastapi-skeleton
     content: demos/render_chat_api—Pydantic + error envelope; pipeline + caller auth (Firebase JWT or chosen); cache scoped by trusted uid; concurrency semaphore; CORS Allow-Headers; per-uid/IP throttles + max body/header sizes + auth-failure telemetry (see Rate limiting); v1 outbound host allowlist only; pipeline stages; log_usage() with cache_hit vs billable fields; HF header; idempotency; pytest (cache scope, saturation, shared fixtures; contract changes update Dart+pytest fixtures same PR).
-    status: pending
+    status: completed
   - id: flutter-secret-di
     content: Firebase→HF token (Remote Config demo vs Callable prod per Security decision); single-flight provider; persist SecretStorage; caller-auth header owner (Firebase ID token refresh at send time, DI lifecycle, test overrides separate from HF provider); get_it register/dispose + test overrides; flavor + web; kill-switch/strict; dedicated Dio (no shared interceptors; redact logs).
-    status: pending
+    status: completed
   - id: render-repo-impl
     content: RenderFastApiChatRepository—attach HF token from secure storage on each orchestration request; separate header from optional demo shared secret; failure mapping; idempotency; cancellation; transportUsed; parser fixtures.
-    status: pending
+    status: completed
   - id: routing-fallback
     content: DemoFirstChatRepository—fallthrough matrix + transport state; HuggingFacePayloadBuilder sends model auto when UI selects Auto (FastAPI resolves to 20B/120B); cubit/tests.
-    status: pending
+    status: completed
   - id: transport-l10n
     content: ChatInferenceTransport.renderOrchestration + frozen ARB keys (chatModelAuto, chatTransportRenderOrchestration, chatRenderStrictMode, chatAuthRefreshRequired, chatSessionEnded, chatSwitchAccount, chatTokenMissing—or names frozen in integrations doc) + flutter gen-l10n; ChatModelSelector; grep exhaustiveness; dart analyze touched lib; analytics/event payloads reuse same literals as badge where applicable.
-    status: pending
+    status: completed
   - id: tests-docs-validate
     content: Flutter—replay/token logout, permanent auth_required terminal queue behavior, kill-switch, strict, widget/cubit asserts for surfaced auth/session/token copy, shared JSON fixtures with pytest; FastAPI—caller 401, cache user scope; manual web/Render cold-start vs Dio timeout proof; docs/integrations; ai_code_review_protocol self-pass.
-    status: pending
+    status: completed
 isProject: false
 plan_status: final
 ---
@@ -28,40 +28,56 @@ plan_status: final
 
 **Canonical copy:** This file is the in-repo source of truth under `docs/plans/`. A Cursor-plan copy may exist under `~/.cursor/plans/`; prefer this path for git-tracked work and Codex review: `./tool/run_codex_plan_review.sh docs/plans/render_fastapi_chat_demo_plan.md`.
 
-**Plan revision:** **Build-ready for Cursor AI agents** — Codex finalization pass merged (overload vs `429`, single worker, fixture root, JWT rules, idempotency lifecycle, session switch, `get_it` hygiene). Requirements below are complete; **product-owned** items remain in **STOP** and must be **frozen in writing** in [`integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md) before treating ambiguous rows as done.
+**Plan revision:** **Final build-ready version for Cursor AI agents** — Codex finalization pass merged (overload vs `429`, single worker, fixture root, JWT rules, idempotency lifecycle, session switch, `get_it` hygiene), and the remaining policy choices are now frozen in [`integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md).
 
 **Normative precedence:** The **STOP** table, **Cursor Agent Kickoff**, **Build order**, **Failure mapping and offline semantics**, and **Transport state contract** override illustrative prose if they conflict.
+
+## Implementation snapshot (repo)
+
+**As of 2026-04-12** the v1 demo slice in the frontmatter `todos` is **shipped** in this repository unless called out below as an incremental quality follow-up. **STOP** defaults and [`integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md) remain the policy SSOT; this table is a durable file map for agents.
+
+| Area | Primary paths |
+| --- | --- |
+| FastAPI | [`demos/render_chat_api/`](../../demos/render_chat_api/) — `main.py`, `orchestration/`, `tests/`, `Dockerfile`, `render.yaml`; ops deploy helper [`tool/trigger_render_chat_api_deploy.sh`](../../tool/trigger_render_chat_api_deploy.sh) (`RENDER_API_KEY`) |
+| Shared fixtures | [`test/fixtures/render_chat_contract/`](../../test/fixtures/render_chat_contract/) (Dart + pytest) |
+| Firebase Callable | [`functions/src/index.ts`](../../functions/src/index.ts) — `issueRenderChatDemoHfReadToken`, secret `RENDER_CHAT_DEMO_HF_READ_TOKEN` |
+| Flutter remote | [`render_fastapi_chat_repository.dart`](../../lib/features/chat/data/render_fastapi_chat_repository.dart), [`demo_first_chat_repository.dart`](../../lib/features/chat/data/demo_first_chat_repository.dart), [`render_chat_failure_mapper.dart`](../../lib/features/chat/data/render_chat_failure_mapper.dart), [`render_chat_dio_factory.dart`](../../lib/features/chat/data/render_chat_dio_factory.dart), [`render_caller_auth_header_provider.dart`](../../lib/features/chat/data/render_caller_auth_header_provider.dart), [`render_orchestration_hf_token_provider.dart`](../../lib/features/chat/data/render_orchestration_hf_token_provider.dart) |
+| DI / config | [`register_chat_services.dart`](../../lib/core/di/register_chat_services.dart), [`secret_config.dart`](../../lib/core/config/secret_config.dart) (`CHAT_RENDER_*`) |
+| UI / l10n | `ChatInferenceTransport.renderOrchestration`, [`chat_model_selector.dart`](../../lib/features/chat/presentation/widgets/chat_model_selector.dart), [`chat_transport_badge.dart`](../../lib/features/chat/presentation/widgets/chat_transport_badge.dart), `lib/l10n/app_*.arb` (STOP #10 keys) |
+| Automated tests (non-exhaustive) | [`demo_first_chat_repository_test.dart`](../../test/features/chat/data/demo_first_chat_repository_test.dart), [`render_chat_failure_mapper_test.dart`](../../test/features/chat/data/render_chat_failure_mapper_test.dart); offline + cubit coverage for terminal `auth_required`; [`demos/render_chat_api/tests/`](../../demos/render_chat_api/tests/) pytest |
+
+**Incremental follow-ups (optional quality, not v1 blockers):** Logged manual pass for Flutter **web** + Render cold-start vs Dio timeout (section **Manual / web / Render** below); broader widget coverage for every ARB string in **Flutter (unit / widget / cubit as appropriate)**; **`stream_response()`**, Redis-backed cache, and **multi-worker** deploys remain explicitly deferred per **Primary purpose** / scope gate unless product reopens them.
 
 ## Cursor Agent Kickoff
 
 Cursor agents should start from this protocol without adding a second planning layer:
 
 1. Update [`tasks/cursor/todo.md`](../../tasks/cursor/todo.md) with the chosen slice, exact write set, open questions, and validation commands.
-2. Read the **STOP** table and [`docs/integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md) before touching code; if a row your slice depends on is still unresolved, stop and get a human decision or record the stated default there first.
+2. Read the **STOP** table and [`docs/integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md) before touching code; treat those defaults as authoritative unless the user explicitly overrides them in the same PR.
 3. Follow **[Build order — step-by-step](#build-order--step-by-step-cursor-agents-follow-in-order)** in order; do not start Flutter repository/UI work before the FastAPI contract and caller-auth policy are frozen.
 4. Treat `demos/render_chat_api/`, [`register_chat_services.dart`](../../lib/core/di/register_chat_services.dart), [`chat_repository.dart`](../../lib/features/chat/domain/chat_repository.dart), and the main chat page / cubit files as **single-owner** files during one implementation pass.
 5. Do not implement phase-B items (streaming, Redis durability, advanced memory/tool loops, moderation providers) unless the user explicitly expands scope.
 
-## STOP — Do not start building until these are explicit
+## STOP — Frozen defaults Cursor agents must implement
 
-**Agents: if any row below is still “TBD” for your branch, stop and get a human decision (or adopt the stated default and record it in [`integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md)). Do not guess in code.**
+**Agents:** implement the defaults below as written. Do not guess outside them; explicit product overrides must update this table and [`integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md) in the same PR.
 
 | # | Topic | Why it blocks agents | Resolve by |
 | --- | --- | --- | --- |
-| 1 | **Who may call Render** | “Verify caller auth when enabled” is ambiguous—**HF token does not authenticate** the client to your service. | Pick **one**: (A) **Firebase ID token** verified on FastAPI every request (+ optional App Check), (B) **Callable-issued** short-lived JWT for Render only, or (C) **Public lab demo** with documented abuse acceptance (rate limits only). **Default recommendation for v1 dev:** (A) or (C) with banner “demo”—never ship (C) to prod. |
-| 2 | **HF read token delivery** | **Remote Config is not a production secrets channel**; the plan allows both RC and Callable. | Per **flavor**: e.g. **dev** = RC demo-scoped HF key + rotation; **staging/prod** = Callable or other **short-lived** path unless product explicitly accepts RC risk. Write the table in integrations doc. |
-| 3 | **Response cache without caller identity** | Cache keys **must** include trusted `sub`/uid when auth is on; when auth is **off** (lab), “disable cache vs anonymous bucket” is a policy choice. | Human picks: **disable server cache** for unauthenticated requests **or** define **single shared demo cache** (document leakage risk). **Default:** disable cache when no verified caller. |
-| 4 | **Frozen HTTP header names** | Codex called out collisions: Firebase `Authorization` vs HF `Authorization`. | Freeze names in integrations doc **before** first PR: e.g. HF in **`X-HF-Authorization`**, demo in **`X-Render-Demo-Secret`**, Firebase **`Authorization: Bearer <id_token>`** (if using A). Same strings in FastAPI CORS `Access-Control-Allow-Headers` and Flutter Dio. |
+| 1 | **Who may call Render** | “Verify caller auth when enabled” is ambiguous—**HF token does not authenticate** the client to your service. | **Frozen default for v1:** Render requires **Firebase ID token** verification on **every** `POST /v1/chat/completions` request via `Authorization: Bearer <id_token>`. **App Check is optional** and deferred; public-lab mode is **not** the default build path. |
+| 2 | **HF read token delivery** | **Remote Config is not a production secrets channel**; the plan allows both RC and Callable. | **Frozen default by flavor:** **dev** = Firebase **Remote Config** demo-scoped HF read token with rotation; **staging** and **prod** = **Callable** (or equivalent short-lived backend-issued token) only. Cursor agents should implement to this table unless product explicitly changes it in the integrations doc. |
+| 3 | **Response cache without caller identity** | Cache keys **must** include trusted `sub`/uid when auth is on; when auth is **off** (lab), “disable cache vs anonymous bucket” is a policy choice. | **Frozen default:** if the caller identity is not verified, **disable server response cache** for that request. No anonymous shared cache bucket in v1. |
+| 4 | **Frozen HTTP header names** | Codex called out collisions: Firebase `Authorization` vs HF `Authorization`. | **Frozen names:** caller auth = **`Authorization: Bearer <id_token>`**; HF read token = **`X-HF-Authorization: Bearer <hf_token>`**; demo secret = **`X-Render-Demo-Secret`**; idempotency = **`Idempotency-Key`**. FastAPI CORS `Access-Control-Allow-Headers` and Flutter Dio must use these exact strings. |
 | 5 | **`model` sentinel for Auto** | Payload must use one literal agreed with FastAPI. | **Default:** JSON `model` field exactly **`"auto"`** (lowercase) on Render path only; FastAPI treats only this value as orchestration routing for mini/full. Document if you need a different sentinel. |
 | 6 | **Overload vs rate limit (no ambiguous 429)** | Generic **HTTP 429** was mapped `rate_limited` / non-retryable while semaphore saturation could also be **429**—Flutter cannot distinguish **retryable overload** from **non-retryable rate limit** without a stable rule. | **Default (Codex build-ready):** **Semaphore / instance saturation → HTTP `503`** with JSON `code: upstream_unavailable` (or frozen synonym) and **`retryable: true`**. Reserve **HTTP `429`** + `code: rate_limited` for **upstream HF / platform** rate limits only (`retryable: false`). If product ever uses **429** for saturation, error JSON **must** use a **distinct `code`** (e.g. `server_overloaded`) and Flutter maps that code’s `retryable` explicitly—document in integrations doc. |
-| 7 | **Complexity scorer thresholds** | “Simple vs complex” has no numbers in this plan. | Human (or first integration PR) fills numeric thresholds + examples in [`integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md); FastAPI unit tests **must** lock those numbers in code comments pointing to the doc. |
+| 7 | **Complexity scorer thresholds** | “Simple vs complex” has no numbers in this plan. | **Frozen v1 heuristic:** treat the request as **complex** when **any** of these are true: latest user message length **> 400 chars**; total normalized message chars **> 1200**; message count **> 8**; latest user message contains a fenced code block / triple backticks; or the latest user message contains **2 or more** of these markers: newline bullet/numbered list items, `compare`, `analyze`, `design`, `architecture`, `refactor`, `debug`, `step-by-step`. Otherwise treat it as **simple**. FastAPI tests must lock these thresholds and examples. |
 | 8 | **Offline replay on permanent `auth_required`** | [Replay and token lifecycle](#replay-and-token-lifecycle) lists options (a)(b)(c) without a single default. | **Default (build-ready):** After **one** dequeue attempt, permanent `auth_required` / non-retryable auth → **stop auto-retry** for that pending item (**dead-letter** semantics: leave a terminal failed state user-visible, **no** infinite dequeue). Cubit/UI shows **`chatAuthRefreshRequired`** (or frozen ARB) and user must recover session; details in [Queue terminal failure behavior](#queue-terminal-failure-behavior) and integrations doc. |
 | 9 | **Unparseable 200 body** | Failure table leaves `retryable` as implementer choice. | **Default:** **`invalid_request`**, `retryable: false` (avoid retry storms). |
 | 10 | **New `ChatInferenceTransport` enum value name** | Badge and grep-exhaustive switches need the exact identifier. | **Frozen:** extend [`ChatInferenceTransport`](../../lib/features/chat/domain/chat_repository.dart) with **`renderOrchestration`** (camelCase Dart identifier). **ARB (freeze in same PR, adjust only via integrations doc):** `chatModelAuto`, `chatTransportRenderOrchestration` (badge label), `chatRenderStrictMode`, `chatAuthRefreshRequired`, `chatSessionEnded`, `chatSwitchAccount`, `chatTokenMissing`, optional `chatOrchestrationTooltip`—**analytics / event payloads** reuse these string keys or the enum `.name` consistently (pick one in implementation, document once). |
 | 11 | **Uvicorn / worker count for v1** | In-memory cache + per-process semaphore are **invalid** across multiple workers or Gunicorn forks—behavior changes instantly. | **Default:** **`uvicorn` with a single worker** (or equivalent: **one process**, no `--workers` > 1) for any deploy that uses in-process cache/semaphore without Redis. Document in `render.yaml` / Dockerfile. **Before** claiming multi-instance correctness, add Redis (or disable cache). |
 | 12 | **Canonical contract fixtures directory** | “Shared fixtures” without one path invites duplicate JSON drift. | **Frozen owner:** repo-relative **`test/fixtures/render_chat_contract/`** — JSON files for success + each error `code`. Dart tests and **`demos/render_chat_api/` pytest** both load from this directory (pathlib / `File` from repo root); **no** second copy under `demos/` unless symlinked or generated from the same source—state rule in integrations doc. |
 
-After STOP items are resolved or defaulted, record them in **[`integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md)** (even stub) so the next agent does not re-derive policy from this plan alone.
+The mirrored freeze table in **[`integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md)** is part of the contract; keep both docs aligned in the same PR when policy changes.
 
 ## For all AI hosts (Cursor, Codex, Gemini CLI, Claude Code, Copilot)
 
@@ -74,7 +90,7 @@ After STOP items are resolved or defaulted, record them in **[`integrations/rend
 
 Implementers should resolve **security and cache semantics** before wiring Render or Flutter details. **Read [Idempotency key lifecycle](#idempotency-key-lifecycle-one-logical-message) before [Routing decision](#routing-decision-locked)** so fallthrough and offline replay bind to a single logical send.
 
-0. [STOP — unresolved product freezes](#stop--do-not-start-building-until-these-are-explicit) (read first; do not skip)
+0. [STOP — frozen defaults](#stop--frozen-defaults-cursor-agents-must-implement) (read first; do not skip)
 1. [Security decision (caller auth and HF token delivery)](#security-decision-caller-auth-and-hf-token-delivery) — includes **Firebase ID token verification** when using Firebase caller auth
 2. [Security and auth contract](#security-and-auth-contract)
 3. [Cache scope and deployment mode](#cache-scope-and-deployment-mode)
@@ -92,7 +108,7 @@ Execute one numbered step at a time. At any step marked **STOP**, do not move in
 | --- | --- | --- |
 | **1** | **Read policy + freezes** — [`AGENTS.md`](../../AGENTS.md), [`docs/ai_code_review_protocol.md`](../ai_code_review_protocol.md), this plan, and [`docs/integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md). | You can name the required write surfaces, STOP dependencies, and validation route for your slice. |
 | **2** | **Open tracker** — update [`tasks/cursor/todo.md`](../../tasks/cursor/todo.md) or [`tasks/codex/todo.md`](../../tasks/codex/todo.md) with scope, single-owner files, open questions, and planned validation commands. | Tracker lists the exact slice, write set, and proof plan for this branch. |
-| **3** | **STOP: freeze unresolved product rows** — for any STOP item your slice depends on, either use the default already stated in this plan and mirror it into the integrations doc, or get a human override first. | The integrations doc records the policy your code will rely on; no branch-local assumptions. |
+| **3** | **Confirm frozen defaults** — before coding, verify the STOP table and integrations doc still match and that your slice depends only on documented defaults. | The integrations doc records the policy your code will rely on; no branch-local assumptions. |
 | **4** | **Freeze FastAPI contract** — lock request headers, success/error JSON, auth mode, idempotency header, and `model: "auto"` handling in the integrations doc before Flutter integration. | Flutter and FastAPI owners share one stable contract and error vocabulary. |
 | **5** | **Phase 1 — FastAPI service** — implement `demos/render_chat_api/` ingress validation, caller auth, orchestration stages, cache scope, usage logging, saturation behavior, and pytest contract coverage. | FastAPI slice passes its focused pytest and contract checks, with shared fixtures rooted at `test/fixtures/render_chat_contract/`. |
 | **6** | **STOP before Flutter remote wiring** — confirm the FastAPI contract, caller-auth header owner, and failure mapping table are still accurate after Phase 1. | No Flutter repository work starts against a drifting backend contract. |
@@ -157,7 +173,7 @@ These steps need a **person** (dashboard access, billing, secrets, browser verif
 ### B — Render (after `demos/render_chat_api/` exists in the connected branch)
 
 1. **Create service:** In Render Dashboard, **New → Web Service**, connect the git repo, pick the **branch** that contains `demos/render_chat_api/`.
-2. **Root / build:** Set **root directory** to `demos/render_chat_api` (or equivalent Docker **context**). Use the repo’s Dockerfile or Render’s Python runtime + documented `pip install` + start command (`uvicorn main:app --host 0.0.0.0 --port $PORT`). For v1 in-process cache, **do not** pass multi-worker flags unless Redis is enabled ([STOP #11](#stop--do-not-start-building-until-these-are-explicit)).
+2. **Root / build:** Set **root directory** to `demos/render_chat_api` (or equivalent Docker **context**). Use the repo’s Dockerfile or Render’s Python runtime + documented `pip install` + start command (`uvicorn main:app --host 0.0.0.0 --port $PORT`). For v1 in-process cache, **do not** pass multi-worker flags unless Redis is enabled ([STOP #11](#stop--frozen-defaults-cursor-agents-must-implement)).
 3. **Health check:** Set health check path to **`/health`** (or match whatever the FastAPI app exposes).
 4. **Environment:** In Render **Environment**, set at least `CORS_ORIGINS` (comma-separated). Optionally set `DEMO_SHARED_SECRET` for service-level auth. **`HF_TOKEN` on Render is optional** (CI/operator smoke tests only); the **primary** HF credential is **client-supplied** from Firebase → secure storage per [Security and auth](#security-and-auth-contract).
 5. **Deploy:** Trigger first deploy; wait until status is **Live** (expect cold start on free/low tiers).
@@ -296,10 +312,10 @@ log_usage(request_id, resolved_model, latency_ms, cache_hit, approx_tokens_in_ou
 
 Must be observable as “more than one logical step” in code and in **structured** logs (redacted):
 
-1. **Ingress:** Validate body (`messages`, `model`, limits); attach **`request_id`**; **verify caller auth** per [Security decision](#security-decision-caller-auth-and-hf-token-delivery) and [STOP #1](#stop--do-not-start-building-until-these-are-explicit) (no “when enabled” ambiguity—lab mode must be an explicit env flag); require **HF read token** header when calling HF; allowlist models (`openai/gpt-oss-20b`, `openai/gpt-oss-120b`, `auto`).
+1. **Ingress:** Validate body (`messages`, `model`, limits); attach **`request_id`**; **verify caller auth** per [Security decision](#security-decision-caller-auth-and-hf-token-delivery) and [STOP #1](#stop--frozen-defaults-cursor-agents-must-implement) (no “when enabled” ambiguity—lab mode must be an explicit env flag); require **HF read token** header when calling HF; allowlist models (`openai/gpt-oss-20b`, `openai/gpt-oss-120b`, `auto`).
 2. **Repeated → cache:** Lookup before HF; on miss continue; on hit return cached JSON and **`log_usage()`**.
 3. **Needs context → memory:** Apply v1 window/primer policy to build `messages_for_upstream`.
-4. **Simple / complex → model:** If JSON `model` is exactly **`"auto"`** ([STOP #5](#stop--do-not-start-building-until-these-are-explicit)), run the **complexity scorer** (thresholds: [STOP #7](#stop--do-not-start-building-until-these-are-explicit)) and set **mini** vs **full**; else use client model id if allowlisted.
+4. **Simple / complex → model:** If JSON `model` is exactly **`"auto"`** ([STOP #5](#stop--frozen-defaults-cursor-agents-must-implement)), run the **complexity scorer** (thresholds: [STOP #7](#stop--frozen-defaults-cursor-agents-must-implement)) and set **mini** vs **full**; else use client model id if allowlisted.
 5. **Execute:** `httpx` to HF with **resolved** model, **per-step timeout**.
 6. **Sensitive → filter:** Run **filter_output** on assistant text before assembly.
 7. **Egress:** One OpenAI-compatible JSON body for the Flutter parser (non-streaming).
@@ -308,6 +324,7 @@ Must be observable as “more than one logical step” in code and in **structur
 ### Idempotency / request correlation
 
 - Flutter sends **`Idempotency-Key`** (or agreed header); FastAPI uses it for **cache** keys and tracing together with **`request_id`**.
+- Flutter sends optional **`X-Client-Correlation-Id`** per outbound chat completion; FastAPI logs it with **`server_request_id`** and returns **`_render_meta`** on success JSON (and matching response headers when proxies allow) so device logs and Render logs stay joinable; see [`integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md) **Log correlation**.
 - **Repeated → cache** is distinct from Flutter offline enqueue: server cache avoids duplicate **HF** cost for **identical** orchestration requests; client fallthrough still follows the [Fallthrough policy](#fallthrough-policy-explicit-matrix).
 - Document duplicate tolerance if a cache entry expires between retries; default: **miss** → new upstream call.
 - A **Render timeout** may still complete work server-side; duplicate user-visible replies remain mitigated by the client’s **single** fallthrough to composite only after classified **retryable** failure, not after success—client shows one assistant bubble per successful `ChatResult`.
@@ -367,12 +384,12 @@ Map into [`ChatRemoteFailureException`](../../lib/features/chat/domain/chat_repo
 | **403** | `forbidden` | false | No | No |
 | **413** / **422** validation | `invalid_request` | false | No | No |
 | **429** (upstream HF / platform rate limit only) | `rate_limited` | false | No | No |
-| **503** (semaphore / instance saturation per [STOP #6](#stop--do-not-start-building-until-these-are-explicit)) | `upstream_unavailable` | true | Yes | Yes |
+| **503** (semaphore / instance saturation per [STOP #6](#stop--frozen-defaults-cursor-agents-must-implement)) | `upstream_unavailable` | true | Yes | Yes |
 | **5xx** from Render (other, not saturation) | `upstream_unavailable` | true | Yes | Yes |
 | **2xx** but JSON parse failure / missing `choices` | `invalid_request` or `upstream_unavailable` | false or true* | *Prefer false if body contract broken; true if treated as transient garble | Per chosen `retryable` |
 | Parser / schema drift in Flutter after 200 | Treat as implementation bug; add contract tests to prevent | — | — | — |
 
-\*Pick one policy in implementation and test it; **default:** [STOP #9](#stop--do-not-start-building-until-these-are-explicit) — `invalid_request`, `retryable: false`.
+\*Pick one policy in implementation and test it; **default:** [STOP #9](#stop--frozen-defaults-cursor-agents-must-implement) — `invalid_request`, `retryable: false`.
 
 ## Transport state contract (Flutter)
 
@@ -446,7 +463,7 @@ Map into [`ChatRemoteFailureException`](../../lib/features/chat/domain/chat_repo
 - Rate limits (per IP + global); **`log_usage()`** fields redacted; **no** full prompts or full assistant text at info.
 - **Rate limiting and abuse controls (authenticated callers):** JWT verification alone is insufficient—add **per verified uid** (and **per IP** as defense-in-depth) request budgets for `POST /v1/chat/completions`; **max JSON body bytes** and **max header bytes** enforced at ingress (reject **413** with stable error JSON); **auth failure telemetry** (structured counters + sampled logs: `auth_failure_reason` enum, **no** token substrings). Wire limits to **pytest** (reject oversize body; throttle burst).
 - **SSRF / outbound host policy (v1):** No user-controlled upstream **URL**, **Host**, or **proxy target**—HF calls use a **fixed** `api-inference.huggingface.co` base and allowlisted model ids only. Any future **tool** or moderation HTTP client **must** keep an explicit **outbound host allowlist**; document extension point in integrations doc.
-- **Concurrency:** Per-process **semaphore** (or limit) on concurrent **120B** upstream calls; saturation → **HTTP `503`** + stable JSON per [STOP #6](#stop--do-not-start-building-until-these-are-explicit); **per-stage upstream timeouts** (connect/read) with budgets tied to Flutter fallthrough policy.
+- **Concurrency:** Per-process **semaphore** (or limit) on concurrent **120B** upstream calls; saturation → **HTTP `503`** + stable JSON per [STOP #6](#stop--frozen-defaults-cursor-agents-must-implement); **per-stage upstream timeouts** (connect/read) with budgets tied to Flutter fallthrough policy.
 - **Response cache:** bounded TTL and max entries (memory or Redis); **no** HF token in values; key includes idempotency + payload hash + **caller scope** ([Cache scope and deployment mode](#cache-scope-and-deployment-mode)).
 - **Output filter:** fail-safe behavior documented; optional **disable** flag for local dev only (never default on in prod).
 - **Headers:** Reject oversized headers; CORS **`Access-Control-Allow-Headers`** frozen list (see [Security and auth contract](#security-and-auth-contract)); **OPTIONS** preflight tests for denied headers.
@@ -464,7 +481,7 @@ Map into [`ChatRemoteFailureException`](../../lib/features/chat/domain/chat_repo
 - **`render.yaml` (recommended):** Service name, **rootDir** `demos/render_chat_api`, Docker build or native `runtime` + **buildCommand** / **startCommand** (`uvicorn … --host 0.0.0.0 --port $PORT`), **healthCheckPath** `/health`, **plan** (instance size) noting cold-start behavior.
 - **Env vars:** `CORS_ORIGINS`, optional `DEMO_SHARED_SECRET`, optional `HF_TOKEN` (CI/smoke only when using Firebase→client tokens in app), optional **Redis URL** when graduating from in-process cache, Python version if native build.
 - **Instance model:** Default **single instance** for v1 if relying on in-memory cache; document **scale-out** implications ([Cache scope and deployment mode](#cache-scope-and-deployment-mode)). Rollback: disable cache via env, redeploy.
-- **Process model ([STOP #11](#stop--do-not-start-building-until-these-are-explicit)):** For in-process cache + semaphore, run **one worker process** (`uvicorn` without `--workers > 1`, or Gunicorn **`workers = 1`**). Multi-worker requires Redis-backed cache + revised limits before claiming correctness.
+- **Process model ([STOP #11](#stop--frozen-defaults-cursor-agents-must-implement)):** For in-process cache + semaphore, run **one worker process** (`uvicorn` without `--workers > 1`, or Gunicorn **`workers = 1`**). Multi-worker requires Redis-backed cache + revised limits before claiming correctness.
 - **Timeouts / cold start:** Render **scale-to-zero** or smallest plan can add **multi-second** first-request latency. **Manual validation:** measure cold-start `POST /v1/chat/completions` p95 from a clean instance; set Flutter **Dio** connect+receive timeouts **above** that budget **or** explicitly accept **retryable fallthrough** to composite on first cold hit (document the chosen floor in `docs/integrations/`). Add a checklist row: “cold start + worst-case orchestration < Dio timeout OR fallthrough observed once.”
 - **Secrets rotation:** Dashboard edit + redeploy + client secret refresh for non-git channels.
 - **Flavor gating:** Production / store builds ship with demo **disabled** unless explicitly approved (`CHAT_RENDER_DEMO_ENABLED` default false for release in implementation plan).
@@ -475,14 +492,15 @@ Map into [`ChatRemoteFailureException`](../../lib/features/chat/domain/chat_repo
 ### SecretConfig and Firebase HF token
 
 - **Demo base URL** + optional demo gate secret per repo patterns; **release** requires `https`; flavor rules per **Security and auth**.
-- **Firebase → secure storage:** Add an auth-gated fetch path (reuse patterns from [`SupabaseConfigProvider`](../../lib/core/config/supabase_config_provider.dart): signed-in user, `RemoteConfigService`, version/payload semantics, single-flight) to retrieve the **HF read token** payload from Firebase and persist via **`SecretStorage`**. Expose a small API for `RenderFastApiChatRepository` to read the current token **at send time**; handle missing token with a clear **non-retryable** client error before calling Render when orchestration is enabled.
-- **Refresh:** Document when to refetch (app start, Remote Config version bump, token expiry signal from Firebase, periodic refresh policy).
+- **Callable (staging/prod HF read token):** This repo implements Firebase Functions v2 HTTPS Callable **`issueRenderChatDemoHfReadToken`** in [`functions/src/index.ts`](../../functions/src/index.ts) (secret **`RENDER_CHAT_DEMO_HF_READ_TOKEN`**, default region **`us-central1`**). Flutter uses compile-time **`CHAT_RENDER_HF_READ_TOKEN_CALLABLE`** / **`CHAT_RENDER_HF_READ_TOKEN_CALLABLE_REGION`**. Ops, payload shape, and emulator env are in [`docs/integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md) and [`docs/envrc.example`](../envrc.example).
+- **Firebase → secure storage (shipped):** [`LayeredRenderOrchestrationHfTokenProvider`](../../lib/features/chat/data/render_orchestration_hf_token_provider.dart) — **dev** Remote Config + **non-dev** Callable / compile-time HF key, single-flight reads, secure-storage cache keys; `RenderFastApiChatRepository` reads at send time; missing token → non-retryable path before Render when orchestration is enabled.
+- **Refresh (shipped + ops):** Remote Config version / Callable / sign-out semantics documented in [`integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md) and [`docs/envrc.example`](../envrc.example); `ChatCubit` clears orchestration token cache on Firebase sign-out when the layered provider is registered.
 
 ### Caller auth implementation contract (DI)
 
 *Distinct from the HF read-token provider—do not conflate in one class.*
 
-- **Owner:** a small **`RenderCallerAuthHeaderProvider`** (name illustrative) registered in `get_it` **beside** the HF token provider: at **each** Render `sendMessage`, it supplies the **Firebase ID token** (or Callable-issued JWT if STOP #1 picks B) via `FirebaseAuth.instance.currentUser?.getIdToken()` / `getIdToken(true)` on refresh signals—**never** reuse Supabase `AuthTokenInterceptor` behavior.
+- **Shipped:** [`RenderCallerAuthHeaderProvider`](../../lib/features/chat/data/render_caller_auth_header_provider.dart) / **`DefaultRenderCallerAuthHeaderProvider`** registered in `get_it` beside the HF token provider: each Render `sendMessage` supplies the **Firebase ID token** via `FirebaseAuth` `getIdToken()` / `getIdToken(true)`—**never** reuse Supabase `AuthTokenInterceptor` on the Render Dio.
 - **Lifecycle:** refresh on **account switch**, **logout** (return null / throw mapped non-retryable), and **token expiry** callbacks; **cancel** in-flight `getIdToken` futures when cubit disposes if applicable.
 - **Injection:** `RenderFastApiChatRepository` accepts this provider + HF provider; **unit tests** register fakes for both independently; **`get_it.reset()`** clears **both** in-memory caches between tests.
 
@@ -498,8 +516,8 @@ Map into [`ChatRemoteFailureException`](../../lib/features/chat/domain/chat_repo
 
 ### Model `Auto` in the AI Chat UI
 
-- Add **`Auto`** to the chat model list ([`ChatCubit`](../../lib/features/chat/presentation/chat_cubit.dart) `models` + [`ChatModelSelector`](../../lib/features/chat/presentation/widgets/chat_model_selector.dart) label via new ARB key, e.g. `chatModelAuto`).
-- When **Auto** is selected, [`HuggingFacePayloadBuilder`](../../lib/features/chat/data/huggingface_payload_builder.dart) must send `model: "auto"` (or the frozen sentinel agreed with FastAPI) on the **Render** path so the server runs **AI orchestration** (complexity → 20B vs 120B). Fixed Hub selections keep sending their explicit ids.
+- **Shipped:** **`Auto`** in the chat model list ([`ChatCubit`](../../lib/features/chat/presentation/chat_cubit.dart) `models` + [`ChatModelSelector`](../../lib/features/chat/presentation/widgets/chat_model_selector.dart) label via ARB `chatModelAuto`).
+- **Shipped:** When **Auto** is selected, [`HuggingFacePayloadBuilder`](../../lib/features/chat/data/huggingface_payload_builder.dart) sends `model: "auto"` on the **Render** path so FastAPI runs **AI orchestration** (complexity → 20B vs 120B). Fixed Hub selections keep sending their explicit ids.
 
 ### Repositories
 
@@ -507,7 +525,7 @@ Map into [`ChatRemoteFailureException`](../../lib/features/chat/domain/chat_repo
 
 ### Transport / l10n
 
-**Frozen identifiers:** [STOP #10](#stop--do-not-start-building-until-these-are-explicit) — `ChatInferenceTransport.renderOrchestration` + ARB key list + analytics alignment. See **Transport state contract**. After edits: run **`flutter gen-l10n`** then **`dart analyze`** on touched `lib/` (or the repo’s scoped analyze entrypoint from [`docs/engineering/validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md)).
+**Frozen identifiers (shipped):** [STOP #10](#stop--frozen-defaults-cursor-agents-must-implement) — `ChatInferenceTransport.renderOrchestration` + ARB keys + badge wiring in [`chat_transport_badge.dart`](../../lib/features/chat/presentation/widgets/chat_transport_badge.dart). See **Transport state contract**. After future ARB edits: **`flutter gen-l10n`** then **`dart analyze`** on touched `lib/` (or the repo’s scoped analyze entrypoint from [`docs/engineering/validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md)).
 
 ## Implementation slices and file ownership
 
@@ -547,13 +565,13 @@ Use one owner per slice. Do not parallel-edit the same files without an explicit
 - Kill-switch skips Render; strict disables fallthrough; retryable triggers **one** composite call; non-retryable does not.
 - **Offline:** enqueue only when `retryable: true` per existing [`OfflineFirstChatRepository`](../../lib/features/chat/data/offline_first_chat_repository.dart) behavior after failed remote.
 - **State:** `lastCompletionTransport` and badge after orchestration success vs after fallback success.
-- **Shared contract fixtures:** Use canonical directory [STOP #12](#stop--do-not-start-building-until-these-are-explicit) — `test/fixtures/render_chat_contract/`; Dart and pytest load **only** these files (repo-root-relative paths). **Same PR rule:** any change to response/error JSON **envelope** fields updates **both** Dart and Python fixture readers in one PR to prevent drift.
+- **Shared contract fixtures:** Use canonical directory [STOP #12](#stop--frozen-defaults-cursor-agents-must-implement) — `test/fixtures/render_chat_contract/`; Dart and pytest load **only** these files (repo-root-relative paths). **Same PR rule:** any change to response/error JSON **envelope** fields updates **both** Dart and Python fixture readers in one PR to prevent drift.
 - **Auth / session copy:** widget or cubit tests assert **surfaced** strings for `chatAuthRefreshRequired`, `chatSessionEnded`, `chatTokenMissing`, and strict-mode messaging (match generated l10n, not hard-coded English).
 - **Cold start:** if product keeps aggressive Dio timeouts, add an integration-style or manual evidence step that **first** request after idle still completes or **falls through** once without wedging the UI.
 
 ### FastAPI (`pytest`)
 
-- **Auto** scorer boundaries (mini vs full); explicit model passthrough; **cache hit** returns identical JSON without calling HF mock; **cache miss** then HF mock called once; **cache user scope** (same key, different mocked uid → different cache entry); **memory** stage caps applied; **filter_output** redacts/fixtures; missing/invalid HF token → **401**; missing **caller** auth → **401** when enforcement on; **`log_usage`** invoked (assert via mock/spy) on hit and miss paths; **semaphore saturation** → **503** + `upstream_unavailable` / `retryable: true` per [STOP #6](#stop--do-not-start-building-until-these-are-explicit), distinct from **429** `rate_limited`; CORS preflight with **allowed headers list**; schema validation.
+- **Auto** scorer boundaries (mini vs full); explicit model passthrough; **cache hit** returns identical JSON without calling HF mock; **cache miss** then HF mock called once; **cache user scope** (same key, different mocked uid → different cache entry); **memory** stage caps applied; **filter_output** redacts/fixtures; missing/invalid HF token → **401**; missing **caller** auth → **401** when enforcement on; **`log_usage`** invoked (assert via mock/spy) on hit and miss paths; **semaphore saturation** → **503** + `upstream_unavailable` / `retryable: true` per [STOP #6](#stop--frozen-defaults-cursor-agents-must-implement), distinct from **429** `rate_limited`; CORS preflight with **allowed headers list**; schema validation.
 
 ### Manual / web / Render
 
@@ -573,7 +591,7 @@ Use one owner per slice. Do not parallel-edit the same files without an explicit
 
 ## 5) Documentation
 
-[`docs/integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md): [STOP](#stop--do-not-start-building-until-these-are-explicit) resolutions; [Security decision](#security-decision-caller-auth-and-hf-token-delivery); **JWT verification** rules; orchestration diagram; pipeline stages; **caller auth**; **Remote Config vs Callable**; **cache scope** + Redis; **idempotency key lifecycle**; **replay / token / user-switch**; **503 vs 429** mapping; **single worker**; CORS **Allow-Headers**; **concurrency**; **Auto** thresholds; **Firebase → secure storage → HF header**; **failure codes**; **`test/fixtures/render_chat_contract/`**; `render.yaml`; **Dio / get_it**; link to [`AGENTS.md`](../../AGENTS.md).
+[`docs/integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md): [STOP](#stop--frozen-defaults-cursor-agents-must-implement) resolutions; [Security decision](#security-decision-caller-auth-and-hf-token-delivery); **JWT verification** rules; orchestration diagram; pipeline stages; **caller auth**; **Remote Config vs Callable**; **cache scope** + Redis; **idempotency key lifecycle**; **replay / token / user-switch**; **503 vs 429** mapping; **single worker**; CORS **Allow-Headers**; **concurrency**; **Auto** thresholds; **Firebase → secure storage → HF header**; **failure codes**; **`test/fixtures/render_chat_contract/`**; `render.yaml`; **Dio / get_it**; link to [`AGENTS.md`](../../AGENTS.md).
 
 ## Risks and mitigations (expanded)
 
@@ -595,7 +613,7 @@ Use one owner per slice. Do not parallel-edit the same files without an explicit
 | **Public Render URL abuse** | Mandatory caller auth + rate limits + concurrency caps; document demo exception |
 | **Cross-user cache leak** | Caller scope in cache key + tests |
 | **Offline `auth_required` loops** | [Replay and token lifecycle](#replay-and-token-lifecycle); non-retryable policy |
-| **Multi-worker / multi-process** breaks cache + semaphore | [STOP #11](#stop--do-not-start-building-until-these-are-explicit); enforce in `render.yaml` / Dockerfile |
+| **Multi-worker / multi-process** breaks cache + semaphore | [STOP #11](#stop--frozen-defaults-cursor-agents-must-implement); enforce in `render.yaml` / Dockerfile |
 | **Stale token after user switch** | [Session and user-switch hygiene](#session-and-user-switch-hygiene-flutter); tests |
 
 ## Resolved gaps vs earlier draft
@@ -607,6 +625,7 @@ Use one owner per slice. Do not parallel-edit the same files without an explicit
 - **HF credentials:** **Firebase**-sourced read token → **secure storage** in app → **per-request header** to FastAPI (Render `HF_TOKEN` optional for tests only).
 - **Pipeline:** **repeated/cache**, **needs_context/memory**, **simple|complex → models**, **sensitive/filter**, **`log_usage()`**; **`stream_response()`** deferred until streaming contract exists.
 - **Codex (cross-agent):** Caller auth to Render; Remote Config ≠ production secret channel; **cache user scope** + single-instance vs Redis; **replay/token** semantics; shared **Dart/Python fixtures**; **concurrency** + CORS **Allow-Headers**; **get_it** / Dio disposal and test overrides; expanded **l10n** proof commands.
-- **Final (agent gate):** [STOP](#stop--do-not-start-building-until-these-are-explicit) table + `plan_status: final`; pseudocode `caller_scope` for cache; ingress “when enabled” removed; failure rows for saturation / unparseable 200 tied to STOP defaults.
+- **Final (agent gate):** [STOP](#stop--frozen-defaults-cursor-agents-must-implement) table + `plan_status: final`; pseudocode `caller_scope` for cache; ingress “when enabled” removed; failure rows for saturation / unparseable 200 tied to STOP defaults.
 - **Codex (Cursor build-ready):** STOP **#6** overload=`503` vs `429` rate limit; **#11** single worker; **#12** `test/fixtures/render_chat_contract/`; Firebase **JWT** checks; **idempotency** lifecycle; **logout/account-switch**; **get_it** clears token cache; tests for **503** saturation vs **429**.
 - **Codex (plan doc, build-ready follow-up):** Transport enum + ARB freeze; caller-auth header provider; per-uid/IP limits + body/header caps + auth telemetry; terminal offline auth failure; `log_usage` upstream vs cache; cold start vs timeout; fixture/version coupling; SSRF posture for v1 + future tools.
+- **Plan doc maintenance (2026-04):** Frontmatter `todos` set to **`completed`**; **Implementation snapshot (repo)** section added; illustrative Flutter bullets aligned with shipped file names. Optional §4 expansion (manual web cold-start log, extra widget ARB asserts) stays incremental unless product requests it.

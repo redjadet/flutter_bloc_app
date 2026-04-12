@@ -121,6 +121,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
           emitState(
             current.copyWith(
               error: null,
+              remoteFailureL10nCode: null,
               status: ViewStatus.success,
             ),
           );
@@ -155,6 +156,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     final bool? isLoading,
     final bool clearError = false,
     final String? error,
+    final String? remoteFailureL10nCode,
     final String? currentModel,
     final ChatInferenceTransport? lastCompletionTransport,
     final bool clearLastCompletionTransport = false,
@@ -165,6 +167,13 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     final ChatInferenceTransport? nextCompletion = clearLastCompletionTransport
         ? null
         : (lastCompletionTransport ?? current.lastCompletionTransport);
+    final String? nextError = clearError ? null : error ?? current.error;
+    final String? nextRemoteCode = clearError
+        ? null
+        : remoteFailureL10nCode ??
+            (error != null && error != current.error
+                ? null
+                : current.remoteFailureL10nCode);
     emitState(
       current.copyWith(
         history: history,
@@ -174,7 +183,8 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
         generatedResponses: active.generatedResponses,
         status: status,
         isLoading: isLoading ?? current.isLoading,
-        error: clearError ? null : error ?? current.error,
+        error: nextError,
+        remoteFailureL10nCode: nextRemoteCode,
         currentModel: currentModel ?? current.currentModel,
         runnableTransportHint: _repository.chatRemoteTransportHint,
         lastCompletionTransport: nextCompletion,

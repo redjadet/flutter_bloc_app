@@ -1,0 +1,16 @@
+{
+  "id": "chatcmpl-fixture-1",
+  "object": "chat.completion",
+  "created": 1700000000,
+  "model": "openai/gpt-oss-20b",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Fixture assistant reply."
+      },
+      "finish_reason": "stop"
+    }
+  ]
+}

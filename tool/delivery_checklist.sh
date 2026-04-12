@@ -12,6 +12,9 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
+# shellcheck disable=SC1091
+source "$PROJECT_ROOT/tool/resolve_flutter_dart.sh"
+
 CHECKLIST_STARTED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 CHECKLIST_START_EPOCH_MS="$(python3 - <<'PY'
 import time
@@ -76,28 +79,6 @@ trap checklist_on_exit EXIT
 declare -a changed_files=()
 declare -a changed_dart_files=()
 CHECKLIST_ALLOW_REUSE="${CHECKLIST_ALLOW_REUSE:-auto}"
-
-resolve_flutter_dart() {
-  local flutter_bin
-  local flutter_root
-  local dart_bin
-
-  flutter_bin="$(command -v flutter || true)"
-  if [ -z "$flutter_bin" ]; then
-    echo "❌ 'flutter' command not found in PATH."
-    exit 1
-  fi
-
-  flutter_root="$(cd "$(dirname "$flutter_bin")/.." && pwd)"
-  dart_bin="$flutter_root/bin/dart"
-
-  if [ ! -x "$dart_bin" ]; then
-    echo "❌ Flutter-managed Dart SDK not found at: $dart_bin"
-    exit 1
-  fi
-
-  echo "$dart_bin"
-}
 
 detect_cpu_count() {
   local cpu_count
@@ -233,6 +214,7 @@ validate_checklist_configuration() {
   local total_messages="${#CHECK_MESSAGES[@]}"
   local total_scripts="${#CHECK_SCRIPTS[@]}"
   local extra_scripts=(
+    "tool/resolve_flutter_dart.sh"
     "tool/run_mix_lint.sh"
     "tool/test_coverage.sh"
     "tool/check_regression_guards.sh"
@@ -606,6 +588,7 @@ CHECK_MESSAGES=(
   "Checking offline-first remote-merge (do not overwrite newer local with older remote)..."
   "Checking feature modularity (library_demo / settings cross-imports)..."
   "Checking centralized memory-pressure handling..."
+  "Running Pyright on Python (Render chat demo + tool/)..."
 )
 
 CHECK_SCRIPTS=(
@@ -654,6 +637,7 @@ CHECK_SCRIPTS=(
   "tool/check_offline_first_remote_merge.sh"
   "tool/check_feature_modularity_leaks.sh"
   "tool/check_memory_pressure_centralized.sh"
+  "tool/check_pyright_python.sh"
 )
 
 DEFAULT_CHECKLIST_JOBS="$(detect_cpu_count)"

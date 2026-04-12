@@ -496,6 +496,40 @@ class AppLocalizationsDe extends AppLocalizations {
       'Direkt. Diese App ruft Hugging Face direkt auf.';
 
   @override
+  String get chatTransportRenderOrchestration => 'Orchestrierung';
+
+  @override
+  String get chatTransportRenderOrchestrationSemanticsLabel =>
+      'Orchestrierung. Antworten nutzen deinen Render-FastAPI-Dienst, der zu Hugging Face routet.';
+
+  @override
+  String get chatModelAuto => 'Auto';
+
+  @override
+  String get chatRenderStrictMode =>
+      'Render-Demo im Strict-Modus; kein Fallback.';
+
+  @override
+  String get chatAuthRefreshRequired =>
+      'Melde dich erneut an, um den Render-Chat-Demo fortzusetzen.';
+
+  @override
+  String get chatSessionEnded =>
+      'Sitzung beendet. Starte nach dem Anmelden einen neuen Chat.';
+
+  @override
+  String get chatSwitchAccount =>
+      'Konto wechseln, um die Render-Chat-Demo-Anmeldedaten zu aktualisieren.';
+
+  @override
+  String get chatTokenMissing =>
+      'Hugging-Face-Token fehlt. Verbindung prüfen und erneut versuchen.';
+
+  @override
+  String get chatOrchestrationTooltip =>
+      'Serverseitige Modellwahl, wenn Auto gewählt ist.';
+
+  @override
   String get chatOfflineBadgeLabel => 'Offline';
 
   @override

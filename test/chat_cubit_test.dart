@@ -60,6 +60,20 @@ void main() {
       await cubit.sendMessage('Hi');
 
       expect(cubit.state.error, isNotNull);
+      expect(cubit.state.remoteFailureL10nCode, isNull);
+      expect(cubit.state.isLoading, false);
+    });
+
+    test('sets remoteFailureL10nCode on ChatRemoteFailureException', () async {
+      final ChatCubit cubit = createCubit(
+        repository: _RemoteFailureChatRepository(),
+        historyRepository: FakeChatHistoryRepository(),
+      );
+
+      await cubit.sendMessage('Hi');
+
+      expect(cubit.state.error, isNotNull);
+      expect(cubit.state.remoteFailureL10nCode, 'auth_required');
       expect(cubit.state.isLoading, false);
     });
 
@@ -972,6 +986,28 @@ class _ErrorChatRepository implements ChatRepository {
     String? clientMessageId,
   }) {
     throw const ChatException('fail');
+  }
+}
+
+class _RemoteFailureChatRepository implements ChatRepository {
+  @override
+  ChatInferenceTransport? get chatRemoteTransportHint => null;
+
+  @override
+  Future<ChatResult> sendMessage({
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
+  }) {
+    throw const ChatRemoteFailureException(
+      'jwt',
+      code: 'auth_required',
+      retryable: false,
+      isEdge: false,
+    );
   }
 }
 
