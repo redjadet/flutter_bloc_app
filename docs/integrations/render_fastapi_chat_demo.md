@@ -19,7 +19,7 @@ Do not rely on branch-local assumptions that only live in chat history.
 | 1 | Caller auth | **Firebase ID token required** on every Render chat request via `Authorization: Bearer <id_token>`. App Check is optional and deferred for v1. |
 | 2 | HF delivery by flavor | **dev** = Firebase Remote Config demo-scoped HF read token. **staging/prod** = Callable or equivalent short-lived backend-issued token only. |
 | 3 | Anonymous cache policy | If caller identity is not verified, **disable server response cache** for that request. No anonymous shared cache bucket in v1. |
-| 4 | Header names | Caller auth = **`Authorization`**. HF token = **`X-HF-Authorization`**. Demo gate = **`X-Render-Demo-Secret`**. Idempotency = **`Idempotency-Key`**. |
+| 4 | Header names | Caller auth = **`Authorization`**. HF token = **`X-HF-Authorization`**. Demo gate = **`X-Render-Demo-Secret`**. Idempotency = **`Idempotency-Key`**. Optional client correlation = **`X-Client-Correlation-Id`** (server logs + success **`_render_meta`**). |
 | 6 | Overload vs rate limit | Semaphore saturation → **503** + `upstream_unavailable`, `retryable: true`. **429** + `rate_limited` reserved for upstream HF only. |
 | 7 | Complexity thresholds | **Complex** if any: latest user message `> 400` chars; total normalized chars `> 1200`; message count `> 8`; fenced code block present; or latest user message contains `2+` markers from bullet/numbered-list items, `compare`, `analyze`, `design`, `architecture`, `refactor`, `debug`, `step-by-step`. Otherwise **simple**. |
 | 8 | Permanent `auth_required` on replay | **Dead-letter** after one dequeue attempt; terminal failed state + `chatAuthRefreshRequired` / `chatSessionEnded` UX; no infinite retry. |
@@ -34,8 +34,8 @@ These defaults make the v1 plan autonomous for Cursor agents. Product overrides 
 Record these before broad Flutter integration starts:
 
 - Caller-auth mode for Render (`Authorization` with Firebase ID token vs alternate JWT).
-- Exact header names for HF token, optional demo secret, idempotency, and any caller-auth header.
-- Success/error JSON envelope fields and the frozen machine-readable `code` values.
+- Exact header names for HF token, optional demo secret, idempotency, optional client **`X-Client-Correlation-Id`**, and any caller-auth header.
+- Success/error JSON envelope fields and the frozen machine-readable `code` values; success payloads include **`_render_meta`** (`server_request_id`, optional `client_correlation_id`) for client log correlation when CDN/proxies omit custom response headers.
 - `model: "auto"` sentinel and allowlisted explicit model ids.
 - Shared fixture filenames under `test/fixtures/render_chat_contract/`.
 - Complexity-threshold examples in tests matching the frozen heuristic above.
@@ -146,6 +146,8 @@ On each `POST /v1/chat/completions`, the Flutter client sends **`X-Client-Correl
 The FastAPI service logs **`chat_completions_begin`** and **`chat_completions_ok`** with **`server_request_id`** (UUID) and the same **`client_correlation_id`** when the header was present. Success JSON includes **`_render_meta`** with **`server_request_id`** and **`client_correlation_id`** (when sent), and the same values are repeated on response headers **`X-Server-Request-Id`** and **`X-Client-Correlation-Id`** when intermediaries pass them through. Grep Render logs for the UUID or the client correlation id and match the Flutter line for the same send.
 
 CORS allowlist for browser clients includes **`x-client-correlation-id`** (see [`demos/render_chat_api/settings.py`](../../demos/render_chat_api/settings.py) `FROZEN_ALLOW_HEADERS`).
+
+**Debug-only client diagnostics** (kDebug / `AppLogger`): the repository also logs Render’s **`rndr-id`** response header when present. If logs show **`_render_meta=false`** on a 2xx body while **`completion_id`** looks valid, the **running service** is behind the commit that adds `_render_meta`—confirm the git branch Render builds, push, then redeploy (script above or Dashboard).
 
 ## Security notes
 
