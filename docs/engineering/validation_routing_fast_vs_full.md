@@ -1,5 +1,7 @@
 # Validation Routing: Fast vs Full
 
+Entrypoint list: [`docs/agents_quick_reference.md`](../agents_quick_reference.md) (**Commands**).
+
 This guide defines when to run fast, scoped validation versus full validation.
 
 ## Fast Path

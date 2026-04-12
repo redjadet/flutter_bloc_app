@@ -13,12 +13,10 @@ has_agent_templates() {
 managed_cursor_files=(
   "cursor/skills/agents-quick-reference/SKILL.md|$HOME/.cursor/skills/agents-quick-reference/SKILL.md"
   "cursor/skills/agents-delivery-workflow/SKILL.md|$HOME/.cursor/skills/agents-delivery-workflow/SKILL.md"
-  "cursor/skills/agents-completion-gate/SKILL.md|$HOME/.cursor/skills/agents-completion-gate/SKILL.md"
-  "cursor/skills/agents-subagent-policy/SKILL.md|$HOME/.cursor/skills/agents-subagent-policy/SKILL.md"
   "cursor/skills/agents-meta-behavior/SKILL.md|$HOME/.cursor/skills/agents-meta-behavior/SKILL.md"
-  "cursor/skills/agents-workflow-commands/SKILL.md|$HOME/.cursor/skills/agents-workflow-commands/SKILL.md"
   "cursor/skills/agents-cursor-integration/SKILL.md|$HOME/.cursor/skills/agents-cursor-integration/SKILL.md"
   "cursor/commands/commit-push-pr.md|$HOME/.cursor/commands/commit-push-pr.md"
+  "cursor/commands/local-agents-quick-reference.md|$HOME/.cursor/commands/local-agents-quick-reference.md"
   "cursor/commands/upgrade-validate-all.md|$HOME/.cursor/commands/upgrade-validate-all.md"
   "cursor/commands/codex-feedback.md|$HOME/.cursor/commands/codex-feedback.md"
   "cursor/rules/agents-global.mdc|$HOME/.cursor/rules/agents-global.mdc"
@@ -29,8 +27,6 @@ managed_codex_files=(
   "codex/AGENTS.md|$HOME/.codex/AGENTS.md"
   "codex/skills/flutter-bloc-app-quick-reference/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-quick-reference/SKILL.md"
   "codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md"
-  "codex/skills/flutter-bloc-app-cross-host-review/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-cross-host-review/SKILL.md"
-  "codex/skills/flutter-bloc-app-subagent-policy/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-subagent-policy/SKILL.md"
 )
 
 managed_codex_rules_template="codex/rules/flutter_bloc_app_default.rules"

@@ -11,9 +11,10 @@ Adapted from Vinod Pal’s March 8, 2026 checklist:
 This review gate comes before normal repo validation. It complements automated
 checks; it does not replace them.
 
-If [`AGENTS.md`](../AGENTS.md) is unavailable in the current host context, combine this
-document with [`agents_quick_reference.md`](agents_quick_reference.md) as the
-repo-visible fallback.
+If [`AGENTS.md`](../AGENTS.md) is unavailable in the current host context,
+combine this document with
+[`agents_quick_reference.md`](agents_quick_reference.md) as the repo-visible
+fallback.
 
 ## The Eight Checks
 
@@ -53,33 +54,23 @@ repo-visible fallback.
 1. Apply the eight checks.
 2. For non-trivial tasks, confirm the active plan and verification are recorded
    in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) or
-   [`tasks/codex/todo.md`](../tasks/codex/todo.md).
-   Use the tracker that matches the active host. Delegates and cross-host
-   helpers should support that tracker instead of creating a second plan.
+   [`tasks/codex/todo.md`](../tasks/codex/todo.md) per
+   [`AGENTS.md`](../AGENTS.md).
 3. For presentation-layer changes, confirm styling uses shared theme/design
    tokens unless the file is intentionally defining tokens.
 4. If subagents or sidecars were used, review their output as draft input and
    validate the integrated result yourself.
 5. Review the diff manually.
 6. Run the smallest matching repo validation command.
+   Use [`AGENTS.md`](../AGENTS.md) plus
+   [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
+   for routing.
 7. For medium/high-risk work, prefer one extra review pass before finalizing.
    From non-Codex hosts, that can include
    `./tool/request_codex_feedback.sh`. From Codex itself, use that helper only
    when the user explicitly asks for a second opinion or cross-host review.
-   Use `./bin/checklist` only for broad or pre-ship sweeps, or when the user
+   Keep `./bin/checklist` for broad or pre-ship sweeps, or when the user
    explicitly asks for the full validation pass.
-
-## Fast Path By Change Shape
-
-- Small/local change:
-  apply the eight checks, review the diff, run targeted validation, and prove
-  the changed behavior.
-- Docs-only or agent-guidance change:
-  review for clarity and policy drift, validate the touched docs/links, and if
-  host templates changed also run the host-asset drift checks.
-- Non-trivial multi-file or architecture change:
-  require an active host-specific tracker entry, explicit risks/edge cases, and
-  scope-matched proof before completion.
 
 ## Before Marking The Task Done
 
