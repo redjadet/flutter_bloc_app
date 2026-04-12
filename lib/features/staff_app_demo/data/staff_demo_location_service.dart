@@ -50,6 +50,9 @@ class StaffDemoLocationService {
 
     try {
       final Position pos = await _currentPositionFetcher();
+      if (!pos.latitude.isFinite || !pos.longitude.isFinite) {
+        return null;
+      }
 
       return StaffDemoCapturedLocation(
         lat: pos.latitude,

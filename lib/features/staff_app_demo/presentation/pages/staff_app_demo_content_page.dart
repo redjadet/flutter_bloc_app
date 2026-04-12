@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_item.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/content/staff_demo_content_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/content/staff_demo_content_state.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
@@ -17,11 +18,12 @@ class StaffAppDemoContentPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final state = context.watch<StaffDemoContentCubit>().state;
+    final l10n = context.l10n;
 
     return CommonPageLayout(
-      title: 'Content',
+      title: l10n.staffDemoContentTitle,
       body: RefreshIndicator(
-        onRefresh: context.read<StaffDemoContentCubit>().load,
+        onRefresh: context.cubit<StaffDemoContentCubit>().load,
         child: switch (state.status) {
           StaffDemoContentStatus.initial ||
           StaffDemoContentStatus.loading => ListView(
@@ -39,7 +41,9 @@ class StaffAppDemoContentPage extends StatelessWidget {
               SizedBox(
                 height: 240,
                 child: Center(
-                  child: Text(state.errorMessage ?? 'Failed to load content.'),
+                  child: Text(
+                    state.errorMessage ?? l10n.staffDemoContentFailedToOpenItem,
+                  ),
                 ),
               ),
             ],
@@ -48,10 +52,10 @@ class StaffAppDemoContentPage extends StatelessWidget {
             state.items.isEmpty
                 ? ListView(
                     physics: const AlwaysScrollableScrollPhysics(),
-                    children: const [
+                    children: [
                       SizedBox(
                         height: 240,
-                        child: Center(child: Text('No content yet.')),
+                        child: Center(child: Text(l10n.staffDemoContentEmpty)),
                       ),
                     ],
                   )
@@ -90,7 +94,10 @@ class _ContentTile extends StatelessWidget {
         final url = await cubit.resolveUrl(item);
         if (!context.mounted) return;
         if (url == null) {
-          ErrorHandling.showErrorSnackBar(context, 'Could not load file URL.');
+          ErrorHandling.showErrorSnackBar(
+            context,
+            context.l10n.staffDemoContentCouldNotLoadUrl,
+          );
           return;
         }
 
@@ -178,9 +185,9 @@ class _VideoViewerPageState extends State<_VideoViewerPage> {
     appBar: AppBar(title: Text(widget.title)),
     body: Center(
       child: _initializationError != null
-          ? const Padding(
-              padding: EdgeInsets.all(24),
-              child: Text('Could not load this video.'),
+          ? Padding(
+              padding: const EdgeInsets.all(24),
+              child: Text(context.l10n.staffDemoVideoPlayerError),
             )
           : _controller.value.isInitialized
           ? AspectRatio(

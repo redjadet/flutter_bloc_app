@@ -279,7 +279,9 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.textContaining('Seed staffDemoProfiles/{uid} in Firestore.'),
+          find.textContaining(
+            'Seed a staffDemoProfiles document keyed by this user',
+          ),
           findsOneWidget,
         );
       },

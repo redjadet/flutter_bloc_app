@@ -3946,6 +3946,486 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Summarize follow-up and prognosis.'**
   String get caseStudyQuestion10;
+
+  /// Staff demo admin section title for flagged entries count
+  ///
+  /// In en, this message translates to:
+  /// **'Flagged ({count})'**
+  String staffDemoAdminFlagged(int count);
+
+  /// Staff demo admin when no flagged time entries exist
+  ///
+  /// In en, this message translates to:
+  /// **'No flagged entries found.'**
+  String get staffDemoAdminNoFlagged;
+
+  /// Staff demo admin heading for recent time entries list
+  ///
+  /// In en, this message translates to:
+  /// **'Recent time entries ({count})'**
+  String staffDemoAdminRecentEntries(int count);
+
+  /// Staff demo admin helper text for Firestore seed documents
+  ///
+  /// In en, this message translates to:
+  /// **'Seeding reminders: create staffDemoProfiles (user uid), staffDemoSites (site id), and staffDemoShifts (shift id) documents in Firestore for full demo coverage.'**
+  String get staffDemoAdminSeedingReminder;
+
+  /// Title for the staff app demo admin page
+  ///
+  /// In en, this message translates to:
+  /// **'Admin'**
+  String get staffDemoAdminTitle;
+
+  /// Label for selecting assignable staff in staff demo messaging
+  ///
+  /// In en, this message translates to:
+  /// **'Assign to staff'**
+  String get staffDemoAssignToStaffLabel;
+
+  /// Default body text for composing a shift assignment message in staff demo
+  ///
+  /// In en, this message translates to:
+  /// **'Your shift starts at 10:00. Please meet at the warehouse.'**
+  String get staffDemoComposeDefaultShiftBody;
+
+  /// Label for manual recipient user id field in staff demo compose dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient userId'**
+  String get staffDemoComposeRecipientUserId;
+
+  /// Primary action to open compose flow for shift assignment in staff demo
+  ///
+  /// In en, this message translates to:
+  /// **'Send shift assignment'**
+  String get staffDemoComposeSendShiftAssignment;
+
+  /// Error when staff assignee list fails to load in staff demo compose dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load staff list.'**
+  String get staffDemoComposeStaffListFailed;
+
+  /// Error when staff list fails with exception details in staff demo compose dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load staff list.\n{details}'**
+  String staffDemoComposeStaffListFailedWithDetails(String details);
+
+  /// Title of the staff demo shift assignment compose dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Send shift assignment'**
+  String get staffDemoComposeTitle;
+
+  /// Snack bar when staff demo content download URL cannot be resolved
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load file URL.'**
+  String get staffDemoContentCouldNotLoadUrl;
+
+  /// Empty state for staff demo published content list
+  ///
+  /// In en, this message translates to:
+  /// **'No content yet.'**
+  String get staffDemoContentEmpty;
+
+  /// Error text when staff demo content list fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load content.'**
+  String get staffDemoContentFailedToOpenItem;
+
+  /// Title for the staff app demo content page
+  ///
+  /// In en, this message translates to:
+  /// **'Content'**
+  String get staffDemoContentTitle;
+
+  /// Greeting on staff demo dashboard with display name
+  ///
+  /// In en, this message translates to:
+  /// **'Hello, {name}'**
+  String staffDemoDashboardHello(String name);
+
+  /// Message when staff demo profile exists but is inactive
+  ///
+  /// In en, this message translates to:
+  /// **'This staff demo profile is inactive.'**
+  String get staffDemoDashboardInactiveProfile;
+
+  /// Intro copy on staff demo home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Use the bottom tabs to navigate the demo. Accounting flow starts with Timeclock.'**
+  String get staffDemoDashboardIntro;
+
+  /// Placeholder while staff demo profile is loading
+  ///
+  /// In en, this message translates to:
+  /// **'Loading…'**
+  String get staffDemoDashboardLoading;
+
+  /// Message when no staff demo profile document exists for the signed-in user
+  ///
+  /// In en, this message translates to:
+  /// **'No staff demo profile found for this user. Seed a staffDemoProfiles document keyed by this user\'s Firebase Auth uid in Firestore.'**
+  String get staffDemoDashboardNoProfile;
+
+  /// Title for the staff app demo dashboard (home) tab
+  ///
+  /// In en, this message translates to:
+  /// **'Staff demo'**
+  String get staffDemoDashboardTitle;
+
+  /// Validation error when site is missing on staff demo manager report form
+  ///
+  /// In en, this message translates to:
+  /// **'Site ID is required.'**
+  String get staffDemoFormsErrorSiteRequired;
+
+  /// Section title for manager report form in staff demo
+  ///
+  /// In en, this message translates to:
+  /// **'Manager report'**
+  String get staffDemoFormsManagerReport;
+
+  /// Label for notes field on staff demo manager report form
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get staffDemoFormsNotesLabel;
+
+  /// Button to submit weekly availability in staff demo forms
+  ///
+  /// In en, this message translates to:
+  /// **'Submit availability'**
+  String get staffDemoFormsSubmitAvailability;
+
+  /// Button to submit manager report in staff demo forms
+  ///
+  /// In en, this message translates to:
+  /// **'Submit report'**
+  String get staffDemoFormsSubmitReport;
+
+  /// Generic success banner after staff demo form submit when kind is unknown
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted.'**
+  String get staffDemoFormsSubmitted;
+
+  /// Success banner after availability submit in staff demo forms
+  ///
+  /// In en, this message translates to:
+  /// **'Availability submitted'**
+  String get staffDemoFormsSuccessAvailability;
+
+  /// Success banner after manager report submit in staff demo forms
+  ///
+  /// In en, this message translates to:
+  /// **'Manager report submitted'**
+  String get staffDemoFormsSuccessManagerReport;
+
+  /// Title for the staff app demo forms page
+  ///
+  /// In en, this message translates to:
+  /// **'Forms'**
+  String get staffDemoFormsTitle;
+
+  /// Section title for weekly availability in staff demo forms
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly availability'**
+  String get staffDemoFormsWeeklyAvailability;
+
+  /// Empty inbox state in staff demo messages tab
+  ///
+  /// In en, this message translates to:
+  /// **'No messages yet.'**
+  String get staffDemoMessagesEmpty;
+
+  /// Error when Firestore inbox subscription fails in staff demo messages
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load inbox updates.'**
+  String get staffDemoMessagesErrorInboxLoadFailed;
+
+  /// Title for the staff app demo messages page
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get staffDemoMessagesTitle;
+
+  /// Bottom navigation label for staff demo admin tab
+  ///
+  /// In en, this message translates to:
+  /// **'Admin'**
+  String get staffDemoNavAdmin;
+
+  /// Bottom navigation label for staff demo content tab
+  ///
+  /// In en, this message translates to:
+  /// **'Content'**
+  String get staffDemoNavContent;
+
+  /// Bottom navigation label for staff demo forms tab
+  ///
+  /// In en, this message translates to:
+  /// **'Forms'**
+  String get staffDemoNavForms;
+
+  /// Bottom navigation label for staff demo home tab
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get staffDemoNavHome;
+
+  /// Bottom navigation label for staff demo messages tab
+  ///
+  /// In en, this message translates to:
+  /// **'Msgs'**
+  String get staffDemoNavMsgs;
+
+  /// Bottom navigation label for staff demo proof tab
+  ///
+  /// In en, this message translates to:
+  /// **'Proof'**
+  String get staffDemoNavProof;
+
+  /// Bottom navigation label for staff demo timeclock tab
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get staffDemoNavTime;
+
+  /// Error when staff demo action requires auth but user id is missing
+  ///
+  /// In en, this message translates to:
+  /// **'Not signed in.'**
+  String get staffDemoNotSignedIn;
+
+  /// Generic failure label in staff demo proof status banner
+  ///
+  /// In en, this message translates to:
+  /// **'Failed.'**
+  String get staffDemoProofFailed;
+
+  /// Staff demo proof submitted while offline and queued for sync
+  ///
+  /// In en, this message translates to:
+  /// **'Offline: queued for sync when online.'**
+  String get staffDemoProofOfflineQueued;
+
+  /// Section title for photo attachments on staff demo proof page
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
+  String get staffDemoProofPhotos;
+
+  /// Button to pick a photo from gallery on staff demo proof page
+  ///
+  /// In en, this message translates to:
+  /// **'Pick'**
+  String get staffDemoProofPickPhoto;
+
+  /// Label for optional shift id field on staff demo proof submit card
+  ///
+  /// In en, this message translates to:
+  /// **'Shift ID (optional)'**
+  String get staffDemoProofShiftIdOptional;
+
+  /// Button to clear signature pad in staff demo proof flow
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get staffDemoProofSignatureClear;
+
+  /// Heading for signature section in staff demo proof flow
+  ///
+  /// In en, this message translates to:
+  /// **'Signature'**
+  String get staffDemoProofSignatureLabel;
+
+  /// Label when signature file has not been saved yet
+  ///
+  /// In en, this message translates to:
+  /// **'Not saved'**
+  String get staffDemoProofSignatureNotSaved;
+
+  /// Button to persist signature PNG in staff demo proof flow
+  ///
+  /// In en, this message translates to:
+  /// **'Save signature'**
+  String get staffDemoProofSignatureSave;
+
+  /// Label when signature file path is saved in staff demo proof flow
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get staffDemoProofSignatureSaved;
+
+  /// Snack bar when user saves signature without drawing
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign before saving.'**
+  String get staffDemoProofSignatureSaveBefore;
+
+  /// Snack bar when signature bytes are saved successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Signature saved.'**
+  String get staffDemoProofSignatureSaveSuccess;
+
+  /// Button to submit proof bundle in staff demo
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get staffDemoProofSubmit;
+
+  /// Section title for proof submission card in staff demo
+  ///
+  /// In en, this message translates to:
+  /// **'Submit proof'**
+  String get staffDemoProofSubmitProof;
+
+  /// Success banner when proof id is not shown in staff demo
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted proof'**
+  String get staffDemoProofSubmittedEmpty;
+
+  /// Success banner including proof document id in staff demo
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted proof {proofId}'**
+  String staffDemoProofSubmittedWithId(String proofId);
+
+  /// Button to capture a photo with camera on staff demo proof page
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get staffDemoProofTakePhoto;
+
+  /// Title for the staff app demo proof page
+  ///
+  /// In en, this message translates to:
+  /// **'Proof'**
+  String get staffDemoProofTitle;
+
+  /// Helper when staff demo site picker has no Firestore sites
+  ///
+  /// In en, this message translates to:
+  /// **'No sites found in staffDemoSites.'**
+  String get staffDemoSitePickerEmpty;
+
+  /// Helper when staff demo site list fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load sites.'**
+  String get staffDemoSitePickerFailed;
+
+  /// Helper while staff demo site list is loading
+  ///
+  /// In en, this message translates to:
+  /// **'Loading sites...'**
+  String get staffDemoSitePickerLoading;
+
+  /// Label for site dropdown in staff demo forms and proof
+  ///
+  /// In en, this message translates to:
+  /// **'Site'**
+  String get staffDemoSitePickerLabel;
+
+  /// Generic submitting status used in staff demo proof and forms banners
+  ///
+  /// In en, this message translates to:
+  /// **'Submitting…'**
+  String get staffDemoSubmitting;
+
+  /// Button to clock in on staff demo timeclock page
+  ///
+  /// In en, this message translates to:
+  /// **'Clock in'**
+  String get staffDemoTimeclockClockIn;
+
+  /// Button to clock out on staff demo timeclock page
+  ///
+  /// In en, this message translates to:
+  /// **'Clock out'**
+  String get staffDemoTimeclockClockOut;
+
+  /// Status line when user is clocked in with open entry id
+  ///
+  /// In en, this message translates to:
+  /// **'Status: clocked in ({entryId})'**
+  String staffDemoTimeclockClockedInStatus(String entryId);
+
+  /// Status line when user is not clocked in
+  ///
+  /// In en, this message translates to:
+  /// **'Status: clocked out'**
+  String get staffDemoTimeclockClockedOutStatus;
+
+  /// Geofence distance readout on staff demo timeclock page
+  ///
+  /// In en, this message translates to:
+  /// **'Distance: {distanceM}m (radius {radiusM}m)'**
+  String staffDemoTimeclockDistanceMeters(String distanceM, String radiusM);
+
+  /// Label before JSON flags from last clock action in staff demo timeclock
+  ///
+  /// In en, this message translates to:
+  /// **'Last result flags:'**
+  String get staffDemoTimeclockLastResultFlags;
+
+  /// Title for the staff app demo timeclock page
+  ///
+  /// In en, this message translates to:
+  /// **'Timeclock'**
+  String get staffDemoTimeclockTitle;
+
+  /// Error body when staff demo content video fails to initialize
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load this video.'**
+  String get staffDemoVideoPlayerError;
+
+  /// Primary send action in staff demo dialogs (e.g. shift assignment)
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get staffDemoActionSend;
+
+  /// Label for shift assignment message body field in staff demo
+  ///
+  /// In en, this message translates to:
+  /// **'Message body'**
+  String get staffDemoComposeMessageBodyLabel;
+
+  /// Helper text for manual recipient user id in staff demo compose dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a Firebase Auth uid.'**
+  String get staffDemoComposeRecipientUserIdHelper;
+
+  /// Inbox list title when message type is empty in staff demo
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get staffDemoInboxMessageFallback;
+
+  /// Button to confirm a shift assignment from inbox in staff demo
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get staffDemoShiftConfirmAction;
+
+  /// Label when shift assignment is already confirmed in staff demo inbox
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get staffDemoShiftConfirmed;
 }
 
 class _AppLocalizationsDelegate

@@ -191,7 +191,7 @@ Verify on Home:
 
 If you intentionally want to test the failure states:
 
-- remove `staffDemoProfiles/{uid}` and verify `missingProfile`
+- remove the signed-in user's `staffDemoProfiles` document (doc id = Firebase Auth uid) and verify `missingProfile`
 - set `isActive=false` and verify `inactive`
 
 ### 2. Verify role-based navigation

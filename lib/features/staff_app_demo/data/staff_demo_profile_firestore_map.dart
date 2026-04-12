@@ -18,8 +18,7 @@ StaffDemoProfile? staffDemoProfileFromFirestoreDoc({
 
   return StaffDemoProfile(
     userId: userId,
-    displayName:
-        (data['displayName'] as String?)?.trim().isNotEmpty == true
+    displayName: (data['displayName'] as String?)?.trim().isNotEmpty == true
         ? (data['displayName'] as String).trim()
         : userId,
     email: (data['email'] as String?)?.trim() ?? '',
