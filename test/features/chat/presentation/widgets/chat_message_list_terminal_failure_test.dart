@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
@@ -10,7 +11,24 @@ import 'package:flutter_bloc_app/shared/services/error_notification_service.dart
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class _FakeChatRepository extends Fake implements ChatRepository {}
+class _FakeChatRepository implements ChatRepository {
+  @override
+  ChatInferenceTransport? get chatRemoteTransportHint => null;
+
+  @override
+  Future<ChatResult> sendMessage({
+    required final List<String> pastUserInputs,
+    required final List<String> generatedResponses,
+    required final String prompt,
+    final String? model,
+    final String? conversationId,
+    final String? clientMessageId,
+  }) async {
+    throw UnimplementedError();
+  }
+}
+
+class _FakeChatHistoryRepository extends Fake implements ChatHistoryRepository {}
 
 class _MockErrorNotificationService extends Mock
     implements ErrorNotificationService {}
@@ -30,7 +48,7 @@ void main() {
 
     final ChatCubit cubit = ChatCubit(
       repository: _FakeChatRepository(),
-      historyRepository: _FakeChatRepository() as dynamic,
+      historyRepository: _FakeChatHistoryRepository(),
     );
     addTearDown(cubit.close);
 
@@ -69,7 +87,10 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('sign', findRichText: true), findsWidgets);
+    expect(
+      find.textContaining('Sign in again', findRichText: true),
+      findsWidgets,
+    );
   });
 }
 
