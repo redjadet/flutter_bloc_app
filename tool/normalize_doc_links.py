@@ -15,6 +15,9 @@ Rules:
   conservatively (best-effort heuristic).
 - For files under docs/**, `docs/` prefix is removed from targets to keep paths
   correct relative to that file.
+- When fixing existing markdown links of the form
+  [backticked-label](relative-path.md#heading), the #heading fragment is
+  preserved; only the path portion is resolved on disk.
 """
 
 from __future__ import annotations
@@ -138,6 +141,20 @@ def _resolve_token_to_existing_path(token: str, *, file_path: Path, repo_root: P
     return None
 
 
+def _split_md_link_target(target: str) -> tuple[str, str | None]:
+    """
+    Split `path/to/file.md#heading` for filesystem resolution.
+
+    Returns (path_part, fragment_without_hash). Fragment is None when absent or
+    empty so callers do not emit a trailing '#'.
+    """
+    if "#" not in target:
+        return target, None
+    path_part, fragment = target.split("#", 1)
+    frag = fragment.strip()
+    return path_part, frag if frag else None
+
+
 def _link_target_for_token(token: str, *, file_path: Path, repo_root: Path) -> str | None:
     if _is_placeholder_token(token):
         return None
@@ -189,18 +206,23 @@ def normalize_file(path: Path, repo_root: Path) -> Change | None:
         nonlocal replacements
 
         label = m.group("label").strip()
-        target = m.group("target").strip()
+        raw_target = m.group("target").strip()
+        path_part, fragment = _split_md_link_target(raw_target)
+        path_part = path_part.strip()
 
         # Template placeholders (e.g. `<feature>`) should not be clickable links.
         if _is_placeholder_token(label):
             replacements += 1
             return f"`{label}`"
 
-        # Skip external links and anchors.
-        if "://" in target or target.startswith("#"):
+        # Skip external links and pure-anchor targets.
+        if "://" in path_part or raw_target.startswith("#"):
             return m.group(0)
 
-        resolved_target = (path.parent / target).resolve()
+        if not path_part:
+            return m.group(0)
+
+        resolved_target = (path.parent / path_part).resolve()
         if resolved_target.is_file():
             return m.group(0)
 
@@ -211,7 +233,8 @@ def normalize_file(path: Path, repo_root: Path) -> Change | None:
 
         replacements += 1
         normalized_label = _normalize_token(label, path)
-        return f"[`{normalized_label}`]({desired})"
+        frag_suffix = f"#{fragment}" if fragment else ""
+        return f"[`{normalized_label}`]({desired}{frag_suffix})"
 
     updated = MD_LINK_RE.sub(_fix_existing_md_link, updated)
 
