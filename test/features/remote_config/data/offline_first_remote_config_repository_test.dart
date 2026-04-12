@@ -74,6 +74,11 @@ void main() {
         () => remoteRepository.getString(RemoteConfigRepository.supabaseAnonKeyKey),
       ).thenReturn('');
       when(
+        () => remoteRepository.getString(
+          RemoteConfigRepository.renderChatDemoHfReadTokenKey,
+        ),
+      ).thenReturn('');
+      when(
         () => remoteRepository.getInt(RemoteConfigRepository.supabaseConfigVersionKey),
       ).thenReturn(1);
 

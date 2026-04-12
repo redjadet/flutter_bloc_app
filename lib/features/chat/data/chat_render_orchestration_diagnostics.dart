@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -41,8 +42,15 @@ String? _renderOrchestrationNotRunnableReason() {
   if (!getIt.isRegistered<FirebaseAuth>()) {
     return 'FirebaseAuth_not_registered';
   }
-  if (getIt<FirebaseAuth>().currentUser == null) {
-    return 'FirebaseAuth_currentUser_null';
+  if (Firebase.apps.isEmpty) {
+    return 'Firebase_default_app_missing';
+  }
+  try {
+    if (getIt<FirebaseAuth>().currentUser == null) {
+      return 'FirebaseAuth_currentUser_null';
+    }
+  } on Object {
+    return 'FirebaseAuth_unavailable';
   }
   return null;
 }

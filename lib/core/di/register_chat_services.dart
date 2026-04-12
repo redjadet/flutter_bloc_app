@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
@@ -127,14 +128,16 @@ void registerChatServices() {
     );
   }
   registerLazySingletonIfAbsent<RenderCallerAuthHeaderProvider>(
-    () => DefaultRenderCallerAuthHeaderProvider(getIt<FirebaseAuth>()),
+    () => DefaultRenderCallerAuthHeaderProvider(() => getIt<FirebaseAuth>()),
   );
   registerLazySingletonIfAbsent<RenderOrchestrationHfTokenProvider>(
     () => LayeredRenderOrchestrationHfTokenProvider(
       runtime: getIt<AppRuntimeConfig>(),
       remoteConfig: getIt<RemoteConfigService>(),
       storage: SecretConfig.storage ?? FlutterSecureSecretStorage(),
-      firebaseAuth: getIt.isRegistered<FirebaseAuth>() ? getIt<FirebaseAuth>() : null,
+      firebaseAuth: getIt.isRegistered<FirebaseAuth>() && Firebase.apps.isNotEmpty
+          ? getIt<FirebaseAuth>()
+          : null,
     ),
   );
   registerLazySingletonIfAbsent<RenderFastApiChatRepository>(
