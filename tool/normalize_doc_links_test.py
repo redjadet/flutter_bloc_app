@@ -8,9 +8,11 @@ from pathlib import Path
 def _load_module():
     script_path = Path(__file__).with_name("normalize_doc_links.py")
     spec = importlib.util.spec_from_file_location("normalize_doc_links", script_path)
+    if spec is None or spec.loader is None:
+        msg = f"Could not load module spec for {script_path}"
+        raise RuntimeError(msg)
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
-    assert spec.loader is not None
     spec.loader.exec_module(module)
     return module
 

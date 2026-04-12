@@ -11,6 +11,7 @@ void main() {
 
   setUp(() {
     SecretConfig.resetForTest();
+    SecretConfig.debugEnvironment = <String, dynamic>{};
   });
 
   test('loads secrets from secure storage when present', () async {
@@ -184,7 +185,7 @@ void main() {
       storage.write(_FakeSecretStorage.googleMapsKey, 'stored-maps');
       SecretConfig.storage = storage;
       SecretConfig.debugAssetBundle = _FakeAssetBundle.throwing();
-      SecretConfig.debugEnvironment = null;
+      SecretConfig.debugEnvironment = <String, dynamic>{};
 
       await SecretConfig.load();
 

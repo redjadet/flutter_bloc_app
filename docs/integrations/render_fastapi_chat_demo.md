@@ -9,6 +9,7 @@ Before writing code, Cursor agents should confirm:
 1. The active slice and write set are recorded in [`tasks/cursor/todo.md`](../../tasks/cursor/todo.md).
 2. Any STOP row the slice depends on is either resolved below or explicitly using the plan default.
 3. FastAPI contract fields used by Flutter are frozen here before repository/UI work begins.
+4. After Python changes under `demos/render_chat_api` or repo `tool/`, run **`./tool/check_pyright_python.sh`** before merge (or rely on **`./bin/checklist`**, which includes it).
 
 Do not rely on branch-local assumptions that only live in chat history.
 
@@ -46,6 +47,12 @@ Record these before broad Flutter integration starts:
 2. Flutter Render repository + provider/DI wiring against the frozen contract.
 3. UI/l10n + auth/session/token surfaced states.
 4. Docs / validation cleanup.
+
+## Python validation (FastAPI + repo `tool/`)
+
+- **`./tool/check_pyright_python.sh`** — Pyright on `demos/render_chat_api` and `tool/`; rejects invalid repo-root `pyrightconfig.json` (e.g. `venvPath` nested under `executionEnvironments`); creates `demos/render_chat_api/.venv` and installs `requirements.txt` when missing. Runs as part of **`./bin/checklist`** / **`./tool/delivery_checklist.sh`** (see [`docs/validation_scripts.md`](../validation_scripts.md)).
+- **pytest** — From `demos/render_chat_api`: `python -m pytest` (shared fixtures under [`test/fixtures/render_chat_contract/`](../../test/fixtures/render_chat_contract/)).
+- **Editor** — Basedpyright/Pyright: [`demos/render_chat_api/README.md`](../../demos/render_chat_api/README.md) (IDE section).
 
 ## Render MCP (Cursor marketplace plugin)
 

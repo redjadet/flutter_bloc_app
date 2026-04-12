@@ -4,7 +4,7 @@ OpenAI-compatible `POST /v1/chat/completions` for the Flutter [`HuggingFaceRespo
 
 ## IDE (Pyright / Basedpyright)
 
-Create `.venv` and install deps (see below). This directory’s [`pyrightconfig.json`](./pyrightconfig.json) plus the repo root [`pyrightconfig.json`](../../pyrightconfig.json) point Pyright/Basedpyright at **`demos/render_chat_api/.venv`** so imports like `fastapi` and `httpx` resolve in Cursor/VS Code without using the system Python.
+Create `.venv` and install deps (see below). This directory’s [`pyrightconfig.json`](./pyrightconfig.json) plus the repo root [`pyrightconfig.json`](../../pyrightconfig.json) point Pyright/Basedpyright at **`demos/render_chat_api/.venv`** so imports like `fastapi` and `httpx` resolve in Cursor/VS Code without using the system Python. **`../../tool/check_pyright_python.sh`** runs the same Pyright pass (and creates `.venv` if missing); it is part of **`./tool/delivery_checklist.sh`** / **`./bin/checklist`** so import and typing regressions fail early in CI and locally.
 
 ## Run locally
 
