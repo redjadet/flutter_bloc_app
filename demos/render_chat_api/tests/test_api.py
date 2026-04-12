@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from typing import Any
 from unittest.mock import AsyncMock, patch
 
@@ -13,7 +14,7 @@ from settings import get_settings
 
 
 @pytest.fixture(autouse=True)
-def _clear_settings_cache() -> None:
+def _clear_settings_cache() -> Iterator[None]:
     get_settings.cache_clear()
     yield
     get_settings.cache_clear()

@@ -45,12 +45,10 @@ String? _renderOrchestrationNotRunnableReason() {
   if (Firebase.apps.isEmpty) {
     return 'Firebase_default_app_missing';
   }
-  try {
-    if (getIt<FirebaseAuth>().currentUser == null) {
-      return 'FirebaseAuth_currentUser_null';
-    }
-  } on Object {
-    return 'FirebaseAuth_unavailable';
-  }
+  // Do not read [FirebaseAuth.currentUser] here: in widget/unit tests the auth
+  // channel may be absent, and the pigeon stack reports failures on an async
+  // gap that a synchronous try/catch does not reliably contain. Runtime gating
+  // for Render still uses [_chatRenderOrchestrationRunnable] in
+  // register_chat_services.dart (currentUser checked only when actually needed).
   return null;
 }

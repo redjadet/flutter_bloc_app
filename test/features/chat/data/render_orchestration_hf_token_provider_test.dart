@@ -14,6 +14,7 @@ void main() {
     setUp(() {
       storage = InMemorySecretStorage();
       SecretConfig.resetForTest();
+      SecretConfig.debugEnvironment = <String, dynamic>{};
     });
 
     tearDown(() {
@@ -21,33 +22,48 @@ void main() {
       FlavorManager.current = Flavor.dev;
     });
 
-    test('dev: reads Remote Config token, persists to secure storage', () async {
-      FlavorManager.current = Flavor.dev;
-      final LayeredRenderOrchestrationHfTokenProvider provider =
-          LayeredRenderOrchestrationHfTokenProvider(
-            runtime: AppRuntimeConfig(flavor: Flavor.dev, skeletonDelay: Duration.zero),
-            remoteConfig: _FakeRemoteConfig(
-              strings: <String, String>{
-                RemoteConfigRepository.renderChatDemoHfReadTokenKey: '  rc-hf  ',
-              },
-            ),
-            storage: storage,
-          );
+    test(
+      'dev: reads Remote Config token, persists to secure storage',
+      () async {
+        FlavorManager.current = Flavor.dev;
+        final LayeredRenderOrchestrationHfTokenProvider provider =
+            LayeredRenderOrchestrationHfTokenProvider(
+              runtime: AppRuntimeConfig(
+                flavor: Flavor.dev,
+                skeletonDelay: Duration.zero,
+              ),
+              remoteConfig: _FakeRemoteConfig(
+                strings: <String, String>{
+                  RemoteConfigRepository.renderChatDemoHfReadTokenKey:
+                      '  rc-hf  ',
+                },
+              ),
+              storage: storage,
+            );
 
-      final String? first = await provider.readHfTokenForUpstream();
-      expect(first, 'rc-hf');
+        final String? first = await provider.readHfTokenForUpstream();
+        expect(first, 'rc-hf');
 
-      final String? cached = await storage.read(LayeredRenderOrchestrationHfTokenProvider.cacheKey);
-      expect(cached, 'rc-hf');
-    });
+        final String? cached = await storage.read(
+          LayeredRenderOrchestrationHfTokenProvider.cacheKey,
+        );
+        expect(cached, 'rc-hf');
+      },
+    );
 
     test('dev: prefers secure storage over Remote Config', () async {
       FlavorManager.current = Flavor.dev;
-      await storage.write(LayeredRenderOrchestrationHfTokenProvider.cacheKey, 'cached-only');
+      await storage.write(
+        LayeredRenderOrchestrationHfTokenProvider.cacheKey,
+        'cached-only',
+      );
 
       final LayeredRenderOrchestrationHfTokenProvider provider =
           LayeredRenderOrchestrationHfTokenProvider(
-            runtime: AppRuntimeConfig(flavor: Flavor.dev, skeletonDelay: Duration.zero),
+            runtime: AppRuntimeConfig(
+              flavor: Flavor.dev,
+              skeletonDelay: Duration.zero,
+            ),
             remoteConfig: _FakeRemoteConfig(
               strings: <String, String>{
                 RemoteConfigRepository.renderChatDemoHfReadTokenKey: 'from-rc',
@@ -59,35 +75,51 @@ void main() {
       expect(await provider.readHfTokenForUpstream(), 'cached-only');
     });
 
-    test('non-dev: skips Remote Config, uses SecretConfig when loaded', () async {
-      FlavorManager.current = Flavor.staging;
-      SecretConfig.storage = storage;
-      await storage.write('huggingface_api_key', 'secure-hf');
-      await SecretConfig.load(allowAssetFallback: false, persistToSecureStorage: false);
+    test(
+      'non-dev: skips Remote Config, uses SecretConfig when loaded',
+      () async {
+        FlavorManager.current = Flavor.staging;
+        SecretConfig.storage = storage;
+        await storage.write('huggingface_api_key', 'secure-hf');
+        await SecretConfig.load(
+          allowAssetFallback: false,
+          persistToSecureStorage: false,
+        );
 
-      final LayeredRenderOrchestrationHfTokenProvider provider =
-          LayeredRenderOrchestrationHfTokenProvider(
-            runtime: AppRuntimeConfig(flavor: Flavor.staging, skeletonDelay: Duration.zero),
-            remoteConfig: _FakeRemoteConfig(
-              strings: <String, String>{
-                RemoteConfigRepository.renderChatDemoHfReadTokenKey: 'from-rc',
-              },
-            ),
-            storage: storage,
-          );
+        final LayeredRenderOrchestrationHfTokenProvider provider =
+            LayeredRenderOrchestrationHfTokenProvider(
+              runtime: AppRuntimeConfig(
+                flavor: Flavor.staging,
+                skeletonDelay: Duration.zero,
+              ),
+              remoteConfig: _FakeRemoteConfig(
+                strings: <String, String>{
+                  RemoteConfigRepository.renderChatDemoHfReadTokenKey:
+                      'from-rc',
+                },
+              ),
+              storage: storage,
+            );
 
-      expect(await provider.readHfTokenForUpstream(), 'secure-hf');
-    });
+        expect(await provider.readHfTokenForUpstream(), 'secure-hf');
+      },
+    );
 
     test('non-dev: Callable override wins before SecretConfig', () async {
       FlavorManager.current = Flavor.staging;
       SecretConfig.storage = storage;
       await storage.write('huggingface_api_key', 'secure-hf');
-      await SecretConfig.load(allowAssetFallback: false, persistToSecureStorage: false);
+      await SecretConfig.load(
+        allowAssetFallback: false,
+        persistToSecureStorage: false,
+      );
 
       final LayeredRenderOrchestrationHfTokenProvider provider =
           LayeredRenderOrchestrationHfTokenProvider(
-            runtime: AppRuntimeConfig(flavor: Flavor.staging, skeletonDelay: Duration.zero),
+            runtime: AppRuntimeConfig(
+              flavor: Flavor.staging,
+              skeletonDelay: Duration.zero,
+            ),
             remoteConfig: _FakeRemoteConfig(),
             storage: storage,
             callableTokenOverride: () async => 'from-callable',
@@ -102,50 +134,86 @@ void main() {
 
     test('migrates legacy RC cache key into primary cache', () async {
       FlavorManager.current = Flavor.dev;
-      await storage.write(LayeredRenderOrchestrationHfTokenProvider.legacyRcCacheKey, 'legacy-rc');
+      await storage.write(
+        LayeredRenderOrchestrationHfTokenProvider.legacyRcCacheKey,
+        'legacy-rc',
+      );
 
       final LayeredRenderOrchestrationHfTokenProvider provider =
           LayeredRenderOrchestrationHfTokenProvider(
-            runtime: AppRuntimeConfig(flavor: Flavor.dev, skeletonDelay: Duration.zero),
+            runtime: AppRuntimeConfig(
+              flavor: Flavor.dev,
+              skeletonDelay: Duration.zero,
+            ),
             remoteConfig: _FakeRemoteConfig(),
             storage: storage,
           );
 
       expect(await provider.readHfTokenForUpstream(), 'legacy-rc');
-      expect(await storage.read(LayeredRenderOrchestrationHfTokenProvider.cacheKey), 'legacy-rc');
       expect(
-        await storage.read(LayeredRenderOrchestrationHfTokenProvider.legacyRcCacheKey),
+        await storage.read(LayeredRenderOrchestrationHfTokenProvider.cacheKey),
+        'legacy-rc',
+      );
+      expect(
+        await storage.read(
+          LayeredRenderOrchestrationHfTokenProvider.legacyRcCacheKey,
+        ),
         isNull,
       );
     });
 
-    test('clearRenderOrchestrationTokenCache removes primary and legacy keys', () async {
-      FlavorManager.current = Flavor.dev;
-      await storage.write(LayeredRenderOrchestrationHfTokenProvider.cacheKey, 'a');
-      await storage.write(LayeredRenderOrchestrationHfTokenProvider.legacyRcCacheKey, 'b');
+    test(
+      'clearRenderOrchestrationTokenCache removes primary and legacy keys',
+      () async {
+        FlavorManager.current = Flavor.dev;
+        await storage.write(
+          LayeredRenderOrchestrationHfTokenProvider.cacheKey,
+          'a',
+        );
+        await storage.write(
+          LayeredRenderOrchestrationHfTokenProvider.legacyRcCacheKey,
+          'b',
+        );
 
-      final LayeredRenderOrchestrationHfTokenProvider provider =
-          LayeredRenderOrchestrationHfTokenProvider(
-            runtime: AppRuntimeConfig(flavor: Flavor.dev, skeletonDelay: Duration.zero),
-            remoteConfig: _FakeRemoteConfig(),
-            storage: storage,
-          );
+        final LayeredRenderOrchestrationHfTokenProvider provider =
+            LayeredRenderOrchestrationHfTokenProvider(
+              runtime: AppRuntimeConfig(
+                flavor: Flavor.dev,
+                skeletonDelay: Duration.zero,
+              ),
+              remoteConfig: _FakeRemoteConfig(),
+              storage: storage,
+            );
 
-      await provider.clearRenderOrchestrationTokenCache();
-      expect(await storage.read(LayeredRenderOrchestrationHfTokenProvider.cacheKey), isNull);
-      expect(
-        await storage.read(LayeredRenderOrchestrationHfTokenProvider.legacyRcCacheKey),
-        isNull,
-      );
-    });
+        await provider.clearRenderOrchestrationTokenCache();
+        expect(
+          await storage.read(
+            LayeredRenderOrchestrationHfTokenProvider.cacheKey,
+          ),
+          isNull,
+        );
+        expect(
+          await storage.read(
+            LayeredRenderOrchestrationHfTokenProvider.legacyRcCacheKey,
+          ),
+          isNull,
+        );
+      },
+    );
 
     test('single-flight: concurrent reads share one resolution', () async {
       FlavorManager.current = Flavor.dev;
       int getStringCalls = 0;
       final LayeredRenderOrchestrationHfTokenProvider provider =
           LayeredRenderOrchestrationHfTokenProvider(
-            runtime: AppRuntimeConfig(flavor: Flavor.dev, skeletonDelay: Duration.zero),
-            remoteConfig: _CountingRemoteConfig(onGetString: () => getStringCalls++, value: 'once'),
+            runtime: AppRuntimeConfig(
+              flavor: Flavor.dev,
+              skeletonDelay: Duration.zero,
+            ),
+            remoteConfig: _CountingRemoteConfig(
+              onGetString: () => getStringCalls++,
+              value: 'once',
+            ),
             storage: storage,
           );
 

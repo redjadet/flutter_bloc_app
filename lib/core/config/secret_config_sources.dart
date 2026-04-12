@@ -47,7 +47,8 @@ final List<_SecretStorageField> _secureStorageFields = <_SecretStorageField>[
     storageKey: SecretConfig._keySupabaseFirebaseProjectId,
     envKey: 'SUPABASE_FIREBASE_PROJECT_ID',
     readValue: () => SecretConfig._supabaseFirebaseProjectId,
-    applyValue: (final value) => SecretConfig._supabaseFirebaseProjectId = value,
+    applyValue: (final value) =>
+        SecretConfig._supabaseFirebaseProjectId = value,
   ),
 ];
 
@@ -151,6 +152,17 @@ bool _hasSecrets(final Map<String, dynamic>? source) {
 }
 
 Map<String, dynamic>? _readEnvironmentSecrets() {
+  // When tests (or tooling) set [SecretConfig.debugEnvironment], treat it as the
+  // sole environment tier so `flutter test` stays deterministic when the host
+  // passes `--dart-define=SUPABASE_*` / HF keys. An empty map means "no env".
+  final Map<String, dynamic>? injectedEnv = SecretConfig.debugEnvironment;
+  if (injectedEnv != null) {
+    if (injectedEnv.isEmpty) {
+      return null;
+    }
+    return Map<String, dynamic>.from(injectedEnv);
+  }
+
   const String token = String.fromEnvironment('HUGGINGFACE_API_KEY');
   const String model = String.fromEnvironment('HUGGINGFACE_MODEL');
   const String completionFlagRaw = String.fromEnvironment(
@@ -196,10 +208,6 @@ Map<String, dynamic>? _readEnvironmentSecrets() {
   }
   if (supabaseFirebaseProjectId.isNotEmpty) {
     result['SUPABASE_FIREBASE_PROJECT_ID'] = supabaseFirebaseProjectId;
-  }
-
-  if (SecretConfig.debugEnvironment case final env?) {
-    result.addAll(env);
   }
 
   return result.isEmpty ? null : result;

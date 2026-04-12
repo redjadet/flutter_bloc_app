@@ -64,10 +64,11 @@ class SecretConfig {
   );
 
   /// Firebase Functions region for `chatRenderHfReadTokenCallable`.
-  static const String chatRenderHfReadTokenCallableRegion = String.fromEnvironment(
-    'CHAT_RENDER_HF_READ_TOKEN_CALLABLE_REGION',
-    defaultValue: 'us-central1',
-  );
+  static const String chatRenderHfReadTokenCallableRegion =
+      String.fromEnvironment(
+        'CHAT_RENDER_HF_READ_TOKEN_CALLABLE_REGION',
+        defaultValue: 'us-central1',
+      );
 
   static const String enableAssetSecretsDefine = 'ENABLE_ASSET_SECRETS';
   static const String _keyHfToken = 'huggingface_api_key';
@@ -79,7 +80,8 @@ class SecretConfig {
   static const String _keySupabaseUrl = 'supabase_url';
   static const String _keySupabaseAnonKey = 'supabase_anon_key';
   static const String _keySupabaseConfigVersion = 'supabase_config_version';
-  static const String _keySupabaseFirebaseProjectId = 'supabase_firebase_project_id';
+  static const String _keySupabaseFirebaseProjectId =
+      'supabase_firebase_project_id';
 
   static bool _loaded = false;
   static String? _huggingfaceApiKey;
@@ -153,7 +155,9 @@ class SecretConfig {
     _supabaseAnonKey = key;
     _supabaseConfigVersion = ver;
     final String? projectId = firebaseProjectId?.trim();
-    _supabaseFirebaseProjectId = (projectId == null || projectId.isEmpty) ? null : projectId;
+    _supabaseFirebaseProjectId = (projectId == null || projectId.isEmpty)
+        ? null
+        : projectId;
   }
 
   static Future<void> persistSupabaseConfig(
@@ -211,10 +215,12 @@ class SecretConfig {
         !kReleaseMode;
 
     try {
+      var hadPreEnvSecretsApply = false;
       final bool loadedFromSecure = await _loadFromSource(
         () => _readSecureSecrets(storage),
       );
       if (loadedFromSecure) {
+        hadPreEnvSecretsApply = true;
         _logHuggingFaceTokenDiagnostics(source: 'secure_storage');
         if (_needsRemoteFallback) {
           AppLogger.warning(
@@ -233,6 +239,7 @@ class SecretConfig {
           afterApply: () => _persistGoogleMapsKey(storage),
         );
         if (loadedFromAssets) {
+          hadPreEnvSecretsApply = true;
           _logHuggingFaceTokenDiagnostics(source: 'asset_secrets');
           if (!_needsRemoteFallback) {
             _loaded = true;
@@ -250,6 +257,11 @@ class SecretConfig {
       );
       if (loadedFromEnvironment) {
         _logHuggingFaceTokenDiagnostics(source: 'dart_define_env');
+        _loaded = true;
+        return;
+      }
+
+      if (hadPreEnvSecretsApply) {
         _loaded = true;
         return;
       }

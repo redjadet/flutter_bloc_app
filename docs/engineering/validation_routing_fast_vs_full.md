@@ -10,6 +10,7 @@ Use fast path for narrow, low-risk edits where routing/auth/gates are unchanged.
 
 - Local formatting/lints/tests for touched files
 - Optional targeted regression tests
+- **Python only** (`demos/render_chat_api/**`, repo `tool/*.py`): `./tool/check_pyright_python.sh` (Pyright + config guard; bootstraps `demos/render_chat_api/.venv` when missing). For behavior proof, `cd demos/render_chat_api && python -m pytest`. Full gate still includes this script via `./bin/checklist`.
 
 ## Scoped Router/Auth Path
 

@@ -140,6 +140,7 @@ Use repo commands instead of ad-hoc validation:
 | --- | --- |
 | `flutter pub get` | Refresh dependencies. |
 | `dart run build_runner build --delete-conflicting-outputs` | Regenerate code after model/API annotation changes. |
+| `./tool/check_pyright_python.sh` | Pyright on `demos/render_chat_api` and `tool/` Python (run when editing the Render FastAPI demo or repo shell tooling; also runs inside `./bin/checklist`). |
 | `./bin/checklist` | Primary local quality gate. |
 | `./bin/integration_tests` | Run integration flows on a supported device. |
 | `./bin/upgrade_validate_all` | Full maintenance and upgrade validation flow. |
