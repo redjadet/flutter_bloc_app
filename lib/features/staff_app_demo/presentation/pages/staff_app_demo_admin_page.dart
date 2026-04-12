@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/admin/staff_demo_admin_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/admin/staff_demo_admin_state.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
@@ -13,11 +15,12 @@ class StaffAppDemoAdminPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     final state = context.watch<StaffDemoAdminCubit>().state;
     final flagged = state.recentEntries.where((e) => e.isFlagged).toList();
+    final l10n = context.l10n;
 
     return CommonPageLayout(
-      title: 'Admin',
+      title: l10n.staffDemoAdminTitle,
       body: RefreshIndicator(
-        onRefresh: context.read<StaffDemoAdminCubit>().load,
+        onRefresh: context.cubit<StaffDemoAdminCubit>().load,
         child: switch (state.status) {
           StaffDemoAdminStatus.initial ||
           StaffDemoAdminStatus.loading => ListView(
@@ -35,7 +38,7 @@ class StaffAppDemoAdminPage extends StatelessWidget {
               SizedBox(
                 height: 240,
                 child: CommonErrorView(
-                  message: state.errorMessage ?? 'Unknown error.',
+                  message: state.errorMessage ?? l10n.errorUnknown,
                 ),
               ),
             ],
@@ -45,16 +48,16 @@ class StaffAppDemoAdminPage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             children: <Widget>[
               Text(
-                'Recent time entries (${state.recentEntries.length})',
+                l10n.staffDemoAdminRecentEntries(state.recentEntries.length),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
               Text(
-                'Flagged (${flagged.length})',
+                l10n.staffDemoAdminFlagged(flagged.length),
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               const SizedBox(height: 8),
-              if (flagged.isEmpty) const Text('No flagged entries found.'),
+              if (flagged.isEmpty) Text(l10n.staffDemoAdminNoFlagged),
               for (final entry in flagged)
                 ListTile(
                   dense: true,
@@ -65,10 +68,7 @@ class StaffAppDemoAdminPage extends StatelessWidget {
                   ),
                 ),
               const SizedBox(height: 16),
-              const Text(
-                'Seeding reminders: create staffDemoProfiles/{uid}, staffDemoSites/{siteId}, '
-                'and staffDemoShifts/{shiftId} in Firestore for full demo coverage.',
-              ),
+              Text(l10n.staffDemoAdminSeedingReminder),
             ],
           ),
         },

@@ -29,13 +29,19 @@ class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
       emit(
         state.copyWith(
           status: StaffDemoFormsStatus.error,
-          errorMessage: 'Not signed in.',
+          knownError: StaffDemoFormsKnownError.notSignedIn,
+          errorMessage: null,
         ),
       );
       return;
     }
 
-    emit(state.copyWith(status: StaffDemoFormsStatus.submitting));
+    emit(
+      state.copyWith(
+        status: StaffDemoFormsStatus.submitting,
+        knownError: null,
+      ),
+    );
     await CubitExceptionHandler.executeAsync<void>(
       operation: () => _repository.submitAvailability(
         userId: userId,
@@ -49,7 +55,8 @@ class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
           state.copyWith(
             status: StaffDemoFormsStatus.success,
             errorMessage: null,
-            lastSubmitLabel: 'Availability submitted',
+            knownError: null,
+            lastSuccessKind: StaffDemoFormsSuccessKind.availabilitySubmitted,
           ),
         );
       },
@@ -58,6 +65,7 @@ class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
         emit(
           state.copyWith(
             status: StaffDemoFormsStatus.error,
+            knownError: null,
             errorMessage: message,
           ),
         );
@@ -78,7 +86,8 @@ class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
       emit(
         state.copyWith(
           status: StaffDemoFormsStatus.error,
-          errorMessage: 'Not signed in.',
+          knownError: StaffDemoFormsKnownError.notSignedIn,
+          errorMessage: null,
         ),
       );
       return;
@@ -87,13 +96,19 @@ class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
       emit(
         state.copyWith(
           status: StaffDemoFormsStatus.error,
-          errorMessage: 'Site ID is required.',
+          knownError: StaffDemoFormsKnownError.siteIdRequired,
+          errorMessage: null,
         ),
       );
       return;
     }
 
-    emit(state.copyWith(status: StaffDemoFormsStatus.submitting));
+    emit(
+      state.copyWith(
+        status: StaffDemoFormsStatus.submitting,
+        knownError: null,
+      ),
+    );
     await CubitExceptionHandler.executeAsync<void>(
       operation: () => _repository.submitManagerReport(
         userId: userId,
@@ -107,7 +122,8 @@ class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
           state.copyWith(
             status: StaffDemoFormsStatus.success,
             errorMessage: null,
-            lastSubmitLabel: 'Manager report submitted',
+            knownError: null,
+            lastSuccessKind: StaffDemoFormsSuccessKind.managerReportSubmitted,
           ),
         );
       },
@@ -116,6 +132,7 @@ class StaffDemoFormsCubit extends Cubit<StaffDemoFormsState> {
         emit(
           state.copyWith(
             status: StaffDemoFormsStatus.error,
+            knownError: null,
             errorMessage: message,
           ),
         );

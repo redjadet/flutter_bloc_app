@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StaffDemoFormsState {
 
- StaffDemoFormsStatus get status; String? get errorMessage; String? get lastSubmitLabel;
+ StaffDemoFormsStatus get status; String? get errorMessage; StaffDemoFormsKnownError? get knownError; StaffDemoFormsSuccessKind? get lastSuccessKind;
 /// Create a copy of StaffDemoFormsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $StaffDemoFormsStateCopyWith<StaffDemoFormsState> get copyWith => _$StaffDemoFor
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StaffDemoFormsState&&(identical(other.status, status) || other.status == status)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.lastSubmitLabel, lastSubmitLabel) || other.lastSubmitLabel == lastSubmitLabel));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StaffDemoFormsState&&(identical(other.status, status) || other.status == status)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.knownError, knownError) || other.knownError == knownError)&&(identical(other.lastSuccessKind, lastSuccessKind) || other.lastSuccessKind == lastSuccessKind));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,errorMessage,lastSubmitLabel);
+int get hashCode => Object.hash(runtimeType,status,errorMessage,knownError,lastSuccessKind);
 
 @override
 String toString() {
-  return 'StaffDemoFormsState(status: $status, errorMessage: $errorMessage, lastSubmitLabel: $lastSubmitLabel)';
+  return 'StaffDemoFormsState(status: $status, errorMessage: $errorMessage, knownError: $knownError, lastSuccessKind: $lastSuccessKind)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $StaffDemoFormsStateCopyWith<$Res>  {
   factory $StaffDemoFormsStateCopyWith(StaffDemoFormsState value, $Res Function(StaffDemoFormsState) _then) = _$StaffDemoFormsStateCopyWithImpl;
 @useResult
 $Res call({
- StaffDemoFormsStatus status, String? errorMessage, String? lastSubmitLabel
+ StaffDemoFormsStatus status, String? errorMessage, StaffDemoFormsKnownError? knownError, StaffDemoFormsSuccessKind? lastSuccessKind
 });
 
 
@@ -62,12 +62,13 @@ class _$StaffDemoFormsStateCopyWithImpl<$Res>
 
 /// Create a copy of StaffDemoFormsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? errorMessage = freezed,Object? lastSubmitLabel = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? errorMessage = freezed,Object? knownError = freezed,Object? lastSuccessKind = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as StaffDemoFormsStatus,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,lastSubmitLabel: freezed == lastSubmitLabel ? _self.lastSubmitLabel : lastSubmitLabel // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,knownError: freezed == knownError ? _self.knownError : knownError // ignore: cast_nullable_to_non_nullable
+as StaffDemoFormsKnownError?,lastSuccessKind: freezed == lastSuccessKind ? _self.lastSuccessKind : lastSuccessKind // ignore: cast_nullable_to_non_nullable
+as StaffDemoFormsSuccessKind?,
   ));
 }
 
@@ -152,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StaffDemoFormsStatus status,  String? errorMessage,  String? lastSubmitLabel)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StaffDemoFormsStatus status,  String? errorMessage,  StaffDemoFormsKnownError? knownError,  StaffDemoFormsSuccessKind? lastSuccessKind)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StaffDemoFormsState() when $default != null:
-return $default(_that.status,_that.errorMessage,_that.lastSubmitLabel);case _:
+return $default(_that.status,_that.errorMessage,_that.knownError,_that.lastSuccessKind);case _:
   return orElse();
 
 }
@@ -173,10 +174,10 @@ return $default(_that.status,_that.errorMessage,_that.lastSubmitLabel);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StaffDemoFormsStatus status,  String? errorMessage,  String? lastSubmitLabel)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StaffDemoFormsStatus status,  String? errorMessage,  StaffDemoFormsKnownError? knownError,  StaffDemoFormsSuccessKind? lastSuccessKind)  $default,) {final _that = this;
 switch (_that) {
 case _StaffDemoFormsState():
-return $default(_that.status,_that.errorMessage,_that.lastSubmitLabel);case _:
+return $default(_that.status,_that.errorMessage,_that.knownError,_that.lastSuccessKind);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +194,10 @@ return $default(_that.status,_that.errorMessage,_that.lastSubmitLabel);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StaffDemoFormsStatus status,  String? errorMessage,  String? lastSubmitLabel)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StaffDemoFormsStatus status,  String? errorMessage,  StaffDemoFormsKnownError? knownError,  StaffDemoFormsSuccessKind? lastSuccessKind)?  $default,) {final _that = this;
 switch (_that) {
 case _StaffDemoFormsState() when $default != null:
-return $default(_that.status,_that.errorMessage,_that.lastSubmitLabel);case _:
+return $default(_that.status,_that.errorMessage,_that.knownError,_that.lastSuccessKind);case _:
   return null;
 
 }
@@ -208,12 +209,13 @@ return $default(_that.status,_that.errorMessage,_that.lastSubmitLabel);case _:
 
 
 class _StaffDemoFormsState implements StaffDemoFormsState {
-  const _StaffDemoFormsState({this.status = StaffDemoFormsStatus.initial, this.errorMessage, this.lastSubmitLabel});
+  const _StaffDemoFormsState({this.status = StaffDemoFormsStatus.initial, this.errorMessage, this.knownError, this.lastSuccessKind});
   
 
 @override@JsonKey() final  StaffDemoFormsStatus status;
 @override final  String? errorMessage;
-@override final  String? lastSubmitLabel;
+@override final  StaffDemoFormsKnownError? knownError;
+@override final  StaffDemoFormsSuccessKind? lastSuccessKind;
 
 /// Create a copy of StaffDemoFormsState
 /// with the given fields replaced by the non-null parameter values.
@@ -225,16 +227,16 @@ _$StaffDemoFormsStateCopyWith<_StaffDemoFormsState> get copyWith => __$StaffDemo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StaffDemoFormsState&&(identical(other.status, status) || other.status == status)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.lastSubmitLabel, lastSubmitLabel) || other.lastSubmitLabel == lastSubmitLabel));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StaffDemoFormsState&&(identical(other.status, status) || other.status == status)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.knownError, knownError) || other.knownError == knownError)&&(identical(other.lastSuccessKind, lastSuccessKind) || other.lastSuccessKind == lastSuccessKind));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,errorMessage,lastSubmitLabel);
+int get hashCode => Object.hash(runtimeType,status,errorMessage,knownError,lastSuccessKind);
 
 @override
 String toString() {
-  return 'StaffDemoFormsState(status: $status, errorMessage: $errorMessage, lastSubmitLabel: $lastSubmitLabel)';
+  return 'StaffDemoFormsState(status: $status, errorMessage: $errorMessage, knownError: $knownError, lastSuccessKind: $lastSuccessKind)';
 }
 
 
@@ -245,7 +247,7 @@ abstract mixin class _$StaffDemoFormsStateCopyWith<$Res> implements $StaffDemoFo
   factory _$StaffDemoFormsStateCopyWith(_StaffDemoFormsState value, $Res Function(_StaffDemoFormsState) _then) = __$StaffDemoFormsStateCopyWithImpl;
 @override @useResult
 $Res call({
- StaffDemoFormsStatus status, String? errorMessage, String? lastSubmitLabel
+ StaffDemoFormsStatus status, String? errorMessage, StaffDemoFormsKnownError? knownError, StaffDemoFormsSuccessKind? lastSuccessKind
 });
 
 
@@ -262,12 +264,13 @@ class __$StaffDemoFormsStateCopyWithImpl<$Res>
 
 /// Create a copy of StaffDemoFormsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? errorMessage = freezed,Object? lastSubmitLabel = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? errorMessage = freezed,Object? knownError = freezed,Object? lastSuccessKind = freezed,}) {
   return _then(_StaffDemoFormsState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as StaffDemoFormsStatus,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,lastSubmitLabel: freezed == lastSubmitLabel ? _self.lastSubmitLabel : lastSubmitLabel // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,knownError: freezed == knownError ? _self.knownError : knownError // ignore: cast_nullable_to_non_nullable
+as StaffDemoFormsKnownError?,lastSuccessKind: freezed == lastSuccessKind ? _self.lastSuccessKind : lastSuccessKind // ignore: cast_nullable_to_non_nullable
+as StaffDemoFormsSuccessKind?,
   ));
 }
 

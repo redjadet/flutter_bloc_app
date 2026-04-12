@@ -96,7 +96,10 @@ void main() {
       await cubit.submitManagerReport(siteId: 'site1', notes: 'Note text');
 
       expect(cubit.state.status, StaffDemoFormsStatus.success);
-      expect(cubit.state.lastSubmitLabel, 'Manager report submitted');
+      expect(
+        cubit.state.lastSuccessKind,
+        StaffDemoFormsSuccessKind.managerReportSubmitted,
+      );
       verify(
         () => repository.submitManagerReport(
           userId: 'u1',
