@@ -38,7 +38,7 @@ plan_status: final
 
 | Area | Primary paths |
 | --- | --- |
-| FastAPI | [`demos/render_chat_api/`](../../demos/render_chat_api/) — `main.py`, `orchestration/`, `tests/`, `Dockerfile`, `render.yaml` |
+| FastAPI | [`demos/render_chat_api/`](../../demos/render_chat_api/) — `main.py`, `orchestration/`, `tests/`, `Dockerfile`, `render.yaml`; ops deploy helper [`tool/trigger_render_chat_api_deploy.sh`](../../tool/trigger_render_chat_api_deploy.sh) (`RENDER_API_KEY`) |
 | Shared fixtures | [`test/fixtures/render_chat_contract/`](../../test/fixtures/render_chat_contract/) (Dart + pytest) |
 | Firebase Callable | [`functions/src/index.ts`](../../functions/src/index.ts) — `issueRenderChatDemoHfReadToken`, secret `RENDER_CHAT_DEMO_HF_READ_TOKEN` |
 | Flutter remote | [`render_fastapi_chat_repository.dart`](../../lib/features/chat/data/render_fastapi_chat_repository.dart), [`demo_first_chat_repository.dart`](../../lib/features/chat/data/demo_first_chat_repository.dart), [`render_chat_failure_mapper.dart`](../../lib/features/chat/data/render_chat_failure_mapper.dart), [`render_chat_dio_factory.dart`](../../lib/features/chat/data/render_chat_dio_factory.dart), [`render_caller_auth_header_provider.dart`](../../lib/features/chat/data/render_caller_auth_header_provider.dart), [`render_orchestration_hf_token_provider.dart`](../../lib/features/chat/data/render_orchestration_hf_token_provider.dart) |
@@ -324,6 +324,7 @@ Must be observable as “more than one logical step” in code and in **structur
 ### Idempotency / request correlation
 
 - Flutter sends **`Idempotency-Key`** (or agreed header); FastAPI uses it for **cache** keys and tracing together with **`request_id`**.
+- Flutter sends optional **`X-Client-Correlation-Id`** per outbound chat completion; FastAPI logs it with **`server_request_id`** and returns **`_render_meta`** on success JSON (and matching response headers when proxies allow) so device logs and Render logs stay joinable; see [`integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md) **Log correlation**.
 - **Repeated → cache** is distinct from Flutter offline enqueue: server cache avoids duplicate **HF** cost for **identical** orchestration requests; client fallthrough still follows the [Fallthrough policy](#fallthrough-policy-explicit-matrix).
 - Document duplicate tolerance if a cache entry expires between retries; default: **miss** → new upstream call.
 - A **Render timeout** may still complete work server-side; duplicate user-visible replies remain mitigated by the client’s **single** fallthrough to composite only after classified **retryable** failure, not after success—client shows one assistant bubble per successful `ChatResult`.
