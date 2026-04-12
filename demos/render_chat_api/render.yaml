@@ -1,7 +1,8 @@
-# Example Render blueprint (adjust service name / plan for your org).
+# Example Render blueprint (Hobby: use plan free; omitting plan defaults to starter = paid).
 services:
   - type: web
     name: flutter-bloc-render-chat-api
+    plan: free
     runtime: docker
     rootDir: demos/render_chat_api
     dockerfilePath: ./Dockerfile

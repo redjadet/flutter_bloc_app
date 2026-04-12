@@ -46,4 +46,4 @@ Shared JSON fixtures live at [`../../test/fixtures/render_chat_contract/`](../..
 
 ## Docker / Render
 
-See `Dockerfile` and `render.yaml`. Use a **single** uvicorn worker when relying on in-process cache ([STOP #11](../../docs/plans/render_fastapi_chat_demo_plan.md)).
+See `Dockerfile` and `render.yaml`. The blueprint sets **`plan: free`** so Hobby workspaces validate without defaulting to paid **starter**. Use a **single** uvicorn worker when relying on in-process cache ([STOP #11](../../docs/plans/render_fastapi_chat_demo_plan.md)).
