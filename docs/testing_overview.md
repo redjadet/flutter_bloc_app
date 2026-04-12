@@ -26,14 +26,14 @@ expected structure and “ownership” contract:
 
 | Command | Purpose |
 | --- | --- |
-| `./bin/checklist` | Full local sweep for formatting, analysis, validator scripts, tests, and coverage workflow. |
-| `./tool/check_pyright_python.sh` | Pyright on `demos/render_chat_api` and `tool/` Python (included in `./bin/checklist`; run alone when iterating on the Render FastAPI demo or shell tooling). |
+| `./tool/delivery_checklist.sh` / `./bin/checklist` | Full local sweep for formatting, analysis, validator scripts, tests, and coverage workflow (`delivery_checklist.sh` is canonical). |
+| `./tool/check_pyright_python.sh` | Pyright on `demos/render_chat_api` and `tool/` Python (included in the full delivery gate; run alone when iterating on the Render FastAPI demo or shell tooling). |
 | `./bin/integration_tests` | Runs integration flows on a supported non-web device. |
 | `tool/test_coverage.sh` | Runs unit, bloc, widget, and other coverage-producing tests. |
 | `dart run tool/update_coverage_summary.dart` | Refreshes [`coverage/coverage_summary.md`](../coverage/coverage_summary.md). |
 
-CI runs `./bin/checklist` on push and pull request. For local work, prefer
-targeted validation first and reserve `./bin/checklist` for broad or pre-ship
+CI runs `./bin/checklist` (same pipeline as `./tool/delivery_checklist.sh`) on push and pull request. For local work, prefer
+targeted validation first and reserve the full delivery gate for broad or pre-ship
 sweeps. The macOS integration job is manual-only through GitHub Actions
 workflow dispatch and supports the
 `smoke`, `standard`, and `exhaustive` rollout tiers defined in
@@ -83,8 +83,8 @@ for integration flows.
 ## Common commands
 
 ```bash
-# Run the standard local gate
-./bin/checklist
+# Run the standard local gate (canonical script; ./bin/checklist is equivalent when present)
+./tool/delivery_checklist.sh
 
 # Run all non-integration tests with coverage
 tool/test_coverage.sh
