@@ -12,6 +12,7 @@ class ChatPage extends StatefulWidget {
   const ChatPage({
     required this.errorNotificationService,
     required this.pendingSyncRepository,
+
     /// When non-null, overrides [SecretConfig.chatRenderDemoStrict] for the transport chip strict line (widget tests).
     this.renderTransportDemoStrictOverride,
     super.key,
@@ -122,7 +123,8 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     final bool renderDemoStrict =
-        widget.renderTransportDemoStrictOverride ?? SecretConfig.chatRenderDemoStrict;
+        widget.renderTransportDemoStrictOverride ??
+        SecretConfig.chatRenderDemoStrict;
     final bool hasHistory = context.selectState<ChatCubit, ChatState, bool>(
       selector: (final state) => state.hasHistory,
     );
@@ -171,9 +173,29 @@ class _ChatPageState extends State<ChatPage> {
                         if (transport == null) {
                           return const SizedBox.shrink();
                         }
-                        return ChatTransportBadge(
-                          transport: transport,
-                          renderDemoStrict: renderDemoStrict,
+                        final bool showFastApiCloudBadge =
+                            transport ==
+                                ChatInferenceTransport.renderOrchestration &&
+                            SecretConfig.chatRenderDemoBaseUrl.contains(
+                              'fastapicloud',
+                            );
+                        if (!showFastApiCloudBadge) {
+                          return ChatTransportBadge(
+                            transport: transport,
+                            renderDemoStrict: renderDemoStrict,
+                          );
+                        }
+                        return Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: context.responsiveGapS,
+                          runSpacing: context.responsiveGapS,
+                          children: <Widget>[
+                            const ChatFastApiCloudBadge(),
+                            ChatTransportBadge(
+                              transport: transport,
+                              renderDemoStrict: renderDemoStrict,
+                            ),
+                          ],
                         );
                       },
                     );

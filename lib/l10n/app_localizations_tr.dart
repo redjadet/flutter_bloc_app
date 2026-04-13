@@ -495,17 +495,25 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get chatTransportRenderOrchestrationSemanticsLabel =>
-      'Orkestrasyon. Yanıtlar Hugging Face\'e yönlendiren Render FastAPI hizmetinizi kullanır.';
+      'Orkestrasyon. Yanıtlar Hugging Face\'e yönlendiren FastAPI Cloud hizmetinizi kullanır.';
+
+  @override
+  String get chatFastApiCloudBadgeLabel => 'FastAPI Cloud';
+
+  @override
+  String get chatFastApiCloudBadgeSemanticsLabel =>
+      'FastAPI Cloud. Orkestrasyon FastAPI Cloud üzerinde çalışıyor.';
 
   @override
   String get chatModelAuto => 'Otomatik';
 
   @override
-  String get chatRenderStrictMode => 'Render demosu katı modda; yedek yol yok.';
+  String get chatRenderStrictMode =>
+      'FastAPI Cloud demosu katı modda; yedek yol yok.';
 
   @override
   String get chatAuthRefreshRequired =>
-      'Render sohbet demosuna devam etmek için yeniden oturum aç.';
+      'FastAPI Cloud sohbet demosuna devam etmek için yeniden oturum aç.';
 
   @override
   String get chatSessionEnded =>
@@ -513,7 +521,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get chatSwitchAccount =>
-      'Render demo kimlik bilgilerini yenilemek için hesap değiştir.';
+      'FastAPI Cloud demo kimlik bilgilerini yenilemek için hesap değiştir.';
 
   @override
   String get chatTokenMissing =>

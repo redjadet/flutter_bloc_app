@@ -2,6 +2,27 @@
 
 Canonical implementation plan: [`docs/plans/render_fastapi_chat_demo_plan.md`](../plans/render_fastapi_chat_demo_plan.md). This document records **product / ops freezes** so agents do not re-derive policy from the plan alone.
 
+## FastAPI Cloud deployment (current)
+
+- **Live URL**: `https://render-chat-api.fastapicloud.dev`
+- **Docs**: `https://render-chat-api.fastapicloud.dev/docs`
+- **Health**: `https://render-chat-api.fastapicloud.dev/health`
+
+### Quick deploy (FastAPI Cloud)
+
+From the repo root:
+
+```bash
+./tool/deploy_fastapi_cloud_chat_api.sh
+```
+
+### FastAPI Cloud required environment
+
+The deployed service validates Firebase ID tokens when `CALLER_AUTH_MODE=firebase`. Ensure these are set in the FastAPI Cloud app’s environment (otherwise requests will 401 with `auth_required` and logs will show `FIREBASE_PROJECT_ID missing while caller_auth_mode=firebase`):
+
+- `CALLER_AUTH_MODE=firebase`
+- `FIREBASE_PROJECT_ID=<your firebase project id>` (for this repo’s app, typically `flutter-bloc-app-697e8`)
+
 ## Cursor agent gate
 
 Before writing code, Cursor agents should confirm:
@@ -134,12 +155,12 @@ Do not append numeric **Cold POST wall (s)** values without a primary measuremen
 
 ## Flutter client (`SecretConfig` compile-time defines)
 
-- **direnv / local env:** Export the `CHAT_RENDER_*` variables (and secrets like `HUGGINGFACE_API_KEY`) from `.envrc` as in [`docs/envrc.example`](../envrc.example). The repo `flutter` wrapper (see [Security and Secrets](../security_and_secrets.md) Option B) reads only keys emitted by [`tool/flutter_dart_defines_from_env.sh`](../../tool/flutter_dart_defines_from_env.sh); add new `fromEnvironment` keys there if you introduce more compile-time toggles.
-- `CHAT_RENDER_DEMO_ENABLED` — when `true`, the orchestration **runnable** gate in [`register_chat_services.dart`](../../lib/core/di/register_chat_services.dart) (`_chatRenderOrchestrationRunnable`) requires a non-empty base URL, a signed-in **Firebase** user, **`https`** origin in release builds, and registered `FirebaseAuth`. **HF read token** presence is enforced in [`render_fastapi_chat_repository.dart`](../../lib/features/chat/data/render_fastapi_chat_repository.dart) at send time (empty → client `token_missing`), not inside that gate. **DemoFirstChatRepository** still orders Render before composite when the gate passes.
-- `CHAT_RENDER_DEMO_BASE_URL` — Render service origin (no trailing slash); release builds require `https`.
-- `CHAT_RENDER_DEMO_STRICT` — when `true`, no fallthrough to composite after a retryable Render failure.
-- `CHAT_RENDER_DEMO_SECRET` — optional `X-Render-Demo-Secret` (dev / non-web smoke only; do not ship in web release per plan).
-- Hugging Face read token for `X-HF-Authorization`: see [`render_orchestration_hf_token_provider.dart`](../../lib/features/chat/data/render_orchestration_hf_token_provider.dart) — **dev:** Remote Config **`RENDER_CHAT_DEMO_HF_READ_TOKEN`**, optional one-shot `forceFetch` when Firebase is up, cache key **`render_chat_orchestration_hf_token_v1`** (migrates legacy `render_chat_demo_rc_hf_read_token_v1` on read). **Non-dev:** when **`CHAT_RENDER_HF_READ_TOKEN_CALLABLE`** is non-empty, calls that HTTPS Callable in **`CHAT_RENDER_HF_READ_TOKEN_CALLABLE_REGION`** (default `us-central1`), expects JSON with **`hf_read_token`** or **`token`**, caches the trimmed value, then falls back to **`SecretConfig.huggingfaceApiKey`**. Single-flight reads; **`ChatCubit`** clears both cache keys on Firebase sign-out when the provider is registered.
+- **direnv / local env:** Export the `CHAT_FASTAPICLOUD_*` variables (preferred; legacy `CHAT_RENDER_*` still supported) (and secrets like `HUGGINGFACE_API_KEY`) from `.envrc` as in [`docs/envrc.example`](../envrc.example). The repo `flutter` wrapper (see [Security and Secrets](../security_and_secrets.md) Option B) reads only keys emitted by [`tool/flutter_dart_defines_from_env.sh`](../../tool/flutter_dart_defines_from_env.sh); add new `fromEnvironment` keys there if you introduce more compile-time toggles.
+- `CHAT_FASTAPICLOUD_DEMO_ENABLED` / `CHAT_RENDER_DEMO_ENABLED` — when `true`, the orchestration **runnable** gate in [`register_chat_services.dart`](../../lib/core/di/register_chat_services.dart) (`_chatRenderOrchestrationRunnable`) requires a non-empty base URL, a signed-in **Firebase** user, **`https`** origin in release builds, and registered `FirebaseAuth`. **HF read token** presence is enforced in [`render_fastapi_chat_repository.dart`](../../lib/features/chat/data/render_fastapi_chat_repository.dart) at send time (empty → client `token_missing`), not inside that gate. **DemoFirstChatRepository** still orders orchestration before composite when the gate passes.
+- `CHAT_FASTAPICLOUD_DEMO_BASE_URL` / `CHAT_RENDER_DEMO_BASE_URL` — service origin (no trailing slash); release builds require `https`.
+- `CHAT_FASTAPICLOUD_DEMO_STRICT` / `CHAT_RENDER_DEMO_STRICT` — when `true`, no fallthrough to composite after a retryable orchestration failure.
+- `CHAT_FASTAPICLOUD_DEMO_SECRET` / `CHAT_RENDER_DEMO_SECRET` — optional `X-Render-Demo-Secret` (dev / non-web smoke only; do not ship in web release per plan).
+- Hugging Face read token for `X-HF-Authorization`: see [`render_orchestration_hf_token_provider.dart`](../../lib/features/chat/data/render_orchestration_hf_token_provider.dart) — **dev:** Remote Config **`RENDER_CHAT_DEMO_HF_READ_TOKEN`**, optional one-shot `forceFetch` when Firebase is up, cache key **`render_chat_orchestration_hf_token_v1`** (migrates legacy `render_chat_demo_rc_hf_read_token_v1` on read). **Non-dev:** when **`CHAT_FASTAPICLOUD_HF_READ_TOKEN_CALLABLE`** (or legacy `CHAT_RENDER_HF_READ_TOKEN_CALLABLE`) is non-empty, calls that HTTPS Callable in the corresponding region key (default `us-central1`), expects JSON with **`hf_read_token`** or **`token`**, caches the trimmed value, then falls back to **`SecretConfig.huggingfaceApiKey`**. Single-flight reads; **`ChatCubit`** clears both cache keys on Firebase sign-out when the provider is registered.
 - **Firebase Callable (this repo):** `functions` exports **`issueRenderChatDemoHfReadToken`** (v2 `onCall`, region **`us-central1`**, requires signed-in user). Set secret **`RENDER_CHAT_DEMO_HF_READ_TOKEN`** to the Hugging Face read token (`firebase functions:secrets:set RENDER_CHAT_DEMO_HF_READ_TOKEN`), deploy **`firebase deploy --only functions:issueRenderChatDemoHfReadToken`**, then build the app with e.g. `--dart-define=CHAT_RENDER_HF_READ_TOKEN_CALLABLE=issueRenderChatDemoHfReadToken` (add `--dart-define=CHAT_RENDER_HF_READ_TOKEN_CALLABLE_REGION=...` only if you change the function region away from `us-central1`). Emulator: set env **`RENDER_CHAT_DEMO_HF_READ_TOKEN`** on the Functions emulator for local token issuance without the secret.
 - **Offline dequeue dead-letter:** non-retryable remote failures during `processOperation` mark the user bubble with `terminalSyncFailureCode` (same string as `ChatRemoteFailureException.code`), complete the pending op, and show plan ARB copy under the bubble (no infinite retry).
 - **Live send errors:** `ChatCubit` keeps `remoteFailureL10nCode` alongside `error` for `ChatRemoteFailureException`; the chat screen snackbar uses the same ARB mapping as terminal dequeue (`terminalSyncFailureMessage`) instead of raw upstream text when a code is present.

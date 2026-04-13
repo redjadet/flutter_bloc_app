@@ -10,14 +10,15 @@ void logChatRenderOrchestrationIfDebug(final String tag) {
   if (!kDebugMode) {
     return;
   }
-  const bool enabled = SecretConfig.chatRenderDemoEnabled;
+  final bool enabled = SecretConfig.chatRenderDemoEnabled;
   final String base = SecretConfig.chatRenderDemoBaseUrl.trim();
+  final bool isFastApiCloud = base.contains('fastapicloud');
   final bool surface = SecretConfig.isChatRenderDemoSurface;
   final String? block = _renderOrchestrationNotRunnableReason();
   final bool runnable = block == null;
   AppLogger.info(
     'Chat: Render/FastAPI diag[$tag] '
-    'dartDefineEnabled=$enabled baseUrlChars=${base.length} '
+    'dartDefineEnabled=$enabled isFastApiCloud=$isFastApiCloud baseUrlChars=${base.length} '
     'surface=$surface attemptsRenderFirst=$runnable '
     '${runnable ? "" : "notRunnableBecause=$block "}'
     '(defines are compile-time; hot reload does not apply new dart-defines)',

@@ -24,8 +24,16 @@ export HUGGINGFACE_API_KEY="YOUR_HUGGINGFACE_TOKEN"
 # export GOOGLE_MAPS_API_KEY="..."
 # export GOOGLE_MAPS_ANDROID_API_KEY="..."
 
-# Optional: Render FastAPI chat demo (see docs/integrations/render_fastapi_chat_demo.md).
+# Optional: FastAPI Cloud chat demo (preferred) (see docs/integrations/render_fastapi_chat_demo.md).
 # `tool/flutter_dart_defines_from_env.sh` maps these to --dart-define for the direnv flutter wrapper.
+# export CHAT_FASTAPICLOUD_DEMO_ENABLED="true"
+# export CHAT_FASTAPICLOUD_DEMO_BASE_URL="https://render-chat-api.fastapicloud.dev"
+# export CHAT_FASTAPICLOUD_DEMO_STRICT="false"
+# export CHAT_FASTAPICLOUD_DEMO_SECRET="..."  # only if the FastAPI service gates requests
+# export CHAT_FASTAPICLOUD_HF_READ_TOKEN_CALLABLE="issueRenderChatDemoHfReadToken"
+# export CHAT_FASTAPICLOUD_HF_READ_TOKEN_CALLABLE_REGION="us-central1"  # omit to use default
+#
+# Legacy Render naming (still supported):
 # export CHAT_RENDER_DEMO_ENABLED="true"
 # export CHAT_RENDER_DEMO_BASE_URL="https://your-service.onrender.com"
 # export CHAT_RENDER_DEMO_STRICT="false"
