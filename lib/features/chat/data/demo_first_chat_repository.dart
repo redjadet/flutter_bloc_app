@@ -6,9 +6,10 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_model_ids.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
-/// Tries the Render orchestration repository first, then the composite
-/// repository on retryable Render failures (unless strict). Resolves `auto`
-/// for composite to 20B.
+/// Tries the orchestration repository first, then falls back to the composite
+/// repository when orchestration can't be used or fails (unless strict).
+///
+/// Resolves `auto` for composite to 20B.
 class DemoFirstChatRepository implements ChatRepository {
   DemoFirstChatRepository({
     required final ChatRepository renderRepository,
@@ -85,8 +86,8 @@ class DemoFirstChatRepository implements ChatRepository {
         conversationId: conversationId,
         clientMessageId: clientMessageId,
       );
-    } on ChatRemoteFailureException catch (e) {
-      if (_isRenderStrict() || !e.retryable) {
+    } on ChatRemoteFailureException {
+      if (_isRenderStrict()) {
         rethrow;
       }
       return _composite.sendMessage(
@@ -101,10 +102,7 @@ class DemoFirstChatRepository implements ChatRepository {
       if (_isRenderStrict()) {
         rethrow;
       }
-      final ChatRemoteFailureException mapped = mapDirectChatException(e);
-      if (!mapped.retryable) {
-        throw mapped;
-      }
+      mapDirectChatException(e);
       return _composite.sendMessage(
         pastUserInputs: pastUserInputs,
         generatedResponses: generatedResponses,

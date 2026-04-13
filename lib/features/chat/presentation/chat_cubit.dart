@@ -113,23 +113,27 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
     if (Firebase.apps.isEmpty) {
       return;
     }
-    _firebaseAuthSubscription = firebase_auth.FirebaseAuth.instance.authStateChanges().listen(
-      (user) {
-        if (user == null && getIt.isRegistered<RenderOrchestrationHfTokenProvider>()) {
-          unawaited(
-            getIt<RenderOrchestrationHfTokenProvider>().clearRenderOrchestrationTokenCache(),
-          );
-        }
-        _refreshRunnableTransportHintOnly();
-      },
-      onError: (final Object error, final StackTrace stackTrace) {
-        AppLogger.error(
-          'ChatCubit.onFirebaseAuthStateChange',
-          error,
-          stackTrace,
+    _firebaseAuthSubscription = firebase_auth.FirebaseAuth.instance
+        .authStateChanges()
+        .listen(
+          (user) {
+            if (user == null &&
+                getIt.isRegistered<RenderOrchestrationHfTokenProvider>()) {
+              unawaited(
+                getIt<RenderOrchestrationHfTokenProvider>()
+                    .clearRenderOrchestrationTokenCache(),
+              );
+            }
+            _refreshRunnableTransportHintOnly();
+          },
+          onError: (final Object error, final StackTrace stackTrace) {
+            AppLogger.error(
+              'ChatCubit.onFirebaseAuthStateChange',
+              error,
+              stackTrace,
+            );
+          },
         );
-      },
-    );
   }
 
   void _listenSupabaseAuthForTransportHint() {
@@ -163,7 +167,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
         'lastCompletion=${state.lastCompletionTransport} '
         'transportForBadge=${state.transportForBadge} '
         '(badge uses lastCompletion first; chip can stay Supabase after a '
-        'Supabase fallback reply even when Render demo is configured)',
+        'Supabase fallback reply even when FastAPI Cloud demo is configured)',
       );
       logChatRenderOrchestrationIfDebug('cubit_transport_hint');
     }

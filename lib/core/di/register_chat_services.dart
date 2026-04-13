@@ -55,7 +55,17 @@ bool _chatRenderOrchestrationRunnable() {
   if (!getIt.isRegistered<FirebaseAuth>()) {
     return false;
   }
-  return getIt<FirebaseAuth>().currentUser != null;
+  final bool hasUser = getIt<FirebaseAuth>().currentUser != null;
+  if (kDebugMode) {
+    AppLogger.info(
+      'Chat: orchestration_runnable_check '
+      'enabled=${SecretConfig.chatRenderDemoEnabled} '
+      'isFastApiCloud=${base.contains('fastapicloud')} '
+      'baseUrlChars=${base.length} '
+      'firebaseUser=$hasUser',
+    );
+  }
+  return hasUser;
 }
 
 /// Registers all chat-related services and repositories.
@@ -135,7 +145,8 @@ void registerChatServices() {
       runtime: getIt<AppRuntimeConfig>(),
       remoteConfig: getIt<RemoteConfigService>(),
       storage: SecretConfig.storage ?? FlutterSecureSecretStorage(),
-      firebaseAuth: getIt.isRegistered<FirebaseAuth>() && Firebase.apps.isNotEmpty
+      firebaseAuth:
+          getIt.isRegistered<FirebaseAuth>() && Firebase.apps.isNotEmpty
           ? getIt<FirebaseAuth>()
           : null,
     ),

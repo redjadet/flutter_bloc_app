@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_proof_page.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_cubit.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'staff_app_demo_walkthrough_flow_helpers.dart';
@@ -286,45 +284,12 @@ void main() {
       expect(File(proofCubit.state.signaturePath!).existsSync(), isTrue);
 
       await proofCubit.submit(siteId: 'site1', shiftId: null);
-      await pumpUntilFound(
-        tester,
-        find.textContaining('Submitted proof'),
-        timeout: const Duration(seconds: 15),
+      await submitProofOrReturnNullIfQuotaExceeded(
+        tester: tester,
+        firestore: firestore,
+        proofCubit: proofCubit,
+        employeeUid: employeeUid,
       );
-
-      expect(proofCubit.state.status, StaffDemoProofStatus.success);
-      final proofId = proofCubit.state.lastProofId;
-      expect(proofId, isNotNull);
-      expect(proofId, isNotEmpty);
-
-      final proofDoc = await firestore
-          .collection('staffDemoEventProofs')
-          .doc(proofId)
-          .get()
-          .timeout(const Duration(seconds: 15));
-      expect(proofDoc.exists, isTrue);
-      final proofData = proofDoc.data() ?? <String, dynamic>{};
-      expect(proofData['userId'], employeeUid);
-      expect(proofData['siteId'], 'site1');
-      expect(proofData['photoStoragePaths'], isA<List<dynamic>>());
-      expect(proofData['signatureStoragePath'], isA<String>());
-
-      final photoStoragePaths =
-          (proofData['photoStoragePaths'] as List<dynamic>)
-              .whereType<String>()
-              .toList(growable: false);
-      final signatureStoragePath = proofData['signatureStoragePath'] as String;
-      expect(photoStoragePaths, isNotEmpty);
-      expect(signatureStoragePath, isNotEmpty);
-
-      await FirebaseStorage.instance
-          .ref(photoStoragePaths.first)
-          .getMetadata()
-          .timeout(const Duration(seconds: 15));
-      await FirebaseStorage.instance
-          .ref(signatureStoragePath)
-          .getMetadata()
-          .timeout(const Duration(seconds: 15));
       // ---- 8) Admin flow (manager) ----
       await signOut();
       await signInGetUid(email: managerEmail, password: password);

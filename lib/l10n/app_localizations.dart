@@ -977,17 +977,29 @@ abstract class AppLocalizations {
   /// **'Direct. This app calls Hugging Face directly for chat replies.'**
   String get chatTransportDirectSemanticsLabel;
 
-  /// Chip label when chat completions use the Render FastAPI orchestration demo
+  /// Chip label when chat completions use the FastAPI Cloud orchestration demo
   ///
   /// In en, this message translates to:
   /// **'Orchestration'**
   String get chatTransportRenderOrchestration;
 
-  /// Screen reader and tooltip for the Render orchestration transport chip
+  /// Screen reader and tooltip for the FastAPI Cloud orchestration transport chip
   ///
   /// In en, this message translates to:
-  /// **'Orchestration. Chat replies use your Render FastAPI service, which routes to Hugging Face.'**
+  /// **'Orchestration. Chat replies use your FastAPI Cloud service, which routes to Hugging Face.'**
   String get chatTransportRenderOrchestrationSemanticsLabel;
+
+  /// Chip label shown when orchestration is hosted on FastAPI Cloud
+  ///
+  /// In en, this message translates to:
+  /// **'FastAPI Cloud'**
+  String get chatFastApiCloudBadgeLabel;
+
+  /// Screen reader and tooltip for the FastAPI Cloud hosting badge
+  ///
+  /// In en, this message translates to:
+  /// **'FastAPI Cloud. Orchestration is running on FastAPI Cloud.'**
+  String get chatFastApiCloudBadgeSemanticsLabel;
 
   /// Chat model picker entry that lets the server choose mini vs full model
   ///
@@ -998,16 +1010,16 @@ abstract class AppLocalizations {
   /// Shown when CHAT_RENDER_DEMO_STRICT prevents falling back to Supabase/direct
   ///
   /// In en, this message translates to:
-  /// **'Render demo strict mode is on; fallthrough is disabled.'**
+  /// **'FastAPI Cloud demo strict mode is on; fallthrough is disabled.'**
   String get chatRenderStrictMode;
 
-  /// User-visible copy when caller auth must be refreshed for the Render path
+  /// User-visible copy when caller auth must be refreshed for the orchestration path
   ///
   /// In en, this message translates to:
-  /// **'Sign in again to continue using the Render chat demo.'**
+  /// **'Sign in again to continue using the FastAPI Cloud chat demo.'**
   String get chatAuthRefreshRequired;
 
-  /// Shown when the signed-in session no longer supports the Render demo path
+  /// Shown when the signed-in session no longer supports the orchestration demo path
   ///
   /// In en, this message translates to:
   /// **'Your session ended. Start a new chat after signing in.'**
@@ -1016,7 +1028,7 @@ abstract class AppLocalizations {
   /// Hint when a different Firebase user is required before sending
   ///
   /// In en, this message translates to:
-  /// **'Switch account to refresh credentials for the Render chat demo.'**
+  /// **'Switch account to refresh credentials for the FastAPI Cloud chat demo.'**
   String get chatSwitchAccount;
 
   /// Shown when the HF read token is unavailable for the Render path
