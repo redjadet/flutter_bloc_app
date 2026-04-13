@@ -90,18 +90,11 @@ void main() {
       expect(find.text('Admin'), findsOneWidget);
 
       // ---- 3) Messaging flow ----
-      await tapAndPump(tester, find.text('Msgs'));
-      await pumpUntilFound(tester, find.text('Messages'));
-
-      // Compose and send assignment to employeeUid.
-      await tapAndPump(tester, find.text('Send shift assignment'));
-      await pumpUntilFound(tester, find.text('Send shift assignment'));
-      await tester.enterText(
-        find.byKey(const Key('staffDemo.shiftAssignment.recipientUserId')),
-        employeeUid,
+      await openMessagesAndSendShiftAssignment(
+        tester,
+        employeeUid: employeeUid,
+        employeeEmail: employeeEmail,
       );
-      await tester.pump(const Duration(milliseconds: 100));
-      await tapAndPump(tester, find.text('Send'));
 
       // Verify Firestore records were created.
       final firestore = FirebaseFirestore.instance;

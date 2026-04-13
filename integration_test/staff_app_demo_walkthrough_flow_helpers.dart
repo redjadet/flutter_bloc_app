@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
@@ -75,3 +76,48 @@ Uint8List buildDeterministicPngBytes() => Uint8List.fromList(<int>[
   137, 80, 78, 71, 13, 10, 26, 10, // PNG signature header
   0, 0, 0, 0,
 ]);
+
+Future<void> openMessagesAndSendShiftAssignment(
+  final WidgetTester tester, {
+  required final String employeeUid,
+  required final String employeeEmail,
+}) async {
+  await tapAndPump(tester, find.text('Msgs'));
+  await pumpUntilFound(tester, find.text('Messages'));
+
+  await pumpUntilFound(
+    tester,
+    find.text('Send shift assignment'),
+    timeout: const Duration(seconds: 15),
+  );
+  await tapAndPump(tester, find.text('Send shift assignment'));
+  await pumpUntilFound(tester, find.text('Send shift assignment'));
+
+  final recipientUserIdField = find.byKey(
+    const Key('staffDemo.shiftAssignment.recipientUserId'),
+  );
+  final recipientDropdown = find.byKey(
+    const Key('staffDemo.shiftAssignment.recipientDropdown'),
+  );
+
+  await pumpSettleWithin(tester, timeout: const Duration(seconds: 6));
+  if (recipientUserIdField.evaluate().isNotEmpty) {
+    await tester.enterText(recipientUserIdField, employeeUid);
+    await tester.pump(const Duration(milliseconds: 100));
+  } else {
+    await pumpUntilFound(
+      tester,
+      recipientDropdown,
+      timeout: const Duration(seconds: 15),
+    );
+    await tapAndPump(tester, recipientDropdown);
+    await pumpUntilFound(
+      tester,
+      find.textContaining(employeeEmail),
+      timeout: const Duration(seconds: 15),
+    );
+    await tapAndPump(tester, find.textContaining(employeeEmail).last);
+  }
+
+  await tapAndPump(tester, find.text('Send'));
+}

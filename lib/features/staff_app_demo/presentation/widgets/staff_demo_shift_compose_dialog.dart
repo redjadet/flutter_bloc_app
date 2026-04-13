@@ -168,6 +168,9 @@ class _StaffDemoShiftComposeDialogState
                   ),
                 if (canSelectFromList)
                   DropdownButtonFormField<String>(
+                    key: const Key(
+                      'staffDemo.shiftAssignment.recipientDropdown',
+                    ),
                     initialValue: _selectedUserId,
                     isExpanded: true,
                     items: staff
