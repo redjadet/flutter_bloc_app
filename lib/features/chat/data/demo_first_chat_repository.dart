@@ -27,8 +27,9 @@ class DemoFirstChatRepository implements ChatRepository {
 
   @override
   ChatInferenceTransport? get chatRemoteTransportHint {
-    if (SecretConfig.isChatRenderDemoSurface) {
-      return ChatInferenceTransport.renderOrchestration;
+    if (_isRenderAttemptedFirst()) {
+      return _render.chatRemoteTransportHint ??
+          _composite.chatRemoteTransportHint;
     }
     return _composite.chatRemoteTransportHint;
   }
@@ -53,17 +54,18 @@ class DemoFirstChatRepository implements ChatRepository {
     final String? conversationId,
     final String? clientMessageId,
   }) async {
+    final bool renderFirst = _isRenderAttemptedFirst();
     if (kDebugMode) {
-      final bool first = _isRenderAttemptedFirst();
       AppLogger.info(
         'Chat: DemoFirst.sendMessage surface=${SecretConfig.isChatRenderDemoSurface} '
-        'attemptsRenderFirst=$first -> ${first ? "render_then_maybe_composite" : "composite_only"}',
+        'attemptsRenderFirst=$renderFirst -> '
+        '${renderFirst ? "render_then_maybe_composite" : "composite_only"}',
       );
-      if (!first) {
+      if (!renderFirst) {
         logChatRenderOrchestrationIfDebug('demo_first_skipped_render');
       }
     }
-    if (!_isRenderAttemptedFirst()) {
+    if (!renderFirst) {
       return _composite.sendMessage(
         pastUserInputs: pastUserInputs,
         generatedResponses: generatedResponses,

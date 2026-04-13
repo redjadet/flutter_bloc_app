@@ -3,12 +3,9 @@
 from __future__ import annotations
 
 import json
-import logging
 from typing import Any
 
 import httpx
-
-logger = logging.getLogger(__name__)
 
 HF_CHAT_COMPLETIONS_URL = "https://router.huggingface.co/v1/chat/completions"
 
@@ -74,6 +71,27 @@ async def call_hf_chat_completions(
             code="rate_limited",
             message="Upstream rate limited.",
             retryable=False,
+        )
+    if resp.status_code == 401:
+        raise HuggingFaceUpstreamError(
+            status_code=401,
+            code="auth_required",
+            message="Upstream authentication failed.",
+            retryable=False,
+        )
+    if resp.status_code == 403:
+        raise HuggingFaceUpstreamError(
+            status_code=403,
+            code="forbidden",
+            message="Upstream request is forbidden.",
+            retryable=False,
+        )
+    if resp.status_code in {408, 504}:
+        raise HuggingFaceUpstreamError(
+            status_code=resp.status_code,
+            code="upstream_timeout",
+            message="Hugging Face request timed out.",
+            retryable=True,
         )
     if resp.status_code >= 500:
         raise HuggingFaceUpstreamError(
