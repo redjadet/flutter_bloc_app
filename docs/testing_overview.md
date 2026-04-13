@@ -4,7 +4,7 @@ This document describes the repo's testing layers, validation commands, and the
 current integration suite layout. It complements the shell validators described
 in [Validation Scripts](validation_scripts.md).
 
-For the complete docs index, see [`README.md`](README.md).
+For the complete docs index, see [docs index](README.md).
 
 ## Source of truth
 

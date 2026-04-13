@@ -1,11 +1,13 @@
 # AI Integration Overview
 
-This app integrates AI chat using the Hugging Face API stack and keeps the
-experience resilient through offline-first storage and sync. The binding
-transport policy for the planned Supabase proxy flow lives in
-[`docs/plans/supabase_proxy_huggingface_chat_plan.md`](plans/supabase_proxy_huggingface_chat_plan.md).
-Use this page as the compact implementation summary and keep it aligned with
-that plan.
+This app’s AI chat stack currently supports direct Hugging Face inference,
+FastAPI Cloud orchestration, and the documented Supabase proxy path while
+keeping the experience resilient through offline-first storage and sync. Use
+this page as the compact implementation summary and keep it aligned with the
+active transport docs:
+
+- [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md)
+- [`docs/plans/supabase_proxy_huggingface_chat_plan.md`](plans/supabase_proxy_huggingface_chat_plan.md)
 
 ## Overview
 
@@ -14,7 +16,8 @@ The chat feature demonstrates production-ready AI integration with:
 - **Offline-first architecture**: Messages queue locally when offline and sync when online
 - **Secure storage**: Chat history encrypted using Hive with secure key management
 - **Error resilience**: Guarded error handling with retry logic and user-friendly error messages
-- **Model flexibility**: Configurable model selection via `SecretConfig`
+- **Transport flexibility**: FastAPI Cloud orchestration, direct Hugging Face, and documented Supabase proxy routing
+- **Model flexibility**: Configurable model selection via `SecretConfig` and orchestration defaults
 
 ## Phase 0 Policy Snapshot
 
@@ -35,10 +38,14 @@ in the same change set.
 Use the full matrix in the plan for edge cases. These summary rules are the
 ones most likely to matter during implementation:
 
-- **Preferred path**: `Supabase configured && session valid && online` -> Edge proxy.
-- **Direct-only path**: use direct HF when Supabase is not configured, or when
-  Supabase is configured but the session is invalid and build policy still
-  allows direct HF.
+- **FastAPI Cloud orchestration path**: when orchestration is enabled and
+  runnable, the app prefers the FastAPI Cloud transport before the composite
+  repository path.
+- **Preferred composite path**: `Supabase configured && session valid && online`
+  -> Edge proxy.
+- **Direct-only path**: use direct HF when orchestration is not runnable and
+  Supabase is not configured, or when Supabase is configured but the session is
+  invalid and build policy still allows direct HF.
 - **No runnable remote path**: if the app is online but neither Edge nor direct
   transport is allowed/configured, hide the transport chip and surface
   auth/configuration UX immediately.
@@ -47,8 +54,10 @@ ones most likely to matter during implementation:
 
 ## What It Uses
 
-- **Hugging Face API stack**: Direct chat completions today; optional Supabase
-  Edge proxy for server-side secret handling
+- **Hugging Face API stack**: Direct chat completions plus optional routed
+  transports that keep orchestration or proxy logic server-side
+- **FastAPI Cloud orchestration**: Render/FastAPI transport with Firebase auth,
+  dedicated token/header handling, and transport diagnostics
 - **Offline-first repository**: `OfflineFirstChatRepository` with queued sync operations
 - **Local persistence**: Encrypted Hive storage for chat history
 - **Sync coordination**: Background sync coordinator for automatic message replay
@@ -59,8 +68,8 @@ ones most likely to matter during implementation:
 
 1. **User sends message**: UI calls `ChatCubit.sendMessage()`
 2. **Local persistence**: User message saved immediately to encrypted Hive storage
-3. **Remote call**: Attempts Supabase Edge or direct HF according to the
-   transport rules above
+3. **Remote call**: Attempts FastAPI Cloud orchestration or the composite
+   repository path according to the transport rules above
 4. **Offline handling**: If offline or retryable transport failure after the
    allowed attempts, message queued in `PendingSyncRepository`
 5. **Background sync**: `BackgroundSyncCoordinator` replays queued messages when online
@@ -70,8 +79,9 @@ ones most likely to matter during implementation:
 
 - **Model selection**: Direct path reads `SecretConfig.huggingfaceModel`; Edge
   path uses the server-owned model policy from the plan
-- **API key**: Direct path uses `SecretConfig.huggingfaceApiKey`; proxy path
-  uses `HUGGINGFACE_API_KEY` in Supabase Edge secrets
+- **API key / tokens**: Direct path uses `SecretConfig.huggingfaceApiKey`;
+  orchestration and proxy paths use their documented server-side / header-based
+  token flow
 - **Response parsing**: `HuggingFaceResponseParser` validates and extracts responses
 - **Payload building**: `HuggingFacePayloadBuilder` constructs API requests
 
@@ -94,6 +104,7 @@ ChatRepository (interface)
 OfflineFirstChatRepository
   ├── ChatSyncOperationFactory (sync payload creation)
   ├── ChatLocalConversationUpdater (local persistence)
+  ├── Demo-first router (FastAPI Cloud orchestration first when runnable)
   ├── Composite remote repository (Supabase Edge first, direct fallback per policy)
   └── PendingSyncRepository (offline queue)
 ```
@@ -113,8 +124,10 @@ OfflineFirstChatRepository
 ## Related Documentation
 
 - Offline-first chat contract: [`offline_first/chat.md`](offline_first/chat.md)
+- FastAPI Cloud orchestration:
+  [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md)
 - Supabase Edge proxy (authoritative plan):
   [`plans/supabase_proxy_huggingface_chat_plan.md`](plans/supabase_proxy_huggingface_chat_plan.md)
 - Error handling patterns: [`CODE_QUALITY.md`](CODE_QUALITY.md)
 - Clean architecture: [`clean_architecture.md`](clean_architecture.md)
-- Security and secrets: [`README.md`](../README.md) (Security & Secrets section)
+- Security and secrets: [`security_and_secrets.md`](security_and_secrets.md)

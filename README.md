@@ -1,25 +1,30 @@
 # Flutter BLoC App
 
-A feature-rich Flutter reference application that demonstrates clean
-architecture, disciplined BLoC/Cubit state management, offline-first patterns,
-and production-minded delivery workflows in a single codebase.
+A Flutter reference application for Clean Architecture, `flutter_bloc`,
+offline-first data flows, and integration-heavy product demos.
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.6-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.4-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
 [![Coverage](https://img.shields.io/badge/Coverage-72%2E34%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
+
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
+[![Architecture Pattern](https://img.shields.io/badge/Architecture-Offline--First-4CAF50.svg)](docs/offline_first/adoption_guide.md)
 [![State Management](https://img.shields.io/badge/State%20Management-BLOC%2FCubit-2196F3.svg)](https://pub.dev/packages/flutter_bloc)
 [![Routing](https://img.shields.io/badge/Routing-GoRouter-00ADD8.svg)](https://pub.dev/packages/go_router)
 [![DI](https://img.shields.io/badge/DI-get__it-8E44AD.svg)](https://pub.dev/packages/get_it)
 [![Testing](https://img.shields.io/badge/Testing-Unit%20%7C%20Widget%20%7C%20Golden%20%7C%20Integration-2E7D32.svg)](docs/testing_overview.md)
+
 [![Backend](https://img.shields.io/badge/Backend-Firebase-FFCA28.svg)](https://firebase.google.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E.svg)](https://supabase.com/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Chat%20demo-009688.svg)](docs/integrations/render_fastapi_chat_demo.md)
 [![Render](https://img.shields.io/badge/Render-Hosting-46E3B7.svg)](https://render.com/)
 [![FastAPI Cloud](https://img.shields.io/badge/FastAPI%20Cloud-Hosting-0B5FFF.svg)](https://fastapicloud.com/)
-[![Architecture Pattern](https://img.shields.io/badge/Architecture-Offline--First-4CAF50.svg)](docs/offline_first/adoption_guide.md)
+[![AI Chat](https://img.shields.io/badge/AI-Chat%20Flows-0EA5E9.svg)](docs/ai_integration.md)
+
+[![Staff Demo](https://img.shields.io/badge/Demo-Staff%20App-2563EB.svg)](docs/staff_app_demo_walkthrough.md)
+[![Case Studies](https://img.shields.io/badge/Product-Case%20Studies-8B5CF6.svg)](docs/case_studies/README.md)
 [![Design System](https://img.shields.io/badge/Design%20System-Material%203-6200EE.svg)](https://m3.material.io/)
 [![iOS Design](https://img.shields.io/badge/iOS%20Design-Cupertino-007AFF.svg)](https://api.flutter.dev/flutter/cupertino/cupertino-library.html)
 [![Type Safety](https://img.shields.io/badge/Type%20Safety-Compile--Time-0F9D58.svg)](docs/compile_time_safety.md)
@@ -29,153 +34,41 @@ and production-minded delivery workflows in a single codebase.
 
 ## Overview
 
-This repository is designed as an engineering reference app, not a narrow demo.
-It combines multiple product surfaces and integrations so architecture,
-validation, and developer workflow can be evaluated under realistic scope.
+This repository is an engineering reference app rather than a single-purpose
+demo. It combines shared app infrastructure, offline-first patterns, backend
+integrations, AI/chat transports, and multiple product-style feature surfaces
+so architecture, validation, and delivery workflows can be exercised under
+realistic scope.
 
-The README stays intentionally high level. Setup detail, architecture rationale,
-feature-level behavior, and operational guidance live in `docs/` and are linked
-throughout this page.
+## Start Here
 
-## Quick Repo Snapshot
+- Full docs index: [docs/README.md](docs/README.md)
+- Local setup and first run: [docs/new_developer_guide.md](docs/new_developer_guide.md)
+- Feature and route catalog: [docs/feature_overview.md](docs/feature_overview.md)
+- Validation and test lanes: [docs/testing_overview.md](docs/testing_overview.md),
+  [docs/validation_scripts.md](docs/validation_scripts.md)
+- Architecture and repo shape: [docs/clean_architecture.md](docs/clean_architecture.md),
+  [docs/architecture_details.md](docs/architecture_details.md)
+- Security and secret injection: [docs/security_and_secrets.md](docs/security_and_secrets.md),
+  [docs/SECURITY.md](docs/SECURITY.md)
+- Deployment and release: [docs/deployment.md](docs/deployment.md)
 
-- AI host guidance: [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md) ->
-  [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
-- Core shape: `Presentation -> Domain <- Data`, `flutter_bloc`, `get_it`,
-  `GoRouter`, offline-first sync under `lib/shared/sync/`
-- Entry points: `lib/main_dev.dart`, `lib/main_staging.dart`,
-  `lib/main_prod.dart`
-- Primary repo validation lanes:
-  - `./tool/delivery_checklist.sh` / `./bin/checklist`
-  - `./bin/router_feature_validate`
-  - `./bin/integration_tests`
-  - `./bin/upgrade_validate_all`
-- Key deep-dive docs:
-  - setup: [New Developer Guide](docs/new_developer_guide.md)
-  - architecture: [Feature Overview](docs/feature_overview.md)
-  - validation: [Validation Scripts](docs/validation_scripts.md)
-  - lifecycle: [Repository Lifecycle](docs/REPOSITORY_LIFECYCLE.md)
+## Current Surfaces
 
-## What This Codebase Covers
+- AI chat overview: [docs/ai_integration.md](docs/ai_integration.md)
+- FastAPI Cloud chat orchestration: [docs/integrations/render_fastapi_chat_demo.md](docs/integrations/render_fastapi_chat_demo.md)
+- Staff app demo walkthrough: [docs/staff_app_demo_walkthrough.md](docs/staff_app_demo_walkthrough.md)
+- Case-study briefs and demo context: [docs/case_studies/README.md](docs/case_studies/README.md)
 
-- Clean Architecture with a `Presentation -> Domain <- Data` feature structure
-- BLoC/Cubit state management with `flutter_bloc`
-- Dependency injection via `get_it`
-- `GoRouter`-based navigation and multiple app entrypoints
-- Firebase-backed core integrations with optional Supabase-backed features
-- Offline-first repositories, pending sync, and background reconciliation
-- Automated validation, coverage tracking, and CI-backed delivery checks
+## Repo Snapshot
 
-## Quick Start
+- Toolchain: Flutter `3.41.6`, Dart `3.11.4`
+- Entry points: `lib/main_dev.dart`, `lib/main_staging.dart`, `lib/main_prod.dart`
+- Architecture shape: `Presentation -> Domain <- Data`
+- Core infra: `flutter_bloc`, `get_it`, `GoRouter`, offline-first sync under `lib/shared/sync/`
+- Validation entrypoints: `./tool/delivery_checklist.sh`, `./bin/router_feature_validate`, `./bin/integration_tests`, `./bin/upgrade_validate_all`
 
-### Android (Google Play)
-
-You can install the published Android build from the Google Play Store:
-
-[flutter_bloc_app on Google Play](https://play.google.com/store/apps/details?id=com.ilkersevim.blocflutter)
-
-### Prerequisites
-
-- Flutter `3.41.6`
-- Dart `3.11.4`
-- Platform tooling for the target you intend to run
-
-Before local setup, review the environment and secrets guides:
-
-- [New Developer Guide](docs/new_developer_guide.md)
-- [Firebase Setup](docs/firebase_setup.md)
-- [Security Policy](docs/SECURITY.md)
-- [Security and Secrets](docs/security_and_secrets.md)
-
-### Run Locally
-
-```bash
-flutter pub get
-flutter run -t lib/main_dev.dart
-```
-
-Secrets for optional backends (Supabase, Hugging Face, Gemini, etc.) are supplied via `--dart-define` or persisted secure storage; see [Security and Secrets](docs/security_and_secrets.md). For day-to-day terminal use, **`direnv`** plus a repo-local `.envrc` (see [`docs/envrc.example`](docs/envrc.example)) can inject those defines automatically so you do not have to paste flags on every `flutter run`. Optional **FastAPI orchestration chat demo** compile-time keys (`CHAT_FASTAPICLOUD_*`, legacy `CHAT_RENDER_*`) and related ops are documented in [`docs/integrations/render_fastapi_chat_demo.md`](docs/integrations/render_fastapi_chat_demo.md); they flow through [`tool/flutter_dart_defines_from_env.sh`](tool/flutter_dart_defines_from_env.sh) when set in the environment. **FastAPI Cloud deploys** from a developer machine use [`tool/deploy_fastapi_cloud_chat_api.sh`](tool/deploy_fastapi_cloud_chat_api.sh). The legacy Render deploy trigger script (`tool/trigger_render_chat_api_deploy.sh`) still exists for the Render path and requires **`RENDER_API_KEY`** (not a client secret).
-
-Available app entrypoints:
-
-- `lib/main_dev.dart`
-- `lib/main_staging.dart`
-- `lib/main_prod.dart`
-
-Run code generation when touching Freezed, JSON serialization, Retrofit, or
-other generated sources:
-
-```bash
-dart run build_runner build --delete-conflicting-outputs
-```
-
-## Validation Workflow
-
-Use the repo commands instead of ad-hoc validation:
-
-| Command | Purpose |
-| --- | --- |
-| `./tool/delivery_checklist.sh` / `./bin/checklist` | Primary local quality gate: formatting, analysis, validation scripts, tests, and coverage workflow (`delivery_checklist.sh` is canonical; `bin/checklist` is the same gate when that wrapper exists). |
-| `./tool/check_pyright_python.sh` | Pyright on `demos/render_chat_api` and `tool/` Python (Render FastAPI demo + shell tooling; included in the full delivery gate above). |
-| `./bin/integration_tests` | Runs the integration suite for flow-level verification. |
-| `./bin/upgrade_validate_all` | Full maintenance workflow for upgrades, validation, integration tests, and coverage/doc refresh. |
-
-Validation behavior, CI coverage, and script-level guards are documented here:
-
-- [Validation Scripts](docs/validation_scripts.md)
-- [Testing Overview](docs/testing_overview.md)
-- [Contributing](docs/contributing.md)
-
-## Documentation Map
-
-The canonical docs index lives in [`docs/README.md`](docs/README.md). The links
-below are the most common entry points.
-
-- **Onboarding**: [New developer guide](docs/new_developer_guide.md)
-- **Architecture**: [Feature overview](docs/feature_overview.md),
-  [Clean architecture](docs/clean_architecture.md),
-  [Architecture details](docs/architecture_details.md)
-- **Quality gates**: [Validation scripts](docs/validation_scripts.md),
-  [Testing overview](docs/testing_overview.md)
-- **Security**: [Security policy](docs/SECURITY.md),
-  [Security and secrets](docs/security_and_secrets.md)
-- **Deployment**: [Deployment and release](docs/deployment.md)
-
-## Representative Feature Areas
-
-This app spans several kinds of product and platform work. Use the linked docs
-for implementation detail and setup notes.
-
-- Core app foundation: counter, settings, localization, adaptive theming, and diagnostics
-- Data and sync: todo list, profile, search, chat, charts, and IoT flows with offline-first behavior
-- Integrations: Firebase Auth, Remote Config, Realtime Database, FCM, Supabase-backed demos, maps, GraphQL, and WebSocket flows
-- AI demos: Hugging Face chat (optional Supabase Edge proxy path; policy and setup in [AI integration](docs/ai_integration.md)) and GenUI-generated UI experiences
-- UI/system demos: whiteboard, markdown editor, calculator, library demo, in-app purchase, and platform-adaptive examples
-- **Case studies:** product briefs under [`docs/case_studies/`](docs/case_studies/README.md) with matching in-app demos (see below)
-
-For module entry points and capability notes, see [Feature Overview](docs/feature_overview.md).
-
-## Case studies
-
-The repo includes **product-style case study briefs** and a **Case Study Demo**
-feature that implements them for architecture and integration reference.
-
-| Brief | Description | Docs |
-| --- | --- | --- |
-| **Dentists** | Dentists record separate video answers to **ten** predefined questions, with case metadata (doctor name, case type, notes) and history. | [Brief](docs/case_studies/dentists.md) · [Demo plan](docs/changes/2026-04-01_dentist_case_study_demo_plan.md) · [Supabase storage plan](docs/changes/2026-04-02_case_study_supabase_private_storage_plan.md) |
-
-- **In-app:** open the **Example** hub (`/example`), then launch **Case Study Demo** — routes are under `/case-study-demo` (requires primary app auth per route policy).
-- **Code:** `lib/features/case_study_demo/` (Clean Architecture: domain, data, presentation).
-- **Storage:** local-first with Hive; optional **Supabase** private bucket and signed URLs when `SUPABASE_URL` / `SUPABASE_ANON_KEY` are configured (see [Security and secrets](docs/security_and_secrets.md)).
-
-Full index: [`docs/case_studies/README.md`](docs/case_studies/README.md).
-
-## Quality Signals
-
-- CI: [GitHub Actions workflow](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml)
-- Coverage: [coverage/coverage_summary.md](coverage/coverage_summary.md)
-- Developer workflow: [docs/new_developer_guide.md](docs/new_developer_guide.md)
-- Validation guards: [docs/validation_scripts.md](docs/validation_scripts.md)
+Use [docs/README.md](docs/README.md) as the source-of-truth navigation page for everything else.
 
 ## Screenshots
 
@@ -232,9 +125,3 @@ Full index: [`docs/case_studies/README.md`](docs/case_studies/README.md).
 | <img src="assets/screenshots/scapes.png" alt="Scapes screen" width="240" /> |
 
 <!-- markdownlint-enable MD033 -->
-
-## License
-
-This project is available for free use in public, non-commercial repositories
-under the terms described in [LICENSE](LICENSE). Commercial or closed-source
-use requires prior written permission from the copyright holder.

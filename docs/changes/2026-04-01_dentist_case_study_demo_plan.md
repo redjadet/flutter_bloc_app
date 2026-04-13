@@ -5,7 +5,7 @@
 
 This document is the **repo-tracked** copy for PRs and reviewers. Implementation defaults and checklist match the Cursor plan frontmatter todos.
 
-**Related docs:** [Dentists product brief](../case_studies/dentists.md) · [Case studies index](../case_studies/README.md) · [README — Case studies](../../README.md#case-studies) · [Supabase storage extension](2026-04-02_case_study_supabase_private_storage_plan.md)
+**Related docs:** [Dentists product brief](../case_studies/dentists.md) · [Case studies index](../case_studies/README.md) · [Feature overview](../feature_overview.md) · [Supabase storage extension](2026-04-02_case_study_supabase_private_storage_plan.md)
 
 ## Tooling / execution note
 

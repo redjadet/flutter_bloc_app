@@ -8,9 +8,11 @@ This folder contains the source-of-truth documentation for the Flutter BLoC app.
 - **Validation + testing**: [`validation_scripts.md`](validation_scripts.md), [`testing_overview.md`](testing_overview.md)
 - **Architecture**: [`feature_overview.md`](feature_overview.md), [`clean_architecture.md`](clean_architecture.md),
   [`architecture_details.md`](architecture_details.md)
+- **AI / chat**: [`ai_integration.md`](ai_integration.md), [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md)
 - **Security**: [`SECURITY.md`](SECURITY.md), [`security_and_secrets.md`](security_and_secrets.md)
 - **Deployment**: [`deployment.md`](deployment.md)
 - **Case studies (product briefs + demo feature)**: [`case_studies/README.md`](case_studies/README.md)
+- **Feature walkthroughs**: [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md)
 
 ## Core docs (by concern)
 
@@ -42,9 +44,17 @@ This folder contains the source-of-truth documentation for the Flutter BLoC app.
 
 - [`firebase_setup.md`](firebase_setup.md)
 - [`authentication.md`](authentication.md)
+- [`ai_integration.md`](ai_integration.md)
+- [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md)
 - [`SECURITY.md`](SECURITY.md)
 - [`security_and_secrets.md`](security_and_secrets.md)
 - [`localization.md`](localization.md)
+
+### Feature walkthroughs and demos
+
+- [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md)
+- [`case_studies/README.md`](case_studies/README.md)
+- [`genui_demo_user_guide.md`](genui_demo_user_guide.md)
 
 ### Release and distribution
 
