@@ -7,6 +7,9 @@ This document defines the stable contract for `./bin/integration_tests` and
 
 - `./bin/integration_tests` with no args runs the aggregate integration suite.
 - Exit semantics remain compatible: `0` on success, non-zero on failure.
+- Only one integration runner instance may hold the repo lock at a time.
+- A second run exits with code `2` while another active run owns the lock.
+- Stale lock directories are removed automatically when the recorded owner PID is no longer alive.
 
 ## Tier selectors
 

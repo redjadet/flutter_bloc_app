@@ -114,6 +114,11 @@ If you want integration flow validation without refreshing coverage output:
 INTEGRATION_TESTS_RUN_COVERAGE=false ./bin/integration_tests
 ```
 
+The integration runner is single-run by default: if another integration run is
+already active in this repo, the second invocation exits early instead of
+competing for the same device/simulator state. Stale lock directories are
+auto-cleared when the recorded owner PID is gone.
+
 ## Repo testing conventions
 
 - Use `FakeTimerService` for time-dependent behavior.
