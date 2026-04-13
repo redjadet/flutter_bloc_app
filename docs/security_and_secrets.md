@@ -3,7 +3,7 @@
 This document explains how the app receives secrets in development and CI, and
 how local persistence is protected (encrypted Hive + platform secure storage).
 
-For the complete docs index, see [`README.md`](README.md).
+For the complete docs index, see [docs index](README.md).
 
 If you are reporting a vulnerability, use [`SECURITY.md`](SECURITY.md) (GitHub security
 advisories / responsible disclosure). This file is about **configuration and
@@ -86,6 +86,16 @@ CI should inject secrets via the CI system (GitHub Actions secrets, etc.) and
 then pass them as `--dart-define` values (or use the same helper script used for
 local development). Avoid “production flutter run” guidance: for release builds,
 focus on how the build environment supplies keys.
+
+For **Android Play** uploads from a maintainer machine, copy
+[`.env.android.release.example`](../.env.android.release.example) to gitignored
+`.env.android.release`, fill required values, and run
+[`tool/release_android_play.sh`](../tool/release_android_play.sh). That script
+sources `.env.android.release` before Fastlane; the Android build uses the same
+[`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh)
+as Option B, so optional `CHAT_FASTAPICLOUD_*` / `CHAT_RENDER_*` compile-time
+keys work the same way as in `.envrc`. See
+[Android Play Store release SOP](android_play_store_release_sop.md).
 
 ## Firebase configuration is separate
 
