@@ -4,7 +4,7 @@ This document describes all validation scripts in the `tool/` directory that
 can be run directly or as part of `./bin/checklist` when you want the full
 repo sweep.
 
-For the complete docs index, see [`README.md`](README.md).
+For the complete docs index, see [docs index](README.md).
 
 ## Overview
 

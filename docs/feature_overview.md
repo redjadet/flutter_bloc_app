@@ -35,7 +35,7 @@ Vertical demos driven by product briefs in [`docs/case_studies/`](case_studies/R
 
 | Feature | Route or entry | Code | Notes |
 | --- | --- | --- | --- |
-| Chat | `/chat`, `/chat-list` | `lib/features/chat/` | Offline-first chat flows with Hugging Face-backed inference. |
+| Chat | `/chat`, `/chat-list` | `lib/features/chat/` | Offline-first chat flows with FastAPI Cloud orchestration, direct Hugging Face inference, and documented Supabase proxy support. |
 | Charts | `/charts` | `lib/features/chart/` | Deferred-loaded chart experience with offline-first behavior. |
 | GraphQL Demo | `/graphql-demo` | `lib/features/graphql_demo/` | Cache-first countries browser with diagnostics support. |
 | Remote Config surfaces | Counter and Settings diagnostics | `lib/features/remote_config/` | Runtime feature flags, diagnostics, and cache behavior. |
