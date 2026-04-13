@@ -48,5 +48,13 @@ emit_define "CHAT_RENDER_DEMO_SECRET"
 emit_define "CHAT_RENDER_HF_READ_TOKEN_CALLABLE"
 emit_define "CHAT_RENDER_HF_READ_TOKEN_CALLABLE_REGION"
 
+# FastAPI Cloud naming (preferred; back-compat keys above still supported).
+emit_define "CHAT_FASTAPICLOUD_DEMO_ENABLED"
+emit_define "CHAT_FASTAPICLOUD_DEMO_STRICT"
+emit_define "CHAT_FASTAPICLOUD_DEMO_BASE_URL"
+emit_define "CHAT_FASTAPICLOUD_DEMO_SECRET"
+emit_define "CHAT_FASTAPICLOUD_HF_READ_TOKEN_CALLABLE"
+emit_define "CHAT_FASTAPICLOUD_HF_READ_TOKEN_CALLABLE_REGION"
+
 printf "\n"
 

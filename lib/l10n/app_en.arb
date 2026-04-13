@@ -664,29 +664,37 @@
   },
   "chatTransportRenderOrchestration": "Orchestration",
   "@chatTransportRenderOrchestration": {
-    "description": "Chip label when chat completions use the Render FastAPI orchestration demo"
+    "description": "Chip label when chat completions use the FastAPI Cloud orchestration demo"
   },
-  "chatTransportRenderOrchestrationSemanticsLabel": "Orchestration. Chat replies use your Render FastAPI service, which routes to Hugging Face.",
+  "chatTransportRenderOrchestrationSemanticsLabel": "Orchestration. Chat replies use your FastAPI Cloud service, which routes to Hugging Face.",
   "@chatTransportRenderOrchestrationSemanticsLabel": {
-    "description": "Screen reader and tooltip for the Render orchestration transport chip"
+    "description": "Screen reader and tooltip for the FastAPI Cloud orchestration transport chip"
+  },
+  "chatFastApiCloudBadgeLabel": "FastAPI Cloud",
+  "@chatFastApiCloudBadgeLabel": {
+    "description": "Chip label shown when orchestration is hosted on FastAPI Cloud"
+  },
+  "chatFastApiCloudBadgeSemanticsLabel": "FastAPI Cloud. Orchestration is running on FastAPI Cloud.",
+  "@chatFastApiCloudBadgeSemanticsLabel": {
+    "description": "Screen reader and tooltip for the FastAPI Cloud hosting badge"
   },
   "chatModelAuto": "Auto",
   "@chatModelAuto": {
     "description": "Chat model picker entry that lets the server choose mini vs full model"
   },
-  "chatRenderStrictMode": "Render demo strict mode is on; fallthrough is disabled.",
+  "chatRenderStrictMode": "FastAPI Cloud demo strict mode is on; fallthrough is disabled.",
   "@chatRenderStrictMode": {
     "description": "Shown when CHAT_RENDER_DEMO_STRICT prevents falling back to Supabase/direct"
   },
-  "chatAuthRefreshRequired": "Sign in again to continue using the Render chat demo.",
+  "chatAuthRefreshRequired": "Sign in again to continue using the FastAPI Cloud chat demo.",
   "@chatAuthRefreshRequired": {
-    "description": "User-visible copy when caller auth must be refreshed for the Render path"
+    "description": "User-visible copy when caller auth must be refreshed for the orchestration path"
   },
   "chatSessionEnded": "Your session ended. Start a new chat after signing in.",
   "@chatSessionEnded": {
-    "description": "Shown when the signed-in session no longer supports the Render demo path"
+    "description": "Shown when the signed-in session no longer supports the orchestration demo path"
   },
-  "chatSwitchAccount": "Switch account to refresh credentials for the Render chat demo.",
+  "chatSwitchAccount": "Switch account to refresh credentials for the FastAPI Cloud chat demo.",
   "@chatSwitchAccount": {
     "description": "Hint when a different Firebase user is required before sending"
   },

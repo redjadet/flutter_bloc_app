@@ -48,6 +48,18 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
       return;
     }
 
+    if (kDebugMode) {
+      final ChatInferenceTransport? hint = state.runnableTransportHint;
+      final ChatInferenceTransport? badge = state.transportForBadge;
+      AppLogger.info(
+        'Chat: sendMessage dispatch '
+        'hint=$hint badge=$badge model=$_currentModel',
+      );
+      if (hint == ChatInferenceTransport.renderOrchestration) {
+        logChatRenderOrchestrationIfDebug('cubit_sendMessage_attempt');
+      }
+    }
+
     await CubitExceptionHandler.executeAsync(
       operation: () => _repository.sendMessage(
         pastUserInputs: withUser.pastUserInputs,
@@ -61,6 +73,17 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
       onSuccess: (final result) {
         if (isClosed || !isRequestCurrent(requestId)) {
           return;
+        }
+        if (kDebugMode) {
+          AppLogger.info(
+            'Chat: sendMessage success transportUsed=${result.transportUsed}',
+          );
+          if (result.transportUsed ==
+              ChatInferenceTransport.renderOrchestration) {
+            logChatRenderOrchestrationIfDebug(
+              'cubit_sendMessage_render_success',
+            );
+          }
         }
         final DateTime replyTimestamp = DateTime.now();
         final ChatMessage replyWithMetadata = ChatMessage(

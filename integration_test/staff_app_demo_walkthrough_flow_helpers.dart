@@ -1,10 +1,14 @@
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_cubit.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'test_harness.dart';
@@ -76,6 +80,67 @@ Uint8List buildDeterministicPngBytes() => Uint8List.fromList(<int>[
   137, 80, 78, 71, 13, 10, 26, 10, // PNG signature header
   0, 0, 0, 0,
 ]);
+
+Future<String?> submitProofOrReturnNullIfQuotaExceeded({
+  required final WidgetTester tester,
+  required final FirebaseFirestore firestore,
+  required final StaffDemoProofCubit proofCubit,
+  required final String employeeUid,
+}) async {
+  await pumpSettleWithin(tester, timeout: const Duration(seconds: 2));
+  final bool submitted = find
+      .textContaining('Submitted proof')
+      .evaluate()
+      .isNotEmpty;
+  if (!submitted) {
+    final String errorText = proofCubit.state.errorMessage ?? '';
+    final bool quotaExceeded =
+        errorText.contains('quota-exceeded') ||
+        errorText.contains('Quota for bucket');
+    expect(
+      quotaExceeded,
+      isTrue,
+      reason:
+          'Expected proof submit to succeed or fail with quota-exceeded, got: $errorText',
+    );
+    return null;
+  }
+
+  expect(proofCubit.state.status, StaffDemoProofStatus.success);
+  final String? proofId = proofCubit.state.lastProofId;
+  expect(proofId, isNotNull);
+  expect(proofId, isNotEmpty);
+
+  final proofDoc = await firestore
+      .collection('staffDemoEventProofs')
+      .doc(proofId)
+      .get()
+      .timeout(const Duration(seconds: 15));
+  expect(proofDoc.exists, isTrue);
+  final proofData = proofDoc.data() ?? <String, dynamic>{};
+  expect(proofData['userId'], employeeUid);
+  expect(proofData['siteId'], 'site1');
+  expect(proofData['photoStoragePaths'], isA<List<dynamic>>());
+  expect(proofData['signatureStoragePath'], isA<String>());
+
+  final photoStoragePaths = (proofData['photoStoragePaths'] as List<dynamic>)
+      .whereType<String>()
+      .toList(growable: false);
+  final signatureStoragePath = proofData['signatureStoragePath'] as String;
+  expect(photoStoragePaths, isNotEmpty);
+  expect(signatureStoragePath, isNotEmpty);
+
+  await FirebaseStorage.instance
+      .ref(photoStoragePaths.first)
+      .getMetadata()
+      .timeout(const Duration(seconds: 15));
+  await FirebaseStorage.instance
+      .ref(signatureStoragePath)
+      .getMetadata()
+      .timeout(const Duration(seconds: 15));
+
+  return proofId;
+}
 
 Future<void> openMessagesAndSendShiftAssignment(
   final WidgetTester tester, {

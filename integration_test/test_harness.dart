@@ -25,6 +25,7 @@ import 'widget_tester_pumps.dart';
 export 'widget_tester_pumps.dart';
 
 part 'test_harness_fakes.dart';
+part 'test_harness_log_filters.dart';
 
 bool _hiveInitialized = false;
 final List<AppLogEntry> _unexpectedIntegrationLogs = <AppLogEntry>[];
@@ -98,7 +99,7 @@ void registerIntegrationFlow({
       try {
         await body(tester);
       } finally {
-        await _disposeIntegrationTestApp(tester);
+        await _postTestCleanupPumps(tester);
       }
     });
   });
@@ -126,77 +127,6 @@ void _beginIntegrationLogCapture() {
 void _endIntegrationLogCapture() {
   AppLogger.observer = null;
   _unexpectedIntegrationLogs.clear();
-}
-
-bool _isUnexpectedIntegrationLog(final AppLogEntry entry) {
-  final bool isWarnOrError =
-      entry.level == AppLogLevel.warning || entry.level == AppLogLevel.error;
-  if (!isWarnOrError) {
-    return false;
-  }
-  return !_isIgnoredIntegrationLog(entry);
-}
-
-bool _isIgnoredIntegrationLog(final AppLogEntry entry) {
-  // iOS integration runs occasionally surface transient Remote Config
-  // cancellation from the plugin while the app is tearing down / relaunching
-  // between flows. Treat this specific case as noise so it doesn't fail the
-  // whole suite.
-  if (entry.message == 'OfflineFirstRemoteConfigRepository.forceFetch failed') {
-    final Object? error = entry.error;
-    if (error != null &&
-        error.toString().contains(
-          '[firebase_remote_config/unknown] cancelled',
-        )) {
-      return true;
-    }
-  }
-
-  // Some integration flows intentionally run without a Firebase user session.
-  // When a feature tries to sync immediately, the repo logs an error and
-  // queues the operation for retry. This is expected and shouldn't fail the
-  // entire integration suite.
-  if (entry.message ==
-      'OfflineFirstTodoRepository.save immediate sync failed, queuing for retry') {
-    final Object? error = entry.error;
-    if (error != null &&
-        error.toString().contains('[firebase_auth/no-current-user]') &&
-        error.toString().contains('did not supply a user within')) {
-      return true;
-    }
-  }
-
-  if (entry.message ==
-      'OfflineFirstTodoRepository.delete immediate sync failed, queuing for retry') {
-    final Object? error = entry.error;
-    if (error != null &&
-        error.toString().contains('[firebase_auth/no-current-user]') &&
-        error.toString().contains('did not supply a user within')) {
-      return true;
-    }
-  }
-
-  // Staff demo push token registration can log an APNs token warning on iOS
-  // simulators (or before APNs registration completes). This should not fail
-  // the integration suite.
-  if (entry.message ==
-      'FirestoreStaffDemoPushTokenRepository.registerTokens APNs token not available yet') {
-    return true;
-  }
-  if (entry.message ==
-      'FirestoreStaffDemoPushTokenRepository.registerTokens failed') {
-    final Object? error = entry.error;
-    if (error != null &&
-        error.toString().contains('[firebase_messaging/apns-token-not-set]')) {
-      return true;
-    }
-  }
-
-  // App Check debug token guidance is expected on simulators during dev runs.
-  if (entry.message.startsWith('Using default App Check debug token.')) {
-    return true;
-  }
-  return false;
 }
 
 void _assertNoUnexpectedIntegrationLogs() {
@@ -286,18 +216,17 @@ Future<void> restartTestApp(
   await launchTestApp(tester, requireAuth: requireAuth);
 }
 
-Future<void> _disposeIntegrationTestApp(final WidgetTester tester) async {
-  await tester.pumpWidget(const SizedBox.shrink());
-  await tester.pump(const Duration(milliseconds: 100));
+Future<void> _postTestCleanupPumps(final WidgetTester tester) async {
+  // Keep cleanup lightweight. Avoid unmounting the whole widget tree here since
+  // the integration device runner manages app lifecycle (install/launch/kill).
   try {
     await pumpSettleWithin(
       tester,
       timeout: const Duration(seconds: 2),
     );
   } on TestFailure {
-    // Best-effort cleanup: integration flows can leave background timers or
-    // plugin callbacks alive briefly, so fall back to a bounded pump instead of
-    // letting final unmount cleanup hang the suite.
+    // Best-effort: leave the app as-is but give pending callbacks a tiny
+    // window to flush, so teardown doesn't hang.
     await tester.pump(const Duration(milliseconds: 250));
   }
 }

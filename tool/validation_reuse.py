@@ -208,6 +208,34 @@ def find_reusable_run(command: str) -> dict[str, object] | None:
     return matches[0]
 
 
+def find_successful_command_event(
+    command: str,
+    *,
+    fingerprint: str | None = None,
+    branch: str | None = None,
+) -> dict[str, object] | None:
+    """Return the latest successful scorecard event for an arbitrary command."""
+    target_fingerprint = fingerprint or compute_workspace_fingerprint()
+    target_branch = branch or _git_branch()
+    matches: list[dict[str, object]] = []
+    for event in _iter_scorecard_events():
+        if event.get("command") != command:
+            continue
+        if event.get("status") != "ok":
+            continue
+        if event.get("invalid_partial") is True:
+            continue
+        if event.get("branch") != target_branch:
+            continue
+        if event.get("workspace_fingerprint") != target_fingerprint:
+            continue
+        matches.append(event)
+    if not matches:
+        return None
+    matches.sort(key=lambda event: str(event.get("ended_at", "")), reverse=True)
+    return matches[0]
+
+
 def _fingerprint_command(_: argparse.Namespace) -> int:
     print(compute_workspace_fingerprint())
     return 0
@@ -215,6 +243,14 @@ def _fingerprint_command(_: argparse.Namespace) -> int:
 
 def _find_command(args: argparse.Namespace) -> int:
     match = find_reusable_run(args.command)
+    if match is None:
+        return 1
+    print(json.dumps(match, ensure_ascii=True))
+    return 0
+
+
+def _find_event_command(args: argparse.Namespace) -> int:
+    match = find_successful_command_event(args.command)
     if match is None:
         return 1
     print(json.dumps(match, ensure_ascii=True))
@@ -235,6 +271,10 @@ def main() -> int:
         choices=["checklist", "integration_tests", "router_feature_validate"],
     )
     find_parser.set_defaults(func=_find_command)
+
+    find_event_parser = subparsers.add_parser("find-event")
+    find_event_parser.add_argument("--command", required=True)
+    find_event_parser.set_defaults(func=_find_event_command)
 
     args = parser.parse_args()
     return args.func(args)

@@ -2,6 +2,29 @@
 
 OpenAI-compatible `POST /v1/chat/completions` for the Flutter [`HuggingFaceResponseParser`](../../lib/features/chat/data/huggingface_response_parser.dart) path.
 
+## FastAPI Cloud (current deployment)
+
+- **Live URL**: `https://render-chat-api.fastapicloud.dev`
+- **Docs**: `https://render-chat-api.fastapicloud.dev/docs`
+- **Health**: `https://render-chat-api.fastapicloud.dev/health`
+
+### Quick deploy (FastAPI Cloud)
+
+From the repo root:
+
+```bash
+./tool/deploy_fastapi_cloud_chat_api.sh
+```
+
+### FastAPI Cloud required environment
+
+When running with `CALLER_AUTH_MODE=firebase`, the server must know which Firebase project to validate tokens against:
+
+- `CALLER_AUTH_MODE=firebase`
+- `FIREBASE_PROJECT_ID=<your firebase project id>`
+
+If `FIREBASE_PROJECT_ID` is missing, the service returns **401** on `POST /v1/chat/completions` and logs `FIREBASE_PROJECT_ID missing while caller_auth_mode=firebase`.
+
 ## IDE (Pyright / Basedpyright)
 
 Create `.venv` and install deps (see below). This directory’s [`pyrightconfig.json`](./pyrightconfig.json) plus the repo root [`pyrightconfig.json`](../../pyrightconfig.json) point Pyright/Basedpyright at **`demos/render_chat_api/.venv`** so imports like `fastapi` and `httpx` resolve in Cursor/VS Code without using the system Python. **`../../tool/check_pyright_python.sh`** runs the same Pyright pass (and creates `.venv` if missing); it is part of **`./tool/delivery_checklist.sh`** / **`./bin/checklist`** so import and typing regressions fail early in CI and locally.
