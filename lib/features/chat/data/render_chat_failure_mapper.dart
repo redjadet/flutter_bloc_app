@@ -20,13 +20,15 @@ ChatRemoteFailureException mapRenderChatFailure(final Object error) {
 
 ChatRemoteFailureException _fromDio(final DioException e) {
   final int? status = e.response?.statusCode;
-  final Object? data = e.response?.data;
+  final Map<String, dynamic>? data = mapFromDynamic(e.response?.data);
 
-  if (status != null && data is Map<String, dynamic>) {
+  if (status != null && data != null) {
     final String? code = stringFromDynamic(data['code']);
     final bool retryable = boolFromDynamic(data['retryable'], fallback: false);
     final String message =
-        stringFromDynamic(data['message']) ?? e.message ?? 'Chat request failed.';
+        stringFromDynamic(data['message']) ??
+        e.message ??
+        'Chat request failed.';
     if (code != null && code.isNotEmpty) {
       return ChatRemoteFailureException(
         message,
@@ -37,9 +39,13 @@ ChatRemoteFailureException _fromDio(final DioException e) {
     }
   }
 
+  final String? fallbackMessageFromBody = stringFromDynamicTrimmed(
+    e.response?.data,
+  );
+
   if (status == 401) {
     return ChatRemoteFailureException(
-      e.message ?? 'Unauthorized.',
+      fallbackMessageFromBody ?? e.message ?? 'Unauthorized.',
       code: 'auth_required',
       retryable: false,
       isEdge: false,
@@ -47,7 +53,7 @@ ChatRemoteFailureException _fromDio(final DioException e) {
   }
   if (status == 403) {
     return ChatRemoteFailureException(
-      e.message ?? 'Forbidden.',
+      fallbackMessageFromBody ?? e.message ?? 'Forbidden.',
       code: 'forbidden',
       retryable: false,
       isEdge: false,
@@ -55,7 +61,7 @@ ChatRemoteFailureException _fromDio(final DioException e) {
   }
   if (status == 413 || status == 422) {
     return ChatRemoteFailureException(
-      e.message ?? 'Invalid request.',
+      fallbackMessageFromBody ?? e.message ?? 'Invalid request.',
       code: 'invalid_request',
       retryable: false,
       isEdge: false,
@@ -63,15 +69,23 @@ ChatRemoteFailureException _fromDio(final DioException e) {
   }
   if (status == 429) {
     return ChatRemoteFailureException(
-      e.message ?? 'Rate limited.',
+      fallbackMessageFromBody ?? e.message ?? 'Rate limited.',
       code: 'rate_limited',
+      retryable: false,
+      isEdge: false,
+    );
+  }
+  if (status != null && status >= 400 && status < 500) {
+    return ChatRemoteFailureException(
+      fallbackMessageFromBody ?? e.message ?? 'Invalid request.',
+      code: 'invalid_request',
       retryable: false,
       isEdge: false,
     );
   }
   if (status != null && status >= 500) {
     return ChatRemoteFailureException(
-      e.message ?? 'Upstream error.',
+      fallbackMessageFromBody ?? e.message ?? 'Upstream error.',
       code: 'upstream_unavailable',
       retryable: true,
       isEdge: false,
@@ -89,7 +103,8 @@ ChatRemoteFailureException _fromDio(final DioException e) {
       isEdge: false,
     );
   }
-  if (type == DioExceptionType.connectionError || type == DioExceptionType.unknown) {
+  if (type == DioExceptionType.connectionError ||
+      type == DioExceptionType.unknown) {
     return ChatRemoteFailureException(
       e.message ?? 'Connection error.',
       code: 'upstream_unavailable',

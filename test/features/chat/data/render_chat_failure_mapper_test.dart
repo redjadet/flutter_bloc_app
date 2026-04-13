@@ -33,5 +33,20 @@ void main() {
       expect(out.code, 'upstream_timeout');
       expect(out.retryable, isTrue);
     });
+
+    test('maps general 4xx responses to invalid_request', () {
+      final DioException e = DioException(
+        requestOptions: RequestOptions(path: '/v1/chat/completions'),
+        response: Response<dynamic>(
+          requestOptions: RequestOptions(path: '/v1/chat/completions'),
+          statusCode: 404,
+          data: <String, dynamic>{'message': 'missing'},
+        ),
+        type: DioExceptionType.badResponse,
+      );
+      final ChatRemoteFailureException out = mapRenderChatFailure(e);
+      expect(out.code, 'invalid_request');
+      expect(out.retryable, isFalse);
+    });
   });
 }
