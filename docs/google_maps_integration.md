@@ -106,8 +106,12 @@ flutter run -d emulator-5554
 
 ### Release builds
 
-Release builds for Play Store should source keys from `.env.android.release` and
-use the release wrapper script:
+Release builds for Play Store should source keys from `.env.android.release`
+(create it from [`.env.android.release.example`](../.env.android.release.example))
+and use the release wrapper script. That file also carries other release-time
+environment values Fastlane forwards as `--dart-define` (same helper as local
+dev), including optional chat orchestration keys—see
+[`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md).
 
 ```bash
 ./tool/release_android_play.sh build_release

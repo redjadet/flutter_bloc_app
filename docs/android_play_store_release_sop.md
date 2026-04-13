@@ -7,8 +7,16 @@ steps for releasing **BlocFlutter** to Google Play.
 
 - Android emulator running and reachable as `emulator-5554`.
 - Release keystore exists and is wired via `android/key.properties`.
-- Local release env file exists as `.env.android.release`.
+- Local release env file exists as `.env.android.release` (copy from tracked
+  [`.env.android.release.example`](../.env.android.release.example); gitignored
+  real file must not be committed).
 - Fastlane is installed (`fastlane --version`).
+
+`./tool/release_android_play.sh` sources `.env.android.release` before Fastlane;
+the Android build uses [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh),
+so the same optional compile-time keys as local dev (for example
+`CHAT_FASTAPICLOUD_*` / legacy `CHAT_RENDER_*`) can be set there—see
+[`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md).
 
 ## 2) Mandatory validation gates
 
