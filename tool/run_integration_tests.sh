@@ -32,7 +32,8 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SCRIPT_PATH="${BASH_SOURCE[0]:-$0}"
+PROJECT_ROOT="$(cd "$(dirname "$SCRIPT_PATH")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
 # shellcheck disable=SC1091
@@ -225,27 +226,69 @@ integration_lock_message() {
   printf '%s\n' "  INTEGRATION_TESTS_ALLOW_CONCURRENT=1 tool/run_integration_tests.sh ..."
 }
 
+integration_lock_pid() {
+  local lock_dir="$1"
+  local details_path="$lock_dir/details.txt"
+  [ -s "$details_path" ] || return 1
+  awk -F= '/^pid=/{print $2; exit}' "$details_path" 2>/dev/null
+}
+
+integration_lock_is_stale() {
+  local lock_dir="$1"
+  local owner_pid=""
+  owner_pid="$(integration_lock_pid "$lock_dir" || true)"
+
+  if ! [[ "$owner_pid" =~ ^[0-9]+$ ]]; then
+    return 0
+  fi
+
+  if kill -0 "$owner_pid" 2>/dev/null; then
+    return 1
+  fi
+
+  return 0
+}
+
+write_integration_lock_details() {
+  local command_text="$1"
+  {
+    printf 'started_at=%s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+    printf 'pid=%s\n' "$$"
+    printf 'user=%s\n' "${USER:-unknown}"
+    printf 'host=%s\n' "$(hostname 2>/dev/null || echo unknown)"
+    printf 'cwd=%s\n' "$(pwd)"
+    printf 'command=%s\n' "$command_text"
+  } >"$INTEGRATION_LOCK_DIR/details.txt" 2>/dev/null || true
+}
+
 acquire_integration_lock() {
   local allow_concurrent="${INTEGRATION_TESTS_ALLOW_CONCURRENT:-0}"
+  local command_text="$0"
   allow_concurrent="$(trim "$allow_concurrent")"
   if [ "$allow_concurrent" = "1" ]; then
     log "⚠️ INTEGRATION_TESTS_ALLOW_CONCURRENT=1: skipping integration test lock (unsafe)."
     return 0
   fi
 
+  if [ "$#" -gt 0 ]; then
+    command_text="$command_text $*"
+  fi
+
   mkdir -p "$PROJECT_ROOT/.dart_tool"
   INTEGRATION_LOCK_DIR="$PROJECT_ROOT/.dart_tool/integration_test_lock"
 
   if mkdir "$INTEGRATION_LOCK_DIR" 2>/dev/null; then
-    {
-      printf 'started_at=%s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
-      printf 'pid=%s\n' "$$"
-      printf 'user=%s\n' "${USER:-unknown}"
-      printf 'host=%s\n' "$(hostname 2>/dev/null || echo unknown)"
-      printf 'cwd=%s\n' "$(pwd)"
-      printf 'command=%s\n' "$0 $*"
-    } >"$INTEGRATION_LOCK_DIR/details.txt" 2>/dev/null || true
+    write_integration_lock_details "$command_text"
     return 0
+  fi
+
+  if integration_lock_is_stale "$INTEGRATION_LOCK_DIR"; then
+    log "Removing stale integration test lock: $INTEGRATION_LOCK_DIR"
+    rm -rf "$INTEGRATION_LOCK_DIR" 2>/dev/null || true
+    if mkdir "$INTEGRATION_LOCK_DIR" 2>/dev/null; then
+      write_integration_lock_details "$command_text"
+      return 0
+    fi
   fi
 
   integration_lock_message "$INTEGRATION_LOCK_DIR" >&2
@@ -971,6 +1014,10 @@ should_retry_integration_run() {
 
   return 0
 }
+
+if [ "${INTEGRATION_TESTS_SOURCE_ONLY:-0}" = "1" ]; then
+  return 0 2>/dev/null || exit 0
+fi
 
 RUN_COVERAGE="${INTEGRATION_TESTS_RUN_COVERAGE:-1}"
 RETRY_ON_FAILURE="${INTEGRATION_TESTS_RETRY_ON_FAILURE:-0}"
