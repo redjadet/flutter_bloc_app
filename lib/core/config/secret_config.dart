@@ -7,33 +7,39 @@ import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 
+part 'secret_config_chat_orchestration.dart';
 part 'secret_config_sources.dart';
 
 class SecretConfig {
   SecretConfig._();
 
-  /// When true, [chatRenderDemoBaseUrl] is non-empty, HF token + Firebase user
-  /// exist, the app attempts Render orchestration before composite chat.
-  static const bool chatRenderDemoEnabled = bool.fromEnvironment(
-    'CHAT_RENDER_DEMO_ENABLED',
-  );
+  /// When true, a base URL is non-empty and the app may attempt orchestration
+  /// before composite chat.
+  static bool get chatRenderDemoEnabled =>
+      _ChatOrchestrationDefines.fastApiCloudEnabled ||
+      _ChatOrchestrationDefines.renderEnabled;
 
-  /// Never fall through to Supabase/direct after a retryable Render failure.
-  static const bool chatRenderDemoStrict = bool.fromEnvironment(
-    'CHAT_RENDER_DEMO_STRICT',
-  );
+  /// Never fall through to Supabase/direct after a retryable orchestration failure.
+  static bool get chatRenderDemoStrict =>
+      _ChatOrchestrationDefines.fastApiCloudStrict ||
+      _ChatOrchestrationDefines.renderStrict;
 
-  /// HTTPS origin of the Render FastAPI service (no trailing slash), e.g.
-  /// `https://my-service.onrender.com`.
-  static const String chatRenderDemoBaseUrl = String.fromEnvironment(
-    'CHAT_RENDER_DEMO_BASE_URL',
-  );
+  /// HTTPS origin of the orchestration FastAPI service (no trailing slash), e.g.
+  /// `https://render-chat-api.fastapicloud.dev`.
+  static String get chatRenderDemoBaseUrl {
+    final String preferred = _ChatOrchestrationDefines.fastApiCloudBaseUrl
+        .trim();
+    if (preferred.isNotEmpty) return preferred;
+    return _ChatOrchestrationDefines.renderBaseUrl;
+  }
 
-  /// Optional `X-Render-Demo-Secret` when the service is gated with
-  /// `DEMO_SHARED_SECRET` (non-web / dev smoke only per plan).
-  static const String chatRenderDemoSecret = String.fromEnvironment(
-    'CHAT_RENDER_DEMO_SECRET',
-  );
+  /// Optional shared secret header for the demo service when configured.
+  static String get chatRenderDemoSecret {
+    final String preferred = _ChatOrchestrationDefines.fastApiCloudSecret
+        .trim();
+    if (preferred.isNotEmpty) return preferred;
+    return _ChatOrchestrationDefines.renderSecret;
+  }
 
   /// Render FastAPI demo is configured via compile-time defines (enabled flag,
   /// non-empty base URL, `https` in release). Used for UI transport hints so the
@@ -57,18 +63,24 @@ class SecretConfig {
   }
 
   /// Optional Cloud Function name (non-dev) that returns a short-lived HF read
-  /// token for Render. Empty disables the Callable path (falls back to
+  /// token for orchestration. Empty disables the Callable path (falls back to
   /// `huggingface_api_key` from secrets when present).
-  static const String chatRenderHfReadTokenCallable = String.fromEnvironment(
-    'CHAT_RENDER_HF_READ_TOKEN_CALLABLE',
-  );
+  static String get chatRenderHfReadTokenCallable {
+    final String preferred = _ChatOrchestrationDefines
+        .fastApiCloudHfReadTokenCallable
+        .trim();
+    if (preferred.isNotEmpty) return preferred;
+    return _ChatOrchestrationDefines.renderHfReadTokenCallable;
+  }
 
   /// Firebase Functions region for `chatRenderHfReadTokenCallable`.
-  static const String chatRenderHfReadTokenCallableRegion =
-      String.fromEnvironment(
-        'CHAT_RENDER_HF_READ_TOKEN_CALLABLE_REGION',
-        defaultValue: 'us-central1',
-      );
+  static String get chatRenderHfReadTokenCallableRegion {
+    final String preferred = _ChatOrchestrationDefines
+        .fastApiCloudHfReadTokenCallableRegion
+        .trim();
+    if (preferred.isNotEmpty) return preferred;
+    return _ChatOrchestrationDefines.renderHfReadTokenCallableRegion;
+  }
 
   static const String enableAssetSecretsDefine = 'ENABLE_ASSET_SECRETS';
   static const String _keyHfToken = 'huggingface_api_key';

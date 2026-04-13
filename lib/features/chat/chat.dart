@@ -19,6 +19,7 @@ export 'presentation/pages/chat_list_page.dart';
 export 'presentation/pages/chat_page.dart';
 export 'presentation/widgets/chat_bottom_navigation_bar.dart';
 export 'presentation/widgets/chat_contact_tile.dart';
+export 'presentation/widgets/chat_fastapi_cloud_badge.dart';
 export 'presentation/widgets/chat_history_sheet.dart';
 export 'presentation/widgets/chat_input_bar.dart';
 export 'presentation/widgets/chat_list_view.dart';

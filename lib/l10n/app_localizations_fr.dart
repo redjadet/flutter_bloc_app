@@ -504,18 +504,25 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get chatTransportRenderOrchestrationSemanticsLabel =>
-      'Orchestration. Les réponses passent par votre service FastAPI sur Render, qui route vers Hugging Face.';
+      'Orchestration. Les réponses passent par votre service FastAPI Cloud, qui route vers Hugging Face.';
+
+  @override
+  String get chatFastApiCloudBadgeLabel => 'FastAPI Cloud';
+
+  @override
+  String get chatFastApiCloudBadgeSemanticsLabel =>
+      'FastAPI Cloud. L’orchestration s’exécute sur FastAPI Cloud.';
 
   @override
   String get chatModelAuto => 'Auto';
 
   @override
   String get chatRenderStrictMode =>
-      'Démo Render en mode strict ; pas de repli.';
+      'Démo FastAPI Cloud en mode strict ; pas de repli.';
 
   @override
   String get chatAuthRefreshRequired =>
-      'Reconnecte-toi pour continuer la démo de chat Render.';
+      'Reconnecte-toi pour continuer la démo de chat FastAPI Cloud.';
 
   @override
   String get chatSessionEnded =>
@@ -523,7 +530,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get chatSwitchAccount =>
-      'Change de compte pour actualiser les identifiants de la démo Render.';
+      'Change de compte pour actualiser les identifiants de la démo FastAPI Cloud.';
 
   @override
   String get chatTokenMissing =>

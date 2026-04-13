@@ -76,7 +76,7 @@ void main() {
       expect(composite.lastModel, 'openai/gpt-oss-20b');
     });
 
-    test('falls through to composite on retryable Render failure', () async {
+    test('falls through to composite on Render failure', () async {
       final _RecordingRepo render = _RecordingRepo(
         throwRemote: const ChatRemoteFailureException(
           'saturation',
@@ -105,6 +105,39 @@ void main() {
       expect(composite.calls, 1);
       expect(out.transportUsed, ChatInferenceTransport.supabase);
     });
+
+    test(
+      'falls through to composite on non-retryable Render failure',
+      () async {
+        final _RecordingRepo render = _RecordingRepo(
+          throwRemote: const ChatRemoteFailureException(
+            'unauthorized',
+            code: 'auth_required',
+            retryable: false,
+            isEdge: false,
+          ),
+        );
+        final _RecordingRepo composite = _RecordingRepo(
+          result: _dummyResult(ChatInferenceTransport.direct),
+        );
+        final DemoFirstChatRepository repo = DemoFirstChatRepository(
+          renderRepository: render,
+          compositeRepository: composite,
+          isRenderAttemptedFirst: () => true,
+          isRenderStrict: () => false,
+        );
+
+        final ChatResult out = await repo.sendMessage(
+          pastUserInputs: const <String>[],
+          generatedResponses: const <String>[],
+          prompt: 'hi',
+        );
+
+        expect(render.calls, 1);
+        expect(composite.calls, 1);
+        expect(out.transportUsed, ChatInferenceTransport.direct);
+      },
+    );
 
     test(
       'passes same clientMessageId to composite on render fallthrough',

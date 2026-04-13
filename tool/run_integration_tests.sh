@@ -15,6 +15,7 @@
 #   INTEGRATION_TESTS_CHANGED_FILES — comma/newline-separated paths for selective resolver
 #   INTEGRATION_TESTS_RETRY_ON_FAILURE (0|1, default 0) — skips retry when logs look like assertion failures
 #   INTEGRATION_TESTS_TIMEOUT_SECONDS (default 1800)
+#   INTEGRATION_TESTS_ALLOW_CONCURRENT (0|1, default 0) — bypass the single-run lock (unsafe)
 #   DEVICE_DISCOVERY_TIMEOUT_SECONDS (default 60)
 #   PROGRESS_HEARTBEAT_SECONDS (default 60)
 #   IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS (default 180)
@@ -186,12 +187,69 @@ PY
   INTEGRATION_FAILURE_CATEGORY="$(classify_exit_category "$integration_exit_code")"
   write_integration_artifact "$integration_exit_code" "${DEVICE_ID:-unknown}" "${INTEGRATION_SELECTED_TARGETS:-}"
   emit_integration_scorecard_event "$integration_exit_code"
+  release_integration_lock
 }
 
 trap 'record_integration_exit' EXIT
 
 log() {
   printf '[%s] %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*" >&2
+}
+
+INTEGRATION_LOCK_DIR=""
+
+release_integration_lock() {
+  [ -n "${INTEGRATION_LOCK_DIR:-}" ] || return 0
+  if [ -d "$INTEGRATION_LOCK_DIR" ]; then
+    rm -rf "$INTEGRATION_LOCK_DIR" 2>/dev/null || true
+  fi
+}
+
+integration_lock_message() {
+  local lock_dir="$1"
+  local details_path="$lock_dir/details.txt"
+  if [ -s "$details_path" ]; then
+    printf '%s\n' "Another integration test run is already in progress."
+    printf '%s\n' ""
+    printf '%s\n' "Lock details:"
+    sed 's/^/  /' "$details_path" || true
+    printf '%s\n' ""
+  else
+    printf '%s\n' "Another integration test run is already in progress (lock: $lock_dir)."
+    printf '%s\n' ""
+  fi
+  printf '%s\n' "If this is stale, delete the lock dir:"
+  printf '%s\n' "  rm -rf \"$lock_dir\""
+  printf '%s\n' ""
+  printf '%s\n' "If you truly need parallel runs, rerun with:"
+  printf '%s\n' "  INTEGRATION_TESTS_ALLOW_CONCURRENT=1 tool/run_integration_tests.sh ..."
+}
+
+acquire_integration_lock() {
+  local allow_concurrent="${INTEGRATION_TESTS_ALLOW_CONCURRENT:-0}"
+  allow_concurrent="$(trim "$allow_concurrent")"
+  if [ "$allow_concurrent" = "1" ]; then
+    log "⚠️ INTEGRATION_TESTS_ALLOW_CONCURRENT=1: skipping integration test lock (unsafe)."
+    return 0
+  fi
+
+  mkdir -p "$PROJECT_ROOT/.dart_tool"
+  INTEGRATION_LOCK_DIR="$PROJECT_ROOT/.dart_tool/integration_test_lock"
+
+  if mkdir "$INTEGRATION_LOCK_DIR" 2>/dev/null; then
+    {
+      printf 'started_at=%s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+      printf 'pid=%s\n' "$$"
+      printf 'user=%s\n' "${USER:-unknown}"
+      printf 'host=%s\n' "$(hostname 2>/dev/null || echo unknown)"
+      printf 'cwd=%s\n' "$(pwd)"
+      printf 'command=%s\n' "$0 $*"
+    } >"$INTEGRATION_LOCK_DIR/details.txt" 2>/dev/null || true
+    return 0
+  fi
+
+  integration_lock_message "$INTEGRATION_LOCK_DIR" >&2
+  exit 2
 }
 
 validate_integration_target_path() {
@@ -1015,6 +1073,8 @@ if [ "$#" -gt 0 ]; then
     fi
   done
 fi
+
+acquire_integration_lock "$@"
 
 DEVICE_ID="$(select_device_id)"
 DART_BIN="$(resolve_flutter_dart)"
