@@ -36,6 +36,25 @@ The README stays intentionally high level. Setup detail, architecture rationale,
 feature-level behavior, and operational guidance live in `docs/` and are linked
 throughout this page.
 
+## Quick Repo Snapshot
+
+- AI host guidance: [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md) ->
+  [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
+- Core shape: `Presentation -> Domain <- Data`, `flutter_bloc`, `get_it`,
+  `GoRouter`, offline-first sync under `lib/shared/sync/`
+- Entry points: `lib/main_dev.dart`, `lib/main_staging.dart`,
+  `lib/main_prod.dart`
+- Primary repo validation lanes:
+  - `./tool/delivery_checklist.sh` / `./bin/checklist`
+  - `./bin/router_feature_validate`
+  - `./bin/integration_tests`
+  - `./bin/upgrade_validate_all`
+- Key deep-dive docs:
+  - setup: [New Developer Guide](docs/new_developer_guide.md)
+  - architecture: [Feature Overview](docs/feature_overview.md)
+  - validation: [Validation Scripts](docs/validation_scripts.md)
+  - lifecycle: [Repository Lifecycle](docs/REPOSITORY_LIFECYCLE.md)
+
 ## What This Codebase Covers
 
 - Clean Architecture with a `Presentation -> Domain <- Data` feature structure
