@@ -6,6 +6,50 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('DemoFirstChatRepository', () {
+    test(
+      'chatRemoteTransportHint uses composite hint when render is not attempted first',
+      () async {
+        final _RecordingRepo render = _RecordingRepo(
+          result: _dummyResult(ChatInferenceTransport.renderOrchestration),
+          hint: ChatInferenceTransport.renderOrchestration,
+        );
+        final _RecordingRepo composite = _RecordingRepo(
+          result: _dummyResult(ChatInferenceTransport.direct),
+          hint: ChatInferenceTransport.direct,
+        );
+        final DemoFirstChatRepository repo = DemoFirstChatRepository(
+          renderRepository: render,
+          compositeRepository: composite,
+          isRenderAttemptedFirst: () => false,
+          isRenderStrict: () => false,
+        );
+
+        expect(repo.chatRemoteTransportHint, ChatInferenceTransport.direct);
+      },
+    );
+
+    test(
+      'chatRemoteTransportHint falls back to composite when render hint is unavailable',
+      () async {
+        final _RecordingRepo render = _RecordingRepo(
+          result: _dummyResult(ChatInferenceTransport.renderOrchestration),
+          hint: null,
+        );
+        final _RecordingRepo composite = _RecordingRepo(
+          result: _dummyResult(ChatInferenceTransport.supabase),
+          hint: ChatInferenceTransport.supabase,
+        );
+        final DemoFirstChatRepository repo = DemoFirstChatRepository(
+          renderRepository: render,
+          compositeRepository: composite,
+          isRenderAttemptedFirst: () => true,
+          isRenderStrict: () => false,
+        );
+
+        expect(repo.chatRemoteTransportHint, ChatInferenceTransport.supabase);
+      },
+    );
+
     test('skips render when not attempted first', () async {
       final _RecordingRepo render = _RecordingRepo(
         result: _dummyResult(ChatInferenceTransport.renderOrchestration),
@@ -62,35 +106,38 @@ void main() {
       expect(out.transportUsed, ChatInferenceTransport.supabase);
     });
 
-    test('passes same clientMessageId to composite on render fallthrough', () async {
-      final _RecordingRepo render = _RecordingRepo(
-        throwRemote: const ChatRemoteFailureException(
-          'saturation',
-          code: 'upstream_unavailable',
-          retryable: true,
-          isEdge: false,
-        ),
-      );
-      final _RecordingRepo composite = _RecordingRepo(
-        result: _dummyResult(ChatInferenceTransport.direct),
-      );
-      final DemoFirstChatRepository repo = DemoFirstChatRepository(
-        renderRepository: render,
-        compositeRepository: composite,
-        isRenderAttemptedFirst: () => true,
-        isRenderStrict: () => false,
-      );
+    test(
+      'passes same clientMessageId to composite on render fallthrough',
+      () async {
+        final _RecordingRepo render = _RecordingRepo(
+          throwRemote: const ChatRemoteFailureException(
+            'saturation',
+            code: 'upstream_unavailable',
+            retryable: true,
+            isEdge: false,
+          ),
+        );
+        final _RecordingRepo composite = _RecordingRepo(
+          result: _dummyResult(ChatInferenceTransport.direct),
+        );
+        final DemoFirstChatRepository repo = DemoFirstChatRepository(
+          renderRepository: render,
+          compositeRepository: composite,
+          isRenderAttemptedFirst: () => true,
+          isRenderStrict: () => false,
+        );
 
-      await repo.sendMessage(
-        pastUserInputs: const <String>[],
-        generatedResponses: const <String>[],
-        prompt: 'hi',
-        clientMessageId: 'idem-client-1',
-      );
+        await repo.sendMessage(
+          pastUserInputs: const <String>[],
+          generatedResponses: const <String>[],
+          prompt: 'hi',
+          clientMessageId: 'idem-client-1',
+        );
 
-      expect(render.clientMessageIds, const <String?>['idem-client-1']);
-      expect(composite.clientMessageIds, const <String?>['idem-client-1']);
-    });
+        expect(render.clientMessageIds, const <String?>['idem-client-1']);
+        expect(composite.clientMessageIds, const <String?>['idem-client-1']);
+      },
+    );
 
     test('strict mode does not fall through', () async {
       final _RecordingRepo render = _RecordingRepo(
@@ -132,16 +179,17 @@ ChatResult _dummyResult(final ChatInferenceTransport transport) => ChatResult(
 );
 
 class _RecordingRepo implements ChatRepository {
-  _RecordingRepo({this.result, this.throwRemote});
+  _RecordingRepo({this.result, this.throwRemote, this.hint});
 
   final ChatResult? result;
   final ChatRemoteFailureException? throwRemote;
+  final ChatInferenceTransport? hint;
   int calls = 0;
   String? lastModel;
   final List<String?> clientMessageIds = <String?>[];
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => null;
+  ChatInferenceTransport? get chatRemoteTransportHint => hint;
 
   @override
   Future<ChatResult> sendMessage({
