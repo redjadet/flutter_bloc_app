@@ -3,7 +3,7 @@
 This repo is a reference Flutter application and not a versioned, packaged
 library. Security reporting is still welcome and handled via the process below.
 
-For the complete docs index, see [`README.md`](README.md).
+For the complete docs index, see [docs index](README.md).
 
 ## Reporting a vulnerability
 

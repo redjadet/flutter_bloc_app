@@ -5,7 +5,7 @@ questions should be answerable by running a repo script, and the docs should
 point you to the smallest correct runbook instead of duplicating platform
 vendor docs.
 
-For the complete docs index, see [`README.md`](README.md).
+For the complete docs index, see [docs index](README.md).
 
 ## Canonical routes
 

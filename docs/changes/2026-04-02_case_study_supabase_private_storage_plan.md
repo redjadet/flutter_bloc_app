@@ -55,7 +55,7 @@ Read first:
 1. [`docs/case_studies/dentists.md`](../case_studies/dentists.md)
 2. [`docs/case_studies/README.md`](../case_studies/README.md) (index of case study briefs)
 3. [`docs/changes/2026-04-01_dentist_case_study_demo_plan.md`](2026-04-01_dentist_case_study_demo_plan.md)
-4. [Repository `README` — Case studies](../../README.md#case-studies)
+4. [`docs/feature_overview.md`](../feature_overview.md)
 5. [`AGENTS.md`](../../AGENTS.md)
 
 ## What the source case study requires
