@@ -20,71 +20,51 @@ lookup only; it does not replace [`AGENTS.md`](../AGENTS.md) once that file is a
 
 ## The Nine Checks
 
-1. **Draft first**
-   Treat the first output as a draft. Do not confuse plausible code, comments,
-   or naming with correctness.
-2. **Problem fit**
-   Check business and production fit, not just the local function body.
-   Include the user outcome, auth, retries, cancellation, lifecycle, offline
-   behavior, and failure handling. Reject happy-path-only widget changes that
-   move shared state into callback chains or place side effects in `build()`.
-3. **Simplify**
-   Prefer the smallest change that solves the task. Remove speculative
-   abstractions, redundant helpers, and avoidable nesting.
-4. **Security**
-   Review auth/session handling, request replay, retries, background sync, file
-   access, logging, secrets, and `--dart-define` usage explicitly.
-5. **Performance**
-   Check for repeated I/O, wide rebuilds, large synchronous parsing on the UI
-   isolate, unnecessary listeners/timers/polling, avoidable allocations,
-   scalability bottlenecks, and static subtrees that should stay `const`.
-6. **Edge cases**
-   Deliberately reason about empty values, malformed payloads, large inputs,
-   repeated taps, concurrent calls, resumed app state, interrupted flows, and
-   offline recovery.
-7. **Dependencies**
-   Before accepting a new dependency, ask whether the repo already has a
-   suitable utility, whether the dependency materially improves the solution,
-   and what upgrade/security cost it adds.
-8. **Focused tests**
-   Expect targeted test updates, regression guards when practical,
-   scope-matched validation, and for async flows either coverage or explicit
-   reasoning for loading, empty, and error states.
-9. **Judgment and ownership**
-   Make the tradeoff explicit when more than one reasonable path exists, and
-   treat production failures in the changed surface as your responsibility to
-   understand, contain, and follow through on.
+| Check | What to ask |
+| --- | --- |
+| Draft first | Am I still treating the first output as draft, not truth? |
+| Problem fit | Does the change fit the user outcome and production path, not just the local function body? |
+| Simplify | Is this the smallest change that solves the task without speculative abstractions? |
+| Security | Did I review auth, replay, retries, logging, secrets, file access, sync, and `--dart-define` handling? |
+| Performance | Did I check rebuild scope, repeated I/O, parsing on the UI isolate, polling/listeners, allocations, and scale bottlenecks? |
+| Edge cases | Did I reason about empty, malformed, repeated, concurrent, offline, resumed, and interrupted paths? |
+| Dependencies | Does the repo already have a suitable utility, and is the new dependency worth its cost? |
+| Focused tests | Is there scope-matched proof, regression coverage where practical, and async-state reasoning or coverage? |
+| Judgment and ownership | Did I document the tradeoff and keep ownership of failures in the changed surface? |
 
 ## Before Accepting AI-Written Code
 
 Work through the following; order matters where noted.
 
-- **Checks:** Apply **The Nine Checks** above.
-- **Tracker:** For non-trivial tasks, confirm the active plan and verification are recorded
-  in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) or
-  [`tasks/codex/todo.md`](../tasks/codex/todo.md) per
-  [`AGENTS.md`](../AGENTS.md).
-- **Presentation:** For presentation-layer changes, confirm styling uses shared theme/design
-  tokens unless the file is intentionally defining tokens.
-- **Delegates:** If subagents or sidecars were used, review their output as draft input and
-  validate the integrated result yourself.
-- **Diff:** Review the diff manually.
-- **Validate:** Run the smallest matching repo validation command.
-  Use [`AGENTS.md`](../AGENTS.md) plus
-  [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
-  for routing.
-- **Extra review:** For medium/high-risk work, prefer one extra review pass before finalizing.
-  From non-Codex hosts, that can include
-  `./tool/request_codex_feedback.sh` (git diff) or
-  `./tool/run_codex_plan_review.sh PATH/TO/plan.md` (tracked template + Codex delegate).
-  From Codex itself, use that helper only
-  when the user explicitly asks for a second opinion or cross-host review.
-  Keep `./tool/delivery_checklist.sh` / `./bin/checklist` for broad or pre-ship sweeps, or when the user
-  explicitly asks for the full validation pass.
-- **Goal fit:** Confirm the solution still aligns with the business goal and does not defer
-  obvious production-risk ownership to an unspecified later cleanup.
-- **Tradeoffs:** If the change makes an operational judgment call, record why this path was
-  chosen and why simpler or safer-looking alternatives were rejected.
+1. **Checks:** Apply **The Nine Checks** above.
+2. **Tracker:** For non-trivial tasks, confirm the active plan and verification
+   are recorded in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) or
+   [`tasks/codex/todo.md`](../tasks/codex/todo.md) per
+   [`AGENTS.md`](../AGENTS.md).
+3. **Presentation:** For presentation-layer changes, confirm styling uses
+   shared theme/design tokens unless the file is intentionally defining them.
+4. **Delegates:** If subagents or sidecars were used, treat their output as
+   draft input and validate the integrated result yourself.
+5. **Diff:** Review the diff manually.
+6. **Validate:** Run the smallest matching repo validation command. Use
+   [`AGENTS.md`](../AGENTS.md) plus
+   [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
+   for routing.
+7. **Extra review:** For medium/high-risk work, prefer one extra review pass
+   before finalizing.
+   From non-Codex hosts, that can include
+   `./tool/request_codex_feedback.sh` (git diff) or
+   `./tool/run_codex_plan_review.sh PATH/TO/plan.md` (tracked template + Codex
+   delegate). From Codex itself, use that helper only when the user explicitly
+   asks for a second opinion or cross-host review. Keep
+   `./tool/delivery_checklist.sh` / `./bin/checklist` for broad or pre-ship
+   sweeps, or when the user explicitly asks for the full validation pass.
+8. **Goal fit:** Confirm the solution still aligns with the business goal and
+   does not defer obvious production-risk ownership to an unspecified later
+   cleanup.
+9. **Tradeoffs:** If the change makes an operational judgment call, record why
+   this path was chosen and why simpler or safer-looking alternatives were
+   rejected.
 
 ## Before Marking The Task Done
 

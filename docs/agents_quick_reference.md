@@ -12,13 +12,14 @@ for command routing (this page is lookup only, not policy).
 
 Pinned repo toolchain: Flutter 3.41.6 / Dart 3.11.4.
 
-## Start Here
+## 30-Second Path
 
 1. Read [`AGENTS.md`](../AGENTS.md).
 2. Read [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
-3. Use this page for command lookup, adapter names, and doc routing.
+3. Use this page for command lookup, adapter names, and doc routing only.
+4. For non-trivial work, keep the active plan in the host tracker.
 
-## Validation Routes
+## Validation Chooser
 
 Decision guide:
 [`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
@@ -36,13 +37,11 @@ Decision guide:
 
 Fastlane note: prefer `./tool/fastlane.sh` over raw `fastlane`.
 
-## Common Flow
+## Default Loop
 
 1. Read the canon.
-2. Understand the business goal and intended user outcome before narrowing to
-   implementation.
-3. For non-trivial work, write plan + verification notes in the active host
-   tracker.
+2. Understand the business goal before narrowing to a local code path.
+3. For non-trivial work, record plan + verification in the active host tracker.
 4. Reuse existing repo seams before adding abstractions.
 5. Apply the AI review gate.
 6. Run the smallest matching validation command.
@@ -50,7 +49,7 @@ Fastlane note: prefer `./tool/fastlane.sh` over raw `fastlane`.
 
 ## Work Shapes
 
-Commands for each lane live in **Validation Routes** above and in
+Commands for each lane live in **Validation Chooser** above and in
 [`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 
 | Work shape | Default action |
@@ -78,6 +77,12 @@ Commands for each lane live in **Validation Routes** above and in
 Repo-managed Cursor slash prompts (synced by `./tool/sync_agent_assets.sh`):
 `/local-agents-quick-reference`, `/upgrade-validate-all`, `/commit-push-pr`,
 `/codex-feedback`.
+
+Cold-start fit:
+
+- Codex: bootstrap -> [`AGENTS.md`](../AGENTS.md), review protocol, quick reference, README
+- Cursor: global rule + skills should point back to the same canon instead of
+  duplicating policy
 
 ## Read By Task
 
