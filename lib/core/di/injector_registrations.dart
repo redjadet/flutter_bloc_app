@@ -9,7 +9,8 @@ import 'package:flutter_bloc_app/core/di/injector_factories.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/core/di/register_auth_services.dart';
 import 'package:flutter_bloc_app/core/di/register_calculator_services.dart';
-import 'package:flutter_bloc_app/core/di/register_case_study_demo_services.dart';
+import 'package:flutter_bloc_app/core/di/register_case_study_demo_services.dart'
+    if (dart.library.html) 'package:flutter_bloc_app/core/di/register_case_study_demo_services_web.dart';
 import 'package:flutter_bloc_app/core/di/register_chart_services.dart';
 import 'package:flutter_bloc_app/core/di/register_chat_services.dart';
 import 'package:flutter_bloc_app/core/di/register_fcm_demo_services.dart';
@@ -23,7 +24,8 @@ import 'package:flutter_bloc_app/core/di/register_playlearn_services.dart';
 import 'package:flutter_bloc_app/core/di/register_profile_services.dart';
 import 'package:flutter_bloc_app/core/di/register_remote_config_services.dart';
 import 'package:flutter_bloc_app/core/di/register_search_services.dart';
-import 'package:flutter_bloc_app/core/di/register_staff_app_demo_services.dart';
+import 'package:flutter_bloc_app/core/di/register_staff_app_demo_services.dart'
+    if (dart.library.html) 'package:flutter_bloc_app/core/di/register_staff_app_demo_services_web.dart';
 import 'package:flutter_bloc_app/core/di/register_supabase_services.dart';
 import 'package:flutter_bloc_app/core/di/register_todo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_walletconnect_auth_services.dart';

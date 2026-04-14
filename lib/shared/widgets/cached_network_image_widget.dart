@@ -82,7 +82,30 @@ class CachedNetworkImageWidget extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final String scheme = Uri.tryParse(imageUrl)?.scheme ?? '';
+    final bool isNonHttpUrl = scheme == 'blob' || scheme == 'data' || scheme == 'file';
+
     if (_isCachedNetworkImageWidgetFlutterTest && cacheManager == null) {
+      return Image.network(
+        imageUrl,
+        fit: fit,
+        width: width,
+        height: height,
+        errorBuilder: (final context, final error, final stackTrace) =>
+            _buildErrorWidget(context, imageUrl, error),
+        loadingBuilder: (final context, final child, final loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          }
+          return _buildPlaceholder(context, imageUrl);
+        },
+      );
+    }
+
+    if (isNonHttpUrl) {
+      // On web, image pickers can return `blob:` object URLs.
+      // Those are not cacheable via the default cache manager and may not work
+      // through all caching layers, so we render them directly.
       return Image.network(
         imageUrl,
         fit: fit,
