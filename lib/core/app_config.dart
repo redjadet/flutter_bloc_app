@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/theme/theme.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_environment.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 
@@ -129,8 +128,9 @@ class AppConfig {
   static bool _isTestEnvironment() {
     // Check for common test environment indicators
     try {
-      return Platform.environment.containsKey('FLUTTER_TEST') ||
-          Platform.environment.containsKey('DART_TEST_CONFIG') ||
+      final env = platformEnvironment();
+      return env.containsKey('FLUTTER_TEST') ||
+          env.containsKey('DART_TEST_CONFIG') ||
           // Check if WidgetsBinding is a test binding (without importing flutter_test)
           WidgetsBinding.instance.runtimeType.toString().contains('Test');
     } on Exception {

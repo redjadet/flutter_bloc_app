@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io' show File;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/came
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/image_from_path.dart';
 
 /// Demo page: take a photo or pick from gallery and show preview.
 class CameraGalleryPage extends StatefulWidget {
@@ -177,8 +177,8 @@ class _PreviewImage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return Image.file(
-      File(path),
+    return imageFromPath(
+      path: path,
       fit: BoxFit.contain,
       errorBuilder: (final _, final error, final stackTrace) {
         AppLogger.error(

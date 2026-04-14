@@ -1,5 +1,4 @@
-import 'dart:io' show Platform;
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_repository.dart';
@@ -18,7 +17,8 @@ class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
   final ImagePicker _picker;
   final bool Function() _isAndroid;
 
-  static bool _defaultIsAndroid() => Platform.isAndroid;
+  static bool _defaultIsAndroid() =>
+      defaultTargetPlatform == TargetPlatform.android;
 
   @override
   Future<CameraGalleryResult> pickFromCamera() async =>
