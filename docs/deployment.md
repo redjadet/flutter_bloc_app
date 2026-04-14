@@ -59,6 +59,98 @@ Use this when you want testers on real devices **before** store submission:
 
 The doc includes both CLI usage and the repo’s Fastlane lanes.
 
+## Web (GitHub Pages)
+
+This repo supports deploying Flutter Web to a **GitHub Pages project site**:
+
+- URL shape: `https://<user>.github.io/<repo>/`
+- **Hash routing** is assumed (URLs like `/#/settings`), so Pages does not need SPA rewrite workarounds.
+
+### One-time GitHub settings (out-of-band)
+
+In GitHub repo settings:
+
+- **Settings → Pages → Build and deployment → Source**: set to **GitHub Actions**.
+
+### Build locally (deterministic)
+
+Use the repo script (required for correct `--base-href` and consistent dart-defines):
+
+```bash
+REPO_NAME="<repo>" bash tool/build_web_github_pages.sh
+```
+
+This produces `build/web`.
+
+### Deploy via GitHub Actions (manual trigger)
+
+This repo’s Pages deploy is intentionally **manual-only** (v1) via `workflow_dispatch`.
+
+Because some environments restrict automated edits under `.github/`, the workflow file may need to be added/updated manually:
+
+- Create: `.github/workflows/deploy_web.yml`
+- Use the workflow skeleton below
+
+```yaml
+name: Deploy web (GitHub Pages)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.41.6
+          channel: stable
+          cache: true
+
+      - name: Pub get
+        run: flutter pub get
+
+      - name: Build web (Pages)
+        env:
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: bash tool/build_web_github_pages.sh
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+Then run it:
+
+- GitHub → **Actions** → **Deploy web (GitHub Pages)** → **Run workflow**
+
+### Post-deploy smoke checks
+
+1. Open `https://<user>.github.io/<repo>/`
+2. Confirm there are no 404s for `main.dart.js` or assets
+3. Navigate to a non-root route (e.g. `/#/settings`) and hard refresh
+
 ## iOS entitlements (development vs distribution)
 
 Personal Apple IDs do **not** support **Associated Domains** (universal links).

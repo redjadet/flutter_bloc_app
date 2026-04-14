@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_environment.dart';
 import 'package:logger/logger.dart';
 
 enum AppLogLevel { debug, info, warning, error }
@@ -153,8 +153,9 @@ class _DebugOnlyFilter extends LogFilter {
     // Check for common test environment indicators
     try {
       // Check if we're running under the test framework
-      return Platform.environment.containsKey('FLUTTER_TEST') ||
-          Platform.environment.containsKey('DART_TEST_CONFIG') ||
+      final env = platformEnvironment();
+      return env.containsKey('FLUTTER_TEST') ||
+          env.containsKey('DART_TEST_CONFIG') ||
           Zone.current.toString().contains('test');
     } on Exception {
       // If we can't determine, assume not in test
