@@ -2,9 +2,9 @@
 
 Compact command and routing cheat sheet for repo-aware AI hosts.
 [`AGENTS.md`](../AGENTS.md) is authoritative. This page is convenience only and
-must stay thinner than the canon.
+must stay thinner than canon.
 
-Fallback only: if [`AGENTS.md`](../AGENTS.md) is unavailable in the current
+Fallback only: if [`AGENTS.md`](../AGENTS.md) is unavailable in current
 host context, combine this page with
 [`ai_code_review_protocol.md`](ai_code_review_protocol.md) and
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
@@ -17,7 +17,7 @@ Pinned repo toolchain: Flutter 3.41.6 / Dart 3.11.4.
 1. Read [`AGENTS.md`](../AGENTS.md).
 2. Read [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
 3. Use this page for command lookup, adapter names, and doc routing only.
-4. For non-trivial work, keep the active plan in the host tracker.
+4. For non-trivial work, keep active plan in host tracker.
 
 ## Validation Chooser
 
@@ -39,13 +39,13 @@ Fastlane note: prefer `./tool/fastlane.sh` over raw `fastlane`.
 
 ## Default Loop
 
-1. Read the canon.
-2. Understand the business goal before narrowing to a local code path.
-3. For non-trivial work, record plan + verification in the active host tracker.
+1. Read canon.
+2. Understand business goal before narrowing to local code path.
+3. For non-trivial work, record plan + verification in active host tracker.
 4. Reuse existing repo seams before adding abstractions.
-5. Apply the AI review gate.
-6. Run the smallest matching validation command.
-7. Prove the result with scope-matched evidence.
+5. Apply AI review gate.
+6. Run smallest matching validation command.
+7. Prove result with scope-matched evidence.
 
 ## Work Shapes
 
@@ -81,7 +81,7 @@ Repo-managed Cursor slash prompts (synced by `./tool/sync_agent_assets.sh`):
 Cold-start fit:
 
 - Codex: bootstrap -> [`AGENTS.md`](../AGENTS.md), review protocol, quick reference, README
-- Cursor: global rule + skills should point back to the same canon instead of
+- Cursor: global rule + skills should point back to same canon instead of
   duplicating policy
 
 ## Read By Task
@@ -112,11 +112,11 @@ Cold-start fit:
 ## Reminders
 
 - Repo scripts and repo docs beat host-local wrappers.
-- Host adapters are accelerators only; they do not replace repo policy.
+- Host adapters are accelerators only; they don't replace repo policy.
 - Goals, scale, edge cases, judgment, and ownership live in
   [`AGENTS.md`](../AGENTS.md) (**Shared Operating Model**); keep this page for
   commands and routing.
 - Docs-only or host-template edits: validate docs, links, and drift paths (see
   **Validation Routes** and validation routing doc).
-- Codex: durable plan in the tracker; short, decision-oriented commentary.
+- Codex: durable plan in tracker; short, decision-oriented commentary.
 - Cursor: copy-paste-ready repo commands over long canon repeats.

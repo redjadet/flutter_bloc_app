@@ -1,6 +1,6 @@
 # AI Code Review Protocol
 
-Treat AI-generated code as draft output that must pass a review gate before it
+Treat AI-generated code as draft output that must pass review gate before it
 is trusted.
 
 Pinned repo toolchain: Flutter 3.41.6 / Dart 3.11.4.
@@ -9,14 +9,14 @@ Adapted from Vinod Pal’s March 8, 2026 checklist:
 <https://medium.com/%40vndpal/my-practical-approach-for-reviewing-ai-generated-code-268db27f3af8>
 
 This review gate comes before normal repo validation. It complements automated
-checks; it does not replace them.
+checks; it doesn't replace them.
 
-If [`AGENTS.md`](../AGENTS.md) is unavailable in the current host context,
+If [`AGENTS.md`](../AGENTS.md) is unavailable in current host context,
 combine this document with
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
 to pick validation commands. When present,
-[`agents_quick_reference.md`](agents_quick_reference.md) is a compact command
-lookup only; it does not replace [`AGENTS.md`](../AGENTS.md) once that file is available.
+[`agents_quick_reference.md`](agents_quick_reference.md) is compact command
+lookup only; it doesn't replace [`AGENTS.md`](../AGENTS.md) once that file is available.
 
 ## The Nine Checks
 
@@ -34,19 +34,19 @@ lookup only; it does not replace [`AGENTS.md`](../AGENTS.md) once that file is a
 
 ## Before Accepting AI-Written Code
 
-Work through the following; order matters where noted.
+Work through following; order matters where noted.
 
-1. **Checks:** Apply **The Nine Checks** above.
-2. **Tracker:** For non-trivial tasks, confirm the active plan and verification
+1. **Checks:** Apply **Nine Checks** above.
+2. **Tracker:** For non-trivial tasks, confirm active plan and verification
    are recorded in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) or
    [`tasks/codex/todo.md`](../tasks/codex/todo.md) per
    [`AGENTS.md`](../AGENTS.md).
 3. **Presentation:** For presentation-layer changes, confirm styling uses
-   shared theme/design tokens unless the file is intentionally defining them.
+   shared theme/design tokens unless file is intentionally defining them.
 4. **Delegates:** If subagents or sidecars were used, treat their output as
-   draft input and validate the integrated result yourself.
-5. **Diff:** Review the diff manually.
-6. **Validate:** Run the smallest matching repo validation command. Use
+   draft input and validate integrated result yourself.
+5. **Diff:** Review diff manually.
+6. **Validate:** Run smallest matching repo validation command. Use
    [`AGENTS.md`](../AGENTS.md) plus
    [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
    for routing.
@@ -55,52 +55,52 @@ Work through the following; order matters where noted.
    From non-Codex hosts, that can include
    `./tool/request_codex_feedback.sh` (git diff) or
    `./tool/run_codex_plan_review.sh PATH/TO/plan.md` (tracked template + Codex
-   delegate). From Codex itself, use that helper only when the user explicitly
-   asks for a second opinion or cross-host review. Keep
+   delegate). From Codex itself, use that helper only when user explicitly
+   asks for second opinion or cross-host review. Keep
    `./tool/delivery_checklist.sh` / `./bin/checklist` for broad or pre-ship
-   sweeps, or when the user explicitly asks for the full validation pass.
-8. **Goal fit:** Confirm the solution still aligns with the business goal and
-   does not defer obvious production-risk ownership to an unspecified later
+   sweeps, or when user explicitly asks for full validation pass.
+8. **Goal fit:** Confirm solution still aligns with business goal and
+   doesn't defer obvious production-risk ownership to unspecified later
    cleanup.
-9. **Tradeoffs:** If the change makes an operational judgment call, record why
+9. **Tradeoffs:** If change makes operational judgment call, record why
    this path was chosen and why simpler or safer-looking alternatives were
    rejected.
 
 ## Before Marking The Task Done
 
-- **Evidence:** Prove behavior with scope-matched evidence such as tests, logs, screenshots,
+- **Evidence:** Prove behavior with scope-matched evidence like tests, logs, screenshots,
   or behavior diffs.
 - **Tracker wrap-up:** When plan-first workflow was used, record verification outcome and short
-  review notes in the host-specific task tracker.
-- **Docs and drift:** For docs-only or agent-guidance changes, still validate the touched docs,
-  links, and any affected host-template drift path instead of treating the
+  review notes in host-specific task tracker.
+- **Docs and drift:** For docs-only or agent-guidance changes, still validate touched docs,
+  links, and any affected host-template drift path instead of treating
   change as proof-free.
-- **Lessons:** If the user corrected a mistake during the task, add a prevention note to
+- **Lessons:** If user corrected mistake during task, add prevention note to
   [`tasks/lessons.md`](../tasks/lessons.md).
-- **Incidents:** If the task involved a production failure or reliability defect, document
-  the root cause, guard, or residual risk in the verification notes.
-- **Decisions:** If the task involved a material tradeoff, document the chosen path briefly
-  enough that the next engineer can understand the decision without redoing
-  the entire analysis.
+- **Incidents:** If task involved production failure or reliability defect, document
+  root cause, guard, or residual risk in verification notes.
+- **Decisions:** If task involved material tradeoff, document chosen path briefly
+  enough that next engineer can understand decision without redoing
+  entire analysis.
 
 ## Special Cases
 
 Dependency changes:
 
-- Justify the new package or upgrade.
-- Check whether an existing repo dependency already covers the need.
-- Do not rely on `flutter pub get` as validation.
+- Justify new package or upgrade.
+- Check whether existing repo dependency already covers need.
+- don't rely on `flutter pub get` as validation.
 
 Bug-fix path:
 
-1. reproduce or reason clearly about the failure
-2. add a focused guard
-3. implement the fix
-4. validate the narrowed scope
+1. reproduce or reason clearly about failure
+2. add focused guard
+3. implement fix
+4. validate narrowed scope
 
 ## Relationship To Validation
 
-This protocol complements, but does not replace:
+This protocol complements, but doesn't replace:
 
 - `./bin/router_feature_validate`
 - `./tool/delivery_checklist.sh` / `./bin/checklist`
