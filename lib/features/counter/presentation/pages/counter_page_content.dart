@@ -20,6 +20,7 @@ class _CounterPageContent extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final l10n = context.l10n;
     return Stack(
+      clipBehavior: Clip.none,
       children: [
         Scaffold(
           appBar: CounterPageAppBar(
