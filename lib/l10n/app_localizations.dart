@@ -170,6 +170,12 @@ abstract class AppLocalizations {
   /// **'Failed to load saved counter'**
   String get loadErrorMessage;
 
+  /// Error message shown when counter data cannot be saved to storage
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save counter'**
+  String get saveErrorMessage;
+
   /// Hint explaining how to start the automatic decrement feature
   ///
   /// In en, this message translates to:

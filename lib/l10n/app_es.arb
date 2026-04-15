@@ -18,6 +18,7 @@
   "incrementTooltip": "Incrementar",
   "decrementTooltip": "Disminuir",
   "loadErrorMessage": "No se pudo cargar el contador guardado",
+  "saveErrorMessage": "No se pudo guardar el contador",
   "startAutoHint": "Si el contador es 0, toca + para iniciar auto",
   "cannotGoBelowZero": "El contador no puede ser inferior a 0",
   "openExampleTooltip": "Abrir página de ejemplo",
