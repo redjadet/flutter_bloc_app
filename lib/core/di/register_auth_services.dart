@@ -26,7 +26,8 @@ void registerAuthServices() {
   }
 
   if (firebaseAuth != null) {
-    registerLazySingletonIfAbsent<FirebaseAuth>(() => firebaseAuth!);
+    final availableFirebaseAuth = firebaseAuth;
+    registerLazySingletonIfAbsent<FirebaseAuth>(() => availableFirebaseAuth);
   }
 
   registerLazySingletonIfAbsent<AuthRepository>(
