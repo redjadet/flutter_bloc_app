@@ -27,20 +27,29 @@ class _CalculatorButton extends StatelessWidget {
       }
     }
 
-    final Widget label = Center(
-      child: FittedBox(
-        fit: BoxFit.scaleDown,
-        child: Text(
-          config.label,
-          style: TextStyle(
-            color: style.foreground,
-            fontSize: 26,
-            fontWeight: config.type == _ButtonType.operation
-                ? FontWeight.w600
-                : FontWeight.w500,
+    final Widget label = LayoutBuilder(
+      builder: (final context, final constraints) {
+        final double cellSize = math.min(
+          constraints.maxWidth,
+          constraints.maxHeight,
+        );
+        final double fontSize = (cellSize * 0.38).clamp(22, 42);
+        return Center(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              config.label,
+              style: TextStyle(
+                color: style.foreground,
+                fontSize: fontSize,
+                fontWeight: config.type == _ButtonType.operation
+                    ? FontWeight.w600
+                    : FontWeight.w500,
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
 
     Widget button;
