@@ -110,6 +110,20 @@ named `BASE_HREF`:
 Workflow uses `inputs.base_href` only for manual runs; for `push` events it
 reads `vars.BASE_HREF`.
 
+#### GitHub Actions Node.js runtime deprecation (Node 20 → 24)
+
+GitHub may show annotations about **Node.js 20** deprecation for some JavaScript
+actions. This does not fail the workflow today, but the default runtime will
+move to **Node.js 24** later (per GitHub’s runner change notices).
+
+Options:
+
+- Do nothing until forced (default).
+- Opt-in early (to catch breakage sooner): set workflow env
+  `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true`.
+- If you must temporarily opt-out later: set
+  `ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true` (last resort).
+
 ### Post-deploy smoke checks
 
 1. Open `https://<user>.github.io/<repo>/`
