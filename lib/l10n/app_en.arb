@@ -299,6 +299,10 @@
   "@settingsBiometricFailed": {
     "description": "Shown when biometric authentication fails"
   },
+  "settingsBiometricUnavailable": "Biometric authentication isn't available on web. Opening Settings anyway.",
+  "@settingsBiometricUnavailable": {
+    "description": "Shown when biometrics are unavailable on the current platform (e.g. Flutter Web) and we still allow navigating to Settings"
+  },
   "openChartsTooltip": "Open charts",
   "@openChartsTooltip": {
     "description": "Tooltip for the action that opens the charts feature"

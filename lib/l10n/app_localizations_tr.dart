@@ -224,6 +224,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsBiometricFailed => 'Kimliğiniz doğrulanamadı.';
 
   @override
+  String get settingsBiometricUnavailable =>
+      'Biyometrik kimlik doğrulama web’de kullanılamıyor. Ayarlar açılıyor.';
+
+  @override
   String get openChartsTooltip => 'Grafikleri aç';
 
   @override

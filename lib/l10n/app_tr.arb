@@ -60,6 +60,7 @@
   },
   "settingsBiometricPrompt": "Ayarları açmak için kimliğinizi doğrulayın",
   "settingsBiometricFailed": "Kimliğiniz doğrulanamadı.",
+  "settingsBiometricUnavailable": "Biyometrik kimlik doğrulama web’de kullanılamıyor. Ayarlar açılıyor.",
   "exampleRunIsolatesButton": "İzole örneklerini çalıştır",
   "exampleIsolateParallelPending": "Paralel görevler çalıştırılıyor...",
   "exampleIsolateFibonacciLabel": "Fibonacci({input}) = {value}",

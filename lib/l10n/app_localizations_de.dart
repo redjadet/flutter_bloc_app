@@ -230,6 +230,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Identität konnte nicht bestätigt werden.';
 
   @override
+  String get settingsBiometricUnavailable =>
+      'Biometrische Authentifizierung ist im Web nicht verfügbar. Einstellungen werden trotzdem geöffnet.';
+
+  @override
   String get openChartsTooltip => 'Diagramme öffnen';
 
   @override
