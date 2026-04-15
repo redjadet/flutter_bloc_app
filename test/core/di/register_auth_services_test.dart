@@ -36,5 +36,19 @@ void main() {
         expect(identical(coreRepository, featureRepository), isTrue);
       },
     );
+
+    test('registers a safe fallback auth repository without Firebase', () {
+      registerAuthServices();
+
+      final feature_auth.AuthRepository featureRepository =
+          getIt<feature_auth.AuthRepository>();
+      final core_auth.AuthRepository coreRepository =
+          getIt<core_auth.AuthRepository>();
+
+      expect(featureRepository, isNot(isA<FirebaseAuthRepository>()));
+      expect(identical(coreRepository, featureRepository), isTrue);
+      expect(featureRepository.currentUser, isNull);
+      expect(featureRepository.authStateChanges, emitsDone);
+    });
   });
 }
