@@ -15,6 +15,7 @@ permissions:
   actions: write
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   FLUTTER_VERSION: '3.41.6'
   COVERAGE_THRESHOLD: '60'
 
