@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
+import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
@@ -12,22 +13,44 @@ import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 /// instance (e.g. Firebase UI) can obtain it from DI. [AuthRepository]
 /// provides a Flutter-agnostic abstraction for routing and business logic.
 void registerAuthServices() {
-  if (!FirebaseBootstrapService.isFirebaseInitialized) {
-    return;
+  FirebaseAuth? firebaseAuth = getIt.isRegistered<FirebaseAuth>()
+      ? getIt<FirebaseAuth>()
+      : null;
+
+  if (firebaseAuth == null && FirebaseBootstrapService.isFirebaseInitialized) {
+    try {
+      firebaseAuth = FirebaseAuth.instance;
+    } on Object {
+      firebaseAuth = null;
+    }
   }
 
-  FirebaseAuth? firebaseAuth;
-  try {
-    firebaseAuth = FirebaseAuth.instance;
-  } on Object {
-    return;
+  if (firebaseAuth != null) {
+    registerLazySingletonIfAbsent<FirebaseAuth>(() => firebaseAuth!);
   }
 
-  registerLazySingletonIfAbsent<FirebaseAuth>(() => firebaseAuth!);
   registerLazySingletonIfAbsent<AuthRepository>(
-    () => FirebaseAuthRepository(firebaseAuth: getIt<FirebaseAuth>()),
+    () => firebaseAuth == null
+        ? const _UnavailableAuthRepository()
+        : FirebaseAuthRepository(firebaseAuth: firebaseAuth),
   );
   registerLazySingletonIfAbsent<core_auth.AuthRepository>(
     () => getIt<AuthRepository>(),
   );
+}
+
+class _UnavailableAuthRepository implements AuthRepository {
+  const _UnavailableAuthRepository();
+
+  @override
+  AuthUser? get currentUser => null;
+
+  @override
+  Stream<AuthUser?> get authStateChanges => const Stream<AuthUser?>.empty();
+
+  @override
+  Future<void> signInAnonymously() async {}
+
+  @override
+  Future<void> signOut() async {}
 }
