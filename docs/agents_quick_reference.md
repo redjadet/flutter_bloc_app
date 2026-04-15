@@ -122,5 +122,6 @@ Cold-start fit:
 - New shared AI-agent markdown docs, including repo-managed host-template
   markdown under `tool/agent_host_templates/`: compress final tracked file with
   `./tool/compress_agent_doc.sh PATH`, keep `.original.md` human backup.
+  `README*.md` files are excluded.
 - Codex: durable plan in tracker; short, decision-oriented commentary.
 - Cursor: copy-paste-ready repo commands over long canon repeats.

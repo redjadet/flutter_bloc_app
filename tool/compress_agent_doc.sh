@@ -56,6 +56,13 @@ for input_path in "$@"; do
     continue
   fi
 
+  base_name="$(basename "$input_path")"
+  if [[ "$base_name" == README*.md ]]; then
+    echo "compress_agent_doc: README files are excluded: $input_path" >&2
+    status=1
+    continue
+  fi
+
   abs_path="$(cd "$(dirname "$input_path")" && pwd)/$(basename "$input_path")"
   echo "compress_agent_doc: $abs_path"
   if ! (cd "$compressor_dir" && python3 -m scripts "$abs_path"); then
