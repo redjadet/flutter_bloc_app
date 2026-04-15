@@ -17,7 +17,8 @@ part 'calculator_page.freezed.dart';
 class CalculatorPage extends StatelessWidget {
   const CalculatorPage({super.key});
 
-  static const double _maxContentWidth = 480;
+  static const double _maxContentWidthCompact = 480;
+  static const double _maxContentWidthWide = 720;
 
   @override
   Widget build(final BuildContext context) {
@@ -65,8 +66,11 @@ class CalculatorPage extends StatelessWidget {
               );
             }
 
+            final double maxWidth = constraints.maxWidth < _maxContentWidthWide
+                ? _maxContentWidthCompact
+                : _maxContentWidthWide;
             return CommonMaxWidth(
-              maxWidth: _maxContentWidth,
+              maxWidth: maxWidth,
               child: content,
             );
           },
