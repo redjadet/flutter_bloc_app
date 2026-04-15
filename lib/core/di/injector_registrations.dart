@@ -133,7 +133,7 @@ void _registerSupabaseConfigServices() {
     return;
   }
 
-  FirebaseAuth? firebaseAuth;
+  late final FirebaseAuth firebaseAuth;
   try {
     firebaseAuth = getIt<FirebaseAuth>();
   } on Object {
@@ -142,7 +142,7 @@ void _registerSupabaseConfigServices() {
 
   registerLazySingletonIfAbsent<SupabaseConfigCoordinator>(
     () => SupabaseConfigCoordinator(
-      auth: firebaseAuth!,
+      auth: firebaseAuth,
       provider: getIt<SupabaseConfigProvider>(),
     ),
     dispose: (final coordinator) => coordinator.dispose(),
