@@ -1,6 +1,17 @@
 name: Deploy web (GitHub Pages)
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - "lib/**"
+      - "web/**"
+      - "assets/**"
+      - "pubspec.yaml"
+      - "pubspec.lock"
+      - "tool/build_web_github_pages.sh"
+      - ".github/workflows/deploy_web.yml"
   workflow_dispatch:
     inputs:
       base_href:
