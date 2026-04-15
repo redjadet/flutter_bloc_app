@@ -30,6 +30,7 @@ Decision guide:
 | Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` |
 | Integration journey / flow verification | `./bin/integration_tests` |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
+| New shared agent-facing markdown doc | `./tool/compress_agent_doc.sh PATH` |
 | Repo-managed host-template drift check | `./tool/check_agent_asset_drift.sh` |
 | Host-template preview sync | `./tool/sync_agent_assets.sh --dry-run` |
 | Cross-host diff review, explicit request only | `./tool/request_codex_feedback.sh` |
@@ -118,5 +119,8 @@ Cold-start fit:
   commands and routing.
 - Docs-only or host-template edits: validate docs, links, and drift paths (see
   **Validation Routes** and validation routing doc).
+- New shared AI-agent markdown docs, including repo-managed host-template
+  markdown under `tool/agent_host_templates/`: compress final tracked file with
+  `./tool/compress_agent_doc.sh PATH`, keep `.original.md` human backup.
 - Codex: durable plan in tracker; short, decision-oriented commentary.
 - Cursor: copy-paste-ready repo commands over long canon repeats.
