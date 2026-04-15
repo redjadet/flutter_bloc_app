@@ -72,9 +72,6 @@ class LocalBiometricAuthenticator implements BiometricAuthenticator {
       AppLogger.warning('Biometric authentication failed');
       AppLogger.debug(stackTrace.toString());
       return false;
-    } on Object {
-      AppLogger.info('Biometric auth unavailable on this platform; allowing.');
-      return true;
     }
   }
 }
