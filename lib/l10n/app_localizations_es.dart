@@ -44,6 +44,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get loadErrorMessage => 'No se pudo cargar el contador guardado';
 
   @override
+  String get saveErrorMessage => 'No se pudo guardar el contador';
+
+  @override
   String get startAutoHint => 'Si el contador es 0, toca + para iniciar auto';
 
   @override

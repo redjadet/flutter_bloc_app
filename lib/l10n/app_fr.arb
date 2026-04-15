@@ -18,6 +18,7 @@
   "incrementTooltip": "Incrémenter",
   "decrementTooltip": "Décrémenter",
   "loadErrorMessage": "Impossible de charger le compteur enregistré",
+  "saveErrorMessage": "Impossible d'enregistrer le compteur",
   "startAutoHint": "Quand le compteur est 0, appuyez sur + pour démarrer",
   "cannotGoBelowZero": "Le compteur ne peut pas être inférieur à 0",
   "openExampleTooltip": "Ouvrir la page d'exemple",

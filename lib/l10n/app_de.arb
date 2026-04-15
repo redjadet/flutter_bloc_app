@@ -18,6 +18,7 @@
   "incrementTooltip": "Erhöhen",
   "decrementTooltip": "Verringern",
   "loadErrorMessage": "Gespeicherter Zähler konnte nicht geladen werden",
+  "saveErrorMessage": "Zähler konnte nicht gespeichert werden",
   "startAutoHint": "Bei Zähler 0: Tippen Sie auf + für Auto-Verringerung",
   "cannotGoBelowZero": "Der Zähler kann nicht unter 0 gehen",
   "openExampleTooltip": "Beispielseite öffnen",

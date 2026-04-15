@@ -8,8 +8,10 @@ String counterErrorMessage(
   switch (error.type) {
     case CounterErrorType.cannotGoBelowZero:
       return l10n.cannotGoBelowZero;
-    case CounterErrorType.loadError || CounterErrorType.saveError:
+    case CounterErrorType.loadError:
       return l10n.loadErrorMessage;
+    case CounterErrorType.saveError:
+      return l10n.saveErrorMessage;
     case CounterErrorType.unknown:
       return error.message ?? l10n.loadErrorMessage;
   }

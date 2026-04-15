@@ -49,6 +49,10 @@
   "@loadErrorMessage": {
     "description": "Error message shown when counter data cannot be loaded from storage"
   },
+  "saveErrorMessage": "Failed to save counter",
+  "@saveErrorMessage": {
+    "description": "Error message shown when counter data cannot be saved to storage"
+  },
   "startAutoHint": "Tap + to start auto-decrement",
   "@startAutoHint": {
     "description": "Hint explaining how to start the automatic decrement feature"

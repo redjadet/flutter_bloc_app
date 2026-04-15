@@ -44,6 +44,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get loadErrorMessage => 'Kaydedilmiş sayaç yüklenemedi';
 
   @override
+  String get saveErrorMessage => 'Sayaç kaydedilemedi';
+
+  @override
   String get startAutoHint => 'Sayı 0 iken otomatik azalma için +\'ya dokunun';
 
   @override

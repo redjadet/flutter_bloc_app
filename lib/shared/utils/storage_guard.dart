@@ -19,7 +19,7 @@ class StorageGuard {
   }) async {
     try {
       return await action();
-    } on Exception catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       AppLogger.error(logContext, error, stackTrace);
       if (fallback != null) {
         return await fallback();
