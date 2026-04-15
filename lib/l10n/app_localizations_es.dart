@@ -225,6 +225,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsBiometricFailed => 'No se pudo verificar tu identidad.';
 
   @override
+  String get settingsBiometricUnavailable =>
+      'La autenticación biométrica no está disponible en la web. Se abrirá la configuración igualmente.';
+
+  @override
   String get openChartsTooltip => 'Abrir gráficos';
 
   @override

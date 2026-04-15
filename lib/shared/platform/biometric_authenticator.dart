@@ -54,6 +54,12 @@ class LocalBiometricAuthenticator implements BiometricAuthenticator {
       // Some platforms throw a non-PlatformException (e.g., LocalAuthException)
       // Parse the string form to detect enrollment-related failures.
       final String text = error.toString();
+      final bool unavailableOnPlatform =
+          error is MissingPluginException || text.contains('MissingPluginException');
+      if (unavailableOnPlatform) {
+        AppLogger.info('Biometric auth unavailable on this platform; allowing.');
+        return true;
+      }
       final bool notEnrolled =
           text.contains('noBiometricsEnrolled') ||
           text.contains('NotEnrolled') ||
@@ -66,6 +72,9 @@ class LocalBiometricAuthenticator implements BiometricAuthenticator {
       AppLogger.warning('Biometric authentication failed');
       AppLogger.debug(stackTrace.toString());
       return false;
+    } on Object {
+      AppLogger.info('Biometric auth unavailable on this platform; allowing.');
+      return true;
     }
   }
 }

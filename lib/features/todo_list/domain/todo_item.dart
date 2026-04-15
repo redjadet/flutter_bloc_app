@@ -81,7 +81,11 @@ class _TodoIdGenerator {
 
   String generate() {
     final int timestamp = DateTime.now().microsecondsSinceEpoch;
-    final int entropy = _random.nextInt(1 << 32);
+    // Dart2JS bit shifts are 32-bit; `1 << 32` becomes 0 and crashes `nextInt`.
+    // Build 32 bits of entropy using two 16-bit chunks (safe on all platforms).
+    final int entropyHigh = _random.nextInt(1 << 16);
+    final int entropyLow = _random.nextInt(1 << 16);
+    final int entropy = (entropyHigh << 16) | entropyLow;
     return '$timestamp-$entropy';
   }
 }

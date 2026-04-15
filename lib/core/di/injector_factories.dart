@@ -92,7 +92,7 @@ RemoteConfigRepository createRemoteConfigRepository() {
   try {
     // Try to create with Firebase if available
     return RemoteConfigRepository(FirebaseRemoteConfig.instance);
-  } on Exception {
+  } on Object {
     // If Firebase is not available (e.g., in tests), create a fake implementation
     return FakeRemoteConfigRepository();
   }

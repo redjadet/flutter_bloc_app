@@ -59,6 +59,7 @@
   },
   "settingsBiometricPrompt": "Authentifiez-vous pour ouvrir les paramètres",
   "settingsBiometricFailed": "Impossible de vérifier votre identité.",
+  "settingsBiometricUnavailable": "L’authentification biométrique n’est pas disponible sur le Web. Ouverture des paramètres quand même.",
   "exampleRunIsolatesButton": "Exécuter les exemples d'isolats",
   "exampleIsolateParallelPending": "Exécution des tâches parallèles...",
   "exampleIsolateFibonacciLabel": "Fibonacci({input}) = {value}",

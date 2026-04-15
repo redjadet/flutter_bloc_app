@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:confetti/confetti.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/core.dart';
@@ -264,6 +265,16 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
 
   Future<void> _handleOpenSettings(final BuildContext context) async {
     final l10n = context.l10n;
+    if (kIsWeb) {
+      unawaited(
+        widget.errorNotificationService.showSnackBar(
+          context,
+          l10n.settingsBiometricUnavailable,
+        ),
+      );
+      await context.pushNamed(AppRoutes.settings);
+      return;
+    }
     final bool authenticated = await widget.biometricAuthenticator.authenticate(
       localizedReason: l10n.settingsBiometricPrompt,
     );

@@ -30,7 +30,7 @@ class AppScope extends StatefulWidget {
 
 class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
   late final BackgroundSyncCoordinator _syncCoordinator;
-  late final SupabaseConfigCoordinator _supabaseConfigCoordinator;
+  SupabaseConfigCoordinator? _supabaseConfigCoordinator;
   late final AppMemoryService _memoryService;
   late final TimerService _timerService;
   TimerDisposable? _resumeDebounceHandle;
@@ -42,11 +42,16 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
     // Ensure DI is configured when running tests that directly pump MyApp.
     ensureConfigured();
     _syncCoordinator = getIt<BackgroundSyncCoordinator>();
-    _supabaseConfigCoordinator = getIt<SupabaseConfigCoordinator>();
+    if (getIt.isRegistered<SupabaseConfigCoordinator>()) {
+      _supabaseConfigCoordinator = getIt<SupabaseConfigCoordinator>();
+    }
     _memoryService = getIt<AppMemoryService>();
     _timerService = getIt<TimerService>();
     WidgetsBinding.instance.addObserver(this);
-    unawaited(_supabaseConfigCoordinator.start());
+    final coordinator = _supabaseConfigCoordinator;
+    if (coordinator != null) {
+      unawaited(coordinator.start());
+    }
   }
 
   @override
