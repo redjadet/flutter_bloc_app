@@ -49,6 +49,7 @@ class SupabaseAuthErrorSection extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final double iconSize = math.min(context.responsiveIconSize, 28);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -62,7 +63,7 @@ class SupabaseAuthErrorSection extends StatelessWidget {
               Icon(
                 Icons.error_outline,
                 color: colors.onErrorContainer,
-                size: context.responsiveIconSize,
+                size: iconSize,
               ),
               SizedBox(width: context.responsiveHorizontalGapM),
               Expanded(
@@ -79,7 +80,7 @@ class SupabaseAuthErrorSection extends StatelessWidget {
                 icon: Icon(
                   Icons.close,
                   color: colors.onErrorContainer,
-                  size: context.responsiveIconSize,
+                  size: iconSize,
                 ),
                 onPressed: onDismiss,
               ),
@@ -112,6 +113,7 @@ class SupabaseAuthAuthenticatedSection extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final double iconSize = math.min(context.responsiveIconSize, 28);
     final displayEmail = user.email ?? user.id;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -126,7 +128,7 @@ class SupabaseAuthAuthenticatedSection extends StatelessWidget {
               Icon(
                 Icons.check_circle_outline,
                 color: colors.onPrimaryContainer,
-                size: context.responsiveIconSize,
+                size: iconSize,
               ),
               SizedBox(width: context.responsiveHorizontalGapM),
               Expanded(

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_address.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
@@ -133,6 +135,7 @@ class _StatusBannerCard extends StatelessWidget {
   Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
+    final double iconSize = math.min(context.responsiveIconSize, 28);
     final bool isDismissible = onDismiss != null;
     final bool isErrorBanner = iconData == Icons.error_outline;
     final Color resolvedBackgroundColor =
@@ -152,7 +155,7 @@ class _StatusBannerCard extends StatelessWidget {
           Icon(
             iconData,
             color: resolvedForegroundColor,
-            size: context.responsiveIconSize,
+            size: iconSize,
           ),
           SizedBox(width: context.responsiveHorizontalGapM),
           Expanded(
@@ -170,7 +173,7 @@ class _StatusBannerCard extends StatelessWidget {
               icon: Icon(
                 Icons.close,
                 color: resolvedForegroundColor,
-                size: context.responsiveIconSize,
+                size: iconSize,
               ),
               onPressed: dismiss,
             ),

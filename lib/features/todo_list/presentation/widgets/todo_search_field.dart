@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/shared/design_system/app_styles.dart';
@@ -33,6 +35,7 @@ class _TodoSearchFieldState extends State<TodoSearchField> {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
+    final double iconSize = math.min(context.responsiveIconSize, 28);
     final bool hasMixTheme = MixScope.maybeOf(context) != null;
     final textStyle = theme.textTheme.bodyMedium?.copyWith(
       color: colors.onSurface,
@@ -64,19 +67,19 @@ class _TodoSearchFieldState extends State<TodoSearchField> {
         prefixIcon: Icon(
           Icons.search,
           color: colors.onSurfaceVariant,
-          size: context.responsiveIconSize,
+          size: iconSize,
         ),
         prefixIconConstraints: BoxConstraints(
           minWidth:
-              context.responsiveIconSize + context.responsiveHorizontalGapM,
-          minHeight: context.responsiveIconSize,
+              iconSize + context.responsiveHorizontalGapM,
+          minHeight: iconSize,
         ),
         suffixIcon: _controller.text.isNotEmpty
             ? IconButton(
                 icon: Icon(
                   Icons.clear,
                   color: colors.onSurfaceVariant,
-                  size: context.responsiveIconSize,
+                  size: iconSize,
                 ),
                 onPressed: () {
                   setState(() {
@@ -88,8 +91,8 @@ class _TodoSearchFieldState extends State<TodoSearchField> {
             : null,
         suffixIconConstraints: BoxConstraints(
           minWidth:
-              context.responsiveIconSize + context.responsiveHorizontalGapM,
-          minHeight: context.responsiveIconSize,
+              iconSize + context.responsiveHorizontalGapM,
+          minHeight: iconSize,
         ),
       ),
       textAlignVertical: TextAlignVertical.center,

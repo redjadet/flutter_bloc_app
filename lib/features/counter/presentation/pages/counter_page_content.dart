@@ -20,6 +20,7 @@ class _CounterPageContent extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final l10n = context.l10n;
     return Stack(
+      clipBehavior: Clip.none,
       children: [
         Scaffold(
           appBar: CounterPageAppBar(
@@ -40,7 +41,11 @@ class _CounterPageContent extends StatelessWidget {
             ),
           ),
           bottomNavigationBar: const CountdownBar(),
-          floatingActionButton: const CounterActions(),
+          floatingActionButton: Padding(
+            padding: EdgeInsets.only(right: context.pageHorizontalPadding),
+            child: const CounterActions(),
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         ),
         _CounterPageConfettiOverlay(confettiController: confettiController),
       ],
