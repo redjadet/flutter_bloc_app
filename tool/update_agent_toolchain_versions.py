@@ -88,13 +88,13 @@ def main() -> int:
     replacements = [
         (
             PROJECT_ROOT / "AGENTS.md",
-            r"^- Flutter \S+ / Dart \S+$",
-            f"- Flutter {flutter_version} / Dart {dart_version}",
+            r"^(Flutter )\S+ / Dart \S+(\s+·\s+Presentation\s+→\s+Domain\s+←\s+Data\s+·\s+Cubit/BLoC\s+·)$",
+            rf"\g<1>{flutter_version} / Dart {dart_version}\g<2>",
         ),
         (
             PROJECT_ROOT / "docs/agents_quick_reference.md",
-            r"^- Flutter \S+ / Dart \S+$",
-            f"- Flutter {flutter_version} / Dart {dart_version}",
+            r"^Pinned repo toolchain: Flutter \S+ / Dart \S+\.$",
+            f"Pinned repo toolchain: Flutter {flutter_version} / Dart {dart_version}.",
         ),
         (
             PROJECT_ROOT / "docs/ai_code_review_protocol.md",
