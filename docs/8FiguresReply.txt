@@ -1,0 +1,16 @@
+Hi Roman,
+
+Thanks for the note. The role is interesting to me because it combines frontend/mobile ownership, product judgment, and AI-native execution instead of treating frontend as just component delivery.
+
+On the AI side, I already work that way. I use Cursor and Codex together rather than relying on one tool. Cursor is where I usually orchestrate the larger workflow: break a feature into bounded slices, keep the shared plan and constraints visible, and coordinate parallel work. Codex is a strong complement for implementation, debugging, and review. I do not default to running Claude directly, because for the way I work it is usually slower and more expensive, and it pushes toward longer autonomous runs. I prefer tighter feedback loops: quicker changes, faster output, smaller diffs, and frequent checkpoints so I can stay in the loop and iterate rapidly rather than send a large prompt and walk away. When a task genuinely benefits from a more autonomous or higher-context pass, I use Claude through Cursor deliberately. I care less about model loyalty and more about having a reliable pipeline.
+
+The important part for me is making that pipeline repeatable. I encode expectations into rules, skills, hooks, commands, and review protocols; use subagents for narrow, clearly owned slices; and then run deterministic validation before trusting output. In practice that means AI increases speed, but judgment, UX quality, and final responsibility still stay with me.
+
+On the investing side, I want to be direct: I care about fintech, trust, data integrity, and building better financial products, but I am not personally obsessed with micromanaging my own portfolio. My personal bias is toward passive, long-term strategies rather than active investing. I’d rather be explicit about that upfront.
+
+I should also be direct on compensation: at this stage I need a role with regular salary-based pay, not something that depends mainly on equity or only pays out if the company becomes profitable.
+
+If you think that can still fit what you need, I’d be happy to do the 30-minute intro call. If this suits you, maybe we can work together.
+
+Best,
+Ilker

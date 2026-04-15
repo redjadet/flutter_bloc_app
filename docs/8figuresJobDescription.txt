@@ -1,0 +1,138 @@
+About 8FIGURES
+
+Most people have their wealth scattered across a dozen platforms -- brokerage accounts, retirement funds, real estate, crypto wallets, and private equity. There is no unified view and no coherent strategy. No one is helping them answer the questions that actually matter: Am I on track to retire? Should I rebalance? What am I paying in hidden fees? What should I do next?
+
+
+
+Traditional financial advisors charge 1-2% of assets under management, pricing out the majority of retail investors. 8FIGURES is building the AI-powered personal financial advisor that makes sophisticated wealth management accessible to everyone. We do not just track portfolios; we analyze them, remember your goals, research equities on your behalf, proactively surface actionable advice, and guide you toward better financial decisions. Think of us as your always-on investment analyst at a fraction of the cost of traditional advisors.
+
+
+
+We are pre-Series A, growing fast, and disrupting the $100B+ financial advisory market. Featured in Forbes and trusted by thousands of users, we are a tight-knit team of 8 passionate individuals, 3 co-founders (CEO, CPO, CTO), and a growing engineering team where every person has an outsized impact.
+
+
+
+The Role
+
+This is not a coding job. And it is not just a frontend job. Read that again.
+
+
+
+The software engineering profession is undergoing its most fundamental shift since the move from assembly to high-level languages. We have passed the autocomplete era. We have passed the Copilot era. At 8FIGURES, we are fully in the orchestrator era -- where engineers architect systems, write specifications, and then delegate execution to multiple AI agents running in parallel.
+
+
+
+As a Principal Software Engineer & Agent Orchestrator (Frontend), you own how users experience 8FIGURES. You are the person who cares whether a feature FEELS right, not just whether it works. You bring design taste, user empathy, analytics-driven iteration, and mobile platform expertise -- and you amplify all of it by orchestrating AI agents to execute at 10x speed.
+
+
+
+You are the user's advocate. Claude is your engineering team.
+
+
+
+This role reports directly to the CTO and sits on the IC (individual contributor) track, working in close collaboration with all three co-founders (CEO, CPO, CTO). You will shape the user experience and frontend direction of the entire platform and have a direct voice in product strategy.
+
+
+
+What You'll Do
+
+Frontend Architecture & Design Systems
+
+Own the frontend architecture across web and mobile: the component system, design tokens, and the patterns that unify them across platforms
+Design component architectures that are accessible, performant, and feel native on every platform -- iOS, Android, and web
+Make build-vs-buy decisions for UI libraries, evaluate component frameworks, and define the design system that both humans and AI agents follow
+Establish frontend architectural standards and guardrails: component patterns, state management conventions, styling approaches, accessibility requirements
+Understand the full stack deeply enough to reason about API contracts, data flows, and backend integration points -- even when your home base is the frontend
+
+
+Agent Orchestration & AI Pipeline Development
+
+Run multiple Claude Code sessions simultaneously, decomposing features into parallelizable work streams
+Author Claude Code skills, commands, hooks, and workflows -- the reusable artifacts that encode your architectural knowledge into repeatable AI pipelines
+Craft precise specifications and context documents that onboard AI agents to your codebase conventions, constraints, and design system
+Select the right AI tool for each task: agentic IDEs for surgical debugging, autonomous agents for large refactors, scaffolders for rapid prototyping
+Manage AI token budgets and optimize for cost-effective output quality
+
+
+Verification, UX Review & Design Fidelity
+
+Review all AI-generated components for correctness, accessibility, visual quality, and adherence to the design system
+Catch what AI misses: awkward interactions, missing loading states, broken mobile layouts, accessibility violations, animations that feel wrong on a real device
+Build deterministic verification workflows -- visual regression tests, Lighthouse CI, accessibility audits, circular dependency detection -- that reduce the surface area for AI mistakes
+Test on real devices. Simulators lie. You know this because you have shipped mobile apps before
+Enforce design fidelity: the gap between design intent and implementation is where user experience dies. You close that gap
+
+
+Product & Feature Delivery
+
+Translate product requirements and design mockups into technical specifications and user stories that AI agents can execute against
+Think in user journeys, not components. Understand how a feature FEELS before deciding how to build it
+Ship features end-to-end: from API contract definition to UI component to mobile deployment to app store review
+Move at startup speed. AI-native development enables 10x velocity on the frontend -- more components, faster iteration, broader device coverage
+
+
+User Experience & Analytics
+
+Own user analytics and behavior tracking (PostHog) -- understand how users actually use the platform, not how you assume they do
+Drive data-informed iteration: identify friction points, measure conversion funnels, run A/B experiments on UI changes
+Manage mobile app deployments, app store relationships, and the release cadence for iOS and Android
+Monitor frontend performance metrics: Core Web Vitals, mobile rendering performance, bundle size, time-to-interactive
+Champion accessibility (WCAG 2.2 AA) and internationalization as first-class concerns, not afterthoughts
+
+
+What You Bring
+
+Obsessed with personal investing: You actively manage your own portfolio. You have brokerage accounts, you track your returns, you understand asset allocation, IRR, and diversification.
+Founder mindset: You think and act like this is your company. You do not wait for specifications - you challenge assumptions, propose features, and make decisions based on user value and business impact. You care about outcomes, not just tasks.
+User experience obsession: You have design taste. You can look at a screen and tell whether it feels right - not just whether it matches a mockup. You think in user journeys, not features.
+Frontend architecture expertise: You have designed and shipped production frontend applications using modern frameworks. You understand component architecture, state management, reactive patterns, and build optimization.
+Mobile platform experience: You have shipped mobile applications - hybrid or native. You understand the unique constraints: touch targets, offline behavior, app store review processes, platform-specific UX patterns, and performance on mid-range devices.
+AI agent orchestration ability: You have used Claude Code, Cursor, Copilot Workspace, or similar agentic development tools in a meaningful way.
+Strong UX review instincts: You can spot bugs, performance issues, accessibility violations, and UX drift in code you did not write.
+Full-stack fluency: Your home base is the frontend, but you can read, reason about, and contribute to backend code when needed. You understand API design, database models, and authentication flows well enough to write specs and review implementations across the stack.
+B2C and analytics mindset: You think in conversion funnels, not just component trees. You have experience with user analytics platforms, A/B testing, and data-driven iteration.
+Startup mentality: You are comfortable with ambiguity, you ship fast, you make pragmatic tradeoffs, and you take ownership of outcomes.
+Fintech awareness: You understand that financial data requires extra care: data integrity, security, compliance, and the consequences of getting it wrong.
+Fluent English: Written and spoken. You will work remotely and asynchronously with the co-founders and team. Clear, precise communication is essential.
+
+
+Compensation & Benefits
+
+Base Salary: Competitive (adjusted based on experience)
+
+Equity: Meaningful early-stage equity package (we are pre-Series A -- this matters)
+
+Remote: Fully remote (EU time zone)
+
+AI Tools: Unlimited Claude Max access, all the AI tooling you want
+
+PTO: Flexible time off -- we trust adults to manage their own time
+
+
+
+We are an early-stage company. The equity component is designed to be significant. If you are looking for a role where your work directly moves the needle on company valuation, this is it.
+
+
+
+How to Apply
+
+We do not care about:
+
+How many years have you been in the industry
+Whether you have a CS degree
+How many LeetCode problems have you solved
+Your job title history
+Which specific framework have you used
+We care about:
+
+Can you design a user experience? Show us something you have built where the UX is exceptional. Walk us through your design decisions - not just the technical ones, but the human ones.
+Can you orchestrate AI effectively? We will give you a real task from our backlog and watch how you decompose it, delegate it to agents, and review the output. This is our interview.
+Can you reason about code you did not write? We will show you AI-generated frontend code and ask you to review it. Find the bugs. Question the component architecture. Spot the accessibility gap. Suggest a better interaction pattern.
+Do you think about the user? Walk us through how you would approach a product problem. We want to hear you ask "why would a user want this?" before "how should we build this?"
+
+
+Send us your resume and anything that demonstrates how you think about products and software. A GitHub profile, a portfolio, a blog post, a side project, an architecture document -- whatever best represents you.
+
+
+
+The future of frontend engineering is not writing more components. It is understanding what users need, designing the right experiences, building smarter pipelines, and making sharper judgments. If you are an investor who is tired of bad financial apps and an engineer who is ready to orchestrate AI agents instead of writing code, we should talk.

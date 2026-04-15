@@ -1,0 +1,14 @@
+Your CV jumped out — 10+ years across Flutter and iOS, Clean Architecture with BLoC/Riverpod, banking apps in production, a published Cocoapod, and the explicit note that AI-assisted workflows are already part of how you ship. Most Flutter candidates have either the architectural rigor or the AI adoption signal; rarely both. The MBA on top is an unusual combination for a senior IC.
+
+I'm Roman, CTO of 8FIGURES — an AI-powered personal financial advisor (Forbes-featured, pre-Series A, team of 8). We connect Plaid, TrueLayer, SnapTrade, Vezgo, Carta and Zillow into one wealth picture, with a Claude-powered assistant on top. We're rebuilding the mobile app in Flutter, and the role I'm hiring for is the person who owns that surface end-to-end and orchestrates the AI agent layer behind it.
+
+This is a Principal IC Frontend + Agent Orchestrator role, reporting directly to me. The shape is unusual: I expect 5–10+ concurrent Claude Code sessions running, AI as a real force multiplier, and full ownership of UX across web + mobile. Builder seat, not manager seat — but with end-to-end ownership of a product in front of real users managing real money.
+
+Two things I want to be upfront about:
+
+1. You'd need to be obsessed with personal investing — our users live in their portfolios, and the engineer building this needs to as well.
+2. AI-as-force-multiplier mindset. We hire at Level 4–5 on the pipeline maturity scale. AI-assisted dev is a great start; what I'm probing for is whether you've built your own multi-agent / Claude Code / MCP workflows.
+
+Compensation is competitive and adjusted to experience, plus meaningful early-stage equity.
+
+If part of this resonates, I'd love a 30-min intro call:
