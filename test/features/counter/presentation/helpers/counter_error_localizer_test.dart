@@ -13,6 +13,7 @@ void main() {
       l10n = MockAppLocalizations();
       when(() => l10n.cannotGoBelowZero).thenReturn('Cannot go below zero');
       when(() => l10n.loadErrorMessage).thenReturn('Load error');
+      when(() => l10n.saveErrorMessage).thenReturn('Save error');
     });
 
     test('returns correct message for cannotGoBelowZero', () {
@@ -27,7 +28,7 @@ void main() {
 
     test('returns correct message for saveError', () {
       const error = CounterError.save();
-      expect(counterErrorMessage(l10n, error), 'Load error');
+      expect(counterErrorMessage(l10n, error), 'Save error');
     });
 
     test('returns correct message for unknown error with message', () {
