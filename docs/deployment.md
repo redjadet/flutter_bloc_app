@@ -61,9 +61,11 @@ The doc includes both CLI usage and the repo’s Fastlane lanes.
 
 ## Web (GitHub Pages)
 
-This repo supports deploying Flutter Web to a **GitHub Pages project site**:
+This repo supports deploying Flutter Web to GitHub Pages:
 
-- URL shape: `https://<user>.github.io/<repo>/`
+- **Project site** URL shape: `https://<user>.github.io/<repo>/`
+- **Evaluated environment URL**: `https://redjadet.github.io/flutter_bloc_app/`
+- **Root/custom-domain** hosting: set Flutter `--base-href` to `/`
 - **Hash routing** is assumed (URLs like `/#/settings`), so Pages does not need SPA rewrite workarounds.
 
 ### One-time GitHub settings (out-of-band)
@@ -82,68 +84,31 @@ REPO_NAME="<repo>" bash tool/build_web_github_pages.sh
 
 This produces `build/web`.
 
-### Deploy via GitHub Actions (manual trigger)
+### Deploy via GitHub Actions (auto on `main`)
 
-This repo’s Pages deploy is intentionally **manual-only** (v1) via `workflow_dispatch`.
+Once GitHub Pages is set to **GitHub Actions**, the workflow in
+`.github/workflows/deploy_web.yml` runs automatically on **every** `push` to
+`main`.
 
-Because some environments restrict automated edits under `.github/`, the workflow file may need to be added/updated manually:
-
-- Create: `.github/workflows/deploy_web.yml`
-- Use the workflow skeleton below
-
-```yaml
-name: Deploy web (GitHub Pages)
-
-on:
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages-${{ github.ref }}
-  cancel-in-progress: true
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: 3.41.6
-          channel: stable
-          cache: true
-
-      - name: Pub get
-        run: flutter pub get
-
-      - name: Build web (Pages)
-        env:
-          REPO_NAME: ${{ github.event.repository.name }}
-        run: bash tool/build_web_github_pages.sh
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: build/web
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
-```
-
-Then run it:
+You can still run it manually:
 
 - GitHub → **Actions** → **Deploy web (GitHub Pages)** → **Run workflow**
+
+#### `base_href` input
+
+- Leave `base_href` empty for project-site deploys (script derives `/${REPO_NAME}/`).
+- Set `base_href` to `/` for root/custom-domain hosting.
+
+#### Auto-deploy root/custom-domain
+
+For automatic deploys on `main`, set a GitHub Actions **repository variable**
+named `BASE_HREF`:
+
+- `BASE_HREF="/<repo>/"` (project site)
+- `BASE_HREF="/"` (root/custom domain)
+
+Workflow uses `inputs.base_href` only for manual runs; for `push` events it
+reads `vars.BASE_HREF`.
 
 ### Post-deploy smoke checks
 
