@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/core/config/supabase_config_coordinator.dart';
 import 'package:flutter_bloc_app/core/config/supabase_config_provider.dart';
@@ -128,9 +129,20 @@ void _registerSupabaseConfigServices() {
   registerLazySingletonIfAbsent<SupabaseConfigProvider>(
     () => SupabaseConfigProvider(remoteConfig: getIt<RemoteConfigService>()),
   );
+  if (!FirebaseBootstrapService.isFirebaseInitialized) {
+    return;
+  }
+
+  FirebaseAuth? firebaseAuth;
+  try {
+    firebaseAuth = getIt<FirebaseAuth>();
+  } on Object {
+    return;
+  }
+
   registerLazySingletonIfAbsent<SupabaseConfigCoordinator>(
     () => SupabaseConfigCoordinator(
-      auth: getIt<FirebaseAuth>(),
+      auth: firebaseAuth!,
       provider: getIt<SupabaseConfigProvider>(),
     ),
     dispose: (final coordinator) => coordinator.dispose(),

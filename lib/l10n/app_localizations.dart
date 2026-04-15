@@ -506,6 +506,12 @@ abstract class AppLocalizations {
   /// **'Couldn\'t verify your identity.'**
   String get settingsBiometricFailed;
 
+  /// Shown when biometrics are unavailable on the current platform (e.g. Flutter Web) and we still allow navigating to Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric authentication isn\'t available on web. Opening Settings anyway.'**
+  String get settingsBiometricUnavailable;
+
   /// Tooltip for the action that opens the charts feature
   ///
   /// In en, this message translates to:

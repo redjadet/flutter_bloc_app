@@ -230,6 +230,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Impossible de vérifier votre identité.';
 
   @override
+  String get settingsBiometricUnavailable =>
+      'L’authentification biométrique n’est pas disponible sur le Web. Ouverture des paramètres quand même.';
+
+  @override
   String get openChartsTooltip => 'Ouvrir les graphiques';
 
   @override

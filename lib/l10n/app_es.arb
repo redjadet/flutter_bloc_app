@@ -59,6 +59,7 @@
   },
   "settingsBiometricPrompt": "Autentícate para abrir la configuración",
   "settingsBiometricFailed": "No se pudo verificar tu identidad.",
+  "settingsBiometricUnavailable": "La autenticación biométrica no está disponible en la web. Se abrirá la configuración igualmente.",
   "exampleRunIsolatesButton": "Ejecutar ejemplos con aislados",
   "exampleIsolateParallelPending": "Ejecutando tareas paralelas...",
   "exampleIsolateFibonacciLabel": "Fibonacci({input}) = {value}",
