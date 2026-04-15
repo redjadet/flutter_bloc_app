@@ -47,6 +47,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   FLUTTER_VERSION: '3.41.6'
   COVERAGE_THRESHOLD: '60'
   IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS: '300'
