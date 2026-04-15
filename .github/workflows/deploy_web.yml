@@ -38,7 +38,7 @@ jobs:
       - name: Build web (Pages)
         env:
           REPO_NAME: ${{ github.event.repository.name }}
-          BASE_HREF: ${{ github.event_name == "workflow_dispatch" && inputs.base_href || vars.BASE_HREF }}
+          BASE_HREF: ${{ github.event.inputs.base_href || vars.BASE_HREF }}
         run: bash tool/build_web_github_pages.sh
 
       - uses: actions/upload-pages-artifact@v3
