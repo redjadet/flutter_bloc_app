@@ -7,6 +7,32 @@ rescanning the whole tree.
 
 This is local developer tooling. It does not affect the Flutter app runtime.
 
+## When agents should use it
+
+Treat `code-review-graph` as the default low-token repo-exploration path for
+Codex when all of these are true:
+
+- the task is non-trivial existing-code work
+- likely blast radius is more than one file or symbol
+- the exact implementation file is not already obvious
+
+In those cases, use the graph first to narrow likely files, symbols,
+callers/callees, or impact before broad `rg`, `sed`, or many-file reads.
+
+Skip graph-first exploration when direct reads are cheaper:
+
+- trivial single-file edits
+- exact-path edits where the target file is already known
+- brand-new files or isolated docs-only work
+- stale/missing local graph where direct reads would be faster
+
+This is best-effort acceleration only. Missing tooling must not block normal
+repo work.
+
+Important: the graph does not save tokens just because it exists. The savings
+come from starting non-trivial repo exploration with graph queries that narrow
+the file/symbol set before opening files broadly.
+
 ## What it adds
 
 - A local graph cache under `.code-review-graph/`
@@ -64,6 +90,11 @@ Repo-native wrapper:
 
 Restart Codex after the install so it picks up the new MCP server.
 
+After install + build, the graph is available automatically through MCP.
+That does not mean every task should hit it first; it means agents should
+default to graph-first exploration for non-trivial existing-code tasks where
+scope is not already obvious.
+
 ## Repo-specific caveat
 
 The installer may write this MCP server entry using `command = "code-review-graph"`:
@@ -106,6 +137,19 @@ From the repo root:
 For agents in this repo, prefer `./tool/refresh_code_review_graph.sh` after
 broad multi-file refactors or shared-surface changes. It is best-effort:
 missing local tooling should not block the task.
+
+Recommended agent pattern:
+
+1. On non-trivial existing-code tasks, query the graph first to narrow scope.
+2. Read only the files and symbols the graph makes likely.
+3. Fall back to direct repo scans when the graph is missing, stale, or too
+   coarse for the question.
+4. After broad multi-file refactors, refresh with
+   `./tool/refresh_code_review_graph.sh`.
+
+This matches the reference article in [`code_graph.pdf`](code_graph.pdf): the
+point is not "always read the graph first no matter what", but "avoid rereading
+the tree when the graph can narrow the relevant slice".
 
 Useful commands:
 

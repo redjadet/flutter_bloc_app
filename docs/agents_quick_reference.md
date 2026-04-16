@@ -16,8 +16,13 @@ Pinned repo toolchain: Flutter 3.41.6 / Dart 3.11.4.
 
 1. Read [`AGENTS.md`](../AGENTS.md).
 2. Read [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
-3. Use this page for command lookup, adapter names, and doc routing only.
-4. For non-trivial work, keep active plan in host tracker.
+3. If local `code-review-graph` is installed and the task is non-trivial
+   existing-code work, use it first to narrow files and symbols before broad
+   repo scans.
+4. For routine low-risk communication, default to caveman-lite brevity when it
+   reduces tokens without reducing clarity.
+5. Use this page for command lookup, adapter names, and doc routing only.
+6. For non-trivial work, keep active plan in host tracker.
 
 ## Validation Chooser
 
@@ -43,11 +48,15 @@ Fastlane note: prefer `./tool/fastlane.sh` over raw `fastlane`.
 
 1. Read canon.
 2. Understand business goal before narrowing to local code path.
-3. For non-trivial work, record plan + verification in active host tracker.
-4. Reuse existing repo seams before adding abstractions.
-5. Apply AI review gate.
-6. Run smallest matching validation command.
-7. Prove result with scope-matched evidence.
+3. For non-trivial existing-code work, use local `code-review-graph` first
+   when available to narrow reads and reduce token use.
+4. Use caveman-lite communication by default for routine updates/summaries
+   unless the message needs fuller precision.
+5. For non-trivial work, record plan + verification in active host tracker.
+6. Reuse existing repo seams before adding abstractions.
+7. Apply AI review gate.
+8. Run smallest matching validation command.
+9. Prove result with scope-matched evidence.
 
 ## Work Shapes
 
@@ -57,6 +66,7 @@ Commands for each lane live in **Validation Chooser** above and in
 | Work shape | Default action |
 | --- | --- |
 | Small/local change | Reuse existing seams, run targeted validation, prove the changed behavior. |
+| Non-trivial existing-code task with local Codex graph installed | Use graph queries first to find likely files/symbols/impact before broad `rg` or many-file reads. |
 | Shared architecture / sync / routing / reliability | Treat as non-trivial, document tradeoffs, bias `./tool/delivery_checklist.sh` / `./bin/checklist` when the blast radius is broad. |
 | Broad multi-file refactor with local Codex graph installed | After implementation, refresh the graph best-effort with `./tool/refresh_code_review_graph.sh`; do not block on missing local tooling. |
 | Docs-only repo guidance | Validate touched docs and links; if host templates changed, run drift and dry-run sync (see **Validation Routes**). |
@@ -116,6 +126,16 @@ Cold-start fit:
 
 - Repo scripts and repo docs beat host-local wrappers.
 - Host adapters are accelerators only; they don't replace repo policy.
+- `code-review-graph` is the preferred low-token exploration path for Codex on
+  non-trivial existing-code tasks when installed. Skip it for trivial edits or
+  when exact file targets are already known.
+- Installation/build only makes the graph available through MCP. The token win
+  happens when the agent actually begins non-trivial repo exploration with
+  graph queries instead of broad file reads.
+- Default to caveman-lite brevity for routine agent communication. Switch back
+  to normal concise prose for warnings, destructive actions, security/privacy
+  notes, ambiguous multi-step instructions, external messages, or any text
+  where extra compression could be misread.
 - Goals, scale, edge cases, judgment, and ownership live in
   [`AGENTS.md`](../AGENTS.md) (**Shared Operating Model**); keep this page for
   commands and routing.

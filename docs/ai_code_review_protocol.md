@@ -82,6 +82,11 @@ Work through following; order matters where noted.
 - **Decisions:** If task involved material tradeoff, document chosen path briefly
   enough that next engineer can understand decision without redoing
   entire analysis.
+- **Communication:** Use caveman-lite brevity for routine review notes and
+  status summaries when it reduces tokens without reducing meaning. Switch to
+  normal concise prose for security/privacy warnings, destructive actions,
+  ambiguous multi-step guidance, or anything that benefits from fuller
+  precision.
 
 ## Special Cases
 
