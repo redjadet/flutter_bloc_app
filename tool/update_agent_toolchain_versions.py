@@ -88,7 +88,7 @@ def main() -> int:
     replacements = [
         (
             PROJECT_ROOT / "AGENTS.md",
-            r"^(Flutter )\S+ / Dart \S+(\s+·\s+Presentation\s+→\s+Domain\s+←\s+Data\s+·\s+Cubit/BLoC\s+·)$",
+            r"^(Flutter )\S+ / Dart \S+(.*)$",
             rf"\g<1>{flutter_version} / Dart {dart_version}\g<2>",
         ),
         (
