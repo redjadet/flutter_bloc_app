@@ -1,4 +1,5 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_sections.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -97,8 +98,7 @@ class ExamplePageBody extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(context.responsiveCardRadius),
             child: FancyShimmerImage(
-              imageUrl:
-                  'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+              imageUrl: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
               height: 180,
               width: double.infinity,
               boxFit: BoxFit.cover,
@@ -168,13 +168,14 @@ class ExamplePageBody extends StatelessWidget {
             label: l10n.exampleTodoListButton,
           ),
           SizedBox(height: context.responsiveGapS),
-          _buildIconButton(
-            context: context,
-            onPressed: onOpenProfile,
-            icon: Icons.person,
-            label: l10n.exampleProfileButton,
-          ),
-          SizedBox(height: context.responsiveGapS),
+          if (!kIsWeb)
+            _buildIconButton(
+              context: context,
+              onPressed: onOpenProfile,
+              icon: Icons.person,
+              label: l10n.exampleProfileButton,
+            ),
+          if (!kIsWeb) SizedBox(height: context.responsiveGapS),
           _buildIconButton(
             context: context,
             onPressed: onOpenRegister,
@@ -226,8 +227,7 @@ class ExamplePageBody extends StatelessWidget {
               icon: Icons.cloud_outlined,
               label: l10n.exampleFirebaseFunctionsButton,
             ),
-          if (onOpenFirebaseFunctionsTest != null)
-            SizedBox(height: context.responsiveGapS),
+          if (onOpenFirebaseFunctionsTest != null) SizedBox(height: context.responsiveGapS),
           _buildIconButton(
             context: context,
             onPressed: onOpenScapes,
@@ -235,13 +235,14 @@ class ExamplePageBody extends StatelessWidget {
             label: l10n.exampleScapesButton,
           ),
           SizedBox(height: context.responsiveGapS),
-          _buildIconButton(
-            context: context,
-            onPressed: onOpenWalletconnectAuth,
-            icon: Icons.account_balance_wallet_outlined,
-            label: l10n.exampleWalletconnectAuthButton,
-          ),
-          SizedBox(height: context.responsiveGapS),
+          if (!kIsWeb)
+            _buildIconButton(
+              context: context,
+              onPressed: onOpenWalletconnectAuth,
+              icon: Icons.account_balance_wallet_outlined,
+              label: l10n.exampleWalletconnectAuthButton,
+            ),
+          if (!kIsWeb) SizedBox(height: context.responsiveGapS),
           _buildIconButton(
             context: context,
             onPressed: onOpenCameraGallery,

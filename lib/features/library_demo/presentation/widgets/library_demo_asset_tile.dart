@@ -65,34 +65,35 @@ class LibraryAssetTile extends StatelessWidget {
           ),
           SizedBox(width: EpochSpacing.gapAssetGroup),
           // Metadata and icons
-          Row(
-            children: [
-              SizedBox(
-                width: 41,
-                child: Text(
-                  asset.durationLabel,
-                  style: EpochTextStyles.metadata(context),
-                  maxLines: 1,
-                  overflow: TextOverflow.clip,
-                  textAlign: TextAlign.left,
+          Flexible(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Flexible(
+                  child: Text(
+                    asset.durationLabel,
+                    style: EpochTextStyles.metadata(context),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.right,
+                  ),
                 ),
-              ),
-              SizedBox(width: EpochSpacing.gapSection),
-              SizedBox(
-                width: 35,
-                child: Text(
-                  asset.formatLabel,
-                  style: EpochTextStyles.metadata(context),
-                  maxLines: 1,
-                  overflow: TextOverflow.clip,
-                  textAlign: TextAlign.left,
+                SizedBox(width: EpochSpacing.gapSection),
+                Flexible(
+                  child: Text(
+                    asset.formatLabel,
+                    style: EpochTextStyles.metadata(context),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.right,
+                  ),
                 ),
-              ),
-              SizedBox(width: EpochSpacing.gapSection),
-              const LibraryFavoriteIcon(),
-              SizedBox(width: EpochSpacing.gapLarge),
-              const LibraryThreeDotIcon(),
-            ],
+                SizedBox(width: EpochSpacing.gapSection),
+                const LibraryFavoriteIcon(),
+                SizedBox(width: EpochSpacing.gapLarge),
+                const LibraryThreeDotIcon(),
+              ],
+            ),
           ),
         ],
       ),
