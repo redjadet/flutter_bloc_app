@@ -11,11 +11,6 @@ on:
         required: false
         default: ""
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
@@ -26,6 +21,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v5
 
@@ -35,14 +32,68 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Preflight GitHub Pages configuration
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          api_url="https://api.github.com/repos/${GITHUB_REPOSITORY}/pages"
+          response_path="${RUNNER_TEMP}/pages-preflight.json"
+          status_code="$(
+            curl -sS \
+              -o "${response_path}" \
+              -w '%{http_code}' \
+              -H 'Accept: application/vnd.github+json' \
+              -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+              -H 'X-GitHub-Api-Version: 2026-03-10' \
+              "${api_url}"
+          )"
+
+          case "${status_code}" in
+            200)
+              python3 -c 'import json, sys; from pathlib import Path; payload = json.loads(Path(sys.argv[1]).read_text()); html_url = payload.get("html_url") or "(not yet published)"; build_type = payload.get("build_type") or "(unset)"; print(f"GitHub Pages preflight OK: {html_url} [{build_type}]")' "${response_path}"
+              ;;
+            404)
+              {
+                echo "GitHub Pages is not enabled for this repository."
+                echo "Enable it in Settings -> Pages -> Build and deployment -> Source -> GitHub Actions."
+                echo "This workflow intentionally fails early here because \`actions/configure-pages\` auto-enable requires a non-\`GITHUB_TOKEN\` credential."
+              } >&2
+              {
+                echo "## GitHub Pages preflight"
+                echo ""
+                echo "- status: \`not enabled\`"
+                echo "- action: enable **Settings -> Pages -> Build and deployment -> Source -> GitHub Actions**"
+                echo "- note: workflow auto-enable is intentionally not used because \`actions/configure-pages\` requires a non-\`GITHUB_TOKEN\` credential for \`enablement: true\`"
+              } >> "$GITHUB_STEP_SUMMARY"
+              exit 1
+              ;;
+            *)
+              echo "Unexpected GitHub Pages API response: HTTP ${status_code}" >&2
+              cat "${response_path}" >&2 || true
+              exit 1
+              ;;
+          esac
+
       - name: Pub get
         run: flutter pub get
 
       - name: Build web (Pages)
         env:
           REPO_NAME: ${{ github.event.repository.name }}
-          BASE_HREF: ${{ github.event.inputs.base_href || vars.BASE_HREF }}
-        run: bash tool/build_web_github_pages.sh
+          INPUT_BASE_HREF: ${{ github.event.inputs.base_href || '' }}
+          REPO_VARS_JSON: ${{ toJson(vars) }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE_HREF="${INPUT_BASE_HREF}"
+          if [[ -z "${BASE_HREF}" ]]; then
+            BASE_HREF="$(python3 -c 'import json, os; raw = os.environ.get("REPO_VARS_JSON", "{}"); data = json.loads(raw) if raw else {}; value = data.get("BASE_HREF", ""); print(value if isinstance(value, str) else "")')"
+          fi
+          export BASE_HREF
+          bash tool/build_web_github_pages.sh
+
 
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -51,9 +102,14 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/configure-pages@v5
+
       - id: deployment
         uses: actions/deploy-pages@v4
