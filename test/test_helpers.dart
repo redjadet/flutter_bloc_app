@@ -545,15 +545,15 @@ Future<void> setupTestDependencies([
     FlavorManager.current = Flavor.prod;
   }
   await getIt.reset(dispose: true);
-  await configureDependencies();
 
   if (options.useMockFirebaseAuth) {
-    // Prevent MethodChannel FirebaseAuth usage in widget tests.
-    if (getIt.isRegistered<FirebaseAuth>()) {
-      getIt.unregister<FirebaseAuth>();
-    }
+    // Prevent MethodChannel FirebaseAuth usage during dependency registration.
     getIt.registerSingleton<FirebaseAuth>(MockFirebaseAuth(signedIn: false));
-  } else {
+  }
+
+  await configureDependencies();
+
+  if (!options.useMockFirebaseAuth) {
     // Integration tests can use the real plugin-backed FirebaseAuth.
     if (!getIt.isRegistered<FirebaseAuth>()) {
       getIt.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
