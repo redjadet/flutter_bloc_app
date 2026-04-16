@@ -1,6 +1,6 @@
-import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'dart:ui' show PointerDeviceKind;
 
+import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/theme/theme.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
