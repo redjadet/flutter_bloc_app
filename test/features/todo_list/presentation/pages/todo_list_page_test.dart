@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
@@ -206,6 +207,57 @@ void main() {
 
       expect(find.byType(ListView), findsOneWidget);
       expect(find.byType(SingleChildScrollView), findsNothing);
+    });
+
+    testWidgets('scroll wheel over header scrolls the list (wide web)', (
+      tester,
+    ) async {
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(2560, 1440);
+
+      final List<TodoItem> items = List<TodoItem>.generate(
+        80,
+        (final i) => _todoItem(id: '${i + 1}', title: 'Todo ${i + 1}'),
+      );
+
+      await tester.pumpWidget(buildSubject(initialItems: items));
+      cubit.loadInitial();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 150));
+      await tester.pumpAndSettle();
+
+      final Finder scrollableFinder = find.byType(Scrollable);
+      final Iterable<ScrollableState> scrollableStates = scrollableFinder
+          .evaluate()
+          .whereType<StatefulElement>()
+          .map((final element) => element.state)
+          .whereType<ScrollableState>();
+      final ScrollableState listScrollable = scrollableStates.firstWhere(
+        (final s) =>
+            s.position.axis == Axis.vertical &&
+            s.position.maxScrollExtent > 0,
+      );
+      final ScrollPosition position = listScrollable.position;
+      final double before = position.pixels;
+
+      // Target a header widget so the header's Listener receives the wheel event.
+      expect(find.byType(TodoStatsWidget), findsOneWidget);
+      final Offset headerCenter = tester.getCenter(find.byType(TodoStatsWidget));
+
+      tester.binding.handlePointerEvent(
+        PointerScrollEvent(
+          position: headerCenter,
+          scrollDelta: const Offset(0, 400),
+          kind: PointerDeviceKind.mouse,
+        ),
+      );
+      await tester.pump();
+
+      expect(position.pixels, greaterThan(before));
     });
 
     testWidgets('initializes cubit on page load', (tester) async {
