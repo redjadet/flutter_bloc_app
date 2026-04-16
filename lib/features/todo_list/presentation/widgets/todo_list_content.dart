@@ -12,6 +12,7 @@ class TodoListContent extends StatelessWidget {
     required this.filteredItems,
     required this.sortOrder,
     required this.selectedItemIds,
+    required this.scrollController,
     required this.cubit,
     required this.onItemSelectionChanged,
     required this.onAddTodo,
@@ -24,6 +25,7 @@ class TodoListContent extends StatelessWidget {
   final List<TodoItem> filteredItems;
   final TodoSortOrder sortOrder;
   final Set<String> selectedItemIds;
+  final ScrollController scrollController;
   final TodoListCubit cubit;
   final void Function(String itemId, {required bool selected})
   onItemSelectionChanged;
@@ -39,6 +41,7 @@ class TodoListContent extends StatelessWidget {
         builder: (final context, final constraints) => RefreshIndicator(
           onRefresh: () => cubit.refresh(),
           child: SingleChildScrollView(
+            controller: scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
@@ -58,6 +61,7 @@ class TodoListContent extends StatelessWidget {
         onRefresh: () => cubit.refresh(),
         child: ClipRect(
           child: ReorderableListView.builder(
+            scrollController: scrollController,
             padding: context.responsiveListPadding,
             cacheExtent: 500,
             itemCount: filteredItems.length,
@@ -103,6 +107,7 @@ class TodoListContent extends StatelessWidget {
       child: TodoListView(
         items: filteredItems,
         sortOrder: sortOrder,
+        scrollController: scrollController,
         onToggle: (final item) => cubit.toggleTodo(item),
         onEdit: (final item) => onEditTodo(item),
         onDelete: (final item) => onDeleteTodo(item),

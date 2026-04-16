@@ -1,7 +1,26 @@
 part of 'todo_list_page.dart';
 
-class _TodoListBody extends StatelessWidget {
+class _TodoListBody extends StatefulWidget {
   const _TodoListBody();
+
+  @override
+  State<_TodoListBody> createState() => _TodoListBodyState();
+}
+
+class _TodoListBodyState extends State<_TodoListBody> {
+  late final ScrollController _listScrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _listScrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _listScrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(
@@ -133,6 +152,7 @@ class _TodoListBody extends StatelessWidget {
                   filteredItems: data.filteredItems,
                   sortOrder: data.sortOrder,
                   selectedItemIds: data.selectedItemIds,
+                  scrollController: _listScrollController,
                   cubit: cubit,
                   onItemSelectionChanged:
                       (
@@ -153,10 +173,32 @@ class _TodoListBody extends StatelessWidget {
               ),
             );
 
+            final Widget header = headerChildren.isEmpty
+                ? const SizedBox.shrink()
+                : Listener(
+                    onPointerSignal: (final event) {
+                      if (event is! PointerScrollEvent) {
+                        return;
+                      }
+                      if (!_listScrollController.hasClients) {
+                        return;
+                      }
+                      final position = _listScrollController.position;
+                      final double nextOffset =
+                          (_listScrollController.offset + event.scrollDelta.dy)
+                              .clamp(0.0, position.maxScrollExtent);
+                      _listScrollController.jumpTo(nextOffset);
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: headerChildren,
+                    ),
+                  );
+
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                ...headerChildren,
+                header,
                 listContent,
               ],
             );
