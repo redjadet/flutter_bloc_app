@@ -9,13 +9,19 @@ Widget buildTodoTextField({
   required final TextEditingController controller,
   required final String placeholder,
   required final bool isCupertino,
+  final ValueChanged<String>? onChanged,
+  final bool autofocus = false,
   final int maxLines = 1,
+  final FocusNode? focusNode,
 }) {
   final textField = PlatformAdaptive.textField(
     context: context,
     controller: controller,
+    focusNode: focusNode,
     placeholder: placeholder,
     hintText: placeholder,
+    onChanged: onChanged,
+    autofocus: autofocus,
     maxLines: maxLines,
     padding: isCupertino ? EdgeInsets.all(context.responsiveGapS) : null,
     decoration: isCupertino

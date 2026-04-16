@@ -8,6 +8,9 @@ import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:mix/mix.dart';
 
+double _todoSearchFontSize(final BuildContext context) =>
+    context.responsiveBodySize.clamp(14.0, 22.0);
+
 class TodoSearchField extends StatefulWidget {
   const TodoSearchField({super.key});
 
@@ -39,16 +42,16 @@ class _TodoSearchFieldState extends State<TodoSearchField> {
     final bool hasMixTheme = MixScope.maybeOf(context) != null;
     final textStyle = theme.textTheme.bodyMedium?.copyWith(
       color: colors.onSurface,
-      fontSize: context.responsiveBodySize,
+      fontSize: _todoSearchFontSize(context),
     );
     final hintStyle = theme.textTheme.bodyMedium?.copyWith(
       color: colors.onSurfaceVariant,
-      fontSize: context.responsiveBodySize,
+      fontSize: _todoSearchFontSize(context),
     );
 
     final EdgeInsets contentPadding = EdgeInsets.symmetric(
-      horizontal: context.responsiveHorizontalGapM,
-      vertical: context.responsiveGapM,
+      horizontal: context.responsiveHorizontalGapM.clamp(10.0, 24.0),
+      vertical: context.responsiveGapM.clamp(10.0, 18.0),
     );
 
     final Widget textField = TextField(
@@ -70,8 +73,7 @@ class _TodoSearchFieldState extends State<TodoSearchField> {
           size: iconSize,
         ),
         prefixIconConstraints: BoxConstraints(
-          minWidth:
-              iconSize + context.responsiveHorizontalGapM,
+          minWidth: iconSize + context.responsiveHorizontalGapM.clamp(10.0, 24.0),
           minHeight: iconSize,
         ),
         suffixIcon: _controller.text.isNotEmpty
@@ -90,8 +92,7 @@ class _TodoSearchFieldState extends State<TodoSearchField> {
               )
             : null,
         suffixIconConstraints: BoxConstraints(
-          minWidth:
-              iconSize + context.responsiveHorizontalGapM,
+          minWidth: iconSize + context.responsiveHorizontalGapM.clamp(10.0, 24.0),
           minHeight: iconSize,
         ),
       ),

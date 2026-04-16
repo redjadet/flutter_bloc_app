@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/helpers/todo_list_dialogs.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -6,9 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 Future<void> _pumpDialog(
   final WidgetTester tester, {
   required final Future<void> Function(BuildContext) open,
+  final TargetPlatform platform = TargetPlatform.android,
 }) async {
   await tester.pumpWidget(
     MaterialApp(
+      theme: ThemeData(platform: platform),
       locale: const Locale('en'),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -64,11 +67,6 @@ void main() {
 
       await tester.enterText(find.byType(TextField).first, 'Buy milk');
       await tester.pumpAndSettle();
-      // Trigger rebuild so Save becomes enabled (dialog does not listen to title controller).
-      await tester.tap(find.byType(Checkbox));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byType(Checkbox));
-      await tester.pumpAndSettle();
 
       await tester.tap(find.text('Save'));
       await tester.pumpAndSettle();
@@ -99,6 +97,33 @@ void main() {
 
       expect(result, isNull);
       expect(find.text('New todo'), findsOneWidget);
+    });
+
+    testWidgets('iOS dialog requests keyboard focus for the title field', (
+      final tester,
+    ) async {
+      await _pumpDialog(
+        tester,
+        platform: TargetPlatform.iOS,
+        open: (final ctx) async {
+          await showTodoEditorDialog(context: ctx);
+        },
+      );
+
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(CupertinoTextField), findsWidgets);
+      expect(tester.testTextInput.hasAnyClients, isTrue);
+      expect(tester.testTextInput.isVisible, isTrue);
+
+      await tester.enterText(find.byType(CupertinoTextField).first, 'Buy milk');
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Save'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('New todo'), findsNothing);
     });
   });
 }

@@ -4,6 +4,9 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
+double _todoFilterChipFontSize(final BuildContext context) =>
+    context.responsiveCaptionSize.clamp(12.0, 18.0);
+
 class TodoFilterBar extends StatelessWidget {
   const TodoFilterBar({
     required this.filter,
@@ -89,7 +92,7 @@ class _FilterChip extends StatelessWidget {
       child: Text(
         label,
         style: theme.textTheme.labelLarge?.copyWith(
-          fontSize: context.responsiveCaptionSize,
+          fontSize: _todoFilterChipFontSize(context),
           fontWeight: FontWeight.w600,
           color: foregroundColor,
         ),

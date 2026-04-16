@@ -125,6 +125,7 @@ class PlatformAdaptive {
   static Widget textField({
     required final BuildContext context,
     required final TextEditingController controller,
+    final FocusNode? focusNode,
     final String? placeholder,
     final String? hintText,
     final void Function(String)? onChanged,
@@ -140,6 +141,7 @@ class PlatformAdaptive {
   }) => PlatformAdaptiveInputs.textField(
     context: context,
     controller: controller,
+    focusNode: focusNode,
     placeholder: placeholder,
     hintText: hintText,
     onChanged: onChanged,
