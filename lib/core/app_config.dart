@@ -1,4 +1,6 @@
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
+import 'dart:ui' show PointerDeviceKind;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/theme/theme.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -39,6 +41,7 @@ class AppConfig {
     theme: AppTheme.lightTheme(),
     darkTheme: AppTheme.darkTheme(),
     themeMode: themeMode,
+    scrollBehavior: const _AppScrollBehavior(),
     builder: (final context, final appChild) {
       Widget result = appChild ?? const SizedBox.shrink();
 
@@ -138,4 +141,17 @@ class AppConfig {
       return false;
     }
   }
+}
+
+class _AppScrollBehavior extends MaterialScrollBehavior {
+  const _AppScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => <PointerDeviceKind>{
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+    PointerDeviceKind.stylus,
+    PointerDeviceKind.unknown,
+  };
 }
