@@ -6,13 +6,12 @@ on:
       - 'pubspec.yaml'
       - 'pubspec.lock'
       - 'custom_lints/**/pubspec.yaml'
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 permissions:
   contents: read
   issues: write
   pull-requests: write
-  actions: write
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -47,7 +46,15 @@ jobs:
         run: flutter pub get
 
       - name: Install lcov
-        run: sudo apt-get update && sudo apt-get install -y lcov
+        shell: bash
+        run: |
+          set -euo pipefail
+          if command -v lcov >/dev/null 2>&1; then
+            echo "lcov already installed"
+            exit 0
+          fi
+          sudo apt-get update
+          sudo apt-get install -y lcov
 
       - name: Flutter analyze
         run: flutter analyze
