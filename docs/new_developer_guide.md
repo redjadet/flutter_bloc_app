@@ -29,6 +29,8 @@ Before running the app, review:
 
 **Optional — automatic secret injection in the terminal:** install [direnv](https://direnv.net/), copy [`docs/envrc.example`](envrc.example) to `.envrc` in the repo root, add your keys, run `direnv allow`, then let the PATH-based `flutter` wrapper inject `--dart-define` values automatically (or use `flutter run $(./tool/flutter_dart_defines_from_env.sh)`). Plain `flutter run` then passes the same `--dart-define` values to iOS and Android. Only variables listed in [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh) are forwarded; optional FastAPI Cloud / legacy Render chat orchestration keys (`CHAT_FASTAPICLOUD_*` / `CHAT_RENDER_*`) are included there—see [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md). For Play Store release builds, the same keys can live in `.env.android.release` (see [`.env.android.release.example`](../.env.android.release.example) and [Android Play Store release SOP](android_play_store_release_sop.md)).
 
+**Optional — Codex code graph for repo exploration:** if you use Codex heavily in this repo, you can install a local `code-review-graph` MCP server and build a persistent graph cache under `.code-review-graph/`. Setup and caveats live in [Code Review Graph for Codex](code_review_graph.md).
+
 ### Install dependencies and run
 
 ```bash
@@ -145,6 +147,10 @@ Use repo commands instead of ad-hoc validation:
 | `./tool/delivery_checklist.sh` / `./bin/checklist` | Primary local quality gate (`delivery_checklist.sh` is canonical). |
 | `./bin/integration_tests` | Run integration flows on a supported device. |
 | `./bin/upgrade_validate_all` | Full maintenance and upgrade validation flow. |
+
+Optional local Codex tooling:
+
+- [Code Review Graph for Codex](code_review_graph.md) — install, build, update, and verify the local MCP-backed code graph
 
 Docs-only changes can stay lightweight, but feature, routing, DI, and behavior
 changes should always go through the correct validation scope.

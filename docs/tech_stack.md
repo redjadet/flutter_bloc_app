@@ -75,6 +75,7 @@ not a replacement for `pubspec.yaml`.
 | Integration tests | `integration_test` plus repo scripts under `bin/` and `tool/` |
 | Code generation | `build_runner`, `json_serializable`, `freezed`, `retrofit_generator` |
 | Static analysis | `very_good_analysis` `^10.2.0`, `flutter_lints` `^6.0.0`, custom lint packages in `custom_lints/` |
+| Optional Codex repo graph | `code-review-graph` local MCP server plus SQLite cache under `.code-review-graph/` |
 
 ## Platform-Specific Dependencies
 
@@ -106,3 +107,4 @@ Platform-specific setup details belong in:
 - [Feature Overview](feature_overview.md)
 - [Testing Overview](testing_overview.md)
 - [Security and Secrets](security_and_secrets.md)
+- [Code Review Graph for Codex](code_review_graph.md)
