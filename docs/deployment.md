@@ -74,6 +74,15 @@ In GitHub repo settings:
 
 - **Settings → Pages → Build and deployment → Source**: set to **GitHub Actions**.
 
+The workflow now performs a preflight API check before building. If Pages is
+not enabled yet, it fails early with this exact setup instruction instead of
+continuing to a later deploy failure.
+
+This repo intentionally does **not** try to auto-enable Pages from the workflow.
+GitHub's `actions/configure-pages` only supports auto-enable via
+`enablement: true` when using a non-`GITHUB_TOKEN` credential with additional
+repo/pages administration rights.
+
 ### Build locally (deterministic)
 
 Use the repo script (required for correct `--base-href` and consistent dart-defines):

@@ -40,7 +40,6 @@ on:
 
 permissions:
   contents: read
-  actions: write
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -132,7 +131,18 @@ jobs:
         run: flutter pub get
 
       - name: Install ripgrep and lcov
-        run: sudo apt-get update && sudo apt-get install -y ripgrep lcov
+        shell: bash
+        run: |
+          set -euo pipefail
+          packages=()
+          command -v rg >/dev/null 2>&1 || packages+=(ripgrep)
+          command -v lcov >/dev/null 2>&1 || packages+=(lcov)
+          if ((${#packages[@]} == 0)); then
+            echo "ripgrep and lcov already installed"
+            exit 0
+          fi
+          sudo apt-get update
+          sudo apt-get install -y "${packages[@]}"
 
       - name: Run delivery checklist
         if: >-
