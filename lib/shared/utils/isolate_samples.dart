@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:flutter/foundation.dart';
+
 /// Provides small examples demonstrating how to offload work to isolates.
 ///
 /// The helpers below intentionally keep the public API simple so the
@@ -13,6 +15,12 @@ class IsolateSamples {
   /// The computation itself is intentionally CPU-bound so we can observe the
   /// advantage of moving the work off the main isolate.
   static Future<int> fibonacci(final int n) async {
+    if (kIsWeb) {
+      // Flutter web isolate support varies by compiler/runtime. Keep the sample
+      // usable by running synchronously when isolates are unavailable.
+      return _calculateFibonacci(n);
+    }
+
     final ReceivePort receivePort = ReceivePort();
     await Isolate.spawn<_FibonacciMessage>(
       _fibonacciEntryPoint,
@@ -30,6 +38,13 @@ class IsolateSamples {
     final List<int> values, {
     final Duration delay = const Duration(milliseconds: 120),
   }) async {
+    if (kIsWeb) {
+      return Future.wait<int>([
+        for (final int value in values)
+          Future<int>.delayed(delay, () => value * 2),
+      ]);
+    }
+
     final List<Future<int>> tasks = <Future<int>>[
       for (final int value in values) _delayedDouble(value, delay),
     ];

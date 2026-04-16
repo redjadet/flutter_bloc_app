@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
@@ -38,9 +40,18 @@ class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
 
       final String path = file.path;
       if (path.isEmpty) {
-        return const CameraGalleryResult.failure(
-          errorKey: CameraGalleryErrorKeys.generic,
-        );
+        // Web can return empty `path` for selected files. Use a `data:` URL
+        // fallback so the preview can render immediately.
+        final Uint8List bytes = await file.readAsBytes();
+        if (bytes.isEmpty) {
+          return const CameraGalleryResult.failure(
+            errorKey: CameraGalleryErrorKeys.generic,
+          );
+        }
+
+        final String mimeType = _inferImageMimeType(file.name) ?? 'image/jpeg';
+        final String dataUrl = 'data:$mimeType;base64,${base64Encode(bytes)}';
+        return CameraGalleryResult.success(dataUrl);
       }
 
       return CameraGalleryResult.success(path);
@@ -55,6 +66,16 @@ class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
         message: error.toString(),
       );
     }
+  }
+
+  static String? _inferImageMimeType(final String filename) {
+    final String lower = filename.toLowerCase();
+    if (lower.endsWith('.png')) return 'image/png';
+    if (lower.endsWith('.gif')) return 'image/gif';
+    if (lower.endsWith('.webp')) return 'image/webp';
+    if (lower.endsWith('.bmp')) return 'image/bmp';
+    if (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) return 'image/jpeg';
+    return null;
   }
 
   CameraGalleryResult _mapPlatformException(final PlatformException error) {
