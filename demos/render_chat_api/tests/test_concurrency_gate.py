@@ -2,16 +2,19 @@
 
 from __future__ import annotations
 
+import asyncio
 import pytest
 
 from exceptions import Saturation
 from orchestration.concurrency_gate import ConcurrencyGate
 
 
-@pytest.mark.asyncio
-async def test_second_slot_raises_saturation_when_limit_one() -> None:
-    gate = ConcurrencyGate(1)
-    with pytest.raises(Saturation):
-        async with gate.slot():
+def test_second_slot_raises_saturation_when_limit_one() -> None:
+    async def run() -> None:
+        gate = ConcurrencyGate(1)
+        with pytest.raises(Saturation):
             async with gate.slot():
-                pass  # unreachable
+                async with gate.slot():
+                    pass  # unreachable
+
+    asyncio.run(run())
