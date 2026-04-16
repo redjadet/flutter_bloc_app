@@ -116,3 +116,6 @@ demos/**/.venv/
 .codex/hooks.json
 AGENTS.original.md
 skills-lock.json
+# Added by code-review-graph
+.code-review-graph/
+docs/code_graph.pdf
