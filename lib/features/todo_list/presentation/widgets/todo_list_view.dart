@@ -10,6 +10,7 @@ class TodoListView extends StatelessWidget {
   const TodoListView({
     required this.items,
     required this.sortOrder,
+    required this.scrollController,
     required this.onToggle,
     required this.onEdit,
     required this.onDelete,
@@ -21,6 +22,7 @@ class TodoListView extends StatelessWidget {
 
   final List<TodoItem> items;
   final TodoSortOrder sortOrder;
+  final ScrollController scrollController;
   final void Function(TodoItem) onToggle;
   final void Function(TodoItem) onEdit;
   final void Function(TodoItem) onDelete;
@@ -57,6 +59,7 @@ class TodoListView extends StatelessWidget {
     if (items.length >= 100) {
       // Use ListView.builder for large lists (better performance)
       return ListView.builder(
+        controller: scrollController,
         padding: context.responsiveListPadding,
         cacheExtent: 500,
         itemCount: items.length * 2 - 1,
@@ -71,6 +74,7 @@ class TodoListView extends StatelessWidget {
     }
 
     return ListView.separated(
+      controller: scrollController,
       padding: context.responsiveListPadding,
       cacheExtent: 500,
       itemCount: items.length,
