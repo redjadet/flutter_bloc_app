@@ -10,9 +10,33 @@ cd "$PROJECT_ROOT"
 
 DEMO_VENV="$PROJECT_ROOT/demos/render_chat_api/.venv"
 REQS="$PROJECT_ROOT/demos/render_chat_api/requirements.txt"
+DEV_REQS="$PROJECT_ROOT/demos/render_chat_api/requirements-dev.txt"
+
+pick_python() {
+  # Prefer a Python >=3.10 runtime. Some demo dependencies (e.g. FastAPI, pytest)
+  # no longer publish wheels for older Python versions.
+  for candidate in python3.12 python3.11 python3.10 python3; do
+    if ! command -v "$candidate" >/dev/null 2>&1; then
+      continue
+    fi
+    if "$candidate" - <<'PY' >/dev/null 2>&1; then
+import sys
+sys.exit(0 if sys.version_info >= (3, 10) else 1)
+PY
+      echo "$candidate"
+      return 0
+    fi
+  done
+
+  echo "ERROR: Python >=3.10 is required for demos/render_chat_api dependencies." >&2
+  echo "Install Python 3.10+ (or ensure python3 points to 3.10+)." >&2
+  exit 1
+}
+
+PYTHON_BIN="$(pick_python)"
 
 validate_root_pyrightconfig() {
-  python3 <<'PY'
+  "$PYTHON_BIN" <<'PY'
 import json
 import sys
 from pathlib import Path
@@ -46,8 +70,12 @@ ensure_demo_venv() {
     exit 1
   fi
   echo "INFO: Creating demos/render_chat_api/.venv and installing requirements.txt ..."
-  python3 -m venv "$DEMO_VENV"
-  "$DEMO_VENV/bin/pip" install -q -r "$REQS"
+  "$PYTHON_BIN" -m venv "$DEMO_VENV"
+  "$DEMO_VENV/bin/python" -m pip install -q -U pip setuptools wheel
+  "$DEMO_VENV/bin/python" -m pip install -q -r "$REQS"
+  if [ -f "$DEV_REQS" ]; then
+    "$DEMO_VENV/bin/python" -m pip install -q -r "$DEV_REQS"
+  fi
 }
 
 echo "Checking Pyright config guard (repo root pyrightconfig.json)..."
