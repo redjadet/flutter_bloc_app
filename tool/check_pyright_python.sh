@@ -10,6 +10,7 @@ cd "$PROJECT_ROOT"
 
 DEMO_VENV="$PROJECT_ROOT/demos/render_chat_api/.venv"
 REQS="$PROJECT_ROOT/demos/render_chat_api/requirements.txt"
+DEV_REQS="$PROJECT_ROOT/demos/render_chat_api/requirements-dev.txt"
 
 pick_python() {
   # Prefer a Python >=3.10 runtime. Some demo dependencies (e.g. FastAPI, pytest)
@@ -70,7 +71,11 @@ ensure_demo_venv() {
   fi
   echo "INFO: Creating demos/render_chat_api/.venv and installing requirements.txt ..."
   "$PYTHON_BIN" -m venv "$DEMO_VENV"
-  "$DEMO_VENV/bin/pip" install -q -r "$REQS"
+  "$DEMO_VENV/bin/python" -m pip install -q -U pip setuptools wheel
+  "$DEMO_VENV/bin/python" -m pip install -q -r "$REQS"
+  if [ -f "$DEV_REQS" ]; then
+    "$DEMO_VENV/bin/python" -m pip install -q -r "$DEV_REQS"
+  fi
 }
 
 echo "Checking Pyright config guard (repo root pyrightconfig.json)..."
