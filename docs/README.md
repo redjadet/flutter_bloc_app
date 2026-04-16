@@ -36,6 +36,7 @@ This folder contains the source-of-truth documentation for the Flutter BLoC app.
 - [`new_developer_guide.md`](new_developer_guide.md)
 - [`validation_scripts.md`](validation_scripts.md)
 - [`testing_overview.md`](testing_overview.md)
+- [`code_review_graph.md`](code_review_graph.md)
 - [`CODE_QUALITY.md`](CODE_QUALITY.md)
 - [`feature_implementation_guide.md`](feature_implementation_guide.md)
 - [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)

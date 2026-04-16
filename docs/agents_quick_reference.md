@@ -30,6 +30,7 @@ Decision guide:
 | Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` |
 | Integration journey / flow verification | `./bin/integration_tests` |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
+| Large refactor with code-review-graph installed | `./tool/refresh_code_review_graph.sh` |
 | New shared agent-facing markdown doc | `./tool/compress_agent_doc.sh PATH` |
 | Repo-managed host-template drift check | `./tool/check_agent_asset_drift.sh` |
 | Host-template preview sync | `./tool/sync_agent_assets.sh --dry-run` |
@@ -57,6 +58,7 @@ Commands for each lane live in **Validation Chooser** above and in
 | --- | --- |
 | Small/local change | Reuse existing seams, run targeted validation, prove the changed behavior. |
 | Shared architecture / sync / routing / reliability | Treat as non-trivial, document tradeoffs, bias `./tool/delivery_checklist.sh` / `./bin/checklist` when the blast radius is broad. |
+| Broad multi-file refactor with local Codex graph installed | After implementation, refresh the graph best-effort with `./tool/refresh_code_review_graph.sh`; do not block on missing local tooling. |
 | Docs-only repo guidance | Validate touched docs and links; if host templates changed, run drift and dry-run sync (see **Validation Routes**). |
 | Production failure / hotfix | Narrow proof first, then widen gates to match blast radius (see **Production-Failure Path** in validation routing). |
 | Explicit second opinion | Use a different host via `./tool/request_codex_feedback.sh`; do not self-delegate. |
