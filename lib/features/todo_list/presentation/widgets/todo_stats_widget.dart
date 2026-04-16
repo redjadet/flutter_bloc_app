@@ -6,6 +6,12 @@ import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
+double _todoStatsValueFontSize(final BuildContext context) =>
+    context.responsiveTitleSize.clamp(20.0, 56.0);
+
+double _todoStatsLabelFontSize(final BuildContext context) =>
+    context.responsiveCaptionSize.clamp(12.0, 24.0);
+
 class TodoStatsWidget extends StatelessWidget {
   const TodoStatsWidget({super.key});
 
@@ -28,8 +34,8 @@ class TodoStatsWidget extends StatelessWidget {
         return CommonCard(
           color: colors.surfaceContainerHighest,
           padding: EdgeInsets.symmetric(
-            horizontal: context.responsiveHorizontalGapM,
-            vertical: context.responsiveGapS,
+            horizontal: context.responsiveHorizontalGapM.clamp(10.0, 28.0),
+            vertical: context.responsiveGapS.clamp(8.0, 18.0),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -90,7 +96,7 @@ class _StatItem extends StatelessWidget {
         Text(
           '$value',
           style: theme.textTheme.headlineSmall?.copyWith(
-            fontSize: context.responsiveTitleSize,
+            fontSize: _todoStatsValueFontSize(context),
             fontWeight: FontWeight.bold,
             color: color,
           ),
@@ -99,7 +105,7 @@ class _StatItem extends StatelessWidget {
         Text(
           label,
           style: theme.textTheme.bodySmall?.copyWith(
-            fontSize: context.responsiveCaptionSize,
+            fontSize: _todoStatsLabelFontSize(context),
             color: theme.colorScheme.onSurfaceVariant,
           ),
         ),

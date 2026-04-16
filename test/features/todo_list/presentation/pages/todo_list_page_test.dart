@@ -506,6 +506,69 @@ void main() {
       expect(find.byType(SingleChildScrollView), findsNothing);
     });
 
+    testWidgets('keeps at least one todo item visible on wide desktop web', (
+      tester,
+    ) async {
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(2560, 1440);
+
+      await tester.pumpWidget(
+        buildSubject(
+          initialItems: <TodoItem>[
+            _todoItem(id: '1', title: 'Wide desktop visible todo'),
+          ],
+        ),
+      );
+
+      cubit.loadInitial();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump();
+
+      final Finder todoTitle = find.text('Wide desktop visible todo');
+      expect(todoTitle, findsOneWidget);
+
+      final Rect todoRect = tester.getRect(todoTitle);
+      expect(todoRect.bottom, greaterThan(0));
+      expect(todoRect.top, lessThan(1440));
+    });
+
+    testWidgets('keeps at least one todo item visible on iPhone-sized layout', (
+      tester,
+    ) async {
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+      tester.view.devicePixelRatio = 3;
+      // 390 x 844 logical points.
+      tester.view.physicalSize = const Size(1170, 2532);
+
+      await tester.pumpWidget(
+        buildSubject(
+          initialItems: <TodoItem>[
+            _todoItem(id: '1', title: 'Mobile visible todo'),
+          ],
+        ),
+      );
+
+      cubit.loadInitial();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump();
+
+      final Finder todoTitle = find.text('Mobile visible todo');
+      expect(todoTitle, findsOneWidget);
+
+      final Rect todoRect = tester.getRect(todoTitle);
+      expect(todoRect.bottom, greaterThan(0));
+      expect(todoRect.top, lessThan(844));
+    });
+
     testWidgets(
       'delete snackbar auto-dismisses after two seconds with undo action',
       (tester) async {

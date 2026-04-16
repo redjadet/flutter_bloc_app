@@ -30,6 +30,7 @@ Future<TodoEditorResult?> showTodoEditorDialog({
   final TodoItem? existing,
 }) async => showAdaptiveDialog<TodoEditorResult>(
   context: context,
+  requestFocus: true,
   builder: (final context) => _TodoEditorDialog(existing: existing),
 );
 
@@ -45,6 +46,8 @@ class _TodoEditorDialog extends StatefulWidget {
 class _TodoEditorDialogState extends State<_TodoEditorDialog> {
   late final TextEditingController _titleController;
   late final TextEditingController _descriptionController;
+  late final FocusNode _titleFocusNode;
+  late final FocusNode _descriptionFocusNode;
   late DateTime? _selectedDueDate;
   late TodoPriority _selectedPriority;
   late bool _isCompleted;
@@ -58,15 +61,24 @@ class _TodoEditorDialogState extends State<_TodoEditorDialog> {
     _descriptionController = TextEditingController(
       text: widget.existing?.description ?? '',
     );
+    _titleFocusNode = FocusNode(debugLabel: 'todoTitleField');
+    _descriptionFocusNode = FocusNode(debugLabel: 'todoDescriptionField');
     _selectedDueDate = widget.existing?.dueDate?.toLocal();
     _selectedPriority = widget.existing?.priority ?? TodoPriority.none;
     _isCompleted = widget.existing?.isCompleted ?? false;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _titleFocusNode.requestFocus();
+      }
+    });
   }
 
   @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
+    _titleFocusNode.dispose();
+    _descriptionFocusNode.dispose();
     super.dispose();
   }
 
@@ -81,10 +93,14 @@ class _TodoEditorDialogState extends State<_TodoEditorDialog> {
       context: context,
       titleController: _titleController,
       descriptionController: _descriptionController,
+      titleFocusNode: _titleFocusNode,
+      descriptionFocusNode: _descriptionFocusNode,
       isCupertino: isCupertino,
       selectedDueDate: _selectedDueDate,
       selectedPriority: _selectedPriority,
       isCompleted: _isCompleted,
+      onTitleChanged: (_) => setState(() {}),
+      onDescriptionChanged: (_) => setState(() {}),
       onDueDateChanged: (final date) {
         setState(() {
           _selectedDueDate = date;

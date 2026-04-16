@@ -8,6 +8,7 @@ class PlatformAdaptiveInputs {
   static Widget textField({
     required final BuildContext context,
     required final TextEditingController controller,
+    final FocusNode? focusNode,
     final String? placeholder,
     final String? hintText,
     final void Function(String)? onChanged,
@@ -24,6 +25,7 @@ class PlatformAdaptiveInputs {
     if (PlatformAdaptive.isCupertino(context)) {
       return CupertinoTextField(
         controller: controller,
+        focusNode: focusNode,
         placeholder: placeholder ?? hintText,
         onChanged: onChanged,
         onSubmitted: onSubmitted,
@@ -38,6 +40,7 @@ class PlatformAdaptiveInputs {
     }
     return TextField(
       controller: controller,
+      focusNode: focusNode,
       onChanged: onChanged,
       onSubmitted: onSubmitted,
       keyboardType: keyboardType,

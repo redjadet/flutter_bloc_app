@@ -4,6 +4,9 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/widgets/icon_label_row.dart';
 
+double _todoSortLabelFontSize(final BuildContext context) =>
+    context.responsiveCaptionSize.clamp(12.0, 18.0);
+
 class TodoSortBar extends StatelessWidget {
   const TodoSortBar({
     required this.sortOrder,
@@ -40,13 +43,13 @@ class TodoSortBar extends StatelessWidget {
         label: sortLabel,
         iconColor: colors.onSurface,
         textStyle: theme.textTheme.labelLarge?.copyWith(
-          fontSize: context.responsiveCaptionSize,
+          fontSize: _todoSortLabelFontSize(context),
           color: colors.onSurface,
         ),
         trailing: Icon(
           Icons.arrow_drop_down,
           color: colors.onSurface,
-          size: context.responsiveIconSize * 0.8,
+          size: (context.responsiveIconSize * 0.8).clamp(16.0, 24.0),
         ),
       ),
       itemBuilder: (final context) => [

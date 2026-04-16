@@ -14,9 +14,13 @@ Widget buildTodoEditorDialogContent({
   required final DateTime? selectedDueDate,
   required final TodoPriority selectedPriority,
   required final bool isCompleted,
+  required final ValueChanged<String> onTitleChanged,
+  required final ValueChanged<String> onDescriptionChanged,
   required final ValueChanged<DateTime?> onDueDateChanged,
   required final ValueChanged<TodoPriority> onPriorityChanged,
   required final ValueChanged<bool> onCompletedChanged,
+  final FocusNode? titleFocusNode,
+  final FocusNode? descriptionFocusNode,
 }) {
   final l10n = context.l10n;
 
@@ -35,15 +39,20 @@ Widget buildTodoEditorDialogContent({
           buildTodoTextField(
             context: context,
             controller: titleController,
+            focusNode: titleFocusNode,
             placeholder: l10n.todoListTitlePlaceholder,
             isCupertino: isCupertino,
+            onChanged: onTitleChanged,
+            autofocus: true,
           ),
           SizedBox(height: context.responsiveGapS),
           buildTodoTextField(
             context: context,
             controller: descriptionController,
+            focusNode: descriptionFocusNode,
             placeholder: l10n.todoListDescriptionPlaceholder,
             isCupertino: isCupertino,
+            onChanged: onDescriptionChanged,
             maxLines: context.isDesktop
                 ? 4
                 : context.isTabletOrLarger
