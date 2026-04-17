@@ -48,6 +48,7 @@ Other entrypoints:
 ```bash
 ./tool/delivery_checklist.sh
 # same pipeline when present: ./bin/checklist
+# local-only sanity shortcut for clean trees or narrow docs/tooling work: ./bin/checklist-fast
 ```
 
 ### Run code generation when needed
@@ -145,6 +146,7 @@ Use repo commands instead of ad-hoc validation:
 | `dart run build_runner build --delete-conflicting-outputs` | Regenerate code after model/API annotation changes. |
 | `./tool/check_pyright_python.sh` | Pyright on `demos/render_chat_api` and `tool/` Python (run when editing the Render FastAPI demo or repo shell tooling; also runs inside the full delivery gate). |
 | `./tool/delivery_checklist.sh` / `./bin/checklist` | Primary local quality gate. Broad/pre-ship runs still take the full sweep; some narrow local docs/tooling edits can use built-in fast paths while CI keeps the full checklist bar (`delivery_checklist.sh` is canonical). |
+| `./bin/checklist-fast` | Local-only sanity shortcut for clean trees or narrow docs/tooling work. Refuses CI and broader app/runtime diffs instead of weakening the full gate. |
 | `./bin/integration_tests` | Run integration flows on a supported device. |
 | `./bin/upgrade_validate_all` | Full maintenance and upgrade validation flow. |
 

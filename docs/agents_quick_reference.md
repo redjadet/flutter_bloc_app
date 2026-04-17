@@ -31,6 +31,7 @@ Decision guide:
 
 | Situation | Command |
 | --- | --- |
+| Clean-tree local sanity or narrow local docs/tooling sweep | `./bin/checklist-fast` |
 | Router / `AppRoutes` / gates / auth UI | `./bin/router_feature_validate` |
 | Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` |
 | Integration journey / flow verification | `./bin/integration_tests` |
@@ -141,6 +142,7 @@ Cold-start fit:
   commands and routing.
 - Docs-only or host-template edits: validate docs, links, and drift paths (see
   **Validation Routes** and validation routing doc).
+- `./bin/checklist-fast` is local-only and conservative: use it for clean-tree sanity or narrow docs/tooling change sets, never as a substitute for the full delivery gate on app/runtime work.
 - New shared AI-agent markdown docs, including repo-managed host-template
   markdown under `tool/agent_host_templates/`: compress final tracked file with
   `./tool/compress_agent_doc.sh PATH`, keep `.original.md` human backup.
