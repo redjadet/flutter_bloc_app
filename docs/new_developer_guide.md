@@ -144,7 +144,7 @@ Use repo commands instead of ad-hoc validation:
 | `flutter pub get` | Refresh dependencies. |
 | `dart run build_runner build --delete-conflicting-outputs` | Regenerate code after model/API annotation changes. |
 | `./tool/check_pyright_python.sh` | Pyright on `demos/render_chat_api` and `tool/` Python (run when editing the Render FastAPI demo or repo shell tooling; also runs inside the full delivery gate). |
-| `./tool/delivery_checklist.sh` / `./bin/checklist` | Primary local quality gate (`delivery_checklist.sh` is canonical). |
+| `./tool/delivery_checklist.sh` / `./bin/checklist` | Primary local quality gate. Broad/pre-ship runs still take the full sweep; some narrow local docs/tooling edits can use built-in fast paths while CI keeps the full checklist bar (`delivery_checklist.sh` is canonical). |
 | `./bin/integration_tests` | Run integration flows on a supported device. |
 | `./bin/upgrade_validate_all` | Full maintenance and upgrade validation flow. |
 

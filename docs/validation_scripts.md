@@ -81,7 +81,7 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs t
 - **`check_inherited_widget_in_create.sh`**: Prevents `context.l10n`/`Theme.of(context)` inside BlocProvider/Provider `create` (see Context & Async Safety below)
 - **`check_inherited_widget_in_initstate.sh`**: Prevents InheritedWidget reads (e.g. `context.l10n`, `Theme.of(context)`) in `initState()`; read in `build()` or `didChangeDependencies()` instead.
 - **`check_lifecycle_error_handling.sh`**: Snackbar via ErrorHandling, `stream.listen` onError, `context.mounted` after show\*Dialog (see Context & Async Safety below)
-- **`check_offline_first_remote_merge.sh`**: Regression tests ensuring offline-first repos do not overwrite newer unsynced local state with older remote (see Offline-first remote merge below)
+- **`check_offline_first_remote_merge.sh`**: Regression tests ensuring offline-first repos do not overwrite newer unsynced local state with older remote (see Offline-first remote merge below). Standalone runs always execute; inside `./bin/checklist`, the script auto-skips on local change sets that do not touch offline-first surfaces, but still runs in CI or when relevant files changed.
 
 ## New Validation Scripts (Context & Async Safety)
 
@@ -822,8 +822,12 @@ The checklist is also change-aware:
 - skips `flutter pub get` when dependency metadata is unchanged
 - formats only changed Dart files
 - exits early for docs-only change sets instead of running code validation
+- exits early for local tooling-only change sets (`tool/*.sh`, `bin/*`, host-template files, and validation-guidance docs) after syntax/doc-sync/drift checks instead of running app-wide Flutter validation
 - caches checklist self-validation until the checklist script/dependency scripts or validation docs change
+- auto-skips `flutter analyze` on local change sets with no Dart/analyzer-relevant files; CI and Dart/config/l10n changes still run it
 - auto-skips the Pyright Python lane on local non-Python change sets; CI and standalone `tool/check_pyright_python.sh` runs still execute it
+- auto-skips the offline-first remote-merge regression lane on local non-offline-first change sets; CI and standalone `tool/check_offline_first_remote_merge.sh` runs still execute it
+- auto-selects the smallest honest `tool/check_regression_guards.sh` test subset for local feature-scoped changes; CI, broad shared/core changes, and standalone runs still use the full suite
 - skips Mix lint unless Mix-related files changed
 - when coverage is disabled, runs focused regression guards and only runs the Todo keyboard/layout subset when the current change set touches Todo/layout-relevant files
 
