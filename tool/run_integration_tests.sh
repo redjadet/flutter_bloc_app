@@ -807,6 +807,7 @@ select_device_id() {
   local preferred_device
   local device_id
   local device_line
+  local device_line_lower
   local index
   local attempt=1
   local max_attempts=6
@@ -845,7 +846,8 @@ select_device_id() {
       local has_ios_simulator=0
       for index in "${!supported_device_ids[@]}"; do
         device_line="${supported_device_lines[$index]}"
-        if [[ "$device_line" == *"ios"* ]] && [[ "$device_line" == *"simulator"* ]]; then
+        device_line_lower="$(printf '%s' "$device_line" | tr '[:upper:]' '[:lower:]')"
+        if [[ "$device_line_lower" == *"ios"* ]] && [[ "$device_line_lower" == *"simulator"* ]]; then
           has_ios_simulator=1
           break
         fi
@@ -897,7 +899,8 @@ select_device_id() {
 
   for index in "${!supported_device_ids[@]}"; do
     device_line="${supported_device_lines[$index]}"
-    if [[ "$device_line" == *"ios"* ]] && [[ "$device_line" == *"simulator"* ]]; then
+    device_line_lower="$(printf '%s' "$device_line" | tr '[:upper:]' '[:lower:]')"
+    if [[ "$device_line_lower" == *"ios"* ]] && [[ "$device_line_lower" == *"simulator"* ]]; then
       echo "${supported_device_ids[$index]}"
       return
     fi
@@ -905,7 +908,8 @@ select_device_id() {
 
   for index in "${!supported_device_ids[@]}"; do
     device_line="${supported_device_lines[$index]}"
-    if [[ "$device_line" == *"ios"* ]]; then
+    device_line_lower="$(printf '%s' "$device_line" | tr '[:upper:]' '[:lower:]')"
+    if [[ "$device_line_lower" == *"ios"* ]]; then
       echo "${supported_device_ids[$index]}"
       return
     fi

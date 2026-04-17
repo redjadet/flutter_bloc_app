@@ -312,26 +312,26 @@ Future<void> captureChartModeIsolationTraces({
 Map<String, dynamic> chartModeIsolationMeta() => <String, dynamic>{
   'meta.charts_minimal_linechart_toggle_trace.note':
       'Minimal harness: toggles ChartLineGraph (isolates fl_chart vs InteractiveViewer).',
-  'meta.charts_minimal_linechart_toggle_trace.flutter': '3.41.6',
+  'meta.charts_minimal_linechart_toggle_trace.flutter': '3.41.7',
   'meta.charts_minimal_placeholder_toggle_trace.note':
       'Minimal harness: toggles placeholder widget with InteractiveViewer (no fl_chart).',
-  'meta.charts_minimal_placeholder_toggle_trace.flutter': '3.41.6',
+  'meta.charts_minimal_placeholder_toggle_trace.flutter': '3.41.7',
   'meta.switch_toggle_no_subtree_change_trace.note':
       'Control: toggles SwitchListTile while rendering constant child.',
-  'meta.switch_toggle_no_subtree_change_trace.flutter': '3.41.6',
+  'meta.switch_toggle_no_subtree_change_trace.flutter': '3.41.7',
   'meta.charts_minimal_placeholder_no_iv_toggle_trace.note':
       'Minimal harness: toggles placeholder widget without InteractiveViewer.',
-  'meta.charts_minimal_placeholder_no_iv_toggle_trace.flutter': '3.41.6',
+  'meta.charts_minimal_placeholder_no_iv_toggle_trace.flutter': '3.41.7',
   'meta.charts_minimal_linechart_no_iv_toggle_trace.note':
       'Minimal harness: toggles bare LineChart without InteractiveViewer.',
-  'meta.charts_minimal_linechart_no_iv_toggle_trace.flutter': '3.41.6',
+  'meta.charts_minimal_linechart_no_iv_toggle_trace.flutter': '3.41.7',
   'meta.charts_chart_only_zoom_trace.note':
       'Chart-only toggle trace (isolates zoom-mode switching).',
-  'meta.charts_chart_only_zoom_trace.flutter': '3.41.6',
+  'meta.charts_chart_only_zoom_trace.flutter': '3.41.7',
   'meta.charts_zoom_enabled_scroll_trace.note':
       'Chart trace: zoom enabled + scroll (InteractiveViewer mode).',
-  'meta.charts_zoom_enabled_scroll_trace.flutter': '3.41.6',
+  'meta.charts_zoom_enabled_scroll_trace.flutter': '3.41.7',
   'meta.charts_zoom_disabled_scroll_trace.note':
       'Chart trace: zoom disabled + scroll (touch/tooltip mode).',
-  'meta.charts_zoom_disabled_scroll_trace.flutter': '3.41.6',
+  'meta.charts_zoom_disabled_scroll_trace.flutter': '3.41.7',
 };

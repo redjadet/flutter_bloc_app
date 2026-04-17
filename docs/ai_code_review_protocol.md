@@ -3,7 +3,7 @@
 Treat AI-generated code as draft output that must pass review gate before it
 is trusted.
 
-Pinned repo toolchain: Flutter 3.41.6 / Dart 3.11.4.
+Pinned repo toolchain: Flutter 3.41.7 / Dart 3.11.5.
 
 Adapted from Vinod Pal’s March 8, 2026 checklist:
 <https://medium.com/%40vndpal/my-practical-approach-for-reviewing-ai-generated-code-268db27f3af8>
