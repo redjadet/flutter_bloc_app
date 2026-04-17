@@ -26,13 +26,13 @@ expected structure and “ownership” contract:
 
 | Command | Purpose |
 | --- | --- |
-| `./tool/delivery_checklist.sh` / `./bin/checklist` | Full local sweep for formatting, analysis, validator scripts, tests, and coverage workflow (`delivery_checklist.sh` is canonical). |
+| `./tool/delivery_checklist.sh` / `./bin/checklist` | Primary local quality gate. Broad/pre-ship runs still take the full sweep; narrow local docs/tooling work can use built-in fast paths while CI keeps the full bar (`delivery_checklist.sh` is canonical). |
 | `./tool/check_pyright_python.sh` | Pyright on `demos/render_chat_api` and `tool/` Python (included in the full delivery gate; run alone when iterating on the Render FastAPI demo or shell tooling). |
 | `./bin/integration_tests` | Runs integration flows on a supported non-web device. |
 | `tool/test_coverage.sh` | Runs unit, bloc, widget, and other coverage-producing tests. |
 | `dart run tool/update_coverage_summary.dart` | Refreshes [`coverage/coverage_summary.md`](../coverage/coverage_summary.md). |
 
-CI runs `./bin/checklist` (same pipeline as `./tool/delivery_checklist.sh`) on push and pull request. For local work, prefer
+CI runs `./bin/checklist` (same pipeline as `./tool/delivery_checklist.sh`) on push and pull request and still keeps the full checklist bar. For local work, prefer
 targeted validation first and reserve the full delivery gate for broad or pre-ship
 sweeps. The macOS integration job is manual-only through GitHub Actions
 workflow dispatch and supports the

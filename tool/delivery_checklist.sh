@@ -339,6 +339,31 @@ validate_docs_only_dependencies() {
   fi
 }
 
+validate_tooling_only_dependencies() {
+  local failed=0
+  local file
+
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    case "$file" in
+      *.sh|bin/*)
+        if [ ! -f "$PROJECT_ROOT/$file" ]; then
+          echo "❌ Missing tooling file: $file"
+          failed=1
+          continue
+        fi
+        if ! bash -n "$PROJECT_ROOT/$file"; then
+          failed=1
+        fi
+        ;;
+    esac
+  done
+
+  if [ "$failed" -ne 0 ]; then
+    echo "❌ Tooling-only syntax validation failed"
+    return 1
+  fi
+}
+
 # Bash 3.2 (macOS /bin/bash) + set -u: "${arr[@]}" in for-loops errors on empty arrays; use ${arr[@]+"${arr[@]}"} instead.
 collect_changed_files() {
   changed_files=()
@@ -419,6 +444,33 @@ is_docs_only_change_set() {
   return 0
 }
 
+is_tooling_only_change_set() {
+  if [ -n "${CI:-}" ] || [ "$HAS_GIT_REPO" -ne 1 ] || [ "${#changed_files[@]}" -eq 0 ]; then
+    return 1
+  fi
+
+  local file
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    case "$file" in
+      tool/*.sh|\
+      bin/*|\
+      tool/agent_host_templates/*|\
+      AGENTS.md|\
+      docs/agents_quick_reference.md|\
+      docs/validation_scripts.md|\
+      docs/testing_overview.md|\
+      docs/new_developer_guide.md|\
+      docs/engineering/validation_routing_fast_vs_full.md)
+        ;;
+      *)
+        return 1
+        ;;
+    esac
+  done
+
+  return 0
+}
+
 should_run_todo_layout_tests_auto() {
   if [ "$HAS_GIT_REPO" -ne 1 ]; then
     return 0
@@ -469,6 +521,37 @@ should_run_agent_asset_drift_check() {
   return 1
 }
 
+should_run_flutter_analyze_auto() {
+  if [ -n "${CI:-}" ]; then
+    return 0
+  fi
+
+  if [ "$HAS_GIT_REPO" -ne 1 ]; then
+    return 0
+  fi
+
+  if [ "${#changed_files[@]}" -eq 0 ]; then
+    return 0
+  fi
+
+  local file
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    case "$file" in
+      *.dart|\
+      analysis_options.yaml|\
+      pubspec.yaml|\
+      pubspec.lock|\
+      l10n.yaml|\
+      lib/l10n/*.arb|\
+      custom_lints/*)
+        return 0
+        ;;
+    esac
+  done
+
+  return 1
+}
+
 echo "🚀 Running Delivery Checklist..."
 echo ""
 
@@ -476,6 +559,7 @@ RUN_COVERAGE="${CHECKLIST_RUN_COVERAGE:-1}"
 RUN_FOCUSED_TESTS="${CHECKLIST_RUN_FOCUSED_TESTS:-auto}"
 RUN_MIX_LINT="${CHECKLIST_RUN_MIX_LINT:-auto}"
 RUN_TODO_LAYOUT_TESTS="${CHECKLIST_RUN_TODO_LAYOUT_TESTS:-auto}"
+RUN_ANALYZE="${CHECKLIST_RUN_ANALYZE:-auto}"
 HAS_GIT_REPO=0
 
 if ! [[ "$RUN_COVERAGE" =~ ^(0|1)$ ]]; then
@@ -496,6 +580,11 @@ fi
 if ! [[ "$RUN_TODO_LAYOUT_TESTS" =~ ^(auto|0|1)$ ]]; then
   echo "⚠️  Invalid CHECKLIST_RUN_TODO_LAYOUT_TESTS='$RUN_TODO_LAYOUT_TESTS'; using auto"
   RUN_TODO_LAYOUT_TESTS=auto
+fi
+
+if ! [[ "$RUN_ANALYZE" =~ ^(auto|0|1)$ ]]; then
+  echo "⚠️  Invalid CHECKLIST_RUN_ANALYZE='$RUN_ANALYZE'; using auto"
+  RUN_ANALYZE=auto
 fi
 
 if command -v git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
@@ -568,6 +657,32 @@ if is_docs_only_change_set; then
   echo "✅ Skipping dependency, analyze, validation, and coverage steps"
   echo ""
   echo "🎉 Delivery checklist complete! No code-relevant work detected."
+  exit 0
+fi
+
+if is_tooling_only_change_set; then
+  echo "🛠️  Tooling-only local change set detected"
+  if ! validate_tooling_only_dependencies; then
+    exit 1
+  fi
+  if ! normalize_doc_links; then
+    exit 1
+  fi
+  if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
+    echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
+    exit 1
+  fi
+  if should_run_agent_asset_drift_check; then
+    echo "🤖 Verifying managed AI agent asset drift for policy/template docs..."
+    if ! bash "$PROJECT_ROOT/tool/check_agent_asset_drift.sh"; then
+      echo "❌ Managed AI agent assets are out of sync; run ./tool/sync_agent_assets.sh --dry-run and reconcile the drift."
+      exit 1
+    fi
+  fi
+
+  echo "✅ Skipping dependency, analyze, app validation, and coverage steps"
+  echo ""
+  echo "🎉 Delivery checklist complete! Tooling-only local validation passed."
   exit 0
 fi
 
@@ -731,6 +846,8 @@ fi
 echo "  Running ${#CHECK_SCRIPTS[@]} static checks with $CHECKLIST_JOBS workers (in parallel with analyze)"
 CHECKLIST_TMP_DIR="$(mktemp -d)"
 export CHECK_PYRIGHT_PYTHON_MODE=auto
+export CHECK_OFFLINE_FIRST_REMOTE_MERGE_MODE=auto
+export CHECK_REGRESSION_GUARDS_MODE=auto
 
 STATIC_CHECKS_LOG="$CHECKLIST_TMP_DIR/static_checks.log"
 STATIC_CHECKS_EXIT="$CHECKLIST_TMP_DIR/static_checks.exit"
@@ -744,8 +861,21 @@ STATIC_CHECKS_EXIT="$CHECKLIST_TMP_DIR/static_checks.exit"
 STATIC_CHECKS_PID=$!
 
 ANALYZE_FAILED=0
-if ! flutter analyze --no-pub; then
-  ANALYZE_FAILED=1
+should_run_analyze=1
+if [ "$RUN_ANALYZE" = "0" ]; then
+  should_run_analyze=0
+elif [ "$RUN_ANALYZE" = "auto" ]; then
+  if ! should_run_flutter_analyze_auto; then
+    should_run_analyze=0
+  fi
+fi
+
+if [ "$should_run_analyze" -eq 1 ]; then
+  if ! flutter analyze --no-pub; then
+    ANALYZE_FAILED=1
+  fi
+else
+  echo "Skipping flutter analyze (no Dart/analyzer-relevant local changes; override with CHECKLIST_RUN_ANALYZE=1)"
 fi
 
 if ! wait "$STATIC_CHECKS_PID"; then

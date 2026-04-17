@@ -59,6 +59,16 @@ Typical path:
 Escalate to `./tool/delivery_checklist.sh` / `./bin/checklist` when the doc change materially changes validation
 guidance, delivery policy, or repo-wide operating rules (including [`AGENTS.md`](../../AGENTS.md)).
 
+## Local Tooling Path
+
+Use the checklist's built-in tooling fast path for local shell/checklist/validation-doc work when every changed file stays inside `tool/*.sh`, `bin/*`, repo-managed host-template files, or validation-guidance docs.
+
+Behavior:
+
+- `./bin/checklist` / `./tool/delivery_checklist.sh` still runs shell syntax checks, doc-link normalization, validation-doc sync, and agent-asset drift checks when relevant
+- it skips app-wide Flutter dependency, analyze, validator-suite, and coverage work for that narrow local-only change set
+- CI does not use this fast path
+
 ## Integration Path
 
 Use for integration-covered workflows, release-candidate lanes, and upgrade lanes.
