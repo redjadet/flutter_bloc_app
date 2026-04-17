@@ -2,7 +2,8 @@
 
 This document describes all validation scripts in the `tool/` directory that
 can be run directly or as part of `./bin/checklist` when you want the full
-repo sweep.
+repo sweep. For a local-only clean-tree or narrow docs/tooling sanity pass,
+use `./bin/checklist-fast`.
 
 For the complete docs index, see [docs index](README.md).
 
@@ -10,7 +11,9 @@ For the complete docs index, see [docs index](README.md).
 
 The validation scripts provide automated guards for architecture, UI/UX, async
 safety, performance, and memory hygiene. Prefer targeted scripts for local
-changes; use `./bin/checklist` for broad or pre-ship validation.
+changes; use `./bin/checklist` for broad or pre-ship validation, and
+`./bin/checklist-fast` only for the narrower local-only sanity path documented
+below.
 
 The checklist includes automated guards for:
 
@@ -817,6 +820,24 @@ repo sweep:
 
 This runs all validation scripts in sequence and fails if any critical violations are found.
 
+### Fast Local Sanity Path
+
+Use `./bin/checklist-fast` for a local-only sanity pass when the tree is clean
+or when the local change set is limited to docs/tooling surfaces:
+
+```bash
+./bin/checklist-fast
+```
+
+Contract:
+
+- local only; CI must keep using `./bin/checklist`
+- supports clean-tree sanity checks
+- supports narrow local docs/tooling change sets only
+- refuses broader app/runtime diffs instead of silently weakening the full gate
+- runs syntax/doc-link/doc-sync/agent-drift checks when relevant
+- skips dependency, analyze, app validator-suite, Mix lint, focused regression, and coverage work
+
 The checklist is also change-aware:
 
 - skips `flutter pub get` when dependency metadata is unchanged
@@ -904,10 +925,12 @@ Each script provides:
 
 1. **Run checklist for broad or pre-ship validation**: `./bin/checklist`
    catches issues early when you need the full sweep
-2. **Fix violations immediately**: Don't accumulate technical debt
-3. **Use check-ignore sparingly**: Only when there's a legitimate reason
-4. **Review heuristic warnings**: Scripts like `check_missing_const.sh` and `check_side_effects_build.sh` are heuristics - review manually
-5. **Keep scripts updated**: As codebase patterns evolve, update scripts accordingly
+2. **Use checklist-fast only for local sanity**: `./bin/checklist-fast`
+   is intentionally narrow and should not replace the full gate for app/runtime work
+3. **Fix violations immediately**: Don't accumulate technical debt
+4. **Use check-ignore sparingly**: Only when there's a legitimate reason
+5. **Review heuristic warnings**: Scripts like `check_missing_const.sh` and `check_side_effects_build.sh` are heuristics - review manually
+6. **Keep scripts updated**: As codebase patterns evolve, update scripts accordingly
 
 ## Related Documentation
 

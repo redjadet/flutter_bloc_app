@@ -471,6 +471,41 @@ is_tooling_only_change_set() {
   return 0
 }
 
+is_checklist_fast_compatible_change_set() {
+  if [ -n "${CI:-}" ] || [ "$HAS_GIT_REPO" -ne 1 ]; then
+    return 1
+  fi
+
+  if [ "${#changed_files[@]}" -eq 0 ]; then
+    return 0
+  fi
+
+  local file
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    case "$file" in
+      tool/*.sh|\
+      bin/*|\
+      tool/agent_host_templates/*|\
+      pyrightconfig.json|\
+      demos/render_chat_api/pyrightconfig.json|\
+      AGENTS.md|\
+      docs/*|\
+      tasks/*.md|\
+      README|README.*|\
+      CHANGELOG|CHANGELOG.*|\
+      LICENSE|LICENSE.*|\
+      .gitignore|\
+      .cursor/*)
+        ;;
+      *)
+        return 1
+        ;;
+    esac
+  done
+
+  return 0
+}
+
 should_run_todo_layout_tests_auto() {
   if [ "$HAS_GIT_REPO" -ne 1 ]; then
     return 0
@@ -555,12 +590,18 @@ should_run_flutter_analyze_auto() {
 echo "🚀 Running Delivery Checklist..."
 echo ""
 
+CHECKLIST_MODE="${CHECKLIST_MODE:-full}"
 RUN_COVERAGE="${CHECKLIST_RUN_COVERAGE:-1}"
 RUN_FOCUSED_TESTS="${CHECKLIST_RUN_FOCUSED_TESTS:-auto}"
 RUN_MIX_LINT="${CHECKLIST_RUN_MIX_LINT:-auto}"
 RUN_TODO_LAYOUT_TESTS="${CHECKLIST_RUN_TODO_LAYOUT_TESTS:-auto}"
 RUN_ANALYZE="${CHECKLIST_RUN_ANALYZE:-auto}"
 HAS_GIT_REPO=0
+
+if ! [[ "$CHECKLIST_MODE" =~ ^(full|fast)$ ]]; then
+  echo "⚠️  Invalid CHECKLIST_MODE='$CHECKLIST_MODE'; using full"
+  CHECKLIST_MODE=full
+fi
 
 if ! [[ "$RUN_COVERAGE" =~ ^(0|1)$ ]]; then
   echo "⚠️  Invalid CHECKLIST_RUN_COVERAGE='$RUN_COVERAGE'; using 1"
@@ -633,6 +674,47 @@ normalize_doc_links() {
   echo "✅ Documentation links normalized"
   echo ""
 }
+
+if [ "$CHECKLIST_MODE" = "fast" ]; then
+  if [ -n "${CI:-}" ]; then
+    echo "❌ checklist-fast is local-only. Use ./bin/checklist on CI."
+    exit 1
+  fi
+
+  if ! is_checklist_fast_compatible_change_set; then
+    echo "❌ checklist-fast only supports clean trees or narrow local docs/tooling change sets."
+    echo "   Use ./bin/checklist or targeted validation for app/runtime changes."
+    exit 1
+  fi
+
+  echo "⚡ Running checklist-fast local sanity path"
+  if ! validate_tooling_only_dependencies; then
+    exit 1
+  fi
+  if ! normalize_doc_links; then
+    exit 1
+  fi
+  if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
+    echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
+    exit 1
+  fi
+  if should_run_agent_asset_drift_check; then
+    echo "🤖 Verifying managed AI agent asset drift for policy/template docs..."
+    if ! bash "$PROJECT_ROOT/tool/check_agent_asset_drift.sh"; then
+      echo "❌ Managed AI agent assets are out of sync; run ./tool/sync_agent_assets.sh --dry-run and reconcile the drift."
+      exit 1
+    fi
+  fi
+
+  echo "✅ Skipping dependency, analyze, app validation, and coverage steps"
+  echo ""
+  if [ "${#changed_files[@]}" -eq 0 ]; then
+    echo "🎉 Delivery checklist fast mode complete! Clean-tree local sanity checks passed."
+  else
+    echo "🎉 Delivery checklist fast mode complete! Narrow local docs/tooling checks passed."
+  fi
+  exit 0
+fi
 
 if is_docs_only_change_set; then
   echo "📝 Docs-only change set detected"

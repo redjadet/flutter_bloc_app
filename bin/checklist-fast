@@ -1,0 +1,48 @@
+#!/bin/bash
+# Shortcut command for local fast checklist sanity checks.
+# Usage: checklist-fast
+# Local only. Clean trees and narrow docs/tooling change sets only.
+
+show_help() {
+  cat <<'EOF'
+Usage: ./bin/checklist-fast
+
+Local-only checklist sanity path.
+
+What it is for:
+- clean-tree local sanity runs
+- narrow local docs/tooling change sets
+
+What it refuses:
+- CI
+- broader app/runtime diffs
+
+What it runs:
+- syntax checks when relevant
+- doc link normalization
+- validation-doc sync check
+- agent asset drift check when relevant
+
+What it skips:
+- flutter pub get
+- flutter analyze
+- app validator suite
+- mix_lint
+- focused regression lanes
+- coverage
+
+Use ./bin/checklist for the full delivery gate.
+EOF
+}
+
+case "${1:-}" in
+  -h|--help|help)
+    show_help
+    exit 0
+    ;;
+esac
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+exec env CHECKLIST_MODE=fast "$PROJECT_ROOT/tool/delivery_checklist.sh" "$@"
