@@ -10,7 +10,7 @@ host context, combine this page with
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
 for command routing (this page is lookup only, not policy).
 
-Pinned repo toolchain: Flutter 3.41.6 / Dart 3.11.4.
+Pinned repo toolchain: Flutter 3.41.7 / Dart 3.11.5.
 
 ## 30-Second Path
 

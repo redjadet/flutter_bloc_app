@@ -11,8 +11,8 @@ For the complete docs index, see [docs index](README.md).
 
 ### Toolchain
 
-- Flutter `3.41.6`
-- Dart `3.11.4`
+- Flutter `3.41.7`
+- Dart `3.11.5`
 - Xcode + CocoaPods for iOS work
 - Android Studio + Android SDK for Android work
 
