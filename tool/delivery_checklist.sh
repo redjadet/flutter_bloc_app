@@ -22,6 +22,8 @@ print(int(time.time() * 1000))
 PY
 )"
 CHECKLIST_TMP_DIR=""
+CHECKLIST_CACHE_DIR="$PROJECT_ROOT/.dart_tool/checklist"
+CHECKLIST_CONFIG_CACHE_FILE="$CHECKLIST_CACHE_DIR/config_validation.sha256"
 
 emit_checklist_scorecard_event() {
   local exit_code="$1"
@@ -108,6 +110,50 @@ detect_cpu_count() {
   fi
 
   echo 4
+}
+
+compute_validation_cache_key() {
+  python3 - "$PROJECT_ROOT" "$@" <<'PY'
+from __future__ import annotations
+
+import hashlib
+import sys
+from pathlib import Path
+
+project_root = Path(sys.argv[1])
+digest = hashlib.sha256()
+
+for relative_path in sys.argv[2:]:
+    path = project_root / relative_path
+    digest.update(relative_path.encode("utf-8"))
+    if not path.exists():
+        digest.update(b":missing")
+        continue
+    stat = path.stat()
+    digest.update(str(stat.st_mtime_ns).encode("utf-8"))
+    digest.update(str(stat.st_size).encode("utf-8"))
+
+print(digest.hexdigest())
+PY
+}
+
+has_matching_validation_cache() {
+  local cache_file="$1"
+  local cache_key="$2"
+
+  if [ ! -f "$cache_file" ]; then
+    return 1
+  fi
+
+  [ "$(cat "$cache_file")" = "$cache_key" ]
+}
+
+write_validation_cache() {
+  local cache_file="$1"
+  local cache_key="$2"
+
+  mkdir -p "$(dirname "$cache_file")"
+  printf '%s\n' "$cache_key" >"$cache_file"
 }
 
 run_parallel_static_checks() {
@@ -213,6 +259,7 @@ validate_checklist_configuration() {
   local syntax_exit=0
   local total_messages="${#CHECK_MESSAGES[@]}"
   local total_scripts="${#CHECK_SCRIPTS[@]}"
+  local cache_key=""
   local extra_scripts=(
     "tool/resolve_flutter_dart.sh"
     "tool/run_mix_lint.sh"
@@ -239,6 +286,15 @@ validate_checklist_configuration() {
     return 1
   fi
 
+  cache_key="$(compute_validation_cache_key \
+    "tool/delivery_checklist.sh" \
+    "${CHECK_SCRIPTS[@]}" \
+    "${extra_scripts[@]}" \
+    "docs/validation_scripts.md")"
+  if has_matching_validation_cache "$CHECKLIST_CONFIG_CACHE_FILE" "$cache_key"; then
+    return 0
+  fi
+
   for script in "${CHECK_SCRIPTS[@]}" "${extra_scripts[@]}"; do
     if ! bash -n "$PROJECT_ROOT/$script"; then
       syntax_exit=1
@@ -249,6 +305,13 @@ validate_checklist_configuration() {
     echo "❌ Checklist script syntax validation failed"
     return 1
   fi
+
+  if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
+    echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
+    return 1
+  fi
+
+  write_validation_cache "$CHECKLIST_CONFIG_CACHE_FILE" "$cache_key"
 }
 
 validate_docs_only_dependencies() {
@@ -665,12 +728,9 @@ echo ""
 if ! normalize_doc_links; then
   exit 1
 fi
-if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
-  echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
-  exit 1
-fi
 echo "  Running ${#CHECK_SCRIPTS[@]} static checks with $CHECKLIST_JOBS workers (in parallel with analyze)"
 CHECKLIST_TMP_DIR="$(mktemp -d)"
+export CHECK_PYRIGHT_PYTHON_MODE=auto
 
 STATIC_CHECKS_LOG="$CHECKLIST_TMP_DIR/static_checks.log"
 STATIC_CHECKS_EXIT="$CHECKLIST_TMP_DIR/static_checks.exit"
