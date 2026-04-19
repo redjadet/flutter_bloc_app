@@ -16,13 +16,16 @@ Pinned repo toolchain: Flutter 3.41.7 / Dart 3.11.5.
 
 1. Read [`AGENTS.md`](../AGENTS.md).
 2. Read [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
-3. If local `code-review-graph` is installed and the task is non-trivial
+3. If suitable Superpowers workflow skills are installed, use them early as the
+   default process layer, but keep [`AGENTS.md`](../AGENTS.md) and direct user
+   instructions authoritative.
+4. If local `code-review-graph` is installed and the task is non-trivial
    existing-code work, use it first to narrow files and symbols before broad
    repo scans.
-4. For routine low-risk communication, default to caveman-lite brevity when it
+5. For routine low-risk communication, default to caveman-lite brevity when it
    reduces tokens without reducing clarity.
-5. Use this page for command lookup, adapter names, and doc routing only.
-6. For non-trivial work, keep active plan in host tracker.
+6. Use this page for command lookup, adapter names, and doc routing only.
+7. For non-trivial work, keep active plan in host tracker.
 
 ## Validation Chooser
 
@@ -48,16 +51,18 @@ Fastlane note: prefer `./tool/fastlane.sh` over raw `fastlane`.
 ## Default Loop
 
 1. Read canon.
-2. Understand business goal before narrowing to local code path.
-3. For non-trivial existing-code work, use local `code-review-graph` first
+2. Use suitable Superpowers workflow skills early when they fit the task;
+   repo canon and user instructions still win.
+3. Understand business goal before narrowing to local code path.
+4. For non-trivial existing-code work, use local `code-review-graph` first
    when available to narrow reads and reduce token use.
-4. Use caveman-lite communication by default for routine updates/summaries
+5. Use caveman-lite communication by default for routine updates/summaries
    unless the message needs fuller precision.
-5. For non-trivial work, record plan + verification in active host tracker.
-6. Reuse existing repo seams before adding abstractions.
-7. Apply AI review gate.
-8. Run smallest matching validation command.
-9. Prove result with scope-matched evidence.
+6. For non-trivial work, record plan + verification in active host tracker.
+7. Reuse existing repo seams before adding abstractions.
+8. Apply AI review gate.
+9. Run smallest matching validation command.
+10. Prove result with scope-matched evidence.
 
 ## Work Shapes
 
@@ -127,6 +132,9 @@ Cold-start fit:
 
 - Repo scripts and repo docs beat host-local wrappers.
 - Host adapters are accelerators only; they don't replace repo policy.
+- When installed and suitable, Superpowers workflow skills are the default
+  process helpers for how to work, but they remain subordinate to repo canon
+  and explicit user instructions.
 - `code-review-graph` is the preferred low-token exploration path for Codex on
   non-trivial existing-code tasks when installed. Skip it for trivial edits or
   when exact file targets are already known.
