@@ -37,20 +37,22 @@ lookup only; it doesn't replace [`AGENTS.md`](../AGENTS.md) once that file is av
 Work through following; order matters where noted.
 
 1. **Checks:** Apply **Nine Checks** above.
-2. **Tracker:** For non-trivial tasks, confirm active plan and verification
+2. **Workflow:** If a suitable Superpowers workflow skill exists for the task,
+   confirm it was used unless repo canon or the user explicitly overrode it.
+3. **Tracker:** For non-trivial tasks, confirm active plan and verification
    are recorded in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) or
    [`tasks/codex/todo.md`](../tasks/codex/todo.md) per
    [`AGENTS.md`](../AGENTS.md).
-3. **Presentation:** For presentation-layer changes, confirm styling uses
+4. **Presentation:** For presentation-layer changes, confirm styling uses
    shared theme/design tokens unless file is intentionally defining them.
-4. **Delegates:** If subagents or sidecars were used, treat their output as
+5. **Delegates:** If subagents or sidecars were used, treat their output as
    draft input and validate integrated result yourself.
-5. **Diff:** Review diff manually.
-6. **Validate:** Run smallest matching repo validation command. Use
+6. **Diff:** Review diff manually.
+7. **Validate:** Run smallest matching repo validation command. Use
    [`AGENTS.md`](../AGENTS.md) plus
    [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
    for routing.
-7. **Extra review:** For medium/high-risk work, prefer one extra review pass
+8. **Extra review:** For medium/high-risk work, prefer one extra review pass
    before finalizing.
    From non-Codex hosts, that can include
    `./tool/request_codex_feedback.sh` (git diff) or
@@ -59,10 +61,10 @@ Work through following; order matters where noted.
    asks for second opinion or cross-host review. Keep
    `./tool/delivery_checklist.sh` / `./bin/checklist` for broad or pre-ship
    sweeps, or when user explicitly asks for full validation pass.
-8. **Goal fit:** Confirm solution still aligns with business goal and
+9. **Goal fit:** Confirm solution still aligns with business goal and
    doesn't defer obvious production-risk ownership to unspecified later
    cleanup.
-9. **Tradeoffs:** If change makes operational judgment call, record why
+10. **Tradeoffs:** If change makes operational judgment call, record why
    this path was chosen and why simpler or safer-looking alternatives were
    rejected.
 
