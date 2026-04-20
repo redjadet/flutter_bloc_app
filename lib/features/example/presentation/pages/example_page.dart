@@ -163,6 +163,7 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenCameraGallery: () => context.pushNamed(AppRoutes.cameraGallery),
         onOpenCaseStudyDemo: () => context.pushNamed(AppRoutes.caseStudyDemo),
         onOpenIapDemo: () => context.pushNamed(AppRoutes.iapDemo),
+        onOpenAiDecisionDemo: () => context.pushNamed(AppRoutes.aiDecisionDemo),
         onRunIsolates: _isRunningIsolates ? null : _runIsolateSamples,
         isRunningIsolates: _isRunningIsolates,
         isolateError: _isolateError,

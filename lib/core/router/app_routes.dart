@@ -125,6 +125,9 @@ class AppRoutes {
   static const staffAppDemo = 'staff-app-demo';
   static const staffAppDemoPath = '/staff-app-demo';
 
+  static const aiDecisionDemo = 'ai-decision-demo';
+  static const aiDecisionDemoPath = '/ai-decision-demo';
+
   static const staffAppDemoDashboard = 'staff-app-demo-dashboard';
   static const staffAppDemoDashboardPath = '/staff-app-demo/dashboard';
 

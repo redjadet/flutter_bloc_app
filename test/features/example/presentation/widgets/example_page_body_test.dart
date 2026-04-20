@@ -43,6 +43,7 @@ void main() {
             onOpenCameraGallery: () {},
             onOpenCaseStudyDemo: () {},
             onOpenIapDemo: () {},
+            onOpenAiDecisionDemo: () {},
           ),
         ),
       );
@@ -96,6 +97,7 @@ void main() {
             onOpenCameraGallery: () {},
             onOpenCaseStudyDemo: () {},
             onOpenIapDemo: () {},
+            onOpenAiDecisionDemo: () {},
           ),
         ),
       );
@@ -146,6 +148,7 @@ void main() {
               caseStudyTapped = true;
             },
             onOpenIapDemo: () {},
+            onOpenAiDecisionDemo: () {},
           ),
         ),
       );
