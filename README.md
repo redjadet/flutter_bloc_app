@@ -6,7 +6,7 @@ offline-first data flows, and integration-heavy product demos.
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.7-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.5-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-74%2E72%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-72%2E42%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
@@ -57,6 +57,8 @@ realistic scope.
 
 - AI chat overview: [docs/ai_integration.md](docs/ai_integration.md)
 - FastAPI Cloud chat orchestration: [docs/integrations/render_fastapi_chat_demo.md](docs/integrations/render_fastapi_chat_demo.md)
+- AI Decision Workbench (local risk score, rationale, proof trail, and action
+  history): [docs/ai_decision_workbench.md](docs/ai_decision_workbench.md)
 - Staff app demo walkthrough: [docs/staff_app_demo_walkthrough.md](docs/staff_app_demo_walkthrough.md)
 - Case-study briefs and demo context: [docs/case_studies/README.md](docs/case_studies/README.md)
 

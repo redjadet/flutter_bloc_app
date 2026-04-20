@@ -36,6 +36,7 @@ Vertical demos driven by product briefs in [`docs/case_studies/`](case_studies/R
 | Feature | Route or entry | Code | Notes |
 | --- | --- | --- | --- |
 | Chat | `/chat`, `/chat-list` | `lib/features/chat/` | Offline-first chat flows with FastAPI Cloud orchestration, direct Hugging Face inference, and documented Supabase proxy support. |
+| AI Decision Workbench | `/ai-decision-demo` (Example hub entry) | `lib/features/ai_decision_demo/` | Local decision support demo with seeded SQLite cases, risk score, rationale, visible proof trail, and action history. Backend: `demos/ai_decision_api/`. Doc: [`ai_decision_workbench.md`](ai_decision_workbench.md). |
 | Charts | `/charts` | `lib/features/chart/` | Deferred-loaded chart experience with offline-first behavior. |
 | GraphQL Demo | `/graphql-demo` | `lib/features/graphql_demo/` | Cache-first countries browser with diagnostics support. |
 | Remote Config surfaces | Counter and Settings diagnostics | `lib/features/remote_config/` | Runtime feature flags, diagnostics, and cache behavior. |
@@ -93,12 +94,16 @@ See [Architecture Details](architecture_details.md) and
   [Authentication](authentication.md) and [Security and Secrets](security_and_secrets.md).
 - Maps require Google Maps platform keys where applicable. See
   [Google Maps Integration](google_maps_integration.md).
-- AI demos require API keys. See [AI Integration](ai_integration.md) and
+- AI chat demos require API keys. See [AI Integration](ai_integration.md) and
   [Security and Secrets](security_and_secrets.md).
+- AI Decision Workbench requires the local FastAPI backend by default:
+  `AI_DECISION_API_BASE_URL=http://127.0.0.1:8008`. See
+  [AI Decision Workbench](ai_decision_workbench.md).
 
 ## Deep-dive references
 
 - [Case studies index](case_studies/README.md)
+- [AI Decision Workbench](ai_decision_workbench.md)
 - [Authentication](authentication.md)
 - [Offline-First Adoption Guide](offline_first/adoption_guide.md)
 - [Testing Overview](testing_overview.md)
