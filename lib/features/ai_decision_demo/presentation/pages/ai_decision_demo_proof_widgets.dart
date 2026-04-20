@@ -88,26 +88,28 @@ Widget buildAiDecisionProofPanel({
             DataColumn(label: Text('Rule')),
             DataColumn(label: Text('Contrib')),
           ],
-          rows: rows
-              .take(8)
-              .map((final r) {
-                final passed = r['passed'] == true;
-                final contrib = (r['contribution'] as num?)?.toDouble() ?? 0.0;
-                return DataRow(
-                  cells: [
-                    DataCell(
-                      Icon(
-                        passed ? Icons.check_circle : Icons.cancel,
-                        size: 18,
-                        color: passed ? colors.tertiary : colors.outline,
-                      ),
+          rows: () {
+            final limited = rows.take(8).toList(growable: false);
+            return List<DataRow>.generate(limited.length, (final i) {
+              final r = limited[i];
+              final passed = r['passed'] == true;
+              final contrib = (r['contribution'] as num?)?.toDouble() ?? 0.0;
+              return DataRow.byIndex(
+                index: i,
+                cells: [
+                  DataCell(
+                    Icon(
+                      passed ? Icons.check_circle : Icons.cancel,
+                      size: 18,
+                      color: passed ? colors.tertiary : colors.outline,
                     ),
-                    DataCell(Text('${r['label']}')),
-                    DataCell(Text(contrib.toStringAsFixed(2))),
-                  ],
-                );
-              })
-              .toList(growable: false),
+                  ),
+                  DataCell(Text('${r['label']}')),
+                  DataCell(Text(contrib.toStringAsFixed(2))),
+                ],
+              );
+            });
+          }(),
         ),
       ),
       const SizedBox(height: 8),
