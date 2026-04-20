@@ -12,7 +12,19 @@ Then you can run `flutter run` without typing `--dart-define` flags manually.
 # Local direnv config (copy to repo root as `.envrc`)
 # `.envrc` is gitignored; never commit real secrets.
 
-export HUGGINGFACE_API_KEY="YOUR_HUGGINGFACE_TOKEN"
+# Used by the FastAPI demo (if you deploy it) to call Hugging Face Inference.
+# This is a secret; keep it out of git.
+# export HUGGINGFACE_API_KEY="hf_..."
+
+# Optional: AI Decision Workbench backend base URL.
+# Pick ONE:
+#
+# Local:
+export AI_DECISION_API_BASE_URL="http://127.0.0.1:8008"
+#
+# FastAPI Cloud / hosted preview if you deploy this demo later:
+# export AI_DECISION_API_BASE_URL="https://ai-decision-api.fastapicloud.dev"
+
 # Optional: if you want Supabase to initialize from local injection.
 # Note: when validating the Firebase Remote Config Supabase flow, keep these
 # unset so you can prove the app is sourcing config from Remote Config.

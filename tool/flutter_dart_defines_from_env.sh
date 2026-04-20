@@ -33,6 +33,9 @@ emit_define "SUPABASE_ANON_KEY"
 # Optional (feature-gated) keys.
 emit_define "GEMINI_API_KEY"
 
+# Local demo API (AI Decision Workbench).
+emit_define "AI_DECISION_API_BASE_URL"
+
 # Back-compat: code may treat GOOGLE_API_KEY as a fallback for GEMINI_API_KEY.
 emit_define "GOOGLE_API_KEY"
 
