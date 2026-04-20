@@ -28,6 +28,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.onOpenCameraGallery,
     required this.onOpenCaseStudyDemo,
     required this.onOpenIapDemo,
+    required this.onOpenAiDecisionDemo,
     required this.onRunIsolates,
     required this.isRunningIsolates,
     required this.isolateError,
@@ -62,6 +63,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onOpenCameraGallery;
   final VoidCallback onOpenCaseStudyDemo;
   final VoidCallback onOpenIapDemo;
+  final VoidCallback onOpenAiDecisionDemo;
   final VoidCallback? onRunIsolates;
   final bool isRunningIsolates;
   final String? isolateError;
@@ -98,7 +100,8 @@ class ExamplePageBody extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(context.responsiveCardRadius),
             child: FancyShimmerImage(
-              imageUrl: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+              imageUrl:
+                  'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
               height: 180,
               width: double.infinity,
               boxFit: BoxFit.cover,
@@ -200,6 +203,14 @@ class ExamplePageBody extends StatelessWidget {
           SizedBox(height: context.responsiveGapS),
           _buildIconButton(
             context: context,
+            onPressed: onOpenAiDecisionDemo,
+            icon: Icons.rule_outlined,
+            label: 'AI Decision Workbench',
+            key: const ValueKey('example-ai-decision-demo-button'),
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
             onPressed: onOpenIgamingDemo,
             icon: Icons.casino_outlined,
             label: l10n.exampleIgamingDemoButton,
@@ -227,7 +238,8 @@ class ExamplePageBody extends StatelessWidget {
               icon: Icons.cloud_outlined,
               label: l10n.exampleFirebaseFunctionsButton,
             ),
-          if (onOpenFirebaseFunctionsTest != null) SizedBox(height: context.responsiveGapS),
+          if (onOpenFirebaseFunctionsTest != null)
+            SizedBox(height: context.responsiveGapS),
           _buildIconButton(
             context: context,
             onPressed: onOpenScapes,

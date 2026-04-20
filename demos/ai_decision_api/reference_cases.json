@@ -1,0 +1,17 @@
+[
+  {
+    "id": "case_ref_001",
+    "text": "Established supplier with strong revenue requesting modest inventory loan.",
+    "label": "safe"
+  },
+  {
+    "id": "case_ref_002",
+    "text": "Young business with low revenue requesting high loan amount.",
+    "label": "risky"
+  },
+  {
+    "id": "case_ref_003",
+    "text": "Retail business requesting inventory loan with prior default.",
+    "label": "risky"
+  }
+]

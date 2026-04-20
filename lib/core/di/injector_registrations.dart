@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/core/config/supabase_config_provider.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_factories.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
+import 'package:flutter_bloc_app/core/di/register_ai_decision_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_auth_services.dart';
 import 'package:flutter_bloc_app/core/di/register_calculator_services.dart';
 import 'package:flutter_bloc_app/core/di/register_case_study_demo_services.dart'
@@ -96,6 +97,7 @@ Future<void> registerAllDependencies() async {
   registerIotDemoServices();
   registerInAppPurchaseDemoServices();
   registerStaffAppDemoServices();
+  registerAiDecisionDemoServices();
   _registerMemoryServices();
   _registerCameraGalleryServices();
   _registerScapesServices();
