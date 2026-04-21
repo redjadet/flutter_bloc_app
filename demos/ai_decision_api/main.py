@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import uuid
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -102,7 +103,7 @@ def create_action(
     if detail is None:
         raise HTTPException(status_code=404, detail="case_not_found")
     # action_type is validated via Pydantic literal, so safe to store.
-    action_id = f"act_{case_id}_{len(detail['actions']) + 1}"
+    action_id = f"act_{uuid.uuid4().hex[:8]}"
     created = store.insert_action(
         action_id=action_id,
         case_id=case_id,

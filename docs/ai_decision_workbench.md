@@ -36,7 +36,7 @@ flowchart LR
   UI["Flutter UI<br/>/ai-decision-demo"] --> Cubit["AiDecisionCubit"]
   Cubit --> Repo["AiDecisionRepository"]
   Repo --> Client["AiDecisionApiClient<br/>Dio"]
-  Client --> API["FastAPI<br/>127.0.0.1:8008"]
+  Client --> API["FastAPI Cloud<br/>default backend"]
   API --> Store["SQLite Store<br/>.data/ai_decision_demo.sqlite3"]
   API --> Score["Rules + Proof Builder"]
   Score -. optional .-> MiniLM["MiniLM Similar Cases<br/>Hugging Face"]
@@ -80,15 +80,16 @@ python -m seed_data --reset
 uvicorn main:app --reload --host 127.0.0.1 --port 8008
 ```
 
-Start Flutter from the repo root:
+Start Flutter from the repo root. All platforms default to the hosted FastAPI
+Cloud API.
 
 ```bash
-flutter run --dart-define=AI_DECISION_API_BASE_URL=http://127.0.0.1:8008
+flutter run -d chrome
 ```
 
-With `direnv`, copy the example value from
-[`envrc.example`](envrc.example), run `direnv allow`, and use the repo Flutter
-wrapper normally.
+To use a local backend or another deployment, set `AI_DECISION_API_BASE_URL`
+explicitly. With `direnv`, copy [`envrc.example`](envrc.example), run
+`direnv allow`, and use the repo Flutter wrapper normally.
 
 ## User Flow
 
@@ -96,6 +97,8 @@ wrapper normally.
 2. Tap **AI Decision Workbench**.
 3. Select one seeded case from the queue.
 4. Confirm the UI shows applicant, business, loan, and risk signals.
+   The case selector and decision actions stay disabled until the case detail
+   has finished loading.
 5. Tap **Run decision support**.
 6. Confirm the UI shows risk score, risk band, recommended action, rationale,
    confidence, input snapshot, band thresholds, similar-case status, rule trace,
@@ -266,8 +269,9 @@ npx markdownlint-cli2 \
 - No generated Flutter API client.
 - No offline-first sync integration.
 - No direct Flutter-to-Hugging-Face calls.
-- No deployment requirement. FastAPI Cloud can be used later for sharing, but
-  local run is the canonical MVP path.
+- No deployment required for MVP usage. The app defaults to a hosted FastAPI
+  Cloud backend for convenience, but local runs remain the canonical MVP path
+  and can be used by setting `AI_DECISION_API_BASE_URL`.
 
 ## Future Upgrades
 

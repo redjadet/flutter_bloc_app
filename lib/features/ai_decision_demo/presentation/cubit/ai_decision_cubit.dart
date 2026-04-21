@@ -1,12 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_repository.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/cubit/ai_decision_state.dart';
+import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
 
 class AiDecisionCubit extends Cubit<AiDecisionState> {
   AiDecisionCubit({required this.repository})
     : super(AiDecisionState.initial());
 
   final AiDecisionRepository repository;
+
+  String _errorMessage(final Object error) =>
+      NetworkErrorMapper.getErrorMessage(error);
 
   void _safeEmit(final AiDecisionState next) {
     if (isClosed) return;
@@ -30,7 +34,10 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
       }
     } on Object catch (e) {
       _safeEmit(
-        state.copyWith(isLoadingQueue: false, errorMessage: e.toString()),
+        state.copyWith(
+          isLoadingQueue: false,
+          errorMessage: _errorMessage(e),
+        ),
       );
     }
   }
@@ -51,7 +58,7 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
       final detail = await repository.getCaseDetail(caseId);
       _safeEmit(state.copyWith(caseDetail: detail));
     } on Object catch (e) {
-      _safeEmit(state.copyWith(errorMessage: e.toString()));
+      _safeEmit(state.copyWith(errorMessage: _errorMessage(e)));
     }
   }
 
@@ -68,7 +75,10 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
       await loadCase(caseId, preserveDecision: true);
     } on Object catch (e) {
       _safeEmit(
-        state.copyWith(isRunningDecision: false, errorMessage: e.toString()),
+        state.copyWith(
+          isRunningDecision: false,
+          errorMessage: _errorMessage(e),
+        ),
       );
     }
   }
@@ -90,7 +100,10 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
       await loadCase(caseId, preserveDecision: true);
     } on Object catch (e) {
       _safeEmit(
-        state.copyWith(isSavingAction: false, errorMessage: e.toString()),
+        state.copyWith(
+          isSavingAction: false,
+          errorMessage: _errorMessage(e),
+        ),
       );
     }
   }

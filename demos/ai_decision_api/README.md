@@ -157,7 +157,14 @@ python -m pytest
 
 ## Flutter Pairing
 
-Run the Flutter app from the repo root with:
+Run the Flutter app from the repo root. All platforms default to the hosted
+FastAPI Cloud deployment:
+
+```bash
+flutter run -d chrome
+```
+
+For local backend development, pass the local backend explicitly:
 
 ```bash
 flutter run --dart-define=AI_DECISION_API_BASE_URL=http://127.0.0.1:8008
@@ -165,10 +172,10 @@ flutter run --dart-define=AI_DECISION_API_BASE_URL=http://127.0.0.1:8008
 
 Then open the Example hub and choose **AI Decision Workbench**.
 
-## Optional FastAPI Cloud Preview
+## FastAPI Cloud Preview
 
-Local is the MVP source of truth. If you need to share the backend later, this
-folder can be deployed to FastAPI Cloud:
+The current web app default expects this backend on FastAPI Cloud. Deploy this
+folder with:
 
 ```bash
 cd demos/ai_decision_api
@@ -186,10 +193,10 @@ fastapi cloud env set --secret HUGGINGFACE_API_KEY "hf_..." .
 fastapi deploy
 ```
 
-Verify the deployed backend before running Flutter:
+Verify the deployed backend before running Flutter web:
 
 ```bash
-curl -s https://YOUR_APP.fastapicloud.dev/health | python -m json.tool
+curl -s https://ai-decision-api.fastapicloud.dev/health | python -m json.tool
 ```
 
 Expected MiniLM-enabled health shape:
@@ -202,7 +209,7 @@ Expected MiniLM-enabled health shape:
 }
 ```
 
-After deployment, run Flutter with the deployed URL:
+To test a different FastAPI Cloud app, override the base URL:
 
 ```bash
 flutter run --dart-define=AI_DECISION_API_BASE_URL=https://YOUR_APP.fastapicloud.dev

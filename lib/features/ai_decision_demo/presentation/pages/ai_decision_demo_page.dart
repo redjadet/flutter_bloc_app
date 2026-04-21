@@ -60,7 +60,10 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
 
             final error = state.errorMessage;
             if (error != null) {
-              return CommonErrorView(message: error);
+              return CommonErrorView(
+                message: error,
+                onRetry: () => context.cubit<AiDecisionCubit>().loadQueue(),
+              );
             }
 
             if (state.queue.isEmpty) {
@@ -72,18 +75,24 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
             final selectedId = state.selectedCaseId ?? state.queue.first.id;
             final detail = state.caseDetail;
             final decision = state.decision ?? detail?.latestDecision;
+            final hasCaseDetail = detail != null;
 
             return Padding(
               padding: const EdgeInsets.all(16),
               child: ListView(
                 children: [
+                  const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
+                    isExpanded: true,
                     initialValue: selectedId,
                     items: state.queue
                         .map(
                           (final c) => DropdownMenuItem<String>(
                             value: c.id,
-                            child: Text('${c.id} • ${c.businessName}'),
+                            child: Text(
+                              '${c.id} • ${c.businessName}',
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         )
                         .toList(growable: false),
@@ -125,7 +134,7 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
                   ),
                   const SizedBox(height: 12),
                   FilledButton(
-                    onPressed: state.isRunningDecision
+                    onPressed: state.isRunningDecision || !hasCaseDetail
                         ? null
                         : () async => context
                               .cubit<AiDecisionCubit>()
@@ -235,7 +244,7 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
     final AiDecisionState state,
     final String actionType,
   ) => FilledButton.tonal(
-    onPressed: state.isSavingAction
+    onPressed: state.isSavingAction || state.caseDetail == null
         ? null
         : () async => context.cubit<AiDecisionCubit>().saveAction(
             actionType: actionType,

@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_models.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_repository.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/cubit/ai_decision_cubit.dart';
@@ -75,6 +76,34 @@ void main() {
       recommendedAction: 'request_docs',
       rationale: 'Because reasons.',
       proof: const {'rule_trace': []},
+    );
+
+    blocTest<AiDecisionCubit, AiDecisionState>(
+      'loadQueue maps Dio connection errors to user-friendly copy',
+      build: () {
+        when(repository.getCases).thenThrow(
+          DioException.connectionError(
+            requestOptions: RequestOptions(path: '/cases'),
+            reason: 'XMLHttpRequest onError callback was called',
+          ),
+        );
+        return buildCubit();
+      },
+      act: (final cubit) async => cubit.loadQueue(),
+      expect: () => [
+        isA<AiDecisionState>().having(
+          (final s) => s.isLoadingQueue,
+          'loading',
+          true,
+        ),
+        isA<AiDecisionState>()
+            .having((final s) => s.isLoadingQueue, 'loading', false)
+            .having(
+              (final s) => s.errorMessage,
+              'errorMessage',
+              'Network connection error. Please check your internet connection.',
+            ),
+      ],
     );
 
     blocTest<AiDecisionCubit, AiDecisionState>(
