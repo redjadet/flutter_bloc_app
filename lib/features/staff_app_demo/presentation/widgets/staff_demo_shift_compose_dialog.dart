@@ -189,7 +189,7 @@ class _StaffDemoShiftComposeDialogState
                     selectedItemBuilder: (final context) => staff
                         .map(
                           (final p) => Align(
-                            alignment: Alignment.centerLeft,
+                            alignment: AlignmentDirectional.centerStart,
                             child: Text(
                               p.email.trim().isEmpty
                                   ? p.displayName

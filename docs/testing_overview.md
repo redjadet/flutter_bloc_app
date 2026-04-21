@@ -12,6 +12,7 @@ For the complete docs index, see [docs index](README.md).
 - Integration flow structure: [Integration Flow Guide](testing_integration_flows.md)
 - Validation scripts: [Validation Scripts](validation_scripts.md)
 - CI workflow: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
+- RTL + localization regression guards: `test/rtl/` (e.g. Arabic `Locale('ar')` directionality + spacing checks)
 
 ## Integration docs (policy and contracts)
 

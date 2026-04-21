@@ -127,7 +127,7 @@ class ScapeGridItem extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Align(
-                        alignment: Alignment.centerLeft,
+                        alignment: AlignmentDirectional.centerStart,
                         child: Text(
                           scape.name,
                           style: titleStyle,

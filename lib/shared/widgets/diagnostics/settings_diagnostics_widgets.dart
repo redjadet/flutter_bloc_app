@@ -33,7 +33,7 @@ class SettingsDiagnosticsClearButton extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return Align(
-      alignment: Alignment.centerRight,
+      alignment: AlignmentDirectional.centerEnd,
       child: PlatformAdaptive.textButton(
         context: context,
         onPressed: onPressed,

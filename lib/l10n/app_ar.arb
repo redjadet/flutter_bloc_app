@@ -1,14 +1,745 @@
 {
-  "@@locale": "en",
-  "autoLabel": "Auto",
+  "@@locale": "ar",
+  "autoLabel": "آلي",
+  "pausedLabel": "متوقف مؤقتًا",
+  "nextAutoDecrementIn": "التخفيض التلقائي التالي في: {s}s",
+  "autoDecrementPaused": "تم إيقاف التخفيض التلقائي مؤقتًا !!!",
+  "lastChangedLabel": "آخر تغيير:",
+  "appTitle": "تطبيق BLoC",
+  "homeTitle": "الصفحة الرئيسية",
+  "pushCountLabel": "لقد ضغطت على الزر عدة مرات:",
+  "incrementTooltip": "زيادة",
+  "decrementTooltip": "إنقاص",
+  "loadErrorMessage": "فشل تحميل العداد المحفوظ",
+  "saveErrorMessage": "فشل حفظ العداد",
+  "startAutoHint": "انقر فوق + لبدء التخفيض التلقائي",
+  "cannotGoBelowZero": "لا يمكن أن يقل العدد عن 0",
+  "openExampleTooltip": "افتح صفحة المثال",
+  "openCaseStudyDemoTooltip": "افتح العرض التوضيحي لدراسة حالة طبيب الأسنان",
+  "openCalculatorTooltip": "فتح حاسبة الدفع",
+  "examplePageTitle": "صفحة المثال",
+  "examplePageDescription": "توضح هذه الصفحة التنقل باستخدام GoRouter.",
+  "exampleBackButtonLabel": "العودة إلى العداد",
+  "exampleNativeInfoButton": "جلب المعلومات الأصلية",
+  "exampleNativeInfoTitle": "معلومات المنصة",
+  "exampleNativeInfoError": "غير قادر على جلب معلومات النظام الأساسي الأصلي.",
+  "exampleNativeInfoDialogTitle": "تفاصيل المنصة",
+  "exampleNativeInfoDialogPlatformLabel": "منصة",
+  "exampleNativeInfoDialogVersionLabel": "إصدار",
+  "exampleNativeInfoDialogManufacturerLabel": "الشركة المصنعة",
+  "exampleNativeInfoDialogModelLabel": "نموذج",
+  "exampleNativeInfoDialogBatteryLabel": "مستوى البطارية",
+  "exampleDialogCloseButton": "يغلق",
+  "exampleRunIsolatesButton": "تشغيل عينات معزولة",
+  "exampleIsolateParallelPending": "تشغيل المهام المتوازية...",
+  "exampleIsolateFibonacciLabel": "فيبوناتشي ({input}) = {value}",
+  "exampleIsolateParallelComplete": "القيم المضاعفة المتوازية: {values} (اكتملت في {milliseconds} مللي ثانية)",
+  "calculatorTitle": "حاسبة الدفع",
+  "calculatorSummaryHeader": "ملخص الدفع",
+  "calculatorResultLabel": "نتيجة",
+  "calculatorSubtotalLabel": "المجموع الفرعي",
+  "calculatorTaxLabel": "الضريبة ({rate})",
+  "calculatorTipLabel": "نصيحة ({rate})",
+  "calculatorTotalLabel": "المبلغ المراد تحصيله",
+  "calculatorTaxPresetsLabel": "الإعدادات المسبقة للضرائب",
+  "calculatorCustomTaxLabel": "ضريبة مخصصة",
+  "calculatorCustomTaxDialogTitle": "ضريبة مخصصة",
+  "calculatorCustomTaxFieldLabel": "نسبة الضريبة",
+  "calculatorResetTax": "إعادة تعيين الضريبة",
+  "calculatorTipRateLabel": "تلميح الإعدادات المسبقة",
+  "calculatorCustomTipLabel": "نصيحة مخصصة",
+  "calculatorResetTip": "نصيحة واضحة",
+  "calculatorCustomTipDialogTitle": "نصيحة مخصصة",
+  "calculatorCustomTipFieldLabel": "نسبة النصيحة",
+  "calculatorCancel": "يلغي",
+  "calculatorApply": "يتقدم",
+  "calculatorKeypadHeader": "لوحة المفاتيح",
+  "calculatorClearLabel": "واضح",
+  "calculatorBackspace": "مسافة للخلف",
+  "calculatorPercentCommand": "نسبة مئوية",
+  "calculatorToggleSign": "تبديل الإشارة",
+  "calculatorDecimalPointLabel": "النقطة العشرية",
+  "calculatorErrorTitle": "خطأ",
+  "calculatorErrorDivisionByZero": "لا يمكن القسمة على صفر",
+  "calculatorErrorInvalidResult": "النتيجة ليست رقمًا صالحًا",
+  "calculatorErrorNonPositiveTotal": "يجب أن يكون الإجمالي أكبر من الصفر",
+  "calculatorEquals": "إجمالي الرسوم",
+  "calculatorPaymentTitle": "ملخص الدفع",
+  "calculatorNewCalculation": "عملية حسابية جديدة",
+  "settingsBiometricPrompt": "قم بالمصادقة لفتح الإعدادات",
+  "settingsBiometricFailed": "تعذر التحقق من هويتك.",
+  "settingsBiometricUnavailable": "المصادقة البيومترية غير متوفرة على الويب. فتح الإعدادات على أي حال.",
+  "openChartsTooltip": "فتح الرسوم البيانية",
+  "openGraphqlTooltip": "استكشف نموذج GraphQL",
+  "openSettingsTooltip": "افتح الإعدادات",
+  "settingsPageTitle": "إعدادات",
+  "settingsThrowTestException": "رمي استثناء الاختبار",
+  "accountSectionTitle": "حساب",
+  "accountSignedInAs": "تم تسجيل الدخول باسم {name}",
+  "accountSignedOutLabel": "لم يتم تسجيل الدخول.",
+  "accountSignInButton": "تسجيل الدخول",
+  "accountManageButton": "إدارة الحساب",
+  "accountGuestLabel": "باستخدام حساب الضيف",
+  "accountGuestDescription": "لقد قمت بتسجيل الدخول بشكل مجهول. قم بإنشاء حساب لمزامنة بياناتك عبر الأجهزة.",
+  "accountUpgradeButton": "إنشاء أو ربط الحساب",
+  "themeSectionTitle": "مظهر",
+  "themeModeSystem": "الافتراضي للنظام",
+  "themeModeLight": "ضوء",
+  "themeModeDark": "مظلم",
+  "languageSectionTitle": "اللغة",
+  "languageSystemDefault": "استخدام لغة الجهاز",
+  "languageEnglish": "الإنجليزية",
+  "languageTurkish": "التركية",
+  "languageGerman": "الألمانية",
+  "languageFrench": "الفرنسية",
+  "languageSpanish": "الإسبانية",
+  "languageArabic": "العربية",
+  "appInfoSectionTitle": "معلومات التطبيق",
+  "settingsRemoteConfigSectionTitle": "التكوين عن بعد",
+  "settingsRemoteConfigStatusIdle": "في انتظار الجلب الأول",
+  "settingsRemoteConfigStatusLoading": "جارٍ تحميل أحدث القيم...",
+  "settingsRemoteConfigStatusLoaded": "تم تحميل أحدث القيم",
+  "settingsRemoteConfigStatusError": "فشل تحميل التكوين عن بعد",
+  "settingsRemoteConfigErrorLabel": "الخطأ الأخير",
+  "remoteConfigAwesomeFeatureEnabled": "تم تمكين الميزة الرائعة",
+  "settingsRemoteConfigFlagLabel": "علم ميزة رهيبة",
+  "settingsRemoteConfigFlagEnabled": "ممكّن",
+  "settingsRemoteConfigFlagDisabled": "عاجز",
+  "settingsRemoteConfigTestValueLabel": "قيمة الاختبار",
+  "settingsRemoteConfigTestValueEmpty": "لم يتم ضبطه",
+  "settingsRemoteConfigRetryButton": "أعد محاولة الجلب",
+  "settingsRemoteConfigClearCacheButton": "مسح ذاكرة التخزين المؤقت للتكوين",
+  "settingsSyncDiagnosticsTitle": "تشخيص المزامنة",
+  "settingsSyncDiagnosticsEmpty": "لم يتم تسجيل أي عمليات مزامنة حتى الآن.",
+  "settingsSyncLastRunLabel": "آخر تشغيل: {timestamp}",
+  "settingsSyncOperationsLabel": "العمليات: تمت معالجة {processed}، وفشلت {failed}",
+  "settingsSyncPendingLabel": "معلق عند البداية: {count}",
+  "settingsSyncPrunedLabel": "مشذب: {count}",
+  "settingsSyncDurationLabel": "المدة: {ms}ms",
+  "settingsSyncHistoryTitle": "عمليات المزامنة الأخيرة",
+  "settingsGraphqlCacheSectionTitle": "ذاكرة التخزين المؤقت GraphQL",
+  "settingsGraphqlCacheDescription": "امسح البلدان/القارات المخزنة مؤقتًا التي يستخدمها العرض التوضيحي لـ GraphQL. سيتم جلب البيانات الجديدة عند التحميل التالي.",
+  "settingsGraphqlCacheClearButton": "مسح ذاكرة التخزين المؤقت GraphQL",
+  "settingsGraphqlCacheClearedMessage": "تم مسح ذاكرة التخزين المؤقت لـ GraphQL",
+  "settingsGraphqlCacheErrorMessage": "تعذر مسح ذاكرة التخزين المؤقت لـ GraphQL",
+  "settingsProfileCacheSectionTitle": "ذاكرة التخزين المؤقت للملف الشخصي",
+  "settingsProfileCacheDescription": "امسح لقطة الملف الشخصي المخزنة مؤقتًا محليًا والمستخدمة لعرض شاشة الملف الشخصي في وضع عدم الاتصال.",
+  "settingsProfileCacheClearButton": "مسح ذاكرة التخزين المؤقت للملف الشخصي",
+  "settingsProfileCacheClearedMessage": "تم مسح ذاكرة التخزين المؤقت للملف الشخصي",
+  "settingsProfileCacheErrorMessage": "تعذر مسح ذاكرة التخزين المؤقت للملف الشخصي",
+  "settingsDiagnosticsLastSyncedAt": "آخر مزامنة: {formattedDate} {formattedTime}",
+  "settingsDiagnosticsCacheSizeKb": "حجم ذاكرة التخزين المؤقت: {kilobytes} كيلو بايت",
+  "settingsDiagnosticsDataSource": "المصدر: {name}",
+  "networkRetryingSnackBarMessage": "جارٍ إعادة المحاولة...",
+  "appInfoVersionLabel": "إصدار",
+  "appInfoBuildNumberLabel": "رقم البناء",
+  "appInfoLoadingLabel": "جارٍ تحميل معلومات التطبيق...",
+  "appInfoLoadErrorLabel": "فشل في تحميل معلومات التطبيق.",
+  "appInfoRetryButtonLabel": "أعد المحاولة",
+  "openChatTooltip": "الدردشة مع منظمة العفو الدولية",
+  "openGenuiDemoTooltip": "عرض GenUI",
+  "openGoogleMapsTooltip": "افتح العرض التوضيحي لخرائط Google/Apple",
+  "openWhiteboardTooltip": "افتح السبورة",
+  "openMarkdownEditorTooltip": "افتح محرر تخفيض السعر",
+  "openTodoTooltip": "افتح قائمة المهام",
+  "openWalletconnectAuthTooltip": "ربط المحفظة",
+  "chatPageTitle": "دردشة الذكاء الاصطناعي",
+  "chatTransportSupabase": "سوباباس",
+  "chatTransportDirect": "مباشر",
+  "chatTransportSupabaseSemanticsLabel": "سوباباس. تستخدم ردود الدردشة وكيل Supabase Edge؛ معانقة الوجه يعمل على الخادم.",
+  "chatTransportDirectSemanticsLabel": "مباشر. يقوم هذا التطبيق باستدعاء Hugging Face مباشرة للردود على الدردشة.",
+  "chatTransportRenderOrchestration": "التنسيق",
+  "chatTransportRenderOrchestrationSemanticsLabel": "التنسيق. تستخدم ردود الدردشة خدمة FastAPI Cloud الخاصة بك، والتي توجه إلى Hugging Face.",
+  "chatFastApiCloudBadgeLabel": "سحابة FastAPI",
+  "chatFastApiCloudBadgeSemanticsLabel": "سحابة FastAPI. يتم تشغيل التزامن على FastAPI Cloud.",
+  "chatModelAuto": "آلي",
+  "chatRenderStrictMode": "الوضع الصارم التجريبي لـ FastAPI Cloud قيد التشغيل؛ تم تعطيل السقوط.",
+  "chatAuthRefreshRequired": "قم بتسجيل الدخول مرة أخرى لمواصلة استخدام العرض التوضيحي للدردشة FastAPI Cloud.",
+  "chatSessionEnded": "انتهت جلستك. ابدأ محادثة جديدة بعد تسجيل الدخول.",
+  "chatSwitchAccount": "قم بتبديل الحساب لتحديث بيانات الاعتماد للعرض التوضيحي للدردشة FastAPI Cloud.",
+  "chatTokenMissing": "رمز وجه المعانقة مفقود. تحقق من اتصالك وحاول مرة أخرى.",
+  "chatOrchestrationTooltip": "يستخدم التوجيه من جانب الخادم بين النماذج عند تحديد تلقائي.",
+  "chatOfflineBadgeLabel": "غير متصل",
+  "chatOfflineBadgeSemanticsLabel": "غير متصل. ستتم مزامنة الرسائل عند معاودة الاتصال بالإنترنت.",
+  "chatInputHint": "اسأل المساعد أي شيء...",
+  "searchHint": "يبحث...",
+  "retryButtonLabel": "حاول ثانية",
+  "featureLoadError": "غير قادر على تحميل هذه الميزة. يرجى المحاولة مرة أخرى.",
+  "chatSendButton": "أرسل رسالة",
+  "chatEmptyState": "ابدأ المحادثة بإرسال رسالة.",
+  "chatModelLabel": "نموذج",
+  "chatModelGptOss20b": "جي بي تي-OSS-20B",
+  "chatModelGptOss120b": "جي بي تي-OSS-120B",
+  "chatHistoryShowTooltip": "عرض التاريخ",
+  "chatHistoryHideTooltip": "إخفاء التاريخ",
+  "chatHistoryPanelTitle": "تاريخ المحادثة",
+  "chatHistoryStartNew": "ابدأ محادثة جديدة",
+  "chatHistoryClearAll": "حذف التاريخ",
+  "chatHistoryDeleteConversation": "حذف المحادثة",
+  "chatHistoryClearAllWarning": "سيؤدي هذا إلى حذف جميع المحادثات المخزنة نهائيًا.",
+  "chatMessageStatusPending": "في انتظار المزامنة",
+  "chatMessageStatusSyncing": "جارٍ المزامنة…",
+  "chatMessageStatusOffline": "غير متصل - سيتم الإرسال عند الاتصال",
+  "registerTitle": "يسجل",
+  "registerFullNameLabel": "الاسم الكامل",
+  "registerFullNameHint": "جين دو",
+  "registerEmailLabel": "عنوان البريد الإلكتروني",
+  "registerEmailHint": "jane.doe@example.com",
+  "registerPhoneLabel": "رقم التليفون",
+  "registerPhoneHint": "5551234567",
+  "registerCountryPickerTitle": "اختر رمز بلدك",
+  "registerPasswordLabel": "كلمة المرور",
+  "registerPasswordHint": "إنشاء كلمة المرور",
+  "registerConfirmPasswordLabel": "تأكيد كلمة المرور",
+  "registerConfirmPasswordHint": "أعد إدخال كلمة المرور",
+  "registerSubmitButton": "التالي",
+  "registerDialogTitle": "اكتمل التسجيل",
+  "registerDialogMessage": "مرحبًا بك على متن الطائرة، {name}!",
+  "registerDialogOk": "نعم",
+  "registerFullNameEmptyError": "الرجاء إدخال اسمك الكامل",
+  "registerFullNameTooShortError": "يجب أن يتكون الاسم من حرفين على الأقل",
+  "registerEmailEmptyError": "الرجاء إدخال البريد الإلكتروني الخاص بك",
+  "registerEmailInvalidError": "الرجاء إدخال بريد إلكتروني صالح",
+  "registerPasswordEmptyError": "الرجاء إدخال كلمة المرور الخاصة بك",
+  "registerPasswordTooShortError": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
+  "registerPasswordLettersAndNumbersError": "استخدم الحروف والأرقام",
+  "registerPasswordWhitespaceError": "لا يمكن أن تحتوي كلمة المرور على مسافات",
+  "registerTermsCheckboxPrefix": "لقد قرأت ووافقت على",
+  "registerTermsCheckboxSuffix": ".",
+  "registerTermsLinkLabel": "الشروط والأحكام",
+  "registerTermsError": "يرجى قبول الشروط للمتابعة",
+  "registerTermsDialogTitle": "الشروط والأحكام",
+  "registerTermsDialogBody": "من خلال إنشاء حساب، فإنك توافق على استخدام هذا التطبيق بشكل مسؤول، واحترام المستخدمين الآخرين، والامتثال لجميع القوانين المعمول بها. أنت توافق على سياسة الخصوصية الخاصة بنا، وتقر بأن توفر الخدمة قد يتغير، وتقبل أنه قد يتم تعليق حسابك بسبب سوء الاستخدام أو انتهاك هذه الشروط.",
+  "registerTermsAcceptButton": "يقبل",
+  "registerTermsRejectButton": "يلغي",
+  "registerTermsPrompt": "يرجى مراجعة الشروط وقبولها قبل المتابعة.",
+  "registerTermsButtonLabel": "اقرأ الشروط والأحكام",
+  "registerTermsSheetTitle": "الشروط والأحكام",
+  "registerTermsSheetBody": "توضح هذه الشروط الاستخدام المقبول لهذا التطبيق التجريبي. من خلال المتابعة، فإنك توافق على التعامل مع حسابك بمسؤولية، وحماية بيانات الاعتماد الخاصة بك، والامتثال لأية قوانين معمول بها. المحتوى المقدم توضيحي فقط وقد يتغير دون إشعار. إذا كنت لا توافق على هذه الشروط، يرجى التوقف عن عملية التسجيل.",
+  "registerTermsDialogAcknowledge": "لقد قرأت الشروط",
+  "registerTermsCheckboxLabel": "أوافق على الشروط والأحكام",
+  "registerTermsCheckboxDisabledHint": "اقرأ الشروط قبل قبولها.",
+  "registerTermsNotAcceptedError": "يجب عليك قبول الشروط للمتابعة.",
+  "registerConfirmPasswordEmptyError": "يرجى تأكيد كلمة المرور الخاصة بك",
+  "registerConfirmPasswordMismatchError": "كلمات المرور غير متطابقة",
+  "registerPhoneEmptyError": "الرجاء إدخال رقم هاتفك",
+  "registerPhoneInvalidError": "أدخل 6-15 رقمًا",
+  "profilePageTitle": "حساب تعريفي",
+  "anonymousSignInButton": "استمر كضيف",
+  "anonymousSignInDescription": "يمكنك استكشاف التطبيق دون إنشاء حساب. يمكنك الترقية لاحقًا من الإعدادات.",
+  "anonymousSignInFailed": "تعذر بدء جلسة الضيف. يرجى المحاولة مرة أخرى.",
+  "anonymousUpgradeHint": "أنت تستخدم حاليًا جلسة ضيف. قم بتسجيل الدخول للاحتفاظ ببياناتك عبر عمليات التثبيت والأجهزة.",
+  "authErrorInvalidEmail": "يبدو أن عنوان البريد الإلكتروني مشوه.",
+  "authErrorUserDisabled": "لقد تم تعطيل هذا الحساب. اتصل بالدعم للحصول على المساعدة.",
+  "authErrorUserNotFound": "لم نتمكن من العثور على حساب بهذه التفاصيل.",
+  "authErrorWrongPassword": "كلمة المرور غير صحيحة. التحقق من ذلك وحاول مرة أخرى.",
+  "authErrorEmailInUse": "هذا البريد الإلكتروني مرتبط بالفعل بحساب آخر.",
+  "authErrorOperationNotAllowed": "طريقة تسجيل الدخول هذه معطلة حاليًا. يرجى تجربة خيار مختلف.",
+  "authErrorWeakPassword": "اختر كلمة مرور أقوى قبل المتابعة.",
+  "authErrorRequiresRecentLogin": "الرجاء تسجيل الدخول مرة أخرى لإكمال هذا الإجراء.",
+  "authErrorCredentialInUse": "بيانات الاعتماد هذه مرتبطة بالفعل بحساب آخر.",
+  "authErrorInvalidCredential": "بيانات الاعتماد المقدمة غير صالحة أو منتهية الصلاحية.",
+  "authErrorGeneric": "لم نتمكن من إكمال الطلب. يرجى المحاولة مرة أخرى.",
+  "authErrorNetworkRequestFailed": "تحقق من اتصالك وحاول مرة أخرى.",
+  "authErrorTooManyRequests": "محاولات كثيرة جدًا. يرجى الانتظار قبل المحاولة مرة أخرى.",
+  "chatHistoryDeleteConversationWarning": "هل تريد حذف \"{title}\"؟",
+  "cancelButtonLabel": "يلغي",
+  "deleteButtonLabel": "يمسح",
+  "chatHistoryEmpty": "لا توجد محادثات سابقة حتى الآن.",
+  "chatHistoryConversationTitle": "المحادثة {index}",
+  "chatHistoryUpdatedAt": "تم التحديث {timestamp}",
+  "chartPageTitle": "سعر البيتكوين (دولار أمريكي)",
+  "chartPageDescription": "سعر الإغلاق خلال الأيام السبعة الماضية (مدعوم من CoinGecko)",
+  "chartPageError": "غير قادر على تحميل بيانات المخطط.",
+  "chartPageEmpty": "لا توجد بيانات الرسم البياني المتاحة حتى الآن.",
+  "chartZoomToggleLabel": "تمكين قرصة التكبير",
+  "chartDataSourceCache": "مخبأ",
+  "chartDataSourceSupabaseEdge": "سوباباس (الحافة)",
+  "chartDataSourceSupabaseTables": "سوباباس (الجداول)",
+  "chartDataSourceFirebaseCloud": "Firebase (السحابة)",
+  "chartDataSourceFirebaseFirestore": "فاير بيس (فاير ستور)",
+  "chartDataSourceRemote": "بعيد",
+  "graphqlSampleTitle": "دول الرسم البياني QL",
+  "graphqlSampleFilterLabel": "تصفية حسب القارة",
+  "graphqlSampleAllContinents": "جميع القارات",
+  "graphqlSampleErrorTitle": "حدث خطأ ما",
+  "graphqlSampleGenericError": "لا يمكننا تحميل البلدان الآن.",
+  "graphqlSampleRetryButton": "حاول ثانية",
+  "graphqlSampleEmpty": "لم تتطابق أي دولة مع عوامل التصفية المحددة.",
+  "graphqlSampleCapitalLabel": "عاصمة",
+  "graphqlSampleCurrencyLabel": "عملة",
+  "graphqlSampleNetworkError": "خطأ في الشبكة. تحقق من اتصالك وحاول مرة أخرى.",
+  "graphqlSampleInvalidRequestError": "تم رفض الطلب. جرب مرشحًا مختلفًا.",
+  "graphqlSampleServerError": "الخدمة غير متوفرة حاليا. يرجى المحاولة مرة أخرى في وقت لاحق.",
+  "graphqlSampleDataError": "لقد تلقينا ردا غير متوقع. يرجى المحاولة مرة أخرى.",
+  "graphqlSampleDataSourceCache": "مخبأ",
+  "graphqlSampleDataSourceSupabaseEdge": "سوباباس (الحافة)",
+  "graphqlSampleDataSourceSupabaseTables": "سوباباس (الجداول)",
+  "graphqlSampleDataSourceRemote": "بعيد",
+  "exampleWebsocketButton": "افتح العرض التوضيحي لـ WebSocket",
+  "exampleGoogleMapsButton": "افتح العرض التوضيحي لخرائط Google/Apple",
+  "exampleNativeBatteryLabel": "مستوى البطارية: {percent}%",
+  "websocketDemoTitle": "عرض WebSocket",
+  "websocketDemoWebUnsupported": "العرض التوضيحي لـ WebSocket غير متوفر على إصدارات الويب حتى الآن.",
+  "websocketReconnectTooltip": "أعد الاتصال",
+  "websocketEmptyState": "لا توجد رسائل حتى الآن. أرسل رسالة للبدء.",
+  "websocketMessageHint": "اكتب رسالة",
+  "websocketSendButton": "إرسال",
+  "websocketStatusConnected": "متصل بـ {endpoint}",
+  "websocketStatusConnecting": "جارٍ الاتصال بـ {endpoint}...",
+  "websocketErrorLabel": "خطأ WebSocket: {error}",
+  "googleMapsPageTitle": "عرض الخرائط",
+  "googleMapsPageGenericError": "لم نتمكن من تحميل بيانات الخريطة الآن.",
+  "googleMapsPageControlsHeading": "ضوابط الخريطة",
+  "googleMapsPageMapTypeNormal": "عرض الخريطة القياسية",
+  "googleMapsPageMapTypeHybrid": "عرض الخريطة الهجينة",
+  "googleMapsPageTrafficToggle": "عرض حركة المرور في الوقت الحقيقي",
+  "googleMapsPageApiKeyHelp": "أضف مفاتيح Google Maps API إلى المشاريع الأصلية لرؤية المربعات الحية.",
+  "googleMapsPageEmptyLocations": "لا توجد مواقع لعرضها بعد.",
+  "googleMapsPageLocationsHeading": "مواقع مميزة",
+  "googleMapsPageFocusButton": "ركز",
+  "googleMapsPageSelectedBadge": "مختارة",
+  "googleMapsPageMissingKeyTitle": "أضف مفتاح API لخرائط Google",
+  "googleMapsPageMissingKeyDescription": "قم بتحديث مشاريع النظام الأساسي باستخدام مفاتيح Google Maps API الصالحة لاستخدام هذا العرض التوضيحي.",
+  "googleMapsPageUnsupportedDescription": "يتوفر الإصدار التجريبي من خرائط Google فقط على إصدارات Android وiOS.",
+  "syncStatusOfflineTitle": "أنت غير متصل بالإنترنت",
+  "syncStatusOfflineMessage": "سنقوم بمزامنة {pendingCount, plural, =0 {تغييراتك} one {تغيير واحد} two {تغييرين} few {# تغييرات} many {# تغييرًا} other {# تغيير}} عندما تعود متصلاً بالإنترنت.",
+  "syncStatusSyncingTitle": "مزامنة التغييرات",
+  "syncStatusSyncingMessage": "{pendingCount, plural, =0 {جارٍ إنهاء آخر تحديثاتك.} one {جارٍ مزامنة تغيير واحد…} two {جارٍ مزامنة تغييرين…} few {جارٍ مزامنة # تغييرات…} many {جارٍ مزامنة # تغييرًا…} other {جارٍ مزامنة # تغيير…}}",
+  "syncStatusPendingTitle": "التغييرات في قائمة الانتظار",
+  "syncStatusPendingMessage": "{pendingCount, plural, zero {لا توجد تغييرات بانتظار المزامنة.} one {تغيير واحد بانتظار المزامنة.} two {تغييرين بانتظار المزامنة.} few {# تغييرات بانتظار المزامنة.} many {# تغييرًا بانتظار المزامنة.} other {# تغيير بانتظار المزامنة.}}",
+  "syncStatusDegradedTitle": "تم اكتشاف مشكلات في المزامنة",
+  "syncStatusDegradedMessage": "قد لا تتم مزامنة بعض البيانات. انقر فوق إعادة المحاولة لمحاولة المزامنة.",
+  "syncStatusSyncNowButton": "مزامنة الآن",
+  "counterLastSynced": "آخر مزامنة: {timestamp}",
+  "counterChangeId": "معرف التغيير: {changeId}",
+  "syncQueueInspectorButton": "عرض قائمة انتظار المزامنة",
+  "syncQueueInspectorEmpty": "لا توجد عمليات معلقة.",
+  "syncQueueInspectorTitle": "عمليات المزامنة المعلقة",
+  "syncQueueInspectorOperation": "الكيان: {entity}، المحاولات: {attempts}",
+  "exampleTodoListButton": "قائمة تودو التجريبي",
+  "exampleChatListButton": "عرض قائمة الدردشة",
+  "exampleSearchDemoButton": "بحث تجريبي",
+  "exampleProfileButton": "العرض التوضيحي للملف الشخصي",
+  "exampleRegisterButton": "سجل تجريبي",
+  "exampleLoggedOutButton": "تسجيل الخروج التجريبي",
+  "exampleLibraryDemoButton": "عرض المكتبة",
+  "libraryDemoPageTitle": "عرض المكتبة",
+  "libraryDemoBrandName": "عصر",
+  "libraryDemoPanelTitle": "مكتبة",
+  "libraryDemoSearchHint": "ابحث في مكتبتك",
+  "libraryDemoCategoryScapes": "المناظر",
+  "libraryDemoCategoryPacks": "حزم",
+  "libraryDemoAssetsTitle": "جميع الأصول",
+  "libraryDemoAssetName": "اسم الأصول",
+  "libraryDemoAssetTypeObject": "هدف",
+  "libraryDemoAssetTypeImage": "صورة",
+  "libraryDemoAssetTypeSound": "صوت",
+  "libraryDemoAssetTypeFootage": "لقطات",
+  "libraryDemoAssetDuration": "00:00",
+  "libraryDemoFormatObj": "OBJ",
+  "libraryDemoFormatJpg": "JPG",
+  "libraryDemoFormatMp4": "MP4",
+  "libraryDemoFormatMp3": "MP3",
+  "libraryDemoBackButtonLabel": "خلف",
+  "libraryDemoFilterButtonLabel": "فلتر",
+  "todoListTitle": "قائمة المهام",
+  "todoListLoadError": "غير قادر على تحميل المهام",
+  "todoListAddAction": "إضافة ما يجب القيام به",
+  "todoListSaveAction": "حفظ",
+  "todoListCancelAction": "يلغي",
+  "todoListDeleteAction": "يمسح",
+  "todoListEditAction": "يحرر",
+  "todoListCompleteAction": "مكتمل",
+  "todoListUndoAction": "وضع علامة نشط",
+  "todoListDeleteDialogTitle": "هل تريد حذف كل ما عليك فعله؟",
+  "todoListDeleteDialogMessage": "هل تريد حذف \"{title}\"؟ لا يمكن التراجع عن هذا.",
+  "todoListSearchHint": "بحث في كل شيء...",
+  "todoListDeleteUndone": "تم حذف ما يجب القيام به",
+  "todoListSortAction": "نوع",
+  "todoListSortDateDesc": "التاريخ (الأحدث أولاً)",
+  "todoListSortDateAsc": "التاريخ (الأقدم أولاً)",
+  "todoListSortTitleAsc": "العنوان (أ-ي)",
+  "todoListSortTitleDesc": "العنوان (ي-أ)",
+  "todoListSortManual": "يدوي (اسحب لإعادة الترتيب)",
+  "todoListSortPriorityDesc": "الأولوية (من الأعلى إلى الأدنى)",
+  "todoListSortPriorityAsc": "الأولوية (من الأقل إلى الأعلى)",
+  "todoListSortDueDateAsc": "تاريخ الاستحقاق (الأقرب أولاً)",
+  "todoListSortDueDateDesc": "تاريخ الاستحقاق (الأحدث أولاً)",
+  "todoListPriorityNone": "لا أحد",
+  "todoListPriorityLow": "قليل",
+  "todoListPriorityMedium": "واسطة",
+  "todoListPriorityHigh": "عالي",
+  "todoListDueDateLabel": "تاريخ الاستحقاق",
+  "todoListNoDueDate": "لا يوجد تاريخ استحقاق",
+  "todoListClearDueDate": "مسح تاريخ الاستحقاق",
+  "todoListPriorityLabel": "أولوية",
+  "todoListSelectAll": "حدد الكل",
+  "todoListClearSelection": "مسح التحديد",
+  "todoListBatchDelete": "حذف المحدد",
+  "todoListBatchDeleteDialogTitle": "هل تريد حذف المهام المحددة؟",
+  "todoListBatchDeleteDialogMessage": "حذف {count, plural, =0 {لا توجد مهام} one {مهمة واحدة} two {مهمتان} few {{count} مهام} many {{count} مهمة} other {{count} مهمة}}؟ لا يمكن التراجع عن ذلك.",
+  "todoListBatchComplete": "أكمل التحديد",
+  "todoListBatchUncomplete": "تم التحديد غير مكتمل",
+  "todoListItemsSelected": "{count} تم التحديد",
+  "todoListAddDialogTitle": "ما يجب القيام به جديد",
+  "todoListEditDialogTitle": "تحرير ما يجب القيام به",
+  "todoListTitlePlaceholder": "عنوان",
+  "todoListDescriptionPlaceholder": "الوصف (اختياري)",
+  "todoListEmptyTitle": "لا يوجد كل شيء حتى الآن",
+  "todoListEmptyMessage": "أضف مهمتك الأولى للبدء.",
+  "todoListFilterAll": "الجميع",
+  "todoListFilterActive": "نشيط",
+  "todoListFilterCompleted": "مكتمل",
+  "todoListClearCompletedAction": "اكتمل المسح",
+  "todoListClearCompletedDialogTitle": "هل تريد مسح المهام المكتملة؟",
+  "todoListClearCompletedDialogMessage": "حذف {count, plural, =0 {لا توجد مهام مكتملة} one {مهمة مكتملة واحدة} two {مهمتان مكتملتان} few {{count} مهام مكتملة} many {{count} مهمة مكتملة} other {{count} مهمة مكتملة}}؟ لا يمكن التراجع عن ذلك.",
+  "exampleScapesButton": "عرض سكيبس",
+  "exampleWalletconnectAuthButton": "مصادقة WalletConnect (تجريبي)",
+  "exampleCameraGalleryButton": "عرض الكاميرا والمعرض",
+  "cameraGalleryPageTitle": "الكاميرا والمعرض",
+  "cameraGalleryTakePhoto": "التقط صورة",
+  "cameraGalleryPickFromGallery": "اختر من المعرض",
+  "cameraGalleryNoImage": "لم يتم تحديد أي صورة",
+  "cameraGalleryPermissionDenied": "تم رفض الوصول إلى الكاميرا أو مكتبة الصور.",
+  "cameraGalleryCancelled": "تم إلغاء الاختيار.",
+  "cameraGalleryGenericError": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+  "cameraGalleryCameraUnavailable": "الكاميرا غير متوفرة. استخدم جهازًا حقيقيًا أو اختر من المعرض.",
+  "scapesPageTitle": "المكتبة / المناظر",
+  "scapeNameLabel": "اسم سكيب",
+  "scapeMetadataFormat": "{duration} • {assetCount, plural, =0 {لا عناصر} one {عنصر واحد} two {عنصران} few {{assetCount} عناصر} many {{assetCount} عنصرًا} other {{assetCount} عنصر}}",
+  "scapeFavoriteAddTooltip": "أضف المفضلة",
+  "scapeFavoriteRemoveTooltip": "إزالة المفضلة",
+  "scapeMoreOptionsTooltip": "المزيد من الخيارات",
+  "scapesGridViewTooltip": "عرض الشبكة",
+  "scapesListViewTooltip": "عرض القائمة",
+  "noWalletConnected": "لا توجد محفظة متصلة. يرجى توصيل المحفظة أولاً.",
+  "noWalletLinked": "لا توجد محفظة مرتبطة. الاتصال والربط أولا.",
+  "couldNotPlayAudio": "تعذر تشغيل الصوت",
+  "scapesErrorOccurred": "حدث خطأ",
+  "noScapesAvailable": "لا يوجد سكيبس المتاحة",
+  "genuiDemoPageTitle": "عرض GenUI",
+  "genuiDemoHintText": "أدخل رسالة لإنشاء واجهة المستخدم...",
+  "genuiDemoSendButton": "إرسال",
+  "genuiDemoErrorTitle": "خطأ",
+  "genuiDemoNoApiKey": "GEMINI_API_KEY لم يتم تكوينه. الرجاء إضافته إلى Secrets.json أو استخدم --dart-define=GEMINI_API_KEY=...",
+  "walletconnectAuthTitle": "ربط المحفظة",
+  "connectWalletButton": "ربط المحفظة",
+  "walletAddress": "عنوان المحفظة",
+  "linkToFirebase": "رابط إلى الحساب",
+  "relinkToAccount": "إعادة الارتباط بالحساب",
+  "disconnectWallet": "قطع الاتصال",
+  "walletConnected": "المحفظة متصلة",
+  "walletLinked": "المحفظة مرتبطة بالحساب",
+  "walletConnectError": "فشل في ربط المحفظة",
+  "walletLinkError": "فشل ربط المحفظة بالحساب",
+  "walletProfileSection": "حساب تعريفي",
+  "balanceOffChain": "الرصيد (خارج السلسلة)",
+  "balanceOnChain": "الرصيد (على السلسلة)",
+  "rewards": "المكافآت",
+  "lastClaim": "المطالبة الأخيرة",
+  "lastClaimNever": "أبداً",
+  "nfts": "NFTs",
+  "nftsCount": "{count} NFT(s)",
+  "playlearnTitle": "تعلم اللعب",
+  "playlearnTopicAnimals": "الحيوانات",
+  "playlearnListen": "يستمع",
+  "playlearnTapToListen": "انقر للاستماع",
+  "playlearnBack": "خلف",
+  "openPlaylearnTooltip": "افتح بلاي ليرن",
+  "openIgamingDemoTooltip": "عرض iGaming",
+  "whiteboardChoosePenColor": "اختيار لون القلم",
+  "whiteboardPickColor": "اختر لونًا",
+  "whiteboardUndo": "تراجع",
+  "whiteboardUndoLastStroke": "التراجع عن السكتة الدماغية الأخيرة",
+  "whiteboardRedo": "إعادة",
+  "whiteboardRedoLastStroke": "إعادة آخر ضربة تم التراجع عنها",
+  "whiteboardClear": "واضح",
+  "whiteboardClearAllStrokes": "مسح كافة السكتات الدماغية",
+  "whiteboardPenColor": "لون القلم",
+  "whiteboardStrokeWidth": "عرض السكتة الدماغية",
+  "whiteboardStrokeWidthThin": "رفيع",
+  "whiteboardStrokeWidthMedium": "واسطة",
+  "whiteboardStrokeWidthThick": "سميك",
+  "whiteboardStrokeWidthExtra": "إضافي",
+  "errorUnknown": "حدث خطأ غير معروف",
+  "errorNetwork": "خطأ في الاتصال بالشبكة. يرجى التحقق من اتصالك بالإنترنت.",
+  "errorTimeout": "انتهت مهلة الطلب. يرجى المحاولة مرة أخرى.",
+  "errorUnauthorized": "المصادقة مطلوبة. الرجاء تسجيل الدخول مرة أخرى.",
+  "errorForbidden": "تم الرفض. ليس لديك إذن بهذا الإجراء.",
+  "errorNotFound": "لم يتم العثور على المورد المطلوب.",
+  "errorServer": "خطأ في الخادم. يرجى المحاولة مرة أخرى في وقت لاحق.",
+  "errorGeneric": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+  "errorClient": "خطأ العميل. Please check your request and try again.",
+  "errorTooManyRequests": "طلبات كثيرة جدًا. يرجى الانتظار قبل المحاولة مرة أخرى.",
+  "errorServiceUnavailable": "الخدمة غير متاحة مؤقتا. يرجى المحاولة مرة أخرى خلال دقيقة.",
+  "igamingDemoLobbyTitle": "عرض iGaming",
+  "igamingDemoBalanceLabel": "التوازن الظاهري",
+  "igamingDemoPlayGame": "لعب لاكي سبين",
+  "igamingDemoGameTitle": "لاكي سبين",
+  "igamingDemoStakeLabel": "حصة",
+  "igamingDemoPlayButton": "يلف",
+  "igamingDemoResultWin": "لقد فزت!",
+  "igamingDemoResultLoss": "لا يوجد فوز هذه المرة.",
+  "igamingDemoPlayAgain": "العب مرة أخرى",
+  "igamingDemoBackToLobby": "العودة إلى الردهة",
+  "igamingDemoErrorInsufficientBalance": "رصيد غير كاف",
+  "igamingDemoErrorLoadBalance": "فشل في تحميل الرصيد",
+  "igamingDemoSymbolLegendTitle": "الرموز",
+  "igamingDemoSymbolWinHint": "ثلاثة رموز متطابقة = فوز. رموز مختلفة = لا فوز.",
+  "igamingDemoSymbol7": "سبعة",
+  "igamingDemoSymbolStar": "نجم",
+  "igamingDemoSymbolDiamond": "الماس",
+  "igamingDemoSymbolCircle": "دائرة",
+  "igamingDemoSymbolTriangle": "مثلث",
+  "igamingDemoSymbolGem": "جوهرة",
+  "exampleIgamingDemoButton": "عرض iGaming",
+  "exampleFcmDemoButton": "عرض FCM",
+  "exampleFirebaseFunctionsButton": "اختبار وظائف Firebase",
+  "firebaseFunctionsTestTitle": "وظائف Firebase",
+  "firebaseFunctionsCallButton": "اتصل بـ helloWorld",
+  "firebaseFunctionsResultLabel": "نتيجة",
+  "firebaseUnavailableMessage": "لم تتم تهيئة Firebase.",
+  "fcmDemoPageTitle": "عرض FCM",
+  "fcmDemoPermissionLabel": "إذن",
+  "fcmDemoPermissionNotDetermined": "لم يتم تحديدها",
+  "fcmDemoPermissionAuthorized": "ممنوح",
+  "fcmDemoPermissionDenied": "رفض",
+  "fcmDemoPermissionProvisional": "مؤقت",
+  "fcmDemoFcmTokenLabel": "رمز FCM",
+  "fcmDemoApnsTokenLabel": "رمز APNs",
+  "fcmDemoTokenNotAvailable": "غير متوفر",
+  "fcmDemoCopyToken": "ينسخ",
+  "fcmDemoCopySuccess": "تم النسخ إلى الحافظة",
+  "fcmDemoCopyFailure": "فشل النسخ",
+  "fcmDemoLastMessageLabel": "الرسالة الأخيرة",
+  "fcmDemoLastMessageNone": "لا شيء حتى الآن",
+  "fcmDemoLastMessageReceived": "تم استلام الرسالة",
+  "fcmDemoScopeNoteIos": "على نظام التشغيل iOS، يتطلب التسليم في الخلفية/الإنهاء وجود مفتاح APNs في Firebase Console.",
+  "fcmDemoScopeNoteSimulator": "في iOS Simulator، استخدم ملف .apns (اسحب إلى جهاز محاكاة أو دفع xcrun simctl).",
+  "iotDemoPageTitle": "عرض إنترنت الأشياء",
+  "iotDemoDeviceListEmpty": "لم يتم العثور على أي أجهزة",
+  "iotDemoConnect": "يتصل",
+  "iotDemoDisconnect": "قطع الاتصال",
+  "iotDemoToggle": "تبديل",
+  "iotDemoSetValue": "تعيين القيمة",
+  "iotDemoSetValueHint": "قيمة",
+  "iotDemoStatusDisconnected": "غير متصل",
+  "iotDemoStatusConnecting": "الاتصال",
+  "iotDemoStatusConnected": "متصل",
+  "iotDemoDeviceTypeLight": "ضوء",
+  "iotDemoDeviceTypeThermostat": "ترموستات",
+  "iotDemoDeviceTypePlug": "سدادة",
+  "iotDemoDeviceTypeSensor": "الاستشعار",
+  "iotDemoDeviceTypeSwitch": "يُحوّل",
+  "iotDemoErrorLoad": "فشل في تحميل الأجهزة",
+  "iotDemoErrorConnect": "فشل الاتصال",
+  "iotDemoErrorDisconnect": "فشل في قطع الاتصال",
+  "iotDemoErrorCommand": "فشل في إرسال الأمر",
+  "iotDemoStateOn": "على",
+  "iotDemoStateOff": "عن",
+  "iotDemoCurrentValue": "القيمة الحالية: {value}",
+  "iotDemoSetValueOutOfRange": "يجب أن تكون القيمة بين {min} و{max}",
+  "iotDemoSetValueInvalidNumber": "أدخل رقمًا صالحًا",
+  "iotDemoAddDevice": "إضافة جهاز",
+  "iotDemoAddDeviceNameHint": "اسم الجهاز",
+  "iotDemoAddDeviceNameRequired": "الاسم مطلوب",
+  "iotDemoAddDeviceNameTooLong": "يجب أن يتكون الاسم من {max} حرفًا على الأكثر",
+  "iotDemoAddDeviceTypeHint": "نوع الجهاز",
+  "iotDemoAddDeviceInitialValue": "القيمة الأولية: {value}",
+  "iotDemoAddDeviceTooltip": "إضافة جهاز",
+  "iotDemoErrorAdd": "فشلت إضافة الجهاز",
+  "iotDemoFilterAll": "الجميع",
+  "iotDemoFilterOnOnly": "على فقط",
+  "iotDemoFilterOffOnly": "إيقاف فقط",
+  "openIotDemoTooltip": "افتح العرض التجريبي لإنترنت الأشياء",
+  "searchAllResultsSectionTitle": "جميع النتائج",
+  "searchErrorLoadingResults": "حدث خطأ أثناء تحميل النتائج",
+  "searchNoResultsFound": "لم يتم العثور على نتائج",
+  "profileSeeMore": "شاهد المزيد",
+  "moreTooltip": "أكثر",
+  "whiteboardPageTitle": "السبورة",
+  "playlearnNoWords": "لا توجد كلمات",
+  "playlearnNoTopics": "لا توجد مواضيع",
+  "commonEmptyStateTryAgain": "حاول ثانية",
+  "profileNoCachedProfile": "لا يوجد ملف تعريف مخبأ",
+  "profileCachedProfileDetailsUnavailable": "الملف الشخصي المخبأ (التفاصيل غير متوفرة)",
+  "loggedOutPhotoLabel": "صورة",
+  "supabaseAuthTitle": "مصادقة سوباباس",
+  "supabaseAuthSignIn": "تسجيل الدخول",
+  "supabaseAuthSignUp": "اشتراك",
+  "supabaseAuthSignOut": "تسجيل الخروج",
+  "supabaseAuthEmailLabel": "بريد إلكتروني",
+  "supabaseAuthPasswordLabel": "كلمة المرور",
+  "supabaseAuthPasswordMinLength": "ما لا يقل عن 6 أحرف",
+  "supabaseAuthDisplayNameLabel": "اسم العرض (اختياري)",
+  "supabaseAuthNotConfigured": "لم يتم تكوين Supabase. أضف SUPABASE_URL وSUPABASE_ANON_KEY إلى الأسرار أو البيئة.",
+  "supabaseAuthErrorInvalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صالحة",
+  "supabaseAuthErrorInvalidEmail": "يرجى إدخال عنوان بريد إلكتروني صالح.",
+  "supabaseAuthErrorNetwork": "خطأ في الشبكة. تحقق من اتصالك.",
+  "supabaseAuthErrorWeakPassword": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.",
+  "supabaseAuthErrorUserAlreadyExists": "يوجد حساب بهذا البريد الإلكتروني بالفعل. حاول تسجيل الدخول.",
+  "supabaseAuthSignedInAs": "تم تسجيل الدخول باسم {email}",
+  "settingsIntegrationsSection": "التكامل",
+  "settingsSupabaseAuth": "مصادقة سوباباس",
+  "commonYes": "نعم",
+  "commonNo": "لا",
+  "exampleIapDemoButton": "العرض التوضيحي لعمليات الشراء داخل التطبيق (IAP).",
+  "iapDemoPageTitle": "عمليات الشراء داخل التطبيق",
+  "iapDemoDisclaimer": "عرض تجريبي لمتجر IAP. تتطلب عمليات الشراء الحقيقية اختبار وضع الحماية في App Store/Play. بالنسبة للمحاكي/المحاكي، استخدم التدفق المحاكى.",
+  "iapDemoUseFakeRepoLabel": "استخدم عمليات الشراء المحاكاة",
+  "iapDemoForceOutcomeLabel": "نتيجة القوة",
+  "iapDemoEntitlementsTitle": "الاستحقاقات",
+  "iapDemoCreditsLabel": "الاعتمادات",
+  "iapDemoPremiumLabel": "قسط المملوكة",
+  "iapDemoSubscriptionLabel": "الاشتراك نشط",
+  "iapDemoSubscriptionExpiryLabel": "انتهاء الاشتراك",
+  "iapDemoRestoreButton": "استعادة المشتريات",
+  "iapDemoProductsTitle": "منتجات",
+  "iapDemoConsumablesTitle": "المواد الاستهلاكية",
+  "iapDemoNonConsumablesTitle": "غير المواد الاستهلاكية",
+  "iapDemoSubscriptionsTitle": "الاشتراكات",
+  "iapDemoLastResultLabel": "النتيجة الأخيرة",
+  "iapDemoBuyButton": "يشتري",
+  "iapDemoNoProductsFound": "لم يتم العثور على منتجات.",
+  "exampleCaseStudyDemoButton": "عرض دراسة حالة (طبيب أسنان)",
+  "caseStudyDemoTitle": "عرض دراسة الحالة",
+  "caseStudyDemoNewCase": "حالة جديدة",
+  "caseStudyDemoHistory": "تاريخ",
+  "caseStudyDemoSettings": "إعدادات",
+  "caseStudyDemoMetadataTitle": "تفاصيل القضية",
+  "caseStudyDoctorNameLabel": "اسم الطبيب",
+  "caseStudyCaseTypeLabel": "نوع القضية",
+  "caseStudyNotesLabel": "ملاحظات (اختياري)",
+  "caseStudyContinue": "يكمل",
+  "caseStudyCaseTypeImplant": "زرع",
+  "caseStudyCaseTypeOrtho": "تقويم الأسنان",
+  "caseStudyCaseTypeCosmetic": "مستحضرات التجميل",
+  "caseStudyCaseTypeGeneral": "عام",
+  "caseStudyRecordTitle": "سجل الردود",
+  "caseStudyQuestionProgress": "السؤال {current} من {total}",
+  "caseStudyPickVideoCamera": "سجل الفيديو",
+  "caseStudyPickVideoGallery": "اختر من المعرض",
+  "caseStudyNext": "التالي",
+  "caseStudyGoToReview": "مواصلة المراجعة",
+  "caseStudyBack": "خلف",
+  "caseStudyReviewTitle": "مراجعة وتقديم",
+  "caseStudySubmit": "مرسل",
+  "caseStudyAbandon": "ترك القضية",
+  "caseStudyAbandonConfirmBody": "هل تريد تجاهل هذه الحالة وحذف أي مقاطع مسجلة لها؟",
+  "caseStudyDeleteDialogTitle": "هل تريد حذف الحالة؟",
+  "caseStudyDeleteDialogBody": "هل تريد حذف هذه الحالة نهائيًا؟ لا يمكن التراجع عن هذا.",
+  "caseStudyUploading": "جارٍ التحميل…",
+  "caseStudyDataModeLocalOnly": "محلي فقط",
+  "caseStudyDataModeSupabase": "سوباباس",
+  "caseStudyHistoryTitle": "الحالات المقدمة",
+  "caseStudyHistoryEmpty": "لم يتم تقديم أي حالات حتى الآن.",
+  "caseStudyHistoryDetailTitle": "تفاصيل القضية",
+  "caseStudySubmittedAt": "مُقَدَّم",
+  "caseStudyVideoMissing": "ملف الفيديو مفقود",
+  "caseStudyErrorGeneric": "حدث خطأ ما. حاول ثانية.",
+  "caseStudyHistoryDetailNotFound": "لم يتم العثور على هذه الحالة. ربما تمت إزالته أو ربما لا يمكنك الوصول إليه.",
+  "caseStudyHistoryDetailUnavailable": "تعذر تحميل هذه الحالة. تحقق من اتصالك وحاول مرة أخرى.",
+  "caseStudySubmitLocalHistoryFailed": "تم حفظ حالتك في السحابة، ولكن لم يتمكن هذا الجهاز من تحديث السجل المحلي. استخدم \"إعادة محاولة الحفظ على هذا الجهاز\" أدناه، أو افتح السجل لرؤية عمليات الإرسال السحابية.",
+  "caseStudyRetryLocalSave": "أعد محاولة الحفظ على هذا الجهاز",
+  "caseStudyRefreshDetailTooltip": "ينعش",
+  "caseStudySignedUrlsRefreshHint": "يستخدم تشغيل المقطع روابط مؤقتة (حوالي 24 ساعة). اسحب لأسفل أو اضغط على \"تحديث\" إذا توقف الفيديو عن العمل.",
+  "caseStudyQuestion1": "تقديم المريض والشكوى الرئيسية.",
+  "caseStudyQuestion2": "وصف التاريخ الطبي ذي الصلة.",
+  "caseStudyQuestion3": "عرض نتائج الفحص خارج الفم.",
+  "caseStudyQuestion4": "عرض نتائج الفحص داخل الفم.",
+  "caseStudyQuestion5": "شرح نتائج التصوير الشعاعي.",
+  "caseStudyQuestion6": "انتقل من خلال التشخيص وقائمة المشاكل.",
+  "caseStudyQuestion7": "وصف خيارات العلاج التي تمت مناقشتها.",
+  "caseStudyQuestion8": "تفاصيل خطة العلاج المختارة.",
+  "caseStudyQuestion9": "إظهار الحالة الفورية بعد العملية الجراحية.",
+  "caseStudyQuestion10": "تلخيص المتابعة والتشخيص.",
+  "staffDemoAdminFlagged": "تم وضع علامة ({count})",
+  "staffDemoAdminNoFlagged": "لم يتم العثور على إدخالات تم وضع علامة عليها.",
+  "staffDemoAdminRecentEntries": "إدخالات الوقت الأخيرة ({count})",
+  "staffDemoAdminSeedingReminder": "تذكيرات البذر: قم بإنشاء مستندات StaffDemoProfiles (معرف مستخدم المستخدم)، و StaffDemoSites (معرف الموقع)، و StaffDemoShifts (معرف التحول) في Firestore للحصول على تغطية تجريبية كاملة.",
+  "staffDemoAdminTitle": "مسؤل",
+  "staffDemoAssignToStaffLabel": "تكليف الموظفين",
+  "staffDemoComposeDefaultShiftBody": "تبدأ مناوبتك في الساعة 10:00. يرجى الاجتماع في المستودع.",
+  "staffDemoComposeRecipientUserId": "معرف المستخدم المستلم",
+  "staffDemoComposeSendShiftAssignment": "إرسال مهمة التحول",
+  "staffDemoComposeStaffListFailed": "فشل تحميل قائمة الموظفين.",
+  "staffDemoComposeStaffListFailedWithDetails": "فشل تحميل قائمة الموظفين.\n{details}",
+  "staffDemoComposeTitle": "إرسال مهمة التحول",
+  "staffDemoContentCouldNotLoadUrl": "تعذر تحميل عنوان URL للملف.",
+  "staffDemoContentEmpty": "لا يوجد محتوى بعد.",
+  "staffDemoContentFailedToOpenItem": "فشل في تحميل المحتوى.",
+  "staffDemoContentTitle": "محتوى",
+  "staffDemoDashboardHello": "مرحبًا، {name}",
+  "staffDemoDashboardInactiveProfile": "هذا الملف التجريبي للموظفين غير نشط.",
+  "staffDemoDashboardIntro": "استخدم علامات التبويب السفلية للتنقل في العرض التوضيحي. يبدأ التدفق المحاسبي بـ Timeclock.",
+  "staffDemoDashboardLoading": "تحميل…",
+  "staffDemoDashboardNoProfile": "لم يتم العثور على ملف تعريف تجريبي للموظفين لهذا المستخدم. قم بتزويد مستند StaffDemoProfiles بمفتاح بواسطة Firebase Auth uid لهذا المستخدم في Firestore.",
+  "staffDemoDashboardTitle": "عرض الموظفين",
+  "staffDemoFormsErrorSiteRequired": "معرف الموقع مطلوب.",
+  "staffDemoFormsManagerReport": "تقرير مدير",
+  "staffDemoFormsNotesLabel": "ملحوظات",
+  "staffDemoFormsSubmitAvailability": "إرسال التوفر",
+  "staffDemoFormsSubmitReport": "إرسال التقرير",
+  "staffDemoFormsSubmitted": "مُقَدَّم.",
+  "staffDemoFormsSuccessAvailability": "تم تقديم التوفر",
+  "staffDemoFormsSuccessManagerReport": "تم تقديم تقرير المدير",
+  "staffDemoFormsTitle": "النماذج",
+  "staffDemoFormsWeeklyAvailability": "التوفر الأسبوعي",
+  "staffDemoMessagesEmpty": "لا توجد رسائل حتى الآن.",
+  "staffDemoMessagesErrorInboxLoadFailed": "فشل تحميل تحديثات البريد الوارد.",
+  "staffDemoMessagesTitle": "رسائل",
+  "staffDemoNavAdmin": "مسؤل",
+  "staffDemoNavContent": "محتوى",
+  "staffDemoNavForms": "النماذج",
+  "staffDemoNavHome": "بيت",
+  "staffDemoNavMsgs": "الرسائل",
+  "staffDemoNavProof": "دليل",
+  "staffDemoNavTime": "وقت",
+  "staffDemoNotSignedIn": "لم يتم تسجيل الدخول.",
+  "staffDemoProofFailed": "فشل.",
+  "staffDemoProofOfflineQueued": "غير متصل: في قائمة الانتظار للمزامنة عند الاتصال بالإنترنت.",
+  "staffDemoProofPhotos": "صور",
+  "staffDemoProofPickPhoto": "يختار",
+  "staffDemoProofShiftIdOptional": "معرف التحول (اختياري)",
+  "staffDemoProofSignatureClear": "واضح",
+  "staffDemoProofSignatureLabel": "إمضاء",
+  "staffDemoProofSignatureNotSaved": "لم يتم حفظها",
+  "staffDemoProofSignatureSave": "حفظ التوقيع",
+  "staffDemoProofSignatureSaved": "أنقذ",
+  "staffDemoProofSignatureSaveBefore": "الرجاء التوقيع قبل الحفظ.",
+  "staffDemoProofSignatureSaveSuccess": "تم حفظ التوقيع.",
+  "staffDemoProofSubmit": "يُقدِّم",
+  "staffDemoProofSubmitProof": "تقديم إثبات",
+  "staffDemoProofSubmittedEmpty": "إثبات مقدم",
+  "staffDemoProofSubmittedWithId": "تم تقديم الدليل {proofId}",
+  "staffDemoProofTakePhoto": "التقط صورة",
+  "staffDemoProofTitle": "دليل",
+  "staffDemoSitePickerEmpty": "لم يتم العثور على مواقع في StaffDemoSites.",
+  "staffDemoSitePickerFailed": "فشل في تحميل المواقع.",
+  "staffDemoSitePickerLoading": "جارٍ تحميل المواقع...",
+  "staffDemoSitePickerLabel": "موقع",
+  "staffDemoSubmitting": "تقديم…",
+  "staffDemoTimeclockClockIn": "الساعة في",
+  "staffDemoTimeclockClockOut": "خارج الساعة",
+  "staffDemoTimeclockClockedInStatus": "الحالة: تم تسجيل الساعة ({entryId})",
+  "staffDemoTimeclockClockedOutStatus": "الحالة: انتهت الساعة",
+  "staffDemoTimeclockDistanceMeters": "المسافة: {distanceM}m (نصف القطر {radiusM}m)",
+  "staffDemoTimeclockLastResultFlags": "علامات النتيجة الأخيرة:",
+  "staffDemoTimeclockTitle": "الساعة الزمنية",
+  "staffDemoVideoPlayerError": "تعذر تحميل هذا الفيديو.",
+  "staffDemoActionSend": "إرسال",
+  "staffDemoComposeMessageBodyLabel": "نص الرسالة",
+  "staffDemoComposeRecipientUserIdHelper": "أدخل معرف Firebase Auth.",
+  "staffDemoInboxMessageFallback": "رسالة",
+  "staffDemoShiftConfirmAction": "يتأكد",
+  "staffDemoShiftConfirmed": "مؤكد",
   "@autoLabel": {
     "description": "Label for choosing automatic behaviour, such as using the system theme"
   },
-  "pausedLabel": "Paused",
   "@pausedLabel": {
     "description": "Label displayed when an automatic process is temporarily stopped"
   },
-  "nextAutoDecrementIn": "Next auto-decrement in: {s}s",
   "@nextAutoDecrementIn": {
     "description": "Countdown message that shows how many seconds remain before the counter auto-decrements",
     "placeholders": {
@@ -17,123 +748,93 @@
       }
     }
   },
-  "autoDecrementPaused": "Auto-decrement paused !!!",
   "@autoDecrementPaused": {
     "description": "Warning text shown when the automatic decrement routine is paused"
   },
-  "lastChangedLabel": "Last changed:",
   "@lastChangedLabel": {
     "description": "Caption shown before the timestamp of the last counter update"
   },
-  "appTitle": "Flutter Demo",
   "@appTitle": {
-    "description": "Application title shown on the launcher and app switcher"
+    "description": "Application title"
   },
-  "homeTitle": "Home Page",
   "@homeTitle": {
     "description": "Title for the home screen in the demo application"
   },
-  "pushCountLabel": "You have pushed the button this many times:",
   "@pushCountLabel": {
     "description": "Label preceding the current count value"
   },
-  "incrementTooltip": "Increment",
   "@incrementTooltip": {
     "description": "Tooltip for the button that increases the counter"
   },
-  "decrementTooltip": "Decrement",
   "@decrementTooltip": {
     "description": "Tooltip for the button that decreases the counter"
   },
-  "loadErrorMessage": "Failed to load saved counter",
   "@loadErrorMessage": {
     "description": "Error message shown when counter data cannot be loaded from storage"
   },
-  "saveErrorMessage": "Failed to save counter",
   "@saveErrorMessage": {
     "description": "Error message shown when counter data cannot be saved to storage"
   },
-  "startAutoHint": "Tap + to start auto-decrement",
   "@startAutoHint": {
     "description": "Hint explaining how to start the automatic decrement feature"
   },
-  "cannotGoBelowZero": "Count cannot go below 0",
   "@cannotGoBelowZero": {
     "description": "Error message displayed when the user tries to decrement past zero"
   },
-  "openExampleTooltip": "Open example page",
   "@openExampleTooltip": {
     "description": "Tooltip for navigating to the example feature page"
   },
-  "openCaseStudyDemoTooltip": "Open dentist case study demo",
   "@openCaseStudyDemoTooltip": {
     "description": "Tooltip for opening the case study demo flow from the home screen"
   },
-  "openCalculatorTooltip": "Open payment calculator",
   "@openCalculatorTooltip": {
     "description": "Tooltip for navigating to the payment calculator page"
   },
-  "examplePageTitle": "Example Page",
   "@examplePageTitle": {
     "description": "Title of the example feature page"
   },
-  "examplePageDescription": "This page demonstrates navigation with GoRouter.",
   "@examplePageDescription": {
     "description": "Description shown on the example page summarising its purpose"
   },
-  "exampleBackButtonLabel": "Back to counter",
   "@exampleBackButtonLabel": {
     "description": "Label for the button that returns from the example page to the counter"
   },
-  "exampleNativeInfoButton": "Fetch native info",
   "@exampleNativeInfoButton": {
     "description": "Button label that triggers fetching platform information via MethodChannel"
   },
-  "exampleNativeInfoTitle": "Platform info",
   "@exampleNativeInfoTitle": {
     "description": "Title displayed above the platform information section"
   },
-  "exampleNativeInfoError": "Unable to fetch native platform info.",
   "@exampleNativeInfoError": {
     "description": "Error message shown when fetching native platform information fails"
   },
-  "exampleNativeInfoDialogTitle": "Platform details",
   "@exampleNativeInfoDialogTitle": {
     "description": "Title shown in the adaptive dialog that displays native platform information"
   },
-  "exampleNativeInfoDialogPlatformLabel": "Platform",
   "@exampleNativeInfoDialogPlatformLabel": {
     "description": "Label for the platform name inside the platform info dialog"
   },
-  "exampleNativeInfoDialogVersionLabel": "Version",
   "@exampleNativeInfoDialogVersionLabel": {
     "description": "Label for the platform version inside the platform info dialog"
   },
-  "exampleNativeInfoDialogManufacturerLabel": "Manufacturer",
   "@exampleNativeInfoDialogManufacturerLabel": {
     "description": "Label for the platform manufacturer inside the platform info dialog"
   },
-  "exampleNativeInfoDialogModelLabel": "Model",
   "@exampleNativeInfoDialogModelLabel": {
     "description": "Label for the platform model inside the platform info dialog"
   },
-  "exampleNativeInfoDialogBatteryLabel": "Battery level",
   "@exampleNativeInfoDialogBatteryLabel": {
     "description": "Label for the battery level row inside the platform info dialog"
   },
-  "exampleDialogCloseButton": "Close",
   "@exampleDialogCloseButton": {
     "description": "Label for the button that dismisses the platform info dialog"
   },
-  "exampleRunIsolatesButton": "Run isolate samples",
   "@exampleRunIsolatesButton": {
     "description": "Button label to execute isolate demo functions"
   },
-  "exampleIsolateParallelPending": "Running parallel tasks...",
   "@exampleIsolateParallelPending": {
     "description": "Status text shown while isolate tasks are in progress"
   },
-  "exampleIsolateFibonacciLabel": "Fibonacci({input}) = {value}",
   "@exampleIsolateFibonacciLabel": {
     "description": "Displays the fibonacci result returned from an isolate",
     "placeholders": {
@@ -145,7 +846,6 @@
       }
     }
   },
-  "exampleIsolateParallelComplete": "Parallel doubled values: {values} (completed in {milliseconds} ms)",
   "@exampleIsolateParallelComplete": {
     "description": "Shows the doubled list and elapsed time of the isolate demo",
     "placeholders": {
@@ -157,23 +857,18 @@
       }
     }
   },
-  "calculatorTitle": "Payment calculator",
   "@calculatorTitle": {
     "description": "Title for the payment calculator screen"
   },
-  "calculatorSummaryHeader": "Payment summary",
   "@calculatorSummaryHeader": {
     "description": "Heading for the payment summary card"
   },
-  "calculatorResultLabel": "Result",
   "@calculatorResultLabel": {
     "description": "Label for the committed calculation result"
   },
-  "calculatorSubtotalLabel": "Subtotal",
   "@calculatorSubtotalLabel": {
     "description": "Label for the subtotal amount"
   },
-  "calculatorTaxLabel": "Tax ({rate})",
   "@calculatorTaxLabel": {
     "description": "Label for the tax amount row",
     "placeholders": {
@@ -182,7 +877,6 @@
       }
     }
   },
-  "calculatorTipLabel": "Tip ({rate})",
   "@calculatorTipLabel": {
     "description": "Label for the tip amount row",
     "placeholders": {
@@ -191,147 +885,111 @@
       }
     }
   },
-  "calculatorTotalLabel": "Amount to collect",
   "@calculatorTotalLabel": {
     "description": "Label for the final total amount"
   },
-  "calculatorTaxPresetsLabel": "Tax presets",
   "@calculatorTaxPresetsLabel": {
     "description": "Caption for the tax preset chips"
   },
-  "calculatorCustomTaxLabel": "Custom tax",
   "@calculatorCustomTaxLabel": {
     "description": "Label for opening the custom tax dialog"
   },
-  "calculatorCustomTaxDialogTitle": "Custom tax",
   "@calculatorCustomTaxDialogTitle": {
     "description": "Dialog title asking for a custom tax percentage"
   },
-  "calculatorCustomTaxFieldLabel": "Tax percentage",
   "@calculatorCustomTaxFieldLabel": {
     "description": "Label for the custom tax text field"
   },
-  "calculatorResetTax": "Reset tax",
   "@calculatorResetTax": {
     "description": "Action label for clearing the configured tax"
   },
-  "calculatorTipRateLabel": "Tip presets",
   "@calculatorTipRateLabel": {
     "description": "Caption for the tip preset chips"
   },
-  "calculatorCustomTipLabel": "Custom tip",
   "@calculatorCustomTipLabel": {
     "description": "Label for opening the custom tip dialog"
   },
-  "calculatorResetTip": "Clear tip",
   "@calculatorResetTip": {
     "description": "Action label for clearing the selected tip"
   },
-  "calculatorCustomTipDialogTitle": "Custom tip",
   "@calculatorCustomTipDialogTitle": {
     "description": "Dialog title asking for a custom tip percentage"
   },
-  "calculatorCustomTipFieldLabel": "Tip percentage",
   "@calculatorCustomTipFieldLabel": {
     "description": "Label for the text field requesting a custom tip"
   },
-  "calculatorCancel": "Cancel",
   "@calculatorCancel": {
     "description": "Generic cancel button label"
   },
-  "calculatorApply": "Apply",
   "@calculatorApply": {
     "description": "Label for applying a custom configuration"
   },
-  "calculatorKeypadHeader": "Keypad",
   "@calculatorKeypadHeader": {
     "description": "Heading for the calculator keypad card"
   },
-  "calculatorClearLabel": "Clear",
   "@calculatorClearLabel": {
     "description": "Button label that clears the calculator state"
   },
-  "calculatorBackspace": "Backspace",
   "@calculatorBackspace": {
     "description": "Button label that removes the last character"
   },
-  "calculatorPercentCommand": "Percent",
   "@calculatorPercentCommand": {
     "description": "Button label that applies the percentage operation"
   },
-  "calculatorToggleSign": "Toggle sign",
   "@calculatorToggleSign": {
     "description": "Button label that toggles the sign of the current value"
   },
-  "calculatorDecimalPointLabel": "Decimal point",
   "@calculatorDecimalPointLabel": {
     "description": "Button label that inserts a decimal separator"
   },
-  "calculatorErrorTitle": "Error",
   "@calculatorErrorTitle": {
     "description": "Title displayed when the calculator encounters an error"
   },
-  "calculatorErrorDivisionByZero": "Cannot divide by zero",
   "@calculatorErrorDivisionByZero": {
     "description": "Error message shown when attempting to divide by zero"
   },
-  "calculatorErrorInvalidResult": "Result is not a valid number",
   "@calculatorErrorInvalidResult": {
     "description": "Error message shown when an operation results in NaN or infinity"
   },
-  "calculatorErrorNonPositiveTotal": "Total must be greater than zero",
   "@calculatorErrorNonPositiveTotal": {
     "description": "Error message shown when attempting to settle a payment with zero or negative amount"
   },
-  "calculatorEquals": "Charge total",
   "@calculatorEquals": {
     "description": "Label for the button finalising the calculation"
   },
-  "calculatorPaymentTitle": "Payment summary",
   "@calculatorPaymentTitle": {
     "description": "Title for the payment breakdown screen"
   },
-  "calculatorNewCalculation": "New calculation",
   "@calculatorNewCalculation": {
     "description": "Button label to return to the calculator"
   },
-  "settingsBiometricPrompt": "Authenticate to open Settings",
   "@settingsBiometricPrompt": {
     "description": "Biometric prompt displayed before navigating to settings"
   },
-  "settingsBiometricFailed": "Couldn't verify your identity.",
   "@settingsBiometricFailed": {
     "description": "Shown when biometric authentication fails"
   },
-  "settingsBiometricUnavailable": "Biometric authentication isn't available on web. Opening Settings anyway.",
   "@settingsBiometricUnavailable": {
     "description": "Shown when biometrics are unavailable on the current platform (e.g. Flutter Web) and we still allow navigating to Settings"
   },
-  "openChartsTooltip": "Open charts",
   "@openChartsTooltip": {
     "description": "Tooltip for the action that opens the charts feature"
   },
-  "openGraphqlTooltip": "Explore GraphQL sample",
   "@openGraphqlTooltip": {
     "description": "Tooltip for navigating to the GraphQL demo page"
   },
-  "openSettingsTooltip": "Open settings",
   "@openSettingsTooltip": {
     "description": "Tooltip for navigating to the settings page"
   },
-  "settingsPageTitle": "Settings",
   "@settingsPageTitle": {
     "description": "Title for the settings screen"
   },
-  "settingsThrowTestException": "Throw Test Exception",
   "@settingsThrowTestException": {
     "description": "Dev-only button label to trigger a test exception for error handling"
   },
-  "accountSectionTitle": "Account",
   "@accountSectionTitle": {
     "description": "Heading for the account and authentication section"
   },
-  "accountSignedInAs": "Signed in as {name}",
   "@accountSignedInAs": {
     "description": "Label showing the current authenticated user",
     "placeholders": {
@@ -340,147 +998,111 @@
       }
     }
   },
-  "accountSignedOutLabel": "Not signed in.",
   "@accountSignedOutLabel": {
     "description": "Label shown when the user has not authenticated"
   },
-  "accountSignInButton": "Sign in",
   "@accountSignInButton": {
     "description": "Button label that navigates to the sign-in flow"
   },
-  "accountManageButton": "Manage account",
   "@accountManageButton": {
     "description": "Button label that opens the profile management page"
   },
-  "accountGuestLabel": "Using guest account",
   "@accountGuestLabel": {
     "description": "Label shown when the current user is anonymous"
   },
-  "accountGuestDescription": "You are signed in anonymously. Create an account to sync your data across devices.",
   "@accountGuestDescription": {
     "description": "Helper text encouraging guest users to upgrade"
   },
-  "accountUpgradeButton": "Create or link account",
   "@accountUpgradeButton": {
     "description": "Button label inviting anonymous users to upgrade"
   },
-  "themeSectionTitle": "Appearance",
   "@themeSectionTitle": {
     "description": "Heading for the appearance/theme selection section"
   },
-  "themeModeSystem": "System default",
   "@themeModeSystem": {
     "description": "Option label for matching the system theme"
   },
-  "themeModeLight": "Light",
   "@themeModeLight": {
     "description": "Option label for forcing light theme"
   },
-  "themeModeDark": "Dark",
   "@themeModeDark": {
     "description": "Option label for forcing dark theme"
   },
-  "languageSectionTitle": "Language",
   "@languageSectionTitle": {
     "description": "Heading for the language selection section"
   },
-  "languageSystemDefault": "Use device language",
   "@languageSystemDefault": {
     "description": "Option label that follows the device language setting"
   },
-  "languageEnglish": "English",
   "@languageEnglish": {
     "description": "Language option for English"
   },
-  "languageTurkish": "Türkçe",
   "@languageTurkish": {
     "description": "Language option for Turkish"
   },
-  "languageGerman": "Deutsch",
   "@languageGerman": {
     "description": "Language option for German"
   },
-  "languageFrench": "Français",
   "@languageFrench": {
     "description": "Language option for French"
   },
-  "languageSpanish": "Español",
   "@languageSpanish": {
     "description": "Language option for Spanish"
   },
-  "languageArabic": "العربية",
   "@languageArabic": {
     "description": "Language option for Arabic"
   },
-  "appInfoSectionTitle": "App info",
   "@appInfoSectionTitle": {
     "description": "Heading for the section that displays application metadata"
   },
-  "settingsRemoteConfigSectionTitle": "Remote config",
   "@settingsRemoteConfigSectionTitle": {
     "description": "Heading for the developer-only section that surfaces remote config health"
   },
-  "settingsRemoteConfigStatusIdle": "Waiting for first fetch",
   "@settingsRemoteConfigStatusIdle": {
     "description": "Status label shown before any remote config fetch completes"
   },
-  "settingsRemoteConfigStatusLoading": "Loading latest values...",
   "@settingsRemoteConfigStatusLoading": {
     "description": "Status label shown while remote config values are being fetched"
   },
-  "settingsRemoteConfigStatusLoaded": "Latest values loaded",
   "@settingsRemoteConfigStatusLoaded": {
     "description": "Status label shown after values load successfully"
   },
-  "settingsRemoteConfigStatusError": "Failed to load remote config",
   "@settingsRemoteConfigStatusError": {
     "description": "Status label shown when remote config fetch fails"
   },
-  "settingsRemoteConfigErrorLabel": "Last error",
   "@settingsRemoteConfigErrorLabel": {
     "description": "Label that prefixes the most recent remote config error message"
   },
-  "remoteConfigAwesomeFeatureEnabled": "Awesome feature is enabled",
   "@remoteConfigAwesomeFeatureEnabled": {
     "description": "Message shown when the awesome feature flag is enabled"
   },
-  "settingsRemoteConfigFlagLabel": "Awesome feature flag",
   "@settingsRemoteConfigFlagLabel": {
     "description": "Label that displays the current awesome feature flag value"
   },
-  "settingsRemoteConfigFlagEnabled": "Enabled",
   "@settingsRemoteConfigFlagEnabled": {
     "description": "Text shown when a boolean flag is enabled"
   },
-  "settingsRemoteConfigFlagDisabled": "Disabled",
   "@settingsRemoteConfigFlagDisabled": {
     "description": "Text shown when a boolean flag is disabled"
   },
-  "settingsRemoteConfigTestValueLabel": "Test value",
   "@settingsRemoteConfigTestValueLabel": {
     "description": "Label that displays the current remote config test value"
   },
-  "settingsRemoteConfigTestValueEmpty": "Not set",
   "@settingsRemoteConfigTestValueEmpty": {
     "description": "Placeholder shown when the test value string is empty"
   },
-  "settingsRemoteConfigRetryButton": "Retry fetch",
   "@settingsRemoteConfigRetryButton": {
     "description": "Button label that retries the remote config fetch"
   },
-  "settingsRemoteConfigClearCacheButton": "Clear config cache",
   "@settingsRemoteConfigClearCacheButton": {
     "description": "Button label that clears the locally cached Remote Config values"
   },
-  "settingsSyncDiagnosticsTitle": "Sync diagnostics",
   "@settingsSyncDiagnosticsTitle": {
     "description": "Heading for the developer-only sync diagnostics section"
   },
-  "settingsSyncDiagnosticsEmpty": "No sync runs recorded yet.",
   "@settingsSyncDiagnosticsEmpty": {
     "description": "Placeholder copy when no sync cycle summary exists"
   },
-  "settingsSyncLastRunLabel": "Last run: {timestamp}",
   "@settingsSyncLastRunLabel": {
     "description": "Label showing the last sync timestamp",
     "placeholders": {
@@ -489,7 +1111,6 @@
       }
     }
   },
-  "settingsSyncOperationsLabel": "Ops: {processed} processed, {failed} failed",
   "@settingsSyncOperationsLabel": {
     "description": "Label showing operations processed/failed during last sync",
     "placeholders": {
@@ -501,7 +1122,6 @@
       }
     }
   },
-  "settingsSyncPendingLabel": "Pending at start: {count}",
   "@settingsSyncPendingLabel": {
     "description": "Label showing pending operations count at the start of last sync",
     "placeholders": {
@@ -510,7 +1130,6 @@
       }
     }
   },
-  "settingsSyncPrunedLabel": "Pruned: {count}",
   "@settingsSyncPrunedLabel": {
     "description": "Label showing how many queued operations were pruned after sync",
     "placeholders": {
@@ -519,7 +1138,6 @@
       }
     }
   },
-  "settingsSyncDurationLabel": "Duration: {ms}ms",
   "@settingsSyncDurationLabel": {
     "description": "Label showing last sync duration in milliseconds",
     "placeholders": {
@@ -528,51 +1146,39 @@
       }
     }
   },
-  "settingsSyncHistoryTitle": "Recent sync runs",
   "@settingsSyncHistoryTitle": {
     "description": "Heading for the sync history list in diagnostics"
   },
-  "settingsGraphqlCacheSectionTitle": "GraphQL cache",
   "@settingsGraphqlCacheSectionTitle": {
     "description": "Heading for the developer-only section that clears the GraphQL demo cache"
   },
-  "settingsGraphqlCacheDescription": "Clear the cached countries/continents used by the GraphQL demo. Fresh data will be fetched on next load.",
   "@settingsGraphqlCacheDescription": {
     "description": "Helper text describing what the GraphQL demo cache does"
   },
-  "settingsGraphqlCacheClearButton": "Clear GraphQL cache",
   "@settingsGraphqlCacheClearButton": {
     "description": "Button label that clears the cached GraphQL demo data"
   },
-  "settingsGraphqlCacheClearedMessage": "GraphQL cache cleared",
   "@settingsGraphqlCacheClearedMessage": {
     "description": "Confirmation snackbar message displayed after clearing the GraphQL cache"
   },
-  "settingsGraphqlCacheErrorMessage": "Couldn't clear GraphQL cache",
   "@settingsGraphqlCacheErrorMessage": {
     "description": "Error snackbar message displayed if clearing the GraphQL cache fails"
   },
-  "settingsProfileCacheSectionTitle": "Profile cache",
   "@settingsProfileCacheSectionTitle": {
     "description": "Heading for the developer-only section that manages the profile cache"
   },
-  "settingsProfileCacheDescription": "Clear the locally cached profile snapshot used to render the profile screen offline.",
   "@settingsProfileCacheDescription": {
     "description": "Helper text describing what the profile cache does"
   },
-  "settingsProfileCacheClearButton": "Clear profile cache",
   "@settingsProfileCacheClearButton": {
     "description": "Button label that clears the cached profile snapshot"
   },
-  "settingsProfileCacheClearedMessage": "Profile cache cleared",
   "@settingsProfileCacheClearedMessage": {
     "description": "Confirmation snackbar message displayed after clearing the profile cache"
   },
-  "settingsProfileCacheErrorMessage": "Couldn't clear profile cache",
   "@settingsProfileCacheErrorMessage": {
     "description": "Error snackbar message displayed if clearing the profile cache fails"
   },
-  "settingsDiagnosticsLastSyncedAt": "Last synced: {formattedDate} {formattedTime}",
   "@settingsDiagnosticsLastSyncedAt": {
     "description": "Diagnostics line showing when data was last synced; date and time are preformatted for the locale",
     "placeholders": {
@@ -584,7 +1190,6 @@
       }
     }
   },
-  "settingsDiagnosticsCacheSizeKb": "Cache size: {kilobytes} KB",
   "@settingsDiagnosticsCacheSizeKb": {
     "description": "Diagnostics line for approximate local cache size in kilobytes",
     "placeholders": {
@@ -593,7 +1198,6 @@
       }
     }
   },
-  "settingsDiagnosticsDataSource": "Source: {name}",
   "@settingsDiagnosticsDataSource": {
     "description": "Diagnostics line naming the configuration data source",
     "placeholders": {
@@ -602,263 +1206,198 @@
       }
     }
   },
-  "networkRetryingSnackBarMessage": "Retrying…",
   "@networkRetryingSnackBarMessage": {
     "description": "Short snackbar message shown while the app is automatically retrying a network request"
   },
-  "appInfoVersionLabel": "Version",
   "@appInfoVersionLabel": {
     "description": "Label shown before the application version string"
   },
-  "appInfoBuildNumberLabel": "Build number",
   "@appInfoBuildNumberLabel": {
     "description": "Label shown before the build number string"
   },
-  "appInfoLoadingLabel": "Loading app info...",
   "@appInfoLoadingLabel": {
     "description": "Status text shown while the app info is loading"
   },
-  "appInfoLoadErrorLabel": "Failed to load app info.",
   "@appInfoLoadErrorLabel": {
     "description": "Error message shown when app info fails to load"
   },
-  "appInfoRetryButtonLabel": "Retry",
   "@appInfoRetryButtonLabel": {
     "description": "Button label to retry loading the app info"
   },
-  "openChatTooltip": "Chat with AI",
   "@openChatTooltip": {
     "description": "Tooltip for navigating to the AI chat feature"
   },
-  "openGenuiDemoTooltip": "GenUI Demo",
   "@openGenuiDemoTooltip": {
     "description": "Tooltip for navigating to the GenUI demo feature"
   },
-  "openGoogleMapsTooltip": "Open Google/Apple Maps demo",
   "@openGoogleMapsTooltip": {
     "description": "Tooltip for navigating to the Google/Apple Maps sample page"
   },
-  "openWhiteboardTooltip": "Open Whiteboard",
   "@openWhiteboardTooltip": {
     "description": "Tooltip for navigating to the Whiteboard feature"
   },
-  "openMarkdownEditorTooltip": "Open Markdown Editor",
   "@openMarkdownEditorTooltip": {
     "description": "Tooltip for navigating to the Markdown Editor feature"
   },
-  "openTodoTooltip": "Open Todo List",
   "@openTodoTooltip": {
     "description": "Tooltip for navigating to the Todo List feature"
   },
-  "openWalletconnectAuthTooltip": "Connect Wallet",
   "@openWalletconnectAuthTooltip": {
     "description": "Tooltip for navigating to the WalletConnect Auth feature"
   },
-  "chatPageTitle": "AI Chat",
   "@chatPageTitle": {
     "description": "Title for the AI chat page"
   },
-  "chatTransportSupabase": "Supabase",
   "@chatTransportSupabase": {
     "description": "Chip label when chat completions use the Supabase Edge proxy"
   },
-  "chatTransportDirect": "Direct",
   "@chatTransportDirect": {
     "description": "Chip label when chat calls Hugging Face from the app (direct)"
   },
-  "chatTransportSupabaseSemanticsLabel": "Supabase. Chat replies use the Supabase Edge proxy; Hugging Face runs on the server.",
   "@chatTransportSupabaseSemanticsLabel": {
     "description": "Screen reader and tooltip for the chat transport chip when using the Edge proxy"
   },
-  "chatTransportDirectSemanticsLabel": "Direct. This app calls Hugging Face directly for chat replies.",
   "@chatTransportDirectSemanticsLabel": {
     "description": "Screen reader and tooltip for the chat transport chip when using direct Hugging Face"
   },
-  "chatTransportRenderOrchestration": "Orchestration",
   "@chatTransportRenderOrchestration": {
     "description": "Chip label when chat completions use the FastAPI Cloud orchestration demo"
   },
-  "chatTransportRenderOrchestrationSemanticsLabel": "Orchestration. Chat replies use your FastAPI Cloud service, which routes to Hugging Face.",
   "@chatTransportRenderOrchestrationSemanticsLabel": {
     "description": "Screen reader and tooltip for the FastAPI Cloud orchestration transport chip"
   },
-  "chatFastApiCloudBadgeLabel": "FastAPI Cloud",
   "@chatFastApiCloudBadgeLabel": {
     "description": "Chip label shown when orchestration is hosted on FastAPI Cloud"
   },
-  "chatFastApiCloudBadgeSemanticsLabel": "FastAPI Cloud. Orchestration is running on FastAPI Cloud.",
   "@chatFastApiCloudBadgeSemanticsLabel": {
     "description": "Screen reader and tooltip for the FastAPI Cloud hosting badge"
   },
-  "chatModelAuto": "Auto",
   "@chatModelAuto": {
     "description": "Chat model picker entry that lets the server choose mini vs full model"
   },
-  "chatRenderStrictMode": "FastAPI Cloud demo strict mode is on; fallthrough is disabled.",
   "@chatRenderStrictMode": {
     "description": "Shown when CHAT_RENDER_DEMO_STRICT prevents falling back to Supabase/direct"
   },
-  "chatAuthRefreshRequired": "Sign in again to continue using the FastAPI Cloud chat demo.",
   "@chatAuthRefreshRequired": {
     "description": "User-visible copy when caller auth must be refreshed for the orchestration path"
   },
-  "chatSessionEnded": "Your session ended. Start a new chat after signing in.",
   "@chatSessionEnded": {
     "description": "Shown when the signed-in session no longer supports the orchestration demo path"
   },
-  "chatSwitchAccount": "Switch account to refresh credentials for the FastAPI Cloud chat demo.",
   "@chatSwitchAccount": {
     "description": "Hint when a different Firebase user is required before sending"
   },
-  "chatTokenMissing": "Hugging Face token is missing. Check your connection and try again.",
   "@chatTokenMissing": {
     "description": "Shown when the HF read token is unavailable for the Render path"
   },
-  "chatOrchestrationTooltip": "Uses server-side routing between models when Auto is selected.",
   "@chatOrchestrationTooltip": {
     "description": "Optional tooltip explaining orchestration when Auto is selected"
   },
-  "chatOfflineBadgeLabel": "Offline",
   "@chatOfflineBadgeLabel": {
     "description": "Chip label when the device has no network route (chat transport chip hidden)"
   },
-  "chatOfflineBadgeSemanticsLabel": "Offline. Messages will sync when you're back online.",
   "@chatOfflineBadgeSemanticsLabel": {
     "description": "Screen reader and tooltip text for the chat offline connectivity chip"
   },
-  "chatInputHint": "Ask the assistant anything...",
   "@chatInputHint": {
     "description": "Placeholder text shown in the chat input field"
   },
-  "searchHint": "Search...",
   "@searchHint": {
     "description": "Placeholder text shown in search input fields"
   },
-  "retryButtonLabel": "TRY AGAIN",
   "@retryButtonLabel": {
     "description": "Label for retry button in error views"
   },
-  "featureLoadError": "Unable to load this feature. Please try again.",
   "@featureLoadError": {
     "description": "Shown when a deferred feature fails to load"
   },
-  "chatSendButton": "Send message",
   "@chatSendButton": {
     "description": "Tooltip and accessibility label for the button that sends a chat message"
   },
-  "chatEmptyState": "Start the conversation by sending a message.",
   "@chatEmptyState": {
     "description": "Empty-state message displayed before any chat messages exist"
   },
-  "chatModelLabel": "Model",
   "@chatModelLabel": {
     "description": "Label shown before the chat model dropdown"
   },
-  "chatModelGptOss20b": "GPT-OSS-20B",
   "@chatModelGptOss20b": {
     "description": "Display name for the GPT-OSS-20B chat model"
   },
-  "chatModelGptOss120b": "GPT-OSS-120B",
   "@chatModelGptOss120b": {
     "description": "Display name for the GPT-OSS-120B chat model"
   },
-  "chatHistoryShowTooltip": "Show history",
   "@chatHistoryShowTooltip": {
     "description": "Tooltip for the action that opens the chat history"
   },
-  "chatHistoryHideTooltip": "Hide history",
   "@chatHistoryHideTooltip": {
     "description": "Tooltip for the action that closes the chat history"
   },
-  "chatHistoryPanelTitle": "Conversation history",
   "@chatHistoryPanelTitle": {
     "description": "Heading for the chat history panel"
   },
-  "chatHistoryStartNew": "Start new conversation",
   "@chatHistoryStartNew": {
     "description": "Button label for creating a new chat conversation"
   },
-  "chatHistoryClearAll": "Delete history",
   "@chatHistoryClearAll": {
     "description": "Button label for clearing all stored chat conversations"
   },
-  "chatHistoryDeleteConversation": "Delete conversation",
   "@chatHistoryDeleteConversation": {
     "description": "Tooltip for removing a single conversation from history"
   },
-  "chatHistoryClearAllWarning": "This will permanently delete all stored conversations.",
   "@chatHistoryClearAllWarning": {
     "description": "Warning message shown before clearing all chat history"
   },
-  "chatMessageStatusPending": "Pending sync",
   "@chatMessageStatusPending": {
     "description": "Status label shown under a user message that has not been synchronized yet"
   },
-  "chatMessageStatusSyncing": "Syncing…",
   "@chatMessageStatusSyncing": {
     "description": "Status label shown while a pending message is being synchronized"
   },
-  "chatMessageStatusOffline": "Offline — will send when connected",
   "@chatMessageStatusOffline": {
     "description": "Status label shown when offline to indicate the message will sync later"
   },
-  "registerTitle": "Register",
   "@registerTitle": {
     "description": "Title for the registration form page"
   },
-  "registerFullNameLabel": "Full name",
   "@registerFullNameLabel": {
     "description": "Label for the full name text field on the registration form"
   },
-  "registerFullNameHint": "Jane Doe",
   "@registerFullNameHint": {
     "description": "Placeholder example shown in the full name field"
   },
-  "registerEmailLabel": "Email address",
   "@registerEmailLabel": {
     "description": "Label for the email text field on the registration form"
   },
-  "registerEmailHint": "jane.doe@example.com",
   "@registerEmailHint": {
     "description": "Placeholder example shown in the email field"
   },
-  "registerPhoneLabel": "Phone number",
   "@registerPhoneLabel": {
     "description": "Label for the phone number text field on the registration form"
   },
-  "registerPhoneHint": "5551234567",
   "@registerPhoneHint": {
     "description": "Placeholder example shown in the phone number field"
   },
-  "registerCountryPickerTitle": "Choose your country code",
   "@registerCountryPickerTitle": {
     "description": "Title for the country selection sheet on the register page"
   },
-  "registerPasswordLabel": "Password",
   "@registerPasswordLabel": {
     "description": "Label for the password text field on the registration form"
   },
-  "registerPasswordHint": "Create password",
   "@registerPasswordHint": {
     "description": "Placeholder example shown in the password field"
   },
-  "registerConfirmPasswordLabel": "Confirm password",
   "@registerConfirmPasswordLabel": {
     "description": "Label for the confirm password text field on the registration form"
   },
-  "registerConfirmPasswordHint": "Re-enter password",
   "@registerConfirmPasswordHint": {
     "description": "Placeholder example shown in the confirm password field"
   },
-  "registerSubmitButton": "Next",
   "@registerSubmitButton": {
     "description": "Label for the button that submits the registration form"
   },
-  "registerDialogTitle": "Registration complete",
   "@registerDialogTitle": {
     "description": "Title shown in the success dialog after registration"
   },
-  "registerDialogMessage": "Welcome aboard, {name}!",
   "@registerDialogMessage": {
     "description": "Success message shown after the registration form is submitted",
     "placeholders": {
@@ -867,195 +1406,147 @@
       }
     }
   },
-  "registerDialogOk": "OK",
   "@registerDialogOk": {
     "description": "Label for the button that closes the registration success dialog"
   },
-  "registerFullNameEmptyError": "Please enter your full name",
   "@registerFullNameEmptyError": {
     "description": "Validation error shown when the full name field is empty"
   },
-  "registerFullNameTooShortError": "Name must be at least 2 characters",
   "@registerFullNameTooShortError": {
     "description": "Validation error shown when the full name is shorter than two characters"
   },
-  "registerEmailEmptyError": "Please enter your email",
   "@registerEmailEmptyError": {
     "description": "Validation error shown when the email field is empty"
   },
-  "registerEmailInvalidError": "Please enter a valid email",
   "@registerEmailInvalidError": {
     "description": "Validation error shown when the email field is not a valid address"
   },
-  "registerPasswordEmptyError": "Please enter your password",
   "@registerPasswordEmptyError": {
     "description": "Validation error shown when the password field is empty"
   },
-  "registerPasswordTooShortError": "Password must be at least 8 characters",
   "@registerPasswordTooShortError": {
     "description": "Validation error shown when the password is too short"
   },
-  "registerPasswordLettersAndNumbersError": "Use letters and numbers",
   "@registerPasswordLettersAndNumbersError": {
     "description": "Validation error shown when the password does not contain both letters and numbers"
   },
-  "registerPasswordWhitespaceError": "Password can’t contain spaces",
   "@registerPasswordWhitespaceError": {
     "description": "Validation error shown when the password includes whitespace characters"
   },
-  "registerTermsCheckboxPrefix": "I have read and agree to the ",
   "@registerTermsCheckboxPrefix": {
     "description": "Prefix text before the terms and conditions link in the checkbox label"
   },
-  "registerTermsCheckboxSuffix": ".",
   "@registerTermsCheckboxSuffix": {
     "description": "Suffix text shown after the terms and conditions link"
   },
-  "registerTermsLinkLabel": "Terms & Conditions",
   "@registerTermsLinkLabel": {
     "description": "Label for the link that opens the terms and conditions dialog"
   },
-  "registerTermsError": "Please accept the terms to continue",
   "@registerTermsError": {
     "description": "Validation error shown when the user has not accepted the terms"
   },
-  "registerTermsDialogTitle": "Terms & Conditions",
   "@registerTermsDialogTitle": {
     "description": "Title for the dialog that displays the terms and conditions"
   },
-  "registerTermsDialogBody": "By creating an account, you agree to use this app responsibly, respect other users, and comply with all applicable laws. You consent to our privacy policy, acknowledge that service availability may change, and accept that your account may be suspended for misuse or violations of these terms.",
   "@registerTermsDialogBody": {
     "description": "Body text shown in the terms and conditions dialog"
   },
-  "registerTermsAcceptButton": "Accept",
   "@registerTermsAcceptButton": {
     "description": "Button label to accept the terms in the dialog"
   },
-  "registerTermsRejectButton": "Cancel",
   "@registerTermsRejectButton": {
     "description": "Button label to dismiss the terms dialog without accepting"
   },
-  "registerTermsPrompt": "Please review and accept the terms before continuing.",
   "@registerTermsPrompt": {
     "description": "Instructional text shown above the terms controls"
   },
-  "registerTermsButtonLabel": "Read terms & conditions",
   "@registerTermsButtonLabel": {
     "description": "Button label that opens the terms and conditions sheet"
   },
-  "registerTermsSheetTitle": "Terms & Conditions",
   "@registerTermsSheetTitle": {
     "description": "Title for the terms and conditions sheet"
   },
-  "registerTermsSheetBody": "These terms outline the acceptable use of this demo application. By continuing, you agree to handle your account responsibly, protect your credentials, and comply with any applicable laws. The content provided is illustrative only and may change without notice. If you do not agree to these terms, please discontinue the registration process.",
   "@registerTermsSheetBody": {
     "description": "Body copy shown inside the terms sheet"
   },
-  "registerTermsDialogAcknowledge": "I have read the terms",
   "@registerTermsDialogAcknowledge": {
     "description": "Button label inside the terms sheet to confirm the user has read the content"
   },
-  "registerTermsCheckboxLabel": "I accept the Terms & Conditions",
   "@registerTermsCheckboxLabel": {
     "description": "Checkbox label for accepting the terms"
   },
-  "registerTermsCheckboxDisabledHint": "Read the terms before accepting them.",
   "@registerTermsCheckboxDisabledHint": {
     "description": "Helper text shown when the checkbox is disabled because the terms haven’t been viewed"
   },
-  "registerTermsNotAcceptedError": "You must accept the terms to continue.",
   "@registerTermsNotAcceptedError": {
     "description": "Error shown when the form is submitted without accepting the terms"
   },
-  "registerConfirmPasswordEmptyError": "Please confirm your password",
   "@registerConfirmPasswordEmptyError": {
     "description": "Validation error shown when the confirm password field is empty"
   },
-  "registerConfirmPasswordMismatchError": "Passwords do not match",
   "@registerConfirmPasswordMismatchError": {
     "description": "Validation error shown when the password and confirmation do not match"
   },
-  "registerPhoneEmptyError": "Please enter your phone number",
   "@registerPhoneEmptyError": {
     "description": "Validation error shown when the phone number field is empty"
   },
-  "registerPhoneInvalidError": "Enter 6-15 digits",
   "@registerPhoneInvalidError": {
     "description": "Validation error shown when the phone number is outside the accepted digit range"
   },
-  "profilePageTitle": "Profile",
   "@profilePageTitle": {
     "description": "Title for the account profile management page"
   },
-  "anonymousSignInButton": "Continue as guest",
   "@anonymousSignInButton": {
     "description": "Button label for anonymous sign-in"
   },
-  "anonymousSignInDescription": "You can explore the app without creating an account. You can upgrade later from Settings.",
   "@anonymousSignInDescription": {
     "description": "Helper text explaining anonymous sign-in"
   },
-  "anonymousSignInFailed": "Couldn't start guest session. Please try again.",
   "@anonymousSignInFailed": {
     "description": "Snackbar message shown if anonymous sign-in fails"
   },
-  "anonymousUpgradeHint": "You're currently using a guest session. Sign in to keep your data across installs and devices.",
   "@anonymousUpgradeHint": {
     "description": "Informational text for anonymous users upgrading"
   },
-  "authErrorInvalidEmail": "The email address appears to be malformed.",
   "@authErrorInvalidEmail": {
     "description": "Error shown when the email is invalid"
   },
-  "authErrorUserDisabled": "This account has been disabled. Contact support for help.",
   "@authErrorUserDisabled": {
     "description": "Error when the Firebase user is disabled"
   },
-  "authErrorUserNotFound": "We couldn't find an account with those details.",
   "@authErrorUserNotFound": {
     "description": "Error when the user does not exist"
   },
-  "authErrorWrongPassword": "The password is incorrect. Check it and try again.",
   "@authErrorWrongPassword": {
     "description": "Error when password is wrong"
   },
-  "authErrorEmailInUse": "That email is already linked to another account.",
   "@authErrorEmailInUse": {
     "description": "Error when email already in use"
   },
-  "authErrorOperationNotAllowed": "This sign-in method is currently disabled. Please try a different option.",
   "@authErrorOperationNotAllowed": {
     "description": "Error when provider is not enabled"
   },
-  "authErrorWeakPassword": "Choose a stronger password before continuing.",
   "@authErrorWeakPassword": {
     "description": "Error for weak password"
   },
-  "authErrorRequiresRecentLogin": "Please sign in again to complete this action.",
   "@authErrorRequiresRecentLogin": {
     "description": "Error when recent login is required"
   },
-  "authErrorCredentialInUse": "Those credentials are already associated with another account.",
   "@authErrorCredentialInUse": {
     "description": "Error when credential already in use"
   },
-  "authErrorInvalidCredential": "The provided credentials are invalid or expired.",
   "@authErrorInvalidCredential": {
     "description": "Error when credential invalid"
   },
-  "authErrorGeneric": "We couldn't complete the request. Please try again.",
   "@authErrorGeneric": {
     "description": "Fallback error message for authentication"
   },
-  "authErrorNetworkRequestFailed": "Check your connection and try again.",
   "@authErrorNetworkRequestFailed": {
     "description": "Firebase auth error when network request fails"
   },
-  "authErrorTooManyRequests": "Too many attempts. Please wait before trying again.",
   "@authErrorTooManyRequests": {
     "description": "Firebase auth rate limit error"
   },
-  "chatHistoryDeleteConversationWarning": "Delete \"{title}\"?",
   "@chatHistoryDeleteConversationWarning": {
     "description": "Warning displayed before deleting a specific conversation",
     "placeholders": {
@@ -1064,19 +1555,15 @@
       }
     }
   },
-  "cancelButtonLabel": "Cancel",
   "@cancelButtonLabel": {
     "description": "Generic cancel button label"
   },
-  "deleteButtonLabel": "Delete",
   "@deleteButtonLabel": {
     "description": "Generic delete button label"
   },
-  "chatHistoryEmpty": "No past conversations yet.",
   "@chatHistoryEmpty": {
     "description": "Message shown when no stored chat history is available"
   },
-  "chatHistoryConversationTitle": "Conversation {index}",
   "@chatHistoryConversationTitle": {
     "description": "Generated title for a conversation in the history list",
     "placeholders": {
@@ -1085,7 +1572,6 @@
       }
     }
   },
-  "chatHistoryUpdatedAt": "Updated {timestamp}",
   "@chatHistoryUpdatedAt": {
     "description": "Indicates when a conversation in the history was last updated",
     "placeholders": {
@@ -1094,127 +1580,96 @@
       }
     }
   },
-  "chartPageTitle": "Bitcoin Price (USD)",
   "@chartPageTitle": {
     "description": "Title for the cryptocurrency chart page"
   },
-  "chartPageDescription": "Closing price over the past 7 days (powered by CoinGecko)",
   "@chartPageDescription": {
     "description": "Description text explaining what data the chart represents"
   },
-  "chartPageError": "Unable to load chart data.",
   "@chartPageError": {
     "description": "Error message shown when fetching chart data fails"
   },
-  "chartPageEmpty": "No chart data available yet.",
   "@chartPageEmpty": {
     "description": "Message displayed when there is no chart data to show"
   },
-  "chartZoomToggleLabel": "Enable pinch zoom",
   "@chartZoomToggleLabel": {
     "description": "Toggle label for enabling pinch-to-zoom on the chart"
   },
-  "chartDataSourceCache": "Cache",
   "@chartDataSourceCache": {
     "description": "Chart data source badge when data is from local cache"
   },
-  "chartDataSourceSupabaseEdge": "Supabase (Edge)",
   "@chartDataSourceSupabaseEdge": {
     "description": "Chart data source badge when data is from Supabase Edge Function"
   },
-  "chartDataSourceSupabaseTables": "Supabase (Tables)",
   "@chartDataSourceSupabaseTables": {
     "description": "Chart data source badge when data is from Supabase table fallback"
   },
-  "chartDataSourceFirebaseCloud": "Firebase (Cloud)",
   "@chartDataSourceFirebaseCloud": {
     "description": "Chart data source badge when data is from Firebase Cloud Function"
   },
-  "chartDataSourceFirebaseFirestore": "Firebase (Firestore)",
   "@chartDataSourceFirebaseFirestore": {
     "description": "Chart data source badge when data is from Firebase Firestore fallback"
   },
-  "chartDataSourceRemote": "Remote",
   "@chartDataSourceRemote": {
     "description": "Chart data source badge when data is from direct remote API"
   },
-  "graphqlSampleTitle": "GraphQL Countries",
   "@graphqlSampleTitle": {
     "description": "App bar title for the GraphQL demo page"
   },
-  "graphqlSampleFilterLabel": "Filter by continent",
   "@graphqlSampleFilterLabel": {
     "description": "Label shown above the continent filter control"
   },
-  "graphqlSampleAllContinents": "All continents",
   "@graphqlSampleAllContinents": {
     "description": "Dropdown option that clears the continent filter"
   },
-  "graphqlSampleErrorTitle": "Something went wrong",
   "@graphqlSampleErrorTitle": {
     "description": "Headline shown when the GraphQL request fails"
   },
-  "graphqlSampleGenericError": "We couldn't load countries right now.",
   "@graphqlSampleGenericError": {
     "description": "Fallback error text used when no specific message is available"
   },
-  "graphqlSampleRetryButton": "Try again",
   "@graphqlSampleRetryButton": {
     "description": "Button label for retrying the GraphQL request"
   },
-  "graphqlSampleEmpty": "No countries matched the selected filters.",
   "@graphqlSampleEmpty": {
     "description": "Message shown when the query returns zero countries"
   },
-  "graphqlSampleCapitalLabel": "Capital",
   "@graphqlSampleCapitalLabel": {
     "description": "Label used before the capital city name"
   },
-  "graphqlSampleCurrencyLabel": "Currency",
   "@graphqlSampleCurrencyLabel": {
     "description": "Label used before the currency code"
   },
-  "graphqlSampleNetworkError": "Network error. Check your connection and try again.",
   "@graphqlSampleNetworkError": {
     "description": "Shown when the GraphQL call fails due to connectivity"
   },
-  "graphqlSampleInvalidRequestError": "The request was rejected. Try a different filter.",
   "@graphqlSampleInvalidRequestError": {
     "description": "Shown when the GraphQL endpoint rejects the query"
   },
-  "graphqlSampleServerError": "The service is unavailable right now. Please try again later.",
   "@graphqlSampleServerError": {
     "description": "Shown when the GraphQL endpoint returns a server error"
   },
-  "graphqlSampleDataError": "We received an unexpected response. Please try again.",
   "@graphqlSampleDataError": {
     "description": "Shown when the GraphQL response is malformed or missing data"
   },
-  "graphqlSampleDataSourceCache": "Cache",
   "@graphqlSampleDataSourceCache": {
     "description": "Badge label when GraphQL data is from local cache"
   },
-  "graphqlSampleDataSourceSupabaseEdge": "Supabase (Edge)",
   "@graphqlSampleDataSourceSupabaseEdge": {
     "description": "Badge label when GraphQL data is returned by Supabase Edge Function"
   },
-  "graphqlSampleDataSourceSupabaseTables": "Supabase (Tables)",
   "@graphqlSampleDataSourceSupabaseTables": {
     "description": "Badge label when GraphQL data is read from Supabase tables"
   },
-  "graphqlSampleDataSourceRemote": "Remote",
   "@graphqlSampleDataSourceRemote": {
     "description": "Badge label when GraphQL data is from remote server"
   },
-  "exampleWebsocketButton": "Open WebSocket demo",
   "@exampleWebsocketButton": {
     "description": "Button label that navigates to the WebSocket demo page"
   },
-  "exampleGoogleMapsButton": "Open Google/Apple Maps demo",
   "@exampleGoogleMapsButton": {
     "description": "Button label that navigates to the Google/Apple Maps sample page"
   },
-  "exampleNativeBatteryLabel": "Battery level: {percent}%",
   "@exampleNativeBatteryLabel": {
     "description": "Label showing the battery level returned from the native platform",
     "placeholders": {
@@ -1223,31 +1678,24 @@
       }
     }
   },
-  "websocketDemoTitle": "WebSocket demo",
   "@websocketDemoTitle": {
     "description": "Title for the WebSocket demonstration page"
   },
-  "websocketDemoWebUnsupported": "The WebSocket demo isn't available on web builds yet.",
   "@websocketDemoWebUnsupported": {
     "description": "Message shown when the WebSocket demo is opened on the web platform"
   },
-  "websocketReconnectTooltip": "Reconnect",
   "@websocketReconnectTooltip": {
     "description": "Tooltip for the reconnect icon button in the WebSocket demo"
   },
-  "websocketEmptyState": "No messages yet. Send a message to get started.",
   "@websocketEmptyState": {
     "description": "Empty state text when no WebSocket messages have been exchanged"
   },
-  "websocketMessageHint": "Type a message",
   "@websocketMessageHint": {
     "description": "Placeholder text for the WebSocket message input"
   },
-  "websocketSendButton": "Send",
   "@websocketSendButton": {
     "description": "Label for the button that sends a WebSocket message"
   },
-  "websocketStatusConnected": "Connected to {endpoint}",
   "@websocketStatusConnected": {
     "description": "Status label shown when the WebSocket connection is established",
     "placeholders": {
@@ -1256,7 +1704,6 @@
       }
     }
   },
-  "websocketStatusConnecting": "Connecting to {endpoint}...",
   "@websocketStatusConnecting": {
     "description": "Status label shown while establishing the WebSocket connection",
     "placeholders": {
@@ -1265,7 +1712,6 @@
       }
     }
   },
-  "websocketErrorLabel": "WebSocket error: {error}",
   "@websocketErrorLabel": {
     "description": "Error message shown when the WebSocket connection fails",
     "placeholders": {
@@ -1274,67 +1720,51 @@
       }
     }
   },
-  "googleMapsPageTitle": "Maps demo",
   "@googleMapsPageTitle": {
     "description": "Title for the Google Maps sample page"
   },
-  "googleMapsPageGenericError": "We couldn't load map data right now.",
   "@googleMapsPageGenericError": {
     "description": "Fallback error message shown when the Google Maps sample fails to load"
   },
-  "googleMapsPageControlsHeading": "Map controls",
   "@googleMapsPageControlsHeading": {
     "description": "Section title for the map interaction controls"
   },
-  "googleMapsPageMapTypeNormal": "Show standard map",
   "@googleMapsPageMapTypeNormal": {
     "description": "Button label that switches the map back to the normal style"
   },
-  "googleMapsPageMapTypeHybrid": "Show hybrid map",
   "@googleMapsPageMapTypeHybrid": {
     "description": "Button label that switches the map to the hybrid style"
   },
-  "googleMapsPageTrafficToggle": "Show real-time traffic",
   "@googleMapsPageTrafficToggle": {
     "description": "Toggle label for enabling traffic overlays on the map"
   },
-  "googleMapsPageApiKeyHelp": "Add your Google Maps API keys to the native projects to see live tiles.",
   "@googleMapsPageApiKeyHelp": {
     "description": "Helper text reminding developers to configure API keys for the Google Maps demo"
   },
-  "googleMapsPageEmptyLocations": "No locations to display yet.",
   "@googleMapsPageEmptyLocations": {
     "description": "Message shown when there are no sample map locations"
   },
-  "googleMapsPageLocationsHeading": "Featured locations",
   "@googleMapsPageLocationsHeading": {
     "description": "Heading displayed above the list of sample map locations"
   },
-  "googleMapsPageFocusButton": "Focus",
   "@googleMapsPageFocusButton": {
     "description": "Button label that re-centres the map on a selected location"
   },
-  "googleMapsPageSelectedBadge": "Selected",
   "@googleMapsPageSelectedBadge": {
     "description": "Badge text shown next to the currently selected location"
   },
-  "googleMapsPageMissingKeyTitle": "Add a Google Maps API key",
   "@googleMapsPageMissingKeyTitle": {
     "description": "Headline shown when no Google Maps API key is configured"
   },
-  "googleMapsPageMissingKeyDescription": "Update the platform projects with valid Google Maps API keys to use this demo.",
   "@googleMapsPageMissingKeyDescription": {
     "description": "Helper text prompting developers to configure Google Maps keys"
   },
-  "googleMapsPageUnsupportedDescription": "The Google Maps demo is only available on Android and iOS builds.",
   "@googleMapsPageUnsupportedDescription": {
     "description": "Message shown when the Google Maps demo is opened on an unsupported platform"
   },
-  "syncStatusOfflineTitle": "You're offline",
   "@syncStatusOfflineTitle": {
     "description": "Title displayed when device is offline"
   },
-  "syncStatusOfflineMessage": "We will sync {pendingCount, plural, =0 {your changes} one {# change} other {# changes}} once you're back online.",
   "@syncStatusOfflineMessage": {
     "description": "Explains queued sync while offline",
     "placeholders": {
@@ -1343,11 +1773,9 @@
       }
     }
   },
-  "syncStatusSyncingTitle": "Syncing changes",
   "@syncStatusSyncingTitle": {
     "description": "Title when sync is in progress"
   },
-  "syncStatusSyncingMessage": "{pendingCount, plural, =0 {Wrapping up your latest updates.} one {Syncing # change…} other {Syncing # changes…}}",
   "@syncStatusSyncingMessage": {
     "description": "Message when sync is running",
     "placeholders": {
@@ -1356,11 +1784,9 @@
       }
     }
   },
-  "syncStatusPendingTitle": "Changes queued",
   "@syncStatusPendingTitle": {
     "description": "Title when changes are still pending"
   },
-  "syncStatusPendingMessage": "{pendingCount, plural, one {# change waiting to sync.} other {# changes waiting to sync.}}",
   "@syncStatusPendingMessage": {
     "description": "Message describing pending operations",
     "placeholders": {
@@ -1369,45 +1795,36 @@
       }
     }
   },
-  "syncStatusDegradedTitle": "Sync issues detected",
   "@syncStatusDegradedTitle": {
     "description": "Title shown when background sync enters a degraded state"
   },
-  "syncStatusDegradedMessage": "Some data may not be synced. Tap retry to attempt synchronization.",
   "@syncStatusDegradedMessage": {
     "description": "Message shown when background sync is degraded and the user can retry"
   },
-  "syncStatusSyncNowButton": "Sync now",
   "@syncStatusSyncNowButton": {
     "description": "Button label to trigger manual syncing of pending changes."
   },
-  "counterLastSynced": "Last synced: {timestamp}",
   "@counterLastSynced": {
     "description": "Label showing the last time the counter synced",
     "placeholders": {
       "timestamp": {}
     }
   },
-  "counterChangeId": "Change ID: {changeId}",
   "@counterChangeId": {
     "description": "Label showing the last change id used for sync",
     "placeholders": {
       "changeId": {}
     }
   },
-  "syncQueueInspectorButton": "View sync queue",
   "@syncQueueInspectorButton": {
     "description": "Button label for opening the sync queue inspector"
   },
-  "syncQueueInspectorEmpty": "No pending operations.",
   "@syncQueueInspectorEmpty": {
     "description": "Shown when inspector has no items"
   },
-  "syncQueueInspectorTitle": "Pending Sync Operations",
   "@syncQueueInspectorTitle": {
     "description": "Title for the sync queue inspector sheet"
   },
-  "syncQueueInspectorOperation": "Entity: {entity}, attempts: {attempts}",
   "@syncQueueInspectorOperation": {
     "description": "Describes a pending operation",
     "placeholders": {
@@ -1419,151 +1836,114 @@
       }
     }
   },
-  "exampleTodoListButton": "Todo List Demo",
   "@exampleTodoListButton": {
     "description": "Button label for opening the todo list demo"
   },
-  "exampleChatListButton": "Chat List Demo",
   "@exampleChatListButton": {
     "description": "Button label for opening the chat list demo"
   },
-  "exampleSearchDemoButton": "Search Demo",
   "@exampleSearchDemoButton": {
     "description": "Button label for opening the search demo"
   },
-  "exampleProfileButton": "Profile Demo",
   "@exampleProfileButton": {
     "description": "Button label for opening the profile demo"
   },
-  "exampleRegisterButton": "Register Demo",
   "@exampleRegisterButton": {
     "description": "Button label for opening the register demo"
   },
-  "exampleLoggedOutButton": "Logged Out Demo",
   "@exampleLoggedOutButton": {
     "description": "Button label for opening the logged out demo"
   },
-  "exampleLibraryDemoButton": "Library Demo",
   "@exampleLibraryDemoButton": {
     "description": "Button label for opening the library demo"
   },
-  "libraryDemoPageTitle": "Library Demo",
   "@libraryDemoPageTitle": {
     "description": "Title for the library demo page"
   },
-  "libraryDemoBrandName": "Epoch",
   "@libraryDemoBrandName": {
     "description": "Brand wordmark shown on the library demo page"
   },
-  "libraryDemoPanelTitle": "Library",
   "@libraryDemoPanelTitle": {
     "description": "Title for the library panel section"
   },
-  "libraryDemoSearchHint": "Search your library",
   "@libraryDemoSearchHint": {
     "description": "Hint text for the library search field"
   },
-  "libraryDemoCategoryScapes": "Scapes",
   "@libraryDemoCategoryScapes": {
     "description": "Label for the Scapes category"
   },
-  "libraryDemoCategoryPacks": "Packs",
   "@libraryDemoCategoryPacks": {
     "description": "Label for the Packs category"
   },
-  "libraryDemoAssetsTitle": "All Assets",
   "@libraryDemoAssetsTitle": {
     "description": "Heading for the assets list section"
   },
-  "libraryDemoAssetName": "Asset Name",
   "@libraryDemoAssetName": {
     "description": "Placeholder asset name shown in the demo list"
   },
-  "libraryDemoAssetTypeObject": "Object",
   "@libraryDemoAssetTypeObject": {
     "description": "Label for object asset type"
   },
-  "libraryDemoAssetTypeImage": "Image",
   "@libraryDemoAssetTypeImage": {
     "description": "Label for image asset type"
   },
-  "libraryDemoAssetTypeSound": "Sound",
   "@libraryDemoAssetTypeSound": {
     "description": "Label for sound asset type"
   },
-  "libraryDemoAssetTypeFootage": "Footage",
   "@libraryDemoAssetTypeFootage": {
     "description": "Label for footage asset type"
   },
-  "libraryDemoAssetDuration": "00:00",
   "@libraryDemoAssetDuration": {
     "description": "Placeholder duration for assets"
   },
-  "libraryDemoFormatObj": "OBJ",
   "@libraryDemoFormatObj": {
     "description": "Format label for OBJ assets"
   },
-  "libraryDemoFormatJpg": "JPG",
   "@libraryDemoFormatJpg": {
     "description": "Format label for JPG assets"
   },
-  "libraryDemoFormatMp4": "MP4",
   "@libraryDemoFormatMp4": {
     "description": "Format label for MP4 assets"
   },
-  "libraryDemoFormatMp3": "MP3",
   "@libraryDemoFormatMp3": {
     "description": "Format label for MP3 assets"
   },
-  "libraryDemoBackButtonLabel": "Back",
   "@libraryDemoBackButtonLabel": {
     "description": "Accessibility label for the back button on the library demo page"
   },
-  "libraryDemoFilterButtonLabel": "Filter",
   "@libraryDemoFilterButtonLabel": {
     "description": "Accessibility label for the filter button on the library demo page"
   },
-  "todoListTitle": "Todo List",
   "@todoListTitle": {
     "description": "Title for the todo list page"
   },
-  "todoListLoadError": "Unable to load todos",
   "@todoListLoadError": {
     "description": "Error message shown when todos fail to load"
   },
-  "todoListAddAction": "Add todo",
   "@todoListAddAction": {
     "description": "Primary action label for adding a todo"
   },
-  "todoListSaveAction": "Save",
   "@todoListSaveAction": {
     "description": "Label for saving a todo in the dialog"
   },
-  "todoListCancelAction": "Cancel",
   "@todoListCancelAction": {
     "description": "Label for cancelling a todo dialog"
   },
-  "todoListDeleteAction": "Delete",
   "@todoListDeleteAction": {
     "description": "Label for deleting a todo"
   },
-  "todoListEditAction": "Edit",
   "@todoListEditAction": {
     "description": "Label for editing a todo"
   },
-  "todoListCompleteAction": "Complete",
   "@todoListCompleteAction": {
     "description": "Label for completing a todo"
   },
-  "todoListUndoAction": "Mark active",
   "@todoListUndoAction": {
     "description": "Label for undoing completion and marking a todo active"
   },
-  "todoListDeleteDialogTitle": "Delete todo?",
   "@todoListDeleteDialogTitle": {
     "description": "Title for the delete confirmation dialog"
   },
-  "todoListDeleteDialogMessage": "Delete \"{title}\"? This cannot be undone.",
   "@todoListDeleteDialogMessage": {
     "description": "Confirmation message for deleting a todo",
     "placeholders": {
@@ -1572,103 +1952,78 @@
       }
     }
   },
-  "todoListSearchHint": "Search todos...",
   "@todoListSearchHint": {
     "description": "Hint text for the todo search field"
   },
-  "todoListDeleteUndone": "Todo deleted",
   "@todoListDeleteUndone": {
     "description": "Message shown when a todo is deleted"
   },
-  "todoListSortAction": "Sort",
   "@todoListSortAction": {
     "description": "Label for the sort action button"
   },
-  "todoListSortDateDesc": "Date (newest first)",
   "@todoListSortDateDesc": {
     "description": "Sort option for date descending"
   },
-  "todoListSortDateAsc": "Date (oldest first)",
   "@todoListSortDateAsc": {
     "description": "Sort option for date ascending"
   },
-  "todoListSortTitleAsc": "Title (A-Z)",
   "@todoListSortTitleAsc": {
     "description": "Sort option for title ascending"
   },
-  "todoListSortTitleDesc": "Title (Z-A)",
   "@todoListSortTitleDesc": {
     "description": "Sort option for title descending"
   },
-  "todoListSortManual": "Manual (drag to reorder)",
   "@todoListSortManual": {
     "description": "Sort option for manual ordering"
   },
-  "todoListSortPriorityDesc": "Priority (high to low)",
   "@todoListSortPriorityDesc": {
     "description": "Label for priority descending sort option"
   },
-  "todoListSortPriorityAsc": "Priority (low to high)",
   "@todoListSortPriorityAsc": {
     "description": "Label for priority ascending sort option"
   },
-  "todoListSortDueDateAsc": "Due date (earliest first)",
   "@todoListSortDueDateAsc": {
     "description": "Label for due date ascending sort option"
   },
-  "todoListSortDueDateDesc": "Due date (latest first)",
   "@todoListSortDueDateDesc": {
     "description": "Label for due date descending sort option"
   },
-  "todoListPriorityNone": "None",
   "@todoListPriorityNone": {
     "description": "Label for no priority"
   },
-  "todoListPriorityLow": "Low",
   "@todoListPriorityLow": {
     "description": "Label for low priority"
   },
-  "todoListPriorityMedium": "Medium",
   "@todoListPriorityMedium": {
     "description": "Label for medium priority"
   },
-  "todoListPriorityHigh": "High",
   "@todoListPriorityHigh": {
     "description": "Label for high priority"
   },
-  "todoListDueDateLabel": "Due date",
   "@todoListDueDateLabel": {
     "description": "Label for due date field"
   },
-  "todoListNoDueDate": "No due date",
   "@todoListNoDueDate": {
     "description": "Placeholder when no due date is selected"
   },
-  "todoListClearDueDate": "Clear due date",
   "@todoListClearDueDate": {
     "description": "Label for clearing the due date"
   },
-  "todoListPriorityLabel": "Priority",
   "@todoListPriorityLabel": {
     "description": "Label for priority field"
   },
-  "todoListSelectAll": "Select all",
   "@todoListSelectAll": {
     "description": "Label for select all action"
   },
-  "todoListClearSelection": "Clear selection",
   "@todoListClearSelection": {
     "description": "Label for clear selection action"
   },
-  "todoListBatchDelete": "Delete selected",
   "@todoListBatchDelete": {
     "description": "Label for batch delete action"
   },
-  "todoListBatchDeleteDialogTitle": "Delete selected todos?",
   "@todoListBatchDeleteDialogTitle": {
     "description": "Title for the batch delete confirmation dialog"
   },
-  "todoListBatchDeleteDialogMessage": "Delete {count, plural, =1 {1 todo} other {{count} todos}}? This cannot be undone.",
   "@todoListBatchDeleteDialogMessage": {
     "description": "Confirmation message for batch deleting todos",
     "placeholders": {
@@ -1677,15 +2032,12 @@
       }
     }
   },
-  "todoListBatchComplete": "Complete selected",
   "@todoListBatchComplete": {
     "description": "Label for batch complete action"
   },
-  "todoListBatchUncomplete": "Uncomplete selected",
   "@todoListBatchUncomplete": {
     "description": "Label for batch uncomplete action"
   },
-  "todoListItemsSelected": "{count} selected",
   "@todoListItemsSelected": {
     "description": "Label showing number of selected items",
     "placeholders": {
@@ -1694,51 +2046,39 @@
       }
     }
   },
-  "todoListAddDialogTitle": "New todo",
   "@todoListAddDialogTitle": {
     "description": "Title for the add todo dialog"
   },
-  "todoListEditDialogTitle": "Edit todo",
   "@todoListEditDialogTitle": {
     "description": "Title for the edit todo dialog"
   },
-  "todoListTitlePlaceholder": "Title",
   "@todoListTitlePlaceholder": {
     "description": "Placeholder for the todo title field"
   },
-  "todoListDescriptionPlaceholder": "Description (optional)",
   "@todoListDescriptionPlaceholder": {
     "description": "Placeholder for the todo description field"
   },
-  "todoListEmptyTitle": "No todos yet",
   "@todoListEmptyTitle": {
     "description": "Title shown when the todo list is empty"
   },
-  "todoListEmptyMessage": "Add your first task to get started.",
   "@todoListEmptyMessage": {
     "description": "Message shown when the todo list is empty"
   },
-  "todoListFilterAll": "All",
   "@todoListFilterAll": {
     "description": "Filter label for all todos"
   },
-  "todoListFilterActive": "Active",
   "@todoListFilterActive": {
     "description": "Filter label for active todos"
   },
-  "todoListFilterCompleted": "Completed",
   "@todoListFilterCompleted": {
     "description": "Filter label for completed todos"
   },
-  "todoListClearCompletedAction": "Clear completed",
   "@todoListClearCompletedAction": {
     "description": "Label for clear completed action"
   },
-  "todoListClearCompletedDialogTitle": "Clear completed todos?",
   "@todoListClearCompletedDialogTitle": {
     "description": "Title for the clear completed confirmation dialog"
   },
-  "todoListClearCompletedDialogMessage": "Delete {count, plural, =1 {1 completed todo} other {{count} completed todos}}? This cannot be undone.",
   "@todoListClearCompletedDialogMessage": {
     "description": "Confirmation message for clearing completed todos",
     "placeholders": {
@@ -1747,59 +2087,45 @@
       }
     }
   },
-  "exampleScapesButton": "Scapes Demo",
   "@exampleScapesButton": {
     "description": "Button label for opening the scapes demo"
   },
-  "exampleWalletconnectAuthButton": "WalletConnect Auth (Demo)",
   "@exampleWalletconnectAuthButton": {
     "description": "Button label for opening the WalletConnect Auth demo from the example page"
   },
-  "exampleCameraGalleryButton": "Camera & Gallery Demo",
   "@exampleCameraGalleryButton": {
     "description": "Button label for opening the Camera & Gallery demo from the example page"
   },
-  "cameraGalleryPageTitle": "Camera & Gallery",
   "@cameraGalleryPageTitle": {
     "description": "Title of the Camera & Gallery demo page"
   },
-  "cameraGalleryTakePhoto": "Take photo",
   "@cameraGalleryTakePhoto": {
     "description": "Button label to capture a photo with the camera"
   },
-  "cameraGalleryPickFromGallery": "Pick from gallery",
   "@cameraGalleryPickFromGallery": {
     "description": "Button label to select an image from the photo library"
   },
-  "cameraGalleryNoImage": "No image selected",
   "@cameraGalleryNoImage": {
     "description": "Placeholder text when no image has been picked yet"
   },
-  "cameraGalleryPermissionDenied": "Camera or photo library access was denied.",
   "@cameraGalleryPermissionDenied": {
     "description": "Error message when the user denies camera or gallery permission"
   },
-  "cameraGalleryCancelled": "Selection was cancelled.",
   "@cameraGalleryCancelled": {
     "description": "Message when the user cancels the camera or gallery picker"
   },
-  "cameraGalleryGenericError": "Something went wrong. Please try again.",
   "@cameraGalleryGenericError": {
     "description": "Generic error message for camera or gallery failures"
   },
-  "cameraGalleryCameraUnavailable": "Camera is not available. Use a real device or pick from gallery.",
   "@cameraGalleryCameraUnavailable": {
     "description": "Shown when camera cannot be used (e.g. iOS Simulator has no camera)"
   },
-  "scapesPageTitle": "Library / Scapes",
   "@scapesPageTitle": {
     "description": "Title for the scapes page"
   },
-  "scapeNameLabel": "Scape Name",
   "@scapeNameLabel": {
     "description": "Label for scape name"
   },
-  "scapeMetadataFormat": "{duration} • {assetCount, plural, =1 {1 ASSET} other {{assetCount} ASSETS}}",
   "@scapeMetadataFormat": {
     "description": "Format for scape metadata showing duration and asset count",
     "placeholders": {
@@ -1811,135 +2137,102 @@
       }
     }
   },
-  "scapeFavoriteAddTooltip": "Add favorite",
   "@scapeFavoriteAddTooltip": {
     "description": "Tooltip for adding a scape to favorites"
   },
-  "scapeFavoriteRemoveTooltip": "Remove favorite",
   "@scapeFavoriteRemoveTooltip": {
     "description": "Tooltip for removing a scape from favorites"
   },
-  "scapeMoreOptionsTooltip": "More options",
   "@scapeMoreOptionsTooltip": {
     "description": "Tooltip for scape item more options button"
   },
-  "scapesGridViewTooltip": "Grid view",
   "@scapesGridViewTooltip": {
     "description": "Tooltip for grid view icon"
   },
-  "scapesListViewTooltip": "List view",
   "@scapesListViewTooltip": {
     "description": "Tooltip for list view icon"
   },
-  "noWalletConnected": "No wallet connected. Please connect a wallet first.",
   "@noWalletConnected": {
     "description": "Error when user tries to link wallet without being connected"
   },
-  "noWalletLinked": "No wallet linked. Connect and link first.",
   "@noWalletLinked": {
     "description": "Error when user tries to relink without a linked wallet"
   },
-  "couldNotPlayAudio": "Could not play audio",
   "@couldNotPlayAudio": {
     "description": "Error when audio playback fails in Playlearn"
   },
-  "scapesErrorOccurred": "An error occurred",
   "@scapesErrorOccurred": {
     "description": "Generic error message on Scapes page"
   },
-  "noScapesAvailable": "No scapes available",
   "@noScapesAvailable": {
     "description": "Empty state when Scapes list is empty"
   },
-  "genuiDemoPageTitle": "GenUI Demo",
   "@genuiDemoPageTitle": {
     "description": "Title for the GenUI demo page"
   },
-  "genuiDemoHintText": "Enter a message to generate UI...",
   "@genuiDemoHintText": {
     "description": "Placeholder text shown in the GenUI demo input field"
   },
-  "genuiDemoSendButton": "Send",
   "@genuiDemoSendButton": {
     "description": "Label for the button that sends a message to generate UI"
   },
-  "genuiDemoErrorTitle": "Error",
   "@genuiDemoErrorTitle": {
     "description": "Title displayed when an error occurs in the GenUI demo"
   },
-  "genuiDemoNoApiKey": "GEMINI_API_KEY not configured. Please add it to secrets.json or use --dart-define=GEMINI_API_KEY=...",
   "@genuiDemoNoApiKey": {
     "description": "Error message shown when the Gemini API key is not configured"
   },
-  "walletconnectAuthTitle": "Connect Wallet",
   "@walletconnectAuthTitle": {
     "description": "Title for the WalletConnect authentication page"
   },
-  "connectWalletButton": "Connect Wallet",
   "@connectWalletButton": {
     "description": "Label for the button that initiates wallet connection"
   },
-  "walletAddress": "Wallet Address",
   "@walletAddress": {
     "description": "Label for displaying the wallet address"
   },
-  "linkToFirebase": "Link to Account",
   "@linkToFirebase": {
     "description": "Label for the button that links wallet to Firebase Auth account"
   },
-  "relinkToAccount": "Re-link to Account",
   "@relinkToAccount": {
     "description": "Label for the button that re-links the already linked wallet (e.g. refresh profile)"
   },
-  "disconnectWallet": "Disconnect",
   "@disconnectWallet": {
     "description": "Label for the button that disconnects the wallet"
   },
-  "walletConnected": "Wallet Connected",
   "@walletConnected": {
     "description": "Message shown when wallet is successfully connected"
   },
-  "walletLinked": "Wallet Linked to Account",
   "@walletLinked": {
     "description": "Message shown when wallet is successfully linked to Firebase Auth account"
   },
-  "walletConnectError": "Failed to connect wallet",
   "@walletConnectError": {
     "description": "Error message shown when wallet connection fails"
   },
-  "walletLinkError": "Failed to link wallet to account",
   "@walletLinkError": {
     "description": "Error message shown when linking wallet to account fails"
   },
-  "walletProfileSection": "Profile",
   "@walletProfileSection": {
     "description": "Section title for wallet user profile on connect wallet screen"
   },
-  "balanceOffChain": "Balance (off-chain)",
   "@balanceOffChain": {
     "description": "Label for off-chain balance in wallet profile"
   },
-  "balanceOnChain": "Balance (on-chain)",
   "@balanceOnChain": {
     "description": "Label for on-chain balance in wallet profile"
   },
-  "rewards": "Rewards",
   "@rewards": {
     "description": "Label for rewards in wallet profile"
   },
-  "lastClaim": "Last claim",
   "@lastClaim": {
     "description": "Label for last claim date in wallet profile"
   },
-  "lastClaimNever": "Never",
   "@lastClaimNever": {
     "description": "Shown when user has never claimed rewards"
   },
-  "nfts": "NFTs",
   "@nfts": {
     "description": "Label for NFTs in wallet profile"
   },
-  "nftsCount": "{count} NFT(s)",
   "@nftsCount": {
     "description": "Number of NFTs in wallet profile",
     "placeholders": {
@@ -1948,395 +2241,297 @@
       }
     }
   },
-  "playlearnTitle": "Playlearn",
   "@playlearnTitle": {
     "description": "Title for the kids vocabulary playlearn feature"
   },
-  "playlearnTopicAnimals": "Animals",
   "@playlearnTopicAnimals": {
     "description": "Topic name for animals vocabulary"
   },
-  "playlearnListen": "Listen",
   "@playlearnListen": {
     "description": "Label for tap-to-hear button"
   },
-  "playlearnTapToListen": "Tap to hear",
   "@playlearnTapToListen": {
     "description": "Accessibility hint for listen button"
   },
-  "playlearnBack": "Back",
   "@playlearnBack": {
     "description": "Back button label for playlearn pages"
   },
-  "openPlaylearnTooltip": "Open Playlearn",
   "@openPlaylearnTooltip": {
     "description": "Tooltip for Playlearn entry in app bar or menu"
   },
-  "openIgamingDemoTooltip": "iGaming Demo",
   "@openIgamingDemoTooltip": {
     "description": "Tooltip for iGaming play-for-fun demo in app bar or menu"
   },
-  "whiteboardChoosePenColor": "Choose pen color",
   "@whiteboardChoosePenColor": {
     "description": "Tooltip and dialog title for whiteboard pen color picker"
   },
-  "whiteboardPickColor": "Pick a color",
   "@whiteboardPickColor": {
     "description": "Heading in whiteboard color picker dialog"
   },
-  "whiteboardUndo": "Undo",
   "@whiteboardUndo": {
     "description": "Label for undo last stroke button"
   },
-  "whiteboardUndoLastStroke": "Undo last stroke",
   "@whiteboardUndoLastStroke": {
     "description": "Tooltip for whiteboard undo button"
   },
-  "whiteboardRedo": "Redo",
   "@whiteboardRedo": {
     "description": "Label for redo button"
   },
-  "whiteboardRedoLastStroke": "Redo last undone stroke",
   "@whiteboardRedoLastStroke": {
     "description": "Tooltip for whiteboard redo button"
   },
-  "whiteboardClear": "Clear",
   "@whiteboardClear": {
     "description": "Label for clear all strokes button"
   },
-  "whiteboardClearAllStrokes": "Clear all strokes",
   "@whiteboardClearAllStrokes": {
     "description": "Tooltip for whiteboard clear button"
   },
-  "whiteboardPenColor": "Pen color",
   "@whiteboardPenColor": {
     "description": "Label for pen color control"
   },
-  "whiteboardStrokeWidth": "Stroke width",
   "@whiteboardStrokeWidth": {
     "description": "Label for stroke width control"
   },
-  "whiteboardStrokeWidthThin": "Thin",
   "@whiteboardStrokeWidthThin": {
     "description": "Whiteboard stroke width preset label"
   },
-  "whiteboardStrokeWidthMedium": "Medium",
   "@whiteboardStrokeWidthMedium": {
     "description": "Whiteboard stroke width preset label"
   },
-  "whiteboardStrokeWidthThick": "Thick",
   "@whiteboardStrokeWidthThick": {
     "description": "Whiteboard stroke width preset label"
   },
-  "whiteboardStrokeWidthExtra": "Extra",
   "@whiteboardStrokeWidthExtra": {
     "description": "Whiteboard stroke width preset label"
   },
-  "errorUnknown": "An unknown error occurred",
   "@errorUnknown": {
     "description": "Generic unknown error message"
   },
-  "errorNetwork": "Network connection error. Please check your internet connection.",
   "@errorNetwork": {
     "description": "Network/connection error message"
   },
-  "errorTimeout": "Request timed out. Please try again.",
   "@errorTimeout": {
     "description": "Timeout error message"
   },
-  "errorUnauthorized": "Authentication required. Please sign in again.",
   "@errorUnauthorized": {
     "description": "401 unauthorized error message"
   },
-  "errorForbidden": "Access denied. You don't have permission for this action.",
   "@errorForbidden": {
     "description": "403 forbidden error message"
   },
-  "errorNotFound": "The requested resource was not found.",
   "@errorNotFound": {
     "description": "404 not found error message"
   },
-  "errorServer": "Server error. Please try again later.",
   "@errorServer": {
     "description": "5xx server error message"
   },
-  "errorGeneric": "Something went wrong. Please try again.",
   "@errorGeneric": {
     "description": "Generic fallback error message"
   },
-  "errorClient": "Client error. Please check your request and try again.",
   "@errorClient": {
     "description": "4xx client error message"
   },
-  "errorTooManyRequests": "Too many requests. Please wait before trying again.",
   "@errorTooManyRequests": {
     "description": "429 rate limit error message"
   },
-  "errorServiceUnavailable": "Service temporarily unavailable. Please try again in a minute.",
   "@errorServiceUnavailable": {
     "description": "503 service unavailable error message"
   },
-  "igamingDemoLobbyTitle": "iGaming Demo",
   "@igamingDemoLobbyTitle": {
     "description": "Title for the play-for-fun iGaming demo lobby"
   },
-  "igamingDemoBalanceLabel": "Virtual balance",
   "@igamingDemoBalanceLabel": {
     "description": "Label for the virtual balance display"
   },
-  "igamingDemoPlayGame": "Play Lucky Spin",
   "@igamingDemoPlayGame": {
     "description": "Button to open the demo game"
   },
-  "igamingDemoGameTitle": "Lucky Spin",
   "@igamingDemoGameTitle": {
     "description": "Title of the demo game screen"
   },
-  "igamingDemoStakeLabel": "Stake",
   "@igamingDemoStakeLabel": {
     "description": "Label for stake amount"
   },
-  "igamingDemoPlayButton": "Spin",
   "@igamingDemoPlayButton": {
     "description": "Button to play one round"
   },
-  "igamingDemoResultWin": "You won!",
   "@igamingDemoResultWin": {
     "description": "Message when the player wins a round"
   },
-  "igamingDemoResultLoss": "No win this time.",
   "@igamingDemoResultLoss": {
     "description": "Message when the player loses a round"
   },
-  "igamingDemoPlayAgain": "Play again",
   "@igamingDemoPlayAgain": {
     "description": "Button to play another round"
   },
-  "igamingDemoBackToLobby": "Back to lobby",
   "@igamingDemoBackToLobby": {
     "description": "Button to return to the demo lobby"
   },
-  "igamingDemoErrorInsufficientBalance": "Insufficient balance",
   "@igamingDemoErrorInsufficientBalance": {
     "description": "Error when bet exceeds balance"
   },
-  "igamingDemoErrorLoadBalance": "Failed to load balance",
   "@igamingDemoErrorLoadBalance": {
     "description": "Error when balance cannot be loaded"
   },
-  "igamingDemoSymbolLegendTitle": "Symbols",
   "@igamingDemoSymbolLegendTitle": {
     "description": "Title for the reel symbols legend"
   },
-  "igamingDemoSymbolWinHint": "Three matching symbols = Win. Different symbols = No win.",
   "@igamingDemoSymbolWinHint": {
     "description": "Clear rule: why the player won or lost based on the reels"
   },
-  "igamingDemoSymbol7": "Seven",
   "@igamingDemoSymbol7": {
     "description": "Reel symbol name: seven"
   },
-  "igamingDemoSymbolStar": "Star",
   "@igamingDemoSymbolStar": {
     "description": "Reel symbol name: star"
   },
-  "igamingDemoSymbolDiamond": "Diamond",
   "@igamingDemoSymbolDiamond": {
     "description": "Reel symbol name: diamond"
   },
-  "igamingDemoSymbolCircle": "Circle",
   "@igamingDemoSymbolCircle": {
     "description": "Reel symbol name: circle"
   },
-  "igamingDemoSymbolTriangle": "Triangle",
   "@igamingDemoSymbolTriangle": {
     "description": "Reel symbol name: triangle"
   },
-  "igamingDemoSymbolGem": "Gem",
   "@igamingDemoSymbolGem": {
     "description": "Reel symbol name: gem"
   },
-  "exampleIgamingDemoButton": "iGaming Demo",
   "@exampleIgamingDemoButton": {
     "description": "Button label for opening the iGaming play-for-fun demo"
   },
-  "exampleFcmDemoButton": "FCM Demo",
   "@exampleFcmDemoButton": {
     "description": "Button label for opening the Firebase Cloud Messaging demo"
   },
-  "exampleFirebaseFunctionsButton": "Firebase Functions Test",
   "@exampleFirebaseFunctionsButton": {
     "description": "Button label for opening the Firebase Functions test page"
   },
-  "firebaseFunctionsTestTitle": "Firebase Functions",
   "@firebaseFunctionsTestTitle": {
     "description": "Title for the Firebase Functions test page"
   },
-  "firebaseFunctionsCallButton": "Call helloWorld",
   "@firebaseFunctionsCallButton": {
     "description": "Button label that calls the helloWorld callable Cloud Function"
   },
-  "firebaseFunctionsResultLabel": "Result",
   "@firebaseFunctionsResultLabel": {
     "description": "Label for the result section on the Firebase Functions test page"
   },
-  "firebaseUnavailableMessage": "Firebase is not initialized.",
   "@firebaseUnavailableMessage": {
     "description": "Shown when Firebase features are unavailable because initialization is incomplete"
   },
-  "fcmDemoPageTitle": "FCM Demo",
   "@fcmDemoPageTitle": {
     "description": "Title for the Firebase Cloud Messaging demo page"
   },
-  "fcmDemoPermissionLabel": "Permission",
   "@fcmDemoPermissionLabel": {
     "description": "Label for the notification permission status"
   },
-  "fcmDemoPermissionNotDetermined": "Not determined",
   "@fcmDemoPermissionNotDetermined": {
     "description": "Permission status: not yet requested or determined"
   },
-  "fcmDemoPermissionAuthorized": "Granted",
   "@fcmDemoPermissionAuthorized": {
     "description": "Permission status: user granted notifications"
   },
-  "fcmDemoPermissionDenied": "Denied",
   "@fcmDemoPermissionDenied": {
     "description": "Permission status: user denied notifications"
   },
-  "fcmDemoPermissionProvisional": "Provisional",
   "@fcmDemoPermissionProvisional": {
     "description": "Permission status: provisional (e.g. iOS quiet delivery)"
   },
-  "fcmDemoFcmTokenLabel": "FCM token",
   "@fcmDemoFcmTokenLabel": {
     "description": "Label for the FCM device token field"
   },
-  "fcmDemoApnsTokenLabel": "APNs token",
   "@fcmDemoApnsTokenLabel": {
     "description": "Label for the APNs device token field (iOS)"
   },
-  "fcmDemoTokenNotAvailable": "Not available",
   "@fcmDemoTokenNotAvailable": {
     "description": "Shown when FCM or APNs token is not yet available"
   },
-  "fcmDemoCopyToken": "Copy",
   "@fcmDemoCopyToken": {
     "description": "Button to copy token to clipboard"
   },
-  "fcmDemoCopySuccess": "Copied to clipboard",
   "@fcmDemoCopySuccess": {
     "description": "Snackbar when token was copied successfully"
   },
-  "fcmDemoCopyFailure": "Copy failed",
   "@fcmDemoCopyFailure": {
     "description": "Snackbar when copying token failed"
   },
-  "fcmDemoLastMessageLabel": "Last message",
   "@fcmDemoLastMessageLabel": {
     "description": "Label for the last received message section"
   },
-  "fcmDemoLastMessageNone": "None yet",
   "@fcmDemoLastMessageNone": {
     "description": "Shown when no message has been received yet"
   },
-  "fcmDemoLastMessageReceived": "Message received",
   "@fcmDemoLastMessageReceived": {
     "description": "Header or status when a message was received"
   },
-  "fcmDemoScopeNoteIos": "On iOS, background/terminated delivery requires APNs key in Firebase Console.",
   "@fcmDemoScopeNoteIos": {
     "description": "Note for iOS about APNs configuration for background FCM"
   },
-  "fcmDemoScopeNoteSimulator": "On iOS Simulator use the .apns file (drag onto simulator or xcrun simctl push).",
   "@fcmDemoScopeNoteSimulator": {
     "description": "Note for testing FCM on iOS Simulator with .apns file"
   },
-  "iotDemoPageTitle": "IoT Demo",
   "@iotDemoPageTitle": {
     "description": "Title for the IoT-connected devices demo page"
   },
-  "iotDemoDeviceListEmpty": "No devices found",
   "@iotDemoDeviceListEmpty": {
     "description": "Shown when the device list is empty"
   },
-  "iotDemoConnect": "Connect",
   "@iotDemoConnect": {
     "description": "Button to connect to a device"
   },
-  "iotDemoDisconnect": "Disconnect",
   "@iotDemoDisconnect": {
     "description": "Button to disconnect from a device"
   },
-  "iotDemoToggle": "Toggle",
   "@iotDemoToggle": {
     "description": "Button to send a toggle command"
   },
-  "iotDemoSetValue": "Set value",
   "@iotDemoSetValue": {
     "description": "Button to set a numeric value"
   },
-  "iotDemoSetValueHint": "Value",
   "@iotDemoSetValueHint": {
     "description": "Hint for the set-value input field"
   },
-  "iotDemoStatusDisconnected": "Disconnected",
   "@iotDemoStatusDisconnected": {
     "description": "Device connection status"
   },
-  "iotDemoStatusConnecting": "Connecting",
   "@iotDemoStatusConnecting": {
     "description": "Device connection status"
   },
-  "iotDemoStatusConnected": "Connected",
   "@iotDemoStatusConnected": {
     "description": "Device connection status"
   },
-  "iotDemoDeviceTypeLight": "Light",
   "@iotDemoDeviceTypeLight": {
     "description": "IoT device type label"
   },
-  "iotDemoDeviceTypeThermostat": "Thermostat",
   "@iotDemoDeviceTypeThermostat": {
     "description": "IoT device type label"
   },
-  "iotDemoDeviceTypePlug": "Plug",
   "@iotDemoDeviceTypePlug": {
     "description": "IoT device type label"
   },
-  "iotDemoDeviceTypeSensor": "Sensor",
   "@iotDemoDeviceTypeSensor": {
     "description": "IoT device type label"
   },
-  "iotDemoDeviceTypeSwitch": "Switch",
   "@iotDemoDeviceTypeSwitch": {
     "description": "IoT device type label"
   },
-  "iotDemoErrorLoad": "Failed to load devices",
   "@iotDemoErrorLoad": {
     "description": "Error when loading the device list fails"
   },
-  "iotDemoErrorConnect": "Failed to connect",
   "@iotDemoErrorConnect": {
     "description": "Error when connecting to a device fails"
   },
-  "iotDemoErrorDisconnect": "Failed to disconnect",
   "@iotDemoErrorDisconnect": {
     "description": "Error when disconnecting fails"
   },
-  "iotDemoErrorCommand": "Failed to send command",
   "@iotDemoErrorCommand": {
     "description": "Error when sending a command fails"
   },
-  "iotDemoStateOn": "On",
   "@iotDemoStateOn": {
     "description": "Toggle state when device is on"
   },
-  "iotDemoStateOff": "Off",
   "@iotDemoStateOff": {
     "description": "Toggle state when device is off"
   },
-  "iotDemoCurrentValue": "Current value: {value}",
   "@iotDemoCurrentValue": {
     "description": "Label for device numeric value (thermostat/sensor)",
     "placeholders": {
@@ -2345,7 +2540,6 @@
       }
     }
   },
-  "iotDemoSetValueOutOfRange": "Value must be between {min} and {max}",
   "@iotDemoSetValueOutOfRange": {
     "description": "Shown when user enters a value outside the allowed range",
     "placeholders": {
@@ -2357,23 +2551,18 @@
       }
     }
   },
-  "iotDemoSetValueInvalidNumber": "Enter a valid number",
   "@iotDemoSetValueInvalidNumber": {
     "description": "Shown when the value field is not a valid number"
   },
-  "iotDemoAddDevice": "Add device",
   "@iotDemoAddDevice": {
     "description": "Title for the add device dialog"
   },
-  "iotDemoAddDeviceNameHint": "Device name",
   "@iotDemoAddDeviceNameHint": {
     "description": "Hint for the device name field"
   },
-  "iotDemoAddDeviceNameRequired": "Name is required",
   "@iotDemoAddDeviceNameRequired": {
     "description": "Error when name is empty"
   },
-  "iotDemoAddDeviceNameTooLong": "Name must be at most {max} characters",
   "@iotDemoAddDeviceNameTooLong": {
     "description": "Error when name exceeds max length",
     "placeholders": {
@@ -2382,11 +2571,9 @@
       }
     }
   },
-  "iotDemoAddDeviceTypeHint": "Device type",
   "@iotDemoAddDeviceTypeHint": {
     "description": "Hint for the device type dropdown"
   },
-  "iotDemoAddDeviceInitialValue": "Initial value: {value}",
   "@iotDemoAddDeviceInitialValue": {
     "description": "Label for thermostat/sensor initial value",
     "placeholders": {
@@ -2395,135 +2582,102 @@
       }
     }
   },
-  "iotDemoAddDeviceTooltip": "Add device",
   "@iotDemoAddDeviceTooltip": {
     "description": "Tooltip for the add device button"
   },
-  "iotDemoErrorAdd": "Failed to add device",
   "@iotDemoErrorAdd": {
     "description": "Error when adding a device fails"
   },
-  "iotDemoFilterAll": "All",
   "@iotDemoFilterAll": {
     "description": "Filter option to show all devices"
   },
-  "iotDemoFilterOnOnly": "On only",
   "@iotDemoFilterOnOnly": {
     "description": "Filter option to show only devices with toggle on"
   },
-  "iotDemoFilterOffOnly": "Off only",
   "@iotDemoFilterOffOnly": {
     "description": "Filter option to show only devices with toggle off"
   },
-  "openIotDemoTooltip": "Open IoT Demo",
   "@openIotDemoTooltip": {
     "description": "Tooltip for navigating to the IoT demo page"
   },
-  "searchAllResultsSectionTitle": "ALL RESULTS",
   "@searchAllResultsSectionTitle": {
     "description": "Section title for all search results"
   },
-  "searchErrorLoadingResults": "Error loading results",
   "@searchErrorLoadingResults": {
     "description": "Error message when search results fail to load"
   },
-  "searchNoResultsFound": "No results found",
   "@searchNoResultsFound": {
     "description": "Message when search returns no results"
   },
-  "profileSeeMore": "SEE MORE",
   "@profileSeeMore": {
     "description": "Button label to see more profile content"
   },
-  "moreTooltip": "More",
   "@moreTooltip": {
     "description": "Tooltip for more options"
   },
-  "whiteboardPageTitle": "Whiteboard",
   "@whiteboardPageTitle": {
     "description": "Title of the whiteboard page"
   },
-  "playlearnNoWords": "No words",
   "@playlearnNoWords": {
     "description": "Empty state when a topic has no vocabulary words"
   },
-  "playlearnNoTopics": "No topics",
   "@playlearnNoTopics": {
     "description": "Empty state when there are no playlearn topics"
   },
-  "commonEmptyStateTryAgain": "Try Again",
   "@commonEmptyStateTryAgain": {
     "description": "Default label for retry button in empty state"
   },
-  "profileNoCachedProfile": "No cached profile",
   "@profileNoCachedProfile": {
     "description": "Shown when there is no cached profile data"
   },
-  "profileCachedProfileDetailsUnavailable": "Cached profile (details unavailable)",
   "@profileCachedProfileDetailsUnavailable": {
     "description": "Profile is cached but sync time and size cannot be shown (missing or invalid metadata)"
   },
-  "loggedOutPhotoLabel": "photo",
   "@loggedOutPhotoLabel": {
     "description": "Label for photo in logged-out header"
   },
-  "supabaseAuthTitle": "Supabase Auth",
   "@supabaseAuthTitle": {
     "description": "Title for the Supabase authentication page"
   },
-  "supabaseAuthSignIn": "Sign in",
   "@supabaseAuthSignIn": {
     "description": "Sign in button on Supabase auth page"
   },
-  "supabaseAuthSignUp": "Sign up",
   "@supabaseAuthSignUp": {
     "description": "Sign up button on Supabase auth page"
   },
-  "supabaseAuthSignOut": "Sign out",
   "@supabaseAuthSignOut": {
     "description": "Sign out button on Supabase auth page"
   },
-  "supabaseAuthEmailLabel": "Email",
   "@supabaseAuthEmailLabel": {
     "description": "Email field label on Supabase auth page"
   },
-  "supabaseAuthPasswordLabel": "Password",
   "@supabaseAuthPasswordLabel": {
     "description": "Password field label on Supabase auth page"
   },
-  "supabaseAuthPasswordMinLength": "At least 6 characters",
   "@supabaseAuthPasswordMinLength": {
     "description": "Hint for minimum password length on Supabase auth page"
   },
-  "supabaseAuthDisplayNameLabel": "Display name (optional)",
   "@supabaseAuthDisplayNameLabel": {
     "description": "Display name field label on Supabase sign up form"
   },
-  "supabaseAuthNotConfigured": "Supabase is not configured. Add SUPABASE_URL and SUPABASE_ANON_KEY to secrets or environment.",
   "@supabaseAuthNotConfigured": {
     "description": "Message when Supabase URL or anon key is missing"
   },
-  "supabaseAuthErrorInvalidCredentials": "Invalid email or password",
   "@supabaseAuthErrorInvalidCredentials": {
     "description": "Error when sign in fails due to invalid credentials"
   },
-  "supabaseAuthErrorInvalidEmail": "Please enter a valid email address.",
   "@supabaseAuthErrorInvalidEmail": {
     "description": "Error when email format is invalid (e.g. sign up validation)"
   },
-  "supabaseAuthErrorNetwork": "Network error. Check your connection.",
   "@supabaseAuthErrorNetwork": {
     "description": "Error when a network failure occurs during auth"
   },
-  "supabaseAuthErrorWeakPassword": "Password must be at least 6 characters.",
   "@supabaseAuthErrorWeakPassword": {
     "description": "Error when sign up fails due to password too short"
   },
-  "supabaseAuthErrorUserAlreadyExists": "An account with this email already exists. Try signing in.",
   "@supabaseAuthErrorUserAlreadyExists": {
     "description": "Error when sign up fails because email is already registered"
   },
-  "supabaseAuthSignedInAs": "Signed in as {email}",
   "@supabaseAuthSignedInAs": {
     "description": "Shown when user is signed in with Supabase",
     "placeholders": {
@@ -2532,113 +2686,75 @@
       }
     }
   },
-  "settingsIntegrationsSection": "Integrations",
   "@settingsIntegrationsSection": {
     "description": "Settings section title for integrations (e.g. Supabase)"
   },
-  "settingsSupabaseAuth": "Supabase Auth",
   "@settingsSupabaseAuth": {
     "description": "Settings link label to open Supabase auth page"
   },
-  "commonYes": "Yes",
   "@commonYes": {
     "description": "Common affirmative label"
   },
-  "commonNo": "No",
   "@commonNo": {
     "description": "Common negative label"
   },
-  "exampleIapDemoButton": "In-app purchases (IAP) demo",
   "@exampleIapDemoButton": {
     "description": "Button label on Example page to open the IAP demo"
   },
-  "iapDemoPageTitle": "In-App Purchases",
   "@iapDemoPageTitle": {
     "description": "Title for the IAP demo page"
   },
-  "iapDemoDisclaimer": "Store IAP demo. Real purchases require App Store / Play sandbox testing. For emulator/simulator, use the simulated flow.",
   "@iapDemoDisclaimer": {
     "description": "Disclaimer text shown on the IAP demo page"
   },
-  "iapDemoUseFakeRepoLabel": "Use simulated purchases",
   "@iapDemoUseFakeRepoLabel": {
     "description": "Label for toggling between fake and real store repositories"
   },
-  "iapDemoForceOutcomeLabel": "Force outcome",
   "@iapDemoForceOutcomeLabel": {
     "description": "Label for the forced outcome demo control"
   },
-  "iapDemoEntitlementsTitle": "Entitlements",
   "@iapDemoEntitlementsTitle": {
     "description": "Section title for entitlements summary"
   },
-  "iapDemoCreditsLabel": "Credits",
   "@iapDemoCreditsLabel": {
     "description": "Label for consumable credits balance"
   },
-  "iapDemoPremiumLabel": "Premium owned",
   "@iapDemoPremiumLabel": {
     "description": "Label for non-consumable entitlement"
   },
-  "iapDemoSubscriptionLabel": "Subscription active",
   "@iapDemoSubscriptionLabel": {
     "description": "Label for subscription entitlement"
   },
-  "iapDemoSubscriptionExpiryLabel": "Subscription expiry",
   "@iapDemoSubscriptionExpiryLabel": {
     "description": "Label for subscription expiry value"
   },
-  "iapDemoRestoreButton": "Restore purchases",
   "@iapDemoRestoreButton": {
     "description": "Button label to restore purchases"
   },
-  "iapDemoProductsTitle": "Products",
   "@iapDemoProductsTitle": {
     "description": "Section title for the product list"
   },
-  "iapDemoConsumablesTitle": "Consumables",
   "@iapDemoConsumablesTitle": {
     "description": "Title for consumable products section"
   },
-  "iapDemoNonConsumablesTitle": "Non-consumables",
   "@iapDemoNonConsumablesTitle": {
     "description": "Title for non-consumable products section"
   },
-  "iapDemoSubscriptionsTitle": "Subscriptions",
   "@iapDemoSubscriptionsTitle": {
     "description": "Title for subscription products section"
   },
-  "iapDemoLastResultLabel": "Last result",
   "@iapDemoLastResultLabel": {
     "description": "Label for displaying the last purchase result"
   },
-  "iapDemoBuyButton": "Buy",
   "@iapDemoBuyButton": {
     "description": "Buy button label prefix"
   },
-  "iapDemoNoProductsFound": "No products found.",
   "@iapDemoNoProductsFound": {
     "description": "Shown when no products are available"
   },
-  "exampleCaseStudyDemoButton": "Case study demo (dentist)",
   "@exampleCaseStudyDemoButton": {
     "description": "Example page entry to the dentist case study demo"
   },
-  "caseStudyDemoTitle": "Case study demo",
-  "caseStudyDemoNewCase": "New case",
-  "caseStudyDemoHistory": "History",
-  "caseStudyDemoSettings": "Settings",
-  "caseStudyDemoMetadataTitle": "Case details",
-  "caseStudyDoctorNameLabel": "Doctor name",
-  "caseStudyCaseTypeLabel": "Case type",
-  "caseStudyNotesLabel": "Notes (optional)",
-  "caseStudyContinue": "Continue",
-  "caseStudyCaseTypeImplant": "Implant",
-  "caseStudyCaseTypeOrtho": "Orthodontics",
-  "caseStudyCaseTypeCosmetic": "Cosmetic",
-  "caseStudyCaseTypeGeneral": "General",
-  "caseStudyRecordTitle": "Record responses",
-  "caseStudyQuestionProgress": "Question {current} of {total}",
   "@caseStudyQuestionProgress": {
     "placeholders": {
       "current": {
@@ -2649,43 +2765,6 @@
       }
     }
   },
-  "caseStudyPickVideoCamera": "Record video",
-  "caseStudyPickVideoGallery": "Choose from gallery",
-  "caseStudyNext": "Next",
-  "caseStudyGoToReview": "Continue to review",
-  "caseStudyBack": "Back",
-  "caseStudyReviewTitle": "Review & submit",
-  "caseStudySubmit": "Sent",
-  "caseStudyAbandon": "Abandon case",
-  "caseStudyAbandonConfirmBody": "Discard this case and delete any recorded clips for it?",
-  "caseStudyDeleteDialogTitle": "Delete case?",
-  "caseStudyDeleteDialogBody": "Delete this case permanently? This cannot be undone.",
-  "caseStudyUploading": "Uploading…",
-  "caseStudyDataModeLocalOnly": "Local only",
-  "caseStudyDataModeSupabase": "Supabase",
-  "caseStudyHistoryTitle": "Submitted cases",
-  "caseStudyHistoryEmpty": "No submitted cases yet.",
-  "caseStudyHistoryDetailTitle": "Case detail",
-  "caseStudySubmittedAt": "Submitted",
-  "caseStudyVideoMissing": "Video file missing",
-  "caseStudyErrorGeneric": "Something went wrong. Try again.",
-  "caseStudyHistoryDetailNotFound": "This case was not found. It may have been removed or you may not have access.",
-  "caseStudyHistoryDetailUnavailable": "Could not load this case. Check your connection and try again.",
-  "caseStudySubmitLocalHistoryFailed": "Your case was saved in the cloud, but this device could not update local history. Use “Retry saving on this device” below, or open History to see cloud submissions.",
-  "caseStudyRetryLocalSave": "Retry saving on this device",
-  "caseStudyRefreshDetailTooltip": "Refresh",
-  "caseStudySignedUrlsRefreshHint": "Clip playback uses temporary links (about 24 hours). Pull down or tap refresh if a video stops working.",
-  "caseStudyQuestion1": "Introduce the patient and chief complaint.",
-  "caseStudyQuestion2": "Describe relevant medical history.",
-  "caseStudyQuestion3": "Show extra-oral examination findings.",
-  "caseStudyQuestion4": "Show intra-oral examination findings.",
-  "caseStudyQuestion5": "Explain radiographic findings.",
-  "caseStudyQuestion6": "Walk through diagnosis and problem list.",
-  "caseStudyQuestion7": "Describe treatment options discussed.",
-  "caseStudyQuestion8": "Detail the chosen treatment plan.",
-  "caseStudyQuestion9": "Show immediate post-operative status.",
-  "caseStudyQuestion10": "Summarize follow-up and prognosis.",
-  "staffDemoAdminFlagged": "Flagged ({count})",
   "@staffDemoAdminFlagged": {
     "description": "Staff demo admin section title for flagged entries count",
     "placeholders": {
@@ -2694,11 +2773,9 @@
       }
     }
   },
-  "staffDemoAdminNoFlagged": "No flagged entries found.",
   "@staffDemoAdminNoFlagged": {
     "description": "Staff demo admin when no flagged time entries exist"
   },
-  "staffDemoAdminRecentEntries": "Recent time entries ({count})",
   "@staffDemoAdminRecentEntries": {
     "description": "Staff demo admin heading for recent time entries list",
     "placeholders": {
@@ -2707,35 +2784,27 @@
       }
     }
   },
-  "staffDemoAdminSeedingReminder": "Seeding reminders: create staffDemoProfiles (user uid), staffDemoSites (site id), and staffDemoShifts (shift id) documents in Firestore for full demo coverage.",
   "@staffDemoAdminSeedingReminder": {
     "description": "Staff demo admin helper text for Firestore seed documents"
   },
-  "staffDemoAdminTitle": "Admin",
   "@staffDemoAdminTitle": {
     "description": "Title for the staff app demo admin page"
   },
-  "staffDemoAssignToStaffLabel": "Assign to staff",
   "@staffDemoAssignToStaffLabel": {
     "description": "Label for selecting assignable staff in staff demo messaging"
   },
-  "staffDemoComposeDefaultShiftBody": "Your shift starts at 10:00. Please meet at the warehouse.",
   "@staffDemoComposeDefaultShiftBody": {
     "description": "Default body text for composing a shift assignment message in staff demo"
   },
-  "staffDemoComposeRecipientUserId": "Recipient userId",
   "@staffDemoComposeRecipientUserId": {
     "description": "Label for manual recipient user id field in staff demo compose dialog"
   },
-  "staffDemoComposeSendShiftAssignment": "Send shift assignment",
   "@staffDemoComposeSendShiftAssignment": {
     "description": "Primary action to open compose flow for shift assignment in staff demo"
   },
-  "staffDemoComposeStaffListFailed": "Failed to load staff list.",
   "@staffDemoComposeStaffListFailed": {
     "description": "Error when staff assignee list fails to load in staff demo compose dialog"
   },
-  "staffDemoComposeStaffListFailedWithDetails": "Failed to load staff list.\n{details}",
   "@staffDemoComposeStaffListFailedWithDetails": {
     "description": "Error when staff list fails with exception details in staff demo compose dialog",
     "placeholders": {
@@ -2744,27 +2813,21 @@
       }
     }
   },
-  "staffDemoComposeTitle": "Send shift assignment",
   "@staffDemoComposeTitle": {
     "description": "Title of the staff demo shift assignment compose dialog"
   },
-  "staffDemoContentCouldNotLoadUrl": "Could not load file URL.",
   "@staffDemoContentCouldNotLoadUrl": {
     "description": "Snack bar when staff demo content download URL cannot be resolved"
   },
-  "staffDemoContentEmpty": "No content yet.",
   "@staffDemoContentEmpty": {
     "description": "Empty state for staff demo published content list"
   },
-  "staffDemoContentFailedToOpenItem": "Failed to load content.",
   "@staffDemoContentFailedToOpenItem": {
     "description": "Error text when staff demo content list fails to load"
   },
-  "staffDemoContentTitle": "Content",
   "@staffDemoContentTitle": {
     "description": "Title for the staff app demo content page"
   },
-  "staffDemoDashboardHello": "Hello, {name}",
   "@staffDemoDashboardHello": {
     "description": "Greeting on staff demo dashboard with display name",
     "placeholders": {
@@ -2773,171 +2836,129 @@
       }
     }
   },
-  "staffDemoDashboardInactiveProfile": "This staff demo profile is inactive.",
   "@staffDemoDashboardInactiveProfile": {
     "description": "Message when staff demo profile exists but is inactive"
   },
-  "staffDemoDashboardIntro": "Use the bottom tabs to navigate the demo. Accounting flow starts with Timeclock.",
   "@staffDemoDashboardIntro": {
     "description": "Intro copy on staff demo home tab"
   },
-  "staffDemoDashboardLoading": "Loading…",
   "@staffDemoDashboardLoading": {
     "description": "Placeholder while staff demo profile is loading"
   },
-  "staffDemoDashboardNoProfile": "No staff demo profile found for this user. Seed a staffDemoProfiles document keyed by this user's Firebase Auth uid in Firestore.",
   "@staffDemoDashboardNoProfile": {
     "description": "Message when no staff demo profile document exists for the signed-in user"
   },
-  "staffDemoDashboardTitle": "Staff demo",
   "@staffDemoDashboardTitle": {
     "description": "Title for the staff app demo dashboard (home) tab"
   },
-  "staffDemoFormsErrorSiteRequired": "Site ID is required.",
   "@staffDemoFormsErrorSiteRequired": {
     "description": "Validation error when site is missing on staff demo manager report form"
   },
-  "staffDemoFormsManagerReport": "Manager report",
   "@staffDemoFormsManagerReport": {
     "description": "Section title for manager report form in staff demo"
   },
-  "staffDemoFormsNotesLabel": "Notes",
   "@staffDemoFormsNotesLabel": {
     "description": "Label for notes field on staff demo manager report form"
   },
-  "staffDemoFormsSubmitAvailability": "Submit availability",
   "@staffDemoFormsSubmitAvailability": {
     "description": "Button to submit weekly availability in staff demo forms"
   },
-  "staffDemoFormsSubmitReport": "Submit report",
   "@staffDemoFormsSubmitReport": {
     "description": "Button to submit manager report in staff demo forms"
   },
-  "staffDemoFormsSubmitted": "Submitted.",
   "@staffDemoFormsSubmitted": {
     "description": "Generic success banner after staff demo form submit when kind is unknown"
   },
-  "staffDemoFormsSuccessAvailability": "Availability submitted",
   "@staffDemoFormsSuccessAvailability": {
     "description": "Success banner after availability submit in staff demo forms"
   },
-  "staffDemoFormsSuccessManagerReport": "Manager report submitted",
   "@staffDemoFormsSuccessManagerReport": {
     "description": "Success banner after manager report submit in staff demo forms"
   },
-  "staffDemoFormsTitle": "Forms",
   "@staffDemoFormsTitle": {
     "description": "Title for the staff app demo forms page"
   },
-  "staffDemoFormsWeeklyAvailability": "Weekly availability",
   "@staffDemoFormsWeeklyAvailability": {
     "description": "Section title for weekly availability in staff demo forms"
   },
-  "staffDemoMessagesEmpty": "No messages yet.",
   "@staffDemoMessagesEmpty": {
     "description": "Empty inbox state in staff demo messages tab"
   },
-  "staffDemoMessagesErrorInboxLoadFailed": "Failed to load inbox updates.",
   "@staffDemoMessagesErrorInboxLoadFailed": {
     "description": "Error when Firestore inbox subscription fails in staff demo messages"
   },
-  "staffDemoMessagesTitle": "Messages",
   "@staffDemoMessagesTitle": {
     "description": "Title for the staff app demo messages page"
   },
-  "staffDemoNavAdmin": "Admin",
   "@staffDemoNavAdmin": {
     "description": "Bottom navigation label for staff demo admin tab"
   },
-  "staffDemoNavContent": "Content",
   "@staffDemoNavContent": {
     "description": "Bottom navigation label for staff demo content tab"
   },
-  "staffDemoNavForms": "Forms",
   "@staffDemoNavForms": {
     "description": "Bottom navigation label for staff demo forms tab"
   },
-  "staffDemoNavHome": "Home",
   "@staffDemoNavHome": {
     "description": "Bottom navigation label for staff demo home tab"
   },
-  "staffDemoNavMsgs": "Msgs",
   "@staffDemoNavMsgs": {
     "description": "Bottom navigation label for staff demo messages tab"
   },
-  "staffDemoNavProof": "Proof",
   "@staffDemoNavProof": {
     "description": "Bottom navigation label for staff demo proof tab"
   },
-  "staffDemoNavTime": "Time",
   "@staffDemoNavTime": {
     "description": "Bottom navigation label for staff demo timeclock tab"
   },
-  "staffDemoNotSignedIn": "Not signed in.",
   "@staffDemoNotSignedIn": {
     "description": "Error when staff demo action requires auth but user id is missing"
   },
-  "staffDemoProofFailed": "Failed.",
   "@staffDemoProofFailed": {
     "description": "Generic failure label in staff demo proof status banner"
   },
-  "staffDemoProofOfflineQueued": "Offline: queued for sync when online.",
   "@staffDemoProofOfflineQueued": {
     "description": "Staff demo proof submitted while offline and queued for sync"
   },
-  "staffDemoProofPhotos": "Photos",
   "@staffDemoProofPhotos": {
     "description": "Section title for photo attachments on staff demo proof page"
   },
-  "staffDemoProofPickPhoto": "Pick",
   "@staffDemoProofPickPhoto": {
     "description": "Button to pick a photo from gallery on staff demo proof page"
   },
-  "staffDemoProofShiftIdOptional": "Shift ID (optional)",
   "@staffDemoProofShiftIdOptional": {
     "description": "Label for optional shift id field on staff demo proof submit card"
   },
-  "staffDemoProofSignatureClear": "Clear",
   "@staffDemoProofSignatureClear": {
     "description": "Button to clear signature pad in staff demo proof flow"
   },
-  "staffDemoProofSignatureLabel": "Signature",
   "@staffDemoProofSignatureLabel": {
     "description": "Heading for signature section in staff demo proof flow"
   },
-  "staffDemoProofSignatureNotSaved": "Not saved",
   "@staffDemoProofSignatureNotSaved": {
     "description": "Label when signature file has not been saved yet"
   },
-  "staffDemoProofSignatureSave": "Save signature",
   "@staffDemoProofSignatureSave": {
     "description": "Button to persist signature PNG in staff demo proof flow"
   },
-  "staffDemoProofSignatureSaved": "Saved",
   "@staffDemoProofSignatureSaved": {
     "description": "Label when signature file path is saved in staff demo proof flow"
   },
-  "staffDemoProofSignatureSaveBefore": "Please sign before saving.",
   "@staffDemoProofSignatureSaveBefore": {
     "description": "Snack bar when user saves signature without drawing"
   },
-  "staffDemoProofSignatureSaveSuccess": "Signature saved.",
   "@staffDemoProofSignatureSaveSuccess": {
     "description": "Snack bar when signature bytes are saved successfully"
   },
-  "staffDemoProofSubmit": "Submit",
   "@staffDemoProofSubmit": {
     "description": "Button to submit proof bundle in staff demo"
   },
-  "staffDemoProofSubmitProof": "Submit proof",
   "@staffDemoProofSubmitProof": {
     "description": "Section title for proof submission card in staff demo"
   },
-  "staffDemoProofSubmittedEmpty": "Submitted proof",
   "@staffDemoProofSubmittedEmpty": {
     "description": "Success banner when proof id is not shown in staff demo"
   },
-  "staffDemoProofSubmittedWithId": "Submitted proof {proofId}",
   "@staffDemoProofSubmittedWithId": {
     "description": "Success banner including proof document id in staff demo",
     "placeholders": {
@@ -2946,43 +2967,33 @@
       }
     }
   },
-  "staffDemoProofTakePhoto": "Take photo",
   "@staffDemoProofTakePhoto": {
     "description": "Button to capture a photo with camera on staff demo proof page"
   },
-  "staffDemoProofTitle": "Proof",
   "@staffDemoProofTitle": {
     "description": "Title for the staff app demo proof page"
   },
-  "staffDemoSitePickerEmpty": "No sites found in staffDemoSites.",
   "@staffDemoSitePickerEmpty": {
     "description": "Helper when staff demo site picker has no Firestore sites"
   },
-  "staffDemoSitePickerFailed": "Failed to load sites.",
   "@staffDemoSitePickerFailed": {
     "description": "Helper when staff demo site list fails to load"
   },
-  "staffDemoSitePickerLoading": "Loading sites...",
   "@staffDemoSitePickerLoading": {
     "description": "Helper while staff demo site list is loading"
   },
-  "staffDemoSitePickerLabel": "Site",
   "@staffDemoSitePickerLabel": {
     "description": "Label for site dropdown in staff demo forms and proof"
   },
-  "staffDemoSubmitting": "Submitting…",
   "@staffDemoSubmitting": {
     "description": "Generic submitting status used in staff demo proof and forms banners"
   },
-  "staffDemoTimeclockClockIn": "Clock in",
   "@staffDemoTimeclockClockIn": {
     "description": "Button to clock in on staff demo timeclock page"
   },
-  "staffDemoTimeclockClockOut": "Clock out",
   "@staffDemoTimeclockClockOut": {
     "description": "Button to clock out on staff demo timeclock page"
   },
-  "staffDemoTimeclockClockedInStatus": "Status: clocked in ({entryId})",
   "@staffDemoTimeclockClockedInStatus": {
     "description": "Status line when user is clocked in with open entry id",
     "placeholders": {
@@ -2991,11 +3002,9 @@
       }
     }
   },
-  "staffDemoTimeclockClockedOutStatus": "Status: clocked out",
   "@staffDemoTimeclockClockedOutStatus": {
     "description": "Status line when user is not clocked in"
   },
-  "staffDemoTimeclockDistanceMeters": "Distance: {distanceM}m (radius {radiusM}m)",
   "@staffDemoTimeclockDistanceMeters": {
     "description": "Geofence distance readout on staff demo timeclock page",
     "placeholders": {
@@ -3007,39 +3016,30 @@
       }
     }
   },
-  "staffDemoTimeclockLastResultFlags": "Last result flags:",
   "@staffDemoTimeclockLastResultFlags": {
     "description": "Label before JSON flags from last clock action in staff demo timeclock"
   },
-  "staffDemoTimeclockTitle": "Timeclock",
   "@staffDemoTimeclockTitle": {
     "description": "Title for the staff app demo timeclock page"
   },
-  "staffDemoVideoPlayerError": "Could not load this video.",
   "@staffDemoVideoPlayerError": {
     "description": "Error body when staff demo content video fails to initialize"
   },
-  "staffDemoActionSend": "Send",
   "@staffDemoActionSend": {
     "description": "Primary send action in staff demo dialogs (e.g. shift assignment)"
   },
-  "staffDemoComposeMessageBodyLabel": "Message body",
   "@staffDemoComposeMessageBodyLabel": {
     "description": "Label for shift assignment message body field in staff demo"
   },
-  "staffDemoComposeRecipientUserIdHelper": "Enter a Firebase Auth uid.",
   "@staffDemoComposeRecipientUserIdHelper": {
     "description": "Helper text for manual recipient user id in staff demo compose dialog"
   },
-  "staffDemoInboxMessageFallback": "Message",
   "@staffDemoInboxMessageFallback": {
     "description": "Inbox list title when message type is empty in staff demo"
   },
-  "staffDemoShiftConfirmAction": "Confirm",
   "@staffDemoShiftConfirmAction": {
     "description": "Button to confirm a shift assignment from inbox in staff demo"
   },
-  "staffDemoShiftConfirmed": "Confirmed",
   "@staffDemoShiftConfirmed": {
     "description": "Label when shift assignment is already confirmed in staff demo inbox"
   }

@@ -83,7 +83,7 @@ class _LocationFocusActions extends StatelessWidget {
       children: [
         if (isSelected)
           Padding(
-            padding: EdgeInsets.only(right: context.responsiveGapXS),
+            padding: EdgeInsetsDirectional.only(end: context.responsiveGapXS),
             child: CommonCard(
               color: colors.secondaryContainer,
               elevation: 0,

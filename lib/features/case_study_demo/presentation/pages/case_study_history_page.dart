@@ -167,7 +167,7 @@ class _CaseStudyHistoryPageState extends State<CaseStudyHistoryPage> {
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                     child: Align(
-                      alignment: Alignment.centerLeft,
+                      alignment: AlignmentDirectional.centerStart,
                       child: CaseStudyDataModeBadge(mode: mode),
                     ),
                   );

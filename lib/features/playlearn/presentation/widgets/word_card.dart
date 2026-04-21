@@ -85,7 +85,7 @@ class WordCard extends StatelessWidget {
             children: <Widget>[
               if (item.imageAssetPath case final path?)
                 Padding(
-                  padding: EdgeInsets.only(right: gapM),
+                  padding: EdgeInsetsDirectional.only(end: gapM),
                   child: SizedBox(
                     width: size,
                     height: size,

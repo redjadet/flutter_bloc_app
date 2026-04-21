@@ -45,7 +45,25 @@ class AppConfig {
     builder: (final context, final appChild) {
       Widget result = appChild ?? const SizedBox.shrink();
 
-      result = buildAppMixScope(context, child: result);
+      final locale = Localizations.maybeLocaleOf(context);
+      final isArabic = locale?.languageCode == 'ar';
+
+      if (isArabic) {
+        final ThemeData baseTheme = Theme.of(context);
+        final ThemeData arabicTheme = baseTheme.copyWith(
+          textTheme: AppTheme.createArabicTextTheme(baseTheme.textTheme),
+        );
+        final Widget themedChild = result;
+        result = Theme(
+          data: arabicTheme,
+          child: Builder(
+            builder: (final themedContext) =>
+                buildAppMixScope(themedContext, child: themedChild),
+          ),
+        );
+      } else {
+        result = buildAppMixScope(context, child: result);
+      }
 
       // Add performance overlay if enabled (but not during tests)
       // Tests use kDebugMode=true, so we check for test environment
