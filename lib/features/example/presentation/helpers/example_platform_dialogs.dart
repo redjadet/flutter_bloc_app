@@ -124,7 +124,7 @@ Widget _buildInfoRow({
         child: Text(
           value,
           style: Theme.of(context).textTheme.bodyMedium,
-          textAlign: TextAlign.right,
+          textAlign: TextAlign.end,
         ),
       ),
     ],

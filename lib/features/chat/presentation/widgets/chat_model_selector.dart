@@ -27,7 +27,7 @@ class ChatModelSelector extends StatelessWidget {
 
         if (models.length <= 1) {
           return Align(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: Text(
               '${l10n.chatModelLabel}: ${_modelLabel(l10n, effectiveModel)}',
               style: theme.textTheme.titleMedium,

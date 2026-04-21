@@ -130,7 +130,7 @@ class _ErrorContent extends StatelessWidget {
         ],
         SizedBox(height: context.responsiveGapS),
         Align(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           child: PlatformAdaptive.dialogAction(
             context: context,
             label: l10n.appInfoRetryButtonLabel,

@@ -32,7 +32,7 @@ class CaseStudyDemoHomePage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerStart,
                   child: CaseStudyDataModeBadge(mode: mode),
                 ),
               ),

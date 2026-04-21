@@ -42,7 +42,9 @@ class _CounterPageContent extends StatelessWidget {
           ),
           bottomNavigationBar: const CountdownBar(),
           floatingActionButton: Padding(
-            padding: EdgeInsets.only(right: context.pageHorizontalPadding),
+            padding: EdgeInsetsDirectional.only(
+              end: context.pageHorizontalPadding,
+            ),
             child: const CounterActions(),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

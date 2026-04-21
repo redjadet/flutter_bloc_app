@@ -55,7 +55,7 @@ Future<CountryOption?> showCountryPicker({
               Padding(
                 padding: EdgeInsets.only(bottom: context.responsiveGapM),
                 child: Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerStart,
                   child: Text(
                     l10n.registerCountryPickerTitle,
                     style: titleStyle,

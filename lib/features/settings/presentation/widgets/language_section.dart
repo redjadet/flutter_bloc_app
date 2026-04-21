@@ -19,6 +19,7 @@ class LanguageSection extends StatelessWidget {
       'de': l10n.languageGerman,
       'fr': l10n.languageFrench,
       'es': l10n.languageSpanish,
+      'ar': l10n.languageArabic,
     };
 
     return SettingsSection(

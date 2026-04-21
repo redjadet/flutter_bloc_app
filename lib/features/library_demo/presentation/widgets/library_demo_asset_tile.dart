@@ -40,7 +40,7 @@ class LibraryAssetTile extends StatelessWidget {
                 // Asset info
                 Expanded(
                   child: Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: AlignmentDirectional.centerStart,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -75,7 +75,7 @@ class LibraryAssetTile extends StatelessWidget {
                     style: EpochTextStyles.metadata(context),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.right,
+                    textAlign: TextAlign.end,
                   ),
                 ),
                 SizedBox(width: EpochSpacing.gapSection),
@@ -85,7 +85,7 @@ class LibraryAssetTile extends StatelessWidget {
                     style: EpochTextStyles.metadata(context),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.right,
+                    textAlign: TextAlign.end,
                   ),
                 ),
                 SizedBox(width: EpochSpacing.gapSection),

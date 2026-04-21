@@ -77,10 +77,10 @@ class _ChartView extends StatelessWidget {
           TypeSafeBlocSelector<ChartCubit, ChartState, ChartDataSource>(
             selector: (final state) => state.dataSource,
             builder: (final context, final source) => Align(
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: Padding(
-                padding: EdgeInsets.only(
-                  right: context.pageHorizontalPadding,
+                padding: EdgeInsetsDirectional.only(
+                  end: context.pageHorizontalPadding,
                   bottom: context.responsiveGapS,
                 ),
                 child: ChartDataSourceBadge(source: source),

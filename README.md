@@ -6,7 +6,7 @@ offline-first data flows, and integration-heavy product demos.
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.7-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.5-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-72%2E45%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-72%2E47%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
@@ -68,6 +68,7 @@ realistic scope.
 - Entry points: `lib/main_dev.dart`, `lib/main_staging.dart`, `lib/main_prod.dart`
 - Architecture shape: `Presentation -> Domain <- Data`
 - Core infra: `flutter_bloc`, `get_it`, `GoRouter`, offline-first sync under `lib/shared/sync/`
+- Localization: `gen_l10n` with supported locales including Arabic (RTL). See [docs/localization.md](docs/localization.md).
 - Validation entrypoints: `./tool/delivery_checklist.sh`, `./bin/router_feature_validate`, `./bin/integration_tests`, `./bin/upgrade_validate_all`
 
 Use [docs/README.md](docs/README.md) as the source-of-truth navigation page for everything else.

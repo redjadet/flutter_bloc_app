@@ -312,6 +312,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get languageSpanish => 'Espagnol';
 
   @override
+  String get languageArabic => 'Arabe';
+
+  @override
   String get appInfoSectionTitle => 'Informations de l\'application';
 
   @override

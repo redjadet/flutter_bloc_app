@@ -25,7 +25,7 @@ class LibrarySearchRow extends StatelessWidget {
             ),
           ),
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: TextField(
               style: EpochTextStyles.searchPlaceholder(context).copyWith(
                 color: EpochColors.warmGreyLightest,

@@ -133,7 +133,7 @@ class _ChatSyncBannerState extends State<ChatSyncBanner> {
                   !isOffline && _pendingCount > 0 && !isSyncing;
               final Widget? trailing = _pendingCount > 0
                   ? Align(
-                      alignment: Alignment.centerRight,
+                      alignment: AlignmentDirectional.centerEnd,
                       child: PlatformAdaptive.textButton(
                         context: context,
                         onPressed: canManualSync && !_isManualSyncing
