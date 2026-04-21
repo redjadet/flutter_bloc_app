@@ -307,6 +307,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get languageSpanish => 'Español';
 
   @override
+  String get languageArabic => 'Árabe';
+
+  @override
   String get appInfoSectionTitle => 'Información de la app';
 
   @override

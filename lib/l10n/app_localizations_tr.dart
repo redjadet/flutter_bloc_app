@@ -306,6 +306,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get languageSpanish => 'İspanyolca';
 
   @override
+  String get languageArabic => 'Arapça';
+
+  @override
   String get appInfoSectionTitle => 'Uygulama bilgileri';
 
   @override

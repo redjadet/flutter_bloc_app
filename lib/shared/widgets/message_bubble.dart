@@ -36,9 +36,9 @@ class MessageBubble extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
 
-    final Alignment alignment = isOutgoing
-        ? Alignment.centerRight
-        : Alignment.centerLeft;
+    final AlignmentGeometry alignment = isOutgoing
+        ? AlignmentDirectional.centerEnd
+        : AlignmentDirectional.centerStart;
 
     final Color bubbleColor = isOutgoing
         ? (outgoingColor ?? colors.primary)

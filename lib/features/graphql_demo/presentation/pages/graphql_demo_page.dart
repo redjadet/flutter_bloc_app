@@ -50,10 +50,10 @@ class GraphqlDemoPage extends StatelessWidget {
           >(
             selector: (final state) => state.dataSource,
             builder: (final context, final source) => Align(
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: Padding(
-                padding: EdgeInsets.only(
-                  right: context.pageHorizontalPadding,
+                padding: EdgeInsetsDirectional.only(
+                  end: context.pageHorizontalPadding,
                   bottom: context.responsiveGapS,
                 ),
                 child: GraphqlDataSourceBadge(source: source),

@@ -208,6 +208,9 @@ flutter:
     - family: Comfortaa
       fonts:
         - asset: assets/fonts/Comfortaa-Regular.ttf
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo.ttf
     - family: SocialIcons
       fonts:
         - asset: packages/firebase_ui_auth/fonts/SocialIcons.ttf

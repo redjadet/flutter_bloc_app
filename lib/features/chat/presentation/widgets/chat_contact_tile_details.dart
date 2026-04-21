@@ -17,6 +17,7 @@ class ChatContactTileDetails extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => LayoutBuilder(
     builder: (final context, final constraints) {
+      final textDirection = Directionality.of(context);
       final timePainter = TextPainter(
         text: TextSpan(text: timeText, style: config.timeTextStyle),
         textDirection: TextDirection.ltr,
@@ -31,7 +32,7 @@ class ChatContactTileDetails extends StatelessWidget {
           text: contact.lastMessage,
           style: config.messageTextStyle,
         ),
-        textDirection: TextDirection.ltr,
+        textDirection: textDirection,
         maxLines: 2,
       )..layout(maxWidth: availableMessageWidth);
 
@@ -90,8 +91,8 @@ class ChatContactTileDetails extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(
-                  left: config.messageTimeSpacing,
+                padding: EdgeInsetsDirectional.only(
+                  start: config.messageTimeSpacing,
                   top: timeTopPadding,
                 ),
                 child: Text(

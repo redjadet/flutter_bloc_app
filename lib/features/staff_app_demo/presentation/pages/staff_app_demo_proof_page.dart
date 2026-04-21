@@ -259,7 +259,7 @@ class _SubmitSectionState extends State<_SubmitSection> {
             ),
             const SizedBox(height: 12),
             Align(
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: FilledButton(
                 onPressed: busy || effectiveSelectedSiteId == null
                     ? null

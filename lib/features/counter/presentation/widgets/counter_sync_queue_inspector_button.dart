@@ -65,7 +65,7 @@ class _CounterSyncQueueInspectorButtonState
     final Widget child = _pendingCount == 0
         ? const SizedBox.shrink()
         : Align(
-            alignment: Alignment.centerRight,
+            alignment: AlignmentDirectional.centerEnd,
             child: PlatformAdaptive.textButton(
               context: context,
               onPressed: () => _showInspector(context, context.l10n),
