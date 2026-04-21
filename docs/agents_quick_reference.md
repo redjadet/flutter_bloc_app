@@ -24,8 +24,10 @@ Pinned repo toolchain: Flutter 3.41.7 / Dart 3.11.5.
    repo scans.
 5. For routine low-risk communication, default to caveman-lite brevity when it
    reduces tokens without reducing clarity.
-6. Use this page for command lookup, adapter names, and doc routing only.
-7. For non-trivial work, keep active plan in host tracker.
+6. Before reporting back, self-verify the final response against the user
+   request, changed files, validation evidence, blockers, and residual risk.
+7. Use this page for command lookup, adapter names, and doc routing only.
+8. For non-trivial work, keep active plan in host tracker.
 
 ## Validation Chooser
 
@@ -62,7 +64,8 @@ Fastlane note: prefer `./tool/fastlane.sh` over raw `fastlane`.
 7. Reuse existing repo seams before adding abstractions.
 8. Apply AI review gate.
 9. Run smallest matching validation command.
-10. Prove result with scope-matched evidence.
+10. Self-verify the final output against request, diff, and validation evidence.
+11. Prove result with scope-matched evidence.
 
 ## Work Shapes
 
@@ -75,7 +78,7 @@ Commands for each lane live in **Validation Chooser** above and in
 | Non-trivial existing-code task with local Codex graph installed | Use graph queries first to find likely files/symbols/impact before broad `rg` or many-file reads. |
 | Shared architecture / sync / routing / reliability | Treat as non-trivial, document tradeoffs, bias `./tool/delivery_checklist.sh` / `./bin/checklist` when the blast radius is broad. |
 | Broad multi-file refactor with local Codex graph installed | After implementation, refresh the graph best-effort with `./tool/refresh_code_review_graph.sh`; do not block on missing local tooling. |
-| Docs-only repo guidance | Validate touched docs and links; if host templates changed, run drift and dry-run sync (see **Validation Routes**). |
+| Docs-only repo guidance | Validate touched docs and links; if host templates changed, run drift and dry-run sync (see **Validation Routes**); self-check final wording against repo canon before reporting. |
 | Production failure / hotfix | Narrow proof first, then widen gates to match blast radius (see **Production-Failure Path** in validation routing). |
 | Explicit second opinion | Use a different host via `./tool/request_codex_feedback.sh`; do not self-delegate. |
 
@@ -145,6 +148,9 @@ Cold-start fit:
   to normal concise prose for warnings, destructive actions, security/privacy
   notes, ambiguous multi-step instructions, external messages, or any text
   where extra compression could be misread.
+- Self-verification is mandatory before final user reports. Check the response
+  against the request, changed files, validation output, blockers, and residual
+  risk; do not use cross-host review helpers as self-review.
 - Goals, scale, edge cases, judgment, and ownership live in
   [`AGENTS.md`](../AGENTS.md) (**Shared Operating Model**); keep this page for
   commands and routing.
