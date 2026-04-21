@@ -118,9 +118,44 @@ sys.exit(0)
 PY
 }
 
+python_supports_demo_venv() {
+  "$1" - <<'PY' >/dev/null 2>&1
+import sys
+sys.exit(0 if sys.version_info >= (3, 10) else 1)
+PY
+}
+
+find_demo_venv_python() {
+  local expected_version="${1:-}"
+  local candidate
+  local -a candidates=()
+
+  if [ -n "$expected_version" ]; then
+    candidates+=("$DEMO_VENV/bin/python$expected_version")
+  fi
+  candidates+=("$DEMO_VENV/bin/python3" "$DEMO_VENV/bin/python")
+
+  for candidate in "${candidates[@]}"; do
+    if [ -x "$candidate" ] || [ -L "$candidate" ]; then
+      echo "$candidate"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
 ensure_demo_venv() {
-  if [ -x "$DEMO_VENV/bin/python" ]; then
-    return 0
+  local existing_python=""
+  existing_python="$(find_demo_venv_python || true)"
+
+  if [ -n "$existing_python" ]; then
+    if python_supports_demo_venv "$existing_python"; then
+      return 0
+    fi
+
+    echo "INFO: Existing venv python is not runnable or is older than 3.10; recreating $DEMO_VENV ..."
+    rm -rf "$DEMO_VENV"
   fi
   if [ ! -f "$REQS" ]; then
     echo "ERROR: Missing $REQS"
@@ -128,10 +163,32 @@ ensure_demo_venv() {
   fi
   echo "INFO: Creating demos/render_chat_api/.venv and installing requirements.txt ..."
   "$PYTHON_BIN" -m venv "$DEMO_VENV"
-  "$DEMO_VENV/bin/python" -m pip install -q -U pip setuptools wheel
-  "$DEMO_VENV/bin/python" -m pip install -q -r "$REQS"
+
+  local venv_python=""
+  local venv_version=""
+  venv_version="$("$PYTHON_BIN" - <<'PY'
+import sys
+print(f"{sys.version_info[0]}.{sys.version_info[1]}")
+PY
+  )"
+
+  venv_python="$(find_demo_venv_python "$venv_version" || true)"
+  if [ -z "$venv_python" ]; then
+    echo "ERROR: venv created but no python executable found under $DEMO_VENV/bin" >&2
+    ls -la "$DEMO_VENV/bin" >&2 || true
+    exit 1
+  fi
+
+  if ! python_supports_demo_venv "$venv_python"; then
+    echo "ERROR: venv python exists but is not runnable or is older than 3.10: $venv_python" >&2
+    ls -la "$DEMO_VENV/bin" >&2 || true
+    exit 1
+  fi
+
+  "$venv_python" -m pip install -q -U pip setuptools wheel
+  "$venv_python" -m pip install -q -r "$REQS"
   if [ -f "$DEV_REQS" ]; then
-    "$DEMO_VENV/bin/python" -m pip install -q -r "$DEV_REQS"
+    "$venv_python" -m pip install -q -r "$DEV_REQS"
   fi
 }
 
