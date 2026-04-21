@@ -96,8 +96,8 @@ See [Architecture Details](architecture_details.md) and
   [Google Maps Integration](google_maps_integration.md).
 - AI chat demos require API keys. See [AI Integration](ai_integration.md) and
   [Security and Secrets](security_and_secrets.md).
-- AI Decision Workbench requires the local FastAPI backend by default:
-  `AI_DECISION_API_BASE_URL=http://127.0.0.1:8008`. See
+- AI Decision Workbench uses FastAPI Cloud by default on all platforms.
+  Override with `AI_DECISION_API_BASE_URL` when needed. See
   [AI Decision Workbench](ai_decision_workbench.md).
 
 ## Deep-dive references

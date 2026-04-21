@@ -88,3 +88,35 @@ def test_decision_includes_similar_case_when_enabled(client_with_fake_matcher):
     assert body["proof"]["similar_case"]["used"] is True
     assert body["proof"]["similar_case"]["case_id"] == "case_ref_003"
     assert body["signals"]["nearest_case_id"] == "case_ref_003"
+
+
+def test_action_ids_are_unique_even_with_stale_action_snapshot(client, monkeypatch):
+    import main as main_mod
+    from store import Store
+
+    store = main_mod.app.state.store
+    original_get_case_detail = Store.get_case_detail
+    original_insert_action = Store.insert_action
+    captured_ids = []
+
+    def stale_detail(self, *, case_id: str):
+        detail = original_get_case_detail(self, case_id=case_id)
+        if detail is not None:
+            detail = dict(detail)
+            detail["actions"] = []
+        return detail
+
+    def capture_insert_action(self, **kwargs):
+        captured_ids.append(kwargs["action_id"])
+        return original_insert_action(self, **kwargs)
+
+    monkeypatch.setattr(Store, "get_case_detail", stale_detail)
+    monkeypatch.setattr(Store, "insert_action", capture_insert_action)
+
+    first = client.post("/cases/case_high_001/actions", json={"action_type": "request_docs", "note": "Need bank statements"})
+    second = client.post("/cases/case_high_001/actions", json={"action_type": "manual_review", "note": "Review cash flow"})
+
+    assert first.status_code == 200
+    assert second.status_code == 200
+    assert len(captured_ids) == 2
+    assert len(set(captured_ids)) == 2
