@@ -59,6 +59,8 @@ agent-facing files.
 
 Typical path:
 
+- Self-verify final wording against [`AGENTS.md`](../../AGENTS.md), the user
+  request, changed docs, blockers, and residual risk before reporting back
 - Markdown lint or link/doc checks on touched paths
 - `./tool/check_agent_asset_drift.sh` when `tool/agent_host_templates/` changed
 - `./tool/sync_agent_assets.sh --dry-run` when repo-managed host assets changed

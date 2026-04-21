@@ -1,7 +1,9 @@
 # AI Code Review Protocol
 
 Treat AI-generated code as draft output that must pass review gate before it
-is trusted.
+is trusted. Before reporting back, every agent must self-verify its own final
+output against the user request, diff, validation evidence, and known residual
+risks.
 
 Pinned repo toolchain: Flutter 3.41.7 / Dart 3.11.5.
 
@@ -18,7 +20,7 @@ to pick validation commands. When present,
 [`agents_quick_reference.md`](agents_quick_reference.md) is compact command
 lookup only; it doesn't replace [`AGENTS.md`](../AGENTS.md) once that file is available.
 
-## The Nine Checks
+## The Ten Checks
 
 | Check | What to ask |
 | --- | --- |
@@ -31,12 +33,13 @@ lookup only; it doesn't replace [`AGENTS.md`](../AGENTS.md) once that file is av
 | Dependencies | Does the repo already have a suitable utility, and is the new dependency worth its cost? |
 | Focused tests | Is there scope-matched proof, regression coverage where practical, and async-state reasoning or coverage? |
 | Judgment and ownership | Did I document the tradeoff and keep ownership of failures in the changed surface? |
+| Self-verification | Before reporting back, did I check my final answer against the request, changed files, validation results, blockers, and residual risk? |
 
 ## Before Accepting AI-Written Code
 
 Work through following; order matters where noted.
 
-1. **Checks:** Apply **Nine Checks** above.
+1. **Checks:** Apply **Ten Checks** above.
 2. **Workflow:** If a suitable Superpowers workflow skill exists for the task,
    confirm it was used unless repo canon or the user explicitly overrode it.
 3. **Tracker:** For non-trivial tasks, confirm active plan and verification
@@ -52,7 +55,10 @@ Work through following; order matters where noted.
    [`AGENTS.md`](../AGENTS.md) plus
    [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
    for routing.
-8. **Extra review:** For medium/high-risk work, prefer one extra review pass
+8. **Self-verify:** Re-read the final diff or changed docs, compare the final
+   response to the user's request, and remove any claim that is not backed by
+   validation evidence.
+9. **Extra review:** For medium/high-risk work, prefer one extra review pass
    before finalizing.
    From non-Codex hosts, that can include
    `./tool/request_codex_feedback.sh` (git diff) or
@@ -61,10 +67,10 @@ Work through following; order matters where noted.
    asks for second opinion or cross-host review. Keep
    `./tool/delivery_checklist.sh` / `./bin/checklist` for broad or pre-ship
    sweeps, or when user explicitly asks for full validation pass.
-9. **Goal fit:** Confirm solution still aligns with business goal and
+10. **Goal fit:** Confirm solution still aligns with business goal and
    doesn't defer obvious production-risk ownership to unspecified later
    cleanup.
-10. **Tradeoffs:** If change makes operational judgment call, record why
+11. **Tradeoffs:** If change makes operational judgment call, record why
    this path was chosen and why simpler or safer-looking alternatives were
    rejected.
 
@@ -72,6 +78,9 @@ Work through following; order matters where noted.
 
 - **Evidence:** Prove behavior with scope-matched evidence like tests, logs, screenshots,
   or behavior diffs.
+- **Self-verification:** Check the final response against the actual request,
+  changed files, validation output, unresolved blockers, and residual risk
+  before sending it.
 - **Tracker wrap-up:** When plan-first workflow was used, record verification outcome and short
   review notes in host-specific task tracker.
 - **Docs and drift:** For docs-only or agent-guidance changes, still validate touched docs,
