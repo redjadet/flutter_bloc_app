@@ -41,7 +41,7 @@ Widget buildTodoItemDismissible({
       key: ValueKey('todo-dismissible-${item.id}'),
       background: buildTodoSwipeBackground(
         context: context,
-        alignment: Alignment.centerLeft,
+        alignment: AlignmentDirectional.centerStart,
         color: colors.primary,
         foregroundColor: colors.onPrimary,
         icon: item.isCompleted
@@ -53,7 +53,7 @@ Widget buildTodoItemDismissible({
       ),
       secondaryBackground: buildTodoSwipeBackground(
         context: context,
-        alignment: Alignment.centerRight,
+        alignment: AlignmentDirectional.centerEnd,
         color: colors.error,
         foregroundColor: colors.onError,
         icon: Icons.delete_outline,

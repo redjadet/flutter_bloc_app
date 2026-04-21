@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 /// Builds the swipe background widget for dismissible todo items.
 Widget buildTodoSwipeBackground({
   required final BuildContext context,
-  required final Alignment alignment,
+  required final AlignmentGeometry alignment,
   required final Color color,
   required final Color foregroundColor,
   required final IconData icon,

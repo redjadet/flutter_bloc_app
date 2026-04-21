@@ -84,7 +84,7 @@ class _ProfileSyncBannerState extends State<ProfileSyncBanner> {
         );
         final bool canManualSync = !isSyncing && !_isManualSyncing;
         final Widget trailing = Align(
-          alignment: Alignment.centerRight,
+          alignment: AlignmentDirectional.centerEnd,
           child: PlatformAdaptive.textButton(
             context: context,
             onPressed: canManualSync ? () => _handleSyncNow(syncCubit) : null,

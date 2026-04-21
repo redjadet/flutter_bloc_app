@@ -132,7 +132,7 @@ class _AvailabilityCardState extends State<_AvailabilityCard> {
             }),
             const SizedBox(height: 8),
             Align(
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: FilledButton(
                 onPressed: () async {
                   await context.cubit<StaffDemoFormsCubit>().submitAvailability(
@@ -233,7 +233,7 @@ class _ManagerReportCardState extends State<_ManagerReportCard> {
             ),
             const SizedBox(height: 8),
             Align(
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: FilledButton(
                 onPressed: () async {
                   final sitesState = context.cubit<StaffDemoSitesCubit>().state;

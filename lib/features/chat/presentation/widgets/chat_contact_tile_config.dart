@@ -22,24 +22,20 @@ class ChatContactTileConfig {
       fontSize: nameFontSize,
       fontWeight: FontWeight.bold,
       color: textColor,
-      fontFamily: 'Roboto',
     );
     unreadTextStyle = TextStyle(
       color: unreadTextColor,
       fontSize: isTabletOrLarger ? 13 : 12,
       fontWeight: FontWeight.bold,
-      fontFamily: 'Roboto',
     );
     messageTextStyle = TextStyle(
       fontSize: messageFontSize,
       height: messageLineHeight / messageFontSize,
       color: subtleTextColor,
-      fontFamily: 'Roboto',
     );
     timeTextStyle = TextStyle(
       fontSize: timeFontSize,
       color: subtleTextColor,
-      fontFamily: 'Roboto',
     );
   }
 

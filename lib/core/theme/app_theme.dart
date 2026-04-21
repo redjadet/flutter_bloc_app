@@ -27,6 +27,9 @@ const List<Color> defaultConfettiParticleColors = [
 class AppTheme {
   AppTheme._();
 
+  /// Bundled Arabic font family.
+  static const String arabicFontFamily = 'Cairo';
+
   /// Light theme for the app.
   static ThemeData lightTheme() => ThemeData(
     useMaterial3: true,
@@ -65,4 +68,10 @@ class AppTheme {
       displaySmall: withComfortaa(robotoTheme.displaySmall),
     );
   }
+
+  /// Arabic-optimized text theme.
+  ///
+  /// Uses bundled Cairo for all styles (no Comfortaa overrides).
+  static TextTheme createArabicTextTheme(final TextTheme baseTextTheme) =>
+      baseTextTheme.apply(fontFamily: arabicFontFamily);
 }

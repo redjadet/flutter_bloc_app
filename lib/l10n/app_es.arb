@@ -170,6 +170,7 @@
   "languageGerman": "Alemán",
   "languageFrench": "Francés",
   "languageSpanish": "Español",
+  "languageArabic": "Árabe",
   "appInfoSectionTitle": "Información de la app",
   "@appInfoSectionTitle": {
     "description": "Encabezado para la sección que muestra los metadatos de la aplicación"

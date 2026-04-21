@@ -171,6 +171,7 @@
   "languageGerman": "Almanca",
   "languageFrench": "Fransızca",
   "languageSpanish": "İspanyolca",
+  "languageArabic": "Arapça",
   "appInfoSectionTitle": "Uygulama bilgileri",
   "@appInfoSectionTitle": {
     "description": "Uygulama meta verilerinin gösterildiği bölümün başlığı"

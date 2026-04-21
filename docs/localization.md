@@ -9,6 +9,7 @@ This document describes the localization setup and supported languages.
 - German (de)
 - French (fr)
 - Spanish (es)
+- Arabic (ar) (RTL)
 
 ## Automatic Generation
 
@@ -58,6 +59,16 @@ Localization strings are defined in `lib/l10n/app_*.arb` files:
 - `app_de.arb` - German
 - `app_fr.arb` - French
 - `app_es.arb` - Spanish
+- `app_ar.arb` - Arabic (RTL)
+
+## Arabic + RTL notes
+
+- Arabic is an RTL locale. Flutter will automatically use `TextDirection.rtl` for `Locale('ar')`.
+- Typography for Arabic uses the **bundled** Cairo font family (see `pubspec.yaml` and `lib/core/theme/app_theme.dart`).
+  - The bundled `assets/fonts/Cairo.ttf` is a variable font (weight axis), so typical `FontWeight` usage maps cleanly without runtime fetching.
+- Prefer directional layout primitives in presentation code:
+  - `AlignmentDirectional`, `EdgeInsetsDirectional`, `BorderRadiusDirectional`, `TextAlign.start/end`, `PositionedDirectional`.
+- ICU plural/select messages must preserve placeholders exactly (e.g. `{count, plural, ...}`) and should use Arabic plural categories (`zero/one/two/few/many/other`) when the string is user-facing.
 
 ## Related Documentation
 

@@ -64,7 +64,7 @@ class _CounterContent extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.all(1),
             child: Align(
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: FlavorBadge(),
             ),
           ),
