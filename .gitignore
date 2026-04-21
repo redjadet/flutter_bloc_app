@@ -119,3 +119,6 @@ skills-lock.json
 # Added by code-review-graph
 .code-review-graph/
 docs/code_graph.pdf
+docs/engineering/validation_routing_fast_vs_full.original.md
+docs/agents_quick_reference.original.md
+docs/ai_code_review_protocol.original.md
