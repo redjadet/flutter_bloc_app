@@ -2,8 +2,12 @@
 
 Treat AI-generated code as draft output that must pass review gate before it
 is trusted. Before reporting back, every agent must self-verify its own final
-output against the user request, diff, validation evidence, and known residual
+output against user request, diff, validation evidence, and known residual
 risks.
+
+Default agent loop: **Plan, Execute, Verify, Report**. Verification happens
+inside agent loop after execution and before reporting; it is not only
+external review or CI step.
 
 Pinned repo toolchain: Flutter 3.41.7 / Dart 3.11.5.
 
@@ -35,13 +39,22 @@ lookup only; it doesn't replace [`AGENTS.md`](../AGENTS.md) once that file is av
 | Judgment and ownership | Did I document the tradeoff and keep ownership of failures in the changed surface? |
 | Self-verification | Before reporting back, did I check my final answer against the request, changed files, validation results, blockers, and residual risk? |
 
+## Plan, Execute, Verify, Report
+
+| Step | Agent responsibility |
+| --- | --- |
+| Plan | Understand the user outcome, repo canon, risks, edge cases, tracker needs, and validation target before changing output. |
+| Execute | Make the smallest defensible change inside existing repo seams, or run the requested analysis/tooling. |
+| Verify | Review own output, inspect diff or generated artifacts, run scope-matched validation, and catch missing data or unsupported claims. |
+| Report | Return concise findings with evidence, commands run, blockers, and residual risk; do not report success before verification. |
+
 ## Before Accepting AI-Written Code
 
 Work through following; order matters where noted.
 
 1. **Checks:** Apply **Ten Checks** above.
-2. **Workflow:** If a suitable Superpowers workflow skill exists for the task,
-   confirm it was used unless repo canon or the user explicitly overrode it.
+2. **Workflow:** If suitable Superpowers workflow skill exists for task,
+   confirm it was used unless repo canon or user explicitly overrode it.
 3. **Tracker:** For non-trivial tasks, confirm active plan and verification
    are recorded in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) or
    [`tasks/codex/todo.md`](../tasks/codex/todo.md) per
@@ -51,12 +64,12 @@ Work through following; order matters where noted.
 5. **Delegates:** If subagents or sidecars were used, treat their output as
    draft input and validate integrated result yourself.
 6. **Diff:** Review diff manually.
-7. **Validate:** Run smallest matching repo validation command. Use
+7. **Verify:** Run smallest matching repo validation command. Use
    [`AGENTS.md`](../AGENTS.md) plus
    [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
    for routing.
-8. **Self-verify:** Re-read the final diff or changed docs, compare the final
-   response to the user's request, and remove any claim that is not backed by
+8. **Self-verify:** Re-read final diff or changed docs, compare final
+   response to user's request, and remove any claim that is not backed by
    validation evidence.
 9. **Extra review:** For medium/high-risk work, prefer one extra review pass
    before finalizing.
@@ -78,9 +91,11 @@ Work through following; order matters where noted.
 
 - **Evidence:** Prove behavior with scope-matched evidence like tests, logs, screenshots,
   or behavior diffs.
-- **Self-verification:** Check the final response against the actual request,
+- **Self-verification:** Check final response against actual request,
   changed files, validation output, unresolved blockers, and residual risk
   before sending it.
+- **Report:** Send user-facing summary only after Plan, Execute,
+  Verify sequence is complete or blocker has been verified.
 - **Tracker wrap-up:** When plan-first workflow was used, record verification outcome and short
   review notes in host-specific task tracker.
 - **Docs and drift:** For docs-only or agent-guidance changes, still validate touched docs,

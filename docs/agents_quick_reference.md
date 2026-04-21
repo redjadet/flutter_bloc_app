@@ -14,20 +14,21 @@ Pinned repo toolchain: Flutter 3.41.7 / Dart 3.11.5.
 
 ## 30-Second Path
 
-1. Read [`AGENTS.md`](../AGENTS.md).
-2. Read [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
-3. If suitable Superpowers workflow skills are installed, use them early as the
+1. Use default loop: **Plan, Execute, Verify, Report**.
+2. Read [`AGENTS.md`](../AGENTS.md).
+3. Read [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
+4. If suitable Superpowers workflow skills are installed, use them early as
    default process layer, but keep [`AGENTS.md`](../AGENTS.md) and direct user
    instructions authoritative.
-4. If local `code-review-graph` is installed and the task is non-trivial
+5. If local `code-review-graph` is installed and task is non-trivial
    existing-code work, use it first to narrow files and symbols before broad
    repo scans.
-5. For routine low-risk communication, default to caveman-lite brevity when it
+6. For routine low-risk communication, default to caveman-lite brevity when it
    reduces tokens without reducing clarity.
-6. Before reporting back, self-verify the final response against the user
+7. Before reporting back, self-verify final response against user
    request, changed files, validation evidence, blockers, and residual risk.
-7. Use this page for command lookup, adapter names, and doc routing only.
-8. For non-trivial work, keep active plan in host tracker.
+8. Use this page for command lookup, adapter names, and doc routing only.
+9. For non-trivial work, keep active plan in host tracker.
 
 ## Validation Chooser
 
@@ -42,7 +43,7 @@ Decision guide:
 | Integration journey / flow verification | `./bin/integration_tests` |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
 | Large refactor with code-review-graph installed | `./tool/refresh_code_review_graph.sh` |
-| New shared agent-facing markdown doc | `./tool/compress_agent_doc.sh PATH` |
+| New shared agent-facing markdown doc | `./tool/compress_agent_doc.sh PATH`; rerun with `--overwrite-backups` to replace backup |
 | Repo-managed host-template drift check | `./tool/check_agent_asset_drift.sh` |
 | Host-template preview sync | `./tool/sync_agent_assets.sh --dry-run` |
 | Cross-host diff review, explicit request only | `./tool/request_codex_feedback.sh` |
@@ -52,20 +53,21 @@ Fastlane note: prefer `./tool/fastlane.sh` over raw `fastlane`.
 
 ## Default Loop
 
-1. Read canon.
-2. Use suitable Superpowers workflow skills early when they fit the task;
+1. **Plan:** Read canon.
+2. **Plan:** Use suitable Superpowers workflow skills early when they fit task;
    repo canon and user instructions still win.
-3. Understand business goal before narrowing to local code path.
-4. For non-trivial existing-code work, use local `code-review-graph` first
+3. **Plan:** Understand business goal before narrowing to local code path.
+4. **Plan:** For non-trivial existing-code work, use local `code-review-graph` first
    when available to narrow reads and reduce token use.
-5. Use caveman-lite communication by default for routine updates/summaries
-   unless the message needs fuller precision.
-6. For non-trivial work, record plan + verification in active host tracker.
-7. Reuse existing repo seams before adding abstractions.
-8. Apply AI review gate.
-9. Run smallest matching validation command.
-10. Self-verify the final output against request, diff, and validation evidence.
-11. Prove result with scope-matched evidence.
+5. **Plan:** For non-trivial work, record plan + verification in active host tracker.
+6. **Execute:** Reuse existing repo seams before adding abstractions.
+7. **Verify:** Apply AI review gate.
+8. **Verify:** Run smallest matching validation command.
+9. **Verify:** Self-verify final output against request, diff, validation
+   evidence, blockers, and residual risk.
+10. **Report:** Use caveman-lite communication for routine updates/summaries
+    unless message needs fuller precision, and prove result with
+    scope-matched evidence.
 
 ## Work Shapes
 
@@ -135,31 +137,34 @@ Cold-start fit:
 
 - Repo scripts and repo docs beat host-local wrappers.
 - Host adapters are accelerators only; they don't replace repo policy.
-- When installed and suitable, Superpowers workflow skills are the default
+- When installed and suitable, Superpowers workflow skills are default
   process helpers for how to work, but they remain subordinate to repo canon
   and explicit user instructions.
-- `code-review-graph` is the preferred low-token exploration path for Codex on
+- `code-review-graph` is preferred low-token exploration path for Codex on
   non-trivial existing-code tasks when installed. Skip it for trivial edits or
   when exact file targets are already known.
-- Installation/build only makes the graph available through MCP. The token win
-  happens when the agent actually begins non-trivial repo exploration with
+- Installation/build only makes graph available through MCP. token win
+  happens when agent begins non-trivial repo exploration with
   graph queries instead of broad file reads.
 - Default to caveman-lite brevity for routine agent communication. Switch back
   to normal concise prose for warnings, destructive actions, security/privacy
   notes, ambiguous multi-step instructions, external messages, or any text
   where extra compression could be misread.
-- Self-verification is mandatory before final user reports. Check the response
-  against the request, changed files, validation output, blockers, and residual
-  risk; do not use cross-host review helpers as self-review.
+- Self-verification is mandatory before final user reports. Check response
+  against request, changed files, validation output, blockers, and residual
+  risk; don't use cross-host review helpers as self-review.
+- general agent loop is Plan, Execute, Verify, Report. don't report before
+  Verify step has checked own output and available proof.
 - Goals, scale, edge cases, judgment, and ownership live in
   [`AGENTS.md`](../AGENTS.md) (**Shared Operating Model**); keep this page for
   commands and routing.
 - Docs-only or host-template edits: validate docs, links, and drift paths (see
   **Validation Routes** and validation routing doc).
-- `./bin/checklist-fast` is local-only and conservative: use it for clean-tree sanity or narrow docs/tooling change sets, never as a substitute for the full delivery gate on app/runtime work.
+- `./bin/checklist-fast` is local-only and conservative: use it for clean-tree sanity or narrow docs/tooling change sets, never as substitute for full delivery gate on app/runtime work.
 - New shared AI-agent markdown docs, including repo-managed host-template
   markdown under `tool/agent_host_templates/`: compress final tracked file with
-  `./tool/compress_agent_doc.sh PATH`, keep `.original.md` human backup.
+  `./tool/compress_agent_doc.sh PATH`; use `--overwrite-backups` to refresh
+  `.original.md` human backup.
   `README*.md` files are excluded.
 - Codex: durable plan in tracker; short, decision-oriented commentary.
 - Cursor: copy-paste-ready repo commands over long canon repeats.
