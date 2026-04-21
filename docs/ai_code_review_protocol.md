@@ -5,10 +5,6 @@ is trusted. Before reporting back, every agent must self-verify its own final
 output against user request, diff, validation evidence, and known residual
 risks.
 
-Default agent loop: **Plan, Execute, Verify, Report**. Verification happens
-inside agent loop after execution and before reporting; it is not only
-external review or CI step.
-
 Pinned repo toolchain: Flutter 3.41.7 / Dart 3.11.5.
 
 Adapted from Vinod Pal’s March 8, 2026 checklist:
@@ -39,80 +35,18 @@ lookup only; it doesn't replace [`AGENTS.md`](../AGENTS.md) once that file is av
 | Judgment and ownership | Did I document the tradeoff and keep ownership of failures in the changed surface? |
 | Self-verification | Before reporting back, did I check my final answer against the request, changed files, validation results, blockers, and residual risk? |
 
-## Plan, Execute, Verify, Report
-
-| Step | Agent responsibility |
-| --- | --- |
-| Plan | Understand the user outcome, repo canon, risks, edge cases, tracker needs, and validation target before changing output. |
-| Execute | Make the smallest defensible change inside existing repo seams, or run the requested analysis/tooling. |
-| Verify | Review own output, inspect diff or generated artifacts, run scope-matched validation, and catch missing data or unsupported claims. |
-| Report | Return concise findings with evidence, commands run, blockers, and residual risk; do not report success before verification. |
-
 ## Before Accepting AI-Written Code
 
 Work through following; order matters where noted.
 
 1. **Checks:** Apply **Ten Checks** above.
-2. **Workflow:** If suitable Superpowers workflow skill exists for task,
-   confirm it was used unless repo canon or user explicitly overrode it.
-3. **Tracker:** For non-trivial tasks, confirm active plan and verification
-   are recorded in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) or
-   [`tasks/codex/todo.md`](../tasks/codex/todo.md) per
-   [`AGENTS.md`](../AGENTS.md).
-4. **Presentation:** For presentation-layer changes, confirm styling uses
-   shared theme/design tokens unless file is intentionally defining them.
-5. **Delegates:** If subagents or sidecars were used, treat their output as
-   draft input and validate integrated result yourself.
-6. **Diff:** Review diff manually.
-7. **Verify:** Run smallest matching repo validation command. Use
-   [`AGENTS.md`](../AGENTS.md) plus
-   [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
-   for routing.
-8. **Self-verify:** Re-read final diff or changed docs, compare final
-   response to user's request, and remove any claim that is not backed by
-   validation evidence.
-9. **Extra review:** For medium/high-risk work, prefer one extra review pass
-   before finalizing.
-   From non-Codex hosts, that can include
-   `./tool/request_codex_feedback.sh` (git diff) or
-   `./tool/run_codex_plan_review.sh PATH/TO/plan.md` (tracked template + Codex
-   delegate). From Codex itself, use that helper only when user explicitly
-   asks for second opinion or cross-host review. Keep
-   `./tool/delivery_checklist.sh` / `./bin/checklist` for broad or pre-ship
-   sweeps, or when user explicitly asks for full validation pass.
-10. **Goal fit:** Confirm solution still aligns with business goal and
-   doesn't defer obvious production-risk ownership to unspecified later
-   cleanup.
-11. **Tradeoffs:** If change makes operational judgment call, record why
-   this path was chosen and why simpler or safer-looking alternatives were
-   rejected.
-
-## Before Marking The Task Done
-
-- **Evidence:** Prove behavior with scope-matched evidence like tests, logs, screenshots,
-  or behavior diffs.
-- **Self-verification:** Check final response against actual request,
-  changed files, validation output, unresolved blockers, and residual risk
-  before sending it.
-- **Report:** Send user-facing summary only after Plan, Execute,
-  Verify sequence is complete or blocker has been verified.
-- **Tracker wrap-up:** When plan-first workflow was used, record verification outcome and short
-  review notes in host-specific task tracker.
-- **Docs and drift:** For docs-only or agent-guidance changes, still validate touched docs,
-  links, and any affected host-template drift path instead of treating
-  change as proof-free.
-- **Lessons:** If user corrected mistake during task, add prevention note to
-  [`tasks/lessons.md`](../tasks/lessons.md).
-- **Incidents:** If task involved production failure or reliability defect, document
-  root cause, guard, or residual risk in verification notes.
-- **Decisions:** If task involved material tradeoff, document chosen path briefly
-  enough that next engineer can understand decision without redoing
-  entire analysis.
-- **Communication:** Use caveman-lite brevity for routine review notes and
-  status summaries when it reduces tokens without reducing meaning. Switch to
-  normal concise prose for security/privacy warnings, destructive actions,
-  ambiguous multi-step guidance, or anything that benefits from fuller
-  precision.
+2. **Diff:** Review diff or generated artifacts.
+3. **Verify:** Run smallest honest validation command (route via
+   [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)).
+4. **Self-verify:** Final response vs request + diff + proof + blockers + residual risk.
+5. **Extra review (risk-based):** For medium/high-risk work, prefer one extra review pass.
+   Cross-host diff review (explicit request): `./tool/request_codex_feedback.sh`.
+   Cross-host plan review: `./tool/run_codex_plan_review.sh PATH/TO/plan.md`.
 
 ## Special Cases
 
