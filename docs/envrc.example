@@ -17,12 +17,15 @@ Then you can run `flutter run` without typing `--dart-define` flags manually.
 # export HUGGINGFACE_API_KEY="hf_..."
 
 # Optional: AI Decision Workbench backend base URL.
-# Pick ONE:
+# Default without this variable on all platforms:
+# https://ai-decision-api.fastapicloud.dev
+#
+# Pick ONE only when you need to override the default:
 #
 # Local:
-export AI_DECISION_API_BASE_URL="http://127.0.0.1:8008"
+# export AI_DECISION_API_BASE_URL="http://127.0.0.1:8008"
 #
-# FastAPI Cloud / hosted preview if you deploy this demo later:
+# FastAPI Cloud:
 # export AI_DECISION_API_BASE_URL="https://ai-decision-api.fastapicloud.dev"
 
 # Optional: if you want Supabase to initialize from local injection.
