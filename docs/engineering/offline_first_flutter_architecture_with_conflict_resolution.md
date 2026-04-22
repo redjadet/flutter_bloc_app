@@ -1,27 +1,27 @@
 # Offline-First Flutter Architecture with Conflict Resolution
 
-This case study describes how this Flutter app implements an offline-first
+This case study describes how this Flutter app implements offline-first
 architecture without collapsing into stale overwrites, duplicate writes, or
 opaque background sync behavior.
 
-The implementation is not a generic sync framework layered on top of the app.
-It is a repository-level pattern integrated into the existing
+implementation is not generic sync framework layered on top of app.
+It is repository-level pattern integrated into existing
 `Presentation -> Domain <- Data` architecture, BLoC/Cubit state management, and
 `get_it` dependency injection.
 
 ## Problem
 
-The app needed to support feature flows that still feel correct when the
+app needed to support feature flows that still feel correct when
 network is unavailable or unstable:
 
 - Users should see data immediately from local storage.
 - User mutations should succeed locally even when remote backends are offline.
 - Queued writes must replay safely when connectivity returns.
 - Remote refreshes must not overwrite newer unsynced local state.
-- The implementation must remain testable, feature-scoped, and compatible with
-  the app’s existing clean architecture.
+- implementation must remain testable, feature-scoped, and compatible with
+  app’s existing clean architecture.
 
-The core difficulty was not "how to cache data." It was how to preserve
+core difficulty was not "how to cache data." It was how to preserve
 correctness when local optimistic state, remote state, retries, and background
 reconciliation are all active at once.
 
@@ -36,18 +36,18 @@ This repository uses:
 - Hive for encrypted local persistence
 - Shared sync infrastructure in `lib/shared/sync/`
 
-The offline-first pattern is used across multiple features with different
+offline-first pattern is used across multiple features with different
 shapes:
 
-- Single-entity state such as Counter
-- Append-heavy data such as Chat
-- List entities with per-item merge logic such as Todo
-- Cache-first read models such as Search, Profile, and Remote Config
+- Single-entity state like Counter
+- Append-heavy data like Chat
+- List entities with per-item merge logic like Todo
+- Cache-first read models like Search, Profile, and Remote Config
 
 ## Architecture Summary
 
-The app treats offline-first behavior as a **data-layer composition pattern**.
-Presentation code talks to domain contracts. The data layer decides whether a
+app treats offline-first behavior as **data-layer composition pattern**.
+Presentation code talks to domain contracts. data layer decides whether
 request is served from Hive, remote APIs, or both.
 
 ```mermaid
@@ -63,13 +63,13 @@ flowchart LR
   Coordinator --> Remote
 ```
 
-At a high level:
+At high level:
 
-1. The user action updates local state first.
-2. The repository marks the data unsynchronized and enqueues a sync operation.
-3. UI reads from local state immediately, so the user sees the optimistic
-   result without waiting for the network.
-4. The shared coordinator replays pending operations when the device is online.
+1. user action updates local state first.
+2. repository marks data unsynchronized and enqueues sync operation.
+3. UI reads from local state immediately, so user sees optimistic
+   result without waiting for network.
+4. shared coordinator replays pending operations when device is online.
 5. Remote refreshes merge back into local storage using feature-specific
    conflict rules.
 
@@ -77,9 +77,9 @@ At a high level:
 
 ### 1. Local-first repositories
 
-Each adopting feature has a Hive-backed local repository or cache under
-`lib/features/<feature>/data/`. Local repositories are the source of immediate
-read performance and the persistence layer for optimistic state.
+Each adopting feature has Hive-backed local repository or cache under
+`lib/features/<feature>/data/`. Local repositories are source of immediate
+read performance and persistence layer for optimistic state.
 
 Examples:
 
@@ -90,8 +90,8 @@ Examples:
 
 ### 2. Offline-first wrappers
 
-The main integration point is an `OfflineFirst*Repository` that composes local
-and remote implementations while still exposing the domain contract used by
+main integration point is `OfflineFirst*Repository` that composes local
+and remote implementations while still exposing domain contract used by
 presentation.
 
 Examples:
@@ -104,7 +104,7 @@ Examples:
 These repositories are responsible for:
 
 - writing to local storage first
-- generating sync metadata such as `changeId`
+- generating sync metadata like `changeId`
 - marking items as synchronized or unsynchronized
 - enqueueing sync work
 - merging remote snapshots back into local storage
@@ -148,31 +148,31 @@ Its execution model matters:
 - old or exhausted operations are pruned
 - summary telemetry is emitted for diagnostics
 
-That ordering prevents a common offline-first failure mode: pulling stale remote
+That ordering prevents common offline-first failure mode: pulling stale remote
 state before local pending changes have been pushed.
 
 ## Write Path
 
-The write path is intentionally simple:
+write path is intentionally simple:
 
-1. Normalize the user mutation into a feature model with sync metadata.
+1. Normalize user mutation into feature model with sync metadata.
 2. Save it locally.
-3. If a remote backend exists, enqueue a `SyncOperation`.
-4. Return control to the caller immediately.
+3. If remote backend exists, enqueue `SyncOperation`.
+4. Return control to caller immediately.
 
-Counter is the clearest example. In
+Counter is clearest example. In
 `lib/features/counter/data/offline_first_counter_repository.dart`,
-`save()` writes the normalized snapshot to Hive, generates a `changeId`, and
-stores a queued operation keyed by that change identifier.
+`save()` writes normalized snapshot to Hive, generates `changeId`, and
+stores queued operation keyed by that change identifier.
 
-This means the UI can update immediately even when the network is gone.
+This means UI can update immediately even when network is gone.
 
-For chat, the repository goes further: if a send must be queued, it throws a
-domain-specific queued signal (`ChatOfflineEnqueuedException`) so the cubit can
-treat the action as a pending success instead of as an error.
+For chat, repository goes further: if send must be queued, it throws
+domain-specific queued signal (`ChatOfflineEnqueuedException`) so cubit can
+treat action as pending success instead of as error.
 
-That is an important product decision. Offline-first systems feel broken when
-every offline send becomes a visible failure state.
+That is important product decision. Offline-first systems feel broken when
+every offline send becomes visible failure state.
 
 ## Read Path
 
@@ -185,84 +185,84 @@ Examples:
 
 - Counter and Todo load from local storage immediately, then reconcile later.
 - Search, Profile, GraphQL, and Remote Config can serve cached data first and
-  refresh in the background when online.
+  refresh in background when online.
 
 Because cubits consume domain contracts rather than data sources directly, UI
-code does not need to know whether the current value came from Hive, a remote
-API, or a reconciliation pass.
+code doesn't need to know whether current value came from Hive, remote
+API, or reconciliation pass.
 
 ## Conflict Resolution Strategy
 
-Conflict resolution is the heart of the design.
+Conflict resolution is heart of design.
 
-This app does not use one global merge algorithm for every feature. Instead, it
-uses a small set of shared invariants plus feature-specific policies.
+This app doesn't use one global merge algorithm for every feature. Instead, it
+uses small set of shared invariants plus feature-specific policies.
 
 ### Invariant 1: older remote data must not overwrite newer unsynced local data
 
-This is the most important rule in the system.
+This is most important rule in system.
 
 If local state contains unsynced changes, remote snapshots are applied only when
-the remote version is clearly newer. This protects against stale watch events,
+remote version is clearly newer. This protects against stale watch events,
 eventual-consistency lag, and slow retries.
 
-The rule is documented in
+rule is documented in
 [`offline_first/dont_overwrite_guide.md`](../offline_first/dont_overwrite_guide.md) and implemented concretely in:
 
 - `lib/features/counter/data/offline_first_counter_repository.dart`
 - `lib/features/todo_list/data/offline_first_todo_repository_helpers.dart`
 - `lib/features/todo_list/data/todo_merge_policy.dart`
 
-This avoids the classic flicker bug where the UI shows:
+This avoids classic flicker bug where UI shows:
 
 1. local optimistic update
 2. stale remote value
 3. eventual corrected remote value
 
-Instead, unsynced local state wins until the system can prove the remote state
-is newer or represents the same accepted change.
+Instead, unsynced local state wins until system can prove remote state
+is newer or represents same accepted change.
 
 ### Invariant 2: queued writes need stable idempotency
 
-Every queued mutation carries an `idempotencyKey`.
+Every queued mutation carries `idempotencyKey`.
 
-`PendingSyncRepository.enqueue()` removes older queued operations that match the
+`PendingSyncRepository.enqueue()` removes older queued operations that match
 same:
 
 - `entityType`
 - `idempotencyKey`
 - best-effort user scope when present
 
-That reduces duplicate replay and keeps the queue from accumulating logically
+That reduces duplicate replay and keeps queue from accumulating logically
 identical work during retries or repeated local saves.
 
 This is especially important for:
 
 - repeated counter updates
 - queued IoT commands
-- any feature where the same intent may be enqueued more than once
+- any feature where same intent may be enqueued more than once
 
 ### Invariant 3: push pending operations before pulling remote snapshots
 
-The coordinator processes pending operations first and only then calls
+coordinator processes pending operations first and only then calls
 `pullRemote()`.
 
 That ordering is visible in `runSyncCycle()` in
 `lib/shared/sync/background_sync_runner.dart`.
 
-Without this, the app could fetch stale server state and overwrite local
-optimistic data before the queued mutation had a chance to land remotely.
+Without this, app could fetch stale server state and overwrite local
+optimistic data before queued mutation had chance to land remotely.
 
 ### Feature-specific policy: Counter
 
-Counter uses a compact last-write-wins approach with additional safeguards:
+Counter uses compact last-write-wins approach with additional safeguards:
 
-- each local mutation gets a `changeId`
-- `lastChanged` is used as the primary ordering signal
+- each local mutation gets `changeId`
+- `lastChanged` is used as primary ordering signal
 - if local is unsynced, remote applies only when `remote.lastChanged` is newer
 - if local is already synced, count changes from remote can still be accepted
 
-This keeps the merge rule simple while still protecting the local optimistic
+This keeps merge rule simple while still protecting local optimistic
 path.
 
 ### Feature-specific policy: Todo
@@ -270,31 +270,31 @@ path.
 Todo uses per-item merge rules rather than whole-list replacement.
 
 `TodoMergePolicy.shouldApplyRemote()` and
-`_mergeRemoteIntoLocal()` in the todo repository helpers do three important
+`_mergeRemoteIntoLocal()` in todo repository helpers do three important
 things:
 
 - skip remote items when local `updatedAt` is newer
-- preserve local unsynced items unless the remote version carries the same
+- preserve local unsynced items unless remote version carries same
   `changeId` or is strictly newer
 - remove local synchronized items that no longer exist remotely
 
-This is a stronger fit for list entities where each item may be in a different
+This is stronger fit for list entities where each item may be in different
 sync state.
 
 ### Feature-specific policy: Chat
 
-Chat is append-heavy and user-facing, so the main conflict problem is not just
-merging snapshots. It is preserving user intent while the assistant response may
+Chat is append-heavy and user-facing, so main conflict problem is not
+merging snapshots. It is preserving user intent while assistant response may
 arrive later.
 
-The repository persists the user’s local message first, then enqueues sync work
-when needed. The UI represents queued state as pending rather than failed.
+repository persists user’s local message first, then enqueues sync work
+when needed. UI represents queued state as pending rather than failed.
 
-That design prevents data loss and produces a much more believable offline UX.
+That design prevents data loss and produces much more believable offline UX.
 
 ## Failure Handling and Recovery
 
-The architecture assumes failure is normal, not exceptional.
+architecture assumes failure is normal, not exceptional.
 
 Recovery mechanisms include:
 
@@ -302,10 +302,10 @@ Recovery mechanisms include:
 - retry scheduling with `nextRetryAt` and `retryCount`
 - queue pruning for stale or exhausted operations
 - background replay on reconnect
-- explicit manual flush paths through the coordinator
+- explicit manual flush paths through coordinator
 - lifecycle-triggered resume flush from `AppScope`
 
-This means the system can survive:
+This means system can survive:
 
 - app restarts
 - temporary backend outages
@@ -316,7 +316,7 @@ without requiring presentation code to manually orchestrate recovery.
 
 ## Why This Fits Clean Architecture
 
-The important architectural choice was to keep sync behavior inside the data
+important architectural choice was to keep sync behavior inside data
 layer.
 
 That preserves clean boundaries:
@@ -325,22 +325,22 @@ That preserves clean boundaries:
 - Domain owns contracts and pure models.
 - Data owns caching, queueing, replay, remote access, and merge policies.
 
-As a result:
+As result:
 
 - cubits stay testable and relatively small
 - features can adopt offline-first incrementally
-- conflict resolution remains close to the data shape it governs
+- conflict resolution remains close to data shape it governs
 - app-wide sync infrastructure is shared without leaking backend details into UI
 
 ## Verification Strategy
 
-The repo backs the design with targeted regression coverage rather than relying
+repo backs design with targeted regression coverage rather than relying
 only on manual QA.
 
 Important checks include:
 
 - repository tests for queueing and replay
-- merge tests that prove stale remote state does not overwrite newer local state
+- merge tests that prove stale remote state doesn't overwrite newer local state
 - cubit tests for queued-success UX paths
 - diagnostics support through `SyncCycleSummary` and Settings sync views
 
@@ -352,8 +352,8 @@ Relevant references:
 - `tool/check_offline_first_remote_merge.sh`
 - `./bin/checklist`
 
-The design specifically treats "older remote must not overwrite newer unsynced
-local" as a regression class worth a dedicated validation path.
+design specifically treats "older remote must not overwrite newer unsynced
+local" as regression class worth dedicated validation path.
 
 ## Trade-offs
 
@@ -367,13 +367,13 @@ What it does well:
 - feature-specific conflict handling where needed
 - strong testability
 
-What it does not try to solve universally:
+What it doesn't try to solve universally:
 
 - CRDT-style multi-master convergence for all data types
 - generic merge UI for every feature
 - backend-agnostic semantic conflict resolution
 
-Those would add substantial complexity. This codebase instead uses a smaller
+Those would add substantial complexity. This codebase instead uses smaller
 toolbox:
 
 - timestamps
@@ -382,16 +382,16 @@ toolbox:
 - queue dedupe
 - per-feature merge policy
 
-For this app, that is the right trade.
+For this app, that is right trade.
 
 ## Lessons
 
 1. Offline-first correctness depends more on merge rules than on storage choice.
 2. Queue durability is necessary, but not sufficient; replay order also matters.
-3. Conflict resolution should live with the feature’s data model, not in a
+3. Conflict resolution should live with feature’s data model, not in
    giant shared abstraction.
-4. "Pending success" is often the right product response for offline writes.
-5. A dedicated stale-remote regression test is worth more than a long sync
+4. "Pending success" is often right product response for offline writes.
+5. dedicated stale-remote regression test is worth more than long sync
    design document if you have to choose one.
 
 ## References
