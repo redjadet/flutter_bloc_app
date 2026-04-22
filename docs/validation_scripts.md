@@ -21,6 +21,7 @@ The checklist includes automated guards for:
 - **UI/UX best practices** - Enforces platform-adaptive widgets, proper image caching, and responsive design
 - **Async safety** - Detects missing lifecycle guards and context usage after async operations
 - **Performance** - Flags performance anti-patterns like unnecessary rebuilds and missing repaint boundaries
+- **Dynamic list safety** - Prevents builder callbacks from indexing live Cubit/BLoC state lists after async shrink/rebuild races
 - **Memory hygiene** - Prevents leaks and ensures proper cleanup of resources
 
 Full documentation and suppression guidance is provided in the sections below.
@@ -61,6 +62,7 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs t
 - **`check_perf_missing_repaint_boundary.sh`**: Warns when heavy widgets lack `RepaintBoundary`
 - **`check_perf_unnecessary_rebuilds.sh`**: Heuristic check for `setState()` calls that might cause unnecessary rebuilds/blinking (warns but doesn't fail)
 - **`check_concurrent_modification.sh`**: Detects potential concurrent modification errors when iterating over collections from getters/properties
+- **`check_live_state_list_indexing.sh`**: Prevents presentation builders from indexing live `state.items[index]`/`state.items.elementAt(index)` directly. Snapshot the state list into a local immutable list, use that snapshot for `itemCount`, and guard stale indexes before indexing.
 
 ### Compute/Isolate Usage
 
@@ -777,6 +779,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_perf_nonbuilder_lists.sh`
 - `check_perf_missing_repaint_boundary.sh`
 - `check_perf_unnecessary_rebuilds.sh`
+- `check_live_state_list_indexing.sh`
 - `check_memory_unclosed_streams.sh`
 - `check_memory_missing_dispose.sh`
 - `check_dialog_controller_dispose.sh`

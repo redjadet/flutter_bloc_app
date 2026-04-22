@@ -28,7 +28,8 @@ class _FakeChatRepository implements ChatRepository {
   }
 }
 
-class _FakeChatHistoryRepository extends Fake implements ChatHistoryRepository {}
+class _FakeChatHistoryRepository extends Fake
+    implements ChatHistoryRepository {}
 
 class _MockErrorNotificationService extends Mock
     implements ErrorNotificationService {}
@@ -41,10 +42,9 @@ void main() {
   testWidgets('shows terminal sync failure copy under user bubble', (
     final WidgetTester tester,
   ) async {
-    final _MockErrorNotificationService errors = _MockErrorNotificationService();
-    when(
-      () => errors.showSnackBar(any(), any()),
-    ).thenAnswer((_) async {});
+    final _MockErrorNotificationService errors =
+        _MockErrorNotificationService();
+    when(() => errors.showSnackBar(any(), any())).thenAnswer((_) async {});
 
     final ChatCubit cubit = ChatCubit(
       repository: _FakeChatRepository(),

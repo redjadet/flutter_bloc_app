@@ -21,7 +21,8 @@ class RemoteConfigRepository implements RemoteConfigService {
   static const String supabaseConfigEnabledKey = 'SUPABASE_CONFIG_ENABLED';
 
   /// Demo-scoped HF read token for Render `X-HF-Authorization` (dev Remote Config).
-  static const String renderChatDemoHfReadTokenKey = 'RENDER_CHAT_DEMO_HF_READ_TOKEN';
+  static const String renderChatDemoHfReadTokenKey =
+      'RENDER_CHAT_DEMO_HF_READ_TOKEN';
   static const Duration _fetchTimeout = Duration(minutes: 1);
   static const Duration _minimumFetchInterval = Duration(hours: 1);
   static const Duration _bypassFetchInterval = Duration.zero;

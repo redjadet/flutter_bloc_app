@@ -6,7 +6,8 @@ abstract class RenderCallerAuthHeaderProvider {
   Future<String?> bearerIdToken({final bool forceRefresh = false});
 }
 
-class DefaultRenderCallerAuthHeaderProvider implements RenderCallerAuthHeaderProvider {
+class DefaultRenderCallerAuthHeaderProvider
+    implements RenderCallerAuthHeaderProvider {
   /// Resolves [FirebaseAuth] lazily so DI registration does not touch
   /// [FirebaseAuth.instance] before Firebase is initialized (for example in
   /// unit tests that configure GetIt without a default Firebase app).

@@ -29,6 +29,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.onOpenCaseStudyDemo,
     required this.onOpenIapDemo,
     required this.onOpenAiDecisionDemo,
+    required this.onOpenOnlineTherapyDemo,
     required this.onRunIsolates,
     required this.isRunningIsolates,
     required this.isolateError,
@@ -64,6 +65,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onOpenCaseStudyDemo;
   final VoidCallback onOpenIapDemo;
   final VoidCallback onOpenAiDecisionDemo;
+  final VoidCallback onOpenOnlineTherapyDemo;
   final VoidCallback? onRunIsolates;
   final bool isRunningIsolates;
   final String? isolateError;
@@ -207,6 +209,14 @@ class ExamplePageBody extends StatelessWidget {
             icon: Icons.rule_outlined,
             label: 'AI Decision Workbench',
             key: const ValueKey('example-ai-decision-demo-button'),
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenOnlineTherapyDemo,
+            icon: Icons.health_and_safety_outlined,
+            label: 'Online Therapy Demo',
+            key: const ValueKey('example-online-therapy-demo-button'),
           ),
           SizedBox(height: context.responsiveGapS),
           _buildIconButton(

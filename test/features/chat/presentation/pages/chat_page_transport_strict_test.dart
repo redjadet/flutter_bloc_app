@@ -20,49 +20,64 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() {
-  testWidgets('ChatPage shows strict line under orchestration when strict override is true', (
-    final WidgetTester tester,
-  ) async {
-    final ChatCubit cubit = ChatCubit(
-      repository: _OrchestrationHintRepository(),
-      historyRepository: _StubHistoryRepository(),
-      supportedModels: const <String>['openai/gpt-oss-20b'],
-    );
-    addTearDown(cubit.close);
-    cubit.emit(
-      cubit.state.copyWith(runnableTransportHint: ChatInferenceTransport.renderOrchestration),
-    );
+  testWidgets(
+    'ChatPage shows strict line under orchestration when strict override is true',
+    (final WidgetTester tester) async {
+      final ChatCubit cubit = ChatCubit(
+        repository: _OrchestrationHintRepository(),
+        historyRepository: _StubHistoryRepository(),
+        supportedModels: const <String>['openai/gpt-oss-20b'],
+      );
+      addTearDown(cubit.close);
+      cubit.emit(
+        cubit.state.copyWith(
+          runnableTransportHint: ChatInferenceTransport.renderOrchestration,
+        ),
+      );
 
-    await tester.pumpWidget(
-      MaterialApp(
-        locale: const Locale('en'),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        builder: (final BuildContext context, final Widget? child) =>
-            buildAppMixScope(context, child: child ?? const SizedBox.shrink()),
-        home: MultiBlocProvider(
-          providers: <BlocProvider<dynamic>>[
-            BlocProvider<ChatCubit>.value(value: cubit),
-            BlocProvider<SyncStatusCubit>.value(value: _buildSyncStatusCubit()),
-          ],
-          child: ChatPage(
-            errorNotificationService: _FakeErrorNotificationService(),
-            pendingSyncRepository: _FakePendingSyncRepository(),
-            renderTransportDemoStrictOverride: true,
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          builder: (final BuildContext context, final Widget? child) =>
+              buildAppMixScope(
+                context,
+                child: child ?? const SizedBox.shrink(),
+              ),
+          home: MultiBlocProvider(
+            providers: <BlocProvider<dynamic>>[
+              BlocProvider<ChatCubit>.value(value: cubit),
+              BlocProvider<SyncStatusCubit>.value(
+                value: _buildSyncStatusCubit(),
+              ),
+            ],
+            child: ChatPage(
+              errorNotificationService: _FakeErrorNotificationService(),
+              pendingSyncRepository: _FakePendingSyncRepository(),
+              renderTransportDemoStrictOverride: true,
+            ),
           ),
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
+      );
+      await tester.pumpAndSettle();
 
-    expect(find.text(AppLocalizationsEn().chatTransportRenderOrchestration), findsOneWidget);
-    expect(find.text(AppLocalizationsEn().chatRenderStrictMode), findsOneWidget);
-  });
+      expect(
+        find.text(AppLocalizationsEn().chatTransportRenderOrchestration),
+        findsOneWidget,
+      );
+      expect(
+        find.text(AppLocalizationsEn().chatRenderStrictMode),
+        findsOneWidget,
+      );
+    },
+  );
 }
 
 class _OrchestrationHintRepository implements ChatRepository {
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => ChatInferenceTransport.renderOrchestration;
+  ChatInferenceTransport? get chatRemoteTransportHint =>
+      ChatInferenceTransport.renderOrchestration;
 
   @override
   Future<ChatResult> sendMessage({
@@ -89,7 +104,10 @@ class _StubHistoryRepository implements ChatHistoryRepository {
 
 class _FakeErrorNotificationService implements ErrorNotificationService {
   @override
-  Future<void> showSnackBar(final BuildContext context, final String message) async {}
+  Future<void> showSnackBar(
+    final BuildContext context,
+    final String message,
+  ) async {}
 
   @override
   Future<void> showAlertDialog(
@@ -107,7 +125,8 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
   Stream<void> get onOperationEnqueued => Stream<void>.empty();
 
   @override
-  Future<SyncOperation> enqueue(final SyncOperation operation) async => operation;
+  Future<SyncOperation> enqueue(final SyncOperation operation) async =>
+      operation;
 
   @override
   Future<int> prune({
@@ -168,7 +187,8 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   List<SyncCycleSummary> get history => const <SyncCycleSummary>[];
 
   @override
-  Stream<SyncCycleSummary> get summaryStream => const Stream<SyncCycleSummary>.empty();
+  Stream<SyncCycleSummary> get summaryStream =>
+      const Stream<SyncCycleSummary>.empty();
 
   @override
   SyncCycleSummary? get latestSummary => null;

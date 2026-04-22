@@ -26,7 +26,8 @@ abstract class RenderOrchestrationHfTokenProvider {
 }
 
 /// Reads only compile-time / asset Hugging Face key (tests / minimal wiring).
-class SecretConfigRenderOrchestrationHfTokenProvider implements RenderOrchestrationHfTokenProvider {
+class SecretConfigRenderOrchestrationHfTokenProvider
+    implements RenderOrchestrationHfTokenProvider {
   const SecretConfigRenderOrchestrationHfTokenProvider();
 
   @override
@@ -47,7 +48,8 @@ class SecretConfigRenderOrchestrationHfTokenProvider implements RenderOrchestrat
 ///
 /// In **debug** builds only, logs `hf_token_source=…` (no token material) after each
 /// resolution for tracing (`orchestration_cache`, `remote_config`, `callable`, etc.).
-class LayeredRenderOrchestrationHfTokenProvider implements RenderOrchestrationHfTokenProvider {
+class LayeredRenderOrchestrationHfTokenProvider
+    implements RenderOrchestrationHfTokenProvider {
   LayeredRenderOrchestrationHfTokenProvider({
     required final AppRuntimeConfig runtime,
     required final RemoteConfigService remoteConfig,
@@ -178,7 +180,8 @@ class LayeredRenderOrchestrationHfTokenProvider implements RenderOrchestrationHf
       final String? t = (await override())?.trim();
       return (t == null || t.isEmpty) ? null : t;
     }
-    final String callableName = SecretConfig.chatRenderHfReadTokenCallable.trim();
+    final String callableName = SecretConfig.chatRenderHfReadTokenCallable
+        .trim();
     if (callableName.isEmpty) {
       return null;
     }
@@ -199,7 +202,8 @@ class LayeredRenderOrchestrationHfTokenProvider implements RenderOrchestrationHf
       return null;
     }
     try {
-      final String region = SecretConfig.chatRenderHfReadTokenCallableRegion.trim().isEmpty
+      final String region =
+          SecretConfig.chatRenderHfReadTokenCallableRegion.trim().isEmpty
           ? 'us-central1'
           : SecretConfig.chatRenderHfReadTokenCallableRegion.trim();
       final FirebaseFunctions functions = FirebaseFunctions.instanceFor(

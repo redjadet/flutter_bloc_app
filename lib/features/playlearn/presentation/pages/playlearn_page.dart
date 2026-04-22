@@ -56,13 +56,17 @@ class PlaylearnPage extends StatelessWidget {
             if (state.topics.isEmpty) {
               return CommonEmptyState(message: l10n.playlearnNoTopics);
             }
+            final topics = List.of(state.topics, growable: false);
             return ListView.separated(
               padding: context.pagePadding,
-              itemCount: state.topics.length,
+              itemCount: topics.length,
               separatorBuilder: (final context, final index) =>
                   SizedBox(height: context.responsiveGapM),
               itemBuilder: (final context, final index) {
-                final topic = state.topics[index];
+                if (index >= topics.length) {
+                  return const SizedBox.shrink();
+                }
+                final topic = topics[index];
                 return TopicCard(
                   topic: topic,
                   displayName: _topicDisplayName(topic.nameL10nKey, l10n),

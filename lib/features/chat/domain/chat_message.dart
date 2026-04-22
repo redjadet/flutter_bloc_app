@@ -71,6 +71,7 @@ class ChatMessage {
     'synchronized': synchronized,
     if (lastSyncedAt case final syncedAt?)
       'lastSyncedAt': syncedAt.toIso8601String(),
-    if (terminalSyncFailureCode != null) 'terminalSyncFailureCode': terminalSyncFailureCode,
+    if (terminalSyncFailureCode != null)
+      'terminalSyncFailureCode': terminalSyncFailureCode,
   };
 }

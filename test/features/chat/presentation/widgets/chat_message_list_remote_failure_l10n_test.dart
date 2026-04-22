@@ -18,161 +18,172 @@ import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('SnackBar uses chatTokenMissing when remoteFailureL10nCode is token_missing', (
-    final WidgetTester tester,
-  ) async {
-    final _StubChatCubit cubit = _StubChatCubit(const ChatState());
-    addTearDown(cubit.close);
+  testWidgets(
+    'SnackBar uses chatTokenMissing when remoteFailureL10nCode is token_missing',
+    (final WidgetTester tester) async {
+      final _StubChatCubit cubit = _StubChatCubit(const ChatState());
+      addTearDown(cubit.close);
 
-    await tester.pumpWidget(
-      _wrapWithApp(
-        cubit,
-        ChatMessageList(
-          controller: ScrollController(),
-          errorNotificationService: SnackbarErrorNotificationService(),
-        ),
-      ),
-    );
-
-    cubit.emit(
-      const ChatState(
-        messages: <ChatMessage>[ChatMessage(author: ChatAuthor.user, text: 'hi')],
-        error: 'opaque-upstream-detail',
-        remoteFailureL10nCode: 'token_missing',
-        status: ViewStatus.error,
-      ),
-    );
-    await tester.pump();
-
-    expect(find.text(AppLocalizationsEn().chatTokenMissing), findsOneWidget);
-    expect(find.text('opaque-upstream-detail'), findsNothing);
-  });
-
-  testWidgets('SnackBar uses chatSessionEnded when remoteFailureL10nCode is rate_limited', (
-    final WidgetTester tester,
-  ) async {
-    final _StubChatCubit cubit = _StubChatCubit(const ChatState());
-    addTearDown(cubit.close);
-
-    await tester.pumpWidget(
-      _wrapWithApp(
-        cubit,
-        ChatMessageList(
-          controller: ScrollController(),
-          errorNotificationService: SnackbarErrorNotificationService(),
-        ),
-      ),
-    );
-
-    cubit.emit(
-      const ChatState(
-        messages: <ChatMessage>[ChatMessage(author: ChatAuthor.user, text: 'hi')],
-        error: 'rate limit detail',
-        remoteFailureL10nCode: 'rate_limited',
-        status: ViewStatus.error,
-      ),
-    );
-    await tester.pump();
-
-    expect(find.text(AppLocalizationsEn().chatSessionEnded), findsOneWidget);
-    expect(find.text('rate limit detail'), findsNothing);
-  });
-
-  testWidgets('SnackBar uses chatSwitchAccount when remoteFailureL10nCode is forbidden', (
-    final WidgetTester tester,
-  ) async {
-    final _StubChatCubit cubit = _StubChatCubit(const ChatState());
-    addTearDown(cubit.close);
-
-    await tester.pumpWidget(
-      _wrapWithApp(
-        cubit,
-        ChatMessageList(
-          controller: ScrollController(),
-          errorNotificationService: SnackbarErrorNotificationService(),
-        ),
-      ),
-    );
-
-    cubit.emit(
-      const ChatState(
-        messages: <ChatMessage>[ChatMessage(author: ChatAuthor.user, text: 'hi')],
-        error: 'opaque-forbidden-detail',
-        remoteFailureL10nCode: 'forbidden',
-        status: ViewStatus.error,
-      ),
-    );
-    await tester.pump();
-
-    expect(find.text(AppLocalizationsEn().chatSwitchAccount), findsOneWidget);
-    expect(find.text('opaque-forbidden-detail'), findsNothing);
-  });
-
-  testWidgets('shows terminal chatTokenMissing for token_missing dead-letter user messages', (
-    final WidgetTester tester,
-  ) async {
-    final _StubChatCubit cubit = _StubChatCubit(
-      const ChatState(
-        messages: <ChatMessage>[
-          ChatMessage(
-            author: ChatAuthor.user,
-            text: 'Queued',
-            clientMessageId: 'm-token-missing',
-            synchronized: false,
-            terminalSyncFailureCode: 'token_missing',
+      await tester.pumpWidget(
+        _wrapWithApp(
+          cubit,
+          ChatMessageList(
+            controller: ScrollController(),
+            errorNotificationService: SnackbarErrorNotificationService(),
           ),
-        ],
-        pastUserInputs: <String>['Queued'],
-      ),
-    );
-    addTearDown(cubit.close);
-
-    await tester.pumpWidget(
-      _wrapWithApp(
-        cubit,
-        ChatMessageList(
-          controller: ScrollController(),
-          errorNotificationService: SnackbarErrorNotificationService(),
         ),
-      ),
-    );
-    await tester.pump();
+      );
 
-    expect(find.text(AppLocalizationsEn().chatTokenMissing), findsOneWidget);
-  });
+      cubit.emit(
+        const ChatState(
+          messages: <ChatMessage>[
+            ChatMessage(author: ChatAuthor.user, text: 'hi'),
+          ],
+          error: 'opaque-upstream-detail',
+          remoteFailureL10nCode: 'token_missing',
+          status: ViewStatus.error,
+        ),
+      );
+      await tester.pump();
 
-  testWidgets('shows terminal chatSwitchAccount for forbidden dead-letter user messages', (
-    final WidgetTester tester,
-  ) async {
-    final _StubChatCubit cubit = _StubChatCubit(
-      const ChatState(
-        messages: <ChatMessage>[
-          ChatMessage(
-            author: ChatAuthor.user,
-            text: 'Queued',
-            clientMessageId: 'm-forbidden',
-            synchronized: false,
-            terminalSyncFailureCode: 'forbidden',
+      expect(find.text(AppLocalizationsEn().chatTokenMissing), findsOneWidget);
+      expect(find.text('opaque-upstream-detail'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'SnackBar uses chatSessionEnded when remoteFailureL10nCode is rate_limited',
+    (final WidgetTester tester) async {
+      final _StubChatCubit cubit = _StubChatCubit(const ChatState());
+      addTearDown(cubit.close);
+
+      await tester.pumpWidget(
+        _wrapWithApp(
+          cubit,
+          ChatMessageList(
+            controller: ScrollController(),
+            errorNotificationService: SnackbarErrorNotificationService(),
           ),
-        ],
-        pastUserInputs: <String>['Queued'],
-      ),
-    );
-    addTearDown(cubit.close);
-
-    await tester.pumpWidget(
-      _wrapWithApp(
-        cubit,
-        ChatMessageList(
-          controller: ScrollController(),
-          errorNotificationService: SnackbarErrorNotificationService(),
         ),
-      ),
-    );
-    await tester.pump();
+      );
 
-    expect(find.text(AppLocalizationsEn().chatSwitchAccount), findsOneWidget);
-  });
+      cubit.emit(
+        const ChatState(
+          messages: <ChatMessage>[
+            ChatMessage(author: ChatAuthor.user, text: 'hi'),
+          ],
+          error: 'rate limit detail',
+          remoteFailureL10nCode: 'rate_limited',
+          status: ViewStatus.error,
+        ),
+      );
+      await tester.pump();
+
+      expect(find.text(AppLocalizationsEn().chatSessionEnded), findsOneWidget);
+      expect(find.text('rate limit detail'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'SnackBar uses chatSwitchAccount when remoteFailureL10nCode is forbidden',
+    (final WidgetTester tester) async {
+      final _StubChatCubit cubit = _StubChatCubit(const ChatState());
+      addTearDown(cubit.close);
+
+      await tester.pumpWidget(
+        _wrapWithApp(
+          cubit,
+          ChatMessageList(
+            controller: ScrollController(),
+            errorNotificationService: SnackbarErrorNotificationService(),
+          ),
+        ),
+      );
+
+      cubit.emit(
+        const ChatState(
+          messages: <ChatMessage>[
+            ChatMessage(author: ChatAuthor.user, text: 'hi'),
+          ],
+          error: 'opaque-forbidden-detail',
+          remoteFailureL10nCode: 'forbidden',
+          status: ViewStatus.error,
+        ),
+      );
+      await tester.pump();
+
+      expect(find.text(AppLocalizationsEn().chatSwitchAccount), findsOneWidget);
+      expect(find.text('opaque-forbidden-detail'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'shows terminal chatTokenMissing for token_missing dead-letter user messages',
+    (final WidgetTester tester) async {
+      final _StubChatCubit cubit = _StubChatCubit(
+        const ChatState(
+          messages: <ChatMessage>[
+            ChatMessage(
+              author: ChatAuthor.user,
+              text: 'Queued',
+              clientMessageId: 'm-token-missing',
+              synchronized: false,
+              terminalSyncFailureCode: 'token_missing',
+            ),
+          ],
+          pastUserInputs: <String>['Queued'],
+        ),
+      );
+      addTearDown(cubit.close);
+
+      await tester.pumpWidget(
+        _wrapWithApp(
+          cubit,
+          ChatMessageList(
+            controller: ScrollController(),
+            errorNotificationService: SnackbarErrorNotificationService(),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.text(AppLocalizationsEn().chatTokenMissing), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'shows terminal chatSwitchAccount for forbidden dead-letter user messages',
+    (final WidgetTester tester) async {
+      final _StubChatCubit cubit = _StubChatCubit(
+        const ChatState(
+          messages: <ChatMessage>[
+            ChatMessage(
+              author: ChatAuthor.user,
+              text: 'Queued',
+              clientMessageId: 'm-forbidden',
+              synchronized: false,
+              terminalSyncFailureCode: 'forbidden',
+            ),
+          ],
+          pastUserInputs: <String>['Queued'],
+        ),
+      );
+      addTearDown(cubit.close);
+
+      await tester.pumpWidget(
+        _wrapWithApp(
+          cubit,
+          ChatMessageList(
+            controller: ScrollController(),
+            errorNotificationService: SnackbarErrorNotificationService(),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.text(AppLocalizationsEn().chatSwitchAccount), findsOneWidget);
+    },
+  );
 }
 
 Widget _wrapWithApp(final ChatCubit cubit, final Widget child) {
@@ -197,7 +208,10 @@ Widget _wrapWithApp(final ChatCubit cubit, final Widget child) {
 
 class _StubChatCubit extends ChatCubit {
   _StubChatCubit(final ChatState initialState)
-    : super(repository: _StubChatRepository(), historyRepository: _StubHistoryRepository()) {
+    : super(
+        repository: _StubChatRepository(),
+        historyRepository: _StubHistoryRepository(),
+      ) {
     emit(initialState);
   }
 
@@ -262,7 +276,8 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   List<SyncCycleSummary> get history => const <SyncCycleSummary>[];
 
   @override
-  Stream<SyncCycleSummary> get summaryStream => const Stream<SyncCycleSummary>.empty();
+  Stream<SyncCycleSummary> get summaryStream =>
+      const Stream<SyncCycleSummary>.empty();
 
   @override
   SyncCycleSummary? get latestSummary => null;

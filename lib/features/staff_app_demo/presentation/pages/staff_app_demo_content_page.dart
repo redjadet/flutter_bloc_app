@@ -19,6 +19,10 @@ class StaffAppDemoContentPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     final state = context.watch<StaffDemoContentCubit>().state;
     final l10n = context.l10n;
+    final contentItems = List<StaffDemoContentItem>.of(
+      state.items,
+      growable: false,
+    );
 
     return CommonPageLayout(
       title: l10n.staffDemoContentTitle,
@@ -49,7 +53,7 @@ class StaffAppDemoContentPage extends StatelessWidget {
             ],
           ),
           StaffDemoContentStatus.ready =>
-            state.items.isEmpty
+            contentItems.isEmpty
                 ? ListView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     children: [
@@ -61,11 +65,14 @@ class StaffAppDemoContentPage extends StatelessWidget {
                   )
                 : ListView.separated(
                     physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: state.items.length,
+                    itemCount: contentItems.length,
                     separatorBuilder: (_, _) => const Divider(height: 1),
-                    itemBuilder: (context, index) => _ContentTile(
-                      item: state.items[index],
-                    ),
+                    itemBuilder: (context, index) {
+                      if (index >= contentItems.length) {
+                        return const SizedBox.shrink();
+                      }
+                      return _ContentTile(item: contentItems[index]);
+                    },
                   ),
         },
       ),

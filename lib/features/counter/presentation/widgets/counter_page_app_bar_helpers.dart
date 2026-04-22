@@ -9,6 +9,7 @@ enum OverflowAction {
   graphql,
   chat,
   genuiDemo,
+  onlineTherapyDemo,
   googleMaps,
   whiteboard,
   markdownEditor,

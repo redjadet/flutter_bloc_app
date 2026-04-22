@@ -83,7 +83,8 @@ class CachedNetworkImageWidget extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final String scheme = Uri.tryParse(imageUrl)?.scheme ?? '';
-    final bool isNonHttpUrl = scheme == 'blob' || scheme == 'data' || scheme == 'file';
+    final bool isNonHttpUrl =
+        scheme == 'blob' || scheme == 'data' || scheme == 'file';
 
     if (_isCachedNetworkImageWidgetFlutterTest && cacheManager == null) {
       return Image.network(

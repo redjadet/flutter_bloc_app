@@ -23,7 +23,8 @@ class ChatTransportBadge extends StatelessWidget {
     final String label = switch (transport) {
       ChatInferenceTransport.supabase => l10n.chatTransportSupabase,
       ChatInferenceTransport.direct => l10n.chatTransportDirect,
-      ChatInferenceTransport.renderOrchestration => l10n.chatTransportRenderOrchestration,
+      ChatInferenceTransport.renderOrchestration =>
+        l10n.chatTransportRenderOrchestration,
     };
     final String semanticsLabel = switch (transport) {
       ChatInferenceTransport.supabase =>
@@ -45,7 +46,8 @@ class ChatTransportBadge extends StatelessWidget {
       ),
     );
 
-    if (transport == ChatInferenceTransport.renderOrchestration && renderDemoStrict) {
+    if (transport == ChatInferenceTransport.renderOrchestration &&
+        renderDemoStrict) {
       final String strictLine = l10n.chatRenderStrictMode;
       return Semantics(
         label: '$semanticsLabel. $strictLine',
