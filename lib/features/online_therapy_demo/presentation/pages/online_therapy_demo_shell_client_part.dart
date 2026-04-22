@@ -36,13 +36,15 @@ class _ClientBookingPanel extends StatelessWidget {
             ],
           );
         }
-        return ListView(
-          children: <Widget>[
-            SizedBox(height: 360, child: therapistList),
-            const Divider(height: 1),
-            const SizedBox(height: 16),
-            SizedBox(height: 720, child: details),
-          ],
+        final List<Widget> items = <Widget>[
+          SizedBox(height: 360, child: therapistList),
+          const Divider(height: 1),
+          const SizedBox(height: 16),
+          SizedBox(height: 720, child: details),
+        ];
+        return ListView.builder(
+          itemCount: items.length,
+          itemBuilder: (context, index) => items[index],
         );
       },
     );

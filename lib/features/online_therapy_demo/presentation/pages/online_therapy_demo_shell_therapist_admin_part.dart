@@ -137,44 +137,48 @@ class _AdminPanel extends StatelessWidget {
               ),
             ),
           Expanded(
-            child: ListView(
-              children: <Widget>[
-                if (state.pendingTherapists.isEmpty)
-                  const ListTile(title: Text('No pending therapists.'))
-                else
-                  ...state.pendingTherapists.map(
-                    (t) => ListTile(
-                      title: Text(t.title),
-                      subtitle: Text(t.bio),
-                      trailing: ElevatedButton(
-                        onPressed: state.isBusy
-                            ? null
-                            : () => cubit.approve(t.id),
-                        child: const Text('Approve'),
-                      ),
-                    ),
-                  ),
-                const Divider(height: 24),
-                const Text(
-                  'Security / audit proof',
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 8),
-                if (state.auditEvents.isEmpty)
-                  const ListTile(title: Text('No audit events yet.'))
-                else
-                  ...state.auditEvents.reversed
-                      .take(8)
-                      .map(
-                        (event) => ListTile(
-                          dense: true,
-                          title: Text(event.action),
-                          subtitle: Text(
-                            'actor=${event.actorId} target=${event.targetId}',
-                          ),
+            child: Builder(
+              builder: (context) {
+                final List<Widget> items = <Widget>[
+                  if (state.pendingTherapists.isEmpty)
+                    const ListTile(title: Text('No pending therapists.'))
+                  else
+                    ...state.pendingTherapists.map(
+                      (t) => ListTile(
+                        title: Text(t.title),
+                        subtitle: Text(t.bio),
+                        trailing: ElevatedButton(
+                          onPressed: state.isBusy ? null : () => cubit.approve(t.id),
+                          child: const Text('Approve'),
                         ),
                       ),
-              ],
+                    ),
+                  const Divider(height: 24),
+                  const Text(
+                    'Security / audit proof',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 8),
+                  if (state.auditEvents.isEmpty)
+                    const ListTile(title: Text('No audit events yet.'))
+                  else
+                    ...state.auditEvents.reversed
+                        .take(8)
+                        .map(
+                          (event) => ListTile(
+                            dense: true,
+                            title: Text(event.action),
+                            subtitle: Text(
+                              'actor=${event.actorId} target=${event.targetId}',
+                            ),
+                          ),
+                        ),
+                ];
+                return ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) => items[index],
+                );
+              },
             ),
           ),
         ],

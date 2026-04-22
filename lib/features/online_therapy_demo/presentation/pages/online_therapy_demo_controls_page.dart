@@ -22,37 +22,39 @@ class OnlineTherapyDemoControlsPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     final state = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
     final session = context.cubit<OnlineTherapyDemoSessionCubit>();
+    final List<Widget> items = <Widget>[
+      const Text(
+        'Failure injection (demo-friendly). Changes affect the fake API behavior.',
+      ),
+      const SizedBox(height: 12),
+      DropdownButton<OnlineTherapyNetworkMode>(
+        isExpanded: true,
+        value: state.networkMode,
+        onChanged: state.isBusy
+            ? null
+            : (v) => v == null ? null : session.setNetworkMode(v),
+        items: OnlineTherapyNetworkMode.values
+            .map(
+              (m) => DropdownMenuItem<OnlineTherapyNetworkMode>(
+                value: m,
+                child: Text('Mode: ${m.name}'),
+              ),
+            )
+            .toList(growable: false),
+      ),
+      const SizedBox(height: 8),
+      Text(
+        _explain(state.networkMode),
+        style: const TextStyle(color: Colors.black54),
+      ),
+    ];
 
     return CommonPageLayout(
       title: 'Demo controls',
-      body: ListView(
+      body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        children: <Widget>[
-          const Text(
-            'Failure injection (demo-friendly). Changes affect the fake API behavior.',
-          ),
-          const SizedBox(height: 12),
-          DropdownButton<OnlineTherapyNetworkMode>(
-            isExpanded: true,
-            value: state.networkMode,
-            onChanged: state.isBusy
-                ? null
-                : (v) => v == null ? null : session.setNetworkMode(v),
-            items: OnlineTherapyNetworkMode.values
-                .map(
-                  (m) => DropdownMenuItem<OnlineTherapyNetworkMode>(
-                    value: m,
-                    child: Text('Mode: ${m.name}'),
-                  ),
-                )
-                .toList(growable: false),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            _explain(state.networkMode),
-            style: const TextStyle(color: Colors.black54),
-          ),
-        ],
+        itemCount: items.length,
+        itemBuilder: (context, index) => items[index],
       ),
     );
   }

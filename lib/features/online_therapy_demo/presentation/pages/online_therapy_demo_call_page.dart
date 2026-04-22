@@ -28,6 +28,10 @@ class _OnlineTherapyDemoCallPageState extends State<OnlineTherapyDemoCallPage> {
     final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
     final state = context.watchBloc<CallCubit>().state;
     final cubit = context.cubit<CallCubit>();
+    final List<Widget> items = <Widget>[
+      if (session.user == null) const OnlineTherapyLoggedOutPrompt(),
+      if (session.user != null) const OnlineTherapyCallView(),
+    ];
 
     return CommonPageLayout(
       title: 'Call',
@@ -37,12 +41,10 @@ class _OnlineTherapyDemoCallPageState extends State<OnlineTherapyDemoCallPage> {
           icon: const Icon(Icons.refresh),
         ),
       ],
-      body: ListView(
+      body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        children: <Widget>[
-          if (session.user == null) const OnlineTherapyLoggedOutPrompt(),
-          if (session.user != null) const OnlineTherapyCallView(),
-        ],
+        itemCount: items.length,
+        itemBuilder: (context, index) => items[index],
       ),
     );
   }
