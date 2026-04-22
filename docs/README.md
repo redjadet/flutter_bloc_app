@@ -17,6 +17,9 @@ This folder contains the source-of-truth documentation for the Flutter BLoC app.
 - **Deployment**: [`deployment.md`](deployment.md)
 - **Case studies (product briefs + demo feature)**: [`case_studies/README.md`](case_studies/README.md)
 - **Feature walkthroughs**: [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md)
+- **AI agent harness**: [`agent_knowledge_base.md`](agent_knowledge_base.md),
+  [`ai_code_review_protocol.md`](ai_code_review_protocol.md),
+  [`agents_quick_reference.md`](agents_quick_reference.md)
 
 ## Core docs (by concern)
 
@@ -38,6 +41,7 @@ This folder contains the source-of-truth documentation for the Flutter BLoC app.
 ### Workflow and quality
 
 - [`new_developer_guide.md`](new_developer_guide.md)
+- [`agent_knowledge_base.md`](agent_knowledge_base.md)
 - [`validation_scripts.md`](validation_scripts.md)
 - [`testing_overview.md`](testing_overview.md)
 - [`code_review_graph.md`](code_review_graph.md)
