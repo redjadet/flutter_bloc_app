@@ -9,8 +9,9 @@ Adapted from Vinod Pal’s March 8, 2026 checklist:
 
 Review gate before normal validation. Complement automated checks; not replace.
 
-If [`AGENTS.md`](../AGENTS.md) is unavailable in current host context,
-combine this document with
+Use [`agent_knowledge_base.md`](agent_knowledge_base.md) for progressive
+disclosure and source-of-truth layout. If [`AGENTS.md`](../AGENTS.md) is
+unavailable in current host context, combine this document with
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
 to pick validation commands. When present,
 [`agents_quick_reference.md`](agents_quick_reference.md) is compact command
@@ -27,6 +28,7 @@ lookup only; it doesn't replace [`AGENTS.md`](../AGENTS.md) once that file is av
 | Performance | Did I check rebuild scope, repeated I/O, parsing on the UI isolate, polling/listeners, allocations, and scale bottlenecks? |
 | Edge cases | Did I reason about empty, malformed, repeated, concurrent, offline, resumed, and interrupted paths? |
 | Dependencies | Does the repo already have a suitable utility, and is the new dependency worth its cost? |
+| Legibility | Can a future Codex/Cursor run inspect the relevant docs, tests, fixtures, logs, or UI proof without chat context? |
 | Focused tests | Is there scope-matched proof, regression coverage where practical, async-state reasoning or coverage, and no deprecated Flutter test APIs? |
 | Judgment and ownership | Did I document the tradeoff and keep ownership of failures in the changed surface? |
 | Self-verification | Before reporting back, did I check my final answer against the request, changed files, validation results, blockers, and residual risk? |
@@ -43,6 +45,10 @@ Do in order:
 5. **Extra review (risk-based):** Medium/high risk -> prefer 1 extra review pass.
    Cross-host diff review (explicit request): `./tool/request_codex_feedback.sh`.
    Cross-host plan review: `./tool/run_codex_plan_review.sh PATH/TO/plan.md`.
+
+If the same critique appears repeatedly, do not only remember it. Convert it
+into a repo-visible capability: source-doc update, validation check, test helper,
+fixture, route proof, or task template.
 
 ## Special Cases
 
