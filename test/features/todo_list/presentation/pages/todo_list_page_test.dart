@@ -238,15 +238,16 @@ void main() {
           .whereType<ScrollableState>();
       final ScrollableState listScrollable = scrollableStates.firstWhere(
         (final s) =>
-            s.position.axis == Axis.vertical &&
-            s.position.maxScrollExtent > 0,
+            s.position.axis == Axis.vertical && s.position.maxScrollExtent > 0,
       );
       final ScrollPosition position = listScrollable.position;
       final double before = position.pixels;
 
       // Target a header widget so the header's Listener receives the wheel event.
       expect(find.byType(TodoStatsWidget), findsOneWidget);
-      final Offset headerCenter = tester.getCenter(find.byType(TodoStatsWidget));
+      final Offset headerCenter = tester.getCenter(
+        find.byType(TodoStatsWidget),
+      );
 
       tester.binding.handlePointerEvent(
         PointerScrollEvent(

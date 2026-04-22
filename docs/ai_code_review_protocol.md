@@ -31,7 +31,7 @@ lookup only; it doesn't replace [`AGENTS.md`](../AGENTS.md) once that file is av
 | Performance | Did I check rebuild scope, repeated I/O, parsing on the UI isolate, polling/listeners, allocations, and scale bottlenecks? |
 | Edge cases | Did I reason about empty, malformed, repeated, concurrent, offline, resumed, and interrupted paths? |
 | Dependencies | Does the repo already have a suitable utility, and is the new dependency worth its cost? |
-| Focused tests | Is there scope-matched proof, regression coverage where practical, and async-state reasoning or coverage? |
+| Focused tests | Is there scope-matched proof, regression coverage where practical, async-state reasoning or coverage, and no deprecated Flutter test APIs? |
 | Judgment and ownership | Did I document the tradeoff and keep ownership of failures in the changed surface? |
 | Self-verification | Before reporting back, did I check my final answer against the request, changed files, validation results, blockers, and residual risk? |
 
@@ -62,6 +62,24 @@ Bug-fix path:
 2. add focused guard
 3. implement fix
 4. validate narrowed scope
+
+Widget-test viewport setup:
+
+- Use `tester.view.physicalSize` and `tester.view.devicePixelRatio`.
+- Reset with `tester.view.resetPhysicalSize()` and
+  `tester.view.resetDevicePixelRatio()`.
+- Do not use deprecated `tester.binding.window` or
+  `TestWidgetsFlutterBinding.window` test-value APIs.
+
+Async list builders:
+
+- In `ListView.builder`, `ListView.separated`, and sliver builders, do not index
+  live Cubit/BLoC state lists directly when async refresh can shrink the list.
+- Snapshot the list at build start, derive `itemCount` from that snapshot, and
+  guard stale builder indexes before indexing. This matters most for header-row
+  patterns such as `items.length + 1` with `items[index - 1]`.
+- Add widget regression coverage when fixing a runtime `RangeError` from a list
+  builder.
 
 ## Relationship To Validation
 

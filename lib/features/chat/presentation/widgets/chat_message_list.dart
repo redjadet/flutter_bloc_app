@@ -40,8 +40,8 @@ class ChatMessageList extends StatelessWidget {
           final trimmedRemoteCode = state.remoteFailureL10nCode?.trim();
           final String snackText =
               trimmedRemoteCode != null && trimmedRemoteCode.isNotEmpty
-                  ? terminalSyncFailureMessage(l10n, trimmedRemoteCode)
-                  : err;
+              ? terminalSyncFailureMessage(l10n, trimmedRemoteCode)
+              : err;
           await errorNotificationService
               .showSnackBar(context, snackText)
               .whenComplete(
@@ -95,8 +95,8 @@ class ChatMessageList extends StatelessWidget {
                   itemBuilder: (final context, final index) {
                     final ChatMessage message = data.messages[index];
                     final bool isUser = message.author == ChatAuthor.user;
-                    final trimmedTerminalCode =
-                        message.terminalSyncFailureCode?.trim();
+                    final trimmedTerminalCode = message.terminalSyncFailureCode
+                        ?.trim();
 
                     return RepaintBoundary(
                       key: _chatMessageKey(message),
@@ -131,7 +131,9 @@ class ChatMessageList extends StatelessWidget {
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.error,
                                 ),
-                                textAlign: isUser ? TextAlign.end : TextAlign.start,
+                                textAlign: isUser
+                                    ? TextAlign.end
+                                    : TextAlign.start,
                               ),
                             ),
                         ],

@@ -46,6 +46,11 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
       labelBuilder: (final l10n) => l10n.openGenuiDemoTooltip,
     ),
     OverflowItem(
+      action: OverflowAction.onlineTherapyDemo,
+      routeName: AppRoutes.onlineTherapyDemo,
+      labelBuilder: (_) => 'Open Online Therapy Demo',
+    ),
+    OverflowItem(
       action: OverflowAction.googleMaps,
       routeName: AppRoutes.googleMaps,
       labelBuilder: (final l10n) => l10n.openGoogleMapsTooltip,

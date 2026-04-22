@@ -43,14 +43,18 @@ final class SupabaseConfigProvider {
   final RemoteConfigService? _remoteConfig;
   final SecretStorage? _storage;
 
-  static const String _reasonFirebaseNotInitialized = 'firebase_not_initialized';
-  static const String _reasonFirebaseAuthUnavailable = 'firebase_auth_unavailable';
+  static const String _reasonFirebaseNotInitialized =
+      'firebase_not_initialized';
+  static const String _reasonFirebaseAuthUnavailable =
+      'firebase_auth_unavailable';
   static const String _reasonFirebaseAuthNotReady = 'firebase_auth_not_ready';
-  static const String _reasonRemoteConfigUnavailable = 'remote_config_unavailable';
+  static const String _reasonRemoteConfigUnavailable =
+      'remote_config_unavailable';
   static const String _reasonRemoteConfigDisabled = 'remote_config_disabled';
   static const String _reasonInvalidPayload = 'invalid_payload';
   static const String _reasonVersionUnchanged = 'version_unchanged';
-  static const String _reasonRemoteConfigFetchFailed = 'remote_config_fetch_failed';
+  static const String _reasonRemoteConfigFetchFailed =
+      'remote_config_fetch_failed';
 
   Future<SupabaseConfigFetchResult>? _inFlight;
 
@@ -99,8 +103,10 @@ final class SupabaseConfigProvider {
   Future<SupabaseConfigFetchResult> _fetchInternal({
     required final bool force,
   }) async {
-    final bool requiresFirebaseSingletons = _auth == null || _remoteConfig == null;
-    if (requiresFirebaseSingletons && !FirebaseBootstrapService.isFirebaseInitialized) {
+    final bool requiresFirebaseSingletons =
+        _auth == null || _remoteConfig == null;
+    if (requiresFirebaseSingletons &&
+        !FirebaseBootstrapService.isFirebaseInitialized) {
       return const SupabaseConfigFetchResult(
         updated: false,
         skipped: true,
@@ -168,7 +174,9 @@ final class SupabaseConfigProvider {
         rethrow;
       }
 
-      final String url = remoteConfig.getString(RemoteConfigRepository.supabaseUrlKey).trim();
+      final String url = remoteConfig
+          .getString(RemoteConfigRepository.supabaseUrlKey)
+          .trim();
       final String anonKey = remoteConfig
           .getString(RemoteConfigRepository.supabaseAnonKeyKey)
           .trim();
@@ -178,16 +186,16 @@ final class SupabaseConfigProvider {
 
       assert(
         () {
-        final Uri? uri = Uri.tryParse(url);
-        final String host = (uri == null || uri.host.isEmpty)
-            ? '(invalid-url)'
-            : uri.host;
-        AppLogger.debug(
-          'SupabaseConfigProvider: source=remote_config '
-          'version=$versionNumber host=$host',
-        );
-        return true;
-      }(),
+          final Uri? uri = Uri.tryParse(url);
+          final String host = (uri == null || uri.host.isEmpty)
+              ? '(invalid-url)'
+              : uri.host;
+          AppLogger.debug(
+            'SupabaseConfigProvider: source=remote_config '
+            'version=$versionNumber host=$host',
+          );
+          return true;
+        }(),
         'SupabaseConfigProvider Remote Config diagnostic',
       );
 
@@ -251,7 +259,9 @@ final class SupabaseConfigProvider {
       return SupabaseConfigFetchResult(
         updated: false,
         skipped: true,
-        reason: error is Exception ? error.runtimeType.toString() : 'unexpected_error',
+        reason: error is Exception
+            ? error.runtimeType.toString()
+            : 'unexpected_error',
       );
     }
   }

@@ -164,43 +164,46 @@ void main() {
     expect(SecretConfig.supabaseConfigVersion, 'rcv:2');
   });
 
-  test('skips invalid payload and does not overwrite existing config', () async {
-    final storage = InMemorySecretStorage();
-    SecretConfig.storage = storage;
+  test(
+    'skips invalid payload and does not overwrite existing config',
+    () async {
+      final storage = InMemorySecretStorage();
+      SecretConfig.storage = storage;
 
-    SecretConfig.applySupabaseConfig(
-      supabaseUrl: 'https://example.supabase.co',
-      supabaseAnonKey: 'anon',
-      version: 'rcv:1',
-      firebaseProjectId: null,
-    );
+      SecretConfig.applySupabaseConfig(
+        supabaseUrl: 'https://example.supabase.co',
+        supabaseAnonKey: 'anon',
+        version: 'rcv:1',
+        firebaseProjectId: null,
+      );
 
-    final auth = _MockFirebaseAuth();
-    final user = _MockUser();
-    when(() => auth.currentUser).thenReturn(user);
-    when(() => user.getIdToken(true)).thenAnswer((_) async => 'token');
+      final auth = _MockFirebaseAuth();
+      final user = _MockUser();
+      when(() => auth.currentUser).thenReturn(user);
+      when(() => user.getIdToken(true)).thenAnswer((_) async => 'token');
 
-    final remoteConfig = _FakeRemoteConfigService(<String, Object?>{
-      'SUPABASE_URL': '',
-      'SUPABASE_ANON_KEY': 'anon',
-      'SUPABASE_CONFIG_VERSION': 2,
-      'SUPABASE_CONFIG_ENABLED': true,
-    });
+      final remoteConfig = _FakeRemoteConfigService(<String, Object?>{
+        'SUPABASE_URL': '',
+        'SUPABASE_ANON_KEY': 'anon',
+        'SUPABASE_CONFIG_VERSION': 2,
+        'SUPABASE_CONFIG_ENABLED': true,
+      });
 
-    final provider = SupabaseConfigProvider(
-      auth: auth,
-      remoteConfig: remoteConfig,
-      storage: storage,
-    );
+      final provider = SupabaseConfigProvider(
+        auth: auth,
+        remoteConfig: remoteConfig,
+        storage: storage,
+      );
 
-    final result = await provider.fetchAndApplyIfNeeded(force: true);
+      final result = await provider.fetchAndApplyIfNeeded(force: true);
 
-    expect(result.updated, isFalse);
-    expect(result.skipped, isTrue);
-    expect(result.reason, 'invalid_payload');
-    expect(SecretConfig.supabaseConfigVersion, 'rcv:1');
-    expect(SecretConfig.supabaseUrl, 'https://example.supabase.co');
-  });
+      expect(result.updated, isFalse);
+      expect(result.skipped, isTrue);
+      expect(result.reason, 'invalid_payload');
+      expect(SecretConfig.supabaseConfigVersion, 'rcv:1');
+      expect(SecretConfig.supabaseUrl, 'https://example.supabase.co');
+    },
+  );
 
   test('skips when disabled and a cached config exists', () async {
     final storage = InMemorySecretStorage();
@@ -283,41 +286,44 @@ void main() {
     expect(result.reason, 'firebase_not_initialized');
   });
 
-  test('skips cleanly when forceFetch fails but cached config exists', () async {
-    final storage = InMemorySecretStorage();
-    SecretConfig.storage = storage;
+  test(
+    'skips cleanly when forceFetch fails but cached config exists',
+    () async {
+      final storage = InMemorySecretStorage();
+      SecretConfig.storage = storage;
 
-    SecretConfig.applySupabaseConfig(
-      supabaseUrl: 'https://example.supabase.co',
-      supabaseAnonKey: 'anon',
-      version: 'rcv:1',
-      firebaseProjectId: null,
-    );
+      SecretConfig.applySupabaseConfig(
+        supabaseUrl: 'https://example.supabase.co',
+        supabaseAnonKey: 'anon',
+        version: 'rcv:1',
+        firebaseProjectId: null,
+      );
 
-    final auth = _MockFirebaseAuth();
-    final user = _MockUser();
-    when(() => auth.currentUser).thenReturn(user);
-    when(() => user.getIdToken(true)).thenAnswer((_) async => 'token');
+      final auth = _MockFirebaseAuth();
+      final user = _MockUser();
+      when(() => auth.currentUser).thenReturn(user);
+      when(() => user.getIdToken(true)).thenAnswer((_) async => 'token');
 
-    final remoteConfig = _FakeRemoteConfigService(<String, Object?>{
-      'SUPABASE_URL': 'https://example.supabase.co',
-      'SUPABASE_ANON_KEY': 'anon',
-      'SUPABASE_CONFIG_VERSION': 2,
-      'SUPABASE_CONFIG_ENABLED': true,
-    });
-    remoteConfig.forceFetchError = Exception('network');
+      final remoteConfig = _FakeRemoteConfigService(<String, Object?>{
+        'SUPABASE_URL': 'https://example.supabase.co',
+        'SUPABASE_ANON_KEY': 'anon',
+        'SUPABASE_CONFIG_VERSION': 2,
+        'SUPABASE_CONFIG_ENABLED': true,
+      });
+      remoteConfig.forceFetchError = Exception('network');
 
-    final provider = SupabaseConfigProvider(
-      auth: auth,
-      remoteConfig: remoteConfig,
-      storage: storage,
-    );
+      final provider = SupabaseConfigProvider(
+        auth: auth,
+        remoteConfig: remoteConfig,
+        storage: storage,
+      );
 
-    final result = await provider.fetchAndApplyIfNeeded();
+      final result = await provider.fetchAndApplyIfNeeded();
 
-    expect(result.updated, isFalse);
-    expect(result.skipped, isTrue);
-    expect(result.reason, 'remote_config_fetch_failed');
-    expect(SecretConfig.supabaseConfigVersion, 'rcv:1');
-  });
+      expect(result.updated, isFalse);
+      expect(result.skipped, isTrue);
+      expect(result.reason, 'remote_config_fetch_failed');
+      expect(SecretConfig.supabaseConfigVersion, 'rcv:1');
+    },
+  );
 }

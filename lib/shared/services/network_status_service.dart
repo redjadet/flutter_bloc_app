@@ -36,10 +36,12 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   TimerDisposable? _debounceTimer;
   NetworkStatus _latest = NetworkStatus.unknown;
+
   /// Increments when a new connectivity listen cycle starts (after all prior
   /// `statusStream` listeners cancelled) and when `dispose` runs, so in-flight
   /// initial `checkConnectivity` work can ignore stale completions.
   int _listenSession = 0;
+
   /// When true, the connectivity stream has applied an update; a late initial
   /// `checkConnectivity` completion must not overwrite latest status or emit a
   /// stale value.

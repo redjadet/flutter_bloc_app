@@ -99,10 +99,13 @@ void main() {
     expect(cubit.clearErrorCalled, isTrue);
   });
 
-  testWidgets('SnackBar uses ARB when remoteFailureL10nCode is set', (WidgetTester tester) async {
+  testWidgets('SnackBar uses ARB when remoteFailureL10nCode is set', (
+    WidgetTester tester,
+  ) async {
     final _StubChatCubit cubit = _StubChatCubit(const ChatState());
     addTearDown(cubit.close);
-    final ErrorNotificationService errorNotificationService = SnackbarErrorNotificationService();
+    final ErrorNotificationService errorNotificationService =
+        SnackbarErrorNotificationService();
 
     await tester.pumpWidget(
       _wrapWithApp(
@@ -116,7 +119,9 @@ void main() {
 
     cubit.emit(
       const ChatState(
-        messages: <ChatMessage>[ChatMessage(author: ChatAuthor.user, text: 'hi')],
+        messages: <ChatMessage>[
+          ChatMessage(author: ChatAuthor.user, text: 'hi'),
+        ],
         error: 'opaque-upstream-detail',
         remoteFailureL10nCode: 'auth_required',
         status: ViewStatus.error,
@@ -124,7 +129,10 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text(AppLocalizationsEn().chatAuthRefreshRequired), findsOneWidget);
+    expect(
+      find.text(AppLocalizationsEn().chatAuthRefreshRequired),
+      findsOneWidget,
+    );
     expect(find.text('opaque-upstream-detail'), findsNothing);
   });
 
@@ -177,38 +185,42 @@ void main() {
     // Pending sync text is no longer displayed in the UI
   });
 
-  testWidgets('shows terminal sync failure line for dead-letter user messages', (
-    final WidgetTester tester,
-  ) async {
-    final _StubChatCubit cubit = _StubChatCubit(
-      const ChatState(
-        messages: <ChatMessage>[
-          ChatMessage(
-            author: ChatAuthor.user,
-            text: 'Queued',
-            clientMessageId: 'm-term',
-            synchronized: false,
-            terminalSyncFailureCode: 'auth_required',
-          ),
-        ],
-        pastUserInputs: <String>['Queued'],
-      ),
-    );
-    addTearDown(cubit.close);
-
-    await tester.pumpWidget(
-      _wrapWithApp(
-        cubit,
-        ChatMessageList(
-          controller: ScrollController(),
-          errorNotificationService: SnackbarErrorNotificationService(),
+  testWidgets(
+    'shows terminal sync failure line for dead-letter user messages',
+    (final WidgetTester tester) async {
+      final _StubChatCubit cubit = _StubChatCubit(
+        const ChatState(
+          messages: <ChatMessage>[
+            ChatMessage(
+              author: ChatAuthor.user,
+              text: 'Queued',
+              clientMessageId: 'm-term',
+              synchronized: false,
+              terminalSyncFailureCode: 'auth_required',
+            ),
+          ],
+          pastUserInputs: <String>['Queued'],
         ),
-      ),
-    );
-    await tester.pump();
+      );
+      addTearDown(cubit.close);
 
-    expect(find.text(AppLocalizationsEn().chatAuthRefreshRequired), findsOneWidget);
-  });
+      await tester.pumpWidget(
+        _wrapWithApp(
+          cubit,
+          ChatMessageList(
+            controller: ScrollController(),
+            errorNotificationService: SnackbarErrorNotificationService(),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(
+        find.text(AppLocalizationsEn().chatAuthRefreshRequired),
+        findsOneWidget,
+      );
+    },
+  );
 
   testWidgets('ChatMessageList uses identity-based repaint keys', (
     WidgetTester tester,

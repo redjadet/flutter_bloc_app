@@ -164,6 +164,8 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenCaseStudyDemo: () => context.pushNamed(AppRoutes.caseStudyDemo),
         onOpenIapDemo: () => context.pushNamed(AppRoutes.iapDemo),
         onOpenAiDecisionDemo: () => context.pushNamed(AppRoutes.aiDecisionDemo),
+        onOpenOnlineTherapyDemo: () =>
+            context.pushNamed(AppRoutes.onlineTherapyDemo),
         onRunIsolates: _isRunningIsolates ? null : _runIsolateSamples,
         isRunningIsolates: _isRunningIsolates,
         isolateError: _isolateError,

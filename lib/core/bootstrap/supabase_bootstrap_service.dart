@@ -91,7 +91,8 @@ class SupabaseBootstrapService {
   }) => Supabase.initialize(url: url, anonKey: anonKey);
 
   static bool _hasCachedConfigProjectMismatch() {
-    final String? cachedProjectId = SecretConfig.supabaseFirebaseProjectId?.trim();
+    final String? cachedProjectId = SecretConfig.supabaseFirebaseProjectId
+        ?.trim();
     if (cachedProjectId == null || cachedProjectId.isEmpty) {
       return false;
     }
