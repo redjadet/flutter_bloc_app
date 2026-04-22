@@ -48,7 +48,7 @@ tier expectations.
 ## CI workflow shape
 
 Integration jobs run only from **Actions → CI → Run workflow** (not on push/PR).
-See [`validation_scripts.md`](../validation_scripts.md) for the current GitHub Actions contract.
+See [`validation_scripts.md`](../validation_scripts.md) for current GitHub Actions contract.
 
 ## Notes
 

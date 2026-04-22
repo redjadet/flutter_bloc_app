@@ -15,4 +15,4 @@ changes. Populate from:
 | Uncategorized failures              | TBD      | TBD     | 0                       | `failure_category`            |
 
 When CI integration is manual-only, collect timing from workflow runs or local
-`./bin/integration_tests` with the same `INTEGRATION_TESTS_TIER` you care about.
+`./bin/integration_tests` with same `INTEGRATION_TESTS_TIER` you care about.

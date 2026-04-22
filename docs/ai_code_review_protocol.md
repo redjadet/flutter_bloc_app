@@ -1,17 +1,13 @@
 # AI Code Review Protocol
 
-Treat AI-generated code as draft output that must pass review gate before it
-is trusted. Before reporting back, every agent must self-verify its own final
-output against user request, diff, validation evidence, and known residual
-risks.
+AI code draft until review gate pass. Before report back, agent self-verify final output vs user request, diff, validation proof, residual risks.
 
 Pinned repo toolchain: Flutter 3.41.7 / Dart 3.11.5.
 
 Adapted from Vinod Pal’s March 8, 2026 checklist:
 <https://medium.com/%40vndpal/my-practical-approach-for-reviewing-ai-generated-code-268db27f3af8>
 
-This review gate comes before normal repo validation. It complements automated
-checks; it doesn't replace them.
+Review gate before normal validation. Complement automated checks; not replace.
 
 If [`AGENTS.md`](../AGENTS.md) is unavailable in current host context,
 combine this document with
@@ -37,14 +33,14 @@ lookup only; it doesn't replace [`AGENTS.md`](../AGENTS.md) once that file is av
 
 ## Before Accepting AI-Written Code
 
-Work through following; order matters where noted.
+Do in order:
 
 1. **Checks:** Apply **Ten Checks** above.
 2. **Diff:** Review diff or generated artifacts.
 3. **Verify:** Run smallest honest validation command (route via
    [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)).
 4. **Self-verify:** Final response vs request + diff + proof + blockers + residual risk.
-5. **Extra review (risk-based):** For medium/high-risk work, prefer one extra review pass.
+5. **Extra review (risk-based):** Medium/high risk -> prefer 1 extra review pass.
    Cross-host diff review (explicit request): `./tool/request_codex_feedback.sh`.
    Cross-host plan review: `./tool/run_codex_plan_review.sh PATH/TO/plan.md`.
 
@@ -54,7 +50,7 @@ Dependency changes:
 
 - Justify new package or upgrade.
 - Check whether existing repo dependency already covers need.
-- don't rely on `flutter pub get` as validation.
+- don’t rely on `flutter pub get` as validation.
 
 Bug-fix path:
 

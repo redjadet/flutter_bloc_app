@@ -6,7 +6,7 @@ This guide describes how to schedule delayed work in production code so it stays
 
 Use `TimerService` (from `lib/core/time/timer_service.dart`) for any delayed work where:
 
-- The delay should be **cancelable** (e.g. on dispose, sign-out, or navigation).
+- delay should be **cancelable** (e.g. on dispose, sign-out, or navigation).
 - Tests need **deterministic time** (e.g. `FakeTimerService` with `elapse()` or `tick()`).
 
 ### API
@@ -16,7 +16,7 @@ Use `TimerService` (from `lib/core/time/timer_service.dart`) for any delayed wor
 
 ### Wiring via DI
 
-`TimerService` is registered in `lib/core/di/injector_registrations.dart` as a lazy singleton. Inject it into repositories, coordinators, or services that need delayed work:
+`TimerService` is registered in `lib/core/di/injector_registrations.dart` as lazy singleton. Inject it into repositories, coordinators, or services that need delayed work:
 
 ```dart
 class MyRepository {
@@ -41,7 +41,7 @@ class MyRepository {
 
 ### Centralize timer disposal
 
-- **Cubits**: If a cubit already uses `CubitSubscriptionMixin`, register timer handles with `registerTimer(...)` and unregister when replaced (`unregisterTimer(...)`). This prevents late-async timer leaks and keeps timer cleanup consistent with subscription cleanup.
+- **Cubits**: If cubit already uses `CubitSubscriptionMixin`, register timer handles with `registerTimer(...)` and unregister when replaced (`unregisterTimer(...)`). This prevents late-async timer leaks and keeps timer cleanup consistent with subscription cleanup.
 - **Repositories/services**: Prefer `TimerHandleManager` (`lib/shared/utils/timer_handle_manager.dart`) to keep timer handles bounded and to ensure delayed restarts don’t outlive `dispose()`.
 
 ### Tests
@@ -63,16 +63,16 @@ For retry/backoff delays, pass `TimerService` into `RetryPolicy.executeWithRetry
 
 ## When Future.delayed is allowed
 
-The validation script `tool/check_raw_future_delayed.sh` flags `Future.delayed` in `lib/` except in allow-listed paths. Allowed without change:
+validation script `tool/check_raw_future_delayed.sh` flags `Future.delayed` in `lib/` except in allow-listed paths. Allowed without change:
 
 - **Mock/demo code**: `mock_*.dart`, `*_demo_*.dart`, `delayed_chart_repository.dart`, `isolate_samples.dart`.
-- **Justified production paths** (allow-listed in the script): `retry_policy.dart` (interruptible via `CancelToken` polling), `navigation.dart` (short safeGo delay with `context.mounted` check), `todo_list_page_handlers.dart` (UI timing), `walletconnect_service.dart` (demo placeholder).
+- **Justified production paths** (allow-listed in script): `retry_policy.dart` (interruptible via `CancelToken` polling), `navigation.dart` (short safeGo delay with `context.mounted` check), `todo_list_page_handlers.dart` (UI timing), `walletconnect_service.dart` (demo placeholder).
 
-For **new** production code, prefer `TimerService`. If you must use `Future.delayed`, add a `// check-ignore: reason` on the line (or the line above) and ensure the script’s allow-list or validation docs are updated if the exception is permanent.
+For **new** production code, prefer `TimerService`. If you must use `Future.delayed`, add `// check-ignore: reason` on line (or line above) and ensure script’s allow-list or validation docs are updated if exception is permanent.
 
 ## Validation script
 
 - **`tool/check_raw_future_delayed.sh`** – run as part of `tool/delivery_checklist.sh`. Fails if `Future.delayed` appears in `lib/` outside allow-listed files or check-ignore.
 - **`tool/check_raw_timer.sh`** – fails if raw `Timer(` is used in production code (use `TimerService` instead).
 
-Running the full checklist: `./tool/delivery_checklist.sh` (or `./bin/checklist` if available).
+Running full checklist: `./tool/delivery_checklist.sh` (or `./bin/checklist` if available).
