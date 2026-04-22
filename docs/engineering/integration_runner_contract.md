@@ -1,15 +1,15 @@
 # Integration Runner Contract
 
-This document defines the stable contract for `./bin/integration_tests` and
+This document defines stable contract for `./bin/integration_tests` and
 `tool/run_integration_tests.sh`.
 
 ## Stable default behavior
 
-- `./bin/integration_tests` with no args runs the aggregate integration suite.
+- `./bin/integration_tests` with no args runs aggregate integration suite.
 - Exit semantics remain compatible: `0` on success, non-zero on failure.
-- Only one integration runner instance may hold the repo lock at a time.
-- A second run exits with code `2` while another active run owns the lock.
-- Stale lock directories are removed automatically when the recorded owner PID is no longer alive.
+- Only one integration runner instance may hold repo lock at time.
+- second run exits with code `2` while another active run owns lock.
+- Stale lock directories are removed automatically when recorded owner PID is no longer alive.
 
 ## Tier selectors
 
@@ -22,17 +22,17 @@ If selectors are invalid, runner falls back to `exhaustive`.
 
 ## Artifact contract
 
-Each run writes a structured summary under:
+Each run writes structured summary under:
 
 - `artifacts/integration/<timestamp>/summary.json`
 
-The latest artifact directory path is also written to:
+latest artifact directory path is also written to:
 
 - `artifacts/integration/.last-run-dir` (single line; used by CI summaries)
 
 Optional companion logs:
 
-- `flutter_test_<label>.log` inside the artifact directory when the run fails
+- `flutter_test_<label>.log` inside artifact directory when run fails
 
 Schema fields include:
 
@@ -57,13 +57,13 @@ available, inference from captured `flutter test` output):
 - `ok`
 - `timeout`
 - `cancelled_or_terminated`
-- `retry_on_failure_enabled` (after an opt-in generic retry)
+- `retry_on_failure_enabled` (after opt-in generic retry)
 - `test_assertion_or_app_failure`
 - `simulator_build_infra`
 - `infra_device_or_tooling`
 - `unknown_transient_or_infra`
 
-With `INTEGRATION_TESTS_RETRY_ON_FAILURE=1`, **retries are skipped** when the
+With `INTEGRATION_TESTS_RETRY_ON_FAILURE=1`, **retries are skipped** when
 inferred category is `test_assertion_or_app_failure` (fail-fast on deterministic
 test failures).
 
@@ -79,9 +79,9 @@ Enable with:
 - `INTEGRATION_TESTS_ENABLE_SELECTIVE=1`
 - `INTEGRATION_TESTS_CHANGED_FILES` — newline- or comma-separated repo-relative paths
 
-**Exhaustive tier** skips selective narrowing (always uses the tier aggregate target).
+**Exhaustive tier** skips selective narrowing (always uses tier aggregate target).
 
-Legacy hard-coded fallbacks were replaced by `force_full_suite_prefixes` in the JSON map.
+Legacy hard-coded fallbacks were replaced by `force_full_suite_prefixes` in JSON map.
 
 ## Selective mapping fallback rules
 

@@ -110,16 +110,12 @@ CLAUDE.md
 docs/gstack_integration.md
 AGENTS.md
 docs/app_for_small_business.txt
+*.original.md
 
 # Python demo local virtualenv (e.g. demos/render_chat_api)
 demos/**/.venv/
 .codex/hooks.json
-AGENTS.original.md
 skills-lock.json
 # Added by code-review-graph
 .code-review-graph/
 docs/code_graph.pdf
-docs/engineering/validation_routing_fast_vs_full.original.md
-docs/agents_quick_reference.original.md
-docs/ai_code_review_protocol.original.md
-docs/agents_appendix.original.md

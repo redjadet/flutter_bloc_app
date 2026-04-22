@@ -10,15 +10,15 @@ Use this policy to decide where coverage should live and how failures are owned.
 - **Integration test:** cross-screen user journey, persistence, and platform-like
   behavior.
 
-If a production bug escapes and affects a user journey, add at least one
+If production bug escapes and affects user journey, add at least one
 integration regression scenario.
 
 ## Required quality bars
 
-- New integration scenarios must map to a named journey in
+- New integration scenarios must map to named journey in
   [`engineering/integration_journey_map.md`](integration_journey_map.md).
-- New flow should declare the intended tier (`smoke`, `standard`, `exhaustive`).
-- Keep assertions explicit; avoid tests that only verify “does not crash.”
+- New flow should declare intended tier (`smoke`, `standard`, `exhaustive`).
+- Keep assertions explicit; avoid tests that only verify “doesn't crash.”
 
 ## Failure ownership routing
 

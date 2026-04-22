@@ -1,6 +1,6 @@
 # Agent Output Scorecard v1
 
-This document defines the v1 measurement contract for agent productivity and
+This document defines v1 measurement contract for agent productivity and
 quality in this repository.
 
 ## Canonical Artifacts
@@ -43,7 +43,7 @@ quality in this repository.
 ## KPI Definitions
 
 - Time-to-green: elapsed time from first run attempt until first full required
-  validation pass for a task.
+  validation pass for task.
 - Scorecard coverage: percent of relevant runs emitting valid scorecard events.
 - Trigger precision: true-positive routes / all positive routes.
 - Trigger recall: true-positive routes / all routes that should be positive.
