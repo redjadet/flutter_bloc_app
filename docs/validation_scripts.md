@@ -46,6 +46,10 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs t
 - **`check_solid_presentation_data_imports.sh`**: Prevents presentation importing data-layer types (DIP)
 - **`check_solid_data_presentation_imports.sh`**: Prevents data layer importing presentation (layering)
 - **`check_feature_modularity_leaks.sh`**: Fails on known cross-feature `package:` imports: `library_demo` must not import `scapes`; `settings` must not import `graphql_demo`, `profile`, or `remote_config`; **`remote_config` must not import `settings`** (use `shared` widgets such as `SettingsSection` instead). Extend the script when new boundary rules land in [modularity.md](modularity.md). Included in `./bin/checklist`.
+- **`check_agent_knowledge_base.sh`**: Keeps the AI-agent knowledge base
+  harness indexed. When local [`AGENTS.md`](../AGENTS.md) is present, it fails
+  if that map grows past the configured line limit or loses required pointers
+  to the progressive-disclosure docs and plan/tracker sources.
 
 ### UI/UX Best Practices
 
@@ -798,6 +802,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_offline_first_remote_merge.sh`
 - `check_feature_modularity_leaks.sh`
 - `check_memory_pressure_centralized.sh`
+- `check_agent_knowledge_base.sh`
 - `check_pyright_python.sh`
 
 <!-- AUTO-GENERATED-CHECK_SCRIPTS:END -->
