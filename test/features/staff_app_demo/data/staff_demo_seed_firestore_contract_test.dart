@@ -40,38 +40,44 @@ void main() {
       expect(item.storagePath, 'staff-app-demo/content/welcome.pdf');
     });
 
-    test('staffDemoShifts/shift1 shape from seed parses when now in window', () {
-      final startAt = DateTime.utc(2026, 6, 1, 10, 0);
-      final endAt = DateTime.utc(2026, 6, 1, 20, 0);
-      final nowUtc = DateTime.utc(2026, 6, 1, 15, 0);
-      const employeeUid = 'seed_employee_uid_placeholder';
-      final fixture = staffDemoSeedShift1Document(
-        employeeUid: employeeUid,
-        startAt: Timestamp.fromDate(startAt),
-        endAt: Timestamp.fromDate(endAt),
-      );
-      final shift = staffDemoActiveShiftFromFirestoreDoc(
-        shiftId: 'shift1',
-        userId: employeeUid,
-        data: fixture,
-        nowUtc: nowUtc,
-      );
-      expect(shift, isNotNull);
-      expect(shift!.siteId, kStaffDemoSeedSiteId);
-      expect(shift.timezoneName, 'UTC');
-    });
+    test(
+      'staffDemoShifts/shift1 shape from seed parses when now in window',
+      () {
+        final startAt = DateTime.utc(2026, 6, 1, 10, 0);
+        final endAt = DateTime.utc(2026, 6, 1, 20, 0);
+        final nowUtc = DateTime.utc(2026, 6, 1, 15, 0);
+        const employeeUid = 'seed_employee_uid_placeholder';
+        final fixture = staffDemoSeedShift1Document(
+          employeeUid: employeeUid,
+          startAt: Timestamp.fromDate(startAt),
+          endAt: Timestamp.fromDate(endAt),
+        );
+        final shift = staffDemoActiveShiftFromFirestoreDoc(
+          shiftId: 'shift1',
+          userId: employeeUid,
+          data: fixture,
+          nowUtc: nowUtc,
+        );
+        expect(shift, isNotNull);
+        expect(shift!.siteId, kStaffDemoSeedSiteId);
+        expect(shift.timezoneName, 'UTC');
+      },
+    );
 
-    test('staffDemoProfiles employee shape from seed parses for assignable list', () {
-      const employeeUid = 'seed_employee_uid_placeholder';
-      final profile = staffDemoProfileFromFirestoreDoc(
-        userId: employeeUid,
-        data: kStaffDemoSeedEmployeeProfileDocument,
-        omitInactive: true,
-      );
-      expect(profile, isNotNull);
-      expect(profile!.displayName, 'Staff Demo Employee');
-      expect(profile.role, StaffDemoRole.employee);
-      expect(profile.email, kStaffDemoSeedEmployeeEmail);
-    });
+    test(
+      'staffDemoProfiles employee shape from seed parses for assignable list',
+      () {
+        const employeeUid = 'seed_employee_uid_placeholder';
+        final profile = staffDemoProfileFromFirestoreDoc(
+          userId: employeeUid,
+          data: kStaffDemoSeedEmployeeProfileDocument,
+          omitInactive: true,
+        );
+        expect(profile, isNotNull);
+        expect(profile!.displayName, 'Staff Demo Employee');
+        expect(profile.role, StaffDemoRole.employee);
+        expect(profile.email, kStaffDemoSeedEmployeeEmail);
+      },
+    );
   });
 }

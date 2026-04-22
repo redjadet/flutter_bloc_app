@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/router/routes_online_therapy_demo.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
@@ -209,6 +210,7 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
     name: AppRoutes.aiDecisionDemo,
     builder: (final context, final state) => const AiDecisionDemoPage(),
   ),
+  createOnlineTherapyDemoRoute(),
 ];
 
 /// When Supabase is configured ([SupabaseAuthRepository.isConfigured]), requires

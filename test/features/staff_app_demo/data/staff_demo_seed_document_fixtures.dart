@@ -33,12 +33,13 @@ const Map<String, dynamic> kStaffDemoSeedWelcomePdfDocument = <String, dynamic>{
 /// Employee profile fields (doc id is the Auth uid; use a placeholder in tests).
 const String kStaffDemoSeedEmployeeEmail = 'staffdemo.employee@example.com';
 
-const Map<String, dynamic> kStaffDemoSeedEmployeeProfileDocument = <String, dynamic>{
-  'displayName': 'Staff Demo Employee',
-  'email': kStaffDemoSeedEmployeeEmail,
-  'role': 'employee',
-  'isActive': true,
-};
+const Map<String, dynamic> kStaffDemoSeedEmployeeProfileDocument =
+    <String, dynamic>{
+      'displayName': 'Staff Demo Employee',
+      'email': kStaffDemoSeedEmployeeEmail,
+      'role': 'employee',
+      'isActive': true,
+    };
 
 /// `staffDemoShifts/shift1`-shaped document (timestamps are caller-provided).
 Map<String, dynamic> staffDemoSeedShift1Document({

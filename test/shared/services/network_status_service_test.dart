@@ -14,9 +14,10 @@ final class _FakeConnectivity implements Connectivity {
     required Stream<List<ConnectivityResult>> onConnectivityChanged,
     this.beforeCheck,
     Future<List<ConnectivityResult>> Function()? checkConnectivity,
-  })  : _onConnectivityChanged = onConnectivityChanged,
-        _checkConnectivity = checkConnectivity ??
-            (() async => <ConnectivityResult>[ConnectivityResult.wifi]);
+  }) : _onConnectivityChanged = onConnectivityChanged,
+       _checkConnectivity =
+           checkConnectivity ??
+           (() async => <ConnectivityResult>[ConnectivityResult.wifi]);
 
   Future<void> Function()? beforeCheck;
   final Stream<List<ConnectivityResult>> _onConnectivityChanged;
@@ -93,11 +94,14 @@ void main() {
         // timer callback returns; flush before asserting.
         await Future<void>.delayed(Duration.zero);
 
-        expect(events, orderedEquals(<NetworkStatus>[
-          NetworkStatus.online,
-          NetworkStatus.offline,
-          NetworkStatus.online,
-        ]));
+        expect(
+          events,
+          orderedEquals(<NetworkStatus>[
+            NetworkStatus.online,
+            NetworkStatus.offline,
+            NetworkStatus.online,
+          ]),
+        );
         await subscription.cancel();
       });
 

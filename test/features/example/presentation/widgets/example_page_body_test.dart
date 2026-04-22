@@ -44,6 +44,7 @@ void main() {
             onOpenCaseStudyDemo: () {},
             onOpenIapDemo: () {},
             onOpenAiDecisionDemo: () {},
+            onOpenOnlineTherapyDemo: () {},
           ),
         ),
       );
@@ -98,6 +99,7 @@ void main() {
             onOpenCaseStudyDemo: () {},
             onOpenIapDemo: () {},
             onOpenAiDecisionDemo: () {},
+            onOpenOnlineTherapyDemo: () {},
           ),
         ),
       );
@@ -149,6 +151,7 @@ void main() {
             },
             onOpenIapDemo: () {},
             onOpenAiDecisionDemo: () {},
+            onOpenOnlineTherapyDemo: () {},
           ),
         ),
       );

@@ -22,6 +22,7 @@ import 'package:flutter_bloc_app/core/di/register_http_services.dart';
 import 'package:flutter_bloc_app/core/di/register_igaming_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_in_app_purchase_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_iot_demo_services.dart';
+import 'package:flutter_bloc_app/core/di/register_online_therapy_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_playlearn_services.dart';
 import 'package:flutter_bloc_app/core/di/register_profile_services.dart';
 import 'package:flutter_bloc_app/core/di/register_remote_config_services.dart';
@@ -98,6 +99,7 @@ Future<void> registerAllDependencies() async {
   registerInAppPurchaseDemoServices();
   registerStaffAppDemoServices();
   registerAiDecisionDemoServices();
+  registerOnlineTherapyDemoServices();
   _registerMemoryServices();
   _registerCameraGalleryServices();
   _registerScapesServices();
