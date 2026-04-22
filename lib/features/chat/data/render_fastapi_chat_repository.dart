@@ -111,14 +111,18 @@ class RenderFastApiChatRepository implements ChatRepository {
         ? trimmedModel
         : kChatOrchestrationAutoModelId;
 
-    final Map<String, dynamic> payload = _payloadBuilder.buildChatCompletionsPayload(
-      pastUserInputs: pastUserInputs,
-      generatedResponses: generatedResponses,
-      prompt: prompt,
-      model: targetModel,
-    );
+    final Map<String, dynamic> payload = _payloadBuilder
+        .buildChatCompletionsPayload(
+          pastUserInputs: pastUserInputs,
+          generatedResponses: generatedResponses,
+          prompt: prompt,
+          model: targetModel,
+        );
 
-    final String idempotencyKey = _idempotencyKey(clientMessageId, conversationId);
+    final String idempotencyKey = _idempotencyKey(
+      clientMessageId,
+      conversationId,
+    );
 
     final String clientCorrelationId = _newRenderClientCorrelationId();
     final Map<String, String> headers = <String, String>{
@@ -156,11 +160,21 @@ class RenderFastApiChatRepository implements ChatRepository {
       }
       final Map<String, dynamic>? json = mapFromDynamic(response.data);
       if (kDebugMode) {
-        final Map<String, dynamic>? meta = mapFromDynamic(json?['_render_meta']);
-        final String? fromBodyServer = stringFromDynamicTrimmed(meta?['server_request_id']);
-        final String? fromBodyEcho = stringFromDynamicTrimmed(meta?['client_correlation_id']);
-        final String? fromHeaderServer = response.headers.value('x-server-request-id');
-        final String? fromHeaderEcho = response.headers.value('x-client-correlation-id');
+        final Map<String, dynamic>? meta = mapFromDynamic(
+          json?['_render_meta'],
+        );
+        final String? fromBodyServer = stringFromDynamicTrimmed(
+          meta?['server_request_id'],
+        );
+        final String? fromBodyEcho = stringFromDynamicTrimmed(
+          meta?['client_correlation_id'],
+        );
+        final String? fromHeaderServer = response.headers.value(
+          'x-server-request-id',
+        );
+        final String? fromHeaderEcho = response.headers.value(
+          'x-client-correlation-id',
+        );
         final String? serverRequestId = fromBodyServer ?? fromHeaderServer;
         final String? echoedCorrelation = fromBodyEcho ?? fromHeaderEcho;
         final String idSource = fromBodyServer != null
@@ -220,7 +234,10 @@ class RenderFastApiChatRepository implements ChatRepository {
     }
   }
 
-  String _idempotencyKey(final String? clientMessageId, final String? conversationId) {
+  String _idempotencyKey(
+    final String? clientMessageId,
+    final String? conversationId,
+  ) {
     final String? a = clientMessageId?.trim();
     if (a != null && a.isNotEmpty) {
       return a;

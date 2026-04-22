@@ -2,7 +2,7 @@
 
 Commands + routing lookup for repo-aware AI hosts. Convenience only.
 Policy lives in [`AGENTS.md`](../AGENTS.md) + [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
-If `AGENTS.md` unavailable, combine this with
+If [`AGENTS.md`](../AGENTS.md) unavailable, combine this with
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 
 Pinned repo toolchain: Flutter 3.41.7 / Dart 3.11.5.
@@ -27,6 +27,19 @@ Decision guide:
 | Cross-host **plan** review (markdown plan + Codex) | `./tool/run_codex_plan_review.sh PATH/TO/plan.md` |
 
 Fastlane note: prefer `./tool/fastlane.sh` over raw `fastlane`.
+
+## Flutter Test Reminder
+
+When widget tests set screen size or pixel ratio, use `WidgetTester.view`:
+`tester.view.physicalSize`, `tester.view.devicePixelRatio`,
+`resetPhysicalSize()`, and `resetDevicePixelRatio()`. Avoid deprecated
+`tester.binding.window` / `TestWidgetsFlutterBinding.window` test-value APIs.
+
+## Async List Builder Reminder
+
+When a builder indexes a Cubit/BLoC list, snapshot the list at build start and
+guard stale indexes before indexing. Header-row lists (`items.length + 1` with
+`items[index - 1]`) are especially prone to `RangeError` during async refresh.
 
 ## Host Trackers
 

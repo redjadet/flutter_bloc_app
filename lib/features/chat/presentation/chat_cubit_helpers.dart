@@ -171,9 +171,9 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     final String? nextRemoteCode = clearError
         ? null
         : remoteFailureL10nCode ??
-            (error != null && error != current.error
-                ? null
-                : current.remoteFailureL10nCode);
+              (error != null && error != current.error
+                  ? null
+                  : current.remoteFailureL10nCode);
     emitState(
       current.copyWith(
         history: history,

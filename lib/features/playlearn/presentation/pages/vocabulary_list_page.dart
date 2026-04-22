@@ -36,10 +36,14 @@ class VocabularyListPage extends StatelessWidget {
             if (state.words.isEmpty && !state.isLoading) {
               return CommonEmptyState(message: l10n.playlearnNoWords);
             }
+            final words = List.of(state.words, growable: false);
             return ListView.builder(
-              itemCount: state.words.length,
+              itemCount: words.length,
               itemBuilder: (final context, final index) {
-                final item = state.words[index];
+                if (index >= words.length) {
+                  return const SizedBox.shrink();
+                }
+                final item = words[index];
                 return WordCard(
                   item: item,
                   onListen: () =>

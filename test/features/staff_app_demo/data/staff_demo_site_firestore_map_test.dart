@@ -21,17 +21,20 @@ void main() {
       expect(site.radiusMeters, 100);
     });
 
-    test('nested map accepts radiusMeters when geofenceRadiusMeters absent', () {
-      final site = staffDemoSiteFromFirestoreMap(
-        siteId: 's',
-        data: <String, dynamic>{
-          'name': 'A',
-          'geofenceCenter': <String, dynamic>{'lat': 1, 'lng': 2},
-          'radiusMeters': 99,
-        },
-      );
-      expect(site!.radiusMeters, 99);
-    });
+    test(
+      'nested map accepts radiusMeters when geofenceRadiusMeters absent',
+      () {
+        final site = staffDemoSiteFromFirestoreMap(
+          siteId: 's',
+          data: <String, dynamic>{
+            'name': 'A',
+            'geofenceCenter': <String, dynamic>{'lat': 1, 'lng': 2},
+            'radiusMeters': 99,
+          },
+        );
+        expect(site!.radiusMeters, 99);
+      },
+    );
 
     test('parses geofenceCenter as Firestore GeoPoint', () {
       final site = staffDemoSiteFromFirestoreMap(
@@ -82,7 +85,11 @@ void main() {
       expect(
         staffDemoSiteFromFirestoreMap(
           siteId: 'x',
-          data: <String, dynamic>{'centerLat': 0, 'centerLng': 0, 'radiusMeters': 1},
+          data: <String, dynamic>{
+            'centerLat': 0,
+            'centerLng': 0,
+            'radiusMeters': 1,
+          },
         ),
         isNull,
       );

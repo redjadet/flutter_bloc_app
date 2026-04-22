@@ -149,6 +149,64 @@ class AppRoutes {
   static const staffAppDemoAdmin = 'staff-app-demo-admin';
   static const staffAppDemoAdminPath = '/staff-app-demo/admin';
 
+  static const onlineTherapyDemo = 'online-therapy-demo';
+  static const onlineTherapyDemoPath = '/online-therapy-demo';
+
+  static const onlineTherapyDemoControls = 'online-therapy-demo-controls';
+  static const onlineTherapyDemoControlsPath = '/online-therapy-demo/controls';
+
+  static const onlineTherapyDemoClient = 'online-therapy-demo-client';
+  static const onlineTherapyDemoClientPath = '/online-therapy-demo/client';
+  static const onlineTherapyDemoClientTherapists =
+      'online-therapy-demo-client-therapists';
+  static const onlineTherapyDemoClientTherapistsPath =
+      '/online-therapy-demo/client/therapists';
+  static const onlineTherapyDemoClientTherapistDetail =
+      'online-therapy-demo-client-therapist-detail';
+  static const onlineTherapyDemoClientTherapistDetailPath =
+      '/online-therapy-demo/client/therapists/:therapistId';
+  static const onlineTherapyDemoClientBookingConfirm =
+      'online-therapy-demo-client-booking-confirm';
+  static const onlineTherapyDemoClientBookingConfirmPath =
+      '/online-therapy-demo/client/booking/confirm';
+  static const onlineTherapyDemoClientAppointments =
+      'online-therapy-demo-client-appointments';
+  static const onlineTherapyDemoClientAppointmentsPath =
+      '/online-therapy-demo/client/appointments';
+  static const onlineTherapyDemoClientMessaging =
+      'online-therapy-demo-client-messaging';
+  static const onlineTherapyDemoClientMessagingPath =
+      '/online-therapy-demo/client/messaging';
+  static const onlineTherapyDemoClientCall = 'online-therapy-demo-client-call';
+  static const onlineTherapyDemoClientCallPath =
+      '/online-therapy-demo/client/call';
+
+  static const onlineTherapyDemoTherapist = 'online-therapy-demo-therapist';
+  static const onlineTherapyDemoTherapistPath =
+      '/online-therapy-demo/therapist';
+  static const onlineTherapyDemoTherapistAppointments =
+      'online-therapy-demo-therapist-appointments';
+  static const onlineTherapyDemoTherapistAppointmentsPath =
+      '/online-therapy-demo/therapist/appointments';
+  static const onlineTherapyDemoTherapistMessaging =
+      'online-therapy-demo-therapist-messaging';
+  static const onlineTherapyDemoTherapistMessagingPath =
+      '/online-therapy-demo/therapist/messaging';
+  static const onlineTherapyDemoTherapistCall =
+      'online-therapy-demo-therapist-call';
+  static const onlineTherapyDemoTherapistCallPath =
+      '/online-therapy-demo/therapist/call';
+
+  static const onlineTherapyDemoAdmin = 'online-therapy-demo-admin';
+  static const onlineTherapyDemoAdminPath = '/online-therapy-demo/admin';
+  static const onlineTherapyDemoAdminVerification =
+      'online-therapy-demo-admin-verification';
+  static const onlineTherapyDemoAdminVerificationPath =
+      '/online-therapy-demo/admin/verification';
+  static const onlineTherapyDemoAdminAudit = 'online-therapy-demo-admin-audit';
+  static const onlineTherapyDemoAdminAuditPath =
+      '/online-therapy-demo/admin/audit';
+
   /// Returns true if [path] is safe for post-login redirect (local path only).
   /// Rejects null, empty, protocol-relative (//), and external URLs.
   static bool isSafeRedirectPath(final String? path) {

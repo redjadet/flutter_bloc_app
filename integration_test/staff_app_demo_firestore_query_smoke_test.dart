@@ -73,7 +73,9 @@ void main() {
 
     // 4) staffDemoSites: orderBy(name) + client parse (seed vs nested vs GeoPoint)
     final sitesRepo = FirestoreStaffDemoSiteRepository(firestore: firestore);
-    final sites = await sitesRepo.listSites().timeout(const Duration(seconds: 15));
+    final sites = await sitesRepo.listSites().timeout(
+      const Duration(seconds: 15),
+    );
     expect(
       sites,
       isNotEmpty,

@@ -12,6 +12,7 @@ abstract class ChatState with _$ChatState {
     @Default(<ChatMessage>[]) final List<ChatMessage> messages,
     @Default(false) final bool isLoading,
     final String? error,
+
     /// When set with [error], snackbars use ARB copy for this remote failure code.
     final String? remoteFailureL10nCode,
     @Default(<String>[]) final List<String> pastUserInputs,

@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+MAX_PASSES="${MAX_PASSES:-3}"
+CHECKLIST_FIX_APPLY="${CHECKLIST_FIX_APPLY:-0}"
+CHECKLIST_FIX_GLOBAL_DART_FIX="${CHECKLIST_FIX_GLOBAL_DART_FIX:-0}"
+
+if ! [[ "$MAX_PASSES" =~ ^[1-9][0-9]*$ ]]; then
+  echo "checklist_fix: MAX_PASSES must be a positive integer" >&2
+  exit 2
+fi
+
+changed_dart_files() {
+  git ls-files --modified --others --exclude-standard -- '*.dart'
+}
+
+echo "checklist_fix: run ./bin/checklist (max passes: $MAX_PASSES)"
+echo "checklist_fix: set CHECKLIST_FIX_APPLY=1 to format changed Dart files between passes"
+
+pass=1
+while true; do
+  echo
+  echo "Pass $pass/$MAX_PASSES: ./bin/checklist"
+  if ./bin/checklist; then
+    echo
+    echo "checklist_fix: checklist passed"
+    exit 0
+  fi
+
+  if [[ "$pass" -ge "$MAX_PASSES" ]]; then
+    echo
+    echo "checklist_fix: checklist still failing after $MAX_PASSES pass(es)"
+    echo "   Fix the remaining errors above, then re-run: ./bin/checklist_fix"
+    exit 1
+  fi
+
+  if [[ "$CHECKLIST_FIX_APPLY" != "1" ]]; then
+    echo
+    echo "checklist_fix: stopping before auto-fix."
+    echo "   Re-run with CHECKLIST_FIX_APPLY=1 to format changed Dart files between passes."
+    echo "   Use CHECKLIST_FIX_GLOBAL_DART_FIX=1 only when global 'dart fix --apply' is intended."
+    exit 1
+  fi
+
+  echo
+  echo "Applying bounded auto-fixes..."
+
+  if command -v dart >/dev/null 2>&1; then
+    dart_files=()
+    while IFS= read -r file; do
+      dart_files+=("$file")
+    done < <(changed_dart_files)
+    if [[ "${#dart_files[@]}" -gt 0 ]]; then
+      echo "  - dart format changed Dart files (${#dart_files[@]})"
+      dart format "${dart_files[@]}"
+    else
+      echo "  - no changed Dart files to format"
+    fi
+  else
+    echo "  - dart not found; skipping dart format"
+  fi
+
+  if [[ "$CHECKLIST_FIX_GLOBAL_DART_FIX" == "1" ]] && command -v dart >/dev/null 2>&1; then
+    echo "  - dart fix --apply"
+    dart fix --apply || true
+  elif [[ "$CHECKLIST_FIX_GLOBAL_DART_FIX" == "1" ]]; then
+    echo "  - dart not found; skipping dart fix"
+  else
+    echo "  - skipping global dart fix --apply"
+  fi
+
+  pass=$((pass + 1))
+done

@@ -59,63 +59,77 @@ void main() {
       await authChanges.close();
     });
 
-    test('dedupes duplicate sign-in events while a fetch is in flight', () async {
-      final user = _MockUser();
-      final completer = Completer<SupabaseConfigFetchResult>();
-      var callCount = 0;
+    test(
+      'dedupes duplicate sign-in events while a fetch is in flight',
+      () async {
+        final user = _MockUser();
+        final completer = Completer<SupabaseConfigFetchResult>();
+        var callCount = 0;
 
-      final coordinatorWithOverride = SupabaseConfigCoordinator(
-        auth: auth,
-        provider: provider,
-        fetchAndApplyIfNeeded: () {
-          callCount++;
-          return completer.future;
-        },
-      );
-      await coordinatorWithOverride.start();
+        final coordinatorWithOverride = SupabaseConfigCoordinator(
+          auth: auth,
+          provider: provider,
+          fetchAndApplyIfNeeded: () {
+            callCount++;
+            return completer.future;
+          },
+        );
+        await coordinatorWithOverride.start();
 
-      authChanges.add(user);
-      authChanges.add(user);
-      await pumpEventQueue(times: 10);
+        authChanges.add(user);
+        authChanges.add(user);
+        await pumpEventQueue(times: 10);
 
-      expect(callCount, 1);
+        expect(callCount, 1);
 
-      completer.complete(
-        const SupabaseConfigFetchResult(updated: false, skipped: true, reason: 'test'),
-      );
-      await pumpEventQueue(times: 10);
+        completer.complete(
+          const SupabaseConfigFetchResult(
+            updated: false,
+            skipped: true,
+            reason: 'test',
+          ),
+        );
+        await pumpEventQueue(times: 10);
 
-      await coordinatorWithOverride.dispose();
-    });
+        await coordinatorWithOverride.dispose();
+      },
+    );
 
-    test('startup path triggers only one fetch even if auth emits quickly', () async {
-      final user = _MockUser();
-      when(() => auth.currentUser).thenReturn(user);
+    test(
+      'startup path triggers only one fetch even if auth emits quickly',
+      () async {
+        final user = _MockUser();
+        when(() => auth.currentUser).thenReturn(user);
 
-      final completer = Completer<SupabaseConfigFetchResult>();
-      var callCount = 0;
+        final completer = Completer<SupabaseConfigFetchResult>();
+        var callCount = 0;
 
-      final coordinator = SupabaseConfigCoordinator(
-        auth: auth,
-        provider: provider,
-        fetchAndApplyIfNeeded: () {
-          callCount++;
-          return completer.future;
-        },
-      );
-      await coordinator.start();
+        final coordinator = SupabaseConfigCoordinator(
+          auth: auth,
+          provider: provider,
+          fetchAndApplyIfNeeded: () {
+            callCount++;
+            return completer.future;
+          },
+        );
+        await coordinator.start();
 
-      authChanges.add(user);
-      await pumpEventQueue(times: 10);
+        authChanges.add(user);
+        await pumpEventQueue(times: 10);
 
-      expect(callCount, 1);
+        expect(callCount, 1);
 
-      completer.complete(
-        const SupabaseConfigFetchResult(updated: false, skipped: true, reason: 'test'),
-      );
-      await pumpEventQueue(times: 10);
+        completer.complete(
+          const SupabaseConfigFetchResult(
+            updated: false,
+            skipped: true,
+            reason: 'test',
+          ),
+        );
+        await pumpEventQueue(times: 10);
 
-      await coordinator.dispose();
-    });
+        await coordinator.dispose();
+      },
+    );
   });
 }
