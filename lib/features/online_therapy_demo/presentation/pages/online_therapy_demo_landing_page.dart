@@ -13,69 +13,70 @@ class OnlineTherapyDemoLandingPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     final state = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
     final session = context.cubit<OnlineTherapyDemoSessionCubit>();
+    final List<Widget> items = <Widget>[
+      const Text(
+        'Interview demo (simulated backend). Not production compliance.',
+      ),
+      const SizedBox(height: 12),
+      if (state.user == null) ...<Widget>[
+        TextField(
+          enabled: !state.isBusy,
+          decoration: const InputDecoration(
+            labelText: 'Email',
+            hintText: 'demo@example.com',
+          ),
+          onChanged: session.setEmailDraft,
+        ),
+        const SizedBox(height: 12),
+        ElevatedButton(
+          onPressed: state.isBusy ? null : () => session.login(),
+          child: Text(state.isBusy ? 'Signing in…' : 'Sign in'),
+        ),
+      ] else ...<Widget>[
+        Text(
+          'User: ${state.user?.displayName} (${state.user?.maskedEmail})',
+        ),
+        const SizedBox(height: 8),
+        ElevatedButton(
+          onPressed: state.isBusy ? null : () => session.logout(),
+          child: const Text('Logout'),
+        ),
+      ],
+      const Divider(height: 24),
+      const Text(
+        'Choose role',
+        style: TextStyle(fontWeight: FontWeight.w600),
+      ),
+      const SizedBox(height: 8),
+      _RoleTile(
+        role: TherapyRole.client,
+        title: 'Client flow',
+        onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoClient),
+      ),
+      _RoleTile(
+        role: TherapyRole.therapist,
+        title: 'Therapist flow',
+        onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoTherapist),
+      ),
+      _RoleTile(
+        role: TherapyRole.admin,
+        title: 'Admin flow',
+        onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoAdmin),
+      ),
+      const SizedBox(height: 12),
+      ListTile(
+        leading: const Icon(Icons.tune),
+        title: const Text('Controls (network/failure injection)'),
+        onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoControls),
+      ),
+    ];
 
     return CommonPageLayout(
       title: 'Online Therapy Demo',
-      body: ListView(
+      body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        children: <Widget>[
-          const Text(
-            'Interview demo (simulated backend). Not production compliance.',
-          ),
-          const SizedBox(height: 12),
-          if (state.user == null) ...<Widget>[
-            TextField(
-              enabled: !state.isBusy,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                hintText: 'demo@example.com',
-              ),
-              onChanged: session.setEmailDraft,
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: state.isBusy ? null : () => session.login(),
-              child: Text(state.isBusy ? 'Signing in…' : 'Sign in'),
-            ),
-          ] else ...<Widget>[
-            Text(
-              'User: ${state.user?.displayName} (${state.user?.maskedEmail})',
-            ),
-            const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: state.isBusy ? null : () => session.logout(),
-              child: const Text('Logout'),
-            ),
-          ],
-          const Divider(height: 24),
-          const Text(
-            'Choose role',
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8),
-          _RoleTile(
-            role: TherapyRole.client,
-            title: 'Client flow',
-            onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoClient),
-          ),
-          _RoleTile(
-            role: TherapyRole.therapist,
-            title: 'Therapist flow',
-            onTap: () =>
-                context.pushNamed(AppRoutes.onlineTherapyDemoTherapist),
-          ),
-          _RoleTile(
-            role: TherapyRole.admin,
-            title: 'Admin flow',
-            onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoAdmin),
-          ),
-          const SizedBox(height: 12),
-          ListTile(
-            leading: const Icon(Icons.tune),
-            title: const Text('Controls (network/failure injection)'),
-            onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoControls),
-          ),
-        ],
+        itemCount: items.length,
+        itemBuilder: (context, index) => items[index],
       ),
     );
   }

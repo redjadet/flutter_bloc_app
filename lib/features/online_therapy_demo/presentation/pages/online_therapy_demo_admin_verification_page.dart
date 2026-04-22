@@ -28,6 +28,41 @@ class _OnlineTherapyDemoAdminVerificationPageState
     final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
     final state = context.watchBloc<AdminCubit>().state;
     final cubit = context.cubit<AdminCubit>();
+    final List<Widget> items = <Widget>[
+      if (session.user == null) const OnlineTherapyLoggedOutPrompt(),
+      if (session.user == null) const SizedBox(height: 12),
+      if (state.errorMessage case final String errorMessage?)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text(
+            errorMessage,
+            style: const TextStyle(color: Colors.red),
+          ),
+        ),
+      if (state.pendingTherapists.isEmpty)
+        const ListTile(title: Text('No pending therapists.'))
+      else
+        ...state.pendingTherapists.map(
+          (t) => Card(
+            child: ListTile(
+              title: Text(
+                t.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              subtitle: Text(
+                t.bio,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              trailing: ElevatedButton(
+                onPressed: state.isBusy ? null : () => cubit.approve(t.id),
+                child: const Text('Approve'),
+              ),
+            ),
+          ),
+        ),
+    ];
 
     return CommonPageLayout(
       title: 'Therapist verification',
@@ -37,43 +72,10 @@ class _OnlineTherapyDemoAdminVerificationPageState
           icon: const Icon(Icons.refresh),
         ),
       ],
-      body: ListView(
+      body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        children: <Widget>[
-          if (session.user == null) const OnlineTherapyLoggedOutPrompt(),
-          if (session.user == null) const SizedBox(height: 12),
-          if (state.errorMessage case final String errorMessage?)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Text(
-                errorMessage,
-                style: const TextStyle(color: Colors.red),
-              ),
-            ),
-          if (state.pendingTherapists.isEmpty)
-            const ListTile(title: Text('No pending therapists.'))
-          else
-            ...state.pendingTherapists.map(
-              (t) => Card(
-                child: ListTile(
-                  title: Text(
-                    t.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subtitle: Text(
-                    t.bio,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  trailing: ElevatedButton(
-                    onPressed: state.isBusy ? null : () => cubit.approve(t.id),
-                    child: const Text('Approve'),
-                  ),
-                ),
-              ),
-            ),
-        ],
+        itemCount: items.length,
+        itemBuilder: (context, index) => items[index],
       ),
     );
   }

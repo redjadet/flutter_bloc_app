@@ -48,93 +48,94 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
         .where((t) => t.id == widget.therapistId)
         .cast<TherapistProfile?>()
         .firstOrNull;
+    final List<Widget> items = <Widget>[
+      if (session.user == null) const OnlineTherapyLoggedOutPrompt(),
+      if (session.user == null) const SizedBox(height: 12),
+      if (therapist == null)
+        const Text(
+          'Therapist not found.',
+          style: TextStyle(color: Colors.red),
+        )
+      else ...<Widget>[
+        Text(
+          'Rating: ${therapist.rating.toStringAsFixed(1)}',
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 8),
+        Text(therapist.bio),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: <Widget>[
+            ...therapist.specialties.map((s) => Chip(label: Text(s))),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Text(
+          'Languages: ${therapist.languages.join(', ')}',
+        ),
+      ],
+      const Divider(height: 24),
+      Row(
+        children: <Widget>[
+          const Expanded(
+            child: Text(
+              'Availability',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+          IconButton(
+            onPressed: state.isBusy
+                ? null
+                : () => unawaited(
+                    cubit.loadAvailability(therapistId: widget.therapistId),
+                  ),
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
+      ),
+      if (state.availability.isEmpty)
+        Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Text(state.isBusy ? 'Loading…' : 'No slots for today.'),
+        )
+      else
+        ...state.availability.map(
+          (slot) => Card(
+            child: ListTile(
+              title: Text(
+                formatDeviceTimeRange(context, slot.startAt, slot.endAt),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              subtitle: Text('Status: ${slot.status.name}'),
+              trailing: slot.status == AvailabilitySlotStatus.available
+                  ? ElevatedButton(
+                      onPressed: state.isBusy
+                          ? null
+                          : () {
+                              cubit.setPendingBookingSlot(slot);
+                              unawaited(
+                                context.pushNamed(
+                                  AppRoutes.onlineTherapyDemoClientBookingConfirm,
+                                ),
+                              );
+                            },
+                      child: const Text('Book'),
+                    )
+                  : const Text('Booked'),
+            ),
+          ),
+        ),
+    ];
 
     return CommonPageLayout(
       title: therapist?.title ?? 'Therapist',
-      body: ListView(
+      body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        children: <Widget>[
-          if (session.user == null) const OnlineTherapyLoggedOutPrompt(),
-          if (session.user == null) const SizedBox(height: 12),
-          if (therapist == null)
-            const Text(
-              'Therapist not found.',
-              style: TextStyle(color: Colors.red),
-            )
-          else ...<Widget>[
-            Text(
-              'Rating: ${therapist.rating.toStringAsFixed(1)}',
-              style: const TextStyle(fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
-            Text(therapist.bio),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: <Widget>[
-                ...therapist.specialties.map((s) => Chip(label: Text(s))),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Languages: ${therapist.languages.join(', ')}',
-            ),
-          ],
-          const Divider(height: 24),
-          Row(
-            children: <Widget>[
-              const Expanded(
-                child: Text(
-                  'Availability',
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-              ),
-              IconButton(
-                onPressed: state.isBusy
-                    ? null
-                    : () => unawaited(
-                        cubit.loadAvailability(therapistId: widget.therapistId),
-                      ),
-                icon: const Icon(Icons.refresh),
-              ),
-            ],
-          ),
-          if (state.availability.isEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(state.isBusy ? 'Loading…' : 'No slots for today.'),
-            )
-          else
-            ...state.availability.map(
-              (slot) => Card(
-                child: ListTile(
-                  title: Text(
-                    formatDeviceTimeRange(context, slot.startAt, slot.endAt),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subtitle: Text('Status: ${slot.status.name}'),
-                  trailing: slot.status == AvailabilitySlotStatus.available
-                      ? ElevatedButton(
-                          onPressed: state.isBusy
-                              ? null
-                              : () {
-                                  cubit.setPendingBookingSlot(slot);
-                                  unawaited(
-                                    context.pushNamed(
-                                      AppRoutes
-                                          .onlineTherapyDemoClientBookingConfirm,
-                                    ),
-                                  );
-                                },
-                          child: const Text('Book'),
-                        )
-                      : const Text('Booked'),
-                ),
-              ),
-            ),
-        ],
+        itemCount: items.length,
+        itemBuilder: (context, index) => items[index],
       ),
     );
   }
