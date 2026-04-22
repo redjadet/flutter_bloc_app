@@ -1,7 +1,9 @@
 # Agent Quick Reference
 
 Commands + routing lookup for repo-aware AI hosts. Convenience only.
-Policy lives in [`AGENTS.md`](../AGENTS.md) + [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
+Policy map lives in [`AGENTS.md`](../AGENTS.md). The agent knowledge base
+lives in [`agent_knowledge_base.md`](agent_knowledge_base.md), and the review
+gate lives in [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
 If [`AGENTS.md`](../AGENTS.md) unavailable, combine this with
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 
@@ -21,6 +23,7 @@ Decision guide:
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
 | Large refactor with code-review-graph installed | `./tool/refresh_code_review_graph.sh` |
 | New shared agent-facing markdown doc | `./tool/compress_agent_doc.sh PATH`; rerun with `--overwrite-backups` to replace backup |
+| Agent knowledge-base/map drift | `./tool/check_agent_knowledge_base.sh` |
 | Repo-managed host-template drift check | `./tool/check_agent_asset_drift.sh` |
 | Host-template preview sync | `./tool/sync_agent_assets.sh --dry-run` |
 | Cross-host diff review, explicit request only | `./tool/request_codex_feedback.sh` |
@@ -46,6 +49,19 @@ guard stale indexes before indexing. Header-row lists (`items.length + 1` with
 - Cursor: [`tasks/cursor/todo.md`](../tasks/cursor/todo.md)
 - Codex: [`tasks/codex/todo.md`](../tasks/codex/todo.md)
 
+## Harness Reminders
+
+- If an agent struggles repeatedly, add the missing repo capability: doc, test,
+  fixture, script, route proof, log helper, or validation check.
+- Make runtime behavior legible. For UI/app work, prefer app-visible proof over
+  logs-only claims.
+- Enforce invariants mechanically where possible; do not paste long rules into
+  host prompts.
+- Keep Codex and Cursor host assets thin and synced from
+  `tool/agent_host_templates/`.
+- Agent behavior changes start in source docs, then sync both host templates;
+  do not fork Codex/Cursor doctrine unless the host capability truly differs.
+
 ## Host Adapters
 
 | Need | Cursor | Codex |
@@ -61,7 +77,8 @@ Repo-managed Cursor slash prompts (synced by `./tool/sync_agent_assets.sh`):
 
 Cold-start fit:
 
-- Codex: bootstrap -> [`AGENTS.md`](../AGENTS.md), review protocol, quick reference, README
+- Codex: bootstrap -> [`AGENTS.md`](../AGENTS.md), knowledge base, review
+  protocol, quick reference, README
 - Cursor: global rule + skills should point back to same canon instead of
   duplicating policy
 
@@ -70,6 +87,9 @@ Cold-start fit:
 - Product/setup context:
   [`README.md`](../README.md),
   [`new_developer_guide.md`](new_developer_guide.md)
+- Agent harness / knowledge base:
+  [`agent_knowledge_base.md`](agent_knowledge_base.md),
+  [`ai_code_review_protocol.md`](ai_code_review_protocol.md)
 - Feature work:
   [`clean_architecture.md`](clean_architecture.md),
   [`architecture_details.md`](architecture_details.md),

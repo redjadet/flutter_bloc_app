@@ -268,6 +268,7 @@ validate_checklist_configuration() {
     "tool/check_todo_keyboard_layout.sh"
     "tool/validate_validation_docs.sh"
     "tool/check_agent_asset_drift.sh"
+    "tool/check_agent_knowledge_base.sh"
   )
 
   if [ "$total_messages" -ne "$total_scripts" ]; then
@@ -320,6 +321,7 @@ validate_docs_only_dependencies() {
   local docs_only_scripts=(
     "tool/validate_validation_docs.sh"
     "tool/check_agent_asset_drift.sh"
+    "tool/check_agent_knowledge_base.sh"
   )
 
   for script in "${docs_only_scripts[@]}"; do
@@ -698,6 +700,10 @@ if [ "$CHECKLIST_MODE" = "fast" ]; then
     echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
     exit 1
   fi
+  if ! bash "$PROJECT_ROOT/tool/check_agent_knowledge_base.sh"; then
+    echo "❌ Agent knowledge base map is out of sync; update AGENTS/docs indexes or source-of-truth links."
+    exit 1
+  fi
   if should_run_agent_asset_drift_check; then
     echo "🤖 Verifying managed AI agent asset drift for policy/template docs..."
     if ! bash "$PROJECT_ROOT/tool/check_agent_asset_drift.sh"; then
@@ -728,6 +734,10 @@ if is_docs_only_change_set; then
     echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
     exit 1
   fi
+  if ! bash "$PROJECT_ROOT/tool/check_agent_knowledge_base.sh"; then
+    echo "❌ Agent knowledge base map is out of sync; update AGENTS/docs indexes or source-of-truth links."
+    exit 1
+  fi
   if should_run_agent_asset_drift_check; then
     echo "🤖 Verifying managed AI agent asset drift for policy/template docs..."
     if ! bash "$PROJECT_ROOT/tool/check_agent_asset_drift.sh"; then
@@ -752,6 +762,10 @@ if is_tooling_only_change_set; then
   fi
   if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
     echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
+    exit 1
+  fi
+  if ! bash "$PROJECT_ROOT/tool/check_agent_knowledge_base.sh"; then
+    echo "❌ Agent knowledge base map is out of sync; update AGENTS/docs indexes or source-of-truth links."
     exit 1
   fi
   if should_run_agent_asset_drift_check; then
@@ -849,6 +863,7 @@ CHECK_MESSAGES=(
   "Checking offline-first remote-merge (do not overwrite newer local with older remote)..."
   "Checking feature modularity (library_demo / settings cross-imports)..."
   "Checking centralized memory-pressure handling..."
+  "Checking agent knowledge base map..."
   "Running Pyright on Python (Render chat demo + tool/)..."
 )
 
@@ -899,6 +914,7 @@ CHECK_SCRIPTS=(
   "tool/check_offline_first_remote_merge.sh"
   "tool/check_feature_modularity_leaks.sh"
   "tool/check_memory_pressure_centralized.sh"
+  "tool/check_agent_knowledge_base.sh"
   "tool/check_pyright_python.sh"
 )
 
