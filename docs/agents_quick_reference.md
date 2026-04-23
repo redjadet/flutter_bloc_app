@@ -1,8 +1,8 @@
 # Agent Quick Reference
 
 Commands + routing lookup for repo-aware AI hosts. Convenience only.
-Policy map lives in [`AGENTS.md`](../AGENTS.md). The agent knowledge base
-lives in [`agent_knowledge_base.md`](agent_knowledge_base.md), and the review
+Policy map lives in [`AGENTS.md`](../AGENTS.md). agent knowledge base
+lives in [`agent_knowledge_base.md`](agent_knowledge_base.md), and review
 gate lives in [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
 If [`AGENTS.md`](../AGENTS.md) unavailable, combine this with
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
@@ -40,7 +40,7 @@ When widget tests set screen size or pixel ratio, use `WidgetTester.view`:
 
 ## Async List Builder Reminder
 
-When a builder indexes a Cubit/BLoC list, snapshot the list at build start and
+When builder indexes Cubit/BLoC list, snapshot list at build start and
 guard stale indexes before indexing. Header-row lists (`items.length + 1` with
 `items[index - 1]`) are especially prone to `RangeError` during async refresh.
 
@@ -51,16 +51,21 @@ guard stale indexes before indexing. Header-row lists (`items.length + 1` with
 
 ## Harness Reminders
 
-- If an agent struggles repeatedly, add the missing repo capability: doc, test,
+- Classify complexity, risk, scope, and uncertainty before choosing planning,
+  validation, or delegation depth.
+- If agent struggles repeatedly, add missing repo capability: doc, test,
   fixture, script, route proof, log helper, or validation check.
+- For non-trivial work, compare few practical approaches and choose
+  lowest-regret option; stop refining when added effort no longer buys down real
+  risk.
 - Make runtime behavior legible. For UI/app work, prefer app-visible proof over
   logs-only claims.
-- Enforce invariants mechanically where possible; do not paste long rules into
+- Enforce invariants mechanically where possible; don't paste long rules into
   host prompts.
 - Keep Codex and Cursor host assets thin and synced from
   `tool/agent_host_templates/`.
 - Agent behavior changes start in source docs, then sync both host templates;
-  do not fork Codex/Cursor doctrine unless the host capability truly differs.
+  don't fork Codex/Cursor doctrine unless host capability truly differs.
 
 ## Host Adapters
 

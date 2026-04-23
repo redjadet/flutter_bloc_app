@@ -34,6 +34,16 @@ require_contains() {
   fi
 }
 
+require_all_contains() {
+  local path="$1"
+  shift
+
+  require_file "$path"
+  for needle in "$@"; do
+    require_contains "$path" "$needle"
+  done
+}
+
 required_files=(
   "docs/agent_knowledge_base.md"
   "docs/ai_code_review_protocol.md"
@@ -65,6 +75,7 @@ else
 fi
 
 require_contains "docs/agent_knowledge_base.md" "Progressive Disclosure"
+require_contains "docs/agent_knowledge_base.md" "Adaptive Execution"
 require_contains "docs/agent_knowledge_base.md" "Agent Legibility"
 require_contains "docs/agent_knowledge_base.md" "Missing Capability Loop"
 require_contains "docs/agent_knowledge_base.md" "System Of Record Layout"
@@ -79,6 +90,79 @@ require_contains "docs/agent_knowledge_base.md" "tasks/cursor/todo.md"
 require_contains "docs/agent_knowledge_base.md" "tasks/lessons.md"
 require_contains "docs/README.md" "agent_knowledge_base.md"
 require_contains "docs/validation_scripts.md" "check_agent_knowledge_base.sh"
+
+if [ -d "tool/agent_host_templates" ]; then
+  require_all_contains \
+    "tool/agent_host_templates/codex/AGENTS.md" \
+    "AGENTS.md" \
+    "docs/agent_knowledge_base.md" \
+    "docs/ai_code_review_protocol.md" \
+    "docs/agents_quick_reference.md" \
+    "docs/README.md" \
+    "tasks/codex/todo.md"
+
+  require_all_contains \
+    "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md" \
+    "AGENTS.md" \
+    "docs/agent_knowledge_base.md" \
+    "docs/agents_quick_reference.md" \
+    "docs/ai_code_review_protocol.md" \
+    "tool/check_agent_knowledge_base.sh" \
+    "tool/check_agent_asset_drift.sh" \
+    "tool/sync_agent_assets.sh --dry-run"
+
+  require_all_contains \
+    "tool/agent_host_templates/codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md" \
+    "AGENTS.md" \
+    "docs/agent_knowledge_base.md" \
+    "docs/ai_code_review_protocol.md" \
+    "tasks/codex/todo.md" \
+    "tool/check_agent_knowledge_base.sh"
+
+  require_all_contains \
+    "tool/agent_host_templates/cursor/rules/agents-global.mdc" \
+    "AGENTS.md" \
+    "docs/agent_knowledge_base.md" \
+    "docs/ai_code_review_protocol.md" \
+    "docs/agents_quick_reference.md" \
+    "tool/check_agent_knowledge_base.sh"
+
+  require_all_contains \
+    "tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md" \
+    "AGENTS.md" \
+    "docs/agent_knowledge_base.md" \
+    "docs/agents_quick_reference.md" \
+    "docs/ai_code_review_protocol.md" \
+    "tool/check_agent_knowledge_base.sh" \
+    "tool/check_agent_asset_drift.sh" \
+    "tool/sync_agent_assets.sh --dry-run"
+
+  require_all_contains \
+    "tool/agent_host_templates/cursor/skills/agents-delivery-workflow/SKILL.md" \
+    "AGENTS.md" \
+    "docs/agent_knowledge_base.md" \
+    "docs/agents_quick_reference.md" \
+    "docs/ai_code_review_protocol.md" \
+    "tasks/cursor/todo.md" \
+    "tool/check_agent_knowledge_base.sh"
+
+  require_all_contains \
+    "tool/agent_host_templates/cursor/skills/agents-meta-behavior/SKILL.md" \
+    "AGENTS.md" \
+    "docs/agent_knowledge_base.md" \
+    "docs/ai_code_review_protocol.md" \
+    "tasks/lessons.md"
+
+  require_all_contains \
+    "tool/agent_host_templates/cursor/skills/agents-cursor-integration/SKILL.md" \
+    "AGENTS.md" \
+    "docs/agent_knowledge_base.md" \
+    "docs/agents_quick_reference.md" \
+    "docs/ai_code_review_protocol.md" \
+    "tool/sync_agent_assets.sh"
+else
+  echo "Host-template source checks skipped (tool/agent_host_templates not present)."
+fi
 
 if [ "$failures" -ne 0 ]; then
   exit 1

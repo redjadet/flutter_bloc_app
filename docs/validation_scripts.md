@@ -49,7 +49,9 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs t
 - **`check_agent_knowledge_base.sh`**: Keeps the AI-agent knowledge base
   harness indexed. When local [`AGENTS.md`](../AGENTS.md) is present, it fails
   if that map grows past the configured line limit or loses required pointers
-  to the progressive-disclosure docs and plan/tracker sources.
+  to the progressive-disclosure docs and plan/tracker sources. When
+  repo-managed host templates are present, it also fails if key Codex/Cursor
+  entrypoints stop pointing back to the repo map and source docs.
 
 ### UI/UX Best Practices
 
