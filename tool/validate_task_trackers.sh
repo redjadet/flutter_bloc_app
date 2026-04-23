@@ -6,6 +6,7 @@ usage() {
 Usage: tool/validate_task_trackers.sh [--paths <file>...] [--base <git-ref>]
 
 Validate that `tasks/*/todo.md` trackers follow the canonical contract.
+With no args, validates existing tracker files and passes when none exist.
 
 Contract:
 - required headings:
@@ -101,7 +102,13 @@ elif [[ -n "$base_ref" ]]; then
     exit 0
   fi
 else
-  targets+=("tasks/cursor/todo.md" "tasks/codex/todo.md")
+  shopt -s nullglob
+  targets+=(tasks/*/todo.md)
+  shopt -u nullglob
+  if [[ "${#targets[@]}" -eq 0 ]]; then
+    echo "✅ Task trackers validated (no tracker files present)."
+    exit 0
+  fi
 fi
 
 failures=0
