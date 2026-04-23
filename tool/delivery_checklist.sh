@@ -269,6 +269,10 @@ validate_checklist_configuration() {
     "tool/validate_validation_docs.sh"
     "tool/check_agent_asset_drift.sh"
     "tool/check_agent_knowledge_base.sh"
+    "tool/check_docs_gardening.sh"
+    "tool/validate_task_trackers.sh"
+    "tool/run_harness_fixtures.sh"
+    "tool/agent_session_bootstrap.sh"
   )
 
   if [ "$total_messages" -ne "$total_scripts" ]; then
@@ -322,6 +326,10 @@ validate_docs_only_dependencies() {
     "tool/validate_validation_docs.sh"
     "tool/check_agent_asset_drift.sh"
     "tool/check_agent_knowledge_base.sh"
+    "tool/check_docs_gardening.sh"
+    "tool/validate_task_trackers.sh"
+    "tool/run_harness_fixtures.sh"
+    "tool/agent_session_bootstrap.sh"
   )
 
   for script in "${docs_only_scripts[@]}"; do
@@ -428,6 +436,8 @@ is_docs_only_change_set() {
     case "$file" in
       *.md|*.mdx|*.txt|*.rst|*.adoc|\
       AGENTS.md|\
+      .markdownlintignore|\
+      .markdownlint-cli2ignore|\
       docs/*|\
       tasks/*.md|\
       tool/agent_host_templates/*|\
@@ -457,7 +467,10 @@ is_tooling_only_change_set() {
       tool/*.sh|\
       bin/*|\
       tool/agent_host_templates/*|\
+      tool/fixtures/harness/*|\
       AGENTS.md|\
+      .markdownlintignore|\
+      .markdownlint-cli2ignore|\
       docs/agents_quick_reference.md|\
       docs/validation_scripts.md|\
       docs/testing_overview.md|\
@@ -488,9 +501,12 @@ is_checklist_fast_compatible_change_set() {
       tool/*.sh|\
       bin/*|\
       tool/agent_host_templates/*|\
+      tool/fixtures/harness/*|\
       pyrightconfig.json|\
       demos/render_chat_api/pyrightconfig.json|\
       AGENTS.md|\
+      .markdownlintignore|\
+      .markdownlint-cli2ignore|\
       docs/*|\
       tasks/*.md|\
       README|README.*|\
@@ -677,6 +693,61 @@ normalize_doc_links() {
   echo ""
 }
 
+collect_changed_doc_files() {
+  local -a out=()
+  local file
+
+  if [ "${#changed_files[@]}" -gt 0 ]; then
+    for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+      case "$file" in
+        README.md|SECURITY.md|AGENTS.md|\
+        docs/*.md|docs/*/*.md|docs/*/*/*.md)
+          if [ -f "$file" ]; then
+            out+=("$file")
+          fi
+          ;;
+      esac
+    done
+  fi
+
+  if [ "${#out[@]}" -eq 0 ]; then
+    return 1
+  fi
+
+  printf '%s\n' "${out[@]}"
+}
+
+run_harness_docs_checks() {
+  local -a doc_files=()
+  local file
+
+  while IFS= read -r file; do
+    [ -n "$file" ] && doc_files+=("$file")
+  done < <(collect_changed_doc_files || true)
+
+  if [ "${#doc_files[@]}" -gt 0 ]; then
+    if ! bash "$PROJECT_ROOT/tool/check_docs_gardening.sh" --paths "${doc_files[@]}"; then
+      echo "❌ Doc gardening checks failed; fix broken doc references or validation doc drift."
+      return 1
+    fi
+  else
+    if ! bash "$PROJECT_ROOT/tool/check_docs_gardening.sh"; then
+      echo "❌ Doc gardening checks failed; fix broken doc references or validation doc drift."
+      return 1
+    fi
+  fi
+
+  if ! bash "$PROJECT_ROOT/tool/validate_task_trackers.sh"; then
+    echo "❌ Task tracker contract failed; update tasks/*/todo.md to match the canonical template."
+    return 1
+  fi
+
+  if ! bash "$PROJECT_ROOT/tool/run_harness_fixtures.sh"; then
+    echo "❌ Harness fixture tests failed; fix harness scripts or fixtures."
+    return 1
+  fi
+}
+
 if [ "$CHECKLIST_MODE" = "fast" ]; then
   if [ -n "${CI:-}" ]; then
     echo "❌ checklist-fast is local-only. Use ./bin/checklist on CI."
@@ -702,6 +773,9 @@ if [ "$CHECKLIST_MODE" = "fast" ]; then
   fi
   if ! bash "$PROJECT_ROOT/tool/check_agent_knowledge_base.sh"; then
     echo "❌ Agent knowledge base map is out of sync; update AGENTS/docs indexes or source-of-truth links."
+    exit 1
+  fi
+  if ! run_harness_docs_checks; then
     exit 1
   fi
   if should_run_agent_asset_drift_check; then
@@ -738,6 +812,9 @@ if is_docs_only_change_set; then
     echo "❌ Agent knowledge base map is out of sync; update AGENTS/docs indexes or source-of-truth links."
     exit 1
   fi
+  if ! run_harness_docs_checks; then
+    exit 1
+  fi
   if should_run_agent_asset_drift_check; then
     echo "🤖 Verifying managed AI agent asset drift for policy/template docs..."
     if ! bash "$PROJECT_ROOT/tool/check_agent_asset_drift.sh"; then
@@ -766,6 +843,9 @@ if is_tooling_only_change_set; then
   fi
   if ! bash "$PROJECT_ROOT/tool/check_agent_knowledge_base.sh"; then
     echo "❌ Agent knowledge base map is out of sync; update AGENTS/docs indexes or source-of-truth links."
+    exit 1
+  fi
+  if ! run_harness_docs_checks; then
     exit 1
   fi
   if should_run_agent_asset_drift_check; then
