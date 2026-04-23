@@ -1,8 +1,8 @@
 # Agent Knowledge Base
 
-This document is the source of truth for how AI agents should discover and use
-repo knowledge. The goal is progressive disclosure: start with a small stable
-map, then open the narrow source that answers the current task.
+This document is source of truth for how AI agents should discover and use
+repo knowledge. goal is progressive disclosure: start with small stable
+map, then open narrow source that answers current task.
 
 ## Core Beliefs
 
@@ -19,30 +19,51 @@ map, then open the narrow source that answers the current task.
 
 ## Progressive Disclosure
 
-Agents should not load the whole repository handbook up front.
+Agents should not load whole repository handbook up front.
 
-1. Read [`AGENTS.md`](../AGENTS.md) for the map.
+1. Read [`AGENTS.md`](../AGENTS.md) for map.
 2. Read this document for knowledge-base layout and harness rules.
-3. Read [`ai_code_review_protocol.md`](ai_code_review_protocol.md) for the
+3. Read [`ai_code_review_protocol.md`](ai_code_review_protocol.md) for
    review gate.
 4. Use [`agents_quick_reference.md`](agents_quick_reference.md) only for command
    lookup.
 5. Use [`README.md`](README.md) to find task-specific docs.
-6. Open only task-specific docs, code, tests, and plans needed for the current
+6. Open only task-specific docs, code, tests, and plans needed for current
    slice.
+
+## Adaptive Execution
+
+Scale process to task value. don't default to maximum depth, broad validation,
+or delegation.
+
+1. Classify task by complexity, risk, scope, and uncertainty.
+2. Calibrate effort: local mechanical changes stay light; cross-system,
+   ambiguous, or high-risk work gets deeper planning and review.
+3. For non-trivial work, consider two or three practical approaches, then choose
+   lowest-regret option by correctness, maintainability, reversibility,
+   blast radius, and failure tolerance.
+4. Debug from root cause: reproduce or reason clearly, isolate failure,
+   fix cause, and verify behavior. If cause remains uncertain, say so and
+   narrow next search space.
+5. Before reporting, predict likely failures: fragile assumptions, edge cases,
+   scale pressure, side effects, and future maintenance cost. Harden material
+   risks before output.
+6. Stop improving when solution is correct for task value, major risks
+   are addressed, proof matches scope, and further refinement would mostly add
+   cost.
 
 ## Agent Legibility
 
-Agents can only reason over what they can inspect during the run. Make product,
-runtime, and quality signals visible inside the repo or through repo scripts.
+Agents can only reason over what they can inspect during run. Make product,
+runtime, and quality signals visible inside repo or through repo scripts.
 
 - Prefer app-visible proof for user-facing changes: screenshots, widget tests,
   integration flows, route validators, or emulator/browser evidence.
-- Prefer repo-local observability and logs over chat-only explanation. If a bug
-  requires a log pattern to diagnose, document the command or add a helper.
+- Prefer repo-local observability and logs over chat-only explanation. If bug
+  requires log pattern to diagnose, document command or add helper.
 - Keep fixtures, schemas, API examples, generated clients, and test harnesses in
-  versioned paths so Codex and Cursor see the same truth.
-- For UI/runtime work, expose the narrowest runnable surface before asking an
+  versioned paths so Codex and Cursor see same truth.
+- For UI/runtime work, expose narrowest runnable surface before asking
   agent to judge behavior. Route tiles, demo controls, and focused smoke tests
   are harness features, not polish.
 - Favor dependencies and abstractions agents can inspect, test, and reason about.
@@ -51,23 +72,23 @@ runtime, and quality signals visible inside the repo or through repo scripts.
 
 ## Missing Capability Loop
 
-Do not respond to repeated failure with a larger prompt.
+don't respond to repeated failure with larger prompt.
 
-1. Identify the missing capability: context, tool, fixture, test, script,
+1. Identify missing capability: context, tool, fixture, test, script,
    ownership boundary, or acceptance criterion.
-2. Add it to the repo in the smallest durable place.
+2. Add it to repo in smallest durable place.
 3. Validate it directly.
-4. Update host templates only if Codex and Cursor need to discover the new
+4. Update host templates only if Codex and Cursor need to discover new
    capability during cold start.
-5. Remove old guidance once the mechanical guard makes it redundant.
+5. Remove old guidance once mechanical guard makes it redundant.
 
 Examples:
 
-- A recurring route mistake should become a route validation check or route doc,
-  not another paragraph in the map.
-- A repeated review comment should become an invariant, linter, test helper, or
+- recurring route mistake should become route validation check or route doc,
+  not another paragraph in map.
+- repeated review comment should become invariant, linter, test helper, or
   source-doc update.
-- A UI proof gap should become a runnable smoke path, screenshot expectation, or
+- UI proof gap should become runnable smoke path, screenshot expectation, or
   integration journey mapping.
 
 ## System Of Record Layout
@@ -90,7 +111,7 @@ Examples:
 
 ## Plans As Artifacts
 
-Small changes can use a lightweight tracker entry. Complex work should use a
+Small changes can use lightweight tracker entry. Complex work should use
 versioned plan or change note.
 
 - Active implementation state lives in [`tasks/codex/todo.md`](../tasks/codex/todo.md) or
@@ -98,7 +119,7 @@ versioned plan or change note.
 - Durable execution plans live under `docs/plans/` when they are still useful
   for future agents.
 - Completed or point-in-time rationale lives under `docs/changes/`.
-- Known technical debt belongs in the owning source-of-truth doc, an ADR, or a
+- Known technical debt belongs in owning source-of-truth doc, ADR, or
   tracked plan; avoid burying it in chat-only context.
 - Plans must include goal, scope, write set, edge cases, validation target, and
   decision log when decisions are likely to matter later.
@@ -128,42 +149,42 @@ implementation expression local.
 - Write guard-script error messages as remediation instructions for future
   agents.
 - Promote repeated review comments into tests, scripts, ADRs, or source docs.
-- Do not encode every stylistic preference. A change meets the bar when it is
+- don't encode every stylistic preference. change meets bar when it is
   correct, maintainable, validated, and legible to future agent runs.
 - Keep custom checks narrow and reversible. Delete or relax checks when they stop
   catching real risk.
 
 ## Codex And Cursor
 
-Both hosts use the same repository knowledge base.
+Both hosts use same repository knowledge base.
 
 - Codex should call repo shell entrypoints directly and keep task state in
   [`tasks/codex/todo.md`](../tasks/codex/todo.md).
-- Cursor should use thin skills/commands that point back to the same docs and
+- Cursor should use thin skills/commands that point back to same docs and
   keep task state in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md).
-- Shared behavior changes start in this document or the owning source doc, then
+- Shared behavior changes start in this document or owning source doc, then
   sync to host templates with `./tool/sync_agent_assets.sh --apply`.
-- Cross-host review is optional and explicit-request-only. It is not a substitute
-  for the reporting agent's own review, validation, and self-check.
-- Host-specific prompts should be short because the repo already carries the
-  context. Use prompts to name the slice, constraints, files to inspect,
+- Cross-host review is optional and explicit-request-only. It is not substitute
+  for reporting agent's own review, validation, and self-check.
+- Host-specific prompts should be short because repo already carries
+  context. Use prompts to name slice, constraints, files to inspect,
   validation, and report fields.
 
 ## Final Agent Contract
 
-For Codex and Cursor, the finished harness loop is:
+For Codex and Cursor, finished harness loop is:
 
-1. Start from the map and open only task-relevant sources.
-2. Record non-trivial scope, risks, write set, and validation target in the
+1. Start from map and open only task-relevant sources.
+2. Record non-trivial scope, risks, write set, and validation target in
    host tracker.
-3. Make the task legible before coding: current files, runnable surface,
+3. Make task legible before coding: current files, runnable surface,
    fixtures, logs, route proof, or acceptance criteria.
-4. Implement the smallest coherent slice inside existing seams.
+4. Implement smallest coherent slice inside existing seams.
 5. Validate with deterministic checks first, then risk-based review.
-6. If the agent hit missing context or repeated review feedback, add a durable
+6. If agent hit missing context or repeated review feedback, add durable
    repo capability before reporting done.
 7. Sync host assets when agent behavior changed.
-8. Report only after checking the final answer against request, changed files,
+8. Report only after checking final answer against request, changed files,
    proof, blockers, and residual risk.
 
 ## Host Parity
@@ -171,51 +192,52 @@ For Codex and Cursor, the finished harness loop is:
 Codex and Cursor should not grow separate operating doctrines.
 
 - Source docs own behavior. Host templates only summarize and route.
-- When changing agent behavior, update the owning source doc first.
-- If the behavior affects command choice, update
+- When changing agent behavior, update owning source doc first.
+- If behavior affects command choice, update
   [`agents_quick_reference.md`](agents_quick_reference.md).
-- If the behavior affects acceptance of AI-written work, update
+- If behavior affects acceptance of AI-written work, update
   [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
-- If the behavior affects host cold start, update both Codex and Cursor
+- If behavior affects host cold start, update both Codex and Cursor
   templates under `tool/agent_host_templates/`.
 - After host-template changes, run sync apply, dry-run, and drift checks in
   sequence.
-- Do not add a Cursor-only or Codex-only workaround unless the host capability
-  truly differs; document that difference in the template, not the source rule.
+- don't add Cursor-only or Codex-only workaround unless host capability
+  truly differs; document that difference in template, not source rule.
 
 ## Mechanical Enforcement
 
-The knowledge base is validated by repo tooling:
+knowledge base is validated by repo tooling:
 
 - `./tool/check_agent_knowledge_base.sh` keeps local [`AGENTS.md`](../AGENTS.md) short when it
-  is present and always checks required cross-links and source-of-truth indexes.
+  is present and always checks required cross-links, source-of-truth indexes,
+  and host-template pointers back to same map and source docs.
 - `./tool/validate_validation_docs.sh` keeps validation docs aligned with
   checklist scripts.
 - `./tool/normalize_doc_links.py` keeps local doc links clickable.
 - `./tool/check_agent_asset_drift.sh` checks managed Cursor/Codex assets against
   repo templates.
-- `./bin/checklist` runs the full gate; `./bin/checklist-fast` is local-only for
+- `./bin/checklist` runs full gate; `./bin/checklist-fast` is local-only for
   clean trees or narrow docs/tooling changes.
 - `.original.md` compression backups are temporary. Delete them after verifying
-  the active docs are present and correct.
+  active docs are present and correct.
 
-When adding a new durable agent rule, update the owning source doc first, then
-thin host templates, then validation if the rule should be mechanically checked.
+When adding new durable agent rule, update owning source doc first, then
+thin host templates, then validation if rule should be mechanically checked.
 
 ## Doc Gardening
 
-Agents should garden docs as part of touched work, not as a separate memory
+Agents should garden docs as part of touched work, not as separate memory
 dump.
 
-- If behavior changes, update the owning source-of-truth doc in the same change.
-- If a plan becomes obsolete, mark it historical or move durable decisions into
-  an ADR/source doc.
-- If a doc contradicts code, trust code plus tests first, then repair the doc.
-- If a rule no longer earns its keep, remove it from host templates and keep the
+- If behavior changes, update owning source-of-truth doc in same change.
+- If plan becomes obsolete, mark it historical or move durable decisions into
+  ADR/source doc.
+- If doc contradicts code, trust code plus tests first, then repair doc.
+- If rule no longer earns its keep, remove it from host templates and keep
   source doc smaller.
 - Keep cleanup continuous and small. Prefer targeted guardrails and tiny
   refactors over periodic large "AI cleanup" sweeps.
 - Track golden principles in source docs or checks, then let agents apply them
-  repeatedly without re-litigating the same review comments.
+  repeatedly without re-litigating same review comments.
 - For broad doc-gardening sweeps, run targeted markdown/link checks and escalate
   to `./bin/checklist` when validation or agent policy changes materially.

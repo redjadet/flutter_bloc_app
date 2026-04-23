@@ -29,6 +29,7 @@ lookup only; it doesn't replace [`AGENTS.md`](../AGENTS.md) once that file is av
 | Edge cases | Did I reason about empty, malformed, repeated, concurrent, offline, resumed, and interrupted paths? |
 | Dependencies | Does the repo already have a suitable utility, and is the new dependency worth its cost? |
 | Legibility | Can a future Codex/Cursor run inspect the relevant docs, tests, fixtures, logs, or UI proof without chat context? |
+| Confidence | Does my confidence come from proof, and did I state uncertainty when risk remains? |
 | Focused tests | Is there scope-matched proof, regression coverage where practical, async-state reasoning or coverage, and no deprecated Flutter test APIs? |
 | Judgment and ownership | Did I document the tradeoff and keep ownership of failures in the changed surface? |
 | Self-verification | Before reporting back, did I check my final answer against the request, changed files, validation results, blockers, and residual risk? |
@@ -46,8 +47,8 @@ Do in order:
    Cross-host diff review (explicit request): `./tool/request_codex_feedback.sh`.
    Cross-host plan review: `./tool/run_codex_plan_review.sh PATH/TO/plan.md`.
 
-If the same critique appears repeatedly, do not only remember it. Convert it
-into a repo-visible capability: source-doc update, validation check, test helper,
+If same critique appears repeatedly, don't only remember it. Convert it
+into repo-visible capability: source-doc update, validation check, test helper,
 fixture, route proof, or task template.
 
 ## Special Cases
@@ -70,17 +71,17 @@ Widget-test viewport setup:
 - Use `tester.view.physicalSize` and `tester.view.devicePixelRatio`.
 - Reset with `tester.view.resetPhysicalSize()` and
   `tester.view.resetDevicePixelRatio()`.
-- Do not use deprecated `tester.binding.window` or
+- don't use deprecated `tester.binding.window` or
   `TestWidgetsFlutterBinding.window` test-value APIs.
 
 Async list builders:
 
-- In `ListView.builder`, `ListView.separated`, and sliver builders, do not index
-  live Cubit/BLoC state lists directly when async refresh can shrink the list.
-- Snapshot the list at build start, derive `itemCount` from that snapshot, and
+- In `ListView.builder`, `ListView.separated`, and sliver builders, don't index
+  live Cubit/BLoC state lists directly when async refresh can shrink list.
+- Snapshot list at build start, derive `itemCount` from that snapshot, and
   guard stale builder indexes before indexing. This matters most for header-row
-  patterns such as `items.length + 1` with `items[index - 1]`.
-- Add widget regression coverage when fixing a runtime `RangeError` from a list
+  patterns like `items.length + 1` with `items[index - 1]`.
+- Add widget regression coverage when fixing runtime `RangeError` from list
   builder.
 
 ## Relationship To Validation
