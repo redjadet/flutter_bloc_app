@@ -1,9 +1,9 @@
 # Agent Quick Reference
 
-Commands + routing lookup for repo-aware AI hosts. Convenience only.
-Policy map lives in [`AGENTS.md`](../AGENTS.md). agent knowledge base
-lives in [`agent_knowledge_base.md`](agent_knowledge_base.md), and review
-gate lives in [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
+Commands + routing lookup. Convenience only.
+Policy map: [`AGENTS.md`](../AGENTS.md). Knowledge base:
+[`agent_knowledge_base.md`](agent_knowledge_base.md). Review gate:
+[`ai_code_review_protocol.md`](ai_code_review_protocol.md).
 If [`AGENTS.md`](../AGENTS.md) unavailable, combine this with
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 
@@ -24,6 +24,7 @@ Decision guide:
 | Large refactor with code-review-graph installed | `./tool/refresh_code_review_graph.sh` |
 | Cold start (print map + validation pointers) | `bash tool/agent_session_bootstrap.sh` |
 | New shared agent-facing markdown doc | `./tool/compress_agent_doc.sh PATH`; rerun with `--overwrite-backups` to replace backup |
+| Cursor shared-doc compression | `caveman-compress` skill or `./tool/compress_agent_doc.sh PATH` |
 | Agent knowledge-base/map drift | `./tool/check_agent_knowledge_base.sh` |
 | Tracker contract check | `bash tool/validate_task_trackers.sh` |
 | Repo-managed host-template drift check | `./tool/check_agent_asset_drift.sh` |
@@ -42,9 +43,9 @@ When widget tests set screen size or pixel ratio, use `WidgetTester.view`:
 
 ## Async List Builder Reminder
 
-When builder indexes Cubit/BLoC list, snapshot list at build start and
-guard stale indexes before indexing. Header-row lists (`items.length + 1` with
-`items[index - 1]`) are especially prone to `RangeError` during async refresh.
+When builder indexes Cubit/BLoC list: snapshot list at build start, guard stale
+indexes before indexing. Header-row lists (`items.length + 1` with
+`items[index - 1]`) prone to `RangeError` during async refresh.
 
 ## Host Trackers
 
@@ -53,21 +54,13 @@ guard stale indexes before indexing. Header-row lists (`items.length + 1` with
 
 ## Harness Reminders
 
-- Classify complexity, risk, scope, and uncertainty before choosing planning,
-  validation, or delegation depth.
-- If agent struggles repeatedly, add missing repo capability: doc, test,
-  fixture, script, route proof, log helper, or validation check.
-- For non-trivial work, compare few practical approaches and choose
-  lowest-regret option; stop refining when added effort no longer buys down real
-  risk.
-- Make runtime behavior legible. For UI/app work, prefer app-visible proof over
-  logs-only claims.
-- Enforce invariants mechanically where possible; don't paste long rules into
-  host prompts.
-- Keep Codex and Cursor host assets thin and synced from
-  `tool/agent_host_templates/`.
-- Agent behavior changes start in source docs, then sync both host templates;
-  don't fork Codex/Cursor doctrine unless host capability truly differs.
+- Classify complexity/risk/scope/uncertainty before choosing plan/validation/delegation depth.
+- If stuck repeatedly, add missing repo capability: doc/test/fixture/script/route proof/log helper/validation check.
+- Non-trivial: compare few approaches, pick lowest-regret; stop when extra work no longer buys real risk reduction.
+- Make runtime behavior legible. UI/app work: prefer app-visible proof over logs-only claims.
+- Enforce invariants mechanically where possible; don’t paste long rules into host prompts.
+- Keep host assets thin + synced from `tool/agent_host_templates/`.
+- Behavior changes start in source docs, then sync both host templates; don’t fork unless host capability truly differs.
 
 ## Host Adapters
 
@@ -88,6 +81,8 @@ Cold-start fit:
   protocol, quick reference, README
 - Cursor: global rule + skills should point back to same canon instead of
   duplicating policy
+- Cursor compression should use `caveman-compress` or
+  `./tool/compress_agent_doc.sh`, not Anthropic auth.
 
 ## Read By Task
 
