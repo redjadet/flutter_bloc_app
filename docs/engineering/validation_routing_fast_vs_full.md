@@ -2,14 +2,13 @@
 
 Entrypoint list: [`docs/agents_quick_reference.md`](../agents_quick_reference.md) (**Commands**).
 
-This guide defines when to run fast, scoped validation versus full validation.
-It supports default agent loop: **Plan, Execute, Verify, Report**. Pick and
-run validation during **Verify**, then report results only after selected
-proof has run or blocker is confirmed.
+Defines when to run fast/scoped validation vs full validation.
+Supports loop: **Plan, Execute, Verify, Report**. Pick lane in **Verify**.
+Report only after proof ran or blocker confirmed.
 
 ## Fast Path
 
-Use fast path for narrow, low-risk edits where routing/auth/gates are unchanged.
+Use for narrow low-risk edits where routing/auth/gates unchanged.
 
 - Local formatting/lints/tests for touched files
 - Optional targeted regression tests
@@ -32,7 +31,7 @@ Command:
 
 ## Full Path
 
-Use full path for broad, medium/high-risk, or pre-ship changes.
+Use for broad, medium/high-risk, or pre-ship changes.
 
 Typical triggers:
 
@@ -66,16 +65,15 @@ Typical path:
   request, changed docs, blockers, and residual risk before reporting back
 - Markdown lint or link/doc checks on touched paths
 - `bash tool/check_docs_gardening.sh` for cheap deterministic doc-rot detection
-- `bash tool/validate_task_trackers.sh` to ensure `tasks/*/todo.md` follows the canonical tracker contract
+- `bash tool/validate_task_trackers.sh` to ensure `tasks/*/todo.md` follows canonical tracker contract
 - `./tool/check_agent_asset_drift.sh` when `tool/agent_host_templates/` changed
 - `./tool/sync_agent_assets.sh --dry-run` when repo-managed host assets changed
 
-Escalate to `./tool/delivery_checklist.sh` / `./bin/checklist` when doc change materially changes validation
-guidance, delivery policy, or repo-wide operating rules (including [`AGENTS.md`](../../AGENTS.md)).
+Escalate to `./tool/delivery_checklist.sh` / `./bin/checklist` when doc change materially changes validation guidance, delivery policy, or repo-wide operating rules (incl [`AGENTS.md`](../../AGENTS.md)).
 
 ## Routing Matrix (path triggers)
 
-This section is the routing source of truth. If a host prompt or helper script disagrees, this document wins.
+Routing source of truth. If host prompt/helper script disagrees, this doc wins.
 
 | Trigger (changed files) | Required lane(s) (minimum) |
 | --- | --- |

@@ -15,6 +15,7 @@ managed_cursor_files=(
   "cursor/skills/agents-delivery-workflow/SKILL.md|$HOME/.cursor/skills/agents-delivery-workflow/SKILL.md"
   "cursor/skills/agents-meta-behavior/SKILL.md|$HOME/.cursor/skills/agents-meta-behavior/SKILL.md"
   "cursor/skills/agents-cursor-integration/SKILL.md|$HOME/.cursor/skills/agents-cursor-integration/SKILL.md"
+  "cursor/skills/caveman-compress/SKILL.md|$HOME/.cursor/skills/caveman-compress/SKILL.md"
   "cursor/commands/commit-push-pr.md|$HOME/.cursor/commands/commit-push-pr.md"
   "cursor/commands/local-agents-quick-reference.md|$HOME/.cursor/commands/local-agents-quick-reference.md"
   "cursor/commands/upgrade-validate-all.md|$HOME/.cursor/commands/upgrade-validate-all.md"
