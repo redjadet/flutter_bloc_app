@@ -1,21 +1,20 @@
 # Validation Scripts Documentation
 
-This document describes all validation scripts in the `tool/` directory that
-can be run directly or as part of `./bin/checklist` when you want the full
-repo sweep. For a local-only clean-tree or narrow docs/tooling sanity pass,
+This document describes all validation scripts in `tool/` directory that
+can be run directly or as part of `./bin/checklist` when you want full
+repo sweep. For local-only clean-tree or narrow docs/tooling sanity pass,
 use `./bin/checklist-fast`.
 
-For the complete docs index, see [docs index](README.md).
+For complete docs index, see [docs index](README.md).
 
 ## Overview
 
-The validation scripts provide automated guards for architecture, UI/UX, async
-safety, performance, and memory hygiene. Prefer targeted scripts for local
-changes; use `./bin/checklist` for broad or pre-ship validation, and
-`./bin/checklist-fast` only for the narrower local-only sanity path documented
-below.
+Validation scripts guard architecture/UI/UX/async/perf/memory hygiene.
+Prefer targeted scripts for local changes; use `./bin/checklist` for broad or
+pre-ship validation. Use `./bin/checklist-fast` only for narrow local-only
+sanity path documented below.
 
-The checklist includes automated guards for:
+Checklist includes guards:
 
 - **Architecture compliance** - Ensures clean architecture boundaries and dependency injection patterns
 - **UI/UX best practices** - Enforces platform-adaptive widgets, proper image caching, and responsive design
@@ -24,15 +23,15 @@ The checklist includes automated guards for:
 - **Dynamic list safety** - Prevents builder callbacks from indexing live Cubit/BLoC state lists after async shrink/rebuild races
 - **Memory hygiene** - Prevents leaks and ensures proper cleanup of resources
 
-Full documentation and suppression guidance is provided in the sections below.
+Full documentation and suppression guidance is provided in sections below.
 
 ## CI (GitHub Actions)
 
 On pushes and pull requests, [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs **`./bin/checklist`** on `ubuntu-latest` (same delivery pipeline as local pre-merge validation). Golden widget tests are skipped in GitHub Actions CI.
 
-**Integration tests are not run on push or PR.** They run only when you manually start the workflow (**Actions → CI → Run workflow**) and set **`run_integration`** to run (it defaults to off). The macOS job boots a preferred iPhone simulator when possible and falls back; if no suitable simulator is available, boot fails, or boot times out, the integration step is skipped instead of failing the job.
+**Integration tests not run on push/PR.** Run only via manual workflow (**Actions → CI → Run workflow**) with **`run_integration`** on (default off). macOS job tries preferred iPhone simulator; if none/boot fail/boot timeout, integration step skips (no job fail).
 
-For broader local or pre-ship validation, `./bin/integration_tests` still runs the aggregated suite in `integration_test/all_flows_test.dart`.
+For broader local or pre-ship validation, `./bin/integration_tests` still runs aggregated suite in `integration_test/all_flows_test.dart`.
 
 ## Existing Validation Scripts
 
@@ -45,16 +44,16 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs t
 - **`check_auth_refresh_single_flight.sh`**: Detects auth retry anti-patterns that can cause 401 refresh races (e.g. `refreshToken()` followed by retry `forceRefresh: true`) and ensures serialized refresh gate exists in `AuthTokenManager`
 - **`check_solid_presentation_data_imports.sh`**: Prevents presentation importing data-layer types (DIP)
 - **`check_solid_data_presentation_imports.sh`**: Prevents data layer importing presentation (layering)
-- **`check_feature_modularity_leaks.sh`**: Fails on known cross-feature `package:` imports: `library_demo` must not import `scapes`; `settings` must not import `graphql_demo`, `profile`, or `remote_config`; **`remote_config` must not import `settings`** (use `shared` widgets such as `SettingsSection` instead). Extend the script when new boundary rules land in [modularity.md](modularity.md). Included in `./bin/checklist`.
-- **`check_agent_knowledge_base.sh`**: Keeps the AI-agent knowledge base
+- **`check_feature_modularity_leaks.sh`**: Fails on known cross-feature `package:` imports: `library_demo` must not import `scapes`; `settings` must not import `graphql_demo`, `profile`, or `remote_config`; **`remote_config` must not import `settings`** (use `shared` widgets like `SettingsSection` instead). Extend script when new boundary rules land in [modularity.md](modularity.md). Included in `./bin/checklist`.
+- **`check_agent_knowledge_base.sh`**: Keeps AI-agent knowledge base
   harness indexed. When local [`AGENTS.md`](../AGENTS.md) is present, it fails
-  if that map grows past the configured line limit or loses required pointers
-  to the progressive-disclosure docs and plan/tracker sources. When
+  if that map grows past configured line limit or loses required pointers
+  to progressive-disclosure docs and plan/tracker sources. When
   repo-managed host templates are present, it also fails if key Codex/Cursor
-  entrypoints stop pointing back to the repo map and source docs.
+  entrypoints stop pointing back to repo map and source docs.
 - **`check_docs_gardening.sh`**: Cheap deterministic doc-rot detection for agent-facing markdown guidance. Flags backticked `*.md` references that don’t resolve to real files (best-effort) and ensures [`validation_scripts.md`](validation_scripts.md) stays in sync with `tool/delivery_checklist.sh` via `tool/validate_validation_docs.sh`. Runs in `./bin/checklist-fast` and other docs/tooling-only lanes.
-- **`validate_task_trackers.sh`**: Validates that `tasks/*/todo.md` trackers follow the canonical tracker contract (required headings + non-empty write-set and validation command). Runs in `./bin/checklist-fast` and other docs/tooling-only lanes.
-- **`run_harness_fixtures.sh`**: Fixture-based smoke tests for harness scripts (help output + a negative-case doc-gardening fixture). Runs in `./bin/checklist-fast` and other docs/tooling-only lanes.
+- **`validate_task_trackers.sh`**: Validates that `tasks/*/todo.md` trackers follow canonical tracker contract (required headings + non-empty write-set and validation command). Runs in `./bin/checklist-fast` and other docs/tooling-only lanes.
+- **`run_harness_fixtures.sh`**: Fixture-based smoke tests for harness scripts (help output + negative-case doc-gardening fixture). Runs in `./bin/checklist-fast` and other docs/tooling-only lanes.
 
 ### UI/UX Best Practices
 
@@ -71,14 +70,14 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs t
 - **`check_perf_missing_repaint_boundary.sh`**: Warns when heavy widgets lack `RepaintBoundary`
 - **`check_perf_unnecessary_rebuilds.sh`**: Heuristic check for `setState()` calls that might cause unnecessary rebuilds/blinking (warns but doesn't fail)
 - **`check_concurrent_modification.sh`**: Detects potential concurrent modification errors when iterating over collections from getters/properties
-- **`check_live_state_list_indexing.sh`**: Prevents presentation builders from indexing live `state.items[index]`/`state.items.elementAt(index)` directly. Snapshot the state list into a local immutable list, use that snapshot for `itemCount`, and guard stale indexes before indexing.
+- **`check_live_state_list_indexing.sh`**: Prevents presentation builders from indexing live `state.items[index]`/`state.items.elementAt(index)` directly. Snapshot state list into local immutable list, use that snapshot for `itemCount`, and guard stale indexes before indexing.
 
 ### Compute/Isolate Usage
 
 - **`check_raw_json_decode.sh`**: Prevents raw `jsonDecode()`/`jsonEncode()` usage - should use `decodeJsonMap()`/`decodeJsonList()`/`encodeJsonIsolate()` for large payloads (>8KB)
 - **`check_compute_domain_layer.sh`**: Prevents `compute()` usage in domain layer (domain should be Flutter-agnostic)
 - **`check_compute_lifecycle.sh`**: Heuristic check for `compute()` usage in lifecycle methods (`build()`, `performLayout()`) - warns but doesn't fail
-- **`check_no_isolate_run_in_presentation.sh`**: Prevents `Isolate.run` under `lib/**/presentation/**`. Closures from `State`/widgets often capture non-sendable Flutter objects and crash with *illegal argument in isolate message*; use `compute(topLevelOrStaticCallback, message)` from `package:flutter/foundation.dart` instead (see `lib/shared/utils/isolate_json.dart`). Suppress with `check-ignore` on the same or previous line only for rare, reviewed cases.
+- **`check_no_isolate_run_in_presentation.sh`**: Prevents `Isolate.run` under `lib/**/presentation/**`. Closures from `State`/widgets often capture non-sendable Flutter objects and crash with *illegal argument in isolate message*; use `compute(topLevelOrStaticCallback, message)` from `package:flutter/foundation.dart` instead (see `lib/shared/utils/isolate_json.dart`). Suppress with `check-ignore` on same or previous line only for rare, reviewed cases.
 
 ### Timing & Services
 
@@ -89,13 +88,13 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs t
 
 - **`check_side_effects_build.sh`**: Heuristic check for side effects in `build()` method (warns but doesn't fail)
 - **`check_dialog_controller_dispose.sh`**: Heuristic check for `TextEditingController` with `showDialog`/`showAdaptiveDialog` and dispose in `finally` (can cause "used after being disposed")
-- **`check_dialog_text_controller_lifecycle.sh`**: Flags `final`/`var` locals assigned `TextEditingController(` inside `async` blocks when the same file uses dialog APIs (prefer Stateful dialog + `initState`/`dispose`)
-- **`check_memory_pressure_centralized.sh`**: Ensures `didHaveMemoryPressure()` handling stays centralized in `lib/app/app_scope.dart` so automatic memory trimming is coordinated through the app shell
-- **`check_pyright_python.sh`**: Runs **Pyright** via `npx pyright` on `demos/render_chat_api` and repo `tool/` Python. Bootstraps `demos/render_chat_api/.venv` from `requirements.txt` when missing (so CI and fresh clones stay reproducible). Fails if `pyrightconfig.json` nests `venvPath` / `venv` under `executionEnvironments` (invalid; use top-level keys). Keep repo-root `exclude` including `**/.venv` so site-packages are not type-checked. Standalone runs always execute; inside `./bin/checklist`, the script auto-skips on local non-Python change sets, but still runs in CI or when Python-related files changed. See [`demos/render_chat_api/README.md`](../demos/render_chat_api/README.md) for editor setup.
+- **`check_dialog_text_controller_lifecycle.sh`**: Flags `final`/`var` locals assigned `TextEditingController(` inside `async` blocks when same file uses dialog APIs (prefer Stateful dialog + `initState`/`dispose`)
+- **`check_memory_pressure_centralized.sh`**: Ensures `didHaveMemoryPressure()` handling stays centralized in `lib/app/app_scope.dart` so automatic memory trimming is coordinated through app shell
+- **`check_pyright_python.sh`**: Runs **Pyright** via `npx pyright` on `demos/render_chat_api` and repo `tool/` Python. Bootstraps `demos/render_chat_api/.venv` from `requirements.txt` when missing (so CI and fresh clones stay reproducible). Fails if `pyrightconfig.json` nests `venvPath` / `venv` under `executionEnvironments` (invalid; use top-level keys). Keep repo-root `exclude` including `**/.venv` so site-packages are not type-checked. Standalone runs always execute; inside `./bin/checklist`, script auto-skips on local non-Python change sets, but still runs in CI or when Python-related files changed. See [`demos/render_chat_api/README.md`](../demos/render_chat_api/README.md) for editor setup.
 - **`check_inherited_widget_in_create.sh`**: Prevents `context.l10n`/`Theme.of(context)` inside BlocProvider/Provider `create` (see Context & Async Safety below)
 - **`check_inherited_widget_in_initstate.sh`**: Prevents InheritedWidget reads (e.g. `context.l10n`, `Theme.of(context)`) in `initState()`; read in `build()` or `didChangeDependencies()` instead.
 - **`check_lifecycle_error_handling.sh`**: Snackbar via ErrorHandling, `stream.listen` onError, `context.mounted` after show\*Dialog (see Context & Async Safety below)
-- **`check_offline_first_remote_merge.sh`**: Regression tests ensuring offline-first repos do not overwrite newer unsynced local state with older remote (see Offline-first remote merge below). Standalone runs always execute; inside `./bin/checklist`, the script auto-skips on local change sets that do not touch offline-first surfaces, but still runs in CI or when relevant files changed.
+- **`check_offline_first_remote_merge.sh`**: Regression tests ensuring offline-first repos don't overwrite newer unsynced local state with older remote (see Offline-first remote merge below). Standalone runs always execute; inside `./bin/checklist`, script auto-skips on local change sets that don't touch offline-first surfaces, but still runs in CI or when relevant files changed.
 
 ## New Validation Scripts (Context & Async Safety)
 
@@ -129,7 +128,7 @@ if (!context.mounted) return; // ✅ Check mounted first
 Navigator.of(context).pop();
 ```
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
@@ -143,7 +142,7 @@ Navigator.of(context).pop();
 
 **Why it matters**:
 
-- Calling `setState()` after a widget is disposed throws "setState() called after dispose()" errors
+- Calling `setState()` after widget is disposed throws "setState() called after dispose()" errors
 - Common source of crashes in async UI flows
 
 **Example violation**:
@@ -161,7 +160,7 @@ if (!mounted) return; // ✅ Check mounted first
 setState(() => _value = 1);
 ```
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
@@ -171,8 +170,8 @@ setState(() => _value = 1);
 
 **Why it matters**:
 
-- Flutter expects the `setState` callback to be synchronous (return `void`).
-- Async callbacks return a `Future` and trigger runtime warnings / Crashlytics noise, and are easy to miss until manual device testing.
+- Flutter expects `setState` callback to be synchronous (return `void`).
+- Async callbacks return `Future` and trigger runtime warnings / Crashlytics noise, and are easy to miss until manual device testing.
 
 **Example violation**:
 
@@ -192,7 +191,7 @@ setState(() {
 });
 ```
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
@@ -202,12 +201,12 @@ setState(() {
 
 **What it checks**:
 
-- In any `create: (...)` callback, the script flags lines that contain `context.l10n`, `Theme.of(context)`, `Localizations.of(context)`, or `AppLocalizations.of(context)` within the callback body (same line or next 20 lines, stopping when callback body ends heuristically).
+- In any `create: (...)` callback, script flags lines that contain `context.l10n`, `Theme.of(context)`, `Localizations.of(context)`, or `AppLocalizations.of(context)` within callback body (same line or next 20 lines, stopping when callback body ends heuristically).
 
 **Why it matters**:
 
-- Using InheritedWidget reads inside `create` or `initState` throws: "Tried to listen to an InheritedWidget in a life-cycle that will never be called again."
-- The `create` callback runs once; registering as a listener there is invalid. Read l10n/theme in `build()` and pass the value into the created object.
+- Using InheritedWidget reads inside `create` or `initState` throws: "Tried to listen to InheritedWidget in life-cycle that will never be called again."
+- `create` callback runs once; registering as listener there is invalid. Read l10n/theme in `build()` and pass value into created object.
 
 **Example violation**:
 
@@ -228,15 +227,15 @@ return BlocProvider(
 );
 ```
 
-**Suppression**: Add `// check-ignore: reason` on the violating line.
+**Suppression**: Add `// check-ignore: reason` on violating line.
 
 **Regression tests**: `test/shared/inherited_widget_lifecycle_regression_test.dart` (also run via `tool/check_regression_guards.sh`).
 
 ### Staff demo Firestore seed vs parser contract
 
 - **Canonical payloads (Dart)**: `test/features/staff_app_demo/data/staff_demo_seed_document_fixtures.dart` must stay aligned with `functions/tool/seed_staff_demo.js` field names and literals.
-- **Contract test**: `test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart` asserts those payloads parse through the shared mappers under `lib/features/staff_app_demo/data/staff_demo_*_firestore_map.dart`.
-- **When to update**: Any change to seed payloads or mapper logic must update fixtures + seed + mappers in the same PR; CI catches drift via `tool/check_regression_guards.sh` (included in `./bin/checklist` when focused regression guards run).
+- **Contract test**: `test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart` asserts those payloads parse through shared mappers under `lib/features/staff_app_demo/data/staff_demo_*_firestore_map.dart`.
+- **When to update**: Any change to seed payloads or mapper logic must update fixtures + seed + mappers in same PR; CI catches drift via `tool/check_regression_guards.sh` (included in `./bin/checklist` when focused regression guards run).
 
 ---
 
@@ -269,7 +268,7 @@ Text('Hello', style: TextStyle(color: Colors.black)) // ❌ Hard-coded color
 Text('Hello', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)) // ✅ Theme-aware
 ```
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
@@ -305,7 +304,7 @@ Text('Search...') // ❌ Hard-coded string
 Text(context.l10n.searchHint) // ✅ Localized
 ```
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
@@ -344,38 +343,38 @@ stream.listen((data) {
 });
 ```
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
 #### `check_unguarded_null_assertion.sh`
 
-**Purpose**: Flags use of the null assertion operator `!` that does not have a same-line null check, to prevent runtime crashes from unguarded assertions.
+**Purpose**: Flags use of null assertion operator `!` that doesn't have same-line null check, to prevent runtime crashes from unguarded assertions.
 
 **What it checks**:
 
-- Lines in `lib/` (excluding generated and test) that contain `!` (null assertion) and do **not** contain a same-line guard: `!= null`, `== null`, or `??=`
-- Detects assertion use before member access and calls (for example `value!.field` and `callback!(...)`)
+- Lines in `lib/` (excluding generated and test) that contain `!` (null assertion) and do **not** contain same-line guard: `!= null`, `== null`, or `??=`
+- Detects assertion use before member access and calls (like `value!.field` and `callback!(...)`)
 - Excludes boolean negation (`if (!`, `&& !`, etc.), `is!` (type check), `!=` (not equals), comments, and l10n/GraphQL string patterns
 
 **Why it matters**:
 
-- Unguarded `!` throws at runtime if the value is null (e.g. after async, or from nullable API returns)
-- Follow the repository null-safety rules for allowed `!` usage and high-risk spots
+- Unguarded `!` throws at runtime if value is null (e.g. after async, or from nullable API returns)
+- Follow repository null-safety rules for allowed `!` usage and high-risk spots
 
 **Correct patterns**:
 
 - Preferred optional-to-non-null pattern: `if (x case final value?) { value.method(); }`
 - Preferred switch null pattern: `final label = switch (x) { final value? => value.toString(), _ => '-' };`
 - Legacy same-line guard (allowed but less preferred): `if (x != null) ... x!.method()`
-- Or add `// check-ignore: reason` when the guard is on the previous line or otherwise verified (e.g. `putIfAbsent` then map lookup)
+- Or add `// check-ignore: reason` when guard is on previous line or otherwise verified (e.g. `putIfAbsent` then map lookup)
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above when the value is provably non-null (e.g. guard on previous line).
+**Suppression**: Add `// check-ignore: reason` on same line or line above when value is provably non-null (e.g. guard on previous line).
 
 **Why this style is preferred**:
 
-- `if (x case final value?)` and `switch` null patterns produce a non-null local value at compile time without `!`
-- This removes an entire class of runtime null-assertion crashes in async and callback-heavy code
+- `if (x case final value?)` and `switch` null patterns produce non-null local value at compile time without `!`
+- This removes entire class of runtime null-assertion crashes in async and callback-heavy code
 - Pattern matching also keeps branches explicit and easier to review than repeated nullable checks plus force unwrapping
 
 ---
@@ -391,12 +390,12 @@ stream.listen((data) {
 
 **Why it matters**:
 
-- Unconstrained `Text` in a horizontal `Row` causes overflow on small screens or large text scale
-- Use `IconLabelRow` (or wrap the label in `Flexible`/`Expanded` with `overflow: TextOverflow.ellipsis`) for icon+label rows
+- Unconstrained `Text` in horizontal `Row` causes overflow on small screens or large text scale
+- Use `IconLabelRow` (or wrap label in `Flexible`/`Expanded` with `overflow: TextOverflow.ellipsis`) for icon+label rows
 
 **Regression tests**: `test/shared/widgets/row_overflow_regression_test.dart` (also run via `tool/check_regression_guards.sh`).
 
-**Suppression**: Add `// check-ignore: reason` on the violation line or line above when the Row is intentionally safe (e.g. label is always short and constrained elsewhere).
+**Suppression**: Add `// check-ignore: reason` on violation line or line above when Row is intentionally safe (e.g. label is always short and constrained elsewhere).
 
 ---
 
@@ -407,14 +406,14 @@ stream.listen((data) {
 **What it checks**:
 
 1. **Snackbar / ScaffoldMessenger**: Direct use of `.hideCurrentSnackBar()` or `.clearSnackBars()` instead of `ErrorHandling.hideCurrentSnackBar(context)` / `ErrorHandling.clearSnackBars(context)`. (Excludes `lib/shared/utils/error_handling.dart`, which implements these.)
-2. **stream.listen() without onError**: Any `.listen(` invocation that does not include `onError:` in the same call block (heuristic: next 25 lines). Ensures stream subscriptions handle errors and avoid unhandled zone errors. (Excludes doc-only examples in `cubit_subscription_mixin.dart` and `subscription_manager.dart`.)
-3. **After await show\*Dialog**: Use of `cubit.`, `context.cubit`, or `onClose()` after `await show*Dialog` / `await showAdaptiveDialog` without a prior `context.mounted` check in the same block.
+2. **stream.listen() without onError**: Any `.listen(` invocation that doesn't include `onError:` in same call block (heuristic: next 25 lines). Ensures stream subscriptions handle errors and avoid unhandled zone errors. (Excludes doc-only examples in `cubit_subscription_mixin.dart` and `subscription_manager.dart`.)
+3. **After await show\*Dialog**: Use of `cubit.`, `context.cubit`, or `onClose()` after `await show*Dialog` / `await showAdaptiveDialog` without prior `context.mounted` check in same block.
 
 **Why it matters**:
 
-- Direct `messenger.hideCurrentSnackBar()` can throw `StateError` when the snackbar was already dismissed; `ErrorHandling` catches this.
+- Direct `messenger.hideCurrentSnackBar()` can throw `StateError` when snackbar was already dismissed; `ErrorHandling` catches this.
 - `stream.listen()` without `onError` leaves errors unhandled and can break reactivity or crash.
-- Using context or cubit after an async dialog without `context.mounted` can trigger "setState() after dispose" or use of a disposed context.
+- Using context or cubit after async dialog without `context.mounted` can trigger "setState() after dispose" or use of disposed context.
 
 **Correct patterns**:
 
@@ -422,27 +421,27 @@ stream.listen((data) {
 - Always pass `onError: (Object error, StackTrace stackTrace) { ... }` (and log with `AppLogger.error`) in `stream.listen()`.
 - After `await show*Dialog`, add `if (!context.mounted) return;` before using `context`, `cubit`, or `onClose()`.
 
-**Suppression**: Add `// check-ignore: reason` on the violation line or line above.
+**Suppression**: Add `// check-ignore: reason` on violation line or line above.
 
 ---
 
 #### `check_offline_first_remote_merge.sh`
 
-**Purpose**: Regression guard to catch bugs where offline-first repositories overwrite newer unsynced local state with an older remote snapshot (e.g. from a remote watch stream). That can cause UI flicker (e.g. counter up then down then up).
+**Purpose**: Regression guard to catch bugs where offline-first repositories overwrite newer unsynced local state with older remote snapshot (e.g. from remote watch stream). That can cause UI flicker (e.g. counter up then down then up).
 
 **What it checks**:
 
-- Runs focused tests that assert: when local has unsynced changes, applying a remote snapshot with an older timestamp must not overwrite local. Tests live in `test/features/counter/data/offline_first_counter_repository_test.dart` (e.g. `remote watch does not overwrite newer unsynced local count`).
+- Runs focused tests that assert: when local has unsynced changes, applying remote snapshot with older timestamp must not overwrite local. Tests live in `test/features/counter/data/offline_first_counter_repository_test.dart` (e.g. `remote watch does not overwrite newer unsynced local count`).
 
 **Why it matters**:
 
-- Offline-first repos merge remote watch into local state. If they apply remote whenever `remote.count != local.count` (or similar) without checking `synchronized` and `lastChanged`, a stale remote event can overwrite newer user changes.
+- Offline-first repos merge remote watch into local state. If they apply remote whenever `remote.count != local.count` (or similar) without checking `synchronized` and `lastChanged`, stale remote event can overwrite newer user changes.
 
 **Correct pattern**:
 
-- Before applying remote over local, use a `_shouldApplyRemote`-style check: when local is not synchronized, apply remote only if remote is strictly newer (e.g. `remote.lastChanged.isAfter(local.lastChanged)`). See `OfflineFirstCounterRepository._shouldApplyRemote` and AGENTS.md §5 Offline-first repositories.
+- Before applying remote over local, use `_shouldApplyRemote`-style check: when local is not synchronized, apply remote only if remote is strictly newer (e.g. `remote.lastChanged.isAfter(local.lastChanged)`). See `OfflineFirstCounterRepository._shouldApplyRemote` and AGENTS.md §5 Offline-first repositories.
 
-**Adding tests**: When adding a new offline-first repository that merges remote watch into local, add a regression test that emits an older remote snapshot and asserts local is unchanged; then add that test file to the `tests` array in `tool/check_offline_first_remote_merge.sh`.
+**Adding tests**: When adding new offline-first repository that merges remote watch into local, add regression test that emits older remote snapshot and asserts local is unchanged; then add that test file to `tests` array in `tool/check_offline_first_remote_merge.sh`.
 
 ---
 
@@ -472,9 +471,9 @@ class MyWidget extends StatelessWidget {
 }
 ```
 
-**Note**: This is a **heuristic check** (warns but doesn't fail the checklist). Review manually for optimization opportunities.
+**Note**: This is **heuristic check** (warns but doesn't fail checklist). Review manually for optimization opportunities.
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
@@ -503,7 +502,7 @@ ListView(shrinkWrap: true, children: items) // ❌ Potential perf hit
 ListView.builder(itemCount: items.length, itemBuilder: ...) // ✅
 ```
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
@@ -532,7 +531,7 @@ ListView(children: items) // ❌ Eager build
 ListView.builder(itemCount: items.length, itemBuilder: ...) // ✅
 ```
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
@@ -542,7 +541,7 @@ ListView.builder(itemCount: items.length, itemBuilder: ...) // ✅
 
 **What it checks**:
 
-- Uses of `CustomPaint`, `ShaderMask`, `BackdropFilter`, `ImageFiltered`, `ClipPath` without `RepaintBoundary` in the same file
+- Uses of `CustomPaint`, `ShaderMask`, `BackdropFilter`, `ImageFiltered`, `ClipPath` without `RepaintBoundary` in same file
 
 **Why it matters**:
 
@@ -561,7 +560,7 @@ CustomPaint(painter: painter) // ❌ No RepaintBoundary in file
 RepaintBoundary(child: CustomPaint(painter: painter)) // ✅
 ```
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
@@ -605,9 +604,9 @@ Future<void> _applyStateUpdate(final MapSampleState state) async {
 }
 ```
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
-**Note**: This is a heuristic check - it warns but doesn't fail. Review manually to confirm.
+**Note**: This is heuristic check - it warns but doesn't fail. Review manually to confirm.
 
 ---
 
@@ -622,9 +621,9 @@ Future<void> _applyStateUpdate(final MapSampleState state) async {
 
 **Why it matters**:
 
-- Iterating over collections from getters/properties can throw `ConcurrentModificationError` if the underlying collection is modified during iteration
+- Iterating over collections from getters/properties can throw `ConcurrentModificationError` if underlying collection is modified during iteration
 - Collections should be snapshot with `List.from()`, `.toList()`, or similar before iteration
-- Common in registry/collection patterns where multiple threads or async operations might modify the collection
+- Common in registry/collection patterns where multiple threads or async operations might modify collection
 
 **Example violation**:
 
@@ -646,7 +645,7 @@ for (final SyncableRepository repo in syncables) {
 }
 ```
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
@@ -658,13 +657,13 @@ for (final SyncableRepository repo in syncables) {
 
 **What it checks**:
 
-- `StreamController` usage without a `.close()` call in the same file
+- `StreamController` usage without `.close()` call in same file
 
 **Why it matters**:
 
 - Unclosed controllers can leak memory and subscriptions
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
@@ -680,48 +679,48 @@ for (final SyncableRepository repo in syncables) {
 
 - Controllers hold resources and need cleanup to avoid leaks
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
 #### `check_dialog_controller_dispose.sh`
 
-**Purpose**: Heuristic check for `TextEditingController` used with `showDialog`/`showAdaptiveDialog` and disposed in a `finally` block or immediately after `await`. This pattern can cause "TextEditingController was used after being disposed" when the dialog route is still tearing down.
+**Purpose**: Heuristic check for `TextEditingController` used with `showDialog`/`showAdaptiveDialog` and disposed in `finally` block or immediately after `await`. This pattern can cause "TextEditingController was used after being disposed" when dialog route is still tearing down.
 
 **What it checks**:
 
-- Files that contain `TextEditingController`, `showDialog` or `showAdaptiveDialog`, a `finally` block, and `.dispose()` in that scope
+- Files that contain `TextEditingController`, `showDialog` or `showAdaptiveDialog`, `finally` block, and `.dispose()` in that scope
 
 **Why it matters**:
 
-- Disposing the controller in `finally` (or right after `await showDialog`) runs before the dialog route is fully torn down; the `TextField` may still reference the controller during teardown, causing the exception
+- Disposing controller in `finally` (or right after `await showDialog`) runs before dialog route is fully torn down; `TextField` may still reference controller during teardown, causing exception
 
 **Correct pattern**:
 
-- Use a `StatefulWidget` for the dialog content: create the controller in `initState`, dispose it in `State.dispose()`. The controller is then only disposed when the dialog's widget tree is disposed after the route is removed.
+- Use `StatefulWidget` for dialog content: create controller in `initState`, dispose it in `State.dispose()`. controller is then only disposed when dialog's widget tree is disposed after route is removed.
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
 #### `check_dialog_text_controller_lifecycle.sh`
 
-**Purpose**: Catch `final foo = TextEditingController(` / `var foo = TextEditingController(` declared inside `async` functions (including top-level helpers) in files that call `showDialog` or `showAdaptiveDialog`. That pattern often pairs with disposing the controller when the helper returns, which can still race dialog route teardown.
+**Purpose**: Catch `final foo = TextEditingController(` / `var foo = TextEditingController(` declared inside `async` functions (including top-level helpers) in files that call `showDialog` or `showAdaptiveDialog`. That pattern often pairs with disposing controller when helper returns, which can still race dialog route teardown.
 
 **What it checks**:
 
-- Same-file presence of dialog APIs plus local (untyped) `final`/`var` controller declarations whose enclosing block opens with an `async` signature tail
+- Same-file presence of dialog APIs plus local (untyped) `final`/`var` controller declarations whose enclosing block opens with `async` signature tail
 - Skips assignments inside `void initState()` bodies and `State` subclass **fields** (`extends State` class body)
 
 **Why it matters**:
 
-- Controllers should typically live in dialog `State` so `State.dispose()` runs after the overlay subtree is done with them
+- Controllers should typically live in dialog `State` so `State.dispose()` runs after overlay subtree is done with them
 
 **Correct pattern**:
 
 - Same as `check_dialog_controller_dispose.sh`: Stateful dialog content, controllers in `initState`, `dispose` in `State.dispose()`
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
@@ -737,7 +736,7 @@ for (final SyncableRepository repo in syncables) {
 
 **Why it matters**:
 
-- Typography should be defined once in the theme for consistency and accessibility
+- Typography should be defined once in theme for consistency and accessibility
 - Per-widget font overrides make text scaling and theming inconsistent
 
 **Example violation**:
@@ -752,14 +751,14 @@ Text('Title', style: GoogleFonts.roboto(fontSize: 18)) // ❌ Per-widget font
 Text('Title', style: Theme.of(context).textTheme.titleLarge) // ✅ Theme-based
 ```
 
-**Suppression**: Add `// check-ignore: reason` on the same line or line above
+**Suppression**: Add `// check-ignore: reason` on same line or line above
 
 ---
 
 <!-- AUTO-GENERATED-CHECK_SCRIPTS:START -->
 ## Checklist Script Index (Auto-generated)
 
-The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
+list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 
 - `check_flutter_domain_imports.sh`
 - `check_material_buttons.sh`
@@ -816,15 +815,15 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 
 `tool/validate_validation_docs.sh` checks that every script in `CHECK_SCRIPTS`
 (in `tool/delivery_checklist.sh`) is mentioned in this document. It runs as
-part of `./bin/checklist` when you choose the full sweep. If you add or remove
-a script from `CHECK_SCRIPTS`, add or remove a corresponding entry here and
+part of `./bin/checklist` when you choose full sweep. If you add or remove
+script from `CHECK_SCRIPTS`, add or remove corresponding entry here and
 run `bash tool/validate_validation_docs.sh` to verify.
 
 ## Running Validation Scripts
 
 ### Full Sweep
 
-All validation scripts are run by the delivery checklist when you want the full
+All validation scripts are run by delivery checklist when you want full
 repo sweep:
 
 ```bash
@@ -835,8 +834,8 @@ This runs all validation scripts in sequence and fails if any critical violation
 
 ### Fast Local Sanity Path
 
-Use `./bin/checklist-fast` for a local-only sanity pass when the tree is clean
-or when the local change set is limited to docs/tooling surfaces:
+Use `./bin/checklist-fast` for local-only sanity pass when tree is clean
+or when local change set is limited to docs/tooling surfaces:
 
 ```bash
 ./bin/checklist-fast
@@ -847,23 +846,23 @@ Contract:
 - local only; CI must keep using `./bin/checklist`
 - supports clean-tree sanity checks
 - supports narrow local docs/tooling change sets only
-- refuses broader app/runtime diffs instead of silently weakening the full gate
+- refuses broader app/runtime diffs instead of silently weakening full gate
 - runs syntax/doc-link/doc-sync/agent-drift checks when relevant
 - skips dependency, analyze, app validator-suite, Mix lint, focused regression, and coverage work
 
-The checklist is also change-aware:
+checklist is also change-aware:
 
 - skips `flutter pub get` when dependency metadata is unchanged
 - formats only changed Dart files
 - exits early for docs-only change sets instead of running code validation
 - exits early for local tooling-only change sets (`tool/*.sh`, `bin/*`, host-template files, and validation-guidance docs) after syntax/doc-sync/drift checks instead of running app-wide Flutter validation
-- caches checklist self-validation until the checklist script/dependency scripts or validation docs change
+- caches checklist self-validation until checklist script/dependency scripts or validation docs change
 - auto-skips `flutter analyze` on local change sets with no Dart/analyzer-relevant files; CI and Dart/config/l10n changes still run it
-- auto-skips the Pyright Python lane on local non-Python change sets; CI and standalone `tool/check_pyright_python.sh` runs still execute it
-- auto-skips the offline-first remote-merge regression lane on local non-offline-first change sets; CI and standalone `tool/check_offline_first_remote_merge.sh` runs still execute it
-- auto-selects the smallest honest `tool/check_regression_guards.sh` test subset for local feature-scoped changes; CI, broad shared/core changes, and standalone runs still use the full suite
+- auto-skips Pyright Python lane on local non-Python change sets; CI and standalone `tool/check_pyright_python.sh` runs still execute it
+- auto-skips offline-first remote-merge regression lane on local non-offline-first change sets; CI and standalone `tool/check_offline_first_remote_merge.sh` runs still execute it
+- auto-selects smallest honest `tool/check_regression_guards.sh` test subset for local feature-scoped changes; CI, broad shared/core changes, and standalone runs still use full suite
 - skips Mix lint unless Mix-related files changed
-- when coverage is disabled, runs focused regression guards and only runs the Todo keyboard/layout subset when the current change set touches Todo/layout-relevant files
+- when coverage is disabled, runs focused regression guards and only runs Todo keyboard/layout subset when current change set touches Todo/layout-relevant files
 
 ### Manual Execution
 
@@ -913,7 +912,7 @@ bash tool/check_dialog_text_controller_lifecycle.sh
 
 ## Suppressing Violations
 
-All scripts support the `check-ignore` comment pattern:
+All scripts support `check-ignore` comment pattern:
 
 ```dart
 // check-ignore: reason for ignoring
@@ -923,7 +922,7 @@ Navigator.of(context).pop(); // This line will be ignored
 Navigator.of(context).pop(); // check-ignore: temporary debug code
 ```
 
-**Important**: Always provide a reason when using `check-ignore`. Ignored violations are reported in the script output.
+**Important**: Always provide reason when using `check-ignore`. Ignored violations are reported in script output.
 
 ## Script Output
 
@@ -937,11 +936,11 @@ Each script provides:
 ## Best Practices
 
 1. **Run checklist for broad or pre-ship validation**: `./bin/checklist`
-   catches issues early when you need the full sweep
+   catches issues early when you need full sweep
 2. **Use checklist-fast only for local sanity**: `./bin/checklist-fast`
-   is intentionally narrow and should not replace the full gate for app/runtime work
+   is intentionally narrow and should not replace full gate for app/runtime work
 3. **Fix violations immediately**: Don't accumulate technical debt
-4. **Use check-ignore sparingly**: Only when there's a legitimate reason
+4. **Use check-ignore sparingly**: Only when there's legitimate reason
 5. **Review heuristic warnings**: Scripts like `check_missing_const.sh` and `check_side_effects_build.sh` are heuristics - review manually
 6. **Keep scripts updated**: As codebase patterns evolve, update scripts accordingly
 
