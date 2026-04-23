@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **72.60%** (19183/26423 lines)
+*Total line coverage*: **72.60%** (19182/26423 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -326,6 +326,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/todo_list/presentation/cubit/todo_list_cubit.dart` | 87.25% | 89/102 |
 | `lib/features/camera_gallery/presentation/pages/camera_gallery_page.dart` | 87.27% | 96/110 |
 | `lib/features/auth/presentation/helpers/google_provider_helper.dart` | 87.50% | 14/16 |
+| `lib/features/profile/presentation/widgets/profile_sync_banner.dart` | 87.50% | 35/40 |
 | `lib/features/chat/presentation/widgets/chat_model_selector.dart` | 87.50% | 28/32 |
 | `lib/core/di/register_case_study_demo_services.dart` | 87.50% | 7/8 |
 | `lib/shared/utils/cubit_async_operations.dart` | 87.50% | 28/32 |
@@ -353,63 +354,62 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/case_study_demo/presentation/pages/case_study_history_detail_page.dart` | 89.73% | 131/146 |
 | `lib/features/chart/data/http_chart_repository.dart` | 89.74% | 35/39 |
 | `lib/features/iot_demo/data/persistent_iot_demo_repository.dart` | 89.84% | 115/128 |
-| `lib/features/online_therapy_demo/presentation/online_therapy_demo_scope.dart` | 90.00% | 36/40 |
-| `lib/features/profile/presentation/widgets/profile_sync_banner.dart` | 90.00% | 36/40 |
-| `lib/core/di/register_iot_demo_services.dart` | 90.00% | 18/20 |
-| `lib/shared/utils/logger.dart` | 90.00% | 45/50 |
-| `lib/features/in_app_purchase_demo/data/iap_demo_credits_store.dart` | 90.00% | 18/20 |
-| `lib/features/deeplink/data/app_links_deep_link_service.dart` | 90.00% | 36/40 |
 | `lib/core/theme/mix_app_theme.dart` | 90.00% | 27/30 |
 | `lib/features/auth/presentation/widgets/register_body.dart` | 90.00% | 9/10 |
-| `lib/features/graphql_demo/presentation/widgets/graphql_body.dart` | 90.24% | 37/41 |
+| `lib/core/di/register_iot_demo_services.dart` | 90.00% | 18/20 |
+| `lib/features/deeplink/data/app_links_deep_link_service.dart` | 90.00% | 36/40 |
+| `lib/shared/utils/logger.dart` | 90.00% | 45/50 |
+| `lib/features/in_app_purchase_demo/data/iap_demo_credits_store.dart` | 90.00% | 18/20 |
+| `lib/features/online_therapy_demo/presentation/online_therapy_demo_scope.dart` | 90.00% | 36/40 |
 | `lib/shared/sync/background_sync_coordinator_lifecycle.dart` | 90.24% | 37/41 |
+| `lib/features/graphql_demo/presentation/widgets/graphql_body.dart` | 90.24% | 37/41 |
 | `lib/features/online_therapy_demo/data/fake/online_therapy_fake_api_internals.dart` | 90.32% | 84/93 |
 | `lib/features/todo_list/presentation/widgets/todo_list_item.dart` | 90.48% | 57/63 |
 | `lib/features/auth/presentation/pages/sign_in_page.dart` | 90.48% | 38/42 |
 | `lib/features/websocket/data/echo_websocket_repository.dart` | 90.67% | 68/75 |
 | `lib/features/scapes/presentation/widgets/scape_grid_item_helpers.dart` | 90.91% | 10/11 |
-| `lib/features/igaming_demo/presentation/pages/lobby_page.dart` | 90.91% | 40/44 |
-| `lib/shared/widgets/app_message.dart` | 90.91% | 30/33 |
-| `lib/features/chat/data/secure_chat_history_repository.dart` | 90.91% | 20/22 |
 | `lib/shared/services/app_memory_service.dart` | 90.91% | 30/33 |
-| `lib/shared/utils/bloc_lint_helpers.dart` | 90.91% | 10/11 |
 | `lib/shared/storage/migration_helpers.dart` | 90.91% | 10/11 |
+| `lib/shared/widgets/app_message.dart` | 90.91% | 30/33 |
+| `lib/features/igaming_demo/presentation/pages/lobby_page.dart` | 90.91% | 40/44 |
+| `lib/features/chat/data/secure_chat_history_repository.dart` | 90.91% | 20/22 |
+| `lib/shared/utils/bloc_lint_helpers.dart` | 90.91% | 10/11 |
 | `lib/features/chat/data/huggingface_chat_repository.dart` | 91.11% | 41/45 |
 | `lib/features/staff_app_demo/presentation/pages/staff_app_demo_messages_page.dart` | 91.30% | 42/46 |
 | `lib/shared/http/app_dio.dart` | 91.30% | 21/23 |
 | `lib/features/counter/data/hive_counter_repository.dart` | 91.53% | 54/59 |
+| `lib/features/staff_app_demo/data/staff_demo_content_firestore_map.dart` | 91.67% | 11/12 |
+| `lib/features/todo_list/presentation/cubit/todo_list_cubit_helpers.dart` | 91.67% | 11/12 |
 | `lib/features/auth/presentation/helpers/provider_builder.dart` | 91.67% | 11/12 |
 | `lib/core/di/injector.dart` | 91.67% | 11/12 |
-| `lib/features/staff_app_demo/data/staff_demo_content_firestore_map.dart` | 91.67% | 11/12 |
 | `lib/features/chat/presentation/widgets/chat_sync_banner.dart` | 91.67% | 55/60 |
-| `lib/features/todo_list/presentation/cubit/todo_list_cubit_helpers.dart` | 91.67% | 11/12 |
 | `lib/shared/utils/platform_adaptive_buttons.dart` | 91.84% | 45/49 |
 | `lib/shared/utils/completer_helper.dart` | 92.00% | 23/25 |
 | `lib/features/calculator/presentation/widgets/calculator_keypad.dart` | 92.00% | 46/50 |
 | `lib/features/counter/data/shared_preferences_counter_repository.dart` | 92.06% | 58/63 |
 | `lib/features/calculator/presentation/cubit/calculator_cubit_helpers.dart` | 92.11% | 35/38 |
 | `lib/features/auth/presentation/widgets/register_phone_field.dart` | 92.16% | 47/51 |
-| `lib/features/settings/presentation/widgets/integrations_section.dart` | 92.31% | 12/13 |
-| `lib/features/staff_app_demo/presentation/pages/staff_app_demo_dashboard_page.dart` | 92.31% | 24/26 |
 | `lib/shared/widgets/retry_snackbar_listener.dart` | 92.31% | 36/39 |
+| `lib/features/settings/presentation/widgets/integrations_section.dart` | 92.31% | 12/13 |
 | `lib/shared/utils/network_error_mapper.dart` | 92.31% | 12/13 |
+| `lib/features/staff_app_demo/presentation/pages/staff_app_demo_dashboard_page.dart` | 92.31% | 24/26 |
 | `lib/features/settings/presentation/widgets/account_section.dart` | 92.42% | 61/66 |
 | `lib/features/chat/presentation/chat_cubit_helpers.dart` | 92.50% | 74/80 |
 | `lib/features/chat/presentation/chat_cubit_message_actions.dart` | 92.54% | 62/67 |
 | `lib/core/di/register_chart_services.dart` | 92.59% | 25/27 |
 | `lib/features/todo_list/data/hive_todo_repository.dart` | 92.68% | 76/82 |
 | `lib/features/todo_list/presentation/widgets/todo_search_field.dart` | 92.73% | 51/55 |
-| `lib/features/calculator/domain/payment_calculator.dart` | 92.86% | 13/14 |
-| `lib/features/search/data/hive_search_cache_repository.dart` | 92.86% | 65/70 |
 | `lib/features/search/presentation/widgets/search_app_bar.dart` | 92.86% | 26/28 |
 | `lib/features/example/presentation/widgets/whiteboard/whiteboard_toolbar_helpers.dart` | 92.86% | 52/56 |
+| `lib/features/search/data/hive_search_cache_repository.dart` | 92.86% | 65/70 |
+| `lib/features/calculator/domain/payment_calculator.dart` | 92.86% | 13/14 |
 | `lib/features/profile/presentation/widgets/profile_action_buttons.dart` | 93.10% | 27/29 |
 | `lib/features/todo_list/presentation/pages/todo_list_page_body.dart` | 93.23% | 124/133 |
 | `lib/features/case_study_demo/presentation/pages/case_study_history_page.dart` | 93.27% | 97/104 |
 | `lib/features/chat/presentation/pages/chat_page.dart` | 93.33% | 98/105 |
-| `lib/features/auth/presentation/helpers/auth_error_message.dart` | 93.33% | 28/30 |
-| `lib/features/walletconnect_auth/data/wallet_user_profile_mapper.dart` | 93.33% | 42/45 |
 | `lib/shared/services/error_notification_service.dart` | 93.33% | 28/30 |
+| `lib/features/walletconnect_auth/data/wallet_user_profile_mapper.dart` | 93.33% | 42/45 |
+| `lib/features/auth/presentation/helpers/auth_error_message.dart` | 93.33% | 28/30 |
 | `lib/features/deeplink/presentation/deep_link_cubit.dart` | 93.51% | 72/77 |
 | `lib/features/counter/data/rest_counter_repository.dart` | 93.55% | 29/31 |
 | `lib/shared/widgets/flavor_badge.dart` | 93.55% | 29/31 |
@@ -429,13 +429,13 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/sync/pending_sync_repository.dart` | 94.44% | 85/90 |
 | `lib/features/counter/data/realtime_database_counter_repository.dart` | 94.55% | 52/55 |
 | `lib/shared/widgets/common_input_decoration_helpers.dart` | 94.59% | 35/37 |
+| `lib/features/todo_list/data/offline_first_todo_repository.dart` | 94.74% | 126/133 |
 | `lib/features/counter/presentation/widgets/countdown_bar/countdown_bar_content.dart` | 94.74% | 36/38 |
 | `lib/features/calculator/presentation/widgets/calculator_keypad_button.dart` | 94.74% | 54/57 |
-| `lib/features/todo_list/data/offline_first_todo_repository.dart` | 94.74% | 126/133 |
 | `lib/features/remote_config/data/remote_config_cache_repository.dart` | 94.87% | 37/39 |
 | `lib/features/example/presentation/helpers/example_platform_dialogs.dart` | 94.92% | 56/59 |
-| `lib/core/theme/app_theme.dart` | 95.00% | 19/20 |
 | `lib/shared/widgets/common_app_bar.dart` | 95.00% | 38/40 |
+| `lib/core/theme/app_theme.dart` | 95.00% | 19/20 |
 | `lib/features/calculator/presentation/pages/calculator_payment_page.dart` | 95.24% | 20/21 |
 | `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_landing_page.dart` | 95.35% | 41/43 |
 | `lib/features/profile/data/profile_cache_repository.dart` | 95.40% | 83/87 |
@@ -451,11 +451,11 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/iot_demo/data/offline_first_iot_demo_repository_sync.dart` | 96.23% | 102/106 |
 | `lib/shared/utils/bloc_provider_helpers.dart` | 96.30% | 26/27 |
 | `lib/shared/widgets/sync_status_banner.dart` | 96.30% | 26/27 |
-| `lib/features/counter/presentation/widgets/countdown_bar/countdown_bar.dart` | 96.43% | 27/28 |
 | `lib/features/settings/presentation/widgets/language_section.dart` | 96.43% | 27/28 |
 | `lib/features/settings/presentation/cubits/theme_cubit.dart` | 96.43% | 27/28 |
-| `lib/features/chat/domain/chat_message.dart` | 96.55% | 28/29 |
+| `lib/features/counter/presentation/widgets/countdown_bar/countdown_bar.dart` | 96.43% | 27/28 |
 | `lib/shared/widgets/skeletons/skeleton_grid_item.dart` | 96.55% | 28/29 |
+| `lib/features/chat/domain/chat_message.dart` | 96.55% | 28/29 |
 | `lib/features/chat/presentation/chat_cubit_history_actions.dart` | 96.61% | 57/59 |
 | `lib/features/auth/presentation/widgets/register_terms_section.dart` | 96.67% | 29/30 |
 | `lib/features/counter/presentation/widgets/counter_display/counter_display_card.dart` | 96.67% | 29/30 |
