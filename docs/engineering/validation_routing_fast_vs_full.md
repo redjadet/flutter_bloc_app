@@ -65,11 +65,27 @@ Typical path:
 - Self-verify final wording against [`AGENTS.md`](../../AGENTS.md), user
   request, changed docs, blockers, and residual risk before reporting back
 - Markdown lint or link/doc checks on touched paths
+- `bash tool/check_docs_gardening.sh` for cheap deterministic doc-rot detection
+- `bash tool/validate_task_trackers.sh` to ensure `tasks/*/todo.md` follows the canonical tracker contract
 - `./tool/check_agent_asset_drift.sh` when `tool/agent_host_templates/` changed
 - `./tool/sync_agent_assets.sh --dry-run` when repo-managed host assets changed
 
 Escalate to `./tool/delivery_checklist.sh` / `./bin/checklist` when doc change materially changes validation
 guidance, delivery policy, or repo-wide operating rules (including [`AGENTS.md`](../../AGENTS.md)).
+
+## Routing Matrix (path triggers)
+
+This section is the routing source of truth. If a host prompt or helper script disagrees, this document wins.
+
+| Trigger (changed files) | Required lane(s) (minimum) |
+| --- | --- |
+| Docs/tooling only (e.g. `docs/**`, `tool/*.sh`, `bin/*`, `.cursor/**`) | `./bin/checklist-fast` + `bash tool/check_agent_knowledge_base.sh` |
+| Routing/auth gates (e.g. `lib/**/router/**`, `AppRoutes`, route guard code, auth UI) | `./bin/router_feature_validate` (+ `./bin/checklist` if wide diff) |
+| Offline-first/sync/lifecycle (e.g. `lib/shared/sync/**`, debounce/flush, pending-sync queues, retry/replay behavior) | `./bin/checklist` |
+| DI / transport config (e.g. `get_it` wiring, Dio/interceptors, auth headers, retry policies, base URL parsing) | `./bin/checklist` |
+| l10n / codegen surfaces (ARB files, generated localization, build_runner outputs) | `./bin/checklist` + run the repo’s documented generation/update step (see [`localization.md`](../localization.md)) |
+| Integration journeys / end-to-end flows | `./bin/integration_tests` (plus the narrowest supporting lane) |
+| Backend-adjacent demos/scripts (e.g. `demos/**`, `demos/render_chat_api/**`, Python lanes, `supabase/**`) | `./bin/checklist` |
 
 ## Local Tooling Path
 

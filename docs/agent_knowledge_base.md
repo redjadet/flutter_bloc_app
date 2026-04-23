@@ -116,6 +116,8 @@ versioned plan or change note.
 
 - Active implementation state lives in [`tasks/codex/todo.md`](../tasks/codex/todo.md) or
   [`tasks/cursor/todo.md`](../tasks/cursor/todo.md).
+- Trackers should follow the canonical template:
+  [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md).
 - Durable execution plans live under `docs/plans/` when they are still useful
   for future agents.
 - Completed or point-in-time rationale lives under `docs/changes/`.
