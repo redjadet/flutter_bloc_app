@@ -32,6 +32,7 @@ lookup only; it doesn't replace [`AGENTS.md`](../AGENTS.md) once that file is av
 | Confidence | Does my confidence come from proof, and did I state uncertainty when risk remains? |
 | Focused tests | Is there scope-matched proof, regression coverage where practical, async-state reasoning or coverage, and no deprecated Flutter test APIs? |
 | Judgment and ownership | Did I document the tradeoff and keep ownership of failures in the changed surface? |
+| Scope discipline | Does every changed line trace to the request or to validation/doc updates required by that same change? |
 | Self-verification | Before reporting back, did I check my final answer against the request, changed files, validation results, blockers, and residual risk? |
 
 ## Before Accepting AI-Written Code
