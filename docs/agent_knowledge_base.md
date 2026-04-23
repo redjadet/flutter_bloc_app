@@ -1,66 +1,50 @@
 # Agent Knowledge Base
 
-This document is source of truth for how AI agents should discover and use
-repo knowledge. goal is progressive disclosure: start with small stable
-map, then open narrow source that answers current task.
+Source of truth: how agents find + use repo knowledge.
+Goal = progressive disclosure: start small map, open only what task needs.
 
 ## Core Beliefs
 
 | Belief | Repo rule |
 | --- | --- |
-| Context beats instructions. | Ground work in real files, current docs, current diff, and repo scripts before implementing. |
-| Planning and execution are separate. | Non-trivial work starts with a tracker plan before edits. |
-| Feedback loops are mandatory. | AI output stays draft until review gate plus scope-matched validation pass. |
-| One unit at a time. | Pick the smallest coherent slice, finish it, verify it, then move on. |
-| The codebase is the knowledge base. | Durable context lives in versioned repo docs, plans, tests, scripts, and ADRs. |
-| Harness parts should be deletable. | Keep host assets thin and remove stale rules when validation proves they no longer help. |
-| Missing capability beats retrying harder. | When an agent struggles, add a legible doc, tool, test, fixture, or script so the next run can succeed. |
-| Enforce invariants, not taste micromanagement. | Encode boundaries and reliability rules mechanically while leaving local implementation freedom. |
+| Context beats instructions. | Ground in real files, current docs, current diff, repo scripts. |
+| Plan != execute. | Non-trivial work starts with tracker plan before edits. |
+| Feedback loops mandatory. | AI output draft until review gate + scope-matched validation. |
+| One unit at time. | Small coherent slice, finish, verify, move on. |
+| Codebase = knowledge base. | Durable context lives in versioned docs/plans/tests/scripts/ADRs. |
+| Harness parts deletable. | Host assets thin; delete stale rules once validation proves redundant. |
+| Missing capability beats retry. | If stuck, add doc/tool/test/fixture/script so next run succeeds. |
+| Enforce invariants, not taste. | Encode boundaries + reliability mechanically; keep local freedom. |
 
 ## Progressive Disclosure
 
-Agents should not load whole repository handbook up front.
+Don’t load whole handbook up front.
 
 1. Read [`AGENTS.md`](../AGENTS.md) for map.
 2. Read this document for knowledge-base layout and harness rules.
-3. Read [`ai_code_review_protocol.md`](ai_code_review_protocol.md) for
-   review gate.
-4. Use [`agents_quick_reference.md`](agents_quick_reference.md) only for command
-   lookup.
+3. Read [`ai_code_review_protocol.md`](ai_code_review_protocol.md) for review gate.
+4. Use [`agents_quick_reference.md`](agents_quick_reference.md) only for command lookup.
 5. Use [`README.md`](README.md) to find task-specific docs.
-6. Open only task-specific docs, code, tests, and plans needed for current
-   slice.
+6. Open only docs/code/tests/plans needed for current slice.
 
 ## Adaptive Execution
 
-Scale process to task value. don't default to maximum depth, broad validation,
-or delegation.
+Scale process to task value. Don’t default to max depth/broad validation/delegation.
 
 1. Classify task by complexity, risk, scope, and uncertainty.
-2. Calibrate effort: local mechanical changes stay light; cross-system,
-   ambiguous, or high-risk work gets deeper planning and review.
-3. For non-trivial work, consider two or three practical approaches, then choose
-   lowest-regret option by correctness, maintainability, reversibility,
-   blast radius, and failure tolerance.
-4. Debug from root cause: reproduce or reason clearly, isolate failure,
-   fix cause, and verify behavior. If cause remains uncertain, say so and
-   narrow next search space.
-5. Before reporting, predict likely failures: fragile assumptions, edge cases,
-   scale pressure, side effects, and future maintenance cost. Harden material
-   risks before output.
-6. Stop improving when solution is correct for task value, major risks
-   are addressed, proof matches scope, and further refinement would mostly add
-   cost.
+2. Calibrate effort: local mechanical = light; cross-system/ambiguous/high-risk = deeper plan + review.
+3. Non-trivial: consider 2–3 approaches, pick lowest-regret by correctness/maintainability/reversibility/blast radius/failure tolerance.
+4. Debug root cause: reproduce/reason, isolate, fix cause, verify. If unsure, say so + narrow search space.
+5. Before report: predict failures (assumptions/edge cases/scale/side effects/maint cost). Harden material risks.
+6. Stop when correct for value, major risks addressed, proof matches scope, more work mostly cost.
 
 ## Agent Legibility
 
-Agents can only reason over what they can inspect during run. Make product,
-runtime, and quality signals visible inside repo or through repo scripts.
+Agents only reason over what they can inspect. Make product/runtime/quality signals visible in repo or via repo scripts.
 
 - Prefer app-visible proof for user-facing changes: screenshots, widget tests,
   integration flows, route validators, or emulator/browser evidence.
-- Prefer repo-local observability and logs over chat-only explanation. If bug
-  requires log pattern to diagnose, document command or add helper.
+- Prefer repo-local observability + logs over chat-only. If bug needs log pattern, document command or add helper.
 - Keep fixtures, schemas, API examples, generated clients, and test harnesses in
   versioned paths so Codex and Cursor see same truth.
 - For UI/runtime work, expose narrowest runnable surface before asking
@@ -72,7 +56,7 @@ runtime, and quality signals visible inside repo or through repo scripts.
 
 ## Missing Capability Loop
 
-don't respond to repeated failure with larger prompt.
+Don’t respond to repeated failure with bigger prompt.
 
 1. Identify missing capability: context, tool, fixture, test, script,
    ownership boundary, or acceptance criterion.
@@ -116,7 +100,7 @@ versioned plan or change note.
 
 - Active implementation state lives in [`tasks/codex/todo.md`](../tasks/codex/todo.md) or
   [`tasks/cursor/todo.md`](../tasks/cursor/todo.md).
-- Trackers should follow the canonical template:
+- Trackers should follow canonical template:
   [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md).
 - Durable execution plans live under `docs/plans/` when they are still useful
   for future agents.
@@ -166,8 +150,7 @@ Both hosts use same repository knowledge base.
   keep task state in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md).
 - Shared behavior changes start in this document or owning source doc, then
   sync to host templates with `./tool/sync_agent_assets.sh --apply`.
-- Cross-host review is optional and explicit-request-only. It is not substitute
-  for reporting agent's own review, validation, and self-check.
+- Cross-host review optional + explicit-request-only. Not substitute for own review/validation/self-check.
 - Host-specific prompts should be short because repo already carries
   context. Use prompts to name slice, constraints, files to inspect,
   validation, and report fields.
@@ -208,7 +191,7 @@ Codex and Cursor should not grow separate operating doctrines.
 
 ## Mechanical Enforcement
 
-knowledge base is validated by repo tooling:
+Knowledge base validated by repo tooling:
 
 - `./tool/check_agent_knowledge_base.sh` keeps local [`AGENTS.md`](../AGENTS.md) short when it
   is present and always checks required cross-links, source-of-truth indexes,
