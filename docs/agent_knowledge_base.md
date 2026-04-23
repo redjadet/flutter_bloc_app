@@ -33,10 +33,17 @@ Scale process to task value. Don’t default to max depth/broad validation/deleg
 
 1. Classify task by complexity, risk, scope, and uncertainty.
 2. Calibrate effort: local mechanical = light; cross-system/ambiguous/high-risk = deeper plan + review.
-3. Non-trivial: consider 2–3 approaches, pick lowest-regret by correctness/maintainability/reversibility/blast radius/failure tolerance.
-4. Debug root cause: reproduce/reason, isolate, fix cause, verify. If unsure, say so + narrow search space.
-5. Before report: predict failures (assumptions/edge cases/scale/side effects/maint cost). Harden material risks.
-6. Stop when correct for value, major risks addressed, proof matches scope, more work mostly cost.
+3. If multiple reasonable interpretations would change behavior or blast
+   radius, surface them. Ask when needed; otherwise make lowest-regret call
+   and record tradeoff in tracker.
+4. Non-trivial: consider 2–3 approaches, pick lowest-regret by
+   correctness/maintainability/reversibility/blast radius/failure tolerance.
+5. Debug root cause: reproduce/reason, isolate, fix cause, verify. If unsure,
+   say so + narrow search space.
+6. Before report: predict failures (assumptions/edge cases/scale/side
+   effects/maint cost). Harden material risks.
+7. Stop when correct for value, major risks addressed, proof matches scope,
+   more work mostly cost.
 
 ## Agent Legibility
 
@@ -135,6 +142,8 @@ implementation expression local.
 - Write guard-script error messages as remediation instructions for future
   agents.
 - Promote repeated review comments into tests, scripts, ADRs, or source docs.
+- Keep diffs surgical. Changed lines should trace directly to user request
+  or to validation/doc updates required by that same change.
 - don't encode every stylistic preference. change meets bar when it is
   correct, maintainable, validated, and legible to future agent runs.
 - Keep custom checks narrow and reversible. Delete or relax checks when they stop
