@@ -7,7 +7,12 @@ GEMINI.md
 
 # Exclude todo trackers from markdownlint checks.
 **/todo.md
+**/TODO.md
 todo.md
+TODO.md
 tasks/**/todo.md
+tasks/**/TODO.md
 tasks/cursor/todo.md
+tasks/cursor/TODO.md
 tasks/codex/todo.md
+tasks/codex/TODO.md

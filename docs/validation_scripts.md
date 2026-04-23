@@ -52,6 +52,9 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs t
   to the progressive-disclosure docs and plan/tracker sources. When
   repo-managed host templates are present, it also fails if key Codex/Cursor
   entrypoints stop pointing back to the repo map and source docs.
+- **`check_docs_gardening.sh`**: Cheap deterministic doc-rot detection for agent-facing markdown guidance. Flags backticked `*.md` references that don’t resolve to real files (best-effort) and ensures [`validation_scripts.md`](validation_scripts.md) stays in sync with `tool/delivery_checklist.sh` via `tool/validate_validation_docs.sh`. Runs in `./bin/checklist-fast` and other docs/tooling-only lanes.
+- **`validate_task_trackers.sh`**: Validates that `tasks/*/todo.md` trackers follow the canonical tracker contract (required headings + non-empty write-set and validation command). Runs in `./bin/checklist-fast` and other docs/tooling-only lanes.
+- **`run_harness_fixtures.sh`**: Fixture-based smoke tests for harness scripts (help output + a negative-case doc-gardening fixture). Runs in `./bin/checklist-fast` and other docs/tooling-only lanes.
 
 ### UI/UX Best Practices
 
