@@ -22,8 +22,10 @@ Decision guide:
 | Integration journey / flow verification | `./bin/integration_tests` |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
 | Large refactor with code-review-graph installed | `./tool/refresh_code_review_graph.sh` |
+| Cold start (print map + validation pointers) | `bash tool/agent_session_bootstrap.sh` |
 | New shared agent-facing markdown doc | `./tool/compress_agent_doc.sh PATH`; rerun with `--overwrite-backups` to replace backup |
 | Agent knowledge-base/map drift | `./tool/check_agent_knowledge_base.sh` |
+| Tracker contract check | `bash tool/validate_task_trackers.sh` |
 | Repo-managed host-template drift check | `./tool/check_agent_asset_drift.sh` |
 | Host-template preview sync | `./tool/sync_agent_assets.sh --dry-run` |
 | Cross-host diff review, explicit request only | `./tool/request_codex_feedback.sh` |
