@@ -198,13 +198,17 @@ class _ChatLoadedList extends StatelessWidget {
           itemCount: contacts.length,
           separatorBuilder: (final context, final index) =>
               const _ChatDivider(),
-          itemBuilder: (final context, final index) => _ChatContactListItem(
-            contact: contacts[index],
-            isFirst: index == 0,
-            isLast: index == contacts.length - 1,
-            onTap: onContactTap,
-            onLongPress: onContactLongPress,
-          ),
+          itemBuilder: (final context, final index) {
+            final contact = contacts[index];
+            return _ChatContactListItem(
+              key: ValueKey<String>('chat-contact-row-${contact.id}'),
+              contact: contact,
+              isFirst: index == 0,
+              isLast: index == contacts.length - 1,
+              onTap: onContactTap,
+              onLongPress: onContactLongPress,
+            );
+          },
         ),
       ),
     );
@@ -218,6 +222,7 @@ class _ChatContactListItem extends StatelessWidget {
     required this.isLast,
     required this.onTap,
     required this.onLongPress,
+    super.key,
   });
 
   final ChatContact contact;

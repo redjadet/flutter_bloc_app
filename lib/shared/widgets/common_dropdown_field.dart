@@ -29,6 +29,7 @@ class CommonDropdownField<T> extends StatelessWidget {
     this.labelPosition = DropdownLabelPosition.top,
     this.customItemLabel,
     this.customPickerItems,
+    this.pickerItemKey,
   });
 
   final T? value;
@@ -42,6 +43,7 @@ class CommonDropdownField<T> extends StatelessWidget {
   final DropdownLabelPosition labelPosition;
   final String Function(T)? customItemLabel;
   final List<T>? customPickerItems;
+  final Object Function(T item)? pickerItemKey;
 
   // Extract all values from DropdownMenuItem list (filters out nulls)
   // Use customPickerItems if provided, otherwise extract from items
@@ -118,6 +120,7 @@ class CommonDropdownField<T> extends StatelessWidget {
                   items: pickerValues,
                   selectedItem: defaultItem,
                   itemLabel: _getItemLabel,
+                  itemKey: pickerItemKey,
                   title: labelText,
                 );
                 if (result != value && context.mounted) {

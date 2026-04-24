@@ -73,10 +73,9 @@ class OnlineTherapyDemoLandingPage extends StatelessWidget {
 
     return CommonPageLayout(
       title: 'Online Therapy Demo',
-      body: ListView.builder(
+      body: ListView(
         padding: const EdgeInsets.all(16),
-        itemCount: items.length,
-        itemBuilder: (context, index) => items[index],
+        children: items,
       ),
     );
   }

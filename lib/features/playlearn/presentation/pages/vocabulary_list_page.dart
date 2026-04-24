@@ -45,6 +45,7 @@ class VocabularyListPage extends StatelessWidget {
                 }
                 final item = words[index];
                 return WordCard(
+                  key: ValueKey<String>('word-$topicId-${item.id}'),
                   item: item,
                   onListen: () =>
                       context.cubit<PlaylearnCubit>().speakWord(item.wordEn),

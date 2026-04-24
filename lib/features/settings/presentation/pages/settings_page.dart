@@ -59,35 +59,56 @@ class _SettingsView extends StatelessWidget {
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     final List<Widget> sections = <Widget>[
-      const AccountSection(),
-      SizedBox(height: context.responsiveGapL),
-      const ThemeSection(),
-      SizedBox(height: context.responsiveGapL),
-      const IntegrationsSection(),
-      SizedBox(height: context.responsiveGapL),
-      const LanguageSection(),
-      SizedBox(height: context.responsiveGapL),
-      const AppInfoSection(),
+      const AccountSection(key: ValueKey('settings-account')),
+      SizedBox(
+        key: const ValueKey('settings-gap-1'),
+        height: context.responsiveGapL,
+      ),
+      const ThemeSection(key: ValueKey('settings-theme')),
+      SizedBox(
+        key: const ValueKey('settings-gap-2'),
+        height: context.responsiveGapL,
+      ),
+      const IntegrationsSection(key: ValueKey('settings-integrations')),
+      SizedBox(
+        key: const ValueKey('settings-gap-3'),
+        height: context.responsiveGapL,
+      ),
+      const LanguageSection(key: ValueKey('settings-language')),
+      SizedBox(
+        key: const ValueKey('settings-gap-4'),
+        height: context.responsiveGapL,
+      ),
+      const AppInfoSection(key: ValueKey('settings-app-info')),
       if (FlavorManager.I.isDev || FlavorManager.I.isQa) ...[
-        SizedBox(height: context.responsiveGapL),
+        SizedBox(
+          key: const ValueKey('settings-gap-qa'),
+          height: context.responsiveGapL,
+        ),
         ...(buildQaExtras?.call(context) ?? const <Widget>[]),
       ],
       if (!const bool.fromEnvironment('dart.vm.product')) ...[
-        SizedBox(height: context.responsiveGapL),
-        PlatformAdaptive.textButton(
-          context: context,
-          onPressed: () => throw Exception('Test exception for error handling'),
-          child: Text(l10n.settingsThrowTestException),
+        SizedBox(
+          key: const ValueKey('settings-gap-debug'),
+          height: context.responsiveGapL,
+        ),
+        KeyedSubtree(
+          key: const ValueKey('settings-throw-test-exception'),
+          child: PlatformAdaptive.textButton(
+            context: context,
+            onPressed: () =>
+                throw Exception('Test exception for error handling'),
+            child: Text(l10n.settingsThrowTestException),
+          ),
         ),
       ],
     ];
     return CommonPageLayout(
       title: l10n.settingsPageTitle,
-      body: ListView.builder(
+      body: ListView(
         key: const ValueKey('settings-list'),
         padding: EdgeInsets.zero,
-        itemCount: sections.length,
-        itemBuilder: (final context, final index) => sections[index],
+        children: sections,
       ),
     );
   }
