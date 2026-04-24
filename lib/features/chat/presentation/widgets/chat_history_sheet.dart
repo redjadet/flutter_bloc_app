@@ -121,6 +121,9 @@ class ChatHistorySheet extends StatelessWidget {
                                           conversation.id ==
                                               data.activeConversationId;
                                       return ChatHistoryConversationTile(
+                                        key: ValueKey<String>(
+                                          'chat-history-conv-${conversation.id}',
+                                        ),
                                         conversation: conversation,
                                         index: index,
                                         isActive: isActive,

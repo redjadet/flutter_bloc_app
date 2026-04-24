@@ -48,24 +48,39 @@ class _OnlineTherapyDemoTherapistAppointmentsPageState
         itemBuilder: (context, index) {
           if (index == 0) {
             if (session.user == null) {
-              return const Padding(
-                padding: EdgeInsets.only(bottom: 8),
-                child: OnlineTherapyLoggedOutPrompt(),
-              );
-            }
-            if (state.errorMessage case final String errorMessage?) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  errorMessage,
-                  style: const TextStyle(color: Colors.red),
+              return const KeyedSubtree(
+                key: ValueKey(
+                  'online-therapy-therapist-appointments-header-logged-out',
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 8),
+                  child: OnlineTherapyLoggedOutPrompt(),
                 ),
               );
             }
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Text(
-                state.isBusy ? 'Loading…' : 'Your upcoming sessions.',
+            if (state.errorMessage case final String errorMessage?) {
+              return KeyedSubtree(
+                key: const ValueKey(
+                  'online-therapy-therapist-appointments-header-error',
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    errorMessage,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
+              );
+            }
+            return KeyedSubtree(
+              key: const ValueKey(
+                'online-therapy-therapist-appointments-header-ok',
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  state.isBusy ? 'Loading…' : 'Your upcoming sessions.',
+                ),
               ),
             );
           }
@@ -75,6 +90,9 @@ class _OnlineTherapyDemoTherapistAppointmentsPageState
           }
           final a = appointments[appointmentIndex];
           return ListTile(
+            key: ValueKey<String>(
+              'online-therapy-therapist-appointment-${a.id}',
+            ),
             title: Text(
               formatDeviceDateTime(context, a.startAt),
               maxLines: 1,

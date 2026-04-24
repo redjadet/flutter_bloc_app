@@ -46,6 +46,21 @@ void main() {
   }
 
   group('LibraryDemoBody', () {
+    testWidgets('preserves search input across parent rebuilds', (
+      WidgetTester tester,
+    ) async {
+      await pumpBody(tester, isGridView: true);
+
+      await tester.enterText(
+        find.byKey(const ValueKey('library-demo-search-field')),
+        'sound pack',
+      );
+
+      await pumpBody(tester, isGridView: true);
+
+      expect(find.text('sound pack'), findsOneWidget);
+    });
+
     testWidgets('grid view shows scapes grid content after load', (
       WidgetTester tester,
     ) async {

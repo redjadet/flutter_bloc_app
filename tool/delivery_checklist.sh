@@ -273,6 +273,8 @@ validate_checklist_configuration() {
     "tool/validate_task_trackers.sh"
     "tool/run_harness_fixtures.sh"
     "tool/agent_session_bootstrap.sh"
+    "tool/check_widget_identity.sh"
+    "tool/check_widget_identity.dart"
   )
 
   if [ "$total_messages" -ne "$total_scripts" ]; then
@@ -301,9 +303,18 @@ validate_checklist_configuration() {
   fi
 
   for script in "${CHECK_SCRIPTS[@]}" "${extra_scripts[@]}"; do
-    if ! bash -n "$PROJECT_ROOT/$script"; then
-      syntax_exit=1
-    fi
+    case "$script" in
+      *.sh|bin/*)
+        if ! bash -n "$PROJECT_ROOT/$script"; then
+          syntax_exit=1
+        fi
+        ;;
+      *.dart)
+        if ! dart analyze "$PROJECT_ROOT/$script"; then
+          syntax_exit=1
+        fi
+        ;;
+    esac
   done
 
   if [ "$syntax_exit" -ne 0 ]; then
@@ -362,6 +373,16 @@ validate_tooling_only_dependencies() {
           continue
         fi
         if ! bash -n "$PROJECT_ROOT/$file"; then
+          failed=1
+        fi
+        ;;
+      *.dart)
+        if [ ! -f "$PROJECT_ROOT/$file" ]; then
+          echo "❌ Missing tooling file: $file"
+          failed=1
+          continue
+        fi
+        if ! dart analyze "$PROJECT_ROOT/$file"; then
           failed=1
         fi
         ;;
@@ -465,6 +486,7 @@ is_tooling_only_change_set() {
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
       tool/*.sh|\
+      tool/*.dart|\
       bin/*|\
       tool/agent_host_templates/*|\
       tool/fixtures/harness/*|\
@@ -499,6 +521,7 @@ is_checklist_fast_compatible_change_set() {
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
       tool/*.sh|\
+      tool/*.dart|\
       bin/*|\
       tool/agent_host_templates/*|\
       tool/fixtures/harness/*|\
@@ -786,6 +809,14 @@ if [ "$CHECKLIST_MODE" = "fast" ]; then
     fi
   fi
 
+  if [ "${#changed_dart_files[@]}" -gt 0 ]; then
+    echo ""
+    echo "🧩 Widget identity drift check (changed Dart files present)"
+    if ! bash "$PROJECT_ROOT/tool/check_widget_identity.sh"; then
+      exit 1
+    fi
+  fi
+
   echo "✅ Skipping dependency, analyze, app validation, and coverage steps"
   echo ""
   if [ "${#changed_files[@]}" -eq 0 ]; then
@@ -922,6 +953,7 @@ CHECK_MESSAGES=(
   "Checking for presentation imports in data layer (SOLID layering)..."
   "Checking for shrinkWrap: true in presentation lists (perf)..."
   "Checking for non-builder ListView/GridView in presentation (perf)..."
+  "Checking for widget identity drift (keys in builders/switchers)..."
   "Checking for missing RepaintBoundary around heavy widgets (perf)..."
   "Checking for unnecessary rebuilds (perf)..."
   "Checking for live state-list indexing in presentation builders..."
@@ -973,6 +1005,7 @@ CHECK_SCRIPTS=(
   "tool/check_solid_data_presentation_imports.sh"
   "tool/check_perf_shrinkwrap_lists.sh"
   "tool/check_perf_nonbuilder_lists.sh"
+  "tool/check_widget_identity.sh"
   "tool/check_perf_missing_repaint_boundary.sh"
   "tool/check_perf_unnecessary_rebuilds.sh"
   "tool/check_live_state_list_indexing.sh"

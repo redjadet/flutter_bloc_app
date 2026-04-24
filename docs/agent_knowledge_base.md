@@ -33,15 +33,17 @@ Scale process to task value; avoid max-depth/broad-validation/delegation by defa
 
 1. Classify task by complexity, risk, scope, and uncertainty.
 2. Calibrate effort: local mechanical = light; cross-system/ambiguous/high-risk = deeper plan + review.
-3. If interpretations change behavior/blast radius, surface them. Ask when
+3. Do not change files until at least 95% confident in goal, scope, and
+   approach. Ask follow-up questions until reaching that confidence.
+4. If interpretations change behavior/blast radius, surface them. Ask when
    needed; otherwise make lowest-regret call and record tradeoff.
-4. Non-trivial: compare 2-3 approaches; pick lowest-regret by
+5. Non-trivial: compare 2-3 approaches; pick lowest-regret by
    correctness/maintainability/reversibility/blast radius/failure tolerance.
-5. Debug root cause: reproduce/reason, isolate, fix cause, verify. If unsure,
+6. Debug root cause: reproduce/reason, isolate, fix cause, verify. If unsure,
    say so + narrow search space.
-6. Before report: predict failures: assumptions, edge cases, scale, side
+7. Before report: predict failures: assumptions, edge cases, scale, side
    effects, maintenance cost. Harden material risks.
-7. Stop when correct for value, major risks addressed, proof matches scope,
+8. Stop when correct for value, major risks addressed, proof matches scope,
    more work mostly cost.
 
 ## Agent Legibility

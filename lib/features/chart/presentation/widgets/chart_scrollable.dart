@@ -7,10 +7,9 @@ class ChartScrollable extends StatelessWidget {
   final List<Widget> children;
 
   @override
-  Widget build(final BuildContext context) => ListView.builder(
+  Widget build(final BuildContext context) => ListView(
     physics: const AlwaysScrollableScrollPhysics(),
     padding: context.allGapL,
-    itemCount: children.length,
-    itemBuilder: (final context, final index) => children[index],
+    children: children,
   );
 }

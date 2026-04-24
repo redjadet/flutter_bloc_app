@@ -44,12 +44,22 @@ class _OnlineTherapyDemoClientAppointmentsPageState
           itemBuilder: (context, index) {
             if (index == 0) {
               if (session.user == null) {
-                return const OnlineTherapyLoggedOutPrompt();
+                return const KeyedSubtree(
+                  key: ValueKey(
+                    'online-therapy-client-appointments-logged-out',
+                  ),
+                  child: OnlineTherapyLoggedOutPrompt(),
+                );
               }
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  state.isBusy ? 'Loading…' : 'Your booked sessions.',
+              return KeyedSubtree(
+                key: const ValueKey(
+                  'online-therapy-client-appointments-header',
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    state.isBusy ? 'Loading…' : 'Your booked sessions.',
+                  ),
                 ),
               );
             }
@@ -59,6 +69,9 @@ class _OnlineTherapyDemoClientAppointmentsPageState
             }
             final a = appointments[appointmentIndex];
             return ListTile(
+              key: ValueKey<String>(
+                'online-therapy-client-appointment-${a.id}',
+              ),
               title: Text(
                 formatDeviceDateTime(context, a.startAt),
                 maxLines: 1,

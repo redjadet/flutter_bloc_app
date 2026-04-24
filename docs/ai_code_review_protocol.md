@@ -55,6 +55,20 @@ update, validation check, test helper, fixture, route proof, or task template.
 Dependency changes: justify package/upgrade, check existing dependencies first,
 and don’t treat `flutter pub get` as validation.
 
+Widget identity (keys) invariants:
+
+- In `ListView.builder`, `ListView.separated`, sliver builders, and similar, **rows
+  must have a stable `Key` derived from a durable id** (not index) when the list
+  can reorder, filter, insert, or delete.
+- In `AnimatedSwitcher` (and similar mode-switching widgets), **the child must
+  have explicit identity** (e.g. `KeyedSubtree(key: ValueKey('mode'), child: …)`),
+  so Flutter doesn't reuse the wrong `Element` subtree across modes.
+- Guardrail: `./tool/check_widget_identity.sh` (wired into `./bin/checklist`;
+  `./bin/checklist-fast` runs it for local tooling/docs changes that include
+  Dart tooling files).
+- Suppress only with a reason: `// widget_identity:ignore <reason>` (same line or
+  line above the flagged construct).
+
 Bug-fix path:
 
 1. reproduce or reason clearly about failure

@@ -42,23 +42,27 @@ class CalculatorKeypad extends StatelessWidget {
         crossAxisSpacing: spacing,
       ),
       itemCount: buttons.length,
-      itemBuilder: (final context, final index) => _CalculatorButton(
-        config: buttons[index],
-        actions: actions,
-        palette: palette,
-        onEvaluate: () {
-          if (cubit.state.error != null) {
-            return;
-          }
-          // check-ignore: navigation is triggered by user action
-          unawaited(
-            context.pushNamed(
-              AppRoutes.calculatorPayment,
-              extra: cubit,
-            ),
-          );
-        },
-      ),
+      itemBuilder: (final context, final index) {
+        final button = buttons[index];
+        return _CalculatorButton(
+          key: ValueKey<String>('calculator-button-${button.label}'),
+          config: button,
+          actions: actions,
+          palette: palette,
+          onEvaluate: () {
+            if (cubit.state.error != null) {
+              return;
+            }
+            // check-ignore: navigation is triggered by user action
+            unawaited(
+              context.pushNamed(
+                AppRoutes.calculatorPayment,
+                extra: cubit,
+              ),
+            );
+          },
+        );
+      },
     );
   }
 

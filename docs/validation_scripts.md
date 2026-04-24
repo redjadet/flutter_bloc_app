@@ -66,7 +66,8 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs a
 ### Performance
 
 - **`check_perf_shrinkwrap_lists.sh`**: Flags `shrinkWrap: true` lists/grids in presentation code
-- **`check_perf_nonbuilder_lists.sh`**: Ensures lists/grids use builder constructors for lazy rendering
+- **`check_perf_nonbuilder_lists.sh`**: Flags likely dynamic `ListView`/`GridView` `children:` construction that eagerly builds rows. Small static/prebuilt section lists may use `children:` when that preserves stable widget identity.
+- **`check_widget_identity.sh`**: Flags common widget identity traps (missing stable `key:` in builder row returns, builder-by-index over prebuilt widget lists, `AnimatedSwitcher` children without explicit keyed identity). Prefer stable domain IDs via `ValueKey('row-$id')`; use `ListView(children: ...)` for static prebuilt widget lists. Suppress only with `// widget_identity:ignore <reason>` on the same or previous line.
 - **`check_perf_missing_repaint_boundary.sh`**: Warns when heavy widgets lack `RepaintBoundary`
 - **`check_perf_unnecessary_rebuilds.sh`**: Heuristic check for `setState()` calls that might cause unnecessary rebuilds/blinking (warns but doesn't fail)
 - **`check_concurrent_modification.sh`**: Detects potential concurrent modification errors when iterating over collections from getters/properties
@@ -508,27 +509,31 @@ ListView.builder(itemCount: items.length, itemBuilder: ...) // ✅
 
 #### `check_perf_nonbuilder_lists.sh`
 
-**Purpose**: Flags `ListView`/`GridView` with `children` in presentation (eager build).
+**Purpose**: Flags likely dynamic `ListView`/`GridView` `children:` construction in presentation (eager build).
 
 **What it checks**:
 
-- `ListView`/`GridView` with `children:` in presentation files
+- `ListView`/`GridView` with dynamic `children:` sources such as `.map(...)`,
+  `List.generate(...)`, or collection `for`
 
 **Why it matters**:
 
 - Eager list builds can be slow for large/dynamic data sets
 - Builder variants are more efficient
+- Small static/prebuilt section lists may use `children:` when stable widget
+  identity matters.
 
 **Example violation**:
 
 ```dart
-ListView(children: items) // ❌ Eager build
+ListView(children: rows.map(buildRow).toList()) // ❌ Eager dynamic build
 ```
 
 **Correct pattern**:
 
 ```dart
 ListView.builder(itemCount: items.length, itemBuilder: ...) // ✅
+ListView(children: staticSections) // ✅ small prebuilt/static sections
 ```
 
 **Suppression**: Add `// check-ignore: reason` on same line or line above

@@ -175,16 +175,31 @@ List<RouteBase> createCoreRoutes() => <RouteBase>[
       appInfoRepository: getIt<AppInfoRepository>(),
       buildQaExtras: (final ctx) => <Widget>[
         GraphqlCacheControlsSection(
+          key: const ValueKey('settings-qa-graphql-cache-controls'),
           cacheRepository: getIt<GraphqlCacheClearPort>(),
         ),
-        SizedBox(height: ctx.responsiveGapL),
+        SizedBox(
+          key: const ValueKey('settings-qa-gap-graphql-profile'),
+          height: ctx.responsiveGapL,
+        ),
         ProfileCacheControlsSection(
+          key: const ValueKey('settings-qa-profile-cache-controls'),
           profileCacheRepository: getIt<ProfileCacheControlsPort>(),
         ),
-        SizedBox(height: ctx.responsiveGapL),
-        const RemoteConfigDiagnosticsSection(),
-        SizedBox(height: ctx.responsiveGapL),
-        const SyncDiagnosticsSection(),
+        SizedBox(
+          key: const ValueKey('settings-qa-gap-profile-remote-config'),
+          height: ctx.responsiveGapL,
+        ),
+        const RemoteConfigDiagnosticsSection(
+          key: ValueKey('settings-qa-remote-config-diagnostics'),
+        ),
+        SizedBox(
+          key: const ValueKey('settings-qa-gap-remote-config-sync'),
+          height: ctx.responsiveGapL,
+        ),
+        const SyncDiagnosticsSection(
+          key: ValueKey('settings-qa-sync-diagnostics'),
+        ),
       ],
     ),
   ),

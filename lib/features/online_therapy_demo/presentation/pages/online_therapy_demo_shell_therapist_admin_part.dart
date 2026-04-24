@@ -148,7 +148,9 @@ class _AdminPanel extends StatelessWidget {
                         title: Text(t.title),
                         subtitle: Text(t.bio),
                         trailing: ElevatedButton(
-                          onPressed: state.isBusy ? null : () => cubit.approve(t.id),
+                          onPressed: state.isBusy
+                              ? null
+                              : () => cubit.approve(t.id),
                           child: const Text('Approve'),
                         ),
                       ),
@@ -174,10 +176,7 @@ class _AdminPanel extends StatelessWidget {
                           ),
                         ),
                 ];
-                return ListView.builder(
-                  itemCount: items.length,
-                  itemBuilder: (context, index) => items[index],
-                );
+                return ListView(children: items);
               },
             ),
           ),

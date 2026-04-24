@@ -43,18 +43,22 @@ class _OnlineTherapyDemoClientTherapistsPageState
               const Divider(height: 1),
           itemBuilder: (context, index) {
             if (index == 0) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  state.isBusy
-                      ? 'Loading…'
-                      : 'Select a therapist to view details.',
+              return KeyedSubtree(
+                key: const ValueKey('online-therapy-client-therapists-header'),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    state.isBusy
+                        ? 'Loading…'
+                        : 'Select a therapist to view details.',
+                  ),
                 ),
               );
             }
 
             final t = therapists[index - 1];
             return ListTile(
+              key: ValueKey<String>('online-therapy-therapist-${t.id}'),
               title: Text(
                 t.title,
                 maxLines: 1,
