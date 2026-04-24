@@ -1,23 +1,22 @@
 # AI Code Review Protocol
 
-AI code draft until review gate pass. Before report back, agent self-verify final output vs user request, diff, validation proof, residual risks.
+AI code is draft until review gate passes. Before report: self-verify final
+output vs request, diff, validation proof, blockers, residual risks.
 
 Pinned repo toolchain: Flutter 3.41.7 / Dart 3.11.5.
 
 Adapted from Vinod Pal’s March 8, 2026 checklist:
 <https://medium.com/%40vndpal/my-practical-approach-for-reviewing-ai-generated-code-268db27f3af8>
 
-Review gate before normal validation. Complement automated checks; not replace.
+Review gate before normal validation. Complements automated checks; not replacement.
 
-Use [`agent_knowledge_base.md`](agent_knowledge_base.md) for progressive
-disclosure and source-of-truth layout. If [`AGENTS.md`](../AGENTS.md) is
-unavailable in current host context, combine this document with
+Use [`agent_knowledge_base.md`](agent_knowledge_base.md) for source layout. If
+[`AGENTS.md`](../AGENTS.md) unavailable, combine this with
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
-to pick validation commands. When present,
-[`agents_quick_reference.md`](agents_quick_reference.md) is compact command
-lookup only; it doesn't replace [`AGENTS.md`](../AGENTS.md) once that file is available.
+for validation. [`agents_quick_reference.md`](agents_quick_reference.md) is
+command lookup, not map replacement.
 
-## The Ten Checks
+## Checks
 
 | Check | What to ask |
 | --- | --- |
@@ -30,7 +29,7 @@ lookup only; it doesn't replace [`AGENTS.md`](../AGENTS.md) once that file is av
 | Dependencies | Does the repo already have a suitable utility, and is the new dependency worth its cost? |
 | Legibility | Can a future Codex/Cursor run inspect the relevant docs, tests, fixtures, logs, or UI proof without chat context? |
 | Confidence | Does my confidence come from proof, and did I state uncertainty when risk remains? |
-| Focused tests | Is there scope-matched proof, regression coverage where practical, async-state reasoning or coverage, and no deprecated Flutter test APIs? |
+| Focused tests | Is proof scope-matched, with regression coverage where practical, async-state reasoning/coverage, and no deprecated Flutter test APIs? |
 | Judgment and ownership | Did I document the tradeoff and keep ownership of failures in the changed surface? |
 | Scope discipline | Does every changed line trace to the request or to validation/doc updates required by that same change? |
 | Self-verification | Before reporting back, did I check my final answer against the request, changed files, validation results, blockers, and residual risk? |
@@ -48,17 +47,13 @@ Do in order:
    Cross-host diff review (explicit request): `./tool/request_codex_feedback.sh`.
    Cross-host plan review: `./tool/run_codex_plan_review.sh PATH/TO/plan.md`.
 
-If same critique appears repeatedly, don't only remember it. Convert it
-into repo-visible capability: source-doc update, validation check, test helper,
-fixture, route proof, or task template.
+If same critique repeats, convert it into repo-visible capability: source-doc
+update, validation check, test helper, fixture, route proof, or task template.
 
 ## Special Cases
 
-Dependency changes:
-
-- Justify new package or upgrade.
-- Check whether existing repo dependency already covers need.
-- don’t rely on `flutter pub get` as validation.
+Dependency changes: justify package/upgrade, check existing dependencies first,
+and don’t treat `flutter pub get` as validation.
 
 Bug-fix path:
 
@@ -78,7 +73,7 @@ Widget-test viewport setup:
 Async list builders:
 
 - In `ListView.builder`, `ListView.separated`, and sliver builders, don't index
-  live Cubit/BLoC state lists directly when async refresh can shrink list.
+  live Cubit/BLoC state lists when async refresh can shrink list.
 - Snapshot list at build start, derive `itemCount` from that snapshot, and
   guard stale builder indexes before indexing. This matters most for header-row
   patterns like `items.length + 1` with `items[index - 1]`.
