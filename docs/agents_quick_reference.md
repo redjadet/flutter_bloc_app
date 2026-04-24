@@ -1,9 +1,8 @@
 # Agent Quick Reference
 
-Commands + routing lookup. Convenience only.
-Policy map: [`AGENTS.md`](../AGENTS.md). Knowledge base:
-[`agent_knowledge_base.md`](agent_knowledge_base.md). Review gate:
-[`ai_code_review_protocol.md`](ai_code_review_protocol.md).
+Commands + routing lookup. Convenience only. Map: [`AGENTS.md`](../AGENTS.md).
+Knowledge base: [`agent_knowledge_base.md`](agent_knowledge_base.md). Review
+gate: [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
 If [`AGENTS.md`](../AGENTS.md) unavailable, combine this with
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 
@@ -32,20 +31,19 @@ Decision guide:
 | Cross-host diff review, explicit request only | `./tool/request_codex_feedback.sh` |
 | Cross-host **plan** review (markdown plan + Codex) | `./tool/run_codex_plan_review.sh PATH/TO/plan.md` |
 
-Fastlane note: prefer `./tool/fastlane.sh` over raw `fastlane`.
+Fastlane: prefer `./tool/fastlane.sh` over raw `fastlane`.
 
 ## Flutter Test Reminder
 
-When widget tests set screen size or pixel ratio, use `WidgetTester.view`:
-`tester.view.physicalSize`, `tester.view.devicePixelRatio`,
-`resetPhysicalSize()`, and `resetDevicePixelRatio()`. Avoid deprecated
-`tester.binding.window` / `TestWidgetsFlutterBinding.window` test-value APIs.
+Widget tests: set screen size/pixel ratio with `WidgetTester.view`
+(`physicalSize`, `devicePixelRatio`, reset methods). Avoid deprecated
+`tester.binding.window` / `TestWidgetsFlutterBinding.window`.
 
 ## Async List Builder Reminder
 
-When builder indexes Cubit/BLoC list: snapshot list at build start, guard stale
-indexes before indexing. Header-row lists (`items.length + 1` with
-`items[index - 1]`) prone to `RangeError` during async refresh.
+Builder indexing Cubit/BLoC list: snapshot at build start, derive `itemCount`
+from snapshot, guard stale indexes. Header-row lists (`items.length + 1` with
+`items[index - 1]`) are `RangeError`-prone during async refresh.
 
 ## Host Trackers
 
@@ -54,11 +52,12 @@ indexes before indexing. Header-row lists (`items.length + 1` with
 
 ## Harness Reminders
 
-- Classify complexity/risk/scope/uncertainty before choosing plan/validation/delegation depth.
+- Classify complexity/risk/scope/uncertainty before plan/validation/delegation depth.
 - If stuck repeatedly, add missing repo capability: doc/test/fixture/script/route proof/log helper/validation check.
-- Non-trivial: compare few approaches, pick lowest-regret; stop when extra work no longer buys real risk reduction.
+- Non-trivial: compare approaches, pick lowest-regret; stop when extra work no
+  longer reduces real risk.
 - Make runtime behavior legible. UI/app work: prefer app-visible proof over logs-only claims.
-- Enforce invariants mechanically where possible; don’t paste long rules into host prompts.
+- Enforce invariants mechanically where possible; don’t paste long host prompts.
 - Keep host assets thin + synced from `tool/agent_host_templates/`.
 - Behavior changes start in source docs, then sync both host templates; don’t fork unless host capability truly differs.
 
@@ -79,8 +78,7 @@ Cold-start fit:
 
 - Codex: bootstrap -> [`AGENTS.md`](../AGENTS.md), knowledge base, review
   protocol, quick reference, README
-- Cursor: global rule + skills should point back to same canon instead of
-  duplicating policy
+- Cursor: global rule + skills point back to same canon; don’t duplicate policy
 - Cursor compression should use `caveman-compress` or
   `./tool/compress_agent_doc.sh`, not Anthropic auth.
 
