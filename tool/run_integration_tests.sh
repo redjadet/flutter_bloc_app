@@ -620,6 +620,9 @@ elif "══╡" in tail and "exception" in low:
     print("test_assertion_or_app_failure")
 elif "expected:" in low and "actual:" in low:
     print("test_assertion_or_app_failure")
+elif "cannot start app on wirelessly tethered ios device" in low:
+    # This is an infra/device limitation; our retry path can auto-add --publish-port.
+    print("wireless_publish_port_required")
 elif "some tests failed" in low:
     print("test_assertion_or_app_failure")
 elif "could not build the application" in low:
@@ -640,8 +643,6 @@ elif (
     or "lost connection to device" in low
 ):
     print("infra_device_or_tooling")
-elif "cannot start app on wirelessly tethered ios device" in low:
-    print("wireless_publish_port_required")
 else:
     print("unknown_transient_or_infra")
 PY
@@ -1254,61 +1255,123 @@ if [ "$#" -eq 0 ]; then
   if [ "$exit_code" -ne 0 ] &&
     [ "$INTEGRATION_PUBLISH_PORT_REQUIRED" = "1" ] &&
     [ "$INTEGRATION_USED_PUBLISH_PORT" = "0" ]; then
+    # Flutter can fail to start integration tests on wirelessly tethered iOS devices.
+    # Rather than retrying with a non-portable flag, fall back to an iPhone simulator.
     INTEGRATION_RETRIED="1"
-    INTEGRATION_RETRY_REASON="wireless_publish_port_required"
+    INTEGRATION_RETRY_REASON="wireless_ios_device_requires_simulator"
     INTEGRATION_USED_PUBLISH_PORT="1"
-    log "Detected wirelessly tethered iOS device. Retrying once with --publish-port..."
-    cleanup_project_xcodebuilds
-    sleep 2
-    set +e
-    if [ "$RUN_COVERAGE" -eq 0 ]; then
-      run_integration_command \
-        "$SELECTED_TARGET publish-port retry" \
-        flutter test \
-        --no-pub \
-        --publish-port \
-        -d "$DEVICE_ID" \
-        "$SELECTED_TARGET"
-    elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$HAS_LCOV" -eq 1 ] && [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
-      run_integration_command \
-        "$SELECTED_TARGET publish-port retry" \
-        flutter test \
-        --no-pub \
-        --publish-port \
-        -d "$DEVICE_ID" \
-        --coverage \
-        --merge-coverage \
-        --coverage-path="$FINAL_COVERAGE_PATH" \
-        "$SELECTED_TARGET"
-    elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
-      run_integration_command \
-        "$SELECTED_TARGET publish-port retry" \
-        flutter test \
-        --no-pub \
-        --publish-port \
-        -d "$DEVICE_ID" \
-        "$SELECTED_TARGET"
-    elif [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
-      run_integration_command \
-        "$SELECTED_TARGET publish-port retry" \
-        flutter test \
-        --no-pub \
-        --publish-port \
-        -d "$DEVICE_ID" \
-        --coverage \
-        --coverage-path="$FINAL_COVERAGE_PATH" \
-        "$SELECTED_TARGET"
+
+    if [ "$(uname -s)" != "Darwin" ]; then
+      log "Detected wirelessly tethered iOS device, but we're not on macOS; cannot auto-fallback to an iOS simulator."
+    elif is_ios_simulator_device "$DEVICE_ID"; then
+      log "Detected wirelessly tethered iOS error on a simulator device id (unexpected). Not retrying device selection."
     else
-      run_integration_command \
-        "$SELECTED_TARGET publish-port retry" \
-        flutter test \
-        --no-pub \
-        --publish-port \
-        -d "$DEVICE_ID" \
-        "$SELECTED_TARGET"
+      log "Detected wirelessly tethered iOS device. Retrying once on an iPhone simulator..."
+      cleanup_project_xcodebuilds
+      sleep 2
+      simulator_selection="$(
+        /usr/bin/python3 - <<'PY'
+import json
+import os
+import subprocess
+import sys
+
+preferred = os.environ.get("IOS_SIMULATOR_PREFERRED_NAMES", "")
+preferred_names = [n.strip() for n in preferred.split(",") if n.strip()]
+
+try:
+    raw = subprocess.check_output(
+        ["xcrun", "simctl", "list", "devices", "available", "-j"],
+        stderr=subprocess.DEVNULL,
+    )
+    data = json.loads(raw.decode("utf-8", errors="replace"))
+except Exception:
+    print("")
+    raise SystemExit(0)
+
+available_iphones = []
+for runtime_name, devices in data.get("devices", {}).items():
+    if "iOS" not in runtime_name:
+        continue
+    for device in devices:
+        if device.get("isAvailable", True) and "iPhone" in device.get("name", ""):
+            available_iphones.append(device)
+
+for preferred_name in preferred_names:
+    for device in available_iphones:
+        if device.get("name") == preferred_name:
+            print(f"{device['udid']}\t{device['name']}")
+            raise SystemExit(0)
+
+if available_iphones:
+    device = available_iphones[0]
+    print(f"{device['udid']}\t{device['name']}")
+    raise SystemExit(0)
+
+print("")
+PY
+      )"
+      if [ -z "${simulator_selection:-}" ]; then
+        log "❌ No available iPhone simulator found for retry. (xcrun simctl returned none)"
+      else
+        IFS=$'\t' read -r fallback_device_id fallback_device_name <<< "$simulator_selection"
+        if [ -z "${fallback_device_id:-}" ]; then
+          log "❌ Failed to parse simulator selection: $simulator_selection"
+        else
+          DEVICE_ID="$fallback_device_id"
+          log "Retry device selected: ${fallback_device_name:-iPhone Simulator} ($DEVICE_ID)"
+          log "Booting iPhone simulator for retry..."
+          if ! xcrun simctl boot "$DEVICE_ID" 2>/dev/null; then
+            log "Simulator $DEVICE_ID was already booted or boot request returned non-zero; continuing with boot wait."
+          fi
+          wait_for_simulator_boot "$DEVICE_ID" "$IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS" || true
+          set +e
+          if [ "$RUN_COVERAGE" -eq 0 ]; then
+            run_integration_command \
+              "$SELECTED_TARGET simulator retry" \
+              flutter test \
+              --no-pub \
+              -d "$DEVICE_ID" \
+              "$SELECTED_TARGET"
+          elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$HAS_LCOV" -eq 1 ] && [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
+            run_integration_command \
+              "$SELECTED_TARGET simulator retry" \
+              flutter test \
+              --no-pub \
+              -d "$DEVICE_ID" \
+              --coverage \
+              --merge-coverage \
+              --coverage-path="$FINAL_COVERAGE_PATH" \
+              "$SELECTED_TARGET"
+          elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
+            run_integration_command \
+              "$SELECTED_TARGET simulator retry" \
+              flutter test \
+              --no-pub \
+              -d "$DEVICE_ID" \
+              "$SELECTED_TARGET"
+          elif [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
+            run_integration_command \
+              "$SELECTED_TARGET simulator retry" \
+              flutter test \
+              --no-pub \
+              -d "$DEVICE_ID" \
+              --coverage \
+              --coverage-path="$FINAL_COVERAGE_PATH" \
+              "$SELECTED_TARGET"
+          else
+            run_integration_command \
+              "$SELECTED_TARGET simulator retry" \
+              flutter test \
+              --no-pub \
+              -d "$DEVICE_ID" \
+              "$SELECTED_TARGET"
+          fi
+          exit_code=$?
+          set -e
+        fi
+      fi
     fi
-    exit_code=$?
-    set -e
   fi
   if [ "$exit_code" -ne 0 ] && should_retry_integration_run "$exit_code"; then
     INTEGRATION_RETRIED="1"

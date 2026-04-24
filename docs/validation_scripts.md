@@ -758,7 +758,7 @@ Text('Title', style: Theme.of(context).textTheme.titleLarge) // ✅ Theme-based
 <!-- AUTO-GENERATED-CHECK_SCRIPTS:START -->
 ## Checklist Script Index (Auto-generated)
 
-list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
+The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 
 - `check_flutter_domain_imports.sh`
 - `check_material_buttons.sh`
