@@ -145,10 +145,13 @@ class _SyncQueueInspectorSheet extends StatelessWidget {
                     operation.entityType,
                     operation.retryCount,
                   );
-                  return PlatformAdaptive.listTile(
-                    context: itemContext,
-                    title: Text(operation.id),
-                    subtitle: Text(subtitle),
+                  return KeyedSubtree(
+                    key: ValueKey<String>('sync-op-${operation.id}'),
+                    child: PlatformAdaptive.listTile(
+                      context: itemContext,
+                      title: Text(operation.id),
+                      subtitle: Text(subtitle),
+                    ),
                   );
                 },
                 separatorBuilder:

@@ -30,6 +30,7 @@ class GraphqlBody extends StatelessWidget {
       itemBuilder: (final context, final index) {
         final GraphqlCountry country = bodyData.countries[index];
         return GraphqlCountryCard(
+          key: ValueKey<String>('graphql-country-${country.code}'),
           country: country,
           capitalLabel: capitalLabel,
           currencyLabel: currencyLabel,

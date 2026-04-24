@@ -41,10 +41,9 @@ class _OnlineTherapyDemoCallPageState extends State<OnlineTherapyDemoCallPage> {
           icon: const Icon(Icons.refresh),
         ),
       ],
-      body: ListView.builder(
+      body: ListView(
         padding: const EdgeInsets.all(16),
-        itemCount: items.length,
-        itemBuilder: (context, index) => items[index],
+        children: items,
       ),
     );
   }

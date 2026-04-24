@@ -166,6 +166,28 @@ void main() {
 
       expect(selectedValue, 'Beta');
     });
+
+    testWidgets('showPickerModal keys material rows with itemKey', (
+      final WidgetTester tester,
+    ) async {
+      await _pumpMaterialAppWithMixTheme(tester);
+
+      unawaited(
+        PlatformAdaptiveSheets.showPickerModal<String>(
+          context: tester.element(find.byType(Scaffold)),
+          items: const <String>['Alpha', 'Beta'],
+          selectedItem: 'Alpha',
+          itemLabel: (final item) => item,
+          itemKey: (final item) => 'id-$item',
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.byKey(const ValueKey<Object?>('id-Alpha')), findsOneWidget);
+      expect(find.byKey(const ValueKey<Object?>('id-Beta')), findsOneWidget);
+    });
   });
 }
 

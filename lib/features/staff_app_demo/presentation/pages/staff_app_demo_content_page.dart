@@ -71,7 +71,13 @@ class StaffAppDemoContentPage extends StatelessWidget {
                       if (index >= contentItems.length) {
                         return const SizedBox.shrink();
                       }
-                      return _ContentTile(item: contentItems[index]);
+                      final item = contentItems[index];
+                      return _ContentTile(
+                        key: ValueKey<String>(
+                          'staff-content-${item.contentId}',
+                        ),
+                        item: item,
+                      );
                     },
                   ),
         },
@@ -81,7 +87,7 @@ class StaffAppDemoContentPage extends StatelessWidget {
 }
 
 class _ContentTile extends StatelessWidget {
-  const _ContentTile({required this.item});
+  const _ContentTile({required this.item, super.key});
 
   final StaffDemoContentItem item;
 

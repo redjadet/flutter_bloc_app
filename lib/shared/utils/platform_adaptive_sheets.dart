@@ -41,6 +41,7 @@ class PlatformAdaptiveSheets {
     required final List<T> items,
     required final T selectedItem,
     required final String Function(T) itemLabel,
+    final Object Function(T item)? itemKey,
     final String? title,
     final Widget Function(BuildContext, T)? itemBuilder,
   }) async {
@@ -52,6 +53,7 @@ class PlatformAdaptiveSheets {
           selectedItem: selectedItem,
           title: title,
           itemLabel: itemLabel,
+          itemKey: itemKey,
           itemBuilder: itemBuilder,
           onDone: (final result) =>
               NavigationUtils.maybePop(popupContext, result: result),
@@ -66,6 +68,7 @@ class PlatformAdaptiveSheets {
         items: items,
         selectedItem: selectedItem,
         itemLabel: itemLabel,
+        itemKey: itemKey,
         title: title,
         itemBuilder: itemBuilder,
       ),
@@ -78,6 +81,7 @@ class _MaterialPickerSheetContent<T> extends StatelessWidget {
     required this.items,
     required this.selectedItem,
     required this.itemLabel,
+    required this.itemKey,
     this.title,
     this.itemBuilder,
   });
@@ -85,6 +89,7 @@ class _MaterialPickerSheetContent<T> extends StatelessWidget {
   final List<T> items;
   final T selectedItem;
   final String Function(T) itemLabel;
+  final Object Function(T item)? itemKey;
   final String? title;
   final Widget Function(BuildContext, T)? itemBuilder;
 
@@ -114,7 +119,9 @@ class _MaterialPickerSheetContent<T> extends StatelessWidget {
                 itemCount: items.length,
                 itemBuilder: (final itemContext, final index) {
                   final T item = items[index];
+                  final Object? keyValue = itemKey?.call(item) ?? item;
                   return _MaterialPickerItemTile<T>(
+                    key: ValueKey<Object?>(keyValue),
                     item: item,
                     isSelected: item == selectedItem,
                     itemLabel: itemLabel,
@@ -136,6 +143,7 @@ class _MaterialPickerItemTile<T> extends StatelessWidget {
     required this.isSelected,
     required this.itemLabel,
     this.itemBuilder,
+    super.key,
   });
 
   final T item;
@@ -177,6 +185,7 @@ class _CupertinoPickerSheetContent<T> extends StatefulWidget {
     required this.itemLabel,
     required this.onDone,
     required this.onCancel,
+    required this.itemKey,
     this.title,
     this.itemBuilder,
   });
@@ -185,6 +194,7 @@ class _CupertinoPickerSheetContent<T> extends StatefulWidget {
   final T selectedItem;
   final String? title;
   final String Function(T) itemLabel;
+  final Object Function(T item)? itemKey;
   final Widget Function(BuildContext, T)? itemBuilder;
   final void Function(T result) onDone;
   final VoidCallback onCancel;
@@ -248,16 +258,20 @@ class _CupertinoPickerSheetContentState<T>
                     });
                   }
                 },
-                children: widget.items
-                    .map(
-                      (final item) => Center(
+                children: widget.items.map(
+                  (final item) {
+                    final Object? keyValue = widget.itemKey?.call(item) ?? item;
+                    return KeyedSubtree(
+                      key: ValueKey<Object?>(keyValue),
+                      child: Center(
                         child: switch (widget.itemBuilder) {
                           final fn? => fn(context, item),
                           _ => Text(widget.itemLabel(item)),
                         },
                       ),
-                    )
-                    .toList(),
+                    );
+                  },
+                ).toList(),
               ),
             ),
             Row(

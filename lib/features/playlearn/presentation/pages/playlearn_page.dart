@@ -68,6 +68,7 @@ class PlaylearnPage extends StatelessWidget {
                 }
                 final topic = topics[index];
                 return TopicCard(
+                  key: ValueKey<String>('topic-${topic.id}'),
                   topic: topic,
                   displayName: _topicDisplayName(topic.nameL10nKey, l10n),
                   onTap: () => context.pushNamed(

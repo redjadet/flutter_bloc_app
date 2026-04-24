@@ -164,17 +164,21 @@ class _CaseStudyHistoryPageState extends State<CaseStudyHistoryPage> {
               separatorBuilder: (context, index) => const Divider(height: 1),
               itemBuilder: (context, i) {
                 if (i == 0) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                    child: Align(
-                      alignment: AlignmentDirectional.centerStart,
-                      child: CaseStudyDataModeBadge(mode: mode),
+                  return KeyedSubtree(
+                    key: const ValueKey('case-study-history-header'),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: CaseStudyDataModeBadge(mode: mode),
+                      ),
                     ),
                   );
                 }
                 final int recordIndex = i - 1;
                 final CaseStudyRecord r = records[recordIndex];
                 return ListTile(
+                  key: ValueKey<String>('case-study-record-${r.id}'),
                   title: Text(r.doctorName),
                   subtitle: Text(
                     '${caseStudyCaseTypeTitle(l10n, r.caseType)} · ${fmt.format(r.submittedAt.toLocal())}',

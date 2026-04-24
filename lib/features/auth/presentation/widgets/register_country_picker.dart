@@ -23,6 +23,7 @@ Future<CountryOption?> showCountryPicker({
         actions: kSupportedCountries
             .map(
               (final country) => CupertinoActionSheetAction(
+                key: ValueKey<String>('country-${country.code}'),
                 isDefaultAction: country == selected,
                 onPressed: () =>
                     NavigationUtils.maybePop(popupContext, result: country),
@@ -70,6 +71,7 @@ Future<CountryOption?> showCountryPicker({
                     final country = kSupportedCountries[index];
                     final bool isSelected = country == selected;
                     return ListTile(
+                      key: ValueKey<String>('country-${country.code}'),
                       leading: Text(
                         country.flagEmoji,
                         style: const TextStyle(fontSize: 24),

@@ -289,13 +289,27 @@ class ExamplePageBody extends StatelessWidget {
           SizedBox(height: context.responsiveGapS),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 250),
-            child: IsolateResultSection(
-              isLoading: isRunningIsolates,
-              errorMessage: isolateError,
-              fibonacciInput: fibonacciInput,
-              fibonacciResult: fibonacciResult,
-              parallelValues: parallelValues,
-              parallelDuration: parallelDuration,
+            child: KeyedSubtree(
+              key: ValueKey<String>(
+                isRunningIsolates
+                    ? 'loading'
+                    : isolateError != null
+                    ? 'error'
+                    : (fibonacciInput != null &&
+                          fibonacciResult != null &&
+                          parallelValues != null &&
+                          parallelDuration != null)
+                    ? 'result'
+                    : 'idle',
+              ),
+              child: IsolateResultSection(
+                isLoading: isRunningIsolates,
+                errorMessage: isolateError,
+                fibonacciInput: fibonacciInput,
+                fibonacciResult: fibonacciResult,
+                parallelValues: parallelValues,
+                parallelDuration: parallelDuration,
+              ),
             ),
           ),
         ],
