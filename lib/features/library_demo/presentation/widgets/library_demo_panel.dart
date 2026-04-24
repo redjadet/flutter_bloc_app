@@ -54,7 +54,10 @@ class LibraryDemoPanel extends StatelessWidget {
             style: EpochTextStyles.heading(context),
           ),
           SizedBox(height: EpochSpacing.gapMedium),
-          LibrarySearchRow(l10n: l10n),
+          LibrarySearchRow(
+            key: const ValueKey('library-demo-search-row'),
+            l10n: l10n,
+          ),
           SizedBox(height: categoryGap),
           LibraryCategoryList(l10n: l10n),
           SizedBox(height: sectionGap),
