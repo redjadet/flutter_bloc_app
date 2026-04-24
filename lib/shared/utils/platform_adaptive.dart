@@ -222,6 +222,7 @@ class PlatformAdaptive {
     required final List<T> items,
     required final T selectedItem,
     required final String Function(T) itemLabel,
+    final Object Function(T item)? itemKey,
     final String? title,
     final Widget Function(BuildContext, T)? itemBuilder,
   }) => PlatformAdaptiveSheets.showPickerModal(
@@ -229,6 +230,7 @@ class PlatformAdaptive {
     items: items,
     selectedItem: selectedItem,
     itemLabel: itemLabel,
+    itemKey: itemKey,
     title: title,
     itemBuilder: itemBuilder,
   );

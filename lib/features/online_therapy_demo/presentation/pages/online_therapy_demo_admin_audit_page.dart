@@ -47,27 +47,37 @@ class _OnlineTherapyDemoAdminAuditPageState
         itemBuilder: (context, index) {
           if (index == 0) {
             if (session.user == null) {
-              return const Padding(
-                padding: EdgeInsets.only(bottom: 8),
-                child: OnlineTherapyLoggedOutPrompt(),
-              );
-            }
-            if (state.errorMessage case final String errorMessage?) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Text(
-                  errorMessage,
-                  style: const TextStyle(color: Colors.red),
+              return const KeyedSubtree(
+                key: ValueKey('online-therapy-admin-audit-header-logged-out'),
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 8),
+                  child: OnlineTherapyLoggedOutPrompt(),
                 ),
               );
             }
-            return const Padding(
-              padding: EdgeInsets.only(bottom: 8),
-              child: Text('Recent security-relevant events (demo).'),
+            if (state.errorMessage case final String errorMessage?) {
+              return KeyedSubtree(
+                key: const ValueKey('online-therapy-admin-audit-header-error'),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Text(
+                    errorMessage,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
+              );
+            }
+            return const KeyedSubtree(
+              key: ValueKey('online-therapy-admin-audit-header-ok'),
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: Text('Recent security-relevant events (demo).'),
+              ),
             );
           }
           final e = events[index - 1];
           return ListTile(
+            key: ValueKey<String>('audit-event-${e.id}'),
             dense: true,
             title: Text(
               e.action,

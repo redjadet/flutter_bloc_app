@@ -20,17 +20,20 @@ class OnlineTherapyDemoClientHubPage extends StatelessWidget {
       ListTile(
         leading: const Icon(Icons.person_search_outlined),
         title: const Text('Therapists'),
-        onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoClientTherapists),
+        onTap: () =>
+            context.pushNamed(AppRoutes.onlineTherapyDemoClientTherapists),
       ),
       ListTile(
         leading: const Icon(Icons.event_outlined),
         title: const Text('My appointments'),
-        onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoClientAppointments),
+        onTap: () =>
+            context.pushNamed(AppRoutes.onlineTherapyDemoClientAppointments),
       ),
       ListTile(
         leading: const Icon(Icons.chat_bubble_outline),
         title: const Text('Messaging'),
-        onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoClientMessaging),
+        onTap: () =>
+            context.pushNamed(AppRoutes.onlineTherapyDemoClientMessaging),
       ),
       ListTile(
         leading: const Icon(Icons.videocam_outlined),
@@ -47,10 +50,9 @@ class OnlineTherapyDemoClientHubPage extends StatelessWidget {
 
     return CommonPageLayout(
       title: 'Client — Therapy demo',
-      body: ListView.builder(
+      body: ListView(
         padding: const EdgeInsets.all(16),
-        itemCount: items.length,
-        itemBuilder: (context, index) => items[index],
+        children: items,
       ),
     );
   }
@@ -71,17 +73,20 @@ class OnlineTherapyDemoTherapistHubPage extends StatelessWidget {
       ListTile(
         leading: const Icon(Icons.event_available_outlined),
         title: const Text('Appointments'),
-        onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoTherapistAppointments),
+        onTap: () =>
+            context.pushNamed(AppRoutes.onlineTherapyDemoTherapistAppointments),
       ),
       ListTile(
         leading: const Icon(Icons.chat_bubble_outline),
         title: const Text('Messaging'),
-        onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoTherapistMessaging),
+        onTap: () =>
+            context.pushNamed(AppRoutes.onlineTherapyDemoTherapistMessaging),
       ),
       ListTile(
         leading: const Icon(Icons.videocam_outlined),
         title: const Text('Call'),
-        onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoTherapistCall),
+        onTap: () =>
+            context.pushNamed(AppRoutes.onlineTherapyDemoTherapistCall),
       ),
       const Divider(height: 24),
       ListTile(
@@ -93,10 +98,9 @@ class OnlineTherapyDemoTherapistHubPage extends StatelessWidget {
 
     return CommonPageLayout(
       title: 'Therapist — Therapy demo',
-      body: ListView.builder(
+      body: ListView(
         padding: const EdgeInsets.all(16),
-        itemCount: items.length,
-        itemBuilder: (context, index) => items[index],
+        children: items,
       ),
     );
   }
@@ -117,7 +121,8 @@ class OnlineTherapyDemoAdminHubPage extends StatelessWidget {
       ListTile(
         leading: const Icon(Icons.verified_user_outlined),
         title: const Text('Therapist verification'),
-        onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoAdminVerification),
+        onTap: () =>
+            context.pushNamed(AppRoutes.onlineTherapyDemoAdminVerification),
       ),
       ListTile(
         leading: const Icon(Icons.security_outlined),
@@ -134,10 +139,9 @@ class OnlineTherapyDemoAdminHubPage extends StatelessWidget {
 
     return CommonPageLayout(
       title: 'Admin — Therapy demo',
-      body: ListView.builder(
+      body: ListView(
         padding: const EdgeInsets.all(16),
-        itemCount: items.length,
-        itemBuilder: (context, index) => items[index],
+        children: items,
       ),
     );
   }

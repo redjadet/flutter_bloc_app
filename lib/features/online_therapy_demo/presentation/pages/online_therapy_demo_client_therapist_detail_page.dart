@@ -118,7 +118,8 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
                               cubit.setPendingBookingSlot(slot);
                               unawaited(
                                 context.pushNamed(
-                                  AppRoutes.onlineTherapyDemoClientBookingConfirm,
+                                  AppRoutes
+                                      .onlineTherapyDemoClientBookingConfirm,
                                 ),
                               );
                             },
@@ -132,10 +133,9 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
 
     return CommonPageLayout(
       title: therapist?.title ?? 'Therapist',
-      body: ListView.builder(
+      body: ListView(
         padding: const EdgeInsets.all(16),
-        itemCount: items.length,
-        itemBuilder: (context, index) => items[index],
+        children: items,
       ),
     );
   }

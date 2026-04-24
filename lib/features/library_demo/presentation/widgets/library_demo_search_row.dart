@@ -4,10 +4,23 @@ import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/libr
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
 
-class LibrarySearchRow extends StatelessWidget {
+class LibrarySearchRow extends StatefulWidget {
   const LibrarySearchRow({required this.l10n, super.key});
 
   final AppLocalizations l10n;
+
+  @override
+  State<LibrarySearchRow> createState() => _LibrarySearchRowState();
+}
+
+class _LibrarySearchRowState extends State<LibrarySearchRow> {
+  late final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(final BuildContext context) => Row(
@@ -27,11 +40,13 @@ class LibrarySearchRow extends StatelessWidget {
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: TextField(
+              key: const ValueKey('library-demo-search-field'),
+              controller: _controller,
               style: EpochTextStyles.searchPlaceholder(context).copyWith(
                 color: EpochColors.warmGreyLightest,
               ),
               decoration: InputDecoration(
-                hintText: l10n.libraryDemoSearchHint.toUpperCase(),
+                hintText: widget.l10n.libraryDemoSearchHint.toUpperCase(),
                 hintStyle: EpochTextStyles.searchPlaceholder(context),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
@@ -45,7 +60,7 @@ class LibrarySearchRow extends StatelessWidget {
       LibraryDemoIconButton(
         icon: const LibraryFilterIcon(),
         onPressed: () {},
-        tooltip: l10n.libraryDemoFilterButtonLabel,
+        tooltip: widget.l10n.libraryDemoFilterButtonLabel,
         backgroundColor: EpochColors.ash.withValues(alpha: 0.5),
       ),
     ],

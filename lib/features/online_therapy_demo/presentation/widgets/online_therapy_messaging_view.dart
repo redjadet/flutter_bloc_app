@@ -77,6 +77,7 @@ class _OnlineTherapyMessagingViewState
                           ? ' • retry'
                           : '';
                       return ListTile(
+                        key: ValueKey<String>('msg-${m.id}'),
                         dense: true,
                         title: Text(
                           m.body,
@@ -191,6 +192,7 @@ class _OnlineTherapyMessagingViewState
                   final c = conversations[index];
                   final selected = c.id == convId;
                   return ListTile(
+                    key: ValueKey<String>('conv-${c.id}'),
                     dense: true,
                     selected: selected,
                     title: Text(

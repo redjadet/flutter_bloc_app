@@ -51,10 +51,9 @@ class OnlineTherapyDemoControlsPage extends StatelessWidget {
 
     return CommonPageLayout(
       title: 'Demo controls',
-      body: ListView.builder(
+      body: ListView(
         padding: const EdgeInsets.all(16),
-        itemCount: items.length,
-        itemBuilder: (context, index) => items[index],
+        children: items,
       ),
     );
   }

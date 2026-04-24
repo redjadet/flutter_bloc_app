@@ -42,10 +42,7 @@ class _ClientBookingPanel extends StatelessWidget {
           const SizedBox(height: 16),
           SizedBox(height: 720, child: details),
         ];
-        return ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) => items[index],
-        );
+        return ListView(children: items);
       },
     );
   }
@@ -76,6 +73,7 @@ class _TherapistList extends StatelessWidget {
         final t = therapists[index];
         final selected = t.id == selectedId;
         return ListTile(
+          key: ValueKey<String>('client-booking-therapist-${t.id}'),
           selected: selected,
           title: Text(t.title),
           subtitle: Text(
@@ -168,6 +166,9 @@ class _TherapistDetails extends StatelessWidget {
                     final canBook =
                         slot.status == AvailabilitySlotStatus.available;
                     return ListTile(
+                      key: ValueKey<String>(
+                        'client-booking-availability-${slot.startAt.toIso8601String()}',
+                      ),
                       contentPadding: EdgeInsets.zero,
                       title: Text(formatDeviceDateTime(context, slot.startAt)),
                       subtitle: Text(formatDeviceDateTime(context, slot.endAt)),
@@ -198,6 +199,9 @@ class _TherapistDetails extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final a = appointments[index];
                       return ListTile(
+                        key: ValueKey<String>(
+                          'client-booking-appointment-${a.id}',
+                        ),
                         contentPadding: EdgeInsets.zero,
                         title: Text(formatDeviceDateTime(context, a.startAt)),
                         subtitle: Text('Status: ${a.status.name}'),

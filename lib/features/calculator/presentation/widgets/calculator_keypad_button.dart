@@ -6,6 +6,7 @@ class _CalculatorButton extends StatelessWidget {
     required this.actions,
     required this.onEvaluate,
     required this.palette,
+    super.key,
   });
 
   final _ButtonConfig config;

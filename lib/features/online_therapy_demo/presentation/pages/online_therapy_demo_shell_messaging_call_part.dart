@@ -71,6 +71,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
                           ? ' • retry'
                           : '';
                       return ListTile(
+                        key: ValueKey<String>('msg-${m.id}'),
                         dense: true,
                         title: Text(
                           m.body,
@@ -185,6 +186,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
                   final c = conversations[index];
                   final selected = c.id == convId;
                   return ListTile(
+                    key: ValueKey<String>('conv-${c.id}'),
                     dense: true,
                     selected: selected,
                     title: Text(
