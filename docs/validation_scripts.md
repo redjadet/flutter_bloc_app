@@ -790,6 +790,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_solid_data_presentation_imports.sh`
 - `check_perf_shrinkwrap_lists.sh`
 - `check_perf_nonbuilder_lists.sh`
+- `check_widget_identity.sh`
 - `check_perf_missing_repaint_boundary.sh`
 - `check_perf_unnecessary_rebuilds.sh`
 - `check_live_state_list_indexing.sh`
