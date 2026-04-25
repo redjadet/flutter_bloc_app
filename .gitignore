@@ -123,3 +123,4 @@ docs/Harness Engineering.pdf
 docs/Harness_Engineering_Leveraging_Codex_OpenAI.pdf
 analysis/agent_scorecard/archive/scorecard-events-2026-03-24.jsonl.gz
 analysis/agent_scorecard/archive/scorecard-events-2026-03-25.jsonl.gz
+analysis/agent_scorecard/archive/*
