@@ -978,6 +978,7 @@ CHECK_MESSAGES=(
   "Checking feature modularity (library_demo / settings cross-imports)..."
   "Checking centralized memory-pressure handling..."
   "Checking agent knowledge base map..."
+  "Checking agent memory compounding..."
   "Checking AI-generated-code smells (high-signal)..."
   "Running Pyright on Python (Render chat demo + tool/)..."
 )

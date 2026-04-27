@@ -28,7 +28,7 @@ Bootstrap: `bash tool/agent_session_bootstrap.sh`
 
 ## Repo Snapshot
 
-Flutter 3.41.7 / Dart 3.11.5. Clean Architecture:
+Flutter 3.41.8 / Dart 3.11.5. Clean Architecture:
 `Presentation -> Domain <- Data`. Cubit/BLoC state, `get_it` DI, GoRouter.
 Offline-first sync: `lib/shared/sync/`. Entrypoints: `lib/main_dev.dart`,
 `lib/main_staging.dart`, `lib/main_prod.dart`.

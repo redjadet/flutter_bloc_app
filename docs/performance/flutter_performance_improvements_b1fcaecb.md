@@ -7,7 +7,7 @@ This file was moved from repo root to keep docs organized.
 ## Environment
 
 - **Date**: 2026-03-25
-- **Flutter**: 3.41.7 (stable)
+- **Flutter**: 3.41.8 (stable)
 - **Dart**: 3.11.5
 - **DevTools**: 2.54.2
 - **Target**: iOS (iPhone simulator)
