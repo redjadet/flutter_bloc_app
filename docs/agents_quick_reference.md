@@ -6,7 +6,7 @@ Knowledge: [`agent_knowledge_base.md`](agent_knowledge_base.md). Review:
 If [`AGENTS.md`](../AGENTS.md) unavailable, combine this with
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 
-Pinned repo toolchain: Flutter 3.41.7 / Dart 3.11.5.
+Pinned repo toolchain: Flutter 3.41.8 / Dart 3.11.5.
 
 ## Validation Chooser
 

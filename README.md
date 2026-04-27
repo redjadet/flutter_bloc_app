@@ -3,10 +3,10 @@
 A Flutter reference application for Clean Architecture, `flutter_bloc`,
 offline-first data flows, and integration-heavy product demos.
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.41.7-blue.svg)](https://flutter.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.41.8-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.5-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-72%2E59%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-70%2E54%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
@@ -64,7 +64,7 @@ realistic scope.
 
 ## Repo Snapshot
 
-- Toolchain: Flutter `3.41.7`, Dart `3.11.5`
+- Toolchain: Flutter `3.41.8`, Dart `3.11.5`
 - Entry points: `lib/main_dev.dart`, `lib/main_staging.dart`, `lib/main_prod.dart`
 - Architecture shape: `Presentation -> Domain <- Data`
 - Core infra: `flutter_bloc`, `get_it`, `GoRouter`, offline-first sync under `lib/shared/sync/`

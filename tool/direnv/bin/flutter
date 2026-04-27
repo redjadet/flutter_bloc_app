@@ -47,10 +47,9 @@ subcommand="${1:-}"
 case "$subcommand" in
   run|build|test|drive|attach)
     shift || true
-    exec "$REAL_FLUTTER" "$subcommand" "${DART_DEFINES[@]}" "$@"
+    exec env PATH="$REAL_PATH" "$REAL_FLUTTER" "$subcommand" "${DART_DEFINES[@]}" "$@"
     ;;
   *)
-    exec "$REAL_FLUTTER" "$@"
+    exec env PATH="$REAL_PATH" "$REAL_FLUTTER" "$@"
     ;;
 esac
-
