@@ -3,12 +3,18 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 RiskBand = Literal["low", "medium", "high"]
 RecommendedAction = Literal["approve", "manual_review", "request_docs", "decline"]
 ProofConfidence = Literal["complete", "rules_only", "partial"]
+
+MAX_NOTE_LENGTH = 2000
+
+
+class RequestModel(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
 
 class CaseSummary(BaseModel):
@@ -65,8 +71,8 @@ class Action(BaseModel):
     created_at: str
 
 
-class CreateDecisionRequest(BaseModel):
-    operator_note: str = Field(default="")
+class CreateDecisionRequest(RequestModel):
+    operator_note: str = Field(default="", max_length=MAX_NOTE_LENGTH)
 
 
 class SimilarCaseProof(BaseModel):
@@ -140,9 +146,9 @@ class CreateDecisionResponse(BaseModel):
     meta: dict[str, Any]
 
 
-class CreateActionRequest(BaseModel):
+class CreateActionRequest(RequestModel):
     action_type: RecommendedAction
-    note: str
+    note: str = Field(min_length=1, max_length=MAX_NOTE_LENGTH)
 
 
 class CreateActionResponse(Action):

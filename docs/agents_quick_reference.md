@@ -1,8 +1,8 @@
 # Agent Quick Reference
 
 Commands + routing lookup. Convenience only. Map: [`AGENTS.md`](../AGENTS.md).
-Knowledge base: [`agent_knowledge_base.md`](agent_knowledge_base.md). Review
-gate: [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
+Knowledge: [`agent_knowledge_base.md`](agent_knowledge_base.md). Review:
+[`ai_code_review_protocol.md`](ai_code_review_protocol.md).
 If [`AGENTS.md`](../AGENTS.md) unavailable, combine this with
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 
@@ -10,8 +10,7 @@ Pinned repo toolchain: Flutter 3.41.7 / Dart 3.11.5.
 
 ## Validation Chooser
 
-Decision guide:
-[`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
+Decision guide: [`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
 
 | Situation | Command |
 | --- | --- |
@@ -28,6 +27,7 @@ Decision guide:
 | Tracker contract check | `bash tool/validate_task_trackers.sh` |
 | Repo-managed host-template drift check | `./tool/check_agent_asset_drift.sh` |
 | Host-template preview sync | `./tool/sync_agent_assets.sh --dry-run` |
+| Scan for AI-generated-code smells (high-signal helper) | `./tool/check_ai_generated_code_smells.sh` |
 | Cross-host diff review, explicit request only | `./tool/request_codex_feedback.sh` |
 | Cross-host **plan** review (markdown plan + Codex) | `./tool/run_codex_plan_review.sh PATH/TO/plan.md` |
 
@@ -47,19 +47,19 @@ from snapshot, guard stale indexes. Header-row lists (`items.length + 1` with
 
 ## Host Trackers
 
-- Cursor: [`tasks/cursor/todo.md`](../tasks/cursor/todo.md)
-- Codex: [`tasks/codex/todo.md`](../tasks/codex/todo.md)
+Cursor: [`tasks/cursor/todo.md`](../tasks/cursor/todo.md). Codex:
+[`tasks/codex/todo.md`](../tasks/codex/todo.md).
 
 ## Harness Reminders
 
-- Classify complexity/risk/scope/uncertainty before plan/validation/delegation depth.
-- If stuck repeatedly, add missing repo capability: doc/test/fixture/script/route proof/log helper/validation check.
-- Non-trivial: compare approaches, pick lowest-regret; stop when extra work no
-  longer reduces real risk.
-- Make runtime behavior legible. UI/app work: prefer app-visible proof over logs-only claims.
-- Enforce invariants mechanically where possible; don’t paste long host prompts.
-- Keep host assets thin + synced from `tool/agent_host_templates/`.
-- Behavior changes start in source docs, then sync both host templates; don’t fork unless host capability truly differs.
+- Classify complexity/risk/scope/uncertainty before scaling plan/validation/delegation.
+- Vague ask -> assumptions + success criteria + smallest verifiable slice before edits.
+- Bug fix -> reproduce/reason to root cause before code change.
+- Repeated failure => add repo capability: doc/test/fixture/script/route proof/log helper/validation check.
+- Non-trivial: compare approaches, pick lowest-regret, stop when extra work stops reducing real risk.
+- UI/app work: prefer app-visible proof over logs-only claims.
+- Enforce invariants mechanically; keep host assets thin and synced from `tool/agent_host_templates/`.
+- Behavior changes start in source docs, then host templates; don’t fork unless host capability differs.
 
 ## Host Adapters
 
@@ -76,11 +76,9 @@ Repo-managed Cursor slash prompts (synced by `./tool/sync_agent_assets.sh`):
 
 Cold-start fit:
 
-- Codex: bootstrap -> [`AGENTS.md`](../AGENTS.md), knowledge base, review
-  protocol, quick reference, README
+- Codex: bootstrap -> [`AGENTS.md`](../AGENTS.md), knowledge base, review protocol, quick reference, README
 - Cursor: global rule + skills point back to same canon; don’t duplicate policy
-- Cursor compression should use `caveman-compress` or
-  `./tool/compress_agent_doc.sh`, not Anthropic auth.
+- Cursor compression: `caveman-compress` or `./tool/compress_agent_doc.sh`, not Anthropic auth.
 
 ## Read By Task
 

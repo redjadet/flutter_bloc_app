@@ -120,3 +120,28 @@ def test_action_ids_are_unique_even_with_stale_action_snapshot(client, monkeypat
     assert second.status_code == 200
     assert len(captured_ids) == 2
     assert len(set(captured_ids)) == 2
+
+
+def test_decision_rejects_oversized_operator_note(client):
+    oversized = "x" * 2500
+    r = client.post("/cases/case_high_001/decision", json={"operator_note": oversized})
+    assert r.status_code == 422
+
+
+def test_action_rejects_empty_note(client):
+    r = client.post("/cases/case_high_001/actions", json={"action_type": "request_docs", "note": ""})
+    assert r.status_code == 422
+
+
+def test_action_rejects_oversized_note(client):
+    oversized = "x" * 2500
+    r = client.post("/cases/case_high_001/actions", json={"action_type": "request_docs", "note": oversized})
+    assert r.status_code == 422
+
+
+def test_action_rejects_unknown_fields(client):
+    r = client.post(
+        "/cases/case_high_001/actions",
+        json={"action_type": "request_docs", "note": "Need docs", "unknown": "nope"},
+    )
+    assert r.status_code == 422

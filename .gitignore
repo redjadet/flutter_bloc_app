@@ -108,7 +108,6 @@ tmp/*
 tasks/*
 CLAUDE.md
 docs/gstack_integration.md
-AGENTS.md
 docs/app_for_small_business.txt
 *.original.md
 
@@ -124,3 +123,4 @@ docs/Harness_Engineering_Leveraging_Codex_OpenAI.pdf
 analysis/agent_scorecard/archive/scorecard-events-2026-03-24.jsonl.gz
 analysis/agent_scorecard/archive/scorecard-events-2026-03-25.jsonl.gz
 analysis/agent_scorecard/archive/*
+docs/Spot_Bad_AI_Generated_Code.pdf

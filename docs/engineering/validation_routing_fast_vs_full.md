@@ -2,9 +2,8 @@
 
 Entrypoint list: [`docs/agents_quick_reference.md`](../agents_quick_reference.md) (**Commands**).
 
-Defines when to run fast/scoped validation vs full validation.
-Supports loop: **Plan, Execute, Verify, Report**. Pick lane in **Verify**.
-Report only after proof ran or blocker confirmed.
+Defines fast/scoped vs full validation. Supports **Plan, Execute, Verify, Report**.
+Pick lane in **Verify**. Report after proof ran or blocker confirmed.
 
 ## Fast Path
 
@@ -56,20 +55,18 @@ Local fast sanity shortcut:
 
 ## Docs And Agent Guidance Path
 
-Use targeted validation for docs-only repo guidance, workflow docs, and
-agent-facing files.
+Use targeted validation for docs-only repo guidance, workflow docs, and agent-facing files.
 
 Typical path:
 
-- Self-verify final wording against [`AGENTS.md`](../../AGENTS.md), user
-  request, changed docs, blockers, and residual risk before reporting back
+- Self-verify final wording against [`AGENTS.md`](../../AGENTS.md), user request, changed docs, blockers, and residual risk before reporting
 - Markdown lint or link/doc checks on touched paths
 - `bash tool/check_docs_gardening.sh` for cheap deterministic doc-rot detection
 - `bash tool/validate_task_trackers.sh` to ensure `tasks/*/todo.md` follows canonical tracker contract
 - `./tool/check_agent_asset_drift.sh` when `tool/agent_host_templates/` changed
 - `./tool/sync_agent_assets.sh --dry-run` when repo-managed host assets changed
 
-Escalate to `./tool/delivery_checklist.sh` / `./bin/checklist` when doc change materially changes validation guidance, delivery policy, or repo-wide operating rules (incl [`AGENTS.md`](../../AGENTS.md)).
+Escalate to `./tool/delivery_checklist.sh` / `./bin/checklist` when docs materially change validation guidance, delivery policy, or repo-wide operating rules (incl [`AGENTS.md`](../../AGENTS.md)).
 
 ## Routing Matrix (path triggers)
 
@@ -87,7 +84,7 @@ Routing source of truth. If host prompt/helper script disagrees, this doc wins.
 
 ## Local Tooling Path
 
-Use checklist's built-in tooling fast path for local shell/checklist/validation-doc work when every changed file stays inside `tool/*.sh`, `bin/*`, repo-managed host-template files, or validation-guidance docs.
+Use checklist's built-in tooling fast path for local shell/checklist/validation-doc work when every changed file stays inside `tool/*.sh`, `bin/*`, repo-managed host templates, or validation-guidance docs.
 
 Behavior:
 
