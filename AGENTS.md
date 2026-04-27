@@ -72,6 +72,8 @@ tracks plan/proof in `tasks/codex/todo.md` or `tasks/cursor/todo.md`.
 - New user-visible feature needs app entrypoint unless doc says route-only intentional.
 - Surgical diff: every changed line traces to request or required validation/doc update.
 - Repeated failure => add missing repo capability: doc/fixture/test/script/UI proof/log helper/validation check.
+- Verified reusable agent conclusion => owning source doc, `docs/changes/`,
+  `docs/plans/`, or `tasks/lessons.md`; don't leave it chat-only.
 - Widget-test viewport/pixel-ratio setup uses `WidgetTester.view`, not deprecated `tester.binding.window`.
 - Use shared lifecycle helpers before custom subscription/timer tracking.
 - Retry/replay GET/HEAD only unless call site opts in.

@@ -29,6 +29,9 @@ bash tool/validate_task_trackers.sh --help >/dev/null
 echo "fixtures|check_docs_gardening|help"
 bash tool/check_docs_gardening.sh --help >/dev/null
 
+echo "fixtures|check_agent_memory_compounding|help"
+bash tool/check_agent_memory_compounding.sh --help >/dev/null
+
 fixture_bad="tool/fixtures/harness/bad_missing_md_token.md"
 fixture_space="tool/fixtures/harness/fixture with space.md"
 
