@@ -13,6 +13,7 @@ Source of truth for how agents find/use repo knowledge. Goal: progressive disclo
 | Goals beat activity. | Vague asks need success criteria before code. |
 | One unit at time. | Small coherent slice, finish, verify, move on. |
 | Codebase = knowledge base. | Durable context lives in versioned docs/plans/tests/scripts/ADRs. |
+| Knowledge should compound. | File reusable conclusions back into owning repo memory instead of leaving them in chat. |
 | Harness parts deletable. | Host assets thin; delete stale rules once validation proves redundant. |
 | Missing capability beats retry. | If stuck, add doc/tool/test/fixture/script so next run succeeds. |
 | Timing matters. | Add abstraction/features only when current need justifies them. |
@@ -75,6 +76,30 @@ Examples:
 - repeated review comment -> invariant, linter, test helper, or source-doc update
 - UI proof gap -> runnable smoke path, screenshot expectation, or integration map
 
+## Memory Compounding
+
+Useful agent work should leave the next session smarter without growing a broad
+wiki.
+
+- Treat source docs, ADRs, plans, changes, tests, scripts, fixtures, and host
+  trackers as the compiled memory layer.
+- File reusable conclusions into the owning source doc, `docs/changes/`,
+  `docs/plans/`, or [`../tasks/lessons.md`](../tasks/lessons.md). Keep
+  transient execution state in host trackers.
+- Preserve source-of-truth boundaries: code/tests beat generated summaries;
+  source docs beat host templates; human/user corrections beat inferred rules.
+- Do not dump chat transcripts or generic summaries into docs. Add only compact,
+  cited, task-relevant facts that future agents can act on.
+- Prefer fat skills only for repeated, validated workflows with clear triggers,
+  write scope, tools, and quality bar. Do not add cron/autonomous behavior
+  without explicit user approval.
+- For large or fast-changing external corpora, use retrieval/search. For this
+  repo, prefer maps, `rg`, code-review-graph, and targeted validation over a
+  separate RAG layer.
+- Semantic lint during doc/agent changes: check for stale plans, duplicate
+  rules, contradictions between [`AGENTS.md`](../AGENTS.md), source docs, and host templates,
+  and reusable conclusions still stranded in task notes.
+
 ## System Of Record Layout
 
 | Area | Source | Status | Use when |
@@ -124,6 +149,8 @@ Constrain architecture/reliability centrally; leave implementation expression lo
 - Enforce layer boundaries, routing reachability, lifecycle cleanup, retry/replay safety, sync behavior, and validation routing mechanically where possible.
 - Write guard-script errors as remediation instructions for future agents.
 - Promote repeated review comments into tests, scripts, ADRs, or source docs.
+- Promote reusable conclusions into durable repo memory after verification, not
+  before.
 - Surgical diffs. Changed lines trace to user request or required validation/doc updates.
 - Don’t encode every stylistic preference. Change meets bar when correct, maintainable, validated, and legible to future agents.
 - Keep custom checks narrow/reversible. Delete or relax when no longer catching risk.
@@ -169,6 +196,8 @@ Codex and Cursor should not grow separate operating doctrines.
 Knowledge base is validated by repo tooling:
 
 - `./tool/check_agent_knowledge_base.sh` keeps local [`AGENTS.md`](../AGENTS.md) short and checks required links, source indexes, host-template pointers.
+- `./tool/check_agent_memory_compounding.sh` keeps memory-compounding guidance
+  automatic, source-aligned, and explicit-approval-gated for autonomous action.
 - `./tool/validate_validation_docs.sh` keeps validation docs aligned with checklist scripts.
 - `./tool/normalize_doc_links.py` keeps local doc links clickable.
 - `./tool/check_agent_asset_drift.sh` checks managed Cursor/Codex assets against
@@ -186,6 +215,8 @@ Agents garden docs as part of touched work, not separate memory dump.
 - If plan becomes obsolete, mark it historical or move durable decisions into
   ADR/source doc.
 - If doc contradicts code, trust code plus tests first, then repair doc.
+- If tracker notes contain reusable conclusions, move them to the owning source
+  doc, `docs/changes/`, or [`tasks/lessons.md`](../tasks/lessons.md) before closing the task.
 - If rule no longer earns its keep, remove it from host templates and keep
   source doc smaller.
 - Keep cleanup continuous/small. Prefer targeted guardrails/tiny refactors over periodic large "AI cleanup" sweeps.
