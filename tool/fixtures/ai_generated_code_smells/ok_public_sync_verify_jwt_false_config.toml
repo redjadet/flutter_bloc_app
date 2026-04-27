@@ -1,0 +1,8 @@
+[functions.sync-graphql-countries]
+verify_jwt = false
+
+[functions.sync-chart-trending]
+verify_jwt = false
+
+[functions.chat-complete]
+verify_jwt = true
