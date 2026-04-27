@@ -24,6 +24,8 @@ Decision guide: [`validation_routing_fast_vs_full.md`](engineering/validation_ro
 | New shared agent-facing markdown doc | `./tool/compress_agent_doc.sh PATH`; rerun with `--overwrite-backups` to replace backup |
 | Cursor shared-doc compression | `caveman-compress` skill or `./tool/compress_agent_doc.sh PATH` |
 | Agent knowledge-base/map drift | `./tool/check_agent_knowledge_base.sh` |
+| Agent memory-compounding drift | `./tool/check_agent_memory_compounding.sh` |
+| Reusable agent conclusion | File into owning source doc, `docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](../tasks/lessons.md) |
 | Tracker contract check | `bash tool/validate_task_trackers.sh` |
 | Repo-managed host-template drift check | `./tool/check_agent_asset_drift.sh` |
 | Host-template preview sync | `./tool/sync_agent_assets.sh --dry-run` |
@@ -58,6 +60,8 @@ Cursor: [`tasks/cursor/todo.md`](../tasks/cursor/todo.md). Codex:
 - Vague ask -> assumptions + success criteria + smallest verifiable slice before edits.
 - Bug fix -> reproduce/reason to root cause before code change.
 - Repeated failure => add repo capability: doc/test/fixture/script/route proof/log helper/validation check.
+- Verified reusable conclusion => file into durable repo memory; don't leave it chat-only.
+- Agent/docs change => semantic lint for stale plans, duplicate rules, and source/template contradictions.
 - Non-trivial: compare approaches, pick lowest-regret, stop when extra work stops reducing real risk.
 - UI/app work: prefer app-visible proof over logs-only claims.
 - Enforce invariants mechanically; keep host assets thin and synced from `tool/agent_host_templates/`.

@@ -78,6 +78,7 @@ require_contains "docs/agent_knowledge_base.md" "Progressive Disclosure"
 require_contains "docs/agent_knowledge_base.md" "Adaptive Execution"
 require_contains "docs/agent_knowledge_base.md" "Agent Legibility"
 require_contains "docs/agent_knowledge_base.md" "Missing Capability Loop"
+require_contains "docs/agent_knowledge_base.md" "Memory Compounding"
 require_contains "docs/agent_knowledge_base.md" "System Of Record Layout"
 require_contains "docs/agent_knowledge_base.md" "Plans As Artifacts"
 require_contains "docs/agent_knowledge_base.md" "Invariant Enforcement"
@@ -88,8 +89,15 @@ require_contains "docs/agent_knowledge_base.md" "Mechanical Enforcement"
 require_contains "docs/agent_knowledge_base.md" "tasks/codex/todo.md"
 require_contains "docs/agent_knowledge_base.md" "tasks/cursor/todo.md"
 require_contains "docs/agent_knowledge_base.md" "tasks/lessons.md"
+require_contains "docs/agent_knowledge_base.md" "reusable conclusions"
+require_contains "docs/agent_knowledge_base.md" "Semantic lint"
 require_contains "docs/README.md" "agent_knowledge_base.md"
 require_contains "docs/validation_scripts.md" "check_agent_knowledge_base.sh"
+require_contains "docs/validation_scripts.md" "memory-compounding"
+
+if ! bash "tool/check_agent_memory_compounding.sh"; then
+  fail "Agent memory-compounding guard failed"
+fi
 
 if [ -d "tool/agent_host_templates" ]; then
   require_all_contains \

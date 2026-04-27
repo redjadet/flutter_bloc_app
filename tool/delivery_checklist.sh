@@ -269,6 +269,7 @@ validate_checklist_configuration() {
     "tool/validate_validation_docs.sh"
     "tool/check_agent_asset_drift.sh"
     "tool/check_agent_knowledge_base.sh"
+    "tool/check_agent_memory_compounding.sh"
     "tool/check_docs_gardening.sh"
     "tool/validate_task_trackers.sh"
     "tool/run_harness_fixtures.sh"
@@ -337,6 +338,7 @@ validate_docs_only_dependencies() {
     "tool/validate_validation_docs.sh"
     "tool/check_agent_asset_drift.sh"
     "tool/check_agent_knowledge_base.sh"
+    "tool/check_agent_memory_compounding.sh"
     "tool/check_docs_gardening.sh"
     "tool/validate_task_trackers.sh"
     "tool/run_harness_fixtures.sh"
@@ -1029,6 +1031,7 @@ CHECK_SCRIPTS=(
   "tool/check_feature_modularity_leaks.sh"
   "tool/check_memory_pressure_centralized.sh"
   "tool/check_agent_knowledge_base.sh"
+  "tool/check_agent_memory_compounding.sh"
   "tool/check_ai_generated_code_smells.sh"
   "tool/check_pyright_python.sh"
 )

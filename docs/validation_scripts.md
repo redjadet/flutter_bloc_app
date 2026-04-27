@@ -43,7 +43,8 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs a
 - **`check_solid_presentation_data_imports.sh`**: Prevents presentation importing data-layer types (DIP)
 - **`check_solid_data_presentation_imports.sh`**: Prevents data layer importing presentation (layering)
 - **`check_feature_modularity_leaks.sh`**: Fails on known cross-feature `package:` imports: `library_demo` must not import `scapes`; `settings` must not import `graphql_demo`, `profile`, or `remote_config`; **`remote_config` must not import `settings`** (use `shared` widgets like `SettingsSection` instead). Extend script when new boundary rules land in [modularity.md](modularity.md). Included in `./bin/checklist`.
-- **`check_agent_knowledge_base.sh`**: Keeps AI-agent map/source-doc/host-template pointers indexed; fails if [`AGENTS.md`](../AGENTS.md) grows past limit or required progressive-disclosure links disappear.
+- **`check_agent_knowledge_base.sh`**: Keeps AI-agent map/source-doc/host-template pointers indexed; fails if [`AGENTS.md`](../AGENTS.md) grows past limit or required progressive-disclosure / memory-compounding anchors disappear.
+- **`check_agent_memory_compounding.sh`**: Safe deterministic guard for memory-compounding automation; ensures reusable conclusions route to durable repo memory, source/host-template pointers stay aligned, and autonomous cron/action guidance still requires explicit user approval.
 - **`check_docs_gardening.sh`**: Cheap doc-rot check for agent-facing markdown; verifies backticked `*.md` references best-effort and keeps [`validation_scripts.md`](validation_scripts.md) aligned with `tool/delivery_checklist.sh`.
 - **`validate_task_trackers.sh`**: Validates `tasks/*/todo.md` tracker contract: required headings, non-empty write set, validation command.
 - **`run_harness_fixtures.sh`**: Smoke tests harness scripts and negative-case fixtures; runs in `./bin/checklist-fast` and docs/tooling lanes.
