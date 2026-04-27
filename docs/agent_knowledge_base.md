@@ -9,6 +9,7 @@ Source of truth for how agents find/use repo knowledge. Goal: progressive disclo
 | Context beats instructions. | Ground in real files, current docs, current diff, repo scripts. |
 | Plan != execute. | Non-trivial work starts with tracker plan before edits. |
 | Feedback loops mandatory. | AI output draft until review gate + scope-matched validation. |
+| Closed loop by default. | Plan once, execute end-to-end, verify, report proof. |
 | Goals beat activity. | Vague asks need success criteria before code. |
 | One unit at time. | Small coherent slice, finish, verify, move on. |
 | Codebase = knowledge base. | Durable context lives in versioned docs/plans/tests/scripts/ADRs. |
@@ -36,14 +37,16 @@ Scale process to task value; avoid max-depth, broad validation, or delegation by
 
 1. Classify task by complexity, risk, scope, and uncertainty.
 2. Calibrate effort: local mechanical = light; cross-system/ambiguous/high-risk = deeper plan + review.
-3. Do not edit until 95% confident in goal/scope/approach; ask until clear.
-4. For vague asks, name assumptions, success criteria, and the smallest verifiable slice before coding.
-5. If interpretations change behavior/blast radius, surface them. Ask when needed; otherwise make lowest-regret call and record tradeoff.
-6. Non-trivial: compare 2-3 approaches; pick lowest-regret by correctness, maintainability, reversibility, blast radius, and failure tolerance.
-7. Debug root cause: reproduce/reason, isolate, fix cause, verify. If unsure,
+3. Plan once (<=10 lines for normal tasks), then execute end-to-end.
+4. Ask only on hard blockers: missing credentials/tooling, unsafe ambiguity below 95% confidence, or user-owned product decision.
+5. Do not edit until 95% confident in goal/scope/approach; ask until clear.
+6. For vague asks, name assumptions, success criteria, and the smallest verifiable slice before coding.
+7. If interpretations change behavior/blast radius, surface them. Ask when needed; otherwise make lowest-regret call and record tradeoff.
+8. Non-trivial: compare 2-3 approaches; pick lowest-regret by correctness, maintainability, reversibility, blast radius, and failure tolerance.
+9. Debug root cause: reproduce/reason, isolate, fix cause, verify. If unsure,
    say so + narrow search space.
-8. Before report, predict failures: assumptions, edge cases, scale, side effects, maintenance cost. Harden material risks.
-9. Stop when value is met, major risks are handled, proof matches scope, and more work mostly adds cost.
+10. Before report, predict failures: assumptions, edge cases, scale, side effects, maintenance cost. Harden material risks.
+11. Stop when value is met, major risks are handled, proof matches scope, and more work mostly adds cost.
 
 ## Agent Legibility
 
@@ -142,7 +145,7 @@ For Codex and Cursor, finished loop:
 1. Start from map and open only task-relevant sources.
 2. Record non-trivial scope, risks, write set, validation target in host tracker.
 3. Make task legible before coding: current files, runnable surface, fixtures, logs, route proof, or acceptance criteria.
-4. Implement smallest coherent slice inside existing seams.
+4. Implement smallest coherent slice inside existing seams and keep moving until blocker/proof.
 5. Validate deterministic checks first, then risk-based review.
 6. If context/review failure repeats, add durable repo capability before reporting done.
 7. Sync host assets when agent behavior changed.

@@ -35,7 +35,8 @@ Offline-first sync: `lib/shared/sync/`. Entrypoints: `lib/main_dev.dart`,
 
 ## Loop
 
-Plan goal + needed docs. Execute in seams. Verify with
+Plan once, then execute end-to-end. Ask only on hard blockers: credentials/tooling,
+unsafe ambiguity below 95% confidence, or user-owned product decision. Verify with
 [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md) + smallest
 honest repo command. Report proof, blockers, residual risk. Non-trivial work
 tracks plan/proof in `tasks/codex/todo.md` or `tasks/cursor/todo.md`.
