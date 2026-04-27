@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from decision_service import DecisionService
 from schemas import (
+    CaseSummary,
     CreateActionRequest,
     CreateActionResponse,
     CreateDecisionRequest,
@@ -61,7 +62,8 @@ def health(matcher: SimilarCaseMatcher = Depends(get_matcher)) -> HealthResponse
 
 @app.get("/cases", response_model=GetCasesResponse)
 def list_cases(store: Store = Depends(get_store)) -> GetCasesResponse:
-    return GetCasesResponse(cases=store.list_case_summaries())
+    cases = [CaseSummary(**row) for row in store.list_case_summaries()]
+    return GetCasesResponse(cases=cases)
 
 
 @app.get("/cases/{case_id}", response_model=GetCaseDetailResponse)

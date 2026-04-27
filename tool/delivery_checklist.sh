@@ -976,6 +976,7 @@ CHECK_MESSAGES=(
   "Checking feature modularity (library_demo / settings cross-imports)..."
   "Checking centralized memory-pressure handling..."
   "Checking agent knowledge base map..."
+  "Checking AI-generated-code smells (high-signal)..."
   "Running Pyright on Python (Render chat demo + tool/)..."
 )
 
@@ -1028,6 +1029,7 @@ CHECK_SCRIPTS=(
   "tool/check_feature_modularity_leaks.sh"
   "tool/check_memory_pressure_centralized.sh"
   "tool/check_agent_knowledge_base.sh"
+  "tool/check_ai_generated_code_smells.sh"
   "tool/check_pyright_python.sh"
 )
 

@@ -1,16 +1,23 @@
 #!/usr/bin/env bash
-# Run Pyright on repo Python: Render FastAPI demo (demos/render_chat_api) and tool/.
+# Run Pyright on repo Python: demo FastAPI surfaces + tool/.
 # Catches unresolved imports, pyrightconfig mistakes (e.g. venvPath under executionEnvironments),
-# and type errors. Uses npx pyright; bootstraps demos/render_chat_api/.venv when missing.
+# and type errors. Uses npx pyright; bootstraps demo venvs when missing.
 
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
-DEMO_VENV="$PROJECT_ROOT/demos/render_chat_api/.venv"
-REQS="$PROJECT_ROOT/demos/render_chat_api/requirements.txt"
-DEV_REQS="$PROJECT_ROOT/demos/render_chat_api/requirements-dev.txt"
+RENDER_DEMO_ROOT="$PROJECT_ROOT/demos/render_chat_api"
+RENDER_DEMO_VENV="$RENDER_DEMO_ROOT/.venv"
+RENDER_REQS="$RENDER_DEMO_ROOT/requirements.txt"
+RENDER_DEV_REQS="$RENDER_DEMO_ROOT/requirements-dev.txt"
+
+AI_DECISION_DEMO_ROOT="$PROJECT_ROOT/demos/ai_decision_api"
+AI_DECISION_DEMO_VENV="$AI_DECISION_DEMO_ROOT/.venv"
+AI_DECISION_REQS="$AI_DECISION_DEMO_ROOT/requirements.txt"
+AI_DECISION_DEV_REQS="$AI_DECISION_DEMO_ROOT/requirements-dev.txt"
+AI_DECISION_PYRIGHT_CONFIG="$AI_DECISION_DEMO_ROOT/pyrightconfig.json"
 PYRIGHT_MODE="${CHECK_PYRIGHT_PYTHON_MODE:-always}"
 
 should_run_pyright_auto() {
@@ -43,9 +50,11 @@ should_run_pyright_auto() {
   for file in "${changed_files[@]}"; do
     case "$file" in
       demos/render_chat_api/*|\
+      demos/ai_decision_api/*|\
       tool/*.py|\
       pyrightconfig.json|\
-      demos/render_chat_api/requirements*.txt)
+      demos/render_chat_api/requirements*.txt|\
+      demos/ai_decision_api/requirements*.txt)
         return 0
         ;;
     esac
@@ -131,9 +140,9 @@ find_demo_venv_python() {
   local -a candidates=()
 
   if [ -n "$expected_version" ]; then
-    candidates+=("$DEMO_VENV/bin/python$expected_version")
+    candidates+=("$2/bin/python$expected_version")
   fi
-  candidates+=("$DEMO_VENV/bin/python3" "$DEMO_VENV/bin/python")
+  candidates+=("$2/bin/python3" "$2/bin/python")
 
   for candidate in "${candidates[@]}"; do
     if [ -x "$candidate" ] || [ -L "$candidate" ]; then
@@ -146,23 +155,29 @@ find_demo_venv_python() {
 }
 
 ensure_demo_venv() {
+  local demo_root="$1"
+  local demo_venv="$2"
+  local demo_reqs="$3"
+  local demo_dev_reqs="$4"
+  local label="$5"
+
   local existing_python=""
-  existing_python="$(find_demo_venv_python || true)"
+  existing_python="$(find_demo_venv_python "" "$demo_venv" || true)"
 
   if [ -n "$existing_python" ]; then
     if python_supports_demo_venv "$existing_python"; then
       return 0
     fi
 
-    echo "INFO: Existing venv python is not runnable or is older than 3.10; recreating $DEMO_VENV ..."
-    rm -rf "$DEMO_VENV"
+    echo "INFO: Existing venv python is not runnable or is older than 3.10; recreating $demo_venv ($label) ..."
+    rm -rf "$demo_venv"
   fi
-  if [ ! -f "$REQS" ]; then
-    echo "ERROR: Missing $REQS"
+  if [ ! -f "$demo_reqs" ]; then
+    echo "ERROR: Missing $demo_reqs"
     exit 1
   fi
-  echo "INFO: Creating demos/render_chat_api/.venv and installing requirements.txt ..."
-  "$PYTHON_BIN" -m venv "$DEMO_VENV"
+  echo "INFO: Creating venv and installing requirements ($label) ..."
+  "$PYTHON_BIN" -m venv "$demo_venv"
 
   local venv_python=""
   local venv_version=""
@@ -172,31 +187,32 @@ print(f"{sys.version_info[0]}.{sys.version_info[1]}")
 PY
   )"
 
-  venv_python="$(find_demo_venv_python "$venv_version" || true)"
+  venv_python="$(find_demo_venv_python "$venv_version" "$demo_venv" || true)"
   if [ -z "$venv_python" ]; then
-    echo "ERROR: venv created but no python executable found under $DEMO_VENV/bin" >&2
-    ls -la "$DEMO_VENV/bin" >&2 || true
+    echo "ERROR: venv created but no python executable found under $demo_venv/bin" >&2
+    ls -la "$demo_venv/bin" >&2 || true
     exit 1
   fi
 
   if ! python_supports_demo_venv "$venv_python"; then
     echo "ERROR: venv python exists but is not runnable or is older than 3.10: $venv_python" >&2
-    ls -la "$DEMO_VENV/bin" >&2 || true
+    ls -la "$demo_venv/bin" >&2 || true
     exit 1
   fi
 
   "$venv_python" -m pip install -q -U pip setuptools wheel
-  "$venv_python" -m pip install -q -r "$REQS"
-  if [ -f "$DEV_REQS" ]; then
-    "$venv_python" -m pip install -q -r "$DEV_REQS"
+  "$venv_python" -m pip install -q -r "$demo_reqs"
+  if [ -f "$demo_dev_reqs" ]; then
+    "$venv_python" -m pip install -q -r "$demo_dev_reqs"
   fi
 }
 
 echo "Checking Pyright config guard (repo root pyrightconfig.json)..."
 validate_root_pyrightconfig
 
-echo "Ensuring Render demo Python venv (for import resolution)..."
-ensure_demo_venv
+echo "Ensuring demo Python venvs (for import resolution)..."
+ensure_demo_venv "$RENDER_DEMO_ROOT" "$RENDER_DEMO_VENV" "$RENDER_REQS" "$RENDER_DEV_REQS" "render_chat_api"
+ensure_demo_venv "$AI_DECISION_DEMO_ROOT" "$AI_DECISION_DEMO_VENV" "$AI_DECISION_REQS" "$AI_DECISION_DEV_REQS" "ai_decision_api"
 
 if ! command -v npx >/dev/null 2>&1; then
   echo "ERROR: npx not found; install Node.js to run Pyright."
@@ -209,4 +225,15 @@ if ! npx --yes pyright demos/render_chat_api tool; then
   exit 1
 fi
 
-echo "OK: Pyright (Python) — demos/render_chat_api + tool/"
+if [ ! -f "$AI_DECISION_PYRIGHT_CONFIG" ]; then
+  echo "ERROR: Missing $AI_DECISION_PYRIGHT_CONFIG"
+  exit 1
+fi
+
+echo "Running npx pyright on demos/ai_decision_api (project config)..."
+if ! npx --yes pyright -p "$AI_DECISION_PYRIGHT_CONFIG" demos/ai_decision_api; then
+  echo "ERROR: Pyright failed for demos/ai_decision_api."
+  exit 1
+fi
+
+echo "OK: Pyright (Python) — demos/render_chat_api + demos/ai_decision_api + tool/"

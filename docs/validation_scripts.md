@@ -1,18 +1,16 @@
 # Validation Scripts Documentation
 
-This document describes all validation scripts in `tool/` directory that
-can be run directly or as part of `./bin/checklist` when you want full
-repo sweep. For local-only clean-tree or narrow docs/tooling sanity pass,
-use `./bin/checklist-fast`.
+Catalog of validation scripts in `tool/`. Run scripts directly for targeted
+proof, `./bin/checklist` for full sweep, and `./bin/checklist-fast` only for
+clean-tree or narrow docs/tooling sanity.
 
 For complete docs index, see [docs index](README.md).
 
 ## Overview
 
-Validation scripts guard architecture/UI/UX/async/perf/memory hygiene.
-Prefer targeted scripts for local changes; use `./bin/checklist` for broad or
-pre-ship validation. Use `./bin/checklist-fast` only for narrow local-only
-sanity path documented below.
+Scripts guard architecture, UI/UX, async, perf, and memory hygiene. Prefer
+targeted scripts for local changes; use `./bin/checklist` for broad/pre-ship
+validation.
 
 Checklist includes guards:
 
@@ -45,15 +43,12 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs a
 - **`check_solid_presentation_data_imports.sh`**: Prevents presentation importing data-layer types (DIP)
 - **`check_solid_data_presentation_imports.sh`**: Prevents data layer importing presentation (layering)
 - **`check_feature_modularity_leaks.sh`**: Fails on known cross-feature `package:` imports: `library_demo` must not import `scapes`; `settings` must not import `graphql_demo`, `profile`, or `remote_config`; **`remote_config` must not import `settings`** (use `shared` widgets like `SettingsSection` instead). Extend script when new boundary rules land in [modularity.md](modularity.md). Included in `./bin/checklist`.
-- **`check_agent_knowledge_base.sh`**: Keeps AI-agent knowledge base
-  harness indexed. When local [`AGENTS.md`](../AGENTS.md) is present, it fails
-  if that map grows past configured line limit or loses required pointers
-  to progressive-disclosure docs and plan/tracker sources. When
-  repo-managed host templates are present, it also fails if key Codex/Cursor
-  entrypoints stop pointing back to repo map and source docs.
-- **`check_docs_gardening.sh`**: Cheap deterministic doc-rot detection for agent-facing markdown guidance. Flags backticked `*.md` references that don’t resolve to real files (best-effort) and ensures [`validation_scripts.md`](validation_scripts.md) stays in sync with `tool/delivery_checklist.sh` via `tool/validate_validation_docs.sh`. Runs in `./bin/checklist-fast` and other docs/tooling-only lanes.
-- **`validate_task_trackers.sh`**: Validates that `tasks/*/todo.md` trackers follow canonical tracker contract (required headings + non-empty write-set and validation command). Runs in `./bin/checklist-fast` and other docs/tooling-only lanes.
-- **`run_harness_fixtures.sh`**: Fixture-based smoke tests for harness scripts (help output + negative-case doc-gardening fixture). Runs in `./bin/checklist-fast` and other docs/tooling-only lanes.
+- **`check_agent_knowledge_base.sh`**: Keeps AI-agent map/source-doc/host-template pointers indexed; fails if [`AGENTS.md`](../AGENTS.md) grows past limit or required progressive-disclosure links disappear.
+- **`check_docs_gardening.sh`**: Cheap doc-rot check for agent-facing markdown; verifies backticked `*.md` references best-effort and keeps [`validation_scripts.md`](validation_scripts.md) aligned with `tool/delivery_checklist.sh`.
+- **`validate_task_trackers.sh`**: Validates `tasks/*/todo.md` tracker contract: required headings, non-empty write set, validation command.
+- **`run_harness_fixtures.sh`**: Smoke tests harness scripts and negative-case fixtures; runs in `./bin/checklist-fast` and docs/tooling lanes.
+- **`check_ai_generated_code_smells.sh`**: High-signal AI-code smell scan: secret-looking literals, swallowed exceptions, obvious SQL string interpolation, and risky Supabase Edge `verify_jwt = false`. Uses `check-ignore: <reason>` allowlist and fixtures under `tool/fixtures/ai_generated_code_smells/`.
+  - **Limitation (intentional)**: `verify_jwt = false` is enforced via TOML section parsing only (`[functions.<name>]`). It does not detect equivalent behavior in deploy flags/scripts/docs/MCP payloads unless those surfaces are added explicitly.
 
 ### UI/UX Best Practices
 

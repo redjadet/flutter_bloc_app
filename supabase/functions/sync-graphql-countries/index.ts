@@ -68,6 +68,13 @@ const COUNTRIES_BY_CONTINENT_QUERY = `
   }
 `;
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
 async function postGraphql<T>(
   payload: Record<string, unknown>,
 ): Promise<T> {
@@ -92,17 +99,39 @@ async function postGraphql<T>(
   return json.data;
 }
 
-function jsonResponse(body: unknown, status = 200): Response {
+function jsonResponse(
+  body: unknown,
+  status = 200,
+  headers: HeadersInit = {},
+): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
       "Content-Type": "application/json",
+      "Cache-Control": "no-store",
       Connection: "keep-alive",
+      ...CORS_HEADERS,
+      ...headers,
     },
   });
 }
 
 Deno.serve(async (req: Request) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", {
+      headers: {
+        ...CORS_HEADERS,
+        "Cache-Control": "no-store",
+      },
+    });
+  }
+
+  if (req.method !== "POST") {
+    return jsonResponse({ error: "Method not allowed" }, 405, {
+      Allow: "POST, OPTIONS",
+    });
+  }
+
   const url = Deno.env.get("SUPABASE_URL");
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if (!url || !serviceRoleKey) {
@@ -116,19 +145,27 @@ Deno.serve(async (req: Request) => {
   try {
     body = await req.json();
   } catch {
-    body = null;
+    return jsonResponse({ error: "Invalid JSON" }, 400);
   }
 
-  const type =
+  const rawType =
     typeof (body as Record<string, unknown>)?.type === "string"
       ? ((body as Record<string, unknown>).type as string)
       : "all";
+  const type = rawType.trim().toLowerCase();
+  if (type !== "all" && type !== "continents" && type !== "countries") {
+    return jsonResponse({ error: "Invalid type" }, 400);
+  }
+
   const continentCodeRaw =
     typeof (body as Record<string, unknown>)?.continentCode === "string"
       ? ((body as Record<string, unknown>).continentCode as string)
       : null;
   const continentCode =
     continentCodeRaw?.trim()?.toUpperCase() || null;
+  if (continentCode !== null && !/^[A-Z]{2}$/.test(continentCode)) {
+    return jsonResponse({ error: "Invalid continentCode" }, 400);
+  }
 
   const supabase = createClient(url, serviceRoleKey);
 

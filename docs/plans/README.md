@@ -13,6 +13,8 @@ This directory contains design notes and execution plans.
 
 ## Index
 
+- [`2026-04-27_ai_agent_code_quality_hardening_plan.md`](2026-04-27_ai_agent_code_quality_hardening_plan.md): Cursor-ready plan for hardening AI-agent guidance,
+  validation helpers, and confirmed AI-generated-code risk patterns.
 - [`future_architecture_code_quality_improvement_plan.md`](future_architecture_code_quality_improvement_plan.md): staged roadmap and
   decision gates for ongoing quality/architecture work.
 - [`settings_diagnostics_decouple_plan.md`](settings_diagnostics_decouple_plan.md): completed slice (kept for context).
