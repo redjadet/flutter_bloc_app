@@ -52,6 +52,8 @@ Cursor: [`tasks/cursor/todo.md`](../tasks/cursor/todo.md). Codex:
 
 ## Harness Reminders
 
+- Closed-loop default: plan once, execute end-to-end, verify, report proof.
+- Ask only on hard blockers: credentials/tooling, unsafe ambiguity below 95%, user-owned decision.
 - Classify complexity/risk/scope/uncertainty before scaling plan/validation/delegation.
 - Vague ask -> assumptions + success criteria + smallest verifiable slice before edits.
 - Bug fix -> reproduce/reason to root cause before code change.
