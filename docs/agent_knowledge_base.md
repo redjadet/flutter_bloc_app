@@ -1,7 +1,6 @@
 # Agent Knowledge Base
 
-Source of truth for how agents find/use repo knowledge. Goal: progressive
-disclosure. Start from small map; open only task-needed files.
+Source of truth for how agents find/use repo knowledge. Goal: progressive disclosure; start from map, open only task-needed files.
 
 ## Core Beliefs
 
@@ -10,58 +9,51 @@ disclosure. Start from small map; open only task-needed files.
 | Context beats instructions. | Ground in real files, current docs, current diff, repo scripts. |
 | Plan != execute. | Non-trivial work starts with tracker plan before edits. |
 | Feedback loops mandatory. | AI output draft until review gate + scope-matched validation. |
+| Goals beat activity. | Vague asks need success criteria before code. |
 | One unit at time. | Small coherent slice, finish, verify, move on. |
 | Codebase = knowledge base. | Durable context lives in versioned docs/plans/tests/scripts/ADRs. |
 | Harness parts deletable. | Host assets thin; delete stale rules once validation proves redundant. |
 | Missing capability beats retry. | If stuck, add doc/tool/test/fixture/script so next run succeeds. |
+| Timing matters. | Add abstraction/features only when current need justifies them. |
 | Enforce invariants, not taste. | Encode boundaries + reliability mechanically; keep local freedom. |
 
 ## Progressive Disclosure
 
-Don’t load whole handbook up front.
+Don’t load the whole handbook up front.
 
 1. Read [`AGENTS.md`](../AGENTS.md) for map.
 2. Read this document for knowledge-base layout and harness rules.
-3. Read [`ai_code_review_protocol.md`](ai_code_review_protocol.md) for review gate.
+3. Read [`ai_code_review_protocol.md`](ai_code_review_protocol.md) for review gate
+   and AI-generated-code risk matrix; route helper details through
+   [`validation_scripts.md`](validation_scripts.md).
 4. Use [`agents_quick_reference.md`](agents_quick_reference.md) for command lookup.
 5. Use [`README.md`](README.md) for task-specific docs.
 6. Open only docs/code/tests/plans needed for current slice.
 
 ## Adaptive Execution
 
-Scale process to task value; avoid max-depth/broad-validation/delegation by default.
+Scale process to task value; avoid max-depth, broad validation, or delegation by default.
 
 1. Classify task by complexity, risk, scope, and uncertainty.
 2. Calibrate effort: local mechanical = light; cross-system/ambiguous/high-risk = deeper plan + review.
-3. Do not change files until at least 95% confident in goal, scope, and
-   approach. Ask follow-up questions until reaching that confidence.
-4. If interpretations change behavior/blast radius, surface them. Ask when
-   needed; otherwise make lowest-regret call and record tradeoff.
-5. Non-trivial: compare 2-3 approaches; pick lowest-regret by
-   correctness/maintainability/reversibility/blast radius/failure tolerance.
-6. Debug root cause: reproduce/reason, isolate, fix cause, verify. If unsure,
+3. Do not edit until 95% confident in goal/scope/approach; ask until clear.
+4. For vague asks, name assumptions, success criteria, and the smallest verifiable slice before coding.
+5. If interpretations change behavior/blast radius, surface them. Ask when needed; otherwise make lowest-regret call and record tradeoff.
+6. Non-trivial: compare 2-3 approaches; pick lowest-regret by correctness, maintainability, reversibility, blast radius, and failure tolerance.
+7. Debug root cause: reproduce/reason, isolate, fix cause, verify. If unsure,
    say so + narrow search space.
-7. Before report: predict failures: assumptions, edge cases, scale, side
-   effects, maintenance cost. Harden material risks.
-8. Stop when correct for value, major risks addressed, proof matches scope,
-   more work mostly cost.
+8. Before report, predict failures: assumptions, edge cases, scale, side effects, maintenance cost. Harden material risks.
+9. Stop when value is met, major risks are handled, proof matches scope, and more work mostly adds cost.
 
 ## Agent Legibility
 
-Agents reason over inspectable state. Make product/runtime/quality signals
-visible in repo or repo scripts.
+Agents reason over inspectable state. Make product/runtime/quality signals visible in repo or repo scripts.
 
-- Prefer app-visible proof for user-facing changes: screenshots, widget tests,
-  integration flows, route validators, emulator/browser evidence.
-- Prefer repo-local observability/logs over chat-only. If bug needs log pattern,
-  document command or add helper.
-- Keep fixtures, schemas, API examples, generated clients, and test harnesses in
-  versioned paths so Codex and Cursor see same truth.
-- For UI/runtime work, expose narrowest runnable surface before judging
-  behavior. Route tiles, demo controls, focused smoke tests are harness features.
-- Favor dependencies and abstractions agents can inspect, test, and reason about.
-  Stable boring packages are usually better than opaque magic; in-repo helpers
-  are justified when they centralize instrumentation or invariants with tests.
+- Prefer app-visible proof: screenshots, widget tests, integration flows, route validators, emulator/browser evidence.
+- Prefer repo-local observability/log helpers over chat-only claims.
+- Keep fixtures, schemas, API examples, generated clients, and test harnesses versioned so Codex and Cursor see the same truth.
+- For UI/runtime work, expose the narrowest runnable surface first: route tile, demo control, smoke test, or fixture.
+- Prefer inspectable dependencies/abstractions. In-repo helpers earn their keep by centralizing instrumentation or invariants with tests.
 
 ## Missing Capability Loop
 
@@ -76,9 +68,9 @@ Don’t answer repeated failure with bigger prompt.
 
 Examples:
 
-- recurring route mistake -> route validation check or route doc.
-- repeated review comment -> invariant, linter, test helper, or source-doc update.
-- UI proof gap -> runnable smoke path, screenshot expectation, or integration map.
+- recurring route mistake -> route validation check or route doc
+- repeated review comment -> invariant, linter, test helper, or source-doc update
+- UI proof gap -> runnable smoke path, screenshot expectation, or integration map
 
 ## System Of Record Layout
 
@@ -100,19 +92,14 @@ Examples:
 
 ## Plans As Artifacts
 
-Small changes can use lightweight tracker entry. Complex work should use
-versioned plan/change note.
+Small changes can use tracker notes. Complex work should use versioned plan/change note.
 
-- Active implementation state lives in [`tasks/codex/todo.md`](../tasks/codex/todo.md) or
-  [`tasks/cursor/todo.md`](../tasks/cursor/todo.md).
-- Trackers should follow canonical template:
-  [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md).
-- Durable execution plans live under `docs/plans/` when they are still useful
-  for future agents.
+- Active state lives in [`tasks/codex/todo.md`](../tasks/codex/todo.md) or [`tasks/cursor/todo.md`](../tasks/cursor/todo.md).
+- Trackers follow [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md).
+- Durable execution plans live under `docs/plans/` while useful for future agents.
 - Completed or point-in-time rationale lives under `docs/changes/`.
 - Known debt belongs in owning source doc, ADR, or tracked plan; not chat-only.
-- Plans must include goal, scope, write set, edge cases, validation target, and
-  decision log when decisions are likely to matter later.
+- Plans include goal, scope, write set, edge cases, validation target, and decision log when decisions matter later.
 
 ## Harness Controls
 
@@ -125,39 +112,28 @@ Use both feedforward guides and feedback sensors.
 | Computational sensors | `flutter analyze`, targeted tests, `./bin/checklist`, static guard scripts. |
 | Inferential sensors | AI review gate, risk review, explicit cross-host review when the user asks. |
 
-Prefer deterministic sensors first: cheaper, faster, easier to audit. Use
-inferential review for business fit, edge cases, architecture, behavior static
-checks cannot see.
+Prefer deterministic sensors first: cheaper, faster, easier to audit. Use inferential review for business fit, edge cases, architecture, and behavior that static checks cannot see.
 
 ## Invariant Enforcement
 
 Constrain architecture/reliability centrally; leave implementation expression local.
 
-- Enforce layer boundaries, routing reachability, lifecycle cleanup, retry/replay
-  safety, sync behavior, validation routing mechanically where possible.
-- Write guard-script error messages as remediation instructions for future
-  agents.
+- Enforce layer boundaries, routing reachability, lifecycle cleanup, retry/replay safety, sync behavior, and validation routing mechanically where possible.
+- Write guard-script errors as remediation instructions for future agents.
 - Promote repeated review comments into tests, scripts, ADRs, or source docs.
 - Surgical diffs. Changed lines trace to user request or required validation/doc updates.
-- don't encode every stylistic preference. change meets bar when it is
-  correct, maintainable, validated, and legible to future agent runs.
+- Don’t encode every stylistic preference. Change meets bar when correct, maintainable, validated, and legible to future agents.
 - Keep custom checks narrow/reversible. Delete or relax when no longer catching risk.
 
 ## Codex And Cursor
 
 Both hosts use same repository knowledge base.
 
-- Codex should call repo shell entrypoints directly and keep task state in
-  [`tasks/codex/todo.md`](../tasks/codex/todo.md).
-- Cursor should use thin skills/commands that point back to same docs and
-  keep task state in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md).
-- Shared behavior changes start in this document or owning source doc, then
-  sync to host templates with `./tool/sync_agent_assets.sh --apply`.
-- Cross-host review optional + explicit-request-only. Not substitute for own
-  review/validation/self-check.
-- Host-specific prompts should be short because repo already carries
-  context. Use prompts to name slice, constraints, files to inspect,
-  validation, and report fields.
+- Codex calls repo shell entrypoints directly and tracks work in [`tasks/codex/todo.md`](../tasks/codex/todo.md).
+- Cursor uses thin skills/commands pointing back here and tracks work in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md).
+- Shared behavior changes start in this document or owning source doc, then sync host templates with `./tool/sync_agent_assets.sh --apply`.
+- Cross-host review is optional, explicit-request-only, and never replaces own review/validation/self-check.
+- Host prompts stay short: name slice, constraints, files to inspect, validation, report fields.
 
 ## Final Agent Contract
 
@@ -165,12 +141,10 @@ For Codex and Cursor, finished loop:
 
 1. Start from map and open only task-relevant sources.
 2. Record non-trivial scope, risks, write set, validation target in host tracker.
-3. Make task legible before coding: current files, runnable surface,
-   fixtures, logs, route proof, or acceptance criteria.
+3. Make task legible before coding: current files, runnable surface, fixtures, logs, route proof, or acceptance criteria.
 4. Implement smallest coherent slice inside existing seams.
 5. Validate deterministic checks first, then risk-based review.
-6. If agent hit missing context or repeated review feedback, add durable
-   repo capability before reporting done.
+6. If context/review failure repeats, add durable repo capability before reporting done.
 7. Sync host assets when agent behavior changed.
 8. Report after checking final answer against request, changed files, proof,
    blockers, residual risk.
@@ -181,34 +155,25 @@ Codex and Cursor should not grow separate operating doctrines.
 
 - Source docs own behavior. Host templates only summarize and route.
 - When changing agent behavior, update owning source doc first.
-- If behavior affects command choice, update
-  [`agents_quick_reference.md`](agents_quick_reference.md).
-- If behavior affects acceptance of AI-written work, update
-  [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
-- If behavior affects host cold start, update both Codex and Cursor
-  templates under `tool/agent_host_templates/`.
-- After host-template changes, run sync apply, dry-run, and drift checks in
-  sequence.
-- don't add Cursor-only/Codex-only workaround unless host capability truly differs;
-  document difference in template, not source rule.
+- If behavior affects command choice, update [`agents_quick_reference.md`](agents_quick_reference.md).
+- If behavior affects accepting AI-written work, update [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
+- If behavior affects host cold start, update both Codex and Cursor templates under `tool/agent_host_templates/`.
+- After host-template changes, run sync apply, dry-run, and drift checks in sequence.
+- Don’t add Cursor-only/Codex-only workaround unless host capability truly differs; document difference in template, not source rule.
 
 ## Mechanical Enforcement
 
-Knowledge base validated by repo tooling:
+Knowledge base is validated by repo tooling:
 
-- `./tool/check_agent_knowledge_base.sh` keeps local [`AGENTS.md`](../AGENTS.md)
-  short and checks required cross-links, source indexes, host-template pointers.
-- `./tool/validate_validation_docs.sh` keeps validation docs aligned with
-  checklist scripts.
+- `./tool/check_agent_knowledge_base.sh` keeps local [`AGENTS.md`](../AGENTS.md) short and checks required links, source indexes, host-template pointers.
+- `./tool/validate_validation_docs.sh` keeps validation docs aligned with checklist scripts.
 - `./tool/normalize_doc_links.py` keeps local doc links clickable.
 - `./tool/check_agent_asset_drift.sh` checks managed Cursor/Codex assets against
   repo templates.
-- `./bin/checklist` runs full gate; `./bin/checklist-fast` is local-only for
-  clean trees or narrow docs/tooling changes.
+- `./bin/checklist` runs full gate; `./bin/checklist-fast` is local-only for clean trees or narrow docs/tooling changes.
 - `.original.md` compression backups are temporary. Delete after verifying active docs.
 
-New durable agent rule: update owning source doc first, then thin host
-templates, then validation if rule needs mechanical check.
+New durable agent rule: update owning source doc first, then thin host templates, then validation if the rule needs mechanical check.
 
 ## Doc Gardening
 
@@ -220,9 +185,6 @@ Agents garden docs as part of touched work, not separate memory dump.
 - If doc contradicts code, trust code plus tests first, then repair doc.
 - If rule no longer earns its keep, remove it from host templates and keep
   source doc smaller.
-- Keep cleanup continuous/small. Prefer targeted guardrails/tiny refactors over
-  periodic large "AI cleanup" sweeps.
-- Track golden principles in source docs or checks, then let agents apply them
-  repeatedly without re-litigating same review comments.
-- For broad doc-gardening sweeps, run targeted markdown/link checks and escalate
-  to `./bin/checklist` when validation or agent policy changes materially.
+- Keep cleanup continuous/small. Prefer targeted guardrails/tiny refactors over periodic large "AI cleanup" sweeps.
+- Track golden principles in source docs or checks so agents do not re-litigate the same review comments.
+- For broad doc-gardening sweeps, run targeted markdown/link checks; escalate to `./bin/checklist` when validation or agent policy changes materially.
