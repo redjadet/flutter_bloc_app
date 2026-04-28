@@ -10,13 +10,14 @@ This folder contains the source-of-truth documentation for the Flutter BLoC app.
   [`architecture_details.md`](architecture_details.md)
 - **AI / chat**: [`ai_integration.md`](ai_integration.md), [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md)
 - **AI decision workbench**:
-  [`ai_decision_workbench.md`](ai_decision_workbench.md) - local FastAPI +
-  SQLite decision demo with visible risk score, rationale, proof trail, and
-  action history.
+  [`ai_decision_workbench.md`](ai_decision_workbench.md) - FastAPI-backed
+  decision demo with visible risk score, rationale, proof trail, and action
+  history.
 - **Security**: [`SECURITY.md`](SECURITY.md), [`security_and_secrets.md`](security_and_secrets.md)
 - **Deployment**: [`deployment.md`](deployment.md)
 - **Case studies (product briefs + demo feature)**: [`case_studies/README.md`](case_studies/README.md)
-- **Feature walkthroughs**: [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md)
+- **Feature walkthroughs**: [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md),
+  [`online_therapy_demo/README.md`](online_therapy_demo/README.md)
 - **AI agent harness**: [`agent_knowledge_base.md`](agent_knowledge_base.md),
   [`ai_code_review_protocol.md`](ai_code_review_protocol.md),
   [`agents_quick_reference.md`](agents_quick_reference.md)
@@ -38,6 +39,7 @@ This folder contains the source-of-truth documentation for the Flutter BLoC app.
 - [`feature_overview.md`](feature_overview.md)
 - [`modularity.md`](modularity.md)
 - [`design_system.md`](design_system.md)
+- [`universal_links/README.md`](universal_links/README.md)
 - `adr/` (architecture decision records)
 
 ### Workflow and quality
@@ -60,11 +62,15 @@ This folder contains the source-of-truth documentation for the Flutter BLoC app.
 - [`SECURITY.md`](SECURITY.md)
 - [`security_and_secrets.md`](security_and_secrets.md)
 - [`localization.md`](localization.md)
+- [`universal_links/README.md`](universal_links/README.md)
 
 ### Feature walkthroughs and demos
 
 - [`ai_decision_workbench.md`](ai_decision_workbench.md)
 - [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md)
+- [`online_therapy_demo/README.md`](online_therapy_demo/README.md)
+- [`features/in_app_purchase_demo.md`](features/in_app_purchase_demo.md)
+- [`fcm_demo_integration.md`](fcm_demo_integration.md)
 - [`case_studies/README.md`](case_studies/README.md)
 - [`genui_demo_user_guide.md`](genui_demo_user_guide.md)
 

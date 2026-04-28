@@ -147,7 +147,10 @@ This codebase implements comprehensive lazy loading strategies to optimize start
 
 ### Deferred Routes
 
-Heavy features are loaded via `DeferredPage` + `deferred as` imports in `lib/app/router/routes.dart`. These features ship outside the initial bundle and load on-demand when the user navigates to them:
+Heavy features are loaded via `DeferredPage` + `deferred as` imports in the
+split route files under `lib/app/router/` (`routes_core.dart`,
+`routes_demos.dart`, and `route_groups.dart`). These features ship outside the
+initial bundle and load on-demand when the user navigates to them:
 
 - **Google Maps** - Heavy native SDK dependencies
 - **Markdown Editor** - Custom RenderObject implementation

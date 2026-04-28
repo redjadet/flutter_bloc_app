@@ -1,9 +1,10 @@
 # AI Decision Workbench
 
-Local, app-visible MVP for proving that the app can make a decision with
-evidence. The demo is intentionally small: Flutter UI, one FastAPI backend,
-local SQLite seed data, deterministic scoring, and optional MiniLM similar-case
-support.
+App-visible MVP for proving that the app can make a decision with evidence.
+The demo is intentionally small: Flutter UI, one FastAPI backend, SQLite seed
+data, deterministic scoring, and optional MiniLM similar-case support. Flutter
+defaults to the hosted FastAPI Cloud deployment and can be pointed at a local
+backend with `AI_DECISION_API_BASE_URL`.
 
 ## MVP Purpose
 

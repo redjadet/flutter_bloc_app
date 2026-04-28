@@ -148,7 +148,10 @@ Already implemented for:
 - **WebSocket** - Real-time communication libraries
 - **Charts** - Data visualization libraries
 
-**Implementation:** Features are loaded via `DeferredPage` + `deferred as` imports in `lib/app/router/routes.dart`. Each deferred feature has a library file in `lib/app/router/deferred_pages/` with a `library;` declaration.
+**Implementation:** Features are loaded via `DeferredPage` + `deferred as`
+imports in the split route files under `lib/app/router/`. Each deferred feature
+has a library file in `lib/app/router/deferred_pages/` with a `library;`
+declaration.
 
 **Impact:** Reduces initial bundle size by excluding heavy dependencies until needed. Estimated 9-17 MB saved from initial bundle, resulting in faster startup time.
 
@@ -223,9 +226,9 @@ fi
 cat .bundle_sizes.json | python3 -m json.tool
 ```
 
-### Generate Report
+### Generate Ad Hoc Report
 
-Create `tool/report_bundle_sizes.sh`:
+Use this local snippet when you need a quick history view:
 
 ```bash
 #!/usr/bin/env bash

@@ -725,7 +725,8 @@ Future<void> _showAddTodoDialog(BuildContext context) async {
 ### 5) Routing
 
 - Add `AppRoutes.todoList` / `AppRoutes.todoListPath` in `lib/core/router/app_routes.dart`.
-- Register a `GoRoute` in `lib/app/router/routes.dart`.
+- Register a `GoRoute` in the appropriate split route file under
+  `lib/app/router/` (currently `routes_demos.dart` for the Todo List demo).
 - Decide on deferred loading. For MVP, avoid deferred loading unless the feature grows heavy.
 
 ### 6) Localization
@@ -832,7 +833,8 @@ testWidgets('swipe right on active item completes it', (
 
 **Coverage:**
 
-- Run `flutter test coverage`
+- Run `tool/test_coverage.sh` (or `flutter test --coverage` for a narrower
+  local check when coverage merge behavior is not needed)
 - Update coverage summary: `dart run tool/update_coverage_summary.dart`
 
 ### 8) Validation
