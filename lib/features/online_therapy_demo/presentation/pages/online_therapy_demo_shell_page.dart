@@ -160,7 +160,10 @@ class _TopControls extends StatelessWidget {
               value: state.role,
               onChanged: state.isBusy
                   ? null
-                  : (final v) => v == null ? null : unawaited(cubit.setRole(v)),
+                  : (final v) {
+                      if (v == null) return;
+                      unawaited(cubit.setRole(v));
+                    },
               items: TherapyRole.values
                   .map(
                     (r) => DropdownMenuItem<TherapyRole>(
