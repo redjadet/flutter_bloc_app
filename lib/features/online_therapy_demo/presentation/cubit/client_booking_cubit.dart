@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/appointment_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapist_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class ClientBookingState {
   const ClientBookingState({
@@ -101,7 +102,8 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
       if (selected != null) {
         await loadAvailability(therapistId: selected);
       }
-    } on Object catch (e) {
+    } on Object catch (e, st) {
+      AppLogger.error('ClientBookingCubit.loadTherapists failed', e, st);
       if (isClosed) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
@@ -135,7 +137,8 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
       if (isClosed) return;
       if (state.selectedTherapistId != therapistId) return;
       emit(state.copyWith(isBusy: false, availability: slots));
-    } on Object catch (e) {
+    } on Object catch (e, st) {
+      AppLogger.error('ClientBookingCubit.loadAvailability failed', e, st);
       if (isClosed) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
@@ -147,7 +150,8 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
       final list = await _appointments.listAppointmentsForCurrentRole();
       if (isClosed) return;
       emit(state.copyWith(isBusy: false, appointments: list));
-    } on Object catch (e) {
+    } on Object catch (e, st) {
+      AppLogger.error('ClientBookingCubit.loadAppointments failed', e, st);
       if (isClosed) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
@@ -164,7 +168,12 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
       if (isClosed) return;
       emit(state.copyWith(isBusy: false, pendingBookingSlot: null));
       await refresh();
-    } on Object catch (e) {
+    } on Object catch (e, st) {
+      AppLogger.error(
+        'ClientBookingCubit.createAppointmentFromSlot failed',
+        e,
+        st,
+      );
       if (isClosed) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
@@ -180,7 +189,8 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
       if (isClosed) return;
       emit(state.copyWith(isBusy: false));
       await refresh();
-    } on Object catch (e) {
+    } on Object catch (e, st) {
+      AppLogger.error('ClientBookingCubit.cancelAppointment failed', e, st);
       if (isClosed) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
