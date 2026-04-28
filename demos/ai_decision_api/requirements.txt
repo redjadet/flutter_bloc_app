@@ -2,4 +2,4 @@ fastapi[standard]>=0.136.1,<1
 uvicorn[standard]>=0.32.0,<1
 pydantic>=2.13.3,<3
 pydantic-settings>=2.14.0,<3
-requests>=2.32.0,<3
+requests>=2.33.1,<3
