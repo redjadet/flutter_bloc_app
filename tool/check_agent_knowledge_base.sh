@@ -94,6 +94,34 @@ require_contains "docs/agent_knowledge_base.md" "Semantic lint"
 require_contains "docs/README.md" "agent_knowledge_base.md"
 require_contains "docs/validation_scripts.md" "check_agent_knowledge_base.sh"
 require_contains "docs/validation_scripts.md" "memory-compounding"
+require_contains "docs/validation_scripts.md" "closed-loop invariants"
+
+require_all_contains \
+  "AGENTS.md" \
+  "95% confident" \
+  "Surgical diff" \
+  "changed line" \
+  "Report proof"
+
+require_all_contains \
+  "docs/agent_knowledge_base.md" \
+  "95% confident" \
+  "Surgical diffs" \
+  "Before report" \
+  "Report after checking"
+
+require_all_contains \
+  "docs/ai_code_review_protocol.md" \
+  "Before report" \
+  "Scope discipline" \
+  "Self-verification" \
+  "Self-verify"
+
+require_all_contains \
+  "docs/agents_quick_reference.md" \
+  "below 95%" \
+  "execute end-to-end, verify, report proof" \
+  "Behavior changes start in source docs"
 
 if ! bash "tool/check_agent_memory_compounding.sh"; then
   fail "Agent memory-compounding guard failed"
@@ -108,6 +136,12 @@ if [ -d "tool/agent_host_templates" ]; then
     "docs/agents_quick_reference.md" \
     "docs/README.md" \
     "tasks/codex/todo.md"
+  require_all_contains \
+    "tool/agent_host_templates/codex/AGENTS.md" \
+    "95% confident" \
+    "Surgical diff" \
+    "Self-check final response" \
+    "Prove result"
 
   require_all_contains \
     "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md" \
@@ -126,6 +160,12 @@ if [ -d "tool/agent_host_templates" ]; then
     "docs/ai_code_review_protocol.md" \
     "tasks/codex/todo.md" \
     "tool/check_agent_knowledge_base.sh"
+  require_all_contains \
+    "tool/agent_host_templates/codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md" \
+    "95% confident" \
+    "Surgical diff" \
+    "Self-verify final response" \
+    "Report only after Verify"
 
   require_all_contains \
     "tool/agent_host_templates/cursor/rules/agents-global.mdc" \
@@ -134,6 +174,11 @@ if [ -d "tool/agent_host_templates" ]; then
     "docs/ai_code_review_protocol.md" \
     "docs/agents_quick_reference.md" \
     "tool/check_agent_knowledge_base.sh"
+  require_all_contains \
+    "tool/agent_host_templates/cursor/rules/agents-global.mdc" \
+    "95% confident" \
+    "Surgical diff" \
+    "Self-verify before report"
 
   require_all_contains \
     "tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md" \
@@ -153,6 +198,12 @@ if [ -d "tool/agent_host_templates" ]; then
     "docs/ai_code_review_protocol.md" \
     "tasks/cursor/todo.md" \
     "tool/check_agent_knowledge_base.sh"
+  require_all_contains \
+    "tool/agent_host_templates/cursor/skills/agents-delivery-workflow/SKILL.md" \
+    "95% confident" \
+    "Surgical diff" \
+    "Self-verify final response" \
+    "Report only after Verify"
 
   require_all_contains \
     "tool/agent_host_templates/cursor/skills/agents-meta-behavior/SKILL.md" \
