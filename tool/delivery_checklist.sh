@@ -82,6 +82,9 @@ declare -a changed_files=()
 declare -a changed_dart_files=()
 CHECKLIST_ALLOW_REUSE="${CHECKLIST_ALLOW_REUSE:-auto}"
 
+print_flutter_resolution_report || true
+echo ""
+
 detect_cpu_count() {
   local cpu_count
 
@@ -489,6 +492,7 @@ is_tooling_only_change_set() {
     case "$file" in
       tool/*.sh|\
       tool/*.dart|\
+      tool/direnv/bin/*|\
       bin/*|\
       tool/agent_host_templates/*|\
       tool/fixtures/harness/*|\
@@ -524,6 +528,7 @@ is_checklist_fast_compatible_change_set() {
     case "$file" in
       tool/*.sh|\
       tool/*.dart|\
+      tool/direnv/bin/*|\
       bin/*|\
       tool/agent_host_templates/*|\
       tool/fixtures/harness/*|\

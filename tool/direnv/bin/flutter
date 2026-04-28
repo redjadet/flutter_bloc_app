@@ -41,6 +41,14 @@ DART_DEFINES=( $("$ROOT_DIR/tool/flutter_dart_defines_from_env.sh") )
 
 subcommand="${1:-}"
 
+if [ "$subcommand" = "doctor" ]; then
+  echo "flutter_resolution|path_flutter|$WRAPPER_DIR/flutter"
+  echo "flutter_resolution|path_flutter_kind|repo-wrapper"
+  echo "flutter_resolution|sdk_flutter|$REAL_FLUTTER"
+  echo "flutter_resolution|note|PATH flutter is repo-wrapper; doctor runs through sdk_flutter"
+  echo ""
+fi
+
 # `--dart-define` is not a global flutter flag; it must come after the subcommand
 # (e.g. `flutter run --dart-define=...`). Only inject for subcommands that
 # accept dart-defines.
