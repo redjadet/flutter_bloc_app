@@ -19,18 +19,22 @@ import 'dart:io';
 /// - This is intentionally heuristic; tune over time if false positives show up.
 Future<void> main(final List<String> args) async {
   final root = Directory.current;
-  final libDir = Directory('${root.path}${Platform.pathSeparator}lib');
-  if (!libDir.existsSync()) {
-    stderr.writeln('check_widget_identity: no lib/ directory found.');
+  final scanFiles = _resolveScanFiles(root, args);
+  if (scanFiles.isEmpty) {
+    stderr.writeln('check_widget_identity: no Dart files found.');
     exit(0);
   }
 
+  final fileLines = <String, List<String>>{};
+  for (final file in scanFiles) {
+    fileLines[file.path] = await file.readAsLines();
+  }
+
+  final localStateOwners = _findLocalStateOwnerWidgets(fileLines);
   final results = <_Finding>[];
 
-  for (final file in libDir.listSync(recursive: true).whereType<File>()) {
-    if (!file.path.endsWith('.dart')) continue;
-    final lines = await file.readAsLines();
-    _scanFile(file.path, lines, results);
+  for (final entry in fileLines.entries) {
+    _scanFile(entry.key, entry.value, localStateOwners, results);
   }
 
   if (results.isEmpty) {
@@ -54,6 +58,7 @@ Future<void> main(final List<String> args) async {
 void _scanFile(
   final String path,
   final List<String> lines,
+  final Set<String> localStateOwners,
   final List<_Finding> out,
 ) {
   for (var i = 0; i < lines.length; i++) {
@@ -144,8 +149,95 @@ void _scanFile(
         );
       }
     }
+
+    // Dynamic children lists can shift sibling slots across rebuilds. If a
+    // child owns local editing/focus state, require explicit identity.
+    if (line.contains('children:')) {
+      final block = _extractChildrenListBlock(lines, i);
+      if (block == null) continue;
+      if (!_isRebuildProneChildrenList(block.text)) continue;
+
+      out.addAll(
+        _findUnkeyedLocalStateOwnerCalls(
+          path: path,
+          lines: lines,
+          block: block,
+          ownerNames: localStateOwners,
+        ),
+      );
+    }
   }
 }
+
+List<File> _resolveScanFiles(final Directory root, final List<String> args) {
+  final scanRoots = args.isEmpty
+      ? <FileSystemEntity>[
+          Directory('${root.path}${Platform.pathSeparator}lib'),
+        ]
+      : args
+            .map(
+              (arg) =>
+                  FileSystemEntity.typeSync(arg) ==
+                      FileSystemEntityType.directory
+                  ? Directory(arg)
+                  : File(arg),
+            )
+            .toList();
+
+  final files = <File>[];
+  for (final entity in scanRoots) {
+    if (!entity.existsSync()) continue;
+    if (entity is File) {
+      if (entity.path.endsWith('.dart')) files.add(entity);
+      continue;
+    }
+    if (entity is Directory) {
+      for (final file in entity.listSync(recursive: true).whereType<File>()) {
+        if (file.path.endsWith('.dart')) files.add(file);
+      }
+    }
+  }
+  files.sort((a, b) => a.path.compareTo(b.path));
+  return files;
+}
+
+Set<String> _findLocalStateOwnerWidgets(
+  final Map<String, List<String>> fileLines,
+) {
+  final owners = <String>{};
+
+  for (final lines in fileLines.values) {
+    final text = lines.join('\n');
+    for (final widgetMatch in RegExp(
+      r'class\s+([A-Za-z_]\w*)\s+extends\s+StatefulWidget\b',
+    ).allMatches(text)) {
+      final widgetName = widgetMatch.group(1)!;
+      final widgetBlock = _extractBraceBlockText(text, widgetMatch.start);
+      if (widgetBlock != null && _ownsLocalControllerOrFocus(widgetBlock)) {
+        owners.add(widgetName);
+        continue;
+      }
+
+      final stateMatch = RegExp(
+        r'class\s+([A-Za-z_]\w*)\s+extends\s+State<'
+        '${RegExp.escape(widgetName)}'
+        r'>\s*\{',
+      ).firstMatch(text);
+      if (stateMatch == null) continue;
+
+      final stateBlock = _extractBraceBlockText(text, stateMatch.start);
+      if (stateBlock != null && _ownsLocalControllerOrFocus(stateBlock)) {
+        owners.add(widgetName);
+      }
+    }
+  }
+
+  return owners;
+}
+
+bool _ownsLocalControllerOrFocus(final String classBlock) =>
+    classBlock.contains('TextEditingController(') ||
+    classBlock.contains('FocusNode(');
 
 bool _containsAny(final String s, final List<String> needles) =>
     needles.any(s.contains);
@@ -180,6 +272,149 @@ _TextBlock? _extractParenBlock(final List<String> lines, final int startLine) {
     }
   }
   return null;
+}
+
+_TextBlock? _extractChildrenListBlock(
+  final List<String> lines,
+  final int startLine,
+) {
+  final buffer = StringBuffer();
+  var open = 0;
+  var seenList = false;
+
+  for (var i = startLine; i < lines.length; i++) {
+    final l = lines[i];
+    final scanFrom = i == startLine ? l.indexOf('children:') : 0;
+    final text = scanFrom < 0 ? l : l.substring(scanFrom);
+    buffer.writeln(text);
+
+    for (final rune in text.runes) {
+      final ch = String.fromCharCode(rune);
+      if (ch == '[') {
+        open++;
+        seenList = true;
+      } else if (ch == ']') {
+        open--;
+      }
+    }
+    if (seenList && open <= 0) {
+      return _TextBlock(buffer.toString(), startLine);
+    }
+  }
+  return null;
+}
+
+String? _extractBraceBlockText(final String text, final int classStart) {
+  final openIdx = text.indexOf('{', classStart);
+  if (openIdx < 0) return null;
+
+  var depth = 0;
+  for (var i = openIdx; i < text.length; i++) {
+    final ch = text[i];
+    if (ch == '{') depth++;
+    if (ch == '}') depth--;
+    if (depth == 0) {
+      return text.substring(openIdx, i + 1);
+    }
+  }
+  return null;
+}
+
+bool _isRebuildProneChildrenList(final String blockText) =>
+    _topLevelChildrenEntries(blockText).any((entry) {
+      final text = entry.text.trimLeft();
+      return text.startsWith('...') ||
+          RegExp(r'^if\s*\(').hasMatch(text) ||
+          RegExp(r'^for\s*\(').hasMatch(text) ||
+          text.startsWith('List.generate(') ||
+          text.startsWith('Iterable.generate(');
+    });
+
+List<_Finding> _findUnkeyedLocalStateOwnerCalls({
+  required final String path,
+  required final List<String> lines,
+  required final _TextBlock block,
+  required final Set<String> ownerNames,
+}) {
+  if (ownerNames.isEmpty) return const [];
+
+  final findings = <_Finding>[];
+  for (final entry in _topLevelChildrenEntries(block.text)) {
+    final entryText = entry.text.trimLeft();
+    final constructorName = _firstConstructorName(entryText);
+    if (constructorName == null || !ownerNames.contains(constructorName)) {
+      continue;
+    }
+
+    final callText = _extractConstructorCallText(entryText);
+    if (callText == null || callText.contains('key:')) continue;
+
+    final ownerOffset = entry.text.indexOf(constructorName);
+    final startOffset = entry.startOffset + (ownerOffset < 0 ? 0 : ownerOffset);
+    final line =
+        block.startLine +
+        block.text.substring(0, startOffset).split('\n').length;
+    if (_isSuppressed(lines, line - 1)) continue;
+
+    findings.add(
+      _Finding(
+        path: path,
+        line: line,
+        message:
+            'Dynamic children list instantiates local state owner `$constructorName` without a stable key.',
+        snippet: lines[line - 1],
+      ),
+    );
+  }
+  return findings;
+}
+
+List<_ChildEntry> _topLevelChildrenEntries(final String blockText) {
+  final openIdx = blockText.indexOf('[');
+  if (openIdx < 0) return const [];
+
+  var listDepth = 0;
+  var parenDepth = 0;
+  var braceDepth = 0;
+  var entryStart = openIdx + 1;
+  final entries = <_ChildEntry>[];
+
+  for (var i = openIdx; i < blockText.length; i++) {
+    final ch = blockText[i];
+    if (ch == '(') parenDepth++;
+    if (ch == ')') parenDepth--;
+    if (ch == '{') braceDepth++;
+    if (ch == '}') braceDepth--;
+    if (ch == '[') {
+      listDepth++;
+      continue;
+    }
+    if (ch == ']') {
+      listDepth--;
+      if (listDepth == 0) {
+        _addChildEntry(entries, blockText, entryStart, i);
+        break;
+      }
+      continue;
+    }
+    if (ch == ',' && listDepth == 1 && parenDepth == 0 && braceDepth == 0) {
+      _addChildEntry(entries, blockText, entryStart, i);
+      entryStart = i + 1;
+    }
+  }
+
+  return entries;
+}
+
+void _addChildEntry(
+  final List<_ChildEntry> entries,
+  final String blockText,
+  final int start,
+  final int end,
+) {
+  final text = blockText.substring(start, end);
+  if (text.trim().isEmpty) return;
+  entries.add(_ChildEntry(text, start));
 }
 
 String? _extractItemBuilderBody(final String blockText) {
@@ -316,8 +551,15 @@ bool _isTriviallySafeReturn(final String name) =>
     name.startsWith('SliverToBoxAdapter');
 
 class _TextBlock {
-  const _TextBlock(this.text);
+  const _TextBlock(this.text, [this.startLine = 0]);
   final String text;
+  final int startLine;
+}
+
+class _ChildEntry {
+  const _ChildEntry(this.text, this.startOffset);
+  final String text;
+  final int startOffset;
 }
 
 class _ReturnCall {
