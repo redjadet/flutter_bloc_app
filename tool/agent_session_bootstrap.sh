@@ -51,6 +51,9 @@ done
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$repo_root"
 
+# shellcheck disable=SC1091
+source "$repo_root/tool/resolve_flutter_dart.sh"
+
 echo "bootstrap|repo_root|$repo_root"
 
 has_git=0
@@ -87,6 +90,9 @@ echo "validation_pointer|fast|./bin/checklist-fast"
 echo "validation_pointer|full|./bin/checklist"
 echo "validation_pointer|router|./bin/router_feature_validate"
 echo "validation_pointer|integration|./bin/integration_tests"
+echo ""
+
+print_flutter_resolution_report || true
 echo ""
 
 scope_mode="unknown"
