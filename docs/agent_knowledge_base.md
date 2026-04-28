@@ -195,7 +195,7 @@ Codex and Cursor should not grow separate operating doctrines.
 
 Knowledge base is validated by repo tooling:
 
-- `./tool/check_agent_knowledge_base.sh` keeps local [`AGENTS.md`](../AGENTS.md) short and checks required links, source indexes, host-template pointers.
+- `./tool/check_agent_knowledge_base.sh` keeps local [`AGENTS.md`](../AGENTS.md) short and checks required links, source indexes, host-template pointers, and closed-loop invariants.
 - `./tool/check_agent_memory_compounding.sh` keeps memory-compounding guidance
   automatic, source-aligned, and explicit-approval-gated for autonomous action.
 - `./tool/validate_validation_docs.sh` keeps validation docs aligned with checklist scripts.
