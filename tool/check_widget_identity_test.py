@@ -1,5 +1,4 @@
 import subprocess
-import sys
 import unittest
 from pathlib import Path
 
@@ -39,4 +38,4 @@ class CheckWidgetIdentityTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    sys.exit(unittest.main())
+    unittest.main()
