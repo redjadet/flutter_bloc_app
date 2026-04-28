@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/audit_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_admin_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class AdminState {
   const AdminState({
@@ -59,7 +60,8 @@ class AdminCubit extends Cubit<AdminState> {
           auditEvents: auditEvents,
         ),
       );
-    } on Object catch (e) {
+    } on Object catch (e, st) {
+      AppLogger.error('AdminCubit.refresh failed', e, st);
       if (isClosed) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
@@ -79,7 +81,8 @@ class AdminCubit extends Cubit<AdminState> {
           auditEvents: auditEvents,
         ),
       );
-    } on Object catch (e) {
+    } on Object catch (e, st) {
+      AppLogger.error('AdminCubit.approve failed', e, st);
       if (isClosed) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
