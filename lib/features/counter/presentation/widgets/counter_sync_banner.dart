@@ -71,12 +71,10 @@ class _CounterSyncBannerState extends State<CounterSyncBanner> {
     }
     _didInitializeInheritedState = true;
     context.ensureSyncStartedIfAvailable();
-    try {
+    if (CubitHelpers.isCubitAvailable<CounterCubit, CounterState>(context)) {
       final CounterCubit cubit = context.cubit<CounterCubit>();
       _lastSyncedAt = cubit.state.lastSyncedAt;
       _lastChangeId = cubit.state.changeId;
-    } on Object {
-      // CounterCubit not available; rely on repository stream below.
     }
   }
 
