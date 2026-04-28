@@ -7,11 +7,11 @@ environment:
   sdk: "3.11.5"
 
 dependencies:
-  analyzer: ^8.4.0
-  analyzer_plugin: ^0.13.0
+  analyzer: ^8.4.1
+  analyzer_plugin: ^0.14.9
   custom_lint_builder: ^0.8.1
 
 dev_dependencies:
-  test: ^1.31.0
-  dart_code_metrics_presets: ^2.30.0
+  test: ^1.31.1
+  dart_code_metrics_presets: ^2.31.0
   flutter_lints: ^4.0.0
