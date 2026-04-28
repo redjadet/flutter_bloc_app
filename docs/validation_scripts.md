@@ -809,6 +809,8 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_feature_modularity_leaks.sh`
 - `check_memory_pressure_centralized.sh`
 - `check_agent_knowledge_base.sh`
+- `check_agent_memory_compounding.sh`
+- `check_ai_generated_code_smells.sh`
 - `check_pyright_python.sh`
 
 <!-- AUTO-GENERATED-CHECK_SCRIPTS:END -->
