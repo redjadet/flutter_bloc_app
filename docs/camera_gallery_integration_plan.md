@@ -44,7 +44,8 @@ Target platforms: **iOS + Android**.
 
 1. Add dependency with `flutter pub add image_picker`.
 2. Confirm selected `image_picker` version compatibility with this project:
-   - Flutter/Dart constraints (project: Flutter 3.41.8, Dart 3.11.5; SDK `^3.9.2` in pubspec).
+   - Flutter/Dart constraints (project: Flutter 3.41.8, Dart 3.11.5;
+     `environment.sdk: 3.11.5` in `pubspec.yaml`).
    - Android minimum SDK requirement of that plugin version.
 3. Confirm Android activity launch mode is **not** `singleInstance` (current
    manifest uses `singleTop`, which is compatible).
@@ -79,7 +80,8 @@ lib/features/camera_gallery/
 
 - `pubspec.yaml` (add `image_picker`).
 - `lib/core/router/app_routes.dart` (add route name/path constants).
-- `lib/app/router/routes.dart` (register new `GoRoute` + cubit provider).
+- `lib/app/router/routes_core.dart` or `lib/app/router/routes_demos.dart`
+  (register new `GoRoute` + cubit provider, depending on feature category).
 - `lib/core/di/injector_registrations.dart` (register repository binding).
 - `lib/features/example/presentation/pages/example_page.dart` (new navigation
   callback).
@@ -150,8 +152,9 @@ Safety requirements:
 1. Add:
    - `AppRoutes.cameraGallery`
    - `AppRoutes.cameraGalleryPath` (e.g. `'/camera-gallery'`)
-2. Register `GoRoute` in `lib/app/router/routes.dart` with cubit creation from
-   DI (`getIt<CameraGalleryRepository>()`).
+2. Register `GoRoute` in the appropriate split route file under
+   `lib/app/router/` with cubit creation from DI
+   (`getIt<CameraGalleryRepository>()`).
 3. Add button in Example page body and wire
    `context.pushNamed(AppRoutes.cameraGallery)`.
 

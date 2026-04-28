@@ -751,7 +751,7 @@ static const genuiDemo = 'genui-demo';
 static const genuiDemoPath = '/genui-demo';
 ```
 
-#### Route Definition (`lib/app/router/routes.dart`)
+#### Route Definition (`lib/app/router/routes_demos.dart`)
 
 ```dart
 GoRoute(
@@ -778,7 +778,7 @@ GoRoute(
 
 **Note**: Add imports for `CommonPageLayout`, `CommonErrorView`,
 `BlocProviderHelpers`, `GenUiDemoCubit`, and `GenUiDemoAgent` as needed in
-`lib/app/router/routes.dart`.
+`lib/app/router/routes_demos.dart`.
 
 #### Feature Exports
 
@@ -999,7 +999,7 @@ available catalog widgets, as per GenUI documentation.
 - `lib/core/di/injector_registrations.dart` (or new
   `register_genui_services.dart`)
 - `lib/core/router/app_routes.dart`
-- `lib/app/router/routes.dart`
+- `lib/app/router/routes_demos.dart`
 - `lib/l10n/app_en.arb`
 - `lib/features/features.dart`
 - `ios/Runner/Runner.entitlements` (if exists, or create)
@@ -1078,7 +1078,7 @@ available catalog widgets, as per GenUI documentation.
    - `register_genui_services.dart` - DI registration (new file)
    - `injector_registrations.dart` - Service registration
    - `app_routes.dart` - Route constants
-   - `routes.dart` - Route definition with API key check
+   - `routes_demos.dart` - Route definition with API key check
    - `app_en.arb` - Localization strings
    - `features.dart` - Feature export
    - `ios/Runner/Runner.entitlements` - Network client permission

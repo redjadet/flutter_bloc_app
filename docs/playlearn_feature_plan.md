@@ -33,7 +33,8 @@ Her feature/oyun farklı sayfada; tek sayfada tek iş.
 - **Presentation:** Cubit sadece tema listesi + seçili tema + kelime listesi (quiz yok). İki ayrı sayfa: tema seçimi, kelime listesi; her sayfa kendi route'unda.
 - **Dosya boyutu:** Tüm dosyalar **max 500 satır**. Sayfa/cubit büyürse parçala (sayfa body ayrı widget dosyasına taşı).
 - **DI:** `lib/core/di/injector_registrations.dart` içinde `VocabularyRepository` ve `AudioPlaybackService` kaydı; `registerLazySingletonIfAbsent` kullan.
-- **Routing:** `lib/core/router/app_routes.dart`, `lib/app/router/routes.dart`; app bar veya overflow'a "Playlearn" linki.
+- **Routing:** `lib/core/router/app_routes.dart`,
+  `lib/app/router/routes_demos.dart`; app bar veya overflow'a "Playlearn" linki.
 - **Type-safe erişim:** UI'da `context.cubit<T>()`, `context.state<T, S>()`, `TypeSafeBlocSelector<T, S, R>` kullan; raw `context.read` yok.
 - **State modeli:** Basit state için Freezed; async emit'lerde `if (isClosed) return;` guard.
 
@@ -102,7 +103,7 @@ lib/features/playlearn/
 1. **Domain:** `VocabularyItem`, `TopicItem`, `VocabularyRepository`, `AudioPlaybackService`.
 2. **Data:** Kelime/tema verisi (const veya asset), `AssetVocabularyRepository`, `TtsAudioService`, DI kaydı.
 3. **Presentation:** `PlaylearnCubit` + state, **PlaylearnPage** (tema seçimi – ayrı sayfa), **VocabularyListPage** (kelime listesi tap-to-hear – ayrı sayfa); widget'lar; max 500 satır/dosya.
-4. **Routing:** `AppRoutes`, `routes.dart` (iki route: `/playlearn`, `/playlearn/vocabulary/:topicId`); app bar veya overflow'a "Playlearn" linki.
+4. **Routing:** `AppRoutes`, `routes_demos.dart` (iki route: `/playlearn`, `/playlearn/vocabulary/:topicId`); app bar veya overflow'a "Playlearn" linki.
 5. **L10n:** Arayüz metinleri için arb.
 6. **Test:** Repository, cubit, kritik widget'lar; `./bin/checklist`.
 

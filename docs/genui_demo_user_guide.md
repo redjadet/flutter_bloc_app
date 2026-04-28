@@ -131,7 +131,8 @@ Before using the GenUI Demo, you need to configure a Google Gemini API key:
 
 ## Technical Details
 
-- **SDK**: GenUI SDK 0.5.1 with Google Generative AI provider
+- **SDK**: GenUI SDK 0.7.x with Google Generative AI provider (see
+  `pubspec.yaml` for pinned package versions)
 - **Model**: Uses Google Gemini for content generation
 - **Architecture**: Follows clean architecture with domain/data/presentation layers
 - **State Management**: BLoC/Cubit pattern with Freezed states

@@ -82,7 +82,10 @@ Create a new feature module `payments`.
 ## Routing / navigation
 
 - Add a new route constant in [lib/core/router/app_routes.dart](../lib/core/router/app_routes.dart) (e.g. `payments` / `paymentsPath`).
-- Wire in GoRouter in [lib/app/router/routes.dart](../lib/app/router/routes.dart) similarly to the calculator feature's pattern: create `PaymentsCubit` in the route builder and inject the domain repository.
+- Wire in GoRouter through the appropriate split route file under
+  [`lib/app/router/`](../lib/app/router/) similarly to the calculator feature's
+  pattern: create `PaymentsCubit` in the route builder and inject the domain
+  repository.
 
 ### Demo page access (easy discoverability)
 
@@ -155,7 +158,11 @@ If you prefer not to add backend code into this repo, the plan will instead defi
 
 - [ ] Confirm where to store Stripe publishable key via SecretConfig and where bootstrap loads it; identify best place to initialize Stripe in app startup.
 - [ ] Add new payments feature module (domain/data/presentation) with repository interface, cubit/state, and demo page using l10n + theming.
-- [ ] Register payments services in GetIt; add payments route in app_routes.dart and routes.dart; add Stripe demo button and onOpenPaymentsDemo on Example page (ExamplePageBody + ExamplePage) and l10n key so the demo is easily accessible from the demo page.
+- [ ] Register payments services in GetIt; add payments route constants in
+  `app_routes.dart` and route wiring under `lib/app/router/`; add Stripe demo
+  button and `onOpenPaymentsDemo` on Example page (`ExamplePageBody` +
+  `ExamplePage`) and l10n key so the demo is easily accessible from the demo
+  page.
 - [ ] Add flutter_stripe dependency and complete Android + iOS native configuration needed for PaymentSheet (setup mode).
 - [ ] Add Firebase callable function (recommended) or document required backend contract to create customer + ephemeral key + setup intent and return secrets.
 - [ ] Add cubit + widget tests, then run ./bin/checklist, coverage update, and fix any validation script failures.

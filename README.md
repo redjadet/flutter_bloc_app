@@ -1,7 +1,7 @@
 # Flutter BLoC App
 
-A Flutter reference application for Clean Architecture, `flutter_bloc`,
-offline-first data flows, and integration-heavy product demos.
+A Flutter reference application for offline-first product demos, AI-assisted
+workflows, backend integrations, and production-minded delivery practices.
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.8-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.5-blue.svg)](https://dart.dev)
@@ -34,18 +34,17 @@ offline-first data flows, and integration-heavy product demos.
 
 ## Overview
 
-This repository is an engineering reference app rather than a single-purpose
-demo. It combines shared app infrastructure, offline-first patterns, backend
-integrations, AI/chat transports, and multiple product-style feature surfaces
-so architecture, validation, and delivery workflows can be exercised under
-realistic scope.
+This repository is a polished Flutter reference app for production-style
+feature delivery. It brings together offline-first data flows, authentication,
+AI-assisted demos, backend integrations, and product walkthroughs so new app
+ideas can be tested without starting from an empty project.
 
 ## Start Here
 
 - Full docs index: [docs/README.md](docs/README.md)
 - Local setup and first run: [docs/new_developer_guide.md](docs/new_developer_guide.md)
 - Feature and route catalog: [docs/feature_overview.md](docs/feature_overview.md)
-- Validation and test lanes: [docs/testing_overview.md](docs/testing_overview.md),
+- Quality and test lanes: [docs/testing_overview.md](docs/testing_overview.md),
   [docs/validation_scripts.md](docs/validation_scripts.md)
 - Architecture and repo shape: [docs/clean_architecture.md](docs/clean_architecture.md),
   [docs/architecture_details.md](docs/architecture_details.md)
@@ -55,21 +54,18 @@ realistic scope.
 
 ## Current Surfaces
 
-- AI chat overview: [docs/ai_integration.md](docs/ai_integration.md)
-- FastAPI Cloud chat orchestration: [docs/integrations/render_fastapi_chat_demo.md](docs/integrations/render_fastapi_chat_demo.md)
-- AI Decision Workbench (local risk score, rationale, proof trail, and action
-  history): [docs/ai_decision_workbench.md](docs/ai_decision_workbench.md)
+- AI chat overview and transports: [docs/ai_integration.md](docs/ai_integration.md),
+  [docs/integrations/render_fastapi_chat_demo.md](docs/integrations/render_fastapi_chat_demo.md),
+  [supabase/README.md](supabase/README.md)
+- AI Decision Workbench (FastAPI-backed risk score, rationale, proof trail,
+  and action history): [docs/ai_decision_workbench.md](docs/ai_decision_workbench.md)
 - Staff app demo walkthrough: [docs/staff_app_demo_walkthrough.md](docs/staff_app_demo_walkthrough.md)
+- Online therapy demo: [docs/online_therapy_demo/README.md](docs/online_therapy_demo/README.md)
 - Case-study briefs and demo context: [docs/case_studies/README.md](docs/case_studies/README.md)
-
-## Repo Snapshot
-
-- Toolchain: Flutter `3.41.8`, Dart `3.11.5`
-- Entry points: `lib/main_dev.dart`, `lib/main_staging.dart`, `lib/main_prod.dart`
-- Architecture shape: `Presentation -> Domain <- Data`
-- Core infra: `flutter_bloc`, `get_it`, `GoRouter`, offline-first sync under `lib/shared/sync/`
-- Localization: `gen_l10n` with supported locales including Arabic (RTL). See [docs/localization.md](docs/localization.md).
-- Validation entrypoints: `./tool/delivery_checklist.sh`, `./bin/router_feature_validate`, `./bin/integration_tests`, `./bin/upgrade_validate_all`
+- Release, Firebase, Supabase, and universal-link setup:
+  [docs/deployment.md](docs/deployment.md),
+  [docs/firebase_setup.md](docs/firebase_setup.md),
+  [docs/universal_links/README.md](docs/universal_links/README.md)
 
 Use [docs/README.md](docs/README.md) as the source-of-truth navigation page for everything else.
 

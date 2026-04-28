@@ -8,7 +8,10 @@ and the next document to read.
 
 - Route names and paths: `lib/core/router/app_routes.dart`
 - Route composition: `lib/app/router/routes_core.dart`,
-  `lib/app/router/routes_demos.dart`, `lib/app/router/route_groups.dart`
+  `lib/app/router/routes_demos.dart`, `lib/app/router/route_groups.dart`,
+  `lib/app/router/routes_staff_app_demo.dart`,
+  `lib/app/router/routes_case_study_demo.dart`, and
+  `lib/app/router/routes_online_therapy_demo.dart`
 - Feature modules: `lib/features/<feature>/`
 
 ## Foundation and core flows
@@ -42,6 +45,7 @@ Vertical demos driven by product briefs in [`docs/case_studies/`](case_studies/R
 | Remote Config surfaces | Counter and Settings diagnostics | `lib/features/remote_config/` | Runtime feature flags, diagnostics, and cache behavior. |
 | IoT Demo | `/iot-demo` | `lib/features/iot_demo/` | Offline-first device list and commands; uses Supabase when configured. |
 | Staff App Demo | `/staff-app-demo` and nested paths (dashboard, timeclock, messages, content, forms, proof, admin) | `lib/features/staff_app_demo/` | Firestore-backed staff ops demo; shared site list via `StaffDemoSitesCubit` / `staffDemoSites`. Walkthrough: [Staff app demo](staff_app_demo_walkthrough.md). |
+| Online Therapy Demo | `/online-therapy-demo` and nested client, therapist, and admin paths | `lib/features/online_therapy_demo/` | Simulation-first product demo for booking, messaging, call state, verification, and admin audit flows. Walkthrough: [Online Therapy Demo](online_therapy_demo/README.md). |
 | Supabase Auth | `/supabase-auth` | `lib/features/supabase_auth/` | Separate optional auth flow for Supabase-backed demos. |
 | WalletConnect Auth | `/walletconnect-auth` | `lib/features/walletconnect_auth/` | Demo wallet-link flow layered on top of Firebase identity. |
 | FCM Demo | `/fcm-demo` | `lib/features/fcm_demo/` | Permission, token, message, and sync-trigger demo. |
@@ -92,6 +96,8 @@ See [Architecture Details](architecture_details.md) and
   [Firebase Setup](firebase_setup.md).
 - Supabase-backed flows require `SUPABASE_URL` and `SUPABASE_ANON_KEY`. See
   [Authentication](authentication.md) and [Security and Secrets](security_and_secrets.md).
+- Universal-link handling is implemented under `lib/features/deeplink/`; host
+  verification files live in [Universal Links](universal_links/README.md).
 - Maps require Google Maps platform keys where applicable. See
   [Google Maps Integration](google_maps_integration.md).
 - AI chat demos require API keys. See [AI Integration](ai_integration.md) and

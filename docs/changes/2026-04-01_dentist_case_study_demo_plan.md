@@ -1,7 +1,6 @@
 # Dentist case study demo — implementation plan (final)
 
 **Status:** Implemented (automated verification done; manual device checklist optional)
-**Canonical Cursor plan:** `~/.cursor/plans/dentist_case_study_demo_9c81a229.plan.md` (if present; keep aligned with this file)
 
 This document is the **repo-tracked** copy for PRs and reviewers. Implementation defaults and checklist match the Cursor plan frontmatter todos.
 
@@ -72,7 +71,7 @@ Full paths (nested):
 
 Implementation notes:
 
-- Prefer **`ShellRoute`** so one [AppRouteAuthGate](../../lib/app/router/app_route_auth_gate.dart) and one session `BlocProvider` wrap nested routes. That requires **`List<RouteBase>`** (not only `List<GoRoute>`) in [routes.dart](../../lib/app/router/routes.dart) and the `GoRouter(routes: …)` call in [app.dart](../../lib/app.dart).
+- Prefer **`ShellRoute`** so one [AppRouteAuthGate](../../lib/app/router/app_route_auth_gate.dart) and one session `BlocProvider` wrap nested routes. Route composition now lives in [routes_case_study_demo.dart](../../lib/app/router/routes_case_study_demo.dart) and is joined through [routes.dart](../../lib/app/router/routes.dart) before the `GoRouter(routes: …)` call in [app.dart](../../lib/app.dart).
 - Add **`AppRoutePolicies.caseStudyDemo`** in [route_auth_policy.dart](../../lib/app/router/route_auth_policy.dart).
 - **Async redirect** on `record` / `review` when draft is invalid; keep a light **in-page guard** as backup.
 - Add `AppRoutes` constants + route **names** in [app_routes.dart](../../lib/core/router/app_routes.dart).
