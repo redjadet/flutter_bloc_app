@@ -75,11 +75,9 @@ class _OnlineTherapyDemoClientTherapistsPageState
                   : () async {
                       await cubit.selectTherapist(t.id);
                       if (!context.mounted) return;
-                      unawaited(
-                        context.pushNamed(
-                          AppRoutes.onlineTherapyDemoClientTherapistDetail,
-                          pathParameters: <String, String>{'therapistId': t.id},
-                        ),
+                      await context.pushNamed(
+                        AppRoutes.onlineTherapyDemoClientTherapistDetail,
+                        pathParameters: <String, String>{'therapistId': t.id},
                       );
                     },
             );

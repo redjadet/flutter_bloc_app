@@ -158,9 +158,10 @@ class _MessagingPanelState extends State<_MessagingPanel> {
                       .toList(growable: false),
                   onChanged: state.isBusy
                       ? null
-                      : (final id) => id == null
-                            ? null
-                            : unawaited(cubit.selectConversation(id)),
+                      : (final id) {
+                          if (id == null) return;
+                          unawaited(cubit.selectConversation(id));
+                        },
                 ),
               ),
               const Divider(height: 1),
