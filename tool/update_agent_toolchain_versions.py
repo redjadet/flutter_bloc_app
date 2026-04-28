@@ -10,6 +10,10 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 README_PATH = PROJECT_ROOT / "README.md"
+VERSION_TOKEN_PATTERN = r"[0-9]+(?:\.[0-9]+){2}(?:[-+][0-9A-Za-z.-]+)?"
+AGENTS_TOOLCHAIN_PATTERN = (
+    rf"^(Flutter ){VERSION_TOKEN_PATTERN}( / Dart ){VERSION_TOKEN_PATTERN}(.*)$"
+)
 
 
 def _find_toolchain_section(text: str) -> str:
@@ -27,7 +31,8 @@ def _extract_version(text: str, label: str) -> str | None:
     patterns = (
         rf"^- {label} `([^`]+)`$",
         rf"{label}\s+`([^`]+)`",
-        rf"{label}\s+([0-9]+\.[0-9]+\.[0-9]+)",
+        rf"{label}\s+({VERSION_TOKEN_PATTERN})",
+        rf"badge/{label}-({VERSION_TOKEN_PATTERN})-",
     )
     for pattern in patterns:
         match = re.search(pattern, text, flags=re.MULTILINE)
@@ -88,8 +93,8 @@ def main() -> int:
     replacements = [
         (
             PROJECT_ROOT / "AGENTS.md",
-            r"^(Flutter )\S+ / Dart \S+(.*)$",
-            rf"\g<1>{flutter_version} / Dart {dart_version}\g<2>",
+            AGENTS_TOOLCHAIN_PATTERN,
+            rf"\g<1>{flutter_version}\g<2>{dart_version}\g<3>",
         ),
         (
             PROJECT_ROOT / "docs/agents_quick_reference.md",
