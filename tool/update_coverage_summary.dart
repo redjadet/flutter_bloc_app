@@ -66,7 +66,11 @@ void main(final List<String> args) {
   final _Coverage coverage = _Coverage.fromLines(lcov.readAsLinesSync());
   final File output = File('coverage/coverage_summary.md');
   output.parent.createSync(recursive: true);
-  output.writeAsStringSync(coverage.toMarkdown());
+  final String nextMarkdown = coverage.toMarkdown();
+  final String? existingMarkdown = output.existsSync() ? output.readAsStringSync() : null;
+  if (existingMarkdown != nextMarkdown) {
+    output.writeAsStringSync(nextMarkdown);
+  }
 
   // Update all documentation files
   final int updatedCount = _Updator.updateAllDocumentation(
@@ -149,7 +153,15 @@ class _Coverage {
             .where((final record) => record.path.startsWith('lib/'))
             .where((final record) => record.linesFound > 0)
             .toList()
-          ..sort((final a, final b) => a.percentage.compareTo(b.percentage));
+          ..sort((final a, final b) {
+            final int percentageComparison = a.percentage.compareTo(
+              b.percentage,
+            );
+            if (percentageComparison != 0) {
+              return percentageComparison;
+            }
+            return a.path.compareTo(b.path);
+          });
 
     final int totalFound = filtered.fold<int>(
       0,
@@ -309,7 +321,7 @@ class _Coverage {
       return false;
     }
     return file.readAsLinesSync().any(
-      (final String line) => line.trim().startsWith('// coverage:ignore-file'),
+      (line) => line.trim().startsWith('// coverage:ignore-file'),
     );
   }
 
