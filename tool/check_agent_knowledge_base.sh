@@ -34,6 +34,18 @@ require_contains() {
   fi
 }
 
+require_not_contains() {
+  local path="$1"
+  local needle="$2"
+  if [ ! -f "$path" ]; then
+    fail "Cannot scan missing file: $path"
+    return
+  fi
+  if grep -qF "$needle" "$path"; then
+    fail "$path must not contain host-specific detail ($needle); keep it map-only and pointer-led"
+  fi
+}
+
 require_all_contains() {
   local path="$1"
   shift
@@ -48,6 +60,7 @@ required_files=(
   "docs/agent_knowledge_base.md"
   "docs/ai_code_review_protocol.md"
   "docs/agents_quick_reference.md"
+  "docs/agent_host_notes.md"
   "docs/README.md"
   "docs/architecture_details.md"
   "docs/CODE_QUALITY.md"
@@ -70,6 +83,12 @@ if [ -f "AGENTS.md" ]; then
   require_contains "AGENTS.md" "docs/ai_code_review_protocol.md"
   require_contains "AGENTS.md" "docs/agents_quick_reference.md"
   require_contains "AGENTS.md" "docs/README.md"
+  require_contains "AGENTS.md" "docs/agent_host_notes.md"
+
+  # Guard map-only invariant: host-specific guidance lives in docs/agent_host_notes.md.
+  require_not_contains "AGENTS.md" "## Codex"
+  require_not_contains "AGENTS.md" "## Cursor"
+  require_not_contains "AGENTS.md" "## Delegation"
 else
   echo "AGENTS.md not present; skipping local injected-map size/link checks."
 fi

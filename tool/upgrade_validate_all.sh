@@ -9,10 +9,50 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+RUN_STARTED_AT_EPOCH="$(date +%s)"
 
 cd "$PROJECT_ROOT"
 
 SYNC_AGENT_ASSETS_MODE="${SYNC_AGENT_ASSETS:-auto}"
+
+get_mtime_epoch() {
+  local path="$1"
+
+  if [ ! -e "$path" ]; then
+    return 1
+  fi
+
+  if stat -f "%m" "$path" >/dev/null 2>&1; then
+    stat -f "%m" "$path"
+    return 0
+  fi
+
+  stat -c "%Y" "$path"
+}
+
+maybe_update_coverage_summary() {
+  local lcov_path="coverage/lcov.info"
+  local summary_path="coverage/coverage_summary.md"
+
+  if [ ! -f "$lcov_path" ]; then
+    echo "No $lcov_path; skipping coverage summary update."
+    return 0
+  fi
+
+  local lcov_mtime
+  lcov_mtime="$(get_mtime_epoch "$lcov_path" || true)"
+  if [ -z "$lcov_mtime" ]; then
+    echo "Could not read mtime for $lcov_path; skipping coverage summary update."
+    return 0
+  fi
+
+  if [ "$lcov_mtime" -lt "$RUN_STARTED_AT_EPOCH" ]; then
+    echo "$lcov_path not updated in this run; skipping coverage summary update."
+    return 0
+  fi
+
+  dart run tool/update_coverage_summary.dart
+}
 
 run_agent_asset_sync_step() {
   case "$SYNC_AGENT_ASSETS_MODE" in
@@ -55,7 +95,7 @@ echo "==> Step 4/6: Run integration tests"
 
 echo "==> Step 5/6: Refresh documentation and AI agent toolchain artifacts"
 python3 "$PROJECT_ROOT/tool/update_agent_toolchain_versions.py"
-dart run tool/update_coverage_summary.dart
+maybe_update_coverage_summary
 bash "$PROJECT_ROOT/tool/fix_validation_docs.sh"
 bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"
 
