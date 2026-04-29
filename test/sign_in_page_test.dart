@@ -29,7 +29,7 @@ void main() {
   group('SignInPage', () {
     Future<void> pumpSignInPage(
       WidgetTester tester, {
-      required FirebaseAuth auth,
+      required FirebaseAuth? auth,
     }) async {
       final router = GoRouter(
         initialLocation: AppRoutes.authPath,
@@ -177,6 +177,21 @@ void main() {
       );
       expect(mockAuth.currentUser, isNull);
     });
+
+    testWidgets(
+      'shows friendly message when repository fallback fails without Firebase',
+      (tester) async {
+        getIt.registerSingleton<AuthRepository>(_ThrowingGuestAuthRepository());
+
+        await pumpSignInPage(tester, auth: null);
+
+        await tester.tap(find.byKey(signInGuestButtonKey));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
+
+        expect(find.text(AppLocalizationsEn().anonymousSignInFailed), findsOne);
+      },
+    );
   });
 
   group('SignInPage.prepareProviders', () {
@@ -255,4 +270,20 @@ class _FallbackGuestAuthRepository implements AuthRepository {
     _currentUser = null;
     _controller.add(null);
   }
+}
+
+class _ThrowingGuestAuthRepository implements AuthRepository {
+  @override
+  AuthUser? get currentUser => null;
+
+  @override
+  Stream<AuthUser?> get authStateChanges => const Stream<AuthUser?>.empty();
+
+  @override
+  Future<void> signInAnonymously() async {
+    throw Exception('guest sign-in unavailable');
+  }
+
+  @override
+  Future<void> signOut() async {}
 }
