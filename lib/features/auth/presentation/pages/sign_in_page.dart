@@ -3,9 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui;
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'
     as firebase_ui_google;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/auth/auth.dart';
+import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
@@ -48,6 +51,10 @@ class SignInPage extends StatelessWidget {
     googleProviderFactory: googleProviderFactory,
   );
 
+  @visibleForTesting
+  static bool get shouldUseMacOsDebugGuestOnlyAuth =>
+      !kIsWeb && !kReleaseMode && defaultTargetPlatform == TargetPlatform.macOS;
+
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
@@ -60,7 +67,9 @@ class SignInPage extends StatelessWidget {
     final bool upgradingAnonymous = auth?.currentUser?.isAnonymous ?? false;
 
     final bool canUseFirebaseUISignIn =
-        auth != null && (providersOverride != null || Firebase.apps.isNotEmpty);
+        !shouldUseMacOsDebugGuestOnlyAuth &&
+        auth != null &&
+        (providersOverride != null || Firebase.apps.isNotEmpty);
 
     late final List<firebase_ui.AuthProvider> providers;
     if (canUseFirebaseUISignIn) {
@@ -95,7 +104,12 @@ class SignInPage extends StatelessWidget {
     }
 
     Future<void> signInAnonymously() async {
+      final AuthRepository? authRepository =
+          getIt.isRegistered<AuthRepository>() ? getIt<AuthRepository>() : null;
       if (auth == null) {
+        if (authRepository != null) {
+          await authRepository.signInAnonymously();
+        }
         if (!context.mounted) {
           ContextUtils.logNotMounted('SignInPage.signInAnonymously.noFirebase');
           return;
@@ -105,7 +119,11 @@ class SignInPage extends StatelessWidget {
       }
 
       try {
-        await auth.signInAnonymously();
+        if (authRepository == null) {
+          await auth.signInAnonymously();
+        } else {
+          await authRepository.signInAnonymously();
+        }
         if (!context.mounted) {
           ContextUtils.logNotMounted('SignInPage.signInAnonymously');
           return;

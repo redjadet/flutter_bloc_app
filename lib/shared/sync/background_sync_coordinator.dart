@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
@@ -200,7 +201,32 @@ class BackgroundSyncCoordinator {
     final String event,
     final Map<String, Object?> payload,
   ) {
+    if (!shouldLogTelemetry(event, payload)) {
+      return;
+    }
     AppLogger.debug('SyncTelemetry[$event] $payload');
+  }
+
+  @visibleForTesting
+  static bool shouldLogTelemetry(
+    final String event,
+    final Map<String, Object?> payload,
+  ) {
+    if (event == 'sync_prune_completed') {
+      return payload['pruned'] != 0;
+    }
+    if (event != 'sync_cycle_completed') {
+      return true;
+    }
+
+    return payload['pullRemoteFailures'] != 0 ||
+        payload['pendingAtStart'] != 0 ||
+        payload['operationsProcessed'] != 0 ||
+        payload['operationsFailed'] != 0 ||
+        payload['prunedCount'] != 0 ||
+        (payload['pendingByEntity'] as Map?)?.isNotEmpty == true ||
+        (payload['retryAttemptsByEntity'] as Map?)?.isNotEmpty == true ||
+        (payload['lastErrorByEntity'] as Map?)?.isNotEmpty == true;
   }
 
   void _publishSummary(final SyncCycleSummary summary) {

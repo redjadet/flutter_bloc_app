@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -9,6 +10,15 @@ abstract class SecretStorage {
 
   T withoutLogs<T>(final T Function() action) => action();
   Future<T> withoutLogsAsync<T>(final Future<T> Function() action) => action();
+}
+
+SecretStorage createDefaultSecretStorage() {
+  if (!kIsWeb &&
+      !kReleaseMode &&
+      defaultTargetPlatform == TargetPlatform.macOS) {
+    return InMemorySecretStorage();
+  }
+  return FlutterSecureSecretStorage();
 }
 
 class FlutterSecureSecretStorage implements SecretStorage {

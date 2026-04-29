@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/subscription_manager.dart';
@@ -33,6 +34,7 @@ class RemoteConfigRepository implements RemoteConfigService {
   // ignore: cancel_subscriptions - Subscription managed by SubscriptionManager
   StreamSubscription<RemoteConfigUpdate>? _configUpdatesSubscription;
   bool _isInitialized = false;
+  bool _disableFetchDueToKeychain = false;
   final SubscriptionManager _subscriptionManager = SubscriptionManager();
 
   @override
@@ -68,6 +70,9 @@ class RemoteConfigRepository implements RemoteConfigService {
 
   @override
   Future<void> forceFetch() async {
+    if (_disableFetchDueToKeychain || _shouldSkipNativeFetchOnMacOsDebug) {
+      return;
+    }
     await _remoteConfig.setConfigSettings(
       RemoteConfigSettings(
         fetchTimeout: _fetchTimeout,
@@ -76,6 +81,17 @@ class RemoteConfigRepository implements RemoteConfigService {
     );
     try {
       await _remoteConfig.fetchAndActivate();
+    } on Exception catch (error, stackTrace) {
+      if (_looksLikeKeychainEntitlementError(error)) {
+        _disableFetchDueToKeychain = true;
+        AppLogger.warning(
+          'RemoteConfig.forceFetch disabled (Keychain unavailable). '
+          'macOS desktop unsigned builds cannot use Firebase Installations.',
+        );
+        AppLogger.error('RemoteConfig.forceFetch', error, stackTrace);
+        return;
+      }
+      rethrow;
     } finally {
       await _remoteConfig.setConfigSettings(
         RemoteConfigSettings(
@@ -127,9 +143,12 @@ class RemoteConfigRepository implements RemoteConfigService {
   }
 
   void _subscribeToRealtimeUpdates() {
-    if (_subscriptionManager.isDisposed) return;
+    if (_subscriptionManager.isDisposed || _shouldSkipNativeFetchOnMacOsDebug) {
+      return;
+    }
     _configUpdatesSubscription ??= _remoteConfig.onConfigUpdated.listen(
       (final update) async {
+        if (_disableFetchDueToKeychain) return;
         final bool shouldLogTestValue = update.updatedKeys.contains(
           testValueKey,
         );
@@ -144,6 +163,18 @@ class RemoteConfigRepository implements RemoteConfigService {
         try {
           await _remoteConfig.fetchAndActivate();
         } on Exception catch (error, stackTrace) {
+          if (_looksLikeKeychainEntitlementError(error)) {
+            _disableFetchDueToKeychain = true;
+            AppLogger.warning(
+              'RemoteConfig realtime fetch disabled (Keychain unavailable).',
+            );
+            AppLogger.error(
+              'RemoteConfig realtime fetch',
+              error,
+              stackTrace,
+            );
+            return;
+          }
           AppLogger.error(
             'Remote Config realtime fetch failed for $testValueKey',
             error,
@@ -179,4 +210,14 @@ class RemoteConfigRepository implements RemoteConfigService {
     final bool value = _remoteConfig.getBool(awesomeFeatureKey);
     _logDebug('RemoteConfig[$source] $awesomeFeatureKey=$value');
   }
+
+  static bool _looksLikeKeychainEntitlementError(final Object error) {
+    final String message = error.toString();
+    return message.contains('-34018') ||
+        message.contains('SecItemAdd') ||
+        message.contains('required entitlement');
+  }
+
+  static bool get _shouldSkipNativeFetchOnMacOsDebug =>
+      !kIsWeb && !kReleaseMode && defaultTargetPlatform == TargetPlatform.macOS;
 }

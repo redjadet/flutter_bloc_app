@@ -1,20 +1,30 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui;
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'
     as firebase_ui_google;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
+import 'package:flutter_bloc_app/features/auth/presentation/pages/sign_in_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mock_exceptions/mock_exceptions.dart';
 
-import 'package:flutter_bloc_app/core/router/app_routes.dart';
-import 'package:flutter_bloc_app/features/auth/presentation/pages/sign_in_page.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  tearDown(() async {
+    debugDefaultTargetPlatformOverride = null;
+    await getIt.reset(dispose: true);
+  });
 
   group('SignInPage', () {
     Future<void> pumpSignInPage(
@@ -56,6 +66,53 @@ void main() {
       expect(find.text('Home'), findsOneWidget);
       expect(mockAuth.currentUser, isNotNull);
       expect(mockAuth.currentUser!.isAnonymous, isTrue);
+    });
+
+    testWidgets(
+      'uses auth repository fallback when Firebase guest sign-in hits Keychain',
+      (tester) async {
+        final mockAuth = MockFirebaseAuth();
+        whenCalling(Invocation.method(#signInAnonymously, null))
+            .on(mockAuth)
+            .thenThrow(
+              FirebaseAuthException(
+                code: 'unknown',
+                message: 'SecItemAdd (-34018)',
+              ),
+            );
+        getIt.registerSingleton<AuthRepository>(_FallbackGuestAuthRepository());
+
+        await pumpSignInPage(tester, auth: mockAuth);
+
+        await tester.tap(find.byKey(signInGuestButtonKey));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(getIt<AuthRepository>().currentUser?.isAnonymous, isTrue);
+      },
+    );
+
+    testWidgets('uses guest-only fallback on macOS debug', (tester) async {
+      addTearDown(() {
+        debugDefaultTargetPlatformOverride = null;
+      });
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      final mockAuth = MockFirebaseAuth();
+      getIt.registerSingleton<AuthRepository>(_FallbackGuestAuthRepository());
+
+      await pumpSignInPage(tester, auth: mockAuth);
+
+      expect(SignInPage.shouldUseMacOsDebugGuestOnlyAuth, isTrue);
+      expect(find.text(AppLocalizationsEn().anonymousSignInButton), findsOne);
+      expect(find.text('Register'), findsNothing);
+
+      await tester.tap(find.byKey(signInGuestButtonKey));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Home'), findsOneWidget);
+      expect(getIt<AuthRepository>().currentUser?.isAnonymous, isTrue);
+      expect(mockAuth.currentUser, isNull);
+      debugDefaultTargetPlatformOverride = null;
     });
 
     testWidgets('navigates to redirect path after anonymous sign-in', (
@@ -174,4 +231,28 @@ void main() {
       expect(authErrorMessage(l10n, error), l10n.authErrorGeneric);
     });
   });
+}
+
+class _FallbackGuestAuthRepository implements AuthRepository {
+  final StreamController<AuthUser?> _controller =
+      StreamController<AuthUser?>.broadcast();
+  AuthUser? _currentUser;
+
+  @override
+  AuthUser? get currentUser => _currentUser;
+
+  @override
+  Stream<AuthUser?> get authStateChanges => _controller.stream;
+
+  @override
+  Future<void> signInAnonymously() async {
+    _currentUser = const AuthUser(id: 'local-guest', isAnonymous: true);
+    _controller.add(_currentUser);
+  }
+
+  @override
+  Future<void> signOut() async {
+    _currentUser = null;
+    _controller.add(null);
+  }
 }
