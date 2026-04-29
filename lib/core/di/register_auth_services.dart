@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
@@ -31,13 +34,86 @@ void registerAuthServices() {
   }
 
   registerLazySingletonIfAbsent<AuthRepository>(
-    () => firebaseAuth == null
-        ? const _UnavailableAuthRepository()
-        : FirebaseAuthRepository(firebaseAuth: firebaseAuth),
+    () {
+      if (firebaseAuth == null) {
+        return const _UnavailableAuthRepository();
+      }
+      if (_shouldUseMacOsDebugGuestFallback) {
+        return _MacOsDebugGuestAuthRepository(firebaseAuth: firebaseAuth);
+      }
+      return FirebaseAuthRepository(firebaseAuth: firebaseAuth);
+    },
+    dispose: (final repository) async {
+      if (repository case final _MacOsDebugGuestAuthRepository fallback) {
+        await fallback.dispose();
+      }
+    },
   );
   registerLazySingletonIfAbsent<core_auth.AuthRepository>(
     () => getIt<AuthRepository>(),
   );
+}
+
+bool get _shouldUseMacOsDebugGuestFallback =>
+    !kIsWeb && !kReleaseMode && defaultTargetPlatform == TargetPlatform.macOS;
+
+class _MacOsDebugGuestAuthRepository extends FirebaseAuthRepository {
+  _MacOsDebugGuestAuthRepository({required super.firebaseAuth}) {
+    _firebaseSubscription = super.authStateChanges.listen((final user) {
+      if (user != null) {
+        _localGuest = null;
+      }
+      _authStateController.add(currentUser);
+    });
+  }
+
+  final StreamController<AuthUser?> _authStateController =
+      StreamController<AuthUser?>.broadcast();
+  StreamSubscription<AuthUser?>? _firebaseSubscription;
+  AuthUser? _localGuest;
+
+  @override
+  AuthUser? get currentUser => super.currentUser ?? _localGuest;
+
+  @override
+  Stream<AuthUser?> get authStateChanges async* {
+    yield currentUser;
+    yield* _authStateController.stream;
+  }
+
+  @override
+  Future<void> signInAnonymously() async {
+    try {
+      await super.signInAnonymously();
+    } on Exception catch (error) {
+      if (!_looksLikeKeychainEntitlementError(error)) {
+        rethrow;
+      }
+      _localGuest = const AuthUser(
+        id: 'macos-debug-local-guest',
+        isAnonymous: true,
+      );
+      _authStateController.add(_localGuest);
+    }
+  }
+
+  @override
+  Future<void> signOut() async {
+    _localGuest = null;
+    _authStateController.add(null);
+    try {
+      await super.signOut();
+    } on Exception catch (error) {
+      if (!_looksLikeKeychainEntitlementError(error)) {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> dispose() async {
+    await _firebaseSubscription?.cancel();
+    await _authStateController.close();
+  }
 }
 
 class _UnavailableAuthRepository implements AuthRepository {
@@ -54,4 +130,13 @@ class _UnavailableAuthRepository implements AuthRepository {
 
   @override
   Future<void> signOut() async {}
+}
+
+bool _looksLikeKeychainEntitlementError(final Object error) {
+  final String message = error.toString().toLowerCase();
+  return message.contains('-34018') ||
+      message.contains('secitemadd') ||
+      message.contains('keychain') ||
+      message.contains('nslocalizedfailurereasonerrorkey') ||
+      message.contains('required entitlement');
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/remote_config_cache_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
@@ -29,7 +30,9 @@ class OfflineFirstRemoteConfigRepository
        _networkStatusService = networkStatusService,
        _registry = registry,
        _telemetry = telemetry ?? _defaultTelemetry {
-    _registry.register(this);
+    if (!shouldSkipBackgroundSyncOnMacOsDebug) {
+      _registry.register(this);
+    }
   }
 
   static const String remoteConfigEntity = 'remote_config';
@@ -57,6 +60,10 @@ class OfflineFirstRemoteConfigRepository
 
   RemoteConfigSnapshot _snapshot = RemoteConfigSnapshot.empty;
   final InFlightCoalescer _fetchCoalescer = InFlightCoalescer();
+
+  @visibleForTesting
+  static bool get shouldSkipBackgroundSyncOnMacOsDebug =>
+      !kIsWeb && !kReleaseMode && defaultTargetPlatform == TargetPlatform.macOS;
 
   @override
   String get entityType => remoteConfigEntity;

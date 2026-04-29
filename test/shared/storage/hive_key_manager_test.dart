@@ -1,11 +1,18 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  tearDown(() {
+    debugDefaultTargetPlatformOverride = null;
+  });
+
   group('HiveKeyManager', () {
     test('getEncryptionKey generates new key when storage is empty', () async {
       final storage = InMemorySecretStorage();
@@ -70,6 +77,19 @@ void main() {
       expect(key, hasLength(32));
     });
 
+    test(
+      'getEncryptionKey reuses temporary key after storage failure',
+      () async {
+        final storage = _FailingSecretStorage();
+        final keyManager = HiveKeyManager(storage: storage);
+
+        final firstKey = await keyManager.getEncryptionKey();
+        final secondKey = await keyManager.getEncryptionKey();
+
+        expect(secondKey, equals(firstKey));
+      },
+    );
+
     test('getEncryptionKey generates unique keys', () async {
       final storage1 = InMemorySecretStorage();
       final storage2 = InMemorySecretStorage();
@@ -81,6 +101,23 @@ void main() {
 
       // Keys should be different (very high probability)
       expect(key1, isNot(equals(key2)));
+    });
+
+    test('uses stable debug key on macOS debug with default storage', () async {
+      addTearDown(() {
+        debugDefaultTargetPlatformOverride = null;
+      });
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+
+      final firstManager = HiveKeyManager();
+      final secondManager = HiveKeyManager();
+
+      final firstKey = await firstManager.getEncryptionKey();
+      final secondKey = await secondManager.getEncryptionKey();
+
+      expect(firstKey, hasLength(32));
+      expect(secondKey, equals(firstKey));
+      debugDefaultTargetPlatformOverride = null;
     });
   });
 }

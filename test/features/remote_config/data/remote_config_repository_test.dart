@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -23,6 +24,7 @@ void main() {
     });
 
     setUp(() {
+      debugDefaultTargetPlatformOverride = null;
       remoteConfig = _MockFirebaseRemoteConfig();
       debugMessages = <String>[];
 
@@ -37,6 +39,10 @@ void main() {
         () => remoteConfig.getBool('awesome_feature_enabled'),
       ).thenReturn(false);
       when(() => remoteConfig.getString('test_value_1')).thenReturn('');
+    });
+
+    tearDown(() {
+      debugDefaultTargetPlatformOverride = null;
     });
 
     test('logs test_value_1 when getString is called', () {
@@ -177,6 +183,41 @@ void main() {
       expect(captured.first.minimumFetchInterval, Duration.zero);
       expect(captured.last.fetchTimeout, const Duration(minutes: 1));
       expect(captured.last.minimumFetchInterval, const Duration(hours: 1));
+    });
+
+    test(
+      'forceFetch disables retries after Keychain entitlement error',
+      () async {
+        when(
+          () => remoteConfig.fetchAndActivate(),
+        ).thenThrow(Exception('SecItemAdd failed with -34018'));
+
+        final repository = RemoteConfigRepository(
+          remoteConfig,
+          debugLogger: debugMessages.add,
+        );
+
+        await repository.forceFetch();
+        await repository.forceFetch();
+
+        verify(() => remoteConfig.fetchAndActivate()).called(1);
+        verifyNever(() => remoteConfig.getString('test_value_1'));
+        verifyNever(() => remoteConfig.getBool('awesome_feature_enabled'));
+      },
+    );
+
+    test('forceFetch skips native fetch on macOS debug', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+
+      final repository = RemoteConfigRepository(
+        remoteConfig,
+        debugLogger: debugMessages.add,
+      );
+
+      await repository.forceFetch();
+
+      verifyNever(() => remoteConfig.fetchAndActivate());
+      verifyNever(() => remoteConfig.setConfigSettings(any()));
     });
 
     test(

@@ -1,10 +1,15 @@
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  tearDown(() {
+    debugDefaultTargetPlatformOverride = null;
+  });
 
   group('InMemorySecretStorage', () {
     test('write/read/delete works as expected', () async {
@@ -33,6 +38,12 @@ void main() {
       });
       expect(asyncValue, 34);
       expect(AppLogger.isSilenced, isFalse);
+    });
+
+    test('default storage uses memory on macOS debug', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+
+      expect(createDefaultSecretStorage(), isA<InMemorySecretStorage>());
     });
   });
 

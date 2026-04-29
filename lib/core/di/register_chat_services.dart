@@ -144,7 +144,7 @@ void registerChatServices() {
     () => LayeredRenderOrchestrationHfTokenProvider(
       runtime: getIt<AppRuntimeConfig>(),
       remoteConfig: getIt<RemoteConfigService>(),
-      storage: SecretConfig.storage ?? FlutterSecureSecretStorage(),
+      storage: SecretConfig.storage ?? createDefaultSecretStorage(),
       firebaseAuth:
           getIt.isRegistered<FirebaseAuth>() && Firebase.apps.isNotEmpty
           ? getIt<FirebaseAuth>()

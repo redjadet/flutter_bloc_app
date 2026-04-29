@@ -134,6 +134,54 @@ void main() {
       await coordinator.stop();
     });
 
+    test('default telemetry filter suppresses empty sync events', () {
+      expect(
+        BackgroundSyncCoordinator.shouldLogTelemetry(
+          'sync_cycle_completed',
+          const <String, Object?>{
+            'durationMs': 0,
+            'pullRemoteCount': 3,
+            'pullRemoteFailures': 0,
+            'pendingAtStart': 0,
+            'operationsProcessed': 0,
+            'operationsFailed': 0,
+            'pendingByEntity': <String, int>{},
+            'prunedCount': 0,
+            'retryAttemptsByEntity': <String, double>{},
+            'lastErrorByEntity': <String, String>{},
+            'retrySuccessRate': 0.0,
+          },
+        ),
+        isFalse,
+      );
+      expect(
+        BackgroundSyncCoordinator.shouldLogTelemetry(
+          'sync_cycle_completed',
+          const <String, Object?>{
+            'durationMs': 10,
+            'pullRemoteCount': 1,
+            'pullRemoteFailures': 0,
+            'pendingAtStart': 1,
+            'operationsProcessed': 1,
+            'operationsFailed': 0,
+            'pendingByEntity': <String, int>{'counter': 1},
+            'prunedCount': 0,
+            'retryAttemptsByEntity': <String, double>{},
+            'lastErrorByEntity': <String, String>{},
+            'retrySuccessRate': 0.0,
+          },
+        ),
+        isTrue,
+      );
+      expect(
+        BackgroundSyncCoordinator.shouldLogTelemetry(
+          'sync_prune_completed',
+          const <String, Object?>{'pruned': 0},
+        ),
+        isFalse,
+      );
+    });
+
     test(
       'start/stop are idempotent and do not double-schedule periodic ticks',
       () async {
