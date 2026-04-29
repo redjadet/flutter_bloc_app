@@ -20,7 +20,8 @@ This folder contains the source-of-truth documentation for the Flutter BLoC app.
   [`online_therapy_demo/README.md`](online_therapy_demo/README.md)
 - **AI agent harness**: [`agent_knowledge_base.md`](agent_knowledge_base.md),
   [`ai_code_review_protocol.md`](ai_code_review_protocol.md),
-  [`agents_quick_reference.md`](agents_quick_reference.md)
+  [`agents_quick_reference.md`](agents_quick_reference.md),
+  [`agent_host_notes.md`](agent_host_notes.md)
   - Cold-start map printer: `bash ../tool/agent_session_bootstrap.sh`
   - Tracker contract: [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md)
 
