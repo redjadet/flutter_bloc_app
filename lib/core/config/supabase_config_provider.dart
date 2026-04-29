@@ -77,7 +77,7 @@ final class SupabaseConfigProvider {
   }
 
   SecretStorage get _safeStorage =>
-      _storage ?? (SecretConfig.storage ?? FlutterSecureSecretStorage());
+      _storage ?? (SecretConfig.storage ?? createDefaultSecretStorage());
 
   /// Fetches config from Remote Config and applies it if it is missing or the
   /// Remote Config `version` differs from the currently loaded one.

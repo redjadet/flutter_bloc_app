@@ -22,9 +22,7 @@ class FallbackSignInContent extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final bool useCupertino =
-        Theme.of(context).platform == TargetPlatform.iOS ||
-        Theme.of(context).platform == TargetPlatform.macOS;
+    final bool useCupertino = Theme.of(context).platform == TargetPlatform.iOS;
     final Widget content = Center(
       child: Padding(
         padding: context.responsiveStatePadding,

@@ -1,3 +1,4 @@
+import 'package:flutter_bloc_app/shared/storage/hive_initializer.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
@@ -26,7 +27,7 @@ class HiveService {
       // Try to initialize Hive
       // In tests, Hive.init() may have been called already, so initFlutter() will fail
       try {
-        await Hive.initFlutter();
+        await initHive();
       } on Exception catch (error, stackTrace) {
         // If initFlutter fails, verify if Hive is actually initialized
         // by attempting to use it (tests call Hive.init() directly)

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:get_it/get_it.dart';
 
@@ -39,6 +40,9 @@ T? createRemoteRepositoryOrNull<T>({
   required final String context,
   required final T Function() factory,
 }) {
+  if (shouldSkipFirebaseRemoteRepositories) {
+    return null;
+  }
   if (Firebase.apps.isEmpty) {
     return null;
   }
@@ -55,3 +59,7 @@ T? createRemoteRepositoryOrNull<T>({
   }
   // coverage:ignore-end
 }
+
+@visibleForTesting
+bool get shouldSkipFirebaseRemoteRepositories =>
+    !kIsWeb && !kReleaseMode && defaultTargetPlatform == TargetPlatform.macOS;

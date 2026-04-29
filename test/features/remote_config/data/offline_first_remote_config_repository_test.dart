@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/offline_first_remote_config_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/remote_config_cache_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
@@ -99,6 +100,7 @@ void main() {
     });
 
     tearDown(() async {
+      debugDefaultTargetPlatformOverride = null;
       await Hive.deleteFromDisk();
       tempDir.deleteSync(recursive: true);
     });
@@ -108,6 +110,33 @@ void main() {
         registry.resolve(OfflineFirstRemoteConfigRepository.remoteConfigEntity),
         isNotNull,
       );
+    });
+
+    test('does not register for background sync on macOS debug', () {
+      addTearDown(() {
+        debugDefaultTargetPlatformOverride = null;
+      });
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      final debugRegistry = SyncableRepositoryRegistry();
+
+      OfflineFirstRemoteConfigRepository(
+        remoteRepository: remoteRepository,
+        cacheRepository: cacheRepository,
+        networkStatusService: networkStatusService,
+        registry: debugRegistry,
+      );
+
+      expect(
+        OfflineFirstRemoteConfigRepository.shouldSkipBackgroundSyncOnMacOsDebug,
+        isTrue,
+      );
+      expect(
+        debugRegistry.resolve(
+          OfflineFirstRemoteConfigRepository.remoteConfigEntity,
+        ),
+        isNull,
+      );
+      debugDefaultTargetPlatformOverride = null;
     });
 
     test('loads cached values when offline and skips remote fetch', () async {

@@ -219,7 +219,7 @@ class SecretConfig {
     if (_loaded) return;
 
     final SecretStorage storage =
-        _configuredStorage ?? FlutterSecureSecretStorage();
+        _configuredStorage ?? createDefaultSecretStorage();
     // In debug, allow local asset secrets by default so `flutter run` works
     // without repeated dart-define flags. Release remains disabled.
     final bool assetFallbackAllowed =

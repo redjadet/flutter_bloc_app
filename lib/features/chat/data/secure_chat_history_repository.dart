@@ -10,7 +10,7 @@ import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 /// Stores chat history in encrypted platform storage.
 class SecureChatHistoryRepository implements ChatHistoryRepository {
   SecureChatHistoryRepository({final SecretStorage? storage})
-    : _storage = storage ?? FlutterSecureSecretStorage();
+    : _storage = storage ?? createDefaultSecretStorage();
 
   static const String _storageKeyHistory = 'chat_history';
 
